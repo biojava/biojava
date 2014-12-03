@@ -327,7 +327,7 @@ public class TestLongPdbVsMmCifParsing {
 		
 		// getHeader() is some times null for badly formatted PDB files (e.g. 4a10, all waters are in a separate chain F)
 		if (isPolymer(cPdb)) {
-			assertNotNull("getHeader is null in pdb (chain "+chainId+")",cPdb.getHeader());
+			assertNotNull("getHeader is null in pdb (chain "+chainId+")",cPdb.getCompound());
 		}
 		// TODO getHeader (Compound) not parsed in mmCIF parser 
 		//assertNotNull("getHeader is null in cif",cCif.getHeader());

@@ -26,13 +26,11 @@ package org.biojava.bio.structure;
 
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
@@ -48,15 +46,29 @@ import org.slf4j.LoggerFactory;
  */
 public class Compound implements Cloneable, Serializable {
 	
-	private final static Logger logger = LoggerFactory.getLogger(Compound.class);
+	//private final static Logger logger = LoggerFactory.getLogger(Compound.class);
 
 	
 	private static final long serialVersionUID = 2991897825657586356L;
 	
-	private List<Chain> chainList;
-	private List<String> chainId;
-	private String refChainId = null;
+	/**
+	 * The list of chains that are described by this Compound 
+	 */
+	private List<Chain> chains;
+	
+	/**
+	 * The list of chain IDs that are described by this Compound
+	 * Note that this information is redundant, it is contained in 
+	 * <code>chains</code>, but it's useful for mapping at parse time
+	 */
+	private List<String> chainIds; 
+		
+	/**
+	 * The Molecule identifier
+	 */
 	private int molId;
+
+	private String refChainId;
 
 	private String molName = null;
 	private String title = null;
@@ -108,74 +120,23 @@ public class Compound implements Cloneable, Serializable {
 	private Long id;
 	
 	public Compound () {
-		chainList = new ArrayList<Chain>();
+		chains = new ArrayList<Chain>();
 		molId = -1;
 	}
 
-	@SuppressWarnings("unchecked")
 	public String toString(){
-		StringBuffer buf = new StringBuffer();
-		buf.append("Compound: " + molId + " " +molName + " ");
-		/* disabled for the moment
-
-    	 buf.append(" chains: " );
-    	Iterator<Chain> iter = chainList.iterator();
-    	while (iter.hasNext()){
-    		Chain c = iter.next();
-    		buf.append (c.getName() + " ");
-    	}
-
-		 */
-		try {
-			@SuppressWarnings("rawtypes")
-			Class c = Class.forName("org.biojava.bio.structure.Compound");
-			Method[] methods  = c.getMethods();
-
-			for (int i = 0; i < methods.length; i++) {
-				Method m = methods[i];
-
-				String name = m.getName();
-				if ( name.substring(0,3).equals("get")) {
-					if (name.equals("getMolId"))
-						continue;
-					if ( name.equals("getMolName"))
-						continue;
-
-					Object o  = m.invoke(this, new Object[]{});
-					if ( o instanceof String){
-						if ( o != null)
-							buf.append(name.substring(3, name.length())+": "+ o + " ");
-					}
-					if ( o instanceof List){
-						if ( o != null)
-                            buf.append(name.substring(3, name.length())).append(": ");
-
-						List<Object>lst = (List<Object>)o;
-						for (Object obj : lst){
-							if ( obj instanceof Chain){
-								continue;
-							}
-                            buf.append(obj).append(" ");
-						}
-
-					}
-				}
-
+		StringBuilder buf = new StringBuilder();
+		buf.append("Compound: " + molId+" ");
+		buf.append(molName==null?"(no name)":"("+molName+")");
+		buf.append(" chains: ");
+		if (chainIds!=null) {
+			for (int i=0;i<chainIds.size();i++) {
+				buf.append(chainIds.get(i));
+				if (i!=chainIds.size()-1) buf.append(",");
 			}
-
-		} catch (ClassNotFoundException e){
-			logger.error("Exception: ", e);
-		} catch (InvocationTargetException e) {
-			logger.error("Exception: ", e);
-		} catch (IllegalAccessException e) {
-			logger.error("Exception: ", e);
+		} else {
+			buf.append("no chains");
 		}
-
-
-		//if ( organismScientific != null)
-		//	buf.append(" organism scientific: " + organismScientific);
-
-
 		return buf.toString();
 	}
 
@@ -210,9 +171,8 @@ public class Compound implements Cloneable, Serializable {
 		if (this.molId != -1) {
 			System.out.println("Mol ID: " + this.molId);
 		}
-		if (this.chainId != null) {
-			System.out.println("Chain: " + this.chainId);
-			//this.refChainId = chainId
+		if (this.chainIds != null) {
+			System.out.println("Chains: " + this.chainIds);
 		}
 		if (this.molName != null) {
 			System.out.println("Mol Name: " + this.molName);
@@ -354,25 +314,27 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the chain id value.
+	 * Return the list of member chain IDs that are described by this Compound 
 	 * @return the list of ChainIDs that are described by this Compound
-	 * @see #setChainId(List)
+	 * @see #setChainIds(List)
+	 * @see #setChains(List)
 	 */
-	public List<String> getChainId() {
-		return chainId;
+	public List<String> getChainIds() {
+		return chainIds;
 	}
 
 	/**
-	 * Sets the list of chain IDs.
-	 * @param chainId  the list of ChainIDs that are described by this Compound
-	 * @see #getChainId()
+	 * Set the list of member chain IDs that are described by this Compound.
+	 * @param chainIds  the list of ChainIDs that are described by this Compound
+	 * @see #getChainIds()
+	 * @see #getChains()
 	 */
-	public void setChainId(List<String> chainId) {
-		this.chainId = chainId;
+	public void setChainIds(List<String> chainIds) {
+		this.chainIds = chainIds;
 	}
 
 	/**
-	 * Returns the ref chain id value.
+	 * Return the ref chain id value.
 	 * @return the RefChainID
 	 * @see #setRefChainId(String)
 	 */
@@ -381,7 +343,7 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the ref chain id value.
+	 * Return the ref chain id value.
 	 * @param refChainId the RefChainID
 	 * @see #getRefChainId()
 	 */
@@ -390,7 +352,7 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the mol id value.
+	 * Return the mol id value.
 	 * @return the MolId value
 	 * @see #setMolId(int)
 	 */
@@ -756,19 +718,24 @@ public class Compound implements Cloneable, Serializable {
 		return newMolId;
 	}
 
-	/** get the chains that are part of this Compound
+	/** 
+	 * Get the list of chains that are part of this Compound
 	 *
 	 * @return a List of Chain objects
 	 */
 	 public List<Chain> getChains(){
-		return this.chainList;
+		return this.chains;
 	}
 
+	 /**
+	  * Add new Chain to this Compound
+	  * @param chain
+	  */
 	public void addChain(Chain chain){
-		this.chainList.add(chain);
+		this.chains.add(chain);		
 	}
 
 	public void setChains(List<Chain> chains){
-		this.chainList = chains;
+		this.chains = chains;
 	}
 }

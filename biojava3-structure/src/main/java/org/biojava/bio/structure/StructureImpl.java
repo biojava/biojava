@@ -402,8 +402,8 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> ngr = cha.getAtomGroups("nucleotide");
 
 				str.append("chain " + j + ": >"+cha.getChainID()+"< ");
-				if ( cha.getHeader() != null){
-					Compound comp = cha.getHeader();
+				if ( cha.getCompound() != null){
+					Compound comp = cha.getCompound();
 					String molName = comp.getMolName();
 					if ( molName != null){
 						str.append(molName);

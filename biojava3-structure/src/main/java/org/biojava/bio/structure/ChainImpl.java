@@ -58,8 +58,8 @@ public class ChainImpl implements Chain, Serializable {
 
 	private static final long serialVersionUID = 1990171805277911840L;
 
-	/** 
-	 * The default chain identifier is an empty space.
+	/**
+	 * The default chain identifier used to be an empty space
 	 */
 	public static String DEFAULT_CHAIN_ID = "A";
 
@@ -134,7 +134,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		n.setChainID( getChainID());
 		n.setSwissprotId ( getSwissprotId());
-		n.setHeader(this.getHeader());
+		n.setCompound(this.getCompound());
 		n.setInternalChainID(internalChainID);
 
 		for (int i=0;i<groups.size();i++){
@@ -178,14 +178,14 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
-	public void setHeader(Compound mol) {
+	public void setCompound(Compound mol) {
 		this.mol = mol;
 	}
 
 	/** {@inheritDoc}
 	 *
 	 */
-	public Compound getHeader() {
+	public Compound getCompound() {
 		return this.mol;
 	}
 
@@ -518,13 +518,6 @@ public class ChainImpl implements Chain, Serializable {
 		//new method returns the length of the sequence defined in the SEQRES records
 		return seqResGroups.size();
 	}
-
-
-
-	public void   setName(String nam) { setChainID(nam); }
-
-
-	public String getName()           {	return getChainID();  }
 
 	/**
 	 * {@inheritDoc}
