@@ -1385,7 +1385,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		int eId = -1;
 		try {
-			Integer.parseInt(epolseq.getEntity_id());
+			eId = Integer.parseInt(epolseq.getEntity_id());
 		} catch (NumberFormatException e) {
 			logger.warn("Could not parse entity id from EntityPolySeq: "+e.getMessage());
 		}

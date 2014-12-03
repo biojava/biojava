@@ -58,7 +58,7 @@ public class SourceCompoundTest extends TestCase{
 		for (Compound compound : s2.getCompounds()){
 			if (compound.getMolId()==1) {
 				assertEquals("COMPLEMENT C3", compound.getMolName());
-				assertEquals("[A, C]", compound.getChainId().toString());
+				assertEquals("[A, C]", compound.getChainIds().toString());
 				assertEquals("FRAGMENT OF ALPHA CHAIN: RESIDUES 996-1287", compound.getFragment());
 				assertEquals("YES", compound.getEngineered());
 				assertEquals("YES", compound.getMutation());
@@ -72,7 +72,7 @@ public class SourceCompoundTest extends TestCase{
 			}
 			if (compound.getMolId()==2) {
 				assertEquals("FIBRINOGEN-BINDING PROTEIN", compound.getMolName());
-				assertEquals("[B, D]", compound.getChainId().toString());
+				assertEquals("[B, D]", compound.getChainIds().toString());
 				assertEquals("C-TERMINAL DOMAIN: RESIDUES 101-165", compound.getFragment());
 				assertEquals("YES", compound.getEngineered());
 				assertEquals("STAPHYLOCOCCUS AUREUS", compound.getOrganismScientific());
@@ -120,9 +120,9 @@ public class SourceCompoundTest extends TestCase{
 			System.out.println(compound.getOrganismScientific());
 			System.out.println(compound.getStrain());
 	*/
-			assertEquals("1", compound.getMolId());
+			assertEquals(1, compound.getMolId());
 			assertEquals("SYLVATICIN", compound.getMolName());
-			assertEquals("[A, B, C, D]", compound.getChainId().toString());
+			assertEquals("[A, B, C, D]", compound.getChainIds().toString());
 			assertEquals("PYTHIUM SYLVATICUM", compound.getOrganismScientific());
 			assertEquals("STRAIN 37", compound.getStrain());
 
@@ -147,9 +147,9 @@ public class SourceCompoundTest extends TestCase{
 				System.out.println(compound.getExpressionSystemVector());
 				System.out.println(compound.getExpressionSystemPlasmid());
 				 */
-				assertEquals("1", compound.getMolId());
+				assertEquals(1, compound.getMolId());
 				assertEquals("PUTATIVE LUXO REPRESSOR PROTEIN", compound.getMolName());
-				assertEquals("[A]", compound.getChainId().toString());
+				assertEquals("[A]", compound.getChainIds().toString());
 				assertEquals("SIGNAL RECEIVER DOMAIN: RESIDUES 2-128", compound.getFragment());
 				assertEquals("YES", compound.getEngineered());
 				assertEquals("VIBRIO PARAHAEMOLYTICUS RIMD 2210633", compound.getOrganismScientific());

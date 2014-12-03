@@ -176,7 +176,7 @@ public class StructureTest extends TestCase {
 		Compound comp = compounds.get(0);
 		assertEquals("did not get the right compounds info",true,comp.getMolName().startsWith("TRYPSIN INHIBITOR"));
 
-		List<String> chainIds = comp.getChainId();
+		List<String> chainIds = comp.getChainIds();
 		List<Chain> chains    = comp.getChains();
 
 		assertEquals("the number of chain ids and chains did not match!",chainIds.size(),chains.size());
