@@ -34,7 +34,7 @@ public class CeCPUserArgumentProcessor extends CeUserArgumentProcessor {
 		protected Integer minCPLength;
 
 		public CeCPStartupParams() {
-			duplicationHint = duplicationHint.SHORTER;
+			duplicationHint = DuplicationHint.SHORTER;
 			minCPLength = CECPParameters.DEFAULT_MIN_CP_LENGTH;
 			maxGapSize = 0;
 		}

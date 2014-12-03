@@ -521,12 +521,13 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public List<DBRef> getDBRefs();
 
-    /** request a particular compound by its id
+    /** 
+     * Request a particular compound by its id
      *
      * @param molId
      * @return a compound
      */
-    public Compound getCompoundById(String molId);
+    public Compound getCompoundById(int molId);
 
 
     /** 

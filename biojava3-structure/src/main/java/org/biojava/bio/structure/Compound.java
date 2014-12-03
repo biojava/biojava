@@ -26,6 +26,7 @@ package org.biojava.bio.structure;
 
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,26 +36,28 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
+ * For polymers (protein/nucleotides) a Molecule maps to the concept of Entity, i.e.
+ * each group of sequence identical NCS-related polymer chains 
  *
  * Now PDB file format 3.2 aware - contains the new TAX_ID fields for the
  * organism studied and the expression system.
  *
  * @author Jules Jacobsen
+ * @author Jose Duarte
  * @since 1.5
  */
 public class Compound implements Cloneable, Serializable {
+	
+	private final static Logger logger = LoggerFactory.getLogger(Compound.class);
 
-   private final static Logger logger = LoggerFactory.getLogger(Compound.class);
-
-	/**
-    *
-    */
-   private static final long serialVersionUID = 2991897825657586356L;
-   private List<Chain> chainList = new ArrayList<Chain>();
-	private List<String> chainId = null;
+	
+	private static final long serialVersionUID = 2991897825657586356L;
+	
+	private List<Chain> chainList;
+	private List<String> chainId;
 	private String refChainId = null;
-	private String molId = "0";
-	//String molId = null;
+	private int molId;
+
 	private String molName = null;
 	private String title = null;
 	private List<String> synonyms = null;
@@ -103,6 +106,11 @@ public class Compound implements Cloneable, Serializable {
 	private String expressionSystemOtherDetails = null;
 
 	private Long id;
+	
+	public Compound () {
+		chainList = new ArrayList<Chain>();
+		molId = -1;
+	}
 
 	@SuppressWarnings("unchecked")
 	public String toString(){
@@ -155,7 +163,11 @@ public class Compound implements Cloneable, Serializable {
 
 			}
 
-		} catch (Exception e){
+		} catch (ClassNotFoundException e){
+			logger.error("Exception: ", e);
+		} catch (InvocationTargetException e) {
+			logger.error("Exception: ", e);
+		} catch (IllegalAccessException e) {
 			logger.error("Exception: ", e);
 		}
 
@@ -195,7 +207,7 @@ public class Compound implements Cloneable, Serializable {
 
 	public void showCompound() {
 		System.out.println("COMPOUND INFO:");
-		if (this.molId != null) {
+		if (this.molId != -1) {
 			System.out.println("Mol ID: " + this.molId);
 		}
 		if (this.chainId != null) {
@@ -380,9 +392,9 @@ public class Compound implements Cloneable, Serializable {
 	/**
 	 * Returns the mol id value.
 	 * @return the MolId value
-	 * @see #setMolId(String)
+	 * @see #setMolId(int)
 	 */
-	public String getMolId() {
+	public int getMolId() {
 		return molId;
 	}
 
@@ -391,7 +403,7 @@ public class Compound implements Cloneable, Serializable {
 	 * @param molId the MolId value
 	 * @see #getMolId()
 	 */
-	public void setMolId(String molId) {
+	public void setMolId(int molId) {
 		this.molId = molId;
 	}
 
