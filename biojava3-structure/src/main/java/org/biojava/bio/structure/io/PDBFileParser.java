@@ -1091,7 +1091,7 @@ public class PDBFileParser  {
 			try {
 				i = Integer.valueOf(value);
 			} catch (NumberFormatException e){
-				logger.warn(e.getMessage() + " while trying to parse COMPND line.");
+				logger.warn(e.getMessage() + " while trying to parse COMPND MOL_ID line.");
 			}
 			if (molTypeCounter != i) {
 				molTypeCounter++;
@@ -1102,7 +1102,7 @@ public class PDBFileParser  {
 
 			}
 
-			current_compound.setMolId(value);
+			current_compound.setMolId(i);
 		}
 		if (field.equals("MOLECULE:")) {
 			current_compound.setMolName(value);

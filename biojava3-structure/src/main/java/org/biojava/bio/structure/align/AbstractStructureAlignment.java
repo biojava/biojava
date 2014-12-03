@@ -1,8 +1,5 @@
 package org.biojava.bio.structure.align;
 
-import java.beans.Introspector;
-import java.util.Iterator;
-import java.util.List;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;

@@ -611,9 +611,9 @@ public class StructureImpl implements Structure, Serializable {
 		return compounds;
 	}
 
-	public Compound getCompoundById(String molId) {
+	public Compound getCompoundById(int molId) {
 		for (Compound mol : this.compounds){
-			if (mol.getMolId().equals(molId)){
+			if (mol.getMolId()==molId){
 				return mol;
 			}
 		}
