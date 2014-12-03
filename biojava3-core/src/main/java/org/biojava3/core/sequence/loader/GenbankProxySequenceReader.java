@@ -50,6 +50,7 @@ import org.biojava3.core.sequence.features.AbstractFeature;
 import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeatureParser;
+import org.biojava3.core.sequence.features.FeatureRetriever;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.io.GenbankSequenceParser;
 import org.biojava3.core.sequence.io.GenericGenbankHeaderParser;
@@ -64,7 +65,7 @@ import org.slf4j.LoggerFactory;
  * @author Karl Nicholas <github:karlnicholas>
  * @author Jacek Grzebyta <github:jgrzebyta>
  */
-public class GenbankProxySequenceReader<C extends Compound> extends StringProxySequenceReader<C> implements FeaturesKeyWordInterface, DatabaseReferenceInterface {
+public class GenbankProxySequenceReader<C extends Compound> extends StringProxySequenceReader<C> implements FeaturesKeyWordInterface, DatabaseReferenceInterface, FeatureRetriever {
 
 	private final static Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReader.class);
 
@@ -204,6 +205,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         logger.info("Sequence ({},{})={}...", proteinSequence.getAccession(), proteinSequence.getLength(), proteinSequence.getSequenceAsString().substring(0, 10));
         logger.info("Keywords: {}", genbankProteinReader.getKeyWords());
         logger.info("DatabaseReferences: {}", genbankProteinReader.getDatabaseReferences());
+        proteinSequence.getFeatures();
 
         GenbankProxySequenceReader<NucleotideCompound> genbankDNAReader
                 = new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "NM_001126", DNACompoundSet.getDNACompoundSet());
