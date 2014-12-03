@@ -270,33 +270,20 @@ public interface Chain {
     public int getLengthAminos();
 
   
-    /** Set the Header from the PDB file.
-     * @param molId the Compound that contains the header information for this chain
-     * @see #getHeader()
+    /** 
+     * Set the Compound
+     * @param compound the Compound 
+     * @see #getCompound()
     */
-    public void setHeader(Compound molId);
+    public void setCompound(Compound compound);
 
-    /** Returns the Header ( a Compound object) for this chain.
+    /** 
+     * Return the Compound for this chain.
      * 
-     * @return the Compound object that contains the Header information
-     * @see #setHeader(Compound)
+     * @return the Compound object 
+     * @see #setCompound(Compound)
      */
-    public Compound getHeader();
-    
-    /** get and set the name of this chain (Chain id in PDB file ).
-     * @param name  a String specifying the name value
-     * @see #getName
-     * @deprecated replaced by {@link #setChainID(String)}
-     */
-    public void setName(String name);	
-
-    /** get and set the name of this chain (Chain id in PDB file ).
-     * @return a String representing the name value
-     * @see #setName
-     * @deprecated replaced by {@link #getChainID()}
-     */
-
-    public String getName();
+    public Compound getCompound();
     
     /** 
      * Set the name of this chain (Chain id in PDB file ).

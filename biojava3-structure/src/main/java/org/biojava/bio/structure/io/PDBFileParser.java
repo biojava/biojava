@@ -281,7 +281,7 @@ public class PDBFileParser  {
 
 	}
 
-	FileParsingParameters params;
+	private FileParsingParameters params;
 
 	public PDBFileParser() {
 		params = new FileParsingParameters();
@@ -1091,7 +1091,7 @@ public class PDBFileParser  {
 			try {
 				i = Integer.valueOf(value);
 			} catch (NumberFormatException e){
-				logger.warn(e.getMessage() + " while trying to parse COMPND line.");
+				logger.warn(e.getMessage() + " while trying to parse COMPND MOL_ID line.");
 			}
 			if (molTypeCounter != i) {
 				molTypeCounter++;
@@ -1102,7 +1102,7 @@ public class PDBFileParser  {
 
 			}
 
-			current_compound.setMolId(value);
+			current_compound.setMolId(i);
 		}
 		if (field.equals("MOLECULE:")) {
 			current_compound.setMolName(value);
@@ -1120,7 +1120,7 @@ public class PDBFileParser  {
 					chainID = " ";
 				chains.add(chainID);
 			}
-			current_compound.setChainId(chains);
+			current_compound.setChainIds(chains);
 
 		}
 		if (field.equals("SYNONYM:")) {
@@ -2978,11 +2978,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.setDBRefs(dbrefs);
 
 		if ( params.isAlignSeqRes() ){
-
+			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
 
 		} else if ( params.getStoreEmptySeqRes() ){
+			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
 			// user wants to know about the seqres, but not align them
 
 			storeUnAlignedSeqRes(structure, seqResChains);
@@ -3120,7 +3121,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		for(Compound comp : compounds){
 			List<Chain> chains = new ArrayList<Chain>();
-			List<String> chainIds = comp.getChainId();
+			List<String> chainIds = comp.getChainIds();
 			if ( chainIds == null)
 				continue;
 			for ( String chainId : chainIds) {
@@ -3142,31 +3143,31 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if ( compounds.size() == 1) {
 			Compound comp = compounds.get(0);
-			if ( comp.getChainId() == null){
+			if ( comp.getChainIds() == null){
 				List<Chain> chains = s.getChains(0);
 				if ( chains.size() == 1) {
 					// this is an old style PDB file - add the ChainI
 					Chain ch = chains.get(0);
 					List <String> chainIds = new ArrayList<String>();
 					chainIds.add(ch.getChainID());
-					comp.setChainId(chainIds);
+					comp.setChainIds(chainIds);
 					comp.addChain(ch);
 				}
 			}
 		}
 
 		for (Compound comp: compounds){
-			if ( comp.getChainId() == null) {
+			if ( comp.getChainIds() == null) {
 				// could not link to chain
 				// TODO: should this be allowed to happen?
 				continue;
 			}
-			for ( String chainId : comp.getChainId()){
+			for ( String chainId : comp.getChainIds()){
 				if ( chainId.equals("NULL"))
 					continue;
 				try {
 					Chain c = s.getChainByPDB(chainId);
-					c.setHeader(comp);
+					c.setCompound(comp);
 				} catch (StructureException e){
 					e.printStackTrace();
 				}

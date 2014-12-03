@@ -136,13 +136,13 @@ public class PdbFileFormat30Test extends TestCase {
 		assertTrue(compounds.size() == 1);
 		Compound mol = compounds.get(0);
 		assertTrue(mol.getMolName().equals("6,7-DIMETHYL-8-RIBITYLLUMAZINE SYNTHASE"));
-                assertEquals(60, mol.getChainId().size());
+                assertEquals(60, mol.getChainIds().size());
                 assertEquals(60, mol.getChains().size());
-                assertTrue(mol.getChainId().contains("S"));
-                assertTrue(mol.getChainId().contains("T"));
-                assertTrue(mol.getChainId().contains("U"));
-                assertTrue(mol.getChainId().contains("g"));
-                assertTrue(mol.getChainId().contains("h"));
-                assertTrue(mol.getChainId().contains("i"));
+                assertTrue(mol.getChainIds().contains("S"));
+                assertTrue(mol.getChainIds().contains("T"));
+                assertTrue(mol.getChainIds().contains("U"));
+                assertTrue(mol.getChainIds().contains("g"));
+                assertTrue(mol.getChainIds().contains("h"));
+                assertTrue(mol.getChainIds().contains("i"));
 	}
 }

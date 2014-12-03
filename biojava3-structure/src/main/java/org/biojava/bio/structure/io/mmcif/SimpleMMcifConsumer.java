@@ -154,11 +154,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structAsyms.add(sasym);
 	}
 
-	private Entity getEntity(String entity_id){
-		for (Entity e: entities){
-			if  (e.getId().equals(entity_id)){
-				return e;
+	private Entity getEntity(int entity_id){
+		try {
+			for (Entity e: entities){
+				int eId = Integer.parseInt(e.getId());
+				if  (eId== entity_id){
+					return e;
+				}
 			}
+		} catch (NumberFormatException e) {
+			logger.warn("Entity id does not look like a number:", e.getMessage());
 		}
 		return null;
 	}
@@ -654,11 +659,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (! eId.equals(asym.getEntity_id()))
 					continue;
 
+				int eIdInt = 0;
+				try {
+					eIdInt = Integer.parseInt(eId);
+				} catch (NumberFormatException e) {
+					logger.warn("Could not parse mol_id from string {}. Will use 0 for matching EntitySrcGen",eId);
+				}
+				
 				// found the matching EntitySrcGen
 				// get the corresponding Entity
-				Compound c = structure.getCompoundById(eId);
+				Compound c = structure.getCompoundById(eIdInt);
 				if ( c == null){
-					c = createNewCompoundFromESG(esg, eId);
+					c = createNewCompoundFromESG(esg, eIdInt);
 					// add to chain
 					List<Compound> compounds  = structure.getCompounds();
 					compounds.add(c);
@@ -676,11 +688,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (! eId.equals(asym.getEntity_id()))
 					continue;
 
+				int eIdInt = 0;
+				try {
+					eIdInt = Integer.parseInt(eId);
+				} catch (NumberFormatException e) {
+					logger.warn("Could not parse mol_id from string {}. Will use 0 for matching EntitySrcGen",eId);
+				}
 				// found the matching EntitySrcGen
 				// get the corresponding Entity
-				Compound c = structure.getCompoundById(eId);
+				Compound c = structure.getCompoundById(eIdInt);
 				if ( c == null){
-					c = createNewCompoundFromESN(esn, eId);
+					c = createNewCompoundFromESN(esn, eIdInt);
 					// add to chain
 					List<Compound> compounds  = structure.getCompounds();
 					compounds.add(c);
@@ -698,11 +716,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (! eId.equals(asym.getEntity_id()))
 					continue;
 
+				int eIdInt = 0;
+				try {
+					eIdInt = Integer.parseInt(eId);
+				} catch (NumberFormatException e) {
+					logger.warn("Could not parse mol_id from string {}. Will use 0 for matching EntitySrcGen",eId);
+				}
 				// found the matching EntitySrcGen
 				// get the corresponding Entity
-				Compound c = structure.getCompoundById(eId);
+				Compound c = structure.getCompoundById(eIdInt);
 				if ( c == null){
-					c = createNewCompoundFromESS(ess, eId);
+					c = createNewCompoundFromESS(ess, eIdInt);
 					// add to chain
 					List<Compound> compounds  = structure.getCompounds();
 					compounds.add(c);
@@ -918,11 +942,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
-	private Compound createNewCompoundFromESG(EntitySrcGen esg, String eId) {
+	private Compound createNewCompoundFromESG(EntitySrcGen esg, int eId) {
 
 		Entity e = getEntity(eId);
 		Compound c = new Compound();
 		c.setMolId(eId);
+		
 		if ( e != null)
 			c.setMolName(e.getPdbx_description());
 		c.setAtcc(esg.getPdbx_gene_src_atcc());
@@ -936,11 +961,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-	private Compound createNewCompoundFromESN(EntitySrcNat esn, String eId) {
+	private Compound createNewCompoundFromESN(EntitySrcNat esn, int eId) {
 
 		Entity e = getEntity(eId);
 		Compound c = new Compound();
+		
 		c.setMolId(eId);
+		
 		if ( e != null)
 			c.setMolName(e.getPdbx_description());
 		c.setAtcc(esn.getPdbx_atcc());
@@ -953,11 +980,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-	private Compound createNewCompoundFromESS(EntitySrcSyn ess, String eId) {
+	private Compound createNewCompoundFromESS(EntitySrcSyn ess, int eId) {
 
 		Entity e = getEntity(eId);
 		Compound c = new Compound();
+		
 		c.setMolId(eId);
+		
 		if ( e != null)
 			c.setMolName(e.getPdbx_description());
 
@@ -1354,7 +1383,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		logger.debug("NEW entity poly seq " + epolseq);
 
-		Entity e = getEntity(epolseq.getEntity_id());
+		int eId = -1;
+		try {
+			eId = Integer.parseInt(epolseq.getEntity_id());
+		} catch (NumberFormatException e) {
+			logger.warn("Could not parse entity id from EntityPolySeq: "+e.getMessage());
+		}
+		Entity e = getEntity(eId);
 
 		if (e == null){
 			logger.info("Could not find entity "+ epolseq.getEntity_id()+". Can not match sequence to it.");

@@ -25,11 +25,18 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import org.biojava.bio.structure.io.EntityFinder;
 import org.biojava.bio.structure.io.FileConvert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Implementation of a PDB Structure. This class
  * provides the data contained in a PDB file.
@@ -44,6 +51,8 @@ import org.biojava.bio.structure.io.FileConvert;
 public class StructureImpl implements Structure, Serializable {
 
 	private static final long serialVersionUID = -8344837138032851347L;
+	
+	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
 	private String pdb_id ;
 	/* models is an ArrayList of ArrayLists */
@@ -62,7 +71,11 @@ public class StructureImpl implements Structure, Serializable {
 	private Long id;
 	private boolean biologicalAssembly;
 
-
+	/**
+	 * A map of chain identifiers to entities
+	 */
+	private TreeMap<String,Entity> chainIds2entities;
+	
 	/**
 	 *  Constructs a StructureImpl object.
 	 */
@@ -264,13 +277,9 @@ public class StructureImpl implements Structure, Serializable {
 	public String getName()           { return name;  }
 
 
-
-	/** @see Structure interface.
-	 *
-	 *
-
-	 */
+	
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
+	
 	/**
 	 * Returns the connections value.
 	 *
@@ -280,17 +289,11 @@ public class StructureImpl implements Structure, Serializable {
 	 */
 	public List<Map<String,Integer>> getConnections()                { return connections ;}
 
-	/** add a new chain.
-	 *
-	 */
 	public void addChain(Chain chain) {
 		int modelnr = 0 ;
 		addChain(chain,modelnr);
 	}
-
-	/** add a new chain, if several models are available.
-	 *
-	 */
+	
 	public void addChain(Chain chain, int modelnr) {
 		// if model has not been initialized, init it!
 		chain.setParent(this);
@@ -309,13 +312,7 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-
-
-	/** retrieve a chain by it's position within the Structure.
-	 *
-	 * @param number  an int
-	 * @return a Chain object
-	 */
+	
 	public Chain getChain(int number) {
 
 		int modelnr = 0 ;
@@ -323,12 +320,7 @@ public class StructureImpl implements Structure, Serializable {
 		return getChain(modelnr,number);
 	}
 
-	/** retrieve a chain by it's position within the Structure and model number.
-	 *
-	 * @param modelnr  an int
-	 * @param number   an int
-	 * @return a Chain object
-	 */
+	
 	public Chain getChain(int modelnr,int number) {
 
 		List<Chain> model  =  models.get(modelnr);
@@ -339,9 +331,7 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-	/** add a new model.
-	 *
-	 */
+	
 	public void addModel(List<Chain> model){
 		for (Chain c: model){
     		c.setParent(this);
@@ -412,8 +402,8 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> ngr = cha.getAtomGroups("nucleotide");
 
 				str.append("chain " + j + ": >"+cha.getChainID()+"< ");
-				if ( cha.getHeader() != null){
-					Compound comp = cha.getHeader();
+				if ( cha.getCompound() != null){
+					Compound comp = cha.getCompound();
 					String molName = comp.getMolName();
 					if ( molName != null){
 						str.append(molName);
@@ -621,9 +611,9 @@ public class StructureImpl implements Structure, Serializable {
 		return compounds;
 	}
 
-	public Compound getCompoundById(String molId) {
+	public Compound getCompoundById(int molId) {
 		for (Compound mol : this.compounds){
-			if (mol.getMolId().equals(molId)){
+			if (mol.getMolId()==molId){
 				return mol;
 			}
 		}
@@ -795,4 +785,111 @@ public class StructureImpl implements Structure, Serializable {
 		return ResidueRange.toStrings(getResidueRanges());
 	}
 
+	@Override
+	public List<Entity> getEntities() {
+
+		if (chainIds2entities !=null) {
+			return findUniqueEntities();
+		}
+		
+		// if null, it hasn't been initialised yet, let's init it:		
+		chainIds2entities = new TreeMap<String,Entity>();
+
+		// finding out whether we have SEQRES: if at least 1 chain has seqres groups, we will consider true
+		boolean hasSeqRes = false;
+		for (Chain chain: getChains()) {
+			if (chain.getSeqResLength()>0) { 
+				hasSeqRes = true;
+				break;
+			}
+		}
+		
+		if (hasSeqRes) { // we have SEQRES
+
+			logger.debug("Getting entities from SEQRES sequences");
+			// map of sequences to list of chain identifiers
+			Map<String, List<String>> uniqSequences = new HashMap<String, List<String>>();
+			// finding the entities (groups of identical chains)
+			for (Chain chain:getChains()) {
+				
+				// TODO chain.getSeqResSequence() below will get 'XXXXX' sequences for nucleotides, we need to change that to get the right sequence
+				// e.g. with this procedure 1g1n results in 2 entities, where there are actually 3
+				// in the meanwhile we warn about that:
+				if (!EntityFinder.isProtein(chain)) {
+					logger.warn("Chain {} looks like a nucleotide chain, entity finding will not be accurate for  it",chain.getChainID());
+				}
+
+				String seq = chain.getSeqResSequence();
+					
+				if (uniqSequences.containsKey(seq)) {
+					uniqSequences.get(seq).add(chain.getChainID());
+				} else {
+					List<String> list = new ArrayList<String>();
+					list.add(chain.getChainID());
+					uniqSequences.put(seq, list);
+				}		
+
+			}
+
+			for (List<String> chainIds:uniqSequences.values()) {
+				// sorting ids in alphabetic order
+				Collections.sort(chainIds);
+				List<Chain> chains = new ArrayList<Chain>();
+				for (String chainId:chainIds) {
+					// chains will be sorted in ids' alphabetic order
+					try {
+						chains.add(this.getChainByPDB(chainId));
+					} catch (StructureException e) {
+						// this basically can't happen, if it does it is some kind of bug
+						logger.error("Unexpected exception!",e);
+					}
+				}
+				// the representative will be the one with first chain id in alphabetic order 
+				Entity entity = new Entity(chains.get(0), chains);
+				for (Chain member:entity.getMembers()) {
+					chainIds2entities.put(member.getChainID(), entity);
+				}
+			}
+
+		// NO SEQRES parsed
+		} else {
+			logger.debug("Getting entities from matching of ATOM sequences numbering. If you have SEQRES in your file make sure you are using the right FileParsingParams");
+
+			EntityFinder ef = new EntityFinder(this);
+			
+			chainIds2entities = ef.findEntities();
+		}
+
+		return findUniqueEntities();
+	}
+	
+	@Override
+	public Entity getEntity(String chainId) {
+		if (chainIds2entities == null) 
+			getEntities();
+		
+		return chainIds2entities.get(chainId);
+	}
+	
+	/**
+	 * Utility method to obtain a list of unique entities from the chainIds2entities map
+	 * @return
+	 */
+	private List<Entity> findUniqueEntities() {
+		
+		List<Entity> list = new ArrayList<Entity>();
+		
+		for (Entity cluster:chainIds2entities.values()) {
+			boolean present = false;
+			for (Entity cl:list) {
+				if (cl==cluster) {
+					present = true;
+					break;
+				}
+			}
+			if (!present) list.add(cluster);
+		}
+		return list;
+	} 
+	
 }
