@@ -32,17 +32,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.TaxonomyID;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.features.AbstractFeature;
+import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
@@ -140,12 +144,20 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
         @SuppressWarnings("unchecked")
         S sequence = (S) sequenceCreator.getSequence(genbankParser.getSequence(new BufferedReader(new InputStreamReader(inputStream)), 0), 0);
         genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
-        //genbankParser.getSequenceFeatureParser().parseFeatures(sequence);
+        
+        // add features to new sequence
         for (String k: genbankParser.getFeatures().keySet()){
             for (AbstractFeature f: genbankParser.getFeatures(k)){
-                //f.getLocations().setSequence(sequence);
+                //f.getLocations().setSequence(sequence);  // can't set proper sequence source to features. It is actually needed? Don't think so...
                 sequence.addFeature(f);
             }
+        }
+        
+        // add taxonomy ID to new sequence
+        ArrayList<DBReferenceInfo> dbQualifier = genbankParser.getDatabaseReferences().get("db_xref");
+        if (dbQualifier != null){
+            DBReferenceInfo q = dbQualifier.get(0);
+            sequence.setTaxonomy(new TaxonomyID(q.getDatabase()+":"+q.getId(), DataSource.GENBANK));
         }
         
     	sequences.put(sequence.getAccession().getID(), sequence);

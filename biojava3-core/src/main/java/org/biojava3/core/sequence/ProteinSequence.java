@@ -60,11 +60,13 @@ import org.slf4j.LoggerFactory;
 public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
 	private final static Logger logger = LoggerFactory.getLogger(ProteinSequence.class);
-
+        
+        /*
     private ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> features
             = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
     private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>> groupedFeatures
             = new LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>>();
+        */
 
     /**
      * Create a protein from a string
@@ -132,48 +134,6 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         setBioEnd(end);
     }
 
-    @Override
-    public void addFeature(FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> feature) {
-        features.add(feature);
-        ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> featureList = groupedFeatures.get(feature.getType());
-        if (featureList == null) {
-            featureList = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
-            groupedFeatures.put(feature.getType(), featureList);
-        }
-        featureList.add(feature);
-        Collections.sort(features, TYPE);
-        Collections.sort(featureList, TYPE);
-
-        // if feature is called 'coded_by' than add parent DNA location
-        if (feature.getType().equals("coded_by")) {
-            InsdcParser parser = new InsdcParser(DataSource.GENBANK);
-
-            Location location = parser.parse(feature.getSource());
-            // convert location into DNASequence
-            try {
-            	DNASequence dnaSeq = new DNASequence(getSequence(location), DNACompoundSet.getDNACompoundSet());
-            	setParentDNASequence(dnaSeq, location.getStart().getPosition(), location.getEnd().getPosition());
-            } catch (CompoundNotFoundException e) {
-            	// TODO is there another solution to handle this exception?
-            	logger.error("Could not add 'coded_by' parent DNA location feature, unrecognised compounds found in DNA sequence: {}",e.getMessage());
-            }
-        }
-    }
-
-    @Override
-    public List<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> getFeaturesByType(String type) {
-        List<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> features = groupedFeatures.get(type);
-        if (features == null) {
-            features = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
-        }
-        return features;
-    }
-
-    @Override
-    public List<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> getFeatures() {
-        return features;
-    }
-    
     private DNASequence getRawParentSequence(String accessId) throws IOException {
         String seqUrlTemplate = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=%s&rettype=fasta&retmode=text";
         URL url = new URL(String.format(seqUrlTemplate, accessId));
