@@ -25,17 +25,14 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
-import org.biojava.bio.structure.io.EntityFinder;
+import org.biojava.bio.structure.io.CompoundFinder;
 import org.biojava.bio.structure.io.FileConvert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of a PDB Structure. This class
@@ -52,12 +49,12 @@ public class StructureImpl implements Structure, Serializable {
 
 	private static final long serialVersionUID = -8344837138032851347L;
 	
-	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
+	//private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
 	private String pdb_id ;
 	/* models is an ArrayList of ArrayLists */
 	private List<List<Chain>> models;
-	//List<Chain> seqResList;
+
 	private List<Map <String,Integer>> connections ;
 	private List<Compound> compounds;
 	private List<DBRef> dbrefs;
@@ -71,10 +68,6 @@ public class StructureImpl implements Structure, Serializable {
 	private Long id;
 	private boolean biologicalAssembly;
 
-	/**
-	 * A map of chain identifiers to entities
-	 */
-	private TreeMap<String,Entity> chainIds2entities;
 	
 	/**
 	 *  Constructs a StructureImpl object.
@@ -90,7 +83,7 @@ public class StructureImpl implements Structure, Serializable {
         pdbHeader      = new PDBHeader();
         ssbonds        = new ArrayList<SSBond>();
         sites          = new ArrayList<Site>();
-        hetAtoms          = new ArrayList<Group>();
+        hetAtoms       = new ArrayList<Group>();
 	}
 
 	/** get the ID used by Hibernate
@@ -240,40 +233,18 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-	/**
-	 *
-	 * set PDB code of structure .
-	 * @see #getPDBCode
-	 *
-	 */
 	public void setPDBCode (String pdb_id_) {
 		pdb_id = pdb_id_ ;
 	}
-	/**
-	 *
-	 * get PDB code of structure .
-	 *
-	 * @return a String representing the PDBCode value
-	 * @see #setPDBCode
-	 */
+
 	public String  getPDBCode () {
 		return pdb_id ;
 	}
 
 
 
-	/** set biological name of Structure.
-	 *
-	 * @see #getName
-	 *
-	 */
 	public void   setName(String nam) { name = nam; }
 
-	/** get biological name of Structure.
-	 *
-	 * @return a String representing the name
-	 * @see #setName
-	 */
 	public String getName()           { return name;  }
 
 
@@ -281,7 +252,7 @@ public class StructureImpl implements Structure, Serializable {
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
 	
 	/**
-	 * Returns the connections value.
+	 * Return the connections value.
 	 *
 	 * @return a List object representing the connections value
 	 * @see Structure interface
@@ -603,11 +574,29 @@ public class StructureImpl implements Structure, Serializable {
 		return false;
 	}
 
-	public void setCompounds(List<Compound>molList){
+	public void setCompounds(List<Compound> molList){
 		this.compounds = molList;
+	}
+	
+	public void addCompound(Compound compound) {
+		this.compounds.add(compound);
 	}
 
 	public List<Compound> getCompounds() {
+		// compounds are parsed from the PDB/mmCIF file normally
+		// but if the file is incomplete, it won't have the Compounds information and we try 
+		// to guess it from the existing seqres/atom sequences
+		if (compounds==null || compounds.isEmpty()) {
+			CompoundFinder cf = new CompoundFinder(this);
+			this.compounds = cf.findCompounds();
+			
+			// now we need to set references in chains:
+			for (Compound compound:compounds) {
+				for (Chain c:compound.getChains()) {
+					c.setCompound(compound);
+				}
+			}
+		}
 		return compounds;
 	}
 
@@ -785,111 +774,4 @@ public class StructureImpl implements Structure, Serializable {
 		return ResidueRange.toStrings(getResidueRanges());
 	}
 
-	@Override
-	public List<Entity> getEntities() {
-
-		if (chainIds2entities !=null) {
-			return findUniqueEntities();
-		}
-		
-		// if null, it hasn't been initialised yet, let's init it:		
-		chainIds2entities = new TreeMap<String,Entity>();
-
-		// finding out whether we have SEQRES: if at least 1 chain has seqres groups, we will consider true
-		boolean hasSeqRes = false;
-		for (Chain chain: getChains()) {
-			if (chain.getSeqResLength()>0) { 
-				hasSeqRes = true;
-				break;
-			}
-		}
-		
-		if (hasSeqRes) { // we have SEQRES
-
-			logger.debug("Getting entities from SEQRES sequences");
-			// map of sequences to list of chain identifiers
-			Map<String, List<String>> uniqSequences = new HashMap<String, List<String>>();
-			// finding the entities (groups of identical chains)
-			for (Chain chain:getChains()) {
-				
-				// TODO chain.getSeqResSequence() below will get 'XXXXX' sequences for nucleotides, we need to change that to get the right sequence
-				// e.g. with this procedure 1g1n results in 2 entities, where there are actually 3
-				// in the meanwhile we warn about that:
-				if (!EntityFinder.isProtein(chain)) {
-					logger.warn("Chain {} looks like a nucleotide chain, entity finding will not be accurate for  it",chain.getChainID());
-				}
-
-				String seq = chain.getSeqResSequence();
-					
-				if (uniqSequences.containsKey(seq)) {
-					uniqSequences.get(seq).add(chain.getChainID());
-				} else {
-					List<String> list = new ArrayList<String>();
-					list.add(chain.getChainID());
-					uniqSequences.put(seq, list);
-				}		
-
-			}
-
-			for (List<String> chainIds:uniqSequences.values()) {
-				// sorting ids in alphabetic order
-				Collections.sort(chainIds);
-				List<Chain> chains = new ArrayList<Chain>();
-				for (String chainId:chainIds) {
-					// chains will be sorted in ids' alphabetic order
-					try {
-						chains.add(this.getChainByPDB(chainId));
-					} catch (StructureException e) {
-						// this basically can't happen, if it does it is some kind of bug
-						logger.error("Unexpected exception!",e);
-					}
-				}
-				// the representative will be the one with first chain id in alphabetic order 
-				Entity entity = new Entity(chains.get(0), chains);
-				for (Chain member:entity.getMembers()) {
-					chainIds2entities.put(member.getChainID(), entity);
-				}
-			}
-
-		// NO SEQRES parsed
-		} else {
-			logger.debug("Getting entities from matching of ATOM sequences numbering. If you have SEQRES in your file make sure you are using the right FileParsingParams");
-
-			EntityFinder ef = new EntityFinder(this);
-			
-			chainIds2entities = ef.findEntities();
-		}
-
-		return findUniqueEntities();
-	}
-	
-	@Override
-	public Entity getEntity(String chainId) {
-		if (chainIds2entities == null) 
-			getEntities();
-		
-		return chainIds2entities.get(chainId);
-	}
-	
-	/**
-	 * Utility method to obtain a list of unique entities from the chainIds2entities map
-	 * @return
-	 */
-	private List<Entity> findUniqueEntities() {
-		
-		List<Entity> list = new ArrayList<Entity>();
-		
-		for (Entity cluster:chainIds2entities.values()) {
-			boolean present = false;
-			for (Entity cl:list) {
-				if (cl==cluster) {
-					present = true;
-					break;
-				}
-			}
-			if (!present) list.add(cluster);
-		}
-		return list;
-	} 
-	
 }

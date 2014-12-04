@@ -493,23 +493,28 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public String toPDB();
 
     /** 
-     * Set the compounds
+     * Set the Compounds
      *
      * @param molList
      */
-    public void setCompounds(List<Compound>molList);
+    public void setCompounds(List<Compound> molList);
 
     /** 
-     * Get all the Compounds that are defined in the PDB Header
+     * Get all the Compounds for this Structure.
+     * Compounds are called Entities in mmCIF dictionary.
      *
-     * @return a list of compound
+     * @return a list of Compounds
      */
     public List<Compound> getCompounds();
 
+    /**
+     * Add a Compound to this Structure
+     */
+    public void addCompound(Compound compound);
+    
     /** 
      * Set the list of database references for this structure
      * @param dbrefs list of DBRef objects
-     *
      *
      */
     public void setDBRefs(List<DBRef> dbrefs);
@@ -522,7 +527,7 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public List<DBRef> getDBRefs();
 
     /** 
-     * Request a particular compound by its id
+     * Request a particular compound by its molId (entity_id in mmCIF dictionary)
      *
      * @param molId
      * @return a compound
@@ -641,18 +646,4 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public PDBCrystallographicInfo getCrystallographicInfo();
  
-    /**
-     * Return all entities (groups of sequence-identical NCS-related chains)
-     * @return
-     * @since 4.0
-     */
-    public List<Entity> getEntities();
-    
-    /**
-     * Get the entity corresponding to the given chain identifier
-     * @param chainId
-     * @return the Entity object or null if no such chain identifier exists
-     * @since 4.0
-     */
-    public Entity getEntity(String chainId);
 }

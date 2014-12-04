@@ -2975,7 +2975,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 		structure.setConnections(connects);
-		structure.setCompounds(compounds);
+		
 		structure.setDBRefs(dbrefs);
 
 		if ( params.isAlignSeqRes() ){
@@ -2992,6 +2992,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 		linkChains2Compound(structure);
+		structure.setCompounds(compounds);
+		
 		//associate the temporary Groups in the siteMap to the ones
 		 
 		linkSitesToGroups(); // will work now that setSites is called
@@ -3118,7 +3120,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @param s the structure
 	 */
 	public void linkChains2Compound(Structure s){
-		List<Compound> compounds = s.getCompounds();
+		
 
 		for(Compound comp : compounds){
 			List<Chain> chains = new ArrayList<Chain>();

@@ -133,6 +133,19 @@ public class Compound implements Serializable {
 		return buf.toString();
 	}
 
+	public Chain getRepresentative() {
+		String minChainId = "ZZZZ";
+		Chain firstLexicographicalIdChain = null;
+		for (Chain chain:chains) {
+			if (chain.getChainID().compareTo(minChainId)<0) {
+				minChainId = chain.getChainID();
+				firstLexicographicalIdChain = chain;
+			}
+		}
+		
+		return firstLexicographicalIdChain;
+	}
+	
 	/** get the ID used by Hibernate
 	 *
 	 * @return the ID used by Hibernate

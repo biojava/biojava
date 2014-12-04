@@ -15,6 +15,7 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.ExperimentalTechnique;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
@@ -195,8 +196,19 @@ public class TestLongPdbVsMmCifParsing {
 		// TODO journal article not parsed in mmCIF parser
 		//assertEquals("failed hasJournalArticle",sPdb.hasJournalArticle(),sCif.hasJournalArticle());
 		
-		// entities
-		assertEquals("failed number of entities", sPdb.getEntities().size(), sCif.getEntities().size());
+		// compounds: there's quite some inconsistencies here between pdb and cif:
+		// sugar polymers are not in pdb at all: we avoid them		
+		boolean canCompareCompoundsSize = true;
+		for (Compound compound: sCif.getCompounds()) {
+			if (compound.getMolName().contains("SUGAR")) {
+				canCompareCompoundsSize = false;
+				break;
+			}
+		}
+		
+		if (canCompareCompoundsSize)
+			assertEquals("failed number of Compounds pdb vs cif", sPdb.getCompounds().size(), sCif.getCompounds().size());
+		
 		
 	}
 	

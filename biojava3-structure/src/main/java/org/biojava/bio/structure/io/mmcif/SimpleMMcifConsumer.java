@@ -655,100 +655,82 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
 
 			
-			for (EntitySrcGen esg : entitySrcGens) {
-				String eId = esg.getEntity_id();
-				if (! eId.equals(asym.getEntity_id()))
-					continue;
-
-				int eIdInt = 0;
-				try {
-					eIdInt = Integer.parseInt(eId);
-				} catch (NumberFormatException e) {
-					logger.warn("Could not parse mol_id from string {}. Will use 0 for matching EntitySrcGen",eId);
-				}
-				
-				// found the matching EntitySrcGen
-				// get the corresponding Entity
-				Compound c = structure.getCompoundById(eIdInt);
-				if ( c == null){					
-					c = createNewCompoundFromESG(esg, eIdInt);
-					// add to chain
-					List<Compound> compounds  = structure.getCompounds();
-					compounds.add(c);
-					logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eIdInt,c.getMolName());
-				}
-
-			}
-
-			for (EntitySrcNat esn : entitySrcNats) {
-				String eId = esn.getEntity_id();
-				if (! eId.equals(asym.getEntity_id()))
-					continue;
-
-				int eIdInt = 0;
-				try {
-					eIdInt = Integer.parseInt(eId);
-				} catch (NumberFormatException e) {
-					logger.warn("Could not parse mol_id from string {}. Will use 0 for matching EntitySrcGen",eId);
-				}
-				// found the matching EntitySrcGen
-				// get the corresponding Entity
-				Compound c = structure.getCompoundById(eIdInt);
-				if ( c == null){					
-					c = createNewCompoundFromESN(esn, eIdInt);
-					// add to chain
-					List<Compound> compounds  = structure.getCompounds();
-					compounds.add(c);
-					logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eIdInt,c.getMolName());
-				}
-
-			}
-
-			for (EntitySrcSyn ess : entitySrcSyns) {
-				String eId = ess.getEntity_id();
-				if (! eId.equals(asym.getEntity_id()))
-					continue;
-
-				int eIdInt = 0;
-				try {
-					eIdInt = Integer.parseInt(eId);
-				} catch (NumberFormatException e) {
-					logger.warn("Could not parse mol_id from string {}. Will use 0 for matching EntitySrcGen",eId);
-				}
-				// found the matching EntitySrcGen
-				// get the corresponding Entity
-				Compound c = structure.getCompoundById(eIdInt);
-				if ( c == null){					
-					c = createNewCompoundFromESS(ess, eIdInt);
-					// add to chain
-					List<Compound> compounds  = structure.getCompounds();
-					compounds.add(c);
-					logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eIdInt,c.getMolName());
-				}
-			}
-			
-			// for some mmCIF files like 1yrm all 3 of _entity_src_gen, _entity_src_nat and _pdbx_entity_src_syn are missing
-			// we need to fill the Compounds in some other way:
-
 			int eId = 0;
 			try {
 				eId = Integer.parseInt(asym.getEntity_id());
 			} catch (NumberFormatException e) {
 				logger.warn("Could not parse mol_id from string {}. Will use 0 for creating Compound",asym.getEntity_id());
 			}
+			Entity e = getEntity(eId);
+			
+			for (EntitySrcGen esg : entitySrcGens) {
+
+				if (! esg.getEntity_id().equals(asym.getEntity_id()))
+					continue;
+
+				// found the matching EntitySrcGen
+				// get the corresponding Entity
+				Compound c = structure.getCompoundById(eId);
+				if ( c == null){
+					if (e!=null && e.getType().equals("polymer")) {
+						c = createNewCompoundFromESG(esg, eId);
+						c.setMolName(e.getPdbx_description());
+						structure.addCompound(c);
+						logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eId,c.getMolName());
+					}
+				}
+
+			}
+
+			for (EntitySrcNat esn : entitySrcNats) {
+				if (! esn.getEntity_id().equals(asym.getEntity_id()))
+					continue;
+
+				// found the matching EntitySrcGen
+				// get the corresponding Entity
+				Compound c = structure.getCompoundById(eId);
+				if ( c == null){		
+					if (e!=null && e.getType().equals("polymer")) {
+						c = createNewCompoundFromESN(esn, eId);
+						c.setMolName(e.getPdbx_description());
+						structure.addCompound(c);
+						logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eId,c.getMolName());
+					}
+				}
+
+			}
+
+			for (EntitySrcSyn ess : entitySrcSyns) {
+				if (! ess.getEntity_id().equals(asym.getEntity_id()))
+					continue;
+
+				// found the matching EntitySrcGen
+				// get the corresponding Entity
+				Compound c = structure.getCompoundById(eId);
+				if ( c == null){	
+					if (e!=null && e.getType().equals("polymer")) {
+						c = createNewCompoundFromESS(ess, eId);
+						c.setMolName(e.getPdbx_description());
+						structure.addCompound(c);
+						logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eId,c.getMolName());
+					}
+				}
+			}
+			
+			// for some mmCIF files like 1yrm all 3 of _entity_src_gen, _entity_src_nat and _pdbx_entity_src_syn are missing
+			// we need to fill the Compounds in some other way:
 
 			Compound c = structure.getCompoundById(eId);
 
 			if (c==null) {
 				c = new Compound();
 				c.setMolId(eId);
-				Entity e = getEntity(eId);
+
 				// we only add the compound if a polymeric one (to match what the PDB parser does)
 				if (e!=null && e.getType().equals("polymer")) {
 					if ( e != null)
 						c.setMolName(e.getPdbx_description());
-					List<Compound> compounds = structure.getCompounds();
-					compounds.add(c);
+					structure.addCompound(c);
 					logger.debug("Adding Compound with entity id {} from _entity, with name: {}",eId, c.getMolName());
 				}
 			}
@@ -978,13 +960,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	private Compound createNewCompoundFromESG(EntitySrcGen esg, int eId) {
-
-		Entity e = getEntity(eId);
+		
 		Compound c = new Compound();
 		c.setMolId(eId);
-		
-		if ( e != null)
-			c.setMolName(e.getPdbx_description());
 		c.setAtcc(esg.getPdbx_gene_src_atcc());
 		c.setCell(esg.getPdbx_gene_src_cell());
 		c.setOrganismCommon(esg.getGene_src_common_name());
@@ -998,13 +976,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	private Compound createNewCompoundFromESN(EntitySrcNat esn, int eId) {
 
-		Entity e = getEntity(eId);
 		Compound c = new Compound();
 		
 		c.setMolId(eId);
-		
-		if ( e != null)
-			c.setMolName(e.getPdbx_description());
 		c.setAtcc(esn.getPdbx_atcc());
 		c.setCell(esn.getPdbx_cell());
 		c.setOrganismCommon(esn.getCommon_name());
@@ -1017,15 +991,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	private Compound createNewCompoundFromESS(EntitySrcSyn ess, int eId) {
 
-		Entity e = getEntity(eId);
 		Compound c = new Compound();
 		
 		c.setMolId(eId);
-		
-		if ( e != null)
-			c.setMolName(e.getPdbx_description());
-
-
 		c.setOrganismCommon(ess.getOrganism_common_name());
 		c.setOrganismScientific(ess.getOrganism_scientific());
 		c.setOrganismTaxId(ess.getNcbi_taxonomy_id());
