@@ -22,31 +22,33 @@ public class LocationParserTest {
 
         assertInsdcLoc("complement(1..10)", new SimpleLocation(1, 10, Strand.NEGATIVE));
 
-        assertInsdcLoc("join(1..2,7..8)", new SimpleLocation(
+        assertInsdcLoc("join(1..2,7..8)", new InsdcLocations.GroupLocation(
                 new SimplePoint(1), new SimplePoint(8), Strand.POSITIVE,
                 new SimpleLocation(1, 2, Strand.POSITIVE),
                 new SimpleLocation(7, 8, Strand.POSITIVE)));
 
-        assertInsdcLoc("complement(join(1..2,7..8))", new SimpleLocation(
+        assertInsdcLoc("complement(join(1..2,7..8))", new InsdcLocations.GroupLocation(
                 new SimplePoint(1), new SimplePoint(8), Strand.NEGATIVE,
                 new SimpleLocation(1, 2, Strand.NEGATIVE),
                 new SimpleLocation(7, 8, Strand.NEGATIVE)));
 
         //Reverse relationship
-        assertInsdcLoc("join(complement(1..2),complement(7..8))", new SimpleLocation(
+        assertInsdcLoc("join(complement(1..2),complement(7..8))", new InsdcLocations.GroupLocation(
                 new SimplePoint(1), new SimplePoint(8), Strand.NEGATIVE,
                 new SimpleLocation(1, 2, Strand.NEGATIVE),
                 new SimpleLocation(7, 8, Strand.NEGATIVE)));
 
         //Complex sub relations
-        assertInsdcLoc("join(1..2,join(4..5,complement(6..8))", new SimpleLocation(
+        //should tests be designed for both modes?
+        //PARSER.setComplexFeaturesAppendMode(InsdcParser.complexFeaturesAppendEnum.HIERARCHICAL);
+        assertInsdcLoc("join(1..2,join(4..5,complement(6..8))", new InsdcLocations.GroupLocation(
                 new SimplePoint(1), new SimplePoint(8), Strand.UNDEFINED,
                 new SimpleLocation(1, 2, Strand.POSITIVE),
                 new SimpleLocation(4, 8, Strand.UNDEFINED,
                 new SimpleLocation(4, 5, Strand.POSITIVE),
                 new SimpleLocation(6, 8, Strand.NEGATIVE))));
 
-        assertInsdcLoc("join(5..10,1..3)", new SimpleLocation(
+        assertInsdcLoc("join(5..10,1..3)", new InsdcLocations.GroupLocation(
                 new SimplePoint(5), new SimplePoint(13), Strand.POSITIVE,
                 true, //Circular genome
                 new SimpleLocation(5, 10, Strand.POSITIVE),
@@ -74,9 +76,6 @@ public class LocationParserTest {
 
     public void assertInsdcLoc(String stringLoc, Location expected) {
         Location actual = PARSER.parse(stringLoc);
-        //should tests be designed for both modes?
-        //we should find an agreement on the final location tree. Now leaves are SequenceLocations and nodes are InsdcLocations
-        //PARSER.setComplexFeaturesAppendMode(InsdcParser.complexFeaturesAppendEnum.HIERARCHICAL);
         Assert.assertEquals("Asserting locations are the same", expected, actual);
     }
 }

@@ -54,7 +54,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
      * parse a location. if group(1) is null than the feature is on the positive
      * strand, group(2) start position, group(3) end position.
      */
-    protected static final Pattern singleLocationPattern = Pattern.compile("(?:[A-Z]([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(?:\\.\\.(>?)(\\d+)(>?))?");
+    protected static final Pattern singleLocationPattern = Pattern.compile("(?:[A-Z]([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
     /**
      * Decodes a split pattern. Split patterns are a composition of multiple
      * locationsString qualified by actions: join(location,location, ...
@@ -181,7 +181,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
             if (!splitQualifier.isEmpty()) {
                 //recursive case
                 int localVersus = splitQualifier.equalsIgnoreCase("complement") ? -1 : 1;
-                List subLocations = parseLocationString(splitString, versus * localVersus);
+                List<Location> subLocations = parseLocationString(splitString, versus * localVersus);
 
                 switch (complexFeaturesAppendMode) {
                     case FLATTEN:
@@ -194,11 +194,9 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                             Point min = Location.Tools.getMin(subLocations).getStart();
                             Point max = Location.Tools.getMax(subLocations).getEnd();
                             AbstractLocation motherLocation
-                                    = new SequenceLocation(
+                                    = new SimpleLocation(
                                             min, 
-                                            max, 
-                                            referenceSequence, 
-                                            Strand.UNDEFINED
+                                            max
                                     );
 
                             if (splitQualifier.equalsIgnoreCase("join")) {
@@ -210,7 +208,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                             if (splitQualifier.equalsIgnoreCase("bond")) {
                                 motherLocation = new InsdcLocations.BondLocation(subLocations);
                             }
-
+                            motherLocation.setStrand(getGroupLocationStrand(subLocations));
                             boundedLocationsCollection.add(motherLocation);
                         }
                     break;
@@ -226,7 +224,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                 String accession = m.group(1);
                 Strand s = versus == 1 ? Strand.POSITIVE : Strand.NEGATIVE;
                 int start = new Integer(m.group(3));
-                int end = m.group(5) == null ? start : new Integer(m.group(5));
+                int end = m.group(6) == null ? start : new Integer(m.group(6));
 
                 if (featureGlobalStart > start) {
                     featureGlobalStart = start;
@@ -235,17 +233,18 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                     featureGlobalEnd = end;
                 }
 
-                SequenceLocation l = new SequenceLocation(
+                AbstractLocation l = new SimpleLocation(
                         start,
                         end,
-                        referenceSequence,
                         s
                 );
+                
+                if(m.group(4) != null && m.group(4).equals("^")) l.setBetweenCompounds(true);
 
                 if (m.group(2).equals("<")) {
                     l.setPartialOn5prime(true);
                 }
-                if (m.group(4) != null && (m.group(4).equals(">") || m.group(6).equals(">"))) {
+                if (m.group(5) != null && (m.group(5).equals(">") || m.group(7).equals(">"))) {
                     l.setPartialOn3prime(true);
                 }
                 
@@ -281,6 +280,17 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
         }
         return result;
     }
+    
+    private Strand getGroupLocationStrand(List<Location> ll){
+        Strand returnStrand = null;
+        
+        for (Location l: ll) {
+            if (returnStrand == null) returnStrand = l.getStrand();
+            if (returnStrand != l.getStrand()) return Strand.UNDEFINED;
+        }
+        return returnStrand;
+    }
+    
     public static void main(String args[]){
         String[] testStrings = {
             "J00194.1:100..202",

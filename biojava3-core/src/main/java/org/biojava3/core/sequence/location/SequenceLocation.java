@@ -35,9 +35,6 @@ import org.biojava3.core.sequence.location.template.Point;
  */
 public class SequenceLocation<S extends AbstractSequence<C>, C extends Compound> extends SimpleLocation {
     private S sequence;
-
-    private boolean partialOn5prime = false;
-    private boolean partialOn3prime = false;
     
     public SequenceLocation(int start, int end,S sequence){
         super(start,end);
@@ -75,27 +72,4 @@ public class SequenceLocation<S extends AbstractSequence<C>, C extends Compound>
     public void setSequence(S sequence) {
         this.sequence = sequence;
     }
-    
-    
-    public boolean isPartialOn5prime() {
-        return partialOn5prime;
-    }
-
-    public void setPartialOn5prime(boolean partialOn5prime) {
-        this.partialOn5prime = partialOn5prime;
-    }
-
-    public boolean isPartialOn3prime() {
-        return partialOn3prime;
-    }
-
-    public void setPartialOn3prime(boolean partialOn3prime) {
-        this.partialOn3prime = partialOn3prime;
-    }
-    
-    public boolean isPartial() {
-        return partialOn5prime || partialOn3prime;
-    }
-
-
 }

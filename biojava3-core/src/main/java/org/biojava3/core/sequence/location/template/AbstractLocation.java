@@ -60,6 +60,9 @@ public abstract class AbstractLocation implements Location {
     private boolean circular;
     private boolean betweenCompounds;
     private AccessionID accession;
+    
+    private boolean partialOn5prime = false;
+    private boolean partialOn3prime = false;
    
 
 
@@ -184,6 +187,26 @@ public abstract class AbstractLocation implements Location {
     @Override
 	public AccessionID getAccession() {
         return accession;
+    }
+    
+    public boolean isPartialOn5prime() {
+        return partialOn5prime;
+    }
+
+    public void setPartialOn5prime(boolean partialOn5prime) {
+        this.partialOn5prime = partialOn5prime;
+    }
+
+    public boolean isPartialOn3prime() {
+        return partialOn3prime;
+    }
+
+    public void setPartialOn3prime(boolean partialOn3prime) {
+        this.partialOn3prime = partialOn3prime;
+    }
+    
+    public boolean isPartial() {
+        return partialOn5prime || partialOn3prime;
     }
 
     /**
@@ -361,11 +384,11 @@ public abstract class AbstractLocation implements Location {
         this.start = start;
     }
 
-    protected void setStrand(Strand strand) {
+    public void setStrand(Strand strand) {
         this.strand = strand;
     }
 
-    protected void setBetweenCompounds(boolean betweenCompounds) {
+    public void setBetweenCompounds(boolean betweenCompounds) {
         this.betweenCompounds = betweenCompounds;
     }
 
