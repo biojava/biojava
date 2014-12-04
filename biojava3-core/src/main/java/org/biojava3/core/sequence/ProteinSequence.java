@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
  * The representation of a ProteinSequence
  *
  * @author Scooter Willis
+ * @author Paolo Pavan
  */
 public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 

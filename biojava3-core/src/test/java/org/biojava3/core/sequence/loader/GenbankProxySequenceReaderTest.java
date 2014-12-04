@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
  * Testing example for issue #834
  *
  * @author Jacek Grzebyta
+ * @author Paolo Pavan
  * @see InfoTask
  */
 @RunWith(Parameterized.class)
@@ -57,6 +58,7 @@ public class GenbankProxySequenceReaderTest {
                                                                     this.gi, 
                                                                     AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
+        // why only tests on protein sequences?
         ProteinSequence seq = new ProteinSequence(genbankReader, AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
         Assert.assertNotNull("protein sequence is null", seq);

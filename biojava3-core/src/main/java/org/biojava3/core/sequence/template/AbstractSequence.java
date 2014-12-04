@@ -20,7 +20,8 @@
  * Created on 01-21-2010
  *
  * @author Richard Holland
- * @auther Scooter Willis
+ * @author Scooter Willis
+ * @author Paolo Pavan
  *
  */
 package org.biojava3.core.sequence.template;
