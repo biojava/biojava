@@ -250,7 +250,7 @@ public class MultiThreadedDBSearch {
 				ConfigStrucAligParams params = algorithm.getParameters();
 				if ( params instanceof CeParameters){
 					CeParameters ceParams = (CeParameters) params;
-					if ( ceParams.getScoringStrategy() != CeParameters.DEFAULT_SCORING_STRATEGY) {
+					if ( ceParams.getScoringStrategy() != CeParameters.ScoringStrategy.DEFAULT_SCORING_STRATEGY) {
 						String scoring = "#param:scoring=" + ceParams.getScoringStrategy();
 						out.write(scoring);
 						out.write(AFPChain.newline);

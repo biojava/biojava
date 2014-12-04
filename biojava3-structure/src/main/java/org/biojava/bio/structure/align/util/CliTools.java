@@ -304,4 +304,33 @@ public class CliTools {
 
 		return (String[]) anonArgs.toArray(new String[anonArgs.size()]);
 	}
+
+	/**
+	 * Constructs a comma-separated list of values for an enum.
+	 * 
+	 * Example:
+	 * > getEnumValues(ScoringStrategy.class)
+	 * "CA_SCORING, SIDE_CHAIN_SCORING, SIDE_CHAIN_ANGLE_SCORING, CA_AND_SIDE_CHAIN_ANGLE_SCORING, or SEQUENCE_CONSERVATION"
+	 * @param enumClass
+	 * @return
+	 */
+	public static <T extends Enum<?>> String getEnumValuesAsString(Class<T> enumClass) {
+		//ScoringStrategy[] vals = ScoringStrategy.values();
+		T[] vals = enumClass.getEnumConstants();
+
+		StringBuilder str = new StringBuilder();
+		if(vals.length == 1) {
+			str.append(vals[0].name());
+		} else if(vals.length > 1 ) {
+			for(int i=0;i<vals.length-1;i++) {
+				str.append(vals[i].name());
+				str.append(", ");
+			}
+			str.append("or ");
+			str.append(vals[vals.length-1].name());
+		}
+
+		return str.toString();
+	}
+
 }

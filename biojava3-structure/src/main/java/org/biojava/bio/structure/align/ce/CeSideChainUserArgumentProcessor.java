@@ -14,7 +14,7 @@ public class CeSideChainUserArgumentProcessor extends CeUserArgumentProcessor {
 	   
 		CeParameters params = new CeParameters();
 	
-		params.setScoringStrategy(CeParameters.SIDE_CHAIN_SCORING);
+		params.setScoringStrategy(CeParameters.ScoringStrategy.SIDE_CHAIN_SCORING);
 		//params.setMaxGapSize(0);
 		return params;
 	}

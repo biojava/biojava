@@ -35,7 +35,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -53,6 +52,7 @@ import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
+import org.biojava.bio.structure.align.ce.CeParameters.ScoringStrategy;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -135,17 +135,28 @@ public class DBResultTable implements ActionListener{
 				else if ( str.startsWith("#param:scoring=")){
 					try {
 						String[] spl = str.split("=");
-						String scoreS = spl[1];
-						int scoring = Integer.parseInt(scoreS);
+						ScoringStrategy scoreS;
+						try {
+							// try to convert from integer score
+							int stratNum = Integer.parseInt(spl[1]);
+							ScoringStrategy[] vals = ScoringStrategy.values();
+							scoreS = vals[stratNum];//throws OutOfBounds if invalid; caught below
+						} catch(NumberFormatException e) {
+							scoreS = ScoringStrategy.valueOf(spl[1]); //
+						}
 						if (algorithm != null){
 							// scoring is a parameter of CE...
 							ConfigStrucAligParams params = algorithm.getParameters();
 							if ( params instanceof CeParameters){
 								CeParameters ceParams = (CeParameters) params;
-								ceParams.setScoringStrategy(scoring);
+								ceParams.setScoringStrategy(scoreS);
 							}
 						}
-					} catch (Exception e){
+					} catch (IndexOutOfBoundsException e){
+						System.err.println("Unknown scoring strategy from line: " + str);
+					} catch (IllegalArgumentException e) {
+						System.err.println("Unknown scoring strategy from line: " + str);
+					} catch (Exception e) {
 						System.err.println("Unknown parameter can't read parameters from line: " + str);
 						e.printStackTrace();
 					}

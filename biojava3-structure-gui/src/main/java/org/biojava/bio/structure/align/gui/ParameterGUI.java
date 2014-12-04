@@ -92,13 +92,7 @@ public class ParameterGUI extends JFrame{
 
 			String data = value.toString();
 			Component field;
-			if ( key.equals(CeParameters.SCORING_STRATEGY) ){
-				String[] values = new String[]{"CA only","Sidechain orientation","Angle between sidechains", "CA distance+Angle between sidechains","Sequence Conservation"};
-				JComboBox jcbox = new JComboBox(values);
-				Integer val = (Integer)value;
-				jcbox.setSelectedIndex(val);
-				field = jcbox;
-			} else if ( type.isEnum() ) {
+			if ( type.isEnum() ) {
 				Object[] values = type.getEnumConstants();
 				JComboBox jcbox = new JComboBox(values);
 				jcbox.setSelectedItem(value);
@@ -197,11 +191,7 @@ public class ParameterGUI extends JFrame{
 			Class type = types.get(i);
 			Object data = getValue(keys.get(i));
 			String name = keys.get(i);
-			if ( name.equals(CeParameters.SCORING_STRATEGY)){
-				JComboBox field = (JComboBox)  textFields.get(i);
-				field.setSelectedIndex((Integer)data);
-				field.updateUI();
-			} else if( type.isEnum()) {
+			if( type.isEnum()) {
 				JComboBox field = (JComboBox)  textFields.get(i);
 				field.setSelectedItem(data);
 				field.updateUI();
@@ -253,11 +243,7 @@ public class ParameterGUI extends JFrame{
 			// String name = keys.get(i);
 			String value = null;
 			System.out.println(key);
-			if ( key.equals(CeParameters.SCORING_STRATEGY)){
-				JComboBox field = (JComboBox)  textFields.get(i);
-				Integer sel = field.getSelectedIndex();
-				value = sel.toString();
-			} else if( type.isEnum() ) {
+			if( type.isEnum() ) {
 				JComboBox field = (JComboBox)  textFields.get(i);
 				Enum sel = (Enum)field.getSelectedItem();
 				value = sel.name();

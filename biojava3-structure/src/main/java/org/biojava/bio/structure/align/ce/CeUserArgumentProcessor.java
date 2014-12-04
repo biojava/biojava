@@ -26,6 +26,7 @@ package org.biojava.bio.structure.align.ce;
 
 
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.ce.CeParameters.ScoringStrategy;
 
 /** process the arguments from command line
  * 
@@ -37,7 +38,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 	protected class CeStartupParams extends StartupParameters {
 		protected int maxGapSize;
 		protected int winSize;
-		protected int scoringStrategy;
+		protected ScoringStrategy scoringStrategy;
 		protected double maxOptRMSD;
 		protected double gapOpen;
 		protected double gapExtension;
@@ -47,7 +48,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 			super();
 			maxGapSize = 30;
 			winSize = 8;
-			scoringStrategy = CeParameters.DEFAULT_SCORING_STRATEGY;
+			scoringStrategy = CeParameters.ScoringStrategy.DEFAULT_SCORING_STRATEGY;
 			showAFPRanges = false;
 			maxOptRMSD = 99d;
 			gapOpen = CeParameters.DEFAULT_GAP_OPEN;
@@ -62,11 +63,11 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 			this.winSize = winSize;
 		}
 
-		public int getScoringStrategy() {
+		public ScoringStrategy getScoringStrategy() {
 			return scoringStrategy;
 		}
 
-		public void setScoringStrategy(int scoringStrategy) {
+		public void setScoringStrategy(ScoringStrategy scoringStrategy) {
 			this.scoringStrategy = scoringStrategy;
 		}
 
