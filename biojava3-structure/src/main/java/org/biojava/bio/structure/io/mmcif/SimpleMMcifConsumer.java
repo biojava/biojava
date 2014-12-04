@@ -859,10 +859,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				String entityId = asymId2entityId.get(chain.getInternalChainID());
 				int eId = Integer.parseInt(entityId);
 				Compound compound = structure.getCompoundById(eId);
-				logger.debug("Adding chain with chain id {} (internal chain id {}) to compound with entity_id {}",
-						chain.getChainID(), chain.getInternalChainID(), eId);
-				compound.addChain(chain);
-				chain.setCompound(compound);
+				if (compound==null) {
+					logger.warn("Could not find a compound for entity_id {} for adding chain id {} (internal chain id {}) to it",
+							eId,chain.getChainID(),chain.getInternalChainID());
+				} else {
+					logger.debug("Adding chain with chain id {} (internal chain id {}) to compound with entity_id {}",
+							chain.getChainID(), chain.getInternalChainID(), eId);
+					compound.addChain(chain);
+					chain.setCompound(compound);
+				}
 
 			}			
 			

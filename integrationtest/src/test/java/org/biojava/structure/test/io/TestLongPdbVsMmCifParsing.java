@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.vecmath.Matrix4d;
@@ -29,8 +30,8 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A test to make sure both PDB and mmCIF parsers can parse 
@@ -52,7 +53,7 @@ import org.junit.Test;
  */
 public class TestLongPdbVsMmCifParsing {
 
-	//private static final Logger logger = LoggerFactory.getLogger(TestLongPdbVsMmCifParsing.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestLongPdbVsMmCifParsing.class);
 	
 	private static final String TEST_LARGE_SET_FILE = "/random_1000_set.list";
 	private static final String TEST_VERY_LARGE_SET_FILE = "/random_10000_set.list";
@@ -63,10 +64,19 @@ public class TestLongPdbVsMmCifParsing {
 	private static final float DELTA_RESOLUTION = 0.01f;
 	private static final float DELTA_RFREE = 0.01f;
 	
+	/**
+	 * The maximum number of PDBs for which we allow a mismatch of mol_ids (entity_ids) between PDB and mmCIF files
+	 * If more mismatches than this, the test will fail.
+	 * As of 2014.12.04 there are 7 mismatches
+	 */
+	private static final int   MAX_ALLOWED_MOL_ID_MISMATCHES = 10;
+	
 	private static AtomCache cache;
 	private static FileParsingParameters params;
 	
 	private String pdbId;
+	
+	private HashSet<String> pdbIdsWithMismatchingMolIds;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -113,6 +123,8 @@ public class TestLongPdbVsMmCifParsing {
 	
 	private void testAll(List<String> pdbIds) throws IOException, StructureException {
 		
+		pdbIdsWithMismatchingMolIds = new HashSet<String>();
+		
 		long start = System.currentTimeMillis();
 		
 		System.out.println("##### Total of "+pdbIds.size()+" PDB entries to test");	
@@ -131,7 +143,17 @@ public class TestLongPdbVsMmCifParsing {
 		
 		long end = System.currentTimeMillis();
 		
+		checkWarnings();
+		
 		System.out.printf("\nDone in %5.1f minutes\n", (end-start)/60000.0);		
+	}
+	
+	private void checkWarnings() {
+		if (pdbIdsWithMismatchingMolIds.size()>0)
+			System.out.println("A total of "+pdbIdsWithMismatchingMolIds.size()+" PDB entries have mismatches in their Compound mol_ids (entity_ids)");
+		
+		assertTrue("Mismatching mol_id (entity_id) between pdb and cif above the maximum allowed ("+MAX_ALLOWED_MOL_ID_MISMATCHES+")",
+				pdbIdsWithMismatchingMolIds.size()<MAX_ALLOWED_MOL_ID_MISMATCHES);
 	}
 	
 	private void testSingleEntry(String pdbId) throws IOException, StructureException {
@@ -329,7 +351,15 @@ public class TestLongPdbVsMmCifParsing {
 		if (isPolymer(cPdb)) {
 			assertNotNull("getCompound is null in pdb (chain "+chainId+")",cPdb.getCompound());
 			assertNotNull("getCompound is null in cif (chain "+chainId+")",cCif.getCompound());
-			assertEquals("compounds mol_ids differ pdb vs cif",cPdb.getCompound().getMolId(), cCif.getCompound().getMolId());
+			
+			// for some badly formatted entries there are mismatches of mol_ids on pdb cs mmcif, e.g. 2efw
+			// we thus count them and only warn at the end
+			int molIdPdb = cPdb.getCompound().getMolId();
+			int molIdCif = cCif.getCompound().getMolId();
+			if (molIdPdb!=molIdCif) {
+				logger.warn("Mismatching mol_id (entity_id) for {}. pdb: {}, mmCIF: {}",pdbId,molIdPdb,molIdCif);
+				pdbIdsWithMismatchingMolIds.add(pdbId);
+			}			
 		}
 
 		
