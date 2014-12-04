@@ -34,8 +34,8 @@ import java.util.List;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
- * For polymers (protein/nucleotides) a Molecule maps to the concept of Entity, i.e.
- * each group of sequence identical NCS-related polymer chains 
+ * In mmCIF dictionary, it is called an Entity. In the case of polymers it
+ * is defined as each group of sequence identical NCS-related chains 
  *
  * Now PDB file format 3.2 aware - contains the new TAX_ID fields for the
  * organism studied and the expression system.
@@ -44,7 +44,7 @@ import java.util.List;
  * @author Jose Duarte
  * @since 1.5
  */
-public class Compound implements Cloneable, Serializable {
+public class Compound implements Serializable {
 	
 	//private final static Logger logger = LoggerFactory.getLogger(Compound.class);
 
@@ -57,14 +57,7 @@ public class Compound implements Cloneable, Serializable {
 	private List<Chain> chains;
 	
 	/**
-	 * The list of chain IDs that are described by this Compound
-	 * Note that this information is redundant, it is contained in 
-	 * <code>chains</code>, but it's useful for mapping at parse time
-	 */
-	private List<String> chainIds; 
-		
-	/**
-	 * The Molecule identifier
+	 * The Molecule identifier, called entity_id in mmCIF dictionary
 	 */
 	private int molId;
 
@@ -129,10 +122,10 @@ public class Compound implements Cloneable, Serializable {
 		buf.append("Compound: " + molId+" ");
 		buf.append(molName==null?"(no name)":"("+molName+")");
 		buf.append(" chains: ");
-		if (chainIds!=null) {
-			for (int i=0;i<chainIds.size();i++) {
-				buf.append(chainIds.get(i));
-				if (i!=chainIds.size()-1) buf.append(",");
+		if (chains!=null) {
+			for (int i=0;i<chains.size();i++) {
+				buf.append(chains.get(i).getChainID());
+				if (i!=chains.size()-1) buf.append(",");
 			}
 		} else {
 			buf.append("no chains");
@@ -171,8 +164,13 @@ public class Compound implements Cloneable, Serializable {
 		if (this.molId != -1) {
 			System.out.println("Mol ID: " + this.molId);
 		}
-		if (this.chainIds != null) {
-			System.out.println("Chains: " + this.chainIds);
+		if (this.chains != null) {
+			StringBuilder buf = new StringBuilder();
+			for (int i=0;i<chains.size();i++) {
+				buf.append(chains.get(i).getChainID());
+				if (i!=chains.size()-1) buf.append(",");
+			}
+			System.out.println("Chains: " + buf.toString());
 		}
 		if (this.molName != null) {
 			System.out.println("Mol Name: " + this.molName);
@@ -316,21 +314,15 @@ public class Compound implements Cloneable, Serializable {
 	/**
 	 * Return the list of member chain IDs that are described by this Compound 
 	 * @return the list of ChainIDs that are described by this Compound
-	 * @see #setChainIds(List)
 	 * @see #setChains(List)
-	 */
-	public List<String> getChainIds() {
-		return chainIds;
-	}
-
-	/**
-	 * Set the list of member chain IDs that are described by this Compound.
-	 * @param chainIds  the list of ChainIDs that are described by this Compound
-	 * @see #getChainIds()
 	 * @see #getChains()
 	 */
-	public void setChainIds(List<String> chainIds) {
-		this.chainIds = chainIds;
+	public List<String> getChainIds() {
+		List<String> chainIds = new ArrayList<String>();
+		for (int i=0;i<chains.size();i++) {
+			chainIds.add(chains.get(i).getChainID());			
+		}
+		return chainIds;
 	}
 
 	/**
@@ -352,8 +344,8 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Return the mol id value.
-	 * @return the MolId value
+	 * Return the molecule identifier, called entity_id in mmCIF dictionary.
+	 * @return the molecule id
 	 * @see #setMolId(int)
 	 */
 	public int getMolId() {
@@ -361,8 +353,8 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Set the mol id value.
-	 * @param molId the MolId value
+	 * Set the molecule identifier, called entity_id in mmCIF dictionary.
+	 * @param molId the molecule id
 	 * @see #getMolId()
 	 */
 	public void setMolId(int molId) {
@@ -713,11 +705,6 @@ public class Compound implements Cloneable, Serializable {
 		this.expressionSystemOtherDetails = expressionSystemOtherDetails;
 	}
 
-	public Compound clone() throws CloneNotSupportedException {
-		Compound newMolId = (Compound) super.clone();
-		return newMolId;
-	}
-
 	/** 
 	 * Get the list of chains that are part of this Compound
 	 *
@@ -735,6 +722,10 @@ public class Compound implements Cloneable, Serializable {
 		this.chains.add(chain);		
 	}
 
+	/**
+	 * Set the chains for this Compound
+	 * @param chains
+	 */
 	public void setChains(List<Chain> chains){
 		this.chains = chains;
 	}

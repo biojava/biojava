@@ -180,6 +180,7 @@ public class PDBFileParser  {
 	private boolean isLastSourceLine = false;
 	private Compound current_compound;
 	private List<Compound> compounds = new ArrayList<Compound>();
+	private HashMap<Integer,List<String>> compoundMolIds2chainIds = new HashMap<Integer, List<String>>();
 	private List<String> compndLines = new ArrayList<String>();
 	private List<String> sourceLines = new ArrayList<String>();
 	private List<String> journalLines = new ArrayList<String>();
@@ -1120,7 +1121,7 @@ public class PDBFileParser  {
 					chainID = " ";
 				chains.add(chainID);
 			}
-			current_compound.setChainIds(chains);
+			compoundMolIds2chainIds.put(current_compound.getMolId(),chains);
 
 		}
 		if (field.equals("SYNONYM:")) {
@@ -3121,7 +3122,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		for(Compound comp : compounds){
 			List<Chain> chains = new ArrayList<Chain>();
-			List<String> chainIds = comp.getChainIds();
+			List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
 			if ( chainIds == null)
 				continue;
 			for ( String chainId : chainIds) {
@@ -3143,26 +3144,23 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if ( compounds.size() == 1) {
 			Compound comp = compounds.get(0);
-			if ( comp.getChainIds() == null){
+			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null){
 				List<Chain> chains = s.getChains(0);
 				if ( chains.size() == 1) {
 					// this is an old style PDB file - add the ChainI
 					Chain ch = chains.get(0);
-					List <String> chainIds = new ArrayList<String>();
-					chainIds.add(ch.getChainID());
-					comp.setChainIds(chainIds);
 					comp.addChain(ch);
 				}
 			}
 		}
 
 		for (Compound comp: compounds){
-			if ( comp.getChainIds() == null) {
+			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null) {
 				// could not link to chain
 				// TODO: should this be allowed to happen?
 				continue;
 			}
-			for ( String chainId : comp.getChainIds()){
+			for ( String chainId : compoundMolIds2chainIds.get(comp.getMolId())){
 				if ( chainId.equals("NULL"))
 					continue;
 				try {
