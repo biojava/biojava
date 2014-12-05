@@ -197,6 +197,12 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 	}
 	
+	/**
+	 * Calculate the interface clusters for this StructureInterfaceList 
+	 * using a contact overlap score to measure the similarity of interfaces.
+	 * Subsequent calls will use the cached value without recomputing the clusters.
+	 * @return
+	 */
 	public List<StructureInterfaceCluster> getClusters() {
 		if (clusters!=null) {
 			return clusters;

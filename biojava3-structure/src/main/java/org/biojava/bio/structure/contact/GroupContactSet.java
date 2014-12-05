@@ -76,14 +76,37 @@ public class GroupContactSet implements Iterable<GroupContact>{
 		contacts.put(getResNumberPairFromContact(groupContact),groupContact);
 	}
 	
+	/**
+	 * Tell whether the given group pair is a contact in this GroupContactSet,
+	 * the comparison is done by matching residue numbers and chain identifiers
+	 * @param group1
+	 * @param group2
+	 * @return
+	 */
 	public boolean hasContact(Group group1, Group group2) {
 		return hasContact(group1.getResidueNumber(),group2.getResidueNumber());
 	}
 	
+	/**
+	 * Tell whether the given pair is a contact in this GroupContactSet,
+	 * the comparison is done by matching residue numbers and chain identifiers
+	 * @param resNumber1
+	 * @param resNumber2
+	 * @return
+	 */
 	public boolean hasContact(ResidueNumber resNumber1, ResidueNumber resNumber2) {
 		return contacts.containsKey(new Pair<ResidueNumber>(resNumber1, resNumber2));
 	}
 	
+	/**
+	 * Tell whether the given pair is a contact in this GroupContactSet,
+	 * in a chain-identifier independent way: contacts happening between different copies of 
+	 * the same Compound(Entity) will be considered equal as long as they have the same
+	 * residue numbers.
+	 * @param resId1
+	 * @param resId2
+	 * @return
+	 */
 	public boolean hasContact(ResidueIdentifier resId1, ResidueIdentifier resId2) {
 		if (residueIdContacts == null) {
 			initResidueIdContacts();

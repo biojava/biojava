@@ -531,7 +531,10 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		Structure otherStruct = other.getParentStructure();
 		
 		if (thisStruct!=otherStruct) {
-			logger.debug("Comparing interfaces from different structures, contact overlap score will be 0");
+			// in the current implementation, comparison between different structure doesn't make much sense 
+			// and won't even work since the compounds of both will never match. We warn because it 
+			// really is not what this is intended for at the moment
+			logger.warn("Comparing interfaces from different structures, contact overlap score will be 0");
 			return 0;
 		}
 		
