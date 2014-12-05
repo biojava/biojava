@@ -3,6 +3,7 @@ package org.biojava.bio.structure.contact;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -246,6 +247,20 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 				interf.setCluster(cluster);
 			}
 		}		
+		
+		// now we sort by areas (descending) and assign ids based on that sorting
+		Collections.sort(clusters, new Comparator<StructureInterfaceCluster>() {
+			@Override
+			public int compare(StructureInterfaceCluster o1, StructureInterfaceCluster o2) {
+				return Double.compare(o2.getTotalArea(), o1.getTotalArea()); //note we invert so that sorting is descending
+			}
+		});
+		int id = 1;
+		for (StructureInterfaceCluster cluster:clusters) {
+			cluster.setId(id);
+			id++;
+		}
+		
 		
 		return clusters;
 	}

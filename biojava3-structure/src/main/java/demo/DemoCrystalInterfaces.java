@@ -135,6 +135,7 @@ public class DemoCrystalInterfaces {
 		
 		System.out.println("Interface clusters (one per line): ");
 		for (StructureInterfaceCluster cluster:clusters) {
+			System.out.print(cluster.getId()+": ");
 			for (StructureInterface member:cluster.getMembers()) {
 				System.out.print(member.getId()+" ");
 			}

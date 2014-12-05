@@ -9,6 +9,8 @@ public class StructureInterfaceCluster implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
+	private int id;
+	
 	private List<StructureInterface> members;
 	
 	
@@ -27,5 +29,25 @@ public class StructureInterfaceCluster implements Serializable {
 
 	public boolean addMember(StructureInterface interf) {
 		return this.members.add(interf);
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	/**
+	 * Return the average buried surface area for this interface cluster
+	 * @return
+	 */
+	public double getTotalArea() {
+		double area = 0;
+		for (StructureInterface interf:members) {
+			area+=interf.getTotalArea();
+		}
+		return area/(double)members.size();
 	}
 }
