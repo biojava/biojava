@@ -131,6 +131,12 @@ public class DemoCrystalInterfaces {
 					cores.getSecond().size());
 			System.out.printf("Interface area: %8.2f\n",interf.getTotalArea());
 			
+			if (interf.isIsologous()) {
+				System.out.println("Isologous");
+			} else {
+				System.out.println("Heterologous");
+			}
+			
 		}
 		
 		System.out.println("Interface clusters (one per line): ");

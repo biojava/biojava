@@ -35,6 +35,11 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	
 	private static final Logger logger = LoggerFactory.getLogger(StructureInterface.class);
 	
+	/**
+	 * Interfaces with larger inverse self contact overlap score will be considered isologous 
+	 */
+	private static final double SELF_SCORE_FOR_ISOLOGOUS = 0.3;
+	
 	private int id;
 	private double totalArea;
 	private AtomContactSet contacts;
@@ -593,6 +598,19 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			this.groupContacts  = new GroupContactSet(contacts);
 		}
 		return this.groupContacts;
+	}
+	
+	/**
+	 * Tell whether the interface is isologous, i.e. it is formed
+	 * by the same patches of same Compound on both sides.
+	 * 
+	 * @return true if isologous, false if heterologous
+	 */
+	public boolean isIsologous() {
+		double scoreInverse = this.getContactOverlapScore(this, true);
+		logger.debug("Interface {} contact overlap score with itself inverted: {}",
+				getId(), scoreInverse);
+		return (scoreInverse>SELF_SCORE_FOR_ISOLOGOUS);
 	}
 	
 	private Pair<Chain> getParentChains() {
