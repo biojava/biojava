@@ -13,6 +13,7 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.contact.AtomContact;
 import org.biojava.bio.structure.contact.Pair;
 import org.biojava.bio.structure.contact.StructureInterface;
+import org.biojava.bio.structure.contact.StructureInterfaceCluster;
 import org.biojava.bio.structure.contact.StructureInterfaceList;
 import org.biojava.bio.structure.xtal.CrystalBuilder;
 import org.biojava.bio.structure.xtal.CrystalTransform;
@@ -74,6 +75,7 @@ public class DemoCrystalInterfaces {
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(CUTOFF);
 		interfaces.calcAsas(N_SPHERE_POINTS, NTHREADS, CONSIDER_COFACTORS);
 		interfaces.removeInterfacesBelowArea(MIN_AREA_TO_KEEP);
+		List<StructureInterfaceCluster> clusters = interfaces.getClusters(); 
 
 		
 		//interfaces.initialiseClusters(pdb, CLUSTERING_CUTOFF, MINATOMS_CLUSTERING, "CA");
@@ -129,7 +131,13 @@ public class DemoCrystalInterfaces {
 			
 		}
 		
-
+		System.out.println("Interface clusters (one per line): ");
+		for (StructureInterfaceCluster cluster:clusters) {
+			for (StructureInterface member:cluster.getMembers()) {
+				System.out.print(member.getId()+" ");
+			}
+			System.out.println();
+		}
 
 	}
 

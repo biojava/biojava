@@ -36,9 +36,13 @@ public class AtomContactSet implements Iterable<AtomContact> {
 	}
 	
 	public boolean hasContact(Atom atom1, Atom atom2) {
-		return contacts.containsKey(new Pair<AtomIdentifier>(
+		return hasContact(
 					new AtomIdentifier(atom1.getPDBserial(),atom1.getGroup().getChainId()),
-					new AtomIdentifier(atom2.getPDBserial(),atom2.getGroup().getChainId()) ));
+					new AtomIdentifier(atom2.getPDBserial(),atom2.getGroup().getChainId()) );
+	}
+	
+	public boolean hasContact(AtomIdentifier atomId1, AtomIdentifier atomId2) {
+		return contacts.containsKey(new Pair<AtomIdentifier>(atomId1,atomId2));
 	}
 
 	/**

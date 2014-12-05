@@ -7,18 +7,21 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.asa.AsaCalculator;
 import org.biojava.bio.structure.asa.GroupAsa;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.xtal.CrystalTransform;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * An interface between 2 molecules (2 sets of atoms).
@@ -35,6 +38,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	private int id;
 	private double totalArea;
 	private AtomContactSet contacts;
+	private GroupContactSet groupContacts;
 	
 	private Pair<Atom[]> molecules;
 
@@ -51,6 +55,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		
 	private Map<ResidueNumber, GroupAsa> groupAsas1;
 	private Map<ResidueNumber, GroupAsa> groupAsas2;
+	
+	private StructureInterfaceCluster cluster;
 	
 	/**
 	 * Constructs a StructureInterface
@@ -497,6 +503,113 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		}
 		
 		return new Pair<List<Group>>(surf1, surf2);		
+	}
+	
+	public StructureInterfaceCluster getCluster() {
+		return cluster;
+	}
+	
+	public void setCluster(StructureInterfaceCluster cluster) {
+		this.cluster = cluster;
+	}
+	
+	/**
+	 * Calculates the contact overlap score between this StructureInterface and
+	 * the given one. 
+	 * The two sides of the given StructureInterface need to match this StructureInterface
+	 * in the sense that they must come from the same Compound (Entity), i.e.
+	 * their residue numbers need to align with 100% identity, except for unobserved 
+	 * density residues.
+	 * @param other
+	 * @param invert if false the comparison will be done first-to-first and second-to-second, 
+	 * if true the match will be first-to-second and second-to-first
+	 * @return the contact overlap score, range [0.0,1.0]
+	 */
+	public double getContactOverlapScore(StructureInterface other, boolean invert) {
+		
+		Structure thisStruct = getParentStructure();
+		Structure otherStruct = other.getParentStructure();
+		
+		if (thisStruct!=otherStruct) {
+			logger.debug("Comparing interfaces from different structures, contact overlap score will be 0");
+			return 0;
+		}
+		
+		Pair<Chain> thisChains = getParentChains();
+		Pair<Chain> otherChains = other.getParentChains();
+		
+		Pair<Compound> thisCompounds = new Pair<Compound>(thisChains.getFirst().getCompound(), thisChains.getSecond().getCompound());
+		Pair<Compound> otherCompounds = new Pair<Compound>(otherChains.getFirst().getCompound(), otherChains.getSecond().getCompound());
+		
+		if ( (  (thisCompounds.getFirst() == otherCompounds.getFirst()) &&
+				(thisCompounds.getSecond() == otherCompounds.getSecond())   )  ||
+			 (  (thisCompounds.getFirst() == otherCompounds.getSecond()) &&
+				(thisCompounds.getSecond() == otherCompounds.getFirst())   )	) {
+		
+			int common = 0;
+			GroupContactSet thisContacts = getGroupContacts();
+			GroupContactSet otherContacts = other.getGroupContacts();
+
+			for (GroupContact thisContact:thisContacts) {
+
+				ResidueIdentifier first = null;
+				ResidueIdentifier second = null;
+
+				if (!invert) {
+					first = new ResidueIdentifier(
+							thisContact.getPair().getFirst().getResidueNumber().getSeqNum(), 
+							thisContact.getPair().getFirst().getResidueNumber().getInsCode());
+					
+					second = new ResidueIdentifier( 
+							thisContact.getPair().getSecond().getResidueNumber().getSeqNum(), 
+							thisContact.getPair().getSecond().getResidueNumber().getInsCode());
+				} else {
+					first = new ResidueIdentifier( 
+							thisContact.getPair().getSecond().getResidueNumber().getSeqNum(), 
+							thisContact.getPair().getSecond().getResidueNumber().getInsCode());
+					second = new ResidueIdentifier(
+							thisContact.getPair().getFirst().getResidueNumber().getSeqNum(), 
+							thisContact.getPair().getFirst().getResidueNumber().getInsCode());
+				}
+
+				if (otherContacts.hasContact(first,second)) {
+					common++;
+				} 
+			}
+			return (2.0*common)/(thisContacts.size()+otherContacts.size());	
+		} else {
+			logger.debug("Chain pairs {},{} and {},{} belong to different compound pairs, contact overlap score will be 0 ",
+					thisChains.getFirst().getChainID(),thisChains.getSecond().getChainID(),
+					otherChains.getFirst().getChainID(),otherChains.getSecond().getChainID());
+			return 0.0;
+		}
+	}
+	
+	public GroupContactSet getGroupContacts() {		
+		if (groupContacts==null) {
+			this.groupContacts  = new GroupContactSet(contacts);
+		}
+		return this.groupContacts;
+	}
+	
+	private Pair<Chain> getParentChains() {
+		Atom[] firstMol = this.molecules.getFirst();
+		Atom[] secondMol = this.molecules.getSecond();
+		if (firstMol.length==0 || secondMol.length==0) {
+			logger.warn("No atoms found in first or second molecule, can't get parent Chains");
+			return null;
+		}
+		
+		return new Pair<Chain>(firstMol[0].getGroup().getChain(), secondMol[0].getGroup().getChain());
+	}
+	
+	private Structure getParentStructure() {
+		Atom[] firstMol = this.molecules.getFirst();
+		if (firstMol.length==0) {
+			logger.warn("No atoms found in first molecule, can't get parent Structure");
+			return null;
+		}
+		return firstMol[0].getGroup().getChain().getParent();
 	}
 	
 	@Override

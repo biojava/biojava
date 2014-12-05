@@ -1,6 +1,7 @@
 package org.biojava.bio.structure.contact;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.biojava.bio.structure.Atom;
@@ -16,6 +17,11 @@ import org.biojava.bio.structure.ResidueNumber;
 public class GroupContactSet implements Iterable<GroupContact>{ 
 
 	private HashMap<Pair<ResidueNumber>, GroupContact> contacts;
+	
+	/**
+	 * A cached HashSet to be used only if hasContact(Pair<ResidueIdentifier>) is called
+	 */
+	private HashSet<Pair<ResidueIdentifier>> residueIdContacts;
 	
 	public GroupContactSet() {
 		contacts = new HashMap<Pair<ResidueNumber>, GroupContact>();
@@ -71,8 +77,31 @@ public class GroupContactSet implements Iterable<GroupContact>{
 	}
 	
 	public boolean hasContact(Group group1, Group group2) {
-		return contacts.containsKey(
-				new Pair<ResidueNumber>(group1.getResidueNumber(),group2.getResidueNumber()));
+		return hasContact(group1.getResidueNumber(),group2.getResidueNumber());
+	}
+	
+	public boolean hasContact(ResidueNumber resNumber1, ResidueNumber resNumber2) {
+		return contacts.containsKey(new Pair<ResidueNumber>(resNumber1, resNumber2));
+	}
+	
+	public boolean hasContact(ResidueIdentifier resId1, ResidueIdentifier resId2) {
+		if (residueIdContacts == null) {
+			initResidueIdContacts();
+		}
+		
+		return residueIdContacts.contains(new Pair<ResidueIdentifier>(resId1, resId2));		
+	}
+	
+	private void initResidueIdContacts() {
+		residueIdContacts = new HashSet<Pair<ResidueIdentifier>>();
+		for (Pair<ResidueNumber> pairResNum:contacts.keySet()) {
+			ResidueNumber resNumFirst = pairResNum.getFirst();
+			ResidueNumber resNumSecond = pairResNum.getSecond();
+			residueIdContacts.add(new Pair<ResidueIdentifier>(
+					new ResidueIdentifier(resNumFirst.getSeqNum(), resNumFirst.getInsCode()),
+					new ResidueIdentifier(resNumSecond.getSeqNum(), resNumSecond.getInsCode())
+					) ); 
+		}
 	}
 	
 	/**
