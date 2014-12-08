@@ -29,7 +29,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava.bio.structure.io.CompoundFinder;
 import org.biojava.bio.structure.io.FileConvert;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
 /**
  * Implementation of a PDB Structure. This class
  * provides the data contained in a PDB file.
@@ -44,11 +48,13 @@ import org.biojava.bio.structure.io.FileConvert;
 public class StructureImpl implements Structure, Serializable {
 
 	private static final long serialVersionUID = -8344837138032851347L;
+	
+	//private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
 	private String pdb_id ;
 	/* models is an ArrayList of ArrayLists */
 	private List<List<Chain>> models;
-	//List<Chain> seqResList;
+
 	private List<Map <String,Integer>> connections ;
 	private List<Compound> compounds;
 	private List<DBRef> dbrefs;
@@ -62,7 +68,7 @@ public class StructureImpl implements Structure, Serializable {
 	private Long id;
 	private boolean biologicalAssembly;
 
-
+	
 	/**
 	 *  Constructs a StructureImpl object.
 	 */
@@ -77,7 +83,7 @@ public class StructureImpl implements Structure, Serializable {
         pdbHeader      = new PDBHeader();
         ssbonds        = new ArrayList<SSBond>();
         sites          = new ArrayList<Site>();
-        hetAtoms          = new ArrayList<Group>();
+        hetAtoms       = new ArrayList<Group>();
 	}
 
 	/** get the ID used by Hibernate
@@ -227,52 +233,26 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-	/**
-	 *
-	 * set PDB code of structure .
-	 * @see #getPDBCode
-	 *
-	 */
 	public void setPDBCode (String pdb_id_) {
 		pdb_id = pdb_id_ ;
 	}
-	/**
-	 *
-	 * get PDB code of structure .
-	 *
-	 * @return a String representing the PDBCode value
-	 * @see #setPDBCode
-	 */
+
 	public String  getPDBCode () {
 		return pdb_id ;
 	}
 
 
 
-	/** set biological name of Structure.
-	 *
-	 * @see #getName
-	 *
-	 */
 	public void   setName(String nam) { name = nam; }
 
-	/** get biological name of Structure.
-	 *
-	 * @return a String representing the name
-	 * @see #setName
-	 */
 	public String getName()           { return name;  }
 
 
-
-	/** @see Structure interface.
-	 *
-	 *
-
-	 */
+	
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
+	
 	/**
-	 * Returns the connections value.
+	 * Return the connections value.
 	 *
 	 * @return a List object representing the connections value
 	 * @see Structure interface
@@ -280,17 +260,11 @@ public class StructureImpl implements Structure, Serializable {
 	 */
 	public List<Map<String,Integer>> getConnections()                { return connections ;}
 
-	/** add a new chain.
-	 *
-	 */
 	public void addChain(Chain chain) {
 		int modelnr = 0 ;
 		addChain(chain,modelnr);
 	}
-
-	/** add a new chain, if several models are available.
-	 *
-	 */
+	
 	public void addChain(Chain chain, int modelnr) {
 		// if model has not been initialized, init it!
 		chain.setParent(this);
@@ -309,13 +283,7 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-
-
-	/** retrieve a chain by it's position within the Structure.
-	 *
-	 * @param number  an int
-	 * @return a Chain object
-	 */
+	
 	public Chain getChain(int number) {
 
 		int modelnr = 0 ;
@@ -323,12 +291,7 @@ public class StructureImpl implements Structure, Serializable {
 		return getChain(modelnr,number);
 	}
 
-	/** retrieve a chain by it's position within the Structure and model number.
-	 *
-	 * @param modelnr  an int
-	 * @param number   an int
-	 * @return a Chain object
-	 */
+	
 	public Chain getChain(int modelnr,int number) {
 
 		List<Chain> model  =  models.get(modelnr);
@@ -339,9 +302,7 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-	/** add a new model.
-	 *
-	 */
+	
 	public void addModel(List<Chain> model){
 		for (Chain c: model){
     		c.setParent(this);
@@ -412,8 +373,8 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> ngr = cha.getAtomGroups("nucleotide");
 
 				str.append("chain " + j + ": >"+cha.getChainID()+"< ");
-				if ( cha.getHeader() != null){
-					Compound comp = cha.getHeader();
+				if ( cha.getCompound() != null){
+					Compound comp = cha.getCompound();
 					String molName = comp.getMolName();
 					if ( molName != null){
 						str.append(molName);
@@ -613,17 +574,35 @@ public class StructureImpl implements Structure, Serializable {
 		return false;
 	}
 
-	public void setCompounds(List<Compound>molList){
+	public void setCompounds(List<Compound> molList){
 		this.compounds = molList;
+	}
+	
+	public void addCompound(Compound compound) {
+		this.compounds.add(compound);
 	}
 
 	public List<Compound> getCompounds() {
+		// compounds are parsed from the PDB/mmCIF file normally
+		// but if the file is incomplete, it won't have the Compounds information and we try 
+		// to guess it from the existing seqres/atom sequences
+		if (compounds==null || compounds.isEmpty()) {
+			CompoundFinder cf = new CompoundFinder(this);
+			this.compounds = cf.findCompounds();
+			
+			// now we need to set references in chains:
+			for (Compound compound:compounds) {
+				for (Chain c:compound.getChains()) {
+					c.setCompound(compound);
+				}
+			}
+		}
 		return compounds;
 	}
 
-	public Compound getCompoundById(String molId) {
+	public Compound getCompoundById(int molId) {
 		for (Compound mol : this.compounds){
-			if (mol.getMolId().equals(molId)){
+			if (mol.getMolId()==molId){
 				return mol;
 			}
 		}

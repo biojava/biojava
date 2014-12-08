@@ -112,7 +112,7 @@ public class SeqRes2AtomAligner {
 			}
 		}
 
-		//System.err.println("could not match seqres chainID >" + seqRes.getChainID() + "< to ATOM chains!  " + atomList.size());
+		logger.debug("Could not match SEQRES chainID >" + seqRes.getChainID() + "< to ATOM chains!, size of atom chain: " + atomList.size());
 		return null;
 	}
 
@@ -132,9 +132,9 @@ public class SeqRes2AtomAligner {
 					continue;
 				mapSeqresRecords(atomRes,seqRes);
 
-				//chains.add(mapped);
+				//chains.add(mapped); 
 			} catch (StructureException e){
-				e.printStackTrace();
+				logger.error("Exception caught ", e);
 			}
 		}
 		//s.setChains(0,chains);
@@ -155,7 +155,8 @@ public class SeqRes2AtomAligner {
 
 
 		
-		logger.debug("COMPARING " + atomRes.getChainID() + " (" + atmResGroups.size()+") " + seqRes.getChainID() + " (" +seqResGroups.size() +") ");
+		logger.debug("Comparing ATOM {} ({}) to SEQRES {} ({}) ", 
+				atomRes.getChainID(), atmResGroups.size(), seqRes.getChainID(), seqResGroups.size());
 		
 
 		List<Group> matchedGroups = trySimpleMatch(seqResGroups, atmResGroups);
@@ -172,24 +173,24 @@ public class SeqRes2AtomAligner {
 
 			if ( seqRes.getAtomGroups(GroupType.NUCLEOTIDE).size() > 1) {
 				
-				logger.debug("chain " + seqRes.getChainID() + " is a nucleotide chain, aligning nucs...");
+				logger.debug("Chain {} is a nucleotide chain, aligning nucleotides...", seqRes.getChainID());
 				
 				align2NucleotideChains(seqRes,atomRes);
 				return;
 			} else {
 				
-				logger.debug("chain " + seqRes.getChainID() + " does not contain amino acids, ignoring...");
+				logger.debug("Chain {} does not contain amino acids, ignoring...", seqRes.getChainID());
 				
 				return;
 			}
 		}
 
 		if ( atomRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
-			logger.debug("chain " + atomRes.getChainID() + " does not contain amino acids, ignoring...");
+			logger.debug("Chain {} does not contain amino acids, ignoring...", atomRes.getChainID());
 			return;
 		}
 		
-		logger.debug("Alignment for chain "+ atomRes.getChainID() );
+		logger.debug("Alignment for chain {}", atomRes.getChainID() );
 
 
 		boolean noMatchFound = align(seqResGroups,atomRes.getAtomGroups());
@@ -202,11 +203,11 @@ public class SeqRes2AtomAligner {
 	private void align2NucleotideChains(Chain seqRes, Chain atomRes) throws StructureException {
 
 		if ( atomRes.getAtomGroups(GroupType.NUCLEOTIDE).size() < 1) {
-			logger.debug("chain " + atomRes.getChainID() + " does not contain nucleotides, ignoring...");
+			logger.debug("Chain {} does not contain nucleotides, ignoring...", atomRes.getChainID());
 			
 			return;
 		}
-		logger.debug("Alignment for chain "+ atomRes.getChainID() );
+		logger.debug("Alignment for chain {}", atomRes.getChainID() );
 
 		List<Group> seqResGroups = seqRes.getAtomGroups();
 		boolean noMatchFound = alignNucleotideGroups(seqResGroups,atomRes.getAtomGroups());
@@ -253,7 +254,7 @@ public class SeqRes2AtomAligner {
 
 
 			if ( seqResPos < 0) {
-				logger.debug("ATOM residue number < 0");
+				logger.debug("ATOM residue number < 0 : {}", seqResPos);
 				return null;
 			}
 
@@ -265,8 +266,8 @@ public class SeqRes2AtomAligner {
 					startAt1 = false;
 				} else {
 					
-					logger.debug("SEQRES position 1  ("+seqResGroup.getPDBName()+
-								") does not match ATOM PDB res num 0 (" + atomResGroup.getPDBName()+")");
+					logger.debug("SEQRES position 1 ({}) does not match ATOM PDB res num 0 ({})",
+							seqResGroup.getPDBName(), atomResGroup.getPDBName());
 
 					
 					return null;
@@ -319,7 +320,7 @@ public class SeqRes2AtomAligner {
 
 			// the two groups are identical and we can merge them
 			// replace the SEQRES group with the ATOM group...
-			logger.debug("merging " + seqResPos + " " + atomResGroup);
+			logger.debug("merging {} {}", seqResPos, atomResGroup);
 			newSeqResGroups.set(seqResPos, atomResGroup);
 
 		}

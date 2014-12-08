@@ -180,6 +180,7 @@ public class PDBFileParser  {
 	private boolean isLastSourceLine = false;
 	private Compound current_compound;
 	private List<Compound> compounds = new ArrayList<Compound>();
+	private HashMap<Integer,List<String>> compoundMolIds2chainIds = new HashMap<Integer, List<String>>();
 	private List<String> compndLines = new ArrayList<String>();
 	private List<String> sourceLines = new ArrayList<String>();
 	private List<String> journalLines = new ArrayList<String>();
@@ -281,7 +282,7 @@ public class PDBFileParser  {
 
 	}
 
-	FileParsingParameters params;
+	private FileParsingParameters params;
 
 	public PDBFileParser() {
 		params = new FileParsingParameters();
@@ -1091,7 +1092,7 @@ public class PDBFileParser  {
 			try {
 				i = Integer.valueOf(value);
 			} catch (NumberFormatException e){
-				logger.warn(e.getMessage() + " while trying to parse COMPND line.");
+				logger.warn(e.getMessage() + " while trying to parse COMPND MOL_ID line.");
 			}
 			if (molTypeCounter != i) {
 				molTypeCounter++;
@@ -1102,7 +1103,7 @@ public class PDBFileParser  {
 
 			}
 
-			current_compound.setMolId(value);
+			current_compound.setMolId(i);
 		}
 		if (field.equals("MOLECULE:")) {
 			current_compound.setMolName(value);
@@ -1120,7 +1121,7 @@ public class PDBFileParser  {
 					chainID = " ";
 				chains.add(chainID);
 			}
-			current_compound.setChainId(chains);
+			compoundMolIds2chainIds.put(current_compound.getMolId(),chains);
 
 		}
 		if (field.equals("SYNONYM:")) {
@@ -2974,15 +2975,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 		structure.setConnections(connects);
-		structure.setCompounds(compounds);
+		
 		structure.setDBRefs(dbrefs);
 
 		if ( params.isAlignSeqRes() ){
-
+			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
 
 		} else if ( params.getStoreEmptySeqRes() ){
+			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
 			// user wants to know about the seqres, but not align them
 
 			storeUnAlignedSeqRes(structure, seqResChains);
@@ -2990,6 +2992,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 		linkChains2Compound(structure);
+		structure.setCompounds(compounds);
+		
 		//associate the temporary Groups in the siteMap to the ones
 		 
 		linkSitesToGroups(); // will work now that setSites is called
@@ -3116,11 +3120,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @param s the structure
 	 */
 	public void linkChains2Compound(Structure s){
-		List<Compound> compounds = s.getCompounds();
+		
 
 		for(Compound comp : compounds){
 			List<Chain> chains = new ArrayList<Chain>();
-			List<String> chainIds = comp.getChainId();
+			List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
 			if ( chainIds == null)
 				continue;
 			for ( String chainId : chainIds) {
@@ -3134,7 +3138,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (StructureException e){
 					// usually if this happens something is wrong with the PDB header
 					// e.g. 2brd - there is no Chain A, although it is specified in the header
-					e.printStackTrace();
+					logger.error("Unexpected exception",e);
 				}
 			}
 			comp.setChains(chains);
@@ -3142,33 +3146,30 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if ( compounds.size() == 1) {
 			Compound comp = compounds.get(0);
-			if ( comp.getChainId() == null){
+			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null){
 				List<Chain> chains = s.getChains(0);
 				if ( chains.size() == 1) {
 					// this is an old style PDB file - add the ChainI
 					Chain ch = chains.get(0);
-					List <String> chainIds = new ArrayList<String>();
-					chainIds.add(ch.getChainID());
-					comp.setChainId(chainIds);
 					comp.addChain(ch);
 				}
 			}
 		}
 
 		for (Compound comp: compounds){
-			if ( comp.getChainId() == null) {
+			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null) {
 				// could not link to chain
 				// TODO: should this be allowed to happen?
 				continue;
 			}
-			for ( String chainId : comp.getChainId()){
+			for ( String chainId : compoundMolIds2chainIds.get(comp.getMolId())){
 				if ( chainId.equals("NULL"))
 					continue;
 				try {
 					Chain c = s.getChainByPDB(chainId);
-					c.setHeader(comp);
+					c.setCompound(comp);
 				} catch (StructureException e){
-					e.printStackTrace();
+					logger.error("Unexpected exception",e);
 				}
 			}
 		}

@@ -27,49 +27,57 @@ package org.biojava.bio.structure.io;
 
 
 
+import java.io.IOException;
+
 import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava3.structure.StructureIO;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class TestMMcifOrganismParsing extends TestCase{
+
+public class TestMMcifOrganismParsing {
 	
 	
 	
-	@Override
-	protected void setUp() throws Exception {
-		
-		super.setUp();
-		
+	@BeforeClass
+	public static void setUp() throws Exception {
+				
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 	}
 
-	public void test1STP(){
+	@Test
+	public void test1STP() throws IOException, StructureException{
 		String pdbId = "1stp";
 		
 		checkPDB(pdbId);
 		
 	}
-	
-	public void test1a4w(){
+
+	// removed this test, since entity 3 of 1a4w has no organism tax_id
+	public void test1a4w() throws IOException, StructureException{
 		String pdbId = "1a4w";
 		
 		checkPDB(pdbId);
 		
 	}
 	
-	public void test4hhb(){
+	@Test
+	public void test4hhb() throws IOException, StructureException{
 		String pdbId = "4hhb";
 		
 		checkPDB(pdbId);
 		
 	}
 	
-	public void test3ZD6(){
+	@Test
+	public void test3ZD6() throws IOException, StructureException {
 		// a PDB ID that contains a synthetic entity
 		String pdbId = "3ZD6";
 		
@@ -80,24 +88,16 @@ public class TestMMcifOrganismParsing extends TestCase{
 	
 	
 
-	private void checkPDB(String pdbId) {
-		try {
+	private void checkPDB(String pdbId) throws IOException, StructureException {
 		Structure s = StructureIO.getStructure(pdbId);
-		
+
 		assertNotNull(s.getCompounds());
 		assertTrue(s.getCompounds().size() > 0);
-		
+
 		for ( Compound c : s.getCompounds()) {
 			assertNotNull(c.getOrganismTaxId());
 		}
-		
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-		
-		
-		
+
 	}
 
 }

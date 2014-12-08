@@ -169,7 +169,8 @@ public void calcPhiPsi({@link Structure} structure){
 public interface Structure extends Cloneable, StructureIdentifier {
 
 
-	/** returns an identical copy of this Structure object
+	/** 
+	 * Return an identical copy of this Structure object
 	 *
 	 * @return identical copy of this Structure object
 	 */
@@ -181,32 +182,31 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public String toString();
 
     /**
-     *
-     * set PDB code of structure .
+     * Set PDB code of structure .
      *
      * @param pdb_id  a String specifying the PDBCode
      * @see #getPDBCode
-     *
      */
     public void setPDBCode (String pdb_id) ;
 
     /**
-     *
-     * get PDB code of structure.
+     * Get PDB code of structure.
      *
      * @return a String representing the PDBCode value
      * @see #setPDBCode
      */
     public String  getPDBCode () ;
 
-    /** set biological name of Structure .
+    /** 
+     * Set biological name of Structure .
      *
      * @param name  a String specifying the biological name of the Structure
      * @see #getName
      */
     public void setName(String name);
 
-    /** get biological name of Structure.
+    /** 
+     * Get biological name of Structure.
      *
      * @return a String representing the biological name of the Structure
      * @see #setName
@@ -326,7 +326,8 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public void setModel(int position, List<Chain> model);
 
-    /** retrieve all Chains belonging to a model .
+    /** 
+     * Retrieve all Chains belonging to a model .
      * @see #getChains(int modelnr)
      *
      * @param modelnr  an int
@@ -335,7 +336,8 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public List<Chain> getModel(int modelnr);
 
-    /** retrieve all chains - if it is a NMR structure will return the chains of the first model.
+    /** 
+     * Retrieve all chains - if it is a NMR structure will return the chains of the first model.
      * This is the same as getChains(0);
      * @see #getModel(int modelnr)
      * @see #getChains(int modelnr)
@@ -345,7 +347,8 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public List<Chain> getChains();
 
 
-    /** set the chains of a structure, if this is a NMR structure,
+    /** 
+     * Set the chains of a structure, if this is a NMR structure,
      * this will only set model 0.
      *
      * @see #setChains(int, List)
@@ -354,7 +357,8 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public void setChains(List<Chain> chains);
 
-    /** retrieve all chains of a model.
+    /** 
+     * Retrieve all chains of a model.
      * @see #getModel
      *
      * @param modelnr  an int
@@ -362,33 +366,38 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public List<Chain> getChains(int modelnr);
 
-    /** set the chains for a model
+    /** 
+     * Set the chains for a model
      * @param chains
      * @param modelnr
      */
     public void setChains( int modelnr, List<Chain> chains);
 
-    /** add a new chain.
+    /** 
+     * Add a new chain.
      *
      * @param chain  a Chain object
      */
     public void addChain(Chain chain);
 
-    /** add a new chain, if several models are available.
+    /** 
+     * Add a new chain, if several models are available.
      *
      * @param chain    a Chain object
      * @param modelnr  an int specifying to which model the Chain should be added
      */
     public void addChain(Chain chain, int modelnr);
 
-    /** retrieve a chain by its position within the Structure .
+    /** 
+     * Retrieve a chain by its position within the Structure .
      *
      * @param pos  an int for the position in the List of Chains.
      * @return a Chain object
     */
     public Chain getChain(int pos);
 
-    /** retrieve a chain by its position within the Structure and model number.
+    /** 
+     * Retrieve a chain by its position within the Structure and model number.
      *
      * @param pos      an int
      * @param modelnr  an int
@@ -398,7 +407,8 @@ public interface Structure extends Cloneable, StructureIdentifier {
 
 
 
-    /** request a particular chain from a structure.
+    /** 
+     * Request a particular chain from a structure.
      * by default considers only the first model.
      * @param chainId the ID of a chain that should be returned
      * @return Chain the requested chain
@@ -408,14 +418,16 @@ public interface Structure extends Cloneable, StructureIdentifier {
     throws StructureException;
 
 
-    /** check if a chain with the id chainId is contained in this structure.
+    /** 
+     * Check if a chain with the id chainId is contained in this structure.
      *
      * @param chainId the name of the chain
      * @return true if a chain with the id (name) chainId is found
      */
     public boolean hasChain(String chainId);
 
-    /** request a particular chain from a particular model
+    /** 
+     * Request a particular chain from a particular model
      * @param modelnr the number of the model to use
      * @param chainId the ID of a chain that should be returned
      * @return Chain the requested chain
@@ -424,18 +436,19 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public Chain findChain(String chainId, int modelnr)
     throws StructureException;
 
-    /** request a particular group from a structure.
-    * by default considers only the first model in the structure.
-    * @param chainId the ID of the chain to use
-    * @param pdbResnum the PDB residue number of the requested group
-    * @return Group the requested Group
-    * @throws StructureException
-    *
-    */
+    /** 
+     * Request a particular group from a structure.
+     * by default considers only the first model in the structure.
+     * @param chainId the ID of the chain to use
+     * @param pdbResnum the PDB residue number of the requested group
+     * @return Group the requested Group
+     * @throws StructureException
+     */
     public  Group findGroup(String chainId, String pdbResnum)
-    throws StructureException;
+    		throws StructureException;
 
-    /** request a particular group from a structure.
+    /** 
+     * Request a particular group from a structure.
      * considers only model nr X. count starts with 0.
      * @param chainId the ID of the chain to use
      * @param pdbResnum the PDB residue number of the requested group
@@ -447,7 +460,8 @@ public interface Structure extends Cloneable, StructureIdentifier {
      throws StructureException;
 
 
-     /** request a chain by its PDB code
+     /** 
+      * Request a chain by its PDB code
       * by default takes only the first model
       *
       * @param chainId the chain identifier
@@ -457,7 +471,8 @@ public interface Structure extends Cloneable, StructureIdentifier {
      public Chain getChainByPDB(String chainId)
          throws StructureException;
 
-     /** request a chain by its PDB code
+     /** 
+      * Request a chain by its PDB code
       * by default takes only the first model
       *
       * @param chainId the chain identifier
@@ -469,54 +484,66 @@ public interface Structure extends Cloneable, StructureIdentifier {
          throws StructureException;
 
 
-    /** create a String that contains the contents of a PDB file .
+    /** 
+     * Create a String that contains the contents of a PDB file .
      *
      * @return a String that looks like a PDB file
      * @see FileConvert
      */
     public String toPDB();
 
-    /** set the compounts
+    /** 
+     * Set the Compounds
      *
      * @param molList
      */
-    public void setCompounds(List<Compound>molList);
+    public void setCompounds(List<Compound> molList);
 
-    /** get all the Compounds that are defined in the PDB Header
+    /** 
+     * Get all the Compounds for this Structure.
+     * Compounds are called Entities in mmCIF dictionary.
      *
-     * @return a list of compound
+     * @return a list of Compounds
      */
     public List<Compound> getCompounds();
 
-    /** set the list of database references for this structure
+    /**
+     * Add a Compound to this Structure
+     */
+    public void addCompound(Compound compound);
+    
+    /** 
+     * Set the list of database references for this structure
      * @param dbrefs list of DBRef objects
-     *
      *
      */
     public void setDBRefs(List<DBRef> dbrefs);
 
-    /** get the list of database references
+    /** 
+     * Get the list of database references
      *
      * @return list of DBRef objects
      */
     public List<DBRef> getDBRefs();
 
-    /** request a particular compound by its id
+    /** 
+     * Request a particular compound by its molId (entity_id in mmCIF dictionary)
      *
      * @param molId
      * @return a compound
      */
-    public Compound getCompoundById(String molId);
+    public Compound getCompoundById(int molId);
 
 
-    /** return the header information for this PDB file
+    /** 
+     * Return the header information for this PDB file
      *
      * @return the PDBHeader object
      */
     public PDBHeader getPDBHeader();
 
     /**
-     * return whether or not the entry has an associated journal article
+     * Return whether or not the entry has an associated journal article
      * or publication. The JRNL section is not mandatory and thus may not be
      * present.
      * @return flag if a JournalArticle has been found.
@@ -524,44 +551,49 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public boolean hasJournalArticle();
 
     /**
-     * get the associated publication as defined by the JRNL records in a PDB
+     * Get the associated publication as defined by the JRNL records in a PDB
      * file.
      * @return a JournalArticle
      */
     public JournalArticle getJournalArticle();
 
     /**
-     * set the associated publication as defined by the JRNL records in a PDB
+     * Set the associated publication as defined by the JRNL records in a PDB
      * file.
      * @param journalArticle
      */
     public void setJournalArticle(JournalArticle journalArticle);
 
-    /** get the list of SSBonds as they have been defined in the PDB files
+    /** 
+     * Get the list of SSBonds as they have been defined in the PDB files
      *
      * @return a list of SSBonds
      */
     public List<SSBond> getSSBonds();
 
-    /** set the list of SSBonds for this structure
+    /** 
+     * Set the list of SSBonds for this structure
      *
      * @param ssbonds
      */
     public void setSSBonds(List<SSBond> ssbonds);
 
-    /** add a single SSBond to this structure
+    /** 
+     * Add a single SSBond to this structure
      *
      * @param ssbond
      */
     public void addSSBond(SSBond ssbond);
 
-    /** the the header information for this PDB file
+    /** 
+     * Set the the header information for this PDB file
      *
      * @param header the PDBHeader object
      */
     public void setPDBHeader(PDBHeader header);
 
-    /** get the ID used by Hibernate
+    /** 
+     * Get the ID used by Hibernate
      *
      * @return the ID used by Hibernate
      */
@@ -586,31 +618,32 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public List<Group> getHetGroups();
     
     /**
-     * Sets a flag to indicate if this structure is a biological assembly
+     * Set a flag to indicate if this structure is a biological assembly
      * @param biologicalAssembly true if biological assembly, otherwise false
      * @since 3.2
      */
     public void setBiologicalAssembly(boolean biologicalAssembly);
 
     /**
-     * Gets flag that indicates if this structure is a biological assembly
+     * Get flag that indicates if this structure is a biological assembly
      * @return  true if biological assembly, otherwise false
      * @since 3.2
      */
     public boolean isBiologicalAssembly();
 
     /**
-     * Sets crystallographic information for this structure
+     * Set crystallographic information for this structure
      * @param PDBCrystallographicInfo crystallographic information
      * @since 3.2
      */
     
     public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo);
+    
     /**
-     * Gets crystallographic information for this structure
+     * Get crystallographic information for this structure
      * @return PDBCrystallographicInfo crystallographic information
      * @since 3.2
      */
     public PDBCrystallographicInfo getCrystallographicInfo();
-    
+ 
 }

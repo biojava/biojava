@@ -56,35 +56,33 @@ public class ChainImpl implements Chain, Serializable {
 
 	private final static Logger logger = LoggerFactory.getLogger(ChainImpl.class);
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1990171805277911840L;
 
-	/** The default chain identifier is an empty space.
-	 *
+	/**
+	 * The default chain identifier used to be an empty space
 	 */
 	public static String DEFAULT_CHAIN_ID = "A";
 
-	String swissprot_id ;
-	String name ; // like in PDBfile
-	List <Group> groups;
-
-
-	protected List<Group> seqResGroups;
+	private String swissprot_id ;
+	private String chainID ; // the chain identifier as in PDB files
+	
+	private List <Group> groups;
+	private List<Group> seqResGroups;
+	
 	private Long id;
-	Compound mol;
-	Structure parent;
+	private Compound mol;
+	private Structure parent;
 
-	Map<String, Integer> pdbResnumMap;
-	String internalChainID;
+	private Map<String, Integer> pdbResnumMap;
+	private String internalChainID; // the chain identifier used in mmCIF files
+	
 	/**
 	 *  Constructs a ChainImpl object.
 	 */
 	public ChainImpl() {
 		super();
 
-		name = DEFAULT_CHAIN_ID;
+		chainID = DEFAULT_CHAIN_ID;
 		groups = new ArrayList<Group>() ;
 
 		seqResGroups = new ArrayList<Group>();
@@ -136,7 +134,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		n.setChainID( getChainID());
 		n.setSwissprotId ( getSwissprotId());
-		n.setHeader(this.getHeader());
+		n.setCompound(this.getCompound());
 		n.setInternalChainID(internalChainID);
 
 		for (int i=0;i<groups.size();i++){
@@ -180,14 +178,14 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
-	public void setHeader(Compound mol) {
+	public void setCompound(Compound mol) {
 		this.mol = mol;
 	}
 
 	/** {@inheritDoc}
 	 *
 	 */
-	public Compound getHeader() {
+	public Compound getCompound() {
 		return this.mol;
 	}
 
@@ -388,7 +386,7 @@ public class ChainImpl implements Chain, Serializable {
 
 			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
 				if ( ! adding)
-					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
+					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
 				adding = false;
 				break;
 			}
@@ -404,7 +402,7 @@ public class ChainImpl implements Chain, Serializable {
 		}
 
 		if ( ! foundStart){
-			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
+			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
 		}
 
 
@@ -434,7 +432,7 @@ public class ChainImpl implements Chain, Serializable {
 			Integer pos = (Integer) pdbResnumMap.get(pdbresnum);
 			return (Group) groups.get(pos.intValue());
 		} else {
-			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + name);
+			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + chainID);
 		}
 	}
 
@@ -479,17 +477,17 @@ public class ChainImpl implements Chain, Serializable {
 
 			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
 				if ( ! adding)
-					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
+					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
 				adding = false;
 				break;
 			}
 		}
 
 		if ( ! foundStart){
-			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
+			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
 		}
 		if ( adding) {
-			throw new StructureException("did not find end PDB residue number " + pdbresnumEnd + " in chain " + name);
+			throw new StructureException("did not find end PDB residue number " + pdbresnumEnd + " in chain " + chainID);
 		}
 
 		return (Group[]) retlst.toArray(new Group[retlst.size()] );
@@ -521,23 +519,16 @@ public class ChainImpl implements Chain, Serializable {
 		return seqResGroups.size();
 	}
 
-
-
-	public void   setName(String nam) { setChainID(nam); }
-
-
-	public String getName()           {	return getChainID();  }
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public void   setChainID(String nam) { name = nam;   }
+	public void   setChainID(String nam) { chainID = nam;   }
 
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getChainID()           {	return name;  }
+	public String getChainID()           {	return chainID;  }
 
 
 
@@ -569,7 +560,6 @@ public class ChainImpl implements Chain, Serializable {
 	/** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
 	 *
 	 * @return the SEQRES groups of the Chain as a Sequence object.
-	 * @throws IllegalSymbolException
 	 */
 	public Sequence<?> getBJSequence()  {
 
@@ -624,7 +614,7 @@ public class ChainImpl implements Chain, Serializable {
 		}
 
 		// not using ChemCOmp records...		
-		List<Group> aminos = getAtomGroups("amino");
+		List<Group> aminos = getAtomGroups(GroupType.AMINOACID);
 		StringBuffer sequence = new StringBuffer() ;
 		for ( int i=0 ; i< aminos.size(); i++){
 			AminoAcid a = (AminoAcid)aminos.get(i);

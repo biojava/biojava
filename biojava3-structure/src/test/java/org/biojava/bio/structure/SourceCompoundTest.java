@@ -56,9 +56,9 @@ public class SourceCompoundTest extends TestCase{
 		Structure s2 = getStructure("/2gox.pdb");
 		assertEquals(2, s2.getCompounds().size());
 		for (Compound compound : s2.getCompounds()){
-			if (compound.getMolId().equals("1")) {
+			if (compound.getMolId()==1) {
 				assertEquals("COMPLEMENT C3", compound.getMolName());
-				assertEquals("[A, C]", compound.getChainId().toString());
+				assertEquals("[A, C]", compound.getChainIds().toString());
 				assertEquals("FRAGMENT OF ALPHA CHAIN: RESIDUES 996-1287", compound.getFragment());
 				assertEquals("YES", compound.getEngineered());
 				assertEquals("YES", compound.getMutation());
@@ -70,9 +70,9 @@ public class SourceCompoundTest extends TestCase{
 				assertEquals("PLASMID", compound.getExpressionSystemVectorType());
 				assertEquals("PT7-", compound.getExpressionSystemPlasmid());
 			}
-			if (compound.getMolId().equals("2")) {
+			if (compound.getMolId()==2) {
 				assertEquals("FIBRINOGEN-BINDING PROTEIN", compound.getMolName());
-				assertEquals("[B, D]", compound.getChainId().toString());
+				assertEquals("[B, D]", compound.getChainIds().toString());
 				assertEquals("C-TERMINAL DOMAIN: RESIDUES 101-165", compound.getFragment());
 				assertEquals("YES", compound.getEngineered());
 				assertEquals("STAPHYLOCOCCUS AUREUS", compound.getOrganismScientific());
@@ -95,14 +95,14 @@ public class SourceCompoundTest extends TestCase{
 		// this file has a CHAIN: string in the value for the FRAGMENT: filed which breaks the version 1.4 parser
 
 		for (Compound compound : s2.getCompounds()) {
-			if (compound.getMolId().equals("1")) {
+			if (compound.getMolId()==1) {
 				assertEquals("FRAGMENT OF ALPHA CHAIN: RESIDUES 996-1287", compound.getFragment());
 			}
 
 		}
 
 		for (Compound compound : s4.getCompounds()) {
-			if (compound.getMolId().equals("1")) {
+			if (compound.getMolId()==1) {
 				assertEquals("SIGNAL RECEIVER DOMAIN: RESIDUES 2-128", compound.getFragment());
 			}
 
@@ -120,9 +120,9 @@ public class SourceCompoundTest extends TestCase{
 			System.out.println(compound.getOrganismScientific());
 			System.out.println(compound.getStrain());
 	*/
-			assertEquals("1", compound.getMolId());
+			assertEquals(1, compound.getMolId());
 			assertEquals("SYLVATICIN", compound.getMolName());
-			assertEquals("[A, B, C, D]", compound.getChainId().toString());
+			assertEquals("[A, B, C, D]", compound.getChainIds().toString());
 			assertEquals("PYTHIUM SYLVATICUM", compound.getOrganismScientific());
 			assertEquals("STRAIN 37", compound.getStrain());
 
@@ -132,7 +132,7 @@ public class SourceCompoundTest extends TestCase{
 	public void testSOURCEsectionSTRAIN(){
 		Structure s4 = getStructure("/3cfy.pdb");
 		for (Compound compound : s4.getCompounds()){
-			if (compound.getMolId().equals("1")) {
+			if (compound.getMolId()==1) {
 				/*System.out.println(compound.getMolId());
 				System.out.println(compound.getMolName());
 				System.out.println(compound.getChainId().toString());
@@ -147,9 +147,9 @@ public class SourceCompoundTest extends TestCase{
 				System.out.println(compound.getExpressionSystemVector());
 				System.out.println(compound.getExpressionSystemPlasmid());
 				 */
-				assertEquals("1", compound.getMolId());
+				assertEquals(1, compound.getMolId());
 				assertEquals("PUTATIVE LUXO REPRESSOR PROTEIN", compound.getMolName());
-				assertEquals("[A]", compound.getChainId().toString());
+				assertEquals("[A]", compound.getChainIds().toString());
 				assertEquals("SIGNAL RECEIVER DOMAIN: RESIDUES 2-128", compound.getFragment());
 				assertEquals("YES", compound.getEngineered());
 				assertEquals("VIBRIO PARAHAEMOLYTICUS RIMD 2210633", compound.getOrganismScientific());
@@ -168,7 +168,7 @@ public class SourceCompoundTest extends TestCase{
 	public void testSOURCEsectionORGSCI(){
 		Structure s5 = getStructure("/3cdl.pdb");
 		for (Compound compound : s5.getCompounds()){
-			if (compound.getMolId().equals("1")) {
+			if (compound.getMolId()==1) {
 				//System.out.println(compound.getOrganismScientific());
 				assertEquals("PSEUDOMONAS SYRINGAE PV. TOMATO STR. DC3000", compound.getOrganismScientific());
 			}
@@ -184,7 +184,7 @@ public class SourceCompoundTest extends TestCase{
 	public void testSourceTaxIdVersion32File(){
 		Structure structure = getStructure("/3dl7_v32.pdb");
 
-        Compound comp = structure.getCompoundById("1");
+        Compound comp = structure.getCompoundById(1);
 
         comp.showSource();
 
