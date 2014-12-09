@@ -50,6 +50,7 @@ import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
@@ -157,10 +158,10 @@ public class AtomCache {
 		// set the input stream provider to caching mode
 		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
 
-		this.path = pdbFilePath;
-		
+		setPath(pdbFilePath);
+
 		this.cachePath = cachePath;
-		
+
 		// this.cache = cache;
 		this.isSplit = isSplit;
 
@@ -751,7 +752,7 @@ public class AtomCache {
 	 *            to a directory
 	 */
 	public void setPath(String path) {
-		this.path = path;
+		this.path = FileDownloadUtils.expandUserHome(path);
 	}
 
 	public void setPdpprovider(PDPProvider pdpprovider) {
