@@ -779,7 +779,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			}
 
-
+			
 		}
 
 
@@ -904,6 +904,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getCrystallographicInfo().setNcsOperators(
 					(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
+		
+		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
+		structure.getCompounds();
+
+
 		
 	}
 
