@@ -304,6 +304,7 @@ public class PDBFileReader implements StructureIOFile {
 			path = new UserConfiguration().getPdbFilePath();
 			logger.debug("Initializing from system property/environment variable to path: {}", path.toString());
 		} else {
+			path = FileDownloadUtils.expandUserHome(path);
 			logger.debug("Initialising with path {}", path.toString());
 		}
 		this.path = new File(path);
@@ -324,7 +325,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * Sets the path for the directory where PDB files are read/written 
 	 */
 	public void setPath(String p){
-		path = new File(p) ;
+		path = new File(FileDownloadUtils.expandUserHome(p)) ;
 	}
 
 	/**
@@ -790,6 +791,7 @@ public class PDBFileReader implements StructureIOFile {
 	public Structure getStructure(String filename)
 			throws IOException
 			{
+		filename = FileDownloadUtils.expandUserHome(filename);
 		File f = new File(filename);
 		return getStructure(f);
 
