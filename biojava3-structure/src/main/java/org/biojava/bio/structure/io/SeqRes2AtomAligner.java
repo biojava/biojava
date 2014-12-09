@@ -39,7 +39,6 @@ import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
@@ -79,10 +78,11 @@ public class SeqRes2AtomAligner {
 
 	private static final Logger logger = LoggerFactory.getLogger(SeqRes2AtomAligner.class);
 	
-	static final List<String> excludeTypes;
+	private static final List<String> excludeTypes;
 
 
-	String alignmentString;
+	private String alignmentString;
+	
 	static {
 		excludeTypes = new ArrayList<String>();
 		excludeTypes.add("HOH"); // we don't want to align water against the SEQRES...
@@ -126,18 +126,15 @@ public class SeqRes2AtomAligner {
 
 
 		for (Chain seqRes: seqResList){
-			try {
-				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
-				if ( atomRes == null)
-					continue;
-				mapSeqresRecords(atomRes,seqRes);
 
-				//chains.add(mapped); 
-			} catch (StructureException e){
-				logger.error("Exception caught ", e);
-			}
+			Chain atomRes = getMatchingAtomRes(seqRes,atomList);
+			if ( atomRes == null)
+				continue;
+
+			mapSeqresRecords(atomRes,seqRes);
+
+ 
 		}
-		//s.setChains(0,chains);
 
 	}
 
@@ -147,15 +144,14 @@ public class SeqRes2AtomAligner {
 	 *  
 	 * @param atomRes
 	 * @param seqRes
-	 * @throws StructureException 
 	 */
-	public void mapSeqresRecords(Chain atomRes, Chain seqRes) throws StructureException {
+	public void mapSeqresRecords(Chain atomRes, Chain seqRes) {
 		List<Group> seqResGroups = seqRes.getAtomGroups();
 		List<Group> atmResGroups = atomRes.getAtomGroups();
 
 
 		
-		logger.debug("Comparing ATOM {} ({}) to SEQRES {} ({}) ", 
+		logger.debug("Comparing ATOM {} ({} groups) to SEQRES {} ({} groups) ", 
 				atomRes.getChainID(), atmResGroups.size(), seqRes.getChainID(), seqResGroups.size());
 		
 
@@ -167,43 +163,46 @@ public class SeqRes2AtomAligner {
 			return;
 		}
 
-		//System.err.println("Could not map SEQRES to ATOM records easily, need to align...");
+		logger.debug("Could not map SEQRES to ATOM records easily, need to align...");
 
-		if ( seqRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
+		int numAminosSeqres = seqRes.getAtomGroups(GroupType.AMINOACID).size();
+		int numNucleotidesSeqres = seqRes.getAtomGroups(GroupType.NUCLEOTIDE).size();
+		
+		if ( numAminosSeqres < 1) {
 
-			if ( seqRes.getAtomGroups(GroupType.NUCLEOTIDE).size() > 1) {
+			if ( numNucleotidesSeqres > 1) {
 				
-				logger.debug("Chain {} is a nucleotide chain, aligning nucleotides...", seqRes.getChainID());
+				logger.debug("SEQRES chain {} is a nucleotide chain ({} nucleotides), aligning nucleotides...", seqRes.getChainID(), numNucleotidesSeqres);
 				
-				align2NucleotideChains(seqRes,atomRes);
+				alignNucleotideChains(seqRes,atomRes);
 				return;
 			} else {
 				
-				logger.debug("Chain {} does not contain amino acids, ignoring...", seqRes.getChainID());
+				logger.debug("SEQRES chain {} contains {} amino acids and {} nucleotides, ignoring...", seqRes.getChainID(),numAminosSeqres,numNucleotidesSeqres);
 				
 				return;
 			}
 		}
 
 		if ( atomRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
-			logger.debug("Chain {} does not contain amino acids, ignoring...", atomRes.getChainID());
+			logger.debug("ATOM chain {} does not contain amino acids, ignoring...", atomRes.getChainID());
 			return;
 		}
 		
-		logger.debug("Alignment for chain {}", atomRes.getChainID() );
+		logger.debug("Proceeding to do protein alignment for chain {}", atomRes.getChainID() );
 
 
-		boolean noMatchFound = align(seqResGroups,atomRes.getAtomGroups());
+		boolean noMatchFound = alignProteinChains(seqResGroups,atomRes.getAtomGroups());
 		if ( ! noMatchFound){
 			atomRes.setSeqResGroups(seqResGroups);
 		}
 
 	}
 
-	private void align2NucleotideChains(Chain seqRes, Chain atomRes) throws StructureException {
+	private void alignNucleotideChains(Chain seqRes, Chain atomRes) {
 
 		if ( atomRes.getAtomGroups(GroupType.NUCLEOTIDE).size() < 1) {
-			logger.debug("Chain {} does not contain nucleotides, ignoring...", atomRes.getChainID());
+			logger.debug("ATOM chain {} does not contain nucleotides, ignoring...", atomRes.getChainID());
 			
 			return;
 		}
@@ -320,7 +319,7 @@ public class SeqRes2AtomAligner {
 
 			// the two groups are identical and we can merge them
 			// replace the SEQRES group with the ATOM group...
-			logger.debug("merging {} {}", seqResPos, atomResGroup);
+			logger.trace("merging {} {}", seqResPos, atomResGroup);
 			newSeqResGroups.set(seqResPos, atomResGroup);
 
 		}
@@ -421,7 +420,7 @@ public class SeqRes2AtomAligner {
 	}
 
 
-	private boolean alignNucleotideGroups(List<Group> seqRes, List<Group> atomRes) throws StructureException{
+	private boolean alignNucleotideGroups(List<Group> seqRes, List<Group> atomRes) {
 
 		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
 		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
@@ -450,7 +449,7 @@ public class SeqRes2AtomAligner {
 				s1 = new RNASequence(seq1,AmbiguityRNACompoundSet.getRNACompoundSet());
 			} catch (CompoundNotFoundException ex) {
 				logger.warn("Could not determine compound set for sequence 1 " + seq1);
-				return false;
+				return true;
 			}
 		}
 		try {
@@ -461,7 +460,7 @@ public class SeqRes2AtomAligner {
 				s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
 			} catch (CompoundNotFoundException ex) {
 				logger.warn("Could not determine compound set for sequence 2 " + seq2);
-				return false;
+				return true;
 			}
 		}
 
@@ -474,7 +473,7 @@ public class SeqRes2AtomAligner {
 					s1 = new RNASequence(seq1,AmbiguityRNACompoundSet.getRNACompoundSet());
 				} catch (CompoundNotFoundException ex) {
 					logger.warn("Could not align DNA and RNA compound sets: " + seq1);
-					return false;
+					return true;
 				}
 			}
 			
@@ -483,7 +482,7 @@ public class SeqRes2AtomAligner {
 						s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
 					} catch (CompoundNotFoundException ex) {
 						logger.warn("Could not align DNA and RNA compound sets: " + seq2);
-						return false;
+						return true;
 					}
 				}
 		}
@@ -507,12 +506,18 @@ public class SeqRes2AtomAligner {
 
 
 
-		if ( pair == null)
-			throw new StructureException("could not align objects!");
+		if ( pair == null) {
+			logger.warn("Could not align nucleotide sequences. ATOM and SEQRES groups will not be aligned.");
+			logger.warn("Sequences: ");
+			logger.warn(seq1);
+			logger.warn(seq2);
+			return true;
+
+		}
 
 
 		
-		logger.debug(pair.toString(60));
+		logger.debug("Alignment:\n"+pair.toString(100));
 		
 
 		@SuppressWarnings("unchecked")
@@ -523,7 +528,8 @@ public class SeqRes2AtomAligner {
 	}
 
 
-	/** aligns two chains of groups, where the first parent is representing the
+	/** 
+	 * Aligns two chains of groups, where the first parent is representing the
 	 * list of amino acids as obtained from the SEQRES records, and the second parent
 	 * represents the groups obtained from the ATOM records (and containing the actual ATOM information).
 	 * This does the actual alignment and if a group can be mapped to a position in the SEQRES then the corresponding
@@ -532,9 +538,8 @@ public class SeqRes2AtomAligner {
 	 * @param seqRes
 	 * @param atomRes
 	 * @return true if no match has been found
-	 * @throws StructureException
 	 */
-	public boolean align(List<Group> seqRes, List<Group> atomRes) throws StructureException{
+	private boolean alignProteinChains(List<Group> seqRes, List<Group> atomRes) {
 
 		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
 		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
@@ -544,8 +549,8 @@ public class SeqRes2AtomAligner {
 		String seq2 = getFullAtomSequence(atomRes, atomIndexPosition);
 
 		
-		logger.debug("align seq1 ("+ seq1.length()+") " + seq1);
-		logger.debug("align seq2 ("+ seq2.length()+") " + seq2);
+		logger.debug("Protein seq1 to align (length "+ seq1.length()+"): " + seq1);
+		logger.debug("Protein seq2 to align (length "+ seq2.length()+"): " + seq2);
 		
 		ProteinSequence s1;
 		ProteinSequence s2;
@@ -553,7 +558,8 @@ public class SeqRes2AtomAligner {
 			s1 = new ProteinSequence(seq1);
 			s2 = new ProteinSequence(seq2);
 		} catch (CompoundNotFoundException e) {
-			throw new StructureException("Could not align atom to seqres sequences. Either sequence contains an unknown compound: "+e.getMessage());
+			logger.warn("Could not create protein sequences ({}) to align ATOM and SEQRES groups, they will remain unaligned.", e.getMessage());
+			return true;
 		}
 		
 
@@ -574,11 +580,16 @@ public class SeqRes2AtomAligner {
 
 
 
-		if ( pair == null)
-			throw new StructureException("Could not align objects!");
+		if ( pair == null) {
+			logger.warn("Could not align protein sequences. ATOM and SEQRES groups will not be aligned.");
+			logger.warn("Sequences: ");
+			logger.warn(seq1);
+			logger.warn(seq2);
+			return true;
+		}			
 
 
-		logger.debug(pair.toString(60));
+		logger.debug("Alignment:\n"+pair.toString(100));
 		
 
 		boolean noMatchFound = mapChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
@@ -592,8 +603,7 @@ public class SeqRes2AtomAligner {
 	private boolean mapChains(List<Group> seqResGroups, List<Group> atomRes,
 			SequencePair<ProteinSequence, AminoAcidCompound> pair,
 			Map<Integer,Integer> seqresIndexPosition,
-			Map<Integer,Integer> atomIndexPosition
-			) throws StructureException{
+			Map<Integer,Integer> atomIndexPosition )   {
 
 
 
@@ -636,7 +646,7 @@ public class SeqRes2AtomAligner {
 
 					if ( s1 == null || a1 == null){
 						/// can't map this position...
-						System.err.println("can't map " + i + ":" + s + " " + posSeq +" " + s1 + " atom: " + posAtom + " " + a1 );
+						logger.warn("can't map " + i + ":" + s + " " + posSeq +" " + s1 + " atom: " + posAtom + " " + a1 );
 						continue mainLoop;
 					}
 
@@ -645,21 +655,20 @@ public class SeqRes2AtomAligner {
 					String pdbNameS = s1.getPDBName();
 					String pdbNameA = a1.getPDBName();
 					if ( pdbNameS == null || pdbNameA == null ){
-						System.err.println("null value found at " + posSeq + " when trying to align " + s1 + " and " + a1 + " " + posAtom);
-						throw new StructureException("null value found at group.getPDBName()");
+						logger.warn("null value for group.getPDBName found at {} when trying to align {} and {} {}",posSeq, s1, a1, posAtom);
+						logger.warn("ATOM and SEQRES sequences will not be aligned.");
+						return true;
 					}
 					if (! pdbNameA.equals(pdbNameS)){
 						if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
-							System.err.println(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom + " should be: " + s + " : " + a);
+							logger.info(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom + " should be: " + s + " : " + a);
 							if ( s1.getType().equals(HetatomImpl.type) && a1.getType().equals(HetatomImpl.type)){
-								System.err.println("they seem to be hetatoms, so ignoring mismatch.");
+								logger.info("they seem to be hetatoms, so ignoring mismatch.");
 							}
 							else {
-								//  System.exit(0);// for debug only
 								//System.out.println(lst1.seqString());
 								//System.out.println(lst2.seqString());
-								System.err.println("could not match residues " + s1 + " " + a1);
-								//throw new StructureException("could not match residues " + s1 + " " + a1);
+								logger.warn("Could not match residues {} {}", s1, a1);
 							}
 
 						}
@@ -689,9 +698,7 @@ public class SeqRes2AtomAligner {
 	private boolean mapDNAChains(List<Group> seqResGroups, List<Group> atomRes,
 			SequencePair<DNASequence, NucleotideCompound> pair,
 			Map<Integer,Integer> seqresIndexPosition,
-			Map<Integer,Integer> atomIndexPosition
-			) throws StructureException{
-
+			Map<Integer,Integer> atomIndexPosition)   {
 
 
 		// at the present stage the future seqREs are still stored as Atom groups in the seqRes parent...
@@ -733,7 +740,7 @@ public class SeqRes2AtomAligner {
 
 					if ( s1 == null || a1 == null){
 						/// can't map this position...
-						System.err.println("can't map " + i + ":" + s + " " + posSeq +" " + s1 + " atom: " + posAtom + " " + a1 );
+						logger.warn("can't map " + i + ":" + s + " " + posSeq +" " + s1 + " atom: " + posAtom + " " + a1 );
 						continue mainLoop;
 					}
 
@@ -742,21 +749,20 @@ public class SeqRes2AtomAligner {
 					String pdbNameS = s1.getPDBName();
 					String pdbNameA = a1.getPDBName();
 					if ( pdbNameS == null || pdbNameA == null ){
-						System.err.println("null value found at " + posSeq + " when trying to align " + s1 + " and " + a1 + " " + posAtom);
-						throw new StructureException("null value found at group.getPDBName()");
+						logger.warn("null value found for group.getPDBName() at " + posSeq + " when trying to align " + s1 + " and " + a1 + " " + posAtom);
+						logger.warn("ATOM and SEQRES sequences will not be aligned.");
 					}
 					if (! pdbNameA.equals(pdbNameS)){
 						if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
-							System.err.println(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom + " should be: " + s + " : " + a);
+							logger.info(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom + " should be: " + s + " : " + a);
 							if ( s1.getType().equals(HetatomImpl.type) && a1.getType().equals(HetatomImpl.type)){
-								System.err.println("they seem to be hetatoms, so ignoring mismatch.");
+								logger.info("they seem to be hetatoms, so ignoring mismatch.");
 							}
 							else {
 								//  System.exit(0);// for debug only
 								//System.out.println(lst1.seqString());
 								//System.out.println(lst2.seqString());
-								System.err.println("could not match residues " + s1 + " " + a1);
-								//throw new StructureException("could not match residues " + s1 + " " + a1);
+								logger.warn("Could not match residues " + s1 + " " + a1);
 							}
 
 						}

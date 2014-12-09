@@ -160,12 +160,9 @@ public class ChainImpl implements Chain, Serializable {
 			
 			// now match them up..
 			SeqRes2AtomAligner seqresaligner = new SeqRes2AtomAligner();
-
-			try {
-				seqresaligner.mapSeqresRecords(n, tmp);
-			} catch (StructureException e){
-				logger.error("Exception: ", e);
-			}
+			
+			seqresaligner.mapSeqresRecords(n, tmp);
+			
 
 		} 
 		
