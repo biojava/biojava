@@ -633,6 +633,17 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return firstMol[0].getGroup().getChain().getParent();
 	}
 	
+	public String toPDB() {
+		StringBuilder sb = new StringBuilder();
+		for (Atom atom:this.molecules.getFirst()) {
+			sb.append(atom.toPDB());
+		}
+		for (Atom atom:this.molecules.getSecond()) {
+			sb.append(atom.toPDB());
+		}
+		return sb.toString();
+	}
+	
 	@Override
 	public int compareTo(StructureInterface o) {
 		// this will sort descending on interface areas

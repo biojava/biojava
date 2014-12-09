@@ -43,6 +43,10 @@ public class GroupContact {
 		return minDistance;
 	}
 	
+	public int getNumAtomContacts() {
+		return atomContacts.size();
+	}
+	
 	@Override
 	public String toString() {
 		return pair.getFirst().getResidueNumber()+","+pair.getSecond().getResidueNumber();
