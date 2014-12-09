@@ -40,6 +40,7 @@ import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava3.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,6 +131,7 @@ public class MMCIFFileReader implements StructureIOFile {
 			path = config.getPdbFilePath();
 			logger.debug("Initialising from system property/environment variable to path: {}", path.toString());
 		} else {
+			path = FileDownloadUtils.expandUserHome(path);
 			logger.debug("Initialising with path {}", path.toString());
 		}
 		this.path = new File(path);
@@ -164,7 +166,7 @@ public class MMCIFFileReader implements StructureIOFile {
 	public Structure getStructure(String filename)
 	throws IOException
 	{
-		File f = new File(filename);
+		File f = new File(FileDownloadUtils.expandUserHome(filename));
 		return getStructure(f);
 
 	}
@@ -209,7 +211,7 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 	public void setPath(String path) {
-		this.path = new File(path);
+		this.path = new File(FileDownloadUtils.expandUserHome(path));
 
 	}
 
