@@ -34,20 +34,12 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.util.ConcurrencyTools;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
  
 public class CookbookMSA {
 
-	private final static Logger logger = LoggerFactory.getLogger(CookbookMSA.class);
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String[] ids = new String[] {"Q21691", "A8WS47", "O48771"};
-        try {
-            multipleSequenceAlignment(ids);
-        } catch (Exception e){
-            logger.error("Exception: ", e);
-        }
+        multipleSequenceAlignment(ids);
     }
  
     private static void multipleSequenceAlignment(String[] ids) throws Exception {
@@ -56,17 +48,19 @@ public class CookbookMSA {
             lst.add(getSequenceForId(id));
         }
         Profile<ProteinSequence, AminoAcidCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
-        logger.info("Clustalw:{}{}", System.getProperty("line.separator"), profile);
+        System.out.printf("Clustalw:%s%s", System.getProperty("line.separator"), profile);
+        System.out.println();
         
         ConcurrencyTools.shutdown();
     }
  
     private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
     	URL uniprotFasta = new URL(String.format("http://www.uniprot.org/uniprot/%s.fasta", uniProtId));
-    	logger.info("Getting Sequence from URL: {}", uniprotFasta);
+    	System.out.println("Getting Sequence from URL: "+ uniprotFasta);
         
     	ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
-    	logger.info("id : {} {}{}{}", uniProtId, seq, System.getProperty("line.separator"), seq.getOriginalHeader());
+    	System.out.printf("id : %s %s%s%s", uniProtId, seq, System.getProperty("line.separator"), seq.getOriginalHeader());
+    	System.out.println();
     	
     	return seq;
     }

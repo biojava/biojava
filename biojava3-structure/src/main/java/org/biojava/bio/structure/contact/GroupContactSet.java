@@ -1,6 +1,7 @@
 package org.biojava.bio.structure.contact;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.biojava.bio.structure.Atom;
@@ -16,6 +17,11 @@ import org.biojava.bio.structure.ResidueNumber;
 public class GroupContactSet implements Iterable<GroupContact>{ 
 
 	private HashMap<Pair<ResidueNumber>, GroupContact> contacts;
+	
+	/**
+	 * A cached HashSet to be used only if hasContact(Pair<ResidueIdentifier>) is called
+	 */
+	private HashSet<Pair<ResidueIdentifier>> residueIdContacts;
 	
 	public GroupContactSet() {
 		contacts = new HashMap<Pair<ResidueNumber>, GroupContact>();
@@ -70,9 +76,55 @@ public class GroupContactSet implements Iterable<GroupContact>{
 		contacts.put(getResNumberPairFromContact(groupContact),groupContact);
 	}
 	
+	/**
+	 * Tell whether the given group pair is a contact in this GroupContactSet,
+	 * the comparison is done by matching residue numbers and chain identifiers
+	 * @param group1
+	 * @param group2
+	 * @return
+	 */
 	public boolean hasContact(Group group1, Group group2) {
-		return contacts.containsKey(
-				new Pair<ResidueNumber>(group1.getResidueNumber(),group2.getResidueNumber()));
+		return hasContact(group1.getResidueNumber(),group2.getResidueNumber());
+	}
+	
+	/**
+	 * Tell whether the given pair is a contact in this GroupContactSet,
+	 * the comparison is done by matching residue numbers and chain identifiers
+	 * @param resNumber1
+	 * @param resNumber2
+	 * @return
+	 */
+	public boolean hasContact(ResidueNumber resNumber1, ResidueNumber resNumber2) {
+		return contacts.containsKey(new Pair<ResidueNumber>(resNumber1, resNumber2));
+	}
+	
+	/**
+	 * Tell whether the given pair is a contact in this GroupContactSet,
+	 * in a chain-identifier independent way: contacts happening between different copies of 
+	 * the same Compound(Entity) will be considered equal as long as they have the same
+	 * residue numbers.
+	 * @param resId1
+	 * @param resId2
+	 * @return
+	 */
+	public boolean hasContact(ResidueIdentifier resId1, ResidueIdentifier resId2) {
+		if (residueIdContacts == null) {
+			initResidueIdContacts();
+		}
+		
+		return residueIdContacts.contains(new Pair<ResidueIdentifier>(resId1, resId2));		
+	}
+	
+	private void initResidueIdContacts() {
+		residueIdContacts = new HashSet<Pair<ResidueIdentifier>>();
+		for (Pair<ResidueNumber> pairResNum:contacts.keySet()) {
+			ResidueNumber resNumFirst = pairResNum.getFirst();
+			ResidueNumber resNumSecond = pairResNum.getSecond();
+			residueIdContacts.add(new Pair<ResidueIdentifier>(
+					new ResidueIdentifier(resNumFirst.getSeqNum(), resNumFirst.getInsCode()),
+					new ResidueIdentifier(resNumSecond.getSeqNum(), resNumSecond.getInsCode())
+					) ); 
+		}
 	}
 	
 	/**

@@ -109,7 +109,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		winSize = 8;
 		rmsdThr = 3.0;
 		rmsdThrJoin = 4.0;
-		scoringStrategy = scoringStrategy.DEFAULT_SCORING_STRATEGY;
+		scoringStrategy = ScoringStrategy.DEFAULT_SCORING_STRATEGY;
 		maxGapSize = 30;
 		showAFPRanges = false;
 		maxOptRMSD = 99;

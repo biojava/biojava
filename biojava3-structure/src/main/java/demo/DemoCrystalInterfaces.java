@@ -13,6 +13,7 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.contact.AtomContact;
 import org.biojava.bio.structure.contact.Pair;
 import org.biojava.bio.structure.contact.StructureInterface;
+import org.biojava.bio.structure.contact.StructureInterfaceCluster;
 import org.biojava.bio.structure.contact.StructureInterfaceList;
 import org.biojava.bio.structure.xtal.CrystalBuilder;
 import org.biojava.bio.structure.xtal.CrystalTransform;
@@ -74,6 +75,7 @@ public class DemoCrystalInterfaces {
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(CUTOFF);
 		interfaces.calcAsas(N_SPHERE_POINTS, NTHREADS, CONSIDER_COFACTORS);
 		interfaces.removeInterfacesBelowArea(MIN_AREA_TO_KEEP);
+		List<StructureInterfaceCluster> clusters = interfaces.getClusters(); 
 
 		
 		//interfaces.initialiseClusters(pdb, CLUSTERING_CUTOFF, MINATOMS_CLUSTERING, "CA");
@@ -103,8 +105,6 @@ public class DemoCrystalInterfaces {
 			System.out.println("Transf1: "+SpaceGroup.getAlgebraicFromMatrix(transf1.getMatTransform())+
 					". Transf2: "+SpaceGroup.getAlgebraicFromMatrix(transf2.getMatTransform()));
 	 		
-			int foldType = sg.getAxisFoldType(transf2.getTransformId());
-			AxisAngle4d axisAngle = sg.getRotAxisAngle(transf2.getTransformId());
 			
 			String screwStr = "";
 			if (transf2.getTransformType().isScrew()) {
@@ -115,9 +115,13 @@ public class DemoCrystalInterfaces {
 
 			}
 			
-			
-			System.out.println(" "+foldType+"-fold on axis "+String.format("(%5.2f,%5.2f,%5.2f)",axisAngle.x,axisAngle.y,axisAngle.z)+screwStr);
-			
+			if (structure.isCrystallographic()) {
+				int foldType = sg.getAxisFoldType(transf2.getTransformId());
+				AxisAngle4d axisAngle = sg.getRotAxisAngle(transf2.getTransformId());
+
+				System.out.println(" "+foldType+"-fold on axis "+String.format("(%5.2f,%5.2f,%5.2f)",axisAngle.x,axisAngle.y,axisAngle.z)+screwStr);
+			}
+
 			System.out.println("Number of contacts: "+interf.getContacts().size());
 			//System.out.println("Number of contacting atoms (from both molecules): "+interf.getNumAtomsInContact());
 			Pair<List<Group>> cores = interf.getCoreResidues(BSATOASA_CUTOFF, MIN_ASA_FOR_SURFACE);
@@ -127,9 +131,22 @@ public class DemoCrystalInterfaces {
 					cores.getSecond().size());
 			System.out.printf("Interface area: %8.2f\n",interf.getTotalArea());
 			
+			if (interf.isIsologous()) {
+				System.out.println("Isologous");
+			} else {
+				System.out.println("Heterologous");
+			}
+			
 		}
 		
-
+		System.out.println("Interface clusters (one per line): ");
+		for (StructureInterfaceCluster cluster:clusters) {
+			System.out.print(cluster.getId()+": ");
+			for (StructureInterface member:cluster.getMembers()) {
+				System.out.print(member.getId()+" ");
+			}
+			System.out.println();
+		}
 
 	}
 
