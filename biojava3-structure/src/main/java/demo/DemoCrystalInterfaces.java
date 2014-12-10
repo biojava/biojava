@@ -15,6 +15,7 @@ import org.biojava.bio.structure.contact.Pair;
 import org.biojava.bio.structure.contact.StructureInterface;
 import org.biojava.bio.structure.contact.StructureInterfaceCluster;
 import org.biojava.bio.structure.contact.StructureInterfaceList;
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.xtal.CrystalBuilder;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 import org.biojava.bio.structure.xtal.SpaceGroup;
@@ -51,6 +52,10 @@ public class DemoCrystalInterfaces {
 		
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
+		
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true); 
+		cache.setFileParsingParams(params);
 		
 		StructureIO.setAtomCache(cache); 
 		

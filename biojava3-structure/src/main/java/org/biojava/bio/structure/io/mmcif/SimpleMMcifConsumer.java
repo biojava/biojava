@@ -739,14 +739,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		if ( params.isAlignSeqRes() ){
 		
-			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();			
-			//aligner.align(structure,seqResChains);
 
 			// fix SEQRES residue numbering
 			List<Chain> atomList   = structure.getModel(0);
 			for (Chain seqResChain: seqResChains){
 		
-					Chain atomChain = aligner.getMatchingAtomRes(seqResChain, atomList);
+					Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList);
 
 					//map the atoms to the seqres...
 

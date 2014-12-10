@@ -102,7 +102,7 @@ public class SeqRes2AtomAligner {
 		return alignmentString;
 	}
 
-	public Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
+	public static Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
 	{
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
@@ -121,7 +121,6 @@ public class SeqRes2AtomAligner {
 
 	public void align(Structure s, List<Chain> seqResList){
 
-		//List<Chain> seqResList = s.getSeqRes();
 		List<Chain> atomList   = s.getModel(0);
 
 
@@ -138,12 +137,15 @@ public class SeqRes2AtomAligner {
 
 	}
 
-	/** map the seqres groups to the atomRes chain.
-	 *  updates the atomRes chain object with the mapped data
-	 *  seqRes chain should not be needed after this and atomRes should be continued to be used.
+	/** 
+	 * Map the seqRes groups to the atomRes chain.
+	 * Updates the atomRes chain object with the mapped data
+	 * The seqRes chain should not be needed after this and atomRes should be further used.
 	 *  
-	 * @param atomRes
-	 * @param seqRes
+	 * @param atomRes the chain containing ATOM groups (in atomGroups slot). This chain 
+	 * is modified to contain in its seqresGroups slot the mapped atom groups
+	 * @param seqRes the chain containing SEQRES groups (in atomGroups slot). This chain 
+	 * is not modified
 	 */
 	public void mapSeqresRecords(Chain atomRes, Chain seqRes) {
 		List<Group> seqResGroups = seqRes.getAtomGroups();
@@ -216,12 +218,12 @@ public class SeqRes2AtomAligner {
 
 	}
 
-	/** a simple matching approach that tries to do a 1:1 mapping between SEQRES and ATOM records
-	 *  returns true if this simple matching approach worked fine
+	/** 
+	 * A simple matching approach that tries to do a 1:1 mapping between SEQRES and ATOM records
 	 *  
 	 * @param seqRes
 	 * @param atomList
-	 * @return
+	 * @return the matching or null if the matching didn't work
 	 */
 	private List<Group> trySimpleMatch(List<Group> seqResGroups,List<Group> atmResGroups) {
 		// by default first ATOM position is 1
@@ -233,9 +235,6 @@ public class SeqRes2AtomAligner {
 		boolean startAt1 = true;
 
 		for ( int atomResPos = 0 ; atomResPos < atmResGroups.size() ; atomResPos++){
-
-			//			if ( DEBUG)
-			//				System.err.println(" trying to simple match " + atomResPos +"/" + atmResGroups.size());
 
 			// let's try to match this case
 			Group atomResGroup = atmResGroups.get(atomResPos);
@@ -319,8 +318,12 @@ public class SeqRes2AtomAligner {
 
 			// the two groups are identical and we can merge them
 			// replace the SEQRES group with the ATOM group...
-			logger.trace("merging {} {}", seqResPos, atomResGroup);
-			newSeqResGroups.set(seqResPos, atomResGroup);
+
+			Group replacedGroup = newSeqResGroups.set(seqResPos, atomResGroup);
+			logger.debug("Merging index {}: replaced seqres group {} ({}) with atom group {} ({})", 
+					seqResPos, 
+					replacedGroup.getResidueNumber(), replacedGroup.getPDBName(), 
+					atomResGroup.getResidueNumber(), atomResGroup.getPDBName());
 
 		}
 

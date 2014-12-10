@@ -134,11 +134,12 @@ public class ChainImpl implements Chain, Serializable {
 
 		n.setChainID( getChainID());
 		n.setSwissprotId ( getSwissprotId());
+		// TODO should the Compound be deep copied too? I'd keep it like this (actually StructureInterface.getContactOverlapScore depends on it NOT being deep copied!!) - JD 2014.12.10
 		n.setCompound(this.getCompound());
 		n.setInternalChainID(internalChainID);
 
 		for (int i=0;i<groups.size();i++){
-			Group g = (Group)groups.get(i);
+			Group g = groups.get(i);
 			n.addGroup((Group)g.clone());
 		}
 		
@@ -149,13 +150,12 @@ public class ChainImpl implements Chain, Serializable {
 
 			List<Group> tmpSeqRes = new ArrayList<Group>();
 			for (int i=0;i<seqResGroups.size();i++){
-				Group g = (Group)seqResGroups.get(i);
-
+				Group g = (Group)seqResGroups.get(i).clone();
 				tmpSeqRes.add(g);
 			}
 			
 			Chain tmp = new ChainImpl();
-			// that's a bit confusing, but that's how to set the seqres so the seqresaligner can use them 
+			// that's a bit confusing, but that's how to set the seqres so that SeqRes2AtomAligner can use them 
 			tmp.setAtomGroups(tmpSeqRes);
 			
 			// now match them up..
@@ -243,19 +243,6 @@ public class ChainImpl implements Chain, Serializable {
 
 	}
 
-	/** return the group at position .
-	 *
-	 *
-	 * @param position  an int
-	 * @return a Group object
-	 * @deprecated use getAtomGroup or getSeqResGroup instead
-	 */
-	public Group getGroup(int position) {
-
-		return (Group)groups.get(position);
-	}
-
-
 
 	/** 
 	 * {@inheritDoc}
@@ -263,17 +250,6 @@ public class ChainImpl implements Chain, Serializable {
 	public Group getAtomGroup(int position) {
 
 		return (Group)groups.get(position);
-	}
-
-	/** Return a list of all groups of one of the types defined in hte {@link GroupType} constants.
-	 *
-	 *
-	 * @param type  a String
-	 * @return an List object containing the groups of type...
-	 * @deprecated use getAtomGroups instead
-	 */
-	public List<Group> getGroups( String type) {
-		return getAtomGroups(type);
 	}
 
 	/**  
@@ -289,14 +265,6 @@ public class ChainImpl implements Chain, Serializable {
 		}
 
 		return tmp ;
-	}
-
-	/** return all groups of this chain .
-	 * @return a List object representing the Groups of this Chain.
-	 * @deprecated use getAtomGroups instead
-	 */
-	public List<Group> getGroups(){
-		return groups ;
 	}
 
 
@@ -492,13 +460,6 @@ public class ChainImpl implements Chain, Serializable {
 
 
 
-	/**
-	 * @deprecated use getAtomLength instead
-	 */
-	public int getLength() {
-		return getAtomLength();
-	}
-
 	/** {@inheritDoc}
 	 *
 	 */
@@ -534,7 +495,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *  */
 	public String toString(){
 		String newline = System.getProperty("line.separator");
-		StringBuffer str = new StringBuffer();
+		StringBuilder str = new StringBuilder();
 		str.append("Chain >"+getChainID()+"<"+newline) ;
 		if ( mol != null ){
 			if ( mol.getMolName() != null){
@@ -544,12 +505,12 @@ public class ChainImpl implements Chain, Serializable {
 		str.append("total SEQRES length: " + getSeqResGroups().size() +
 				" total ATOM length:" + getAtomLength() + " residues " + newline);
 
+		// commented out the looping over residues, I thought it didn't help much, especially in debugging - JD 2014-12-10
 		// loop over the residues
-
-		for ( int i = 0 ; i < seqResGroups.size();i++){
-			Group gr = (Group) seqResGroups.get(i);
-			str.append(gr.toString()).append(newline);
-		}
+		//for ( int i = 0 ; i < seqResGroups.size();i++){
+		//	Group gr = (Group) seqResGroups.get(i);
+		//	str.append(gr.toString()).append(newline);
+		//}
 		return str.toString() ;
 
 	}

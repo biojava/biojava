@@ -3033,7 +3033,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
-		SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 
 		for (int i = 0; i < structure.nrModels(); i++) {
 			List<Chain> atomList   = structure.getModel(i);
@@ -3041,7 +3040,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			for (Chain seqRes: seqResChains){
 				Chain atomRes;
 			
-				atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
+				atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomList);
 				atomRes.setSeqResGroups(seqRes.getAtomGroups());
 				
 			}
