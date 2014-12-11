@@ -116,6 +116,77 @@ public class Compound implements Serializable {
 		chains = new ArrayList<Chain>();
 		molId = -1;
 	}
+	
+	/**
+	 * Constructs a new Compound copying all data from the given one
+	 * but not setting the Chains
+	 * @param c
+	 */
+	public Compound (Compound c) {
+		
+		this.chains = new ArrayList<Chain>();
+		
+		this.molId = c.molId;
+		
+		this.refChainId = c.refChainId;
+
+		this.molName = c.molName;
+		this.title = c.title;
+		
+		if (c.synonyms!=null) {
+			this.synonyms = new ArrayList<String>();
+			synonyms.addAll(c.synonyms);
+		}
+		if (c.ecNums!=null) {
+			this.ecNums = new ArrayList<String>();
+			ecNums.addAll(c.ecNums);
+		}
+		
+		this.engineered = c.engineered;
+		this.mutation = c.mutation;
+		this.biologicalUnit = c.biologicalUnit;
+		this.details = c.details;
+
+		this.numRes = c.numRes;
+		this.resNames = c.resNames;
+
+		this.headerVars = c.headerVars;
+
+		this.synthetic = c.synthetic;
+		this.fragment = c.fragment;
+		this.organismScientific = c.organismScientific;
+		this.organismTaxId = c.organismTaxId;
+		this.organismCommon = c.organismCommon;
+		this.strain = c.strain;
+		this.variant = c.variant;
+		this.cellLine = c.cellLine;
+		this.atcc = c.atcc;
+		this.organ = c.organ;
+		this.tissue = c.tissue;
+		this.cell = c.cell;
+		this.organelle = c.organelle;
+		this.secretion = c.secretion;
+		this.gene = c.gene;
+		this.cellularLocation = c.cellularLocation;
+		this.expressionSystem = c.expressionSystem;
+	    this.expressionSystemTaxId = c.expressionSystemTaxId;
+		this.expressionSystemStrain = c.expressionSystemStrain;
+		this.expressionSystemVariant = c.expressionSystemVariant;
+		this.expressionSystemCellLine = c.expressionSystemCellLine;
+		this.expressionSystemAtccNumber = c.expressionSystemAtccNumber;
+		this.expressionSystemOrgan = c.expressionSystemOrgan;
+		this.expressionSystemTissue = c.expressionSystemTissue;
+		this.expressionSystemCell = c.expressionSystemCell;
+		this.expressionSystemOrganelle = c.expressionSystemOrganelle;
+		this.expressionSystemCellularLocation = c.expressionSystemCellularLocation;
+		this.expressionSystemVectorType = c.expressionSystemVectorType;
+		this.expressionSystemVector = c.expressionSystemVector;
+		this.expressionSystemPlasmid = c.expressionSystemPlasmid;
+		this.expressionSystemGene = c.expressionSystemGene;
+		this.expressionSystemOtherDetails = c.expressionSystemOtherDetails;
+
+		
+	}
 
 	public String toString(){
 		StringBuilder buf = new StringBuilder();

@@ -31,8 +31,8 @@ import java.util.Map;
 
 import org.biojava.bio.structure.io.CompoundFinder;
 import org.biojava.bio.structure.io.FileConvert;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of a PDB Structure. This class
@@ -49,7 +49,7 @@ public class StructureImpl implements Structure, Serializable {
 
 	private static final long serialVersionUID = -8344837138032851347L;
 	
-	//private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
 	private String pdb_id ;
 	/* models is an ArrayList of ArrayLists */
@@ -125,9 +125,6 @@ public class StructureImpl implements Structure, Serializable {
 		addChain(c);
 	}
 
-	/** returns an identical copy of this structure .
-	 * @return an identical Structure object
-	 */
 	public Structure clone() {
 
 		Structure n = new StructureImpl();
@@ -137,12 +134,12 @@ public class StructureImpl implements Structure, Serializable {
 
 		n.setPDBCode(getPDBCode());
 		n.setName(getName());
-		//TODO: do deep copying of data!
+		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
 		n.setConnections(getConnections());
 		n.setSites(getSites());
-		n.setCrystallographicInfo(getCrystallographicInfo());
+				
 
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
@@ -150,20 +147,41 @@ public class StructureImpl implements Structure, Serializable {
 
 			for (int j=0;j<size(i);j++){
 
-				Chain current_chain = (Chain) getChain(i,j);
-				Chain cloned_chain  = (Chain) current_chain.clone();
+				Chain cloned_chain  = (Chain) getChain(i,j).clone();
 
+				// setting the parent: can only be done from the parent
+				cloned_chain.setParent(n);
+				
 				cloned_model.add(cloned_chain);
+				
 			}
 			n.addModel(cloned_model);
 
 		}
+		
+		// deep-copying of Compounds is tricky: there's cross references also in the Chains
+		// beware: if we copy the compounds we would also need to reset the references to compounds in the individual chains
+		List<Compound> newCompoundList = new ArrayList<Compound>();
+		for (Compound compound:this.compounds) {
+			Compound newCompound = new Compound(compound); // this sets everything but the chains
+			for (String chainId:compound.getChainIds()) {
+				try {
+					Chain newChain = n.getChainByPDB(chainId);
+					newChain.setCompound(newCompound);
+					newCompound.addChain(newChain);
+				} catch (StructureException e) {
+					logger.error("Could not find chain id {} while cloning Structure's compounds. Something is wrong!");
+				}
+			}
+			newCompoundList.add(newCompound);
+		}
+		n.setCompounds(newCompoundList); 
+
 
 		for (SSBond ssbond: ssbonds){
 			n.addSSBond(ssbond.clone());
 		}
 
-		//n.setSeqRes(this.getSeqRes());
 		return n ;
 	}
 

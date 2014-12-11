@@ -337,8 +337,9 @@ public class HetatomImpl implements Group,Serializable {
 		
 		// copy the atoms
 		for (int i=0;i<atoms.size();i++){
-			Atom atom = atoms.get(i);
-			n.addAtom((Atom)atom.clone());
+			Atom atom = (Atom) atoms.get(i).clone();
+			n.addAtom(atom);
+			atom.setGroup(n);
 		}
 		return n;
 	}

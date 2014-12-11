@@ -134,13 +134,17 @@ public class ChainImpl implements Chain, Serializable {
 
 		n.setChainID( getChainID());
 		n.setSwissprotId ( getSwissprotId());
-		// TODO should the Compound be deep copied too? I'd keep it like this (actually StructureInterface.getContactOverlapScore depends on it NOT being deep copied!!) - JD 2014.12.10
-		n.setCompound(this.getCompound());
+		
+		// NOTE the Compound will be reset at the parent level (Structure) if cloning is happening from parent level
+		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
+		n.setCompound(this.mol);
+		
 		n.setInternalChainID(internalChainID);
 
 		for (int i=0;i<groups.size();i++){
-			Group g = groups.get(i);
-			n.addGroup((Group)g.clone());
+			Group g = (Group)groups.get(i).clone();
+			n.addGroup(g);
+			g.setChain(n);
 		}
 		
 		if (seqResGroups.size() > 0 ){
@@ -151,6 +155,7 @@ public class ChainImpl implements Chain, Serializable {
 			List<Group> tmpSeqRes = new ArrayList<Group>();
 			for (int i=0;i<seqResGroups.size();i++){
 				Group g = (Group)seqResGroups.get(i).clone();
+				g.setChain(n);
 				tmpSeqRes.add(g);
 			}
 			
