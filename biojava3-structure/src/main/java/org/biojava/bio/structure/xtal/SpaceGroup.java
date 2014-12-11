@@ -533,7 +533,7 @@ public class SpaceGroup implements Serializable {
 				axisType=6;
 				break;
 			default:
-				throw new NullPointerException("Trace of transform does not correspond to one of the expected types. This is most likely a bug");
+				throw new RuntimeException("Trace of transform does not correspond to one of the expected types. This is most likely a bug");
 			}
 		} else {
 			switch (trace) {
@@ -553,7 +553,7 @@ public class SpaceGroup implements Serializable {
 				axisType=-6;
 				break;
 			default:
-				throw new NullPointerException("Trace of transform does not correspond to one of the expected types. This is most likely a bug");
+				throw new RuntimeException("Trace of transform does not correspond to one of the expected types. This is most likely a bug");
 			}
 		}
 		return axisType;
