@@ -254,7 +254,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public Group getAtomGroup(int position) {
 
-		return (Group)groups.get(position);
+		return groups.get(position);
 	}
 
 	/**  
@@ -263,7 +263,7 @@ public class ChainImpl implements Chain, Serializable {
 	public List<Group> getAtomGroups(String type){
 		List<Group> tmp = new ArrayList<Group>() ;
 		for (int i=0;i<groups.size();i++){
-			Group g = (Group)groups.get(i);
+			Group g = groups.get(i);
 			if (g.getType().equals(type)){
 				tmp.add(g);
 			}
@@ -399,8 +399,8 @@ public class ChainImpl implements Chain, Serializable {
 	public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
 		String pdbresnum = resNum.toString();
 		if ( pdbResnumMap.containsKey(pdbresnum)) {
-			Integer pos = (Integer) pdbResnumMap.get(pdbresnum);
-			return (Group) groups.get(pos.intValue());
+			Integer pos = pdbResnumMap.get(pdbresnum);
+			return groups.get(pos.intValue());
 		} else {
 			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + chainID);
 		}
@@ -464,15 +464,6 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 
-
-	/** {@inheritDoc}
-	 *
-	 */
-	public int getLengthAminos() {
-
-		List<Group> g = getAtomGroups(GroupType.AMINOACID);
-		return g.size() ;
-	}
 
 	/**
 	 * {@inheritDoc}
