@@ -47,6 +47,26 @@ public class GroupContact {
 		return atomContacts.size();
 	}
 	
+	public List<AtomContact> getAtomContacts() {
+		return atomContacts;
+	}
+	
+	/**
+	 * Returns the list of atom contacts in this GroupContact that are within the given distance.
+	 * @param distance
+	 * @return
+	 */
+	public List<AtomContact> getContactsWithinDistance(double distance) {				
+
+		List<AtomContact> list = new ArrayList<AtomContact>();
+		for (AtomContact contact:this.atomContacts) {			
+			if (contact.getDistance()<distance) {
+				list.add(contact);
+			}
+		}
+		return list;				
+	}
+	
 	@Override
 	public String toString() {
 		return pair.getFirst().getResidueNumber()+","+pair.getSecond().getResidueNumber();
