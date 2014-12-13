@@ -3,6 +3,7 @@ package org.biojava.bio.structure;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.contact.StructureInterface;
@@ -184,7 +185,8 @@ public class TestStructureCrossReferences {
 			// the SEQRES groups should contain a reference to each and every ATOM group
 			// (of course they will also contain some extra groups: those that are only in SEQRES)
 			if (c.getSeqResGroups().size()>0) {
-				assertTrue("SeqResGroups should contain ATOM group "+g.toString(), c.getSeqResGroups().contains(g));
+				assertTrue("SeqResGroups should contain ATOM group "+g.toString(), 
+						containsReference(g, c.getSeqResGroups()) );
 			}
 		}
 		
@@ -217,6 +219,13 @@ public class TestStructureCrossReferences {
 			assertNotNull(a.getGroup().getChain().getCompound());
 		}
 
+	}
+	
+	private static boolean containsReference(Group g, List<Group> list) {
+		for (Group group:list) {
+			if (group==g) return true;
+		}
+		return false;
 	}
 	
 }
