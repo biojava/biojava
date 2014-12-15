@@ -263,6 +263,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getByCategory(org.biojava.bio.structure.scop.ScopCategory)
 	 */
+	@Override
 	public List<ScopDescription> getByCategory(ScopCategory category){
 
 		ensureDesInstalled();
@@ -281,6 +282,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByClassificationId(java.lang.String)
 	 */
+	@Override
 	public List<ScopDescription> filterByClassificationId(String query){
 		ensureDesInstalled();
 
@@ -302,6 +304,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getTree(org.biojava.bio.structure.scop.ScopDomain)
 	 */
+	@Override
 	public List<ScopNode> getTree(ScopDomain domain){
 		ScopNode node = getScopNode(domain.getSunid());
 
@@ -322,6 +325,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDomainName(java.lang.String)
 	 */
+	@Override
 	public List<ScopDomain> filterByDomainName(String query) {
 
 		List<ScopDomain > domains = new ArrayList<ScopDomain>();
@@ -350,6 +354,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDescription(java.lang.String)
 	 */
+	@Override
 	public List<ScopDescription> filterByDescription(String query){
 		ensureDesInstalled();
 
@@ -372,6 +377,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDescriptionBySunid(int)
 	 */
+	@Override
 	public ScopDescription getScopDescriptionBySunid(int sunid){
 		ensureDesInstalled();
 		return sunidMap.get(sunid);
@@ -380,6 +386,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainsForPDB(java.lang.String)
 	 */
+	@Override
 	public  List<ScopDomain> getDomainsForPDB(String pdbId){
 		ensureClaInstalled();
 
@@ -407,6 +414,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainByScopID(java.lang.String)
 	 */
+	@Override
 	public ScopDomain getDomainByScopID(String scopId) {
 		ensureClaInstalled();
 
@@ -428,6 +436,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopNode(int)
 	 */
+	@Override
 	public ScopNode getScopNode(int sunid){
 		ensureHieInstalled();
 		ScopNode node = scopTree.get(sunid);
@@ -876,9 +885,11 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopVersion()
 	 */
+	@Override
 	public String getScopVersion() {
 		return scopVersion;
 	}
+	@Override
 	public void setScopVersion(String scopVersion) {
 		this.scopVersion = scopVersion;
 	}
@@ -920,6 +931,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDomainsBySunid(java.lang.Integer)
 	 */
+	@Override
 	public List<ScopDomain> getScopDomainsBySunid(Integer sunid)
 	{
 

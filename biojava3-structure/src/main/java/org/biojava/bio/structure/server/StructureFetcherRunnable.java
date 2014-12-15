@@ -33,6 +33,7 @@ import org.biojava.bio.structure.Structure;
  * @author Andreas Prlic
  * @deprecated
  */
+@Deprecated
 public class StructureFetcherRunnable 
 implements Runnable{
 
@@ -44,6 +45,7 @@ implements Runnable{
 		listeners = new ArrayList<StructureListener>();
 	}
 
+	@Override
 	public void run() {
 		
 		

@@ -40,195 +40,221 @@ import org.biojava.bio.structure.io.FileConvert;
  */
 public class AtomImpl implements Atom, Serializable, PDBRecord {
 
-   private static final long serialVersionUID = -2258364127420562883L;
-   String name     ;
-    Element element;
-    double[] coords ;
-    String pdbline  ;
-    int pdbserial   ;
+	private static final long serialVersionUID = -2258364127420562883L;
+	String name     ;
+	Element element;
+	double[] coords ;
+	String pdbline  ;
+	int pdbserial   ;
 
-    double occupancy ;
-    double tempfactor;
+	double occupancy ;
+	double tempfactor;
 
-    Character altLoc ;
-    Group parent;
-    long id;
-    
-    private List<Bond> bonds;
+	Character altLoc ;
+	Group parent;
+	long id;
 
-    public AtomImpl () {
-        name     = null        ;
-        element = Element.R;
-        coords   = new double[3];
-        pdbline  = ""          ;
-        occupancy  = 0.0       ;
-        tempfactor = 0.0       ;
-        altLoc = new Character(' ');
-        altLoc = null;
-        parent = null;
-        bonds = Collections.emptyList();
-    }
-    /** Get the Hibernate database ID.
-     *
-     * @return the id
-     * @see #setId(long)
-     */
+	private List<Bond> bonds;
+
+	public AtomImpl () {
+		name     = null        ;
+		element = Element.R;
+		coords   = new double[3];
+		pdbline  = ""          ;
+		occupancy  = 0.0       ;
+		tempfactor = 0.0       ;
+		altLoc = new Character(' ');
+		altLoc = null;
+		parent = null;
+		bonds = Collections.emptyList();
+	}
+	/** Get the Hibernate database ID.
+	 *
+	 * @return the id
+	 * @see #setId(long)
+	 */
 	public long getId() {
 		return id;
 	}
 
 	/** Set the Hibernate database ID.
-     *
-     * @param id the hibernate id
-     * @see #getId()
-     */
+	 *
+	 * @param id the hibernate id
+	 * @see #getId()
+	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 
-    /** 
-     * {@inheritDoc}
-     */
-    public void   setName(String s) { name = s ;}
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void   setName(String s) { name = s ;}
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getName()         { return name ;}
-
-    /** 
-     * {@inheritDoc}
-     */
-    public void setPDBserial(int i) { pdbserial = i    ; }
-
-    /** 
-     * {@inheritDoc}
-     */
-    public int  getPDBserial()      { return pdbserial ; }
-
-    /** 
-     * {@inheritDoc}
-     */
-    public void     setCoords( double[] c ) { coords = c   ; }
-
-    /** 
-     * {@inheritDoc}
-     */
-    public double[] getCoords()            { return coords ; }
-
-    public void setX(double x) {
-        coords[0] = x ;
-    }
-    public void setY(double y) {
-        coords[1] = y ;
-    }
-    public void setZ(double z) {
-        coords[2] = z ;
-    }
-
-    /** 
-     * {@inheritDoc} 
-     */
-    public double getX() { return coords[0]; }
-
-    /** 
-     * {@inheritDoc}
-     */
-    public double getY() { return coords[1]; }
-
-    /** 
-     * {@inheritDoc}
-     */
-    public double getZ() { return coords[2]; }
-
-    /** set alternate Location.
-     * @see #getAltLoc
-     */
-    public void setAltLoc(Character c) {
-        altLoc = c ;
-    }
-    /** get alternate Location.
-     * @return a Character object representing the alt loc value
-     * @see #setAltLoc
-     */
-    public Character getAltLoc() {
-        return altLoc ;
-    }
-
-    /** string representation. */
-    public String toString() {
-        String str = name + " " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
-        return str ;
-    }
-
-    public void   setOccupancy(double occu){ occupancy = occu ;} ;
-    public double getOccupancy(){ return occupancy; } ;
-
-    public void   setTempFactor(double temp){ tempfactor = temp ;} ;
-    public double getTempFactor(){ return tempfactor; } ;
-
-    /** returns and identical copy of this  object .
-     * @return  and identical copy of this  object
-     */
-    public Object clone() {
-        AtomImpl n = new AtomImpl();
-        n.setOccupancy(getOccupancy());
-        n.setTempFactor(getTempFactor());
-        n.setAltLoc(getAltLoc());
-        double[] coords = getCoords();
-        n.setX(coords[0]);
-        n.setY(coords[1]);
-        n.setZ(coords[2]);
-        n.setPDBserial(getPDBserial());
-        n.setName(getName());
-        n.setElement(getElement());
-        return n ;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setGroup(Group parent){
-    	this.parent = parent;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public Group getGroup(){
-    	return parent;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-	public Element getElement() {
-		return element;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public String getName()         { return name ;}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setPDBserial(int i) { pdbserial = i    ; }
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int  getPDBserial()      { return pdbserial ; }
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void     setCoords( double[] c ) { coords = c   ; }
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double[] getCoords()            { return coords ; }
+
+	@Override
+	public void setX(double x) {
+		coords[0] = x ;
+	}
+	@Override
+	public void setY(double y) {
+		coords[1] = y ;
+	}
+	@Override
+	public void setZ(double z) {
+		coords[2] = z ;
+	}
+
+	/** 
+	 * {@inheritDoc} 
+	 */
+	@Override
+	public double getX() { return coords[0]; }
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double getY() { return coords[1]; }
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double getZ() { return coords[2]; }
+
+	/** set alternate Location.
+	 * @see #getAltLoc
+	 */
+	@Override
+	public void setAltLoc(Character c) {
+		altLoc = c ;
+	}
+	/** get alternate Location.
+	 * @return a Character object representing the alt loc value
+	 * @see #setAltLoc
+	 */
+	@Override
+	public Character getAltLoc() {
+		return altLoc ;
+	}
+
+	/** string representation. */
+	@Override
+	public String toString() {
+		String str = name + " " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
+		return str ;
+	}
+
+	@Override
+	public void   setOccupancy(double occu){ occupancy = occu ;} ;
+	@Override
+	public double getOccupancy(){ return occupancy; } ;
+
+	@Override
+	public void   setTempFactor(double temp){ tempfactor = temp ;} ;
+	@Override
+	public double getTempFactor(){ return tempfactor; } ;
+
+	/** returns and identical copy of this  object .
+	 * @return  and identical copy of this  object
+	 */
+	@Override
+	public Object clone() {
+		AtomImpl n = new AtomImpl();
+		n.setOccupancy(getOccupancy());
+		n.setTempFactor(getTempFactor());
+		n.setAltLoc(getAltLoc());
+		double[] coords = getCoords();
+		n.setX(coords[0]);
+		n.setY(coords[1]);
+		n.setZ(coords[2]);
+		n.setPDBserial(getPDBserial());
+		n.setName(getName());
+		n.setElement(getElement());
+		return n ;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setGroup(Group parent){
+		this.parent = parent;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Group getGroup(){
+		return parent;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Element getElement() {
+		return element;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setElement(Element e) {
 		this.element = e;
-	
+
 	}
-	
+
+	@Override
 	public String toPDB() {
-		
+
 		return FileConvert.toPDB(this);
 	}
-	
+
+	@Override
 	public void toPDB(StringBuffer buf) {
 		FileConvert.toPDB(this,buf);
-		
+
 	}
-	
+
 	@Override
 	public List<Bond> getBonds() {
 		return bonds;
 	}
-	
+
 	@Override
 	public void addBond(Bond bond) {
 		if (bonds.size() == 0) {

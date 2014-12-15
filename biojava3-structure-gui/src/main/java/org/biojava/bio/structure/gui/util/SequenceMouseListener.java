@@ -98,6 +98,7 @@ MouseMotionListener
 		alignmentPositionListeners.add(li);
 	}
 
+	@Override
 	public void mousePressed(MouseEvent event) {
 
 		int pos  = getSeqPos(event);
@@ -161,6 +162,7 @@ MouseMotionListener
 	}
 
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		dragging = true;
 
@@ -190,6 +192,7 @@ MouseMotionListener
 
 
 
+	@Override
 	public void mouseMoved(MouseEvent e) {
 	
 
@@ -217,21 +220,25 @@ MouseMotionListener
 
 
 
+	@Override
 	public void mouseClicked(MouseEvent arg0) {
 
 
 	}
 
+	@Override
 	public void mouseEntered(MouseEvent arg0) {
 
 
 	}
 
+	@Override
 	public void mouseExited(MouseEvent arg0) {
 
 	}
 
 
+	@Override
 	public void mouseReleased(MouseEvent event) {
 		// logger.info("mouse released");
 

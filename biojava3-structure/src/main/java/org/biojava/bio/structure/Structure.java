@@ -179,6 +179,7 @@ public interface Structure extends Cloneable, StructureIdentifier {
     /**
      * String representation of object.
      */
+    @Override
     public String toString();
 
     /**

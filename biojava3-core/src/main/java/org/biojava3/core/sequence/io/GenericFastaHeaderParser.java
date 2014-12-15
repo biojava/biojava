@@ -107,7 +107,8 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
      * @param header
      * @param sequence
      */
-    public void parseHeader(String header, S sequence) {
+    @Override
+	public void parseHeader(String header, S sequence) {
         //uniptrot
         // tr|Q0TET7|Q0TET7_ECOL5 Putative uncharacterized protein OS=Escherichia coli O6:K15:H31 (strain 536 / UPEC) GN=ECP_2553 PE=4 SV=1
         sequence.setOriginalHeader(header);

@@ -115,7 +115,8 @@ public class SymbolTable<Key extends Comparable<Key>, Value> implements Iterable
      * To iterate over all of the keys in the symbol table <tt>st</tt>, use the
      * foreach notation: <tt>for (Key key : st)</tt>.
      */ 
-    public Iterator<Key> iterator() {
+    @Override
+	public Iterator<Key> iterator() {
         return st.keySet().iterator();
     }
 

@@ -71,6 +71,7 @@ public class SecStrucState{
 		this.kappa = kappa;
 	}
 
+	@Override
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
 		buf.append(secStruc.toString()+threeState.toString() + " a1:"+accept1 + " a2:" + accept2 + " d1:" + donor1 + " d2:" + donor2);

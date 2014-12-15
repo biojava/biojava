@@ -254,7 +254,8 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
      *
      * @return a simple view of the alignment profile
      */
-    String toString();
+    @Override
+	String toString();
 
     /**
      * Returns a formatted view of the alignment profile.  This shows the start and end indices of the profile and each

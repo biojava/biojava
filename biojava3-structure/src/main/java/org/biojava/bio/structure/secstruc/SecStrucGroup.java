@@ -42,7 +42,8 @@ implements Group {
         super();
     }
 
-    public String toString(){
+    @Override
+	public String toString(){
 
         StringBuffer str = new StringBuffer("SecStrucGroup ");
         str.append(residueNumber);

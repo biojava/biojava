@@ -35,7 +35,8 @@ import java.util.Comparator;
  * @param o2
  * @return val
  */
-        public int compare(CDSSequence o1, CDSSequence o2) {
+        @Override
+		public int compare(CDSSequence o1, CDSSequence o2) {
             if(o1.getStrand() != o2.getStrand()){
                 return o1.getBioBegin() - o2.getBioBegin();
             }

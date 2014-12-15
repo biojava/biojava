@@ -249,6 +249,7 @@ public class AFPChain implements Serializable, Cloneable
 	/**
 	 * Creates and returns a copy of this object.
 	 */
+	@Override
 	public Object clone() {
 		return new AFPChain(this);
 	}
@@ -375,6 +376,7 @@ public class AFPChain implements Serializable, Cloneable
 		
 	}
 
+	@Override
 	public String toString(){
 
 		//int lA = ca1Length;

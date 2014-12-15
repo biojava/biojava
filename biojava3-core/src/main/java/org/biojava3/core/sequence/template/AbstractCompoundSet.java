@@ -88,11 +88,13 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
     compoundStringLengthEqual = null;
   }
 
-  public String getStringForCompound(C compound) {
+  @Override
+public String getStringForCompound(C compound) {
     return compound.toString();
   }
 
-  public C getCompoundForString(String string) {
+  @Override
+public C getCompoundForString(String string) {
     if(string == null) {
       throw new IllegalArgumentException("Given a null CharSequence to process");
     }
@@ -108,7 +110,8 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
     return charSeqToCompound.get(string);
   }
 
-  public int getMaxSingleCompoundStringLength() {
+  @Override
+public int getMaxSingleCompoundStringLength() {
     if(maxCompoundCharSequenceLength == -1) {
       for(C compound: charSeqToCompound.values()) {
         int size = getStringForCompound(compound).length();
@@ -135,18 +138,21 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
         return compoundStringLengthEqual;
     }
 
-  public boolean hasCompound(C compound) {
+  @Override
+public boolean hasCompound(C compound) {
     C retrievedCompound = getCompoundForString(compound.toString());
     return retrievedCompound != null;
   }
 
-  public boolean compoundsEquivalent(C compoundOne, C compoundTwo) {
+  @Override
+public boolean compoundsEquivalent(C compoundOne, C compoundTwo) {
     assertCompound(compoundOne);
     assertCompound(compoundTwo);
     return compoundOne.equals(compoundTwo) || equivalentsMap.get(compoundOne).contains(compoundTwo);
   }
 
-  public Set<C> getEquivalentCompounds(C compound) {
+  @Override
+public Set<C> getEquivalentCompounds(C compound) {
     return equivalentsMap.get(compound);
   }
 
@@ -168,7 +174,8 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
 
 
 
-  public List<C> getAllCompounds() {
+  @Override
+public List<C> getAllCompounds() {
     return new ArrayList<C>(charSeqToCompound.values());
   }
 

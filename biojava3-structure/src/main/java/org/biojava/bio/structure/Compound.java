@@ -117,6 +117,7 @@ public class Compound implements Serializable {
 		molId = -1;
 	}
 
+	@Override
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
 		buf.append("Compound: " + molId+" ");

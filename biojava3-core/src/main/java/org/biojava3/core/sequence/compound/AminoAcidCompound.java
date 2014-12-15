@@ -48,7 +48,8 @@ public class AminoAcidCompound extends AbstractCompound {
   }
 
   // TODO need to allow for modified name; that's not equality though is it?
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
     if (obj == null) {
       return false;
     }
@@ -63,11 +64,13 @@ public class AminoAcidCompound extends AbstractCompound {
 
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return toString().hashCode();
   }
 
-  public boolean equalsIgnoreCase(Compound compound) {
+  @Override
+public boolean equalsIgnoreCase(Compound compound) {
     if (compound == null) {
       return false;
     }

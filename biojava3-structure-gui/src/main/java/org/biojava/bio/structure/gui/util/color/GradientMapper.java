@@ -142,6 +142,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return
 	 * @see org.biojava.bio.structure.gui.util.color.ContinuousColorMapper#getColor(double)
 	 */
+	@Override
 	public Color getColor(double value) {
 		Double left = mapping.floorKey(value);
 		Double right = mapping.higherKey(value);
@@ -171,6 +172,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * 
 	 * @see java.util.Map#clear()
 	 */
+	@Override
 	public void clear() {
 		Color neg = mapping.get(Double.NEGATIVE_INFINITY);
 		Color pos = mapping.get(Double.POSITIVE_INFINITY);
@@ -183,6 +185,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
+	@Override
 	public boolean containsKey(Object position) {
 		return mapping.containsKey(position);
 	}
@@ -191,6 +194,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return
 	 * @see java.util.Map#containsValue(java.lang.Object)
 	 */
+	@Override
 	public boolean containsValue(Object color) {
 		return mapping.containsValue(color);
 	}
@@ -198,6 +202,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return
 	 * @see java.util.Map#entrySet()
 	 */
+	@Override
 	public Set<java.util.Map.Entry<Double, Color>> entrySet() {
 		return mapping.entrySet();
 	}
@@ -206,6 +211,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return The color of the endpoint at position, or null if no endpoint exists there
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
+	@Override
 	public Color get(Object position) {
 		return mapping.get(position);
 	}
@@ -213,6 +219,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return true if this gradient does not contain finite endpoints
 	 * @see java.util.Map#isEmpty()
 	 */
+	@Override
 	public boolean isEmpty() {
 		return mapping.size() <= 2;
 	}
@@ -220,6 +227,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return
 	 * @see java.util.Map#keySet()
 	 */
+	@Override
 	public Set<Double> keySet() {
 		return mapping.keySet();
 	}
@@ -230,6 +238,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public Color put(Double position, Color color) {
 		if( position == null ) {
 			throw new NullPointerException("Null endpoint position");
@@ -243,6 +252,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @param m
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
+	@Override
 	public void putAll(Map<? extends Double, ? extends Color> m) {
 		mapping.putAll(m);		
 	}
@@ -251,6 +261,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
+	@Override
 	public Color remove(Object position) {
 		if( ((Double)position).isInfinite() ) {
 			throw new UnsupportedOperationException("Cannot remove infinite endpoints");
@@ -261,6 +272,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return Number of finite endpoints
 	 * @see java.util.Map#size()
 	 */
+	@Override
 	public int size() {
 		return mapping.size()-2;
 	}
@@ -268,6 +280,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @return
 	 * @see java.util.Map#values()
 	 */
+	@Override
 	public Collection<Color> values() {
 		return mapping.values();
 	}

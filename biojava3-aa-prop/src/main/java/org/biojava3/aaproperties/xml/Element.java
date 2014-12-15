@@ -64,6 +64,7 @@ public class Element {
 		this.setMass(mass);
 	}
 	
+	@Override
 	public String toString(){
 		return symbol + ", " + name + ", " + atomicNumber;
 	}

@@ -498,7 +498,7 @@ public class SeqRes2AtomAligner {
 		penalty.setOpenPenalty(gop);
 		penalty.setExtensionPenalty(extend);
 
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@SuppressWarnings({ "unchecked" })
 		PairwiseSequenceAligner smithWaterman =
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 

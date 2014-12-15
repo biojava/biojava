@@ -37,6 +37,7 @@ public class PdbFileFormat30Test extends TestCase {
 
 	
 
+	@Override
 	protected void setUp(){
 	
 	}

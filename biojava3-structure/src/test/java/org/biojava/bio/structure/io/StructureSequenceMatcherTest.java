@@ -51,6 +51,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 	private String[] pdbNum1;
 	private String seq1;
 	
+	@Override
 	public void setUp() throws IOException, StructureException {
 		String name1 = "2PTC";
 		

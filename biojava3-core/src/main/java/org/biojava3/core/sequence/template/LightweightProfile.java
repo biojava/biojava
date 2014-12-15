@@ -101,7 +101,8 @@ public interface LightweightProfile<S extends Sequence<C>, C extends Compound> {
      *
      * @return a simple view of the alignment profile
      */
-    String toString();
+    @Override
+	String toString();
 
     /**
      * Returns a formatted view of the alignment profile.  This shows the start and end indices of the profile for each

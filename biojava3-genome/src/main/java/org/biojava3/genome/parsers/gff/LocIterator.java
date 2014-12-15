@@ -104,6 +104,7 @@ public class LocIterator implements Iterator<Location> {
 	* @return True if window of default size is available. The default size
 	* is the size specified in the LocIterator constructor.
 	*/	
+	@Override
 	public boolean hasNext()
 	{
 		return hasNext( mWindowSize, mIncrement );
@@ -145,6 +146,7 @@ public class LocIterator implements Iterator<Location> {
 	 * @return Location of next window.
 	 * @throws IndexOutOfBoundsException The next window was not within the bounding location.
 	 */
+	@Override
 	public Location next()
 	{
 		return next( mWindowSize, mIncrement );
@@ -209,6 +211,7 @@ public class LocIterator implements Iterator<Location> {
 	 *
 	 * @return Description of internal state.
 	 */
+	@Override
 	public String toString()
 	{
 		return "bounds=" + mBounds.toString() + "; pos=" + mPosition + "; winsize=" + mWindowSize + "; inc=" + mIncrement;
@@ -219,6 +222,7 @@ public class LocIterator implements Iterator<Location> {
 	 *
 	 * @throws UnsupportedOperationException
 	 */
+	@Override
 	public void remove()
 	{
 		throw new UnsupportedOperationException();
@@ -227,7 +231,8 @@ public class LocIterator implements Iterator<Location> {
      /**
      * @deprecated
      */
-    public static void main( String args[] )
+    @Deprecated
+	public static void main( String args[] )
     {
         
        Location r= new Location( 10, 21 );

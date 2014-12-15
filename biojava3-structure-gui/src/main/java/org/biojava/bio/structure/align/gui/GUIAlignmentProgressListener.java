@@ -82,7 +82,8 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 	/**
      * Invoked when the user presses the stop button.
      */
-    public void actionPerformed(ActionEvent evt) {
+    @Override
+	public void actionPerformed(ActionEvent evt) {
     	
     	//System.out.println("stopping!");
     	logStatus("terminating");
@@ -101,6 +102,7 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
     }
 
    
+	@Override
 	public void alignmentEnded() {
 		
 		alignmentsProcessed++;
@@ -114,18 +116,22 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 
 	}
 
+	@Override
 	public void alignmentStarted(String name1, String name2) {	
 		logStatus("#" + progressBar.getValue() + " starting alignment of " + name1 + " " + name2);
 	}
 
+	@Override
 	public void downloadingStructures(String name) {		
 		logStatus("Downloading " + name );
 	}
 
+	@Override
 	public void logStatus(String message) {		
 		taskOutput.append(message+"\n");
 	}
 
+	@Override
 	public void requestingAlignmentsFromServer(int nrAlignments) {
 		logStatus("Requesting " + nrAlignments + " alignments to be calculated");
 		progressBar.setMaximum(nrAlignments);
@@ -134,6 +140,7 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 
 	}
 
+	@Override
 	public void sentResultsToServer(int nrAlignments, String serverMessage) {
 		logStatus("sent alignment results back to server. Server responded: >"+serverMessage+"<");
 		progressBar.setValue(0);

@@ -131,6 +131,7 @@ public class AlternativeAlignment implements Serializable{
 	 *
 	 * @return a String representation
 	 */
+	@Override
 	public String toString(){
 		DecimalFormat d2 = new DecimalFormat();
 		// the result can be localized. To change this and enforce UK local do...

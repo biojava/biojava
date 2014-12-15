@@ -123,11 +123,13 @@ implements StructurePairSelector {
 		return chain1.getText();
 	}
 
+	@Override
 	public Structure getStructure1() throws StructureException{
 
 		return getStructure(filePath1,chain1);
 	}
 
+	@Override
 	public Structure getStructure2() throws StructureException{
 
 		return getStructure(filePath2,chain2);
@@ -215,6 +217,7 @@ class ChooseAction extends AbstractAction{
 	}
 	public static final long serialVersionUID = 0l;
 	// This method is called when the button is pressed
+	@Override
 	public void actionPerformed(ActionEvent evt) {
 		// Perform action...
 		final JFileChooser fc = new JFileChooser();

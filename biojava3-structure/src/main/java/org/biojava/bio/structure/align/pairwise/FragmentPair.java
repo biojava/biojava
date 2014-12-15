@@ -82,6 +82,7 @@ public class FragmentPair {
          center2 = new AtomImpl();
 
     }
+    @Override
     public Object clone(){
         
         FragmentPair n = new FragmentPair(length,pos1,pos2);
@@ -205,6 +206,7 @@ public class FragmentPair {
         this.center2 = center2;
     }
     
+    @Override
     public String toString() {
     	return String.format("Fragment (%d,%d) len %d", pos1, pos2, length);
     }

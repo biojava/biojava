@@ -82,6 +82,7 @@ public interface Chain {
      * @see #getAtomGroup(int)
      * @see #getSeqResGroup(int)
      */
+    @Deprecated
     public Group getGroup (int position);
 	
     /** 
@@ -115,13 +116,15 @@ public interface Chain {
      * @return a List object
      * @deprecated use getAtomGroups or getSeqResGroups instead
      */
-    public List<Group> getGroups (String type);
+    @Deprecated
+	public List<Group> getGroups (String type);
 
     /** return all groups of this chain.
      * @return a List of all Group objects of this chain
      * @deprecated use getAtomGroups or getSeqResGroups instead
      */
-    public List<Group> getGroups ();
+    @Deprecated
+	public List<Group> getGroups ();
     
     /** 
      * Return all Groups with observed density in the chain, i.e.
@@ -235,7 +238,8 @@ public interface Chain {
      * @see #getAtomLength()
      * @see #getSeqResLength()
      */
-    public int getLength();
+    @Deprecated
+	public int getLength();
     
     
     /** 
@@ -267,7 +271,8 @@ public interface Chain {
      * @deprecated use getAtomGroups("amino").size() instead.
      */
 
-    public int getLengthAminos();
+    @Deprecated
+	public int getLengthAminos();
 
   
     /** 
@@ -318,8 +323,9 @@ public interface Chain {
     public void setInternalChainID(String internalChainID);
     
     /** string representation.  */
+    @Override
     public String toString();
-	
+
     
     /** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
      * 
@@ -338,8 +344,8 @@ public interface Chain {
     
     /**
      * Return the PDB SEQRES sequence as a one-letter sequence string.
-	 * Non-standard residues are represented by an "X".
-	 * @return one-letter PDB SEQRES sequence as string 
+     * Non-standard residues are represented by an "X".
+     * @return one-letter PDB SEQRES sequence as string 
      * @see #getAtomSequence() 
      */
     public String getSeqResSequence();

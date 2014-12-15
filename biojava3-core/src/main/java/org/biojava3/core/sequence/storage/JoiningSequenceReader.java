@@ -91,7 +91,8 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
     }
 
     
-    public C getCompoundAt(int position) {
+    @Override
+	public C getCompoundAt(int position) {
         int sequenceIndex = getSequenceIndex(position);
         Sequence<C> sequence = sequences.get(sequenceIndex);
         int indexInSequence = (position - getMinSequenceIndex()[sequenceIndex]) + 1;
@@ -99,12 +100,14 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
     }
 
     
-    public CompoundSet<C> getCompoundSet() {
+    @Override
+	public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
 
     
-    public int getLength() {
+    @Override
+	public int getLength() {
         int[] maxSeqIndex = getMaxSequenceIndex();
         if (maxSeqIndex.length == 0) {
             return 0;
@@ -205,7 +208,8 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
      * attempting to skip onto the next sequence as & when it is asked to
      */
     
-    public Iterator<C> iterator() {
+    @Override
+	public Iterator<C> iterator() {
         final List<Sequence<C>> localSequences = sequences;
         return new Iterator<C>() {
 
@@ -213,7 +217,8 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
             private int currentPosition = 0;
 
             
-            public boolean hasNext() {
+            @Override
+			public boolean hasNext() {
                 //If the current iterator is null then see if the Sequences object has anything
                 if (currentSequenceIterator == null) {
                     return !localSequences.isEmpty();
@@ -228,7 +233,8 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
             }
 
             
-            public C next() {
+            @Override
+			public C next() {
                 if (currentSequenceIterator == null) {
                     if (localSequences.isEmpty()) {
                         throw new NoSuchElementException("No sequences to iterate over; make sure you call hasNext() before next()");
@@ -244,54 +250,64 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
             }
 
             
-            public void remove() throws UnsupportedOperationException {
+            @Override
+			public void remove() throws UnsupportedOperationException {
                 throw new UnsupportedOperationException("Cannot remove from this Sequence");
             }
         };
     }
 
     
-    public void setCompoundSet(CompoundSet<C> compoundSet) {
+    @Override
+	public void setCompoundSet(CompoundSet<C> compoundSet) {
         throw new UnsupportedOperationException();
     }
 
     
-    public void setContents(String sequence) throws CompoundNotFoundException {
+    @Override
+	public void setContents(String sequence) throws CompoundNotFoundException {
         throw new UnsupportedOperationException();
     }
 
     
-    public int countCompounds(C... compounds) {
+    @Override
+	public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 
     
-    public AccessionID getAccession() throws UnsupportedOperationException {
+    @Override
+	public AccessionID getAccession() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
     
-    public List<C> getAsList() {
+    @Override
+	public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
     
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         return SequenceMixin.indexOf(this, compound);
     }
 
     
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         return SequenceMixin.lastIndexOf(this, compound);
     }
 
     
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return SequenceMixin.toStringBuilder(this).toString();
     }
 
     
-    public SequenceView<C> getSubSequence(Integer start, Integer end) {
+    @Override
+	public SequenceView<C> getSubSequence(Integer start, Integer end) {
         return SequenceMixin.createSubSequence(this, start, end);
     }
 

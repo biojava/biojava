@@ -290,6 +290,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         return s.toString();
     }
 
+	@Override
 	public Map<C, Short> getRow(C row) {
 		int rowIndex = rows.indexOf(row);
 		Map<C, Short> map = new HashMap<C, Short>();
@@ -299,6 +300,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		return map;
 	}
 
+	@Override
 	public Map<C, Short> getColumn(C column) {
 		int colIndex = cols.indexOf(column);
 		Map<C, Short> map = new HashMap<C, Short>();

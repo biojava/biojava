@@ -116,6 +116,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	public abstract Object getParameters();
 	public abstract String getDbSearchLegend();
 
+	@Override
 	public void process(String[] argv){
 
 		printAboutMe();
@@ -738,6 +739,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		return afpChain.toDBSearchResult();
 	}
 
+	@Override
 	public String printHelp() {
 		StringBuffer buf = new StringBuffer();
 		StructureAlignment alg = getAlgorithm();

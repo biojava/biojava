@@ -57,6 +57,7 @@ public class LinearColorInterpolator implements ColorInterpolator {
 	 * @throws IllegalArgumentException if mixing is not between 0 and 1
 	 * @see org.biojava.bio.structure.gui.util.color.ColorInterpolator#interpolate(java.awt.Color, java.awt.Color, float)
 	 */
+	@Override
 	public Color interpolate(Color a, Color b, float mixing) {
 		float[] compA, compB;
 		// Get components

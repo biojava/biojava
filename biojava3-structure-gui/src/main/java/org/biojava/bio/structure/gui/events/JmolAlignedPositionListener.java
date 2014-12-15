@@ -57,6 +57,7 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 		ca2 = structurePairAligner.getAlignmentAtoms(structure2);
 	}
 
+	@Override
 	public void mouseOverPosition(AlignedPosition p) {
 		
 		//System.out.println("mouseoverposition " + p);
@@ -109,21 +110,25 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 		
 	}
 
+	@Override
 	public void positionSelected(AlignedPosition p) {
 		mouseOverPosition(p);
 		
 	}
 
+	@Override
 	public void rangeSelected(AlignedPosition start, AlignedPosition end) {
 		
 		
 	}
 
+	@Override
 	public void selectionLocked() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void selectionUnlocked() {
 		// TODO Auto-generated method stub
 		
@@ -131,6 +136,7 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 
 
 
+	@Override
 	public void toggleSelection(AlignedPosition p) {
 		// TODO Auto-generated method stub
 		

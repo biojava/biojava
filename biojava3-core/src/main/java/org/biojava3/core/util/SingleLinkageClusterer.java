@@ -46,6 +46,7 @@ public class SingleLinkageClusterer {
 			return closestDistance;
 		}
 		
+		@Override
 		public String toString() {
 			
 			String closestDistStr = null;

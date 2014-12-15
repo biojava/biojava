@@ -25,6 +25,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		provider  = new MmCifPDBBiolAssemblyProvider();
 	}
 	
+	@Override
 	public Structure getAsymUnit(String pdbId){
 	 
 		provider.setPdbId(pdbId);
@@ -33,6 +34,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		return s1;
 	}
 	
+	@Override
 	public void setAsymUnit(Structure s){
 		provider.setAsymUnit(s);
 	}

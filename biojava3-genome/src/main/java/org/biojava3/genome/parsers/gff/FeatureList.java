@@ -49,6 +49,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * @param feature The FeatureI object to add.
 	 * @return True if the feature was added.
 	 */
+	@Override
 	public boolean add(FeatureI feature) {
 		if (mLocation == null) {
 			mLocation = feature.location().plus();
@@ -432,6 +433,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 *
 	 * @return A string.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder  s = new StringBuilder("FeatureList: >>\n");
 		for (FeatureI f : this) {
@@ -447,6 +449,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 */
 	private class FeatureComparator implements Comparator<FeatureI> {
 
+		@Override
 		public int compare(FeatureI a, FeatureI b) {
 			if (a.seqname().equals(b.seqname()) && a.location().isSameStrand(b.location())) {
 				return a.location().start() - b.location().start();		//sort on start
@@ -477,6 +480,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 *
 	 */
 	// FIXME features may have a null location() !!
+	@Deprecated
 	static public void main(String args[]) {
 	}
 

@@ -41,6 +41,7 @@ public class GradientPanel extends JPanel {
 		this.setPreferredSize(new Dimension(100,20));
 	}
 	
+	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		int w = getWidth();

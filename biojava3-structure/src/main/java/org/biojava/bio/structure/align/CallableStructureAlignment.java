@@ -41,6 +41,7 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 		
 	}
 
+	@Override
 	public AFPChain  call() throws Exception {
 		
 		

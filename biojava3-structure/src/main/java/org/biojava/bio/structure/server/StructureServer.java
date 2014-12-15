@@ -27,6 +27,7 @@ package org.biojava.bio.structure.server;
  * @author Andreas Prlic
  * @deprecated
  */
+@Deprecated
 public interface StructureServer {
 
 	public void addStructureListener(StructureListener listener);

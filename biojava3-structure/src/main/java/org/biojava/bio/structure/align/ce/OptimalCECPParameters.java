@@ -75,6 +75,7 @@ public class OptimalCECPParameters extends CeParameters {
 		return params;
 	}
 
+	@Override
 	public List<String> getUserConfigParameters() {
 		List<String> params = super.getUserConfigParameters();
 		params.add("TryAllCPs");
@@ -82,6 +83,7 @@ public class OptimalCECPParameters extends CeParameters {
 		return params;
 	}
 
+	@Override
 	public List<String> getUserConfigParameterNames(){
 		List<String> params = super.getUserConfigParameterNames();
 		
@@ -90,6 +92,7 @@ public class OptimalCECPParameters extends CeParameters {
 		return params;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
 		List<Class> params = super.getUserConfigTypes();

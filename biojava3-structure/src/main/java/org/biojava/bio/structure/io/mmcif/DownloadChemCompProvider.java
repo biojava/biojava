@@ -106,6 +106,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			
 			FilenameFilter filter =new FilenameFilter() {
 
+				@Override
 				public boolean accept(File dir, String file) {
 					return file.endsWith(".cif.gz");
 				}
@@ -195,6 +196,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	 * @param recordName the ID of the {@link ChemComp}
 	 * @return a new {@link ChemComp} definition.
 	 */
+	@Override
 	public  ChemComp getChemComp(String recordName) {
 
 		// make sure we work with upper case records		

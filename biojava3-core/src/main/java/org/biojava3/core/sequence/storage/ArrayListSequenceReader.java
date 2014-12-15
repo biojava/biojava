@@ -86,7 +86,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @return
      */
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return getSequenceAsString(1, getLength(), Strand.POSITIVE);
     }
 
@@ -107,7 +108,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @return
      */
-    public List<C> getAsList() {
+    @Override
+	public List<C> getAsList() {
         return this.parsedCompounds;
     }
 
@@ -116,7 +118,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      * @param position
      * @return
      */
-    public C getCompoundAt(int position) {
+    @Override
+	public C getCompoundAt(int position) {
         return this.parsedCompounds.get(position - 1);
     }
 
@@ -125,7 +128,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      * @param compound
      * @return
      */
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         return this.parsedCompounds.indexOf(compound) + 1;
     }
 
@@ -134,7 +138,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      * @param compound
      * @return
      */
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
@@ -142,7 +147,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @return
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return this.parsedCompounds.size();
     }
 
@@ -150,7 +156,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @return
      */
-    public Iterator<C> iterator() {
+    @Override
+	public Iterator<C> iterator() {
         return this.parsedCompounds.iterator();
     }
 
@@ -158,7 +165,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @param compoundSet
      */
-    public void setCompoundSet(CompoundSet<C> compoundSet) {
+    @Override
+	public void setCompoundSet(CompoundSet<C> compoundSet) {
         this.compoundSet = compoundSet;
     }
 
@@ -166,7 +174,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @return
      */
-    public CompoundSet<C> getCompoundSet() {
+    @Override
+	public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
 
@@ -174,7 +183,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @param sequence
      */
-    public void setContents(String sequence) throws CompoundNotFoundException {
+    @Override
+	public void setContents(String sequence) throws CompoundNotFoundException {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
         this.parsedCompounds.clear();
@@ -225,7 +235,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      * @param bioEnd
      * @return
      */
-    public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
+    @Override
+	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         return new SequenceProxyView<C>(ArrayListSequenceReader.this, bioBegin, bioEnd);
     }
 
@@ -233,7 +244,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @return
      */
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -242,7 +254,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      * @param compounds
      * @return
      */
-    public int countCompounds(C... compounds) {
+    @Override
+	public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 

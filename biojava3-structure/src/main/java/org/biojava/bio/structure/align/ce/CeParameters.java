@@ -57,6 +57,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		private ScoringStrategy(String name) {
 			this.name = name;
 		}
+		@Override
 		public String toString() {
 			return name;
 		}
@@ -105,6 +106,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 
+	@Override
 	public void reset(){
 		winSize = 8;
 		rmsdThr = 3.0;
@@ -194,6 +196,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
+	@Override
 	public List<String> getUserConfigHelp() {
 		List<String> params =new ArrayList<String>();
 		String helpMaxGap = "This parameter configures the maximum gap size G, that is applied during the AFP extension. The larger the value, the longer the calculation time can become, Default value is 30. Set to 0 for no limit. " ;
@@ -210,6 +213,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		return params;
 	}
 
+	@Override
 	public List<String> getUserConfigParameters() {
 		List<String> params = new ArrayList<String>();
 		params.add("MaxGapSize");
@@ -223,6 +227,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		return params;
 	}
 
+	@Override
 	public List<String> getUserConfigParameterNames(){
 		List<String> params = new ArrayList<String>();
 		params.add("max. gap size G (during AFP extension).");
@@ -235,6 +240,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		return params;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
 		List<Class> params = new ArrayList<Class>();

@@ -49,9 +49,11 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
+	@Override
 	public String getType(){ return type;}
 
 
+	@Override
 	public String toString(){
 
 		String str = "PDB: "+ pdb_name + " " + residueNumber +  " "+ pdb_flag;
@@ -92,6 +94,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
+	@Override
 	public Object clone(){
 		NucleotideImpl n = new NucleotideImpl();
 

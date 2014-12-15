@@ -37,6 +37,7 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 		return comp;
 	}
 	
+	@Override
 	public ChemComp getChemComp(String recordName) {
 		String name = recordName.toUpperCase().trim();
 		InputStream inStream = this.getClass().getResourceAsStream("/chemcomp/"+name + ".cif.gz");

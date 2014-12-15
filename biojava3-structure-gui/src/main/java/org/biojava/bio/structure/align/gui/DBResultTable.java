@@ -289,6 +289,7 @@ public class DBResultTable implements ActionListener{
 	}
 
 	private class RowListener implements ListSelectionListener {
+		@Override
 		public void valueChanged(ListSelectionEvent event) {
 			if (event.getValueIsAdjusting()) {
 				return;
@@ -370,6 +371,7 @@ public class DBResultTable implements ActionListener{
 		return StructureTools.getReducedStructure(s, userChain2);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 

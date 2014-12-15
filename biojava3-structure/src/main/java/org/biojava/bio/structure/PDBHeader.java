@@ -77,6 +77,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 	/** String representation
 	 *
 	 */
+	@Override
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
 
@@ -121,6 +122,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 *
 	 * @return a PDB file style display
 	 */
+	@Override
 	public String toPDB(){
 		StringBuffer buf = new StringBuffer();
 		toPDB(buf);
@@ -131,6 +133,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 *
 	 * @param buf
 	 */
+	@Override
 	public void toPDB(StringBuffer buf){
 		//          1         2         3         4         5         6         7
 		//01234567890123456789012345678901234567890123456789012345678901234567890123456789

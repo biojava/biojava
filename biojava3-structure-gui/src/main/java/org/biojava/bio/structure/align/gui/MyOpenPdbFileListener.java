@@ -12,6 +12,7 @@ import org.biojava.bio.structure.io.PDBFileReader;
 
 public class MyOpenPdbFileListener 
 implements ActionListener {
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();			        
 		if ( cmd.equals("Open PDB file")){

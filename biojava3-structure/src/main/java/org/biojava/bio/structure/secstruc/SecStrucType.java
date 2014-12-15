@@ -35,6 +35,7 @@ public enum SecStrucType implements Serializable{
 
 	}
 
+	@Override
 	public String toString(){
 		return type.toString();
 	}

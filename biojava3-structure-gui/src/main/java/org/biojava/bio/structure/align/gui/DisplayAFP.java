@@ -142,6 +142,7 @@ public class DisplayAFP
 	 * @return
 	 * @deprecated use AFPAlignmentDisplay.getBlockNrForAlignPos instead...
 	 */
+	@Deprecated
 	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
 		
 		return AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);

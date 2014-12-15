@@ -216,6 +216,7 @@ extends JPanel{
 		g2D.setFont(seqFont);
 	}
 
+	@Override
 	public void paintComponent(Graphics g){
 
 		g.setColor(BACKGROUND_COLOR);

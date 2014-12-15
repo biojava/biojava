@@ -32,7 +32,8 @@ import org.biojava3.core.sequence.io.template.SequenceParserInterface;
  */
 public class FastaSequenceParser implements SequenceParserInterface {
 
-    public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException {
+    @Override
+	public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException {
         StringBuilder sb;
         if (sequenceLength != -1) {
             sb = new StringBuilder(sequenceLength);

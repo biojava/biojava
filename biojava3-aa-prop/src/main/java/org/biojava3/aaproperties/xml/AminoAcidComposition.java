@@ -56,6 +56,7 @@ public class AminoAcidComposition {
 		this.isotopeList = isotopeList;
 	}
 	
+	@Override
 	public String toString(){
 		return symbol + ", " + shortName + ", " + name;
 	}

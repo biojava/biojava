@@ -101,6 +101,7 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 			}
 		}
 		
+		@Override
 		public String toString() {
 			return "BerkeleyScopMirror[ \"" + rootURL + " ]";
 		}

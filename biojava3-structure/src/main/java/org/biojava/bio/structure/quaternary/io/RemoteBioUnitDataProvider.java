@@ -157,6 +157,7 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 	
 	}
 	
+	@Override
 	public void setAsymUnit(Structure s){
 		// nothing to be done here so far..
 	}

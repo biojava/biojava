@@ -69,6 +69,7 @@ public class MenuCreator {
 		JMenuItem openI = new JMenuItem("Open");
 		openI.setMnemonic(KeyEvent.VK_O);
 		openI.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();			        
 				if ( cmd.equals("Open")){
@@ -102,6 +103,7 @@ public class MenuCreator {
 		exitI.setMnemonic(KeyEvent.VK_X);
 		exitI.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
@@ -117,6 +119,7 @@ public class MenuCreator {
 		JMenu align = new JMenu("Align");
 		JMenuItem pairI = new JMenuItem("2 protein structures");
 		pairI.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
@@ -134,6 +137,7 @@ public class MenuCreator {
 		JMenuItem aboutI = new JMenuItem("PDBview");
 		aboutI.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
@@ -186,6 +190,7 @@ public class MenuCreator {
 		JButton close = new JButton("Close");
 
 		close.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				Object source = event.getSource();
 

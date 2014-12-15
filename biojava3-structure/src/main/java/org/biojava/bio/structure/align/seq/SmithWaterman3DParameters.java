@@ -42,6 +42,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 
 
 
+	@Override
 	public List<String> getUserConfigHelp()
 	{
 		List<String> params =new ArrayList<String>();
@@ -54,6 +55,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 		return params;
 	}
 
+	@Override
 	public List<String> getUserConfigParameterNames()
 	{
 		List<String> params =new ArrayList<String>();
@@ -64,6 +66,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 		return params;
 	}
 
+	@Override
 	public List<String> getUserConfigParameters()
 	{
 		List<String> params =new ArrayList<String>();
@@ -73,6 +76,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 		return params;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes()
 	{
@@ -83,6 +87,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 		return params;
 	}
 
+	@Override
 	public void reset()
 	{
 		gapOpen = (short) 8;

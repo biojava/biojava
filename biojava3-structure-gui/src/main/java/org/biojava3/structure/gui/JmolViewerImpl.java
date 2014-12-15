@@ -93,7 +93,8 @@ public class JmolViewerImpl implements StructureViewer {
         frame.repaint();
     }
 
-    public void setStructure(Structure structure) {
+    @Override
+	public void setStructure(Structure structure) {
         if (jmolPanel == null) {
             System.err.println("please install Jmol first");
             return;
@@ -120,37 +121,45 @@ public class JmolViewerImpl implements StructureViewer {
         // code. See the SPICE code repository for how to do this.
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         // TODO Auto-generated method stub
     }
 
-    public Color getColor() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Selection getSelection() {
+    @Override
+	public Color getColor() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public void repaint() {
+    @Override
+	public Selection getSelection() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+	public void repaint() {
         // TODO Auto-generated method stub
     }
 
-    public void setColor(Color red) {
+    @Override
+	public void setColor(Color red) {
         // TODO Auto-generated method stub
     }
 
-    public void setSelection(Selection selection) {
+    @Override
+	public void setSelection(Selection selection) {
         // TODO Auto-generated method stub
     }
 
-    public void setStyle(RenderStyle wireframe) {
+    @Override
+	public void setStyle(RenderStyle wireframe) {
         // TODO Auto-generated method stub
     }
 
-    public void setZoom(int i) {
+    @Override
+	public void setZoom(int i) {
         // TODO Auto-generated method stub
     }
     @SuppressWarnings("rawtypes")
@@ -246,7 +255,8 @@ public class JmolViewerImpl implements StructureViewer {
         final Dimension currentSize = new Dimension();
         final Rectangle rectClip = new Rectangle();
 
-        public void paint(Graphics g) {
+        @Override
+		public void paint(Graphics g) {
             getSize(currentSize);
             g.getClipBounds(rectClip);
             //viewer.renderScreenImage(g, currentSize, rectClip);

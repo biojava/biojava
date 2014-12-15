@@ -94,6 +94,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -101,6 +102,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -108,6 +110,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public void setParent(Structure parent) {
 		this.parent = parent;
 	}
@@ -116,7 +119,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 * @return the parent Structure object
 	 */
-
+	@Override
 	public Structure getParent() {
 
 
@@ -127,6 +130,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** Returns an identical copy of this Chain .
 	 * @return an identical copy of this Chain
 	 */
+	@Override
 	public Object clone() {
 		// go through all groups and add to new Chain.
 		ChainImpl n = new ChainImpl();
@@ -178,6 +182,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public void setCompound(Compound mol) {
 		this.mol = mol;
 	}
@@ -185,6 +190,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public Compound getCompound() {
 		return this.mol;
 	}
@@ -193,7 +199,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @param sp_id  a String specifying the swissprot id value
 	 * @see #getSwissprotId
 	 */
-
+	@Override
 	public void setSwissprotId(String sp_id){
 		swissprot_id = sp_id ;
 	}
@@ -202,6 +208,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @return a String representing the swissprot id value
 	 * @see #setSwissprotId
 	 */
+	@Override
 	public String getSwissprotId() {
 		return swissprot_id ;
 	}
@@ -209,6 +216,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public void addGroup(Group group) {
 
 		group.setChain(this);
@@ -253,6 +261,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @return a Group object
 	 * @deprecated use getAtomGroup or getSeqResGroup instead
 	 */
+	@Override @Deprecated
 	public Group getGroup(int position) {
 
 		return (Group)groups.get(position);
@@ -263,6 +272,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Group getAtomGroup(int position) {
 
 		return (Group)groups.get(position);
@@ -275,6 +285,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @return an List object containing the groups of type...
 	 * @deprecated use getAtomGroups instead
 	 */
+	@Override @Deprecated
 	public List<Group> getGroups( String type) {
 		return getAtomGroups(type);
 	}
@@ -282,6 +293,7 @@ public class ChainImpl implements Chain, Serializable {
 	/**  
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<Group> getAtomGroups(String type){
 		List<Group> tmp = new ArrayList<Group>() ;
 		for (int i=0;i<groups.size();i++){
@@ -298,6 +310,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @return a List object representing the Groups of this Chain.
 	 * @deprecated use getAtomGroups instead
 	 */
+	@Override @Deprecated
 	public List<Group> getGroups(){
 		return groups ;
 	}
@@ -306,6 +319,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public List<Group> getAtomGroups(){
 		return groups ;
 	}
@@ -313,6 +327,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public void setAtomGroups(List<Group> groups){
 		for (Group g:groups){
 			g.setChain(this);
@@ -323,6 +338,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd, boolean ignoreMissing)
 			throws StructureException {
 
@@ -336,6 +352,7 @@ public class ChainImpl implements Chain, Serializable {
 
 	}
 
+	@Override
 	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ignoreMissing)
 			throws StructureException {
 
@@ -416,6 +433,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * {@inheritDoc}
 	 *
 	 */
+	@Override
 	public Group getGroupByPDB(String pdbresnum) throws StructureException {
 		ResidueNumber resNum = ResidueNumber.fromString(pdbresnum);
 		return getGroupByPDB(resNum);
@@ -426,6 +444,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * {@inheritDoc}
 	 *
 	 */
+	@Override
 	public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
 		String pdbresnum = resNum.toString();
 		if ( pdbResnumMap.containsKey(pdbresnum)) {
@@ -440,6 +459,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * {@inheritDoc}
 	 *
 	 */
+	@Override
 	public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd)
 			throws StructureException {
 		ResidueNumber start = ResidueNumber.fromString(pdbresnumStart);
@@ -453,6 +473,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * {@inheritDoc}
 	 *
 	 */
+	@Override
 	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
 			throws StructureException {
 
@@ -498,6 +519,7 @@ public class ChainImpl implements Chain, Serializable {
 	/**
 	 * @deprecated use getAtomLength instead
 	 */
+	@Override @Deprecated
 	public int getLength() {
 		return getAtomLength();
 	}
@@ -505,6 +527,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public int getLengthAminos() {
 
 		List<Group> g = getAtomGroups(GroupType.AMINOACID);
@@ -514,6 +537,7 @@ public class ChainImpl implements Chain, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getSeqResLength() {
 		//new method returns the length of the sequence defined in the SEQRES records
 		return seqResGroups.size();
@@ -522,19 +546,22 @@ public class ChainImpl implements Chain, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void   setChainID(String nam) { chainID = nam;   }
 
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getChainID()           {	return chainID;  }
 
 
 
 	/** String representation.
 	 * @return String representation of the Chain
-	 *  */
+	 */
+	@Override
 	public String toString(){
 		String newline = System.getProperty("line.separator");
 		StringBuffer str = new StringBuffer();
@@ -561,6 +588,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 * @return the SEQRES groups of the Chain as a Sequence object.
 	 */
+	@Override
 	public Sequence<?> getBJSequence()  {
 
 		//List<Group> groups = c.getSeqResGroups();
@@ -587,6 +615,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public String getAtomSequence(){
 
 		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
@@ -628,6 +657,7 @@ public class ChainImpl implements Chain, Serializable {
 	/**
 	 * {@inheritDoc}	 
 	 */
+	@Override
 	public String getSeqResSequence(){
 
 		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
@@ -670,6 +700,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public Group getSeqResGroup(int position) {
 
 		return seqResGroups.get(position);
@@ -678,6 +709,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public List<Group> getSeqResGroups(String type) {
 		List<Group> tmp = new ArrayList<Group>() ;
 		for (int i=0;i<seqResGroups.size();i++){
@@ -693,6 +725,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public List<Group> getSeqResGroups() {
 		return seqResGroups;
 	}
@@ -700,6 +733,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public void setSeqResGroups(List<Group> groups){
 		for (Group g: groups){
 			g.setChain(this);
@@ -715,6 +749,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public int getAtomLength() {
 
 		return groups.size();
@@ -723,6 +758,7 @@ public class ChainImpl implements Chain, Serializable {
 	/** {@inheritDoc}
 	 *
 	 */
+	@Override
 	public List<Group> getAtomLigands(){
 		List<Group> ligands = new ArrayList<Group>();
 		

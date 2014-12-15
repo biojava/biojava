@@ -324,6 +324,7 @@ public class PDBFileReader implements StructureIOFile {
 	/** 
 	 * Sets the path for the directory where PDB files are read/written 
 	 */
+	@Override
 	public void setPath(String p){
 		path = new File(FileDownloadUtils.expandUserHome(p)) ;
 	}
@@ -334,6 +335,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * @see #setPath
 	 *
 	 */
+	@Override
 	public String getPath() {
 		return path.toString() ;
 	}
@@ -342,6 +344,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * compressed extensions .Z,.gz do not need to be specified
 	 * they are dealt with automatically.
 	 */
+	@Override
 	public void addExtension(String s){
 		//System.out.println("add Extension "+s);
 		extensions.add(s);
@@ -350,6 +353,7 @@ public class PDBFileReader implements StructureIOFile {
 	/** clear the supported file extensions
 	 *
 	 */
+	@Override
 	public void clearExtensions(){
 		extensions.clear();
 	}
@@ -358,6 +362,7 @@ public class PDBFileReader implements StructureIOFile {
 	 *  
 	 * @return boolean. default is false (all files in one directory)
 	 */
+	@Override
 	public boolean isPdbDirectorySplit() {
 		return pdbDirectorySplit;
 	}
@@ -366,6 +371,7 @@ public class PDBFileReader implements StructureIOFile {
 	 *  
 	 * @param pdbDirectorySplit boolean. If set to false all files are in one directory.
 	 */
+	@Override
 	public void setPdbDirectorySplit(boolean pdbDirectorySplit) {
 		this.pdbDirectorySplit = pdbDirectorySplit;
 	}
@@ -764,6 +770,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * @return the Structure object
 	 * @throws IOException ...
 	 */
+	@Override
 	public  Structure getStructureById(String pdbId)throws IOException	{
 
 		InputStream inStream = null;
@@ -788,6 +795,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * @return the Structure object
 	 * @throws IOException ...
 	 */
+	@Override
 	public Structure getStructure(String filename)
 			throws IOException
 			{
@@ -803,6 +811,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * @return the Structure object
 	 * @throws IOException ...
 	 */
+	@Override
 	public Structure getStructure(File filename) throws IOException {
 
 		InputStreamProvider isp = new InputStreamProvider();
@@ -830,6 +839,7 @@ public class PDBFileReader implements StructureIOFile {
 
 
 
+	@Override
 	public void setFileParsingParameters(FileParsingParameters params){
 		this.params= params;
 		if ( ! params.isLoadChemCompInfo()) {
@@ -837,16 +847,19 @@ public class PDBFileReader implements StructureIOFile {
 		}
 	}
 
+	@Override
 	public FileParsingParameters getFileParsingParameters(){
 		return params;
 	}
 
 
+	@Override
 	public boolean isAutoFetch(){
 		return autoFetch;
 	}
 
 
+	@Override
 	public void setAutoFetch(boolean autoFetch){
 		this.autoFetch = autoFetch;
 	}

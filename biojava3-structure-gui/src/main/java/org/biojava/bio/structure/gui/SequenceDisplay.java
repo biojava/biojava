@@ -139,6 +139,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 			frame.pack();
 			frame.setVisible(true);
 			frame.addWindowListener(new WindowAdapter(){
+				@Override
 				public void windowClosing(WindowEvent e){
 					JFrame f = (JFrame) e.getSource();
 					f.setVisible(false);
@@ -419,6 +420,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 		return apos;
 	}
 
+	@Override
 	public void stateChanged(ChangeEvent e) {
 
 		JSlider source = (JSlider)e.getSource();
