@@ -290,7 +290,6 @@ public class MMcifTest extends TestCase {
 				// can;t compare seq res, since this is only done for 1st...
 				//assertEquals("c1.getSeqResLength(),cx.getSeqResLength());
 				assertEquals(c1.getAtomSequence(),cx.getAtomSequence());
-				assertEquals(c1.getAtomGroups("amino").size(),cx.getAtomGroups("amino").size());
 				assertEquals(c1.getAtomGroups(GroupType.AMINOACID).size(),cx.getAtomGroups(GroupType.AMINOACID).size());
 				assertEquals(c1.getAtomGroups(GroupType.NUCLEOTIDE).size(),cx.getAtomGroups(GroupType.NUCLEOTIDE).size());
 				assertEquals(c1.getAtomGroups(GroupType.HETATM).size(),cx.getAtomGroups(GroupType.HETATM).size());

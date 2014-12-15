@@ -45,7 +45,7 @@ implements AminoAcid, Serializable
 	private static final long serialVersionUID = -6018854413829044230L;
 
 	/** this is an Amino acid. type is "amino". */
-	public static final String type = GroupType.AMINOACID;
+	public static final GroupType type = GroupType.AMINOACID;
 
 	/** IUPAC amino acid residue names
 	 */
@@ -67,7 +67,7 @@ implements AminoAcid, Serializable
 	}
 
 	@Override
-	public String getType(){ return type;}
+	public GroupType getType(){ return type;}
 
 	/**
 	 * {@inheritDoc} 

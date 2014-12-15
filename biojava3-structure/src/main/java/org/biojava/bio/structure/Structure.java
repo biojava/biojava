@@ -111,7 +111,7 @@ public void calcPhiPsi({@link Structure} structure){
 		// from the ATOM records
 
 		//  get the Groups of the chain that are AminoAcids.
-		List<Group> groups = chain.getAtomGroups("amino");
+		List<Group> groups = chain.getAtomGroups(GroupType.AMINOACID);
 
 		{@link AminoAcid} a;
 		{@link AminoAcid} b;
@@ -119,7 +119,7 @@ public void calcPhiPsi({@link Structure} structure){
 
 		for ( int i=0; i < groups.size(); i++){
 
-			// since we requested only groups of type "amino" they will always be amino acids
+			// since we requested only groups of type AMINOACID they will always be amino acids
 			// Nucleotide and Hetatom groups will not be present in the groups list.
 
 			b = ({@link AminoAcid})groups.get(i);

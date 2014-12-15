@@ -34,8 +34,6 @@ import java.awt.RenderingHints;
 import javax.swing.JPanel;
 
 import org.biojava.bio.structure.*;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.util.*;
@@ -158,7 +156,7 @@ extends JPanel{
 
 	public synchronized void setChain(Chain c){
 
-		List<Group> a = c.getAtomGroups("amino");
+		List<Group> a = c.getAtomGroups(GroupType.AMINOACID);
 
 		seqArr = new Character[a.size()];
 

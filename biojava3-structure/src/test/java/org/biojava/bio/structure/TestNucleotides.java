@@ -65,7 +65,7 @@ public class TestNucleotides {
 
 		Chain c = s.getChains().get(1);
 		assertEquals("C", c.getChainID());
-		List<Group> ngr = c.getAtomGroups("nucleotide");
+		List<Group> ngr = c.getAtomGroups(GroupType.NUCLEOTIDE);
 		assertEquals(6,ngr.size());
 		
 		
@@ -105,7 +105,7 @@ public class TestNucleotides {
 		assertTrue("Found an unknown polymertype!", (! g.getChemComp().getPolymerType().equals(PolymerType.unknown)));
 		//System.out.println(g.getChemComp().getPolymerType());
 
-		List<Group> ngr1 = c1.getAtomGroups("nucleotide");
+		List<Group> ngr1 = c1.getAtomGroups(GroupType.NUCLEOTIDE);
 		assertEquals(6,ngr1.size());
 
 
@@ -122,12 +122,12 @@ public class TestNucleotides {
 
 		Chain a = s.getChains().get(0);
 		assertEquals("A", a.getChainID());
-		List<Group> ngrA = a.getAtomGroups("nucleotide");
+		List<Group> ngrA = a.getAtomGroups(GroupType.NUCLEOTIDE);
 		assertEquals(10,ngrA.size());
 
 		Chain b = s.getChains().get(1);
 		assertEquals("B", b.getChainID());
-		List<Group> ngrB = b.getAtomGroups("nucleotide");
+		List<Group> ngrB = b.getAtomGroups(GroupType.NUCLEOTIDE);
 		assertEquals(10,ngrB.size());
 	}
 

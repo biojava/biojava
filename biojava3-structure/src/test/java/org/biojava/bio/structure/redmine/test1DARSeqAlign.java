@@ -4,6 +4,7 @@ package org.biojava.bio.structure.redmine;
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
@@ -47,7 +48,7 @@ public class test1DARSeqAlign extends TestCase {
 			
 			assertTrue( g instanceof NucleotideImpl);
 			
-			assertTrue(g.getType().equals("nucleotide"));
+			assertTrue(g.getType().equals(GroupType.NUCLEOTIDE));
 			
 			assertTrue( g3.getPDBName().equals("LYS"));
 			assertTrue( c.getSeqResGroups().contains(g3));

@@ -117,7 +117,7 @@ public interface Chain {
      * @deprecated use getAtomGroups or getSeqResGroups instead
      */
     @Deprecated
-	public List<Group> getGroups (String type);
+	public List<Group> getGroups (GroupType type);
 
     /** return all groups of this chain.
      * @return a List of all Group objects of this chain
@@ -150,12 +150,12 @@ public interface Chain {
      * {@link GroupType#HETATM} or {@link GroupType#NUCLEOTIDE}.
      * Note that if a standard aminoacid appears as a HETATM (because it is part of a ligand) then
      * it is still considered as {@link GroupType#AMINOACID} and not as {@link GroupType#HETATM}.
-     * @param type  a String
+     * @param type  GroupType
      * @return a List object
      * @see #setAtomGroups(List)
      * @see #getSeqResGroups(String)
      */
-    public List<Group> getAtomGroups (String type);
+    public List<Group> getAtomGroups (GroupType type);
 
     /** get a group by its PDB residue numbering. if the PDB residue number is not know,
      * throws a StructureException.
@@ -268,7 +268,7 @@ public interface Chain {
      * note: not all amino acids need to have 3D coords, in fact in could be that none
      * has!    
      * @return an int representing the length of the AminoAcids in the ATOM records of the chain.
-     * @deprecated use getAtomGroups("amino").size() instead.
+     * @deprecated use getAtomGroups(GroupType.AMINOACID).size() instead.
      */
 
     @Deprecated
@@ -366,12 +366,12 @@ public interface Chain {
     /** 
      * Return a List of all SEQRES groups of a special type, one of: {@link GroupType#AMINOACID},
      * {@link GroupType#HETATM} or {@link GroupType#NUCLEOTIDE}.
-     * @param type  a String
+     * @param type  a GroupType
      * @return an List object
      * @see #setSeqResGroups(List)
      * @see #getAtomGroups(String)
      */
-    public List<Group> getSeqResGroups (String type);
+    public List<Group> getSeqResGroups (GroupType type);
 
     /** 
      * Return a list of all groups in SEQRES records of the chain, i.e.

@@ -248,7 +248,7 @@ public class CompoundFinder {
 	 * @return true if protein, false if nucleotide or ligand
 	 */
 	public static boolean isProtein(Chain c) {
-		return getPredominantGroupType(c).equals(GroupType.AMINOACID);
+		return getPredominantGroupType(c) == GroupType.AMINOACID;
 	}
 	/**
 	 * Tell whether given chain is DNA or RNA
@@ -256,14 +256,14 @@ public class CompoundFinder {
 	 * @return true if nucleic acid, false if protein or ligand
 	 */
 	public static boolean isNucleicAcid(Chain c) {
-		return getPredominantGroupType(c).equals(GroupType.NUCLEOTIDE);
+		return getPredominantGroupType(c) == GroupType.NUCLEOTIDE;
 	}
 	/**
 	 * Gets the predominant GroupType for a given Chain
 	 * @param c
 	 * @return
 	 */
-	public static String getPredominantGroupType(Chain c) {
+	public static GroupType getPredominantGroupType(Chain c) {
 		int sizeAminos = c.getAtomGroups(GroupType.AMINOACID).size();
 		int sizeNucleotides = c.getAtomGroups(GroupType.NUCLEOTIDE).size();
 		List<Group> hetAtoms = c.getAtomGroups(GroupType.HETATM);
@@ -282,7 +282,7 @@ public class CompoundFinder {
 		if ((double)(sizeHetatoms-sizeWaters)/(double)fullSize > RATIO_RESIDUES_TO_TOTAL) return GroupType.HETATM;
 		
 		// finally if neither condition works, we try based on majority, but log it
-		String max;
+		GroupType max;
 		if(sizeNucleotides > sizeAminos) {
 			if(sizeNucleotides > sizeHetatoms) {
 				max = GroupType.NUCLEOTIDE;

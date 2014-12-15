@@ -114,7 +114,7 @@ public class PdbFileFormat30Test extends TestCase {
 		while(iter.hasNext()){
 			Group g = (Group) iter.next();
 			
-			if (g.getType().equals("nucleotide")){
+			if (g.getType().equals(GroupType.NUCLEOTIDE)){
 				nr ++;
 			} else {
 				//System.out.println(g.getType() + g.getPDBName());

@@ -124,7 +124,7 @@ public class Mutator{
                     
                     // we only mutate amino acids
                     // and ignore hetatoms and nucleotides in this case                   
-                    if (rnum.equals(pdbResnum) && (g.getType().equals("amino"))){
+                    if (rnum.equals(pdbResnum) && (g.getType() == GroupType.AMINOACID) ){
                         
                         // create the mutated amino acid and add it to our new chain
                         AminoAcid newgroup = mutateResidue((AminoAcid)g,newType);

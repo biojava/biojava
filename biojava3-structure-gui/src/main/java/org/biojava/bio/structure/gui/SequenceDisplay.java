@@ -42,6 +42,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.StructurePairAligner;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
@@ -462,8 +463,8 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	}
 
 	private int getMaxSequenceLength(){
-		int l1 = panel1.getChain().getAtomGroups("amino").size();
-		int l2 = panel2.getChain().getAtomGroups("amino").size();
+		int l1 = panel1.getChain().getAtomGroups(GroupType.AMINOACID).size();
+		int l2 = panel2.getChain().getAtomGroups(GroupType.AMINOACID).size();
 		if ( l1 > l2)
 			return l1;
 		else return l2;

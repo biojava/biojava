@@ -403,7 +403,7 @@ Angstroms.
 		Chain c = g.getChain();
 		String chainID = c.getChainID();
 
-		String type = g.getType() ;
+		GroupType type = g.getType() ;
 
 		String record = "" ;
 		if ( type.equals(GroupType.HETATM) ) {
@@ -537,7 +537,7 @@ Angstroms.
 					Group gr = chain.getAtomGroup(groupnr);
 					xw.openTag("group");
 					xw.attribute("name",gr.getPDBName());
-					xw.attribute("type",gr.getType());
+					xw.attribute("type",gr.getType().toString());
 					xw.attribute("groupID",gr.getResidueNumber().toString());
 
 

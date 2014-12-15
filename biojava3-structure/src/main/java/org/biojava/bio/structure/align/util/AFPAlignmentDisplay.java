@@ -29,6 +29,7 @@ import java.util.Map;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -423,8 +424,8 @@ public class AFPAlignmentDisplay
 		if ( g1 != null) {
 			c1 = g1.getChain();
 			if ( c1 != null){
-				hetatms = c1.getAtomGroups("hetatm");;
-				nucs1  = c1.getAtomGroups("nucleotide");
+				hetatms = c1.getAtomGroups(GroupType.HETATM);;
+				nucs1  = c1.getAtomGroups(GroupType.NUCLEOTIDE);
 			}
 		}
 		List<Group> hetatms2 = new ArrayList<Group>();
@@ -434,8 +435,8 @@ public class AFPAlignmentDisplay
 		if ( g2 != null){
 			c2 = g2.getChain();
 			if ( c2 != null){
-				hetatms2 = c2.getAtomGroups("hetatm");
-				nucs2 = c2.getAtomGroups("nucleotide");
+				hetatms2 = c2.getAtomGroups(GroupType.HETATM);
+				nucs2 = c2.getAtomGroups(GroupType.NUCLEOTIDE);
 			}
 		}
 		Atom[] arr1 = GuiWrapper.getAtomArray(ca1, hetatms, nucs1);

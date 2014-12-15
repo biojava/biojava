@@ -55,7 +55,7 @@ public class HetatomImpl implements Group,Serializable {
 	/** this is a "hetatm".
 	 *
 	 */
-	public static final String type = GroupType.HETATM ;
+	public static final GroupType type = GroupType.HETATM ;
 
 	private static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
 
@@ -252,7 +252,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * {@inheritDoc}	 
 	 */
 	@Override
-	public String getType(){ return type;}
+	public GroupType getType(){ return type;}
 
 	@Override
 	public String toString(){
