@@ -484,15 +484,14 @@ public class HetatomImpl implements Group,Serializable {
 	 * all internal Collection objects to the required size.
 	 * 
 	 */
-	@SuppressWarnings("rawtypes")
 	public void trimToSize(){
 
-		if ( atoms instanceof ArrayList) {
-			ArrayList myatoms = (ArrayList) atoms;
+		if ( atoms instanceof ArrayList<?>) {
+			ArrayList<Atom> myatoms = (ArrayList<Atom>) atoms;
 			myatoms.trimToSize();
 		}
-		if ( altLocs instanceof ArrayList){
-			ArrayList myAltLocs = (ArrayList) altLocs;
+		if ( altLocs instanceof ArrayList<?>){
+			ArrayList<Group> myAltLocs = (ArrayList<Group>) altLocs;
 			myAltLocs.trimToSize();
 		}
 		atomNameLookup = new HashMap<String,Atom>(atomNameLookup);

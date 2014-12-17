@@ -436,9 +436,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// same residueNumber, but altLocs...
 
 			// test altLoc
-			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {												
+			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {
+				logger.debug("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
-				//System.out.println("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
+				if (altGroup.getChain()==null) {
+					altGroup.setChain(current_chain);
+				}
 			}
 		}
 

@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
@@ -696,6 +697,11 @@ public class ChainImpl implements Chain, Serializable {
 	public void setInternalChainID(String internalChainID) {
 		this.internalChainID = internalChainID;
 
+	}
+	
+	@Override
+	public String toPDB() {
+		return FileConvert.toPDB(this);
 	}
 }
 

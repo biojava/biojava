@@ -148,6 +148,9 @@ public class TestStructureCrossReferences {
 		for (StructureInterface interf:interfaces) {
 			testInterfaceRefs(structure, interf);
 		}
+		
+		System.out.println("Testing references in original structure after getUniqueInterfaces");
+		testStructureRefs(structure);
 	}
 	
 	private void testStructureRefs(Structure s) throws StructureException {

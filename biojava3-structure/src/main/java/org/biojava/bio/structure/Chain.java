@@ -366,7 +366,11 @@ public interface Chain {
      */
     public List<Group> getAtomLigands();
     
-    
+    /**
+     * Convert this Chain to a String in PDB format
+     * @return
+     */
+    public String toPDB();
    
     
 }

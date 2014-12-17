@@ -336,7 +336,7 @@ public class FileConvert {
 	}
 	
 	
-	/** Convert a CHain object to PDB representation
+	/** Convert a Chain object to PDB representation
 	 * 
 	 * @param chain
 	 * @return
