@@ -335,6 +335,14 @@ public class FileConvert {
 
 	}
 	
+	public static String toPDB(Atom a, String chainId) {
+		StringBuffer w = new StringBuffer();
+
+		toPDB(a,w, chainId);
+
+		return w.toString();		
+	}
+	
 	
 	/** Convert a Chain object to PDB representation
 	 * 
@@ -396,12 +404,13 @@ Angstroms.
 77 - 78        LString(2)      element       Element symbol, right-justified.
 79 - 80        LString(2)      charge        Charge on the atom.
 </pre>
-*/
-	public static void toPDB(Atom a, StringBuffer str) {
+     * @param a
+     * @param str
+     * @param chainID the chain ID that the Atom will have in the output string
+	 */
+	public static void toPDB(Atom a, StringBuffer str, String chainID) {
 
 		Group g = a.getGroup();
-		Chain c = g.getChain();
-		String chainID = c.getChainID();
 
 		String type = g.getType() ;
 
@@ -471,6 +480,11 @@ Angstroms.
 		str.append(newline);
 
 	}
+	
+	public static void toPDB(Atom a, StringBuffer str) {
+		toPDB(a,str,a.getGroup().getChain().getChainID());
+	}
+	
 
 	/** test if pdbserial has an insertion code */
 	private static boolean hasInsertionCode(String pdbserial) {

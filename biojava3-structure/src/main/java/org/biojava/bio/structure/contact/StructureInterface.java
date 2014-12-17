@@ -16,6 +16,7 @@ import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.asa.AsaCalculator;
 import org.biojava.bio.structure.asa.GroupAsa;
+import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.xtal.CrystalTransform;
@@ -633,14 +634,41 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return firstMol[0].getGroup().getChain().getParent();
 	}
 	
+	/**
+	 * Return a String representing the 2 molecules of this interface in PDB format.
+	 * If the molecule ids (i.e. chain ids) are the same for both molecules, then the second
+	 * one will be replaced by the next letter in alphabet (or A for Z) 
+	 * @return
+	 */
 	public String toPDB() {
+		
+		String molecId1 = getMoleculeIds().getFirst();
+		String molecId2 = getMoleculeIds().getSecond();
+		
+		if (molecId2.equals(molecId1)) {
+			// if both chains are named equally we want to still named them differently in the output pdb file
+			// so that molecular viewers can handle properly the 2 chains as separate entities 
+			char letter = molecId1.charAt(0);
+			if (letter!='Z' && letter!='z') {
+				molecId2 = Character.toString((char)(letter+1)); // i.e. next letter in alphabet
+			} else {
+				molecId2 = Character.toString((char)(letter-25)); //i.e. 'A' or 'a'
+			}
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		for (Atom atom:this.molecules.getFirst()) {
-			sb.append(atom.toPDB());
+			sb.append(FileConvert.toPDB(atom, molecId1));
 		}
+		sb.append("TER");
+		sb.append(System.getProperty("line.separator"));
 		for (Atom atom:this.molecules.getSecond()) {
-			sb.append(atom.toPDB());
+			sb.append(FileConvert.toPDB(atom,molecId2));
 		}
+		sb.append("TER");
+		sb.append(System.getProperty("line.separator"));
+		sb.append("END");
+		sb.append(System.getProperty("line.separator"));
 		return sb.toString();
 	}
 	
