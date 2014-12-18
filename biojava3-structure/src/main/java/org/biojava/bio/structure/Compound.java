@@ -49,6 +49,12 @@ public class Compound implements Serializable {
 	//private final static Logger logger = LoggerFactory.getLogger(Compound.class);
 
 	
+	//TODO we should consider having the data here as it is in mmCIF dictionary - JD 2014-12-11
+	//     Especially useful would be to have the polymer/non-polymer/water classification present in mmCIF
+	//     We could drop a lot of the stuff here that is PDB-file related (actually many PDB files don't contain many of these fields)
+	//     The only really essential part of a Compound is the member chains and the entity_id/mol_id
+	// See also issue https://github.com/biojava/biojava/issues/219
+	
 	private static final long serialVersionUID = 2991897825657586356L;
 	
 	/**
@@ -117,6 +123,77 @@ public class Compound implements Serializable {
 		molId = -1;
 	}
 
+	/**
+	 * Constructs a new Compound copying all data from the given one
+	 * but not setting the Chains
+	 * @param c
+	 */
+	public Compound (Compound c) {
+		
+		this.chains = new ArrayList<Chain>();
+		
+		this.molId = c.molId;
+		
+		this.refChainId = c.refChainId;
+
+		this.molName = c.molName;
+		this.title = c.title;
+		
+		if (c.synonyms!=null) {
+			this.synonyms = new ArrayList<String>();
+			synonyms.addAll(c.synonyms);
+		}
+		if (c.ecNums!=null) {
+			this.ecNums = new ArrayList<String>();
+			ecNums.addAll(c.ecNums);
+		}
+		
+		this.engineered = c.engineered;
+		this.mutation = c.mutation;
+		this.biologicalUnit = c.biologicalUnit;
+		this.details = c.details;
+
+		this.numRes = c.numRes;
+		this.resNames = c.resNames;
+
+		this.headerVars = c.headerVars;
+
+		this.synthetic = c.synthetic;
+		this.fragment = c.fragment;
+		this.organismScientific = c.organismScientific;
+		this.organismTaxId = c.organismTaxId;
+		this.organismCommon = c.organismCommon;
+		this.strain = c.strain;
+		this.variant = c.variant;
+		this.cellLine = c.cellLine;
+		this.atcc = c.atcc;
+		this.organ = c.organ;
+		this.tissue = c.tissue;
+		this.cell = c.cell;
+		this.organelle = c.organelle;
+		this.secretion = c.secretion;
+		this.gene = c.gene;
+		this.cellularLocation = c.cellularLocation;
+		this.expressionSystem = c.expressionSystem;
+	    this.expressionSystemTaxId = c.expressionSystemTaxId;
+		this.expressionSystemStrain = c.expressionSystemStrain;
+		this.expressionSystemVariant = c.expressionSystemVariant;
+		this.expressionSystemCellLine = c.expressionSystemCellLine;
+		this.expressionSystemAtccNumber = c.expressionSystemAtccNumber;
+		this.expressionSystemOrgan = c.expressionSystemOrgan;
+		this.expressionSystemTissue = c.expressionSystemTissue;
+		this.expressionSystemCell = c.expressionSystemCell;
+		this.expressionSystemOrganelle = c.expressionSystemOrganelle;
+		this.expressionSystemCellularLocation = c.expressionSystemCellularLocation;
+		this.expressionSystemVectorType = c.expressionSystemVectorType;
+		this.expressionSystemVector = c.expressionSystemVector;
+		this.expressionSystemPlasmid = c.expressionSystemPlasmid;
+		this.expressionSystemGene = c.expressionSystemGene;
+		this.expressionSystemOtherDetails = c.expressionSystemOtherDetails;
+
+		
+	}
+
 	@Override
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
@@ -134,6 +211,12 @@ public class Compound implements Serializable {
 		return buf.toString();
 	}
 
+	/**
+	 * Get the representative Chain for this Compound.
+	 * We choose the Chain with the first chain identifier after
+	 * lexicographical sorting, e.g. chain A if Compound is composed of chains A,B,C,D,E
+	 * @return
+	 */
 	public Chain getRepresentative() {
 		String minChainId = "ZZZZ";
 		Chain firstLexicographicalIdChain = null;

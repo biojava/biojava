@@ -221,6 +221,10 @@ public class TestAltLocs {
 	public void test3PIUpdb() throws IOException, StructureException{ 
 
 		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -239,12 +243,19 @@ public class TestAltLocs {
 			for (Group g: c.getAtomGroups()){
 
 				for (Group altLocGroup:g.getAltLocs()) {
-					ensureAllAtomsSameAltCode(altLocGroup);						
+					ensureAllAtomsSameAltCode(altLocGroup);
+
+					for (Atom a:altLocGroup.getAtoms()) {
+						assertNotNull(a.getGroup());
+						assertNotNull(a.getGroup().getChain());
+					}
 				}
 
 				List<Atom> atoms = g.getAtoms();
 				boolean caInMain = false;
 				for (Atom a: atoms){
+					assertNotNull(a.getGroup());
+					assertNotNull(a.getGroup().getChain());
 
 					if ( a.getName().equals(StructureTools.CA_ATOM_NAME)) {
 						caList.add(a);
@@ -272,6 +283,9 @@ public class TestAltLocs {
 	public void test3PIUmmcif() throws IOException, StructureException{ 
 
 		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -290,13 +304,21 @@ public class TestAltLocs {
 			for (Group g: c.getAtomGroups()){
 
 				for (Group altLocGroup:g.getAltLocs()) {
-					ensureAllAtomsSameAltCode(altLocGroup);						
+					ensureAllAtomsSameAltCode(altLocGroup);
+					
+					for (Atom a:altLocGroup.getAtoms()) {
+						assertNotNull(a.getGroup());
+						assertNotNull(a.getGroup().getChain());
+					}
 				}
 
 				List<Atom> atoms = g.getAtoms();
 				boolean caInMain = false;
 				for (Atom a: atoms){
 
+					assertNotNull(a.getGroup());
+					assertNotNull(a.getGroup().getChain());
+					
 					if ( a.getName().equals(StructureTools.CA_ATOM_NAME)) {
 						caList.add(a);
 						caInMain = true;

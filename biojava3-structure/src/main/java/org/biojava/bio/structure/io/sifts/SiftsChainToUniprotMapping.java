@@ -41,6 +41,8 @@ import java.util.zip.GZIPInputStream;
 
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava3.core.sequence.io.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A mapping between UniProt entries and PDB chains.
@@ -59,6 +61,9 @@ import org.biojava3.core.sequence.io.util.IOUtils;
  * @since 3.0.7
  */
 public class SiftsChainToUniprotMapping {
+	
+	private final static Logger logger = LoggerFactory.getLogger(SiftsChainToUniprotMapping.class);
+	
 
 	private static File DEFAULT_FILE;
 
@@ -107,7 +112,7 @@ public class SiftsChainToUniprotMapping {
 		try {
 			return build();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.info("Caught IOException while reading {}. Error: {}",DEFAULT_FILE,e.getMessage());
 			if (useOnlyLocal) throw new IOException(DEFAULT_FILE + " could not be read, and did not redownload");
 			download();
 			return build();
@@ -140,6 +145,9 @@ public class SiftsChainToUniprotMapping {
 	}
 
 	private static void download() throws IOException {
+		
+		logger.info("Downloading {} to {}",DEFAULT_URL.toString(),DEFAULT_FILE);
+		
 		InputStream in = null;
 		OutputStream out = null;
 

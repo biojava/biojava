@@ -75,16 +75,6 @@ public interface Chain {
     public void setId(Long id) ;
 
 	
-    /** return the amino acid at position X.
-     * @param position  an int
-     * @return a Group object
-     * @deprecated use getAtomGroup or getSeqResGroup instead
-     * @see #getAtomGroup(int)
-     * @see #getSeqResGroup(int)
-     */
-    @Deprecated
-    public Group getGroup (int position);
-	
     /** 
      * Return the Group at given position, 
      * from within Groups with observed density in the chain, i.e.
@@ -109,22 +99,6 @@ public interface Chain {
      */
     public Group getSeqResGroup (int position);
     
-    
-    /** return a List of all groups of a special type (e.g. amino,
-     * hetatm, nucleotide).
-     * @param type  a String
-     * @return a List object
-     * @deprecated use getAtomGroups or getSeqResGroups instead
-     */
-    @Deprecated
-	public List<Group> getGroups (GroupType type);
-
-    /** return all groups of this chain.
-     * @return a List of all Group objects of this chain
-     * @deprecated use getAtomGroups or getSeqResGroups instead
-     */
-    @Deprecated
-	public List<Group> getGroups ();
     
     /** 
      * Return all Groups with observed density in the chain, i.e.
@@ -232,16 +206,6 @@ public interface Chain {
     public Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd,boolean ignoreMissing) throws StructureException;
     
     
-    /** get total length of chain, including HETATMs..
-     * @return an int representing the length of the whole chain including HETATMs
-     * @deprecated please use getAtomLength or getLengthSeqRes instead
-     * @see #getAtomLength()
-     * @see #getSeqResLength()
-     */
-    @Deprecated
-	public int getLength();
-    
-    
     /** 
      * Return the number of Groups with observed density in the chain, i.e. 
      * those with coordinates in ATOM and HETATMs (including waters) records
@@ -264,17 +228,6 @@ public interface Chain {
      */
     public int getSeqResLength();
     
-    /** returns the length of the AminoAcids in the ATOM records of this chain.
-     * note: not all amino acids need to have 3D coords, in fact in could be that none
-     * has!    
-     * @return an int representing the length of the AminoAcids in the ATOM records of the chain.
-     * @deprecated use getAtomGroups(GroupType.AMINOACID).size() instead.
-     */
-
-    @Deprecated
-	public int getLengthAminos();
-
-  
     /** 
      * Set the Compound
      * @param compound the Compound 
@@ -414,7 +367,11 @@ public interface Chain {
      */
     public List<Group> getAtomLigands();
     
-    
+    /**
+     * Convert this Chain to a String in PDB format
+     * @return
+     */
+    public String toPDB();
    
     
 }

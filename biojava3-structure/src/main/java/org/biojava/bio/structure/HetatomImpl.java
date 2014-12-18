@@ -358,9 +358,13 @@ public class HetatomImpl implements Group,Serializable {
 		
 		// copy the atoms
 		for (int i=0;i<atoms.size();i++){
-			Atom atom = atoms.get(i);
-			n.addAtom((Atom)atom.clone());
+			Atom atom = (Atom) atoms.get(i).clone();
+			n.addAtom(atom);
+			atom.setGroup(n);
 		}
+		
+		// TODO alt locs are not cloned! do we need to clone them? - JD 2014-12-17
+		
 		return n;
 	}
 
@@ -517,15 +521,14 @@ public class HetatomImpl implements Group,Serializable {
 	 * 
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
 	public void trimToSize(){
 
-		if ( atoms instanceof ArrayList) {
-			ArrayList myatoms = (ArrayList) atoms;
+		if ( atoms instanceof ArrayList<?>) {
+			ArrayList<Atom> myatoms = (ArrayList<Atom>) atoms;
 			myatoms.trimToSize();
 		}
-		if ( altLocs instanceof ArrayList){
-			ArrayList myAltLocs = (ArrayList) altLocs;
+		if ( altLocs instanceof ArrayList<?>){
+			ArrayList<Group> myAltLocs = (ArrayList<Group>) altLocs;
 			myAltLocs.trimToSize();
 		}
 		atomNameLookup = new HashMap<String,Atom>(atomNameLookup);

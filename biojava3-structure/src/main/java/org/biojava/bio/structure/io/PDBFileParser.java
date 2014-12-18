@@ -1853,14 +1853,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			// test altLoc
 			if ( ! altLoc.equals(' ')) {
-				
+				logger.debug("found altLoc! " + current_group + " " + altGroup);
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3);
 				if ( altGroup.getChain() == null) {
 					// need to set current chain
 					altGroup.setChain(current_chain);
-				}
-				//System.out.println("found altLoc! " + current_group + " " + altGroup);
-				
+				}				
 			
 			}
 		}
@@ -3025,11 +3023,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			pdbHeader.setRfree(rfreeStandardLine);
 		} // otherwise it remains default value: PDBHeader.DEFAULT_RFREE
 		
+		
+		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
+		structure.getCompounds();
 	}
 
 
 	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
-		SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 
 		for (int i = 0; i < structure.nrModels(); i++) {
 			List<Chain> atomList   = structure.getModel(i);
@@ -3037,7 +3038,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			for (Chain seqRes: seqResChains){
 				Chain atomRes;
 			
-				atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
+				atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomList);
 				atomRes.setSeqResGroups(seqRes.getAtomGroups());
 				
 			}

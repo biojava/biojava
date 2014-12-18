@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
@@ -138,12 +139,17 @@ public Object clone() {
 
 	n.setChainID( getChainID());
 	n.setSwissprotId ( getSwissprotId());
-	n.setCompound(this.getCompound());
+		
+		// NOTE the Compound will be reset at the parent level (Structure) if cloning is happening from parent level
+		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
+		n.setCompound(this.mol);
+		
 	n.setInternalChainID(internalChainID);
 
 	for (int i=0;i<groups.size();i++){
-		Group g = (Group)groups.get(i);
-		n.addGroup((Group)g.clone());
+			Group g = (Group)groups.get(i).clone();
+			n.addGroup(g);
+			g.setChain(n);
 	}
 	
 	if (seqResGroups.size() > 0 ){
@@ -153,23 +159,20 @@ public Object clone() {
 
 		List<Group> tmpSeqRes = new ArrayList<Group>();
 		for (int i=0;i<seqResGroups.size();i++){
-			Group g = (Group)seqResGroups.get(i);
-
+				Group g = (Group)seqResGroups.get(i).clone();
+				g.setChain(n);
 			tmpSeqRes.add(g);
 		}
 		
 		Chain tmp = new ChainImpl();
-		// that's a bit confusing, but that's how to set the seqres so the seqresaligner can use them 
+			// that's a bit confusing, but that's how to set the seqres so that SeqRes2AtomAligner can use them 
 		tmp.setAtomGroups(tmpSeqRes);
 		
 		// now match them up..
 		SeqRes2AtomAligner seqresaligner = new SeqRes2AtomAligner();
 
-		try {
 			seqresaligner.mapSeqresRecords(n, tmp);
-		} catch (StructureException e){
-			logger.error("Exception: ", e);
-		}
+			
 
 	} 
 	
@@ -254,20 +257,6 @@ public void addGroup(Group group) {
 
 }
 
-/** return the group at position .
- *
- *
- * @param position  an int
- * @return a Group object
- * @deprecated use getAtomGroup or getSeqResGroup instead
- */
-@Override @Deprecated
-public Group getGroup(int position) {
-
-	return (Group)groups.get(position);
-}
-
-
 
 /** 
  * {@inheritDoc}
@@ -275,20 +264,8 @@ public Group getGroup(int position) {
 @Override
 public Group getAtomGroup(int position) {
 
-	return (Group)groups.get(position);
-}
-
-/** Return a list of all groups of one of the types defined in hte {@link GroupType} constants.
- *
- *
- * @param type  a String
- * @return an List object containing the groups of type...
- * @deprecated use getAtomGroups instead
- */
-@Override @Deprecated
-public List<Group> getGroups( GroupType type) {
-	return getAtomGroups(type);
-}
+		return groups.get(position);
+	}
 
 /**  
  * {@inheritDoc}
@@ -298,22 +275,13 @@ public List<Group> getAtomGroups(GroupType type){
 
 	List<Group> tmp = new ArrayList<Group>() ;
 	for (int i=0;i<groups.size();i++){
-		Group g = (Group)groups.get(i);
+			Group g = groups.get(i);
 		if (g.getType().equals(type)){
 			tmp.add(g);
 		}
 	}
 
 	return tmp ;
-}
-
-/** return all groups of this chain .
- * @return a List object representing the Groups of this Chain.
- * @deprecated use getAtomGroups instead
- */
-@Override @Deprecated
-public List<Group> getGroups(){
-	return groups ;
 }
 
 
@@ -449,8 +417,8 @@ public Group getGroupByPDB(String pdbresnum) throws StructureException {
 public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
 	String pdbresnum = resNum.toString();
 	if ( pdbResnumMap.containsKey(pdbresnum)) {
-		Integer pos = (Integer) pdbResnumMap.get(pdbresnum);
-		return (Group) groups.get(pos.intValue());
+			Integer pos = pdbResnumMap.get(pdbresnum);
+			return groups.get(pos.intValue());
 	} else {
 		throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + chainID);
 	}
@@ -518,24 +486,6 @@ public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
 
 
 /**
- * @deprecated use getAtomLength instead
- */
-@Override @Deprecated
-public int getLength() {
-	return getAtomLength();
-}
-
-/** {@inheritDoc}
- *
- */
-@Override
-public int getLengthAminos() {
-
-	List<Group> g = getAtomGroups(GroupType.AMINOACID);
-	return g.size() ;
-}
-
-/**
  * {@inheritDoc}
  */
 @Override
@@ -565,7 +515,7 @@ public String getChainID()           {	return chainID;  }
 @Override
 public String toString(){
 	String newline = System.getProperty("line.separator");
-	StringBuffer str = new StringBuffer();
+		StringBuilder str = new StringBuilder();
 	str.append("Chain >"+getChainID()+"<"+newline) ;
 	if ( mol != null ){
 		if ( mol.getMolName() != null){
@@ -575,12 +525,12 @@ public String toString(){
 	str.append("total SEQRES length: " + getSeqResGroups().size() +
 			" total ATOM length:" + getAtomLength() + " residues " + newline);
 
+		// commented out the looping over residues, I thought it didn't help much, especially in debugging - JD 2014-12-10
 	// loop over the residues
-
-	for ( int i = 0 ; i < seqResGroups.size();i++){
-		Group gr = (Group) seqResGroups.get(i);
-		str.append(gr.toString()).append(newline);
-	}
+		//for ( int i = 0 ; i < seqResGroups.size();i++){
+		//	Group gr = (Group) seqResGroups.get(i);
+		//	str.append(gr.toString()).append(newline);
+		//}
 	return str.toString() ;
 
 }
@@ -779,6 +729,11 @@ public int getAtomLength() {
 	public void setInternalChainID(String internalChainID) {
 		this.internalChainID = internalChainID;
 
+	}
+	
+	@Override
+	public String toPDB() {
+		return FileConvert.toPDB(this);
 	}
 }
 

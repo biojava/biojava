@@ -443,8 +443,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			// test altLoc
 			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {												
+				logger.debug("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
-				//System.out.println("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
+				if (altGroup.getChain()==null) {
+					altGroup.setChain(current_chain);
+				}
 			}
 		}
 
@@ -747,14 +750,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		if ( params.isAlignSeqRes() ){
 		
-			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();			
-			//aligner.align(structure,seqResChains);
 
 			// fix SEQRES residue numbering
 			List<Chain> atomList   = structure.getModel(0);
 			for (Chain seqResChain: seqResChains){
 		
-					Chain atomChain = aligner.getMatchingAtomRes(seqResChain, atomList);
+					Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList);
 
 					//map the atoms to the seqres...
 
@@ -912,6 +913,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getCrystallographicInfo().setNcsOperators(
 					(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
+		
+		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
+		structure.getCompounds();
+
+
 		
 	}
 

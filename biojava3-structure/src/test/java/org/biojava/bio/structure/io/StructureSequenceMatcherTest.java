@@ -31,7 +31,6 @@ import junit.framework.TestCase;
 
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
