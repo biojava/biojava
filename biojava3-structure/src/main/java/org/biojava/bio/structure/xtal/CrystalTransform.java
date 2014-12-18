@@ -67,6 +67,11 @@ public class CrystalTransform implements Serializable {
 		this.crystalTranslation = new Point3i(0,0,0);
 	}
 	
+	/**
+	 * Represents the n-th transform 
+	 * @param sg
+	 * @param transformId
+	 */
 	public CrystalTransform(SpaceGroup sg, int transformId) {
 		this.sg = sg;
 		this.transformId = transformId;
@@ -80,12 +85,15 @@ public class CrystalTransform implements Serializable {
 		this.crystalTranslation = new Point3i(0,0,0);
 	}
 	
+	/**
+	 * Copy constructor
+	 * @param transform
+	 */
 	public CrystalTransform(CrystalTransform transform) {
 		this.sg = transform.sg;
 		this.transformId = transform.transformId;
 		this.matTransform = new Matrix4d(transform.matTransform);
 		this.crystalTranslation = new Point3i(transform.crystalTranslation);
-		
 	}
 	
 	public Matrix4d getMatTransform() {
