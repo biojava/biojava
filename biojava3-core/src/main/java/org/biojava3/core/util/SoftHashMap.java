@@ -71,7 +71,8 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
    }
 
-   public V get(Object key) {
+   @Override
+public V get(Object key) {
 
       V result = null;
 
@@ -211,7 +212,8 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
     */
 
-   public synchronized V put(K key, V value) {
+   @Override
+public synchronized V put(K key, V value) {
 
       clearGCCollected();
 
@@ -225,6 +227,7 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 
 
+	@Override
 	public V remove(Object key) {
 		clearGCCollected();
 		logger.debug("Removing {} from cache. size: {}", key, size());
@@ -233,7 +236,8 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 
 
-   public void clear() {
+   @Override
+public void clear() {
 
       synchronized (hardCache){
          hardCache.clear();
@@ -247,7 +251,8 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 
 
-   public int size() {
+   @Override
+public int size() {
 
       clearGCCollected();
 
@@ -257,7 +262,8 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 
 
-   public Set<Map.Entry<K, V>> entrySet() {
+   @Override
+public Set<Map.Entry<K, V>> entrySet() {
 
       throw new UnsupportedOperationException();
 

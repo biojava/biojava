@@ -94,6 +94,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 
 
+	@Override
 	public void run() {
 
 		StructureAlignment algorithm = null;
@@ -151,6 +152,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	 * 
 	 *
 	 */
+	@Override
 	public void interrupt() {
 		interrupted.set(true);
 		if ( job != null)
@@ -160,6 +162,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 	}
 
+	@Override
 	public void cleanup()
 	{
 		parent.notifyCalcFinished();
@@ -175,6 +178,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 	}
 
+	@Override
 	public void setNrCPUs(int useNrCPUs) {
 		nrCPUs = useNrCPUs;
 

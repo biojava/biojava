@@ -76,6 +76,7 @@ public class AlignmentCalc implements Runnable {
 
 	}
 
+	@Override
 	public void run() {
 
 		// both structure have been downloaded, now calculate the alignment ...

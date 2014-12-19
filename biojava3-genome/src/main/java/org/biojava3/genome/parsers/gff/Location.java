@@ -353,6 +353,7 @@ public class Location implements Iterable<Location>
 		//return iterable anonymous inner class
 		return new Iterable<Location> ()
 			{
+				@Override
 				public LocIterator iterator()
 				{
 					return new LocIterator( loc, windowSize, increment );
@@ -367,6 +368,7 @@ public class Location implements Iterable<Location>
 	 *
 	 * @return An iterator over a Location (a LocIterator object).
 	 */
+	@Override
 	public LocIterator iterator()
 	{
 		return new LocIterator( this, 1, 1 );
@@ -821,6 +823,7 @@ public class Location implements Iterable<Location>
 	 *
 	 * @return Text string.
 	 */
+	@Override
 	public String toString()
 	{
 		return new String( "[L=" + (mEnd - mStart) + "; S=" + mStart + "; E=" + mEnd +"]" );
@@ -862,6 +865,7 @@ public class Location implements Iterable<Location>
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	@SuppressWarnings("unused")
 	public static void main( String args[] )
 	throws Exception

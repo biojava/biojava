@@ -67,6 +67,7 @@ public class LocalCacheStructureProvider implements StructureProvider{
 		return path ;
 	}
 	
+	@Override
 	public Structure getStructureById(String pdbId) throws IOException {
 		
 		PDBFileReader reader = getPdbFilereader();
@@ -89,6 +90,7 @@ public class LocalCacheStructureProvider implements StructureProvider{
 	 * @throws IOException 
 	 * 
 	 */
+	@Override
 	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException {
 		if (pdbId == null || pdbId.length()< 4)
 			throw new StructureException("This does not look like a valid PDB ID! (" + pdbId + ")");
@@ -164,10 +166,12 @@ public class LocalCacheStructureProvider implements StructureProvider{
 
 	}
 	
+	@Override
 	public void setFileParsingParameters(FileParsingParameters params) {
 		this.params = params;
 	}
 
+	@Override
 	public FileParsingParameters getFileParsingParameters() {
 		return params;
 	}

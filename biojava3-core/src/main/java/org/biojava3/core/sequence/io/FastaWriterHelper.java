@@ -190,7 +190,8 @@ public class FastaWriterHelper {
         FastaHeaderFormatInterface<Sequence<?>, Compound> fhfi =
                 new FastaHeaderFormatInterface<Sequence<?>, Compound>() {
 
-                    public String getHeader(Sequence<?> sequence) {
+                    @Override
+					public String getHeader(Sequence<?> sequence) {
                         return sequence.getAccession().toString();
                     }
 

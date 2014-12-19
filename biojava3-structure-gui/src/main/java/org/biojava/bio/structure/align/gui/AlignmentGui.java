@@ -217,6 +217,7 @@ public class AlignmentGui extends JFrame{
 		Action actionAlgorithm = new AbstractAction("Algorithm") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				JComboBox cb = (JComboBox)evt.getSource();
 				String algorithmName = (String)cb.getSelectedItem();
@@ -234,6 +235,7 @@ public class AlignmentGui extends JFrame{
 		Action paramAction = new AbstractAction("Parameters") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Perform action...
 				//System.out.println("calc structure alignment");
@@ -276,6 +278,7 @@ public class AlignmentGui extends JFrame{
 		Action action1 = new AbstractAction("Align") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Perform action...
 				//System.out.println("calc structure alignment");
@@ -296,6 +299,7 @@ public class AlignmentGui extends JFrame{
 		Action action3 = new AbstractAction("Abort") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Perform action...
 				abortCalc();
@@ -309,6 +313,7 @@ public class AlignmentGui extends JFrame{
 		Action action2 = new AbstractAction("Exit") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Perform action...
 				abortCalc();
@@ -558,6 +563,7 @@ class ProgressThreadDrawer extends Thread {
 	}
 
 
+	@Override
 	public void run() {
 		progress.setVisible(true);
 		boolean finished = false;

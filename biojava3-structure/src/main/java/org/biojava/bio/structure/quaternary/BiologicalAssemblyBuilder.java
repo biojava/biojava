@@ -100,6 +100,7 @@ public class BiologicalAssemblyBuilder {
 	private void orderTransformationsByChainId(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations) {
 		final List<String> chainIds = getChainIds(asymUnit);
 		Collections.sort(transformations, new Comparator<BiologicalAssemblyTransformation>() {
+			@Override
 			public int compare(BiologicalAssemblyTransformation t1, BiologicalAssemblyTransformation t2) {
 				// set sort order only if the two ids are identical
 				if (t1.getId().equals(t2.getId())) {

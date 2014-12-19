@@ -451,7 +451,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      * @return the accession
      */
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         return accession;
     }
 
@@ -476,7 +477,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         this.taxonomy = taxonomy;
     }
 
-    public CompoundSet<C> getCompoundSet() {
+    @Override
+	public CompoundSet<C> getCompoundSet() {
         if (compoundSet != null) {
             return compoundSet;
         }
@@ -543,7 +545,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * Default case is to assume strand is positive because only CDSSequence can be either positive or negative Strand.
      * @return
      */
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return SequenceMixin.toString(this);
 
     }
@@ -552,7 +555,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *
      * @return
      */
-    public List<C> getAsList() {
+    @Override
+	public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
@@ -561,7 +565,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param position The 1-indexed position of the amino acid
      * @return
      */
-    public C getCompoundAt(int position) {
+    @Override
+	public C getCompoundAt(int position) {
     	
         return getSequenceStorage().getCompoundAt(position);
     }
@@ -571,7 +576,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param compound
      * @return The first index of compound in this sequence (1-based)
      */
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         return getSequenceStorage().getIndexOf(compound);
     }
 
@@ -580,7 +586,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param compound
      * @return The last index of compound in this sequence (1-based)
      */
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         return getSequenceStorage().getLastIndexOf(compound);
     }
 
@@ -588,7 +595,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *
      * @return
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return getSequenceStorage().getLength();
     }
 
@@ -598,7 +606,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param bioEnd
      * @return
      */
-    public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
+    @Override
+	public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
         return new SequenceProxyView<C>(this, bioStart, bioEnd);
     }
 
@@ -606,7 +615,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *
      * @return
      */
-    public Iterator<C> iterator() {
+    @Override
+	public Iterator<C> iterator() {
         return getSequenceStorage().iterator();
     }
 
@@ -615,7 +625,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param compounds
      * @return
      */
-    public int countCompounds(C... compounds) {
+    @Override
+	public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 

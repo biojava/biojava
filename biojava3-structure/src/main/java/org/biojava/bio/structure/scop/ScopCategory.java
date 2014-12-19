@@ -57,7 +57,8 @@ public enum ScopCategory implements Serializable
          return Px;
    }
    
-   public String toString(){
+   @Override
+public String toString(){
       switch (this) {
          case Class:
             return "cl";

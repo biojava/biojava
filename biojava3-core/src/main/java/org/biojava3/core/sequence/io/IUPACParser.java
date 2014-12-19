@@ -315,7 +315,8 @@ public class IUPACParser {
     /**
      * Returns the compound set of codons
      */
-    public CompoundSet<Codon> getCodonCompoundSet(
+    @Override
+	public CompoundSet<Codon> getCodonCompoundSet(
         final CompoundSet<NucleotideCompound> rnaCompounds,
         final CompoundSet<AminoAcidCompound> aminoAcidCompounds) {
       if (compounds == null) {

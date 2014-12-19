@@ -122,7 +122,7 @@ public class Compound implements Serializable {
 		chains = new ArrayList<Chain>();
 		molId = -1;
 	}
-	
+
 	/**
 	 * Constructs a new Compound copying all data from the given one
 	 * but not setting the Chains
@@ -194,6 +194,7 @@ public class Compound implements Serializable {
 		
 	}
 
+	@Override
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
 		buf.append("Compound: " + molId+" ");

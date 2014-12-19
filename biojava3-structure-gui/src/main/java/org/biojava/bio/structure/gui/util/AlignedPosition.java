@@ -59,6 +59,7 @@ public class AlignedPosition {
 	
 
 	
+	@Override
 	public  String toString(){
 		String t = " AlignedPosition pos1: " + pos1 + " pos2: "+ pos2 ;
 		if ( equivalent == EQUIVALENT)

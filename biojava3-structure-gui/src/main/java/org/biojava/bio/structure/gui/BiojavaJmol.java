@@ -109,6 +109,7 @@ public class BiojavaJmol  {
 		frame.setJMenuBar(menu);
 
 		frame.addWindowListener( new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				frame.dispose();
 				//System.exit(0);
@@ -166,6 +167,7 @@ public class BiojavaJmol  {
 		
 		resetDisplay.addActionListener(new ActionListener() {
 			
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("reset!!");
 				jmolPanel.executeCmd("restore STATE state_1");
@@ -179,6 +181,7 @@ public class BiojavaJmol  {
 		toggleSelection.addItemListener(
 			    new ItemListener() {
 					
+					@Override
 					public void itemStateChanged(ItemEvent e) {
 						  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
 						  

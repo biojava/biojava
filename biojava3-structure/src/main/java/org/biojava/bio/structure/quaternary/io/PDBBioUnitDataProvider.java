@@ -62,6 +62,7 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		return header ;
 	}
 	
+	@Override
 	public Structure getAsymUnit(String pdbId){
 		
 		if (s == null ||( ! s.getPDBCode().equalsIgnoreCase(pdbId))) {
@@ -75,6 +76,7 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		
 		return s;
 	}
+	@Override
 	public void setAsymUnit(Structure s){
 		this.s = s;
 	}

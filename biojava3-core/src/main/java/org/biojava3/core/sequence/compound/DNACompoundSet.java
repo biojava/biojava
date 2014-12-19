@@ -45,7 +45,8 @@ public class DNACompoundSet extends AbstractNucleotideCompoundSet<NucleotideComp
     addNucleotideCompound("-", "-");
   }
 
-  public NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
+  @Override
+public NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
     if(equivalents.length == 0) {
       return new NucleotideCompound(base, this, complement);
     }

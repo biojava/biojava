@@ -1890,6 +1890,7 @@ nBestTrace=nTrace;
 	 * @throws StructureException
 	 * @deprecated Use {@link #calc_rmsd(Atom[],Atom[],int,boolean)} instead
 	 */
+	@Deprecated
 	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, boolean storeTransform, boolean show) throws StructureException {
 		return calc_rmsd(pro1, pro2, strLen, storeTransform);
 	}

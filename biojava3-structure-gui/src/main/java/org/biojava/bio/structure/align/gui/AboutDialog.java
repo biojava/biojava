@@ -76,7 +76,8 @@ public class AboutDialog
       
       txt.addHyperlinkListener(new HyperlinkListener(){
          
-         public void hyperlinkUpdate(HyperlinkEvent e) {
+         @Override
+		public void hyperlinkUpdate(HyperlinkEvent e) {
              
              if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                  String href = e.getDescription();
@@ -98,7 +99,8 @@ public class AboutDialog
       JButton close = new JButton("Close");
 
       close.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent event) {
+         @Override
+		public void actionPerformed(ActionEvent event) {
             Object source = event.getSource();
 
             JButton but = (JButton)source;

@@ -57,7 +57,8 @@ public class ProteinSequenceCreator implements
  * @return
  * @throws CompoundNotFoundException
  */
-  public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
+  @Override
+public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
       long index) throws CompoundNotFoundException {
     return new ProteinSequence(sequence, compoundSet);
   }
@@ -66,7 +67,8 @@ public class ProteinSequenceCreator implements
  * @param list
  * @return
  */
-  public AbstractSequence<AminoAcidCompound> getSequence(
+  @Override
+public AbstractSequence<AminoAcidCompound> getSequence(
       List<AminoAcidCompound> list) {
     ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<AminoAcidCompound>();
     store.setCompoundSet(compoundSet);
@@ -79,7 +81,8 @@ public class ProteinSequenceCreator implements
  * @param index not used in this implementation
  * @return
  */
-  public AbstractSequence<AminoAcidCompound> getSequence(
+  @Override
+public AbstractSequence<AminoAcidCompound> getSequence(
       ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
     return new ProteinSequence(proxyLoader, compoundSet);
   }

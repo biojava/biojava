@@ -141,6 +141,7 @@ public class ParameterGUI extends JFrame{
 
 		JButton abort = new JButton("Cancel");
 		abort.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				destroy();
 				dispose();	         }
@@ -148,6 +149,7 @@ public class ParameterGUI extends JFrame{
 
 		JButton defaultB = new JButton("Default");
 		defaultB.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				setDefault();
 			}
@@ -156,6 +158,7 @@ public class ParameterGUI extends JFrame{
 		JButton close = new JButton("Apply");
 
 		close.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent event) {
 
 				storeParameters();
@@ -266,7 +269,7 @@ public class ParameterGUI extends JFrame{
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	private void setValue(String name, Class type, String value) {
 		try {
 			String methodName = "set" + name;
@@ -314,7 +317,6 @@ public class ParameterGUI extends JFrame{
 		try {
 			String methodName = "get" + name;
 
-			@SuppressWarnings("rawtypes")
 			Class paramC = params.getClass();
 
 			Method m;

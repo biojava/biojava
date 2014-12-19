@@ -141,10 +141,12 @@ implements StructurePairSelector{
 
 
 
+	@Override
 	public Structure getStructure1() throws StructureException{
 		return fromPDB(f1,c1);
 	}
 
+	@Override
 	public Structure getStructure2() throws StructureException{
 		return fromPDB(f2,c2);
 	}

@@ -117,13 +117,15 @@ implements StructurePairSelector
       return hBox;
   }
    
-   public Structure getStructure1() throws StructureException
+   @Override
+public Structure getStructure1() throws StructureException
    {
 	   String scop1 = dom1.getText();
       return getStructure(scop1);
    }
 
-   public Structure getStructure2() throws StructureException
+   @Override
+public Structure getStructure2() throws StructureException
    {
       return getStructure(dom2.getText());
    }

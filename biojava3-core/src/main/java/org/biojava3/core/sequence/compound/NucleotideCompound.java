@@ -66,11 +66,13 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
       return getBase();
     }
 
-    public ComplementCompound getComplement() {
+    @Override
+	public ComplementCompound getComplement() {
         return compoundSet.getCompoundForString(complementStr);
     }
 
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }
@@ -81,11 +83,13 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
         return toString().equals(them.toString());
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return toString().hashCode();
     }
 
-    public boolean equalsIgnoreCase(Compound compound) {
+    @Override
+	public boolean equalsIgnoreCase(Compound compound) {
         if (compound == null) {
             return false;
         }
@@ -101,7 +105,8 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
     }
     
     /**@deprecated replaced with {@link #getConstituents()} due to typographical error */
-    public Set<NucleotideCompound> getConsituents() {
+    @Deprecated
+	public Set<NucleotideCompound> getConsituents() {
     	return getConstituents();
     }
 

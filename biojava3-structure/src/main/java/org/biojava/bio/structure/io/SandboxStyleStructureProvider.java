@@ -114,6 +114,7 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 	}
 	
 	
+	@Override
 	public Structure getStructureById(String pdbId) throws IOException,StructureException {
 
 		
@@ -154,16 +155,19 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 		
 	}
 
+	@Override
 	public Structure getBiologicalUnit(String pdbId) throws StructureException,
 			IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public void setFileParsingParameters(FileParsingParameters params) {
 		this.params = params;
 	}
 
+	@Override
 	public FileParsingParameters getFileParsingParameters() {
 		return params;
 	}

@@ -174,6 +174,7 @@ public class GenbankWriterHelper {
 
 		GenbankHeaderFormatInterface<Sequence<?>, Compound> fhfi = new GenbankHeaderFormatInterface<Sequence<?>, Compound>() {
 
+			@Override
 			public String getHeader(Sequence<?> sequence) {
 				return sequence.getAccession().toString();
 			}

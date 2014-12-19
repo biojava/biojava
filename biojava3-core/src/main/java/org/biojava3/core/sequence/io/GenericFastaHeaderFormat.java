@@ -36,7 +36,8 @@ import org.biojava3.core.sequence.template.Compound;
  */
 public class GenericFastaHeaderFormat<S extends AbstractSequence<?>, C extends Compound> implements FastaHeaderFormatInterface<S, C> {
 
-    public String getHeader(S sequence) {
+    @Override
+	public String getHeader(S sequence) {
         String header = "";
 
         if (sequence.getOriginalHeader() != null && sequence.getOriginalHeader().length() > 0) {

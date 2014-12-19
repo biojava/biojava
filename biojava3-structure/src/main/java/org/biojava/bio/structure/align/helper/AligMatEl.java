@@ -55,7 +55,8 @@ extends IndexPair{
             this.value = value;
         }
         
-        public String toString(){
+        @Override
+		public String toString(){
             String ret = "AligMatEl val:" + value + " contig:" + contig + 
             " trackrow:" + getRow() + " trackcol:" + getCol();
             return ret;

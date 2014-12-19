@@ -80,6 +80,7 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 
 	}
 
+	@Override
 	public void run() {
 
 		// both structure have been downloaded, now calculate the alignment ...
@@ -131,10 +132,12 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 	 * 
 	 *
 	 */
+	@Override
 	public void interrupt() {
 		interrupted = true;
 	}
 
+	@Override
 	public void cleanup() {
 
 		parent.notifyCalcFinished();
@@ -150,6 +153,7 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 	/** does not do anything here...
 	 * 
 	 */
+	@Override
 	public void setNrCPUs(int useNrCPUs) {
 		// TODO Auto-generated method stub
 		// 

@@ -81,12 +81,14 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
         private final static byte MASK = (byte) ((int) Math.pow(2, 0) | (int) Math.pow(2, 1) | (int) Math.pow(2, 2) | (int) Math.pow(2, 3));
 
         
-        protected byte bitMask() {
+        @Override
+		protected byte bitMask() {
             return MASK;
         }
 
         
-        protected int compoundsPerDatatype() {
+        @Override
+		protected int compoundsPerDatatype() {
             return 8;
         }
 
@@ -97,7 +99,8 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
          * not changed then neither will this.
          */
         
-        protected Map<C, Integer> generateCompoundsToIndex() {
+        @Override
+		protected Map<C, Integer> generateCompoundsToIndex() {
             final CompoundSet<C> cs = getCompoundSet();
             Map<C, Integer> map = new HashMap<C, Integer>();
             int index = 0;
@@ -132,7 +135,8 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
             Collections.sort(compounds, new Comparator<C>() {
 
                 
-                public int compare(C o1, C o2) {
+                @Override
+				public int compare(C o1, C o2) {
                     String s1 = cs.getStringForCompound(o1);
                     String s2 = cs.getStringForCompound(o2);
                     return s1.compareTo(s2);
@@ -145,7 +149,8 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
          * Returns a List which reverse encodes the Compound, Integer map
          */
         
-        protected List<C> generateIndexToCompounds() {
+        @Override
+		protected List<C> generateIndexToCompounds() {
             CompoundSet<C> cs = getCompoundSet();
             Map<C, Integer> lookup = getCompoundsToIndexLookup();
             Map<Integer, C> tempMap = new HashMap<Integer, C>();

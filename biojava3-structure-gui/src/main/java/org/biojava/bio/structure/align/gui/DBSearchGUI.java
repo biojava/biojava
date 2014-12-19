@@ -168,6 +168,7 @@ public class DBSearchGUI extends JPanel {
 
 		chB.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
 				chooser.setMultiSelectionEnabled(false);

@@ -161,7 +161,8 @@ public class CathDomain implements Serializable, StructureIdentifier {
      * For example: {@code 1hiv.A}.
      * @deprecated This method is poorly named; use {@link #getThePdbId()} or {@link #getPdbIdAndChain()} instead
      */
-    @Deprecated
+    @Override
+	@Deprecated
     public String getPdbId() {
          return getPdbIdAndChain();
     }

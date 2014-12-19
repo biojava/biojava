@@ -38,7 +38,8 @@ public class MyExportListener implements ActionListener{
    MyExportListener(StructureAlignmentJmol parent){
       this.parent = parent;
    }
-   public void actionPerformed(ActionEvent arg0)
+   @Override
+public void actionPerformed(ActionEvent arg0)
    {
       final JFileChooser fc = new JFileChooser();
 

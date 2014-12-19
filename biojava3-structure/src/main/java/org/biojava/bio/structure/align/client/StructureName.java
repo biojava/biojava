@@ -61,6 +61,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * 
 	 * @return upper case PDB ID
 	 */
+	@Override
 	public String getPdbId(){
 
 		return pdbId;
@@ -77,6 +78,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		return name;
 	}
 
+	@Override
 	public String toString(){
 		StringWriter s = new StringWriter();
 
@@ -149,6 +151,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		return true;
 	}
 
+	@Override
 	public int compareTo(StructureName o) {
 		if ( this.equals(o))
 			return 0;

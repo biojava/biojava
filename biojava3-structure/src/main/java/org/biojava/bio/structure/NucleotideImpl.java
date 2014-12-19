@@ -39,7 +39,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	private static final long serialVersionUID = -7467726932980288712L;
 	/** this is a "nucleotide", a special occurance of a Hetatom. */
-	public static final String type = GroupType.NUCLEOTIDE;
+	public static final GroupType type = GroupType.NUCLEOTIDE;
 
 	/*
 	 * inherits most from Hetero and has just a few extensions.
@@ -49,9 +49,11 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	public String getType(){ return type;}
+	@Override
+	public GroupType getType(){ return type;}
 
 
+	@Override
 	public String toString(){
 
 		String str = "PDB: "+ pdb_name + " " + residueNumber +  " "+ pdb_flag;
@@ -92,6 +94,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
+	@Override
 	public Object clone(){
 		NucleotideImpl n = new NucleotideImpl();
 

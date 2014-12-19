@@ -39,12 +39,13 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		double disCut;
 		int maxTra;
 	}
-	
+
 	@Override
 	protected StartupParameters getStartupParametersInstance() {
 		return new FatCatStartupParams();
 	}
 
+	@Override
 	public StructureAlignment getAlgorithm() {
 		StructureAlignment algorithm = null;
 		if ( params.isFlexible()) {
@@ -55,19 +56,21 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 			algorithm = new FatCatRigid();			
 		}
 		return algorithm;
-		
+
 	}
-	
+
+	@Override
 	public Object getParameters() {
-		
+
 		FatCatParameters jparams = new FatCatParameters();
 		return jparams;
 	}
-		
+
+	@Override
 	public String getDbSearchLegend(){
-		
+
 		return "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
-		
+
 	}
 
 }

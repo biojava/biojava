@@ -46,7 +46,8 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
      * @param header
      * @param sequence
      */
-    public void parseHeader(String header, S sequence) {
+    @Override
+	public void parseHeader(String header, S sequence) {
     	sequence.setOriginalHeader(header);
     	sequence.setAccession(new AccessionID(accession));
     	sequence.setDescription(description);

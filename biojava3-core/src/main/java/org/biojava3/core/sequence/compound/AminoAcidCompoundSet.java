@@ -98,11 +98,13 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         }
     }
 
-    public String getStringForCompound(AminoAcidCompound compound) {
+    @Override
+	public String getStringForCompound(AminoAcidCompound compound) {
         return compound.toString();
     }
 
-    public AminoAcidCompound getCompoundForString(String string) {
+    @Override
+	public AminoAcidCompound getCompoundForString(String string) {
         if (string.length() == 0) {
             return null;
         }
@@ -115,12 +117,14 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return this.aminoAcidCompoundCache.get(string.toUpperCase());
     }
 
-    public int getMaxSingleCompoundStringLength() {
+    @Override
+	public int getMaxSingleCompoundStringLength() {
         return 1;
     }
 
 
-    public boolean isCompoundStringLengthEqual() {
+    @Override
+	public boolean isCompoundStringLengthEqual() {
         return true;
     }
 
@@ -130,12 +134,14 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return aminoAcidCompoundSet;
     }
 
-    public boolean compoundsEquivalent(AminoAcidCompound compoundOne, AminoAcidCompound compoundTwo) {
+    @Override
+	public boolean compoundsEquivalent(AminoAcidCompound compoundOne, AminoAcidCompound compoundTwo) {
         Set<AminoAcidCompound> equivalents = getEquivalentCompounds(compoundOne);
         return (equivalents != null) && equivalents.contains(compoundTwo);
     }
 
-    public Set<AminoAcidCompound> getEquivalentCompounds(AminoAcidCompound compound) {
+    @Override
+	public Set<AminoAcidCompound> getEquivalentCompounds(AminoAcidCompound compound) {
         if (equivalentsCache.isEmpty()) {
             // most compounds are equivalent to themselves alone
             for (AminoAcidCompound c : aminoAcidCompoundCache.values()) {
@@ -184,7 +190,8 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         equivalentsCache.put(cTwo, equivalents);
     }
 
-    public boolean hasCompound(AminoAcidCompound compound) {
+    @Override
+	public boolean hasCompound(AminoAcidCompound compound) {
         return aminoAcidCompoundCache.containsValue(compound);
     }
 
@@ -198,12 +205,14 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return true;
     }
 
-    public List<AminoAcidCompound> getAllCompounds() {
+    @Override
+	public List<AminoAcidCompound> getAllCompounds() {
         return new ArrayList<AminoAcidCompound>(aminoAcidCompoundCache.values());
     }
 
 
-    public boolean isComplementable() {
+    @Override
+	public boolean isComplementable() {
         return false;
     }
 }

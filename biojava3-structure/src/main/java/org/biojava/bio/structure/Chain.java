@@ -124,12 +124,12 @@ public interface Chain {
      * {@link GroupType#HETATM} or {@link GroupType#NUCLEOTIDE}.
      * Note that if a standard aminoacid appears as a HETATM (because it is part of a ligand) then
      * it is still considered as {@link GroupType#AMINOACID} and not as {@link GroupType#HETATM}.
-     * @param type  a String
+     * @param type  GroupType
      * @return a List object
      * @see #setAtomGroups(List)
      * @see #getSeqResGroups(String)
      */
-    public List<Group> getAtomGroups (String type);
+    public List<Group> getAtomGroups (GroupType type);
 
     /** get a group by its PDB residue numbering. if the PDB residue number is not know,
      * throws a StructureException.
@@ -276,8 +276,9 @@ public interface Chain {
     public void setInternalChainID(String internalChainID);
     
     /** string representation.  */
+    @Override
     public String toString();
-	
+
     
     /** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
      * 
@@ -296,8 +297,8 @@ public interface Chain {
     
     /**
      * Return the PDB SEQRES sequence as a one-letter sequence string.
-	 * Non-standard residues are represented by an "X".
-	 * @return one-letter PDB SEQRES sequence as string 
+     * Non-standard residues are represented by an "X".
+     * @return one-letter PDB SEQRES sequence as string 
      * @see #getAtomSequence() 
      */
     public String getSeqResSequence();
@@ -318,12 +319,12 @@ public interface Chain {
     /** 
      * Return a List of all SEQRES groups of a special type, one of: {@link GroupType#AMINOACID},
      * {@link GroupType#HETATM} or {@link GroupType#NUCLEOTIDE}.
-     * @param type  a String
+     * @param type  a GroupType
      * @return an List object
      * @see #setSeqResGroups(List)
      * @see #getAtomGroups(String)
      */
-    public List<Group> getSeqResGroups (String type);
+    public List<Group> getSeqResGroups (GroupType type);
 
     /** 
      * Return a list of all groups in SEQRES records of the chain, i.e.

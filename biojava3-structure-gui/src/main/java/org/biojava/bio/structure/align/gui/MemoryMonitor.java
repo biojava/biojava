@@ -84,7 +84,8 @@ public class MemoryMonitor extends JPanel {
        controls.add(dateStampCB);
        dateStampCB.setFont(font);
        addMouseListener(new MouseAdapter() {
-           public void mouseClicked(MouseEvent e) {
+           @Override
+		public void mouseClicked(MouseEvent e) {
                removeAll();
                if ((doControls = !doControls)) {
                    surf.stop();
@@ -131,26 +132,31 @@ public class MemoryMonitor extends JPanel {
        public Surface() {
            setBackground(Color.black);
            addMouseListener(new MouseAdapter() {
-               public void mouseClicked(MouseEvent e) {
+               @Override
+			public void mouseClicked(MouseEvent e) {
                    if (thread == null) start(); else stop();
                }
            });
        }
        
-       public Dimension getMinimumSize() {
+       @Override
+	public Dimension getMinimumSize() {
            return getPreferredSize();
        }
        
-       public Dimension getMaximumSize() {
+       @Override
+	public Dimension getMaximumSize() {
            return getPreferredSize();
        }
        
-       public Dimension getPreferredSize() {
+       @Override
+	public Dimension getPreferredSize() {
            return new Dimension(135,80);
        }
        
        
-       public void paint(Graphics g) {
+       @Override
+	public void paint(Graphics g) {
            
            if (big == null) {
                return;
@@ -280,7 +286,8 @@ public class MemoryMonitor extends JPanel {
        }
        
        
-       public void run() {
+       @Override
+	public void run() {
            
            Thread me = Thread.currentThread();
            
@@ -318,9 +325,12 @@ public class MemoryMonitor extends JPanel {
    public static void main(String s[]) {
        final MemoryMonitor demo = new MemoryMonitor();
        WindowListener l = new WindowAdapter() {
-           public void windowClosing(WindowEvent e) {System.exit(0);}
-           public void windowDeiconified(WindowEvent e) { demo.surf.start(); }
-           public void windowIconified(WindowEvent e) { demo.surf.stop(); }
+           @Override
+		public void windowClosing(WindowEvent e) {System.exit(0);}
+           @Override
+		public void windowDeiconified(WindowEvent e) { demo.surf.start(); }
+           @Override
+		public void windowIconified(WindowEvent e) { demo.surf.stop(); }
        };
        JFrame f = new JFrame("Java2D Demo - MemoryMonitor");
        f.addWindowListener(l);

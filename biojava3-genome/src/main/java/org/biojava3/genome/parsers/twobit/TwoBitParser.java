@@ -149,7 +149,8 @@ public class TwoBitParser extends InputStream {
     /**
      * Method resets current position to the begining of sequence stream.
      */
-    public synchronized void reset() throws IOException {
+    @Override
+	public synchronized void reset() throws IOException {
         cur_seq_pos = 0;
         cur_nn_block_num = (cur_nn_blocks.length>0)?0:-1;
         cur_mask_block_num = (cur_mask_blocks.length>0)?0:-1;
@@ -193,7 +194,8 @@ public class TwoBitParser extends InputStream {
      * Method reads 1 nucleotide from sequence stream. You should set current sequence
      * before use it.
      */
-    public int read() throws IOException {
+    @Override
+	public int read() throws IOException {
         if(cur_seq_name==null) throw new IOException("Sequence is not set");
         if(cur_seq_pos==cur_dna_size) {
             logger.debug("End of sequence (file position:{})", raf.getFilePointer());
@@ -241,7 +243,8 @@ public class TwoBitParser extends InputStream {
      * Method skips n nucleotides in sequence stream. You should set current sequence
      * before use it.
      */
-    public synchronized long skip(long n) throws IOException {
+    @Override
+	public synchronized long skip(long n) throws IOException {
         if(cur_seq_name==null) throw new IOException("Sequence is not set");
         if(n<4) {
             int ret = 0;
@@ -273,7 +276,8 @@ public class TwoBitParser extends InputStream {
      * Method closes current sequence and it's necessary to invoke it before setting
      * new current sequence.
      */
-    public void close() throws IOException {
+    @Override
+	public void close() throws IOException {
         cur_seq_name = null;
         cur_nn_blocks = null;
         cur_mask_blocks = null;
@@ -287,7 +291,8 @@ public class TwoBitParser extends InputStream {
         file_pos = -1;
         start_file_pos = -1;
     }
-    public int available() throws IOException {
+    @Override
+	public int available() throws IOException {
         if(cur_seq_name==null) throw new IOException("Sequence is not set");
         return (int)(cur_dna_size-cur_seq_pos);
     }

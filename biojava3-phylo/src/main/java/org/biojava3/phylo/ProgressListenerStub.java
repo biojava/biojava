@@ -18,7 +18,8 @@ public class ProgressListenerStub implements NJTreeProgressListener {
 	private static final Logger logger = LoggerFactory.getLogger(ProgressListenerStub.class);
 
 	String priorState = "";
-    public void progress(Object njtree,String state, int percentageComplete) {
+    @Override
+	public void progress(Object njtree,String state, int percentageComplete) {
         if(!priorState.equals(state)){
             priorState = state;
         }
@@ -28,7 +29,8 @@ public class ProgressListenerStub implements NJTreeProgressListener {
 
 
 
-    public void progress(Object njtree,String state, int currentCount, int totalCount) {
+    @Override
+	public void progress(Object njtree,String state, int currentCount, int totalCount) {
         if (!priorState.equals(state)){
             priorState = state;
         }
@@ -36,11 +38,13 @@ public class ProgressListenerStub implements NJTreeProgressListener {
         logger.info("{}:{}/", state, currentCount, totalCount);
     }
 
-    public void complete(Object njtree) {
+    @Override
+	public void complete(Object njtree) {
 
     }
 
-    public void canceled(Object njtree) {
+    @Override
+	public void canceled(Object njtree) {
        
     }
 

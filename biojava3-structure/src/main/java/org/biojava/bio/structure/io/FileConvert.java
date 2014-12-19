@@ -337,7 +337,7 @@ public class FileConvert {
 	
 	public static String toPDB(Atom a, String chainId) {
 		StringBuffer w = new StringBuffer();
-
+	
 		toPDB(a,w, chainId);
 
 		return w.toString();		
@@ -412,7 +412,7 @@ Angstroms.
 
 		Group g = a.getGroup();
 
-		String type = g.getType() ;
+		GroupType type = g.getType() ;
 
 		String record = "" ;
 		if ( type.equals(GroupType.HETATM) ) {
@@ -480,7 +480,7 @@ Angstroms.
 		str.append(newline);
 
 	}
-	
+
 	public static void toPDB(Atom a, StringBuffer str) {
 		toPDB(a,str,a.getGroup().getChain().getChainID());
 	}
@@ -551,7 +551,7 @@ Angstroms.
 					Group gr = chain.getAtomGroup(groupnr);
 					xw.openTag("group");
 					xw.attribute("name",gr.getPDBName());
-					xw.attribute("type",gr.getType());
+					xw.attribute("type",gr.getType().toString());
 					xw.attribute("groupID",gr.getResidueNumber().toString());
 
 

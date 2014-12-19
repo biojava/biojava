@@ -126,11 +126,11 @@ public class SeqRes2AtomAligner {
 
 		for (Chain seqRes: seqResList){
 
-			Chain atomRes = getMatchingAtomRes(seqRes,atomList);
-			if ( atomRes == null)
-				continue;
+				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
+				if ( atomRes == null)
+					continue;
 
-			mapSeqresRecords(atomRes,seqRes);
+				mapSeqresRecords(atomRes,seqRes);
 
  
 		}
@@ -169,9 +169,9 @@ public class SeqRes2AtomAligner {
 
 		int numAminosSeqres = seqRes.getAtomGroups(GroupType.AMINOACID).size();
 		int numNucleotidesSeqres = seqRes.getAtomGroups(GroupType.NUCLEOTIDE).size();
-		
-		if ( numAminosSeqres < 1) {
 
+		if ( numAminosSeqres < 1) {
+				
 			if ( numNucleotidesSeqres > 1) {
 				
 				logger.debug("SEQRES chain {} is a nucleotide chain ({} nucleotides), aligning nucleotides...", seqRes.getChainID(), numNucleotidesSeqres);
@@ -500,7 +500,7 @@ public class SeqRes2AtomAligner {
 		penalty.setOpenPenalty(gop);
 		penalty.setExtensionPenalty(extend);
 
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@SuppressWarnings({ "unchecked" })
 		PairwiseSequenceAligner smithWaterman =
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
@@ -518,7 +518,7 @@ public class SeqRes2AtomAligner {
 
 		}
 
-
+		
 		
 		logger.debug("Alignment:\n"+pair.toString(100));
 		

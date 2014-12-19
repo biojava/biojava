@@ -119,7 +119,8 @@ public class StrucAligParameters {
         permutationSize     = 20;
         evalCutoff          = 6.0f;
     }
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuffer buf = new StringBuffer();
         String t = " ";
 

@@ -92,7 +92,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @param compoundSet
      */
-    public void setCompoundSet(CompoundSet<C> compoundSet) {
+    @Override
+	public void setCompoundSet(CompoundSet<C> compoundSet) {
         this.compoundSet = compoundSet;
     }
 
@@ -115,7 +116,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @param sequence
      */
-    public void setContents(String sequence) throws CompoundNotFoundException {
+    @Override
+	public void setContents(String sequence) throws CompoundNotFoundException {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
         this.parsedCompounds.clear();
@@ -140,7 +142,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @return
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return sequenceLength;
     }
 
@@ -149,7 +152,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @param position
      * @return
      */
-    public C getCompoundAt(int position) {
+    @Override
+	public C getCompoundAt(int position) {
         
         return this.parsedCompounds.get(position - 1);
     }
@@ -159,7 +163,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @param compound
      * @return
      */
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         
         return this.parsedCompounds.indexOf(compound) + 1;
     }
@@ -169,7 +174,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @param compound
      * @return
      */
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
@@ -178,7 +184,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @return
      */
-    public String toString() {
+    @Override
+	public String toString() {
         
         return getSequenceAsString();
     }
@@ -187,7 +194,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @return
      */
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return getSequenceAsString(1, getLength(), Strand.POSITIVE);
     }
 
@@ -208,7 +216,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @return
      */
-    public List<C> getAsList() {
+    @Override
+	public List<C> getAsList() {
         
         return this.parsedCompounds;
 
@@ -220,7 +229,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @param bioEnd
      * @return
      */
-    public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
+    @Override
+	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         
         return new SequenceProxyView<C>(SequenceFileProxyLoader.this, bioBegin, bioEnd);
     }
@@ -229,7 +239,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @return
      */
-    public Iterator<C> iterator() {
+    @Override
+	public Iterator<C> iterator() {
         
         return this.parsedCompounds.iterator();
     }
@@ -238,7 +249,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @return
      */
-    public CompoundSet<C> getCompoundSet() {
+    @Override
+	public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
 
@@ -246,7 +258,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      *
      * @return
      */
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -255,7 +268,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @param compounds
      * @return
      */
-    public int countCompounds(C... compounds) {
+    @Override
+	public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 

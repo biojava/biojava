@@ -66,6 +66,7 @@ public class FatCat
       processor.process(argv);
    }
 
+   @Override
    public String toString(){
       return "JFatCat v. " + VERSION;
    }

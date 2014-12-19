@@ -67,6 +67,7 @@ public class GroupIterator implements Iterator<Group> {
     private void setGroupPos(int pos){ current_group_pos = pos  ;}
     
     /**  Creates and returns a copy of this object. */
+    @Override
     public Object clone () {
         
         GroupIterator gr = new GroupIterator(this.getStructure()) ;
@@ -79,6 +80,7 @@ public class GroupIterator implements Iterator<Group> {
     
     
     /** is there a group after the current one in the structure? */
+    @Override
     public boolean hasNext() {
         return hasSubGroup(current_model_pos,current_chain_pos , current_group_pos +1) ;
         //ArrayList model = structure.getModel(current_model_pos);
@@ -145,6 +147,7 @@ public class GroupIterator implements Iterator<Group> {
      * @return next Group 
      * @throws NoSuchElementException ... 
      */
+    @Override
     public Group next()
     throws NoSuchElementException
     {
@@ -187,6 +190,7 @@ public class GroupIterator implements Iterator<Group> {
     
     /** does nothing .
      */
+    @Override
     public void remove() {
     }
     

@@ -34,7 +34,8 @@ import java.util.Comparator;
     public class ExonComparator implements Comparator<ExonSequence>{
 
      
-        public int compare(ExonSequence o1, ExonSequence o2) {
+        @Override
+		public int compare(ExonSequence o1, ExonSequence o2) {
 
             return o1.getBioBegin() - o2.getBioBegin();
         }

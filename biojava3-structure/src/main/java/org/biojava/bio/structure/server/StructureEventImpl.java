@@ -33,15 +33,18 @@ implements StructureEvent{
 		this.s = s;
 	}
 	
+	@Override
 	public Structure getStructure() {
 	
 		return s;
 	}
 
+	@Override
 	public String getPDBCode() {
 		return pdbCode;
 	}
 
+	@Override
 	public void setPDBCode(String pdbCode) {
 		this.pdbCode = pdbCode;
 		

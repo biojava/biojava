@@ -463,11 +463,11 @@ public class AsaCalculator {
 			return atom.getElement().getVDWRadius();
 		}
 
-		String type = res.getType();
+		GroupType type = res.getType();
 
-		if (type.equals(GroupType.AMINOACID)) return getRadiusForAmino(((AminoAcid)res), atom);
+		if (type == GroupType.AMINOACID) return getRadiusForAmino(((AminoAcid)res), atom);
 
-		if (type.equals(GroupType.NUCLEOTIDE)) return getRadiusForNucl((NucleotideImpl)res,atom);
+		if (type == GroupType.NUCLEOTIDE) return getRadiusForNucl((NucleotideImpl)res,atom);
 
 
 		return atom.getElement().getVDWRadius();

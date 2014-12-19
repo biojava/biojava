@@ -69,7 +69,8 @@ public enum CathCategory {
         }
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         switch (this) {
             case Class:
                 return "C";

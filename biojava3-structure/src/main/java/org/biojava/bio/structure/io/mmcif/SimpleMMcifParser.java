@@ -114,16 +114,19 @@ public class SimpleMMcifParser implements MMcifParser {
 		struct = null;
 	}
 
+	@Override
 	public void addMMcifConsumer(MMcifConsumer consumer) {
 		consumers.add(consumer);
 
 	}
 
+	@Override
 	public void clearConsumers() {
 		consumers.clear();
 
 	}
 
+	@Override
 	public void removeMMcifConsumer(MMcifConsumer consumer) {
 		consumers.remove(consumer);
 	}
@@ -147,11 +150,13 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
+	@Override
 	public void parse(InputStream inStream) throws IOException {
 		parse(new BufferedReader(new InputStreamReader(inStream)));
 
 	}
 
+	@Override
 	public void parse(BufferedReader buf)
 			throws IOException {
 

@@ -140,16 +140,19 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
+	@Override
 	public void newEntity(Entity entity) {
 		logger.debug("New entity: {}",entity.toString());
 		entities.add(entity);
 	}
 
+	@Override
 	public void newPdbxStructOperList(PdbxStructOperList structOper){
 
 		structOpers.add(structOper);
 	}
 
+	@Override
 	public void newStructAsym(StructAsym sasym){
 
 		structAsyms.add(sasym);
@@ -169,6 +172,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return null;
 	}
 
+	@Override
 	public void newStructKeywords(StructKeywords kw){
 		PDBHeader header = structure.getPDBHeader();
 		if ( header == null)
@@ -177,6 +181,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		header.setClassification(kw.getPdbx_keywords());
 	}
 
+	@Override
 	public void setStruct(Struct struct) {
 
 		PDBHeader header = structure.getPDBHeader();
@@ -270,6 +275,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return null;
 	}
 
+	@Override
 	public void newAtomSite(AtomSite atom) {
 
 		// Warning: getLabel_asym_id is not the "chain id" in the PDB file
@@ -436,7 +442,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// same residueNumber, but altLocs...
 
 			// test altLoc
-			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {
+			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {												
 				logger.debug("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
 				if (altGroup.getChain()==null) {
@@ -594,6 +600,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	/** Start the parsing
 	 *
 	 */
+	@Override
 	public void documentStart() {
 		structure = new StructureImpl();
 
@@ -621,6 +628,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 
+	@Override
 	public void documentEnd() {
 
 		// a problem occurred earlier so current_chain = null ...
@@ -780,7 +788,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			}
 
-			
+
 		}
 
 
@@ -1019,6 +1027,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return structure;
 	}
 
+	@Override
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
 		//System.out.println("got a database revision:" + dbrev);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
@@ -1059,6 +1068,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structure.setPDBHeader(header);
 	}
 
+	@Override
 	public void newDatabasePDBremark(DatabasePDBremark remark) {
 		//System.out.println(remark);
 		String id = remark.getId();
@@ -1092,6 +1102,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
+	@Override
 	public void newRefine(Refine r){
 		
 		PDBHeader pdbHeader = structure.getPDBHeader();
@@ -1126,6 +1137,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 
+	@Override
 	public void newAuditAuthor(AuditAuthor aa){
 
 		String name =  aa.getName();
@@ -1162,6 +1174,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
+	@Override
 	public void newExptl(Exptl exptl) {
 
 		PDBHeader pdbHeader = structure.getPDBHeader();
@@ -1170,6 +1183,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 	
+	@Override
 	public void newCell(Cell cell) {
 		
 		try {
@@ -1210,6 +1224,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 	
+	@Override
 	public void newSymmetry(Symmetry symmetry) {
         String spaceGroup = symmetry.getSpace_group_name_H_M();
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
@@ -1218,10 +1233,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg); 
 	}
 
+	@Override
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		structNcsOper.add(sNcsOper);
 	}
 	
+	@Override
 	public void newStructRef(StructRef sref) {
 		logger.debug(sref.toString());
 		strucRefs.add(sref);
@@ -1261,6 +1278,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 *
 	 *
 	 */
+	@Override
 	public void newStructRefSeq(StructRefSeq sref) {
 		//if (DEBUG)
 		//	System.out.println(sref);
@@ -1389,6 +1407,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * Later on the entities are mapped to the BioJava Chain and Compound objects.
 	 * @param epolseq the EntityPolySeq record for one amino acid
 	 */
+	@Override
 	public void newEntityPolySeq(EntityPolySeq epolseq) {
 
 		logger.debug("NEW entity poly seq " + epolseq);
@@ -1542,6 +1561,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			target.setResidueNumber(residueNumber);
 		}
 	}
+	@Override
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {
 
 		//if ( headerOnly)
@@ -1568,6 +1588,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 
+	@Override
 	public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss) {
 
 		//if (headerOnly)
@@ -1588,34 +1609,40 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
+	@Override
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen){
 		// TODO: do something with them...
 		// not implemented yet...
 		//System.out.println(pen.getEntity_id() + " " + pen.getName() + " " + pen.getComp_id());
 	}
 
+	@Override
 	public void newChemComp(ChemComp c) {
 		// TODO: do something with them...
 
 	}
 
+	@Override
 	public void newGenericData(String category, List<String> loopFields,
 			List<String> lineData) {
 
 		//logger.debug("unhandled category so far: " + category);		
 	}
 
+	@Override
 	public FileParsingParameters getFileParsingParameters()
 	{
 		return params;
 	}
 
+	@Override
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		this.params = params;
 
 	}
 
+	@Override
 	public void newChemCompDescriptor(ChemCompDescriptor ccd) {
 
 		// TODO nothing happening here yet.

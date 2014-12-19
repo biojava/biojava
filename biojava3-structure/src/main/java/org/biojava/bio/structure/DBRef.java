@@ -113,7 +113,8 @@ public class DBRef implements PDBRecord, Serializable{
      *
      * @return a PDB - DBREF formatted line
      */
-    public String toPDB(){
+    @Override
+	public String toPDB(){
 
 
 
@@ -127,7 +128,8 @@ public class DBRef implements PDBRecord, Serializable{
      *
      * @param buf the StringBuffer to write to.
      */
-    public void toPDB(StringBuffer buf){
+    @Override
+	public void toPDB(StringBuffer buf){
     	 Formatter formatter = new Formatter(new StringBuilder(),Locale.UK);
 //        DBREF  3ETA A  990  1295  UNP    P06213   INSR_HUMAN    1017   1322
 //        DBREF  3EH2 A    2   767  UNP    P53992   SC24C_HUMAN    329   1094
@@ -146,7 +148,8 @@ public class DBRef implements PDBRecord, Serializable{
     /** String representation of a DBRef.
      * @return a String
      */
-    public String toString(){
+    @Override
+	public String toString(){
         StringBuffer buf = new StringBuffer();
 
         try {

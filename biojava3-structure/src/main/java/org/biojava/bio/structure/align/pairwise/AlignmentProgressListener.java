@@ -101,6 +101,7 @@ public class AlignmentProgressListener
 		frame.setTitle(title);
 
 		frame.addWindowListener(new WindowAdapter(){
+			@Override
 			public void windowClosing(WindowEvent e){
 				JFrame f = (JFrame) e.getSource();
 				f.setVisible(false);
@@ -138,6 +139,7 @@ public class AlignmentProgressListener
 		frame.setTitle(title);
 
 		frame.addWindowListener(new WindowAdapter(){
+			@Override
 			public void windowClosing(WindowEvent e){
 				JFrame f = (JFrame) e.getSource();
 				f.setVisible(false);

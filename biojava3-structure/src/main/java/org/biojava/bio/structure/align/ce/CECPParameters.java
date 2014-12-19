@@ -22,6 +22,7 @@ public class CECPParameters extends CeParameters {
 		private DuplicationHint(String name) {
 			this.name = name;
 		}
+		@Override
 		public String toString() {
 			return name;
 		}
@@ -87,6 +88,7 @@ public class CECPParameters extends CeParameters {
 		return params;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
 		List<Class> params = super.getUserConfigTypes();

@@ -46,6 +46,7 @@ public class FatCatRigid extends FatCat implements StructureAlignment{
 	    params.setMaxTra(0);		
 	}
 
+	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
 
 		AFPChain afpChain = alignRigid(ca1, ca2, params);
@@ -54,6 +55,7 @@ public class FatCatRigid extends FatCat implements StructureAlignment{
 		return afpChain;
 	}
 
+	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param)
 	throws StructureException {
 
@@ -69,16 +71,19 @@ public class FatCatRigid extends FatCat implements StructureAlignment{
 		return afpChain;
 	}
 
+	@Override
 	public String getAlgorithmName() {
 
 		return algorithmName;
 	}
 
+	@Override
 	public ConfigStrucAligParams getParameters() {
 
 		return params;
 	}
 
+	@Override
 	public String getVersion(){
 		return VERSION+"";
 	}
@@ -92,6 +97,7 @@ public class FatCatRigid extends FatCat implements StructureAlignment{
 //		return gui;
 //	}
 
+	@Override
 	public void setParameters(ConfigStrucAligParams parameters) {
 		if (! (parameters instanceof FatCatParameters)){
 			throw new IllegalArgumentException("Provided parameters are not of type FatCatParameters!");

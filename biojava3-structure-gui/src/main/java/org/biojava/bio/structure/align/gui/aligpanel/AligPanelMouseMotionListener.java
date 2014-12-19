@@ -37,6 +37,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 		aligPosListeners.add(li);
 	}
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		
 
@@ -109,6 +110,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 		}
 
 	}
+	@Override
 	public void mouseMoved(MouseEvent e) {
 		if ( selectionLocked)
 			return;
@@ -182,6 +184,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 
 	}
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 
 	}
@@ -207,16 +210,19 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 //		
 //	}
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void mouseExited(MouseEvent e) {
 
 
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		
 		selectionStart = null;
@@ -246,6 +252,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 		triggerSelectionLocked(flag);
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 
 		isDragging = false;

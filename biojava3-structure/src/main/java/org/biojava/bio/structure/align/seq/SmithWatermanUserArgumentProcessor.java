@@ -45,6 +45,7 @@ public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProc
 	}
 
 
+	@Override
 	public StructureAlignment getAlgorithm() {
 		return new SmithWaterman3Daligner();
 	}
@@ -67,6 +68,7 @@ public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProc
 		return p;
 	}
 
+	@Override
 	public String getDbSearchLegend(){
 		String legend = "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
 		return legend;

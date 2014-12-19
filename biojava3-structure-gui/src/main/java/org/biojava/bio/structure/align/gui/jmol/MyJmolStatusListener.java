@@ -45,32 +45,38 @@ public class MyJmolStatusListener implements JmolStatusListener {
 		status = statusField;
 	}
 	
+	@Override
 	public String createImage(String arg0, String arg1, Object arg2, int arg3) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String eval(String arg0) {
 		if(verbose) System.out.println("eval " + arg0);
 		return null;
 	}
 
+	@Override
 	public float[][] functionXY(String arg0, int arg1, int arg2) {
 		if(verbose) System.out.println("XY " + arg0 + " " + arg1 + " " + arg2);
 		return null;
 	}
 
+	@Override
 	public float[][][] functionXYZ(String arg0, int arg1, int arg2, int arg3) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Hashtable getRegistryInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public void showUrl(String arg0) {
 		status.setText(arg0);
 
@@ -86,6 +92,7 @@ public class MyJmolStatusListener implements JmolStatusListener {
 		return false;
 	}
 
+	@Override
 	public void setCallbackFunction(String arg0, String arg1) {
 		if(verbose) System.out.println("callback:" + arg0 + " " + arg1);
 		status.setText(arg0 + " " + arg1);
@@ -111,18 +118,21 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	}
 
 	
+	@Override
 	public void notifyCallback(EnumCallback arg0, Object[] arg1) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	
+	@Override
 	public boolean notifyEnabled(EnumCallback arg0) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	
+	@Override
 	public Map<String, Object> getProperty(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
@@ -136,6 +146,7 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	}
 
 
+	@Override
 	public void resizeInnerPanel(String data) {
 		// TODO Auto-generated method stub
 		

@@ -54,6 +54,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 
 	private String[][] strucs;
 
+	@Override
 	public void setUp() {
 		strucs = new String[1][1];
 

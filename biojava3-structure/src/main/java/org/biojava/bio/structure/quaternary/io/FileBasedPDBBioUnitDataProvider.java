@@ -112,6 +112,7 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 		return header ;
 	}
 
+	@Override
 	public Structure getAsymUnit(String pdbId){
 
 		if (s == null ||( ! s.getPDBCode().equalsIgnoreCase(pdbId))) {
@@ -122,6 +123,7 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 			s = StructureTools.removeModels(s);
 		return s;
 	}
+	@Override
 	public void setAsymUnit(Structure s){
 		this.s = s;
 	}

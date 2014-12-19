@@ -14,6 +14,7 @@ public class SchemaGenerator extends SchemaOutputResolver{
 		this.fileName = filename;
 	}
 	
+	@Override
 	public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
 		File f = new File(this.fileName);
 		f.createNewFile();

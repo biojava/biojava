@@ -198,6 +198,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 	}
 
 
+	@Override
 	public String getDbSearchLegend(){
 		//String legend = "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
 		//return legend;

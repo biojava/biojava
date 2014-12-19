@@ -30,47 +30,54 @@ public class CountProgressListener implements AlignmentProgressListener {
 
 	int nrCalculated ;
 	int nrSubmitted;
-	
+
 	public CountProgressListener(){
 		nrCalculated = 0;
 		nrSubmitted  = 0;
 	}
-	
+
+	@Override
 	public void alignmentEnded() {
 		nrCalculated++;
 
 	}
 
+	@Override
 	public void alignmentStarted(String name1, String name2) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void downloadingStructures(String name) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void logStatus(String message) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void requestingAlignmentsFromServer(int nrAlignments) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void sentResultsToServer(int nrAlignments, String serverMessage) {
 		nrSubmitted+=nrAlignments;				
 	}
 
 
+	@Override
 	public String toString() {
 		return "[nrCalculated=" + nrCalculated
 				+ ", nrSubmitted=" + nrSubmitted + "]";
 	}
-	
-	
+
+
 
 }

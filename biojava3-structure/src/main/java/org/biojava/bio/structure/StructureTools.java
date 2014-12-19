@@ -345,7 +345,7 @@ public class StructureTools {
 			if (a.getElement()==Element.H) continue;
 
 			Group g = a.getGroup();
-			
+
 			if (g.isWater()) continue;
 
 			if (!hetAtoms && g.getType().equals(GroupType.HETATM)) continue;
@@ -1052,6 +1052,7 @@ public class StructureTools {
 	 * @return a ResidueNumber object
 	 * @deprecated replaced by  Group.getResidueNumber()
 	 */
+	@Deprecated
 	public static final ResidueNumber getPDBResidueNumber(Group g){
 
 		return g.getResidueNumber();

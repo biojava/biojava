@@ -171,6 +171,7 @@ extends JFrame{
 		frame.setTitle("Alt. Alig [" + position+"] - Distance Matrix & path");
 		
 		frame.addWindowListener(new WindowAdapter(){
+			@Override
 			public void windowClosing(WindowEvent e){
 				JFrame f = (JFrame) e.getSource();
 				f.setVisible(false);
@@ -249,6 +250,7 @@ extends JFrame{
 		frame.pack();
 		frame.setVisible(true);
 		frame.addWindowListener(new WindowAdapter(){
+			@Override
 			public void windowClosing(WindowEvent e){
 				JFrame f = (JFrame) e.getSource();
 				f.setVisible(false);
@@ -341,24 +343,29 @@ class MyButtonMouseListener implements MouseListener{
 
 
 
+	@Override
 	public void mouseClicked(MouseEvent arg0) {
 
 
 	}
 
+	@Override
 	public void mousePressed(MouseEvent arg0) {
 
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent arg0) {     
 		parent.showAlternative(pos);
 
 	}
 
+	@Override
 	public void mouseEntered(MouseEvent arg0) {
 
 	}
 
+	@Override
 	public void mouseExited(MouseEvent arg0) {
 
 	}
@@ -374,17 +381,22 @@ class MatrixMouseListener implements MouseListener{
 		this.pos = position;
 	}
 
+	@Override
 	public void mouseClicked(MouseEvent arg0) {}
+	@Override
 	public void mousePressed(MouseEvent arg0) {}
 
+	@Override
 	public void mouseReleased(MouseEvent arg0) {     
 		parent.showDistanceMatrix(pos);
 
 	}
 
 
+	@Override
 	public void mouseEntered(MouseEvent arg0) { }
 
+	@Override
 	public void mouseExited(MouseEvent arg0) {}
 
 }

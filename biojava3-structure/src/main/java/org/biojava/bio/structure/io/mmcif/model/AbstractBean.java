@@ -38,6 +38,7 @@ public abstract class AbstractBean {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AbstractBean.class);
 
+	@Override
 	@SuppressWarnings({  "unchecked" })
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
