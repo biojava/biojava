@@ -49,7 +49,6 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.features.AbstractFeature;
 import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
-import org.biojava3.core.sequence.features.FeatureParser;
 import org.biojava3.core.sequence.features.FeatureRetriever;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.io.GenbankSequenceParser;
