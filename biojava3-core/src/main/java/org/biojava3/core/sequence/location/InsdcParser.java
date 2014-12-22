@@ -23,7 +23,6 @@ package org.biojava3.core.sequence.location;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
