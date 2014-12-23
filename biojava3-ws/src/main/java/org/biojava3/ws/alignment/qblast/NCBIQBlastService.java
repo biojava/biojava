@@ -73,7 +73,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	public static final long WAIT_INCREMENT = 3000;
 
 	private static final MapToStringTransformer MAP_TO_STRING_TRANSFORMER = new MapToStringTransformer();
-	private static final String SERVICE_URL = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi";
+	private static final String SERVICE_URL = "http://blast.ncbi.nlm.nih.gov/Blast.cgi";
 	private static final String DEFAULT_EMAIL = "anonymous@biojava.org";
 	private static final String DEFAULT_TOOL = "biojava3";
 
