@@ -127,6 +127,7 @@ implements ChangeListener, ActionListener {
 			ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
 			JFrame frame = new JFrame();
 			frame.addWindowListener(new WindowAdapter(){
+				@Override
 				public void windowClosing(WindowEvent e){
 					JFrame f = (JFrame) e.getSource();
 					f.setVisible(false);
@@ -314,6 +315,7 @@ implements ChangeListener, ActionListener {
 		return gradients;
 	}
 
+	@Override
 	public void stateChanged(ChangeEvent e) {
 		
 		JSlider source = (JSlider)e.getSource();
@@ -434,6 +436,7 @@ implements ChangeListener, ActionListener {
 		 * to the selected value and returns the label, set up
 		 * to display the text and image.
 		 */
+		@Override
 		public Component getListCellRendererComponent(
 				JList list,
 				Object value,
@@ -471,6 +474,7 @@ implements ChangeListener, ActionListener {
 	 * @param e
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
         JComboBox cb = (JComboBox)e.getSource(); // == coloring
         String gradientName = (String)cb.getSelectedItem();

@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import org.biojava3.core.exceptions.HeaderParseException;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
@@ -56,7 +56,6 @@ import org.biojava3.core.sequence.io.GenericGenbankHeaderParser;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,14 +76,15 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     
 
     /**
-     * @throws Exception
-     *
+     * 
+     * @throws InterruptedException 
+     * @throws IOException 
+     * @throws CompoundNotFoundException 
      */
     public GenbankProxySequenceReader(
             String genbankDirectoryCache,
             String accessionID,
-            CompoundSet<C> compoundSet
-    ) throws Throwable {
+            CompoundSet<C> compoundSet ) throws IOException, InterruptedException, CompoundNotFoundException {
 
         setGenbankDirectoryCache(genbankDirectoryCache);
         setCompoundSet(compoundSet);
@@ -101,8 +101,8 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
         if (compoundSet.equals(AminoAcidCompoundSet.class)) {
             if (!genbankParser.getCompoundType().equals(compoundSet)) {
-                logger.error("Declared compount type {} does not mach the real", genbankParser.getCompoundType().toString());
-                throw new HeaderParseException("wrong declared compound type for: " + accessionID); //it is en Error not exception
+                logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
+                throw new IOException("Wrong declared compound type for: " + accessionID); 
             }
         }
 
@@ -186,12 +186,12 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     }
 
     @Override
-    public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() throws Exception {
+    public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
         return genbankParser.getDatabaseReferences();
     }
 
     @Override
-    public ArrayList<String> getKeyWords() throws Exception {
+    public ArrayList<String> getKeyWords() {
         return genbankParser.getKeyWords();
     }
 

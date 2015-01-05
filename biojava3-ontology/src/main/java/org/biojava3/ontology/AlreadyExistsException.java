@@ -32,6 +32,9 @@ package org.biojava3.ontology;
 public class AlreadyExistsException extends OntologyException {
   
 
+	
+	private static final long serialVersionUID = 1L;
+
 	public AlreadyExistsException() {
         super();
     }

@@ -1,6 +1,7 @@
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -15,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A class that contains PDB Header information.
@@ -27,7 +30,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	private static final long serialVersionUID = -5834326174085429508L;
 	
-	private String method;
+	private static final Logger logger = LoggerFactory.getLogger(PDBHeader.class);
+	
 	private String title;
 	private String description;
 	private String idCode;
@@ -41,19 +45,22 @@ public class PDBHeader implements PDBRecord, Serializable{
 	
 	private float resolution;
 	
+	private float rFree;
+	
 	private JournalArticle journalArticle;
 	private String authors;
 	
 	private int nrBioAssemblies ;
 	
 	public static final float DEFAULT_RESOLUTION = 99;
+	public static final float DEFAULT_RFREE = 1; // worst possible rfree is the default
 
 	private Long id;
 	public static final String newline = System.getProperty("line.separator");
 
 	private DateFormat dateFormat;
 
-	private Map<Integer,List<BiologicalAssemblyTransformation>> tranformationMap ;
+	private Map<String,List<BiologicalAssemblyTransformation>> tranformationMap ;
 
 	public PDBHeader(){
 
@@ -61,7 +68,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 		modDate = new Date(0);
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
-		tranformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
+		rFree = DEFAULT_RFREE;
+		tranformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
 		nrBioAssemblies = -1;
 		crystallographicInfo = new PDBCrystallographicInfo();
 	}
@@ -69,13 +77,14 @@ public class PDBHeader implements PDBRecord, Serializable{
 	/** String representation
 	 *
 	 */
+	@Override
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
 
 		try {
 
-			@SuppressWarnings("rawtypes")
-			Class c = Class.forName("org.biojava.bio.structure.PDBHeader");
+			
+			Class<?> c = Class.forName(PDBHeader.class.getName());
 			Method[] methods  = c.getMethods();
 
 			for (int i = 0; i < methods.length; i++) {
@@ -98,8 +107,12 @@ public class PDBHeader implements PDBRecord, Serializable{
 					}
 				}
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			logger.error("Exception caught while creating toString  ",e);
+		} catch (InvocationTargetException e) {
+			logger.error("Exception caught while creating toString ",e);
+		} catch (IllegalAccessException e) {
+			logger.error("Exception caught while creating toString ",e);
 		}
 
 		return buf.toString();
@@ -109,6 +122,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 *
 	 * @return a PDB file style display
 	 */
+	@Override
 	public String toPDB(){
 		StringBuffer buf = new StringBuffer();
 		toPDB(buf);
@@ -119,6 +133,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 *
 	 * @param buf
 	 */
+	@Override
 	public void toPDB(StringBuffer buf){
 		//          1         2         3         4         5         6         7
 		//01234567890123456789012345678901234567890123456789012345678901234567890123456789
@@ -196,7 +211,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	private void printMultiLine(StringBuffer buf, String lineStart, String data, char breakChar){
 		if ( lineStart.length() !=  9)
-			System.err.println("lineStart != 9, there will be problems :" + lineStart);
+			logger.info("lineStart != 9, there will be problems :" + lineStart);
 
 		if ( data.length() < 58) {
 			buf.append(lineStart);
@@ -376,9 +391,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 */
 	public boolean equals(PDBHeader other){
 		try {
-
-			@SuppressWarnings("rawtypes")
-			Class c = Class.forName("org.biojava.bio.structure.PDBHeader");
+			
+			Class<?> c = Class.forName(PDBHeader.class.getName());
 			Method[] methods  = c.getMethods();
 
 			for (int i = 0; i < methods.length; i++) {
@@ -394,22 +408,28 @@ public class PDBHeader implements PDBRecord, Serializable{
 						if ( b == null ){
 							continue;
 						} else {
-							System.out.println(name + " a is null, where other is " + b);
+							logger.warn(name + " a is null, where other is " + b);
 							return false;
 						}
 					}
 					if ( b == null) {
-						System.out.println(name + " other is null, where a is " + a);
+						logger.warn(name + " other is null, where a is " + a);
 						return false;
 					}
 					if (! (a.equals(b))){
-						System.out.println("mismatch with " + name + " >" + a + "< >" + b + "<");
+						logger.warn("mismatch with " + name + " >" + a + "< >" + b + "<");
 						return false;
 					}
 				}
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			logger.error("Exception caught while comparing PDBHeader objects ",e);
+			return false;
+		} catch (InvocationTargetException e) {
+			logger.error("Exception caught while comparing PDBHeader objects ",e);
+			return false;
+		} catch (IllegalAccessException e) {
+			logger.error("Exception caught while comparing PDBHeader objects ",e);
 			return false;
 		}
 		return true;
@@ -518,6 +538,14 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.resolution = resolution;
 	}
 
+	public float getRfree() {
+		return rFree;
+	}
+	
+	public void setRfree(float rFree) {
+		this.rFree = rFree;
+	}
+	
 	public Date getModDate() {
 		return modDate;
 	}
@@ -526,22 +554,6 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.modDate = modDate;
 	}
 
-	@Deprecated 
-	/**
-	 * use getTecnhnique instead
-	 * @return
-	 */
-	public String getMethod() {
-		return method;
-	}
-	@Deprecated
-	/** use setTechnique instead
-	 * 
-	 * @param method
-	 */
-	public void setMethod(String method) {
-		this.method = method;
-	}
 	public String getTitle() {
 		return title;
 	}
@@ -555,7 +567,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.description = description;
 	}
 
-	/** Returns the names of the authors as listed in the AUTHORS section of a PDB file.
+	/** 
+	 * Return the names of the authors as listed in the AUTHORS section of a PDB file.
 	 * Not necessarily the same authors as listed in the AUTH section of the primary citation!
 	 *
 	 * @return Authors as a string
@@ -602,11 +615,11 @@ public class PDBHeader implements PDBRecord, Serializable{
     }
 	
 	
-	public Map<Integer,List<BiologicalAssemblyTransformation>> getBioUnitTranformationMap() {
+	public Map<String,List<BiologicalAssemblyTransformation>> getBioUnitTranformationMap() {
 		return tranformationMap ;
 	}
 
-	public void setBioUnitTranformationMap(Map<Integer,List<BiologicalAssemblyTransformation>> tranformationMap) {
+	public void setBioUnitTranformationMap(Map<String,List<BiologicalAssemblyTransformation>> tranformationMap) {
 		this.tranformationMap = tranformationMap;
 	}
 

@@ -20,6 +20,8 @@
 package org.biojava.bio.structure.align.webstart;
 
 import java.io.File;
+
+import javax.jnlp.UnavailableServiceException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -46,7 +48,6 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava.bio.structure.gui.util.PDBDirPanel;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 public class WebStartMain
@@ -79,6 +80,7 @@ public class WebStartMain
 			// we did not get enough arguments, show the general user interface...
 
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 
 					AlignmentGui.getInstance();
@@ -93,6 +95,7 @@ public class WebStartMain
 			//String arg0 = args[0];
 
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					AlignmentGui.getInstance();
 				}
@@ -134,7 +137,7 @@ public class WebStartMain
 
 			UserConfiguration config = getWebStartConfig();
 
-			System.setProperty("PDB_DIR",config.getPdbFilePath());
+			System.setProperty(UserConfiguration.PDB_DIR,config.getPdbFilePath());
 			System.out.println("using PDB file path: " + config.getPdbFilePath());
 
 			AtomCache cache = new AtomCache(config);
@@ -251,7 +254,7 @@ public class WebStartMain
 
 				webstartConfig.save(userConfig);
 
-			} catch (Exception e){
+			} catch (UnavailableServiceException e){
 				System.err.println(e.getMessage());
 			}
 		}
@@ -263,7 +266,7 @@ public class WebStartMain
 	public static UserConfiguration getDefaultConfig(){
 		userConfig = new UserConfiguration();
 
-		String pdbDir = System.getProperty(PDBDirPanel.PDB_DIR);
+		String pdbDir = System.getProperty(UserConfiguration.PDB_DIR);
 		if ( pdbDir != null) {
 			userConfig.setPdbFilePath(pdbDir);
 
@@ -279,7 +282,7 @@ public class WebStartMain
 
 			webstartConfig.save(config);
 
-		} catch (Exception e){
+		} catch (UnavailableServiceException e){
 			e.printStackTrace();
 		}
 
@@ -292,7 +295,7 @@ public class WebStartMain
 			//UserConfiguration config = new UserConfiguration();
 			userConfig = new UserConfiguration();
 
-			String pdbDir = System.getProperty(PDBDirPanel.PDB_DIR);
+			String pdbDir = System.getProperty(UserConfiguration.PDB_DIR);
 			if ( pdbDir != null) {
 				userConfig.setPdbFilePath(pdbDir);
 				return userConfig;
@@ -322,7 +325,7 @@ public class WebStartMain
 			System.err.println("did not provide directory, going on level higher! " + file.getAbsolutePath());
 			file = file.getParentFile();
 		}
-		System.setProperty(PDBDirPanel.PDB_DIR, file.getAbsolutePath());
+		System.setProperty(UserConfiguration.PDB_DIR, file.getAbsolutePath());
 		userConfig.setPdbFilePath(file.getAbsolutePath());
 
 		return userConfig;

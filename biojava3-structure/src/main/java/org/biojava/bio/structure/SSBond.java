@@ -34,7 +34,7 @@ import java.io.Serializable;
  * @author Andreas Prlic
  *
  */
-public class SSBond implements PDBRecord, Serializable{
+public class SSBond implements PDBRecord, Serializable, Cloneable {
 
 	/**
     *
@@ -52,6 +52,7 @@ public class SSBond implements PDBRecord, Serializable{
 		serNum = 0;
 	}
 
+	@Override
 	public String toPDB(){
 
 
@@ -64,6 +65,7 @@ public class SSBond implements PDBRecord, Serializable{
 	 *
 	 * @param buf a StringBuffer to print the PDB representation to
 	 */
+	@Override
 	public void toPDB(StringBuffer buf){
 
 		/*12 - 14        LString(3)      "CYS"        Residue name.
@@ -122,6 +124,7 @@ public class SSBond implements PDBRecord, Serializable{
 		this.serNum = serNum;
 	}
 
+	@Override
 	public SSBond clone() {
 		SSBond nbond = new SSBond();
 		nbond.setChainID1(chainID1);

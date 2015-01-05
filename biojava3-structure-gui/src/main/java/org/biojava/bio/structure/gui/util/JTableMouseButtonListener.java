@@ -70,24 +70,29 @@ class JTableMouseButtonListener implements MouseListener {
       __table = table;
     }
 
-    public void mouseClicked(MouseEvent e) {
+    @Override
+	public void mouseClicked(MouseEvent e) {
         //System.out.println("clicked!");
       __forwardEventToButton(e);
     }
 
-    public void mouseEntered(MouseEvent e) {
+    @Override
+	public void mouseEntered(MouseEvent e) {
       __forwardEventToButton(e);
     }
 
-    public void mouseExited(MouseEvent e) {
+    @Override
+	public void mouseExited(MouseEvent e) {
       __forwardEventToButton(e);
     }
 
-    public void mousePressed(MouseEvent e) {
+    @Override
+	public void mousePressed(MouseEvent e) {
       __forwardEventToButton(e);
     }
 
-    public void mouseReleased(MouseEvent e) {
+    @Override
+	public void mouseReleased(MouseEvent e) {
       __forwardEventToButton(e);
     }
   }

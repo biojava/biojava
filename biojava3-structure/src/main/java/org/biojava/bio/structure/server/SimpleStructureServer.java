@@ -33,6 +33,7 @@ import org.biojava.bio.structure.Structure;
  * 
  *
  */
+@Deprecated
 public class SimpleStructureServer 
 implements StructureServer, 
 StructureListener {
@@ -61,11 +62,13 @@ StructureListener {
 		checkStatus();
 	}
 
+	@Override
 	public void addStructureListener(StructureListener listener) {
 		listeners.add(listener);
 
 	}
 
+	@Override
 	public void clearStructureListeners() {
 		listeners.clear();
 
@@ -76,11 +79,13 @@ StructureListener {
 		return 0;
 	}
 
+	@Override
 	public PDBInstallation getPDBInstallation() {
 
 		return installation; 
 	}
 
+	@Override
 	public synchronized void requestNextStructure(StructureListener listener) {
 
 		if (installation ==null) {
@@ -157,19 +162,23 @@ StructureListener {
 		return s;
 	}
 
+	@Override
 	public void setCacheSize(int cacheSize) {
 		this.cacheSize = cacheSize;
 
 	}
+	@Override
 	public int getCacheSize(){
 		return cacheSize;
 	}
 
+	@Override
 	public void setPDBInstallation(PDBInstallation installation) {
 		this.installation = installation;
 
 	}
 
+	@Override
 	public boolean hasNextStructure() {
 		//System.out.println("server hasNextStructure loading:" +countLoading);
 		if (queue.size() > 0)
@@ -192,11 +201,13 @@ StructureListener {
 
 
 
+	@Override
 	public void modifiedStructure(StructureEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public synchronized void newStructure(StructureEvent event) {
 		countLoading--;
 		Structure s = event.getStructure();
@@ -216,6 +227,7 @@ StructureListener {
 
 	}
 
+	@Override
 	public void obsoleteStructure(StructureEvent event) {
 		// TODO Auto-generated method stub
 

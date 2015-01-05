@@ -39,8 +39,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava3.core.sequence.io.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A mapping between UniProt entries and PDB chains.
@@ -59,6 +61,9 @@ import org.biojava3.core.sequence.io.util.IOUtils;
  * @since 3.0.7
  */
 public class SiftsChainToUniprotMapping {
+	
+	private final static Logger logger = LoggerFactory.getLogger(SiftsChainToUniprotMapping.class);
+	
 
 	private static File DEFAULT_FILE;
 
@@ -75,7 +80,7 @@ public class SiftsChainToUniprotMapping {
 
 	/**
 	 * Loads the SIFTS mapping.
-	 * Attempts to load the mapping file file in the PDB cache directory.
+	 * Attempts to load the mapping file in the PDB cache directory.
 	 * If the file does not exist or could not be parsed, downloads and stores a GZ-compressed file.
 	 * @return
 	 * @throws IOException If the local file could not be read and could not be downloaded
@@ -86,20 +91,20 @@ public class SiftsChainToUniprotMapping {
 
 	/**
 	 * Loads the SIFTS mapping.
-	 * Attempts to load the mapping file file in the PDB cache directory.
+	 * Attempts to load the mapping file in the PDB cache directory.
 	 * If the file does not exist or could not be parsed, downloads and stores a GZ-compressed file.
 	 * @param useOnlyLocal If true, will throw an IOException if the file needs to be downloaded
 	 * @return
 	 * @throws IOException If the local file could not be read and could not be downloaded (including if onlyLocal is true)
 	 */
 	public static SiftsChainToUniprotMapping load(boolean useOnlyLocal) throws IOException {
-		String cacheDir = System.getProperty(AbstractUserArgumentProcessor.CACHE_DIR);
-		if (cacheDir != null) {
-			DEFAULT_FILE = new File(cacheDir.endsWith(File.pathSeparator) ? cacheDir + DEFAULT_FILENAME : cacheDir
-					+ File.pathSeparator + DEFAULT_FILENAME);
-		} else {
-			DEFAULT_FILE = File.createTempFile(DEFAULT_FILENAME, "xml");
-		}
+		
+		UserConfiguration config = new UserConfiguration();
+		File cacheDir = new File(config.getCacheFilePath());
+		
+		DEFAULT_FILE = new File(cacheDir, DEFAULT_FILENAME);
+		 
+		
 		if (!DEFAULT_FILE.exists() || DEFAULT_FILE.length() == 0) {
 			if (useOnlyLocal) throw new IOException(DEFAULT_FILE + " does not exist, and did not download");
 			download();
@@ -107,7 +112,7 @@ public class SiftsChainToUniprotMapping {
 		try {
 			return build();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.info("Caught IOException while reading {}. Error: {}",DEFAULT_FILE,e.getMessage());
 			if (useOnlyLocal) throw new IOException(DEFAULT_FILE + " could not be read, and did not redownload");
 			download();
 			return build();
@@ -116,62 +121,40 @@ public class SiftsChainToUniprotMapping {
 
 	private static SiftsChainToUniprotMapping build() throws IOException {
 		SiftsChainToUniprotMapping sifts = new SiftsChainToUniprotMapping();
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(DEFAULT_FILE));
-			String line = "";
-			while ((line = br.readLine()) != null) {
-				if (line.isEmpty() || line.startsWith("#") || line.startsWith("PDB")) continue;
-				String[] parts = line.split("\t");
-				String pdbId = parts[0];
-				String chainId = parts[1];
-				String uniProtId = parts[2];
-				String seqresStart = parts[3];
-				String seqresEnd = parts[4];
-				String pdbStart = parts[5];
-				String pdbEnd = parts[6];
-				String uniprotStart = parts[7];
-				String uniprotEnd = parts[8];
-				SiftsChainEntry entry = new SiftsChainEntry(pdbId, chainId, uniProtId, seqresStart, seqresEnd,
-						pdbStart, pdbEnd, uniprotStart, uniprotEnd);
-				sifts.byChainId.put(pdbId + "." + chainId, entry);
-				sifts.byUniProtId.put(uniProtId, entry);
-			}
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		BufferedReader br = new BufferedReader(new FileReader(DEFAULT_FILE));
+		String line = "";
+		while ((line = br.readLine()) != null) {
+			if (line.isEmpty() || line.startsWith("#") || line.startsWith("PDB")) continue;
+			String[] parts = line.split("\t");
+			String pdbId = parts[0];
+			String chainId = parts[1];
+			String uniProtId = parts[2];
+			String seqresStart = parts[3];
+			String seqresEnd = parts[4];
+			String pdbStart = parts[5];
+			String pdbEnd = parts[6];
+			String uniprotStart = parts[7];
+			String uniprotEnd = parts[8];
+			SiftsChainEntry entry = new SiftsChainEntry(pdbId, chainId, uniProtId, seqresStart, seqresEnd,
+					pdbStart, pdbEnd, uniprotStart, uniprotEnd);
+			sifts.byChainId.put(pdbId + "." + chainId, entry);
+			sifts.byUniProtId.put(uniProtId, entry);
 		}
+		br.close();
 		return sifts;
 	}
 
 	private static void download() throws IOException {
+		
+		logger.info("Downloading {} to {}",DEFAULT_URL.toString(),DEFAULT_FILE);
+		
 		InputStream in = null;
 		OutputStream out = null;
-		try {
-			in = new GZIPInputStream(DEFAULT_URL.openStream());
-			out = new FileOutputStream(DEFAULT_FILE);
-			IOUtils.copy(in, out);
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (in != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+
+		in = new GZIPInputStream(DEFAULT_URL.openStream());
+		out = new FileOutputStream(DEFAULT_FILE);
+		IOUtils.copy(in, out);
+
 	}
 
 	private Map<String, SiftsChainEntry> byChainId = new HashMap<String, SiftsChainEntry>();

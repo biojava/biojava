@@ -1,5 +1,6 @@
 package org.biojava.bio.structure.quaternary.io;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +23,13 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
  */
 public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 
-	String pdbId;
-	List<PdbxStructAssembly> pdbxStructAssemblies;
-	List<PdbxStructAssemblyGen> pdbxStructAssemblyGens;
-	List<PdbxStructOperList> pdbxStructOperList;
-	Structure asymUnit;
+	private String pdbId;
+	private List<PdbxStructAssembly> pdbxStructAssemblies;
+	private List<PdbxStructAssemblyGen> pdbxStructAssemblyGens;
+	private List<PdbxStructOperList> pdbxStructOperList;
+	private Structure asymUnit;
 	
-	AtomCache cache ;
+	private AtomCache cache ;
 	
 	public MmCifPDBBiolAssemblyProvider(){
 		//reset();
@@ -51,11 +52,13 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 		
 		reset();
 		
-		MMCIFFileReader reader = new MMCIFFileReader();
+		MMCIFFileReader reader = new MMCIFFileReader(cache.getPath());
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setAlignSeqRes(true);
 		params.setParseBioAssembly(true);
 		reader.setFileParsingParameters(params);
+		reader.setAutoFetch(cache.isAutoFetch());
+		reader.setPdbDirectorySplit(cache.isSplit());
 		
 		try{
 			asymUnit = reader.getStructureById(pdbId);
@@ -79,7 +82,8 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 			
 			// reset the consumer data to avoid memory leaks
 			consumer.documentStart();
-		} catch (Exception e){
+		} catch (IOException e){
+			// TODO shouldn't this be thrown?
 			e.printStackTrace();
 			
 		}

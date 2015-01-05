@@ -20,8 +20,15 @@
 # load files from local file system. Note: aligned the whole file, i.e. all chains. If you want to break this up into regions, you need to manipulate the files first manually.
 # bash runCECP.sh -file1 /tmp/cn/pdb3cna.ent.gz -file2  file:///tmp/pe/pdb2pel.ent.gz -show3d
 
-# send the arguments to the java app
-# allows to specify a different config file
-args="$*"
+### Execute jar ###
 
-java -Xmx500M -cp "$PWD/jars/*" org.biojava.bio.structure.align.ce.CeCPMain $args
+# Get the base directory of the argument.
+# Can resolve single symlinks if readlink is installed
+function scriptdir {
+    cd "$(dirname "$1")"
+    cd "$(dirname "$(readlink "$1" 2>/dev/null || basename "$1" )")"
+    pwd
+}
+DIR="$(scriptdir "$0" )"
+# send the arguments to the java app
+java -Xmx500M -cp "$DIR/${project.build.finalName}.jar" org.biojava.bio.structure.align.ce.CeCPMain "$@"

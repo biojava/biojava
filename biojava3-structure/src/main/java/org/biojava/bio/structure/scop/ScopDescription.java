@@ -35,6 +35,7 @@ public class ScopDescription implements Serializable,Cloneable{
 	String description;
 
 
+	@Override
 	public String toString(){
 		StringWriter buf = new StringWriter();
 
@@ -203,7 +204,7 @@ public class ScopDescription implements Serializable,Cloneable{
 
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	protected Object clone() {
 		ScopDescription n = new ScopDescription();
 		
 		n.setCategory(getCategory());

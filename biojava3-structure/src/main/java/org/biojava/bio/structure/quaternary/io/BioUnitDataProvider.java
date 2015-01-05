@@ -1,8 +1,10 @@
 package org.biojava.bio.structure.quaternary.io;
 
 import java.util.List;
+
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
 /** Provides access to the data that is needed in order to rebuild the correct biological assembly of a protein.
@@ -50,4 +52,11 @@ public interface BioUnitDataProvider {
 	public void setAtomCache(AtomCache cache);
 	
 	public AtomCache getAtomCache();
+	
+	/** Returns all PdbxStrucAsembly objects. Useful for mapping the index position to the ID of the bio assembly. e.g PAU can be ID, see 1A34 
+	 * 
+	 * @return
+	 */
+	public List<PdbxStructAssembly> getPdbxStructAssemblies();
+	
 }

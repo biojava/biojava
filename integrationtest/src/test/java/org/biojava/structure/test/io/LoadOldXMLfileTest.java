@@ -30,88 +30,78 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.model.AfpChainWriter;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 
-import junit.framework.TestCase;
+public class LoadOldXMLfileTest {
 
-public class LoadOldXMLfileTest extends TestCase
-{
+	@Test
+	public void testLoadOldXMLFile1() throws IOException, StructureException { 
 
-   public void testLoadOldXMLFile1(){
-      
-    
-         String name1="1P80.D";
-         String name2="2IUF.E";
-         
-         loadOldXMLFile(name1, name2);
-         
-     
+
+		String name1="1P80.D";
+		String name2="2IUF.E";
+
+		loadOldXMLFile(name1, name2);
+
+
+	}
+   
+	@Test
+	public void testLoadOldXMLFile2() throws IOException, StructureException {
+
+
+		String name1="1FEZ.A";
+		String name2="1O08.A";
+
+		loadOldXMLFile(name1, name2);
+
+
+	}
+
+   
+   private void loadOldXMLFile(String name1, String name2) throws IOException, StructureException {
+
+      System.out.println("loading " + name1 + " " + name2);
+      InputStream inStream = this.getClass().getResourceAsStream("/align/"+name1+"_"+name2+".xml");
+      assertNotNull(inStream);
+
+      String xml = convertStreamToString(inStream);
+
+      AtomCache cache = new AtomCache();
+
+      Atom[] ca1 = cache.getAtoms(name1);
+      Atom[] ca2 = cache.getAtoms(name2);
+
+      AFPChain afpChain = AFPChainXMLParser.fromXML(xml, ca1, ca2);
+
+
+
+      String txt = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2);
+      assertNotNull(txt);
+
+
    }
    
-   public void testLoadOldXMLFile2(){
-      
-      
-      String name1="1FEZ.A";
-      String name2="1O08.A";
-      
-      loadOldXMLFile(name1, name2);
-      
-  
-}
-
-   
-   private void loadOldXMLFile(String name1, String name2){
-
-      System.err.println("loading " + name1 + " " + name2);
-      try {
-         InputStream inStream = this.getClass().getResourceAsStream("/align/"+name1+"_"+name2+".xml");
-         assertNotNull(inStream);
-
-         String xml = convertStreamToString(inStream);
-         
-         AtomCache cache = new AtomCache();
-         
-         Atom[] ca1 = cache.getAtoms(name1);
-         Atom[] ca2 = cache.getAtoms(name2);
-         
-         AFPChain afpChain = AFPChainXMLParser.fromXML(xml, ca1, ca2);
-         
-       
-
-         String txt = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2);
-         assertNotNull(txt);
-
-
-     } catch (Exception e) {
-         e.printStackTrace();
-         e.printStackTrace();
-         fail(e.getMessage());
-     }
-   }
-   
-   public static String convertStreamToString(InputStream stream){
+   public static String convertStreamToString(InputStream stream) throws IOException {
       BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
       StringBuilder sb = new StringBuilder();
 
       String line = null;
-      try {
-         while ((line = reader.readLine()) != null) {
-             sb.append(line).append("\n");
-         }
-      } catch (IOException e) {
-         //e.printStackTrace();
-      } finally {
-         try {
-            stream.close();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
+
+      while ((line = reader.readLine()) != null) {
+    	  sb.append(line).append("\n");
       }
+
+      stream.close();
+
 
       return sb.toString();
    }

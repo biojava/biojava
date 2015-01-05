@@ -89,7 +89,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
          AFPChain afpChain = afps[0];
 
          UserConfiguration config = WebStartMain.getWebStartConfig();
-         AtomCache cache = new AtomCache(config.getPdbFilePath(),config.isSplit());
+         AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath(),config.isSplit());
 
          Atom[] ca1 = cache.getAtoms(afpChain.getName1());
          Atom[] ca2 = cache.getAtoms(afpChain.getName2());
@@ -167,6 +167,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
    }
 
 
+@Override
 public void paintComponent(Graphics g){
 
       super.paintComponent(g);
@@ -398,7 +399,8 @@ public void paintComponent(Graphics g){
    }
 
 
-   public void mouseOverPosition(AlignedPosition p) {
+   @Override
+public void mouseOverPosition(AlignedPosition p) {
       //System.out.println("AligPanel: mouse over position " + p.getPos1() );
 
       if ( ! selectionLocked)
@@ -467,12 +469,14 @@ public void paintComponent(Graphics g){
    }
 
 
-   public void positionSelected(AlignedPosition p) {
+   @Override
+public void positionSelected(AlignedPosition p) {
       mouseOverPosition(p);
 
    }
 
-   public void rangeSelected(AlignedPosition start, AlignedPosition end) {
+   @Override
+public void rangeSelected(AlignedPosition start, AlignedPosition end) {
       //System.out.println("AligPanel: range selected " + start.getPos1() + " - " + end.getPos1() + " selectionLockedL " + selectionLocked);
       if ( ! selectionLocked )
          selection.clear();
@@ -482,12 +486,14 @@ public void paintComponent(Graphics g){
 
    }
 
-   public void selectionLocked() {
+   @Override
+public void selectionLocked() {
       selectionLocked = true;
 
    }
 
-   public void selectionUnlocked() {
+   @Override
+public void selectionUnlocked() {
       selectionLocked = false;
       selection.clear();
       this.repaint();
@@ -495,7 +501,8 @@ public void paintComponent(Graphics g){
    }
 
 
-   public void toggleSelection(AlignedPosition p) {
+   @Override
+public void toggleSelection(AlignedPosition p) {
       selection.flip(p.getPos1());
       //System.out.println("AligPanel: toggle selection " + p.getPos1() + " " + selection.get(p.getPos1()));
       updateJmolDisplay();
@@ -511,49 +518,57 @@ public void paintComponent(Graphics g){
    }
 
 
-   public void windowActivated(WindowEvent e) {
+   @Override
+public void windowActivated(WindowEvent e) {
 
       // TODO Auto-generated method stub
 
    }
 
 
-   public void windowClosed(WindowEvent e) {
+   @Override
+public void windowClosed(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
 
-   public void windowClosing(WindowEvent e) {
+   @Override
+public void windowClosing(WindowEvent e) {
       destroy();
 
    }
 
 
-   public void windowDeactivated(WindowEvent e) {
+   @Override
+public void windowDeactivated(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
 
-   public void windowDeiconified(WindowEvent e) {
+   @Override
+public void windowDeiconified(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
 
-   public void windowIconified(WindowEvent e) {
+   @Override
+public void windowIconified(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
 
-   public void windowOpened(WindowEvent e) {
+   @Override
+public void windowOpened(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void actionPerformed(ActionEvent e) {
+   @Override
+public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       // print is handled by superclass
       if ( cmd.equals(MenuCreator.PRINT)) {

@@ -46,6 +46,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 		dictionary = new ChemicalComponentDictionary();
 	}
 
+	@Override
 	public void documentStart() {
 
 
@@ -55,6 +56,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 		return dictionary;
 	}
 
+	@Override
 	public void newChemComp(ChemComp c) {
 		latestChemCompId = c.getId();
 		dictionary.addChemComp(c);		
@@ -71,98 +73,118 @@ public class ChemCompConsumer implements MMcifConsumer {
 		//	System.out.println(c);
 	}
 
+	@Override
 	public void documentEnd() {
 
 
 	}
 
+	@Override
 	public void newAtomSite(AtomSite atom) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newDatabasePDBremark(DatabasePDBremark remark) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newEntity(Entity entity) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newEntityPolySeq(EntityPolySeq epolseq) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newExptl(Exptl exptl) {
 		// TODO Auto-generated method stub
 
 	}
 	
+	@Override
 	public void newCell(Cell cell) {
 		// TODO Auto-generated method stub
 	}
 	
+	@Override
 	public void newSymmetry(Symmetry symmetry) {
 		// TODO Auto-generated method stub 
 	}
 	
+	@Override
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newRefine(Refine r) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newStructAsym(StructAsym sasym) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newStructKeywords(StructKeywords kw) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newStructRef(StructRef sref) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newStructRefSeq(StructRefSeq sref) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void setStruct(Struct struct) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newGenericData(String category, List<String> loopFields,
 			List<String> lineData) {
 		//System.out.println("unhandled category: " + category);
@@ -170,24 +192,28 @@ public class ChemCompConsumer implements MMcifConsumer {
 	}
 
 
+	@Override
 	public void newAuditAuthor(AuditAuthor aa)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public FileParsingParameters getFileParsingParameters()
 	{
 		// can be ingored in this case...
 		return null;
 	}
 
+	@Override
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void newChemCompDescriptor(ChemCompDescriptor ccd) {
 		ChemComp cc = dictionary.getChemComp(latestChemCompId);
 		cc.getDescriptors().add(ccd);

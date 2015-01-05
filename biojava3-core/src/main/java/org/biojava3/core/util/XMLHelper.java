@@ -9,24 +9,29 @@ import static org.biojava3.core.sequence.io.util.IOUtils.openFile;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -40,7 +45,7 @@ public class XMLHelper {
         return childElement;
     }
 
-    static public Document getNewDocument() throws Exception {
+    static public Document getNewDocument() throws ParserConfigurationException  {
 
         //Create instance of DocumentBuilderFactory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -51,14 +56,14 @@ public class XMLHelper {
         return doc;
     }
 
-    static public Document loadXML(String fileName) throws Exception {
+    static public Document loadXML(String fileName) throws SAXException, IOException, ParserConfigurationException  {
         InputStream is = openFile(new File(fileName));
         Document doc = inputStreamToDocument(new BufferedInputStream(is));
         close(is);
         return doc;
     }
 
-    static public Document inputStreamToDocument(InputStream inputStream) throws Exception {
+    static public Document inputStreamToDocument(InputStream inputStream) throws SAXException, IOException, ParserConfigurationException  {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -69,11 +74,11 @@ public class XMLHelper {
         return doc;
     }
 
-    static public void outputToStream(Document document, OutputStream outputStream) throws Exception {
+    static public void outputToStream(Document document, OutputStream outputStream) throws TransformerException {
         // Use a Transformer for output
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer();
-        //    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        //    transformer.setOutputProperty(OutputKeys.INDENT, "yes"); 
 
         DOMSource source = new DOMSource(document);
         StreamResult result = new StreamResult(outputStream);
@@ -82,7 +87,7 @@ public class XMLHelper {
 
     }
 
-    static public void outputToStream(Element document, OutputStream outputStream) throws Exception {
+    static public void outputToStream(Element document, OutputStream outputStream) throws TransformerException  {
         // Use a Transformer for output
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer();
@@ -106,7 +111,7 @@ public class XMLHelper {
         return selectParentElement(parentElement, parentName);
     }
 
-    static public Element selectSingleElement(Element element, String xpathExpression) throws Exception {
+    static public Element selectSingleElement(Element element, String xpathExpression) throws XPathExpressionException {
         if (xpathExpression.indexOf("/") == -1) {
             NodeList nodeList = element.getChildNodes();
             for (int i = 0; i < nodeList.getLength(); i++) {
@@ -128,7 +133,7 @@ public class XMLHelper {
         }
     }
 
-    static public ArrayList<Element> selectElements(Element element, String xpathExpression) throws Exception {
+    static public ArrayList<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
         ArrayList<Element> resultVector = new ArrayList<Element>();
         if (element == null) {
             return resultVector;

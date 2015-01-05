@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava3.core.util.InputStreamProvider;
 
 
@@ -98,19 +98,13 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 	public SandboxStyleStructureProvider() {
 		params = new FileParsingParameters();
 		
+		UserConfiguration config = new UserConfiguration();
 		
-		String defaultPath = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-		if ( defaultPath == null) {
-			String property = "java.io.tmpdir";
-			defaultPath = System.getProperty(property);
-		}
-		
-		setPath(defaultPath);
+		setPath(config.getPdbFilePath());
 	}
 	
 	/** directory where to find PDB files */
 	public void setPath(String p){
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,p);
 		
 		path = p ;
 		
@@ -120,6 +114,7 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 	}
 	
 	
+	@Override
 	public Structure getStructureById(String pdbId) throws IOException,StructureException {
 
 		
@@ -148,7 +143,7 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 			return struc ;
 			
 			
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 			// something is wrong with the file!
 			// it probably should be downloaded again...
@@ -160,16 +155,19 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 		
 	}
 
+	@Override
 	public Structure getBiologicalUnit(String pdbId) throws StructureException,
 			IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public void setFileParsingParameters(FileParsingParameters params) {
 		this.params = params;
 	}
 
+	@Override
 	public FileParsingParameters getFileParsingParameters() {
 		return params;
 	}

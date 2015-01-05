@@ -24,7 +24,6 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -34,6 +33,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
@@ -43,6 +43,8 @@ import org.biojava.bio.structure.align.gui.jmol.JmolTools;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A utility class for visualistion of structure alignments
  * 
@@ -52,7 +54,8 @@ import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 public class DisplayAFP
 {
 
-	public static final boolean debug =  false;
+	private static final Logger logger = LoggerFactory.getLogger(DisplayAFP.class);
+	
 
 
 	//TODO: same as getEqrPos??? !!!
@@ -140,6 +143,7 @@ public class DisplayAFP
 	 * @return
 	 * @deprecated use AFPAlignmentDisplay.getBlockNrForAlignPos instead...
 	 */
+	@Deprecated
 	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
 		
 		return AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);
@@ -458,8 +462,6 @@ public class DisplayAFP
 
 		Structure s = new StructureImpl();
 
-		s.setNmr(true);
-
 
 		List<Chain>model1 = getAlignedModel(ca1);
 		List<Chain>model2 = getAlignedModel(ca2);
@@ -478,8 +480,8 @@ public class DisplayAFP
 			atoms.add(a);         
 		}
 
-		if ( debug)
-			System.out.println("got " + hetatms.size() + " hetatoms");
+		logger.debug("got {} hetatoms", hetatms.size());
+		
 		// we only add atom nr 1, since the getAlignedStructure method actually adds the parent group, and not the atoms...
 		for (Group g : hetatms){
 			if (g.size() < 1)
@@ -558,8 +560,6 @@ public class DisplayAFP
 
 		//String rot = afpChain.toRotMat();
 		//DisplayAFP.showAlignmentImage(afpChain, result + AFPChain.newline + rot);
-
-		System.out.println(result);
 
 		AligPanel me = new AligPanel();
 		me.setStructureAlignmentJmol(jmol);		
@@ -665,8 +665,8 @@ public class DisplayAFP
 		if ( g1 != null) {
 			c1 = g1.getChain();
 			if ( c1 != null){
-				hetatms = c1.getAtomGroups("hetatm");;
-				nucs1  = c1.getAtomGroups("nucleotide");
+				hetatms = c1.getAtomGroups(GroupType.HETATM);;
+				nucs1  = c1.getAtomGroups(GroupType.NUCLEOTIDE);
 			}
 		}
 		List<Group> hetatms2 = new ArrayList<Group>();
@@ -676,8 +676,8 @@ public class DisplayAFP
 		if ( g2 != null){
 			c2 = g2.getChain();
 			if ( c2 != null){
-				hetatms2 = c2.getAtomGroups("hetatm");
-				nucs2 = c2.getAtomGroups("nucleotide");
+				hetatms2 = c2.getAtomGroups(GroupType.HETATM);
+				nucs2 = c2.getAtomGroups(GroupType.NUCLEOTIDE);
 			}
 		}
 

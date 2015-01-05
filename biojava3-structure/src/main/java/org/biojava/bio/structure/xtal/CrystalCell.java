@@ -7,8 +7,12 @@ import java.util.Collections;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Point3i;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A crystal cell's parameters.
@@ -19,6 +23,7 @@ import javax.vecmath.Vector3d;
 public class CrystalCell implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(CrystalCell.class);
 
 	private static final double MIN_VALID_CELL_SIZE = 10.0; // the minimum admitted for a crystal cell
 
@@ -125,6 +130,68 @@ public class CrystalCell implements Serializable {
 	}
 	
 	/**
+	 * Get the index of a unit cell to which the query point belongs.
+	 * 
+	 * <p>For instance, all points in the unit cell at the origin will return (0,0,0);
+	 * Points in the unit cell one unit further along the `a` axis will return (1,0,0),
+	 * etc.
+	 * @param pt Input point
+	 * @return A new point with the three indices of the cell containing pt
+	 */
+	public Point3i getCellIndices(Tuple3d pt) {
+		Point3d p = new Point3d(pt);
+		this.transfToCrystal(p);
+
+		int x = (int)Math.floor(p.x);
+		int y = (int)Math.floor(p.y);
+		int z = (int)Math.floor(p.z);
+		return new Point3i(x,y,z);
+	}
+
+	/**
+	 * Converts the coordinates in pt so that they occur within the (0,0,0) unit cell
+	 * @param pt
+	 */
+	public void transfToOriginCell(Tuple3d pt) {
+		transfToCrystal(pt);
+
+		// convert all coordinates to [0,1) interval
+		pt.x = pt.x<0 ? (pt.x%1.0 + 1.0)%1.0 : pt.x%1.0;
+		pt.y = pt.y<0 ? (pt.y%1.0 + 1.0)%1.0 : pt.y%1.0;
+		pt.z = pt.z<0 ? (pt.z%1.0 + 1.0)%1.0 : pt.z%1.0;
+
+		transfToOrthonormal(pt);
+	}
+
+	/**
+	 * Converts a set of points so that the reference point falls in the unit cell.
+	 *
+	 * This is useful to transform a whole chain at once, allowing some of the
+	 * atoms to be outside the unit cell, but forcing the centroid to be within it.
+	 *
+	 * @param points A set of points to transform
+	 * @param reference The reference point, which is unmodified but which would
+	 *    be in the unit cell were it to have been transformed. It is safe to
+	 *    use a member of the points array here.
+	 */
+	public void transfToOriginCell(Tuple3d[] points, Tuple3d reference) {
+		reference = new Point3d(reference);//clone
+		transfToCrystal(reference);
+
+		int x = (int)Math.floor(reference.x);
+		int y = (int)Math.floor(reference.y);
+		int z = (int)Math.floor(reference.z);
+
+		for( Tuple3d point: points ) {
+			transfToCrystal(point);
+			point.x -= x;
+			point.y -= y;
+			point.z -= z;
+			transfToOrthonormal(point);
+		}
+	}
+
+	/**
 	 * Transform given Matrix4d in crystal basis to the orthonormal basis using
 	 * the PDB axes convention (NCODE=1)
 	 * @param m
@@ -133,7 +200,7 @@ public class CrystalCell implements Serializable {
 	public Matrix4d transfToOrthonormal(Matrix4d m) {
 		Vector3d trans = new Vector3d(m.m03,m.m13,m.m23);
 		transfToOrthonormal(trans);
-		
+
 		Matrix3d rot = new Matrix3d();
 		m.getRotationScale(rot);
 		// see Giacovazzo section 2.E, eq. 2.E.1
@@ -436,7 +503,7 @@ public class CrystalCell implements Serializable {
 		if (this.getA()<MIN_VALID_CELL_SIZE &&
 				this.getB()<MIN_VALID_CELL_SIZE &&
 				this.getC()<MIN_VALID_CELL_SIZE) {
-			System.err.println("Warning! crystal cell with 3 dimensions below "+MIN_VALID_CELL_SIZE+". Will ignore it.");
+			logger.warn("Warning! crystal cell with 3 dimensions below "+MIN_VALID_CELL_SIZE+". Will ignore it.");
 			return false;
 		}
 		
@@ -444,6 +511,7 @@ public class CrystalCell implements Serializable {
 		
 	}
 	
+	@Override
 	public String toString() {
 		return String.format("a%7.2f b%7.2f c%7.2f alpha%6.2f beta%6.2f gamma%6.2f", a, b, c, alpha, beta, gamma);
 	}

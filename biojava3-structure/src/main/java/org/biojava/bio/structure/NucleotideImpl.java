@@ -35,17 +35,11 @@ import java.io.Serializable;
  * @since 1.4
  * @version %I% %G%
  */
-public class NucleotideImpl
-extends HetatomImpl
-implements Group, Serializable
-{
+public class NucleotideImpl extends HetatomImpl implements Group, Serializable, Cloneable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -7467726932980288712L;
 	/** this is a "nucleotide", a special occurance of a Hetatom. */
-	public static final String type = GroupType.NUCLEOTIDE;
+	public static final GroupType type = GroupType.NUCLEOTIDE;
 
 	/*
 	 * inherits most from Hetero and has just a few extensions.
@@ -55,9 +49,11 @@ implements Group, Serializable
 
 	}
 
-	public String getType(){ return type;}
+	@Override
+	public GroupType getType(){ return type;}
 
 
+	@Override
 	public String toString(){
 
 		String str = "PDB: "+ pdb_name + " " + residueNumber +  " "+ pdb_flag;
@@ -98,6 +94,7 @@ implements Group, Serializable
 
 	}
 
+	@Override
 	public Object clone(){
 		NucleotideImpl n = new NucleotideImpl();
 
@@ -108,8 +105,9 @@ implements Group, Serializable
 
 		// copy the atoms
 		for (int i=0;i<atoms.size();i++){
-			Atom atom = (Atom)atoms.get(i);
-			n.addAtom((Atom)atom.clone());
+			Atom atom = (Atom)atoms.get(i).clone();
+			n.addAtom(atom);
+			atom.setGroup(n);
 		}
 		return n;
 	}

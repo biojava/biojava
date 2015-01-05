@@ -31,14 +31,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -51,693 +55,661 @@ import org.biojava3.core.sequence.template.Sequence;
  */
 public class ChainImpl implements Chain, Serializable {
 
-	/**
-	 *
-	 */
+	private final static Logger logger = LoggerFactory.getLogger(ChainImpl.class);
+
 	private static final long serialVersionUID = 1990171805277911840L;
 
-	/** The default chain identifier is an empty space.
-	 *
-	 */
-	public static String DEFAULT_CHAIN_ID = "A";
-
-	String swissprot_id ;
-	String name ; // like in PDBfile
-	List <Group> groups;
-
-
-	protected List<Group> seqResGroups;
-	private Long id;
-	Compound mol;
-	Structure parent;
-
-	Map<String, Integer> pdbResnumMap;
-	String internalChainID;
 	/**
-	 *  Constructs a ChainImpl object.
-	 */
-	public ChainImpl() {
-		super();
+ * The default chain identifier used to be an empty space
+ */
+public static String DEFAULT_CHAIN_ID = "A";
 
-		name = DEFAULT_CHAIN_ID;
-		groups = new ArrayList<Group>() ;
+private String swissprot_id ;
+private String chainID ; // the chain identifier as in PDB files
 
-		seqResGroups = new ArrayList<Group>();
-		pdbResnumMap = new HashMap<String,Integer>();
-		internalChainID = null;
+private List <Group> groups;
+private List<Group> seqResGroups;
 
+private Long id;
+private Compound mol;
+private Structure parent;
+
+private Map<String, Integer> pdbResnumMap;
+private String internalChainID; // the chain identifier used in mmCIF files
+
+/**
+ *  Constructs a ChainImpl object.
+ */
+public ChainImpl() {
+	super();
+
+	chainID = DEFAULT_CHAIN_ID;
+	groups = new ArrayList<Group>() ;
+
+	seqResGroups = new ArrayList<Group>();
+	pdbResnumMap = new HashMap<String,Integer>();
+	internalChainID = null;
+
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public Long getId() {
+	return id;
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public void setId(Long id) {
+	this.id = id;
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public void setParent(Structure parent) {
+	this.parent = parent;
+}
+
+/** Returns the parent Structure of this chain.
+ *
+ * @return the parent Structure object
+ */
+@Override
+public Structure getParent() {
+
+
+	return parent;
+}
+
+
+/** Returns an identical copy of this Chain .
+ * @return an identical copy of this Chain
+ */
+@Override
+public Object clone() {
+	// go through all groups and add to new Chain.
+	ChainImpl n = new ChainImpl();
+	// copy chain data:
+
+	n.setChainID( getChainID());
+	n.setSwissprotId ( getSwissprotId());
+		
+		// NOTE the Compound will be reset at the parent level (Structure) if cloning is happening from parent level
+		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
+		n.setCompound(this.mol);
+		
+	n.setInternalChainID(internalChainID);
+
+	for (int i=0;i<groups.size();i++){
+			Group g = (Group)groups.get(i).clone();
+			n.addGroup(g);
+			g.setChain(n);
 	}
+	
+	if (seqResGroups.size() > 0 ){
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public Long getId() {
-		return id;
-	}
+		// cloning seqres and atom groups is ugly, due to their
+		// nested relationship (some of the atoms can be in the seqres, but not all)
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	/** {@inheritDoc}
-	 *
-	 */
-	public void setParent(Structure parent) {
-		this.parent = parent;
-	}
-
-	/** Returns the parent Structure of this chain.
-	 *
-	 * @return the parent Structure object
-	 */
-
-	public Structure getParent() {
-
-
-		return parent;
-	}
-
-
-	/** Returns an identical copy of this Chain .
-	 * @return an identical copy of this Chain
-	 */
-	public Object clone() {
-		// go through all groups and add to new Chain.
-		ChainImpl n = new ChainImpl();
-		// copy chain data:
-
-		n.setChainID( getChainID());
-		n.setSwissprotId ( getSwissprotId());
-		n.setHeader(this.getHeader());
-		n.setInternalChainID(internalChainID);
-
-		for (int i=0;i<groups.size();i++){
-			Group g = (Group)groups.get(i);
-			n.addGroup((Group)g.clone());
+		List<Group> tmpSeqRes = new ArrayList<Group>();
+		for (int i=0;i<seqResGroups.size();i++){
+				Group g = (Group)seqResGroups.get(i).clone();
+				g.setChain(n);
+			tmpSeqRes.add(g);
 		}
 		
-		if (seqResGroups.size() > 0 ){
-
-			// cloning seqres and atom groups is ugly, due to their
-			// nested relationship (some of the atoms can be in the seqres, but not all)
-
-			List<Group> tmpSeqRes = new ArrayList<Group>();
-			for (int i=0;i<seqResGroups.size();i++){
-				Group g = (Group)seqResGroups.get(i);
-
-				tmpSeqRes.add(g);
-			}
-			
-			Chain tmp = new ChainImpl();
-			// that's a bit confusing, but that's how to set the seqres so the seqresaligner can use them 
-			tmp.setAtomGroups(tmpSeqRes);
-			
-			// now match them up..
-			SeqRes2AtomAligner seqresaligner = new SeqRes2AtomAligner();
-
-			try {
-				seqresaligner.mapSeqresRecords(n, tmp);
-			} catch (StructureException e){
-				e.printStackTrace();
-			}
-
-		} 
+		Chain tmp = new ChainImpl();
+			// that's a bit confusing, but that's how to set the seqres so that SeqRes2AtomAligner can use them 
+		tmp.setAtomGroups(tmpSeqRes);
 		
+		// now match them up..
+		SeqRes2AtomAligner seqresaligner = new SeqRes2AtomAligner();
 
-		return n ;
-	}
+			seqresaligner.mapSeqresRecords(n, tmp);
+			
+
+	} 
+	
+
+	return n ;
+}
 
 
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public void setHeader(Compound mol) {
-		this.mol = mol;
-	}
+/** {@inheritDoc}
+ *
+ */
+@Override
+public void setCompound(Compound mol) {
+	this.mol = mol;
+}
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public Compound getHeader() {
-		return this.mol;
-	}
+/** {@inheritDoc}
+ *
+ */
+@Override
+public Compound getCompound() {
+	return this.mol;
+}
 
-	/** set the Swissprot id of this chains .
-	 * @param sp_id  a String specifying the swissprot id value
-	 * @see #getSwissprotId
-	 */
+/** set the Swissprot id of this chains .
+ * @param sp_id  a String specifying the swissprot id value
+ * @see #getSwissprotId
+ */
+@Override
+public void setSwissprotId(String sp_id){
+	swissprot_id = sp_id ;
+}
 
-	public void setSwissprotId(String sp_id){
-		swissprot_id = sp_id ;
-	}
+/** get the Swissprot id of this chains .
+ * @return a String representing the swissprot id value
+ * @see #setSwissprotId
+ */
+@Override
+public String getSwissprotId() {
+	return swissprot_id ;
+}
 
-	/** get the Swissprot id of this chains .
-	 * @return a String representing the swissprot id value
-	 * @see #setSwissprotId
-	 */
-	public String getSwissprotId() {
-		return swissprot_id ;
-	}
+/** {@inheritDoc}
+ *
+ */
+@Override
+public void addGroup(Group group) {
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public void addGroup(Group group) {
+	group.setChain(this);
 
-		group.setChain(this);
+	groups.add(group);
 
-		groups.add(group);
+	// store the position internally for quick access of this group
 
-		// store the position internally for quick access of this group
+	String pdbResnum = null ;
+	ResidueNumber resNum = group.getResidueNumber();
+	if ( resNum != null)
+		pdbResnum = resNum.toString();
+	if ( pdbResnum != null) {
+		Integer pos = new Integer(groups.size()-1);
+		// ARGH sometimes numbering in PDB files is confusing.
+		// e.g. PDB: 1sfe
+		/*
+		 * ATOM    620  N   GLY    93     -24.320  -6.591   4.210  1.00 46.82           N
+		 * ATOM    621  CA  GLY    93     -24.960  -6.849   5.497  1.00 47.35           C
+		 * ATOM    622  C   GLY    93     -26.076  -5.873   5.804  1.00 47.24           C
+		 * ATOM    623  O   GLY    93     -26.382  -4.986   5.006  1.00 47.56           O
+         and ...
+		 * HETATM 1348  O   HOH    92     -21.853 -16.886  19.138  1.00 66.92           O
+		 * HETATM 1349  O   HOH    93     -26.126   1.226  29.069  1.00 71.69           O
+		 * HETATM 1350  O   HOH    94     -22.250 -18.060  -6.401  1.00 61.97           O
+		 */
 
-		String pdbResnum = null ;
-		ResidueNumber resNum = group.getResidueNumber();
-		if ( resNum != null)
-			pdbResnum = resNum.toString();
-		if ( pdbResnum != null) {
-			Integer pos = new Integer(groups.size()-1);
-			// ARGH sometimes numbering in PDB files is confusing.
-			// e.g. PDB: 1sfe
-			/*
-			 * ATOM    620  N   GLY    93     -24.320  -6.591   4.210  1.00 46.82           N
-			 * ATOM    621  CA  GLY    93     -24.960  -6.849   5.497  1.00 47.35           C
-			 * ATOM    622  C   GLY    93     -26.076  -5.873   5.804  1.00 47.24           C
-			 * ATOM    623  O   GLY    93     -26.382  -4.986   5.006  1.00 47.56           O
-             and ...
-			 * HETATM 1348  O   HOH    92     -21.853 -16.886  19.138  1.00 66.92           O
-			 * HETATM 1349  O   HOH    93     -26.126   1.226  29.069  1.00 71.69           O
-			 * HETATM 1350  O   HOH    94     -22.250 -18.060  -6.401  1.00 61.97           O
-			 */
-
-			// this check is to give in this case the entry priority that is an AminoAcid / comes first...
-			if (  pdbResnumMap.containsKey(pdbResnum)) {
-				if ( group instanceof AminoAcid)
-					pdbResnumMap.put(pdbResnum,pos);
-			} else
+		// this check is to give in this case the entry priority that is an AminoAcid / comes first...
+		if (  pdbResnumMap.containsKey(pdbResnum)) {
+			if ( group instanceof AminoAcid)
 				pdbResnumMap.put(pdbResnum,pos);
+		} else
+			pdbResnumMap.put(pdbResnum,pos);
+	}
+
+}
+
+
+/** 
+ * {@inheritDoc}
+ */
+@Override
+public Group getAtomGroup(int position) {
+
+		return groups.get(position);
+	}
+
+/**  
+ * {@inheritDoc}
+ */
+@Override
+public List<Group> getAtomGroups(GroupType type){
+
+	List<Group> tmp = new ArrayList<Group>() ;
+	for (int i=0;i<groups.size();i++){
+			Group g = groups.get(i);
+		if (g.getType().equals(type)){
+			tmp.add(g);
+		}
+	}
+
+	return tmp ;
+}
+
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public List<Group> getAtomGroups(){
+	return groups ;
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public void setAtomGroups(List<Group> groups){
+	for (Group g:groups){
+		g.setChain(this);
+	}
+	this.groups = groups;
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd, boolean ignoreMissing)
+		throws StructureException {
+
+	ResidueNumber start = ResidueNumber.fromString(pdbresnumStart);
+	ResidueNumber end = ResidueNumber.fromString(pdbresnumEnd);
+
+	if (! ignoreMissing )
+		return getGroupsByPDB(start, end);
+
+	return getGroupsByPDB(start, end, ignoreMissing);
+
+}
+
+@Override
+public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ignoreMissing)
+		throws StructureException {
+
+	if (! ignoreMissing )
+		return getGroupsByPDB(start, end);
+
+
+	List<Group> retlst = new ArrayList<Group>();
+
+	String pdbresnumStart = start.toString();
+	String pdbresnumEnd   = end.toString();
+
+
+	int startPos = Integer.MIN_VALUE;
+	int endPos   = Integer.MAX_VALUE;
+
+
+	startPos = start.getSeqNum();
+	endPos   = end.getSeqNum();
+
+
+
+	boolean adding = false;
+	boolean foundStart = false;
+
+	for (Group g: groups){
+
+		if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
+			adding = true;
+			foundStart = true;
 		}
 
-	}
-
-	/** return the group at position .
-	 *
-	 *
-	 * @param position  an int
-	 * @return a Group object
-	 * @deprecated use getAtomGroup or getSeqResGroup instead
-	 */
-	public Group getGroup(int position) {
-
-		return (Group)groups.get(position);
-	}
+		if ( ! (foundStart && adding) ) {
 
 
+			int pos = g.getResidueNumber().getSeqNum();
 
-	/** 
-	 * {@inheritDoc}
-	 */
-	public Group getAtomGroup(int position) {
-
-		return (Group)groups.get(position);
-	}
-
-	/** Return a list of all groups of one of the types defined in hte {@link GroupType} constants.
-	 *
-	 *
-	 * @param type  a String
-	 * @return an List object containing the groups of type...
-	 * @deprecated use getAtomGroups instead
-	 */
-	public List<Group> getGroups( String type) {
-		return getAtomGroups(type);
-	}
-
-	/**  
-	 * {@inheritDoc}
-	 */
-	public List<Group> getAtomGroups(String type){
-		List<Group> tmp = new ArrayList<Group>() ;
-		for (int i=0;i<groups.size();i++){
-			Group g = (Group)groups.get(i);
-			if (g.getType().equals(type)){
-				tmp.add(g);
-			}
-		}
-
-		return tmp ;
-	}
-
-	/** return all groups of this chain .
-	 * @return a List object representing the Groups of this Chain.
-	 * @deprecated use getAtomGroups instead
-	 */
-	public List<Group> getGroups(){
-		return groups ;
-	}
-
-
-	/** {@inheritDoc}
-	 *
-	 */
-	public List<Group> getAtomGroups(){
-		return groups ;
-	}
-
-	/** {@inheritDoc}
-	 *
-	 */
-	public void setAtomGroups(List<Group> groups){
-		for (Group g:groups){
-			g.setChain(this);
-		}
-		this.groups = groups;
-	}
-
-	/** {@inheritDoc}
-	 *
-	 */
-	public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd, boolean ignoreMissing)
-			throws StructureException {
-
-		ResidueNumber start = ResidueNumber.fromString(pdbresnumStart);
-		ResidueNumber end = ResidueNumber.fromString(pdbresnumEnd);
-
-		if (! ignoreMissing )
-			return getGroupsByPDB(start, end);
-
-		return getGroupsByPDB(start, end, ignoreMissing);
-
-	}
-
-	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ignoreMissing)
-			throws StructureException {
-
-		if (! ignoreMissing )
-			return getGroupsByPDB(start, end);
-
-
-		List<Group> retlst = new ArrayList<Group>();
-
-		String pdbresnumStart = start.toString();
-		String pdbresnumEnd   = end.toString();
-
-
-		int startPos = Integer.MIN_VALUE;
-		int endPos   = Integer.MAX_VALUE;
-
-
-		startPos = start.getSeqNum();
-		endPos   = end.getSeqNum();
-
-
-
-		boolean adding = false;
-		boolean foundStart = false;
-
-		for (Group g: groups){
-
-			if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
-				adding = true;
+			if ( pos >= startPos) {
 				foundStart = true;
+				adding = true;
 			}
 
-			if ( ! (foundStart && adding) ) {
 
+		}
 
-				int pos = g.getResidueNumber().getSeqNum();
+		if ( adding)
+			retlst.add(g);
 
-				if ( pos >= startPos) {
-					foundStart = true;
-					adding = true;
-				}
+		if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
+			if ( ! adding)
+				throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
+			adding = false;
+			break;
+		}
+		if (adding){
 
-
-			}
-
-			if ( adding)
-				retlst.add(g);
-
-			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
-				if ( ! adding)
-					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
+			int pos = g.getResidueNumber().getSeqNum();
+			if (pos >= endPos) {
 				adding = false;
 				break;
 			}
-			if (adding){
 
-				int pos = g.getResidueNumber().getSeqNum();
-				if (pos >= endPos) {
-					adding = false;
-					break;
-				}
-
-			}
-		}
-
-		if ( ! foundStart){
-			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
-		}
-
-
-		//not checking if the end has been found in this case...
-
-		return (Group[]) retlst.toArray(new Group[retlst.size()] );
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 */
-	public Group getGroupByPDB(String pdbresnum) throws StructureException {
-		ResidueNumber resNum = ResidueNumber.fromString(pdbresnum);
-		return getGroupByPDB(resNum);
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 */
-	public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
-		String pdbresnum = resNum.toString();
-		if ( pdbResnumMap.containsKey(pdbresnum)) {
-			Integer pos = (Integer) pdbResnumMap.get(pdbresnum);
-			return (Group) groups.get(pos.intValue());
-		} else {
-			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + name);
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 */
-	public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd)
-			throws StructureException {
-		ResidueNumber start = ResidueNumber.fromString(pdbresnumStart);
-		ResidueNumber end = ResidueNumber.fromString(pdbresnumEnd);
-
-		return getGroupsByPDB(start,end);
+	if ( ! foundStart){
+		throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 */
-	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
-			throws StructureException {
+	//not checking if the end has been found in this case...
 
-		String pdbresnumStart = start.toString();
-		String pdbresnumEnd   = end.toString();
+	return (Group[]) retlst.toArray(new Group[retlst.size()] );
+}
 
-		List<Group> retlst = new ArrayList<Group>();
 
-		Iterator<Group> iter = groups.iterator();
-		boolean adding = false;
-		boolean foundStart = false;
+/**
+ * {@inheritDoc}
+ *
+ */
+@Override
+public Group getGroupByPDB(String pdbresnum) throws StructureException {
+	ResidueNumber resNum = ResidueNumber.fromString(pdbresnum);
+	return getGroupByPDB(resNum);
 
-		while ( iter.hasNext()){
-			Group g = (Group) iter.next();
-			if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
-				adding = true;
-				foundStart = true;
-			}
+}
 
-			if ( adding)
-				retlst.add(g);
+/**
+ * {@inheritDoc}
+ *
+ */
+@Override
+public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
+	String pdbresnum = resNum.toString();
+	if ( pdbResnumMap.containsKey(pdbresnum)) {
+			Integer pos = pdbResnumMap.get(pdbresnum);
+			return groups.get(pos.intValue());
+	} else {
+		throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + chainID);
+	}
+}
 
-			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
-				if ( ! adding)
-					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
-				adding = false;
-				break;
-			}
+/**
+ * {@inheritDoc}
+ *
+ */
+@Override
+public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd)
+		throws StructureException {
+	ResidueNumber start = ResidueNumber.fromString(pdbresnumStart);
+	ResidueNumber end = ResidueNumber.fromString(pdbresnumEnd);
+
+	return getGroupsByPDB(start,end);
+}
+
+
+/**
+ * {@inheritDoc}
+ *
+ */
+@Override
+public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
+		throws StructureException {
+
+	String pdbresnumStart = start.toString();
+	String pdbresnumEnd   = end.toString();
+
+	List<Group> retlst = new ArrayList<Group>();
+
+	Iterator<Group> iter = groups.iterator();
+	boolean adding = false;
+	boolean foundStart = false;
+
+	while ( iter.hasNext()){
+		Group g = (Group) iter.next();
+		if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
+			adding = true;
+			foundStart = true;
 		}
 
-		if ( ! foundStart){
-			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
+		if ( adding)
+			retlst.add(g);
+
+		if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
+			if ( ! adding)
+				throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
+			adding = false;
+			break;
 		}
-		if ( adding) {
-			throw new StructureException("did not find end PDB residue number " + pdbresnumEnd + " in chain " + name);
+	}
+
+	if ( ! foundStart){
+		throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
+	}
+	if ( adding) {
+		throw new StructureException("did not find end PDB residue number " + pdbresnumEnd + " in chain " + chainID);
+	}
+
+	return (Group[]) retlst.toArray(new Group[retlst.size()] );
+}
+
+
+
+/**
+ * {@inheritDoc}
+ */
+@Override
+public int getSeqResLength() {
+	//new method returns the length of the sequence defined in the SEQRES records
+	return seqResGroups.size();
+}
+
+/**
+ * {@inheritDoc}
+ */
+@Override
+public void   setChainID(String nam) { chainID = nam;   }
+
+
+/**
+ * {@inheritDoc}
+ */
+@Override
+public String getChainID()           {	return chainID;  }
+
+
+
+/** String representation.
+ * @return String representation of the Chain
+ */
+@Override
+public String toString(){
+	String newline = System.getProperty("line.separator");
+		StringBuilder str = new StringBuilder();
+	str.append("Chain >"+getChainID()+"<"+newline) ;
+	if ( mol != null ){
+		if ( mol.getMolName() != null){
+			str.append(mol.getMolName()).append(newline);
 		}
-
-		return (Group[]) retlst.toArray(new Group[retlst.size()] );
 	}
+	str.append("total SEQRES length: " + getSeqResGroups().size() +
+			" total ATOM length:" + getAtomLength() + " residues " + newline);
 
+		// commented out the looping over residues, I thought it didn't help much, especially in debugging - JD 2014-12-10
+	// loop over the residues
+		//for ( int i = 0 ; i < seqResGroups.size();i++){
+		//	Group gr = (Group) seqResGroups.get(i);
+		//	str.append(gr.toString()).append(newline);
+		//}
+	return str.toString() ;
 
+}
 
-	/**
-	 * @deprecated use getAtomLength instead
-	 */
-	public int getLength() {
-		return getAtomLength();
-	}
+/** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
+ *
+ * @return the SEQRES groups of the Chain as a Sequence object.
+ */
+@Override
+public Sequence<?> getBJSequence()  {
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public int getLengthAminos() {
+	//List<Group> groups = c.getSeqResGroups();
+	String seq = getSeqResSequence();
 
-		List<Group> g = getAtomGroups(GroupType.AMINOACID);
-		return g.size() ;
-	}
+	//		String name = "";
+	//		if ( this.getParent() != null )
+	//			name = getParent().getPDBCode();
+	//		name += "." + getName();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getSeqResLength() {
-		//new method returns the length of the sequence defined in the SEQRES records
-		return seqResGroups.size();
-	}
+	Sequence<AminoAcidCompound> s = null;
 
-
-
-	public void   setName(String nam) { setChainID(nam); }
-
-
-	public String getName()           {	return getChainID();  }
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void   setChainID(String nam) { name = nam;   }
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getChainID()           {	return name;  }
-
-
-
-	/** String representation.
-	 * @return String representation of the Chain
-	 *  */
-	public String toString(){
-		String newline = System.getProperty("line.separator");
-		StringBuffer str = new StringBuffer();
-		str.append("Chain >"+getChainID()+"<"+newline) ;
-		if ( mol != null ){
-			if ( mol.getMolName() != null){
-				str.append(mol.getMolName()).append(newline);
-			}
-		}
-		str.append("total SEQRES length: " + getSeqResGroups().size() +
-				" total ATOM length:" + getAtomLength() + " residues " + newline);
-
-		// loop over the residues
-
-		for ( int i = 0 ; i < seqResGroups.size();i++){
-			Group gr = (Group) seqResGroups.get(i);
-			str.append(gr.toString()).append(newline);
-		}
-		return str.toString() ;
-
-	}
-
-	/** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
-	 *
-	 * @return the SEQRES groups of the Chain as a Sequence object.
-	 * @throws IllegalSymbolException
-	 */
-	public Sequence<?> getBJSequence()  {
-
-		//List<Group> groups = c.getSeqResGroups();
-		String seq = getSeqResSequence();
-
-		//		String name = "";
-		//		if ( this.getParent() != null )
-		//			name = getParent().getPDBCode();
-		//		name += "." + getName();
-
-		Sequence<AminoAcidCompound> s = null;
-
+	try {
 		s = new ProteinSequence(seq);
-
-		//TODO: return a DNA sequence if the content is DNA...
-		return s;
-
+	} catch (CompoundNotFoundException e) {
+		logger.error("Could not create sequence object from seqres sequence. Some unknown compound: {}",e.getMessage());
 	}
 
+	//TODO: return a DNA sequence if the content is DNA...
+	return s;
+
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public String getAtomSequence(){
+
+	String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+	if ( prop != null && prop.equalsIgnoreCase("true")){
 
 
-	/** get amino acid sequence of the chain. for backwards compatibility this returns
-	 * the Atom sequence of the chain.
-	 * @return a String representing the sequence.
-	 * @deprecated use getAtomSequence instead
-	 * @see #getAtomSequence()
-	 * @see #getSeqResSequence()
-	 */
-	public String getSequence(){
-		return getAtomSequence();
-	}
-
-
-	/** {@inheritDoc}
-	 *
-	 */
-	public String getAtomSequence(){
-
-		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
-		if ( prop != null && prop.equalsIgnoreCase("true")){
-
-
-			List<Group> groups = getAtomGroups();
-			StringBuffer sequence = new StringBuffer() ;
-
-			for ( Group g: groups){
-				ChemComp cc = g.getChemComp();
-
-				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
-						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
-					// an amino acid residue.. use for alignment
-					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
-					if ( oneLetter == null)
-						oneLetter = "X";
-					sequence.append(oneLetter);
-				}
-
-			}
-			return sequence.toString();
-		}
-
-		// not using ChemCOmp records...		
-		List<Group> aminos = getAtomGroups("amino");
+		List<Group> groups = getAtomGroups();
 		StringBuffer sequence = new StringBuffer() ;
-		for ( int i=0 ; i< aminos.size(); i++){
-			AminoAcid a = (AminoAcid)aminos.get(i);
-			sequence.append( a.getAminoType());
+
+		for ( Group g: groups){
+			ChemComp cc = g.getChemComp();
+
+			if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+				// an amino acid residue.. use for alignment
+				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+				if ( oneLetter == null)
+					oneLetter = "X";
+				sequence.append(oneLetter);
+			}
+
 		}
-
 		return sequence.toString();
-
 	}
 
-	/**
-	 * {@inheritDoc}	 
-	 */
-	public String getSeqResSequence(){
+	// not using ChemCOmp records...		
+	List<Group> aminos = getAtomGroups(GroupType.AMINOACID);
+	StringBuffer sequence = new StringBuffer() ;
+	for ( int i=0 ; i< aminos.size(); i++){
+		AminoAcid a = (AminoAcid)aminos.get(i);
+		sequence.append( a.getAminoType());
+	}
 
-		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+	return sequence.toString();
 
-		if ( prop != null && prop.equalsIgnoreCase("true")){
-			StringBuffer str = new StringBuffer();
-			for (Group g : seqResGroups) {
-				ChemComp cc = g.getChemComp();
-				if ( cc == null) {
-					System.err.println("Could not load ChemComp for group " + g);
-					str.append("X");
-				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
-						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
-					// an amino acid residue.. use for alignment
-					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
-					if ( oneLetter == null ||  oneLetter.length()==0  || oneLetter.equals("?"))
-						oneLetter = "X";
-					str.append(oneLetter);
-				} else {
-					str.append("X");
-				}
-			}
-			return str.toString();
-		}
+}
 
+/**
+ * {@inheritDoc}	 
+ */
+@Override
+public String getSeqResSequence(){
+
+	String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+	if ( prop != null && prop.equalsIgnoreCase("true")){
 		StringBuffer str = new StringBuffer();
-		for (Group group : seqResGroups) {
-			if (group instanceof AminoAcid) {
-				AminoAcid aa = (AminoAcid)group;
-				str.append(aa.getAminoType()) ;
+		for (Group g : seqResGroups) {
+			ChemComp cc = g.getChemComp();
+			if ( cc == null) {
+				logger.warn("Could not load ChemComp for group: ", g);
+				str.append("X");
+			} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+				// an amino acid residue.. use for alignment
+				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+				if ( oneLetter == null ||  oneLetter.length()==0  || oneLetter.equals("?"))
+					oneLetter = "X";
+				str.append(oneLetter);
 			} else {
 				str.append("X");
 			}
 		}
 		return str.toString();
-
 	}
 
-
-	/** {@inheritDoc}
-	 *
-	 */
-	public Group getSeqResGroup(int position) {
-
-		return seqResGroups.get(position);
-	}
-
-	/** {@inheritDoc}
-	 *
-	 */
-	public List<Group> getSeqResGroups(String type) {
-		List<Group> tmp = new ArrayList<Group>() ;
-		for (int i=0;i<seqResGroups.size();i++){
-			Group g = (Group)seqResGroups.get(i);
-			if (g.getType().equals(type)){
-				tmp.add(g);
-			}
+	StringBuffer str = new StringBuffer();
+	for (Group group : seqResGroups) {
+		if (group instanceof AminoAcid) {
+			AminoAcid aa = (AminoAcid)group;
+			str.append(aa.getAminoType()) ;
+		} else {
+			str.append("X");
 		}
-
-		return tmp ;
 	}
+	return str.toString();
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public List<Group> getSeqResGroups() {
-		return seqResGroups;
-	}
+}
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public void setSeqResGroups(List<Group> groups){
-		for (Group g: groups){
-			g.setChain(this);
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public Group getSeqResGroup(int position) {
+
+	return seqResGroups.get(position);
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public List<Group> getSeqResGroups(GroupType type) {
+	List<Group> tmp = new ArrayList<Group>() ;
+	for (int i=0;i<seqResGroups.size();i++){
+		Group g = (Group)seqResGroups.get(i);
+		if (g.getType().equals(type)){
+			tmp.add(g);
 		}
-		this.seqResGroups = groups;
 	}
 
-	protected void addSeqResGroup(Group g){
-		seqResGroups.add(g);
+	return tmp ;
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public List<Group> getSeqResGroups() {
+	return seqResGroups;
+}
+
+/** {@inheritDoc}
+ *
+ */
+@Override
+public void setSeqResGroups(List<Group> groups){
+	for (Group g: groups){
+		g.setChain(this);
 	}
+	this.seqResGroups = groups;
+}
+
+protected void addSeqResGroup(Group g){
+	seqResGroups.add(g);
+}
 
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public int getAtomLength() {
+/** {@inheritDoc}
+ *
+ */
+@Override
+public int getAtomLength() {
 
-		return groups.size();
-	}
+	return groups.size();
+}
 
-	/** {@inheritDoc}
-	 *
-	 */
+/** {@inheritDoc}
+ *
+ */
+	@Override
 	public List<Group> getAtomLigands(){
 		List<Group> ligands = new ArrayList<Group>();
 		
@@ -757,6 +729,11 @@ public class ChainImpl implements Chain, Serializable {
 	public void setInternalChainID(String internalChainID) {
 		this.internalChainID = internalChainID;
 
+	}
+	
+	@Override
+	public String toPDB() {
+		return FileConvert.toPDB(this);
 	}
 }
 

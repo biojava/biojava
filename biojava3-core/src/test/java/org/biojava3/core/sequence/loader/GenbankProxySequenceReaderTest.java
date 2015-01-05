@@ -1,8 +1,11 @@
 package org.biojava3.core.sequence.loader;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -51,7 +54,7 @@ public class GenbankProxySequenceReaderTest {
     }
 
     @Test
-    public void biojava3() throws Throwable {
+    public void biojava3() throws IOException, InterruptedException, CompoundNotFoundException  { 
         logger.info("run test for protein: {}", gi);
         GenbankProxySequenceReader<AminoAcidCompound> genbankReader
                 = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"), 

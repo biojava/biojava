@@ -47,35 +47,43 @@ public abstract class AbstractCompound implements Compound {
     return upperedBase;
   }
 
-  public String getDescription() {
+  @Override
+public String getDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
+  @Override
+public void setDescription(String description) {
     this.description = description;
   }
 
-  public String getShortName() {
+  @Override
+public String getShortName() {
     return shortName;
   }
 
-  public void setShortName(String shortName) {
+  @Override
+public void setShortName(String shortName) {
     this.shortName = shortName;
   }
 
-  public String getLongName() {
+  @Override
+public String getLongName() {
     return longName;
   }
 
-  public void setLongName(String longName) {
+  @Override
+public void setLongName(String longName) {
     this.longName = longName;
   }
 
-  public Float getMolecularWeight() {
+  @Override
+public Float getMolecularWeight() {
     return molecularWeight;
   }
 
-  public void setMolecularWeight(Float molecularWeight) {
+  @Override
+public void setMolecularWeight(Float molecularWeight) {
     this.molecularWeight = molecularWeight;
   }
 

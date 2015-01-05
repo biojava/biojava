@@ -4,7 +4,7 @@
  */
 package org.biojava3.survival.cox.comparators;
 
-import java.util.ArrayList;
+
 import java.util.Comparator;
 import org.biojava3.survival.cox.CoxVariables;
 

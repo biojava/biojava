@@ -2,6 +2,7 @@ package org.biojava3.core.sequence;
 
 import static org.junit.Assert.assertEquals;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.edits.Edit;
 import org.biojava3.core.sequence.template.Compound;
@@ -11,7 +12,7 @@ import org.junit.Test;
 public class EditSequenceTest {
 
   @Test
-  public void substitute() {
+  public void substitute() throws CompoundNotFoundException {
     DNASequence seq = new DNASequence("ACGT");
     assertSeq(new Edit.Substitute<NucleotideCompound>("T", 2).edit(seq), "ATGT");
     assertSeq(new Edit.Substitute<NucleotideCompound>("TT", 2).edit(seq), "ATTT");
@@ -20,12 +21,12 @@ public class EditSequenceTest {
   }
 
   @Test(expected=IndexOutOfBoundsException.class)
-  public void badSubstitute() {
+  public void badSubstitute() throws CompoundNotFoundException {
     new Edit.Substitute<NucleotideCompound>("AAAA", 4).edit(new DNASequence("ACGT"));
   }
 
   @Test
-  public void delete() {
+  public void delete() throws CompoundNotFoundException {
     DNASequence seq = new DNASequence("ACGT");
     assertSeq(new Edit.Delete<NucleotideCompound>(1).edit(seq), "CGT");
     assertSeq(new Edit.Delete<NucleotideCompound>(4).edit(seq), "ACG");
@@ -36,7 +37,7 @@ public class EditSequenceTest {
   }
 
   @Test
-  public void insert() {
+  public void insert() throws CompoundNotFoundException { 
     DNASequence seq = new DNASequence("ACGT");
     assertSeq(new Edit.Insert<NucleotideCompound>("TT", 1).edit(seq), "TTACGT");
     assertSeq(new Edit.Insert<NucleotideCompound>("TT", 2,3).edit(seq), "ACTTGT");

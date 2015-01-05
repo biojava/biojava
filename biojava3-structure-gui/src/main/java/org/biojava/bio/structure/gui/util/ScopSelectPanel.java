@@ -26,7 +26,6 @@ package org.biojava.bio.structure.gui.util;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -35,13 +34,14 @@ import javax.swing.JTextField;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-
 import org.biojava.bio.structure.align.gui.autosuggest.AutoSuggestProvider;
 import org.biojava.bio.structure.align.gui.autosuggest.JAutoSuggest;
 import org.biojava.bio.structure.align.gui.autosuggest.SCOPAutoSuggestProvider;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 public class ScopSelectPanel 
 extends JPanel
@@ -55,8 +55,7 @@ implements StructurePairSelector
    JAutoSuggest dom1;
    JAutoSuggest dom2;
 
-   
-   public static Logger logger =  Logger.getLogger("org.biojava");
+   //private static final Logger logger = LoggerFactory.getLogger(ScopSelectPanel.class);
    
    public ScopSelectPanel(){
       
@@ -118,13 +117,15 @@ implements StructurePairSelector
       return hBox;
   }
    
-   public Structure getStructure1() throws StructureException
+   @Override
+public Structure getStructure1() throws StructureException
    {
 	   String scop1 = dom1.getText();
       return getStructure(scop1);
    }
 
-   public Structure getStructure2() throws StructureException
+   @Override
+public Structure getStructure2() throws StructureException
    {
       return getStructure(dom2.getText());
    }

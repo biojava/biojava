@@ -83,6 +83,7 @@ public class PDBDomainProvider implements DomainProvider{
 			
 			final SortedSet<String> results = new TreeSet<String>();
 			DefaultHandler handler = new DefaultHandler() {
+				@Override
 				public void startElement(String uri, String localName,String qName, 
 						Attributes attributes) throws SAXException {
 

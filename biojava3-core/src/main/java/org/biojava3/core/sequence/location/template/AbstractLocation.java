@@ -145,27 +145,32 @@ public abstract class AbstractLocation implements Location {
     }
 
     
-    public Point getEnd() {
+    @Override
+	public Point getEnd() {
         return end;
     }
 
     
-    public Point getStart() {
+    @Override
+	public Point getStart() {
         return start;
     }
 
     
-    public int getLength() {
+    @Override
+	public int getLength() {
         return (getEnd().getPosition() - getStart().getPosition()) + 1;
     }
 
     
-    public Strand getStrand() {
+    @Override
+	public Strand getStrand() {
         return strand;
     }
 
     
-    public List<Location> getSubLocations() {
+    @Override
+	public List<Location> getSubLocations() {
         if(subLocations == null) {
             return Collections.emptyList();
         }
@@ -173,12 +178,14 @@ public abstract class AbstractLocation implements Location {
     }
 
     
-    public boolean isComplex() {
+    @Override
+	public boolean isComplex() {
         return getSubLocations().size() > 0;
     }
 
     
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         return accession;
     }
     
@@ -207,7 +214,8 @@ public abstract class AbstractLocation implements Location {
      * not descend
      */
     
-    public Iterator<Location> iterator() {
+    @Override
+	public Iterator<Location> iterator() {
         List<Location> list;
         if(isComplex()) {
             list = getSubLocations();
@@ -225,7 +233,8 @@ public abstract class AbstractLocation implements Location {
      * the exact elements of a location back for sub sequences.
      */
     
-    public List<Location> getRelevantSubLocations() {
+    @Override
+	public List<Location> getRelevantSubLocations() {
         return getAllSubLocations(this);
     }
 
@@ -246,7 +255,8 @@ public abstract class AbstractLocation implements Location {
     }
 
     
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         boolean equals = false;
         if (classEqual(this, obj)) {
             AbstractLocation l = (AbstractLocation) obj;
@@ -262,7 +272,8 @@ public abstract class AbstractLocation implements Location {
     }
 
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int r = Hashcoder.SEED;
         r = Hashcoder.hash(r, getStart());
         r = Hashcoder.hash(r, getEnd());
@@ -275,12 +286,14 @@ public abstract class AbstractLocation implements Location {
     }
 
     
-    public boolean isCircular() {
+    @Override
+	public boolean isCircular() {
         return circular;
     }
 
     
-    public boolean isBetweenCompounds() {
+    @Override
+	public boolean isBetweenCompounds() {
         return betweenCompounds;
     }
 
@@ -292,7 +305,8 @@ public abstract class AbstractLocation implements Location {
      * outer-bounds defined by this location.
      */
     
-    public <C extends Compound> Sequence<C> getSubSequence(Sequence<C> sequence) {
+    @Override
+	public <C extends Compound> Sequence<C> getSubSequence(Sequence<C> sequence) {
         if(isCircular()) {
             List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
             for(Location l: this) {
@@ -308,7 +322,8 @@ public abstract class AbstractLocation implements Location {
      * 
      */
     
-    public <C extends Compound> Sequence<C> getRelevantSubSequence(Sequence<C> sequence) {
+    @Override
+	public <C extends Compound> Sequence<C> getRelevantSubSequence(Sequence<C> sequence) {
         List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
         for(Location l: getRelevantSubLocations()) {
             sequences.add(l.getSubSequence(sequence));
@@ -349,7 +364,8 @@ public abstract class AbstractLocation implements Location {
     }
 
     
-    public String toString() {
+    @Override
+	public String toString() {
         String circ = (isCircular()) ? " - circular" : "";
         String between = (isBetweenCompounds()) ? "^" : "..";
         return format("%d%s%d(%s%s)", getStart().getPosition(), between, getEnd().getPosition(),

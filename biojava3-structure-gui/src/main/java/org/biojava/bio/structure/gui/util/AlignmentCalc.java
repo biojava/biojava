@@ -23,14 +23,14 @@
 package org.biojava.bio.structure.gui.util;
 
 
-import java.util.logging.Logger;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ClusterAltAligs;
 import org.biojava.bio.structure.align.StructurePairAligner;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -45,7 +45,7 @@ import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 public class AlignmentCalc implements Runnable {
 
 
-	public static Logger logger =  Logger.getLogger("org.biojava");
+	private static final Logger logger = LoggerFactory.getLogger(AlignmentCalc.class);
 
 	boolean interrupted = false;
 
@@ -76,17 +76,18 @@ public class AlignmentCalc implements Runnable {
 
 	}
 
+	@Override
 	public void run() {
 
 		// both structure have been downloaded, now calculate the alignment ...
 
 
 		StructurePairAligner aligner = new StructurePairAligner();
-		aligner.setDebug(true);
+		
 		try {
 			aligner.align(structure1,structure2);
 		} catch (StructureException e){
-			logger.warning(e.getMessage());
+			logger.warn(e.getMessage());
 
 		}
 

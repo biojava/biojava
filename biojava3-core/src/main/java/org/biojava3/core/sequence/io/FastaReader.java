@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -123,7 +124,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * time before the first result is available.<br>
      * <b>N.B.</b>
      * <ul>
-     * <li>This method ca't be called after calling its NO-ARGUMENT twin.</li> 
+     * <li>This method can't be called after calling its NO-ARGUMENT twin.</li> 
      * <li>remember to close the underlying resource when you are done.</li> 
      * </ul>
      * @see #process()
@@ -134,7 +135,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * present, starting current fileIndex onwards.
      * @throws IOException if an error occurs reading the input file
      */
-    public LinkedHashMap<String,S> process(int max) throws IOException {
+	public LinkedHashMap<String,S> process(int max) throws IOException {
         LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
 
         String line = "";
@@ -156,11 +157,18 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
                 if (line.startsWith(">")) {//start of new fasta record
                     if (sb.length() > 0) {//i.e. if there is already a sequence before
                     //    logger.debug("Sequence index=" + sequenceIndex);
-                    	@SuppressWarnings("unchecked")
-                        S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
-                        headerParser.parseHeader(header, sequence);
-                        sequences.put(sequence.getAccession().getID(),sequence);
-                        processedSequences++;
+                    	
+                    	try {    
+                    	    @SuppressWarnings("unchecked")
+                    		S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
+                            headerParser.parseHeader(header, sequence);
+                            sequences.put(sequence.getAccession().getID(),sequence);
+                            processedSequences++;
+
+                    	} catch (CompoundNotFoundException e) {
+                    		logger.warn("Sequence with header '{}' has unrecognised compounds ({}), it will be ignored", 
+                    				header, e.getMessage());
+                    	}
 //                        if (maxSequenceLength < sb.length()) {
 //                            maxSequenceLength = sb.length();
 //                        }
@@ -186,11 +194,16 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
                     logger.warn("header: {}", header);
                 }
                 //    logger.debug("Sequence index=" + sequenceIndex + " " + fileIndex );
-                @SuppressWarnings("unchecked")
-				S sequence = (S)sequenceCreator.getSequence(seq, sequenceIndex);
-                headerParser.parseHeader(header, sequence);
-                sequences.put(sequence.getAccession().getID(),sequence);
-                processedSequences++;
+                try {
+                	@SuppressWarnings("unchecked")
+                	S sequence = (S)sequenceCreator.getSequence(seq, sequenceIndex);
+                	headerParser.parseHeader(header, sequence);
+                	sequences.put(sequence.getAccession().getID(),sequence);
+                	processedSequences++;                	
+                } catch (CompoundNotFoundException e) {
+            		logger.warn("Sequence with header '{}' has unrecognised compounds ({}), it will be ignored", 
+            				header, e.getMessage());
+            	}
                 keepGoing = false;
             }
 			if (max > -1 && processedSequences>=max) {

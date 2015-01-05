@@ -28,6 +28,7 @@ import org.biojava3.core.util.InputStreamProvider;
  * @deprecated
  *
  */
+@Deprecated
 public class MMCIFFileInstallation implements PDBInstallation
 {
 
@@ -179,26 +180,31 @@ public class MMCIFFileInstallation implements PDBInstallation
 		return tempFile;
 	}
 
+	@Override
 	public void addPDBFilter(PDBFilter filter) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void clearFilters() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public List<PDBHeader> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public PDBHeader getPDBHeader(String pdbId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public Structure getStructure(String pdbId)  {
 
 		Structure struc = null;
@@ -243,11 +249,13 @@ public class MMCIFFileInstallation implements PDBInstallation
 
 	}
 
+	@Override
 	public boolean hasNext() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public Structure next() {
 		// TODO Auto-generated method stub
 		return null;

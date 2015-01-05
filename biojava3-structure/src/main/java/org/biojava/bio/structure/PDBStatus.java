@@ -177,7 +177,7 @@ public class PDBStatus {
 		List<Map<String,String>> attrList = getStatusIdRecords(pdbIds);
 		//Expect a single record
 		if(attrList == null || attrList.size() != pdbIds.length) {
-			logger.error("Error getting Status for "+pdbIds+" from the PDB website.");
+			logger.error("Error getting Status for {} from the PDB website.", Arrays.toString(pdbIds));
 			return null;
 		}
 
@@ -196,14 +196,16 @@ public class PDBStatus {
 
 				//Check that the status is given
 				String statusStr = attrs.get("status");
+				Status status = null;
 				if(statusStr == null ) {
-					logger.error("No status returned for "+pdbIds[pdbNum]);
+					logger.error("No status returned for {}", pdbIds[pdbNum]);
 					statuses[pdbNum] = null;
+				} else {
+					status = Status.fromString(statusStr);
 				}
 
-				Status status = Status.fromString(statusStr);
 				if(status == null) {
-					logger.error("Unknown status '"+statusStr+"'");
+					logger.error("Unknown status '{}'", statusStr);
 					statuses[pdbNum] = null;
 				}
 
@@ -211,7 +213,7 @@ public class PDBStatus {
 				foundAttr = true;
 			}
 			if(!foundAttr) {
-				logger.error("No result found for "+pdbIds[pdbNum]);
+				logger.error("No result found for {}", pdbIds[pdbNum]);
 				statuses[pdbNum] = null;
 			}
 		}
@@ -257,7 +259,7 @@ public class PDBStatus {
 		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {oldPdbId});
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
-			logger.error("Error getting Status for "+oldPdbId+" from the PDB website.");
+			logger.error("Error getting Status for {} from the PDB website.", oldPdbId);
 			return null;
 		}
 
@@ -266,20 +268,20 @@ public class PDBStatus {
 		//Check that the record matches pdbId
 		String id = attrs.get("structureId");
 		if(id == null || !id.equalsIgnoreCase(oldPdbId)) {
-			logger.error("Results returned from the query don't match "+oldPdbId);
+			logger.error("Results returned from the query don't match {}", oldPdbId);
 			return null;
 		}
 
 		//Check that the status is given
 		String statusStr = attrs.get("status");
 		if(statusStr == null ) {
-			logger.error("No status returned for "+oldPdbId);
+			logger.error("No status returned for {}", oldPdbId);
 			return null;
 		}
 
 		Status status = Status.fromString(statusStr);
 		if(status == null ) {
-			logger.error("Unknown status '"+statusStr+"'");
+			logger.error("Unknown status '{}'", statusStr);
 			return null;
 		}
 
@@ -292,7 +294,7 @@ public class PDBStatus {
 		case OBSOLETE: {
 			String replacementStr = attrs.get("replacedBy");
 			if(replacementStr == null) {
-				logger.error(String.format("%s is OBSOLETE but lacks a replacedBy attribute.",oldPdbId));
+				logger.error(String.format("{} is OBSOLETE but lacks a replacedBy attribute.", oldPdbId));
 				return null;
 			}
 			replacementStr = replacementStr.toUpperCase();
@@ -307,6 +309,7 @@ public class PDBStatus {
 
 			String[] replacements = replacementStr.split(" ");
 			Arrays.sort(replacements, new Comparator<String>() {
+				@Override
 				public int compare(String o1, String o2) {
 					return o2.compareToIgnoreCase(o1);
 				}
@@ -364,6 +367,7 @@ public class PDBStatus {
 
 			String[] replacements = replacementStr.split(" ");
 			Arrays.sort(replacements, new Comparator<String>() {
+				@Override
 				public int compare(String o1, String o2) {
 					return o2.compareToIgnoreCase(o1);
 				}
@@ -456,7 +460,7 @@ public class PDBStatus {
 		if(attrList == null || attrList.size() != 1) {
 			//TODO Is it possible to have multiple record per ID?
 			// They seem to be combined into one record with space-delimited 'replaces'
-			logger.error("Error getting Status for "+newPdbId+" from the PDB website.");
+			logger.error("Error getting Status for {} from the PDB website.", newPdbId);
 			return null;
 		}
 
@@ -465,7 +469,7 @@ public class PDBStatus {
 		//Check that the record matches pdbId
 		String id = attrs.get("structureId");
 		if(id == null || !id.equals(newPdbId)) {
-			logger.error("Results returned from the query don't match "+newPdbId);
+			logger.error("Results returned from the query don't match {}", newPdbId);
 			return null;
 		}
 
@@ -545,7 +549,7 @@ public class PDBStatus {
 			pdbId = pdbId.toUpperCase();
 			//check the cache
 			if (recordsCache.containsKey(pdbId)) {
-				//System.out.println("Fetching "+pdbId+" from Cache");
+				//logger.debug("Fetching "+pdbId+" from Cache");
 				result.add( recordsCache.get(pdbId) );
 			} else {
 				urlStr += pdbId + ",";
@@ -558,7 +562,7 @@ public class PDBStatus {
 		}
 
 		try {
-			logger.info("Fetching " + urlStr);
+			logger.info("Fetching {}", urlStr);
 
 			URL url = new URL(urlStr);
 
@@ -568,7 +572,7 @@ public class PDBStatus {
 			BufferedReader r = new BufferedReader(new InputStreamReader(uStream));
 			String line = r.readLine();
 			while(line != null) {
-				System.out.println(line);
+				logger.info(line);
 				line = r.readLine();
 			}
 			r.close();
@@ -603,14 +607,14 @@ public class PDBStatus {
 			
 		// TODO should throw these forward and let the caller log 
 		} catch (IOException e){
-			logger.error("Problem getting status for " +Arrays.toString(pdbIDs) + " from PDB server. Error: " +e.getMessage() );
+			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
 			return null;
 		} catch (SAXException e) {
-			logger.error("Problem getting status for " +Arrays.toString(pdbIDs) + " from PDB server. Error: " +e.getMessage() );
+			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
 			return null;			
 		} catch (ParserConfigurationException e) {
-			logger.error("Problem getting status for " +Arrays.toString(pdbIDs) + " from PDB server. Error: " +e.getMessage() );
-			return null;						
+			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
+			return null;
 		}
 
 		return result;
@@ -708,7 +712,7 @@ public class PDBStatus {
 			}
 		// TODO should throw forward
 		} catch (IOException e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 			return null;
 		}
 		return allPDBs;

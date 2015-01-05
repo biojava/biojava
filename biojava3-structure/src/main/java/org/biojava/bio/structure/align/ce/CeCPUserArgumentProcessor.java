@@ -25,9 +25,67 @@
 package org.biojava.bio.structure.align.ce;
 
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.ce.CECPParameters.DuplicationHint;
 
 public class CeCPUserArgumentProcessor extends CeUserArgumentProcessor {
+	
+	protected class CeCPStartupParams extends CeStartupParams {
+		protected DuplicationHint duplicationHint;
+		protected Integer minCPLength;
+
+		public CeCPStartupParams() {
+			duplicationHint = DuplicationHint.SHORTER;
+			minCPLength = CECPParameters.DEFAULT_MIN_CP_LENGTH;
+			maxGapSize = 0;
+		}
+
+		public DuplicationHint getDuplicationHint() {
+			return duplicationHint;
+		}
+
+		public void setDuplicationHint(DuplicationHint duplicationHint) {
+			this.duplicationHint = duplicationHint;
+		}
+
+		public Integer getMinCPLength() {
+			return minCPLength;
+		}
+
+		public void setMinCPLength(Integer minCPLength) {
+			this.minCPLength = minCPLength;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("CeCPStartupParams [duplicationHint=")
+					.append(duplicationHint).append(", minCPLength=")
+					.append(minCPLength).append("]");
+			return builder.toString();
+		}
+	}
+	
+	@Override
+	protected StartupParameters getStartupParametersInstance() {
+		return  new CeCPStartupParams();
+	}
+	@Override
 	public StructureAlignment getAlgorithm() {
 		return new CeCPMain();
 	}
+	
+	@Override
+	public Object getParameters() {
+		CECPParameters aligParams = (CECPParameters) super.getParameters();
+		CeCPStartupParams startParams = (CeCPStartupParams) params;
+		
+		if ( aligParams == null)
+			aligParams = new CECPParameters();
+		
+		// Copy relevant parameters from the startup parameters
+		aligParams.setDuplicationHint(startParams.getDuplicationHint());
+		aligParams.setMinCPLength(startParams.getMinCPLength());
+		return aligParams;
+	}
 }
+

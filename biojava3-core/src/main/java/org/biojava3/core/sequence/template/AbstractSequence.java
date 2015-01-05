@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.Strand;
@@ -49,6 +50,8 @@ import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -57,6 +60,8 @@ import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
  */
 public abstract class AbstractSequence<C extends Compound> implements Sequence<C> {
 
+	private final static Logger logger = LoggerFactory.getLogger(AbstractSequence.class);
+	
     private TaxonomyID taxonomy;
     private AccessionID accession;
     private SequenceReader<C> sequenceStorage = null;
@@ -86,8 +91,9 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * Create a Sequence from a simple string where the values should be found in compoundSet
      * @param seqString
      * @param compoundSet
+     * @throws CompoundNotFoundException 
      */
-    public AbstractSequence(String seqString, CompoundSet<C> compoundSet) {
+    public AbstractSequence(String seqString, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
         setCompoundSet(compoundSet);
         sequenceStorage = new ArrayListSequenceReader<C>();
         sequenceStorage.setCompoundSet(this.getCompoundSet());
@@ -97,8 +103,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      * A ProxySequenceReader allows abstraction of both the storage of the sequence data and the location
      * of the sequence data. A variety of use cases are possible. A ProxySequenceReader that knows the offset and of the sequence in
-     * a large fasta file. A ProxySequenceReader that can pull Sequence data from Uniprot, NCBI or a custom database.
-     * If the ProxySequecneReader implements various interfaces then the sequence will set those interfaces so that calls to
+     * a large fasta file. A ProxySequenceReader that can pull Sequence data from UniProt, NCBI or a custom database.
+     * If the ProxySequenceReader implements various interfaces then the sequence will set those interfaces so that calls to
      * various methods will be valid.
      *
      * @param proxyLoader
@@ -475,7 +481,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      * @return the accession
      */
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         return accession;
     }
 
@@ -500,7 +507,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         this.taxonomy = taxonomy;
     }
 
-    public CompoundSet<C> getCompoundSet() {
+    @Override
+	public CompoundSet<C> getCompoundSet() {
         if (compoundSet != null) {
             return compoundSet;
         }
@@ -536,7 +544,12 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
             if ( this.compoundSet.equals(parentSequence.getCompoundSet())){
             	sequenceStorage = new ArrayListSequenceReader<C>();
                 sequenceStorage.setCompoundSet(this.getCompoundSet());
-                sequenceStorage.setContents(parentSequence.getSequenceAsString());
+                try {
+                	sequenceStorage.setContents(parentSequence.getSequenceAsString());
+                } catch (CompoundNotFoundException e) {
+                	// TODO is there a better way to handle this exception?
+                	logger.error("Problem setting contents from parent sequence, some unrecognised compound: {}",e.getMessage());                	
+                }
                 return sequenceStorage;
             }
             
@@ -562,7 +575,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * Default case is to assume strand is positive because only CDSSequence can be either positive or negative Strand.
      * @return
      */
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return SequenceMixin.toString(this);
 
     }
@@ -571,7 +585,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *
      * @return
      */
-    public List<C> getAsList() {
+    @Override
+	public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
@@ -580,7 +595,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param position The 1-indexed position of the amino acid
      * @return
      */
-    public C getCompoundAt(int position) {
+    @Override
+	public C getCompoundAt(int position) {
     	
         return getSequenceStorage().getCompoundAt(position);
     }
@@ -590,7 +606,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param compound
      * @return The first index of compound in this sequence (1-based)
      */
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         return getSequenceStorage().getIndexOf(compound);
     }
 
@@ -599,7 +616,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param compound
      * @return The last index of compound in this sequence (1-based)
      */
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         return getSequenceStorage().getLastIndexOf(compound);
     }
 
@@ -607,7 +625,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *
      * @return
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return getSequenceStorage().getLength();
     }
 
@@ -617,7 +636,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param bioEnd
      * @return
      */
-    public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
+    @Override
+	public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
         return new SequenceProxyView<C>(this, bioStart, bioEnd);
     }
 
@@ -625,7 +645,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *
      * @return
      */
-    public Iterator<C> iterator() {
+    @Override
+	public Iterator<C> iterator() {
         return getSequenceStorage().iterator();
     }
 
@@ -634,7 +655,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param compounds
      * @return
      */
-    public int countCompounds(C... compounds) {
+    @Override
+	public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 

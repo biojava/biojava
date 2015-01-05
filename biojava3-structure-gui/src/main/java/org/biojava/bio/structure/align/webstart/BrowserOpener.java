@@ -21,12 +21,14 @@ package org.biojava.bio.structure.align.webstart;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class BrowserOpener {
-    public static Logger logger =  Logger.getLogger("org.biojava.spice");
+	
+	private static final Logger logger = LoggerFactory.getLogger(BrowserOpener.class);
    
     /** open a URL in the browser that was used to launch SPICE
      * 
@@ -58,7 +60,7 @@ public class BrowserOpener {
             
             return showDocument(url);
         } catch (MalformedURLException e){
-            logger.log(Level.WARNING,"malformed URL "+urlstring, e.getCause());
+            logger.warn("malformed URL {}", urlstring, e);
             return false;
         }
     }

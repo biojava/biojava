@@ -22,10 +22,7 @@ public class TargetedLocationParserTest {
     private Data request;
     
     public static class Data {
-        private String gi;
         private String Insdc;
-        private CompoundSet<?> compound;
-        private CompoundSet<?> originType;
 
         /**
          * Parser data input. Based on that input it should be able to identity the origin and wanted target
@@ -34,11 +31,8 @@ public class TargetedLocationParserTest {
          * @param Insdc string with INSDC notation
          * @param compound wanted compound type {@see CompoundSet}
          */
-        public Data(String gi, CompoundSet originType, String Insdc, CompoundSet compound) {
-            this.gi = gi;
-            this.originType = originType;
+        public Data(String gi, CompoundSet<?> originType, String Insdc, CompoundSet<?> compound) {
             this.Insdc = Insdc;
-            this.compound = compound;
         }
     };
     

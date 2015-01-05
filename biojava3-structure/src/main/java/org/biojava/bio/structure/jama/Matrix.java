@@ -199,7 +199,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
    /** Clone the Matrix object.
    */
 
-   public Object clone () {
+   @Override
+public Object clone () {
       return this.copy();
    }
 
@@ -908,7 +909,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
       return A;
    }
 
-   public String toString(){
+   @Override
+public String toString(){
 	   StringWriter writer = new StringWriter();
 	   PrintWriter printWriter = new PrintWriter(writer);
 	   print(printWriter,getColumnDimension(),3);

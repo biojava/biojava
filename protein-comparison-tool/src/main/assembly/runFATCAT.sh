@@ -12,7 +12,17 @@
 # for more examples see runCE.sh
 # jCE works almost exactly the same...
 
-# send the arguments to the java app
-args="$*"
 
-java -Xmx500M -cp "$PWD/jars/*" org.biojava.bio.structure.align.fatcat.FatCat $args
+### Execute jar ###
+
+
+# Get the base directory of the argument.
+# Can resolve single symlinks if readlink is installed
+function scriptdir {
+    cd "$(dirname "$1")"
+    cd "$(dirname "$(readlink "$1" 2>/dev/null || basename "$1" )")"
+    pwd
+}
+DIR="$(scriptdir "$0" )"
+# send the arguments to the java app
+java -Xmx500M -cp "$DIR/${project.build.finalName}.jar" org.biojava.bio.structure.align.fatcat.FatCat "$@"

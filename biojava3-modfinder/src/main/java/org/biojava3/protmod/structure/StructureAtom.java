@@ -50,6 +50,7 @@ public class StructureAtom {
 		return atomName;
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
@@ -68,6 +69,7 @@ public class StructureAtom {
 		return true;
 	}
 	
+	@Override
 	public int hashCode() {
 		int result = 17;
 		result = result * 32 + group.hashCode();
@@ -75,6 +77,7 @@ public class StructureAtom {
 		return result;
 	}
 	
+	@Override
 	public String toString() {
 		return group.toString() + '\t' + atomName; 
 	}

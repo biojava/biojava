@@ -1,10 +1,14 @@
 package org.biojava3.aaproperties;
 
+import java.io.File;
+
 import org.junit.Test;
 
-public class GenbankCommandPromptTester {
+public class GenbankCommandPromptTest {
 	@Test
 	public void testAdvancedXMLExample() throws Exception{
+		File output = new File(System.getProperty("java.io.tmpdir"),"modifiedTestGB.csv");
+		output.deleteOnExit();
 		//-i BondFeature.gb -a
 		String[] args = new String[11];
 		args[0] = "-i";
@@ -17,19 +21,21 @@ public class GenbankCommandPromptTester {
 		args[7] = "1";
 		args[8] = "-a";
 		args[9] = "-o";
-		args[10] = "./src/test/resources/modifiedTestGB.csv";
+		args[10] = output.toString();
 		CommandPrompt.run(args);
 	}
 	
 	@Test
 	public void testExample1() throws Exception{
+		File output = new File(System.getProperty("java.io.tmpdir"),"testgb.tsv");
+		output.deleteOnExit();
 		//-i BondFeature.gb -a
 		String[] args = new String[7];
 		args[0] = "-i";
 		args[1] = "./src/test/resources/BondFeature.gb";;
 		args[2] = "-a";
 		args[3] = "-o";
-		args[4] = "./src/test/resources/testgb.tsv";
+		args[4] = output.toString();
 		args[5] = "-f";
 		args[6] = "tsv";
 		CommandPrompt.run(args);
@@ -37,13 +43,15 @@ public class GenbankCommandPromptTester {
 	
 	@Test
 	public void testExample1WithCSV() throws Exception{
+		File output = new File(System.getProperty("java.io.tmpdir"),"testgb.csv");
+		output.deleteOnExit();
 		//-i BondFeature.gb -a
 		String[] args = new String[7];
 		args[0] = "-i";
 		args[1] = "./src/test/resources/BondFeature.gb";;
 		args[2] = "-a";
 		args[3] = "-o";
-		args[4] = "./src/test/resources/testgb.csv";
+		args[4] = output.toString();
 		args[5] = "-f";
 		args[6] = "csv";
 		CommandPrompt.run(args);

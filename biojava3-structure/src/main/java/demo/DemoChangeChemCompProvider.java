@@ -44,7 +44,8 @@ public class DemoChangeChemCompProvider {
 		// you can set the path to the local PDB installation either like this
 //		reader.setPath(PDB_PATH);
 		// or via
-		//System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,PDB_PATH);		
+		// by setting the PDB_PATH environmental variable or system property
+		// when running the demo (e.g. -DPDB_DIR=/path/to/pdb)
 		
 		if ( loadChemComp) {
 			

@@ -49,12 +49,14 @@ public class CRC64Checksum implements Checksum {
 		}
 	}
 
+	@Override
 	public void update(int b) {
 		long low = crc >>> 8;
 		long high = crcTable[(int) ((crc ^ b) & 0xFF)];
 		crc = low ^ high;
 	}
 
+	@Override
 	public void update(byte[] b, int offset, int length) {
 		for (int i = offset; i < length; ++i)
 			update(b[i]);
@@ -68,6 +70,7 @@ public class CRC64Checksum implements Checksum {
 
 	}
 
+	@Override
 	public long getValue() {
 		return crc;
 	}
@@ -76,6 +79,7 @@ public class CRC64Checksum implements Checksum {
 	 * Returns a zero-padded 16 character wide string containing the current
 	 * value of this checksum in uppercase hexadecimal format.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer builder = new StringBuffer();
 		builder.append(Long.toHexString(crc >>> 4));
@@ -85,6 +89,7 @@ public class CRC64Checksum implements Checksum {
 		return builder.toString().toUpperCase();
 	}
 
+	@Override
 	public void reset() {
 		crc = 0;
 	}

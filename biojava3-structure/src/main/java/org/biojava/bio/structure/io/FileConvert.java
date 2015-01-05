@@ -335,8 +335,16 @@ public class FileConvert {
 
 	}
 	
+	public static String toPDB(Atom a, String chainId) {
+		StringBuffer w = new StringBuffer();
 	
-	/** Convert a CHain object to PDB representation
+		toPDB(a,w, chainId);
+
+		return w.toString();		
+	}
+	
+	
+	/** Convert a Chain object to PDB representation
 	 * 
 	 * @param chain
 	 * @return
@@ -396,14 +404,15 @@ Angstroms.
 77 - 78        LString(2)      element       Element symbol, right-justified.
 79 - 80        LString(2)      charge        Charge on the atom.
 </pre>
-*/
-	public static void toPDB(Atom a, StringBuffer str) {
+     * @param a
+     * @param str
+     * @param chainID the chain ID that the Atom will have in the output string
+	 */
+	public static void toPDB(Atom a, StringBuffer str, String chainID) {
 
 		Group g = a.getGroup();
-		Chain c = g.getChain();
-		String chainID = c.getChainID();
 
-		String type = g.getType() ;
+		GroupType type = g.getType() ;
 
 		String record = "" ;
 		if ( type.equals(GroupType.HETATM) ) {
@@ -472,6 +481,11 @@ Angstroms.
 
 	}
 
+	public static void toPDB(Atom a, StringBuffer str) {
+		toPDB(a,str,a.getGroup().getChain().getChainID());
+	}
+	
+
 	/** test if pdbserial has an insertion code */
 	private static boolean hasInsertionCode(String pdbserial) {
 		try {
@@ -537,7 +551,7 @@ Angstroms.
 					Group gr = chain.getAtomGroup(groupnr);
 					xw.openTag("group");
 					xw.attribute("name",gr.getPDBName());
-					xw.attribute("type",gr.getType());
+					xw.attribute("type",gr.getType().toString());
 					xw.attribute("groupID",gr.getResidueNumber().toString());
 
 

@@ -91,9 +91,8 @@ public class Domain implements Comparable<Domain>, Serializable{
 	}
 
 
+	@Override
 	public int compareTo(Domain other) {
-		
-		
 		if ( this.getId() == null)
 			return 1;
 		if ( other.getId() == null)

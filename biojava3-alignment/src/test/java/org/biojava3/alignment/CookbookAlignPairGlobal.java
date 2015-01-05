@@ -22,7 +22,7 @@ public class CookbookAlignPairGlobal {
 
     private static void alignPairGlobal(String id1, String id2) throws Exception {
         ProteinSequence s1 = getSequenceForId(id1), s2 = getSequenceForId(id2);
-        SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
         SequencePair<ProteinSequence, AminoAcidCompound> pair = Alignments.getPairwiseAlignment(s1, s2,
                 PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(), matrix);
         System.out.printf("%n%s vs %s%n%s", pair.getQuery().getAccession(), pair.getTarget().getAccession(), pair);

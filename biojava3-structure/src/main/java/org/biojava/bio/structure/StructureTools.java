@@ -309,7 +309,8 @@ public class StructureTools {
 	
 	/** 
 	 * Returns and array of all atoms of the chain (first model), including 
-	 * Hydrogens (if present) and all HETATOMs
+	 * Hydrogens (if present) and all HETATOMs.
+	 * Waters are not included.
 	 * 
 	 * @param c input chain
 	 * @return all atom array
@@ -318,6 +319,7 @@ public class StructureTools {
 		List<Atom> atoms = new ArrayList<Atom>();
 
 		for (Group g:c.getAtomGroups()){
+			if (g.isWater()) continue;
 			for (Atom a:g.getAtoms()) {
 				atoms.add(a);
 			}
@@ -327,7 +329,8 @@ public class StructureTools {
 
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure, 
-	 * optionally including HET atoms or not
+	 * optionally including HET atoms or not.
+	 * Waters are not included.
 	 * @param s
 	 * @param hetAtoms if true HET atoms are included in array, if false they are not
 	 * @return
@@ -343,6 +346,8 @@ public class StructureTools {
 
 			Group g = a.getGroup();
 
+			if (g.isWater()) continue;
+
 			if (!hetAtoms && g.getType().equals(GroupType.HETATM)) continue;
 
 			atoms.add(a);
@@ -353,6 +358,7 @@ public class StructureTools {
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Chain, 
 	 * optionally including HET atoms or not
+	 * Waters are not included. 
 	 * @param c
 	 * @param hetAtoms if true HET atoms are included in array, if false they are not
 	 * @return
@@ -361,6 +367,7 @@ public class StructureTools {
 		List<Atom> atoms = new ArrayList<Atom>();
 		
 		for (Group g:c.getAtomGroups()){
+			if (g.isWater()) continue;
 			for (Atom a:g.getAtoms()) {
 
 				if (a.getElement()==Element.H) continue;
@@ -795,7 +802,7 @@ public class StructureTools {
 		if ( c != null) {
 			newS.addChain(c);
 			for ( Compound comp : s.getCompounds()){
-				if ( comp.getChainId() != null && comp.getChainId().contains(c.getChainID())){
+				if ( comp.getChainIds() != null && comp.getChainIds().contains(c.getChainID())){
 					// found matching compound. set description...
 					newS.getPDBHeader().setDescription("Chain " + c.getChainID() + " of " + s.getPDBCode() + " " + comp.getMolName());
 				}
@@ -1045,6 +1052,7 @@ public class StructureTools {
 	 * @return a ResidueNumber object
 	 * @deprecated replaced by  Group.getResidueNumber()
 	 */
+	@Deprecated
 	public static final ResidueNumber getPDBResidueNumber(Group g){
 
 		return g.getResidueNumber();

@@ -7,18 +7,22 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.asa.AsaCalculator;
 import org.biojava.bio.structure.asa.GroupAsa;
+import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.xtal.CrystalTransform;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * An interface between 2 molecules (2 sets of atoms).
@@ -32,15 +36,21 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	
 	private static final Logger logger = LoggerFactory.getLogger(StructureInterface.class);
 	
+	/**
+	 * Interfaces with larger inverse self contact overlap score will be considered isologous 
+	 */
+	private static final double SELF_SCORE_FOR_ISOLOGOUS = 0.3;
+	
 	private int id;
 	private double totalArea;
 	private AtomContactSet contacts;
+	private GroupContactSet groupContacts;
 	
 	private Pair<Atom[]> molecules;
 
 	/**
 	 * The identifier for each of the atom arrays (usually a chain identifier, i.e. a single capital letter)
-	 * Servers to identify the molecules within the Asymmetric Unit of the crystal
+	 * Serves to identify the molecules within the Asymmetric Unit of the crystal
 	 */
 	private Pair<String> moleculeIds; 
 	
@@ -51,6 +61,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		
 	private Map<ResidueNumber, GroupAsa> groupAsas1;
 	private Map<ResidueNumber, GroupAsa> groupAsas2;
+	
+	private StructureInterfaceCluster cluster;
 	
 	/**
 	 * Constructs a StructureInterface
@@ -72,6 +84,14 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		this.moleculeIds = new Pair<String>(firstMoleculeId,secondMoleculeId);
 		this.contacts = contacts;
 		this.transforms = new Pair<CrystalTransform>(firstTransf, secondTransf);
+	}
+	
+	/**
+	 * Constructs an empty StructureInterface
+	 */
+	public StructureInterface() {
+		this.groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
+		this.groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>(); 
 	}
 	
 	public int getId() {
@@ -122,18 +142,30 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	public Pair<Atom[]> getMolecules() {
 		return molecules;
 	}
+	
+	public void setMolecules(Pair<Atom[]> molecules) {
+		this.molecules = molecules;
+	}
 
 	public Pair<String> getMoleculeIds() {
 		return moleculeIds;
 	}
 	
+	public void setMoleculeIds(Pair<String> moleculeIds) {
+		this.moleculeIds = moleculeIds;
+	}
+	
 	/**
 	 * Return the 2 crystal transform operations performed on each of the 
-	 * chains of this interface.
+	 * molecules of this interface.
 	 * @return
 	 */
 	public Pair<CrystalTransform> getTransforms() {
 		return transforms;
+	}
+	
+	public void setTransforms(Pair<CrystalTransform> transforms) {
+		this.transforms = transforms;
 	}
 
 	protected void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {
@@ -251,7 +283,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			atoms.add(a);
 			
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+		return atoms.toArray(new Atom[atoms.size()]);			
 	}
 	
 	/**
@@ -305,7 +337,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	/**
 	 * Returns true if the transformation applied to the second molecule of this interface
 	 * has an infinite character (pure translation or screw rotation)
-	 * and both chains of the interface have the same PDB chain code: in such cases the 
+	 * and both molecules of the interface have the same asymmetric unit identifier (chain id): in such cases the 
 	 * interface would lead to infinite fiber-like (linear or helical) assemblies
 	 * @return
 	 */
@@ -330,12 +362,20 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return groupAsas1.get(resNum);
 	}
 	
+	public void setFirstGroupAsa(GroupAsa groupAsa) {
+		groupAsas1.put(groupAsa.getGroup().getResidueNumber(), groupAsa);
+	}
+	
 	/**
 	 * Gets a map of ResidueNumbers to GroupAsas for all groups of second chain.
 	 * @return
 	 */
 	public Map<ResidueNumber, GroupAsa> getSecondGroupAsas() {
 		return groupAsas2;
+	}
+	
+	public void setSecondGroupAsa(GroupAsa groupAsa) {
+		groupAsas2.put(groupAsa.getGroup().getResidueNumber(), groupAsa);
 	}
 
 	/**
@@ -419,10 +459,228 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return new Pair<List<Group>>(rim1, rim2);		
 	}
 	
+	/**
+	 * Returns the residues belonging to the interface, i.e. the residues 
+	 * at the surface with BSA>0
+	 * @param minAsaForSurface the minimum ASA to consider a residue on the surface
+	 * @return
+	 */
+	public Pair<List<Group>> getInterfacingResidues(double minAsaForSurface) {
+				
+		List<Group> interf1 = new ArrayList<Group>();
+		List<Group> interf2 = new ArrayList<Group>();
+		
+		for (GroupAsa groupAsa:groupAsas1.values()) {
+			
+			if (groupAsa.getAsaU()>minAsaForSurface && groupAsa.getBsa()>0) {
+				interf1.add(groupAsa.getGroup());
+			}
+		}
+		for (GroupAsa groupAsa:groupAsas2.values()) {
+			
+			if (groupAsa.getAsaU()>minAsaForSurface && groupAsa.getBsa()>0) {
+				interf2.add(groupAsa.getGroup());
+			}
+		}
+		
+		return new Pair<List<Group>>(interf1, interf2);		
+	}
+	
+	/**
+	 * Returns the residues belonging to the surface
+	 * @param minAsaForSurface the minimum ASA to consider a residue on the surface
+	 * @return
+	 */
+	public Pair<List<Group>> getSurfaceResidues(double minAsaForSurface) {
+		List<Group> surf1 = new ArrayList<Group>();
+		List<Group> surf2 = new ArrayList<Group>();
+		
+		for (GroupAsa groupAsa:groupAsas1.values()) {
+			
+			if (groupAsa.getAsaU()>minAsaForSurface) {
+				surf1.add(groupAsa.getGroup());
+			}
+		}
+		for (GroupAsa groupAsa:groupAsas2.values()) {
+			
+			if (groupAsa.getAsaU()>minAsaForSurface) {
+				surf2.add(groupAsa.getGroup());
+			}
+		}
+		
+		return new Pair<List<Group>>(surf1, surf2);		
+	}
+	
+	public StructureInterfaceCluster getCluster() {
+		return cluster;
+	}
+	
+	public void setCluster(StructureInterfaceCluster cluster) {
+		this.cluster = cluster;
+	}
+	
+	/**
+	 * Calculates the contact overlap score between this StructureInterface and
+	 * the given one. 
+	 * The two sides of the given StructureInterface need to match this StructureInterface
+	 * in the sense that they must come from the same Compound (Entity), i.e.
+	 * their residue numbers need to align with 100% identity, except for unobserved 
+	 * density residues.
+	 * @param other
+	 * @param invert if false the comparison will be done first-to-first and second-to-second, 
+	 * if true the match will be first-to-second and second-to-first
+	 * @return the contact overlap score, range [0.0,1.0]
+	 */
+	public double getContactOverlapScore(StructureInterface other, boolean invert) {
+		
+		Structure thisStruct = getParentStructure();
+		Structure otherStruct = other.getParentStructure();
+		
+		if (thisStruct!=otherStruct) {
+			// in the current implementation, comparison between different structure doesn't make much sense 
+			// and won't even work since the compounds of both will never match. We warn because it 
+			// really is not what this is intended for at the moment
+			logger.warn("Comparing interfaces from different structures, contact overlap score will be 0");
+			return 0;
+		}
+		
+		Pair<Chain> thisChains = getParentChains();
+		Pair<Chain> otherChains = other.getParentChains();
+		
+		Pair<Compound> thisCompounds = new Pair<Compound>(thisChains.getFirst().getCompound(), thisChains.getSecond().getCompound());
+		Pair<Compound> otherCompounds = new Pair<Compound>(otherChains.getFirst().getCompound(), otherChains.getSecond().getCompound());
+		
+		if ( (  (thisCompounds.getFirst() == otherCompounds.getFirst()) &&
+				(thisCompounds.getSecond() == otherCompounds.getSecond())   )  ||
+			 (  (thisCompounds.getFirst() == otherCompounds.getSecond()) &&
+				(thisCompounds.getSecond() == otherCompounds.getFirst())   )	) {
+		
+			int common = 0;
+			GroupContactSet thisContacts = getGroupContacts();
+			GroupContactSet otherContacts = other.getGroupContacts();
+
+			for (GroupContact thisContact:thisContacts) {
+
+				ResidueIdentifier first = null;
+				ResidueIdentifier second = null;
+
+				if (!invert) {
+					first = new ResidueIdentifier(
+							thisContact.getPair().getFirst().getResidueNumber().getSeqNum(), 
+							thisContact.getPair().getFirst().getResidueNumber().getInsCode());
+					
+					second = new ResidueIdentifier( 
+							thisContact.getPair().getSecond().getResidueNumber().getSeqNum(), 
+							thisContact.getPair().getSecond().getResidueNumber().getInsCode());
+				} else {
+					first = new ResidueIdentifier( 
+							thisContact.getPair().getSecond().getResidueNumber().getSeqNum(), 
+							thisContact.getPair().getSecond().getResidueNumber().getInsCode());
+					second = new ResidueIdentifier(
+							thisContact.getPair().getFirst().getResidueNumber().getSeqNum(), 
+							thisContact.getPair().getFirst().getResidueNumber().getInsCode());
+				}
+
+				if (otherContacts.hasContact(first,second)) {
+					common++;
+				} 
+			}
+			return (2.0*common)/(thisContacts.size()+otherContacts.size());	
+		} else {
+			logger.debug("Chain pairs {},{} and {},{} belong to different compound pairs, contact overlap score will be 0 ",
+					thisChains.getFirst().getChainID(),thisChains.getSecond().getChainID(),
+					otherChains.getFirst().getChainID(),otherChains.getSecond().getChainID());
+			return 0.0;
+		}
+	}
+	
+	public GroupContactSet getGroupContacts() {		
+		if (groupContacts==null) {
+			this.groupContacts  = new GroupContactSet(contacts);
+		}
+		return this.groupContacts;
+	}
+	
+	/**
+	 * Tell whether the interface is isologous, i.e. it is formed
+	 * by the same patches of same Compound on both sides.
+	 * 
+	 * @return true if isologous, false if heterologous
+	 */
+	public boolean isIsologous() {
+		double scoreInverse = this.getContactOverlapScore(this, true);
+		logger.debug("Interface {} contact overlap score with itself inverted: {}",
+				getId(), scoreInverse);
+		return (scoreInverse>SELF_SCORE_FOR_ISOLOGOUS);
+	}
+	
+	private Pair<Chain> getParentChains() {
+		Atom[] firstMol = this.molecules.getFirst();
+		Atom[] secondMol = this.molecules.getSecond();
+		if (firstMol.length==0 || secondMol.length==0) {
+			logger.warn("No atoms found in first or second molecule, can't get parent Chains");
+			return null;
+		}
+		
+		return new Pair<Chain>(firstMol[0].getGroup().getChain(), secondMol[0].getGroup().getChain());
+	}
+	
+	private Structure getParentStructure() {
+		Atom[] firstMol = this.molecules.getFirst();
+		if (firstMol.length==0) {
+			logger.warn("No atoms found in first molecule, can't get parent Structure");
+			return null;
+		}
+		return firstMol[0].getGroup().getChain().getParent();
+	}
+	
+	/**
+	 * Return a String representing the 2 molecules of this interface in PDB format.
+	 * If the molecule ids (i.e. chain ids) are the same for both molecules, then the second
+	 * one will be replaced by the next letter in alphabet (or A for Z) 
+	 * @return
+	 */
+	public String toPDB() {
+		
+		String molecId1 = getMoleculeIds().getFirst();
+		String molecId2 = getMoleculeIds().getSecond();
+		
+		if (molecId2.equals(molecId1)) {
+			// if both chains are named equally we want to still named them differently in the output pdb file
+			// so that molecular viewers can handle properly the 2 chains as separate entities 
+			char letter = molecId1.charAt(0);
+			if (letter!='Z' && letter!='z') {
+				molecId2 = Character.toString((char)(letter+1)); // i.e. next letter in alphabet
+			} else {
+				molecId2 = Character.toString((char)(letter-25)); //i.e. 'A' or 'a'
+			}
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for (Atom atom:this.molecules.getFirst()) {
+			sb.append(FileConvert.toPDB(atom, molecId1));
+		}
+		sb.append("TER");
+		sb.append(System.getProperty("line.separator"));
+		for (Atom atom:this.molecules.getSecond()) {
+			sb.append(FileConvert.toPDB(atom,molecId2));
+		}
+		sb.append("TER");
+		sb.append(System.getProperty("line.separator"));
+		sb.append("END");
+		sb.append(System.getProperty("line.separator"));
+		return sb.toString();
+	}
+	
 	@Override
 	public int compareTo(StructureInterface o) {
 		// this will sort descending on interface areas
 		return (Double.compare(o.totalArea,this.totalArea));
+	}
+
+	@Override
+	public String toString() {
+		return String.format("StructureInterface %d (%s, %.0f A, <%s; %s>)", id, moleculeIds,totalArea,transforms.getFirst().toXYZString(),transforms.getSecond().toXYZString());
 	}
 	
 }

@@ -4,7 +4,6 @@
  */
 package org.biojava3.survival.cox.matrix;
 
-import java.util.LinkedHashMap;
 
 /**
  *

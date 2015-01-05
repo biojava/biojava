@@ -2,6 +2,8 @@ package org.biojava3.core.sequence.storage;
 
 import java.util.Iterator;
 import java.util.List;
+
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -47,7 +49,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Unsupported
      */
     
-    public void setCompoundSet(CompoundSet<C> compoundSet) {
+    @Override
+	public void setCompoundSet(CompoundSet<C> compoundSet) {
         throw new UnsupportedOperationException("Not supported.");
     }
 
@@ -55,7 +58,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Unsupported
      */
     
-    public void setContents(String sequence) {
+    @Override
+	public void setContents(String sequence) throws CompoundNotFoundException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
@@ -63,7 +67,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Returns the length given during construction
      */
     
-    public int getLength() {
+    @Override
+	public int getLength() {
         return length;
     }
 
@@ -71,7 +76,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Always returns the compound given at construction
      */
     
-    public C getCompoundAt(int position) {
+    @Override
+	public C getCompoundAt(int position) {
         return compound;
     }
 
@@ -80,7 +86,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * construction; otherwise will return -1.
      */
     
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         if(compound.equals(this.compound)) {
             return 1;
         }
@@ -92,7 +99,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * the one given during construction. Otherwise returns -1
      */
     
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         if(compound.equals(this.compound)) {
             return getLength();
         }
@@ -103,7 +111,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Delegates to {@link SequenceMixin#toList(org.biojava3.core.sequence.template.Sequence) }
      */
     
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return SequenceMixin.toString(this);
     }
 
@@ -111,7 +120,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Delegates to {@link SequenceMixin#toList(org.biojava3.core.sequence.template.Sequence) }
      */
     
-    public List<C> getAsList() {
+    @Override
+	public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
@@ -119,7 +129,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Creates a {@link SequenceProxyView} for the given coordinates
      */
     
-    public SequenceView<C> getSubSequence(Integer start, Integer end) {
+    @Override
+	public SequenceView<C> getSubSequence(Integer start, Integer end) {
         return new SequenceProxyView<C>(this, start, end);
     }
 
@@ -127,7 +138,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Returns the compound set given at construction
      */
     
-    public CompoundSet<C> getCompoundSet() {
+    @Override
+	public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
 
@@ -135,7 +147,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Unsupoorted
      */
     
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -143,7 +156,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Delegates to {@link SequenceMixin#countCompounds(org.biojava3.core.sequence.template.Sequence, C[]) }
      */
     
-    public int countCompounds(C... compounds) {
+    @Override
+	public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 
@@ -151,7 +165,8 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Returns an instance of {@link SequenceMixin.SequenceIterator}
      */
     
-    public Iterator<C> iterator() {
+    @Override
+	public Iterator<C> iterator() {
         return new SequenceMixin.SequenceIterator<C>(this);
     }
 

@@ -161,28 +161,32 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     /**
      * @return the description
      */
-    public String getDescription() {
+    @Override
+	public String getDescription() {
         return description;
     }
 
     /**
      * @param description the description to set
      */
-    public void setDescription(String description) {
+    @Override
+	public void setDescription(String description) {
         this.description = description;
     }
 
     /**
      * @return the shortDescription
      */
-    public String getShortDescription() {
+    @Override
+	public String getShortDescription() {
         return shortDescription;
     }
 
     /**
      * @param shortDescription the shortDescription to set
      */
-    public void setShortDescription(String shortDescription) {
+    @Override
+	public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
     }
 
@@ -194,7 +198,8 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 
     public static final Comparator<FeatureInterface<?, ?>> LOCATION_LENGTH = new Comparator<FeatureInterface<?, ?>>() {
 
-        public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
+        @Override
+		public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
             double v1 = e1.getLocations().getStart().getPosition();
             double v2 = e2.getLocations().getStart().getPosition();
             if (v1 < v2) {
@@ -222,7 +227,8 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 
     static public final Comparator<FeatureInterface<?, ?>> LENGTH = new Comparator<FeatureInterface<?, ?>>() {
 
-        public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
+        @Override
+		public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
             double v1 = Math.abs(e1.getLocations().getEnd().getPosition()- e1.getLocations().getStart().getPosition());
             double v2 = Math.abs(e2.getLocations().getEnd().getPosition() -  e2.getLocations().getStart().getPosition());
             if (v1 < v2) {
@@ -250,7 +256,8 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     /**
      * @return the userObject
      */
-    public Object getUserObject() {
+    @Override
+	public Object getUserObject() {
         return userObject;
     }
 
@@ -259,7 +266,8 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
      * is clicked on the application can then get a user defined object associated with the feature.
      * @param userObject the userObject to set
      */
-    public void setUserObject(Object userObject) {
+    @Override
+	public void setUserObject(Object userObject) {
         this.userObject = userObject;
     }
     

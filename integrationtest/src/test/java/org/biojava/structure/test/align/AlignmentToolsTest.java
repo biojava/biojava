@@ -44,7 +44,6 @@ import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.align.util.AlignmentTools.IdentityMap;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 
 public class AlignmentToolsTest extends TestCase {

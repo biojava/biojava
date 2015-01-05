@@ -50,6 +50,7 @@ public class SqrtColorMapper extends ContinuousColorMapperTransform {
 	 * @return sqrt(value), or NEGATIVE_INFINITY
 	 * @see org.biojava.bio.structure.gui.util.color.ContinuousColorMapper#getColor(double)
 	 */
+	@Override
 	public double transform(double value) {
 		double sqrtValue = Double.NEGATIVE_INFINITY;
 		if(value >= 0)

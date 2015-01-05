@@ -282,6 +282,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return version;
 	}
 
+	@Override
 	public void setScopVersion(String version) {
 		this.version = version;
 	}

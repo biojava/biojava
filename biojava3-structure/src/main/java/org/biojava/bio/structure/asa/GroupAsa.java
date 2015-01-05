@@ -199,6 +199,7 @@ public class GroupAsa {
 
 	}
 	
+	@Override
 	public Object clone() {
 		GroupAsa n = new GroupAsa(this.g);
 		n.setAsaC(this.getAsaC());

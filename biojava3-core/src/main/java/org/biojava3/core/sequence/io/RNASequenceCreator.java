@@ -7,6 +7,7 @@ package org.biojava3.core.sequence.io;
 
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.RNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
@@ -36,8 +37,10 @@ public class RNASequenceCreator implements
  * @param sequence
  * @param index
  * @return
+ * @throws CompoundNotFoundException
  */
-  public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index) {
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index) throws CompoundNotFoundException {
     return new RNASequence(sequence, compoundSet);
   }
 /**
@@ -46,7 +49,8 @@ public class RNASequenceCreator implements
  * @param index
  * @return
  */
-  public AbstractSequence<NucleotideCompound> getSequence(
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(
       ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
     return new RNASequence(proxyLoader, compoundSet);
   }
@@ -55,7 +59,8 @@ public class RNASequenceCreator implements
  * @param list
  * @return
  */
-  public AbstractSequence<NucleotideCompound> getSequence(List<NucleotideCompound> list) {
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(List<NucleotideCompound> list) {
     ArrayListProxySequenceReader<NucleotideCompound> store =
       new ArrayListProxySequenceReader<NucleotideCompound>();
     store.setCompoundSet(compoundSet);

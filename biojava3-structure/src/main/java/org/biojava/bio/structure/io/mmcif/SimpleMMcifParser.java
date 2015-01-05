@@ -95,7 +95,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleMMcifParser implements MMcifParser {
 
-	List<MMcifConsumer> consumers ;
+	private List<MMcifConsumer> consumers ;
 
 	public static final String LOOP_END = "#";
 	public static final String LOOP_START = "loop_";
@@ -105,25 +105,28 @@ public class SimpleMMcifParser implements MMcifParser {
 	private static final char s1 = '\'';
 	private static final char s2 = '\"';
 
-	Struct struct ;
+	private Struct struct ;
 
-	static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
+	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
 
 	public SimpleMMcifParser(){
 		consumers = new ArrayList<MMcifConsumer>();
 		struct = null;
 	}
 
+	@Override
 	public void addMMcifConsumer(MMcifConsumer consumer) {
 		consumers.add(consumer);
 
 	}
 
+	@Override
 	public void clearConsumers() {
 		consumers.clear();
 
 	}
 
+	@Override
 	public void removeMMcifConsumer(MMcifConsumer consumer) {
 		consumers.remove(consumer);
 	}
@@ -147,11 +150,13 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
+	@Override
 	public void parse(InputStream inStream) throws IOException {
 		parse(new BufferedReader(new InputStreamReader(inStream)));
 
 	}
 
+	@Override
 	public void parse(BufferedReader buf)
 			throws IOException {
 
@@ -180,7 +185,8 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 		while ( (line = buf.readLine ()) != null ){
-			//System.out.println(inLoop + " " + line);
+			
+			logger.debug(inLoop + " " + line);
 
 
 			if ( inLoop){
@@ -585,7 +591,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					EntitySrcNat.class.getName(),
 					loopFields,lineData, loopWarnings);
 			triggerNewEntitySrcNat(entitySrcNat);
-		} else if ( category.equals("_entity_src_syn")){
+		} else if ( category.equals("_pdbx_entity_src_syn")){
 			EntitySrcSyn entitySrcSyn = (EntitySrcSyn) buildObject(
 					EntitySrcSyn.class.getName(),
 					loopFields,lineData, loopWarnings);

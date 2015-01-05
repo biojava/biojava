@@ -23,6 +23,12 @@
 
 package org.biojava3.alignment;
 
+import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,12 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-
-import org.biojava3.alignment.template.SubstitutionMatrix;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
 
 /**
  * Implements a data structure which holds the score (penalty or bonus) given during alignment for the exchange of one
@@ -61,14 +61,8 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
     private short max, min;
     private List<C> rows, cols;
 
-    /**
-     * Creates a substitution matrix using the defaults (BLOSUM 62).
-     *
-     * @throws ClassCastException if type parameter C is not {@link AminoAcidCompound}
-     */
-    @SuppressWarnings("unchecked") // TODO proper generic type checking instead of possible ClassCastException
-    public SimpleSubstitutionMatrix() {
-        this((CompoundSet<C>) AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
+    public static SubstitutionMatrix<AminoAcidCompound> getBlosum62() {
+        return new SimpleSubstitutionMatrix<AminoAcidCompound>(AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
                 SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt")), "blosum62");
     }
 
@@ -296,6 +290,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         return s.toString();
     }
 
+	@Override
 	public Map<C, Short> getRow(C row) {
 		int rowIndex = rows.indexOf(row);
 		Map<C, Short> map = new HashMap<C, Short>();
@@ -305,6 +300,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		return map;
 	}
 
+	@Override
 	public Map<C, Short> getColumn(C column) {
 		int colIndex = cols.indexOf(column);
 		Map<C, Short> map = new HashMap<C, Short>();

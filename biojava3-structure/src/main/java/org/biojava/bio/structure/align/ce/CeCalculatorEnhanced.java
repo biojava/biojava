@@ -152,7 +152,7 @@ public class CeCalculatorEnhanced {
 		if ( debug )
 			System.out.println("parameters: " + params);
 
-		if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+		if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SEQUENCE_CONSERVATION){
 			if ( params.getSeqWeight() < 1)
 				params.setSeqWeight(2);
 		}
@@ -264,7 +264,7 @@ public class CeCalculatorEnhanced {
 	 */
 	private double getDistanceWithSidechain(Atom ca1, Atom ca2) throws StructureException {
 
-		if ( params.getScoringStrategy() == CeParameters.DEFAULT_SCORING_STRATEGY) {
+		if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.CA_SCORING) {
 
 			return Calc.getDistance(ca1,ca2);
 
@@ -284,7 +284,7 @@ public class CeCalculatorEnhanced {
 		}
 
 
-		if ( params.getScoringStrategy() == CeParameters.SIDE_CHAIN_SCORING) {
+		if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SIDE_CHAIN_SCORING) {
 
 
 			// here we are using side chain orientation for scoring...
@@ -302,7 +302,7 @@ public class CeCalculatorEnhanced {
 			return dist;
 		}
 
-		else if ( params.getScoringStrategy() == CeParameters.SIDE_CHAIN_ANGLE_SCORING){
+		else if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SIDE_CHAIN_ANGLE_SCORING){
 
 			// score type 2 add angle info
 
@@ -322,7 +322,7 @@ public class CeCalculatorEnhanced {
 			return dist;
 
 		}
-		else if ( params.getScoringStrategy() == CeParameters.CA_AND_SIDE_CHAIN_ANGLE_SCORING){
+		else if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.CA_AND_SIDE_CHAIN_ANGLE_SCORING){
 
 			// score type 3
 			// CA distance + cos(angle)
@@ -338,7 +338,7 @@ public class CeCalculatorEnhanced {
 
 			return dist;
 
-		} else if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+		} else if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SEQUENCE_CONSERVATION){
 			if ( cb1 != null && cb2 != null) {
 				// CB distance
 				dist = Calc.getDistance(cb1,cb2);
@@ -1406,7 +1406,7 @@ nBestTrace=nTrace;
 
 			mat = notifyMatrixListener(mat);
 
-			if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+			if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SEQUENCE_CONSERVATION){
 				mat = updateMatrixWithSequenceConservation(mat,ca1,ca2, params);
 			}
 

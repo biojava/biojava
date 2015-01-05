@@ -65,10 +65,9 @@ public class TestDifficultMmCIFFiles {
 		StructureIO.setAtomCache(cache); 
 				
 		FileParsingParameters params = cache.getFileParsingParams();
-		
 		params.setParseBioAssembly(true);
 		StructureIO.setAtomCache(cache);
-
+	
 		cache.setUseMmCif(false);
 		Structure sPdb = StructureIO.getStructure("1GQO");
 		
@@ -80,15 +79,15 @@ public class TestDifficultMmCIFFiles {
 		assertNotNull(sPdb.getPDBHeader().getBioUnitTranformationMap());
 		assertNotNull(sCif.getPDBHeader().getBioUnitTranformationMap());
 		
-		Map<Integer,List<BiologicalAssemblyTransformation>> mapPdb = sPdb.getPDBHeader().getBioUnitTranformationMap();
-		Map<Integer,List<BiologicalAssemblyTransformation>> mapCif = sCif.getPDBHeader().getBioUnitTranformationMap();
+		Map<String,List<BiologicalAssemblyTransformation>> mapPdb = sPdb.getPDBHeader().getBioUnitTranformationMap();
+		Map<String,List<BiologicalAssemblyTransformation>> mapCif = sCif.getPDBHeader().getBioUnitTranformationMap();
+		
+		
 		
 		assertEquals(mapPdb.size(),mapCif.size());
 		
-		// we don't compare sizes of lists in pdb vs cif because in cif the chain ids 
-		// are the internal ones, so there are a lot more than in pdb 	
-		assertEquals(60, mapCif.get(1).size());
-		assertEquals(60, mapCif.get(2).size());
+		assertEquals(60, mapCif.get("1").size());
+		assertEquals(60, mapCif.get("2").size());
 		
 		// an X-RAY entry
 		assertTrue(sPdb.isCrystallographic());

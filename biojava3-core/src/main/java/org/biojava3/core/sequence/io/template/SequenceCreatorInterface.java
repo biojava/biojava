@@ -22,8 +22,10 @@
 
 package org.biojava3.core.sequence.io.template;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
@@ -33,25 +35,29 @@ import org.biojava3.core.sequence.template.ProxySequenceReader;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public interface SequenceCreatorInterface<C extends Compound> {
-/**
- *
- * @param sequence
- * @param index
- * @return
- */
-    public AbstractSequence<C> getSequence(String sequence, long index);
- /**
-  * 
-  * @param proxyLoader
-  * @param index
-  * @return
-  */
-    public AbstractSequence<C> getSequence(ProxySequenceReader<C> proxyLoader, long index);
- /**
-  * 
-  * @param list
-  * @return
-  */
-    public AbstractSequence<C> getSequence(List<C> list);
+	/**
+	 *
+	 * @param sequence
+	 * @param index
+	 * @return
+	 * @throws CompoundNotFoundException
+	 * @throws IOException
+	 */
+	public AbstractSequence<C> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException;
+	
+	/**
+	 * 
+	 * @param proxyLoader
+	 * @param index
+	 * @return
+	 */
+	public AbstractSequence<C> getSequence(ProxySequenceReader<C> proxyLoader, long index);
+	
+	/**
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public AbstractSequence<C> getSequence(List<C> list);
 
 }

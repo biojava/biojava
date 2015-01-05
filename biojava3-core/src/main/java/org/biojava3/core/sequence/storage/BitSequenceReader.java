@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
@@ -49,54 +50,55 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 
     /**
      * Class is immutable & so this is unsupported
-     */
-    
-    public void setCompoundSet(CompoundSet<C> compoundSet) {
+     */    
+    @Override
+	public void setCompoundSet(CompoundSet<C> compoundSet) {
         throw new UnsupportedOperationException("Cannot reset the CompoundSet; object is immutable");
     }
 
     /**
      * Class is immutable & so this is unsupported
-     */
-    
-    public void setContents(String sequence) {
+     */    
+    @Override
+	public void setContents(String sequence) throws CompoundNotFoundException {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " is an immutable data structure; cannot reset contents");
     }
 
     /**
      * Counts the number of times a compound appears in this sequence store
-     */
-    
-    public int countCompounds(C... compounds) {
+     */    
+    @Override
+	public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 
     
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         return accession;
     }
 
     /**
      * Returns this Sequence store as a List
-     */
-    
-    public List<C> getAsList() {
+     */    
+    @Override
+	public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
     /**
      * Returns the compound at the specified biological index
-     */
-    
-    public C getCompoundAt(int position) {
+     */    
+    @Override
+	public C getCompoundAt(int position) {
         return worker.getCompoundAt(position);
     }
 
     /**
      * Returns the compound set backing this store
-     */
-    
-    public CompoundSet<C> getCompoundSet() {
+     */    
+    @Override
+	public CompoundSet<C> getCompoundSet() {
         return worker.getCompoundSet();
     }
 
@@ -105,7 +107,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
      * a linear search
      */
     
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         return SequenceMixin.indexOf(this, compound);
     }
 
@@ -114,7 +117,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
      * a linear search
      */
     
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         return SequenceMixin.lastIndexOf(this, compound);
     }
 
@@ -122,7 +126,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
      * Returns the length of the sequence
      */
     
-    public int getLength() {
+    @Override
+	public int getLength() {
         return worker.getLength();
     }
 
@@ -130,7 +135,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
      * Returns the sequence as a String
      */
     
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return SequenceMixin.toStringBuilder(this).toString();
     }
 
@@ -149,7 +155,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
         return SequenceMixin.createIterator(this);
     }
     
-    public SequenceView<C> getSubSequence(Integer start, Integer end) {
+    @Override
+	public SequenceView<C> getSubSequence(Integer start, Integer end) {
         return getSubSequence((int) start, (int) end);
     }
 

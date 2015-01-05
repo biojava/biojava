@@ -36,8 +36,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 
 /** A class that provides an InputStream from a File. The file can be compressed or uncompressed. 
@@ -60,14 +60,15 @@ import org.slf4j.LoggerFactory;
  */
 public class InputStreamProvider {
 
-	private final static Logger logger = LoggerFactory.getLogger(InputStreamProvider.class);
+	//private final static Logger logger = LoggerFactory.getLogger(InputStreamProvider.class);
 
    /**
     * The magic number found at the start of a GZIP stream.
     */
    public static final int GZIP_MAGIC = 0x1f8b;
    public static final String CACHE_PROPERTY = "biojava.cache.files";
-   boolean cacheRawFiles ;
+  
+   private boolean cacheRawFiles ;
 
    FlatFileCache cache ;
    public InputStreamProvider() {
@@ -123,13 +124,11 @@ public class InputStreamProvider {
 
       int magic = 0;
 
-      try {
-         InputStream inStream = u.openStream(); 
-         magic = getMagicNumber(inStream);
-         inStream.close();
-      } catch (Exception e){
-    	  logger.error("Exception: ", e);
-      };
+      
+      InputStream inStream = u.openStream(); 
+      magic = getMagicNumber(inStream);
+      inStream.close();
+      
 
       if (magic == UncompressInputStream.LZW_MAGIC ) {
          // a Z compressed file
@@ -143,7 +142,7 @@ public class InputStreamProvider {
          return openCompressedURL(u);
 
       } else {
-         InputStream inStream = u.openStream();
+         inStream = u.openStream();
          return inStream;
       }
 
@@ -165,13 +164,11 @@ public class InputStreamProvider {
 
       int magic = 0;
 
-      try {
-         InputStream test = getInputStreamFromFile(f);
-         magic = getMagicNumber(test);
-         test.close();
-      } catch (Exception e){
-    	  logger.error("Problem while loading: {}", f, e);
-      };
+
+      InputStream test = getInputStreamFromFile(f);
+      magic = getMagicNumber(test);
+      test.close();
+
 
       InputStream inputStream = null;
 

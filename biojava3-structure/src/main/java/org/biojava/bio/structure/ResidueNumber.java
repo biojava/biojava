@@ -183,6 +183,7 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 	}
 
 
+	@Override
 	public int compareTo(ResidueNumber other) {
 		
 		// chain id

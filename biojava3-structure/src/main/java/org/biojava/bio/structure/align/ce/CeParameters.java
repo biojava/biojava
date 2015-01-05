@@ -27,6 +27,7 @@ package org.biojava.bio.structure.align.ce;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava3.alignment.SubstitutionMatrixHelper;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -44,14 +45,25 @@ public class CeParameters implements ConfigStrucAligParams  {
 	protected double rmsdThrJoin;
 	protected double maxOptRMSD;
 
-	public static final int DEFAULT_SCORING_STRATEGY = 0;
-	public static final int SIDE_CHAIN_SCORING = 1;
-	public static final int SIDE_CHAIN_ANGLE_SCORING = 2;
-	public static final int CA_AND_SIDE_CHAIN_ANGLE_SCORING = 3;
-	public static final int SEQUENCE_CONSERVATION = 4;
+	public static enum ScoringStrategy {
+		CA_SCORING("CA only"),
+		SIDE_CHAIN_SCORING("Sidechain orientation"),
+		SIDE_CHAIN_ANGLE_SCORING("Angle between sidechains"),
+		CA_AND_SIDE_CHAIN_ANGLE_SCORING("CA distance+Angle between sidechains"),
+		SEQUENCE_CONSERVATION("Sequence Conservation");
+		public static ScoringStrategy DEFAULT_SCORING_STRATEGY = CA_SCORING;
 
-	public static final String SCORING_STRATEGY = "ScoringStrategy";
-	protected int scoringStrategy;
+		private String name;
+		private ScoringStrategy(String name) {
+			this.name = name;
+		}
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
+
+	protected ScoringStrategy scoringStrategy;
 	//String[] alignmentAtoms;
 	protected int maxGapSize;
 
@@ -94,11 +106,12 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 
+	@Override
 	public void reset(){
 		winSize = 8;
 		rmsdThr = 3.0;
 		rmsdThrJoin = 4.0;
-		scoringStrategy = DEFAULT_SCORING_STRATEGY;
+		scoringStrategy = ScoringStrategy.DEFAULT_SCORING_STRATEGY;
 		maxGapSize = 30;
 		showAFPRanges = false;
 		maxOptRMSD = 99;
@@ -145,7 +158,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		this.rmsdThrJoin = rmsdThrJoin;
 	}
 
-	public Integer getScoringStrategy()
+	public ScoringStrategy getScoringStrategy()
 	{
 		return scoringStrategy;
 	}
@@ -156,7 +169,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	 * 
 	 * @param scoringStrategy
 	 */
-	public void setScoringStrategy(Integer scoringStrategy)
+	public void setScoringStrategy(ScoringStrategy scoringStrategy)
 	{
 		this.scoringStrategy = scoringStrategy;
 	}
@@ -183,28 +196,30 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
+	@Override
 	public List<String> getUserConfigHelp() {
 		List<String> params =new ArrayList<String>();
 		String helpMaxGap = "This parameter configures the maximum gap size G, that is applied during the AFP extension. The larger the value, the longer the calculation time can become, Default value is 30. Set to 0 for no limit. " ;
 		//String helpRmsdThr = "This configures the RMSD threshold applied during the trace of the fragment matrix.";
 		String helpWinSize = "This configures the fragment size m of Aligned Fragment Pairs (AFPs).";
-		String helpScoring = "Which scoring function to use.";
+
 		params.add(helpMaxGap);
 		//params.add(helpRmsdThr);
 		params.add(helpWinSize);
-		params.add(helpScoring);
+		params.add("Which scoring function to use: "+CliTools.getEnumValuesAsString(ScoringStrategy.class) );
 		params.add("The maximum RMSD at which to stop alignment optimization. (default: unlimited=99)");
-		params.add("Gap opening penalty during alignment optimization.");
-		params.add("Gap extension penalty during alignment optimization.");
+		params.add("Gap opening penalty during alignment optimization [default: "+DEFAULT_GAP_OPEN+"].");
+		params.add("Gap extension penalty during alignment optimization [default: "+DEFAULT_GAP_EXTENSION+"].");
 		return params;
 	}
 
+	@Override
 	public List<String> getUserConfigParameters() {
 		List<String> params = new ArrayList<String>();
 		params.add("MaxGapSize");
 		//params.add("RmsdThr");
 		params.add("WinSize");
-		params.add(SCORING_STRATEGY);
+		params.add("ScoringStrategy");
 		params.add("MaxOptRMSD");
 		params.add("GapOpen");
 		params.add("GapExtension");
@@ -212,6 +227,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		return params;
 	}
 
+	@Override
 	public List<String> getUserConfigParameterNames(){
 		List<String> params = new ArrayList<String>();
 		params.add("max. gap size G (during AFP extension).");
@@ -224,13 +240,14 @@ public class CeParameters implements ConfigStrucAligParams  {
 		return params;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
 		List<Class> params = new ArrayList<Class>();
 		params.add(Integer.class);
 		//params.add(Double.class);
 		params.add(Integer.class);
-		params.add(Integer.class);
+		params.add(ScoringStrategy.class);
 		params.add(Double.class);
 		params.add(Double.class);
 		params.add(Double.class);

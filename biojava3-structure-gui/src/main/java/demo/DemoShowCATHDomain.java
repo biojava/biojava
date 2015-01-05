@@ -25,10 +25,7 @@ package demo;
 
 import java.util.List;
 
-import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.client.StructureName;
-import org.biojava.bio.structure.align.gui.AlignmentGui;
-import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.cath.CathDatabase;
 import org.biojava.bio.structure.cath.CathDomain;

@@ -26,6 +26,7 @@ package org.biojava.bio.structure.align.ce;
 
 
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.ce.CeParameters.ScoringStrategy;
 
 /** process the arguments from command line
  * 
@@ -33,7 +34,142 @@ import org.biojava.bio.structure.align.StructureAlignment;
  *
  */
 public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
+	
+	protected class CeStartupParams extends StartupParameters {
+		protected int maxGapSize;
+		protected int winSize;
+		protected ScoringStrategy scoringStrategy;
+		protected double maxOptRMSD;
+		protected double gapOpen;
+		protected double gapExtension;
+		protected boolean showAFPRanges;
 
+		public CeStartupParams() {
+			super();
+			maxGapSize = 30;
+			winSize = 8;
+			scoringStrategy = CeParameters.ScoringStrategy.DEFAULT_SCORING_STRATEGY;
+			showAFPRanges = false;
+			maxOptRMSD = 99d;
+			gapOpen = CeParameters.DEFAULT_GAP_OPEN;
+			gapExtension = CeParameters.DEFAULT_GAP_EXTENSION;
+		}
+
+		public int getWinSize() {
+			return winSize;
+		}
+
+		public void setWinSize(int winSize) {
+			this.winSize = winSize;
+		}
+
+		public ScoringStrategy getScoringStrategy() {
+			return scoringStrategy;
+		}
+
+		public void setScoringStrategy(ScoringStrategy scoringStrategy) {
+			this.scoringStrategy = scoringStrategy;
+		}
+
+		public double getGapOpen() {
+			return gapOpen;
+		}
+
+		public void setGapOpen(double gapOpen) {
+			this.gapOpen = gapOpen;
+		}
+
+		public double getGapExtension() {
+			return gapExtension;
+		}
+
+		public void setGapExtension(double gapExtension) {
+			this.gapExtension = gapExtension;
+		}
+
+		/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
+		 * 
+		 * @return the maximum gap size G parameter.
+		 */
+		public int getMaxGapSize() {
+			return maxGapSize;
+		}
+
+		/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
+		 * 
+		 * @param maxGapSize
+		 */
+		public void setMaxGapSize(int maxGapSize) {
+			this.maxGapSize = maxGapSize;
+		}
+
+		public boolean isShowAFPRanges()
+		{
+			return showAFPRanges;
+		}
+
+		public void setShowAFPRanges(boolean showAFP)
+		{
+			this.showAFPRanges = showAFP;
+		}
+
+
+		/**(jCE specific): maximum RMSD that shall be calculated for the alignment.
+		 * 
+		 * @return maxOptRMSD parameter
+		 */
+		public Double getMaxOptRMSD() {
+			return maxOptRMSD;
+		}
+
+		/** (jCE specific): maximum RMSD that shall be calculated for the alignment.
+		 * 
+		 * @param maxOptRMSD max RMSD to calculate
+		 */
+		public void setMaxOptRMSD(Double maxOptRMSD) {
+			this.maxOptRMSD = maxOptRMSD;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("CeStartupParams [maxGapSize=").append(maxGapSize)
+					.append(", winSize=").append(winSize)
+					.append(", scoringStrategy=").append(scoringStrategy)
+					.append(", maxOptRMSD=").append(maxOptRMSD)
+					.append(", gapOpen=").append(gapOpen)
+					.append(", gapExtension=").append(gapExtension)
+					.append(", showAFPRanges=").append(showAFPRanges)
+					.append(", pdbFilePath=").append(pdbFilePath)
+					.append(", cacheFilePath=").append(cacheFilePath)
+					.append(", outFile=").append(outFile).append(", pdb1=")
+					.append(pdb1).append(", pdb2=").append(pdb2)
+					.append(", file1=").append(file1).append(", file2=")
+					.append(file2).append(", showDBresult=")
+					.append(showDBresult).append(", printXML=")
+					.append(printXML).append(", printFatCat=")
+					.append(printFatCat).append(", show3d=").append(show3d)
+					.append(", autoFetch=").append(autoFetch)
+					.append(", flexible=").append(flexible)
+					.append(", pdbDirSplit=").append(pdbDirSplit)
+					.append(", printCE=").append(printCE).append(", showMenu=")
+					.append(showMenu).append(", printPDB=").append(printPDB)
+					.append(", isDomainSplit=").append(isDomainSplit)
+					.append(", alignPairs=").append(alignPairs)
+					.append(", searchFile=").append(searchFile)
+					.append(", saveOutputDir=").append(saveOutputDir)
+					.append(", nrCPU=").append(nrCPU).append("]");
+			return builder.toString();
+		}
+
+	}
+	
+	@Override
+	protected StartupParameters getStartupParametersInstance() {
+		return new CeStartupParams();
+	}
+
+	@Override
 	public StructureAlignment getAlgorithm() {
 		return new CeMain();
 	}
@@ -44,18 +180,25 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		
 		StructureAlignment alignment = getAlgorithm();
 		
-		CeParameters p = (CeParameters) alignment.getParameters();
+		CeParameters aligParams = (CeParameters) alignment.getParameters();
+		CeStartupParams startParams = (CeStartupParams) params;
 		
-		if ( p == null)
-			p = new CeParameters();
+		if ( aligParams == null)
+			aligParams = new CECPParameters();
 		
-		p.setMaxOptRMSD(params.getMaxOptRMSD());
-		p.setMaxGapSize(params.getMaxGapSize());
-		p.setShowAFPRanges(params.isShowAFPRanges());
-		return p;
+		// Copy relevant parameters from the startup parameters
+		aligParams.setMaxGapSize(startParams.getMaxGapSize());
+		aligParams.setWinSize(startParams.getWinSize());
+		aligParams.setScoringStrategy(startParams.getScoringStrategy());
+		aligParams.setMaxOptRMSD(startParams.getMaxOptRMSD());
+		aligParams.setGapOpen(startParams.getGapOpen());
+		aligParams.setGapExtension(startParams.getGapExtension());
+		aligParams.setShowAFPRanges(startParams.isShowAFPRanges());
+		return aligParams;
 	}
 
 
+	@Override
 	public String getDbSearchLegend(){
 		//String legend = "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
 		//return legend;

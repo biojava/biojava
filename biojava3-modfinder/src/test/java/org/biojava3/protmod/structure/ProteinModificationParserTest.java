@@ -50,6 +50,7 @@ public class ProteinModificationParserTest extends TestCase {
 
 	private String[][] strucs;
 	
+	@Override
 	public void setUp() {
 		strucs = setUpShortTest();
 //		strucs = setUpLongTest();

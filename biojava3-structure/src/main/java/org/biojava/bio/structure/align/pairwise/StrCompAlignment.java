@@ -57,11 +57,13 @@ implements Alignable
         score = 0;
     }
     
-    public int getRows(){
+    @Override
+	public int getRows(){
         return rows;
     }
     
-    public int getCols() {
+    @Override
+	public int getCols() {
         return cols;
     }
     
@@ -72,71 +74,87 @@ implements Alignable
         return aligmat[i][j];
     }
     
-    public AligMatEl[][] getAligMat(){
+    @Override
+	public AligMatEl[][] getAligMat(){
         return aligmat;
     }
     
-    public void setAligMat(AligMatEl[][] al){
+    @Override
+	public void setAligMat(AligMatEl[][] al){
         //System.out.println("setting alig mat: " + al.length + " " + al[0].length);
         rows = al.length -1;
         cols = al[0].length -1;
         aligmat = al;
     }
     
-    public float getGapExtCol() {
+    @Override
+	public float getGapExtCol() {
         return gapExtCol;
     }
 
-    public void setGapExtCol(float gapExtCol) {
+    @Override
+	public void setGapExtCol(float gapExtCol) {
         this.gapExtCol = gapExtCol;
     }
 
-    public float getGapExtRow() {
+    @Override
+	public float getGapExtRow() {
         return gapExtRow;
     }
 
-    public void setGapExtRow(float gapExtRow) {
+    @Override
+	public void setGapExtRow(float gapExtRow) {
         this.gapExtRow = gapExtRow;
     }
 
-    public float getGapOpenCol() {
+    @Override
+	public float getGapOpenCol() {
         return gapOpenCol;
     }
 
-    public void setGapOpenCol(float gapOpenCol) {
+    @Override
+	public void setGapOpenCol(float gapOpenCol) {
         this.gapOpenCol = gapOpenCol;
     }
 
-    public float getGapOpenRow() {
+    @Override
+	public float getGapOpenRow() {
         return gapOpenRow;
     }
 
-    public void setGapOpenRow(float gapOpenRow) {
+    @Override
+	public void setGapOpenRow(float gapOpenRow) {
         this.gapOpenRow = gapOpenRow;
     }
 
-    public float getScore() {
+    @Override
+	public float getScore() {
       return score;
     }
 
-    public void setScore(float score) {
+    @Override
+	public void setScore(float score) {
         //System.out.println("StrCompAlig got score " +score);
        this.score = score;
     }
 
-    public IndexPair[] getPath() {
+    @Override
+	public IndexPair[] getPath() {
         return path;
     }
 
-    public void setPath(IndexPair[] path) {
+    @Override
+	public void setPath(IndexPair[] path) {
         this.path = path;
     }
 
-    public int getPathSize() {
+    @Override
+	public int getPathSize() {
         return pathSize;
     }
 
-    public void setPathSize(int pathSize) {
+    @Override
+	public void setPathSize(int pathSize) {
         this.pathSize = pathSize;
     }
     

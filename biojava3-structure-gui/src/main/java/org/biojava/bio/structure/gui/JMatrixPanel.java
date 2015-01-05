@@ -149,6 +149,7 @@ public class JMatrixPanel extends JPanel{
 		setPreferredSize();
 	}
 
+	@Override
 	public void paintComponent(Graphics g){
 
 		//super.paintComponent(g);

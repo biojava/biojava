@@ -27,7 +27,8 @@ public class MyAlignmentLoadListener implements ActionListener {
    public MyAlignmentLoadListener(StructureAlignmentJmol jmol){
       this.jmol = jmol;
    }
-   public void actionPerformed(ActionEvent evt) {
+   @Override
+public void actionPerformed(ActionEvent evt) {
 
       final JFileChooser fc = new JFileChooser();
 
@@ -55,7 +56,7 @@ public class MyAlignmentLoadListener implements ActionListener {
             AFPChain afpChain = afps[0];
 
             UserConfiguration config = WebStartMain.getWebStartConfig();
-            AtomCache cache = new AtomCache(config.getPdbFilePath(),config.isSplit());
+            AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath(),config.isSplit());
 
             Atom[] ca1 = cache.getAtoms(afpChain.getName1());
             Atom[] ca2 = cache.getAtoms(afpChain.getName2());

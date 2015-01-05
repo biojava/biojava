@@ -27,6 +27,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.features.FeatureInterface;
@@ -41,13 +42,13 @@ public final class FastqToolsTest extends TestCase
 {
     private final FastqBuilder builder = new FastqBuilder().withDescription("foo").withSequence("ACTG").withQuality("ZZZZ");
 
-    public void testCreateDNASequence()
+    public void testCreateDNASequence() throws CompoundNotFoundException
     {
         DNASequence sequence = FastqTools.createDNASequence(builder.build());
         assertNotNull(sequence);
     }
 
-    public void testCreateDNASequenceNullFastq()
+    public void testCreateDNASequenceNullFastq() throws CompoundNotFoundException
     {
         try
         {
@@ -60,7 +61,7 @@ public final class FastqToolsTest extends TestCase
         }
     }
 
-    public void testCreateDNASequenceWithQualityScores()
+    public void testCreateDNASequenceWithQualityScores() throws CompoundNotFoundException
     {
         DNASequence sequence = FastqTools.createDNASequenceWithQualityScores(builder.build());
         assertNotNull(sequence);
@@ -73,7 +74,7 @@ public final class FastqToolsTest extends TestCase
         assertEquals(sequence.getLength(), qualityScores.getLocations().getLength());
     }
 
-    public void testCreateDNASequenceWithQualityScoresNullFastq()
+    public void testCreateDNASequenceWithQualityScoresNullFastq() throws CompoundNotFoundException
     {
         try
         {
@@ -86,7 +87,7 @@ public final class FastqToolsTest extends TestCase
         }
     }
 
-    public void testCreateDNASequenceWithErrorProbabilies()
+    public void testCreateDNASequenceWithErrorProbabilies() throws CompoundNotFoundException
     {
         DNASequence sequence = FastqTools.createDNASequenceWithErrorProbabilities(builder.build());
         assertNotNull(sequence);
@@ -99,7 +100,7 @@ public final class FastqToolsTest extends TestCase
         assertEquals(sequence.getLength(), errorProbabilities.getLocations().getLength());
     }
 
-    public void testCreateDNASequenceWithErrorProbabilitiesNullFastq()
+    public void testCreateDNASequenceWithErrorProbabilitiesNullFastq() throws CompoundNotFoundException
     {
         try
         {
@@ -112,7 +113,7 @@ public final class FastqToolsTest extends TestCase
         }
     }
 
-    public void testCreateDNASequenceWithQualityScoresAndErrorProbabilities()
+    public void testCreateDNASequenceWithQualityScoresAndErrorProbabilities() throws CompoundNotFoundException
     {
         DNASequence sequence = FastqTools.createDNASequenceWithQualityScoresAndErrorProbabilities(builder.build());
         assertNotNull(sequence);
@@ -132,7 +133,7 @@ public final class FastqToolsTest extends TestCase
         assertEquals(sequence.getLength(), errorProbabilities.getLocations().getLength());
     }
 
-    public void testCreateDNASequenceWithQualityScoresAndErrorProbabilitiesNullFastq()
+    public void testCreateDNASequenceWithQualityScoresAndErrorProbabilitiesNullFastq() throws CompoundNotFoundException
     {
         try
         {

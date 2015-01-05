@@ -53,6 +53,7 @@ public class Segment implements Serializable, Comparable<Segment> {
 
 
 
+	@Override
 	public int compareTo(Segment o) {
 		
 		Integer s1 = getFrom();

@@ -53,7 +53,8 @@ public class AlignmentResult implements Serializable
    long calculationTime;
    long ioTime;
 
-   public String toString(){
+   @Override
+public String toString(){
       StringBuffer buf = new StringBuffer();
       buf.append(pdb1);
       buf.append("_");

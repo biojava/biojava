@@ -43,7 +43,8 @@ public class CodonCompound extends AbstractCompound {
     this.start = start;
   }
 
-  public boolean equalsIgnoreCase(Compound compound) {
+  @Override
+public boolean equalsIgnoreCase(Compound compound) {
     if (compound == null) {
       return false;
     }
@@ -54,7 +55,8 @@ public class CodonCompound extends AbstractCompound {
     return toString().equalsIgnoreCase(them.toString());
   }
 
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
     if (obj == null) {
       return false;
     }
@@ -65,7 +67,8 @@ public class CodonCompound extends AbstractCompound {
     return toString().equals(them.toString());
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return toString().hashCode();
   }
 
@@ -85,42 +88,50 @@ public class CodonCompound extends AbstractCompound {
     return start;
   }
 
-  public String getDescription() {
+  @Override
+public String getDescription() {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public String getLongName() {
+  @Override
+public String getLongName() {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public Float getMolecularWeight() {
+  @Override
+public Float getMolecularWeight() {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public String getShortName() {
+  @Override
+public String getShortName() {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public void setDescription(String description) {
+  @Override
+public void setDescription(String description) {
     // TODO Auto-generated method stub
 
   }
 
-  public void setLongName(String longName) {
+  @Override
+public void setLongName(String longName) {
     // TODO Auto-generated method stub
 
   }
 
-  public void setMolecularWeight(Float molecularWeight) {
+  @Override
+public void setMolecularWeight(Float molecularWeight) {
     // TODO Auto-generated method stub
 
   }
 
-  public void setShortName(String shortName) {
+  @Override
+public void setShortName(String shortName) {
     // TODO Auto-generated method stub
 
   }

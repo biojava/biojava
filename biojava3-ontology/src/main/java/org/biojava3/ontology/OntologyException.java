@@ -31,7 +31,10 @@ package org.biojava3.ontology;
 
 public class OntologyException
 extends Exception {
-  public OntologyException() {
+  
+	private static final long serialVersionUID = 1L;
+
+public OntologyException() {
     super();
   }
   

@@ -63,7 +63,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
      * End position of the aligned sequence in the query and target respectively
      */
     protected int[] xyMax;
-    protected short max, min, score;
+    protected int max, min, score;
     /**
      * Dynamic programming score matrix
      * The first dimension has the length of the first (query) sequence + 1
@@ -71,7 +71,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
      * The third has length 1 for linear gap penalty and 3 for affine/constant gap
      * (one each for match/substitution, deletion, insertion) 
      */
-    protected short[][][] scores;
+    protected int[][][] scores;
     /**
      * Friendly name of each copy of the scoring matrix.
      * The number of elements must match the number of elements in third dimension of @see scores 
@@ -181,7 +181,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     // methods for MatrixAligner
 
     @Override
-    public short[][][] getScoreMatrix() {
+    public int[][][] getScoreMatrix() {
         boolean tempStoringScoreMatrix = storingScoreMatrix;
         if (scores == null) {
             storingScoreMatrix = true;
@@ -190,9 +190,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
                 return null;
             }
         }
-        short[][][] copy = scores;
+        int[][][] copy = scores;
         if (tempStoringScoreMatrix) {
-            copy = new short[scores.length][scores[0].length][];
+            copy = new int[scores.length][scores[0].length][];
             for (int i = 0; i < copy.length; i++) {
                 for (int j = 0; j < copy[0].length; j++) {
                     copy[i][j] = Arrays.copyOf(scores[i][j], scores[i][j].length);
@@ -205,14 +205,14 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 
     @Override
     public String getScoreMatrixAsString() {
-        short[][][] scores = getScoreMatrix();
+        int[][][] scores = getScoreMatrix();
         return scoreMatrixToString(scores);
     }
-	private String scoreMatrixToString(short[][][] scores) {
+	private String scoreMatrixToString(int[][][] scores) {
 		StringBuilder s = new StringBuilder();
         CompoundSet<C> compoundSet = getCompoundSet();
         int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
-                Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
+                Math.max(Math.max(Integer.toString(min).length(), Integer.toString(max).length()), lengthCompound) + 1;
         String padCompound = "%" + Integer.toString(lengthCompound) + "s",
                 padRest = "%" + Integer.toString(lengthRest);
         List<C> query = getCompoundsOfQuery(), target = getCompoundsOfTarget();
@@ -297,11 +297,11 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 
         int[] dim = getScoreMatrixDimensions();
         if (storingScoreMatrix) {
-            scores = new short[dim[0]][dim[1]][dim[2]];
+            scores = new int[dim[0]][dim[1]][dim[2]];
         } else {
-            scores = new short[dim[0]][][];
-            scores[0] = new short[dim[1]][dim[2]];
-            scores[1] = new short[dim[1]][dim[2]];
+            scores = new int[dim[0]][][];
+            scores[0] = new int[dim[1]][dim[2]];
+            scores[1] = new int[dim[1]][dim[2]];
         }
         boolean linear = (gapPenalty.getType() == GapPenalty.Type.LINEAR);
         Last[][][] traceback = new Last[dim[0]][][];
@@ -324,9 +324,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
             }
             setSteps(traceback, scores, sx, sy);
             score = Short.MIN_VALUE;
-            short[] finalScore = scores[xyMax[0]][xyMax[1]];
+            int[] finalScore = scores[xyMax[0]][xyMax[1]];
             for (int z = 0; z < finalScore.length; z++) {
-            	score = (short) Math.max(score, finalScore[z]);
+            	score = (int) Math.max(score, finalScore[z]);
             }
         } else {
             for (int x = 0; x < dim[0]; x++) {
@@ -351,13 +351,13 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     }
 
     // returns score for the alignment of the query column to all target columns
-    protected short[] getSubstitutionScoreVector(int queryColumn) {
+    protected int[] getSubstitutionScoreVector(int queryColumn) {
         return getSubstitutionScoreVector(queryColumn, new Subproblem(0, 0, scores.length - 1, scores[0].length - 1));
     }
 
     // returns score for the alignment of the query column to all target columns
-    protected short[] getSubstitutionScoreVector(int queryColumn, Subproblem subproblem) {
-        short[] subs = new short[subproblem.getTargetEndIndex() + 1];
+    protected int[] getSubstitutionScoreVector(int queryColumn, Subproblem subproblem) {
+        int[] subs = new int[subproblem.getTargetEndIndex() + 1];
         if (queryColumn > 0) {
             for (int y = Math.max(1, subproblem.getTargetStartIndex()); y <= subproblem.getTargetEndIndex(); y++) {
                 subs[y] = getSubstitutionScore(queryColumn, y);
@@ -391,7 +391,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     protected abstract int[] getScoreMatrixDimensions();
 
     // returns score for the alignment of two columns
-    protected abstract short getSubstitutionScore(int queryColumn, int targetColumn);
+    protected abstract int getSubstitutionScore(int queryColumn, int targetColumn);
 
     // prepares for alignment; returns true if everything is set to run the alignment
     protected abstract boolean isReady();

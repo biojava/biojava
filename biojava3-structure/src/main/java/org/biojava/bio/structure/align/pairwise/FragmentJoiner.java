@@ -637,7 +637,8 @@ public static Object resizeArray (Object oldArray, int newSize) {
 class JointFragmentsComparator
 implements Comparator<JointFragments> {
 
-   public int compare(JointFragments one, JointFragments two) {
+   @Override
+public int compare(JointFragments one, JointFragments two) {
 
 
       int s1 = one.getIdxlist().size();

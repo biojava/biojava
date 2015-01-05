@@ -74,14 +74,16 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
     }
 
    
-    public String toPDB() {
+    @Override
+	public String toPDB() {
         StringBuffer buffer = new StringBuffer();
         toPDB(buffer);
         return buffer.toString();
     }
 
 
-    public void toPDB(StringBuffer buf) {
+    @Override
+	public void toPDB(StringBuffer buf) {
         if (groups == null || groups.size() < 1) {
             return;
         }
@@ -259,6 +261,7 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
     
     
 
+	@Override
 	public int compareTo(Site other) {
 		return this.toString().compareTo(other.toString());
 	}

@@ -22,6 +22,7 @@
  */
 package org.biojava3.core.sequence;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -35,7 +36,7 @@ import org.biojava3.core.sequence.template.Sequence;
  */
 public class BasicSequence<C extends Compound> extends AbstractSequence<C> {
 
-  public BasicSequence(String sequence, CompoundSet<C> compoundSet) {
+  public BasicSequence(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
     super(sequence, compoundSet);
   }
 

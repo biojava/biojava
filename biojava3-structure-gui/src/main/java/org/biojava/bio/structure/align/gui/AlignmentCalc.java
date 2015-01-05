@@ -23,18 +23,17 @@
 package org.biojava.bio.structure.align.gui;
 
 
-import java.util.logging.Logger;
 import org.biojava.bio.structure.Atom;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
-
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A class that obtains two structures via DAS and aligns them
@@ -47,7 +46,7 @@ import org.biojava.bio.structure.align.model.AFPChain;
  */
 public class AlignmentCalc implements AlignmentCalculationRunnable {
 
-	public static Logger logger =  Logger.getLogger("org.biojava");
+	private static final Logger logger = LoggerFactory.getLogger(AlignmentCalc.class);
 
 	boolean interrupted = false;
 
@@ -81,6 +80,7 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 
 	}
 
+	@Override
 	public void run() {
 
 		// both structure have been downloaded, now calculate the alignment ...
@@ -113,7 +113,7 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 
 		} catch (StructureException e){
 			e.printStackTrace();
-			logger.warning(e.getMessage());
+			logger.warn(e.getMessage());
 
 		}
 
@@ -132,10 +132,12 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 	 * 
 	 *
 	 */
+	@Override
 	public void interrupt() {
 		interrupted = true;
 	}
 
+	@Override
 	public void cleanup() {
 
 		parent.notifyCalcFinished();
@@ -151,6 +153,7 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 	/** does not do anything here...
 	 * 
 	 */
+	@Override
 	public void setNrCPUs(int useNrCPUs) {
 		// TODO Auto-generated method stub
 		// 

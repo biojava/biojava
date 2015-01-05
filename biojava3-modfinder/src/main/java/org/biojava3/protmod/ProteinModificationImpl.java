@@ -54,59 +54,73 @@ implements ProteinModification , Comparable<ProteinModification> {
 	
 	private final Set<String> keywords;
 
+	@Override
 	public String getId() {
 		return id;
 	}
 	
+	@Override
 	public String getPdbccId() {
 		return pdbccId;
 	}
 	
+	@Override
 	public String getPdbccName() {
 		return pdbccName;
 	}
 	
+	@Override
 	public String getResidId() {
 		return residId;
 	}
 	
+	@Override
 	public String getResidName() {
 		return residName;
 	}
 	
+	@Override
 	public String getPsimodId() {
 		return psimodId;
 	}
 	
+	@Override
 	public String getPsimodName() {
 		return psimodName;
 	}
 	
+	@Override
 	public String getSystematicName() {
 		return sysName;
 	}
 	
+	@Override
 	public String getDescription() {
 		return toString();
 		//return description;
 	}
 	
+	@Override
 	public Set<String> getKeywords() {
 		return keywords;
 	}
 	
+	@Override
 	public ModificationCondition getCondition() {
 		return condition;
 	}
 	
+	@Override
 	public String getFormula() {
 		return formula;
 	}
 	
+	@Override
 	public ModificationCategory getCategory() {
 		return category;
 	}
 	
+	@Override
 	public ModificationOccurrenceType getOccurrenceType() {
 		return occurrenceType;
 	}
@@ -193,12 +207,14 @@ implements ProteinModification , Comparable<ProteinModification> {
 	}
 	*/
 
+	@Override
 	public int hashCode() {
 		int ret = id.hashCode();
 		ret = ret * 31 + category.hashCode();
 		return ret;
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ProteinModification))
 			return false;

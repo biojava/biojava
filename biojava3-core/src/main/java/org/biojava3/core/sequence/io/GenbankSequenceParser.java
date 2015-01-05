@@ -360,7 +360,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     }
 
     @Override
-    public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws Exception {
+    public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException {
         featureCollection = new HashMap<String, ArrayList<AbstractFeature>>();
         mapDB = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
         headerParser = new GenericGenbankHeaderParser<S, C>();

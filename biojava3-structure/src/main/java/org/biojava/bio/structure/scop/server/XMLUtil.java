@@ -32,6 +32,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
@@ -53,7 +54,7 @@ public class XMLUtil {
 	static {
 		try {
 			jaxbContextScopDescription= JAXBContext.newInstance(ScopDescription.class);
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 	}
@@ -62,7 +63,7 @@ public class XMLUtil {
 	static {
 		try {
 			jaxbContextScopDomain= JAXBContext.newInstance(ScopDomain.class);
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 	}
@@ -71,7 +72,7 @@ public class XMLUtil {
 	static {
 		try {
 			jaxbContextScopNode= JAXBContext.newInstance(ScopNode.class);
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 	}
@@ -80,7 +81,7 @@ public class XMLUtil {
 	static {
 		try {
 			jaxbContextDomains= JAXBContext.newInstance(TreeSet.class);
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 	}
@@ -89,7 +90,7 @@ public class XMLUtil {
 	static {
 		try {
 			jaxbContextStringSortedSet= JAXBContext.newInstance(TreeSetStringWrapper.class);
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 	}
@@ -98,7 +99,7 @@ public class XMLUtil {
 	static {
 		try {
 			jaxbContextComments = JAXBContext.newInstance(ListStringWrapper.class);
-		} catch( Exception e){
+		} catch( JAXBException e){
 			e.printStackTrace();
 		}
 	}
@@ -122,7 +123,7 @@ public class XMLUtil {
 
 			job = (ScopDescription) un.unmarshal(bais);
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -143,7 +144,7 @@ public class XMLUtil {
 			m.marshal( desc, ps);
 
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -178,7 +179,7 @@ public class XMLUtil {
 			m.marshal( wrapper, ps);
 
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -197,7 +198,7 @@ public class XMLUtil {
 			ListStringWrapper wrapper = (ListStringWrapper) un.unmarshal(bais);
 			comments = wrapper.getData();
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -219,7 +220,7 @@ public class XMLUtil {
 			m.marshal( scopNode, ps);
 
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -237,7 +238,7 @@ public class XMLUtil {
 
 			job = (ScopNode) un.unmarshal(bais);
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -265,7 +266,7 @@ public class XMLUtil {
 			m.marshal( domain, ps);
 
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			System.err.println("Could not serialize  ScopDomain to XML :" + domain);
 			e.printStackTrace();
 		}
@@ -284,7 +285,7 @@ public class XMLUtil {
 
 			job = (ScopDomain) un.unmarshal(bais);
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -313,12 +314,13 @@ public class XMLUtil {
 			m.marshal( domains, ps);
 
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
 		return baos.toString();
 	}
+	@SuppressWarnings("unchecked")
 	public static SortedSet<Domain> getDomainsFromXML(String xml) {
 
 		SortedSet<Domain> domains = null;
@@ -330,7 +332,7 @@ public class XMLUtil {
 
 			domains = (SortedSet<Domain>) un.unmarshal(bais);
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -356,7 +358,7 @@ public class XMLUtil {
 			m.marshal( wrapper, ps);
 
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 
@@ -374,7 +376,7 @@ public class XMLUtil {
 			TreeSetStringWrapper wrapper = (TreeSetStringWrapper) un.unmarshal(bais);
 			domains = wrapper.getData();
 
-		} catch (Exception e){
+		} catch (JAXBException e){
 			e.printStackTrace();
 		}
 

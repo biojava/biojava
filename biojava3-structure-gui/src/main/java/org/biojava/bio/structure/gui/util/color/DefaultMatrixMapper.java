@@ -46,6 +46,7 @@ public class DefaultMatrixMapper implements ContinuousColorMapper {
 	 * @return
 	 * @see org.biojava.bio.structure.gui.util.color.ContinuousColorMapper#getColor(double)
 	 */
+	@Override
 	public Color getColor(double value) {
 		float hue = 1.0f;
 		hue = (float)(1-(value/scalevalue));

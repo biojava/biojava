@@ -27,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -41,7 +42,7 @@ public class LocalAlignmentTest {
 	private static final double PRECISION = 0.00000001;
 	
 	@Test
-	public void shouldAllowZeroLengthMatches() {
+	public void shouldAllowZeroLengthMatches() throws CompoundNotFoundException { 
         DNASequence query = new DNASequence("C", DNACompoundSet.getDNACompoundSet());
         DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
         SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();

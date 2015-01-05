@@ -36,7 +36,8 @@ public class CaseInsensitiveCompound implements Compound {
     this.compound = compound;
   }
 
-  public boolean equalsIgnoreCase(Compound compound) {
+  @Override
+public boolean equalsIgnoreCase(Compound compound) {
     if (compound == null) {
       return false;
     }
@@ -47,7 +48,8 @@ public class CaseInsensitiveCompound implements Compound {
     return toString().equalsIgnoreCase(them.toString());
   }
 
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
     if (obj == null) {
       return false;
     }
@@ -57,7 +59,8 @@ public class CaseInsensitiveCompound implements Compound {
     return equalsIgnoreCase((Compound)obj);
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return toString().toUpperCase().hashCode();
   }
 
@@ -65,39 +68,48 @@ public class CaseInsensitiveCompound implements Compound {
     return this.compound;
   }
 
-  public String getDescription() {
+  @Override
+public String getDescription() {
     return getUnderlyingCompound().getDescription();
   }
 
-  public String getLongName() {
+  @Override
+public String getLongName() {
     return getUnderlyingCompound().getLongName();
   }
 
-  public Float getMolecularWeight() {
+  @Override
+public Float getMolecularWeight() {
     return getUnderlyingCompound().getMolecularWeight();
   }
 
-  public String getShortName() {
+  @Override
+public String getShortName() {
     return getUnderlyingCompound().getShortName();
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     return getUnderlyingCompound().toString();
   }
 
-  public void setDescription(String description) {
+  @Override
+public void setDescription(String description) {
     //Nothing
   }
 
-  public void setLongName(String longName) {
+  @Override
+public void setLongName(String longName) {
     //Nothing
   }
 
-  public void setMolecularWeight(Float molecularWeight) {
+  @Override
+public void setMolecularWeight(Float molecularWeight) {
     //Nothing
   }
 
-  public void setShortName(String shortName) {
+  @Override
+public void setShortName(String shortName) {
     //Nothing
   }
 }

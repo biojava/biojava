@@ -89,6 +89,7 @@ implements ActionListener
 
 	}
 
+	@Override
 	public void paint(Graphics g) {
 
 		getSize(currentSize);
@@ -175,6 +176,7 @@ implements ActionListener
 	 * 
 	 * @param event an ActionEvent
 	 */
+	@Override
 	public void actionPerformed(ActionEvent event) {
 		
 		Object mysource = event.getSource();

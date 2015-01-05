@@ -162,7 +162,8 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       frame.addWindowListener( new WindowAdapter()
       {
 
-         public void windowClosing(WindowEvent e) {
+         @Override
+		public void windowClosing(WindowEvent e) {
 
             nrOpenWindows--;
             
@@ -247,6 +248,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 		
 		resetDisplay.addActionListener(new ActionListener() {
 			
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("reset!!");
 				jmolPanel.executeCmd("restore STATE state_1");
@@ -262,6 +264,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 		toggleSelection.addItemListener(
 			    new ItemListener() {
 					
+					@Override
 					public void itemStateChanged(ItemEvent e) {
 						  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
 						  
@@ -428,12 +431,14 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       return frame.getTitle();
    }
 
-   public void mouseDragged(MouseEvent e) {
+   @Override
+public void mouseDragged(MouseEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void mouseMoved(MouseEvent e) {
+   @Override
+public void mouseMoved(MouseEvent e) {
 
       JmolViewer viewer = jmolPanel.getViewer();
 
@@ -448,27 +453,32 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    }
 
-   public void mouseClicked(MouseEvent e) {
+   @Override
+public void mouseClicked(MouseEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void mouseEntered(MouseEvent e) {
+   @Override
+public void mouseEntered(MouseEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void mouseExited(MouseEvent e) {
+   @Override
+public void mouseExited(MouseEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void mousePressed(MouseEvent e) {
+   @Override
+public void mousePressed(MouseEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void mouseReleased(MouseEvent e) {
+   @Override
+public void mouseReleased(MouseEvent e) {
       JmolViewer viewer = jmolPanel.getViewer();
 
 
@@ -486,42 +496,50 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    }
 
-   public void windowActivated(WindowEvent e) {
+   @Override
+public void windowActivated(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void windowClosed(WindowEvent e) {
+   @Override
+public void windowClosed(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void windowClosing(WindowEvent e) {
+   @Override
+public void windowClosing(WindowEvent e) {
       destroy();
 
    }
 
-   public void windowDeactivated(WindowEvent e) {
+   @Override
+public void windowDeactivated(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void windowDeiconified(WindowEvent e) {
+   @Override
+public void windowDeiconified(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void windowIconified(WindowEvent e) {
+   @Override
+public void windowIconified(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void windowOpened(WindowEvent e) {
+   @Override
+public void windowOpened(WindowEvent e) {
       // TODO Auto-generated method stub
 
    }
 
-   public void actionPerformed(ActionEvent e) {
+   @Override
+public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
          if ( afpChain == null) {

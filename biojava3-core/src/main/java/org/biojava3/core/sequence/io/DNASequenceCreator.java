@@ -24,6 +24,7 @@ package org.biojava3.core.sequence.io;
 
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
@@ -57,8 +58,9 @@ public class DNASequenceCreator implements
  * @param index Currently not used
  * @return
  */
-  public AbstractSequence<NucleotideCompound> getSequence(String sequence,
-      long index) {
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(String sequence,
+      long index) throws CompoundNotFoundException {
     return new DNASequence(sequence, compoundSet);
   }
 /**
@@ -67,7 +69,8 @@ public class DNASequenceCreator implements
  * @param index Currently not used
  * @return
  */
-  public AbstractSequence<NucleotideCompound> getSequence(
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(
       ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
     return new DNASequence(proxyLoader, compoundSet);
   }
@@ -77,7 +80,8 @@ public class DNASequenceCreator implements
    * @param list
    * @return
    */
-  public AbstractSequence<NucleotideCompound> getSequence(
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(
       List<NucleotideCompound> list) {
     ArrayListProxySequenceReader<NucleotideCompound> store = new ArrayListProxySequenceReader<NucleotideCompound>();
     store.setCompoundSet(compoundSet);

@@ -159,33 +159,42 @@ public class StructureViewerTest extends TestCase {
 
     public class StructureViewerImpl implements StructureViewer {
 
-        public void setStructure(Structure structure) {
+        @Override
+		public void setStructure(Structure structure) {
         }
 
-        public void repaint() {
+        @Override
+		public void repaint() {
         }
 
-        public void setSelection(Selection selection) {
+        @Override
+		public void setSelection(Selection selection) {
         }
 
-        public Selection getSelection() {
+        @Override
+		public Selection getSelection() {
             return null;
         }
 
-        public void setColor(Color red) {
+        @Override
+		public void setColor(Color red) {
         }
 
-        public Color getColor() {
+        @Override
+		public Color getColor() {
             return null;
         }
 
-        public void setStyle(RenderStyle wireframe) {
+        @Override
+		public void setStyle(RenderStyle wireframe) {
         }
 
-        public void clear() {
+        @Override
+		public void clear() {
         }
 
-        public void setZoom(int i) {
+        @Override
+		public void setZoom(int i) {
         }
     }
 

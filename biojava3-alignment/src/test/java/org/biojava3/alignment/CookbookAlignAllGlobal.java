@@ -28,7 +28,7 @@ public class CookbookAlignAllGlobal {
         for (String id : ids) {
             lst.add(getSequenceForId(id));
         }
-        SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
         List<SequencePair<ProteinSequence, AminoAcidCompound>> alig = Alignments.getAllPairsAlignments(lst,
                 PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(), matrix);
         for (SequencePair<ProteinSequence, AminoAcidCompound> pair : alig) {

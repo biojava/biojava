@@ -83,10 +83,10 @@ public class DemoShowValidationResults {
 				List<Clash> clashes = subgroup.getClash();
 				
 				String chainId = subgroup.getChain();
-				String resname = subgroup.getResname();
+				//String resname = subgroup.getResname();
 				String iCode = subgroup.getIcode();
 				BigInteger resnum = subgroup.getResnum();
-				String altcode = subgroup.getAltcode();
+				//String altcode = subgroup.getAltcode();
 				
 				
 				String pos = resnum.toString() ;

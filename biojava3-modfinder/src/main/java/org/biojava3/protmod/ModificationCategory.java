@@ -70,6 +70,7 @@ public enum ModificationCategory {
 	/**
 	 * @return the label of this ModificationCategory.
 	 */
+	@Override
 	public String toString() {
 		return label;
 	}

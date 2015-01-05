@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.vecmath.Matrix4d;
 
@@ -178,6 +180,7 @@ public class PDBFileParser  {
 	private boolean isLastSourceLine = false;
 	private Compound current_compound;
 	private List<Compound> compounds = new ArrayList<Compound>();
+	private HashMap<Integer,List<String>> compoundMolIds2chainIds = new HashMap<Integer, List<String>>();
 	private List<String> compndLines = new ArrayList<String>();
 	private List<String> sourceLines = new ArrayList<String>();
 	private List<String> journalLines = new ArrayList<String>();
@@ -197,6 +200,10 @@ public class PDBFileParser  {
 	private String continuationField;
 	private String continuationString = "";
 	private DateFormat dateFormat;
+	
+	// for rfree parsing
+	private float rfreeStandardLine = -1;
+	private float rfreeNoCutoffLine = -1;
 
 	private static  final List<String> compndFieldValues = new ArrayList<String>(
 			Arrays.asList(
@@ -275,7 +282,7 @@ public class PDBFileParser  {
 
 	}
 
-	FileParsingParameters params;
+	private FileParsingParameters params;
 
 	public PDBFileParser() {
 		params = new FileParsingParameters();
@@ -1085,7 +1092,7 @@ public class PDBFileParser  {
 			try {
 				i = Integer.valueOf(value);
 			} catch (NumberFormatException e){
-				logger.warn(e.getMessage() + " while trying to parse COMPND line.");
+				logger.warn(e.getMessage() + " while trying to parse COMPND MOL_ID line.");
 			}
 			if (molTypeCounter != i) {
 				molTypeCounter++;
@@ -1096,7 +1103,7 @@ public class PDBFileParser  {
 
 			}
 
-			current_compound.setMolId(value);
+			current_compound.setMolId(i);
 		}
 		if (field.equals("MOLECULE:")) {
 			current_compound.setMolName(value);
@@ -1114,7 +1121,7 @@ public class PDBFileParser  {
 					chainID = " ";
 				chains.add(chainID);
 			}
-			current_compound.setChainId(chains);
+			compoundMolIds2chainIds.put(current_compound.getMolId(),chains);
 
 		}
 		if (field.equals("SYNONYM:")) {
@@ -1387,62 +1394,18 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	}
 
-
-	/** Handler for
-	 REMARK  2
-
-	 * For diffraction experiments:
-
-	 COLUMNS        DATA TYPE       FIELD               DEFINITION
-	 --------------------------------------------------------------------------------
-	 1 -  6        Record name     "REMARK"
-	 10             LString(1)      "2"
-	 12 - 22        LString(11)     "RESOLUTION."
-	 23 - 27        Real(5.2)       resolution          Resolution.
-	 29 - 38        LString(10)     "ANGSTROMS."
-	 */
-
-	private void pdb_REMARK_2_Handler(String line) {
-		//System.out.println(line);
-		int i = line.indexOf("ANGSTROM");
-		if ( i != -1) {
-			// line contains ANGSTROM info...
-			//get the chars between 22 and where Angstrom starts
-			// this is for backwards compatibility
-			// new PDB files start at 24!!!
-			//System.out.println(i);
-
-			String resolution = line.substring(22,i).trim();
-			//System.out.println(resolution);
-			// convert string to float
-			float res = PDBHeader.DEFAULT_RESOLUTION ;
-			try {
-				res = Float.parseFloat(resolution);
-			} catch (NumberFormatException e) {
-				logger.info("Could not parse resolution ("+e.getMessage()+"), ignoring it. Line: >" + line+"<");
-				return ;
-			}
-			//System.out.println("got resolution:" +res);
-			pdbHeader.setResolution(res);
-		}
-
-	}
-
-
-	/** Handler for REMARK lines
+	/** 
+	 * Handler for REMARK lines
 	 */
 	private void pdb_REMARK_Handler(String line) {
-		// finish off the compound handler!
-
-
+		
 		if ( line == null || line.length() < 11)
 			return;
-		
-		String l = line.substring(0,11).trim();
-		if (l.equals("REMARK   2"))pdb_REMARK_2_Handler(line);
+			
 
 		if (line.startsWith("REMARK 800")) {
 			pdb_REMARK_800_Handler(line);
+			
 		}  else if ( line.startsWith("REMARK 350")){
 			
 			if ( params.isParseBioAssembly()) {
@@ -1452,6 +1415,54 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				}
 				
 				bioAssemblyParser.pdb_REMARK_350_Handler(line);
+			}
+			
+		// REMARK 3 (for R free)
+		// note: if more than 1 value present (occurring in hybrid experimental technique entries, e.g. 3ins, 4n9m)
+		// then last one encountered will be taken
+		} else if (line.startsWith("REMARK   3   FREE R VALUE")) {
+			
+			// Rfree annotation is not very consistent in PDB format, it varies depending on the software
+			// Here we follow this strategy:
+			// a) take the '(NO CUTOFF)' value if the only one available (shelx software, e.g. 1x7q)
+			// b) don't take it if also a line without '(NO CUTOFF)' is present (CNX software, e.g. 3lak) 
+			
+			Pattern pR = Pattern.compile("^REMARK   3   FREE R VALUE\\s+(?:\\(NO CUTOFF\\))?\\s+:\\s+(\\d?\\.\\d+).*");
+			Matcher mR = pR.matcher(line);
+			if (mR.matches()) {	
+				try {
+					rfreeNoCutoffLine = Float.parseFloat(mR.group(1));					
+				} catch (NumberFormatException e) {
+					logger.info("Rfree value "+mR.group(1)+" does not look like a number, will ignore it");
+				}
+			}
+			pR = Pattern.compile("^REMARK   3   FREE R VALUE\\s+:\\s+(\\d?\\.\\d+).*");
+			mR = pR.matcher(line);
+			if (mR.matches()) {
+				try {
+					rfreeStandardLine = Float.parseFloat(mR.group(1));
+				} catch (NumberFormatException e) {
+					logger.info("Rfree value '{}' does not look like a number, will ignore it", mR.group(1));
+				}
+			}
+		
+		// REMARK 3 RESOLUTION (contains more info than REMARK 2, for instance multiple resolutions in hybrid experimental technique entries)
+		// note: if more than 1 value present (occurring in hybrid experimental technique entries, e.g. 3ins, 4n9m)
+		// then last one encountered will be taken
+		} else if (line.startsWith("REMARK   3   RESOLUTION RANGE HIGH")){
+			Pattern pR = Pattern.compile("^REMARK   3   RESOLUTION RANGE HIGH \\(ANGSTROMS\\) :\\s+(\\d+\\.\\d+).*");
+			Matcher mR = pR.matcher(line);
+			if (mR.matches()) {
+				try {
+					float res = Float.parseFloat(mR.group(1));
+					if (pdbHeader.getResolution()!=PDBHeader.DEFAULT_RESOLUTION) {
+						logger.warn("More than 1 resolution value present, will use last one {} and discard previous {} "
+								,mR.group(1), String.format("%4.2f",pdbHeader.getResolution()));			
+					} 
+					pdbHeader.setResolution(res);
+				} catch (NumberFormatException e) {
+					logger.info("Could not parse resolution '{}', ignoring it",mR.group(1));
+				}
 			}
 		}
 
@@ -1842,14 +1853,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			// test altLoc
 			if ( ! altLoc.equals(' ')) {
-				
+				logger.debug("found altLoc! " + current_group + " " + altGroup);
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3);
 				if ( altGroup.getChain() == null) {
 					// need to set current chain
 					altGroup.setChain(current_chain);
-				}
-				//System.out.println("found altLoc! " + current_group + " " + altGroup);
-				
+				}				
 			
 			}
 		}
@@ -2964,15 +2973,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 		structure.setConnections(connects);
-		structure.setCompounds(compounds);
+		
 		structure.setDBRefs(dbrefs);
 
 		if ( params.isAlignSeqRes() ){
-
+			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
 
 		} else if ( params.getStoreEmptySeqRes() ){
+			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
 			// user wants to know about the seqres, but not align them
 
 			storeUnAlignedSeqRes(structure, seqResChains);
@@ -2980,6 +2990,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 		linkChains2Compound(structure);
+		structure.setCompounds(compounds);
+		
 		//associate the temporary Groups in the siteMap to the ones
 		 
 		linkSitesToGroups(); // will work now that setSites is called
@@ -2996,11 +3008,29 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 		
+		
+		// rfree end file check
+		// Rfree annotation is not very consistent in PDB format, it varies depending on the software
+		// Here we follow this strategy:
+		// a) take the '(NO CUTOFF)' value if the only one available (shelx software, e.g. 1x7q)
+		// b) don't take it if also a line without '(NO CUTOFF)' is present (CNX software, e.g. 3lak) 
+
+		if (rfreeNoCutoffLine>0 && rfreeStandardLine<0) {
+			pdbHeader.setRfree(rfreeNoCutoffLine);				
+		} else if (rfreeNoCutoffLine>0 && rfreeStandardLine>0) {
+			pdbHeader.setRfree(rfreeStandardLine);
+		} else if (rfreeNoCutoffLine<0 && rfreeStandardLine>0) {
+			pdbHeader.setRfree(rfreeStandardLine);
+		} // otherwise it remains default value: PDBHeader.DEFAULT_RFREE
+		
+		
+		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
+		structure.getCompounds();
 	}
 
 
 	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
-		SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 
 		for (int i = 0; i < structure.nrModels(); i++) {
 			List<Chain> atomList   = structure.getModel(i);
@@ -3008,7 +3038,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			for (Chain seqRes: seqResChains){
 				Chain atomRes;
 			
-				atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
+				atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomList);
 				atomRes.setSeqResGroups(seqRes.getAtomGroups());
 				
 			}
@@ -3091,11 +3121,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @param s the structure
 	 */
 	public void linkChains2Compound(Structure s){
-		List<Compound> compounds = s.getCompounds();
+		
 
 		for(Compound comp : compounds){
 			List<Chain> chains = new ArrayList<Chain>();
-			List<String> chainIds = comp.getChainId();
+			List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
 			if ( chainIds == null)
 				continue;
 			for ( String chainId : chainIds) {
@@ -3109,7 +3139,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (StructureException e){
 					// usually if this happens something is wrong with the PDB header
 					// e.g. 2brd - there is no Chain A, although it is specified in the header
-					e.printStackTrace();
+					logger.error("Unexpected exception",e);
 				}
 			}
 			comp.setChains(chains);
@@ -3117,33 +3147,30 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if ( compounds.size() == 1) {
 			Compound comp = compounds.get(0);
-			if ( comp.getChainId() == null){
+			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null){
 				List<Chain> chains = s.getChains(0);
 				if ( chains.size() == 1) {
 					// this is an old style PDB file - add the ChainI
 					Chain ch = chains.get(0);
-					List <String> chainIds = new ArrayList<String>();
-					chainIds.add(ch.getChainID());
-					comp.setChainId(chainIds);
 					comp.addChain(ch);
 				}
 			}
 		}
 
 		for (Compound comp: compounds){
-			if ( comp.getChainId() == null) {
+			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null) {
 				// could not link to chain
 				// TODO: should this be allowed to happen?
 				continue;
 			}
-			for ( String chainId : comp.getChainId()){
+			for ( String chainId : compoundMolIds2chainIds.get(comp.getMolId())){
 				if ( chainId.equals("NULL"))
 					continue;
 				try {
 					Chain c = s.getChainByPDB(chainId);
-					c.setHeader(comp);
+					c.setCompound(comp);
 				} catch (StructureException e){
-					e.printStackTrace();
+					logger.error("Unexpected exception",e);
 				}
 			}
 		}

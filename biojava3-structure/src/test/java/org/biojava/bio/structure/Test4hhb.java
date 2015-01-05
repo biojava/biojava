@@ -35,33 +35,33 @@ import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-/** A collection of tests to make sure 4hhb is represented corrrectly.
+/** A collection of tests to make sure 4hhb is represented correctly.
  *  
  * @author Andreas Prlic
  *
  */
-public class Test4hhb  extends TestCase {
+public class Test4hhb {
 
-	public void test4hhbPDBFile()
+	@Test
+	public void test4hhbPDBFile() throws IOException
 	{
 
 		Structure structure = null;
-		try {
-			InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.pdb.gz"));
-			assertNotNull(inStream);
 
-			PDBFileParser pdbpars = new PDBFileParser();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setAlignSeqRes(true);
-			pdbpars.setFileParsingParameters(params);
-			//pdbpars.setLoadChemCompInfo(true);
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.pdb.gz"));
+		assertNotNull(inStream);
 
-			structure = pdbpars.parsePDBFile(inStream) ;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+		//pdbpars.setLoadChemCompInfo(true);
+
+		structure = pdbpars.parsePDBFile(inStream) ;
+
 
 		assertNotNull(structure);
 
@@ -70,26 +70,21 @@ public class Test4hhb  extends TestCase {
 		testStructure(structure);
 
 
-
 		Structure structure2 = null;
-		try {
-			InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.cif.gz"));
-			assertNotNull(inStream);
 
-			MMcifParser pdbpars = new SimpleMMcifParser();
-			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setAlignSeqRes(true);
-			consumer.setFileParsingParameters(params);
-			pdbpars.addMMcifConsumer(consumer);
+		inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.cif.gz"));
+		assertNotNull(inStream);
 
-			pdbpars.parse(inStream) ;
-			structure2 = consumer.getStructure();
+		MMcifParser mmcifpars = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		consumer.setFileParsingParameters(params);
+		mmcifpars.addMMcifConsumer(consumer);
 
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		mmcifpars.parse(inStream) ;
+		structure2 = consumer.getStructure();
+		
 
 		assertNotNull(structure2);
 
@@ -177,12 +172,12 @@ public class Test4hhb  extends TestCase {
 	private void testCrystallographicInfo(Structure s1, Structure s2) {
 		PDBCrystallographicInfo xtalInfo = s1.getPDBHeader().getCrystallographicInfo();
 		PDBCrystallographicInfo xtalInfo2 = s2.getPDBHeader().getCrystallographicInfo();
-		assertEquals(xtalInfo.getA(), xtalInfo2.getA());
-		assertEquals(xtalInfo.getB(), xtalInfo2.getB());
-		assertEquals(xtalInfo.getC(), xtalInfo2.getC());
-		assertEquals(xtalInfo.getAlpha(), xtalInfo2.getAlpha());
-		assertEquals(xtalInfo.getBeta(), xtalInfo2.getBeta());
-		assertEquals(xtalInfo.getGamma(), xtalInfo2.getGamma());
+		assertEquals(xtalInfo.getA(), xtalInfo2.getA(), 0.0001);
+		assertEquals(xtalInfo.getB(), xtalInfo2.getB(), 0.0001);
+		assertEquals(xtalInfo.getC(), xtalInfo2.getC(), 0.0001);
+		assertEquals(xtalInfo.getAlpha(), xtalInfo2.getAlpha(), 0.0001);
+		assertEquals(xtalInfo.getBeta(), xtalInfo2.getBeta(), 0.0001);
+		assertEquals(xtalInfo.getGamma(), xtalInfo2.getGamma(), 0.0001);
 		assertEquals(xtalInfo.getZ(), xtalInfo2.getZ());
 
 		assertEquals(xtalInfo.getSpaceGroup(),xtalInfo2.getSpaceGroup());

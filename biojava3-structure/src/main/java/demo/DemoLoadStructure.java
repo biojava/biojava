@@ -107,7 +107,7 @@ public class DemoLoadStructure
 
 			System.out.print(c);
 
-			System.out.println(c.getHeader());
+			System.out.println(c.getCompound());
 
 		} catch (Exception e){
 			e.printStackTrace();

@@ -27,7 +27,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -43,6 +42,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.StructurePairAligner;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
@@ -52,6 +52,8 @@ import org.biojava.bio.structure.gui.SequenceDisplay;
 import org.biojava.bio.structure.gui.util.AlignedPosition;
 import org.biojava.bio.structure.gui.util.SequenceMouseListener;
 import org.biojava.bio.structure.gui.util.SequenceScalePanel;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /** A sequence display that can show the results of a protein structure alignment.
  * 
@@ -83,7 +85,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	 */
 	public static final int MAX_SCALE               = 10;
 
-	Logger logger = Logger.getLogger("org.biojava");
+	//private static final Logger logger = LoggerFactory.getLogger(SequenceDisplay.class);
 
 	List<AlignedPosition> apos;
 
@@ -138,6 +140,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 			frame.pack();
 			frame.setVisible(true);
 			frame.addWindowListener(new WindowAdapter(){
+				@Override
 				public void windowClosing(WindowEvent e){
 					JFrame f = (JFrame) e.getSource();
 					f.setVisible(false);
@@ -418,6 +421,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 		return apos;
 	}
 
+	@Override
 	public void stateChanged(ChangeEvent e) {
 
 		JSlider source = (JSlider)e.getSource();
@@ -459,8 +463,8 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	}
 
 	private int getMaxSequenceLength(){
-		int l1 = panel1.getChain().getAtomGroups("amino").size();
-		int l2 = panel2.getChain().getAtomGroups("amino").size();
+		int l1 = panel1.getChain().getAtomGroups(GroupType.AMINOACID).size();
+		int l2 = panel2.getChain().getAtomGroups(GroupType.AMINOACID).size();
 		if ( l1 > l2)
 			return l1;
 		else return l2;

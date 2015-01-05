@@ -91,7 +91,7 @@ public class FarmJobRunnable implements Runnable {
 		verbose = false;
 
 		// multiple farm jobs share the same SoftHashMap for caching coordinates
-		cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
+		cache = new AtomCache( params.getPdbFilePath(), params.getCacheFilePath(), params.isPdbDirSplit());
 		
 			
 		if ( params.getServer()!= null && (!params.getServer().equals("") ) ) {
@@ -183,6 +183,7 @@ public class FarmJobRunnable implements Runnable {
 		System.out.println(buf.toString());
 	}
 
+	@Override
 	public void run() {
 
 		// Retrieve resource

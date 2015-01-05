@@ -38,7 +38,7 @@
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
 		<slf4j.version>1.7.7</slf4j.version>
-		<log4j.version>2.0.2</log4j.version>	
+		<log4j.version>2.1</log4j.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
@@ -221,6 +221,11 @@
 							"UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
 					</configuration>
 
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.3</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>

@@ -22,8 +22,10 @@
 package org.biojava3.core.sequence.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
@@ -71,9 +73,11 @@ public class FileProxyDNASequenceCreator implements
      * @param sequence
      * @param index
      * @return
+     * @throws CompoundNotFoundException  
+     * @throws IOException
      */
-
-    public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) {
+    @Override
+	public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) throws CompoundNotFoundException, IOException {
         SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<NucleotideCompound>(
                 file, 
                 sequenceParser, 
@@ -89,7 +93,8 @@ public class FileProxyDNASequenceCreator implements
      * @param index
      * @return
      */
-    public AbstractSequence<NucleotideCompound> getSequence(
+    @Override
+	public AbstractSequence<NucleotideCompound> getSequence(
             ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -99,7 +104,8 @@ public class FileProxyDNASequenceCreator implements
      * @param list
      * @return
      */
-    public AbstractSequence<NucleotideCompound> getSequence(
+    @Override
+	public AbstractSequence<NucleotideCompound> getSequence(
             List<NucleotideCompound> list) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

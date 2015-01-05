@@ -27,11 +27,9 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -47,6 +45,8 @@ import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A JPanel to upload 2 custom PDB files.
  * 
@@ -64,7 +64,7 @@ implements StructurePairSelector {
 
 
 
-	public static Logger logger =  Logger.getLogger("org.biojava");
+	private static final Logger logger = LoggerFactory.getLogger(PDBUploadPanel.class);
 
 	
 	
@@ -123,11 +123,13 @@ implements StructurePairSelector {
 		return chain1.getText();
 	}
 
+	@Override
 	public Structure getStructure1() throws StructureException{
 
 		return getStructure(filePath1,chain1);
 	}
 
+	@Override
 	public Structure getStructure2() throws StructureException{
 
 		return getStructure(filePath2,chain2);
@@ -152,7 +154,7 @@ implements StructurePairSelector {
 		try {
 			s = reader.getStructure(f);
 		} catch (IOException  e){
-			logger.warning(e.getMessage());
+			logger.warn(e.getMessage());
 			//e.printStackTrace();
 			throw new StructureException(e);
 		}
@@ -215,6 +217,7 @@ class ChooseAction extends AbstractAction{
 	}
 	public static final long serialVersionUID = 0l;
 	// This method is called when the button is pressed
+	@Override
 	public void actionPerformed(ActionEvent evt) {
 		// Perform action...
 		final JFileChooser fc = new JFileChooser();

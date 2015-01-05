@@ -38,6 +38,7 @@ import org.biojava.bio.structure.align.webstart.WebStartMain;
 
 public class ShowPDBIDListener
 implements ActionListener {
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();                  
 		if ( cmd.equals("Show By ID")){

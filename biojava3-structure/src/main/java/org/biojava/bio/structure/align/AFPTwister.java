@@ -41,14 +41,14 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AFPTwister
 {
+	private final static Logger logger = LoggerFactory.getLogger(AFPTwister.class);
 
 //   private static final boolean showAlignmentSteps = false;
-   private static final boolean debug = false;
-
-
 
    /**
     * calculate the total rmsd of the blocks
@@ -93,8 +93,7 @@ public class AFPTwister
       b2 = 0;
 
 
-      if ( debug)
-         System.out.println("blockNUm at twister:" + blockNum);
+      logger.debug("blockNUm at twister: ", blockNum);
 
       for(int bk = 0; bk < blockNum; bk ++)       {
 
@@ -108,10 +107,7 @@ public class AFPTwister
             b2 = e2; 
          }
 
-         if ( debug ){
-            System.out.println("b2 is " + b2 + " before  modifyCon");
-         }
-
+         logger.debug("b2 is {} before  modifyCon", b2);
 
          if(bk < (blockNum - 1))   {
 
@@ -123,8 +119,7 @@ public class AFPTwister
             int afpPos2 = afpChainList[block2Afp[bk + 1]];
             AFP a2 = afpSet.get(afpPos2);
             e2 = (a2.getP2() - e2)/ 2 + e2;
-            if (debug)
-               System.err.println("e2 : " + e2);
+            logger.debug("e2 : {}", e2);
          } else{ 
             // last one is until the end...
             e2 = ca2.length; 
@@ -146,22 +141,20 @@ public class AFPTwister
       int totalLenIni = focusResn;
       afpChain.setTotalLenIni(totalLenIni);
 
-      if(debug)    
-         System.out.println(String.format("calrmsdini for %d residues", focusResn));
+      logger.debug(String.format("calrmsdini for %d residues", focusResn));
 
       double totalRmsdIni = calCaRmsd(ca1,iniTwistPdb, focusResn, afpChain.getFocusRes1() , afpChain.getFocusRes2() );
 
 
       afpChain.setTotalRmsdIni(totalRmsdIni);
-      if ( debug ) {
-         System.out.println("got iniRMSD: " + totalRmsdIni);
-         if ( totalRmsdIni == 5.76611141613097) {
-            System.out.println(afpChain.getAlnseq1());
-            System.out.println(afpChain.getAlnsymb());
-            System.out.println(afpChain.getAlnseq2());
-            // System.exit(0);
-         }
+      logger.debug("got iniRMSD: {}", totalRmsdIni);
+      if ( totalRmsdIni == 5.76611141613097) {
+         logger.debug("{}", afpChain.getAlnseq1());
+         logger.debug("{}", afpChain.getAlnsymb());
+         logger.debug("{}", afpChain.getAlnseq2());
+         // System.exit(0);
       }
+
       afpChain.setFocusAfpList(focusAfpList);
       afpChain.setBlock2Afp(block2Afp);
       afpChain.setAfpChainList(afpChainList);
@@ -208,7 +201,7 @@ public class AFPTwister
       int[][][] optAln  = afpChain.getOptAln();
 
       for(int bk = 0; bk < blockNum; bk ++)       {
-         //System.out.println("transforming "+ optLen[bk] + " " +  bk);
+         //logger.debug("transforming "+ optLen[bk] + " " +  bk);
          //  THIS IS TRANSFORMING THE ORIGINAL ca2 COORDINATES, NO CLONING...
          // copies the atoms over to iniTwistPdb later on in modifyCod
          transformOrigPDB(optLen[bk], optAln[bk][0], optAln[bk][1], ca1, ca2,afpChain,bk);
@@ -220,26 +213,26 @@ public class AFPTwister
             e2 = (optAln[bk + 1][1][0] - e2)/ 2 + e2;
          }
          else    { e2 = ca2.length; }
-         //System.out.println("modifyCod: " + b2 + " " + e2);
+         //logger.debug("modifyCod: " + b2 + " " + e2);
          cloneAtomRange(optTwistPdb, ca2, b2, e2);
          //bound[bk] = e2;
          for(int i = 0; i < optLen[bk]; i ++)        {
-            // System.out.println("bk " + bk + " i " + i + " optLen:" + optLen[bk] + " " + optAln[bk][0][i]);
+            // logger.debug("bk " + bk + " i " + i + " optLen:" + optLen[bk] + " " + optAln[bk][0][i]);
             focusRes1[focusResn] = optAln[bk][0][i];
             focusRes2[focusResn] = optAln[bk][1][i];
             focusResn ++;
          }
       }
       int totalLenOpt = focusResn;
-      if(debug)       System.out.println(String.format("calrmsdopt for %d residues\n", focusResn));
+      logger.debug("calrmsdopt for {} residues", focusResn);
       double totalRmsdOpt = calCaRmsd(ca1, optTwistPdb, focusResn, focusRes1, focusRes2);
-      if ( debug ) System.out.println("got opt RMSD: " + totalRmsdOpt);
+      logger.debug("got opt RMSD: {}", totalRmsdOpt);
       int optLength = afpChain.getOptLength();
 
       if(totalLenOpt != optLength)    {
-         System.err.println(String.format("Warning: final alignment length is different %d %d\n", totalLenOpt, optLength));
+         logger.warn("Final alignment length is different {} {}", totalLenOpt, optLength);
       }
-      if(debug) System.out.println(String.format("final alignment length %d, rmsd %.3f\n", focusResn, totalRmsdOpt));
+      logger.debug("final alignment length {}, rmsd {}", focusResn, totalRmsdOpt);
 
       afpChain.setTotalLenOpt(totalLenOpt);
       afpChain.setTotalRmsdOpt(totalRmsdOpt);
@@ -259,9 +252,7 @@ public class AFPTwister
    private static void transformOrigPDB(int n, int[] res1, int[] res2, Atom[] ca1, Atom[] ca2, AFPChain afpChain, int blockNr)
    throws StructureException
    {
-      if ( debug ){
-         System.err.println("transforming original coordinates " + n + " len1: " + ca1.length + " res1:" + res1.length + " len2: "+ ca2.length + " res2: " + res2.length);
-      }
+      logger.debug("transforming original coordinates {} len1: {} res1: {} len2: {} res2: {}", n, ca1.length, res1.length, ca2.length, res2.length);
 
       Atom[] cod1 = getAtoms(ca1, res1, n,false); 
       Atom[] cod2 = getAtoms(ca2, res2, n,false);
@@ -277,8 +268,7 @@ public class AFPTwister
       r = svd.getRotation();
       t = svd.getTranslation();
 
-      if ( debug)
-         System.out.println("transPdb: transforming orig coordinates with matrix: " + r);
+      logger.debug("transPdb: transforming orig coordinates with matrix: {}", r);
       
       if ( afpChain != null ){
          Matrix[] ms = afpChain.getBlockRotationMatrix();
@@ -342,8 +332,7 @@ public class AFPTwister
    throws StructureException
    {
 
-      if ( debug )
-         System.err.println("modifyCod from: " + r1 + " to: " + r2);
+      logger.debug("modifyCod from: {} to: {}", r1, r2);
 
       // special clone method, can;t use StructureTools.cloneCAArray, since we access the data
       // slightly differently here.
@@ -400,7 +389,7 @@ public class AFPTwister
       Atom t;
 
       if ( cod1.length == 0  || cod2.length == 0){
-         System.out.println("length of atoms  == 0!");
+         logger.info("length of atoms  == 0!");
          return 99;
       }
       SVDSuperimposer svd = new SVDSuperimposer(cod1, cod2);
@@ -454,9 +443,9 @@ public class AFPTwister
       List<AFP> afpSet =afpChain.getAfpSet();
            
       for(int i = listStart; i < listStart+afpn; i ++)      {
-         //System.out.println("i:"+i+" " + list.length + " " + afpn);
+         //logger.debug("i:"+i+" " + list.length + " " + afpn);
          int a = afpPositions[i];
-         //System.out.println(String.format("afp %d %d\n", i, a));
+         //logger.debug(String.format("afp %d %d\n", i, a));
          for(int j = 0; j < afpSet.get(a).getFragLen(); j ++)     {
             if(n >= minLen) {              
                throw new RuntimeException("Error: too many residues in AFPChainer.afp2Res!");
@@ -472,7 +461,7 @@ public class AFPTwister
       afpChain.setFocusResn(n);
       
       if ( n == 0 ){
-         System.err.println("warning: n=0!!! + " + afpn + " " + listStart + " " + afpPositions.length);
+         logger.warn("warning: n=0!!! + " + afpn + " " + listStart + " " + afpPositions.length);
       }
       return n;
    }

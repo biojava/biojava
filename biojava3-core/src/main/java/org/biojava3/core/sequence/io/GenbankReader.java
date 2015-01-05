@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
@@ -109,9 +110,10 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
      * @see #process(int)
      * @return {@link HashMap} containing all the parsed Genbank records 
      * present, starting current fileIndex onwards.
-     * @throws Exception 
+     * @throws IOException
+     * @throws CompoundNotFoundException 
      */
-    public LinkedHashMap<String,S> process() throws Exception {
+    public LinkedHashMap<String,S> process() throws IOException, CompoundNotFoundException {
     	LinkedHashMap<String,S> sequences = process(-1);
     	return sequences;
     }
@@ -134,9 +136,10 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
      * @param max maximum number of records to return, <code>-1</code> for infinity.
      * @return {@link HashMap} containing maximum <code>max</code> parsed Genbank records 
      * present, starting current fileIndex onwards.
-     * @throws Exception 
+     * @throws IOException
+     * @throws CompoundNotFoundException 
      */
-    public LinkedHashMap<String,S> process(int max) throws Exception {
+    public LinkedHashMap<String,S> process(int max) throws IOException, CompoundNotFoundException {
         LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
         @SuppressWarnings("unchecked")
         S sequence = (S) sequenceCreator.getSequence(genbankParser.getSequence(new BufferedReader(new InputStreamReader(inputStream)), 0), 0);

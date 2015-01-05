@@ -78,14 +78,17 @@ implements StructureAlignment  {
 //		return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, nucs2, hetatms2, nucs2);
 //	}
 
+	@Override
 	public String getAlgorithmName() {
 		return algorithmName;
 	}
 
+	@Override
 	public ConfigStrucAligParams getParameters() {
 		return null;//TODO shall we update it?
 	}
 	
+	@Override
 	public void setParameters(ConfigStrucAligParams o){
 		//TODO what is the relation between StrucAligParameters and ConfigStrucAligParams?
 		if ( ! (o instanceof StrucAligParameters)){
@@ -94,6 +97,7 @@ implements StructureAlignment  {
 		params = (StrucAligParameters) o;
 	}
 
+	@Override
 	public String getVersion() {
 		return versionNr+"";
 	}
@@ -104,6 +108,7 @@ implements StructureAlignment  {
 
 
 
+	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
 		StrucAligParameters params = StrucAligParameters.getDefaultParameters();
 		return align(ca1,ca2,params);
@@ -111,6 +116,7 @@ implements StructureAlignment  {
 	}
 
 
+	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object params)
 	throws StructureException {
 		if ( ! (params instanceof StrucAligParameters)){

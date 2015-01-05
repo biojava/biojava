@@ -57,9 +57,12 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
      l.addAll(Arrays.asList(targets));
   }
 
-    @Override
+  @Override
   public List<T> translateMany(F fromCompound) {
-    return mapper.get(fromCompound);
+	  if (!mapper.containsKey(fromCompound)) {
+		  throw new TranslationException("Can not translate compound "+fromCompound);
+	  }
+	  return mapper.get(fromCompound);
   }
 
     @Override

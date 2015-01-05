@@ -32,7 +32,7 @@ import org.biojava3.core.sequence.AccessionID;
 
 import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.Strand;
 
 import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
@@ -55,17 +55,19 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 
     public StringProxySequenceReader() {}
 
-    public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) {
+    public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException { 
         this.sequence = sequence;
         setCompoundSet(compoundSet);
         setContents(sequence);
     }
 
-    public void setCompoundSet(CompoundSet<C> compoundSet) {
+    @Override
+	public void setCompoundSet(CompoundSet<C> compoundSet) {
         this.compoundSet = compoundSet;
     }
 
-    public void setContents(String sequence) {
+    @Override
+	public void setContents(String sequence) throws CompoundNotFoundException {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
     	this.sequence = sequence;
@@ -78,7 +80,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
                 compound = compoundSet.getCompoundForString(compoundStr);
             }
             if (compound == null) {
-                throw new CompoundNotFoundError(compoundStr);
+                throw new CompoundNotFoundException("Compound "+compoundStr+" not found");
             } else {
                 i += compoundStr.length();
             }
@@ -86,37 +88,43 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
         }
     }
     
-    public void setContents(String sequence, ArrayList features){
+    public void setContents(String sequence, ArrayList features) throws CompoundNotFoundException{
         setContents(sequence);
-        
     }
 
-    public int getLength() {
+    @Override
+	public int getLength() {
         return this.parsedCompounds.size();
     }
 
-    public C getCompoundAt(int position) {
+    @Override
+	public C getCompoundAt(int position) {
         return this.parsedCompounds.get(position - 1);
     }
 
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         return this.parsedCompounds.indexOf(compound) + 1;
     }
 
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
     
-    public String toString() {
+    @Override
+	public String toString() {
         return getSequenceAsString();
     }
 
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return sequence;
     }
 
-    public List<C> getAsList() {
+    @Override
+	public List<C> getAsList() {
         return this.parsedCompounds;
     }
 
@@ -127,25 +135,30 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
     }
 
-    public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
+    @Override
+	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         return new SequenceProxyView<C>(StringProxySequenceReader.this,bioBegin,bioEnd);
     }
 
-    public Iterator<C> iterator() {
+    @Override
+	public Iterator<C> iterator() {
         return this.parsedCompounds.iterator();
     }
 
-    public CompoundSet<C> getCompoundSet() {
+    @Override
+	public CompoundSet<C> getCompoundSet() {
       return compoundSet;
     }
 
     
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     
-    public int countCompounds(C... compounds) {
+    @Override
+	public int countCompounds(C... compounds) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

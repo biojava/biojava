@@ -55,6 +55,7 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	PolymerType polymerType;
 	boolean standard;
 
+	@Override
 	public String toString(){
 		StringBuffer buf = new StringBuffer("ChemComp ");
 		buf.append(id);
@@ -298,11 +299,11 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	public void setDescriptors(List<ChemCompDescriptor> descriptors) {
 		this.descriptors = descriptors;
 	}
-	
+
 	public List<ChemCompBond> getBonds() {
 		return bonds;
 	}
-	
+
 	public void setBonds(List<ChemCompBond> bonds) {
 		this.bonds = bonds;
 	}
@@ -310,11 +311,12 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	public List<ChemCompAtom> getAtoms() {
 		return atoms;
 	}
-	
+
 	public void setAtoms(List<ChemCompAtom> atoms) {
 		this.atoms = atoms;
 	}
-	
+
+	@Override
 	public int compareTo(ChemComp arg0) {
 		if ( this.equals(arg0))
 			return 0;

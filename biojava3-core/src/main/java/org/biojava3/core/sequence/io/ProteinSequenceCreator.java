@@ -24,6 +24,7 @@ package org.biojava3.core.sequence.io;
 
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
@@ -54,9 +55,11 @@ public class ProteinSequenceCreator implements
  * @param sequence
  * @param index not used in this implementation
  * @return
+ * @throws CompoundNotFoundException
  */
-  public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
-      long index) {
+  @Override
+public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
+      long index) throws CompoundNotFoundException {
     return new ProteinSequence(sequence, compoundSet);
   }
 /**
@@ -64,7 +67,8 @@ public class ProteinSequenceCreator implements
  * @param list
  * @return
  */
-  public AbstractSequence<AminoAcidCompound> getSequence(
+  @Override
+public AbstractSequence<AminoAcidCompound> getSequence(
       List<AminoAcidCompound> list) {
     ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<AminoAcidCompound>();
     store.setCompoundSet(compoundSet);
@@ -77,7 +81,8 @@ public class ProteinSequenceCreator implements
  * @param index not used in this implementation
  * @return
  */
-  public AbstractSequence<AminoAcidCompound> getSequence(
+  @Override
+public AbstractSequence<AminoAcidCompound> getSequence(
       ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
     return new ProteinSequence(proxyLoader, compoundSet);
   }

@@ -28,6 +28,7 @@ public enum BridgeType implements Serializable{
 
 	}
 
+	@Override
 	public String toString(){
 		return type.toString();
 	}

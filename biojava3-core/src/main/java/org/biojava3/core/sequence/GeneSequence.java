@@ -25,20 +25,23 @@ package org.biojava3.core.sequence;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.logging.Logger;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Scooter Willis
  */
 public class GeneSequence extends DNASequence {
+	
+	private final static Logger logger = LoggerFactory.getLogger(GeneSequence.class);
 
-    private final LinkedHashMap<String, TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<String, TranscriptSequence>();
-    private static final Logger log = Logger.getLogger(GeneSequence.class.getName());
+    private final LinkedHashMap<String, TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<String, TranscriptSequence>();    
     private final LinkedHashMap<String, IntronSequence> intronSequenceHashMap = new LinkedHashMap<String, IntronSequence>();
     private final LinkedHashMap<String, ExonSequence> exonSequenceHashMap = new LinkedHashMap<String, ExonSequence>();
     private final ArrayList<IntronSequence> intronSequenceList = new ArrayList<IntronSequence>();
@@ -239,8 +242,8 @@ public class GeneSequence extends DNASequence {
                 intronAdded = false;
                 try{
                     addIntronsUsingExons();
-                }catch(Exception e){
-                    log.severe("Remove Exon validate() error " + e.getMessage());
+                } catch(Exception e){
+                    logger.error("Remove Exon validate() error " + e.getMessage());
                 }
                 return exonSequence;
             }
@@ -301,7 +304,13 @@ public class GeneSequence extends DNASequence {
             }
             sequence = b.toString();
         }
-        DNASequence dnaSequence = new DNASequence(sequence.toUpperCase());
+        DNASequence dnaSequence = null;
+        try {
+        	dnaSequence = new DNASequence(sequence.toUpperCase());
+        } catch (CompoundNotFoundException e) {
+        	// this should not happen, the sequence is DNA originally, if it does, there's a bug somewhere
+        	logger.error("Could not create new DNA sequence in getSequence5PrimeTo3Prime(). Error: {}",e.getMessage());
+        }
         dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
         return dnaSequence;
     }

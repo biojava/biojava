@@ -22,8 +22,10 @@
 package org.biojava3.core.sequence.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
@@ -68,9 +70,11 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
      * @param sequence
      * @param index
      * @return
+     * @throws CompoundNotFoundException 
+     * @throws IOException
      */
-
-    public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) {
+    @Override
+	public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException {
         SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader = 
         		new SequenceFileProxyLoader<AminoAcidCompound>(
         				file, 
@@ -88,7 +92,8 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
      * @param index
      * @return
      */
-    public AbstractSequence<AminoAcidCompound> getSequence(
+    @Override
+	public AbstractSequence<AminoAcidCompound> getSequence(
             ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -98,7 +103,8 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
      * @param list
      * @return
      */
-    public AbstractSequence<AminoAcidCompound> getSequence(
+    @Override
+	public AbstractSequence<AminoAcidCompound> getSequence(
             List<AminoAcidCompound> list) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

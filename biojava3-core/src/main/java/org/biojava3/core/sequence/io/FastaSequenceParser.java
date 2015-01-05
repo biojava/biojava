@@ -22,6 +22,7 @@
 package org.biojava3.core.sequence.io;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 
 import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 
@@ -31,7 +32,8 @@ import org.biojava3.core.sequence.io.template.SequenceParserInterface;
  */
 public class FastaSequenceParser implements SequenceParserInterface {
 
-    public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws Exception {
+    @Override
+	public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException {
         StringBuilder sb;
         if (sequenceLength != -1) {
             sb = new StringBuilder(sequenceLength);

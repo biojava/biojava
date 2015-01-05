@@ -2,6 +2,7 @@ package org.biojava3.core.sequence;
 
 import static org.junit.Assert.assertEquals;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceView;
@@ -10,7 +11,7 @@ import org.junit.Test;
 public class SequenceViewTest {
 
   @Test
-  public void testGetCompoundAt() {
+  public void testGetCompoundAt() throws CompoundNotFoundException {
     SequenceView<NucleotideCompound> s = new DNASequence("ATGC").getSubSequence(1, 4);
     assertEquals("Compound @ 1", s.getCompoundAt(1).toString(), "A");
     assertEquals("Compound @ 3", s.getCompoundAt(3).toString(), "G");
@@ -18,7 +19,7 @@ public class SequenceViewTest {
   }
 
   @Test
-  public void testLastIndexOf() {
+  public void testLastIndexOf() throws CompoundNotFoundException {
     SequenceView<NucleotideCompound> s = new DNASequence("ATGC").getSubSequence(1, 4);
     CompoundSet<NucleotideCompound> cs = s.getCompoundSet();
     assertEquals("Last index of ", 4, s.getLastIndexOf(cs.getCompoundForString("C")));
@@ -31,7 +32,7 @@ public class SequenceViewTest {
   }
 
   @Test
-  public void testInverse() {
+  public void testInverse() throws CompoundNotFoundException { 
     SequenceView<NucleotideCompound> s = new DNASequence("ATGC").getSubSequence(2, 3).getInverse();
     assertEquals("Reversed complementing view", s.getSequenceAsString(), "CA");
   }

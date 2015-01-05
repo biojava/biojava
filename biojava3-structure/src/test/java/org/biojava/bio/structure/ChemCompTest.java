@@ -63,7 +63,7 @@ public class ChemCompTest {
 
 		Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(chemID);
 
-		assertTrue( g.getType().equals("amino"));
+		assertTrue( g.getType().equals(GroupType.AMINOACID));
 		
 		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 	}

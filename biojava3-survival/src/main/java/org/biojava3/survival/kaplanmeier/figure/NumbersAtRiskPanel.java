@@ -23,7 +23,9 @@ import org.biojava3.survival.cox.SurvFitInfo;
  */
 public class NumbersAtRiskPanel extends JPanel {
 
-    KaplanMeierFigure kmf = null;
+	private static final long serialVersionUID = 1L;
+	
+	KaplanMeierFigure kmf = null;
     Double timePercentage = .20;
 
     public NumbersAtRiskPanel() {
@@ -64,12 +66,12 @@ public class NumbersAtRiskPanel extends JPanel {
         
         if(sfiHashMap.size() == 0)
             return;
-        int height = this.getHeight();
+        //int height = this.getHeight();
         
         int row = 0;
         int left = kmf.getLeft();
-        int right = kmf.getRight();
-        int width = right - left;
+        //int right = kmf.getRight();
+        //int width = right - left;
         Font f = g2.getFont();
         Font nf = new Font(f.getName(), Font.BOLD, f.getSize());
         g2.setFont(nf); 
@@ -91,7 +93,7 @@ public class NumbersAtRiskPanel extends JPanel {
             g2.setColor(Color.BLACK);
             StrataInfo si = sfiHashMap.get(group);
             if(kmf.title.toString().equals("[APOBEC1 Transhera Observation Arm]")){
-                int dummy = 1;
+                //int dummy = 1;
             }
  //           System.out.println(kmf.title + " Group " +  group);
  //           System.out.println(si);

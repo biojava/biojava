@@ -54,7 +54,7 @@ public class SurvivalInfoHelper {
     private static boolean isCategorical(LinkedHashMap<String, Double> values) {
         try {
             for (String value : values.keySet()) {
-                Double d = Double.parseDouble(value);
+                Double.parseDouble(value);
             }
             return false;
         } catch (Exception e) {

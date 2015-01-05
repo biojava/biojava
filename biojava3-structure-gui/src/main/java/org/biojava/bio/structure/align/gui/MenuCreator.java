@@ -189,6 +189,7 @@ public class MenuCreator {
 
 		saveI.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
 
@@ -421,6 +422,7 @@ public class MenuCreator {
 		aboutM.setMnemonic(KeyEvent.VK_A);
 		aboutM.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				MenuCreator.showAboutDialog();
 
@@ -445,6 +447,7 @@ public class MenuCreator {
 		aboutM.setMnemonic(KeyEvent.VK_S);
 		aboutM.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				MenuCreator.showSystemInfo();
 
@@ -467,6 +470,7 @@ public class MenuCreator {
 		exitI.setMnemonic(KeyEvent.VK_X);
 		exitI.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
@@ -494,6 +498,7 @@ public class MenuCreator {
 		helpM.setMnemonic(KeyEvent.VK_H);
 		helpM.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				HelpDialog d = new HelpDialog();
 				d.showDialog();
@@ -522,6 +527,7 @@ public class MenuCreator {
 			MyCloseListener(JFrame frame){
 				f=frame;
 			}
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
@@ -588,6 +594,7 @@ public class MenuCreator {
 		else 
 			pairI = new JMenuItem("New Alignment", alignIcon);
 		pairI.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
@@ -611,12 +618,14 @@ public class MenuCreator {
 		public DotPlotListener(AFPChain afpChain) {
 			this.afpChain = afpChain;
 		}
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			String title = String.format("%s vs. %s", afpChain.getName1(),afpChain.getName2());
 
 			// Create window
 			JFrame frame = new JFrame(title);
 			frame.addWindowListener(new WindowAdapter(){
+				@Override
 				public void windowClosing(WindowEvent e){
 					JFrame f = (JFrame) e.getSource();
 					f.setVisible(false);
@@ -710,6 +719,7 @@ public class MenuCreator {
 		aboutM.setMnemonic(KeyEvent.VK_M);
 		aboutM.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				MenuCreator.showMemoryMonitor();
 
@@ -726,8 +736,11 @@ public class MenuCreator {
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		WindowListener l = new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {}
+			@Override
 			public void windowDeiconified(WindowEvent e) { demo.surf.start(); }
+			@Override
 			public void windowIconified(WindowEvent e) { demo.surf.stop(); }
 		};
 		
@@ -778,6 +791,7 @@ public class MenuCreator {
 		configI.setMnemonic(KeyEvent.VK_S);
 		configI.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 

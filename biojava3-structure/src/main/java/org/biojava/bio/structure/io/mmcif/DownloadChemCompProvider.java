@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.InputStreamProvider;
 import org.slf4j.Logger;
@@ -42,8 +42,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(DownloadChemCompProvider.class);
 	
-	private static String path; 
-	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	private static File path; 
+	//private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	private static final String NEWLINE = System.getProperty("line.separator");
 
 	public static String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
@@ -67,45 +67,46 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	boolean downloadAll = false;
 
 	public DownloadChemCompProvider(){
-		//System.out.println("USING DOWNLOAD CHEM COMP PROVIDER");		
+		logger.debug("Initialising DownloadChemCompProvider");
+		
+		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
+		initPath();
+	}
+	
+	private static void initPath(){
+		
+		if (path==null) {
+			UserConfiguration config = new UserConfiguration();
+			path = new File(config.getCacheFilePath());
+		}
 	}
 
 	/** checks if the chemical components already have been installed into the PDB directory.
 	 *  If not, will download the chemical components definitions file and split it up into small
 	 *  subfiles.
 	 */
-	public void checkDoFirstInstall(){
+	public void checkDoFirstInstall(){ 
 
 		if ( ! downloadAll ) {
 			return;
 		}
 		
-		if ( path == null)
-			path =  System.getProperty(AbstractUserArgumentProcessor.CACHE_DIR);
-		if (path == null || path.equals(""))
-			path = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
 		
-		String filename = path + 	
-		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY +
-		FILE_SEPARATOR + 
-		"components.cif.gz";
-
-		File f = new File(filename);
-
+		// this makes sure there is a file separator between every component,
+		// if path has a trailing file separator or not, it will work for both cases
+		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY); 
+		File f = new File(dir, "components.cif.gz");
+		
 		if ( ! f.exists()) {
 
 			downloadAllDefinitions();
 
 		} else {
 			// file exists.. did it get extracted?
-			String directoryName = path + 	
-			DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY +
-			FILE_SEPARATOR;
-
-			File dir = new File(directoryName);
-
+			
 			FilenameFilter filter =new FilenameFilter() {
 
+				@Override
 				public boolean accept(File dir, String file) {
 					return file.endsWith(".cif.gz");
 				}
@@ -120,19 +121,16 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	private void split(){
 
-		System.out.println("Installing individual chem comp files ...");
+		logger.info("Installing individual chem comp files ...");
 		
-		if ( path == null)
-			path = System.getProperty("java.io.tmpdir");
+		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY);
+		File f = new File(dir, "components.cif.gz");
 		
-		String filename = path + 
-		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR +
-		"components.cif.gz";
 
 		int counter = 0;
 		InputStreamProvider prov = new InputStreamProvider();
 		try {
-			InputStream inStream = prov.getInputStream(filename);
+			InputStream inStream = prov.getInputStream(f);
 
 			BufferedReader buf = new BufferedReader (new InputStreamReader (inStream));
 
@@ -167,7 +165,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		} catch (IOException e){
 			e.printStackTrace();
 		}
-		System.out.println("created " + counter + " chemical component files.");
+		logger.info("Created " + counter + " chemical component files.");
 	}
 
 	private void writeID(StringWriter writer, String currentID) throws IOException{
@@ -198,9 +196,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	 * @param recordName the ID of the {@link ChemComp}
 	 * @return a new {@link ChemComp} definition.
 	 */
+	@Override
 	public  ChemComp getChemComp(String recordName) {
-
-		checkPath();
 
 		// make sure we work with upper case records		
 		recordName = recordName.toUpperCase().trim();
@@ -251,32 +248,6 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-	private static void checkPath(){
-
-		if ((path == null) || (path.equals("")) || path.equals("null")) {
-
-			String syspath = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-
-			if ((syspath != null) && (! syspath.equals("")) && (! syspath.equals("null"))){
-
-				path = syspath;
-				return;
-			}
-
-			// accessing temp. OS directory:         
-			String property = "java.io.tmpdir";
-
-			String tempdir = System.getProperty(property);
-
-			if ( !(tempdir.endsWith(FILE_SEPARATOR) ) )
-				tempdir = tempdir + FILE_SEPARATOR;
-
-			logger.warn("You did not set the path in PDBFileReader, don't know where to write the downloaded file to. "
-					+ "Assuming default location is temp directory: " + tempdir);
-			path = tempdir;
-		}
-	}
-
 	/** Returns the file name that contains the definition for this {@link ChemComp}
 	 *  
 	 * @param recordName the ID of the {@link ChemComp}
@@ -288,17 +259,22 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			recordName = "_" + recordName;
 		}
 		
-		String dir = path + CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR;
-
-		File f = new File(dir);
+		initPath();
+		
+		File f = new File(path, CHEM_COMP_CACHE_DIRECTORY);
 		if (! f.exists()){
-			logger.info("creating directory " + f);
-			f.mkdir();
+			logger.info("Creating directory " + f);
+			
+			boolean success = f.mkdir();
+			// we've checked in initPath that path is writable, so there's no need to check if it succeeds
+			// in the unlikely case that in the meantime it isn't writable at least we log an error 
+			if (!success) logger.error("Directory {} could not be created",f);
+			
 		}
 
-		String fileName = path + CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR + recordName + ".cif.gz";
-
-		return fileName;
+		File theFile = new File(f,recordName + ".cif.gz");
+		
+		return theFile.toString();
 	}
 
 	private static  boolean fileExists(String recordName){
@@ -312,10 +288,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	}
 
 	private static void downloadChemCompRecord(String recordName) {
-		String path = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-		setPath(path);
-
-
+		
 		String localName = getLocalFileName(recordName);
 
 		String u = serverLocation + recordName + ".cif";
@@ -358,28 +331,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-
-	/** making sure we use the same path for the PDB installation as is used by the PdbFileReader
-	 * 
-	 * @param p path to PDB files.
-	 */
-	public static void setPath(String p) {
-		if ( p == null)
-			return;
-		path = p;
-		if ( ! path.endsWith(FILE_SEPARATOR))
-			path += FILE_SEPARATOR;
-		
-		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR,path);
-		
-		
-
-	}
-
 	private void downloadAllDefinitions() {
 
 		if ( loading.get()){
-			System.out.println("Waiting for other thread to install chemical components...");
+			logger.info("Waiting for other thread to install chemical components...");
 		}
 
 		while ( loading.get() ) {
@@ -392,11 +347,11 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				logger.error("Thread interrupted "+e.getMessage());
 			}
 
-			System.out.println("Another thread installed the chemical components.");
+			logger.info("Another thread installed the chemical components.");
 			return;
 
 		}
@@ -404,10 +359,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		loading.set(true);
 		long timeS = System.currentTimeMillis();
 
-		System.out.println("Performing first installation of chemical components.");
-		System.out.println("Downloading components.cif.gz ...");
+		logger.info("Performing first installation of chemical components.");
+		logger.info("Downloading components.cif.gz ...");
 
-		AllChemCompProvider.checkPath();
+		
 		try {
 			AllChemCompProvider.downloadFile();
 		} catch (IOException e){
@@ -416,7 +371,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		
 		split();
 		long timeE = System.currentTimeMillis();		
-		System.out.println("time to install chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");		
+		logger.info("time to install chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");		
 		loading.set(false);
 
 	}

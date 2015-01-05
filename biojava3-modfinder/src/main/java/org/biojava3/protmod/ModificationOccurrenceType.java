@@ -52,6 +52,7 @@ public enum ModificationOccurrenceType {
 	/**
 	 * @return the label of this ModificationOccurrenceType.
 	 */
+	@Override
 	public String toString() {
 		return label;
 	}

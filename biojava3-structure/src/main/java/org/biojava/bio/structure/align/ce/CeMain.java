@@ -50,7 +50,13 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 	public static final String algorithmName = "jCE";
 
-	public static final String version = "1.1";
+	/**
+	 *  version history:
+	 *  1.2 - Added more parameters to the command line, including -maxOptRMSD
+	 *  1.1 - Additional parameters
+	 *  1.0 - Initial port from C code
+	 */
+	public static final String version = "1.2";
 
 	protected CeParameters params;
 	protected CECalculator calculator;
@@ -70,29 +76,14 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	 * 
 	 */
 	public static void main(String[] args){
-
-		CeMain ce = new CeMain(); //Used only for printing help
-		if (args.length  == 0 ) {			
-			System.out.println(ce.printHelp());
-			return;			
-		}
-
-		if ( args.length == 1){
-			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-				System.out.println(ce.printHelp());								
-				return;
-			}
-
-		}
-
 		CeUserArgumentProcessor processor = new CeUserArgumentProcessor(); //Responsible for creating a CeMain instance
 		processor.process(args);
-
 	}
 
 	/**
 	 * Align ca2 onto ca1.
 	 */
+	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{		
 		if ( ! (param instanceof CeParameters))
 			throw new IllegalArgumentException("CE algorithm needs an object of call CeParameters as argument.");
@@ -147,6 +138,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 
 
+	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
 
 		if (params == null)
@@ -155,16 +147,19 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		return align(ca1,ca2,params);
 	}
 
+	@Override
 	public String getAlgorithmName() {
 
 		return CeMain.algorithmName;
 	}
 
+	@Override
 	public ConfigStrucAligParams getParameters() {
 
 		return params;
 	}
 
+	@Override
 	public void setParameters(ConfigStrucAligParams params){
 		if (! (params instanceof CeParameters )){
 			throw new IllegalArgumentException("provided parameter object is not of type CeParameter");
@@ -172,6 +167,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		this.params = (CeParameters) params;
 	}
 
+	@Override
 	public String getVersion() {
 		return CeMain.version;
 	}

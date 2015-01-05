@@ -24,7 +24,8 @@ public class RNACompoundSet extends AbstractNucleotideCompoundSet<NucleotideComp
     addNucleotideCompound("-", "-");
   }
 
-  public NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
+  @Override
+public NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
     return new NucleotideCompound(base, this, complement);
   }
 }

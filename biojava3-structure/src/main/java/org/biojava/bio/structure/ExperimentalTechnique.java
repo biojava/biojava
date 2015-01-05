@@ -111,4 +111,9 @@ public enum ExperimentalTechnique {
 		 
 		 return false;		
 	 }
+	 
+	 @Override
+	public String toString() {
+		 return getName();
+	 }
 }

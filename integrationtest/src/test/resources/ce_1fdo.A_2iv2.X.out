@@ -1,4 +1,4 @@
-<AFPChain name1="1FDO.A" name2="2IV2.X" method="jCE" version="1.1" alnLength="720" blockNum="1" gapLen="28" optLength="692" totalLenIni="697" alignScore="1551.34" chainRmsd="0.91" identity="0.9569" normAlignScore="0.00" probability="8.40e+00" similarity="0.9569" similarity1="97" similarity2="99" totalRmsdIni="1.36" totalRmsdOpt="0.91" ca1Length="715" ca2Length="697" afpNum="4" alignScoreUpdate="0.00" time="-1">
+<AFPChain name1="1FDO.A" name2="2IV2.X" method="jCE" version="1.2" alnLength="720" blockNum="1" gapLen="28" optLength="692" totalLenIni="697" alignScore="1551.34" chainRmsd="0.91" identity="0.9569" normAlignScore="0.00" probability="8.40e+00" similarity="0.9569" similarity1="97" similarity2="99" totalRmsdIni="1.36" totalRmsdOpt="0.91" ca1Length="715" ca2Length="697" afpNum="4" alignScoreUpdate="0.00" time="-1">
   <block blockNr="0" blockSize="0" blockScore="0.00" blockRmsd="0.91" blockGap="0">
     <eqr eqrNr="0" pdbres1="1" chain1="A" pdbres2="1" chain2="X" />
     <eqr eqrNr="1" pdbres1="2" chain1="A" pdbres2="2" chain2="X" />

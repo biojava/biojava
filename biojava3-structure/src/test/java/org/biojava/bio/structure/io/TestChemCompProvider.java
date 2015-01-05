@@ -26,18 +26,22 @@ package org.biojava.bio.structure.io;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ChemCompProvider;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 
 /** Test case for https://redmine.open-bio.org/issues/3334
  * 
  * @author Andreas Prlic
  *
  */
-public class TestChemCompProvider extends TestCase {
+public class TestChemCompProvider {
 
+	@Test
 	public  void testChemCompProvider(){
 		
 		String pdbId = "1znf";
@@ -48,6 +52,7 @@ public class TestChemCompProvider extends TestCase {
 		PDBFileReader r = new PDBFileReader();
 		r.setAutoFetch(true);
 		r.setFileParsingParameters(params);
+		r.setPdbDirectorySplit(true);
 		
 		ChemCompProvider prov = ChemCompGroupFactory.getChemCompProvider();
 		
@@ -56,7 +61,6 @@ public class TestChemCompProvider extends TestCase {
 		try {
 			r.getStructureById(pdbId);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -73,7 +77,6 @@ public class TestChemCompProvider extends TestCase {
 		try {
 			r.getStructureById(pdbId);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail(e.getMessage());
 		}

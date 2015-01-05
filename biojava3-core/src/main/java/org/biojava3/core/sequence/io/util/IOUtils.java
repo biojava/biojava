@@ -121,6 +121,7 @@ public class IOUtils {
 	public static List<String> getList(BufferedReader br) throws ParserException {
 		final List<String> list = new ArrayList<String>();
 		processReader(br, new ReaderProcessor() {
+			@Override
 			public void process(String line) {
 				list.add(line);
 			}

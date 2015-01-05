@@ -12,6 +12,7 @@ import org.junit.Before;
 public class TestBond extends TestCase {
 	private Structure s;
 
+	@Override
 	@Before
 	public void setUp() throws IOException, StructureException {		
 		AtomCache cache = new AtomCache();

@@ -42,6 +42,7 @@ public class JPrintPanel extends JPanel implements Printable,ActionListener{
 	 */
 	private static final long serialVersionUID = -3337337068138131455L;
 
+	@Override
 	public int print(Graphics g, PageFormat pf, int pi) throws PrinterException {
 
 		if (pi >= 1) {
@@ -65,6 +66,7 @@ public class JPrintPanel extends JPanel implements Printable,ActionListener{
 		return Printable.PAGE_EXISTS;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		PrinterJob printJob = PrinterJob.getPrinterJob();

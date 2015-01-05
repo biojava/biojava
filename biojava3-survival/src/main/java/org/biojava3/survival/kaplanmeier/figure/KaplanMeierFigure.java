@@ -26,7 +26,6 @@ import java.util.LinkedHashMap;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.biojava3.survival.cox.StrataInfo;
 
 /**
@@ -35,7 +34,9 @@ import org.biojava3.survival.cox.StrataInfo;
  */
 public class KaplanMeierFigure extends JPanel {
 
-    ArrayList<String> title = new ArrayList<String>();
+	private static final long serialVersionUID = 1L;
+	
+	ArrayList<String> title = new ArrayList<String>();
     /**
      *
      */
@@ -180,7 +181,7 @@ public class KaplanMeierFigure extends JPanel {
 
         setSurvivalData(title, survivalData, useWeighted);
         CoxCoefficient cc = ci.getCoefficient(strataVariable);
-        DecimalFormat df = new DecimalFormat("#.##");
+        //DecimalFormat df = new DecimalFormat("#.##");
         String line1 = "HR=" + fmt(cc.getHazardRatio(), 2, 0) + " (CI:" + fmt(cc.getHazardRatioLoCI(), 2, 0) + "-" + fmt(cc.getHazardRatioHiCI(), 2, 0) + ")";
         String line2 = "p=" + fmt(cc.getPvalue(), 3, 0);
        // String line2 = "logrank P=" + fmt(ci.getScoreLogrankTestpvalue(), 3, 0);
@@ -562,7 +563,7 @@ public class KaplanMeierFigure extends JPanel {
                 g2.setFont(f);
                 fm = getFontMetrics(f);
             }
-            g2.drawString(title.get(i), (size().width - fm.stringWidth(title.get(i))) / 2, ((i + 1) * fontHeight));
+            g2.drawString(title.get(i), (getSize().width - fm.stringWidth(title.get(i))) / 2, ((i + 1) * fontHeight));
             // g2.setFont(font);
         }
         // draw the maxPercentage and minPercentage values
@@ -570,7 +571,7 @@ public class KaplanMeierFigure extends JPanel {
         g2.drawString(label, left - 5 - (int) (fm.stringWidth(label)), bottom + titleHeight / 6);
         g2.drawLine(left - 5, bottom, left, bottom);
         double d = minPercentage + kmfi.yaxisPercentIncrement;
-        double graphHeight = top - bottom;
+        //double graphHeight = top - bottom;
 
         while (d < maxPercentage) {
             int yvalue = bottom - (int) (d * (bottom - top));
@@ -659,7 +660,7 @@ public class KaplanMeierFigure extends JPanel {
         g2.drawLine(left, bottom, right, bottom);
 
         // draw xAxis legend
-        g2.drawString(kmfi.xAxisLegend, size().width / 2 - (fm.stringWidth(kmfi.xAxisLegend) / 2), bottom + 2 * fm.getHeight() + 10);
+        g2.drawString(kmfi.xAxisLegend, getSize().width / 2 - (fm.stringWidth(kmfi.xAxisLegend) / 2), bottom + 2 * fm.getHeight() + 10);
     }
     Double adjustedPercentIncrement = 0.0;
 
@@ -757,36 +758,36 @@ public class KaplanMeierFigure extends JPanel {
             KaplanMeierFigure kaplanMeierFigure = new KaplanMeierFigure();
             LinkedHashMap<String, ArrayList<CensorStatus>> survivalDataHashMap = new LinkedHashMap<String, ArrayList<CensorStatus>>();
 
-            if (false) { //http://sph.bu.edu/otlt/MPH-Modules/BS/BS704_Survival/
-                ArrayList<CensorStatus> graph1 = new ArrayList<CensorStatus>();
-                graph1.add(new CensorStatus("A", 24.0, "0"));
-                graph1.add(new CensorStatus("A", 3.0, "1"));
-                graph1.add(new CensorStatus("A", 11.0, "0"));
-                graph1.add(new CensorStatus("A", 19.0, "0"));
-                graph1.add(new CensorStatus("A", 24.0, "0"));
-                graph1.add(new CensorStatus("A", 13.0, "0"));
-
-                graph1.add(new CensorStatus("A", 14.0, "1"));
-                graph1.add(new CensorStatus("A", 2.0, "0"));
-                graph1.add(new CensorStatus("A", 18.0, "0"));
-                graph1.add(new CensorStatus("A", 17.0, "0"));
-                graph1.add(new CensorStatus("A", 24.0, "0"));
-                graph1.add(new CensorStatus("A", 21.0, "0"));
-                graph1.add(new CensorStatus("A", 12.0, "0"));
-
-                graph1.add(new CensorStatus("A", 1.0, "1"));
-                graph1.add(new CensorStatus("A", 10.0, "0"));
-                graph1.add(new CensorStatus("A", 23.0, "1"));
-                graph1.add(new CensorStatus("A", 6.0, "0"));
-                graph1.add(new CensorStatus("A", 5.0, "1"));
-                graph1.add(new CensorStatus("A", 9.0, "0"));
-                graph1.add(new CensorStatus("A", 17.0, "1"));
-
-                survivalDataHashMap.put("Label 1", graph1);
-
-
-
-            }
+//            if (false) { //http://sph.bu.edu/otlt/MPH-Modules/BS/BS704_Survival/
+//                ArrayList<CensorStatus> graph1 = new ArrayList<CensorStatus>();
+//                graph1.add(new CensorStatus("A", 24.0, "0"));
+//                graph1.add(new CensorStatus("A", 3.0, "1"));
+//                graph1.add(new CensorStatus("A", 11.0, "0"));
+//                graph1.add(new CensorStatus("A", 19.0, "0"));
+//                graph1.add(new CensorStatus("A", 24.0, "0"));
+//                graph1.add(new CensorStatus("A", 13.0, "0"));
+//
+//                graph1.add(new CensorStatus("A", 14.0, "1"));
+//                graph1.add(new CensorStatus("A", 2.0, "0"));
+//                graph1.add(new CensorStatus("A", 18.0, "0"));
+//                graph1.add(new CensorStatus("A", 17.0, "0"));
+//                graph1.add(new CensorStatus("A", 24.0, "0"));
+//                graph1.add(new CensorStatus("A", 21.0, "0"));
+//                graph1.add(new CensorStatus("A", 12.0, "0"));
+//
+//                graph1.add(new CensorStatus("A", 1.0, "1"));
+//                graph1.add(new CensorStatus("A", 10.0, "0"));
+//                graph1.add(new CensorStatus("A", 23.0, "1"));
+//                graph1.add(new CensorStatus("A", 6.0, "0"));
+//                graph1.add(new CensorStatus("A", 5.0, "1"));
+//                graph1.add(new CensorStatus("A", 9.0, "0"));
+//                graph1.add(new CensorStatus("A", 17.0, "1"));
+//
+//                survivalDataHashMap.put("Label 1", graph1);
+//
+//
+//
+//            }
 
 
             if (true) {
@@ -875,8 +876,8 @@ public class KaplanMeierFigure extends JPanel {
             }
 
             ArrayList<String> figureInfo = new ArrayList<String>();
-            DecimalFormat dfe = new DecimalFormat("0.00E0");
-            DecimalFormat df = new DecimalFormat("0.00");
+            //DecimalFormat dfe = new DecimalFormat("0.00E0");
+            //DecimalFormat df = new DecimalFormat("0.00");
 
 
 

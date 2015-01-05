@@ -27,6 +27,9 @@ package org.biojava.bio.structure;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /** an iterator over all atoms of a structure / group. 
  * @author Andreas Prlic
@@ -35,6 +38,9 @@ import java.util.NoSuchElementException;
  */
 
 public class AtomIterator implements Iterator<Atom> {
+
+	private final static Logger logger = LoggerFactory.getLogger(AtomIterator.class);
+
 	Structure structure     ;
 	Group     group         ;
 	int current_atom_pos    ;
@@ -91,6 +97,7 @@ public class AtomIterator implements Iterator<Atom> {
 	/** Is there a next atom ?
 	 * @return true if there is an atom after the current one 
 	 * */
+	@Override
 	public boolean hasNext() {
 
 		// trying to iterate over an empty structure...
@@ -126,6 +133,7 @@ public class AtomIterator implements Iterator<Atom> {
 	 * @return the next Atom
 	 * @throws NoSuchElementException if there is no atom after the current one
 	 */
+	@Override
 	public Atom next() 
 	throws NoSuchElementException
 	{
@@ -149,7 +157,7 @@ public class AtomIterator implements Iterator<Atom> {
 		
 		a = group.getAtom(current_atom_pos);
 		if ( a == null) {
-			System.err.println("current_atom_pos " + current_atom_pos + " group " + group + "size:" + group.size());
+			logger.error("current_atom_pos {} group {} size: {}", current_atom_pos, group, group.size());
 			
 			throw new NoSuchElementException("error wile trying to retrieve atom");
 		}
@@ -159,6 +167,7 @@ public class AtomIterator implements Iterator<Atom> {
 	}
 
 	/** does nothing. */
+	@Override
 	public void remove() {
 	}
 
