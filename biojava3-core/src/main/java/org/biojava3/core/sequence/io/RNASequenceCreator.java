@@ -39,7 +39,8 @@ public class RNASequenceCreator implements
  * @return
  * @throws CompoundNotFoundException
  */
-  public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index) throws CompoundNotFoundException {
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index) throws CompoundNotFoundException {
     return new RNASequence(sequence, compoundSet);
   }
 /**
@@ -48,7 +49,8 @@ public class RNASequenceCreator implements
  * @param index
  * @return
  */
-  public AbstractSequence<NucleotideCompound> getSequence(
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(
       ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
     return new RNASequence(proxyLoader, compoundSet);
   }
@@ -57,7 +59,8 @@ public class RNASequenceCreator implements
  * @param list
  * @return
  */
-  public AbstractSequence<NucleotideCompound> getSequence(List<NucleotideCompound> list) {
+  @Override
+public AbstractSequence<NucleotideCompound> getSequence(List<NucleotideCompound> list) {
     ArrayListProxySequenceReader<NucleotideCompound> store =
       new ArrayListProxySequenceReader<NucleotideCompound>();
     store.setCompoundSet(compoundSet);

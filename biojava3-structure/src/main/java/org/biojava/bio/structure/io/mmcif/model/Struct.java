@@ -34,6 +34,7 @@ public class Struct {
 	String pdbx_model_type_details;
 	String pdbx_CASP_flag;
 
+	@Override
 	public String toString(){
 		return "entry_id:" +entry_id + " title:" + title + " pdbx_descriptor:" +pdbx_descriptor + " pdbx_model_details:"+pdbx_model_details;
 	}

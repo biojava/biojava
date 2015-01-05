@@ -730,7 +730,7 @@ public class WorkSheet {
      */
     private static Object resizeArray(Object oldArray, int newSize) {
         int oldSize = java.lang.reflect.Array.getLength(oldArray);
-        Class elementType = oldArray.getClass().getComponentType();
+        Class<?> elementType = oldArray.getClass().getComponentType();
         Object newArray = java.lang.reflect.Array.newInstance(
                 elementType, newSize);
         int preserveLength = Math.min(oldSize, newSize);
@@ -1590,7 +1590,7 @@ public class WorkSheet {
      */
     public void save(OutputStream outputStream, char delimitter, boolean quoteit) throws Exception {
         outputStream.write(rowHeader.getBytes());
-        String quote = "\"";
+        //String quote = "\"";
 
         for (String col : getColumns()) {
             outputStream.write(delimitter);

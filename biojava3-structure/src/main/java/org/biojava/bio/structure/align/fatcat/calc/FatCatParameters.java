@@ -66,6 +66,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	}
 
 
+	@Override
 	public void reset(){
 		fragLen = DEFAULT_FRAGLEN;
 		fragLenSq = fragLen * fragLen;
@@ -249,7 +250,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	 * 
 	 * @return max nr of allowed twists
 	 */
-	 public Integer getMaxTra()
+	public Integer getMaxTra()
 	{
 		return maxTra;
 	}
@@ -258,194 +259,199 @@ public class FatCatParameters implements ConfigStrucAligParams
 	 * 
 	 * @param maxTra
 	 */
-	 public void setMaxTra(Integer maxTra)
-	 {
-		 this.maxTra = maxTra;
-	 }
+	public void setMaxTra(Integer maxTra)
+	{
+		this.maxTra = maxTra;
+	}
 
 
-	 public double getGapCreate()
-	 {
-		 return gapCreate;
-	 }
+	public double getGapCreate()
+	{
+		return gapCreate;
+	}
 
 
-	 public void setGapCreate(double gapCreate)
-	 {
-		 this.gapCreate = gapCreate;
-	 }
+	public void setGapCreate(double gapCreate)
+	{
+		this.gapCreate = gapCreate;
+	}
 
 
-	 public double getGapExtend()
-	 {
-		 return gapExtend;
-	 }
+	public double getGapExtend()
+	{
+		return gapExtend;
+	}
 
 
-	 public void setGapExtend(double gapExtend)
-	 {
-		 this.gapExtend = gapExtend;
-	 }
+	public void setGapExtend(double gapExtend)
+	{
+		this.gapExtend = gapExtend;
+	}
 
 
-	 public double getMisScore()
-	 {
-		 return misScore;
-	 }
+	public double getMisScore()
+	{
+		return misScore;
+	}
 
 
-	 public void setMisScore(double misScore)
-	 {
-		 this.misScore = misScore;
-	 }
+	public void setMisScore(double misScore)
+	{
+		this.misScore = misScore;
+	}
 
 
-	 public double getTorsionPenalty()
-	 {
-		 return torsionPenalty;
-	 }
+	public double getTorsionPenalty()
+	{
+		return torsionPenalty;
+	}
 
 
-	 public void setTorsionPenalty(double torsionPenalty)
-	 {
-		 this.torsionPenalty = torsionPenalty;
-	 }
+	public void setTorsionPenalty(double torsionPenalty)
+	{
+		this.torsionPenalty = torsionPenalty;
+	}
 
 
-	 public double getMaxPenalty()
-	 {
-		 return maxPenalty;
-	 }
+	public double getMaxPenalty()
+	{
+		return maxPenalty;
+	}
 
 
-	 public void setMaxPenalty(double maxPenalty)
-	 {
-		 this.maxPenalty = maxPenalty;
-	 }
+	public void setMaxPenalty(double maxPenalty)
+	{
+		this.maxPenalty = maxPenalty;
+	}
 
 
-	 public double getResScore()
-	 {
-		 return resScore;
-	 }
+	public double getResScore()
+	{
+		return resScore;
+	}
 
 
-	 public void setResScore(double resScore)
-	 {
-		 this.resScore = resScore;
-	 }
+	public void setResScore(double resScore)
+	{
+		this.resScore = resScore;
+	}
 
 
-	 public double getFragScore()
-	 {
-		 return fragScore;
-	 }
+	public double getFragScore()
+	{
+		return fragScore;
+	}
 
 
-	 public void setFragScore(double fragScore)
-	 {
-		 this.fragScore = fragScore;
-	 }
+	public void setFragScore(double fragScore)
+	{
+		this.fragScore = fragScore;
+	}
 
 
-	 public int getSparse()
-	 {
-		 return sparse;
-	 }
+	public int getSparse()
+	{
+		return sparse;
+	}
 
 
-	 public void setSparse(int sparse)
-	 {
-		 this.sparse = sparse;
-	 }
+	public void setSparse(int sparse)
+	{
+		this.sparse = sparse;
+	}
 
 
-	 public List<String> getUserConfigHelp() {
-		 List<String> params = new ArrayList<String>();
-		 String fragLen = "The length of the fragments.";
-		 String rmsdCutHelp = "The RMSD cutoff to be used during AFP detection.";
-		 String disCutHelp = "The distance cutoff used when calculate the connectivity of AFP pairs";
-		 String twistHelp ="The number of twists that are allowed to be introduced. If set to 0 alignments are run in RIGID mode.";
-		 params.add(fragLen);
-		 params.add(rmsdCutHelp);
-		 params.add(disCutHelp);
-		 params.add(twistHelp);
-		 return params;
+	@Override
+	public List<String> getUserConfigHelp() {
+		List<String> params = new ArrayList<String>();
+		String fragLen = "The length of the fragments.";
+		String rmsdCutHelp = "The RMSD cutoff to be used during AFP detection.";
+		String disCutHelp = "The distance cutoff used when calculate the connectivity of AFP pairs";
+		String twistHelp ="The number of twists that are allowed to be introduced. If set to 0 alignments are run in RIGID mode.";
+		params.add(fragLen);
+		params.add(rmsdCutHelp);
+		params.add(disCutHelp);
+		params.add(twistHelp);
+		return params;
 
-	 }
-
-
-	 public List<String> getUserConfigParameterNames() {
-		 List<String> params = new ArrayList<String>();
-		 params.add("Fragment Length");
-		 params.add("RMSD Cutoff");
-		 params.add("AFP Distance Cutoff");
-		 params.add("Maximum Nr. of twists");
-		 return params;
-	 }
+	}
 
 
-	 public List<String> getUserConfigParameters() {
-		 List<String> params = new ArrayList<String>();
-		 params.add("FragLen");
-		 params.add("RmsdCut");
-		 params.add("DisCut");
-		 params.add("MaxTra");
-		 return params;
-	 }
+	@Override
+	public List<String> getUserConfigParameterNames() {
+		List<String> params = new ArrayList<String>();
+		params.add("Fragment Length");
+		params.add("RMSD Cutoff");
+		params.add("AFP Distance Cutoff");
+		params.add("Maximum Nr. of twists");
+		return params;
+	}
 
 
-	 @SuppressWarnings({  "rawtypes" })
+	@Override
+	public List<String> getUserConfigParameters() {
+		List<String> params = new ArrayList<String>();
+		params.add("FragLen");
+		params.add("RmsdCut");
+		params.add("DisCut");
+		params.add("MaxTra");
+		return params;
+	}
+
+
+	@Override
+	@SuppressWarnings({  "rawtypes" })
 	public List<Class> getUserConfigTypes() {
-		 
-		 List<Class> params = new ArrayList<Class>();
-		 params.add(Integer.class);
-		 params.add(Double.class);
-		 params.add(Double.class);
-		 params.add(Integer.class);
-		 return params;
-	 }
 
-	 
-	 public String toString(){
-	    StringWriter writer = new StringWriter();
-	    writer.append("[");
-	    if ( maxTra == 0)
-	       writer.append("Mode: rigid, ");
-	    else 
-	       writer.append("Mode: flexible, ");
-	    List<String> params = getUserConfigParameters();
-	    
-	    for ( String s : params){
-	       writer.append(s);
-	       writer.append(": ");
-	       Object val = getValue(s);
-	       writer.append(val.toString());
-	       writer.append(", ");
-	    }
-	    writer.append("]");
-	    return writer.toString();
-	 }
-	 
-	 @SuppressWarnings({ "unchecked", "rawtypes" })
-	   private Object  getValue(String name){
-
-	      try {
-	         String methodName = "get" + name;
-
-	         Class paramC = this.getClass();
-
-	         Method m =paramC.getMethod(methodName,(Class[])null);
-
-	         Object value = m.invoke(this);
-
-	         return value;
-	      } catch (Exception e){
-	         e.printStackTrace();
-	         return null;
-	      }
+		List<Class> params = new ArrayList<Class>();
+		params.add(Integer.class);
+		params.add(Double.class);
+		params.add(Double.class);
+		params.add(Integer.class);
+		return params;
+	}
 
 
-	   }
+	@Override
+	public String toString(){
+		StringWriter writer = new StringWriter();
+		writer.append("[");
+		if ( maxTra == 0)
+			writer.append("Mode: rigid, ");
+		else 
+			writer.append("Mode: flexible, ");
+		List<String> params = getUserConfigParameters();
+
+		for ( String s : params){
+			writer.append(s);
+			writer.append(": ");
+			Object val = getValue(s);
+			writer.append(val.toString());
+			writer.append(", ");
+		}
+		writer.append("]");
+		return writer.toString();
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	private Object  getValue(String name){
+
+		try {
+			String methodName = "get" + name;
+
+			Class paramC = this.getClass();
+
+			Method m =paramC.getMethod(methodName,(Class[])null);
+
+			Object value = m.invoke(this);
+
+			return value;
+		} catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+
+
+	}
 
 }

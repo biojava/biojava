@@ -6,7 +6,7 @@ package org.biojava3.survival.cox;
 
 import org.biojava3.survival.cox.matrix.Matrix;
 import java.util.ArrayList;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.LinkedHashMap;
 
 /**
@@ -56,16 +56,16 @@ public class ResidualsCoxph {
         }
 
         //debug
-        if (false) {
-            for (int i = 0; i < ci.survivalInfoList.size(); i++) {
-                SurvivalInfo si = ci.survivalInfoList.get(i);
-                System.out.print("residuals " + si.getOrder() + " " + si.getClusterValue());
-                for (int j = 0; j < 2; j++) {
-                    System.out.print(" " + rr[i][j]);
-                }
-                System.out.println();
-            }
-        }
+//        if (false) {
+//            for (int i = 0; i < ci.survivalInfoList.size(); i++) {
+//                SurvivalInfo si = ci.survivalInfoList.get(i);
+//                System.out.print("residuals " + si.getOrder() + " " + si.getClusterValue());
+//                for (int j = 0; j < 2; j++) {
+//                    System.out.print(" " + rr[i][j]);
+//                }
+//                System.out.println();
+//            }
+//        }
 
 
         double[][] vv = null;

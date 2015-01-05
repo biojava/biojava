@@ -67,19 +67,6 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
     }
 
     /**
-     * Creates a substitution matrix using the defaults (BLOSUM 62).
-     *
-     * @throws ClassCastException if type parameter C is not {@link AminoAcidCompound}
-     * @deprecated Use {@link #getBlosum62} instead.
-     */
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    public SimpleSubstitutionMatrix() {
-        this((CompoundSet<C>) AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
-                SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt")), "blosum62");
-    }
-
-    /**
      * Creates a substitution matrix by reading in a file.
      *
      * @param compoundSet the {@link CompoundSet} on which the matrix is defined
@@ -303,6 +290,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         return s.toString();
     }
 
+	@Override
 	public Map<C, Short> getRow(C row) {
 		int rowIndex = rows.indexOf(row);
 		Map<C, Short> map = new HashMap<C, Short>();
@@ -312,6 +300,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		return map;
 	}
 
+	@Override
 	public Map<C, Short> getColumn(C column) {
 		int colIndex = cols.indexOf(column);
 		Map<C, Short> map = new HashMap<C, Short>();

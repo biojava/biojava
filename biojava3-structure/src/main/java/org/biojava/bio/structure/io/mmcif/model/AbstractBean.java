@@ -21,10 +21,13 @@
  */
 package org.biojava.bio.structure.io.mmcif.model;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
 import org.biojava.bio.structure.Chain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** a generic class that implements the toString method for a bean
  * 
@@ -32,8 +35,11 @@ import org.biojava.bio.structure.Chain;
  *
  */ 
 public abstract class AbstractBean {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AbstractBean.class);
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	@SuppressWarnings({  "unchecked" })
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
         buf.append(this.getClass().getName()).append(": ");
@@ -48,7 +54,7 @@ public abstract class AbstractBean {
 
 		 */
 		try {
-			Class c = this.getClass();
+			Class<? extends AbstractBean> c = this.getClass(); 
 			Method[] methods  = c.getMethods();
 
 			for (int i = 0; i < methods.length; i++) {
@@ -80,8 +86,10 @@ public abstract class AbstractBean {
 
 			}
 
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (InvocationTargetException e){
+			logger.error("Exception caught while producing toString",e);
+		} catch (IllegalAccessException e) {
+			logger.error("Exception caught while producing toString",e);
 		}
 
 

@@ -53,6 +53,7 @@ public abstract class ContinuousColorMapperTransform implements ContinuousColorM
 	 * @return color corresponding to transform(value)
 	 * @see org.biojava.bio.structure.gui.util.color.ContinuousColorMapper#getColor(double)
 	 */
+	@Override
 	public Color getColor(double value) {
 		return mapper.getColor(transform(value));
 	}

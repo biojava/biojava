@@ -37,11 +37,11 @@ public class HetatomImplTest extends TestCase{
     public static void tearDownClass() throws Exception {
     }
 
-    @Before
+    @Override @Before
     public void setUp() {
     }
 
-    @After
+    @After @Override
     public void tearDown() {
     }
 

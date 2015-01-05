@@ -17,7 +17,6 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,7 +28,9 @@ import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
  */
 public class ExpressionFigure extends JPanel {
 
-    ArrayList<String> title = new ArrayList<String>();
+	private static final long serialVersionUID = 1L;
+	
+	ArrayList<String> title = new ArrayList<String>();
     /**
      *
      */
@@ -152,8 +153,8 @@ public class ExpressionFigure extends JPanel {
 
     public void paintComponent(Graphics g) // draw graphics in the panel
     {
-        int width = getWidth();             // width of window in pixels
-        int height = getHeight();           // height of window in pixels
+        //int width = getWidth();             // width of window in pixels
+        //int height = getHeight();           // height of window in pixels
         setFigureDimensions();
         super.paintComponent(g);            // call superclass to make panel display correctly
         Graphics2D g2 = (Graphics2D)g;
@@ -215,10 +216,10 @@ public class ExpressionFigure extends JPanel {
 
     }
 
-    private int getYFromPercentage(double percentage) {
-        double d = top + (((bottom - top) * percentage));
-        return (int) d;
-    }
+//    private int getYFromPercentage(double percentage) {
+//        double d = top + (((bottom - top) * percentage));
+//        return (int) d;
+//    }
 
     private int getX(double value) {
         double d = left + (((right - left) * value) / (maxX - minX));
@@ -253,7 +254,7 @@ public class ExpressionFigure extends JPanel {
                 g2.setFont(f);
                 fm = getFontMetrics(f);
             }
-            g2.drawString(title.get(i), (size().width - fm.stringWidth(title.get(i))) / 2, ((i + 1) * fontHeight));
+            g2.drawString(title.get(i), (getSize().width - fm.stringWidth(title.get(i))) / 2, ((i + 1) * fontHeight));
             g2.setFont(font);
         }
         // draw the maxY and minY values
@@ -264,7 +265,7 @@ public class ExpressionFigure extends JPanel {
         increment = Math.ceil(increment);
         //  increment = increment * 10.0;
         double d = minY + increment;
-        double graphHeight = top - bottom;
+        //double graphHeight = top - bottom;
         String label = "";
         while (d < maxY) {
             int yvalue = getY(maxY - d);

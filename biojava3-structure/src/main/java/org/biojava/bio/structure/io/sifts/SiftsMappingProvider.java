@@ -30,13 +30,17 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SiftsMappingProvider {
 
+	private final static Logger logger = LoggerFactory.getLogger(SiftsMappingProvider.class);
+	
+			
 	static String EBI_SIFTS_FILE_LOCATION = "ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/%s.xml.gz";
 	
 	static String RCSB_SIFTS_FILE_LOCATION = "http://www.rcsb.org/pdb/files/%s.sifts.xml.gz";
@@ -81,19 +85,23 @@ public class SiftsMappingProvider {
 		File siftsDir = new File(path , "SIFTS");
 		
 		
-		if ( ! siftsDir.exists()) 
+		if ( ! siftsDir.exists()) {
+			logger.info("Creating directory {}", siftsDir.toString());
 			siftsDir.mkdir();
+		}
 		
 		File hashDir = new File(siftsDir, dirHash);
 		
 		if ( ! hashDir.exists()){
+			logger.info("Creating directory {}", hashDir.toString());
 			hashDir.mkdir();
 		}
 		File dest = new File( hashDir, pdbId + ".sifts.xml.gz");
 		
-		if ( ! dest.exists()){
+		if ( ! dest.exists()){			
 			String u = String.format(fileLoc,pdbId);
 			URL url = new URL(u);
+			logger.info("Downloading SIFTS file {} to {}",url,dest);
 			FileDownloadUtils.downloadGzipCompressedFile(url, dest);
 		}
 		

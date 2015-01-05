@@ -73,7 +73,8 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
      * @throws CompoundNotFoundException 
      * @throws IOException
      */
-    public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException {
+    @Override
+	public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException {
         SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader = 
         		new SequenceFileProxyLoader<AminoAcidCompound>(
         				file, 
@@ -91,7 +92,8 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
      * @param index
      * @return
      */
-    public AbstractSequence<AminoAcidCompound> getSequence(
+    @Override
+	public AbstractSequence<AminoAcidCompound> getSequence(
             ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -101,7 +103,8 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
      * @param list
      * @return
      */
-    public AbstractSequence<AminoAcidCompound> getSequence(
+    @Override
+	public AbstractSequence<AminoAcidCompound> getSequence(
             List<AminoAcidCompound> list) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

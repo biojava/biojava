@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GenerateJavaCodesFromText {
+public class GenerateJavaCodesFromTextTest {
 	
-	private final static Logger logger = LoggerFactory.getLogger(GenerateJavaCodesFromText.class);
+	private final static Logger logger = LoggerFactory.getLogger(GenerateJavaCodesFromTextTest.class);
 
 	/*
 	 * Generate java codes from two text files; Symbol2Name.txt and Symbol2Weight.txt

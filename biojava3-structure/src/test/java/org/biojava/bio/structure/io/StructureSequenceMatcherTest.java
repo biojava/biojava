@@ -51,6 +51,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 	private String[] pdbNum1;
 	private String seq1;
 	
+	@Override
 	public void setUp() throws IOException, StructureException {
 		String name1 = "2PTC";
 		
@@ -104,9 +105,9 @@ public class StructureSequenceMatcherTest extends TestCase {
 		int modelnr = 0 ; // also is 0 if structure is an XRAY structure.
 		List<Chain> chains = struct1.getChains(modelnr);
 		for (Chain cha:chains){
-			List<Group> agr = cha.getAtomGroups("amino");
-			List<Group> hgr = cha.getAtomGroups("hetatm");
-			List<Group> ngr = cha.getAtomGroups("nucleotide");
+			List<Group> agr = cha.getAtomGroups(GroupType.AMINOACID);
+			List<Group> hgr = cha.getAtomGroups(GroupType.HETATM);
+			List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
 			System.out.print("chain: >"+cha.getChainID()+"<");
 			System.out.print(" length SEQRES: " +cha.getSeqResLength());

@@ -26,35 +26,49 @@ package org.biojava.bio.structure;
 
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
+ * In mmCIF dictionary, it is called an Entity. In the case of polymers it
+ * is defined as each group of sequence identical NCS-related chains 
  *
  * Now PDB file format 3.2 aware - contains the new TAX_ID fields for the
  * organism studied and the expression system.
  *
  * @author Jules Jacobsen
+ * @author Jose Duarte
  * @since 1.5
  */
-public class Compound implements Cloneable, Serializable {
+public class Compound implements Serializable {
+	
+	//private final static Logger logger = LoggerFactory.getLogger(Compound.class);
 
-   private final static Logger logger = LoggerFactory.getLogger(Compound.class);
-
+	
+	//TODO we should consider having the data here as it is in mmCIF dictionary - JD 2014-12-11
+	//     Especially useful would be to have the polymer/non-polymer/water classification present in mmCIF
+	//     We could drop a lot of the stuff here that is PDB-file related (actually many PDB files don't contain many of these fields)
+	//     The only really essential part of a Compound is the member chains and the entity_id/mol_id
+	// See also issue https://github.com/biojava/biojava/issues/219
+	
+	private static final long serialVersionUID = 2991897825657586356L;
+	
 	/**
-    *
-    */
-   private static final long serialVersionUID = 2991897825657586356L;
-   private List<Chain> chainList = new ArrayList<Chain>();
-	private List<String> chainId = null;
-	private String refChainId = null;
-	private String molId = "0";
-	//String molId = null;
+	 * The list of chains that are described by this Compound 
+	 */
+	private List<Chain> chains;
+	
+	/**
+	 * The Molecule identifier, called entity_id in mmCIF dictionary
+	 */
+	private int molId;
+
+	private String refChainId;
+
 	private String molName = null;
 	private String title = null;
 	private List<String> synonyms = null;
@@ -103,70 +117,119 @@ public class Compound implements Cloneable, Serializable {
 	private String expressionSystemOtherDetails = null;
 
 	private Long id;
+	
+	public Compound () {
+		chains = new ArrayList<Chain>();
+		molId = -1;
+	}
 
-	@SuppressWarnings("unchecked")
-	public String toString(){
-		StringBuffer buf = new StringBuffer();
-		buf.append("Compound: " + molId + " " +molName + " ");
-		/* disabled for the moment
+	/**
+	 * Constructs a new Compound copying all data from the given one
+	 * but not setting the Chains
+	 * @param c
+	 */
+	public Compound (Compound c) {
+		
+		this.chains = new ArrayList<Chain>();
+		
+		this.molId = c.molId;
+		
+		this.refChainId = c.refChainId;
 
-    	 buf.append(" chains: " );
-    	Iterator<Chain> iter = chainList.iterator();
-    	while (iter.hasNext()){
-    		Chain c = iter.next();
-    		buf.append (c.getName() + " ");
-    	}
-
-		 */
-		try {
-			@SuppressWarnings("rawtypes")
-			Class c = Class.forName("org.biojava.bio.structure.Compound");
-			Method[] methods  = c.getMethods();
-
-			for (int i = 0; i < methods.length; i++) {
-				Method m = methods[i];
-
-				String name = m.getName();
-				if ( name.substring(0,3).equals("get")) {
-					if (name.equals("getMolId"))
-						continue;
-					if ( name.equals("getMolName"))
-						continue;
-
-					Object o  = m.invoke(this, new Object[]{});
-					if ( o instanceof String){
-						if ( o != null)
-							buf.append(name.substring(3, name.length())+": "+ o + " ");
-					}
-					if ( o instanceof List){
-						if ( o != null)
-                            buf.append(name.substring(3, name.length())).append(": ");
-
-						List<Object>lst = (List<Object>)o;
-						for (Object obj : lst){
-							if ( obj instanceof Chain){
-								continue;
-							}
-                            buf.append(obj).append(" ");
-						}
-
-					}
-				}
-
-			}
-
-		} catch (Exception e){
-			logger.error("Exception: ", e);
+		this.molName = c.molName;
+		this.title = c.title;
+		
+		if (c.synonyms!=null) {
+			this.synonyms = new ArrayList<String>();
+			synonyms.addAll(c.synonyms);
 		}
+		if (c.ecNums!=null) {
+			this.ecNums = new ArrayList<String>();
+			ecNums.addAll(c.ecNums);
+		}
+		
+		this.engineered = c.engineered;
+		this.mutation = c.mutation;
+		this.biologicalUnit = c.biologicalUnit;
+		this.details = c.details;
 
+		this.numRes = c.numRes;
+		this.resNames = c.resNames;
 
-		//if ( organismScientific != null)
-		//	buf.append(" organism scientific: " + organismScientific);
+		this.headerVars = c.headerVars;
 
+		this.synthetic = c.synthetic;
+		this.fragment = c.fragment;
+		this.organismScientific = c.organismScientific;
+		this.organismTaxId = c.organismTaxId;
+		this.organismCommon = c.organismCommon;
+		this.strain = c.strain;
+		this.variant = c.variant;
+		this.cellLine = c.cellLine;
+		this.atcc = c.atcc;
+		this.organ = c.organ;
+		this.tissue = c.tissue;
+		this.cell = c.cell;
+		this.organelle = c.organelle;
+		this.secretion = c.secretion;
+		this.gene = c.gene;
+		this.cellularLocation = c.cellularLocation;
+		this.expressionSystem = c.expressionSystem;
+	    this.expressionSystemTaxId = c.expressionSystemTaxId;
+		this.expressionSystemStrain = c.expressionSystemStrain;
+		this.expressionSystemVariant = c.expressionSystemVariant;
+		this.expressionSystemCellLine = c.expressionSystemCellLine;
+		this.expressionSystemAtccNumber = c.expressionSystemAtccNumber;
+		this.expressionSystemOrgan = c.expressionSystemOrgan;
+		this.expressionSystemTissue = c.expressionSystemTissue;
+		this.expressionSystemCell = c.expressionSystemCell;
+		this.expressionSystemOrganelle = c.expressionSystemOrganelle;
+		this.expressionSystemCellularLocation = c.expressionSystemCellularLocation;
+		this.expressionSystemVectorType = c.expressionSystemVectorType;
+		this.expressionSystemVector = c.expressionSystemVector;
+		this.expressionSystemPlasmid = c.expressionSystemPlasmid;
+		this.expressionSystemGene = c.expressionSystemGene;
+		this.expressionSystemOtherDetails = c.expressionSystemOtherDetails;
 
+		
+	}
+
+	@Override
+	public String toString(){
+		StringBuilder buf = new StringBuilder();
+		buf.append("Compound: " + molId+" ");
+		buf.append(molName==null?"(no name)":"("+molName+")");
+		buf.append(" chains: ");
+		if (chains!=null) {
+			for (int i=0;i<chains.size();i++) {
+				buf.append(chains.get(i).getChainID());
+				if (i!=chains.size()-1) buf.append(",");
+			}
+		} else {
+			buf.append("no chains");
+		}
 		return buf.toString();
 	}
 
+	/**
+	 * Get the representative Chain for this Compound.
+	 * We choose the Chain with the first chain identifier after
+	 * lexicographical sorting, e.g. chain A if Compound is composed of chains A,B,C,D,E
+	 * @return
+	 */
+	public Chain getRepresentative() {
+		String minChainId = "ZZZZ";
+		Chain firstLexicographicalIdChain = null;
+		for (Chain chain:chains) {
+			if (chain.getChainID().compareTo(minChainId)<0) {
+				minChainId = chain.getChainID();
+				firstLexicographicalIdChain = chain;
+			}
+		}
+		
+		return firstLexicographicalIdChain;
+	}
+	
 	/** get the ID used by Hibernate
 	 *
 	 * @return the ID used by Hibernate
@@ -195,12 +258,16 @@ public class Compound implements Cloneable, Serializable {
 
 	public void showCompound() {
 		System.out.println("COMPOUND INFO:");
-		if (this.molId != null) {
+		if (this.molId != -1) {
 			System.out.println("Mol ID: " + this.molId);
 		}
-		if (this.chainId != null) {
-			System.out.println("Chain: " + this.chainId);
-			//this.refChainId = chainId
+		if (this.chains != null) {
+			StringBuilder buf = new StringBuilder();
+			for (int i=0;i<chains.size();i++) {
+				buf.append(chains.get(i).getChainID());
+				if (i!=chains.size()-1) buf.append(",");
+			}
+			System.out.println("Chains: " + buf.toString());
 		}
 		if (this.molName != null) {
 			System.out.println("Mol Name: " + this.molName);
@@ -342,25 +409,21 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the chain id value.
+	 * Return the list of member chain IDs that are described by this Compound 
 	 * @return the list of ChainIDs that are described by this Compound
-	 * @see #setChainId(List)
+	 * @see #setChains(List)
+	 * @see #getChains()
 	 */
-	public List<String> getChainId() {
-		return chainId;
+	public List<String> getChainIds() {
+		List<String> chainIds = new ArrayList<String>();
+		for (int i=0;i<chains.size();i++) {
+			chainIds.add(chains.get(i).getChainID());			
+		}
+		return chainIds;
 	}
 
 	/**
-	 * Sets the list of chain IDs.
-	 * @param chainId  the list of ChainIDs that are described by this Compound
-	 * @see #getChainId()
-	 */
-	public void setChainId(List<String> chainId) {
-		this.chainId = chainId;
-	}
-
-	/**
-	 * Returns the ref chain id value.
+	 * Return the ref chain id value.
 	 * @return the RefChainID
 	 * @see #setRefChainId(String)
 	 */
@@ -369,7 +432,7 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the ref chain id value.
+	 * Return the ref chain id value.
 	 * @param refChainId the RefChainID
 	 * @see #getRefChainId()
 	 */
@@ -378,20 +441,20 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the mol id value.
-	 * @return the MolId value
-	 * @see #setMolId(String)
+	 * Return the molecule identifier, called entity_id in mmCIF dictionary.
+	 * @return the molecule id
+	 * @see #setMolId(int)
 	 */
-	public String getMolId() {
+	public int getMolId() {
 		return molId;
 	}
 
 	/**
-	 * Set the mol id value.
-	 * @param molId the MolId value
+	 * Set the molecule identifier, called entity_id in mmCIF dictionary.
+	 * @param molId the molecule id
 	 * @see #getMolId()
 	 */
-	public void setMolId(String molId) {
+	public void setMolId(int molId) {
 		this.molId = molId;
 	}
 
@@ -739,24 +802,28 @@ public class Compound implements Cloneable, Serializable {
 		this.expressionSystemOtherDetails = expressionSystemOtherDetails;
 	}
 
-	public Compound clone() throws CloneNotSupportedException {
-		Compound newMolId = (Compound) super.clone();
-		return newMolId;
-	}
-
-	/** get the chains that are part of this Compound
+	/** 
+	 * Get the list of chains that are part of this Compound
 	 *
 	 * @return a List of Chain objects
 	 */
 	 public List<Chain> getChains(){
-		return this.chainList;
+		return this.chains;
 	}
 
+	 /**
+	  * Add new Chain to this Compound
+	  * @param chain
+	  */
 	public void addChain(Chain chain){
-		this.chainList.add(chain);
+		this.chains.add(chain);		
 	}
 
+	/**
+	 * Set the chains for this Compound
+	 * @param chains
+	 */
 	public void setChains(List<Chain> chains){
-		this.chainList = chains;
+		this.chains = chains;
 	}
 }

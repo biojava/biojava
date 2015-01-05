@@ -35,6 +35,7 @@ public class ScopDescription implements Serializable,Cloneable{
 	String description;
 
 
+	@Override
 	public String toString(){
 		StringWriter buf = new StringWriter();
 

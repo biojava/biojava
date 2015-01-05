@@ -37,6 +37,7 @@ public class GUIFarmJobRunnable implements Runnable{
 		frame.setVisible(true);
 	}
 
+	@Override
 	public void run() {
 		
 		progressListener = new GUIAlignmentProgressListener();
@@ -56,7 +57,8 @@ public class GUIFarmJobRunnable implements Runnable{
 		
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-	        public void run() {
+	        @Override
+			public void run() {
 	            createAndShowGUI(progressListener);
 	        }
 		});

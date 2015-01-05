@@ -168,6 +168,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	/** {@inheritDoc}
 	 * 
 	 */
+	@Override
 	public ChemComp getChemComp(String recordName) {
 
 		while ( loading.get()) {
@@ -192,6 +193,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	/** Do the actual loading of the dictionary in a thread.
 	 * 
 	 */
+	@Override
 	public void run() {
 		long timeS = System.currentTimeMillis();
 

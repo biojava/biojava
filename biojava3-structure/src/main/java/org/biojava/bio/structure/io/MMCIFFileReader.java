@@ -40,6 +40,7 @@ import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava3.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ import org.slf4j.LoggerFactory;
         String filename =  "/path/to/something.cif.gz" ;
 
         StructureIOFile reader = new MMCIFFileReader();
-        
+
         Structure struc = reader.getStructure(filename);
         System.out.println(struc);
     }
@@ -66,37 +67,37 @@ public class MMCIFFileReader implements StructureIOFile {
 	private static final Logger logger = LoggerFactory.getLogger(MMCIFFileReader.class);
 
 	public static final String lineSplit = System.getProperty("file.separator");
-	
+
 	public static final String LOCAL_MMCIF_SPLIT_DIR    = "data"+lineSplit+"structures"+lineSplit+"divided" +lineSplit+"mmCIF";
 	public static final String LOCAL_MMCIF_ALL_DIR      = "data"+lineSplit+"structures"+lineSplit+"all"     +lineSplit+"mmCIF";
 	public static final String LOCAL_MMCIF_OBSOLETE_DIR = "data"+lineSplit+"structures"+lineSplit+"obsolete"+lineSplit+"mmCIF";
 
 	private static final String CURRENT_FILES_PATH  = "/pub/pdb/data/structures/divided/mmCIF/";
 	//private static final String OBSOLETE_FILES_PATH = "/pub/pdb/data/structures/obsolete/mmCIF/";
-	
-	
+
+
 	private File path;
 	private List<String> extensions;
 	private boolean autoFetch;
 	private boolean pdbDirectorySplit;
-	
+
 	private String serverName;
-	
+
 	private FileParsingParameters params;
 	private SimpleMMcifConsumer consumer;
-	
+
 	public static void main(String[] args) throws Exception {
-	
+
 		MMCIFFileReader reader = new MMCIFFileReader();
 		FileParsingParameters params = new FileParsingParameters();
 		reader.setFileParsingParameters(params);
-		
-		
+
+
 		Structure struc = reader.getStructureById("1m4x");
 		System.out.println(struc);
 		System.out.println(struc.toPDB());
-		
-			
+
+
 	}
 
 	/**
@@ -130,10 +131,11 @@ public class MMCIFFileReader implements StructureIOFile {
 			path = config.getPdbFilePath();
 			logger.debug("Initialising from system property/environment variable to path: {}", path.toString());
 		} else {
+			path = FileDownloadUtils.expandUserHome(path);
 			logger.debug("Initialising with path {}", path.toString());
 		}
 		this.path = new File(path);
-		
+
 		this.serverName = System.getProperty(PDBFileReader.PDB_FILE_SERVER_PROPERTY);
 
 		if ( serverName == null || serverName.trim().isEmpty()) {
@@ -145,12 +147,14 @@ public class MMCIFFileReader implements StructureIOFile {
 
 
 	}
-	
+
+	@Override
 	public void addExtension(String ext) {
 		extensions.add(ext);
 
 	}
 
+	@Override
 	public void clearExtensions(){
 		extensions.clear();
 	}
@@ -161,10 +165,11 @@ public class MMCIFFileReader implements StructureIOFile {
 	 * @return the Structure object
 	 * @throws IOException ...
 	 */
+	@Override
 	public Structure getStructure(String filename)
-	throws IOException
+			throws IOException
 	{
-		File f = new File(filename);
+		File f = new File(FileDownloadUtils.expandUserHome(filename));
 		return getStructure(f);
 
 	}
@@ -175,6 +180,7 @@ public class MMCIFFileReader implements StructureIOFile {
 	 * @return the Structure object
 	 * @throws IOException ...
 	 */
+	@Override
 	public Structure getStructure(File filename) throws IOException {
 
 		InputStreamProvider isp = new InputStreamProvider();
@@ -191,10 +197,10 @@ public class MMCIFFileReader implements StructureIOFile {
 		MMcifParser parser = new SimpleMMcifParser();
 
 		consumer = new SimpleMMcifConsumer();
-		   
+
 		consumer.setFileParsingParameters(params);
-		
-		
+
+
 		// The Consumer builds up the BioJava - structure object.
 		// you could also hook in your own and build up you own data model.
 		parser.addMMcifConsumer(consumer);
@@ -208,12 +214,14 @@ public class MMCIFFileReader implements StructureIOFile {
 		return cifStructure;
 	}
 
+	@Override
 	public void setPath(String path) {
-		this.path = new File(path);
+		this.path = new File(FileDownloadUtils.expandUserHome(path));
 
 	}
 
 
+	@Override
 	public String getPath() {
 		return path.toString();
 	}
@@ -222,6 +230,7 @@ public class MMCIFFileReader implements StructureIOFile {
 	 *
 	 * @param pdbId a 4 letter PDB code.
 	 */
+	@Override
 	public Structure getStructureById(String pdbId) throws IOException {
 		InputStream inStream = getInputStream(pdbId);
 
@@ -229,16 +238,16 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 	private InputStream getInputStream(String pdbId) throws IOException{
-		
+
 		if ( pdbId.length() < 4)
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
-		
+
 		InputStream inputStream =null;
 
 		String pdbFile = null ;
 		File f = null ;
 
-		
+
 		File dir = getDir(pdbId);
 
 		// this are the possible PDB file names...
@@ -258,7 +267,7 @@ public class MMCIFFileReader implements StructureIOFile {
 				if ( f.exists()) {
 					//System.out.println("found!");
 					pdbFile = testpath+ex ;
-					
+
 					if ( params.isUpdateRemediatedFiles()){
 						long lastModified = f.lastModified();
 
@@ -270,7 +279,7 @@ public class MMCIFFileReader implements StructureIOFile {
 							return null;
 						}
 					}
-					
+
 
 					InputStreamProvider isp = new InputStreamProvider();
 
@@ -295,7 +304,7 @@ public class MMCIFFileReader implements StructureIOFile {
 
 
 	private InputStream downloadAndGetInputStream(String pdbId)
-		throws IOException{
+			throws IOException{
 		//PDBURLReader reader = new PDBURLReader();
 		//Structure s = reader.getStructureById(pdbId);
 		File tmp = downloadPDB(pdbId);
@@ -311,13 +320,13 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 	public File downloadPDB(String pdbId){
-				
+
 
 		File dir = getDir(pdbId);
-		
+
 		File tempFile = new File(dir, getMmCifFileName(pdbId));
-		
-		
+
+
 		String ftp = String.format("ftp://%s%s%s/%s.cif.gz", 
 				serverName, CURRENT_FILES_PATH, pdbId.substring(1,3).toLowerCase(), pdbId.toLowerCase());
 
@@ -350,11 +359,13 @@ public class MMCIFFileReader implements StructureIOFile {
 		return tempFile;
 	}
 
+	@Override
 	public boolean isAutoFetch() {
 		return autoFetch;
 	}
 
 
+	@Override
 	public void setAutoFetch(boolean autoFetch) {
 		this.autoFetch = autoFetch;
 
@@ -364,6 +375,7 @@ public class MMCIFFileReader implements StructureIOFile {
 	 *  
 	 * @return boolean. default is false (all files in one directory)
 	 */
+	@Override
 	public boolean isPdbDirectorySplit() {
 		return pdbDirectorySplit;
 	}
@@ -372,58 +384,61 @@ public class MMCIFFileReader implements StructureIOFile {
 	 *  
 	 * @param pdbDirectorySplit boolean. If set to false all files are in one directory.
 	 */
+	@Override
 	public void setPdbDirectorySplit(boolean pdbDirectorySplit) {
 		this.pdbDirectorySplit = pdbDirectorySplit;
 	}
 
 
 
-   public FileParsingParameters getFileParsingParameters()
-   {
-      return params;
-   }
+	@Override
+	public FileParsingParameters getFileParsingParameters()
+	{
+		return params;
+	}
 
 
-   public void setFileParsingParameters(FileParsingParameters params)
-   {
-     this.params=params;
-      
-   }
+	@Override
+	public void setFileParsingParameters(FileParsingParameters params)
+	{
+		this.params=params;
 
-   public SimpleMMcifConsumer getMMcifConsumer(){
-	   return consumer;
-   }
-   
-   public void setMMCifConsumer(SimpleMMcifConsumer consumer){
-	   this.consumer = consumer;
-   }
-   
-   public String getMmCifFileName(String pdbId) {
-	   return pdbId.toLowerCase()+".cif.gz";
-   }
+	}
 
-   public File getDir(String pdbId) {
-	   
-	   File dir = null;
-	   
-	   if (pdbDirectorySplit) {
-   
-		   String middle = pdbId.substring(1,3).toLowerCase();
-		   dir = new File(path, LOCAL_MMCIF_SPLIT_DIR + lineSplit + middle);
-		
-	   } else {
-		   
-		   dir = new File(path, LOCAL_MMCIF_ALL_DIR);
-		   
-	   }
-	   
-	   
-	   if (!dir.exists()) {
-		   boolean success = dir.mkdirs();
-		   if (!success) logger.error("Could not create mmCIF dir {}",dir.toString());
-	   }
-	   
-	   return dir;
-   }
-   
+	public SimpleMMcifConsumer getMMcifConsumer(){
+		return consumer;
+	}
+
+	public void setMMCifConsumer(SimpleMMcifConsumer consumer){
+		this.consumer = consumer;
+	}
+
+	public String getMmCifFileName(String pdbId) {
+		return pdbId.toLowerCase()+".cif.gz";
+	}
+
+	public File getDir(String pdbId) {
+
+		File dir = null;
+
+		if (pdbDirectorySplit) {
+
+			String middle = pdbId.substring(1,3).toLowerCase();
+			dir = new File(path, LOCAL_MMCIF_SPLIT_DIR + lineSplit + middle);
+
+		} else {
+
+			dir = new File(path, LOCAL_MMCIF_ALL_DIR);
+
+		}
+
+
+		if (!dir.exists()) {
+			boolean success = dir.mkdirs();
+			if (!success) logger.error("Could not create mmCIF dir {}",dir.toString());
+		}
+
+		return dir;
+	}
+
 }

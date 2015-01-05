@@ -62,6 +62,7 @@ MouseListener {
 		historyPosition = -2; // -2 = history = empty;
 	}	
 	
+	@Override
 	public void actionPerformed(ActionEvent event) {
 		/*
 	        if ( spice.isLoading() ) {
@@ -95,6 +96,7 @@ MouseListener {
 
 	}
 
+	@Override
 	public void  mouseClicked(MouseEvent e){
 		String cmd = textfield.getText();
 		if ( cmd.equals(StructureAlignmentJmol.COMMAND_LINE_HELP)){
@@ -104,10 +106,14 @@ MouseListener {
 	};
 
 
+	@Override
 	public void  mouseExited(MouseEvent e){};
+	@Override
 	public void  mouseReleased(MouseEvent e){};
+	@Override
 	public void  mousePressed(MouseEvent e){};
 
+	@Override
 	public void  mouseEntered(MouseEvent e){};
 
 	/** takes care of the cursor up/down keys. triggers copying of stored 
@@ -116,6 +122,7 @@ MouseListener {
 	 */ 
 	 
 
+	@Override
 	public void keyReleased(KeyEvent e){
 
 		int code = e.getKeyCode();

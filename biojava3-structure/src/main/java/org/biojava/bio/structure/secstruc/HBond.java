@@ -29,7 +29,8 @@ public class HBond{
         partner = 0;
     }
     
-    public Object clone(){
+    @Override
+	public Object clone(){
         
         HBond n = new HBond();
         n.setEnergy(energy);
@@ -39,7 +40,8 @@ public class HBond{
         
     }
     
-    public String toString(){
+    @Override
+	public String toString(){
         StringBuffer buf = new StringBuffer();
         
         buf.append(partner+"|"+(energy/1000.0));

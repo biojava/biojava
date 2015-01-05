@@ -13,4 +13,7 @@ package org.biojava3.ontology;
 public abstract class DefaultOps
 implements OntologyOps, java.io.Serializable {
 
+	
+	private static final long serialVersionUID = 1L;
+
 }

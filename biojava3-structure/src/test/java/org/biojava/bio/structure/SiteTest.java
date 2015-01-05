@@ -114,11 +114,13 @@ public class SiteTest extends TestCase {
     public static void tearDownClass() throws Exception {
     }
 
-    @Before
+    @Override
+	@Before
     public void setUp() {
     }
 
-    @After
+    @Override
+	@After
     public void tearDown() {
     }
 

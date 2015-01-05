@@ -37,27 +37,33 @@ class JTableDataButtonModel extends AbstractTableModel {
     }
     
     
-    public String getColumnName(int column) { 
+    @Override
+	public String getColumnName(int column) { 
       return __columns[column];
     }
 
-    public int getRowCount() {
+    @Override
+	public int getRowCount() {
       return __rows.length;
     }
 
-    public int getColumnCount() {
+    @Override
+	public int getColumnCount() {
       return __columns.length;
     }
 
-    public Object getValueAt(int row, int column) { 
+    @Override
+	public Object getValueAt(int row, int column) { 
         return __rows[row][column];
     }
 
-    public boolean isCellEditable(int row, int column) {
+    @Override
+	public boolean isCellEditable(int row, int column) {
       return false;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+	@SuppressWarnings({ "unchecked" })
 	public Class getColumnClass(int column) {
       return getValueAt(0, column).getClass();
     }

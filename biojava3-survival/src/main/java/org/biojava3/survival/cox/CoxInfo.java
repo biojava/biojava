@@ -5,7 +5,7 @@
 package org.biojava3.survival.cox;
 
 import org.biojava3.survival.cox.stats.ChiSq;
-import org.biojava3.survival.cox.comparators.SurvivalInfoComparator;
+//import org.biojava3.survival.cox.comparators.SurvivalInfoComparator;
 import org.biojava3.survival.kaplanmeier.figure.ExpressionFigure;
 import org.biojava3.survival.kaplanmeier.figure.KaplanMeierFigure;
 import java.text.DecimalFormat;
@@ -334,8 +334,8 @@ public class CoxInfo {
 
         //need an ordered list for comparing to R dumps
 
-        ArrayList<SurvivalInfo> orderedSurvivalInfoList = new ArrayList<SurvivalInfo>(survivalInfoList);
-        SurvivalInfoComparator sicSort = new SurvivalInfoComparator();
+//        ArrayList<SurvivalInfo> orderedSurvivalInfoList = new ArrayList<SurvivalInfo>(survivalInfoList);
+//        SurvivalInfoComparator sicSort = new SurvivalInfoComparator();
         //       Collections.sort(orderedSurvivalInfoList,sicSort);
 
 
@@ -393,27 +393,27 @@ public class CoxInfo {
         System.out.println(flag);
 
         System.out.println();
-        if (false) {
-            System.out.println("ID      LP       Score      Residuals");
-            for (SurvivalInfo si : orderedSurvivalInfoList) {
-                System.out.println(si.getOrder() + " " + si.getLinearPredictor() + " " + si.getScore() + " " + si.getResidual());
-
-            }
-            System.out.println();
-            ArrayList<String> variables = new ArrayList<String>(coefficientsList.keySet());
-            System.out.print("Sample");
-            for (String v : variables) {
-                System.out.print("    " + v);
-            }
-            System.out.println("rr");
-            for (SurvivalInfo si : orderedSurvivalInfoList) {
-                System.out.print(si.getOrder());
-                for (String v : variables) {
-                    System.out.print("   " + si.getResidualVariable(v));
-                }
-                System.out.println();
-            }
-        }
+//        if (false) {
+//            System.out.println("ID      LP       Score      Residuals");
+//            for (SurvivalInfo si : orderedSurvivalInfoList) {
+//                System.out.println(si.getOrder() + " " + si.getLinearPredictor() + " " + si.getScore() + " " + si.getResidual());
+//
+//            }
+//            System.out.println();
+//            ArrayList<String> variables = new ArrayList<String>(coefficientsList.keySet());
+//            System.out.print("Sample");
+//            for (String v : variables) {
+//                System.out.print("    " + v);
+//            }
+//            System.out.println("rr");
+//            for (SurvivalInfo si : orderedSurvivalInfoList) {
+//                System.out.print(si.getOrder());
+//                for (String v : variables) {
+//                    System.out.print("   " + si.getResidualVariable(v));
+//                }
+//                System.out.println();
+//            }
+//        }
 
     }
 

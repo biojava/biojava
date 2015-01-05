@@ -115,6 +115,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 
 	}
 
+	@Override
 	public void setModification(ProteinModification protmod){
 		originalModification = protmod;
 		
@@ -174,6 +175,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	 * @return the original modification ID.
 	 * @deprecated use getModification().getId()
 	 */
+	@Deprecated
 	public String getOriginalModificationId() {
 		if (originalModification==null)
 			return null;
@@ -200,6 +202,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 		return result;
 	}
 
+	@Override
 	public void setGroups(Set<StructureGroup> groups){
 		this.groups = groups;
 		resetModification();
@@ -220,6 +223,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	}
 
 
+	@Override
 	public void setAtomLinkages(Set<StructureAtomLinkage> linkages) {
 		for (StructureAtomLinkage sali : linkages){
 			addAtomLinkage(sali);
@@ -264,6 +268,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 		resetModification();
 	}
 	
+	@Override
 	public boolean crossChains() {
 		if (groups==null || groups.isEmpty())
 			return false;
@@ -279,6 +284,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	}
 
 
+	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		if ( originalModification == null)
@@ -297,6 +303,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	}
 
 
+	@Override
 	public String getDescription() {
 
 		StringBuilder sb = new StringBuilder();
@@ -343,11 +350,13 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 		return sb.toString();
 	}
 
+	@Override
 	public void setDescription(String desc){
 		// do nothing....
 
 	}
 
+	@Override
 	public int compareTo(ModifiedCompound compound){
 		try {
 			// quite complex objects so the easiest is to just wrap it as XML

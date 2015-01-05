@@ -147,6 +147,7 @@ public interface AminoAcid extends Group {
     public String getRecordType();
 
     /** string representation. */
+    @Override
     public String toString() ;
 
 }

@@ -26,7 +26,8 @@ public class Feature implements FeatureI {
      *
      * @return Sequence name.
      */
-    public String seqname() {
+    @Override
+	public String seqname() {
         return mSeqname;
     }
 
@@ -49,7 +50,8 @@ public class Feature implements FeatureI {
      *
      * @return Feature type.
      */
-    public String type() {
+    @Override
+	public String type() {
         return mType;
     }
 
@@ -62,7 +64,8 @@ public class Feature implements FeatureI {
      *
      * @return Location of feature.
      */
-    public Location location() {
+    @Override
+	public Location location() {
         return mLocation;
     }
 
@@ -171,7 +174,8 @@ public class Feature implements FeatureI {
      *
      * @return The user HashMap.
      */
-    public HashMap<String, String> userData() {
+    @Override
+	public HashMap<String, String> userData() {
         return mUserMap;
     }
 
@@ -204,7 +208,8 @@ public class Feature implements FeatureI {
      * @param key The key.
      * @return The corresponding value. Null if the key has no value defined.
      */
-    public String getAttribute(String key) {
+    @Override
+	public String getAttribute(String key) {
         
         return attributeHashMap.get(key);
     }
@@ -234,11 +239,13 @@ public class Feature implements FeatureI {
         return null;
     }
 
-    public boolean hasAttribute(String key) {
+    @Override
+	public boolean hasAttribute(String key) {
         return attributeHashMap.containsKey(key);
     }
 
-    public boolean hasAttribute(String key, String value) {
+    @Override
+	public boolean hasAttribute(String key, String value) {
         String data = getAttribute(key);
         if(data == null)
             return false;
@@ -257,7 +264,8 @@ public class Feature implements FeatureI {
      *
      * @return The group id. Everything before the first semicolon in the attributes string (minus trailing whitespace).
      */
-    public String group() {
+    @Override
+	public String group() {
         int i = mAttributes.indexOf(';');
         return (i < 0) ? mAttributes.trim() : mAttributes.substring(0, i).trim();
     }
@@ -265,7 +273,8 @@ public class Feature implements FeatureI {
     /**
      *
      */
-    public String toString() {
+    @Override
+	public String toString() {
         String s = mSeqname + '\t';
         s += mSource + '\t';
         s += mType + '\t';
@@ -287,7 +296,8 @@ public class Feature implements FeatureI {
     /**
      * @deprecated
      */
-    public static void main(String args[])
+    @Deprecated
+	public static void main(String args[])
             throws Exception {
         //Feature f= new Feature();
         //intentionally perverse

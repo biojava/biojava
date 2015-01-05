@@ -43,6 +43,7 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 
 	}
 
+	@Override
 	public void mouseOverPosition(AlignedPosition p) {
 
 		if ( afpChain == null)
@@ -77,10 +78,12 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 
 	
 
+	@Override
 	public void positionSelected(AlignedPosition p) {
 		mouseOverPosition(p);
 
 	}
+	@Override
 	public void toggleSelection(AlignedPosition p) {
 		if ( afpChain == null)
 			return;
@@ -108,6 +111,7 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 	}
 
 
+	@Override
 	public void rangeSelected(AlignedPosition start, AlignedPosition end) {
 		char[] aligs1  = afpChain.getAlnseq1();
 		char[] aligs2  = afpChain.getAlnseq2();
@@ -143,11 +147,13 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 
 	}
 
+	@Override
 	public void selectionLocked() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void selectionUnlocked() {
 		// TODO Auto-generated method stub
 
@@ -176,30 +182,37 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 	public void setCa2(Atom[] ca2) {
 		this.ca2 = ca2;
 	}
+	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
 	public void windowClosed(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
 	public void windowClosing(WindowEvent e) {
 		destroy();
 		
 	}
+	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
 	public void windowIconified(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
 		

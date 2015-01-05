@@ -10,13 +10,9 @@ import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TestDNANeedlemanWunsch {
 	
-	private final static Logger logger = LoggerFactory.getLogger(TestDNANeedlemanWunsch.class);
-
 	public static void main(String[] args) throws Exception {
 
 		String query = "AGGATGAACGCTGGCGGCGTGCTTAACACATGCAAGTCGAACGGTGAAGCCCAGCTTGCTGGGTGGATCA" +
@@ -72,11 +68,11 @@ public class TestDNANeedlemanWunsch {
 		SequencePair<DNASequence, NucleotideCompound>
 		alignment = aligner.getPair();
 		
-		logger.info("Alignment: {}", alignment);
+		System.out.println("Alignment: "+ alignment);
 		
 		int identical = alignment.getNumIdenticals();
-		logger.info("Number of identical residues: {}", identical);
-		logger.info("% identical query: {}", identical / (float) query.length());
-		logger.info("% identical target: {}", identical / (float) target.length());
+		System.out.println("Number of identical residues: "+ identical);
+		System.out.println("% identical query: "+ identical / (float) query.length());
+		System.out.println("% identical target: "+ identical / (float) target.length());
 	}
 }

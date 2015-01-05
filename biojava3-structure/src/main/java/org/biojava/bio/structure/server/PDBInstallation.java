@@ -33,6 +33,7 @@ import org.biojava.bio.structure.Structure;
  * @author Andreas Prlic
  * @deprecated
  */
+@Deprecated
 public interface PDBInstallation{
 	
 	/** get all PDBHeaders that pass the added Filters, if no filters have been added returns all available PDBs

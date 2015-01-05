@@ -1,7 +1,6 @@
 package org.biojava.bio.structure.quaternary.io;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,6 +62,7 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		return header ;
 	}
 	
+	@Override
 	public Structure getAsymUnit(String pdbId){
 		
 		if (s == null ||( ! s.getPDBCode().equalsIgnoreCase(pdbId))) {
@@ -76,6 +76,7 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		
 		return s;
 	}
+	@Override
 	public void setAsymUnit(Structure s){
 		this.s = s;
 	}

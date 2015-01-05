@@ -3,13 +3,16 @@ package org.biojava.bio.structure.contact;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.asa.AsaCalculator;
+import org.biojava3.core.util.SingleLinkageClusterer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +24,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class StructureInterfaceList implements Serializable, Iterable<StructureInterface> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StructureInterfaceList.class);
+	
 	/**
 	 * Default minimum area for a contact between two chains to be considered a
 	 * valid interface.
@@ -38,11 +44,18 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 */
 	public static final int DEFAULT_MIN_COFACTOR_SIZE = 40;
 
+	/**
+	 * Any 2 interfaces with contact overlap score larger than this value
+	 * will be considered to be clustered
+	 */
+	public static final double CONTACT_OVERLAP_SCORE_CLUSTER_CUTOFF = 0.2;
+	
 	private static final long serialVersionUID = 1L;
 
 	private List<StructureInterface> list;
 
-	private static final Logger logger = LoggerFactory.getLogger(StructureInterfaceList.class);
+	private List<StructureInterfaceCluster> clusters;
+
 
 	public StructureInterfaceList() {
 		this.list = new ArrayList<StructureInterface>();
@@ -183,6 +196,73 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 				it.remove();
 			}
 		}
+	}
+	
+	/**
+	 * Calculate the interface clusters for this StructureInterfaceList 
+	 * using a contact overlap score to measure the similarity of interfaces.
+	 * Subsequent calls will use the cached value without recomputing the clusters.
+	 * @return
+	 */
+	public List<StructureInterfaceCluster> getClusters() {
+		if (clusters!=null) {
+			return clusters;
+		}
+		
+		clusters = new ArrayList<StructureInterfaceCluster>();
+		
+		double[][] matrix = new double[list.size()][list.size()];
+		
+		for (int i=0;i<list.size();i++) {
+			for (int j=i+1;j<list.size();j++) {
+				StructureInterface iInterf = list.get(i);
+				StructureInterface jInterf = list.get(j);
+				
+				double scoreDirect = iInterf.getContactOverlapScore(jInterf, false);
+				double scoreInvert = iInterf.getContactOverlapScore(jInterf, true);
+				
+				double maxScore = Math.max(scoreDirect, scoreInvert);
+				
+				matrix[i][j] = maxScore;
+			}
+			
+		}
+		
+		SingleLinkageClusterer slc = new SingleLinkageClusterer(matrix, true);
+		
+		Map<Integer,Set<Integer>> clusteredIndices = slc.getClusters(CONTACT_OVERLAP_SCORE_CLUSTER_CUTOFF);
+		for (int clusterIdx:clusteredIndices.keySet()) {
+			List<StructureInterface> members = new ArrayList<StructureInterface>();
+			for (int idx:clusteredIndices.get(clusterIdx)) {
+				members.add(list.get(idx));
+			}
+			StructureInterfaceCluster cluster = new StructureInterfaceCluster();			
+			cluster.setMembers(members);
+			clusters.add(cluster);
+		}
+		
+		// finally we have to set the back-references in each StructureInterface
+		for (StructureInterfaceCluster cluster:clusters) {
+			for (StructureInterface interf:cluster.getMembers()) {
+				interf.setCluster(cluster);
+			}
+		}		
+		
+		// now we sort by areas (descending) and assign ids based on that sorting
+		Collections.sort(clusters, new Comparator<StructureInterfaceCluster>() {
+			@Override
+			public int compare(StructureInterfaceCluster o1, StructureInterfaceCluster o2) {
+				return Double.compare(o2.getTotalArea(), o1.getTotalArea()); //note we invert so that sorting is descending
+			}
+		});
+		int id = 1;
+		for (StructureInterfaceCluster cluster:clusters) {
+			cluster.setId(id);
+			id++;
+		}
+		
+		
+		return clusters;
 	}
 
 	@Override

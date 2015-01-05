@@ -19,6 +19,7 @@
 
 package org.biojava.bio.structure.align.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import java.util.Map;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -381,9 +383,21 @@ public class AFPAlignmentDisplay
 	}
 
 
+	/**
+	 * 
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @return
+	 * @throws ClassNotFoundException If an error occurs when invoking jmol
+	 * @throws NoSuchMethodException If an error occurs when invoking jmol
+	 * @throws InvocationTargetException If an error occurs when invoking jmol
+	 * @throws IllegalAccessException If an error occurs when invoking jmol
+	 */
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
-			Atom[] ca2) throws Exception{
-
+			Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException,
+			InvocationTargetException, IllegalAccessException
+	{
 
 		if ( afpChain.getNrEQR() < 1){
 			return GuiWrapper.getAlignedStructure(ca1, ca2);
@@ -410,8 +424,8 @@ public class AFPAlignmentDisplay
 		if ( g1 != null) {
 			c1 = g1.getChain();
 			if ( c1 != null){
-				hetatms = c1.getAtomGroups("hetatm");;
-				nucs1  = c1.getAtomGroups("nucleotide");
+				hetatms = c1.getAtomGroups(GroupType.HETATM);;
+				nucs1  = c1.getAtomGroups(GroupType.NUCLEOTIDE);
 			}
 		}
 		List<Group> hetatms2 = new ArrayList<Group>();
@@ -421,8 +435,8 @@ public class AFPAlignmentDisplay
 		if ( g2 != null){
 			c2 = g2.getChain();
 			if ( c2 != null){
-				hetatms2 = c2.getAtomGroups("hetatm");
-				nucs2 = c2.getAtomGroups("nucleotide");
+				hetatms2 = c2.getAtomGroups(GroupType.HETATM);
+				nucs2 = c2.getAtomGroups(GroupType.NUCLEOTIDE);
 			}
 		}
 		Atom[] arr1 = GuiWrapper.getAtomArray(ca1, hetatms, nucs1);

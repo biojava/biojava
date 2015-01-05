@@ -39,7 +39,8 @@ public class AltAligComparator implements Comparator<AlternativeAlignment> {
 
     }
 
-    public int compare(AlternativeAlignment a, AlternativeAlignment b) {
+    @Override
+	public int compare(AlternativeAlignment a, AlternativeAlignment b) {
         
         int s1 = a.getIdx1().length;
         int s2 = b.getIdx1().length;

@@ -55,7 +55,8 @@ public interface Edit<C extends Compound> {
         protected abstract Sequence<C> getThreePrime(Sequence<C> editingSequence);
 
       
-        public Sequence<C> edit(Sequence<C> editingSequence) {
+        @Override
+		public Sequence<C> edit(Sequence<C> editingSequence) {
             Sequence<C> targetSequence = getTargetSequence(editingSequence);
             List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
 

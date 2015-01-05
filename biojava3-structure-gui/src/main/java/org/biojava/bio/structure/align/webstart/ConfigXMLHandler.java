@@ -44,7 +44,8 @@ public class ConfigXMLHandler extends DefaultHandler {
       config         = new UserConfiguration();
    }
 
-   public void startElement (String uri, String name, String qName, Attributes atts){
+   @Override
+public void startElement (String uri, String name, String qName, Attributes atts){
       //System.out.println("new element >" + name + "< >" + qName+"<" + uri);
       if ( qName.equals("PDBFILEPATH")){
 

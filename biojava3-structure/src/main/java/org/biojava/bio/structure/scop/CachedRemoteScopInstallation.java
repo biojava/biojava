@@ -43,33 +43,33 @@ import org.biojava.bio.structure.scop.server.ScopDomains;
 public class CachedRemoteScopInstallation extends SerializableCache<String,ScopDomain> implements ScopDatabase {
 
 	private static String CACHE_FILE_NAME = "remotescopinstallation.ser";
-	
+
 	RemoteScopInstallation proxy ;
-	
+
 	SerializableCache<Integer,ScopDescription> scopDescriptionCache ;
-	
+
 	public CachedRemoteScopInstallation() {
 		this(true);
-		
-		
+
+
 
 	}
-	
+
 	public CachedRemoteScopInstallation(boolean useCache) {
 
 		super(CACHE_FILE_NAME);
 
 		proxy = new RemoteScopInstallation();
-		
+
 		scopDescriptionCache = new SerializableCache<Integer,ScopDescription>("scopDescriptionCache.ser");
 		//scopDescriptionCache.setDebug(true);
-		
+
 		if ( ! useCache) {
 			System.err.println("CachedRemoteScopInstallation disableing cache");
 			disableCache();
 			scopDescriptionCache.disableCache();
 		} else {
-			
+
 			if ( serializedCache.size() < 8000){
 				loadRepresentativeDomains();
 			}
@@ -82,84 +82,92 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 	 * 
 	 */
 	private void loadRepresentativeDomains() {
-		
-			ScopDomains results = null;
-			try {
-				URL u = new URL(RemoteScopInstallation.DEFAULT_SERVER + "getRepresentativeScopDomains");
-				System.out.println(u);
-				InputStream response = HTTPConnectionTools.getInputStream(u);
-				String xml = JFatCatClient.convertStreamToString(response);			
-				//System.out.println(xml);
-				results  = ScopDomains.fromXML(xml);
 
-				
-				System.out.println("got " + results.getScopDomain().size() + " domain ranges for Scop domains from server.");
-				for (ScopDomain dom : results.getScopDomain()){
-					String scopId = dom.getScopId();
-					serializedCache.put(scopId, dom);
-				}
-				
-				
-			} catch (Exception e){
-				e.printStackTrace();
+		ScopDomains results = null;
+		try {
+			URL u = new URL(RemoteScopInstallation.DEFAULT_SERVER + "getRepresentativeScopDomains");
+			System.out.println(u);
+			InputStream response = HTTPConnectionTools.getInputStream(u);
+			String xml = JFatCatClient.convertStreamToString(response);			
+			//System.out.println(xml);
+			results  = ScopDomains.fromXML(xml);
+
+
+			System.out.println("got " + results.getScopDomain().size() + " domain ranges for Scop domains from server.");
+			for (ScopDomain dom : results.getScopDomain()){
+				String scopId = dom.getScopId();
+				serializedCache.put(scopId, dom);
 			}
-			return ;
-			
-		
 
-		
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return ;
+
+
+
+
 	}
-	
-	
-	
+
+
+
+	@Override
 	public List<ScopDescription> getByCategory(ScopCategory category) {
 		return proxy.getByCategory(category);
 	}
 
-	
+
+	@Override
 	public List<ScopDescription> filterByClassificationId(String query) {
 		return proxy.filterByClassificationId(query);
 	}
 
-	
+
+	@Override
 	public List<ScopNode> getTree(ScopDomain domain) {
 		return proxy.getTree(domain);
 	}
 
-	
+
+	@Override
 	public List<ScopDomain> filterByDomainName(String query) {
 		return proxy.filterByDomainName(query);
 	}
 
-	
+
+	@Override
 	public List<ScopDescription> filterByDescription(String query) {
 		return proxy.filterByClassificationId(query);
 	}
 
-	
+
+	@Override
 	public ScopDescription getScopDescriptionBySunid(int sunid) {
-		
+
 		ScopDescription desc = scopDescriptionCache.get(sunid);
 		if ( desc != null)
 			return desc;
-		
-		
+
+
 		desc =  proxy.getScopDescriptionBySunid(sunid);
 		if ( desc != null)
 			scopDescriptionCache.cache(sunid,desc);
 		return desc;
 	}
 
-	
+
+	@Override
 	public List<ScopDomain> getDomainsForPDB(String pdbId) {
-		
+
 		return proxy.getDomainsForPDB(pdbId);
 	}
 
-	
+
+	@Override
 	public ScopDomain getDomainByScopID(String scopId) {
 		ScopDomain dom;
-		
+
 		if ( serializedCache != null){			
 			if ( serializedCache.containsKey(scopId)) {
 				dom = serializedCache.get(scopId);
@@ -168,31 +176,35 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 				}
 			}			
 		}
-		
-		 dom = proxy.getDomainByScopID(scopId);
-		
+
+		dom = proxy.getDomainByScopID(scopId);
+
 		if ( dom != null)
 			cache(scopId, dom);
-		
-		
+
+
 		return dom;
 	}
 
 
+	@Override
 	public ScopNode getScopNode(int sunid) {
 		return proxy.getScopNode(sunid);
 	}
 
 
+	@Override
 	public String getScopVersion() {
 		return proxy.getScopVersion();
 	}
 
+	@Override
 	public void setScopVersion(String version) {
 		proxy.setScopVersion(version);
 	}
 
 
+	@Override
 	public List<ScopDomain> getScopDomainsBySunid(Integer sunid) {
 		return proxy.getScopDomainsBySunid(sunid);
 	}
@@ -209,5 +221,5 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 		return new ArrayList<String>(1);
 	}
 
-	
+
 }

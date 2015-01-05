@@ -1,6 +1,7 @@
 package org.biojava3.aaproperties.xml;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,14 +18,16 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ElementTester {
+public class ElementTest {
 
-	private final static Logger logger = LoggerFactory.getLogger(ElementTester.class);
+	private final static Logger logger = LoggerFactory.getLogger(ElementTest.class);
 
 	@Test
 	public void generateSchema() throws JAXBException, IOException{
+		File outputFile = new File(System.getProperty("java.io.tmpdir"),"ElementMass.xsd");
+		outputFile.deleteOnExit();
 		JAXBContext context = JAXBContext.newInstance(ElementTable.class);
-		context.generateSchema(new SchemaGenerator("./src/main/resources/ElementMass.xsd"));
+		context.generateSchema(new SchemaGenerator(outputFile.toString()));
 	}
 	
 	@Test
@@ -754,7 +757,9 @@ public class ElementTester {
 		marshaller.marshal(iTable, sw);
 		// print it out for this example
 		logger.info("Marshal to file: {}", sw.toString());
-		BufferedWriter output = new BufferedWriter(new FileWriter("./src/main/resources/ElementMass.xml"));
+		File outputFile = new File(System.getProperty("java.io.tmpdir"),"ElementMass.xml");
+		outputFile.deleteOnExit();
+		BufferedWriter output = new BufferedWriter(new FileWriter(outputFile));
 		output.write(sw.toString());
 		output.close();
 	}

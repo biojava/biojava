@@ -26,7 +26,6 @@ package org.biojava.bio.structure.align.gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -54,6 +53,8 @@ import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
 import org.biojava.bio.structure.gui.util.ScopSelectPanel;
 import org.biojava.bio.structure.gui.util.StructurePairSelector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A JFrame that allows to trigger a pairwise structure alignment,
@@ -71,7 +72,7 @@ public class AlignmentGui extends JFrame{
 
 	private final static long serialVersionUID =0l;
 
-	public static Logger logger =  Logger.getLogger("org.biojava.spice");
+	private static final Logger logger = LoggerFactory.getLogger(AlignmentGui.class);
 
 	StructureAlignment algorithm;
 
@@ -216,6 +217,7 @@ public class AlignmentGui extends JFrame{
 		Action actionAlgorithm = new AbstractAction("Algorithm") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				JComboBox cb = (JComboBox)evt.getSource();
 				String algorithmName = (String)cb.getSelectedItem();
@@ -233,6 +235,7 @@ public class AlignmentGui extends JFrame{
 		Action paramAction = new AbstractAction("Parameters") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Perform action...
 				//System.out.println("calc structure alignment");
@@ -275,6 +278,7 @@ public class AlignmentGui extends JFrame{
 		Action action1 = new AbstractAction("Align") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Perform action...
 				//System.out.println("calc structure alignment");
@@ -295,6 +299,7 @@ public class AlignmentGui extends JFrame{
 		Action action3 = new AbstractAction("Abort") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Perform action...
 				abortCalc();
@@ -308,6 +313,7 @@ public class AlignmentGui extends JFrame{
 		Action action2 = new AbstractAction("Exit") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// Perform action...
 				abortCalc();
@@ -557,6 +563,7 @@ class ProgressThreadDrawer extends Thread {
 	}
 
 
+	@Override
 	public void run() {
 		progress.setVisible(true);
 		boolean finished = false;

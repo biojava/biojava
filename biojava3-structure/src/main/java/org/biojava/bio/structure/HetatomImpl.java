@@ -55,7 +55,7 @@ public class HetatomImpl implements Group,Serializable {
 	/** this is a "hetatm".
 	 *
 	 */
-	public static final String type = GroupType.HETATM ;
+	public static final GroupType type = GroupType.HETATM ;
 
 	private static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
 
@@ -105,6 +105,7 @@ public class HetatomImpl implements Group,Serializable {
 	 *  returns true or false, depending if this group has 3D coordinates or not.
 	 * @return true if Group has 3D coordinates
 	 */
+	@Override
 	public boolean has3D() {
 		return pdb_flag;
 	}
@@ -113,6 +114,7 @@ public class HetatomImpl implements Group,Serializable {
 	 *
 	 * @param flag  true to set flag that this Group has 3D coordinates
 	 */
+	@Override
 	public void setPDBFlag(boolean flag){
 		pdb_flag = flag ;
 	}
@@ -122,6 +124,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * @param s  a String specifying the PDBName value
 	 * @see #getPDBName
 	 */
+	@Override
 	public void setPDBName(String s) {
 		// hetatoms can have pdb_name length < 3. e.g. CU (see 1a4a position 1200 )
 		//if (s.length() != 3) {
@@ -138,11 +141,13 @@ public class HetatomImpl implements Group,Serializable {
 	 * @return a String representing the PDBName value
 	 * @see #setPDBName
 	 */
+	@Override
 	public String getPDBName() { return pdb_name;}
 
 	/**
 	 * {@inheritDoc} 
 	 */
+	@Override
 	public void addAtom(Atom atom){
 		atom.setGroup(this);
 		atoms.add(atom);
@@ -166,6 +171,7 @@ public class HetatomImpl implements Group,Serializable {
 	/** remove all atoms
 	 *
 	 */
+	@Override
 	public void clearAtoms() {
 		atoms.clear();
 		setPDBFlag(false);
@@ -175,11 +181,13 @@ public class HetatomImpl implements Group,Serializable {
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int size(){ return atoms.size();   }
 
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<Atom> getAtoms(){
 		return atoms ;
 	}
@@ -187,6 +195,7 @@ public class HetatomImpl implements Group,Serializable {
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setAtoms(List<Atom> atoms) {
 		
 		// important we are resetting atoms to a new list, we need to reset the lookup too!
@@ -206,6 +215,7 @@ public class HetatomImpl implements Group,Serializable {
 	/**  
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Atom getAtom(String name) {		
 		return atomNameLookup.get(name);
 	}
@@ -213,6 +223,7 @@ public class HetatomImpl implements Group,Serializable {
 	/** 
 	 * {@inheritDoc}	
 	 */
+	@Override
 	public Atom getAtom(int position) {			
 			
 		if ((position < 0)|| ( position >= atoms.size())) {
@@ -226,6 +237,7 @@ public class HetatomImpl implements Group,Serializable {
 	/**
 	 * {@inheritDoc} 
 	 */
+	@Override
 	public boolean hasAtom(String fullName) {
 
 		Atom a = atomNameLookup.get(fullName.trim());
@@ -239,8 +251,10 @@ public class HetatomImpl implements Group,Serializable {
 	/**
 	 * {@inheritDoc}	 
 	 */
-	public String getType(){ return type;}
+	@Override
+	public GroupType getType(){ return type;}
 
+	@Override
 	public String toString(){
 
 		String str = "Hetatom "+ residueNumber + " " + pdb_name +  " "+ pdb_flag;
@@ -258,6 +272,7 @@ public class HetatomImpl implements Group,Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean hasAminoAtoms(){
 		// if this method call is performed too often, it should become a
 		// private method and provide a flag for Group object ...
@@ -282,6 +297,7 @@ public class HetatomImpl implements Group,Serializable {
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setProperties(Map<String,Object> props) {
 		properties =  props ;
 	}
@@ -291,6 +307,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * @return a HashMap object representing the properties value
 	 * @see #setProperties
 	 */
+	@Override
 	public Map<String, Object> getProperties() {
 		return properties ;
 	}
@@ -300,6 +317,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * @see #getProperties
 	 * @see #getProperty
 	 */
+	@Override
 	public void setProperty(String key, Object value){
 		properties.put(key,value);
 	}
@@ -310,6 +328,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * @see #setProperty
 	 * @see #setProperties
 	 */
+	@Override
 	public Object getProperty(String key){
 		return properties.get(key);
 	}
@@ -319,6 +338,7 @@ public class HetatomImpl implements Group,Serializable {
 	 *
 	 * @return an Iterator object
 	 */
+	@Override
 	public Iterator<Atom> iterator() {
 		Iterator<Atom> iter = new AtomIterator(this);
 		return iter ;
@@ -327,6 +347,7 @@ public class HetatomImpl implements Group,Serializable {
 	/** returns and identical copy of this Group object .
 	 * @return  and identical copy of this Group object
 	 */
+	@Override
 	public Object clone(){
 
 		HetatomImpl n = new HetatomImpl();
@@ -337,9 +358,13 @@ public class HetatomImpl implements Group,Serializable {
 		
 		// copy the atoms
 		for (int i=0;i<atoms.size();i++){
-			Atom atom = atoms.get(i);
-			n.addAtom((Atom)atom.clone());
+			Atom atom = (Atom) atoms.get(i).clone();
+			n.addAtom(atom);
+			atom.setGroup(n);
 		}
+		
+		// TODO alt locs are not cloned! do we need to clone them? - JD 2014-12-17
+		
 		return n;
 	}
 
@@ -359,6 +384,7 @@ public class HetatomImpl implements Group,Serializable {
 		this.id = id;
 	}
 
+	@Override
 	public ChemComp getChemComp() {
 		if  ( chemComp == null ) {
 			chemComp = ChemCompGroupFactory.getChemComp(pdb_name);
@@ -367,6 +393,7 @@ public class HetatomImpl implements Group,Serializable {
 		return chemComp;
 	}
 
+	@Override
 	public void setChemComp(ChemComp cc) {
 		chemComp = cc;
 
@@ -375,6 +402,7 @@ public class HetatomImpl implements Group,Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setChain(Chain chain) {
 		this.parent = chain;
 		//TODO: setChain(), getChainId() and ResidueNumber.set/getChainId() are
@@ -388,6 +416,7 @@ public class HetatomImpl implements Group,Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Chain getChain() {
 		return parent;
 	}
@@ -395,6 +424,7 @@ public class HetatomImpl implements Group,Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getChainId() {
 		if (parent == null) {
 			return "";
@@ -405,20 +435,24 @@ public class HetatomImpl implements Group,Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ResidueNumber getResidueNumber() {
 
 		return residueNumber;
 	}
 
 
+	@Override
 	public void setResidueNumber(ResidueNumber residueNumber) {
 		this.residueNumber = residueNumber;
 	}
 
+	@Override
 	public void setResidueNumber(String chainId, Integer resNum, Character iCode) {
 		this.residueNumber = new ResidueNumber(chainId, resNum, iCode);
 	}
 
+	@Override
 	public boolean hasAltLoc() {
 		if ( altLocs == null)
 			return false;
@@ -427,12 +461,14 @@ public class HetatomImpl implements Group,Serializable {
 		return false;
 	}
 
+	@Override
 	public List<Group> getAltLocs() {
 		if ( altLocs == null)
 			return new ArrayList<Group>();
 		return altLocs;
 	}
 
+	@Override
 	public Group getAltLocGroup(Character altLoc) {
 		
 			Atom a = getAtom(0);
@@ -466,6 +502,7 @@ public class HetatomImpl implements Group,Serializable {
 		return null;
 	}
 
+	@Override
 	public void addAltLoc(Group group) {
 		if ( altLocs == null) {
 			altLocs = new ArrayList<Group>();
@@ -483,15 +520,15 @@ public class HetatomImpl implements Group,Serializable {
 	 * all internal Collection objects to the required size.
 	 * 
 	 */
-	@SuppressWarnings("rawtypes")
+	@Override
 	public void trimToSize(){
 
-		if ( atoms instanceof ArrayList) {
-			ArrayList myatoms = (ArrayList) atoms;
+		if ( atoms instanceof ArrayList<?>) {
+			ArrayList<Atom> myatoms = (ArrayList<Atom>) atoms;
 			myatoms.trimToSize();
 		}
-		if ( altLocs instanceof ArrayList){
-			ArrayList myAltLocs = (ArrayList) altLocs;
+		if ( altLocs instanceof ArrayList<?>){
+			ArrayList<Group> myAltLocs = (ArrayList<Group>) altLocs;
 			myAltLocs.trimToSize();
 		}
 		atomNameLookup = new HashMap<String,Atom>(atomNameLookup);

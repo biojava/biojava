@@ -158,6 +158,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		// Create window
 		JFrame frame = new JFrame(title);
 		frame.addWindowListener(new WindowAdapter(){
+			@Override
 			public void windowClosing(WindowEvent e){
 				JFrame f = (JFrame) e.getSource();
 				f.setVisible(false);

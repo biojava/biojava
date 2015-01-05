@@ -41,11 +41,11 @@ public class   AminoAcidImpl
 extends    HetatomImpl
 implements AminoAcid, Serializable
 {
-	
-   private static final long serialVersionUID = -6018854413829044230L;
 
-   /** this is an Amino acid. type is "amino". */
-	public static final String type = GroupType.AMINOACID;
+	private static final long serialVersionUID = -6018854413829044230L;
+
+	/** this is an Amino acid. type is "amino". */
+	public static final GroupType type = GroupType.AMINOACID;
 
 	/** IUPAC amino acid residue names
 	 */
@@ -66,11 +66,13 @@ implements AminoAcid, Serializable
 		recordType = ATOMRECORD;
 	}
 
-	public String getType(){ return type;}
+	@Override
+	public GroupType getType(){ return type;}
 
 	/**
 	 * {@inheritDoc} 
 	 */
+	@Override
 	public void setSecStruc(Map<String,String> secstr) {
 		this.secstruc = secstr ;
 	}
@@ -78,6 +80,7 @@ implements AminoAcid, Serializable
 	/**
 	 * {@inheritDoc} 
 	 */
+	@Override
 	public Map<String,String> getSecStruc(){
 		return secstruc ;
 	}
@@ -85,11 +88,13 @@ implements AminoAcid, Serializable
 	/**
 	 * {@inheritDoc} 
 	 */
+	@Override
 	public Atom getN()    {return getAtom("N");  }
 
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Atom getCA()   {
 		// note CA can also be Calcium, but that can't happen in a standard aminoacid, so this should be safe
 		return getAtom("CA"); 
@@ -98,22 +103,26 @@ implements AminoAcid, Serializable
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Atom getC()    {return getAtom("C");  }
 
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Atom getO()    {return getAtom("O");  }
 
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Atom getCB()   {return getAtom("CB"); }
 
 
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public  Character getAminoType() {
 		return amino_char;
 	}
@@ -121,6 +130,7 @@ implements AminoAcid, Serializable
 	/** 
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setAminoType(Character aa){
 		amino_char  = aa ;
 	}
@@ -128,22 +138,25 @@ implements AminoAcid, Serializable
 	/** 
 	 * {@inheritDoc}
 	 */
-    public void setRecordType(String recordName) {
-        recordType = recordName;
-    }
+	@Override
+	public void setRecordType(String recordName) {
+		recordType = recordName;
+	}
 
 	/** 
 	 * {@inheritDoc}
 	 */
-    public String getRecordType() {
-        return recordType;
+	@Override
+	public String getRecordType() {
+		return recordType;
 	}
 
 	/** string representation. */
+	@Override
 	public String toString(){
 
 		String str = "AminoAcid "+ recordType + ":"+ pdb_name + " " + amino_char +
-		" " + residueNumber +  " "+ pdb_flag + " " + recordType  ;
+				" " + residueNumber +  " "+ pdb_flag + " " + recordType  ;
 		if (pdb_flag) {
 			str = str + " atoms: "+atoms.size();
 		}
@@ -158,8 +171,9 @@ implements AminoAcid, Serializable
 	 * @param s  a String specifying the PDBName value
 	 * @see #getPDBName()
 	 */
+	@Override
 	public void setPDBName(String s) {
-		
+
 		pdb_name =s ;
 
 	}
@@ -168,20 +182,22 @@ implements AminoAcid, Serializable
 	/** returns and identical copy of this Group object .
 	 * @return  and identical copy of this Group object
 	 */
+	@Override
 	public Object clone(){
 		AminoAcidImpl n = new AminoAcidImpl();
 		n.setPDBFlag(has3D());		
 		n.setResidueNumber(getResidueNumber());
-		
+
 		n.setPDBName(getPDBName());
-		
+
 		n.setAminoType(getAminoType());
 		n.setRecordType(recordType);
 
 		// copy the atoms
 		for (int i=0;i<atoms.size();i++){
-			Atom atom = (Atom)atoms.get(i);
-			n.addAtom((Atom)atom.clone());
+			Atom atom = (Atom) atoms.get(i).clone();
+			n.addAtom(atom);
+			atom.setGroup(n);
 		}
 		return n;
 	}

@@ -29,7 +29,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava.bio.structure.io.CompoundFinder;
 import org.biojava.bio.structure.io.FileConvert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Implementation of a PDB Structure. This class
  * provides the data contained in a PDB file.
@@ -45,10 +49,12 @@ public class StructureImpl implements Structure, Serializable {
 
 	private static final long serialVersionUID = -8344837138032851347L;
 
+	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
+
 	private String pdb_id ;
 	/* models is an ArrayList of ArrayLists */
 	private List<List<Chain>> models;
-	//List<Chain> seqResList;
+
 	private List<Map <String,Integer>> connections ;
 	private List<Compound> compounds;
 	private List<DBRef> dbrefs;
@@ -56,7 +62,7 @@ public class StructureImpl implements Structure, Serializable {
 	private List<Site> sites;
 	private List<Group> hetAtoms;
 	private String name ;
-	
+
 	private PDBHeader pdbHeader;
 
 	private Long id;
@@ -73,28 +79,30 @@ public class StructureImpl implements Structure, Serializable {
 		name           = "";
 		connections    = new ArrayList<Map<String,Integer>>();
 		compounds      = new ArrayList<Compound>();
-        dbrefs         = new ArrayList<DBRef>();
-        pdbHeader      = new PDBHeader();
-        ssbonds        = new ArrayList<SSBond>();
-        sites          = new ArrayList<Site>();
-        hetAtoms          = new ArrayList<Group>();
+		dbrefs         = new ArrayList<DBRef>();
+		pdbHeader      = new PDBHeader();
+		ssbonds        = new ArrayList<SSBond>();
+		sites          = new ArrayList<Site>();
+		hetAtoms       = new ArrayList<Group>();
 	}
 
 	/** get the ID used by Hibernate
-     *
-     * @return the ID used by Hibernate
-     */
-    public Long getId() {
-        return id;
-    }
+	 *
+	 * @return the ID used by Hibernate
+	 */
+	@Override
+	public Long getId() {
+		return id;
+	}
 
-    /** set the ID used by Hibernate
-     *
-     * @param id
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/** set the ID used by Hibernate
+	 *
+	 * @param id
+	 */
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 
 	/** construct a Structure object that only contains a single group
@@ -122,6 +130,7 @@ public class StructureImpl implements Structure, Serializable {
 	/** returns an identical copy of this structure .
 	 * @return an identical Structure object
 	 */
+	@Override
 	public Structure clone() {
 
 		Structure n = new StructureImpl();
@@ -131,12 +140,12 @@ public class StructureImpl implements Structure, Serializable {
 
 		n.setPDBCode(getPDBCode());
 		n.setName(getName());
-		//TODO: do deep copying of data!
+		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
 		n.setConnections(getConnections());
 		n.setSites(getSites());
-		n.setCrystallographicInfo(getCrystallographicInfo());
+				
 
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
@@ -144,26 +153,48 @@ public class StructureImpl implements Structure, Serializable {
 
 			for (int j=0;j<size(i);j++){
 
-				Chain current_chain = (Chain) getChain(i,j);
-				Chain cloned_chain  = (Chain) current_chain.clone();
+				Chain cloned_chain  = (Chain) getChain(i,j).clone();
+
+				// setting the parent: can only be done from the parent
+				cloned_chain.setParent(n);
 
 				cloned_model.add(cloned_chain);
+				
 			}
 			n.addModel(cloned_model);
 
 		}
 
+		// deep-copying of Compounds is tricky: there's cross references also in the Chains
+		// beware: if we copy the compounds we would also need to reset the references to compounds in the individual chains
+		List<Compound> newCompoundList = new ArrayList<Compound>();
+		for (Compound compound:this.compounds) {
+			Compound newCompound = new Compound(compound); // this sets everything but the chains
+			for (String chainId:compound.getChainIds()) {
+				try {
+					Chain newChain = n.getChainByPDB(chainId);
+					newChain.setCompound(newCompound);
+					newCompound.addChain(newChain);
+				} catch (StructureException e) {
+					logger.error("Could not find chain id {} while cloning Structure's compounds. Something is wrong!");
+				}
+			}
+			newCompoundList.add(newCompound);
+		}
+		n.setCompounds(newCompoundList); 
+
+
 		for (SSBond ssbond: ssbonds){
 			n.addSSBond(ssbond.clone());
 		}
 
-		//n.setSeqRes(this.getSeqRes());
 		return n ;
 	}
 
 
+	@Override
 	public Group findGroup(String chainId, String pdbResnum, int modelnr)
-	throws StructureException {
+			throws StructureException {
 
 
 		// if structure is xray there will be only one "model".
@@ -195,6 +226,7 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
+	@Override
 	public Group findGroup(String chainName, String pdbResnum) throws StructureException
 	{
 		return findGroup(chainName, pdbResnum, 0);
@@ -204,6 +236,7 @@ public class StructureImpl implements Structure, Serializable {
 
 
 
+	@Override
 	public Chain findChain(String chainId, int modelnr) throws StructureException {
 
 		List<Chain> chains = getChains(modelnr);
@@ -221,76 +254,53 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
+	@Override
 	public Chain findChain(String chainId) throws StructureException {
 
 		return findChain(chainId,0);
 	}
 
 
-	/**
-	 *
-	 * set PDB code of structure .
-	 * @see #getPDBCode
-	 *
-	 */
+	@Override
 	public void setPDBCode (String pdb_id_) {
 		pdb_id = pdb_id_ ;
 	}
-	/**
-	 *
-	 * get PDB code of structure .
-	 *
-	 * @return a String representing the PDBCode value
-	 * @see #setPDBCode
-	 */
+
+	@Override
 	public String  getPDBCode () {
 		return pdb_id ;
 	}
 
 
 
-	/** set biological name of Structure.
-	 *
-	 * @see #getName
-	 *
-	 */
+	@Override
 	public void   setName(String nam) { name = nam; }
 
-	/** get biological name of Structure.
-	 *
-	 * @return a String representing the name
-	 * @see #setName
-	 */
+	@Override
 	public String getName()           { return name;  }
 
 
 
-	/** @see Structure interface.
-	 *
-	 *
-
-	 */
+	@Override
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
+
 	/**
-	 * Returns the connections value.
+	 * Return the connections value.
 	 *
 	 * @return a List object representing the connections value
 	 * @see Structure interface
 	 * @see #setConnections
 	 */
+	@Override
 	public List<Map<String,Integer>> getConnections()                { return connections ;}
 
-	/** add a new chain.
-	 *
-	 */
+	@Override
 	public void addChain(Chain chain) {
 		int modelnr = 0 ;
 		addChain(chain,modelnr);
 	}
 
-	/** add a new chain, if several models are available.
-	 *
-	 */
+	@Override
 	public void addChain(Chain chain, int modelnr) {
 		// if model has not been initialized, init it!
 		chain.setParent(this);
@@ -310,12 +320,7 @@ public class StructureImpl implements Structure, Serializable {
 
 
 
-
-	/** retrieve a chain by it's position within the Structure.
-	 *
-	 * @param number  an int
-	 * @return a Chain object
-	 */
+	@Override
 	public Chain getChain(int number) {
 
 		int modelnr = 0 ;
@@ -323,12 +328,8 @@ public class StructureImpl implements Structure, Serializable {
 		return getChain(modelnr,number);
 	}
 
-	/** retrieve a chain by it's position within the Structure and model number.
-	 *
-	 * @param modelnr  an int
-	 * @param number   an int
-	 * @return a Chain object
-	 */
+
+	@Override
 	public Chain getChain(int modelnr,int number) {
 
 		List<Chain> model  =  models.get(modelnr);
@@ -339,17 +340,17 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-	/** add a new model.
-	 *
-	 */
+
+	@Override
 	public void addModel(List<Chain> model){
 		for (Chain c: model){
-    		c.setParent(this);
-    	}
+			c.setParent(this);
+		}
 		models.add(model);
 	}
 
 
+	@Override
 	public void setChains(List<Chain> chains){
 
 		setModel(0,chains);
@@ -357,25 +358,27 @@ public class StructureImpl implements Structure, Serializable {
 
 
 
-    public void setModel(int position, List<Chain> model){
-    	if (model == null)
-    		throw new IllegalArgumentException("trying to set model to null!");
+	@Override
+	public void setModel(int position, List<Chain> model){
+		if (model == null)
+			throw new IllegalArgumentException("trying to set model to null!");
 
-    	for (Chain c: model)
-    		c.setParent(this);
+		for (Chain c: model)
+			c.setParent(this);
 
-    	//System.out.println("model size:" + models.size());
+		//System.out.println("model size:" + models.size());
 
-    	if (models.size() ==0){
-    		models.add(model);
-    	} else {
-    		models.set(position, model);
-    	}
-    }
+		if (models.size() ==0){
+			models.add(model);
+		} else {
+			models.set(position, model);
+		}
+	}
 
 	/** string representation.
 	 *
 	 */
+	@Override
 	public String toString(){
 		String newline = System.getProperty("line.separator");
 		StringBuffer str = new StringBuffer();
@@ -391,10 +394,10 @@ public class StructureImpl implements Structure, Serializable {
 			str.append(newline) ;
 		}
 
-        str.append(pdbHeader.toString());
-        str.append(newline) ;
+		str.append(pdbHeader.toString());
+		str.append(newline) ;
 
-        for (int i=0;i<nrModels();i++){
+		for (int i=0;i<nrModels();i++){
 			if ( nrModels()>1 ) {
 				str.append(" model[");
 				str.append(i);
@@ -407,13 +410,13 @@ public class StructureImpl implements Structure, Serializable {
 			for (int j=0;j<size(i);j++){
 
 				Chain cha = (Chain)getChain(i,j);
-				List<Group> agr = cha.getAtomGroups("amino");
-				List<Group> hgr = cha.getAtomGroups("hetatm");
-				List<Group> ngr = cha.getAtomGroups("nucleotide");
+				List<Group> agr = cha.getAtomGroups(GroupType.AMINOACID);
+				List<Group> hgr = cha.getAtomGroups(GroupType.HETATM);
+				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
 				str.append("chain " + j + ": >"+cha.getChainID()+"< ");
-				if ( cha.getHeader() != null){
-					Compound comp = cha.getHeader();
+				if ( cha.getCompound() != null){
+					Compound comp = cha.getCompound();
 					String molName = comp.getMolName();
 					if ( molName != null){
 						str.append(molName);
@@ -422,23 +425,23 @@ public class StructureImpl implements Structure, Serializable {
 
 
 				str.append(newline);
-                str.append(" length SEQRES: ").append(cha.getSeqResLength());
-                str.append(" length ATOM: ").append(cha.getAtomLength());
-                str.append(" aminos: ").append(agr.size());
-                str.append(" hetatms: ").append(hgr.size());
+				str.append(" length SEQRES: ").append(cha.getSeqResLength());
+				str.append(" length ATOM: ").append(cha.getAtomLength());
+				str.append(" aminos: ").append(agr.size());
+				str.append(" hetatms: ").append(hgr.size());
 				str.append(" nucleotides: "+ngr.size() + newline);
 			}
 
 		}
-        str.append("DBRefs: "+ dbrefs.size()+ newline);
-        for (DBRef dbref: dbrefs){
-            str.append(dbref.toPDB()).append(newline);
-        }
-        str.append("Molecules: ").append(newline);
+		str.append("DBRefs: "+ dbrefs.size()+ newline);
+		for (DBRef dbref: dbrefs){
+			str.append(dbref.toPDB()).append(newline);
+		}
+		str.append("Molecules: ").append(newline);
 		Iterator<Compound> iter = compounds.iterator();
 		while (iter.hasNext()){
 			Compound mol = iter.next();
-            str.append(mol).append(newline);
+			str.append(mol).append(newline);
 		}
 
 
@@ -448,6 +451,7 @@ public class StructureImpl implements Structure, Serializable {
 	/** return number of chains , if NMR return number of chains of first model .
 	 *
 	 */
+	@Override
 	public int size() {
 		int modelnr = 0 ;
 
@@ -463,11 +467,13 @@ public class StructureImpl implements Structure, Serializable {
 	/** return number of chains  of model.
 	 *
 	 */
+	@Override
 	public int size(int modelnr) { return getChains(modelnr).size();   }
 
 	// some NMR stuff :
 
 	/** return number of models. */
+	@Override
 	public int nrModels() {
 		return models.size() ;
 	}
@@ -479,6 +485,7 @@ public class StructureImpl implements Structure, Serializable {
 	 * 
 	 * @return true if crystallographic, false otherwise
 	 */
+	@Override
 	public boolean isCrystallographic() {
 		if (pdbHeader.getExperimentalTechniques()!=null) {
 			return ExperimentalTechnique.isCrystallographic(pdbHeader.getExperimentalTechniques());
@@ -490,18 +497,19 @@ public class StructureImpl implements Structure, Serializable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Whether this Structure is a NMR structure or not.
 	 * It will first check the experimental technique and if not present it will try
 	 * to guess from the presence of more than 1 model and from b-factors being 0 in first chain of first model
 	 * @return true if NMR, false otherwise
 	 */
+	@Override
 	public boolean isNmr() {
-		
+
 		// old implementation was:
 		//return nmrflag;
-		
+
 		if (pdbHeader.getExperimentalTechniques()!=null) {
 			return ExperimentalTechnique.isNmr(pdbHeader.getExperimentalTechniques());
 		} else {
@@ -519,7 +527,8 @@ public class StructureImpl implements Structure, Serializable {
 		}
 		return false;
 	}
-	
+
+	@Override
 	@Deprecated
 	public void setNmr(boolean nmr) {	
 		// old implementation was:
@@ -532,28 +541,32 @@ public class StructureImpl implements Structure, Serializable {
 	 * @param modelnr  an int
 	 * @return a List object
 	 */
+	@Override
 	public List<Chain> getChains(int modelnr){
 		return getModel(modelnr);
 	}
 
+	@Override
 	public List<Chain> getChains(){
 		return getModel(0);
 	}
 
-    public void setChains(int modelnr, List<Chain> chains){
-    	for (Chain c: chains){
-    		c.setParent(this);
-    	}
-        models.remove(modelnr);
-        models.add(modelnr, chains);
+	@Override
+	public void setChains(int modelnr, List<Chain> chains){
+		for (Chain c: chains){
+			c.setParent(this);
+		}
+		models.remove(modelnr);
+		models.add(modelnr, chains);
 
-    }
+	}
 
 	/** retrieve all Chains belonging to a model .
 	 *
 	 * @param modelnr  an int
 	 * @return a List object
 	 */
+	@Override
 	public List<Chain> getModel(int modelnr) {
 
 		List<Chain> model = models.get(modelnr);
@@ -563,8 +576,9 @@ public class StructureImpl implements Structure, Serializable {
 
 
 
+	@Override
 	public Chain getChainByPDB(String chainId, int modelnr)
-	throws StructureException{
+			throws StructureException{
 
 		List<Chain> chains = getChains(modelnr);
 		Iterator<Chain> iter = chains.iterator();
@@ -578,8 +592,9 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
+	@Override
 	public Chain getChainByPDB(String chainId)
-	throws StructureException{
+			throws StructureException{
 		return getChainByPDB(chainId,0);
 	}
 
@@ -588,6 +603,7 @@ public class StructureImpl implements Structure, Serializable {
 	 *
 	 * @return a String that represents the structure as a PDB file.
 	 */
+	@Override
 	public String toPDB() {
 		FileConvert f = new FileConvert(this) ;
 
@@ -599,6 +615,7 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
+	@Override
 	public boolean hasChain(String chainId) {
 		int modelnr = 0;
 
@@ -613,17 +630,39 @@ public class StructureImpl implements Structure, Serializable {
 		return false;
 	}
 
-	public void setCompounds(List<Compound>molList){
+	@Override
+	public void setCompounds(List<Compound> molList){
 		this.compounds = molList;
 	}
 
+	@Override
+	public void addCompound(Compound compound) {
+		this.compounds.add(compound);
+	}
+
+	@Override
 	public List<Compound> getCompounds() {
+		// compounds are parsed from the PDB/mmCIF file normally
+		// but if the file is incomplete, it won't have the Compounds information and we try 
+		// to guess it from the existing seqres/atom sequences
+		if (compounds==null || compounds.isEmpty()) {
+			CompoundFinder cf = new CompoundFinder(this);
+			this.compounds = cf.findCompounds();
+
+			// now we need to set references in chains:
+			for (Compound compound:compounds) {
+				for (Chain c:compound.getChains()) {
+					c.setCompound(compound);
+				}
+			}
+		}
 		return compounds;
 	}
 
-	public Compound getCompoundById(String molId) {
+	@Override
+	public Compound getCompoundById(int molId) {
 		for (Compound mol : this.compounds){
-			if (mol.getMolId().equals(molId)){
+			if (mol.getMolId()==molId){
 				return mol;
 			}
 		}
@@ -631,145 +670,162 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-    public List<DBRef> getDBRefs() {
-       return dbrefs;
-    }
+	@Override
+	public List<DBRef> getDBRefs() {
+		return dbrefs;
+	}
 
 
-    public void setDBRefs(List<DBRef> dbrefs) {
-    	if ( dbrefs == null)
-    		throw new IllegalArgumentException("trying to set dbrefs to null!");
+	@Override
+	public void setDBRefs(List<DBRef> dbrefs) {
+		if ( dbrefs == null)
+			throw new IllegalArgumentException("trying to set dbrefs to null!");
 
-    	for( DBRef ref : dbrefs){
-    		ref.setParent(this);
-    	}
-        this.dbrefs = dbrefs;
-    }
+		for( DBRef ref : dbrefs){
+			ref.setParent(this);
+		}
+		this.dbrefs = dbrefs;
+	}
 
 
+	@Override
 	public PDBHeader getPDBHeader() {
 		return pdbHeader;
 	}
 
+	@Override
 	public void setPDBHeader(PDBHeader pdbHeader){
 		this.pdbHeader = pdbHeader;
 	}
 
-    /** get the list of SSBonds as they have been defined in the PDB files
-     *
-     * @return a list of SSBonds
-     */
-    public List<SSBond> getSSBonds(){
-    	return ssbonds;
+	/** get the list of SSBonds as they have been defined in the PDB files
+	 *
+	 * @return a list of SSBonds
+	 */
+	@Override
+	public List<SSBond> getSSBonds(){
+		return ssbonds;
 
-    }
-    /** set the list of SSBonds for this structure
-     *
-     * @param ssbonds
-     */
-    public void setSSBonds(List<SSBond> ssbonds){
-    	this.ssbonds = ssbonds;
-    }
+	}
+	/** set the list of SSBonds for this structure
+	 *
+	 * @param ssbonds
+	 */
+	@Override
+	public void setSSBonds(List<SSBond> ssbonds){
+		this.ssbonds = ssbonds;
+	}
 
-    /** add a single SSBond to this structure
-     *
-     * @param ssbond the SSBond.
-     */
-    public void addSSBond(SSBond ssbond){
-    	ssbonds.add(ssbond);
-    	ssbond.setSerNum(ssbonds.size());
-    }
+	/** add a single SSBond to this structure
+	 *
+	 * @param ssbond the SSBond.
+	 */
+	@Override
+	public void addSSBond(SSBond ssbond){
+		ssbonds.add(ssbond);
+		ssbond.setSerNum(ssbonds.size());
+	}
 
-    /**
-     * Return whether or not the entry has an associated journal article
-     * or publication. The JRNL section is not mandatory and thus may not be
-     * present.
-     * @return flag if a JournalArticle could be found.
-     */
-    public boolean hasJournalArticle() {
-    	return this.pdbHeader.hasJournalArticle();
-    }
+	/**
+	 * Return whether or not the entry has an associated journal article
+	 * or publication. The JRNL section is not mandatory and thus may not be
+	 * present.
+	 * @return flag if a JournalArticle could be found.
+	 */
+	@Override
+	public boolean hasJournalArticle() {
+		return this.pdbHeader.hasJournalArticle();
+	}
 
-    /**
-     * get the associated publication as defined by the JRNL records in a PDB
-     * file.
-     * @return a JournalArticle
-     */
-    public JournalArticle getJournalArticle() {
-        return this.pdbHeader.getJournalArticle();
-    }
+	/**
+	 * get the associated publication as defined by the JRNL records in a PDB
+	 * file.
+	 * @return a JournalArticle
+	 */
+	@Override
+	public JournalArticle getJournalArticle() {
+		return this.pdbHeader.getJournalArticle();
+	}
 
-    /**
-     * set the associated publication as defined by the JRNL records in a PDB
-     * file.
-     * @param journalArticle the article
-     */
-    public void setJournalArticle(JournalArticle journalArticle) {
-        this.pdbHeader.setJournalArticle(journalArticle);
-    }
+	/**
+	 * set the associated publication as defined by the JRNL records in a PDB
+	 * file.
+	 * @param journalArticle the article
+	 */
+	@Override
+	public void setJournalArticle(JournalArticle journalArticle) {
+		this.pdbHeader.setJournalArticle(journalArticle);
+	}
 
-    /**
-     * @return the sites contained in this structure
-     */
-  
-    public List<Site> getSites() {
-            return sites;
-    }
+	/**
+	 * @return the sites contained in this structure
+	 */
 
-    /**
-     * @param sites the sites to set in the structure
-     */
- 
-    public void setSites(List<Site> sites) {
-            this.sites = sites;
-    }
+	@Override
+	public List<Site> getSites() {
+		return sites;
+	}
 
-    /** Caution: we should probably remove this to avoid confusion. Currently this is always an empty list!
-     *
-     * @return a list of Groups listed in the HET records - this will not
-     * include any waters.
-     */
-    
-    public List<Group> getHetGroups() {
-        return hetAtoms;
-    }
-    
-    /**
-     * Sets a flag to indicate if this structure is a biological assembly
-     * @param biologicalAssembly true if biological assembly, otherwise false
-     * @since 3.2
-     */
-    public void setBiologicalAssembly(boolean biologicalAssembly) {
-    	this.biologicalAssembly = biologicalAssembly;
-    }
+	/**
+	 * @param sites the sites to set in the structure
+	 */
 
-    /**
-     * Gets flag that indicates if this structure is a biological assembly
-     * @return the sites contained in this structure
-     * @since 3.2
-     */
-    public boolean isBiologicalAssembly() {
-    	return biologicalAssembly;
-    }
-    
-    /**
-     * Sets crystallographic information for this structure
-     * @param PDBCrystallographicInfo crystallographic information
-     * @since 3.2
-     */
-    
-    public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo) {
-    	this.pdbHeader.setCrystallographicInfo(crystallographicInfo);
-    }
-    
-    /**
-     * Gets crystallographic information for this structure
-     * @return PDBCrystallographicInfo crystallographic information
-     * @since 3.2
-     */
-    public PDBCrystallographicInfo getCrystallographicInfo() {
-    	return pdbHeader.getCrystallographicInfo();
-    }
+	@Override
+	public void setSites(List<Site> sites) {
+		this.sites = sites;
+	}
+
+	/** Caution: we should probably remove this to avoid confusion. Currently this is always an empty list!
+	 *
+	 * @return a list of Groups listed in the HET records - this will not
+	 * include any waters.
+	 */
+
+	@Override
+	public List<Group> getHetGroups() {
+		return hetAtoms;
+	}
+
+	/**
+	 * Sets a flag to indicate if this structure is a biological assembly
+	 * @param biologicalAssembly true if biological assembly, otherwise false
+	 * @since 3.2
+	 */
+	@Override
+	public void setBiologicalAssembly(boolean biologicalAssembly) {
+		this.biologicalAssembly = biologicalAssembly;
+	}
+
+	/**
+	 * Gets flag that indicates if this structure is a biological assembly
+	 * @return the sites contained in this structure
+	 * @since 3.2
+	 */
+	@Override
+	public boolean isBiologicalAssembly() {
+		return biologicalAssembly;
+	}
+
+	/**
+	 * Sets crystallographic information for this structure
+	 * @param PDBCrystallographicInfo crystallographic information
+	 * @since 3.2
+	 */
+
+	@Override
+	public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo) {
+		this.pdbHeader.setCrystallographicInfo(crystallographicInfo);
+	}
+
+	/**
+	 * Gets crystallographic information for this structure
+	 * @return PDBCrystallographicInfo crystallographic information
+	 * @since 3.2
+	 */
+	@Override
+	public PDBCrystallographicInfo getCrystallographicInfo() {
+		return pdbHeader.getCrystallographicInfo();
+	}
 
 	@Override
 	public String getIdentifier() {

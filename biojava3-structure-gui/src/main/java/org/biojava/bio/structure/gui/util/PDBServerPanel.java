@@ -27,20 +27,20 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
-import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A class to define where a structure for the alignment is coming from
  *
@@ -65,8 +65,7 @@ implements StructurePairSelector{
 	JTextField c2;
 
 
-
-	public static Logger logger =  Logger.getLogger("org.biojava");
+	private static final Logger logger = LoggerFactory.getLogger(PDBServerPanel.class);
 
 	/** load the PDB files from a local directory
 	 *
@@ -134,7 +133,7 @@ implements StructurePairSelector{
 			System.out.println("ok");
 
 		} catch (IOException e){
-			logger.warning(e.getMessage());
+			logger.warn(e.getMessage());
 			throw new StructureException(e);
 		}
 		return tmp1;
@@ -142,10 +141,12 @@ implements StructurePairSelector{
 
 
 
+	@Override
 	public Structure getStructure1() throws StructureException{
 		return fromPDB(f1,c1);
 	}
 
+	@Override
 	public Structure getStructure2() throws StructureException{
 		return fromPDB(f2,c2);
 	}

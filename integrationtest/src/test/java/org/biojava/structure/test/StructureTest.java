@@ -15,6 +15,7 @@ import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.ExperimentalTechnique;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.SSBond;
 import org.biojava.bio.structure.SVDSuperimposer;
@@ -95,13 +96,13 @@ public class StructureTest extends TestCase {
 		assertEquals("pdb code not set!","5PTI",structure.getPDBCode());
 
 		Chain c = structure.getChain(0);
-		assertEquals("did not find the expected 58 amino acids!",58,c.getAtomGroups("amino").size());
+		assertEquals("did not find the expected 58 amino acids!",58,c.getAtomGroups(GroupType.AMINOACID).size());
 
-		assertTrue(c.getAtomGroups("hetatm").size()     == 0);
+		assertTrue(c.getAtomGroups(GroupType.HETATM).size()     == 0);
 
 		Chain c2 = structure.getChain(1);
-		assertTrue(c2.getAtomGroups("hetatm").size()     == 65);
-		assertTrue(c2.getAtomGroups("nucleotide").size() == 0 );
+		assertTrue(c2.getAtomGroups(GroupType.HETATM).size()     == 65);
+		assertTrue(c2.getAtomGroups(GroupType.NUCLEOTIDE).size() == 0 );
 
 		List<Compound> compounds= structure.getCompounds();
 		assertTrue(compounds.size() == 1);
@@ -176,7 +177,7 @@ public class StructureTest extends TestCase {
 		Compound comp = compounds.get(0);
 		assertEquals("did not get the right compounds info",true,comp.getMolName().startsWith("TRYPSIN INHIBITOR"));
 
-		List<String> chainIds = comp.getChainId();
+		List<String> chainIds = comp.getChainIds();
 		List<Chain> chains    = comp.getChains();
 
 		assertEquals("the number of chain ids and chains did not match!",chainIds.size(),chains.size());

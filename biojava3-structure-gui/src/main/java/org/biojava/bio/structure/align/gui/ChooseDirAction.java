@@ -52,6 +52,7 @@ public class ChooseDirAction extends AbstractAction{
 	}
 	public static final long serialVersionUID = 0l;
 	// This method is called when the button is pressed
+	@Override
 	public void actionPerformed(ActionEvent evt) {
 		// Perform action...
 		JFileChooser chooser = new JFileChooser();

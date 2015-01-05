@@ -71,7 +71,7 @@ public class CAConverter {
 
         Chain newChain = new ChainImpl();
         newChain.setChainID(chain.getChainID());
-        newChain.setHeader(chain.getHeader());
+        newChain.setCompound(chain.getCompound());
         newChain.setSwissprotId(chain.getSwissprotId());
         
         List<Group> groups = chain.getAtomGroups();

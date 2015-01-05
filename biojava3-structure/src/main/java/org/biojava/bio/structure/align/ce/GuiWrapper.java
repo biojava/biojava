@@ -80,7 +80,7 @@ public class GuiWrapper {
 			throws ClassNotFoundException, NoSuchMethodException, 
 			InvocationTargetException, IllegalAccessException, InstantiationException{
 
-		Class structureAlignmentJmol = Class.forName(strucAligJmol);
+		Class<?> structureAlignmentJmol = Class.forName(strucAligJmol);
 
 		Object strucAligJ = structureAlignmentJmol.newInstance();		
 
@@ -101,7 +101,7 @@ public class GuiWrapper {
 		m.invoke(c,(Object[])null);
 	}
 
-	@SuppressWarnings({ "unchecked", "unused", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "unused" })
 	public static Structure getAlignedStructure(Atom[] ca1, Atom[] ca2)
 			throws ClassNotFoundException, NoSuchMethodException,
 			InvocationTargetException, IllegalAccessException{
@@ -117,7 +117,7 @@ public class GuiWrapper {
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public static JPanel getScaleableMatrixPanel(Matrix m)
 			throws ClassNotFoundException, NoSuchMethodException,
 			InvocationTargetException, IllegalAccessException, InstantiationException{
@@ -134,6 +134,17 @@ public class GuiWrapper {
 
 	}
 
+	/**
+	 * 
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @return
+	 * @throws ClassNotFoundException If an error occurs when invoking jmol
+	 * @throws NoSuchMethodException If an error occurs when invoking jmol
+	 * @throws InvocationTargetException If an error occurs when invoking jmol
+	 * @throws IllegalAccessException If an error occurs when invoking jmol
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2)
@@ -178,7 +189,7 @@ public class GuiWrapper {
 		String tableClass = "org.biojava.bio.structure.align.gui.DBResultTable";
 		
 		try {
-			Class c = Class.forName(tableClass);
+			Class<?> c = Class.forName(tableClass);
 			Object table = c.newInstance();
 			
 			Method show = c.getMethod("show", new Class[]{File.class, UserConfiguration.class });

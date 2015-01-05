@@ -145,7 +145,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         return null;
     }
 
-    public void setCompoundSet(CompoundSet<C> compoundSet) {
+    @Override
+	public void setCompoundSet(CompoundSet<C> compoundSet) {
         this.compoundSet = compoundSet;
     }
 
@@ -154,7 +155,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @param sequence
      * @throws CompoundNotFoundException 
      */
-    public void setContents(String sequence) throws CompoundNotFoundException { 
+    @Override
+	public void setContents(String sequence) throws CompoundNotFoundException { 
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
         this.sequence = sequence;
@@ -179,7 +181,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * The sequence length
      * @return
      */
-    public int getLength() {
+    @Override
+	public int getLength() {
         return this.parsedCompounds.size();
     }
 
@@ -188,7 +191,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @param position
      * @return
      */
-    public C getCompoundAt(int position) {
+    @Override
+	public C getCompoundAt(int position) {
         return this.parsedCompounds.get(position - 1);
     }
 
@@ -197,7 +201,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @param compound
      * @return
      */
-    public int getIndexOf(C compound) {
+    @Override
+	public int getIndexOf(C compound) {
         return this.parsedCompounds.indexOf(compound) + 1;
     }
 
@@ -206,7 +211,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @param compound
      * @return
      */
-    public int getLastIndexOf(C compound) {
+    @Override
+	public int getLastIndexOf(C compound) {
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
@@ -223,7 +229,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      *
      * @return
      */
-    public String getSequenceAsString() {
+    @Override
+	public String getSequenceAsString() {
         return sequence;
     }
 
@@ -231,7 +238,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      *
      * @return
      */
-    public List<C> getAsList() {
+    @Override
+	public List<C> getAsList() {
         return this.parsedCompounds;
     }
 
@@ -262,7 +270,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @param bioEnd
      * @return
      */
-    public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
+    @Override
+	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         return new SequenceProxyView<C>(UniprotProxySequenceReader.this, bioBegin, bioEnd);
     }
 
@@ -270,7 +279,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      *
      * @return
      */
-    public Iterator<C> iterator() {
+    @Override
+	public Iterator<C> iterator() {
         return this.parsedCompounds.iterator();
     }
 
@@ -278,7 +288,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      *
      * @return
      */
-    public CompoundSet<C> getCompoundSet() {
+    @Override
+	public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
 
@@ -286,7 +297,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      *
      * @return
      */
-    public AccessionID getAccession() {
+    @Override
+	public AccessionID getAccession() {
         AccessionID accessionID = new AccessionID();
         if (uniprotDoc == null) {
             return accessionID;
@@ -328,7 +340,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @param compounds
      * @return
      */
-    public int countCompounds(C... compounds) {
+    @Override
+	public int countCompounds(C... compounds) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -563,7 +576,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * Pull UniProt key words which is a mixed bag of words associated with this sequence
      * @return
      */
-    public ArrayList<String> getKeyWords() {	
+    @Override
+	public ArrayList<String> getKeyWords() {	
         ArrayList<String> keyWordsList = new ArrayList<String>();
         if (uniprotDoc == null) {
             return keyWordsList;
@@ -588,7 +602,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * The Uniprot mappings to other database identifiers for this sequence
      * @return
      */
-    public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences()  {
+    @Override
+	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences()  {
         LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
         if (uniprotDoc == null) {
             return databaseReferencesHashMap;

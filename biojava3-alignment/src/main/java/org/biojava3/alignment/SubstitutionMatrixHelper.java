@@ -64,6 +64,10 @@ public class SubstitutionMatrixHelper {
     }
     
     
+    public static SubstitutionMatrix<AminoAcidCompound> getIdentity() {
+    	return getAminoAcidMatrix("identity");
+    }
+    
     /**
      * Returns Blosum 100 matrix by Henikoff & Henikoff
      * @return Blosum 100 matrix

@@ -29,6 +29,7 @@ public class DatabasePDBrev {
 	String mod_type;
 	String num;
 
+	@Override
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
 		buf.append("DatabasePDBrev ");

@@ -51,6 +51,7 @@ public class StructureAtomLinkage {
 		return distance;
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
@@ -68,12 +69,14 @@ public class StructureAtomLinkage {
 		return false;
 	}
 	
+	@Override
 	public int hashCode() {
 		int result = 17;
 		result = result * 31 + atom1.hashCode() + atom2.hashCode();
 		return result;
 	}
 	
+	@Override
 	public String toString() {
 		String dat =  atom1.toString() + "-" + atom2.toString() + " distance: " + String.format("%.2f",distance);
 		dat = dat.replaceAll("\t"," ");

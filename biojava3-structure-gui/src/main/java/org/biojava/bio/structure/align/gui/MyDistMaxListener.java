@@ -36,7 +36,8 @@ implements ActionListener{
    MyDistMaxListener(AFPChain parent){
       this.parent = parent;
    }
-   public void actionPerformed(ActionEvent arg0)
+   @Override
+public void actionPerformed(ActionEvent arg0)
    {
 
       System.out.println("show distance matrices");
@@ -54,7 +55,8 @@ implements ActionListener{
       ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
       JFrame frame = new JFrame(title);
       frame.addWindowListener(new WindowAdapter(){
-         public void windowClosing(WindowEvent e){
+         @Override
+		public void windowClosing(WindowEvent e){
             JFrame f = (JFrame) e.getSource();
             f.setVisible(false);
             f.dispose();

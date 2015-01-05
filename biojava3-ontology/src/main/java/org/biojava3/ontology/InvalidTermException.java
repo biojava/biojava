@@ -34,7 +34,10 @@ package org.biojava3.ontology;
 public class InvalidTermException
     extends OntologyException 
 {
-  public InvalidTermException() {
+  
+	private static final long serialVersionUID = 1L;
+
+public InvalidTermException() {
     super();
   }
   

@@ -3,12 +3,15 @@ package org.biojava.bio.structure.domain;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A class that provides all that is necessary to create a Serializable Cache
@@ -21,11 +24,12 @@ import org.biojava.bio.structure.align.util.AtomCache;
  * @since 3.0.3
  */
 public class SerializableCache <K,V>{
+	
+	private static final Logger logger = LoggerFactory.getLogger(SerializableCache.class);
 
 	protected String cacheFileName;
 	protected Map<K,V> serializedCache ;
 
-	boolean debug = false;
 
 	/** set cacheFileName to null to disable caching
 	 * 
@@ -58,8 +62,8 @@ public class SerializableCache <K,V>{
 		}
 		if ( serializedCache != null){
 
-			if ( debug )
-				System.out.println("Caching " + name + "  " + data);
+			
+			logger.debug("Caching {}  {}", name, data);
 
 			serializedCache.put(name,data);
 
@@ -93,7 +97,7 @@ public class SerializableCache <K,V>{
 
 
 
-
+	@SuppressWarnings("unchecked")
 	public Map<K,V> reloadFromFile() {
 
 		File f = getCacheFile();
@@ -102,24 +106,29 @@ public class SerializableCache <K,V>{
 
 		// has never been cached here before
 		if( ! f.exists()) {
-			System.out.println("creating new cache " + f.getAbsolutePath());
+			logger.info("Creating new cache " + f.getAbsolutePath());
 			return serializedCache;
 		}
 
 		try{
-			if  ( debug )
-				System.out.println("reloading from cache " + f.getAbsolutePath());
+			
+			logger.debug("Reloading from cache " + f.getAbsolutePath());
+			
 			FileInputStream fis = new FileInputStream(f);
-			ObjectInputStream ois = new ObjectInputStream(fis);
+			ObjectInputStream ois = new ObjectInputStream(fis);			
 			serializedCache = (HashMap<K,V>) ois.readObject();
 			ois.close();
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (IOException e){
+			// TODO shouldn't this be thrown forward?
+			logger.error("Exception caught while reading serialized file",e);
+			return null;
+		} catch (ClassNotFoundException e) {
+			logger.error("Exception caught while reading serialized file",e);
 			return null;
 		}
 
 		//if ( debug )
-		System.out.println("reloaded from cache: " + f.getName()+ " size: " + serializedCache.keySet().size() + " cached records.");
+		logger.info("Reloaded from cache: " + f.getName()+ " size: " + serializedCache.keySet().size() + " cached records.");
 		return serializedCache;
 	}
 
@@ -128,8 +137,7 @@ public class SerializableCache <K,V>{
 		String path = cache.getCachePath();
 		File f = new File(path + System.getProperty("file.separator") + cacheFileName);
 
-		if (debug)
-			System.out.println(f.getAbsolutePath());
+		logger.debug(f.getAbsolutePath());
 		return f;
 	}
 
@@ -146,19 +154,10 @@ public class SerializableCache <K,V>{
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(serializedCache);
 				oos.close();
-			} catch (Exception e){
-				e.printStackTrace();
+			} catch (IOException e){
+				logger.error("Exception caught", e);
 			}
 		}
 	}
-
-	public boolean isDebug() {
-		return debug;
-	}
-
-	public void setDebug(boolean debug) {
-		this.debug = debug;
-	}
-	
 	
 }

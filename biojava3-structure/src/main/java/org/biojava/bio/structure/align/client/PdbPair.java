@@ -43,10 +43,12 @@ public class PdbPair implements Comparable<PdbPair> {
 		this.name2 = new StructureName(name2);
 	}
 	
+	@Override
 	public String toString() {
 		return "PdbPair [name1=" + name1 + ", name2=" + name2 + "]";
 	}
 	
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -55,6 +57,7 @@ public class PdbPair implements Comparable<PdbPair> {
 		return result;
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -76,6 +79,7 @@ public class PdbPair implements Comparable<PdbPair> {
 		return true;
 	}
 	
+	@Override
 	public int compareTo(PdbPair o) {
 		if ( this.equals(o))
 			return 0;

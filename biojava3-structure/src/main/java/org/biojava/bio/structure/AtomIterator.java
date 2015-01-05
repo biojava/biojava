@@ -97,6 +97,7 @@ public class AtomIterator implements Iterator<Atom> {
 	/** Is there a next atom ?
 	 * @return true if there is an atom after the current one 
 	 * */
+	@Override
 	public boolean hasNext() {
 
 		// trying to iterate over an empty structure...
@@ -132,6 +133,7 @@ public class AtomIterator implements Iterator<Atom> {
 	 * @return the next Atom
 	 * @throws NoSuchElementException if there is no atom after the current one
 	 */
+	@Override
 	public Atom next() 
 	throws NoSuchElementException
 	{
@@ -165,6 +167,7 @@ public class AtomIterator implements Iterator<Atom> {
 	}
 
 	/** does nothing. */
+	@Override
 	public void remove() {
 	}
 

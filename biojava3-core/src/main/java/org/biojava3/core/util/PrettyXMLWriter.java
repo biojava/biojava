@@ -55,7 +55,8 @@ public class PrettyXMLWriter implements XMLWriter {
         this.writer = writer;
     }
 
-    public void declareNamespace(String nsURI, String prefixHint) 
+    @Override
+	public void declareNamespace(String nsURI, String prefixHint) 
         throws IOException
     {
         if (!namespacePrefixes.containsKey(nsURI)) {
@@ -120,7 +121,8 @@ public class PrettyXMLWriter implements XMLWriter {
         return prefix;
     }
     
-    public void openTag(String nsURI, String localName)
+    @Override
+	public void openTag(String nsURI, String localName)
         throws IOException
     {
     	if (nsURI == null || nsURI.length() == 0)
@@ -144,7 +146,8 @@ public class PrettyXMLWriter implements XMLWriter {
         handleDeclaredNamespaces();
     }
     
-    public void openTag(String qName)
+    @Override
+	public void openTag(String qName)
         throws IOException
     {
         _openTag();
@@ -153,7 +156,8 @@ public class PrettyXMLWriter implements XMLWriter {
         handleDeclaredNamespaces();
     }
 
-    public void attribute(String nsURI, String localName, String value)
+    @Override
+	public void attribute(String nsURI, String localName, String value)
         throws IOException
     {
         if (! isOpeningTag) {
@@ -175,7 +179,8 @@ public class PrettyXMLWriter implements XMLWriter {
         writer.print('"');
     }
     
-    public void attribute(String qName, String value)
+    @Override
+	public void attribute(String qName, String value)
         throws IOException
     {
         if (! isOpeningTag) {
@@ -200,7 +205,8 @@ public class PrettyXMLWriter implements XMLWriter {
         }
     }
     
-    public void closeTag(String nsURI, String localName)
+    @Override
+	public void closeTag(String nsURI, String localName)
         throws IOException
     {
         String prefix = namespacePrefixes.get(nsURI);
@@ -224,7 +230,8 @@ public class PrettyXMLWriter implements XMLWriter {
         _closeTag();
     }
     
-    public void closeTag(String qName) 
+    @Override
+	public void closeTag(String qName) 
         throws IOException
     {
         indent--;
@@ -242,7 +249,8 @@ public class PrettyXMLWriter implements XMLWriter {
         _closeTag();
     }
 
-    public void println(String data)
+    @Override
+	public void println(String data)
         throws IOException
     {
 	if (isOpeningTag) {
@@ -254,7 +262,8 @@ public class PrettyXMLWriter implements XMLWriter {
 	afterNewline = true;
     }
 
-    public void print(String data)
+    @Override
+	public void print(String data)
         throws IOException
     {
 	if (isOpeningTag) {
@@ -265,7 +274,8 @@ public class PrettyXMLWriter implements XMLWriter {
 	afterNewline = false;
     }
 
-    public void printRaw(String data)
+    @Override
+	public void printRaw(String data)
         throws IOException
     {
 	writer.println(data);
@@ -315,7 +325,8 @@ public class PrettyXMLWriter implements XMLWriter {
 	writer.print(';');
     }
     
-    public void close()
+    @Override
+	public void close()
         throws IOException
     {
         writer.close();

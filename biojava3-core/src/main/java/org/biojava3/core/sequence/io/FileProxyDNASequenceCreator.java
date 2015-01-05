@@ -76,7 +76,8 @@ public class FileProxyDNASequenceCreator implements
      * @throws CompoundNotFoundException  
      * @throws IOException
      */
-    public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) throws CompoundNotFoundException, IOException {
+    @Override
+	public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) throws CompoundNotFoundException, IOException {
         SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<NucleotideCompound>(
                 file, 
                 sequenceParser, 
@@ -92,7 +93,8 @@ public class FileProxyDNASequenceCreator implements
      * @param index
      * @return
      */
-    public AbstractSequence<NucleotideCompound> getSequence(
+    @Override
+	public AbstractSequence<NucleotideCompound> getSequence(
             ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -102,7 +104,8 @@ public class FileProxyDNASequenceCreator implements
      * @param list
      * @return
      */
-    public AbstractSequence<NucleotideCompound> getSequence(
+    @Override
+	public AbstractSequence<NucleotideCompound> getSequence(
             List<NucleotideCompound> list) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

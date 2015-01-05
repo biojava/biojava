@@ -89,6 +89,17 @@ public class SpaceGroup implements Serializable {
 		this.bravLattice = bravLattice;
 	}
 
+	/**
+	 * Get the space group for the given international short name, using
+	 * the PDB format, e.g. 'P 21 21 21' or 'C 1 c 1'
+	 * @param shortName
+	 * @return the SpaceGroup or null if the shortName is not valid
+	 * @see SymoplibParser#getSpaceGroup(String)
+	 */
+	public static SpaceGroup parseSpaceGroup(String shortName) {
+		return SymoplibParser.getSpaceGroup(shortName);
+	}
+
 	public void addTransformation(String transfAlgebraic) {
 		this.transfAlgebraic.add(transfAlgebraic);
 		this.transformations.add(getMatrixFromAlgebraic(transfAlgebraic));
@@ -533,7 +544,7 @@ public class SpaceGroup implements Serializable {
 				axisType=6;
 				break;
 			default:
-				throw new NullPointerException("Trace of transform does not correspond to one of the expected types. This is most likely a bug");
+				throw new RuntimeException("Trace of transform does not correspond to one of the expected types. This is most likely a bug");
 			}
 		} else {
 			switch (trace) {
@@ -553,7 +564,7 @@ public class SpaceGroup implements Serializable {
 				axisType=-6;
 				break;
 			default:
-				throw new NullPointerException("Trace of transform does not correspond to one of the expected types. This is most likely a bug");
+				throw new RuntimeException("Trace of transform does not correspond to one of the expected types. This is most likely a bug");
 			}
 		}
 		return axisType;

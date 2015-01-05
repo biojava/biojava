@@ -95,7 +95,8 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
    * in the hopes of making less confusing.
    * @return
    */
-  public SequenceView<NucleotideCompound> getInverse() {
+  @Override
+public SequenceView<NucleotideCompound> getInverse() {
     return new ReversedSequenceView<NucleotideCompound>(this);
   }
 

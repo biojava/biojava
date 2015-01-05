@@ -39,16 +39,16 @@ public class CoxCC {
         double[][] r = ResidualsCoxph.process(ci, ResidualsCoxph.Type.score, false, null); // dn not use weighted
 
         // ArrayList<String> variables = ci.survivalInfoList.get(0).getDataVariables();
-        if (false) {
-            for (int i = 0; i < survivalInfoList.size(); i++) {
-                SurvivalInfo si = survivalInfoList.get(i);
-                System.out.print("Cox cc " + si.getOrder());
-                for (int j = 0; j < variables.size(); j++) {
-                    System.out.print(" " + r[i][j]);
-                }
-                System.out.println();
-            }
-        }
+//        if (false) {
+//            for (int i = 0; i < survivalInfoList.size(); i++) {
+//                SurvivalInfo si = survivalInfoList.get(i);
+//                System.out.print("Cox cc " + si.getOrder());
+//                for (int j = 0; j < variables.size(); j++) {
+//                    System.out.print(" " + r[i][j]);
+//                }
+//                System.out.println();
+//            }
+//        }
 
         double[][] rvar = null;
 

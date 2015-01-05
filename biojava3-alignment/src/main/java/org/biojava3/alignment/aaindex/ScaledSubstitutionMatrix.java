@@ -52,18 +52,23 @@ public class ScaledSubstitutionMatrix implements
 		this.scale = scale;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
+	@Override
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	@Override
 	public String getName() {
 		return name;
 	}
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
+	@Override
 	public short[][] getMatrix() {
 		return matrix;
 	}
@@ -188,6 +193,7 @@ public class ScaledSubstitutionMatrix implements
 	}
     
 
+	@Override
 	public Map<AminoAcidCompound, Short> getRow(AminoAcidCompound row) {
 		int rowIndex = rows.indexOf(row);
 		Map<AminoAcidCompound, Short> map = new HashMap<AminoAcidCompound, Short>();
@@ -197,6 +203,7 @@ public class ScaledSubstitutionMatrix implements
 		return map;
 	}
 
+	@Override
 	public Map<AminoAcidCompound, Short> getColumn(AminoAcidCompound column) {
 		int colIndex = cols.indexOf(column);
 		Map<AminoAcidCompound, Short> map = new HashMap<AminoAcidCompound, Short>();

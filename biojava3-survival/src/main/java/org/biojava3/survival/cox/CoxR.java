@@ -5,10 +5,12 @@
 package org.biojava3.survival.cox;
 
 import java.io.InputStream;
+
 import org.biojava3.survival.cox.matrix.Matrix;
 import org.biojava3.survival.cox.stats.Cholesky2;
 import org.biojava3.survival.cox.stats.ChiSq;
 import org.biojava3.survival.data.WorkSheet;
+
 import java.util.ArrayList;
 import java.util.Collections;
    
@@ -163,7 +165,8 @@ public class CoxR {
         double deadwt;  /*sum of case weights for the deaths*/
         double efronwt; /* sum of weighted risk scores for the deaths*/
         int halving;    /*are we doing step halving at the moment? */
-        int nrisk = 0;   /* number of subjects in the current risk set */
+        @SuppressWarnings("unused")
+		int nrisk = 0;   /* number of subjects in the current risk set */
 
         /* copies of scalar input arguments */
         int nused, nvar;
@@ -212,7 +215,7 @@ public class CoxR {
         //  means = REAL(means2);
         means = new double[nvar];
         double[] sd = new double[nvar];
-        double[] se = new double[nvar];
+        //double[] se = new double[nvar];
 
         //   means = means2;
         //   PROTECT(u2 = allocVector(REALSXP, nvar));
@@ -972,67 +975,67 @@ public class CoxR {
 
         }
 
-        if (false) {
-
-            try {
-
-
-                WorkSheet worksheet = WorkSheet.readCSV("/Users/Scooter/NetBeansProjects/AssayWorkbench/src/edu/scripps/assayworkbench/cox/uis-complete.txt", '\t');
-                ArrayList<String> rows = worksheet.getRows();
-                ArrayList<String> variables = new ArrayList<String>();
-                variables.add("AGE");
-                variables.add("TREAT");
-                double[] time2 = new double[rows.size()];
-                int[] status2 = new int[rows.size()];
-                double[][] covar2 = new double[variables.size()][rows.size()];
-                double[] offset2 = new double[rows.size()];
-                double[] weights2 = new double[rows.size()];
-                int[] strata2 = new int[rows.size()];
-
-
-                for (int i = 0; i < rows.size(); i++) {
-                    String row = rows.get(i);
-                    double time = worksheet.getCellDouble(row, "TIME");
-                    //      double age = worksheet.getCellDouble(row, "AGE");
-                    //      double treat = worksheet.getCellDouble(row, "TREAT");
-                    double c = worksheet.getCellDouble(row, "CENSOR");
-                    int censor = (int) c;
-
-                    time2[i] = time;
-                    status2[i] = censor;
-                    offset2[i] = 0;
-                    weights2[i] = 1;
-                    strata2[i] = 0;
-
-                    for (int j = 0; j < variables.size(); j++) {
-                        String variable = variables.get(j);
-                        double v = worksheet.getCellDouble(row, variable);
-                        covar2[j][i] = v;
-                    }
-
-
-                }
-                //from coxph.control.S
-                int maxiter2 = 20;
-                double eps2 = 1e-9;
-                double toler2 = Math.pow(eps2, .75);
-                int doscale2 = 1;
-                int method2 = 0;
-                //toler.chol = eps ^ .75
-                //toler.inf=sqrt(eps)
-                //outer.max=10
-
-                CoxR cox = new CoxR();
-                //        cox.coxfit6(maxiter2, time2, status2, covar2, offset2, weights2, strata2, method2, eps2, toler2, time2, doscale2);
-
-
-
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        if (false) {
+//
+//            try {
+//
+//
+//                WorkSheet worksheet = WorkSheet.readCSV("/Users/Scooter/NetBeansProjects/AssayWorkbench/src/edu/scripps/assayworkbench/cox/uis-complete.txt", '\t');
+//                ArrayList<String> rows = worksheet.getRows();
+//                ArrayList<String> variables = new ArrayList<String>();
+//                variables.add("AGE");
+//                variables.add("TREAT");
+//                double[] time2 = new double[rows.size()];
+//                int[] status2 = new int[rows.size()];
+//                double[][] covar2 = new double[variables.size()][rows.size()];
+//                double[] offset2 = new double[rows.size()];
+//                double[] weights2 = new double[rows.size()];
+//                int[] strata2 = new int[rows.size()];
+//
+//
+//                for (int i = 0; i < rows.size(); i++) {
+//                    String row = rows.get(i);
+//                    double time = worksheet.getCellDouble(row, "TIME");
+//                    //      double age = worksheet.getCellDouble(row, "AGE");
+//                    //      double treat = worksheet.getCellDouble(row, "TREAT");
+//                    double c = worksheet.getCellDouble(row, "CENSOR");
+//                    int censor = (int) c;
+//
+//                    time2[i] = time;
+//                    status2[i] = censor;
+//                    offset2[i] = 0;
+//                    weights2[i] = 1;
+//                    strata2[i] = 0;
+//
+//                    for (int j = 0; j < variables.size(); j++) {
+//                        String variable = variables.get(j);
+//                        double v = worksheet.getCellDouble(row, variable);
+//                        covar2[j][i] = v;
+//                    }
+//
+//
+//                }
+//                //from coxph.control.S
+//                int maxiter2 = 20;
+//                double eps2 = 1e-9;
+//                double toler2 = Math.pow(eps2, .75);
+//                int doscale2 = 1;
+//                int method2 = 0;
+//                //toler.chol = eps ^ .75
+//                //toler.inf=sqrt(eps)
+//                //outer.max=10
+//
+//                CoxR cox = new CoxR();
+//                //        cox.coxfit6(maxiter2, time2, status2, covar2, offset2, weights2, strata2, method2, eps2, toler2, time2, doscale2);
+//
+//
+//
+//
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
 
     }
 

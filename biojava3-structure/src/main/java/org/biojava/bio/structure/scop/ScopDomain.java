@@ -95,12 +95,14 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	public void setScopId(String scopId) {
 		this.scopId = scopId;
 	}
+	@Override
 	public String getPdbId() {
 		return pdbId;
 	}
 	public void setPdbId(String pdbId) {
 		this.pdbId = pdbId;
 	}
+	@Override
 	public List<String> getRanges() {
 		return ranges;
 	}

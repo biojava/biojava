@@ -309,6 +309,7 @@ public class PDBStatus {
 
 			String[] replacements = replacementStr.split(" ");
 			Arrays.sort(replacements, new Comparator<String>() {
+				@Override
 				public int compare(String o1, String o2) {
 					return o2.compareToIgnoreCase(o1);
 				}
@@ -366,6 +367,7 @@ public class PDBStatus {
 
 			String[] replacements = replacementStr.split(" ");
 			Arrays.sort(replacements, new Comparator<String>() {
+				@Override
 				public int compare(String o1, String o2) {
 					return o2.compareToIgnoreCase(o1);
 				}

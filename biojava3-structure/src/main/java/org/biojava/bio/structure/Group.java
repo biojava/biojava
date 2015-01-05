@@ -78,7 +78,7 @@ public interface Group {
 	 *
 	 * @return a String representing the type value
 	 */
-	public String getType();
+	public GroupType getType();
 
 	/** Add an atom to this group.
 	 *

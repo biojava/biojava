@@ -16,6 +16,8 @@ import org.biojava3.aaproperties.xml.MyValidationEventHandler;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class contains the actual implementation of IPeptideProperties and is wrapped around by PeptideProperties for ease of use. 
@@ -27,6 +29,8 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
  * @see PeptideProperties
  */
 public class PeptidePropertiesImpl implements IPeptideProperties{
+	
+	private final static Logger logger = LoggerFactory.getLogger(PeptidePropertiesImpl.class);
 	
 	/**
 	 * @return the molecular weight of water
@@ -161,6 +165,10 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//Absorb(Prot) = E(Prot) / Molecular_weight
 		double mw = this.getMolecularWeight(sequence);
 		double eProt = this.getExtinctionCoefficient(sequence, assumeCysReduced);
+		if (mw == 0.0) {
+			logger.warn("Molecular weight is 0.0, can't divide by 0: setting absorbance to 0.0");
+			return 0.0;
+		}
 		return eProt / mw;
 	}
 	
@@ -201,7 +209,13 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 				sum += Constraints.diAA2Instability.get(dipeptide);
 			}
 		}
-		return sum * 10 / (s.length() - Utils.getNumberOfInvalidChar(s, null, true));
+		int denominator = s.length() - Utils.getNumberOfInvalidChar(s, null, true);
+		
+		if (denominator==0) {
+			logger.warn("Valid length of sequence is 0, can't divide by 0 to calculate instability index: setting instability index value to 0.0");
+			return 0.0;
+		}
+		return sum * 10.0 / denominator;
 	}
 
 	@Override
@@ -236,6 +250,11 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 				validLength++;
 			}
 		}
+		if (validLength==0) {
+			logger.warn("Valid length of sequence is 0, can't divide by 0 to calculate average hydropathy: setting average hydropathy to 0");
+			return 0.0;
+		}
+		
 		return total / validLength;
 	}
 

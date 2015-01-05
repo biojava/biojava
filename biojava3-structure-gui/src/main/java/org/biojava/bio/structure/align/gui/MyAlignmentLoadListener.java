@@ -27,7 +27,8 @@ public class MyAlignmentLoadListener implements ActionListener {
    public MyAlignmentLoadListener(StructureAlignmentJmol jmol){
       this.jmol = jmol;
    }
-   public void actionPerformed(ActionEvent evt) {
+   @Override
+public void actionPerformed(ActionEvent evt) {
 
       final JFileChooser fc = new JFileChooser();
 

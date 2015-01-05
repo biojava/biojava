@@ -8,6 +8,7 @@ import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.AFPTwister;
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
@@ -42,8 +43,8 @@ public class StructureAlignmentDisplay {
       if ( g1 != null) {
          c1 = g1.getChain();
          if ( c1 != null){
-            hetatms = c1.getAtomGroups("hetatm");;
-            nucs1  = c1.getAtomGroups("nucleotide");
+            hetatms = c1.getAtomGroups(GroupType.HETATM);;
+            nucs1  = c1.getAtomGroups(GroupType.NUCLEOTIDE);
          }
       }
       List<Group> hetatms2 = new ArrayList<Group>();
@@ -53,8 +54,8 @@ public class StructureAlignmentDisplay {
       if ( g2 != null){
          c2 = g2.getChain();
          if ( c2 != null){
-            hetatms2 = c2.getAtomGroups("hetatm");
-            nucs2 = c2.getAtomGroups("nucleotide");
+            hetatms2 = c2.getAtomGroups(GroupType.HETATM);
+            nucs2 = c2.getAtomGroups(GroupType.NUCLEOTIDE);
          }
       }
          
@@ -96,8 +97,8 @@ public class StructureAlignmentDisplay {
       if ( g2 != null){
          c2 = g2.getChain();
          if ( c2 != null){
-            hetatms2 = c2.getAtomGroups("hetatm");
-            nucs2 = c2.getAtomGroups("nucleotide");
+            hetatms2 = c2.getAtomGroups(GroupType.HETATM);
+            nucs2 = c2.getAtomGroups(GroupType.NUCLEOTIDE);
          }
       }
       

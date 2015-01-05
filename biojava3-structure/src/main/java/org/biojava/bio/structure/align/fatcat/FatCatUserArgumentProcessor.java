@@ -27,12 +27,25 @@ package org.biojava.bio.structure.align.fatcat;
 
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 
 
 public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
+	protected class FatCatStartupParams extends StartupParameters {
+		int fragLen;
+		Double rmsdCut;
+		double disCut;
+		int maxTra;
+	}
 
+	@Override
+	protected StartupParameters getStartupParametersInstance() {
+		return new FatCatStartupParams();
+	}
+
+	@Override
 	public StructureAlignment getAlgorithm() {
 		StructureAlignment algorithm = null;
 		if ( params.isFlexible()) {
@@ -43,19 +56,21 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 			algorithm = new FatCatRigid();			
 		}
 		return algorithm;
-		
+
 	}
-	
+
+	@Override
 	public Object getParameters() {
-		
+
 		FatCatParameters jparams = new FatCatParameters();
 		return jparams;
 	}
-		
+
+	@Override
 	public String getDbSearchLegend(){
-		
+
 		return "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
-		
+
 	}
 
 }

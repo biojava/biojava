@@ -39,6 +39,7 @@ public class Entity {
 	String pdbx_fragment;
 	String pdbx_ec;
 
+	@Override
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
 

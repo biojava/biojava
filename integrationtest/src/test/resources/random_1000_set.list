@@ -224,7 +224,8 @@
 3du6
 4lhy
 4iks
-2pdm
+#2pdm excluded because of inconsistent rfree pdb/mmCIF, 3lmn replaces it (randomly chosen)
+3lmn
 3ozk
 3l4u
 2a6d

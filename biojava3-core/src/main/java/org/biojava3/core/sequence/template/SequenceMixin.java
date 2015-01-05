@@ -318,7 +318,7 @@ public class SequenceMixin {
      * @param sequence The input sequence
      * @return The inverted sequence which is optionally complemented
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public static <C extends Compound> SequenceView<C> inverse(Sequence<C> sequence) {
         SequenceView<C> reverse = new ReversedSequenceView<C>(sequence);
         if(sequence.getCompoundSet().isComplementable()) {
@@ -404,19 +404,22 @@ public class SequenceMixin {
         }
 
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (currentPosition < length);
         }
 
      
-        public C next() {
+        @Override
+		public C next() {
             if(!hasNext()) {
                 throw new NoSuchElementException("Exhausted sequence of elements");
             }
             return sequence.getCompoundAt(++currentPosition);
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             throw new UnsupportedOperationException("Cannot remove() on a SequenceIterator");
         }
     }
