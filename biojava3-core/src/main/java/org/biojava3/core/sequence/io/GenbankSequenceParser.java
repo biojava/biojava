@@ -132,7 +132,6 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     
     
 
-    @SuppressWarnings("unchecked")
     private String parse(BufferedReader bufferedReader) {
         String sectionKey = null;
         List<String[]> section;
