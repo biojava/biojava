@@ -1,10 +1,7 @@
 package org.biojava.bio.structure.io;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 import org.biojava.bio.structure.Chain;
@@ -13,6 +10,7 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +26,6 @@ public class CompoundFinder {
 	private Structure s;
 	
 	private static final Logger logger = LoggerFactory.getLogger(CompoundFinder.class);
-	
-	/**
-	 * Below this ratio of aminoacid/nucleotide residues to the sequence total,
-	 * we use simple majority of aminoacid/nucleotide residues to decide the character 
-	 * of the chain (protein/nucleotide) 
-	 */
-	public static final double RATIO_RESIDUES_TO_TOTAL = 0.95;
 	
 	/**
 	 * Above this ratio of mismatching residue types for same residue numbers we 
@@ -79,59 +70,6 @@ public class CompoundFinder {
 		}
 		return list;
 	} 
-	
-	@SuppressWarnings("unused")
-	private TreeMap<String,Compound> findCompoundsFromSeqresSequences() {
-
-		TreeMap<String,Compound> chainIds2entities = new TreeMap<String,Compound>();
-				
-		// map of sequences to list of chain identifiers
-		Map<String, List<String>> uniqSequences = new HashMap<String, List<String>>();
-		// finding the entities (groups of identical chains)
-		for (Chain chain:s.getChains()) {
-			
-			// TODO chain.getSeqResSequence() below will get 'XXXXX' sequences for nucleotides, we need to change that to get the right sequence
-			// e.g. with this procedure 1g1n results in 2 entities, where there are actually 3
-			// in the meanwhile we warn about that:
-			if (!CompoundFinder.isProtein(chain)) {
-				logger.warn("Chain {} looks like a nucleotide chain, entity finding will not be accurate for  it",chain.getChainID());
-			}
-
-			String seq = chain.getSeqResSequence();
-				
-			if (uniqSequences.containsKey(seq)) {
-				uniqSequences.get(seq).add(chain.getChainID());
-			} else {
-				List<String> list = new ArrayList<String>();
-				list.add(chain.getChainID());
-				uniqSequences.put(seq, list);
-			}		
-
-		}
-
-		for (List<String> chainIds:uniqSequences.values()) {
-			// sorting ids in alphabetic order
-			Collections.sort(chainIds);
-			List<Chain> chains = new ArrayList<Chain>();
-			for (String chainId:chainIds) {
-				// chains will be sorted in ids' alphabetic order
-				try {
-					chains.add(s.getChainByPDB(chainId));
-				} catch (StructureException e) {
-					// this basically can't happen, if it does it is some kind of bug
-					logger.error("Unexpected exception!",e);
-				}
-			}
-			// the representative will be the one with first chain id in alphabetic order 
-			Compound entity = new Compound();
-			entity.setChains(chains);
-			for (Chain member:chains) {
-				chainIds2entities.put(member.getChainID(), entity);
-			}
-		}
-		
-		return chainIds2entities;
-	}
 	
 	private TreeMap<String,Compound> findCompoundsFromAtomSequences() {		
 
@@ -202,8 +140,8 @@ public class CompoundFinder {
 	
 	private static boolean areResNumbersAligned(Chain c1, Chain c2) {
 
-		boolean isC1prot = isProtein(c1);
-		boolean isC2prot = isProtein(c2);
+		boolean isC1prot = StructureTools.isProtein(c1);
+		boolean isC2prot = StructureTools.isProtein(c2);
 		
 		// different kind of chain: we won't try to align them
 		if (isC1prot != isC2prot ) return false;
@@ -242,69 +180,6 @@ public class CompoundFinder {
 		return true;
 	}
 	
-	/**
-	 * Tell whether given chain is a protein chain
-	 * @param c
-	 * @return true if protein, false if nucleotide or ligand
-	 */
-	public static boolean isProtein(Chain c) {
-		return getPredominantGroupType(c) == GroupType.AMINOACID;
-	}
-	/**
-	 * Tell whether given chain is DNA or RNA
-	 * @param c
-	 * @return true if nucleic acid, false if protein or ligand
-	 */
-	public static boolean isNucleicAcid(Chain c) {
-		return getPredominantGroupType(c) == GroupType.NUCLEOTIDE;
-	}
-	/**
-	 * Gets the predominant GroupType for a given Chain
-	 * @param c
-	 * @return
-	 */
-	public static GroupType getPredominantGroupType(Chain c) {
-		int sizeAminos = c.getAtomGroups(GroupType.AMINOACID).size();
-		int sizeNucleotides = c.getAtomGroups(GroupType.NUCLEOTIDE).size();
-		List<Group> hetAtoms = c.getAtomGroups(GroupType.HETATM);
-		int sizeHetatoms = hetAtoms.size();
-		int sizeWaters = 0;
-		for (Group g:hetAtoms) {
-			if (g.isWater()) sizeWaters++;
-		}
-		
-		int fullSize = sizeAminos + sizeNucleotides + sizeHetatoms - sizeWaters;
-		
-		if ((double)sizeAminos/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return GroupType.AMINOACID;
-		
-		if ((double)sizeNucleotides/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return GroupType.NUCLEOTIDE;
-		
-		if ((double)(sizeHetatoms-sizeWaters)/(double)fullSize > RATIO_RESIDUES_TO_TOTAL) return GroupType.HETATM;
-		
-		// finally if neither condition works, we try based on majority, but log it
-		GroupType max;
-		if(sizeNucleotides > sizeAminos) {
-			if(sizeNucleotides > sizeHetatoms) {
-				max = GroupType.NUCLEOTIDE;
-			} else {
-				max = GroupType.HETATM;
-			}
-		} else {
-			if(sizeAminos > sizeHetatoms) {
-				max = GroupType.AMINOACID;
-			} else {
-				max = GroupType.HETATM;
-			}
-		}
-		logger.debug("Ratio of residues to total for chain {} is below {}. Assuming it is a {} chain. "
-				+ "Counts: # aa residues: {}, # nuc residues: {}, # het residues: {}, # waters: {}, "
-				+ "ratio aa/total: {}, ratio nuc/total: {}",
-				c.getChainID(), RATIO_RESIDUES_TO_TOTAL, max,
-				sizeAminos, sizeNucleotides, sizeHetatoms, sizeWaters,
-				(double)sizeAminos/(double)fullSize,(double)sizeNucleotides/(double)fullSize) ;
-
-		return max;
-	}
 
 
 }
