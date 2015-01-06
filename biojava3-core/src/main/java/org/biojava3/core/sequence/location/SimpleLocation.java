@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
@@ -37,6 +38,7 @@ import org.biojava3.core.sequence.location.template.Point;
  * of simple constructors.
  *
  * @author ayates
+ * @author Paolo Pavan
  */
 public class SimpleLocation extends AbstractLocation {
 
@@ -52,6 +54,10 @@ public class SimpleLocation extends AbstractLocation {
 
     public SimpleLocation(int start, int end, Strand strand) {
         this(new SimplePoint(start), new SimplePoint(end), strand);
+    }
+    
+    public SimpleLocation(int start, int end, Strand strand, List<Location> subLocations) {
+        this(new SimplePoint(start), new SimplePoint(end), strand, subLocations);
     }
 
     public SimpleLocation(Point start, Point end, Strand strand) {
@@ -85,6 +91,10 @@ public class SimpleLocation extends AbstractLocation {
 
     public SimpleLocation(Point start, Point end, Strand strand, boolean circular, List<Location> subLocations) {
         super(start, end, strand, circular, false, subLocations);
+    }
+    
+    public SimpleLocation(Point start, Point end, Strand strand, List<Location> subLocations) {
+        super(start, end, strand, false, false, subLocations);
     }
 
     public SimpleLocation(Point start, Point end, Strand strand, boolean circular, boolean betweenBases, List<Location> subLocations) {

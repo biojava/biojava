@@ -20,7 +20,8 @@
  * Created on 01-21-2010
  *
  * @author Richard Holland
- * @auther Scooter Willis
+ * @author Scooter Willis
+ * @author Paolo Pavan
  *
  */
 package org.biojava3.core.sequence.template;
@@ -28,17 +29,21 @@ package org.biojava3.core.sequence.template;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
+import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.TaxonomyID;
 import org.biojava3.core.sequence.features.AbstractFeature;
+import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeatureInterface;
+import org.biojava3.core.sequence.features.FeatureRetriever;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava3.core.sequence.location.SequenceLocation;
@@ -73,6 +78,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private Double sequenceScore = null;
     private FeaturesKeyWordInterface featuresKeyWord = null;
     private DatabaseReferenceInterface databaseReferences = null;
+    private FeatureRetriever featureRetriever = null;
     private ArrayList<FeatureInterface<AbstractSequence<C>, C>> features =
             new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
     private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>> groupedFeatures =
@@ -124,6 +130,20 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         if (proxyLoader instanceof DatabaseReferenceInterface) {
             this.setDatabaseReferences((DatabaseReferenceInterface) sequenceStorage);
         }
+        
+        if (proxyLoader instanceof FeatureRetriever) {
+            this.setFeatureRetriever((FeatureRetriever) sequenceStorage);
+            HashMap<String, ArrayList<AbstractFeature>> ff = getFeatureRetriever().getFeatures();
+            for (String k: ff.keySet()){
+                for (AbstractFeature f: ff.get(k)){
+                    this.addFeature(f);
+                }
+            }
+            // success of next statement guaranteed because source is a compulsory field
+            DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifiers().get("db_xref");
+            if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getDatabase()+":"+dbQualifier.getId(), DataSource.UNKNOWN));
+        }
+        
         if(getAccession() == null && proxyLoader instanceof UniprotProxySequenceReader){ // we have lots of unsupported operations for this call so quick fix to allow this tow rork
             this.setAccession(proxyLoader.getAccession());
         }
@@ -442,6 +462,16 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     public void setDatabaseReferences(DatabaseReferenceInterface databaseReferences) {
         this.databaseReferences = databaseReferences;
     }
+
+    public FeatureRetriever getFeatureRetriever() {
+        return featureRetriever;
+    }
+
+    public void setFeatureRetriever(FeatureRetriever featureRetriever) {
+        this.featureRetriever = featureRetriever;
+    }
+    
+    
 
     public enum AnnotationType {
 

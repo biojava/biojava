@@ -25,10 +25,7 @@ package org.biojava3.core.sequence;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
@@ -36,9 +33,6 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-
-import static org.biojava3.core.sequence.features.AbstractFeature.TYPE;
-
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.io.DNASequenceCreator;
 import org.biojava3.core.sequence.io.FastaReader;
@@ -56,15 +50,18 @@ import org.slf4j.LoggerFactory;
  * The representation of a ProteinSequence
  *
  * @author Scooter Willis
+ * @author Paolo Pavan
  */
 public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
 	private final static Logger logger = LoggerFactory.getLogger(ProteinSequence.class);
-
+        
+        /*
     private ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> features
             = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
     private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>> groupedFeatures
             = new LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>>();
+        */
 
     /**
      * Create a protein from a string
@@ -132,17 +129,16 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         setBioEnd(end);
     }
 
+    /**
+     * Add feature.
+     * <p>
+     * If feature is type 'coded_by' than resolves parent DNA sequence.
+     * </p>
+     * @param feature 
+     */
     @Override
     public void addFeature(FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> feature) {
-        features.add(feature);
-        ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> featureList = groupedFeatures.get(feature.getType());
-        if (featureList == null) {
-            featureList = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
-            groupedFeatures.put(feature.getType(), featureList);
-        }
-        featureList.add(feature);
-        Collections.sort(features, TYPE);
-        Collections.sort(featureList, TYPE);
+        super.addFeature(feature);
 
         // if feature is called 'coded_by' than add parent DNA location
         if (feature.getType().equals("coded_by")) {
@@ -160,20 +156,6 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         }
     }
 
-    @Override
-    public List<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> getFeaturesByType(String type) {
-        List<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> features = groupedFeatures.get(type);
-        if (features == null) {
-            features = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
-        }
-        return features;
-    }
-
-    @Override
-    public List<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> getFeatures() {
-        return features;
-    }
-    
     private DNASequence getRawParentSequence(String accessId) throws IOException {
         String seqUrlTemplate = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=%s&rettype=fasta&retmode=text";
         URL url = new URL(String.format(seqUrlTemplate, accessId));
