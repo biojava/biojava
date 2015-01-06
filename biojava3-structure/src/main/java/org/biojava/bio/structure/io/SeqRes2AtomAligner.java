@@ -78,21 +78,10 @@ public class SeqRes2AtomAligner {
 
 	private static final Logger logger = LoggerFactory.getLogger(SeqRes2AtomAligner.class);
 	
-	private static final List<String> excludeTypes;
 
 
 	private String alignmentString;
 	
-	static {
-		excludeTypes = new ArrayList<String>();
-		excludeTypes.add("HOH"); // we don't want to align water against the SEQRES...
-		excludeTypes.add("DOD"); // deuterated water
-
-
-		//matrix.printMatrix();
-
-	}
-
 	public SeqRes2AtomAligner(){
 		logger.debug("initialising SeqRes2AtomAligner");
 		alignmentString = "";
@@ -240,8 +229,7 @@ public class SeqRes2AtomAligner {
 			Group atomResGroup = atmResGroups.get(atomResPos);
 
 			// let's ignore waters
-			String threeLetterCode = atomResGroup.getPDBName();
-			if ( excludeTypes.contains(threeLetterCode)){
+			if ( atomResGroup.isWater()){
 				continue;
 			}
 
@@ -372,7 +360,7 @@ public class SeqRes2AtomAligner {
 			} else {
 
 				// exclude solvents
-				if (  excludeTypes.contains(g.getPDBName()))
+				if (  g.isWater())
 					continue;
 
 				// exclude metals
@@ -501,7 +489,7 @@ public class SeqRes2AtomAligner {
 		penalty.setExtensionPenalty(extend);
 
 		@SuppressWarnings({ "unchecked" })
-		PairwiseSequenceAligner smithWaterman =
+		PairwiseSequenceAligner<?, NucleotideCompound> smithWaterman =
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
 		@SuppressWarnings("rawtypes")

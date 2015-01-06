@@ -101,14 +101,14 @@ public class GuiWrapper {
 		m.invoke(c,(Object[])null);
 	}
 
-	@SuppressWarnings({ "unchecked", "unused" })
+	@SuppressWarnings({"unused" })
 	public static Structure getAlignedStructure(Atom[] ca1, Atom[] ca2)
 			throws ClassNotFoundException, NoSuchMethodException,
 			InvocationTargetException, IllegalAccessException{
 
-		Class structureAlignmentJmol = Class.forName(strucAligJmol);
+		Class<?> structureAlignmentJmol = Class.forName(strucAligJmol);
 
-		Class c = Class.forName(displayAFP);		
+		Class<?> c = Class.forName(displayAFP);		
 		Method show = c.getMethod("getAlignedStructure", new Class[] { Atom[].class, Atom[].class});
 
 		Structure s = (Structure) show.invoke(null, ca1, ca2);
@@ -117,12 +117,11 @@ public class GuiWrapper {
 
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	public static JPanel getScaleableMatrixPanel(Matrix m)
 			throws ClassNotFoundException, NoSuchMethodException,
 			InvocationTargetException, IllegalAccessException, InstantiationException{
 
-		Class scaleMatrixPanelC = Class.forName(scaleMatrixPanel);
+		Class<?> scaleMatrixPanelC = Class.forName(scaleMatrixPanel);
 
 		Method setMatrix = scaleMatrixPanelC.getMethod("setMatrix", new Class[] { Matrix.class});
 

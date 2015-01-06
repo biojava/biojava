@@ -270,7 +270,7 @@ public class CompoundFinder {
 		int sizeHetatoms = hetAtoms.size();
 		int sizeWaters = 0;
 		for (Group g:hetAtoms) {
-			if (g.getPDBName().equals("HOH")) sizeWaters++;
+			if (g.isWater()) sizeWaters++;
 		}
 		
 		int fullSize = sizeAminos + sizeNucleotides + sizeHetatoms - sizeWaters;

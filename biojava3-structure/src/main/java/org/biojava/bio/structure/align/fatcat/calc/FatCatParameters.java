@@ -433,13 +433,12 @@ public class FatCatParameters implements ConfigStrucAligParams
 		return writer.toString();
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	private Object  getValue(String name){
 
 		try {
 			String methodName = "get" + name;
 
-			Class paramC = this.getClass();
+			Class<?> paramC = this.getClass();
 
 			Method m =paramC.getMethod(methodName,(Class[])null);
 

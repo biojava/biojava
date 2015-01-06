@@ -1201,7 +1201,7 @@ public class StructureTools {
 			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
 
 				// exclude water
-				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
+				if (!includeWater && chainGroup.isWater()) continue;
 
 				// check blacklist of residue numbers
 				for (ResidueNumber rn : excludeResidues) {
@@ -1263,7 +1263,7 @@ public class StructureTools {
 		Set<Group> returnSet = new LinkedHashSet<Group>();
 		for (Chain chain : structure.getChains()) {
 			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
-				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
+				if (!includeWater && chainGroup.isWater()) continue;
 				for (ResidueNumber rn : excludeResidues) {
 					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
 				}
