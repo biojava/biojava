@@ -1872,7 +1872,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if ( atomCount == my_ATOM_CA_THRESHOLD ) {
 			// throw away the SEQRES lines - too much to deal with...
-			System.err.println("more than " + my_ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
+			logger.warn("more than " + my_ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
 			seqResChains.clear();
 
 			switchCAOnly();
@@ -1882,8 +1882,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 		if ( atomCount == load_max_atoms){
-			System.err.println("too many atoms (>"+load_max_atoms+"in this protein structure.");
-			System.err.println("ignoring lines after: " + line);
+			logger.warn("too many atoms (>"+load_max_atoms+"in this protein structure.");
+			logger.warn("ignoring lines after: " + line);
 			return;
 		}
 		if ( atomCount > load_max_atoms){

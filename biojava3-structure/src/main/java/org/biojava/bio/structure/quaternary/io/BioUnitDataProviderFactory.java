@@ -7,13 +7,13 @@ public class BioUnitDataProviderFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(BioUnitDataProviderFactory.class);
 	
-	public static final String mmcifProviderClassName = "org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider";
+	public static final String mmcifProviderClassName     = MmCifBiolAssemblyProvider.class.getName();
 	
-	public static final String remoteProviderClassName = "org.biojava.bio.structure.quaternary.io.RemoteBioUnitDataProvider";
+	public static final String remoteProviderClassName    = RemoteBioUnitDataProvider.class.getName();
 	
-	public static final String pdbProviderClassName 	= "org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider";
+	public static final String pdbProviderClassName       = PDBBioUnitDataProvider.class.getName();
 	
-	public static final String fileBasedProviderClassName = "org.biojava.bio.structure.quaternary.io.FileBasedPDBBioUnitDataProvider";
+	public static final String fileBasedProviderClassName = FileBasedPDBBioUnitDataProvider.class.getName();
 	
 	public static String DEFAULT_PROVIDER_CLASSNAME =  mmcifProviderClassName;
 	
@@ -32,14 +32,11 @@ public class BioUnitDataProviderFactory {
 			//System.out.println("Using BioUnitProvider: " + providerClassName);
 			return (BioUnitDataProvider) cls.newInstance();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception caught",e);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception caught",e);
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();			
+			logger.error("Exception caught",e);			
 		}
 		
 		return null;
@@ -65,8 +62,7 @@ public class BioUnitDataProviderFactory {
 				return ;
 			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception caught",e);
 			
 			// we do not set classes that don't exist!
 			return;
