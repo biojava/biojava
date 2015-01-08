@@ -48,6 +48,8 @@ import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.util.FileDownloadUtils;
@@ -89,14 +91,11 @@ public class AtomCache {
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-	private boolean fetchCurrent;
-
-	private boolean fetchFileEvenIfObsolete;
-
 	protected FileParsingParameters params;
 	protected PDPProvider pdpprovider;
 
-	private boolean autoFetch;
+	private FetchBehavior fetchBehavior;
+	private ObsoleteBehavior obsoleteBehavior;
 
 	private String cachePath;
 
@@ -165,9 +164,8 @@ public class AtomCache {
 		// this.cache = cache;
 		this.isSplit = isSplit;
 
-		autoFetch = true;
-		fetchFileEvenIfObsolete = false;
-		fetchCurrent = false;
+		fetchBehavior = FetchBehavior.DEFAULT;
+		obsoleteBehavior = ObsoleteBehavior.DEFAULT;
 
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
@@ -192,7 +190,8 @@ public class AtomCache {
 	 */
 	public AtomCache(UserConfiguration config) {
 		this(config.getPdbFilePath(), config.getCacheFilePath(), config.isSplit());
-		autoFetch = config.getAutoFetch();
+		fetchBehavior = config.getFetchBehavior();
+		obsoleteBehavior = config.getObsoleteBehavior();
 	}
 
 	/**
@@ -625,18 +624,22 @@ public class AtomCache {
 	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
 	 * 
 	 * @return flag
+	 * @deprecated Use {@link #getFetchBehavior()}
 	 */
+	@Deprecated
 	public boolean isAutoFetch() {
-		return autoFetch;
+		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
 	}
 
 	/**
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
 	 * 
 	 * @return the fetchCurrent
+	 * @deprecated Use {@link FileParsingParameters#getObsoleteBehavior()} instead (4.0.0)
 	 */
+	@Deprecated
 	public boolean isFetchCurrent() {
-		return fetchCurrent;
+		return getObsoleteBehavior() == ObsoleteBehavior.FETCH_CURRENT;
 	}
 
 	/**
@@ -648,9 +651,11 @@ public class AtomCache {
 	 * @author Amr AL-Hossary
 	 * @see #fetchCurrent
 	 * @since 3.0.2
+	 * @deprecated Use {@link FileParsingParameters#getObsoleteBehavior()} instead (4.0.0)
 	 */
+	@Deprecated
 	public boolean isFetchFileEvenIfObsolete() {
-		return fetchFileEvenIfObsolete;
+		return getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE;
 	}
 
 	/**
@@ -702,9 +707,15 @@ public class AtomCache {
 	 * 
 	 * @param autoFetch
 	 *            flag
+	 * @deprecated Use {@link #getFetchBehavior()}
 	 */
+	@Deprecated
 	public void setAutoFetch(boolean autoFetch) {
-		this.autoFetch = autoFetch;
+		if(autoFetch) {
+			setFetchBehavior(FetchBehavior.DEFAULT);
+		} else {
+			setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+		}
 	}
 
 	/**
@@ -726,9 +737,17 @@ public class AtomCache {
 	 * @author Amr AL-Hossary
 	 * @see #setFetchFileEvenIfObsolete(boolean)
 	 * @since 3.0.2
+	 * @deprecated Use {@link FileParsingParameters#setObsoleteBehavior()} instead (4.0.0)
 	 */
+	@Deprecated
 	public void setFetchCurrent(boolean fetchNewestCurrent) {
-		fetchCurrent = fetchNewestCurrent;
+		if(fetchNewestCurrent) {
+			setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
+		} else {
+			if(getObsoleteBehavior() == ObsoleteBehavior.FETCH_CURRENT) {
+				setObsoleteBehavior(ObsoleteBehavior.DEFAULT);
+			}
+		}
 	}
 
 	/**
@@ -736,13 +755,76 @@ public class AtomCache {
 	 * 
 	 * @param fetchFileEvenIfObsolete
 	 *            the fetchFileEvenIfObsolete to set
+	 * @deprecated Use {@link FileParsingParameters#setObsoleteBehavior()} instead (4.0.0)
 	 */
+	@Deprecated
 	public void setFetchFileEvenIfObsolete(boolean fetchFileEvenIfObsolete) {
-		this.fetchFileEvenIfObsolete = fetchFileEvenIfObsolete;
+		if(fetchFileEvenIfObsolete) {
+			setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
+		} else {
+			if(getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE) {
+				setObsoleteBehavior(ObsoleteBehavior.DEFAULT);
+			}
+		}
 	}
 
 	public void setFileParsingParams(FileParsingParameters params) {
 		this.params = params;
+	}
+
+
+	/**
+	 * <b>[Optional]</b> This method changes the behavior when obsolete entries
+	 * are requested. Current behaviors are:
+	 * <ul>
+	 * <li>{@link ObsoleteBehavior#THROW_EXCEPTION THROW_EXCEPTION}
+	 *   Throw a {@link StructureException} (the default)
+	 * <li>{@link ObsoleteBehavior#FETCH_OBSOLETE FETCH_OBSOLETE}
+	 *   Load the requested ID from the PDB's obsolete repository
+	 * <li>{@link ObsoleteBehavior#FETCH_CURRENT FETCH_CURRENT}
+	 *   Load the most recent version of the requested structure
+	 * 
+	 * <p>This setting may be silently ignored by implementations which do not have
+	 * access to the server to determine whether an entry is obsolete, such as
+	 * if {@link #isAutoFetch()} is false. Note that an obsolete entry may still be
+	 * returned even this is FETCH_CURRENT if the entry is found locally.
+	 * 
+	 * @param fetchFileEvenIfObsolete Whether to fetch obsolete records
+	 * @see #setFetchCurrent(boolean)
+	 * @since 4.0.0
+	 */
+	public void setObsoleteBehavior(ObsoleteBehavior behavior) {
+		obsoleteBehavior = behavior;
+	}
+
+	/**
+	 * Returns how this instance deals with obsolete entries. Note that this
+	 * setting may be ignored by some implementations or in some situations,
+	 * such as when {@link #isAutoFetch()} is false.
+	 * 
+	 * <p>For most implementations, the default value is
+	 * {@link ObsoleteBehavior#THROW_EXCEPTION THROW_EXCEPTION}.
+	 * 
+	 * @return The ObsoleteBehavior
+	 * @since 4.0.0
+	 */
+	public ObsoleteBehavior getObsoleteBehavior() {
+		return obsoleteBehavior;
+	}
+
+	/**
+	 * Get the behavior for fetching files from the server
+	 * @return
+	 */
+	public FetchBehavior getFetchBehavior() {
+		return fetchBehavior;
+	}
+	/**
+	 * Set the behavior for fetching files from the server
+	 * @param fetchBehavior
+	 */
+	public void setFetchBehavior(FetchBehavior fetchBehavior) {
+		this.fetchBehavior = fetchBehavior;
 	}
 
 	/**
@@ -975,9 +1057,8 @@ public class AtomCache {
 
 		PDBFileReader reader = new PDBFileReader(path);
 		reader.setPdbDirectorySplit(isSplit);
-		reader.setAutoFetch(autoFetch);
-		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-		reader.setFetchCurrent(fetchCurrent);
+		reader.setFetchBehavior(fetchBehavior);
+		reader.setObsoleteBehavior(obsoleteBehavior);
 
 		reader.setFileParsingParameters(params);
 		Structure s = reader.getStructure(url);
@@ -1073,7 +1154,8 @@ public class AtomCache {
 		try {
 			MMCIFFileReader reader = new MMCIFFileReader(path);
 			reader.setPdbDirectorySplit(isSplit);
-			reader.setAutoFetch(autoFetch);
+			reader.setFetchBehavior(fetchBehavior);
+			reader.setObsoleteBehavior(obsoleteBehavior);
 
 			// not supported yet
 			// reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
@@ -1099,9 +1181,8 @@ public class AtomCache {
 		try {
 			PDBFileReader reader = new PDBFileReader(path);
 			reader.setPdbDirectorySplit(isSplit);
-			reader.setAutoFetch(autoFetch);
-			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-			reader.setFetchCurrent(fetchCurrent);
+			reader.setFetchBehavior(fetchBehavior);
+			reader.setObsoleteBehavior(obsoleteBehavior);
 
 			reader.setFileParsingParameters(params);
 

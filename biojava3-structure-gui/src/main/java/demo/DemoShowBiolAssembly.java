@@ -38,7 +38,7 @@ public class DemoShowBiolAssembly {
 			jmolPanel.setStructure(bioAssembly);
 
 			// send some commands to Jmol
-			jmolPanel.evalString("select * ; color structure ; spacefill off; wireframe off; backbone off; cartoon on; select ligands ; spacefill 0.4; color cpk;");
+			jmolPanel.evalString("select * ; color structure ; spacefill off; wireframe off; backbone off; cartoon on; select ligands ; spacefill 0.4; color cpk; model 0;");
 			
 			System.out.println("done!");
 

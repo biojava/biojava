@@ -37,7 +37,7 @@ public class TestLoadStructureFromURL {
 		c.getStructure("1znf");
 
 		//and now create a URL for this file
-		File subdir = new File(f, PDBFileReader.LOCAL_PDB_SPLIT_DIR+lineSplit+"zn");
+		File subdir = new File(f, String.join(lineSplit,PDBFileReader.PDB_SPLIT_DIR)+lineSplit+"zn");
 		File newFile = new File(subdir, "pdb1znf.ent.gz");
 
 		subdir.deleteOnExit();

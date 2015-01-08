@@ -49,6 +49,7 @@ import org.biojava.bio.structure.align.util.SynchronizedOutFile;
 import org.biojava.bio.structure.domain.DomainProvider;
 import org.biojava.bio.structure.domain.DomainProviderFactory;
 import org.biojava.bio.structure.domain.RemoteDomainProvider;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava3.core.util.ConcurrencyTools;
 import org.slf4j.Logger;
@@ -397,13 +398,11 @@ public class MultiThreadedDBSearch {
 		StructureName name = new StructureName(repre);
 		
 		PDBFileReader reader = new PDBFileReader();
-		reader.setAutoFetch(true);
+		reader.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
 		reader.setPath(cache.getPath());
 		reader.setFileParsingParameters(cache.getFileParsingParams());
 		reader.setPdbDirectorySplit(cache.isSplit());
-		if ( ! reader.checkFileExists(name.getPdbId()))
-			reader.downloadPDB(name.getPdbId());
-		
+		reader.prefetchStructure(name.getPdbId());
 	}
 
 

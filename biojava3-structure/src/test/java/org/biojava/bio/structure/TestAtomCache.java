@@ -30,6 +30,8 @@ import java.util.ArrayList;
 
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,8 +65,8 @@ public class TestAtomCache {
 		for(String pdbId : uncacheIDs) {
 			String middle = pdbId.substring(1,3).toLowerCase();
 			
-			String fpath = cacheDir + PDBFileReader.LOCAL_PDB_SPLIT_DIR + lineSplit + middle + lineSplit + pdbId;
-			String ppath = cacheDir + PDBFileReader.LOCAL_PDB_SPLIT_DIR + lineSplit + middle + lineSplit + "pdb"+pdbId;
+			String fpath = cacheDir + String.join(lineSplit,PDBFileReader.PDB_SPLIT_DIR) + lineSplit + middle + lineSplit + pdbId;
+			String ppath = cacheDir + String.join(lineSplit,PDBFileReader.PDB_SPLIT_DIR) + lineSplit + middle + lineSplit + "pdb"+pdbId;
 			
 			String[] paths = new String[]{fpath,ppath};
 
@@ -72,7 +74,7 @@ public class TestAtomCache {
 				String testpath = paths[p];
 				//System.out.println(testpath);
 				for (int i=0 ; i<extensions.size();i++){
-					String ex = (String)extensions.get(i) ;
+					String ex = extensions.get(i) ;
 					//System.out.println("PDBFileReader testing: "+testpath+ex);
 					File f = new File(testpath+ex) ;
 
@@ -155,55 +157,81 @@ public class TestAtomCache {
 		c = s.getChainByPDB(chainId2);
 		assertEquals(c.getChainID(),chainId2);
 
-		
-		
 
 	}
 	
+	@Test
+	public void testObsoleteId() throws StructureException {
+		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
+		cache.setObsoleteBehavior(ObsoleteBehavior.THROW_EXCEPTION);
+
+		// OBSOLETE PDB; should throw an exception
+		cache.setUseMmCif(false);
+		try {
+			cache.getStructure("1HHB");
+			fail("Obsolete structure should throw exception");
+		} catch(IOException e) {}
+	}
+	
 	// note: we expect an IOException because 1CMW is obsolete and hasn't got a replacement
-	@Test(expected=IOException.class)
+	@Test
 	public void testFetchCurrent1CMW() throws IOException, StructureException {
 		
-		cache.setUseMmCif(false); //TODO Remove after implementing obsolete mmcif fetching
-		cache.setAutoFetch(true);
-		cache.setFetchCurrent(true);
-		cache.setFetchFileEvenIfObsolete(false);
+		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
+		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
 		
 		// OBSOLETE PDB; should throw an exception
-		cache.getStructure("1CMW");
+		cache.setUseMmCif(false);
+		try {
+			cache.getStructure("1CMW");
+			fail("Obsolete structure should throw exception");
+		} catch(IOException e) {}
+
+		cache.setUseMmCif(true);
+		try {
+			cache.getStructure("1CMW");
+			fail("Obsolete structure should throw exception");
+		} catch(IOException e) {}
 	}
 
 	// 1HHB is obsolete with a replacement
 	@Test
 	public void testFetchCurrent1HHB() throws IOException, StructureException {
 		
-		cache.setUseMmCif(false); //TODO Remove after implementing obsolete mmcif fetching
-		cache.setAutoFetch(true);
-		cache.setFetchCurrent(true);
-		cache.setFetchFileEvenIfObsolete(false);
- 
+		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
+		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
+		
+		cache.setUseMmCif(false);
 		Structure s = cache.getStructure("1HHB");
 		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
 		
+		cache.setUseMmCif(true);
+		s = cache.getStructure("1HHB");
+		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
 	}
 
+	// Fetching obsolete directly
 	@Test
 	public void testFetchObsolete() throws IOException, StructureException {
-		
-		
-		cache.setUseMmCif(false); //TODO Remove after implementing obsolete mmcif fetching
-		cache.setAutoFetch(true);
-		cache.setFetchCurrent(false);
-		cache.setFetchFileEvenIfObsolete(true);
-		
+		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
+		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
+
 		Structure s;
 
+		cache.setUseMmCif(false);
 		s = cache.getStructure("1CMW");
 		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
 
 		s = cache.getStructure("1HHB");
-		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPDBCode());		
-		
+		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPDBCode());
+
+		cache.setUseMmCif(true);
+		s = cache.getStructure("1CMW");
+		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
+
+		s = cache.getStructure("1HHB");
+		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPDBCode());
+
 	}
 
 }

@@ -25,6 +25,8 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import org.biojava.bio.structure.align.ce.StartupParameters;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.core.util.XMLWriter;
 import org.slf4j.Logger;
@@ -55,7 +57,8 @@ public class UserConfiguration
 	private String cacheFilePath;
 	private boolean isSplit;
 
-	private boolean autoFetch;
+	private FetchBehavior fetchBehavior;
+	private ObsoleteBehavior obsoleteBehavior;
 
 	private String fileFormat;
 
@@ -87,13 +90,14 @@ public class UserConfiguration
 	 */
 	public UserConfiguration(){
 		isSplit = true;
-		autoFetch = true;
-		       
+		fetchBehavior = FetchBehavior.DEFAULT;
+		obsoleteBehavior = ObsoleteBehavior.DEFAULT;
+
 		pdbFilePath = initPdbFilePath();
 		// note that in initCacheFilePath, we set to the provided one (if readable) or to the same as pdbFilePath
 		cacheFilePath = initCacheFilePath();
 		
-		fileFormat = PDB_FORMAT;
+		fileFormat = PDB_FORMAT;//TODO switch to mmcif (SB 2015-01)
 	}
 	
 	private String initPdbFilePath() {
@@ -149,7 +153,7 @@ public class UserConfiguration
 				logger.warn("Could not read dir from system property {} or environment variable {}, "
 						+ "using system's temp directory {}",
 						propertyName, propertyName, path);
-			}   
+			}
 		}
 		
 		if ( ! path.endsWith(lineSplit) )
@@ -255,12 +259,41 @@ public class UserConfiguration
 		this.isSplit = isSplit;
 	}
 
+
+	/**
+	 * @deprecated Use {@link #getFetchBehavior()}
+	 */
+	@Deprecated
 	public boolean getAutoFetch() {
-		return autoFetch;
+		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
 	}
 
+	/**
+	 * @deprecated Use {@link #getFetchBehavior()}
+	 */
+	@Deprecated
 	public void setAutoFetch(boolean autoFetch) {
-		this.autoFetch = autoFetch;
+		if(autoFetch) {
+			setFetchBehavior(FetchBehavior.DEFAULT);
+		} else {
+			setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+		}
+	}
+
+	public FetchBehavior getFetchBehavior() {
+		return fetchBehavior;
+	}
+
+	public void setFetchBehavior(FetchBehavior fetchBehavior) {
+		this.fetchBehavior = fetchBehavior;
+	}
+
+	public ObsoleteBehavior getObsoleteBehavior() {
+		return obsoleteBehavior;
+	}
+
+	public void setObsoleteBehavior(ObsoleteBehavior obsoleteBehavior) {
+		this.obsoleteBehavior = obsoleteBehavior;
 	}
 
 	/** convert Configuration to an XML file so it can be serialized
@@ -302,7 +335,8 @@ public class UserConfiguration
 			xw.attribute("path", pdbFilePath);
 
 		xw.attribute("split", isSplit +"" );
-		xw.attribute("autofetch", autoFetch+"");
+		xw.attribute("fetchBehavior", fetchBehavior+"");
+		xw.attribute("obsoleteBehavior", obsoleteBehavior+"");
 		xw.attribute("fileFormat", fileFormat);
 		xw.closeTag("PDBFILEPATH");
 
