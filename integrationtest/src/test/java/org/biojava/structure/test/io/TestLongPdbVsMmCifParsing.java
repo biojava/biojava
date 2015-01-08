@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.vecmath.Matrix4d;
 
@@ -26,6 +27,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -322,11 +324,31 @@ public class TestLongPdbVsMmCifParsing {
 				assertEquals("Number of NCS operators don't coincide", ncsOpersPdb.length, ncsOpersCif.length);
 				
 				for (int i=0;i<ncsOpersPdb.length;i++) {
-					assertTrue("NCS operator "+i+" don't coincide",ncsOpersPdb[i].epsilonEquals(ncsOpersCif[i], 0.0001)); 
+					assertTrue("NCS operators "+i+" don't coincide",ncsOpersPdb[i].epsilonEquals(ncsOpersCif[i], 0.0001)); 
 				}
 			}
 		}
 		
+		// biological assemblies
+		// a) we don't test in non-crystallographic case because annotation is inconsistent between PDB and mmCIF,
+		//    e.g. 2kli (NMR) has bioassembly annotation in mmCIF but not in PDB
+		// b) we don't test virus entries (we check via looking at ncs operators==null): 
+		//    they are inconsistent PDB vs mmCIF (e.g. 1pgw has 6 biounits in mmCIF and only 1 in PDB) 
+		if (isCrystallographic && hPdb.getCrystallographicInfo().getNcsOperators()==null
+				// 1ruh, 2ms2, 2r06: virus proteins with data consistency issue: it's missing the MTRXn record (so it appears as ncs operators==null)
+				&& (!sPdb.getPDBCode().equalsIgnoreCase("1ruh"))
+				&& (!sPdb.getPDBCode().equalsIgnoreCase("2ms2")) 
+				&& (!sPdb.getPDBCode().equalsIgnoreCase("2r06"))) {			
+			
+			assertEquals("Number of bioassemblies don't coincide",hPdb.getNrBioAssemblies(), hCif.getNrBioAssemblies());
+
+			Map<String,List<BiologicalAssemblyTransformation>> batPdb = hPdb.getBioUnitTranformationMap();
+			Map<String,List<BiologicalAssemblyTransformation>> batCif = hCif.getBioUnitTranformationMap();		
+
+			assertEquals("Size of bioassemblies map doesn't coincide with nr of bioassemblies",
+					hPdb.getNrBioAssemblies(),batPdb.size());
+			assertEquals("Size of bioassemblies maps don't coincide",batPdb.size(), batCif.size());
+		}
 	}
 	
 	private void testChains(Structure sPdb, Structure sCif) throws StructureException {
@@ -464,6 +486,7 @@ public class TestLongPdbVsMmCifParsing {
 		// set parsing params here:
 		params.setAlignSeqRes(true); 
 		//params.setLoadChemCompInfo(true);
+		params.setParseBioAssembly(true);
 		
 		return cache.getStructure(pdbId);
 
@@ -474,6 +497,7 @@ public class TestLongPdbVsMmCifParsing {
 		// set parsing params here:
 		params.setAlignSeqRes(true); 		
 		//params.setLoadChemCompInfo(true);
+		params.setParseBioAssembly(true);
 		
 		return cache.getStructure(pdbId);
 		

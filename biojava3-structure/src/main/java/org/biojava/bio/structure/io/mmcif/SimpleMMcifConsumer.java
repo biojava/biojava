@@ -866,41 +866,42 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		
 
 		// set the oligomeric state info in the header...
+		if (params.isParseBioAssembly()) {
+			PDBHeader header = structure.getPDBHeader();
+			header.setNrBioAssemblies(strucAssemblies.size());
 
-		PDBHeader header = structure.getPDBHeader();
-		header.setNrBioAssemblies(strucAssemblies.size());
+			// the more detailed mapping of chains to rotation operations happens in StructureIO...
+			// TODO clean this up and move it here...
+			//header.setBioUnitTranformationMap(tranformationMap);
+			Map<String,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
+			//int total = strucAssemblies.size();
 
-		// the more detailed mapping of chains to rotation operations happens in StructureIO...
-		// TODO clean this up and move it here...
-		//header.setBioUnitTranformationMap(tranformationMap);
-		Map<String,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
-		//int total = strucAssemblies.size();
+			//for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
 
-		//for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
-		
-		for ( PdbxStructAssembly psa : strucAssemblies){
-		//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
+			for ( PdbxStructAssembly psa : strucAssemblies){
+				//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
 
-			//PdbxStructAssembly psa = strucAssemblies.get(asmbl.getId());
-			List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>(1);
+				//PdbxStructAssembly psa = strucAssemblies.get(asmbl.getId());
+				List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>(1);
 
-			for ( PdbxStructAssemblyGen psag: strucAssemblyGens ) {
-				if ( psag.getAssembly_id().equals(psa.getId())) {
-					psags.add(psag);
+				for ( PdbxStructAssemblyGen psag: strucAssemblyGens ) {
+					if ( psag.getAssembly_id().equals(psa.getId())) {
+						psags.add(psag);
+					}
 				}
+
+				//System.out.println("psags: " + psags.size());
+				BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
+
+				// these are the transformations that need to be applied to our model
+				List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
+
+				transformationMap.put(psa.getId(),transformations);
+				//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
+
 			}
-
-			//System.out.println("psags: " + psags.size());
-			BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
-
-			// these are the transformations that need to be applied to our model
-			List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
-
-			transformationMap.put(psa.getId(),transformations);
-			//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
-
+			structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
 		}
-		structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
 
 		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
 		for (StructNcsOper sNcsOper:structNcsOper) {
