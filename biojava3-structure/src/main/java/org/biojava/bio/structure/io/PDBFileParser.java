@@ -2998,7 +2998,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		if ( bioAssemblyParser != null){
 			pdbHeader.setBioUnitTranformationMap(bioAssemblyParser.getTransformationMap());
-			pdbHeader.setNrBioAssemblies(bioAssemblyParser.getNrBioAssemblies());
 			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
 			//System.out.println(pdbHeader.getBioUnitTranformationMap().keySet());
 		}

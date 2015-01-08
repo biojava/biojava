@@ -50,8 +50,6 @@ public class PDBHeader implements PDBRecord, Serializable{
 	private JournalArticle journalArticle;
 	private String authors;
 	
-	private int nrBioAssemblies ;
-	
 	public static final float DEFAULT_RESOLUTION = 99;
 	public static final float DEFAULT_RFREE = 1; // worst possible rfree is the default
 
@@ -70,7 +68,6 @@ public class PDBHeader implements PDBRecord, Serializable{
 		resolution = DEFAULT_RESOLUTION;
 		rFree = DEFAULT_RFREE;
 		tranformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
-		nrBioAssemblies = -1;
 		crystallographicInfo = new PDBCrystallographicInfo();
 	}
 
@@ -614,7 +611,11 @@ public class PDBHeader implements PDBRecord, Serializable{
         this.journalArticle = journalArticle;
     }
 	
-	
+	/**
+	 * Return the map of biological assembly transformations per assembly. The keys are the 
+	 * biological assembly identifiers, usually numerical from 1 to n, but can also be "PAU" and "XAU"
+	 * @return
+	 */
 	public Map<String,List<BiologicalAssemblyTransformation>> getBioUnitTranformationMap() {
 		return tranformationMap ;
 	}
@@ -623,13 +624,12 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.tranformationMap = tranformationMap;
 	}
 
-	public void setNrBioAssemblies(int nrBioAssemblies) {
-		this.nrBioAssemblies = nrBioAssemblies;
-		
-	}
-	
+	/**
+	 * Get the number of biological assemblies available in the PDB header
+	 * @return
+	 */
 	public int getNrBioAssemblies() {
-		return nrBioAssemblies;
+		return this.tranformationMap.size();
 	}
 
 
