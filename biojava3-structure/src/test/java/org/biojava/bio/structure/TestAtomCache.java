@@ -24,18 +24,24 @@
 
 package org.biojava.bio.structure;
 
-import java.io.File;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.LocalPDBDirectory;
 import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.biojava.bio.structure.io.MMCIFFileReader;
+import org.biojava.bio.structure.io.PDBFileReader;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class TestAtomCache {
 	
@@ -47,44 +53,20 @@ public class TestAtomCache {
 		cache = new AtomCache();
 
 		// Delete files which were cached in previous tests
-		String cacheDir = cache.getPath();
 		String[] uncacheIDs = new String[] {
 				"1cmw", "1hhb","4hhb"
 		};
-		
-		ArrayList<String> extensions    = new ArrayList<String>();
 
-		extensions.add(".ent");
-		extensions.add(".pdb");
-		extensions.add(".ent.gz");
-		extensions.add(".pdb.gz");
-		extensions.add(".ent.Z");
-		extensions.add(".pdb.Z");
+		List<LocalPDBDirectory> readers = new ArrayList<LocalPDBDirectory>();
+		readers.add(new MMCIFFileReader(cache.getPath()) );
+		readers.add(new PDBFileReader(cache.getCachePath()) );
+		for(LocalPDBDirectory reader : readers) {
+			reader.setFetchBehavior(cache.getFetchBehavior());
+			reader.setObsoleteBehavior(cache.getObsoleteBehavior());
 
-		
-		for(String pdbId : uncacheIDs) {
-			String middle = pdbId.substring(1,3).toLowerCase();
-			
-			String fpath = cacheDir + String.join(lineSplit,PDBFileReader.PDB_SPLIT_DIR) + lineSplit + middle + lineSplit + pdbId;
-			String ppath = cacheDir + String.join(lineSplit,PDBFileReader.PDB_SPLIT_DIR) + lineSplit + middle + lineSplit + "pdb"+pdbId;
-			
-			String[] paths = new String[]{fpath,ppath};
-
-			for ( int p=0;p<paths.length;p++ ){
-				String testpath = paths[p];
-				//System.out.println(testpath);
-				for (int i=0 ; i<extensions.size();i++){
-					String ex = extensions.get(i) ;
-					//System.out.println("PDBFileReader testing: "+testpath+ex);
-					File f = new File(testpath+ex) ;
-
-					if ( f.exists()) {
-						System.out.println("Deleting "+testpath+ex);
-						assertTrue("Error deleting "+testpath+ex+" during setup.",f.delete());
-					}
-				}
+			for(String pdbId : uncacheIDs) {
+				reader.deleteStructure(pdbId);
 			}
-
 		}
 	}
 

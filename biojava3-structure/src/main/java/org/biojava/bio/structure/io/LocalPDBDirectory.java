@@ -130,6 +130,13 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	private ObsoleteBehavior obsoleteBehavior;
 	private FetchBehavior fetchBehavior;
 
+	
+	// Cache results of get*DirPath()
+	private String splitDirURL; // path on the server, starting with a slash and ending before the 2-char split directories
+	private String obsoleteDirURL;
+	private File splitDirPath; // path to the directory before the 2-char split
+	private File obsoleteDirPath;
+	
 	/**
 	 * Subclasses should provide default and single-string constructors.
 	 * They should use {@link #addExtension(String)} to add one or more extensions.
@@ -161,6 +168,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		} else {
 			logger.info("Using PDB file server {} read from system property {}",serverName,PDBFileReader.PDB_FILE_SERVER_PROPERTY);
 		}
+		
+		// Initialize splitDirURL,obsoleteDirURL,splitDirPath,obsoleteDirPath
+		initPaths();
 
 		fetchBehavior = FetchBehavior.DEFAULT;
 		obsoleteBehavior = ObsoleteBehavior.DEFAULT;
@@ -173,9 +183,11 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	/** 
 	 * Sets the path for the directory where PDB files are read/written 
 	 */
+	@SuppressWarnings("deprecation") //method belongs at this level --SB
 	@Override
 	public void setPath(String p){
 		path = new File(FileDownloadUtils.expandUserHome(p)) ;
+		initPaths();
 	}
 
 	/**
@@ -184,6 +196,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @see #setPath
 	 *
 	 */
+	@SuppressWarnings("deprecation") //method belongs at this level --SB
 	@Override
 	public String getPath() {
 		return path.toString() ;
@@ -410,6 +423,42 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
 		}
 	}
+	
+	/**
+	 * Attempts to delete all versions of a structure from the local directory.
+	 * @param pdbId
+	 * @return True if one or more files were deleted
+	 */
+	public boolean deleteStructure(String pdbId){
+		boolean deleted = false;
+		File existing = getLocalFile(pdbId);
+		while(existing != null) {
+			assert(existing.exists()); // should exist unless concurrency problems
+			
+			if( getFetchBehavior() == FetchBehavior.LOCAL_ONLY) {
+				throw new RuntimeException("Refusing to delete from LOCAL_ONLY directory");
+			}
+			
+			// delete file
+			boolean success = existing.delete();
+			if(success) {
+				logger.info("Deleting "+existing.getAbsolutePath());
+			}
+			deleted |= success;
+			
+			// delete parent if empty
+			File parent = existing.getParentFile();
+			if(parent != null) {
+				success = parent.delete();
+				if(success) {
+					logger.info("Deleting "+parent.getAbsolutePath());
+				}
+			}
+			
+			existing = getLocalFile(pdbId);
+		}
+		return deleted;
+	}
 
 	/**
 	 * Downloads an MMCIF file from the PDB to the local path
@@ -468,17 +517,12 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				// either an error or there is not current entry
 				current = pdbId;
 			}
-			String path;
-			path = String.join("/", getSplitDirPath());
-			return downloadStructure(current, path,false);
+			return downloadStructure(current, splitDirURL,false);
 		} else if(obsoleteBehavior == ObsoleteBehavior.FETCH_OBSOLETE
 				&& PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
-			String path = String.join("/", getObsoleteDirPath());
-			return downloadStructure(pdbId, path,true);
+			return downloadStructure(pdbId, obsoleteDirURL,true);
 		} else {
-			String path;
-			path = String.join("/", getSplitDirPath());
-			return downloadStructure(pdbId, path, false);
+			return downloadStructure(pdbId, splitDirURL, false);
 		}
 	}
 
@@ -494,7 +538,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		File dir = getDir(pdbId,obsolete);
 		File realFile = new File(dir,getFilename(pdbId));
 
-		String ftp = String.format("ftp://%s/pub/pdb/%s/%s/%s", 
+		String ftp = String.format("ftp://%s%s/%s/%s", 
 				serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
 
 		logger.info("Fetching " + ftp);
@@ -523,10 +567,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		if (obsolete) {
 			// obsolete is always split
 			String middle = pdbId.substring(1,3).toLowerCase();
-			dir = new File(path, String.join(lineSplit, getObsoleteDirPath()) + lineSplit + middle);
+			dir = new File(obsoleteDirPath, middle);
 		} else {
 			String middle = pdbId.substring(1,3).toLowerCase();
-			dir = new File(path, String.join(lineSplit, getSplitDirPath()) + lineSplit + middle);
+			dir = new File(splitDirPath, middle);
 		}
 
 
@@ -543,7 +587,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @param pdbId
 	 * @return A file pointing to the existing file, or null if not found
 	 */
-	protected File getLocalFile(String pdbId) {
+	public File getLocalFile(String pdbId) {
 
 		// Search for existing files
 
@@ -553,11 +597,11 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		LinkedList<File> searchdirs = new LinkedList<File>();
 		String middle = pdbId.substring(1,3).toLowerCase();
 
-		File splitdir = new File(new File(getPath(), String.join(lineSplit, getSplitDirPath()) ), middle);
+		File splitdir = new File(splitDirPath, middle);
 		searchdirs.add(splitdir);
 		// Search obsolete files if requested
 		if(getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE) {
-			File obsdir = new File(getPath(), String.join(lineSplit, getObsoleteDirPath()));
+			File obsdir = new File(obsoleteDirPath,middle);
 			searchdirs.add(obsdir);
 		}
 
@@ -584,6 +628,44 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			return true;
 		return false;
 	}
+	
+	/**
+	 * Should be called whenever any of the path variables change.
+	 * Thus, if {@link getSplitDirPath()} or {@link getObsoleteDirPath()}
+	 * depend on anything, they should call this function when that thing
+	 * changes (possibly including at the end of the constructor).
+	 */
+	protected void initPaths() {
+		// Hand-rolled String.join(), for java 6
+		String[] split = getSplitDirPath();
+		String[] obsolete = getObsoleteDirPath();
+		
+		//URLs are joined with '/'
+		StringBuilder splitURL = new StringBuilder("/pub/pdb");
+		for(int i=0;i<split.length;i++) {
+			splitURL.append("/");
+			splitURL.append(split[i]);
+		}
+		StringBuilder obsoleteURL = new StringBuilder("/pub/pdb");
+		for(int i=0;i<obsolete.length;i++) {
+			obsoleteURL.append("/");
+			obsoleteURL.append(obsolete[i]);
+		}
+
+		splitDirURL = splitURL.toString();
+		obsoleteDirURL = obsoleteURL.toString();
+
+
+		//Files join themselves iteratively
+		splitDirPath = path;
+		for(int i=0;i<split.length;i++) {
+			splitDirPath = new File(splitDirPath,split[i]);
+		}
+		obsoleteDirPath = path;
+		for(int i=0;i<obsolete.length;i++) {
+			obsoleteDirPath = new File(obsoleteDirPath,split[i]);
+		}
+	}
 
 	/**
 	 * Converts a PDB ID into a filename with the proper extension
@@ -592,6 +674,20 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	protected abstract String getFilename(String pdbId);
 
+	/**
+	 * Location of split files within the directory, as an array of paths.
+	 * These will be joined with either slashes (for the URL) or the file
+	 * separator (for directories). The returned results should be constant,
+	 * to allow for caching.
+	 * @return A list of directories, relative to the /pub/pdb directory on the server
+	 */
 	protected abstract String[] getSplitDirPath();
+	/**
+	 * Location of obsolete files within the directory, as an array of paths.
+	 * These will be joined with either slashes (for the URL) or the file
+	 * separator (for directories). The returned results should be constant,
+	 * to allow for caching.
+	 * @return A list of directories, relative to the /pub/pdb directory on the server
+	 */
 	protected abstract String[] getObsoleteDirPath();
 }
