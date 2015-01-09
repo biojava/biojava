@@ -109,9 +109,8 @@ public class TestQuaternaryStructureProviders {
 
 					if  (! m1.getChainId().equals(m2.getChainId()))
 						continue;
-					if ( ! m1.getRotationMatrix().toString().equals(m2.getRotationMatrix().toString()))
-						continue;
-					if ( ! equalVectors(m1.getTranslation(), m2.getTranslation()))
+					
+					if ( ! m1.getTransformationMatrix().epsilonEquals(m2.getTransformationMatrix(), 0.0001)) 
 						continue;
 
 					found = true;
@@ -155,13 +154,4 @@ public class TestQuaternaryStructureProviders {
 
 	}
 	
-	private boolean equalVectors(double[] vector, double[] vector2) {
-		
-		String s1 = String.format("%.5f %.5f %.5f", vector[0], vector[1], vector[2]);
-		String s2 = String.format("%.5f %.5f %.5f", vector2[0], vector2[1], vector2[2]);
-		//System.out.println(s1 + " " + s2);
-		return s1.equals(s2);
-		
-	}
-
 }

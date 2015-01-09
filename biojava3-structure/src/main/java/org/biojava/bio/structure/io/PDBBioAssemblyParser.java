@@ -128,7 +128,7 @@ public class PDBBioAssemblyParser {
 
 		for (String chainId : currentChainIDs) {
 			BiologicalAssemblyTransformation transformation = new BiologicalAssemblyTransformation();
-			transformation.setRotationMatrix(currentMatrix);
+			transformation.setRotationMatrix(currentMatrix.getArray());
 			transformation.setTranslation(shift);
 			transformation.setId(String.valueOf(modelNumber));
 			transformation.setChainId(chainId);
