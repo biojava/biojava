@@ -55,7 +55,6 @@ public class UserConfiguration
 
 	private String pdbFilePath;
 	private String cacheFilePath;
-	private boolean isSplit;
 
 	private FetchBehavior fetchBehavior;
 	private ObsoleteBehavior obsoleteBehavior;
@@ -89,7 +88,6 @@ public class UserConfiguration
 	 * </ul>
 	 */
 	public UserConfiguration(){
-		isSplit = true;
 		fetchBehavior = FetchBehavior.DEFAULT;
 		obsoleteBehavior = ObsoleteBehavior.DEFAULT;
 
@@ -251,15 +249,6 @@ public class UserConfiguration
 		this.cacheFilePath = cacheFilePath;
 	}
 
-	public boolean isSplit() {
-		return isSplit;
-	}
-
-	public void setSplit(boolean isSplit) {
-		this.isSplit = isSplit;
-	}
-
-
 	/**
 	 * @deprecated Use {@link #getFetchBehavior()}
 	 */
@@ -319,6 +308,7 @@ public class UserConfiguration
 	 * @param xw the XML writer to use
 	 * @return the writer again
 	 * @throws IOException
+	 * @see org.biojava.bio.structure.align.webstart.ConfigXMLHandler
 	 */
 
 	public XMLWriter toXML(XMLWriter xw) 
@@ -334,7 +324,6 @@ public class UserConfiguration
 		if (! pdbFilePath.equals(tempdir))
 			xw.attribute("path", pdbFilePath);
 
-		xw.attribute("split", isSplit +"" );
 		xw.attribute("fetchBehavior", fetchBehavior+"");
 		xw.attribute("obsoleteBehavior", obsoleteBehavior+"");
 		xw.attribute("fileFormat", fileFormat);
@@ -349,7 +338,6 @@ public class UserConfiguration
 		UserConfiguration config = new UserConfiguration();
 		config.setPdbFilePath(params.getPdbFilePath());
 		config.setAutoFetch(params.isAutoFetch());
-		config.setSplit(params.isPdbDirSplit());
 		// TODO support MMCif Files
 		config.setFileFormat(UserConfiguration.PDB_FORMAT);
 		return config;

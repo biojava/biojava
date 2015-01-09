@@ -31,8 +31,6 @@ import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /** How to parse an mmCif file:
@@ -53,10 +51,9 @@ import org.slf4j.LoggerFactory;
  */
 public class MMCIFFileReader extends LocalPDBDirectory {
 
-	private static final Logger logger = LoggerFactory.getLogger(MMCIFFileReader.class);
+	//private static final Logger logger = LoggerFactory.getLogger(MMCIFFileReader.class);
 
 	public static final String[] MMCIF_SPLIT_DIR    = new String[]{"data","structures","divided" ,"mmCIF"};
-	public static final String[] MMCIF_ALL_DIR      = new String[]{"data","structures","all"     ,"mmCIF"};
 	public static final String[] MMCIF_OBSOLETE_DIR = new String[]{"data","structures","obsolete","mmCIF"};
 
 	private SimpleMMcifConsumer consumer;
@@ -136,11 +133,6 @@ public class MMCIFFileReader extends LocalPDBDirectory {
 	@Override
 	protected String[] getSplitDirPath() {
 		return MMCIF_SPLIT_DIR;
-	}
-
-	@Override
-	protected String[] getUnsplitDirPath() {
-		return MMCIF_ALL_DIR;
 	}
 
 	@Override

@@ -13,8 +13,6 @@ public class BioUnitDataProviderFactory {
 	
 	public static final String pdbProviderClassName       = PDBBioUnitDataProvider.class.getName();
 	
-	public static final String fileBasedProviderClassName = FileBasedPDBBioUnitDataProvider.class.getName();
-	
 	public static String DEFAULT_PROVIDER_CLASSNAME =  mmcifProviderClassName;
 	
 	private static String providerClassName = DEFAULT_PROVIDER_CLASSNAME;

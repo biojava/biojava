@@ -36,8 +36,6 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -102,7 +100,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PDBFileReader extends LocalPDBDirectory {
 
-	private static final Logger logger = LoggerFactory.getLogger(PDBFileReader.class);
+	//private static final Logger logger = LoggerFactory.getLogger(PDBFileReader.class);
 
 	// a list of big pdb files for testing
 	//  "1htq",
@@ -130,7 +128,6 @@ public class PDBFileReader extends LocalPDBDirectory {
 	public static final String LOAD_CHEM_COMP_PROPERTY = "loadChemCompInfo";
 
 	public static final String[] PDB_SPLIT_DIR    = new String[]{"data","structures","divided" ,"pdb"};
-	public static final String[] PDB_ALL_DIR      = new String[]{"data","structures","all"     ,"pdb"};
 	public static final String[] PDB_OBSOLETE_DIR = new String[]{"data","structures","obsolete","pdb"};
 
 	public static void main(String[] args){
@@ -311,19 +308,6 @@ public class PDBFileReader extends LocalPDBDirectory {
 		return getObsoleteBehavior() == ObsoleteBehavior.FETCH_CURRENT;
 	}
 
-	/**
-	 * Returns the file name of a PDB biological unit file based on the pdbId and biologicalAssemblyID.
-	 * 
-	 * @param pdbId the protein data bank ID
-	 * @param biologicalAssemblyId the ID of the biological assembly
-	 * @return file name of PDB biological assembly file
-	 * @author Peter Rose
-	 * @since 3.2
-	 */
-	private String getBiologicalAsssemblyFileName(String pdbId, int biologicalAssemblyId) {
-		return pdbId.toLowerCase() + ".pdb" + biologicalAssemblyId + ".gz";
-	}
-
 	@Override
 	protected String getFilename(String pdbId) {
 		return "pdb"+pdbId.toLowerCase()+".ent.gz";
@@ -342,12 +326,6 @@ public class PDBFileReader extends LocalPDBDirectory {
 	protected String[] getSplitDirPath() {
 		return PDB_SPLIT_DIR;
 	}
-
-	@Override
-	protected String[] getUnsplitDirPath() {
-		return PDB_ALL_DIR;
-	}
-
 
 	@Override
 	protected String[] getObsoleteDirPath() {

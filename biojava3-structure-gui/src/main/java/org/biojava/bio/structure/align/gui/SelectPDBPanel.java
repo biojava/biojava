@@ -131,7 +131,7 @@ implements StructurePairSelector{
 		String pdb = f.getText().trim();
 
 		UserConfiguration config = WebStartMain.getWebStartConfig();
-		
+
 		if ( pdb.length() < 4) {
 			f.setText("!!!");
 			return null;
@@ -143,32 +143,27 @@ implements StructurePairSelector{
 
 
 		String range = r.getText().trim();
-		
+
 		String fileFormat = config.getFileFormat();
-		
+
 		StructureIOFile reader = null;
 		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
-			PDBFileReader re = new PDBFileReader();
-			
+			PDBFileReader re = new PDBFileReader(config.getPdbFilePath());
+			re.setFetchBehavior(config.getFetchBehavior());
 			reader = re;
-		} else if ( fileFormat.equals(UserConfiguration.MMCIF_FORMAT)){						
-			reader = new MMCIFFileReader();
-			
+		} else if ( fileFormat.equals(UserConfiguration.MMCIF_FORMAT)){
+			MMCIFFileReader re = new MMCIFFileReader(config.getPdbFilePath());
+			re.setFetchBehavior(config.getFetchBehavior());
+			reader = re;
 		} else {
 			throw new StructureException("Unkown file format " + fileFormat);
 		}
-		
+
 		FileParsingParameters params = new FileParsingParameters();
-        params.setAlignSeqRes(false);
+		params.setAlignSeqRes(false);
 		reader.setFileParsingParameters(params);
-		
-		reader.setPath(config.getPdbFilePath());
-		
-		reader.setPdbDirectorySplit(config.isSplit());
-		
-		reader.setAutoFetch(config.getAutoFetch());
-		
-	
+
+
 		Structure structure ;
 		try {
 			structure = reader.getStructureById(pdb);

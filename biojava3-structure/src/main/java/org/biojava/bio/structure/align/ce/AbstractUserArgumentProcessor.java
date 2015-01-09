@@ -55,6 +55,7 @@ import org.biojava.bio.structure.align.util.ConfigurationException;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 
@@ -269,7 +270,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		}
 
 
-		AtomCache cache = new AtomCache(pdbFilePath, pdbFilePath, params.isPdbDirSplit());
+		AtomCache cache = new AtomCache(pdbFilePath, pdbFilePath);
 
 		String alignPairs = params.getAlignPairs();
 
@@ -455,8 +456,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				System.err.println("You did not specify the -pdbFilePath parameter. Defaulting to "+path+".");
 			}
 
-			AtomCache cache = new AtomCache(path, path, params.isPdbDirSplit());
-			cache.setAutoFetch(params.isAutoFetch());
+			AtomCache cache = new AtomCache(path, path);
+			if(params.isAutoFetch()) {
+				cache.setFetchBehavior(FetchBehavior.DEFAULT);
+			} else {
+				cache.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+			}
 			structure1 = getStructure(cache, name1, file1);
 			structure2 = getStructure(cache, name2, file2);
 		} else {

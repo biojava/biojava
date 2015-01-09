@@ -58,7 +58,6 @@ public class ConfigPDBInstallPanel extends JPanel
     */
    private static final long serialVersionUID = -1055193854675583808L;
 
-   JCheckBox pdbSplit;
    JCheckBox fromFtp;
    JComboBox fileType;
    
@@ -100,24 +99,6 @@ public class ConfigPDBInstallPanel extends JPanel
 
       JButton chooser = new JButton(action);
       hBox.add(chooser);
-
-      Box hBox2 = Box.createHorizontalBox();
-
-      JLabel label = new JLabel("Files in split directories:");
-
-      pdbSplit = new JCheckBox();
-      pdbSplit.setMnemonic(KeyEvent.VK_S);
-
-      pdbSplit.setSelected(true);
-      if ( config != null){
-         pdbSplit.setSelected(config.isSplit());
-      }
-
-      hBox2.add(Box.createGlue());
-      hBox2.add(label);
-      hBox2.add(pdbSplit);
-
-      vBox.add(hBox2);
 
       Box hBox3 = Box.createHorizontalBox();
       JLabel label2 = new JLabel("Fetch missing PDBs from ftp site:");
@@ -206,8 +187,6 @@ public class ConfigPDBInstallPanel extends JPanel
       
       String dir = pdbDir.getText();
       config.setPdbFilePath(dir);
-      boolean isSplit = pdbSplit.isSelected();
-      config.setSplit(isSplit);
       boolean fromFtpF = fromFtp.isSelected();
       config.setAutoFetch(fromFtpF);
       String fileFormat = (String)fileType.getSelectedItem();
@@ -226,14 +205,6 @@ public class ConfigPDBInstallPanel extends JPanel
    {
       System.out.println(fromFtp);
       this.fromFtp = fromFtp;
-   }
-   public JCheckBox getPdbSplit()
-   {
-      return pdbSplit;
-   }
-   public void setPdbSplit(JCheckBox pdbSplit)
-   {
-      this.pdbSplit = pdbSplit;
    }
    public JTextField getPDBDirField(){
       return pdbDir;

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 
 /**
  *  StructureIOFile defines a few methods that are useful when parsing PDB files from file system.
@@ -38,7 +39,7 @@ public interface StructureIOFile  {
 	 * This is for installations of PDB/mmCif where all files are located in one directory.
 	 *
 	 * @param path  a String specifying the path value
-	 * @deprecated Removed from API
+	 * @deprecated Removed from API (4.0.0)
 	 */
 	@Deprecated
 	public void setPath(String path) ;
@@ -46,7 +47,7 @@ public interface StructureIOFile  {
 	/** get the directory path to the files
 	 *
 	 * @return path
-	 * @deprecated Removed from API
+	 * @deprecated Removed from API (4.0.0)
 	 */
 	@Deprecated
 	public String getPath();
@@ -80,7 +81,7 @@ public interface StructureIOFile  {
 	/** Fetch files automatically from FTP server. Default: false
 	 *
 	 * @return flag is true or false.
-	 * @deprecated Removed from API
+	 * @deprecated Removed from API (4.0.0). Use {@link LocalPDBDirectory#setFetchBehavior(FetchBehavior)}
 	 */
 	@Deprecated
 	public boolean isAutoFetch();
@@ -90,28 +91,10 @@ public interface StructureIOFile  {
 	 * default is false. If true, new PDB files will be automatically stored in the Path and gzip compressed.
 	 *
 	 * @param autoFetch flag.
-	 * @deprecated Removed from API
+	 * @deprecated Removed from API (4.0.0). Use {@link LocalPDBDirectory#setFetchBehavior(FetchBehavior)}
 	 */ 
 	@Deprecated
 	public void setAutoFetch(boolean autoFetch);
-
-
-	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
-	 * 
-	 * @param isSplit
-	 * @deprecated Removed from API
-	 */
-	@Deprecated
-	public void setPdbDirectorySplit(boolean isSplit);
-
-	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
-	 * 
-	 * @return flag
-	 * @deprecated Removed from API
-	 */
-	@Deprecated
-	public boolean isPdbDirectorySplit();
-
 
 	/** Get a Structure based on its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
 	 * @return a Structure object

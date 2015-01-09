@@ -56,13 +56,6 @@ public class ConfigXMLHandler extends DefaultHandler {
          if ( path != null)
             config.setPdbFilePath(path);
 
-         String isSplit = atts.getValue("split");
-         config.setSplit(true);
-         if ( isSplit != null)     {   	 
-            if ( isSplit.equals("false"))
-               config.setSplit(false);
-         }
-
          //Deprecated property; supported for backwards compatibility
          String autoFetch = atts.getValue("autoFetch");
          if(autoFetch == null || !autoFetch.equals("false")) {

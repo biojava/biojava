@@ -401,7 +401,6 @@ public class MultiThreadedDBSearch {
 		reader.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
 		reader.setPath(cache.getPath());
 		reader.setFileParsingParameters(cache.getFileParsingParams());
-		reader.setPdbDirectorySplit(cache.isSplit());
 		reader.prefetchStructure(name.getPdbId());
 	}
 

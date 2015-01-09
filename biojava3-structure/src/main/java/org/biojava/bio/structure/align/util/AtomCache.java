@@ -102,7 +102,6 @@ public class AtomCache {
 	// make sure IDs are loaded uniquely
 	private Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
-	private boolean isSplit;
 	private String path;
 
 	private boolean strictSCOP;
@@ -124,29 +123,21 @@ public class AtomCache {
 	 * 
 	 * @param pdbFilePath
 	 *            a directory in the file system to use as a location to cache files.
-
-	 * @param isSplit
-	 *            a flag to indicate if the directory organisation is "split" as on the PDB ftp servers, or if all files
-	 *            are contained in one directory.
 	 */
-	public AtomCache(String pdbFilePath,  boolean isSplit) {
-		this(pdbFilePath,pdbFilePath,isSplit);
-		
+	public AtomCache(String pdbFilePath) {
+		this(pdbFilePath,pdbFilePath);
 	}
-	
+
 	/**
 	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system.
 	 * 
 	 * @param pdbFilePath
 	 *            a directory in the file system to use as a location to cache files.
 	 * @param cachePath
-	 * @param isSplit
-	 *            a flag to indicate if the directory organisation is "split" as on the PDB ftp servers, or if all files
-	 *            are contained in one directory.
 	 */
-	public AtomCache(String pdbFilePath, String cachePath, boolean isSplit) {
+	public AtomCache(String pdbFilePath, String cachePath) {
 		
-		logger.debug("Initialising AtomCache with pdbFilePath={}, cachePath={} and isSplit={}",pdbFilePath, cachePath, isSplit);
+		logger.debug("Initialising AtomCache with pdbFilePath={}, cachePath={}",pdbFilePath, cachePath);
 
 		if (!pdbFilePath.endsWith(FILE_SEPARATOR)) {
 			pdbFilePath += FILE_SEPARATOR;
@@ -160,9 +151,6 @@ public class AtomCache {
 		setPath(pdbFilePath);
 
 		this.cachePath = cachePath;
-
-		// this.cache = cache;
-		this.isSplit = isSplit;
 
 		fetchBehavior = FetchBehavior.DEFAULT;
 		obsoleteBehavior = ObsoleteBehavior.DEFAULT;
@@ -181,6 +169,23 @@ public class AtomCache {
 		setUseMmCif(true);
 
 	}
+	
+	/**
+	 * @param isSplit Ignored
+	 * @deprecated isSplit parameter is ignored (4.0.0)
+	 */
+	@Deprecated
+	public AtomCache(String pdbFilePath,boolean isSplit) {
+		this(pdbFilePath);
+	}
+	/**
+	 * @param isSplit Ignored
+	 * @deprecated isSplit parameter is ignored (4.0.0)
+	 */
+	@Deprecated
+	public AtomCache(String pdbFilePath, String cachePath,boolean isSplit) {
+		this(pdbFilePath,cachePath);
+	}
 
 	/**
 	 * Creates a new AtomCache object based on the provided UserConfiguration.
@@ -189,7 +194,7 @@ public class AtomCache {
 	 *            the UserConfiguration to use for this cache.
 	 */
 	public AtomCache(UserConfiguration config) {
-		this(config.getPdbFilePath(), config.getCacheFilePath(), config.isSplit());
+		this(config.getPdbFilePath(), config.getCacheFilePath());
 		fetchBehavior = config.getFetchBehavior();
 		obsoleteBehavior = config.getObsoleteBehavior();
 	}
@@ -658,15 +663,6 @@ public class AtomCache {
 		return getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE;
 	}
 
-	/**
-	 * Is the organization of files within the directory split, as on the PDB FTP servers, or are all files contained in
-	 * one directory.
-	 * 
-	 * @return flag
-	 */
-	public boolean isSplit() {
-		return isSplit;
-	}
 
 	/**
 	 * Reports whether strict scop naming will be enforced, or whether this AtomCache should try to guess some simple
@@ -841,16 +837,6 @@ public class AtomCache {
 		this.pdpprovider = pdpprovider;
 	}
 
-	/**
-	 * Is the organization of files within the directory split, as on the PDB FTP servers, or are all files contained in
-	 * one directory.
-	 * 
-	 * @param isSplit
-	 *            flag
-	 */
-	public void setSplit(boolean isSplit) {
-		this.isSplit = isSplit;
-	}
 
 	/**
 	 * When strictSCOP is enabled, SCOP domain identifiers (eg 'd1gbga_') are matched literally to the SCOP database.
@@ -1056,7 +1042,6 @@ public class AtomCache {
 		
 
 		PDBFileReader reader = new PDBFileReader(path);
-		reader.setPdbDirectorySplit(isSplit);
 		reader.setFetchBehavior(fetchBehavior);
 		reader.setObsoleteBehavior(obsoleteBehavior);
 
@@ -1153,7 +1138,6 @@ public class AtomCache {
 		flagLoading(pdbId);
 		try {
 			MMCIFFileReader reader = new MMCIFFileReader(path);
-			reader.setPdbDirectorySplit(isSplit);
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
 
@@ -1180,7 +1164,6 @@ public class AtomCache {
 		flagLoading(pdbId);
 		try {
 			PDBFileReader reader = new PDBFileReader(path);
-			reader.setPdbDirectorySplit(isSplit);
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
 

@@ -117,8 +117,6 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 
          UserConfiguration config = new UserConfiguration();
-         config.setSplit(true);
-         config.setAutoFetch(true);
          AtomCache cache = new AtomCache(config);
 
          Structure struc = cache.getStructure("5pti");

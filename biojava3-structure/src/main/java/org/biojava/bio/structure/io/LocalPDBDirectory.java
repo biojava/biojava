@@ -123,8 +123,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	private File path;
 	private List<String> extensions;
 
-	private boolean pdbDirectorySplit;
-
 	private String serverName;
 
 	private FileParsingParameters params;
@@ -142,8 +140,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	public LocalPDBDirectory(String path) {
 		extensions    = new ArrayList<String>();
-
-		pdbDirectorySplit = false;
 
 		params = new FileParsingParameters();
 
@@ -214,26 +210,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	public void clearExtensions(){
 		extensions.clear();
 	}
-
-
-	/** Flag that defines if the PDB directory is containing all PDB files or is split into sub dirs (like the FTP site).
-	 *  
-	 * @return boolean. default is false (all files in one directory)
-	 */
-	@Override
-	public boolean isPdbDirectorySplit() {
-		return pdbDirectorySplit;
-	}
-
-	/** Flag that defines if the PDB directory is containing all PDB files or is split into sub dirs (like the FTP site).
-	 *  
-	 * @param pdbDirectorySplit boolean. If set to false all files are in one directory.
-	 */
-	@Override
-	public void setPdbDirectorySplit(boolean pdbDirectorySplit) {
-		this.pdbDirectorySplit = pdbDirectorySplit;
-	}
-
 
 	/**
 	 * @deprecated Use {@link #getFetchBehavior()}
@@ -314,7 +290,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		return fetchBehavior;
 	}
 	/**
-	 * Set the behavior for fetching files from the server
+	 * Set the behavior for fetching files from the server.
+	 * This replaces the {@link #setAutoFetch(boolean)} method with a more
+	 * extensive set of options.
 	 * @param fetchBehavior
 	 */
 	public void setFetchBehavior(FetchBehavior fetchBehavior) {
@@ -491,11 +469,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				current = pdbId;
 			}
 			String path;
-			if(pdbDirectorySplit) {
-				path = String.join("/", getSplitDirPath());
-			} else {
-				path = String.join("/", getUnsplitDirPath());
-			}
+			path = String.join("/", getSplitDirPath());
 			return downloadStructure(current, path,false);
 		} else if(obsoleteBehavior == ObsoleteBehavior.FETCH_OBSOLETE
 				&& PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
@@ -503,11 +477,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			return downloadStructure(pdbId, path,true);
 		} else {
 			String path;
-			if(pdbDirectorySplit) {
-				path = String.join("/", getSplitDirPath());
-			} else {
-				path = String.join("/", getUnsplitDirPath());
-			}
+			path = String.join("/", getSplitDirPath());
 			return downloadStructure(pdbId, path, false);
 		}
 	}
@@ -554,11 +524,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			// obsolete is always split
 			String middle = pdbId.substring(1,3).toLowerCase();
 			dir = new File(path, String.join(lineSplit, getObsoleteDirPath()) + lineSplit + middle);
-		} else if (pdbDirectorySplit) {
+		} else {
 			String middle = pdbId.substring(1,3).toLowerCase();
 			dir = new File(path, String.join(lineSplit, getSplitDirPath()) + lineSplit + middle);
-		} else {
-			dir = new File(path, String.join(lineSplit,getUnsplitDirPath()) );
 		}
 
 
@@ -585,17 +553,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		LinkedList<File> searchdirs = new LinkedList<File>();
 		String middle = pdbId.substring(1,3).toLowerCase();
 
-
-
 		File splitdir = new File(new File(getPath(), String.join(lineSplit, getSplitDirPath()) ), middle);
-		File alldir = new File(getPath(), String.join(lineSplit, getUnsplitDirPath()));
-		// Change order of search depending on isSplit setting
 		searchdirs.add(splitdir);
-		if(isPdbDirectorySplit()) {
-			searchdirs.addLast(alldir);
-		} else {
-			searchdirs.addFirst(alldir);
-		}
 		// Search obsolete files if requested
 		if(getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE) {
 			File obsdir = new File(getPath(), String.join(lineSplit, getObsoleteDirPath()));
@@ -634,6 +593,5 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	protected abstract String getFilename(String pdbId);
 
 	protected abstract String[] getSplitDirPath();
-	protected abstract String[] getUnsplitDirPath();
 	protected abstract String[] getObsoleteDirPath();
 }
