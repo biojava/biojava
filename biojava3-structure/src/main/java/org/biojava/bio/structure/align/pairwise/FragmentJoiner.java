@@ -94,7 +94,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
       int j = f.getPos2();
 
       for ( int p =0; p < fragments.size(); p++){
-         FragmentPair tmp = (FragmentPair)fragments.get(p);
+         FragmentPair tmp = fragments.get(p);
 
          int di1 = Math.abs(f.getPos1() - tmp.getPos1());
          int di2 = Math.abs(f.getPos2() - tmp.getPos2());
@@ -223,12 +223,12 @@ public static Object resizeArray (Object oldArray, int newSize) {
       int m = Math.min(params.getMaxrefine(),fll.size());
       List<JointFragments> retlst = new ArrayList<JointFragments>();
       for ( int i = 0 ; i < m ; i++){
-         JointFragments jf = (JointFragments)fll.get(i);
+         JointFragments jf = fll.get(i);
          //System.out.println(jf);
          retlst.add(jf);
       }
 
-      return (JointFragments[])retlst.toArray(new JointFragments[retlst.size()]);
+      return retlst.toArray(new JointFragments[retlst.size()]);
 
    }
 
@@ -241,7 +241,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
       AlternativeAlignment ali = new AlternativeAlignment();
       ali.apairs_from_idxlst(ftmp);
 
-      Atom[] aa3 = (Atom[])aa2.clone();
+      Atom[] aa3 = aa2.clone();
 
       try {
 
@@ -540,7 +540,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
       int m = Math.min(maxRefine,fll.size());
       List<JointFragments> retlst = new ArrayList<JointFragments>();
       for ( int i = 0 ; i < m ; i++){
-         JointFragments jf = (JointFragments)fll.get(i);
+         JointFragments jf = fll.get(i);
          retlst.add(jf);
       }
 

@@ -48,6 +48,6 @@ public class StructureInterfaceCluster implements Serializable {
 		for (StructureInterface interf:members) {
 			area+=interf.getTotalArea();
 		}
-		return area/(double)members.size();
+		return area/members.size();
 	}
 }

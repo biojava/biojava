@@ -238,7 +238,7 @@ public class AFPOptimizer
          alignScoreUpdate += blockScore[i];
       }
       if(blockNum >= 2)       {
-         alignScoreUpdate += (double)(blockNum - 1) * torsionPenalty;
+         alignScoreUpdate += (blockNum - 1) * torsionPenalty;
       }
 
       afpChain.setBlockGap(blockGap);

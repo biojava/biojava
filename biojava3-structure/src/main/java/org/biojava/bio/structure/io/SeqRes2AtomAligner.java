@@ -346,7 +346,7 @@ public class SeqRes2AtomAligner {
 		StringBuffer sequence = new StringBuffer() ;
 		int seqIndex = 0; // track sequence.length()
 		for ( int i=0 ; i< groups.size(); i++){
-			Group g = (Group) groups.get(i);
+			Group g = groups.get(i);
 
 			if ( g instanceof AminoAcid ){
 				AminoAcid a = (AminoAcid)g;

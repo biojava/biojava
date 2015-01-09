@@ -112,7 +112,7 @@ public class PdbFileFormat30Test extends TestCase {
 		GroupIterator iter = new GroupIterator(s);
 		int nr = 0;
 		while(iter.hasNext()){
-			Group g = (Group) iter.next();
+			Group g = iter.next();
 			
 			if (g.getType().equals(GroupType.NUCLEOTIDE)){
 				nr ++;

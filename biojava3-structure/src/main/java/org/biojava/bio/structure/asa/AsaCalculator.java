@@ -117,7 +117,7 @@ public class AsaCalculator {
 		// initialising the sphere points to sample
 		spherePoints = generateSpherePoints(nSpherePoints);
 
-		cons = 4.0 * Math.PI / (double)nSpherePoints;
+		cons = 4.0 * Math.PI / nSpherePoints;
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class AsaCalculator {
 		// initialising the sphere points to sample
 		spherePoints = generateSpherePoints(nSpherePoints);
 
-		cons = 4.0 * Math.PI / (double)nSpherePoints;
+		cons = 4.0 * Math.PI / nSpherePoints;
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class AsaCalculator {
 			}
 		}
 
-		return (GroupAsa[]) asas.values().toArray(new GroupAsa[asas.size()]);			
+		return asas.values().toArray(new GroupAsa[asas.size()]);			
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class AsaCalculator {
 	private Point3d[] generateSpherePoints(int nSpherePoints) {
 		Point3d[] points = new Point3d[nSpherePoints];
 		double inc = Math.PI * (3.0 - Math.sqrt(5.0));
-		double offset = 2.0 / (double)nSpherePoints; 
+		double offset = 2.0 / nSpherePoints; 
 		for (int k=0;k<nSpherePoints;k++) {
 			double y = k * offset - 1.0 + (offset / 2.0);
 			double r = Math.sqrt(1.0 - y*y);

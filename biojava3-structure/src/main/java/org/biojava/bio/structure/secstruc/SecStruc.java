@@ -620,7 +620,7 @@ public class SecStruc {
 			}
 		}
 
-		return (SecStrucGroup[]) groupList.toArray(new SecStrucGroup[groupList.size()]);
+		return groupList.toArray(new SecStrucGroup[groupList.size()]);
 	}
 
 

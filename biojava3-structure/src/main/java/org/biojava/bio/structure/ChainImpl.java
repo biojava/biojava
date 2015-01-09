@@ -394,7 +394,7 @@ public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ig
 
 	//not checking if the end has been found in this case...
 
-	return (Group[]) retlst.toArray(new Group[retlst.size()] );
+	return retlst.toArray(new Group[retlst.size()] );
 }
 
 
@@ -456,7 +456,7 @@ public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
 	boolean foundStart = false;
 
 	while ( iter.hasNext()){
-		Group g = (Group) iter.next();
+		Group g = iter.next();
 		if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
 			adding = true;
 			foundStart = true;
@@ -480,7 +480,7 @@ public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
 		throw new StructureException("did not find end PDB residue number " + pdbresnumEnd + " in chain " + chainID);
 	}
 
-	return (Group[]) retlst.toArray(new Group[retlst.size()] );
+	return retlst.toArray(new Group[retlst.size()] );
 }
 
 
@@ -664,7 +664,7 @@ public Group getSeqResGroup(int position) {
 public List<Group> getSeqResGroups(GroupType type) {
 	List<Group> tmp = new ArrayList<Group>() ;
 	for (int i=0;i<seqResGroups.size();i++){
-		Group g = (Group)seqResGroups.get(i);
+		Group g = seqResGroups.get(i);
 		if (g.getType().equals(type)){
 			tmp.add(g);
 		}

@@ -21,7 +21,7 @@ public class CollectionTools {
         double[] a = new double[l.size()];
         int i = 0;
         for (Iterator<Number> j = l.iterator(); j.hasNext(); ) {
-            a[i++] = ((Number) j.next()).doubleValue();
+            a[i++] = j.next().doubleValue();
         }
         return a;
     }
