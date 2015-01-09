@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.w3c.dom.Document;
@@ -24,6 +25,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
+ * The transformation needed for generation of biological assemblies 
+ * from the contents of a PDB/mmCIF file. It contains both the actual
+ * transformation (rotation+translation) and the chain identifier to 
+ * which it should be applied.
+ * 
  * @author Peter Rose
  * @author Andreas Prlic
  * @author rickb
@@ -33,16 +39,17 @@ import org.xml.sax.SAXException;
 public class BiologicalAssemblyTransformation implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = -6388503076022480391L;
-	private String id = null;
-	private String chainId = null;
-	
+
+	private String id;
+	private String chainId;	
 	private Matrix4d transformation;
 	
 	/**
 	 * Default Constructor
 	 */
 	public BiologicalAssemblyTransformation() {
-		transformation = new Matrix4d(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1); // we initialize to identity so that setting rotation and translation work separately 
+		// we initialize to identity so that setting rotation and translation work properly
+		transformation = new Matrix4d(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);  
 	}
 
 	/**
@@ -59,7 +66,8 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	
 	
 	/**
-	 * Sets the identifier for this biological assembly transformation. This is usually the model number used in the biological assembly files.
+	 * Sets the identifier for this biological assembly transformation. This is usually 
+	 * the model number used in the biological assembly files.
 	 * @param id
 	 */
 	public void setId(String id) {
@@ -99,10 +107,12 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	}
 	
 	/**
-	 * Returns the rotational and translational component of this transformation as 4x4 transformation matrix.
+	 * Return the transformation (both rotational and translational component) as a 4x4 transformation matrix.
+	 * The transformation is in orthonormal (cartesian coordinates). If required to be converted to 
+	 * crystal coordinates then use {@link CrystalCell#transfToCrystal(Matrix4d)}
 	 * Note that this is a reference to the variable, thus it remains linked to this object's transformation field.
 	 * The user must deep copy it if need changing it.
-	 * @return 4X4 transformation matrix
+	 * @return 4x4 transformation matrix
 	 */
 	public Matrix4d getTransformationMatrix() {
 		return transformation;
@@ -123,7 +133,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	}
 	
 	/**
-	 * Applies the transformation to this point.
+	 * Applies the transformation to given point.
 	 */
 	public void transformPoint(final double[] point) {
 		Point3d p = new Point3d(point[0],point[1],point[2]);
