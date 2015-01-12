@@ -39,6 +39,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 
 
 
@@ -100,7 +101,7 @@ public class SecStruc {
 
 
 			AtomCache cache = new AtomCache();
-			cache.setAutoFetch(false);
+			cache.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
 
 			// a small one
 			Structure s = cache.getStructure("5pti");

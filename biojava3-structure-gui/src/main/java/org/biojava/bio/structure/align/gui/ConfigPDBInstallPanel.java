@@ -26,7 +26,6 @@ package org.biojava.bio.structure.align.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -45,10 +44,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 
 public class ConfigPDBInstallPanel extends JPanel
 {
@@ -106,7 +105,7 @@ public class ConfigPDBInstallPanel extends JPanel
       fromFtp.setMnemonic(KeyEvent.VK_F);
       fromFtp.setSelected(true);
       if ( config != null)
-         fromFtp.setSelected(config.getAutoFetch());
+         fromFtp.setSelected(config.getFetchBehavior() != FetchBehavior.LOCAL_ONLY);
 
       JLabel ftype = new JLabel("File format:");
 
@@ -188,7 +187,11 @@ public class ConfigPDBInstallPanel extends JPanel
       String dir = pdbDir.getText();
       config.setPdbFilePath(dir);
       boolean fromFtpF = fromFtp.isSelected();
-      config.setAutoFetch(fromFtpF);
+      if(fromFtpF) {
+         config.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
+      } else {
+         config.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+      }
       String fileFormat = (String)fileType.getSelectedItem();
       config.setFileFormat(fileFormat);
       

@@ -308,6 +308,7 @@ public void setAtomGroups(List<Group> groups){
  *
  */
 @Override
+@Deprecated
 public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd, boolean ignoreMissing)
 		throws StructureException {
 
@@ -322,6 +323,7 @@ public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd, boolea
 }
 
 @Override
+@Deprecated
 public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ignoreMissing)
 		throws StructureException {
 
@@ -403,6 +405,7 @@ public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ig
  *
  */
 @Override
+@Deprecated
 public Group getGroupByPDB(String pdbresnum) throws StructureException {
 	ResidueNumber resNum = ResidueNumber.fromString(pdbresnum);
 	return getGroupByPDB(resNum);
@@ -429,6 +432,7 @@ public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
  *
  */
 @Override
+@Deprecated
 public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd)
 		throws StructureException {
 	ResidueNumber start = ResidueNumber.fromString(pdbresnumStart);

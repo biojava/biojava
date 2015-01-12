@@ -96,7 +96,6 @@ public class FatCat
       buf.append("-outFile file to write the output to (writes XML representation).").append(newline);
       buf.append("-autoFetch true/false if set to true PDB files will automatically get downloaded and stored in the right location. (default: false)").append(newline);
       buf.append("-flexible true/false run flexible alignment (default: rigid body alignment, false). ").append(newline);
-      buf.append("-pdbDirSplit true/false the directory containing PDB files has all PDBs in one level or is split into multiple subdirs, like the ftp site. (default: true)").append(newline);
       buf.append("-showMenu displays the menu that allows to run alignments through a user interface.");
       buf.append(newline);
       buf.append("--- database searches ---");

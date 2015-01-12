@@ -91,7 +91,7 @@ public class FarmJobRunnable implements Runnable {
 		verbose = false;
 
 		// multiple farm jobs share the same SoftHashMap for caching coordinates
-		cache = new AtomCache( params.getPdbFilePath(), params.getCacheFilePath(), params.isPdbDirSplit());
+		cache = new AtomCache( params.getPdbFilePath(), params.getCacheFilePath());
 		
 			
 		if ( params.getServer()!= null && (!params.getServer().equals("") ) ) {
@@ -218,7 +218,7 @@ public class FarmJobRunnable implements Runnable {
 
 			// talk to server
 			// get list of alignments to run
-			// if maxNrAlignments > 100 we split up the calculations in junks of 100.
+			// if maxNrAlignments > 100 we split up the calculations in chunks of 100.
 			// otherwise we request all of them at once.
 			// we request
 			PdbPairsMessage msg = getAlignmentPairsFromServer();

@@ -111,7 +111,6 @@ implements StructurePairSelector{
 		PDBFileReader reader = new PDBFileReader();
 
 		reader.setPath(".");
-		reader.setAutoFetch(true);
 
 		Structure tmp1 = new StructureImpl();
 

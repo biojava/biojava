@@ -87,7 +87,6 @@ public class DemoMMCIFReader
 		StructureIOFile pdbreader = new MMCIFFileReader();
 
 		try {
-			pdbreader.setAutoFetch(true);
 			Structure s = pdbreader.getStructureById(pdbId);
 
 			Chain h = s.getChainByPDB("H");

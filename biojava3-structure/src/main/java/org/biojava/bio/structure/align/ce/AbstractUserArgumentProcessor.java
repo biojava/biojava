@@ -776,7 +776,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		buf.append("   -outFile file to write the output to (default: writes XML representation).").append(newline);
 		buf.append("   -outputPDB use this flag together with -outFile to dump the PDB file of the aligned structures, instead of the XML representation, instead of XML").append(newline);
 		buf.append("   -autoFetch true/false if set to true PDB files will automatically get downloaded and stored in the right location. (default: false)").append(newline);
-		buf.append("   -pdbDirSplit true/false the directory containing PDB files has all PDBs in one level or is split into multiple subdirs, like the ftp site. (default: true)").append(newline);
 		buf.append("   -showMenu displays the menu that allows to run alignments through a user interface.").append(newline);
 		buf.append(newline);
 
