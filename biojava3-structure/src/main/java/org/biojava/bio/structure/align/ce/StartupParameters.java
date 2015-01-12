@@ -22,7 +22,6 @@ public class StartupParameters {
 	boolean printFatCat;
 	boolean show3d;
 	boolean autoFetch;
-	boolean flexible;
 	boolean printCE;
 	boolean showMenu;
 	boolean printPDB;
@@ -44,7 +43,6 @@ public class StartupParameters {
 		printPDB = false;
 		printFatCat = false;
 		autoFetch = false;
-		flexible = false;
 		showMenu = false;
 		isDomainSplit = true;
 		nrCPU = Runtime.getRuntime().availableProcessors() -1;
@@ -108,15 +106,6 @@ public class StartupParameters {
 		this.printCE = printCE;
 	}
 
-	
-
-	public boolean isFlexible() {
-		return flexible;
-	}
-	public void setFlexible(boolean flexible) {
-		this.flexible = flexible;
-	}
-	
 
 	public String getPdb1() {
 		return pdb1;
@@ -276,7 +265,6 @@ public class StartupParameters {
 				+ ", " + newline + " file2=" + file2 + ", " + newline + " showDBresult=" + showDBresult
 				+ ", " + newline + " printXML=" + printXML + ", " + newline + " printFatCat=" + printFatCat
 				+ ", " + newline + " show3d=" + show3d + ", " + newline + " autoFetch=" + autoFetch
-				+ ", " + newline + " flexible=" + flexible
 				+ ", " + newline + " printCE=" + printCE + ", " + newline + " showMenu=" + showMenu
 				+ ", " + newline + " printPDB=" + printPDB
 				+ ", " + newline + " isDomainSplit="

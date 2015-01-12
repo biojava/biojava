@@ -150,7 +150,6 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 					.append(printXML).append(", printFatCat=")
 					.append(printFatCat).append(", show3d=").append(show3d)
 					.append(", autoFetch=").append(autoFetch)
-					.append(", flexible=").append(flexible)
 					.append(", printCE=").append(printCE).append(", showMenu=")
 					.append(showMenu).append(", printPDB=").append(printPDB)
 					.append(", isDomainSplit=").append(isDomainSplit)
