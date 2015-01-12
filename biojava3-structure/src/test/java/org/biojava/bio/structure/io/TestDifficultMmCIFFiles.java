@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.Chain;
@@ -15,7 +14,7 @@ import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava3.structure.StructureIO;
 import org.junit.Test;
 
@@ -76,18 +75,18 @@ public class TestDifficultMmCIFFiles {
 		
 		assertNotNull(sCif);
 
-		assertNotNull(sPdb.getPDBHeader().getBioUnitTranformationMap());
-		assertNotNull(sCif.getPDBHeader().getBioUnitTranformationMap());
+		assertNotNull(sPdb.getPDBHeader().getBioAssemblies());
+		assertNotNull(sCif.getPDBHeader().getBioAssemblies());
 		
-		Map<String,List<BiologicalAssemblyTransformation>> mapPdb = sPdb.getPDBHeader().getBioUnitTranformationMap();
-		Map<String,List<BiologicalAssemblyTransformation>> mapCif = sCif.getPDBHeader().getBioUnitTranformationMap();
+		Map<String,BioAssemblyInfo> mapPdb = sPdb.getPDBHeader().getBioAssemblies();
+		Map<String,BioAssemblyInfo> mapCif = sCif.getPDBHeader().getBioAssemblies();
 		
 		
 		
 		assertEquals(mapPdb.size(),mapCif.size());
 		
-		assertEquals(60, mapCif.get("1").size());
-		assertEquals(60, mapCif.get("2").size());
+		assertEquals(60, mapCif.get("1").getTransforms().size());
+		assertEquals(60, mapCif.get("2").getTransforms().size());
 		
 		// an X-RAY entry
 		assertTrue(sPdb.isCrystallographic());

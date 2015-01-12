@@ -87,6 +87,7 @@ import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Symmetry;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.xtal.CrystalCell;
@@ -869,17 +870,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (params.isParseBioAssembly()) {
 
 			// the more detailed mapping of chains to rotation operations happens in StructureIO...
-			// TODO clean this up and move it here...
-			//header.setBioUnitTranformationMap(tranformationMap);
-			Map<String,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
-			//int total = strucAssemblies.size();
-
-			//for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
+			
+			Map<String,BioAssemblyInfo> transformationMap = new HashMap<String, BioAssemblyInfo>();
 
 			for ( PdbxStructAssembly psa : strucAssemblies){
-				//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
 
-				//PdbxStructAssembly psa = strucAssemblies.get(asmbl.getId());
 				List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>(1);
 
 				for ( PdbxStructAssemblyGen psag: strucAssemblyGens ) {
@@ -894,11 +889,22 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// these are the transformations that need to be applied to our model
 				List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
-				transformationMap.put(psa.getId(),transformations);
+				int mmSize = 0;
+				try {
+					mmSize = Integer.parseInt(psa.getOligomeric_count());
+				} catch (NumberFormatException e) {
+					logger.info("Could not parse oligomeric count from '{}' for biological assembly id {}",
+							psa.getOligomeric_count(),psa.getId());
+				}
+				BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
+				bioAssembly.setId(psa.getId());
+				bioAssembly.setMacromolecularSize(mmSize);
+				bioAssembly.setTransforms(transformations);
+				transformationMap.put(psa.getId(),bioAssembly);
 				//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
 
 			}
-			structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
+			structure.getPDBHeader().setBioAssemblies(transformationMap);
 		}
 
 		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
@@ -1678,25 +1684,21 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemCompAtom(ChemCompAtom atom) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void newChemCompBond(ChemCompBond bond) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
-		// TODO Auto-generated method stub
 
 	}
 

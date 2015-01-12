@@ -2997,7 +2997,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		linkSitesToGroups(); // will work now that setSites is called
 		
 		if ( bioAssemblyParser != null){
-			pdbHeader.setBioUnitTranformationMap(bioAssemblyParser.getTransformationMap());
+			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
 			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
 			//System.out.println(pdbHeader.getBioUnitTranformationMap().keySet());
 		}

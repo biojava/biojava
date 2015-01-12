@@ -31,14 +31,14 @@ public class DemoShowBiolAssembly {
 			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
 			//Structure bioAssembly = StructureIO.getBiologicalAssembly("4A1I",2);	
 			
-			Structure bioAssembly = StructureIO.getBiologicalAssembly("1ei7",1);
+			Structure bioAssembly = StructureIO.getBiologicalAssembly("1pdr",1);
 									
 			StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol();
 			//jmolPanel.evalString("set autobond=false");
 			jmolPanel.setStructure(bioAssembly);
 
 			// send some commands to Jmol
-			jmolPanel.evalString("select * ; color structure ; spacefill off; wireframe off; backbone off; cartoon on; select ligands ; spacefill 0.4; color cpk;");
+			jmolPanel.evalString("select * ; color structure ; spacefill off; wireframe off; backbone off; cartoon on; select ligands ; spacefill 0.4; color cpk; model 0;");
 			
 			System.out.println("done!");
 

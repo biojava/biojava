@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.jama.Matrix;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
 /** 
@@ -42,8 +43,9 @@ public class PDBBioAssemblyParser {
 	private List<String> currentChainIDs = new ArrayList<String>();
 	private Matrix currentMatrix = null;
 	private double[] shift = null;
-	private Map<String,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
+	private Map<String,BioAssemblyInfo> transformationMap = new HashMap<String, BioAssemblyInfo>();
 	private int modelNumber = 1;
+	private int currentMmSize;
 	
 	private List<BiologicalAssemblyTransformation> transformations;
 	
@@ -59,6 +61,12 @@ public class PDBBioAssemblyParser {
 		    initialize();
 			currentBioMolecule = Integer.parseInt(line.substring(24).trim());
 			
+		} else if ( line.matches("REMARK 350 \\w+ DETERMINED BIOLOGICAL UNIT:.*" ) ||
+					line.matches("REMARK 350 \\w+ DETERMINED QUATERNARY STRUCTURE:.*" )) {
+			// text can be : 
+			// author determined biological unit
+			// software determined quaternary structure
+			currentMmSize = getMmSize(line);
 		} else if ( line.startsWith("REMARK 350 APPLY THE FOLLOWING TO CHAINS:")) {
 			currentChainIDs.clear();
 			addToCurrentChainList(line);	
@@ -82,7 +90,7 @@ public class PDBBioAssemblyParser {
 	 * Returns a map of bioassembly transformations
 	 * @return
 	 */
-	public Map<String, List<BiologicalAssemblyTransformation>> getTransformationMap() {
+	public Map<String, BioAssemblyInfo> getTransformationMap() {
 		return transformationMap;
 	}
 	
@@ -134,10 +142,71 @@ public class PDBBioAssemblyParser {
 			transformation.setChainId(chainId);
 			transformations.add(transformation);
 		}
-			
-		transformationMap.put(currentBioMolecule.toString(),transformations);
+		
+		BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
+		bioAssembly.setId(currentBioMolecule.toString());
+		bioAssembly.setMacromolecularSize(currentMmSize); 
+		bioAssembly.setTransforms(transformations);
+		transformationMap.put(currentBioMolecule.toString(),bioAssembly);
+	}
+	
+	private int getMmSize(String line) {
+		int index = line.indexOf(':');
+		String mmString = line.substring(index+1,line.length()-1).trim().toLowerCase();
+		return getSizefromString(mmString);
 	}
 
+	private static int getSizefromString(String oligomer){
+		int size=0;
+		
+		oligomer = oligomer.toLowerCase();
+		
+		if (oligomer.equals("monomeric")) {
+		    size = 1;
+		} else if (oligomer.equals("dimeric")) {
+		    size = 2;
+		} else if (oligomer.equals("trimeric")) {
+		    size = 3;
+		} else if (oligomer.equals("tetrameric")) {
+		    size = 4;
+		} else if (oligomer.equals("pentameric")) {
+		    size = 5;
+		} else if (oligomer.equals("hexameric")) {
+		    size = 6;
+		} else if (oligomer.equals("heptameric")) {
+		    size = 7;
+		} else if (oligomer.equals("octameric")) {
+		    size = 8;
+		} else if (oligomer.equals("nonameric")) {
+		    size = 9;
+		} else if (oligomer.equals("decameric")) {
+		    size = 10;
+		} else if (oligomer.equals("undecameric")) {
+		    size = 11;
+		} else if (oligomer.equals("dodecameric")) {
+		    size = 12;
+		} else if (oligomer.equals("tridecameric")) {
+		    size = 13;
+		} else if (oligomer.equals("tetradecameric")) {
+		    size = 14;
+		} else if (oligomer.equals("pentadecameric")) {
+		    size = 15;
+		} else if (oligomer.equals("hexadecameric")) {
+		    size = 16;
+		} else if (oligomer.equals("heptadecameric")) {
+		    size = 17;
+		} else if (oligomer.equals("octadecameric")) {
+		    size = 18;
+		} else if (oligomer.equals("nonadecameric")) {
+		    size = 19;
+		} else if (oligomer.equals("eicosameric")) {
+		    size = 20;
+		} else if( oligomer.matches("(\\d+).*")) {
+		    size = Integer.parseInt((oligomer.replaceAll("(\\d+).*", "$1")));
+		}
+		return size;
+	}
+	
 	/**
 	 * Parses list of chain ids (A, B, C, etc.)
 	 */
@@ -155,5 +224,6 @@ public class PDBBioAssemblyParser {
 		currentBioMolecule = null;
 		shift = new double[3];
 		modelNumber = 1;
+		currentMmSize = 0;
 	}
 }

@@ -139,7 +139,7 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 			header = loadPDB(pdbId,biolAssemblyNr);
 		}
 
-		return header.getBioUnitTranformationMap().get(biolAssemblyNr);
+		return header.getBioAssemblies().get(biolAssemblyNr).getTransforms();
 
 
 	}

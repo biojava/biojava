@@ -13,6 +13,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
@@ -82,8 +83,8 @@ public class TestQuaternaryStructureProviders {
 		assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
 
 
-		Map<String, List<BiologicalAssemblyTransformation>> pMap = pHeader.getBioUnitTranformationMap();
-		Map<String, List<BiologicalAssemblyTransformation>> mMap = mHeader.getBioUnitTranformationMap();
+		Map<String, BioAssemblyInfo> pMap = pHeader.getBioAssemblies();
+		Map<String, BioAssemblyInfo> mMap = mHeader.getBioAssemblies();
 
 		//System.out.println("PDB: " + pMap);
 
@@ -94,10 +95,12 @@ public class TestQuaternaryStructureProviders {
 		for ( String k : pMap.keySet()) {
 			assertTrue(mMap.containsKey(k));
 
-			List<BiologicalAssemblyTransformation> pL = pMap.get(k);
+			assertEquals("Macromolecular sizes don't coincide!",pMap.get(k).getMacromolecularSize(), mMap.get(k).getMacromolecularSize());
+			
+			List<BiologicalAssemblyTransformation> pL = pMap.get(k).getTransforms();
 
 			// mmcif list can be longer due to the use of internal chain IDs
-			List<BiologicalAssemblyTransformation> mL = mMap.get(k);
+			List<BiologicalAssemblyTransformation> mL = mMap.get(k).getTransforms();
 
 			//assertEquals(pL.size(), mL.size());
 

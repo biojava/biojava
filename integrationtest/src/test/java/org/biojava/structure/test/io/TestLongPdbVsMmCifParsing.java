@@ -27,7 +27,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -340,14 +340,24 @@ public class TestLongPdbVsMmCifParsing {
 				&& (!sPdb.getPDBCode().equalsIgnoreCase("2ms2")) 
 				&& (!sPdb.getPDBCode().equalsIgnoreCase("2r06"))) {			
 			
-			assertEquals("Number of bioassemblies don't coincide",hPdb.getNrBioAssemblies(), hCif.getNrBioAssemblies());
+			assertEquals("Number of bioassemblies doesn't coincide",
+					hPdb.getNrBioAssemblies(), hCif.getNrBioAssemblies());
 
-			Map<String,List<BiologicalAssemblyTransformation>> batPdb = hPdb.getBioUnitTranformationMap();
-			Map<String,List<BiologicalAssemblyTransformation>> batCif = hCif.getBioUnitTranformationMap();		
+			Map<String,BioAssemblyInfo> batPdb = hPdb.getBioAssemblies();
+			Map<String,BioAssemblyInfo> batCif = hCif.getBioAssemblies();		
 
 			assertEquals("Size of bioassemblies map doesn't coincide with nr of bioassemblies",
 					hPdb.getNrBioAssemblies(),batPdb.size());
 			assertEquals("Size of bioassemblies maps don't coincide",batPdb.size(), batCif.size());
+			
+			for (String id:batPdb.keySet()) {
+				assertTrue("Bioassembly id is not contained in mmCIF",batCif.containsKey(id));
+				// there's an inconsistency in 4amh pdb vs mmCIF in mmSize
+				if (sPdb.getPDBCode().equalsIgnoreCase("4amh")) continue;
+				
+				assertEquals("Macromolecular size of assemblies doesn't coincide",
+						batPdb.get(id).getMacromolecularSize(), batCif.get(id).getMacromolecularSize());
+			}
 		}
 	}
 	
