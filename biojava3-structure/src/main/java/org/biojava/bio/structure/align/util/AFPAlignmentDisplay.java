@@ -112,7 +112,7 @@ public class AFPAlignmentDisplay
 			}
 
 		}
-		return (Atom[])atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 	public static Atom[] getAlignedAtoms2(AFPChain afpChain,Atom[] ca2){
 
@@ -133,7 +133,7 @@ public class AFPAlignmentDisplay
 			}
 
 		}
-		return (Atom[])atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
 
@@ -370,8 +370,8 @@ public class AFPAlignmentDisplay
 
 
 		if ( alnLength > 0){
-			similarity = (identity + similarity) / (double)alnLength;
-			identity = identity/(double)alnLength;
+			similarity = (identity + similarity) / alnLength;
+			identity = identity/alnLength;
 		} else {
 			
 		}
@@ -415,7 +415,7 @@ public class AFPAlignmentDisplay
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
+		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
 
 		List<Group> hetatms  = new ArrayList<Group>();
 		List<Group> nucs1    = new ArrayList<Group>();

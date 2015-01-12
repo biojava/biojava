@@ -57,8 +57,8 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 		params.setAlignSeqRes(true);
 		params.setParseBioAssembly(true);
 		reader.setFileParsingParameters(params);
-		reader.setAutoFetch(cache.isAutoFetch());
-		reader.setPdbDirectorySplit(cache.isSplit());
+		reader.setFetchBehavior(cache.getFetchBehavior());
+		reader.setObsoleteBehavior(cache.getObsoleteBehavior());
 		
 		try{
 			asymUnit = reader.getStructureById(pdbId);

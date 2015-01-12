@@ -202,7 +202,6 @@ public class SiftsXMLParser {
 			boolean observed = true;
 			
 			String detail = getTextValue(residue, "residueDetail");
-			if ( detail != null)
 			//System.out.println(">"+detail+"<");
 			if ( detail != null && detail.trim().equalsIgnoreCase("Not_Observed")){
 				observed = false;

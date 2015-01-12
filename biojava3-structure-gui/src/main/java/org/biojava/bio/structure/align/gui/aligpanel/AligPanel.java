@@ -1,7 +1,6 @@
 package org.biojava.bio.structure.align.gui.aligpanel;
 
 import java.awt.Color;
-
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,7 +8,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
@@ -19,8 +17,6 @@ import java.util.List;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
-
-
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.JPrintPanel;
 import org.biojava.bio.structure.align.gui.MenuCreator;
@@ -44,7 +40,7 @@ import org.biojava.bio.structure.gui.util.color.ColorUtils;
  * @author Andreas Prlic
  *
  */
-public class AligPanel  extends JPrintPanel implements AlignmentPositionListener, WindowListener, ActionListener{
+public class AligPanel  extends JPrintPanel implements AlignmentPositionListener, WindowListener{
 
    /**
     * 
@@ -89,7 +85,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
          AFPChain afpChain = afps[0];
 
          UserConfiguration config = WebStartMain.getWebStartConfig();
-         AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath(),config.isSplit());
+         AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath());
 
          Atom[] ca1 = cache.getAtoms(afpChain.getName1());
          Atom[] ca2 = cache.getAtoms(afpChain.getName2());

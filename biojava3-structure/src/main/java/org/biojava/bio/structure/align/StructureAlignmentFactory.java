@@ -29,14 +29,10 @@ public class StructureAlignmentFactory {
 		StructureAlignment fatcatRigid    = new FatCatRigid();
 		StructureAlignment fatcatFlexible = new FatCatFlexible();
 
-		if ( fatcatRigid != null) {
-			algorithms.add( fatcatRigid) ;
+		algorithms.add( fatcatRigid) ;
 
-		}
-		if ( fatcatFlexible != null){
-			algorithms.add( fatcatFlexible );
+		algorithms.add( fatcatFlexible );
 
-		}
 		algorithms.add( new SmithWaterman3Daligner()) ;
 		//algorithms.add( new BioJavaStructureAlignment());
 	}
@@ -118,7 +114,7 @@ public class StructureAlignmentFactory {
 			names.add(alg.getAlgorithmName());
 		}
 
-		return (String[])names.toArray(new String[names.size()]);
+		return names.toArray(new String[names.size()]);
 	}
 
 }

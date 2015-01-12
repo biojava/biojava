@@ -3004,7 +3004,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		if (ncsOperators !=null && ncsOperators.size()>0) {
 			crystallographicInfo.setNcsOperators(
-				(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
+				ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 		
 		
@@ -3062,13 +3062,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 				// assign all residues in this range to this secondary structure type
 				// String initResName = (String)m.get("initResName");
-				String initChainId = (String)m.get("initChainId");
-				String initSeqNum  = (String)m.get("initSeqNum" );
-				String initICode   = (String)m.get("initICode" );
+				String initChainId = m.get("initChainId");
+				String initSeqNum  = m.get("initSeqNum" );
+				String initICode   = m.get("initICode" );
 				// String endResName  = (String)m.get("endResName" );
-				String endChainId  = (String)m.get("endChainId" );
-				String endSeqNum   = (String)m.get("endSeqNum");
-				String endICode    = (String)m.get("endICode");
+				String endChainId  = m.get("endChainId" );
+				String endSeqNum   = m.get("endSeqNum");
+				String endICode    = m.get("endICode");
 
 				if (initICode.equals(" "))
 					initICode = "";
@@ -3080,7 +3080,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				GroupIterator gi = new GroupIterator(structure);
 				boolean inRange = false;
 				while (gi.hasNext()){
-					Group g = (Group)gi.next();
+					Group g = gi.next();
 					Chain c = g.getChain();
 
 					if (c.getChainID().equals(initChainId)){

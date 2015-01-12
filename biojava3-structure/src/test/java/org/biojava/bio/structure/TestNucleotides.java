@@ -71,14 +71,12 @@ public class TestNucleotides {
 		
 		// now test if we download all definitions correctly for this one...
 		PDBFileReader reader = new PDBFileReader();
-		reader.setAutoFetch(true);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setParseSecStruc(true);
 		params.setAlignSeqRes(true);
 		params.setParseCAOnly(false);
 		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
-		reader.setPdbDirectorySplit(true); 
 		
 		ChemCompProvider chemProv = ChemCompGroupFactory.getChemCompProvider();
 
@@ -142,14 +140,12 @@ public class TestNucleotides {
 	public void test1REP() throws StructureException, IOException{
 		
 		PDBFileReader reader = new PDBFileReader();
-		reader.setAutoFetch(true);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setParseSecStruc(true);
 		params.setAlignSeqRes(true);
 		params.setParseCAOnly(false);
 		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
-		reader.setPdbDirectorySplit(true);
 
 
 

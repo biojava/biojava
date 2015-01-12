@@ -51,7 +51,7 @@ public class JointFragments {
         public void setIdxlist(List<int[]> idxs) {
             Iterator<int[]> iter = idxs.iterator();
             while (iter.hasNext()){
-                int[] e = (int[])iter.next();
+                int[] e = iter.next();
                 idxlist.add(e);
             }
         }
@@ -79,7 +79,7 @@ public class JointFragments {
                 // check if already known ...
                 Iterator<int[]> iter = idxlist.iterator();
                 while (iter.hasNext()){
-                    int[] kno = (int[])iter.next();
+                    int[] kno = iter.next();
                     if ((kno[0] == e[0]) && ( kno[1] == e[1])){
                         System.err.println("already known index pair, not adding a 2nd time." + e[0] + " " + e[1]);
                         return;

@@ -1,6 +1,9 @@
 package org.biojava.structure.test.io;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +102,8 @@ public class TestLongPdbVsMmCifParsing {
 		
 		params = new FileParsingParameters();
 		cache.setFileParsingParams(params);
+		
+		cache.setFetchCurrent(true);
 	}
 	
 	@Test
@@ -116,6 +122,11 @@ public class TestLongPdbVsMmCifParsing {
 		
 		testAll(pdbIds);
 		
+	}
+	
+	@Test
+	public void testSingle() throws IOException, StructureException {
+		testAll(Arrays.asList("3fhs"));
 	}
 	
 	@After

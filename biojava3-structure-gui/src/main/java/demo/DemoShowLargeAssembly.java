@@ -4,7 +4,6 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.PDBFileReader;
 /*
  *                    BioJava development code
  *
@@ -27,6 +26,7 @@ import org.biojava.bio.structure.io.PDBFileReader;
  * created at Sep 19, 2013
  * Author: Andreas Prlic 
  */
+import org.biojava3.structure.StructureIO;
 
 public class DemoShowLargeAssembly {
 
@@ -57,7 +57,8 @@ public class DemoShowLargeAssembly {
 				r.maxMemory() / 1048576);
 
 		System.out.println(mem);
-				
+		
+		// 9693 atoms in the asymmetric unit * 1680 copies per assembly = 16284240 atoms
 		System.out.println("# atoms: " + StructureTools.getNrAtoms(bigStructure));
 		
 	}
@@ -72,39 +73,25 @@ public class DemoShowLargeAssembly {
 		// pre-computed files use lower case PDB IDs
 		pdbId = pdbId.toLowerCase();
 
-		// we need to tweak the FileParsing parameters a bit
-		FileParsingParameters p = new FileParsingParameters();
+		// we just need this to track where to store PDB files
+		// this checks the PDB_DIR property (and uses a tmp location if not set) 
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+		FileParsingParameters p = cache.getFileParsingParams();
 
 		// some bio assemblies are large, we want an all atom representation and avoid
 		// switching to a Calpha-only representation for large molecules
 		// note, this requires several GB of memory for some of the largest assemblies, such a 1MX4
 		p.setAtomCaThreshold(Integer.MAX_VALUE);
-
+		
 		// parse remark 350 
 		p.setParseBioAssembly(true);
 
-		// The low level PDB file parser
-		PDBFileReader pdbreader = new PDBFileReader();
-
-		// we just need this to track where to store PDB files
-		// this checks the PDB_DIR property (and uses a tmp location if not set) 
-		AtomCache cache = new AtomCache();
-		pdbreader.setPath(cache.getPath());
-
-		pdbreader.setFileParsingParameters(p);
-
 		// download missing files
-		pdbreader.setAutoFetch(true);
-
-		pdbreader.setBioAssemblyId(bioAssemblyId);
-		pdbreader.setBioAssemblyFallback(false);
 
 		Structure structure = null;
-		try { 
-			structure = pdbreader.getStructureById(pdbId);
-			if ( bioAssemblyId > 0 )
-				structure.setBiologicalAssembly(true);
-			structure.setPDBCode(pdbId);
+		try {
+			structure = StructureIO.getBiologicalAssembly(pdbId,bioAssemblyId);
 		} catch (Exception e){
 			e.printStackTrace();
 			return null;

@@ -33,6 +33,7 @@ import org.biojava.bio.structure.ResidueRange;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.junit.After;
@@ -54,7 +55,7 @@ public class AtomCacheTest {
 	public void setUp() {
 		previousPDB_DIR = System.getProperty(UserConfiguration.PDB_DIR, null);
 		cache = new AtomCache();
-		cache.setFetchFileEvenIfObsolete(true);
+		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 		cache.setStrictSCOP(false);
 		// Use a fixed SCOP version for stability
 		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
@@ -156,7 +157,7 @@ public class AtomCacheTest {
 
 	@Test
 	public void testNewInstanceWithTilder() throws Exception {
-		AtomCache cache1 = new AtomCache("~" + File.separator, false);
+		AtomCache cache1 = new AtomCache("~" + File.separator);
 		
 		assertEquals(System.getProperty("user.home") + File.separator, cache1.getPath());
 	}

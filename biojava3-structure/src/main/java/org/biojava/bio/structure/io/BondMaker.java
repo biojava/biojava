@@ -139,11 +139,6 @@ public class BondMaker {
 					continue;
 				}
 
-				if ( phosphorous == null || oThreePrime == null) {
-					continue;
-				}
-
-
 
 				if (Calc.getDistance(phosphorous, oThreePrime) < MAX_NUCLEOTIDE_BOND_LENGTH) {
 					new Bond(phosphorous, oThreePrime, 1);

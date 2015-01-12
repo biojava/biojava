@@ -80,7 +80,7 @@ public final class StandardAminoAcid {
        
             GroupIterator iter = new GroupIterator(s);
             while (iter.hasNext()){
-                Group g = (Group) iter.next();
+                Group g = iter.next();
                
                 if ( g instanceof AminoAcid){
                     AminoAcid aa = (AminoAcid)g;
@@ -103,7 +103,7 @@ public final class StandardAminoAcid {
      */
     public static AminoAcid getAminoAcid(String name){
         
-        return (AminoAcid) aminoAcids.get(name);
+        return aminoAcids.get(name);
     }
     
 }

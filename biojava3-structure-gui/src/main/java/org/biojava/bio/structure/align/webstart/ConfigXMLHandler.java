@@ -23,8 +23,10 @@ package org.biojava.bio.structure.align.webstart;
 
 
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.Attributes ;
 
 
 
@@ -45,7 +47,7 @@ public class ConfigXMLHandler extends DefaultHandler {
    }
 
    @Override
-public void startElement (String uri, String name, String qName, Attributes atts){
+   public void startElement (String uri, String name, String qName, Attributes atts){
       //System.out.println("new element >" + name + "< >" + qName+"<" + uri);
       if ( qName.equals("PDBFILEPATH")){
 
@@ -54,18 +56,25 @@ public void startElement (String uri, String name, String qName, Attributes atts
          if ( path != null)
             config.setPdbFilePath(path);
 
-         String isSplit = atts.getValue("split");
-         config.setSplit(true);
-         if ( isSplit != null)     {   	 
-            if ( isSplit.equals("false"))
-               config.setSplit(false);
-         }
-
+         //Deprecated property; supported for backwards compatibility
          String autoFetch = atts.getValue("autoFetch");
-         config.setAutoFetch(true);
-         if ( autoFetch != null){
-            if ( autoFetch.equals("false"))
-               config.setAutoFetch(false);
+         if(autoFetch == null || !autoFetch.equals("false")) {
+            config.setFetchBehavior(FetchBehavior.DEFAULT);
+         } else {
+            config.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+         }
+         
+         String fetchBehavior = atts.getValue("fetchBehavior");
+         if(fetchBehavior == null) {
+            config.setFetchBehavior(FetchBehavior.DEFAULT);
+         } else {
+            config.setFetchBehavior(FetchBehavior.valueOf(fetchBehavior));
+         }
+         String obsoleteBehavior = atts.getValue("obsoleteBehavior");
+         if(obsoleteBehavior == null) {
+            config.setObsoleteBehavior(ObsoleteBehavior.DEFAULT);
+         } else {
+            config.setObsoleteBehavior(ObsoleteBehavior.valueOf(obsoleteBehavior));
          }
 
          String fileFormat = atts.getValue("fileFormat");

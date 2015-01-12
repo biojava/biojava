@@ -92,8 +92,6 @@ public class DBResultTable implements ActionListener{
 
 		DBResultTable table = new DBResultTable();
 		UserConfiguration config = WebStartMain.getDefaultConfig();
-		config.setAutoFetch(true);
-		config.setSplit(true);
 		table.show(new File(file),config);
 	}
 
