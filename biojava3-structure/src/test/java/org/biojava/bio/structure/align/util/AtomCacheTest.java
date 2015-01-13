@@ -21,6 +21,10 @@
 package org.biojava.bio.structure.align.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +37,10 @@ import org.biojava.bio.structure.ResidueRange;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.io.LocalPDBDirectory;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.junit.After;
@@ -161,6 +168,74 @@ public class AtomCacheTest {
 		
 		assertEquals(System.getProperty("user.home") + File.separator, cache1.getPath());
 	}
-
 	
+	@Test
+	public void testFetchBehavior() throws IOException {
+		// really more of a LocalPDBDirectory test, but throw it in with AtomCache
+		String pdbId = "1hh0"; // A small structure, since we download it multiple times
+		LocalPDBDirectory reader = new MMCIFFileReader(cache.getPath());
+		
+		// delete
+		reader.deleteStructure(pdbId);
+		assertNull("Failed to delete previous version",reader.getLocalFile(pdbId));
+		
+		// LOCAL_ONLY fails
+		reader.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+		Structure s;
+		try {
+			s = reader.getStructureById(pdbId);
+			fail("LOCAL_ONLY shouldn't download files");
+		} catch(IOException e) {
+			assertTrue("Wrong IOException reason", e.getMessage().contains("configured not to download"));
+		}
+		
+		// delete
+		reader.deleteStructure(pdbId);
+		assertNull("Failed to delete previous version",reader.getLocalFile(pdbId));
+
+		// fetch from server
+		reader.setFetchBehavior(FetchBehavior.FETCH_FILES);
+		s = reader.getStructureById(pdbId);
+		assertNotNull("Failed to fetch structure",s);
+		File location = reader.getLocalFile(pdbId);
+		
+		long prerem = LocalPDBDirectory.LAST_REMEDIATION_DATE-1000*60*60*25; // 25 hours before the remediation
+		location.setLastModified(prerem);
+		assertEquals(prerem,location.lastModified()); //sanity check
+		
+		// force refetching
+		reader.setFetchBehavior(FetchBehavior.FORCE_DOWNLOAD);
+		s = reader.getStructureById(pdbId);
+		assertNotNull("Failed to fetch structure",s);
+		location = reader.getLocalFile(pdbId);
+		assertTrue(location.exists());
+		long currMod = location.lastModified();
+		assertTrue("Not re-downloaded", currMod > prerem);
+
+		// Now LOCAL_ONLY should work
+		reader.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+		s = reader.getStructureById(pdbId);
+		assertNotNull("Failed to fetch structure",s);
+		
+		// Check remediation
+		location.setLastModified(prerem);
+		
+		// Shouldn't re-fetch
+		reader.setFetchBehavior(FetchBehavior.FETCH_FILES);
+		s = reader.getStructureById(pdbId);
+		location = reader.getLocalFile(pdbId);
+		assertTrue(location.exists());
+		assertEquals("Falsely re-downloaded", prerem,location.lastModified());
+		
+		// Now should re-fetch 
+		reader.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
+		s = reader.getStructureById(pdbId);
+		assertNotNull("Failed to fetch structure",s);
+		location = reader.getLocalFile(pdbId);
+		assertTrue(location.exists());
+		currMod = location.lastModified();
+		assertTrue("Not re-downloaded", currMod > prerem);
+
+	}
+
 }

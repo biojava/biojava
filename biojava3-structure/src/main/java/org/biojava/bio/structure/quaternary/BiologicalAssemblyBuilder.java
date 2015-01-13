@@ -72,7 +72,7 @@ public class BiologicalAssemblyBuilder {
                 
 				String intChainID = c.getInternalChainID();
 				if (intChainID == null) {
-					logger.debug("no internal chain ID found, using chain ID instead: " + c.getChainID());
+					logger.info("No internal chain ID found while building bioassembly, using chain ID instead: " + c.getChainID());
 					intChainID = c.getChainID();
 				}
 
@@ -177,7 +177,7 @@ public class BiologicalAssemblyBuilder {
 		for (PdbxStructOperList oper: operators){
 			BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
 			transform.setId(oper.getId());
-			transform.setRotationMatrix(oper.getMatrix());
+			transform.setRotationMatrix(oper.getMatrix().getArray());
 			transform.setTranslation(oper.getVector());
 //			transform.setTransformationMatrix(oper.getMatrix(), oper.getVector());
 			modelTransformations.add(transform);

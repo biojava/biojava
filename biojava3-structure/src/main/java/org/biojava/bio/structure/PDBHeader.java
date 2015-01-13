@@ -10,12 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +49,6 @@ public class PDBHeader implements PDBRecord, Serializable{
 	private JournalArticle journalArticle;
 	private String authors;
 	
-	private int nrBioAssemblies ;
-	
 	public static final float DEFAULT_RESOLUTION = 99;
 	public static final float DEFAULT_RFREE = 1; // worst possible rfree is the default
 
@@ -60,7 +57,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	private DateFormat dateFormat;
 
-	private Map<String,List<BiologicalAssemblyTransformation>> tranformationMap ;
+	private Map<String,BioAssemblyInfo> bioAssemblies ;
 
 	public PDBHeader(){
 
@@ -69,8 +66,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
 		rFree = DEFAULT_RFREE;
-		tranformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
-		nrBioAssemblies = -1;
+		bioAssemblies = new HashMap<String, BioAssemblyInfo>();
 		crystallographicInfo = new PDBCrystallographicInfo();
 	}
 
@@ -614,22 +610,25 @@ public class PDBHeader implements PDBRecord, Serializable{
         this.journalArticle = journalArticle;
     }
 	
-	
-	public Map<String,List<BiologicalAssemblyTransformation>> getBioUnitTranformationMap() {
-		return tranformationMap ;
+	/**
+	 * Return the map of biological assemblies. The keys are the 
+	 * biological assembly identifiers, usually numerical from "1" to "n", but can also be "PAU" and "XAU"
+	 * @return
+	 */
+	public Map<String,BioAssemblyInfo> getBioAssemblies() {
+		return bioAssemblies ;
 	}
 
-	public void setBioUnitTranformationMap(Map<String,List<BiologicalAssemblyTransformation>> tranformationMap) {
-		this.tranformationMap = tranformationMap;
+	public void setBioAssemblies(Map<String,BioAssemblyInfo> bioAssemblies) {
+		this.bioAssemblies = bioAssemblies;
 	}
 
-	public void setNrBioAssemblies(int nrBioAssemblies) {
-		this.nrBioAssemblies = nrBioAssemblies;
-		
-	}
-	
+	/**
+	 * Get the number of biological assemblies available in the PDB header
+	 * @return
+	 */
 	public int getNrBioAssemblies() {
-		return nrBioAssemblies;
+		return this.bioAssemblies.size();
 	}
 
 

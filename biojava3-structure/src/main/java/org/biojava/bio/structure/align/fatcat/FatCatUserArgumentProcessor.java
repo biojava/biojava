@@ -27,8 +27,6 @@ package org.biojava.bio.structure.align.fatcat;
 
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
-import org.biojava.bio.structure.align.ce.CECPParameters;
-import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.slf4j.Logger;

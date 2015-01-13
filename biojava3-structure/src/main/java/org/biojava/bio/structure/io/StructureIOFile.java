@@ -27,30 +27,12 @@ import java.io.File;
 import java.io.IOException;
 
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 
 /**
  *  StructureIOFile defines a few methods that are useful when parsing PDB files from file system.
  * @author Andreas Prlic
  */
 public interface StructureIOFile  {
-
-	/** Set path to file / connection string to db.
-	 * This is for installations of PDB/mmCif where all files are located in one directory.
-	 *
-	 * @param path  a String specifying the path value
-	 * @deprecated Removed from API (4.0.0)
-	 */
-	@Deprecated
-	public void setPath(String path) ;
-
-	/** get the directory path to the files
-	 *
-	 * @return path
-	 * @deprecated Removed from API (4.0.0)
-	 */
-	@Deprecated
-	public String getPath();
 
 	/** add a known File extension.
 	 * @param ext  a String ...
@@ -77,24 +59,6 @@ public interface StructureIOFile  {
 	 * @throws IOException ...
 	 */
 	public Structure getStructure(File file) throws IOException ;
-
-	/** Fetch files automatically from FTP server. Default: false
-	 *
-	 * @return flag is true or false.
-	 * @deprecated Removed from API (4.0.0). Use {@link LocalPDBDirectory#setFetchBehavior(FetchBehavior)}
-	 */
-	@Deprecated
-	public boolean isAutoFetch();
-
-	/** Tell the parser to fetch missing PDB files from the FTP server automatically.
-	 *
-	 * default is false. If true, new PDB files will be automatically stored in the Path and gzip compressed.
-	 *
-	 * @param autoFetch flag.
-	 * @deprecated Removed from API (4.0.0). Use {@link LocalPDBDirectory#setFetchBehavior(FetchBehavior)}
-	 */ 
-	@Deprecated
-	public void setAutoFetch(boolean autoFetch);
 
 	/** Get a Structure based on its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
 	 * @return a Structure object

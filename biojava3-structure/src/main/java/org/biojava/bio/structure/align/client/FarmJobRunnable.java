@@ -31,7 +31,7 @@ import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.PdbPairsMessage;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
-import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.scop.RemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.FlatFileCache;
@@ -119,8 +119,7 @@ public class FarmJobRunnable implements Runnable {
 		
 		
 		// enforce to replace remediated files with new versions...
-		FileParsingParameters fparams = cache.getFileParsingParams();
-		fparams.setUpdateRemediatedFiles(params.isUpdateRemediatedFiles());
+		cache.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
 		
 		maxNrAlignments = params.getNrAlignments();
 		progressListeners = null;

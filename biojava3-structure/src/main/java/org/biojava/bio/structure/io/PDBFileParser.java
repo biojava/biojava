@@ -2997,8 +2997,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		linkSitesToGroups(); // will work now that setSites is called
 		
 		if ( bioAssemblyParser != null){
-			pdbHeader.setBioUnitTranformationMap(bioAssemblyParser.getTransformationMap());
-			pdbHeader.setNrBioAssemblies(bioAssemblyParser.getNrBioAssemblies());
+			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
 			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
 			//System.out.println(pdbHeader.getBioUnitTranformationMap().keySet());
 		}
@@ -3024,7 +3023,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} // otherwise it remains default value: PDBHeader.DEFAULT_RFREE
 		
 		
-		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		structure.getCompounds();
 	}

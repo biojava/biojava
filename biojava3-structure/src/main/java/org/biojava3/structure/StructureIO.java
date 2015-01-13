@@ -146,13 +146,13 @@ public class StructureIO {
 			
 			// probably a PDB file based provider. That one does not contain that info... problem!
 			// workaround will only work if the ID is not PAU or XAU
-			transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(""+(biolAssemblyNr));
+			transformations = asymUnit.getPDBHeader().getBioAssemblies().get(""+(biolAssemblyNr)).getTransforms();
 			
 		} else {
 			
 			PdbxStructAssembly psa = psas.get(biolAssemblyNr-1);
 			
-			transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(psa.getId());
+			transformations = asymUnit.getPDBHeader().getBioAssemblies().get(psa.getId()).getTransforms();
 		}
 		
 		//cleanup to avoid memory leaks
