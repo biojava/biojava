@@ -59,7 +59,7 @@ public class TestAtomCache {
 
 		List<LocalPDBDirectory> readers = new ArrayList<LocalPDBDirectory>();
 		readers.add(new MMCIFFileReader(cache.getPath()) );
-		readers.add(new PDBFileReader(cache.getCachePath()) );
+		readers.add(new PDBFileReader(cache.getPath()) );
 		for(LocalPDBDirectory reader : readers) {
 			reader.setFetchBehavior(cache.getFetchBehavior());
 			reader.setObsoleteBehavior(cache.getObsoleteBehavior());

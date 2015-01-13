@@ -183,8 +183,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	/** 
 	 * Sets the path for the directory where PDB files are read/written 
 	 */
-	@SuppressWarnings("deprecation") //method belongs at this level --SB
-	@Override
 	public void setPath(String p){
 		path = new File(FileDownloadUtils.expandUserHome(p)) ;
 		initPaths();
@@ -196,8 +194,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @see #setPath
 	 *
 	 */
-	@SuppressWarnings("deprecation") //method belongs at this level --SB
-	@Override
 	public String getPath() {
 		return path.toString() ;
 	}
@@ -228,16 +224,14 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @deprecated Use {@link #getFetchBehavior()}
 	 */
 	@Deprecated
-	@Override
 	public boolean isAutoFetch() {
 		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
 	}
 
 	/**
-	 * @deprecated Use {@link #getFetchBehavior()}
+	 * @deprecated Use {@link #setFetchBehavior()}
 	 */
 	@Deprecated
-	@Override
 	public void setAutoFetch(boolean autoFetch) {
 		if(autoFetch) {
 			setFetchBehavior(FetchBehavior.DEFAULT);
@@ -421,33 +415,42 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	public boolean deleteStructure(String pdbId){
 		boolean deleted = false;
-		File existing = getLocalFile(pdbId);
-		while(existing != null) {
-			assert(existing.exists()); // should exist unless concurrency problems
-			
-			if( getFetchBehavior() == FetchBehavior.LOCAL_ONLY) {
-				throw new RuntimeException("Refusing to delete from LOCAL_ONLY directory");
-			}
-			
-			// delete file
-			boolean success = existing.delete();
-			if(success) {
-				logger.info("Deleting "+existing.getAbsolutePath());
-			}
-			deleted |= success;
-			
-			// delete parent if empty
-			File parent = existing.getParentFile();
-			if(parent != null) {
-				success = parent.delete();
-				if(success) {
-					logger.info("Deleting "+parent.getAbsolutePath());
+		// Force getLocalFile to check in obsolete locations
+		ObsoleteBehavior obsolete = getObsoleteBehavior();
+		setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
+
+		try {
+			File existing = getLocalFile(pdbId);
+			while(existing != null) {
+				assert(existing.exists()); // should exist unless concurrency problems
+
+				if( getFetchBehavior() == FetchBehavior.LOCAL_ONLY) {
+					throw new RuntimeException("Refusing to delete from LOCAL_ONLY directory");
 				}
+
+				// delete file
+				boolean success = existing.delete();
+				if(success) {
+					logger.info("Deleting "+existing.getAbsolutePath());
+				}
+				deleted = deleted || success;
+
+				// delete parent if empty
+				File parent = existing.getParentFile();
+				if(parent != null) {
+					success = parent.delete();
+					if(success) {
+						logger.info("Deleting "+parent.getAbsolutePath());
+					}
+				}
+
+				existing = getLocalFile(pdbId);
 			}
+			return deleted;
 			
-			existing = getLocalFile(pdbId);
+		} finally {
+			setObsoleteBehavior(obsolete);
 		}
-		return deleted;
 	}
 
 	/**
@@ -660,7 +663,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		}
 		obsoleteDirPath = path;
 		for(int i=0;i<obsolete.length;i++) {
-			obsoleteDirPath = new File(obsoleteDirPath,split[i]);
+			obsoleteDirPath = new File(obsoleteDirPath,obsolete[i]);
 		}
 	}
 
