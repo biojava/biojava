@@ -23,7 +23,12 @@
 
 package org.biojava.bio.structure;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,6 +36,7 @@ import java.util.List;
 import java.util.NavigableMap;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +52,7 @@ public class ResidueRangeTest {
 	@Before
 	public void setUp() throws Exception {
 		cache = new AtomCache();
-		cache.setFetchFileEvenIfObsolete(true);
+		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 	}
 
 	@Test

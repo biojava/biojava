@@ -68,6 +68,8 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	@Override
 	public void reset(){
+		// Note: Update FatCatUserArgumentProcessor.FatCatStartupParams after
+		// modifying user-exposed values
 		fragLen = DEFAULT_FRAGLEN;
 		fragLenSq = fragLen * fragLen;
 		rmsdCut = 3.0; //cutoff for AFP detection

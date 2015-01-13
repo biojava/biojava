@@ -50,9 +50,7 @@ public class TestChemCompProvider {
 		params.setLoadChemCompInfo(true);
 		
 		PDBFileReader r = new PDBFileReader();
-		r.setAutoFetch(true);
 		r.setFileParsingParameters(params);
-		r.setPdbDirectorySplit(true);
 		
 		ChemCompProvider prov = ChemCompGroupFactory.getChemCompProvider();
 		

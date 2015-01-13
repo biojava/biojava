@@ -224,7 +224,7 @@ public class StructureTools {
 		Iterator<Group> iter = new GroupIterator(s);
 
 		while ( iter.hasNext()){
-			Group g = (Group) iter.next();
+			Group g = iter.next();
 			nrAtoms += g.size();
 		}
 
@@ -243,7 +243,7 @@ public class StructureTools {
 		List<Chain> chains = s.getChains(0);
 		Iterator<Chain> iter = chains.iterator();
 		while (iter.hasNext()){
-			Chain c = (Chain) iter.next();
+			Chain c = iter.next();
 			nrGroups += c.getAtomLength();
 		}
 		return nrGroups;
@@ -268,7 +268,7 @@ public class StructureTools {
 		List<Atom> atoms = new ArrayList<Atom>();
 
 		extractAtoms(atomNames, chains, atoms);
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 
 	}
 
@@ -294,7 +294,7 @@ public class StructureTools {
 			List<Chain> chains = s.getModel(i);
 			extractAtoms(atomNames, chains, atoms);
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 
 	}
 
@@ -312,7 +312,7 @@ public class StructureTools {
 			Atom a = iter.next();
 			atoms.add(a);
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
+		return atoms.toArray(new Atom[atoms.size()]);	
 	}
 	
 	/** 
@@ -332,7 +332,7 @@ public class StructureTools {
 				atoms.add(a);
 			}
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
+		return atoms.toArray(new Atom[atoms.size()]);	
 	}
 
 	/**
@@ -360,7 +360,7 @@ public class StructureTools {
 
 			atoms.add(a);
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+		return atoms.toArray(new Atom[atoms.size()]);			
 	}
 	
 	/**
@@ -385,7 +385,7 @@ public class StructureTools {
 				atoms.add(a);
 			}
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+		return atoms.toArray(new Atom[atoms.size()]);			
 	}
 	
 	/**
@@ -421,7 +421,7 @@ public class StructureTools {
 					// add the atoms of this group to the array.
 					Iterator<Atom> aIter = thisGroupAtoms.iterator();
 					while(aIter.hasNext()){
-						Atom a = (Atom) aIter.next();
+						Atom a = aIter.next();
 						atoms.add(a);
 					}
 				}
@@ -468,13 +468,13 @@ public class StructureTools {
 				// add the atoms of this group to the array.
 				Iterator<Atom> aIter = thisGroupAtoms.iterator();
 				while(aIter.hasNext()){
-					Atom a = (Atom) aIter.next();
+					Atom a = aIter.next();
 					atoms.add(a);
 				}
 			}
 
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 
 	}
 
@@ -492,7 +492,7 @@ public class StructureTools {
 			}
 		}
 		
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
 	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
@@ -651,7 +651,7 @@ public class StructureTools {
 			}
 		}
 
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
 	/** 
@@ -680,7 +680,7 @@ public class StructureTools {
 			
 		}
 		
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
 
@@ -718,7 +718,7 @@ public class StructureTools {
 	 */
 	public static final Character get1LetterCode(String groupCode3){
 
-		Character aminoCode1 = null;
+		Character aminoCode1;
 		try {
 			// is it a standard amino acid ?
 			aminoCode1 = convert_3code_1code(groupCode3);

@@ -14,6 +14,7 @@ import java.util.zip.GZIPOutputStream;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,6 @@ public class LocalCacheStructureProvider implements StructureProvider{
 	String path;
 	public static final String lineSplit = System.getProperty("file.separator");
 	
-	private static final boolean isSplit = true;
 	private static final String BIOL_DIR  = "BIOL_UNITS";
 	
 	public LocalCacheStructureProvider(){
@@ -76,10 +76,8 @@ public class LocalCacheStructureProvider implements StructureProvider{
 	
 	private PDBFileReader getPdbFilereader(){
 		PDBFileReader reader = new PDBFileReader(path);
-		reader.setAutoFetch(true);
+		reader.setFetchBehavior(FetchBehavior.DEFAULT);
 		reader.setFileParsingParameters(params);
-		reader.setPdbDirectorySplit(isSplit);
-		
 		return reader;
 	}
 

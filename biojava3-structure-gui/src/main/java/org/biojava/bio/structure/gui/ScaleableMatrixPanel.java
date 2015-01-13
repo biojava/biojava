@@ -91,7 +91,6 @@ implements ChangeListener, ActionListener {
 	public static void main(String[] args){
 
 		PDBFileReader pdbr = new PDBFileReader();  
-		pdbr.setAutoFetch(true);
 		pdbr.setPath("/tmp/");
 
 

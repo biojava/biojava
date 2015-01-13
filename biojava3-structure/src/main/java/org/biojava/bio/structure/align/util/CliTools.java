@@ -98,7 +98,7 @@ public class CliTools {
 				continue;
 			
 			if ((arg.length() > 0 ) && arg.charAt(0) == '-') {
-				PropertyDescriptor pd = (PropertyDescriptor) propertiesByName.get(arg.substring(1));
+				PropertyDescriptor pd = propertiesByName.get(arg.substring(1));
 
 				boolean arrayMode = false;
 				Object propVal = null;
@@ -107,7 +107,7 @@ public class CliTools {
 				if (pd == null) {
 					if (arg.startsWith("-no")) {
 						String altPropName = Introspector.decapitalize(arg.substring(3));
-						pd = (PropertyDescriptor) propertiesByName.get(altPropName);
+						pd = propertiesByName.get(altPropName);
 						if (pd == null) {
 							throw new ConfigurationException("No property named " + arg.substring(1) + " or " + altPropName);
 						}
@@ -251,7 +251,7 @@ public class CliTools {
 				//System.out.println("setting to: " + propVal + " " + propVal.getClass().getName());
 
 				if (arrayMode) {
-					List valList = (List) arrayProps.get(pd);
+					List valList = arrayProps.get(pd);
 					if (valList == null) {
 						valList = new ArrayList();
 						arrayProps.put(pd, valList);
@@ -302,7 +302,7 @@ public class CliTools {
 			}
 		}
 
-		return (String[]) anonArgs.toArray(new String[anonArgs.size()]);
+		return anonArgs.toArray(new String[anonArgs.size()]);
 	}
 
 	/**

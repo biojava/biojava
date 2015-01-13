@@ -149,7 +149,7 @@ public class FileConvert {
 		List<Map<String, Integer>> cons = structure.getConnections();
 		for (int cnr = 0; cnr<cons.size();cnr++){
 			Map<String,Integer> con =  cons.get(cnr);
-			Integer as = (Integer) con.get("atomserial");
+			Integer as = con.get("atomserial");
 
 			String atomserial =  "";
 
@@ -536,7 +536,7 @@ Angstroms.
 
 			// do for all chains:
 			for (int chainnr = 0;chainnr<structure.size(modelnr);chainnr++){
-				Chain chain = (Chain)structure.getChain(modelnr,chainnr);
+				Chain chain = structure.getChain(modelnr,chainnr);
 				xw.openTag("chain");
 				xw.attribute("id",chain.getChainID());
 				xw.attribute("SwissprotId",chain.getSwissprotId() );
@@ -559,7 +559,7 @@ Angstroms.
 					//Atom[] atoms  = gr.getAtoms();
 					List<Atom> atoms =  gr.getAtoms();
 					for (int atomnr=0;atomnr<atoms.size();atomnr++){
-						Atom atom = (Atom)atoms.get(atomnr);
+						Atom atom = atoms.get(atomnr);
 						xw.openTag("atom");
 						xw.attribute("atomID",Integer.toString(atom.getPDBserial()));
 						xw.attribute("atomName",formatAtomName(atom));
@@ -593,8 +593,8 @@ Angstroms.
                  </ul>
 				 */
 
-				Map<String, Integer> con = (Map<String, Integer>)cons.get(cnr);
-				Integer as = (Integer)con.get("atomserial");
+				Map<String, Integer> con = cons.get(cnr);
+				Integer as = con.get("atomserial");
 				int atomserial = as.intValue();
 
 

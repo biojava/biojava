@@ -476,7 +476,7 @@ public class OptimalCECPMain extends CeMain {
 	{
 		long startTime = System.currentTimeMillis();
 		
-		if(alignments.length != ca2.length) {
+		if(alignments != null && alignments.length != ca2.length) {
 			throw new IllegalArgumentException("scores param should have same length as ca2");
 		}
 		

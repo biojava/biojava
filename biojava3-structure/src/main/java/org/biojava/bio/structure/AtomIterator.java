@@ -57,7 +57,7 @@ public class AtomIterator implements Iterator<Atom> {
 
 		groupiter = new GroupIterator(structure) ;
 		if ( groupiter.hasNext() ) {
-			group = (Group) groupiter.next() ;
+			group = groupiter.next() ;
 		}
 		else 
 			group = null ;
@@ -113,7 +113,7 @@ public class AtomIterator implements Iterator<Atom> {
 			if (groupiter != null) {
 				GroupIterator tmp = (GroupIterator) groupiter.clone() ;
 				while (tmp.hasNext()) {
-					Group tmpg = (Group) tmp.next() ;
+					Group tmpg = tmp.next() ;
 
 					if ( tmpg.size() > 0 ) {
 						return true ;
@@ -144,7 +144,7 @@ public class AtomIterator implements Iterator<Atom> {
 
 			}
 			if ( groupiter.hasNext() ) {
-				group = (Group) groupiter.next() ;
+				group = groupiter.next() ;
 				current_atom_pos = -1 ;
 				return next();
 			} else {

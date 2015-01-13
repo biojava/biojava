@@ -16,7 +16,6 @@ public class FarmJobParameters {
 		DEFAULT_SERVER_URL = server;
 	}
 	public static final String DEFAULT_PDB_PATH = "/tmp/";
-	public static final boolean DEFAULT_DIR_SPLIT = true;
 	public static final int DEFAULT_BATCH_SIZE         = 100;
 	
 	private static final String DEFAULT_BATCH_SIZE_PROP = "request.pair.size";
@@ -26,7 +25,6 @@ public class FarmJobParameters {
 	int threads;
 	String server;
 	String pdbFilePath;
-	boolean pdbDirSplit;
 	String username;
 	boolean runBackground;
 	boolean verbose;
@@ -41,7 +39,6 @@ public class FarmJobParameters {
 		threads = DEFAULT_NR_THREADS;
 		server = DEFAULT_SERVER_URL;
 		pdbFilePath = DEFAULT_PDB_PATH;
-		pdbDirSplit = DEFAULT_DIR_SPLIT;
 		runBackground = false;
 		cacheFilePath = DEFAULT_PDB_PATH;
 		updateRemediatedFiles = false;
@@ -108,15 +105,23 @@ public class FarmJobParameters {
 	public void setServer(String server) {
 		this.server = server;
 	}
-	
+
+	/**
+	 * @return true
+	 * @deprecated Always true (4.0.0)
+	 */
+	@Deprecated
 	public boolean isPdbDirSplit() {
-		return pdbDirSplit;
+		return true;
 	}
 
-	public void setPdbDirSplit(boolean pdbDirSplit) {
-		this.pdbDirSplit = pdbDirSplit;
-	}
-	
+	/**
+	 * @param pdbDirSplit Ignored
+	 * @deprecated Ignored (4.0.0)
+	 */
+	@Deprecated
+	public void setPdbDirSplit(boolean pdbDirSplit) {}
+
 	public String getUsername() {
 		return username;
 	}
@@ -173,8 +178,8 @@ public class FarmJobParameters {
 	public String toString() {
 		return "FarmJobParameters [nrAlignments=" + nrAlignments + ", time="
 				+ time + ", threads=" + threads + ", server=" + server
-				+ ", pdbFilePath=" + pdbFilePath + ", pdbDirSplit="
-				+ pdbDirSplit + ", username=" + username + ", runBackground="
+				+ ", pdbFilePath=" + pdbFilePath
+				+ ", username=" + username + ", runBackground="
 				+ runBackground + ", verbose=" + verbose
 				+ ", updateRemediatedFiles=" + updateRemediatedFiles
 				+ ", stepSize=" + stepSize + ", cacheFilePath=" + cacheFilePath

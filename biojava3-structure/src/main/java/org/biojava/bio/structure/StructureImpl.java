@@ -409,7 +409,7 @@ public class StructureImpl implements Structure, Serializable {
 
 			for (int j=0;j<size(i);j++){
 
-				Chain cha = (Chain)getChain(i,j);
+				Chain cha = getChain(i,j);
 				List<Group> agr = cha.getAtomGroups(GroupType.AMINOACID);
 				List<Group> hgr = cha.getAtomGroups(GroupType.HETATM);
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);

@@ -68,15 +68,6 @@ public class DemoChangeChemCompProvider {
 	public void basicLoad(PDBFileReader reader, boolean loadChemComp, String pdbId){
 
 		try {
-
-
-			// are all files in one directory, or are the files split,
-			// as on the PDB ftp servers?
-			reader.setPdbDirectorySplit(true);
-
-			// should a missing PDB id be fetched automatically from the FTP servers?
-			reader.setAutoFetch(true);
-
 			// configure the parameters of file parsing
 
 			FileParsingParameters params = new FileParsingParameters();

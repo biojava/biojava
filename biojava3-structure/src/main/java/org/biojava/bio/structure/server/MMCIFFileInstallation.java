@@ -95,7 +95,7 @@ public class MMCIFFileInstallation implements PDBInstallation
 		String[] paths = new String[]{fpath,ppath,fsplit};
 		for (String testpath : paths) {
 			for (int i=0 ; i<extensions.size();i++){
-				String ex = (String)extensions.get(i) ;
+				String ex = extensions.get(i) ;
 				//System.out.println("PDBFileReader testing: "+testpath+ex);
 				f = new File(testpath+ex) ;
 

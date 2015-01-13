@@ -56,7 +56,7 @@ public void actionPerformed(ActionEvent evt) {
             AFPChain afpChain = afps[0];
 
             UserConfiguration config = WebStartMain.getWebStartConfig();
-            AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath(),config.isSplit());
+            AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath());
 
             Atom[] ca1 = cache.getAtoms(afpChain.getName1());
             Atom[] ca2 = cache.getAtoms(afpChain.getName2());

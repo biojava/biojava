@@ -51,6 +51,8 @@ public class FileParsingParameters implements Serializable
 	 */
 	private static final long serialVersionUID = 5878292315163939027L;
 
+
+
 	/** flag to detect if the secondary structure info should be read
 	 * 
 	 */
@@ -258,7 +260,11 @@ public class FileParsingParameters implements Serializable
 	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
 	 * 
 	 * @returns updateRemediatedFiles flag
+	 * @deprecated Properties which impact downloading and caching behavior
+	 *  have been moved to the {@link StructureIOFile} implementations.
+	 *  See {@link LocalPDBDirectory#getFetchBehavior(LocalPDBDirectory.FetchBehavior)}
 	 */
+	@Deprecated
 	public boolean isUpdateRemediatedFiles() {
 		return updateRemediatedFiles;
 	}
@@ -266,7 +272,11 @@ public class FileParsingParameters implements Serializable
 	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
 	 * 
 	 * @param updateRemediatedFiles
+	 * @deprecated Properties which impact downloading and caching behavior
+	 *  have been moved to the {@link StructureIOFile} implementations.
+	 *  See {@link LocalPDBDirectory#setFetchBehavior(LocalPDBDirectory.FetchBehavior)}
 	 */
+	@Deprecated
 	public void setUpdateRemediatedFiles(boolean updateRemediatedFiles) {
 		this.updateRemediatedFiles = updateRemediatedFiles;
 	}

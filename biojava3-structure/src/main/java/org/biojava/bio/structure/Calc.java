@@ -393,7 +393,7 @@ public class Calc {
 		}
 		AtomIterator iter = new AtomIterator(structure) ;
 		while (iter.hasNext()) {
-			Atom atom = (Atom) iter.next() ;
+			Atom atom = iter.next() ;
 			Calc.rotate(atom,rotationmatrix);
 		}
 			}
@@ -415,7 +415,7 @@ public class Calc {
 		while (iter.hasNext()) {
 			Atom atom = null ;
 
-			atom = (Atom) iter.next() ;
+			atom = iter.next() ;
 			rotate(atom,rotationmatrix);
 
 		}
@@ -452,7 +452,7 @@ public class Calc {
 		AtomIterator iter = new AtomIterator(group) ;
 
 		while (iter.hasNext()) {
-			Atom atom = (Atom) iter.next() ;
+			Atom atom = iter.next() ;
 			rotate(atom,m);
 
 		}
@@ -469,7 +469,7 @@ public class Calc {
 		AtomIterator iter = new AtomIterator(structure) ;
 
 		while (iter.hasNext()) {
-			Atom atom = (Atom) iter.next() ;
+			Atom atom = iter.next() ;
 			rotate(atom,m);
 
 		}
@@ -502,7 +502,7 @@ public class Calc {
 		AtomIterator iter = new AtomIterator(group) ;
 
 		while (iter.hasNext()) {
-			Atom atom = (Atom) iter.next() ;
+			Atom atom = iter.next() ;
 			transform(atom,m);
 
 		}
@@ -518,7 +518,7 @@ public class Calc {
 		AtomIterator iter = new AtomIterator(structure) ;
 
 		while (iter.hasNext()) {
-			Atom atom = (Atom) iter.next() ;
+			Atom atom = iter.next() ;
 			transform(atom,m);
 
 		}
@@ -562,7 +562,7 @@ public class Calc {
 		AtomIterator iter = new AtomIterator(group) ;
 
 		while (iter.hasNext()) {
-			Atom atom = (Atom) iter.next() ;
+			Atom atom = iter.next() ;
 			translate(atom,v);
 
 		}
@@ -578,7 +578,7 @@ public class Calc {
 		AtomIterator iter = new AtomIterator(structure) ;
 
 		while (iter.hasNext()) {
-			Atom atom = (Atom) iter.next() ;
+			Atom atom = iter.next() ;
 			translate(atom,v);
 
 		}
@@ -596,7 +596,7 @@ public class Calc {
 		while (iter.hasNext()) {
 			Atom atom = null ;
 
-			atom = (Atom) iter.next() ;
+			atom = iter.next() ;
 			try {
 				if ( oldAtom != null){
 					logger.debug("before {}", getDistance(oldAtom,atom));
@@ -644,7 +644,7 @@ public class Calc {
 		while (iter.hasNext() ) {
 			Atom atom = null ;
 
-			atom = (Atom) iter.next()  ;	    
+			atom = iter.next()  ;	    
 
 			Atom natom = add(atom,a);	   
 			double x = natom.getX();
@@ -684,7 +684,7 @@ public class Calc {
 		while (iter.hasNext() ) {
 			Atom atom = null ;
 
-			atom = (Atom) iter.next()  ;     
+			atom = iter.next()  ;     
 
 			Atom natom = add(atom,a);       
 			double x = natom.getX();
@@ -927,11 +927,11 @@ public class Calc {
 		double rY = (float) Math.acos(m22) * degreesPerRadian;
 		double rZ1, rZ2;
 		if (m22 > .999d || m22 < -.999d) {
-			rZ1 = (double) Math.atan2(m.get(1,0),  m.get(1,1)) * degreesPerRadian;
+			rZ1 = Math.atan2(m.get(1,0),  m.get(1,1)) * degreesPerRadian;
 			rZ2 = 0;
 		} else {
-			rZ1 = (double) Math.atan2(m.get(2,1), -m.get(2,0)) * degreesPerRadian;
-			rZ2 = (double) Math.atan2(m.get(1,2),  m.get(0,2)) * degreesPerRadian;
+			rZ1 = Math.atan2(m.get(2,1), -m.get(2,0)) * degreesPerRadian;
+			rZ2 = Math.atan2(m.get(1,2),  m.get(0,2)) * degreesPerRadian;
 		}
 		return new double[] {rZ1,rY,rZ2};
 	}

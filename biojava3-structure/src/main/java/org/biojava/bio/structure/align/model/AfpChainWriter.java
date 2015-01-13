@@ -205,7 +205,7 @@ public class AfpChainWriter
 		if ( longHeader ) {
 			txt.append(String.format( "Twists %d ini-len %d ini-rmsd %.2f opt-equ %d opt-rmsd %.2f chain-rmsd %.2f Score %.2f align-len %d gaps %d (%.2f%%)",
 					blockNum - 1, totalLenIni, totalRmsdIni, optLength, totalRmsdOpt, chainRmsd, alignScore, 
-					alnLength, gapLen, (100.0 * (double)gapLen/(double)alnLength)) );
+					alnLength, gapLen, (100.0 * gapLen/alnLength)) );
 			txt.append(newline);
 
 		}  else {
@@ -232,7 +232,7 @@ public class AfpChainWriter
 		if ( longHeader ){
 			int fragLen = 8 ; // FatCatParameters.DEFAULT_FRAGLEN;
 			for(i = 0; i < blockNum; i ++)  {
-				gap = (double)blockGap[i] /( (double)blockGap[i] + fragLen * blockSize[i]);
+				gap = blockGap[i] /( (double)blockGap[i] + fragLen * blockSize[i]);
 				txt.append(String.format( "Block %2d afp %2d score %5.2f rmsd %5.2f gap %d (%.2f%%)",
 						i, blockSize[i], blockScore[i], blockRmsd[i], blockGap[i], gap));
 				txt.append(newline);
@@ -406,7 +406,7 @@ public class AfpChainWriter
 		txt.append(String.format("Align-len: %d ", alnLength));
 		txt.append(newline);
 		txt.append(String.format("Gaps: %d (%.2f%%)",
-				gapLen, (100.0 * (double)gapLen/(double)alnLength)) );
+				gapLen, (100.0 * gapLen/alnLength)) );
 		txt.append(newline);
 		if ( afpChain.getTMScore() >= 0) {
 			txt.append(String.format("TM-score: %.2f",afpChain.getTMScore()));
