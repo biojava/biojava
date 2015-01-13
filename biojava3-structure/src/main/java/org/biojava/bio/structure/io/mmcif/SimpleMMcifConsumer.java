@@ -739,8 +739,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 				// we only add the compound if a polymeric one (to match what the PDB parser does)
 				if (e!=null && e.getType().equals("polymer")) {
-					if ( e != null)
-						c.setMolName(e.getPdbx_description());
+					c.setMolName(e.getPdbx_description());
 					structure.addCompound(c);
 					logger.debug("Adding Compound with entity id {} from _entity, with name: {}",eId, c.getMolName());
 				}
@@ -911,7 +910,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// we only set it if not empty, otherwise remains null
 		if (ncsOperators.size()>0) {
 			structure.getCrystallographicInfo().setNcsOperators(
-					(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
+					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 		
 		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the

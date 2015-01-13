@@ -103,7 +103,7 @@ public class GroupIterator implements Iterator<Group> {
             return hasSubGroup(tmp_model+1,0,0);
         }
         
-        Chain     chain = (Chain)model.get(tmp_chain);
+        Chain     chain = model.get(tmp_chain);
         
         if (tmp_group  >= chain.getAtomLength()){	   
             // start search at beginning of next chain.	    
@@ -138,7 +138,7 @@ public class GroupIterator implements Iterator<Group> {
             return null;
         }
         
-        Chain     chain = (Chain)model.get(current_chain_pos);
+        Chain     chain = model.get(current_chain_pos);
         return chain;
         
     }
@@ -173,7 +173,7 @@ public class GroupIterator implements Iterator<Group> {
             return getNextGroup(tmp_model+1,0,0);
         }
         
-        Chain     chain = (Chain) model.get(tmp_chain);
+        Chain     chain = model.get(tmp_chain);
         
         if (tmp_group  >= chain.getAtomLength()){	   
             // start search at beginning of next chain.	    

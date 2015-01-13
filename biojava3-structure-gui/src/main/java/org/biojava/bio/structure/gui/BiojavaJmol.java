@@ -77,7 +77,6 @@ public class BiojavaJmol  {
 
 			PDBFileReader pdbr = new PDBFileReader();
 
-			pdbr.setAutoFetch(true);
 			pdbr.setPath("/tmp/");
 
 			String pdbCode = "5pti";

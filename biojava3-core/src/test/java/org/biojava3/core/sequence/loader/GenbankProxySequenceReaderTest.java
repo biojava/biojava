@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
  * Testing example for issue #834
  *
  * @author Jacek Grzebyta
+ * @author Paolo Pavan
  * @see InfoTask
  */
 @RunWith(Parameterized.class)
@@ -60,16 +61,16 @@ public class GenbankProxySequenceReaderTest {
                                                                     this.gi, 
                                                                     AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
+        // why only tests on protein sequences?
         ProteinSequence seq = new ProteinSequence(genbankReader, AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
         Assert.assertNotNull("protein sequence is null", seq);
         genbankReader.getHeaderParser().parseHeader(genbankReader.getHeader(), seq);
-        genbankReader.getFeatureParser().parseFeatures(seq);
         
         Assert.assertTrue(seq.getDescription() != null);
 
         Assert.assertFalse(seq.getFeaturesKeyWord().getKeyWords().isEmpty());
-        Assert.assertFalse(seq.getFeaturesByType("organism").get(0).getSource().isEmpty());
+        Assert.assertFalse(seq.getFeaturesByType("source").get(0).getSource().isEmpty());
         
         logger.info("taxonomy id: {}", seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getTaxonomy().getID());

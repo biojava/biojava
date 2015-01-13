@@ -197,7 +197,8 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	}
 
 	private String _insdc_location_string_ignoring_strand_and_subfeatures(
-			SequenceLocation<AbstractSequence<C>, C> sequenceLocation,
+			//SequenceLocation<AbstractSequence<C>, C> sequenceLocation,
+                        org.biojava3.core.sequence.location.template.AbstractLocation sequenceLocation,
 			int record_length) {
 	/*
 	if location.ref:

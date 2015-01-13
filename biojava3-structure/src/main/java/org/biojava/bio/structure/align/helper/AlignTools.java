@@ -84,7 +84,7 @@ public class AlignTools {
 		Atom[] tmp = new Atom[fragmentLength];
 
 		for (int i=0;i< fragmentLength;i++){
-			tmp[i] = (Atom)caall[i+pos];
+			tmp[i] = caall[i+pos];
 		}
 		return tmp;
 

@@ -17,6 +17,8 @@ import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -39,6 +41,8 @@ import org.biojava.bio.structure.StructureTools;
  */
 public class AsaCalculator {
 
+	private static final Logger logger = LoggerFactory.getLogger(AsaCalculator.class);
+	
 	// Bosco uses as default 960, Shrake and Rupley seem to use in their paper 92 (not sure if this is actually the same parameter)
 	public static final int DEFAULT_N_SPHERE_POINTS = 960;
 	public static final double DEFAULT_PROBE_SIZE = 1.4;
@@ -113,7 +117,7 @@ public class AsaCalculator {
 		// initialising the sphere points to sample
 		spherePoints = generateSpherePoints(nSpherePoints);
 
-		cons = 4.0 * Math.PI / (double)nSpherePoints;
+		cons = 4.0 * Math.PI / nSpherePoints;
 	}
 
 	/**
@@ -145,7 +149,7 @@ public class AsaCalculator {
 		// initialising the sphere points to sample
 		spherePoints = generateSpherePoints(nSpherePoints);
 
-		cons = 4.0 * Math.PI / (double)nSpherePoints;
+		cons = 4.0 * Math.PI / nSpherePoints;
 	}
 
 	/**
@@ -173,7 +177,7 @@ public class AsaCalculator {
 			}
 		}
 
-		return (GroupAsa[]) asas.values().toArray(new GroupAsa[asas.size()]);			
+		return asas.values().toArray(new GroupAsa[asas.size()]);			
 	}
 
 	/**
@@ -254,7 +258,7 @@ public class AsaCalculator {
 	private Point3d[] generateSpherePoints(int nSpherePoints) {
 		Point3d[] points = new Point3d[nSpherePoints];
 		double inc = Math.PI * (3.0 - Math.sqrt(5.0));
-		double offset = 2.0 / (double)nSpherePoints; 
+		double offset = 2.0 / nSpherePoints; 
 		for (int k=0;k<nSpherePoints;k++) {
 			double y = k * offset - 1.0 + (offset / 2.0);
 			double r = Math.sqrt(1.0 - y*y);
@@ -397,14 +401,14 @@ public class AsaCalculator {
 					else if (atomCode.equals("CG")) return TETRAHEDRAL_CARBON_VDW;
 
 				default:
-					System.err.println("Warning: unexpected carbon atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
+					logger.warn("Unexpected carbon atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
 					return Element.C.getVDWRadius();
 				}
 			}
 
 			// not any of the expected atoms
 		} else {
-			System.err.println("Warning: unexpected atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
+			logger.warn("Unexpected atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
 			return atom.getElement().getVDWRadius();
 		}
 	}
@@ -428,7 +432,7 @@ public class AsaCalculator {
 
 		if (atom.getElement()==Element.O) return OXIGEN_VDW;
 
-		System.err.println("Warning: unexpected atom "+atom.getName()+" for nucleotide "+nuc.getPDBName()+", assigning its standard vdw radius");
+		logger.warn("Unexpected atom "+atom.getName()+" for nucleotide "+nuc.getPDBName()+", assigning its standard vdw radius");
 		return atom.getElement().getVDWRadius();
 	}
 
@@ -450,7 +454,7 @@ public class AsaCalculator {
 	public static double getRadius(Atom atom) {
 
 		if (atom.getElement()==null) {
-			System.err.println("Warning: unrecognised atom "+atom.getName()+" with serial "+atom.getPDBserial()+
+			logger.warn("Unrecognised atom "+atom.getName()+" with serial "+atom.getPDBserial()+
 					", assigning the default vdw radius (Nitrogen vdw radius).");
 			return Element.N.getVDWRadius();
 		}
@@ -458,7 +462,7 @@ public class AsaCalculator {
 		Group res = atom.getGroup();
 
 		if (res==null) {
-			System.err.println("Warning: unknown parent residue for atom "+atom.getName()+" with serial "+
+			logger.warn("Unknown parent residue for atom "+atom.getName()+" with serial "+
 					atom.getPDBserial()+", assigning its default vdw radius");
 			return atom.getElement().getVDWRadius();
 		}

@@ -24,7 +24,6 @@
 package org.biojava.bio.structure;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -52,12 +51,11 @@ public class HetatomImpl implements Group,Serializable {
 
 	private static final long serialVersionUID = 4491470432023820382L;
 
-	/** this is a "hetatm".
-	 *
+	/** 
+	 * The GroupType is HETATM
 	 */
 	public static final GroupType type = GroupType.HETATM ;
 
-	private static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
 
 	private Map<String, Object> properties ;
 
@@ -513,7 +511,7 @@ public class HetatomImpl implements Group,Serializable {
 
 	@Override
 	public boolean isWater() {
-		return WATERNAMES.contains(pdb_name);
+		return GroupType.WATERNAMES.contains(pdb_name);
 	}
 
 	/** attempts to reduce the memory imprint of this group by trimming 

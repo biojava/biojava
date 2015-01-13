@@ -140,7 +140,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		Structure asymUnit = null;
 		
 		if ( provider instanceof MmCifPDBBiolAssemblyProvider){
-			MmCifPDBBiolAssemblyProvider mmcifprov = (MmCifPDBBiolAssemblyProvider) provider;
+			MmCifPDBBiolAssemblyProvider mmcifprov = provider;
 			asymUnit = mmcifprov.getAsymUnit();
 		} else {
 			

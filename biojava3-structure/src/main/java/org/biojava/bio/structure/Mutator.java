@@ -105,7 +105,7 @@ public class Mutator{
         // iterate over all chains.
         Iterator<Chain> iter = chains.iterator();
         while (iter.hasNext()){
-            Chain c = (Chain)iter.next();
+            Chain c = iter.next();
             if (c.getChainID().equals(chainId)) {
                 // here is our chain!
                 
@@ -119,7 +119,7 @@ public class Mutator{
                 
                 Iterator<Group> giter = groups.iterator();
                 while (giter.hasNext()){
-                    Group g = (Group) giter.next();
+                    Group g = giter.next();
                     String rnum = g.getResidueNumber().toString();
                     
                     // we only mutate amino acids
@@ -165,7 +165,7 @@ public class Mutator{
         
         AtomIterator aiter =new AtomIterator(oldAmino);
         while (aiter.hasNext()){
-            Atom a = (Atom)aiter.next();
+            Atom a = aiter.next();
             if ( supportedAtoms.contains(a.getName())){
                 newgroup.addAtom(a);
             }

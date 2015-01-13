@@ -66,7 +66,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	}
 	
 	/**
-	 * Returns the identified for this biological assembly transformation.
+	 * Returns the identifier for this biological assembly transformation.
 	 * @return biological assembly transformation identifier
 	 */
 	public String getId() {

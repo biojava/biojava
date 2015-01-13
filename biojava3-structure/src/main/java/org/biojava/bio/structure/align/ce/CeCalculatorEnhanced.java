@@ -2035,7 +2035,7 @@ nBestTrace=nTrace;
 			}
 			atoms.add(a);
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
 

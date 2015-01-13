@@ -57,8 +57,8 @@ public class ClusterDomains {
 					if(minDomSize>150&&maxDomSize>1.5*minDomSize) maxDomSize=1.5*minDomSize;
 					else if(maxDomSize>2*minDomSize) maxDomSize=2*minDomSize;
 					
-					long size1= new Double(Math.min((double)PDPParameters.MAXSIZE,minDomSize)).longValue();
-					long size2= new Double(Math.min((double)PDPParameters.MAXSIZE,maxDomSize)).longValue();
+					long size1= new Double(Math.min(PDPParameters.MAXSIZE,minDomSize)).longValue();
+					long size2= new Double(Math.min(PDPParameters.MAXSIZE,maxDomSize)).longValue();
 					minDomSize=Math.min(Math.pow(minDomSize,1.6/3)+PDPParameters.RG1,Math.pow(minDomSize,1.4/3)+Math.pow(PDPParameters.TD1,1.6/3)+PDPParameters.RG1);
 					maxDomSize=Math.min(Math.pow(maxDomSize,1.6/3)+PDPParameters.RG1,Math.pow(maxDomSize,1.4/3)+Math.pow(PDPParameters.TD1,1.6/3)+PDPParameters.RG1);
 

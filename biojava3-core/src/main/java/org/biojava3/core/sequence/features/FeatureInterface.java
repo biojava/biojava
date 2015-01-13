@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.biojava3.core.sequence.location.SequenceLocation;
+import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 
@@ -22,6 +23,7 @@ import org.biojava3.core.sequence.template.Compound;
  * and other requirements for grouping.
  * 
  * @author Scooter Willis <willishf at gmail dot com>
+ * @author Paolo Pavan
  */
 public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compound> {
 
@@ -63,7 +65,7 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
      *
      * @return a Location anchoring this feature
      */
-    public SequenceLocation<S, C> getLocations();
+    public AbstractLocation getLocations();
 
         /**
      * The new location for this feature.
@@ -76,7 +78,7 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
      * @param loc the new Location for this feature
      *
      */
-    public void setLocation(SequenceLocation<S, C> loc);
+    public void setLocation(AbstractLocation loc);
 
         /**
      * The type of the feature.

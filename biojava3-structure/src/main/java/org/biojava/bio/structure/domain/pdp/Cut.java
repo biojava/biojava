@@ -61,7 +61,7 @@ public class Cut {
 						from2 = dom.getSegmentAtPos(kseg).getFrom();
 						to2 = dom.getSegmentAtPos(kseg).getFrom();
 						for(int j=from2;j<to2;j++)
-							if(Math.abs(i-j)>4) contactsd+=(int)(dist[i][j]);
+							if(Math.abs(i-j)>4) contactsd+=(dist[i][j]);
 					}
 				}
 			}
@@ -79,7 +79,7 @@ public class Cut {
 						from2 = dom.getSegmentAtPos(kseg).getFrom();
 						to2 = dom.getSegmentAtPos(kseg).getTo();
 						for(int j=from2;j<=to2;j++)
-							if(Math.abs(i-j)>4) contacts[k]+=(int)(dist[i][j]);
+							if(Math.abs(i-j)>4) contacts[k]+=(dist[i][j]);
 					}
 				}
 				/*
@@ -87,7 +87,7 @@ public class Cut {
 				 */
 				for(int i=from;i<=k;i++) {
 					for (int j=k+1;j<=to;j++) 
-						if(Math.abs(i-j)>4) contacts[k]+=(int)(dist[i][j]);
+						if(Math.abs(i-j)>4) contacts[k]+=(dist[i][j]);
 				}
 				/*
 	if(k==392) printf("[from,k]x]k,to[ = %d\n",contacts[k]);
@@ -97,7 +97,7 @@ public class Cut {
 						from2 = dom.getSegmentAtPos(kseg).getFrom();
 						to2 = dom.getSegmentAtPos(kseg).getTo();
 						for(int j=from2;j<to2;j++)
-							if(Math.abs(i-j)>4) contacts[k]+=(int)(dist[j][i]);
+							if(Math.abs(i-j)>4) contacts[k]+=(dist[j][i]);
 					}
 				}
 				/*
@@ -120,7 +120,7 @@ public class Cut {
 				 */
 				max_contacts[k] = 10*x*y;
 				if(size1>150) max_contacts[k] = 9*x*y;
-				contact_density[k]=(double)contacts[k]/max_contacts[k];
+				contact_density[k]=contacts[k]/max_contacts[k];
 				/*
 			if(contact_density[k]>2.5) contact_density[k]=2.5;
 				 */
@@ -348,7 +348,7 @@ public class Cut {
 			 */
 			max_contacts[nc] = x*y*10;
 			if(size1>150) max_contacts[k] = 9*x*y;
-			contact_density[nc]=(double)contacts[nc]/(double)max_contacts[nc];
+			contact_density[nc]=contacts[nc]/max_contacts[nc];
 			/*
 	if(first_cut)
 			 */

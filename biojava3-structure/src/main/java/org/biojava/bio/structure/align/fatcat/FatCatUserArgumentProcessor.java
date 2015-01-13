@@ -27,17 +27,63 @@ package org.biojava.bio.structure.align.fatcat;
 
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.ce.CECPParameters;
+import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
+	Logger logger = LoggerFactory.getLogger(FatCatUserArgumentProcessor.class);
 
 	protected class FatCatStartupParams extends StartupParameters {
 		int fragLen;
 		Double rmsdCut;
 		double disCut;
 		int maxTra;
+		boolean flexible;
+		
+		public FatCatStartupParams() {
+			// Defaults should match those in FatCatParameters.reset()
+			fragLen = FatCatParameters.DEFAULT_FRAGLEN;
+			rmsdCut = 3.0;
+			disCut = 5.0;
+			maxTra = 5;
+			flexible = false;
+		}
+		
+		public int getFragLen() {
+			return fragLen;
+		}
+		public void setFragLen(int fragLen) {
+			this.fragLen = fragLen;
+		}
+		public Double getRmsdCut() {
+			return rmsdCut;
+		}
+		public void setRmsdCut(Double rmsdCut) {
+			this.rmsdCut = rmsdCut;
+		}
+		public double getDisCut() {
+			return disCut;
+		}
+		public void setDisCut(double disCut) {
+			this.disCut = disCut;
+		}
+		public int getMaxTra() {
+			return maxTra;
+		}
+		public void setMaxTra(int maxTra) {
+			this.maxTra = maxTra;
+		}
+		public boolean isFlexible() {
+			return flexible;
+		}
+		public void setFlexible(boolean flexible) {
+			this.flexible = flexible;
+		}
 	}
 
 	@Override
@@ -48,12 +94,13 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 	@Override
 	public StructureAlignment getAlgorithm() {
 		StructureAlignment algorithm = null;
-		if ( params.isFlexible()) {
-			System.out.println("running flexible alignment");
+		if ( params != null && ((FatCatStartupParams)params).isFlexible()) {
+			logger.info("running flexible alignment");
 			algorithm = new FatCatFlexible();
 		}
-		else { 
-			algorithm = new FatCatRigid();			
+		else {
+			logger.info("running rigid alignment");
+			algorithm = new FatCatRigid();
 		}
 		return algorithm;
 
@@ -61,9 +108,20 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
 	@Override
 	public Object getParameters() {
+		StructureAlignment alignment = getAlgorithm();
 
-		FatCatParameters jparams = new FatCatParameters();
-		return jparams;
+		FatCatParameters aligParams = (FatCatParameters) alignment.getParameters();
+		FatCatStartupParams startParams = (FatCatStartupParams) params;
+		
+		if ( aligParams == null)
+			aligParams = new FatCatParameters();
+		
+		aligParams.setFragLen(startParams.getFragLen());
+		aligParams.setRmsdCut(startParams.getRmsdCut());
+		aligParams.setDisCut(startParams.getDisCut());
+		aligParams.setMaxTra(startParams.getMaxTra());
+		
+		return aligParams;
 	}
 
 	@Override

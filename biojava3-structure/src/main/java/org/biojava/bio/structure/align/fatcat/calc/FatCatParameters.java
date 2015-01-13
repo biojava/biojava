@@ -68,6 +68,8 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	@Override
 	public void reset(){
+		// Note: Update FatCatUserArgumentProcessor.FatCatStartupParams after
+		// modifying user-exposed values
 		fragLen = DEFAULT_FRAGLEN;
 		fragLenSq = fragLen * fragLen;
 		rmsdCut = 3.0; //cutoff for AFP detection
@@ -433,13 +435,12 @@ public class FatCatParameters implements ConfigStrucAligParams
 		return writer.toString();
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	private Object  getValue(String name){
 
 		try {
 			String methodName = "get" + name;
 
-			Class paramC = this.getClass();
+			Class<?> paramC = this.getClass();
 
 			Method m =paramC.getMethod(methodName,(Class[])null);
 

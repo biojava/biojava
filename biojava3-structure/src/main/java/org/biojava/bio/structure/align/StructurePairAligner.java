@@ -555,7 +555,7 @@ public class StructurePairAligner {
 
 		notifyFragmentListeners(fragments);
 
-		FragmentPair[] fp = (FragmentPair[]) fragments.toArray(new FragmentPair[fragments.size()]);
+		FragmentPair[] fp = fragments.toArray(new FragmentPair[fragments.size()]);
 		setFragmentPairs(fp);
 
 		logger.debug(" got # fragment pairs: {}", fp.length);
@@ -630,7 +630,7 @@ public class StructurePairAligner {
 		Collections.sort(aas,comp);
 		Collections.reverse(aas);
 
-		alts = (AlternativeAlignment[])aas.toArray(new AlternativeAlignment[aas.size()]);
+		alts = aas.toArray(new AlternativeAlignment[aas.size()]);
 		// do final numbering of alternative solutions
 		int aanbr = 0;
 		for ( int i = 0 ; i < alts.length; i++){

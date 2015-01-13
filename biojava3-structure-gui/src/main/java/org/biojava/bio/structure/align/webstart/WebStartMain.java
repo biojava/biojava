@@ -48,7 +48,6 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava.bio.structure.io.PDBFileReader;
 
 public class WebStartMain
 {
@@ -309,11 +308,12 @@ public class WebStartMain
 
 			// accessing temp. OS directory:         
 			String property = "java.io.tmpdir";
-
+			String lineSplit = System.getProperty("file.separator");
+			
 			String tempdir = System.getProperty(property);
 
-			if ( !(tempdir.endsWith(PDBFileReader.lineSplit ) ) )
-				tempdir = tempdir + PDBFileReader.lineSplit;
+			if ( !(tempdir.endsWith(lineSplit ) ) )
+				tempdir = tempdir + lineSplit;
 
 			userConfig.setPdbFilePath(tempdir);
 			return userConfig;

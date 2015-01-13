@@ -1,7 +1,9 @@
 package org.biojava.bio.structure;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
@@ -24,17 +26,17 @@ public enum GroupType {
 	
 
 	/**
-	 * the type for amino acids (L-peptides)
+	 * The type for amino acids (L-peptides)
 	 */
 	AMINOACID("amino",GroupType.matchPolymerTypes(PolymerType.PROTEIN_ONLY)),
 
 	/**
-	 * the type for nucelotide groups (dna and rna)
+	 * The type for nucleotide groups (dna and rna)
 	 */
 	NUCLEOTIDE("nucleotide",GroupType.matchPolymerTypes(PolymerType.POLYNUCLEOTIDE_ONLY)),
 
-	/** the type for hetero groups (everything else)
-	 *
+	/** 
+	 * The type for hetero groups (everything else)
 	 */
 	HETATM("hetatm",GroupType.getHetatmTypes());
 
@@ -45,6 +47,12 @@ public enum GroupType {
 		this.types = types;
 	}
 
+	/**
+	 * The 3-letter codes used in the PDB to identify water molecules
+	 * @see Group#isWater()
+	 */
+	public static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
+	
 	/**
 	 * @return The name of this GroupType. One of "amino", "nucleotide", or "hetatm"
 	 */

@@ -79,7 +79,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 			try {
 			downloadFile();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Caught IOException",e);
 			}
 		}
 
