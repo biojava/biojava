@@ -34,6 +34,7 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 
@@ -41,7 +42,7 @@ import org.biojava.bio.structure.io.PDBFileReader;
 public class MyTestHelper
 {
 
-   // 
+    
    public static final String pdbPath = System.getProperty("java.io.tmpdir");
 
    public static String compareAlignment(String pdb1, String chain1, String pdb2, String chain2, String originalOutput, boolean doRigid){
@@ -50,7 +51,7 @@ public class MyTestHelper
 
       PDBFileReader pdbpars = new PDBFileReader();
       pdbpars.setPath(pdbPath);
-      pdbpars.setAutoFetch(true);
+      pdbpars.setFetchBehavior(FetchBehavior.FETCH_FILES);
       
       FileParsingParameters params = new FileParsingParameters();
       params.setAlignSeqRes(true);

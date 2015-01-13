@@ -24,19 +24,15 @@
  */
 package org.biojava.bio.structure.io.util;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,36 +41,41 @@ public class FileDownloadUtils {
 	
 	private static final Logger logger = LoggerFactory.getLogger(FileDownloadUtils.class);
 
-	/** Copy the content of file A to B
+	/** 
+	 * Copy the content of file src to dst
 	 * TODO since java 1.7 this is provided in java.nio.file.Files
 	 * @param src
 	 * @param dst
 	 * @throws IOException
 	 */
-	public static void copy(File src, File dst) throws IOException {
+	public static void copy(File src, File dst) throws IOException {		
+		
+		// Took following recipe from 
+		// http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
+		// The nio package seems to be the most efficient way to copy a file
+		FileChannel source = null;
+	    FileChannel destination = null;
 
-		InputStream in = new FileInputStream(src);
-		OutputStream out = new FileOutputStream(dst);
-
-		// Transfer bytes from in to out
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
-		}
-		in.close();
-		out.close();
+	    try {
+	        source = new FileInputStream(src).getChannel();
+	        destination = new FileOutputStream(dst).getChannel();
+	        destination.transferFrom(source, 0, source.size());
+	    }
+	    finally {
+	        if(source != null) {
+	            source.close();
+	        }
+	        if(destination != null) {
+	            destination.close();
+	        }
+	    }
 	}
 
 	public static String getFileExtension(File f){
 		String fileName = f.getName();
-		//String fname="";
-		String ext="";
+		String ext = "";
 		int mid= fileName.lastIndexOf(".");
-		//fname=fileName.substring(0,mid);
 		ext=fileName.substring(mid+1,fileName.length());  
-		//System.out.println("File name ="+fname);
-		//System.out.println("Extension ="+ext);
 		return ext;
 	}
 
@@ -89,81 +90,47 @@ public class FileDownloadUtils {
 	}
 
 
-	/** Download the content provided at URL url and stores the result to a local file
+	/** 
+	 * Download the content provided at URL url and store the result to a local file,
+	 * using a temp file to cache the content in case something goes wrong in download
 	 * 
 	 * @param url
 	 * @param destination
 	 * @throws IOException
 	 */
-	public static void downloadGzipCompressedFile(URL url, File destination) throws IOException{
-
-
-		InputStream uStream = url.openStream();
-		InputStream conn = new GZIPInputStream(uStream);
+	public static void downloadFile(URL url, File destination) throws IOException {
 
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
 
-		//			System.out.println("downloading " + url + " to " + tempFile.getAbsolutePath());
-		FileOutputStream outPut = new FileOutputStream(tempFile);
-		GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
-		PrintWriter pw = new PrintWriter(gzOutPut);
+		// Took following recipe from stackoverflow:
+		// http://stackoverflow.com/questions/921262/how-to-download-and-save-a-file-from-internet-using-java
+		// It seems to be the most efficient way to transfer a file
+		// See: http://docs.oracle.com/javase/7/docs/api/java/nio/channels/FileChannel.html
 
-		BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-		String line;
-		while ((line = fileBuffer.readLine()) != null) {
-			pw.println(line);
+		ReadableByteChannel rbc = null;
+		FileOutputStream fos = null;
+		try {
+			rbc = Channels.newChannel(url.openStream());
+			fos = new FileOutputStream(tempFile);
+			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+			fos.close();
+			rbc.close();
 		}
-		pw.flush();
-		pw.close();
-
-		outPut.flush();
-		outPut.close();
-		conn.close();
-		uStream.close();
-
-		// copy file name to **real** location (without the tmpFileName)
-		// prepare destination
-//		System.out.println("copying to " + destination);
-
+		finally {
+			if(rbc != null) {
+				rbc.close();
+			}
+			if(fos != null) {
+				fos.close();
+			}
+		}
+		
+		logger.debug("Copying temp file {} to final location {}",tempFile, destination);
 		copy(tempFile, destination);
 
 		// delete the tmp file			
 		tempFile.delete();
 
-	}
-
-	public static File downloadFileIfAvailable(URL url, File destination) throws IOException {
-
-		InputStream uStream = url.openStream();
-		InputStream conn = new GZIPInputStream(uStream);
-	
-		FileOutputStream outPut = null;
-		GZIPOutputStream gzOutPut = null;
-		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
-		
-		outPut = new FileOutputStream(tempFile);
-		gzOutPut = new GZIPOutputStream(outPut);
-		PrintWriter pw = new PrintWriter(gzOutPut);
-
-		BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-		String line;
-		while ((line = fileBuffer.readLine()) != null) {
-			pw.println(line);
-		}
-		pw.flush();
-		pw.close();
-
-		outPut.flush();
-		outPut.close();
-		conn.close();
-		uStream.close();
-
-		
-		logger.info("Writing to " + destination);
-
-		copy(tempFile, destination);
-
-		return destination;
 	}
 
 	/**
