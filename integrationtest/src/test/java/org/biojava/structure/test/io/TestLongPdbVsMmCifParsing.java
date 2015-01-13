@@ -31,6 +31,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.junit.After;
@@ -47,11 +48,11 @@ import org.slf4j.LoggerFactory;
  * Will take very long to run, thus they are excluded by default in the pom.
  * To run them use, for the 1000 entries one:
  * <pre> 
- * mvn -DPDB_DIR=/my/pdb/dir -Dtest=TestLongPdbVsMmCifParsing#testLongPdbVsMmCif test
+ * mvn -Dtest=TestLongPdbVsMmCifParsing#testLongPdbVsMmCif test
  * </pre>
  * or for the 10000 entries:
  * <pre>
- * mvn -DPDB_DIR=/my/pdb/dir -Dtest=TestLongPdbVsMmCifParsing#testVeryLongPdbVsMmCif test
+ * mvn -Dtest=TestLongPdbVsMmCifParsing#testVeryLongPdbVsMmCif test
  * </pre>
  * 
  * 
@@ -102,8 +103,7 @@ public class TestLongPdbVsMmCifParsing {
 		
 		params = new FileParsingParameters();
 		cache.setFileParsingParams(params);
-		
-		cache.setFetchCurrent(true);
+		cache.setObsoleteBehavior(ObsoleteBehavior.THROW_EXCEPTION);
 	}
 	
 	@Test

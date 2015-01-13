@@ -546,7 +546,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		URL url = new URL(ftp);
 
-		FileDownloadUtils.downloadGzipCompressedFile(url, realFile);
+		FileDownloadUtils.downloadFile(url, realFile);
 
 		return realFile;
 	}
