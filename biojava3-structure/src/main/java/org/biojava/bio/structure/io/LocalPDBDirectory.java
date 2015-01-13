@@ -382,12 +382,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// Check existing
-		File file = getLocalFile(pdbId);
-
-		// Redownload
-		if(file == null ) {
-			file = downloadStructure(pdbId);
-		}
+		File file = downloadStructure(pdbId);
 
 		if(!file.exists()) {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
@@ -412,12 +407,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// Check existing
-		File file = getLocalFile(pdbId);
-
-		// Redownload
-		if(file == null ) {
-			file = downloadStructure(pdbId);
-		}
+		File file = downloadStructure(pdbId);
 
 		if(!file.exists()) {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
@@ -469,12 +459,19 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	@SuppressWarnings("deprecation") //for isUpdateRemediatedFiles()
 	protected File downloadStructure(String pdbId) throws IOException{
+		if ( pdbId.length() < 4)
+			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
+
 		// decide whether download is required
 		File existing =  getLocalFile(pdbId);
 		switch(fetchBehavior) {
 		case LOCAL_ONLY:
-			throw new IOException(String.format("Structure {} not found in {} "
-					+ "and configured not to download.",pdbId,getPath()));
+			if( existing == null ) {
+				throw new IOException(String.format("Structure %s not found in %s "
+						+ "and configured not to download.",pdbId,getPath()));
+			} else {
+				return existing;
+			}
 		case FETCH_FILES:
 			// Use existing if present
 			if( existing != null) {

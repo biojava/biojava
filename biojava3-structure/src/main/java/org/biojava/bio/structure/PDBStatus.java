@@ -294,7 +294,7 @@ public class PDBStatus {
 		case OBSOLETE: {
 			String replacementStr = attrs.get("replacedBy");
 			if(replacementStr == null) {
-				logger.error(String.format("{} is OBSOLETE but lacks a replacedBy attribute.", oldPdbId));
+				logger.error("{} is OBSOLETE but lacks a replacedBy attribute.", oldPdbId);
 				return null;
 			}
 			replacementStr = replacementStr.toUpperCase();
