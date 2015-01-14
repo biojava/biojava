@@ -309,7 +309,7 @@
 						<!-- we exclude by default the long parsing tests, they will only be 
 							executed if explicitly called -->
 						<exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
-
+						<exclude>**/TestAtomCachePerformance.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

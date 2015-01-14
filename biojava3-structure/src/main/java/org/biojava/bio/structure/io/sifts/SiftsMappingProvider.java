@@ -102,7 +102,7 @@ public class SiftsMappingProvider {
 			String u = String.format(fileLoc,pdbId);
 			URL url = new URL(u);
 			logger.info("Downloading SIFTS file {} to {}",url,dest);
-			FileDownloadUtils.downloadGzipCompressedFile(url, dest);
+			FileDownloadUtils.downloadFile(url, dest);
 		}
 		
 		InputStreamProvider prov = new InputStreamProvider();

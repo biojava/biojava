@@ -58,7 +58,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	private static final Logger logger = LoggerFactory.getLogger(LocalPDBDirectory.class);
 
-	public static final String DEFAULT_PDB_FILE_SERVER = "ftp.wwpdb.org";
+	public static final String DEFAULT_PDB_FILE_SERVER = "http://ftp.wwpdb.org";
 	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
 
 	/**
@@ -160,14 +160,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		}
 		this.path = new File(path);
 
-		this.serverName = System.getProperty(PDBFileReader.PDB_FILE_SERVER_PROPERTY);
-
-		if ( serverName == null || serverName.trim().isEmpty()) {
-			serverName = PDBFileReader.DEFAULT_PDB_FILE_SERVER;
-			logger.debug("Using default PDB file server {}",serverName);
-		} else {
-			logger.info("Using PDB file server {} read from system property {}",serverName,PDBFileReader.PDB_FILE_SERVER_PROPERTY);
-		}
+		this.serverName = getServerName();
 		
 		// Initialize splitDirURL,obsoleteDirURL,splitDirPath,obsoleteDirPath
 		initPaths();
@@ -538,7 +531,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		File dir = getDir(pdbId,obsolete);
 		File realFile = new File(dir,getFilename(pdbId));
 
-		String ftp = String.format("ftp://%s%s/%s/%s", 
+		String ftp = String.format("%s%s/%s/%s", 
 				serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
 
 		logger.info("Fetching " + ftp);
@@ -546,7 +539,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		URL url = new URL(ftp);
 
-		FileDownloadUtils.downloadGzipCompressedFile(url, realFile);
+		FileDownloadUtils.downloadFile(url, realFile);
 
 		return realFile;
 	}
@@ -627,6 +620,30 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		if ( path != null)
 			return true;
 		return false;
+	}
+	
+	/**
+	 * Return the String with the PDB server name, including the leading protocol 
+	 * String (http:// or ftp://). 
+	 * The server name will be by default the value {@value #DEFAULT_PDB_FILE_SERVER} or the one 
+	 * read from system property {@value #PDB_FILE_SERVER_PROPERTY}
+	 *  
+	 * @return the server name including the leading protocol string
+	 */
+	public static String getServerName() {
+		String name = System.getProperty(PDB_FILE_SERVER_PROPERTY);
+
+		if ( name == null || name.trim().isEmpty()) {
+			name = DEFAULT_PDB_FILE_SERVER;
+			logger.debug("Using default PDB file server {}",name);
+		} else {
+			if (!name.startsWith("http://") || !name.startsWith("ftp://")) {
+				logger.warn("Server name {} read from system property {} does not have a leading protocol string. Adding http:// to it", name, PDB_FILE_SERVER_PROPERTY);
+				name = "http://"+name;
+			}
+			logger.info("Using PDB file server {} read from system property {}", name, PDB_FILE_SERVER_PROPERTY);
+		}
+		return name;
 	}
 	
 	/**
