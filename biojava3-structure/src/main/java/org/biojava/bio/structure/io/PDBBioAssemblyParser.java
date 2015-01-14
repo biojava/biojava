@@ -29,6 +29,8 @@ import java.util.Map;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 
  * Parses REMARK 350 records in a PDB file and creates transformations to 
@@ -39,11 +41,14 @@ import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
  *
  */
 public class PDBBioAssemblyParser {	
+	
+	private static final Logger logger = LoggerFactory.getLogger(PDBBioAssemblyParser.class);
+	
 	private Integer currentBioMolecule = null;
 	private List<String> currentChainIDs = new ArrayList<String>();
 	private Matrix currentMatrix = null;
 	private double[] shift = null;
-	private Map<String,BioAssemblyInfo> transformationMap = new HashMap<String, BioAssemblyInfo>();
+	private Map<Integer,BioAssemblyInfo> transformationMap = new HashMap<Integer, BioAssemblyInfo>();
 	private int modelNumber = 1;
 	private int currentMmSize;
 	
@@ -90,18 +95,10 @@ public class PDBBioAssemblyParser {
 	 * Returns a map of bioassembly transformations
 	 * @return
 	 */
-	public Map<String, BioAssemblyInfo> getTransformationMap() {
+	public Map<Integer, BioAssemblyInfo> getTransformationMap() {
 		return transformationMap;
 	}
 	
-	/**
-	 * Returns the number of bioassemblies
-	 * @return number of bioassemblies
-	 */
-	public int getNrBioAssemblies(){
-		return transformationMap.size();
-	}
-		
 	/**
 	 * Parses a row of a BIOMT matrix in a REMARK 350 record.
 	 * Example: REMARK 350   BIOMT1   2  1.000000  0.000000  0.000000        0.00000 
@@ -143,11 +140,16 @@ public class PDBBioAssemblyParser {
 			transformations.add(transformation);
 		}
 		
-		BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
-		bioAssembly.setId(currentBioMolecule.toString());
-		bioAssembly.setMacromolecularSize(currentMmSize); 
-		bioAssembly.setTransforms(transformations);
-		transformationMap.put(currentBioMolecule.toString(),bioAssembly);
+		if (!transformationMap.containsKey(currentBioMolecule)) {
+			BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
+			bioAssembly.setId(currentBioMolecule);
+			if (currentMmSize==0) {
+				logger.warn("No macromolecular size could be parsed for biological assembly {}",currentBioMolecule);
+			}
+			bioAssembly.setMacromolecularSize(currentMmSize); 
+			bioAssembly.setTransforms(transformations);
+			transformationMap.put(currentBioMolecule,bioAssembly);
+		}
 	}
 	
 	private int getMmSize(String line) {

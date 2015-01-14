@@ -83,8 +83,8 @@ public class TestQuaternaryStructureProviders {
 		assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
 
 
-		Map<String, BioAssemblyInfo> pMap = pHeader.getBioAssemblies();
-		Map<String, BioAssemblyInfo> mMap = mHeader.getBioAssemblies();
+		Map<Integer, BioAssemblyInfo> pMap = pHeader.getBioAssemblies();
+		Map<Integer, BioAssemblyInfo> mMap = mHeader.getBioAssemblies();
 
 		//System.out.println("PDB: " + pMap);
 
@@ -92,7 +92,7 @@ public class TestQuaternaryStructureProviders {
 
 		assertTrue(pMap.keySet().size()<= mMap.keySet().size());
 
-		for ( String k : pMap.keySet()) {
+		for ( int k : pMap.keySet()) {
 			assertTrue(mMap.containsKey(k));
 
 			assertEquals("Macromolecular sizes don't coincide!",pMap.get(k).getMacromolecularSize(), mMap.get(k).getMacromolecularSize());

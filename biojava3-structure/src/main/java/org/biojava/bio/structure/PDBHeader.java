@@ -57,7 +57,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	private DateFormat dateFormat;
 
-	private Map<String,BioAssemblyInfo> bioAssemblies ;
+	private Map<Integer,BioAssemblyInfo> bioAssemblies ;
 
 	public PDBHeader(){
 
@@ -66,7 +66,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
 		rFree = DEFAULT_RFREE;
-		bioAssemblies = new HashMap<String, BioAssemblyInfo>();
+		bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
 		crystallographicInfo = new PDBCrystallographicInfo();
 	}
 
@@ -615,11 +615,11 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 * biological assembly identifiers, usually numerical from "1" to "n", but can also be "PAU" and "XAU"
 	 * @return
 	 */
-	public Map<String,BioAssemblyInfo> getBioAssemblies() {
+	public Map<Integer,BioAssemblyInfo> getBioAssemblies() {
 		return bioAssemblies ;
 	}
 
-	public void setBioAssemblies(Map<String,BioAssemblyInfo> bioAssemblies) {
+	public void setBioAssemblies(Map<Integer,BioAssemblyInfo> bioAssemblies) {
 		this.bioAssemblies = bioAssemblies;
 	}
 

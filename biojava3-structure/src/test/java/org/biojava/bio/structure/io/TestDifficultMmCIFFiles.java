@@ -78,15 +78,15 @@ public class TestDifficultMmCIFFiles {
 		assertNotNull(sPdb.getPDBHeader().getBioAssemblies());
 		assertNotNull(sCif.getPDBHeader().getBioAssemblies());
 		
-		Map<String,BioAssemblyInfo> mapPdb = sPdb.getPDBHeader().getBioAssemblies();
-		Map<String,BioAssemblyInfo> mapCif = sCif.getPDBHeader().getBioAssemblies();
+		Map<Integer,BioAssemblyInfo> mapPdb = sPdb.getPDBHeader().getBioAssemblies();
+		Map<Integer,BioAssemblyInfo> mapCif = sCif.getPDBHeader().getBioAssemblies();
 		
 		
 		
 		assertEquals(mapPdb.size(),mapCif.size());
 		
-		assertEquals(60, mapCif.get("1").getTransforms().size());
-		assertEquals(60, mapCif.get("2").getTransforms().size());
+		assertEquals(60, mapCif.get(1).getTransforms().size());
+		assertEquals(60, mapCif.get(2).getTransforms().size());
 		
 		// an X-RAY entry
 		assertTrue(sPdb.isCrystallographic());

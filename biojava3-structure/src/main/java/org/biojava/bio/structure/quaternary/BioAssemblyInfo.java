@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class BioAssemblyInfo {
 	
-	private String id;
+	private int id;
 	private List<BiologicalAssemblyTransformation> transforms;
 	private int macromolecularSize;
 	
@@ -25,15 +25,14 @@ public class BioAssemblyInfo {
 	}
 	
 	/**
-	 * The identifier for this Biological Assembly, usually a number "1" to "n" but can also 
-	 * be "PAU" and "XAU" for large proteins with highly symmetrical asymmetric units.
+	 * The identifier for this Biological Assembly, from 1 to n
 	 * @return
 	 */
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 	
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	

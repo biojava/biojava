@@ -6,11 +6,12 @@ import java.util.List;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProvider;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A class that provides static access methods for easy lookup of protein structure related components
  * 
@@ -20,6 +21,7 @@ import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
  */
 public class StructureIO {
 
+	private static final Logger logger = LoggerFactory.getLogger(StructureIO.class);
 
 	private static AtomCache cache ;
 
@@ -127,33 +129,16 @@ public class StructureIO {
 		checkInitAtomCache();
 		provider.setAtomCache(cache);
 		
-		Structure asymUnit = null;
-
-		asymUnit = provider.getAsymUnit(pdbId);
+		Structure asymUnit = provider.getAsymUnit(pdbId);
 		
 		// 0 ... asym unit
 		if ( biolAssemblyNr == 0) {
+			logger.info("Requested biological assembly 0, returning asymmetric unit");
 			return asymUnit;
 		}
 		
-		List<BiologicalAssemblyTransformation> transformations = null;
-		
-		//List<ModelTransformationMatrix> transformations = provider.getBioUnitTransformationList(pdbId, biolAssemblyNr -1);
-		List<PdbxStructAssembly> psas = provider.getPdbxStructAssemblies();
-
-		
-		if ( psas.size() == 0) {
-			
-			// probably a PDB file based provider. That one does not contain that info... problem!
-			// workaround will only work if the ID is not PAU or XAU
-			transformations = asymUnit.getPDBHeader().getBioAssemblies().get(""+(biolAssemblyNr)).getTransforms();
-			
-		} else {
-			
-			PdbxStructAssembly psa = psas.get(biolAssemblyNr-1);
-			
-			transformations = asymUnit.getPDBHeader().getBioAssemblies().get(psa.getId()).getTransforms();
-		}
+		List<BiologicalAssemblyTransformation> transformations = 
+				asymUnit.getPDBHeader().getBioAssemblies().get(biolAssemblyNr).getTransforms();
 		
 		//cleanup to avoid memory leaks
 		provider.setAsymUnit(null);
@@ -163,7 +148,6 @@ public class StructureIO {
 			
 			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);
 		}
-		//System.out.println("StructureIO:" + transformations.get(0).toXML());
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations);

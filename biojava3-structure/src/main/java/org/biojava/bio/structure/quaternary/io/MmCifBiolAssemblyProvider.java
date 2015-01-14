@@ -119,11 +119,8 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		
 		List<PdbxStructAssemblyGen> psags = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
 		
-//		System.out.println(psa);
-//		System.out.println(psags);
 		
 		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
-		//System.out.println(operators);
 		
 		
 		/** now we start to rebuild the quaternary structure
@@ -164,11 +161,5 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 	public AtomCache getAtomCache() {
 		return cache;
 	}
-
-	@Override
-	public List<PdbxStructAssembly> getPdbxStructAssemblies() {
-		return provider.getPdbxStructAssemblies();
-	}
-
 
 }

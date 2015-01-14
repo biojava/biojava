@@ -870,7 +870,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			// the more detailed mapping of chains to rotation operations happens in StructureIO...
 			
-			Map<String,BioAssemblyInfo> transformationMap = new HashMap<String, BioAssemblyInfo>();
+			Map<Integer,BioAssemblyInfo> bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
 
 			for ( PdbxStructAssembly psa : strucAssemblies){
 
@@ -882,28 +882,41 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 				}
 
-				//System.out.println("psags: " + psags.size());
 				BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 				// these are the transformations that need to be applied to our model
 				List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
+				boolean validBioAssembly = true;
 				int mmSize = 0;
+				int bioAssemblyId = 0;
 				try {
-					mmSize = Integer.parseInt(psa.getOligomeric_count());
+					mmSize = Integer.parseInt(psa.getOligomeric_count());					
 				} catch (NumberFormatException e) {
 					logger.info("Could not parse oligomeric count from '{}' for biological assembly id {}",
 							psa.getOligomeric_count(),psa.getId());
+					validBioAssembly = false;
 				}
-				BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
-				bioAssembly.setId(psa.getId());
-				bioAssembly.setMacromolecularSize(mmSize);
-				bioAssembly.setTransforms(transformations);
-				transformationMap.put(psa.getId(),bioAssembly);
-				//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
+				try {
+					bioAssemblyId = Integer.parseInt(psa.getId());
+				} catch (NumberFormatException e) {
+					logger.info("Could not parse a numerical bio assembly id from '{}'",psa.getId());
+					validBioAssembly = false;
+				}
+				
+				// if either there's no oligomeric count or bioassembly id is not numerical we throw it away
+				// this happens usually for viral capsid entries, like 1ei7
+				// see issue #230 in github
+				if (validBioAssembly) {
+					BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
+					bioAssembly.setId(bioAssemblyId);
+					bioAssembly.setMacromolecularSize(mmSize);
+					bioAssembly.setTransforms(transformations);
+					bioAssemblies.put(bioAssemblyId,bioAssembly);
+				}
 
 			}
-			structure.getPDBHeader().setBioAssemblies(transformationMap);
+			structure.getPDBHeader().setBioAssemblies(bioAssemblies);
 		}
 
 		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
