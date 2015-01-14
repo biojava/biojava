@@ -113,8 +113,6 @@ public class FileDownloadUtils {
 			rbc = Channels.newChannel(url.openStream());
 			fos = new FileOutputStream(tempFile);
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-			fos.close();
-			rbc.close();
 		}
 		finally {
 			if(rbc != null) {
