@@ -28,7 +28,11 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.biojava.bio.structure.AtomPositionMap;
 import org.biojava.bio.structure.Chain;
@@ -170,7 +174,7 @@ public class AtomCacheTest {
 	}
 	
 	@Test
-	public void testFetchBehavior() throws IOException {
+	public void testFetchBehavior() throws IOException, ParseException {
 		// really more of a LocalPDBDirectory test, but throw it in with AtomCache
 		String pdbId = "1hh0"; // A small structure, since we download it multiple times
 		LocalPDBDirectory reader = new MMCIFFileReader(cache.getPath());
@@ -236,6 +240,23 @@ public class AtomCacheTest {
 		currMod = location.lastModified();
 		assertTrue("Not re-downloaded", currMod > prerem);
 
+		// test FETCH_IF_OUTDATED: change existing file timestamp to 2000 and try refetching (the file is from March 2009)
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+		Date d = formatter.parse("2000/01/01");
+		location.setLastModified(d.getTime());
+		reader.setFetchBehavior(FetchBehavior.FETCH_IF_OUTDATED);
+		s = reader.getStructureById(pdbId);
+		assertNotNull("Failed to fetch structure",s);
+		currMod = location.lastModified();
+		assertTrue("Not re-downloaded", currMod>d.getTime());
+		
+		// try again: should not download
+		reader.setFetchBehavior(FetchBehavior.FETCH_IF_OUTDATED);
+		location = reader.getLocalFile(pdbId);
+		currMod = location.lastModified();
+		s = reader.getStructureById(pdbId);		
+		assertEquals("Falsely re-downloaded", currMod, location.lastModified());
+		
 	}
 
 }

@@ -44,7 +44,8 @@ public interface StructureIOFile  {
 	 */
 	public void clearExtensions();
 
-	/** open filename and returns
+	/** 
+	 * Open filename and returns
 	 * a Structure object.
 	 * @param filename  a String
 	 * @return a Structure object
@@ -52,7 +53,8 @@ public interface StructureIOFile  {
 	 */
 	public Structure getStructure(String filename) throws IOException ;
 
-	/** read file from File and returns
+	/** 
+	 * Read file from File and returns
 	 * a Structure object.
 	 * @param file file containing a PDB or mmcif file
 	 * @return a Structure object
@@ -60,7 +62,8 @@ public interface StructureIOFile  {
 	 */
 	public Structure getStructure(File file) throws IOException ;
 
-	/** Get a Structure based on its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
+	/** 
+	 * Get a Structure by its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
 	 * @return a Structure object
 	 */
 	public Structure getStructureById(String pdbId) throws IOException;
