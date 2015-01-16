@@ -858,7 +858,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}			
 			
 		}
-		
+
+		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
+		List<Compound> compounds = structure.getCompounds();
+		// final sanity check: it can happen that from the annotated compounds some are not linked to any chains
+		// e.g. 3s26: a sugar entity does not have any chains associated to it (it seems to be happening with many sugar compounds)
+		// we simply log it, this can sign some other problems if the compounds are used down the line
+		for (Compound compound:compounds) {
+			if (compound.getChains().isEmpty()) {
+				logger.info("Compound {} '{}' has no chains associated to it",
+						compound.getId()==null?"with no entity id":compound.getId(), compound.getMolName());
+			}
+		}
+
 
 		// set the oligomeric state info in the header...
 		if (params.isParseBioAssembly()) {
@@ -926,9 +939,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 		
-		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
-		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
-		structure.getCompounds();
 
 
 		

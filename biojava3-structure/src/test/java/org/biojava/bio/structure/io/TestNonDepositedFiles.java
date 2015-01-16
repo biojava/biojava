@@ -17,6 +17,7 @@ import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava3.structure.StructureIO;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -166,7 +167,8 @@ public class TestNonDepositedFiles {
 	 * This is the file submitted to the PDB for deposition of entry 4lup
 	 * @throws IOException
 	 */
-	//@Test
+	@Ignore // remove once issue #234 is fixed
+	@Test
 	public void testPhenixFile() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/bio/structure/io/4lup_phenix_output.cif.gz"));
 		MMcifParser parser = new SimpleMMcifParser();
