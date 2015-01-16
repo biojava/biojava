@@ -1058,11 +1058,13 @@ public class AtomCache {
 
 	protected void flagLoading(String name) {
 		if (!currentlyLoading.contains(name)) {
+			
 			currentlyLoading.add(name);
 		}
 	}
 
 	protected void flagLoadingFinished(String name) {
+	
 		currentlyLoading.remove(name);
 	}
 
@@ -1083,9 +1085,12 @@ public class AtomCache {
 
 			s = reader.getStructureById(pdbId.toLowerCase());
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			flagLoadingFinished(pdbId);
-			throw e;//new StructureException(e.getMessage() + " while parsing " + pdbId, e);
+			
+			IOException ie = new IOException(e.getMessage());
+			ie.setStackTrace(e.getStackTrace());
+			throw ie;//new StructureException(e.getMessage() + " while parsing " + pdbId, e);
 		}
 		flagLoadingFinished(pdbId);
 
@@ -1107,9 +1112,12 @@ public class AtomCache {
 
 			s = reader.getStructureById(pdbId.toLowerCase());
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			flagLoadingFinished(pdbId);
-			throw e;//new StructureException(e.getMessage() + " while parsing " + pdbId, e);
+			
+			IOException ie = new IOException(e.getMessage());
+			ie.setStackTrace(e.getStackTrace());
+			throw ie;//new StructureException(e.getMessage() + " while parsing " + pdbId, e);
 		}
 		flagLoadingFinished(pdbId);
 
