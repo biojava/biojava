@@ -323,10 +323,10 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
                 }
             }
             setSteps(traceback, scores, sx, sy);
-            score = Short.MIN_VALUE;
+            score = Integer.MIN_VALUE;
             int[] finalScore = scores[xyMax[0]][xyMax[1]];
             for (int z = 0; z < finalScore.length; z++) {
-            	score = (int) Math.max(score, finalScore[z]);
+            	score = Math.max(score, finalScore[z]);
             }
         } else {
             for (int x = 0; x < dim[0]; x++) {

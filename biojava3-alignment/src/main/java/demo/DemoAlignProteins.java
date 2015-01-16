@@ -28,8 +28,8 @@ public class DemoAlignProteins {
 
 		GapPenalty penalty = new SimpleGapPenalty();
 
-		short gop = 8;
-		short extend = 1;
+		int gop = 8;
+		int extend = 1;
 		penalty.setOpenPenalty(gop);
 		penalty.setExtensionPenalty(extend);
 

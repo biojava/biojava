@@ -29,6 +29,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.biojava3.alignment.template.AlignedSequence.Step;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,6 +41,8 @@ import org.biojava3.alignment.template.AlignedSequence.Step;
  */
 public class AlignerHelper {
 
+	//private static final Logger logger = LoggerFactory.getLogger(AlignerHelper.class);
+	
     // types
 
     /**
@@ -373,7 +377,7 @@ public class AlignerHelper {
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, int gop, int gep, int[] subs,
             boolean storing, int[][][] scores, boolean startAnchored) {
         Last[][] pointers = new Last[ye + 1][];
-        int min = (int) (Short.MIN_VALUE - gop - gep);
+        int min = Integer.MIN_VALUE - gop - gep;
         ensureScoringMatrixColumn(x, storing, scores);
         if (x == xb) {
             scores[xb][yb][1] = scores[xb][yb][2] = gop;
@@ -503,6 +507,7 @@ public class AlignerHelper {
             scores[x] = scores[x - 2];
         }
     }
+    
     // finds alignment path through traceback matrix
     public static int[] setSteps(Last[][][] traceback, boolean local, int[] xyMax, Last last, List<Step> sx,
             List<Step> sy) {
@@ -535,9 +540,21 @@ public class AlignerHelper {
     public static int[] setSteps(Last[][][] traceback, int[][][] scores, List<Step> sx, List<Step> sy) {
         int xMax = scores.length - 1, yMax = scores[xMax].length - 1;
         boolean linear = (traceback[xMax][yMax].length == 1);
-        Last last = linear ? traceback[xMax][yMax][0] : (scores[xMax][yMax][1] > scores[xMax][yMax][0] &&
-                scores[xMax][yMax][1] > scores[xMax][yMax][2]) ? Last.DELETION : (scores[xMax][yMax][0] >
-                scores[xMax][yMax][2]) ? Last.SUBSTITUTION : Last.INSERTION;
+        
+        Last last = 
+        		
+        	linear ? 
+        		traceback[xMax][yMax][0] : 
+        			
+        		(scores[xMax][yMax][1] > scores[xMax][yMax][0] &&
+        		 scores[xMax][yMax][1] > scores[xMax][yMax][2] ) ? 
+        						
+        				Last.DELETION : 
+        					(scores[xMax][yMax][0] > scores[xMax][yMax][2]) ? 
+        							Last.SUBSTITUTION : 
+        							Last.INSERTION;
+        
+        		
         return setSteps(traceback, false, new int[] {xMax, yMax}, last, sx, sy);
     }
 
@@ -545,6 +562,7 @@ public class AlignerHelper {
     public static int[] setSteps(Last[][][] traceback, int[] xyMax, List<Step> sx, List<Step> sy) {
         return setSteps(traceback, true, xyMax, Last.SUBSTITUTION, sx, sy);
     }
+    
     public static String tracebackToString(Last[][][] traceback) {
     	StringBuilder sb = new StringBuilder();
     	for (int z = 0; z < 3; z++) {

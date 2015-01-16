@@ -32,7 +32,7 @@ public class SimpleGapPenaltyTest {
 
     @Test
     public void testSimpleGapPenalty() {
-        short gop = -12, gep = -3;
+        int gop = -12, gep = -3;
         GapPenalty defaults = new SimpleGapPenalty();
         SimpleGapPenalty.setDefaultOpenPenalty(gop);
         SimpleGapPenalty.setDefaultExtensionPenalty(gep);

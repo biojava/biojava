@@ -59,7 +59,7 @@ public class TestDNANeedlemanWunsch {
 		"GGGTCTTGTACACACCGCCCGTCAAGTCATGAAAGTCGGTAACACCTGAAGCCGGTGGCCCAACCCTTGT" +
 		"GGAGGGAGCCGTCGAAGGTGGGATCGGTAATTAGGACTAAGTCGTAACAAGGTAGCCGTACC";
 
-		GapPenalty penalty = new SimpleGapPenalty((short)-14, (short)-4);
+		GapPenalty penalty = new SimpleGapPenalty(-14, -4);
 		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(
 				new DNASequence(query, AmbiguityDNACompoundSet.getDNACompoundSet()),
 				new DNASequence(target, AmbiguityDNACompoundSet.getDNACompoundSet()),
