@@ -783,16 +783,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 					atomChain.setSeqResGroups(seqResGroups);
 
-			
-
-
 			}
-
-
 		}
 
-
-		addBonds();
+		if ( params.shouldCreateAtomBonds())
+			addBonds();
 
 		//TODO: add support for these:
 		//structure.setConnections(connects);
