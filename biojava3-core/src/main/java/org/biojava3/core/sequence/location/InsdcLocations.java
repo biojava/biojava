@@ -34,6 +34,7 @@ import org.biojava3.core.sequence.location.template.Point;
  * in records.
  *
  * @author ayates
+ * @author Paolo Pavan
  */
 public class InsdcLocations {
 
@@ -77,6 +78,20 @@ public class InsdcLocations {
      * Used to describe a 5' to 3' ordering but no firm assurance it is correct
      */
     public static class OrderLocation extends SimpleLocation {
+        public OrderLocation(List subLocations){
+            super(
+                    Location.Tools.getMin(subLocations).getStart(),
+                    Location.Tools.getMax(subLocations).getEnd()
+            );
+            
+            setStrand(Strand.UNDEFINED);
+            setSubLocations(subLocations);
+            assertLocation();
+        }
+        
+        public OrderLocation(Location... subLocations) {
+            this(Arrays.asList(subLocations));
+        }
 
         public OrderLocation(Point start, Point end, Strand strand,
                 boolean circular, Location... subLocations) {
@@ -116,6 +131,20 @@ public class InsdcLocations {
      * locations
      */
     public static class GroupLocation extends SimpleLocation {
+        public GroupLocation(List subLocations){
+            super(
+                    Location.Tools.getMin(subLocations).getStart(),
+                    Location.Tools.getMax(subLocations).getEnd()
+            );
+            
+            setStrand(Strand.UNDEFINED);
+            setSubLocations(subLocations);
+            assertLocation();
+        }
+        
+        public GroupLocation(Location... subLocations) {
+            this(Arrays.asList(subLocations));
+        }
 
         public GroupLocation(Point start, Point end, Strand strand,
                 boolean circular, Location... subLocations) {

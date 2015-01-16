@@ -1,11 +1,12 @@
 package org.biojava.bio.structure.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.junit.Assume.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava3.structure.StructureIO;
 import org.junit.Test;
 
@@ -76,18 +77,18 @@ public class TestDifficultMmCIFFiles {
 		
 		assertNotNull(sCif);
 
-		assertNotNull(sPdb.getPDBHeader().getBioUnitTranformationMap());
-		assertNotNull(sCif.getPDBHeader().getBioUnitTranformationMap());
+		assertNotNull(sPdb.getPDBHeader().getBioAssemblies());
+		assertNotNull(sCif.getPDBHeader().getBioAssemblies());
 		
-		Map<String,List<BiologicalAssemblyTransformation>> mapPdb = sPdb.getPDBHeader().getBioUnitTranformationMap();
-		Map<String,List<BiologicalAssemblyTransformation>> mapCif = sCif.getPDBHeader().getBioUnitTranformationMap();
+		Map<Integer,BioAssemblyInfo> mapPdb = sPdb.getPDBHeader().getBioAssemblies();
+		Map<Integer,BioAssemblyInfo> mapCif = sCif.getPDBHeader().getBioAssemblies();
 		
 		
 		
 		assertEquals(mapPdb.size(),mapCif.size());
 		
-		assertEquals(60, mapCif.get("1").size());
-		assertEquals(60, mapCif.get("2").size());
+		assertEquals(60, mapCif.get(1).getTransforms().size());
+		assertEquals(60, mapCif.get(2).getTransforms().size());
 		
 		// an X-RAY entry
 		assertTrue(sPdb.isCrystallographic());
@@ -113,5 +114,31 @@ public class TestDifficultMmCIFFiles {
 		ResidueNumber resNum = res.getResidueNumber();
 
 		assertEquals("Groups have wrong chain in resnum",resNum.getChainId(),"E");
+	}
+
+	@Test
+	public void test4letterChains() throws IOException, StructureException, URISyntaxException {
+		String filename = "/1hh0_4char.cif.gz";
+		URL url = getClass().getResource(filename);
+		assumeNotNull("Can't find resource "+filename,url);
+
+		File file = new File(url.toURI());
+		assumeNotNull(file);
+		assumeTrue(file.exists());
+
+		MMCIFFileReader reader = new MMCIFFileReader();
+		Structure s = reader.getStructure(file);
+
+		assertNotNull("Failed to load structure from jar",s);
+
+		List<Chain> chains = s.getChains();
+		assertEquals("Wrong number of chains",chains.size(), 1);
+
+		Chain chain = chains.get(0);
+		assertEquals("Wrong chain ID",chain.getChainID(),"ABCD");
+
+		Chain chain2 = s.getChainByPDB("ABCD");
+		assertNotNull(chain2);
+		assertEquals(chain2, chain);
 	}
 }

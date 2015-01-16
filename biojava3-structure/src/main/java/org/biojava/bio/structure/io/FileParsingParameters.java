@@ -27,6 +27,8 @@ package org.biojava.bio.structure.io;
 import java.io.Serializable;
 
 import org.biojava.bio.structure.AminoAcid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A class that configures parameters that can be sent to the PDB file parsers
  * 
@@ -46,10 +48,12 @@ import org.biojava.bio.structure.AminoAcid;
 public class FileParsingParameters implements Serializable
 {
 
-	/**
-	 * 
-	 */
+	private static final Logger logger = LoggerFactory.getLogger(FileParsingParameters.class);
+	
+	
 	private static final long serialVersionUID = 5878292315163939027L;
+
+
 
 	/** flag to detect if the secondary structure info should be read
 	 * 
@@ -258,7 +262,11 @@ public class FileParsingParameters implements Serializable
 	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
 	 * 
 	 * @returns updateRemediatedFiles flag
+	 * @deprecated Properties which impact downloading and caching behavior
+	 *  have been moved to the {@link StructureIOFile} implementations.
+	 *  See {@link LocalPDBDirectory#getFetchBehavior(LocalPDBDirectory.FetchBehavior)}
 	 */
+	@Deprecated
 	public boolean isUpdateRemediatedFiles() {
 		return updateRemediatedFiles;
 	}
@@ -266,8 +274,13 @@ public class FileParsingParameters implements Serializable
 	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
 	 * 
 	 * @param updateRemediatedFiles
+	 * @deprecated Properties which impact downloading and caching behavior
+	 *  have been moved to the {@link StructureIOFile} implementations.
+	 *  See {@link LocalPDBDirectory#setFetchBehavior(LocalPDBDirectory.FetchBehavior)}
 	 */
+	@Deprecated
 	public void setUpdateRemediatedFiles(boolean updateRemediatedFiles) {
+		logger.warn("FileParsingParameters.setUpdateRemediatedFiles() is deprecated, please use LocalPDBDirectory.setFetchBehavior() instead. The option will be removed in upcoming releases");
 		this.updateRemediatedFiles = updateRemediatedFiles;
 	}
 

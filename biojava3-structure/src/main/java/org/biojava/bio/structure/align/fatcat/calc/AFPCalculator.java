@@ -256,7 +256,7 @@ public class AFPCalculator
 			if (clone){
 				tmp[i] = (Atom)caall[i+pos].clone();
 			} else {
-				tmp[i] = (Atom)caall[i+pos];
+				tmp[i] = caall[i+pos];
 			}
 		}
 		return tmp;

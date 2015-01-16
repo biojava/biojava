@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
 
 import org.biojava.bio.structure.xtal.io.SpaceGroupMapRoot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -25,6 +27,9 @@ import org.biojava.bio.structure.xtal.io.SpaceGroupMapRoot;
  *
  */
 public class SymoplibParser {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SymoplibParser.class);
+	
 	private static final String newline = System.getProperty("line.separator");
 
 	private static final String SPACE_GROUPS_FILE = "org/biojava/bio/structure/xtal/spacegroups.xml";
@@ -70,7 +75,7 @@ public class SymoplibParser {
 		InputStream spaceGroupIS = SymoplibParser.class.getClassLoader().getResourceAsStream(SPACE_GROUPS_FILE);
 
 		if ( spaceGroupIS == null) {
-			System.err.println("Fatal error! Could not find resource: " + SPACE_GROUPS_FILE + ". This probably means that your biojava.jar file is corrupt or incorrectly built.");
+			logger.error("Fatal error! Could not find resource: " + SPACE_GROUPS_FILE + ". This probably means that your biojava jar file is corrupt or incorrectly built.");
 			System.exit(1);
 		}
 
@@ -79,10 +84,10 @@ public class SymoplibParser {
 		try {
 			map = parseSpaceGroupsXML(spaceGroupIS);
 		} catch (IOException e) {
-			System.err.println("Fatal error! Could not parse resource: "+SPACE_GROUPS_FILE+". Error: "+e.getMessage());
+			logger.error("Fatal error! Could not parse resource: "+SPACE_GROUPS_FILE+". Error: "+e.getMessage());
 			System.exit(1);
 		} catch (JAXBException e) {
-			System.err.println("Fatal error! Could not parse resource: "+SPACE_GROUPS_FILE+". Problem in xml formatting: "+e.getMessage());
+			logger.error("Fatal error! Could not parse resource: "+SPACE_GROUPS_FILE+". Problem in xml formatting: "+e.getMessage());
 			System.exit(1);			
 		}
 
@@ -217,8 +222,7 @@ public class SymoplibParser {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.err.println("Fatal error! Can't read symop.lib file. Error: "+e.getMessage()+". ");
+			logger.error("Fatal error! Can't read symop.lib file. Error: "+e.getMessage()+". ");
 			System.exit(1);
 		}
 

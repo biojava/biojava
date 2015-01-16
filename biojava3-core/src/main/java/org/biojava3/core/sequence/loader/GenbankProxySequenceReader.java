@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.biojava3.core.exceptions.CompoundNotFoundException;
@@ -45,9 +46,10 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.features.AbstractFeature;
 import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
-import org.biojava3.core.sequence.features.FeatureParser;
+import org.biojava3.core.sequence.features.FeatureRetriever;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.io.GenbankSequenceParser;
 import org.biojava3.core.sequence.io.GenericGenbankHeaderParser;
@@ -61,7 +63,7 @@ import org.slf4j.LoggerFactory;
  * @author Karl Nicholas <github:karlnicholas>
  * @author Jacek Grzebyta <github:jgrzebyta>
  */
-public class GenbankProxySequenceReader<C extends Compound> extends StringProxySequenceReader<C> implements FeaturesKeyWordInterface, DatabaseReferenceInterface {
+public class GenbankProxySequenceReader<C extends Compound> extends StringProxySequenceReader<C> implements FeaturesKeyWordInterface, DatabaseReferenceInterface, FeatureRetriever {
 
 	private final static Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReader.class);
 
@@ -70,6 +72,8 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     private GenbankSequenceParser<AbstractSequence<C>, C> genbankParser;
     private GenericGenbankHeaderParser<AbstractSequence<C>, C> headerParser;
     private String header;
+    private HashMap<String, ArrayList<AbstractFeature>> features;
+    
 
     /**
      * 
@@ -93,6 +97,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         setContents(genbankParser.getSequence(new BufferedReader(new InputStreamReader(inStream)), 0));
         headerParser = genbankParser.getSequenceHeaderParser();
         header = genbankParser.getHeader();
+        features = genbankParser.getFeatures();
 
         if (compoundSet.equals(AminoAcidCompoundSet.class)) {
             if (!genbankParser.getCompoundType().equals(compoundSet)) {
@@ -176,6 +181,9 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     public GenericGenbankHeaderParser<AbstractSequence<C>, C> getHeaderParser() {
         return headerParser;
     }
+    public HashMap<String, ArrayList<AbstractFeature>> getFeatures() {
+        return features;
+    }
 
     @Override
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
@@ -187,10 +195,6 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         return genbankParser.getKeyWords();
     }
 
-    public FeatureParser<C> getFeatureParser() {
-        return genbankParser;
-    }
-
     public static void main(String[] args) throws Throwable {
 
         GenbankProxySequenceReader<AminoAcidCompound> genbankProteinReader
@@ -200,6 +204,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         logger.info("Sequence ({},{})={}...", proteinSequence.getAccession(), proteinSequence.getLength(), proteinSequence.getSequenceAsString().substring(0, 10));
         logger.info("Keywords: {}", genbankProteinReader.getKeyWords());
         logger.info("DatabaseReferences: {}", genbankProteinReader.getDatabaseReferences());
+        proteinSequence.getFeatures();
 
         GenbankProxySequenceReader<NucleotideCompound> genbankDNAReader
                 = new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "NM_001126", DNACompoundSet.getDNACompoundSet());

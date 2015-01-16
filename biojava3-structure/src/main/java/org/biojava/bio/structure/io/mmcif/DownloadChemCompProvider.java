@@ -41,14 +41,16 @@ import org.slf4j.LoggerFactory;
 public class DownloadChemCompProvider implements ChemCompProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(DownloadChemCompProvider.class);
+
+	public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
+
+	public static final String SERVER_LOCATION = "http://www.rcsb.org/pdb/files/ligand/";
+
 	
 	private static File path; 
 	//private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	private static final String NEWLINE = System.getProperty("line.separator");
 
-	public static String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
-
-	private static String serverLocation = "http://www.rcsb.org/pdb/files/ligand/";
 
 	// flags to make sure there is only one thread running that is loading the dictionary
 	static AtomicBoolean loading = new AtomicBoolean(false);
@@ -291,7 +293,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		
 		String localName = getLocalFileName(recordName);
 
-		String u = serverLocation + recordName + ".cif";
+		String u = SERVER_LOCATION + recordName + ".cif";
 
 //		System.out.println("downloading " + u);
 

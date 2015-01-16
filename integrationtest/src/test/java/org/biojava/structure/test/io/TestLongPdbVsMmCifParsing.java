@@ -1,6 +1,9 @@
 package org.biojava.structure.test.io;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,8 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.vecmath.Matrix4d;
 
@@ -26,6 +31,8 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -41,11 +48,11 @@ import org.slf4j.LoggerFactory;
  * Will take very long to run, thus they are excluded by default in the pom.
  * To run them use, for the 1000 entries one:
  * <pre> 
- * mvn -DPDB_DIR=/my/pdb/dir -Dtest=TestLongPdbVsMmCifParsing#testLongPdbVsMmCif test
+ * mvn -Dtest=TestLongPdbVsMmCifParsing#testLongPdbVsMmCif test
  * </pre>
  * or for the 10000 entries:
  * <pre>
- * mvn -DPDB_DIR=/my/pdb/dir -Dtest=TestLongPdbVsMmCifParsing#testVeryLongPdbVsMmCif test
+ * mvn -Dtest=TestLongPdbVsMmCifParsing#testVeryLongPdbVsMmCif test
  * </pre>
  * 
  * 
@@ -96,6 +103,7 @@ public class TestLongPdbVsMmCifParsing {
 		
 		params = new FileParsingParameters();
 		cache.setFileParsingParams(params);
+		cache.setObsoleteBehavior(ObsoleteBehavior.THROW_EXCEPTION);
 	}
 	
 	@Test
@@ -114,6 +122,11 @@ public class TestLongPdbVsMmCifParsing {
 		
 		testAll(pdbIds);
 		
+	}
+	
+	@Test
+	public void testSingle() throws IOException, StructureException {
+		testAll(Arrays.asList("1pgw"));
 	}
 	
 	@After
@@ -322,11 +335,41 @@ public class TestLongPdbVsMmCifParsing {
 				assertEquals("Number of NCS operators don't coincide", ncsOpersPdb.length, ncsOpersCif.length);
 				
 				for (int i=0;i<ncsOpersPdb.length;i++) {
-					assertTrue("NCS operator "+i+" don't coincide",ncsOpersPdb[i].epsilonEquals(ncsOpersCif[i], 0.0001)); 
+					assertTrue("NCS operators "+i+" don't coincide",ncsOpersPdb[i].epsilonEquals(ncsOpersCif[i], 0.0001)); 
 				}
 			}
 		}
 		
+		// biological assemblies
+		// a) we don't test in non-crystallographic case because annotation is inconsistent between PDB and mmCIF,
+		//    e.g. 2kli (NMR) has bioassembly annotation in mmCIF but not in PDB
+		// b) we don't test virus entries (we check via looking at ncs operators==null): 
+		//    they are inconsistent PDB vs mmCIF (e.g. 1pgw has no oligomeric size in PDB, and 120 in mmCIF) 
+		if (isCrystallographic && hPdb.getCrystallographicInfo().getNcsOperators()==null
+				// 1ruh, 2ms2, 2r06: virus proteins with data consistency issue: it's missing the MTRXn record (so it appears as ncs operators==null)
+				&& (!sPdb.getPDBCode().equalsIgnoreCase("1ruh"))
+				&& (!sPdb.getPDBCode().equalsIgnoreCase("2ms2")) 
+				&& (!sPdb.getPDBCode().equalsIgnoreCase("2r06"))) {			
+			
+			assertEquals("Number of bioassemblies doesn't coincide",
+					hPdb.getNrBioAssemblies(), hCif.getNrBioAssemblies());
+
+			Map<Integer,BioAssemblyInfo> batPdb = hPdb.getBioAssemblies();
+			Map<Integer,BioAssemblyInfo> batCif = hCif.getBioAssemblies();		
+
+			assertEquals("Size of bioassemblies map doesn't coincide with nr of bioassemblies",
+					hPdb.getNrBioAssemblies(),batPdb.size());
+			assertEquals("Size of bioassemblies maps don't coincide",batPdb.size(), batCif.size());
+			
+			for (int id:batPdb.keySet()) {
+				assertTrue("Bioassembly id is not contained in mmCIF",batCif.containsKey(id));
+				// there's an inconsistency in 4amh pdb vs mmCIF in mmSize
+				if (sPdb.getPDBCode().equalsIgnoreCase("4amh")) continue;
+				
+				assertEquals("Macromolecular size of assemblies doesn't coincide",
+						batPdb.get(id).getMacromolecularSize(), batCif.get(id).getMacromolecularSize());
+			}
+		}
 	}
 	
 	private void testChains(Structure sPdb, Structure sCif) throws StructureException {
@@ -464,6 +507,7 @@ public class TestLongPdbVsMmCifParsing {
 		// set parsing params here:
 		params.setAlignSeqRes(true); 
 		//params.setLoadChemCompInfo(true);
+		params.setParseBioAssembly(true);
 		
 		return cache.getStructure(pdbId);
 
@@ -474,6 +518,7 @@ public class TestLongPdbVsMmCifParsing {
 		// set parsing params here:
 		params.setAlignSeqRes(true); 		
 		//params.setLoadChemCompInfo(true);
+		params.setParseBioAssembly(true);
 		
 		return cache.getStructure(pdbId);
 		

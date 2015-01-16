@@ -18,6 +18,8 @@
  * @author George Waldon
  * @author Deepak Sheoran
  * @author Karl Nicholas <github:karlnicholas>
+ * @author Jacek Grzebyta
+ * @author Paolo Pavan 
  *
  * For more information on the BioJava project and its aims,
  * or to join the biojava-l mailing list, visit the home page
@@ -32,49 +34,46 @@ package org.biojava3.core.sequence.io;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.DataSource;
-import org.biojava3.core.sequence.TaxonomyID;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.features.AbstractFeature;
 import org.biojava3.core.sequence.features.DBReferenceInfo;
-import org.biojava3.core.sequence.features.FeatureDbReferenceInfo;
-import org.biojava3.core.sequence.features.FeatureInterface;
-import org.biojava3.core.sequence.features.FeatureParser;
+import org.biojava3.core.sequence.features.Qualifier;
 import org.biojava3.core.sequence.features.TextFeature;
 import org.biojava3.core.sequence.io.template.SequenceParserInterface;
+import org.biojava3.core.sequence.location.InsdcParser;
+import org.biojava3.core.sequence.location.template.AbstractLocation;
+import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author unknown
- * @author Jacek Grzebyta
- * @param <S>
- * @param <C>
- */
-public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceParserInterface, FeatureParser<C> {
+public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceParserInterface{
 
     private String seqData = null;
     private GenericGenbankHeaderParser<S, C> headerParser;
     private String header;
     private String accession;
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
-    private TreeMap<String, AbstractFeature<AbstractSequence<C>, C>> mapFeature;
-    
-    private Logger log= LoggerFactory.getLogger(getClass());
+    /**
+     * this data structure collects list of features extracted from the
+     * FEATURE_TAG section They are organized by list of the same type (i.e.
+     * same genbank Feature) and are provided with location
+     */
+    private HashMap<String, ArrayList<AbstractFeature>> featureCollection;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     // this is a compoundset parsed from header.
     private CompoundSet<?> compoundType;
@@ -116,6 +115,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     protected static final Pattern refp = Pattern.compile("^(\\d+)\\s*(?:(\\((?:bases|residues)\\s+(\\d+\\s+to\\s+\\d+(\\s*;\\s*\\d+\\s+to\\s+\\d+)*)\\))|\\(sites\\))?");
     // dbxref line
     protected static final Pattern dbxp = Pattern.compile("^([^:]+):(\\S+)$");
+    
+    protected static final InsdcParser locationParser = new InsdcParser(DataSource.GENBANK);
     //sections start at a line and continue till the first line afterwards with a
     //non-whitespace first character
     //we want to match any of the following as a new section within a section
@@ -128,8 +129,10 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     protected static final Pattern headerLine = Pattern.compile("^LOCUS.*");
 
 //  private NCBITaxon tax = null;
-    @SuppressWarnings("unchecked")
-	private String parse(BufferedReader bufferedReader) {
+    
+    
+
+    private String parse(BufferedReader bufferedReader) {
         String sectionKey = null;
         List<String[]> section;
         // Get an ordered list of key->value pairs in array-tuples
@@ -165,7 +168,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                         }
                     }
 
-                    log.debug("compound type: {}" ,compoundType.getClass().getSimpleName());
+                    log.debug("compound type: {}", compoundType.getClass().getSimpleName());
 
                 } else {
                     throw new ParserException("Bad locus line");
@@ -208,73 +211,59 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
             } else if (sectionKey.equals(FEATURE_TAG)) {
                 // starting from second line of input, start a new feature whenever we come across
                 // a key that does not start with /
-                boolean skippingBond = false;
-                
-                // paragraph is a key not started with '/' character
-                String paragraph = ""; 
+                AbstractFeature gbFeature = null;
                 for (int i = 1; i < section.size(); i++) {
                     String key = ((String[]) section.get(i))[0];
                     String val = ((String[]) section.get(i))[1];
                     if (key.startsWith("/")) {
-                        if (!skippingBond) {
-                            key = key.substring(1); // strip leading slash
-                            val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();
-                            if (val.endsWith("\"")) {
-                                val = val.substring(1, val.length() - 1); // strip quotes
-                            }                            // parameter on old feature
-                            if (key.equals("db_xref")) {
-                                Matcher m = dbxp.matcher(val);
-                                if (m.matches()) {
-                                    String dbname = m.group(1);
-                                    String raccession = m.group(2);
-                                    ArrayList<DBReferenceInfo> listDBEntry = mapDB.get(key);
-                                    if (listDBEntry == null) {
-                                        listDBEntry = new ArrayList<DBReferenceInfo>();
-                                    }
-                                    FeatureDbReferenceInfo<S, C> dbReference = new FeatureDbReferenceInfo<S, C>(dbname, raccession);
-                                    listDBEntry.add(dbReference);
-                                    mapDB.put(key, listDBEntry); 
-                                    
-                                    // put dbReference as a child feature to paragraph feature
-                                    if (!paragraph.isEmpty()) {
-                                        AbstractFeature<AbstractSequence<C>, C> paragraphFeature = mapFeature.get(paragraph);
-                                        List<FeatureInterface<AbstractSequence<C>, C>> childrenFeatures = paragraphFeature.getChildrenFeatures();
-                                        if (childrenFeatures == null) {
-                                            childrenFeatures = new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
-                                            paragraphFeature.setChildrenFeatures(childrenFeatures);
-                                        }
-                                        childrenFeatures.add((FeatureInterface<AbstractSequence<C>, C>) dbReference);
-                                    }
-                                    
-                                } else {
-                                    throw new ParserException("Bad dbxref");
-                                }
-                            } else if (key.equalsIgnoreCase("organism")) {
-                                mapFeature.put(key, new TextFeature<AbstractSequence<C>, C>(key, val.replace('\n', ' '), "organism", "organism"));
+                        if (gbFeature == null) {
+                            throw new ParserException("Malformed GenBank file: found a qualifier without feature.");
+                        }
+                        key = key.substring(1); // strip leading slash
+                        val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();
+                        if (val.endsWith("\"")) {
+                            val = val.substring(1, val.length() - 1); // strip quotes
+                        }
+                        // parameter on old feature
+                        if (key.equals("db_xref")) {
+                            Matcher m = dbxp.matcher(val);
+                            if (m.matches()) {
+                                String dbname = m.group(1);
+                                String raccession = m.group(2);
+                                Qualifier xref = new DBReferenceInfo(dbname, raccession);
+                                gbFeature.addQualifier(key, xref);
+
+                                ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<DBReferenceInfo>();
+                                listDBEntry.add((DBReferenceInfo) xref);
+                                mapDB.put(key, listDBEntry);
                             } else {
-                                if (key.equalsIgnoreCase("translation")) {
-                                    // strip spaces from sequence
-                                    val = val.replaceAll("\\s+", "");
-                                    mapFeature.put(key, new TextFeature<AbstractSequence<C>, C>(key, val, "translation", "translation"));
-                                } else {
-                                    mapFeature.put(key, new TextFeature<AbstractSequence<C>, C>(key, val, key, key));
-                                }
+                                throw new ParserException("Bad dbxref");
+                            }
+                        } else if (key.equalsIgnoreCase("organism")) {
+                            Qualifier q = new Qualifier(key, val.replace('\n', ' '));
+                            gbFeature.addQualifier(key, q);
+                        } else {
+                            if (key.equalsIgnoreCase("translation")) {
+                                // strip spaces from sequence
+                                val = val.replaceAll("\\s+", "");
+                                Qualifier q = new Qualifier(key, val);
+                                gbFeature.addQualifier(key, q);
+                            } else {
+                                Qualifier q = new Qualifier(key, val);
+                                gbFeature.addQualifier(key, q);
                             }
                         }
                     } else {
                         // new feature!
-                        // end previous feature
-                        if(key.equalsIgnoreCase("bond"))
-                        {
-                            skippingBond = true;
-                        }
-                        else
-                        {
-                            skippingBond = false;
-                            mapFeature.put(key, new TextFeature<AbstractSequence<C>, C>(key, val, key, key));
-                            paragraph = key; //keep a name of paragraph feture
-                        }
+                        gbFeature = new TextFeature(key, val, key, key);
+                        Location l = 
+                                locationParser.parse(val);
+                        gbFeature.setLocation((AbstractLocation)l);
 
+                        if (!featureCollection.containsKey(key)) {
+                            featureCollection.put(key, new ArrayList());
+                        }
+                        featureCollection.get(key).add(gbFeature);
                     }
                 }
             } else if (sectionKey.equals(BASE_COUNT_TAG)) {
@@ -295,7 +284,13 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
         return seqData;
     }
 
+    
+
 	// reads an indented section, combining split lines and creating a list of
+    // key->value tuples
+    // reads an indented section, combining split lines and creating a list of
+    // key->value tuples
+    // reads an indented section, combining split lines and creating a list of
     // key->value tuples
     private List<String[]> readSection(BufferedReader bufferedReader) {
         List<String[]> section = new ArrayList<String[]>();
@@ -332,12 +327,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                             section.add(new String[]{currKey,
                                 currVal.toString()});
                         }
-						// key = group(2) or group(4) or group(6) - whichever is
+                        // key = group(2) or group(4) or group(6) - whichever is
                         // not null
                         currKey = m.group(2) == null ? (m.group(4) == null ? m
                                 .group(6) : m.group(4)) : m.group(2);
                         currVal = new StringBuffer();
-						// val = group(3) if group(2) not null, group(5) if
+			// val = group(3) if group(2) not null, group(5) if
                         // group(4) not null, "" otherwise, trimmed
                         currVal.append((m.group(2) == null ? (m.group(4) == null ? ""
                                 : m.group(5))
@@ -366,7 +361,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
     @Override
     public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException {
-        mapFeature = new TreeMap<String, AbstractFeature<AbstractSequence<C>, C>>();
+        featureCollection = new HashMap<String, ArrayList<AbstractFeature>>();
         mapDB = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
         headerParser = new GenericGenbankHeaderParser<S, C>();
 
@@ -388,35 +383,20 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     }
 
     public ArrayList<String> getKeyWords() {
-        return new ArrayList<String>(mapFeature.keySet());
+        return new ArrayList<String>(featureCollection.keySet());
     }
-
-    @Override
-    public FeatureInterface<AbstractSequence<C>, C> getFeature(String keyword) {
-        return mapFeature.get(keyword);
+    
+    public ArrayList<AbstractFeature> getFeatures(String keyword) {
+        return featureCollection.get(keyword);
     }
-
-    @Override
+    public HashMap<String, ArrayList<AbstractFeature>> getFeatures() {
+        return featureCollection;
+    }
+    
     public void parseFeatures(AbstractSequence<C> sequence) {
-        for (Map.Entry<String, AbstractFeature<AbstractSequence<C>, C>> f: mapFeature.entrySet()) {
-            sequence.addFeature(f.getValue());
-        }
-        
-        
-        // list of referece databases
-        ArrayList<DBReferenceInfo> dbs = mapDB.get("db_xref");
-        
-        //System.err.println("db ref size: " + dbs.size());
-        for (DBReferenceInfo db: dbs) {
-            //System.err.println(String.format("db name: %s", db.getDatabase()));
-            if (db.getDatabase().equals("taxon")) {
-                //System.err.println("found taxon");
-                String taxonId = db.getId();
-                sequence.setTaxonomy(new TaxonomyID(taxonId, DataSource.NCBI));
-                break;
-            }
-        }
-        
+        for (String k: featureCollection.keySet())
+            for (AbstractFeature f: featureCollection.get(k))
+                sequence.addFeature(f);
     }
 
     public CompoundSet<?> getCompoundType() {

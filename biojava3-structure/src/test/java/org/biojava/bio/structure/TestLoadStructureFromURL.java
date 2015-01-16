@@ -29,7 +29,7 @@ public class TestLoadStructureFromURL {
 			System.out.println("making dir with space:" + f);
 			f.mkdir();
 		}
-		AtomCache c = new AtomCache(f.toString(), f.toString(), true);
+		AtomCache c = new AtomCache(f.toString(), f.toString());
 		c.setUseMmCif(false);
 
 		// fetch a random small structure
@@ -37,7 +37,11 @@ public class TestLoadStructureFromURL {
 		c.getStructure("1znf");
 
 		//and now create a URL for this file
-		File subdir = new File(f, PDBFileReader.LOCAL_PDB_SPLIT_DIR+lineSplit+"zn");
+		File subdir = f;
+		for(String dir :PDBFileReader.PDB_SPLIT_DIR) {
+			subdir = new File(subdir,dir);
+		}
+		subdir = new File(subdir,"zn");
 		File newFile = new File(subdir, "pdb1znf.ent.gz");
 
 		subdir.deleteOnExit();

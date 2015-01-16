@@ -153,9 +153,7 @@ public Structure getStructure2() throws StructureException
      }
      return s;
       
-//      boolean isSplit = config.isSplit();
-//      
-//      AtomCache cache = new AtomCache(cacheLocation,isSplit );
+//      AtomCache cache = new AtomCache(cacheLocation );
 //      
 //      ScopDatabase scop = ScopInstallationInstance.getInstance().getSCOP();
 //      

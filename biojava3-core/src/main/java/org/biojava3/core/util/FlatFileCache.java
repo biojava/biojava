@@ -99,7 +99,7 @@ public class FlatFileCache {
 			cache.put(key,bytes);
 			
 		} catch (Exception e){
-			logger.error("Error adding to cache! {}" + e.getMessage(), e);
+			logger.error("Error adding to cache! " + e.getMessage(), e);
 		}
 	}
 

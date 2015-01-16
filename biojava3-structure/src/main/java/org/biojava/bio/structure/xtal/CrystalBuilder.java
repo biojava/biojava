@@ -168,7 +168,7 @@ public class CrystalBuilder {
 			ops = structure.getCrystallographicInfo().getTransformationsOrthonormal();
 		} else {
 			ops = new Matrix4d[1];
-			ops[0] = IDENTITY;
+			ops[0] = new Matrix4d(IDENTITY);
 		}
 
 		// The bounding boxes of all AUs of the unit cell

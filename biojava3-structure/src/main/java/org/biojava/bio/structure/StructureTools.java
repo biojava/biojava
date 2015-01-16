@@ -91,6 +91,14 @@ public class StructureTools {
 
 	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');
 
+	/**
+	 * Below this ratio of aminoacid/nucleotide residues to the sequence total,
+	 * we use simple majority of aminoacid/nucleotide residues to decide the character 
+	 * of the chain (protein/nucleotide) 
+	 */
+	public static final double RATIO_RESIDUES_TO_TOTAL = 0.95;
+	
+
 
 	//private static final String insertionCodeRegExp = "([0-9]+)([a-zA-Z]*)";
 	//private static final Pattern insertionCodePattern = Pattern.compile(insertionCodeRegExp);
@@ -216,7 +224,7 @@ public class StructureTools {
 		Iterator<Group> iter = new GroupIterator(s);
 
 		while ( iter.hasNext()){
-			Group g = (Group) iter.next();
+			Group g = iter.next();
 			nrAtoms += g.size();
 		}
 
@@ -235,7 +243,7 @@ public class StructureTools {
 		List<Chain> chains = s.getChains(0);
 		Iterator<Chain> iter = chains.iterator();
 		while (iter.hasNext()){
-			Chain c = (Chain) iter.next();
+			Chain c = iter.next();
 			nrGroups += c.getAtomLength();
 		}
 		return nrGroups;
@@ -260,7 +268,7 @@ public class StructureTools {
 		List<Atom> atoms = new ArrayList<Atom>();
 
 		extractAtoms(atomNames, chains, atoms);
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 
 	}
 
@@ -286,7 +294,7 @@ public class StructureTools {
 			List<Chain> chains = s.getModel(i);
 			extractAtoms(atomNames, chains, atoms);
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 
 	}
 
@@ -304,7 +312,7 @@ public class StructureTools {
 			Atom a = iter.next();
 			atoms.add(a);
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
+		return atoms.toArray(new Atom[atoms.size()]);	
 	}
 	
 	/** 
@@ -324,7 +332,7 @@ public class StructureTools {
 				atoms.add(a);
 			}
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
+		return atoms.toArray(new Atom[atoms.size()]);	
 	}
 
 	/**
@@ -352,7 +360,7 @@ public class StructureTools {
 
 			atoms.add(a);
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+		return atoms.toArray(new Atom[atoms.size()]);			
 	}
 	
 	/**
@@ -377,7 +385,7 @@ public class StructureTools {
 				atoms.add(a);
 			}
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+		return atoms.toArray(new Atom[atoms.size()]);			
 	}
 	
 	/**
@@ -413,7 +421,7 @@ public class StructureTools {
 					// add the atoms of this group to the array.
 					Iterator<Atom> aIter = thisGroupAtoms.iterator();
 					while(aIter.hasNext()){
-						Atom a = (Atom) aIter.next();
+						Atom a = aIter.next();
 						atoms.add(a);
 					}
 				}
@@ -460,13 +468,13 @@ public class StructureTools {
 				// add the atoms of this group to the array.
 				Iterator<Atom> aIter = thisGroupAtoms.iterator();
 				while(aIter.hasNext()){
-					Atom a = (Atom) aIter.next();
+					Atom a = aIter.next();
 					atoms.add(a);
 				}
 			}
 
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 
 	}
 
@@ -484,7 +492,7 @@ public class StructureTools {
 			}
 		}
 		
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
 	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
@@ -643,7 +651,7 @@ public class StructureTools {
 			}
 		}
 
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
 	/** 
@@ -672,7 +680,7 @@ public class StructureTools {
 			
 		}
 		
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
 
@@ -710,7 +718,7 @@ public class StructureTools {
 	 */
 	public static final Character get1LetterCode(String groupCode3){
 
-		Character aminoCode1 = null;
+		Character aminoCode1;
 		try {
 			// is it a standard amino acid ?
 			aminoCode1 = convert_3code_1code(groupCode3);
@@ -1201,7 +1209,7 @@ public class StructureTools {
 			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
 
 				// exclude water
-				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
+				if (!includeWater && chainGroup.isWater()) continue;
 
 				// check blacklist of residue numbers
 				for (ResidueNumber rn : excludeResidues) {
@@ -1263,7 +1271,7 @@ public class StructureTools {
 		Set<Group> returnSet = new LinkedHashSet<Group>();
 		for (Chain chain : structure.getChains()) {
 			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
-				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
+				if (!includeWater && chainGroup.isWater()) continue;
 				for (ResidueNumber rn : excludeResidues) {
 					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
 				}
@@ -1484,4 +1492,80 @@ public class StructureTools {
 			return cache.getStructure(name);
 		}
 	}
+	
+	/**
+	 * Tell whether given chain is a protein chain
+	 * @param c
+	 * @return true if protein, false if nucleotide or ligand
+	 * @see #getPredominantGroupType(Chain)
+	 */
+	public static boolean isProtein(Chain c) {
+		return getPredominantGroupType(c) == GroupType.AMINOACID;
+	}
+	
+	/**
+	 * Tell whether given chain is DNA or RNA
+	 * @param c
+	 * @return true if nucleic acid, false if protein or ligand
+	 * @see #getPredominantGroupType(Chain)
+	 */
+	public static boolean isNucleicAcid(Chain c) {
+		return getPredominantGroupType(c) == GroupType.NUCLEOTIDE;
+	}
+	
+	/**
+	 * Get the predominant {@link GroupType} for a given Chain, following these rules:
+	 * <li>if the ratio of number of residues of a certain {@link GroupType} to total 
+	 * non-water residues is above the threshold {@value #RATIO_RESIDUES_TO_TOTAL}, then that {@link GroupType} is returned </li>
+	 * <li>if there is no {@link GroupType} that is above the threshold then the {@link GroupType} 
+	 * with most members is chosen, logging it</li>
+	 * See also {@link ChemComp#getPolymerType()} and {@link ChemComp#getResidueType()} which 
+	 * follow the PDB chemical component dictionary and provide a much more accurate description of 
+	 * groups and their linking.
+	 * @param c
+	 * @return
+	 */
+	public static GroupType getPredominantGroupType(Chain c) {
+		int sizeAminos = c.getAtomGroups(GroupType.AMINOACID).size();
+		int sizeNucleotides = c.getAtomGroups(GroupType.NUCLEOTIDE).size();
+		List<Group> hetAtoms = c.getAtomGroups(GroupType.HETATM);
+		int sizeHetatoms = hetAtoms.size();
+		int sizeWaters = 0;
+		for (Group g:hetAtoms) {
+			if (g.isWater()) sizeWaters++;
+		}
+		
+		int fullSize = sizeAminos + sizeNucleotides + sizeHetatoms - sizeWaters;
+		
+		if ((double)sizeAminos/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return GroupType.AMINOACID;
+		
+		if ((double)sizeNucleotides/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return GroupType.NUCLEOTIDE;
+		
+		if ((double)(sizeHetatoms-sizeWaters)/(double)fullSize > RATIO_RESIDUES_TO_TOTAL) return GroupType.HETATM;
+		
+		// finally if neither condition works, we try based on majority, but log it
+		GroupType max;
+		if(sizeNucleotides > sizeAminos) {
+			if(sizeNucleotides > sizeHetatoms) {
+				max = GroupType.NUCLEOTIDE;
+			} else {
+				max = GroupType.HETATM;
+			}
+		} else {
+			if(sizeAminos > sizeHetatoms) {
+				max = GroupType.AMINOACID;
+			} else {
+				max = GroupType.HETATM;
+			}
+		}
+		logger.debug("Ratio of residues to total for chain {} is below {}. Assuming it is a {} chain. "
+				+ "Counts: # aa residues: {}, # nuc residues: {}, # het residues: {}, # waters: {}, "
+				+ "ratio aa/total: {}, ratio nuc/total: {}",
+				c.getChainID(), RATIO_RESIDUES_TO_TOTAL, max,
+				sizeAminos, sizeNucleotides, sizeHetatoms, sizeWaters,
+				(double)sizeAminos/(double)fullSize,(double)sizeNucleotides/(double)fullSize) ;
+
+		return max;
+	}
+
 }

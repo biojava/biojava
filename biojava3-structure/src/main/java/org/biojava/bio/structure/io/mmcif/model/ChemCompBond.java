@@ -24,6 +24,9 @@
  */
 package org.biojava.bio.structure.io.mmcif.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /*
  * _chem_comp_bond.comp_id
@@ -35,6 +38,9 @@ _chem_comp_bond.pdbx_stereo_config
 _chem_comp_bond.pdbx_ordinal
  */
 public class ChemCompBond {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ChemCompBond.class);
+	
 	String comp_id;
 	String atom_id_1;
 	String atom_id_2;
@@ -115,7 +121,7 @@ public class ChemCompBond {
 		} else if (value_order.equals("QUAD")) {
 			return 4;
 		} else {
-			System.err.println("Unknown or non-numeric value for value_order: "
+			logger.error("Unknown or non-numeric value for value_order: "
 					+ value_order);
 			return -1;
 		}

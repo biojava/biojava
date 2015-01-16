@@ -6,14 +6,16 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.biojava.bio.structure.jama.Matrix;
+import org.biojava.bio.structure.xtal.CrystalCell;
+import org.biojava.bio.structure.xtal.CrystalTransform;
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -23,23 +25,32 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
+ * The transformation needed for generation of biological assemblies 
+ * from the contents of a PDB/mmCIF file. It contains both the actual
+ * transformation (rotation+translation) and the chain identifier to 
+ * which it should be applied.
+ * 
  * @author Peter Rose
  * @author Andreas Prlic
  * @author rickb
- *
+ * @author duarte_j
+ * @see CrystalTransform
  */
 public class BiologicalAssemblyTransformation implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = -6388503076022480391L;
-	private String id = null;
-	private String chainId = null;
-	private Matrix rotation = null;
-	private double[] translation = new double[3];
+
+	private String id;
+	private String chainId;	
+	private Matrix4d transformation;
 	
 	/**
 	 * Default Constructor
 	 */
-	public BiologicalAssemblyTransformation() {}
+	public BiologicalAssemblyTransformation() {
+		// we initialize to identity so that setting rotation and translation work properly
+		transformation = new Matrix4d(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);  
+	}
 
 	/**
 	 * Copy Constructor
@@ -48,17 +59,15 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	 */
 	public BiologicalAssemblyTransformation(final BiologicalAssemblyTransformation src)
 	{
-		this.rotation = new Matrix(src.getRotationMatrix().getArrayCopy());
-		this.translation [0] = src.translation[0];
-		this.translation [1] = src.translation[1];
-		this.translation [2] = src.translation[2];
+		this.transformation = new Matrix4d(src.transformation);
 		this.id = src.getId();
 		this.chainId =  src.getChainId();
 	}
 	
 	
 	/**
-	 * Sets the identifier for this biological assembly transformation. This is usually the model number used in the biological assembly files.
+	 * Sets the identifier for this biological assembly transformation. This is usually 
+	 * the model number used in the biological assembly files.
 	 * @param id
 	 */
 	public void setId(String id) {
@@ -66,7 +75,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	}
 	
 	/**
-	 * Returns the identified for this biological assembly transformation.
+	 * Returns the identifier for this biological assembly transformation.
 	 * @return biological assembly transformation identifier
 	 */
 	public String getId() {
@@ -90,84 +99,59 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	}
 
 	/**
-	 * Set the rotation matrix for this transformation
-	 * @param rotation
-	 */
-	public void setRotationMatrix(Matrix rotation) {
-		this.rotation = new Matrix(rotation.getArray());
-	}
-	
-	/**
-	 * Return the rotation matrix for this transformation
-	 * @return 3x3 rotation matrix
-	 */
-	public Matrix getRotationMatrix() {
-		return this.rotation;
-	}
-	
-	/**
-	 * Sets the translational component of this transformation
-	 * @param translation
-	 */
-	public void setTranslation(double[] translation) {
-		this.translation [0] = translation[0];
-		this.translation [1] = translation[1];
-		this.translation [2] = translation[2];
-	}
-	
-	/**
-	 * Returns the translational component of this transformation
-	 * @return translational component
-	 */
-	public double[] getTranslation() {
-		return this.translation;
-	}
-	
-	/**
 	 * Sets the transformation using a 4x4 transformation matrix
 	 * @param transformation
 	 */
-	public void setTransformationMatrix(Matrix transformation) {
-		this.rotation = transformation.getMatrix(0, 2, 0, 2);
-		this.translation = new double[3];
-		this.translation[0] = transformation.get(0, 3);
-		this.translation[1] = transformation.get(1, 3);
-		this.translation[2] = transformation.get(2, 3);
+	public void setTransformationMatrix(Matrix4d transformation) {
+		this.transformation = transformation;
 	}
 	
 	/**
-	 * Returns the rotational and translational component of this transformation as 4x4 transformation matrix.
-	 * @return 4X4 rotation matrix
+	 * Return the transformation (both rotational and translational component) as a 4x4 transformation matrix.
+	 * The transformation is in orthonormal (cartesian coordinates). If required to be converted to 
+	 * crystal coordinates then use {@link CrystalCell#transfToCrystal(Matrix4d)}
+	 * Note that this is a reference to the variable, thus it remains linked to this object's transformation field.
+	 * The user must deep copy it if need changing it.
+	 * @return 4x4 transformation matrix
 	 */
-	public Matrix getTransformationMatrix() {
-		Matrix transformation = Matrix.identity(4, 4);
-		transformation.setMatrix(0, 2, 0, 2, rotation);
-		transformation.set(0, 3, translation[0]);
-		transformation.set(1, 3, translation[1]);
-		transformation.set(2, 3, translation[2]);
+	public Matrix4d getTransformationMatrix() {
 		return transformation;
 	}
 	
+	public void setRotationMatrix(double[][] m) {
+		for (int i=0;i<3;i++) {
+			for (int j=0;j<3;j++) {
+				this.transformation.setElement(i, j, m[i][j]);
+			}
+		}
+	}
+	
+	public void setTranslation(double[] t) {
+		for (int i=0;i<3;i++) {
+			this.transformation.setElement(i, 3, t[i]);
+		}
+	}
+	
 	/**
-	 * Applies the transformation to this point.
+	 * Applies the transformation to given point.
 	 */
 	public void transformPoint(final double[] point) {
-		double x = point[0] * rotation.get(0, 0) + point[1] * rotation.get(0, 1) + point[2] * rotation.get(0, 2) + translation[0];
-		double y = point[0] * rotation.get(1, 0) + point[1] * rotation.get(1, 1) + point[2] * rotation.get(1, 2) + translation[1];
-		double z = point[0] * rotation.get(2, 0) + point[1] * rotation.get(2, 1) + point[2] * rotation.get(2, 2) + translation[2];
-		point[0] = x;
-		point[1] = y;
-		point[2] = z;
+		Point3d p = new Point3d(point[0],point[1],point[2]);
+		transformation.transform(p); 
+		point[0] = p.x;
+		point[1] = p.y;
+		point[2] = p.z;
 	}
 	
 	/**
 	 * Returns the combination (product) of two biological assembly transformations.
-	 * @param matrix1 4x4 transformation matrix
-	 * @param matrix2 4x4 transformation matrix
+	 * @param matrix1 
+	 * @param matrix2 
 	 * @return combined transformation
 	 */
-	public static BiologicalAssemblyTransformation combine(BiologicalAssemblyTransformation matrix1, BiologicalAssemblyTransformation matrix2) {	
-		Matrix transformation = matrix1.getTransformationMatrix().times(matrix2.getTransformationMatrix());
+	public static BiologicalAssemblyTransformation combine(BiologicalAssemblyTransformation matrix1, BiologicalAssemblyTransformation matrix2) {
+		Matrix4d transformation = new Matrix4d(matrix1.transformation);
+		transformation.mul(matrix2.transformation); 
 		BiologicalAssemblyTransformation combined = new BiologicalAssemblyTransformation();
 		combined.setTransformationMatrix(transformation);
 		return combined;
@@ -193,19 +177,17 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 		xml.attribute("index",id);
 
 		xml.openTag("matrix");
-		Matrix m = getRotationMatrix();
 		
 			for ( int i = 0 ; i<3 ; i++){
 				for ( int j = 0 ; j<3 ;j++){	
-				xml.attribute("m" +  (i+1) + (j+1), String.format("%.8f",m.get(i,j)));
+				xml.attribute("m" +  (i+1) + (j+1), String.format("%.8f",transformation.getElement(i,j)));
 			}
 		}
 		xml.closeTag("matrix");
 
-		double[] shift = getTranslation();
 		xml.openTag("shift");
 		for ( int i = 0 ; i<3 ; i++) {
-			xml.attribute("v"+(i+1),String.format("%.8f", shift[i]));
+			xml.attribute("v"+(i+1),String.format("%.8f", transformation.getElement(i,3)));
 		}
 		xml.closeTag("shift");
 
@@ -285,13 +267,13 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 		return d;
 	}
 
-	private static Matrix getMatrixFromXML(Node block) {
-		Matrix m  = new Matrix(3,3);
+	private static double[][] getMatrixFromXML(Node block) {
+		double[][] m  = new double[3][3];
 		for ( int i = 0 ; i<3 ; i++){
 			for ( int j = 0 ; j<3 ;j++){
 				// TODO check is this matrix is populated correctly
 				String val = getAttribute(block, "m" + (j+1)+(i+1));			
-				m.set(j,i, Float.parseFloat(val));
+				m[j][i] = Double.parseDouble(val);
 			}
 		}
 		return m;
@@ -322,10 +304,16 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	@Override
 	public String toString() {
 		return "BiologicalAssemblyTransformation [id=" + id + ", chainId="
-				+ chainId + ", rotation=" + rotation + ", translation="
-				+ Arrays.toString(translation) + "]";
+				+ chainId + ", rotation=" + rotMatrixToString(transformation) + ", translation="
+				+ translVecToString(transformation) + "]";
 	}
 	
+	public static String rotMatrixToString(Matrix4d m) {
+		return String.format("(%5.2f %5.2f %5.2f, %5.2f %5.2f %5.2f, %5.2f %5.2f %5.2f)", m.m00, m.m01, m.m02,  m.m10, m.m11, m.m12,  m.m20, m.m21, m.m22);
+	}
 	
+	public static String translVecToString(Matrix4d m) {
+		return String.format("(%5.2f %5.2f %5.2f)", m.m03, m.m13, m.m23);
+	}
 
 }

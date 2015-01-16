@@ -34,95 +34,54 @@ import org.biojava.bio.structure.Structure;
  */
 public interface StructureIOFile  {
 
-    /** Set path to file / connection string to db.
-     * This is for installations of PDB/mmCif where all files are located in one directory.
-     *
-     * @param path  a String specifying the path value
-     */
-    public void setPath(String path) ;
-
-    /** get the directory path to the files
-     *
-     * @return path
-     */
-    public String getPath();
-
-    /** add a known File extension.
-     * @param ext  a String ...
-     */
-    public void addExtension(String ext);
-
-    /** clear all file extensions
-     *
-     */
-    public void clearExtensions();
-
-    /** open filename and returns
-     * a Structure object.
-     * @param filename  a String
-     * @return a Structure object
-     * @throws IOException ...
-     */
-    public Structure getStructure(String filename) throws IOException ;
-
-    /** read file from File and returns
-     * a Structure object.
-     * @param file file containing a PDB or mmcif file
-     * @return a Structure object
-     * @throws IOException ...
-     */
-    public Structure getStructure(File file) throws IOException ;
-
-    /** Fetch files automatically from FTP server. Default: false
-     *
-     * @return flag is true or false.
-     * 
-     */
-    public boolean isAutoFetch();
-       
-    /** Tell the parser to fetch missing PDB files from the FTP server automatically.
-	 *
-	 * default is false. If true, new PDB files will be automatically stored in the Path and gzip compressed.
-	 *
-	 * @param autoFetch flag.
-	 */ 
-	public void setAutoFetch(boolean autoFetch);
-
-	
-	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
-	 * 
-	 * @param isSplit
-	 * 
+	/** add a known File extension.
+	 * @param ext  a String ...
 	 */
-	public void setPdbDirectorySplit(boolean isSplit);
-	
-	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
-	 * 
-	 * @return flag
+	public void addExtension(String ext);
+
+	/** clear all file extensions
 	 *
 	 */
-	public boolean isPdbDirectorySplit();
-		
-	
-	/** Get a Structure based on its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
+	public void clearExtensions();
+
+	/** 
+	 * Open filename and returns
+	 * a Structure object.
+	 * @param filename  a String
+	 * @return a Structure object
+	 * @throws IOException ...
+	 */
+	public Structure getStructure(String filename) throws IOException ;
+
+	/** 
+	 * Read file from File and returns
+	 * a Structure object.
+	 * @param file file containing a PDB or mmcif file
+	 * @return a Structure object
+	 * @throws IOException ...
+	 */
+	public Structure getStructure(File file) throws IOException ;
+
+	/** 
+	 * Get a Structure by its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
 	 * @return a Structure object
 	 */
 	public Structure getStructureById(String pdbId) throws IOException;
 
-	
+
 	/** Set the parameters that should be used for file parsing
 	 * 
 	 * @param params FileParsingParameters
 	 */
 	public void setFileParsingParameters(FileParsingParameters params);
-	   
-	
+
+
 	/** Get the parameters that should be used for file parsing
-     * 
-     * @return the FileParsingParameters that are configuring the behavior of the parser
-     */
-    public FileParsingParameters getFileParsingParameters();
-    
-	
-	
+	 * 
+	 * @return the FileParsingParameters that are configuring the behavior of the parser
+	 */
+	public FileParsingParameters getFileParsingParameters();
+
+
+
 }

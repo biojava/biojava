@@ -33,18 +33,20 @@ import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
  * to load a protein sequence
  *
  * @author Scooter Willis <willishf at gmail dot com>
+ * @author Paolo Pavan
  */
-public class DBReferenceInfo {
+public class DBReferenceInfo extends Qualifier {
     private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
     private String database = "";
     private String id = "";
-
+    
     /**
      * The source database and id
      * @param database
      * @param id
      */
     public DBReferenceInfo(String database, String id){
+        super("dbxref","");
         this.database = database;
         this.id = id;
     }

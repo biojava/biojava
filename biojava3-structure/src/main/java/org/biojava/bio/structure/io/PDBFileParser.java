@@ -1872,7 +1872,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if ( atomCount == my_ATOM_CA_THRESHOLD ) {
 			// throw away the SEQRES lines - too much to deal with...
-			System.err.println("more than " + my_ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
+			logger.warn("more than " + my_ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
 			seqResChains.clear();
 
 			switchCAOnly();
@@ -1882,8 +1882,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 		if ( atomCount == load_max_atoms){
-			System.err.println("too many atoms (>"+load_max_atoms+"in this protein structure.");
-			System.err.println("ignoring lines after: " + line);
+			logger.warn("too many atoms (>"+load_max_atoms+"in this protein structure.");
+			logger.warn("ignoring lines after: " + line);
 			return;
 		}
 		if ( atomCount > load_max_atoms){
@@ -2997,15 +2997,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		linkSitesToGroups(); // will work now that setSites is called
 		
 		if ( bioAssemblyParser != null){
-			pdbHeader.setBioUnitTranformationMap(bioAssemblyParser.getTransformationMap());
-			pdbHeader.setNrBioAssemblies(bioAssemblyParser.getNrBioAssemblies());
+			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
 			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
 			//System.out.println(pdbHeader.getBioUnitTranformationMap().keySet());
 		}
 		
 		if (ncsOperators !=null && ncsOperators.size()>0) {
 			crystallographicInfo.setNcsOperators(
-				(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
+				ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 		
 		
@@ -3024,7 +3023,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} // otherwise it remains default value: PDBHeader.DEFAULT_RFREE
 		
 		
-		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		structure.getCompounds();
 	}
@@ -3063,13 +3062,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 				// assign all residues in this range to this secondary structure type
 				// String initResName = (String)m.get("initResName");
-				String initChainId = (String)m.get("initChainId");
-				String initSeqNum  = (String)m.get("initSeqNum" );
-				String initICode   = (String)m.get("initICode" );
+				String initChainId = m.get("initChainId");
+				String initSeqNum  = m.get("initSeqNum" );
+				String initICode   = m.get("initICode" );
 				// String endResName  = (String)m.get("endResName" );
-				String endChainId  = (String)m.get("endChainId" );
-				String endSeqNum   = (String)m.get("endSeqNum");
-				String endICode    = (String)m.get("endICode");
+				String endChainId  = m.get("endChainId" );
+				String endSeqNum   = m.get("endSeqNum");
+				String endICode    = m.get("endICode");
 
 				if (initICode.equals(" "))
 					initICode = "";
@@ -3081,7 +3080,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				GroupIterator gi = new GroupIterator(structure);
 				boolean inRange = false;
 				while (gi.hasNext()){
-					Group g = (Group)gi.next();
+					Group g = gi.next();
 					Chain c = g.getChain();
 
 					if (c.getChainID().equals(initChainId)){

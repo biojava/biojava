@@ -34,6 +34,8 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 
  * Reconstructs the quaternary structure of a protein from an asymmetric unit
@@ -43,10 +45,15 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
  *
  */
 public class BiologicalAssemblyBuilder {
+	
+	private static final Logger logger = LoggerFactory.getLogger(BiologicalAssemblyBuilder.class);
+	
 	private OperatorResolver operatorResolver;
 	private List<PdbxStructAssemblyGen> psags;
 
 	private List<BiologicalAssemblyTransformation> modelTransformations;
+	
+	private List<String> modelIndex = new ArrayList<String>();
 
 	public BiologicalAssemblyBuilder(){
 		init();
@@ -65,13 +72,13 @@ public class BiologicalAssemblyBuilder {
                 
 				String intChainID = c.getInternalChainID();
 				if (intChainID == null) {
-					//System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
+					logger.info("No internal chain ID found while building bioassembly, using chain ID instead: " + c.getChainID());
 					intChainID = c.getChainID();
 				}
 
 				if (transformation.getChainId().equals(intChainID)){
 					Chain chain = (Chain)c.clone();
-		//			
+					
 					for (Group g : chain.getAtomGroups()) {
 
 						for (Atom a: g.getAtoms()) {
@@ -128,9 +135,8 @@ public class BiologicalAssemblyBuilder {
 			chainIds.add(intChainID);
 		}
 		return chainIds;
-	}
-
-	List<String> modelIndex = new ArrayList<String>();
+	}	
+	
 	private void addChainAndModel(Structure s, Chain newChain, String modelId) {
 		
 		if ( modelIndex.size() == 0)
@@ -171,7 +177,7 @@ public class BiologicalAssemblyBuilder {
 		for (PdbxStructOperList oper: operators){
 			BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
 			transform.setId(oper.getId());
-			transform.setRotationMatrix(oper.getMatrix());
+			transform.setRotationMatrix(oper.getMatrix().getArray());
 			transform.setTranslation(oper.getVector());
 //			transform.setTransformationMatrix(oper.getMatrix(), oper.getVector());
 			modelTransformations.add(transform);
@@ -228,7 +234,7 @@ public class BiologicalAssemblyBuilder {
 				return transform;
 			}
 		}
-		System.err.println("Could not find modelTransformationmatrix for " + operator);
+		logger.error("Could not find modelTransformationmatrix for " + operator);
 		return new BiologicalAssemblyTransformation();
 	}
 

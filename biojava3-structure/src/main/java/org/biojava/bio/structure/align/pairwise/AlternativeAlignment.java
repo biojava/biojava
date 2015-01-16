@@ -268,7 +268,7 @@ public class AlternativeAlignment implements Serializable{
 		idx1 = new int[il.size()];
 		idx2 = new int[il.size()];
 		for (int i =0 ; i < il.size();i++) {
-			int[] p = (int[])il.get(i);
+			int[] p = il.get(i);
 			//System.out.print(" idx1 " + p[0] + " idx2 " + p[1]);
 			idx1[i] = p[0];
 			idx2[i] = p[1];
@@ -852,7 +852,7 @@ public class AlternativeAlignment implements Serializable{
 	 */
 	public Structure getAlignedStructure(Structure s1, Structure s2){
 		// do not change the original coords ..
-		Structure s3 = (Structure)s2.clone();
+		Structure s3 = s2.clone();
 
 		currentRotMatrix.print(3,3);
 

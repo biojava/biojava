@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.io.LocalPDBDirectory;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.InputStreamProvider;
 import org.slf4j.Logger;
@@ -27,11 +28,13 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	
 	private static final Logger logger = LoggerFactory.getLogger(AllChemCompProvider.class);
 
-	private static String path; 
+	public static final String COMPONENTS_FILE_LOCATION = "pub/pdb/data/monomers/components.cif.gz";
 
-	//private static final String lineSplit = System.getProperty("file.separator");
+	
+	private static String path;
+	
+	private static String serverName;
 
-	private static String serverLocation = "ftp://ftp.wwpdb.org/pub/pdb/data/monomers/";
 
 	// there will be only one copy of the dictionary across all instances
 	// to reduce memory impact
@@ -68,6 +71,13 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 			path = config.getCacheFilePath();
 		}
 	}
+	
+	private static void initServerName() {
+		
+		if (serverName==null) {
+			serverName = LocalPDBDirectory.getServerName();
+		}
+	}
 
 	private void ensureFileExists() {
 
@@ -79,7 +89,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 			try {
 			downloadFile();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Caught IOException",e);
 			}
 		}
 
@@ -90,13 +100,15 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	/** Downloads the components.cif.gz file from the wwPDB site.
 	 * 
 	 */
-	public static void downloadFile() throws IOException,FileNotFoundException{
+	public static void downloadFile() throws IOException {
 
 		initPath();
 		
+		initServerName();
+		
 		String localName = getLocalFileName();
 
-		String u = serverLocation +  "components.cif.gz";
+		String u = serverName + "/" + COMPONENTS_FILE_LOCATION;
 
 		downloadFileFromRemote(new URL(u), new File(localName));
 		
