@@ -342,12 +342,11 @@ public class SeqRes2AtomAligner {
 	 */
 	public static String getFullAtomSequence(List<Group> groups, Map<Integer, Integer> positionIndex){
 
-
 		StringBuffer sequence = new StringBuffer() ;
 		int seqIndex = 0; // track sequence.length()
 		for ( int i=0 ; i< groups.size(); i++){
 			Group g = groups.get(i);
-
+			
 			if ( g instanceof AminoAcid ){
 				AminoAcid a = (AminoAcid)g;
 				char oneLetter =a.getAminoType();
@@ -373,9 +372,10 @@ public class SeqRes2AtomAligner {
 						continue;
 
 				}
-
+				
 				ChemComp cc = g.getChemComp();
 				if ( cc == null) {
+					logger.debug("No chem comp available for group {}",g.toString());
 					// not sure what to do in that case!
 					continue;
 				}
@@ -389,14 +389,23 @@ public class SeqRes2AtomAligner {
 					if ( c.equals("?"))
 						c = "X";
 
-					// TODO for some unusual cases the het residue can map to 2 standard aas and thus give an 
-					//      insertion of length of 2. How can we handle that? (JD - 20/08/2014)
-					//      e.g. SUI maps to DG (in 1oew,A)
-					positionIndex.put(seqIndex,i);
-					sequence.append(c);
-					seqIndex++;
+					// For some unusual cases the het residue can map to 2 or more standard aas and thus give an 
+					// insertion of length >1. 
+					//      e.g. 1: SUI maps to DG  (in 1oew,A)
+					//		e.g. 2: NRQ maps to MYG (in 3cfh,A)
+					if (c.length()>1) {
+						logger.info("Group '{}' maps to more than 1 standard aminoacid: {}.",
+								g.toString(), c);
+					}
+					// because of the mapping to more than 1 aminoacid, we have 
+					// to loop through it (99% of cases c will have length 1 anyway)
+					for (int cIdx=0;cIdx<c.length();cIdx++) {
+						positionIndex.put(seqIndex,i);
+						sequence.append(c.charAt(cIdx));
+						seqIndex++;
+					}
 				} else {
-					//System.out.println(cc);
+					logger.debug("Group {} is not lPeptideLinked, nor PROTEIN_ONLY, nor POLYNUCLEOTIDE_ONLY",g.toString());
 					continue;
 				}
 
