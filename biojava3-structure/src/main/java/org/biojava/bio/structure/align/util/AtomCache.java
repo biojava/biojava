@@ -1143,22 +1143,13 @@ public class AtomCache {
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
 
-			// not supported yet
-			// reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-			// reader.setFetchCurrent(fetchCurrent);
-
 			reader.setFileParsingParameters(params);
 
 			s = reader.getStructureById(pdbId.toLowerCase());
 
-		} catch (Exception e) {
-			flagLoadingFinished(pdbId);
-			
-			IOException ie = new IOException(e.getMessage());
-			ie.setStackTrace(e.getStackTrace());
-			throw ie;//new StructureException(e.getMessage() + " while parsing " + pdbId, e);
+		} finally {
+			flagLoadingFinished(pdbId);			
 		}
-		flagLoadingFinished(pdbId);
 
 		return s;
 	}
@@ -1176,15 +1167,10 @@ public class AtomCache {
 
 			s = reader.getStructureById(pdbId.toLowerCase());
 
-		} catch (Exception e) {
+		} finally {
 			flagLoadingFinished(pdbId);
-			
-			IOException ie = new IOException(e.getMessage());
-			ie.setStackTrace(e.getStackTrace());
-			throw ie;//new StructureException(e.getMessage() + " while parsing " + pdbId, e);
 		}
-		flagLoadingFinished(pdbId);
-
+		
 		return s;
 	}
 
