@@ -25,29 +25,42 @@ package org.biojava.bio.structure.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.biojava.bio.structure.Structure;
 
 /**
- *  StructureIOFile defines a few methods that are useful when parsing PDB files from file system.
+ *  StructureIOFile extends StructureProvider with methods specific to 
+ *  parsing files from the filesystem.
  * @author Andreas Prlic
  */
-public interface StructureIOFile  {
+public interface StructureIOFile extends StructureProvider {
 
-	/** add a known File extension.
+	/**
+	 * Associates a file extension with this particular StructureIOFile,
+	 * indicating that files of that type can be parsed. This is generally
+	 * called only in the constructor of the implementing class.
 	 * @param ext  a String ...
 	 */
 	public void addExtension(String ext);
+	
+	/**
+	 * Returns a list of extensions supported by this class
+	 * @return a (potentially empty) list of strings
+	 */
+	public List<String> getExtensions();
 
 	/** clear all file extensions
-	 *
+	 * @deprecated Removed in 4.0.0
 	 */
-	public void clearExtensions();
+	//public void clearExtensions();
 
 	/** 
-	 * Open filename and returns
-	 * a Structure object.
-	 * @param filename  a String
+	 * Open filename and return a Structure object.
+	 * 
+	 * Not to be confused with {@link #getStructureById(String)}
+	 * @param filename  The path to the file. Must be the correct format for the
+	 *  implementing class.
 	 * @return a Structure object
 	 * @throws IOException ...
 	 */
@@ -56,32 +69,10 @@ public interface StructureIOFile  {
 	/** 
 	 * Read file from File and returns
 	 * a Structure object.
-	 * @param file file containing a PDB or mmcif file
+	 * @param file file containing the structure. Must be the correct format for
+	 *  the implementing class
 	 * @return a Structure object
 	 * @throws IOException ...
 	 */
 	public Structure getStructure(File file) throws IOException ;
-
-	/** 
-	 * Get a Structure by its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
-	 * @return a Structure object
-	 */
-	public Structure getStructureById(String pdbId) throws IOException;
-
-
-	/** Set the parameters that should be used for file parsing
-	 * 
-	 * @param params FileParsingParameters
-	 */
-	public void setFileParsingParameters(FileParsingParameters params);
-
-
-	/** Get the parameters that should be used for file parsing
-	 * 
-	 * @return the FileParsingParameters that are configuring the behavior of the parser
-	 */
-	public FileParsingParameters getFileParsingParameters();
-
-
-
 }

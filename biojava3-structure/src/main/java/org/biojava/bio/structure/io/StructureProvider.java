@@ -23,8 +23,10 @@ public interface StructureProvider {
 	 * 
 	 * @param pdbId
 	 * @return
+	 * @deprecated Better to use {@link StructureIO#getBiologicalAssembly(String)}
+	 * or a {@link BioUnitDataProvider}
 	 */
-	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException;
+	//public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException;
 
 	
 	/** Set the parameters that should be used for file parsing
