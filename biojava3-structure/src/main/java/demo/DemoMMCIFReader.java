@@ -34,7 +34,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.MMCIFFileReader;
-import org.biojava.bio.structure.io.StructureIOFile;
+import org.biojava.bio.structure.io.StructureProvider;
 import org.biojava3.structure.StructureIO;
 
 /** An example of how to read MMcif files
@@ -84,7 +84,7 @@ public class DemoMMCIFReader
 	public void loadFromDirectAccess(){
 		String pdbId = "1A4W";
 
-		StructureIOFile pdbreader = new MMCIFFileReader();
+		StructureProvider pdbreader = new MMCIFFileReader();
 
 		try {
 			Structure s = pdbreader.getStructureById(pdbId);

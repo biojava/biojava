@@ -112,54 +112,37 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 			path = path + fileSeparator;
 				
 	}
-	
-	
+
 	@Override
 	public Structure getStructureById(String pdbId) throws IOException,StructureException {
 
-		
+
 		if (pdbId == null || pdbId.length()< 4)
 			throw new StructureException("This does not look like a valid PDB ID! (" + pdbId + ")");
-		
+
 		pdbId = pdbId.toLowerCase();
-		
+
 		String middle = pdbId.substring(1,3).toLowerCase();
-		
+
 		File f = new File(path + fileSeparator + middle + fileSeparator + pdbId  + fileSeparator + "pdb" + pdbId + ".ent.gz");
-		
+
 		if (! f.exists()){
-			
+
 		}
-		
-		
+
+
 		InputStreamProvider isp = new InputStreamProvider();
-		
-		try {
-			InputStream inputStream = isp.getInputStream(f);
-			PDBFileParser pdbpars = new PDBFileParser();
-			pdbpars.setFileParsingParameters(params);
 
-			Structure struc = pdbpars.parsePDBFile(inputStream) ;
-			return struc ;
-			
-			
-		} catch (IOException e){
-			e.printStackTrace();
-			// something is wrong with the file!
-			// it probably should be downloaded again...
-			// TODO: add auto-download funcitonality...
-		}
-		
-		return null;
-		
-		
-	}
+		InputStream inputStream = isp.getInputStream(f);
+		PDBFileParser pdbpars = new PDBFileParser();
+		pdbpars.setFileParsingParameters(params);
 
-	@Override
-	public Structure getBiologicalUnit(String pdbId) throws StructureException,
-			IOException {
-		// TODO Auto-generated method stub
-		return null;
+		Structure struc = pdbpars.parsePDBFile(inputStream) ;
+		return struc ;
+
+		// something is wrong with the file!
+		// it probably should be downloaded again...
+		// TODO: add auto-download functionality...
 	}
 
 	@Override

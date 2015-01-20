@@ -69,7 +69,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	/**
 	 * Behaviors for when an obsolete structure is requested.
 	 * @author Spencer Bliven
-	 * @see StructureIOFile#setObsoleteBehavior(ObsoleteBehavior)
+	 * @see LocalPDBDirectory#setObsoleteBehavior(ObsoleteBehavior)
 	 */
 	public static enum ObsoleteBehavior {
 		/** Fetch the most recent version of the PDB entry. */
@@ -218,6 +218,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		extensions.add(s);
 	}
 
+	@Override
 	public List<String> getExtensions() {
 		return Collections.unmodifiableList(extensions);
 	}
@@ -225,7 +226,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	/** clear the supported file extensions
 	 *
 	 */
-	@Override
 	public void clearExtensions(){
 		extensions.clear();
 	}
