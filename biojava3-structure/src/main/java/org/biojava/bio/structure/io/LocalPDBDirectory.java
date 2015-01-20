@@ -568,7 +568,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 							existingFile, serverFileDate.toString());
 				}
 			} else {
-				logger.warn("Could not determine if file {} is outdated. Will force redownload");
+				logger.warn("Could not determine if file {} is outdated (could not get timestamp from server). Will force redownload", existingFile);
 			}
 		}
 		

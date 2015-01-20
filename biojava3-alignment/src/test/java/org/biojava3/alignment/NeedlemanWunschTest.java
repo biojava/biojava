@@ -28,6 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.biojava3.alignment.template.GapPenalty;
+import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
@@ -52,7 +53,7 @@ public class NeedlemanWunschTest {
     public void setup() throws CompoundNotFoundException { 
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
-        gaps = new SimpleGapPenalty((short) 10, (short) 1);
+        gaps = new SimpleGapPenalty(10, 1);
         blosum62 = SubstitutionMatrixHelper.getBlosum62();
         alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
         self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
@@ -102,57 +103,61 @@ public class NeedlemanWunschTest {
     @Test
     public void testGetScoreMatrix() {
         int[][][] scores = alignment.getScoreMatrix();
-        assertEquals(scores[2][1][0], -6);
+        assertEquals(4, scores[2][1][0]);
         scores = self.getScoreMatrix();
-        assertEquals(scores[3][4][2], 4);
+        assertEquals(4, scores[3][4][2]);
     }
 
     @Test
     public void testGetScoreMatrixAsString() {
-        assertEquals(alignment.getScoreMatrixAsString(), String.format(
+    	//System.out.println(alignment.getScoreMatrixAsString());
+    	//System.out.println(self.getScoreMatrixAsString());
+        assertEquals(String.format(
                 "Substitution%n" +
                 "        R   D   G%n" +
                 "    0  -\u221E  -\u221E  -\u221E%n" +
-                "A  -\u221E  -1 -13 -12%n" +
-                "R  -\u221E  -6  -3 -14%n" +
-                "N  -\u221E -12  -5  -3%n" +
-                "D  -\u221E -15  -6  -6%n" +
+                "A  -\u221E  -1  -3  -2%n" +
+                "R  -\u221E   4  -3  -5%n" +
+                "N  -\u221E  -2   5  -3%n" +
+                "D  -\u221E  -5   4   4%n" +
                 "%nDeletion%n" +
                 "        R   D   G%n" +
-                "  -10  -\u221E  -\u221E  -\u221E%n" +
-                "A -11  -\u221E  -\u221E  -\u221E%n" +
-                "R -12 -12 -24 -23%n" +
-                "N -13 -13 -14 -24%n" +
-                "D -14 -14 -15 -14%n" +
+                "    0  -\u221E  -\u221E  -\u221E%n" +
+                "A  -1  -\u221E  -\u221E  -\u221E%n" +
+                "R  -2 -12 -14 -13%n" +
+                "N  -3  -7 -14 -14%n" +
+                "D  -4  -8  -6 -14%n" +
                 "%nInsertion%n" +
                 "        R   D   G%n" +
-                "  -10 -11 -12 -13%n" +
+                "    0  -1  -2  -3%n" +
                 "A  -\u221E  -\u221E -12 -13%n" +
-                "R  -\u221E  -\u221E -17 -14%n" +
-                "N  -\u221E  -\u221E -23 -16%n" +
-                "D  -\u221E  -\u221E -26 -17%n"));
-        assertEquals(self.getScoreMatrixAsString(), String.format(
+                "R  -\u221E  -\u221E  -7  -8%n" +
+                "N  -\u221E  -\u221E -13  -6%n" +
+                "D  -\u221E  -\u221E -16  -7%n"),
+                alignment.getScoreMatrixAsString());
+        assertEquals(String.format(
                 "Substitution%n" +
                 "        A   R   N   D%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "A  -\u221E   4 -12 -14 -15%n" +
-                "R  -\u221E -12   9  -7 -10%n" +
-                "N  -\u221E -14  -7  15  -1%n" +
-                "D  -\u221E -15 -10  -1  21%n" +
+                "A  -\u221E   4  -2  -4  -5%n" +
+                "R  -\u221E  -2   9  -2  -6%n" +
+                "N  -\u221E  -4  -2  15  -1%n" +
+                "D  -\u221E  -5  -6  -1  21%n" +
                 "%nDeletion%n" +
                 "        A   R   N   D%n" +
-                "  -10  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "A -11  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "R -12  -7 -23 -25 -26%n" +
-                "N -13  -8  -2 -18 -21%n" +
-                "D -14  -9  -3   4 -12%n" +
+                "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A  -1  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "R  -2  -7 -13 -15 -16%n" +
+                "N  -3  -8  -2 -13 -17%n" +
+                "D  -4  -9  -3   4 -12%n" +
                 "%nInsertion%n" +
                 "        A   R   N   D%n" +
-                "  -10 -11 -12 -13 -14%n" +
+                "    0  -1  -2  -3  -4%n" +
                 "A  -\u221E  -\u221E  -7  -8  -9%n" +
-                "R  -\u221E  -\u221E -23  -2  -3%n" +
-                "N  -\u221E  -\u221E -25 -18   4%n" +
-                "D  -\u221E  -\u221E -26 -21 -12%n"));
+                "R  -\u221E  -\u221E -13  -2  -3%n" +
+                "N  -\u221E  -\u221E -15 -13   4%n" +
+                "D  -\u221E  -\u221E -16 -17 -12%n"),
+                self.getScoreMatrixAsString());
     }
 
     @Test
@@ -163,33 +168,34 @@ public class NeedlemanWunschTest {
 
     @Test
     public void testGetProfile() {
-        assertEquals(alignment.getProfile().toString(), String.format("ARND%n-RDG%n"));
-        assertEquals(self.getProfile().toString(), String.format("ARND%nARND%n"));
+        assertEquals(String.format("ARND%n-RDG%n"), alignment.getProfile().toString());
+        assertEquals(String.format("ARND%nARND%n"), self.getProfile().toString());
     }
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(alignment.getMaxScore(), 21, PRECISION);
-        assertEquals(self.getMaxScore(), 21, PRECISION);
+        assertEquals(21, alignment.getMaxScore(), PRECISION);
+        assertEquals(21, self.getMaxScore(), PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(alignment.getMinScore(), -27, PRECISION);
-        assertEquals(self.getMinScore(), -28, PRECISION);
+        assertEquals(-27, alignment.getMinScore(), PRECISION);
+        assertEquals(-28, self.getMinScore(), PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(alignment.getScore(), -6, PRECISION);
-        assertEquals(self.getScore(), 21, PRECISION);
+        assertEquals(4, alignment.getScore(), PRECISION);
+        assertEquals(21, self.getScore(), PRECISION);
     }
 
     @Test
     public void testGetPair() {
-        assertEquals(alignment.getPair().toString(), String.format("ARND%n-RDG%n"));
-        assertEquals(self.getPair().toString(), String.format("ARND%nARND%n"));
+        assertEquals(String.format("ARND%n-RDG%n"), alignment.getPair().toString());
+        assertEquals(String.format("ARND%nARND%n"), self.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -201,6 +207,7 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { 0, 1, 2} );
 		assertEquals(String.format("ACG%nCGT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -212,6 +219,7 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { 1, -1, -1} );
 		assertEquals(String.format("-AAT%nAATT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -223,6 +231,7 @@ public class NeedlemanWunschTest {
 		aligner.addAnchor(2, 3);
 		assertEquals(String.format("AA-G%nAATT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -234,6 +243,7 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { -1, 2, -1} );
 		assertEquals(String.format("A-CTTT%nACGTTT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -248,6 +258,7 @@ public class NeedlemanWunschTest {
 		aligner.addAnchor(3, 5);
 		assertEquals(String.format("ACG--T%nATACGT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -263,6 +274,7 @@ public class NeedlemanWunschTest {
 		anchored.addAnchor(3, 3);
 		assertEquals(aligner.getScore(), anchored.getScore(), PRECISION);
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -306,5 +318,40 @@ public class NeedlemanWunschTest {
 		//System.out.println("getSimilarity: " + aligner.getSimilarity());
 		
 		assertTrue("Similarity must be positive, this must be an integer overflow bug!", aligner.getSimilarity()>0);
-	}      
+	} 
+	
+	/**
+	 * The starting gap in a global alignment should not be penalised as a gap opening,
+	 * other implementations of Needleman-Wunsch behave in that way (see for instance needle from 
+	 * EMBOSS, http://www.ebi.ac.uk/Tools/psa/emboss_needle/)
+	 * @author Jose M Duarte
+	 * @throws CompoundNotFoundException
+	 */
+	@Test
+	public void testGapAtStartIssue() throws CompoundNotFoundException {
+		
+		String str1 = "HHHAAAA";
+		String str2 = "MAAAA";
+
+		
+		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum50();
+		//System.out.println(matrix.toString());
+		
+		GapPenalty penalty = new SimpleGapPenalty(10, 1);
+
+		ProteinSequence s1 = new ProteinSequence(str1);
+		ProteinSequence s2 = new ProteinSequence(str2);
+
+		NeedlemanWunsch<ProteinSequence,AminoAcidCompound> nw = 
+				new NeedlemanWunsch<ProteinSequence,AminoAcidCompound>(s1,s2, penalty, matrix);
+		
+		//System.out.println(nw.getScoreMatrixAsString());
+		//System.out.println("Score: "+nw.getScore());
+		
+		SequencePair<ProteinSequence, AminoAcidCompound> pair = nw.getPair();
+		//System.out.println(pair.toString(100));
+		assertEquals("The first position in target aligned seq should be a gap","-",pair.getCompoundInTargetAt(1).toString());
+
+		assertEquals(String.format("HHHAAAA%n--MAAAA%n"), pair.toString());
+	}
 }

@@ -46,7 +46,7 @@ public class AlignerHelper {
     // types
 
     /**
-     * Defines a traceback pointer for the three edit operations: substitution (match/replacement of a query compound
+     * Define a traceback pointer for the three edit operations: substitution (match/replacement of a query compound
      * with a target compound), deletion (removal of a query compound leaving a gap in the target sequence), and
      * insertion (addition of a target compound opening a gap in the query sequence).
      */
@@ -257,7 +257,7 @@ public class AlignerHelper {
     		this.isAnchored = isAnchored;
     	}
     	/**
-    	 * Converts a list of anchors into a subproblem list.
+    	 * Convert a list of anchors into a subproblem list.
     	 * @param anchors anchored read pairs
     	 * @param querySequenceLength length of query sequence
     	 * @param targetSequenceLength length of target sequence
@@ -298,7 +298,7 @@ public class AlignerHelper {
         }
     }
     /**
-     * Calculates the optimal alignment score for the given sequence positions with an affine or constant gap penalty
+     * Calculate the optimal alignment score for the given sequence positions with an affine or constant gap penalty
      * @param x position in query
      * @param y position in target
      * @param gop gap opening penalty
@@ -312,31 +312,31 @@ public class AlignerHelper {
 
         // substitution
         if (scores[x - 1][y - 1][1] >= scores[x - 1][y - 1][0] && scores[x - 1][y - 1][1] >= scores[x - 1][y - 1][2]) {
-            scores[x][y][0] = (int) (scores[x - 1][y - 1][1] + sub);
+            scores[x][y][0] = scores[x - 1][y - 1][1] + sub;
             pointers[0] = Last.DELETION;
         } else if (scores[x - 1][y - 1][0] >= scores[x - 1][y - 1][2]) {
-            scores[x][y][0] = (int) (scores[x - 1][y - 1][0] + sub);
+            scores[x][y][0] = scores[x - 1][y - 1][0] + sub;
             pointers[0] = Last.SUBSTITUTION;
         } else {
-            scores[x][y][0] = (int) (scores[x - 1][y - 1][2] + sub);
+            scores[x][y][0] = scores[x - 1][y - 1][2] + sub;
             pointers[0] = Last.INSERTION;
         }
 
         // deletion
         if (scores[x - 1][y][1] >= scores[x - 1][y][0] + gop) {
-            scores[x][y][1] = (int) (scores[x - 1][y][1] + gep);
+            scores[x][y][1] = scores[x - 1][y][1] + gep;
             pointers[1] = Last.DELETION;
         } else {
-            scores[x][y][1] = (int) (scores[x - 1][y][0] + gop + gep);
+            scores[x][y][1] = scores[x - 1][y][0] + gop + gep;
             pointers[1] = Last.SUBSTITUTION;
         }
 
         // insertion
         if (scores[x][y - 1][0] + gop >= scores[x][y - 1][2]) {
-            scores[x][y][2] = (int) (scores[x][y - 1][0] + gop + gep);
+            scores[x][y][2] = scores[x][y - 1][0] + gop + gep;
             pointers[2] = Last.SUBSTITUTION;
         } else {
-            scores[x][y][2] = (int) (scores[x][y - 1][2] + gep);
+            scores[x][y][2] = scores[x][y - 1][2] + gep;
             pointers[2] = Last.INSERTION;
         }
 
@@ -367,27 +367,50 @@ public class AlignerHelper {
         }
     }
 
-    // scores global alignment for a given position in the query sequence
+    /**
+     * Score global alignment for a given position in the query sequence
+     * @param x
+     * @param subproblem
+     * @param gop
+     * @param gep
+     * @param subs
+     * @param storing
+     * @param scores
+     * @return
+     */
     public static Last[][] setScoreVector(int x, Subproblem subproblem, int gop, int gep, int[] subs, boolean storing,
             int[][][] scores) {
         return setScoreVector(x, subproblem.getQueryStartIndex(), subproblem.getTargetStartIndex(), subproblem.getTargetEndIndex(), gop, gep, subs, storing, scores, subproblem.isStartAnchored());
     }
 
-    // scores global alignment for a given position in the query sequence
+    /**
+     * Score global alignment for a given position in the query sequence
+     * @param x
+     * @param xb
+     * @param yb
+     * @param ye
+     * @param gop
+     * @param gep
+     * @param subs
+     * @param storing
+     * @param scores
+     * @param startAnchored
+     * @return
+     */
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, int gop, int gep, int[] subs,
             boolean storing, int[][][] scores, boolean startAnchored) {
         Last[][] pointers = new Last[ye + 1][];
         int min = Integer.MIN_VALUE - gop - gep;
         ensureScoringMatrixColumn(x, storing, scores);
         if (x == xb) {
-            scores[xb][yb][1] = scores[xb][yb][2] = gop;
+            scores[xb][yb][1] = scores[xb][yb][2] = 0;
             pointers[yb] = new Last[] {null, null, null};
             if (startAnchored) {
         		assert (xb > 0 && yb > 0);
-        		int subproblemStartingScore = (int) (scores[xb - 1][yb - 1][0] + subs[yb]);
-        		scores[xb][yb][0] = (int) (subproblemStartingScore);
-        		scores[xb][yb][1] = (int) (subproblemStartingScore + gop);
-        		scores[xb][yb][2] = (int) (subproblemStartingScore + gop);
+        		int subproblemStartingScore = scores[xb - 1][yb - 1][0] + subs[yb];
+        		scores[xb][yb][0] = subproblemStartingScore;
+        		scores[xb][yb][1] = subproblemStartingScore + gop;
+        		scores[xb][yb][2] = subproblemStartingScore + gop;
         		pointers[yb] = new Last[] {Last.SUBSTITUTION, Last.SUBSTITUTION, Last.SUBSTITUTION};
         	}
             Last[] insertion = new Last[] { null, null, Last.INSERTION };
@@ -398,7 +421,7 @@ public class AlignerHelper {
             }
         } else {
             scores[x][yb][0] = scores[x][yb][2] = min;
-            scores[x][yb][1] = (int) (scores[x - 1][yb][1] + gep);
+            scores[x][yb][1] = scores[x - 1][yb][1] + gep;
             pointers[yb] = new Last[] { null, Last.DELETION, null };
             for (int y = yb + 1; y <= ye; y++) {
                 pointers[y] = setScorePoint(x, y, gop, gep, subs[y], scores);
@@ -407,13 +430,34 @@ public class AlignerHelper {
         return pointers;
     }
 
-    // scores global alignment for a given position in the query sequence for a linear gap penalty
+    /**
+     * Score global alignment for a given position in the query sequence for a linear gap penalty
+     * @param x
+     * @param subproblem
+     * @param gep
+     * @param subs
+     * @param storing
+     * @param scores
+     * @return
+     */
     public static Last[][] setScoreVector(int x, Subproblem subproblem, int gep, int[] subs, boolean storing,
             int[][][] scores) {
         return setScoreVector(x, subproblem.getQueryStartIndex(), subproblem.getTargetStartIndex(), subproblem.getTargetEndIndex(), gep, subs, storing, scores, subproblem.isStartAnchored());
     }
 
-    // scores global alignment for a given position in the query sequence for a linear gap penalty
+    /**
+     * Score global alignment for a given position in the query sequence for a linear gap penalty
+     * @param x
+     * @param xb
+     * @param yb
+     * @param ye
+     * @param gep
+     * @param subs
+     * @param storing
+     * @param scores
+     * @param startAnchored
+     * @return
+     */
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, int gep, int[] subs, boolean storing,
             int[][][] scores, boolean startAnchored) {
         Last[][] pointers = new Last[ye + 1][1];
@@ -438,13 +482,38 @@ public class AlignerHelper {
         return pointers;
     }
 
-    // scores local alignment for a given position in the query sequence
+    /**
+     * Score local alignment for a given position in the query sequence
+     * @param x
+     * @param gop
+     * @param gep
+     * @param subs
+     * @param storing
+     * @param scores
+     * @param xyMax
+     * @param score
+     * @return
+     */
     public static Last[][] setScoreVector(int x, int gop, int gep, int[] subs, boolean storing,
             int[][][] scores, int[] xyMax, int score) {
         return setScoreVector(x, 0, 0, scores[0].length - 1, gop, gep, subs, storing, scores, xyMax, score);
     }
 
-    // scores local alignment for a given position in the query sequence
+    /**
+     * Score local alignment for a given position in the query sequence
+     * @param x
+     * @param xb
+     * @param yb
+     * @param ye
+     * @param gop
+     * @param gep
+     * @param subs
+     * @param storing
+     * @param scores
+     * @param xyMax
+     * @param score
+     * @return
+     */
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, int gop, int gep, int[] subs,
             boolean storing, int[][][] scores, int[] xyMax, int score) {
         Last[][] pointers;
@@ -472,13 +541,36 @@ public class AlignerHelper {
         return pointers;
     }
     
-    // scores local alignment for a given position in the query sequence for a linear gap penalty
+    /**
+     * Score local alignment for a given position in the query sequence for a linear gap penalty
+     * @param x
+     * @param gep
+     * @param subs
+     * @param storing
+     * @param scores
+     * @param xyMax
+     * @param score
+     * @return
+     */
     public static Last[][] setScoreVector(int x, int gep, int[] subs, boolean storing, int[][][] scores,
             int[] xyMax, int score) {
         return setScoreVector(x, 0, 0, scores[0].length - 1, gep, subs, storing, scores, xyMax, score);
     }
 
-    // scores local alignment for a given position in the query sequence for a linear gap penalty
+    /**
+     * Score local alignment for a given position in the query sequence for a linear gap penalty
+     * @param x
+     * @param xb
+     * @param yb
+     * @param ye
+     * @param gep
+     * @param subs
+     * @param storing
+     * @param scores
+     * @param xyMax
+     * @param score
+     * @return
+     */
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, int gep, int[] subs, boolean storing,
             int[][][] scores, int[] xyMax, int score) {
         Last[][] pointers;
@@ -502,13 +594,23 @@ public class AlignerHelper {
         }
         return pointers;
     }
+    
     private static void ensureScoringMatrixColumn(int x, boolean storingFullMatrix, int[][][] scores) {
     	if (!storingFullMatrix && x > 1) {
             scores[x] = scores[x - 2];
         }
     }
     
-    // finds alignment path through traceback matrix
+    /**
+     * Find alignment path through traceback matrix
+     * @param traceback
+     * @param local
+     * @param xyMax
+     * @param last
+     * @param sx
+     * @param sy
+     * @return
+     */
     public static int[] setSteps(Last[][][] traceback, boolean local, int[] xyMax, Last last, List<Step> sx,
             List<Step> sy) {
         int x = xyMax[0], y = xyMax[1];
@@ -536,7 +638,14 @@ public class AlignerHelper {
         return new int[] {x, y};
     }
 
-    // finds global alignment path through traceback matrix
+    /**
+     * Find global alignment path through traceback matrix
+     * @param traceback
+     * @param scores
+     * @param sx
+     * @param sy
+     * @return
+     */
     public static int[] setSteps(Last[][][] traceback, int[][][] scores, List<Step> sx, List<Step> sy) {
         int xMax = scores.length - 1, yMax = scores[xMax].length - 1;
         boolean linear = (traceback[xMax][yMax].length == 1);
@@ -558,7 +667,14 @@ public class AlignerHelper {
         return setSteps(traceback, false, new int[] {xMax, yMax}, last, sx, sy);
     }
 
-    // finds local alignment path through traceback matrix
+    /**
+     * Find local alignment path through traceback matrix
+     * @param traceback
+     * @param xyMax
+     * @param sx
+     * @param sy
+     * @return
+     */
     public static int[] setSteps(Last[][][] traceback, int[] xyMax, List<Step> sx, List<Step> sy) {
         return setSteps(traceback, true, xyMax, Last.SUBSTITUTION, sx, sy);
     }
