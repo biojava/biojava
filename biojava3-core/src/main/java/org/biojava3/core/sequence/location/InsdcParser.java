@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.AccessionID;
+import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.template.AbstractLocation;
@@ -90,7 +92,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
     protected Integer featureGlobalStart, featureGlobalEnd;
     
     //private S referenceSequence = new org.biojava3.core.sequence.DNASequence();
-    private AbstractSequence referenceSequence = new org.biojava3.core.sequence.DNASequence();
+    private AbstractSequence referenceSequence = new DNASequence();
     
     enum complexFeaturesAppendEnum {
 
@@ -164,7 +166,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
     
     private List<Location> parseLocationString(String string, int versus) throws ParserException {
         Matcher m;
-        List<Location> boundedLocationsCollection = new ArrayList();
+        List<Location> boundedLocationsCollection = new ArrayList<Location>();
 
         //String[] tokens = string.split(locationSplitPattern);
         List<String> tokens = splitString(string);
