@@ -24,19 +24,18 @@
  */
 package org.biojava.bio.structure.scop.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -56,7 +55,7 @@ public class ListStringWrapper implements Serializable{
 		try {
 			jaxbContext= JAXBContext.newInstance(ListStringWrapper.class);
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context for " + ListStringWrapper.class, e);
 		}
 	}
 	
@@ -87,7 +86,7 @@ public class ListStringWrapper implements Serializable{
 			
 
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not convert " + getClass() + " to XML", e);
 		}
 
 		return baos.toString();
@@ -107,7 +106,7 @@ public class ListStringWrapper implements Serializable{
 			job = (ListStringWrapper) un.unmarshal(bais);
 
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse " + ListStringWrapper.class + " from XML", e);
 		}
 
 		return job;

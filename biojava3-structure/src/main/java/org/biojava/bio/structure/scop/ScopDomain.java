@@ -1,17 +1,15 @@
 package org.biojava.bio.structure.scop;
 
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.biojava.bio.structure.ResidueRange;
+import org.biojava.bio.structure.StructureIdentifier;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.biojava.bio.structure.ResidueRange;
-import org.biojava.bio.structure.StructureIdentifier;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 /** Container for the information for a domain. Contains a line in the file
@@ -25,9 +23,6 @@ import org.biojava.bio.structure.StructureIdentifier;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ScopDomain implements Serializable, Cloneable, StructureIdentifier {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5890476209571654301L;
 	
 	String scopId;
@@ -49,7 +44,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 
 	@Override
 	public String toString() {
-		StringWriter buf = new StringWriter();
+		StringBuilder buf = new StringBuilder();
 		buf.append(scopId);
 		buf.append("\t") ;
 		buf.append(pdbId);
@@ -166,7 +161,8 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
-	
+
+		super.clone();
 		
 		ScopDomain n = new ScopDomain();
 		n.setClassId(getClassId());

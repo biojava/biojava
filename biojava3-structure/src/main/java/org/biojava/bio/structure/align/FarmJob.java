@@ -1,9 +1,5 @@
 package org.biojava.bio.structure.align;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.FarmJobRunnable;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
@@ -16,6 +12,11 @@ import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /** A job as it can be run on the farm.
@@ -109,7 +110,7 @@ public class FarmJob implements Runnable {
 
 			} catch (ConfigurationException e){
 
-				logger.error("Exception: ", e);
+				logger.error("Exception", e);
 
 				if ( mandatoryArgs.contains(arg) ) {
 					// there must not be a ConfigurationException with mandatory arguments.
@@ -125,11 +126,9 @@ public class FarmJob implements Runnable {
 			logger.error("Please provide either the -time or the -nrAlignments argument!");
 			return;
 		}
-		
-		
 
-		
-		FarmJobRunnable.log("Using parameters: " + params.toString());
+
+		logger.info("Using parameters: {}", params);
 		
 		job.setParams(params);
 		job.run();
@@ -153,13 +152,18 @@ public class FarmJob implements Runnable {
 			System.setProperty(UserConfiguration.PDB_CACHE_DIR,path);
 		}
 		// declare SCOP to be locally cached, but fetching new stuff from remote
-		ScopDatabase scop = new CachedRemoteScopInstallation(true);
+		ScopDatabase scop = null;
+		try {
+			scop = new CachedRemoteScopInstallation(true);
+		} catch (IOException e) {
+			throw new RuntimeException("Could not load " + CachedRemoteScopInstallation.class.getName(), e);
+		}
 		ScopFactory.setScopDatabase(scop);
 		
 		String username = params.getUsername();
 		jobs = new ArrayList<FarmJobRunnable>();
 		for ( int i = 0 ; i < params.getThreads();i++){
-			FarmJobRunnable.log("starting thread #" + (i+1));
+			logger.info("starting thread #{}", (i+1));
 			FarmJobRunnable runner = new FarmJobRunnable(params);	
 			params.setUsername(username+"_thread_" + (i+1));
 			jobs.add(runner);
@@ -169,38 +173,34 @@ public class FarmJob implements Runnable {
 					runner.addAlignmentProgressListener(li);
 				}
 			}
-				
-			
-			
-			
-			//javax.swing.SwingUtilities.invokeLater(runner);
+
+
 			Thread t = new Thread(runner);
 			if ( ( (params.getThreads() > 1 ) && ( i < params.getThreads() - 1) )|| ( params.isRunBackground())) {
-				FarmJobRunnable.log("starting thread " + (i+1) + " in background.");
+				logger.info("starting thread #{} in background.", (i + 1));
 				t.start();
 			} else {
 				// single CPU jobs are run in the main thread and the last job is also run in the main thread
-				FarmJobRunnable.log("starting thread " + (i+1) + " in main thread.");
+				logger.info("starting thread #{} in main thread.", (i + 1));
 				t.run();
 			}
 		}
 	}
 	
 	public void terminate(){
-		
-		FarmJobRunnable.log("terminating jobs:");
+
+		logger.info("terminating jobs");
 		
 		if ( jobs == null)
 			return;
 		
 		int js = jobs.size();
-		FarmJobRunnable.log("nr jobs: " + js);
-		
-		
+		logger.info("number of jobs: {}", js);
+
+
 		for (FarmJobRunnable runner : jobs){
-			synchronized(runner){
-				runner.terminate();
-			}		
+			// runner.terminate() is already synchronized
+			runner.terminate();
 		}
 		
 		clearListeners();

@@ -24,6 +24,13 @@
 
 package org.biojava.bio.structure.scop;
 
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,13 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava3.core.util.InputStreamProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /** This class provides access to the SCOP protein structure classification.
@@ -151,113 +151,33 @@ public class ScopInstallation implements LocalScopDatabase {
 	public ScopInstallation() {
 		this((new UserConfiguration()).getCacheFilePath());
 	}
-	
-	public void ensureClaInstalled(){
-		if ( installedCla.get())
-			return;
 
-		if ( ! claFileAvailable()){
-			try {
-				downloadClaFile();
-			} catch (IOException e){
-				e.printStackTrace();
-				installedCla.set(false);
-				return;
-			}
-		} 
-
-		try {
-			parseClassification();
-
-		} catch (IOException e){
-			e.printStackTrace();
-			installedCla.set(false);
-			return;
-		}
+	public void ensureClaInstalled() throws IOException {
+		if (installedCla.get()) return;
+		if (!claFileAvailable()) downloadClaFile();
+		parseClassification();
 		installedCla.set(true);
-
 	}
 
-	public void ensureDesInstalled(){
-		if ( installedDes.get()) {
-			return;
-		}
-
-		if ( ! desFileAvailable()){
-			try {
-				downloadDesFile();
-			} catch (IOException e){
-				e.printStackTrace();
-				installedDes.set(false);
-				return;
-			}
-		}
-		try {
-
-			parseDescriptions();
-		} catch (IOException e){
-			e.printStackTrace();
-			installedDes.set(false);
-			return;
-		}
+	public void ensureDesInstalled() throws IOException {
+		if (installedDes.get()) return;
+		if (!desFileAvailable()) downloadDesFile();
+		parseDescriptions();
 		installedDes.set(true);
-
-
 	}
 
-	public void ensureComInstalled() {
-
-		if ( installedCom.get()) {
-			return;
-		}
-
-		if ( ! comFileAvailable()){
-			try {
-				downloadComFile();
-			} catch (IOException e){
-				e.printStackTrace();
-				installedCom.set(false);
-				return;
-			}   
-		}
-
-		try {
-			parseComments();
-		} catch (IOException e){
-			e.printStackTrace();
-			installedCom.set(false);
-			return;
-		}
+	public void ensureComInstalled() throws IOException {
+		if (installedCom.get()) return;
+		if (!comFileAvailable()) downloadComFile();
+		parseComments();
 		installedCom.set(true);
-
 	}
 
-	public void ensureHieInstalled(){
-		if ( installedHie.get()) {
-			return;
-		}
-
-		if ( ! hieFileAvailable()){
-			try {
-				downloadHieFile();
-			} catch (IOException e){
-				e.printStackTrace();
-				installedHie.set(false);
-				return;
-			}   
-		}
-
-		try {
-
-			parseHierarchy();
-		} catch (IOException e){
-			e.printStackTrace();
-			installedHie.set(false);
-			return;
-		}
+	public void ensureHieInstalled() throws IOException {
+		if ( installedHie.get()) return;
+		if ( ! hieFileAvailable()) downloadHieFile();
+		parseHierarchy();
 		installedHie.set(true);
-
-
 	}
 
 	/* (non-Javadoc)
@@ -266,15 +186,23 @@ public class ScopInstallation implements LocalScopDatabase {
 	@Override
 	public List<ScopDescription> getByCategory(ScopCategory category){
 
-		ensureDesInstalled();
+		try {
+			ensureDesInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
 
 		List<ScopDescription> matches = new ArrayList<ScopDescription>();
 		for (Integer i : sunidMap.keySet()){
 			ScopDescription sc = sunidMap.get(i);
 			if ( sc.getCategory().equals(category))
-				
-				matches.add((ScopDescription)sc.clone());
-				
+
+				try {
+					matches.add((ScopDescription)sc.clone());
+				} catch (CloneNotSupportedException e) {
+					throw new RuntimeException("Could not clone " + ScopDescription.class + " subclass", e);
+				}
+
 		}
 		return matches;
 	}
@@ -284,7 +212,12 @@ public class ScopInstallation implements LocalScopDatabase {
 	 */
 	@Override
 	public List<ScopDescription> filterByClassificationId(String query){
-		ensureDesInstalled();
+
+		try {
+			ensureDesInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
 
 		List<ScopDescription> matches = new ArrayList<ScopDescription>();
 		for (Integer i : sunidMap.keySet()){
@@ -293,7 +226,6 @@ public class ScopInstallation implements LocalScopDatabase {
 
 			if( sc.getClassificationId().startsWith(query)){
 				matches.add(sc);
-				continue;
 			}
 		}
 
@@ -355,18 +287,20 @@ public class ScopInstallation implements LocalScopDatabase {
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDescription(java.lang.String)
 	 */
 	@Override
-	public List<ScopDescription> filterByDescription(String query){
-		ensureDesInstalled();
+	public List<ScopDescription> filterByDescription(String query) throws ScopIOException {
+		try {
+			ensureDesInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
 
 		query = query.toLowerCase();
 		List<ScopDescription> matches = new ArrayList<ScopDescription>();
 		for (Integer i : sunidMap.keySet()){
 			ScopDescription sc = sunidMap.get(i);
 
-
 			if( sc.getDescription().toLowerCase().startsWith(query)){
 				matches.add(sc);
-				continue;
 			}
 		}
 
@@ -378,8 +312,12 @@ public class ScopInstallation implements LocalScopDatabase {
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDescriptionBySunid(int)
 	 */
 	@Override
-	public ScopDescription getScopDescriptionBySunid(int sunid){
-		ensureDesInstalled();
+	public ScopDescription getScopDescriptionBySunid(int sunid) {
+		try {
+			ensureDesInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
 		return sunidMap.get(sunid);
 	}
 
@@ -387,9 +325,13 @@ public class ScopInstallation implements LocalScopDatabase {
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainsForPDB(java.lang.String)
 	 */
 	@Override
-	public  List<ScopDomain> getDomainsForPDB(String pdbId){
-		ensureClaInstalled();
+	public  List<ScopDomain> getDomainsForPDB(String pdbId) {
 
+		try {
+			ensureClaInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
 
 		List<ScopDomain> doms = domainMap.get(pdbId.toLowerCase());
 		
@@ -403,7 +345,7 @@ public class ScopInstallation implements LocalScopDatabase {
 				ScopDomain n = (ScopDomain) d.clone();
 				retdoms.add(n);
 			}  catch (CloneNotSupportedException e){
-				e.printStackTrace();
+				throw new RuntimeException(ScopDomain.class + " subclass does not support clone()", e);
 			}
 
 
@@ -416,10 +358,15 @@ public class ScopInstallation implements LocalScopDatabase {
 	 */
 	@Override
 	public ScopDomain getDomainByScopID(String scopId) {
-		ensureClaInstalled();
+
+		try {
+			ensureClaInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
 
 		if ( scopId.length() < 6) {
-			throw new IllegalArgumentException("Does not look like a scop ID! " + scopId);
+			throw new ScopIOException("Does not look like a scop ID! " + scopId);
 		}
 		String pdbId = scopId.substring(1,5);
 		List<ScopDomain> doms = getDomainsForPDB(pdbId);
@@ -438,17 +385,20 @@ public class ScopInstallation implements LocalScopDatabase {
 	 */
 	@Override
 	public ScopNode getScopNode(int sunid){
-		ensureHieInstalled();
-		ScopNode node = scopTree.get(sunid);
 
-		return node;
+		try {
+			ensureHieInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
+
+		return scopTree.get(sunid);
 	}
 
 
 	private void parseClassification() throws IOException{
 
 		File file = new File(getClaFilename());
-
 
 		InputStreamProvider ips = new InputStreamProvider();
 		BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
@@ -470,7 +420,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	private void parseHierarchy(BufferedReader buffer) throws IOException {
-		String line = null;
+		String line;
 
 		int counter =0;
 		while ((line = buffer.readLine ()) != null) {
@@ -480,8 +430,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			String[] spl  = line.split("\t");
 
 			if ( spl.length != 3 ) {
-				System.err.println("parseHierarchy: Can't parse line " + line +" (length: " + spl.length+")");
-				continue;
+				throw new IOException("parseHierarchy: Can't parse line " + line +" (length: " + spl.length+")");
 			}
 			counter++;
 			int sunid       = Integer.parseInt(spl[0]);
@@ -509,14 +458,13 @@ public class ScopInstallation implements LocalScopDatabase {
 
 			scopTree.put(sunid, node);
 		}
-		System.out.println("parsed " + counter + " scop sunid nodes.");
+		logger.info("Parsed {} SCOP sunid nodes.", counter);
 	}
 
 
 	private void parseDescriptions() throws IOException{
 
 		File file = new File(getDesFilename());
-
 
 		InputStreamProvider ips = new InputStreamProvider();
 		BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
@@ -539,18 +487,13 @@ public class ScopInstallation implements LocalScopDatabase {
 	private void parseComments(BufferedReader buffer) throws IOException {
 
 		commentsMap = new HashMap<Integer,List<String>>();
-		
-		String line = null;
+
+		int counter = 0;
+		String line;
 		while ((line = buffer.readLine ()) != null) {
 			if (line.startsWith("#")) continue;
 			String[] parts = line.split("!");
-			int sunId = -1;
-			try {
-				sunId = Integer.parseInt(parts[0].trim());
-			} catch (RuntimeException e) {
-				e.printStackTrace();
-				continue;
-			}
+			int sunId = Integer.parseInt(parts[0].trim());
 			if (parts.length == 1) {
 				commentsMap.put(sunId, new ArrayList<String>(1));
 				continue;
@@ -563,7 +506,9 @@ public class ScopInstallation implements LocalScopDatabase {
 				}
 			}
 			commentsMap.put(sunId, comments);
+			counter++;
 		}
+		logger.info("Parsed {} SCOP comments.", counter);
 
 	}
 	
@@ -578,8 +523,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			String[] spl  = line.split("\t");
 
 			if ( spl.length != 5 ) {
-				System.err.println("parseDescriptions: Can't parse line " + line +" (length: " + spl.length+")");
-				continue;
+				throw new IOException("parseDescriptions: Can't parse line " + line +" (length: " + spl.length+")");
 			}
 			counter++;
 
@@ -597,10 +541,10 @@ public class ScopInstallation implements LocalScopDatabase {
 			c.setName(name);
 			c.setDescription(desc);
 
-			sunidMap.put(new Integer(sunID), c);
+			sunidMap.put(sunID, c);
 
 		}
-		System.out.println("parsed " + counter + " scop sunid descriptions.");
+		logger.info("Parsed {} SCOP sunid descriptions.", counter);
 	}
 
 
@@ -616,9 +560,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			String[] spl  = line.split("\t");
 
 			if ( spl.length != 6){
-				System.err.println("Can't parse line " + line);
-				continue;
-
+				throw new IOException("Can't parse line " + line);
 			}
 			counter++;
 
@@ -643,7 +585,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			String[] treeSplit = tree.split(",");
 
 			if (  treeSplit.length != 7 ) {
-				System.err.println("can't process: " + line );
+				throw new IOException("Can't process: " + line );
 			}
 
 			int classId =Integer.parseInt(treeSplit[0].substring(3));
@@ -672,7 +614,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 			domainList.add(d);
 		}
-		System.out.println("parsed "+ counter + " scop sunid domains.");
+		logger.info("Parsed {} SCOP sunid domains.", counter);
 
 	}
 
@@ -698,10 +640,7 @@ public class ScopInstallation implements LocalScopDatabase {
 				}
 
 				// Allow explicit chain syntax
-				if(subRange.charAt(1) == ':') {
-					continue;
-				}
-				else {
+				if(subRange.charAt(1) != ':') {
 					// Early versions sometimes skip the chain identifier for single-chain domains
 					// Indicate this with a chain "_"
 					rangeSpl[i] = "_:"+subRange;
@@ -728,7 +667,6 @@ public class ScopInstallation implements LocalScopDatabase {
 				return;
 			} catch(IOException e ) {
 				exception = e;
-				continue;
 			}
 		}
 		throw new IOException("Unable to download SCOP .cla file",exception);
@@ -750,13 +688,12 @@ public class ScopInstallation implements LocalScopDatabase {
 				return;
 			} catch(IOException e ) {
 				exception = e;
-				continue;
 			}
 		}
 		throw new IOException("Unable to download SCOP .des file",exception);
 	}
 
-	protected void downloadHieFile() throws FileNotFoundException, IOException{
+	protected void downloadHieFile() throws IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
@@ -772,7 +709,6 @@ public class ScopInstallation implements LocalScopDatabase {
 				return;
 			} catch(IOException e ) {
 				exception = e;
-				continue;
 			}
 		}
 		throw new IOException("Unable to download SCOP .hie file",exception);
@@ -793,15 +729,14 @@ public class ScopInstallation implements LocalScopDatabase {
 
 				downloadFileFromRemote(url, localFile);
 				return;
-			} catch(IOException e ) {
+			} catch (IOException e ) {
 				exception = e;
-				continue;
 			}
 		}
 		throw new IOException("Unable to download SCOP .com file",exception);
 	}
 
-	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
+	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
 		FileOutputStream out = new FileOutputStream(localFile);
 
@@ -849,25 +784,21 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	protected String getClaFilename(){
-		String f = cacheLocation + claFileName + scopVersion;
-		return f;
+		return cacheLocation + claFileName + scopVersion;
 	}
 
 	protected String getDesFilename(){
-		String f = cacheLocation + desFileName + scopVersion;
-		return f;
+		return cacheLocation + desFileName + scopVersion;
 
 	}
 
 	protected String getHieFilename(){
-		String f = cacheLocation + hieFileName + scopVersion;
-		return f;
+		return cacheLocation + hieFileName + scopVersion;
 
 	}
 
 	protected String getComFilename(){
-		String f = cacheLocation + comFileName + scopVersion;
-		return f;
+		return cacheLocation + comFileName + scopVersion;
 	}
 
 	public String getCacheLocation() {
@@ -935,7 +866,11 @@ public class ScopInstallation implements LocalScopDatabase {
 	public List<ScopDomain> getScopDomainsBySunid(Integer sunid)
 	{
 
-		ensureClaInstalled();
+		try {
+			ensureClaInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
 
 		List<ScopDomain> domains = new ArrayList<ScopDomain>();
 
@@ -944,28 +879,23 @@ public class ScopInstallation implements LocalScopDatabase {
 				try {
 					if ( d.getPx() == sunid) {
 						domains.add((ScopDomain)d.clone());
-						continue;
 					} else if ( d.getSpeciesId() == sunid ){
 						domains.add((ScopDomain)d.clone());
-						continue;
 					}else if ( d.getDomainId() == sunid ){
 						domains.add((ScopDomain)d.clone());
-						continue;
 					}else if ( d.getFamilyId() == sunid ){
 						domains.add((ScopDomain)d.clone());
-						continue;
 					}else if ( d.getSuperfamilyId() == sunid ){
 						domains.add((ScopDomain)d.clone());
-						continue;
 					}else if ( d.getFoldId() == sunid ){
 						domains.add((ScopDomain)d.clone());
-						continue;
 					}else if ( d.getClassId() == sunid ){
 						domains.add((ScopDomain)d.clone());
-						continue;
+					} else {
+						throw new RuntimeException("Type " + d + " not recognized"); // only possible if SCOP changes
 					}
 				} catch (CloneNotSupportedException e){
-					e.printStackTrace();
+					throw new RuntimeException(ScopDomain.class + " subclass does not support clone()", e);
 				}
 			}
 		}
@@ -975,14 +905,18 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	@Override
 	public List<String> getComments(int sunid) {
-		ensureComInstalled();
+		try {
+			ensureComInstalled();
+		} catch (IOException e) {
+			throw new ScopIOException(e);
+		}
 		if (!commentsMap.containsKey(sunid)) return new ArrayList<String>(1);
 		return commentsMap.get(sunid);
 	}
 	
 
 	private void initScopURLs() {
-		if(this.mirrors.size() > 0) {
+		if(!this.mirrors.isEmpty()) {
 			return;
 		}
 

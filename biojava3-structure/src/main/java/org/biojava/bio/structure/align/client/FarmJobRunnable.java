@@ -1,19 +1,5 @@
 package org.biojava.bio.structure.align.client;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.InetAddress;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.UUID;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
@@ -36,6 +22,22 @@ import org.biojava.bio.structure.scop.RemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.FlatFileCache;
 import org.biojava3.core.util.PrettyXMLWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.UUID;
 
 
 
@@ -46,6 +48,8 @@ import org.biojava3.core.util.PrettyXMLWriter;
  *
  */
 public class FarmJobRunnable implements Runnable {
+
+	private static final Logger logger = LoggerFactory.getLogger(FarmJobRunnable.class);
 
 
 	//private static final int DEFAULT_PAIR_FETCH_DELAY   = 30000;
@@ -81,7 +85,7 @@ public class FarmJobRunnable implements Runnable {
 	String userName = null;
 	protected AtomCache cache;
 
-	boolean verbose = false;
+	boolean verbose = false; // TODO dmyersturnbull: we should probably remove this in favor of SLF4J
 	String version = null;
 	
 	private static final String alignURL = "/align/";
@@ -158,28 +162,13 @@ public class FarmJobRunnable implements Runnable {
 			InetAddress i = InetAddress.getLocalHost();
 			name += i.getHostAddress();
 			name += "_";
-		} catch (Exception e){
-			//e.printStackTrace();
+		} catch (UnknownHostException e){
+			throw new RuntimeException(e);
 		}
 		name +=  UUID.randomUUID();
 
 		return name;
 
-	}
-
-	public static void log(String message){
-		StringBuffer buf = new StringBuffer();
-
-		buf.append("[");
-		Date date = new Date();
-		String formattedDate;
-		synchronized (dateFormat) {
-			formattedDate = dateFormat.format(date);
-		}
-		buf.append(formattedDate);
-		buf.append("] ");
-		buf.append(message);
-		System.out.println(buf.toString());
 	}
 
 	@Override
@@ -188,7 +177,7 @@ public class FarmJobRunnable implements Runnable {
 		// Retrieve resource
 		String appVersion = resourceManager.getString(JFATCAT_VERSION);
 		String appName    = resourceManager.getString(JFATCAT_NAME);
-		log(appName + " version:" + appVersion);
+		logger.info("{} version: {}", appName, appVersion);
 
 
 		startTime = System.currentTimeMillis();
@@ -210,7 +199,7 @@ public class FarmJobRunnable implements Runnable {
 			maxNrAlignments = Integer.MAX_VALUE;
 		}
 
-		log("running job for max: " + maxNrAlignments + " alignments");
+		logger.info("running job for max {} alignments", maxNrAlignments);
 
 
 		while (! terminated){
@@ -222,12 +211,12 @@ public class FarmJobRunnable implements Runnable {
 			// we request
 			PdbPairsMessage msg = getAlignmentPairsFromServer();
 			if ( msg == null) {
-				System.err.println("Got null instead of alignment pairs from server.");
+				logger.error("Got null instead of alignment pairs from server.");
 				randomSleep();
 				continue;
 			}
 			SortedSet<PdbPair> alignmentPairs = msg.getPairs(); 
-			log(userName+": Server responded with " + alignmentPairs.size() + " pairs.");
+			logger.debug("{}: Server responded with {} pairs.", userName, alignmentPairs.size());
 			List<String> results = new ArrayList<String>();
 
 			String algorithmName = msg.getMethod();
@@ -260,28 +249,19 @@ public class FarmJobRunnable implements Runnable {
 
 
 				try {
-					//System.out.println("calculating alignent: " + name1 + "  " + name2);
 					String resultXML = alignPair(name1, name2,algorithmName);
 
 					if ( progressListeners != null)
 						notifyEndAlignment();
 
-					//System.out.println("got XML: " + resultXML);
 					results.add(resultXML);
 
 				} catch (Exception e){
-					//if (e.getMessage() == null)
-					System.err.println("Problem aligning " + name1 + " " + name2);
-					e.printStackTrace();
-					// log that an exception has occurred and send it back to server!1
-					log("Error: " + e.getMessage() + " while aligning " + name1 + " vs. " + name2);
-					System.err.println(e.getMessage());
-					//e.printStackTrace();
+					logger.error("Problem aligning {} with {}", name1, name2, e);
 
 					StringWriter sw = new StringWriter();
-					PrintWriter writer = new PrintWriter(sw);
 
-					PrettyXMLWriter xml = new PrettyXMLWriter(writer);
+					PrettyXMLWriter xml = new PrettyXMLWriter(new PrintWriter(sw));
 					try {
 						xml.openTag("AFPChain");
 
@@ -290,7 +270,7 @@ public class FarmJobRunnable implements Runnable {
 						xml.attribute("error", e.getMessage());
 						xml.closeTag("AFPChain");
 					} catch(IOException ex){
-						ex.printStackTrace();
+						logger.error("Error occured converting alignment for {} and {} to XML", name1, name2, ex);
 					}
 
 					if ( progressListeners != null)
@@ -307,17 +287,16 @@ public class FarmJobRunnable implements Runnable {
 
 			// send results back to server
 			sendResultsToServer(results);
-			//log("sent results to server: " + counter.toString());
 
 			long end = System.currentTimeMillis();
 			if ( end >= maxTime)  {
-				System.out.println("OK end of job: reached maxTime.");
+				logger.info("OK end of job: reached maxTime {}", maxTime);
 				terminated = true;
 
 			}
 
 			if ( alignmentsCalculated >= maxNrAlignments) {
-				System.out.println("OK end of job: reached maxNrAlignments");
+				logger.info("OK end of job: reached maxNrAlignments", maxNrAlignments);
 				terminated = true;
 
 			}		
@@ -325,14 +304,14 @@ public class FarmJobRunnable implements Runnable {
 			long tdiff = (end - startTime);
 			if ( tdiff != 0) {
 
-				log(userName + String.format(": job has run for :  %.2f", ( tdiff)/1000.0/60) + " min.");
-				log(userName + ": total nr of alignments calculated: " +alignmentsCalculated );
+				logger.info(userName + String.format(": job has run for :  %.2f", (tdiff) / 1000.0 / 60) + " min.");
+				logger.info("{}: total nr of alignments calculated: {}", userName, alignmentsCalculated);
 				if ( alignmentsCalculated > 0)
-					log(userName + String.format(": average time / alignment: %.2f", ( tdiff / alignmentsCalculated / 1000.0 )) + " sec.");
+					logger.info(userName + String.format(": average time / alignment: %.2f", (tdiff / alignmentsCalculated / 1000.0)) + " sec.");
 			}
-		}	
+		}
 
-		log(userName+": jFATCAT job result: " + counter.toString());
+		logger.info(userName + ": jFATCAT job result: " + counter);
 
 		// clean up in the end...
 		clearListeners();
@@ -348,9 +327,8 @@ public class FarmJobRunnable implements Runnable {
 			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
 			version = algorithm.getVersion();
 		} catch (StructureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			version = resourceManager.getString(JFATCAT_VERSION);
+			throw new RuntimeException("Couldn't set version for algorithm \"" + algorithmName + "\"", e);
+//			version = resourceManager.getString(JFATCAT_VERSION); // dmyersturnbull: was this
 		}
 		
 		
@@ -402,13 +380,12 @@ public class FarmJobRunnable implements Runnable {
 		
 		// 	make sure each thread has an independent instance of the algorithm object ...
 		
-		StructureAlignment algorithm = getAlgorithm(algorithmName); 
-		//StructureAlignment fatCatRigid    = new FatCatRigid();
+		StructureAlignment algorithm = getAlgorithm(algorithmName);
 
 		// we are running with default parameters
 
 		if ( verbose ) {
-			log("aligning " + name1 + " vs. " + name2);
+			logger.debug("aligning {} against {}", name1, name2);
 		}
 
 		long startTime = System.currentTimeMillis();
@@ -424,12 +401,6 @@ public class FarmJobRunnable implements Runnable {
 		// get a copy of the atoms, but clone them, since they will be rotated...
 		Atom[] ca2 =  cache.getAtoms(name2);
 
-		//		if ( FatCatAligner.printTimeStamps){
-		
-
-
-		//			System.out.println("time to get " + name1 + " " + name2 + " : " + (endTime-startTime) / 1000.0 + " sec.");
-		//		}
 		AFPChain afpChain = algorithm.align(ca1, ca2);
 
 		afpChain.setName1(name1);
@@ -439,9 +410,8 @@ public class FarmJobRunnable implements Runnable {
 			// add tmScore
 			double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
 			afpChain.setTMScore(tmScore);
-		} catch (Exception e){
-			e.printStackTrace();
-			System.out.println("ca1 size:" + ca1.length + " ca2 length: " + ca2.length + " " + afpChain.getName1() + " " + afpChain.getName2());
+		} catch (RuntimeException e){
+			logger.error("ca1 size: {} ca2 length: {} {}  {}", ca1.length, ca2.length, afpChain.getName1(), afpChain.getName2(), e);
 			
 		}
 		long endTime = System.currentTimeMillis();
@@ -453,15 +423,14 @@ public class FarmJobRunnable implements Runnable {
 			msg += " algo: " + algorithmName + " v:" + version + " " + afpChain;
 			
 			if ( isCP ) msg += "HAS A CIRCULAR PERMUTATION!!!";
-			log(msg);
+			logger.debug(msg);
 		}
 		if (verbose){
 			printMemory();
 		}
 		afpChain.setCalculationTime(calcTime);
 
-		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
-		return xml;
+		return AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 	}
 
 
@@ -478,16 +447,16 @@ public class FarmJobRunnable implements Runnable {
 		// Get amount of free memory within the heap in bytes. This size will increase
 		// after garbage collection and decrease as new objects are created.
 		long heapFreeSize = Runtime.getRuntime().freeMemory() / size;
-		StringBuffer msg = new StringBuffer();
+		StringBuilder msg = new StringBuilder();
 		msg.append("  total: ").append(heapSize).append(" M");
 		msg.append(" max: "). append(heapMaxSize).append(" M");
 		msg.append(" free: ").append(heapFreeSize).append(" M");
 		
-		System.out.println(msg.toString());
+		logger.debug(msg.toString());
 		
 	}
 
-	private StructureAlignment getAlgorithm(String algorithmName) {
+	private StructureAlignment getAlgorithm(String algorithmName) throws StructureException {
 		
 	
 		StructureAlignment algorithm    = null;
@@ -513,14 +482,9 @@ public class FarmJobRunnable implements Runnable {
 			algorithm = new FatCatFlexible();
 			
 		} else {
-			
-			try {
-				
-				algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
-		
-			} catch (StructureException ex){
-				ex.printStackTrace();
-			}
+
+			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
+
 		}
 		
 		if ( algorithm == null) {
@@ -534,12 +498,10 @@ public class FarmJobRunnable implements Runnable {
 	}
 
 	private void initMaster(String name1) throws IOException, StructureException{
-		//AtomCache cache = AtomCache.getInstance();
 
 		ca1 = cache.getAtoms(name1);
 
 		prevName1 = name1;
-
 
 	}
 
@@ -576,23 +538,22 @@ public class FarmJobRunnable implements Runnable {
 
 			} else {
 
-				while (allPairs.size() == 0) {
+				while (allPairs.isEmpty()) {
 					msg = JFatCatClient.getPdbPairs(url, nrPairs, userName);
 					allPairs = msg.getPairs();
 
-					if ( allPairs.size() == 0 ) {
+					if (allPairs.isEmpty()) {
 						randomSleep();
 					}
 				}
 			}
 		} catch ( JobKillException k ){
 
+			logger.debug("Terminating job", k);
 			terminate();
 
 		} catch (Exception e) {
-			if ( e.getMessage() == null)
-				e.printStackTrace();
-			System.err.println("Error while requesting alignment pairs: " + e.getMessage());
+			logger.error("Error while requesting alignment pairs", e);
 			// an error has occured sleep 30 sec.
 
 			randomSleep();
@@ -607,10 +568,10 @@ public class FarmJobRunnable implements Runnable {
 		try {
 
 			int delay = JFatCatClient.getRandomSleepTime();
-			System.err.println("sleeping "+ delay/1000 + " sec.");
+			logger.debug("sleeping {} sec.", delay/1000);
 			Thread.sleep(delay);
 		} catch (InterruptedException ex){
-			ex.printStackTrace();
+			logger.trace("InterruptedException occurred while sleeping", ex);
 		}
 		
 	}
@@ -622,8 +583,6 @@ public class FarmJobRunnable implements Runnable {
 		if ( results.size() < 1)
 			return;
 
-		//System.out.println("sending " + results.size() + " results back to server");
-
 		String fullXml = "<alignments>";
 
 		for (String xml: results){
@@ -634,15 +593,14 @@ public class FarmJobRunnable implements Runnable {
 		try {
 			msg = JFatCatClient.sendMultiAFPChainToServer(serverLocation,fullXml, userName, version );
 		} catch (JobKillException e){
-			log(userName+ " Got Job Kill message from server, terminating...");
-			e.printStackTrace();
+			logger.info("{} Got Job Kill message from server, terminating...", userName, e);
 			terminate();
 		}
 
 		if ( progressListeners != null)
 			notifySubmittingAlignments(results.size(), msg);
-		log (userName + ": Sent " + results.size() +" results to server. job status:" + counter.toString());
-		log (userName + ": fileCache size:" + FlatFileCache.getInstance().size());
+		logger.info("{}: Sent {} results to server. job status: {}", userName, results.size(), counter);
+		logger.info("{}: fileCache size: {}", userName, FlatFileCache.getInstance().size());
 	}
 
 

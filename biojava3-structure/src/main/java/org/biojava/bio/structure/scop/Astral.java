@@ -125,7 +125,7 @@ public class Astral {
 
 	/**
 	 * Get a list of representatives' names for the specified ASTRAL cutoff.
-	 * @param An ASTRAL Id, such as 1.75A_95.
+	 * @param id An ASTRAL Id, such as 1.75A_95.
 	 */
 	public static Set<String> getRepresentatives(String id) {
 		return getRepresentatives(AstralSet.parse(id));
