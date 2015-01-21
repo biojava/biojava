@@ -899,7 +899,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						String warning = "Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")";
 						String warnkey = key+"-"+c.getName();
 						// Suppress duplicate warnings or attempts to store empty data
-						if( val.equals("?") || ( warnings != null && warnings.contains(warnkey)) ) {
+						if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
 							logger.debug(warning);
 						} else {
 							logger.warn(warning);

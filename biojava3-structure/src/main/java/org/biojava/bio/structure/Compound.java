@@ -27,10 +27,11 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
@@ -46,7 +47,7 @@ import java.util.List;
  */
 public class Compound implements Serializable {
 	
-	//private final static Logger logger = LoggerFactory.getLogger(Compound.class);
+	private final static Logger logger = LoggerFactory.getLogger(Compound.class);
 
 	
 	//TODO we should consider having the data here as it is in mmCIF dictionary - JD 2014-12-11
@@ -214,20 +215,28 @@ public class Compound implements Serializable {
 	/**
 	 * Get the representative Chain for this Compound.
 	 * We choose the Chain with the first chain identifier after
-	 * lexicographical sorting, e.g. chain A if Compound is composed of chains A,B,C,D,E
+	 * lexicographical sorting (case insensitive), 
+	 * e.g. chain A if Compound is composed of chains A,B,C,D,E
 	 * @return
 	 */
 	public Chain getRepresentative() {
-		String minChainId = "ZZZZ";
-		Chain firstLexicographicalIdChain = null;
+		
+		List<String> chainIds = new ArrayList<String>();
 		for (Chain chain:chains) {
-			if (chain.getChainID().compareTo(minChainId)<0) {
-				minChainId = chain.getChainID();
-				firstLexicographicalIdChain = chain;
+			chainIds.add(chain.getChainID());
+		}
+		
+		Collections.sort(chainIds, String.CASE_INSENSITIVE_ORDER);
+
+		for (Chain chain:chains) {
+			if (chain.getChainID().equals(chainIds.get(0))) {
+				return chain;
 			}
 		}
 		
-		return firstLexicographicalIdChain;
+		logger.error("Could not find a representative chain for compound '{}'", this.toString());
+		
+		return null;
 	}
 	
 	/** get the ID used by Hibernate

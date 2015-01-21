@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;

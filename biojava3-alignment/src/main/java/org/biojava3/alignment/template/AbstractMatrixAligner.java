@@ -287,7 +287,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 
     // helper methods
 
-    // performs alignment
+    /**
+     * Performs alignment
+     */
     protected void align() {
         if (!isReady()) {
             return;
@@ -357,12 +359,21 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         time = System.nanoTime() - timeStart;
     }
 
-    // returns score for the alignment of the query column to all target columns
+    /**
+     * Returns score for the alignment of the query column to all target columns
+     * @param queryColumn
+     * @return
+     */
     protected int[] getSubstitutionScoreVector(int queryColumn) {
         return getSubstitutionScoreVector(queryColumn, new Subproblem(0, 0, scores.length - 1, scores[0].length - 1));
     }
 
-    // returns score for the alignment of the query column to all target columns
+    /**
+     * Returns score for the alignment of the query column to all target columns
+     * @param queryColumn
+     * @param subproblem
+     * @return
+     */
     protected int[] getSubstitutionScoreVector(int queryColumn, Subproblem subproblem) {
         int[] subs = new int[subproblem.getTargetEndIndex() + 1];
         if (queryColumn > 0) {
@@ -373,7 +384,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         return subs;
     }
 
-    // resets output fields; should be overridden to set max and min
+    /**
+     * Resets output fields; should be overridden to set max and min
+     */
     protected void reset() {
         xyMax = new int[] {0, 0};
         xyStart = new int[] {0, 0};

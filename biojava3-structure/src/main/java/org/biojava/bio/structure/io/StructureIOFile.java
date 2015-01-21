@@ -50,11 +50,6 @@ public interface StructureIOFile extends StructureProvider {
 	 */
 	public List<String> getExtensions();
 
-	/** clear all file extensions
-	 * @deprecated Removed in 4.0.0
-	 */
-	//public void clearExtensions();
-
 	/** 
 	 * Open filename and return a Structure object.
 	 * 

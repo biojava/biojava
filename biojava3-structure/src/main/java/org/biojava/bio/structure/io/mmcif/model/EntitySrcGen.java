@@ -50,6 +50,10 @@ public class EntitySrcGen {
 	String  host_org_genus	 ;
 	String  host_org_species;	 
 	String  host_org_strain	 ;
+	String  pdbx_src_id;
+	String  pdbx_seq_type;
+	String  pdbx_beg_seq_num;
+	String  pdbx_end_seq_num;
 	String  pdbx_description;	 
 	String  pdbx_gene_src_atcc;	 
 	String  pdbx_gene_src_cell	; 
@@ -172,6 +176,30 @@ public class EntitySrcGen {
 	}
 	public void setHost_org_strain(String host_org_strain) {
 		this.host_org_strain = host_org_strain;
+	}
+	public String getPdbx_src_id() {
+		return pdbx_src_id;
+	}
+	public void setPdbx_src_id(String pdbx_src_id) {
+		this.pdbx_src_id = pdbx_src_id;
+	}
+	public String getPdbx_seq_type() {
+		return pdbx_seq_type;
+	}
+	public void setPdbx_seq_type(String pdbx_seq_type) {
+		this.pdbx_seq_type = pdbx_seq_type;
+	}
+	public String getPdbx_beg_seq_num() {
+		return pdbx_beg_seq_num;
+	}
+	public void setPdbx_beg_seq_num(String pdbx_beg_seq_num) {
+		this.pdbx_beg_seq_num = pdbx_beg_seq_num;
+	}
+	public String getPdbx_end_seq_num() {
+		return pdbx_end_seq_num;
+	}
+	public void setPdbx_end_seq_num(String pdbx_end_seq_num) {
+		this.pdbx_end_seq_num = pdbx_end_seq_num;
 	}
 	public String getPdbx_description() {
 		return pdbx_description;

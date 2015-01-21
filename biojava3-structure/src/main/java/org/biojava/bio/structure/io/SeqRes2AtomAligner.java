@@ -436,10 +436,8 @@ public class SeqRes2AtomAligner {
 		
 
 
-		@SuppressWarnings("rawtypes")
-		Sequence s1;
-		@SuppressWarnings("rawtypes")
-		Sequence s2;
+		Sequence<NucleotideCompound> s1;
+		Sequence<NucleotideCompound> s2;
 
 		try {
 			s1 = new DNASequence(seq1,AmbiguityDNACompoundSet.getDNACompoundSet());
@@ -488,21 +486,16 @@ public class SeqRes2AtomAligner {
 		}
 		
 		
-		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_2();
+		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
 
-		GapPenalty penalty = new SimpleGapPenalty();
+		GapPenalty penalty = new SimpleGapPenalty(8,1);
 
-		short gop = 8;
-		short extend = 1;
-		penalty.setOpenPenalty(gop);
-		penalty.setExtensionPenalty(extend);
-
-		@SuppressWarnings({ "unchecked" })
-		PairwiseSequenceAligner<?, NucleotideCompound> smithWaterman =
+		PairwiseSequenceAligner<Sequence<NucleotideCompound>, NucleotideCompound> smithWaterman =
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-		@SuppressWarnings("rawtypes")
-		SequencePair pair = smithWaterman.getPair();
+		
+
+		SequencePair<Sequence<NucleotideCompound>, NucleotideCompound> pair = smithWaterman.getPair();  
 
 
 
@@ -520,7 +513,6 @@ public class SeqRes2AtomAligner {
 		logger.debug("Alignment:\n"+pair.toString(100));
 		
 
-		@SuppressWarnings("unchecked")
 		boolean noMatchFound = mapDNAChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
 
 		return noMatchFound;
@@ -565,12 +557,7 @@ public class SeqRes2AtomAligner {
 
 		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
 
-		GapPenalty penalty = new SimpleGapPenalty();
-
-		short gop = 8;
-		short extend = 1;
-		penalty.setOpenPenalty(gop);
-		penalty.setExtensionPenalty(extend);
+		GapPenalty penalty = new SimpleGapPenalty(8, 1);
 
 
 		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
@@ -696,7 +683,7 @@ public class SeqRes2AtomAligner {
 	}
 
 	private boolean mapDNAChains(List<Group> seqResGroups, List<Group> atomRes,
-			SequencePair<DNASequence, NucleotideCompound> pair,
+			SequencePair<Sequence<NucleotideCompound>, NucleotideCompound> pair,
 			Map<Integer,Integer> seqresIndexPosition,
 			Map<Integer,Integer> atomIndexPosition)   {
 
