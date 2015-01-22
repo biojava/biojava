@@ -84,7 +84,7 @@ public class CrystalBuilder {
 		this.isCrystallographic = false;
 				
 		
-		if (this.crystallographicInfo.getSpaceGroup()==null) {
+		if (structure.isCrystallographic() && this.crystallographicInfo.getSpaceGroup()==null) {
 			logger.warn("Could not find a space group, will only calculate asymmetric unit interfaces.");
 		}
 		// we need to check space group not null for the cases where the entry is crystallographic but 
