@@ -758,6 +758,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		
 					Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList);
 
+					if (atomChain == null) {
+						// most likely there's no observed residues at all for the seqres chain: can't map
+						// e.g. 3zyb: chains with asym_id L,M,N,O,P have no observed residues
+						logger.warn("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
+								seqResChain.getChainID());
+						continue;
+					}
+					
 					//map the atoms to the seqres...
 
 					List<Group> seqResGroups = seqResChain.getAtomGroups(); 
