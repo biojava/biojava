@@ -907,27 +907,30 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// these are the transformations that need to be applied to our model
 				List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
-				boolean validBioAssembly = true;
 				int mmSize = 0;
-				int bioAssemblyId = 0;
-				try {
-					mmSize = Integer.parseInt(psa.getOligomeric_count());					
-				} catch (NumberFormatException e) {
-					logger.info("Could not parse oligomeric count from '{}' for biological assembly id {}",
-							psa.getOligomeric_count(),psa.getId());
-					validBioAssembly = false;
-				}
+				int bioAssemblyId = -1;
 				try {
 					bioAssemblyId = Integer.parseInt(psa.getId());
 				} catch (NumberFormatException e) {
 					logger.info("Could not parse a numerical bio assembly id from '{}'",psa.getId());
-					validBioAssembly = false;
+				}
+				try {
+					mmSize = Integer.parseInt(psa.getOligomeric_count());					
+				} catch (NumberFormatException e) {
+					if (bioAssemblyId!=-1)
+						// if we have a numerical id, then it's unusual to have no oligomeric size: we warn about it
+						logger.warn("Could not parse oligomeric count from '{}' for biological assembly id {}",
+							psa.getOligomeric_count(),psa.getId());
+					else 
+						// no numerical id (PAU,XAU in virus entries), it's normal to have no oligomeric size
+						logger.info("Could not parse oligomeric count from '{}' for biological assembly id {}",
+								psa.getOligomeric_count(),psa.getId());
 				}
 				
-				// if either there's no oligomeric count or bioassembly id is not numerical we throw it away
+				// if bioassembly id is not numerical we throw it away
 				// this happens usually for viral capsid entries, like 1ei7
 				// see issue #230 in github
-				if (validBioAssembly) {
+				if (bioAssemblyId!=-1) {
 					BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
 					bioAssembly.setId(bioAssemblyId);
 					bioAssembly.setMacromolecularSize(mmSize);
