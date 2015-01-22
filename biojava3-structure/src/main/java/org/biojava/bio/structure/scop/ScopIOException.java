@@ -5,6 +5,8 @@ package org.biojava.bio.structure.scop;
  */
 public class ScopIOException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	public ScopIOException() {
 	}
 
