@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -838,6 +839,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 				}
 			}
+			// a final check before adding the chains: some bad entries contain water-only 
+			// chains, which does not fit the standard practices, e.g. 3o6j has chain Z with 1 single water molecule
+			Iterator<Chain> it = pdbChains.iterator();
+			while (it.hasNext()) {
+				Chain c = it.next();
+				if (StructureTools.isChainWaterOnly(c)) {
+					logger.warn("Chain {} (internal chain id {}, {} atom groups) is composed of water molecules only. Removing it.", 
+							c.getChainID(), c.getInternalChainID(), c.getAtomGroups().size());
+					it.remove();
+				}
+			}
 			structure.setModel(i,pdbChains);
 			
 			// finally setting chains to compounds and compounds to chains now that we have the final chains
@@ -938,9 +950,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getCrystallographicInfo().setNcsOperators(
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
-		
-
-
 		
 	}
 

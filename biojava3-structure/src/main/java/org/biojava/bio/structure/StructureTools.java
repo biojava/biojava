@@ -1567,5 +1567,19 @@ public class StructureTools {
 
 		return max;
 	}
+	
+	/**
+	 * Returns true if the given chain is composed of water molecules only
+	 * @param c
+	 * @return
+	 */
+	public static boolean isChainWaterOnly(Chain c) {
+		boolean waterOnly = true;
+		for (Group g: c.getAtomGroups()) {
+			if (!g.isWater()) waterOnly = false;
+			break;
+		}
+		return waterOnly;
+	}
 
 }
