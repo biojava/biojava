@@ -49,9 +49,8 @@ public enum ExperimentalTechnique {
 		 this.isNmr = isNmr;
 	 }
 	 
-	 
-	 
-	 private static final HashMap<String, ExperimentalTechnique> initExpTechStr2Value() {	 
+
+	 private static HashMap<String, ExperimentalTechnique> initExpTechStr2Value() {
 		HashMap<String, ExperimentalTechnique> expTechStr2Value = new HashMap<String, ExperimentalTechnique>();
 		for(ExperimentalTechnique exp:ExperimentalTechnique.values()) {
 			expTechStr2Value.put(exp.getName(), exp);
@@ -73,7 +72,7 @@ public enum ExperimentalTechnique {
 	 
 	 /**
 	  * Returns the ExpTechnique given an experimental technique name as used in the PDB, 
-	  * e.g. "X-RAY DIFFRACTION" returns {@link ExperimentalTechnique.XRAY_DIFFRACTION} 
+	  * e.g. "X-RAY DIFFRACTION" returns {@link ExperimentalTechnique#XRAY_DIFFRACTION}
 	  * @param expTechniqueName the ExpTechnique value or null if string doesn't match one of the known PDB experimental strings
 	  * @return
 	  */

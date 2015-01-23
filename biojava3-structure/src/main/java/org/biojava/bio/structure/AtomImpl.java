@@ -23,12 +23,12 @@
  */
 package org.biojava.bio.structure;
 
+import org.biojava.bio.structure.io.FileConvert;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.biojava.bio.structure.io.FileConvert;
 
 
 /**
@@ -63,7 +63,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		pdbline  = ""          ;
 		occupancy  = 0.0       ;
 		tempfactor = 0.0       ;
-		altLoc = new Character(' ');
+		altLoc = ' ';
 		altLoc = null;
 		parent = null;
 		bonds = Collections.emptyList();
@@ -172,8 +172,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	/** string representation. */
 	@Override
 	public String toString() {
-		String str = name + " " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
-		return str ;
+		return name + " " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
 	}
 
 	@Override
@@ -257,7 +256,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 
 	@Override
 	public void addBond(Bond bond) {
-		if (bonds.size() == 0) {
+		if (bonds.isEmpty()) {
 			// most atoms have a maximum of 3 heavy atom neighbors, so use this as the default size
 			bonds = new ArrayList<Bond>(3);
 		}

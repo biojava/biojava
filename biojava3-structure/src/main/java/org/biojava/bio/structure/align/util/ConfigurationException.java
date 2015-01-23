@@ -16,7 +16,11 @@ public class ConfigurationException extends Exception {
     public ConfigurationException(String s) {
 	super(s);
     }
-    
+
+    public ConfigurationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     /**
      * Constructs a ConfigurationException object.
      *
@@ -24,6 +28,13 @@ public class ConfigurationException extends Exception {
      */
     public ConfigurationException (Throwable t) {
 	super(t);
+    }
+
+    public ConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public ConfigurationException() {
     }
 }
 

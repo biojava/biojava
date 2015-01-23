@@ -1,13 +1,13 @@
 package org.biojava.bio.structure;
 
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 
 
 /**
@@ -51,7 +51,7 @@ public enum GroupType {
 	 * The 3-letter codes used in the PDB to identify water molecules
 	 * @see Group#isWater()
 	 */
-	public static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
+	public static final List<String> WATERNAMES = Arrays.asList("HOH", "DOD", "WAT");
 	
 	/**
 	 * @return The name of this GroupType. One of "amino", "nucleotide", or "hetatm"

@@ -397,8 +397,9 @@ public enum Element implements Serializable {
 	/**
 	 * Returns <code>true</code> if this Element is Hydrogen.
 	 * <p>
-	 * <b>Note:</b> Deuterium ({@link #D}) and Tritium ({@link T}) will return
+	 * <strong>Note:</strong> Deuterium ({@link #D}) and Tritium ({@link Element#T}) will return
 	 * <code>true</code> to this method.
+     * </p>
 	 * 
 	 * @return <CODE>true</CODE> if the Element is Hydrogen.
 	 */
@@ -411,6 +412,7 @@ public enum Element implements Serializable {
 	 * isotope of Hydrogen).
 	 * <p>
 	 * This method is the exact opposite of {@link #isHydrogen()}.
+     * </p>
 	 * 
 	 * @return <CODE>true</CODE> is Element is not Hydrogen.
 	 */
@@ -474,7 +476,7 @@ public enum Element implements Serializable {
      * @see #getHillOrder()
      */
     public static Element getElementFromHillIndex(int index) {
-    	throw new RuntimeException("Not implemented, yet!");
+    	throw new UnsupportedOperationException("Not implemented, yet!");
         //return hillOrderIndex[index];
     }
 }

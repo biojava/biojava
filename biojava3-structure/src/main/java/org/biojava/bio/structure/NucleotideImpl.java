@@ -104,8 +104,8 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 		n.setPDBName(getPDBName());
 
 		// copy the atoms
-		for (int i=0;i<atoms.size();i++){
-			Atom atom = (Atom)atoms.get(i).clone();
+		for (Atom atom1 : atoms) {
+			Atom atom = (Atom) atom1.clone();
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}

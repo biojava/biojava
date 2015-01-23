@@ -26,9 +26,6 @@
 
 package org.biojava.bio.structure.align;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
@@ -37,12 +34,16 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-//import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+
+//import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 
 public class AFPTwister
 {
@@ -138,8 +139,7 @@ public class AFPTwister
 
       int focusResn = afp2Res(afpChain, focusAfpn,  focusAfpList, 0);
 
-      int totalLenIni = focusResn;
-      afpChain.setTotalLenIni(totalLenIni);
+      afpChain.setTotalLenIni(focusResn);
 
       logger.debug(String.format("calrmsdini for %d residues", focusResn));
 
@@ -152,7 +152,6 @@ public class AFPTwister
          logger.debug("{}", afpChain.getAlnseq1());
          logger.debug("{}", afpChain.getAlnsymb());
          logger.debug("{}", afpChain.getAlnseq2());
-         // System.exit(0);
       }
 
       afpChain.setFocusAfpList(focusAfpList);
@@ -201,7 +200,6 @@ public class AFPTwister
       int[][][] optAln  = afpChain.getOptAln();
 
       for(int bk = 0; bk < blockNum; bk ++)       {
-         //logger.debug("transforming "+ optLen[bk] + " " +  bk);
          //  THIS IS TRANSFORMING THE ORIGINAL ca2 COORDINATES, NO CLONING...
          // copies the atoms over to iniTwistPdb later on in modifyCod
          transformOrigPDB(optLen[bk], optAln[bk][0], optAln[bk][1], ca1, ca2,afpChain,bk);
@@ -213,11 +211,8 @@ public class AFPTwister
             e2 = (optAln[bk + 1][1][0] - e2)/ 2 + e2;
          }
          else    { e2 = ca2.length; }
-         //logger.debug("modifyCod: " + b2 + " " + e2);
          cloneAtomRange(optTwistPdb, ca2, b2, e2);
-         //bound[bk] = e2;
          for(int i = 0; i < optLen[bk]; i ++)        {
-            // logger.debug("bk " + bk + " i " + i + " optLen:" + optLen[bk] + " " + optAln[bk][0][i]);
             focusRes1[focusResn] = optAln[bk][0][i];
             focusRes2[focusResn] = optAln[bk][1][i];
             focusResn ++;
@@ -237,9 +232,7 @@ public class AFPTwister
       afpChain.setTotalLenOpt(totalLenOpt);
       afpChain.setTotalRmsdOpt(totalRmsdOpt);
 
-      Group[] retGroups = StructureTools.cloneGroups(optTwistPdb);
-
-      return retGroups;
+      return StructureTools.cloneGroups(optTwistPdb);
 
    }
 
@@ -287,12 +280,8 @@ public class AFPTwister
       }
 
       for (Atom a : ca2){
-         //Calc.rotate(a, r);
-         //Calc.shift(a, t);
-
          Calc.rotate(a.getGroup(),r);
          Calc.shift(a.getGroup(),t);
-
       }
 
 
@@ -363,7 +352,7 @@ public class AFPTwister
          newChain.addGroup(newG);
 
 
-      } //modify caCod                                                                                                                                                                                               
+      } //modify caCod
 
    }
 
@@ -398,25 +387,11 @@ public class AFPTwister
       t = svd.getTranslation();
             
       for (Atom a : cod2){
-         //Calc.rotate(a, r);
-         //Calc.shift(a, t);
 
          Calc.rotate(a.getGroup(), r);
          Calc.shift(a.getGroup(),  t);
       }
 
-//      if ( showAlignmentSteps){
-//         StructureAlignmentJmol jmol = new StructureAlignmentJmol();
-//
-//         jmol.setAtoms(cod1);
-//         jmol.evalString("select * ; wireframe off; spacefill off;  backbone on; color chain; select ligand;color cpk; wireframe 40;spacefill 120;  ");
-//         jmol.setTitle("calCaRmsd - pdb1");
-//
-//         StructureAlignmentJmol jmol2 = new StructureAlignmentJmol();
-//         jmol2.setAtoms(cod2);
-//         jmol2.evalString("select * ; wireframe off; spacefill off;  backbone on; color chain; select ligand;color cpk; wireframe 40;spacefill 120;  ");
-//         jmol2.setTitle("calCaRmsd - pdb2");
-//      }
       return SVDSuperimposer.getRMS(cod1, cod2);
    }
 
@@ -443,9 +418,7 @@ public class AFPTwister
       List<AFP> afpSet =afpChain.getAfpSet();
            
       for(int i = listStart; i < listStart+afpn; i ++)      {
-         //logger.debug("i:"+i+" " + list.length + " " + afpn);
          int a = afpPositions[i];
-         //logger.debug(String.format("afp %d %d\n", i, a));
          for(int j = 0; j < afpSet.get(a).getFragLen(); j ++)     {
             if(n >= minLen) {              
                throw new RuntimeException("Error: too many residues in AFPChainer.afp2Res!");
@@ -461,7 +434,7 @@ public class AFPTwister
       afpChain.setFocusResn(n);
       
       if ( n == 0 ){
-         logger.warn("warning: n=0!!! + " + afpn + " " + listStart + " " + afpPositions.length);
+         logger.warn("n=0!!! + " + afpn + " " + listStart + " " + afpPositions.length);
       }
       return n;
    }

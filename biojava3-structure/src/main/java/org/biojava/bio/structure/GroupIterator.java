@@ -83,35 +83,29 @@ public class GroupIterator implements Iterator<Group> {
     @Override
     public boolean hasNext() {
         return hasSubGroup(current_model_pos,current_chain_pos , current_group_pos +1) ;
-        //ArrayList model = structure.getModel(current_model_pos);
-        //Chain     chain = model.getChain(current_chain_pos);
     }
     
     /** recursive method to determine if there is a next group. Helper
      * method for hasNext(). 
      * @see #hasNext
      */
-    private boolean hasSubGroup(int tmp_model,int tmp_chain,int tmp_group){ 
-        
-        if ( tmp_model >= structure.nrModels()){
+    private boolean hasSubGroup(int tmp_model,int tmp_chain,int tmp_group) {
+
+        if (tmp_model >= structure.nrModels()) {
             return false;
         }
-        
-        List<Chain> model =  structure.getModel(tmp_model);
-        
-        if ( tmp_chain >= model.size() ){
-            return hasSubGroup(tmp_model+1,0,0);
+
+        List<Chain> model = structure.getModel(tmp_model);
+
+        if (tmp_chain >= model.size()) {
+            return hasSubGroup(tmp_model + 1, 0, 0);
         }
-        
-        Chain     chain = model.get(tmp_chain);
-        
-        if (tmp_group  >= chain.getAtomLength()){	   
-            // start search at beginning of next chain.	    
-            return hasSubGroup(tmp_model,tmp_chain+1,0);
-        } else {
-            return true;
-        }
-        
+
+        Chain chain = model.get(tmp_chain);
+
+        // start search at beginning of next chain.
+        return tmp_group < chain.getAtomLength() || hasSubGroup(tmp_model, tmp_chain + 1, 0);
+
     }
     
     /** Get the model number of the current model.
@@ -137,9 +131,8 @@ public class GroupIterator implements Iterator<Group> {
         if ( current_chain_pos >= model.size() ){
             return null;
         }
-        
-        Chain     chain = model.get(current_chain_pos);
-        return chain;
+
+        return model.get(current_chain_pos);
         
     }
     
@@ -182,8 +175,7 @@ public class GroupIterator implements Iterator<Group> {
             current_model_pos = tmp_model;
             current_chain_pos = tmp_chain;
             current_group_pos = tmp_group;
-            Group group = chain.getAtomGroup(current_group_pos);
-            return group;
+            return chain.getAtomGroup(current_group_pos);
         }
         
     }
@@ -192,9 +184,9 @@ public class GroupIterator implements Iterator<Group> {
      */
     @Override
     public void remove() {
+        throw new UnsupportedOperationException("Cannot call remove() for GroupIterator");
     }
-    
-    
+
     
 }
 

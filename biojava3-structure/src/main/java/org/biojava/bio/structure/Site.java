@@ -60,7 +60,7 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("SITE ");
-        stringBuilder.append(siteID + " " + groups.size() + " ");
+        stringBuilder.append(siteID).append(" ").append(groups.size()).append(" ");
         for (Group group : groups) {
             // 012345678910   
             //'ARG H 221A '
@@ -100,8 +100,7 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
         int groupsWritten = 0;
         int groupNum = 0;
         //new StringBuilder for adding the groups to
-        StringBuffer stringBuilder = new StringBuffer();
-//        Formatter form = new Formatter(stringBuilder, Locale.UK);
+        StringBuilder stringBuilder = new StringBuilder();
         
         while (groupsWritten < groups.size()) {
             StringBuilder groupsString = new StringBuilder();
@@ -123,7 +122,7 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
             stringBuilder.append(lineEnd);
         }
 
-        buf.append(stringBuilder.toString());
+        buf.append(stringBuilder);
     }
 
     /**

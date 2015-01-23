@@ -20,11 +20,10 @@
 
 package org.biojava.bio.structure;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.biojava.bio.structure.io.PDBParseException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /** A class that can change one amino acid to another. Side chain atoms are neglected, only the Cb atom is kept.
@@ -36,7 +35,6 @@ import org.biojava.bio.structure.io.PDBParseException;
  String outputfile =  "/Users/ap3/WORK/PDB/mutated.pdb" ;
  
 
- try{
      Structure struc = StructureIO.getStructure("5pti");
      System.out.println(struc);
  
@@ -55,10 +53,7 @@ import org.biojava.bio.structure.io.PDBParseException;
   
       p.close();
   
-  
-  } catch (Exception e) {
-      e.printStackTrace();
-  } 
+
   </pre>
   * @author Andreas Prlic
   * @since 1.5
@@ -103,46 +98,41 @@ public class Mutator{
         List<Chain> chains = struc.getChains(0);
         
         // iterate over all chains.
-        Iterator<Chain> iter = chains.iterator();
-        while (iter.hasNext()){
-            Chain c = iter.next();
+        for (Chain c : chains) {
             if (c.getChainID().equals(chainId)) {
                 // here is our chain!
-                
+
                 Chain newchain = new ChainImpl();
                 newchain.setChainID(c.getChainID());
-                
+
                 List<Group> groups = c.getAtomGroups();
-                
+
                 // now iterate over all groups in this chain.
                 // in order to find the amino acid that has this pdbRenum.               
-                
-                Iterator<Group> giter = groups.iterator();
-                while (giter.hasNext()){
-                    Group g = giter.next();
+
+                for (Group g : groups) {
                     String rnum = g.getResidueNumber().toString();
-                    
+
                     // we only mutate amino acids
                     // and ignore hetatoms and nucleotides in this case                   
-                    if (rnum.equals(pdbResnum) && (g.getType() == GroupType.AMINOACID) ){
-                        
+                    if (rnum.equals(pdbResnum) && (g.getType() == GroupType.AMINOACID)) {
+
                         // create the mutated amino acid and add it to our new chain
-                        AminoAcid newgroup = mutateResidue((AminoAcid)g,newType);
+                        AminoAcid newgroup = mutateResidue((AminoAcid) g, newType);
                         newchain.addGroup(newgroup);
-                    }
-                    else {
+                    } else {
                         // add the group  to the new chain unmodified.
                         newchain.addGroup(g);
                     }
                 }
-                
+
                 // add the newly constructed chain to the structure;
                 newstruc.addChain(newchain);
             } else {
                 // this chain is not requested, add it to the new structure unmodified.
                 newstruc.addChain(c);
             }
-            
+
         }
         return newstruc;
     }

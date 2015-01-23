@@ -15,11 +15,8 @@ import java.util.List;
  */
 public class JournalArticle implements Serializable{
 
-    /**
-    *
-    */
-   private static final long serialVersionUID = 5062668226159515468L;
-   private List<Author> authorList = new ArrayList<Author>();
+    private static final long serialVersionUID = 5062668226159515468L;
+    private List<Author> authorList = new ArrayList<Author>();
     private List<Author> editorList = new ArrayList<Author>();
     private String title = "";
     private String ref = "";
@@ -220,48 +217,46 @@ public class JournalArticle implements Serializable{
 //        JRNL        DOI    10.1038/NI1450
         String eol = System.getProperty("line.separator");
 
-        StringBuffer jrnlString = new StringBuffer();
+        StringBuilder jrnlString = new StringBuilder();
 
-        StringBuffer authString = new StringBuffer("JRNL        AUTH   ");
-        StringBuffer titlString = new StringBuffer("JRNL        TITL   ");
-        StringBuffer editString = new StringBuffer("JRNL        EDIT   ");
-        StringBuffer refString = new StringBuffer("JRNL        REF    ");
-        StringBuffer publString = new StringBuffer("JRNL        PUBL   ");
-        StringBuffer refnString = new StringBuffer("JRNL        REFN                   ");
-        StringBuffer pmidString = new StringBuffer("JRNL        PMID   ");
-        StringBuffer doiString = new StringBuffer("JRNL        DOI    ");
+        StringBuilder authString = new StringBuilder("JRNL        AUTH   ");
+        StringBuilder titlString = new StringBuilder("JRNL        TITL   ");
+        StringBuilder editString = new StringBuilder("JRNL        EDIT   ");
+        StringBuilder refString = new StringBuilder("JRNL        REF    ");
+        StringBuilder publString = new StringBuilder("JRNL        PUBL   ");
+        StringBuilder refnString = new StringBuilder("JRNL        REFN                   ");
+        StringBuilder pmidString = new StringBuilder("JRNL        PMID   ");
+        StringBuilder doiString = new StringBuilder("JRNL        DOI    ");
 
         for (Author author : authorList) {
             authString.append(author).append(",");
         }
-        jrnlString.append(authString.toString()).append(eol);
+        jrnlString.append(authString).append(eol);
         titlString.append(title);
-        jrnlString.append(titlString.toString()).append(eol);
+        jrnlString.append(titlString).append(eol);
         if (!editorList.isEmpty()) {
             for (Author editor : editorList) {
                 editString.append(editor).append(",");
             }
-            jrnlString.append(editString.toString()).append(eol);
+            jrnlString.append(editString).append(eol);
         }
-//        if (ref.equals("TO BE PUBLISHED")) {
-            refString.append(ref);
-        jrnlString.append(refString.toString()).append(eol);
-//        }
+        refString.append(ref);
+        jrnlString.append(refString).append(eol);
         if (!publisher.equals("")) {
             publString.append(publisher);
-            jrnlString.append(publString.toString()).append(eol);
+            jrnlString.append(publString).append(eol);
         }
         if (!refn.equals("")) {
             refnString.append(refn);
-            jrnlString.append(refnString.toString()).append(eol);
+            jrnlString.append(refnString).append(eol);
         }
         if (!pmid.equals("")) {
             pmidString.append(pmid);
-            jrnlString.append(pmidString.toString()).append(eol);
+            jrnlString.append(pmidString).append(eol);
         }
         if (!doi.equals("")) {
             doiString.append(doi);
-            jrnlString.append(doiString.toString()).append(eol);
+            jrnlString.append(doiString).append(eol);
         }
 
         return jrnlString.toString();

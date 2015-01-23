@@ -25,13 +25,13 @@
 package org.biojava.bio.structure;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
@@ -198,7 +198,7 @@ public class Compound implements Serializable {
 	@Override
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
-		buf.append("Compound: " + molId+" ");
+		buf.append("Compound: ").append(molId).append(" ");
 		buf.append(molName==null?"(no name)":"("+molName+")");
 		buf.append(" chains: ");
 		if (chains!=null) {
@@ -425,8 +425,8 @@ public class Compound implements Serializable {
 	 */
 	public List<String> getChainIds() {
 		List<String> chainIds = new ArrayList<String>();
-		for (int i=0;i<chains.size();i++) {
-			chainIds.add(chains.get(i).getChainID());			
+		for (Chain chain : chains) {
+			chainIds.add(chain.getChainID());
 		}
 		return chainIds;
 	}

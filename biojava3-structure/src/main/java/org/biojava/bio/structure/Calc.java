@@ -24,24 +24,25 @@
 
 package org.biojava.bio.structure ;
 
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.bio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 
-/** utility operations on Atoms, AminoAcids, etc. 
+
+/** utility operations on Atoms, AminoAcids, etc.
  * <p>
  * Currently the
  * coordinates of an Atom are stored as an array of size 3
  * (double[3]). It would be more powerful to use Point3D from
  * javax.vecmath.  but unfortunately this is not a part of standard
  * java installations, since it comes with java3d . So to keep things
- * simple at the moment biojava does not depend on java3d.  
+ * simple at the moment biojava does not depend on java3d.
+ * </p>
  * @author Andreas Prlic
  * @since 1.4
  * @version %I% %G%
@@ -55,20 +56,15 @@ public class Calc {
 	static final double RADIAN = 57.29577951 ;
 
 	/** Radians per degree.
-	 * 
-	 */ 
+	 *
+	 */
 	public final static float radiansPerDegree = (float) (2 * Math.PI / 360);
 
 	/** Degrees per radian.
-	 * 
+	 *
 	 */
 	public final static float degreesPerRadian = (float) (360 / (2 * Math.PI));
 
-
-	/**
-
-	 *    
-	 */
 
 	/**
 	 * calculate distance between two atoms.
@@ -77,18 +73,14 @@ public class Calc {
 	 * @param b  an Atom object
 	 * @return a double	
 	 */
-	public static final double getDistance(Atom a, Atom b) 
-
-	{
+	public static final double getDistance(Atom a, Atom b) {
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();
 
 		double s  = x * x  + y * y + z * z;
 
-		double dist = Math.sqrt(s);
-
-		return dist ;
+		return Math.sqrt(s);
 	}
 
 
@@ -102,16 +94,12 @@ public class Calc {
 	 * @param b  an Atom object
 	 * @return a double
 	 */
-	public static double getDistanceFast(Atom a, Atom b)
-
-	{
+	public static double getDistanceFast(Atom a, Atom b) {
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();
 
-		double distSquared  = x * x  + y * y + z * z;
-
-		return distSquared ;
+		return x * x  + y * y + z * z;
 	}
 
 	public static final Atom invert(Atom a) {
@@ -165,7 +153,7 @@ public class Calc {
 	 */
 	public static final Atom vectorProduct(Atom a , Atom b){
 
-		Atom c = new AtomImpl();  
+		Atom c = new AtomImpl();
 		c.setX( a.getY() * b.getZ() - a.getZ() * b.getY() ) ;
 		c.setY( a.getZ() * b.getX() - a.getX() * b.getZ() ) ;
 		c.setZ( a.getX() * b.getY() - a.getY() * b.getX() ) ;
@@ -175,13 +163,13 @@ public class Calc {
 
 	/**
 	 * Scalar product (dot product).
-	 * 
+	 *
 	 * @param a an Atom object
 	 * @param b an Atom object
 	 * @return a double
 	 */
 	public static final double scalarProduct(Atom a, Atom b) {
-		return a.getX() * b.getX() + a.getY() * b.getY() + a.getZ() * b.getZ(); 
+		return a.getX() * b.getX() + a.getY() * b.getY() + a.getZ() * b.getZ();
 	}
 
 	/** Gets the length of the vector (2-norm)
@@ -208,7 +196,7 @@ public class Calc {
 
 		angle = skalar/( amount(a) * amount (b) );
 		angle = Math.acos(angle);
-		angle = angle * RADIAN ; 
+		angle = angle * RADIAN ;
 
 		return angle;
 	}
@@ -220,7 +208,6 @@ public class Calc {
 	 */
 	public static final Atom unitVector(Atom a) {
 		double amount = amount(a) ;
-		Atom U = a ;
 
 		double[] coords = new double[3];
 
@@ -228,12 +215,12 @@ public class Calc {
 		coords[1] = a.getY() / amount ;
 		coords[2] = a.getZ() / amount ;
 
-		U.setCoords(coords);
-		return U ;
+		a.setCoords(coords);
+		return a;
 
 	}
 
-	/** 
+	/**
 	 * Calculate the torsion angle, i.e. the angle between the normal vectors of the 
 	 * two plains a-b-c and b-c-d.
 	 *
@@ -243,29 +230,27 @@ public class Calc {
 	 * @param d  an Atom object
 	 * @return a double
 	 */
-	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d)
-
-	{
+	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d) {
 
 		Atom ab = subtract(a,b);
 		Atom cb = subtract(c,b);
 		Atom bc = subtract(b,c);
 		Atom dc = subtract(d,c);
 
-		Atom abc = vectorProduct(ab,cb);	
+		Atom abc = vectorProduct(ab,cb);
 		Atom bcd = vectorProduct(bc,dc);
 
 		double angl = angle(abc,bcd) ;
 
 		/* calc the sign: */
-		Atom vecprod = vectorProduct(abc,bcd);	
+		Atom vecprod = vectorProduct(abc,bcd);
 		double val = scalarProduct(cb,vecprod);
 		if (val<0.0) angl = -angl ;
 
 		return angl;
 	}
 
-	/** 
+	/**
 	 * Calculate the phi angle.
 	 *
 	 * @param a  an AminoAcid object
@@ -273,13 +258,11 @@ public class Calc {
 	 * @return a double
 	 * @throws StructureException if aminoacids not connected or if any of the 4 needed atoms missing
 	 */
-	public static final double getPhi(AminoAcid a, AminoAcid b)
-			throws StructureException
-			{
+	public static final double getPhi(AminoAcid a, AminoAcid b) throws StructureException {
 
 		if ( ! isConnected(a,b)){
 			throw new StructureException("can not calc Phi - AminoAcids are not connected!") ;
-		} 
+		}
 
 		Atom a_C  = a.getC();
 		Atom b_N  = b.getN();
@@ -288,12 +271,11 @@ public class Calc {
 
 		// C and N were checked in isConnected already
 		if (b_CA==null) throw new StructureException("Can not calculate Phi, CA atom is missing");
-		
-		double phi = torsionAngle(a_C,b_N,b_CA,b_C);
-		return phi ;
-			}
 
-	/** 
+		return torsionAngle(a_C,b_N,b_CA,b_C);
+	}
+
+	/**
 	 * Calculate the psi angle.
 	 *
 	 * @param a  an AminoAcid object
@@ -301,9 +283,7 @@ public class Calc {
 	 * @return a double
 	 * @throws StructureException if aminoacids not connected or if any of the 4 needed atoms missing
 	 */
-	public static final double getPsi(AminoAcid a, AminoAcid b)
-			throws StructureException
-			{
+	public static final double getPsi(AminoAcid a, AminoAcid b) throws StructureException {
 		if ( ! isConnected(a,b)) {
 			throw new StructureException("can not calc Psi - AminoAcids are not connected!") ;
 		}
@@ -315,48 +295,41 @@ public class Calc {
 
 		// C and N were checked in isConnected already
 		if (a_CA==null) throw new StructureException("Can not calculate Psi, CA atom is missing");
-		
-		double psi = torsionAngle(a_N,a_CA,a_C,b_N);
-		return psi ;
 
-			}
+		return torsionAngle(a_N,a_CA,a_C,b_N);
 
-	/** 
+	}
+
+	/**
 	 * Test if two amino acids are connected, i.e.
 	 * if the distance from C to N < 2.5 Angstrom.
-	 * 
+	 *
 	 * If one of the AminoAcids has an atom missing, returns false.
 	 *
 	 * @param a  an AminoAcid object
 	 * @param b  an AminoAcid object
 	 * @return true if ...
-	 */    
-	public static final boolean isConnected(AminoAcid a, AminoAcid b)
-
-	{
+	 */
+	public static final boolean isConnected(AminoAcid a, AminoAcid b) {
 		Atom C = null ;
 		Atom N = null;
-		
+
 		C = a.getC();
 		N = b.getN();
-		
+
 		if ( C == null || N == null)
 			return false;
-		
+
 		// one could also check if the CA atoms are < 4 A...
 		double distance = getDistance(C,N);
-		if ( distance < 2.5) { 
-			return true ;
-		} else {
-			return false ;
-		}
+		return distance < 2.5;
 	}
 
 
 
 	/** rotate a single atom aroud a rotation matrix.
 	 * matrix must be a 3x3 matrix.
-	 * 
+	 *
 	 * If the matrix is indexed m[row][col], then the matrix will be
 	 * pre-multiplied (y=atom*M)
 	 * @param atom atom to be rotated
@@ -386,9 +359,8 @@ public class Calc {
 	 */
 	public static final void rotate(Structure structure, double[][] rotationmatrix)
 			throws StructureException
-			{
-		double[][]m = rotationmatrix;
-		if ( m.length != 3 ) {
+	{
+		if ( rotationmatrix.length != 3 ) {
 			throw new StructureException ("matrix does not have size 3x3 !");
 		}
 		AtomIterator iter = new AtomIterator(structure) ;
@@ -396,7 +368,7 @@ public class Calc {
 			Atom atom = iter.next() ;
 			Calc.rotate(atom,rotationmatrix);
 		}
-			}
+	}
 
 	/** rotate a structure .
 	 *
@@ -404,11 +376,9 @@ public class Calc {
 	 * @param rotationmatrix an array (3x3) of double representing the rotation matrix. 
 	 * @throws StructureException ...
 	 */
-	public static final void rotate(Group group, double[][] rotationmatrix)
-			throws StructureException
-			{
-		double[][]m = rotationmatrix;
-		if ( m.length != 3 ) {
+	public static final void rotate(Group group, double[][] rotationmatrix) throws StructureException {
+
+		if ( rotationmatrix.length != 3 ) {
 			throw new StructureException ("matrix does not have size 3x3 !");
 		}
 		AtomIterator iter = new AtomIterator(group) ;
@@ -419,10 +389,10 @@ public class Calc {
 			rotate(atom,rotationmatrix);
 
 		}
-			}
+	}
 
 	/** Rotate an atom around a Matrix object.
-	 * 
+	 *
 	 * @param atom atom to be rotated
 	 * @param m rotation matrix to be applied to the atom
 	 */
@@ -443,7 +413,7 @@ public class Calc {
 	}
 
 	/** Rotate a group object.
-	 * 
+	 *
 	 * @param group  a group to be rotated
 	 * @param m a Matrix object representing the rotation matrix
 	 */
@@ -460,7 +430,7 @@ public class Calc {
 	}
 
 	/** Rotate a structure object.
-	 * 
+	 *
 	 * @param structure the structure to be rotated
 	 * @param m rotation matrix to be applied 
 	 */
@@ -475,7 +445,7 @@ public class Calc {
 		}
 
 	}
-	
+
 	/**
 	 * Transforms an atom object, given a Matrix4d (i.e. the vecmath library 
 	 * double-precision 4x4 rotation+translation matrix)
@@ -483,15 +453,15 @@ public class Calc {
 	 * @param m
 	 */
 	public static final void transform (Atom atom, Matrix4d m) {
-		
+
 		Point3d p = new Point3d(atom.getX(),atom.getY(),atom.getZ());
 		m.transform(p);
-		
+
 		atom.setX(p.x);
 		atom.setY(p.y);
 		atom.setZ(p.z);
 	}
-	
+
 	/**
 	 * Transforms a group object, given a Matrix4d (i.e. the vecmath library 
 	 * double-precision 4x4 rotation+translation matrix)
@@ -507,7 +477,7 @@ public class Calc {
 
 		}
 	}
-	
+
 	/**
 	 * Transforms a structure object, given a Matrix4d (i.e. the vecmath library 
 	 * double-precision 4x4 rotation+translation matrix)
@@ -523,7 +493,7 @@ public class Calc {
 
 		}
 	}
-	
+
 	/**
 	 * Transforms a chain object, given a Matrix4d (i.e. the vecmath library 
 	 * double-precision 4x4 rotation+translation matrix)
@@ -531,7 +501,7 @@ public class Calc {
 	 * @param m
 	 */
 	public static final void transform (Chain chain, Matrix4d m) {
-		
+
 		for (Group g:chain.getAtomGroups()) {
 			for (Atom atom: g.getAtoms()) {
 				transform(atom,m);
@@ -546,12 +516,12 @@ public class Calc {
 	 * @param v
 	 */
 	public static final void translate (Atom atom, Vector3d v) {
-		
+
 		atom.setX(atom.getX()+v.x);
 		atom.setY(atom.getY()+v.y);
 		atom.setZ(atom.getZ()+v.z);
 	}
-	
+
 	/**
 	 * Translates a group object, given a Vector3d (i.e. the vecmath library 
 	 * double-precision 3-d vector)
@@ -567,7 +537,7 @@ public class Calc {
 
 		}
 	}
-	
+
 	/**
 	 * Translates a Structure object, given a Vector3d (i.e. the vecmath library 
 	 * double-precision 3-d vector)
@@ -583,9 +553,9 @@ public class Calc {
 
 		}
 	}
-	
+
 	/** calculate structure + Matrix coodinates ... 
-	 * 
+	 *
 	 * @param s the structure to operate on
 	 * @param matrix a Matrix object
 	 */
@@ -644,9 +614,9 @@ public class Calc {
 		while (iter.hasNext() ) {
 			Atom atom = null ;
 
-			atom = iter.next()  ;	    
+			atom = iter.next()  ;
 
-			Atom natom = add(atom,a);	   
+			Atom natom = add(atom,a);
 			double x = natom.getX();
 			double y = natom.getY() ;
 			double z = natom.getZ();
@@ -658,13 +628,13 @@ public class Calc {
 	}
 
 	/** Shift a vector.
-	 * 
+	 *
 	 * @param a vector a
 	 * @param b vector b
 	 */
 	public static final void shift(Atom a, Atom b){
 
-		Atom natom = add(a,b);      
+		Atom natom = add(a,b);
 		double x = natom.getX();
 		double y = natom.getY() ;
 		double z = natom.getZ();
@@ -684,9 +654,9 @@ public class Calc {
 		while (iter.hasNext() ) {
 			Atom atom = null ;
 
-			atom = iter.next()  ;     
+			atom = iter.next()  ;
 
-			Atom natom = add(atom,a);       
+			Atom natom = add(atom,a);
 			double x = natom.getX();
 			double y = natom.getY() ;
 			double z = natom.getZ();
@@ -711,8 +681,7 @@ public class Calc {
 		coords[1] = 0;
 		coords[2] = 0 ;
 
-		for (int i =0 ; i < atomSet.length; i++){
-			Atom a = atomSet[i];
+		for (Atom a : atomSet) {
 			coords[0] += a.getX();
 			coords[1] += a.getY();
 			coords[2] += a.getZ();
@@ -733,8 +702,7 @@ public class Calc {
 		Atom center = new AtomImpl();
 
 		float totalMass = 0.0f;
-		for (int i = 0, n = points.length; i < n; i++) {
-			Atom a = points[i];
+		for (Atom a : points) {
 			float mass = a.getElement().getAtomicMass();
 			totalMass += mass;
 			center = scaleAdd(mass, a, center);
@@ -843,7 +811,7 @@ public class Calc {
 	/** Center the atoms at the Centroid. 
 	 * @param atomSet a set of Atoms
 	 * @return an Atom representing the Centroid of the set of atoms
-	 * @throws StructureException 
+	 * @throws StructureException
 	 * */
 	public static final Atom[] centerAtoms(Atom[] atomSet) throws StructureException {
 
@@ -854,7 +822,7 @@ public class Calc {
 	/** Center the atoms at the Centroid, if the centroid is already know.
 	 * @param atomSet a set of Atoms
 	 * @return an Atom representing the Centroid of the set of atoms
-	 * @throws StructureException 
+	 * @throws StructureException
 	 * */
 	public static final Atom[] centerAtoms(Atom[] atomSet, Atom centroid) throws StructureException {
 
@@ -874,13 +842,13 @@ public class Calc {
 
 
 	/** creates a virtual C-beta atom. this might be needed when working with GLY
-	 * 
+	 *
 	 * thanks to Peter Lackner for a python template of this method.
 	 * @param amino the amino acid for which a "virtual" CB atom should be calculated 
 	 * @return a "virtual" CB atom
 	 * @throws StructureException
 	 */
-	public static final Atom createVirtualCBAtom(AminoAcid amino) 
+	public static final Atom createVirtualCBAtom(AminoAcid amino)
 			throws StructureException{
 
 		AminoAcid  ala = StandardAminoAcid.getAminoAcid("ALA");
@@ -913,12 +881,12 @@ public class Calc {
 		virtualCB.setName("CB");
 
 		return virtualCB;
-	}    
+	}
 
 
 	/**Get euler angles for a matrix given in ZYZ convention.
 	 * (as e.g. used by Jmol)
-	 * 
+	 *
 	 * @param m the rotation matrix
 	 * @return the euler values for a rotation around Z, Y, Z in degrees...
 	 */
@@ -943,10 +911,10 @@ public class Calc {
 	 *   Coordinate System: right hand
 	 *   Positive angle: right hand
 	 *   Order of euler angles: heading first, then attitude, then bank
-	 *   
+	 *
 	 * @param m the rotation matrix
 	 * @return a array of three doubles containing the three euler angles in radians
-	 */   
+	 */
 	public static final double[] getXYZEuler(Matrix m){
 		double heading, attitude, bank;
 

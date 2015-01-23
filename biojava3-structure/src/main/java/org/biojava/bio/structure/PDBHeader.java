@@ -1,5 +1,9 @@
 package org.biojava.bio.structure;
 
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,10 +17,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /** A class that contains PDB Header information.
@@ -75,7 +75,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 */
 	@Override
 	public String toString(){
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 
 		try {
 
@@ -83,23 +83,17 @@ public class PDBHeader implements PDBRecord, Serializable{
 			Class<?> c = Class.forName(PDBHeader.class.getName());
 			Method[] methods  = c.getMethods();
 
-			for (int i = 0; i < methods.length; i++) {
-				Method m = methods[i];
-
+			for (Method m : methods) {
 				String name = m.getName();
 
-				if ( name.substring(0,3).equals("get")) {
-					if (name.equals("getClass"))
+				if (name.substring(0, 3).equals("get")) {
+					if (name.equals("getClass")) {
 						continue;
-					Object o  = m.invoke(this, new Object[]{});
-					if ( o != null){
-						buf.append(name.substring(3,name.length()));
-						buf.append(": " + o + " ");
-						//if ( o instanceof Date) {
-						//    buf.append(": " + FlatFileInstallation.dateFormat.format(o) + " ");
-						//} else  {
-						//    buf.append(": " + o + " ");
-						//}
+					}
+					Object o = m.invoke(this);
+					if (o != null) {
+						buf.append(name.substring(3, name.length()));
+						buf.append(": ").append(o).append(" ");
 					}
 				}
 			}
@@ -234,8 +228,6 @@ public class PDBHeader implements PDBRecord, Serializable{
 						i++;
 					data = data.substring(i);
 					charFound = true;
-					//System.out.println(thisLine);
-					//System.out.println(title);
 					break;
 				}
 			}
@@ -274,7 +266,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		}
 
 		// last line...
-		if ( data.trim().length() > 0){
+		if (!data.trim().isEmpty()){
 			buf.append(lineStart);
 			buf.append(count);
 			int filledLeft = 10;
@@ -303,10 +295,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 		String classification = getClassification();
 
-		if (
-				(classification ==null) ||
-				(classification.length() == 0))
-			return;
+		if (classification == null || classification.isEmpty()) return;
 
 		// we can;t display this line since the classification is not there...
 
@@ -352,7 +341,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 		String title = getTitle();
 
-		if ( (title == null) || ( title.trim().length() == 0) )
+		if ( (title == null) || (title.trim().isEmpty()) )
 			return;
 
 		printMultiLine(buf, "TITLE    ", title,' ');
@@ -391,28 +380,28 @@ public class PDBHeader implements PDBRecord, Serializable{
 			Class<?> c = Class.forName(PDBHeader.class.getName());
 			Method[] methods  = c.getMethods();
 
-			for (int i = 0; i < methods.length; i++) {
-				Method m = methods[i];
+			for (Method m : methods) {
 				String name = m.getName();
 
-				if ( name.substring(0,3).equals("get")) {
-					if (name.equals("getClass"))
+				if (name.substring(0, 3).equals("get")) {
+					if (name.equals("getClass")) {
 						continue;
-					Object a  = m.invoke(this,  new Object[]{});
-					Object b  = m.invoke(other, new Object[]{});
-					if ( a == null ){
-						if ( b == null ){
+					}
+					Object a = m.invoke(this);
+					Object b = m.invoke(other);
+					if (a == null) {
+						if (b == null) {
 							continue;
 						} else {
 							logger.warn(name + " a is null, where other is " + b);
 							return false;
 						}
 					}
-					if ( b == null) {
+					if (b == null) {
 						logger.warn(name + " other is null, where a is " + a);
 						return false;
 					}
-					if (! (a.equals(b))){
+					if (!(a.equals(b))) {
 						logger.warn("mismatch with " + name + " >" + a + "< >" + b + "<");
 						return false;
 					}
@@ -467,25 +456,6 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.depDate = depDate;
 	}
 
-	@Deprecated
-	/**
-	 * Use #getExperimentalTechniques() instead
-	 * @return
-	 */
-	public String getTechnique() {
-		if (techniques==null) return null;
-		return techniques.iterator().next().getName();
-	}
-
-	@Deprecated
-	/**
-	 * Use #setExperimentalTechnique() instead
-	 * @param technique
-	 */
-	public void setTechnique(String technique) {
-		setExperimentalTechnique(technique);
-	}
-	
 	/**
 	 * Return the Set of ExperimentalTechniques, usually the set is of size 1 except for hybrid
 	 * experimental techniques when the Set will contain 2 or more values
@@ -586,11 +556,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 * @return flag if a JournalArticle could be found.
 	 */
 	public boolean hasJournalArticle() {
-        if (this.journalArticle != null) {
-            return true;
-        }
-        return false;
-    }
+		return this.journalArticle != null;
+	}
 
     /**
      * Get the associated publication as defined by the JRNL records in a PDB

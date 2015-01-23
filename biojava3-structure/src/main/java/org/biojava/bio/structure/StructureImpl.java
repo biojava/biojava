@@ -23,16 +23,15 @@
  */
 package org.biojava.bio.structure;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.bio.structure.io.CompoundFinder;
 import org.biojava.bio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of a PDB Structure. This class
@@ -176,7 +175,7 @@ public class StructureImpl implements Structure, Serializable {
 					newChain.setCompound(newCompound);
 					newCompound.addChain(newChain);
 				} catch (StructureException e) {
-					logger.error("Could not find chain id {} while cloning Structure's compounds. Something is wrong!");
+					logger.error("Could not find chain id {} while cloning Structure's compounds. Something is wrong!", e);
 				}
 			}
 			newCompoundList.add(newCompound);
@@ -210,15 +209,14 @@ public class StructureImpl implements Structure, Serializable {
 		// now iterate over all groups in this chain.
 		// in order to find the amino acid that has this pdbRenum.
 
-		Iterator<Group> giter = groups.iterator();
-		while (giter.hasNext()){
-			Group g =  giter.next();
+		for (Group g : groups) {
 			String rnum = g.getResidueNumber().toString();
 			//System.out.println(g + " >" + rnum + "< >" + pdbResnum + "<");
 			// we only mutate amino acids
 			// and ignore hetatoms and nucleotides in this case
-			if (rnum.equals(pdbResnum))
+			if (rnum.equals(pdbResnum)) {
 				return g;
+			}
 		}
 
 		throw new StructureException("could not find group " + pdbResnum +
@@ -242,10 +240,7 @@ public class StructureImpl implements Structure, Serializable {
 		List<Chain> chains = getChains(modelnr);
 
 		// iterate over all chains.
-		Iterator<Chain> iter = chains.iterator();
-		while (iter.hasNext()){
-			Chain c = iter.next();
-
+		for (Chain c : chains) {
 			if (c.getChainID().equals(chainId)) {
 				return c;
 			}
@@ -304,7 +299,7 @@ public class StructureImpl implements Structure, Serializable {
 	public void addChain(Chain chain, int modelnr) {
 		// if model has not been initialized, init it!
 		chain.setParent(this);
-		if ( models.size() == 0  ) {
+		if (models.isEmpty()) {
 			List<Chain> model = new ArrayList<Chain>() ;
 			model.add(chain);
 			models.add(model);
@@ -334,9 +329,7 @@ public class StructureImpl implements Structure, Serializable {
 
 		List<Chain> model  =  models.get(modelnr);
 
-		Chain chain =   model.get (number );
-
-		return chain ;
+		return model.get (number );
 	}
 
 
@@ -368,7 +361,7 @@ public class StructureImpl implements Structure, Serializable {
 
 		//System.out.println("model size:" + models.size());
 
-		if (models.size() ==0){
+		if (models.isEmpty()){
 			models.add(model);
 		} else {
 			models.set(position, model);
@@ -381,7 +374,7 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public String toString(){
 		String newline = System.getProperty("line.separator");
-		StringBuffer str = new StringBuffer();
+		StringBuilder str = new StringBuilder();
 		str.append("structure ");
 		str.append(name);
 		str.append(" ");
@@ -394,7 +387,7 @@ public class StructureImpl implements Structure, Serializable {
 			str.append(newline) ;
 		}
 
-		str.append(pdbHeader.toString());
+		str.append(pdbHeader);
 		str.append(newline) ;
 
 		for (int i=0;i<nrModels();i++){
@@ -414,7 +407,7 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> hgr = cha.getAtomGroups(GroupType.HETATM);
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
-				str.append("chain " + j + ": >"+cha.getChainID()+"< ");
+				str.append("chain ").append(j).append(": >").append(cha.getChainID()).append("< ");
 				if ( cha.getCompound() != null){
 					Compound comp = cha.getCompound();
 					String molName = comp.getMolName();
@@ -429,18 +422,16 @@ public class StructureImpl implements Structure, Serializable {
 				str.append(" length ATOM: ").append(cha.getAtomLength());
 				str.append(" aminos: ").append(agr.size());
 				str.append(" hetatms: ").append(hgr.size());
-				str.append(" nucleotides: "+ngr.size() + newline);
+				str.append(" nucleotides: ").append(ngr.size()).append(newline);
 			}
 
 		}
-		str.append("DBRefs: "+ dbrefs.size()+ newline);
+		str.append("DBRefs: ").append(dbrefs.size()).append(newline);
 		for (DBRef dbref: dbrefs){
 			str.append(dbref.toPDB()).append(newline);
 		}
 		str.append("Molecules: ").append(newline);
-		Iterator<Compound> iter = compounds.iterator();
-		while (iter.hasNext()){
-			Compound mol = iter.next();
+		for (Compound mol : compounds) {
 			str.append(mol).append(newline);
 		}
 
@@ -455,7 +446,7 @@ public class StructureImpl implements Structure, Serializable {
 	public int size() {
 		int modelnr = 0 ;
 
-		if ( models.size() > 0) {
+		if (!models.isEmpty()) {
 			return models.get(modelnr).size();
 		}
 		else {
@@ -569,8 +560,7 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public List<Chain> getModel(int modelnr) {
 
-		List<Chain> model = models.get(modelnr);
-		return model;
+		return models.get(modelnr);
 	}
 
 
@@ -581,11 +571,10 @@ public class StructureImpl implements Structure, Serializable {
 			throws StructureException{
 
 		List<Chain> chains = getChains(modelnr);
-		Iterator<Chain> iter = chains.iterator();
-		while ( iter.hasNext()){
-			Chain c = iter.next();
-			if ( c.getChainID().equals(chainId))
+		for (Chain c : chains) {
+			if (c.getChainID().equals(chainId)) {
 				return c;
+			}
 		}
 		throw new StructureException("did not find chain with chainId \"" + chainId + "\"" + " for PDB id " + pdb_id);
 
@@ -606,12 +595,7 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public String toPDB() {
 		FileConvert f = new FileConvert(this) ;
-
-		String str = f.toPDB();
-
-
-		return str ;
-
+		return f.toPDB();
 	}
 
 
@@ -620,12 +604,11 @@ public class StructureImpl implements Structure, Serializable {
 		int modelnr = 0;
 
 		List<Chain> chains = getChains(modelnr);
-		Iterator<Chain> iter = chains.iterator();
-		while ( iter.hasNext()){
-			Chain c = iter.next();
+		for (Chain c : chains) {
 			// we check here with equals because we might want to distinguish between upper and lower case chains!
-			if ( c.getChainID().equals(chainId))
+			if (c.getChainID().equals(chainId)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -808,7 +791,7 @@ public class StructureImpl implements Structure, Serializable {
 
 	/**
 	 * Sets crystallographic information for this structure
-	 * @param PDBCrystallographicInfo crystallographic information
+	 * @param crystallographicInfo crystallographic information
 	 * @since 3.2
 	 */
 

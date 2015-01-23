@@ -26,16 +26,17 @@
 
 package org.biojava.bio.structure.align.fatcat.calc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.SVDSuperimposer;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** a class that performs calculations on AFPCHains
  * 
@@ -47,7 +48,7 @@ public class AFPCalculator
 	public static final boolean debug = FatCatAligner.debug;
 
 
-	public static final  void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2){
+	public static final  void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2) throws StructureException {
 
 
 
@@ -64,8 +65,6 @@ public class AFPCalculator
 		int n0, n, n1, n2;
 		double  filter1;
 		double rmsd = 0;
-		//double[] r = new double[9]; // rotation matrix
-		//double[] t = new double[3]; // shift vector
 
 		Matrix r = new Matrix(3,3);
 		Atom   t = new AtomImpl();
@@ -117,8 +116,6 @@ public class AFPCalculator
 				//
 				rmsd = getRmsd(ca1,ca2,fragLen, p1,p2,r,t);
 
-				//printf("afp %d: p1 %d p2 %d rmsd %f end-to-end dis %f\n", afpSet.size(), p1, p2, rmsd, filter1);
-
 				if(rmsd < rmsdCut)      {
 					AFP     afptmp = new AFP();
 					afptmp.setP1(p1);
@@ -157,14 +154,10 @@ public class AFPCalculator
 	{
 
 		double min = 99;
-		try {
 			double dist1 = Calc.getDistance(ca1[p1b], ca1[p1e]);
 			double dist2 = Calc.getDistance(ca2[p2b], ca2[p2e]);
 			min = dist1 - dist2;
 
-		} catch (Exception e){
-			e.printStackTrace();
-		}
 		return Math.abs(min);
 	}
 
@@ -187,21 +180,14 @@ public class AFPCalculator
 		/// DO NOT DO Math.round() this will give different results to FATCAT....
 		int     d4 = (int)(0.3 * minLen);
 
-		if(d3 < d4)     {
-			//if (debug){
-			//   System.out.println("filterTerminal: " + d3 + " " + d4 +" " + p1b + " " + p1e + " " + p2b + " " +  p2e + " " + fragLen + " " + minLen );
-			//}
-			return true;
-		}
+		return d3 < d4;
 
-		return false;
 	}
 
-	private static final double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen, int p1, int p2, Matrix m, Atom t) {
+	private static final double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen, int p1, int p2, Matrix m, Atom t) throws StructureException {
 
 
 		double rmsd = 99.9;
-		try {
 			Atom[] catmp1 = getFragment(ca1, p1, fragLen,false);
 			Atom[] catmp2 = getFragment(ca2, p2, fragLen,true); // clone the atoms for fragment 2 so we can manipulate them...
 
@@ -229,10 +215,6 @@ public class AFPCalculator
 			}
 
 			rmsd = SVDSuperimposer.getRMS(catmp1,catmp2);
-
-		} catch (Exception e){
-			e.printStackTrace();
-		}
 
 		return rmsd;
 	}

@@ -37,10 +37,7 @@ import java.util.Map;
  * @version %I% %G%
  *
  */
-public class   AminoAcidImpl
-extends    HetatomImpl
-implements AminoAcid, Serializable
-{
+public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializable {
 
 	private static final long serialVersionUID = -6018854413829044230L;
 
@@ -160,7 +157,7 @@ implements AminoAcid, Serializable
 		if (pdb_flag) {
 			str = str + " atoms: "+atoms.size();
 		}
-		if ( getAltLocs().size()>0 )
+		if (!getAltLocs().isEmpty())
 			str += " has altLocs :" + getAltLocs().size(); 
 
 		return str ;
@@ -183,7 +180,8 @@ implements AminoAcid, Serializable
 	 * @return  and identical copy of this Group object
 	 */
 	@Override
-	public Object clone(){
+	public Object clone() {
+
 		AminoAcidImpl n = new AminoAcidImpl();
 		n.setPDBFlag(has3D());		
 		n.setResidueNumber(getResidueNumber());
@@ -194,8 +192,8 @@ implements AminoAcid, Serializable
 		n.setRecordType(recordType);
 
 		// copy the atoms
-		for (int i=0;i<atoms.size();i++){
-			Atom atom = (Atom) atoms.get(i).clone();
+		for (Atom atom1 : atoms) {
+			Atom atom = (Atom) atom1.clone();
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}
