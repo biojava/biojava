@@ -77,6 +77,7 @@ public class CrystalBuilder {
 
 	public CrystalBuilder(Structure structure) {
 		this.structure = structure;
+		
 		this.crystallographicInfo = structure.getCrystallographicInfo();
 
 		this.numChainsAu = structure.getChains().size();
@@ -136,6 +137,16 @@ public class CrystalBuilder {
 
 
 		StructureInterfaceList set = new StructureInterfaceList();
+		
+		// certain structures in the PDB are not macromolecules (contain no polymeric chains at all), e.g. 1ao2
+		// with the current mmCIF parsing, those will be empty since purely non-polymeric chains are removed
+		// see commit e9562781f23da0ebf3547146a307d7edd5741090
+		if (structure.getChains().size()==0) {
+			logger.warn("No chains present in the structure! No interfaces will be calculated");
+			return set;
+		}
+		
+
 
 		// initialising the visited ArrayList for keeping track of symmetry redundancy
 		initialiseVisited();
