@@ -847,29 +847,37 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 				}
 			}
-			// a final check before adding the chains: some bad entries contain water-only 
-			// chains, which does not fit the standard practices, e.g. 3o6j has chain Z with 1 single water molecule
-			Iterator<Chain> it = pdbChains.iterator();
-			while (it.hasNext()) {
-				Chain c = it.next();
-				if (StructureTools.isChainWaterOnly(c)) {
-					logger.warn("Chain {} (internal chain id {}, {} atom groups) is composed of water molecules only. Removing it.", 
-							c.getChainID(), c.getInternalChainID(), c.getAtomGroups().size());
-					it.remove();
-				}
-			}
+
 			structure.setModel(i,pdbChains);
 			
+			Iterator<Chain> it = pdbChains.iterator();
 			// finally setting chains to compounds and compounds to chains now that we have the final chains
-			for (Chain chain:pdbChains) {
+			while (it.hasNext()) {
+				Chain chain = it.next();
 				String entityId = asymId2entityId.get(chain.getInternalChainID());
 				int eId = Integer.parseInt(entityId);
+				// We didn't add above compounds for nonpolymeric entities, thus here if a chain is nonpolymeric 
+				// its compound won't be found. In biojava Structure data model a nonpolymeric chain does not really
+				// make much sense, since all small molecules are associated to a polymeric chain (the same data  
+				// model as PDB files).
+				// In any case it happens in rare cases that a non-polymeric chain is not associated to any polymeric
+				// chain, e.g. 
+				//   - 2uub: asym_id X, chainId Z, entity_id 24: fully non-polymeric but still with its own chainId
+				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
+				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone 
+				// We will discard those chains here, because they don't fit into the current data model and thus
+				// can cause problems, e.g. 
+				//  a) they would not be linked to a compound and give null pointers
+				//  b) StructureTools.getAllAtoms() methods that return all atoms except waters would have 
+				//     empty lists for water-only chains
 				Compound compound = structure.getCompoundById(eId);
 				if (compound==null) {
-					logger.warn("Could not find a compound for entity_id {} for adding chain id {} (internal chain id {}) to it",
-							eId,chain.getChainID(),chain.getInternalChainID());
+					logger.warn("Could not find a compound for entity_id {} corresponding to chain id {} (asym id {})."
+							+ " Most likely it is a purely non-polymeric chain ({} groups). Removing it from this structure.",
+							eId,chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
+					it.remove();
 				} else {
-					logger.debug("Adding chain with chain id {} (internal chain id {}) to compound with entity_id {}",
+					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
 							chain.getChainID(), chain.getInternalChainID(), eId);
 					compound.addChain(chain);
 					chain.setCompound(compound);
