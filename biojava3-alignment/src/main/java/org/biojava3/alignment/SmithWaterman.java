@@ -23,8 +23,6 @@
 
 package org.biojava3.alignment;
 
-import java.util.List;
-
 import org.biojava3.alignment.template.AbstractPairwiseSequenceAligner;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
@@ -32,6 +30,8 @@ import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.List;
 
 /**
  * Smith and Waterman defined an algorithm for pairwise local sequence alignments (best match of sections from each
@@ -49,7 +49,7 @@ public class SmithWaterman<S extends Sequence<C>, C extends Compound> extends Ab
      * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
      */
     public SmithWaterman() {
-        super(null, null, null, null, true);
+        super(null, null, null, null, AlignmentMode.LOCAL);
     }
 
     /**
@@ -61,7 +61,7 @@ public class SmithWaterman<S extends Sequence<C>, C extends Compound> extends Ab
      * @param subMatrix the set of substitution scores used during alignment
      */
     public SmithWaterman(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        super(query, target, gapPenalty, subMatrix, true);
+        super(query, target, gapPenalty, subMatrix, AlignmentMode.LOCAL);
     }
 
     // method for AbstractMatrixAligner
