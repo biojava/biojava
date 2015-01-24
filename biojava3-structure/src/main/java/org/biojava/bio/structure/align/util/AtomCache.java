@@ -20,23 +20,12 @@
  */
 package org.biojava.bio.structure.align.util;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomPositionMap;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueRange;
+import org.biojava.bio.structure.ResidueRangeAndLength;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -63,6 +52,18 @@ import org.biojava3.core.util.InputStreamProvider;
 import org.biojava3.structure.StructureIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A utility class that provides easy access to Structure objects. If you are running a script that is frequently
@@ -548,10 +549,10 @@ public class AtomCache {
 		// because ligands sometimes occur after TER records in PDB files, we may need to add some ligands back in
 		// specifically, we add a ligand if and only if it occurs within the domain
 		AtomPositionMap map = null;
-		List<ResidueRange> rrs = null;
+		List<ResidueRangeAndLength> rrs = null;
 		if (strictLigandHandling) {
 			map = new AtomPositionMap(StructureTools.getAllAtomArray(fullStructure), AtomPositionMap.ANYTHING_MATCHER);
-			rrs = ResidueRange.parseMultiple(domain.getRanges(), map);
+			rrs = ResidueRangeAndLength.parseMultiple(domain.getRanges(), map);
 		}
 		for (Chain chain : fullStructure.getChains()) {
 			if (!structure.hasChain(chain.getChainID())) {
@@ -627,7 +628,7 @@ public class AtomCache {
 
 	/**
 	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 * 
+	 *
 	 * @return flag
 	 * @deprecated Use {@link #getFetchBehavior()}
 	 */
@@ -638,7 +639,7 @@ public class AtomCache {
 
 	/**
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
+	 *
 	 * @return the fetchCurrent
 	 * @deprecated Use {@link FileParsingParameters#getObsoleteBehavior()} instead (4.0.0)
 	 */
@@ -651,7 +652,7 @@ public class AtomCache {
 	 * forces the cache to fetch the file if its status is OBSOLETE. This feature has a higher priority than
 	 * {@link #setFetchCurrent(boolean)}.<br>
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
+	 *
 	 * @return the fetchFileEvenIfObsolete
 	 * @author Amr AL-Hossary
 	 * @see #fetchCurrent
@@ -727,7 +728,7 @@ public class AtomCache {
 	 * if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation. The
 	 * {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.<br>
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
+	 *
 	 * @param fetchCurrent
 	 *            the fetchCurrent to set
 	 * @author Amr AL-Hossary

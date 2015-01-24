@@ -23,22 +23,20 @@
 
 package org.biojava.bio.structure;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NavigableMap;
 
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * A unit test for {@link ResidueRange}.
@@ -51,7 +49,7 @@ public class ResidueRangeTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		cache = new AtomCache();
+		cache = new AtomCache(); // TODO Should mock instead of depending on real data from AtomCache
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 	}
 
@@ -65,46 +63,50 @@ public class ResidueRangeTest {
 	}
 
 	@Test
-	public void testWholeChainWithMap() throws IOException, StructureException {
+	public void testPartialChainWithMap() throws IOException, StructureException {
 		String pdbId = "1cph";
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
-		String range = "B:";
-		ResidueRange rr = ResidueRange.parse(range, map);
+		String range = "B:1-30";
+		ResidueRange rr = ResidueRangeAndLength.parse(range, map);
 		ResidueNumber start = new ResidueNumber("B", 1, null);
 		ResidueNumber end = new ResidueNumber("B", 30, null);
 		assertEquals("Wrong chain Id", "B", rr.getChainId());
 		assertEquals("Wrong start", start, rr.getStart());
 		assertEquals("Wrong end", end, rr.getEnd());
 	}
-	
+
+	@Test
+	public void testWholeChainWithMap() throws IOException, StructureException {
+		String pdbId = "1cph";
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+		String range = "B:";
+		ResidueRange rr = ResidueRangeAndLength.parse(range, map);
+		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertNull("Wrong start", rr.getStart());
+		assertNull("Wrong end", rr.getEnd());
+	}
+
 	/**
 	 * Tests creating ResidueRanges and calculating their lengths.
 	 */
 	@Test
-	public void testBasic() {
+	public void testWithLengths() throws IOException, StructureException {
 		String[] ids = new String[] {"1w0p", "3qq3", "3chc", "2ei7"}; // more: , "2qbr"
 		String[] chains = new String[] {"A", "B", "A", "L"};
 		ResidueNumber[] starts = new ResidueNumber[] {new ResidueNumber("A", 5, ' '), new ResidueNumber("B", 10, 's'), new ResidueNumber("A", 15, 'm'), new ResidueNumber("L", 44, ' ')};
 		ResidueNumber[] ends = new ResidueNumber[] {new ResidueNumber("A", 117, ' '), new ResidueNumber("B", 200, 's'), new ResidueNumber("A", 464, 'q'), new ResidueNumber("L", 254, 't')};
-		Integer[] lengths = new Integer[] {117-5, 200-10, 111, null};
+		int[] lengths = new int[] {117-5, 200-10, 111, 55};
 		int totalLength = 0;
-		List<ResidueRange> ranges = new ArrayList<ResidueRange>(ids.length);
+		List<ResidueRangeAndLength> ranges = new ArrayList<ResidueRangeAndLength>(ids.length);
 		for (int i = 0; i < ids.length; i++) {
-			ResidueRange rr = new ResidueRange(chains[i], starts[i], ends[i], lengths[i]);
+			ResidueRangeAndLength rr = new ResidueRangeAndLength(chains[i], starts[i], ends[i], lengths[i]);
 			assertEquals("The chain is incorrect", chains[i], rr.getChainId());
 			assertEquals("The start is incorrect", starts[i], rr.getStart());
 			assertEquals("The end is incorrect", ends[i], rr.getEnd());
 			assertEquals("The length is incorrect", lengths[i], rr.getLength());
 			ranges.add(rr);
-			if (lengths[i] != null) {
-				totalLength += lengths[i];
-				assertEquals("Total length is wrong", totalLength, ResidueRange.calcLength(ranges));
-			} else {
-				try {
-					ResidueRange.calcLength(ranges); // should fail
-					fail("Lengths should be undefined");
-				} catch (IllegalArgumentException e) {}
-			}
+			totalLength += lengths[i];
+			assertEquals("Total length is wrong", totalLength, ResidueRangeAndLength.calcLength(ranges));
 		}
 	}
 	
@@ -147,20 +149,18 @@ public class ResidueRangeTest {
 		//String pdbId1 = "2eke";
 		String string1 = "C_1023-1063,C_1064-1084";
 		List<ResidueRange> list1 = ResidueRange.parseMultiple(string1);
-		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1023, null), new ResidueNumber("C", 1063, null), null), list1.get(0));
-		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1064, null), new ResidueNumber("C", 1084, null), null), list1.get(1));
-		assertEquals(null, list1.get(0).getLength());
-		assertEquals(null, list1.get(1).getLength());
+		assertEquals(new ResidueRange("C", new ResidueNumber("C", 1023, null), new ResidueNumber("C", 1063, null)), list1.get(0));
+		assertEquals(new ResidueRange("C", new ResidueNumber("C", 1064, null), new ResidueNumber("C", 1084, null)), list1.get(1));
 
 		//String pdbId = "1qdm";
 		String string2 = "A_3S-37S,A_65S-99S";
 		List<ResidueRange> list2 = ResidueRange.parseMultiple(string2);
-		assertEquals(new ResidueRange('A', new ResidueNumber("A", 3, 'S'), new ResidueNumber("A", 37, 'S'), null), list2.get(0));
-		assertEquals(new ResidueRange('A', new ResidueNumber("A", 65, 'S'), new ResidueNumber("A", 99, 'S'), null), list2.get(1));
+		assertEquals(new ResidueRange("A", new ResidueNumber("A", 3, 'S'), new ResidueNumber("A", 37, 'S')), list2.get(0));
+		assertEquals(new ResidueRange("A", new ResidueNumber("A", 65, 'S'), new ResidueNumber("A", 99, 'S')), list2.get(1));
 	}
 
 	/**
-	 * Tests {@link ResidueRange#parseMultiple(String, NavigableMap)}.
+	 * Tests {@link org.biojava.bio.structure.ResidueRangeAndLength#parseMultiple(String, org.biojava.bio.structure.AtomPositionMap)}.
 	 * @throws StructureException 
 	 * @throws IOException 
 	 */
@@ -172,16 +172,10 @@ public class ResidueRangeTest {
 		String pdbId1 = "2eke";
 		map = new AtomPositionMap(cache.getAtoms(pdbId1));
 		String string1 = "C_1023-1063,C_1064-1084";
-		List<ResidueRange> list1 = ResidueRange.parseMultiple(string1, map);
-		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1023, null), new ResidueNumber("C", 1063, null), null), list1.get(0));
-		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1064, null), new ResidueNumber("C", 1084, null), null), list1.get(1));
-		assertEquals(1063-1023, list1.get(0).getLength().intValue()); // no insertion codes
-		assertEquals(1084-1064, list1.get(1).getLength().intValue());
+		List<ResidueRangeAndLength> list1 = ResidueRangeAndLength.parseMultiple(string1, map);
+		assertEquals(new ResidueRangeAndLength("C", new ResidueNumber("C", 1023, null), new ResidueNumber("C", 1063, null), 1063-1023), list1.get(0));
+		assertEquals(new ResidueRangeAndLength("C", new ResidueNumber("C", 1064, null), new ResidueNumber("C", 1084, null), 1084-1064), list1.get(1));
 
-		list1 = ResidueRange.parseMultiple(string1, map);
-		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1023, null), new ResidueNumber("C", 1063, null), null), list1.get(0));
-		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1064, null), new ResidueNumber("C", 1084, null), null), list1.get(1));
-		
 	}
 	
 	@Test

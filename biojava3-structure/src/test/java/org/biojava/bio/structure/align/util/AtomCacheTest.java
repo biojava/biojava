@@ -20,24 +20,10 @@
  */
 package org.biojava.bio.structure.align.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import org.biojava.bio.structure.AtomPositionMap;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueRange;
+import org.biojava.bio.structure.ResidueRangeAndLength;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -50,6 +36,20 @@ import org.biojava.bio.structure.scop.ScopFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -86,7 +86,7 @@ public class AtomCacheTest {
 		String ranges = "A:328-396,B:518-527";
 		Structure whole = cache.getStructure("1h6w");
 		AtomPositionMap map = new AtomPositionMap(StructureTools.getAllAtomArray(whole), AtomPositionMap.ANYTHING_MATCHER);
-		List<ResidueRange> rrs = ResidueRange.parseMultiple(ranges, map);
+		List<ResidueRangeAndLength> rrs = ResidueRangeAndLength.parseMultiple(ranges, map);
 		int expectedLengthA = rrs.get(0).getLength();
 		int expectedLengthB = rrs.get(1).getLength();
 		Structure structure = cache.getStructureForDomain("d1h6w.2");
@@ -106,7 +106,7 @@ public class AtomCacheTest {
 		String ranges = "A:,B:";
 		Structure whole = cache.getStructure("1I3O");
 		AtomPositionMap map = new AtomPositionMap(StructureTools.getAllAtomArray(whole), AtomPositionMap.ANYTHING_MATCHER);
-		List<ResidueRange> rrs = ResidueRange.parseMultiple(ranges, map);
+		List<ResidueRangeAndLength> rrs = ResidueRangeAndLength.parseMultiple(ranges, map);
 		int expectedLengthA = rrs.get(0).getLength();
 		int expectedLengthB = rrs.get(1).getLength();
 		Structure structure = cache.getStructureForDomain("d1i3o.1");
@@ -130,7 +130,7 @@ public class AtomCacheTest {
 		String ranges = "E:";
 		Structure whole = cache.getStructure("1I3O");
 		AtomPositionMap map = new AtomPositionMap(StructureTools.getAllAtomArray(whole), AtomPositionMap.ANYTHING_MATCHER);
-		List<ResidueRange> rrs = ResidueRange.parseMultiple(ranges, map);
+		List<ResidueRangeAndLength> rrs = ResidueRangeAndLength.parseMultiple(ranges, map);
 		int expectedLengthE = rrs.get(0).getLength();
 		Structure structure = cache.getStructureForDomain("d1i3oe_");
 		assertEquals(1, structure.getChains().size());
