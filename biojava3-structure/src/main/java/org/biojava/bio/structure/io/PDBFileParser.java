@@ -2200,6 +2200,18 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			if ( ch == null ) {
 				current_model.add(current_chain);
 			}
+			// removing water-only chains, they don't follow the standard data modeling practices. 
+			// We have to remove them or otherwise they can cause problems down the line, 
+			// e.g. 3o6j has chain Z with a single water molecule
+			Iterator<Chain> it = current_model.iterator();
+			while (it.hasNext()) {
+				Chain c = it.next();
+				if (StructureTools.isChainWaterOnly(c)) {
+					logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
+							c.getChainID(), c.getAtomGroups().size());
+					it.remove();
+				}
+			}
 			structure.addModel(current_model);
 			current_model = new ArrayList<Chain>();
 			current_chain = null;
@@ -2969,6 +2981,18 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			pdbHeader.setJournalArticle(journalArticle);
 		}
 
+		// removing water-only chains, they don't follow the standard data modeling practices. 
+		// We have to remove them or otherwise they can cause problems down the line, 
+		// e.g. 3o6j has chain Z with a single water molecule
+		Iterator<Chain> it = current_model.iterator();
+		while (it.hasNext()) {
+			Chain c = it.next();
+			if (StructureTools.isChainWaterOnly(c)) {
+				logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
+						c.getChainID(), c.getAtomGroups().size());
+				it.remove();
+			}
+		}
 		structure.addModel(current_model);
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);

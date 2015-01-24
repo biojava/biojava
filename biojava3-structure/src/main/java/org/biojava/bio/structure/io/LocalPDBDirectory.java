@@ -690,7 +690,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		for( File searchdir :searchdirs){
 			for( String prefix : prefixes) {
 				for(String ex : getExtensions() ){
-					File f = new File(searchdir,prefix + pdbId + ex) ;
+					File f = new File(searchdir,prefix + pdbId.toLowerCase() + ex) ;
 					if ( f.exists()) {
 						return f;
 					}

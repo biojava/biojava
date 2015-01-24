@@ -126,7 +126,7 @@ public class TestLongPdbVsMmCifParsing {
 	
 	@Test
 	public void testSingle() throws IOException, StructureException {
-		testAll(Arrays.asList("1pgw"));
+		testAll(Arrays.asList("3zyb"));
 	}
 	
 	@After
@@ -426,7 +426,8 @@ public class TestLongPdbVsMmCifParsing {
 
 		// note for getSeqResLength to work one needs the setAlignSeqRes option in the parsers
 		
-		assertEquals("failed for getSeqResLength pdb vs cif:",cPdb.getSeqResLength(),cCif.getSeqResLength());
+		assertEquals("failed for getSeqResLength pdb vs cif (chain "+chainId+"):",
+						cPdb.getSeqResLength(),cCif.getSeqResLength());
 		assertEquals("failed for getSeqResGroups().size pdb vs cif",
 				cPdb.getSeqResGroups().size(), cCif.getSeqResGroups().size());
 		assertEquals("getSeqResLength and getSeqResGroups.size should coincide in pdb:",

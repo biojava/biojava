@@ -547,6 +547,14 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		Pair<Chain> thisChains = getParentChains();
 		Pair<Chain> otherChains = other.getParentChains();
 		
+		if (thisChains.getFirst().getCompound() == null || thisChains.getSecond().getCompound() == null ||
+			otherChains.getFirst().getCompound() == null || otherChains.getSecond().getCompound() == null ) {
+			// this happens in cases like 2uub
+			logger.warn("Found chains with null compounds while comparing interfaces {} and {}. Contact overlap score for them will be 0.",
+					this.getId(), other.getId());
+			return 0;
+		}
+		
 		Pair<Compound> thisCompounds = new Pair<Compound>(thisChains.getFirst().getCompound(), thisChains.getSecond().getCompound());
 		Pair<Compound> otherCompounds = new Pair<Compound>(otherChains.getFirst().getCompound(), otherChains.getSecond().getCompound());
 		

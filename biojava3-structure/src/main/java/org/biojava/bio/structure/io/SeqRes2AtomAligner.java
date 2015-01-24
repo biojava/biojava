@@ -101,7 +101,7 @@ public class SeqRes2AtomAligner {
 			}
 		}
 
-		logger.debug("Could not match SEQRES chainID >" + seqRes.getChainID() + "< to ATOM chains!, size of atom chain: " + atomList.size());
+		logger.info("Could not match SEQRES chainID >" + seqRes.getChainID() + "< to ATOM chains!, size of atom chain: " + atomList.size());
 		return null;
 	}
 
