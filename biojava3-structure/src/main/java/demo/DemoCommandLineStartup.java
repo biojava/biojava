@@ -29,23 +29,13 @@ import org.biojava.bio.structure.align.ce.CeMain;
 public class DemoCommandLineStartup
 {
 
-   public static void main(String[] arg){
+   public static void main(String[] arg) throws Exception {
+
       // demo how to use with command line parameters
       String commandLine = "-file1 /tmp/cd/pdb1cdg.ent.gz -file2 file:///tmp/ti/pdb1tim.ent.gz -printCE";
       String[] args = commandLine.split(" ");
       
       CeMain.main(args);
-      
-      
-      //String[] args = new String[]{"-pdb1","1cdg", "-pdbFilePath","/tmp/", "-pdb2","1tim.B","-printCE", "-showAFPRanges"};
-      
-      //CeMain.main(args);
-            
-      // args = new String[]{"-file1","ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/cd/pdb1cdg.ent.gz","-file2","ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/ti/pdb1tim.ent.gz","-printCE"};
-      
-      //CeMain.main(args);
-      
-      
       
    }
 }

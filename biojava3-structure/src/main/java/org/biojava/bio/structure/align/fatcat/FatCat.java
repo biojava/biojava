@@ -34,6 +34,7 @@ import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatAligner;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.ConfigurationException;
 
 
 public class FatCat
@@ -61,7 +62,7 @@ public class FatCat
     * 
     * @param argv
     */
-   public static void main(String[] argv){
+   public static void main(String[] argv) throws ConfigurationException {
       FatCatUserArgumentProcessor processor = new FatCatUserArgumentProcessor();
       processor.process(argv);
    }
@@ -110,37 +111,5 @@ public class FatCat
          aligner = new FatCatAligner();
       return aligner;
    }
-
-   /** Display the results of an alignment. All input coordinate are not rotated. rotations are done automatically.
-    * 
-    * @param afpChain
-    * @param ca1
-    * @param ca2
-    * @param hetatms
-    * @param nucs
-    * @param hetatms2
-    * @param nucs2
-    * @throws StructureException
-    */
-//   public StructureAlignmentJmol display(AFPChain afpChain, Atom[] ca1, Atom[] ca2,List<Group> hetatms, List<Group>nucs,List<Group> hetatms2, List<Group>nucs2 )
-//   throws StructureException {
-//
-//
-//      FatCatAligner ali = getFatCatAligner();
-//      Group[] twistedGroups = ali.getTwistedGroups();
-//
-//      if ( twistedGroups == null) {	
-//         System.out.println("twisting");
-//         Atom[] ca3 = StructureTools.cloneCAArray(ca2);
-//
-//         // this can happen if the alignment got loaded from a flat file
-//         twistedGroups = AFPTwister.twistOptimized(afpChain, ca1, ca3);
-//         ali.setTwistedGroups(twistedGroups);
-//      }
-//
-//      return DisplayAFP.display(afpChain,twistedGroups, ca1, ca2,hetatms, nucs, hetatms2, nucs2);
-//
-//   }
-
 
 }

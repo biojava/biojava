@@ -1,5 +1,7 @@
 package org.biojava.bio.structure.align.ce;
 
+import org.biojava.bio.structure.align.util.ConfigurationException;
+
 public interface UserArgumentProcessor {
 
 	
@@ -7,7 +9,7 @@ public interface UserArgumentProcessor {
 	 * 
 	 * @param argv
 	 */
-	public void process(String[] argv);
+	public void process(String[] argv) throws ConfigurationException;
 	
 	/**
 	 * Print help about the arguments
