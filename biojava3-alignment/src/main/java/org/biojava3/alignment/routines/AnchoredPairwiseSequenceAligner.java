@@ -99,9 +99,9 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
     	for (int i = 0; i < anchor.length; i++) {
     		anchor[i] = -1;
     	}
-        for (Anchor a : anchors) {
-            anchor[a.getQueryIndex()] = a.getTargetIndex();
-        }
+    	for (int i = 0; i < anchors.size(); i++) {
+    		anchor[anchors.get(i).getQueryIndex()] = anchors.get(i).getTargetIndex();
+    	}
     	return anchor;
     }
 

@@ -63,7 +63,6 @@ public class Alignments {
      */
     public static enum PairwiseSequenceAlignerType {
         GLOBAL,              // Needleman-Wunsch/Gotoh
-        SEMIGLOBAL,
         GLOBAL_LINEAR_SPACE, // Guan-Uberbacher
         LOCAL,               // Smith-Waterman/Gotoh
         LOCAL_LINEAR_SPACE   // Smith-Waterman/Gotoh with smart traceback at each maximum
@@ -213,6 +212,8 @@ public class Alignments {
         return getPairwiseAligner(query, target, type, gapPenalty, subMatrix).getPair();
     }
 
+    // default access (package private) factory methods
+
     /**
      * Factory method which sets up a sequence alignment for all {@link Sequence} pairs in the given {@link List}.
      *
@@ -287,6 +288,7 @@ public class Alignments {
     static <E> List<E> getListFromFutures(List<Future<E>> futures) {
         List<E> list = new ArrayList<E>();
         for (Future<E> f : futures) {
+            // TODO when added to ConcurrencyTools, log completions and exceptions instead of printing stack traces
             try {
                 list.add(f.get());
             } catch (InterruptedException e) {
@@ -314,8 +316,8 @@ public class Alignments {
             S query, S target, PairwiseSequenceAlignerType type, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
     	if (!query.getCompoundSet().equals(target.getCompoundSet())) {
-    		throw new IllegalArgumentException("Sequence compound sets must be the same; got "
-                + query.getCompoundSet().getClass().getName() + " and " + target.getCompoundSet().getClass().getName());
+    		System.err.println(query.getCompoundSet().getClass().getName() + " != " + target.getCompoundSet().getClass().getName());
+    		throw new IllegalArgumentException("Sequence compound sets must be the same");
     	}
         switch (type) {
         default:
