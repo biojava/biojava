@@ -1247,16 +1247,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			float alpha = Float.parseFloat(cell.getAngle_alpha());
 			float beta = Float.parseFloat(cell.getAngle_beta());
 			float gamma = Float.parseFloat(cell.getAngle_gamma());
-			// If the entry describes a structure determined by a technique other than X-ray crystallography,
-		    // cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
-			// if so we don't add and CrystalCell will be null
-			if (a == 1.0f && b == 1.0f && c == 1.0f && 
-	        		alpha == 90.0f && beta == 90.0f && gamma == 90.0f ) {
-	        	return;
-	        } 
 		
 			CrystalCell xtalCell = new CrystalCell(); 
-			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(xtalCell);
 			xtalCell.setA(a);
 			xtalCell.setB(b);
 			xtalCell.setC(c);
@@ -1264,7 +1256,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			xtalCell.setBeta(beta);
 			xtalCell.setGamma(gamma);
 			
+			if (!xtalCell.isCellReasonable()) {
+				// If the entry describes a structure determined by a technique other than X-ray crystallography,
+			    // cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
+				// if so we don't add and CrystalCell will be null
+				logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.",
+						CrystalCell.MIN_VALID_CELL_SIZE);				
+				return;
+			}
 			
+			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(xtalCell);
 			
 		} catch (NumberFormatException e){
 			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(null);

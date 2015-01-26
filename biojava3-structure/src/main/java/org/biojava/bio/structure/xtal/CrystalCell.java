@@ -11,8 +11,8 @@ import javax.vecmath.Point3i;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * A crystal cell's parameters.
@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 public class CrystalCell implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LoggerFactory.getLogger(CrystalCell.class);
+	//private static final Logger logger = LoggerFactory.getLogger(CrystalCell.class);
 
-	private static final double MIN_VALID_CELL_SIZE = 10.0; // the minimum admitted for a crystal cell
+	public static final double MIN_VALID_CELL_SIZE = 10.0; // the minimum admitted for a crystal cell
 
 	
 	private double a;
@@ -503,7 +503,6 @@ public class CrystalCell implements Serializable {
 		if (this.getA()<MIN_VALID_CELL_SIZE &&
 				this.getB()<MIN_VALID_CELL_SIZE &&
 				this.getC()<MIN_VALID_CELL_SIZE) {
-			logger.warn("Warning! crystal cell with 3 dimensions below "+MIN_VALID_CELL_SIZE+". Will ignore it.");
 			return false;
 		}
 		

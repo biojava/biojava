@@ -483,7 +483,11 @@ public class StructureImpl implements Structure, Serializable {
 		} else {
 			// no experimental technique known, we try to guess...
 			if (pdbHeader.getCrystallographicInfo().getSpaceGroup()!=null) {
-				return pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable();
+				if (pdbHeader.getCrystallographicInfo().getCrystalCell()==null) {
+					return false; // space group defined but no crystal cell: incomplete info, return false
+				} else {
+					return pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable();
+				}
 			}
 		}
 		return false;
@@ -507,7 +511,10 @@ public class StructureImpl implements Structure, Serializable {
 			// no experimental technique known, we try to guess...
 			if (nrModels()>1) {
 				if (pdbHeader.getCrystallographicInfo().getSpaceGroup()!=null) {
-					// multi-model and cell unreasonable: must be NMR
+					// multimodel, sg defined, but missing cell: must be NMR
+					if (pdbHeader.getCrystallographicInfo().getCrystalCell()==null) 
+						return true;					
+					// multi-model, sg defined and cell unreasonable: must be NMR
 					if (!pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable())
 						return true;
 				} else { 

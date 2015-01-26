@@ -1561,22 +1561,24 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 		spaceGroup = line.substring(55,66).trim();
 		
-		// If the entry describes a structure determined by a technique other than X-ray crystallography,
-	    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
-		// if so we don't add and CrystalCell and SpaceGroup remain both null
-		if (a == 1.0f && b == 1.0f && c == 1.0f && 
-        		alpha == 90.0f && beta == 90.0f && gamma == 90.0f && 
-        		spaceGroup.equals("P 1") && z == 1) {
-        	return;
-        } 
 		CrystalCell xtalCell = new CrystalCell();
-		crystallographicInfo.setCrystalCell(xtalCell);
 		xtalCell.setA(a);
 		xtalCell.setB(b);
 		xtalCell.setC(c);
 		xtalCell.setAlpha(alpha);
 		xtalCell.setBeta(beta);
 		xtalCell.setGamma(gamma);
+		
+		if (!xtalCell.isCellReasonable()) {
+			// If the entry describes a structure determined by a technique other than X-ray crystallography,
+		    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+			// if so we don't add the crystal cell and it remains null 
+			logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.",
+					CrystalCell.MIN_VALID_CELL_SIZE);
+		} else {		
+			crystallographicInfo.setCrystalCell(xtalCell);
+		}
+		
         SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
         if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
         crystallographicInfo.setSpaceGroup(sg);
