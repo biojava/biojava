@@ -23,21 +23,17 @@
 
 package org.biojava3.alignment.template;
 
-import org.biojava3.alignment.AlignmentMode;
-import org.biojava3.alignment.routines.AlignerHelper.Last;
-import org.biojava3.alignment.template.AlignedSequence.Step;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.Sequence;
+import static org.biojava3.alignment.routines.AlignerHelper.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.biojava3.alignment.routines.AlignerHelper.Anchor;
-import static org.biojava3.alignment.routines.AlignerHelper.Subproblem;
-import static org.biojava3.alignment.routines.AlignerHelper.setScoreVector;
-import static org.biojava3.alignment.routines.AlignerHelper.setSteps;
+import org.biojava3.alignment.routines.AlignerHelper.Last;
+import org.biojava3.alignment.template.AlignedSequence.Step;
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.Sequence;
 
 /**
  * Implements common code for an {@link Aligner} which builds a score matrix during computation.
@@ -53,9 +49,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     // input fields
     protected GapPenalty gapPenalty;
     private SubstitutionMatrix<C> subMatrix;
-    private AlignmentMode alignmentMode;
-
-    private boolean storingScoreMatrix;
+    private boolean local, storingScoreMatrix;
     protected List<Anchor> anchors = new ArrayList<Anchor>();
     protected int cutsPerSection;
 
@@ -99,7 +93,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
      * @param subMatrix the set of substitution scores used during alignment
      */
     protected AbstractMatrixAligner(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        this(gapPenalty, subMatrix, AlignmentMode.GLOBAL);
+        this(gapPenalty, subMatrix, false);
     }
 
     /**
@@ -107,12 +101,12 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
      *
      * @param gapPenalty the gap penalties used during alignment
      * @param subMatrix the set of substitution scores used during alignment
-     * @param alignmentMode
+     * @param local if true, find a region of similarity rather than aligning every compound
      */
-    protected AbstractMatrixAligner(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix, AlignmentMode alignmentMode) {
+    protected AbstractMatrixAligner(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix, boolean local) {
         this.gapPenalty = gapPenalty;
         this.subMatrix = subMatrix;
-        this.alignmentMode = alignmentMode;
+        this.local = local;
         reset();
     }
 
@@ -139,8 +133,8 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
      *
      * @return true if alignment finds a region of similarity rather than aligning every compound
      */
-    public AlignmentMode getAlignmentMode() {
-        return alignmentMode;
+    public boolean isLocal() {
+        return local;
     }
 
     /**
@@ -315,30 +309,31 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         Last[][][] traceback = new Last[dim[0]][][];
         List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
 
-        if (alignmentMode == AlignmentMode.GLOBAL) {
+        if (!local) {
         	xyMax = new int[] { dim[0] - 1, dim[1] - 1 };
         	xyStart = new int[] { 0, 0 };
             score = 0;
             List<Subproblem> problems = Subproblem.getSubproblems(anchors, xyMax[0], xyMax[1]);
             assert problems.size() == anchors.size() + 1;
-            for (Subproblem subproblem : problems) {
-                for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
-
-                    traceback[x] =
-
-                            linear ?
-                                    setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) :
-
-                                    setScoreVector(x, subproblem, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
+            for (int i = 0; i < problems.size(); i++) {
+            	Subproblem subproblem = problems.get(i);
+            	for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
+                	
+            		traceback[x] = 
+                		
+            		  linear ? 
+                		setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) : 
+                		
+                		setScoreVector(x, subproblem, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
                 }
             }
             setSteps(traceback, scores, sx, sy);
             score = Integer.MIN_VALUE;
             int[] finalScore = scores[xyMax[0]][xyMax[1]];
-            for (int aFinalScore : finalScore) {
-                score = Math.max(score, aFinalScore);
+            for (int z = 0; z < finalScore.length; z++) {
+            	score = Math.max(score, finalScore[z]);
             }
-        } else if (alignmentMode == AlignmentMode.LOCAL) {
+        } else {
             for (int x = 0; x < dim[0]; x++) {
             	
             	traceback[x] = 
@@ -352,10 +347,8 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
                     score = scores[x][xyMax[1]][0];
                 }
             }
-        } else {
-            throw new UnsupportedOperationException("Semiglobal alignment is not implemented yet"); // TODO implement
+            xyStart = local ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
         }
-        xyStart = alignmentMode==AlignmentMode.LOCAL ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
 
         setProfile(sx, sy);
 

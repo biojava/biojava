@@ -23,13 +23,12 @@
 
 package org.biojava3.alignment.template;
 
-import org.biojava3.alignment.AlignmentMode;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Implements common code for an {@link Aligner} for a pair of {@link Sequence}s.
@@ -65,7 +64,7 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
      */
     protected AbstractPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
-        this(query, target, gapPenalty, subMatrix, AlignmentMode.GLOBAL);
+        this(query, target, gapPenalty, subMatrix, false);
     }
 
     /**
@@ -75,11 +74,11 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
      * @param target the second {@link Sequence} of the pair to align
      * @param gapPenalty the gap penalties used during alignment
      * @param subMatrix the set of substitution scores used during alignment
-     * @param alignmentMode
+     * @param local if true, find a region of similarity rather than aligning every compound
      */
     protected AbstractPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty,
-            SubstitutionMatrix<C> subMatrix, AlignmentMode alignmentMode) {
-        super(gapPenalty, subMatrix, alignmentMode);
+            SubstitutionMatrix<C> subMatrix, boolean local) {
+        super(gapPenalty, subMatrix, local);
         this.query = query;
         this.target = target;
         reset();
@@ -174,17 +173,9 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
             for (C c : target) {
                 maxt += getSubstitutionMatrix().getValue(c, c);
             }
-            max = Math.max(maxq, maxt);
-            // TODO dmyersturnbull: doesn't this depend on the matrix? The diagonal could be worse
-            if (getAlignmentMode() == AlignmentMode.LOCAL) {
-                min = 0;
-            } else if (getAlignmentMode() == AlignmentMode.GLOBAL) {
-                min = 2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
-                        target.getLength()) * getGapPenalty().getExtensionPenalty();
-            } else if (getAlignmentMode() == AlignmentMode.SEMIGLOBAL) {
-                min = getGapPenalty().getOpenPenalty() + target.getLength() * getGapPenalty().getExtensionPenalty();
-            }
-            score = min;
+            max = (int) Math.max(maxq, maxt);
+            score = min = isLocal() ? 0 : (int) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
+                    target.getLength()) * getGapPenalty().getExtensionPenalty());
         }
     }
 
