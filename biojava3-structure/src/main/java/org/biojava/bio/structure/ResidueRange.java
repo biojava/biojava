@@ -44,7 +44,17 @@ public class ResidueRange {
 	private final ResidueNumber end;
 	private final ResidueNumber start;
 
-	public static final String RANGE_REGEX = "^([a-zA-Z])+[_:](?:(-?\\d+[a-zA-Z]?)-(-?\\d+[a-zA-Z]?))?$";
+	public static final Pattern RANGE_REGEX = Pattern.compile(
+			"^\\s*([a-zA-Z0-9]+|_)" + //chain ID. Be flexible here, rather than restricting to 4-char IDs
+			"(?:" + //begin range, this is a "non-capturing group"
+				"(?::|_|:$|_$|$)" + //colon or underscore, could be at the end of a line, another non-capt. group.
+				"(?:"+ // another non capturing group for the residue range
+					"([-+]?[0-9]+[A-Za-z]?)" + // first residue
+					"\\s*-\\s*" + // -
+					"([-+]?[0-9]+[A-Za-z]?)" + // second residue
+				")?+"+
+			")?" + //end range
+			"\\s*");
 
 	/**
 	 * @param s
@@ -54,7 +64,7 @@ public class ResidueRange {
 	public static ResidueRange parse(String s) {
 		ResidueNumber start = null, end = null;
 		String chain = null;
-		Matcher matcher = match(s);
+		Matcher matcher = RANGE_REGEX.matcher(s);
 		if (matcher.matches()) {
 			try {
 				chain = matcher.group(1);
@@ -304,25 +314,6 @@ public class ResidueRange {
 			if (i < ranges.size() - 1) sb.append(",");
 		}
 		return sb.toString();
-	}
-	
-	/**
-	 * Matches the string with a regex pattern that matches all recognizable range formats.
-	 * @param s A string to match against
-	 * @return A Matcher run against {@code s}; contains 1 or 3 groups: {@code matcher.group(1)} is the chain Id, and optionally {@code matcher.group(2)} and {@code matcher.group(3)} are the start and end residues, respectively.
-	 */
-	public static Matcher match(String s) {
-		Pattern pattern = Pattern.compile(RANGE_REGEX);
-		Matcher matcher = pattern.matcher(s);
-		matcher.find();
-		return matcher;
-	}
-	
-	/**
-	 * Determines whether a String is of a recognizable range format
-	 */
-	public static boolean looksLikeRange(String s) {
-		return match(s).matches();
 	}
 
 }

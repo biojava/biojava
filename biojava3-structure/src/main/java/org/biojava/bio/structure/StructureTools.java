@@ -117,23 +117,6 @@ public class StructureTools {
 	//	private static  SymbolTokenization oneLetter ;
 
 
-	/**
-	 * Pattern to describe subranges. Matches "A", "A:", "A:7-53","A_7-53", etc.
-	 * @see #getSubRanges(Structure, String)
-	 */
-	public static final Pattern pdbNumRangeRegex = Pattern.compile(
-			"^\\s*(\\w)" + //chain ID
-					"(?:" + //begin range, this is a "non-capturing group"
-					"(?::|_|:$|_$|$)" + //colon or underscore, could be at the end of a line, another non-capt. group.
-					"(?:"+ // another non capturing group for the residue range
-					"([-+]?[0-9]+[A-Za-z]?)" + // first residue
-					"\\s*-\\s*" + // -
-					"([-+]?[0-9]+[A-Za-z]?)" + // second residue
-					")?+"+
-					")?" + //end range
-			"\\s*");
-
-
 	static {
 		nucleotides30 = new HashMap<String,Integer>();
 		nucleotides30.put("DA",1);
@@ -916,7 +899,7 @@ public class StructureTools {
 
 			// Match a single range, eg "A_4-27"
 
-			Matcher matcher = pdbNumRangeRegex.matcher(r);
+			Matcher matcher = ResidueRange.RANGE_REGEX.matcher(r);
 			if( ! matcher.matches() ){
 				throw new StructureException("wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2: "+ranges);
 			}
