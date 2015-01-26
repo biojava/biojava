@@ -1176,13 +1176,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.warn("More than 1 Rfree value present, will use last one {} and discard previous {} ",
 					r.getLs_R_factor_R_free(), String.format("%4.2f",pdbHeader.getRfree()));
 		} 
-		try {
-			pdbHeader.setRfree(Float.parseFloat(r.getLs_R_factor_R_free()));
-		} catch (NumberFormatException e){
-			// no rfree present ('?') is very usual, that's why we set it to debug
-			logger.debug("Could not parse Rfree from string '{}'", r.getLs_R_factor_R_free());
+		if (r.getLs_R_factor_R_free()==null) {
+			// some entries like 2ifo haven't got this field at all
+			logger.info("_refine.ls_R_factor_R_free not present, not parsing Rfree value");
+		} else {
+			try {
+				pdbHeader.setRfree(Float.parseFloat(r.getLs_R_factor_R_free()));
+			} catch (NumberFormatException e){
+				// no rfree present ('?') is very usual, that's why we set it to debug
+				logger.debug("Could not parse Rfree from string '{}'", r.getLs_R_factor_R_free());
+			}
 		}
-
 		
 	}
 
