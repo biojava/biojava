@@ -23,18 +23,16 @@
 
 package org.biojava.bio.structure;
 
-import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
+
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 
 /**
  * A map from {@link ResidueNumber ResidueNumbers} to ATOM record positions in a PDB file.
@@ -53,11 +51,6 @@ public class AtomPositionMap {
 	private HashMap<ResidueNumber, Integer> hashMap;
 	private TreeMap<ResidueNumber, Integer> treeMap;
 
-	public static final Set<String> AMINO_ACID_NAMES = new TreeSet<String>();
-	static {
-		AMINO_ACID_NAMES.addAll(Arrays.asList("ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"));
-		AMINO_ACID_NAMES.addAll(Arrays.asList("ASX", "GLX", "XLE", "XAA"));
-	}
 
 	public static interface GroupMatcher {
 		boolean matches(Group group);
@@ -67,7 +60,7 @@ public class AtomPositionMap {
 		@Override
 		public boolean matches(Group group) {
 			ResidueType type = group.getChemComp().getResidueType();
-			return group.hasAtom(StructureTools.CA_ATOM_NAME) || AMINO_ACID_NAMES.contains(group.getPDBName()) || type == ResidueType.lPeptideLinking || type == ResidueType.glycine || type == ResidueType.lPeptideAminoTerminus || type == ResidueType.lPeptideCarboxyTerminus || type == ResidueType.dPeptideLinking || type == ResidueType.dPeptideAminoTerminus || type == ResidueType.dPeptideCarboxyTerminus;
+			return PolymerType.PROTEIN_ONLY.contains(type.getPolymerType());
 		}
 	};
 
