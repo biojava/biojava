@@ -1,6 +1,6 @@
-HEADER    COMPLEX (SERINE PROTEASE/INHIBITORS)    06-FEB-98   1A4W              
-TITLE     CRYSTAL STRUCTURES OF THROMBIN WITH THIAZOLE-CONTAINING               
-TITLE    2 INHIBITORS: PROBES OF THE S1' BINDING SITE                           
+HEADER    HYDROLASE/HYDROLASE INHIBITOR           06-FEB-98   1A4W              
+TITLE     CRYSTAL STRUCTURES OF THROMBIN WITH THIAZOLE-CONTAINING INHIBITORS:   
+TITLE    2 PROBES OF THE S1' BINDING SITE                                       
 COMPND    MOL_ID: 1;                                                            
 COMPND   2 MOLECULE: ALPHA-THROMBIN (SMALL SUBUNIT);                            
 COMPND   3 CHAIN: L;                                                            
@@ -26,26 +26,26 @@ SOURCE  10 ORGANISM_TAXID: 9606;
 SOURCE  11 ORGAN: BLOOD;                                                        
 SOURCE  12 TISSUE: BLOOD;                                                       
 SOURCE  13 MOL_ID: 3                                                            
-KEYWDS    COMPLEX (SERINE PROTEASE/INHIBITORS), BLOOD COAGULATION               
+KEYWDS    SERINE PROTEASE-INHIBITOR, BLOOD COAGULATION, HYDROLASE-HYDROLASE     
+KEYWDS   2 INHIBITOR COMPLEX                                                    
 EXPDTA    X-RAY DIFFRACTION                                                     
-AUTHOR    J.H.MATTHEWS,R.KRISHNAN,M.J.COSTANZO,B.E.MARYANOFF,                   
-AUTHOR   2 A.TULINSKY                                                           
+AUTHOR    J.H.MATTHEWS,R.KRISHNAN,M.J.COSTANZO,B.E.MARYANOFF,A.TULINSKY         
+REVDAT   3   13-JUL-11 1A4W    1       VERSN                                    
 REVDAT   2   24-FEB-09 1A4W    1       VERSN                                    
 REVDAT   1   29-APR-98 1A4W    0                                                
 JRNL        AUTH   J.H.MATTHEWS,R.KRISHNAN,M.J.COSTANZO,B.E.MARYANOFF,          
 JRNL        AUTH 2 A.TULINSKY                                                   
-JRNL        TITL   CRYSTAL STRUCTURES OF THROMBIN WITH                          
-JRNL        TITL 2 THIAZOLE-CONTAINING INHIBITORS: PROBES OF THE S1'            
-JRNL        TITL 3 BINDING SITE.                                                
+JRNL        TITL   CRYSTAL STRUCTURES OF THROMBIN WITH THIAZOLE-CONTAINING      
+JRNL        TITL 2 INHIBITORS: PROBES OF THE S1' BINDING SITE.                  
 JRNL        REF    BIOPHYS.J.                    V.  71  2830 1996              
 JRNL        REFN                   ISSN 0006-3495                               
 JRNL        PMID   8913620                                                      
 REMARK   1                                                                      
 REMARK   1 REFERENCE 1                                                          
 REMARK   1  AUTH   J.VIJAYALAKSHMI,K.P.PADMANABHAN,K.G.MANN,A.TULINSKY          
-REMARK   1  TITL   THE ISOMORPHOUS STRUCTURES OF PRETHROMBIN2,                  
-REMARK   1  TITL 2 HIRUGEN-, AND PPACK-THROMBIN: CHANGES ACCOMPANYING           
-REMARK   1  TITL 3 ACTIVATION AND EXOSITE BINDING TO THROMBIN                   
+REMARK   1  TITL   THE ISOMORPHOUS STRUCTURES OF PRETHROMBIN2, HIRUGEN-, AND    
+REMARK   1  TITL 2 PPACK-THROMBIN: CHANGES ACCOMPANYING ACTIVATION AND EXOSITE  
+REMARK   1  TITL 3 BINDING TO THROMBIN                                          
 REMARK   1  REF    PROTEIN SCI.                  V.   3  2254 1994              
 REMARK   1  REFN                   ISSN 0961-8368                               
 REMARK   1 REFERENCE 2                                                          
@@ -55,11 +55,10 @@ REMARK   1  REF    BLOOD COAGULATION             V.   4   305 1993
 REMARK   1  REF  2 FIBRINOLYSIS                                                 
 REMARK   1  REFN                   ISSN 0957-5235                               
 REMARK   1 REFERENCE 3                                                          
-REMARK   1  AUTH   X.QIU,K.P.PADMANABHAN,V.E.CARPEROS,A.TULINSKY,               
-REMARK   1  AUTH 2 T.KLINE,J.M.MARAGANORE,J.W.FENTON II                         
-REMARK   1  TITL   STRUCTURE OF THE HIRULOG 3-THROMBIN COMPLEX AND              
-REMARK   1  TITL 2 NATURE OF THE S' SUBSITES OF SUBSTRATES AND                  
-REMARK   1  TITL 3 INHIBITORS                                                   
+REMARK   1  AUTH   X.QIU,K.P.PADMANABHAN,V.E.CARPEROS,A.TULINSKY,T.KLINE,       
+REMARK   1  AUTH 2 J.M.MARAGANORE,J.W.FENTON II                                 
+REMARK   1  TITL   STRUCTURE OF THE HIRULOG 3-THROMBIN COMPLEX AND NATURE OF    
+REMARK   1  TITL 2 THE S' SUBSITES OF SUBSTRATES AND INHIBITORS                 
 REMARK   1  REF    BIOCHEMISTRY                  V.  31 11689 1992              
 REMARK   1  REFN                   ISSN 0006-2960                               
 REMARK   2                                                                      
@@ -94,9 +93,9 @@ REMARK   3   FREE R VALUE TEST SET COUNT   (NO CUTOFF) : NULL
 REMARK   3   TOTAL NUMBER OF REFLECTIONS   (NO CUTOFF) : NULL                   
 REMARK   3                                                                      
 REMARK   3  NUMBER OF NON-HYDROGEN ATOMS USED IN REFINEMENT.                    
-REMARK   3   PROTEIN ATOMS            : 2080                                    
+REMARK   3   PROTEIN ATOMS            : 2238                                    
 REMARK   3   NUCLEIC ACID ATOMS       : 0                                       
-REMARK   3   HETEROGEN ATOMS          : 198                                     
+REMARK   3   HETEROGEN ATOMS          : 44                                      
 REMARK   3   SOLVENT ATOMS            : 157                                     
 REMARK   3                                                                      
 REMARK   3  B VALUES.                                                           
@@ -145,7 +144,7 @@ REMARK   3   SIDE-CHAIN ANGLE              (A**2) : 4.100 ; 2.500
 REMARK   3                                                                      
 REMARK   3  OTHER REFINEMENT REMARKS: NULL                                      
 REMARK   4                                                                      
-REMARK   4 1A4W COMPLIES WITH FORMAT V. 3.15, 01-DEC-08                         
+REMARK   4 1A4W COMPLIES WITH FORMAT V. 3.30, 13-JUL-11                         
 REMARK 100                                                                      
 REMARK 100 THIS ENTRY HAS BEEN PROCESSED BY BNL.                                
 REMARK 200                                                                      
@@ -258,13 +257,10 @@ REMARK 350   BIOMT2   1  0.000000  1.000000  0.000000        0.00000
 REMARK 350   BIOMT3   1  0.000000  0.000000  1.000000        0.00000            
 REMARK 400                                                                      
 REMARK 400 COMPOUND                                                             
-REMARK 400                                                                      
 REMARK 400 THROMBIN IS CLEAVED BETWEEN RESIDUES 15 AND 16.  CHAIN               
 REMARK 400 IDENTIFIER *L* IS USED FOR RESIDUES 1H - 15 AND CHAIN                
 REMARK 400 IDENTIFIER *H* IS USED FOR RESIDUES 16 - 247.  CHAIN                 
 REMARK 400 IDENTIFIER *I* IS USED FOR HIRUGEN, THE CARBOXYL.                    
-REMARK 400 RESIDUES DAN R 373, ARG R 350, PIP R 375, AND TZL R 377              
-REMARK 400 CONSTITUTE THE ACTIVE SITE INHIBITOR.                                
 REMARK 465                                                                      
 REMARK 465 MISSING RESIDUES                                                     
 REMARK 465 THE FOLLOWING RESIDUES WERE NOT LOCATED IN THE                       
@@ -298,14 +294,14 @@ REMARK 465     GLY I   354
 REMARK 465     LEU I   364                                                      
 REMARK 470                                                                      
 REMARK 470 MISSING ATOM                                                         
-REMARK 470 THE FOLLOWING RESIDUES HAVE MISSING ATOMS(M=MODEL NUMBER;            
+REMARK 470 THE FOLLOWING RESIDUES HAVE MISSING ATOMS (M=MODEL NUMBER;           
 REMARK 470 RES=RESIDUE NAME; C=CHAIN IDENTIFIER; SSEQ=SEQUENCE NUMBER;          
 REMARK 470 I=INSERTION CODE):                                                   
 REMARK 470   M RES CSSEQI  ATOMS                                                
 REMARK 470     LYS L  14A   CG   CD   CE   NZ                                   
 REMARK 470     ARG L  14D   CG   CD   NE   CZ   NH1  NH2                        
 REMARK 470     ILE L  14K   CB   CG1  CG2  CD1                                  
-REMARK 470     ASN H  62    CB   CG   OD1  ND2                                  
+REMARK 470     ASN H  62    CB   CG   OD1                                       
 REMARK 470     ARG H  75    CB   CG   CD   NE   CZ   NH1  NH2                   
 REMARK 470     ARG H  77A   CB   CG   CD   NE   CZ   NH1  NH2                   
 REMARK 470     LYS H 110    CG   CD   CE   NZ                                   
@@ -430,8 +426,8 @@ REMARK 500 (M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN IDENTIFIER;
 REMARK 500 SSEQ=SEQUENCE NUMBER; I=INSERTION CODE).                             
 REMARK 500                                                                      
 REMARK 500  M RES CSSEQI        RMS     TYPE                                    
-REMARK 500    ARG H  73         0.12    SIDE_CHAIN                              
-REMARK 500    PHE H 232         0.08    SIDE_CHAIN                              
+REMARK 500    ARG H  73         0.12    SIDE CHAIN                              
+REMARK 500    PHE H 232         0.08    SIDE CHAIN                              
 REMARK 500                                                                      
 REMARK 500 REMARK: NULL                                                         
 REMARK 500                                                                      
@@ -439,7 +435,7 @@ REMARK 500 GEOMETRY AND STEREOCHEMISTRY
 REMARK 500 SUBTOPIC: MAIN CHAIN PLANARITY                                       
 REMARK 500                                                                      
 REMARK 500 THE FOLLOWING RESIDUES HAVE A PSEUDO PLANARITY                       
-REMARK 500 TORSION, C(I) - CA(I) - N(I+1) - O(I), GREATER                       
+REMARK 500 TORSION ANGLE, C(I) - CA(I) - N(I+1) - O(I), GREATER                 
 REMARK 500 10.0 DEGREES. (M=MODEL NUMBER; RES=RESIDUE NAME;                     
 REMARK 500 C=CHAIN IDENTIFIER; SSEQ=SEQUENCE NUMBER;                            
 REMARK 500 I=INSERTION CODE).                                                   
@@ -449,23 +445,28 @@ REMARK 500    SER H  20         11.04
 REMARK 500    GLN H 151         10.60                                           
 REMARK 500                                                                      
 REMARK 500 REMARK: NULL                                                         
-REMARK 525                                                                      
-REMARK 525 SOLVENT                                                              
-REMARK 525                                                                      
-REMARK 525 THE SOLVENT MOLECULES HAVE CHAIN IDENTIFIERS THAT                    
-REMARK 525 INDICATE THE POLYMER CHAIN WITH WHICH THEY ARE MOST                  
-REMARK 525 CLOSELY ASSOCIATED. THE REMARK LISTS ALL THE SOLVENT                 
-REMARK 525 MOLECULES WHICH ARE MORE THAN 5A AWAY FROM THE                       
-REMARK 525 NEAREST POLYMER CHAIN (M = MODEL NUMBER;                             
-REMARK 525 RES=RESIDUE NAME; C=CHAIN IDENTIFIER; SSEQ=SEQUENCE                  
-REMARK 525 NUMBER; I=INSERTION CODE):                                           
-REMARK 525                                                                      
-REMARK 525  M RES CSSEQI                                                        
-REMARK 525    HOH H 537        DISTANCE =  5.46 ANGSTROMS                       
+REMARK 500                                                                      
+REMARK 500 GEOMETRY AND STEREOCHEMISTRY                                         
+REMARK 500 SUBTOPIC: CHIRAL CENTERS                                             
+REMARK 500                                                                      
+REMARK 500 UNEXPECTED CONFIGURATION OF THE FOLLOWING CHIRAL                     
+REMARK 500 CENTER(S) USING IMPROPER CA--C--CB--N CHIRALITY                      
+REMARK 500 FOR AMINO ACIDS AND C1'--O4'--N1(N9)--C2' FOR                        
+REMARK 500 NUCLEIC ACIDS OR EQUIVALENT ANGLE                                    
+REMARK 500 M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN                            
+REMARK 500 IDENTIFIER; SSEQ=SEQUENCE NUMBER; I=INSERTION CODE                   
+REMARK 500                                                                      
+REMARK 500 STANDARD TABLE:                                                      
+REMARK 500 FORMAT: (10X,I3,1X,A3,1X,A1,I4,A1,6X,F5.1,6X,A1,10X,A1,3X,A16)       
+REMARK 500                                                                      
+REMARK 500  M RES CSSEQI    IMPROPER   EXPECTED   FOUND DETAILS                 
+REMARK 500    SER L  11        24.6      L          L   OUTSIDE RANGE           
+REMARK 500                                                                      
+REMARK 500 REMARK: NULL                                                         
 REMARK 620                                                                      
 REMARK 620 METAL COORDINATION                                                   
-REMARK 620  (M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN IDENTIFIER;              
-REMARK 620  SSEQ=SEQUENCE NUMBER; I=INSERTION CODE):                            
+REMARK 620 (M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN IDENTIFIER;               
+REMARK 620 SSEQ=SEQUENCE NUMBER; I=INSERTION CODE):                             
 REMARK 620                                                                      
 REMARK 620 COORDINATION ANGLES FOR:  M RES CSSEQI METAL                         
 REMARK 620                              NA H 541  NA                            
@@ -488,33 +489,44 @@ REMARK 620 4 HOH H 467   O   171.9  94.2  96.9
 REMARK 620 5 PHE H 204A  O    97.8  93.6  78.7  90.3                            
 REMARK 620 6 HOH H 515   O    74.9  84.0 102.2  97.0 172.5                      
 REMARK 620 N                    1     2     3     4     5                       
+REMARK 630                                                                      
+REMARK 630 MOLECULE TYPE: NULL                                                  
+REMARK 630 MOLECULE NAME: AMINO{[(4S)-4-({[5-(DIMETHYLAMINO)NAPHTHALEN-1-YL]    
+REMARK 630 SULFONYL}AMINO)-5-OXO-5-{(2R)-2-[3-OXO-3-(1,3-THIAZOL-2-YL)PROPYL]   
+REMARK 630 PIPERIDIN-1-YL}PENTYL]AMINO}METHANIMINIUM                            
+REMARK 630 (M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN IDENTIFIER;               
+REMARK 630  SSSEQ=SEQUENCE NUMBER; I=INSERTION CODE.)                           
+REMARK 630                                                                      
+REMARK 630   M RES C SSSEQI                                                     
+REMARK 630     QWE H   373                                                      
+REMARK 630 SOURCE: NULL                                                         
+REMARK 630 TAXONOMY: NULL                                                       
+REMARK 630 SUBCOMP:    ANS ARG 5TP                                              
+REMARK 630 DETAILS: NULL                                                        
 REMARK 800                                                                      
 REMARK 800 SITE                                                                 
 REMARK 800 SITE_IDENTIFIER: CAT                                                 
 REMARK 800 EVIDENCE_CODE: UNKNOWN                                               
 REMARK 800 SITE_DESCRIPTION: ACTIVE SITE                                        
+REMARK 800                                                                      
 REMARK 800 SITE_IDENTIFIER: AC1                                                 
 REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
 REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE NA H 541                  
+REMARK 800                                                                      
 REMARK 800 SITE_IDENTIFIER: AC2                                                 
 REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
 REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE NA H 542                  
+REMARK 800                                                                      
 REMARK 800 SITE_IDENTIFIER: AC3                                                 
 REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
-REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE ANS H 373                 
+REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE QWE H 373                 
+REMARK 800                                                                      
 REMARK 800 SITE_IDENTIFIER: AC4                                                 
 REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
-REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE DAR H 350                 
-REMARK 800 SITE_IDENTIFIER: AC5                                                 
-REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
-REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE 2EP H 375                 
-REMARK 800 SITE_IDENTIFIER: AC6                                                 
-REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
-REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE KTH H 377                 
+REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR CHAIN I OF HIRUGEN                
 DBREF  1A4W L    1H   14N UNP    P00734   THRB_HUMAN     328    363             
 DBREF  1A4W H   16   247  UNP    P00734   THRB_HUMAN     364    622             
 DBREF  1A4W I  353   364  UNP    P09945   ITH3_HIRME      60     71             
-SEQADV 1A4W TYS I  363  UNP  P09945    TYR    70 CONFLICT                       
 SEQRES   1 L   36  THR PHE GLY SER GLY GLU ALA ASP CYS GLY LEU ARG PRO          
 SEQRES   2 L   36  LEU PHE GLU LYS LYS SER LEU GLU ASP LYS THR GLU ARG          
 SEQRES   3 L   36  GLU LEU LEU GLU SER TYR ILE ASP GLY ARG                      
@@ -543,25 +555,18 @@ MODRES 1A4W TYS I  363  TYR  O-SULFO-L-TYROSINE
 HET    TYS  I 363      16                                                       
 HET     NA  H 541       1                                                       
 HET     NA  H 542       1                                                       
-HET    ANS  H 373      16                                                       
-HET    DAR  H 350      11                                                       
-HET    2EP  H 375       8                                                       
-HET    KTH  H 377       7                                                       
+HET    QWE  H 373      42                                                       
 HETNAM     TYS O-SULFO-L-TYROSINE                                               
 HETNAM      NA SODIUM ION                                                       
-HETNAM     ANS 5-(DIMETHYLAMINO)-1-NAPHTHALENESULFONIC ACID(DANSYL              
-HETNAM   2 ANS  ACID)                                                           
-HETNAM     DAR D-ARGININE                                                       
-HETNAM     2EP 2-ETHYLPIPERIDINE                                                
-HETNAM     KTH 2-KETOTHIAZOLE                                                   
-HETSYN     ANS DANSYL ACID                                                      
+HETNAM     QWE AMINO{[(4S)-4-({[5-(DIMETHYLAMINO)NAPHTHALEN-1-                  
+HETNAM   2 QWE  YL]SULFONYL}AMINO)-5-OXO-5-{(2R)-2-[3-OXO-3-(1,3-               
+HETNAM   3 QWE  THIAZOL-2-YL)PROPYL]PIPERIDIN-1-                                
+HETNAM   4 QWE  YL}PENTYL]AMINO}METHANIMINIUM                                   
+HETSYN     QWE RWJ-50215                                                        
 FORMUL   3  TYS    C9 H11 N O6 S                                                
 FORMUL   4   NA    2(NA 1+)                                                     
-FORMUL   6  ANS    C12 H13 N O3 S                                               
-FORMUL   6  DAR    C6 H15 N4 O2 1+                                              
-FORMUL   6  2EP    C7 H15 N                                                     
-FORMUL   7  KTH    C4 H3 N O S                                                  
-FORMUL   8  HOH   *157(H2 O)                                                    
+FORMUL   6  QWE    C29 H40 N7 O4 S2 1+                                          
+FORMUL   7  HOH   *157(H2 O)                                                    
 HELIX    1  H1 ALA H   55  LEU H   60  1                                   6    
 HELIX    2  H2 GLU H  164  SER H  171  1                                   8    
 HELIX    3  H3 ASP H  125  LEU H  129C 1                                   8    
@@ -585,9 +590,6 @@ SSBOND   2 CYS H   42    CYS H   58                          1555   1555  2.06
 SSBOND   3 CYS H  168    CYS H  182                          1555   1555  2.06  
 SSBOND   4 CYS H  191    CYS H  220                          1555   1555  2.09  
 LINK         N   TYS I 363                 C   GLU I 362     1555   1555  1.33  
-LINK         S   ANS H 373                 N   DAR H 350     1555   1555  1.91  
-LINK         N1  2EP H 375                 C   DAR H 350     1555   1555  1.42  
-LINK         C2' 2EP H 375                 C2' KTH H 377     1555   1555  1.48  
 LINK        NA    NA H 541                 O   LYS H 224     1555   1555  2.32  
 LINK        NA    NA H 542                 O   LYS H 169     1555   1555  2.36  
 LINK        NA    NA H 542                 O   THR H 172     1555   1555  2.33  
@@ -606,13 +608,14 @@ SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460
 SITE     2 AC1  6 HOH H 464  HOH H 497                                          
 SITE     1 AC2  6 LYS H 169  THR H 172  PHE H 204A HOH H 467                    
 SITE     2 AC2  6 HOH H 515  HOH H 518                                          
-SITE     1 AC3  8 TYR H  60A GLU H  97A LEU H  99  TRP H 215                    
-SITE     2 AC3  8 GLY H 216  GLY H 219  DAR H 350  HOH H 448                    
-SITE     1 AC4  8 ASP H 189  ALA H 190  TRP H 215  GLY H 216                    
-SITE     2 AC4  8 GLY H 219  ANS H 373  2EP H 375  HOH H 471                    
-SITE     1 AC5  4 TRP H  60D LEU H  99  DAR H 350  KTH H 377                    
-SITE     1 AC6  5 HIS H  57  TRP H  60D LYS H  60F 2EP H 375                    
-SITE     2 AC6  5 HOH H 532                                                     
+SITE     1 AC3 14 HIS H  57  TYR H  60A TRP H  60D LYS H  60F                   
+SITE     2 AC3 14 GLU H  97A LEU H  99  ASP H 189  ALA H 190                    
+SITE     3 AC3 14 TRP H 215  GLY H 216  GLY H 219  HOH H 448                    
+SITE     4 AC3 14 HOH H 471  HOH H 532                                          
+SITE     1 AC4 14 PHE H  34  ARG H  67  ARG H  73  THR H  74                    
+SITE     2 AC4 14 ARG H  75  TYR H  76  LYS H  81  ILE H  82                    
+SITE     3 AC4 14 HOH H 393  HOH H 432  HOH I 419  HOH I 435                    
+SITE     4 AC4 14 HOH I 476  HOH I 504                                          
 CRYST1   71.470   72.000   73.390  90.00 101.13  90.00 C 1 2 1       4          
 ORIGX1      1.000000  0.000000  0.000000        0.00000                         
 ORIGX2      0.000000  1.000000  0.000000        0.00000                         
@@ -2863,48 +2866,48 @@ HETATM 2240  O   TYS I 363      18.126   0.587  -2.682  1.00 44.82           O
 TER    2241      TYS I 363                                                      
 HETATM 2242 NA    NA H 541       5.845 -14.122  30.560  0.88 23.48          NA  
 HETATM 2243 NA    NA H 542      18.411 -16.475  38.464  0.88 24.77          NA  
-HETATM 2244  C1  ANS H 373      17.735 -17.178  22.612  1.00 26.29           C  
-HETATM 2245  C2  ANS H 373      18.543 -17.350  21.462  1.00 26.22           C  
-HETATM 2246  C3  ANS H 373      19.877 -17.046  21.558  1.00 26.06           C  
-HETATM 2247  C4  ANS H 373      20.401 -16.566  22.766  1.00 26.60           C  
-HETATM 2248  C4A ANS H 373      19.613 -16.358  23.893  1.00 27.46           C  
-HETATM 2249  C5  ANS H 373      20.084 -15.791  25.046  1.00 28.32           C  
-HETATM 2250  C6  ANS H 373      19.241 -15.568  26.114  1.00 27.47           C  
-HETATM 2251  C7  ANS H 373      17.893 -15.971  26.028  1.00 27.79           C  
-HETATM 2252  C8  ANS H 373      17.370 -16.510  24.879  1.00 26.51           C  
-HETATM 2253  C8A ANS H 373      18.205 -16.689  23.809  1.00 26.70           C  
-HETATM 2254  N   ANS H 373      21.383 -15.285  25.104  1.00 29.72           N  
-HETATM 2255  CM1 ANS H 373      21.898 -14.217  24.214  1.00 30.75           C  
-HETATM 2256  CM2 ANS H 373      22.635 -16.213  25.496  1.00 31.28           C  
-HETATM 2257  S   ANS H 373      15.909 -17.581  22.417  1.00 26.82           S  
-HETATM 2258  O1S ANS H 373      15.988 -18.013  21.010  1.00 27.08           O  
-HETATM 2259  O2S ANS H 373      14.998 -18.191  23.402  1.00 25.52           O  
-HETATM 2260  N   DAR H 350      14.893 -15.970  22.485  1.00 26.45           N  
-HETATM 2261  CA  DAR H 350      15.193 -15.114  21.296  1.00 26.19           C  
-HETATM 2262  CB  DAR H 350      13.942 -14.354  20.879  1.00 23.76           C  
-HETATM 2263  CG  DAR H 350      13.232 -13.686  22.058  1.00 25.01           C  
-HETATM 2264  CD  DAR H 350      11.892 -13.133  21.595  1.00 23.01           C  
-HETATM 2265  NE  DAR H 350      11.218 -12.647  22.780  1.00 21.45           N  
-HETATM 2266  CZ  DAR H 350      11.457 -11.554  23.483  1.00 20.16           C  
-HETATM 2267  NH1 DAR H 350      12.359 -10.674  23.045  1.00 20.04           N  
-HETATM 2268  NH2 DAR H 350      10.723 -11.336  24.566  1.00 20.85           N  
-HETATM 2269  C   DAR H 350      16.307 -14.167  21.752  1.00 26.27           C  
-HETATM 2270  O   DAR H 350      16.212 -13.781  22.914  1.00 24.70           O  
-HETATM 2271  N1  2EP H 375      17.280 -13.692  20.830  1.00 27.91           N  
-HETATM 2272  C2  2EP H 375      17.043 -14.033  19.327  1.00 30.31           C  
-HETATM 2273  C3  2EP H 375      18.421 -14.472  18.809  1.00 29.73           C  
-HETATM 2274  C4  2EP H 375      19.610 -13.417  19.194  1.00 29.33           C  
-HETATM 2275  C5  2EP H 375      19.696 -13.083  20.765  1.00 28.57           C  
-HETATM 2276  C6  2EP H 375      18.351 -12.680  21.310  1.00 28.50           C  
-HETATM 2277  C1' 2EP H 375      16.593 -13.014  18.550  1.00 33.08           C  
-HETATM 2278  C2' 2EP H 375      15.941 -13.425  17.179  1.00 37.01           C  
-HETATM 2279  S1  KTH H 377      15.783 -14.904  14.458  1.00 43.62           S  
-HETATM 2280  O2  KTH H 377      17.488 -11.922  16.287  1.00 41.38           O  
-HETATM 2281  C5  KTH H 377      17.059 -15.583  13.508  1.00 43.74           C  
-HETATM 2282  C2  KTH H 377      16.864 -13.556  14.739  1.00 42.63           C  
-HETATM 2283  C2' KTH H 377      16.825 -12.903  16.107  1.00 40.59           C  
-HETATM 2284  C4  KTH H 377      18.146 -14.734  13.451  1.00 43.96           C  
-HETATM 2285  N3  KTH H 377      18.049 -13.554  14.106  1.00 43.46           N  
+HETATM 2244  C1  QWE H 373      17.735 -17.178  22.612  1.00 26.29           C  
+HETATM 2245  C2  QWE H 373      18.543 -17.350  21.462  1.00 26.22           C  
+HETATM 2246  C3  QWE H 373      19.877 -17.046  21.558  1.00 26.06           C  
+HETATM 2247  C4  QWE H 373      20.401 -16.566  22.766  1.00 26.60           C  
+HETATM 2248  C4A QWE H 373      19.613 -16.358  23.893  1.00 27.46           C  
+HETATM 2249  C5  QWE H 373      20.084 -15.791  25.046  1.00 28.32           C  
+HETATM 2250  C6  QWE H 373      19.241 -15.568  26.114  1.00 27.47           C  
+HETATM 2251  C7  QWE H 373      17.893 -15.971  26.028  1.00 27.79           C  
+HETATM 2252  C8  QWE H 373      17.370 -16.510  24.879  1.00 26.51           C  
+HETATM 2253  C8A QWE H 373      18.205 -16.689  23.809  1.00 26.70           C  
+HETATM 2254  N   QWE H 373      21.383 -15.285  25.104  1.00 29.72           N  
+HETATM 2255  CM1 QWE H 373      21.898 -14.217  24.214  1.00 30.75           C  
+HETATM 2256  CM2 QWE H 373      22.635 -16.213  25.496  1.00 31.28           C  
+HETATM 2257  S   QWE H 373      15.909 -17.581  22.417  1.00 26.82           S  
+HETATM 2258  O1S QWE H 373      15.988 -18.013  21.010  1.00 27.08           O  
+HETATM 2259  O2S QWE H 373      14.998 -18.191  23.402  1.00 25.52           O  
+HETATM 2260  N1  QWE H 373      14.893 -15.970  22.485  1.00 26.45           N  
+HETATM 2261  CA  QWE H 373      15.193 -15.114  21.296  1.00 26.19           C  
+HETATM 2262  C   QWE H 373      16.307 -14.167  21.752  1.00 26.27           C  
+HETATM 2263  O   QWE H 373      16.212 -13.781  22.914  1.00 24.70           O  
+HETATM 2264  CB  QWE H 373      13.942 -14.354  20.879  1.00 23.76           C  
+HETATM 2265  CG  QWE H 373      13.232 -13.686  22.058  1.00 25.01           C  
+HETATM 2266  CD  QWE H 373      11.892 -13.133  21.595  1.00 23.01           C  
+HETATM 2267  NE  QWE H 373      11.218 -12.647  22.780  1.00 21.45           N  
+HETATM 2268  CZ  QWE H 373      11.457 -11.554  23.483  1.00 20.16           C  
+HETATM 2269  NH1 QWE H 373      12.359 -10.674  23.045  1.00 20.04           N  
+HETATM 2270  NH2 QWE H 373      10.723 -11.336  24.566  1.00 20.85           N  
+HETATM 2271  N11 QWE H 373      17.280 -13.692  20.830  1.00 27.91           N  
+HETATM 2272  C21 QWE H 373      17.043 -14.033  19.327  1.00 30.31           C  
+HETATM 2273  C31 QWE H 373      18.421 -14.472  18.809  1.00 29.73           C  
+HETATM 2274  C41 QWE H 373      19.610 -13.417  19.194  1.00 29.33           C  
+HETATM 2275  C51 QWE H 373      19.696 -13.083  20.765  1.00 28.57           C  
+HETATM 2276  C61 QWE H 373      18.351 -12.680  21.310  1.00 28.50           C  
+HETATM 2277  C1' QWE H 373      16.593 -13.014  18.550  1.00 33.08           C  
+HETATM 2278  C2' QWE H 373      15.941 -13.425  17.179  1.00 37.01           C  
+HETATM 2279  S1  QWE H 373      15.783 -14.904  14.458  1.00 43.62           S  
+HETATM 2280  O2  QWE H 373      17.488 -11.922  16.287  1.00 41.38           O  
+HETATM 2281  C52 QWE H 373      17.059 -15.583  13.508  1.00 43.74           C  
+HETATM 2282  C22 QWE H 373      16.864 -13.556  14.739  1.00 42.63           C  
+HETATM 2283 C2'1 QWE H 373      16.825 -12.903  16.107  1.00 40.59           C  
+HETATM 2284  C42 QWE H 373      18.146 -14.734  13.451  1.00 43.96           C  
+HETATM 2285  N3  QWE H 373      18.049 -13.554  14.106  1.00 43.46           N  
 HETATM 2286  O   HOH L 382      -2.186  12.007  23.167  0.90 17.26           O  
 HETATM 2287  O   HOH L 391      -6.499   6.251  26.260  0.86 24.38           O  
 HETATM 2288  O   HOH L 408      -2.832   0.680  34.246  0.94 22.88           O  
@@ -3112,17 +3115,17 @@ CONECT 2257 2244 2258 2259 2260
 CONECT 2258 2257                                                                
 CONECT 2259 2257                                                                
 CONECT 2260 2257 2261                                                           
-CONECT 2261 2260 2262 2269                                                      
-CONECT 2262 2261 2263                                                           
-CONECT 2263 2262 2264                                                           
-CONECT 2264 2263 2265                                                           
+CONECT 2261 2260 2262 2264                                                      
+CONECT 2262 2261 2263 2271                                                      
+CONECT 2263 2262                                                                
+CONECT 2264 2261 2265                                                           
 CONECT 2265 2264 2266                                                           
-CONECT 2266 2265 2267 2268                                                      
-CONECT 2267 2266                                                                
-CONECT 2268 2266                                                                
-CONECT 2269 2261 2270 2271                                                      
-CONECT 2270 2269                                                                
-CONECT 2271 2269 2272 2276                                                      
+CONECT 2266 2265 2267                                                           
+CONECT 2267 2266 2268                                                           
+CONECT 2268 2267 2269 2270                                                      
+CONECT 2269 2268                                                                
+CONECT 2270 2268                                                                
+CONECT 2271 2262 2272 2276                                                      
 CONECT 2272 2271 2273 2277                                                      
 CONECT 2273 2272 2274                                                           
 CONECT 2274 2273 2275                                                           
@@ -3144,5 +3147,5 @@ CONECT 2375 2243
 CONECT 2401 2242                                                                
 CONECT 2415 2243                                                                
 CONECT 2418 2243                                                                
-MASTER      471    0    7    4   14    0   12    6 2439    3   82   24          
+MASTER      484    0    4    4   14    0   13    6 2439    3   82   24          
 END                                                                             

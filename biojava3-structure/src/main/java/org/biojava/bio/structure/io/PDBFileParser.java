@@ -2723,6 +2723,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		atomCount = 0;
 		atomOverflow = false;
 		linkRecords = new ArrayList<LinkRecord>();
+		siteToResidueMap.clear();
 
 		parseCAonly = params.isParseCAOnly();
 
