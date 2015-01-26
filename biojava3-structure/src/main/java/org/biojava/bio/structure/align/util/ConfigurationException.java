@@ -30,10 +30,6 @@ public class ConfigurationException extends Exception {
 	super(t);
     }
 
-    public ConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
     public ConfigurationException() {
     }
 }
