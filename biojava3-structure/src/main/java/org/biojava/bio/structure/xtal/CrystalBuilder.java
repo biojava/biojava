@@ -82,17 +82,28 @@ public class CrystalBuilder {
 
 		this.numChainsAu = structure.getChains().size();
 		this.numOperatorsSg = 1;
-		this.isCrystallographic = false;
 				
 		
-		if (structure.isCrystallographic() && this.crystallographicInfo.getSpaceGroup()==null) {
-			logger.warn("Could not find a space group, will only calculate asymmetric unit interfaces.");
-		}
-		// we need to check space group not null for the cases where the entry is crystallographic but 
-		// the space group is not a standard one recognized by biojava, e.g. 1mnk (SG: 'I 21')
-		if (structure.isCrystallographic() && this.crystallographicInfo.getSpaceGroup()!=null) {
-			this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
+		if (structure.isCrystallographic()) {
+			
 			this.isCrystallographic = true;
+			// we need to check space group not null for the cases where the entry is crystallographic but 
+			// the space group is not a standard one recognized by biojava, e.g. 1mnk (SG: 'I 21')
+			if (this.crystallographicInfo.getSpaceGroup()==null) {
+				logger.warn("Could not find a space group, will only calculate asymmetric unit interfaces.");
+				this.isCrystallographic = false;
+			} else {
+				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();				
+			}
+			// we need to check crystal cell not null for the rare cases where the entry is crystallographic but 
+			// the crystal cell is not given, e.g. 2i68, 2xkm, 4bpq
+			if (this.crystallographicInfo.getCrystalCell()==null) {
+				logger.warn("Could not find a crystal cell definition, will only calculate asymmetric unit interfaces.");
+				this.isCrystallographic = false;
+			}
+			
+		} else {
+			this.isCrystallographic = false;			
 		}
 
 		this.numCells = DEF_NUM_CELLS;
@@ -160,7 +171,7 @@ public class CrystalBuilder {
 		// d) isCrystallographic will be false if the structure is crystallographic but the space group was not recognized
 
 
-		calcInterfacesCrystal(set, cutoff, isCrystallographic);
+		calcInterfacesCrystal(set, cutoff);
 
 
 		return set;
@@ -172,7 +183,7 @@ public class CrystalBuilder {
 	 * @param set
 	 * @param cutoff
 	 */
-	private void calcInterfacesCrystal(StructureInterfaceList set, double cutoff, boolean isCrystallographic) {
+	private void calcInterfacesCrystal(StructureInterfaceList set, double cutoff) {
 
 
 		// initialising debugging vars
