@@ -94,7 +94,7 @@ public class GuanUberbacherTest {
 
     @Test
     public void testGetScore() {
-        assertEquals(4, alignment.getScore(), PRECISION);
+        assertEquals(-6, alignment.getScore(), PRECISION);
         assertEquals(21, self.getScore(), PRECISION);
     }
 

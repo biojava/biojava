@@ -124,7 +124,7 @@ public class SimpleProfileProfileAlignerTest {
         int[][][] scores = sppa1.getScoreMatrix();
         assertEquals(1, scores[2][1][1]);
         scores = sppa2.getScoreMatrix();
-        assertEquals(-5, scores[3][4][0]);
+        assertEquals(-7, scores[3][4][0]);
         scores = sppa3.getScoreMatrix();
         assertEquals(1, scores[1][2][2]);
     }
@@ -135,70 +135,70 @@ public class SimpleProfileProfileAlignerTest {
                 "Substitution%n" +
                 "        A   R   N   D%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "A  -\u221E   4  -2  -4  -5%n" +
-                "R  -\u221E  -2   9   1  -2%n" +
-                "N  -\u221E  -4   1  15   7%n" +
-                "D  -\u221E  -5  -2   7  21%n" +
+                "A  -\u221E   4  -4  -6  -7%n" +
+                "R  -\u221E  -4   9   1  -2%n" +
+                "N  -\u221E  -6   1  15   7%n" +
+                "D  -\u221E  -7  -2   7  21%n" +
                 "%nDeletion%n" +
                 "        A   R   N   D%n" +
-                "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "A  -1  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "R  -2   1  -5  -7  -8%n" +
-                "N  -3   0   6  -2  -5%n" +
-                "D  -4  -1   5  12   4%n" +
+                "   -2  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A  -3  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "R  -4   1  -7  -9 -10%n" +
+                "N  -5   0   6  -2  -5%n" +
+                "D  -6  -1   5  12   4%n" +
                 "%nInsertion%n" +
                 "        A   R   N   D%n" +
-                "    0  -1  -2  -3  -4%n" +
+                "   -2  -3  -4  -5  -6%n" +
                 "A  -\u221E  -\u221E   1   0  -1%n" +
-                "R  -\u221E  -\u221E  -5   6   5%n" +
-                "N  -\u221E  -\u221E  -7  -2  12%n" +
-                "D  -\u221E  -\u221E  -8  -5   4%n"),
+                "R  -\u221E  -\u221E  -7   6   5%n" +
+                "N  -\u221E  -\u221E  -9  -2  12%n" +
+                "D  -\u221E  -\u221E -10  -5   4%n"),
                 sppa1.getScoreMatrixAsString());
         assertEquals(String.format(
                 "Substitution%n" +
                 "        A   N   D   R%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "H  -\u221E  -2   0  -3  -3%n" +
-                "I  -\u221E  -2  -5  -3  -6%n" +
-                "L  -\u221E  -3  -5  -7  -5%n" +
-                "K  -\u221E  -4  -3  -5  -4%n" +
+                "H  -\u221E  -2  -2  -5  -5%n" +
+                "I  -\u221E  -4  -5  -5  -8%n" +
+                "L  -\u221E  -5  -7  -9  -7%n" +
+                "K  -\u221E  -6  -5  -7  -6%n" +
                 "%nDeletion%n" +
                 "        A   N   D   R%n" +
-                "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "H  -1  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "I  -2  -5  -3  -6  -6%n" +
-                "L  -3  -5  -4  -6  -7%n" +
-                "K  -4  -6  -5  -7  -8%n" +
+                "   -2  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "H  -3  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "I  -4  -5  -5  -8  -8%n" +
+                "L  -5  -6  -6  -8  -9%n" +
+                "K  -6  -7  -7  -9 -10%n" +
                 "%nInsertion%n" +
                 "        A   N   D   R%n" +
-                "    0  -1  -2  -3  -4%n" +
-                "H  -\u221E  -\u221E  -5  -3  -4%n" +
-                "I  -\u221E  -\u221E  -5  -6  -6%n" +
-                "L  -\u221E  -\u221E  -6  -7  -8%n" +
-                "K  -\u221E  -\u221E  -7  -6  -7%n"),
+                "   -2  -3  -4  -5  -6%n" +
+                "H  -\u221E  -\u221E  -5  -5  -6%n" +
+                "I  -\u221E  -\u221E  -7  -8  -8%n" +
+                "L  -\u221E  -\u221E  -8  -9 -10%n" +
+                "K  -\u221E  -\u221E  -9  -8  -9%n"),
                 sppa2.getScoreMatrixAsString());
         assertEquals(String.format(
                 "Substitution%n" +
                 "        -   H   I   L   K%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "A  -\u221E   4  -3  -3  -4  -5%n" +
-                "R  -\u221E  -2   4  -1  -2   3%n" +
-                "N  -\u221E  -4   5   3  -2   0%n" +
-                "D  -\u221E  -5   0   7  -1   0%n" +
+                "A  -\u221E   4  -5  -5  -6  -7%n" +
+                "R  -\u221E  -4   4  -1  -2   3%n" +
+                "N  -\u221E  -6   5   3  -2   0%n" +
+                "D  -\u221E  -7   0   7  -1   0%n" +
                 "%nDeletion%n" +
                 "        -   H   I   L   K%n" +
-                "    0  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "A  -1  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "R  -2   1  -6  -6  -7  -8%n" +
-                "N  -3   0   1  -4  -5   0%n" +
-                "D  -4  -1   2   0  -5  -1%n" +
+                "   -2  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A  -3  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "R  -4   1  -8  -8  -9 -10%n" +
+                "N  -5   0   1  -4  -5   0%n" +
+                "D  -6  -1   2   0  -5  -1%n" +
                 "%nInsertion%n" +
                 "        -   H   I   L   K%n" +
-                "    0  -1  -2  -3  -4  -5%n" +
+                "   -2  -3  -4  -5  -6  -7%n" +
                 "A  -\u221E  -\u221E   1   0  -1  -2%n" +
-                "R  -\u221E  -\u221E  -5   1   0  -1%n" +
-                "N  -\u221E  -\u221E  -7   2   1   0%n" +
-                "D  -\u221E  -\u221E  -8  -3   4   3%n"),
+                "R  -\u221E  -\u221E  -7   1   0  -1%n" +
+                "N  -\u221E  -\u221E  -9   2   1   0%n" +
+                "D  -\u221E  -\u221E -10  -3   4   3%n"),
                 sppa3.getScoreMatrixAsString());
     }
 
@@ -233,7 +233,7 @@ public class SimpleProfileProfileAlignerTest {
     @Test
     public void testGetScore() {
         assertEquals(21, sppa1.getScore(), PRECISION);
-        assertEquals(-4, sppa2.getScore(), PRECISION);
+        assertEquals(-6, sppa2.getScore(), PRECISION);
         assertEquals(3, sppa3.getScore(), PRECISION);
     }
 

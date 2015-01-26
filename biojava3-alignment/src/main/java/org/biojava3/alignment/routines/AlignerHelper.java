@@ -403,7 +403,7 @@ public class AlignerHelper {
         int min = Integer.MIN_VALUE - gop - gep;
         ensureScoringMatrixColumn(x, storing, scores);
         if (x == xb) {
-            scores[xb][yb][1] = scores[xb][yb][2] = 0;
+            scores[xb][yb][1] = scores[xb][yb][2] = gop;
             pointers[yb] = new Last[] {null, null, null};
             if (startAnchored) {
         		assert (xb > 0 && yb > 0);
