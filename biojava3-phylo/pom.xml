@@ -35,8 +35,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-    	<groupId>org.forester</groupId>
-    	<artifactId>forester-lgpl</artifactId>
+    	<groupId>org.biojava.thirdparty</groupId>
+    	<artifactId>forester</artifactId>
     	<version>1.005</version>
     	<type>jar</type>
     	<scope>compile</scope>
