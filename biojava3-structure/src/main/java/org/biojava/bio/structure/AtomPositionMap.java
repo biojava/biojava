@@ -132,18 +132,6 @@ public class AtomPositionMap {
 	 * @param startingChain
 	 * @return
 	 */
-	public int calcLength(int positionA, int positionB, char startingChain) {
-		return calcLength(positionA, positionB, String.valueOf(startingChain));
-	}
-
-	/**
-	 * This is <strong>not</em> the same as subtracting {@link #getPosition(ResidueNumber)} for {@code positionB} from {@link #getPosition(ResidueNumber)} for {@code positionA}.
-	 * The latter considers only positions of ATOM entries in the PDB file and ignores chains. This method only includes ATOMs from the same chain.
-	 * @param positionA
-	 * @param positionB
-	 * @param startingChain
-	 * @return
-	 */
 	public int calcLength(int positionA, int positionB, String startingChain) {
 		int positionStart, positionEnd;
 		if (positionA <= positionB) {
@@ -173,17 +161,7 @@ public class AtomPositionMap {
 	 * @param startingChain
 	 * @return
 	 */
-	public int calcLengthDirectional(int positionStart, int positionEnd, char startingChain) {
-		return calcLengthDirectional(positionStart, positionEnd, String.valueOf(startingChain));
-	}
 
-	/**
-	 * Calculates the distance between {@code positionStart} and {@code positionEnd}. Will return a negative value if the start is past the end.
-	 * @param positionStart
-	 * @param positionEnd
-	 * @param startingChain
-	 * @return
-	 */
 	public int calcLengthDirectional(int positionStart, int positionEnd, String startingChain) {
 		int count = 0;
 		for (Map.Entry<ResidueNumber, Integer> entry : treeMap.entrySet()) {
@@ -203,7 +181,7 @@ public class AtomPositionMap {
 	 * @param positionA
 	 * @param positionB
 	 * @return
-	 * @see #calcLength(int, int, char)
+	 * @see #calcLength(int, int, String)
 	 */
 	public int calcLength(ResidueNumber positionA, ResidueNumber positionB) {
 		int pA = hashMap.get(positionA);
