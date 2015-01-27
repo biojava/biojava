@@ -24,11 +24,7 @@
  */
 package org.biojava.bio.structure.scop.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.Serializable;
-import java.util.List;
+import org.biojava.bio.structure.scop.ScopDescription;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -36,8 +32,11 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.biojava.bio.structure.scop.ScopDescription;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.List;
 
 
 
@@ -45,9 +44,7 @@ import org.biojava.bio.structure.scop.ScopDescription;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ScopDescriptions implements Serializable{
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 4924350548761431852L;
 	
 	static JAXBContext jaxbContext;
@@ -55,7 +52,7 @@ public class ScopDescriptions implements Serializable{
 		try {
 			jaxbContext= JAXBContext.newInstance(ScopDescriptions.class);
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context for " + ScopDescriptions.class, e);
 		}
 	}
 	
@@ -86,7 +83,7 @@ public class ScopDescriptions implements Serializable{
 			
 
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not convert " + getClass() + " to XML", e);
 		}
 
 		return baos.toString();
@@ -106,7 +103,7 @@ public class ScopDescriptions implements Serializable{
 			job = (ScopDescriptions) un.unmarshal(bais);
 
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse " + ScopDescriptions.class + " from XML", e);
 		}
 
 		return job;

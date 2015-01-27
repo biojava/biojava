@@ -1,5 +1,18 @@
 package org.biojava.bio.structure.align.util;
 
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.SVDSuperimposer;
+import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.ce.CECalculator;
+import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
+import org.biojava.bio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,17 +28,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.CECalculator;
-import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.bio.structure.jama.Matrix;
-
 /**
  * Some utility methods for analyzing and manipulating AFPChains.
  *
@@ -33,6 +35,10 @@ import org.biojava.bio.structure.jama.Matrix;
  *
  */
 public class AlignmentTools {
+
+	private static final Logger logger = LoggerFactory.getLogger(AlignmentTools.class);
+
+
 	public static boolean debug = false;
 
 	/**
@@ -305,7 +311,7 @@ public class AlignmentTools {
 		boolean foundSymmetry = false;
 
 		if(debug) {
-			System.out.println("Symm\tPos\tDelta");
+			logger.trace("Symm\tPos\tDelta");
 		}
 
 		for(int n=1;n<=maxSymmetry;n++) {
@@ -325,7 +331,7 @@ public class AlignmentTools {
 					numDeltas++;
 
 					if(debug) {
-						System.out.format("%d\t%d\t%d\n",n,preimage.get(i),delta);
+						logger.debug("%d\t%d\t%d\n",n,preimage.get(i),delta);
 					}
 				}
 
@@ -335,9 +341,6 @@ public class AlignmentTools {
 			// Not normalizing by numDeltas favors smaller orders
 
 			double metric = Math.sqrt((double)deltasSq/numDeltas); // root mean squared distance
-			//double metric = Math.sqrt((double)deltasSq); // root squared distance
-
-			//System.out.format("%d\t%f\n",n,metric);
 
 			if(!foundSymmetry && metric < bestMetric * minimumMetricChange) {
 				// n = 1 is never the best symmetry
@@ -408,7 +411,7 @@ public class AlignmentTools {
 	 * <pre>
 	 * 12456789
 	 * 12345789</pre>
-	 * @param afpChain The non-sequential input alignment
+	 * @param alignment The non-sequential input alignment
 	 * @param inverseAlignment If false, map from structure1 to structure2. If
 	 *  true, generate the inverse of that map.
 	 * @return A mapping from sequential residues of one protein to those of the other
@@ -486,7 +489,6 @@ public class AlignmentTools {
 	 * @author Spencer Bliven
 	 *
 	 * @param <K>
-	 * @param <V>
 	 */
 	public static class IdentityMap<K> extends AbstractMap<K,K> {
 		public IdentityMap() {}
@@ -571,8 +573,8 @@ public class AlignmentTools {
 
 		String[][][] pdbAln = new String[1][2][alnLen];
 		for(int i=0;i<alnLen;i++) {
-			pdbAln[0][0][i] = aligned1[i].getChainId()+":"+aligned1[i].toString();
-			pdbAln[0][1][i] = aligned2[i].getChainId()+":"+aligned2[i].toString();
+			pdbAln[0][0][i] = aligned1[i].getChainId()+":"+aligned1[i];
+			pdbAln[0][1][i] = aligned2[i].getChainId()+":"+aligned2[i];
 		}
 
 		a.setPdbAln(pdbAln);
@@ -677,7 +679,7 @@ public class AlignmentTools {
 	 *
 	 * @param afpChain The alignment to be modified
 	 * @param alignment The new alignment, as a Map
-	 * @throws StructureException if an error occured during superposition
+	 * @throws StructureException if an error occurred during superposition
 	 * @see AlignmentTools#createAFPChain(Atom[], Atom[], ResidueNumber[], ResidueNumber[])
 	 */
 	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
@@ -740,7 +742,6 @@ public class AlignmentTools {
 	 * @param afpChain Input afpchain. UNMODIFIED
 	 * @param ca1
 	 * @param ca2
-	 * @param optLength
 	 * @param optLens
 	 * @param optAln
 	 * @return A NEW AfpChain based off the input but with the optAln modified
@@ -823,7 +824,7 @@ public class AlignmentTools {
 
 		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.		
 		if (pos != afpChain.getOptLength()){
-			System.err.println("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLength());
+			logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLength());
 			// we need to resize the array, because we allocated too many atoms earlier on.
 			ca1aligned = (Atom[]) resizeArray(ca1aligned, pos);
 			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
@@ -911,7 +912,7 @@ public class AlignmentTools {
 
 		StringBuilder str = new StringBuilder();
 
-		while( alig.size() > 0 ){
+		while(!alig.isEmpty()){
 			// Pick an edge and work upstream to a root or cycle
 			S seedNode = alig.keySet().iterator().next();
 			S node = seedNode;
@@ -943,7 +944,7 @@ public class AlignmentTools {
 					inverse.remove(node);
 				}
 			}
-			if(alig.size() > 0) {
+			if(!alig.isEmpty()) {
 				str.append(' ');
 			}
 		}

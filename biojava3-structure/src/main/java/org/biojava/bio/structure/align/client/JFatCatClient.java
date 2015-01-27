@@ -1,16 +1,5 @@
 package org.biojava.bio.structure.align.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Random;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
@@ -27,6 +16,16 @@ import org.biojava.bio.structure.align.xml.PositionInQueueXMLConverter;
 import org.biojava.bio.structure.align.xml.RepresentativeXMLConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Random;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class JFatCatClient {
 	private final static Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
@@ -61,31 +60,26 @@ public class JFatCatClient {
 	
 	}
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception {
 		//System.out.println(hasPrecalculatedResult("http://source.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
 		AtomCache cache = new AtomCache();
 		String name1= "2W72.A";
 		String name2= "1D2Z.D";
-		
-		try {
-		
-			Atom[] ca1 = cache.getAtoms(name1);
-			Atom[] ca2 = cache.getAtoms(name2);
-			
-			int timeout = 10000;
 
-			String testServer = "http://source.rcsb.org/jfatcatserver/align/";
-			
-			System.out.println(getAFPChainFromServer(testServer, FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
+		Atom[] ca1 = cache.getAtoms(name1);
+		Atom[] ca2 = cache.getAtoms(name2);
 
-			PdbPairsMessage msg = getPdbPairs(testServer, 1, "test");
-			
-			System.out.println(msg);
+		int timeout = 10000;
 
-			System.out.println(getRepresentatives(FarmJobParameters.DEFAULT_SERVER_URL, 40));
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		String testServer = "http://source.rcsb.org/jfatcatserver/align/";
+
+		System.out.println(getAFPChainFromServer(testServer, FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
+
+		PdbPairsMessage msg = getPdbPairs(testServer, 1, "test");
+
+		System.out.println(msg);
+
+		System.out.println(getRepresentatives(FarmJobParameters.DEFAULT_SERVER_URL, 40));
 	}
 
 	public static boolean hasPrecalculatedResult(String serverLocation, String method, String name1, String name2 ){
@@ -149,7 +143,7 @@ public class JFatCatClient {
 			}
 
 		} catch (IOException e){
-			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
+			logger.error("error in JFatCatClient: getAFPChainFromServer",e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
 		}
 		return position;
 
@@ -181,19 +175,15 @@ public class JFatCatClient {
 			if ( stream != null) {
 
 				xml = convertStreamToString(stream);
-				//System.out.println("got XML from server: " + xml);
 			}
 			if (xml != null) {
 
-				//System.out.println("got XML from server: " + xml);
-
-				AFPChain newChain = AFPChainXMLParser.fromXML (xml, name1, name2, ca1, ca2);
-
-				return newChain;
+				return AFPChainXMLParser.fromXML (xml, name1, name2, ca1, ca2);
 
 			} else {
 				return null;
-			} 
+			}
+			// TODO dmyersturnbull: method should throw; we shouldn't catch here
 		} catch (IOException e){
 			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
 		} catch (StructureException e) {
@@ -213,12 +203,12 @@ public class JFatCatClient {
                 sb.append(line).append(newline);
 			}
 		} catch (IOException e) {
-			//e.printStackTrace();
+			logger.error("Couldn't convert stream to string", e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
 		} finally {
 			try {
 				stream.close();
 			} catch (IOException e) {
-				logger.error("Can't close stream", e);
+				logger.warn("Can't close stream", e);
 			}
 		}
 
@@ -243,10 +233,8 @@ public class JFatCatClient {
 
 		while (! submitted ){
 			try { 
-				URL url = new URL(u); 
-				//System.out.println("posting xml: " + xml);
+				URL url = new URL(u);
 				InputStream response = HTTPConnectionTools.doPOST(url, multiXML,timeout);
-				//System.out.println("got response: " + convertStreamToString(response));
 				responseS = convertStreamToString(response);
 				submitted = true;
 				if (! responseS.contains("OK"))
@@ -265,7 +253,7 @@ public class JFatCatClient {
 					logger.warn("sleeping " + (randomSleep/1000) + " sec.");
 					Thread.sleep(randomSleep);
 				} catch (InterruptedException ex){
-					logger.error("Interrupted while sleeping",ex);
+					logger.warn("Interrupted while sleeping", ex);
 				}
 			}
 		} 
@@ -313,10 +301,9 @@ public class JFatCatClient {
 
 			URL url = new URL(u); 
 
-			//System.out.println("posting xml: " + xml);
 			InputStream response = HTTPConnectionTools.doPOST(url, xml,timeout);
 
-			FarmJobRunnable.log("got response: " + convertStreamToString(response));
+			logger.debug("got response: {}", convertStreamToString(response));
 
 			if ( xml.startsWith("KILL_JOB")){
 				throw new JobKillException("Server responded with KILL message.");
@@ -341,22 +328,14 @@ public class JFatCatClient {
 	}
 
 
-	public static final PdbPairsMessage getPdbPairs(String url,int nrPair, String username) throws MalformedURLException, IOException, JobKillException {
-		StringBuffer u = new StringBuffer();
-		u.append(url);
-		u.append("getPairs?");
-		u.append("nrPairs=");
-		u.append(nrPair);
-		u.append("&username=");
-		u.append(URLEncoder.encode(username,"UTF-8"));
+	public static final PdbPairsMessage getPdbPairs(String url,int nrPair, String username) throws IOException, JobKillException {
 
 
-		String urlS= u.toString();
+		String urlS= url + "getPairs?" + "nrPairs=" + nrPair + "&username=" + URLEncoder.encode(username, "UTF-8");
 		int timeout = getTimeout();
 
-		//SortedSet<PdbPair> pairs = new TreeSet<PdbPair>();
 		PdbPairsMessage msg = null;
-		FarmJobRunnable.log("requesting " + urlS);
+		logger.info("requesting {}", urlS);
 		URL serverUrl = new URL(urlS);
 		// we are very tolerant with requesting a set of pairs, since we probably depend on getting it to get work started...
 		// 1 min...
@@ -366,7 +345,6 @@ public class JFatCatClient {
 		if ( stream != null) {
 
 			xml = convertStreamToString(stream);
-			//System.out.println("got XML from server: " + xml);
 			if (xml != null) {
 				if ( xml.startsWith("KILL_JOB")){
 					// we got the KILL signal from the server...
@@ -402,12 +380,11 @@ public class JFatCatClient {
 			if ( stream != null) {
 
 				xml = convertStreamToString(stream);
-				//System.out.println("got XML from server: " + xml);
 			}
 			if (xml != null) {
 				representatives = RepresentativeXMLConverter.fromXML(xml);
 			}
-		} catch (IOException e){
+		} catch (IOException e){ // TODO dmyersturnbull: method should throw; we shouldn't catch here
 			logger.error("Error fetching representatives",e);
 		}
 		return representatives;

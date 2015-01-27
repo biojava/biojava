@@ -1,9 +1,5 @@
 package org.biojava.bio.structure.align;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
@@ -12,6 +8,10 @@ import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 
 public class StructureAlignmentFactory {
@@ -90,8 +90,7 @@ public class StructureAlignmentFactory {
 				// creating a new StructureAlignment every time this is called
 				try {
 					Class<StructureAlignment> c = (Class<StructureAlignment>) Class.forName(algo.getClass().getName());
-					StructureAlignment sa = c.newInstance();
-					return sa;
+					return c.newInstance();
 				} catch (Exception e){
 					logger.error("Exception: ", e);
 					return null;

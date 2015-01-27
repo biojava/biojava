@@ -1,11 +1,9 @@
 package org.biojava.bio.structure.scop;
 
-import java.io.Serializable;
-import java.io.StringWriter;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 /** Contains data from
  * dir.des.scop.txt_1.75
@@ -24,9 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "ScopDescription", namespace ="http://source.rcsb.org")
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ScopDescription implements Serializable,Cloneable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 8579808155176839161L;
 	int sunID;
 	ScopCategory category;
@@ -37,11 +33,11 @@ public class ScopDescription implements Serializable,Cloneable{
 
 	@Override
 	public String toString(){
-		StringWriter buf = new StringWriter();
+		StringBuilder buf = new StringBuilder();
 
         buf.append(String.valueOf(sunID));
 		buf.append("\t");
-		buf.append(category.toString());
+		buf.append(category);
 		buf.append("\t");
 		buf.append(classificationId);
 		buf.append("\t");
@@ -196,15 +192,13 @@ public class ScopDescription implements Serializable,Cloneable{
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
-		if (sunID != other.sunID) {
-			return false;
-		}
-		return true;
+		return sunID == other.sunID;
 	}
 
 
 	@Override
-	protected Object clone() {
+	protected Object clone() throws CloneNotSupportedException {
+		super.clone();
 		ScopDescription n = new ScopDescription();
 		
 		n.setCategory(getCategory());

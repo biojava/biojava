@@ -36,11 +36,9 @@ import java.io.Serializable;
  */
 public class SSBond implements PDBRecord, Serializable, Cloneable {
 
-	/**
-    *
-    */
-   private static final long serialVersionUID = -8663681100691188647L;
-   int serNum;
+	private static final long serialVersionUID = -8663681100691188647L;
+
+	int serNum;
 	String chainID1;
 	String chainID2;
 	String resnum1;
@@ -172,23 +170,23 @@ public class SSBond implements PDBRecord, Serializable, Cloneable {
 	public void setResnum2(String resnum2) {
 		this.resnum2 = resnum2;
 	}
-	
+
 	@Override
 	public String toString() {
 		String s = "[SSBOND:\n";
-		
+
 		s += "Atom 1:\n";
 		s += "\tChain: " + chainID1 + "\n";
 		s += "\tResidue #: " + resnum1 + "\n";
 		s += "\tIns. Code: " + insCode1 + "\n";
-		
+
 		s += "Atom 2:\n";
 		s += "\tChain: " + chainID2 + "\n";
 		s += "\tResidue #: " + resnum2 + "\n";
 		s += "\tIns. Code: " + insCode2 + "\n";
-		
+
 		s += "]";
-		
+
 		return s;
 	}
 }

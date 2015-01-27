@@ -32,8 +32,6 @@ import org.biojava.bio.structure.jama.SingularValueDecomposition;
  *
  * example usage:
  * <pre>
- * try{
-
             // get some arbitrary amino acids from somewhere
             String filename   =  "/Users/ap3/WORK/PDB/5pti.pdb" ;
 
@@ -121,9 +119,6 @@ import org.biojava.bio.structure.jama.SingularValueDecomposition;
 
             System.out.println("wrote to file " + outputfile);
 
-        } catch (Exception e){
-            e.printStackTrace();
-        }
         </pre>
  *
  *
@@ -182,9 +177,6 @@ public class SVDSuperimposer {
     }
 
 
-
-
-
     /** Do the actual calculation.
      *
      * @param coordSet1 coordinates for atom array 1
@@ -204,9 +196,6 @@ public class SVDSuperimposer {
 
         SingularValueDecomposition svd = corr.svd();
 
-        // A = U*S*V'.
-
-
         Matrix u = svd.getU();
         // v is alreaady transposed ! difference to numermic python ...
         Matrix vt =svd.getV();
@@ -219,10 +208,7 @@ public class SVDSuperimposer {
 
         // check if we have found a reflection
 
-        //printMatrix(rot);
-
         double det = rot.det();
-        //System.out.println(det);
 
          if (det<0) {
             vt = vt_orig.transpose();
@@ -266,7 +252,6 @@ public class SVDSuperimposer {
         double avd = ( sum/ atomSet1.length);
         //System.out.println("av dist" + avd);
         return Math.sqrt(avd);
-
 
     }
 
@@ -378,22 +363,6 @@ public class SVDSuperimposer {
         a.setY(tran.get(0,1));
         a.setZ(tran.get(0,2));
         return a;
-    }
-
-    /** Simple debug method to print a Matrix object on System.out.
-     *
-     * @param m a Matrix
-     * 
-     * @deprecated Matrix.toString() provides the same functionality.
-     */
-    @Deprecated
-    public void printMatrix(Matrix m){
-        for (int i = 0 ; i < m.getRowDimension(); i++){
-            for (int j = 0 ; j< m.getColumnDimension(); j++){
-                System.out.print("\t" + m.get(i,j) + " ");
-            }
-            System.out.println("");
-        }
     }
 
 }

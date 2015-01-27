@@ -287,7 +287,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 
     // helper methods
 
-    // performs alignment
+    /**
+     * Performs alignment
+     */
     protected void align() {
         if (!isReady()) {
             return;
@@ -316,24 +318,31 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
             for (int i = 0; i < problems.size(); i++) {
             	Subproblem subproblem = problems.get(i);
             	for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
-                	traceback[x] = linear ? setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(),
-                            getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) : setScoreVector(x, subproblem,
-                            gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
-                            getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
+                	
+            		traceback[x] = 
+                		
+            		  linear ? 
+                		setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) : 
+                		
+                		setScoreVector(x, subproblem, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
                 }
             }
             setSteps(traceback, scores, sx, sy);
-            score = Short.MIN_VALUE;
+            score = Integer.MIN_VALUE;
             int[] finalScore = scores[xyMax[0]][xyMax[1]];
             for (int z = 0; z < finalScore.length; z++) {
-            	score = (int) Math.max(score, finalScore[z]);
+            	score = Math.max(score, finalScore[z]);
             }
         } else {
             for (int x = 0; x < dim[0]; x++) {
-            	traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
-                        getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
-                        setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
-                        getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
+            	
+            	traceback[x] = 
+            			
+            	  linear ? 
+           			setScoreVector(x, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
+                    
+           			setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
+           				
                 if (xyMax[0] == x) {
                     score = scores[x][xyMax[1]][0];
                 }
@@ -350,12 +359,21 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         time = System.nanoTime() - timeStart;
     }
 
-    // returns score for the alignment of the query column to all target columns
+    /**
+     * Returns score for the alignment of the query column to all target columns
+     * @param queryColumn
+     * @return
+     */
     protected int[] getSubstitutionScoreVector(int queryColumn) {
         return getSubstitutionScoreVector(queryColumn, new Subproblem(0, 0, scores.length - 1, scores[0].length - 1));
     }
 
-    // returns score for the alignment of the query column to all target columns
+    /**
+     * Returns score for the alignment of the query column to all target columns
+     * @param queryColumn
+     * @param subproblem
+     * @return
+     */
     protected int[] getSubstitutionScoreVector(int queryColumn, Subproblem subproblem) {
         int[] subs = new int[subproblem.getTargetEndIndex() + 1];
         if (queryColumn > 0) {
@@ -366,7 +384,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         return subs;
     }
 
-    // resets output fields; should be overridden to set max and min
+    /**
+     * Resets output fields; should be overridden to set max and min
+     */
     protected void reset() {
         xyMax = new int[] {0, 0};
         xyStart = new int[] {0, 0};

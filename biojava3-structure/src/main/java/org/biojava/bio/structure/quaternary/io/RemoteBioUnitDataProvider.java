@@ -1,39 +1,46 @@
 package org.biojava.bio.structure.quaternary.io;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 
-	public static String DEFAULT_SERVERNAME = "http://pepper.rcsb.org:8080/pdb/rest/biolassembly/";
+	
+	private static final Logger logger = LoggerFactory.getLogger(RemoteBioUnitDataProvider.class);
+			
+	public static final String DEFAULT_SERVERNAME = "http://pepper.rcsb.org:8080/pdb/rest/biolassembly/";
 
-	public static String NR_BIOL_APPEND = "nrBiolAssemblies?structureId=%s";
+	public static final String NR_BIOL_APPEND = "nrBiolAssemblies?structureId=%s";
 
-	public static String BIO_ASSEMBLY = "bioAssembly?structureId=%s&nr=%s";
+	public static final String BIO_ASSEMBLY = "bioAssembly?structureId=%s&nr=%s";
 
-	String serverName;
 	private static final int DEFAULT_TIMEOUT = 5000;
 
-	int timeout;
+	private String serverName;
+
+	private int timeout;
 
 	public RemoteBioUnitDataProvider(){
 		serverName = DEFAULT_SERVERNAME;
@@ -66,8 +73,12 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 				System.out.println(xml);
 				transformations = BiologicalAssemblyTransformation.fromMultiXML(xml);
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (IOException e){
+			logger.error("Exception caught while getting biological assemblies",e);
+		} catch (SAXException e) {
+			logger.error("Exception caught while getting biological assemblies",e);
+		} catch (ParserConfigurationException e) {
+			logger.error("Exception caught while getting biological assemblies",e);
 		}
 
 		return transformations;
@@ -97,8 +108,8 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 
 				nrBiolAssemblies = extractNrBiolAssemblies(xml);
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (IOException e){
+			logger.error("Exception caught while getting number of biological assemblies",e);
 		}
 		return nrBiolAssemblies;
 	}
@@ -143,15 +154,19 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 				nrBiolAssemblies = Integer.parseInt(count);
 			}
 
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (IOException e){
+			logger.error("Exception caught while getting number of biological assemblies",e);
+		} catch (SAXException e) {
+			logger.error("Exception caught while getting number of biological assemblies",e);
+		} catch (ParserConfigurationException e) {
+			logger.error("Exception caught while getting number of biological assemblies",e);
 		}
 		return nrBiolAssemblies;
 	}
 
 	@Override
 	public Structure getAsymUnit(String pdbId) {
-		System.err.println("RemoteBioUnitDataProvider getAsymUnit Not implemented yet!");
+		logger.error("RemoteBioUnitDataProvider getAsymUnit Not implemented yet!");
 		return null;
 	
 	
@@ -174,8 +189,4 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 		return null;
 	}
 	
-	@Override
-	public List<PdbxStructAssembly> getPdbxStructAssemblies() {
-		return Collections.emptyList();		
-	}
 }

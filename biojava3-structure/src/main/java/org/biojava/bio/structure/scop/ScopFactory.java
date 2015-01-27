@@ -1,5 +1,8 @@
 package org.biojava.bio.structure.scop;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +29,8 @@ import java.util.Map;
  *
  */
 public class ScopFactory {
+
+	private static final Logger logger = LoggerFactory.getLogger(ScopFactory.class);
 
 	// berkeley 2
 	public static final String VERSION_2_0_4 = "2.04";
@@ -113,6 +118,7 @@ public class ScopFactory {
 		if ( forceLocalData) {
 			// Use a local installation
 			if( scop == null || !(scop instanceof LocalScopDatabase) ) {
+				logger.info("Creating new {}, version {}", BerkeleyScopInstallation.class.getSimpleName(), version);
 				BerkeleyScopInstallation berkeley = new BerkeleyScopInstallation();
 				berkeley.setScopVersion(version);
 				versionedScopDBs.put(version,berkeley);
@@ -122,6 +128,7 @@ public class ScopFactory {
 		} else {
 			// Use a remote installation
 			if( scop == null ) {
+				logger.info("Creating new {}, version {}", RemoteScopInstallation.class.getSimpleName(), version);
 				scop = new RemoteScopInstallation();
 				scop.setScopVersion(version);
 				versionedScopDBs.put(version,scop);
@@ -146,7 +153,7 @@ public class ScopFactory {
 	 * @param forceLocalData Whether to use a local installation or a remote installation
 	 */
 	public static void setScopDatabase(String version, boolean forceLocalData) {
-		//System.out.println("ScopFactory: Setting ScopDatabase to version: " + version + " forced local: " + forceLocalData);
+		logger.debug("ScopFactory: Setting ScopDatabase to version: {}, forced local: {}", version, forceLocalData);
 		getSCOP(version,forceLocalData);
 		defaultVersion = version;
 	}
@@ -156,7 +163,7 @@ public class ScopFactory {
 	 * @param scop
 	 */
 	public static void setScopDatabase(ScopDatabase scop){
-		//System.out.println("ScopFactory: Setting ScopDatabase to type: " + scop.getClass().getName());
+		logger.debug("ScopFactory: Setting ScopDatabase to type: {}", scop.getClass().getName());
 		defaultVersion = scop.getScopVersion();
 		versionedScopDBs.put(defaultVersion,scop);
 	}

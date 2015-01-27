@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -87,6 +88,7 @@ import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Symmetry;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.xtal.CrystalCell;
@@ -756,6 +758,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		
 					Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList);
 
+					if (atomChain == null) {
+						// most likely there's no observed residues at all for the seqres chain: can't map
+						// e.g. 3zyb: chains with asym_id L,M,N,O,P have no observed residues
+						logger.warn("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
+								seqResChain.getChainID());
+						continue;
+					}
+					
 					//map the atoms to the seqres...
 
 					List<Group> seqResGroups = seqResChain.getAtomGroups(); 
@@ -782,16 +792,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 					atomChain.setSeqResGroups(seqResGroups);
 
-			
-
-
 			}
-
-
 		}
 
-
-		addBonds();
+		if ( params.shouldCreateAtomBonds())
+			addBonds();
 
 		//TODO: add support for these:
 		//structure.setConnections(connects);
@@ -842,18 +847,37 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 				}
 			}
+
 			structure.setModel(i,pdbChains);
 			
+			Iterator<Chain> it = pdbChains.iterator();
 			// finally setting chains to compounds and compounds to chains now that we have the final chains
-			for (Chain chain:pdbChains) {
+			while (it.hasNext()) {
+				Chain chain = it.next();
 				String entityId = asymId2entityId.get(chain.getInternalChainID());
 				int eId = Integer.parseInt(entityId);
+				// We didn't add above compounds for nonpolymeric entities, thus here if a chain is nonpolymeric 
+				// its compound won't be found. In biojava Structure data model a nonpolymeric chain does not really
+				// make much sense, since all small molecules are associated to a polymeric chain (the same data  
+				// model as PDB files).
+				// In any case it happens in rare cases that a non-polymeric chain is not associated to any polymeric
+				// chain, e.g. 
+				//   - 2uub: asym_id X, chainId Z, entity_id 24: fully non-polymeric but still with its own chainId
+				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
+				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone 
+				// We will discard those chains here, because they don't fit into the current data model and thus
+				// can cause problems, e.g. 
+				//  a) they would not be linked to a compound and give null pointers
+				//  b) StructureTools.getAllAtoms() methods that return all atoms except waters would have 
+				//     empty lists for water-only chains
 				Compound compound = structure.getCompoundById(eId);
 				if (compound==null) {
-					logger.warn("Could not find a compound for entity_id {} for adding chain id {} (internal chain id {}) to it",
-							eId,chain.getChainID(),chain.getInternalChainID());
+					logger.warn("Could not find a compound for entity_id {} corresponding to chain id {} (asym id {})."
+							+ " Most likely it is a purely non-polymeric chain ({} groups). Removing it from this structure.",
+							eId,chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
+					it.remove();
 				} else {
-					logger.debug("Adding chain with chain id {} (internal chain id {}) to compound with entity_id {}",
+					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
 							chain.getChainID(), chain.getInternalChainID(), eId);
 					compound.addChain(chain);
 					chain.setCompound(compound);
@@ -862,44 +886,77 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}			
 			
 		}
-		
+
+		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
+		List<Compound> compounds = structure.getCompounds();
+		// final sanity check: it can happen that from the annotated compounds some are not linked to any chains
+		// e.g. 3s26: a sugar entity does not have any chains associated to it (it seems to be happening with many sugar compounds)
+		// we simply log it, this can sign some other problems if the compounds are used down the line
+		for (Compound compound:compounds) {
+			if (compound.getChains().isEmpty()) {
+				logger.info("Compound {} '{}' has no chains associated to it",
+						compound.getId()==null?"with no entity id":compound.getId(), compound.getMolName());
+			}
+		}
+
 
 		// set the oligomeric state info in the header...
+		if (params.isParseBioAssembly()) {
 
-		PDBHeader header = structure.getPDBHeader();
-		header.setNrBioAssemblies(strucAssemblies.size());
+			// the more detailed mapping of chains to rotation operations happens in StructureIO...
+			
+			Map<Integer,BioAssemblyInfo> bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
 
-		// the more detailed mapping of chains to rotation operations happens in StructureIO...
-		// TODO clean this up and move it here...
-		//header.setBioUnitTranformationMap(tranformationMap);
-		Map<String,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
-		//int total = strucAssemblies.size();
+			for ( PdbxStructAssembly psa : strucAssemblies){
 
-		//for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
-		
-		for ( PdbxStructAssembly psa : strucAssemblies){
-		//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
+				List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>(1);
 
-			//PdbxStructAssembly psa = strucAssemblies.get(asmbl.getId());
-			List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>(1);
-
-			for ( PdbxStructAssemblyGen psag: strucAssemblyGens ) {
-				if ( psag.getAssembly_id().equals(psa.getId())) {
-					psags.add(psag);
+				for ( PdbxStructAssemblyGen psag: strucAssemblyGens ) {
+					if ( psag.getAssembly_id().equals(psa.getId())) {
+						psags.add(psag);
+					}
 				}
+
+				BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
+
+				// these are the transformations that need to be applied to our model
+				List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
+
+				int mmSize = 0;
+				int bioAssemblyId = -1;
+				try {
+					bioAssemblyId = Integer.parseInt(psa.getId());
+				} catch (NumberFormatException e) {
+					logger.info("Could not parse a numerical bio assembly id from '{}'",psa.getId());
+				}
+				try {
+					mmSize = Integer.parseInt(psa.getOligomeric_count());					
+				} catch (NumberFormatException e) {
+					if (bioAssemblyId!=-1)
+						// if we have a numerical id, then it's unusual to have no oligomeric size: we warn about it
+						logger.warn("Could not parse oligomeric count from '{}' for biological assembly id {}",
+							psa.getOligomeric_count(),psa.getId());
+					else 
+						// no numerical id (PAU,XAU in virus entries), it's normal to have no oligomeric size
+						logger.info("Could not parse oligomeric count from '{}' for biological assembly id {}",
+								psa.getOligomeric_count(),psa.getId());
+				}
+				
+				// if bioassembly id is not numerical we throw it away
+				// this happens usually for viral capsid entries, like 1ei7
+				// see issue #230 in github
+				if (bioAssemblyId!=-1) {
+					BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
+					bioAssembly.setId(bioAssemblyId);
+					bioAssembly.setMacromolecularSize(mmSize);
+					bioAssembly.setTransforms(transformations);
+					bioAssemblies.put(bioAssemblyId,bioAssembly);
+				}
+
 			}
-
-			//System.out.println("psags: " + psags.size());
-			BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
-
-			// these are the transformations that need to be applied to our model
-			List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
-
-			transformationMap.put(psa.getId(),transformations);
-			//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
-
+			structure.getPDBHeader().setBioAssemblies(bioAssemblies);
 		}
-		structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
 
 		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
 		for (StructNcsOper sNcsOper:structNcsOper) {
@@ -912,12 +969,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getCrystallographicInfo().setNcsOperators(
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
-		
-		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
-		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
-		structure.getCompounds();
-
-
 		
 	}
 
@@ -1125,13 +1176,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.warn("More than 1 Rfree value present, will use last one {} and discard previous {} ",
 					r.getLs_R_factor_R_free(), String.format("%4.2f",pdbHeader.getRfree()));
 		} 
-		try {
-			pdbHeader.setRfree(Float.parseFloat(r.getLs_R_factor_R_free()));
-		} catch (NumberFormatException e){
-			// no rfree present ('?') is very usual, that's why we set it to debug
-			logger.debug("Could not parse Rfree from string '{}'", r.getLs_R_factor_R_free());
+		if (r.getLs_R_factor_R_free()==null) {
+			// some entries like 2ifo haven't got this field at all
+			logger.info("_refine.ls_R_factor_R_free not present, not parsing Rfree value");
+		} else {
+			try {
+				pdbHeader.setRfree(Float.parseFloat(r.getLs_R_factor_R_free()));
+			} catch (NumberFormatException e){
+				// no rfree present ('?') is very usual, that's why we set it to debug
+				logger.debug("Could not parse Rfree from string '{}'", r.getLs_R_factor_R_free());
+			}
 		}
-
 		
 	}
 
@@ -1192,16 +1247,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			float alpha = Float.parseFloat(cell.getAngle_alpha());
 			float beta = Float.parseFloat(cell.getAngle_beta());
 			float gamma = Float.parseFloat(cell.getAngle_gamma());
-			// If the entry describes a structure determined by a technique other than X-ray crystallography,
-		    // cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
-			// if so we don't add and CrystalCell will be null
-			if (a == 1.0f && b == 1.0f && c == 1.0f && 
-	        		alpha == 90.0f && beta == 90.0f && gamma == 90.0f ) {
-	        	return;
-	        } 
 		
 			CrystalCell xtalCell = new CrystalCell(); 
-			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(xtalCell);
 			xtalCell.setA(a);
 			xtalCell.setB(b);
 			xtalCell.setC(c);
@@ -1209,7 +1256,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			xtalCell.setBeta(beta);
 			xtalCell.setGamma(gamma);
 			
+			if (!xtalCell.isCellReasonable()) {
+				// If the entry describes a structure determined by a technique other than X-ray crystallography,
+			    // cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
+				// if so we don't add and CrystalCell will be null
+				logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.",
+						CrystalCell.MIN_VALID_CELL_SIZE);				
+				return;
+			}
 			
+			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(xtalCell);
 			
 		} catch (NumberFormatException e){
 			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(null);
@@ -1678,25 +1734,21 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemCompAtom(ChemCompAtom atom) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void newChemCompBond(ChemCompBond bond) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
-		// TODO Auto-generated method stub
 
 	}
 

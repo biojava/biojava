@@ -19,13 +19,6 @@
 
 package org.biojava.bio.structure.align.util;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
@@ -39,6 +32,13 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class AFPAlignmentDisplay
@@ -154,10 +154,8 @@ public class AFPAlignmentDisplay
      * and {@link AFPChain#getAlnseq2()}.
      * 
 	 */
-	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2)
-	{
-		boolean showSeq = false;
-		getAlign(afpChain, ca1, ca2, showSeq);
+	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2) {
+		getAlign(afpChain, ca1, ca2, false);
 	}
 
 	/**
@@ -213,11 +211,6 @@ public class AFPAlignmentDisplay
 		}
 
 
-
-		//		if ( afpChain.getAlgorithmName().equals(FatCatRigid.algorithmName)){
-		//			showSeq = true;
-		//		}
-
 		int blockNum = afpChain.getBlockNum();
 
 		int[] optLen = afpChain.getOptLen();
@@ -225,7 +218,7 @@ public class AFPAlignmentDisplay
 
 		int alnbeg1 = afpChain.getAlnbeg1(); // immediately overwritten
 		int alnbeg2 = afpChain.getAlnbeg2(); // immediately overwritten
-		int alnLength = afpChain.getAlnLength(); // immediately overwritten
+		int alnLength; // immediately overwritten
 		int optLength = afpChain.getOptLength();
 
 		if ( optLen == null) {
@@ -295,11 +288,6 @@ public class AFPAlignmentDisplay
 		}
 		alnLength = len;
 
-
-		//		System.out.println(alnseq1);
-		//		System.out.println(alnsymb);
-		//		System.out.println(alnseq2);
-
 		afpChain.setOptAln(optAln);
 		afpChain.setOptLen(optLen);
 		afpChain.setAlnbeg1(alnbeg1);
@@ -309,9 +297,7 @@ public class AFPAlignmentDisplay
 	}
 
 	private static char getOneLetter(Group g){
-
-		Character c = StructureTools.get1LetterCode(g.getPDBName());
-		return c;
+		return StructureTools.get1LetterCode(g.getPDBName());
 	}
 
 	public static int aaScore(char a, char b){
@@ -356,24 +342,20 @@ public class AFPAlignmentDisplay
 		
 		int     i;
 
-		for(i = 0; i < alnLength; i ++)        {
+		for(i = 0; i < alnLength; i ++) {
 		
 				if(seq1[i] == seq2[i])  {
 
 					identity += 1.0;
-				}
-				else if(seq1[i] == '-' || seq1[i] == '*' || seq1[i] == '.' ||
-						seq2[i] == '-' || seq2[i] == '*' || seq2[i] == '.' )
-					continue;
-				else if(aaScore(seq1[i], seq2[i]) > 0)  similarity += 1.0;		
+				} else if(seq1[i] == '-' || seq1[i] == '*' || seq1[i] == '.' ||
+						seq2[i] == '-' || seq2[i] == '*' || seq2[i] == '.' ) {
+				} else if(aaScore(seq1[i], seq2[i]) > 0)  similarity += 1.0;
 		}
 
 
 		if ( alnLength > 0){
 			similarity = (identity + similarity) / alnLength;
 			identity = identity/alnLength;
-		} else {
-			
 		}
 		Map<String, Double> m = new HashMap<String, Double>();
 		m.put("similarity", similarity);
@@ -442,8 +424,7 @@ public class AFPAlignmentDisplay
 		Atom[] arr1 = GuiWrapper.getAtomArray(ca1, hetatms, nucs1);
 		Atom[] arr2 = GuiWrapper.getAtomArray(twistedAtoms, hetatms2, nucs2);
 
-		Structure artificial = GuiWrapper.getAlignedStructure(arr1,arr2);
-		return artificial;
+		return GuiWrapper.getAlignedStructure(arr1,arr2);
 	}
 	
 	/** get the block number for an aligned position
@@ -454,8 +435,7 @@ public class AFPAlignmentDisplay
 	 */
 	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
 		// moved here from DisplayAFP;
-		
-		//int ungappedPos = -1;
+
 		int blockNum = afpChain.getBlockNum();
 
 		int[] optLen = afpChain.getOptLen();
@@ -472,11 +452,7 @@ public class AFPAlignmentDisplay
 				int p1 = optAln[i][0][j];
 				int p2 = optAln[i][1][j];
 
-				//                 System.out.println(p1 + " " + p2 + " " +  footer2.toString());
-
-				if ( len == 0){
-					//
-				} else {
+				if (len != 0) {
 					// check for gapped region
 					int lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
 					for(int k = 0; k < lmax; k ++)      {
@@ -485,7 +461,6 @@ public class AFPAlignmentDisplay
 				}
 
 				len++;
-				//ungappedPos++;
 				p1b = p1;
 				p2b = p2;
 				if ( len >= aligPos) {

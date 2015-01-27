@@ -23,30 +23,32 @@
 
 package org.biojava.bio.structure;
 
-import static org.junit.Assert.assertEquals;
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.LocalPDBDirectory;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.NavigableMap;
 
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
- * A unit test for {@link AtomPosition}.
+ * A unit test for {@link org.biojava.bio.structure.AtomPositionMap}.
  * @author dmyerstu
  */
 public class AtomPositionMapTest {
 
 	@Before
 	public void setUp() throws Exception {
-		cache = new AtomCache();
+		cache = new AtomCache(); // TODO Should mock instead of depending on real data from AtomCache
+		cache.setObsoleteBehavior(LocalPDBDirectory.ObsoleteBehavior.FETCH_OBSOLETE);
 	}
 	
 	private AtomCache cache;
 	
 	/**
-	 * Tests the methods {@link ResidueRange#getAminoAcidPositions(org.biojava.bio.structure.Atom[])}, {@link ResidueRange#orderByAtoms(java.util.Map)}, and {@link ResidueRange#calcResiduesBetween(int, int, NavigableMap, char)} in PDB records with no insertion codes.
+	 * Tests with no insertion codes.
 	 * @throws StructureException 
 	 * @throws IOException 
 	 */
@@ -58,7 +60,6 @@ public class AtomPositionMapTest {
 		ResidueNumber end = new ResidueNumber("A", 117, null);
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 		NavigableMap<ResidueNumber,Integer> navMap = map.getNavMap();
-		//assertEquals("The maps have different sizes", navMap.size(), map.size());
 		for (ResidueNumber n : navMap.keySet()) {
 			assertEquals("An element is missing", map.getPosition(n).intValue(), navMap.get(n).intValue());
 		}
@@ -67,7 +68,7 @@ public class AtomPositionMapTest {
 	}
 
 	/**
-	 * Tests the methods {@link ResidueRange#getAminoAcidPositions(org.biojava.bio.structure.Atom[])}, {@link ResidueRange#orderByAtoms(java.util.Map)}, and {@link ResidueRange#calcResiduesBetween(int, int, NavigableMap, char)} in PDB records with insertion codes.
+	 * Tests with insertion codes.
 	 * @throws StructureException 
 	 * @throws IOException 
 	 */
@@ -81,7 +82,7 @@ public class AtomPositionMapTest {
 
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 		NavigableMap<ResidueNumber,Integer> navMap = map.getNavMap();
-		//assertEquals("The maps have different sizes", navMap.size(), map.size());
+
 		for (ResidueNumber n : navMap.keySet()) {
 			assertEquals("An element is missing", map.getPosition(n).intValue(), navMap.get(n).intValue());
 		}

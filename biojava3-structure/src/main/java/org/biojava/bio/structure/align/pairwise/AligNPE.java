@@ -33,7 +33,8 @@ public class AligNPE {
 
     }
     
-    /** Align w/o penalizing endpags. Return alignment and score
+    /** 
+     * Align without penalizing end-gaps. Return alignment and score
      * 
      * @param sim the similarity matrix   
      * @param params the structure alignment parameters to be used

@@ -21,25 +21,25 @@
  */
 package org.biojava3.core.sequence.location.template;
 
-import static java.lang.String.format;
 import org.biojava3.core.sequence.AccessionID;
+import org.biojava3.core.sequence.Strand;
+import org.biojava3.core.sequence.storage.JoiningSequenceReader;
+import org.biojava3.core.sequence.template.ComplementCompound;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
-import static org.biojava3.core.util.Equals.classEqual;
-import static org.biojava3.core.util.Equals.equal;
+import org.biojava3.core.sequence.views.ComplementSequenceView;
+import org.biojava3.core.sequence.views.ReversedSequenceView;
+import org.biojava3.core.util.Hashcoder;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.biojava3.core.sequence.Strand;
-import org.biojava3.core.sequence.storage.JoiningSequenceReader;
-import org.biojava3.core.sequence.template.ComplementCompound;
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.views.ComplementSequenceView;
-import org.biojava3.core.sequence.views.ReversedSequenceView;
-import org.biojava3.core.util.Hashcoder;
+import static java.lang.String.format;
+import static org.biojava3.core.util.Equals.classEqual;
+import static org.biojava3.core.util.Equals.equal;
 
 /**
  * Base abstraction of a location which encodes for the majority of important
@@ -112,7 +112,7 @@ public abstract class AbstractLocation implements Location {
         this.circular = circular;
         this.betweenCompounds = betweenCompounds;
         this.accession = accession;
-        this.subLocations = Collections.unmodifiableList(subLocations);
+        this.subLocations = subLocations==null? null : Collections.unmodifiableList(subLocations);
         assertLocation();
     }
 
@@ -180,7 +180,7 @@ public abstract class AbstractLocation implements Location {
     
     @Override
 	public boolean isComplex() {
-        return getSubLocations().size() > 0;
+        return !getSubLocations().isEmpty();
     }
 
     

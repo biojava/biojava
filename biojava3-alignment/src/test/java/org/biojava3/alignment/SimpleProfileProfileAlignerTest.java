@@ -52,7 +52,7 @@ public class SimpleProfileProfileAlignerTest {
         protein2 = new ProteinSequence("ARND");
         protein3 = new ProteinSequence("HILK");
         protein4 = new ProteinSequence("ANDR");
-        gaps = new SimpleGapPenalty((short) 2, (short) 1);
+        gaps = new SimpleGapPenalty(2, 1);
         blosum62 = SubstitutionMatrixHelper.getBlosum62();
         prof1 = new SimpleProfile<ProteinSequence, AminoAcidCompound>(protein1);
         prof2 = new SimpleProfile<ProteinSequence, AminoAcidCompound>(protein2);
@@ -86,30 +86,30 @@ public class SimpleProfileProfileAlignerTest {
 
     @Test
     public void testGetQuery() {
-        assertEquals(sppa1.getQuery(), prof1);
-        assertEquals(sppa2.getQuery(), prof3);
-        assertEquals(sppa3.getQuery(), pp1);
+        assertEquals(prof1, sppa1.getQuery());
+        assertEquals(prof3, sppa2.getQuery());
+        assertEquals(pp1, sppa3.getQuery());
     }
 
     @Test
     public void testGetTarget() {
-        assertEquals(sppa1.getTarget(), prof2);
-        assertEquals(sppa2.getTarget(), prof4);
-        assertEquals(sppa3.getTarget(), pp2);
+        assertEquals(prof2, sppa1.getTarget());
+        assertEquals(prof4, sppa2.getTarget());
+        assertEquals(pp2, sppa3.getTarget());
     }
 
     @Test
     public void testGetGapPenalty() {
-        assertEquals(sppa1.getGapPenalty(), gaps);
-        assertEquals(sppa2.getGapPenalty(), gaps);
-        assertEquals(sppa3.getGapPenalty(), gaps);
+        assertEquals(gaps, sppa1.getGapPenalty());
+        assertEquals(gaps, sppa2.getGapPenalty());
+        assertEquals(gaps, sppa3.getGapPenalty());
     }
 
     @Test
     public void testGetSubstitutionMatrix() {
-        assertEquals(sppa1.getSubstitutionMatrix(), blosum62);
-        assertEquals(sppa2.getSubstitutionMatrix(), blosum62);
-        assertEquals(sppa3.getSubstitutionMatrix(), blosum62);
+        assertEquals(blosum62, sppa1.getSubstitutionMatrix());
+        assertEquals(blosum62, sppa2.getSubstitutionMatrix());
+        assertEquals(blosum62, sppa3.getSubstitutionMatrix());
     }
 
     @Test
@@ -122,16 +122,16 @@ public class SimpleProfileProfileAlignerTest {
     @Test
     public void testGetScoreMatrix() {
         int[][][] scores = sppa1.getScoreMatrix();
-        assertEquals(scores[2][1][1], 1);
+        assertEquals(1, scores[2][1][1]);
         scores = sppa2.getScoreMatrix();
-        assertEquals(scores[3][4][0], -7);
+        assertEquals(-7, scores[3][4][0]);
         scores = sppa3.getScoreMatrix();
-        assertEquals(scores[1][2][2], 1);
+        assertEquals(1, scores[1][2][2]);
     }
 
     @Test
     public void testGetScoreMatrixAsString() {
-        assertEquals(sppa1.getScoreMatrixAsString(), String.format(
+        assertEquals(String.format(
                 "Substitution%n" +
                 "        A   R   N   D%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
@@ -152,8 +152,9 @@ public class SimpleProfileProfileAlignerTest {
                 "A  -\u221E  -\u221E   1   0  -1%n" +
                 "R  -\u221E  -\u221E  -7   6   5%n" +
                 "N  -\u221E  -\u221E  -9  -2  12%n" +
-                "D  -\u221E  -\u221E -10  -5   4%n"));
-        assertEquals(sppa2.getScoreMatrixAsString(), String.format(
+                "D  -\u221E  -\u221E -10  -5   4%n"),
+                sppa1.getScoreMatrixAsString());
+        assertEquals(String.format(
                 "Substitution%n" +
                 "        A   N   D   R%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
@@ -174,8 +175,9 @@ public class SimpleProfileProfileAlignerTest {
                 "H  -\u221E  -\u221E  -5  -5  -6%n" +
                 "I  -\u221E  -\u221E  -7  -8  -8%n" +
                 "L  -\u221E  -\u221E  -8  -9 -10%n" +
-                "K  -\u221E  -\u221E  -9  -8  -9%n"));
-        assertEquals(sppa3.getScoreMatrixAsString(), String.format(
+                "K  -\u221E  -\u221E  -9  -8  -9%n"),
+                sppa2.getScoreMatrixAsString());
+        assertEquals(String.format(
                 "Substitution%n" +
                 "        -   H   I   L   K%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
@@ -196,7 +198,8 @@ public class SimpleProfileProfileAlignerTest {
                 "A  -\u221E  -\u221E   1   0  -1  -2%n" +
                 "R  -\u221E  -\u221E  -7   1   0  -1%n" +
                 "N  -\u221E  -\u221E  -9   2   1   0%n" +
-                "D  -\u221E  -\u221E -10  -3   4   3%n"));
+                "D  -\u221E  -\u221E -10  -3   4   3%n"),
+                sppa3.getScoreMatrixAsString());
     }
 
     @Test
@@ -215,30 +218,30 @@ public class SimpleProfileProfileAlignerTest {
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(sppa1.getMaxScore(), 21, PRECISION);
-        assertEquals(sppa2.getMaxScore(), 21, PRECISION);
-        assertEquals(sppa3.getMaxScore(), 21, PRECISION);
+        assertEquals(21, sppa1.getMaxScore(), PRECISION);
+        assertEquals(21, sppa2.getMaxScore(), PRECISION);
+        assertEquals(21, sppa3.getMaxScore(), PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(sppa1.getMinScore(), -12, PRECISION);
-        assertEquals(sppa2.getMinScore(), -12, PRECISION);
-        assertEquals(sppa3.getMinScore(), -13, PRECISION);
+        assertEquals(-12, sppa1.getMinScore(), PRECISION);
+        assertEquals(-12, sppa2.getMinScore(), PRECISION);
+        assertEquals(-13, sppa3.getMinScore(), PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(sppa1.getScore(), 21, PRECISION);
-        assertEquals(sppa2.getScore(), -6, PRECISION);
-        assertEquals(sppa3.getScore(), 3, PRECISION);
+        assertEquals(21, sppa1.getScore(), PRECISION);
+        assertEquals(-6, sppa2.getScore(), PRECISION);
+        assertEquals(3, sppa3.getScore(), PRECISION);
     }
 
     @Test
     public void testGetPair() {
-        assertEquals(pp1.toString(), String.format("ARND%nARND%n"));
-        assertEquals(pp2.toString(), String.format("-HILK%nAND-R%n"));
-        assertEquals(all.toString(), String.format("ARND--%nARND--%n--HILK%nA-ND-R%n"));
+        assertEquals(String.format("ARND%nARND%n"), pp1.toString());
+        assertEquals(String.format("-HILK%nAND-R%n"), pp2.toString());
+        assertEquals(String.format("ARND--%nARND--%n--HILK%nA-ND-R%n"), all.toString());
     }
 
 }

@@ -211,6 +211,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		
 		clusters = new ArrayList<StructureInterfaceCluster>();
 		
+		// nothing to do if we have no interfaces
+		if (list.size()==0) return clusters;
+		
 		double[][] matrix = new double[list.size()][list.size()];
 		
 		for (int i=0;i<list.size();i++) {

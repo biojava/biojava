@@ -51,7 +51,7 @@ public class GuanUberbacherTest {
     public void setup() throws CompoundNotFoundException { 
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
-        gaps = new SimpleGapPenalty((short) 10, (short) 1);
+        gaps = new SimpleGapPenalty(10, 1);
         blosum62 = SubstitutionMatrixHelper.getBlosum62();
         alignment = new GuanUberbacher<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
         self = new GuanUberbacher<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
@@ -76,32 +76,32 @@ public class GuanUberbacherTest {
 
     @Test
     public void testGetProfile() {
-        assertEquals(alignment.getProfile().toString(), String.format("ARND%n-RDG%n"));
-        assertEquals(self.getProfile().toString(), String.format("ARND%nARND%n"));
+        assertEquals(String.format("ARND%n-RDG%n"), alignment.getProfile().toString());
+        assertEquals(String.format("ARND%nARND%n"), self.getProfile().toString());
     }
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(alignment.getMaxScore(), 21, PRECISION);
-        assertEquals(self.getMaxScore(), 21, PRECISION);
+        assertEquals(21, alignment.getMaxScore(), PRECISION);
+        assertEquals(21, self.getMaxScore(), PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(alignment.getMinScore(), -27, PRECISION);
-        assertEquals(self.getMinScore(), -28, PRECISION);
+        assertEquals(-27, alignment.getMinScore(), PRECISION);
+        assertEquals(-28, self.getMinScore(), PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(alignment.getScore(), -6, PRECISION);
-        assertEquals(self.getScore(), 21, PRECISION);
+        assertEquals(-6, alignment.getScore(), PRECISION);
+        assertEquals(21, self.getScore(), PRECISION);
     }
 
     @Test
     public void testGetPair() {
-        assertEquals(alignment.getPair().toString(), String.format("ARND%n-RDG%n"));
-        assertEquals(self.getPair().toString(), String.format("ARND%nARND%n"));
+        assertEquals(String.format("ARND%n-RDG%n"), alignment.getPair().toString());
+        assertEquals(String.format("ARND%nARND%n"), self.getPair().toString());
     }
     /**
      * @author Daniel Cameron 

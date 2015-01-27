@@ -24,11 +24,7 @@
  */
 package org.biojava.bio.structure.scop.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.Serializable;
-import java.util.List;
+import org.biojava.bio.structure.scop.ScopDomain;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -36,8 +32,11 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.biojava.bio.structure.scop.ScopDomain;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.List;
 
 @XmlRootElement(name = "ScopDomains", namespace ="http://source.rcsb.org")
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
@@ -55,7 +54,7 @@ public class ScopDomains implements Serializable{
 		try {
 			jaxbContext= JAXBContext.newInstance(ScopDomains.class);
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context for " + ScopDomains.class, e);
 		}
 	}
 	
@@ -85,7 +84,7 @@ public class ScopDomains implements Serializable{
 			
 
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not convert " + getClass() + " to XML", e);
 		}
 
 		return baos.toString();
@@ -105,7 +104,7 @@ public class ScopDomains implements Serializable{
 			job = (ScopDomains) un.unmarshal(bais);
 
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse " + ScopDomains.class + " from XML", e);
 		}
 
 		return job;

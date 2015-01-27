@@ -25,18 +25,20 @@
 package org.biojava.bio.structure.align.util;
 
 
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class AFPChainScorer
-{
-	
-	
+public class AFPChainScorer {
+
+	private static final Logger logger = LoggerFactory.getLogger(AFPChainScorer.class);
+
+
 	public  static double getTMScore(AFPChain align, Atom[] ca1, Atom[] ca2) throws StructureException
 	{
 		if ( align.getNrEQR() == 0)
@@ -54,23 +56,12 @@ public class AFPChainScorer
 		for(int block=0;block< align.getBlockNum();block++) {
 		
 			if ( ! ( blockLens[block] <= optAln[block][0].length)) {
-				System.err.println("AFPChainScorer getTMScore: errors reconstructing alignment block ["+ block +"]. Length is " + blockLens[block] + " but should be <=" + optAln[block][0].length );
+				logger.warn("AFPChainScorer getTMScore: errors reconstructing alignment block [" + block + "]. Length is " + blockLens[block] + " but should be <=" + optAln[block][0].length);
 			}
 
 			for(int i=0;i<blockLens[block];i++) {
 				int pos1 = optAln[block][0][i];
 				int pos2 = optAln[block][1][i];
-//				if ( pos1 >= ca1.length) {
-//					System.err.println("getTMScore: pos1 " + pos1 + " > ca1.length " + ca1.length + " " + align.getName1() + ":" +align.getName2());
-//					System.err.println(ca1[0].getGroup().getChain().getChainID());
-//					System.err.println(ca1[0].getGroup().getChain().getParent().getPDBCode());
-//					
-//				}
-//				if ( pos2 >= ca2.length) {
-//					System.err.println("getTMScore: pos2 " + pos2 + " > ca2.length " + ca2.length + " " + align.getName2() + ":" + align.getName1());
-//					System.err.println(ca2[0].getGroup().getChain().getChainID());
-//					System.err.println(ca2[0].getGroup().getChain().getParent().getPDBCode());
-//				}
 				Atom a1 = ca1[pos1];
 				Atom a2 = (Atom) ca2[pos2].clone();
 								
@@ -82,7 +73,7 @@ public class AFPChainScorer
 		
 		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.		
 		if ( pos != align.getOptLength()){
-			System.err.println("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + align.getOptLength());
+			logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + align.getOptLength());
 			// we need to resize the array, because we allocated too many atoms earlier on.
 			ca1aligned = (Atom[]) resizeArray(ca1aligned, pos);
 			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);

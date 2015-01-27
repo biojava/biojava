@@ -2,29 +2,24 @@ package org.biojava.bio.structure.align.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-
 import java.io.IOException;
 
-
 import javax.swing.Box;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+import org.biojava.bio.structure.gui.util.StructurePairSelector;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.bio.structure.io.StructureIOFile;
-import org.biojava.bio.structure.gui.util.StructurePairSelector;
+import org.biojava.bio.structure.io.StructureProvider;
 
 
 /** A Panel that allows user to specify PDB & chain ID, as well as sub-ranges
@@ -146,7 +141,7 @@ implements StructurePairSelector{
 
 		String fileFormat = config.getFileFormat();
 
-		StructureIOFile reader = null;
+		StructureProvider reader = null;
 		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
 			PDBFileReader re = new PDBFileReader(config.getPdbFilePath());
 			re.setFetchBehavior(config.getFetchBehavior());

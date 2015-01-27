@@ -13,6 +13,7 @@ import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.ce.UserArgumentProcessor;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.bio.structure.align.util.ConfigurationException;
 import org.biojava3.alignment.Alignments;
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SubstitutionMatrixHelper;
@@ -44,7 +45,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	private static final String version = "1.1";
 	SmithWaterman3DParameters params;
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws ConfigurationException {
 		//args = new String[]{"-pdb1","1cdg.A","-pdb2","1tim.A","-pdbFilePath","/tmp/","-show3d","-printFatCat"};
 		UserArgumentProcessor processor = new SmithWatermanUserArgumentProcessor();
 		processor.process(args);
@@ -60,8 +61,6 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			params = new SmithWaterman3DParameters();
 		return align(ca1,ca2,params);
 	}
-
-
 
 	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object parameters)
@@ -81,9 +80,6 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			String seq1 = StructureTools.convertAtomsToSeq(ca1);
 			String seq2 = StructureTools.convertAtomsToSeq(ca2);
 
-			//System.out.println(seq1);
-			//System.out.println(seq2);
-			
 			ProteinSequence s1 = new ProteinSequence(seq1);
 			ProteinSequence s2 = new ProteinSequence(seq2);
 
@@ -91,7 +87,6 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
 					
 			GapPenalty penalty = new SimpleGapPenalty();
-			
 			
 			penalty.setOpenPenalty(params.getGapOpen());
 			penalty.setExtensionPenalty(params.getGapExtend());
@@ -119,7 +114,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	 * @param ca1 CA atoms from the query sequence
 	 * @param ca2 CA atoms from the target sequence
 	 * @param smithWaterman pairwise Sequence aligner
-	 * @param aligPair The sequence alignment calculated by aligner
+	 * @param pair The sequence alignment calculated by aligner
 	 * @return an AFPChain encapsulating the alignment in aligPair
 	 * @throws StructureException
 	 */
@@ -129,27 +124,19 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;		
 
-		//System.out.println(aligner.getScore());
-
 		afpChain.setAlignScore(smithWaterman.getScore());
 		afpChain.setCa1Length(ca1Length);
 		afpChain.setCa2Length(ca2Length);
 
-		//int nrRows = pair.getSize();
 		int nrCols = pair.getLength();
 		int nAtom=0; 
 		int nGaps=0;
-
-		//System.out.println(pair.toString(60));
 
 		Atom[] strBuf1 = new Atom[nrCols];
 		Atom[] strBuf2 = new Atom[nrCols];
 		char[] alnseq1 = new char[ca1Length+ca2Length+1];
 		char[] alnseq2 = new char[ca1Length+ca2Length+1] ;
 		char[] alnsymb = new char[ca1Length+ca2Length+1];
-
-//		System.out.println("nrRows: " + nrRows);
-//		System.out.println("nrCols: " + nrCols) ;
 
 		Compound gapSymbol =  AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("-");
 
@@ -173,7 +160,6 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			int pos2 = pair.getIndexInTargetAt(i) -1;
 			
 			if ( ( ! s1.equals(gapSymbol) )&&  (! s2.equals(gapSymbol))){
-				//System.out.println(i+ " " + 1 + " " + 1 + " " + s1 + " " + s2 + " " + pos1 + " " + ca1.length);
 				strBuf1[nAtom] = ca1[pos1];
 				strBuf2[nAtom] = ca2[pos2];
 				//
@@ -197,7 +183,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 				//
 				align_se1[myI] = pos1;
 				align_se2[myI] = pos2;
-				//             
+				//
 				pos++;
 				nAtom++;
 
@@ -230,7 +216,6 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 		}
 
-
 		afpChain.setAlnbeg1(pair.getIndexInQueryAt(1)-1);
 		afpChain.setAlnbeg2(pair.getIndexInTargetAt(1)-1);
 		
@@ -240,11 +225,6 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		afpChain.setAlnseq2(alnseq2);
 		afpChain.setAlnsymb(alnsymb);
 
-//		System.out.println("nr aligned positions:" + pos + " " + nAtom);
-//		System.out.println(new String(alnseq1));
-//		System.out.println(new String(alnsymb));
-//		System.out.println(new String(alnseq2));
-
 		// CE uses the aligned pairs as reference not the whole alignment including gaps...
 		afpChain.setIdentity(nrIdent*1.0/pos);
 		afpChain.setSimilarity(nrSim*1.0/pos);
@@ -253,40 +233,31 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		afpChain.setOptLength(nAtom);
 		int[] optLen = new int[]{nAtom};
 		afpChain.setOptLen(optLen);
-
-		
 		
 		if(nAtom<4) 
 			return afpChain;
 
 		CeParameters params = new CeParameters();
 		CECalculator cecalc = new CECalculator(params);
-		//sup_str(strBuf1, strBuf2, nAtom, _d);
+
 		// here we don't store the rotation matrix for the user!
-		//System.out.println(strBuf1.length + " " + aligLength);
+
 		double rmsd= cecalc.calc_rmsd(strBuf1, strBuf2, nAtom,true);
 
 		afpChain.setBlockRmsd(new double[]{rmsd});
 		afpChain.setOptRmsd(new double[]{rmsd});
 		afpChain.setTotalRmsdOpt(rmsd);
 		afpChain.setChainRmsd(rmsd);
-		
-
-		
 
 		// let's hijack the CE implementation
 		// and use some utilities from there to 
 		// build up the afpChain object
 
 		cecalc.setnAtom(nAtom);
-		//afpChain.setAlnbeg1(0);
-		//afpChain.setAlnbeg2(0);
+
 		cecalc.setAlign_se1(align_se1);
 		cecalc.setAlign_se2(align_se2);
-		//System.out.println(align_se1);
-		//System.out.println(align_se2);
 
-		//System.out.println("lcmp:" + lcmp + " " + aligLength + " " + nAtom);
 		cecalc.setLcmp(nrCols  );
 
 		cecalc.convertAfpChain(afpChain, ca1, ca2);
@@ -297,140 +268,14 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		return afpChain;
 	}
 
-
-
-	/*
-      //Sequence symb1 = aligPair.getQuery();
-      //Sequence symb2 = aligPair.getSubject();
-
-      int queryEnd = aligPair.getQueryEnd();
-      int queryStart = aligPair.getQueryStart();
-      int subjectEnd = aligPair.getSubjectEnd();
-      int subjectStart = aligPair.getSubjectStart();
-
-//      try {
-//         System.out.println(aligPair.formatOutput(89));
-//      } catch (Exception e) {
-//         e.printStackTrace();
-//         // TODO: handle exception
-//      }
-      List<Alphabet> alphas = new ArrayList<Alphabet>();
-      alphas.add(symb1.getAlphabet()); 
-      Symbol gapSymbol = AlphabetManager.getGapSymbol(alphas);
-
-      //System.out.println(aligPair.getQueryStart() + " " + " " + aligPair.getQueryEnd()+ " "+ aligPair.getQueryLength() + " " + aligPair.getSubjectStart() + " " + aligPair.getSubjectEnd() + " " + aligPair.getSubjectLength() );
-
-      int lcmp = aligPair.getQueryLength() - 1;
-
-      Atom[] strBuf1 = new Atom[lcmp];
-      Atom[] strBuf2 = new Atom[lcmp];
-
-      int pos1 = queryStart - 2 ;
-      int pos2 = subjectStart - 2;
-
-      char[] alnseq1 = new char[ca1Length+ca2Length+1];
-      char[] alnseq2 = new char[ca1Length+ca2Length+1] ;
-      char[] alnsymb = new char[ca1Length+ca2Length+1];
-
-      int nrIdent = 0;
-      int nrSim   = 0;
-      int pos =0;
-
-      int[] align_se1 = new int[lcmp];
-      int[] align_se2 = new int[lcmp];
-      int aligLength = 0;
-
-      for(int ia=0;ia < Math.min(queryEnd - queryStart, subjectEnd
-            - subjectStart) ; ia++) {
-
-         aligLength++;
-         Symbol s1 = symb1.symbolAt(ia+queryStart);
-         Symbol s2 = symb2.symbolAt(ia+subjectStart);
-
-
-
-         if ( !s1.equals(gapSymbol))
-            pos1++;
-         if ( ! s2.equals(gapSymbol))
-            pos2++;
-
-         if ( ( ! s1.equals(gapSymbol) )&&  (! s2.equals(gapSymbol))){
-            //System.out.println(ia+ " " + queryStart + " " + subjectStart + " " + s1.getName() + " " + s2.getName() + pos1 + " " + ca1.length);
-            strBuf1[nAtom] = ca1[pos1];
-            strBuf2[nAtom] = ca2[pos2];
-
-            char l1 = getOneLetter(ca1[pos1].getParent());
-            char l2 = getOneLetter(ca2[pos2].getParent());
-
-            alnseq1[ia] = Character.toUpperCase(l1);
-            alnseq2[ia] = Character.toUpperCase(l2);
-            alnsymb[ia] = ' ';
-
-            if ( l1 == l2) {					
-               nrIdent++;
-               nrSim++;
-               alnsymb[ia] = '|';
-
-            } else if ( AFPAlignmentDisplay.aaScore(l1, l2) > 0){
-
-               nrSim++;
-               alnsymb[ia] = ':';
-            }
-
-            align_se1[ia] = pos1;
-            align_se2[ia] = pos2;
-
-            pos++;
-            nAtom++;
-
-         } else {
-            // there is a gap at this position
-            nGaps++;
-
-            alnsymb[ia] = ' ';
-            align_se1[ia] = -1;
-            align_se2[ia] = -1;
-
-            if ( s1.equals(gapSymbol)){
-               alnseq1[ia] = '-';
-
-            } else {
-               char l1 = getOneLetter(ca1[pos1].getParent());
-               alnseq1[ia] = Character.toUpperCase(l1);
-               align_se1[ia] = pos1;
-            }
-            if ( s2.equals(gapSymbol)){
-               alnseq2[ia] = '-';
-
-            } else {
-               char l2 = getOneLetter(ca2[pos2].getParent());
-               alnseq2[ia] = Character.toUpperCase(l2);
-               align_se2[ia] = pos2;
-
-            }
-
-         }
-
-
-      }
-
-
-      //AFPAlignmentDisplay.getAlign(afpChain, ca1, ca2);
-	 */
-
-
-
 	private static char getOneLetter(Group g){
 
 		try {
-			Character c = StructureTools.get1LetterCode(g.getPDBName());
-			return c;
+			return StructureTools.get1LetterCode(g.getPDBName());
 		} catch (Exception e){
 			return 'X';
 		}
 	}
-
-
 
 	@Override
 	public String getAlgorithmName() {

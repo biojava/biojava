@@ -23,9 +23,9 @@
  */
 package org.biojava.bio.structure;
 
-import java.util.List;
-
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.List;
 
 /**
  * <p>
@@ -127,21 +127,9 @@ public interface Chain {
      * @param type  GroupType
      * @return a List object
      * @see #setAtomGroups(List)
-     * @see #getSeqResGroups(String)
      */
     public List<Group> getAtomGroups (GroupType type);
 
-    /** get a group by its PDB residue numbering. if the PDB residue number is not know,
-     * throws a StructureException.
-     * 
-     * @param pdbresnum the PDB residue number of the group
-     * @return the matching group
-     * @throws StructureException
-     * @deprecated replaced by {@link #getGroupByPDB(ResidueNumber)}
-     */
-    @Deprecated
-    public Group getGroupByPDB(String pdbresnum) throws StructureException;
-    
 
     /** 
      * Get a group by its PDB residue numbering. If the PDB residue number is not known,
@@ -152,17 +140,6 @@ public interface Chain {
      * @throws StructureException
      */
     public Group getGroupByPDB(ResidueNumber resNum) throws StructureException;
-    
-    /** Get all groups that are located between two PDB residue numbers.
-     * 
-     * @param pdbresnumStart PDB residue number of start
-     * @param pdbresnumEnd PDB residue number of end
-     * @return Groups in between. or throws a StructureException if either start or end can not be found,
-     * @throws StructureException
-     * @deprecated replaced by {@link #getGroupsByPDB(ResidueNumber, ResidueNumber)}
-     */
-    @Deprecated
-    public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd) throws StructureException;
 
     /** Get all groups that are located between two PDB residue numbers.
      * 
@@ -172,23 +149,6 @@ public interface Chain {
      * @throws StructureException
      */
     public Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd) throws StructureException;
-
-    
-    
-    /** Get all groups that are located between two PDB residue numbers. In contrast to getGroupsByPDB
-     * this method call ignores if the exact outer groups are not found. This is useful e.g. when requesting the range
-     * of groups as specified by the DBREF records - these frequently are rather inaccurate.
-     * 
-     * 
-     * @param pdbresnumStart PDB residue number of start
-     * @param pdbresnumEnd PDB residue number of end
-     * @param ignoreMissing ignore missing groups in this range.
-     * @return Groups in between. or throws a StructureException if either start or end can not be found,
-     * @throws StructureException
-     * @deprecated replaced by #{@link #getGroupsByPDB(ResidueNumber, ResidueNumber, boolean)}
-     */
-    @Deprecated
-    public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd,boolean ignoreMissing) throws StructureException;
 
     
     /** Get all groups that are located between two PDB residue numbers. In contrast to getGroupsByPDB
@@ -274,16 +234,15 @@ public interface Chain {
      * @since 3.0.5
      */
     public void setInternalChainID(String internalChainID);
-    
+
     /** string representation.  */
     @Override
     public String toString();
 
-    
+
     /** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
      * 
      * @return the SEQRES groups of the Chain as a Sequence object.
-     * @throws IllegalSymbolException 
      */
     public Sequence<?> getBJSequence()  ;
        
@@ -322,7 +281,6 @@ public interface Chain {
      * @param type  a GroupType
      * @return an List object
      * @see #setSeqResGroups(List)
-     * @see #getAtomGroups(String)
      */
     public List<Group> getSeqResGroups (GroupType type);
 

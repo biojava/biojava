@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * An identifier that <em>uniquely</em> identifies a whole {@link Structure} or arbitrary substructure,
- * including whole chains, {@link ScopDomain ScopDomains}, and {@link CathDomain CathDomains}.
+ * including whole chains, {@link org.biojava.bio.structure.scop.ScopDomain ScopDomains}, and {@link org.biojava.bio.structure.cath.CathDomain CathDomains}.
  * @author dmyersturnbull
  */
 public interface StructureIdentifier {
@@ -72,7 +72,7 @@ public interface StructureIdentifier {
 	 * Returns the list of {@link ResidueRange ResidueRanges} that this StructureIdentifier defines.
 	 * This is a unique representation.
 	 */
-	List<ResidueRange> getResidueRanges();
+	List<? extends ResidueRange> getResidueRanges();
 	
 	/**
 	 * Returns a list of ranges of the form described in {@link #getIdentifier()}. For example:

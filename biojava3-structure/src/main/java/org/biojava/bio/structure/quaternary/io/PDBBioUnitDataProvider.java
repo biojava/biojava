@@ -1,7 +1,6 @@
 package org.biojava.bio.structure.quaternary.io;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import org.biojava.bio.structure.PDBHeader;
@@ -10,7 +9,6 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava3.core.util.SoftHashMap;
 
@@ -92,7 +90,7 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 			header = loadPDB(pdbId);
 		}
 		
-		return header.getBioUnitTranformationMap().get(biolAssemblyNr);
+		return header.getBioAssemblies().get(biolAssemblyNr).getTransforms();
 
 
 	}
@@ -133,11 +131,6 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 	@Override
 	public AtomCache getAtomCache() {
 		return cache;
-	}
-
-	@Override
-	public List<PdbxStructAssembly> getPdbxStructAssemblies() {
-		return Collections.emptyList();		
 	}
 
 }

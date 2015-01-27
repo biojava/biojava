@@ -22,12 +22,11 @@
  */
 package org.biojava.bio.structure;
 
+import org.biojava.bio.structure.io.PDBFileParser;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-
-import org.biojava.bio.structure.io.PDBFileParser;
 
 
 /** A class that provides a set of standard amino acids.
@@ -43,12 +42,11 @@ public final class StandardAminoAcid {
     
     static private Map<String,AminoAcid> aminoAcids;
     
-    /** can not be instanciated
-     * 
+    /**
+     * Cannot be instantiated.
      */
     private StandardAminoAcid() {
         super();
-        
     }
     
     /**

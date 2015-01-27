@@ -101,7 +101,7 @@ public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
          setreadtimeout.invoke(huc,new Object[] {new Integer(timeout)});
          //System.out.println("successfully set java 1.5 timeout");
       } catch (Exception e) {
-         e.printStackTrace();
+         e.printStackTrace(); // TODO dmyersturnbull: should we rethrow this?
          // most likely it was a NoSuchMEthodException and we are running java 1.4.
       }
       return huc;
@@ -190,7 +190,7 @@ public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, in
       inStream = huc.getInputStream();
 
       if (contentEncoding != null) {
-         if (contentEncoding.indexOf("gzip") != -1) {
+         if (contentEncoding.contains("gzip")) {
             // we have gzip encoding
             inStream = new GZIPInputStream(inStream);
          }
@@ -199,45 +199,6 @@ public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, in
       return inStream;
 
    }
-
-
-   /** request an InputStream and provide username and password for logging in.
-    *  (using BASE64 Encoding)
-    *
-    * @param url
-    * @param name
-    * @param password
-    * @return an InputStream
-    * @throws IOException
-    * @throws ConnectException
-    */
-//   public static InputStream getInputStream(URL url, String name, String password)
-//   throws IOException, ConnectException
-//   {
-//      InputStream inStream = null;
-//
-//
-//      HttpURLConnection huc = openHttpURLConnection(url);
-//
-//      huc.setRequestProperty(
-//            "Authorization",
-//            "Basic " +
-//            encode(name + ":" + password)
-//      );
-//
-//      inStream = huc.getInputStream();
-//
-//      return inStream;
-//
-//   }
-
-
-
-   /*public static String encode (String source) {
-      BASE64Encoder enc = new BASE64Encoder();
-      return(enc.encode(source.getBytes()));
-   }*/
-   
 
    /** do a POST to a URL and return the response stream for further processing elsewhere.
     * 

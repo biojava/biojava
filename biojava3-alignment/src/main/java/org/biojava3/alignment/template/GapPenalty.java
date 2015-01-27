@@ -46,14 +46,14 @@ public interface GapPenalty {
      *
      * @return gap extension penalty
      */
-    short getExtensionPenalty();
+    int getExtensionPenalty();
 
     /**
      * Returns penalty given when a deletion or insertion gap first opens
      *
      * @return gap open penalty
      */
-    short getOpenPenalty();
+    int getOpenPenalty();
 
     /**
      * Returns {@link GapPenalty.Type} stored.
@@ -67,13 +67,13 @@ public interface GapPenalty {
      *
      * @param gep gap extension penalty
      */
-    void setExtensionPenalty(short gep);
+    void setExtensionPenalty(int gep);
 
     /**
      * Sets penalty given when a deletion or insertion gap first opens
      *
      * @param gop gap open penalty
      */
-    void setOpenPenalty(short gop);
+    void setOpenPenalty(int gop);
 
 }

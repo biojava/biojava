@@ -24,15 +24,19 @@
  */
 package org.biojava.bio.structure.scop;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.biojava.bio.structure.domain.SerializableCache;
 import org.biojava.bio.structure.scop.server.ScopDomains;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /** An extension of the RemoteScopInstallation that caches some of the data locally.
@@ -42,30 +46,28 @@ import org.biojava.bio.structure.scop.server.ScopDomains;
  */
 public class CachedRemoteScopInstallation extends SerializableCache<String,ScopDomain> implements ScopDatabase {
 
-	private static String CACHE_FILE_NAME = "remotescopinstallation.ser";
+	private static final Logger logger = LoggerFactory.getLogger(CachedRemoteScopInstallation.class);
+
+	private static final String CACHE_FILE_NAME = "remotescopinstallation.ser";
 
 	RemoteScopInstallation proxy ;
 
 	SerializableCache<Integer,ScopDescription> scopDescriptionCache ;
 
-	public CachedRemoteScopInstallation() {
+	public CachedRemoteScopInstallation() throws IOException {
 		this(true);
-
-
-
 	}
 
-	public CachedRemoteScopInstallation(boolean useCache) {
+	public CachedRemoteScopInstallation(boolean useCache) throws IOException {
 
 		super(CACHE_FILE_NAME);
 
 		proxy = new RemoteScopInstallation();
 
 		scopDescriptionCache = new SerializableCache<Integer,ScopDescription>("scopDescriptionCache.ser");
-		//scopDescriptionCache.setDebug(true);
 
 		if ( ! useCache) {
-			System.err.println("CachedRemoteScopInstallation disableing cache");
+			logger.warn(getClass().getSimpleName() + " disabling cache");
 			disableCache();
 			scopDescriptionCache.disableCache();
 		} else {
@@ -79,34 +81,26 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 
 
 	/** get the ranges of representative domains from the centralized server
-	 * 
+	 *
 	 */
-	private void loadRepresentativeDomains() {
+	private void loadRepresentativeDomains() throws IOException {
 
-		ScopDomains results = null;
+		URL u = null;
 		try {
-			URL u = new URL(RemoteScopInstallation.DEFAULT_SERVER + "getRepresentativeScopDomains");
-			System.out.println(u);
-			InputStream response = HTTPConnectionTools.getInputStream(u);
-			String xml = JFatCatClient.convertStreamToString(response);			
-			//System.out.println(xml);
-			results  = ScopDomains.fromXML(xml);
-
-
-			System.out.println("got " + results.getScopDomain().size() + " domain ranges for Scop domains from server.");
-			for (ScopDomain dom : results.getScopDomain()){
-				String scopId = dom.getScopId();
-				serializedCache.put(scopId, dom);
-			}
-
-
-		} catch (Exception e){
-			e.printStackTrace();
+			u = new URL(RemoteScopInstallation.DEFAULT_SERVER + "getRepresentativeScopDomains");
+		} catch (MalformedURLException e) {
+			throw new IOException("URL " + RemoteScopInstallation.DEFAULT_SERVER + "getRepresentativeScopDomains" + " is wrong", e);
 		}
-		return ;
+		logger.info("Using " + u + " to download representative domains");
+		InputStream response = HTTPConnectionTools.getInputStream(u);
+		String xml = JFatCatClient.convertStreamToString(response);
+		ScopDomains results  = ScopDomains.fromXML(xml);
 
-
-
+		logger.info("got " + results.getScopDomain().size() + " domain ranges for Scop domains from server.");
+		for (ScopDomain dom : results.getScopDomain()){
+			String scopId = dom.getScopId();
+			serializedCache.put(scopId, dom);
+		}
 
 	}
 
@@ -211,7 +205,7 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 
 	@Override
 	public void flushCache() {
-		System.out.println("flushing CachedRemoteScopInstallation");
+		logger.info("flushing " + getClass().getSimpleName());
 		super.flushCache();
 		scopDescriptionCache.flushCache();
 	}

@@ -31,7 +31,7 @@ public class DemoShowBiolAssembly {
 			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
 			//Structure bioAssembly = StructureIO.getBiologicalAssembly("4A1I",2);	
 			
-			Structure bioAssembly = StructureIO.getBiologicalAssembly("1ei7",1);
+			Structure bioAssembly = StructureIO.getBiologicalAssembly("1pdr",1);
 									
 			StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol();
 			//jmolPanel.evalString("set autobond=false");

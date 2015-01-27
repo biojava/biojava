@@ -24,22 +24,21 @@
  */
 package org.biojava.bio.structure.scop.server;
 
+import org.biojava.bio.structure.domain.pdp.Domain;
+import org.biojava.bio.structure.scop.ScopDescription;
+import org.biojava.bio.structure.scop.ScopDomain;
+import org.biojava.bio.structure.scop.ScopNode;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
-import org.biojava.bio.structure.domain.pdp.Domain;
-import org.biojava.bio.structure.scop.ScopDescription;
-import org.biojava.bio.structure.scop.ScopDomain;
-import org.biojava.bio.structure.scop.ScopNode;
 
 
 /** Utility classes for the XML serialization and de-serialization of SCOP.
@@ -55,7 +54,7 @@ public class XMLUtil {
 		try {
 			jaxbContextScopDescription= JAXBContext.newInstance(ScopDescription.class);
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context", e);
 		}
 	}
 
@@ -64,7 +63,7 @@ public class XMLUtil {
 		try {
 			jaxbContextScopDomain= JAXBContext.newInstance(ScopDomain.class);
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context", e);
 		}
 	}
 
@@ -73,7 +72,7 @@ public class XMLUtil {
 		try {
 			jaxbContextScopNode= JAXBContext.newInstance(ScopNode.class);
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context", e);
 		}
 	}
 
@@ -82,7 +81,7 @@ public class XMLUtil {
 		try {
 			jaxbContextDomains= JAXBContext.newInstance(TreeSet.class);
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context", e);
 		}
 	}
 
@@ -91,7 +90,7 @@ public class XMLUtil {
 		try {
 			jaxbContextStringSortedSet= JAXBContext.newInstance(TreeSetStringWrapper.class);
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context", e);
 		}
 	}
 	
@@ -100,7 +99,7 @@ public class XMLUtil {
 		try {
 			jaxbContextComments = JAXBContext.newInstance(ListStringWrapper.class);
 		} catch( JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context", e);
 		}
 	}
 
@@ -124,7 +123,7 @@ public class XMLUtil {
 			job = (ScopDescription) un.unmarshal(bais);
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse from XML", e);
 		}
 
 		return job;
@@ -145,7 +144,7 @@ public class XMLUtil {
 
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse from XML", e);
 		}
 
 		return baos.toString();
@@ -180,7 +179,7 @@ public class XMLUtil {
 
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse from XML", e);
 		}
 
 		return baos.toString();
@@ -199,7 +198,7 @@ public class XMLUtil {
 			comments = wrapper.getData();
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse from XML", e);
 		}
 
 		return comments;
@@ -221,7 +220,7 @@ public class XMLUtil {
 
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse from XML", e);
 		}
 
 		return baos.toString();
@@ -239,7 +238,7 @@ public class XMLUtil {
 			job = (ScopNode) un.unmarshal(bais);
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse from XML", e);
 		}
 
 		return job;
@@ -267,8 +266,7 @@ public class XMLUtil {
 
 
 		} catch (JAXBException e){
-			System.err.println("Could not serialize  ScopDomain to XML :" + domain);
-			e.printStackTrace();
+			throw new RuntimeException("Could not serialize to XML", e);
 		}
 
 		return baos.toString();
@@ -286,7 +284,7 @@ public class XMLUtil {
 			job = (ScopDomain) un.unmarshal(bais);
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not serialize to XML", e);
 		}
 
 		return job;
@@ -315,7 +313,7 @@ public class XMLUtil {
 
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not serialize to XML", e);
 		}
 
 		return baos.toString();
@@ -333,7 +331,7 @@ public class XMLUtil {
 			domains = (SortedSet<Domain>) un.unmarshal(bais);
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not serialize to XML", e);
 		}
 
 		return domains;
@@ -359,7 +357,7 @@ public class XMLUtil {
 
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not serialize to XML", e);
 		}
 
 		return baos.toString();
@@ -377,7 +375,7 @@ public class XMLUtil {
 			domains = wrapper.getData();
 
 		} catch (JAXBException e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not serialize to XML", e);
 		}
 
 		return domains;

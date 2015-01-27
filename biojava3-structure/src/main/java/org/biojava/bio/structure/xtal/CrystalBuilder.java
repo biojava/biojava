@@ -70,17 +70,40 @@ public class CrystalBuilder {
 	private int numCells;
 
 	private ArrayList<CrystalTransform> visited;
+	
+	private boolean isCrystallographic;
 
 
 
 	public CrystalBuilder(Structure structure) {
 		this.structure = structure;
+		
 		this.crystallographicInfo = structure.getCrystallographicInfo();
 
 		this.numChainsAu = structure.getChains().size();
 		this.numOperatorsSg = 1;
+				
+		
 		if (structure.isCrystallographic()) {
-			this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
+			
+			this.isCrystallographic = true;
+			// we need to check space group not null for the cases where the entry is crystallographic but 
+			// the space group is not a standard one recognized by biojava, e.g. 1mnk (SG: 'I 21')
+			if (this.crystallographicInfo.getSpaceGroup()==null) {
+				logger.warn("Could not find a space group, will only calculate asymmetric unit interfaces.");
+				this.isCrystallographic = false;
+			} else {
+				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();				
+			}
+			// we need to check crystal cell not null for the rare cases where the entry is crystallographic but 
+			// the crystal cell is not given, e.g. 2i68, 2xkm, 4bpq
+			if (this.crystallographicInfo.getCrystalCell()==null) {
+				logger.warn("Could not find a crystal cell definition, will only calculate asymmetric unit interfaces.");
+				this.isCrystallographic = false;
+			}
+			
+		} else {
+			this.isCrystallographic = false;			
 		}
 
 		this.numCells = DEF_NUM_CELLS;
@@ -125,6 +148,16 @@ public class CrystalBuilder {
 
 
 		StructureInterfaceList set = new StructureInterfaceList();
+		
+		// certain structures in the PDB are not macromolecules (contain no polymeric chains at all), e.g. 1ao2
+		// with the current mmCIF parsing, those will be empty since purely non-polymeric chains are removed
+		// see commit e9562781f23da0ebf3547146a307d7edd5741090
+		if (structure.getChains().size()==0) {
+			logger.warn("No chains present in the structure! No interfaces will be calculated");
+			return set;
+		}
+		
+
 
 		// initialising the visited ArrayList for keeping track of symmetry redundancy
 		initialiseVisited();
@@ -135,10 +168,10 @@ public class CrystalBuilder {
 		// a) entries with expMethod X-RAY/other diffraction and defined crystalCell (most usual case)
 		// b) entries with expMethod null but defined crystalCell (e.g. PDB file with CRYST1 record but no expMethod annotation)
 		// c) entries with expMethod not X-RAY (e.g. NMR) and defined crystalCell (NMR entries do have a dummy CRYST1 record "1 1 1 90 90 90 P1")
+		// d) isCrystallographic will be false if the structure is crystallographic but the space group was not recognized
 
 
-
-		calcInterfacesCrystal(set, cutoff, structure.isCrystallographic());
+		calcInterfacesCrystal(set, cutoff);
 
 
 		return set;
@@ -150,7 +183,7 @@ public class CrystalBuilder {
 	 * @param set
 	 * @param cutoff
 	 */
-	private void calcInterfacesCrystal(StructureInterfaceList set, double cutoff, boolean isCrystallographic) {
+	private void calcInterfacesCrystal(StructureInterfaceList set, double cutoff) {
 
 
 		// initialising debugging vars
@@ -168,7 +201,7 @@ public class CrystalBuilder {
 			ops = structure.getCrystallographicInfo().getTransformationsOrthonormal();
 		} else {
 			ops = new Matrix4d[1];
-			ops[0] = IDENTITY;
+			ops[0] = new Matrix4d(IDENTITY);
 		}
 
 		// The bounding boxes of all AUs of the unit cell

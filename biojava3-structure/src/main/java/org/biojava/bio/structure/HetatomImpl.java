@@ -22,17 +22,17 @@
  *
  */
 package org.biojava.bio.structure;
+import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -204,7 +204,7 @@ public class HetatomImpl implements Group,Serializable {
 			atomNameLookup.put(a.getName(),a);
 		}
 		this.atoms = atoms;
-		if ( atoms.size() > 0) {
+		if (!atoms.isEmpty()) {
 			pdb_flag = true;
 		}
 
@@ -228,8 +228,7 @@ public class HetatomImpl implements Group,Serializable {
 			//throw new StructureException("No atom found at position "+position);
 			return null;
 		}
-		Atom a = atoms.get(position);
-		return a ;
+		return atoms.get(position);
 	}
 
 	/**
@@ -239,10 +238,7 @@ public class HetatomImpl implements Group,Serializable {
 	public boolean hasAtom(String fullName) {
 
 		Atom a = atomNameLookup.get(fullName.trim());
-		if ( a != null)
-			return true;
-
-		return false;
+		return a != null;
 
 	}
 
@@ -275,20 +271,11 @@ public class HetatomImpl implements Group,Serializable {
 		// if this method call is performed too often, it should become a
 		// private method and provide a flag for Group object ...
 
-		if (	hasAtom(StructureTools.CA_ATOM_NAME) && 
-				hasAtom(StructureTools.C_ATOM_NAME) && 
-				hasAtom(StructureTools.N_ATOM_NAME) && 
-				hasAtom(StructureTools.O_ATOM_NAME)) {
-			
-			// this is the minimun requirement for something to be considered an aminoacid with a backbone
-			// note that if the backbone is incomplete it won't be considered an aminoacid
-			// if it's a HETATOM that has all these atoms, this is a very good guess that this is 
-			// some kind of non-standard aminoacid
-			
-			return true;
-		}
-		
-		return false;
+		return hasAtom(StructureTools.CA_ATOM_NAME) &&
+				hasAtom(StructureTools.C_ATOM_NAME) &&
+				hasAtom(StructureTools.N_ATOM_NAME) &&
+				hasAtom(StructureTools.O_ATOM_NAME);
+
 	}
 
 
@@ -338,15 +325,14 @@ public class HetatomImpl implements Group,Serializable {
 	 */
 	@Override
 	public Iterator<Atom> iterator() {
-		Iterator<Atom> iter = new AtomIterator(this);
-		return iter ;
+		return new AtomIterator(this);
 	}
 
 	/** returns and identical copy of this Group object .
 	 * @return  and identical copy of this Group object
 	 */
 	@Override
-	public Object clone(){
+	public Object clone() {
 
 		HetatomImpl n = new HetatomImpl();
 		n.setPDBFlag(has3D());
@@ -355,8 +341,8 @@ public class HetatomImpl implements Group,Serializable {
 		n.setPDBName(getPDBName());
 		
 		// copy the atoms
-		for (int i=0;i<atoms.size();i++){
-			Atom atom = (Atom) atoms.get(i).clone();
+		for (Atom atom1 : atoms) {
+			Atom atom = (Atom) atom1.clone();
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}
@@ -454,9 +440,7 @@ public class HetatomImpl implements Group,Serializable {
 	public boolean hasAltLoc() {
 		if ( altLocs == null)
 			return false;
-		if ( altLocs.size() > 0)
-			return true;
-		return false;
+		return !altLocs.isEmpty();
 	}
 
 	@Override
@@ -479,7 +463,7 @@ public class HetatomImpl implements Group,Serializable {
 				return this;
 			}
 
-			if (altLocs == null || altLocs.size() == 0)
+			if (altLocs == null || altLocs.isEmpty())
 				return null;
 
 			for (Group group : altLocs) {

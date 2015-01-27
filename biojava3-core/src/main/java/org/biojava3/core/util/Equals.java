@@ -4,12 +4,14 @@ package org.biojava3.core.util;
  * A set of helper methods which return true if the two parameters are
  * equal to each other.
  *
+ * @see #classEqual(Object, Object) For how to use this class
+ *
  * @author ayates
  */
 public class Equals {
 
   public static boolean equal(int one, int two) {
-    return (one == two);
+    return one == two;
   }
 
   public static boolean equal(long one, long two) {
@@ -17,27 +19,15 @@ public class Equals {
   }
 
   public static boolean equal(boolean one, boolean two) {
-    return (one == two);
+    return one == two;
   }
 
+  /**
+   * Does not compare class types.
+   * @see #classEqual(Object, Object)
+   */
   public static boolean equal(Object one, Object two) {
-    boolean equal = false;
-    //Both are null means they're equal
-    if (one == null && two == null) {
-      equal = true;
-    }
-    else if (one == null || two == null) {
-      equal = false;
-    }
-    //True only if they are the same object
-    else if (one == two) {
-      equal = true;
-    }
-    //Otherwise ask the Object on their equals method.
-    else {
-      equal = one.equals(two);
-    }
-    return equal;
+    return one == null && two == null || !(one == null || two == null) && (one == two || one.equals(two));
   }
 
   /**
@@ -72,19 +62,6 @@ public class Equals {
    *         equal at the class level
    */
   public static boolean classEqual(Object one, Object two) {
-
-    boolean equal = false;
-
-    if (one == two) {
-      equal = true;
-    }
-    else if (one == null || two == null) {
-      equal = false;
-    }
-    else {
-      equal = (one.getClass() == two.getClass());
-    }
-
-    return equal;
+    return one == two || !(one == null || two == null) && one.getClass() == two.getClass();
   }
 }

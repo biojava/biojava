@@ -427,7 +427,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		boolean inString = false;
 
-		String bigWord = null;
+		StringBuilder bigWord = null;
 
 		while ( true ){
 
@@ -436,22 +436,21 @@ public class SimpleMMcifParser implements MMcifParser {
 
 					inString = true;
 					if ( line.length() > 1)
-						bigWord = line.substring(1);
+						bigWord = new StringBuilder(line.substring(1));
 					else
-						bigWord = "";
+						bigWord = new StringBuilder("");
 
 
 				} else {
 					// the end of a word
-					lineData.add(bigWord);
+					lineData.add(bigWord.toString());
 					bigWord = null;
 					inString = false;
 
 				}
 			} else {
 				if ( inString )
-					//TODO: make bigWord a stringbuffer...
-					bigWord += (line);
+					bigWord.append(line);
 				else {
 
 					List<String> dat = processSingleLine(line);
@@ -900,7 +899,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						String warning = "Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")";
 						String warnkey = key+"-"+c.getName();
 						// Suppress duplicate warnings or attempts to store empty data
-						if( val.equals("?") || ( warnings != null && warnings.contains(warnkey)) ) {
+						if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
 							logger.debug(warning);
 						} else {
 							logger.warn(warning);

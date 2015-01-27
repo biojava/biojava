@@ -198,6 +198,7 @@ public class SubstitutionMatrixHelper {
 
     /**
      * Returns Nuc 4.2 matrix by Lowe
+     * Only the first nucleotide sequence to align can contain ambiguous nucleotides
      * @return Nuc 4.2 matrix
      */
     public static SubstitutionMatrix<NucleotideCompound> getNuc4_2() {
@@ -206,6 +207,7 @@ public class SubstitutionMatrixHelper {
 
     /**
      * Returns Nuc 4.4 matrix by Lowe
+     * Both of the nucleotide sequences to align can contain ambiguous nucleotides
      * @return Nuc 4.4 matrix
      */
     public static SubstitutionMatrix<NucleotideCompound> getNuc4_4() {

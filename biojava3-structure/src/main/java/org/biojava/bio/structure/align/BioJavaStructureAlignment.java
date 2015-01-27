@@ -29,10 +29,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.StrucAligParameters;
-import org.biojava.bio.structure.align.StructurePairAligner;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
-
 import org.biojava.bio.structure.align.helper.IndexPair;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
@@ -55,28 +52,6 @@ implements StructureAlignment  {
 	public BioJavaStructureAlignment(){
 		params = new StrucAligParameters();
 	}
-
-//	public StructureAlignmentJmol display(AFPChain afpChain, Atom[] ca1,
-//			Atom[] ca2, List<Group> hetatms, List<Group> nucs1,
-//			List<Group> hetatms2, List<Group> nucs2) throws StructureException {
-//		
-//	
-//
-//		Group[] twistedGroups = new Group[ ca2.length];
-//		
-//		int i=-1;
-//		Matrix m =  afpChain.getBlockRotationMatrix()[0];
-//		Atom shift =  afpChain.getBlockShiftVector()[0];
-//		
-//		for (Atom a: ca2){
-//			i++;
-//			twistedGroups[i]=a.getParent();
-//			Calc.rotate(twistedGroups[i],m);
-//			Calc.shift(twistedGroups[i],shift);
-//		}
-//		
-//		return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, nucs2, hetatms2, nucs2);
-//	}
 
 	@Override
 	public String getAlgorithmName() {
@@ -224,11 +199,9 @@ implements StructureAlignment  {
 	}
 	
 	private static char getOneLetter(Group g){
-
         try {
-           Character c = StructureTools.get1LetterCode(g.getPDBName());
-           return c;
-        } catch (Exception e){
+	        return StructureTools.get1LetterCode(g.getPDBName());
+        } catch (Exception e) {
            return 'X';
         }
      }

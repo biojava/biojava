@@ -22,15 +22,6 @@
  */
 package org.biojava.bio.structure.align;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
@@ -53,6 +44,14 @@ import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 /**
@@ -78,20 +77,14 @@ import org.slf4j.LoggerFactory;
 		{@link Structure} structure2 = null;
 
 		{@link PDBFileParser} pdbpars = new {@link PDBFileParser}();
-		try {
-			structure1 = pdbpars.parsePDBFile(inStream1) ;
-			structure2 = pdbpars.parsePDBFile(inStream2);
+		structure1 = pdbpars.parsePDBFile(inStream1) ;
+		structure2 = pdbpars.parsePDBFile(inStream2);
 
-		} catch ({@link IOException} e) {
-			e.printStackTrace();
-			return;
-		}
 
 		// calculate structure superimposition for two complete structures
 		{@link StructurePairAligner} aligner = new {@link StructurePairAligner}();
 
 
-		try {
 			// align the full 2 structures with default parameters.
 			// see StructurePairAligner for more options and how to align
 			// any set of Atoms
@@ -138,9 +131,6 @@ import org.slf4j.LoggerFactory;
 			// now show both models again.
 			jmol.evalString("model 0;");
 
-		} catch ({@link StructureException} e){
-			e.printStackTrace();
-		}
 	}
  *  </pre>
  *
@@ -183,10 +173,7 @@ public class StructurePairAligner {
 	 *
 	 * @param args
 	 */
-	public static void main(String[] args){
-		try {
-
-
+	public static void main(String[] args) throws Exception {
 			// UPDATE THE FOLLOWING LINES TO MATCH YOUR SETUP
 
 			PDBFileReader pdbr = new PDBFileReader();
@@ -224,8 +211,7 @@ public class StructurePairAligner {
 
 			// print the result:
 			// the AlternativeAlignment object gives also access to rotation matrices / shift vectors.
-			for (int i=0 ; i< aligs.length; i ++){
-				AlternativeAlignment aa = aligs[i];
+			for (AlternativeAlignment aa : aligs) {
 				logger.info("Alternative Alignment: ", aa);
 			}
 
@@ -255,24 +241,10 @@ public class StructurePairAligner {
 
 				if (! GuiWrapper.isGuiModuleInstalled()){
 					logger.error("Could not find structure-gui modules in classpath, please install first!");
-					return;
 				}
 
-				//AlternativeAlignment aa1 =aligs[0];
-
-				// first get an artificial structure for the alignment
-				//Structure artificial = aa1.getAlignedStructure(s1, s2);
-
-
-				// and then send it to Jmol (only will work if Jmol is in the Classpath)
-				
-				//GuiWrapper.display(afpChain, ca1, ca2, hetatms1, nucs1, hetatms2, nucs2);
 			}
 
-
-		} catch (Exception e){
-			logger.error("Exception: ", e);
-		}
 
 	}
 
@@ -351,9 +323,6 @@ public class StructurePairAligner {
 	public void setDebug(boolean debug) {
 	}
 
-
-
-
 	/** Calculate the alignment between the two full structures with default parameters
 	 *
 	 * @param s1
@@ -365,10 +334,6 @@ public class StructurePairAligner {
 
 		align(s1,s2,params);
 	}
-
-	
-	
-	
 
 	/** Calculate the alignment between the two full structures with user provided parameters
 	 *
@@ -478,8 +443,6 @@ public class StructurePairAligner {
 		}
 		int rows = ca1.length - fragmentLength + 1;
 		int cols = ca2.length - fragmentLength + 1;
-		//logger.debug("rows "  + rows + " " + cols +
-		//      " ca1 l " + ca1.length + " ca2 l " + ca2.length);
 		distanceMatrix = new Matrix(rows,cols,0.0);
 
 		double[] dist1 = AlignTools.getDiagonalAtK(ca1, k);
@@ -493,7 +456,6 @@ public class StructurePairAligner {
 		}
 
 		double[][] utmp = new double[][] {{0,0,1}};
-		//Matrix unitv = new Matrix(utmp);
 		Atom unitvector = new AtomImpl();
 		unitvector.setCoords(utmp[0]);
 
@@ -516,19 +478,16 @@ public class StructurePairAligner {
 
 				if ( rdd < params.getFragmentMiniDistance()) {
 					FragmentPair f = new FragmentPair(fragmentLength,i,j);
-					//logger.debug("i " + i + " " + j );
 					try {
 
 						Atom[] catmp2 = AlignTools.getFragment(ca2, j, fragmentLength);
 						Atom  center2 = AlignTools.getCenter(ca2,j,fragmentLength);
 
-						//logger.debug("c1 : " + center1 + " c2: " + center2);
 						f.setCenter1(center1);
 						f.setCenter2(center2);
 
 						SVDSuperimposer svd = new SVDSuperimposer(catmp1,catmp2);
 						Matrix rotmat = svd.getRotation();
-						//rotmat.print(3,3);
 						f.setRot(rotmat);
 
 						Atom aunitv = (Atom)unitvector.clone();
@@ -599,8 +558,6 @@ public class StructurePairAligner {
 		for ( int i = 0 ; i < frags.length;i++){
 			JointFragments f = frags[i];
 			AlternativeAlignment a = new AlternativeAlignment();
-			//logger.debug(f.getRms());
-			//a.setRms(f.getRms());
 			a.apairs_from_idxlst(f);
 			a.setAltAligNumber(i+1);
 			a.setDistanceMatrix(distanceMatrix);
@@ -614,13 +571,11 @@ public class StructurePairAligner {
 
 				      a.finish(params,ca1,ca2);
 
-
 				}
 			} catch (StructureException e){
-				logger.error("Exception: ", e);
+				logger.error("Refinement of fragment {} failed", i, e);
 			}
 			a.calcScores(ca1,ca2);
-			// a.getRotationMatrix().print(3,3);
 			aas.add(a);
 		}
 
@@ -633,14 +588,10 @@ public class StructurePairAligner {
 		alts = aas.toArray(new AlternativeAlignment[aas.size()]);
 		// do final numbering of alternative solutions
 		int aanbr = 0;
-		for ( int i = 0 ; i < alts.length; i++){
-			AlternativeAlignment a = alts[i];
+		for (AlternativeAlignment a : alts) {
 			aanbr++;
 			a.setAltAligNumber(aanbr);
-			//logger.debug(aanbr);
-			//a.getRotationMatrix().print(3,3);
 		}
-		//logger.debug("calc done");
 
 		logger.debug("total calculation time: {} ms.", (System.currentTimeMillis()-timeStart));
 	}

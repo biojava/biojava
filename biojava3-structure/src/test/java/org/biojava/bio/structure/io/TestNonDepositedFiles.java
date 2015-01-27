@@ -2,16 +2,22 @@ package org.biojava.bio.structure.io;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
 
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.mmcif.MMcifParser;
+import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
+import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava3.structure.StructureIO;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -154,6 +160,35 @@ public class TestNonDepositedFiles {
 			System.out.println("seq res groups size: "+chain.getSeqResGroups().size());
 			System.out.println("num hetatom groups: "+chain.getAtomLigands().size());
 		}
+	}
+	
+	/**
+	 * A test for reading a phenix-produced (ver 1.9_1692) mmCIF file.
+	 * This is the file submitted to the PDB for deposition of entry 4lup
+	 * @throws IOException
+	 */
+	@Ignore // remove once issue #234 is fixed
+	@Test
+	public void testPhenixFile() throws IOException {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/bio/structure/io/4lup_phenix_output.cif.gz"));
+		MMcifParser parser = new SimpleMMcifParser();
+
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+
+		FileParsingParameters fileParsingParams = new FileParsingParameters();
+		fileParsingParams.setAlignSeqRes(true);
+
+		consumer.setFileParsingParameters(fileParsingParams);
+
+		parser.addMMcifConsumer(consumer);
+
+		parser.parse(new BufferedReader(new InputStreamReader(inStream))); 
+
+		Structure s = consumer.getStructure();
+		
+		assertNotNull(s);
+		
+		assertTrue(s.isCrystallographic());
 	}
 
 }

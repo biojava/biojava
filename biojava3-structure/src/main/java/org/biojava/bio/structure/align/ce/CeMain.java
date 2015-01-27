@@ -75,7 +75,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	 * -pdbFilePath /tmp -autoFetch -printCE -pdb1 1cnv -pdb2 3cna 
 	 * 
 	 */
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception {
 		CeUserArgumentProcessor processor = new CeUserArgumentProcessor(); //Responsible for creating a CeMain instance
 		processor.process(args);
 	}

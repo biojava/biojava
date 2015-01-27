@@ -22,13 +22,13 @@
  */
 package org.biojava.bio.structure;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Formatter;
 import java.util.Locale;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /** A class to represent database cross references. This is just a simple bean that contains the infor from one
@@ -116,8 +116,6 @@ public class DBRef implements PDBRecord, Serializable{
     @Override
 	public String toPDB(){
 
-
-
          StringBuffer buf = new StringBuffer();
          toPDB(buf);
          return buf.toString();
@@ -150,7 +148,7 @@ public class DBRef implements PDBRecord, Serializable{
      */
     @Override
 	public String toString(){
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         try {
 
@@ -158,18 +156,17 @@ public class DBRef implements PDBRecord, Serializable{
 			Class c = Class.forName("org.biojava.bio.structure.DBRef");
             Method[] methods  = c.getMethods();
 
-            for (int i = 0; i < methods.length; i++) {
-                Method m = methods[i];
-
+            for (Method m : methods) {
                 String name = m.getName();
 
-                if ( name.substring(0,3).equals("get")) {
-                    if (name.equals("getClass"))
-                            continue;
-                    Object o  = m.invoke(this, new Object[]{});
-                    if ( o != null){
-                        buf.append(name.substring(3,name.length()));
-                        buf.append(": " + o + " ");
+                if (name.substring(0, 3).equals("get")) {
+                    if (name.equals("getClass")) {
+                        continue;
+                    }
+                    Object o = m.invoke(this);
+                    if (o != null) {
+                        buf.append(name.substring(3, name.length()));
+                        buf.append(": ").append(o).append(" ");
                     }
                 }
             }
@@ -202,7 +199,6 @@ public class DBRef implements PDBRecord, Serializable{
 	/** The chain ID of the corresponding chain.
      *
      * @return chainId the ID of the corresponding chain.
-     * @see #setChainId(Character)
      */
     public String getChainId() {
         return chainId;

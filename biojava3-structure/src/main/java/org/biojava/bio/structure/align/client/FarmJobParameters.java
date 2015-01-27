@@ -12,8 +12,7 @@ public class FarmJobParameters {
 	private static ResourceManager resourceManager;
 	static {
 		resourceManager = ResourceManager.getResourceManager("jfatcat");
-		String server = resourceManager.getString("server.url");
-		DEFAULT_SERVER_URL = server;
+		DEFAULT_SERVER_URL = resourceManager.getString("server.url");
 	}
 	public static final String DEFAULT_PDB_PATH = "/tmp/";
 	public static final int DEFAULT_BATCH_SIZE         = 100;
@@ -48,11 +47,7 @@ public class FarmJobParameters {
 		
 		username = FarmJobRunnable.getRandomUsername();
 		if ( nrPairsProp != null){
-			try {
-				stepSize = Integer.parseInt(nrPairsProp);
-			} catch (NumberFormatException ex){
-				ex.printStackTrace();
-			}
+			stepSize = Integer.parseInt(nrPairsProp);
 		}
 		
 	}
@@ -105,22 +100,6 @@ public class FarmJobParameters {
 	public void setServer(String server) {
 		this.server = server;
 	}
-
-	/**
-	 * @return true
-	 * @deprecated Always true (4.0.0)
-	 */
-	@Deprecated
-	public boolean isPdbDirSplit() {
-		return true;
-	}
-
-	/**
-	 * @param pdbDirSplit Ignored
-	 * @deprecated Ignored (4.0.0)
-	 */
-	@Deprecated
-	public void setPdbDirSplit(boolean pdbDirSplit) {}
 
 	public String getUsername() {
 		return username;

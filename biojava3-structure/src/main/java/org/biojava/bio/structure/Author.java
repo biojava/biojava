@@ -13,9 +13,6 @@ import java.io.Serializable;
  */
 public class Author implements Serializable{
 
-    /**
-    *
-    */
    private static final long serialVersionUID = 4840370515056666418L;
    private String surname = "";
     private String initials = "";
@@ -49,10 +46,7 @@ public class Author implements Serializable{
         if ((this.surname == null) ? (other.surname != null) : !this.surname.equals(other.surname)) {
             return false;
         }
-        if ((this.initials == null) ? (other.initials != null) : !this.initials.equals(other.initials)) {
-            return false;
-        }
-        return true;
+        return !((this.initials == null) ? (other.initials != null) : !this.initials.equals(other.initials));
     }
 
     @Override

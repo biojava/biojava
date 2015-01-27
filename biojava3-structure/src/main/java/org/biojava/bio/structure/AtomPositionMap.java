@@ -23,6 +23,8 @@
 
 package org.biojava.bio.structure;
 
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,8 +35,6 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 
 /**
  * A map from {@link ResidueNumber ResidueNumbers} to ATOM record positions in a PDB file.
@@ -55,8 +55,8 @@ public class AtomPositionMap {
 
 	public static final Set<String> AMINO_ACID_NAMES = new TreeSet<String>();
 	static {
-		AMINO_ACID_NAMES.addAll(Arrays.asList(new String[] {"ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"}));
-		AMINO_ACID_NAMES.addAll(Arrays.asList(new String[] {"ASX", "GLX", "XLE", "XAA"}));
+		AMINO_ACID_NAMES.addAll(Arrays.asList("ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"));
+		AMINO_ACID_NAMES.addAll(Arrays.asList("ASX", "GLX", "XLE", "XAA"));
 	}
 
 	public static interface GroupMatcher {
@@ -259,7 +259,6 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * @param chainId
 	 * @return The first {@link ResidueNumber} of any chain (the one farthest down in the PDB file)
 	 */
 	public ResidueNumber getFirst() {
@@ -267,7 +266,6 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * @param chainId
 	 * @return The last {@link ResidueNumber} of any chain (the one farthest down in the PDB file)
 	 */
 	public ResidueNumber getLast() {
@@ -277,15 +275,15 @@ public class AtomPositionMap {
 	/**
 	 * Returns a list of {@link ResidueRange ResidueRanges} corresponding to this entire AtomPositionMap.
 	 */
-	public List<ResidueRange> getRanges() {
+	public List<ResidueRangeAndLength> getRanges() {
 		String currentChain = "";
 		ResidueNumber first = null;
 		ResidueNumber prev = null;
-		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
+		List<ResidueRangeAndLength> ranges = new ArrayList<ResidueRangeAndLength>();
 		for (ResidueNumber rn : treeMap.keySet()) {
 			if (!rn.getChainId().equals(currentChain)) {
 				if (first != null) {
-					ResidueRange newRange = new ResidueRange(currentChain, first, prev, this.calcLength(first, prev));
+					ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.calcLength(first, prev));
 					ranges.add(newRange);
 				}
 				first = rn;
@@ -293,7 +291,7 @@ public class AtomPositionMap {
 			prev = rn;
 			currentChain = rn.getChainId();
 		}
-		ResidueRange newRange = new ResidueRange(currentChain, first, prev, this.calcLength(first, prev));
+		ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.calcLength(first, prev));
 		ranges.add(newRange);
 		return ranges;
 	}

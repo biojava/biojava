@@ -22,6 +22,17 @@
  */
 package org.biojava.bio.structure;
 
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.contact.AtomContactSet;
+import org.biojava.bio.structure.contact.Grid;
+import org.biojava.bio.structure.io.PDBFileParser;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,17 +48,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.contact.AtomContactSet;
-import org.biojava.bio.structure.contact.Grid;
-import org.biojava.bio.structure.io.PDBFileParser;
-import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava.bio.structure.io.util.FileDownloadUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -167,42 +167,41 @@ public class StructureTools {
 		// the modified versions of nucleic acids (+C, +G, +A, +T, +U, and +I), and
 		nucleotides23  = new HashMap<String,Integer>();
 		String[] names = {"C","G","A","T","U","I","+C","+G","+A","+T","+U","+I"};
-		for (int i = 0; i < names.length; i++) {
-			String n = names[i];
-			nucleotides23.put(n,1);
+		for (String n : names) {
+			nucleotides23.put(n, 1);
 		}
 
 		aminoAcids = new HashMap<String, Character>();
-		aminoAcids.put("GLY", new Character('G'));
-		aminoAcids.put("ALA", new Character('A'));
-		aminoAcids.put("VAL", new Character('V'));
-		aminoAcids.put("LEU", new Character('L'));
-		aminoAcids.put("ILE", new Character('I'));
-		aminoAcids.put("PHE", new Character('F'));
-		aminoAcids.put("TYR", new Character('Y'));
-		aminoAcids.put("TRP", new Character('W'));
-		aminoAcids.put("PRO", new Character('P'));
-		aminoAcids.put("HIS", new Character('H'));
-		aminoAcids.put("LYS", new Character('K'));
-		aminoAcids.put("ARG", new Character('R'));
-		aminoAcids.put("SER", new Character('S'));
-		aminoAcids.put("THR", new Character('T'));
-		aminoAcids.put("GLU", new Character('E'));
-		aminoAcids.put("GLN", new Character('Q'));
-		aminoAcids.put("ASP", new Character('D'));
-		aminoAcids.put("ASN", new Character('N'));
-		aminoAcids.put("CYS", new Character('C'));
-		aminoAcids.put("MET", new Character('M'));
+		aminoAcids.put("GLY", 'G');
+		aminoAcids.put("ALA", 'A');
+		aminoAcids.put("VAL", 'V');
+		aminoAcids.put("LEU", 'L');
+		aminoAcids.put("ILE", 'I');
+		aminoAcids.put("PHE", 'F');
+		aminoAcids.put("TYR", 'Y');
+		aminoAcids.put("TRP", 'W');
+		aminoAcids.put("PRO", 'P');
+		aminoAcids.put("HIS", 'H');
+		aminoAcids.put("LYS", 'K');
+		aminoAcids.put("ARG", 'R');
+		aminoAcids.put("SER", 'S');
+		aminoAcids.put("THR", 'T');
+		aminoAcids.put("GLU", 'E');
+		aminoAcids.put("GLN", 'Q');
+		aminoAcids.put("ASP", 'D');
+		aminoAcids.put("ASN", 'N');
+		aminoAcids.put("CYS", 'C');
+		aminoAcids.put("MET", 'M');
 		//MSE is only found as a molecular replacement for MET
-		aminoAcids.put("MSE", new Character('M'));
+		aminoAcids.put("MSE", 'M');
 		//'non-standard', genetically encoded
 		//http://www.chem.qmul.ac.uk/iubmb/newsletter/1999/item3.html
 		//IUBMB recommended name is 'SEC' but the wwPDB currently use 'CSE'
 		//likewise 'PYL' (IUBMB) and 'PYH' (PDB)
-		aminoAcids.put("CSE", new Character('U'));
-		aminoAcids.put("SEC", new Character('U'));
-		aminoAcids.put("PYH", new Character('O'));
-		aminoAcids.put("PYL", new Character('O'));
+		aminoAcids.put("CSE", 'U');
+		aminoAcids.put("SEC", 'U');
+		aminoAcids.put("PYH", 'O');
+		aminoAcids.put("PYL", 'O');
 
 		hBondDonorAcceptors = new HashSet<Element>();
 		hBondDonorAcceptors.add(Element.N);
@@ -241,9 +240,7 @@ public class StructureTools {
 		int nrGroups = 0;
 
 		List<Chain> chains = s.getChains(0);
-		Iterator<Chain> iter = chains.iterator();
-		while (iter.hasNext()){
-			Chain c = iter.next();
+		for (Chain c : chains) {
 			nrGroups += c.getAtomLength();
 		}
 		return nrGroups;
@@ -405,12 +402,10 @@ public class StructureTools {
 				List<Atom> thisGroupAtoms = new ArrayList<Atom>();
 				// flag to check if this group contains all the requested atoms.
 				boolean thisGroupAllAtoms = true;
-				for ( int i = 0 ; i < atomNames.length; i++){
-					String atomName = atomNames[i];
-
+				for (String atomName : atomNames) {
 					Atom a = g.getAtom(atomName);
 
-					if ( a == null) {
+					if (a == null) {
 						// this group does not have a required atom, skip it...
 						thisGroupAllAtoms = false;
 						break;
@@ -419,9 +414,7 @@ public class StructureTools {
 				}
 				if ( thisGroupAllAtoms){
 					// add the atoms of this group to the array.
-					Iterator<Atom> aIter = thisGroupAtoms.iterator();
-					while(aIter.hasNext()){
-						Atom a = aIter.next();
+					for (Atom a : thisGroupAtoms) {
 						atoms.add(a);
 					}
 				}
@@ -451,12 +444,10 @@ public class StructureTools {
 			List<Atom> thisGroupAtoms = new ArrayList<Atom>();
 			// flag to check if this group contains all the requested atoms.
 			boolean thisGroupAllAtoms = true;
-			for ( int i = 0 ; i < atomNames.length; i++){
-				String atomName = atomNames[i];
-
+			for (String atomName : atomNames) {
 				Atom a = g.getAtom(atomName);
-				if ( a == null) {
-					logger.debug("Group "+g.getResidueNumber()+" ("+g.getPDBName()+") does not have the required atom '"+atomName+"'");
+				if (a == null) {
+					logger.debug("Group " + g.getResidueNumber() + " (" + g.getPDBName() + ") does not have the required atom '" + atomName + "'");
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;
@@ -466,9 +457,7 @@ public class StructureTools {
 
 			if ( thisGroupAllAtoms){
 				// add the atoms of this group to the array.
-				Iterator<Atom> aIter = thisGroupAtoms.iterator();
-				while(aIter.hasNext()){
-					Atom a = aIter.next();
+				for (Atom a : thisGroupAtoms) {
 					atoms.add(a);
 				}
 			}
@@ -689,15 +678,10 @@ public class StructureTools {
 	 * e.g. convert CYS to C
 	 * @return a character
 	 * @param code3 a three character amino acid representation String
-	 * @throws IllegalSymbolException
+	 * @throws UnknownPdbAminoAcidException
 	 */
 	public static final Character convert_3code_1code(String code3)
 			throws UnknownPdbAminoAcidException {
-		//	{
-		//		Symbol sym   =  threeLetter.parseToken(code3) ;
-		//		String code1 =  oneLetter.tokenizeSymbol(sym);
-		//
-		//		return new Character(code1.charAt(0)) ;
 		Character code1 = null;
 		code1 = aminoAcids.get(code3);
 
@@ -746,18 +730,9 @@ public class StructureTools {
 	 * @param a 3-character code for a group.
 	 *
 	 */
-	public static final boolean isNucleotide(String groupCode3){
-
+	public static final boolean isNucleotide(String groupCode3) {
 		String code = groupCode3.trim();
-		if ( nucleotides30.containsKey(code)){
-			return true;
-		}
-
-		if ( nucleotides23.containsKey(code)){
-			return true;
-		}
-
-		return false ;
+		return nucleotides30.containsKey(code) || nucleotides23.containsKey(code);
 	}
 
 	/** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainId is provided only return a structure containing that Chain ID. 
@@ -986,7 +961,7 @@ public class StructureTools {
 
 				groups = chain.getGroupsByPDB(pdbresnum1, pdbresnum2);
 
-				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
+				name.append(chainId).append(AtomCache.UNDERSCORE).append(pdbresnumStart).append("-").append(pdbresnumEnd);
 
 			} else {
 				// full chain
@@ -1032,7 +1007,7 @@ public class StructureTools {
 
 	public static final String convertAtomsToSeq(Atom[] atoms) {
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		Group prevGroup  = null;
 		for (Atom a : atoms){
 			Group g = a.getGroup();
@@ -1054,19 +1029,6 @@ public class StructureTools {
 		return buf.toString();
 	}
 
-	/** get a PDB residue number object for this group
-	 * 
-	 * @param g Group object
-	 * @return a ResidueNumber object
-	 * @deprecated replaced by  Group.getResidueNumber()
-	 */
-	@Deprecated
-	public static final ResidueNumber getPDBResidueNumber(Group g){
-
-		return g.getResidueNumber();
-
-	}
-
 	/** Get a group represented by a ResidueNumber.
 	 * 
 	 * @param struc a {@link Structure}
@@ -1081,12 +1043,6 @@ public class StructureTools {
 		}
 
 		Chain chain = struc.findChain(pdbResNum.getChainId());
-
-		//		String numIns = "" + pdbResNum.getSeqNum();
-		//		if (pdbResNum.getInsCode() != null) {
-		//			numIns += pdbResNum.getInsCode();
-		//		}
-
 
 		return chain.getGroupByPDB(pdbResNum);
 	}
@@ -1308,76 +1264,6 @@ public class StructureTools {
 		return returnList;
 	}
 
-	//	This code relies on an old version of the Bond class.
-	//	
-	//	/*
-	//	 * Very simple distance-based bond calculator. Will give approximations,
-	//	 * but do not rely on this to be chemically correct.
-	//	 */
-	//	public static List<Bond> findBonds(Group group, List<Group> groups) {
-	//		List<Bond> bondList = new ArrayList<Bond>();
-	//		for (Atom atomA : group.getAtoms()) {
-	//			for (Group groupB : groups) {
-	//				if (groupB.getType().equals(GroupType.HETATM)) {
-	//					continue;
-	//				}
-	//				for (Atom atomB : groupB.getAtoms()) {
-	//					try {
-	//						double dist = Calc.getDistance(atomA, atomB);
-	//						BondType bondType = BondType.UNDEFINED;
-	//						if (dist <= 2) {
-	//							bondType = BondType.COVALENT;
-	//							Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-	//							bondList.add(bond);
-	//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
-	//						}
-	//						else if (dist <= 3.25) {
-	//
-	//							if (isHbondDonorAcceptor(atomA) && isHbondDonorAcceptor(atomB)) {
-	//								bondType = BondType.HBOND;
-	//							}
-	//							else if (atomA.getElement().isMetal() && isHbondDonorAcceptor(atomB)) {
-	//								bondType = BondType.METAL;
-	//							}
-	//							else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
-	//								bondType = BondType.HYDROPHOBIC;
-	//							}
-	//							//not really interested in 'undefined' types
-	//							if (bondType != BondType.UNDEFINED) {
-	//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-	//								bondList.add(bond);
-	//							}
-	//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
-	//						} else if (dist <= 3.9) {
-	//							if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
-	//								bondType = BondType.HYDROPHOBIC;
-	//							}
-	//							//not really interested in 'undefined' types
-	//							if (bondType != BondType.UNDEFINED) {
-	//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-	//								bondList.add(bond);
-	//							}
-	//						}
-	//
-	//					} catch (StructureException ex) {
-	//						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
-	//					}
-	//
-	//				}
-	//			}
-	//		}
-	//
-	//
-	//		return bondList;
-	//	}
-	//
-	//	private static boolean isHbondDonorAcceptor(Atom atom) {
-	//		if (hBondDonorAcceptors.contains(atom.getElement())) {
-	//			return true;
-	//		}
-	//		return false;
-	//	}
-
 	/** Remove all models from a Structure and keep only the first
 	 * 
 	 * @param s original Structure
@@ -1414,12 +1300,6 @@ public class StructureTools {
 	 * 
 	 */
 	public static List<Group> filterLigands(List<Group> allGroups){
-		//String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
-		//    if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
-		//      System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
-		//    }
-
 
 		List<Group> groups = new ArrayList<Group>();
 		for ( Group g: allGroups) {
@@ -1433,7 +1313,6 @@ public class StructureTools {
 				continue;
 			}
 			if ( ! g.isWater()) {
-				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
 				groups.add(g);
 			}
 		}
@@ -1566,6 +1445,20 @@ public class StructureTools {
 				(double)sizeAminos/(double)fullSize,(double)sizeNucleotides/(double)fullSize) ;
 
 		return max;
+	}
+	
+	/**
+	 * Returns true if the given chain is composed of water molecules only
+	 * @param c
+	 * @return
+	 */
+	public static boolean isChainWaterOnly(Chain c) {
+		boolean waterOnly = true;
+		for (Group g: c.getAtomGroups()) {
+			if (!g.isWater()) waterOnly = false;
+			break;
+		}
+		return waterOnly;
 	}
 
 }

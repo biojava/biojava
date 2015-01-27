@@ -52,7 +52,7 @@ public class NeedlemanWunschTest {
     public void setup() throws CompoundNotFoundException { 
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
-        gaps = new SimpleGapPenalty((short) 10, (short) 1);
+        gaps = new SimpleGapPenalty(10, 1);
         blosum62 = SubstitutionMatrixHelper.getBlosum62();
         alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
         self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
@@ -102,14 +102,16 @@ public class NeedlemanWunschTest {
     @Test
     public void testGetScoreMatrix() {
         int[][][] scores = alignment.getScoreMatrix();
-        assertEquals(scores[2][1][0], -6);
+        assertEquals(-6, scores[2][1][0]);
         scores = self.getScoreMatrix();
-        assertEquals(scores[3][4][2], 4);
+        assertEquals(4, scores[3][4][2]);
     }
 
     @Test
     public void testGetScoreMatrixAsString() {
-        assertEquals(alignment.getScoreMatrixAsString(), String.format(
+    	//System.out.println(alignment.getScoreMatrixAsString());
+    	//System.out.println(self.getScoreMatrixAsString());
+        assertEquals(String.format(
                 "Substitution%n" +
                 "        R   D   G%n" +
                 "    0  -\u221E  -\u221E  -\u221E%n" +
@@ -130,8 +132,9 @@ public class NeedlemanWunschTest {
                 "A  -\u221E  -\u221E -12 -13%n" +
                 "R  -\u221E  -\u221E -17 -14%n" +
                 "N  -\u221E  -\u221E -23 -16%n" +
-                "D  -\u221E  -\u221E -26 -17%n"));
-        assertEquals(self.getScoreMatrixAsString(), String.format(
+                "D  -\u221E  -\u221E -26 -17%n"),
+                alignment.getScoreMatrixAsString());
+        assertEquals(String.format(
                 "Substitution%n" +
                 "        A   R   N   D%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
@@ -152,7 +155,8 @@ public class NeedlemanWunschTest {
                 "A  -\u221E  -\u221E  -7  -8  -9%n" +
                 "R  -\u221E  -\u221E -23  -2  -3%n" +
                 "N  -\u221E  -\u221E -25 -18   4%n" +
-                "D  -\u221E  -\u221E -26 -21 -12%n"));
+                "D  -\u221E  -\u221E -26 -21 -12%n"),
+                self.getScoreMatrixAsString());
     }
 
     @Test
@@ -163,33 +167,34 @@ public class NeedlemanWunschTest {
 
     @Test
     public void testGetProfile() {
-        assertEquals(alignment.getProfile().toString(), String.format("ARND%n-RDG%n"));
-        assertEquals(self.getProfile().toString(), String.format("ARND%nARND%n"));
+        assertEquals(String.format("ARND%n-RDG%n"), alignment.getProfile().toString());
+        assertEquals(String.format("ARND%nARND%n"), self.getProfile().toString());
     }
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(alignment.getMaxScore(), 21, PRECISION);
-        assertEquals(self.getMaxScore(), 21, PRECISION);
+        assertEquals(21, alignment.getMaxScore(), PRECISION);
+        assertEquals(21, self.getMaxScore(), PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(alignment.getMinScore(), -27, PRECISION);
-        assertEquals(self.getMinScore(), -28, PRECISION);
+        assertEquals(-27, alignment.getMinScore(), PRECISION);
+        assertEquals(-28, self.getMinScore(), PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(alignment.getScore(), -6, PRECISION);
-        assertEquals(self.getScore(), 21, PRECISION);
+        assertEquals(-6, alignment.getScore(), PRECISION);
+        assertEquals(21, self.getScore(), PRECISION);
     }
 
     @Test
     public void testGetPair() {
-        assertEquals(alignment.getPair().toString(), String.format("ARND%n-RDG%n"));
-        assertEquals(self.getPair().toString(), String.format("ARND%nARND%n"));
+        assertEquals(String.format("ARND%n-RDG%n"), alignment.getPair().toString());
+        assertEquals(String.format("ARND%nARND%n"), self.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -201,6 +206,7 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { 0, 1, 2} );
 		assertEquals(String.format("ACG%nCGT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -212,6 +218,7 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { 1, -1, -1} );
 		assertEquals(String.format("-AAT%nAATT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -223,6 +230,7 @@ public class NeedlemanWunschTest {
 		aligner.addAnchor(2, 3);
 		assertEquals(String.format("AA-G%nAATT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -234,6 +242,7 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { -1, 2, -1} );
 		assertEquals(String.format("A-CTTT%nACGTTT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -248,6 +257,7 @@ public class NeedlemanWunschTest {
 		aligner.addAnchor(3, 5);
 		assertEquals(String.format("ACG--T%nATACGT%n"), aligner.getPair().toString());
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -263,6 +273,7 @@ public class NeedlemanWunschTest {
 		anchored.addAnchor(3, 3);
 		assertEquals(aligner.getScore(), anchored.getScore(), PRECISION);
     }
+    
     /**
      * @author Daniel Cameron 
      */
@@ -306,5 +317,6 @@ public class NeedlemanWunschTest {
 		//System.out.println("getSimilarity: " + aligner.getSimilarity());
 		
 		assertTrue("Similarity must be positive, this must be an integer overflow bug!", aligner.getSimilarity()>0);
-	}      
+	} 
+	
 }

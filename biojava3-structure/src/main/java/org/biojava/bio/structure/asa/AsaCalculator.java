@@ -408,7 +408,12 @@ public class AsaCalculator {
 
 			// not any of the expected atoms
 		} else {
-			logger.warn("Unexpected atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
+			// we log at info level for the MSE case (Selenomethionine), because it is too usual			
+			if (aa == 'M' && atomCode.equals("SE")) {  
+				logger.info("Unexpected atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
+			} else {
+				logger.warn("Unexpected atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");				
+			}
 			return atom.getElement().getVDWRadius();
 		}
 	}

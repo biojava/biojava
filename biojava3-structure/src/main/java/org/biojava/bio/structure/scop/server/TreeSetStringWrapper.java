@@ -24,19 +24,17 @@
  */
 package org.biojava.bio.structure.scop.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.Serializable;
-
-import java.util.TreeSet;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.TreeSet;
 
 
 
@@ -56,7 +54,7 @@ public class TreeSetStringWrapper implements Serializable{
 		try {
 			jaxbContext= JAXBContext.newInstance(TreeSetStringWrapper.class);
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not initialize JAXB context for " + TreeSetStringWrapper.class, e);
 		}
 	}
 	
@@ -84,10 +82,10 @@ public class TreeSetStringWrapper implements Serializable{
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( this, ps);
-			
+
 
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not convert " + getClass() + " to XML", e);
 		}
 
 		return baos.toString();
@@ -107,7 +105,7 @@ public class TreeSetStringWrapper implements Serializable{
 			job = (TreeSetStringWrapper) un.unmarshal(bais);
 
 		} catch (Exception e){
-			e.printStackTrace();
+			throw new RuntimeException("Could not parse " + TreeSetStringWrapper.class + " from XML", e);
 		}
 
 		return job;

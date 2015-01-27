@@ -1,14 +1,14 @@
 package org.biojava.bio.structure.asa;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A class to store the results of ASA calculations, it can
@@ -23,7 +23,7 @@ public class GroupAsa {
 	// ASA in extended tripeptide conformation (GLY-X-GLY) 
 	private static final HashMap<Character,Double> tripeptAsa = initTriPeptAsas();
 	
-	private static final HashMap<Character,Double>  initTriPeptAsas() {
+	private static HashMap<Character,Double>  initTriPeptAsas() {
 		// ASA in extended tripeptide conformation (GLY-X-GLY) from Miller et al JMB 1987 (for calculation of relative ASAs)
 		HashMap<Character,Double> map = new HashMap<Character,Double>();
 		map.put('A', 113.0);
@@ -135,8 +135,8 @@ public class GroupAsa {
 	public void setAtomAsaUs(List<Double> atomAsaUs) {
 		this.atomAsaUs = atomAsaUs;
 		this.asaU = 0;
-		for (int i=0;i<atomAsaUs.size();i++) {
-			this.asaU+=atomAsaUs.get(i);
+		for (Double atomAsaU : atomAsaUs) {
+			this.asaU += atomAsaU;
 		}
 	}
 	
@@ -147,8 +147,8 @@ public class GroupAsa {
 	public void setAtomAsaCs(List<Double> atomAsaCs) {
 		this.atomAsaCs = atomAsaCs;
 		this.asaC = 0;
-		for (int i=0;i<atomAsaCs.size();i++) {
-			this.asaC+=atomAsaCs.get(i);
+		for (Double atomAsaC : atomAsaCs) {
+			this.asaC += atomAsaC;
 		}
 	}
 

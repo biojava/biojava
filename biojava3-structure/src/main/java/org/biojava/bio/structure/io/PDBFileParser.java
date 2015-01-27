@@ -1561,22 +1561,24 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 		spaceGroup = line.substring(55,66).trim();
 		
-		// If the entry describes a structure determined by a technique other than X-ray crystallography,
-	    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
-		// if so we don't add and CrystalCell and SpaceGroup remain both null
-		if (a == 1.0f && b == 1.0f && c == 1.0f && 
-        		alpha == 90.0f && beta == 90.0f && gamma == 90.0f && 
-        		spaceGroup.equals("P 1") && z == 1) {
-        	return;
-        } 
 		CrystalCell xtalCell = new CrystalCell();
-		crystallographicInfo.setCrystalCell(xtalCell);
 		xtalCell.setA(a);
 		xtalCell.setB(b);
 		xtalCell.setC(c);
 		xtalCell.setAlpha(alpha);
 		xtalCell.setBeta(beta);
 		xtalCell.setGamma(gamma);
+		
+		if (!xtalCell.isCellReasonable()) {
+			// If the entry describes a structure determined by a technique other than X-ray crystallography,
+		    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+			// if so we don't add the crystal cell and it remains null 
+			logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.",
+					CrystalCell.MIN_VALID_CELL_SIZE);
+		} else {		
+			crystallographicInfo.setCrystalCell(xtalCell);
+		}
+		
         SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
         if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
         crystallographicInfo.setSpaceGroup(sg);
@@ -2199,6 +2201,18 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			Chain ch = isKnownChain(current_chain.getChainID(),current_model) ;
 			if ( ch == null ) {
 				current_model.add(current_chain);
+			}
+			// removing water-only chains, they don't follow the standard data modeling practices. 
+			// We have to remove them or otherwise they can cause problems down the line, 
+			// e.g. 3o6j has chain Z with a single water molecule
+			Iterator<Chain> it = current_model.iterator();
+			while (it.hasNext()) {
+				Chain c = it.next();
+				if (StructureTools.isChainWaterOnly(c)) {
+					logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
+							c.getChainID(), c.getAtomGroups().size());
+					it.remove();
+				}
 			}
 			structure.addModel(current_model);
 			current_model = new ArrayList<Chain>();
@@ -2969,6 +2983,18 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			pdbHeader.setJournalArticle(journalArticle);
 		}
 
+		// removing water-only chains, they don't follow the standard data modeling practices. 
+		// We have to remove them or otherwise they can cause problems down the line, 
+		// e.g. 3o6j has chain Z with a single water molecule
+		Iterator<Chain> it = current_model.iterator();
+		while (it.hasNext()) {
+			Chain c = it.next();
+			if (StructureTools.isChainWaterOnly(c)) {
+				logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
+						c.getChainID(), c.getAtomGroups().size());
+				it.remove();
+			}
+		}
 		structure.addModel(current_model);
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
@@ -2997,8 +3023,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		linkSitesToGroups(); // will work now that setSites is called
 		
 		if ( bioAssemblyParser != null){
-			pdbHeader.setBioUnitTranformationMap(bioAssemblyParser.getTransformationMap());
-			pdbHeader.setNrBioAssemblies(bioAssemblyParser.getNrBioAssemblies());
+			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
 			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
 			//System.out.println(pdbHeader.getBioUnitTranformationMap().keySet());
 		}
@@ -3024,7 +3049,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} // otherwise it remains default value: PDBHeader.DEFAULT_RFREE
 		
 		
-		// to make sures we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		structure.getCompounds();
 	}

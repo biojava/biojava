@@ -25,11 +25,6 @@
 package org.biojava.bio.structure.align.ce;
 
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Group;
@@ -38,7 +33,13 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.bio.structure.align.util.ConfigurationException;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /** 
  * A wrapper for {@link CeMain} which sets default parameters to be appropriate for finding
@@ -84,12 +85,10 @@ public class CeCPMain extends CeMain {
 		return CeCPMain.version;
 	}
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws ConfigurationException {
 		CeCPUserArgumentProcessor processor = new CeCPUserArgumentProcessor(); //Responsible for creating a CeCPMain instance
 		processor.process(args);
 	}
-
-
 
 
 	/**
@@ -535,11 +534,8 @@ public class CeCPMain extends CeMain {
 		
 		// Clean up remaining properties using the FatCat helper method
 		Atom[] ca2 = new Atom[ca2len];
-		for(int i=0;i<ca2len;i++) {
-			ca2[i]=ca2duplicated[i];
-		}
+		System.arraycopy(ca2duplicated, 0, ca2, 0, ca2len);
 		AFPAlignmentDisplay.getAlign(newAFPChain, ca1, ca2duplicated);
-		//		return afpChain;
 
 		return newAFPChain;
 	}
@@ -742,9 +738,7 @@ public class CeCPMain extends CeMain {
 			lastRes = ca2len-1;
 		}
 		
-		
-		
-		
+
 		CutPoint cp = new CutPoint();
 		cp.firstRes=firstRes;
 		cp.numResiduesCut = numResiduesCut;
@@ -761,6 +755,7 @@ public class CeCPMain extends CeMain {
 
 	// try showing a GUI
 	// requires additional dependencies biojava3-structure-gui and JmolApplet
+	// TODO dmyersturnbull: This should probably be in structure-gui
 	@SuppressWarnings("unused")
 	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
 		Atom[] ca1clone = StructureTools.cloneCAArray(ca1);

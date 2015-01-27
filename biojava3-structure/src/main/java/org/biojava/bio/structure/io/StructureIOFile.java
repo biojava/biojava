@@ -25,96 +25,49 @@ package org.biojava.bio.structure.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 
 /**
- *  StructureIOFile defines a few methods that are useful when parsing PDB files from file system.
+ *  StructureIOFile extends StructureProvider with methods specific to 
+ *  parsing files from the filesystem.
  * @author Andreas Prlic
  */
-public interface StructureIOFile  {
+public interface StructureIOFile extends StructureProvider {
 
-	/** Set path to file / connection string to db.
-	 * This is for installations of PDB/mmCif where all files are located in one directory.
-	 *
-	 * @param path  a String specifying the path value
-	 * @deprecated Removed from API (4.0.0)
-	 */
-	@Deprecated
-	public void setPath(String path) ;
-
-	/** get the directory path to the files
-	 *
-	 * @return path
-	 * @deprecated Removed from API (4.0.0)
-	 */
-	@Deprecated
-	public String getPath();
-
-	/** add a known File extension.
+	/**
+	 * Associates a file extension with this particular StructureIOFile,
+	 * indicating that files of that type can be parsed. This is generally
+	 * called only in the constructor of the implementing class.
 	 * @param ext  a String ...
 	 */
 	public void addExtension(String ext);
-
-	/** clear all file extensions
-	 *
+	
+	/**
+	 * Returns a list of extensions supported by this class
+	 * @return a (potentially empty) list of strings
 	 */
-	public void clearExtensions();
+	public List<String> getExtensions();
 
-	/** open filename and returns
-	 * a Structure object.
-	 * @param filename  a String
+	/** 
+	 * Open filename and return a Structure object.
+	 * 
+	 * Not to be confused with {@link #getStructureById(String)}
+	 * @param filename  The path to the file. Must be the correct format for the
+	 *  implementing class.
 	 * @return a Structure object
 	 * @throws IOException ...
 	 */
 	public Structure getStructure(String filename) throws IOException ;
 
-	/** read file from File and returns
+	/** 
+	 * Read file from File and returns
 	 * a Structure object.
-	 * @param file file containing a PDB or mmcif file
+	 * @param file file containing the structure. Must be the correct format for
+	 *  the implementing class
 	 * @return a Structure object
 	 * @throws IOException ...
 	 */
 	public Structure getStructure(File file) throws IOException ;
-
-	/** Fetch files automatically from FTP server. Default: false
-	 *
-	 * @return flag is true or false.
-	 * @deprecated Removed from API (4.0.0). Use {@link LocalPDBDirectory#setFetchBehavior(FetchBehavior)}
-	 */
-	@Deprecated
-	public boolean isAutoFetch();
-
-	/** Tell the parser to fetch missing PDB files from the FTP server automatically.
-	 *
-	 * default is false. If true, new PDB files will be automatically stored in the Path and gzip compressed.
-	 *
-	 * @param autoFetch flag.
-	 * @deprecated Removed from API (4.0.0). Use {@link LocalPDBDirectory#setFetchBehavior(FetchBehavior)}
-	 */ 
-	@Deprecated
-	public void setAutoFetch(boolean autoFetch);
-
-	/** Get a Structure based on its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
-	 * @return a Structure object
-	 */
-	public Structure getStructureById(String pdbId) throws IOException;
-
-
-	/** Set the parameters that should be used for file parsing
-	 * 
-	 * @param params FileParsingParameters
-	 */
-	public void setFileParsingParameters(FileParsingParameters params);
-
-
-	/** Get the parameters that should be used for file parsing
-	 * 
-	 * @return the FileParsingParameters that are configuring the behavior of the parser
-	 */
-	public FileParsingParameters getFileParsingParameters();
-
-
-
 }
