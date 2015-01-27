@@ -151,6 +151,8 @@ public class UserConfiguration
 				logger.warn("Could not read dir from system property {} or environment variable {}, "
 						+ "using system's temp directory {}",
 						propertyName, propertyName, path);
+
+				System.setProperty(propertyName,path);
 			}
 		}
 		
@@ -184,6 +186,7 @@ public class UserConfiguration
 						"Provided path {} (with system property {}) is not writable. Using system's temp directory instead {}", 
 						path, propertyName, System.getProperty(TMP_DIR));
 				path = System.getProperty(TMP_DIR);
+				System.setProperty(propertyName,path);
 			}
 			
 
@@ -215,11 +218,15 @@ public class UserConfiguration
 					logger.info("Could not read cache dir from system property {} or environment variable {}, "
 							+ "using PDB directory instead {}",
 							propertyName, propertyName, path);
+					System.setProperty(propertyName,path);
+
 				} else {
 					path = System.getProperty(TMP_DIR);
 					logger.warn("Could not read cache dir from system property {} or environment variable {}, "
 							+ "and PDB directory {} is not writable. Using system's temp directory instead {}",
-							propertyName, propertyName, pdbFilePath, path);	
+							propertyName, propertyName, pdbFilePath, path);
+					System.setProperty(propertyName,path);
+
 				}
 			}   
 		}
