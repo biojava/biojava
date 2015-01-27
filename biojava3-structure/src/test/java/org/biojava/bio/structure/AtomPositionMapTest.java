@@ -23,13 +23,12 @@
 
 package org.biojava.bio.structure;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;import static org.junit.Assume.*;
+import static org.junit.Assume.*;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.NavigableMap;
 
-import static org.junit.Assert.assertEquals;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.LocalPDBDirectory;
 import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
@@ -47,9 +46,9 @@ public class AtomPositionMapTest {
 		cache = new AtomCache(); // TODO Should mock instead of depending on real data from AtomCache
 		cache.setObsoleteBehavior(LocalPDBDirectory.ObsoleteBehavior.FETCH_OBSOLETE);
 	}
-	
+
 	private AtomCache cache;
-	
+
 	/**
 	 * Tests with no insertion codes.
 	 * @throws StructureException 
@@ -57,8 +56,9 @@ public class AtomPositionMapTest {
 	 */
 	@Test
 	public void testEasy() throws IOException, StructureException { // no insertion codes
+		// Straightforward case. Density for residues 25-777 (743 residues)
 		String pdbId = "1w0p";
-		int length = 92;
+		int length = 93;
 		ResidueNumber start = new ResidueNumber("A", 25, null);
 		ResidueNumber end = new ResidueNumber("A", 117, null);
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
@@ -69,88 +69,107 @@ public class AtomPositionMapTest {
 		int realLength = map.calcLength(start, end);
 		assertEquals("Real atom length is wrong", length, realLength);
 	}
-	
+
 	@Test
 	public void testLengths() throws IOException, StructureException {
-		String pdbId = "4hhb";
-		cache.setUseMmCif(false);
-		cache.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+		// Two identical chains, residues 1-68, no insertion codes or missing residues
+		String pdbId = "3w0e";
+
 		Atom[] atoms = cache.getAtoms(pdbId);
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 
-		int len;
-		int start,end;
-		
-		// Single residue
-		start = 1;
-		end = 1;
-		len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("A",end,null));
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-		len = map.calcLength(start, end,"A");
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-		len = map.calcLengthDirectional(start, end, "A");
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-		len = map.calcLengthDirectional(end, start, "A");
-		assertEquals("Bad length for ("+start+","+end+")",0, len);
-
-		// Short range
-		start = 1;
-		end = 3;
-		len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("A",end,null));
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-		len = map.calcLength(start, end,"A");
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-		len = map.calcLengthDirectional(start, end, "A");
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-		len = map.calcLengthDirectional(end, start, "A");
-		assertEquals("Bad length for ("+start+","+end+")",0, len);
-		
 		// Double check that the chain length is correct
 		int chainAlen = cache.getStructure(pdbId).getChainByPDB("A").getAtomGroups(GroupType.AMINOACID).size();
-		assumeTrue(141==chainAlen);
+		assumeTrue(68==chainAlen);
+
+
+		int len;
+		int start,end;// 0-based
+
+		// Single residue
+		start = 0;
+		end = 0;
+		len = map.calcLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
+		len = map.calcLength(start, end,"A");
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
+		len = map.calcLengthDirectional(start, end, "A");
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
+		len = map.calcLengthDirectional(end, start, "A");
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
+
+		// Short range
+		start = 2;
+		end = 4;
+		len = map.calcLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
+		assertEquals("Bad length for ("+start+","+end+")",3, len);
+		len = map.calcLength(start, end,"A");
+		assertEquals("Bad length for ("+start+","+end+")",3, len);
+		len = map.calcLengthDirectional(start, end, "A");
+		assertEquals("Bad length for ("+start+","+end+")",3, len);
+		len = map.calcLengthDirectional(end, start, "A");
+		assertEquals("Bad length for ("+start+","+end+")",-3, len);
 
 		//Full chain
-		start = 1;
-		end = chainAlen;
-		len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("A",end,null));
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		start = 0;
+		end = chainAlen-1;
+		len = map.calcLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
+		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
 		len = map.calcLength(start, end,"A");
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
 		len = map.calcLengthDirectional(start, end, "A");
-		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
 		len = map.calcLengthDirectional(end, start, "A");
-		assertEquals("Bad length for ("+start+","+end+")",0, len);
-		
+		assertEquals("Bad length for ("+start+","+end+")",-chainAlen, len);
 
-		//Fuller chain
-		try {
-			start = 1;
-			end = chainAlen+1;
-			len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("A",end,null));
-			assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-			len = map.calcLength(start, end,"A");
-			assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-			len = map.calcLengthDirectional(start, end, "A");
-			assertEquals("Bad length for ("+start+","+end+")",end-start, len);
-			len = map.calcLengthDirectional(end, start, "A");
-			assertEquals("Bad length for ("+start+","+end+")",0, len);
-		} catch( NullPointerException e) {
-			// WTF
-		}
-
-		
 		// Chain spanning
-		start = chainAlen;
-		end = chainAlen+1;
-		len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("B",end-chainAlen,null));
-		assertEquals("Bad length for ("+start+","+end+")",-1/*end-start*/, len);
+		start = chainAlen-1;
+		end = chainAlen;
+		try {
+			len = map.calcLength(new ResidueNumber("A",chainAlen,null), new ResidueNumber("B",1,null));
+			fail("Not the same chain");
+		} catch( IllegalArgumentException e) {}
 		len = map.calcLength(start, end,"A");
-		assertEquals("Bad length for ("+start+","+end+")",-1/*end-start*/, len);
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
 		len = map.calcLengthDirectional(start, end, "A");
-		assertEquals("Bad length for ("+start+","+end+")",-1/*end-start*/, len);
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
 		len = map.calcLengthDirectional(end, start, "A");
-		assertEquals("Bad length for ("+start+","+end+")",chainAlen-1, len);
+		assertEquals("Bad length for ("+start+","+end+")",-1, len);
+		len = map.calcLengthDirectional(start,end, "B");
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
+		
+		start = chainAlen-2; //2 residues of A
+		end = chainAlen+2; // 3 residues of B
+		len = map.calcLengthDirectional(start, end, "A");
+		assertEquals("Bad length for ("+start+","+end+")",2, len);
+		len = map.calcLengthDirectional(end, start, "A");
+		assertEquals("Bad length for ("+start+","+end+")",-2, len);
+		len = map.calcLengthDirectional(start, end, "B");
+		assertEquals("Bad length for ("+start+","+end+")",3, len);
+		len = map.calcLengthDirectional(end, start, "B");
+		assertEquals("Bad length for ("+start+","+end+")",-3, len);
 
+		start = 0;
+		end = chainAlen;
+		try {
+			len = map.calcLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
+			fail("Residue found from the wrong chain");
+		} catch( IllegalArgumentException e) {
+			// end residue should be B1, not A142
+		}
+		// Chain Spanning
+		len = map.calcLength(start, end,"B");
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
+		len = map.calcLengthDirectional(start, end, "B");
+		assertEquals("Bad length for ("+start+","+end+")",1, len);
+		len = map.calcLengthDirectional(end, start, "B");
+		assertEquals("Bad length for ("+start+","+end+")",-1, len);
+		len = map.calcLength(start, end,"A");
+		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
+		len = map.calcLengthDirectional(start, end, "A");
+		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
+		len = map.calcLengthDirectional(end, start, "A");
+		assertEquals("Bad length for ("+start+","+end+")",-chainAlen, len);
 	}
 
 	/**
@@ -159,12 +178,11 @@ public class AtomPositionMapTest {
 	 * @throws IOException 
 	 */
 	@Test
-	public void testHard() throws IOException, StructureException {
-
+	public void testInsertionCodes() throws IOException, StructureException {
 		String pdbId = "1qdm";
-		// has 2 insertion code regions:
-		// P at the beginning starting at 6P and ending at 27P, where 2 starts
-		// S between 247 (before:1S) and 248 (after:104S)
+		// has 2 insertion code regions, lettered P and S, as well as disordered regions:
+		// 6P-26P,2-163,169-247,1S-37S,65S-104S,248-338
+		// Len:21,  162,     79,    37,      40,     91 = 430
 
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 		NavigableMap<ResidueNumber,Integer> navMap = map.getNavMap();
@@ -172,9 +190,9 @@ public class AtomPositionMapTest {
 		for (ResidueNumber n : navMap.keySet()) {
 			assertEquals("An element is missing", map.getPosition(n).intValue(), navMap.get(n).intValue());
 		}
-		
-		int length1 = 59;
-		int length2 = 131;
+
+		int length1 = 60; // 2+37+21
+		int length2 = 132;// 2+37+40+53
 		ResidueNumber start = new ResidueNumber("A", 246, null);
 		ResidueNumber mid = new ResidueNumber("A", 85, 'S');
 		ResidueNumber end = new ResidueNumber("A", 300, null);
@@ -182,6 +200,39 @@ public class AtomPositionMapTest {
 		assertEquals("Real atom length is wrong", length1, realLength1);
 		int realLength2 = map.calcLength(start, end);
 		assertEquals("Real atom length is wrong", length2, realLength2);
+		
+		int realLength = map.calcLength(new ResidueNumber("A",6,'P'),new ResidueNumber("A",338,null));
+		assertEquals("Full length wrong",430,realLength);
 	}
 
+
+	@Test
+	public void testChains() throws IOException, StructureException {
+		String pdbId = "1qdm";
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+
+		ResidueNumber start,end;
+		try {
+			start = new ResidueNumber("A",6,'P');
+			end = new ResidueNumber("B",338,null);
+			map.calcLength(start, end);
+			fail("Chain missmatch");
+		} catch(IllegalArgumentException e) {
+			// Expected
+		}
+		try {
+			start = new ResidueNumber("A",6,'P');
+			end = new ResidueNumber("B",338,null);
+			map.calcLengthDirectional(start, end);
+			fail("Chain missmatch");
+		} catch(IllegalArgumentException e) {
+			// Expected
+		}
+
+		// With integers, only count matching chain atoms
+		start = new ResidueNumber("A",338,null);
+		end = new ResidueNumber("B",6,'P');
+		int len = map.calcLength(map.getPosition(start),map.getPosition(end),"A");
+		assertEquals(1, len);
+	}
 }

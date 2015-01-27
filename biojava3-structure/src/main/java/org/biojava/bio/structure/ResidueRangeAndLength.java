@@ -29,16 +29,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 	 */
 	@Override
 	public Iterator<ResidueNumber> iterator(AtomPositionMap map) {
-		return super.iterator(map, length); // just a bit faster
-	}
-
-	/**
-	 * Returns a new Iterator over every {@link ResidueNumber} in this ResidueRange.
-	 * Stores the contents of {@code map} until the iterator is finished, so calling code should set the iterator to {@code null} if it did not finish.
-	 */
-	@Override
-	public Iterator<ResidueNumber> iterator(AtomPositionMap map, Integer length) {
-		return super.iterator(map, length); // just a bit faster
+		return super.iterator(map); // just a bit faster
 	}
 
 	/**
@@ -73,7 +64,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 		// get a non-null start and end
 		// if it's the whole chain, choose the first and last residue numbers in the chain
 		if (start==null) {
-			if (rr.getChainId() == null) {
+			if (rr.getChainId() == null) {//TODO || rr.getChainId() == '_'
 				start = map.getFirst();
 			} else {
 				start = map.getFirst(rr.getChainId());
@@ -93,7 +84,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 		int length = map.calcLength(start, end);
 
 		// to avoid confusing the user, don't add the start and end if they weren't specified in the string s
-		return new ResidueRangeAndLength(rr.getChainId(), rr.getStart(), rr.getEnd(), length);
+		return new ResidueRangeAndLength(rr.getChainId(), start, end, length);
 	}
 
 	public static List<ResidueRangeAndLength> parseMultiple(List<String> ranges, AtomPositionMap map) {
