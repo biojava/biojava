@@ -23,15 +23,18 @@
 
 package org.biojava.bio.structure;
 
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.LocalPDBDirectory;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;import static org.junit.Assume.*;
 
 import java.io.IOException;
 import java.util.NavigableMap;
 
 import static org.junit.Assert.assertEquals;
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.LocalPDBDirectory;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * A unit test for {@link org.biojava.bio.structure.AtomPositionMap}.
@@ -65,6 +68,89 @@ public class AtomPositionMapTest {
 		}
 		int realLength = map.calcLength(start, end);
 		assertEquals("Real atom length is wrong", length, realLength);
+	}
+	
+	@Test
+	public void testLengths() throws IOException, StructureException {
+		String pdbId = "4hhb";
+		cache.setUseMmCif(false);
+		cache.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+		Atom[] atoms = cache.getAtoms(pdbId);
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+
+		int len;
+		int start,end;
+		
+		// Single residue
+		start = 1;
+		end = 1;
+		len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("A",end,null));
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLength(start, end,"A");
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLengthDirectional(start, end, "A");
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLengthDirectional(end, start, "A");
+		assertEquals("Bad length for ("+start+","+end+")",0, len);
+
+		// Short range
+		start = 1;
+		end = 3;
+		len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("A",end,null));
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLength(start, end,"A");
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLengthDirectional(start, end, "A");
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLengthDirectional(end, start, "A");
+		assertEquals("Bad length for ("+start+","+end+")",0, len);
+		
+		// Double check that the chain length is correct
+		int chainAlen = cache.getStructure(pdbId).getChainByPDB("A").getAtomGroups(GroupType.AMINOACID).size();
+		assumeTrue(141==chainAlen);
+
+		//Full chain
+		start = 1;
+		end = chainAlen;
+		len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("A",end,null));
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLength(start, end,"A");
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLengthDirectional(start, end, "A");
+		assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+		len = map.calcLengthDirectional(end, start, "A");
+		assertEquals("Bad length for ("+start+","+end+")",0, len);
+		
+
+		//Fuller chain
+		try {
+			start = 1;
+			end = chainAlen+1;
+			len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("A",end,null));
+			assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+			len = map.calcLength(start, end,"A");
+			assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+			len = map.calcLengthDirectional(start, end, "A");
+			assertEquals("Bad length for ("+start+","+end+")",end-start, len);
+			len = map.calcLengthDirectional(end, start, "A");
+			assertEquals("Bad length for ("+start+","+end+")",0, len);
+		} catch( NullPointerException e) {
+			// WTF
+		}
+
+		
+		// Chain spanning
+		start = chainAlen;
+		end = chainAlen+1;
+		len = map.calcLength(new ResidueNumber("A",start,null), new ResidueNumber("B",end-chainAlen,null));
+		assertEquals("Bad length for ("+start+","+end+")",-1/*end-start*/, len);
+		len = map.calcLength(start, end,"A");
+		assertEquals("Bad length for ("+start+","+end+")",-1/*end-start*/, len);
+		len = map.calcLengthDirectional(start, end, "A");
+		assertEquals("Bad length for ("+start+","+end+")",-1/*end-start*/, len);
+		len = map.calcLengthDirectional(end, start, "A");
+		assertEquals("Bad length for ("+start+","+end+")",chainAlen-1, len);
+
 	}
 
 	/**

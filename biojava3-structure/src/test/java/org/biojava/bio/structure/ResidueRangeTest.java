@@ -111,6 +111,16 @@ public class ResidueRangeTest {
 	}
 	
 	@Test
+	public void testLengths() throws IOException, StructureException {
+		String pdbId = "1w0p";
+		String rangeStr = "A:25-26";
+		Atom[] atoms = cache.getAtoms(pdbId);
+		AtomPositionMap map = new AtomPositionMap(atoms);
+		ResidueRangeAndLength range = ResidueRangeAndLength.parse(rangeStr, map);
+		assertEquals(2,range.getLength());
+	}
+	
+	@Test
 	public void testIterator() throws IOException, StructureException {
 		String pdbId = "2eke";
 		String[] expected = new String[] {"C_1023", "C_1024", "C_1025", "C_1026", "C_1027", "C_1028", "C_1029", "C_1030", "C_1031", "C_1032", "C_1033", "C_1034", "C_1035", "C_1036", "C_1037", "C_1038", "C_1039", "C_1040", "C_1041", "C_1042", "C_1043", "C_1044", "C_1045", "C_1046", "C_1047", "C_1048", "C_1049", "C_1050", "C_1051", "C_1052", "C_1053", "C_1054", "C_1055", "C_1056", "C_1057", "C_1058", "C_1059", "C_1060", "C_1061", "C_1062", "C_1063"};
