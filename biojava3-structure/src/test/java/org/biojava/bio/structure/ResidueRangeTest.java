@@ -49,7 +49,7 @@ public class ResidueRangeTest {
 	@Before
 	public void setUp() throws Exception {
 		cache = new AtomCache(); // TODO Should mock instead of depending on
-									// real data from AtomCache
+		// real data from AtomCache
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 	}
 
@@ -64,7 +64,7 @@ public class ResidueRangeTest {
 
 	@Test
 	public void testPartialChainWithMap() throws IOException,
-			StructureException {
+	StructureException {
 		String pdbId = "1cph";
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 		String range = "B:1-30";
@@ -93,8 +93,8 @@ public class ResidueRangeTest {
 	@Test
 	public void testWithLengths() throws IOException, StructureException {
 		String[] ids = new String[] { "1w0p", "3qq3", "3chc", "2ei7" }; // more:
-																		// ,
-																		// "2qbr"
+		// ,
+		// "2qbr"
 		String[] chains = new String[] { "A", "B", "A", "L" };
 		ResidueNumber[] starts = new ResidueNumber[] {
 				new ResidueNumber("A", 5, ' '),
@@ -265,7 +265,7 @@ public class ResidueRangeTest {
 	 */
 	@Test
 	public void testParseAndEqualWithLengths() throws IOException,
-			StructureException {
+	StructureException {
 		String rangeStr;
 		List<ResidueRangeAndLength> ranges;
 		ResidueRangeAndLength range;
@@ -285,6 +285,31 @@ public class ResidueRangeTest {
 		assertEquals(new ResidueRangeAndLength("C", new ResidueNumber("C", 105,
 				null), new ResidueNumber("C", 1095, null), 91), ranges.get(2));
 
+		// Wildcard chains
+
+		pdbId = "4r61"; // A:8-52,58-109,119-161
+		map = new AtomPositionMap(cache.getAtoms(pdbId));
+		rangeStr = "_,__,_:52-58";
+		ranges = ResidueRangeAndLength.parseMultiple(rangeStr, map);
+		range = ranges.get(0);
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",8,null),range.getStart());
+		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",161,null),range.getEnd());
+		range = ranges.get(1);
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",8,null),range.getStart());
+		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",161,null),range.getEnd());
+		range = ranges.get(2);
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A", 52,null), range.getStart());
+		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A", 58,null), range.getEnd());
+
+		// wildcards not converted without the map
+		ResidueRange range2 = ResidueRange.parse("_");
+		assertEquals("Error parsing " + rangeStr, "_", range2.getChainId());
+		assertNull("Error parsing " + rangeStr,range2.getStart());
+		assertNull("Error parsing " + rangeStr,range2.getEnd());
+
 	}
 
 	@Test
@@ -293,9 +318,9 @@ public class ResidueRangeTest {
 		String[] yes = new String[] { "A_", "A:", "ABC:", "abc:", "A_5-100",
 				"A_5-100S", "A_5S-100", "A_5S-100S", "A_-5-100", "A_-5--100",
 				"A_-5S--100S", "ABC:-5--200S", "A", "ABCD", "A1", // valid
-																	// multi-char
-																	// chain
-																	// name
+				// multi-char
+				// chain
+				// name
 				"3A:1-100", // Weird chain name
 				"_", "_:1-10", "__-2--1", "__"// catch-all chain
 		};
