@@ -19,6 +19,8 @@ public class TestStructureCrossReferences {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestStructureCrossReferences.class);
 	
+	private static final String PDBCODE1 = "1smt";
+	private static final String PDBCODE2 = "2mre";
 			
 	@Test
 	public void testCrossReferencesMmCif() throws IOException, StructureException {
@@ -32,9 +34,12 @@ public class TestStructureCrossReferences {
 		
 		StructureIO.setAtomCache(cache); 
 		
-		Structure structure = StructureIO.getStructure("1smt");
+		Structure structure = StructureIO.getStructure(PDBCODE1);
 		
 		System.out.println("Testing references in mmCIF loading with NO alignSeqRes");
+		doFullTest(structure);
+		
+		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
 		doFullTest(structure);
 		
 	}
@@ -51,10 +56,14 @@ public class TestStructureCrossReferences {
 		
 		StructureIO.setAtomCache(cache); 
 		
-		Structure structure = StructureIO.getStructure("1smt");
+		Structure structure = StructureIO.getStructure(PDBCODE1);
 		
 		System.out.println("Testing references in mmCIF loading with alignSeqRes");
 		doFullTest(structure);
+		
+		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
+		doFullTest(structure);
+
 		
 	}
 
@@ -71,11 +80,14 @@ public class TestStructureCrossReferences {
 		
 		StructureIO.setAtomCache(cache); 
 		
-		Structure structure = StructureIO.getStructure("1smt");
+		Structure structure = StructureIO.getStructure(PDBCODE1);
 		
 		System.out.println("Testing references in PDB loading with NO alignSeqRes");
 		doFullTest(structure);
 		
+		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
+		doFullTest(structure);
+
 	}
 	
 	@Test
@@ -91,9 +103,13 @@ public class TestStructureCrossReferences {
 		StructureIO.setAtomCache(cache); 
 		
 		System.out.println("Testing references in PDB loading with alignSeqRes");
-		Structure structure = StructureIO.getStructure("1smt");
+		Structure structure = StructureIO.getStructure(PDBCODE1);
 		
 		doFullTest(structure);
+		
+		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
+		doFullTest(structure);
+
 		
 	}
 	
@@ -167,8 +183,13 @@ public class TestStructureCrossReferences {
 		for (Compound compound:s.getCompounds()) {
 			for (Chain c:compound.getChains()) {
 				assertSame(compound, c.getCompound());
-				Chain cFromStruc = s.getChainByPDB(c.getChainID());
-				assertSame(cFromStruc,c);
+				int count = 0;
+				for (int modelNr=0;modelNr<s.nrModels();modelNr++) {
+					// the chain must be matched by 1 and only 1 chain from all models
+					Chain cFromStruc = s.getChainByPDB(c.getChainID(), modelNr);
+					if (cFromStruc==c) count++;
+				}
+				assertEquals("Only 1 chain must match the compound chain for all models",1,count);
 			}
 		}
 	}
@@ -188,6 +209,9 @@ public class TestStructureCrossReferences {
 			// the SEQRES groups should contain a reference to each and every ATOM group
 			// (of course they will also contain some extra groups: those that are only in SEQRES)
 			if (c.getSeqResGroups().size()>0) {
+				// we don't want to test hetatoms that are most likely outside of the seqres defined chains
+				if (g.getType() == GroupType.HETATM) continue;
+				
 				assertTrue("SeqResGroups should contain ATOM group "+g.toString(), 
 						containsReference(g, c.getSeqResGroups()) );
 			}

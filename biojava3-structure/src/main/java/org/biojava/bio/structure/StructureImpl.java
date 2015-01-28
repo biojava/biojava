@@ -171,9 +171,11 @@ public class StructureImpl implements Structure, Serializable {
 			Compound newCompound = new Compound(compound); // this sets everything but the chains
 			for (String chainId:compound.getChainIds()) {
 				try {
-					Chain newChain = n.getChainByPDB(chainId);
-					newChain.setCompound(newCompound);
-					newCompound.addChain(newChain);
+					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
+						Chain newChain = n.getChainByPDB(chainId,modelNr);
+						newChain.setCompound(newCompound);
+						newCompound.addChain(newChain);
+					}
 				} catch (StructureException e) {
 					logger.error("Could not find chain id {} while cloning Structure's compounds. Something is wrong!", e);
 				}
