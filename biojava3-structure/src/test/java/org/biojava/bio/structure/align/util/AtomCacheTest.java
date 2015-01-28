@@ -93,9 +93,8 @@ public class AtomCacheTest {
 		assertEquals(2, structure.getChains().size());
 		Chain a = structure.getChainByPDB("A");
 		Chain b = structure.getChainByPDB("B");
-		// we're one off because getAtomGroups().size() includes the last Group
-		assertEquals(expectedLengthA, a.getAtomGroups().size()-1);
-		assertEquals(expectedLengthB, b.getAtomGroups().size()-1);
+		assertEquals(expectedLengthA, a.getAtomGroups().size());
+		assertEquals(expectedLengthB, b.getAtomGroups().size());
 	}
 
 	/**
@@ -113,9 +112,8 @@ public class AtomCacheTest {
 		assertEquals(2, structure.getChains().size());
 		Chain a = structure.getChainByPDB("A");
 		Chain b = structure.getChainByPDB("B");
-		// we're one off because getAtomGroups().size() includes the last Group
-		assertEquals(expectedLengthA, a.getAtomGroups().size()-1);
-		assertEquals(expectedLengthB, b.getAtomGroups().size()-1);
+		assertEquals(expectedLengthA, a.getAtomGroups().size());
+		assertEquals(expectedLengthB, b.getAtomGroups().size());
 		List<Group> ligandsA = StructureTools.filterLigands(b.getAtomGroups());
 		assertEquals(0, ligandsA.size());
 		List<Group> ligandsB = StructureTools.filterLigands(b.getAtomGroups());
@@ -135,8 +133,7 @@ public class AtomCacheTest {
 		Structure structure = cache.getStructureForDomain("d1i3oe_");
 		assertEquals(1, structure.getChains().size());
 		Chain e = structure.getChainByPDB("E");
-		// we're one off because getAtomGroups().size() includes the last Group
-		assertEquals(expectedLengthE, e.getAtomGroups().size()-1);
+		assertEquals(expectedLengthE, e.getAtomGroups().size());
 		List<Group> ligandsE = StructureTools.filterLigands(e.getAtomGroups());
 		assertEquals(1, ligandsE.size());
 	}
