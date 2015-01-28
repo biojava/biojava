@@ -66,7 +66,7 @@ public class AtomPositionMapTest {
 		for (ResidueNumber n : navMap.keySet()) {
 			assertEquals("An element is missing", map.getPosition(n).intValue(), navMap.get(n).intValue());
 		}
-		int realLength = map.calcLength(start, end);
+		int realLength = map.getLength(start, end);
 		assertEquals("Real atom length is wrong", length, realLength);
 	}
 
@@ -89,86 +89,86 @@ public class AtomPositionMapTest {
 		// Single residue
 		start = 0;
 		end = 0;
-		len = map.calcLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
+		len = map.getLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
-		len = map.calcLength(start, end,"A");
+		len = map.getLength(start, end,"A");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
-		len = map.calcLengthDirectional(start, end, "A");
+		len = map.getLengthDirectional(start, end, "A");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
-		len = map.calcLengthDirectional(end, start, "A");
+		len = map.getLengthDirectional(end, start, "A");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
 
 		// Short range
 		start = 2;
 		end = 4;
-		len = map.calcLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
+		len = map.getLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
 		assertEquals("Bad length for ("+start+","+end+")",3, len);
-		len = map.calcLength(start, end,"A");
+		len = map.getLength(start, end,"A");
 		assertEquals("Bad length for ("+start+","+end+")",3, len);
-		len = map.calcLengthDirectional(start, end, "A");
+		len = map.getLengthDirectional(start, end, "A");
 		assertEquals("Bad length for ("+start+","+end+")",3, len);
-		len = map.calcLengthDirectional(end, start, "A");
+		len = map.getLengthDirectional(end, start, "A");
 		assertEquals("Bad length for ("+start+","+end+")",-3, len);
 
 		//Full chain
 		start = 0;
 		end = chainAlen-1;
-		len = map.calcLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
+		len = map.getLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
 		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
-		len = map.calcLength(start, end,"A");
+		len = map.getLength(start, end,"A");
 		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
-		len = map.calcLengthDirectional(start, end, "A");
+		len = map.getLengthDirectional(start, end, "A");
 		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
-		len = map.calcLengthDirectional(end, start, "A");
+		len = map.getLengthDirectional(end, start, "A");
 		assertEquals("Bad length for ("+start+","+end+")",-chainAlen, len);
 
 		// Chain spanning
 		start = chainAlen-1;
 		end = chainAlen;
 		try {
-			len = map.calcLength(new ResidueNumber("A",chainAlen,null), new ResidueNumber("B",1,null));
+			len = map.getLength(new ResidueNumber("A",chainAlen,null), new ResidueNumber("B",1,null));
 			fail("Not the same chain");
 		} catch( IllegalArgumentException e) {}
-		len = map.calcLength(start, end,"A");
+		len = map.getLength(start, end,"A");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
-		len = map.calcLengthDirectional(start, end, "A");
+		len = map.getLengthDirectional(start, end, "A");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
-		len = map.calcLengthDirectional(end, start, "A");
+		len = map.getLengthDirectional(end, start, "A");
 		assertEquals("Bad length for ("+start+","+end+")",-1, len);
-		len = map.calcLengthDirectional(start,end, "B");
+		len = map.getLengthDirectional(start,end, "B");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
 		
 		start = chainAlen-2; //2 residues of A
 		end = chainAlen+2; // 3 residues of B
-		len = map.calcLengthDirectional(start, end, "A");
+		len = map.getLengthDirectional(start, end, "A");
 		assertEquals("Bad length for ("+start+","+end+")",2, len);
-		len = map.calcLengthDirectional(end, start, "A");
+		len = map.getLengthDirectional(end, start, "A");
 		assertEquals("Bad length for ("+start+","+end+")",-2, len);
-		len = map.calcLengthDirectional(start, end, "B");
+		len = map.getLengthDirectional(start, end, "B");
 		assertEquals("Bad length for ("+start+","+end+")",3, len);
-		len = map.calcLengthDirectional(end, start, "B");
+		len = map.getLengthDirectional(end, start, "B");
 		assertEquals("Bad length for ("+start+","+end+")",-3, len);
 
 		start = 0;
 		end = chainAlen;
 		try {
-			len = map.calcLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
+			len = map.getLength(new ResidueNumber("A",start+1,null), new ResidueNumber("A",end+1,null));
 			fail("Residue found from the wrong chain");
 		} catch( IllegalArgumentException e) {
 			// end residue should be B1, not A142
 		}
 		// Chain Spanning
-		len = map.calcLength(start, end,"B");
+		len = map.getLength(start, end,"B");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
-		len = map.calcLengthDirectional(start, end, "B");
+		len = map.getLengthDirectional(start, end, "B");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
-		len = map.calcLengthDirectional(end, start, "B");
+		len = map.getLengthDirectional(end, start, "B");
 		assertEquals("Bad length for ("+start+","+end+")",-1, len);
-		len = map.calcLength(start, end,"A");
+		len = map.getLength(start, end,"A");
 		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
-		len = map.calcLengthDirectional(start, end, "A");
+		len = map.getLengthDirectional(start, end, "A");
 		assertEquals("Bad length for ("+start+","+end+")",chainAlen, len);
-		len = map.calcLengthDirectional(end, start, "A");
+		len = map.getLengthDirectional(end, start, "A");
 		assertEquals("Bad length for ("+start+","+end+")",-chainAlen, len);
 	}
 
@@ -196,12 +196,12 @@ public class AtomPositionMapTest {
 		ResidueNumber start = new ResidueNumber("A", 246, null);
 		ResidueNumber mid = new ResidueNumber("A", 85, 'S');
 		ResidueNumber end = new ResidueNumber("A", 300, null);
-		int realLength1 = map.calcLength(start, mid);
+		int realLength1 = map.getLength(start, mid);
 		assertEquals("Real atom length is wrong", length1, realLength1);
-		int realLength2 = map.calcLength(start, end);
+		int realLength2 = map.getLength(start, end);
 		assertEquals("Real atom length is wrong", length2, realLength2);
 		
-		int realLength = map.calcLength(new ResidueNumber("A",6,'P'),new ResidueNumber("A",338,null));
+		int realLength = map.getLength(new ResidueNumber("A",6,'P'),new ResidueNumber("A",338,null));
 		assertEquals("Full length wrong",430,realLength);
 	}
 
@@ -215,7 +215,7 @@ public class AtomPositionMapTest {
 		try {
 			start = new ResidueNumber("A",6,'P');
 			end = new ResidueNumber("B",338,null);
-			map.calcLength(start, end);
+			map.getLength(start, end);
 			fail("Chain missmatch");
 		} catch(IllegalArgumentException e) {
 			// Expected
@@ -223,7 +223,7 @@ public class AtomPositionMapTest {
 		try {
 			start = new ResidueNumber("A",6,'P');
 			end = new ResidueNumber("B",338,null);
-			map.calcLengthDirectional(start, end);
+			map.getLengthDirectional(start, end);
 			fail("Chain missmatch");
 		} catch(IllegalArgumentException e) {
 			// Expected
@@ -232,7 +232,7 @@ public class AtomPositionMapTest {
 		// With integers, only count matching chain atoms
 		start = new ResidueNumber("A",338,null);
 		end = new ResidueNumber("B",6,'P');
-		int len = map.calcLength(map.getPosition(start),map.getPosition(end),"A");
+		int len = map.getLength(map.getPosition(start),map.getPosition(end),"A");
 		assertEquals(1, len);
 	}
 }

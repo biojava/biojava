@@ -98,7 +98,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 		
 		// now use those to calculate the length
 		// if start or end is null, will throw NPE
-		int length = map.calcLength(start, end);
+		int length = map.getLength(start, end);
 
 		return new ResidueRangeAndLength(chain, start, end, length);
 	}

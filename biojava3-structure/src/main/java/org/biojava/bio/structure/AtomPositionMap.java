@@ -47,6 +47,9 @@ import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
  * int pos = map.getPosition(start);
  * int length = map.calcLength(start, end);
  * </pre>
+ * 
+ * <p>Note: The getLength() methods were introduced in BioJava 4.0.0 to replace
+ * the calcLength methods, which returned the length-1
  * @author dmyerstu
  */
 public class AtomPositionMap {
@@ -148,7 +151,7 @@ public class AtomPositionMap {
 	 * @param startingChain Case-sensitive chain
 	 * @return The number of atoms between A and B inclusive belonging to the given chain
 	 */
-	public int calcLength(int positionA, int positionB, String startingChain) {
+	public int getLength(int positionA, int positionB, String startingChain) {
 		
 		int positionStart, positionEnd;
 		if (positionA <= positionB) {
@@ -181,8 +184,8 @@ public class AtomPositionMap {
 	 * @param startingChain Case-sensitive chain
 	 * @return The number of atoms from A to B inclusive belonging to the given chain
 	 */
-	public int calcLengthDirectional(int positionStart, int positionEnd, String startingChain) {
-		int count = calcLength(positionStart,positionEnd,startingChain);
+	public int getLengthDirectional(int positionStart, int positionEnd, String startingChain) {
+		int count = getLength(positionStart,positionEnd,startingChain);
 		if(positionStart <= positionEnd) {
 			return count;
 		} else {
@@ -199,7 +202,7 @@ public class AtomPositionMap {
 	 * @throws IllegalArgumentException if start and end are on different chains,
 	 *  or if either of the residues doesn't exist
 	 */
-	public int calcLength(ResidueNumber start, ResidueNumber end) {
+	public int getLength(ResidueNumber start, ResidueNumber end) {
 		if( ! start.getChainId().equals(end.getChainId())) {
 			throw new IllegalArgumentException(String.format(
 					"Chains differ between %s and %s. Unable to calculate length.",
@@ -213,7 +216,7 @@ public class AtomPositionMap {
 		if(endPos == null) {
 			throw new IllegalArgumentException("Residue "+start+" was not found.");
 		}
-		return calcLength(startPos,endPos, start.getChainId());
+		return getLength(startPos,endPos, start.getChainId());
 	}
 
 	/**
@@ -226,7 +229,7 @@ public class AtomPositionMap {
 	 * @throws IllegalArgumentException if start and end are on different chains,
 	 *  or if either of the residues doesn't exist
 	 */
-	public int calcLengthDirectional(ResidueNumber start, ResidueNumber end) {
+	public int getLengthDirectional(ResidueNumber start, ResidueNumber end) {
 		if( ! start.getChainId().equals(end.getChainId())) {
 			throw new IllegalArgumentException(String.format(
 					"Chains differ between %s and %s. Unable to calculate length.",
@@ -240,7 +243,7 @@ public class AtomPositionMap {
 		if(endPos == null) {
 			throw new IllegalArgumentException("Residue "+start+" was not found.");
 		}
-		return calcLengthDirectional(startPos,endPos, start.getChainId());
+		return getLengthDirectional(startPos,endPos, start.getChainId());
 	}
 
 
@@ -309,7 +312,7 @@ public class AtomPositionMap {
 		for (ResidueNumber rn : treeMap.keySet()) {
 			if (!rn.getChainId().equals(currentChain)) {
 				if (first != null) {
-					ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.calcLength(first, prev));
+					ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.getLength(first, prev));
 					ranges.add(newRange);
 				}
 				first = rn;
@@ -317,7 +320,7 @@ public class AtomPositionMap {
 			prev = rn;
 			currentChain = rn.getChainId();
 		}
-		ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.calcLength(first, prev));
+		ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.getLength(first, prev));
 		ranges.add(newRange);
 		return ranges;
 	}
