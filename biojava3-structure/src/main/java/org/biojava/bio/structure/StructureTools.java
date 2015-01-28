@@ -1398,9 +1398,11 @@ public class StructureTools {
 	 * non-water residues is above the threshold {@value #RATIO_RESIDUES_TO_TOTAL}, then that {@link GroupType} is returned </li>
 	 * <li>if there is no {@link GroupType} that is above the threshold then the {@link GroupType} 
 	 * with most members is chosen, logging it</li>
+	 * <p>
 	 * See also {@link ChemComp#getPolymerType()} and {@link ChemComp#getResidueType()} which 
 	 * follow the PDB chemical component dictionary and provide a much more accurate description of 
 	 * groups and their linking.
+	 * </p>
 	 * @param c
 	 * @return
 	 */
@@ -1413,35 +1415,36 @@ public class StructureTools {
 		for (Group g:hetAtoms) {
 			if (g.isWater()) sizeWaters++;
 		}
+		int sizeHetatomsWithoutWater = sizeHetatoms - sizeWaters;
 		
-		int fullSize = sizeAminos + sizeNucleotides + sizeHetatoms - sizeWaters;
+		int fullSize = sizeAminos + sizeNucleotides + sizeHetatomsWithoutWater;
 		
 		if ((double)sizeAminos/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return GroupType.AMINOACID;
 		
 		if ((double)sizeNucleotides/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return GroupType.NUCLEOTIDE;
 		
-		if ((double)(sizeHetatoms-sizeWaters)/(double)fullSize > RATIO_RESIDUES_TO_TOTAL) return GroupType.HETATM;
+		if ((double)(sizeHetatomsWithoutWater)/(double)fullSize > RATIO_RESIDUES_TO_TOTAL) return GroupType.HETATM;
 		
 		// finally if neither condition works, we try based on majority, but log it
 		GroupType max;
 		if(sizeNucleotides > sizeAminos) {
-			if(sizeNucleotides > sizeHetatoms) {
+			if(sizeNucleotides > sizeHetatomsWithoutWater) {
 				max = GroupType.NUCLEOTIDE;
 			} else {
 				max = GroupType.HETATM;
 			}
 		} else {
-			if(sizeAminos > sizeHetatoms) {
+			if(sizeAminos > sizeHetatomsWithoutWater) {
 				max = GroupType.AMINOACID;
 			} else {
 				max = GroupType.HETATM;
 			}
 		}
 		logger.debug("Ratio of residues to total for chain {} is below {}. Assuming it is a {} chain. "
-				+ "Counts: # aa residues: {}, # nuc residues: {}, # het residues: {}, # waters: {}, "
+				+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
 				+ "ratio aa/total: {}, ratio nuc/total: {}",
 				c.getChainID(), RATIO_RESIDUES_TO_TOTAL, max,
-				sizeAminos, sizeNucleotides, sizeHetatoms, sizeWaters,
+				sizeAminos, sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
 				(double)sizeAminos/(double)fullSize,(double)sizeNucleotides/(double)fullSize) ;
 
 		return max;
