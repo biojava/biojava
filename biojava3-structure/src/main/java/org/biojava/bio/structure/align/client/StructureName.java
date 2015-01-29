@@ -21,32 +21,24 @@
 package org.biojava.bio.structure.align.client;
 
 
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.List;
-import java.util.regex.Matcher;
-
-import org.biojava.bio.structure.ResidueRange;
-import org.biojava.bio.structure.StructureIdentifier;
 import org.biojava.bio.structure.align.util.AtomCache;
+
+import java.io.Serializable;
+import java.util.regex.Matcher;
 
 
 /** A utility class that makes working with names of structures, domains and ranges easier.
  * 
- * @param name the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
+ * @see #getName the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
  */
-public class StructureName implements Comparable<StructureName>, Serializable, StructureIdentifier{
+public class StructureName implements Comparable<StructureName>, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4021229518711762954L;
 	protected String name;
 	protected String pdbId;
 	protected String chainId;
 
 	String cathPattern = "[0-9][a-z0-9][a-z0-9][a-z0-9].[0-9][0-9]";
-
 
 	private enum Source {
 		PDB,
@@ -55,10 +47,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		CATH
 	};
 
-
-	Source mySource = null; 
-	private  List<ResidueRange> ranges ;
-	
+	Source mySource = null;
 	
 	public StructureName(String name){
 		if ( name.length() <  4)
@@ -69,19 +58,13 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		this.pdbId = parsePdbId();
 
 		this.chainId = parseChainId();
-		
-		this.ranges = parseRanges();
-	}
 
-	private List<ResidueRange> parseRanges() {
-		return ResidueRange.parseMultiple(name);
 	}
 
 	/** PDB IDs are always returned as upper case
 	 * 
 	 * @return upper case PDB ID
 	 */
-	@Override
 	public String getPdbId(){
 
 		return pdbId;
@@ -100,7 +83,8 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 
 	@Override
 	public String toString(){
-		StringWriter s = new StringWriter();
+
+		StringBuilder s = new StringBuilder();
 
 		s.append(name);
 
@@ -115,7 +99,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		if ( chainID != null) {
 			s.append(" has chain ID: ");
 			s.append(chainID);
-
 		}
 
 		if ( isPDPDomain())
@@ -126,20 +109,13 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	}
 
 	public boolean isScopName() {
-		if (name.startsWith("d") && name.length() >6)		
-			return true;
-		return false;
+		return name.startsWith("d") && name.length() > 6;
 	}
 
 
 
 	public boolean hasChainID(){
-		//return name.contains(AtomCache.CHAIN_SPLIT_SYMBOL);
-
-
-		if ( chainId != null)
-			return true;
-		return false;
+		return chainId != null;
 	}
 
 	public boolean isPDPDomain(){
@@ -189,6 +165,9 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	}
 
 	private String parsePdbId(){
+
+		// TODO dmyersturnbull: Why do we uppercase? It seems like it does more harm than good.
+
 		if ( isScopName() ) {
 			mySource = Source.SCOP;
 			return name.substring(1,5).toUpperCase();
@@ -211,18 +190,17 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 
 
 	private String parseChainId(){
+
 		if (name.length() == 6){
 			// name is PDB.CHAINID style (e.g. 4hhb.A)
-
-
 			if ( name.substring(4,5).equals(AtomCache.CHAIN_SPLIT_SYMBOL)) {
 				return name.substring(5,6);
 			}
+
 		}  else if ( isCathID()){
 			return name.substring(4,5);
+
 		} else  if ( name.startsWith("d")){
-
-
 
 			Matcher scopMatch = AtomCache.scopIDregex.matcher(name);
 			if( scopMatch.matches() ) {
@@ -233,48 +211,20 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				return chainID.toUpperCase();
 			}
 
-
 		} else if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
 			// eg. PDP:4HHBAa
-			String chainID = name.substring(8,9);
-			//System.out.println("chain " + chainID + " for " + name);
-			return chainID;
+			return name.substring(8,9);
 		}
 
 		return null;
 	}
 
-	public boolean isCathID(){
-
-		if ( name.length() != 7 )
-			return false;
-
-		return name.matches(cathPattern);
+	public boolean isCathID() {
+		return name.length() == 7 && name.matches(cathPattern);
 	}
 
-	@Override
-	public String getIdentifier() {
-		return name;
-	}
-
-	@Override
-	public List<ResidueRange> getResidueRanges() {
-		return ranges;
-	}
-
-	@Override
-	public List<String> getRanges() {
-		return ResidueRange.toStrings(ranges);
-	}
-
-	public boolean hasRanges(){
-		return (ranges != null && ranges.size() > 0);
-	}
-	
 	public boolean isPdbId(){
-		if (name.length() == 4)
-			return true;
-		return false;
+		return name.length() == 4;
 	}
 
 

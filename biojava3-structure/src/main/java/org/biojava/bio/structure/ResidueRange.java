@@ -58,16 +58,18 @@ public class ResidueRange {
 			")?" + //end range
 			"\\s*");
 
+	public static final Pattern CHAIN_REGEX = Pattern.compile("^\\s*([a-zA-Z0-9]+|_)$");
+
 	/**
 	 * @param s
 	 *            A string of the form chain_start-end or chain.start-end. For example: <code>A.5-100</code> or <code>A_5-100</code>.
 	 * @return The unique ResidueRange corresponding to {@code s}
 	 */
 	public static ResidueRange parse(String s) {
-		ResidueNumber start = null, end = null;
-		String chain = null;
 		Matcher matcher = RANGE_REGEX.matcher(s);
 		if (matcher.matches()) {
+			ResidueNumber start = null, end = null;
+			String chain = null;
 			try {
 				chain = matcher.group(1);
 				if (matcher.group(2) != null) {
@@ -79,8 +81,11 @@ public class ResidueRange {
 			} catch (IllegalStateException e) {
 				throw new IllegalArgumentException("Range " + s + " was not valid", e);
 			}
+			return new ResidueRange(chain, start, end);
+		} else if (CHAIN_REGEX.matcher(s).matches()) {
+			return new ResidueRange(s, (ResidueNumber)null, null);
 		}
-		return new ResidueRange(chain, start, end);
+		throw new IllegalArgumentException("Could not understand ResidueRange string " + s);
 	}
 
 	/**
@@ -163,7 +168,7 @@ public class ResidueRange {
 	 * @return The ResidueNumber, or false if it does not exist or is not within this ResidueRange
 	 */
 	public ResidueNumber getResidue(int positionInRange, AtomPositionMap map) {
-		if (map == null) throw new IllegalArgumentException("The AtomPositionMap must be non-null");
+		if (map == null) throw new NullPointerException("The AtomPositionMap must be non-null");
 		int i = 0;
 		for (Map.Entry<ResidueNumber, Integer> entry : map.getNavMap().entrySet()) {
 			if (i == positionInRange) return entry.getKey();
@@ -178,18 +183,22 @@ public class ResidueRange {
 	 * @return True if and only if {@code residueNumber} is within this ResidueRange
 	 */
 	public boolean contains(ResidueNumber residueNumber, AtomPositionMap map) {
+
 		if (residueNumber == null)
-			throw new NullPointerException("Can't find a null ResidueNumber");
+			throw new NullPointerException("Can't find the ResidueNumber because it is null");
+
 		if (map == null)
 			throw new NullPointerException("The AtomPositionMap must be non-null");
-		// TODO treat missing bounds as full chain
-		if (getStart() == null || getEnd() == null)
-			throw new IllegalArgumentException("The bounds of this ResidueNumber aren't known");
+
 		Integer pos = map.getPosition(residueNumber);
 		if (pos == null) throw new IllegalArgumentException("Couldn't find residue " + residueNumber.printFull());
-		Integer startPos = map.getPosition(getStart());
+
+		ResidueNumber startResidue = getStart()==null? map.getFirst(getChainId()) : getStart();
+		Integer startPos = map.getPosition(startResidue);
 		if (startPos == null) throw new IllegalArgumentException("Couldn't find the start position");
-		Integer endPos = map.getPosition(getEnd());
+
+		ResidueNumber endResidue = getEnd()==null? map.getLast(getChainId()) : getEnd();
+		Integer endPos = map.getPosition(endResidue);
 		if (endPos == null) throw new IllegalArgumentException("Couldn't find the end position");
 		return pos >= startPos && pos <= endPos;
 	}

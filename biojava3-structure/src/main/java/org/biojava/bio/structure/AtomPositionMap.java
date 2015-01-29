@@ -23,6 +23,9 @@
 
 package org.biojava.bio.structure;
 
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -30,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-
-import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 
 /**
  * A map from {@link ResidueNumber ResidueNumbers} to ATOM record positions in a PDB file.
@@ -49,7 +49,8 @@ import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
  * </pre>
  * 
  * <p>Note: The getLength() methods were introduced in BioJava 4.0.0 to replace
- * the calcLength methods, which returned the length-1
+ * the calcLength methods. The new method returns the number of residues between
+ * two residues, inclusive, whereas the previous method returned 1 less than that.
  * @author dmyerstu
  */
 public class AtomPositionMap {
@@ -145,7 +146,7 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * Calculates the number of residues of the specified chain in a given range.
+	 * Calculates the number of residues of the specified chain in a given range, inclusive.
 	 * @param positionA index of the first atom to count
 	 * @param positionB index of the last atom to count
 	 * @param startingChain Case-sensitive chain
@@ -179,8 +180,8 @@ public class AtomPositionMap {
 	/**
 	 * Calculates the number of residues of the specified chain in a given range.
 	 * Will return a negative value if the start is past the end.
-	 * @param positionA index of the first atom to count
-	 * @param positionB index of the last atom to count
+	 * @param positionStart index of the first atom to count
+	 * @param positionEnd index of the last atom to count
 	 * @param startingChain Case-sensitive chain
 	 * @return The number of atoms from A to B inclusive belonging to the given chain
 	 */
@@ -194,10 +195,10 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * Calculates the number of atoms between two ResidueNumbers. Both residues
+	 * Calculates the number of atoms between two ResidueNumbers, inclusive. Both residues
 	 * must belong to the same chain.
-	 * @param positionA First residue
-	 * @param positionB Last residue
+	 * @param start First residue
+	 * @param end Last residue
 	 * @return The number of atoms from A to B inclusive
 	 * @throws IllegalArgumentException if start and end are on different chains,
 	 *  or if either of the residues doesn't exist
@@ -216,15 +217,15 @@ public class AtomPositionMap {
 		if(endPos == null) {
 			throw new IllegalArgumentException("Residue "+start+" was not found.");
 		}
-		return getLength(startPos,endPos, start.getChainId());
+		return getLength(startPos, endPos, start.getChainId());
 	}
 
 	/**
-	 * Calculates the number of atoms between two ResidueNumbers. Both residues
+	 * Calculates the number of atoms between two ResidueNumbers, inclusive. Both residues
 	 * must belong to the same chain.
 	 * Will return a negative value if the start is past the end.
-	 * @param positionA First residue
-	 * @param positionB Last residue
+	 * @param start First residue
+	 * @param end Last residue
 	 * @return The number of atoms from A to B inclusive
 	 * @throws IllegalArgumentException if start and end are on different chains,
 	 *  or if either of the residues doesn't exist
@@ -243,7 +244,7 @@ public class AtomPositionMap {
 		if(endPos == null) {
 			throw new IllegalArgumentException("Residue "+start+" was not found.");
 		}
-		return getLengthDirectional(startPos,endPos, start.getChainId());
+		return getLengthDirectional(startPos, endPos, start.getChainId());
 	}
 
 
