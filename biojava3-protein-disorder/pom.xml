@@ -19,7 +19,10 @@
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<debug>true</debug>
-				</configuration>
+                    <excludes>
+                        <exclude>demo/**.java</exclude>
+                    </excludes>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
