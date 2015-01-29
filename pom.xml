@@ -46,17 +46,7 @@
 		<url>https://github.com/biojava/biojava</url>
 		<tag>biojava-3.1.0</tag>
 	</scm>
-	<repositories>
-		<!-- The BioJava repository -->
-		<repository>
-			<id>biojava-maven-repo</id>
-			<name>BioJava repository</name>
-			<url>http://www.biojava.org/download/maven/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+
 	<!-- This section required for release at Maven Central. For a full list 
 		of Developers, please see https://github.com/orgs/biojava/members For a list 
 		of contributors, please see https://github.com/biojava/biojava/graphs/contributors -->
@@ -544,21 +534,21 @@
 
 	<modules>
 
-		<module>biojava3-core</module>
-		<module>biojava3-phylo</module>
-		<module>biojava3-alignment</module>
-		<module>biojava3-structure</module>
-		<module>integrationtest</module>
-		<module>biojava3-structure-gui</module>
-		<module>biojava3-sequencing</module>
-		<module>biojava3-genome</module>
-		<module>biojava3-modfinder</module>
-		<module>biojava3-ws</module>
-		<module>biojava3-protein-disorder</module>
-		<module>biojava3-aa-prop</module>
-		<module>protein-comparison-tool</module>
-		<module>biojava3-survival</module>
-		<module>biojava3-ontology</module>
+		<module>biojava-core</module>
+		<module>biojava-phylo</module>
+		<module>biojava-alignment</module>
+		<module>biojava-structure</module>
+		<module>biojava-integrationtest</module>
+		<module>biojava-structure-gui</module>
+		<module>biojava-sequencing</module>
+		<module>biojava-genome</module>
+		<module>biojava-modfinder</module>
+		<module>biojava-ws</module>
+		<module>biojava-protein-disorder</module>
+		<module>biojava-aa-prop</module>
+		<module>biojava-protein-comparison-tool</module>
+		<module>biojava-survival</module>
+		<module>biojava-ontology</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
 	<issueManagement>
