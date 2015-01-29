@@ -79,8 +79,9 @@ public class ResidueRange {
 			} catch (IllegalStateException e) {
 				throw new IllegalArgumentException("Range " + s + " was not valid", e);
 			}
+			return new ResidueRange(chain, start, end);
 		}
-		return new ResidueRange(chain, start, end);
+		throw new IllegalArgumentException("Could not understand ResidueRange string " + s);
 	}
 
 	/**

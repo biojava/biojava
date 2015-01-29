@@ -254,6 +254,17 @@ public class ResidueRangeTest {
 
 	}
 
+	@Test(expected=IllegalArgumentException.class)
+	public void testBadSyntax() throws IOException, StructureException {
+		ResidueRange.parse("-");
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testPartialRange() throws IOException, StructureException {
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms("2eke"));
+		ResidueRangeAndLength.parse("C_1023-", map);
+	}
+
 	/**
 	 * Tests
 	 * {@link org.biojava.bio.structure.ResidueRangeAndLength#parseMultiple(String, org.biojava.bio.structure.AtomPositionMap)}
