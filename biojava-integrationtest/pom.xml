@@ -22,7 +22,7 @@
     </dependency>
     <dependency>
     	<groupId>org.biojava</groupId>
-    	<artifactId>biojava3-structure</artifactId>
+    	<artifactId>biojava-structure</artifactId>
     	<version>4.0.0-SNAPSHOT</version>
     </dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
