@@ -11,7 +11,7 @@
 	<description>The protein structure modules of BioJava.</description>
 
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-alignment</artifactId>
@@ -49,10 +49,10 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>			
+  		</dependency>
 
-		  		
-		
+
+
 		<!--  Testing related dependencies -->
 
 		<dependency>
@@ -66,9 +66,9 @@
 			<version>1.5</version>
 			<scope>test</scope>
 		</dependency>
-	
+
 	</dependencies>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
@@ -82,7 +82,13 @@
 		<plugins>
 
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>demo/**.java</exclude>
+                    </excludes>
+                </configuration>
 			</plugin>
 
 			<plugin>
@@ -113,7 +119,7 @@
 		</resources>
 
 	</build>
-	
-	
+
+
 </project>
 
