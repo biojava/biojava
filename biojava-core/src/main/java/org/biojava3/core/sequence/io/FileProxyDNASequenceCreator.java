@@ -21,10 +21,6 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -34,6 +30,10 @@ import org.biojava3.core.sequence.loader.SequenceFileProxyLoader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * This class is a good example of using the SequenceCreatorInterface where during parsing of the stream

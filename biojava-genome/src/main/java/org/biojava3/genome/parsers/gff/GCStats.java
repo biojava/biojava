@@ -24,8 +24,9 @@
  */
 package org.biojava3.genome.parsers.gff;
 
-import java.util.Collection;
 import org.biojava3.core.sequence.DNASequence;
+
+import java.util.Collection;
 
 /**
  *

@@ -21,11 +21,6 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -35,6 +30,11 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
 
 /**
  *

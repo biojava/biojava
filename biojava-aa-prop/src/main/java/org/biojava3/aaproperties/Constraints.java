@@ -20,12 +20,12 @@
  */
 package org.biojava3.aaproperties;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.biojava3.aaproperties.PeptideProperties.SingleLetterAACode;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is used to support the implementation of properties stated in IPeptideProperties. 

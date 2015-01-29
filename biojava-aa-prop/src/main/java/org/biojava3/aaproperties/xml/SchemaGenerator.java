@@ -20,12 +20,11 @@
  */
 package org.biojava3.aaproperties.xml;
 
-import java.io.File;
-import java.io.IOException;
-
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.IOException;
 
 public class SchemaGenerator extends SchemaOutputResolver{
 	private String fileName;

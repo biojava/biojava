@@ -23,23 +23,14 @@
 
 package org.biojava3.ws.alignment.qblast;
 
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.DATABASE;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.EXPECT;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.GAPCOSTS;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.MATRIX_NAME;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.MEGABLAST;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.OTHER_ADVANCED;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.PROGRAM;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.QUERY_FROM;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.QUERY_TO;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.WORD_SIZE;
+import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.*;
 
 /**
  * This class wraps a QBlast search request parameter {@code Map} by adding several convenient parameter addition

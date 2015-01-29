@@ -20,7 +20,7 @@
  */
 package org.biojava3.genome.parsers.gff;
 
-import java.util.*;
+import java.util.HashMap;
 
 /**
 * A feature on a sequence (for example, an exon or a gene), defined by a location

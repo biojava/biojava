@@ -21,19 +21,12 @@
  */
 package org.biojava.bio.structure.gui.util.color;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.color.ColorSpace;
-import java.util.Collection;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.TreeMap;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
 import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator.InterpolationDirection;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.util.*;
 
 /**
  * Maps a set of real values onto a gradient.

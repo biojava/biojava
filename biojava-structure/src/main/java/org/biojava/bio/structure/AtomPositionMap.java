@@ -26,13 +26,7 @@ package org.biojava.bio.structure;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * A map from {@link ResidueNumber ResidueNumbers} to ATOM record positions in a PDB file.

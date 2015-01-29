@@ -21,25 +21,19 @@
 package demo;
 
 
-
-import java.util.List;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.contact.AtomContact;
-import org.biojava.bio.structure.contact.Pair;
-import org.biojava.bio.structure.contact.StructureInterface;
-import org.biojava.bio.structure.contact.StructureInterfaceCluster;
-import org.biojava.bio.structure.contact.StructureInterfaceList;
+import org.biojava.bio.structure.contact.*;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.xtal.CrystalBuilder;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava3.structure.StructureIO;
+
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Vector3d;
+import java.util.List;
 
 
 

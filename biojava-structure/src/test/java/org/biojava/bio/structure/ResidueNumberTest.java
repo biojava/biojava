@@ -25,16 +25,11 @@
 
 package org.biojava.bio.structure;
 
+import junit.framework.TestCase;
+import org.junit.*;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import junit.framework.TestCase;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 
 /**

@@ -22,15 +22,14 @@
  */
 package org.biojava3.aaproperties;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Map;
-
-import javax.xml.bind.JAXBException;
-
 import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Map;
 
 
 /**

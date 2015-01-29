@@ -23,22 +23,18 @@
 
 package org.biojava3.alignment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.location.template.Point;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.Sequence;
-import org.biojava3.core.sequence.template.SequenceMixin;
-import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.sequence.template.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Implements a data structure for a {@link Sequence} within an alignment.

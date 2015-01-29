@@ -47,13 +47,14 @@ package org.biojava3.phylo;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
-import java.awt.Color;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 public class ResidueProperties {
 

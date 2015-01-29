@@ -23,11 +23,7 @@
 
 package org.biojava3.alignment;
 
-import org.biojava3.alignment.template.AbstractScorer;
-import org.biojava3.alignment.template.AlignedSequence;
-import org.biojava3.alignment.template.PairwiseSequenceAligner;
-import org.biojava3.alignment.template.PairwiseSequenceScorer;
-import org.biojava3.alignment.template.SequencePair;
+import org.biojava3.alignment.template.*;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 

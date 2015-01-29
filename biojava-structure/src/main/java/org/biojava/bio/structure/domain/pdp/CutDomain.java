@@ -20,10 +20,10 @@
  */
 package org.biojava.bio.structure.domain.pdp;
 
+import org.biojava.bio.structure.Atom;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava.bio.structure.Atom;
 
 
 public class CutDomain {

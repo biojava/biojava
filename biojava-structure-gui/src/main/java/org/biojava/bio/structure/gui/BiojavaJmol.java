@@ -25,31 +25,14 @@
 package org.biojava.bio.structure.gui;
 
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JTextField;
-
-
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
-import org.biojava.bio.structure.gui.BiojavaJmol;
-
 import org.biojava.bio.structure.gui.util.MenuCreator;
+import org.biojava.bio.structure.io.PDBFileReader;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 
 /** A class that provides a simple GUI for Jmol

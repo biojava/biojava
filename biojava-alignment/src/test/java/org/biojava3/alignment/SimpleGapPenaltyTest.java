@@ -23,10 +23,10 @@
 
 package org.biojava3.alignment;
 
-import static org.junit.Assert.*;
-
 import org.biojava3.alignment.template.GapPenalty;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class SimpleGapPenaltyTest {
 

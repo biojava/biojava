@@ -20,14 +20,13 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
+import junit.framework.TestCase;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 /**
  * Abstract unit test for implementations of FastqWriter.

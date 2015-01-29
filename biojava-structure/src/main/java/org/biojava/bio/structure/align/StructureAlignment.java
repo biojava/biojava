@@ -21,7 +21,6 @@
 package org.biojava.bio.structure.align;
 
 import org.biojava.bio.structure.Atom;
-
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.model.AFPChain;

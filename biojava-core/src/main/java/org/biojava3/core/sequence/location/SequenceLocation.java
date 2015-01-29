@@ -24,10 +24,11 @@ package org.biojava3.core.sequence.location;
 
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.template.Location;
+import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+
 import java.util.List;
-import org.biojava3.core.sequence.location.template.Point;
 /**
  * A location in a sequence that keeps a reference to its parent sequence
  * @author Scooter Willis <willishf at gmail dot com>

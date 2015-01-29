@@ -26,11 +26,11 @@
 
 package org.biojava.bio.structure.align.fatcat.calc;
 
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
+
+import java.util.List;
 
 /** does post processing after alignment chaingin
  * 

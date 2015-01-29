@@ -20,35 +20,7 @@
  */
 package org.biojava.structure.test.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Compound;
-import org.biojava.bio.structure.ExperimentalTechnique;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.NucleotideImpl;
-import org.biojava.bio.structure.PDBCrystallographicInfo;
-import org.biojava.bio.structure.PDBHeader;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
@@ -60,6 +32,12 @@ import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.io.*;
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 /**
  * A test to make sure both PDB and mmCIF parsers can parse 

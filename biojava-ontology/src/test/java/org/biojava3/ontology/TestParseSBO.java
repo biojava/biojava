@@ -23,16 +23,15 @@
 
 package org.biojava3.ontology;
 
+import junit.framework.TestCase;
+import org.biojava3.ontology.io.OboParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
-
-import junit.framework.TestCase;
-
-import org.biojava3.ontology.io.OboParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TestParseSBO extends TestCase {
 

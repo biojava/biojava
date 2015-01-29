@@ -24,11 +24,11 @@
  */
 package org.biojava.bio.structure.align.xml;
 
+import org.biojava.bio.structure.align.client.PdbPair;
+
 import java.io.StringWriter;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.biojava.bio.structure.align.client.PdbPair;
 
 public class PdbPairsMessage {
 	

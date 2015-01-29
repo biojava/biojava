@@ -25,22 +25,6 @@
 package org.biojava.bio.structure.align.ce;
 
 
-import java.beans.Introspector;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -48,15 +32,18 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.MultiThreadedDBSearch;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.align.util.CliTools;
-import org.biojava.bio.structure.align.util.ConfigurationException;
-import org.biojava.bio.structure.align.util.ResourceManager;
-import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.align.util.*;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.PDBFileReader;
+
+import java.beans.Introspector;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**

@@ -21,14 +21,10 @@
  */
 package org.biojava.bio.structure.io.mmcif.chem;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.bio.structure.io.mmcif.ChemicalComponentDictionary;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+
+import java.util.*;
 
 /** Some tools for working with chemical compounds.
  *

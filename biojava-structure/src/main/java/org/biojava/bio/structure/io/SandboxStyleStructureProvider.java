@@ -20,16 +20,16 @@
  */
 package org.biojava.bio.structure.io;
 
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava3.core.util.InputStreamProvider;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava3.core.util.InputStreamProvider;
 
 
 /** The "Sandbox" style of organizing files is  to have a directory structure like below, i.e. the files are organized into

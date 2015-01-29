@@ -23,12 +23,11 @@
  */
 package org.biojava3.genome;
 
+import junit.framework.TestCase;
 import org.biojava3.genome.parsers.gff.Feature;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.Location;
 import org.junit.Test;
-
-import junit.framework.TestCase;
 
 /**
  * @author mckeee1

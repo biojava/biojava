@@ -20,9 +20,8 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.InputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.net.URL;
 
 /**

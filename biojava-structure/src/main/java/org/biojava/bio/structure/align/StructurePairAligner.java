@@ -22,23 +22,11 @@
  */
 package org.biojava.bio.structure.align;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.ce.GuiWrapper;
 import org.biojava.bio.structure.align.helper.AlignTools;
 import org.biojava.bio.structure.align.helper.JointFragments;
-import org.biojava.bio.structure.align.pairwise.AlignmentProgressListener;
-import org.biojava.bio.structure.align.pairwise.AltAligComparator;
-import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
-import org.biojava.bio.structure.align.pairwise.FragmentJoiner;
-import org.biojava.bio.structure.align.pairwise.FragmentPair;
+import org.biojava.bio.structure.align.pairwise.*;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.jama.Matrix;

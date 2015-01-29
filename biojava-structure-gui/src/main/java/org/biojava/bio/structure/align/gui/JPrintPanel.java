@@ -24,17 +24,14 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-
-import javax.swing.JPanel;
 
 public class JPrintPanel extends JPanel implements Printable,ActionListener{
 	/**

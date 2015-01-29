@@ -24,7 +24,7 @@
 
 package org.biojava.bio.structure.align.webstart;
 
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 

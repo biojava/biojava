@@ -23,13 +23,13 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.util.ArrayList;
-
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+
+import java.util.ArrayList;
 
 public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceHeaderParserInterface<S,C> {
 

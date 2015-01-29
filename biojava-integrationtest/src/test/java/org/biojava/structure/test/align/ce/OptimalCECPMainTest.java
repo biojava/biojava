@@ -23,25 +23,20 @@
  */
 package org.biojava.structure.test.align.ce;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-
 import junit.framework.TestCase;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CECPParameters;
+import org.biojava.bio.structure.align.ce.*;
 import org.biojava.bio.structure.align.ce.CECPParameters.DuplicationHint;
-import org.biojava.bio.structure.align.ce.CeCPMain;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.ce.OptimalCECPMain;
-import org.biojava.bio.structure.align.ce.OptimalCECPParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * @author Spencer Bliven

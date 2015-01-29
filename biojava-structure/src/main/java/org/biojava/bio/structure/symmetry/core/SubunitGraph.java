@@ -20,12 +20,11 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.List;
-
-import javax.vecmath.Point3d;
-
 import org.biojava.bio.structure.symmetry.utils.Graph;
 import org.biojava.bio.structure.symmetry.utils.SimpleGraph;
+
+import javax.vecmath.Point3d;
+import java.util.List;
 
 public class SubunitGraph {
 	private static double DISTANCE_CUTOFF = 8;

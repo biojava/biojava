@@ -20,18 +20,11 @@
  */
 package org.biojava.bio.structure.quaternary;
 
+import org.biojava.bio.structure.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureImpl;
-import org.biojava.bio.structure.StructureTools;
 
 
 

@@ -34,10 +34,13 @@
 
 package org.biojava.bio.structure.align.util;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.beans.*;
-import java.lang.reflect.*;
 
 /**
  * Utilities for autoconfiguring javabeans based on command line arguments.

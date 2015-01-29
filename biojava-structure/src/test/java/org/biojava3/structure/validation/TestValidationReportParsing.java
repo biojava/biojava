@@ -23,15 +23,14 @@
 
 package org.biojava3.structure.validation;
 
-import static org.junit.Assert.*;
-
-import java.io.InputStream;
-import java.util.zip.GZIPInputStream;
+import org.junit.Test;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
 public class TestValidationReportParsing {
 

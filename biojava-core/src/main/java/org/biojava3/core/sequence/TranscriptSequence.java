@@ -22,15 +22,15 @@
  */
 package org.biojava3.core.sequence;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 
 /**
  * This is the sequence if you want to go from a gene sequence to a protein sequence. Need to start with a

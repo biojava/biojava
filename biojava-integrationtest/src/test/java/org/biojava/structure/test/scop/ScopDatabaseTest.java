@@ -24,20 +24,15 @@
 
 package org.biojava.structure.test.scop;
 
-import static org.junit.Assert.*;
+import org.biojava.bio.structure.scop.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.biojava.bio.structure.scop.ScopCategory;
-import org.biojava.bio.structure.scop.ScopDatabase;
-import org.biojava.bio.structure.scop.ScopDescription;
-import org.biojava.bio.structure.scop.ScopDomain;
-import org.biojava.bio.structure.scop.ScopFactory;
-import org.biojava.bio.structure.scop.ScopNode;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import static org.junit.Assert.*;
 
 /**
  * Generic tests for ScopDatabases. All implementing classes should pass these tests.

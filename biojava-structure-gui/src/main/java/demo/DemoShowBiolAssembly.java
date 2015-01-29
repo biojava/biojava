@@ -23,7 +23,6 @@ package demo;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
-
 import org.biojava3.structure.StructureIO;
 
 public class DemoShowBiolAssembly {

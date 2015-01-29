@@ -21,12 +21,8 @@
  */
 package org.biojava.bio.structure.gui.util.color;
 
-import java.awt.BasicStroke;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 public class GradientPanel extends JPanel {
 	private static final long serialVersionUID = -6387922432121206731L;

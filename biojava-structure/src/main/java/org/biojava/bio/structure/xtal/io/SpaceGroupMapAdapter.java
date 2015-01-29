@@ -23,12 +23,11 @@
 
 package org.biojava.bio.structure.xtal.io;
 
-import java.util.Map;
-import java.util.TreeMap;
+import org.biojava.bio.structure.xtal.SpaceGroup;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-
-import org.biojava.bio.structure.xtal.SpaceGroup;
+import java.util.Map;
+import java.util.TreeMap;
 
 class SpaceGroupMapAdapter extends XmlAdapter<SpaceGroupMapElements[], Map<Integer, SpaceGroup>> {
     @Override

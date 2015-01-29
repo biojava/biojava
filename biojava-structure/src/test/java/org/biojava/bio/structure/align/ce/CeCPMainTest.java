@@ -25,27 +25,16 @@ package org.biojava.bio.structure.align.ce;
 
 //import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-
 import junit.framework.TestCase;
-
-import org.biojava.bio.structure.AminoAcidImpl;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.CECalculator;
-import org.biojava.bio.structure.align.ce.CeCPMain;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.PDBParseException;
-import org.junit.*;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 
 /**

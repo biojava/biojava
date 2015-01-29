@@ -23,16 +23,16 @@
 
 package org.biojava3.alignment;
 
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.biojava3.alignment.aaindex.AAindexFactory;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

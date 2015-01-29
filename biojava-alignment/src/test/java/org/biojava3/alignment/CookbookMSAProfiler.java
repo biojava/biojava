@@ -20,11 +20,6 @@
  */
 package org.biojava3.alignment;
 
-import java.io.File;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava3.alignment.Alignments.PairwiseSequenceScorerType;
 import org.biojava3.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava3.alignment.template.GapPenalty;
@@ -35,6 +30,11 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.util.ConcurrencyTools;
+
+import java.io.File;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CookbookMSAProfiler {
 

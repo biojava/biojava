@@ -20,12 +20,12 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Group;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
 
 public class UniqueSequenceList implements Cloneable {
 	private String sequenceString = "";

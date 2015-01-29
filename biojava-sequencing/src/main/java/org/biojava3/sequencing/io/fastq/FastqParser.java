@@ -20,10 +20,10 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.IOException;
-
 import com.google.common.io.CharStreams;
 import com.google.common.io.LineProcessor;
+
+import java.io.IOException;
 
 /**
  * Low-level event based parser for FASTQ formatted sequences.

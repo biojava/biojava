@@ -23,20 +23,10 @@
  */
 package org.biojava.bio.structure.domain;
 
-import java.util.List;
+import org.biojava.bio.structure.*;
+import org.biojava.bio.structure.domain.pdp.*;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.domain.pdp.ClusterDomains;
-import org.biojava.bio.structure.domain.pdp.CutDomain;
-import org.biojava.bio.structure.domain.pdp.CutSites;
-import org.biojava.bio.structure.domain.pdp.Domain;
-import org.biojava.bio.structure.domain.pdp.GetDistanceMatrix;
-import org.biojava.bio.structure.domain.pdp.PDPDistanceMatrix;
-import org.biojava.bio.structure.domain.pdp.ShortSegmentRemover;
+import java.util.List;
 
 
 /** Protein Domain Parser is a an algorithm that attempts at assigning domains for 3D protein structures.

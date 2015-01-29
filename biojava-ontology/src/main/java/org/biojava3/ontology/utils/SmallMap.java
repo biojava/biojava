@@ -21,12 +21,7 @@
 package org.biojava3.ontology.utils;
 
 import java.io.Serializable;
-import java.util.AbstractMap;
-import java.util.AbstractSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Lightweight implementation of Map which uses little memory to store a

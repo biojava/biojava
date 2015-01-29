@@ -23,24 +23,17 @@
 
 package org.biojava.bio.structure.gui;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Method;
-
-import javax.swing.JPanel;
-
 import org.biojava.bio.structure.align.StrucAligParameters;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.align.pairwise.FragmentPair;
 import org.biojava.bio.structure.gui.util.color.ContinuousColorMapper;
 import org.biojava.bio.structure.gui.util.color.DefaultMatrixMapper;
 import org.biojava.bio.structure.jama.Matrix;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Method;
 
 
 /** a JPanel that can display a difference of distance matrix and paths that have been

@@ -20,14 +20,13 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.StringReader;
-
-import java.net.URL;
-
 import junit.framework.TestCase;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URL;
 
 /**
  * Abstract unit test for implementations of FastqReader.

@@ -23,23 +23,14 @@
  */
 package org.biojava.bio.structure.symmetry.jmolScript;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Color4f;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.bio.structure.symmetry.core.HelixAxisAligner;
 import org.biojava.bio.structure.symmetry.core.Subunits;
 import org.jcolorbrewer.ColorBrewer;
+
+import javax.vecmath.*;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 
 /**

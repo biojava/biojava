@@ -25,8 +25,6 @@
 package demo;
 
 
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
@@ -38,13 +36,9 @@ import org.biojava.bio.structure.align.model.AfpChainWriter;
 import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.scop.ScopCategory;
-import org.biojava.bio.structure.scop.ScopDatabase;
-import org.biojava.bio.structure.scop.ScopDescription;
-import org.biojava.bio.structure.scop.ScopDomain;
-import org.biojava.bio.structure.scop.ScopFactory;
-import org.biojava.bio.structure.scop.ScopInstallation;
-import org.biojava.bio.structure.scop.ScopNode;
+import org.biojava.bio.structure.scop.*;
+
+import java.util.List;
 
 /** A class demonstrating the use of the SCOP parsing tools
  * 

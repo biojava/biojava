@@ -20,10 +20,6 @@
  */
 package org.biojava.bio.structure.quaternary.io;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -33,6 +29,10 @@ import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 

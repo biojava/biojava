@@ -20,14 +20,9 @@
  */
 package org.biojava.bio.structure.symmetry.geometry;
 
+import javax.vecmath.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.AxisAngle4f;
-import javax.vecmath.Point3i;
-import javax.vecmath.Quat4d;
-import javax.vecmath.Tuple3i;
 
 
 // Generate the permutations and sign changes for a Triple.

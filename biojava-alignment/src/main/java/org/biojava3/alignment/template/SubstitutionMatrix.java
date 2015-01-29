@@ -23,10 +23,10 @@
 
 package org.biojava3.alignment.template;
 
-import java.util.Map;
-
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
+
+import java.util.Map;
 
 /**
  * Defines a data structure which holds the score (penalty or bonus) given during alignment for the exchange of one

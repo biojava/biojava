@@ -22,17 +22,7 @@
  */
 package org.biojava.structure.test.align;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -45,6 +35,11 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class AlignmentToolsTest extends TestCase {
 	

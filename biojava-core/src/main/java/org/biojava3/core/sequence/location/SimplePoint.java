@@ -22,8 +22,8 @@
 package org.biojava3.core.sequence.location;
 
 import org.biojava3.core.sequence.location.template.Point;
-import org.biojava3.core.util.Hashcoder;
 import org.biojava3.core.util.Equals;
+import org.biojava3.core.util.Hashcoder;
 
 /**
  * Basic implementation of the Point interface.

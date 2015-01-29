@@ -23,10 +23,10 @@
 
 package org.biojava3.alignment.template;
 
-import java.util.List;
-
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.List;
 
 /**
  * Defines a mutable (editable) data structure for a {@link Profile}.  Returned {@link List}s are modifiable.

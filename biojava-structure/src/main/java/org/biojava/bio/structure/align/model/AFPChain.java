@@ -19,18 +19,17 @@
 
 package org.biojava.bio.structure.align.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeSideChainMain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 /** a bean to contain the core of an alignment

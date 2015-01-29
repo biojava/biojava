@@ -23,18 +23,18 @@
 
 package org.biojava3.alignment.routines;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava3.alignment.SimpleSequencePair;
+import org.biojava3.alignment.routines.AlignerHelper.Anchor;
 import org.biojava3.alignment.template.AbstractPairwiseSequenceAligner;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
-import org.biojava3.alignment.routines.AlignerHelper.*;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This algorithm uses a divide-and-conquer approach to find optimal pairwise global sequence alignments (from the

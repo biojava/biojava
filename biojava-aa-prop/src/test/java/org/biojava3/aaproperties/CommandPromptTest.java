@@ -20,9 +20,9 @@
  */
 package org.biojava3.aaproperties;
 
-import java.io.File;
-
 import org.junit.Test;
+
+import java.io.File;
 
 public class CommandPromptTest {
 	@Test

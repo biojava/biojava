@@ -23,10 +23,9 @@
  */
 package org.biojava.bio.structure.symmetry.geometry;
 
-import java.util.List;
-
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
+import java.util.List;
 
 /**
  * @author Peter

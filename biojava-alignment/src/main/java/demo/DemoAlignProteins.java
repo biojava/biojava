@@ -20,12 +20,10 @@
  */
 package demo;
 
-import java.net.URL;
-
 import org.biojava3.alignment.Alignments;
+import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SubstitutionMatrixHelper;
-import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.SequencePair;
@@ -33,6 +31,8 @@ import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
+
+import java.net.URL;
 
 public class DemoAlignProteins {
 

@@ -20,11 +20,6 @@
  */
 package demo;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -36,8 +31,13 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava3.core.sequence.io.ProteinSequenceCreator;
-import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Demo of how to use the {@link FastaStructureParser} class to read protein

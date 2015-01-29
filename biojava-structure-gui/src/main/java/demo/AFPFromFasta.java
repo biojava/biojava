@@ -24,8 +24,6 @@
  */
 package demo;
 
-import java.io.IOException;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -38,6 +36,8 @@ import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.io.FastaAFPChainConverter;
 import org.biojava.bio.structure.io.FastaStructureParser;
+
+import java.io.IOException;
 
 /**
  * Demo displaying a structural alignment from a FASTA file using {@link FastaAFPChainConverter}.

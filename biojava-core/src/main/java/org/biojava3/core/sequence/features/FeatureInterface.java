@@ -25,13 +25,12 @@
 
 package org.biojava3.core.sequence.features;
 
-import java.util.HashMap;
-import java.util.List;
-
-import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Interface class to handle describing arbitrary features. A feature can be found at multiple locations in a sequence such as

@@ -20,15 +20,11 @@
  */
 package org.biojava3.aaproperties.xml;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.*;
 
 public class ModifiedAminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
 

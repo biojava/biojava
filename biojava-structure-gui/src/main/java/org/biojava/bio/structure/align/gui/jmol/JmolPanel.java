@@ -24,27 +24,8 @@
 
 package org.biojava.bio.structure.align.gui.jmol;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
-import java.util.List;
-
-import javax.swing.JComboBox;
-
-
-
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.gui.JPrintPanel;
-import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
 import org.biojava.bio.structure.domain.LocalProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
@@ -55,10 +36,16 @@ import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopInstallation;
 import org.jmol.adapter.smarter.SmarterJmolAdapter;
 import org.jmol.api.JmolAdapter;
-
 import org.jmol.api.JmolStatusListener;
 import org.jmol.api.JmolViewer;
 import org.jmol.util.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.util.List;
 
 
 public class JmolPanel 

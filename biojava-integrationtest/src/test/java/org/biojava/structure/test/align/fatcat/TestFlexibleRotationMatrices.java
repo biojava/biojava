@@ -24,17 +24,8 @@
 
 package org.biojava.structure.test.align.fatcat;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.TestCase;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
@@ -44,6 +35,10 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 

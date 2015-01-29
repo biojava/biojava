@@ -23,17 +23,17 @@
 
 package org.biojava3.alignment.template;
 
-import static org.biojava3.alignment.routines.AlignerHelper.*;
+import org.biojava3.alignment.routines.AlignerHelper.*;
+import org.biojava3.alignment.template.AlignedSequence.Step;
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.Sequence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.biojava3.alignment.routines.AlignerHelper.Last;
-import org.biojava3.alignment.template.AlignedSequence.Step;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.Sequence;
+import static org.biojava3.alignment.routines.AlignerHelper.*;
 
 /**
  * Implements common code for an {@link Aligner} which builds a score matrix during computation.

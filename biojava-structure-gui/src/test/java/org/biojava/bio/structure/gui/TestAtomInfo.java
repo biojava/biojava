@@ -23,7 +23,6 @@
 package org.biojava.bio.structure.gui;
 
 import junit.framework.TestCase;
-
 import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
 
 

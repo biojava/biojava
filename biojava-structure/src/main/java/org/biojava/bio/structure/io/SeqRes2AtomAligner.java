@@ -24,28 +24,14 @@
 package org.biojava.bio.structure.io;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.HetatomImpl;
-import org.biojava.bio.structure.NucleotideImpl;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.alignment.Alignments;
+import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SubstitutionMatrixHelper;
-import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.SequencePair;
@@ -54,16 +40,13 @@ import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.RNASequence;
-import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
-import org.biojava3.core.sequence.compound.AmbiguityRNACompoundSet;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.compound.DNACompoundSet;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.compound.*;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 
 /** Aligns the SEQRES residues to the ATOM residues.

@@ -20,13 +20,14 @@
  */
 package org.biojava.bio.structure.xtal;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3i;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestCrystalCell {
 

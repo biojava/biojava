@@ -20,14 +20,14 @@
  */
 package org.biojava3.core.sequence;
 
-import static org.junit.Assert.assertEquals;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.edits.Edit;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class EditSequenceTest {
 

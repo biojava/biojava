@@ -20,14 +20,14 @@
  */
 package demo;
 
-import java.io.IOException;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.asa.AsaCalculator;
 import org.biojava.bio.structure.asa.GroupAsa;
 import org.biojava3.structure.StructureIO;
+
+import java.io.IOException;
 
 public class DemoAsa {
 

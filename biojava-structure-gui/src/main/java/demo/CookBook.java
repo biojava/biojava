@@ -30,7 +30,6 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;

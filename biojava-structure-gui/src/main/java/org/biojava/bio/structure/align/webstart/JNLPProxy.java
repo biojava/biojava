@@ -36,8 +36,8 @@
 
 package org.biojava.bio.structure.align.webstart;
 
-import java.lang.reflect.*;
-import java.net.*;
+import java.lang.reflect.Method;
+import java.net.URL;
 
 
 public final class  JNLPProxy

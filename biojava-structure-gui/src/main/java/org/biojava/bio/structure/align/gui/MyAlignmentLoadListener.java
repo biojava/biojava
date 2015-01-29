@@ -20,17 +20,6 @@
  */
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -39,6 +28,14 @@ import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava3.core.util.InputStreamProvider;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class MyAlignmentLoadListener implements ActionListener {

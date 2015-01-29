@@ -20,16 +20,16 @@
  */
 package org.biojava.bio.structure;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
+import static org.junit.Assert.assertNotNull;
 
 
 public class TestLoadStructureFromURL {

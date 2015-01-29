@@ -25,17 +25,12 @@
 package org.biojava.bio.structure.symmetry.analysis;
 
 
-import java.util.List;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.ResourceManager;
-import org.biojava.bio.structure.symmetry.core.AxisAligner;
-import org.biojava.bio.structure.symmetry.core.QuatSymmetryDetector;
-import org.biojava.bio.structure.symmetry.core.QuatSymmetryParameters;
-import org.biojava.bio.structure.symmetry.core.QuatSymmetryResults;
-import org.biojava.bio.structure.symmetry.core.RotationGroup;
-import org.biojava.bio.structure.symmetry.core.Subunits;
+import org.biojava.bio.structure.symmetry.core.*;
 import org.biojava.bio.structure.symmetry.jmolScript.JmolSymmetryScriptGenerator;
+
+import java.util.List;
 
 
 public class CalcBioAssemblySymmetry {

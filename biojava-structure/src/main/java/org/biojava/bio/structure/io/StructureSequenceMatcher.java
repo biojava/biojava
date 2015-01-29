@@ -22,19 +22,7 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava3.alignment.Alignments;
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.SimpleGapPenalty;
@@ -49,6 +37,12 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**

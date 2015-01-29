@@ -24,14 +24,12 @@
 
 package org.biojava.bio.structure.align.gui.jmol;
 
-import java.util.Hashtable;
-import java.util.Map;
-
-
-import javax.swing.JTextField;
-
 import org.jmol.api.JmolStatusListener;
 import org.jmol.constant.EnumCallback;
+
+import javax.swing.*;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class MyJmolStatusListener implements JmolStatusListener {
 	

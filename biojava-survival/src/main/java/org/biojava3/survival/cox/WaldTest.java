@@ -24,8 +24,8 @@
  */
 package org.biojava3.survival.cox;
 
-import org.biojava3.survival.cox.stats.Chsolve2;
 import org.biojava3.survival.cox.stats.Cholesky2;
+import org.biojava3.survival.cox.stats.Chsolve2;
 
 /**
  *

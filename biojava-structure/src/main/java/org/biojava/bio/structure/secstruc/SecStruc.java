@@ -25,21 +25,15 @@
 
 package org.biojava.bio.structure.secstruc;
 
+import org.biojava.bio.structure.*;
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 
 
 

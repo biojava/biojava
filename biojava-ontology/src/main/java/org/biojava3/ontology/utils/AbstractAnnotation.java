@@ -22,11 +22,7 @@
 package org.biojava3.ontology.utils;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 
 /**

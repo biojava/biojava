@@ -20,14 +20,14 @@
  */
 package org.biojava.bio.structure;
 
-import static org.junit.Assert.*;
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava3.structure.StructureIO;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava3.structure.StructureIO;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class TestExperimentalTechniques {
 

@@ -24,13 +24,7 @@
 
 package org.biojava3.protmod.structure;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -38,6 +32,11 @@ import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 

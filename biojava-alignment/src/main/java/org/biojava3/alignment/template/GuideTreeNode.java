@@ -23,11 +23,11 @@
 
 package org.biojava3.alignment.template;
 
-import java.util.concurrent.Future;
-import javax.swing.tree.TreeNode;
-
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import javax.swing.tree.TreeNode;
+import java.util.concurrent.Future;
 
 /**
  * Defines a data structure for the node in a guide tree used during progressive multiple sequence alignment.

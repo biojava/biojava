@@ -20,16 +20,17 @@
  */
 package org.biojava.structure.test.io;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * A test to check the performance of AtomCache downloading

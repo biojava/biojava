@@ -20,16 +20,16 @@
  */
 package org.biojava3.alignment.routines;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava3.alignment.routines.AlignerHelper.Anchor;
 import org.biojava3.alignment.routines.AlignerHelper.Cut;
 import org.biojava3.alignment.routines.AlignerHelper.Subproblem;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * 

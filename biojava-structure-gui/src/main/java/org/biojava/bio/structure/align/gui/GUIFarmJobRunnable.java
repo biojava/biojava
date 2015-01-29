@@ -20,13 +20,11 @@
  */
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.Dimension;
-
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-
 import org.biojava.bio.structure.align.FarmJob;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class GUIFarmJobRunnable implements Runnable{
 	FarmJobParameters params;

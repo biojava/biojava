@@ -20,11 +20,10 @@
  */
 package org.biojava3.ws.hmmer;
 
-import java.io.IOException;
-
-import java.util.SortedSet;
-
 import org.biojava3.core.sequence.ProteinSequence;
+
+import java.io.IOException;
+import java.util.SortedSet;
 
 /** Interface for performing Hmmscans on sequences.
  * 

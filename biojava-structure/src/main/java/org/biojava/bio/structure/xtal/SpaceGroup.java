@@ -20,13 +20,11 @@
  */
 package org.biojava.bio.structure.xtal;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.biojava.bio.structure.jama.EigenvalueDecomposition;
+import org.biojava.bio.structure.jama.Matrix;
+import org.biojava.bio.structure.xtal.io.TransfAlgebraicAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix3d;
@@ -39,12 +37,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import org.biojava.bio.structure.jama.EigenvalueDecomposition;
-import org.biojava.bio.structure.jama.Matrix;
-import org.biojava.bio.structure.xtal.io.TransfAlgebraicAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**

@@ -22,9 +22,9 @@
  */
 package org.biojava3.core.sequence;
 
-import java.util.Comparator;
-
 import org.biojava3.core.sequence.template.AbstractSequence;
+
+import java.util.Comparator;
 
 /**
  * Used to sort sequences

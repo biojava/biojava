@@ -20,14 +20,10 @@
  */
 package org.biojava.bio.structure.symmetry.misc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
 import org.biojava.bio.structure.symmetry.utils.BlastClustReader;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class ProteinComplexSignature {
 	private BlastClustReader blastClust = null;

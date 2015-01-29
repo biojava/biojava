@@ -20,28 +20,18 @@
  */
 package org.biojava3.structure.gui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.gui.MenuCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import javax.swing.Box;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.gui.MenuCreator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JmolViewerImpl implements StructureViewer {
 	

@@ -24,10 +24,9 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.util.Comparator;
-
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.util.Comparator;
 
 public class MyTableRowSorter extends TableRowSorter<TableModel>
 {

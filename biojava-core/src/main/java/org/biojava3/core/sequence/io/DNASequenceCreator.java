@@ -22,8 +22,6 @@
 
 package org.biojava3.core.sequence.io;
 
-import java.util.List;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -32,6 +30,8 @@ import org.biojava3.core.sequence.loader.ArrayListProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
+
+import java.util.List;
 
 /**
  * A helper class that allows different ways to read a string and create a DNA sequence. Used in FastaReaderHelper

@@ -20,10 +20,9 @@
  */
 package org.biojava.bio.structure.io.mmcif.model;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class PdbxStructAssemblyGen implements Serializable{

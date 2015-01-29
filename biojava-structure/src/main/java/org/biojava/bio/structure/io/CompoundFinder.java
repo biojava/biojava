@@ -20,19 +20,13 @@
  */
 package org.biojava.bio.structure.io;
 
+import org.biojava.bio.structure.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Compound;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Heuristically finding of Compounds (called Entities in mmCIF dictionary)

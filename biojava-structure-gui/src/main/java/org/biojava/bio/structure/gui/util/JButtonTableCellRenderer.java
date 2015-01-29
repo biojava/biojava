@@ -22,10 +22,9 @@
  */
 package org.biojava.bio.structure.gui.util;
 
-import java.awt.Component;
-
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 class JButtonTableCellRenderer implements TableCellRenderer {
     private TableCellRenderer __defaultRenderer;

@@ -26,12 +26,12 @@
 
 package org.biojava.bio.structure.align.fatcat.calc;
 
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
+
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 
 
 public class FatCatParameters implements ConfigStrucAligParams

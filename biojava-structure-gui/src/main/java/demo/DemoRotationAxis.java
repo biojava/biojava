@@ -20,8 +20,6 @@
  */
 package demo;
 
-import java.io.IOException;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
@@ -32,6 +30,8 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.RotationAxis;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.io.IOException;
 
 /**
  * A demo for how to use {@link RotationAxis} to display the rotation for an

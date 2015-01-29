@@ -21,14 +21,14 @@
 package org.biojava3.core.sequence.io;
 
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.ByteArrayOutputStream;
-
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DNASequence;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class FastaWriterTest {
 

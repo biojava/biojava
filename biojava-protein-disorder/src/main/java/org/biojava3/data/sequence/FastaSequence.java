@@ -24,11 +24,10 @@
 
 package org.biojava3.data.sequence;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A FASTA formatted sequence. Please note that this class does not make any

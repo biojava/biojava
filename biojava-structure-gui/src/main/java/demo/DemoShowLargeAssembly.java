@@ -4,6 +4,8 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava3.structure.StructureIO;
+
 /*
  *                    BioJava development code
  *
@@ -24,9 +26,8 @@ import org.biojava.bio.structure.io.FileParsingParameters;
  *      http://www.biojava.org/
  *
  * created at Sep 19, 2013
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  */
-import org.biojava3.structure.StructureIO;
 
 public class DemoShowLargeAssembly {
 

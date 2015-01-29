@@ -21,19 +21,6 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
 import org.biojava.bio.structure.PDBStatus;
 import org.biojava.bio.structure.PDBStatus.Status;
 import org.biojava.bio.structure.Structure;
@@ -43,6 +30,14 @@ import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava3.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Superclass for classes which download and interact with the PDB's FTP server,

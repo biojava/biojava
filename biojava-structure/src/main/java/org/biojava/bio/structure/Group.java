@@ -22,11 +22,12 @@
  *
  */
 package org.biojava.bio.structure;
+
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
 
 /**

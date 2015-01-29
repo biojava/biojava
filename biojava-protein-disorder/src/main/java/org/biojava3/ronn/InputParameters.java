@@ -25,13 +25,9 @@
  */
 package org.biojava3.ronn;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import org.biojava3.ronn.ORonn.ResultLayout;
+
+import java.io.*;
 
 
 /**

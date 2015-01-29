@@ -27,13 +27,7 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.biojava.bio.structure.align.util.ResourceManager;
-import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
-import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.bio.structure.align.xml.HasResultXMLConverter;
-import org.biojava.bio.structure.align.xml.PdbPairXMLConverter;
-import org.biojava.bio.structure.align.xml.PdbPairsMessage;
-import org.biojava.bio.structure.align.xml.PositionInQueueXMLConverter;
-import org.biojava.bio.structure.align.xml.RepresentativeXMLConverter;
+import org.biojava.bio.structure.align.xml.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -25,6 +25,7 @@
 package org.biojava3.survival.cox.comparators;
 
 import org.biojava3.survival.cox.SurvivalInfo;
+
 import java.util.Comparator;
 
 /**

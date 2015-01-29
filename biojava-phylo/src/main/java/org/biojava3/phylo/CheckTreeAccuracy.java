@@ -24,17 +24,17 @@
  */
 package org.biojava3.phylo;
 
+import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
+import org.forester.evoinference.matrix.distance.DistanceMatrix;
+import org.forester.phylogeny.Phylogeny;
+import org.forester.phylogeny.PhylogenyNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.forester.phylogeny.Phylogeny;
-import org.forester.phylogeny.PhylogenyNode;
-import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
-import org.forester.evoinference.matrix.distance.DistanceMatrix;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

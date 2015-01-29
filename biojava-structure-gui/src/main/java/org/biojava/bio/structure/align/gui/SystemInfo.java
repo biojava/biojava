@@ -24,26 +24,18 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
+import org.biojava.bio.structure.align.webstart.BrowserOpener;
+
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-
-import org.biojava.bio.structure.align.webstart.BrowserOpener;
 
 public class SystemInfo
 {

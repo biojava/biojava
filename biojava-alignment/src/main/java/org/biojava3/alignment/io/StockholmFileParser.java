@@ -18,18 +18,18 @@
 
 package org.biojava3.alignment.io;
 
+import org.biojava3.alignment.io.StockholmFileAnnotation.StockholmFileAnnotationReference;
+import org.biojava3.core.exceptions.ParserException;
+import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
-import org.biojava3.alignment.io.StockholmFileAnnotation.StockholmFileAnnotationReference;
-import org.biojava3.core.exceptions.ParserException;
-import org.biojava3.core.util.InputStreamProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Stockholm file parser.<br>

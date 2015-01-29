@@ -23,8 +23,6 @@
 
 package org.biojava3.alignment;
 
-import java.util.List;
-
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.Profile;
@@ -32,6 +30,8 @@ import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.List;
 
 /**
  * Implements a data structure for the results of pairwise sequence alignment.

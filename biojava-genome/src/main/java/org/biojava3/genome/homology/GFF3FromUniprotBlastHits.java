@@ -24,24 +24,12 @@
  */
 package org.biojava3.genome.homology;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import org.biojava3.alignment.Alignments;
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SimpleSubstitutionMatrix;
 import org.biojava3.alignment.template.SequencePair;
-import org.biojava3.core.sequence.CDSSequence;
-import org.biojava3.core.sequence.ChromosomeSequence;
-import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.GeneSequence;
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.Strand;
-import org.biojava3.core.sequence.TranscriptSequence;
+import org.biojava3.core.sequence.*;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.features.DBReferenceInfo;
@@ -51,6 +39,12 @@ import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava3.genome.GeneFeatureHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  *

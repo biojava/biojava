@@ -20,23 +20,20 @@
  */
 package org.biojava.bio.structure.domain;
 
+import org.biojava.bio.structure.align.client.JFatCatClient;
+import org.biojava.bio.structure.align.client.StructureName;
+import org.biojava.bio.structure.align.util.HTTPConnectionTools;
+import org.biojava.bio.structure.scop.ScopDatabase;
+import org.biojava.bio.structure.scop.ScopDomain;
+import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava.bio.structure.scop.server.XMLUtil;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-
-import org.biojava.bio.structure.align.client.JFatCatClient;
-import org.biojava.bio.structure.align.client.StructureName;
-import org.biojava.bio.structure.align.util.HTTPConnectionTools;
-
-
-import org.biojava.bio.structure.scop.ScopDatabase;
-import org.biojava.bio.structure.scop.ScopDomain;
-import org.biojava.bio.structure.scop.ScopFactory;
-import org.biojava.bio.structure.scop.server.XMLUtil;
 
 
 public class RemoteDomainProvider extends SerializableCache<String,SortedSet<String>> implements DomainProvider{

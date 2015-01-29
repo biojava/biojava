@@ -20,15 +20,7 @@
  */
 package org.biojava.bio.structure.align.util;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomPositionMap;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueRange;
-import org.biojava.bio.structure.ResidueRangeAndLength;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.cath.CathDatabase;
 import org.biojava.bio.structure.cath.CathDomain;
@@ -43,11 +35,7 @@ import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
-import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
-import org.biojava.bio.structure.scop.ScopDatabase;
-import org.biojava.bio.structure.scop.ScopDescription;
-import org.biojava.bio.structure.scop.ScopDomain;
-import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava.bio.structure.scop.*;
 import org.biojava3.core.util.InputStreamProvider;
 import org.biojava3.structure.StructureIO;
 import org.slf4j.Logger;
@@ -56,12 +44,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

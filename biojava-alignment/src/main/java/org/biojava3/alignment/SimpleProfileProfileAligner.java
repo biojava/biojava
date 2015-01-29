@@ -23,19 +23,13 @@
 
 package org.biojava3.alignment;
 
-import java.util.List;
-import java.util.concurrent.Future;
-
-import org.biojava3.alignment.template.AbstractProfileProfileAligner;
-import org.biojava3.alignment.template.AlignedSequence;
+import org.biojava3.alignment.template.*;
 import org.biojava3.alignment.template.AlignedSequence.Step;
-import org.biojava3.alignment.template.Aligner;
-import org.biojava3.alignment.template.GapPenalty;
-import org.biojava3.alignment.template.Profile;
-import org.biojava3.alignment.template.ProfilePair;
-import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * Implements a simple (naive) {@link Aligner} for a pair of {@link Profile}s.  This is basically an extension of the

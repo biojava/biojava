@@ -24,22 +24,18 @@
  */
 package org.biojava3.core.sequence.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.junit.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *

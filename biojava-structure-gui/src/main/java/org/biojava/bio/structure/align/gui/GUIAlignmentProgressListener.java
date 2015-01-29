@@ -20,22 +20,13 @@
  */
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
 import org.biojava.bio.structure.align.FarmJob;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /** a GUI that allows to watch progress as multiple alignments are being processed.
  * 

@@ -24,10 +24,10 @@
 
 package org.biojava3.protmod.structure;
 
+import org.biojava3.protmod.ProteinModification;
+
 import java.util.Collection;
 import java.util.Set;
-
-import org.biojava3.protmod.ProteinModification;
 
 /**
  * Root interface for all modifications in structure.

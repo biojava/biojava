@@ -23,11 +23,6 @@
 
 package org.biojava3.alignment;
 
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.Profile;
@@ -40,6 +35,11 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class SimpleProfileTest {
 

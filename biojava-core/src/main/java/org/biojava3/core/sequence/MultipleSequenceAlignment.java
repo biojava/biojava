@@ -23,15 +23,15 @@
 
 package org.biojava3.core.sequence;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.biojava3.core.sequence.io.util.IOUtils;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.LightweightProfile;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Implements a minimal data structure for reading and writing a sequence alignment.  The full {@code Profile} data

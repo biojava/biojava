@@ -24,14 +24,7 @@ package org.biojava3.ontology.utils;
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
-import java.util.AbstractMap;
-import java.util.AbstractSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Map implementation which keeps weak references to values.

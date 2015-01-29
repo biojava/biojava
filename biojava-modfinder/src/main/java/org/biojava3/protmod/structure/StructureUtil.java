@@ -24,16 +24,11 @@
 
 package org.biojava3.protmod.structure;
 
+import org.biojava.bio.structure.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.ResidueNumber;
 
 public final class StructureUtil {
 	private StructureUtil() {

@@ -24,18 +24,14 @@
  */
 package org.biojava3.survival.kaplanmeier.figure;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import org.biojava3.survival.cox.StrataInfo;
+import org.biojava3.survival.cox.SurvFitInfo;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import javax.swing.JPanel;
-import org.biojava3.survival.cox.StrataInfo;
-import org.biojava3.survival.cox.SurvFitInfo;
  
 /**
  * 

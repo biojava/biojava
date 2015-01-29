@@ -24,9 +24,7 @@
 package org.biojava.structure.test.io;
 
 
-
 import junit.framework.TestCase;
-
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;

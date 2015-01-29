@@ -22,24 +22,16 @@
  */
 package org.biojava.structure.test;
 
-import static org.junit.Assume.assumeNoException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import junit.framework.TestCase;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ResidueRange;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.junit.Assume.assumeNoException;
 
 public class StructureToolsTest extends TestCase {
 

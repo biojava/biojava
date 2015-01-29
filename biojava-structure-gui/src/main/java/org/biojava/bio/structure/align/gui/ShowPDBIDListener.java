@@ -24,16 +24,12 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-
-import javax.swing.JCheckBox;
-
-import javax.swing.JOptionPane;
-
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class ShowPDBIDListener

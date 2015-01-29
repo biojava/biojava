@@ -21,12 +21,6 @@
  */
 package org.biojava3.core.sequence.transcription;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava3.core.sequence.RNASequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -37,6 +31,8 @@ import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.transcription.Table.Codon;
 import org.biojava3.core.sequence.views.WindowedSequence;
+
+import java.util.*;
 
 /**
  * Takes a {@link Sequence} of {@link NucleotideCompound} which should represent

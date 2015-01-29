@@ -20,10 +20,10 @@
  */
 package org.biojava.bio.structure.contact;
 
+import org.biojava.bio.structure.Group;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava.bio.structure.Group;
 
 /**
  * A pair of residues that are in contact

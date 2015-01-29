@@ -25,20 +25,19 @@
 package org.biojava.bio.structure.align.ce;
 
 
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AFPChainScorer;
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.jama.Matrix;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AFPChainScorer;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.jama.Matrix;
 
 /** 
  * A wrapper for {@link CeMain} which sets default parameters to be appropriate for finding

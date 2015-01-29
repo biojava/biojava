@@ -20,18 +20,17 @@
  */
 package org.biojava.bio.structure.align.util;
 
-import java.io.StringWriter;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
+
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector3d;
+import java.io.StringWriter;
 
 /**
  * Calculates the rotation axis for an alignment

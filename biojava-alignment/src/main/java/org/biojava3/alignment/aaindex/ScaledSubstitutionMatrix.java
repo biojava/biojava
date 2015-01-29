@@ -20,15 +20,15 @@
  */
 package org.biojava3.alignment.aaindex;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.CompoundSet;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 
 /**

@@ -22,10 +22,10 @@
 
 package org.biojava.bio.structure.io.mmcif;
 
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
 /** A representation of the Chemical Component Dictionary.
  *

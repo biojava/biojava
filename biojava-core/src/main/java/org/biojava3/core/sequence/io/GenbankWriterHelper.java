@@ -23,21 +23,20 @@
  */
 package org.biojava3.core.sequence.io;
 
+import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.io.template.GenbankHeaderFormatInterface;
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.Sequence;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.io.GenbankWriter;
-import org.biojava3.core.sequence.template.Sequence;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.io.template.GenbankHeaderFormatInterface;
 
 /**
  * The class that should be used to write out genbank file of a sequence

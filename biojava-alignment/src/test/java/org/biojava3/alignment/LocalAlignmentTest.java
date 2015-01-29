@@ -22,8 +22,6 @@
  */
 package org.biojava3.alignment;
 
-import static org.junit.Assert.assertEquals;
-
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.SubstitutionMatrix;
@@ -32,6 +30,8 @@ import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Daniel Cameron

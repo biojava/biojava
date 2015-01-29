@@ -20,15 +20,10 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import org.biojava.bio.structure.Atom;
 
 import javax.vecmath.Point3d;
-
-import org.biojava.bio.structure.Atom;
+import java.util.*;
 
 public class ChainClusterer  {	
 	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();	

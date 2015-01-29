@@ -24,10 +24,10 @@
  */
 package org.biojava.bio.structure.domain;
 
-import java.util.SortedSet;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
+
+import java.util.SortedSet;
 
 public interface PDPProvider {
 	

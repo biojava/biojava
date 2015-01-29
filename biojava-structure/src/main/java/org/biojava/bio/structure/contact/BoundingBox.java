@@ -20,14 +20,13 @@
  */
 package org.biojava.bio.structure.contact;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
-import javax.vecmath.Vector3d;
-
 import org.biojava.bio.structure.Atom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Vector3d;
+import java.io.Serializable;
+import java.util.Arrays;
 
 
 /**

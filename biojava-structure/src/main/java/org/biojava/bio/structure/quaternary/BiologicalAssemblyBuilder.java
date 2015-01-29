@@ -21,12 +21,6 @@
 
 package org.biojava.bio.structure.quaternary;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
@@ -36,6 +30,8 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /** 
  * Reconstructs the quaternary structure of a protein from an asymmetric unit

@@ -23,14 +23,14 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.Collection;
-
 import org.biojava3.core.sequence.io.template.GenbankHeaderFormatInterface;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.StringManipulationHelper;
+
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Collection;
 
 
 /**

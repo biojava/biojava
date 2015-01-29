@@ -23,16 +23,17 @@
 
 package org.biojava.bio.structure;
 
-import static org.junit.Assume.*;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.NavigableMap;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.LocalPDBDirectory;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.NavigableMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * A unit test for {@link org.biojava.bio.structure.AtomPositionMap}.

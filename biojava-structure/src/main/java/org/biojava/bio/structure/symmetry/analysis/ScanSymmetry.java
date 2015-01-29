@@ -20,14 +20,6 @@
  */
 package org.biojava.bio.structure.symmetry.analysis;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
-
 import org.biojava.bio.structure.PDBCrystallographicInfo;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
@@ -45,6 +37,14 @@ import org.biojava.bio.structure.symmetry.misc.ProteinComplexSignature;
 import org.biojava.bio.structure.symmetry.utils.BlastClustReader;
 import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava3.structure.StructureIO;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
 
 
 public class ScanSymmetry implements Runnable {

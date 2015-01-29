@@ -23,15 +23,16 @@
 package org.biojava.bio.structure.gui.util;
 
 //import java.awt.Cursor;
+
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.gui.SequenceDisplay;
+import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
-import org.biojava.bio.structure.gui.SequenceDisplay;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 

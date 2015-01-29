@@ -20,13 +20,12 @@
  */
 package org.biojava.bio.structure.asa;
 
-import java.io.IOException;
-
+import junit.framework.TestCase;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava3.structure.StructureIO;
 
-import junit.framework.TestCase;
+import java.io.IOException;
 
 /**
  * Testing of Accessible Surface Area calculations

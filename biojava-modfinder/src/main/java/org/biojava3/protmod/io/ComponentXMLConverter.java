@@ -20,17 +20,17 @@
  */
 package org.biojava3.protmod.io;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.protmod.Component;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class ComponentXMLConverter {

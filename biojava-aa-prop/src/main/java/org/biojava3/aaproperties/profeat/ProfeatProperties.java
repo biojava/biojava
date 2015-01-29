@@ -20,13 +20,13 @@
  */
 package org.biojava3.aaproperties.profeat;
 
-import java.util.Map;
-
 import org.biojava3.aaproperties.profeat.IProfeatProperties.ATTRIBUTE;
 import org.biojava3.aaproperties.profeat.IProfeatProperties.DISTRIBUTION;
 import org.biojava3.aaproperties.profeat.IProfeatProperties.GROUPING;
 import org.biojava3.aaproperties.profeat.IProfeatProperties.TRANSITION;
 import org.biojava3.core.sequence.ProteinSequence;
+
+import java.util.Map;
 
 /**
  * This is an adaptor class which enable the ease of generating profeat properties.

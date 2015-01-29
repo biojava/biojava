@@ -23,10 +23,9 @@
  */
 package org.biojava.structure.test.scop;
 
+import junit.framework.TestCase;
 import org.biojava.bio.structure.scop.ScopCategory;
 import org.biojava.bio.structure.scop.ScopDescription;
-
-import junit.framework.TestCase;
 
 
 /**

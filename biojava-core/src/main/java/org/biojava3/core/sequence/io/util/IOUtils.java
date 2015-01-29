@@ -21,23 +21,6 @@
  */
 package org.biojava3.core.sequence.io.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.GZIPInputStream;
-
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AmbiguityRNACompoundSet;
@@ -46,6 +29,13 @@ import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 public class IOUtils {
 

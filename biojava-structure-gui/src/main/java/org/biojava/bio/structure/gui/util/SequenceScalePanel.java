@@ -22,21 +22,13 @@
  */
 package org.biojava.bio.structure.gui.util;
 
-import java.awt.AlphaComposite;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-
-import javax.swing.JPanel;
-
 import org.biojava.bio.structure.*;
 
-import java.awt.Color;
-import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /** A class that draws a Sequence as a rectangle, a scale display over it.

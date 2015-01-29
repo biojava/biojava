@@ -20,16 +20,15 @@
  */
 package org.biojava.bio.structure.io.mmcif.model;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.List;
 
 @XmlRootElement(name="PdbxStructAssemblyXMLContainer")
 public class PdbxStructAssemblyXMLContainer {

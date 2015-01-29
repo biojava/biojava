@@ -24,10 +24,11 @@
  */
 package org.biojava3.genome.homology;
 
+import org.biojava3.genome.query.BlastXMLQuery;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import org.biojava3.genome.query.BlastXMLQuery;
 
 /**
  *

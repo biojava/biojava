@@ -20,12 +20,6 @@
  */
 package org.biojava.bio.structure.align;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.concurrent.Callable;
-import java.util.zip.GZIPOutputStream;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
@@ -37,6 +31,12 @@ import org.biojava.bio.structure.align.util.SynchronizedOutFile;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.concurrent.Callable;
+import java.util.zip.GZIPOutputStream;
 
 public class CallableStructureAlignment implements  Callable<AFPChain> {
 	

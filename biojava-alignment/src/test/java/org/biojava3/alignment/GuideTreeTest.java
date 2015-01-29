@@ -23,11 +23,6 @@
 
 package org.biojava3.alignment;
 
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.biojava3.alignment.Alignments.PairwiseSequenceScorerType;
 import org.biojava3.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava3.alignment.template.GapPenalty;
@@ -38,6 +33,11 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class GuideTreeTest {
 

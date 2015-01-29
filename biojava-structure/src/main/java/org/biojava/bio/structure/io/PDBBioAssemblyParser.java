@@ -20,17 +20,13 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /** 
  * Parses REMARK 350 records in a PDB file and creates transformations to 

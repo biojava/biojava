@@ -23,10 +23,10 @@
 
 package org.biojava3.alignment.template;
 
-import java.util.concurrent.Callable;
-
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.concurrent.Callable;
 
 /**
  * Implements a concurrency wrapper for a {@link ProfileProfileAligner}.

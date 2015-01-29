@@ -22,20 +22,14 @@
  */
 package org.biojava3.ws.alignment.qblast;
 
-import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.ALIGNMENTS;
-import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.ALIGNMENT_VIEW;
-import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.DESCRIPTIONS;
-import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.FORMAT_TYPE;
-import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.NOHEADER;
-import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.SHOW_LINKOUT;
-import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.SHOW_OVERVIEW;
+import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.*;
 
 /**
  * This class wraps a QBlast output parameter {@code Map} by adding several convenient parameter addition methods. Other

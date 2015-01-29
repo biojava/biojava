@@ -22,15 +22,14 @@
  */
 package org.biojava.structure.test;
 
-import java.io.IOException;
-import java.io.InputStream;
-
+import junit.framework.TestCase;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.StructurePairAligner;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.io.PDBFileParser;
 
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class StructurePairAlignerTest extends TestCase {
 

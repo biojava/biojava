@@ -21,25 +21,20 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Use FastaReaderHelper as an example of how to use this class where FastaReaderHelper should be the

@@ -19,11 +19,6 @@
 
 package org.biojava.bio.structure.align.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
-
 import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
@@ -31,6 +26,11 @@ import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.core.util.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 
 /** A container to persist config to the file system

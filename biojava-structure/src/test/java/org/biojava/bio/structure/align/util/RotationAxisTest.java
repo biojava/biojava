@@ -47,12 +47,12 @@
  */
 package org.biojava.bio.structure.align.util;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author blivens

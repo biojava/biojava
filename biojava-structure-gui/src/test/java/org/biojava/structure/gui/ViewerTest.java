@@ -21,11 +21,9 @@
 package org.biojava.structure.gui;
 
 
+import junit.framework.TestCase;
 import org.biojava.bio.structure.Structure;
 import org.biojava3.structure.gui.StructureViewer;
-
-
-import junit.framework.TestCase;
 
 /**
  *

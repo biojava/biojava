@@ -23,13 +23,7 @@
  */
 package org.biojava3.alignment;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import junit.framework.TestCase;
-
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.Profile;
@@ -42,6 +36,11 @@ import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.util.ConcurrencyTools;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class TestDNAAlignment extends TestCase {
 

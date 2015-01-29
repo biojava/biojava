@@ -21,11 +21,11 @@
  */
 package org.biojava3.core.sequence.features;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * It is common to have a numerical value or values associated with a feature. This can then

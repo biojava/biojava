@@ -24,19 +24,19 @@
  */
 package org.biojava3.genome.parsers.geneid;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.biojava3.core.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  *

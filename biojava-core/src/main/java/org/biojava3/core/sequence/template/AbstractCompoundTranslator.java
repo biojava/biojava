@@ -20,15 +20,10 @@
  */
 package org.biojava3.core.sequence.template;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava3.core.exceptions.TranslationException;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
+
+import java.util.*;
 
 
 public abstract class AbstractCompoundTranslator<F extends Compound, T extends Compound>

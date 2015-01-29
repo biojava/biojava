@@ -20,9 +20,6 @@
  */
 package demo;
 
-import java.util.SortedSet;
-
-
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -31,6 +28,8 @@ import org.biojava3.ws.hmmer.HmmerDomain;
 import org.biojava3.ws.hmmer.HmmerResult;
 import org.biojava3.ws.hmmer.HmmerScan;
 import org.biojava3.ws.hmmer.RemoteHmmerScan;
+
+import java.util.SortedSet;
 
 /** The cookbook recipe for how to request Pfam annotations for a protein sequence using the Hmmer3 service
  * 

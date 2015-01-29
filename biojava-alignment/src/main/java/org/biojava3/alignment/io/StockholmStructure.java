@@ -18,11 +18,6 @@
 
 package org.biojava3.alignment.io;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.RNASequence;
@@ -30,6 +25,11 @@ import org.biojava3.core.sequence.template.AbstractCompound;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Stores all the content of a Stockholm file. <i><b>N.B.: This structure will undergo several enhancements later on.

@@ -24,11 +24,6 @@
 
 package org.biojava.structure.test.io;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -37,7 +32,12 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import static org.junit.Assert.assertNotNull;
 
 
 public class LoadOldXMLfileTest {

@@ -24,15 +24,11 @@
  */
 package org.biojava3.core.util;
 
-import static org.biojava3.core.sequence.io.util.IOUtils.close;
-import static org.biojava3.core.sequence.io.util.IOUtils.openFile;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,12 +42,11 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.*;
+import java.util.ArrayList;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import static org.biojava3.core.sequence.io.util.IOUtils.close;
+import static org.biojava3.core.sequence.io.util.IOUtils.openFile;
 
 /**
  *

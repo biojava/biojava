@@ -21,17 +21,7 @@
 
 package org.biojava.bio.structure.io;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.PDBHeader;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -40,6 +30,13 @@ import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
 import org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider;
 import org.biojava3.structure.StructureIO;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestQuaternaryStructureProviders {
 

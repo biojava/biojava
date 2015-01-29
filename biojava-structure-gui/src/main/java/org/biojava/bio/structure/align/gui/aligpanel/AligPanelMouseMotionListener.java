@@ -20,16 +20,15 @@
  */
 package org.biojava.bio.structure.align.gui.aligpanel;
 
+import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
+import org.biojava.bio.structure.gui.util.AlignedPosition;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
-
-
-import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
-import org.biojava.bio.structure.gui.util.AlignedPosition;
 
 public class AligPanelMouseMotionListener implements MouseMotionListener, MouseListener {
 

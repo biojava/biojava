@@ -20,25 +20,23 @@
  */
 package org.biojava.bio.structure.align.xml;
 
+import org.biojava.bio.structure.align.client.PdbPair;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
+import org.biojava3.core.util.PrettyXMLWriter;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.biojava.bio.structure.align.client.PdbPair;
-import org.biojava.bio.structure.align.fatcat.FatCatRigid;
-import org.biojava3.core.util.PrettyXMLWriter;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 public class PdbPairXMLConverter {
 	

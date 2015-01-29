@@ -23,17 +23,11 @@
  */
 package org.biojava.bio.structure;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.biojava.bio.structure.PDBStatus;
+import junit.framework.TestCase;
 import org.biojava.bio.structure.PDBStatus.Status;
 
-import junit.framework.TestCase;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * @author Spencer Bliven <sbliven@ucsd.edu>

@@ -24,34 +24,12 @@
 
 package org.biojava3.protmod.structure;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-
-import org.biojava3.protmod.Component;
-import org.biojava3.protmod.ModificationCategory;
-import org.biojava3.protmod.ModificationCondition;
-import org.biojava3.protmod.ModificationLinkage;
-import org.biojava3.protmod.ProteinModification;
-import org.biojava3.protmod.ProteinModificationRegistry;
+import org.biojava.bio.structure.*;
+import org.biojava3.protmod.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Identify attachment modification in a 3-D structure.

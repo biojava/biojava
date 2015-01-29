@@ -24,10 +24,10 @@
 
 package org.biojava.bio.structure.align.seq;
 
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 
 public class SmithWaterman3DParameters implements ConfigStrucAligParams
 {

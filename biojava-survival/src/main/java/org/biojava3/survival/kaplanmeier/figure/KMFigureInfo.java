@@ -24,8 +24,7 @@
  */
 package org.biojava3.survival.kaplanmeier.figure;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
+import java.awt.*;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Properties;

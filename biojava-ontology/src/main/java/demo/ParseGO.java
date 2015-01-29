@@ -24,18 +24,18 @@
 
 package demo;
 
+import org.biojava3.ontology.Ontology;
+import org.biojava3.ontology.Term;
+import org.biojava3.ontology.io.OboParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.biojava3.ontology.Ontology;
-import org.biojava3.ontology.Term;
-import org.biojava3.ontology.io.OboParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ParseGO {
 	

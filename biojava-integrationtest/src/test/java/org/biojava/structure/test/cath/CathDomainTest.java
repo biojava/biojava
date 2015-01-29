@@ -20,11 +20,11 @@
  */
 package org.biojava.structure.test.cath;
 
-import static org.junit.Assert.*;
-
 import org.biojava.bio.structure.cath.CathDomain;
 import org.biojava.bio.structure.cath.CathFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**

@@ -23,26 +23,17 @@
 package org.biojava.bio.structure.align.pairwise;
 
 
-import java.io.Serializable;
-import java.text.DecimalFormat;
-
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.StrucAligParameters;
 import org.biojava.bio.structure.align.helper.AligMatEl;
 import org.biojava.bio.structure.align.helper.IndexPair;
 import org.biojava.bio.structure.align.helper.JointFragments;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Implements a class which handles one possible (alternative) solution.

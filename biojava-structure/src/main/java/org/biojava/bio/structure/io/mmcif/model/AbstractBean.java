@@ -21,13 +21,13 @@
  */
 package org.biojava.bio.structure.io.mmcif.model;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
 import org.biojava.bio.structure.Chain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /** a generic class that implements the toString method for a bean
  * 

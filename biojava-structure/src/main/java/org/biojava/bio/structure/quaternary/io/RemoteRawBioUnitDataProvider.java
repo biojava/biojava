@@ -20,29 +20,21 @@
  */
 package org.biojava.bio.structure.quaternary.io;
 
-import java.io.InputStream;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
-
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGenXMLContainer;
-
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyXMLContainer;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperListXMLContainer;
+import org.biojava.bio.structure.io.mmcif.model.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.List;
 
 /** A BioUnitDataProvider that fetches the symmetry operations via remote calls to servers from RCSB PDB
  * 

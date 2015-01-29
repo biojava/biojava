@@ -20,14 +20,7 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
+import java.io.*;
 import java.util.Arrays;
 
 /**

@@ -19,14 +19,10 @@
 
 package org.biojava.structure.test.align.fatcat;
 
-import java.io.IOException;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
-import org.biojava.bio.structure.StructureTools;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.fatcat.FatCat;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -34,9 +30,7 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.io.IOException;
 
 public class AFPChainSerialisationTest 
 extends TestCase

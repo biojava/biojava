@@ -20,9 +20,6 @@
  */
 package org.biojava.bio.structure.quaternary.io;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -31,6 +28,9 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava3.core.util.SoftHashMap;
+
+import java.io.IOException;
+import java.util.List;
 
 
 /** A BioUnitDataProvider that extracts the necessary info from PDB files

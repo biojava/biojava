@@ -19,16 +19,12 @@
 
 package org.biojava3.core.util;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.SoftReference;
+import java.util.*;
 
 
 /** A in memory cache using soft references. (can be garbage collected)

@@ -19,18 +19,16 @@
 
 package org.biojava.bio.structure.align.gui;
 
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 
 public class MyExportListener implements ActionListener{
 

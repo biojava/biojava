@@ -20,6 +20,11 @@
  */
 package org.biojava.bio.structure.xtal;
 
+import org.biojava.bio.structure.xtal.io.SpaceGroupMapRoot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +33,6 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.bind.JAXBException;
-
-import org.biojava.bio.structure.xtal.io.SpaceGroupMapRoot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

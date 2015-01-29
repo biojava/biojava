@@ -24,19 +24,13 @@
 
 package org.biojava3.protmod.structure;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationImpl;
 import org.biojava3.protmod.io.ModifiedCompoundXMLConverter;
+
+import java.io.Serializable;
+import java.util.*;
 
 
 /**

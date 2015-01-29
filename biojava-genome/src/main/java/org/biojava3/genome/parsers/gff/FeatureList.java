@@ -20,10 +20,10 @@
  */
 package org.biojava3.genome.parsers.gff;
 
+import org.biojava3.core.sequence.DNASequence;
+
 import java.util.*;
 import java.util.Map.Entry;
-
-import org.biojava3.core.sequence.DNASequence;
 
 
 

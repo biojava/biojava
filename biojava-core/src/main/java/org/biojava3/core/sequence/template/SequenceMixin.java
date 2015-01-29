@@ -20,22 +20,15 @@
  */
 package org.biojava3.core.sequence.template;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
+import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
+import org.biojava3.core.sequence.views.WindowedSequence;
 import org.biojava3.core.util.CRC64Checksum;
 
-import java.util.NoSuchElementException;
-import org.biojava3.core.sequence.views.ComplementSequenceView;
-import org.biojava3.core.sequence.views.WindowedSequence;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Provides a set of static methods to be used as static imports when needed

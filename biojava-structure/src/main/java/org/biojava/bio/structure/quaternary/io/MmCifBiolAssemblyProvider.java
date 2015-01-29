@@ -20,10 +20,6 @@
  */
 package org.biojava.bio.structure.quaternary.io;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -33,6 +29,10 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava3.structure.StructureIO;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 

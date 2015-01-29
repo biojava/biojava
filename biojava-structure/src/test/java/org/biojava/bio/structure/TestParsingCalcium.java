@@ -24,12 +24,13 @@
 
 package org.biojava.bio.structure;
 
-import java.io.IOException;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class TestParsingCalcium {

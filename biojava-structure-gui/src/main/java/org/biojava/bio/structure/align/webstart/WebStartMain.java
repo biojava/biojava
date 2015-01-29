@@ -19,15 +19,6 @@
 
 package org.biojava.bio.structure.align.webstart;
 
-import java.io.File;
-
-import javax.jnlp.UnavailableServiceException;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
@@ -48,6 +39,10 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+
+import javax.jnlp.UnavailableServiceException;
+import javax.swing.*;
+import java.io.File;
 
 public class WebStartMain
 {

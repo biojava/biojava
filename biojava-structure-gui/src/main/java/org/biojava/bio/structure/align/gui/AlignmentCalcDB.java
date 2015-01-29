@@ -25,15 +25,15 @@
 package org.biojava.bio.structure.align.gui;
 
 
-import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.MultiThreadedDBSearch;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.scop.ScopFactory;
+
+import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 

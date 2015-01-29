@@ -20,18 +20,11 @@
  */
 package org.biojava3.aaproperties.profeat;
 
+import org.biojava3.aaproperties.profeat.convertor.*;
+import org.biojava3.core.sequence.ProteinSequence;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.biojava3.aaproperties.profeat.convertor.Convert2Charge;
-import org.biojava3.aaproperties.profeat.convertor.Convert2Hydrophobicity;
-import org.biojava3.aaproperties.profeat.convertor.Convert2NormalizedVanDerWaalsVolume;
-import org.biojava3.aaproperties.profeat.convertor.Convert2Polarity;
-import org.biojava3.aaproperties.profeat.convertor.Convert2Polarizability;
-import org.biojava3.aaproperties.profeat.convertor.Convert2SecondaryStructure;
-import org.biojava3.aaproperties.profeat.convertor.Convert2SolventAccessibility;
-import org.biojava3.aaproperties.profeat.convertor.Convertor;
-import org.biojava3.core.sequence.ProteinSequence;
 
 public class ProfeatPropertiesImpl implements IProfeatProperties{
 

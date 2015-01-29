@@ -20,14 +20,6 @@
  */
 package org.biojava.bio.structure.io;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.zip.GZIPInputStream;
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -39,6 +31,14 @@ import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava3.structure.StructureIO;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests for non-deposited PDB/mmCIF files, i.e. any kind of "raw" file

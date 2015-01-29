@@ -23,12 +23,6 @@
 
 package org.biojava3.alignment;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.Profile;
@@ -42,6 +36,8 @@ import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.*;
 
 
 /**

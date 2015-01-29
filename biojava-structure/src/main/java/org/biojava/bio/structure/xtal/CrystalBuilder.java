@@ -21,23 +21,18 @@
 package org.biojava.bio.structure.xtal;
 
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3i;
-import javax.vecmath.Vector3d;
-
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.PDBCrystallographicInfo;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.contact.AtomContactSet;
 import org.biojava.bio.structure.contact.StructureInterface;
 import org.biojava.bio.structure.contact.StructureInterfaceList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3i;
+import javax.vecmath.Vector3d;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 

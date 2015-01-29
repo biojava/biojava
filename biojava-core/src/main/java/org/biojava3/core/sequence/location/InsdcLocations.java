@@ -21,12 +21,13 @@
  */
 package org.biojava3.core.sequence.location;
 
-import java.util.Arrays;
-import java.util.List;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.location.template.Point;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A collection of locations which are used whenever we work with INSDC; some

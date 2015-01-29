@@ -22,19 +22,14 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.vecmath.Point3d;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.symmetry.utils.CombinationGenerator;
 import org.biojava.bio.structure.symmetry.utils.ComponentFinder;
 import org.biojava.bio.structure.symmetry.utils.Graph;
+
+import javax.vecmath.Point3d;
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * Detects global and local quaternary protein structure symmetry in a structure.

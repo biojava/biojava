@@ -22,13 +22,13 @@
 
 package org.biojava3.core.sequence.io.template;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  *

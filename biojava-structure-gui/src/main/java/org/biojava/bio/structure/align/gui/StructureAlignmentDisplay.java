@@ -20,22 +20,16 @@
  */
 package org.biojava.bio.structure.align.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.AFPTwister;
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StructureAlignmentDisplay {
 

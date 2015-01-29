@@ -23,8 +23,6 @@
 
 package demo;
 
-import java.util.List;
-
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.cath.CathDatabase;
@@ -33,6 +31,8 @@ import org.biojava.bio.structure.cath.CathInstallation;
 import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.gui.BiojavaJmol;
 import org.biojava3.structure.StructureIO;
+
+import java.util.List;
 
 public class DemoShowCATHDomain {
 

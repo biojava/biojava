@@ -24,21 +24,7 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
@@ -51,12 +37,18 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.CasePreservingProteinSequenceCreator;
 import org.biojava3.core.sequence.io.FastaReader;
 import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
-import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.SequenceTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * A collection of static utilities to convert between {@link AFPChain AFPChains} and {@link FastaSequence FastaSequences}.

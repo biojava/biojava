@@ -21,10 +21,10 @@
  */
 package org.biojava3.core.sequence.io;
 
+import org.biojava3.core.sequence.io.template.SequenceParserInterface;
+
 import java.io.BufferedReader;
 import java.io.IOException;
-
-import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 
 /**
  * Used to parse a stream of a fasta file to get the sequence

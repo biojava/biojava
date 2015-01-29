@@ -22,8 +22,9 @@
 
 package org.biojava3.core.sequence.features;
 
-import java.util.LinkedHashMap;
 import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
+
+import java.util.LinkedHashMap;
 
 /**
  * If you have a uniprot ID then it is possible to get a collection

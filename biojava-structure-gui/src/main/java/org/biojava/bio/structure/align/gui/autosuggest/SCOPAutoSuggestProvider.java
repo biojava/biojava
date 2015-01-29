@@ -24,15 +24,15 @@
  */
 package org.biojava.bio.structure.align.gui.autosuggest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDescription;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 

@@ -25,10 +25,6 @@
 package org.biojava.bio.structure.io;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Group;
@@ -36,6 +32,10 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * <p>

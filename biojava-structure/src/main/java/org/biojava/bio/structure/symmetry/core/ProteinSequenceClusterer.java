@@ -20,14 +20,10 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
+
+import java.util.*;
 
 public class ProteinSequenceClusterer {
 	private Structure structure = null;

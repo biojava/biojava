@@ -20,14 +20,13 @@
  */
 package org.biojava.bio.structure;
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava3.structure.StructureIO;
 import org.junit.Before;
+
+import java.io.IOException;
 
 public class TestBond extends TestCase {
 	private Structure s;

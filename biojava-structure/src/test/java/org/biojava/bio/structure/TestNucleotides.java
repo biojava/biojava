@@ -24,9 +24,6 @@
  */
 package org.biojava.bio.structure;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -36,6 +33,9 @@ import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 

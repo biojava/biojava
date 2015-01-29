@@ -21,16 +21,14 @@
 package org.biojava.bio.structure.io.mmcif.model;
 
 
-import java.io.Serializable;
-import java.util.Arrays;
-
+import org.biojava.bio.structure.jama.Matrix;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-
-import org.biojava.bio.structure.jama.Matrix;
+import java.io.Serializable;
+import java.util.Arrays;
 
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class PdbxStructOperList implements Serializable{

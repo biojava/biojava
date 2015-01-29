@@ -20,13 +20,13 @@
  */
 package org.biojava.bio.structure.xtal;
 
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.contact.BoundingBox;
+
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector3d;
 
 /**
  * A class to contain the BoundingBoxes of all molecules in a full unit cell

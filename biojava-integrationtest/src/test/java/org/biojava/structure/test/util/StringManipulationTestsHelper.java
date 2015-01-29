@@ -21,7 +21,6 @@
 package org.biojava.structure.test.util;
 
 import junit.framework.TestCase;
-
 import org.biojava3.core.util.StringManipulationHelper;
 
 public class StringManipulationTestsHelper extends TestCase {

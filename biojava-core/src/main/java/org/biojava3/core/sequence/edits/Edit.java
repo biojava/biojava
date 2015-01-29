@@ -20,9 +20,6 @@
  */
 package org.biojava3.core.sequence.edits;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.BasicSequence;
 import org.biojava3.core.sequence.storage.JoiningSequenceReader;
@@ -30,6 +27,9 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interface for carrying out edit operations on a Sequence. The 3 major

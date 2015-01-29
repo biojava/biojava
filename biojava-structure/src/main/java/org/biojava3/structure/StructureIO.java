@@ -20,9 +20,6 @@
  */
 package org.biojava3.structure;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -32,6 +29,9 @@ import org.biojava.bio.structure.quaternary.io.BioUnitDataProvider;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
 
 /** A class that provides static access methods for easy lookup of protein structure related components
  * 

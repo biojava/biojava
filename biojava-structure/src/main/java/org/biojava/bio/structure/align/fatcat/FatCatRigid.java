@@ -25,12 +25,10 @@
 package org.biojava.bio.structure.align.fatcat;
 
 import org.biojava.bio.structure.Atom;
-
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
-
 import org.biojava.bio.structure.align.model.AFPChain;
 
 

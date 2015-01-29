@@ -20,15 +20,14 @@
  */
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import javax.swing.JFileChooser;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.io.PDBFileReader;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 public class MyOpenPdbFileListener 
 implements ActionListener {

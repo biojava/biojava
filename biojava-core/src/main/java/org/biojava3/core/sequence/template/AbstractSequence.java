@@ -26,25 +26,12 @@
  */
 package org.biojava3.core.sequence.template;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.TaxonomyID;
-import org.biojava3.core.sequence.features.AbstractFeature;
-import org.biojava3.core.sequence.features.DBReferenceInfo;
-import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
-import org.biojava3.core.sequence.features.FeatureInterface;
-import org.biojava3.core.sequence.features.FeatureRetriever;
-import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
+import org.biojava3.core.sequence.features.*;
 import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.SimpleLocation;
@@ -52,6 +39,8 @@ import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  *

@@ -27,13 +27,13 @@ package org.biojava.bio.structure.cath;
  * @author Daniel Asarnow
  */
 
+import org.biojava.bio.structure.ResidueRange;
+import org.biojava.bio.structure.StructureIdentifier;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.biojava.bio.structure.ResidueRange;
-import org.biojava.bio.structure.StructureIdentifier;
 
 /**
  * A class which represents a single CATH domain.

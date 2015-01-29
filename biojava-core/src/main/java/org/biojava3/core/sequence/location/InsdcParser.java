@@ -21,13 +21,6 @@
  */
 package org.biojava3.core.sequence.location;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DNASequence;
@@ -38,6 +31,13 @@ import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Parser for working with INSDC style locations. This class supports the

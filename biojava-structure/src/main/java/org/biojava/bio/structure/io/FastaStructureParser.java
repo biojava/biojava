@@ -20,12 +20,6 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -33,8 +27,14 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.FastaReader;
-import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
 
 
 /**

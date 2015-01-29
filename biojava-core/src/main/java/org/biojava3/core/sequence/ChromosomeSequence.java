@@ -22,13 +22,13 @@
  */
 package org.biojava3.core.sequence;
 
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceReader;
+
+import java.util.LinkedHashMap;
 
 /**
  * A ChromosomeSequence is a DNASequence but keeps track of geneSequences

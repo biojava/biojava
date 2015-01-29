@@ -20,16 +20,17 @@
  */
 package org.biojava3.ronn;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the following UniProt IDs:

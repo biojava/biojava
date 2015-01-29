@@ -21,14 +21,13 @@
 
 package org.biojava.bio.structure.symmetry.geometry;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.biojava.bio.structure.jama.EigenvalueDecomposition;
+import org.biojava.bio.structure.jama.Matrix;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.biojava.bio.structure.jama.EigenvalueDecomposition;
-import org.biojava.bio.structure.jama.Matrix;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

@@ -22,22 +22,6 @@
 package org.biojava.bio.structure.gui.util;
 
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -47,6 +31,13 @@ import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 /** A JPanel to upload 2 custom PDB files.
  * 

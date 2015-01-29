@@ -21,16 +21,16 @@
  */
 package org.biojava3.core.sequence.location;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.location.template.Point;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Very basic implementation of the Location interface which defines a series

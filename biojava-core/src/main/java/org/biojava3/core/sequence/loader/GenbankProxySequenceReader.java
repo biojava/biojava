@@ -24,20 +24,6 @@
  */
 package org.biojava3.core.sequence.loader;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DNASequence;
@@ -46,11 +32,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.features.AbstractFeature;
-import org.biojava3.core.sequence.features.DBReferenceInfo;
-import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
-import org.biojava3.core.sequence.features.FeatureRetriever;
-import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
+import org.biojava3.core.sequence.features.*;
 import org.biojava3.core.sequence.io.GenbankSequenceParser;
 import org.biojava3.core.sequence.io.GenericGenbankHeaderParser;
 import org.biojava3.core.sequence.template.AbstractSequence;
@@ -58,6 +40,13 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * @author Karl Nicholas <github:karlnicholas>

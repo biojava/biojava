@@ -20,9 +20,8 @@
  */
 package org.biojava.bio.structure.symmetry.jmolScript;
 
-import java.awt.Color;
-
 import javax.vecmath.Color4f;
+import java.awt.*;
 
 public class ColorConverter {
 

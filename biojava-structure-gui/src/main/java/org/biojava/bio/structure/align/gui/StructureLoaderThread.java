@@ -20,17 +20,6 @@
  */
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.BorderLayout;
-
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
@@ -39,6 +28,9 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.quaternary.BioAssemblyTools;
 import org.biojava3.structure.StructureIO;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class StructureLoaderThread extends SwingWorker<String, Object> {
 

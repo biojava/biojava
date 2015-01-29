@@ -20,11 +20,11 @@
  */
 package org.biojava.bio.structure.contact;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

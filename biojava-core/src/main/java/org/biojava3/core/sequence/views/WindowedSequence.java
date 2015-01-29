@@ -20,12 +20,12 @@
  */
 package org.biojava3.core.sequence.views;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceView;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A sliding window view of a sequence which does not implement any

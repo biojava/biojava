@@ -24,14 +24,14 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.io.IOException;
-
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ChemCompProvider;
-
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 /** Test case for https://redmine.open-bio.org/issues/3334

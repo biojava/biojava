@@ -20,12 +20,6 @@
  */
 package org.biojava3.core.sequence.location;
 
-import static org.biojava3.core.sequence.Strand.UNDEFINED;
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.Strand;
@@ -33,6 +27,12 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.Sequence;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.biojava3.core.sequence.Strand.UNDEFINED;
+import static org.junit.Assert.assertEquals;
 
 public class LocationTest {
 

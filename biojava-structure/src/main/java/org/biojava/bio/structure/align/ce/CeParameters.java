@@ -24,13 +24,13 @@
 
 package org.biojava.bio.structure.align.ce;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava3.alignment.SubstitutionMatrixHelper;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /** Contains the parameters that can be sent to CE

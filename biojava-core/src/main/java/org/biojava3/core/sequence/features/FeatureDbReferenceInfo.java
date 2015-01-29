@@ -25,14 +25,13 @@
 
 package org.biojava3.core.sequence.features;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * It is {@link DBReferenceInfo} which implements {@link FeatureInterface}. It allows to keep a dbReferenceInfo as a feature.

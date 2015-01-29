@@ -20,16 +20,15 @@
  */
 package org.biojava.bio.structure.xtal;
 
-import java.util.Collection;
+import org.biojava.bio.structure.jama.Matrix;
+import org.junit.Assert;
+import org.junit.Test;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
-
-import org.biojava.bio.structure.jama.Matrix;
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.Collection;
 
 /**
  * Testing of space group symop.lib parsing and for crystal operator calculation correctness

@@ -22,17 +22,10 @@
  */
 package org.biojava.bio.structure.io;
 
+import org.biojava.bio.structure.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.AminoAcidImpl;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Element;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.StructureTools;
 
 /** Converts full atom representations to Calpha only ones.
  * 

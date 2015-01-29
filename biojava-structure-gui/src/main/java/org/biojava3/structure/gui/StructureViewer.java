@@ -20,9 +20,9 @@
  */
 package org.biojava3.structure.gui;
 
-import java.awt.Color;
-
 import org.biojava.bio.structure.Structure;
+
+import java.awt.*;
 
 public interface StructureViewer {
 

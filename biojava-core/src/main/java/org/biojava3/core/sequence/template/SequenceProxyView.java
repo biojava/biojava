@@ -25,9 +25,10 @@
  */
 package org.biojava3.core.sequence.template;
 
+import org.biojava3.core.sequence.AccessionID;
+
 import java.util.Iterator;
 import java.util.List;
-import org.biojava3.core.sequence.AccessionID;
 
 public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 

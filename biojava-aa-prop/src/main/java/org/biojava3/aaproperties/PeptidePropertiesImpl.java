@@ -20,16 +20,6 @@
  */
 package org.biojava3.aaproperties;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
 import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.biojava3.aaproperties.xml.ElementTable;
 import org.biojava3.aaproperties.xml.MyValidationEventHandler;
@@ -38,6 +28,15 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class contains the actual implementation of IPeptideProperties and is wrapped around by PeptideProperties for ease of use. 

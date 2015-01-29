@@ -20,11 +20,11 @@
  */
 package org.biojava3.genome.parsers.gff;
 
-import java.util.Iterator;
-
 import org.biojava3.genome.App;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
 
 /**
 * Move a sliding window over a Location.

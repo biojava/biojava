@@ -23,23 +23,16 @@
 package org.biojava.bio.structure.io;
 
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import junit.framework.TestCase;
-
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.UnknownPdbAminoAcidException;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Spencer Bliven

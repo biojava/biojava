@@ -24,21 +24,10 @@ package org.biojava.bio.structure.align;
  *
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.SortedSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.CeCPMain;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.ce.CeParameters;
-import org.biojava.bio.structure.align.ce.CeSideChainMain;
-import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
+import org.biojava.bio.structure.align.ce.*;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.PdbPair;
@@ -54,6 +43,13 @@ import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava3.core.util.ConcurrencyTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.SortedSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /** Performs a multi threaded database search for an input protein structure

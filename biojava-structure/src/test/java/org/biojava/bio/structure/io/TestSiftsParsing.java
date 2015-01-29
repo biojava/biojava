@@ -24,14 +24,13 @@
 
 package org.biojava.bio.structure.io;
 
-import java.util.List;
-
+import junit.framework.TestCase;
 import org.biojava.bio.structure.io.sifts.SiftsEntity;
 import org.biojava.bio.structure.io.sifts.SiftsMappingProvider;
 import org.biojava.bio.structure.io.sifts.SiftsResidue;
 import org.biojava.bio.structure.io.sifts.SiftsSegment;
 
-import junit.framework.TestCase;
+import java.util.List;
 
 public class TestSiftsParsing extends TestCase {
 

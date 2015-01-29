@@ -27,13 +27,7 @@
 package org.biojava.bio.structure.align.fatcat.calc;
 
 
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.jama.Matrix;
 
 

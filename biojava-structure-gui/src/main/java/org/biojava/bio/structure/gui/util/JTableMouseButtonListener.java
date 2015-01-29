@@ -22,13 +22,11 @@
  */
 package org.biojava.bio.structure.gui.util;
 
-import java.awt.Component;
+import javax.swing.*;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableColumnModel;
 
 class JTableMouseButtonListener implements MouseListener {
     

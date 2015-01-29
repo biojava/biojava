@@ -24,18 +24,15 @@
  */
 package org.biojava3.genome.parsers.gff;
 
+import org.biojava3.core.sequence.*;
+import org.biojava3.genome.GeneFeatureHelper;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import org.biojava3.core.sequence.CDSSequence;
-import org.biojava3.core.sequence.ChromosomeSequence;
-import org.biojava3.core.sequence.GeneSequence;
-import org.biojava3.core.sequence.SequenceComparator;
-import org.biojava3.core.sequence.TranscriptSequence;
-import org.biojava3.genome.GeneFeatureHelper;
 
 /**
  *

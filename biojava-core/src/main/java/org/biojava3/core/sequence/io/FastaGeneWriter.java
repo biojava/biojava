@@ -22,20 +22,15 @@
 
 package org.biojava3.core.sequence.io;
 
+import org.biojava3.core.sequence.*;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.ChromosomeSequence;
-import org.biojava3.core.sequence.ExonSequence;
-import org.biojava3.core.sequence.GeneSequence;
-import org.biojava3.core.sequence.Strand;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A Gene sequence has a Positive or Negative Strand where we want to write out to a stream the 5 to 3 prime version.

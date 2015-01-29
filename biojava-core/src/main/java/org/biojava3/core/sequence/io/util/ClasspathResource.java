@@ -21,19 +21,14 @@
  */
 package org.biojava3.core.sequence.io.util;
 
-import static org.biojava3.core.sequence.io.util.IOUtils.close;
-import static org.biojava3.core.sequence.io.util.IOUtils.copy;
+import org.biojava3.core.exceptions.ParserException;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import org.biojava3.core.exceptions.ParserException;
+import static org.biojava3.core.sequence.io.util.IOUtils.close;
+import static org.biojava3.core.sequence.io.util.IOUtils.copy;
 
 /**
  * This object represents a classpath resource on the local system. It allows

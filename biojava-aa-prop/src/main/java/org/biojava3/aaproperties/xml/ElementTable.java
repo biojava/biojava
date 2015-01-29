@@ -20,11 +20,10 @@
  */
 package org.biojava3.aaproperties.xml;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="elements", namespace="http://biojava.org")
 public class ElementTable {

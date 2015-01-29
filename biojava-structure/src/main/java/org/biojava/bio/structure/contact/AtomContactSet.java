@@ -20,13 +20,9 @@
  */
 package org.biojava.bio.structure.contact;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
+
+import java.util.*;
 
 
 /**

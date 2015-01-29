@@ -20,18 +20,14 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ProteinChainExtractor  {
 	private Structure structure = null;

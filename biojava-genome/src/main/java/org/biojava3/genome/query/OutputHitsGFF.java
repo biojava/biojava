@@ -24,16 +24,16 @@
  */
 package org.biojava3.genome.query;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import org.biojava3.genome.parsers.gff.Feature;
 import org.biojava3.genome.parsers.gff.FeatureI;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GeneMarkGTFReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  *

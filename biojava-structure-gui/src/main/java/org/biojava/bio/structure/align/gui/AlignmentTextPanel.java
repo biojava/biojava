@@ -25,9 +25,8 @@
 package org.biojava.bio.structure.align.gui;
 
 
-import java.awt.Color;
-
-import javax.swing.JEditorPane;
+import javax.swing.*;
+import java.awt.*;
 
 public class AlignmentTextPanel extends JPrintPanel {
 	/**

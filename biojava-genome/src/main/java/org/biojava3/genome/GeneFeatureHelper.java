@@ -24,33 +24,18 @@
  */
 package org.biojava3.genome;
 
+import org.biojava3.core.sequence.*;
+import org.biojava3.core.sequence.io.FastaReaderHelper;
+import org.biojava3.genome.parsers.gff.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-
-import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.CDSSequence;
-import org.biojava3.core.sequence.ChromosomeSequence;
-import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.ExonSequence;
-import org.biojava3.core.sequence.GeneSequence;
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.Strand;
-import org.biojava3.core.sequence.TranscriptSequence;
-import org.biojava3.core.sequence.io.FastaReaderHelper;
-import org.biojava3.genome.parsers.gff.Feature;
-import org.biojava3.genome.parsers.gff.FeatureHelper;
-import org.biojava3.genome.parsers.gff.FeatureI;
-import org.biojava3.genome.parsers.gff.FeatureList;
-import org.biojava3.genome.parsers.gff.GFF3Reader;
-import org.biojava3.genome.parsers.gff.GeneIDGFF2Reader;
-import org.biojava3.genome.parsers.gff.GeneMarkGTFReader;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

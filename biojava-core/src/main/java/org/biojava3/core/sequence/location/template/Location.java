@@ -21,15 +21,15 @@
  */
 package org.biojava3.core.sequence.location.template;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.SimplePoint;
 import org.biojava3.core.sequence.template.Accessioned;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Sets of integers used to represent the location of features on sequence. A

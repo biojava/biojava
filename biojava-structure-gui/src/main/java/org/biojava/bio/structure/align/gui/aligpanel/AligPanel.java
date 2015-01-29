@@ -20,21 +20,6 @@
  */
 package org.biojava.bio.structure.align.gui.aligpanel;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.BitSet;
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
@@ -53,6 +38,15 @@ import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.bio.structure.gui.util.AlignedPosition;
 import org.biojava.bio.structure.gui.util.color.ColorUtils;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.BitSet;
+import java.util.List;
 
 
 /** A JPanel that can display an AFPChain in a nice way and interact with Jmol.

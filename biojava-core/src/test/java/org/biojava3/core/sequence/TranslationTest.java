@@ -20,26 +20,12 @@
  */
 package org.biojava3.core.sequence;
 
-import static org.biojava3.core.sequence.io.util.IOUtils.close;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.io.DNASequenceCreator;
-import org.biojava3.core.sequence.io.FastaReader;
-import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
-import org.biojava3.core.sequence.io.IUPACParser;
-import org.biojava3.core.sequence.io.ProteinSequenceCreator;
+import org.biojava3.core.sequence.io.*;
 import org.biojava3.core.sequence.io.util.ClasspathResource;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.transcription.Frame;
@@ -50,6 +36,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static org.biojava3.core.sequence.io.util.IOUtils.close;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class TranslationTest {
 

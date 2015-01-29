@@ -21,14 +21,14 @@
 package demo;
 
 
-import java.util.List;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.domain.LocalProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
 import org.biojava.bio.structure.io.FileParsingParameters;
+
+import java.util.List;
 
 public class DemoDomainsplit {
 

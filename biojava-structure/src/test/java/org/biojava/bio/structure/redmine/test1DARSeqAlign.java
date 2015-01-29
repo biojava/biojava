@@ -21,17 +21,10 @@
 package org.biojava.bio.structure.redmine;
 
 
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.NucleotideImpl;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
+import junit.framework.TestCase;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
-
-import junit.framework.TestCase;
 
 /** test for https://redmine.open-bio.org/issues/3282
  * 

@@ -24,28 +24,11 @@
  */
 package org.biojava.bio.structure.align.gui.autosuggest;
 
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.IllegalComponentStateException;
-import java.awt.Point;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingWorker;
 
 
 

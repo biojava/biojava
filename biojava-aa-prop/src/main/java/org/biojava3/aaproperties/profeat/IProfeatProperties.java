@@ -20,9 +20,9 @@
  */
 package org.biojava3.aaproperties.profeat;
 
-import java.util.Map;
-
 import org.biojava3.core.sequence.ProteinSequence;
+
+import java.util.Map;
 
 public interface IProfeatProperties {
 	/**

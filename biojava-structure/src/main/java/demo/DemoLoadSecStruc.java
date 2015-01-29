@@ -20,13 +20,14 @@
  */
 package demo;
 
-import java.util.Map;
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
+
+import java.util.Map;
 
 public class DemoLoadSecStruc {
     public static void main(String[] args){

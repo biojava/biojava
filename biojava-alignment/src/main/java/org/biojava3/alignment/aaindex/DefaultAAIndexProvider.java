@@ -20,15 +20,15 @@
  */
 package org.biojava3.alignment.aaindex;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
 import org.biojava3.alignment.SubstitutionMatrixHelper;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 
 /** The default provider for AAINDEX loads substitution matrices from the AAINDEX file in the resources directory

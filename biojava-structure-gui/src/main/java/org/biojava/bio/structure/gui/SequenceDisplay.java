@@ -21,37 +21,23 @@
  */
 package org.biojava.bio.structure.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
+import org.biojava.bio.structure.*;
+import org.biojava.bio.structure.align.StructurePairAligner;
+import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
+import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
+import org.biojava.bio.structure.gui.util.AlignedPosition;
+import org.biojava.bio.structure.gui.util.SequenceMouseListener;
+import org.biojava.bio.structure.gui.util.SequenceScalePanel;
+import org.biojava.bio.structure.io.PDBFileReader;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.StructurePairAligner;
-import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
-import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
-import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.bio.structure.gui.SequenceDisplay;
-import org.biojava.bio.structure.gui.util.AlignedPosition;
-import org.biojava.bio.structure.gui.util.SequenceMouseListener;
-import org.biojava.bio.structure.gui.util.SequenceScalePanel;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 

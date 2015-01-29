@@ -24,10 +24,9 @@
  
 package org.biojava.bio.structure.xtal.io;
 
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
  
 public class TransfAlgebraicAdapter extends XmlAdapter<String[], List<String>>{
 

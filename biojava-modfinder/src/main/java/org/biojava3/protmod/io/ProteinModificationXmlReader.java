@@ -24,37 +24,19 @@
 
 package org.biojava3.protmod.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.biojava3.protmod.Component;
-import org.biojava3.protmod.ModificationCategory;
-import org.biojava3.protmod.ModificationCondition;
-import org.biojava3.protmod.ModificationConditionImpl;
-import org.biojava3.protmod.ModificationOccurrenceType;
-import org.biojava3.protmod.ModificationLinkage;
-import org.biojava3.protmod.ProteinModificationImpl;
-import org.biojava3.protmod.ProteinModificationRegistry;
-
+import org.biojava3.protmod.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * 

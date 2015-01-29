@@ -23,9 +23,6 @@
 
 package org.biojava3.ontology.obo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava3.ontology.AlreadyExistsException;
 import org.biojava3.ontology.Ontology;
 import org.biojava3.ontology.Synonym;
@@ -33,6 +30,9 @@ import org.biojava3.ontology.Term;
 import org.biojava3.ontology.utils.Annotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** A  file handler for .obo files
  * 

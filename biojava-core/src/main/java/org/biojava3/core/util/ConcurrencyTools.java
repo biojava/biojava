@@ -23,14 +23,10 @@
 
 package org.biojava3.core.util;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.*;
 
 /**
  * Static utility to easily share a thread pool for concurrent/parallel/lazy execution.  To exit cleanly,

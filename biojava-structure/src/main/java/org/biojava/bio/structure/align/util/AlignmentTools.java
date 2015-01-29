@@ -20,12 +20,7 @@
  */
 package org.biojava.bio.structure.align.util;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
@@ -33,18 +28,8 @@ import org.biojava.bio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

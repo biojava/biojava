@@ -24,6 +24,12 @@
  */
 package org.biojava3.ronn;
 
+import org.biojava3.data.sequence.FastaSequence;
+import org.biojava3.data.sequence.SequenceUtil;
+import org.biojava3.ronn.ModelLoader.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,17 +38,7 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.biojava3.data.sequence.FastaSequence;
-import org.biojava3.data.sequence.SequenceUtil;
-import org.biojava3.ronn.ModelLoader.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.*;
 
 
 /**

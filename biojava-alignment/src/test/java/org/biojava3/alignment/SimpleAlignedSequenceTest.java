@@ -23,10 +23,6 @@
 
 package org.biojava3.alignment;
 
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.core.exceptions.CompoundNotFoundException;
@@ -38,6 +34,10 @@ import org.biojava3.core.sequence.location.SimpleLocation;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
 
 public class SimpleAlignedSequenceTest {
 

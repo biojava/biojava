@@ -20,13 +20,6 @@
  */
 package org.biojava.bio.structure.align.gui.aligpanel;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
-import javax.swing.JTextField;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
@@ -34,6 +27,11 @@ import org.biojava.bio.structure.align.gui.jmol.JmolTools;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.bio.structure.gui.util.AlignedPosition;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class StatusDisplay extends JTextField implements AlignmentPositionListener, WindowListener  {
 

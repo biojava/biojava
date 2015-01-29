@@ -25,12 +25,14 @@
 package org.biojava3.survival.cox;
 
 import org.biojava3.survival.cox.stats.ChiSq;
-//import org.biojava3.survival.cox.comparators.SurvivalInfoComparator;
 import org.biojava3.survival.kaplanmeier.figure.ExpressionFigure;
 import org.biojava3.survival.kaplanmeier.figure.KaplanMeierFigure;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
+//import org.biojava3.survival.cox.comparators.SurvivalInfoComparator;
 
 /** 
  * Holds the results of a cox analysis where calling dump(), toString() will give an output similar to R 

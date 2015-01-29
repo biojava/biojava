@@ -24,13 +24,12 @@
  
 package org.biojava.structure.test.scop;
 
-import java.net.URL;
-
 import junit.framework.TestCase;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.PDBFileParser;
+
+import java.net.URL;
  
 public class TestParsingScopDomainPDB extends TestCase{
 

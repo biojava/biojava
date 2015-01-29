@@ -20,8 +20,11 @@
  */
 package org.biojava.bio.structure.io;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.*;
+import org.biojava.bio.structure.*;
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
+import org.biojava3.structure.StructureIO;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,15 +33,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
-import org.biojava3.structure.StructureIO;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.junit.Assume.assumeNotNull;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Testing parsing of some difficult mmCIF files. 

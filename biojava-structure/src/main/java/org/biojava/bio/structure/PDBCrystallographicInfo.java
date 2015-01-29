@@ -20,12 +20,11 @@
  */
 package org.biojava.bio.structure;
 
-import java.io.Serializable;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.SpaceGroup;
+
+import javax.vecmath.Matrix4d;
+import java.io.Serializable;
 
 /**
  * A class to hold crystallographic information about a PDB structure.

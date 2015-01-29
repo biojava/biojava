@@ -22,11 +22,7 @@
  */
 package org.biojava.bio.structure.io.mmcif;
 
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.AminoAcidImpl;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.HetatomImpl;
-import org.biojava.bio.structure.NucleotideImpl;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.SoftHashMap;

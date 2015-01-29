@@ -19,14 +19,6 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JFrame;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
@@ -38,8 +30,15 @@ import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
+import org.biojava.bio.structure.jama.Matrix;
+
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Displays the dot plot trace for an alignment.

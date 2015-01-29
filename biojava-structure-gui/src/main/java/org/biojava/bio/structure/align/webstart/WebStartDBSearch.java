@@ -20,17 +20,15 @@
  */
 package org.biojava.bio.structure.align.webstart;
 
-import java.util.Arrays;
-import java.util.List;
-
-
-import javax.swing.JOptionPane;
-
 import org.biojava.bio.structure.align.FarmJob;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.gui.GUIFarmJobRunnable;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
+
+import javax.swing.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 

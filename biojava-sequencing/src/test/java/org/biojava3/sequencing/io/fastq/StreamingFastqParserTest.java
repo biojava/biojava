@@ -20,9 +20,9 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.StringReader;
-
 import junit.framework.TestCase;
+
+import java.io.StringReader;
 
 /**
  * Unit test for StreamingFastqParser.

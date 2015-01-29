@@ -20,20 +20,11 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix3d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.bio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
+
+import javax.vecmath.*;
+import java.util.*;
 
 public class HelixAxisAligner extends AxisAligner {
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);

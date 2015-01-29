@@ -21,58 +21,7 @@
  */
 package org.biojava.bio.structure.io;
 
-import static java.lang.Math.min;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.AminoAcidImpl;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Author;
-import org.biojava.bio.structure.Bond;
-//import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Compound;
-import org.biojava.bio.structure.DBRef;
-import org.biojava.bio.structure.Element;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupIterator;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.HetatomImpl;
-import org.biojava.bio.structure.JournalArticle;
-import org.biojava.bio.structure.NucleotideImpl;
-import org.biojava.bio.structure.PDBCrystallographicInfo;
-import org.biojava.bio.structure.PDBHeader;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.SSBond;
-import org.biojava.bio.structure.Site;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
 import org.biojava.bio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
@@ -81,6 +30,22 @@ import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava.bio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.lang.Math.min;
+
+//import org.biojava.bio.structure.Calc;
 
 
 /**

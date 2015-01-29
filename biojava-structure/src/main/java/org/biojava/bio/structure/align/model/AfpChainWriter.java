@@ -24,21 +24,16 @@
 
 package org.biojava.bio.structure.align.model;
 
-import java.io.StringWriter;
-import java.util.List;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.StructureTools;
-
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeSideChainMain;
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.io.StringWriter;
+import java.util.List;
 
 /** A class to convert the data in an AfpChain object to various String outputs.
  *  

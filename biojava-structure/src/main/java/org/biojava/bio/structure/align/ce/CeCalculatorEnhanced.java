@@ -24,16 +24,7 @@
 
 package org.biojava.bio.structure.align.ce;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
@@ -42,6 +33,9 @@ import org.biojava3.alignment.aaindex.ScaledSubstitutionMatrix;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 

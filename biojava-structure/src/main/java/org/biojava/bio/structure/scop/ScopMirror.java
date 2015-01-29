@@ -20,10 +20,10 @@
  */
 package org.biojava.bio.structure.scop;
 
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
+
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import org.biojava.bio.structure.io.util.FileDownloadUtils;
 
 /**
  * Helper class to store paths to the four SCOP files

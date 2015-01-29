@@ -22,10 +22,8 @@
  */
 
 package org.biojava.bio.structure.xtal.io;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.TreeMap;
+
+import org.biojava.bio.structure.xtal.SpaceGroup;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -33,8 +31,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import org.biojava.bio.structure.xtal.SpaceGroup;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.TreeMap;
 
 @XmlRootElement(name="SpaceGroupMapRoot", namespace ="http://www.biojava.org")
 

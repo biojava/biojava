@@ -24,12 +24,13 @@
  */
 package org.biojava3.survival.cox;
 
+import org.apache.commons.math.stat.correlation.Covariance;
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.biojava3.survival.cox.matrix.Matrix;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import org.apache.commons.math.stat.correlation.Covariance;
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
  
 /**
  *

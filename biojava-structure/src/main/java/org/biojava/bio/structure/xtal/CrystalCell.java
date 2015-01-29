@@ -20,16 +20,10 @@
  */
 package org.biojava.bio.structure.xtal;
 
+import javax.vecmath.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import javax.vecmath.Matrix3d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Point3i;
-import javax.vecmath.Tuple3d;
-import javax.vecmath.Vector3d;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

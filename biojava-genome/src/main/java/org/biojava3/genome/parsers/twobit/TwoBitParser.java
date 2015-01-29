@@ -21,14 +21,14 @@
 package org.biojava3.genome.parsers.twobit;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * downloaded from http://storage.bioinf.fbb.msu.ru/~roman/TwoBitParser.java

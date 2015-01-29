@@ -24,14 +24,14 @@
  */
 package org.biojava3.ronn;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-
 import org.biojava3.ronn.ModelLoader.Model;
 import org.biojava3.ronn.ModelLoader.Threshold;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 
 

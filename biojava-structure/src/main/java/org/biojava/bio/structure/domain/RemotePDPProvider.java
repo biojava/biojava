@@ -24,13 +24,6 @@
  */
 package org.biojava.bio.structure.domain;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.client.JFatCatClient;
@@ -38,6 +31,13 @@ import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.biojava.bio.structure.scop.server.XMLUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 
 /** A class that provided PDP assignments that are loaded from a remote web server

@@ -20,11 +20,11 @@
  */
 package org.biojava3.ronn;
 
-import static org.junit.Assert.assertEquals;
-
 import org.biojava3.data.sequence.FastaSequence;
 import org.biojava3.ronn.Jronn.Range;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class JronnTest {

@@ -24,19 +24,19 @@
 
 package org.biojava.bio.structure;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import static org.junit.Assert.*;
-import org.junit.Test;
 
 /** A collection of tests to make sure 4hhb is represented correctly.
  *  

@@ -24,15 +24,6 @@
  */
 package org.biojava.bio.structure.io;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintStream;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -50,6 +41,11 @@ import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
+
+import java.io.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 /**

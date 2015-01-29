@@ -23,19 +23,18 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Formatter;
-import java.util.Locale;
-
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.features.Qualifier;
-import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.util.StringManipulationHelper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Formatter;
+import java.util.Locale;
 
 /**
  * @author mckeee1

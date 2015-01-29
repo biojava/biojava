@@ -24,16 +24,13 @@
 
 package org.biojava.bio.structure.align.gui;
 
+import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.align.webstart.PersistentConfig;
+import org.biojava.bio.structure.align.webstart.WebStartMain;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-
-import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-
-import org.biojava.bio.structure.align.webstart.PersistentConfig;
-import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava.bio.structure.align.webstart.WebStartMain;
 
 
 /** Ask the user to provide a directory containting PDB files. 

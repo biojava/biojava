@@ -24,16 +24,12 @@
  */
 package org.biojava3.core.sequence.storage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.*;
 
 /**
  *

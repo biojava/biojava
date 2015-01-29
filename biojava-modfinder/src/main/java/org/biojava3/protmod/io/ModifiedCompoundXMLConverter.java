@@ -20,27 +20,10 @@
  */
 package org.biojava3.protmod.io;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationRegistry;
-import org.biojava3.protmod.structure.ModifiedCompound;
-import org.biojava3.protmod.structure.ModifiedCompoundImpl;
-import org.biojava3.protmod.structure.StructureAtom;
-import org.biojava3.protmod.structure.StructureAtomLinkage;
-import org.biojava3.protmod.structure.StructureGroup;
+import org.biojava3.protmod.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -50,6 +33,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.*;
 
 public class ModifiedCompoundXMLConverter {
 

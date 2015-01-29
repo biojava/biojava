@@ -20,17 +20,17 @@
  */
 package org.biojava.structure.test.scop;
 
-import static org.junit.Assert.*;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
-
 import org.biojava.bio.structure.scop.BerkeleyScopInstallation;
 import org.biojava.bio.structure.scop.RemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 public class ScopFactoryTest {
 

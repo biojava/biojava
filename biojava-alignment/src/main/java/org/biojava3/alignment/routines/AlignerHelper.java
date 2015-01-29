@@ -23,12 +23,12 @@
 
 package org.biojava3.alignment.routines;
 
+import org.biojava3.alignment.template.AlignedSequence.Step;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import org.biojava3.alignment.template.AlignedSequence.Step;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 

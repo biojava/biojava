@@ -20,22 +20,16 @@
  */
 package org.biojava.bio.structure.io.mmcif;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.LocalPDBDirectory;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.URL;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /** A ChemComp provider that downloads and caches the components.cif file from the wwPDB site. It then loads
  * all chemical components at startup and keeps them in memory. This provider is not used as a default

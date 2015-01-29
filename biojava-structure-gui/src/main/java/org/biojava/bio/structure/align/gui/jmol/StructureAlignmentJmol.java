@@ -25,41 +25,7 @@
 package org.biojava.bio.structure.align.gui.jmol;
 
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
-import java.awt.event.MouseMotionListener;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JTextField;
-
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.PDBHeader;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.MenuCreator;
@@ -69,15 +35,15 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.AligUIManager;
-import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
-import org.biojava.bio.structure.align.gui.jmol.AtomInfoParser;
-import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
-import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
-import org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener;
 import org.biojava.bio.structure.gui.util.color.ColorUtils;
-
-
 import org.jmol.api.JmolViewer;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /** A class that provides a simple GUI for Jmol

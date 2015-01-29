@@ -23,14 +23,8 @@
  */
 package org.biojava3.genome;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-
 import junit.framework.TestCase;
 import junitx.framework.FileAssert;
-
 import org.biojava3.core.sequence.ChromosomeSequence;
 import org.biojava3.core.sequence.GeneSequence;
 import org.biojava3.core.sequence.ProteinSequence;
@@ -40,6 +34,11 @@ import org.biojava3.genome.parsers.gff.GFF3Reader;
 import org.biojava3.genome.parsers.gff.GFF3Writer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 
 /**
  * 

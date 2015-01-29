@@ -20,17 +20,15 @@
  */
 package org.biojava3.aaproperties;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Map;
-
-import javax.xml.bind.JAXBException;
-
-import org.biojava3.aaproperties.PeptideProperties;
 import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Map;
 
 public class CookBookTest {
 	

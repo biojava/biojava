@@ -19,21 +19,18 @@
  */
 package org.biojava3.ronn;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+ import org.biojava3.core.sequence.ProteinSequence;
+ import org.biojava3.core.sequence.compound.AminoAcidCompound;
+ import org.biojava3.data.sequence.FastaSequence;
+ import org.biojava3.data.sequence.SequenceUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-
-
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.data.sequence.FastaSequence;
-import org.biojava3.data.sequence.SequenceUtil;
+ import java.io.FileInputStream;
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.TreeMap;
 
 
 /**

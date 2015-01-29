@@ -20,16 +20,15 @@
  */
 package org.biojava3.alignment;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.biojava3.alignment.Alignments;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.util.ConcurrencyTools;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CookbookMSA {
 

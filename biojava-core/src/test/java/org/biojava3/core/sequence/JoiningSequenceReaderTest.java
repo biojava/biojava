@@ -20,13 +20,13 @@
  */
 package org.biojava3.core.sequence;
 
-import static org.junit.Assert.assertEquals;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.storage.JoiningSequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class JoiningSequenceReaderTest {
 

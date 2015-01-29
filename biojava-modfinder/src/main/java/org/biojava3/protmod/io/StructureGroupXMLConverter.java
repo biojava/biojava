@@ -20,13 +20,13 @@
  */
 package org.biojava3.protmod.io;
 
-import java.io.IOException;
-
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.protmod.structure.StructureGroup;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+
+import java.io.IOException;
 
 public class StructureGroupXMLConverter {
 

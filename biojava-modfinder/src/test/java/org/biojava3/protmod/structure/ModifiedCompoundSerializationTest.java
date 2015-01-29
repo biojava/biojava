@@ -24,27 +24,19 @@
 
 package org.biojava3.protmod.structure;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import junit.framework.TestCase;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModificationRegistry;
 import org.biojava3.protmod.io.ModifiedCompoundXMLConverter;
-import org.biojava3.protmod.structure.ProteinModificationIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import junit.framework.TestCase;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class ModifiedCompoundSerializationTest extends TestCase {
 	

@@ -20,10 +20,10 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
+import org.biojava.bio.structure.Structure;
+
 import java.util.Collections;
 import java.util.List;
-
-import org.biojava.bio.structure.Structure;
 
 public class ClusterProteinChains {
 	private Structure structure = null;

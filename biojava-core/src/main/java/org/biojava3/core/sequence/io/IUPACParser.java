@@ -21,13 +21,6 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -36,6 +29,9 @@ import org.biojava3.core.sequence.io.util.IOUtils;
 import org.biojava3.core.sequence.template.AbstractCompoundSet;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.transcription.Table;
+
+import java.io.InputStream;
+import java.util.*;
 
 
 /**

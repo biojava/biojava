@@ -29,7 +29,6 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
-import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.slf4j.Logger;

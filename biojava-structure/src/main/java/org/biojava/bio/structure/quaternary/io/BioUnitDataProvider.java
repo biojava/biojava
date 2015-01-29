@@ -20,11 +20,11 @@
  */
 package org.biojava.bio.structure.quaternary.io;
 
-import java.util.List;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+
+import java.util.List;
 
 /** Provides access to the data that is needed in order to rebuild the correct biological assembly of a protein.
  * 

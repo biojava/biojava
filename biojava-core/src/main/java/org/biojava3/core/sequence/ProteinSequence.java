@@ -22,19 +22,8 @@
  */
 package org.biojava3.core.sequence;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
-import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.compound.DNACompoundSet;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-
-
+import org.biojava3.core.sequence.compound.*;
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.io.DNASequenceCreator;
 import org.biojava3.core.sequence.io.FastaReader;
@@ -47,6 +36,11 @@ import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.LinkedHashMap;
 
 /**
  * The representation of a ProteinSequence

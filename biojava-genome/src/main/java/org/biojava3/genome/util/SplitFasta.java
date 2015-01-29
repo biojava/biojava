@@ -25,15 +25,15 @@
 
 package org.biojava3.genome.util;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 
 /**

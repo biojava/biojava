@@ -20,20 +20,14 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class HelixSolver {
 	private Subunits subunits = null;

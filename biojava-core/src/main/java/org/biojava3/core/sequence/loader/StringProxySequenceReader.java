@@ -25,21 +25,15 @@
  */
 package org.biojava3.core.sequence.loader;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
+import org.biojava3.core.sequence.AccessionID;
+import org.biojava3.core.sequence.Strand;
+import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
+import org.biojava3.core.sequence.template.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.biojava3.core.sequence.AccessionID;
-
-import org.biojava3.core.sequence.template.SequenceProxyView;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.exceptions.CompoundNotFoundException;
-import org.biojava3.core.sequence.Strand;
-
-import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.ProxySequenceReader;
-import org.biojava3.core.sequence.template.SequenceMixin;
-import org.biojava3.core.sequence.template.SequenceView;
 
 /**
  * An example of a ProxySequenceReader that is created from a String. Used for testing

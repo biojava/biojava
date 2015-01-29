@@ -22,6 +22,7 @@
  */
 package org.biojava.bio.structure.align.ce;
 
+import junit.framework.TestCase;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
@@ -31,8 +32,6 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainFlipper;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-
-import junit.framework.TestCase;
 
 import java.io.IOException;
 

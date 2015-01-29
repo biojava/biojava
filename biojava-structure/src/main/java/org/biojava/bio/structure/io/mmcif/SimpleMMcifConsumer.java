@@ -21,73 +21,11 @@
  */
 package org.biojava.bio.structure.io.mmcif;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.AminoAcidImpl;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Compound;
-import org.biojava.bio.structure.DBRef;
-import org.biojava.bio.structure.Element;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.HetatomImpl;
-import org.biojava.bio.structure.NucleotideImpl;
-import org.biojava.bio.structure.PDBHeader;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureImpl;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.UnknownPdbAminoAcidException;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.io.BondMaker;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
-import org.biojava.bio.structure.io.mmcif.model.AtomSite;
-import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
-import org.biojava.bio.structure.io.mmcif.model.Cell;
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
-import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
-import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
-import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
-import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
-import org.biojava.bio.structure.io.mmcif.model.Entity;
-import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
-import org.biojava.bio.structure.io.mmcif.model.EntitySrcGen;
-import org.biojava.bio.structure.io.mmcif.model.EntitySrcNat;
-import org.biojava.bio.structure.io.mmcif.model.EntitySrcSyn;
-import org.biojava.bio.structure.io.mmcif.model.Exptl;
-import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
-import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
-import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
-import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
-import org.biojava.bio.structure.io.mmcif.model.PdbxPolySeqScheme;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
-import org.biojava.bio.structure.io.mmcif.model.Refine;
-import org.biojava.bio.structure.io.mmcif.model.Struct;
-import org.biojava.bio.structure.io.mmcif.model.StructAsym;
-import org.biojava.bio.structure.io.mmcif.model.StructConn;
-import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
-import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
-import org.biojava.bio.structure.io.mmcif.model.StructRef;
-import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
-import org.biojava.bio.structure.io.mmcif.model.Symmetry;
+import org.biojava.bio.structure.io.mmcif.model.*;
 import org.biojava.bio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -96,6 +34,11 @@ import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava.bio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.

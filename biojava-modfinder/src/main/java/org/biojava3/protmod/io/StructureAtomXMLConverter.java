@@ -20,18 +20,16 @@
  */
 package org.biojava3.protmod.io;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import org.biojava3.core.util.PrettyXMLWriter;
-
-
 import org.biojava3.protmod.structure.StructureAtom;
 import org.biojava3.protmod.structure.StructureGroup;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class StructureAtomXMLConverter {
 

@@ -25,12 +25,11 @@
 package org.biojava.bio.structure;
 
 
+import junit.framework.TestCase;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava3.structure.StructureIO;
 import org.junit.Test;
-
-import junit.framework.TestCase;
 
 public class TestCloning extends TestCase{
 	

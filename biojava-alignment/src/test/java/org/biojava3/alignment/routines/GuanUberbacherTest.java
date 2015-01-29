@@ -23,8 +23,6 @@
 
 package org.biojava3.alignment.routines;
 
-import static org.junit.Assert.*;
-
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SubstitutionMatrixHelper;
 import org.biojava3.alignment.template.GapPenalty;
@@ -37,6 +35,9 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GuanUberbacherTest {
 

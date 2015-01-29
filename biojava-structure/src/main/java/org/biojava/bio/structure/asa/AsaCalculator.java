@@ -20,25 +20,15 @@
  */
 package org.biojava.bio.structure.asa;
 
+import org.biojava.bio.structure.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Point3d;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import javax.vecmath.Point3d;
-
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Element;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.NucleotideImpl;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 

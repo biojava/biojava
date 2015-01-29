@@ -21,13 +21,13 @@
 
 package org.biojava3.ontology;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.biojava3.ontology.utils.Annotatable;
 import org.biojava3.ontology.utils.Annotation;
 import org.biojava3.ontology.utils.SmallAnnotation;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 

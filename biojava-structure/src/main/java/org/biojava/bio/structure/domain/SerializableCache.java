@@ -20,18 +20,13 @@
  */
 package org.biojava.bio.structure.domain;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /** A class that provides all that is necessary to create a Serializable Cache

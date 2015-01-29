@@ -24,14 +24,6 @@
 
 package org.biojava.bio.structure.gui.util;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.gui.autosuggest.AutoSuggestProvider;
@@ -40,6 +32,9 @@ import org.biojava.bio.structure.align.gui.autosuggest.SCOPAutoSuggestProvider;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+
+import javax.swing.*;
+import java.awt.*;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 

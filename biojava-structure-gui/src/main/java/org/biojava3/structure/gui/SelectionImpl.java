@@ -20,9 +20,9 @@
  */
 package org.biojava3.structure.gui;
 
-import java.util.List;
-
 import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
+
+import java.util.List;
 
 public class SelectionImpl implements Selection {
 

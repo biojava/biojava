@@ -26,8 +26,6 @@
 
 package org.biojava.bio.structure.align.fatcat.calc;
 
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.SVDSuperimposer;
@@ -36,6 +34,8 @@ import org.biojava.bio.structure.align.AFPTwister;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.util.List;
 
 /** a class to chain AFPs to an alignment
  * 

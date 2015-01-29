@@ -23,15 +23,9 @@
 
 package org.biojava3.alignment.io;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-
 import org.biojava3.alignment.io.StockholmStructure.DatabaseReference;
+
+import java.util.*;
 
 /**
  * Stores all the content parsed from the #=GF lines

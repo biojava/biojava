@@ -21,7 +21,7 @@
  */
 package org.biojava.bio.structure.gui.util.color;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 
 /**

@@ -20,17 +20,16 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.util.List;
-
-import com.google.common.collect.Lists;
 import com.google.common.collect.ImmutableList;
-
+import com.google.common.collect.Lists;
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.features.QualityFeature;
 import org.biojava3.core.sequence.features.QuantityFeature;
 import org.biojava3.core.sequence.template.AbstractSequence;
+
+import java.util.List;
 
 /**
  * Utility methods for FASTQ formatted sequences.

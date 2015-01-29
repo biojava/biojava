@@ -20,11 +20,11 @@
  */
 package org.biojava.bio.structure.quaternary.io;
 
-import java.util.List;
-
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
+
+import java.util.List;
 
 
 /** Defines the methods that have to be implemented by a class that provides the data that is necessary to recreate the correct biological assembly of a protein.

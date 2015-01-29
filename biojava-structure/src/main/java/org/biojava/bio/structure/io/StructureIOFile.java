@@ -23,11 +23,11 @@
  */
 package org.biojava.bio.structure.io;
 
+import org.biojava.bio.structure.Structure;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import org.biojava.bio.structure.Structure;
 
 /**
  *  StructureIOFile extends StructureProvider with methods specific to 

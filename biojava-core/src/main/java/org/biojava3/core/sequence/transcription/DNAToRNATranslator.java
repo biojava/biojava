@@ -20,10 +20,7 @@
  */
 package org.biojava3.core.sequence.transcription;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.biojava3.core.sequence.RNASequence;
-
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.AbstractCompoundTranslator;
@@ -31,6 +28,9 @@ import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.views.RnaSequenceView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Performs the first stage of transcription by going from DNA to RNA. This

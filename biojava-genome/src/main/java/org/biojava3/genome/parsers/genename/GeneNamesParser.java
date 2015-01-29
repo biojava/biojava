@@ -23,6 +23,10 @@
 
 package org.biojava3.genome.parsers.genename;
 
+import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,10 +34,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava3.core.util.InputStreamProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Parses a file from the www.genenames.org website that contains a mapping of human gene names to other databases
  * 

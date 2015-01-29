@@ -21,20 +21,13 @@
 
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
+import org.biojava.bio.structure.symmetry.geometry.MomentsOfInertia;
+import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.biojava.bio.structure.symmetry.geometry.MomentsOfInertia;
-import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 /**

@@ -24,26 +24,20 @@
 
 package org.biojava.bio.structure.align.webstart;
 
+import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava3.core.util.XMLWriter;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
+import javax.jnlp.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
-
-import javax.jnlp.BasicService;
-import javax.jnlp.FileContents;
-import javax.jnlp.PersistenceService;
-import javax.jnlp.ServiceManager;
-import javax.jnlp.UnavailableServiceException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava3.core.util.XMLWriter;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 
 /** a class to store the config using the Java Web Start

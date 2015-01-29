@@ -21,29 +21,17 @@
  */
 package org.biojava.bio.structure.gui.util;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.gui.AlignmentGui;
+import org.biojava.bio.structure.gui.BiojavaJmol;
+import org.biojava.bio.structure.io.PDBFileReader;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
-
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.io.PDBFileReader;
-
-import org.biojava.bio.structure.align.gui.AlignmentGui;
-import org.biojava.bio.structure.gui.BiojavaJmol;
 
 
 /**

@@ -20,19 +20,18 @@
  */
 package org.biojava.bio.structure.align.ce;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import javax.swing.JPanel;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.jama.Matrix;
+
+import javax.swing.*;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /** A class to wrap some of the strucutre.gui classes using Reflection
  *  

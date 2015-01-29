@@ -23,11 +23,11 @@
  */
 package org.biojava.bio.structure;
 
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.PDBFileReader;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**

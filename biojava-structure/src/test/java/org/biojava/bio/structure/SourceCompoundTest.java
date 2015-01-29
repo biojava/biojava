@@ -22,15 +22,12 @@
 
 package org.biojava.bio.structure;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.List;
-
+import junit.framework.TestCase;
 import org.biojava.bio.structure.io.PDBFileParser;
 
-
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 
 public class SourceCompoundTest extends TestCase{

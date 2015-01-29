@@ -19,16 +19,15 @@
 
 package org.biojava.bio.structure.align.pairwise;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.List;
-
-import javax.swing.JFrame;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.align.helper.JointFragments;
 import org.biojava.bio.structure.jama.Matrix;
+
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
 
 
 /** A class to listen to progress of the structure alignment calculations

@@ -20,17 +20,16 @@
  */
 package org.biojava.bio.structure.symmetry.jmolScript;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import org.biojava.bio.structure.symmetry.core.AxisAligner;
+import org.biojava.bio.structure.symmetry.core.HelixAxisAligner;
+import org.biojava.bio.structure.symmetry.core.RotationAxisAligner;
 
 import javax.vecmath.Color4f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Tuple3d;
-
-import org.biojava.bio.structure.symmetry.core.AxisAligner;
-import org.biojava.bio.structure.symmetry.core.HelixAxisAligner;
-import org.biojava.bio.structure.symmetry.core.RotationAxisAligner;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public abstract class JmolSymmetryScriptGenerator {
 

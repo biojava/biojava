@@ -20,18 +20,13 @@
  */
 package org.biojava.bio.structure.contact;
 
-import static org.junit.Assert.*;
+import org.biojava.bio.structure.*;
+import org.biojava3.structure.StructureIO;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava3.structure.StructureIO;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 
 

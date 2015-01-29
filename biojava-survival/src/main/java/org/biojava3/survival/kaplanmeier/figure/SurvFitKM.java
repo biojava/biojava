@@ -24,14 +24,15 @@
  */
 package org.biojava3.survival.kaplanmeier.figure;
 
-import org.biojava3.survival.data.WorkSheet;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import javax.swing.JFrame;
 import org.biojava3.survival.cox.StrataInfo;
 import org.biojava3.survival.cox.SurvFitInfo;
 import org.biojava3.survival.cox.SurvivalInfo;
+import org.biojava3.survival.data.WorkSheet;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
  
 /**
  * Ported from survfitKM.S When combining multiple entries with same time not

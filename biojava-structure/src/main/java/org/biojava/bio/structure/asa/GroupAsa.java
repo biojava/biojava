@@ -20,11 +20,7 @@
  */
 package org.biojava.bio.structure.asa;
 
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Element;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

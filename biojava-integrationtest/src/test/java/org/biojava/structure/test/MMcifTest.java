@@ -21,27 +21,19 @@
  */
 package org.biojava.structure.test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.DBRef;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.PDBHeader;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
+import junit.framework.TestCase;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
 
-import junit.framework.TestCase;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 
 public class MMcifTest extends TestCase {
 

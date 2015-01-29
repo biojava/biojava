@@ -22,23 +22,6 @@
  */
 package org.biojava.bio.structure.gui.util;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -47,6 +30,12 @@ import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 
 /** A class to define where a structure for the alignment is coming from
  * 

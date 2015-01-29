@@ -22,8 +22,6 @@
 
 package org.biojava3.core.sequence.io;
 
-import java.util.List;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -32,6 +30,8 @@ import org.biojava3.core.sequence.loader.ArrayListProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
+
+import java.util.List;
 
 /**
  * Used to create a ProteinSequence from a String to allow for details

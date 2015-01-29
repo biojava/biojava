@@ -20,8 +20,6 @@
  */
 package org.biojava3.aaproperties.profeat;
 
-import java.util.Map;
-
 import org.biojava3.aaproperties.profeat.IProfeatProperties.ATTRIBUTE;
 import org.biojava3.aaproperties.profeat.IProfeatProperties.DISTRIBUTION;
 import org.biojava3.aaproperties.profeat.IProfeatProperties.GROUPING;
@@ -29,6 +27,8 @@ import org.biojava3.aaproperties.profeat.IProfeatProperties.TRANSITION;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class CookBookTest {
 	

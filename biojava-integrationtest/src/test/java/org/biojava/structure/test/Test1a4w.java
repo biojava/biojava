@@ -24,24 +24,18 @@
 
 package org.biojava.structure.test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import junit.framework.TestCase;
-
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.Site;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 public class Test1a4w extends TestCase{
 

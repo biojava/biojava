@@ -20,10 +20,10 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.io.IOException;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+
+import java.io.IOException;
 
 /** A class that can provide a protein structure object from somewhere.
  * 

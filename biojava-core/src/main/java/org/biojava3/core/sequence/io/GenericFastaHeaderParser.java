@@ -21,8 +21,6 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.util.ArrayList;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
@@ -30,10 +28,12 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
-import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
+import org.biojava3.core.sequence.template.Compound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 /**
  * The default fasta header parser where some headers are well defined based on the source

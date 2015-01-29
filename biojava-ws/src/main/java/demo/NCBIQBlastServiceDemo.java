@@ -20,19 +20,15 @@
  */
 package demo;
 
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.ENTREZ_QUERY;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import org.biojava3.core.sequence.io.util.IOUtils;
 import org.biojava3.ws.alignment.qblast.BlastProgramEnum;
 import org.biojava3.ws.alignment.qblast.NCBIQBlastAlignmentProperties;
 import org.biojava3.ws.alignment.qblast.NCBIQBlastOutputProperties;
 import org.biojava3.ws.alignment.qblast.NCBIQBlastService;
+
+import java.io.*;
+
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.ENTREZ_QUERY;
 
 /**
  * A simple demo showing {@link NCBIQBlastService} usage

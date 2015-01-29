@@ -20,18 +20,10 @@
  */
 package org.biojava3.ontology;
 
-import java.util.AbstractSet;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.biojava3.ontology.utils.Annotation;
-
 import org.biojava3.ontology.utils.WeakValueHashMap;
+
+import java.util.*;
 
 
 

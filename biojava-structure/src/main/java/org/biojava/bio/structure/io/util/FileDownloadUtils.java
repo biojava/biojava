@@ -24,6 +24,9 @@
  */
 package org.biojava.bio.structure.io.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,9 +36,6 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FileDownloadUtils {
 	

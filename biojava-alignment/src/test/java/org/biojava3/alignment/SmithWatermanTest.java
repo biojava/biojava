@@ -23,8 +23,6 @@
 
 package org.biojava3.alignment;
 
-import static org.junit.Assert.*;
-
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.exceptions.CompoundNotFoundException;
@@ -32,6 +30,8 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class SmithWatermanTest {
 

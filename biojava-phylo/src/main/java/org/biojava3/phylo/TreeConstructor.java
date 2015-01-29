@@ -24,16 +24,6 @@
  */
 package org.biojava3.phylo;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Vector;
-
 import org.biojava3.core.sequence.MultipleSequenceAlignment;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -43,13 +33,23 @@ import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
-import org.forester.io.writers.PhylogenyWriter;
-import org.forester.phylogeny.Phylogeny;
+import org.forester.evoinference.distance.NeighborJoining;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.evoinference.matrix.distance.DistanceMatrix;
-import org.forester.evoinference.distance.NeighborJoining;
+import org.forester.io.writers.PhylogenyWriter;
+import org.forester.phylogeny.Phylogeny;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Tree constructor uses the forrester tree library to build phylogenetic trees using neighbor joining algorithm. The distance matrix

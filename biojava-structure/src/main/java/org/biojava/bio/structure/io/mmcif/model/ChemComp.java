@@ -20,13 +20,13 @@
  */
 package org.biojava.bio.structure.io.mmcif.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.bio.structure.io.mmcif.chem.ChemCompTools;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /** A definition for a Chemical Component, as maintained by the wwPDB. For access to all definitions,
  * please download the components.cif.gz file from the wwPDB website.

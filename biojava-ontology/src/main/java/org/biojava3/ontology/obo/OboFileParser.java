@@ -23,23 +23,14 @@
 
 package org.biojava3.ontology.obo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.Vector;
-
 import org.biojava3.ontology.Synonym;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /** A class to parse the content of an OBO file. It delegates handling of the 

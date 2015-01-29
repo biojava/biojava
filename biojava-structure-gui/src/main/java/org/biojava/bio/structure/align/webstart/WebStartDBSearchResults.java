@@ -24,12 +24,11 @@
  */
 package org.biojava.bio.structure.align.webstart;
 
-import java.net.URL;
-
-import javax.swing.JOptionPane;
-
 import org.biojava.bio.structure.align.gui.DBResultTable;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+
+import javax.swing.*;
+import java.net.URL;
 
 public class WebStartDBSearchResults {
 

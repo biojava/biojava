@@ -20,10 +20,10 @@
  */
 package org.biojava3.ws.alignment;
 
-import java.io.InputStream;
-
-import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.Sequence;
+
+import java.io.InputStream;
 /**
  * This interface specifies minimal information needed to execute a pairwise alignment on a remote service.
  * 

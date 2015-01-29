@@ -20,20 +20,11 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
+import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.Point3d;
-
-import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class HelicalRepeatUnit {
 	private Subunits subunits = null;

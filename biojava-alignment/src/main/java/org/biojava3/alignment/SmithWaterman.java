@@ -23,8 +23,6 @@
 
 package org.biojava3.alignment;
 
-import java.util.List;
-
 import org.biojava3.alignment.template.AbstractPairwiseSequenceAligner;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
@@ -32,6 +30,8 @@ import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.List;
 
 /**
  * Smith and Waterman defined an algorithm for pairwise local sequence alignments (best match of sections from each

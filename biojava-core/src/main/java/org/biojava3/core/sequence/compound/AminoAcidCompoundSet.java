@@ -22,16 +22,10 @@
 
 package org.biojava3.core.sequence.compound;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.*;
 
 /**
  * Set of proteinogenic amino acids.  Molecular weights are recorded in daltons (Da) as residues of a chain; monomers

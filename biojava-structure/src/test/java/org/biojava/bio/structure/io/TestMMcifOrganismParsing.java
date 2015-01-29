@@ -24,11 +24,6 @@
 package org.biojava.bio.structure.io;
 
 
-
-
-
-import java.io.IOException;
-
 import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -37,7 +32,10 @@ import org.biojava3.structure.StructureIO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 
 public class TestMMcifOrganismParsing {

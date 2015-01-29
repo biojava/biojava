@@ -20,16 +20,11 @@
  */
 package org.biojava3.ontology.io;
 
+import org.biojava3.ontology.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
-
-import org.biojava3.ontology.AlreadyExistsException;
-import org.biojava3.ontology.Ontology;
-import org.biojava3.ontology.OntologyException;
-import org.biojava3.ontology.OntologyFactory;
-import org.biojava3.ontology.Term;
-import org.biojava3.ontology.Triple;
 
 
 

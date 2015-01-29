@@ -20,6 +20,11 @@
  */
 package org.biojava.bio.structure.rcsb;
 
+import org.biojava.bio.structure.align.client.JFatCatClient;
+import org.biojava.bio.structure.align.client.StructureName;
+import org.biojava.bio.structure.align.util.HTTPConnectionTools;
+import org.biojava.bio.structure.align.xml.RepresentativeXMLConverter;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,11 +33,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.biojava.bio.structure.align.client.JFatCatClient;
-import org.biojava.bio.structure.align.client.StructureName;
-import org.biojava.bio.structure.align.util.HTTPConnectionTools;
-import org.biojava.bio.structure.align.xml.RepresentativeXMLConverter;
 
 /**
  * TODO Move this to {@link Representatives}.

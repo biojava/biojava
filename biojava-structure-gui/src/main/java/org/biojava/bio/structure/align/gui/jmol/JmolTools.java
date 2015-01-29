@@ -20,16 +20,10 @@
  */
 package org.biojava.bio.structure.align.gui.jmol;
 
+import org.biojava.bio.structure.*;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.biojava.bio.structure.AminoAcidImpl;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueNumber;
 
 public class JmolTools {
 

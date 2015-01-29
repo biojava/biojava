@@ -24,17 +24,11 @@
  */
 package org.biojava3.survival.kaplanmeier.figure;
 
-import org.biojava3.survival.cox.CoxCoefficient;
-import org.biojava3.survival.cox.CoxInfo;
-import org.biojava3.survival.cox.SurvFitInfo;
+import org.biojava3.survival.cox.*;
 
-import org.biojava3.survival.cox.SurvivalInfo;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D; 
-import java.awt.RenderingHints;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -43,10 +37,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import org.biojava3.survival.cox.StrataInfo;
 
 /**
  *

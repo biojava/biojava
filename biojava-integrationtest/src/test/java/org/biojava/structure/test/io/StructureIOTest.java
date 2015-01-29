@@ -21,7 +21,6 @@
 package org.biojava.structure.test.io;
 
 import junit.framework.TestCase;
-
 import org.biojava3.structure.StructureIO;
 
 public class StructureIOTest extends TestCase {

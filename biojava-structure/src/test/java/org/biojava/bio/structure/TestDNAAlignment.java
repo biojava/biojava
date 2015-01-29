@@ -24,11 +24,10 @@
 
 package org.biojava.bio.structure;
 
+import junit.framework.TestCase;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
-
-import junit.framework.TestCase;
 
 /** make sure DNA alignments fail gracefully
  * 

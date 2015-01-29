@@ -60,15 +60,15 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.Date;
 
 
 /**

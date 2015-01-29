@@ -20,17 +20,6 @@
  */
 package org.biojava.bio.structure.quaternary.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -44,6 +33,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 

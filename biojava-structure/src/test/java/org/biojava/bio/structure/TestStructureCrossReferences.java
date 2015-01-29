@@ -20,11 +20,6 @@
  */
 package org.biojava.bio.structure;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.contact.StructureInterface;
 import org.biojava.bio.structure.contact.StructureInterfaceList;
@@ -34,6 +29,11 @@ import org.biojava3.structure.StructureIO;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class TestStructureCrossReferences {
 

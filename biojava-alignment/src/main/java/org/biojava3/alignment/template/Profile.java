@@ -23,12 +23,12 @@
 
 package org.biojava3.alignment.template;
 
-import java.util.List;
-
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.List;
 
 /**
  * Defines a data structure for the results of sequence alignment.  Every {@link List} returned is unmodifiable unless

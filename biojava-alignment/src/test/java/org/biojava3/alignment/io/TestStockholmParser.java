@@ -22,14 +22,14 @@ package org.biojava3.alignment.io;
 
 //import java.io.BufferedReader;
 //import java.io.IOException;
-import java.io.InputStream;
-//import java.io.InputStreamReader;
-import java.util.zip.GZIPInputStream;
-
-import org.biojava3.core.sequence.template.AbstractSequence;
-
 
 import junit.framework.TestCase;
+import org.biojava3.core.sequence.template.AbstractSequence;
+
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
+
+//import java.io.InputStreamReader;
 
 public class TestStockholmParser extends TestCase {
 

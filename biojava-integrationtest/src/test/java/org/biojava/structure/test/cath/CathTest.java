@@ -24,7 +24,6 @@
 package org.biojava.structure.test.cath;
 
 import junit.framework.TestCase;
-
 import org.junit.Test;
 
 /**

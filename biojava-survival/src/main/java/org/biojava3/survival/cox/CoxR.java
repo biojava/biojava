@@ -24,13 +24,12 @@
  */
 package org.biojava3.survival.cox;
 
-import java.io.InputStream;
-
 import org.biojava3.survival.cox.matrix.Matrix;
-import org.biojava3.survival.cox.stats.Cholesky2;
 import org.biojava3.survival.cox.stats.ChiSq;
+import org.biojava3.survival.cox.stats.Cholesky2;
 import org.biojava3.survival.data.WorkSheet;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
    

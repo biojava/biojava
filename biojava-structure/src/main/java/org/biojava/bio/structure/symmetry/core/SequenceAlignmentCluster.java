@@ -20,12 +20,6 @@
  */
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
@@ -34,6 +28,8 @@ import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
+
+import java.util.*;
 
 public class SequenceAlignmentCluster implements Cloneable {
 	private QuatSymmetryParameters parameters = null;

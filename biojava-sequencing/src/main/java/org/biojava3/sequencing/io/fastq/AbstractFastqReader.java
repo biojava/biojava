@@ -20,23 +20,14 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.net.URL;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-
-import java.nio.charset.Charset;
-
-import java.util.List;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import com.google.common.io.Resources;
+
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * Abstract reader implementation for FASTQ formatted sequences.

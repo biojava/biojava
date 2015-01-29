@@ -20,6 +20,15 @@
  */
 package org.biojava3.aaproperties;
 
+import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
+import org.biojava3.aaproperties.xml.CaseFreeAminoAcidCompoundSet;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
+import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.io.*;
+import org.biojava3.core.sequence.template.CompoundSet;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,19 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
-import org.biojava3.aaproperties.xml.CaseFreeAminoAcidCompoundSet;
-import org.biojava3.core.exceptions.CompoundNotFoundException;
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.io.FastaReader;
-import org.biojava3.core.sequence.io.GenbankReader;
-import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
-import org.biojava3.core.sequence.io.GenericGenbankHeaderParser;
-import org.biojava3.core.sequence.io.ProteinSequenceCreator;
-import org.biojava3.core.sequence.template.CompoundSet;
 
 public class CommandPrompt {
 	

@@ -21,31 +21,22 @@
 
 package org.biojava3.ws.alignment.qblast;
 
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.CMD;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.DATABASE;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.EMAIL;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.PROGRAM;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.QUERY;
-import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.TOOL;
-import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.RID;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.biojava3.core.sequence.io.util.IOUtils;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentService;
+
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.*;
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.RID;
 
 /**
  * Provides a simple way of submitting BLAST request to the QBlast service at NCBI.

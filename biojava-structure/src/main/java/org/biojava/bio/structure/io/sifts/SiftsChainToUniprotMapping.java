@@ -23,13 +23,12 @@
  */
 package org.biojava.bio.structure.io.sifts;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava3.core.sequence.io.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -38,11 +37,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
-
-import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava3.core.sequence.io.util.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A mapping between UniProt entries and PDB chains.

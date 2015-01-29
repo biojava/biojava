@@ -24,18 +24,13 @@
 
 package demo;
 
-import java.util.List;
-
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.StructureProvider;
 import org.biojava3.structure.StructureIO;
+
+import java.util.List;
 
 /** An example of how to read MMcif files
  * 

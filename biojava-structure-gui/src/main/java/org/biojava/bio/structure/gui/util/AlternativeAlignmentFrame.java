@@ -22,37 +22,26 @@
  */
 package org.biojava.bio.structure.gui.util;
 
-import java.awt.Color;
-import java.awt.Dimension;
+import org.biojava.bio.structure.*;
+import org.biojava.bio.structure.align.StructurePairAligner;
+import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
+import org.biojava.bio.structure.gui.BiojavaJmol;
+import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
+import org.biojava.bio.structure.gui.SequenceDisplay;
+import org.biojava.bio.structure.gui.events.JmolAlignedPositionListener;
+import org.biojava.bio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureImpl;
-import org.biojava.bio.structure.align.StructurePairAligner;
-import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
-import org.biojava.bio.structure.gui.events.JmolAlignedPositionListener;
-import org.biojava.bio.structure.jama.Matrix;
-import org.biojava.bio.structure.gui.BiojavaJmol;
-import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
-import org.biojava.bio.structure.gui.SequenceDisplay;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /** a frame showing the alternative alignments, which are the result of a structure superimposition

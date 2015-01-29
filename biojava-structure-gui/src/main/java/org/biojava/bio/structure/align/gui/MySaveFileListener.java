@@ -20,21 +20,19 @@
  */
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 
 public class MySaveFileListener implements ActionListener {
 

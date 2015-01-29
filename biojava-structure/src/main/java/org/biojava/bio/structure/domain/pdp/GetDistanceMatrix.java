@@ -20,12 +20,7 @@
  */
 package org.biojava.bio.structure.domain.pdp;
 
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Group;
-
-import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.*;
 
 
 public class GetDistanceMatrix {

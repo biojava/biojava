@@ -20,8 +20,6 @@
  */
 package org.biojava3.core.sequence.location;
 
-import java.util.Arrays;
-import java.util.Collection;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
@@ -31,6 +29,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  *

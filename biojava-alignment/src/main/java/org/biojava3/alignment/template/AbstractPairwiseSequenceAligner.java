@@ -23,12 +23,12 @@
 
 package org.biojava3.alignment.template;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implements common code for an {@link Aligner} for a pair of {@link Sequence}s.

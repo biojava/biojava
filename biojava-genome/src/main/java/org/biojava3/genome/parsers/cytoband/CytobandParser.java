@@ -23,6 +23,9 @@
 
 package org.biojava3.genome.parsers.cytoband;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,9 +34,6 @@ import java.net.URL;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Parses the cytoband (karyotype) file from UCSC.

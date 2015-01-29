@@ -25,8 +25,6 @@
 
 package org.biojava3.core.sequence.io;
 
-import java.util.List;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.RNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -35,6 +33,8 @@ import org.biojava3.core.sequence.loader.ArrayListProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
+
+import java.util.List;
 
 /**
  * Used to create a RNA sequence

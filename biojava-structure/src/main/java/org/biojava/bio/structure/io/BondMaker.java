@@ -22,20 +22,13 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.biojava.bio.structure.AminoAcidImpl;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Bond;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.NucleotideImpl;
-import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adds polymer bonds for peptides and nucleotides based on distance cutoffs and

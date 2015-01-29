@@ -23,10 +23,20 @@
 
 package org.biojava.bio.structure.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.StrucAligParameters;
+import org.biojava.bio.structure.align.StructurePairAligner;
+import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
+import org.biojava.bio.structure.align.pairwise.FragmentPair;
+import org.biojava.bio.structure.gui.util.color.*;
+import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator.InterpolationDirection;
+import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.jama.Matrix;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,31 +45,6 @@ import java.awt.event.WindowEvent;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.ListCellRenderer;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.StrucAligParameters;
-import org.biojava.bio.structure.align.StructurePairAligner;
-import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
-import org.biojava.bio.structure.align.pairwise.FragmentPair;
-import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.bio.structure.jama.Matrix;
-import org.biojava.bio.structure.gui.JMatrixPanel;
-import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
-import org.biojava.bio.structure.gui.util.color.*;
-import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator.InterpolationDirection;
 
 
 /** A JPanel that can display the underlying distance matrix 

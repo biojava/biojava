@@ -24,10 +24,11 @@
  */
 package org.biojava3.core.sequence.storage;
 
-import java.util.List;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
+
+import java.util.List;
 
 /**
  * This is a common method that can be used across multiple storage/proxy implementations to

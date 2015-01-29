@@ -24,17 +24,12 @@
 
 package org.biojava.bio.structure.align.ce;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
+import junit.framework.TestCase;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-
 import org.biojava.bio.structure.align.client.JFatCatClient;
-
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainFlipper;
@@ -42,8 +37,9 @@ import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava3.core.util.PrettyXMLWriter;
 
-
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 
 public class TestWebStartClient extends TestCase

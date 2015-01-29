@@ -23,15 +23,6 @@
 
 package org.biojava3.alignment;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Stack;
-import java.util.Vector;
-import java.util.concurrent.Future;
-import javax.swing.tree.TreeNode;
-
 import org.biojava3.alignment.template.GuideTreeNode;
 import org.biojava3.alignment.template.PairwiseSequenceScorer;
 import org.biojava3.alignment.template.Profile;
@@ -39,11 +30,14 @@ import org.biojava3.alignment.template.ProfilePair;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
-
+import org.forester.evoinference.distance.NeighborJoining;
+import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
 import org.forester.phylogeny.PhylogenyNode;
-import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
-import org.forester.evoinference.distance.NeighborJoining;
+
+import javax.swing.tree.TreeNode;
+import java.util.*;
+import java.util.concurrent.Future;
 
 /**
  * Implements a data structure for a guide tree used during progressive multiple sequence alignment.  Leaf

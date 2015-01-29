@@ -25,6 +25,13 @@
  */
 package org.biojava3.core.sequence.loader;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
+import org.biojava3.core.sequence.AccessionID;
+import org.biojava3.core.sequence.Strand;
+import org.biojava3.core.sequence.io.template.SequenceParserInterface;
+import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
+import org.biojava3.core.sequence.template.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -32,18 +39,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.biojava3.core.sequence.template.SequenceProxyView;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.exceptions.CompoundNotFoundException;
-import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.Strand;
-import org.biojava3.core.sequence.io.template.SequenceParserInterface;
-import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.ProxySequenceReader;
-import org.biojava3.core.sequence.template.SequenceMixin;
-import org.biojava3.core.sequence.template.SequenceView;
 
 /**
  * This class represents the storage container of a sequence stored in a fasta file where

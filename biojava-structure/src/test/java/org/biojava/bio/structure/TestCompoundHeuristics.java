@@ -20,7 +20,9 @@
  */
 package org.biojava.bio.structure;
 
-import static org.junit.Assert.*;
+import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.PDBFileParser;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,9 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.PDBFileParser;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class TestCompoundHeuristics {
 	

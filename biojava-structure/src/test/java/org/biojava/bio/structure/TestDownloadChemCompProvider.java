@@ -20,10 +20,9 @@
  */
 package org.biojava.bio.structure;
 
+import junit.framework.TestCase;
 import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-
-import junit.framework.TestCase;
 
 public class TestDownloadChemCompProvider extends TestCase{
 	

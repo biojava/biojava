@@ -24,11 +24,11 @@
 
 package org.biojava.bio.structure;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
 /** an iterator over all atoms of a structure / group. 

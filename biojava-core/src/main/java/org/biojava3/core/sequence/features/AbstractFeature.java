@@ -22,15 +22,14 @@
 
 package org.biojava3.core.sequence.features;
 
+import org.biojava3.core.sequence.location.template.AbstractLocation;
+import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-
-import org.biojava3.core.sequence.location.SequenceLocation;
-import org.biojava3.core.sequence.location.template.AbstractLocation;
-import org.biojava3.core.sequence.template.AbstractSequence;
-import org.biojava3.core.sequence.template.Compound;
 
 /**
  * A feature is currently any descriptive item that can be associated with a sequence position(s)

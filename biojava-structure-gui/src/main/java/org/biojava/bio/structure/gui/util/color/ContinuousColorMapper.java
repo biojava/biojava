@@ -21,7 +21,7 @@
  */
 package org.biojava.bio.structure.gui.util.color;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Provides a mapping between real numbers and Colors.

@@ -20,13 +20,7 @@
  */
 package org.biojava.bio.structure.align.util;
 
-import org.biojava.bio.structure.AtomPositionMap;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueRangeAndLength;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.io.LocalPDBDirectory;
 import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
@@ -45,11 +39,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**

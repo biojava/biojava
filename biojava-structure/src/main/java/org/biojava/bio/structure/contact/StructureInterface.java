@@ -20,20 +20,7 @@
  */
 package org.biojava.bio.structure.contact;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Compound;
-import org.biojava.bio.structure.Element;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.*;
 import org.biojava.bio.structure.asa.AsaCalculator;
 import org.biojava.bio.structure.asa.GroupAsa;
 import org.biojava.bio.structure.io.FileConvert;
@@ -42,6 +29,12 @@ import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**

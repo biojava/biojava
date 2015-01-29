@@ -20,11 +20,10 @@
  */
 package org.biojava.bio.structure.symmetry.geometry;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class RectangularPrism implements Polyhedron {

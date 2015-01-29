@@ -25,26 +25,15 @@
 package org.biojava.bio.structure.align.gui;
 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-
-
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
 import org.biojava.bio.structure.gui.util.ScopSelectPanel;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 public class DBSearchGUI extends JPanel {
 

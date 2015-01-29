@@ -20,8 +20,6 @@
  */
 package demo;
 
-import java.util.List;
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
@@ -31,6 +29,8 @@ import org.biojava.bio.structure.io.mmcif.AllChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
+
+import java.util.List;
 
 
 /** 

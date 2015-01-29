@@ -21,12 +21,11 @@
 
 package org.biojava.bio.structure.symmetry.core;
 
-import java.util.List;
+import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
-
-import org.biojava.bio.structure.symmetry.geometry.SuperPosition;
+import java.util.List;
 
 /**
  *

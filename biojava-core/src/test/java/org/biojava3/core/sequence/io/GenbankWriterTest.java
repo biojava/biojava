@@ -24,16 +24,15 @@
 package org.biojava3.core.sequence.io;
 
 
+import junit.framework.TestCase;
+import org.biojava3.core.sequence.DNASequence;
+import org.junit.Test;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import junit.framework.TestCase;
-
-import org.biojava3.core.sequence.DNASequence;
-import org.junit.Test;
 
 
 /**

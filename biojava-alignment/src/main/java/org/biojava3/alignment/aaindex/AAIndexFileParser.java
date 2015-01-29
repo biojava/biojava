@@ -20,22 +20,18 @@
  */
 package org.biojava3.alignment.aaindex;
 
+import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-
 import java.util.Map;
-
-import org.biojava3.alignment.template.SubstitutionMatrix;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 
 
 

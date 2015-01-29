@@ -20,12 +20,12 @@
  */
 package org.biojava.bio.structure.align;
 
+import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 
 /** A class that clusters alternative alignments according to their
  * similarity.

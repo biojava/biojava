@@ -20,9 +20,9 @@
  */
 package org.biojava.bio.structure.align.gui.aligpanel;
 
-import java.awt.Point;
-
 import org.biojava.bio.structure.align.model.AFPChain;
+
+import java.awt.*;
 
 public class AFPChainCoordManager {
 

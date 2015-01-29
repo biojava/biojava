@@ -23,10 +23,10 @@
 
 package org.biojava3.alignment.io;
 
+import org.biojava3.alignment.io.StockholmStructure.DatabaseReference;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import org.biojava3.alignment.io.StockholmStructure.DatabaseReference;
 
 /**
  * Stores all the content parsed from the #=GS lines

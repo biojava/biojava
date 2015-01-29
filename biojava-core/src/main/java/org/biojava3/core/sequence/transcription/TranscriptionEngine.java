@@ -21,22 +21,18 @@
  */
 package org.biojava3.core.sequence.transcription;
 
-import java.util.EnumMap;
-import java.util.Map;
-
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.compound.DNACompoundSet;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.compound.RNACompoundSet;
+import org.biojava3.core.sequence.compound.*;
 import org.biojava3.core.sequence.io.IUPACParser;
+import org.biojava3.core.sequence.io.IUPACParser.IUPACTable;
 import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.io.RNASequenceCreator;
-import org.biojava3.core.sequence.io.IUPACParser.IUPACTable;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.transcription.Table.Codon;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * Used as a way of encapsulating the data structures required to parse DNA to a

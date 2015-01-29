@@ -20,26 +20,20 @@
  */
 package org.biojava.bio.structure.domain;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 
 /**

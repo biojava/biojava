@@ -21,13 +21,6 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -36,6 +29,13 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 
 /**
  * The FastaWriter writes a collection of sequences to an outputStream. FastaWriterHelper should be

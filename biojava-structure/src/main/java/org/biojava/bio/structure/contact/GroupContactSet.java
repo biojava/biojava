@@ -20,13 +20,13 @@
  */
 package org.biojava.bio.structure.contact;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * A set of residue-residue contacts 

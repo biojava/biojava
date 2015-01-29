@@ -20,9 +20,6 @@
  */
 package org.biojava.structure.test.scop;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava.bio.structure.scop.ScopInstallation;
@@ -31,6 +28,9 @@ import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Tests {@link ScopInstallation}.

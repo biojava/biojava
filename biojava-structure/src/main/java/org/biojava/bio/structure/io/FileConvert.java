@@ -21,6 +21,9 @@
  */
 package org.biojava.bio.structure.io;
 
+import org.biojava.bio.structure.*;
+import org.biojava3.core.util.XMLWriter;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -30,18 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.DBRef;
-import org.biojava.bio.structure.Element;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.PDBHeader;
-import org.biojava.bio.structure.SSBond;
-import org.biojava.bio.structure.Site;
-import org.biojava.bio.structure.Structure;
-import org.biojava3.core.util.XMLWriter;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 

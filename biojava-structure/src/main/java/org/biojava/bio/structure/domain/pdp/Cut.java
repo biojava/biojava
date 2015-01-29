@@ -20,9 +20,9 @@
  */
 package org.biojava.bio.structure.domain.pdp;
 
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
+
+import java.util.List;
 
 public class Cut {
 

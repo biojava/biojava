@@ -20,21 +20,16 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.Locale;
-
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.io.template.GenbankHeaderFormatInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.io.GenericInsdcHeaderFormat;
 import org.biojava3.core.util.StringManipulationHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends Compound>
 		extends GenericInsdcHeaderFormat<S, C> implements

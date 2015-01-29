@@ -20,9 +20,9 @@
  */
 package org.biojava.bio.structure.align.model;
 
-import java.io.Serializable;
-
 import org.biojava.bio.structure.jama.Matrix;
+
+import java.io.Serializable;
 
 /** A class to represent a FATCAT AFP
  *

@@ -23,29 +23,11 @@
 package org.biojava.bio.structure.align.gui;
 
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
-import javax.swing.JTabbedPane;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
-import org.biojava.bio.structure.align.gui.AlignmentGui;
-import org.biojava.bio.structure.align.gui.ProgressThreadDrawer;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.AligUIManager;
@@ -55,6 +37,11 @@ import org.biojava.bio.structure.gui.util.ScopSelectPanel;
 import org.biojava.bio.structure.gui.util.StructurePairSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 
 /** A JFrame that allows to trigger a pairwise structure alignment,

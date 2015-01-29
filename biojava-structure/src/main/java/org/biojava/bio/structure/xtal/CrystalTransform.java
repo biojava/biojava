@@ -20,12 +20,11 @@
  */
 package org.biojava.bio.structure.xtal;
 
-import java.io.Serializable;
-
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3i;
 import javax.vecmath.Vector3d;
+import java.io.Serializable;
 
 import static java.lang.Math.abs;
 

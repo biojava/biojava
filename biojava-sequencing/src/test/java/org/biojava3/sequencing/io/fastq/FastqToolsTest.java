@@ -20,13 +20,7 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
 import junit.framework.TestCase;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -34,6 +28,11 @@ import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.features.QualityFeature;
 import org.biojava3.core.sequence.features.QuantityFeature;
 import org.biojava3.core.sequence.template.AbstractSequence;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Unit test for FastqTools.

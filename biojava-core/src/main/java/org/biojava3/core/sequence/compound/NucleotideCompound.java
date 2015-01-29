@@ -25,16 +25,16 @@
  */
 package org.biojava3.core.sequence.compound;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableSet;
+import org.biojava3.core.sequence.template.AbstractCompound;
+import org.biojava3.core.sequence.template.ComplementCompound;
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.biojava3.core.sequence.template.AbstractCompound;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.ComplementCompound;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  *

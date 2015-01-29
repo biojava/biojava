@@ -23,14 +23,12 @@
  */
 package org.biojava.bio.structure.domain.pdp;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement(name = "Domain", namespace ="http://www.biojava.org")
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)

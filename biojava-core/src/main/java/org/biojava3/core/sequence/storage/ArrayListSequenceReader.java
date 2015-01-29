@@ -25,22 +25,16 @@
  */
 package org.biojava3.core.sequence.storage;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
+import org.biojava3.core.sequence.AccessionID;
+import org.biojava3.core.sequence.Strand;
+import org.biojava3.core.sequence.template.*;
+import org.biojava3.core.util.Equals;
+import org.biojava3.core.util.Hashcoder;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.biojava3.core.sequence.AccessionID;
-
-import org.biojava3.core.sequence.template.SequenceProxyView;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.exceptions.CompoundNotFoundException;
-import org.biojava3.core.sequence.Strand;
-
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceMixin;
-import org.biojava3.core.sequence.template.SequenceReader;
-import org.biojava3.core.sequence.template.SequenceView;
-import org.biojava3.core.util.Equals;
-import org.biojava3.core.util.Hashcoder;
 
 /**
  * Stores a Sequence as a collection of compounds in an ArrayList

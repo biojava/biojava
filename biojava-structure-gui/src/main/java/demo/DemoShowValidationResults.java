@@ -23,25 +23,18 @@
 
 package demo;
 
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
+import org.biojava3.structure.StructureIO;
+import org.biojava3.structure.validation.*;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
-import org.biojava3.structure.StructureIO;
-import org.biojava3.structure.validation.AngleOutlier;
-import org.biojava3.structure.validation.BondOutlier;
-import org.biojava3.structure.validation.Clash;
-import org.biojava3.structure.validation.Entry;
-import org.biojava3.structure.validation.ModelledSubgroup;
-
-import org.biojava3.structure.validation.WwPDBValidationInformation;
 
 public class DemoShowValidationResults {
 

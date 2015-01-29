@@ -20,21 +20,16 @@
  */
 package org.biojava3.ws.hmmer;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.biojava3.core.sequence.ProteinSequence;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.biojava3.core.sequence.ProteinSequence;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 
 /** Makes remote calls to the Hmmer3 web site and returns Pfam domain annotations for an input protein sequence.

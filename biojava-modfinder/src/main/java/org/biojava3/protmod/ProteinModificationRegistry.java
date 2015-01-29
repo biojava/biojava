@@ -24,18 +24,12 @@
 
 package org.biojava3.protmod;
 
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.biojava3.protmod.io.ProteinModificationXmlReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * This class serves as a instance registry by maintaining 

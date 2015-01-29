@@ -23,17 +23,13 @@
  */
 package org.biojava3.core.sequence.views;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.compound.RNACompoundSet;
-import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.ProxySequenceReader;
-import org.biojava3.core.sequence.template.SequenceProxyView;
-import org.biojava3.core.sequence.template.Sequence;
-import org.biojava3.core.sequence.template.SequenceMixin;
+import org.biojava3.core.sequence.template.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Attempts to do on the fly translation of RNA by not requesting the compounds

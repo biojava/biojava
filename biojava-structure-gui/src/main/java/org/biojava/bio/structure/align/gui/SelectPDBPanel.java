@@ -20,16 +20,6 @@
  */
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.io.IOException;
-
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -40,6 +30,10 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureProvider;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
 
 
 /** A Panel that allows user to specify PDB & chain ID, as well as sub-ranges

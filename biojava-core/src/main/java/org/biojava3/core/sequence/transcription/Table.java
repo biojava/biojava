@@ -21,14 +21,14 @@
  */
 package org.biojava3.core.sequence.transcription;
 
-import java.util.List;
-
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.util.Equals;
 import org.biojava3.core.util.Hashcoder;
+
+import java.util.List;
 
 /**
  * Provides a way of separating us from the specific {@link IUPACTable} even

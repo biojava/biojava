@@ -24,8 +24,8 @@
  */
 package org.biojava3.survival.kaplanmeier.metadata;
 
-import org.biojava3.survival.data.WorkSheet;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.biojava3.survival.data.WorkSheet;
 
 /**
  *

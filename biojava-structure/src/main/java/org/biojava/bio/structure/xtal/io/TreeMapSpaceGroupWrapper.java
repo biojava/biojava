@@ -24,11 +24,7 @@
  */
 package org.biojava.bio.structure.xtal.io;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.Serializable;
-import java.util.TreeMap;
+import org.biojava.bio.structure.xtal.SpaceGroup;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,8 +33,11 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.biojava.bio.structure.xtal.SpaceGroup;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.TreeMap;
 
 
 

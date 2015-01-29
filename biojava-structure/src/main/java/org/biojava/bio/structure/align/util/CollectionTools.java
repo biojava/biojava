@@ -20,7 +20,8 @@
  */
 package org.biojava.bio.structure.align.util;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Utilities for working with collections.
