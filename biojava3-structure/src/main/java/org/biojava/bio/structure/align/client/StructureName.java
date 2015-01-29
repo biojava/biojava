@@ -1,12 +1,9 @@
 package org.biojava.bio.structure.align.client;
 
 
-import org.biojava.bio.structure.ResidueRange;
-import org.biojava.bio.structure.StructureIdentifier;
 import org.biojava.bio.structure.align.util.AtomCache;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.regex.Matcher;
 
 
@@ -14,18 +11,14 @@ import java.util.regex.Matcher;
  * 
  * @see #getName the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
  */
-public class StructureName implements Comparable<StructureName>, Serializable, StructureIdentifier{
+public class StructureName implements Comparable<StructureName>, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4021229518711762954L;
 	protected String name;
 	protected String pdbId;
 	protected String chainId;
 
 	String cathPattern = "[0-9][a-z0-9][a-z0-9][a-z0-9].[0-9][0-9]";
-
 
 	private enum Source {
 		PDB,
@@ -34,8 +27,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		CATH
 	};
 
-	Source mySource = null; 
-	private  List<ResidueRange> ranges ;
+	Source mySource = null;
 	
 	public StructureName(String name){
 		if ( name.length() <  4)
@@ -46,19 +38,13 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		this.pdbId = parsePdbId();
 
 		this.chainId = parseChainId();
-		
-		this.ranges = parseRanges();
-	}
 
-	private List<ResidueRange> parseRanges() {
-		return ResidueRange.parseMultiple(name.substring(name.indexOf('.') + 1));
 	}
 
 	/** PDB IDs are always returned as upper case
 	 * 
 	 * @return upper case PDB ID
 	 */
-	@Override
 	public String getPdbId(){
 
 		return pdbId;
@@ -217,25 +203,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		return name.length() == 7 && name.matches(cathPattern);
 	}
 
-	@Override
-	public String getIdentifier() {
-		return name;
-	}
-
-	@Override
-	public List<ResidueRange> getResidueRanges() {
-		return ranges;
-	}
-
-	@Override
-	public List<String> getRanges() {
-		return ResidueRange.toStrings(ranges);
-	}
-
-	public boolean hasRanges(){
-		return (ranges != null && !ranges.isEmpty());
-	}
-	
 	public boolean isPdbId(){
 		return name.length() == 4;
 	}

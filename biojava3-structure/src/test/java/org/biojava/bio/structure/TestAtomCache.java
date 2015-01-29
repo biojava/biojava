@@ -43,6 +43,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+// TODO dmyersturnbull: we should merge TestAtomCache and AtomCacheTest
 public class TestAtomCache {
 	
 	public static final String lineSplit = System.getProperty("file.separator");
@@ -71,7 +72,7 @@ public class TestAtomCache {
 	}
 
 	// TODO dmyersturnbull: Which of these syntaxes do we support? We should re-enable after
-//	@Test
+	@Test
 	public void testAtomCacheNameParsing() throws IOException, StructureException {
 
 
