@@ -22,22 +22,24 @@
  */
 package org.biojava.structure.test;
 
+import static org.junit.Assume.assumeNoException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import junit.framework.TestCase;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.ResidueRange;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
-import static org.junit.Assume.*;
-
-import junit.framework.TestCase;
 
 public class StructureToolsTest extends TestCase {
 
@@ -53,6 +55,7 @@ public class StructureToolsTest extends TestCase {
 		PDBFileParser pdbpars = new PDBFileParser();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(false);
+		params.setLoadChemCompInfo(false);
 
 		pdbpars.setFileParsingParameters(params);
 
@@ -79,7 +82,7 @@ public class StructureToolsTest extends TestCase {
 
 		inStream.close();
 
-		// Load structure2
+		// Load structure3
 		inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
 		assertNotNull(inStream);
 
@@ -251,7 +254,7 @@ public class StructureToolsTest extends TestCase {
 	public void testStructureToolsRegexp(){
 
 
-		Pattern p =  StructureTools.pdbNumRangeRegex;
+		Pattern p =  ResidueRange.RANGE_REGEX;
 
 		String t2 = "A_10-20";
 		Matcher m2 = p.matcher(t2);

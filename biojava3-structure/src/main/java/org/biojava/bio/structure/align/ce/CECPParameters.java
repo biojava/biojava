@@ -33,9 +33,7 @@ public class CECPParameters extends CeParameters {
 	
 	public CECPParameters() {
 		super();
-		duplicationHint = DuplicationHint.SHORTER;
-		minCPLength = DEFAULT_MIN_CP_LENGTH;
-		setMaxGapSize(0);
+		// super calls reset();
 	}
 
 	@Override

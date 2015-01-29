@@ -72,6 +72,12 @@ public enum ResidueType implements Serializable {
    public final PolymerType polymerType;
 
    /**
+    * Gets the associated PolymerType, which are less specific
+    * @return
+    */
+   public PolymerType getPolymerType() {return polymerType;}
+   
+   /**
     * String value of the type
     */
    public final String chem_comp_type;

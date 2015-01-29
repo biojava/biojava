@@ -24,9 +24,11 @@
 package org.biojava.bio.structure;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,7 +46,17 @@ public class ResidueRange {
 	private final ResidueNumber end;
 	private final ResidueNumber start;
 
-	public static final String RANGE_REGEX = "^([a-zA-Z])+[_:](?:(-?\\d+[a-zA-Z]?)-(-?\\d+[a-zA-Z]?))?$";
+	public static final Pattern RANGE_REGEX = Pattern.compile(
+			"^\\s*([a-zA-Z0-9]+|_)" + //chain ID. Be flexible here, rather than restricting to 4-char IDs
+			"(?:" + //begin range, this is a "non-capturing group"
+				"(?::|_|:$|_$|$)" + //colon or underscore, could be at the end of a line, another non-capt. group.
+				"(?:"+ // another non capturing group for the residue range
+					"([-+]?[0-9]+[A-Za-z]?)" + // first residue
+					"\\s*-\\s*" + // -
+					"([-+]?[0-9]+[A-Za-z]?)" + // second residue
+				")?+"+
+			")?" + //end range
+			"\\s*");
 
 	/**
 	 * @param s
@@ -54,7 +66,7 @@ public class ResidueRange {
 	public static ResidueRange parse(String s) {
 		ResidueNumber start = null, end = null;
 		String chain = null;
-		Matcher matcher = match(s);
+		Matcher matcher = RANGE_REGEX.matcher(s);
 		if (matcher.matches()) {
 			try {
 				chain = matcher.group(1);
@@ -146,7 +158,8 @@ public class ResidueRange {
 	}
 
 	/**
-	 * Returns the ResidueNumber that is at position {@code positionInRange} in <em>this</em> ResidueRange.
+	 * Returns the ResidueNumber that is at position {@code positionInRange} in
+	 * <em>this</em> ResidueRange.
 	 * @return The ResidueNumber, or false if it does not exist or is not within this ResidueRange
 	 */
 	public ResidueNumber getResidue(int positionInRange, AtomPositionMap map) {
@@ -165,9 +178,13 @@ public class ResidueRange {
 	 * @return True if and only if {@code residueNumber} is within this ResidueRange
 	 */
 	public boolean contains(ResidueNumber residueNumber, AtomPositionMap map) {
-		if (residueNumber == null) throw new IllegalArgumentException("Can't find a null ResidueNumber");
-		if (map == null) throw new IllegalArgumentException("The AtomPositionMap must be non-null");
-		if (getStart() == null || getEnd() == null) throw new IllegalArgumentException("The bounds of this ResidueNumber aren't known");
+		if (residueNumber == null)
+			throw new NullPointerException("Can't find a null ResidueNumber");
+		if (map == null)
+			throw new NullPointerException("The AtomPositionMap must be non-null");
+		// TODO treat missing bounds as full chain
+		if (getStart() == null || getEnd() == null)
+			throw new IllegalArgumentException("The bounds of this ResidueNumber aren't known");
 		Integer pos = map.getPosition(residueNumber);
 		if (pos == null) throw new IllegalArgumentException("Couldn't find residue " + residueNumber.printFull());
 		Integer startPos = map.getPosition(getStart());
@@ -182,46 +199,43 @@ public class ResidueRange {
 	 * Stores the contents of {@code map} until the iterator is finished, so calling code should set the iterator to {@code null} if it did not finish.
 	 */
 	public Iterator<ResidueNumber> iterator(final AtomPositionMap map) {
-		return iterator(map, null);
-	}
-
-	/**
-	 * Returns a new Iterator over every {@link ResidueNumber} in this ResidueRange.
-	 * Stores the contents of {@code map} until the iterator is finished, so calling code should set the iterator to {@code null} if it did not finish.
-	 */
-	public Iterator<ResidueNumber> iterator(final AtomPositionMap map, Integer length) {
-		// get the length without the side effect of setting it
-		final int theLength = length==null? map.calcLength(start, end) : length;
+		//Use Entries to guarentee not null
+		final Iterator<Entry<ResidueNumber, Integer>> entryIt = map.getNavMap().entrySet().iterator();
+		if(! entryIt.hasNext()) {
+			// empty iterator
+			return Arrays.asList(new ResidueNumber[0]).iterator();
+		}
+		// Peek at upcoming entry
+		
 		return new Iterator<ResidueNumber>() {
-			private ResidueNumber[] residueNumbers = new ResidueNumber[map.getNavMap().size()];
-			private int i = -1;
-			@Override
-			public boolean hasNext() {
-				return i < theLength;
-			}
-			@Override
-			public ResidueNumber next() {
-				if (i == -1) {
-					residueNumbers = new ResidueNumber[map.getNavMap().size()];
-					int j = 0;
-					for (Map.Entry<ResidueNumber,Integer> entry : map.getNavMap().entrySet()) {
-						residueNumbers[j] = entry.getKey();
-						if (contains(entry.getKey(), map)) {
-							j++;
-						}
+			Entry<ResidueNumber,Integer> next = loadNext();
+			
+			private Entry<ResidueNumber,Integer> loadNext() {
+
+				while( entryIt.hasNext() ) {
+					next = entryIt.next();
+					ResidueNumber nextPos = next.getKey();
+					if( contains(nextPos, map)) {
+						// loaded a valid next value
+						return next;
 					}
 				}
-				i++;
-				ResidueNumber rn = residueNumbers[i];
-				// let's assume we're not going to use this anymore
-				// destroy array to free memory
-				// we can always reconstruct
-				if (i > theLength) {
-					residueNumbers = null;
-					i = -1;
-				}
-				return rn;
+				next = null;
+				return next;
 			}
+
+			@Override
+			public boolean hasNext() {
+				return next != null;
+			}
+
+			@Override
+			public ResidueNumber next() {
+				ResidueNumber pos = next.getKey();
+				loadNext();
+				return pos;
+			}
+
 			@Override
 			public void remove() {
 				throw new UnsupportedOperationException("Not modifiable");
@@ -304,25 +318,6 @@ public class ResidueRange {
 			if (i < ranges.size() - 1) sb.append(",");
 		}
 		return sb.toString();
-	}
-	
-	/**
-	 * Matches the string with a regex pattern that matches all recognizable range formats.
-	 * @param s A string to match against
-	 * @return A Matcher run against {@code s}; contains 1 or 3 groups: {@code matcher.group(1)} is the chain Id, and optionally {@code matcher.group(2)} and {@code matcher.group(3)} are the start and end residues, respectively.
-	 */
-	public static Matcher match(String s) {
-		Pattern pattern = Pattern.compile(RANGE_REGEX);
-		Matcher matcher = pattern.matcher(s);
-		matcher.find();
-		return matcher;
-	}
-	
-	/**
-	 * Determines whether a String is of a recognizable range format
-	 */
-	public static boolean looksLikeRange(String s) {
-		return match(s).matches();
 	}
 
 }

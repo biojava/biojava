@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A chain, a start residue, and an end residue.
  *
  * Also stores a length. Because of insertion codes, this length is not necessarily {@code end − start}.
  */
 public class ResidueRangeAndLength extends ResidueRange {
+	private static final Logger logger = LoggerFactory.getLogger(ResidueRangeAndLength.class);
 
 	private final int length;
 
@@ -29,16 +33,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 	 */
 	@Override
 	public Iterator<ResidueNumber> iterator(AtomPositionMap map) {
-		return super.iterator(map, length); // just a bit faster
-	}
-
-	/**
-	 * Returns a new Iterator over every {@link ResidueNumber} in this ResidueRange.
-	 * Stores the contents of {@code map} until the iterator is finished, so calling code should set the iterator to {@code null} if it did not finish.
-	 */
-	@Override
-	public Iterator<ResidueNumber> iterator(AtomPositionMap map, Integer length) {
-		return super.iterator(map, length); // just a bit faster
+		return super.iterator(map); // just a bit faster
 	}
 
 	/**
@@ -62,6 +57,11 @@ public class ResidueRangeAndLength extends ResidueRange {
 	}
 
 	/**
+	 * Parses a residue range.
+	 * 
+	 * The AtomPositionMap is used to calculate the length and fill in missing
+	 * information, such as for whole chains ('A:'). Supports the special chain
+	 * name '_' for single-chain structures.
 	 * @param s
 	 *            A string of the form chain_start-end. For example: <code>A.5-100</code>.
 	 * @return The unique ResidueRange corresponding to {@code s}.
@@ -69,31 +69,38 @@ public class ResidueRangeAndLength extends ResidueRange {
 	public static ResidueRangeAndLength parse(String s, AtomPositionMap map) {
 		ResidueRange rr = parse(s);
 		ResidueNumber start = rr.getStart();
+		
+		String chain = rr.getChainId();
+		
+		// handle special "_" chain
+		if(chain == null || chain.equals("_")) {
+			ResidueNumber first = map.getNavMap().firstKey();
+			chain = first.getChainId();
+			// Quick check for additional chains. Not guaranteed.
+			if( ! map.getNavMap().lastKey().getChainId().equals(chain) ) {
+				logger.warn("Multiple possible chains match '_'. Using chain {}",chain);
+			}
+		}
 
 		// get a non-null start and end
 		// if it's the whole chain, choose the first and last residue numbers in the chain
 		if (start==null) {
-			if (rr.getChainId() == null) {
-				start = map.getFirst();
-			} else {
-				start = map.getFirst(rr.getChainId());
-			}
+			start = map.getFirst(chain);
 		}
 		ResidueNumber end = rr.getEnd();
 		if (end==null) { // should happen iff start==null
-			if (rr.getChainId() == null) {
-				end = map.getLast();
-			} else {
-				end = map.getLast(rr.getChainId());
-			}
+			end = map.getLast(chain);
 		}
 
+		// Replace '_'
+		start.setChainId(chain);
+		end.setChainId(chain);
+		
 		// now use those to calculate the length
 		// if start or end is null, will throw NPE
-		int length = map.calcLength(start, end);
+		int length = map.getLength(start, end);
 
-		// to avoid confusing the user, don't add the start and end if they weren't specified in the string s
-		return new ResidueRangeAndLength(rr.getChainId(), rr.getStart(), rr.getEnd(), length);
+		return new ResidueRangeAndLength(chain, start, end, length);
 	}
 
 	public static List<ResidueRangeAndLength> parseMultiple(List<String> ranges, AtomPositionMap map) {
