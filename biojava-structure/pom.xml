@@ -14,13 +14,13 @@
 
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava3-alignment</artifactId>
+			<artifactId>biojava-alignment</artifactId>
 			<version>4.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava3-core</artifactId>
+			<artifactId>biojava-core</artifactId>
 			<version>4.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
