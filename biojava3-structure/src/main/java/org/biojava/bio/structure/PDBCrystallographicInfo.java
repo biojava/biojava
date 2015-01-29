@@ -30,8 +30,6 @@ public class PDBCrystallographicInfo implements Serializable {
 	 */
 	private Matrix4d[] ncsOperators;
 	
-	private int z;
-	
 	public PDBCrystallographicInfo() {
 		
 	}
@@ -112,18 +110,11 @@ public class PDBCrystallographicInfo implements Serializable {
 	
 	/**
 	 * Return the z, i.e. the multiplicity of the space group times the number of chains in asymmetric unit
-	 * @return the z
+	 * @return 0
+	 * @deprecated As of 4.0, use {@link SpaceGroup#getMultiplicity()} and {@link Structure#size()}
 	 */
 	public int getZ() {		
-		return z;
-	}
-	
-	/**
-	 * Set the z 
-	 * @param z
-	 */
-	public void setZ(int z) {
-		this.z = z;
+		return 0;
 	}
 	
 	/**

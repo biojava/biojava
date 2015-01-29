@@ -1532,9 +1532,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 
 	private void pdb_CRYST1_Handler(String line) {    
-        // don't process incomplete CRYST1 records
-		if (line.length() < 69) {
-			logger.info("CRYST1 record has fewer than 69 columns: will ignore it");
+        // for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 63
+		if (line.length() < 63) {
+			logger.warn("CRYST1 record has fewer than 63 columns: will ignore it");
 			return;
 		}
 		
@@ -1545,7 +1545,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		float beta;
 		float gamma;
 		String spaceGroup = "";
-		int z;
 
 		try {
 			a = Float.parseFloat(line.substring(6,15).trim());
@@ -1554,12 +1553,17 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			alpha = Float.parseFloat(line.substring(33,40).trim());
 			beta = Float.parseFloat(line.substring(40,47).trim());
 			gamma = Float.parseFloat(line.substring(47,54).trim());
-			z = Integer.parseInt(line.substring(66,70).trim());
 		} catch (NumberFormatException e) {
 			logger.info("could not parse CRYST1 record ("+e.getMessage()+") from line and ignoring it " + line);
 			return ;
 		}
-		spaceGroup = line.substring(55,66).trim();
+		if (line.length()>=66) {
+			// for well formatted files
+			spaceGroup = line.substring(55,66).trim();
+		} else {
+			// for not-so-well formatted files, e.g. phenix-produced ones: they lack a Z value
+			spaceGroup = line.substring(55,line.length()).trim();
+		}
 		
 		CrystalCell xtalCell = new CrystalCell();
 		xtalCell.setA(a);
@@ -1582,7 +1586,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
         SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
         if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
         crystallographicInfo.setSpaceGroup(sg);
-        crystallographicInfo.setZ(z);
 	}
 
 	/**

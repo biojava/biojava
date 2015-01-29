@@ -1271,12 +1271,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(null);
 			logger.info("could not parse some cell parameters ("+e.getMessage()+"), ignoring _cell ");
 		}
-		try {
-			// if Z parsing fails it is not so important
-			structure.getPDBHeader().getCrystallographicInfo().setZ(Integer.parseInt(cell.getZ_PDB()));
-		} catch (NumberFormatException e) {
-			logger.info("could not parse some the Z parameter from _cell ");
-		}
 	}
 	
 	@Override

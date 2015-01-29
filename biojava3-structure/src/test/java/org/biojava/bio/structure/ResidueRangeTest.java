@@ -24,7 +24,6 @@
 package org.biojava.bio.structure;
 
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.bio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.junit.Before;
 import org.junit.Test;

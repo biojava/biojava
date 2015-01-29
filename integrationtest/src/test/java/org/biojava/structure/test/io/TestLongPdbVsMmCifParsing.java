@@ -309,10 +309,12 @@ public class TestLongPdbVsMmCifParsing {
 			PDBCrystallographicInfo ciPdb = hPdb.getCrystallographicInfo();
 			PDBCrystallographicInfo ciCif = hCif.getCrystallographicInfo();
 			
-			assertNotNull(ciPdb.getSpaceGroup());
-			assertNotNull(ciCif.getSpaceGroup());
+			assertNotNull("space group null in pdb", ciPdb.getSpaceGroup());
+			assertNotNull("space group null in cif", ciCif.getSpaceGroup());
 			assertNotNull("crystal cell null in pdb",ciPdb.getCrystalCell());
 			assertNotNull("crystal cell null in cif",ciCif.getCrystalCell());
+			assertEquals("failed for space group short symbol pdb vs cif",
+					ciPdb.getSpaceGroup().getShortSymbol(), ciCif.getSpaceGroup().getShortSymbol());
 			
 			CrystalCell ccPdb = ciPdb.getCrystalCell();
 			CrystalCell ccCif = ciCif.getCrystalCell();

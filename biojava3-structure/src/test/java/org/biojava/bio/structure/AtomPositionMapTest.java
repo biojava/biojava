@@ -31,7 +31,6 @@ import java.util.NavigableMap;
 
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.LocalPDBDirectory;
-import org.biojava.bio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,7 +75,7 @@ public class AtomPositionMapTest {
 		String pdbId = "3w0e";
 
 		Atom[] atoms = cache.getAtoms(pdbId);
-		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+		AtomPositionMap map = new AtomPositionMap(atoms);
 
 		// Double check that the chain length is correct
 		int chainAlen = cache.getStructure(pdbId).getChainByPDB("A").getAtomGroups(GroupType.AMINOACID).size();
