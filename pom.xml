@@ -546,7 +546,6 @@
 		<module>biojava-ws</module>
 		<module>biojava-protein-disorder</module>
 		<module>biojava-aa-prop</module>
-		<module>biojava-protein-comparison-tool</module>
 		<module>biojava-survival</module>
 		<module>biojava-ontology</module>
 	</modules>
