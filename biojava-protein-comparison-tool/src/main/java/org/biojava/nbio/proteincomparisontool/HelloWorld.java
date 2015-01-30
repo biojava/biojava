@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.proteincomparisontool;
 
+/** A dummy class that does nothing. This is so we can upload protein-comparison-tool.jar to Maven Central
+ * 
+ */
 class HelloWorld{
 
     public HelloWorld(){
