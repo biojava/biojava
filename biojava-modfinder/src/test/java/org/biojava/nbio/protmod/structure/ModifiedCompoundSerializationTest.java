@@ -184,7 +184,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 	}
 
 	public void testFlatFileParsing(){
-		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava3/protmod/parser/modifiedCompound.xml");
+		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava/nbio/protmod/parser/modifiedCompound.xml");
 		assertNotNull(inStream);
 		try {
 			String xml = convertStreamToString(inStream);

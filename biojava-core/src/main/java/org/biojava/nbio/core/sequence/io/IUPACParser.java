@@ -84,7 +84,7 @@ public class IUPACParser {
     return IOD.INSTANCE;
   }
 
-  public static final String      IUPAC_LOCATION = "org/biojava3/core/sequence/iupac.txt";
+  public static final String      IUPAC_LOCATION = "/org/biojava/nbio/core/sequence/iupac.txt";
 
   private InputStream              is;
   private List<IUPACTable>         tables;
