@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>4.0.1-SNAPSHOT</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>	
 	<artifactId>biojava-ws</artifactId>
 	<name>biojava-ws</name>
@@ -12,7 +12,7 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>4.0.1-SNAPSHOT</version>
+			<version>4.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
