@@ -44,7 +44,7 @@
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
 		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
 		<url>https://github.com/biojava/biojava</url>
-		<tag>biojava-3.1.0</tag>
+		<tag>biojava-4.0.0</tag>
 	</scm>
 
 	<!-- This section required for release at Maven Central. For a full list 
