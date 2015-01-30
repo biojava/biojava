@@ -20,17 +20,14 @@
  */
 package demo;
 
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContact;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.GroupContactSet;
-import org.biojava.nbio.structure.StructureIO;
 
 import java.io.IOException;
 
-//import org.biojava.nbio.structure.Group;
-//import org.biojava.nbio.structure.contact.GroupContact;
-//import org.biojava.nbio.structure.io.FileParsingParameters;
 
 public class DemoContacts {
 
