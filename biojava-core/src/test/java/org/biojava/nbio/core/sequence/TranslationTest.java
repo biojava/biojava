@@ -61,13 +61,13 @@ public class TranslationTest {
 	@BeforeClass
 	public static void parseSequences() {
 		InputStream cdsIs = new ClasspathResource(
-				"/org/biojava/nbio/core/sequence/BRCA2-cds.fasta").getInputStream();
+				"org/biojava/nbio/core/sequence/BRCA2-cds.fasta").getInputStream();
 		InputStream pepIs = new ClasspathResource(
-				"/org/biojava/nbio/core/sequence/BRCA2-peptide.fasta").getInputStream();
+				"org/biojava/nbio/core/sequence/BRCA2-peptide.fasta").getInputStream();
 		InputStream volDnaIs = new ClasspathResource(
-				"/org/biojava/nbio/core/sequence/volvox-cds.fasta").getInputStream();
+				"org/biojava/nbio/core/sequence/volvox-cds.fasta").getInputStream();
 		InputStream volPepIs = new ClasspathResource(
-				"/org/biojava/nbio/core/sequence/volvox-peptide.fasta").getInputStream();
+				"org/biojava/nbio/core/sequence/volvox-peptide.fasta").getInputStream();
 
 		try {
 			FastaReader<DNASequence, NucleotideCompound> dnaReader = new FastaReader<DNASequence, NucleotideCompound>(cdsIs,
