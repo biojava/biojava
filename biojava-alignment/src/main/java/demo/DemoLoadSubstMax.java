@@ -20,9 +20,9 @@
  */
 package demo;
 
-import org.biojava3.alignment.SubstitutionMatrixHelper;
-import org.biojava3.alignment.template.SubstitutionMatrix;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.alignment.SubstitutionMatrixHelper;
+import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 
 public class DemoLoadSubstMax {
 

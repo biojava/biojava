@@ -7,7 +7,7 @@
     </Appenders>
     <Loggers>
         <!-- 
-        <Logger name="org.biojava3.core.sequence.loader.GenbankProxySequenceReader" level="debug">
+        <Logger name="org.biojava.nbio.core.sequence.loader.GenbankProxySequenceReader" level="debug">
             <AppenderRef ref="Console"/>
         </Logger>
         -->

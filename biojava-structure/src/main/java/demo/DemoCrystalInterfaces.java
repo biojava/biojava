@@ -21,15 +21,15 @@
 package demo;
 
 
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.contact.*;
-import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.xtal.CrystalBuilder;
-import org.biojava.bio.structure.xtal.CrystalTransform;
-import org.biojava.bio.structure.xtal.SpaceGroup;
-import org.biojava3.structure.StructureIO;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.contact.*;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.xtal.CrystalBuilder;
+import org.biojava.nbio.structure.xtal.CrystalTransform;
+import org.biojava.nbio.structure.xtal.SpaceGroup;
+import org.biojava.nbio.structure.StructureIO;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;

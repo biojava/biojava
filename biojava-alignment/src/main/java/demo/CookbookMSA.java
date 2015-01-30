@@ -24,12 +24,12 @@
  */
 package demo;
 
-import org.biojava3.alignment.Alignments;
-import org.biojava3.alignment.template.Profile;
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.io.FastaReaderHelper;
-import org.biojava3.core.util.ConcurrencyTools;
+import org.biojava.nbio.alignment.Alignments;
+import org.biojava.nbio.alignment.template.Profile;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.io.FastaReaderHelper;
+import org.biojava.nbio.core.util.ConcurrencyTools;
 
 import java.net.URL;
 import java.util.ArrayList;

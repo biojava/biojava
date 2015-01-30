@@ -18,9 +18,11 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava3.aaproperties;
+package org.biojava.nbio.aaproperties;
 
-import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
+import org.biojava.nbio.aaproperties.PeptideProperties;
+import org.biojava.nbio.aaproperties.Utils;
+import org.biojava.nbio.aaproperties.xml.AminoAcidCompositionTable;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

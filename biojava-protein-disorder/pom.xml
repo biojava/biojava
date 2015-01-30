@@ -34,7 +34,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>org.biojava3.ronn.ORonn</mainClass>
+							<mainClass>org.biojava.nbio.ronn.ORonn</mainClass>
 						</manifest>
 						<manifestEntries>
 							<product>JRONN a Java RONN (www.strubi.ox.ac.uk/RONN)</product>

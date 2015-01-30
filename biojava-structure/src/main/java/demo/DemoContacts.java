@@ -20,18 +20,17 @@
  */
 package demo;
 
-import org.biojava.bio.structure.*;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.contact.AtomContact;
-import org.biojava.bio.structure.contact.AtomContactSet;
-import org.biojava.bio.structure.contact.GroupContactSet;
-import org.biojava3.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.contact.AtomContact;
+import org.biojava.nbio.structure.contact.AtomContactSet;
+import org.biojava.nbio.structure.contact.GroupContactSet;
+import org.biojava.nbio.structure.StructureIO;
 
 import java.io.IOException;
 
-//import org.biojava.bio.structure.Group;
-//import org.biojava.bio.structure.contact.GroupContact;
-//import org.biojava.bio.structure.io.FileParsingParameters;
+//import org.biojava.nbio.structure.Group;
+//import org.biojava.nbio.structure.contact.GroupContact;
+//import org.biojava.nbio.structure.io.FileParsingParameters;
 
 public class DemoContacts {
 

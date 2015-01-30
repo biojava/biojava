@@ -24,11 +24,10 @@
 
 package demo;
 
-import org.biojava.bio.structure.*;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.MMCIFFileReader;
-import org.biojava.bio.structure.io.StructureProvider;
-import org.biojava3.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.StructureProvider;
+import org.biojava.nbio.structure.StructureIO;
 
 import java.util.List;
 

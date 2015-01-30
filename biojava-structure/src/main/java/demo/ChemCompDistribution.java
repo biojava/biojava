@@ -20,7 +20,7 @@
  */
 package demo;
 
-import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
 public class ChemCompDistribution {
 

@@ -30,7 +30,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava3-core</artifactId>
+			<artifactId>biojava-core</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

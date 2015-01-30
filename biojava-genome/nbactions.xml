@@ -8,7 +8,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-Xmx2048m -classpath %classpath org.biojava3.genome.GeneFeatureHelper</exec.args>
+                <exec.args>-Xmx2048m -classpath %classpath org.biojava.nbio.genome.GeneFeatureHelper</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -20,7 +20,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -Xmx2048m -classpath %classpath org.biojava3.genome.GeneFeatureHelper</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -Xmx2048m -classpath %classpath org.biojava.nbio.genome.GeneFeatureHelper</exec.args>
                 <jpda.listen>true</jpda.listen>
                 <exec.executable>java</exec.executable>
             </properties>
@@ -32,7 +32,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>${profiler.args} -Xmx2048m -classpath %classpath org.biojava3.genome.GeneFeatureHelper</exec.args>
+                <exec.args>${profiler.args} -Xmx2048m -classpath %classpath org.biojava.nbio.genome.GeneFeatureHelper</exec.args>
                 <profiler.action>profile</profiler.action>
                 <exec.executable>${profiler.java}</exec.executable>
             </properties>

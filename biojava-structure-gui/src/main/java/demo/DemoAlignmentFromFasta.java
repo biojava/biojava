@@ -20,20 +20,19 @@
  */
 package demo;
 
-import org.biojava.bio.structure.*;
-import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;
-import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AlignmentTools;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.FastaStructureParser;
-import org.biojava.bio.structure.io.StructureSequenceMatcher;
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.io.CasePreservingProteinSequenceCreator;
-import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
-import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
-import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
+import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
+import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.util.AlignmentTools;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FastaStructureParser;
+import org.biojava.nbio.structure.io.StructureSequenceMatcher;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava.nbio.core.sequence.io.CasePreservingProteinSequenceCreator;
+import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
+import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
+import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

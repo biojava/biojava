@@ -23,7 +23,7 @@
 package demo;
 
 
-import org.biojava.bio.structure.align.gui.AlignmentGui;
+import org.biojava.nbio.structure.align.gui.AlignmentGui;
 
 /**
  * 

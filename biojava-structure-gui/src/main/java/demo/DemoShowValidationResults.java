@@ -23,10 +23,10 @@
 
 package demo;
 
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
-import org.biojava3.structure.StructureIO;
-import org.biojava3.structure.validation.*;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.validation.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;

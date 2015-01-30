@@ -24,15 +24,15 @@
 
 package demo;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava3.core.util.InputStreamProvider;
-import org.biojava3.structure.StructureIO;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.PDBFileReader;
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.StructureIO;
 
 
 /** Example for how to load protein structures (from PDB files).

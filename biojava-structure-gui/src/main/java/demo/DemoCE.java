@@ -24,18 +24,18 @@
 
 package demo;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.StructureAlignment;
-import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.ce.CeParameters;
-import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;
-import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.model.AfpChainWriter;
-import org.biojava.bio.structure.align.util.AFPChainScorer;
-import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.StructureAlignment;
+import org.biojava.nbio.structure.align.StructureAlignmentFactory;
+import org.biojava.nbio.structure.align.ce.CeMain;
+import org.biojava.nbio.structure.align.ce.CeParameters;
+import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
+import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.model.AfpChainWriter;
+import org.biojava.nbio.structure.align.util.AFPChainScorer;
+import org.biojava.nbio.structure.align.util.AtomCache;
 
 public class DemoCE
 {

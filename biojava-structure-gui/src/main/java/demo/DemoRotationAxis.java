@@ -20,16 +20,16 @@
  */
 package demo;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.StructureAlignment;
-import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
-import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.align.util.RotationAxis;
-import org.biojava.bio.structure.jama.Matrix;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.StructureAlignment;
+import org.biojava.nbio.structure.align.StructureAlignmentFactory;
+import org.biojava.nbio.structure.align.ce.CeMain;
+import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
+import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.align.util.RotationAxis;
+import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.IOException;
 

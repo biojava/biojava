@@ -12,8 +12,8 @@
 			
 			<!-- <useAllReactorProjects>true</useAllReactorProjects> -->
 			<includes>
-				<include>org.biojava:biojava3-core</include>				
-				<include>org.biojava:biojava3-structure</include>
+				<include>org.biojava:biojava-core</include>
+				<include>org.biojava:biojava-structure</include>
 
 			</includes>
 			<binaries>

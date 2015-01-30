@@ -21,12 +21,12 @@
 package demo;
 
 
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.domain.LocalProteinDomainParser;
-import org.biojava.bio.structure.domain.pdp.Domain;
-import org.biojava.bio.structure.domain.pdp.Segment;
-import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.domain.LocalProteinDomainParser;
+import org.biojava.nbio.structure.domain.pdp.Domain;
+import org.biojava.nbio.structure.domain.pdp.Segment;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 
 import java.util.List;
 

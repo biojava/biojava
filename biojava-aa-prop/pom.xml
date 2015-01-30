@@ -28,7 +28,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>org.biojava3.aaproperties.CommandPrompt</mainClass>
+							<mainClass>org.biojava.nbio.aaproperties.CommandPrompt</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

@@ -21,25 +21,16 @@ The [Maven Repository](http://biojava.org/download/maven/) contains the jars of 
 If you are using Maven you can add the BioJava repository by adding the following XML to your project pom.xml file:
 
 ``` 
-    <repositories>
-      <repository>
-        <id>biojava-maven-repo</id>
-        <name>BioJava repository</name>
-        <url>http://www.biojava.org/download/maven/</url>			
-      </repository>
-    </repositories>
 
     <dependencies>
       <dependency>
         <groupId>org.biojava</groupId>
-        <artifactId>biojava3-core</artifactId>
-        <version>3.1.0</version>
+        <artifactId>biojava-core</artifactId>
+        <version>4.0.0</version>
       </dependency>
       <!-- other biojava jars as needed -->
     </dependencies>
 ```
-
-Note: for the upcoming BioJava 4.0.0 release we are planning to migrate the hosting to Maven Central and this step should not be required.
 
 
 ### Mailing Lists

@@ -18,9 +18,10 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava3.aaproperties.xml;
+package org.biojava.nbio.aaproperties.xml;
 
-import org.biojava3.aaproperties.PeptideProperties;
+import org.biojava.nbio.aaproperties.PeptideProperties;
+import org.biojava.nbio.aaproperties.xml.*;
 import org.junit.Test;
 
 import javax.xml.bind.JAXBContext;

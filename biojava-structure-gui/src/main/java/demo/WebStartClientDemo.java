@@ -24,7 +24,7 @@
 
 package demo;
 
-import org.biojava.bio.structure.align.webstart.WebStartMain;
+import org.biojava.nbio.structure.align.webstart.WebStartMain;
 
 public class WebStartClientDemo
 {

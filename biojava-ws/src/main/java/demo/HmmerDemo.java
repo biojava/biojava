@@ -20,14 +20,14 @@
  */
 package demo;
 
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
-import org.biojava3.ws.hmmer.HmmerDomain;
-import org.biojava3.ws.hmmer.HmmerResult;
-import org.biojava3.ws.hmmer.HmmerScan;
-import org.biojava3.ws.hmmer.RemoteHmmerScan;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
+import org.biojava.nbio.ws.hmmer.HmmerDomain;
+import org.biojava.nbio.ws.hmmer.HmmerResult;
+import org.biojava.nbio.ws.hmmer.HmmerScan;
+import org.biojava.nbio.ws.hmmer.RemoteHmmerScan;
 
 import java.util.SortedSet;
 

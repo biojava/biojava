@@ -24,7 +24,7 @@
 
 package demo;
 
-import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.nbio.structure.align.ce.CeMain;
 
 public class DemoCommandLineStartup
 {

@@ -20,10 +20,10 @@
  */
 package demo;
 
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
-import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
-import org.biojava3.structure.StructureIO;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
+import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
+import org.biojava.nbio.structure.StructureIO;
 
 public class DemoShowBiolAssembly {
 

@@ -20,9 +20,9 @@
  */
 package demo;
 
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.scop.ScopDatabase;
-import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.scop.ScopDatabase;
+import org.biojava.nbio.structure.scop.ScopFactory;
 
 /** A demo for how to use the Berkeley version of SCOP instead of the default UK-SCOP
  * 

@@ -20,12 +20,14 @@
  */
 package demo;
 
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.asa.AsaCalculator;
-import org.biojava.bio.structure.asa.GroupAsa;
-import org.biojava3.structure.StructureIO;
+
+
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.asa.AsaCalculator;
+import org.biojava.nbio.structure.asa.GroupAsa;
 
 import java.io.IOException;
 
@@ -46,13 +48,13 @@ public class DemoAsa {
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		
-		StructureIO.setAtomCache(cache); 
+		StructureIO.setAtomCache(cache);
 		
 		Structure structure = StructureIO.getStructure(pdbCode);
 			
 		long start = System.currentTimeMillis();
 		
-		AsaCalculator asaCalc = new AsaCalculator(structure, 
+		AsaCalculator asaCalc = new AsaCalculator(structure,
 				AsaCalculator.DEFAULT_PROBE_SIZE, 
 				1000, numThreads, hetAtoms);
 		

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava3.aaproperties;
+package org.biojava.nbio.aaproperties;
 
 public class ProfeatPropertiesImplTest {
 

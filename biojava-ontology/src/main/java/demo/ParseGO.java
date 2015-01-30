@@ -24,9 +24,9 @@
 
 package demo;
 
-import org.biojava3.ontology.Ontology;
-import org.biojava3.ontology.Term;
-import org.biojava3.ontology.io.OboParser;
+import org.biojava.nbio.ontology.Ontology;
+import org.biojava.nbio.ontology.Term;
+import org.biojava.nbio.ontology.io.OboParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -20,12 +20,12 @@
  */
 package demo;
 
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 
 import java.util.Map;
 

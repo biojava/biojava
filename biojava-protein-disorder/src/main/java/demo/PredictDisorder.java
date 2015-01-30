@@ -20,11 +20,11 @@
  */
 package demo;
 
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
-import org.biojava3.ronn.Jronn;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
+import org.biojava.nbio.ronn.Jronn;
 
 import java.util.Arrays;
 

@@ -21,11 +21,11 @@
 package demo;
 
 
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.cath.CathDatabase;
-import org.biojava.bio.structure.cath.CathDomain;
-import org.biojava.bio.structure.cath.CathInstallation;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.cath.CathDatabase;
+import org.biojava.nbio.structure.cath.CathDomain;
+import org.biojava.nbio.structure.cath.CathInstallation;
 
 /** An example for how to access CATH data.
  * 

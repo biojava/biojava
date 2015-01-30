@@ -25,4 +25,4 @@ function scriptdir {
 }
 DIR="$(scriptdir "$0" )"
 # send the arguments to the java app
-java -Xmx500M -cp "$DIR/${project.build.finalName}.jar" org.biojava.bio.structure.align.fatcat.FatCat "$@"
+java -Xmx500M -cp "$DIR/${project.build.finalName}.jar" org.biojava.nbio.structure.align.fatcat.FatCat "$@"

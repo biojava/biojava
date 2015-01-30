@@ -19,10 +19,10 @@
  *
  */
 package demo;
-import org.biojava3.aaproperties.IPeptideProperties;
-import org.biojava3.aaproperties.PeptidePropertiesImpl;
-import org.biojava3.core.exceptions.CompoundNotFoundException;
-import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava.nbio.aaproperties.IPeptideProperties;
+import org.biojava.nbio.aaproperties.PeptidePropertiesImpl;
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.core.sequence.ProteinSequence;
 
 /**
  * Created by andreas on 8/9/14.

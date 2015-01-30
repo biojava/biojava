@@ -100,7 +100,7 @@
 									</excludes>
 								</filter>
 								<filter>
-									<artifact>org.biojava:biojava3-structure</artifact>
+									<artifact>org.biojava:biojava-structure</artifact>
 									<excludes>
 										<exclude>demo/DemoFATCAT*</exclude>
 										<exclude>demo/DemoCE*</exclude>
@@ -125,7 +125,7 @@
 										<Implementation-Version>${project.version}</Implementation-Version>
 										<Specification-Title>${project.name}</Specification-Title>
 										<Implementation-Title>${project.name}</Implementation-Title>
-										<Main-Class>org.biojava.bio.structure.align.gui.AlignmentGui</Main-Class>
+										<Main-Class>org.biojava.nbio.structure.align.gui.AlignmentGui</Main-Class>
 									</manifestEntries>
 								</transformer>
 								<!-- This bit merges the various META-INF/services files -->
