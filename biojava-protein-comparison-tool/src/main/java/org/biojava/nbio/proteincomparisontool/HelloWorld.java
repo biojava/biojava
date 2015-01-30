@@ -21,11 +21,18 @@
 package org.biojava.nbio.proteincomparisontool;
 
 /** A dummy class that does nothing. This is so we can upload protein-comparison-tool.jar to Maven Central
- * 
+ *
  */
 class HelloWorld{
 
     public HelloWorld(){
         // hello world
+    }
+
+    /** Prints hello world on command line
+     * 
+     */
+    public void print(){
+        System.out.println("Hello World!");
     }
 }
