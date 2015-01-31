@@ -1,4 +1,4 @@
-# Welcome to BioJava v.3
+# Welcome to BioJava
 
 [![Build Status](https://travis-ci.org/biojava/biojava.svg?branch=master)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394) [![Version](http://img.shields.io/badge/version-4.0.0-blue.svg?style=flat)](http://biojava.org/wiki/BioJava:Download) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
 
