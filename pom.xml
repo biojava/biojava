@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<!-- for releasing to Maven Central / OSS Sonatype -->
 	<parent>
@@ -13,7 +12,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>4.0.0-SNAPSHOT</version>
+	<version>4.0.1-SNAPSHOT</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
         data. It provides analytical and statistical routines, parsers for common file formats and allows the
@@ -37,26 +36,17 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
-		<slf4j.version>1.7.7</slf4j.version>
+		<slf4j.version>1.7.10</slf4j.version>
 		<log4j.version>2.1</log4j.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
 		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
 		<url>https://github.com/biojava/biojava</url>
-		<tag>biojava-3.1.0</tag>
-	</scm>
-	<repositories>
-		<!-- The BioJava repository -->
-		<repository>
-			<id>biojava-maven-repo</id>
-			<name>BioJava repository</name>
-			<url>http://www.biojava.org/download/maven/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+
+	  <tag>HEAD</tag>
+  </scm>
+
 	<!-- This section required for release at Maven Central. For a full list 
 		of Developers, please see https://github.com/orgs/biojava/members For a list 
 		of contributors, please see https://github.com/biojava/biojava/graphs/contributors -->
@@ -376,7 +366,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.11</version>
+				<version>4.12</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -414,7 +404,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>2.10.1</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<breakiterator>true</breakiterator>
@@ -544,21 +534,20 @@
 
 	<modules>
 
-		<module>biojava3-core</module>
-		<module>biojava3-phylo</module>
-		<module>biojava3-alignment</module>
-		<module>biojava3-structure</module>
-		<module>integrationtest</module>
-		<module>biojava3-structure-gui</module>
-		<module>biojava3-sequencing</module>
-		<module>biojava3-genome</module>
-		<module>biojava3-modfinder</module>
-		<module>biojava3-ws</module>
-		<module>biojava3-protein-disorder</module>
-		<module>biojava3-aa-prop</module>
-		<module>protein-comparison-tool</module>
-		<module>biojava3-survival</module>
-		<module>biojava3-ontology</module>
+		<module>biojava-core</module>
+		<module>biojava-phylo</module>
+		<module>biojava-alignment</module>
+		<module>biojava-structure</module>
+		<module>biojava-integrationtest</module>
+		<module>biojava-structure-gui</module>
+		<module>biojava-sequencing</module>
+		<module>biojava-genome</module>
+		<module>biojava-modfinder</module>
+		<module>biojava-ws</module>
+		<module>biojava-protein-disorder</module>
+		<module>biojava-aa-prop</module>
+		<module>biojava-survival</module>
+		<module>biojava-ontology</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
 	<issueManagement>

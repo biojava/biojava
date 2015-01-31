@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import namespace="http://biojava.org" schemaLocation="AminoAcidComposition.xsd"/>
+
+  <xs:complexType name="aminoAcidCompositionTable">
+    <xs:sequence>
+      <xs:element name="compound" type="aminoAcidComposition" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="aminoAcidComposition">
+    <xs:sequence>
+      <xs:element name="element" type="name2Count" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="isotope" type="name2Count" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="symbol" type="xs:string" use="required"/>
+    <xs:attribute name="shortname" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="name2Count">
+    <xs:sequence/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="count" type="xs:int" use="required"/>
+  </xs:complexType>
+</xs:schema>
+
