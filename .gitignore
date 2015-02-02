@@ -7,4 +7,5 @@
 *.iml
 /*/target
 *.swp
-
+target
+*~

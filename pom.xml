@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<!-- for releasing to Maven Central / OSS Sonatype -->
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>9</version>
+	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>3.1.0</version>
+	<version>4.0.0</version>
 	<name>biojava</name>
-	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
+	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
+        data. It provides analytical and statistical routines, parsers for common file formats and allows the
+        manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application
+        development for bioinformatics.
+    </description>
 	<url>http://www.biojava.org</url>
 	<organization>
 		<name>BioJava</name>
@@ -19,72 +31,118 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<scm>
-		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
-		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
-		<url>https://github.com/biojava/biojava</url>
-		<tag>biojava-3.1.0</tag>
-	</scm>
-	<repositories>
-		<repository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Maven 2 Repository</name>
-			<url>http://download.java.net/maven/2</url>
-		</repository>
-		<repository>
-			<id>maven-repository.dev.java.net</id>
-			<name>Java.net Maven 1 Repository (legacy)</name>
-			<url>http://download.java.net/maven/1</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<id>biojava-maven-repo</id>
-			<name>BioJava repository</name>
-			<url>http://www.biojava.org/download/maven/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Maven 2 Repository</name>
-			<url>http://download.java.net/maven/2</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>maven-repository.dev.java.net</id>
-			<name>Java.net Maven 1 Repository (legacy)</name>
-			<url>http://download.java.net/maven/1</url>
-			<layout>default</layout>
-		</pluginRepository>
-	</pluginRepositories>
-	<distributionManagement>
-		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>biojava-maven-repo</id>
-			<name>BioJava Maven Repository</name>
-			<url>scp://cloudportal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
-			<layout>default</layout>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>biojava-maven-repo</id>
-			<name>BioJava Maven Repository</name>
-			<url>scp://cloudportal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
-			<layout>default</layout>
-		</snapshotRepository>
-	</distributionManagement>
 	<properties>
 		<jdk.version>1.6</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
+		<slf4j.version>1.7.10</slf4j.version>
+		<log4j.version>2.1</log4j.version>
 	</properties>
+	<scm>
+		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
+		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
+		<url>https://github.com/biojava/biojava</url>
+
+	  <tag>biojava-4.0.0</tag>
+  </scm>
+
+	<!-- This section required for release at Maven Central. For a full list 
+		of Developers, please see https://github.com/orgs/biojava/members For a list 
+		of contributors, please see https://github.com/biojava/biojava/graphs/contributors -->
+	<developers>
+		<developer>
+			<id>andreas</id>
+			<name>Andreas Prlic</name>
+			<email>andreas.prlic@gmail.com</email>
+			<url>http://www.spice-3d.org</url>
+			<organization>University of California, San Diego</organization>
+			<organizationUrl>http://www.rcsb.org</organizationUrl>
+			<roles>
+				<role>project lead</role>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-9</timezone>
+			<properties>
+				<picUrl>http://tinyurl.com/mymsfga</picUrl>
+			</properties>
+		</developer>
+		<developer>
+			<name>Amr AL-HOSSARY</name>
+		</developer>
+		<developer>
+			<name>Andreas Dräger</name>
+		</developer>
+		<developer>
+			<name>Andy Yates</name>
+		</developer>
+		<developer>
+			<name>Carmelo Foti</name>
+		</developer>
+		<developer>
+			<name>Chuan Hock Koh</name>
+		</developer>
+		<developer>
+			<name>Douglas Myers-Turnbull</name>
+		</developer>
+		<developer>
+			<name>Gediminas Rimsa</name>
+		</developer>
+		<developer>
+			<name>George Waldon</name>
+		</developer>
+		<developer>
+			<name>Hannes Brandstätter-Müller</name>
+		</developer>
+		<developer>
+			<name>Elinow</name>
+		</developer>
+		<developer>
+			<name>Jianjiong Gao</name>
+		</developer>
+		<developer>
+			<name>Jonathan Warren</name>
+		</developer>
+		<developer>
+			<name>Jose Manuel Duarte</name>
+		</developer>
+		<developer>
+			<name>Jules Jacobsen</name>
+		</developer>
+		<developer>
+			<name>Karl Nicholas</name>
+		</developer>
+		<developer>
+			<name>Mark Chapman</name>
+		</developer>
+		<developer>
+			<name>Michael Heuer</name>
+		</developer>
+		<developer>
+			<name>Peter Rose</name>
+		</developer>
+		<developer>
+			<name>Peter Troshin</name>
+		</developer>
+		<developer>
+			<name>Richard Holland</name>
+		</developer>
+		<developer>
+			<name>Robert Thornton</name>
+		</developer>
+		<developer>
+			<name>Scooter Willis</name>
+		</developer>
+		<developer>
+			<name>Spencer Bliven</name>
+		</developer>
+		<developer>
+			<name>Sylvain Foisy</name>
+		</developer>
+	</developers>
+
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -102,11 +160,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.7</version>
+					<version>2.8</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.4</version>
+					<version>2.5</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-scm-plugin</artifactId>
@@ -114,17 +172,9 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.2.1</version>
+					<version>2.3</version>
 				</plugin>
-				<plugin>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.17</version>
-					<configuration>
-						<argLine>-Xms256m -Xmx2000M</argLine>
-						<reuseForks>false</reuseForks>
-						<forkCount>1</forkCount>
-					</configuration>
-				</plugin>
+
 				<plugin>
 					<groupId>net.sf</groupId>
 					<artifactId>stat-scm</artifactId>
@@ -144,6 +194,8 @@
 						<remoteTagging>true</remoteTagging>
 						<preparationGoals>clean install</preparationGoals>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<!-- work around for GPG hanging issue http://jira.codehaus.org/browse/MGPG-9 -->
+						<mavenExecutorId>forked-path</mavenExecutorId>
 					</configuration>
 
 				</plugin>
@@ -159,6 +211,11 @@
 							"UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
 					</configuration>
 
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.3</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
@@ -200,6 +257,54 @@
 
 		<plugins>
 
+			<!-- for deployment on OSS Sonatype -->
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.1</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
+			<!-- for digital signing of code -->
+			<!--<plugin> -->
+			<!--<groupId>org.apache.maven.plugins</groupId> -->
+			<!--<artifactId>maven-gpg-plugin</artifactId> -->
+			<!--<version>1.5</version> -->
+			<!--<executions> -->
+			<!--<execution> -->
+			<!--<id>sign-artifacts</id> -->
+			<!--<phase>verify</phase> -->
+			<!--<goals> -->
+			<!--<goal>sign</goal> -->
+			<!--</goals> -->
+			<!--</execution> -->
+			<!--</executions> -->
+			<!--</plugin> -->
+
+			<!-- give more memory for junit tests -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.17</version>
+				<configuration>
+					<argLine>-Xmx1500M</argLine>
+					<reuseForks>false</reuseForks>
+					<forkCount>1</forkCount>
+
+					<excludes>
+						<!-- we exclude by default the long parsing tests, they will only be 
+							executed if explicitly called -->
+						<exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
+						<exclude>**/TestAtomCachePerformance.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -224,8 +329,6 @@
 			</plugin>
 
 
-
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
@@ -239,6 +342,12 @@
 					<!-- <consoleOutput>true</consoleOutput> -->
 				</configuration>
 			</plugin>
+
+            <plugin>
+                <groupId>com.versioneye</groupId>
+                <artifactId>versioneye-maven-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
 
 		</plugins>
 
@@ -257,75 +366,73 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.11</version>
+				<version>4.12</version>
 				<scope>test</scope>
 			</dependency>
-
 			<dependency>
-				<groupId>javax.xml.bind</groupId>
-				<artifactId>jaxb-api</artifactId>
-				<version>2.2</version>
-			</dependency>
-
-			<dependency>
-				<groupId>xerces</groupId>
-				<artifactId>xercesImpl</artifactId>
-				<version>2.4.0</version>
-			</dependency>
+        		<groupId>org.slf4j</groupId>
+        		<artifactId>slf4j-api</artifactId>
+        		<version>${slf4j.version}</version>
+    		</dependency>
+			<!-- binding for log4j 2 -->
+  			<dependency>
+    			<groupId>org.apache.logging.log4j</groupId>
+    			<artifactId>log4j-slf4j-impl</artifactId>
+    			<version>${log4j.version}</version>
+    			<!-- runtime scope includes the test scope as well -->
+    			<scope>runtime</scope>
+  			</dependency>
+  			<!-- Log4j API and Core implementation required for binding -->
+  			<dependency>
+    			<groupId>org.apache.logging.log4j</groupId>
+    			<artifactId>log4j-api</artifactId>
+    			<version>${log4j.version}</version>
+    			<!-- runtime scope includes the test scope as well -->
+    			<scope>runtime</scope>    			
+  			</dependency>
+  			<dependency>
+    			<groupId>org.apache.logging.log4j</groupId>
+    			<artifactId>log4j-core</artifactId>
+    			<version>${log4j.version}</version>
+    			<!-- runtime scope includes the test scope as well -->
+    			<scope>runtime</scope>    			
+  			</dependency>			
 		</dependencies>
 	</dependencyManagement>
 
 	<reporting>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.7</version>
-			</plugin>
-			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>2.10.1</version>
 				<configuration>
 					<aggregate>true</aggregate>
-					<minmemory>140m</minmemory>
-					<maxmemory>140m</maxmemory>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
-					<source>1.6</source>
+					<source>1.5</source>
 					<verbose>false</verbose>
 					<linksource>true</linksource>
-					<!-- <detectLinks>true</detectLinks> -->
-					<links>
-						<!-- JSE -->
-						<link>http://docs.oracle.com/javase/6/docs/api/</link>
-
-						<!-- Libraries -->
-						<!-- <link>http://jakarta.apache.org/commons/collections/apidocs</link> 
-							<link>http://jakarta.apache.org/commons/logging/apidocs/</link> <link>http://www.junit.org/junit/javadoc/</link> -->
-						<link>http://logging.apache.org/log4j/docs/api/</link>
-						<link>http://jakarta.apache.org/regexp/apidocs/</link>
-						<link>http://jakarta.apache.org/velocity/api/</link>
-					</links>
+					<detectlinks>true</detectlinks>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>net.sf</groupId>
-				<artifactId>stat-scm</artifactId>
-				<version>1.2.0</version>
-				<configuration>
-					<includes>
-						<include>**/*.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/test/**/*.java</exclude>
-					</excludes>
-					<tags>3.0</tags>
-					<tagsDir>/releases/</tagsDir>
-					<cacheDir>/statsvn/</cacheDir>
-					<title>BioJava SVN statistics</title>
-				</configuration>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.7</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>summary</report>
+							<report>modules</report>
+							<report>scm</report>
+							<report>dependency-management</report>
+							<report>dependencies</report>
+							<report>dependency-convergence</report>
+							<report>distribution-management</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
@@ -343,8 +450,8 @@
 				<version>2.4</version>
 			</plugin>
 		</plugins>
-
 	</reporting>
+
 
 	<profiles>
 
@@ -394,25 +501,53 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 
 	<modules>
 
-		<module>biojava3-core</module>
-		<module>biojava3-phylo</module>
-		<module>biojava3-alignment</module>
-		<module>biojava3-structure</module>
-		<module>integrationtest</module>
-		<module>biojava3-structure-gui</module>
-		<module>biojava3-sequencing</module>
-		<module>biojava3-genome</module>
-		<module>biojava3-modfinder</module>
-		<module>biojava3-ws</module>
-		<module>biojava3-protein-disorder</module>
-		<module>biojava3-aa-prop</module>
-		<module>protein-comparison-tool</module>
-		<module>biojava3-survival</module>
-		<module>biojava3-ontology</module>
+		<module>biojava-core</module>
+		<module>biojava-phylo</module>
+		<module>biojava-alignment</module>
+		<module>biojava-structure</module>
+		<module>biojava-integrationtest</module>
+		<module>biojava-structure-gui</module>
+		<module>biojava-sequencing</module>
+		<module>biojava-genome</module>
+		<module>biojava-modfinder</module>
+		<module>biojava-ws</module>
+		<module>biojava-protein-disorder</module>
+		<module>biojava-aa-prop</module>
+		<module>biojava-survival</module>
+		<module>biojava-ontology</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
 	<issueManagement>
