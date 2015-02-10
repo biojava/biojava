@@ -157,7 +157,7 @@ public class GenbankReaderHelper {
             File file) throws Exception {
         FileInputStream inStream = new FileInputStream(file);
         LinkedHashMap<String, DNASequence> dnaSequences = readGenbankDNASequence(inStream);
-        inStream.close();
+        //inStream.close();
         return dnaSequences;
     }
 
