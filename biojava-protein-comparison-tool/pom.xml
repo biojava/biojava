@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>biojava</artifactId>
@@ -12,13 +11,13 @@
 	<packaging>jar</packaging>
 	<name>biojava-protein-comparison-tool</name>
 	<url>http://source.rcsb.org</url>
-	<properties>
+	<properties>	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
-		<timestamp>${maven.build.timestamp}</timestamp>
+		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>		
+		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>    	    	
+    	<timestamp>${maven.build.timestamp}</timestamp>		
 	</properties>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -26,23 +25,23 @@
 
 			<scope>test</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-alignment</artifactId>
 			<version>4.0.0-SNAPSHOT</version>
-
+	
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
 			<version>4.0.0-SNAPSHOT</version>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-structure</artifactId>
 			<version>4.0.0-SNAPSHOT</version>
-		</dependency>
+		</dependency>			
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-structure-gui</artifactId>
@@ -55,22 +54,22 @@
 		</dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<!-- binding for log4j2, scope=runTime set in parent pom -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-		</dependency>
+        	<groupId>org.slf4j</groupId>
+        	<artifactId>slf4j-api</artifactId>
+    	</dependency>
+    	<!-- binding for log4j2, scope=runTime set in parent pom -->
+ 		<dependency>
+    		<groupId>org.apache.logging.log4j</groupId>
+    		<artifactId>log4j-slf4j-impl</artifactId>
+  		</dependency>
+  		<dependency>
+    		<groupId>org.apache.logging.log4j</groupId>
+    		<artifactId>log4j-api</artifactId>
+  		</dependency>
+  		<dependency>
+    		<groupId>org.apache.logging.log4j</groupId>
+    		<artifactId>log4j-core</artifactId>
+  		</dependency>			
 	</dependencies>
 
 	<build>
@@ -127,7 +126,6 @@
 										<Specification-Title>${project.name}</Specification-Title>
 										<Implementation-Title>${project.name}</Implementation-Title>
 										<Main-Class>org.biojava.nbio.structure.align.gui.AlignmentGui</Main-Class>
-										<Implementation-Build>${buildNumber}</Implementation-Build>
 									</manifestEntries>
 								</transformer>
 								<!-- This bit merges the various META-INF/services files -->
@@ -164,24 +162,7 @@
 
 			</plugin>
 
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-				<version>1.3</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>create</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<doCheck>false</doCheck>
-					<doUpdate>false</doUpdate>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
-
+	
 </project>
