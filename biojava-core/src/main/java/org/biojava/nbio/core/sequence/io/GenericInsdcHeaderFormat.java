@@ -281,7 +281,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			}
 		} else {
 			//Typical case, e.g. 12..15 gets mapped to 11:15
-			return ref + _insdc_feature_position_string(sequenceLocation.getStart(), 1) + ".." + _insdc_feature_position_string(sequenceLocation.getEnd());
+			return ref + _insdc_feature_position_string(sequenceLocation.getStart(), 0) + ".." + _insdc_feature_position_string(sequenceLocation.getEnd());
 		}
 	}
 	private String _insdc_feature_position_string(Point location) {
