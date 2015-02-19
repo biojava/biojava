@@ -845,4 +845,9 @@ public class StructureImpl implements Structure, Serializable {
 		return ResidueRange.toStrings(getResidueRanges());
 	}
 
+	@Override
+	public void resetModels() {
+		models = new ArrayList<List<Chain>>();
+	}
+
 }
