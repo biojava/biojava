@@ -199,7 +199,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		try {
 			copy = (SequenceAlignmentCluster) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			logger.error("CloneNotSupportedException caught",e);
 		}
 		// deep copy sequences
 		copy.uniqueSequenceList = new ArrayList<UniqueSequenceList>();
@@ -249,7 +249,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 				System.out.println(afp.toFatcat(ca1Seq, ca2Seq));
 			}
 		} catch (StructureException e) {
-			e.printStackTrace();
+			logger.error("StructureException caught",e);
 		}            
 		return afp;
 	}
