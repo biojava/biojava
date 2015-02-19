@@ -170,15 +170,17 @@ public class StructureImpl implements Structure, Serializable {
 		for (Compound compound:this.compounds) {
 			Compound newCompound = new Compound(compound); // this sets everything but the chains
 			for (String chainId:compound.getChainIds()) {
-				try {
+				
 					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
-						Chain newChain = n.getChainByPDB(chainId,modelNr);
-						newChain.setCompound(newCompound);
-						newCompound.addChain(newChain);
+						try {
+							Chain newChain = n.getChainByPDB(chainId,modelNr);
+							newChain.setCompound(newCompound);
+							newCompound.addChain(newChain);
+						} catch (StructureException e) {
+							// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
+							logger.warn("Could not find chain id "+chainId+" of model "+modelNr+" while cloning compound "+compound.getMolId()+". Something is wrong!");
+						}
 					}
-				} catch (StructureException e) {
-					logger.error("Could not find chain id {} while cloning Structure's compounds. Something is wrong!", e);
-				}
 			}
 			newCompoundList.add(newCompound);
 		}
