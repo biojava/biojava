@@ -24,12 +24,17 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ProteinChainExtractor  {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ProteinChainExtractor.class);
+	
 	private Structure structure = null;
 	private QuatSymmetryParameters parameters = null;
 	private boolean modified = true;
@@ -206,7 +211,7 @@ public class ProteinChainExtractor  {
 	private boolean isAminoAcid(Group group) {
 		ChemComp cc= group.getChemComp();
 		if (cc.getResidueType() == null) {
-			System.err.println("null residue type for: " + group.getPDBName());
+			logger.warn("null residue type for: " + group.getPDBName());
 			return false;
 		}
 		return (cc.getResidueType().equals(ResidueType.lPeptideLinking) || cc.getResidueType().equals(ResidueType.glycine));
