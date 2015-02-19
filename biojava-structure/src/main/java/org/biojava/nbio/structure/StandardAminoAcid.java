@@ -56,7 +56,7 @@ public final class StandardAminoAcid {
      *
      * <p>
      * This parses the resource
-     * <code>org/biojava/bio/structure/standardaminos.pdb</code>
+     * <code>org/biojava/nbio/structure/standardaminos.pdb</code>
      * and builds a basic set of amino acids.
      *</p>
      * @author Tamas Horvath provided the standard amino acids 
@@ -66,7 +66,7 @@ public final class StandardAminoAcid {
     
         try {
             InputStream fileStream = StandardAminoAcid.class.getClassLoader().getResourceAsStream(
-                    "org/biojava/bio/structure/standardaminos.pdb"
+                    "org/biojava/nbio/structure/standardaminos.pdb"
             );
             if (fileStream == null) {
                 throw new Exception("Couldn't locate standardaminos.pdb.  This probably means that your biojava.jar file is corrupt or incorrectly built.");
