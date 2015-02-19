@@ -28,10 +28,15 @@ import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.ce.CeParameters;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class SequenceAlignmentCluster implements Cloneable {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SequenceAlignmentCluster.class);
+	
 	private QuatSymmetryParameters parameters = null;
 	private List<UniqueSequenceList> uniqueSequenceList = new ArrayList<UniqueSequenceList>();
 	private List<Atom[]> alignedCAlphaAtoms = null;
@@ -227,7 +232,8 @@ public class SequenceAlignmentCluster implements Cloneable {
 		try {
 			afp = aligner.align(ca1Seq, ca2Seq);
 		} catch (StructureException e) {
-			e.printStackTrace();
+			logger.error("StructureException caught in SmithWaterman3Daligner.align() for atom arrays of sizes "+
+					ca1Seq.length+" and "+ca2Seq.length,e);
 		} 
 		return afp;
 	}

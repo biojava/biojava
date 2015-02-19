@@ -42,6 +42,7 @@ import org.biojava.nbio.structure.align.ce.UserArgumentProcessor;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.align.util.ConfigurationException;
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -121,7 +122,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			// convert to a 3D alignment...
 			afpChain = convert(ca1,ca2,pair, smithWaterman);
 
-		} catch (Exception e){
+		} catch (CompoundNotFoundException e){
 
 			throw new StructureException(e.getMessage(),e);
 		}
