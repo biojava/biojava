@@ -28,10 +28,15 @@ import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.ce.CeParameters;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class SequenceAlignmentCluster implements Cloneable {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SequenceAlignmentCluster.class);
+	
 	private QuatSymmetryParameters parameters = null;
 	private List<UniqueSequenceList> uniqueSequenceList = new ArrayList<UniqueSequenceList>();
 	private List<Atom[]> alignedCAlphaAtoms = null;
@@ -132,7 +137,14 @@ public class SequenceAlignmentCluster implements Cloneable {
 			List<Integer> alig1 = new ArrayList<Integer>();
 			List<Integer> alig2 = new ArrayList<Integer>();
 			Atom[] referenceAtoms = u.getCalphaAtoms();
-			int inCommon = alignIdenticalSequence(referenceAtoms, cAlphaAtoms, alig1, alig2);
+			int inCommon = 0;
+			try {
+				inCommon = alignIdenticalSequence(referenceAtoms, cAlphaAtoms, alig1, alig2);
+			} catch (StructureException e) {
+				// this happens in some cases like all X sequences, e.g. 1s1o or 1s4a
+				logger.warn("Could not align identical sequences {}: {} and {}: {}. Chains won't be clustered together.",
+						u.getChainId(),refSequence,chainId,sequence);
+			}
 
 			if (inCommon > 0) {
 				UniqueSequenceList seqList = new UniqueSequenceList(cAlphaAtoms, chainId, modelNumber, structureId, sequence);
@@ -194,7 +206,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		try {
 			copy = (SequenceAlignmentCluster) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			logger.error("CloneNotSupportedException caught",e);
 		}
 		// deep copy sequences
 		copy.uniqueSequenceList = new ArrayList<UniqueSequenceList>();
@@ -221,15 +233,9 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 	}
 
-	private AFPChain alignPairBySequence(Atom[] ca1Seq, Atom[] ca2Seq) {
+	private AFPChain alignPairBySequence(Atom[] ca1Seq, Atom[] ca2Seq) throws StructureException { 
 		SmithWaterman3Daligner aligner = new SmithWaterman3Daligner();
-		AFPChain afp = null;
-		try {
-			afp = aligner.align(ca1Seq, ca2Seq);
-		} catch (StructureException e) {
-			e.printStackTrace();
-		} 
-		return afp;
+		return aligner.align(ca1Seq, ca2Seq);
 	}
 	
 	private AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq) {
@@ -243,13 +249,13 @@ public class SequenceAlignmentCluster implements Cloneable {
 				System.out.println(afp.toFatcat(ca1Seq, ca2Seq));
 			}
 		} catch (StructureException e) {
-			e.printStackTrace();
+			logger.error("StructureException caught",e);
 		}            
 		return afp;
 	}
 	
 	
-	private int alignIdenticalSequence(Atom[] ca1Seq, Atom[] ca2Seq, List<Integer> align1, List<Integer> align2) {
+	private int alignIdenticalSequence(Atom[] ca1Seq, Atom[] ca2Seq, List<Integer> align1, List<Integer> align2) throws StructureException {
 		AFPChain afp = alignPairBySequence(ca1Seq, ca2Seq);
 		int[][][] align = afp.getOptAln();
 		if (align == null) {

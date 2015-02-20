@@ -647,4 +647,9 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public PDBCrystallographicInfo getCrystallographicInfo();
  
+    /**
+	 * Resets all models of this Structure
+	 * @since 4.0.1
+	 */
+    public void resetModels();
 }

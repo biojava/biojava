@@ -199,11 +199,11 @@ implements StructureAlignment  {
 	}
 	
 	private static char getOneLetter(Group g){
-        try {
-	        return StructureTools.get1LetterCode(g.getPDBName());
-        } catch (Exception e) {
-           return 'X';
-        }
-     }
+
+		if (g==null) return StructureTools.UNKNOWN_GROUP_LABEL;
+		
+		return StructureTools.get1LetterCode(g.getPDBName());
+
+	}
 
 }

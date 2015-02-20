@@ -32,6 +32,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
@@ -418,17 +420,23 @@ public class Compound implements Serializable {
 	}
 
 	/**
-	 * Return the list of member chain IDs that are described by this Compound 
-	 * @return the list of ChainIDs that are described by this Compound
+	 * Return the list of member chain IDs that are described by this Compound, 
+	 * only unique chain IDs are contained in the list. 
+	 * Note that in the case of multimodel structures this will return just the unique
+	 * chain identifiers whilst {@link #getChains()} will return a corresponding chain 
+	 * per model. 
+	 * @return the list of unique ChainIDs that are described by this Compound
 	 * @see #setChains(List)
 	 * @see #getChains()
 	 */
 	public List<String> getChainIds() {
-		List<String> chainIds = new ArrayList<String>();
-		for (Chain chain : chains) {
-			chainIds.add(chain.getChainID());
+		
+		Set<String> uniqChainIds = new TreeSet<String>();
+		for (int i=0;i<getChains().size();i++) {
+			uniqChainIds.add(getChains().get(i).getChainID());
 		}
-		return chainIds;
+
+		return new ArrayList<String>(uniqChainIds);
 	}
 
 	/**
@@ -812,7 +820,8 @@ public class Compound implements Serializable {
 	}
 
 	/** 
-	 * Get the list of chains that are part of this Compound
+	 * Get the list of chains that are part of this Compound. Note that for multi-model 
+	 * structures chains from all models are returned.
 	 *
 	 * @return a List of Chain objects
 	 */
