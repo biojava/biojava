@@ -47,6 +47,8 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.template.Compound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** provides a 3D superimposition based on the sequence alignment
@@ -57,6 +59,8 @@ import org.biojava.nbio.core.sequence.template.Compound;
 public class SmithWaterman3Daligner extends AbstractStructureAlignment implements StructureAlignment {
 
 	public static final String algorithmName = "Smith-Waterman superposition";
+	
+	private static final Logger logger = LoggerFactory.getLogger(SmithWaterman3Daligner.class);
 
 	/**
 	 *  version history:
@@ -117,10 +121,12 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 			SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
 
-			// Print the alignment to the screen
-			// System.out.println(aligner.getAlignmentString());
+			logger.debug("Smith-Waterman alignment is: "+pair.toString(100));
+			
 			// convert to a 3D alignment...
 			afpChain = convert(ca1,ca2,pair, smithWaterman);
+			
+
 
 		} catch (CompoundNotFoundException e){
 
@@ -291,11 +297,10 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 	private static char getOneLetter(Group g){
 
-		try {
-			return StructureTools.get1LetterCode(g.getPDBName());
-		} catch (Exception e){
-			return 'X';
-		}
+		if (g==null) return StructureTools.UNKNOWN_GROUP_LABEL;
+		
+		return StructureTools.get1LetterCode(g.getPDBName());
+		
 	}
 
 	@Override
@@ -305,7 +310,6 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 	@Override
 	public ConfigStrucAligParams getParameters() {
-		// TODO Auto-generated method stub
 		return params;
 	}
 
