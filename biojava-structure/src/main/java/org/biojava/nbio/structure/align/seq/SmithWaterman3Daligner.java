@@ -100,13 +100,21 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		params = (SmithWaterman3DParameters) parameters;
 		AFPChain afpChain = new AFPChain();
 
-		try {
+		
 			// covert input to sequences
 			String seq1 = StructureTools.convertAtomsToSeq(ca1);
 			String seq2 = StructureTools.convertAtomsToSeq(ca2);
 
-			ProteinSequence s1 = new ProteinSequence(seq1);
-			ProteinSequence s2 = new ProteinSequence(seq2);
+			ProteinSequence s1 = null;
+			ProteinSequence s2 = null;
+					
+			try {
+				s1 = new ProteinSequence(seq1);
+				s2 = new ProteinSequence(seq2);
+			} catch (CompoundNotFoundException e){
+
+				throw new StructureException(e.getMessage(),e);
+			}
 
 			// default blosum62 
 			SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
@@ -120,6 +128,10 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
 			SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
+			
+			if (pair.getTarget().toString().isEmpty() || pair.getQuery().toString().isEmpty()) {
+				throw new StructureException("Empty alignment for sequences "+s1+" and "+s2);
+			}
 
 			logger.debug("Smith-Waterman alignment is: "+pair.toString(100));
 			
@@ -128,10 +140,6 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			
 
 
-		} catch (CompoundNotFoundException e){
-
-			throw new StructureException(e.getMessage(),e);
-		}
 		return afpChain;
 	}
 
