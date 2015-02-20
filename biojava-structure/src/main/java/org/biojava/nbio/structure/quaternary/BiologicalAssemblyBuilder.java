@@ -60,10 +60,13 @@ public class BiologicalAssemblyBuilder {
         orderTransformationsByChainId(asymUnit, transformations);
         
 		Structure s = asymUnit.clone();
-		s.setChains(new ArrayList<Chain>());
+		// this resets all models (not only the first one): this is important for NMR (multi-model) 
+		// structures, otherwise we could not add new models below 
+		s.resetModels();
 
 		for (BiologicalAssemblyTransformation transformation : transformations){
 			
+			// note: for NMR structures (or any multi-model) we use the first model only and throw away the rest
 			for (Chain c : asymUnit.getChains()){
                 
 				String intChainID = c.getInternalChainID();

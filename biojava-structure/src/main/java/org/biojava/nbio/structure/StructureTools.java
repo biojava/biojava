@@ -76,8 +76,10 @@ public class StructureTools {
 	 */
 	public static final String CB_ATOM_NAME = "CB";
 
-
-	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');
+	/**
+	 * The character to use for unknown compounds in sequence strings
+	 */
+	public static final char UNKNOWN_GROUP_LABEL = 'X';
 
 	/**
 	 * Below this ratio of aminoacid/nucleotide residues to the sequence total,
@@ -665,8 +667,9 @@ public class StructureTools {
 	}
 
 	/** 
-	 * Convert a three letter code into single character.
-	 * catches for unusual characters
+	 * Convert a three letter aminoacid code into a single character code.
+	 * If the code corresponds to a nucleotide null is returned, in all other cases 
+	 * {@value #UNKNOWN_GROUP_LABEL} is returned
 	 *
 	 * @param groupCode3 three letter representation
 	 * @return null if group is a nucleotide code
