@@ -31,6 +31,25 @@ If you are using Maven you can add the BioJava repository by adding the followin
     </dependencies>
 ```
 
+### Snapshot builds
+
+To use the latest builds from BioJava, you can add the following config your project's pom.xml:
+
+```xml
+<repositories>
+    <repository>
+      <id>oss.sonatype.org-snapshot</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  ```
+
 ### Mailing Lists
 
 BioJava has two main mailing lists. In order to avoid SPAM both lists only accept postings from list members. Anybody can become a list member, so please subscribe before you post. If you send without being subscribed your mail might get stuck in the moderation loop, which can cause several weeks of delay (no fun to read through all that spam).
