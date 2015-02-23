@@ -46,3 +46,11 @@ This list is intended for general discussion, advice, questions, offers of help,
 * [biojava-dev@biojava.org](http://lists.open-bio.org/mailman/listinfo/biojava-dev)
 
 This list is intended for more technical discussions about API design, bugs in git development code, performance issues and things that might not be of interest to the more casual user.
+
+### Please cite
+
+
+**BioJava: an open-source framework for bioinformatics in 2012**<br/>
+*Andreas Prlic; Andrew Yates; Spencer E. Bliven; Peter W. Rose; Julius Jacobsen; Peter V. Troshin; Mark Chapman; Jianjiong Gao; Chuan Hock Koh; Sylvain Foisy; Richard Holland; Gediminas Rimsa; Michael L. Heuer; H. Brandstatter-Muller; Philip E. Bourne; Scooter Willis* <br/>
+[Bioinformatics (2012) 28 (20): 2693-2695.](http://bioinformatics.oxfordjournals.org/content/28/20/2693.abstract) <br/>
+[![doi](http://img.shields.io/badge/doi-10.1093%2Fbioinformatics%2Fbts494-blue.svg?style=flat)](http://bioinformatics.oxfordjournals.org/content/28/20/2693.abstract) [![pubmed](http://img.shields.io/badge/pubmed-22877863-blue.svg?style=flat)](http://www.ncbi.nlm.nih.gov/pubmed/22877863)
