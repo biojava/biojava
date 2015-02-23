@@ -59,7 +59,7 @@ public class CrystalBuilder {
 	// After a scan of the whole PDB (Oct 2013) using numCells=50, the highest one was 4jgc with
 	// interfaces up to the 11th neighbor. Other high ones (9th neighbors) are 4jbm and 4k3t.
 	// We set the default value to 12 based on that (having not seen any difference in runtime)
-	private static final int DEF_NUM_CELLS = 12;
+	public static final int DEF_NUM_CELLS = 12;
 
 	/**
 	 * Default maximum distance between two chains to be considered an interface.
