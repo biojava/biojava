@@ -39,7 +39,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import org.biojava.nbio.core.sequence.features.AbstractFeature;
 import org.biojava.nbio.core.sequence.features.Qualifier;
-import org.junit.Ignore;
 
 /**
  * Testing example for issue #834
@@ -94,14 +93,22 @@ public class GenbankProxySequenceReaderTest {
         so it should be done here (manualy).
         */
         genbankReader.getHeaderParser().parseHeader(genbankReader.getHeader(), seq);
+        
+        // test description
         Assert.assertTrue(seq.getDescription() != null);
+        
+        // test accession Id
+        logger.info("accession id: {}", seq.getAccession().getID());
+        Assert.assertNotNull(seq.getAccession().getID());
 
-        Assert.assertFalse(seq.getFeaturesKeyWord().getKeyWords().isEmpty());
-        Assert.assertFalse(seq.getFeaturesByType("source").get(0).getSource().isEmpty());
-
+        // test taxonomy id
         logger.info("taxonomy id: {}", seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getTaxonomy().getID());
-        Assert.assertNotNull(seq.getSequenceAsString());
+        
+        // test taxonomy name
+        String taxonName = seq.getFeaturesByType("source").get(0).getQualifiers().get("organism").getValue();
+        logger.info("taxonomy name '{}'", taxonName);
+        Assert.assertNotNull(taxonName);
 
         if (seq.getFeaturesByType("CDS").size() > 0) {
             FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> CDS = seq.getFeaturesByType("CDS").get(0);
