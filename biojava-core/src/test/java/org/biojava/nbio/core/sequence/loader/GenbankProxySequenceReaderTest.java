@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Testing example for issue #834
@@ -74,34 +73,35 @@ public class GenbankProxySequenceReaderTest {
     }
 
     @Test
-    public void biojava3() throws IOException, InterruptedException, CompoundNotFoundException  { 
+    public void biojava3() throws IOException, InterruptedException, CompoundNotFoundException {
         logger.info("run test for protein: {}", gi);
         GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-                = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"), 
-                                                                    this.gi, 
-                                                                    AminoAcidCompoundSet.getAminoAcidCompoundSet());
+                = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
+                        this.gi,
+                        AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
         // why only tests on protein sequences?
         ProteinSequence seq = new ProteinSequence(genbankReader, AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
         Assert.assertNotNull("protein sequence is null", seq);
         genbankReader.getHeaderParser().parseHeader(genbankReader.getHeader(), seq);
-        
+
         Assert.assertTrue(seq.getDescription() != null);
 
         Assert.assertFalse(seq.getFeaturesKeyWord().getKeyWords().isEmpty());
         Assert.assertFalse(seq.getFeaturesByType("source").get(0).getSource().isEmpty());
-        
+
         logger.info("taxonomy id: {}", seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getSequenceAsString());
-        
-        
-        List<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> codedBy = seq.getFeaturesByType("coded_by");
 
-        if (!codedBy.isEmpty()) {
-            // get parent DNA
-            Assert.assertNotNull(seq.getParentSequence().getSequenceAsString() != null);
+        if (seq.getFeaturesByType("CDS").size() > 0) {
+            FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> CDS = seq.getFeaturesByType("CDS").get(0);
+            logger.info("CDS: {}", CDS);
+            String codedBy = CDS.getQualifiers().get("coded_by").getValue();
+            Assert.assertNotNull(codedBy);
+            Assert.assertTrue(!codedBy.isEmpty());
+            logger.info("\t\tcoded_by: {}", codedBy);
         }
     }
 }
