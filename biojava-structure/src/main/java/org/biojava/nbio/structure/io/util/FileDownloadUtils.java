@@ -102,8 +102,8 @@ public class FileDownloadUtils {
 	 */
 	public static void downloadFile(URL url, File destination) throws IOException {
 
-            int connectionTimeout = 15000; // 15 sec
-            int readingTimeout = 15000; //15 sec
+            int connectionTimeout = 20000; // 15 sec
+            int readingTimeout = 20000; //15 sec
             
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
 
