@@ -31,8 +31,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
@@ -100,6 +102,9 @@ public class FileDownloadUtils {
 	 */
 	public static void downloadFile(URL url, File destination) throws IOException {
 
+            int connectionTimeout = 15000; // 15 sec
+            int readingTimeout = 15000; //15 sec
+            
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
 
 		// Took following recipe from stackoverflow:
@@ -110,7 +115,13 @@ public class FileDownloadUtils {
 		ReadableByteChannel rbc = null;
 		FileOutputStream fos = null;
 		try {
-			rbc = Channels.newChannel(url.openStream());
+                    URLConnection connection = url.openConnection();
+                    connection.setConnectTimeout(connectionTimeout);
+                    connection.setReadTimeout(readingTimeout);
+                    connection.connect();
+                    InputStream inputStream = connection.getInputStream();
+                    
+			rbc = Channels.newChannel(inputStream);
 			fos = new FileOutputStream(tempFile);
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		}
