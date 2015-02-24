@@ -101,9 +101,7 @@ public class FileDownloadUtils {
 	 * @throws IOException
 	 */
 	public static void downloadFile(URL url, File destination) throws IOException {
-
-            int connectionTimeout = 20000; // 15 sec
-            int readingTimeout = 20000; //15 sec
+            int timeout = 20000; //20 sec
             
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
 
@@ -115,9 +113,7 @@ public class FileDownloadUtils {
 		ReadableByteChannel rbc = null;
 		FileOutputStream fos = null;
 		try {
-                    URLConnection connection = url.openConnection();
-                    connection.setConnectTimeout(connectionTimeout);
-                    connection.setReadTimeout(readingTimeout);
+                    URLConnection connection = prepareURLConnection(url.toString(), timeout);
                     connection.connect();
                     InputStream inputStream = connection.getInputStream();
                     
@@ -196,9 +192,7 @@ public class FileDownloadUtils {
 	    //url = url.replaceFirst("https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
 
 	    try {
-	        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-	        connection.setConnectTimeout(timeout);
-	        connection.setReadTimeout(timeout);
+	        HttpURLConnection connection = (HttpURLConnection) prepareURLConnection(url, timeout);
 	        connection.setRequestMethod("HEAD");
 	        int responseCode = connection.getResponseCode();
 	        return (200 <= responseCode && responseCode <= 399);
@@ -206,6 +200,34 @@ public class FileDownloadUtils {
 	        return false;
 	    }
 	}
+        
+        /**
+         * Prepare {@link URLConnection} with customised timeouts.
+         * 
+         * @param url The URL
+         * @param timeout The timeout in millis for both the connection timeout and the response read timeout. Note that
+	 * the total timeout is effectively two times the given timeout.
+         * 
+         * <p>
+         * Example of code.
+         * <code>
+         * UrlConnection conn = prepareURLConnection("http://www.google.com/", 20000);
+         * conn.connect();
+         * conn.getInputStream();
+         * </code>
+         * <p>
+         * 
+         * <bold>NB. User should execute connect() method before getting input stream.</bold>
+         * @return
+         * @throws IOException
+         * @author Jacek Grzebyta
+         */
+        public static URLConnection prepareURLConnection(String url, int timeout) throws IOException {
+            URLConnection connection = new URL(url).openConnection();
+            connection.setReadTimeout(timeout);
+            connection.setConnectTimeout(timeout);
+            return connection;
+        }
 	
 	public static void main(String[] args) {
 		String url;
