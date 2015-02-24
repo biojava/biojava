@@ -88,7 +88,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         header = genbankParser.getHeader();
         features = genbankParser.getFeatures();
 
-        if (compoundSet.equals(AminoAcidCompoundSet.class)) {
+        if (compoundSet.getClass().equals(AminoAcidCompoundSet.class)) {
             if (!genbankParser.getCompoundType().equals(compoundSet)) {
                 logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
                 throw new IOException("Wrong declared compound type for: " + accessionID); 

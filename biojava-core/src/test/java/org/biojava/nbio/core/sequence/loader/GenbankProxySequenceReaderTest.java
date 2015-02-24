@@ -62,12 +62,10 @@ public class GenbankProxySequenceReaderTest {
         String[][] out = new String[][]{
             {"399235158"},
             {"7525057"},
-            {"34567"},
             {"379015144"},
             {"381353147"},
             {"381353148"},
             {"152970917"},
-            {"7856885"},
             {"381353149"},
             {"254839678"}
         };
@@ -87,16 +85,16 @@ public class GenbankProxySequenceReaderTest {
         ProteinSequence seq = new ProteinSequence(genbankReader);
 
         Assert.assertNotNull("protein sequence is null", seq);
-        
+
         /*
-        parse description from header. There is no separate interface/abstract class for method getHeader()
-        so it should be done here (manualy).
-        */
+         parse description from header. There is no separate interface/abstract class for method getHeader()
+         so it should be done here (manualy).
+         */
         genbankReader.getHeaderParser().parseHeader(genbankReader.getHeader(), seq);
-        
+
         // test description
         Assert.assertTrue(seq.getDescription() != null);
-        
+
         // test accession Id
         logger.info("accession id: {}", seq.getAccession().getID());
         Assert.assertNotNull(seq.getAccession().getID());
@@ -104,7 +102,8 @@ public class GenbankProxySequenceReaderTest {
         // test taxonomy id
         logger.info("taxonomy id: {}", seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getTaxonomy().getID());
-        
+        Assert.assertNotNull(Integer.decode(seq.getTaxonomy().getID().split(":")[1]));
+
         // test taxonomy name
         String taxonName = seq.getFeaturesByType("source").get(0).getQualifiers().get("organism").getValue();
         logger.info("taxonomy name '{}'", taxonName);
