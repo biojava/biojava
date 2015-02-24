@@ -34,8 +34,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import org.biojava.nbio.core.sequence.features.AbstractFeature;
+import org.biojava.nbio.core.sequence.features.Qualifier;
+import org.junit.Ignore;
 
 /**
  * Testing example for issue #834
@@ -73,7 +77,7 @@ public class GenbankProxySequenceReaderTest {
     }
 
     @Test
-    public void biojava3() throws IOException, InterruptedException, CompoundNotFoundException {
+    public void testFeatures() throws IOException, InterruptedException, CompoundNotFoundException {
         logger.info("run test for protein: {}", gi);
         GenbankProxySequenceReader<AminoAcidCompound> genbankReader
                 = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
@@ -81,11 +85,15 @@ public class GenbankProxySequenceReaderTest {
                         AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
         // why only tests on protein sequences?
-        ProteinSequence seq = new ProteinSequence(genbankReader, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        ProteinSequence seq = new ProteinSequence(genbankReader);
 
         Assert.assertNotNull("protein sequence is null", seq);
+        
+        /*
+        parse description from header. There is no separate interface/abstract class for method getHeader()
+        so it should be done here (manualy).
+        */
         genbankReader.getHeaderParser().parseHeader(genbankReader.getHeader(), seq);
-
         Assert.assertTrue(seq.getDescription() != null);
 
         Assert.assertFalse(seq.getFeaturesKeyWord().getKeyWords().isEmpty());
@@ -103,5 +111,43 @@ public class GenbankProxySequenceReaderTest {
             Assert.assertTrue(!codedBy.isEmpty());
             logger.info("\t\tcoded_by: {}", codedBy);
         }
+    }
+
+    @Test
+    public void testProteinSequenceFactoring() throws Exception {
+        logger.info("create protein sequence test for target {}", gi);
+
+        GenbankProxySequenceReader<AminoAcidCompound> genbankReader
+                = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
+                        this.gi,
+                        AminoAcidCompoundSet.getAminoAcidCompoundSet());
+
+        ProteinSequence seq = new ProteinSequence(genbankReader);
+
+        // if target protein contain CDS/coded_by than it should contain parent nucleotide seq
+        ArrayList<AbstractFeature> CDSs = genbankReader.getFeatures().get("CDS");
+
+        if (CDSs != null) {
+            if (CDSs.size() == 1) {
+                Qualifier codedBy = (Qualifier) CDSs.get(0).getQualifiers().get("coded_by");
+                if (codedBy != null) {
+
+                    AbstractSequence<?> parentSeq = seq.getParentSequence();
+                    Assert.assertNotNull(parentSeq);
+
+                    /* 
+                     Sometimes protein might have many 'parents' with different accessions
+                     so accession is not set.
+                
+                     That test is always failed
+                     */
+                    //Assert.assertTrue(parentSeq.getAccession()); 
+                    Assert.assertTrue(!parentSeq.getSequenceAsString().isEmpty());
+                }
+            }
+        } else {
+            logger.info("target {} has no CDS", gi);
+        }
+
     }
 }

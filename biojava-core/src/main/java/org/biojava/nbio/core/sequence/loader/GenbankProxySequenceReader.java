@@ -103,7 +103,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         if (genbankDirectoryCache != null && genbankDirectoryCache.length() > 0) {
             File f = new File(genbankDirectoryCache + File.separatorChar + accessionID + ".gb");
             if (f.exists()) {
-                logger.info("Reading: {}", f.toString());
+                logger.debug("Reading: {}", f.toString());
                 inStream = new BufferedInputStream(new FileInputStream(f));
             } else {
                 InputStream in = getEutilsInputStream(accessionID, db);
@@ -135,7 +135,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
     private InputStream getEutilsInputStream(String accessionID, String db) throws IOException {
         String genbankURL = eutilBaseURL + "efetch.fcgi?db=" + db + "&id=" + accessionID + "&rettype=gb&retmode=text";
-        logger.info("Loading: {}", genbankURL);
+        logger.trace("Loading: {}", genbankURL);
         URL genbank = new URL(genbankURL);
         URLConnection genbankConnection = genbank.openConnection();
         return genbankConnection.getInputStream();
