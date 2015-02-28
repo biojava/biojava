@@ -2029,7 +2029,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				return current_group;
 			}
 			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
-			Group altLocG = (Group) current_group.clone();
+			Group altLocG = current_group.clone();
 			// drop atoms from cloned group...
 			// https://redmine.open-bio.org/issues/3307
 			altLocG.setAtoms(new ArrayList<Atom>());

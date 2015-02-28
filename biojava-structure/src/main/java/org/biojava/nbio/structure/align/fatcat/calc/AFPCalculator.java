@@ -232,7 +232,7 @@ public class AFPCalculator
 
 		for (int i=0;i< fragmentLength;i++){
 			if (clone){
-				tmp[i] = (Atom)caall[i+pos].clone();
+				tmp[i] = caall[i+pos].clone();
 			} else {
 				tmp[i] = caall[i+pos];
 			}

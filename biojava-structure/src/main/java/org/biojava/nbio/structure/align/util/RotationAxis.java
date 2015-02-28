@@ -145,7 +145,7 @@ public final class RotationAxis {
 	 */
 	public RotationAxis(Atom axis, Atom pos, double theta) {
 		this.rotationAxis = Calc.unitVector(axis);
-		this.rotationPos = (Atom) pos.clone();
+		this.rotationPos = pos.clone();
 		this.theta = theta;
 		this.screwTranslation = new AtomImpl(); //zero
 		this.otherTranslation = null; //deprecated
@@ -408,9 +408,9 @@ public final class RotationAxis {
 		}
 
 		// Find end points of the rotation axis to display
-		Atom axisMin = (Atom) axialPt.clone();
+		Atom axisMin = axialPt.clone();
 		Calc.scaleAdd(min, rotationAxis, axisMin);
-		Atom axisMax = (Atom) axialPt.clone();
+		Atom axisMax = axialPt.clone();
 		Calc.scaleAdd(max, rotationAxis, axisMax);
 
 		StringWriter result = new StringWriter();

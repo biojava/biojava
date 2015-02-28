@@ -180,7 +180,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	 * @return  and identical copy of this Group object
 	 */
 	@Override
-	public Object clone() {
+	public AminoAcidImpl clone() {
 
 		AminoAcidImpl n = new AminoAcidImpl();
 		n.setPDBFlag(has3D());		
@@ -193,7 +193,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 
 		// copy the atoms
 		for (Atom atom1 : atoms) {
-			Atom atom = (Atom) atom1.clone();
+			Atom atom = atom1.clone();
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}

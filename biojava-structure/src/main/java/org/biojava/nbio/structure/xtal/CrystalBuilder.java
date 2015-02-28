@@ -320,7 +320,7 @@ public class CrystalBuilder {
 								if (n==0 && a==0 && b==0 && c==0) {
 									chainj = structure.getChain(j);
 								} else {
-									chainj = (Chain)structure.getChain(j).clone();
+									chainj = structure.getChain(j).clone();
 									Matrix4d m = new Matrix4d(ops[n]);
 									translate(m, transOrth);
 									Calc.transform(chainj,m);

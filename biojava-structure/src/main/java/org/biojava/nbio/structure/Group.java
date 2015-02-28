@@ -221,7 +221,7 @@ public interface Group {
 	/** returns and identical copy of this Group object .
 	 * @return  and identical copy of this Group object
 	 */
-	public Object clone();
+	public Group clone();
 
 	/**
 	 * Sets the back-reference to its parent Chain.

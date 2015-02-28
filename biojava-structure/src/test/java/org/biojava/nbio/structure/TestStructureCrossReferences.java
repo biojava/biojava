@@ -165,7 +165,7 @@ public class TestStructureCrossReferences {
 		
 		System.out.println("Testing references of chain clones");
 		for (Chain c:structure.getChains()) {
-			Chain clonedChain = (Chain) c.clone();
+			Chain clonedChain = c.clone();
 			testChainRefs(clonedChain);
 		}
 		

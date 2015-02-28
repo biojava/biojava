@@ -344,7 +344,7 @@ public class BioAssemblyTools {
 					Atom a = g.getAtom(StructureTools.CA_ATOM_NAME);
 					if ( a != null){
 						
-						Group g1 = (Group)g.clone();
+						Group g1 = g.clone();
 						g1.clearAtoms();
 						g1.addAtom(a);
 						c1.addGroup(g1);

@@ -306,7 +306,7 @@ public class AlternativeAlignment implements Serializable{
 
 		Atom[] ca3 = new Atom[ca2.length];
 		for ( int i = 0 ; i < ca2.length;i++){
-			ca3[i] = (Atom) ca2[i].clone();
+			ca3[i] = ca2[i].clone();
 
 		}
 		// do the inital superpos...
@@ -462,7 +462,7 @@ public class AlternativeAlignment implements Serializable{
 		// avoid any operations on the original Atoms ...
 		Atom[] ca3 = new Atom[ca2.length];
 		for ( int i = 0 ; i < ca2.length;i++){
-			ca3[i] = (Atom) ca2[i].clone();
+			ca3[i] = ca2[i].clone();
 
 		}
 		//Atom[] ca3 = (Atom[]) ca2.clone();
@@ -773,7 +773,7 @@ public class AlternativeAlignment implements Serializable{
 			int pos2 =  idx2[i];
 
 			ca1subset[i] =  ca1[pos1];
-			ca2subset[i] = (Atom) ca2[pos2].clone();
+			ca2subset[i] = ca2[pos2].clone();
 		}
 
 		SVDSuperimposer svd = new SVDSuperimposer(ca1subset,ca2subset);

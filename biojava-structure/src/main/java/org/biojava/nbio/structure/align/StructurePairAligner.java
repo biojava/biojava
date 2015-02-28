@@ -478,7 +478,7 @@ public class StructurePairAligner {
 						Matrix rotmat = svd.getRotation();
 						f.setRot(rotmat);
 
-						Atom aunitv = (Atom)unitvector.clone();
+						Atom aunitv = unitvector.clone();
 						Calc.rotate(aunitv,rotmat);
 						f.setUnitv(aunitv);
 

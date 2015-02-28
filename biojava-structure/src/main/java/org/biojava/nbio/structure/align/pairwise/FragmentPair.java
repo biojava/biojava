@@ -83,14 +83,14 @@ public class FragmentPair {
 
     }
     @Override
-    public Object clone(){
+    public FragmentPair clone(){
         
         FragmentPair n = new FragmentPair(length,pos1,pos2);
         if ( center1 !=null)
-            n.setCenter1((Atom)center1.clone());
+            n.setCenter1(center1.clone());
         
         if ( center2 != null)
-            n.setCenter2((Atom)center2.clone());
+            n.setCenter2(center2.clone());
         
         n.setCluster(cluster);
         n.setContacts(contacts);
@@ -98,7 +98,7 @@ public class FragmentPair {
         n.setRms(rms);
         n.setLength(length);
         n.setRot((Matrix)rot.clone());
-        n.setUnitv((Atom)unitv.clone());
+        n.setUnitv(unitv.clone());
         
         return n;
     }

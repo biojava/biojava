@@ -120,7 +120,7 @@ public class FragmentJoiner {
 
       FragmentPair[] tmpfidx = new FragmentPair[fraglst.length];
       for ( int i=0 ; i < fraglst.length; i++){
-         tmpfidx[i] = (FragmentPair)fraglst[i].clone();
+         tmpfidx[i] = fraglst[i].clone();
       }
 
       int n  = tmpfidx.length;
@@ -278,7 +278,7 @@ public class FragmentJoiner {
       ftmp.add(p2i,p2j,0,l2);
       Atom[] a3 = new Atom[a2.length];
       for (int i=0;i < a2.length;i++){
-         a3[i] = (Atom)a2[i].clone();
+         a3[i] = a2[i].clone();
       }
       return getRMS(a1,a3,ftmp);
    }
@@ -363,7 +363,7 @@ public class FragmentJoiner {
 
       FragmentPair[] tmpfidx = new FragmentPair[fraglst.length];
       for ( int i=0 ; i < fraglst.length; i++){
-         tmpfidx[i] = (FragmentPair)fraglst[i].clone();
+         tmpfidx[i] = fraglst[i].clone();
       }
 
       int n  = tmpfidx.length;

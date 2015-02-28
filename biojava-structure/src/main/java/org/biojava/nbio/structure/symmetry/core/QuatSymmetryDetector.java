@@ -133,7 +133,7 @@ public class QuatSymmetryDetector {
 						addToLocalSymmetry(result, lSymmetry);
 						
 						double time = (System.nanoTime()- start)/1000000000;
-						if (time > ((QuatSymmetryParameters) parameters).getLocalTimeLimit()) {
+						if (time > parameters.getLocalTimeLimit()) {
 							System.out.println("Warning: QuatSymmetryDetector: Exceeded time limit for local symmetry calculations: " + time +
 									" seconds. Results may be incomplete");
 							break;

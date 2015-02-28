@@ -128,7 +128,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @return an identical copy of this Chain
 	 */
 	@Override
-	public Object clone() {
+	public ChainImpl clone() {
 		// go through all groups and add to new Chain.
 		ChainImpl n = new ChainImpl();
 		// copy chain data:
@@ -143,7 +143,7 @@ public class ChainImpl implements Chain, Serializable {
 		n.setInternalChainID(internalChainID);
 
 		for (Group group : groups) {
-			Group g = (Group) group.clone();
+			Group g = group.clone();
 			n.addGroup(g);
 			g.setChain(n);
 		}
@@ -155,7 +155,7 @@ public class ChainImpl implements Chain, Serializable {
 
 			List<Group> tmpSeqRes = new ArrayList<Group>();
 			for (Group seqResGroup : seqResGroups) {
-				Group g = (Group) seqResGroup.clone();
+				Group g = seqResGroup.clone();
 				g.setChain(n);
 				tmpSeqRes.add(g);
 			}

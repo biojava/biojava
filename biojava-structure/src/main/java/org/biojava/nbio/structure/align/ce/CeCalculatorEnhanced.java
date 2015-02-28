@@ -1922,7 +1922,7 @@ nBestTrace=nTrace;
 
 		for(int l=0; l<nse2; l++) {
 			Atom a = caA[l];
-			Group g = (Group)a.getGroup().clone();
+			Group g = a.getGroup().clone();
 			//Group g = (Group)a.getParent();
 
 			Calc.rotate( g, m);
@@ -2018,7 +2018,7 @@ nBestTrace=nTrace;
 
 			Atom a;
 			if ( clone ){
-				Group g = (Group)ca[i].getGroup().clone();
+				Group g = ca[i].getGroup().clone();
 				a = g.getAtom(StructureTools.CA_ATOM_NAME);
 			}
 			else {
