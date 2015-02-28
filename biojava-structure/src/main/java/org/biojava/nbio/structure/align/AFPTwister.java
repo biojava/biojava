@@ -289,8 +289,8 @@ public class AFPTwister
          int p = positions[i];
          Atom a;
          if ( clone ){
-            a = (Atom)ca[p].clone();
-            a.setGroup((Group)ca[p].getGroup().clone());
+            a = ca[p].clone();
+            a.setGroup(ca[p].getGroup().clone());
          }
          else {
             a = ca[p];
@@ -322,7 +322,7 @@ public class AFPTwister
       for(int i = r1; i < r2; i ++) {
 
          Group g = p2[i].getGroup();
-         Group newG = (Group)g.clone();
+         Group newG = g.clone();
 
          p1[i] = newG.getAtom(StructureTools.CA_ATOM_NAME);
          Chain parentC = g.getChain();

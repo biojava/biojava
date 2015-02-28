@@ -187,7 +187,7 @@ public interface Atom extends Cloneable, PDBRecord {
      * Return an identical copy of this  object .
      * @return  an identical copy of this  object 
      */
-    public Object clone();
+    public Atom clone();
     
     /** 
      * Set the back-reference to its parent Group.

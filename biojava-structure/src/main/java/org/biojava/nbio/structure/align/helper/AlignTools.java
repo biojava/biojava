@@ -41,7 +41,7 @@ public class AlignTools {
 		for (int p = 0 ; p < idx.length;p++){
 
 			int pos1 =  idx[p];
-			subset[p] =  (Atom) caall[pos1].clone();            
+			subset[p] =  caall[pos1].clone();            
 		}
 		return subset;
 	}
@@ -61,7 +61,7 @@ public class AlignTools {
 		Atom[] tmp = new Atom[fragmentLength];
 
 		for (int i=0;i< fragmentLength;i++){
-			tmp[i] = (Atom)caall[i+pos].clone();
+			tmp[i] = caall[i+pos].clone();
 		}
 		return tmp;
 

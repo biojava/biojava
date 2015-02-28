@@ -476,7 +476,7 @@ public class CeCPMain extends CeMain {
 				atoms1[pos] = ca1[pair.a];
 				// Clone residue to allow modification
 				Atom atom2 = ca2duplicated[pair.b];
-				Group g = (Group) atom2.getGroup().clone();
+				Group g = atom2.getGroup().clone();
 				atoms2[pos] = g.getAtom( atom2.getName() );
 				pos++;
 			}
@@ -516,7 +516,7 @@ public class CeCPMain extends CeMain {
 			for(int i=1;i<blocks.size();i++) {
 				blockRMSDs[i] = -1; //TODO Recalculate for the FATCAT text format
 				blockRotationMatrices[i] = (Matrix) blockRotationMatrices[0].clone();
-				blockShifts[i] = (Atom) blockShifts[0].clone();
+				blockShifts[i] = blockShifts[0].clone();
 			}
 			
 		}

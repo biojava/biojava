@@ -20,19 +20,24 @@
  */
 package org.biojava.nbio.aaproperties.xml;
 
-import org.biojava.nbio.aaproperties.PeptideProperties;
-import org.biojava.nbio.aaproperties.xml.*;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.biojava.nbio.aaproperties.PeptideProperties;
+import org.junit.Test;
 
 public class AminoAcidTest {
 	

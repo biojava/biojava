@@ -249,7 +249,7 @@ public class AFPChain implements Serializable, Cloneable
 	 * Creates and returns a copy of this object.
 	 */
 	@Override
-	public Object clone() {
+	public AFPChain clone() {
 		return new AFPChain(this);
 	}
 

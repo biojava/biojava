@@ -588,10 +588,10 @@ public class SecStruc {
 					if ( N == null || CA == null || C == null || O == null)
 						continue;
 
-					sg.setN((Atom)   N.clone());
-					sg.setCA((Atom) CA.clone());
-					sg.setC((Atom)   C.clone());
-					sg.setO((Atom)  O.clone());
+					sg.setN(N.clone());
+					sg.setCA(CA.clone());
+					sg.setC(C.clone());
+					sg.setO(O.clone());
 					sg.setOriginal(g);
 					// create H in calc_H
 

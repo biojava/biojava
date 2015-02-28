@@ -670,7 +670,7 @@ public class AFPChainer
 
 		for ( int i =0 ; i< focusResn;i++){
 			tmp1[i] =       ca1[focusRes1[i]];
-			tmp2[i] = (Atom)ca2[focusRes2[i]].clone();
+			tmp2[i] = ca2[focusRes2[i]].clone();
 			if (tmp1[i].getCoords() == null){
 				System.err.println("tmp1 got null: " +i + " pos: " + focusRes1[i]);
 			}

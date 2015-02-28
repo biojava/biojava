@@ -486,7 +486,7 @@ public class StructureTools {
 				model.add(newChain);
 			}
 
-			Group parentN = (Group)parentG.clone();
+			Group parentN = parentG.clone();
 
 			newCA[apos] = parentN.getAtom(CA_ATOM_NAME);
 			newChain.addGroup(parentN);
@@ -522,7 +522,7 @@ public class StructureTools {
 				model.add(newChain);
 			}
 
-			Group ng = (Group)parentG.clone();
+			Group ng = parentG.clone();
 			newGroup[apos] = ng;
 			newChain.addGroup(ng);
 		}
@@ -546,7 +546,7 @@ public class StructureTools {
 		Chain c = null;
 		String prevChainId = "";
 		for (Atom a : ca2){			
-			Group g = (Group) a.getGroup().clone(); // works because each group has only a CA atom
+			Group g = a.getGroup().clone(); // works because each group has only a CA atom
 
 			if (c == null ) {
 				c = new ChainImpl();
@@ -570,7 +570,7 @@ public class StructureTools {
 		c = null;
 		prevChainId = "";
 		for (Atom a : ca2){
-			Group g = (Group)a.getGroup().clone();
+			Group g = a.getGroup().clone();
 
 			if (c == null ) {
 				c = new ChainImpl();

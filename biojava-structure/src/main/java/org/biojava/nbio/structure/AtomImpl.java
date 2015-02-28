@@ -189,7 +189,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	 * @return  and identical copy of this  object
 	 */
 	@Override
-	public Object clone() {
+	public Atom clone() {
 		AtomImpl n = new AtomImpl();
 		n.setOccupancy(getOccupancy());
 		n.setTempFactor(getTempFactor());

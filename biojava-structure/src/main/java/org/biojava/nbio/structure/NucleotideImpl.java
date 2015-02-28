@@ -95,7 +95,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 	}
 
 	@Override
-	public Object clone(){
+	public NucleotideImpl clone(){
 		NucleotideImpl n = new NucleotideImpl();
 
 		n.setPDBFlag(has3D());
@@ -105,7 +105,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 		// copy the atoms
 		for (Atom atom1 : atoms) {
-			Atom atom = (Atom) atom1.clone();
+			Atom atom = atom1.clone();
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}

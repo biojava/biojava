@@ -574,7 +574,7 @@ public class Calc {
 			} catch (Exception e){
 				logger.error("Exception: ", e);
 			}
-			oldAtom = (Atom)atom.clone();
+			oldAtom = atom.clone();
 
 			double x = atom.getX();
 			double y = atom.getY() ;
@@ -596,7 +596,7 @@ public class Calc {
 			} catch (Exception e){
 				logger.error("Exception: ", e);
 			}
-			rotOldAtom  = (Atom) atom.clone();
+			rotOldAtom  = atom.clone();
 		}
 
 	}

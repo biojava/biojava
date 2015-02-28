@@ -63,7 +63,7 @@ public class AFPChainScorer {
 				int pos1 = optAln[block][0][i];
 				int pos2 = optAln[block][1][i];
 				Atom a1 = ca1[pos1];
-				Atom a2 = (Atom) ca2[pos2].clone();
+				Atom a2 = ca2[pos2].clone();
 								
 				ca1aligned[pos] = a1;
 				ca2aligned[pos] = a2;

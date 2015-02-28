@@ -76,7 +76,7 @@ public class BiologicalAssemblyBuilder {
 				}
 
 				if (transformation.getChainId().equals(intChainID)){
-					Chain chain = (Chain)c.clone();
+					Chain chain = c.clone();
 					
 					for (Group g : chain.getAtomGroups()) {
 

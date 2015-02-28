@@ -152,7 +152,7 @@ public class StructureImpl implements Structure, Serializable {
 
 			for (int j=0;j<size(i);j++){
 
-				Chain cloned_chain  = (Chain) getChain(i,j).clone();
+				Chain cloned_chain  = getChain(i,j).clone();
 
 				// setting the parent: can only be done from the parent
 				cloned_chain.setParent(n);

@@ -329,7 +329,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * @return  and identical copy of this Group object
 	 */
 	@Override
-	public Object clone() {
+	public HetatomImpl clone() {
 
 		HetatomImpl n = new HetatomImpl();
 		n.setPDBFlag(has3D());
@@ -339,7 +339,7 @@ public class HetatomImpl implements Group,Serializable {
 		
 		// copy the atoms
 		for (Atom atom1 : atoms) {
-			Atom atom = (Atom) atom1.clone();
+			Atom atom = atom1.clone();
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}

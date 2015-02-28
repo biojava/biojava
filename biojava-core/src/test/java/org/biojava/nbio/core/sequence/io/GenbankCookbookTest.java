@@ -24,6 +24,8 @@
  */
 package org.biojava.nbio.core.sequence.io;
 
+import java.util.LinkedHashMap;
+
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -32,13 +34,13 @@ import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.io.util.ClasspathResource;
 import org.biojava.nbio.core.sequence.loader.GenbankProxySequenceReader;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.LinkedHashMap;
 
 /**
  *

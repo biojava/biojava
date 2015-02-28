@@ -51,7 +51,7 @@ public interface Chain {
     /** returns an identical copy of this Chain. 
      * @return  an identical copy of this Chain 
      */
-    public Object clone();
+    public Chain clone();
 
     /** add a group to the list of ATOM record group of this chain.
      * To add SEQRES records a more complex alignment between ATOM and SEQRES residues

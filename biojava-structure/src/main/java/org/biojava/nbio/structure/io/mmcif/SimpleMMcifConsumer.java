@@ -524,7 +524,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				return current_group;
 			}
 			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
-			Group altLocG = (Group) current_group.clone();
+			Group altLocG = current_group.clone();
 			// drop atoms from cloned group...
 			// https://redmine.open-bio.org/issues/3307
 			altLocG.setAtoms(new ArrayList<Atom>());
@@ -602,7 +602,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			asymId2entityId.put(asym.getId(), asym.getEntity_id());
 			
 			Chain s = getEntityChain(asym.getEntity_id());
-			Chain seqres = (Chain)s.clone();
+			Chain seqres = s.clone();
 			// to solve issue #160 (e.g. 3u7t)
 			seqres = removeSeqResHeterogeneity(seqres);
 			seqres.setChainID(asym.getId());
@@ -940,7 +940,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// we need to first clone the seqres so that they stay independent for different models
 				List<Group> seqResGroups = new ArrayList<Group>();
 				for (int i=0;i<seqResChain.getAtomGroups().size();i++) {
-					seqResGroups.add((Group)seqResChain.getAtomGroups().get(i).clone());
+					seqResGroups.add(seqResChain.getAtomGroups().get(i).clone());
 				}
 
 				for ( int seqResPos = 0 ; seqResPos < seqResGroups.size(); seqResPos++) {
