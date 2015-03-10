@@ -20,9 +20,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.biojava.nbio.core.util.ConcurrencyTools;
-import org.biojava.nbio.structure.domain.EcodDomain;
-import org.biojava.nbio.structure.domain.EcodInstallation;
-import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.structure.ecod.EcodDatabase;
+import org.biojava.nbio.structure.ecod.EcodDomain;
+import org.biojava.nbio.structure.ecod.EcodFactory;
+import org.biojava.nbio.structure.ecod.EcodInstallation;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -41,8 +42,7 @@ public class EcodInstallationTest {
 
 	// Set up static ecod singleton
 	static {
-		ecod = new EcodInstallation();
-		ecod.setVersion(VERSION);
+		ecod = (EcodInstallation) EcodFactory.getEcodDatabase(VERSION);
 	}
 
 	static {
@@ -53,8 +53,7 @@ public class EcodInstallationTest {
 	@Test
 	public void testDownloads() throws IOException {
 		// Use second installation with tmp location to avoid overwriting main cache
-		EcodInstallation ecod2 = new EcodInstallation(tmpFolder.getRoot().getAbsolutePath());
-		ecod2.setVersion(VERSION);
+		EcodInstallation ecod2 = new EcodInstallation(tmpFolder.getRoot().getAbsolutePath(),VERSION);
 		// Delete old VERSION
 		File domainsFile = new File(ecod2.getCacheLocation(),"ecod."+VERSION+".domains.txt");
 		if( domainsFile.exists() ) {
@@ -80,7 +79,7 @@ public class EcodInstallationTest {
 
 		pdbId = "1lyw";
 		expectedDomains = new String[] {"e1lyw.1","e1lyw.2","e1lyw.3","e1lyw.4"};
-		domains = ecod.getDomainsForPDB(pdbId);
+		domains = ecod.getDomainsForPdb(pdbId);
 
 		matchNames(pdbId,expectedDomains,domains);
 
@@ -114,7 +113,11 @@ public class EcodInstallationTest {
 				"UNK_F_TYPE", false, Collections.singleton("EPE")
 				);
 		assertEquals(ecodId,expected,domain);
-
+		
+		ecodId = "e4v4fAA1";
+		domain = ecod.getDomainsById(ecodId);
+		assertNotNull(ecodId,domain);
+		assertEquals(ecodId,ecodId,domain.getDomainId());
 	}
 
 	@Test

@@ -1,4 +1,24 @@
-package org.biojava.nbio.structure.domain;
+/*
+ * BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ */
+
+package org.biojava.nbio.structure.ecod;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,7 +45,22 @@ import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EcodInstallation {
+/**
+ * Provides access to the Evolutionary Classification of Protein Domains (ECOD).
+ * 
+ * The preferred mechanism for obtaining instances of this class is through the
+ * {@link EcodFactory} class.
+ * 
+ * Reference:
+ * H. Cheng, R. D. Schaeffer, Y. Liao, L. N. Kinch, J. Pei, S. Shi, B. H.\
+ *   Kim, N. V. Grishin. (2014) ECOD: An evolutionary classification of protein
+ *   domains. PLoS Comput Biol 10(12): e1003926.
+ * http://prodata.swmed.edu/ecod/
+ * 
+ * @author Spencer Bliven
+ *
+ */
+public class EcodInstallation implements EcodDatabase {
 	private static final Logger logger = LoggerFactory.getLogger(EcodInstallation.class);
 
 	public static final String DEFAULT_VERSION = "latest";
@@ -34,34 +69,51 @@ public class EcodInstallation {
 	public static final String ECOD_URL = "http://prodata.swmed.edu";
 	public static final String DOMAINS_PATH = "/ecod/distributions/";
 
-	public static final Pattern ECOD_RE = Pattern.compile("e(....)(.)(.)");
+	// ECOD identifiers are e<pdbID><chain><domain>, where chain and domain
+	// Chain and domain can both be multi-letter (e.g. e2q7zA10)
+	public static final Pattern ECOD_RE = Pattern.compile("^e(....).+\\d+$");
 
 
 	private String cacheLocation;
-	private String version;
+	private String requestedVersion; // version requested, e.g. "latest". Used for the paths
+	private String parsedVersion; // actual version parsed
 
 	// lock to prevent multiple threads from downloading simultaneously
 	// Should hold the lock when reading/writing allDomains or domainMap
 	private ReadWriteLock domainsFileLock;
 	private List<EcodDomain> allDomains;
-	private Map<String,List<EcodDomain>> domainMap;//PDB ID -> domains
+	private Map<String,List<EcodDomain>> domainMap;//PDB ID -> domains, lazily constructed from allDomains
 
 	private String url;
 
-	public EcodInstallation(String cacheLocation) {
+	/**
+	 * Use EcodFactory to create instances. The instantiation of multiple
+	 * installations at the same path can lead to race conditions when downloading
+	 * files.
+	 * @param cacheLocation Location to save files, typically from the PDB_CACHE_DIR parameter
+	 * @param requestedVersion ECOD requestedVersion to fetch
+	 */
+	public EcodInstallation(String cacheLocation, String version) {
 		domainsFileLock = new ReentrantReadWriteLock();
 
 		this.cacheLocation = cacheLocation;
 
-		this.version = DEFAULT_VERSION;
+		this.requestedVersion = version;
 		this.url = ECOD_URL;
 
 		allDomains = null; // null signals it needs to be parsed
 		domainMap = null; // null signals it needs to be constructed from allDomains
 	}
 
-	public EcodInstallation() {
-		this( new UserConfiguration().getCacheFilePath() );
+	/**
+	 * @see EcodFactory#getEcodDatabase()
+	 */
+	EcodInstallation() {
+		this( new UserConfiguration().getCacheFilePath(), DEFAULT_VERSION );
+	}
+	/**
+	public EcodInstallation(String cacheLocation) {
+		this( cacheLocation, DEFAULT_VERSION );
 	}
 
 	/**
@@ -70,7 +122,8 @@ public class EcodInstallation {
 	 * @return the list of domains, or null if no matching domains were found
 	 * @throws IOException
 	 */
-	public List<EcodDomain> getDomainsForPDB(String pdbId) throws IOException {
+	@Override
+	public List<EcodDomain> getDomainsForPdb(String pdbId) throws IOException {
 		domainsFileLock.readLock().lock();
 		try {
 			logger.trace("LOCK readlock");
@@ -101,6 +154,13 @@ public class EcodInstallation {
 		}
 	}
 
+	/**
+	 * Get a particular ECOD domain by the domain ID (e.g. "e4hhbA1")
+	 * @param ecodId
+	 * @return
+	 * @throws IOException
+	 */
+	@Override
 	public EcodDomain getDomainsById(String ecodId) throws IOException {
 		if(ecodId == null || ecodId.isEmpty()) {
 			return null;
@@ -110,7 +170,7 @@ public class EcodInstallation {
 		String pdbId = null;
 		if( match.matches() )
 			pdbId = match.group(1);
-		List<EcodDomain> doms = getDomainsForPDB(pdbId);
+		List<EcodDomain> doms = getDomainsForPdb(pdbId);
 		if(doms == null) {
 			logger.debug("Null domains for {} from {}",pdbId,ecodId);
 			return null;
@@ -124,6 +184,12 @@ public class EcodInstallation {
 		return null;
 	}
 
+	/**
+	 * Get all ECOD domains
+	 * @return
+	 * @throws IOException
+	 */
+	@Override
 	public List<EcodDomain> getAllDomains() throws IOException {
 		domainsFileLock.readLock().lock();
 		logger.trace("LOCK readlock");
@@ -155,31 +221,19 @@ public class EcodInstallation {
 		logger.trace("UNLOCK writelock");
 		domainsFileLock.writeLock().unlock();
 	}
+	/**
+	 * Return the ECOD version, as parsed from the file.
+	 * 
+	 * Note that this may differ from the version requested in the constructor
+	 * for the special case of "latest"
+	 * @return the ECOD version
+	 */
+	@Override
 	public String getVersion() {
-		return version;
-	}
-	public void setVersion(String version) {
-		domainsFileLock.readLock().lock();
-		logger.trace("LOCK readlock");
-		try {
-			if(version.equals(this.version)) {
-				return; //no change
-			}
-		} finally {
-			logger.trace("UNLOCK readlock");
-			domainsFileLock.readLock().unlock();
+		if( parsedVersion == null) {
+			return requestedVersion;
 		}
-
-		// update version and force reparsing
-		domainsFileLock.writeLock().lock();
-		logger.trace("LOCK writelock");
-		try {
-			this.version = version;
-			this.clear();
-		} finally {
-			logger.trace("UNLOCK writelock");
-			domainsFileLock.writeLock().unlock();
-		}
+		return parsedVersion;
 	}
 
 	/**
@@ -225,9 +279,10 @@ public class EcodInstallation {
 	/**
 	 * Blocks until ECOD domains file has been downloaded and parsed.
 	 * 
-	 * This may be useful in multithreaded environments
+	 * This may be useful in multithreaded environments.
 	 * @throws IOException
 	 */
+	// Populates allDomains
 	public void ensureDomainsFileInstalled() throws IOException{
 		// Quick check for availability
 		domainsFileLock.readLock().lock();
@@ -294,7 +349,7 @@ public class EcodInstallation {
 	}
 
 	/**
-	 * Basename for the domains file with the current version.
+	 * Basename for the domains file with the current requestedVersion.
 	 * @return
 	 */
 	private String getDomainFilename() {
@@ -319,6 +374,7 @@ public class EcodInstallation {
 		try {
 			EcodParser parser = new EcodParser(getDomainFile());
 			allDomains = parser.getDomains();
+			parsedVersion = parser.getVersion();
 		} finally {
 			logger.trace("UNLOCK writelock");
 			domainsFileLock.writeLock().unlock();
@@ -326,7 +382,7 @@ public class EcodInstallation {
 	}
 
 	/**
-	 * Populates domainMap
+	 * Populates domainMap from allDomains
 	 * @throws IOException 
 	 */
 	private void indexDomains() throws IOException {
@@ -372,7 +428,8 @@ public class EcodInstallation {
 
 	public static class EcodParser {
 
-		private final List<EcodDomain> domains;
+		private List<EcodDomain> domains;
+		private String version;
 
 		public EcodParser(String filename) throws IOException {
 			this(new File(filename));
@@ -384,93 +441,111 @@ public class EcodInstallation {
 			this(new BufferedReader(reader));
 		}
 		public EcodParser(BufferedReader reader) throws IOException {
-			domains =Collections.unmodifiableList( parse(reader) );
+			version = null;
+			parse(reader);
 		}
 
-		private static List<EcodDomain> parse(BufferedReader in) throws IOException {
-			ArrayList<EcodDomain> domains = null;
+		private void parse(BufferedReader in) throws IOException {
 			try {
 				// Allocate plenty of space for ECOD as of 2015 
-				domains = new ArrayList<EcodDomain>(500000);
+				ArrayList<EcodDomain> domainsList = new ArrayList<EcodDomain>(500000);
+
+				Pattern versionRE = Pattern.compile("^\\s*#.*ECOD\\s*requestedVersion\\s+(\\w+)");
+				Pattern commentRE = Pattern.compile("^\\s*#");
 
 				String line = in.readLine();
 				int lineNum = 0;
 				while( line != null ) {
-					// Ignore comments
-					if( line.charAt(0) != '#' ) {
-						String[] fields = line.split("\t");
-						if( fields.length == 13 ) {
-							try {
-								int i = 0; // field number, to allow future insertion of fields
-
-								Long uid = Long.parseLong(fields[i++]);
-								String domainId = fields[i++];
-								Boolean manual = null;
-
-								// heirarchical field, e.g. "1.1.4"
-								String[] xhtGroup = fields[i++].split("\\.");
-								if(xhtGroup.length != 3) {
-									logger.warn("Unexpected format for heirarchical field \"{}\" in line {}",fields[i-1],lineNum);
-								}
-								Integer xGroup = xhtGroup.length>0 ? Integer.parseInt(xhtGroup[0]) : null;
-								Integer hGroup = xhtGroup.length>1 ? Integer.parseInt(xhtGroup[1]) : null;
-								Integer tGroup = xhtGroup.length>2 ? Integer.parseInt(xhtGroup[2]) : null;
-
-								String pdbId = fields[i++];
-								String chainId = fields[i++];
-								String range = fields[i++];
-
-								// Intern strings likely to be shared by many domains
-								String architectureName = fields[i++].intern();
-								String xGroupName = fields[i++].intern();
-								String hGroupName = fields[i++].intern();
-								String tGroupName = fields[i++].intern();
-								String fGroupName = fields[i++].intern();
-
-								Boolean isAssembly = null;
-								String assemblyStr = fields[i++];
-								if(assemblyStr.equals("NOT_DOMAIN_ASSEMBLY")) {
-									isAssembly = false;
-								} else if(assemblyStr.equals("IS_DOMAIN_ASSEMBLY")) {
-									isAssembly = true;
-								} else {
-									logger.warn("Unexpected value for assembly field \"{}\" in line {}",assemblyStr,lineNum);
-								}
-
-								String ligandStr = fields[i++];
-								Set<String> ligands = null;
-								if( ligandStr.equals("NO_LIGANDS_4A") || ligandStr.isEmpty() ) {
-									ligands = Collections.emptySet();
-								} else {
-									String[] ligSplit = ligandStr.split(",");
-									ligands = new LinkedHashSet<String>(ligSplit.length);
-									for(String s : ligSplit) {
-										ligands.add(s.intern());
-									}
-								}
-
-
-								EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, pdbId, chainId, range, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, isAssembly, ligands);
-								domains.add(domain);
-							} catch(NumberFormatException e) {
-								logger.warn("Error in ECOD parsing at line "+lineNum,e);
-							}
+					// Check for requestedVersion string
+					Matcher match = versionRE.matcher(line);
+					if(match.matches()) {
+						// special requestedVersion comment
+						this.version = match.group(1);
+					} else {
+						match = commentRE.matcher(line);
+						if(match.matches()) {
+							// ignore comments
 						} else {
-							logger.warn("Unexpected number of fields in line {}",lineNum);
+							// data line
+							String[] fields = line.split("\t");
+							if( fields.length == 13 ) {
+								try {
+									int i = 0; // field number, to allow future insertion of fields
+
+									Long uid = Long.parseLong(fields[i++]);
+									String domainId = fields[i++];
+									Boolean manual = null;
+
+									// heirarchical field, e.g. "1.1.4"
+									String[] xhtGroup = fields[i++].split("\\.");
+									if(xhtGroup.length != 3) {
+										logger.warn("Unexpected format for heirarchical field \"{}\" in line {}",fields[i-1],lineNum);
+									}
+									Integer xGroup = xhtGroup.length>0 ? Integer.parseInt(xhtGroup[0]) : null;
+									Integer hGroup = xhtGroup.length>1 ? Integer.parseInt(xhtGroup[1]) : null;
+									Integer tGroup = xhtGroup.length>2 ? Integer.parseInt(xhtGroup[2]) : null;
+
+									String pdbId = fields[i++];
+									String chainId = fields[i++];
+									String range = fields[i++];
+
+									// Intern strings likely to be shared by many domains
+									String architectureName = fields[i++].intern();
+									String xGroupName = fields[i++].intern();
+									String hGroupName = fields[i++].intern();
+									String tGroupName = fields[i++].intern();
+									String fGroupName = fields[i++].intern();
+
+									Boolean isAssembly = null;
+									String assemblyStr = fields[i++];
+									if(assemblyStr.equals("NOT_DOMAIN_ASSEMBLY")) {
+										isAssembly = false;
+									} else if(assemblyStr.equals("IS_DOMAIN_ASSEMBLY")) {
+										isAssembly = true;
+									} else {
+										logger.warn("Unexpected value for assembly field \"{}\" in line {}",assemblyStr,lineNum);
+									}
+
+									String ligandStr = fields[i++];
+									Set<String> ligands = null;
+									if( ligandStr.equals("NO_LIGANDS_4A") || ligandStr.isEmpty() ) {
+										ligands = Collections.emptySet();
+									} else {
+										String[] ligSplit = ligandStr.split(",");
+										ligands = new LinkedHashSet<String>(ligSplit.length);
+										for(String s : ligSplit) {
+											ligands.add(s.intern());
+										}
+									}
+
+
+									EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, pdbId, chainId, range, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, isAssembly, ligands);
+									domainsList.add(domain);
+								} catch(NumberFormatException e) {
+									logger.warn("Error in ECOD parsing at line "+lineNum,e);
+								}
+							} else {
+								logger.warn("Unexpected number of fields in line {}",lineNum);
+							}
 						}
 					}
 
 					line = in.readLine();
 					lineNum++;
 				}
-				logger.info("Parsed {} ECOD domains",domains.size());
+				if(this.version == null)
+					logger.info("Parsed {} ECOD domains",domainsList.size());
+				else
+					logger.info("Parsed {} ECOD domains from requestedVersion {}",domainsList.size(),this.version);
+
+
+				this.domains = Collections.unmodifiableList( domainsList );
+
 			} finally {
 				if(in != null) {
 					in.close();
 				}
 			}
-
-			return domains;
 		}
 
 		/**
@@ -478,6 +553,13 @@ public class EcodInstallation {
 		 */
 		public List<EcodDomain> getDomains() {
 			return domains;
+		}
+		
+		/**
+		 * @return the requestedVersion for this file, or null if none was parsed
+		 */
+		public String getVersion() {
+			return version;
 		}
 	}
 
