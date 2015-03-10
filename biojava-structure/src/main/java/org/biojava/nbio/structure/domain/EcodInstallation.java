@@ -73,11 +73,14 @@ public class EcodInstallation {
 	public List<EcodDomain> getDomainsForPDB(String pdbId) throws IOException {
 		domainsFileLock.readLock().lock();
 		try {
+			logger.trace("LOCK readlock");
 			while( domainMap == null ) {
 				// unlock to allow ensureDomainsFileInstalled to get the write lock
+				logger.trace("UNLOCK readlock");
 				domainsFileLock.readLock().unlock();
 				indexDomains();
 				domainsFileLock.readLock().lock();
+				logger.trace("LOCK readlock");
 			}
 
 			if(pdbId != null)
@@ -93,6 +96,7 @@ public class EcodInstallation {
 			}
 			return clonedDoms;
 		} finally {
+			logger.trace("UNLOCK readlock");
 			domainsFileLock.readLock().unlock();
 		}
 	}
@@ -107,6 +111,11 @@ public class EcodInstallation {
 		if( match.matches() )
 			pdbId = match.group(1);
 		List<EcodDomain> doms = getDomainsForPDB(pdbId);
+		if(doms == null) {
+			logger.debug("Null domains for {} from {}",pdbId,ecodId);
+			return null;
+		}
+		logger.debug("Got {} domains from {}",doms.size(),pdbId);
 		for(EcodDomain d: doms) {
 			if(ecodId.equals(d.getDomainId())) {
 				return d;
@@ -117,16 +126,20 @@ public class EcodInstallation {
 
 	public List<EcodDomain> getAllDomains() throws IOException {
 		domainsFileLock.readLock().lock();
+		logger.trace("LOCK readlock");
 		try {
 			while( allDomains == null) {
 				// unlock to allow ensureDomainsFileInstalled to get the write lock
+				logger.trace("UNLOCK readlock");
 				domainsFileLock.readLock().unlock();
 				ensureDomainsFileInstalled();
 				domainsFileLock.readLock().lock();
+				logger.trace("LOCK readlock");
 			}
 			return allDomains;
 		} finally {
-			domainsFileLock.readLock().lock();
+			logger.trace("UNLOCK readlock");
+			domainsFileLock.readLock().unlock();
 		}
 
 	}
@@ -135,9 +148,11 @@ public class EcodInstallation {
 	 * Clears all domains, requiring the file to be reparsed for subsequent accesses
 	 */
 	public void clear() {
-		domainsFileLock.writeLock().lock();;
+		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
 		allDomains = null;
 		domainMap = null;
+		logger.trace("UNLOCK writelock");
 		domainsFileLock.writeLock().unlock();
 	}
 	public String getVersion() {
@@ -145,20 +160,24 @@ public class EcodInstallation {
 	}
 	public void setVersion(String version) {
 		domainsFileLock.readLock().lock();
+		logger.trace("LOCK readlock");
 		try {
 			if(version.equals(this.version)) {
 				return; //no change
 			}
 		} finally {
+			logger.trace("UNLOCK readlock");
 			domainsFileLock.readLock().unlock();
 		}
 
 		// update version and force reparsing
 		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
 		try {
 			this.version = version;
 			this.clear();
 		} finally {
+			logger.trace("UNLOCK writelock");
 			domainsFileLock.writeLock().unlock();
 		}
 	}
@@ -197,7 +216,9 @@ public class EcodInstallation {
 		}
 		// update location
 		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
 		this.cacheLocation = cacheLocation;
+		logger.trace("UNLOCK writelock");
 		domainsFileLock.writeLock().unlock();
 	}
 
@@ -210,22 +231,26 @@ public class EcodInstallation {
 	public void ensureDomainsFileInstalled() throws IOException{
 		// Quick check for availability
 		domainsFileLock.readLock().lock();
+		logger.trace("LOCK readlock");
 		try {
 			if( allDomains != null ) {
 				return;
 			}
 		} finally {
+			logger.trace("UNLOCK readlock");
 			domainsFileLock.readLock().unlock();
 		}
 
 		// Download domains
 		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
 		try {
 			if( !domainsAvailable() ) {
 				downloadDomains();
 			}
 			parseDomains();
 		} finally {
+			logger.trace("UNLOCK writelock");
 			domainsFileLock.writeLock().unlock();
 		}
 	}
@@ -236,11 +261,13 @@ public class EcodInstallation {
 	 */
 	private boolean domainsAvailable() {
 		domainsFileLock.readLock().lock();
+		logger.trace("LOCK readlock");
 		try {
 			File f = getDomainFile();
 
 			return f.exists() && f.length()>0;
 		} finally {
+			logger.trace("UNLOCK readlock");
 			domainsFileLock.readLock().unlock();
 		}
 	}
@@ -251,6 +278,7 @@ public class EcodInstallation {
 	 */
 	private void downloadDomains() throws IOException {
 		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
 		try {
 			URL domainsURL = new URL( url + DOMAINS_PATH + getDomainFilename());
 			File localFile = getDomainFile();
@@ -260,6 +288,7 @@ public class EcodInstallation {
 		} catch (MalformedURLException e) {
 			logger.error("Malformed url: "+ url + DOMAINS_PATH + getDomainFilename(),e);
 		} finally {
+			logger.trace("UNLOCK writelock");
 			domainsFileLock.writeLock().unlock();
 		}
 	}
@@ -286,10 +315,12 @@ public class EcodInstallation {
 	 */
 	private void parseDomains() throws IOException {
 		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
 		try {
 			EcodParser parser = new EcodParser(getDomainFile());
 			allDomains = parser.getDomains();
 		} finally {
+			logger.trace("UNLOCK writelock");
 			domainsFileLock.writeLock().unlock();
 		}
 	}
@@ -300,6 +331,7 @@ public class EcodInstallation {
 	 */
 	private void indexDomains() throws IOException {
 		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
 		try {
 			if( allDomains == null) {
 				ensureDomainsFileInstalled();
@@ -331,6 +363,7 @@ public class EcodInstallation {
 				currDomains.add(d);
 			}
 		} finally {
+			logger.trace("UNLOCK writelock");
 			domainsFileLock.writeLock().unlock();
 		}
 

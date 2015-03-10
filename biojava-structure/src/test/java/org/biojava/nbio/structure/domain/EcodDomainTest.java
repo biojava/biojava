@@ -7,19 +7,33 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import org.biojava.nbio.core.util.ConcurrencyTools;
+import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Spencer Bliven
  *
  */
 public class EcodDomainTest {
+
+	private static final Logger logger = LoggerFactory.getLogger(EcodDomainTest.class);
 	private static EcodInstallation ecod;
 	private static final String VERSION = "develop77";
 
@@ -29,15 +43,23 @@ public class EcodDomainTest {
 		ecod.setVersion(VERSION);
 	}
 
+	static {
+		//System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+		} 
+	@Rule
+	public TemporaryFolder tmpFolder = new TemporaryFolder();
 	@Test
 	public void testDownloads() throws IOException {
+		// Use second installation with tmp location to avoid overwriting main cache
+		EcodInstallation ecod2 = new EcodInstallation(tmpFolder.getRoot().getAbsolutePath());
+		ecod2.setVersion(VERSION);
 		// Delete old VERSION
-		File domainsFile = new File(ecod.getCacheLocation(),"ecod."+VERSION+".domains.txt");
+		File domainsFile = new File(ecod2.getCacheLocation(),"ecod."+VERSION+".domains.txt");
 		if( domainsFile.exists() ) {
 			domainsFile.delete();
 		}
 		// Force download
-		ecod.ensureDomainsFileInstalled();
+		ecod2.ensureDomainsFileInstalled();
 		// Check for download
 		assertTrue("No downloaded file at "+domainsFile.toString(),domainsFile.exists());
 	}
@@ -91,5 +113,48 @@ public class EcodDomainTest {
 				);
 		assertEquals(ecodId,expected,domain);
 
+	}
+
+	@Test
+	public void testMultithreaded() throws IOException {
+		ecod.clear();
+		String[] ecodIds = new String[] {
+				"e4s1gA1", "e4umoB1", "e4v0cA1", "e4v1af1", "e3j7yj1", "e4wfcA1","e4b0jP1",
+		};
+		List<Future<EcodDomain>> futureDomains = new ArrayList<Future<EcodDomain>>();
+		for(final String ecodId : ecodIds) {
+			Callable<EcodDomain> job = new Callable<EcodDomain>() {
+				@Override
+				public EcodDomain call() throws Exception {
+					logger.info("Running "+ecodId);
+					EcodDomain d = ecod.getDomainsById(ecodId);
+					logger.info("Finished "+ecodId);
+					return d;
+				}
+				@Override
+				public String toString() {
+					return "Job fetching ECOD "+ecodId;
+				}
+			};
+			Future<EcodDomain> future = ConcurrencyTools.submit(job,ecodId);
+			futureDomains.add(future);
+		}
+		int successful = 0;
+		for(Future<EcodDomain> future : futureDomains) {
+			try {
+				EcodDomain domain = future.get(60, TimeUnit.SECONDS);
+				if(domain != null) {
+					successful++;
+				}
+			} catch (InterruptedException e) {
+				logger.error("Job "+future+" interrupted",e);
+			} catch (ExecutionException e) {
+				logger.error("Job "+future+" error",e);
+			} catch (TimeoutException e) {
+				logger.error("Job "+future+" timed out",e);
+			}
+
+		}
+		assertEquals(ecodIds.length, successful);
 	}
 }
