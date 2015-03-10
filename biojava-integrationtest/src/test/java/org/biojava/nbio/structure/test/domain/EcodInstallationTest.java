@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.biojava.nbio.structure.domain;
+package org.biojava.nbio.structure.test.domain;
 
 import static org.junit.Assert.*;
 
@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.biojava.nbio.core.util.ConcurrencyTools;
+import org.biojava.nbio.structure.domain.EcodDomain;
+import org.biojava.nbio.structure.domain.EcodInstallation;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,9 +33,9 @@ import org.slf4j.LoggerFactory;
  * @author Spencer Bliven
  *
  */
-public class EcodDomainTest {
+public class EcodInstallationTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(EcodDomainTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(EcodInstallationTest.class);
 	private static EcodInstallation ecod;
 	private static final String VERSION = "develop77";
 
