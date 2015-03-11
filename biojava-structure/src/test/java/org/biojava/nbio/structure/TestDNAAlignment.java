@@ -24,7 +24,10 @@
 
 package org.biojava.nbio.structure;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
+
 import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -37,7 +40,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 public class TestDNAAlignment extends TestCase
 {
 
-   public void test1(){
+   public void test1() throws IOException {
       String name1="1l3s.A";
       String name2="1t7p.P";
 
@@ -53,7 +56,7 @@ public class TestDNAAlignment extends TestCase
         
         assertNotNull(txt);
         
-      } catch (Exception e){
+      } catch (StructureException e){
          e.printStackTrace();
          fail(e.getMessage());
       }

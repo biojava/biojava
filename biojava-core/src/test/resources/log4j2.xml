@@ -11,6 +11,10 @@
             <AppenderRef ref="Console"/>
         </Logger>
         -->
+        <!--
+        <Logger name="org.biojava.nbio.core.sequence.location.InsdcParserTest" level="debug" />
+        -->
+        
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>

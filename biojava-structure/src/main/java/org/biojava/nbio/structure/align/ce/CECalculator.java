@@ -26,7 +26,12 @@ package org.biojava.nbio.structure.align.ce;
 
 import org.biojava.nbio.alignment.aaindex.ScaledSubstitutionMatrix;
 import org.biojava.nbio.alignment.template.SubstitutionMatrix;
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.SVDSuperimposer;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
