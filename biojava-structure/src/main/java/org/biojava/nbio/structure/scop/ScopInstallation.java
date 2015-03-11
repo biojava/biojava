@@ -27,6 +27,7 @@ package org.biojava.nbio.structure.scop;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +130,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	 */
 	public void nullifyComments() {
 		commentsMap = null;
+		installedCom.set(false);
 	}
 	
 	/**
@@ -726,18 +728,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
-		FileOutputStream out = new FileOutputStream(localFile);
-
-		InputStream in = remoteURL.openStream();
-		byte[] buf = new byte[4 * 1024]; // 4K buffer
-		int bytesRead;
-		while ((bytesRead = in.read(buf)) != -1) {
-			out.write(buf, 0, bytesRead);
-		}
-		in.close();
-		out.close();
-
-
+		FileDownloadUtils.downloadFile(remoteURL, localFile);
 	}
 
 	private boolean claFileAvailable(){
@@ -810,7 +801,17 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 	@Override
 	public void setScopVersion(String scopVersion) {
+		if(scopVersion == null)
+			throw new NullPointerException("Null scop version");
+		if(this.scopVersion.equals(scopVersion))
+			return;
 		this.scopVersion = scopVersion;
+		// reset installation flags
+		installedCla.set(false);
+		installedDes.set(false);
+		installedHie.set(false);
+		installedCom.set(false);
+
 	}
 	
 
