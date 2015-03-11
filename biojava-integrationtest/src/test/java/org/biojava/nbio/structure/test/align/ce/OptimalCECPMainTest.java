@@ -364,4 +364,22 @@ public class OptimalCECPMainTest extends TestCase {
 			System.out.println();
 		}
 	}
+	
+	public static void main(String[] args) throws Exception {
+		// this is to test this issue:
+		// https://github.com/rcsb/symmetry/issues/46
+		// 
+		
+		OptimalCECPMainTest t = new OptimalCECPMainTest();
+		System.out.println("Test 1");
+		t.testPermuteOptAlnUnpermuted();
+		System.out.println("Test 2");
+		t.testOptimalAlignmentConsistency();
+		//System.out.println("Test 3");
+		//t.testUnpermuted();
+		//System.out.println("Test 4");
+		//t.testPermuteArray();
+		//System.out.println("Test 5");
+		//t.testPermuteOptAln();
+	}
 }
