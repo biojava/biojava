@@ -1,6 +1,23 @@
-/**
- * 
+/*
+ * BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
  */
+
 package org.biojava.nbio.structure.test.domain;
 
 import static org.junit.Assert.*;
@@ -10,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,17 +55,11 @@ import org.slf4j.LoggerFactory;
 public class EcodInstallationTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(EcodInstallationTest.class);
-	private static EcodInstallation ecod;
 	private static final String VERSION = "develop77";
-
-	// Set up static ecod singleton
-	static {
-		ecod = (EcodInstallation) EcodFactory.getEcodDatabase(VERSION);
-	}
 
 	static {
 		//System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
-		} 
+	} 
 	@Rule
 	public TemporaryFolder tmpFolder = new TemporaryFolder();
 	@Test
@@ -65,14 +77,19 @@ public class EcodInstallationTest {
 		assertTrue("No downloaded file at "+domainsFile.toString(),domainsFile.exists());
 	}
 
+
 	@Test
 	public void testAllDomains() throws IOException {
+		EcodDatabase ecod = EcodFactory.getEcodDatabase(VERSION);
+
 		List<EcodDomain> domains = ecod.getAllDomains();
 		assertEquals("Wrong number of domains",423779,domains.size());
 	}
 
 	@Test
 	public void testByPDB() throws IOException {
+		EcodDatabase ecod = EcodFactory.getEcodDatabase(VERSION);
+
 		String pdbId;
 		String[] expectedDomains;
 		List<EcodDomain> domains;
@@ -95,6 +112,8 @@ public class EcodInstallationTest {
 
 	@Test
 	public void testParsing() throws IOException {
+		EcodDatabase ecod = EcodFactory.getEcodDatabase(VERSION);
+
 		String ecodId;
 		EcodDomain domain,expected;
 
@@ -113,7 +132,7 @@ public class EcodInstallationTest {
 				"UNK_F_TYPE", false, Collections.singleton("EPE")
 				);
 		assertEquals(ecodId,expected,domain);
-		
+
 		ecodId = "e4v4fAA1";
 		domain = ecod.getDomainsById(ecodId);
 		assertNotNull(ecodId,domain);
@@ -122,6 +141,7 @@ public class EcodInstallationTest {
 
 	@Test
 	public void testMultithreaded() throws IOException {
+		final EcodInstallation ecod = (EcodInstallation) EcodFactory.getEcodDatabase(VERSION);
 		ecod.clear();
 		String[] ecodIds = new String[] {
 				"e4s1gA1", "e4umoB1", "e4v0cA1", "e4v1af1", "e3j7yj1", "e4wfcA1","e4b0jP1",
@@ -161,5 +181,44 @@ public class EcodInstallationTest {
 
 		}
 		assertEquals(ecodIds.length, successful);
+	}
+
+	@Test
+	public void testFilterByHierarchy() throws IOException {
+		EcodDatabase ecod = EcodFactory.getEcodDatabase(VERSION);
+
+		List<EcodDomain> filtered;
+		Set<String> expected,actual;
+
+		expected = new HashSet<String>(Arrays.asList(
+				"e4il6R1 e4pj0R1 e4pj0r1 e4ub6R1 e4ub8R1".split(" ") ));
+		filtered = ecod.filterByHierarchy("6106.1.1");
+		actual = new HashSet<String>();
+		for(EcodDomain d : filtered) {
+			actual.add(d.getDomainId());
+		}
+		assertEquals(expected,actual);
+
+		filtered = ecod.filterByHierarchy("6106.1");
+		actual = new HashSet<String>();
+		for(EcodDomain d : filtered) {
+			actual.add(d.getDomainId());
+		}
+		assertEquals(expected,actual);
+
+		filtered = ecod.filterByHierarchy("6106");
+		actual = new HashSet<String>();
+		for(EcodDomain d : filtered) {
+			actual.add(d.getDomainId());
+		}
+		assertEquals(expected,actual);
+	}
+
+	@Test
+	public void testVersion() throws IOException {
+		EcodDatabase ecod3 = EcodFactory.getEcodDatabase("latest");
+		String version = ecod3.getVersion();
+		assertNotNull(version);
+		assertNotEquals("latest", version);
 	}
 }

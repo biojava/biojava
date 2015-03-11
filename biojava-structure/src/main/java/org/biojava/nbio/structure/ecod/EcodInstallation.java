@@ -155,6 +155,42 @@ public class EcodInstallation implements EcodDatabase {
 	}
 
 	/**
+	 * Get a list of domains within a particular level of the hierarchy
+	 * @param hierarchy A dot-separated list giving the X-group, H-group, and/or
+	 *  T-group (e.g. "1.1" for all members of the RIFT-related H-group)
+	 * @return
+	 * @throws IOException 
+	 */
+	@Override
+	public List<EcodDomain> filterByHierarchy(String hierarchy) throws IOException {
+		String[] xhtGroup = hierarchy.split("\\.");
+		Integer xGroup = xhtGroup.length>0 ? Integer.parseInt(xhtGroup[0]) : null;
+		Integer hGroup = xhtGroup.length>1 ? Integer.parseInt(xhtGroup[1]) : null;
+		Integer tGroup = xhtGroup.length>2 ? Integer.parseInt(xhtGroup[2]) : null;
+
+		List<EcodDomain> filtered = new ArrayList<EcodDomain>();
+		for(EcodDomain d: getAllDomains()) {
+			boolean match = true;
+			if(xhtGroup.length>0) {
+				match = match && xGroup.equals(d.getxGroup());
+			}
+			if(xhtGroup.length>1) {
+				match = match && hGroup.equals(d.gethGroup());
+			}
+			if(xhtGroup.length>2) {
+				match = match && tGroup.equals(d.gettGroup());
+			}
+			if(xhtGroup.length>3) {
+				logger.warn("Ignoring unexpected additional parts of ECOD {}",hierarchy);
+			}
+			if(match) {
+				filtered.add(d);
+			}
+		}
+		return filtered;
+	}
+	
+	/**
 	 * Get a particular ECOD domain by the domain ID (e.g. "e4hhbA1")
 	 * @param ecodId
 	 * @return
@@ -227,9 +263,12 @@ public class EcodInstallation implements EcodDatabase {
 	 * Note that this may differ from the version requested in the constructor
 	 * for the special case of "latest"
 	 * @return the ECOD version
+	 * @throws IOException If an error occurs while downloading or parsing the file
 	 */
 	@Override
-	public String getVersion() {
+	public String getVersion() throws IOException {
+		ensureDomainsFileInstalled();
+
 		if( parsedVersion == null) {
 			return requestedVersion;
 		}
@@ -353,7 +392,7 @@ public class EcodInstallation implements EcodDatabase {
 	 * @return
 	 */
 	private String getDomainFilename() {
-		return  String.format(DOMAINS_FILENAME_FORMAT,getVersion());
+		return  String.format(DOMAINS_FILENAME_FORMAT,requestedVersion);
 	}
 
 	/**
@@ -450,8 +489,8 @@ public class EcodInstallation implements EcodDatabase {
 				// Allocate plenty of space for ECOD as of 2015 
 				ArrayList<EcodDomain> domainsList = new ArrayList<EcodDomain>(500000);
 
-				Pattern versionRE = Pattern.compile("^\\s*#.*ECOD\\s*requestedVersion\\s+(\\w+)");
-				Pattern commentRE = Pattern.compile("^\\s*#");
+				Pattern versionRE = Pattern.compile("^\\s*#.*ECOD\\s*version\\s+(\\w+).*");
+				Pattern commentRE = Pattern.compile("^\\s*#.*");
 
 				String line = in.readLine();
 				int lineNum = 0;
@@ -563,6 +602,20 @@ public class EcodInstallation implements EcodDatabase {
 		}
 	}
 
+
+	@Override
+	public String toString() {
+		String version = null;
+		try {
+			version = getVersion();
+		} catch (IOException e) {
+			// For parsing errors, use the requested version
+			version = requestedVersion;
+		}
+
+		return "EcodInstallation [cacheLocation=" + cacheLocation
+				+ ", version=" + version + "]";
+	}
 
 	public static void main(String[] args) {
 		if( args.length!= 1) {

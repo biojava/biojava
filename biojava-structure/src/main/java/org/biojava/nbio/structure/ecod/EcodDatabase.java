@@ -23,11 +23,6 @@ package org.biojava.nbio.structure.ecod;
 import java.io.IOException;
 import java.util.List;
 
-import org.biojava.nbio.structure.cath.CathCategory;
-import org.biojava.nbio.structure.cath.CathDomain;
-import org.biojava.nbio.structure.cath.CathFragment;
-import org.biojava.nbio.structure.cath.CathNode;
-
 /** General API for interacting with CATH.
  *
  * @author Spencer Bliven
@@ -37,8 +32,9 @@ public interface EcodDatabase {
 	/** Return the release version.
 	 *
 	 * @return version
+	 * @throws IOException 
 	 */
-	public String getVersion();
+	public String getVersion() throws IOException;
 
 	/**
 	 * Get a particular ECOD domain by the domain ID (e.g. "e4hhbA1")
@@ -56,6 +52,15 @@ public interface EcodDatabase {
 	 */
 	public List<EcodDomain> getDomainsForPdb(String pdbId) throws IOException;
 
+	/**
+	 * Get a list of domains within a particular level of the hierarchy
+	 * @param hierarchy A dot-separated list giving the X-group, H-group, and/or
+	 *  T-group (e.g. "1.1" for all members of the RIFT-related H-group)
+	 * @return
+	 * @throws IOException 
+	 */
+	public List<EcodDomain> filterByHierarchy(String hierarchy) throws IOException;
+	
 	/**
 	 * Get all ECOD domains
 	 * @return

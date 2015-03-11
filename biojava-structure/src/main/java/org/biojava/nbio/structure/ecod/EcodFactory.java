@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.ecod;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,8 +70,12 @@ public class EcodFactory {
 				versionedEcodDBs.put(version.toLowerCase(), ecod);
 
 				// If the parsed version differed from that requested, add that too
-				if( ! versionedEcodDBs.containsKey(ecod.getVersion().toLowerCase()) ) {
-					versionedEcodDBs.put(ecod.getVersion().toLowerCase(),ecod);
+				try {
+					if( ! versionedEcodDBs.containsKey(ecod.getVersion().toLowerCase()) ) {
+						versionedEcodDBs.put(ecod.getVersion().toLowerCase(),ecod);
+					}
+				} catch (IOException e) {
+					// For parsing errors, just use the requested version
 				}
 			}
 
