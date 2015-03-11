@@ -55,7 +55,11 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
      * parse a location. if group(1) is null than the feature is on the positive
      * strand, group(2) start position, group(3) end position.
      */
-    protected static final Pattern singleLocationPattern = Pattern.compile("(?:[A-Z]([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
+    // why in the location the first character was ignored?
+    //protected static final Pattern singleLocationPattern = Pattern.compile("(?:[A-Z]([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
+    
+    // fixed issue #254
+    protected static final Pattern singleLocationPattern = Pattern.compile("(?:([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
     /**
      * Decodes a split pattern. Split patterns are a composition of multiple
      * locationsString qualified by actions: join(location,location, ...

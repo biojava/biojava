@@ -39,11 +39,7 @@ public class ConcurrencyTools {
 	private final static Logger logger = LoggerFactory.getLogger(ConcurrencyTools.class);
 
     private static ThreadPoolExecutor pool;
-    // private static int tasks;
-
-    // TODO additional logging and listening services
-
-    // prevents instantiation
+    private static int tasks = 0;
     private ConcurrencyTools() { }
 
     /**
@@ -155,7 +151,7 @@ public class ConcurrencyTools {
      * @return future on which the desired value is retrieved by calling get()
      */
     public static<T> Future<T> submit(Callable<T> task, String message) {
-        // TODO log("Task " + (++tasks) + " submitted to shared thread pool. " + message);
+        logger.debug("Task " + (++tasks) + " submitted to shared thread pool. " + message);
         return getThreadPool().submit(task);
     }
 

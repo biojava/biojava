@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedHashMap;
+import java.util.List;
+import org.biojava.nbio.core.sequence.features.Qualifier;
 
 /**
  * The representation of a ProteinSequence
@@ -50,22 +52,21 @@ import java.util.LinkedHashMap;
  */
 public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
-	private final static Logger logger = LoggerFactory.getLogger(ProteinSequence.class);
-        
-        /*
-    private ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> features
-            = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
-    private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>> groupedFeatures
-            = new LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>>();
-        */
+    private final static Logger logger = LoggerFactory.getLogger(ProteinSequence.class);
 
+    /*
+     private ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> features
+     = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
+     private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>> groupedFeatures
+     = new LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>>();
+     */
     /**
      * Create a protein from a string
      *
      * @param seqString
-     * @throws CompoundNotFoundException 
+     * @throws CompoundNotFoundException
      */
-    public ProteinSequence(String seqString) throws CompoundNotFoundException { 
+    public ProteinSequence(String seqString) throws CompoundNotFoundException {
         this(seqString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
     }
 
@@ -74,7 +75,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
      *
      * @param seqString
      * @param compoundSet
-     * @throws CompoundNotFoundException 
+     * @throws CompoundNotFoundException
      */
     public ProteinSequence(String seqString, CompoundSet<AminoAcidCompound> compoundSet) throws CompoundNotFoundException {
         super(seqString, compoundSet);
@@ -97,9 +98,35 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
      * file or via a Uniprot Proxy reader via Uniprot ID
      *
      * @param proxyLoader
+     * @param compoundSet
      */
     public ProteinSequence(ProxySequenceReader<AminoAcidCompound> proxyLoader, CompoundSet<AminoAcidCompound> compoundSet) {
         super(proxyLoader, compoundSet);
+
+        // do protein-specific tasks
+        // add source if found
+        List<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> CDSFeatures = getFeaturesByType("CDS");
+
+        // cases if a protein has more than 1 parent are not supported yet
+        if (CDSFeatures.size() == 1) {
+            Qualifier codedBy = CDSFeatures.get(0).getQualifiers().get("coded_by");
+
+            if (codedBy != null) {
+                String codedBySeq = codedBy.getValue();
+
+                InsdcParser parser = new InsdcParser(DataSource.GENBANK);
+                Location location = parser.parse(codedBySeq);
+
+                try {
+                    DNASequence dnaSeq = new DNASequence(getSequence(location), DNACompoundSet.getDNACompoundSet());
+                    setParentDNASequence(dnaSeq, location.getStart().getPosition(), location.getEnd().getPosition());
+                } catch (CompoundNotFoundException e) {
+                    // TODO is there another solution to handle this exception?
+                    logger.error("Could not add 'coded_by' parent DNA location feature, unrecognised compounds found in DNA sequence: {}", e.getMessage());
+                }
+            }
+        }
+
     }
 
     /**
@@ -125,39 +152,12 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         setBioEnd(end);
     }
 
-    /**
-     * Add feature.
-     * <p>
-     * If feature is type 'coded_by' than resolves parent DNA sequence.
-     * </p>
-     * @param feature 
-     */
-    @Override
-    public void addFeature(FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> feature) {
-        super.addFeature(feature);
-
-        // if feature is called 'coded_by' than add parent DNA location
-        if (feature.getType().equals("coded_by")) {
-            InsdcParser parser = new InsdcParser(DataSource.GENBANK);
-
-            Location location = parser.parse(feature.getSource());
-            // convert location into DNASequence
-            try {
-            	DNASequence dnaSeq = new DNASequence(getSequence(location), DNACompoundSet.getDNACompoundSet());
-            	setParentDNASequence(dnaSeq, location.getStart().getPosition(), location.getEnd().getPosition());
-            } catch (CompoundNotFoundException e) {
-            	// TODO is there another solution to handle this exception?
-            	logger.error("Could not add 'coded_by' parent DNA location feature, unrecognised compounds found in DNA sequence: {}",e.getMessage());
-            }
-        }
-    }
-    
     private DNASequence getRawParentSequence(String accessId) throws IOException {
         String seqUrlTemplate = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=%s&rettype=fasta&retmode=text";
         URL url = new URL(String.format(seqUrlTemplate, accessId));
-        
-        logger.info("Getting parent DNA sequence from URL: {}", url.toString());
-        
+
+        logger.trace("Getting parent DNA sequence from URL: {}", url.toString());
+
         InputStream is = url.openConnection().getInputStream();
 
         FastaReader<DNASequence, NucleotideCompound> parentReader
@@ -176,14 +176,14 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
     }
 
     private String getSequence(Location cdna) {
-        DNASequence rawParent = null;
+        DNASequence rawParent;
         if (!cdna.isComplex()) {
             try {
                 rawParent = getRawParentSequence(cdna.getAccession().getID());
                 return cdna.getSubSequence(rawParent).getSequenceAsString();
             } catch (IOException e) {
                 // return null
-            	logger.error("Caught IOException when getting DNA sequence for id {}. Error: {}", cdna.getAccession().getID(), e.getMessage());
+                logger.error("Caught IOException when getting DNA sequence for id {}. Error: {}", cdna.getAccession().getID(), e.getMessage());
                 return null;
             }
         } else {

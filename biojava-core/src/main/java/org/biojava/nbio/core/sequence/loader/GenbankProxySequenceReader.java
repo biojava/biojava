@@ -88,7 +88,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         header = genbankParser.getHeader();
         features = genbankParser.getFeatures();
 
-        if (compoundSet.equals(AminoAcidCompoundSet.class)) {
+        if (compoundSet.getClass().equals(AminoAcidCompoundSet.class)) {
             if (!genbankParser.getCompoundType().equals(compoundSet)) {
                 logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
                 throw new IOException("Wrong declared compound type for: " + accessionID); 
@@ -103,7 +103,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         if (genbankDirectoryCache != null && genbankDirectoryCache.length() > 0) {
             File f = new File(genbankDirectoryCache + File.separatorChar + accessionID + ".gb");
             if (f.exists()) {
-                logger.info("Reading: {}", f.toString());
+                logger.debug("Reading: {}", f.toString());
                 inStream = new BufferedInputStream(new FileInputStream(f));
             } else {
                 InputStream in = getEutilsInputStream(accessionID, db);
@@ -135,7 +135,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
     private InputStream getEutilsInputStream(String accessionID, String db) throws IOException {
         String genbankURL = eutilBaseURL + "efetch.fcgi?db=" + db + "&id=" + accessionID + "&rettype=gb&retmode=text";
-        logger.info("Loading: {}", genbankURL);
+        logger.trace("Loading: {}", genbankURL);
         URL genbank = new URL(genbankURL);
         URLConnection genbankConnection = genbank.openConnection();
         return genbankConnection.getInputStream();

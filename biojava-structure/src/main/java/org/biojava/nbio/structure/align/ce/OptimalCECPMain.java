@@ -53,7 +53,7 @@ import java.util.Scanner;
  *
  */
 public class OptimalCECPMain extends CeMain {
-	private static boolean debug = true;
+	private static final boolean debug = true;
 
 
 	public static final String algorithmName = "jCE Optimal Circular Permutation";
@@ -507,11 +507,11 @@ public class OptimalCECPMain extends CeMain {
 			if(debug) System.out.print(".");
 			
 			// fix up names, since cloning ca2 wipes it
-			try {
+			
+			if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getParent()!=null) {
 				currentAlignment.setName2(ca2[0].getGroup().getChain().getParent().getName()+" CP="+cp);
-			} catch( Exception e) {
-				//null pointers, empty arrays, etc.
 			}
+			
 			double currentScore = currentAlignment.getAlignScore();
 			
 			if(alignments != null) {
