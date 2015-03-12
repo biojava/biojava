@@ -462,6 +462,4 @@ public class AFPAlignmentDisplay
 		return blockNum;
 
 	}
-
-
 }

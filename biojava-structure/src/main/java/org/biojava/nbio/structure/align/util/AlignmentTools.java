@@ -835,7 +835,7 @@ public class AlignmentTools {
 			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
 		}
 
-		// superimpose
+		//Superimpose the two structures in correspondance to the new alignment
 		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
 		Matrix matrix = svd.getRotation();
 		Atom shift = svd.getTranslation();
@@ -850,16 +850,64 @@ public class AlignmentTools {
 			Calc.rotate(a, matrix);
 			Calc.shift(a, shift);
 		}
-
+		
+		//Calculate the RMSD and TM score for the new alignment
 		double rmsd = SVDSuperimposer.getRMS(ca1aligned, ca2aligned);
 		double tmScore = SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
 		afpChain.setTotalRmsdOpt(rmsd);
 		afpChain.setTMScore(tmScore);
+		
+		//Calculate the RMSD and TM score for every block of the new alignment
+		double[] blockRMSD = new double[afpChain.getBlockNum()];
+		double[] blockScore = new double[afpChain.getBlockNum()];
+		for (int k=0; k<afpChain.getBlockNum(); k++){
+			//Clone the AFP for each block calculation
+			AFPChain afpChainb = (AFPChain) afpChain.clone();
+			//Create the atom arrays corresponding to the aligned residues in the block
+			Atom[] ca1block = new Atom[afpChainb.getOptLen()[k]];
+			Atom[] ca2block = new Atom[afpChainb.getOptLen()[k]];
+			int position=0;
+			for(int i=0;i<blockLens[k];i++) {
+				int pos1 = optAln[k][0][i];
+				int pos2 = optAln[k][1][i];
+				Atom a1 = ca1[pos1];
+				Atom a2 = (Atom) ca2[pos2].clone();
+				ca1block[position] = a1;
+				ca2block[position] = a2;
+				position++;
+			}
+			if (position != afpChainb.getOptLen()[k]){
+				logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChainb.getOptLen()[k]);
+				// we need to resize the array, because we allocated too many atoms earlier on.
+				ca1block = (Atom[]) resizeArray(ca1block, position);
+				ca2block = (Atom[]) resizeArray(ca2block, position);
+			}
+			//Superimpose the two block structures
+			SVDSuperimposer svdb = new SVDSuperimposer(ca1block, ca2block);
+			Matrix matrixb = svdb.getRotation();
+			Atom shiftb = svdb.getTranslation();
+			Matrix[] blockMxsb = new Matrix[afpChain.getBlockNum()];
+			Arrays.fill(blockMxsb, matrix);
+			afpChainb.setBlockRotationMatrix(blockMxsb);
+			Atom[] blockShiftsb = new Atom[afpChainb.getBlockNum()];
+			Arrays.fill(blockShiftsb, shiftb);
+			afpChainb.setBlockShiftVector(blockShiftsb);
 
-		double[] dummy = new double[afpChain.getBlockNum()];
-		Arrays.fill(dummy, -1.);
-		afpChain.setOptRmsd(dummy);
-		afpChain.setBlockRmsd(dummy);
+			for (Atom a : ca2block) {
+				Calc.rotate(a, matrixb);
+				Calc.shift(a, shiftb);
+			}
+			
+			//Calculate the RMSD and TM score for the block
+			double rmsdb = SVDSuperimposer.getRMS(ca1block, ca2block);
+			double tmScoreb = SVDSuperimposer.getTMScore(ca1block, ca2block, ca1.length, ca2.length);
+			blockRMSD[k] = rmsdb;
+			blockScore[k] = tmScoreb;
+		
+		}
+		afpChain.setOptRmsd(blockRMSD);
+		afpChain.setBlockRmsd(blockRMSD);
+		afpChain.setBlockScore(blockScore);
 	}
 
 	/**
