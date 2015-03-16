@@ -172,13 +172,13 @@ public class EcodInstallation implements EcodDatabase {
 		for(EcodDomain d: getAllDomains()) {
 			boolean match = true;
 			if(xhtGroup.length>0) {
-				match = match && xGroup.equals(d.getxGroup());
+				match = match && xGroup.equals(d.getXGroup());
 			}
 			if(xhtGroup.length>1) {
-				match = match && hGroup.equals(d.gethGroup());
+				match = match && hGroup.equals(d.getHGroup());
 			}
 			if(xhtGroup.length>2) {
-				match = match && tGroup.equals(d.gettGroup());
+				match = match && tGroup.equals(d.getTGroup());
 			}
 			if(xhtGroup.length>3) {
 				logger.warn("Ignoring unexpected additional parts of ECOD {}",hierarchy);
@@ -189,7 +189,7 @@ public class EcodInstallation implements EcodDatabase {
 		}
 		return filtered;
 	}
-	
+
 	/**
 	 * Get a particular ECOD domain by the domain ID (e.g. "e4hhbA1")
 	 * @param ecodId
@@ -467,6 +467,17 @@ public class EcodInstallation implements EcodDatabase {
 
 	public static class EcodParser {
 
+		/** String for unclassified F-groups */
+		public static final String F_UNCLASSIFIED = "F_UNCLASSIFIED";
+		/** String for single-domain assemblies */
+		public static final String NOT_DOMAIN_ASSEMBLY = "NOT_DOMAIN_ASSEMBLY";
+		/** Deprecated way of indicating there is an assembly. replaced by the assembly id */
+		public static final String IS_DOMAIN_ASSEMBLY = "IS_DOMAIN_ASSEMBLY";
+		/** Indicates a manual representative */
+		public static final String IS_REPRESENTATIVE = "MANUAL_REP";
+		/** Indicates not a manual representative */
+		public static final String NOT_REPRESENTATIVE = "AUTO_NONREP";
+
 		private List<EcodDomain> domains;
 		private String version;
 
@@ -489,11 +500,15 @@ public class EcodInstallation implements EcodDatabase {
 				// Allocate plenty of space for ECOD as of 2015 
 				ArrayList<EcodDomain> domainsList = new ArrayList<EcodDomain>(500000);
 
-				Pattern versionRE = Pattern.compile("^\\s*#.*ECOD\\s*version\\s+(\\w+).*");
+				Pattern versionRE = Pattern.compile("^\\s*#.*ECOD\\s*version\\s+(\\S+).*");
 				Pattern commentRE = Pattern.compile("^\\s*#.*");
 
+				// prevent too many warnings; negative numbers print all warnings
+				int warnIsDomainAssembly = 1;
+				int warnHierarchicalFormat = 5;
+
 				String line = in.readLine();
-				int lineNum = 0;
+				int lineNum = 1;
 				while( line != null ) {
 					// Check for requestedVersion string
 					Matcher match = versionRE.matcher(line);
@@ -507,22 +522,40 @@ public class EcodInstallation implements EcodDatabase {
 						} else {
 							// data line
 							String[] fields = line.split("\t");
-							if( fields.length == 13 ) {
+							if( fields.length == 13 || fields.length == 14 ) {
 								try {
 									int i = 0; // field number, to allow future insertion of fields
 
 									Long uid = Long.parseLong(fields[i++]);
 									String domainId = fields[i++];
+									// Manual column may be missing
 									Boolean manual = null;
+									if( fields.length >= 14) {
+										String manualString = fields[i++];
+										if(manualString.equalsIgnoreCase(IS_REPRESENTATIVE)) {
+											manual = true;
+										} else if(manualString.equalsIgnoreCase(NOT_REPRESENTATIVE)) {
+											manual = false;
+										} else {
+											logger.warn("Unexpected value for manual field: {} in line {}",manualString,lineNum);
+										}
+									}
 
-									// heirarchical field, e.g. "1.1.4"
+									// hierarchical field, e.g. "1.1.4.1"
 									String[] xhtGroup = fields[i++].split("\\.");
-									if(xhtGroup.length != 3) {
-										logger.warn("Unexpected format for heirarchical field \"{}\" in line {}",fields[i-1],lineNum);
+									if(xhtGroup.length < 3 || 4 < xhtGroup.length) {
+										if(warnHierarchicalFormat > 1) {
+											logger.warn("Unexpected format for hierarchical field \"{}\" in line {}",fields[i-1],lineNum);
+											warnHierarchicalFormat--;
+										} else if(warnHierarchicalFormat != 0) {
+											logger.warn("Unexpected format for hierarchical field \"{}\" in line {}. Not printing future similar warnings.",fields[i-1],lineNum);
+											warnHierarchicalFormat--;
+										}
 									}
 									Integer xGroup = xhtGroup.length>0 ? Integer.parseInt(xhtGroup[0]) : null;
 									Integer hGroup = xhtGroup.length>1 ? Integer.parseInt(xhtGroup[1]) : null;
 									Integer tGroup = xhtGroup.length>2 ? Integer.parseInt(xhtGroup[2]) : null;
+									Integer fGroup = xhtGroup.length>3 ? Integer.parseInt(xhtGroup[3]) : null;
 
 									String pdbId = fields[i++];
 									String chainId = fields[i++];
@@ -535,14 +568,21 @@ public class EcodInstallation implements EcodDatabase {
 									String tGroupName = fields[i++].intern();
 									String fGroupName = fields[i++].intern();
 
-									Boolean isAssembly = null;
+									Long assemblyId = null;
 									String assemblyStr = fields[i++];
-									if(assemblyStr.equals("NOT_DOMAIN_ASSEMBLY")) {
-										isAssembly = false;
-									} else if(assemblyStr.equals("IS_DOMAIN_ASSEMBLY")) {
-										isAssembly = true;
+									if(assemblyStr.equals(NOT_DOMAIN_ASSEMBLY)) {
+										assemblyId = uid;
+									} else if(assemblyStr.equals("IS_DOMAIN_ASSEMBLY") ) {
+										if(warnIsDomainAssembly > 1) {
+											logger.info("Deprecated 'IS_DOMAIN_ASSEMBLY' value ignored in line {}.",lineNum);
+											warnIsDomainAssembly--;
+										} else if(warnIsDomainAssembly == 0) {
+											logger.info("Deprecated 'IS_DOMAIN_ASSEMBLY' value ignored in line {}. Not printing future similar warnings.",lineNum);
+											warnIsDomainAssembly--;
+										} 
+										//assemblyId = null;
 									} else {
-										logger.warn("Unexpected value for assembly field \"{}\" in line {}",assemblyStr,lineNum);
+										assemblyId = Long.parseLong(assemblyStr);
 									}
 
 									String ligandStr = fields[i++];
@@ -558,7 +598,7 @@ public class EcodInstallation implements EcodDatabase {
 									}
 
 
-									EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, pdbId, chainId, range, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, isAssembly, ligands);
+									EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, fGroup,pdbId, chainId, range, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, assemblyId, ligands);
 									domainsList.add(domain);
 								} catch(NumberFormatException e) {
 									logger.warn("Error in ECOD parsing at line "+lineNum,e);
@@ -575,7 +615,7 @@ public class EcodInstallation implements EcodDatabase {
 				if(this.version == null)
 					logger.info("Parsed {} ECOD domains",domainsList.size());
 				else
-					logger.info("Parsed {} ECOD domains from requestedVersion {}",domainsList.size(),this.version);
+					logger.info("Parsed {} ECOD domains from version {}",domainsList.size(),this.version);
 
 
 				this.domains = Collections.unmodifiableList( domainsList );
@@ -593,7 +633,7 @@ public class EcodInstallation implements EcodDatabase {
 		public List<EcodDomain> getDomains() {
 			return domains;
 		}
-		
+
 		/**
 		 * @return the requestedVersion for this file, or null if none was parsed
 		 */

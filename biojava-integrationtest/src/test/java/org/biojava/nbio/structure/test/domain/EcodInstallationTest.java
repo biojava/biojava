@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +54,7 @@ import org.slf4j.LoggerFactory;
 public class EcodInstallationTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(EcodInstallationTest.class);
-	private static final String VERSION = "develop77";
+	private static final String VERSION = "develop78";
 
 	static {
 		//System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
@@ -80,10 +79,13 @@ public class EcodInstallationTest {
 
 	@Test
 	public void testAllDomains() throws IOException {
+		int expected;
 		EcodDatabase ecod = EcodFactory.getEcodDatabase(VERSION);
 
 		List<EcodDomain> domains = ecod.getAllDomains();
-		assertEquals("Wrong number of domains",423779,domains.size());
+		expected = 423779; //version77
+		expected = 423869; //version78
+		assertEquals("Wrong number of domains",expected,domains.size());
 	}
 
 	@Test
@@ -122,14 +124,15 @@ public class EcodInstallationTest {
 		expected = new EcodDomain(
 				//				Long uid, String domainId, Boolean manual,
 				20669l, "e1lyw.1", null,
-				//				Integer xGroup, Integer hGroup, Integer tGroup, String pdbId,
-				1,1,1,"1lyw",
+				//				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
+				1,1,1,2,"1lyw",
 				//				String chainId, String range, String architectureName,
 				".", "A:3-97,B:106-346", "beta barrels",
 				//				String xGroupName, String hGroupName, String tGroupName,
 				//				String fGroupName, Boolean isAssembly, List<String> ligands
 				"cradle loop barrel", "RIFT-related", "acid protease",
-				"UNK_F_TYPE", false, Collections.singleton("EPE")
+				"EF00710",//"UNK_F_TYPE",
+				20669l, Collections.singleton("EPE")
 				);
 		assertEquals(ecodId,expected,domain);
 
@@ -220,5 +223,22 @@ public class EcodInstallationTest {
 		String version = ecod3.getVersion();
 		assertNotNull(version);
 		assertNotEquals("latest", version);
+	}
+	
+	@Test
+	public void testAllVersions() throws IOException {
+		int firstVersion = 45;
+		int lastVersion = 78;
+		List<String> versions = new ArrayList<String>();
+		
+		for(int version = firstVersion; version<= lastVersion;version++) {
+			versions.add("develop"+version);
+		}
+		versions.add("latest");
+		for(String version : versions) {
+			EcodInstallation ecod = (EcodInstallation)EcodFactory.getEcodDatabase(version);
+			ecod.getAllDomains();
+			System.out.println(version +" -> "+ ecod.getVersion());
+		}
 	}
 }
