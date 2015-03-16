@@ -1055,6 +1055,7 @@ nBestTrace=nTrace;
 						inner_loop:
 							for(int idep=1; idep<=winSize/2; idep++) {
 
+								// isCopied indicates that bestTrace has changed and needs to be re-copied
 								if(!isCopied)
 									for(jt=0; jt<nBestTrace; jt++) {
 										trace1[jt]=bestTrace1[jt];
@@ -1063,11 +1064,13 @@ nBestTrace=nTrace;
 									}
 								isCopied=false;
 
+								// Move an atom from the previous trace to the current on, or vice versa
 								traceLen[it-1]+=idir;
 								traceLen[it]-=idir;
 								trace1[it]+=idir;
 								trace2[it]+=idir;
 
+								// Copy atoms from the current trace into strBuf
 								is=0;
 								for(jt=0; jt<nBestTrace; jt++) {
 									for(int i=0; i<traceLen[jt]; i++) {
@@ -1078,9 +1081,12 @@ nBestTrace=nTrace;
 									}
 									is+=traceLen[jt];
 								}
+								// Check new RMSD
 								//sup_str(strBuf1, strBuf2, strLen, d_);
 								rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen, true);
 								//System.out.println(String.format("step %d %d %d %.2f old: %.2f", it, idir, idep, rmsdNew, rmsd));
+								
+								// Update best trace if RMSD improved
 								if(rmsdNew<rmsd) {
 
 									for(jt=0; jt<nBestTrace; jt++) {
@@ -1389,12 +1395,12 @@ nBestTrace=nTrace;
 
 				}
 			}
-
-			mat = notifyMatrixListener(mat);
 			
 			if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SEQUENCE_CONSERVATION){
 				mat = updateMatrixWithSequenceConservation(mat,ca1,ca2, params);
 			}
+			
+			mat = notifyMatrixListener(mat);
 			
 			double gapOpen = params.getGapOpen();
 			double gapExtension = params.getGapExtension();
