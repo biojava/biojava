@@ -506,6 +506,7 @@ public class EcodInstallation implements EcodDatabase {
 				// prevent too many warnings; negative numbers print all warnings
 				int warnIsDomainAssembly = 1;
 				int warnHierarchicalFormat = 5;
+				int warnNumberOfFields = 10;
 
 				String line = in.readLine();
 				int lineNum = 1;
@@ -604,7 +605,13 @@ public class EcodInstallation implements EcodDatabase {
 									logger.warn("Error in ECOD parsing at line "+lineNum,e);
 								}
 							} else {
-								logger.warn("Unexpected number of fields in line {}",lineNum);
+								if(warnNumberOfFields > 1) {
+									logger.warn("Unexpected number of fields in line {}.",lineNum);
+									warnNumberOfFields--;
+								} else if(warnNumberOfFields == 0) {
+									logger.warn("Unexpected number of fields in line {}. Not printing future similar warnings",lineNum);
+									warnIsDomainAssembly--;
+								}
 							}
 						}
 					}

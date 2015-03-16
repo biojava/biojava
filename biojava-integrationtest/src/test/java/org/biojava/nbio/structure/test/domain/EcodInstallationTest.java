@@ -35,12 +35,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.biojava.nbio.core.util.ConcurrencyTools;
 import org.biojava.nbio.structure.ecod.EcodDatabase;
 import org.biojava.nbio.structure.ecod.EcodDomain;
 import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.structure.ecod.EcodInstallation;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -123,7 +126,7 @@ public class EcodInstallationTest {
 		domain = ecod.getDomainsById(ecodId);
 		expected = new EcodDomain(
 				//				Long uid, String domainId, Boolean manual,
-				20669l, "e1lyw.1", null,
+				20669l, "e1lyw.1", false,
 				//				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 				1,1,1,2,"1lyw",
 				//				String chainId, String range, String architectureName,
@@ -224,17 +227,33 @@ public class EcodInstallationTest {
 		assertNotNull(version);
 		assertNotEquals("latest", version);
 	}
-	
+
+	/**
+	 * Parses all known versions. Only fails due to exceptions, so manually check for warnings.
+	 * Hierarchical field warnings are expected for versions prior to develop68.
+	 * @throws IOException
+	 */
+	//@Ignore
 	@Test
 	public void testAllVersions() throws IOException {
+		// Fetch latest version
+		EcodDatabase latest = EcodFactory.getEcodDatabase("latest");
+		String latestVersionStr = latest.getVersion();
+		int latestVersion = 0;
+		Matcher match = Pattern.compile("develop([0-9]+)",Pattern.CASE_INSENSITIVE).matcher(latestVersionStr);
+		if(match.matches())
+			latestVersion = Integer.parseInt(match.group(1));
+
+		// List all versions
 		int firstVersion = 45;
-		int lastVersion = 78;
+		int lastVersion = Math.max(78,latestVersion);
 		List<String> versions = new ArrayList<String>();
-		
+		versions.add("latest");
 		for(int version = firstVersion; version<= lastVersion;version++) {
 			versions.add("develop"+version);
 		}
-		versions.add("latest");
+		
+		// Parse all versions
 		for(String version : versions) {
 			EcodInstallation ecod = (EcodInstallation)EcodFactory.getEcodDatabase(version);
 			ecod.getAllDomains();
