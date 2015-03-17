@@ -43,7 +43,6 @@ import org.biojava.nbio.structure.ecod.EcodDatabase;
 import org.biojava.nbio.structure.ecod.EcodDomain;
 import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.structure.ecod.EcodInstallation;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -233,7 +232,7 @@ public class EcodInstallationTest {
 	 * Hierarchical field warnings are expected for versions prior to develop68.
 	 * @throws IOException
 	 */
-	//@Ignore
+	//@Ignore // Very slow parsing test
 	@Test
 	public void testAllVersions() throws IOException {
 		// Fetch latest version
@@ -243,6 +242,7 @@ public class EcodInstallationTest {
 		Matcher match = Pattern.compile("develop([0-9]+)",Pattern.CASE_INSENSITIVE).matcher(latestVersionStr);
 		if(match.matches())
 			latestVersion = Integer.parseInt(match.group(1));
+		latest = null;
 
 		// List all versions
 		int firstVersion = 45;
@@ -258,6 +258,20 @@ public class EcodInstallationTest {
 			EcodInstallation ecod = (EcodInstallation)EcodFactory.getEcodDatabase(version);
 			ecod.getAllDomains();
 			System.out.println(version +" -> "+ ecod.getVersion());
+			
+			// Force garbage collection of all soft references
+			// This shouldn't be required, but without it we get
+			// 'OutOfMemoryError: GC overhead limit exceeded'.
+			// Probably this is due to synchronization in EcodFactory blocking
+			// the GC during parsing. -Spencer
+			ecod = null;
+			System.gc();
+			try {
+				@SuppressWarnings("unused")
+				Object[] ignored = new Object[(int) Runtime.getRuntime().maxMemory()];
+			} catch (Throwable e) {
+				// Ignore OME
+			}
 		}
 	}
 }
