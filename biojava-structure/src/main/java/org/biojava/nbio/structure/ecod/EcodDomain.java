@@ -21,7 +21,6 @@ package org.biojava.nbio.structure.ecod;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,7 +33,7 @@ public class EcodDomain implements Serializable, Cloneable {
 Column 1: ECOD uid - internal domain unique identifier
 Column 2: ECOD domain id - domain identifier
 Column 3: ECOD representative status - manual (curated) or automated nonrep
-Column 4: ECOD hierachy identifier - [X-group].[H-group].{T-group]
+Column 4: ECOD hierachy identifier - [X-group].[H-group].{T-group].[F-group]
 Column 5: PDB identifier
 Column 6: Chain identifier (note: case-sensitive)
 Column 7: PDB residue number range
@@ -54,8 +53,6 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 
 	private static final long serialVersionUID = -7760082165560332048L;
 
-	/** String for unclassified F-groups */
-	public static final String F_UNCLASSFIED = "F_UNCLASSIFIED";
 
 	private Long uid;
 	private String domainId;
@@ -63,6 +60,7 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 	private Integer xGroup;
 	private Integer hGroup;
 	private Integer tGroup;
+	private Integer fGroup;
 	private String pdbId;
 	private String chainId;
 	private String range;
@@ -71,23 +69,24 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 	private String hGroupName;
 	private String tGroupName;
 	private String fGroupName;
-	private Boolean isAssembly; // Maybe should be a list, according to description?
+	private Long assemblyId; //for non-assemblies, matches the uid.
 	private Set<String> ligands;
 	
 	/** Default constructor with all null properties */
 	public EcodDomain() {}
 	
 	public EcodDomain(Long uid, String domainId, Boolean manual,
-			Integer xGroup, Integer hGroup, Integer tGroup, String pdbId,
+			Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 			String chainId, String range, String architectureName,
 			String xGroupName, String hGroupName, String tGroupName,
-			String fGroupName, Boolean isAssembly, Set<String> ligands) {
+			String fGroupName, Long assemblyId, Set<String> ligands) {
 		this.uid = uid;
 		this.domainId = domainId;
 		this.manual = manual;
 		this.xGroup = xGroup;
 		this.hGroup = hGroup;
 		this.tGroup = tGroup;
+		this.fGroup = fGroup;
 		this.pdbId = pdbId;
 		this.chainId = chainId;
 		this.range = range;
@@ -96,7 +95,7 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.hGroupName = hGroupName;
 		this.tGroupName = tGroupName;
 		this.fGroupName = fGroupName;
-		this.isAssembly = isAssembly;
+		this.assemblyId = assemblyId;
 		this.ligands = ligands;
 	}
 	public EcodDomain(String domainId) {
@@ -109,6 +108,7 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.xGroup = o.xGroup;
 		this.hGroup = o.hGroup;
 		this.tGroup = o.tGroup;
+		this.fGroup = o.fGroup;
 		this.pdbId = o.pdbId;
 		this.chainId = o.chainId;
 		this.range = o.range;
@@ -117,7 +117,7 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.hGroupName = o.hGroupName;
 		this.tGroupName = o.tGroupName;
 		this.fGroupName = o.fGroupName;
-		this.isAssembly = o.isAssembly;
+		this.assemblyId = o.assemblyId;
 		this.ligands = new HashSet<String>(o.ligands);
 	}
 
@@ -144,23 +144,29 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 	public void setManual(Boolean manual) {
 		this.manual = manual;
 	}
-	public Integer getxGroup() {
+	public Integer getXGroup() {
 		return xGroup;
 	}
-	public void setxGroup(Integer xGroup) {
+	public void setXGroup(Integer xGroup) {
 		this.xGroup = xGroup;
 	}
-	public Integer gethGroup() {
+	public Integer getHGroup() {
 		return hGroup;
 	}
-	public void sethGroup(Integer hGroup) {
+	public void setHGroup(Integer hGroup) {
 		this.hGroup = hGroup;
 	}
-	public Integer gettGroup() {
+	public Integer getTGroup() {
 		return tGroup;
 	}
-	public void settGroup(Integer tGroup) {
+	public void setTGroup(Integer tGroup) {
 		this.tGroup = tGroup;
+	}
+	public Integer getFGroup() {
+		return fGroup;
+	}
+	public void setFGroup(Integer fGroup) {
+		this.fGroup = fGroup;
 	}
 	public String getPdbId() {
 		return pdbId;
@@ -186,35 +192,38 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 	public void setArchitectureName(String architectureName) {
 		this.architectureName = architectureName;
 	}
-	public String getxGroupName() {
+	public String getXGroupName() {
 		return xGroupName;
 	}
-	public void setxGroupName(String xGroupName) {
+	public void setXGroupName(String xGroupName) {
 		this.xGroupName = xGroupName;
 	}
-	public String gethGroupName() {
+	public String getHGroupName() {
 		return hGroupName;
 	}
-	public void sethGroupName(String hGroupName) {
+	public void setHGroupName(String hGroupName) {
 		this.hGroupName = hGroupName;
 	}
-	public String gettGroupName() {
+	public String getTGroupName() {
 		return tGroupName;
 	}
-	public void settGroupName(String tGroupName) {
+	public void setGroupName(String tGroupName) {
 		this.tGroupName = tGroupName;
 	}
-	public String getfGroupName() {
+	public String getFGroupName() {
 		return fGroupName;
 	}
-	public void setfGroupName(String fGroupName) {
+	public void setFGroupName(String fGroupName) {
 		this.fGroupName = fGroupName;
 	}
-	public Boolean getIsAssembly() {
-		return isAssembly;
+	/**
+	 * @return The assembly ID, or the DomainId if not in an assembly, or null if unknown.
+	 */
+	public Long getAssemblyId() {
+		return assemblyId;
 	}
-	public void setIsAssembly(Boolean isAssembly) {
-		this.isAssembly = isAssembly;
+	public void setAssemblyId(Long assemblyId) {
+		this.assemblyId = assemblyId;
 	}
 	public Set<String> getLigands() {
 		return ligands;
@@ -230,12 +239,12 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 	public String toString() {
 		return "EcodDomain [uid=" + uid + ", domainId=" + domainId
 				+ ", manual=" + manual + ", xGroup=" + xGroup + ", hGroup="
-				+ hGroup + ", tGroup=" + tGroup + ", pdbId=" + pdbId
+				+ hGroup + ", tGroup=" + tGroup + ", fGroup="+ fGroup + ", pdbId=" + pdbId
 				+ ", chainId=" + chainId + ", range=" + range
 				+ ", architectureName=" + architectureName + ", xGroupName="
 				+ xGroupName + ", hGroupName=" + hGroupName + ", tGroupName="
-				+ tGroupName + ", fGroupName=" + fGroupName + ", isAssembly="
-				+ isAssembly + ", ligands=" + ligands + "]";
+				+ tGroupName + ", fGroupName=" + fGroupName + ", assemblyId="
+				+ assemblyId + ", ligands=" + ligands + "]";
 	}
 
 	/* (non-Javadoc)
@@ -253,11 +262,12 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 				+ ((domainId == null) ? 0 : domainId.hashCode());
 		result = prime * result
 				+ ((fGroupName == null) ? 0 : fGroupName.hashCode());
+		result = prime * result + ((fGroup == null) ? 0 : fGroup.hashCode());
 		result = prime * result + ((hGroup == null) ? 0 : hGroup.hashCode());
 		result = prime * result
 				+ ((hGroupName == null) ? 0 : hGroupName.hashCode());
 		result = prime * result
-				+ ((isAssembly == null) ? 0 : isAssembly.hashCode());
+				+ ((assemblyId == null) ? 0 : assemblyId.hashCode());
 		result = prime * result + ((ligands == null) ? 0 : ligands.hashCode());
 		result = prime * result + ((manual == null) ? 0 : manual.hashCode());
 		result = prime * result + ((pdbId == null) ? 0 : pdbId.hashCode());
@@ -304,6 +314,11 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 				return false;
 		} else if (!fGroupName.equals(other.fGroupName))
 			return false;
+		if (fGroup == null) {
+			if (other.fGroup != null)
+				return false;
+		} else if (!fGroup.equals(other.fGroup))
+			return false;
 		if (hGroup == null) {
 			if (other.hGroup != null)
 				return false;
@@ -314,10 +329,10 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 				return false;
 		} else if (!hGroupName.equals(other.hGroupName))
 			return false;
-		if (isAssembly == null) {
-			if (other.isAssembly != null)
+		if (assemblyId == null) {
+			if (other.assemblyId != null)
 				return false;
-		} else if (!isAssembly.equals(other.isAssembly))
+		} else if (!assemblyId.equals(other.assemblyId))
 			return false;
 		if (ligands == null) {
 			if (other.ligands != null)

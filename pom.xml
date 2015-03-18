@@ -300,6 +300,7 @@
 							executed if explicitly called -->
 						<exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
 						<exclude>**/TestAtomCachePerformance.java</exclude>
+						<exclude>**/EcodInstallationTest.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
