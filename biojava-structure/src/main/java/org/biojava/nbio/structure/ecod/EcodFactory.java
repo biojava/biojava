@@ -21,9 +21,12 @@
 package org.biojava.nbio.structure.ecod;
 
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.cath.CathDatabase;
@@ -46,8 +49,8 @@ public class EcodFactory {
 
 	public static String DEFAULT_VERSION = EcodInstallation.DEFAULT_VERSION;
 
-	private static Map<String, EcodDatabase> versionedEcodDBs =
-			Collections.synchronizedMap(new HashMap<String, EcodDatabase>());
+	private static Map<String, SoftReference<EcodDatabase>> versionedEcodDBs =
+			Collections.synchronizedMap(new HashMap<String, SoftReference<EcodDatabase>>());
 	private static String defaultVersion = DEFAULT_VERSION;
 
 	/**
@@ -61,25 +64,49 @@ public class EcodFactory {
 		if( version == null )
 			version = defaultVersion;
 
+		logger.trace("Waiting for EcodFactory lock to get version "+version);
 		synchronized(versionedEcodDBs) {
-			EcodDatabase ecod = versionedEcodDBs.get(version.toLowerCase());
+			logger.trace("Got EcodFactory lock to get version "+version);
+			
+			releaseReferences();
+			
+			SoftReference<EcodDatabase> ecodRef = versionedEcodDBs.get(version.toLowerCase());
+			EcodDatabase ecod = null;
+			if(ecodRef != null) {
+				ecod = ecodRef.get();
+			}
 			if( ecod == null ) {
-				logger.info("Creating new {}, version {}",EcodInstallation.class.getSimpleName(),version);
+				logger.debug("Creating new {}, version {}",EcodInstallation.class.getSimpleName(),version);
 				String cacheDir = new UserConfiguration().getCacheFilePath();
 				ecod = new EcodInstallation(cacheDir, version);
-				versionedEcodDBs.put(version.toLowerCase(), ecod);
+				versionedEcodDBs.put(version.toLowerCase(), new SoftReference<EcodDatabase>(ecod));
 
 				// If the parsed version differed from that requested, add that too
 				try {
 					if( ! versionedEcodDBs.containsKey(ecod.getVersion().toLowerCase()) ) {
-						versionedEcodDBs.put(ecod.getVersion().toLowerCase(),ecod);
+						versionedEcodDBs.put(ecod.getVersion().toLowerCase(),new SoftReference<EcodDatabase>(ecod));
 					}
 				} catch (IOException e) {
 					// For parsing errors, just use the requested version
 				}
 			}
+			logger.trace("Releasing EcodFactory lock after getting version "+version);
 
 			return ecod;
+		}
+	}
+	
+	private static void releaseReferences() {
+		synchronized(versionedEcodDBs) {
+			Iterator<Entry<String, SoftReference<EcodDatabase>>> it = versionedEcodDBs.entrySet().iterator();
+			while(it.hasNext()) {
+				Entry<String, SoftReference<EcodDatabase>> entry = it.next();
+				SoftReference<EcodDatabase> ref = entry.getValue();
+				if(ref.get() == null) {
+					logger.debug("Removed version {} from EcodFactory to save memory.",entry.getKey());
+					it.remove();
+				}
+			}
 		}
 	}
 
