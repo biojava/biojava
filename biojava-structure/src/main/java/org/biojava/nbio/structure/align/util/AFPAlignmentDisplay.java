@@ -449,13 +449,14 @@ public class AFPAlignmentDisplay
 					}
 				}
 
-				len++;
+				
 				p1b = p1;
 				p2b = p2;
 				if ( len >= aligPos) {
 
 					return i;
 				}
+				len++;
 			}
 		}
 

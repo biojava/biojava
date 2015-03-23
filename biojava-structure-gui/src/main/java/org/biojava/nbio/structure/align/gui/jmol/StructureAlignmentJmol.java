@@ -541,7 +541,7 @@ public void actionPerformed(ActionEvent e) {
 
    }
 
-   public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+   public String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
      
       if ( afpChain.getBlockNum() > 1){
          return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
@@ -616,7 +616,7 @@ public void actionPerformed(ActionEvent e) {
       return j.toString();
    }
    
-   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
+   public String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
 	   int blockNum = afpChain.getBlockNum();
 	   
 	   if ( blockNr >= blockNum)
@@ -644,7 +644,7 @@ public void actionPerformed(ActionEvent e) {
    }
    
 
-   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
+   private String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
    {
 
       int blockNum = afpChain.getBlockNum();      
@@ -671,22 +671,33 @@ public void actionPerformed(ActionEvent e) {
 
    }
 
-private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
+private void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 		int[] optLen, int[][][] optAln, StringWriter jmol, int bk) {
 	//the block nr determines the color...
 	 int colorPos = bk;
-	 if ( colorPos > ColorUtils.colorWheel.length){
-	    colorPos = ColorUtils.colorWheel.length % colorPos ;
+	 
+	 Color c1;
+	 Color c2;
+	 //If the colors for the block are specified in AFPChain use them, otherwise the default ones are calculated
+	 if (afpChain.getBlockColors()==null){
+		 
+		 if ( colorPos > ColorUtils.colorWheel.length){
+		    colorPos = ColorUtils.colorWheel.length % colorPos ;
+		 }
+		 
+		 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
+		 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
+		 	 
+		 c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
+		 c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
 	 }
-	 
-	 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
-	 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
-	 	 
-	 Color c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
-	 Color c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
-	 
-	 
-	 
+	 else{
+		 Color[] colors = afpChain.getBlockColors();
+		 int n = colors.length;
+		 
+		 c1   = colors[colorPos%n];
+		 c2   = colors[(colorPos+1%n)%afpChain.getBlockNum()];
+	 }
 	 
 	 List<String> pdb1 = new ArrayList<String>();
 	 List<String> pdb2 = new ArrayList<String>();
