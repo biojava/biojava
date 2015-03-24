@@ -32,11 +32,14 @@ import org.biojava.nbio.core.util.Hashcoder;
  * to identify the type of ID
  *
  * @author Scooter Willis
+ * @author Jacek Grzebyta
  */
 public class AccessionID {
 
     private String id = null;
     private DataSource source = DataSource.LOCAL;
+    private Integer version;
+    private String identifier = null;
 
     /**
      *
@@ -55,6 +58,7 @@ public class AccessionID {
         this.id = id.trim();
         this.source = DataSource.LOCAL;
     }
+    
 
     /**
      *
@@ -64,6 +68,13 @@ public class AccessionID {
     public AccessionID(String id, DataSource source) {
         this.id = id.trim();
         this.source = source;
+    }
+    
+    public AccessionID(String id, DataSource source, Integer version, String identifier) {
+        this.id = id;
+        this.source = source;
+        this.version = version;
+        this.identifier = identifier;
     }
 
     /**
@@ -86,8 +97,10 @@ public class AccessionID {
         if (Equals.classEqual(this, o)) {
             AccessionID l = (AccessionID) o;
             equals = (Equals.equal(getID(), l.getID())
-                    && Equals.equal(getDataSource(), l.getDataSource()));
-        }
+                    && Equals.equal(getDataSource(), l.getDataSource())
+                    && Equals.equal(getIdentifier(), l.getIdentifier())
+                    && Equals.equal(getVersion(), l.getVersion()));
+    }
         return equals;
     }
 
@@ -96,13 +109,42 @@ public class AccessionID {
         int r = Hashcoder.SEED;
         r = Hashcoder.hash(r, getID());
         r = Hashcoder.hash(r, getDataSource());
+        r = Hashcoder.hash(r, getIdentifier());
+        r = Hashcoder.hash(r, getVersion());
         return r;
-    }
+        }
 
  //   public void setDataSource(DataSource dataSource){
  //       source = dataSource;
  //   }
 
+
+    /**
+     * In case if the {@link #getID() } is not unique keeps the id version.
+     * @return the version
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    /**
+     * In case if {@link #getID() } in not unique keeps the alternative id, eg. NCBI GI number.
+     * 
+     * @return 
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+    
+    
     @Override
     public String toString() {
         return id;
