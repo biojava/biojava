@@ -30,6 +30,7 @@ import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 
 import java.util.ArrayList;
+import org.biojava.nbio.core.sequence.DataSource;
 
 public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceHeaderParserInterface<S,C> {
 
@@ -49,7 +50,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
     @Override
 	public void parseHeader(String header, S sequence) {
     	sequence.setOriginalHeader(header);
-    	sequence.setAccession(new AccessionID(accession));
+        sequence.setAccession(new AccessionID(accession, DataSource.GENBANK, version, identifier));
     	sequence.setDescription(description);
     }
     
