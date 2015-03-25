@@ -86,6 +86,9 @@ public class TestNonDepositedFiles {
 		
 		assertEquals(2,s.getChains().size());
 		
+		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
+		assertEquals(1, s.getCompounds().size());
+		
 		//System.out.println("Chains from incomplete header file: ");
 		//checkChains(s);
 		
@@ -96,6 +99,10 @@ public class TestNonDepositedFiles {
 		inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/1b8g_raw.pdb.gz"));
 		s = pdbpars.parsePDBFile(inStream);
 		assertNotNull(s);
+		
+		assertEquals(2,s.getChains().size());
+				
+		assertEquals(1, s.getCompounds().size());
 	}
 	
 	//@Test

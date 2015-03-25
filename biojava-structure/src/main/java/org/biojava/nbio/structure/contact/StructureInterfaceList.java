@@ -61,7 +61,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * Any 2 interfaces with contact overlap score larger than this value
 	 * will be considered to be clustered
 	 */
-	public static final double CONTACT_OVERLAP_SCORE_CLUSTER_CUTOFF = 0.2;
+	public static final double DEFAULT_CONTACT_OVERLAP_SCORE_CLUSTER_CUTOFF = 0.2;
 	
 	private static final long serialVersionUID = 1L;
 
@@ -210,14 +210,28 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			}
 		}
 	}
+
+	/**
+	 * Calculate the interface clusters for this StructureInterfaceList 
+	 * using a contact overlap score to measure the similarity of interfaces.
+	 * Subsequent calls will use the cached value without recomputing the clusters.
+	 * The contact overlap score cutoff to consider a pair in the same cluster is 
+	 * the value {@link #DEFAULT_CONTACT_OVERLAP_SCORE_CLUSTER_CUTOFF}
+	 * @return
+	 */
+	public List<StructureInterfaceCluster> getClusters() {
+		return getClusters(DEFAULT_CONTACT_OVERLAP_SCORE_CLUSTER_CUTOFF);
+	}
 	
 	/**
 	 * Calculate the interface clusters for this StructureInterfaceList 
 	 * using a contact overlap score to measure the similarity of interfaces.
 	 * Subsequent calls will use the cached value without recomputing the clusters.
+	 * @param contactOverlapScoreClusterCutoff the contact overlap score above which a pair will be 
+	 * clustered
 	 * @return
 	 */
-	public List<StructureInterfaceCluster> getClusters() {
+	public List<StructureInterfaceCluster> getClusters(double contactOverlapScoreClusterCutoff) {
 		if (clusters!=null) {
 			return clusters;
 		}
@@ -246,7 +260,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		
 		SingleLinkageClusterer slc = new SingleLinkageClusterer(matrix, true);
 		
-		Map<Integer,Set<Integer>> clusteredIndices = slc.getClusters(CONTACT_OVERLAP_SCORE_CLUSTER_CUTOFF);
+		Map<Integer,Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
 		for (int clusterIdx:clusteredIndices.keySet()) {
 			List<StructureInterface> members = new ArrayList<StructureInterface>();
 			for (int idx:clusteredIndices.get(clusterIdx)) {
