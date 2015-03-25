@@ -35,7 +35,7 @@ import org.biojava.nbio.structure.align.ce.CeParameters.ScoringStrategy;
  */
 public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 	
-	protected class CeStartupParams extends StartupParameters {
+	protected static class CeStartupParams extends StartupParameters {
 		protected int maxGapSize;
 		protected int winSize;
 		protected ScoringStrategy scoringStrategy;
@@ -202,7 +202,6 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		//return legend;
 		
 		return "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
-		
 		
 	}
 	
