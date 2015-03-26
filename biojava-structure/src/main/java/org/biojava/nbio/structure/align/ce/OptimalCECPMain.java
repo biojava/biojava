@@ -498,7 +498,7 @@ public class OptimalCECPMain extends CeMain {
 		
 		for(int cp=1;cp<ca2.length;cp++) {
 			// clone ca2 to prevent side effects from propegating
-			Atom[] ca2p = StructureTools.cloneCAArray(ca2);
+			Atom[] ca2p = StructureTools.cloneAtomArray(ca2);
 
 			//permute one each time. Alters ca2p as a side effect
 			AFPChain currentAlignment = alignPermuted(ca1,ca2p,param,cp);
@@ -654,8 +654,8 @@ public class OptimalCECPMain extends CeMain {
 	 * @throws StructureException
 	 */
 	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
-		Atom[] ca1clone = StructureTools.cloneCAArray(ca1);
-		Atom[] ca2clone = StructureTools.cloneCAArray(ca2);
+		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
+		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {
 			System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
 			// display alignment in console

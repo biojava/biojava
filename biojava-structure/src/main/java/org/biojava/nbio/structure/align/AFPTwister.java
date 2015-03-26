@@ -65,8 +65,8 @@ public class AFPTwister
 
 
       //superimposing according to the initial AFP-chaining
-      Atom[] origCA      = StructureTools.cloneCAArray(ca2);
-      Atom[] iniTwistPdb = StructureTools.cloneCAArray(ca2);
+      Atom[] origCA      = StructureTools.cloneAtomArray(ca2);
+      Atom[] iniTwistPdb = StructureTools.cloneAtomArray(ca2);
 
       int[] blockResSize = afpChain.getBlockResSize();
 

@@ -768,7 +768,7 @@ public class AlignmentTools {
 		refinedAFP.setBlockNum(blockNum);
 
 		//TODO recalculate properties: superposition, tm-score, etc
-		Atom[] ca2clone = StructureTools.cloneCAArray(ca2); // don't modify ca2 positions
+		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2); // don't modify ca2 positions
 		AlignmentTools.updateSuperposition(refinedAFP, ca1, ca2clone);
 
 		AFPAlignmentDisplay.getAlign(refinedAFP, ca1, ca2clone);
