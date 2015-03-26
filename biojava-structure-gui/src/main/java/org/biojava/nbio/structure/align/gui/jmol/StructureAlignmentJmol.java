@@ -33,12 +33,14 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.AfpChainWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.ResourceManager;
+import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.jmol.api.JmolViewer;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.StringWriter;
@@ -663,7 +665,20 @@ public void actionPerformed(ActionEvent e) {
 
          printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk, afpChain.getBlockColors());
       }
-      jmol.append("model 0;  ");
+      //For CE-Symm we only want to see one of the models in the first place, with the rotation axis
+      if (afpChain.getAlgorithmName()== "jCE-symmetry"){
+    	  jmol.append("model 1;  ");
+    	  try {
+			RotationAxis axis = new RotationAxis(afpChain);
+			jmol.append(axis.getJmolScript(ca1));
+			} catch (StructureException e) {
+				e.printStackTrace();
+			}
+	      }
+      else{
+    	  jmol.append("model 0;  ");
+      }
+      
       jmol.append(LIGAND_DISPLAY_SCRIPT);
       //System.out.println(jmol);
       return jmol.toString();
