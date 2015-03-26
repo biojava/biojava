@@ -616,7 +616,7 @@ public void actionPerformed(ActionEvent e) {
       return j.toString();
    }
    
-   public String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
+   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
 	   int blockNum = afpChain.getBlockNum();
 	   
 	   if ( blockNr >= blockNum)
@@ -633,7 +633,7 @@ public void actionPerformed(ActionEvent e) {
 
 	   jmol.append("select */2; color lightgrey; model 2; ");
 	      
-	   printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, blockNr);
+	   printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, blockNr, afpChain.getBlockColors());
 	   
 	   jmol.append("model 0;  ");
 	   jmol.append(LIGAND_DISPLAY_SCRIPT);
@@ -644,7 +644,7 @@ public void actionPerformed(ActionEvent e) {
    }
    
 
-   private String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
+   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
    {
 
       int blockNum = afpChain.getBlockNum();      
@@ -661,7 +661,7 @@ public void actionPerformed(ActionEvent e) {
       
       for(int bk = 0; bk < blockNum; bk ++)       {
 
-         printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk);
+         printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk, afpChain.getBlockColors());
       }
       jmol.append("model 0;  ");
       jmol.append(LIGAND_DISPLAY_SCRIPT);
@@ -671,15 +671,15 @@ public void actionPerformed(ActionEvent e) {
 
    }
 
-private void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
-		int[] optLen, int[][][] optAln, StringWriter jmol, int bk) {
+private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
+		int[] optLen, int[][][] optAln, StringWriter jmol, int bk, Color[] colors) {
 	//the block nr determines the color...
 	 int colorPos = bk;
 	 
 	 Color c1;
 	 Color c2;
 	 //If the colors for the block are specified in AFPChain use them, otherwise the default ones are calculated
-	 if (afpChain.getBlockColors()==null){
+	 if (colors==null){
 		 
 		 if ( colorPos > ColorUtils.colorWheel.length){
 		    colorPos = ColorUtils.colorWheel.length % colorPos ;
@@ -692,11 +692,10 @@ private void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 		 c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
 	 }
 	 else{
-		 Color[] colors = afpChain.getBlockColors();
 		 int n = colors.length;
 		 
 		 c1   = colors[colorPos%n];
-		 c2   = colors[(colorPos+1%n)%afpChain.getBlockNum()];
+		 c2   = colors[(colorPos+1%n)%blockNum];
 	 }
 	 
 	 List<String> pdb1 = new ArrayList<String>();
