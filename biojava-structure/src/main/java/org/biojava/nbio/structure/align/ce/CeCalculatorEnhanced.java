@@ -1238,7 +1238,7 @@ nBestTrace=nTrace;
 		//TODO
 		Group parent = ca[j].getGroup();
 		int pos = 0;
-		String atomName = StructureTools.CA_ATOM_NAME;
+		String atomName = ca[j].getName();
 
 		Atom a = null;
 
@@ -1927,7 +1927,7 @@ nBestTrace=nTrace;
 
 			Calc.rotate( g, m);
 			Calc.shift(  g, shift);
-			caB[l] = g.getAtom(StructureTools.CA_ATOM_NAME);
+			caB[l] = g.getAtom(a.getName());
 		}
 	}
 
@@ -2019,7 +2019,7 @@ nBestTrace=nTrace;
 			Atom a;
 			if ( clone ){
 				Group g = (Group)ca[i].getGroup().clone();
-				a = g.getAtom(StructureTools.CA_ATOM_NAME);
+				a = g.getAtom(ca[i].getName());
 			}
 			else {
 				a = ca[i];

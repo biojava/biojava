@@ -169,7 +169,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		Group group;
 		if ( recordName.equals("ATOM") ) {
-			if (aminoCode1 == null)  {
+			if (StructureTools.isNucleotide(groupCode3))  {
 				// it is a nucleotide
 				NucleotideImpl nu = new NucleotideImpl();
 				group = nu;

@@ -97,7 +97,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		for (Atom a : ca2){
 			Group g = (Group)a.getGroup().clone(); // works because each group has only a CA atom
 
-			ca2clone[pos] = g.getAtom(StructureTools.CA_ATOM_NAME);
+			ca2clone[pos] = g.getAtom(a.getName());
 
 			pos++;
 		}
