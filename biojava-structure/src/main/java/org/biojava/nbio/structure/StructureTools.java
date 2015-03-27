@@ -806,6 +806,7 @@ public class StructureTools {
 		for (Chain c: s.getChains()) {
 			for (Group g: c.getAtomGroups()) {
 				switch(g.getType()) {
+				default:
 				case AMINOACID:
 					if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
 						atoms.add(g.getAtom(CA_ATOM_NAME));
@@ -816,8 +817,6 @@ public class StructureTools {
 						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
 					}
 					break;
-				default:
-					// don't add
 				}
 			}
 		}

@@ -321,8 +321,8 @@ public class DBResultTable implements ActionListener{
 			Atom[] ca1;
 			Atom[] ca2;
 
-			ca1 = StructureTools.getAtomCAArray(structure1);
-			ca2 = StructureTools.getAtomCAArray(structure2);
+			ca1 = StructureTools.getRepresentativeAtomArray(structure1);
+			ca2 = StructureTools.getRepresentativeAtomArray(structure2);
 
 			AFPChain afpChain;
 

@@ -82,8 +82,8 @@ public class MyTestHelper
          Structure s4 = new StructureImpl();
          s4.addChain(c2);
 
-         Atom[] ca1 = StructureTools.getAtomCAArray(s3);
-         Atom[] ca2 = StructureTools.getAtomCAArray(s4);
+         Atom[] ca1 = StructureTools.getRepresentativeAtomArray(s3);
+         Atom[] ca2 = StructureTools.getRepresentativeAtomArray(s4);
 
          // keep an independent copy of them for tests further down..
          Atom[] ca3 = new Atom[ca2.length];

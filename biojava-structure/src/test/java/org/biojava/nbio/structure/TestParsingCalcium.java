@@ -79,14 +79,14 @@ public class TestParsingCalcium {
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure(pdbID);
 		
-		Atom[] atoms = StructureTools.getAtomCAArray(s);
+		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
 		for (Atom atom:atoms) {
 			assertTrue("atom "+atom.getPDBserial()+" of residue "+atom.getGroup().getResidueNumber()+"-"+atom.getGroup().getPDBName()+
 					" is not a Carbon alpha", atom.getElement()==Element.C);
 		}
 		
 		for (Chain c:s.getChains()) {
-			atoms = StructureTools.getAtomCAArray(c);
+			atoms = StructureTools.getRepresentativeAtomArray(c);
 			for (Atom atom:atoms) {
 				assertTrue("atom "+atom.getPDBserial()+" of residue "+atom.getGroup().getResidueNumber()+"-"+atom.getGroup().getPDBName()+
 						" is not a Carbon alpha", atom.getElement()==Element.C);

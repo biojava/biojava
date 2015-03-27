@@ -89,7 +89,7 @@ public class StructureToolsTest extends TestCase {
 
 
 	public void testGetCAAtoms(){
-		Atom[] cas = StructureTools.getAtomCAArray(structure);
+		Atom[] cas = StructureTools.getRepresentativeAtomArray(structure);
 		assertEquals("did not find the expected number of Atoms (58), but got " + cas.length,58,cas.length);
 	}
 
@@ -231,13 +231,13 @@ public class StructureToolsTest extends TestCase {
 		assertTrue(s.getChains().size() == 1);
 		Chain c = s.getChainByPDB(chainId);
 		assertEquals(c.getChainID(),chainId);
-		Atom[] ca = StructureTools.getAtomCAArray(s);
+		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 		assertEquals(83,ca.length);
 
 		String name10 = "4hhb.C_1-83,A_1-10";
 		s = cache.getStructure(name10);
 		assertTrue(s.getChains().size() == 2);
-		ca = StructureTools.getAtomCAArray(s);
+		ca = StructureTools.getRepresentativeAtomArray(s);
 		assertEquals(93, ca.length);
 
 		
@@ -419,8 +419,8 @@ public class StructureToolsTest extends TestCase {
 			assumeNoException(e);
 		}
 		
-		Atom[] pdbCA = StructureTools.getAtomCAArray(pdb);
-		Atom[] mmcifCA = StructureTools.getAtomCAArray(mmcif);
+		Atom[] pdbCA = StructureTools.getRepresentativeAtomArray(pdb);
+		Atom[] mmcifCA = StructureTools.getRepresentativeAtomArray(mmcif);
 		
 		assertEquals("PDB has wrong length",409,pdbCA.length);
 		assertEquals("PDB has wrong length",409,mmcifCA.length);

@@ -269,7 +269,7 @@ public class MultiThreadedDBSearch {
 
 		ConcurrencyTools.setThreadPoolSize(nrCPUs);
 
-		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(structure1);
 
 		int nrJobs = 0;
 		for (String repre : representatives){

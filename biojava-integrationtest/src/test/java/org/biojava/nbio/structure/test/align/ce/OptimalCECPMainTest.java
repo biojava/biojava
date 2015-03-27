@@ -249,7 +249,7 @@ public class OptimalCECPMainTest extends TestCase {
 		Method permuteArray = OptimalCECPMain.class.getDeclaredMethod(
 				"permuteArray", Object[].class, int.class);
 		permuteArray.setAccessible(true);
-		Atom[] ca2p = StructureTools.cloneCAArray(ca2);
+		Atom[] ca2p = StructureTools.cloneAtomArray(ca2);
 		permuteArray.invoke(null, ca2p, 63);
 		
 		AFPChain cpAlignment = ce.align(ca1, ca2);

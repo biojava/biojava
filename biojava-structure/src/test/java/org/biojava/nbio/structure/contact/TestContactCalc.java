@@ -72,7 +72,7 @@ public class TestContactCalc {
 				
 				AtomContactSet atomContacts = null;
 				if (cts[i]!=null && cts[i][0].equals("CA")) {
-					atomContacts = StructureTools.getAtomsCAInContact(chain, cutoffs[i]);
+					atomContacts = StructureTools.getRepresentativeAtomsInContact(chain, cutoffs[i]);
 				} else {
 					atomContacts = StructureTools.getAtomsInContact(chain, cts[i], cutoffs[i]);
 				}

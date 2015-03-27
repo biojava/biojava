@@ -291,7 +291,7 @@ implements ActionListener
 			return;
 
 		try {
-			Atom[] ca = StructureTools.getAtomCAArray(structure);
+			Atom[] ca = StructureTools.getRepresentativeAtomArray(structure);
 			List<Domain> domains = LocalProteinDomainParser.suggestDomains(ca);
 			int i = -1;
 			for ( Domain dom : domains){
