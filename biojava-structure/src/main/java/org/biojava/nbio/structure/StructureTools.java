@@ -371,6 +371,62 @@ public class StructureTools {
 	}
 
 	/**
+	 * List of groups from the structure not included in ca (e.g. ligands).
+	 * 
+	 * Unaligned groups are searched from all chains referenced in ca, as well
+	 * as any chains in the first model of the structure from ca[0], if any.
+	 * 
+	 * @param ca2
+	 * @return
+	 */
+	public static List<Group> getUnalignedGroups(Atom[] ca) {
+		Set<Chain> chains = new HashSet<Chain>();
+		Set<Group> caGroups = new HashSet<Group>();
+		
+		// Create list of all chains in this structure
+		Structure s = null;
+		if( ca.length > 0 ) {
+			Group g = ca[0].getGroup();
+			if(g != null) {
+				Chain c = g.getChain();
+				if( c != null) {
+					s = c.getParent();
+				}
+			}
+		}
+		if( s != null) {
+			// Add all chains from the structure
+			for( Chain c : s.getChains(0)) {
+				chains.add(c);
+			}
+		}
+
+		// Add groups and chains from ca
+		for(Atom a : ca) {
+			Group g = a.getGroup();
+			if( g != null) {
+				caGroups.add(g);
+
+				Chain c = g.getChain();
+				if(c != null) {
+					chains.add(c);
+				}
+			}
+		}
+		
+		// Iterate through all chains, finding groups not in ca
+		List<Group> unadded = new ArrayList<Group>();
+		for(Chain c : chains) {
+			for(Group g : c.getAtomGroups() ) {
+				if(! caGroups.contains(g) ) {
+					unadded.add(g);
+				}
+			}
+		}
+		return unadded;
+	}
+	
+	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure, 
 	 * optionally including HET atoms or not.
 	 * Waters are not included.
