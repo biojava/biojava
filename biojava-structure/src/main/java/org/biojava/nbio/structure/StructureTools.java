@@ -790,7 +790,7 @@ public class StructureTools {
 	}
 	
 	/**
-	 * Gets a representative atom for each group.
+	 * Gets a representative atom for each group. Atoms are not cloned.
 	 * 
 	 * For amino acids, the representative is a CA carbon.
 	 * For nucleotides, the representative is the C3' carbon.
