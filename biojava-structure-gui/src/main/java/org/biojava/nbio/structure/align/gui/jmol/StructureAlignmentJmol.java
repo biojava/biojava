@@ -192,6 +192,8 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 		String[] styles = new String[] { "Cartoon", "Backbone", "CPK", "Ball and Stick", "Ligands","Ligands and Pocket"};
 		JComboBox style = new JComboBox(styles);
+		
+		hBox1.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 
 		hBox1.add(new JLabel("Style"));
 		hBox1.add(style);
@@ -206,9 +208,11 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 		hBox1.add(Box.createGlue());
 		hBox1.add(new JLabel("Color"));
 		hBox1.add(colors);
+		
 
 // CHeck boxes
 		Box hBox2 = Box.createHorizontalBox();
+		hBox2.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 		
 		JButton resetDisplay = new JButton("Reset Display");
 		
@@ -665,19 +669,7 @@ public void actionPerformed(ActionEvent e) {
 
          printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk, afpChain.getBlockColors());
       }
-      //For CE-Symm we only want to see one of the models in the first place, with the rotation axis
-      if (afpChain.getAlgorithmName()== "jCE-symmetry"){
-    	  jmol.append("model 1;  ");
-    	  try {
-			RotationAxis axis = new RotationAxis(afpChain);
-			jmol.append(axis.getJmolScript(ca1));
-			} catch (StructureException e) {
-				e.printStackTrace();
-			}
-	      }
-      else{
-    	  jmol.append("model 0;  ");
-      }
+      jmol.append("model 0;  ");
       
       jmol.append(LIGAND_DISPLAY_SCRIPT);
       //System.out.println(jmol);
