@@ -453,19 +453,32 @@ public class Compound implements Serializable {
 	
 	/**
 	 * Given a Group g of Chain c (member of this Compound) return the corresponding position in the 
-	 * alignment of all member sequences (1-based numbering), i.e. this is equivalent 
-	 * to getting the index (1-based) in the SEQRES sequence. 
-	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used, a mapping will not be available
-	 * and this method will return -1 for all residues of all chains.
+	 * alignment of all member sequences (1-based numbering), i.e. the index (1-based) in the SEQRES sequence.
+	 * This allows for comparisons of residues belonging to different chains of the same Compound (entity).
+	 * <p>
+	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping 
+	 * will not be available and this method will return {@link ResidueNumber#getSeqNum()} for all residues, which
+	 * in some cases will be correctly aligned indices (when no insertion codes are 
+	 * used and when all chains within the entity are numbered in the same way), but
+	 * in general they will be neither unique (because of insertion codes) nor aligned.
+	 * </p>
 	 * @param g
 	 * @param c
-	 * @return the aligned residue index (1 to n) or -1 if no mapping exists for the given group
+	 * @return the aligned residue index (1 to n) or {@link ResidueNumber#getSeqNum()} if no mapping exists 
+	 * for the given group and chain
 	 * @throws IllegalArgumentException if the given Chain is not a member of this Compound
 	 * @see {@link Chain#getSeqResGroup(int)} 
 	 */
 	public int getAlignedResIndex(Group g, Chain c) {
 		
-		if (!chains.contains(c)) 
+		boolean contained = false;
+		for (Chain member:getChains()) {
+			if (c.getChainID().equals(member.getChainID())) {
+				contained = true;
+				break;
+			}
+		}
+		if (!contained) 
 			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this Compound (entity): "+getChainIds().toString()); 
 		
 		if (chains2pdbResNums2ResSerials.isEmpty() || !chains2pdbResNums2ResSerials.containsKey(c.getChainID())) {
@@ -476,19 +489,23 @@ public class Compound implements Serializable {
 		Integer alignedSerial = chains2pdbResNums2ResSerials.get(c.getChainID()).get(g.getResidueNumber());
 		
 		if (alignedSerial==null) {
-			return -1;
+			return g.getResidueNumber().getSeqNum();
 		}
 		
 		return alignedSerial;
 	}
 	
 	private void initResSerialsMap(Chain c) {
-		if (c.getSeqResGroups().isEmpty()) {
-			logger.warn("No seqres groups found in chain {}, no residue mapping within entity will be available. Make sure you use the ALIGN SEQRES file parsing parameter", c.getChainID());
+		if (c.getSeqResGroups()==null || c.getSeqResGroups().isEmpty()) {
+			logger.warn("No SEQRES groups found in chain {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
+					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)", 
+					c.getChainID());
 		}
 		
 		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<ResidueNumber, Integer>();
 		chains2pdbResNums2ResSerials.put(c.getChainID(), resNums2ResSerials);
+		
+		if (c.getSeqResGroups()==null) return;
 		
 		for (int i=0;i<c.getSeqResGroups().size();i++) {
 			resNums2ResSerials.put(c.getSeqResGroup(i).getResidueNumber(), i+1);

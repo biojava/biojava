@@ -25,6 +25,7 @@ package org.biojava.nbio.structure;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
@@ -1023,7 +1024,9 @@ public class StructureTools {
 
 	/**
 	 * Returns the set of intra-chain contacts for the given chain for given atom names, i.e. the contact map.
-	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.  
 	 * @param chain
 	 * @param atomNames the array with atom names to be used. Beware: CA will do both C-alphas an Calciums
 	 * if null all non-H atoms of non-hetatoms will be used
@@ -1047,7 +1050,9 @@ public class StructureTools {
 	
 	/**
 	 * Returns the set of intra-chain contacts for the given chain for all non-H atoms of non-hetatoms, i.e. the contact map.
-	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.  
 	 * @param chain
 	 * @param cutoff
 	 * @return
@@ -1060,6 +1065,8 @@ public class StructureTools {
 	 * Returns the set of intra-chain contacts for the given chain for C-alpha atoms (including non-standard 
 	 * aminoacids appearing as HETATM groups), i.e. the contact map.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.  
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.
 	 * @param chain
 	 * @param cutoff
 	 * @return
@@ -1076,7 +1083,9 @@ public class StructureTools {
 	
 	/**
 	 * Returns the set of inter-chain contacts between the two given chains for the given atom names.
-	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.  
 	 * @param chain1
 	 * @param chain2
 	 * @param atomNames the array with atom names to be used. For Calphas use {"CA"}, 
@@ -1103,7 +1112,9 @@ public class StructureTools {
 	
 	/**
 	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms.
-	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.  
 	 * @param chain1
 	 * @param chain2
 	 * @param cutoff

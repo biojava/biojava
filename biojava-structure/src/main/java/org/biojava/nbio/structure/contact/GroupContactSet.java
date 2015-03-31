@@ -25,26 +25,22 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * A set of residue-residue contacts 
+ * A set of residue-residue contacts.
+ * Relies on residue indices (based on SEQRES and starting with 1) to store the pairs 
+ * and thus to match contacts.
  * 
  * @author duarte_j
- *
+ * @see ResidueIdentifier
  */
 public class GroupContactSet implements Iterable<GroupContact>{ 
 
-	private HashMap<Pair<ResidueNumber>, GroupContact> contacts;
-	
-	/**
-	 * A cached HashSet to be used only if hasContact(Pair<ResidueIdentifier>) is called
-	 */
-	private HashSet<Pair<ResidueIdentifier>> residueIdContacts;
+	private HashMap<Pair<ResidueIdentifier>, GroupContact> contacts;
 	
 	public GroupContactSet() {
-		contacts = new HashMap<Pair<ResidueNumber>, GroupContact>();
+		contacts = new HashMap<Pair<ResidueIdentifier>, GroupContact>();
 	}
 	
 	/**
@@ -53,7 +49,7 @@ public class GroupContactSet implements Iterable<GroupContact>{
 	 * @param atomContacts
 	 */
 	public GroupContactSet(AtomContactSet atomContacts) {
-		contacts = new HashMap<Pair<ResidueNumber>, GroupContact>();
+		contacts = new HashMap<Pair<ResidueIdentifier>, GroupContact>();
 		atoms2groups(atomContacts);
 	}
 	
@@ -71,7 +67,7 @@ public class GroupContactSet implements Iterable<GroupContact>{
 			if (iResidue.equals(jResidue)) continue;
 			
 			Pair<Group> residuePair = new Pair<Group> (iResidue, jResidue);
-			Pair<ResidueNumber> pair = new Pair<ResidueNumber>(iResidue.getResidueNumber(), jResidue.getResidueNumber());
+			Pair<ResidueIdentifier> pair = new Pair<ResidueIdentifier>(new ResidueIdentifier(iResidue), new ResidueIdentifier(jResidue));
 			
 			if (!contacts.containsKey(pair)) {
 				
@@ -93,7 +89,7 @@ public class GroupContactSet implements Iterable<GroupContact>{
 	}
 
 	public void add(GroupContact groupContact) {
-		contacts.put(getResNumberPairFromContact(groupContact),groupContact);
+		contacts.put(getResIdPairFromContact(groupContact),groupContact);
 	}
 	
 	/**
@@ -128,23 +124,8 @@ public class GroupContactSet implements Iterable<GroupContact>{
 	 * @return
 	 */
 	public boolean hasContact(ResidueIdentifier resId1, ResidueIdentifier resId2) {
-		if (residueIdContacts == null) {
-			initResidueIdContacts();
-		}
-		
-		return residueIdContacts.contains(new Pair<ResidueIdentifier>(resId1, resId2));		
-	}
-	
-	private void initResidueIdContacts() {
-		residueIdContacts = new HashSet<Pair<ResidueIdentifier>>();
-		for (Pair<ResidueNumber> pairResNum:contacts.keySet()) {
-			ResidueNumber resNumFirst = pairResNum.getFirst();
-			ResidueNumber resNumSecond = pairResNum.getSecond();
-			residueIdContacts.add(new Pair<ResidueIdentifier>(
-					new ResidueIdentifier(resNumFirst.getSeqNum(), resNumFirst.getInsCode()),
-					new ResidueIdentifier(resNumSecond.getSeqNum(), resNumSecond.getInsCode())
-					) ); 
-		}
+				
+		return contacts.containsKey(new Pair<ResidueIdentifier>(resId1, resId2));		
 	}
 	
 	/**
@@ -167,8 +148,10 @@ public class GroupContactSet implements Iterable<GroupContact>{
 		return contacts.values().iterator();
 	}
 	
-	private Pair<ResidueNumber> getResNumberPairFromContact(GroupContact groupContact) {
-		return new Pair<ResidueNumber>(groupContact.getPair().getFirst().getResidueNumber(),groupContact.getPair().getSecond().getResidueNumber());
+	private Pair<ResidueIdentifier> getResIdPairFromContact(GroupContact groupContact) {
+		return new Pair<ResidueIdentifier>(
+				new ResidueIdentifier(groupContact.getPair().getFirst()),
+				new ResidueIdentifier(groupContact.getPair().getSecond()) );
 		
 	}
 }

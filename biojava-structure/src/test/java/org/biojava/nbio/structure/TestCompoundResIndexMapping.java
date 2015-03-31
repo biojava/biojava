@@ -76,6 +76,11 @@ public class TestCompoundResIndexMapping {
 		}
 	}
 	
+	// This doesn't work yet, since for raw files without a SEQRES, the seqres groups are not populated. Instead
+	// in that case Compound.getAlignedResIndex() returns residue numbers as given (without insertion codes) and
+	// thus in general residues will not be correctly aligned between different chains of same entity. This breaks 
+	// cases like 3ddo (with no SEQRES records) where residue numbering is different in every chain of the one entity. 
+	// see https://github.com/eppic-team/eppic/issues/39
 	//@Test
 	public void test3ddoRawNoSeqres() throws IOException, StructureException { 
 		
