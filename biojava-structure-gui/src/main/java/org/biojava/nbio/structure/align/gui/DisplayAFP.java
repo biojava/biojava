@@ -504,7 +504,7 @@ public class DisplayAFP
 	/** Note: ca2, hetatoms2 and nucleotides2 should not be rotated. This will be done here...
 	 * */
 
-	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms, List<Group> nucleotides, List<Group> hetatms2, List<Group> nucleotides2 ) throws StructureException{
+	public static StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms, List<Group> nucleotides, List<Group> hetatms2, List<Group> nucleotides2 ) throws StructureException{
 
 		List<Atom> twistedAs = new ArrayList<Atom>();
 

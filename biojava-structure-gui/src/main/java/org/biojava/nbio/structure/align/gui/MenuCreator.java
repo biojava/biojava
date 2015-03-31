@@ -156,7 +156,7 @@ public class MenuCreator {
 
 
 		JMenu about = new JMenu("Help");
-		about.setMnemonic(KeyEvent.VK_A);
+		about.setMnemonic(KeyEvent.VK_H);
 
 		JMenuItem helpM = getHelpMenuItem();
 		about.add(helpM);

@@ -33,7 +33,6 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.AfpChainWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.ResourceManager;
-import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
@@ -60,15 +59,15 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    Structure structure; 
 
-   JmolPanel jmolPanel;
-   JFrame frame ;
+   protected JmolPanel jmolPanel;
+   protected JFrame frame;
    JTextField text ;
    JTextField status;
 
    protected static final String COMMAND_LINE_HELP = "enter Jmol scripting command...";
-   Atom[] ca1;
-   Atom[] ca2;
-   AFPChain afpChain;
+   protected Atom[] ca1;
+   protected Atom[] ca2;
+   protected AFPChain afpChain;
 
    private static final int DEFAULT_HEIGHT = 500;
 
@@ -292,7 +291,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       initCoords();
 
       resetDisplay();
-
+      
    }
    private void initCoords(){
       try {
@@ -386,7 +385,6 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 
       structure = s;
-
    }
 
    public Structure getStructure(){
@@ -516,9 +514,12 @@ public void actionPerformed(ActionEvent e) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2) ;
+         //Clone the AFPChain to not override the FatCat numbers in alnsymb
+         AFPChain textAFP = (AFPChain) afpChain.clone();
+         String result = AfpChainWriter.toWebSiteDisplay(textAFP, ca1, ca2) ;
 
          DisplayAFP.showAlignmentImage(afpChain, result);
+         
       } else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
          if ( afpChain == null) {
             System.err.println("Currently not viewing an alignment!");
@@ -527,6 +528,7 @@ public void actionPerformed(ActionEvent e) {
          String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
 
          DisplayAFP.showAlignmentImage(afpChain, result);
+         
       } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
          if ( afpChain == null) {
             System.err.println("Currently not viewing an alignment!");
@@ -544,7 +546,6 @@ public void actionPerformed(ActionEvent e) {
          result += afpChain.toRotMat();
          DisplayAFP.showAlignmentImage(afpChain, result);
       }
-
    }
 
    public String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
@@ -754,8 +755,5 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
          jmolPanel.evalString("save STATE state_1");
       }
    }
-   
-   
-
 
 }
