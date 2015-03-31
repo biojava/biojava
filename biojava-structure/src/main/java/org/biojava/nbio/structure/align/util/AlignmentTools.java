@@ -672,6 +672,58 @@ public class AlignmentTools {
 
 		return replaceOptAln(a, ca1, ca2, blocks.size(), newBlockLens, newOptAln);
 	}
+	
+	/**
+	 * It returns an AFPChain with a segmented optimal alignment, which means that it has <order of symmetry> blocks of
+	 * aligned subunits. The original AFPChain is not modified.
+	 * 
+	 * INPUT: the optimal alignment in a triple list (same format as optAln of AFPChain) and the Atom[] arrays.
+	 * OUTPUT: the optimal AFPChain alignment object divided into the subunits.
+	 */
+	public static AFPChain replaceOptAln(int[][][] newAlgn, AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
+		
+		//The order is the number of groups in the newAlgn
+		int order = newAlgn.length;
+		
+		//Calculate the alignment length from all the subunits lengths
+		int[] optLens = new int[order];
+		for(int s=0;s<order;s++) {
+			optLens[s] = newAlgn[s][0].length;
+		}
+		int optLength = 0;
+		for(int s=0;s<order;s++) {
+			optLength += optLens[s];
+		}
+		
+		/*//Print the sizes to check correctness
+		System.out.println("Number of subunits: "+newAlgn.length);
+		System.out.println("Subunit length: "+newAlgn[0][0].length);*/
+		
+		//Create a copy of the original AFPChain and set everything needed for the structure update
+		AFPChain copyAFP = (AFPChain) afpChain.clone();
+		
+		//Set the new parameters of the optimal alignment
+		copyAFP.setOptLength(optLength);
+		copyAFP.setOptLen(optLens);
+		copyAFP.setOptAln(newAlgn);
+		
+		//Set the block information of the new alignment
+		copyAFP.setBlockNum(order);
+		copyAFP.setBlockSize(optLens);
+		copyAFP.setBlockResList(newAlgn);
+		copyAFP.setBlockResSize(optLens);
+		copyAFP.setBlockGap(calculateBlockGap(newAlgn));
+		
+		//Recalculate properties: superposition, tm-score, etc
+		Atom[] ca2clone = StructureTools.cloneCAArray(ca2); // don't modify ca1 positions
+		AlignmentTools.updateSuperposition(copyAFP, ca1, ca2clone);
+		
+		//It re-does the sequence alignment strings from the OptAlgn information only
+		copyAFP.setAlnsymb(null);
+		AFPAlignmentDisplay.getAlign(copyAFP, ca1, ca2clone);
+		
+		return copyAFP;
+	}
 
 	/**
 	 * Takes an AFPChain and replaces the optimal alignment based on an alignment map
@@ -835,7 +887,7 @@ public class AlignmentTools {
 			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
 		}
 
-		// superimpose
+		//Superimpose the two structures in correspondance to the new alignment
 		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
 		Matrix matrix = svd.getRotation();
 		Atom shift = svd.getTranslation();
@@ -850,16 +902,64 @@ public class AlignmentTools {
 			Calc.rotate(a, matrix);
 			Calc.shift(a, shift);
 		}
-
+		
+		//Calculate the RMSD and TM score for the new alignment
 		double rmsd = SVDSuperimposer.getRMS(ca1aligned, ca2aligned);
 		double tmScore = SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
 		afpChain.setTotalRmsdOpt(rmsd);
 		afpChain.setTMScore(tmScore);
+		
+		//Calculate the RMSD and TM score for every block of the new alignment
+		double[] blockRMSD = new double[afpChain.getBlockNum()];
+		double[] blockScore = new double[afpChain.getBlockNum()];
+		for (int k=0; k<afpChain.getBlockNum(); k++){
+			//Clone the AFP for each block calculation
+			AFPChain afpChainb = (AFPChain) afpChain.clone();
+			//Create the atom arrays corresponding to the aligned residues in the block
+			Atom[] ca1block = new Atom[afpChainb.getOptLen()[k]];
+			Atom[] ca2block = new Atom[afpChainb.getOptLen()[k]];
+			int position=0;
+			for(int i=0;i<blockLens[k];i++) {
+				int pos1 = optAln[k][0][i];
+				int pos2 = optAln[k][1][i];
+				Atom a1 = ca1[pos1];
+				Atom a2 = (Atom) ca2[pos2].clone();
+				ca1block[position] = a1;
+				ca2block[position] = a2;
+				position++;
+			}
+			if (position != afpChainb.getOptLen()[k]){
+				logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChainb.getOptLen()[k]);
+				// we need to resize the array, because we allocated too many atoms earlier on.
+				ca1block = (Atom[]) resizeArray(ca1block, position);
+				ca2block = (Atom[]) resizeArray(ca2block, position);
+			}
+			//Superimpose the two block structures
+			SVDSuperimposer svdb = new SVDSuperimposer(ca1block, ca2block);
+			Matrix matrixb = svdb.getRotation();
+			Atom shiftb = svdb.getTranslation();
+			Matrix[] blockMxsb = new Matrix[afpChain.getBlockNum()];
+			Arrays.fill(blockMxsb, matrix);
+			afpChainb.setBlockRotationMatrix(blockMxsb);
+			Atom[] blockShiftsb = new Atom[afpChainb.getBlockNum()];
+			Arrays.fill(blockShiftsb, shiftb);
+			afpChainb.setBlockShiftVector(blockShiftsb);
 
-		double[] dummy = new double[afpChain.getBlockNum()];
-		Arrays.fill(dummy, -1.);
-		afpChain.setOptRmsd(dummy);
-		afpChain.setBlockRmsd(dummy);
+			for (Atom a : ca2block) {
+				Calc.rotate(a, matrixb);
+				Calc.shift(a, shiftb);
+			}
+			
+			//Calculate the RMSD and TM score for the block
+			double rmsdb = SVDSuperimposer.getRMS(ca1block, ca2block);
+			double tmScoreb = SVDSuperimposer.getTMScore(ca1block, ca2block, ca1.length, ca2.length);
+			blockRMSD[k] = rmsdb;
+			blockScore[k] = tmScoreb;
+		
+		}
+		afpChain.setOptRmsd(blockRMSD);
+		afpChain.setBlockRmsd(blockRMSD);
+		afpChain.setBlockScore(blockScore);
 	}
 
 	/**
@@ -982,5 +1082,47 @@ public class AlignmentTools {
 			}
 		}
 		return map;
+	}
+	
+	/**
+	 * Method that calculates the number of gaps in each subunit block of an optimal AFP alignment.
+	 * 
+	 * INPUT: an optimal alignment in the format int[][][].
+	 * OUTPUT: an int[] array of <order> length containing the gaps in each block as int[block].
+	 */
+	public static int[] calculateBlockGap(int[][][] optAln){
+		
+		//Initialize the array to be returned
+		int [] blockGap = new int[optAln.length];
+		
+		//Loop for every block and look in both chains for non-contiguous residues.
+		for (int i=0; i<optAln.length; i++){
+			int gaps = 0; //the number of gaps in that block
+			int last1 = 0; //the last residue position in chain 1
+			int last2 = 0; //the last residue position in chain 2
+			//Loop for every position in the block
+			for (int j=0; j<optAln[i][0].length; j++){
+				//If the first position is evaluated initialize the last positions
+				if (j==0){
+					last1 = optAln[i][0][j];
+					last2 = optAln[i][1][j];
+				}
+				else{
+					//If one of the positions or both are not contiguous increment the number of gaps
+					if (optAln[i][0][j] > last1+1 || optAln[i][1][j] > last2+1){
+						gaps++;
+						last1 = optAln[i][0][j];
+						last2 = optAln[i][1][j];
+					}
+					//Otherwise just set the last position to the current one
+					else{
+						last1 = optAln[i][0][j];
+						last2 = optAln[i][1][j];
+					}
+				}
+			}
+			blockGap[i] = gaps;
+		}
+		return blockGap;
 	}
 }

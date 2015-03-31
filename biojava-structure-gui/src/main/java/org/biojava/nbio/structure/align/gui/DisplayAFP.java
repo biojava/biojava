@@ -77,16 +77,16 @@ public class DisplayAFP
 
 	private static boolean isAlignedPosition(int i, char c1, char c2, boolean isFatCat,char[]symb)
 	{
-		if ( isFatCat){
+//		if ( isFatCat){
 			char s = symb[i];
 			if ( c1 != '-' && c2 != '-' && s != ' '){
 				return true;
 			}          
-		} else {
-
-			if ( c1 != '-' && c2 != '-')
-				return true;
-		}
+//		} else {
+//
+//			if ( c1 != '-' && c2 != '-')
+//				return true;
+//		}
 
 		return false;
 
