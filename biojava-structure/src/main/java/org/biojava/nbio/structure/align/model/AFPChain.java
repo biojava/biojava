@@ -25,6 +25,7 @@ import org.biojava.nbio.structure.align.ce.CeSideChainMain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.jama.Matrix;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,6 +106,7 @@ public class AFPChain implements Serializable, Cloneable
 	int[][][]     blockResList;//the list of AFP for each block
 	Matrix[] blockRotationMatrix;
 	Atom[]   blockShiftVector;
+	Color[] blockColors;    //An array of colors for each block, size = blockNum.
 
 	int     focusResn;      //the size of the set
 	int[]     focusRes1;     //the residues from protein 1
@@ -1281,6 +1283,16 @@ public class AFPChain implements Serializable, Cloneable
 	public void setBlockShiftVector(Atom[] blockShiftVector)
 	{
 		this.blockShiftVector = blockShiftVector;
+	}
+	
+	public Color[] getBlockColors()
+	{
+		return blockColors;
+	}
+	
+	public void setBlockColors(Color[] colors)
+	{
+		this.blockColors = colors;
 	}
 
 	public String getAlgorithmName() {

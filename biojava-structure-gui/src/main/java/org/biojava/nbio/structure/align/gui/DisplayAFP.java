@@ -75,16 +75,16 @@ public class DisplayAFP
 
 	private static boolean isAlignedPosition(int i, char c1, char c2, boolean isFatCat,char[]symb)
 	{
-		if ( isFatCat){
+//		if ( isFatCat){
 			char s = symb[i];
 			if ( c1 != '-' && c2 != '-' && s != ' '){
 				return true;
 			}          
-		} else {
-
-			if ( c1 != '-' && c2 != '-')
-				return true;
-		}
+//		} else {
+//
+//			if ( c1 != '-' && c2 != '-')
+//				return true;
+//		}
 
 		return false;
 
@@ -504,7 +504,7 @@ public class DisplayAFP
 	/** Note: ca2, hetatoms2 and nucleotides2 should not be rotated. This will be done here...
 	 * */
 
-	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms, List<Group> nucleotides, List<Group> hetatms2, List<Group> nucleotides2 ) throws StructureException{
+	public static StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms, List<Group> nucleotides, List<Group> hetatms2, List<Group> nucleotides2 ) throws StructureException{
 
 		List<Atom> twistedAs = new ArrayList<Atom>();
 
