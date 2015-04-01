@@ -505,7 +505,7 @@ public class PDBFileParserTest {
 			Structure s = cache.getStructure("4HHB");
 
 			//System.out.println(s.toPDB());
-			Atom[] ca = StructureTools.getAtomCAArray(s);
+			Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 			Atom[] cb = StructureTools.getAtomArray(s, new String[]{StructureTools.CB_ATOM_NAME,});
 
 			// gly does not have cb...

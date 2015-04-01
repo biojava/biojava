@@ -31,8 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /** A utility class for visualistion of structure alignments
@@ -75,16 +77,16 @@ public class DisplayAFP
 
 	private static boolean isAlignedPosition(int i, char c1, char c2, boolean isFatCat,char[]symb)
 	{
-		if ( isFatCat){
+//		if ( isFatCat){
 			char s = symb[i];
 			if ( c1 != '-' && c2 != '-' && s != ' '){
 				return true;
 			}          
-		} else {
-
-			if ( c1 != '-' && c2 != '-')
-				return true;
-		}
+//		} else {
+//
+//			if ( c1 != '-' && c2 != '-')
+//				return true;
+//		}
 
 		return false;
 
@@ -462,12 +464,16 @@ public class DisplayAFP
 
 
 
-	public static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms, List<Group> nucleotides ) throws StructureException{
+	/**
+	 * Returns the first atom for each group
+	 * @param ca
+	 * @param hetatms
+	 * @return
+	 * @throws StructureException
+	 */
+	public static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms ) throws StructureException{
 		List<Atom> atoms = new ArrayList<Atom>();
-
-		for (Atom a: ca){			
-			atoms.add(a);         
-		}
+		Collections.addAll(atoms, ca);
 
 		logger.debug("got {} hetatoms", hetatms.size());
 		
@@ -483,17 +489,6 @@ public class DisplayAFP
 			a.setGroup(g);
 			atoms.add(a);
 		}
-		for (Group g : nucleotides ){
-			if (g.size() < 1)
-				continue;
-			//if (debug)
-			//   System.out.println("adding group " + g);
-			Atom a = g.getAtom(0);
-			//if (debug)
-			//   System.out.println(a);
-			a.setGroup(g);
-			atoms.add(a);
-		}
 
 		Atom[] arr = (Atom[]) atoms.toArray(new Atom[atoms.size()]);
 
@@ -504,7 +499,7 @@ public class DisplayAFP
 	/** Note: ca2, hetatoms2 and nucleotides2 should not be rotated. This will be done here...
 	 * */
 
-	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms, List<Group> nucleotides, List<Group> hetatms2, List<Group> nucleotides2 ) throws StructureException{
+	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms1, List<Group> hetatms2 ) throws StructureException{
 
 		List<Atom> twistedAs = new ArrayList<Atom>();
 
@@ -517,9 +512,10 @@ public class DisplayAFP
 			twistedAs.add(a);
 		}
 		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
+		twistedAtoms = StructureTools.cloneAtomArray(twistedAtoms);
 
-		Atom[] arr1 = getAtomArray(ca1, hetatms, nucleotides);
-		Atom[] arr2 = getAtomArray(twistedAtoms, hetatms2, nucleotides2);
+		Atom[] arr1 = getAtomArray(ca1, hetatms1);
+		Atom[] arr2 = getAtomArray(twistedAtoms, hetatms2);
 
 		// 
 
@@ -538,6 +534,7 @@ public class DisplayAFP
 		StructureAlignmentJmol jmol = new StructureAlignmentJmol(afpChain,arr1,arr2);      
 		//jmol.setStructure(artificial);
 
+		System.out.format("CA2[0]=(%.2f,%.2f,%.2f)%n", arr2[0].getX(), arr2[0].getY(), arr2[0].getZ());
 
 		//jmol.setTitle("Structure Alignment: " + afpChain.getName1() + " vs. " + afpChain.getName2());
 		jmol.setTitle(title);
@@ -647,31 +644,11 @@ public class DisplayAFP
 		}
 		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
 
-		List<Group> hetatms  = new ArrayList<Group>();
-		List<Group> nucs1    = new ArrayList<Group>();
-		Group g1 = ca1[0].getGroup();
-		Chain c1 = null;
-		if ( g1 != null) {
-			c1 = g1.getChain();
-			if ( c1 != null){
-				hetatms = c1.getAtomGroups(GroupType.HETATM);;
-				nucs1  = c1.getAtomGroups(GroupType.NUCLEOTIDE);
-			}
-		}
-		List<Group> hetatms2 = new ArrayList<Group>();
-		List<Group> nucs2    = new ArrayList<Group>();
-		Group g2 = ca2[0].getGroup();
-		Chain c2 = null;
-		if ( g2 != null){
-			c2 = g2.getChain();
-			if ( c2 != null){
-				hetatms2 = c2.getAtomGroups(GroupType.HETATM);
-				nucs2 = c2.getAtomGroups(GroupType.NUCLEOTIDE);
-			}
-		}
+		List<Group> hetatms  = StructureTools.getUnalignedGroups(ca1);
+		List<Group> hetatms2 = StructureTools.getUnalignedGroups(ca2);
 
-		Atom[] arr1 = DisplayAFP.getAtomArray(ca1, hetatms, nucs1);
-		Atom[] arr2 = DisplayAFP.getAtomArray(twistedAtoms, hetatms2, nucs2);
+		Atom[] arr1 = DisplayAFP.getAtomArray(ca1, hetatms);
+		Atom[] arr2 = DisplayAFP.getAtomArray(twistedAtoms, hetatms2);
 
 		Structure artificial = DisplayAFP.getAlignedStructure(arr1,arr2);
 		return artificial;

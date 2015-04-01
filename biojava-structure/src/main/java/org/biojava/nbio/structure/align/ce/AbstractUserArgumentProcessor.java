@@ -374,8 +374,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				Atom[] ca2;
 
 
-				ca1 = StructureTools.getAtomCAArray(structure1);
-				ca2 = StructureTools.getAtomCAArray(structure2);
+				ca1 = StructureTools.getRepresentativeAtomArray(structure1);
+				ca2 = StructureTools.getRepresentativeAtomArray(structure2);
 
 				Object jparams = getParameters();
 
@@ -490,8 +490,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			Atom[] ca1;
 			Atom[] ca2;
 
-			ca1 = StructureTools.getAtomCAArray(structure1);
-			ca2 = StructureTools.getAtomCAArray(structure2);
+			ca1 = StructureTools.getRepresentativeAtomArray(structure1);
+			ca2 = StructureTools.getRepresentativeAtomArray(structure2);
 
 			StructureAlignment algorithm =  getAlgorithm();
 			Object jparams = getParameters();

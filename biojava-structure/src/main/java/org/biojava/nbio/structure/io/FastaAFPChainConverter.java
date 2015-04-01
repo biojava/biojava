@@ -137,8 +137,8 @@ public class FastaAFPChainConverter {
 			gappedCpShift++;
 		}
 
-		Atom[] ca1 = StructureTools.getAtomCAArray(structure);
-		Atom[] ca2 =  StructureTools.getAtomCAArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
+		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(structure);
+		Atom[] ca2 =  StructureTools.getRepresentativeAtomArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
 		
 		ProteinSequence antipermuted = null;
 		try {
@@ -283,8 +283,8 @@ public class FastaAFPChainConverter {
 			throw new IllegalArgumentException("A sequence is null");
 		}
 
-		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
-		Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
+		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(structure1);
+		Atom[] ca2 = StructureTools.getRepresentativeAtomArray(structure2);
 
 		ResidueNumber[] residues1 = StructureSequenceMatcher.matchSequenceToStructure(sequence1, structure1);
 		ResidueNumber[] residues2 = StructureSequenceMatcher.matchSequenceToStructure(sequence2, structure2);

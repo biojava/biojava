@@ -20,45 +20,56 @@
  */
 package org.biojava.nbio.structure.contact;
 
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.Group;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * A class used only within the contact package to be able to compare 
- * contacts based on residue numbers and independently from chain identifiers
+ * A bean for identifying groups in GroupContactSets.
+ * Used only within the contact package to be able to compare 
+ * contacts between chains of same entity/compound based on residue numbers 
+ * and independently from chain identifiers.
  * 
  * @author duarte_j
  */
 class ResidueIdentifier {
 
-	private int seqNum;
-	private Character insCode;
+	private static final Logger logger = LoggerFactory.getLogger(ResidueIdentifier.class);
 	
-	public ResidueIdentifier(int seqNum, Character insCode) {
-		this.seqNum = seqNum;
-		this.insCode = insCode;
+	private int seqResIndex;
+	
+	
+	public ResidueIdentifier(Group g) {
+
+		Chain c = g.getChain();
+		if (c==null) {
+			logger.warn("Chain is not available for group {}. Contact comparison will not work for this residue",g.toString());
+			this.seqResIndex = -1;
+		} else {
+			Compound comp = c.getCompound();
+			if (comp==null) {
+				logger.warn("Compound is not available for group {}. Contact comparison will not work for this residue",g.toString());
+				this.seqResIndex = -1;
+			} else {
+				this.seqResIndex = comp.getAlignedResIndex(g, c);
+			}
+
+		}
 	}
 	
-	public int getSeqNum() {
-		return seqNum;
+	public int getSeqResIndex() {
+		return seqResIndex;
 	}
 
-	public void setSeqNum(int seqNum) {
-		this.seqNum = seqNum;
-	}
-
-	public Character getInsCode() {
-		return insCode;
-	}
-
-	public void setInsCode(char insCode) {
-		this.insCode = insCode;
+	public void setSeqResIndex(int seqResIndex) {
+		this.seqResIndex = seqResIndex;
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + seqNum;
-		result = prime * result + (insCode==null?0:insCode);
-		return result;
+		return seqResIndex;
 	}
 
 	@Override
@@ -70,24 +81,13 @@ class ResidueIdentifier {
 		if (getClass() != obj.getClass())
 			return false;
 		ResidueIdentifier other = (ResidueIdentifier) obj;
-		if (this.seqNum!=other.seqNum) 
-			return false;
-		if (this.insCode==null && other.insCode!=null)
-			return false;
-		if (this.insCode!=null && other.insCode==null)
-			return false;
-		if (this.insCode==null && other.insCode==null)
-			return true;
-		if (this.insCode!=other.insCode)
-			return false;
-
-		return true;
+		
+		return this.seqResIndex == other.seqResIndex;
 	}
 
 	@Override
 	public String toString() {
-		return ""+ seqNum + (insCode==null?"":insCode);
+		return ""+ seqResIndex;
 	}
 
-	
 }

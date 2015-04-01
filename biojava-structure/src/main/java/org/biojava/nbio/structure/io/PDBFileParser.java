@@ -309,30 +309,20 @@ public class PDBFileParser  {
 
 
 		Group group;
-		if ( recordName.equals("ATOM") ) {
-			if (aminoCode1 == null)  {
-				// it is a nucleotide
-				NucleotideImpl nu = new NucleotideImpl();
-				group = nu;
+		if (aminoCode1 == null || StructureTools.UNKNOWN_GROUP_LABEL == aminoCode1 ){
+			group = new HetatomImpl();
 
-			} else if (aminoCode1 == StructureTools.UNKNOWN_GROUP_LABEL){
-				group = new HetatomImpl();
+		} else if(StructureTools.isNucleotide(aminoCode3))  {
+			// it is a nucleotide
+			NucleotideImpl nu = new NucleotideImpl();
+			group = nu;
 
-			} else {
-				AminoAcidImpl aa = new AminoAcidImpl() ;
-				aa.setAminoType(aminoCode1);
-				group = aa ;
-			}
+		} else {
+			AminoAcidImpl aa = new AminoAcidImpl() ;
+			aa.setAminoType(aminoCode1);
+			group = aa ;
 		}
-		else {
-			if (aminoCode1 != null ) {
-				AminoAcidImpl aa = new AminoAcidImpl() ;
-				aa.setAminoType(aminoCode1);
-				group = aa ;
-			} else {
-				group = new HetatomImpl();
-			}
-		}
+
 		//		System.out.println("new resNum type: "+ resNum.getType() );
 		return  group ;
 	}

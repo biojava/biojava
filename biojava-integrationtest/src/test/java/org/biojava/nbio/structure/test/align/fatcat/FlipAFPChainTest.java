@@ -159,7 +159,7 @@ public class FlipAFPChainTest extends TestCase {
 	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2) 
 	throws StructureException {
 		
-		Atom[] ca2clone = StructureTools.cloneCAArray(ca2);
+		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		rotateAtoms2(afpChain,ca2clone);
 		
 		// get only the subset of Atoms that is on structurally equivalent positions

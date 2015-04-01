@@ -235,7 +235,7 @@ public class TestCrystalCell {
 		Point3d ref;
 		ref = new Point3d(50-3*25*sqrt(2), -3*25*sqrt(2), 50); // center of cell (.5,-2,0)
 		
-		Matrix4d[] transformed = cell.transfToOriginCell(operations, ref);
+		Matrix4d[] transformed = cell.transfToOriginCellOrthonormal(operations, ref);
 		
 		for(Matrix4d op: transformed) {
 			Point3d x = new Point3d(ref);

@@ -396,8 +396,8 @@ public class AlignmentToolsTest extends TestCase {
 	 */
 	public void testUpdateSuperposition() throws IOException, StructureException {
 		Structure s = StructureTools.getStructure("31BI");
-		Atom[] ca1 = StructureTools.getAtomCAArray(s);
-		Atom[] ca2 = StructureTools.getAtomCAArray(s);
+		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(s);
+		Atom[] ca2 = StructureTools.getRepresentativeAtomArray(s);
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new FileReader("src/test/resources/align/31BI_symm_align.xml"));
 		String line = "";

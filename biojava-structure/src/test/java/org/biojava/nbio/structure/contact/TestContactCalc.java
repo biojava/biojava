@@ -21,6 +21,9 @@
 package org.biojava.nbio.structure.contact;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -40,11 +43,20 @@ public class TestContactCalc {
 			"1w0nA",
 			"1wb4A",
 			"1wvfA",
-			"2gpiA",
-			"2h6fB",
-			"3nulA",
-			"7odcA" };
+			"2gpiA"			
+			};
 	
+	@BeforeClass
+	public static void setupBeforeClass() {
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		// it is important to set setAlignSeqRes(true), or otherwise contacts won't be stored correctly
+		// since the contacts are stored via using SEQRES as identifiers 
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+		StructureIO.setAtomCache(cache);
+
+	}
 	
 	@Test
 	public void testIntraChainContacts() throws StructureException, IOException { 
@@ -61,7 +73,7 @@ public class TestContactCalc {
 			System.out.print(pdbId+"\t");
 			String pdbCode = pdbId.substring(0,4);
 			String pdbChainCode = pdbId.substring(4,5);
-
+			
 			Structure structure = StructureIO.getStructure(pdbCode);
 			
 			Chain chain = structure.getChainByPDB(pdbChainCode);
@@ -72,7 +84,7 @@ public class TestContactCalc {
 				
 				AtomContactSet atomContacts = null;
 				if (cts[i]!=null && cts[i][0].equals("CA")) {
-					atomContacts = StructureTools.getAtomsCAInContact(chain, cutoffs[i]);
+					atomContacts = StructureTools.getRepresentativeAtomsInContact(chain, cutoffs[i]);
 				} else {
 					atomContacts = StructureTools.getAtomsInContact(chain, cts[i], cutoffs[i]);
 				}
@@ -131,6 +143,10 @@ public class TestContactCalc {
 		assertTrue(Math.abs(contacts1.size()-contacts2.size())<10);
 		assertTrue(Math.abs(contacts1.size()-contacts3.size())<10);
 		assertTrue(Math.abs(contacts2.size()-contacts3.size())<10);
+
+		assertTrue(contacts1.size()>1);
+		assertTrue(contacts2.size()>1);
+		assertTrue(contacts3.size()>1);
 
 		assertTrue(contacts1.size()<atomContacts1.size()/10);
 		assertTrue(contacts2.size()<atomContacts2.size()/10);

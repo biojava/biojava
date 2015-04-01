@@ -214,20 +214,41 @@ public class CrystalCell implements Serializable {
 	 *  inputs, but with translation such that the reference point would fall
 	 *  within the unit cell
 	 */
-	public Matrix4d[] transfToOriginCell(Matrix4d[] ops, Tuple3d reference) {
-		Matrix4d[] transformed = new Matrix4d[ops.length];
-		
+	public Matrix4d[] transfToOriginCellOrthonormal(Matrix4d[] ops, Tuple3d reference) {
 		// reference in crystal coords
 		Point3d refXtal = new Point3d(reference);
 		transfToCrystal(refXtal);
+
+		// Convert to crystal coords
+		Matrix4d[] opsXtal = new Matrix4d[ops.length];
+		for(int i=0;i<ops.length;i++) {
+			opsXtal[i] = transfToCrystal(ops[i]);
+		}
 		
+		Matrix4d[] transformed = transfToOriginCellCrystal(opsXtal, refXtal);
 		
+		// Convert back to orthonormal
+		for(int i=0;i<ops.length;i++) {
+			transformed[i] = transfToOrthonormal(transformed[i]);
+		}
+		return transformed;
+	}
+	/**
+	 * 
+	 * @param ops Set of operations in crystal coordinates
+	 * @param reference Reference point, which should be in the unit cell after
+	 *  each operation (also in crystal coordinates)
+	 * @return A set of crystal operators with equivalent rotation to the
+	 *  inputs, but with translation such that the reference point would fall
+	 *  within the unit cell
+	 */
+	public Matrix4d[] transfToOriginCellCrystal(Matrix4d[] ops, Tuple3d reference) {
+		Matrix4d[] transformed = new Matrix4d[ops.length];
 		for(int j=0;j<ops.length;j++) {
-			// Convert to crystal coords
-			Matrix4d op = transfToCrystal(ops[j]);
+			Matrix4d op = ops[j];
 			
 			// transform the reference point
-			Point3d xXtal = new Point3d(refXtal);
+			Point3d xXtal = new Point3d(reference);
 			op.transform(xXtal);
 
 			// Calculate unit cell of transformed reference
@@ -241,11 +262,10 @@ public class CrystalCell implements Serializable {
 			// Compose op with an additional translation operator
 			translation.mul(op);
 
-			Point3d ref2 = new Point3d(refXtal);
+			Point3d ref2 = new Point3d(reference);
 			translation.transform(ref2);
 			
-			// Convert back to orthonormal
-			transformed[j] = transfToOrthonormal(translation);
+			transformed[j] = translation;
 		}
 		
 		return transformed;

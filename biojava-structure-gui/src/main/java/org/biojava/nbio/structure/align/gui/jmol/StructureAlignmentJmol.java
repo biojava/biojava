@@ -39,6 +39,7 @@ import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.jmol.api.JmolViewer;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.StringWriter;
@@ -58,15 +59,15 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    Structure structure; 
 
-   JmolPanel jmolPanel;
-   JFrame frame ;
+   protected JmolPanel jmolPanel;
+   protected JFrame frame;
    JTextField text ;
    JTextField status;
 
    protected static final String COMMAND_LINE_HELP = "enter Jmol scripting command...";
-   Atom[] ca1;
-   Atom[] ca2;
-   AFPChain afpChain;
+   protected Atom[] ca1;
+   protected Atom[] ca2;
+   protected AFPChain afpChain;
 
    private static final int DEFAULT_HEIGHT = 500;
 
@@ -190,6 +191,8 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 		String[] styles = new String[] { "Cartoon", "Backbone", "CPK", "Ball and Stick", "Ligands","Ligands and Pocket"};
 		JComboBox style = new JComboBox(styles);
+		
+		hBox1.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 
 		hBox1.add(new JLabel("Style"));
 		hBox1.add(style);
@@ -204,9 +207,11 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 		hBox1.add(Box.createGlue());
 		hBox1.add(new JLabel("Color"));
 		hBox1.add(colors);
+		
 
 // CHeck boxes
 		Box hBox2 = Box.createHorizontalBox();
+		hBox2.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 		
 		JButton resetDisplay = new JButton("Reset Display");
 		
@@ -286,7 +291,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       initCoords();
 
       resetDisplay();
-
+      
    }
    private void initCoords(){
       try {
@@ -380,7 +385,6 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 
       structure = s;
-
    }
 
    public Structure getStructure(){
@@ -510,9 +514,12 @@ public void actionPerformed(ActionEvent e) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2) ;
+         //Clone the AFPChain to not override the FatCat numbers in alnsymb
+         AFPChain textAFP = (AFPChain) afpChain.clone();
+         String result = AfpChainWriter.toWebSiteDisplay(textAFP, ca1, ca2) ;
 
          DisplayAFP.showAlignmentImage(afpChain, result);
+         
       } else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
          if ( afpChain == null) {
             System.err.println("Currently not viewing an alignment!");
@@ -521,6 +528,7 @@ public void actionPerformed(ActionEvent e) {
          String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
 
          DisplayAFP.showAlignmentImage(afpChain, result);
+         
       } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
          if ( afpChain == null) {
             System.err.println("Currently not viewing an alignment!");
@@ -538,10 +546,9 @@ public void actionPerformed(ActionEvent e) {
          result += afpChain.toRotMat();
          DisplayAFP.showAlignmentImage(afpChain, result);
       }
-
    }
 
-   public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+   public String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
      
       if ( afpChain.getBlockNum() > 1){
          return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
@@ -633,7 +640,7 @@ public void actionPerformed(ActionEvent e) {
 
 	   jmol.append("select */2; color lightgrey; model 2; ");
 	      
-	   printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, blockNr);
+	   printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, blockNr, afpChain.getBlockColors());
 	   
 	   jmol.append("model 0;  ");
 	   jmol.append(LIGAND_DISPLAY_SCRIPT);
@@ -661,9 +668,10 @@ public void actionPerformed(ActionEvent e) {
       
       for(int bk = 0; bk < blockNum; bk ++)       {
 
-         printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk);
+         printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk, afpChain.getBlockColors());
       }
       jmol.append("model 0;  ");
+      
       jmol.append(LIGAND_DISPLAY_SCRIPT);
       //System.out.println(jmol);
       return jmol.toString();
@@ -672,21 +680,31 @@ public void actionPerformed(ActionEvent e) {
    }
 
 private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
-		int[] optLen, int[][][] optAln, StringWriter jmol, int bk) {
+		int[] optLen, int[][][] optAln, StringWriter jmol, int bk, Color[] colors) {
 	//the block nr determines the color...
 	 int colorPos = bk;
-	 if ( colorPos > ColorUtils.colorWheel.length){
-	    colorPos = ColorUtils.colorWheel.length % colorPos ;
+	 
+	 Color c1;
+	 Color c2;
+	 //If the colors for the block are specified in AFPChain use them, otherwise the default ones are calculated
+	 if (colors==null){
+		 
+		 if ( colorPos > ColorUtils.colorWheel.length){
+		    colorPos = ColorUtils.colorWheel.length % colorPos ;
+		 }
+		 
+		 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
+		 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
+		 	 
+		 c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
+		 c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
 	 }
-	 
-	 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
-	 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
-	 	 
-	 Color c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
-	 Color c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
-	 
-	 
-	 
+	 else{
+		 int n = colors.length;
+		 
+		 c1   = colors[colorPos%n];
+		 c2   = colors[(colorPos+1%n)%blockNum];
+	 }
 	 
 	 List<String> pdb1 = new ArrayList<String>();
 	 List<String> pdb2 = new ArrayList<String>();
@@ -737,8 +755,5 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
          jmolPanel.evalString("save STATE state_1");
       }
    }
-   
-   
-
 
 }
