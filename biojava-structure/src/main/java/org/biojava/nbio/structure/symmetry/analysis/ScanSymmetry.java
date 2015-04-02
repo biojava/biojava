@@ -138,14 +138,14 @@ public class ScanSymmetry implements Runnable {
 
 				try {
 					SpaceGroup spaceGroup =null;
-					float resolution = 0.0f;
+					//float resolution = 0.0f;
 					if (structure != null) {
 						PDBCrystallographicInfo info = structure.getCrystallographicInfo();
 						if (info != null) {
 							spaceGroup = info.getSpaceGroup();
 						}
-						PDBHeader pdbHeader = structure.getPDBHeader();
-						resolution = pdbHeader.getResolution();	
+						//PDBHeader pdbHeader = structure.getPDBHeader();
+						//resolution = pdbHeader.getResolution();	
 					}
 					QuatSymmetryDetector detector = new QuatSymmetryDetector(structure, parameters);
 
