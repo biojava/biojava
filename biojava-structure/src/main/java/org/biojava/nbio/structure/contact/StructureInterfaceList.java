@@ -276,7 +276,12 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 					countPairs++;
 				}
 			}
-			averageScore = averageScore/(double)countPairs;
+			if (countPairs>0) { 
+				averageScore = averageScore/(double)countPairs;
+			} else {
+				// if only one interface in cluster we set the score to the maximum
+				averageScore = 1.0;
+			}
 			cluster.setAverageScore(averageScore);
 			clusters.add(cluster);
 		}
