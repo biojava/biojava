@@ -52,7 +52,7 @@ public class MenuCreator {
 	public static final String SAVE_ALIGNMENT_XML = "Save Alignment XML";
 	public static final String LOAD_ALIGNMENT_XML = "Load Alignment XML";
 	public static final String FATCAT_TEXT = "View as FATCAT result";
-	private static final int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	protected static final int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	/** provide a JMenuBar that can be added to a JFrame
 	 * 
 	 * @return a JMenuBar
@@ -346,7 +346,7 @@ public class MenuCreator {
 
 
 
-	private static JMenuItem getIcon(ActionListener actionListener, String text) {
+	protected static JMenuItem getIcon(ActionListener actionListener, String text) {
 		JMenuItem to = new JMenuItem(text);
 
 		to.setMnemonic(KeyEvent.VK_E);
@@ -586,7 +586,7 @@ public class MenuCreator {
 	}
 
 
-	private static JMenuItem getPairwiseAlignmentMenuItem() {
+	protected static JMenuItem getPairwiseAlignmentMenuItem() {
 		ImageIcon alignIcon = createImageIcon("/icons/window_new.png");
 
 		JMenuItem pairI ;
@@ -616,7 +616,7 @@ public class MenuCreator {
 	 * @author Spencer Bliven
 	 *
 	 */
-	private static class DotPlotListener implements ActionListener {
+	public static class DotPlotListener implements ActionListener {
 		private final AFPChain afpChain;
 		public DotPlotListener(AFPChain afpChain) {
 			this.afpChain = afpChain;

@@ -61,23 +61,23 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    protected JmolPanel jmolPanel;
    protected JFrame frame;
-   JTextField text ;
-   JTextField status;
+   protected JTextField text ;
+   protected JTextField status;
 
    protected static final String COMMAND_LINE_HELP = "enter Jmol scripting command...";
    protected Atom[] ca1;
    protected Atom[] ca2;
    protected AFPChain afpChain;
 
-   private static final int DEFAULT_HEIGHT = 500;
+   protected static final int DEFAULT_HEIGHT = 500;
 
-   private static final int DEFAULT_WIDTH = 500;
+   protected static final int DEFAULT_WIDTH = 500;
 
-   public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
+   protected static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
 
-   private static final String LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
+   protected static final String LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
 
-   static int nrOpenWindows = 0;
+   protected static int nrOpenWindows = 0;
 
    public static void main(String[] args){
       try {
@@ -293,7 +293,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       resetDisplay();
       
    }
-   private void initCoords(){
+   protected void initCoords(){
       try {
          if ( ca1 == null || ca2 == null ){
             if ( structure != null)
