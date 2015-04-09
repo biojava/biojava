@@ -169,7 +169,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		Group group;
 		if ( recordName.equals("ATOM") ) {
-			if (aminoCode1 == null)  {
+			if (StructureTools.isNucleotide(groupCode3))  {
 				// it is a nucleotide
 				NucleotideImpl nu = new NucleotideImpl();
 				group = nu;
@@ -692,54 +692,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 
-		if ( params.isAlignSeqRes() ){
-		
-
-			// fix SEQRES residue numbering
-			List<Chain> atomList   = structure.getModel(0);
-			for (Chain seqResChain: seqResChains){
-		
-					Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList);
-
-					if (atomChain == null) {
-						// most likely there's no observed residues at all for the seqres chain: can't map
-						// e.g. 3zyb: chains with asym_id L,M,N,O,P have no observed residues
-						logger.warn("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
-								seqResChain.getChainID());
-						continue;
-					}
-					
-					//map the atoms to the seqres...
-
-					List<Group> seqResGroups = seqResChain.getAtomGroups(); 
-
-					for ( int seqResPos = 0 ; seqResPos < seqResGroups.size(); seqResPos++) {
-						Group seqresG = seqResGroups.get(seqResPos);
-						boolean found = false;
-						for ( Group atomG: atomChain.getAtomGroups()) {
-
-							int internalNr = getInternalNr (atomG);
-
-							if (seqresG.getResidueNumber().getSeqNum() == internalNr ) {															
-								seqResGroups.set(seqResPos, atomG);
-								found = true;
-								break;
-							}
-
-
-						}
-						if ( ! found)
-							// so far the residue number has tracked internal numbering.
-							// however there are no atom records, as such this can't be a PDB residue number...
-							seqresG.setResidueNumber(null);
-					}
-					atomChain.setSeqResGroups(seqResGroups);
-
-			}
+		if ( params.isAlignSeqRes() ){		
+			alignSeqRes();
 		}
 
-		if ( params.shouldCreateAtomBonds())
+		if ( params.shouldCreateAtomBonds()) {
 			addBonds();
+		}
 
 		//TODO: add support for these:
 		//structure.setConnections(connects);
@@ -947,12 +906,68 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 		return trimmedChain;
 	}
-	
-   private void addBonds() {
-	   BondMaker maker = new BondMaker(structure);
-	   maker.makeBonds();	
-   }
 
+	private void addBonds() {
+		BondMaker maker = new BondMaker(structure);
+		maker.makeBonds();	
+	}
+
+	private void alignSeqRes() {
+
+		logger.debug("Parsing mode align_seqres, will align to ATOM to SEQRES sequence");
+		
+		// fix SEQRES residue numbering for all models
+
+		for (int model=0;model<structure.nrModels();model++) {
+			
+			List<Chain> atomList   = structure.getModel(model);
+			
+			for (Chain seqResChain: seqResChains){
+
+				// this extracts the matching atom chain from atomList
+				Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList);
+
+				if (atomChain == null) {
+					// most likely there's no observed residues at all for the seqres chain: can't map
+					// e.g. 3zyb: chains with asym_id L,M,N,O,P have no observed residues
+					logger.warn("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
+							seqResChain.getChainID());
+					continue;
+				}
+
+				//map the atoms to the seqres...
+
+				// we need to first clone the seqres so that they stay independent for different models
+				List<Group> seqResGroups = new ArrayList<Group>();
+				for (int i=0;i<seqResChain.getAtomGroups().size();i++) {
+					seqResGroups.add((Group)seqResChain.getAtomGroups().get(i).clone());
+				}
+
+				for ( int seqResPos = 0 ; seqResPos < seqResGroups.size(); seqResPos++) {
+					Group seqresG = seqResGroups.get(seqResPos);
+					boolean found = false;
+					for ( Group atomG: atomChain.getAtomGroups()) {
+
+						int internalNr = getInternalNr (atomG);
+
+						if (seqresG.getResidueNumber().getSeqNum() == internalNr ) {															
+							seqResGroups.set(seqResPos, atomG);
+							found = true;
+							break;
+						}
+
+
+					}
+					if ( ! found)
+						// so far the residue number has tracked internal numbering.
+						// however there are no atom records, as such this can't be a PDB residue number...
+						seqresG.setResidueNumber(null);
+				}
+				atomChain.setSeqResGroups(seqResGroups);
+
+			}
+		}
+	}
 
 	private int getInternalNr(Group atomG) {
 		if ( atomG.getType().equals(GroupType.AMINOACID)) {

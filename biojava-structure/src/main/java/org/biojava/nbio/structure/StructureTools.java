@@ -22,9 +22,25 @@
  */
 package org.biojava.nbio.structure;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
@@ -32,10 +48,6 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.util.*;
-import java.util.regex.Matcher;
 
 
 /**
@@ -49,6 +61,7 @@ public class StructureTools {
 	
 	private static final Logger logger = LoggerFactory.getLogger(StructureTools.class);
 
+	// Amino Acid backbone
 	/** 
 	 * The atom name of the backbone C-alpha atom.
 	 * Note that this can be ambiguous depending on the context since Calcium atoms
@@ -76,8 +89,58 @@ public class StructureTools {
 	 */
 	public static final String CB_ATOM_NAME = "CB";
 
-
-	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');
+	
+	// Nucleotide backbone
+	/**
+	 * The atom name of the backbone C1' in RNA
+	 */
+	public static final String C1_ATOM_NAME = "C1'";
+	/**
+	 * The atom name of the backbone C2' in RNA
+	 */
+	public static final String C2_ATOM_NAME = "C2'";
+	/**
+	 * The atom name of the backbone C3' in RNA
+	 */
+	public static final String C3_ATOM_NAME = "C3'";
+	/**
+	 * The atom name of the backbone C4' in RNA
+	 */
+	public static final String C4_ATOM_NAME = "C4'";
+	/**
+	 * The atom name of the backbone O2' in RNA
+	 */
+	public static final String O2_ATOM_NAME = "O2'";
+	/**
+	 * The atom name of the backbone O3' in RNA
+	 */
+	public static final String O3_ATOM_NAME = "O3'";
+	/**
+	 * The atom name of the backbone O4' in RNA
+	 */
+	public static final String O4_ATOM_NAME = "O4'";
+	/**
+	 * The atom name of the backbone O4' in RNA
+	 */
+	public static final String O5_ATOM_NAME = "O5'";
+	/**
+	 * The atom name of the backbone O4' in RNA
+	 */
+	public static final String OP1_ATOM_NAME = "OP1";
+	/**
+	 * The atom name of the backbone O4' in RNA
+	 */
+	public static final String OP2_ATOM_NAME = "OP2";
+	/**
+	 * The atom name of the backbone phosphate in RNA
+	 */
+	public static final String P_ATOM_NAME = "P";
+	public static final String NUCLEOTIDE_REPRESENTATIVE = C4_ATOM_NAME;
+	
+	/**
+	 * The character to use for unknown compounds in sequence strings
+	 */
+	public static final char UNKNOWN_GROUP_LABEL = 'X';
 
 	/**
 	 * Below this ratio of aminoacid/nucleotide residues to the sequence total,
@@ -93,8 +156,8 @@ public class StructureTools {
 
 
 	// there is a file format change in PDB 3.0 and nucleotides are being renamed
-	static private Map<String, Integer> nucleotides30 ;
-	static private Map<String, Integer> nucleotides23 ;
+	static private Map<String, Character> nucleotides30 ;
+	static private Map<String, Character> nucleotides23 ;
 
 	//amino acid 3 and 1 letter code definitions
 	private static final Map<String, Character> aminoAcids;
@@ -106,40 +169,45 @@ public class StructureTools {
 
 
 	static {
-		nucleotides30 = new HashMap<String,Integer>();
-		nucleotides30.put("DA",1);
-		nucleotides30.put("DC",1);
-		nucleotides30.put("DG",1);
-		nucleotides30.put("DT",1);
-		nucleotides30.put("DI",1);
-		nucleotides30.put("A",1);
-		nucleotides30.put("G",1);
-		nucleotides30.put("C",1);
-		nucleotides30.put("U",1);
-		nucleotides30.put("I",1);
+		nucleotides30 = new HashMap<String,Character>();
+		nucleotides30.put("DA",'A');
+		nucleotides30.put("DC",'C');
+		nucleotides30.put("DG",'G');
+		nucleotides30.put("DT",'T');
+		nucleotides30.put("DI",'I');
+		nucleotides30.put("A", 'A');
+		nucleotides30.put("G", 'G');
+		nucleotides30.put("C", 'C');
+		nucleotides30.put("U", 'U');
+		nucleotides30.put("I", 'I');
 
 		//TODO: check if they are always HETATMs, in that case this will not be necessary
 		// the DNA linkers - the +C , +G, +A  +T +U and +I have been replaced with these:
-		nucleotides30.put("TAF",1); // 2'-DEOXY-2'-FLUORO-ARABINO-FURANOSYL THYMINE-5'-PHOSPHATE
-		nucleotides30.put("TC1",1); // 3-(5-PHOSPHO-2-DEOXY-BETA-D-RIBOFURANOSYL)-2-OXO-1,3-DIAZA-PHENOTHIAZINE
-		nucleotides30.put("TFE",1); // 2'-O-[2-(TRIFLUORO)ETHYL] THYMIDINE-5'-MONOPHOSPHATE
-		nucleotides30.put("TFO",1); // [2-(6-AMINO-9H-PURIN-9-YL)-1-METHYLETHOXY]METHYLPHOSPHONIC ACID"
-		nucleotides30.put("TGP",1); // 5'-THIO-2'-DEOXY-GUANOSINE PHOSPHONIC ACID
-		nucleotides30.put("THX",1); // PHOSPHONIC ACID 6-({6-[6-(6-CARBAMOYL-3,6,7,8-TETRAHYDRO-3,6-DIAZA-AS-INDACENE-2-CARBONYL)-3,6,7,8-TETRAHYDRO-3,6-DIAZA-AS-INDOCENE-2-CARBONYL]-3,6,7,8-TETRAHYDRO-3,6-DIAZA-AS-INDACENE-2-CARBONL}-AMINO)-HEXYL ESTER 5-(5-METHYL-2,4-DIOXO-3,4-DIHYDRO-2H-PYRIMIDIN-1-YL)-TETRAHYDRO-FURAN-2-YLMETHYL ESTER
-		nucleotides30.put("TLC",1); // 2-O,3-ETHDIYL-ARABINOFURANOSYL-THYMINE-5'-MONOPHOSPHATE
-		nucleotides30.put("TLN",1); //  [(1R,3R,4R,7S)-7-HYDROXY-3-(THYMIN-1-YL)-2,5-DIOXABICYCLO[2.2.1]HEPT-1-YL]METHYL DIHYDROGEN PHOSPHATE"
-		nucleotides30.put("TP1",1); // 2-(METHYLAMINO)-ETHYLGLYCINE-CARBONYLMETHYLENE-THYMINE
-		nucleotides30.put("TPC",1); // 5'-THIO-2'-DEOXY-CYTOSINE PHOSPHONIC ACID
-		nucleotides30.put("TPN",1); // 2-AMINOETHYLGLYCINE-CARBONYLMETHYLENE-THYMINE
+		nucleotides30.put("TAF",UNKNOWN_GROUP_LABEL); // Fluorinated Thymine
+		nucleotides30.put("TC1",UNKNOWN_GROUP_LABEL); // Furanosyl
+		nucleotides30.put("TFE",UNKNOWN_GROUP_LABEL); // Fluorinated Thymine
+		nucleotides30.put("TFO",UNKNOWN_GROUP_LABEL); // Tenofovir (3' terminator)
+		nucleotides30.put("TGP",UNKNOWN_GROUP_LABEL); // Guanine variant
+		nucleotides30.put("THX",UNKNOWN_GROUP_LABEL); // 5' terminator
+		nucleotides30.put("TLC",UNKNOWN_GROUP_LABEL); // Thymine with dicyclic sugar
+		nucleotides30.put("TLN",UNKNOWN_GROUP_LABEL); // locked Thymine
+		nucleotides30.put("LCG",UNKNOWN_GROUP_LABEL); // locked Guanine
+		nucleotides30.put("TP1",UNKNOWN_GROUP_LABEL); // Thymine peptide nucleic acid, with added methyl
+		nucleotides30.put("CP1",UNKNOWN_GROUP_LABEL); // Cytidine peptide nucleic acid, with added methyl
+		nucleotides30.put("TPN",UNKNOWN_GROUP_LABEL); // Thymine peptide nucleic acid
+		nucleotides30.put("CPN",UNKNOWN_GROUP_LABEL); // Cytidine peptide nucleic acid
+		nucleotides30.put("GPN",UNKNOWN_GROUP_LABEL); // Guanine peptide nucleic acid
+		nucleotides30.put("APN",UNKNOWN_GROUP_LABEL); // Adenosine peptide nucleic acid
+		nucleotides30.put("TPC",UNKNOWN_GROUP_LABEL); // Thymine variant
 
 
 
 		// store nucleic acids (C, G, A, T, U, and I), and
 		// the modified versions of nucleic acids (+C, +G, +A, +T, +U, and +I), and
-		nucleotides23  = new HashMap<String,Integer>();
+		nucleotides23  = new HashMap<String,Character>();
 		String[] names = {"C","G","A","T","U","I","+C","+G","+A","+T","+U","+I"};
 		for (String n : names) {
-			nucleotides23.put(n, 1);
+			nucleotides23.put(n, n.charAt(n.length()-1));
 		}
 
 		aminoAcids = new HashMap<String, Character>();
@@ -304,6 +372,62 @@ public class StructureTools {
 	}
 
 	/**
+	 * List of groups from the structure not included in ca (e.g. ligands).
+	 * 
+	 * Unaligned groups are searched from all chains referenced in ca, as well
+	 * as any chains in the first model of the structure from ca[0], if any.
+	 * 
+	 * @param ca2
+	 * @return
+	 */
+	public static List<Group> getUnalignedGroups(Atom[] ca) {
+		Set<Chain> chains = new HashSet<Chain>();
+		Set<Group> caGroups = new HashSet<Group>();
+		
+		// Create list of all chains in this structure
+		Structure s = null;
+		if( ca.length > 0 ) {
+			Group g = ca[0].getGroup();
+			if(g != null) {
+				Chain c = g.getChain();
+				if( c != null) {
+					s = c.getParent();
+				}
+			}
+		}
+		if( s != null) {
+			// Add all chains from the structure
+			for( Chain c : s.getChains(0)) {
+				chains.add(c);
+			}
+		}
+
+		// Add groups and chains from ca
+		for(Atom a : ca) {
+			Group g = a.getGroup();
+			if( g != null) {
+				caGroups.add(g);
+
+				Chain c = g.getChain();
+				if(c != null) {
+					chains.add(c);
+				}
+			}
+		}
+		
+		// Iterate through all chains, finding groups not in ca
+		List<Group> unadded = new ArrayList<Group>();
+		for(Chain c : chains) {
+			for(Group g : c.getAtomGroups() ) {
+				if(! caGroups.contains(g) ) {
+					unadded.add(g);
+				}
+			}
+		}
+		return unadded;
+	}
+	
+	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure, 
 	 * optionally including HET atoms or not.
 	 * Waters are not included.
@@ -442,7 +566,10 @@ public class StructureTools {
 	 * Returns an Atom array of the C-alpha atoms. Any atom that is a carbon and has CA name will be returned.
 	 * @param c the structure object
 	 * @return an Atom[] array
+	 * @see #getRepresentativeAtomArray(Chain)
+	 * @deprecated Use the more generic {@link #getRepresentativeAtomArray(Chain)} instead
 	 */
+	@Deprecated
 	public static final Atom[] getAtomCAArray(Chain c){
 		List<Atom> atoms = new ArrayList<Atom>();
 		
@@ -454,14 +581,60 @@ public class StructureTools {
 		
 		return atoms.toArray(new Atom[atoms.size()]);
 	}
+	
+	/**
+	 * Gets a representative atom for each group.
+	 * 
+	 * For amino acids, the representative is a CA carbon.
+	 * For nucleotides, the representative is the C3' carbon.
+	 * Other group types will be ignored.
+	 * @param c
+	 * @return
+	 * @since Biojava 4.1.0
+	 */
+	public static final Atom[] getRepresentativeAtomArray(Chain c) {
+		List<Atom> atoms = new ArrayList<Atom>();
+		
+		for (Group g: c.getAtomGroups()) {
+			switch(g.getType()) {
+			case AMINOACID:
+				if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+					atoms.add(g.getAtom(CA_ATOM_NAME));
+				}
+				break;
+			case NUCLEOTIDE:
+				if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE) && g.getAtom(NUCLEOTIDE_REPRESENTATIVE).getElement()==Element.C) {
+					atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
+				}
+				break;
+			default:
+				// don't add
+			}
+		}
+		
+		return atoms.toArray(new Atom[atoms.size()]);
+
+	}
 
 	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
-	 * groups and chains. The chain will only contain groups that are part of the CA array.
+	 * groups and chains. The chain will only contain groups that are part of the input array.
 	 * 
-	 * @param ca array of CA atoms
+	 * @param ca array of representative atoms, e.g. CA atoms
 	 * @return Atom array
+	 * @deprecated Use the better-named {@link #cloneAtomArray(Atom[])} instead
 	 */
+	@Deprecated
 	public static final Atom[] cloneCAArray(Atom[] ca) throws StructureException{
+		return cloneAtomArray(ca);
+	}
+	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
+	 * groups and chains. The chain will only contain groups that are part of the input array.
+	 * 
+	 * @param ca array of representative atoms, e.g. CA atoms
+	 * @return Atom array
+	 * @since Biojava 4.1.0
+	 */
+	public static final Atom[] cloneAtomArray(Atom[] ca) throws StructureException{
 		Atom[] newCA = new Atom[ca.length];
 
 		List<Chain> model = new ArrayList<Chain>();
@@ -486,13 +659,14 @@ public class StructureTools {
 
 			Group parentN = (Group)parentG.clone();
 
-			newCA[apos] = parentN.getAtom(CA_ATOM_NAME);
+			newCA[apos] = parentN.getAtom(a.getName());
 			newChain.addGroup(parentN);
 		}
 		return newCA;
 	}
 
-	/** Clone a set of CA Atoms, but returns the parent groups
+
+	/** Clone a set of representative Atoms, but returns the parent groups
 	 *  
 	 * @param ca Atom array
 	 * @return Group array
@@ -543,8 +717,8 @@ public class StructureTools {
 
 		Chain c = null;
 		String prevChainId = "";
-		for (Atom a : ca2){			
-			Group g = (Group) a.getGroup().clone(); // works because each group has only a CA atom
+		for (Atom a : ca2){
+			Group g = (Group) a.getGroup().clone(); // works because each group has only a single atom
 
 			if (c == null ) {
 				c = new ChainImpl();
@@ -559,7 +733,7 @@ public class StructureTools {
 			}
 
 			c.addGroup(g);
-			ca2clone[pos] = g.getAtom(CA_ATOM_NAME);
+			ca2clone[pos] = g.getAtom(a.getName());
 
 			pos++;
 		}
@@ -583,7 +757,7 @@ public class StructureTools {
 			}
 
 			c.addGroup(g);
-			ca2clone[pos] = g.getAtom(CA_ATOM_NAME);
+			ca2clone[pos] = g.getAtom(a.getName());
 
 			pos++;
 		}
@@ -598,7 +772,9 @@ public class StructureTools {
 	 * Return an Atom array of the C-alpha atoms. Any atom that is a carbon and has CA name will be returned.
 	 * @param s the structure object
 	 * @return an Atom[] array
+	 * @deprecated Use the more generic {@link #getRepresentativeAtomArray(Structure)} instead
 	 */
+	@Deprecated
 	public static Atom[] getAtomCAArray(Structure s){
 		
 		List<Atom> atoms = new ArrayList<Atom>();
@@ -607,6 +783,41 @@ public class StructureTools {
 			for (Group g: c.getAtomGroups()) {
 				if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
 					atoms.add(g.getAtom(CA_ATOM_NAME));
+				}
+			}
+		}
+
+		return atoms.toArray(new Atom[atoms.size()]);
+	}
+	
+	/**
+	 * Gets a representative atom for each group. Atoms are not cloned.
+	 * 
+	 * For amino acids, the representative is a CA carbon.
+	 * For nucleotides, the representative is the C3' carbon.
+	 * Other group types will be ignored.
+	 * @param s Input structure
+	 * @return
+	 * @since Biojava 4.1.0
+	 */
+	public static Atom[] getRepresentativeAtomArray(Structure s){
+		
+		List<Atom> atoms = new ArrayList<Atom>();
+		
+		for (Chain c: s.getChains()) {
+			for (Group g: c.getAtomGroups()) {
+				switch(g.getType()) {
+				default:
+				case AMINOACID:
+					if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+						atoms.add(g.getAtom(CA_ATOM_NAME));
+					}
+					break;
+				case NUCLEOTIDE:
+					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE) && g.getAtom(NUCLEOTIDE_REPRESENTATIVE).getElement()==Element.C) {
+						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
+					}
+					break;
 				}
 			}
 		}
@@ -629,11 +840,31 @@ public class StructureTools {
 				if (g.hasAminoAtoms()) {
 					// this means we will only take atoms grom groups that have complete backbones
 					for (Atom a:g.getAtoms()) {
-						// we do it this way instead of with g.getAtom() to be sure we always use the same order as original
-						if (a.getName().equals(CA_ATOM_NAME)) atoms.add(a);
-						if (a.getName().equals(C_ATOM_NAME)) atoms.add(a);
-						if (a.getName().equals(N_ATOM_NAME)) atoms.add(a);
-						if (a.getName().equals(O_ATOM_NAME)) atoms.add(a);
+						switch(g.getType()) {
+						case NUCLEOTIDE:
+							// Nucleotide backbone
+							if (a.getName().equals( C1_ATOM_NAME  )) atoms.add(a);
+							if (a.getName().equals( C2_ATOM_NAME  )) atoms.add(a);
+							if (a.getName().equals( C3_ATOM_NAME  )) atoms.add(a);
+							if (a.getName().equals( C4_ATOM_NAME  )) atoms.add(a);
+							if (a.getName().equals( O2_ATOM_NAME  )) atoms.add(a);
+							if (a.getName().equals( O3_ATOM_NAME  )) atoms.add(a);
+							if (a.getName().equals( O4_ATOM_NAME  )) atoms.add(a);
+							if (a.getName().equals( O5_ATOM_NAME  )) atoms.add(a);
+							if (a.getName().equals( OP1_ATOM_NAME )) atoms.add(a);
+							if (a.getName().equals( OP2_ATOM_NAME )) atoms.add(a);
+							if (a.getName().equals( P_ATOM_NAME   )) atoms.add(a);
+							//TODO Allow C4* names as well as C4'? -SB 3/2015
+							break;
+						case AMINOACID:
+						default:
+							// we do it this way instead of with g.getAtom() to be sure we always use the same order as original
+							if (a.getName().equals(CA_ATOM_NAME)) atoms.add(a);
+							if (a.getName().equals(C_ATOM_NAME)) atoms.add(a);
+							if (a.getName().equals(N_ATOM_NAME)) atoms.add(a);
+							if (a.getName().equals(O_ATOM_NAME)) atoms.add(a);
+							break;
+						}
 					}
 				}
 			}
@@ -650,6 +881,7 @@ public class StructureTools {
 	 * @return a character
 	 * @param code3 a three character amino acid representation String
 	 * @throws UnknownPdbAminoAcidException
+	 * @see {@link #get1LetterCode(String)}
 	 */
 	public static final Character convert_3code_1code(String code3)
 			throws UnknownPdbAminoAcidException {
@@ -665,11 +897,13 @@ public class StructureTools {
 	}
 
 	/** 
-	 * Convert a three letter code into single character.
-	 * catches for unusual characters
+	 * Convert a three letter aminoacid code into a single character code.
+	 * If the code does not correspond to a amino acid or nucleotide, returns
+	 * {@link #UNKNOWN_GROUP_LABEL}.
 	 *
+	 * Returned null for nucleotides prior to version 4.0.1.
 	 * @param groupCode3 three letter representation
-	 * @return null if group is a nucleotide code
+	 * @return The 1-letter abbreviation
 	 */
 	public static final Character get1LetterCode(String groupCode3){
 
@@ -680,9 +914,16 @@ public class StructureTools {
 		} catch (UnknownPdbAminoAcidException e){
 			// hm groupCode3 is not standard
 			// perhaps it is an nucleotide?
+			groupCode3 = groupCode3.trim();
 			if ( isNucleotide(groupCode3) ) {
 				//System.out.println("nucleotide, aminoCode1:"+aminoCode1);
-				aminoCode1= null;
+				aminoCode1= nucleotides30.get(groupCode3);
+				if(aminoCode1 == null) {
+					aminoCode1 = nucleotides23.get(groupCode3);
+				}
+				if(aminoCode1 == null) {
+					aminoCode1 = UNKNOWN_GROUP_LABEL;
+				}
 			} else {
 				// does not seem to be so let's assume it is
 				//  nonstandard aminoacid and label it "X"
@@ -1020,7 +1261,9 @@ public class StructureTools {
 
 	/**
 	 * Returns the set of intra-chain contacts for the given chain for given atom names, i.e. the contact map.
-	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.  
 	 * @param chain
 	 * @param atomNames the array with atom names to be used. Beware: CA will do both C-alphas an Calciums
 	 * if null all non-H atoms of non-hetatoms will be used
@@ -1044,7 +1287,9 @@ public class StructureTools {
 	
 	/**
 	 * Returns the set of intra-chain contacts for the given chain for all non-H atoms of non-hetatoms, i.e. the contact map.
-	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.  
 	 * @param chain
 	 * @param cutoff
 	 * @return
@@ -1057,10 +1302,14 @@ public class StructureTools {
 	 * Returns the set of intra-chain contacts for the given chain for C-alpha atoms (including non-standard 
 	 * aminoacids appearing as HETATM groups), i.e. the contact map.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.  
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.
 	 * @param chain
 	 * @param cutoff
 	 * @return
+	 * @deprecated Use the more generic {@link #getRepresentativeAtomsInContact(Chain, double)} instead
 	 */
+	@Deprecated
 	public static AtomContactSet getAtomsCAInContact(Chain chain, double cutoff) {
 		Grid grid = new Grid(cutoff);
 		
@@ -1072,8 +1321,30 @@ public class StructureTools {
 	}
 	
 	/**
+	 * Returns the set of intra-chain contacts for the given chain for C-alpha or C3' atoms (including non-standard 
+	 * aminoacids appearing as HETATM groups), i.e. the contact map.
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.  
+	 * @param chain
+	 * @param cutoff
+	 * @return
+	 * @since Biojava 4.1.0
+	 */
+	public static AtomContactSet getRepresentativeAtomsInContact(Chain chain, double cutoff) {
+		Grid grid = new Grid(cutoff);
+		
+		Atom[] atoms = getRepresentativeAtomArray(chain);
+				
+		grid.addAtoms(atoms);
+		
+		return grid.getContacts();
+	}
+	
+	
+	/**
 	 * Returns the set of inter-chain contacts between the two given chains for the given atom names.
-	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.  
 	 * @param chain1
 	 * @param chain2
 	 * @param atomNames the array with atom names to be used. For Calphas use {"CA"}, 
@@ -1100,7 +1371,9 @@ public class StructureTools {
 	
 	/**
 	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms.
-	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
+	 * The parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to true for this 
+	 * to work.  
 	 * @param chain1
 	 * @param chain2
 	 * @param cutoff

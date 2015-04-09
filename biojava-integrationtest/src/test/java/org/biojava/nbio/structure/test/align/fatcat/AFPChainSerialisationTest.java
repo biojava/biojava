@@ -79,8 +79,8 @@ extends TestCase
          Structure s2 = getStructure("1hwg","C");
 
 
-         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
-         Atom[] ca2 = StructureTools.getAtomCAArray(s2);
+         Atom[] ca1 = StructureTools.getRepresentativeAtomArray(s1);
+         Atom[] ca2 = StructureTools.getRepresentativeAtomArray(s2);
 
          testAlignment("1a21.A","1hwg.C",ca1,ca2,false);
          testAlignment("1a21.A","1hwg.C",ca1,ca2,true);
@@ -147,7 +147,7 @@ extends TestCase
    private void testAlignment(String name1, String name2, Atom[] ca1, Atom[] ca2, boolean doRigid) throws StructureException,IOException{
 
 
-      Atom[] ca3 = StructureTools.cloneCAArray(ca2);
+      Atom[] ca3 = StructureTools.cloneAtomArray(ca2);
 
 
       AFPChain afpChain = doAlign(name1, name2, ca1,ca2,doRigid);
@@ -255,17 +255,17 @@ extends TestCase
       try {
          Structure s1 = getStructure("5pti","A");
          Structure s2 = getStructure("1znf","A");
-         ca1 = StructureTools.getAtomCAArray(s1);
-         ca2 = StructureTools.getAtomCAArray(s2);
-         ca3 = StructureTools.cloneCAArray(ca2);
+         ca1 = StructureTools.getRepresentativeAtomArray(s1);
+         ca2 = StructureTools.getRepresentativeAtomArray(s2);
+         ca3 = StructureTools.cloneAtomArray(ca2);
 
          result1 = align(name1,name2,ca1, ca2,true);
 
          Structure s3 = getStructure("1hiv","A");
          Structure s4 = getStructure("1a4w","H");
-         ca4 = StructureTools.getAtomCAArray(s3);
-         ca5 = StructureTools.getAtomCAArray(s4);
-         ca6 = StructureTools.cloneCAArray(ca5);
+         ca4 = StructureTools.getRepresentativeAtomArray(s3);
+         ca5 = StructureTools.getRepresentativeAtomArray(s4);
+         ca6 = StructureTools.cloneAtomArray(ca5);
 
          result2 = align(name3,name4,ca4, ca5,true);
 

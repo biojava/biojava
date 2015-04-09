@@ -73,16 +73,16 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 			// ca1 can be set from outside...
 			if (ca1 == null) {
 				Structure structure1 = cache.getStructure(pair.getName1());
-				ca1 =  StructureTools.getAtomCAArray(structure1);
+				ca1 =  StructureTools.getRepresentativeAtomArray(structure1);
 			} else {
-				ca1 = StructureTools.cloneCAArray(ca1);
+				ca1 = StructureTools.cloneAtomArray(ca1);
 			}
 			Structure structure2 = cache.getStructure(pair.getName2());
 			
 			Atom[] ca2;
 
 		
-			ca2 = StructureTools.getAtomCAArray(structure2);
+			ca2 = StructureTools.getRepresentativeAtomArray(structure2);
 
 			afpChain = algorithm.align(ca1, ca2);
 			afpChain.setName1(pair.getName1());

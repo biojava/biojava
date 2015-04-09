@@ -31,7 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TestCompoundHeuristics {
 	
@@ -165,6 +165,53 @@ public class TestCompoundHeuristics {
 		checkCompoundsNumbered(s.getCompounds());
 
 	}
+	
+	@Test
+	public void test3ddoNoseqres() throws IOException, StructureException {
+		
+		// 3ddo contains 6 chains in 1 entity, with residue numbering completely different in each of the chains
+		
+		Structure s = getStructure("3ddo_raw_noseqres.pdb.gz", true);
+
+		assertNotNull(s);
+		
+		assertEquals(6, s.getChains().size());
+		
+		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
+		assertEquals(1, s.getCompounds().size());
+		
+		// trying without seqAlignSeqRes
+		s = getStructure("3ddo_raw_noseqres.pdb.gz", false);
+		assertNotNull(s);
+		
+		assertEquals(6, s.getChains().size());
+		
+		assertEquals(1, s.getCompounds().size());
+	}
+	
+	@Test
+	public void test3ddoSeqres() throws IOException, StructureException {
+		
+		// 3ddo contains 6 chains in 1 entity, with residue numbering completely different in each of the chains
+		
+		Structure s = getStructure("3ddo_raw_trunc_seqres.pdb.gz", true);
+
+		assertNotNull(s);
+		
+		assertEquals(6, s.getChains().size());
+		
+		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
+		assertEquals(1, s.getCompounds().size());
+		
+		// trying without seqAlignSeqRes
+		s = getStructure("3ddo_raw_trunc_seqres.pdb.gz", true);
+		assertNotNull(s);
+		
+		assertEquals(6, s.getChains().size());
+		
+		assertEquals(1, s.getCompounds().size());
+	}
+
 
 	private Structure getStructure(String fileName, boolean setAlignSeqRes) throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream(PATH_TO_TEST_FILES+fileName));

@@ -20,14 +20,16 @@
  */
 package org.biojava.nbio.structure.xtal;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3i;
+import static java.lang.Math.sqrt;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 public class TestCrystalCell {
 
@@ -207,4 +209,41 @@ public class TestCrystalCell {
 		assertTrue("Error transforming to origin. Expected:"+expected+" but was:"+query, expected.epsilonEquals(query, tol));
 	}
 
+	@Test
+	public void testMatrixTransfToOriginCell() {
+		CrystalCell cell = new CrystalCell(100, 100, 100, 90, 90, 45);
+
+		Matrix4d[] operations = new Matrix4d[2];
+		
+		Matrix4d xtalOp;
+		int i = 0;
+		
+		// 90 deg rotation
+		xtalOp = new Matrix4d();
+		xtalOp.set(new AxisAngle4d(0,0,1,Math.PI/2));
+		operations[i++] = cell.transfToOrthonormal(xtalOp);
+		
+		// translate (+2,+1,-1) followed by 90 deg rotation 
+		xtalOp.m03 += 2;
+		xtalOp.m13 += 1;
+		xtalOp.m23 += -1;
+		operations[i++] = cell.transfToOrthonormal(xtalOp);
+		
+		xtalOp.set(new AxisAngle4d(0,0,1,-Math.PI/4));
+		xtalOp.m03 += 1;
+
+		Point3d ref;
+		ref = new Point3d(50-3*25*sqrt(2), -3*25*sqrt(2), 50); // center of cell (.5,-2,0)
+		
+		Matrix4d[] transformed = cell.transfToOriginCellOrthonormal(operations, ref);
+		
+		for(Matrix4d op: transformed) {
+			Point3d x = new Point3d(ref);
+			op.transform(x);
+			
+			Point3i index = cell.getCellIndices(x);
+			assertEquals(new Point3i(0,0,0),index);
+		}
+		
+	}
 }

@@ -40,6 +40,8 @@ import java.util.Map;
  */
 public final class StandardAminoAcid {
     
+	private static final String STANDARD_AMINOS_FILE = "org/biojava/nbio/structure/standardaminos.pdb";
+	
     static private Map<String,AminoAcid> aminoAcids;
     
     /**
@@ -55,41 +57,40 @@ public final class StandardAminoAcid {
      * </p>
      *
      * <p>
-     * This parses the resource
-     * <code>org/biojava/bio/structure/standardaminos.pdb</code>
+     * This parses the resource 
+     * <code>{@value #STANDARD_AMINOS_FILE}</code>
      * and builds a basic set of amino acids.
      *</p>
      * @author Tamas Horvath provided the standard amino acids 
      */
     static {
-        aminoAcids = new HashMap<String,AminoAcid>();
-    
-        try {
-            InputStream fileStream = StandardAminoAcid.class.getClassLoader().getResourceAsStream(
-                    "org/biojava/bio/structure/standardaminos.pdb"
-            );
-            if (fileStream == null) {
-                throw new Exception("Couldn't locate standardaminos.pdb.  This probably means that your biojava.jar file is corrupt or incorrectly built.");
-            }
-            
-            PDBFileParser parser = new PDBFileParser();
-            Structure s = parser.parsePDBFile(fileStream);
+    	aminoAcids = new HashMap<String,AminoAcid>();
 
-       
-            GroupIterator iter = new GroupIterator(s);
-            while (iter.hasNext()){
-                Group g = iter.next();
-               
-                if ( g instanceof AminoAcid){
-                    AminoAcid aa = (AminoAcid)g;
-       
-                    aminoAcids.put(aa.getPDBName(),aa);
-                    aminoAcids.put(aa.getAminoType().toString(),aa);
-                    
-                }
-            }
-            
-        } catch (Exception t) {
+
+    	InputStream fileStream = StandardAminoAcid.class.getClassLoader().getResourceAsStream(STANDARD_AMINOS_FILE);
+    	if (fileStream == null) {
+    		throw new RuntimeException("Could not find resource "+STANDARD_AMINOS_FILE+".  This probably means that your biojava.jar file is corrupt or incorrectly built.");
+    	}
+
+    	try {
+    		PDBFileParser parser = new PDBFileParser();
+    		Structure s = parser.parsePDBFile(fileStream);
+
+
+    		GroupIterator iter = new GroupIterator(s);
+    		while (iter.hasNext()){
+    			Group g = iter.next();
+
+    			if ( g instanceof AminoAcid){
+    				AminoAcid aa = (AminoAcid)g;
+
+    				aminoAcids.put(aa.getPDBName(),aa);
+    				aminoAcids.put(aa.getAminoType().toString(),aa);
+
+    			}
+    		}
+
+    	} catch (Exception t) {
             throw new RuntimeException( "Unable to initialize standard aminoacids", t);
         }
     }

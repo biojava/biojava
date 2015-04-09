@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.asa.AsaCalculator;
 import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.io.FileConvert;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
@@ -538,7 +539,9 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * The two sides of the given StructureInterface need to match this StructureInterface
 	 * in the sense that they must come from the same Compound (Entity), i.e.
 	 * their residue numbers need to align with 100% identity, except for unobserved 
-	 * density residues.
+	 * density residues. The SEQRES indices obtained through {@link Compound#getAlignedResIndex(Group, Chain)} are
+	 * used to match residues, thus if no SEQRES is present or if {@link FileParsingParameters#setAlignSeqRes(boolean)}
+	 * is not used, this calculation is not guaranteed to work properly.
 	 * @param other
 	 * @param invert if false the comparison will be done first-to-first and second-to-second, 
 	 * if true the match will be first-to-second and second-to-first
@@ -586,20 +589,13 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 				ResidueIdentifier second = null;
 
 				if (!invert) {
-					first = new ResidueIdentifier(
-							thisContact.getPair().getFirst().getResidueNumber().getSeqNum(), 
-							thisContact.getPair().getFirst().getResidueNumber().getInsCode());
+					first = new ResidueIdentifier(thisContact.getPair().getFirst());
 					
-					second = new ResidueIdentifier( 
-							thisContact.getPair().getSecond().getResidueNumber().getSeqNum(), 
-							thisContact.getPair().getSecond().getResidueNumber().getInsCode());
+					second = new ResidueIdentifier(thisContact.getPair().getSecond());
 				} else {
-					first = new ResidueIdentifier( 
-							thisContact.getPair().getSecond().getResidueNumber().getSeqNum(), 
-							thisContact.getPair().getSecond().getResidueNumber().getInsCode());
-					second = new ResidueIdentifier(
-							thisContact.getPair().getFirst().getResidueNumber().getSeqNum(), 
-							thisContact.getPair().getFirst().getResidueNumber().getInsCode());
+					first = new ResidueIdentifier(thisContact.getPair().getSecond());
+					
+					second = new ResidueIdentifier(thisContact.getPair().getFirst());
 				}
 
 				if (otherContacts.hasContact(first,second)) {

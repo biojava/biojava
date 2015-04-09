@@ -102,4 +102,24 @@ public class TestCrystalBuilder {
 		assertTrue(interfaces.size()>3);
 				
 	}
+	
+	@Test
+	public void test2H2Z() throws IOException, StructureException { 
+
+		// a crystallographic structure C 1 2 1. 
+		// Should have a minimum number of contacts of 3, from the C number given in:
+		// Wukowitz & Yeates, Nature Structural Biology, 1995
+		// the molecule happens to be placed quite far from the origin, so this tests if we really capture all contacts
+		
+		AtomCache cache = new AtomCache();
+		
+		StructureIO.setAtomCache(cache); 
+
+		cache.setUseMmCif(false);
+		Structure s1 = StructureIO.getStructure("2H2Z");
+		CrystalBuilder cb = new CrystalBuilder(s1);
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+		assertTrue(interfaces.size()>=3);
+				
+	}
 }

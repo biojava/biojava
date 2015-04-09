@@ -64,7 +64,7 @@ public class LocalProteinDomainParser {
 	 */
 	public static List<Domain> suggestDomains(Structure s) throws StructureException{
 
-		Atom[] ca = StructureTools.getAtomCAArray(s);
+		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 
 		return suggestDomains(ca);
 	} 

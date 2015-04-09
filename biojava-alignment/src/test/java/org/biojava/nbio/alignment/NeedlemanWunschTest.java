@@ -24,6 +24,8 @@
 package org.biojava.nbio.alignment;
 
 import org.biojava.nbio.alignment.template.GapPenalty;
+import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
+import org.biojava.nbio.alignment.template.SequencePair;
 import org.biojava.nbio.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
@@ -35,7 +37,9 @@ import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class NeedlemanWunschTest {
 
@@ -55,6 +59,30 @@ public class NeedlemanWunschTest {
         alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
         self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
     }
+
+	@Test
+	public void testComplex() throws Exception {
+
+		short match = 2, gop = -5, gep = -3; // 2, 5, and 3 are coprime; -2 is the mismatch score
+		SimpleSubstitutionMatrix<NucleotideCompound> mx = new SimpleSubstitutionMatrix<NucleotideCompound>(new DNACompoundSet(), match, (short)-match);
+
+		DNASequence a = new DNASequence("CGTAT  ATATCGCGCGCGCGATATATATATCT TCTCTAAAAAAA".replaceAll(" ", ""));
+		DNASequence b = new DNASequence("GGTATATATATCGCGCGCACGAT TATATATCTCTCTCTAAAAAAA".replaceAll(" ", ""));
+//                                       --CGTATATATCGCGCGCGCGATATATATATCT-TCTCTAAAAAAA
+//                                       GGTATATATATCGCGCGCACGAT-TATATATCTCTCTCTAAAAAAA
+//  mismatches:                             ^              ^
+// The two alignments should have the same score. The bottom one is the one the aligner found.
+
+		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(a, b, Alignments.PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(gop, gep), mx);
+		SequencePair<DNASequence, NucleotideCompound> pair = aligner.getPair();
+		System.out.println(pair); // prints the alignment above
+
+		int nMatches = "--CGTATATATCGCGCGCGCGATATATATATCT-TCTCTAAAAAAA".length() - 2 - 4;
+		double expectedScore = nMatches * match
+				                       - 2 * match // there are two mismatches
+				                       + 3 * gop + 4 * gep; // there are 3 gap opens and either 1 or 4 extensions, depending on the def
+		assertEquals(expectedScore, aligner.getScore(), 0.00000001);
+	}
 
     @Test
     public void testNeedlemanWunsch() {
@@ -124,16 +152,16 @@ public class NeedlemanWunschTest {
                 "R -12 -12 -24 -23%n" +
                 "N -13 -13 -14 -24%n" +
                 "D -14 -14 -15 -14%n" +
-                "%nInsertion%n" +
+		                "%nInsertion%n" +
                 "        R   D   G%n" +
                 "  -10 -11 -12 -13%n" +
                 "A  -\u221E  -\u221E -12 -13%n" +
                 "R  -\u221E  -\u221E -17 -14%n" +
                 "N  -\u221E  -\u221E -23 -16%n" +
                 "D  -\u221E  -\u221E -26 -17%n"),
-                alignment.getScoreMatrixAsString());
+                     alignment.getScoreMatrixAsString());
         assertEquals(String.format(
-                "Substitution%n" +
+		                                  "Substitution%n" +
                 "        A   R   N   D%n" +
                 "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
                 "A  -\u221E   4 -12 -14 -15%n" +
@@ -144,7 +172,7 @@ public class NeedlemanWunschTest {
                 "        A   R   N   D%n" +
                 "  -10  -\u221E  -\u221E  -\u221E  -\u221E%n" +
                 "A -11  -\u221E  -\u221E  -\u221E  -\u221E%n" +
-                "R -12  -7 -23 -25 -26%n" +
+				                                  "R -12  -7 -23 -25 -26%n" +
                 "N -13  -8  -2 -18 -21%n" +
                 "D -14  -9  -3   4 -12%n" +
                 "%nInsertion%n" +

@@ -69,10 +69,10 @@ public class TestFlexibleRotationMatrices extends TestCase{
          Atom[] ca1orig = cache.getAtoms(name1);
          Atom[] ca2orig = cache.getAtoms(name2);
 
-         Atom[] ca1 = StructureTools.cloneCAArray(ca1orig);
-         Atom[] ca2 = StructureTools.cloneCAArray(ca2orig);
+         Atom[] ca1 = StructureTools.cloneAtomArray(ca1orig);
+         Atom[] ca2 = StructureTools.cloneAtomArray(ca2orig);
 
-         Atom[] ca3 = StructureTools.cloneCAArray(ca2);
+         Atom[] ca3 = StructureTools.cloneAtomArray(ca2);
 
          AFPChain afpChain = getAlignment(name1, name2, ca1, ca2, doRigid);
          afpChain.setCalculationTime(-1);
@@ -113,8 +113,8 @@ public class TestFlexibleRotationMatrices extends TestCase{
             }
 
 
-            Atom[] ca1new = StructureTools.cloneCAArray(ca1orig);
-            Atom[] ca2new = StructureTools.cloneCAArray(ca2orig);
+            Atom[] ca1new = StructureTools.cloneAtomArray(ca1orig);
+            Atom[] ca2new = StructureTools.cloneAtomArray(ca2orig);
 
             compareBlock(x,afpChain, newChain,ca1new,ca2new );
 
@@ -144,9 +144,9 @@ public class TestFlexibleRotationMatrices extends TestCase{
       
 
 
-      Atom[] ca1Copy = StructureTools.cloneCAArray(ca1);
-      Atom[] ca2Copy = StructureTools.cloneCAArray(ca2);
-      Atom[] ca2Copy2 = StructureTools.cloneCAArray(ca2);
+      Atom[] ca1Copy = StructureTools.cloneAtomArray(ca1);
+      Atom[] ca2Copy = StructureTools.cloneAtomArray(ca2);
+      Atom[] ca2Copy2 = StructureTools.cloneAtomArray(ca2);
 
      // int[][][] blocks1 = afpChain.getOptAln();
       int[][][] blocks2 = newChain.getOptAln();

@@ -52,6 +52,7 @@ public class MenuCreator {
 	public static final String SAVE_ALIGNMENT_XML = "Save Alignment XML";
 	public static final String LOAD_ALIGNMENT_XML = "Load Alignment XML";
 	public static final String FATCAT_TEXT = "View as FATCAT result";
+	private static final int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	/** provide a JMenuBar that can be added to a JFrame
 	 * 
 	 * @return a JMenuBar
@@ -63,6 +64,7 @@ public class MenuCreator {
 		JMenuBar menu = new JMenuBar();
 
 		JMenu file= new JMenu("File");
+		file.setMnemonic(KeyEvent.VK_F);
 		file.getAccessibleContext().setAccessibleDescription("File Menu");
 
 		if ( parent != null){
@@ -109,6 +111,7 @@ public class MenuCreator {
 
 
 		JMenu align = new JMenu("Align");
+		align.setMnemonic(KeyEvent.VK_A);
 		JMenuItem pairI = getPairwiseAlignmentMenuItem();
 		align.add(pairI);
 
@@ -120,25 +123,31 @@ public class MenuCreator {
 
 		if ( parent != null){
 			JMenuItem aligpI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
+			aligpI.setMnemonic(KeyEvent.VK_M);
+			aligpI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, keyMask));
 			view.add(aligpI);
 
 			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
+			textI.setMnemonic(KeyEvent.VK_T);
 			view.add(textI);
 
 			JMenuItem pairsI = MenuCreator.getIcon(parent,PAIRS_ONLY);
+			pairsI.setMnemonic(KeyEvent.VK_P);
 			view.add(pairsI);
 
 			JMenuItem textF = MenuCreator.getIcon(parent,FATCAT_TEXT);
+			textF.setMnemonic(KeyEvent.VK_F);
 			view.add(textF);
 		}
 
 		if ( afpChain != null){
 			JMenuItem distMax = new  JMenuItem("Show Distance Matrices");
+			distMax.setMnemonic(KeyEvent.VK_D);
 			distMax.addActionListener(new MyDistMaxListener(afpChain));
 			view.add(distMax);
 
 			JMenuItem dotplot = new JMenuItem("Show Dot Plot");
-
+			dotplot.setMnemonic(KeyEvent.VK_O);
 			dotplot.addActionListener(new DotPlotListener(afpChain));
 			view.add(dotplot);
 		}
@@ -147,7 +156,7 @@ public class MenuCreator {
 
 
 		JMenu about = new JMenu("Help");
-		about.setMnemonic(KeyEvent.VK_A);
+		about.setMnemonic(KeyEvent.VK_H);
 
 		JMenuItem helpM = getHelpMenuItem();
 		about.add(helpM);
@@ -204,6 +213,7 @@ public class MenuCreator {
 		else 
 			openI =new JMenuItem("Show By ID", loadI);
 		openI.setMnemonic(KeyEvent.VK_O);
+		openI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, keyMask));
 		openI.addActionListener(new ShowPDBIDListener());
 		return openI;
 	}
@@ -217,7 +227,7 @@ public class MenuCreator {
 			openI =new JMenuItem("Open PDB file");
 		else 
 			openI =new JMenuItem("Open PDB file", loadI);
-		openI.setMnemonic(KeyEvent.VK_O);
+		openI.setMnemonic(KeyEvent.VK_F);
 		openI.addActionListener(new MyOpenPdbFileListener());
 		return openI;
 	}
@@ -232,6 +242,7 @@ public class MenuCreator {
 		else 
 			loadF = new JMenuItem(LOAD_ALIGNMENT_XML, loadI);
 		loadF.setMnemonic(KeyEvent.VK_L);
+		loadF.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, keyMask));
 
 		return loadF;
 	}
@@ -360,6 +371,7 @@ public class MenuCreator {
 
 
 		print.setMnemonic(KeyEvent.VK_P);
+		print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, keyMask));
 
 		return print;
 	}
@@ -374,7 +386,7 @@ public class MenuCreator {
 			exportI = new JMenuItem("Export PDB file", saveicon);
 
 		exportI.setMnemonic(KeyEvent.VK_E);
-
+		exportI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, keyMask));
 		exportI.addActionListener(new MyExportListener(parent));
 		return exportI;
 	}
@@ -389,6 +401,7 @@ public class MenuCreator {
 			saveF = new JMenuItem(SAVE_ALIGNMENT_XML, saveicon);
 
 		saveF.setMnemonic(KeyEvent.VK_S);
+		saveF.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, keyMask));
 		saveF.addActionListener(new MySaveFileListener(afpChain));
 
 		return saveF;
@@ -450,17 +463,18 @@ public class MenuCreator {
 		JMenuItem exitI;
 
 		if ( exitIcon == null)
-			exitI = new JMenuItem("Exit");
+			exitI = new JMenuItem("Quit");
 		else 
-			exitI = new JMenuItem("Exit",exitIcon);
-		exitI.setMnemonic(KeyEvent.VK_X);
+			exitI = new JMenuItem("Quit",exitIcon);
+		exitI.setMnemonic(KeyEvent.VK_Q);
+		exitI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, keyMask));
 		exitI.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("Exit")){
+				if ( cmd.equals("Quit")){
 					System.exit(0);
 				}				
 			}			
@@ -501,12 +515,13 @@ public class MenuCreator {
 
 		JMenuItem closeI ;
 
-		if ( closeIcon == null ) 
+		if ( closeIcon == null )
 			closeI = new JMenuItem("Close Frame");
 		else
 			closeI = new JMenuItem("Close Frame", closeIcon);
 
 		closeI.setMnemonic(KeyEvent.VK_C);
+		closeI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, keyMask));
 
 		class MyCloseListener implements ActionListener{
 			JFrame f;
@@ -519,8 +534,8 @@ public class MenuCreator {
 
 				if ( cmd.equals("Close Frame")){
 					f.dispose();
-				}               
-			}       
+				}
+			}
 
 		}
 
@@ -579,6 +594,8 @@ public class MenuCreator {
 			pairI = new JMenuItem("New Alignment");
 		else 
 			pairI = new JMenuItem("New Alignment", alignIcon);
+		pairI.setMnemonic(KeyEvent.VK_N);
+		pairI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, keyMask));
 		pairI.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

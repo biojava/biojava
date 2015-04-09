@@ -113,7 +113,7 @@ public class AlignmentGui extends JFrame{
 	}
 
 
-	private AlignmentGui() {
+	protected AlignmentGui() {
 		super();
 
 		thread = null;

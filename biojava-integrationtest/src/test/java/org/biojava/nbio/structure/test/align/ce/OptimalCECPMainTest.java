@@ -249,7 +249,7 @@ public class OptimalCECPMainTest extends TestCase {
 		Method permuteArray = OptimalCECPMain.class.getDeclaredMethod(
 				"permuteArray", Object[].class, int.class);
 		permuteArray.setAccessible(true);
-		Atom[] ca2p = StructureTools.cloneCAArray(ca2);
+		Atom[] ca2p = StructureTools.cloneAtomArray(ca2);
 		permuteArray.invoke(null, ca2p, 63);
 		
 		AFPChain cpAlignment = ce.align(ca1, ca2);
@@ -363,5 +363,23 @@ public class OptimalCECPMainTest extends TestCase {
 			}
 			System.out.println();
 		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+		// this is to test this issue:
+		// https://github.com/rcsb/symmetry/issues/46
+		// 
+		
+		OptimalCECPMainTest t = new OptimalCECPMainTest();
+		System.out.println("Test 1");
+		t.testPermuteOptAlnUnpermuted();
+		System.out.println("Test 2");
+		t.testOptimalAlignmentConsistency();
+		//System.out.println("Test 3");
+		//t.testUnpermuted();
+		//System.out.println("Test 4");
+		//t.testPermuteArray();
+		//System.out.println("Test 5");
+		//t.testPermuteOptAln();
 	}
 }

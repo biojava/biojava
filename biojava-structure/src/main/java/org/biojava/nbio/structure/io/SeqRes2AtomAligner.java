@@ -412,7 +412,10 @@ public class SeqRes2AtomAligner {
 		//
 		String seq2 = getFullAtomSequence(atomRes, atomIndexPosition);
 
-		
+		if (seq1.isEmpty() || seq2.isEmpty()) {
+			logger.warn("Could not align nucleotide sequences, at least one of them is empty");
+			return true;
+		}
 
 		logger.debug("align seq1 ("+ seq1.length()+") " + seq1);
 		logger.debug("align seq2 ("+ seq2.length()+") " + seq2);

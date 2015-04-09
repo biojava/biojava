@@ -25,13 +25,18 @@
 package org.biojava.nbio.structure;
 
 
+import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
@@ -68,6 +73,12 @@ public class Compound implements Serializable {
 	 */
 	private int molId;
 
+	/**
+	 * A map to cache residue number mapping, between ResidueNumbers and index (1-based) in aligned sequences (SEQRES).
+	 * Initialised lazily upon call to {@link #getAlignedResIndex(Group, Chain)}
+	 */
+	private Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
+	
 	private String refChainId;
 
 	private String molName = null;
@@ -121,6 +132,7 @@ public class Compound implements Serializable {
 	
 	public Compound () {
 		chains = new ArrayList<Chain>();
+		chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
 		molId = -1;
 	}
 
@@ -132,6 +144,8 @@ public class Compound implements Serializable {
 	public Compound (Compound c) {
 		
 		this.chains = new ArrayList<Chain>();
+		
+		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
 		
 		this.molId = c.molId;
 		
@@ -418,17 +432,84 @@ public class Compound implements Serializable {
 	}
 
 	/**
-	 * Return the list of member chain IDs that are described by this Compound 
-	 * @return the list of ChainIDs that are described by this Compound
+	 * Return the list of member chain IDs that are described by this Compound, 
+	 * only unique chain IDs are contained in the list. 
+	 * Note that in the case of multimodel structures this will return just the unique
+	 * chain identifiers whilst {@link #getChains()} will return a corresponding chain 
+	 * per model. 
+	 * @return the list of unique ChainIDs that are described by this Compound
 	 * @see #setChains(List)
 	 * @see #getChains()
 	 */
 	public List<String> getChainIds() {
-		List<String> chainIds = new ArrayList<String>();
-		for (Chain chain : chains) {
-			chainIds.add(chain.getChainID());
+		
+		Set<String> uniqChainIds = new TreeSet<String>();
+		for (int i=0;i<getChains().size();i++) {
+			uniqChainIds.add(getChains().get(i).getChainID());
 		}
-		return chainIds;
+
+		return new ArrayList<String>(uniqChainIds);
+	}
+	
+	/**
+	 * Given a Group g of Chain c (member of this Compound) return the corresponding position in the 
+	 * alignment of all member sequences (1-based numbering), i.e. the index (1-based) in the SEQRES sequence.
+	 * This allows for comparisons of residues belonging to different chains of the same Compound (entity).
+	 * <p>
+	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping 
+	 * will not be available and this method will return {@link ResidueNumber#getSeqNum()} for all residues, which
+	 * in some cases will be correctly aligned indices (when no insertion codes are 
+	 * used and when all chains within the entity are numbered in the same way), but
+	 * in general they will be neither unique (because of insertion codes) nor aligned.
+	 * </p>
+	 * @param g
+	 * @param c
+	 * @return the aligned residue index (1 to n) or {@link ResidueNumber#getSeqNum()} if no mapping exists 
+	 * for the given group and chain
+	 * @throws IllegalArgumentException if the given Chain is not a member of this Compound
+	 * @see {@link Chain#getSeqResGroup(int)} 
+	 */
+	public int getAlignedResIndex(Group g, Chain c) {
+		
+		boolean contained = false;
+		for (Chain member:getChains()) {
+			if (c.getChainID().equals(member.getChainID())) {
+				contained = true;
+				break;
+			}
+		}
+		if (!contained) 
+			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this Compound (entity): "+getChainIds().toString()); 
+		
+		if (chains2pdbResNums2ResSerials.isEmpty() || !chains2pdbResNums2ResSerials.containsKey(c.getChainID())) {
+			// we do lazy initialisation of the map
+			initResSerialsMap(c);
+		}
+		
+		Integer alignedSerial = chains2pdbResNums2ResSerials.get(c.getChainID()).get(g.getResidueNumber());
+		
+		if (alignedSerial==null) {
+			return g.getResidueNumber().getSeqNum();
+		}
+		
+		return alignedSerial;
+	}
+	
+	private void initResSerialsMap(Chain c) {
+		if (c.getSeqResGroups()==null || c.getSeqResGroups().isEmpty()) {
+			logger.warn("No SEQRES groups found in chain {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
+					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)", 
+					c.getChainID());
+		}
+		
+		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<ResidueNumber, Integer>();
+		chains2pdbResNums2ResSerials.put(c.getChainID(), resNums2ResSerials);
+		
+		if (c.getSeqResGroups()==null) return;
+		
+		for (int i=0;i<c.getSeqResGroups().size();i++) {
+			resNums2ResSerials.put(c.getSeqResGroup(i).getResidueNumber(), i+1);
+		}
 	}
 
 	/**
@@ -812,7 +893,8 @@ public class Compound implements Serializable {
 	}
 
 	/** 
-	 * Get the list of chains that are part of this Compound
+	 * Get the list of chains that are part of this Compound. Note that for multi-model 
+	 * structures chains from all models are returned.
 	 *
 	 * @return a List of Chain objects
 	 */
@@ -825,7 +907,7 @@ public class Compound implements Serializable {
 	  * @param chain
 	  */
 	public void addChain(Chain chain){
-		this.chains.add(chain);		
+		this.chains.add(chain);
 	}
 
 	/**
@@ -833,6 +915,6 @@ public class Compound implements Serializable {
 	 * @param chains
 	 */
 	public void setChains(List<Chain> chains){
-		this.chains = chains;
+		this.chains = chains;		
 	}
 }

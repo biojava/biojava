@@ -244,7 +244,8 @@ public void paintComponent(Graphics g){
             else
                isGapped = true;
          } else {
-            if ( c1 !=  '-' && c2 != '-' ){
+        	char s = symb[i];
+            if ( c1 !=  '-' && c2 != '-' && s!= ' '){
                // no gap
                g2D.setFont(eqFont);
             } else {
@@ -276,7 +277,7 @@ public void paintComponent(Graphics g){
                } else  {
                   
                   int colorPos = 0;
-                  if (isFATCAT ) {
+                  if (isFATCAT) {
                      int block = 0;
                      char s = symb[i];
                      try {
@@ -291,11 +292,19 @@ public void paintComponent(Graphics g){
                         colorPos = ColorUtils.colorWheel.length % colorPos ;
                      }
                   } else {
-                     colorPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, i);
-                     bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
-                     bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
-                     //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
-                     //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
+                	  colorPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, i);
+                	  if (afpChain.getBlockColors()==null){
+                		  bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
+                		  bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
+                		  //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
+                		  //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
+                	  }
+                	  else{
+                		  Color[] colors = afpChain.getBlockColors();
+                		  int n = colors.length;
+                		  bg = colors[colorPos%n];
+                		  bg2 = colors[((colorPos+1)%n)%afpChain.getBlockNum()];
+                	  }
                   }
                   
                    

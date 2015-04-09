@@ -26,7 +26,12 @@ package org.biojava.nbio.structure.align.ce;
 
 import org.biojava.nbio.alignment.aaindex.ScaledSubstitutionMatrix;
 import org.biojava.nbio.alignment.template.SubstitutionMatrix;
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.SVDSuperimposer;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
@@ -1055,6 +1060,7 @@ nBestTrace=nTrace;
 						inner_loop:
 							for(int idep=1; idep<=winSize/2; idep++) {
 
+								// isCopied indicates that bestTrace has changed and needs to be re-copied
 								if(!isCopied)
 									for(jt=0; jt<nBestTrace; jt++) {
 										trace1[jt]=bestTrace1[jt];
@@ -1063,11 +1069,13 @@ nBestTrace=nTrace;
 									}
 								isCopied=false;
 
+								// Move an atom from the previous trace to the current on, or vice versa
 								traceLen[it-1]+=idir;
 								traceLen[it]-=idir;
 								trace1[it]+=idir;
 								trace2[it]+=idir;
 
+								// Copy atoms from the current trace into strBuf
 								is=0;
 								for(jt=0; jt<nBestTrace; jt++) {
 									for(int i=0; i<traceLen[jt]; i++) {
@@ -1078,9 +1086,12 @@ nBestTrace=nTrace;
 									}
 									is+=traceLen[jt];
 								}
+								// Check new RMSD
 								//sup_str(strBuf1, strBuf2, strLen, d_);
 								rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen, true);
 								//System.out.println(String.format("step %d %d %d %.2f old: %.2f", it, idir, idep, rmsdNew, rmsd));
+								
+								// Update best trace if RMSD improved
 								if(rmsdNew<rmsd) {
 
 									for(jt=0; jt<nBestTrace; jt++) {
@@ -1235,7 +1246,7 @@ nBestTrace=nTrace;
 		//TODO
 		Group parent = ca[j].getGroup();
 		int pos = 0;
-		String atomName = StructureTools.CA_ATOM_NAME;
+		String atomName = ca[j].getName();
 
 		Atom a = null;
 		
@@ -1320,12 +1331,9 @@ nBestTrace=nTrace;
 
 	private static char getOneLetter(Group g){
 
-		try {
-			Character c = StructureTools.get1LetterCode(g.getPDBName());
-			return c;
-		} catch (Exception e){
-			return 'X';
-		}
+		if (g==null) return StructureTools.UNKNOWN_GROUP_LABEL;
+		
+		return StructureTools.get1LetterCode(g.getPDBName());
 	}
 
 
@@ -1392,12 +1400,12 @@ nBestTrace=nTrace;
 
 				}
 			}
-
-			mat = notifyMatrixListener(mat);
 			
 			if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SEQUENCE_CONSERVATION){
 				mat = updateMatrixWithSequenceConservation(mat,ca1,ca2, params);
 			}
+			
+			mat = notifyMatrixListener(mat);
 			
 			double gapOpen = params.getGapOpen();
 			double gapExtension = params.getGapExtension();
@@ -1850,7 +1858,7 @@ nBestTrace=nTrace;
 
 			Calc.rotate( g, m);
 			Calc.shift(  g, shift);
-			caB[l] = g.getAtom(StructureTools.CA_ATOM_NAME);
+			caB[l] = g.getAtom(a.getName());
 		}
 	}
 
@@ -1937,7 +1945,7 @@ nBestTrace=nTrace;
 			Atom a;
 			if ( clone ){
 				Group g = (Group)ca[i].getGroup().clone();
-				a = g.getAtom(StructureTools.CA_ATOM_NAME);
+				a = g.getAtom(ca[i].getName());
 			}
 			else {
 				a = ca[i];
