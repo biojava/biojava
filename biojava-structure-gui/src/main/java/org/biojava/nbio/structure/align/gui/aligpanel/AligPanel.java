@@ -293,22 +293,12 @@ public void paintComponent(Graphics g){
                      }
                   } else {
                 	  colorPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, i);
-                	  if (afpChain.getBlockColors()==null){
-                		  bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
-                		  bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
-                		  //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
-                		  //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
-                	  }
-                	  else{
-                		  Color[] colors = afpChain.getBlockColors();
-                		  int n = colors.length;
-                		  bg = colors[colorPos%n];
-                		  bg2 = colors[((colorPos+1)%n)%afpChain.getBlockNum()];
-                	  }
+            		  bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
+            		  bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
+            		  //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
+            		  //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
                   }
                   
-                   
-                 
                }
             } else {
 
