@@ -33,6 +33,7 @@ import java.util.TreeMap;
 
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,8 +77,24 @@ public class AtomPositionMap {
 	public static final GroupMatcher AMINO_ACID_MATCHER = new GroupMatcher() {
 		@Override
 		public boolean matches(Group group) {
-			ResidueType type = group.getChemComp().getResidueType();
-			return PolymerType.PROTEIN_ONLY.contains(type.getPolymerType())
+			if( group == null )
+				return false;
+			ChemComp chem = group.getChemComp();
+			if(chem == null)
+				return false;
+			// Get polymer type
+			PolymerType polyType = chem.getPolymerType();
+			if( polyType == null) {
+				ResidueType type = chem.getResidueType();
+				if(type != null ) {
+					polyType = type.getPolymerType();
+				}
+			}
+			if( polyType == null ) {
+				return false;
+			}
+
+			return PolymerType.PROTEIN_ONLY.contains(polyType)
 					&& group.hasAtom(StructureTools.CA_ATOM_NAME);
 		}
 	};
