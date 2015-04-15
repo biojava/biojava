@@ -32,7 +32,7 @@ import java.awt.event.WindowEvent;
 public class MyDistMaxListener
 implements ActionListener{
    AFPChain parent;
-   MyDistMaxListener(AFPChain parent){
+   public MyDistMaxListener(AFPChain parent){
       this.parent = parent;
    }
    @Override
