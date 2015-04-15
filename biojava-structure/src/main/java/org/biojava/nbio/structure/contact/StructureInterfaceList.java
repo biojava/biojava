@@ -268,6 +268,21 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			}
 			StructureInterfaceCluster cluster = new StructureInterfaceCluster();			
 			cluster.setMembers(members);
+			double averageScore = 0.0;
+			int countPairs = 0;
+			for (int i=0;i<members.size();i++) {
+				for (int j=i+1;j<members.size();j++) {
+					averageScore += matrix[members.get(i).getId()-1][members.get(j).getId()-1];
+					countPairs++;
+				}
+			}
+			if (countPairs>0) { 
+				averageScore = averageScore/(double)countPairs;
+			} else {
+				// if only one interface in cluster we set the score to the maximum
+				averageScore = 1.0;
+			}
+			cluster.setAverageScore(averageScore);
 			clusters.add(cluster);
 		}
 		

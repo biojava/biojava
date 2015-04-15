@@ -20,12 +20,13 @@
  */
 package org.biojava.nbio.structure;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NavigableMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A chain, a start residue, and an end residue.
@@ -82,6 +83,13 @@ public class ResidueRangeAndLength extends ResidueRange {
 	 * The AtomPositionMap is used to calculate the length and fill in missing
 	 * information, such as for whole chains ('A:'). Supports the special chain
 	 * name '_' for single-chain structures.
+	 * 
+	 * If residues are specified outside of the range given in the map,
+	 * attempts to decrease the input range to valid values. In extreme cases
+	 * where this process fails fails to find any valid indices, returns null.
+	 * 
+	 * For a function which more conservatively represents the input range,
+	 * without chain inference and error fixes, use {@link ResidueRange#parse(String)}.
 	 * @param s
 	 *            A string of the form chain_start-end. For example: <code>A.5-100</code>.
 	 * @return The unique ResidueRange corresponding to {@code s}.
@@ -96,7 +104,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 		if(chain == null || chain.equals("_")) {
 			ResidueNumber first = map.getNavMap().firstKey();
 			chain = first.getChainId();
-			// Quick check for additional chains. Not guaranteed.
+			// Quick check for additional chains. Not guaranteed if the atoms are out of order.
 			if( ! map.getNavMap().lastKey().getChainId().equals(chain) ) {
 				logger.warn("Multiple possible chains match '_'. Using chain {}",chain);
 			}
@@ -116,12 +124,10 @@ public class ResidueRangeAndLength extends ResidueRange {
 		start.setChainId(chain);
 		end.setChainId(chain);
 		
-		// now use those to calculate the length
-		// if start or end is null, will throw NPE
-		int length = map.getLength(start, end);
-
-		return new ResidueRangeAndLength(chain, start, end, length);
+		// Now fix any errors and calculate the length
+		return map.trimToValidResidues(new ResidueRange(chain, start, end));
 	}
+
 
 	public static List<ResidueRangeAndLength> parseMultiple(List<String> ranges, AtomPositionMap map) {
 		List<ResidueRangeAndLength> rrs = new ArrayList<ResidueRangeAndLength>(ranges.size());

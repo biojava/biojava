@@ -715,7 +715,7 @@ public class AlignmentTools {
 		copyAFP.setBlockGap(calculateBlockGap(newAlgn));
 		
 		//Recalculate properties: superposition, tm-score, etc
-		Atom[] ca2clone = StructureTools.cloneCAArray(ca2); // don't modify ca1 positions
+		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2); // don't modify ca1 positions
 		AlignmentTools.updateSuperposition(copyAFP, ca1, ca2clone);
 		
 		//It re-does the sequence alignment strings from the OptAlgn information only

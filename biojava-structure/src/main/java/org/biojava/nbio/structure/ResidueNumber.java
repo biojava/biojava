@@ -42,6 +42,12 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 
 	public ResidueNumber() {
 	}
+	
+	public ResidueNumber(ResidueNumber o) {
+		this.chainId = o.chainId;
+		this.insCode = o.insCode;
+		this.seqNum = o.seqNum;
+	}
 
 	public ResidueNumber(String chainId, Integer residueNumber, Character insCode) {
 		this.chainId = chainId;

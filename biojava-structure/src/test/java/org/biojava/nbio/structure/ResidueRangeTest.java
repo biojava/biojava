@@ -327,10 +327,8 @@ public class ResidueRangeTest {
 		// Valid ranges
 		String[] yes = new String[] { "A_", "A:", "ABC:", "abc:", "A_5-100",
 				"A_5-100S", "A_5S-100", "A_5S-100S", "A_-5-100", "A_-5--100",
-				"A_-5S--100S", "ABC:-5--200S", "A", "ABCD", "A1", // valid
-				// multi-char
-				// chain
-				// name
+				"A_-5S--100S", "ABC:-5--200S", "A", "ABCD", "A_1", 
+				"A1", // valid multi-char chain name
 				"3A:1-100", // Weird chain name
 				"_", "_:1-10", "__-2--1", "__"// catch-all chain
 		};
@@ -339,7 +337,7 @@ public class ResidueRangeTest {
 					ResidueRange.RANGE_REGEX.matcher(s).matches());
 		}
 		// invalid ranges
-		String[] no = new String[] { "A_1", "A_1-", "A_1S-", "A_1-100-",
+		String[] no = new String[] { "A_1-", "A_1S-", "A_1-100-",
 				"A_-10-1000_", "", "-", "___", "__:" };
 		for (String s : no) {
 			assertFalse(s + " was considered a valid range format",

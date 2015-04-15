@@ -175,7 +175,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				group = nu;
 				nu.setId(seq_id);
 
-			} else if (aminoCode1 == StructureTools.UNKNOWN_GROUP_LABEL){
+			} else if (aminoCode1==null || aminoCode1 == StructureTools.UNKNOWN_GROUP_LABEL){
 				HetatomImpl h = new HetatomImpl();
 				h.setId(seq_id);
 				group = h;
@@ -188,7 +188,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		else {
-			if (aminoCode1 != null ) {
+			if (StructureTools.isNucleotide(groupCode3))  {
+				// it is a nucleotide
+				NucleotideImpl nu = new NucleotideImpl();
+				group = nu;
+				nu.setId(seq_id);
+			}
+			else if (aminoCode1 != null ) {
 				AminoAcidImpl aa = new AminoAcidImpl() ;
 				aa.setAminoType(aminoCode1);
 				aa.setId(seq_id);
@@ -229,18 +235,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		// later one needs to map the asym id to the pdb_strand_id
 
-		//TODO: add support for MAX_ATOMS
+		//TODO: add support for FileParsingParams.getMaxAtoms()
 
 		boolean startOfNewChain = false;
 
-		//String chain_id      = atom.getAuth_asym_id();
 		String chain_id      = atom.getLabel_asym_id();		
 				
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
 		Integer residueNrInt = Integer.parseInt(residueNumberS);
 
-		//String residueNumberSeqres = atom.getLabel_seq_id();
 		// the 3-letter name of the group:
 		String groupCode3    = atom.getLabel_comp_id();
 		if ( groupCode3.length() == 1){
@@ -251,9 +255,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 		Character aminoCode1 = null;
 		if ( recordName.equals("ATOM") )
-			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
+			aminoCode1 = StructureTools.get1LetterCodeAmino(groupCode3);
 		else {
-			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
+			aminoCode1 = StructureTools.get1LetterCodeAmino(groupCode3);
+
 			// for nucleotides this will be null..
 			if (aminoCode1 != null &&  aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL)) 
 				aminoCode1 = null;
@@ -700,8 +705,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			addBonds();
 		}
 
-		//TODO: add support for these:
-		//structure.setConnections(connects);
+		//TODO: add support for structure.setConnections(connects);
 		
 
 		// mismatching Author assigned chain IDS and PDB internal chain ids:
@@ -1438,52 +1442,43 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// create group from epolseq;
 		// by default this are the SEQRES records...
 
-		AminoAcid g = new AminoAcidImpl();
 
-		g.setRecordType(AminoAcid.SEQRESRECORD);
+		if (epolseq.getMon_id().length()==3 && StructureTools.get1LetterCodeAmino(epolseq.getMon_id())!=null){
+			AminoAcid g = new AminoAcidImpl();
 
-		try {
+			g.setRecordType(AminoAcid.SEQRESRECORD);
+
+			g.setPDBName(epolseq.getMon_id());
+
+			Character code1 = StructureTools.get1LetterCodeAmino(epolseq.getMon_id());
+			g.setAminoType(code1);
+
+			g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
+			// ARGH at this stage we don't know about insertion codes
+			// this has to be obtained from _pdbx_poly_seq_scheme
+			entityChain.addGroup(g);
+
+		} else if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
+			// the group is actually a nucleotide group...
+			NucleotideImpl n = new NucleotideImpl();
 			
-			if (epolseq.getMon_id().length()==3){
-				g.setPDBName(epolseq.getMon_id());
-				
-				Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
-				g.setAminoType(code1);
-
-				g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-				// ARGH at this stage we don;t know about insertion codes
-				// this has to be obtained from _pdbx_poly_seq_scheme
-				entityChain.addGroup(g);
-
-			} else if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
-				// the group is actually a nucleotide group...
-				NucleotideImpl n = new NucleotideImpl();
-
-				n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-				n.setPDBName(epolseq.getMon_id());
-				entityChain.addGroup(n);				
-			} else {				
-				HetatomImpl h = new HetatomImpl();
-				
-				h.setPDBName(epolseq.getMon_id());
-				//h.setAminoType('X');
-				h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-				entityChain.addGroup(h);
-
-			}
-		} catch (UnknownPdbAminoAcidException ex){
-			logger.debug("Residue {} {} is not a standard aminoacid, will create a het group for it", epolseq.getNum(),epolseq.getMon_id());
-			HetatomImpl h = new HetatomImpl();
+			n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
+			n.setPDBName(epolseq.getMon_id());
+			entityChain.addGroup(n);				
+		} else {				
+			logger.debug("Residue {} {} is not a standard aminoacid or nucleotide, will create a het group for it", epolseq.getNum(),epolseq.getMon_id());
+			HetatomImpl h = new HetatomImpl();				
 			h.setPDBName(epolseq.getMon_id());
-			//h.setAminoType('X');
 			h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
 			entityChain.addGroup(h);
 
 		}
+
 	}
 
 
-	/* returns the chains from all models that have the provided chainId
+	/**
+	 * Returns the chains from all models that have the provided chainId
 	 *
 	 */
 	private List<Chain> getChainsFromAllModels(String chainId){
@@ -1502,7 +1497,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return chains;
 	}
 
-	/** finds the residue in the internal representation and fixes the residue number and insertion code
+	/** 
+	 * Finds the residue in the internal representation and fixes the residue number and insertion code
 	 *
 	 * @param ppss
 	 */

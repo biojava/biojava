@@ -2042,16 +2042,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		parseCAonly = true;
 
 
-		current_model = CAConverter.getCAOnly(current_model);
+		current_model = CAConverter.getRepresentativeAtomsOnly(current_model);
 
 		for ( int i =0; i< structure.nrModels() ; i++){
 			//  iterate over all known models ...
 			List<Chain> model = structure.getModel(i);
-			model = CAConverter.getCAOnly(model);
+			model = CAConverter.getRepresentativeAtomsOnly(model);
 			structure.setModel(i,model);
 		}
 
-		current_chain = CAConverter.getCAOnly(current_chain);
+		current_chain = CAConverter.getRepresentativeAtomsOnly(current_chain);
 
 	}
 
