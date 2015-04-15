@@ -82,6 +82,7 @@ public class EcodFactory {
 				versionedEcodDBs.put(version.toLowerCase(), new SoftReference<EcodDatabase>(ecod));
 
 				// If the parsed version differed from that requested, add that too
+				// Note that getVersion() may trigger file parsing
 				try {
 					if( ! versionedEcodDBs.containsKey(ecod.getVersion().toLowerCase()) ) {
 						versionedEcodDBs.put(ecod.getVersion().toLowerCase(),new SoftReference<EcodDatabase>(ecod));
@@ -96,6 +97,9 @@ public class EcodFactory {
 		}
 	}
 	
+	/**
+	 * removes SoftReferences which have already been garbage collected
+	 */
 	private static void releaseReferences() {
 		synchronized(versionedEcodDBs) {
 			Iterator<Entry<String, SoftReference<EcodDatabase>>> it = versionedEcodDBs.entrySet().iterator();

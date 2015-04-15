@@ -1168,7 +1168,15 @@ public class StructureTools {
 
 				ResidueNumber pdbresnum1 = ResidueNumber.fromString(pdbresnumStart);
 				ResidueNumber pdbresnum2 = ResidueNumber.fromString(pdbresnumEnd);
-
+				
+				// Trim extra residues off the range
+				Atom[] allAtoms = StructureTools.getRepresentativeAtomArray(struc);
+				AtomPositionMap map = new AtomPositionMap(allAtoms);
+				ResidueRange trimmed = map.trimToValidResidues(new ResidueRange(chain.getChainID(),pdbresnum1,pdbresnum2));
+				if(trimmed != null) {
+					pdbresnum1 = trimmed.getStart();
+					pdbresnum2 = trimmed.getEnd();
+				}
 				groups = chain.getGroupsByPDB(pdbresnum1, pdbresnum2);
 
 				name.append(chainId).append(AtomCache.UNDERSCORE).append(pdbresnumStart).append("-").append(pdbresnumEnd);

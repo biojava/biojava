@@ -31,9 +31,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.NavigableMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assert.*;
+import static org.junit.Assume.*;
 
 /**
  * A unit test for {@link org.biojava.nbio.structure.AtomPositionMap}.
@@ -205,6 +204,55 @@ public class AtomPositionMapTest {
 		assertEquals("Full length wrong",430,realLength);
 	}
 
+	@Test
+	public void testTrim() throws IOException, StructureException {
+		// Two identical chains, residues 1-68, no insertion codes or missing residues
+		String pdbId = "3w0e";
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+		
+		ResidueRangeAndLength trimmed;
+		ResidueRange untrimmed;
+		
+		untrimmed = new ResidueRange("A", "1", "68");
+		trimmed = map.trimToValidResidues(untrimmed);
+		assertEquals("Wrong start after trimming "+untrimmed,new ResidueNumber("A", 1, null), trimmed.getStart());
+		assertEquals("Wrong end after trimming "+untrimmed,new ResidueNumber("A", 68, null), trimmed.getEnd());
+		assertEquals("Wrong length after trimming "+untrimmed,68, trimmed.getLength());
+
+		untrimmed = new ResidueRange("A", "1", "1");
+		trimmed = map.trimToValidResidues(untrimmed);
+		assertEquals("Wrong start after trimming "+untrimmed,new ResidueNumber("A", 1, null), trimmed.getStart());
+		assertEquals("Wrong end after trimming "+untrimmed,new ResidueNumber("A", 1, null), trimmed.getEnd());
+		assertEquals("Wrong length after trimming "+untrimmed,1, trimmed.getLength());
+
+		untrimmed = new ResidueRange("A", "-1", "70");
+		trimmed = map.trimToValidResidues(untrimmed);
+		assertEquals("Wrong start after trimming "+untrimmed,new ResidueNumber("A", 1, null), trimmed.getStart());
+		assertEquals("Wrong end after trimming "+untrimmed,new ResidueNumber("A", 68, null), trimmed.getEnd());
+		assertEquals("Wrong length after trimming "+untrimmed,68, trimmed.getLength());
+
+		// Fully out of range
+		untrimmed = new ResidueRange("A", "-4", "-1");
+		trimmed = map.trimToValidResidues(untrimmed);
+		assertNull("Should be empty range "+untrimmed,trimmed);
+
+		// Start before end. Arguably should be invalid, but currently works
+		untrimmed = new ResidueRange("A", "4", "1");
+		trimmed = map.trimToValidResidues(untrimmed);
+		assertEquals("Wrong start after trimming "+untrimmed,new ResidueNumber("A", 4, null), trimmed.getStart());
+		assertEquals("Wrong end after trimming "+untrimmed,new ResidueNumber("A", 1, null), trimmed.getEnd());
+		assertEquals("Wrong length after trimming "+untrimmed,4, trimmed.getLength());
+
+		// However, doesn't work if the endpoints are invalid, since searches wrong direction
+		untrimmed = new ResidueRange("A", "4", "-1");
+		trimmed = map.trimToValidResidues(untrimmed);
+		assertNull("Should be empty range "+untrimmed,trimmed);
+
+		untrimmed = new ResidueRange("A", "70", "50");
+		trimmed = map.trimToValidResidues(untrimmed);
+		assertNull("Should be empty range "+untrimmed,trimmed);
+
+	}
 
 	@Test
 	public void testChains() throws IOException, StructureException {
