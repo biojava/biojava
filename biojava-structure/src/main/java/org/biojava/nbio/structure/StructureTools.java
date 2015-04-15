@@ -139,7 +139,7 @@ public class StructureTools {
 	/**
 	 * The atom used as representative for nucleotides, equivalent to {@link #CA_ATOM_NAME} for proteins
 	 */
-	public static final String NUCLEOTIDE_REPRESENTATIVE = C4_ATOM_NAME;
+	public static final String NUCLEOTIDE_REPRESENTATIVE = P_ATOM_NAME;
 	
 	/**
 	 * The character to use for unknown compounds in sequence strings
@@ -807,7 +807,7 @@ public class StructureTools {
 					}
 					break;
 				case NUCLEOTIDE:
-					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE) && g.getAtom(NUCLEOTIDE_REPRESENTATIVE).getElement()==Element.C) {
+					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE) ) {
 						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
 					}
 					break;
@@ -1151,6 +1151,11 @@ public class StructureTools {
 
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
+			
+			if(pdbresnumEnd == null ) {
+				// Single residue range
+				pdbresnumEnd = pdbresnumStart;
+			}
 
 
 			if ( ! firstRange){
@@ -1168,7 +1173,15 @@ public class StructureTools {
 
 				ResidueNumber pdbresnum1 = ResidueNumber.fromString(pdbresnumStart);
 				ResidueNumber pdbresnum2 = ResidueNumber.fromString(pdbresnumEnd);
-
+				
+				// Trim extra residues off the range
+				Atom[] allAtoms = StructureTools.getRepresentativeAtomArray(struc);
+				AtomPositionMap map = new AtomPositionMap(allAtoms);
+				ResidueRange trimmed = map.trimToValidResidues(new ResidueRange(chain.getChainID(),pdbresnum1,pdbresnum2));
+				if(trimmed != null) {
+					pdbresnum1 = trimmed.getStart();
+					pdbresnum2 = trimmed.getEnd();
+				}
 				groups = chain.getGroupsByPDB(pdbresnum1, pdbresnum2);
 
 				name.append(chainId).append(AtomCache.UNDERSCORE).append(pdbresnumStart).append("-").append(pdbresnumEnd);

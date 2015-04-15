@@ -23,10 +23,19 @@
 
 package org.biojava.nbio.structure;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
+
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
-
-import java.util.*;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A map from {@link ResidueNumber ResidueNumbers} to ATOM record positions in a PDB file.
@@ -49,6 +58,8 @@ import java.util.*;
  */
 public class AtomPositionMap {
 
+	private static final Logger logger = LoggerFactory.getLogger(AtomPositionMap.class);
+	
 	private HashMap<ResidueNumber, Integer> hashMap;
 	private TreeMap<ResidueNumber, Integer> treeMap;
 
@@ -66,8 +77,24 @@ public class AtomPositionMap {
 	public static final GroupMatcher AMINO_ACID_MATCHER = new GroupMatcher() {
 		@Override
 		public boolean matches(Group group) {
-			ResidueType type = group.getChemComp().getResidueType();
-			return PolymerType.PROTEIN_ONLY.contains(type.getPolymerType())
+			if( group == null )
+				return false;
+			ChemComp chem = group.getChemComp();
+			if(chem == null)
+				return false;
+			// Get polymer type
+			PolymerType polyType = chem.getPolymerType();
+			if( polyType == null) {
+				ResidueType type = chem.getResidueType();
+				if(type != null ) {
+					polyType = type.getPolymerType();
+				}
+			}
+			if( polyType == null ) {
+				return false;
+			}
+
+			return PolymerType.PROTEIN_ONLY.contains(polyType)
 					&& group.hasAtom(StructureTools.CA_ATOM_NAME);
 		}
 	};
@@ -320,4 +347,76 @@ public class AtomPositionMap {
 		return ranges;
 	}
 
+	/**
+	 * Trims a residue range so that both endpoints are contained in this map.
+	 * @param rr
+	 * @param map
+	 * @return
+	 */
+	public ResidueRangeAndLength trimToValidResidues(ResidueRange rr) {
+		ResidueNumber start = rr.getStart();
+		ResidueNumber end = rr.getEnd();
+		String chain = rr.getChainId();
+		// Add chainId
+		if(start.getChainId() == null) {
+			start = new ResidueNumber(chain,start.getSeqNum(),start.getInsCode());
+		}
+		if(end.getChainId() == null) {
+			end = new ResidueNumber(chain,end.getSeqNum(),end.getInsCode());
+		}
+		// Check that start and end are present in the map.
+		// If not, try to find the next valid residue
+		// (terminal residues sometimes lack CA atoms, so they don't appear)
+		Integer startIndex = getPosition(start);
+		if( startIndex == null) {
+			// Assume that the residue numbers are sequential
+			// Find startIndex such that the SeqNum is bigger than start's seqNum
+			for(ResidueNumber key :  treeMap.keySet()) {
+				if( !key.getChainId().equals(chain) )
+					continue;
+				if( start.getSeqNum() <= key.getSeqNum() ) {
+					start = key;
+					startIndex = getPosition(key);
+					break;
+				}
+			}
+			if( startIndex == null ) {
+				logger.error("Unable to find Residue {} in AtomPositionMap, and no plausible substitute.",start);
+				return null;
+			} else {
+				logger.warn("Unable to find Residue {}, so substituting {}.",rr.getStart(),start);
+			}
+		}
+		Integer endIndex = getPosition(end);
+		if( endIndex == null) {
+			// Assume that the residue numbers are sequential
+			// Find startIndex such that the SeqNum is bigger than start's seqNum
+			for(ResidueNumber key :  treeMap.descendingKeySet()) {
+				if( !key.getChainId().equals(chain) )
+					continue;
+				Integer value = getPosition(key);
+				if( value < startIndex ) {
+					// start is before the end!
+					break;
+				}
+				if( end.getSeqNum() >= key.getSeqNum() ) {
+					end = key;
+					endIndex = value;
+					break;
+				}
+			}
+			if( endIndex == null ) {
+				logger.error("Unable to find Residue {} in AtomPositionMap, and no plausible substitute.",end);
+				return null;
+			} else {
+				logger.warn("Unable to find Residue {}, so substituting {}.",rr.getEnd(),end);
+			}
+		}
+		
+		// now use those to calculate the length
+		// if start or end is null, will throw NPE
+		int length = getLength(startIndex, endIndex,chain);
+
+		return new ResidueRangeAndLength(chain, start, end, length);
+	}
 }
