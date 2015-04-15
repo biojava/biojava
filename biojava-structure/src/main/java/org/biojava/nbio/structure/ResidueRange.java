@@ -47,8 +47,10 @@ public class ResidueRange {
 				"(?::|_|:$|_$|$)" + //colon or underscore, could be at the end of a line, another non-capt. group.
 				"(?:"+ // another non capturing group for the residue range
 					"([-+]?[0-9]+[A-Za-z]?)" + // first residue
-					"\\s*-\\s*" + // -
-					"([-+]?[0-9]+[A-Za-z]?)" + // second residue
+					"(?:" +
+						"\\s*-\\s*" + // -
+						"([-+]?[0-9]+[A-Za-z]?)" + // second residue
+					")?+"+
 				")?+"+
 			")?" + //end range
 			"\\s*");

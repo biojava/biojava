@@ -164,6 +164,13 @@ public class StructureToolsTest extends TestCase {
 		chain = substr.getChain(0);
 		assertEquals("Did not find the expected number of residues in "+range, 5, chain.getAtomLength() );
 
+		// single residue
+		range = "A:3";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChain(0);
+		assertEquals("Did not find the expected number of residues in "+range, 1, chain.getAtomLength() );
+
 		// Special '-' case
 		range = "-";
 		substr = StructureTools.getSubRanges(structure2, range);

@@ -1151,6 +1151,11 @@ public class StructureTools {
 
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
+			
+			if(pdbresnumEnd == null ) {
+				// Single residue range
+				pdbresnumEnd = pdbresnumStart;
+			}
 
 
 			if ( ! firstRange){
