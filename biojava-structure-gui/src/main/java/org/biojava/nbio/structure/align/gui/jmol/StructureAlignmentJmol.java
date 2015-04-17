@@ -61,23 +61,23 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    protected JmolPanel jmolPanel;
    protected JFrame frame;
-   JTextField text ;
-   JTextField status;
+   protected JTextField text ;
+   protected JTextField status;
 
    protected static final String COMMAND_LINE_HELP = "enter Jmol scripting command...";
    protected Atom[] ca1;
    protected Atom[] ca2;
    protected AFPChain afpChain;
 
-   private static final int DEFAULT_HEIGHT = 500;
+   protected static final int DEFAULT_HEIGHT = 500;
 
-   private static final int DEFAULT_WIDTH = 500;
+   protected static final int DEFAULT_WIDTH = 500;
 
-   public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
+   protected static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
 
-   private static final String LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
+   protected static final String LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
 
-   static int nrOpenWindows = 0;
+   protected static int nrOpenWindows = 0;
 
    public static void main(String[] args){
       try {
@@ -293,7 +293,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       resetDisplay();
       
    }
-   private void initCoords(){
+   protected void initCoords(){
       try {
          if ( ca1 == null || ca2 == null ){
             if ( structure != null)
@@ -640,7 +640,7 @@ public void actionPerformed(ActionEvent e) {
 
 	   jmol.append("select */2; color lightgrey; model 2; ");
 	      
-	   printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, blockNr, afpChain.getBlockColors());
+	   printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, blockNr);
 	   
 	   jmol.append("model 0;  ");
 	   jmol.append(LIGAND_DISPLAY_SCRIPT);
@@ -668,7 +668,7 @@ public void actionPerformed(ActionEvent e) {
       
       for(int bk = 0; bk < blockNum; bk ++)       {
 
-         printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk, afpChain.getBlockColors());
+         printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk);
       }
       jmol.append("model 0;  ");
       
@@ -680,31 +680,23 @@ public void actionPerformed(ActionEvent e) {
    }
 
 private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
-		int[] optLen, int[][][] optAln, StringWriter jmol, int bk, Color[] colors) {
+		int[] optLen, int[][][] optAln, StringWriter jmol, int bk) {
 	//the block nr determines the color...
 	 int colorPos = bk;
 	 
 	 Color c1;
 	 Color c2;
 	 //If the colors for the block are specified in AFPChain use them, otherwise the default ones are calculated
-	 if (colors==null){
 		 
-		 if ( colorPos > ColorUtils.colorWheel.length){
-		    colorPos = ColorUtils.colorWheel.length % colorPos ;
-		 }
-		 
-		 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
-		 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
-		 	 
-		 c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
-		 c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
+	 if ( colorPos > ColorUtils.colorWheel.length){
+	    colorPos = ColorUtils.colorWheel.length % colorPos ;
 	 }
-	 else{
-		 int n = colors.length;
-		 
-		 c1   = colors[colorPos%n];
-		 c2   = colors[(colorPos+1%n)%blockNum];
-	 }
+	 
+	 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
+	 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
+	 	 
+	 c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
+	 c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
 	 
 	 List<String> pdb1 = new ArrayList<String>();
 	 List<String> pdb2 = new ArrayList<String>();
