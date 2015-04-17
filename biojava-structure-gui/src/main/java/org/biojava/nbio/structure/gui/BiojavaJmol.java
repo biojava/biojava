@@ -122,6 +122,7 @@ public class BiojavaJmol  {
 
 		/// COMBO BOXES 
 		Box hBox1 = Box.createHorizontalBox();
+		hBox1.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 
 
 		String[] styles = new String[] { "Cartoon", "Backbone", "CPK", "Ball and Stick", "Ligands","Ligands and Pocket"};
@@ -143,7 +144,8 @@ public class BiojavaJmol  {
 		
 		// Check boxes
 		Box hBox2 = Box.createHorizontalBox();
-		
+		hBox2.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
+
 		
 		JButton resetDisplay = new JButton("Reset Display");
 		
