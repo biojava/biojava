@@ -695,10 +695,6 @@ public class AlignmentTools {
 			optLength += optLens[s];
 		}
 		
-		/*//Print the sizes to check correctness
-		System.out.println("Number of subunits: "+newAlgn.length);
-		System.out.println("Subunit length: "+newAlgn[0][0].length);*/
-		
 		//Create a copy of the original AFPChain and set everything needed for the structure update
 		AFPChain copyAFP = (AFPChain) afpChain.clone();
 		
@@ -845,6 +841,10 @@ public class AlignmentTools {
 	 */
 	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
 
+		//Update ca information, because the atom array might also be changed
+		afpChain.setCa1Length(ca1.length);
+		afpChain.setCa2Length(ca2.length);
+		
 		// we need this to get the correct superposition
 		int[] focusRes1 = afpChain.getFocusRes1();
 		int[] focusRes2 = afpChain.getFocusRes2();
