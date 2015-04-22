@@ -674,11 +674,7 @@ public class AlignmentTools {
 	}
 	
 	/**
-	 * It returns an AFPChain with a segmented optimal alignment, which means that it has <order of symmetry> blocks of
-	 * aligned subunits. The original AFPChain is not modified.
-	 * 
-	 * INPUT: the optimal alignment in a triple list (same format as optAln of AFPChain) and the Atom[] arrays.
-	 * OUTPUT: the optimal AFPChain alignment object divided into the subunits.
+	 * It replaces an optimal alignment of an AFPChain and calculates all the new alignment scores and variables.
 	 */
 	public static AFPChain replaceOptAln(int[][][] newAlgn, AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
 		
@@ -711,7 +707,7 @@ public class AlignmentTools {
 		copyAFP.setBlockGap(calculateBlockGap(newAlgn));
 		
 		//Recalculate properties: superposition, tm-score, etc
-		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2); // don't modify ca1 positions
+		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2); // don't modify ca2 positions
 		AlignmentTools.updateSuperposition(copyAFP, ca1, ca2clone);
 		
 		//It re-does the sequence alignment strings from the OptAlgn information only

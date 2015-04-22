@@ -20,9 +20,10 @@ public class Pose implements Serializable, Cloneable{
 	BlockSet parent;
 
 	List<Matrix> transforms;				//transform Matrix for every structure to calculate the aligned 3D superimposition
-													//SIZE: n Matrices of s*s size (s=structure length)
-	List<List<Matrix>> distanceMatrix; 					//A (n*l)*(n*l) matrix that stores the distance between every pair of aligned residues
-													//n=nr. structures; l=alignment length
+													//SIZE: n Matrices of s*s size (s=structure length) - one of the structures is the reference (transform = 0)
+	List<Matrix> distanceTables; 			//A list of n (l*l) matrices that store the distance between every pair of residues for every protein
+													//n=nr. structures; l=alignment length 
+													//(This variable does not change, because proteins stay the same. Should it be moved to the MultipleAlignment class?) TODO
 	
 	
 	/**
@@ -32,16 +33,13 @@ public class Pose implements Serializable, Cloneable{
 		
 		parent = blockSet;
 		transforms = new ArrayList<Matrix>();
-		distanceMatrix = new ArrayList<List<Matrix>>();
+		distanceTables = new ArrayList<Matrix>();
 		
 		//Initialize the distanceMatrix with matrices of zeros
-		for (int i=0; i<parent.getMultipleAlignment().getSize(); i++){
-			distanceMatrix.add(new ArrayList<Matrix>());
-			for (int j=0; j<parent.getMultipleAlignment().getSize(); j++){
-				int len = parent.getLength();
-				distanceMatrix.get(i).add(new Matrix(len,len));
-			}
-		}
+		/*for (int j=0; j<parent.getMultipleAlignment().getSize(); j++){
+			int len = parent.getMultipleAlignment().getAtomArrays().get(j).length;
+			distanceTables.add(new Matrix(len,len));
+		}*/
 		
 	}
 	
@@ -52,7 +50,7 @@ public class Pose implements Serializable, Cloneable{
 		
 		this.parent = p.parent;
 		transforms = new ArrayList<Matrix>(p.transforms);
-		distanceMatrix = new ArrayList<List<Matrix>>(p.distanceMatrix);
+		distanceTables = new ArrayList<Matrix>(p.distanceTables);
 		
 	}
 	
@@ -67,7 +65,7 @@ public class Pose implements Serializable, Cloneable{
 	@Override
 	public String toString() {
 		return "Pose [parent=" + parent + ", transforms=" + transforms
-				+ ", distanceMatrix=" + distanceMatrix + "]";
+				+ ", distanceMatrix=" + distanceTables + "]";
 	}
 
 	//Getters and Setters **************************************************************************************
@@ -88,11 +86,11 @@ public class Pose implements Serializable, Cloneable{
 		this.transforms = transforms;
 	}
 
-	public List<List<Matrix>> getDistanceMatrix() {
-		return distanceMatrix;
+	public List<Matrix> getDistanceMatrix() {
+		return distanceTables;
 	}
 
-	public void setDistanceMatrix(List<List<Matrix>> distanceMatrix) {
-		this.distanceMatrix = distanceMatrix;
+	public void setDistanceMatrix(List<Matrix> distanceMatrix) {
+		this.distanceTables = distanceMatrix;
 	}
 }

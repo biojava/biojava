@@ -67,7 +67,7 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	}
 	
 	/**
-	 * Copy constructor. TODO
+	 * Copy constructor.
 	 */
 	public MultipleAlignment(MultipleAlignment ma) {
 		
