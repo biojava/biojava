@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -19,8 +20,9 @@ public class Pose implements Serializable, Cloneable{
 	
 	BlockSet parent;
 
-	List<Matrix> transforms;				//transform Matrix for every structure to calculate the aligned 3D superimposition
+	List<Matrix> rotationMatrix;			//rotation Matrix for every structure to calculate the aligned 3D superimposition
 													//SIZE: n Matrices of s*s size (s=structure length) - one of the structures is the reference (transform = 0)
+	List<Atom> translation;					//shift matrix for the atoms of every protein. There are n entries in the list.
 	List<Matrix> distanceTables; 			//A list of n (l*l) matrices that store the distance between every pair of residues for every protein
 													//n=nr. structures; l=alignment length 
 													//(This variable does not change, because proteins stay the same. Should it be moved to the MultipleAlignment class?) TODO
@@ -32,7 +34,8 @@ public class Pose implements Serializable, Cloneable{
 	public Pose(BlockSet blockSet) {
 		
 		parent = blockSet;
-		transforms = new ArrayList<Matrix>();
+		rotationMatrix = new ArrayList<Matrix>();
+		translation = new ArrayList<Atom>();
 		distanceTables = new ArrayList<Matrix>();
 		
 		//Initialize the distanceMatrix with matrices of zeros
@@ -49,7 +52,8 @@ public class Pose implements Serializable, Cloneable{
 	public Pose(Pose p) {
 		
 		this.parent = p.parent;
-		transforms = new ArrayList<Matrix>(p.transforms);
+		rotationMatrix = new ArrayList<Matrix>(p.rotationMatrix);
+		translation = new ArrayList<Atom>(p.translation);
 		distanceTables = new ArrayList<Matrix>(p.distanceTables);
 		
 	}
@@ -64,7 +68,7 @@ public class Pose implements Serializable, Cloneable{
 
 	@Override
 	public String toString() {
-		return "Pose [parent=" + parent + ", transforms=" + transforms
+		return "Pose [parent=" + parent + ", transforms=" + rotationMatrix
 				+ ", distanceMatrix=" + distanceTables + "]";
 	}
 
@@ -78,12 +82,12 @@ public class Pose implements Serializable, Cloneable{
 		this.parent = parent;
 	}
 
-	public List<Matrix> getTransforms() {
-		return transforms;
+	public List<Matrix> getRotationMatrix() {
+		return rotationMatrix;
 	}
 
-	public void setTransforms(List<Matrix> transforms) {
-		this.transforms = transforms;
+	public void setRotationMatrix(List<Matrix> transforms) {
+		this.rotationMatrix = transforms;
 	}
 
 	public List<Matrix> getDistanceMatrix() {
@@ -92,5 +96,13 @@ public class Pose implements Serializable, Cloneable{
 
 	public void setDistanceMatrix(List<Matrix> distanceMatrix) {
 		this.distanceTables = distanceMatrix;
+	}
+
+	public List<Atom> getTranslation() {
+		return translation;
+	}
+
+	public void setTranslation(List<Atom> translation) {
+		this.translation = translation;
 	}
 }
