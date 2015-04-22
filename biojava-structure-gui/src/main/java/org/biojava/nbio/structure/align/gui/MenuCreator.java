@@ -22,21 +22,28 @@
 package org.biojava.nbio.structure.align.gui;
 
 
-import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
+import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
+import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
 
 /**
- *  Create the menu for Fatcat/CE structure alignment stuff
+ * Create the menu for Fatcat/CE structure alignment stuff 
+ * AND
+ * Create the menu for Multiple Alignment stuff
+ * 
  * @author Andreas Prlic
+ * @author Aleix Lafita
  * @since 1.7
+ * 
  */
 public class MenuCreator {
 
@@ -53,11 +60,12 @@ public class MenuCreator {
 	public static final String LOAD_ALIGNMENT_XML = "Load Alignment XML";
 	public static final String FATCAT_TEXT = "View as FATCAT result";
 	protected static final int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	
 	/** provide a JMenuBar that can be added to a JFrame
 	 * 
 	 * @return a JMenuBar
 	 */
-	public static JMenuBar initMenu(JFrame frame, StructureAlignmentJmol parent, AFPChain afpChain){
+	public static JMenuBar initMenu(JFrame frame, AlignmentJmol parent, AFPChain afpChain){
 
 		// show a menu
 
@@ -376,7 +384,7 @@ public class MenuCreator {
 		return print;
 	}
 
-	public static JMenuItem getExportPDBMenuItem(StructureAlignmentJmol parent) {
+	public static JMenuItem getExportPDBMenuItem(AlignmentJmol parent) {
 		ImageIcon saveicon = createImageIcon("/icons/compfile.png");
 		JMenuItem exportI = null;
 

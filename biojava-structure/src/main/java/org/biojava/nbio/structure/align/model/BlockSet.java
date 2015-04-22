@@ -16,13 +16,14 @@ public class BlockSet implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = -1015791986000076089L;
 	
-	MultipleAlignment parent;		//Multiple Alignment Instance
-	List<Block> blocks;				//Aligned Positions
+	MultipleAlignment parent;		//Link to the MultipleAlignment Instance as parent
+	List<Block> blocks;				//Aligned positions as a list of Blocks
 	Pose pose;						//Superimposition pose (cash)
 	int length;						//total number of aligned positions, including gaps = sum of columns in the blocks
 	
 	/**
 	 * Constructor.
+	 * @param multipleAlignment: the parent MultipleAlignment instance.
 	 */
 	public BlockSet(MultipleAlignment multipleAlignment){
 		
@@ -33,7 +34,8 @@ public class BlockSet implements Serializable, Cloneable{
 	}
 	
 	/**
-	 * Copy constructor. TODO
+	 * Copy constructor.
+	 * @param bs: the BlockSet from which the information is copied.
 	 */
 	public BlockSet(BlockSet bs){
 		

@@ -20,9 +20,11 @@
 package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -32,8 +34,8 @@ import java.io.PrintWriter;
 
 public class MyExportListener implements ActionListener{
 
-   StructureAlignmentJmol parent;
-   MyExportListener(StructureAlignmentJmol parent){
+   AlignmentJmol parent;
+   MyExportListener(AlignmentJmol parent){
       this.parent = parent;
    }
    @Override
@@ -51,7 +53,7 @@ public void actionPerformed(ActionEvent arg0)
          Structure s = parent.getStructure();
 
          try {
-            PrintWriter pw = new PrintWriter(new FileWriter(file));                 
+            PrintWriter pw = new PrintWriter(new FileWriter(file));
             pw.println(s.toPDB());                   
             pw.close();
          } catch (IOException e){
