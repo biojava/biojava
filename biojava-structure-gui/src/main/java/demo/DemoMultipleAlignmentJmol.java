@@ -59,6 +59,7 @@ public class DemoMultipleAlignmentJmol {
 		}
 		
 		MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(fakeMultAln, rotatedAtoms);
+		jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 
 	}
 	

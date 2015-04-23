@@ -534,8 +534,8 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 
       if (afpChain != null && ca1 != null && ca2 != null) {
          String script = getJmolString( afpChain,ca1,ca2);
-         System.out.println(script);
-         //evalString(script);
+         //System.out.println(script);
+         evalString(script);
          jmolPanel.evalString("save STATE state_1");
       }
    }

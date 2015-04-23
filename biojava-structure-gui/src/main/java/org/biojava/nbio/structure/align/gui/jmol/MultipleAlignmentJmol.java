@@ -265,6 +265,7 @@ public class MultipleAlignmentJmol extends AlignmentJmol {
          PDBHeader header = new PDBHeader();
          String title =  multAln.getAlgorithmName() + " V." +multAln.getVersion() + " : ";
          for (String name:multAln.getStructureNames()) title +=  name + " ";
+         System.out.println(title);
          header.setTitle(title);
          artificial.setPDBHeader(header);
          setStructure(artificial);
