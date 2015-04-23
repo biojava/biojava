@@ -6,22 +6,25 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
+import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.model.Block;
 import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.Pose;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.jama.Matrix;
 
 /**
- * Demo for visualizing the results of a Multiple Alignment, from a MultipleAlignment object created by a MSTA algorithm.
+ * Demo for visualizing the results of a Multiple Alignment, from a sample MultipleAlignment object.
  * 
  * @author Aleix Lafita
  * 
  */
-public class DemoMultipleAlignment {
+public class DemoMultipleAlignmentJmol {
 
 	public static void main(String[] args) throws IOException, StructureException {
 		
@@ -41,8 +44,22 @@ public class DemoMultipleAlignment {
 		fakeMultAln.setAlgorithmName("fakeAlgorithm");
 		fakeMultAln.setAtomArrays(atomArrays);
 		fakeMultAln.setStructureNames(names);
+		fakeMultAln.setSize(names.size());
 		
-		//StructureAlignmentJmol jmol = new StructureAlignmentJmol(fakeMultAln);
+		//Rotate the atom coordinates of all the structures to create a rotated atomArrays
+		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+		for (int i=0; i<fakeMultAln.getSize(); i++){
+			Matrix rotationMatrix = fakeMultAln.getBlockSets().get(0).getPose().getRotationMatrix().get(i);
+			Atom shiftVector = fakeMultAln.getBlockSets().get(0).getPose().getTranslation().get(i);
+			Atom[] rotCA = StructureTools.cloneAtomArray(atomArrays.get(i));
+			for (Atom a:rotCA){
+				Calc.rotate(a, rotationMatrix);
+				Calc.shift(a, shiftVector);
+			}
+			rotatedAtoms.add(rotCA);
+		}
+		
+		MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(fakeMultAln, rotatedAtoms);
 
 	}
 	

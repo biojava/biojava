@@ -102,4 +102,11 @@ public class BlockSet implements Serializable, Cloneable{
 	public void setLength(int length) {
 		this.length = length;
 	}
+	
+	/**
+	 * Return the number of Blocks in the BlockSet.
+	 */
+	public int getBlockNum() {
+		return blocks.size();
+	}
 }

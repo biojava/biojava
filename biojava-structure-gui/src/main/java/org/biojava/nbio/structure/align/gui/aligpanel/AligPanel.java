@@ -26,6 +26,7 @@ import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
+import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -65,7 +66,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
    AFPChainCoordManager coordManager ;
    Font seqFont;
    Font eqFont;
-   private StructureAlignmentJmol jmol;
+   private AlignmentJmol jmol;
    AligPanelMouseMotionListener mouseMoLi;
 
    BitSet selection;
@@ -521,7 +522,7 @@ public void toggleSelection(AlignedPosition p) {
 
 
 
-   public void setStructureAlignmentJmol(StructureAlignmentJmol jmol) {
+   public void setStructureAlignmentJmol(AlignmentJmol jmol) {
       this.jmol = jmol;
 
    }

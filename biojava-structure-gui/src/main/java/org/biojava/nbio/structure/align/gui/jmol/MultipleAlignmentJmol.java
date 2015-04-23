@@ -1,27 +1,3 @@
-/*
- *                    BioJava development code
- *
- * This code may be freely distributed and modified under the
- * terms of the GNU Lesser General Public Licence.  This should
- * be distributed with the code.  If you do not have a copy,
- * see:
- *
- *      http://www.gnu.org/copyleft/lesser.html
- *
- * Copyright for this code is held jointly by the individual
- * authors.  These should be listed in @author doc comments.
- *
- * For more information on the BioJava project and its aims,
- * or to join the biojava-l mailing list, visit the home page
- * at:
- *
- *      http://www.biojava.org/
- *
- * Created on 24.05.2004
- * @author Andreas Prlic
- *
- */
-
 package org.biojava.nbio.structure.align.gui.jmol;
 
 
@@ -31,10 +7,14 @@ import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.AfpChainWriter;
+import org.biojava.nbio.structure.align.model.BlockSet;
+import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+import org.jcolorbrewer.ColorBrewer;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -44,17 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** A class that provides a simple GUI for Jmol
+/** A class that provides GUI for multiple alignments. Code adapted from the StructuralAlignmentJmol class.
  * 
- * @author Andreas Prlic
- * @since 1.6
+ * @author Aleix Lafita
  *
  */
-public class StructureAlignmentJmol extends AlignmentJmol {
+public class MultipleAlignmentJmol extends AlignmentJmol {
 
-   protected Atom[] ca1;
-   protected Atom[] ca2;
-   protected AFPChain afpChain;
+   MultipleAlignment multAln;
+   List<Atom[]> atomArrays;    //rotated atom arrays of every structure
 
    public static void main(String[] args){
       try {
@@ -65,7 +43,7 @@ public class StructureAlignmentJmol extends AlignmentJmol {
 
          Structure struc = cache.getStructure("5pti");
 
-         StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol(null,null,null);
+         MultipleAlignmentJmol jmolPanel = new MultipleAlignmentJmol(null, null);
 
          jmolPanel.setStructure(struc);
 
@@ -78,13 +56,20 @@ public class StructureAlignmentJmol extends AlignmentJmol {
       }
    }
 
-   public StructureAlignmentJmol(){
-      // don;t have an afpChain, set it to null...
-      this(null, null, null);
+   /**
+    * Default constructor creates an empty window, from where alignments can be made through the align menu.
+    */
+   public MultipleAlignmentJmol(){
+      //don't have a multiple alignment, set it to null...
+      this(null, null);
    }
 
-
-   public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
+   /**
+    * The constructor displays the Mutltiple Alignment in a Jmol panel.
+    * @param multAln: contains the aligned residues.
+    * @param atomArrays: contains the atom coordinates to display, already rotated.
+    */
+   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> atomArrays) {
 
       AligUIManager.setLookAndFeel();
 
@@ -93,14 +78,13 @@ public class StructureAlignmentJmol extends AlignmentJmol {
 
       frame = new JFrame();
 
-      JMenuBar menu = MenuCreator.initMenu(frame,this, afpChain);
+      JMenuBar menu = MenuCreator.initMenu(frame,this,null);
 
       frame.setJMenuBar(menu);
       //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      this.afpChain = afpChain;
-      this.ca1 = ca1;
-      this.ca2 = ca2;
-
+      this.multAln = multAln;
+      this.atomArrays = atomArrays;
+      
       frame.addWindowListener( new WindowAdapter()
       {
 
@@ -262,9 +246,6 @@ public class StructureAlignmentJmol extends AlignmentJmol {
       frame.pack();
       frame.setVisible(true); 
 
-
-      // init coordinates
-
       initCoords();
 
       resetDisplay();
@@ -272,7 +253,7 @@ public class StructureAlignmentJmol extends AlignmentJmol {
    }
    protected void initCoords(){
       try {
-         if ( ca1 == null || ca2 == null ){
+         if ( multAln == null ){
             if ( structure != null)
                setStructure(structure);
             else  {
@@ -280,9 +261,10 @@ public class StructureAlignmentJmol extends AlignmentJmol {
                return;
             }
          }
-         Structure artificial = DisplayAFP.getAlignedStructure(ca1,ca2);
+         Structure artificial = DisplayAFP.getAlignedStructure(atomArrays);
          PDBHeader header = new PDBHeader();
-         String title =  afpChain.getAlgorithmName() + " V." +afpChain.getVersion() + " : " + afpChain.getName1() + " vs. " + afpChain.getName2();
+         String title =  multAln.getAlgorithmName() + " V." +multAln.getVersion() + " : ";
+         for (String name:multAln.getStructureNames()) title +=  name + " ";
          header.setTitle(title);
          artificial.setPDBHeader(header);
          setStructure(artificial);
@@ -293,146 +275,139 @@ public class StructureAlignmentJmol extends AlignmentJmol {
 
    public void destroy(){
 	  super.destroy();
-      afpChain =null;
-      ca1 = null;
-      ca2 = null;
+      multAln =null;
+      atomArrays = null;
    }
 
    @Override
 public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
-         if ( afpChain == null) {
+         if ( multAln == null) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         //Clone the AFPChain to not override the FatCat numbers in alnsymb
-         AFPChain textAFP = (AFPChain) afpChain.clone();
-         String result = AfpChainWriter.toWebSiteDisplay(textAFP, ca1, ca2) ;
-
-         DisplayAFP.showAlignmentImage(afpChain, result);
+         System.out.println("Option currently not available for Multiple Alignments");
+         //String result = AfpChainWriter.toWebSiteDisplay(textAFP, ca1, ca2) ;
+         //DisplayAFP.showAlignmentImage(afpChain, result);
          
       } else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
-         if ( afpChain == null) {
+         if ( multAln == null) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
-
-         DisplayAFP.showAlignmentImage(afpChain, result);
+         System.out.println("Option currently not available for Multiple Alignments");
+         //String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
+         //DisplayAFP.showAlignmentImage(afpChain, result);
          
       } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
-         if ( afpChain == null) {
+         if ( multAln == null) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+         System.out.println("Option currently not available for Multiple Alignments");
+         //DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
 
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
-         if ( afpChain == null) {
+         if ( multAln == null) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         String result = afpChain.toFatcat(ca1, ca2) ;
-         result += AFPChain.newline;
-         result += afpChain.toRotMat();
-         DisplayAFP.showAlignmentImage(afpChain, result);
+         System.out.println("Option currently not available for Multiple Alignments");
+         //String result = afpChain.toFatcat(ca1, ca2) ;
+         //result += AFPChain.newline;
+         //result += afpChain.toRotMat();
+         //DisplayAFP.showAlignmentImage(afpChain, result);
       }
    }
 
-   public String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+   /**
+    * Generate a Jmol command String that colors the aligned residues of every structure.
+    * 
+    * @param multAln
+    * @param atomArrays
+    */
+   public String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays){
      
-      if ( afpChain.getBlockNum() > 1){
-         return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
-      }
+	  /* TODO Color by block is disabled right now
+      if (multAln.getBlockSets().get(0).getBlockNum() > 1){
+         return getMultiBlockJmolString(multAln, atomArrays);
+      }*/
 
-      
-      
       StringBuffer j = new StringBuffer();
       j.append(DEFAULT_SCRIPT);
-
-     
-      // now color the equivalent residues ...
+      
+      //Set one color for every structure in the multiple alignment
+      Color[] colors = ColorBrewer.Set1.getColorPalette(multAln.getSize());
+      
+      //Color the equivalent residues of every structure
       StringBuffer sel = new StringBuffer();
-      List<String> pdb1 = DisplayAFP.getPDBresnum(0,afpChain,ca1);
-      sel.append("select ");
-      int pos = 0;
-      for (String res :pdb1 ){
-         if ( pos > 0)
-            sel.append(",");
-         pos++;
+      sel.append("select *; color lightgrey; ");
+      List<List<String>> allPDB = new ArrayList<List<String>>();
+      //Loop through all the structures and get the aligned residues
+      for (int i=0; i<multAln.getSize(); i++){
+    	  
+    	  List<String> pdb = DisplayAFP.getPDBresnum(i,multAln,atomArrays.get(i));
+    	  allPDB.add(pdb);
+    	  sel.append("select ");
+          int pos = 0;
+          for (String res :pdb){
+             if (pos > 0)
+                sel.append(",");
+             pos++;
 
-         sel.append(res);    
-         sel.append("/1");
+             sel.append(res);    
+             sel.append("/"+(i+1));
+          }
+          if ( pos == 0)
+             sel.append("none");
+          sel.append("; backbone 0.6 ; color ["+ colors[i].getRed() +","+ colors[i].getGreen() +","+ colors[i].getBlue() +"]; ");
+          
       }
-      if ( pos == 0)
-         sel.append("none");
-      sel.append(";");
-      sel.append("backbone 0.6 ;   color orange;");
-      sel.append("select */2; color lightgrey; model 2; ");
-      //jmol.evalString("select */2; color lightgrey; model 2; ");        
-      List<String> pdb2 = DisplayAFP.getPDBresnum(1,afpChain,ca2);
-      sel.append("select ");
-      pos = 0;
-      for (String res :pdb2 ){
-         if ( pos > 0)
-            sel.append(",");
-         pos++;
-
-         sel.append(res);
-         sel.append("/2");
-      }
-      if ( pos == 0)
-         sel.append("none");
-      sel.append("; backbone 0.6 ;   color cyan;");
-      //System.out.println(sel);
+      
       j.append(sel);
-      // now show both models again.
       j.append("model 0;  ");
       j.append(LIGAND_DISPLAY_SCRIPT);
-      //color [object] cpk , set defaultColors Jmol , set defaultColors Rasmol  
-
-      // and now select the aligned residues...
+      
+      //Now select the aligned residues
       StringBuffer buf = new StringBuffer("select ");
-      int count = 0;
-      for (String res : pdb1 ){
-         if ( count > 0)
-            buf.append(",");
-         buf.append(res);
-         buf.append("/1");
-         count++;
+      //Loop through all the structures and get the aligned residues
+      for (int i=0; i<multAln.getSize(); i++){
+    	  int count = 0;
+	      for (String res : allPDB.get(i) ){
+	         if ( count > 0) buf.append(",");
+	         buf.append(res);
+	         buf.append("/"+(i+1));
+	         count++;
+	      }
+	      if (i!=multAln.getSize()-1) buf.append(",");
       }
-
-      for (String res :pdb2 ){
-         buf.append(",");
-         buf.append(res);
-         buf.append("/2");
-      }
-      //buf.append("; set display selected;");
 
       j.append(buf);
 
       return j.toString();
    }
    
-   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
-	   int blockNum = afpChain.getBlockNum();
+   /**
+    * Only select and color one aligned block, indicated by the blockNr.
+    */
+   public static String getJmolScript4Block(MultipleAlignment multAln, List<Atom[]> atomArrays, int blockNr){
+	   
+	   BlockSet optAln = multAln.getBlockSets().get(0);
+	   int blockNum = optAln.getBlockNum();
 	   
 	   if ( blockNr >= blockNum)
 		   return DEFAULT_SCRIPT;
-		   		   
-	   int[] optLen = afpChain.getOptLen();
-	   int[][][] optAln = afpChain.getOptAln();
-
-	   if ( optLen == null)
+	   
+	   if ( blockNum == 0)
 		   return DEFAULT_SCRIPT;
 
 	   StringWriter jmol = new StringWriter();
 	   jmol.append(DEFAULT_SCRIPT);
 
-	   jmol.append("select */2; color lightgrey; model 2; ");
+	   jmol.append("select *; color lightgrey; ");
 	      
-	   printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, blockNr);
+	   printJmolScript4Block(atomArrays, blockNum, optAln, jmol, blockNr);
 	   
 	   jmol.append("model 0;  ");
 	   jmol.append(LIGAND_DISPLAY_SCRIPT);
@@ -443,37 +418,36 @@ public void actionPerformed(ActionEvent e) {
    }
    
 
-   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
+   private static String getMultiBlockJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays)
    {
 
-      int blockNum = afpChain.getBlockNum();      
-      int[] optLen = afpChain.getOptLen();
-      int[][][] optAln = afpChain.getOptAln();
-
-      if ( optLen == null)
-         return DEFAULT_SCRIPT;
-
-      StringWriter jmol = new StringWriter();
-      jmol.append(DEFAULT_SCRIPT);
-
-      jmol.append("select */2; color lightgrey; model 2; ");
-      
-      for(int bk = 0; bk < blockNum; bk ++)       {
-
-         printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk);
-      }
-      jmol.append("model 0;  ");
-      
-      jmol.append(LIGAND_DISPLAY_SCRIPT);
-      //System.out.println(jmol);
-      return jmol.toString();
+	  BlockSet optAln = multAln.getBlockSets().get(0);
+	  int blockNum = optAln.getBlockNum();      
+	
+	  if ( blockNum == 0 )
+	     return DEFAULT_SCRIPT;
+	
+	  StringWriter jmol = new StringWriter();
+	  jmol.append(DEFAULT_SCRIPT);
+	
+	  jmol.append("select */2; color lightgrey; model 2; ");
+	  
+	  //for(int bk = 0; bk < blockNum; bk ++) printJmolScript4Block(atomArrays, blockNum, optAln, jmol, bk);
+	  //TODO Print by block is disabled right now
+	  
+	  jmol.append("model 0;  ");
+	  jmol.append(LIGAND_DISPLAY_SCRIPT);
+	  
+	  return jmol.toString();
 
 
    }
 
-private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
-		int[] optLen, int[][][] optAln, StringWriter jmol, int bk) {
-	//the block nr determines the color...
+private static void printJmolScript4Block(List<Atom[]> atomArrays, int blockNum,
+		BlockSet optAln, StringWriter jmol, int bk) {
+	
+		//TODO disabled the coloring by block
+	 /*//the block nr determines the color...
 	 int colorPos = bk;
 	 
 	 Color c1;
@@ -527,15 +501,15 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 	 buf.append("; backbone 0.6 ; color [" + c2.getRed() +"," + c2.getGreen() +"," +c2.getBlue()+"];");
 
 	 // now color this block:
-	 jmol.append(buf);
+	 jmol.append(buf);*/
 }
 
    public void resetDisplay(){
-
-      if (afpChain != null && ca1 != null && ca2 != null) {
-         String script = getJmolString( afpChain,ca1,ca2);
+	   
+      if (multAln != null) {
+         String script = getJmolString(multAln, atomArrays);
          System.out.println(script);
-         //evalString(script);
+         evalString(script);
          jmolPanel.evalString("save STATE state_1");
       }
    }

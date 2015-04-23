@@ -23,9 +23,12 @@ package org.biojava.nbio.structure.align.gui;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
+import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.model.BlockSet;
+import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -93,10 +97,14 @@ public class DisplayAFP
 
 	}
 
-
-
-
-
+	/**
+	 * Return a list of pdb Strings corresponding to the aligned positions of the molecule. 
+	 * Only supports a pairwise alignment with the AFPChain DS.
+	 * 
+	 * @param aligPos
+	 * @param afpChain
+	 * @param ca
+	 */
 	public static final List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
 		List<String> lst = new ArrayList<String>();
 		if ( aligPos > 1) {
@@ -123,6 +131,38 @@ public class DisplayAFP
 				}
 			}
 
+		}
+		return lst;
+	}
+	
+	/**
+	 * Return a list of pdb Strings corresponding to the aligned positions of the molecule. 
+	 * Adapted the method to a more general version for the multiple alignments, using the MultipleAlignment DS.
+	 * 
+	 * @param aligPos
+	 * @param multAln
+	 * @param ca
+	 */
+	public static final List<String> getPDBresnum(int structNum, MultipleAlignment multAln, Atom[] ca){
+		
+		List<String> lst = new ArrayList<String>();
+		
+		BlockSet optAln= multAln.getBlockSets().get(0);
+		int blockNum = optAln.getBlockNum();
+
+		//Loop through all the blocks
+		for(int bk = 0; bk < blockNum; bk ++){
+			
+			//Loop though all the residues in a block for the specified 
+			for (int i=0; i<optAln.getBlocks().get(bk).getCols(); i++){
+				
+				int pos = optAln.getBlocks().get(bk).getAlignRes().get(structNum).get(i);
+				if ( pos < ca.length) {
+					String pdbInfo = JmolTools.getPdbInfo(ca[pos]);
+					//lst.add(ca1[pos].getParent().getPDBCode());
+					lst.add(pdbInfo);
+				}
+			}
 		}
 		return lst;
 	}
@@ -451,6 +491,8 @@ public class DisplayAFP
 	 */
 	public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) throws StructureException{
 
+		/* Previous implementation commented
+
 		Structure s = new StructureImpl();
 
 
@@ -458,6 +500,27 @@ public class DisplayAFP
 		List<Chain>model2 = getAlignedModel(ca2);
 		s.addModel(model1);
 		s.addModel(model2);
+		
+		return s;*/
+
+		return getAlignedStructure(Arrays.asList(ca1,ca2));
+	}
+	
+	/** Get an artifical Structure containing all the chains (Multiple Alignment generalization)
+	 * Does NOT rotate anything
+	 * @param ca1
+	 * @param ca2
+	 * @return a structure object containing two models, one for each set of Atoms.
+	 * @throws StructureException
+	 */
+	public static final Structure getAlignedStructure(List<Atom[]> atomArrays) throws StructureException{
+
+		Structure s = new StructureImpl();
+
+		for (int i=0; i<atomArrays.size(); i++){
+			List<Chain>model = getAlignedModel(atomArrays.get(i));
+			s.addModel(model);
+		}
 
 		return s;
 	}
@@ -541,7 +604,7 @@ public class DisplayAFP
 		return jmol;
 	}
 
-	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, StructureAlignmentJmol jmol) {
+	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AlignmentJmol jmol) {
 		String result = afpChain.toFatcat(ca1, ca2);
 
 		//String rot = afpChain.toRotMat();

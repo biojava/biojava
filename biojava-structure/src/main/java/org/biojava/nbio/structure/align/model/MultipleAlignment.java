@@ -35,13 +35,13 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	int size;								//number of structures
 
 	//Aligned Positions
-	List<BlockSet> blockSets;				//aligned positions of the alignment
+	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
 	List<String> alnSequences; 				//sequence alignment for every structure as a String with gaps (cash)
 	
 	//Alignment Information
-	double rmsd;							//RMSD of the multiple alignment
-	double tmScore;							//TM-score of the multiple alignment
-	int length;								//total length of the alignment, including gaps = number of aligned positions
+	double rmsd;							//RMSD of the optimal multiple alignment
+	double tmScore;							//TM-score of the optimal multiple alignment
+	int length;								//total length of the optimal alignment, including gaps = number of aligned positions
 	int coreLength;							//length of the ungapped aligned positions = length - gap length
 	double coverage;						//fraction of the total structure length aligned
 	double similarity;						//similarity measure for all the structures (global value)
