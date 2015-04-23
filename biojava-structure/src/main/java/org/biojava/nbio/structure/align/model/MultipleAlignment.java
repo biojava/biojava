@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * A MultipleAlignment is a Data Structure to store the core of a multiple structure alignment, as a return type.
@@ -33,6 +34,8 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	List<String> structureNames;  			//names of the structures in PDB or SCOP format
 	List<Atom[]> atomArrays;      			//arrays of atoms for every structure in the alignment
 	int size;								//number of structures
+	List<Matrix> distanceMatrix; 			//A list of n (l*l) matrices that store the distance between every pair of residues for every protein
+											//n=nr. structures; l=alignment length 
 
 	//Aligned Positions
 	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
@@ -58,8 +61,10 @@ public class MultipleAlignment implements Serializable, Cloneable{
 		algorithmName = DEFAULT_ALGORITHM_NAME;
 		version = "1.0";
 		
+		//TODO Is it better to initialize the variables or to set them to null?
 		structureNames = new ArrayList<String>();
 		atomArrays = new ArrayList<Atom[]>();
+		distanceMatrix = new ArrayList<Matrix>();
 		
 		blockSets = new ArrayList<BlockSet>();
 		alnSequences = new ArrayList<String>();
@@ -75,8 +80,10 @@ public class MultipleAlignment implements Serializable, Cloneable{
 		this.setAlgScore(ma.getAlgScore());
 		this.setAlnSequences(new ArrayList<String>(ma.getAlnSequences()));
 		this.setAtomArrays(new ArrayList<Atom[]>(ma.getAtomArrays()));
+		this.setDistanceMatrix(new ArrayList<Matrix>(ma.getDistanceMatrix()));
 		
-		//Ensure a proper cloning of all the BlockSet objects
+		//Ensure a proper cloning of all the BlockSet objects 
+		//TODO In AFPChain this is not made, only pointers copied. Is it for any reason?
 		List<BlockSet> bSets = new ArrayList<BlockSet>();
 		for (BlockSet bs:ma.getBlockSets()){
 			bSets.add(bs.clone());
@@ -116,7 +123,8 @@ public class MultipleAlignment implements Serializable, Cloneable{
 				+ ", version=" + version + ", ioTime=" + ioTime
 				+ ", calculationTime=" + calculationTime + ", id=" + id
 				+ ", structureNames=" + structureNames + ", atomArrays="
-				+ atomArrays + ", size=" + size + ", blockSets=" + blockSets
+				+ atomArrays + ", size=" + size + ", distanceMatrix="
+				+ distanceMatrix + ", blockSets=" + blockSets
 				+ ", alnSequences=" + alnSequences + ", rmsd=" + rmsd
 				+ ", tmScore=" + tmScore + ", length=" + length
 				+ ", coreLength=" + coreLength + ", coverage=" + coverage
@@ -278,6 +286,13 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	public void setCoreLength(int coreLength) {
 		this.coreLength = coreLength;
 	}
-
 	
+	public List<Matrix> getDistanceMatrix() {
+		return distanceMatrix;
+	}
+
+	public void setDistanceMatrix(List<Matrix> distanceMatrix) {
+		this.distanceMatrix = distanceMatrix;
+	}
+
 }

@@ -20,29 +20,17 @@ public class Pose implements Serializable, Cloneable{
 	
 	BlockSet parent;
 
-	List<Matrix> rotationMatrix;			//rotation Matrix for every structure to calculate the aligned 3D superimposition
-													//SIZE: n Matrices of s*s size (s=structure length) - one of the structures is the reference (transform = 0)
-	List<Atom> translation;					//shift matrix for the atoms of every protein. There are n entries in the list.
-	List<Matrix> distanceTables; 			//A list of n (l*l) matrices that store the distance between every pair of residues for every protein
-													//n=nr. structures; l=alignment length 
-													//(This variable does not change, because proteins stay the same. Should it be moved to the MultipleAlignment class?) TODO
-	
-	
+	List<Matrix> rotation;			//rotation Matrix for every structure to calculate the 3D superimposition.
+	List<Atom> translation;			//translation Vectors for the atoms of every structure.
+
 	/**
 	 * Constructor
 	 */
 	public Pose(BlockSet blockSet) {
 		
 		parent = blockSet;
-		rotationMatrix = new ArrayList<Matrix>();
+		rotation = new ArrayList<Matrix>();
 		translation = new ArrayList<Atom>();
-		distanceTables = new ArrayList<Matrix>();
-		
-		//Initialize the distanceMatrix with matrices of zeros
-		/*for (int j=0; j<parent.getMultipleAlignment().getSize(); j++){
-			int len = parent.getMultipleAlignment().getAtomArrays().get(j).length;
-			distanceTables.add(new Matrix(len,len));
-		}*/
 		
 	}
 	
@@ -52,9 +40,8 @@ public class Pose implements Serializable, Cloneable{
 	public Pose(Pose p) {
 		
 		this.parent = p.parent;
-		rotationMatrix = new ArrayList<Matrix>(p.rotationMatrix);
+		rotation = new ArrayList<Matrix>(p.rotation);
 		translation = new ArrayList<Atom>(p.translation);
-		distanceTables = new ArrayList<Matrix>(p.distanceTables);
 		
 	}
 	
@@ -68,40 +55,53 @@ public class Pose implements Serializable, Cloneable{
 
 	@Override
 	public String toString() {
-		return "Pose [parent=" + parent + ", transforms=" + rotationMatrix
-				+ ", distanceMatrix=" + distanceTables + "]";
+		return "Pose [parent=" + parent + ", rotation=" + rotation
+				+ ", translation=" + translation + "]";
 	}
 
 	//Getters and Setters **************************************************************************************
 	
+	/**
+	 * Get the parent BlockSet that generated this Pose instance.
+	 */
 	public BlockSet getBlockSet() {
 		return parent;
 	}
 
+	/**
+	 * Set the link to the parent BlockSet of this Pose instance.
+	 * @param parent
+	 */
 	public void setBlockSet(BlockSet parent) {
 		this.parent = parent;
 	}
 
+	/**
+	 * Get the list of rotation matrices. One Matrix for the atom rotation of each structure.
+	 */
 	public List<Matrix> getRotationMatrix() {
-		return rotationMatrix;
+		return rotation;
 	}
 
-	public void setRotationMatrix(List<Matrix> transforms) {
-		this.rotationMatrix = transforms;
+	/**
+	 * Set the list of rotation matrices. One Matrix for the atom rotation of each structure.
+	 * @param rotation
+	 */
+	public void setRotationMatrix(List<Matrix> rotationMatrix) {
+		this.rotation = rotationMatrix;
 	}
 
-	public List<Matrix> getDistanceMatrix() {
-		return distanceTables;
-	}
-
-	public void setDistanceMatrix(List<Matrix> distanceMatrix) {
-		this.distanceTables = distanceMatrix;
-	}
-
+	/**
+	 * Get the list of translation vectors as Atom coordinates. One vector for every structure.
+	 */
 	public List<Atom> getTranslation() {
 		return translation;
 	}
 
+	/**
+	 * Set the list of translation vectors as Atom coordinates. One vector for every structure.
+	 * @param translation
+	 */
 	public void setTranslation(List<Atom> translation) {
 		this.translation = translation;
 	}
