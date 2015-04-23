@@ -156,10 +156,10 @@ public class DisplayAFP
 			//Loop though all the residues in a block for the specified 
 			for (int i=0; i<optAln.getBlocks().get(bk).getCols(); i++){
 				
-				int pos = optAln.getBlocks().get(bk).getAlignRes().get(structNum).get(i);
+				Integer pos = optAln.getBlocks().get(bk).getAlignRes().get(structNum).get(i);
+				if (pos==null) continue; //It means a GAP
 				if ( pos < ca.length) {
 					String pdbInfo = JmolTools.getPdbInfo(ca[pos]);
-					//lst.add(ca1[pos].getParent().getPDBCode());
 					lst.add(pdbInfo);
 				}
 			}

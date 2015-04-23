@@ -508,7 +508,7 @@ private static void printJmolScript4Block(List<Atom[]> atomArrays, int blockNum,
 	   
       if (multAln != null) {
          String script = getJmolString(multAln, atomArrays);
-         System.out.println(script);
+         //System.out.println(script);
          evalString(script);
          jmolPanel.evalString("save STATE state_1");
       }
