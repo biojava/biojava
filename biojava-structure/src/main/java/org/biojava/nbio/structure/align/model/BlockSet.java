@@ -55,6 +55,7 @@ public class BlockSet implements Serializable, Cloneable{
 	/**
 	 * Creates and returns a copy of this object. Uses the copy constructor.
 	 */
+	@Override
 	public BlockSet clone(){
 		
 		return new BlockSet(this);
