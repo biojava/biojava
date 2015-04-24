@@ -49,6 +49,7 @@ public class Block implements Serializable, Cloneable{
 	/**
 	 * Creates and returns a copy of this object. Uses the copy constructor.
 	 */
+	@Override
 	public Block clone(){
 		
 		return new Block(this);

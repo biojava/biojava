@@ -9,7 +9,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * A Pose is a Data Structure that stores the coordinates of a 3D superimposition of the structures in a multiple alignment.
- * It is associated with a {@link BlockSet} instance, named as parent. It is used as a cash variable in the BlockSet.
+ * It is associated with a {@link BlockSet} instance, named as parent. It is used as a cache variable in the BlockSet.
  *
  * @author Aleix Lafita
  * 
@@ -48,6 +48,7 @@ public class Pose implements Serializable, Cloneable{
 	/**
 	 * Creates and returns a copy of this object. Uses the copy constructor.
 	 */
+	@Override
 	public Pose clone(){
 		
 		return new Pose(this);

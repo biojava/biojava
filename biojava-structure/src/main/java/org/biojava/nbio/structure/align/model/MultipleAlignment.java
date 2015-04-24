@@ -21,7 +21,6 @@ import org.biojava.nbio.structure.jama.Matrix;
 public class MultipleAlignment implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = 3432043794125805139L;
-	public static final String DEFAULT_ALGORITHM_NAME = "CE-MC";  //there is no algorithm yet... TODO
 
 	//Creation Properties
 	String algorithmName;
@@ -58,17 +57,15 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	 */
 	public MultipleAlignment() {
 		
-		algorithmName = DEFAULT_ALGORITHM_NAME;
+		algorithmName = null;
 		version = "1.0";
 		
-		//TODO Is it better to initialize the variables or to set them to null?
-		structureNames = new ArrayList<String>();
-		atomArrays = new ArrayList<Atom[]>();
-		distanceMatrix = new ArrayList<Matrix>();
+		structureNames = null;
+		atomArrays = null;
+		distanceMatrix = null;
 		
-		blockSets = new ArrayList<BlockSet>();
-		alnSequences = new ArrayList<String>();
-		
+		blockSets = null;
+		alnSequences = null;
 	}
 	
 	/**
@@ -83,7 +80,6 @@ public class MultipleAlignment implements Serializable, Cloneable{
 		this.setDistanceMatrix(new ArrayList<Matrix>(ma.getDistanceMatrix()));
 		
 		//Ensure a proper cloning of all the BlockSet objects 
-		//TODO In AFPChain this is not made, only pointers copied. Is it for any reason?
 		List<BlockSet> bSets = new ArrayList<BlockSet>();
 		for (BlockSet bs:ma.getBlockSets()){
 			bSets.add(bs.clone());
