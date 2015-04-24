@@ -339,14 +339,14 @@ public void actionPerformed(ActionEvent e) {
       j.append(DEFAULT_SCRIPT);
       
       //Set one color for every structure in the multiple alignment
-      Color[] colors = ColorBrewer.Set1.getColorPalette(multAln.getSize());
+      Color[] colors = ColorBrewer.Set1.getColorPalette(multAln.size());
       
       //Color the equivalent residues of every structure
       StringBuffer sel = new StringBuffer();
       sel.append("select *; color lightgrey; ");
       List<List<String>> allPDB = new ArrayList<List<String>>();
       //Loop through all the structures and get the aligned residues
-      for (int i=0; i<multAln.getSize(); i++){
+      for (int i=0; i<multAln.size(); i++){
     	  
     	  List<String> pdb = DisplayAFP.getPDBresnum(i,multAln,atomArrays.get(i));
     	  allPDB.add(pdb);
@@ -373,7 +373,7 @@ public void actionPerformed(ActionEvent e) {
       //Now select the aligned residues
       StringBuffer buf = new StringBuffer("select ");
       //Loop through all the structures and get the aligned residues
-      for (int i=0; i<multAln.getSize(); i++){
+      for (int i=0; i<multAln.size(); i++){
     	  int count = 0;
 	      for (String res : allPDB.get(i) ){
 	         if ( count > 0) buf.append(",");
@@ -381,7 +381,7 @@ public void actionPerformed(ActionEvent e) {
 	         buf.append("/"+(i+1));
 	         count++;
 	      }
-	      if (i!=multAln.getSize()-1) buf.append(",");
+	      if (i!=multAln.size()-1) buf.append(",");
       }
 
       j.append(buf);

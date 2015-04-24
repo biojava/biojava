@@ -1,9 +1,13 @@
 package demo;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.SVDSuperimposer;
@@ -12,9 +16,12 @@ import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.model.Block;
 import org.biojava.nbio.structure.align.model.BlockImpl;
 import org.biojava.nbio.structure.align.model.BlockSet;
+import org.biojava.nbio.structure.align.model.BlockSetImpl;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.Pose;
+import org.biojava.nbio.structure.align.model.PoseImpl;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * Demo for visualizing the results of a Multiple Alignment, from a sample MultipleAlignment object.
@@ -50,12 +57,15 @@ public class DemoMultipleAlignmentJmol {
 		
 		//Initialize the multiple alignment
 		MultipleAlignment fakeMultAln = new MultipleAlignment();
-		BlockSet blockSet = new BlockSet(fakeMultAln);
-		Pose pose = new Pose(blockSet);
-		Block block = new Block(blockSet);
+		BlockSet blockSet = new BlockSetImpl(fakeMultAln);
+		Pose pose = new PoseImpl(blockSet);
+		Block block = new BlockImpl(blockSet);
+		fakeMultAln.setBlockSets(new ArrayList<BlockSet>());
 		fakeMultAln.getBlockSets().add(blockSet);
 		blockSet.setPose(pose);
+		blockSet.setBlocks(new ArrayList<Block>());
 		blockSet.getBlocks().add(block);
+		block.setAlignRes(new ArrayList<List<Integer>>());
 		
 		int size = atomArrays.size();
 		
@@ -72,8 +82,8 @@ public class DemoMultipleAlignmentJmol {
 			block.getAlignRes().add(aligned4);
 			
 			int length = aligned1.size();
-			block.setCols(length);
-			block.setRows(size);
+			pose.setRotation(new ArrayList<Matrix>());
+			pose.setTranslation(new ArrayList<Atom>());
 			
 			//We suppose the first molecule as reference and superimpose everything to it
 			for (int i=0; i<size; i++){				
@@ -91,13 +101,6 @@ public class DemoMultipleAlignmentJmol {
 				pose.getRotation().add(svd.getRotation());
 				pose.getTranslation().add(svd.getTranslation());
 			}
-			
-			blockSet.setLength(block.getCols());
-			fakeMultAln.setLength(blockSet.getLength());
-			fakeMultAln.setSize(size);
-			
-			BlockImpl bloc = new BlockImpl(blockSet);
-			bloc.size
 		}
 		return fakeMultAln;
 	}

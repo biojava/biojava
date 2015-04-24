@@ -74,7 +74,7 @@ public class StructureAlignmentDisplay {
     */
    public static MultipleAlignmentJmol display(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureException {
 	   	
-		for (int i=0; i<multAln.getSize(); i++){
+		for (int i=0; i<multAln.size(); i++){
 			if ( atomArrays.get(i).length < 1) 
 				throw new StructureException("length of atoms arrays is too short! " + atomArrays.get(i).length);
 		}
@@ -92,7 +92,7 @@ public class StructureAlignmentDisplay {
 	    }
       
 	  	//Rotate the atom coordinates of all the structures to create a rotated atomArrays
-		for (int i=0; i<multAln.getSize(); i++){
+		for (int i=0; i<multAln.size(); i++){
 			
 			Matrix rotationMatrix = multAln.getBlockSets().get(0).getPose().getRotation().get(i);
 			Atom shiftVector = multAln.getBlockSets().get(0).getPose().getTranslation().get(i);

@@ -45,8 +45,9 @@ public class PoseImpl implements Serializable, Pose{
 	 */
 	public PoseImpl(PoseImpl p) {
 		
-		this.parent = p.parent;
+		parent = p.parent;
 		
+		rotation = null;
 		if (p.getRotation()!=null){
 			//Make a deep copy of everything
 			rotation = new ArrayList<Matrix>();
@@ -54,6 +55,7 @@ public class PoseImpl implements Serializable, Pose{
 				rotation.add((Matrix) p.getRotation().get(i).clone());
 		}
 		
+		translation = null;
 		if (p.getTranslation()!=null){
 			//Make a deep copy of everything
 			translation = new ArrayList<Atom>();
@@ -61,6 +63,7 @@ public class PoseImpl implements Serializable, Pose{
 				translation.add((Atom) p.getTranslation().get(i).clone());
 		}
 		
+		backDistMatrix = null;
 		if (p.getBackDistMatrix()!=null){
 			//Make a deep copy of everything
 			backDistMatrix = new ArrayList<List<Matrix>>();

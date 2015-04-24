@@ -26,39 +26,40 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	String algorithmName;
 	String version;
 	long ioTime;
-	long calculationTime;
 	long id;
 	
 	//Structure Identifiers
 	List<String> structureNames;  			//names of the structures in PDB or SCOP format
 	List<Atom[]> atomArrays;      			//arrays of atoms for every structure in the alignment
-	int size;								//number of structures
-	List<Matrix> distanceMatrix; 			//A list of n (l*l) matrices that store the distance between every pair of residues for every protein
-											//n=nr. structures; l=alignment length 
+	List<Matrix> distanceMatrix; 			//A list of n (l*l)-matrices that store the distance between every pair of residues for every protein
+											//n=nr. structures; l=length of the protein
 
 	//Aligned Positions
 	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
 	List<String> alnSequences; 				//sequence alignment for every structure as a String with gaps (cash)
 	
-	//Alignment Information
+	//Alignment Information - TODO This information seems more reasonable to be in Pose or BlockSet, because it is BlockSet specific.
 	double rmsd;							//RMSD of the optimal multiple alignment
 	double tmScore;							//TM-score of the optimal multiple alignment
 	int length;								//total length of the optimal alignment, including gaps = number of aligned positions
-	int coreLength;							//length of the ungapped aligned positions = length - gap length
 	double coverage;						//fraction of the total structure length aligned
 	double similarity;						//similarity measure for all the structures (global value)
 	
 	//Algorithm Specific Information
 	double algScore;						//algorithm score for the multiple alignment
 	double probability;
+	long calculationTime;					//running time of the algorithm
 	
 	/**
-	 * Constructor
+	 * Constructor.
+	 * @return MultipleAlignment a MultipleAlignment instance.
 	 */
 	public MultipleAlignment() {
 		
 		algorithmName = null;
 		version = "1.0";
+		ioTime = 0;
+		id = 0;
 		
 		structureNames = null;
 		atomArrays = null;
@@ -66,41 +67,50 @@ public class MultipleAlignment implements Serializable, Cloneable{
 		
 		blockSets = null;
 		alnSequences = null;
+		
+		rmsd = 0;
+		tmScore = 0;
+		length = 0;
+		coverage =0;
+		similarity = 0;
+		
+		algScore = 0;
+		probability = 0;
+		calculationTime = 0;
 	}
 	
 	/**
 	 * Copy constructor.
+	 * @return MultipleAlignment identical copy of the input MultipleAlignment.
 	 */
 	public MultipleAlignment(MultipleAlignment ma) {
 		
-		this.setAlgorithmName(ma.getAlgorithmName());
-		this.setAlgScore(ma.getAlgScore());
-		this.setAlnSequences(new ArrayList<String>(ma.getAlnSequences()));
-		this.setAtomArrays(new ArrayList<Atom[]>(ma.getAtomArrays()));
-		this.setDistanceMatrix(new ArrayList<Matrix>(ma.getDistanceMatrix()));
+		algorithmName = ma.getAlgorithmName();
+		algScore = ma.getAlgScore();
+		alnSequences = new ArrayList<String>(ma.getAlnSequences());
+		atomArrays = new ArrayList<Atom[]>(ma.getAtomArrays());
+		distanceMatrix = new ArrayList<Matrix>(ma.getDistanceMatrix());
 		
-		//Ensure a proper cloning of all the BlockSet objects 
-		List<BlockSet> bSets = new ArrayList<BlockSet>();
-		for (BlockSet bs:ma.getBlockSets()){
-			bSets.add(bs.clone());
+		blockSets = null;
+		if (ma.getBlockSets()!=null){
+			//Make a deep copy of everything
+			this.blockSets = new ArrayList<BlockSet>();
+			for (BlockSet bs:ma.getBlockSets()){
+				blockSets.add((BlockSet) bs.clone());
+			}
 		}
-		this.setBlockSets(bSets);
 		
-		this.setCalculationTime(ma.getCalculationTime());
-		this.setCoreLength(ma.getCoreLength());
-		this.setCoverage(ma.getCoverage());
-		this.setId(ma.getId());
-		this.setIoTime(ma.getIoTime());
-		this.setLength(ma.getLength());
+		structureNames = null;
+				
+		rmsd = ma.getRmsd();
+		tmScore = ma.getTmScore();
+		length = ma.length();
+		coverage = ma.getCoverage();
+		similarity = ma.getSimilarity();
 		
-		this.setProbability(ma.getProbability());
-		this.setRmsd(ma.getRmsd());
-		this.setSimilarity(ma.getSimilarity());
-		this.setStructureNames(ma.getStructureNames());
-		this.setSize(ma.getSize());
-		
-		this.setTmScore(ma.getTmScore());
-		this.setVersion(ma.getVersion());
+		algScore = ma.getAlgScore();
+		probability = ma.getProbability();
+		calculationTime = ma.getCalculationTime();
 		
 	}
 	
@@ -116,16 +126,14 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	@Override
 	public String toString() {
 		return "MultipleAlignment [algorithmName=" + algorithmName
-				+ ", version=" + version + ", ioTime=" + ioTime
-				+ ", calculationTime=" + calculationTime + ", id=" + id
+				+ ", version=" + version + ", ioTime=" + ioTime + ", id=" + id
 				+ ", structureNames=" + structureNames + ", atomArrays="
-				+ atomArrays + ", size=" + size + ", distanceMatrix="
-				+ distanceMatrix + ", blockSets=" + blockSets
-				+ ", alnSequences=" + alnSequences + ", rmsd=" + rmsd
-				+ ", tmScore=" + tmScore + ", length=" + length
-				+ ", coreLength=" + coreLength + ", coverage=" + coverage
-				+ ", similarity=" + similarity + ", algScore=" + algScore
-				+ ", probability=" + probability + "]";
+				+ atomArrays + ", distanceMatrix=" + distanceMatrix
+				+ ", blockSets=" + blockSets + ", alnSequences=" + alnSequences
+				+ ", rmsd=" + rmsd + ", tmScore=" + tmScore + ", length="
+				+ length + ", coverage=" + coverage + ", similarity="
+				+ similarity + ", algScore=" + algScore + ", probability="
+				+ probability + ", calculationTime=" + calculationTime + "]";
 	}
 
 	//Getters and Setters **************************************************************************************
@@ -218,17 +226,6 @@ public class MultipleAlignment implements Serializable, Cloneable{
 		this.tmScore = tmScore;
 	}
 
-	/**
-	 * Total length of the multiple alignment, including gaps.
-	 */
-	public int getLength() {
-		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
-	}
-
 	public double getCoverage() {
 		return coverage;
 	}
@@ -262,27 +259,37 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	}
 	
 	/**
-	 * Number of structures in the multiple alignment.
+	 * Returns the number of aligned positions in the optimal alignment.
+	 * @return int number of aligned positions
+	 * @see #size()
+	 * @see #getBlockSetNum()
 	 */
-	public int getSize() {
-		return size;
-	}
-
-	public void setSize(int size) {
-		this.size = size;
-	}
-
-	/**
-	 * Length of the ungapped aligned positions, which means that all structures have an aligned residue in those positions.
-	 */
-	public int getCoreLength() {
-		return coreLength;
-	}
-
-	public void setCoreLength(int coreLength) {
-		this.coreLength = coreLength;
+	public int length() {
+		return length;
 	}
 	
+	/**
+	 * Returns the number of aligned structures in the MultipleAlignment.
+	 * @return int number of aligned structures
+	 * @see #length()
+	 * @see #getBlockSetNum()
+	 */
+	public int size() {
+		if (atomArrays == null) return 0;
+		else return atomArrays.size();
+	}
+	
+	/**
+	 * Returns the number of BlockSets in the MultipleAlignment.
+	 * @return int number of BlockSets
+	 * @see #length()
+	 * @see #size()
+	 */
+	public int getBlockSetNum(){
+		if (blockSets == null) return 0;
+		else return blockSets.size();
+	}
+
 	public List<Matrix> getDistanceMatrix() {
 		return distanceMatrix;
 	}

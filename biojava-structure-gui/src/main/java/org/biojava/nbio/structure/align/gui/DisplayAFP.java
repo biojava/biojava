@@ -154,7 +154,7 @@ public class DisplayAFP
 		for(int bk = 0; bk < blockNum; bk ++){
 			
 			//Loop though all the residues in a block for the specified 
-			for (int i=0; i<optAln.getBlocks().get(bk).getCols(); i++){
+			for (int i=0; i<optAln.getBlocks().get(bk).length(); i++){
 				
 				Integer pos = optAln.getBlocks().get(bk).getAlignRes().get(structNum).get(i);
 				if (pos==null) continue; //It means a GAP
