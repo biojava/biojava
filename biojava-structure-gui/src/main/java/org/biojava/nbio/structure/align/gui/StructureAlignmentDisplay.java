@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
@@ -31,14 +32,16 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.AFPTwister;
 import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
+import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.jama.Matrix;
 
 public class StructureAlignmentDisplay {
 
    
-   /** Display the alignment
+   /** Display an AFPChain alignment
     * 
     * @param afpChain
     * @param ca1
@@ -57,7 +60,55 @@ public class StructureAlignmentDisplay {
       List<Group> hetatms  = StructureTools.getUnalignedGroups(ca1);
       List<Group> hetatms2 = StructureTools.getUnalignedGroups(ca2);
          
-      return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, hetatms2);
+      return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2, hetatms, hetatms2);
+
+   }
+   
+   /** 
+    * Display a MultipleAlignment. Atoms are rotated here with the Pose information of the alignment.
+    * 
+    * @param multAln
+    * @param atomArrays
+    * @return a MultipleAlignmentJmol instance
+    * @throws StructureException
+    */
+   public static MultipleAlignmentJmol display(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureException {
+	   	
+		for (int i=0; i<multAln.getSize(); i++){
+			if ( atomArrays.get(i).length < 1) 
+				throw new StructureException("length of atoms arrays is too short! " + atomArrays.get(i).length);
+		}
+		
+		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+		
+		if ( multAln.getBlockSets().get(0).getPose().getRotation() == null || multAln.getBlockSets().get(0).getPose().getTranslation() == null) {
+	         //The rotation matrices are not present
+	         System.err.println("No information found to rotate the structures!");
+	         //TODO Calculate the rotation matrices and the translations. For now no rotation applied
+	         rotatedAtoms = atomArrays;
+	         MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
+	 		 jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
+	 		 return jmol;
+	    }
+      
+	  	//Rotate the atom coordinates of all the structures to create a rotated atomArrays
+		for (int i=0; i<multAln.getSize(); i++){
+			
+			Matrix rotationMatrix = multAln.getBlockSets().get(0).getPose().getRotation().get(i);
+			Atom shiftVector = multAln.getBlockSets().get(0).getPose().getTranslation().get(i);
+			
+			Atom[] rotCA = StructureTools.cloneAtomArray(atomArrays.get(i));
+			for (Atom a:rotCA){
+				Calc.rotate(a, rotationMatrix);
+				Calc.shift(a, shiftVector);
+			}
+			rotatedAtoms.add(rotCA);
+		}
+		
+		MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
+		jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
+         
+      return jmol;
 
    }
    
@@ -140,16 +191,14 @@ public class StructureAlignmentDisplay {
 
   /** only shift CA positions.
    * 
-  
    */
-   public static void shiftCA2(AFPChain afpChain, Atom[] ca2,  Matrix m, Atom shift, Group[] twistedGroups)
-   {
+   public static void shiftCA2(AFPChain afpChain, Atom[] ca2,  Matrix m, Atom shift, Group[] twistedGroups) {
+	   
       int i = -1;
       for (Atom a: ca2){
          i++;
          Group g = a.getGroup();
         
-         
          Calc.rotate(g,m);
          Calc.shift(g, shift);
          
@@ -163,13 +212,8 @@ public class StructureAlignmentDisplay {
         		 }
         	 }
          }
-         
-         
          twistedGroups[i]=g;
       }
-
-    
    }
-
 
 }

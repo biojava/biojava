@@ -79,7 +79,7 @@ public class Pose implements Serializable, Cloneable{
 	/**
 	 * Get the list of rotation matrices. One Matrix for the atom rotation of each structure.
 	 */
-	public List<Matrix> getRotationMatrix() {
+	public List<Matrix> getRotation() {
 		return rotation;
 	}
 
@@ -87,8 +87,8 @@ public class Pose implements Serializable, Cloneable{
 	 * Set the list of rotation matrices. One Matrix for the atom rotation of each structure.
 	 * @param rotation
 	 */
-	public void setRotationMatrix(List<Matrix> rotationMatrix) {
-		this.rotation = rotationMatrix;
+	public void setRotation(List<Matrix> rotation) {
+		this.rotation = rotation;
 	}
 
 	/**
