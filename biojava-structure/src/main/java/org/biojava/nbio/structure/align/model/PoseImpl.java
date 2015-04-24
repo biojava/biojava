@@ -23,6 +23,8 @@ public class PoseImpl implements Serializable, Pose{
 	private List<Atom> translation;					//translation Vectors for the atoms of every structure.
 	private List<List<Matrix>> backDistMatrix;    	//Background distances of every structure (dot-plot). 
 														//TODO In theory there would be N^2 distance matrices, one for each pairwise comparison. Is that feasible? Or too much space and not scalable?
+	private double rmsd;							//RMSD of the 3D superposition
+	private double tmScore;							//score of the 3D superposition
 
 	/**
 	 * Constructor.
@@ -35,7 +37,8 @@ public class PoseImpl implements Serializable, Pose{
 		rotation = null;
 		translation = null;
 		backDistMatrix = null;
-		
+		rmsd = 0;
+		tmScore = 0;
 	}
 	
 	/**
@@ -136,6 +139,28 @@ public class PoseImpl implements Serializable, Pose{
 		else if (rotation != null) return rotation.size();
 		else if (translation != null) return translation.size();
 		else return 0;
+	}
+
+	@Override
+	public double getRMSD() {
+		return rmsd;
+	}
+
+	@Override
+	public void updateRMSD() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getTMscore() {
+		return tmScore;
+	}
+
+	@Override
+	public void updateTMscore() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

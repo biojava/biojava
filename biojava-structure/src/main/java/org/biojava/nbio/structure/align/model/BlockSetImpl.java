@@ -4,6 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.SVDSuperimposer;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
+import org.biojava.nbio.structure.jama.Matrix;
+
 /**
  * A general implementation of a BlockSet to store multiple alignments.
  *
@@ -18,6 +24,8 @@ public class BlockSetImpl implements Serializable, BlockSet{
 	private List<Block> blocks;				//aligned positions as a list of Blocks
 	private Pose pose;						//3D superimposition information pose (cache)
 	private int length;						//total number of aligned positions, including gaps = sum of blocks lengths
+	private double coverage;				//coverage of the alignment
+	private double similarity;				//similarity measure for the aligned structures
 	
 	/**
 	 * Constructor.
@@ -29,7 +37,10 @@ public class BlockSetImpl implements Serializable, BlockSet{
 		parent = multipleAlignment;
 		blocks = null;
 		pose = new PoseImpl(this);
+		
 		length = -1;						//Value -1 reserved to indicate that has to be calculated TODO correct?
+		coverage = 0;
+		similarity = 0;
 	}
 	
 	/**
@@ -117,6 +128,78 @@ public class BlockSetImpl implements Serializable, BlockSet{
 	public int getBlockNum() {
 		if (blocks == null) return 0;
 		else return blocks.size();
+	}
+
+	@Override
+	public double getSimilarity() {
+		return similarity;
+	}
+
+	@Override
+	public void updateSimilarity() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getCoverage() {
+		return coverage;
+	}
+
+	@Override
+	public void updateCoverage() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updatePose(PoseMethod method) throws StructureException{
+		
+		//TODO is it better to catch the errors or to throw them?
+		//TODO should throw error? maybe we should not check for that because a parent and an alignment should be there.
+		if (parent == null) return;		//If there is not a parent the atoms cannot be obtained so nothing is done
+		if (blocks == null) return;		//If the aligned Blocks are not initialized do nothing
+		
+		//Create a new Pose if there is not one
+		if (pose == null) pose = new PoseImpl(this);
+		
+		//Initialize or replace the rotation and translation variables
+		pose.setRotation(new ArrayList<Matrix>());
+		pose.setTranslation(new ArrayList<Atom>());
+		
+		switch (method) {
+		case REFERENCE:
+			//We suppose the first molecule as reference and superimpose everything to it
+			for (int i=0; i<size(); i++){
+				List<Atom> atomSet1 = new ArrayList<Atom>();
+				List<Atom> atomSet2 = new ArrayList<Atom>();
+				for (int k=0; k<getBlockNum(); k++){
+					for (int j=0; j<blocks.get(k).length(); j++){
+						Integer pos1 = blocks.get(k).getAlignRes().get(0).get(j);
+						Integer pos2 = blocks.get(k).getAlignRes().get(i).get(j);
+						
+						if (pos1==null || pos2==null) continue;
+						atomSet1.add((Atom) parent.getAtomArrays().get(0)[pos1].clone());
+						atomSet2.add((Atom) parent.getAtomArrays().get(i)[pos2].clone());
+					}
+				}
+				SVDSuperimposer svd = new SVDSuperimposer(atomSet1.toArray(new Atom[0]), atomSet2.toArray(new Atom[0]));
+				pose.getRotation().add(svd.getRotation());
+				pose.getTranslation().add(svd.getTranslation());
+			}
+			break;
+		case MEDIAN:
+			//TODO implement this type of superimposition
+			System.out.println("Not yet implemented!");
+			break;
+		case CONSENSUS:
+			//TODO implement this type of superimposition
+			System.out.println("Not yet implemented!");
+			break;
+		}
+		
+		pose.updateRMSD();
+		pose.updateTMscore();
 	}
 
 }

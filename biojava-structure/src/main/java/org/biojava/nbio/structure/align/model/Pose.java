@@ -15,6 +15,16 @@ import org.biojava.nbio.structure.jama.Matrix;
 public interface Pose extends Cloneable{
 
 	/**
+	 * Method used to calculate the 3D superposition.
+	 */
+	public static enum PoseMethod {
+		REFERENCE,	//align everything to the first structure, the master.
+		MEDIAN,		//take the closest structure to all others in average as the master and align everything to it.
+		CONSENSUS;	//build a consensus structure and align everything to it.
+		public static PoseMethod DEFAULT = REFERENCE;
+	}
+	
+	/**
 	 * Creates and returns an identical copy of this object.
 	 * @return Pose identical copy of this object.
 	 */
@@ -78,6 +88,32 @@ public interface Pose extends Cloneable{
 	 * @see #getBackDistMatrix(List)
 	 */
 	public void setBackDistMatrix(List<List<Matrix>> backDistMatrix);
+	
+	/**
+	 * Returns the RMSD of the 3D superimposition.
+	 * @return double RMSD of the 3D superimposition.
+	 * @see #updateRMSD()
+	 */
+	public double getRMSD();
+	
+	/**
+	 * Calculates and sets the new value of the RMSD with the current 3D superimposition in the Pose.
+	 * @see #getRMSD()
+	 */
+	public void updateRMSD();
+	
+	/**
+	 * Returns the TM-score of the 3D superimposition.
+	 * @return double TM-score of the 3D superimposition.
+	 * @see #updateTMscore()
+	 */
+	public double getTMscore();
+	
+	/**
+	 * Calculates and sets the new value of the TM-score with the current 3D superimposition in the Pose.
+	 * @see #getTMscore()
+	 */
+	public void updateTMscore();
 	
 	/**
 	 * Returns the number of aligned structures in the Pose.

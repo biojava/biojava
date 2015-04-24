@@ -39,11 +39,11 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	List<String> alnSequences; 				//sequence alignment for every structure as a String with gaps (cash)
 	
 	//Alignment Information - TODO This information seems more reasonable to be in Pose or BlockSet, because it is BlockSet specific.
-	double rmsd;							//RMSD of the optimal multiple alignment
+	/*double rmsd;							//RMSD of the optimal multiple alignment
 	double tmScore;							//TM-score of the optimal multiple alignment
 	int length;								//total length of the optimal alignment, including gaps = number of aligned positions
 	double coverage;						//fraction of the total structure length aligned
-	double similarity;						//similarity measure for all the structures (global value)
+	double similarity;						//similarity measure for all the structures (global value)*/
 	
 	//Algorithm Specific Information
 	double algScore;						//algorithm score for the multiple alignment
@@ -68,11 +68,11 @@ public class MultipleAlignment implements Serializable, Cloneable{
 		blockSets = null;
 		alnSequences = null;
 		
-		rmsd = 0;
+		/*rmsd = 0;
 		tmScore = 0;
 		length = 0;
 		coverage =0;
-		similarity = 0;
+		similarity = 0;*/
 		
 		algScore = 0;
 		probability = 0;
@@ -102,11 +102,11 @@ public class MultipleAlignment implements Serializable, Cloneable{
 		
 		structureNames = null;
 				
-		rmsd = ma.getRmsd();
+		/*rmsd = ma.getRmsd();
 		tmScore = ma.getTmScore();
 		length = ma.length();
 		coverage = ma.getCoverage();
-		similarity = ma.getSimilarity();
+		similarity = ma.getSimilarity();*/
 		
 		algScore = ma.getAlgScore();
 		probability = ma.getProbability();
@@ -130,10 +130,8 @@ public class MultipleAlignment implements Serializable, Cloneable{
 				+ ", structureNames=" + structureNames + ", atomArrays="
 				+ atomArrays + ", distanceMatrix=" + distanceMatrix
 				+ ", blockSets=" + blockSets + ", alnSequences=" + alnSequences
-				+ ", rmsd=" + rmsd + ", tmScore=" + tmScore + ", length="
-				+ length + ", coverage=" + coverage + ", similarity="
-				+ similarity + ", algScore=" + algScore + ", probability="
-				+ probability + ", calculationTime=" + calculationTime + "]";
+				+ ", algScore=" + algScore + ", probability=" + probability
+				+ ", calculationTime=" + calculationTime + "]";
 	}
 
 	//Getters and Setters **************************************************************************************
@@ -210,7 +208,7 @@ public class MultipleAlignment implements Serializable, Cloneable{
 		this.alnSequences = alnSequences;
 	}
 
-	public double getRmsd() {
+/*	public double getRmsd() {
 		return rmsd;
 	}
 
@@ -241,7 +239,7 @@ public class MultipleAlignment implements Serializable, Cloneable{
 	public void setSimilarity(double similarity) {
 		this.similarity = similarity;
 	}
-
+*/
 	public double getAlgScore() {
 		return algScore;
 	}
@@ -256,16 +254,6 @@ public class MultipleAlignment implements Serializable, Cloneable{
 
 	public void setProbability(double probability) {
 		this.probability = probability;
-	}
-	
-	/**
-	 * Returns the number of aligned positions in the optimal alignment.
-	 * @return int number of aligned positions
-	 * @see #size()
-	 * @see #getBlockSetNum()
-	 */
-	public int length() {
-		return length;
 	}
 	
 	/**

@@ -2,6 +2,9 @@ package org.biojava.nbio.structure.align.model;
 
 import java.util.List;
 
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
+
 /**
  * A BlockSet is a Data Structure to store the aligned positions of a multiple alignment as a collection of {@link Block}.
  * It allows flexible alignments, non-sequential alignments and circular permutations, thanks to the multiple Block format.
@@ -48,17 +51,57 @@ public interface BlockSet extends Cloneable{
 	public void setBlocks(List<Block> blocks);
 	
 	/**
+	 * Returns the global similarity measure among all the structures aligned.
+	 * @return double similarity measure.
+	 * @see #updateSimilarity()
+	 */
+	public double getSimilarity();
+	
+	/**
+	 * Calculates and sets the new value of the similarity measure of the alignment.
+	 * @see #getSimilarity()
+	 */
+	public void updateSimilarity();
+	
+	/**
+	 * Returns the coverage of the alignment.
+	 * @return double coverage as a value in [0,1].
+	 * @see #updateCoverage()
+	 */
+	public double getCoverage();
+	
+	/**
+	 * Calculates and sets the new value of coverage of the alignment.
+	 * @see #getCoverage()
+	 */
+	public void updateCoverage();
+	
+	/**
 	 * Returns the 3D transformation information of the alignment as a Pose object.
-	 * @return Pose the 3D transformation information.
+	 * @return Pose the 3D superimposition information.
 	 * @see #setPose(Pose)
+	 * @see #updatePose(PoseMethod)
 	 */
 	public Pose getPose();
 	
 	/**
 	 * Set the 3D transformation information of the alignment as a Pose object.
-	 * @param pose the Pose instance containing the 3D transformation information.
+	 * @param pose the Pose instance containing the 3D superimposition information.
+	 * @see #updatePose(PoseMethod)
 	 */
 	public void setPose(Pose pose);
+	
+	/**
+	 * Calculates and sets the new 3D superimposition information in the Pose.
+	 * Methods: REFERENCE (align everything to the first structure, the master), 
+	 * 			MEDIAN (take the closest structure to all others in average as the master and align everything to it),
+	 * 			CONSENSUS (build a consensus structure and align everything to it)
+	 * @param method PoseMethod indicating one of the methods listed above, to be used in the superposition.
+	 * @throws StructureException 
+	 * @see #setPose(Pose)
+	 * @see #getPose()
+	 */
+	public void updatePose(PoseMethod method) throws StructureException;
 	
 	/**
 	 * Returns the total number of aligned residues (columns) in the alignment: the sum of all Block lengths.
