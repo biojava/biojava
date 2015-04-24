@@ -10,6 +10,7 @@ import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.model.Block;
+import org.biojava.nbio.structure.align.model.BlockImpl;
 import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.Pose;
@@ -94,6 +95,9 @@ public class DemoMultipleAlignmentJmol {
 			blockSet.setLength(block.getCols());
 			fakeMultAln.setLength(blockSet.getLength());
 			fakeMultAln.setSize(size);
+			
+			BlockImpl bloc = new BlockImpl(blockSet);
+			bloc.size
 		}
 		return fakeMultAln;
 	}

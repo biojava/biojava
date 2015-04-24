@@ -1,112 +1,87 @@
 package org.biojava.nbio.structure.align.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A BlockSet is a Data Structure to store the aligned positions of a multiple alignment as a collection of {@link Block}.
- * It allows flexible alignments, non-sequential alignments and circular permutations, thanks to the multiple block format.
+ * It allows flexible alignments, non-sequential alignments and circular permutations, thanks to the multiple Block format.
  * It is part of a {@link MultipleAlignment} instance, named as parent.
  *
  * @author Aleix Lafita
  * 
  */
-public class BlockSet implements Serializable, Cloneable{
-
-	private static final long serialVersionUID = -1015791986000076089L;
-	
-	MultipleAlignment parent;		//Link to the MultipleAlignment Instance as parent
-	List<Block> blocks;				//Aligned positions as a list of Blocks
-	Pose pose;						//Superimposition pose (cash)
-	int length;						//total number of aligned positions, including gaps = sum of columns in the blocks
+public interface BlockSet extends Cloneable{
 	
 	/**
-	 * Constructor.
-	 * @param multipleAlignment: the parent MultipleAlignment instance.
+	 * Creates and returns an identical copy of this object.
+	 * @return BlockSet identical copy of this object.
 	 */
-	public BlockSet(MultipleAlignment multipleAlignment){
-		
-		parent = multipleAlignment;
-		blocks = new ArrayList<Block>();
-		pose = new Pose(this);
-		
-	}
+	public Object clone();
+	
+	/** 
+     * Returns the parent MultipleAlignment of the BlockSet.
+     * Returns null if there is no referenced object. 
+     * @return MultipleAlignment the parent MultipleAlignment of the BlockSet, or null.
+     * @see #setMultipleAlignment(MultipleAlignment)
+     */
+	public MultipleAlignment getMultipleAlignment();
+	
+	/** 
+     * Set the back-reference to its parent MultipleAlignment.
+     * @param parent the parent MultipleAlignment.
+     * @see #getMultipleAlignment()
+     */
+	public void setMultipleAlignment(MultipleAlignment parent);
 	
 	/**
-	 * Copy constructor.
-	 * @param bs: the BlockSet from which the information is copied.
+	 * Returns the List of alignment Blocks of the BlockSet.
+	 * @return List of alignment Blocks.
+	 * @see #setBlocks(List)
 	 */
-	public BlockSet(BlockSet bs){
-		
-		this.parent = bs.parent;
-		this.pose = bs.pose.clone();
-		this.length = bs.length;
-		
-		//Ensure a proper cloning of all the Block objects
-		List<Block> blocks = new ArrayList<Block>();
-		for (Block b:bs.blocks){
-			blocks.add(b.clone());
-		}
-		this.blocks = blocks;
-		
-	}
+	public List<Block> getBlocks();
 	
 	/**
-	 * Creates and returns a copy of this object. Uses the copy constructor.
+	 * Set the List of alignment Blocks of the BlockSet.
+	 * @param blocks List of alignment Blocks.
+	 * @see #getBlocks()
 	 */
-	public BlockSet clone(){
-		
-		return new BlockSet(this);
-	}
+	public void setBlocks(List<Block> blocks);
 	
-	@Override
-	public String toString() {
-		return "BlockSet [parent=" + parent + ", blocks=" + blocks + ", pose="
-				+ pose + ", length=" + length + "]";
-	}
-
-	//Getters and Setters **************************************************************************************
+	/**
+	 * Returns the 3D transformation information of the alignment as a Pose object.
+	 * @return Pose the 3D transformation information.
+	 * @see #setPose(Pose)
+	 */
+	public Pose getPose();
 	
-	public MultipleAlignment getMultipleAlignment() {
-		return parent;
-	}
+	/**
+	 * Set the 3D transformation information of the alignment as a Pose object.
+	 * @param pose the Pose instance containing the 3D transformation information.
+	 */
+	public void setPose(Pose pose);
 	
-	public void setMultipleAlignment(MultipleAlignment parent) {
-		this.parent = parent;
-	}
-	
-	public List<Block> getBlocks() {
-		return blocks;
-	}
-	
-	public void setBlocks(List<Block> blocks) {
-		this.blocks = blocks;
-	}
-	
-	public Pose getPose() {
-		return pose;
-	}
-	
-	public void setPose(Pose pose) {
-		this.pose = pose;
-	}
+	/**
+	 * Returns the total number of aligned residues (columns) in the alignment: the sum of all Block lengths.
+	 * @return int the total number of aligned residues.
+	 * @see #size()
+	 * @see #getBlockNum()
+	 */
+	public int length();
 
 	/**
-	 * Total number of aligned positions, including gaps, in the blocks (sum of columns in all blocks)
+	 * Returns the number of aligned structures in the BlockSet.
+	 * @return int number of aligned structures
+	 * @see #length()
+	 * @see #getBlockNum()
 	 */
-	public int getLength() {
-		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
-	}
+	public int size();
 	
 	/**
-	 * Return the number of Blocks in the BlockSet.
+	 * Returns the number of alignment Blocks in the BlockSet.
+	 * @return int number of Blocks
+	 * @see #length()
+	 * @see #size()
 	 */
-	public int getBlockNum() {
-		return blocks.size();
-	}
+	public int getBlockNum();
+	
 }
