@@ -16,6 +16,7 @@ public class BlockImpl implements Serializable, Block{
 	
 	private BlockSet parent;						//BlockSet instance
 	private List<List<Integer>> alignRes;			//residues aligned as a double list of length=n and size=l (n=nr.structures; l=block length)
+	private int coreLength;							//number of residues aligned without gaps (cache)
 	
 	/**
 	 * Constructor.
@@ -26,6 +27,7 @@ public class BlockImpl implements Serializable, Block{
 		
 		parent = blockSet;
 		alignRes = null;
+		coreLength = -1;							//Value -1 indicates not calculated.
 	}
 	
 	/**
@@ -35,14 +37,14 @@ public class BlockImpl implements Serializable, Block{
 	 */
 	public BlockImpl(BlockImpl b) {
 		
-		this.parent = b.getBlockSet();
-		
+		this.parent = b.parent;
+		this.coreLength = b.coreLength;
 		this.alignRes = null;
-		if (b.getAlignRes()!=null){
+		if (b.alignRes!=null){
 			//Make a deep copy of everything
 			alignRes = new ArrayList<List<Integer>>();
 			for (int k=0; k<b.size(); k++)
-				alignRes.add(new ArrayList<Integer>(b.getAlignRes().get(k)));
+				alignRes.add(new ArrayList<Integer>(b.alignRes.get(k)));
 		}
 	}
 	
@@ -53,7 +55,8 @@ public class BlockImpl implements Serializable, Block{
 
 	@Override
 	public String toString() {
-		return "BlockImpl [parent=" + parent + ", alignRes=" + alignRes + "]";
+		return "BlockImpl [parent=" + parent + ", alignRes=" + alignRes
+				+ ", coreLength=" + coreLength + "]";
 	}
 
 	@Override
@@ -87,6 +90,19 @@ public class BlockImpl implements Serializable, Block{
 	@Override
 	public int size() {
 		return alignRes.size();
+	}
+
+	@Override
+	public int getCoreLength() {
+		if(coreLength == -1) updateCoreLength();
+		return coreLength;
+	}
+
+	@Override
+	public int updateCoreLength() {
+		// TODO Auto-generated method stub
+		//Loop through all the columns of the alignments and count how many of them do not have gaps.
+		return 0;
 	}
 	
 }

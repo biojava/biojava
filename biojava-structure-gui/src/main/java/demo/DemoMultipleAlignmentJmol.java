@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.model.Block;
@@ -16,9 +15,7 @@ import org.biojava.nbio.structure.align.model.BlockSetImpl;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.Pose;
 import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
-import org.biojava.nbio.structure.align.model.PoseImpl;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * Demo for visualizing the results of a Multiple Alignment, from a sample MultipleAlignment object.
@@ -52,7 +49,7 @@ public class DemoMultipleAlignmentJmol {
 	private static MultipleAlignment fakeMultipleAlignment(String family, List<Atom[]>atomArrays) throws StructureException{
 		
 		//Initialize the multiple alignment
-		MultipleAlignment fakeMultAln = new MultipleAlignment();
+		MultipleAlignment fakeMultAln = new MultipleAlignmentImpl();
 		BlockSet blockSet = new BlockSetImpl(fakeMultAln);
 		Pose pose = new PoseImpl(blockSet);
 		Block block = new BlockImpl(blockSet);

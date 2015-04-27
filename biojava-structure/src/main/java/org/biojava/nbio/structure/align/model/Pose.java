@@ -3,11 +3,17 @@ package org.biojava.nbio.structure.align.model;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
- * A Pose is a Data Structure that stores the coordinates of a 3D superimposition of the structures in a multiple alignment.
- * It is associated with a {@link BlockSet} instance, named as parent. It is used as a cache variable in the BlockSet.
+ * A Pose is a Data Structure that stores information of the 3D superimposition of the structures in a multiple alignment.
+ * It can be associated to a {@link BlockSet} instance, its parent, to describe the superimposition of one of the
+ * flexible parts of a flexible alignment. It can also be associated to a {@link MultipleAlignment} instance, its parent,
+ * to describe the global (final) superimposition of the structures.
+ * The idea of a Pose is to be used as a cache variable for the 3D information and contain all the methods to calculate
+ * (update) the 3D superimposition given the aligned residues. It only contains Getter methods, the variables are
+ * automatically calculated when the Pose is updated (so the do not need to be set).
  *
  * @author Aleix Lafita
  * 
@@ -29,96 +35,67 @@ public interface Pose extends Cloneable{
 	 * @return Pose identical copy of this object.
 	 */
 	public Object clone();
-	
-	/** 
-     * Set the back-reference to its parent BlockSet.
-     * @param parent the parent BlockSet.
-     * @see #getBlockSet()
-     */
-	public void setBlockSet(BlockSet parent);
 
 	/** 
-     * Returns the parent BlockSet of the Pose.
-     * Returns null if there is no referenced object. 
-     * @return BlockSet the parent BlockSet of the Pose, or null.
-     * @see #setBlockSet(BlockSet)
+     * Returns the parent object of the Pose (BlockSet or MultipleAlignment).
+     * Returns null if there is no referenced object.
+     * @return BlockSet or MultipleAlignment parent of the Pose, or null.
      */
-	public BlockSet getBlockSet();
+	public Object getParent();
 
 	/**
 	 * Returns the List of rotation Matrices. One Matrix for each structure.
-	 * @return List of rotation Matrix
-	 * @see #setRotation(List)
+	 * TODO is it better to update the Pose or to throw an exception if it is null?)
+	 * @return List of rotation Matrix.
+	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
 	 */
-	public List<Matrix> getRotation();
-
-	/**
-	 * Set the List of rotation Matrices. One Matrix for each structure.
-	 * @param rotation the List of rotation Matrix
-	 * @see #getRotation()
-	 */
-	public void setRotation(List<Matrix> rotation);
-
+	public List<Matrix> getRotation() throws StructureAlignmentException;
+	
 	/**
 	 * Return the List of translation Vectors as Atom coordinates. One vector for every structure.
-	 * @return List of translation Atoms
-	 * @see #setTranslation(List)
+	 * @return List of translation Atoms.
+	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
 	 */
-	public List<Atom> getTranslation();
-
-	/**
-	 * Set the List of translation Vectors as Atom coordinates. One vector for every structure.
-	 * @param translation the List of translation Atoms
-	 * @see #getTranslation()
-	 */
-	public void setTranslation(List<Atom> translation);
+	public List<Atom> getTranslation() throws StructureAlignmentException;
 
 	/**
 	 * The background distances are the distances between every Atom of two aligned structures (Dot-Plot).
 	 * Return the background distance Matrices as a double List. One Matrix for every structure pairwise combination.
-	 * @return List double with the background distance Matrices
-	 * @see #setBackDistMatrix(List)
+	 * @return double List with the background distance Matrices.
+	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
 	 */
-	public List<List<Matrix>> getBackDistMatrix();
-
-	/**
-	 * The background distances are the distances between every Atom of two aligned structures (Dot-Plot).
-	 * Set the background distance Matrices as a double List. One Matrix for every structure pairwise combination.
-	 * @param backDistMatrix List double with the background distance Matrices
-	 * @see #getBackDistMatrix(List)
-	 */
-	public void setBackDistMatrix(List<List<Matrix>> backDistMatrix);
+	public List<List<Matrix>> getBackDistMatrix() throws StructureAlignmentException;
 	
 	/**
 	 * Returns the RMSD of the 3D superimposition.
 	 * @return double RMSD of the 3D superimposition.
-	 * @see #updateRMSD()
+	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
 	 */
-	public double getRMSD();
-	
-	/**
-	 * Calculates and sets the new value of the RMSD with the current 3D superimposition in the Pose.
-	 * @see #getRMSD()
-	 */
-	public void updateRMSD();
+	public double getRMSD() throws StructureAlignmentException;
 	
 	/**
 	 * Returns the TM-score of the 3D superimposition.
 	 * @return double TM-score of the 3D superimposition.
-	 * @see #updateTMscore()
+	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
 	 */
-	public double getTMscore();
+	public double getTMscore() throws StructureAlignmentException;
 	
 	/**
-	 * Calculates and sets the new value of the TM-score with the current 3D superimposition in the Pose.
-	 * @see #getTMscore()
+	 * Calculates and sets all the Pose variables from the parent information.
+	 * Methods: REFERENCE (align everything to the first structure, the master), 
+	 * 			MEDIAN (take the closest structure to all others in average as the master and align everything to it),
+	 * 			CONSENSUS (build a consensus structure and align everything to it)
+	 * @param method PoseMethod indicating one of the methods listed above, to be used in the superimposition.
+	 * @throws StructureException
+	 * @throws StructureAlignmentException
 	 */
-	public void updateTMscore();
+	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException;
 	
 	/**
 	 * Returns the number of aligned structures in the Pose.
-	 * @return int number of aligned structures
+	 * @return int number of aligned structures.
+	 * @throws StructureAlignmentException
 	 */
-	public int size();
+	public int size() throws StructureAlignmentException;
 
 }

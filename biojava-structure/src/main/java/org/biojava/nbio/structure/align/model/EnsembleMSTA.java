@@ -1,0 +1,175 @@
+package org.biojava.nbio.structure.align.model;
+
+import java.util.List;
+
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.jama.Matrix;
+
+/**
+ * An EnsembleMSTA is a collection of {@link MultipleAlignments} that share the same Atom arrays (structures) and 
+ * creation properties (algorithm, version, creation time, etc.).
+ * This class deals with the multiple alternatives returned by the MSTA algorithms, so that only one object is returned
+ * with more than one alignment options (depending on the RMSD/length trade-offs made, as an example).
+ * 
+ * @author Aleix Lafita
+ *
+ */
+public interface EnsembleMSTA extends Cloneable{
+
+	/**
+	 * Creates and returns an identical copy of this object.
+	 * @return EnsembleMSTA identical copy of this object.
+	 */
+	public Object clone();
+	
+	/**
+	 * Returns the name of the multiple structure alignment algorithm that created the MultipleAlignment objects.
+	 * @return String name of the algorithm.
+	 * @see #setAlgorithmName(String)
+	 */
+	public String getAlgorithmName();
+
+	/**
+	 * Set the name of the multiple structure alignment algorithm that created the MultipleAlignment objects.
+	 * @param algorithmName name of the algorithm.
+	 * @see #getAlgorithmName()
+	 */
+	public void setAlgorithmName(String algorithmName);
+
+	/**
+	 * Returns the version of the algorithm used to generate the MultipleAlignment objects.
+	 * @return String version of the algorithm.
+	 * @see #setVersion(String)
+	 */
+	public String getVersion();
+
+	/**
+	 * Sets the version of the algorithm used to generate the MultipleAlignment objects.
+	 * @param version the version of the algorithm.
+	 * @see #getVersion()
+	 */
+	public void setVersion(String version);
+
+	/**
+	 * Returns the creation time of this object, in milliseconds.
+	 * @return long creation time.
+	 */
+	public long getIoTime();
+
+	/**
+	 * Returns the running time of the structure alignment calculation, in milliseconds.
+	 * @return long running time of the calculation.
+	 * @see #setCalculationTime(long)
+	 */
+	public long getCalculationTime();
+
+	/**
+	 * Set the running time of the structure alignment calculation, in milliseconds.
+	 * @param calculationTime running time of the calculation.
+	 * @see #getCalculationTime()
+	 */
+	public void setCalculationTime(long calculationTime);
+
+	/**
+	 * Returns the structure alignment object ID.
+	 * @return long structure alignment ID.
+	 * @see #setId(long)
+	 */
+	public long getId();
+
+	/**
+	 * Sets the structure alignment object ID.
+	 * @param id structure alignment object ID.
+	 * @see #getId()
+	 */
+	public void setId(long id);
+	
+	/**
+	 * Returns a List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).
+	 * They are in the same order as in the Atom List and alignment List (same index number for same structure).
+	 * @return List of String names of the structures
+	 * @see #setStructureNames(List)
+	 * @see #getAtomArrays()
+	 */
+	public List<String> getStructureNames();
+
+	/**
+	 * Set the List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).
+	 * @param structureNames names of the structures
+	 * @see #getStructureNames()
+	 * @see #setAtomArrays(List)
+	 */
+	public void setStructureNames(List<String> structureNames);
+
+	/**
+	 * Returns the List of Atom arrays. Every structure has an Atom array associated.
+	 * @return List of Atom[].
+	 * @see #setAtomArrays(List)
+	 */
+	public List<Atom[]> getAtomArrays();
+
+	/**
+	 * Sets the List of Atom arrays. Every structure has an Atom array associated.
+	 * @param atomArrays the List of Atom[].
+	 * @param setNames if true the List of structure names is updated with the corresponding PDB codes of the Atoms.
+	 * @see #getAtomArrays()
+	 * @see #setStructureNames(List)
+	 */
+	public void setAtomArrays(List<Atom[]> atomArrays, boolean setNames);
+	
+	/**
+	 * Return the number of alternative alignments stored in the EnsembleMSTA object.
+	 * @return int number of alternative alignments.
+	 * @see #size()
+	 */
+	public int getAlignmentNum();
+
+	/**
+	 * Returns the List containing the interatomic distance Matrix of each structure.
+	 * @return List of Matrix interatomic distance matrices.
+	 * @see #setDistanceMatrix(List)
+	 */
+	public List<Matrix> getDistanceMatrix();
+
+	/**
+	 * Calculates and sets the cache List containing the interatomic distance Matrix of each structure.
+	 * @param distanceMatrix interatomic distance matrices.
+	 * @see #getDistanceMatrix()
+	 */
+	public void calculateDistanceMatrix(List<Matrix> distanceMatrix);
+	
+	/**
+	 * Returns the List of MultipleAlignments in the EnsembleMSTA object.
+	 * @return List of MultipleAlignment in the EnsembleMSTA.
+	 * @see #setMultipleAlignments()
+	 * @see #getOptimalMSTA()
+	 */
+	public List<MultipleAlignment> getMultipleAlignments();
+	
+	/**
+	 * Set the List of MultipleAlignments in the EnsembleMSTA object.
+	 * @param List of MultipleAlignments that are part of the ensemble.
+	 * @see #getMultipleAlignments()
+	 * @see #getOptimalMSTA()
+	 */
+	public void setMultipleAlignments(List<MultipleAlignment> multipleAlignments);
+	
+	/**
+	 * Returns the optimal MultipleAlignment of the ensemble, stored at the first position (index 0) of the List.
+	 * @return MultipleAlignment optimal MSTA of the EnsembleMSTA.
+	 * @throws StructureAlignmentException if the EnsembleMSTA is empty.
+	 * @see #getMultipleAlignments()
+	 * @see #setMultipleAlignments()
+	 */
+	public MultipleAlignment getOptimalMSTA() throws StructureAlignmentException;
+	
+	/**
+	 * Returns the number of aligned structures in the MultipleAlignments.
+	 * @return int number of aligned structures.
+	 * @throws StructureAlignmentException if atomArrays is null.
+	 * @see #getStructureNames()
+	 * @see #getAtomArrays()
+	 */
+	public int size() throws StructureAlignmentException;
+	
+}

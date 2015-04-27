@@ -1,289 +1,198 @@
 package org.biojava.nbio.structure.align.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
- * A MultipleAlignment is a Data Structure to store the core of a multiple structure alignment, as a return type.
- * 
- * It is described as a collection of {@link BlockSet} that define the aligned positions, 
- *                    a collection of structure identifiers (i,e. Atom arrays),
- *                    information about the alignment (Score, RMSD, etc),
- *                    and creation properties (algorithm, version, etc).
+ * A MultipleAlignment is a Data Structure to store the core information of a multiple structure alignment, as a return type.
+ * Each alignment is described as a collection of {@link BlockSet} that define the aligned positions, 
+ * a collection of structure identifiers (i,e. Atom arrays), information about the 3D superimposition in {@link Pose},
+ * and creation properties (algorithm, version, etc).
+ * A collection of MultipleAlignments that share the Atom arrays and creation properties form an {@link EnsembleMSTA}.
+ * Every MultipleAlignment has an {@link EnsembleMSTA} as its parent.
  *
  * @author Aleix Lafita
  * 
  */
-public class MultipleAlignment implements Serializable, Cloneable{
-
-	private static final long serialVersionUID = 3432043794125805139L;
-
-	//Creation Properties
-	String algorithmName;
-	String version;
-	long ioTime;
-	long id;
-	
-	//Structure Identifiers
-	List<String> structureNames;  			//names of the structures in PDB or SCOP format
-	List<Atom[]> atomArrays;      			//arrays of atoms for every structure in the alignment
-	List<Matrix> distanceMatrix; 			//A list of n (l*l)-matrices that store the distance between every pair of residues for every protein
-											//n=nr. structures; l=length of the protein
-
-	//Aligned Positions
-	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
-	List<String> alnSequences; 				//sequence alignment for every structure as a String with gaps (cash)
-	
-	//Alignment Information - TODO This information seems more reasonable to be in Pose or BlockSet, because it is BlockSet specific.
-	/*double rmsd;							//RMSD of the optimal multiple alignment
-	double tmScore;							//TM-score of the optimal multiple alignment
-	int length;								//total length of the optimal alignment, including gaps = number of aligned positions
-	double coverage;						//fraction of the total structure length aligned
-	double similarity;						//similarity measure for all the structures (global value)*/
-	
-	//Algorithm Specific Information
-	double algScore;						//algorithm score for the multiple alignment
-	double probability;
-	long calculationTime;					//running time of the algorithm
+public interface MultipleAlignment extends Cloneable{
 	
 	/**
-	 * Constructor.
-	 * @return MultipleAlignment a MultipleAlignment instance.
+	 * Creates and returns an identical copy of this object.
+	 * @return MultipleAlignment identical copy of this object.
 	 */
-	public MultipleAlignment() {
-		
-		algorithmName = null;
-		version = "1.0";
-		ioTime = 0;
-		id = 0;
-		
-		structureNames = null;
-		atomArrays = null;
-		distanceMatrix = null;
-		
-		blockSets = null;
-		alnSequences = null;
-		
-		/*rmsd = 0;
-		tmScore = 0;
-		length = 0;
-		coverage =0;
-		similarity = 0;*/
-		
-		algScore = 0;
-		probability = 0;
-		calculationTime = 0;
-	}
+	public Object clone();
 	
 	/**
-	 * Copy constructor.
-	 * @return MultipleAlignment identical copy of the input MultipleAlignment.
+	 * Returns the name of the multiple structure alignment algorithm that created this MSTA object.
+	 * @return String name of the algorithm.
 	 */
-	public MultipleAlignment(MultipleAlignment ma) {
-		
-		algorithmName = ma.getAlgorithmName();
-		algScore = ma.getAlgScore();
-		alnSequences = new ArrayList<String>(ma.getAlnSequences());
-		atomArrays = new ArrayList<Atom[]>(ma.getAtomArrays());
-		distanceMatrix = new ArrayList<Matrix>(ma.getDistanceMatrix());
-		
-		blockSets = null;
-		if (ma.getBlockSets()!=null){
-			//Make a deep copy of everything
-			this.blockSets = new ArrayList<BlockSet>();
-			for (BlockSet bs:ma.getBlockSets()){
-				blockSets.add((BlockSet) bs.clone());
-			}
-		}
-		
-		structureNames = null;
-				
-		/*rmsd = ma.getRmsd();
-		tmScore = ma.getTmScore();
-		length = ma.length();
-		coverage = ma.getCoverage();
-		similarity = ma.getSimilarity();*/
-		
-		algScore = ma.getAlgScore();
-		probability = ma.getProbability();
-		calculationTime = ma.getCalculationTime();
-		
-	}
+	public String getAlgorithmName();
+
+	/**
+	 * Returns the version of the algorithm used to generate this MSTA object.
+	 * @return String version of the algorithm.
+	 */
+	public String getVersion();
+
+	/**
+	 * Returns the creation time of this MSTA object, in milliseconds.
+	 * @return long creation time.
+	 */
+	public long getIoTime();
+
+	/**
+	 * Returns the running time of the structure alignment calculation, in milliseconds.
+	 * @return long running time of the calculation.
+	 * @see #getIoTime()
+	 */
+	public long getCalculationTime();
+
+	/**
+	 * Returns the structure alignment object ID.
+	 * @return long structure alignment ID.
+	 * @see #setId(long)
+	 */
+	public long getId();
 	
 	/**
-	 * Creates and returns a copy of this object. Uses the copy constructor.
+	 * Returns a List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).
+	 * They are in the same order as in the Atom List and alignment List (same index number for same structure).
+	 * @return List of String names of the structures
+	 * @see #getAtomArrays()
 	 */
-	@Override
-	public MultipleAlignment clone() {
-		
-		return new MultipleAlignment(this);
-	}
+	public List<String> getStructureNames();
 
-	@Override
-	public String toString() {
-		return "MultipleAlignment [algorithmName=" + algorithmName
-				+ ", version=" + version + ", ioTime=" + ioTime + ", id=" + id
-				+ ", structureNames=" + structureNames + ", atomArrays="
-				+ atomArrays + ", distanceMatrix=" + distanceMatrix
-				+ ", blockSets=" + blockSets + ", alnSequences=" + alnSequences
-				+ ", algScore=" + algScore + ", probability=" + probability
-				+ ", calculationTime=" + calculationTime + "]";
-	}
-
-	//Getters and Setters **************************************************************************************
+	/**
+	 * Returns the List of Atom arrays. Every structure has an Atom array associated.
+	 * @return List of Atom[].
+	 * @see #getStructureNames()
+	 */
+	public List<Atom[]> getAtomArrays();
 	
-	public String getAlgorithmName() {
-		return algorithmName;
-	}
+	/**
+	 * Returns the BlockSet List of the multiple structure alignment.
+	 * Initializes the variable if it is null.
+	 * @return List of BlockSets that describe the aligned residues of all the structures.
+	 * @see #getBlockSetNum()
+	 * @see #setBlockSets(List)
+	 */
+	public List<BlockSet> getBlockSets();
 
-	public void setAlgorithmName(String algorithmName) {
-		this.algorithmName = algorithmName;
-	}
+	/**
+	 * Sets the List of BlockSet List of the specified alignment. The optimal alignment is always stored at position 0.
+	 * @param blockSets the List of BlockSets that describe the aligned residues.
+	 * @see #getBlockSets()
+	 */
+	public void setBlockSets(List<BlockSet> blockSets);
 
-	public String getVersion() {
-		return version;
-	}
+	/**
+	 * Returns the List of Strings that represent the multiple sequence alignment of all the structures.
+	 * @return List of Strings multiple sequence alignment
+	 * @see #updateAlnSequences()
+	 */
+	public List<String> getAlnSequences();
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+	/**
+	 * Calculates and sets the List of Strings that represent the multiple sequence alignment of all the structures.
+	 * @see #getAlnSequences()
+	 */
+	public void updateAlnSequences();
+	
+	/**
+	 * Returns the Pose object that stores the 3D superimposition information of the multiple structure alignment.
+	 * @return Pose the 3D superimposition information of the alignment
+	 * @throws StructureAlignmentException 
+	 * @see #updatePose(PoseMethod)
+	 */
+	public Pose getPose() throws StructureAlignmentException;
+	
+	/**
+	 * Calculates and sets the new 3D superimposition information in the Pose of the optimal multiple alignment.
+	 * Methods: REFERENCE (align everything to the first structure, the master), 
+	 * 			MEDIAN (take the closest structure to all others in average as the master and align everything to it),
+	 * 			CONSENSUS (build a consensus structure and align everything to it)
+	 * @param method PoseMethod indicating one of the methods listed above, to be used in the superimposition.
+	 * @throws StructureException
+	 * @throws StructureAlignmentException
+	 * @see #getPose()
+	 */
+	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException;
+	
+	/**
+	 * Returns the score of the multiple alignment used by the algorithm.
+	 * @return double score of the multiple alignment used by the algorithm.
+	 * @see #setAlgScore(double)
+	 */
+	public double getAlgScore();
 
-	public long getIoTime() {
-		return ioTime;
-	}
+	/**
+	 * Sets the score of the multiple alignment used by the algorithm.
+	 * @param algScore score of the multiple alignment used by the algorithm.
+	 * @see #getAlgScore()
+	 */
+	public void setAlgScore(double algScore);
 
-	public void setIoTime(long ioTime) {
-		this.ioTime = ioTime;
-	}
+	/**
+	 * Returns the probability used by the algorithm.
+	 * @return double probability
+	 * @see #setProbability(double)
+	 */
+	public double getProbability();
 
-	public long getCalculationTime() {
-		return calculationTime;
-	}
-
-	public void setCalculationTime(long calculationTime) {
-		this.calculationTime = calculationTime;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public List<String> getStructureNames() {
-		return structureNames;
-	}
-
-	public void setStructureNames(List<String> structureNames) {
-		this.structureNames = structureNames;
-	}
-
-	public List<Atom[]> getAtomArrays() {
-		return atomArrays;
-	}
-
-	public void setAtomArrays(List<Atom[]> atomArrays) {
-		this.atomArrays = atomArrays;
-	}
-
-	public List<BlockSet> getBlockSets() {
-		return blockSets;
-	}
-
-	public void setBlockSets(List<BlockSet> blockSets) {
-		this.blockSets = blockSets;
-	}
-
-	public List<String> getAlnSequences() {
-		return alnSequences;
-	}
-
-	public void setAlnSequences(List<String> alnSequences) {
-		this.alnSequences = alnSequences;
-	}
-
-/*	public double getRmsd() {
-		return rmsd;
-	}
-
-	public void setRmsd(double rmsd) {
-		this.rmsd = rmsd;
-	}
-
-	public double getTmScore() {
-		return tmScore;
-	}
-
-	public void setTmScore(double tmScore) {
-		this.tmScore = tmScore;
-	}
-
-	public double getCoverage() {
-		return coverage;
-	}
-
-	public void setCoverage(double coverage) {
-		this.coverage = coverage;
-	}
-
-	public double getSimilarity() {
-		return similarity;
-	}
-
-	public void setSimilarity(double similarity) {
-		this.similarity = similarity;
-	}
-*/
-	public double getAlgScore() {
-		return algScore;
-	}
-
-	public void setAlgScore(double algScore) {
-		this.algScore = algScore;
-	}
-
-	public double getProbability() {
-		return probability;
-	}
-
-	public void setProbability(double probability) {
-		this.probability = probability;
-	}
+	/**
+	 * Sets the probability used by the algorithm.
+	 * @param probability
+	 * @see #getProbability()
+	 */
+	public void setProbability(double probability);
 	
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignment.
 	 * @return int number of aligned structures
+	 * @throws StructureAlignmentException 
 	 * @see #length()
+	 * @see #getCoreLength()
 	 * @see #getBlockSetNum()
 	 */
-	public int size() {
-		if (atomArrays == null) return 0;
-		else return atomArrays.size();
-	}
+	public int size() throws StructureAlignmentException;
 	
 	/**
-	 * Returns the number of BlockSets in the MultipleAlignment.
-	 * @return int number of BlockSets
+	 * Returns the total number of aligned residues (columns) in the multiple alignment: the sum of all BlockSet lengths.
+	 * @return int the total number of aligned residues in the alignment.
+	 * @throws StructureAlignmentException if there are no BlockSets.
+	 * @see #getCoreLength()
+	 * @see #size()
+	 * @see #getBlockSetNum()
+	 */
+	public int length() throws StructureAlignmentException;
+	
+	/**
+	 * Returns the number of aligned residues (columns) without gaps in the alignment: the sum of all BlockSet core lengths.
+	 * @return int the total number of aligned residues.
+	 * @throws StructureAlignmentException if there are no BlockSets.
+	 * @see #length()
+	 * @see #size()
+	 * @see #getBlockNum()
+	 */
+	public int getCoreLength() throws StructureAlignmentException;
+	
+	/**
+	 * Returns the number of BlockSets in the multiple structure alignment.
+	 * @return int number of BlockSets.
+	 * @throws StructureAlignmentException if the MultipleAlignment is empty.
 	 * @see #length()
 	 * @see #size()
 	 */
-	public int getBlockSetNum(){
-		if (blockSets == null) return 0;
-		else return blockSets.size();
-	}
+	public int getBlockSetNum() throws StructureAlignmentException;
 
-	public List<Matrix> getDistanceMatrix() {
-		return distanceMatrix;
-	}
-
-	public void setDistanceMatrix(List<Matrix> distanceMatrix) {
-		this.distanceMatrix = distanceMatrix;
-	}
+	/**
+	 * Returns the List containing the interatomic distance Matrix of each structure.
+	 * @return List of Matrix interatomic distance matrices.
+	 */
+	public List<Matrix> getDistanceMatrix();
 
 }
