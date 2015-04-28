@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
+
 /**
  * A general implementation of a BlockSet to store multiple alignments.
  *
@@ -17,7 +20,7 @@ public class BlockSetImpl implements Serializable, BlockSet{
 	private MultipleAlignment parent;		//link to the MultipleAlignment parent instance
 	private List<Block> blocks;				//aligned positions as a list of Blocks
 	
-	//Cache variables
+	//Cache variables (can be updated)
 	private Pose pose;						//3D superimposition information Pose
 	private int length;						//total number of aligned positions, including gaps = sum of blocks lengths (cache)
 	private int coreLength;					//number of aligned positions without gaps (cache)
@@ -33,6 +36,7 @@ public class BlockSetImpl implements Serializable, BlockSet{
 		parent = multipleAlignment;
 		blocks = null;
 		
+		//Cache variables (can be updated)
 		pose = new PoseBS(this);
 		length = -1;						//Value -1 reserved to indicate that has to be calculated
 		coreLength = -1;
@@ -96,17 +100,16 @@ public class BlockSetImpl implements Serializable, BlockSet{
 		if (pose == null) pose = new PoseBS(this);
 		return pose;
 	}
+	
+	@Override
+	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException {
+		if (pose == null) pose = new PoseBS(this);
+		pose.updatePose(method);
+	}
 
 	@Override
 	public int length() throws StructureAlignmentException {
-		if (length == -1){
-			if(getBlockNum()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
-			//Try to calculate it from the Block information
-			else {
-				length = 0;
-				for (Block block:blocks) length += block.length();
-			}
-		}
+		if (length == -1) updateLength();
 		return length;
 	}
 
@@ -126,15 +129,35 @@ public class BlockSetImpl implements Serializable, BlockSet{
 
 	@Override
 	public int getCoreLength() throws StructureAlignmentException {
-		if (coreLength == -1){
-			if(getBlockNum()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
-			//Try to calculate it from the Block information
-			else {
-				coreLength = 0;
-				for (Block block:blocks) coreLength += block.getCoreLength();
-			}
-		}
+		if (coreLength == -1) updateCoreLength();
 		return coreLength;
+	}
+
+	@Override
+	public void updateLength() throws StructureAlignmentException {
+		if(getBlockNum()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
+		//Try to calculate it from the Block information
+		else {
+			length = 0;
+			for (Block block:blocks) length += block.length();
+		}
+	}
+
+	@Override
+	public void updateCoreLength() throws StructureAlignmentException {
+		if(getBlockNum()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
+		//Try to calculate it from the Block information
+		else {
+			coreLength = 0;
+			for (Block block:blocks) coreLength += block.getCoreLength();
+		}
+	}
+
+	@Override
+	public void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException {
+		updatePose(method);
+		updateCoreLength();
+		updateLength();
 	}
 	
 }

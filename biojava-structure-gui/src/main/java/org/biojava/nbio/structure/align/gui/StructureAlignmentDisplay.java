@@ -36,6 +36,7 @@ import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
+import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.jama.Matrix;
 
 public class StructureAlignmentDisplay {
@@ -65,51 +66,52 @@ public class StructureAlignmentDisplay {
    }
    
    /** 
-    * Display a MultipleAlignment. Atoms are rotated here with the Pose information of the alignment.
+    * Display a MultipleAlignment. Atoms are rotated here with the Pose information of the MSTA alignment.
     * 
     * @param multAln
-    * @param atomArrays
-    * @return a MultipleAlignmentJmol instance
+    * @return MultipleAlignmentJmol instance
     * @throws StructureException
+    * @throws StructureAlignmentException 
     */
-   public static MultipleAlignmentJmol display(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureException {
+   public static MultipleAlignmentJmol display(MultipleAlignment multAln) throws StructureException, StructureAlignmentException {
 	   	
 		for (int i=0; i<multAln.size(); i++){
-			if ( atomArrays.get(i).length < 1) 
-				throw new StructureException("length of atoms arrays is too short! " + atomArrays.get(i).length);
+			if (multAln.getAtomArrays().get(i).length < 1) 
+				throw new StructureException("Length of atoms arrays is too short! " + multAln.getAtomArrays().get(i).length);
 		}
 		
 		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
 		
-		if ( multAln.getBlockSets().get(0).getPose().getRotation() == null || multAln.getBlockSets().get(0).getPose().getTranslation() == null) {
+		try {
+      
+		  	//Rotate the atom coordinates of all the structures to create a rotated atomArrays
+			for (int i=0; i<multAln.size(); i++){
+				
+				Matrix rotationMatrix = multAln.getPose().getRotation().get(i);
+				Atom shiftVector = multAln.getPose().getTranslation().get(i);
+				
+				Atom[] rotCA = StructureTools.cloneAtomArray(multAln.getAtomArrays().get(i));
+				for (Atom a:rotCA){
+					Calc.rotate(a, rotationMatrix);
+					Calc.shift(a, shiftVector);
+				}
+				rotatedAtoms.add(rotCA);
+			}
+			
+			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
+			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
+			return jmol;
+		} 
+		catch (StructureAlignmentException e) {
+			
+			 e.printStackTrace();
 	         //The rotation matrices are not present
 	         System.err.println("No information found to rotate the structures!");
 	         //TODO Calculate the rotation matrices and the translations. For now no rotation applied
-	         rotatedAtoms = atomArrays;
-	         MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
+	         MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, multAln.getAtomArrays());
 	 		 jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 	 		 return jmol;
-	    }
-      
-	  	//Rotate the atom coordinates of all the structures to create a rotated atomArrays
-		for (int i=0; i<multAln.size(); i++){
-			
-			Matrix rotationMatrix = multAln.getBlockSets().get(0).getPose().getRotation().get(i);
-			Atom shiftVector = multAln.getBlockSets().get(0).getPose().getTranslation().get(i);
-			
-			Atom[] rotCA = StructureTools.cloneAtomArray(atomArrays.get(i));
-			for (Atom a:rotCA){
-				Calc.rotate(a, rotationMatrix);
-				Calc.shift(a, shiftVector);
-			}
-			rotatedAtoms.add(rotCA);
 		}
-		
-		MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
-		jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
-         
-      return jmol;
-
    }
    
    /** Rotate the Atoms/Groups so they are aligned for the 3D visualisation

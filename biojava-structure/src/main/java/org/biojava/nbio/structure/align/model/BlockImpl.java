@@ -72,6 +72,7 @@ public class BlockImpl implements Serializable, Block{
 
 	@Override
 	public List<List<Integer>> getAlignRes() {
+		if (alignRes == null) alignRes = new ArrayList<List<Integer>>();
 		return alignRes;
 	}
 

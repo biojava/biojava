@@ -111,7 +111,7 @@ public interface MultipleAlignment extends Cloneable{
 	public Pose getPose() throws StructureAlignmentException;
 	
 	/**
-	 * Calculates and sets the new 3D superimposition information in the Pose of the optimal multiple alignment.
+	 * Calculates and sets the new 3D superimposition information in the Pose of the multiple alignment.
 	 * Methods: REFERENCE (align everything to the first structure, the master), 
 	 * 			MEDIAN (take the closest structure to all others in average as the master and align everything to it),
 	 * 			CONSENSUS (build a consensus structure and align everything to it)
@@ -164,6 +164,7 @@ public interface MultipleAlignment extends Cloneable{
 	 * Returns the total number of aligned residues (columns) in the multiple alignment: the sum of all BlockSet lengths.
 	 * @return int the total number of aligned residues in the alignment.
 	 * @throws StructureAlignmentException if there are no BlockSets.
+	 * @see #updateLength()
 	 * @see #getCoreLength()
 	 * @see #size()
 	 * @see #getBlockSetNum()
@@ -171,14 +172,33 @@ public interface MultipleAlignment extends Cloneable{
 	public int length() throws StructureAlignmentException;
 	
 	/**
+	 * Calculates and sets the total number of aligned residues (columns) in the alignment: the sum of all BlockSet lengths.
+	 * @throws StructureAlignmentException
+	 * @see #length()
+	 * @see #updateCoreLength()
+	 * @see #getCoreLength()
+	 */
+	public void updateLength() throws StructureAlignmentException;
+	
+	/**
 	 * Returns the number of aligned residues (columns) without gaps in the alignment: the sum of all BlockSet core lengths.
 	 * @return int the total number of aligned residues.
 	 * @throws StructureAlignmentException if there are no BlockSets.
+	 * @see #updateCoreLength()
 	 * @see #length()
 	 * @see #size()
 	 * @see #getBlockNum()
 	 */
 	public int getCoreLength() throws StructureAlignmentException;
+	
+	/**
+	 * Calculates and sets the number of aligned residues (columns) without gaps in the alignment: the sum of all BlockSet core lengths.
+	 * @throws StructureAlignmentException
+	 * @see #getCoreLength()
+	 * @see #length()
+	 * @see #updateLength()
+	 */
+	public void updateCoreLength() throws StructureAlignmentException;
 	
 	/**
 	 * Returns the number of BlockSets in the multiple structure alignment.
@@ -194,5 +214,17 @@ public interface MultipleAlignment extends Cloneable{
 	 * @return List of Matrix interatomic distance matrices.
 	 */
 	public List<Matrix> getDistanceMatrix();
+	
+	/**
+	 * Calls all the update methods for the Cache variables.
+	 * @param method PoseMethod indicating one of the methods listed above, to be used in the superimposition.
+	 * @throws StructureAlignmentException
+	 * @throws StructureException 
+	 * @see #updateLength()
+	 * @see #updateCoreLength()
+	 * @see #updatePose(PoseMethod)
+	 * @see #updateAlnSequences()
+	 */
+	public void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException;
 
 }

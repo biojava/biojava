@@ -7,7 +7,6 @@ import java.util.List;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**

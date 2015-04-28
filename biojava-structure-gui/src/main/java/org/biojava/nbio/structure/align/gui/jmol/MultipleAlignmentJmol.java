@@ -5,14 +5,12 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.AlignmentGui;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
-import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.model.AfpChainWriter;
 import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
+import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
-import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.swing.*;
@@ -58,8 +56,9 @@ public class MultipleAlignmentJmol extends AlignmentJmol {
 
    /**
     * Default constructor creates an empty window, from where alignments can be made through the align menu.
+    * @throws StructureAlignmentException 
     */
-   public MultipleAlignmentJmol(){
+   public MultipleAlignmentJmol() throws StructureAlignmentException{
       //don't have a multiple alignment, set it to null...
       this(null, null);
    }
@@ -68,8 +67,9 @@ public class MultipleAlignmentJmol extends AlignmentJmol {
     * The constructor displays the Mutltiple Alignment in a Jmol panel.
     * @param multAln: contains the aligned residues.
     * @param atomArrays: contains the atom coordinates to display, already rotated.
+    * @throws StructureAlignmentException 
     */
-   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> atomArrays) {
+   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureAlignmentException {
 
       AligUIManager.setLookAndFeel();
 
@@ -327,8 +327,9 @@ public void actionPerformed(ActionEvent e) {
     * 
     * @param multAln
     * @param atomArrays
+    * @throws StructureAlignmentException 
     */
-   public String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays){
+   public String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureAlignmentException{
      
 	  /* TODO Color by block is disabled right now
       if (multAln.getBlockSets().get(0).getBlockNum() > 1){
@@ -391,8 +392,9 @@ public void actionPerformed(ActionEvent e) {
    
    /**
     * Only select and color one aligned block, indicated by the blockNr.
+    * @throws StructureAlignmentException 
     */
-   public static String getJmolScript4Block(MultipleAlignment multAln, List<Atom[]> atomArrays, int blockNr){
+   public static String getJmolScript4Block(MultipleAlignment multAln, List<Atom[]> atomArrays, int blockNr) throws StructureAlignmentException{
 	   
 	   BlockSet optAln = multAln.getBlockSets().get(0);
 	   int blockNum = optAln.getBlockNum();
@@ -419,7 +421,7 @@ public void actionPerformed(ActionEvent e) {
    }
    
 
-   private static String getMultiBlockJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays)
+   private static String getMultiBlockJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureAlignmentException
    {
 
 	  BlockSet optAln = multAln.getBlockSets().get(0);
@@ -505,7 +507,7 @@ private static void printJmolScript4Block(List<Atom[]> atomArrays, int blockNum,
 	 jmol.append(buf);*/
 }
 
-   public void resetDisplay(){
+   public void resetDisplay() throws StructureAlignmentException{
 	   
       if (multAln != null) {
          String script = getJmolString(multAln, atomArrays);

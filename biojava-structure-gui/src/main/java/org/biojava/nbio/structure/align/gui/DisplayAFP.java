@@ -27,8 +27,9 @@ import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.model.BlockSet;
+import org.biojava.nbio.structure.align.model.Block;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
+import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,25 +143,29 @@ public class DisplayAFP
 	 * @param aligPos
 	 * @param multAln
 	 * @param ca
+	 * @throws StructureAlignmentException 
 	 */
-	public static final List<String> getPDBresnum(int structNum, MultipleAlignment multAln, Atom[] ca){
+	public static final List<String> getPDBresnum(int structNum, MultipleAlignment multAln, Atom[] ca) throws StructureAlignmentException{
 		
 		List<String> lst = new ArrayList<String>();
-		
-		BlockSet optAln= multAln.getBlockSets().get(0);
-		int blockNum = optAln.getBlockNum();
 
-		//Loop through all the blocks
-		for(int bk = 0; bk < blockNum; bk ++){
+		//Loop through all the BlockSets
+		for (int bs = 0; bs < multAln.getBlockSetNum(); bs++){
 			
-			//Loop though all the residues in a block for the specified 
-			for (int i=0; i<optAln.getBlocks().get(bk).length(); i++){
-				
-				Integer pos = optAln.getBlocks().get(bk).getAlignRes().get(structNum).get(i);
-				if (pos==null) continue; //It means a GAP
-				if ( pos < ca.length) {
-					String pdbInfo = JmolTools.getPdbInfo(ca[pos]);
-					lst.add(pdbInfo);
+			//Loop through all the Blocks
+			for (int b = 0; b < multAln.getBlockSets().get(bs).getBlockNum(); b++){
+			
+				//Loop though all the residues in the Block
+				for (int i=0; i<multAln.getBlockSets().get(bs).getBlocks().get(b).length(); i++){
+					
+					Block block = multAln.getBlockSets().get(bs).getBlocks().get(b);
+					
+					Integer pos = block.getAlignRes().get(structNum).get(i);
+					if (pos==null) continue; //It means a GAP
+					else if (pos < ca.length) {
+						String pdbInfo = JmolTools.getPdbInfo(ca[pos]);
+						lst.add(pdbInfo);
+					}
 				}
 			}
 		}

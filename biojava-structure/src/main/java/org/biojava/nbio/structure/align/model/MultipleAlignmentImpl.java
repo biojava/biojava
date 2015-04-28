@@ -23,6 +23,8 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	
 	//Multiple Alignment Positions
 	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
+	
+	//Cache variables (can be updated)
 	List<String> alnSequences; 				//sequence alignment for every structure as a String with gaps (cache)
 	int length;								//total length of the alignment, including gaps: sum of BlockSet lengths (cache)
 	int coreLength;							//length of the alignment without gaps, only columns without gaps: sum of BlockSet core lengths (cache)
@@ -190,14 +192,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 
 	@Override
 	public int length() throws StructureAlignmentException {
-		if (length == -1){
-			if(getBlockSetNum()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
-			//Try to calculate it from the BlockSet information
-			else {
-				length = 0;
-				for (BlockSet blockSet:blockSets) length += blockSet.length();
-			}
-		}
+		if (length == -1) updateLength();
 		return length;
 	}
 
@@ -209,14 +204,36 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 
 	@Override
 	public int getCoreLength() throws StructureAlignmentException {
-		if (coreLength == -1){
-			if(getBlockSetNum()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
-			//Try to calculate it from the BlockSet information
-			else {
-				coreLength = 0;
-				for (BlockSet blockSet:blockSets) coreLength += blockSet.getCoreLength();
-			}
-		}
+		if (coreLength == -1) updateCoreLength();
 		return coreLength;
 	}
+
+	@Override
+	public void updateLength() throws StructureAlignmentException {
+		if(getBlockSetNum()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
+		//Try to calculate it from the BlockSet information
+		else {
+			length = 0;
+			for (BlockSet blockSet:blockSets) length += blockSet.length();
+		}
+	}
+
+	@Override
+	public void updateCoreLength() throws StructureAlignmentException {
+		if(getBlockSetNum()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
+		//Try to calculate it from the BlockSet information
+		else {
+			coreLength = 0;
+			for (BlockSet blockSet:blockSets) coreLength += blockSet.getCoreLength();
+		}
+	}
+
+	@Override
+	public void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException {
+		updatePose(method);
+		updateAlnSequences();
+		updateCoreLength();
+		updateLength();
+	}
+	
 }

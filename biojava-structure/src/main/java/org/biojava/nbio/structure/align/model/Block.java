@@ -2,8 +2,6 @@ package org.biojava.nbio.structure.align.model;
 
 import java.util.List;
 
-import javax.print.attribute.Size2DSyntax;
-
 /**
  * A Block is a Data Structure that stores aligned positions of a multiple alignment that fulfill the following conditions:
  * 		1- Residues are in a sequential order (increasing or decreasing)
@@ -40,7 +38,8 @@ public interface Block extends Cloneable{
 
 	/**
 	 * Returns the double List containing the aligned residues for each structure.
-	 * alignRes.get(structure).get(residue) = alignRes.get(size).get(length)
+	 * alignRes.get(structure).get(residue) = alignRes.get(size).get(length).
+	 * Initializes the variable if it is null.
 	 * @return List a double List of aligned residues for each structure.
 	 * @see #setAlignRes()
 	 */

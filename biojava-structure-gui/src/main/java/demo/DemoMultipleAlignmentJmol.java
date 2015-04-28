@@ -13,8 +13,11 @@ import org.biojava.nbio.structure.align.model.BlockImpl;
 import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.BlockSetImpl;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.Pose;
+import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsembleImpl;
+import org.biojava.nbio.structure.align.model.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
+import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
@@ -25,7 +28,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  */
 public class DemoMultipleAlignmentJmol {
 
-	public static void main(String[] args) throws IOException, StructureException {
+	public static void main(String[] args) throws IOException, StructureException, StructureAlignmentException {
 		
 		//Specify the structures to align
 		//List<String> names = Arrays.asList("1tim.a", "1vzw", "1nsj", "3tha.a");	//TIM barrels
@@ -39,49 +42,77 @@ public class DemoMultipleAlignmentJmol {
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
 		MultipleAlignment fakeMultAln = fakeMultipleAlignment("globins",atomArrays);
 		
-		//Complete the information of the MultipleAlignment object
-		fakeMultAln.setAlgorithmName("fakeAlgorithm");
-		fakeMultAln.setStructureNames(names);
-		
-		StructureAlignmentDisplay.display(fakeMultAln, atomArrays);
+		StructureAlignmentDisplay.display(fakeMultAln);
 	}
 	
-	private static MultipleAlignment fakeMultipleAlignment(String family, List<Atom[]>atomArrays) throws StructureException{
+	/**
+	 * Method that constructs a fake MultipleAlignment with two BlockSets, with two and one Blocks respectively. Used to
+	 * test the correctness of the DataStructure. In the future it will be in the Test packages.
+	 * @param family name of the protein family
+	 * @param atomArrays
+	 * @return MultipleAlignment
+	 * @throws StructureException
+	 * @throws StructureAlignmentException
+	 */
+	private static MultipleAlignment fakeMultipleAlignment(String family, List<Atom[]>atomArrays) throws StructureException, StructureAlignmentException{
 		
-		//Initialize the multiple alignment
-		MultipleAlignment fakeMultAln = new MultipleAlignmentImpl();
-		BlockSet blockSet = new BlockSetImpl(fakeMultAln);
-		Pose pose = new PoseImpl(blockSet);
-		Block block = new BlockImpl(blockSet);
-		fakeMultAln.setBlockSets(new ArrayList<BlockSet>());
-		fakeMultAln.getBlockSets().add(blockSet);
-		fakeMultAln.setAtomArrays(atomArrays);
-		blockSet.setPose(pose);
-		blockSet.setBlocks(new ArrayList<Block>());
-		blockSet.getBlocks().add(block);
-		block.setAlignRes(new ArrayList<List<Integer>>());
+		//Initialize the multiple alignment parent ensemble
+		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl();
+		ensemble.setAtomArrays(atomArrays, true);
+		ensemble.setAlgorithmName("fakeAlgorithm");
+		
+		MultipleAlignment fakeMultAln = new MultipleAlignmentImpl(ensemble);
 		
 		if (family == "globins"){
 			
-			//Alignment obtained from MUSTANG multiple alignment (just some of the residues, not the whole alignment)
-			List<Integer> aligned1 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
-												   29,30,31,32,33,34,35,36,37,38,
-												   123,124,125,126,127,128,129,130,131,132,133,134);
-			List<Integer> aligned2 = Arrays.asList(10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,null,27,28,29,30,31,
-												   39,40,41,42,43,44,45,46,47,48,
-												   133,134,135,136,137,138,139,140,141,142,143,144);
-			List<Integer> aligned3 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
-												   29,30,31,32,33,34,35,36,37,38,
-												   117,118,119,120,121,122,123,124,125,126,127,128);
-			List<Integer> aligned4 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,null,17,18,19,20,21,
-												   30,31,32,33,34,35,36,37,38,39,
-												   121,122,123,124,125,126,127,128,129,130,131,132);
-			block.getAlignRes().add(aligned1);
-			block.getAlignRes().add(aligned2);
-			block.getAlignRes().add(aligned3);
-			block.getAlignRes().add(aligned4);
+			BlockSet blockSet1 = new BlockSetImpl(fakeMultAln); //first BlockSet with 2 Blocks
+			BlockSet blockSet2 = new BlockSetImpl(fakeMultAln); //second BlockSet with 1 Block
+			fakeMultAln.getBlockSets().add(blockSet1);
+			fakeMultAln.getBlockSets().add(blockSet2);
 			
-			blockSet.updatePose(PoseMethod.REFERENCE);
+			Block block1 = new BlockImpl(blockSet1);
+			Block block2 = new BlockImpl(blockSet1);
+			blockSet1.getBlocks().add(block1);
+			blockSet1.getBlocks().add(block2);
+			
+			Block block3 = new BlockImpl(blockSet2);
+			blockSet2.getBlocks().add(block3);
+			
+			
+			//Alignment obtained from MUSTANG multiple alignment (just some of the residues, not the whole alignment)
+			List<Integer> aligned11 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
+			List<Integer> aligned12 = Arrays.asList(29,30,31,32,33,34,35,36,37,38);
+			List<Integer> aligned13 = Arrays.asList(123,124,125,126,127,128,129,130,131,132,133,134);
+			
+			List<Integer> aligned21 = Arrays.asList(10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,null,27,28,29,30,31);
+			List<Integer> aligned22 = Arrays.asList(39,40,41,42,43,44,45,46,47,48);
+			List<Integer> aligned23 = Arrays.asList(133,134,135,136,137,138,139,140,141,142,143,144);
+			
+			List<Integer> aligned31 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
+			List<Integer> aligned32 = Arrays.asList(29,30,31,32,33,34,35,36,37,38);
+			List<Integer> aligned33 = Arrays.asList(117,118,119,120,121,122,123,124,125,126,127,128);
+			
+			List<Integer> aligned41 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,null,17,18,19,20,21);
+			List<Integer> aligned42 = Arrays.asList(30,31,32,33,34,35,36,37,38,39);
+			List<Integer> aligned43 = Arrays.asList(121,122,123,124,125,126,127,128,129,130,131,132);
+			
+			block1.getAlignRes().add(aligned11);
+			block1.getAlignRes().add(aligned21);
+			block1.getAlignRes().add(aligned31);
+			block1.getAlignRes().add(aligned41);
+			
+			block2.getAlignRes().add(aligned12);
+			block2.getAlignRes().add(aligned22);
+			block2.getAlignRes().add(aligned32);
+			block2.getAlignRes().add(aligned42);
+			
+			block3.getAlignRes().add(aligned13);
+			block3.getAlignRes().add(aligned23);
+			block3.getAlignRes().add(aligned33);
+			block3.getAlignRes().add(aligned43);
+			
+			//Calculating all information in the alignment is as easy as that line, once the residue equivalencies are set
+			fakeMultAln.updateCache(PoseMethod.REFERENCE);
 		}
 		return fakeMultAln;
 	}
