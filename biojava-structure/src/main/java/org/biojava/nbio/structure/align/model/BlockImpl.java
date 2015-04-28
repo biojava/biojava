@@ -26,6 +26,8 @@ public class BlockImpl implements Serializable, Block{
 	public BlockImpl(BlockSet blockSet) {
 		
 		parent = blockSet;
+		if (parent!=null) parent.getBlocks().add(this);
+		
 		alignRes = null;
 		coreLength = -1;							//Value -1 indicates not calculated.
 	}

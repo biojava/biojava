@@ -26,6 +26,21 @@ public interface MultipleAlignment extends Cloneable{
 	 */
 	public Object clone();
 	
+	/** 
+     * Returns the parent Ensemble of the MultipleAlignment.
+     * Returns null if there is no referenced object.
+     * @return MultipleAlignmentEnsemble the parent MultipleAlignment of the BlockSet, or null.
+     * @see #setParent(MultipleAlignmentEnsemble)
+     */
+	public MultipleAlignmentEnsemble getParent();
+	
+	/** 
+     * Set the back-reference to its parent Ensemble.
+     * @param parent the parent MultipleAlignmentEnsemble.
+     * @see #getParent()
+     */
+	public void setParent(MultipleAlignmentEnsemble parent);
+	
 	/**
 	 * Returns the name of the multiple structure alignment algorithm that created this MSTA object.
 	 * @return String name of the algorithm.

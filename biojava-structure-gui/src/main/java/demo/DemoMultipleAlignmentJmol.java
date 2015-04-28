@@ -60,24 +60,17 @@ public class DemoMultipleAlignmentJmol {
 		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl();
 		ensemble.setAtomArrays(atomArrays, true);
 		ensemble.setAlgorithmName("fakeAlgorithm");
-		
 		MultipleAlignment fakeMultAln = new MultipleAlignmentImpl(ensemble);
 		
 		if (family == "globins"){
 			
 			BlockSet blockSet1 = new BlockSetImpl(fakeMultAln); //first BlockSet with 2 Blocks
 			BlockSet blockSet2 = new BlockSetImpl(fakeMultAln); //second BlockSet with 1 Block
-			fakeMultAln.getBlockSets().add(blockSet1);
-			fakeMultAln.getBlockSets().add(blockSet2);
 			
 			Block block1 = new BlockImpl(blockSet1);
 			Block block2 = new BlockImpl(blockSet1);
-			blockSet1.getBlocks().add(block1);
-			blockSet1.getBlocks().add(block2);
 			
 			Block block3 = new BlockImpl(blockSet2);
-			blockSet2.getBlocks().add(block3);
-			
 			
 			//Alignment obtained from MUSTANG multiple alignment (just some of the residues, not the whole alignment)
 			List<Integer> aligned11 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);

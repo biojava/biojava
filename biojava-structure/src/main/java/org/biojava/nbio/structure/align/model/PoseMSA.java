@@ -139,16 +139,6 @@ public class PoseMSA implements Serializable, Pose{
 		if (tmScore == -1) throw new StructureAlignmentException("Empty Pose: updatePose() first.");
 		else return tmScore;
 	}
-
-	private void updateRMSD() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	private void updateTMscore() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	@Override
 	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException {
@@ -197,8 +187,8 @@ public class PoseMSA implements Serializable, Pose{
 			break;
 		}
 		
-		updateRMSD();
-		updateTMscore();
+		//updateRMSD(); //it has to be a weighted average
+		//updateTMscore(); //weighted average as well
 	}
 	
 }

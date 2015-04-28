@@ -36,12 +36,35 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	
 	/**
 	 * Constructor.
-	 * @param ensemble parent EnsembleMSTA.
-	 * @return MultipleAlignment a MultipleAlignment instance part of an EnsembleMSTA.
+	 * @param ensemble parent MultipleAlignmentEnsemble.
+	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentEnsemble ensemble) {
 		
 		parent = ensemble;
+		//TODO is this a good idea? Cross-link the two objects automatically when instanciated.
+		if (parent!=null) parent.getMultipleAlignments().add(this);
+		
+		blockSets = null;
+		alnSequences = null;
+		
+		algScore = 0;
+		probability = 0;
+		
+		length = -1;						//Value -1 reserved to indicate that has to be calculated
+		coreLength = -1;
+	}
+	
+	/**
+	 * Constructor that allows creating a MultipleAlignment instance without caring about the Ensemble. Ideal for
+	 * dealing with one MultipleAlignment alternative.
+	 * @param atomArrays List of Atom arrays of the structures.
+	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
+	 */
+	public MultipleAlignmentImpl(List<Atom[]> atomArrays) {
+		
+		parent = new MultipleAlignmentEnsembleImpl();
+		parent.setAtomArrays(atomArrays, true);
 		
 		blockSets = null;
 		alnSequences = null;
@@ -234,6 +257,16 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 		updateAlnSequences();
 		updateCoreLength();
 		updateLength();
+	}
+
+	@Override
+	public MultipleAlignmentEnsemble getParent() {
+		return parent;
+	}
+
+	@Override
+	public void setParent(MultipleAlignmentEnsemble parent) {
+		this.parent = parent;
 	}
 	
 }

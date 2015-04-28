@@ -34,6 +34,7 @@ public class BlockSetImpl implements Serializable, BlockSet{
 	public BlockSetImpl(MultipleAlignment multipleAlignment) throws StructureAlignmentException{
 		
 		parent = multipleAlignment;
+		if (parent!=null) parent.getBlockSets().add(this);
 		blocks = null;
 		
 		//Cache variables (can be updated)

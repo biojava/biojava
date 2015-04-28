@@ -190,6 +190,7 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 
 	@Override
 	public List<MultipleAlignment> getMultipleAlignments() {
+		if (multipleAlignments == null) multipleAlignments = new ArrayList<MultipleAlignment>();
 		return multipleAlignments;
 	}
 
