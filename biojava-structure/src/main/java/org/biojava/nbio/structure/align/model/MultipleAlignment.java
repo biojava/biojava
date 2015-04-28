@@ -9,11 +9,11 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * A MultipleAlignment is a Data Structure to store the core information of a multiple structure alignment, as a return type.
- * Each alignment is described as a collection of {@link BlockSet} that define the aligned positions, 
+ * Each alignment is described as a collection of {@link BlockSet}s that define the aligned positions, 
  * a collection of structure identifiers (i,e. Atom arrays), information about the 3D superimposition in {@link Pose},
  * and creation properties (algorithm, version, etc).
- * A collection of MultipleAlignments that share the Atom arrays and creation properties form an {@link EnsembleMSTA}.
- * Every MultipleAlignment has an {@link EnsembleMSTA} as its parent.
+ * A collection of MultipleAlignments that share the Atom arrays and creation properties form a {@link MultipleAlignmentEnsemble}.
+ * Every MultipleAlignment has a {@link MultipleAlignmentEnsemble} as its parent.
  *
  * @author Aleix Lafita
  * 

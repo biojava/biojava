@@ -6,15 +6,15 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
- * An EnsembleMSTA is a collection of {@link MultipleAlignments} that share the same Atom arrays (structures) and 
+ * A MultipleAlignmentEnsemble is a collection of {@link MultipleAlignments} that share the same Atom arrays (structures) and 
  * creation properties (algorithm, version, creation time, etc.).
  * This class deals with the multiple alternatives returned by the MSTA algorithms, so that only one object is returned
- * with more than one alignment options (depending on the RMSD/length trade-offs made, as an example).
+ * with more than one alignment option (depending on the RMSD/length trade-offs made, for example).
  * 
  * @author Aleix Lafita
  *
  */
-public interface EnsembleMSTA extends Cloneable{
+public interface MultipleAlignmentEnsemble extends Cloneable{
 
 	/**
 	 * Creates and returns an identical copy of this object.
@@ -139,29 +139,29 @@ public interface EnsembleMSTA extends Cloneable{
 	public void calculateDistanceMatrix(List<Matrix> distanceMatrix);
 	
 	/**
-	 * Returns the List of MultipleAlignments in the EnsembleMSTA object.
-	 * @return List of MultipleAlignment in the EnsembleMSTA.
+	 * Returns the List of MultipleAlignments in the MultipleAlignmentEnsemble object.
+	 * @return List of MultipleAlignment in the MultipleAlignmentEnsemble.
 	 * @see #setMultipleAlignments()
-	 * @see #getOptimalMSTA()
+	 * @see #getOptimalMultipleAlignment()
 	 */
 	public List<MultipleAlignment> getMultipleAlignments();
 	
 	/**
-	 * Set the List of MultipleAlignments in the EnsembleMSTA object.
+	 * Set the List of MultipleAlignments in the MultipleAlignmentEnsemble object.
 	 * @param List of MultipleAlignments that are part of the ensemble.
 	 * @see #getMultipleAlignments()
-	 * @see #getOptimalMSTA()
+	 * @see #getOptimalMultipleAlignment()
 	 */
 	public void setMultipleAlignments(List<MultipleAlignment> multipleAlignments);
 	
 	/**
 	 * Returns the optimal MultipleAlignment of the ensemble, stored at the first position (index 0) of the List.
-	 * @return MultipleAlignment optimal MSTA of the EnsembleMSTA.
-	 * @throws StructureAlignmentException if the EnsembleMSTA is empty.
+	 * @return MultipleAlignment optimal MSTA of the MultipleAlignmentEnsemble.
+	 * @throws StructureAlignmentException if the MultipleAlignmentEnsemble is empty.
 	 * @see #getMultipleAlignments()
 	 * @see #setMultipleAlignments()
 	 */
-	public MultipleAlignment getOptimalMSTA() throws StructureAlignmentException;
+	public MultipleAlignment getOptimalMultipleAlignment() throws StructureAlignmentException;
 	
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignments.

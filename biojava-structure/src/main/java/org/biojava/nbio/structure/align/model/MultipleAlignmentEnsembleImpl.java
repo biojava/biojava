@@ -13,7 +13,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * @author Aleix Lafita
  *
  */
-public class EnsembleMSTAImpl implements EnsembleMSTA, Serializable{
+public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble, Serializable{
 
 	private static final long serialVersionUID = -5732485866623431898L;
 	
@@ -33,9 +33,9 @@ public class EnsembleMSTAImpl implements EnsembleMSTA, Serializable{
 	
 	/**
 	 * Constructor.
-	 * @return EnsembleMSTAImpl an empty EnsembleMSTAImpl instance.
+	 * @return MultipleAlignmentEnsemble an empty MultipleAlignmentEnsemble instance.
 	 */
-	public EnsembleMSTAImpl(){
+	public MultipleAlignmentEnsembleImpl(){
 		
 		algorithmName = null;
 		version = "1.0";
@@ -51,10 +51,10 @@ public class EnsembleMSTAImpl implements EnsembleMSTA, Serializable{
 	
 	/**
 	 * Copy constructor.
-	 * @param e EnsembleMSTAImpl to copy.
-	 * @return EnsembleMSTAImpl identical copy of the input EnsembleMSTAImpl.
+	 * @param e MultipleAlignmentEnsembleImpl to copy.
+	 * @return MultipleAlignmentEnsembleImpl identical copy of the input MultipleAlignmentEnsembleImpl.
 	 */
-	public EnsembleMSTAImpl(EnsembleMSTAImpl e){
+	public MultipleAlignmentEnsembleImpl(MultipleAlignmentEnsembleImpl e){
 		
 		algorithmName = e.algorithmName;
 		version = e.version;
@@ -98,7 +98,7 @@ public class EnsembleMSTAImpl implements EnsembleMSTA, Serializable{
 	
 	@Override
 	public Object clone() {
-		return new EnsembleMSTAImpl(this);
+		return new MultipleAlignmentEnsembleImpl(this);
 	}
 	
 	@Override
@@ -199,7 +199,7 @@ public class EnsembleMSTAImpl implements EnsembleMSTA, Serializable{
 	}
 
 	@Override
-	public MultipleAlignment getOptimalMSTA() throws StructureAlignmentException {
+	public MultipleAlignment getOptimalMultipleAlignment() throws StructureAlignmentException {
 		if (getAlignmentNum() == 0) throw new StructureAlignmentException("Empty EnsembleMSTA: getAlignmentNum() == 0");
 		else return multipleAlignments.get(0);
 	}

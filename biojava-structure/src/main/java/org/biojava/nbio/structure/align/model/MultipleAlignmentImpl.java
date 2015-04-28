@@ -19,7 +19,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 
 	private static final long serialVersionUID = 3432043794125805139L;
 
-	EnsembleMSTA parent;
+	MultipleAlignmentEnsemble parent;
 	
 	//Multiple Alignment Positions
 	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
@@ -37,7 +37,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	 * @param ensemble parent EnsembleMSTA.
 	 * @return MultipleAlignment a MultipleAlignment instance part of an EnsembleMSTA.
 	 */
-	public MultipleAlignmentImpl(EnsembleMSTA ensemble) {
+	public MultipleAlignmentImpl(MultipleAlignmentEnsemble ensemble) {
 		
 		parent = ensemble;
 		
