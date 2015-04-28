@@ -127,16 +127,17 @@ public interface MultipleAlignmentEnsemble extends Cloneable{
 	/**
 	 * Returns the List containing the interatomic distance Matrix of each structure.
 	 * @return List of Matrix interatomic distance matrices.
-	 * @see #setDistanceMatrix(List)
+	 * @throws StructureAlignmentException 
+	 * @see #updateDistanceMatrix()
 	 */
-	public List<Matrix> getDistanceMatrix();
+	public List<Matrix> getDistanceMatrix() throws StructureAlignmentException;
 
 	/**
 	 * Calculates and sets the cache List containing the interatomic distance Matrix of each structure.
-	 * @param distanceMatrix interatomic distance matrices.
+	 * @throws StructureAlignmentException 
 	 * @see #getDistanceMatrix()
 	 */
-	public void calculateDistanceMatrix(List<Matrix> distanceMatrix);
+	public void updateDistanceMatrix() throws StructureAlignmentException;
 	
 	/**
 	 * Returns the List of MultipleAlignments in the MultipleAlignmentEnsemble object.

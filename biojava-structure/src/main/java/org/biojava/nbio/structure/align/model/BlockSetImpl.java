@@ -83,6 +83,7 @@ public class BlockSetImpl implements Serializable, BlockSet{
 	@Override
 	public void setMultipleAlignment(MultipleAlignment parent) {
 		this.parent = parent;
+		if (parent!=null) parent.getBlockSets().add(this);
 	}
 
 	@Override

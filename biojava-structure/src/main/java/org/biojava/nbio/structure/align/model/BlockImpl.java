@@ -64,6 +64,7 @@ public class BlockImpl implements Serializable, Block{
 	@Override
 	public void setBlockSet(BlockSet parent) {
 		this.parent = parent;
+		if (parent!=null) parent.getBlocks().add(this);
 		
 	}
 

@@ -209,7 +209,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	}
 	
 	@Override
-	public List<Matrix> getDistanceMatrix() {
+	public List<Matrix> getDistanceMatrix() throws StructureAlignmentException {
 		return parent.getDistanceMatrix();
 	}
 
@@ -267,6 +267,8 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	@Override
 	public void setParent(MultipleAlignmentEnsemble parent) {
 		this.parent = parent;
+		//TODO is this a good idea? Cross-link the two objects automatically when parent is changed.
+		if (parent!=null) parent.getMultipleAlignments().add(this);
 	}
 	
 }

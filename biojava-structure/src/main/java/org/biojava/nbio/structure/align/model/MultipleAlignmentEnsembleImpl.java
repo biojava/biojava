@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -148,6 +149,7 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 
 	@Override
 	public List<String> getStructureNames() {
+		if (structureNames == null) structureNames = new ArrayList<String>();
 		return structureNames;
 	}
 
@@ -158,6 +160,7 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 
 	@Override
 	public List<Atom[]> getAtomArrays() {
+		if (atomArrays == null) atomArrays = new ArrayList<Atom[]>();
 		return atomArrays;
 	}
 
@@ -178,14 +181,30 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	}
 
 	@Override
-	public List<Matrix> getDistanceMatrix() {
+	public List<Matrix> getDistanceMatrix() throws StructureAlignmentException {
+		if (distanceMatrix == null) updateDistanceMatrix();
 		return distanceMatrix;
 	}
 
 	@Override
-	public void calculateDistanceMatrix(List<Matrix> distanceMatrix) {
-		// TODO Auto-generated method stub
+	public void updateDistanceMatrix() throws StructureAlignmentException {
 		
+		//Reset the distance Matrix variable
+		distanceMatrix = new ArrayList<Matrix>();
+		
+		for (int s=0; s<size(); s++){
+			int n = atomArrays.get(s).length;  //length of the structure
+			Matrix distMat = new Matrix(n,n);
+			
+			//Calculate all distances between every pair of atoms and set the entries
+			for (int a1=0; a1<n; a1++){
+				for (int a2=0; a2<n; a2++){
+					double dist = Calc.getDistance(atomArrays.get(s)[a1], atomArrays.get(s)[a2]);
+					distMat.set(a1, a2, dist);
+				}
+			}
+			distanceMatrix.add(distMat);
+		}
 	}
 
 	@Override
@@ -201,13 +220,13 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 
 	@Override
 	public MultipleAlignment getOptimalMultipleAlignment() throws StructureAlignmentException {
-		if (getAlignmentNum() == 0) throw new StructureAlignmentException("Empty EnsembleMSTA: getAlignmentNum() == 0");
+		if (getAlignmentNum() == 0) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: getAlignmentNum() == 0");
 		else return multipleAlignments.get(0);
 	}
 
 	@Override
 	public int size() throws StructureAlignmentException {
-		if (atomArrays == null) throw new StructureAlignmentException("Empty EnsembleMSTA: atomArrays == null");
+		if (atomArrays == null) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: atomArrays == null");
 		else return atomArrays.size();
 	}
 
