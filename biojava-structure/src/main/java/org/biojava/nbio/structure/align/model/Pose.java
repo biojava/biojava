@@ -97,5 +97,24 @@ public interface Pose extends Cloneable{
 	 * @throws StructureAlignmentException
 	 */
 	public int size() throws StructureAlignmentException;
+	
+	/**
+	 * Creates and returns a List of Atoms rotated with the Pose 3D information. 
+	 * The rotated Atoms are a deep copy of the ones stored in the MultipleAlignment.
+	 * @return List of rotated Atom arrays
+	 * @throws StructureAlignmentException
+	 * @throws StructureException 
+	 */
+	public List<Atom[]> getRotatedAtoms() throws StructureAlignmentException, StructureException;
 
+	/**
+	 * Calculates and sets the background distance Matrices of all structural pairwise comparisons.
+	 * It can be computationally expensive and use a lot of space, since the number of comparisons is 
+	 * combinatorial: quatratic in the number of structures and quadratic in number of residues.
+	 * It is thought to be used as a Cache if a Dot-Plot for pairwise comparisons is displayed.
+	 * @throws StructureAlignmentException
+	 * @throws StructureException
+	 */
+	void updateBackDistMatrix() throws StructureAlignmentException, StructureException;
+	
 }

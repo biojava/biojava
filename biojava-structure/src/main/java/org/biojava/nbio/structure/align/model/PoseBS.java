@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -23,8 +25,7 @@ public class PoseBS implements Serializable, Pose{
 
 	private List<Matrix> rotation;					//rotation Matrix for every structure to calculate the 3D superimposition.
 	private List<Atom> translation;					//translation Vectors for the atoms of every structure.
-	private List<List<Matrix>> backDistMatrix;    	//Background distances of every structure (dot-plot). 
-														//TODO In theory there would be N^2 distance matrices, one for each pairwise comparison. Is that feasible? Or too much space and not scalable?
+	private List<List<Matrix>> backDistMatrix;    	//Background distances of every structure (dot-plot).
 	private double rmsd;							//RMSD of the 3D superposition
 	private double tmScore;							//score of the 3D superposition
 
@@ -143,8 +144,6 @@ public class PoseBS implements Serializable, Pose{
 	@Override
 	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException{
 		
-		if (parent.getBlockNum() == 0) return;		//If there are not aligned residues do nothing TODO or identity variables?
-		
 		//Initialize or replace the rotation and translation variables
 		rotation = new ArrayList<Matrix>();
 		translation = new ArrayList<Atom>();
@@ -161,11 +160,15 @@ public class PoseBS implements Serializable, Pose{
 						Integer pos2 = parent.getBlocks().get(k).getAlignRes().get(i).get(j);
 						
 						if (pos1==null || pos2==null) continue;
-						atomSet1.add((Atom) parent.getMultipleAlignment().getAtomArrays().get(0)[pos1].clone());
+						atomSet1.add((Atom) parent.getMultipleAlignment().getAtomArrays().get(0)[pos1]);
 						atomSet2.add((Atom) parent.getMultipleAlignment().getAtomArrays().get(i)[pos2].clone());
 					}
 				}
-				SVDSuperimposer svd = new SVDSuperimposer(atomSet1.toArray(new Atom[0]), atomSet2.toArray(new Atom[0]));
+				Atom[] array1 = atomSet1.toArray(new Atom[atomSet1.size()]);
+				Atom[] array2 = atomSet2.toArray(new Atom[atomSet2.size()]);
+				
+				//From the superimposer we obtain the rotation and translation information
+				SVDSuperimposer svd = new SVDSuperimposer(array1, array2);
 				rotation.add(svd.getRotation());
 				translation.add(svd.getTranslation());
 			}
@@ -180,8 +183,65 @@ public class PoseBS implements Serializable, Pose{
 			break;
 		}
 		
-		//updateRMSD(); //it has to be a weighted average
-		//updateTMscore(); //weighted average as well
+		//Once translation and rotation are set, update the other Cache variables (in that order)
+		updateBackDistMatrix();
+		updateRMSD();
+		updateTMscore();
+	}
+
+	private void updateTMscore() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void updateRMSD() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void updateBackDistMatrix() throws StructureAlignmentException, StructureException {
+		
+		//Reset or initialize the backDistanceMatrices
+		backDistMatrix = new ArrayList<List<Matrix>>();
+		
+		//First rotate the atoms
+		List<Atom[]> rotatedAtoms = getRotatedAtoms();
+		//Loop thorugh all pairwise structure comparisons
+		for (int s1=0; s1<size(); s1++){
+			int n = rotatedAtoms.get(s1).length;
+			backDistMatrix.add(new ArrayList<Matrix>());
+			
+			for (int s2=0; s2<size(); s2++){
+				int m = rotatedAtoms.get(s2).length;
+				backDistMatrix.get(s1).add(new Matrix(n, m));
+				if (s1==s2) continue;
+				
+				//Loop through all residue pairwise combinations and complete the Matrix
+				for (int i=0; i<n; i++){
+					for (int j=0; j<m; j++){
+						double distance = Calc.getDistance(rotatedAtoms.get(s1)[n], rotatedAtoms.get(s2)[m]);
+						backDistMatrix.get(s1).get(s2).set(i, j, distance);
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public List<Atom[]> getRotatedAtoms() throws StructureAlignmentException, StructureException {
+		
+		if (rotation == null || translation == null) throw new StructureAlignmentException("Empty Pose: updatePose() first.");
+		
+		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+		//Rotate the atom coordinates of all the structures
+		for (int i=0; i<size(); i++){
+			Atom[] rotCA = StructureTools.cloneAtomArray(parent.getMultipleAlignment().getAtomArrays().get(i));
+			Calc.rotate(rotCA, rotation.get(i));
+			Calc.shift(rotCA, translation.get(i));
+			rotatedAtoms.add(rotCA);
+		}
+		return rotatedAtoms;
 	}
 	
 }

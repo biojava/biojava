@@ -66,7 +66,7 @@ public class StructureAlignmentDisplay {
    }
    
    /** 
-    * Display a MultipleAlignment. Atoms are rotated here with the Pose information of the MSTA alignment.
+    * Display a MultipleAlignment. Atoms are rotated here with the Pose method.
     * 
     * @param multAln
     * @return MultipleAlignmentJmol instance
@@ -80,23 +80,9 @@ public class StructureAlignmentDisplay {
 				throw new StructureException("Length of atoms arrays is too short! " + multAln.getAtomArrays().get(i).length);
 		}
 		
-		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
-		
 		try {
-      
-		  	//Rotate the atom coordinates of all the structures to create a rotated atomArrays
-			for (int i=0; i<multAln.size(); i++){
-				
-				Matrix rotationMatrix = multAln.getPose().getRotation().get(i);
-				Atom shiftVector = multAln.getPose().getTranslation().get(i);
-				
-				Atom[] rotCA = StructureTools.cloneAtomArray(multAln.getAtomArrays().get(i));
-				for (Atom a:rotCA){
-					Calc.rotate(a, rotationMatrix);
-					Calc.shift(a, shiftVector);
-				}
-				rotatedAtoms.add(rotCA);
-			}
+			
+			List<Atom[]> rotatedAtoms = multAln.getPose().getRotatedAtoms();
 			
 			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
 			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());

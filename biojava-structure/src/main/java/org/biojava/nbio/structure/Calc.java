@@ -1039,6 +1039,15 @@ public class Calc {
 	public static void rotate(Atom[] ca, Matrix matrix) {
 		for (Atom atom : ca) Calc.rotate(atom, matrix);
 	}
+	
+	/**
+	 * Shift an array of atoms at once.
+	 * @param ca array of Atoms to shift
+	 * @param b reference Atom vector
+	 */
+	public static void shift(Atom[] ca, Atom b) {
+		for (Atom atom : ca) Calc.shift(atom, b);
+	}
 }
 
 

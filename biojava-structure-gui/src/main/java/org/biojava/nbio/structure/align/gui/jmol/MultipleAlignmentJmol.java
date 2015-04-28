@@ -30,7 +30,7 @@ import java.util.List;
 public class MultipleAlignmentJmol extends AlignmentJmol {
 
    MultipleAlignment multAln;
-   List<Atom[]> atomArrays;    //rotated atom arrays of every structure
+   List<Atom[]> rotatedAtoms;    //rotated atom arrays of every structure
 
    public static void main(String[] args){
       try {
@@ -69,7 +69,7 @@ public class MultipleAlignmentJmol extends AlignmentJmol {
     * @param atomArrays: contains the atom coordinates to display, already rotated.
     * @throws StructureAlignmentException 
     */
-   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureAlignmentException {
+   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> rotatedAtoms) throws StructureAlignmentException {
 
       AligUIManager.setLookAndFeel();
 
@@ -83,7 +83,7 @@ public class MultipleAlignmentJmol extends AlignmentJmol {
       frame.setJMenuBar(menu);
       //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.multAln = multAln;
-      this.atomArrays = atomArrays;
+      this.rotatedAtoms = rotatedAtoms;
       
       frame.addWindowListener( new WindowAdapter()
       {
@@ -261,7 +261,7 @@ public class MultipleAlignmentJmol extends AlignmentJmol {
                return;
             }
          }
-         Structure artificial = DisplayAFP.getAlignedStructure(atomArrays);
+         Structure artificial = DisplayAFP.getAlignedStructure(rotatedAtoms);
          PDBHeader header = new PDBHeader();
          String title =  multAln.getAlgorithmName() + " V." +multAln.getVersion() + " : ";
          for (String name:multAln.getStructureNames()) title +=  name + " ";
@@ -277,7 +277,7 @@ public class MultipleAlignmentJmol extends AlignmentJmol {
    public void destroy(){
 	  super.destroy();
       multAln =null;
-      atomArrays = null;
+      rotatedAtoms = null;
    }
 
    @Override
@@ -510,10 +510,11 @@ private static void printJmolScript4Block(List<Atom[]> atomArrays, int blockNum,
    public void resetDisplay() throws StructureAlignmentException{
 	   
       if (multAln != null) {
-         String script = getJmolString(multAln, atomArrays);
+         String script = getJmolString(multAln, rotatedAtoms);
          //System.out.println(script);
          evalString(script);
          jmolPanel.evalString("save STATE state_1");
+         jmolPanel.evalString("hide ligand");
       }
    }
 

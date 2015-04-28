@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -143,13 +145,6 @@ public class PoseMSA implements Serializable, Pose{
 	@Override
 	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException {
 		
-		if (parent.getBlockSetNum() == 0) return;		//If there are not aligned residues do nothing TODO or identity variables?
-		else {
-			for (BlockSet bs:parent.getBlockSets()){
-				if (bs.getBlockNum() == 0) return;
-			}
-		}
-		
 		//Initialize or replace the rotation and translation variables
 		rotation = new ArrayList<Matrix>();
 		translation = new ArrayList<Atom>();
@@ -187,8 +182,64 @@ public class PoseMSA implements Serializable, Pose{
 			break;
 		}
 		
-		//updateRMSD(); //it has to be a weighted average
-		//updateTMscore(); //weighted average as well
+		//Once translation and rotation are set, update the other Cache variables (in that order)
+		updateBackDistMatrix();
+		updateRMSD();
+		updateTMscore();
+	}
+
+	private void updateTMscore() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void updateRMSD() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateBackDistMatrix() throws StructureAlignmentException, StructureException {
+		
+		//Reset or initialize the backDistanceMatrices
+		backDistMatrix = new ArrayList<List<Matrix>>();
+		
+		//First rotate the atoms
+		List<Atom[]> rotatedAtoms = getRotatedAtoms();
+		//Loop thorugh all pairwise structure comparisons
+		for (int s1=0; s1<size(); s1++){
+			int n = rotatedAtoms.get(s1).length;
+			backDistMatrix.add(new ArrayList<Matrix>());
+			
+			for (int s2=0; s2<size(); s2++){
+				int m = rotatedAtoms.get(s2).length;
+				backDistMatrix.get(s1).add(new Matrix(n, m));
+				if (s1==s2) continue;
+				
+				//Loop through all residue pairwise combinations and complete the Matrix
+				for (int i=0; i<n; i++){
+					for (int j=0; j<m; j++){
+						double distance = Calc.getDistance(rotatedAtoms.get(s1)[i], rotatedAtoms.get(s2)[j]);
+						backDistMatrix.get(s1).get(s2).set(i, j, distance);
+					}
+				} //finish Matrix
+			}
+		} //finish all pairwise comparisons
+	}
+	
+	@Override
+	public List<Atom[]> getRotatedAtoms() throws StructureAlignmentException, StructureException {
+		
+		if (rotation == null || translation == null) throw new StructureAlignmentException("Empty Pose: updatePose() first.");
+		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+		//Rotate the atom coordinates of all the structures
+		for (int i=0; i<size(); i++){
+			Atom[] rotCA = StructureTools.cloneAtomArray(parent.getAtomArrays().get(i));
+			Calc.rotate(rotCA, rotation.get(i));
+			Calc.shift(rotCA, translation.get(i));
+			rotatedAtoms.add(rotCA);
+		}
+		return rotatedAtoms;
 	}
 	
 }
