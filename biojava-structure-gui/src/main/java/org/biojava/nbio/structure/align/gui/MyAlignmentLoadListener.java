@@ -21,7 +21,7 @@
 package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -42,8 +42,8 @@ import java.io.InputStreamReader;
 
 public class MyAlignmentLoadListener implements ActionListener {
 
-   AlignmentJmol jmol;
-   public MyAlignmentLoadListener(AlignmentJmol jmol){
+   AbstractAlignmentJmol jmol;
+   public MyAlignmentLoadListener(AbstractAlignmentJmol jmol){
       this.jmol = jmol;
    }
    @Override

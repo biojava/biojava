@@ -24,9 +24,9 @@ public interface Pose extends Cloneable{
 	 * Method used to calculate the 3D superposition.
 	 */
 	public static enum PoseMethod {
-		REFERENCE,	//align everything to the first structure, the master.
-		MEDIAN,		//take the closest structure to all others in average as the master and align everything to it.
-		CONSENSUS;	//build a consensus structure and align everything to it.
+		REFERENCE,	//align everything to the first structure, the master. N superpositions.
+		MEDIAN,		//take the closest structure to all others in average as the master and align everything to it. N^2 superpositions.
+		CONSENSUS;	//build a consensus structure and align everything to it. N^2 superpositions, slower than MEDIAN.
 		public static PoseMethod DEFAULT = REFERENCE;
 	}
 	
@@ -67,24 +67,42 @@ public interface Pose extends Cloneable{
 	public List<List<Matrix>> getBackDistMatrix() throws StructureAlignmentException;
 	
 	/**
-	 * Returns the RMSD of the 3D superimposition.
+	 * Returns the global RMSD of the 3D superimposition.
 	 * @return double RMSD of the 3D superimposition.
 	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
+	 * @see #getRMSD(int)
 	 */
 	public double getRMSD() throws StructureAlignmentException;
 	
 	/**
-	 * Returns the TM-score of the 3D superimposition.
+	 * Returns the RMSD of the specified structure against all others.
+	 * @return double RMSD of the specified structure against the others.
+	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
+	 * @see #getRMSD()
+	 */
+	public double getRMSD(int structureNr) throws StructureAlignmentException;
+	
+	/**
+	 * Returns the global TM-score of the 3D superimposition.
 	 * @return double TM-score of the 3D superimposition.
 	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
+	 * @see #getTMscore(int)
 	 */
 	public double getTMscore() throws StructureAlignmentException;
 	
 	/**
+	 * Returns the TM-score of the specified structure against all others.
+	 * @return double TM-score of the specified structure against the others.
+	 * @throws StructureAlignmentException if Pose is empty. Call {@link #updatePose(PoseMethod)} first.
+	 * @see #getTMscore()
+	 */
+	public double getTMscore(int structureNr) throws StructureAlignmentException;
+	
+	/**
 	 * Calculates and sets all the Pose variables from the parent information.
-	 * Methods: REFERENCE (align everything to the first structure, the master), 
-	 * 			MEDIAN (take the closest structure to all others in average as the master and align everything to it),
-	 * 			CONSENSUS (build a consensus structure and align everything to it)
+	 * Methods: REFERENCE (align everything to the first structure, the master - T(n)=n), 
+	 * 			MEDIAN (take the closest structure to all others in average as the master and align everything to it - T(n)=n^2),
+	 * 			CONSENSUS (build a consensus structure and align everything to it - T(n)=n^2+C)
 	 * @param method PoseMethod indicating one of the methods listed above, to be used in the superimposition.
 	 * @throws StructureException
 	 * @throws StructureAlignmentException
@@ -107,14 +125,4 @@ public interface Pose extends Cloneable{
 	 */
 	public List<Atom[]> getRotatedAtoms() throws StructureAlignmentException, StructureException;
 
-	/**
-	 * Calculates and sets the background distance Matrices of all structural pairwise comparisons.
-	 * It can be computationally expensive and use a lot of space, since the number of comparisons is 
-	 * combinatorial: quatratic in the number of structures and quadratic in number of residues.
-	 * It is thought to be used as a Cache if a Dot-Plot for pairwise comparisons is displayed.
-	 * @throws StructureAlignmentException
-	 * @throws StructureException
-	 */
-	void updateBackDistMatrix() throws StructureAlignmentException, StructureException;
-	
 }

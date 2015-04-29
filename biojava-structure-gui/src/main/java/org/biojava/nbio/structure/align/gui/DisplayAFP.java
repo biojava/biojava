@@ -23,7 +23,7 @@ package org.biojava.nbio.structure.align.gui;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
-import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -609,7 +609,7 @@ public class DisplayAFP
 		return jmol;
 	}
 
-	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AlignmentJmol jmol) {
+	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) {
 		String result = afpChain.toFatcat(ca1, ca2);
 
 		//String rot = afpChain.toRotMat();

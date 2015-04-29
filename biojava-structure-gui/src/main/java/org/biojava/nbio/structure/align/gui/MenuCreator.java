@@ -22,8 +22,8 @@
 package org.biojava.nbio.structure.align.gui;
 
 
-import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
-import org.biojava.nbio.structure.align.gui.jmol.AlignmentJmol;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
@@ -65,7 +65,7 @@ public class MenuCreator {
 	 * 
 	 * @return a JMenuBar
 	 */
-	public static JMenuBar initMenu(JFrame frame, AlignmentJmol parent, AFPChain afpChain){
+	public static JMenuBar initMenu(JFrame frame, AbstractAlignmentJmol parent, AFPChain afpChain){
 
 		// show a menu
 
@@ -384,7 +384,7 @@ public class MenuCreator {
 		return print;
 	}
 
-	public static JMenuItem getExportPDBMenuItem(AlignmentJmol parent) {
+	public static JMenuItem getExportPDBMenuItem(AbstractAlignmentJmol parent) {
 		ImageIcon saveicon = createImageIcon("/icons/compfile.png");
 		JMenuItem exportI = null;
 

@@ -50,7 +50,7 @@ import java.util.List;
  * @since 1.6
  *
  */
-public class StructureAlignmentJmol extends AlignmentJmol {
+public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
    protected Atom[] ca1;
    protected Atom[] ca2;

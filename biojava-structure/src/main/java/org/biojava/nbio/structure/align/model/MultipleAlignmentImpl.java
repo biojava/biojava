@@ -10,7 +10,7 @@ import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
- * A general implementation of a MultipleAlignment.
+ * A general implementation of a {@link MultipleAlignment}.
  *
  * @author Aleix Lafita
  * 
@@ -63,8 +63,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	 */
 	public MultipleAlignmentImpl(List<Atom[]> atomArrays) {
 		
-		parent = new MultipleAlignmentEnsembleImpl();
-		parent.setAtomArrays(atomArrays, true);
+		parent = new MultipleAlignmentEnsembleImpl(atomArrays);
 		
 		blockSets = null;
 		alnSequences = null;

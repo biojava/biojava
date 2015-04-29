@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;

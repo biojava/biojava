@@ -27,7 +27,7 @@ import java.util.List;
  * @author Aleix Lafita
  *
  */
-public class MultipleAlignmentJmol extends AlignmentJmol {
+public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
    MultipleAlignment multAln;
    List<Atom[]> rotatedAtoms;    //rotated atom arrays of every structure

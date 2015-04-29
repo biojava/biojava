@@ -9,7 +9,7 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
- * A general implementation of an EnsembleMSTA.
+ * A general implementation of a {@link MultipleAlignmentEnsemble}.
  * 
  * @author Aleix Lafita
  *
@@ -33,7 +33,7 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	private List<MultipleAlignment> multipleAlignments;
 	
 	/**
-	 * Constructor.
+	 * Default Constructor.
 	 * @return MultipleAlignmentEnsemble an empty MultipleAlignmentEnsemble instance.
 	 */
 	public MultipleAlignmentEnsembleImpl(){
@@ -48,6 +48,17 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 		atomArrays = null;
 		distanceMatrix = null;
 		multipleAlignments = null;
+	}
+	
+	/**
+	 * Constructor using AtomArrays.
+	 * @param atomArrays List of Atom arrays of the structures.
+	 * @return MultipleAlignmentEnsemble a MultipleAlignmentEnsemble instance with the structures.
+	 */
+	public MultipleAlignmentEnsembleImpl(List<Atom[]> atomArrays){
+		
+		this();
+		setAtomArrays(atomArrays, true);
 	}
 	
 	/**
