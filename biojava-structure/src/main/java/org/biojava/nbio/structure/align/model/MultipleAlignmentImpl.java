@@ -2,6 +2,7 @@ package org.biojava.nbio.structure.align.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
@@ -31,13 +32,31 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	Pose pose;
 	
 	//Algorithm Specific Information
-	double algScore;						//algorithm score for the multiple alignment
+	double algScore;						//algorithm score for this multiple alignment
 	double probability;
 	
 	/**
-	 * Constructor.
-	 * @param ensemble parent MultipleAlignmentEnsemble.
+	 * Default Constructor. Empty alignment. No structures assigned.
+	 * @return MultipleAlignment an empty MultipleAlignment instance.
+	 */
+	public MultipleAlignmentImpl() {
+		this(new MultipleAlignmentEnsembleImpl());  //assign an empty ensemble.
+	}
+	
+	/**
+	 * Constructor that allows creating a MultipleAlignment instance without caring about the ensemble.
+	 * Ideal for dealing with one MultipleAlignment alternative only.
+	 * @param atomArrays List of Atom arrays of the structures.
 	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
+	 */
+	public MultipleAlignmentImpl(List<Atom[]> atomArrays) {
+		this(new MultipleAlignmentEnsembleImpl(atomArrays));
+	}
+	
+	/**
+	 * Constructor linking to an existing ensemble.
+	 * @param ensemble parent MultipleAlignmentEnsemble.
+	 * @return MultipleAlignment a MultipleAlignment instance part of an ensemble.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentEnsemble ensemble) {
 		
@@ -47,6 +66,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 		
 		blockSets = null;
 		alnSequences = null;
+		pose = null;
 		
 		algScore = 0;
 		probability = 0;
@@ -56,23 +76,28 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	}
 	
 	/**
-	 * Constructor that allows creating a MultipleAlignment instance without caring about the Ensemble. Ideal for
-	 * dealing with one MultipleAlignment alternative.
-	 * @param atomArrays List of Atom arrays of the structures.
+	 * Constructor from an AFPChain instance. Creates an equivalent pairwise alignment.
+	 * @param ensemble parent MultipleAlignmentEnsemble.
 	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
+	 * @throws StructureAlignmentException 
+	 * @throws StructureException 
 	 */
-	public MultipleAlignmentImpl(List<Atom[]> atomArrays) {
+	public MultipleAlignmentImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException {
+		this(new MultipleAlignmentEnsembleImpl(Arrays.asList(ca1,ca2)));
 		
-		parent = new MultipleAlignmentEnsembleImpl(atomArrays);
-		
-		blockSets = null;
-		alnSequences = null;
-		
-		algScore = 0;
-		probability = 0;
-		
-		length = -1;						//Value -1 reserved to indicate that has to be calculated
-		coreLength = -1;
+		//Create a BlockSet for every block in AFPChain TODO we dont't know if blocks correspond to flexible or CP.
+		for (int bs=0; bs<afpChain.getBlockNum(); bs++){
+			BlockSet blockSet = new BlockSetImpl(this);
+			Block block = new BlockImpl(blockSet);
+			block.getAlignRes().add(new ArrayList<Integer>()); //add the two chains
+			block.getAlignRes().add(new ArrayList<Integer>());
+			
+			for (int i=0; i<afpChain.getOptLen()[bs]; i++){
+				block.getAlignRes().get(0).add(afpChain.getOptAln()[bs][0][i]);
+				block.getAlignRes().get(1).add(afpChain.getOptAln()[bs][1][i]);
+			}
+		}
+		updateCache(PoseMethod.REFERENCE);
 	}
 	
 	/**
@@ -107,9 +132,10 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	@Override
 	public String toString() {
 		return "MultipleAlignmentImpl [parent=" + parent + ", blockSets="
-				+ blockSets + ", alnSequences=" + alnSequences + ", pose="
-				+ pose + ", algScore=" + algScore + ", probability="
-				+ probability + "]";
+				+ blockSets + ", alnSequences=" + alnSequences + ", length="
+				+ length + ", coreLength=" + coreLength + ", pose=" + pose
+				+ ", algScore=" + algScore + ", probability=" + probability
+				+ "]";
 	}
 
 	@Override

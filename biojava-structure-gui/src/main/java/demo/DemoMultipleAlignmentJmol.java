@@ -7,7 +7,9 @@ import java.util.ArrayList;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.fatcat.FatCat;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
+import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.Block;
 import org.biojava.nbio.structure.align.model.BlockImpl;
 import org.biojava.nbio.structure.align.model.BlockSet;
@@ -42,7 +44,13 @@ public class DemoMultipleAlignmentJmol {
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
 		MultipleAlignment fakeMultAln = fakeMultipleAlignment("globins",atomArrays);
 		
+		//Generate a pairwise alignment and convert it to a MultipleAlignment
+		FatCat fatcat  = new FatCat();
+        AFPChain afpChain = fatcat.alignRigid(atomArrays.get(0),atomArrays.get(1));
+        MultipleAlignment pairwise = new MultipleAlignmentImpl(afpChain,atomArrays.get(0),atomArrays.get(1));
+        
 		StructureAlignmentDisplay.display(fakeMultAln);
+		StructureAlignmentDisplay.display(pairwise);
 	}
 	
 	/**

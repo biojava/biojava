@@ -33,7 +33,7 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	private List<MultipleAlignment> multipleAlignments;
 	
 	/**
-	 * Default Constructor.
+	 * Default Constructor. Empty ensemble, no structures assigned.
 	 * @return MultipleAlignmentEnsemble an empty MultipleAlignmentEnsemble instance.
 	 */
 	public MultipleAlignmentEnsembleImpl(){

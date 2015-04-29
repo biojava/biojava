@@ -221,8 +221,8 @@ public abstract class PoseAbstractImpl implements Serializable, Pose{
 		int size = size();  //better performance because it is used a lot.
 		rmsd =0;
 		tmScore=0;
-		listRMSD = new ArrayList<Double>();
-		listTMscore = new ArrayList<Double>();
+		listRMSD = new ArrayList<Double>(size);
+		listTMscore = new ArrayList<Double>(size);
 		
 		//Loop for every structure (s1) and look at the distances to every other aligned atom of the other structures (s2)
 		for (int s1=0; s1<size; s1++){
