@@ -219,6 +219,8 @@ public abstract class PoseAbstractImpl implements Serializable, Pose{
 	private void updateRMSDandScore() throws StructureAlignmentException, StructureException{
 		
 		int size = size();  //better performance because it is used a lot.
+		rmsd =0;
+		tmScore=0;
 		listRMSD = new ArrayList<Double>();
 		listTMscore = new ArrayList<Double>();
 		
@@ -257,8 +259,8 @@ public abstract class PoseAbstractImpl implements Serializable, Pose{
 		//The global RMSD is the average RMSD of all the structures 
 		//TODO should it be weighted average depending on the aligned residues of each structure? (only important if there are a lot of GAPS between structures)
 		for (int i=0; i<size; i++){
-			rmsd = listRMSD.get(i);
-			tmScore = listTMscore.get(i);
+			rmsd += listRMSD.get(i);
+			tmScore += listTMscore.get(i);
 		}
 		rmsd /= size;
 		tmScore /= size;
