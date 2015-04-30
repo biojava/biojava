@@ -152,15 +152,15 @@ public interface MultipleAlignment extends Cloneable{
 	public void setAlgScore(double algScore);
 
 	/**
-	 * Returns the probability used by the algorithm.
+	 * Returns the probability (FATCAT) or Z-score (CE) of the alignment.
 	 * @return double probability
 	 * @see #setProbability(double)
 	 */
 	public double getProbability();
 
 	/**
-	 * Sets the probability used by the algorithm.
-	 * @param probability
+	 * Sets the Returns the probability (FATCAT) or Z-score (CE) of the alignment.
+	 * @param probability double
 	 * @see #getProbability()
 	 */
 	public void setProbability(double probability);

@@ -96,6 +96,7 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 			}
 		}
 		
+		//TODO set new parent of the MultipleAlignment copies
 		multipleAlignments = null;
 		if (e.multipleAlignments!=null){
 			//Make a deep copy of everything

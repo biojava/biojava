@@ -83,7 +83,14 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	 * @throws StructureException 
 	 */
 	public MultipleAlignmentImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException {
+		//Copy all the creation and algorithm information
 		this(new MultipleAlignmentEnsembleImpl(Arrays.asList(ca1,ca2)));
+		parent.setAlgorithmName(afpChain.getAlgorithmName());
+		parent.setVersion(afpChain.getVersion());
+		parent.setId(afpChain.getId());
+		parent.setCalculationTime(afpChain.getCalculationTime());
+		algScore = afpChain.getAlignScore();
+		probability = afpChain.getProbability();
 		
 		//Create a BlockSet for every block in AFPChain TODO we dont't know if blocks correspond to flexible or CP.
 		for (int bs=0; bs<afpChain.getBlockNum(); bs++){
