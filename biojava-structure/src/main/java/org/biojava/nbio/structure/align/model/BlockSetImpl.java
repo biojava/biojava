@@ -51,14 +51,16 @@ public class BlockSetImpl implements Serializable, BlockSet{
 	public BlockSetImpl(BlockSetImpl bs){
 		
 		this.parent = bs.parent;
-		this.pose = (Pose) bs.pose.clone();
 		this.length = bs.length;
 		this.coreLength = bs.coreLength;
+		
+		this.pose = null;  pose = null;  //Because the pose is a cache variable it has to be updated/calculated again.
 		
 		//Ensure a proper cloning of all the Block objects
 		List<Block> blocks = new ArrayList<Block>();
 		for (Block b:bs.blocks){
-			blocks.add((Block) b.clone());
+			Block newBK = (Block) b.clone();
+			newBK.setBlockSet(this);
 		}
 		this.blocks = blocks;
 	}

@@ -102,7 +102,8 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 			//Make a deep copy of everything
 			multipleAlignments = new ArrayList<MultipleAlignment>();
 			for (MultipleAlignment msa:e.multipleAlignments){
-				multipleAlignments.add((MultipleAlignment) msa.clone());
+				MultipleAlignment newMSA = (MultipleAlignment) msa.clone();
+				newMSA.setParent(this);  //This automatically adds the newMSA to the multipleAlignments list
 			}
 		}
 		

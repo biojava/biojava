@@ -118,12 +118,15 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 		
 		alnSequences = new ArrayList<String>(ma.getAlnSequences());
 		
+		pose = null;  //Because the pose is a cache variable it has to be updated/calculated again.
+		
 		blockSets = null;
 		if (ma.blockSets!=null){
 			//Make a deep copy of everything
 			this.blockSets = new ArrayList<BlockSet>();
 			for (BlockSet bs:ma.blockSets){
-				blockSets.add((BlockSet) bs.clone());
+				BlockSet newBS = (BlockSet) bs.clone();
+				newBS.setMultipleAlignment(this); //This automatically adds the newBS to the blockSets list
 			}
 		}
 		
