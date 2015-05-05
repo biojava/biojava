@@ -37,9 +37,8 @@ public interface Pose extends Cloneable{
 	public Object clone();
 
 	/** 
-     * Returns the parent object of the Pose (BlockSet or MultipleAlignment).
-     * Returns null if there is no referenced object.
-     * @return BlockSet or MultipleAlignment parent of the Pose, or null.
+     * Returns the parent Object of the Pose.
+     * @return parent Object of the Pose.
      */
 	public Object getParent();
 
