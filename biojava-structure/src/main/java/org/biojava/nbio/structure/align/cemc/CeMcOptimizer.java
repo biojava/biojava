@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
+import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 
 /**
@@ -14,11 +15,22 @@ import org.biojava.nbio.structure.align.model.StructureAlignmentException;
  *
  */
 public class CeMcOptimizer implements Callable<MultipleAlignment> {
+	
+	MultipleAlignment msa;
+	
+	/**
+	 * Constructor.
+	 * @param seed MultipleAlignment to be optimize.
+	 */
+	public CeMcOptimizer(MultipleAlignment seed) {
+		this.msa = (MultipleAlignment) seed.clone();
+	}
 
 	@Override
 	public MultipleAlignment call() throws StructureException, StructureAlignmentException{
-		// TODO Auto-generated method stub
-		return null;
+		
+		msa.updateCache(PoseMethod.REFERENCE);
+		return msa;
 	}
 
 }

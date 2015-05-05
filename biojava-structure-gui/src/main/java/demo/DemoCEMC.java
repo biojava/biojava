@@ -15,18 +15,18 @@ import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
- * Demo for visualizing the results of a Multiple Alignment seed, before MC optimization.
+ * Demo for visualizing the results of a CEMC result.
  * 
  * @author Aleix Lafita
  * 
  */
-public class DemoMultipleAlignmentSeed {
+public class DemoCEMC {
 
 	public static void main(String[] args) throws IOException, StructureException, StructureAlignmentException, InterruptedException, ExecutionException {
 		
 		//Specify the structures to align
-		List<String> names = Arrays.asList("1tim.a", "1vzw", "1nsj", "3tha.a");			//TIM barrels
-		//List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.a", "1ith.a");		//globins
+		//List<String> names = Arrays.asList("1tim.a", "1vzw", "1nsj", "3tha.a");			//TIM barrels
+		List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.a", "1ith.a");		//globins
 		
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
@@ -34,12 +34,13 @@ public class DemoMultipleAlignmentSeed {
 		for (String name:names) atomArrays.add(cache.getAtoms(name));
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
-		MultipleAlignment seed = CeMcMain.generateSeed(atomArrays);
+		CeMcMain algorithm = new CeMcMain();
+		MultipleAlignment result = algorithm.align(atomArrays);
 		
 		//Information about the alignment
-		seed.getParent().setAlgorithmName(CeMcMain.algorithmName);
-		seed.getParent().setVersion(CeMcMain.version);
+		result.getParent().setAlgorithmName(algorithm.getAlgorithmName());
+		result.getParent().setVersion(algorithm.getVersion());
         
-		StructureAlignmentDisplay.display(seed);
+		StructureAlignmentDisplay.display(result);
 	}
 }

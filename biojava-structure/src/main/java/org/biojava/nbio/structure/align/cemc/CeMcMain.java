@@ -10,7 +10,9 @@ import java.util.concurrent.Future;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.MultipleStructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeMain;
+import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.Block;
 import org.biojava.nbio.structure.align.model.BlockImpl;
@@ -18,6 +20,7 @@ import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.BlockSetImpl;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
@@ -32,14 +35,15 @@ import org.biojava.nbio.structure.align.model.StructureAlignmentException;
  * @author Aleix Lafita
  *
  */
-public class CeMcMain {
+public class CeMcMain implements MultipleStructureAlignment{
 	
 	/**
 	 *  version history:
 	 *  1.0 - Initial code implementation from article.
 	 */
-	public static final String version = "1.0";
-	public static final String algorithmName = "jCEMC";
+	private static final String version = "1.0";
+	private static final String algorithmName = "jCEMC";
+	private CeMcParameters params;
 	private MultipleAlignmentEnsemble ensemble;
 	
 	/**
@@ -47,6 +51,7 @@ public class CeMcMain {
 	 */
 	public CeMcMain(){
 		ensemble = null;
+		params = new CeMcParameters();
 	}
 
 	/**
@@ -203,13 +208,70 @@ public class CeMcMain {
 		return seed;
 	}
 
-	/**
-	 * Aligns all the structures to generate an optimal MultipleAlignment.
-	 * @param atomArrays List of Atoms to align of the structures
-	 * @return MultipleAlignment optimal alignment
-	 */
-	public MultipleAlignment align(List<Atom[]> atomArrays){
-		//TODO
-		return null;
+	@Override
+	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException, StructureAlignmentException {
+		
+		MultipleAlignment result = null;
+		ensemble = new MultipleAlignmentEnsembleImpl(atomArrays);
+		
+		//Generate the seed alignment from all-to-all pairwise alignments
+		try {
+			result = generateSeed(atomArrays);
+			ExecutorService executor = Executors.newCachedThreadPool();
+			List<Future<MultipleAlignment>> afpFuture = new ArrayList<Future<MultipleAlignment>>();
+			
+			//Repeat the optimization 100 times in parallel
+			for (int i=0; i<100; i++){
+				Callable<MultipleAlignment> worker = new CeMcOptimizer(result);
+	  			Future<MultipleAlignment> submit = executor.submit(worker);
+	  			afpFuture.add(submit);
+			}
+			
+			//When all the optimizations are finished take the one with the best result
+			for (int i=0; i<afpFuture.size(); i++){
+				if (afpFuture.get(i).get().getPose().getRMSD() < result.getPose().getRMSD()){
+					result = afpFuture.get(i).get();
+				}
+			}
+			result.setParent(ensemble);
+			executor.shutdown();
+			return result;
+			
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException, StructureAlignmentException {
+		CeMcParameters params = new CeMcParameters();
+		return align(atomArrays,params);
+	}
+
+	@Override
+	public ConfigStrucAligParams getParameters() {
+		return params;
+	}
+
+	@Override
+	public void setParameters(ConfigStrucAligParams parameters) {
+		if (! (params instanceof CeMcParameters )){
+			throw new IllegalArgumentException("Provided parameter object is not of type CeMcParameter");
+		}
+		this.params = (CeMcParameters) params;
+	}
+
+	@Override
+	public String getAlgorithmName() {
+		return algorithmName;
+	}
+
+	@Override
+	public String getVersion() {
+		return version;
 	}
 }
