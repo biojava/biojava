@@ -116,7 +116,8 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 		
 		parent = ma.parent;
 		
-		alnSequences = new ArrayList<String>(ma.getAlnSequences());
+		alnSequences = null;
+		if (ma.alnSequences!=null) alnSequences = new ArrayList<String>(ma.alnSequences);
 		
 		pose = null;  //Because the pose is a cache variable it has to be updated/calculated again.
 		

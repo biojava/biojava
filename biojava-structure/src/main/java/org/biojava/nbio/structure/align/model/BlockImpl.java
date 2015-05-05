@@ -41,6 +41,7 @@ public class BlockImpl implements Serializable, Block{
 		
 		this.parent = b.parent;
 		this.coreLength = b.coreLength;
+		
 		this.alignRes = null;
 		if (b.alignRes!=null){
 			//Make a deep copy of everything

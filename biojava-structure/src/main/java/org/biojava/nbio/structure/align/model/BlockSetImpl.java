@@ -56,13 +56,15 @@ public class BlockSetImpl implements Serializable, BlockSet{
 		
 		this.pose = null;  pose = null;  //Because the pose is a cache variable it has to be updated/calculated again.
 		
-		//Ensure a proper cloning of all the Block objects
-		List<Block> blocks = new ArrayList<Block>();
-		for (Block b:bs.blocks){
-			Block newBK = (Block) b.clone();
-			newBK.setBlockSet(this);
+		blocks = null;
+		if (bs.blocks!=null){
+			//Make a deep copy of everything
+			this.blocks = new ArrayList<Block>();
+			for (Block b:bs.blocks){
+				Block newB = (Block) b.clone();
+				newB.setBlockSet(this); //This automatically adds the newB to the blocks list
+			}
 		}
-		this.blocks = blocks;
 	}
 	
 	@Override
