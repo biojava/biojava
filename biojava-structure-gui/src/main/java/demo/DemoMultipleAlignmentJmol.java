@@ -68,7 +68,7 @@ public class DemoMultipleAlignmentJmol {
 		
 		//Initialize the multiple alignment parent ensemble
 		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl();
-		ensemble.setAtomArrays(atomArrays, true);
+		ensemble.setAtomArrays(atomArrays);
 		ensemble.setAlgorithmName("fakeAlgorithm");
 		MultipleAlignment fakeMultAln = new MultipleAlignmentImpl(ensemble);
 		

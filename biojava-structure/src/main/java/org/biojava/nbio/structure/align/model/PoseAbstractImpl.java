@@ -156,8 +156,13 @@ public abstract class PoseAbstractImpl implements Serializable, Pose{
 		updateRMSDandScore();
 	}
 
-	@Override
-	public List<Atom[]> getRotatedAtoms() throws StructureAlignmentException, StructureException {
+	/**
+	 * Helper method for the RMSD and TMscore calculation. It gets the atoms and rotates them.
+	 * @return
+	 * @throws StructureAlignmentException
+	 * @throws StructureException
+	 */
+	private List<Atom[]> getRotatedAtoms() throws StructureAlignmentException, StructureException {
 		
 		if (rotation == null || translation == null) throw new StructureAlignmentException("Empty Pose: updatePose() first.");
 		

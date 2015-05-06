@@ -20,12 +20,15 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.AFPTwister;
@@ -65,23 +68,36 @@ public class StructureAlignmentDisplay {
    }
    
    /** 
-    * Display a MultipleAlignment. Atoms are rotated here with the Pose method.
+    * Display a MultipleAlignment. New structures are downloaded if they were not cached in the alignment
+    * and they are entirely rotated here with the Pose information.
     * 
     * @param multAln
     * @return MultipleAlignmentJmol instance
     * @throws StructureException
     * @throws StructureAlignmentException 
+    * @throws IOException 
     */
-   public static MultipleAlignmentJmol display(MultipleAlignment multAln) throws StructureException, StructureAlignmentException {
-	   	
-		for (int i=0; i<multAln.size(); i++){
+   public static MultipleAlignmentJmol display(MultipleAlignment multAln) throws StructureException, StructureAlignmentException, IOException {
+	   
+	   	int size = multAln.size();
+	   	if (multAln.getAtomArrays() == null) multAln.getParent().updateAtomArrays();
+	   
+		for (int i=0; i<size; i++){
 			if (multAln.getAtomArrays().get(i).length < 1) 
 				throw new StructureException("Length of atoms arrays is too short! " + multAln.getAtomArrays().get(i).length);
 		}
 		
 		try {
-			
-			List<Atom[]> rotatedAtoms = multAln.getPose().getRotatedAtoms();
+			List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+			//Rotate the atom coordinates of all the structures
+			for (int i=0; i<size; i++){
+				Structure displayS = multAln.getAtomArrays().get(i)[0].getGroup().getChain().getParent().clone();
+				Atom[] rotCA = StructureTools.getAtomCAArray(displayS);
+				//Rotate the structure to ensure a full rotation in the display
+				Calc.rotate(rotCA[0].getGroup().getChain().getParent(), multAln.getPose().getRotation().get(i));
+				Calc.shift(rotCA[0].getGroup().getChain().getParent(), multAln.getPose().getTranslation().get(i));
+				rotatedAtoms.add(rotCA);
+			}
 			
 			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
 			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
@@ -91,7 +107,7 @@ public class StructureAlignmentDisplay {
 			
 			 e.printStackTrace();
 	         //The rotation matrices are not present
-	         System.err.println("No information found to rotate the structures!");
+	         System.err.println("No Pose information found to rotate the structures!");
 	         //TODO Calculate the rotation matrices and the translations. For now no rotation applied
 	         MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, multAln.getAtomArrays());
 	 		 jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());

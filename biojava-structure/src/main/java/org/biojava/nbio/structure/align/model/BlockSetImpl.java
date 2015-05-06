@@ -86,7 +86,10 @@ public class BlockSetImpl implements Serializable, BlockSet{
 
 	@Override
 	public void setMultipleAlignment(MultipleAlignment parent) {
+		//Delete the alignment instance from the parent list
+		if (parent!=null) parent.getBlockSets().remove(this);
 		this.parent = parent;
+		//Cross-link parent and this instance
 		if (parent!=null) parent.getBlockSets().add(this);
 	}
 

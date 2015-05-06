@@ -39,7 +39,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 	
 	/**
 	 *  version history:
-	 *  1.0 - Initial code implementation from article.
+	 *  1.0 - Initial code implementation from CEMC article.
 	 */
 	private static final String version = "1.0";
 	private static final String algorithmName = "jCEMC";
@@ -47,7 +47,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 	private MultipleAlignmentEnsemble ensemble;
 	
 	/**
-	 * Default constructor. Instantiates an empty CeMcMain object.
+	 * Default constructor. Instantiates an empty CeMcMain object with the default parameters.
 	 */
 	public CeMcMain(){
 		ensemble = null;
@@ -67,7 +67,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 	 * @throws StructureException 
 	 * @throws StructureAlignmentException 
 	 */
-	public static MultipleAlignment generateSeed(List<Atom[]> atomArrays) throws InterruptedException, ExecutionException, StructureAlignmentException, StructureException{
+	public MultipleAlignment generateSeed(List<Atom[]> atomArrays) throws InterruptedException, ExecutionException, StructureAlignmentException, StructureException{
 		
 		int size = atomArrays.size();
 		
@@ -133,7 +133,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 	 * @throws StructureAlignmentException 
 	 * @throws StructureException 
 	 */
-	private static MultipleAlignment seedFromReference(List<AFPChain> afpList, List<Atom[]> atomArrays, int ref) throws StructureAlignmentException, StructureException {
+	private MultipleAlignment seedFromReference(List<AFPChain> afpList, List<Atom[]> atomArrays, int ref) throws StructureAlignmentException, StructureException {
 		
 		int size = atomArrays.size();  //the number of structures
 		int length = 0;  //the number of residues of the reference structure
@@ -172,7 +172,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 		}
 		
 		//Now that we have the equivalencies we create the MultipleAlignment
-		MultipleAlignment seed = new MultipleAlignmentImpl(atomArrays);
+		MultipleAlignment seed = new MultipleAlignmentImpl(ensemble);
 		BlockSet blockSet = new BlockSetImpl(seed);
 		new BlockImpl(blockSet);  //This automatically adds a Block to the Block list in BlockSet
 		
@@ -212,7 +212,8 @@ public class CeMcMain implements MultipleStructureAlignment{
 	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException, StructureAlignmentException {
 		
 		MultipleAlignment result = null;
-		ensemble = new MultipleAlignmentEnsembleImpl(atomArrays);
+		ensemble = new MultipleAlignmentEnsembleImpl();
+		ensemble.setAtomArrays(atomArrays);
 		
 		//Generate the seed alignment from all-to-all pairwise alignments
 		try {
@@ -220,8 +221,8 @@ public class CeMcMain implements MultipleStructureAlignment{
 			ExecutorService executor = Executors.newCachedThreadPool();
 			List<Future<MultipleAlignment>> afpFuture = new ArrayList<Future<MultipleAlignment>>();
 			
-			//Repeat the optimization 100 times in parallel
-			for (int i=0; i<100; i++){
+			//Repeat the optimization 10 times in parallel
+			for (int i=0; i<10; i++){
 				Callable<MultipleAlignment> worker = new CeMcOptimizer(result);
 	  			Future<MultipleAlignment> submit = executor.submit(worker);
 	  			afpFuture.add(submit);

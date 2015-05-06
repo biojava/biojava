@@ -64,7 +64,10 @@ public class BlockImpl implements Serializable, Block{
 
 	@Override
 	public void setBlockSet(BlockSet parent) {
+		//Delete the alignment instance from the parent list
+		if (parent!=null) parent.getBlocks().remove(this);
 		this.parent = parent;
+		//Cross-link the parent and this instance
 		if (parent!=null) parent.getBlocks().add(this);
 		
 	}

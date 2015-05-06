@@ -1,8 +1,10 @@
 package org.biojava.nbio.structure.align.model;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -86,7 +88,8 @@ public interface MultipleAlignmentEnsemble extends Cloneable{
 	
 	/**
 	 * Returns a List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).
-	 * They are in the same order as in the Atom List and alignment List (same index number for same structure).
+	 * The names are structure identifiers of the structures.
+	 * They are in the same order as in the alignment Blocks (same index number for same structure).
 	 * @return List of String names of the structures
 	 * @see #setStructureNames(List)
 	 * @see #getAtomArrays()
@@ -95,7 +98,8 @@ public interface MultipleAlignmentEnsemble extends Cloneable{
 
 	/**
 	 * Set the List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).
-	 * @param structureNames names of the structures
+	 * The names are structure identifiers of the structures.
+	 * @param structureNames names of the structures, structure identifiers
 	 * @see #getStructureNames()
 	 * @see #setAtomArrays(List)
 	 */
@@ -103,6 +107,7 @@ public interface MultipleAlignmentEnsemble extends Cloneable{
 
 	/**
 	 * Returns the List of Atom arrays. Every structure has an Atom array associated.
+	 * The Atom arrays are only stored as a cache, and must be deleted when the alignment is serialized or stored.
 	 * @return List of Atom[].
 	 * @see #setAtomArrays(List)
 	 */
@@ -110,12 +115,24 @@ public interface MultipleAlignmentEnsemble extends Cloneable{
 
 	/**
 	 * Sets the List of Atom arrays. Every structure has an Atom array associated.
+	 * The Atom arrays are only stored as a cache, and must be deleted when the alignment is serialized or stored.
 	 * @param atomArrays the List of Atom[].
-	 * @param setNames if true the List of structure names is updated with the corresponding PDB codes of the Atoms.
 	 * @see #getAtomArrays()
 	 * @see #setStructureNames(List)
 	 */
-	public void setAtomArrays(List<Atom[]> atomArrays, boolean setNames);
+	public void setAtomArrays(List<Atom[]> atomArrays);
+	
+	/**
+	 * Downloads and sets the List of Atom arrays from the Structure identifiers.
+	 * The Atom arrays are only stored as a cache, and must be deleted when the alignment is serialized or stored.
+	 * @param atomArrays the List of Atom[].
+	 * @throws StructureAlignmentException
+	 * @throws StructureException 
+	 * @throws IOException 
+	 * @see #setAtomArrays(List)
+	 * @see #setStructureNames(List)
+	 */
+	public void updateAtomArrays() throws StructureAlignmentException, IOException, StructureException;
 	
 	/**
 	 * Return the number of alternative alignments stored in the EnsembleMSTA object.

@@ -114,14 +114,5 @@ public interface Pose extends Cloneable{
 	 * @throws StructureAlignmentException
 	 */
 	public int size() throws StructureAlignmentException;
-	
-	/**
-	 * Creates and returns a List of Atoms rotated with the Pose 3D information. 
-	 * The rotated Atoms are a deep copy of the ones stored in the MultipleAlignment.
-	 * @return List of rotated Atom arrays
-	 * @throws StructureAlignmentException
-	 * @throws StructureException 
-	 */
-	public List<Atom[]> getRotatedAtoms() throws StructureAlignmentException, StructureException;
 
 }

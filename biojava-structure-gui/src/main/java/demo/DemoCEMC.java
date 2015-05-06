@@ -15,7 +15,7 @@ import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
- * Demo for visualizing the results of a CEMC result.
+ * Demo for running a CEMC Multiple Structure Alignment and visualizing the results.
  * 
  * @author Aleix Lafita
  * 
@@ -25,8 +25,9 @@ public class DemoCEMC {
 	public static void main(String[] args) throws IOException, StructureException, StructureAlignmentException, InterruptedException, ExecutionException {
 		
 		//Specify the structures to align
-		//List<String> names = Arrays.asList("1tim.a", "1vzw", "1nsj", "3tha.a");			//TIM barrels
-		List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.a", "1ith.a");		//globins
+		//List<String> names = Arrays.asList("1tim.A", "1vzw", "1nsj", "3tha.A");				//TIM barrels
+		List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.A", "1ith.A");				//globins
+		//List<String> names = Arrays.asList("4xt3", "4or2.A", "3odu.A", "2z73.A", "4ug2.A");			//GPCRs
 		
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();

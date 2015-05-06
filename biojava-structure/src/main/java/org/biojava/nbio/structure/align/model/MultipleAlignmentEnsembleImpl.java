@@ -1,11 +1,14 @@
 package org.biojava.nbio.structure.align.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -51,14 +54,14 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	}
 	
 	/**
-	 * Constructor using AtomArrays.
-	 * @param atomArrays List of Atom arrays of the structures.
+	 * Constructor using structure identifiers.
+	 * @param structureNames List of Structure names, that can be parsed by AtomCache.
 	 * @return MultipleAlignmentEnsemble a MultipleAlignmentEnsemble instance with the structures.
 	 */
-	public MultipleAlignmentEnsembleImpl(List<Atom[]> atomArrays){
+	public MultipleAlignmentEnsembleImpl(List<String> structureNames){
 		
 		this();
-		setAtomArrays(atomArrays, true);
+		setStructureNames(structureNames);
 	}
 	
 	/**
@@ -96,7 +99,6 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 			}
 		}
 		
-		//TODO set new parent of the MultipleAlignment copies
 		multipleAlignments = null;
 		if (e.multipleAlignments!=null){
 			//Make a deep copy of everything
@@ -162,7 +164,6 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 
 	@Override
 	public List<String> getStructureNames() {
-		if (structureNames == null) structureNames = new ArrayList<String>();
 		return structureNames;
 	}
 
@@ -173,18 +174,27 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 
 	@Override
 	public List<Atom[]> getAtomArrays() {
-		if (atomArrays == null) atomArrays = new ArrayList<Atom[]>();
+		if (atomArrays == null);
 		return atomArrays;
 	}
 
 	@Override
-	public void setAtomArrays(List<Atom[]> atomArrays, boolean setNames) {
+	public void setAtomArrays(List<Atom[]> atomArrays) {
 		this.atomArrays = atomArrays;
-		if (setNames){
-			List<String> names = new ArrayList<String>();
-			for (int i=0; i<atomArrays.size(); i++)
-				names.add(atomArrays.get(i)[0].getGroup().getChain().getParent().getPDBCode());
-			setStructureNames(names);
+		//If the atomArrays are changed the structure identifiers must be also changed.
+		List<String> names = new ArrayList<String>();
+		for (int i=0; i<atomArrays.size(); i++)
+			names.add(atomArrays.get(i)[0].getGroup().getChain().getParent().getIdentifier());
+		setStructureNames(names);
+	}
+	
+	@Override
+	public void updateAtomArrays() throws StructureAlignmentException, IOException, StructureException{
+		AtomCache cache = new AtomCache();
+		atomArrays = new ArrayList<Atom[]>();
+		for (int s=0; s<size(); s++){
+			Atom[] array = cache.getAtoms(structureNames.get(s));
+			atomArrays.add(array);
 		}
 	}
 
@@ -239,8 +249,8 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 
 	@Override
 	public int size() throws StructureAlignmentException {
-		if (atomArrays == null) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: atomArrays == null");
-		else return atomArrays.size();
+		if (structureNames == null) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: structureNames == null");
+		else return structureNames.size();
 	}
 
 }

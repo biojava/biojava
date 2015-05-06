@@ -46,11 +46,11 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	/**
 	 * Constructor that allows creating a MultipleAlignment instance without caring about the ensemble.
 	 * Ideal for dealing with one MultipleAlignment alternative only.
-	 * @param atomArrays List of Atom arrays of the structures.
-	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
+	 * @param structureNames List of Structure identifiers.
+	 * @return MultipleAlignment a MultipleAlignment instance part of its own MultipleAlignmentEnsemble.
 	 */
-	public MultipleAlignmentImpl(List<Atom[]> atomArrays) {
-		this(new MultipleAlignmentEnsembleImpl(atomArrays));
+	public MultipleAlignmentImpl(List<String> structureNames) {
+		this(new MultipleAlignmentEnsembleImpl(structureNames));
 	}
 	
 	/**
@@ -61,7 +61,6 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	public MultipleAlignmentImpl(MultipleAlignmentEnsemble ensemble) {
 		
 		parent = ensemble;
-		//TODO is this a good idea? Cross-link the two objects automatically when instanciated.
 		if (parent!=null) parent.getMultipleAlignments().add(this);
 		
 		blockSets = null;
@@ -84,7 +83,9 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	 */
 	public MultipleAlignmentImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException {
 		//Copy all the creation and algorithm information
-		this(new MultipleAlignmentEnsembleImpl(Arrays.asList(ca1,ca2)));
+		this();
+		parent.setAtomArrays(Arrays.asList(ca1,ca2));
+		parent.setStructureNames(Arrays.asList(afpChain.getName1(),afpChain.getName2()));
 		parent.setAlgorithmName(afpChain.getAlgorithmName());
 		parent.setVersion(afpChain.getVersion());
 		parent.setId(afpChain.getId());
@@ -92,7 +93,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 		algScore = afpChain.getAlignScore();
 		probability = afpChain.getProbability();
 		
-		//Create a BlockSet for every block in AFPChain TODO we dont't know if blocks correspond to flexible or CP.
+		//Create a BlockSet for every block in AFPChain
 		for (int bs=0; bs<afpChain.getBlockNum(); bs++){
 			BlockSet blockSet = new BlockSetImpl(this);
 			Block block = new BlockImpl(blockSet);
@@ -302,8 +303,10 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 
 	@Override
 	public void setParent(MultipleAlignmentEnsemble parent) {
+		//Delete the alignment instance from the parent list
+		if (parent!=null) parent.getMultipleAlignments().remove(this);
 		this.parent = parent;
-		//TODO is this a good idea? Cross-link the two objects automatically when parent is changed.
+		//Cross-link the two objects automatically when parent is changed.
 		if (parent!=null) parent.getMultipleAlignments().add(this);
 	}
 	
