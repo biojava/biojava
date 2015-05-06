@@ -84,9 +84,10 @@ public interface MultipleAlignment extends Cloneable{
 	/**
 	 * Returns the List of Atom arrays. Every structure has an Atom array associated.
 	 * @return List of Atom[].
+	 * @throws StructureAlignmentException 
 	 * @see #getStructureNames()
 	 */
-	public List<Atom[]> getAtomArrays();
+	public List<Atom[]> getAtomArrays() throws StructureAlignmentException;
 	
 	/**
 	 * Returns the BlockSet List of the multiple structure alignment.

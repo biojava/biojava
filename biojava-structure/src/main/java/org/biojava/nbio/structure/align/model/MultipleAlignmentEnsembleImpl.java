@@ -173,8 +173,8 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	}
 
 	@Override
-	public List<Atom[]> getAtomArrays() {
-		if (atomArrays == null);
+	public List<Atom[]> getAtomArrays() throws StructureAlignmentException {
+		if (atomArrays == null) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: updateAtomArrays() first");
 		return atomArrays;
 	}
 
@@ -182,10 +182,9 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	public void setAtomArrays(List<Atom[]> atomArrays) {
 		this.atomArrays = atomArrays;
 		//If the atomArrays are changed the structure identifiers must be also changed.
-		List<String> names = new ArrayList<String>();
+		structureNames = new ArrayList<String>();
 		for (int i=0; i<atomArrays.size(); i++)
-			names.add(atomArrays.get(i)[0].getGroup().getChain().getParent().getIdentifier());
-		setStructureNames(names);
+			structureNames.add(atomArrays.get(i)[0].getGroup().getChain().getParent().getIdentifier());
 	}
 	
 	@Override

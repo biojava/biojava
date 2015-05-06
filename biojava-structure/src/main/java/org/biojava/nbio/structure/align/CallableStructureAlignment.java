@@ -111,7 +111,7 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 			}
 			
 			//Do not output anything if there is no File information
-			if (outFile == null || outFileDir == null){
+			if (outFile != null && outFileDir != null){
 				String desc2 = structure2.getPDBHeader().getDescription();
 				if ( desc2 == null)
 					desc2="";

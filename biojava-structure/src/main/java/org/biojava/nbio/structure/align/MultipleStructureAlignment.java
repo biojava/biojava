@@ -25,7 +25,6 @@ import java.util.List;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
-import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 

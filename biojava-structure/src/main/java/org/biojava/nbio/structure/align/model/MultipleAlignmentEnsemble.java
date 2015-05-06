@@ -109,9 +109,10 @@ public interface MultipleAlignmentEnsemble extends Cloneable{
 	 * Returns the List of Atom arrays. Every structure has an Atom array associated.
 	 * The Atom arrays are only stored as a cache, and must be deleted when the alignment is serialized or stored.
 	 * @return List of Atom[].
+	 * @throws StructureAlignmentException 
 	 * @see #setAtomArrays(List)
 	 */
-	public List<Atom[]> getAtomArrays();
+	public List<Atom[]> getAtomArrays() throws StructureAlignmentException;
 
 	/**
 	 * Sets the List of Atom arrays. Every structure has an Atom array associated.

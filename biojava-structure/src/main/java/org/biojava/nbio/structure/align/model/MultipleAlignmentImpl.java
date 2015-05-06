@@ -181,7 +181,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	}
 
 	@Override
-	public List<Atom[]> getAtomArrays() {
+	public List<Atom[]> getAtomArrays() throws StructureAlignmentException {
 		return parent.getAtomArrays();
 	}
 
