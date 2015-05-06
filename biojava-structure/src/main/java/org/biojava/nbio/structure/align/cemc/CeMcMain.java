@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.CallableStructureAlignment;
 import org.biojava.nbio.structure.align.MultipleStructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
@@ -41,8 +42,8 @@ public class CeMcMain implements MultipleStructureAlignment{
 	 *  version history:
 	 *  1.0 - Initial code implementation from CEMC article.
 	 */
-	private static final String version = "1.0";
-	private static final String algorithmName = "jCEMC";
+	public static final String version = "1.0";
+	public static final String algorithmName = "jCEMC";
 	private CeMcParameters params;
 	private MultipleAlignmentEnsemble ensemble;
 	
@@ -87,7 +88,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 	  	for (int i=0; i<size; i++){	  		
 	  		for (int j=i+1; j<size; j++){
 	    
-	  			Callable<AFPChain> worker = new ParallelAlignment(atomArrays.get(i), atomArrays.get(j), new CeMain());
+	  			Callable<AFPChain> worker = new CallableStructureAlignment(atomArrays.get(i), atomArrays.get(j), CeMain.algorithmName);
 	  			Future<AFPChain> submit = executor.submit(worker);
 	  			afpFuture.add(submit);
 	  		}
