@@ -32,28 +32,6 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
    MultipleAlignment multAln;
    List<Atom[]> rotatedAtoms;    //rotated atom arrays of every structure
 
-   public static void main(String[] args){
-      try {
-
-
-         UserConfiguration config = new UserConfiguration();
-         AtomCache cache = new AtomCache(config);
-
-         Structure struc = cache.getStructure("5pti");
-
-         MultipleAlignmentJmol jmolPanel = new MultipleAlignmentJmol(null, null);
-
-         jmolPanel.setStructure(struc);
-
-         // send some RASMOL style commands to Jmol
-         jmolPanel.evalString("select * ; color chain;");
-         jmolPanel.evalString("select *; spacefill off; wireframe off; backbone 0.4;  ");
-
-      } catch (Exception e){
-         e.printStackTrace();
-      }
-   }
-
    /**
     * Default constructor creates an empty window, from where alignments can be made through the align menu.
     * @throws StructureAlignmentException 
@@ -344,7 +322,7 @@ public void actionPerformed(ActionEvent e) {
       
       //Color the equivalent residues of every structure
       StringBuffer sel = new StringBuffer();
-      sel.append("select *; color lightgrey; ");
+      sel.append("select *; color lightgrey; backbone 0.1; ");
       List<List<String>> allPDB = new ArrayList<List<String>>();
       //Loop through all the structures and get the aligned residues
       for (int i=0; i<multAln.size(); i++){
@@ -363,7 +341,7 @@ public void actionPerformed(ActionEvent e) {
           }
           if ( pos == 0)
              sel.append("none");
-          sel.append("; backbone 0.6 ; color ["+ colors[i].getRed() +","+ colors[i].getGreen() +","+ colors[i].getBlue() +"]; ");
+          sel.append("; backbone 0.4 ; color ["+ colors[i].getRed() +","+ colors[i].getGreen() +","+ colors[i].getBlue() +"]; ");
           
       }
       

@@ -25,14 +25,15 @@ public class DemoCEMC {
 	public static void main(String[] args) throws IOException, StructureException, StructureAlignmentException, InterruptedException, ExecutionException {
 		
 		//Specify the structures to align
-		//List<String> names = Arrays.asList("1tim.A", "1vzw", "1nsj", "3tha.A");						//TIM barrels
-		//List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.A", "1ith.A");							//globins
-		List<String> names = Arrays.asList("4xt3", "4or2.A", "3odu.A", "2z73.A", "4ug2.A");			//GPCRs
+		List<String> names = Arrays.asList("1tim.A", "1vzw", "1nsj", "3tha.A");						//TIM barrels
+		//List<String> names = Arrays.asList("4xt3", "4or2.A", "3odu.A", "2z73.A", "4ug2.A");			//GPCRs
+		//List<String> names = Arrays.asList("2hla.B", "3hla.B", "1cd8", "2rhe", "1tlk", "1ten", "1ttf");			//immunoglobulins
+		//List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.A", "1ith.A","1idr.A", "1dlw", "1kr7.A", "1ew6.A", "1it2.A", "1eco", "3sdh.A", "1cg5.B", "1fhj.B", "1ird.A", "1mba", "2gdm", "1b0b", "1h97.A", "1ash", "1cqx.A", "1jl7.A");						//globins
 		
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
-		for (String name:names) atomArrays.add(cache.getAtoms(name));
+		for (String name:names)	atomArrays.add(cache.getAtoms(name));
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
 		CeMcMain algorithm = new CeMcMain();
