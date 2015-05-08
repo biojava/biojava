@@ -28,7 +28,7 @@ import org.jmol.api.JmolViewer;
  */
 public abstract class AbstractAlignmentJmol implements MouseMotionListener, MouseListener, WindowListener,ActionListener {
 
-	   Structure structure; 
+	   protected Structure structure; 
 
 	   protected JmolPanel jmolPanel;
 	   protected JFrame frame;

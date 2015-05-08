@@ -52,9 +52,9 @@ import java.util.List;
  */
 public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
-   protected Atom[] ca1;
-   protected Atom[] ca2;
-   protected AFPChain afpChain;
+   private Atom[] ca1;
+   private Atom[] ca2;
+   private AFPChain afpChain;
 
    public static void main(String[] args){
       try {
