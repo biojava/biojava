@@ -360,6 +360,22 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	}
 
 	/**
+	 * Returns true if the 2 molecules of this interface are the same entity (i.e. homomeric interface), false
+	 * otherwise (i.e. heteromeric interface)
+	 * @return true if homomeric or if either of the entities is unknonw (null Compounds), false otherwise
+	 */
+	public boolean isHomomeric() {
+		Compound first = getParentChains().getFirst().getCompound();
+		Compound second = getParentChains().getSecond().getCompound();
+		if (first==null || second==null) {
+			logger.warn("Some compound of interface {} is null, can't determine whether it is homo/heteromeric. Consider it homomeric", getId());
+			return true;
+		}
+		return 
+			first.getRepresentative().getChainID().equals(second.getRepresentative().getChainID());			
+	}
+	
+	/**
 	 * Gets a map of ResidueNumbers to GroupAsas for all groups of first chain.
 	 * @return
 	 */
