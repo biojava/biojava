@@ -932,9 +932,8 @@ public class AlignmentTools {
 			SVDSuperimposer svdb = new SVDSuperimposer(ca1block, ca2block);
 			Matrix matrixb = svdb.getRotation();
 			Atom shiftb = svdb.getTranslation();
-			Arrays.fill(blockMxs, matrixb);
-			afpChain.setBlockRotationMatrix(blockMxs);
-			Arrays.fill(blockShifts, shiftb);
+			afpChain.getBlockRotationMatrix()[k] = matrixb;
+			afpChain.getBlockShiftVector()[k] = shiftb;
 			afpChain.setBlockShiftVector(blockShifts);
 			for (Atom a : ca2block) {
 				Calc.rotate(a, matrixb);
