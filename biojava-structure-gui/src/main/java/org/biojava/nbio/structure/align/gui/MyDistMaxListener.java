@@ -45,8 +45,8 @@ public void actionPerformed(ActionEvent arg0)
          System.err.println("Not displaying any alignment currently!");
          return;
       }
-      showMatrix(parent.getDisTable1(), "Internal distances for Structure 1");
-      showMatrix(parent.getDisTable2(), "Internal distances for Structure 2");
+      if (parent.getDisTable1()!=null) showMatrix(parent.getDisTable1(), "Internal distances for Structure 1");
+      if (parent.getDisTable2()!=null) showMatrix(parent.getDisTable2(), "Internal distances for Structure 2");
 
    }
 
