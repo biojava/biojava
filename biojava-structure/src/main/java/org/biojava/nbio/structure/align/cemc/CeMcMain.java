@@ -221,10 +221,11 @@ public class CeMcMain implements MultipleStructureAlignment{
 			result = generateSeed(atomArrays);
 			ExecutorService executor = Executors.newCachedThreadPool();
 			List<Future<MultipleAlignment>> afpFuture = new ArrayList<Future<MultipleAlignment>>();
+			int seed = 0;
 			
 			//Repeat the optimization 10 times in parallel
-			for (int i=0; i<10; i++){
-				Callable<MultipleAlignment> worker = new CeMcOptimizer(result);
+			for (int i=0; i<1; i++){
+				Callable<MultipleAlignment> worker = new CeMcOptimizer(result, seed+i);
 	  			Future<MultipleAlignment> submit = executor.submit(worker);
 	  			afpFuture.add(submit);
 			}
