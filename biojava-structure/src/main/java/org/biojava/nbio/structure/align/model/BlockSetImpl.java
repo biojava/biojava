@@ -13,7 +13,7 @@ import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
  * @author Aleix Lafita
  * 
  */
-public class BlockSetImpl implements Serializable, BlockSet{
+public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 
 	private static final long serialVersionUID = -1015791986000076089L;
 	
@@ -68,7 +68,7 @@ public class BlockSetImpl implements Serializable, BlockSet{
 	}
 	
 	@Override
-	public Object clone(){
+	public BlockSetImpl clone(){
 		return new BlockSetImpl(this);
 	}
 	

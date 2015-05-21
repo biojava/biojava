@@ -13,13 +13,13 @@ import java.util.List;
  * @author Aleix Lafita
  * 
  */
-public interface Block extends Cloneable{
+public interface Block {
 	
 	/**
-	 * Creates and returns an identical copy of this object.
+	 * Creates and returns an identical copy of this block.
 	 * @return Block identical copy of this object.
 	 */
-	public Object clone();
+	public Block clone();
 	
 	/** 
      * Set the back-reference to its parent BlockSet.

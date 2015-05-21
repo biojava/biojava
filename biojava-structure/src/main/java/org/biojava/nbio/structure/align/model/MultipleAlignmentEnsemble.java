@@ -16,13 +16,14 @@ import org.biojava.nbio.structure.jama.Matrix;
  * @author Aleix Lafita
  *
  */
-public interface MultipleAlignmentEnsemble extends Cloneable{
+public interface MultipleAlignmentEnsemble {
 
 	/**
-	 * Creates and returns an identical copy of this object.
+	 * Creates and returns an identical copy of this ensemble, including a deep
+	 * clone of all constituent alignments.
 	 * @return EnsembleMSTA identical copy of this object.
 	 */
-	public Object clone();
+	public MultipleAlignmentEnsemble clone();
 	
 	/**
 	 * Returns the name of the multiple structure alignment algorithm that created the MultipleAlignment objects.

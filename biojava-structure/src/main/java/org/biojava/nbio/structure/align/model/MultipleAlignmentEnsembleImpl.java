@@ -17,7 +17,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * @author Aleix Lafita
  *
  */
-public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble, Serializable{
+public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 
 	private static final long serialVersionUID = -5732485866623431898L;
 	
@@ -113,7 +113,7 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	}
 	
 	@Override
-	public Object clone() {
+	public MultipleAlignmentEnsembleImpl clone() {
 		return new MultipleAlignmentEnsembleImpl(this);
 	}
 	

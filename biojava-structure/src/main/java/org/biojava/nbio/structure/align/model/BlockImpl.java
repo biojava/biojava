@@ -10,7 +10,7 @@ import java.util.List;
  * @author Aleix Lafita
  * 
  */
-public class BlockImpl implements Serializable, Block{
+public class BlockImpl implements Serializable, Block, Cloneable{
 
 	private static final long serialVersionUID = -5804042669466177641L;
 	
@@ -52,7 +52,7 @@ public class BlockImpl implements Serializable, Block{
 	}
 	
 	@Override
-	public Object clone(){
+	public Block clone(){
 		return new BlockImpl(this);
 	}
 
