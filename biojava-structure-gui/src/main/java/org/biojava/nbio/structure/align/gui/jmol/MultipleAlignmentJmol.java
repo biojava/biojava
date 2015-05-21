@@ -4,7 +4,6 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.AlignmentGui;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
-import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
@@ -174,7 +173,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				} catch (StructureAlignmentException e1) {
 					e1.printStackTrace();
 				}
-				evalString(script+"restore selection; ");
+				evalString(script+"; restore selection; ");
 			}
 		});
 
@@ -438,8 +437,8 @@ public void actionPerformed(ActionEvent e) {
    
    private static void printJmolScript4Block(Atom[] atoms, List<List<Integer>> alignRes, Color[] colors, StringWriter jmol, int str, int colorPos, int blockNum) {
 	 
-	 Color start = ColorUtils.lighter(colors[str%colors.length], 1);
-	 double fraction = (colorPos*1.0)/blockNum;
+	 Color start = colors[str%colors.length];
+	 double fraction = (colorPos*1.0)/(blockNum+1.0);
 	 Color color = ColorUtils.darker(start, fraction);
 	 
 	 //Obtain the residues aligned in this block of the structure
@@ -473,7 +472,7 @@ public void actionPerformed(ActionEvent e) {
 	   
       if (multAln != null) {
          String script = getJmolString(multAln, atomArrays,colors);
-         System.out.println(script);
+         //System.out.println(script);
          evalString(script);
          jmolPanel.evalString("save STATE state_1");
          jmolPanel.evalString("hide ligand");
