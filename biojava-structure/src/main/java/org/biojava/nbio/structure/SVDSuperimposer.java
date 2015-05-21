@@ -22,6 +22,10 @@
  */
 package org.biojava.nbio.structure;
 
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector3d;
+
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.jama.SingularValueDecomposition;
 
@@ -363,6 +367,10 @@ public class SVDSuperimposer {
         a.setY(tran.get(0,1));
         a.setZ(tran.get(0,2));
         return a;
+    }
+    
+    public Matrix4d getTransformation() {
+    	return Calc.getTransformation(rot, tran);
     }
 
 }

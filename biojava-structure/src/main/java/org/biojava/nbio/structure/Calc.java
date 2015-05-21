@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -1047,6 +1048,29 @@ public class Calc {
 	 */
 	public static void shift(Atom[] ca, Atom b) {
 		for (Atom atom : ca) Calc.shift(atom, b);
+	}
+	
+	/**
+	 * Convert JAMA rotation and translation to a Vecmath transformation matrix
+	 * @param rot 3x3 Rotation matrix
+	 * @param trans 3x1 Translation matrix
+	 * @return 4x4 transformation matrix
+	 */
+	public static Matrix4d getTransformation(Matrix rot, Matrix trans) {
+		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
+				new Vector3d(trans.getColumnPackedCopy()),
+				1.0);
+	}
+	/**
+	 * Convert JAMA rotation and translation to a Vecmath transformation matrix
+	 * @param rot 3x3 Rotation matrix
+	 * @param trans 3x1 Translation matrix
+	 * @return 4x4 transformation matrix
+	 */
+	public static Matrix4d getTransformation(Matrix rot, Atom trans) {
+		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
+				new Vector3d(trans.getCoords()),
+				1.0);
 	}
 }
 
