@@ -340,7 +340,7 @@ public void actionPerformed(ActionEvent e) {
       }
    }
 
-   public String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+   private static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
      
       if ( afpChain.getBlockNum() > 1){
          return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
@@ -415,7 +415,7 @@ public void actionPerformed(ActionEvent e) {
       return j.toString();
    }
    
-   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
+   private static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
 	   int blockNum = afpChain.getBlockNum();
 	   
 	   if ( blockNr >= blockNum)

@@ -223,16 +223,16 @@ public class CeMcMain implements MultipleStructureAlignment{
 			List<Future<MultipleAlignment>> afpFuture = new ArrayList<Future<MultipleAlignment>>();
 			int seed = 0;
 			
-			//Repeat the optimization 10 times in parallel
-			for (int i=0; i<1; i++){
+			//Repeat the optimization 10 times in parallel, to obtain a more robust result.
+			for (int i=0; i<10; i++){
 				Callable<MultipleAlignment> worker = new CeMcOptimizer(result, seed+i);
 	  			Future<MultipleAlignment> submit = executor.submit(worker);
 	  			afpFuture.add(submit);
 			}
 			
-			//When all the optimizations are finished take the one with the best result
+			//When all the optimizations are finished take the one with the best result (best TM-score)
 			for (int i=0; i<afpFuture.size(); i++){
-				if (afpFuture.get(i).get().getPose().getRMSD() < result.getPose().getRMSD()){
+				if (afpFuture.get(i).get().getPose().getTMscore() < result.getPose().getTMscore()){
 					result = afpFuture.get(i).get();
 				}
 			}

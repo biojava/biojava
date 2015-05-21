@@ -31,7 +31,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  */
 public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	
-	private static final boolean debug = true;  //Prints the optimization moves and saves a file of the history
+	private static final boolean debug = false;  //Prints the optimization moves and saves a file of the history
 	private Random rnd;
 	
 	//Optimization parameters
@@ -139,14 +139,13 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		updateScore();
 	}
 	/**
-	 *  Optimization method based in a Monte-Carlo approach. Starting from the refined afpChain uses 5 types of moves:
+	 *  Optimization method based in a Monte-Carlo approach. 4 types of moves:
 	 *  
 	 *  	1- Shift Row: if there are enough freePool residues available.
-	 *  	2- Change Residue: move residues from one structure to another.
-	 *  	3- Expand Block: if there are enough freePool residues available.
-	 *  	4- Shrink Block: move a block column to the freePool.
-	 *  	5- Split and Shrink Block: split a block in the middle and shrink one column.
-	 * @throws StructureAlignmentException 
+	 *  	2- Expand Block: if there are enough freePool residues available.
+	 *  	3- Shrink Block: move a block column to the freePool.
+	 *  	4- Split and Shrink Block: split a block in the middle and shrink one column.
+	 * 
 	 */
 	private void optimizeMC(int maxIter) throws StructureException, StructureAlignmentException{
 		
@@ -718,7 +717,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		double d3 = distances[index10];
 		
 		//Option 4: the highest distance of the seed alignment.
-		double d4 = rmsd*(0.5*size);
+		double d4 = rmsd*(1+0.25*size);
 		
 		d0=Math.max(d4,5);  //The minimum d0 value is 5A
 	}
