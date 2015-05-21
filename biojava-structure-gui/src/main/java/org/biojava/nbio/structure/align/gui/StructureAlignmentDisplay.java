@@ -80,7 +80,7 @@ public class StructureAlignmentDisplay {
    public static MultipleAlignmentJmol display(MultipleAlignment multAln) throws StructureException, StructureAlignmentException, IOException {
 	   
 	   	int size = multAln.size();
-	   	if (multAln.getAtomArrays() == null) multAln.getParent().updateAtomArrays();
+	   	if (multAln.getAtomArrays() == null) multAln.getEnsemble().updateAtomArrays();
 	   
 		for (int i=0; i<size; i++){
 			if (multAln.getAtomArrays().get(i).length < 1) 

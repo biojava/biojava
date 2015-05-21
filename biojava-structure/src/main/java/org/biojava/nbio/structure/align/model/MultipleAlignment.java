@@ -32,23 +32,23 @@ public interface MultipleAlignment extends Cloneable{
      * @return MultipleAlignmentEnsemble the parent MultipleAlignment of the BlockSet, or null.
      * @see #setParent(MultipleAlignmentEnsemble)
      */
-	public MultipleAlignmentEnsemble getParent();
+	public MultipleAlignmentEnsemble getEnsemble();
 	
 	/** 
      * Set the back-reference to its parent Ensemble.
      * @param parent the parent MultipleAlignmentEnsemble.
      * @see #getParent()
      */
-	public void setParent(MultipleAlignmentEnsemble parent);
+	public void setEnsemble(MultipleAlignmentEnsemble parent);
 	
 	/**
-	 * Returns the name of the multiple structure alignment algorithm that created this MSTA object.
+	 * Returns the name of the multiple structure alignment algorithm that created this alignment object.
 	 * @return String name of the algorithm.
 	 */
 	public String getAlgorithmName();
 
 	/**
-	 * Returns the version of the algorithm used to generate this MSTA object.
+	 * Returns the version of the algorithm used to generate this alignment object.
 	 * @return String version of the algorithm.
 	 */
 	public String getVersion();
@@ -175,7 +175,7 @@ public interface MultipleAlignment extends Cloneable{
 	 * @see #getBlockSetNum()
 	 */
 	public int size() throws StructureAlignmentException;
-	
+
 	/**
 	 * Returns the total number of aligned residues (columns) in the multiple alignment: the sum of all BlockSet lengths.
 	 * @return int the total number of aligned residues in the alignment.

@@ -235,7 +235,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 					result = afpFuture.get(i).get();
 				}
 			}
-			result.setParent(ensemble);
+			result.setEnsemble(ensemble);
 			executor.shutdown();
 			return result;
 			

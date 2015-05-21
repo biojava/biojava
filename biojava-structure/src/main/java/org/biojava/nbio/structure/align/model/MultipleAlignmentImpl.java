@@ -55,6 +55,8 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	
 	/**
 	 * Constructor linking to an existing ensemble.
+	 * 
+	 * Automatically adds this alignment to the parent ensemble
 	 * @param ensemble parent MultipleAlignmentEnsemble.
 	 * @return MultipleAlignment a MultipleAlignment instance part of an ensemble.
 	 */
@@ -297,12 +299,12 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 	}
 
 	@Override
-	public MultipleAlignmentEnsemble getParent() {
+	public MultipleAlignmentEnsemble getEnsemble() {
 		return parent;
 	}
 
 	@Override
-	public void setParent(MultipleAlignmentEnsemble parent) {
+	public void setEnsemble(MultipleAlignmentEnsemble parent) {
 		//Delete the alignment instance from the parent list
 		if (parent!=null) parent.getMultipleAlignments().remove(this);
 		this.parent = parent;

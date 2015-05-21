@@ -38,11 +38,11 @@ public class DemoCEMC {
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
 		CeMcMain algorithm = new CeMcMain();
 		MultipleAlignment result = algorithm.align(atomArrays);
-		result.getParent().setStructureNames(names);
+		result.getEnsemble().setStructureNames(names);
 		
 		//Information about the alignment
-		result.getParent().setAlgorithmName(algorithm.getAlgorithmName());
-		result.getParent().setVersion(algorithm.getVersion());
+		result.getEnsemble().setAlgorithmName(algorithm.getAlgorithmName());
+		result.getEnsemble().setVersion(algorithm.getVersion());
         
 		StructureAlignmentDisplay.display(result);
 	}
