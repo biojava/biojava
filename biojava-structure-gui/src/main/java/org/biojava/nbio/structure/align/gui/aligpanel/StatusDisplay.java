@@ -21,80 +21,62 @@
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
-import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class StatusDisplay extends JTextField implements AlignmentPositionListener, WindowListener  {
+public class StatusDisplay extends JTextField implements AlignmentPositionListener, WindowListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6939947266417830429L;
-
-	AFPChain afpChain;
-	Atom[] ca1;
-	Atom[] ca2;
-
-	
+	MultipleAlignment multAln;
 
 	public StatusDisplay(){
 		super();
-
 		this.setBackground(Color.white);
 		this.setEditable(false);
-		this.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
-
+		this.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 	}
+	
+	public StatusDisplay(MultipleAlignment multAln){
+		this();
+		this.multAln = multAln;
+	}
+	
 	public void destroy(){
-		afpChain = null;
-		ca1= null;
-		ca2 = null;
-
+		multAln = null;
 	}
 
 	@Override
 	public void mouseOverPosition(AlignedPosition p) {
 
-		if ( afpChain == null)
-			return;
-
-		char[] aligs1  = afpChain.getAlnseq1();
-		char[] aligs2  = afpChain.getAlnseq2();
-
-		char c1 = aligs1[p.getPos1()];
-		char c2 = aligs2[p.getPos2()];
-
+		if (multAln == null) return;
+				
 		try {
-			Atom a1 = DisplayAFP.getAtomForAligPos(afpChain, 0, p.getPos1(), ca1,false);
-			Atom a2 = DisplayAFP.getAtomForAligPos(afpChain, 1, p.getPos2(), ca2,true);
-
-			String pdbInfo1 = JmolTools.getPdbInfo(a1);
-			String pdbInfo2 = JmolTools.getPdbInfo(a2);
-
-			String msg = "alig pos:" + p.getPos1()+ " " +  pdbInfo1 + " ("+c1+") : " + pdbInfo2 + " ("+c2+")";
-
-			this.setText(msg);
-
-
+			String msg = "alig pos";
+			for (int str=0; str<multAln.size(); str++) {
 			
-		} catch (StructureException e){
+				String alnseq  = multAln.getAlnSequences().get(str);
+				char c = alnseq.charAt(p.getPos1());
+		
+				Atom a = DisplayAFP.getAtomForAligPos(multAln, str, p.getPos1());
+				String pdbInfo = JmolTools.getPdbInfo(a);
+				msg += ": "+pdbInfo + " ("+c+") ";
+			}
+			this.setText(msg);
+			this.repaint();
+			
+		} catch (Exception e){
 			e.printStackTrace();
 		}
-
-		this.repaint();
-
 	}
-
-	
 
 	@Override
 	public void positionSelected(AlignedPosition p) {
@@ -103,66 +85,53 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 	}
 	@Override
 	public void toggleSelection(AlignedPosition p) {
-		if ( afpChain == null)
-			return;
-
-		char[] aligs1  = afpChain.getAlnseq1();
-		char[] aligs2  = afpChain.getAlnseq2();
-
-		char c1 = aligs1[p.getPos1()];
-		char c2 = aligs2[p.getPos2()];
-
+		
+		if (multAln == null) return;
+		
 		try {
-			Atom a1 = DisplayAFP.getAtomForAligPos(afpChain, 0, p.getPos1(), ca1,false);
-			Atom a2 = DisplayAFP.getAtomForAligPos(afpChain, 1, p.getPos2(), ca2,true);
+			String msg = "Clicked pos";
+			for (int str=0; str<multAln.size(); str++) {
+			
+				String alnseq  = multAln.getAlnSequences().get(str);
+				char c = alnseq.charAt(p.getPos1());
+		
+				Atom a = DisplayAFP.getAtomForAligPos(multAln, str, p.getPos1());
+				String pdbInfo = JmolTools.getPdbInfo(a);
 
-			String pdbInfo1 = JmolTools.getPdbInfo(a1);
-			String pdbInfo2 = JmolTools.getPdbInfo(a2);
-
-			String msg = "Clicked pos:" + p.getPos1()+ " " + pdbInfo1 + " ("+c1+") : " + pdbInfo2 + " ("+c2+")";
-
+				msg += ": "+pdbInfo + " ("+c+") ";
+			}
 			this.setText(msg);
-		} catch (StructureException e){
+			
+		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
 	}
 
 
 	@Override
 	public void rangeSelected(AlignedPosition start, AlignedPosition end) {
-		char[] aligs1  = afpChain.getAlnseq1();
-		char[] aligs2  = afpChain.getAlnseq2();
-
-		char c1 = aligs1[start.getPos1()];
-		char c3 = aligs1[end.getPos1()];
-		
-		char c2 = aligs2[start.getPos2()];
-		char c4 = aligs2[end.getPos2()];
 		
 		try {
-			Atom a1 = DisplayAFP.getAtomForAligPos(afpChain, 0, start.getPos1(), ca1,false);
-			Atom a2 = DisplayAFP.getAtomForAligPos(afpChain, 1, start.getPos2(), ca2,true);
-
-			Atom a3 = DisplayAFP.getAtomForAligPos(afpChain, 0, end.getPos1(), ca1,false);
-			Atom a4 = DisplayAFP.getAtomForAligPos(afpChain, 1, end.getPos2(), ca2,true);
-			
-			String pdbInfo1 = JmolTools.getPdbInfo(a1);
-			String pdbInfo2 = JmolTools.getPdbInfo(a2);
-
-			String pdbInfo3 = JmolTools.getPdbInfo(a3);
-			String pdbInfo4 = JmolTools.getPdbInfo(a4);
-			
-			String msg =  "Selected range1: " + pdbInfo1 + " ("+c1+") - " + pdbInfo3 + " ("+c3+")";
-			msg       +=  " range2: "         + pdbInfo2 + " ("+c2+") - " + pdbInfo4 + " ("+c4+")";
+			String msg =  "Selected:";
+			for (int str=0; str<multAln.size(); str++) {
+				
+				String alnseq  = multAln.getAlnSequences().get(str);
+				char c1 = alnseq.charAt(start.getPos1());
+				char c2 = alnseq.charAt(end.getPos1());
 		
+				Atom a1 = DisplayAFP.getAtomForAligPos(multAln, str, start.getPos1());
+				Atom a2 = DisplayAFP.getAtomForAligPos(multAln, str, end.getPos1());
+				
+				String pdbInfo1 = JmolTools.getPdbInfo(a1);
+				String pdbInfo2 = JmolTools.getPdbInfo(a2);
 
+				msg +=  " range"+str+": " + pdbInfo1 + " ("+c1+") - " + pdbInfo2 + " ("+c2+")";
+			}
 			this.setText(msg);
-		} catch (StructureException e){
+
+		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
-
 	}
 
 	@Override
@@ -177,29 +146,6 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 
 	}
 
-	public AFPChain getAfpChain() {
-		return afpChain;
-	}
-
-	public void setAfpChain(AFPChain afpChain) {
-		this.afpChain = afpChain;
-	}
-
-	public Atom[] getCa1() {
-		return ca1;
-	}
-
-	public void setCa1(Atom[] ca1) {
-		this.ca1 = ca1;
-	}
-
-	public Atom[] getCa2() {
-		return ca2;
-	}
-
-	public void setCa2(Atom[] ca2) {
-		this.ca2 = ca2;
-	}
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
@@ -235,13 +181,4 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 		// TODO Auto-generated method stub
 		
 	}
-
-	
-	
-	
-
-	
-	
-
-
 }

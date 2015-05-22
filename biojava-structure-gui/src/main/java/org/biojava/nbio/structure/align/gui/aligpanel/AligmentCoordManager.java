@@ -20,14 +20,12 @@
  */
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
-import org.biojava.nbio.structure.align.model.AFPChain;
-
 import java.awt.*;
 
-public class AFPChainCoordManager {
-
+public class AligmentCoordManager {
 	
-	AFPChain afpChain ;
+	int alignmentLength;     	//number of aligned residues
+	int alignmentSize;			//number of strucures aligned
 
 	/** Space on the right side between sequence and legend.
 	 * 
@@ -73,6 +71,13 @@ public class AFPChainCoordManager {
 	
 	private static final int DEFAULT_LEGEND_SIZE = 50;
 	
+	public void setAlignmentLength(int length) {
+		this.alignmentLength = length;	
+	}
+	
+	public void setAlignmentSize(int size) {
+		this.alignmentSize = size;	
+	}
 	
 	public int getSummaryPos(){
 		return SUMMARY_POS;
@@ -91,7 +96,7 @@ public class AFPChainCoordManager {
 	 * @return the preferred height
 	 */
 	public int getPreferredHeight(){
-		return 2* DEFAULT_Y_SPACE + (afpChain.getAlnLength() / DEFAULT_LINE_LENGTH) * DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
+		return 2* DEFAULT_Y_SPACE + (alignmentLength / DEFAULT_LINE_LENGTH) * DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
 	}
 	
 	/** Convert from a X position in the JPanel to alignment position
@@ -143,11 +148,6 @@ public class AFPChainCoordManager {
 		
 		p.setLocation(x, y);
 		return p;
-	}
-
-	public void setAFPChain(AFPChain afpChain) {
-		this.afpChain = afpChain;
-		
 	}
 
 	/** returns the AligSeq (0 or 1) for a point

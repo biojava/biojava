@@ -31,10 +31,12 @@ import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.AfpChainWriter;
+import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -326,7 +328,12 @@ public void actionPerformed(ActionEvent e) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+	         try {
+				DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				return;
+			}
 
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
          if ( afpChain == null) {

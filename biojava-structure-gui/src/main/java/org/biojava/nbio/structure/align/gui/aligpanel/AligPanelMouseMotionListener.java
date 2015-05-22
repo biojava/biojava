@@ -20,7 +20,10 @@
  */
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
+import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.model.MultipleAlignment;
+import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
@@ -153,7 +156,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 	}
 
 	private AlignedPosition getCurrentAlignedPosition(MouseEvent e){
-		AFPChainCoordManager coordManager = parent.getCoordManager();
+		AligmentCoordManager coordManager = parent.getCoordManager();
 
 		int aligSeq = coordManager.getAligSeq(e.getPoint());
 
@@ -174,13 +177,9 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 		if ( seqPos < 0)
 			return null;
 
-
-
-		AFPChain afpChain = parent.getAFPChain();
-		char[] aligs1  = afpChain.getAlnseq1();
-		char[] aligs2  = afpChain.getAlnseq2();
-
-		if ( seqPos >= afpChain.getAlnLength()) {
+		MultipleAlignment multAln = parent.getMultipleAlignment();
+		
+		if ( seqPos >= multAln.getAlnSequences().get(0).length()) {
 			//System.err.println("seqpos " + seqPos +" >= " + afpChain.getAlnLength());
 			return null;
 		}
@@ -189,9 +188,14 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 		AlignedPosition pos = new AlignedPosition();
 		pos.setPos1(seqPos);
 		pos.setPos2(seqPos);
-
-		if ( aligs1[seqPos] != '-' && aligs2[seqPos] != '-'){
-			pos.setEquivalent(AlignedPosition.EQUIVALENT);
+		
+		try {
+			if (DisplayAFP.getCoreAlignmentPos(multAln).contains(seqPos)){
+				pos.setEquivalent(AlignedPosition.EQUIVALENT);
+			}
+		} catch (StructureAlignmentException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 		return pos;
@@ -258,11 +262,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 			if ( pos != null) {
 				prevPos = pos.getPos1();
 			}
-			
-			
 		}
-		
-
 	}
 
 
@@ -292,13 +292,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 				triggerMouseOverPosition(pos);
 			else
 				triggerToggleSelection(pos);
-			prevPos = pos.getPos1() ;
-			 
+			prevPos = pos.getPos1() ; 
 		} 
-		
-		
-
-
 	}
-
 }
