@@ -3,11 +3,15 @@ package org.biojava.nbio.structure.align.model;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -17,7 +21,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * @author Aleix Lafita
  *
  */
-public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble, Serializable, Cloneable {
+public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 
 	private static final long serialVersionUID = -5732485866623431898L;
 	
@@ -34,6 +38,7 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	private List<Matrix> distanceMatrix; 			//A list of n (l*l)-matrices that store the distance between every pair of residues for every protein
 														//n=nr. structures; l=length of the protein
 	private List<MultipleAlignment> multipleAlignments;
+	
 	
 	/**
 	 * Default Constructor. Empty ensemble, no structures assigned.
@@ -104,13 +109,55 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 			//Make a deep copy of everything
 			multipleAlignments = new ArrayList<MultipleAlignment>();
 			for (MultipleAlignment msa:e.multipleAlignments){
-				MultipleAlignment newMSA = (MultipleAlignment) msa.clone();
+				MultipleAlignment newMSA = msa.clone();
 				newMSA.setEnsemble(this);  //This automatically adds the newMSA to the multipleAlignments list
 			}
 		}
 		
 		structureNames = new ArrayList<String>(e.structureNames);
 	}
+	
+	/**
+	 * Constructor from an AFPChain instance. Creates an equivalent pairwise alignment.
+	 * @param ensemble parent MultipleAlignmentEnsemble.
+	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
+	 * @throws StructureAlignmentException 
+	 * @throws StructureException 
+	 */
+	public MultipleAlignmentEnsembleImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException {
+		//Copy all the creation and algorithm information
+		this();
+		setAtomArrays(Arrays.asList(ca1,ca2));
+		setStructureNames(Arrays.asList(afpChain.getName1(),afpChain.getName2()));
+		setAlgorithmName(afpChain.getAlgorithmName());
+		setVersion(afpChain.getVersion());
+		setCalculationTime(afpChain.getCalculationTime());
+		
+		MultipleAlignmentImpl alignment = new MultipleAlignmentImpl(this);
+		setMultipleAlignments( Arrays.asList( (MultipleAlignment) alignment));
+		
+		//Create a BlockSet for every block in AFPChain
+		List<Block>blocks = new ArrayList<Block>(afpChain.getBlockNum());
+		for (int bs=0; bs<afpChain.getBlockNum(); bs++){
+			BlockSet blockSet = new BlockSetImpl(alignment);
+			Block block = new BlockImpl(blockSet);
+			block.getAlignRes().add(new ArrayList<Integer>()); //add the two chains
+			block.getAlignRes().add(new ArrayList<Integer>());
+			blocks.add(block);
+			
+			for (int i=0; i<afpChain.getOptLen()[bs]; i++){
+				block.getAlignRes().get(0).add(afpChain.getOptAln()[bs][0][i]);
+				block.getAlignRes().get(1).add(afpChain.getOptAln()[bs][1][i]);
+			}
+		}
+
+		//Do superposition
+//		ReferenceSuperimposer sup = new ReferenceSuperimposer();
+//		List<Matrix4d> trans = sup.superimpose(atomArrays, blocks);
+//		alignment.setTransformationMatrices(trans);
+		//TODO
+	}
+
 	
 	@Override
 	public MultipleAlignmentEnsembleImpl clone() {
@@ -138,28 +185,23 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	}
 
 	@Override
-	public long getIoTime() {
+	public Long getIoTime() {
 		return ioTime;
 	}
 
 	@Override
-	public long getCalculationTime() {
+	public void setIoTime(Long millis) {
+		this.ioTime = millis;
+	}
+	
+	@Override
+	public Long getCalculationTime() {
 		return calculationTime;
 	}
 
 	@Override
-	public void setCalculationTime(long calculationTime) {
-		this.calculationTime = calculationTime;
-	}
-
-	@Override
-	public long getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(long id) {
-		this.id = id;
+	public void setCalculationTime(Long millis) {
+		this.calculationTime = millis;
 	}
 
 	@Override
@@ -187,7 +229,6 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 			structureNames.add(atomArrays.get(i)[0].getGroup().getChain().getParent().getIdentifier());
 	}
 	
-	@Override
 	public void updateAtomArrays() throws StructureAlignmentException, IOException, StructureException{
 		AtomCache cache = new AtomCache();
 		atomArrays = new ArrayList<Atom[]>();
@@ -208,7 +249,6 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 		return distanceMatrix;
 	}
 
-	@Override
 	public void updateDistanceMatrix() throws StructureAlignmentException {
 		
 		//Reset the distance Matrix variable
@@ -241,15 +281,12 @@ public class MultipleAlignmentEnsembleImpl implements MultipleAlignmentEnsemble,
 	}
 
 	@Override
-	public MultipleAlignment getOptimalMultipleAlignment() throws StructureAlignmentException {
-		if (getAlignmentNum() == 0) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: getAlignmentNum() == 0");
-		else return multipleAlignments.get(0);
-	}
-
-	@Override
 	public int size() throws StructureAlignmentException {
 		if (structureNames == null) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: structureNames == null");
 		else return structureNames.size();
 	}
+	
+
+
 
 }

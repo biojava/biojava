@@ -10,7 +10,7 @@ import java.util.List;
  * @author Aleix Lafita
  * 
  */
-public class BlockImpl implements Serializable, Block, Cloneable{
+public class BlockImpl extends AbstractScoresCache implements Serializable, Block, Cloneable{
 
 	private static final long serialVersionUID = -5804042669466177641L;
 	
@@ -106,8 +106,7 @@ public class BlockImpl implements Serializable, Block, Cloneable{
 		return coreLength;
 	}
 
-	@Override
-	public int updateCoreLength() {
+	protected int updateCoreLength() {
 		// TODO Auto-generated method stub
 		//Loop through all the columns of the alignments and count how many of them do not have gaps.
 		return 0;

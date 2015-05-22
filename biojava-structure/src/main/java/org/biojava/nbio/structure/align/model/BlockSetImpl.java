@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 
@@ -13,7 +15,7 @@ import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
  * @author Aleix Lafita
  * 
  */
-public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
+public class BlockSetImpl extends AbstractScoresCache implements Serializable, BlockSet, Cloneable{
 
 	private static final long serialVersionUID = -1015791986000076089L;
 	
@@ -21,7 +23,7 @@ public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 	private List<Block> blocks;				//aligned positions as a list of Blocks
 	
 	//Cache variables (can be updated)
-	private Pose pose;						//3D superimposition information Pose
+	private List<Matrix4d> pose;						//3D superimposition information Pose
 	private int length;						//total number of aligned positions, including gaps = sum of blocks lengths (cache)
 	private int coreLength;					//number of aligned positions without gaps (cache)
 	
@@ -38,7 +40,7 @@ public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 		blocks = null;
 		
 		//Cache variables (can be updated)
-		pose = new PoseBS(this);
+		pose = null;
 		length = -1;						//Value -1 reserved to indicate that has to be calculated
 		coreLength = -1;
 	}
@@ -61,7 +63,7 @@ public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 			//Make a deep copy of everything
 			this.blocks = new ArrayList<Block>();
 			for (Block b:bs.blocks){
-				Block newB = (Block) b.clone();
+				Block newB = b.clone();
 				newB.setBlockSet(this); //This automatically adds the newB to the blocks list
 			}
 		}
@@ -103,17 +105,27 @@ public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 	public void setBlocks(List<Block> blocks) {
 		this.blocks = blocks;
 	}
-
+	
+	/**
+	 * Returns a transformation matrix for each structure giving the
+	 * 3D superimposition information of the multiple structure alignment.
+	 * @return the 3D superimposition information of the alignment
+	 * @throws StructureAlignmentException 
+	 */
 	@Override
-	public Pose getPose() throws StructureAlignmentException {
-		if (pose == null) pose = new PoseBS(this);
+	public List<Matrix4d> getTransformations() throws StructureAlignmentException {
 		return pose;
 	}
 	
+	/**
+	 * Set a new superposition for the structures.
+	 * 
+	 * This may trigger other properties to update which depend on the superposition.
+	 * @param matrices
+	 */
 	@Override
-	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException {
-		if (pose == null) pose = new PoseBS(this);
-		pose.updatePose(method);
+	public void setTransformations(List<Matrix4d> transformations) throws StructureAlignmentException {
+		pose = transformations;
 	}
 
 	@Override
@@ -126,14 +138,8 @@ public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 	public int size() throws StructureAlignmentException {
 		//Get the size from the variables that can contain the information
 		if (parent != null) return parent.size();
-		else if (getBlockNum()==0) throw new StructureAlignmentException("Empty BlockSet: parent==null && getBlockNum() == 0.");
+		else if (getBlocks().size()==0) throw new StructureAlignmentException("Empty BlockSet: parent==null && getBlockNum() == 0.");
 		else return blocks.get(0).size();
-	}
-
-	@Override
-	public int getBlockNum() throws StructureAlignmentException {
-		if (blocks == null) throw new StructureAlignmentException("Empty BlockSet: getBlocks() == null.");
-		else return blocks.size();
 	}
 
 	@Override
@@ -142,9 +148,8 @@ public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 		return coreLength;
 	}
 
-	@Override
-	public void updateLength() throws StructureAlignmentException {
-		if(getBlockNum()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
+	protected void updateLength() throws StructureAlignmentException {
+		if(getBlocks().size()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
 		//Try to calculate it from the Block information
 		else {
 			length = 0;
@@ -152,9 +157,8 @@ public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 		}
 	}
 
-	@Override
-	public void updateCoreLength() throws StructureAlignmentException {
-		if(getBlockNum()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
+	protected void updateCoreLength() throws StructureAlignmentException {
+		if(getBlocks().size()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
 		//Try to calculate it from the Block information
 		else {
 			coreLength = 0;
@@ -162,9 +166,8 @@ public class BlockSetImpl implements Serializable, BlockSet, Cloneable{
 		}
 	}
 
-	@Override
-	public void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException {
-		updatePose(method);
+	protected void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException {
+		//TODO updatePose(method);
 		updateCoreLength();
 		updateLength();
 	}

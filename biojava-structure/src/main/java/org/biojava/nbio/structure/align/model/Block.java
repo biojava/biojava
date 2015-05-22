@@ -13,7 +13,7 @@ import java.util.List;
  * @author Aleix Lafita
  * 
  */
-public interface Block {
+public interface Block extends ScoresCache {
 	
 	/**
 	 * Creates and returns an identical copy of this block.
@@ -76,13 +76,5 @@ public interface Block {
 	 * @see #size()
 	 */
 	public int getCoreLength();
-	
-	/**
-	 * Calculates and sets the number of aligned positions without gaps in the Block.
-	 * @see #getCoreLength()
-	 * @see #length()
-	 * @see #size()
-	 */
-	public int updateCoreLength();
-	
+
 }

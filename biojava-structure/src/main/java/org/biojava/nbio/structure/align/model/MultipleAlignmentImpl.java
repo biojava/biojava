@@ -2,13 +2,12 @@ package org.biojava.nbio.structure.align.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.biojava.nbio.structure.Atom;
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
-import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * A general implementation of a {@link MultipleAlignment}.
@@ -16,25 +15,21 @@ import org.biojava.nbio.structure.jama.Matrix;
  * @author Aleix Lafita
  * 
  */
-public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, Cloneable{
+public class MultipleAlignmentImpl extends AbstractScoresCache implements Serializable, MultipleAlignment, Cloneable{
 
 	private static final long serialVersionUID = 3432043794125805139L;
 
 	MultipleAlignmentEnsemble parent;
-	
+
 	//Multiple Alignment Positions
 	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
-	
+
 	//Cache variables (can be updated)
 	List<String> alnSequences; 				//sequence alignment for every structure as a String with gaps (cache)
 	int length;								//total length of the alignment, including gaps: sum of BlockSet lengths (cache)
 	int coreLength;							//length of the alignment without gaps, only columns without gaps: sum of BlockSet core lengths (cache)
-	Pose pose;
-	
-	//Algorithm Specific Information
-	double algScore;						//algorithm score for this multiple alignment
-	double probability;
-	
+	List<Matrix4d> pose;
+
 	/**
 	 * Default Constructor. Empty alignment. No structures assigned.
 	 * @return MultipleAlignment an empty MultipleAlignment instance.
@@ -61,61 +56,26 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, C
 	 * @return MultipleAlignment a MultipleAlignment instance part of an ensemble.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentEnsemble ensemble) {
-		
+		super();
+
 		parent = ensemble;
 		if (parent!=null) parent.getMultipleAlignments().add(this);
-		
+
 		blockSets = null;
 		alnSequences = null;
 		pose = null;
-		
-		algScore = 0;
-		probability = 0;
-		
+
 		length = -1;						//Value -1 reserved to indicate that has to be calculated
 		coreLength = -1;
 	}
-	
-	/**
-	 * Constructor from an AFPChain instance. Creates an equivalent pairwise alignment.
-	 * @param ensemble parent MultipleAlignmentEnsemble.
-	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
-	 * @throws StructureAlignmentException 
-	 * @throws StructureException 
-	 */
-	public MultipleAlignmentImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException {
-		//Copy all the creation and algorithm information
-		this();
-		parent.setAtomArrays(Arrays.asList(ca1,ca2));
-		parent.setStructureNames(Arrays.asList(afpChain.getName1(),afpChain.getName2()));
-		parent.setAlgorithmName(afpChain.getAlgorithmName());
-		parent.setVersion(afpChain.getVersion());
-		parent.setId(afpChain.getId());
-		parent.setCalculationTime(afpChain.getCalculationTime());
-		algScore = afpChain.getAlignScore();
-		probability = afpChain.getProbability();
-		
-		//Create a BlockSet for every block in AFPChain
-		for (int bs=0; bs<afpChain.getBlockNum(); bs++){
-			BlockSet blockSet = new BlockSetImpl(this);
-			Block block = new BlockImpl(blockSet);
-			block.getAlignRes().add(new ArrayList<Integer>()); //add the two chains
-			block.getAlignRes().add(new ArrayList<Integer>());
-			
-			for (int i=0; i<afpChain.getOptLen()[bs]; i++){
-				block.getAlignRes().get(0).add(afpChain.getOptAln()[bs][0][i]);
-				block.getAlignRes().get(1).add(afpChain.getOptAln()[bs][1][i]);
-			}
-		}
-		updateCache(PoseMethod.REFERENCE);
-	}
-	
+
 	/**
 	 * Copy constructor.
 	 * @param ma MultipleAlignmentImpl to copy.
 	 * @return MultipleAlignmentImpl identical copy of the input MultipleAlignmentImpl.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentImpl ma) {
+		super(ma);
 		
 		parent = ma.parent;
 		
@@ -129,13 +89,12 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, C
 			//Make a deep copy of everything
 			this.blockSets = new ArrayList<BlockSet>();
 			for (BlockSet bs:ma.blockSets){
-				BlockSet newBS = (BlockSet) bs.clone();
+				BlockSet newBS = bs.clone();
 				newBS.setMultipleAlignment(this); //This automatically adds the newBS to the blockSets list
 			}
 		}
 		
-		algScore = ma.getAlgScore();
-		probability = ma.getProbability();		
+		
 	}
 	
 	@Override
@@ -148,43 +107,7 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, C
 		return "MultipleAlignmentImpl [parent=" + parent + ", blockSets="
 				+ blockSets + ", alnSequences=" + alnSequences + ", length="
 				+ length + ", coreLength=" + coreLength + ", pose=" + pose
-				+ ", algScore=" + algScore + ", probability=" + probability
 				+ "]";
-	}
-
-	@Override
-	public String getAlgorithmName() {
-		return parent.getAlgorithmName();
-	}
-
-	@Override
-	public String getVersion() {
-		return parent.getVersion();
-	}
-
-	@Override
-	public long getIoTime() {
-		return parent.getIoTime();
-	}
-
-	@Override
-	public long getCalculationTime() {
-		return parent.getCalculationTime();
-	}
-
-	@Override
-	public long getId() {
-		return parent.getId();
-	}
-
-	@Override
-	public List<String> getStructureNames() {
-		return parent.getStructureNames();
-	}
-
-	@Override
-	public List<Atom[]> getAtomArrays() throws StructureAlignmentException {
-		return parent.getAtomArrays();
 	}
 
 	@Override
@@ -192,6 +115,21 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, C
 		if (blockSets == null) blockSets = new ArrayList<BlockSet>();
 		return blockSets;
 	}
+	
+	/**
+	 * Convenience method to get a list of all blocks from all blocksets
+	 * @return
+	 * @throws StructureAlignmentException
+	 */
+	@Override
+	public List<Block> getBlocks() {
+		List<Block> blocks = new ArrayList<Block>();
+		for(BlockSet bs : getBlockSets()) {
+			blocks.addAll(bs.getBlocks());
+		}
+		return blocks;
+	}
+
 
 	@Override
 	public void setBlockSets(List<BlockSet> blockSets) {
@@ -204,52 +142,42 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, C
 		return alnSequences;
 	}
 
-	@Override
 	public void updateAlnSequences() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * Returns a transformation matrix for each structure giving the
+	 * 3D superimposition information of the multiple structure alignment.
+	 * @return the 3D superimposition information of the alignment
+	 * @throws StructureAlignmentException 
+	 */
 	@Override
-	public Pose getPose() throws StructureAlignmentException {
-		if (pose == null) pose = new PoseMSA(this);
+	public List<Matrix4d> getTransformations()
+			throws StructureAlignmentException {
 		return pose;
 	}
 
+	/**
+	 * Set a new superposition for the structures.
+	 * 
+	 * This may trigger other properties to update which depend on the superposition.
+	 * @param matrices
+	 */
 	@Override
-	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException {
-		if (pose == null) pose = new PoseMSA(this);
-		pose.updatePose(method);
-	}
-
-	@Override
-	public double getAlgScore() {
-		return algScore;
-	}
-
-	@Override
-	public void setAlgScore(double algScore) {
-		this.algScore = algScore;
-	}
-
-	@Override
-	public double getProbability() {
-		return probability;
-	}
-
-	@Override
-	public void setProbability(double probability) {
-		this.probability = probability;
+	public void setTransformations(List<Matrix4d> matrices) throws StructureAlignmentException {
+		if(size() != matrices.size()) {
+			throw new StructureAlignmentException("Wrong number of structures for this alignment");
+		}
+		// set properties that depend on the pose to null
+		//TODO clearPose();
+		pose = matrices;
 	}
 
 	@Override
 	public int size() throws StructureAlignmentException {
 		return parent.size();
-	}
-	
-	@Override
-	public List<Matrix> getDistanceMatrix() throws StructureAlignmentException {
-		return parent.getDistanceMatrix();
 	}
 
 	@Override
@@ -259,20 +187,13 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, C
 	}
 
 	@Override
-	public int getBlockSetNum() throws StructureAlignmentException {
-		if (blockSets == null) throw new StructureAlignmentException("Empty BlockSet: getBlocks() == null.");
-		else return blockSets.size();
-	}
-
-	@Override
 	public int getCoreLength() throws StructureAlignmentException {
 		if (coreLength == -1) updateCoreLength();
 		return coreLength;
 	}
 
-	@Override
-	public void updateLength() throws StructureAlignmentException {
-		if(getBlockSetNum()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
+	protected void updateLength() throws StructureAlignmentException {
+		if(getBlockSets().size()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
 		//Try to calculate it from the BlockSet information
 		else {
 			length = 0;
@@ -280,9 +201,8 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, C
 		}
 	}
 
-	@Override
-	public void updateCoreLength() throws StructureAlignmentException {
-		if(getBlockSetNum()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
+	protected void updateCoreLength() throws StructureAlignmentException {
+		if(getBlockSets().size()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
 		//Try to calculate it from the BlockSet information
 		else {
 			coreLength = 0;
@@ -290,9 +210,8 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment, C
 		}
 	}
 
-	@Override
-	public void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException {
-		updatePose(method);
+	protected void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException {
+		//TODO updatePose(method);
 		updateAlnSequences();
 		updateCoreLength();
 		updateLength();

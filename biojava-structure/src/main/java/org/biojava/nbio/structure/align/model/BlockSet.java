@@ -2,8 +2,7 @@ package org.biojava.nbio.structure.align.model;
 
 import java.util.List;
 
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
+import javax.vecmath.Matrix4d;
 
 /**
  * A BlockSet is a Data Structure to store aligned positions of a multiple alignment as a collection of {@link Block}s.
@@ -16,13 +15,14 @@ import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
  * @author Aleix Lafita
  * 
  */
-public interface BlockSet extends Cloneable{
+public interface BlockSet extends ScoresCache {
 	
 	/**
-	 * Creates and returns an identical copy of this object.
+	 * Creates and returns an identical copy of this blockset, including a deep
+	 * clone of all constituent blocks.
 	 * @return BlockSet identical copy of this object.
 	 */
-	public Object clone();
+	public BlockSet clone();
 	
 	/** 
      * Returns the parent MultipleAlignment of the BlockSet.
@@ -55,26 +55,21 @@ public interface BlockSet extends Cloneable{
 	public void setBlocks(List<Block> blocks);
 	
 	/**
-	 * Returns the 3D transformation information of the alignment as a Pose object.
-	 * Initializes a new Pose if it is null.
-	 * @return Pose the 3D superimposition information.
+	 * Returns a transformation matrix for each structure giving the
+	 * 3D superimposition information of the multiple structure alignment.
+	 * @return the 3D superimposition information of the alignment
 	 * @throws StructureAlignmentException 
-	 * @see #updatePose(PoseMethod)
 	 */
-	public Pose getPose() throws StructureAlignmentException;
+	public List<Matrix4d> getTransformations() throws StructureAlignmentException;
 	
 	/**
-	 * Calculates and sets the new 3D superimposition information in the Pose of the BlockSet part.
-	 * Methods: REFERENCE (align everything to the first structure, the master), 
-	 * 			MEDIAN (take the closest structure to all others in average as the master and align everything to it),
-	 * 			CONSENSUS (build a consensus structure and align everything to it)
-	 * @param method PoseMethod indicating one of the methods listed above, to be used in the superimposition.
-	 * @throws StructureException
-	 * @throws StructureAlignmentException
-	 * @see #getPose()
+	 * Set a new superposition for the structures.
+	 * 
+	 * This may trigger other properties to update which depend on the superposition.
+	 * @param matrices
 	 */
-	public void updatePose(PoseMethod method) throws StructureException, StructureAlignmentException;
-	
+	public void setTransformations(List<Matrix4d> transformations) throws StructureAlignmentException;
+
 	/**
 	 * Returns the total number of aligned residues (columns) in the alignment: the sum of all Block lengths.
 	 * @return int the total number of aligned residues.
@@ -87,15 +82,6 @@ public interface BlockSet extends Cloneable{
 	public int length() throws StructureAlignmentException;
 	
 	/**
-	 * Calculates and sets the total number of aligned residues (columns) in the alignment: the sum of all Block lengths.
-	 * @throws StructureAlignmentException
-	 * @see #length()
-	 * @see #updateCoreLength()
-	 * @see #getCoreLength()
-	 */
-	public void updateLength() throws StructureAlignmentException;
-	
-	/**
 	 * Returns the number of aligned residues (columns) without gaps in the alignment: the sum of all Block core lengths.
 	 * @return int the total number of aligned residues.
 	 * @throws StructureAlignmentException if there are no Blocks.
@@ -105,16 +91,7 @@ public interface BlockSet extends Cloneable{
 	 * @see #getBlockNum()
 	 */
 	public int getCoreLength() throws StructureAlignmentException;
-	
-	/**
-	 * Calculates and sets the number of aligned residues (columns) without gaps in the alignment: the sum of all Block core lengths.
-	 * @throws StructureAlignmentException
-	 * @see #getCoreLength()
-	 * @see #length()
-	 * @see #updateLength()
-	 */
-	public void updateCoreLength() throws StructureAlignmentException;
-	
+
 	/**
 	 * Returns the number of aligned structures in the BlockSet.
 	 * @return int number of aligned structures
@@ -123,25 +100,4 @@ public interface BlockSet extends Cloneable{
 	 * @see #getBlockNum()
 	 */
 	public int size() throws StructureAlignmentException;
-	
-	/**
-	 * Returns the number of alignment Blocks in the BlockSet.
-	 * @return int number of Blocks
-	 * @throws StructureAlignmentException if the BlockSet is empty.
-	 * @see #length()
-	 * @see #size()
-	 */
-	public int getBlockNum() throws StructureAlignmentException;
-	
-	/**
-	 * Calls all the update methods for the Cache variables.
-	 * @throws StructureAlignmentException
-	 * @param method PoseMethod indicating one of the methods listed above, to be used in the superimposition.
-	 * @throws StructureException 
-	 * @see #updateLength()
-	 * @see #updateCoreLength()
-	 * @see #updatePose(PoseMethod)
-	 */
-	public void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException;
-	
 }

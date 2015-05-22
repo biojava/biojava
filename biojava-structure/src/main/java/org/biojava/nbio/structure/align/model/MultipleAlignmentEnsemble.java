@@ -16,7 +16,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * @author Aleix Lafita
  *
  */
-public interface MultipleAlignmentEnsemble {
+public interface MultipleAlignmentEnsemble extends ScoresCache {
 
 	/**
 	 * Creates and returns an identical copy of this ensemble, including a deep
@@ -54,40 +54,6 @@ public interface MultipleAlignmentEnsemble {
 	public void setVersion(String version);
 
 	/**
-	 * Returns the creation time of this object, in milliseconds.
-	 * @return long creation time.
-	 */
-	public long getIoTime();
-
-	/**
-	 * Returns the running time of the structure alignment calculation, in milliseconds.
-	 * @return long running time of the calculation.
-	 * @see #setCalculationTime(long)
-	 */
-	public long getCalculationTime();
-
-	/**
-	 * Set the running time of the structure alignment calculation, in milliseconds.
-	 * @param calculationTime running time of the calculation.
-	 * @see #getCalculationTime()
-	 */
-	public void setCalculationTime(long calculationTime);
-
-	/**
-	 * Returns the structure alignment object ID.
-	 * @return long structure alignment ID.
-	 * @see #setId(long)
-	 */
-	public long getId();
-
-	/**
-	 * Sets the structure alignment object ID.
-	 * @param id structure alignment object ID.
-	 * @see #getId()
-	 */
-	public void setId(long id);
-	
-	/**
 	 * Returns a List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).
 	 * The names are structure identifiers of the structures.
 	 * They are in the same order as in the alignment Blocks (same index number for same structure).
@@ -108,34 +74,27 @@ public interface MultipleAlignmentEnsemble {
 
 	/**
 	 * Returns the List of Atom arrays. Every structure has an Atom array associated.
-	 * The Atom arrays are only stored as a cache, and must be deleted when the alignment is serialized or stored.
+	 * 
+	 * If atoms have not previously been set using {@link #setAtomArrays(List)},
+	 * attempts to load representative atoms based on {@link #getStructureNames()}.
 	 * @return List of Atom[].
-	 * @throws StructureAlignmentException 
+	 * @throws StructureException If errors occur during loading
+	 * @throws IOException If atoms need to be loaded, but an IO error occurs
 	 * @see #setAtomArrays(List)
 	 */
-	public List<Atom[]> getAtomArrays() throws StructureAlignmentException;
+	public List<Atom[]> getAtomArrays() throws StructureAlignmentException, StructureException, IOException;
 
 	/**
 	 * Sets the List of Atom arrays. Every structure has an Atom array associated.
-	 * The Atom arrays are only stored as a cache, and must be deleted when the alignment is serialized or stored.
+	 * 
+	 * Note that atom arrays are not serialized, but are regenerated based on
+	 * {@link #getStructureNames()
 	 * @param atomArrays the List of Atom[].
 	 * @see #getAtomArrays()
 	 * @see #setStructureNames(List)
 	 */
 	public void setAtomArrays(List<Atom[]> atomArrays);
-	
-	/**
-	 * Downloads and sets the List of Atom arrays from the Structure identifiers.
-	 * The Atom arrays are only stored as a cache, and must be deleted when the alignment is serialized or stored.
-	 * @param atomArrays the List of Atom[].
-	 * @throws StructureAlignmentException
-	 * @throws StructureException 
-	 * @throws IOException 
-	 * @see #setAtomArrays(List)
-	 * @see #setStructureNames(List)
-	 */
-	public void updateAtomArrays() throws StructureAlignmentException, IOException, StructureException;
-	
+
 	/**
 	 * Return the number of alternative alignments stored in the EnsembleMSTA object.
 	 * @return int number of alternative alignments.
@@ -152,20 +111,13 @@ public interface MultipleAlignmentEnsemble {
 	public List<Matrix> getDistanceMatrix() throws StructureAlignmentException;
 
 	/**
-	 * Calculates and sets the cache List containing the interatomic distance Matrix of each structure.
-	 * @throws StructureAlignmentException 
-	 * @see #getDistanceMatrix()
-	 */
-	public void updateDistanceMatrix() throws StructureAlignmentException;
-	
-	/**
 	 * Returns the List of MultipleAlignments in the MultipleAlignmentEnsemble object.
 	 * @return List of MultipleAlignment in the MultipleAlignmentEnsemble.
 	 * @see #setMultipleAlignments()
 	 * @see #getOptimalMultipleAlignment()
 	 */
 	public List<MultipleAlignment> getMultipleAlignments();
-	
+
 	/**
 	 * Set the List of MultipleAlignments in the MultipleAlignmentEnsemble object.
 	 * @param List of MultipleAlignments that are part of the ensemble.
@@ -173,16 +125,7 @@ public interface MultipleAlignmentEnsemble {
 	 * @see #getOptimalMultipleAlignment()
 	 */
 	public void setMultipleAlignments(List<MultipleAlignment> multipleAlignments);
-	
-	/**
-	 * Returns the optimal MultipleAlignment of the ensemble, stored at the first position (index 0) of the List.
-	 * @return MultipleAlignment optimal MSTA of the MultipleAlignmentEnsemble.
-	 * @throws StructureAlignmentException if the MultipleAlignmentEnsemble is empty.
-	 * @see #getMultipleAlignments()
-	 * @see #setMultipleAlignments()
-	 */
-	public MultipleAlignment getOptimalMultipleAlignment() throws StructureAlignmentException;
-	
+
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignments.
 	 * @return int number of aligned structures.
@@ -191,5 +134,29 @@ public interface MultipleAlignmentEnsemble {
 	 * @see #getAtomArrays()
 	 */
 	public int size() throws StructureAlignmentException;
-	
+
+	/**
+	 * Returns the io time for this object, in milliseconds.
+	 * @return long creation time, or null if unset
+	 */
+	public Long getIoTime();
+	/**
+	 * Set the IO time to load this object
+	 * @param millis
+	 */
+	public void setIoTime(Long millis);
+
+	/**
+	 * Returns the running time of the structure alignment calculation, in milliseconds.
+	 * @return long running time of the calculation, or null if unset
+	 * @see #getIoTime()L
+	 */
+	public Long getCalculationTime();
+	/**
+	 * Set the time needed to calculate this alignment
+	 * @param millis
+	 */
+	public void setCalculationTime(Long millis);
+
+
 }
