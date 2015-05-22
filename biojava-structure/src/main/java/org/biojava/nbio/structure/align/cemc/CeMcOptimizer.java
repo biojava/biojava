@@ -31,7 +31,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  */
 public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	
-	private static final boolean debug = false;  //Prints the optimization moves and saves a file of the history
+	private static final boolean debug = true;  //Prints the optimization moves and saves a file of the history
 	private Random rnd;
 	
 	//Optimization parameters

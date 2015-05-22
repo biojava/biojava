@@ -474,8 +474,8 @@ public void actionPerformed(ActionEvent e) {
          String script = getJmolString(multAln, atomArrays,colors);
          //System.out.println(script);
          evalString(script);
-         jmolPanel.evalString("save STATE state_1");
          jmolPanel.evalString("hide ligand");
+         jmolPanel.evalString("save STATE state_1");
       }
    }
 
