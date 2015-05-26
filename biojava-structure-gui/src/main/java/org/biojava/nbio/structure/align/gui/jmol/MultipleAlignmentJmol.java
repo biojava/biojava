@@ -318,8 +318,13 @@ public void actionPerformed(ActionEvent e) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         System.out.println("Option currently not available for Multiple Alignments");
-         //DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+         try {
+			DisplayAFP.showAlignmentImage(multAln, this, colors);
+		} catch (StructureAlignmentException e1) {
+			e1.printStackTrace();
+		} catch (StructureException e1) {
+			e1.printStackTrace();
+		}
 
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
          if ( multAln == null) {

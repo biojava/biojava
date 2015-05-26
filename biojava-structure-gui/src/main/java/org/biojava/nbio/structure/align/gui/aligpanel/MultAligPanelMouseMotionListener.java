@@ -21,12 +21,10 @@
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
-import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -35,15 +33,15 @@ import java.util.List;
 
 public class MultAligPanelMouseMotionListener implements MouseMotionListener, MouseListener {
 
-	MultAligPanel parent;
+	private MultAligPanel parent;
 
-	List<AlignmentPositionListener> aligPosListeners;
-	int prevPos;
+	private List<AlignmentPositionListener> aligPosListeners;
+	private int prevPos;
 
-	boolean isDragging ;
-	AlignedPosition selectionStart ;
-	AlignedPosition selectionEnd;
-	boolean selectionLocked;
+	private boolean isDragging ;
+	private AlignedPosition selectionStart ;
+	private AlignedPosition selectionEnd;
+	private boolean selectionLocked;
 
 	public MultAligPanelMouseMotionListener(MultAligPanel parent){
 		this.parent = parent;
@@ -116,35 +114,27 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 		return false;
 	}
 
-	private void triggerRangeSelected(AlignedPosition start,
-			AlignedPosition end) {		
+	private void triggerRangeSelected(AlignedPosition start, AlignedPosition end) {		
 		for (AlignmentPositionListener li : aligPosListeners){
 			li.rangeSelected(start, end);
 		}
 	}
+	
 	public void triggerSelectionLocked(boolean b) {
 		selectionLocked = b;
 		for (AlignmentPositionListener li : aligPosListeners){
-			if ( b)
-				li.selectionLocked();
-			else 
-				li.selectionUnlocked();
+			if (b) li.selectionLocked();
+			else li.selectionUnlocked();
 		}
-
 	}
+	
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if ( selectionLocked)
-			return;
+		if ( selectionLocked) return;
 		AlignedPosition pos = getCurrentAlignedPosition(e);
-		if ( pos == null)
-			return;
+		if ( pos == null) return;
 
 		triggerMouseOverPosition(pos);
-
-
-
-
 	}
 
 	private void triggerMouseOverPosition(AlignedPosition pos) {
@@ -156,45 +146,28 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 	}
 
 	private AlignedPosition getCurrentAlignedPosition(MouseEvent e){
+		
 		MultAligmentCoordManager coordManager = parent.getCoordManager();
-
 		int aligSeq = coordManager.getAligSeq(e.getPoint());
 
-		// we are over a position in the sequences
-		if ( aligSeq == -1) {
-			return null;
-		}
-
-		//get sequence positions
+		//We are not over a position in the sequences
+		if ( aligSeq == -1) return null;
+		
+		//Get sequence positions
 		int seqPos = coordManager.getSeqPos(aligSeq, e.getPoint());
-
-		//if ( prevPos == seqPos)
-		//	return null;
-
-
-		//prevPos = seqPos;
-
-		if ( seqPos < 0)
-			return null;
+		if ( seqPos < 0) return null;
 
 		MultipleAlignment multAln = parent.getMultipleAlignment();
 		
-		if ( seqPos >= multAln.getAlnSequences().get(0).length()) {
-			//System.err.println("seqpos " + seqPos +" >= " + afpChain.getAlnLength());
-			return null;
-		}
-
-		//System.out.println("alignment " + aligSeq + " " + seqPos + " : ");
+		if ( seqPos >= multAln.getAlnSequences().get(0).length()) return null;
+		
 		AlignedPosition pos = new AlignedPosition();
 		pos.setPos1(seqPos);
-		pos.setPos2(seqPos);
-		
+
 		try {
-			if (DisplayAFP.getCoreAlignmentPos(multAln).contains(seqPos)){
+			if (DisplayAFP.getCoreAlignmentPos(multAln).contains(seqPos))
 				pos.setEquivalent(AlignedPosition.EQUIVALENT);
-			}
 		} catch (StructureAlignmentException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 

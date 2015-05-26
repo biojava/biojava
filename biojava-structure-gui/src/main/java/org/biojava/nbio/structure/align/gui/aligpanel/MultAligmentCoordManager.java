@@ -24,8 +24,19 @@ import java.awt.*;
 
 public class MultAligmentCoordManager {
 	
-	int alignmentLength;     	//number of aligned residues
-	int alignmentSize;			//number of strucures aligned
+	private int alignmentLength;     	//number of aligned residues
+	private int alignmentSize;			//number of strucures aligned
+	
+	/**
+	 * Constructor.
+	 * @param size number of structures/sequences aligned (rows).
+	 * @param length number of aligned residues (columns)
+	 */
+	public MultAligmentCoordManager(int size, int length){
+		alignmentLength = length;
+		alignmentSize = size;
+		DEFAULT_Y_STEP = 30*size;
+	}
 
 	/** Space on the right side between sequence and legend.
 	 * 
@@ -40,7 +51,7 @@ public class MultAligmentCoordManager {
 	/** size of space between rows
 	 * 
 	 */
-	public static final int DEFAULT_Y_STEP = 60;
+	public final int DEFAULT_Y_STEP;
 	
 	/** size per character
 	 * 
@@ -71,14 +82,6 @@ public class MultAligmentCoordManager {
 	
 	private static final int DEFAULT_LEGEND_SIZE = 50;
 	
-	public void setAlignmentLength(int length) {
-		this.alignmentLength = length;	
-	}
-	
-	public void setAlignmentSize(int size) {
-		this.alignmentSize = size;	
-	}
-	
 	public int getSummaryPos(){
 		return SUMMARY_POS;
 	}
@@ -101,7 +104,7 @@ public class MultAligmentCoordManager {
 	
 	/** Convert from a X position in the JPanel to alignment position
 	 * 
-	 * @param aligSeq sequence 0 or 1 
+	 * @param aligSeq sequence number
 	 * @param p point on panel
 	 * @return the sequence position for a point on the Panel
 	 */
@@ -125,7 +128,7 @@ public class MultAligmentCoordManager {
 
 	/** get the position of the sequence position on the Panel
 	 * 
-	 * @param aligSeq  0 or 1 for which of the two sequences to ask for.
+	 * @param aligSeq number of the sequence to ask for.
 	 * @param i sequence position
 	 * @return the point on a panel for a sequence position
 	 */
@@ -150,7 +153,7 @@ public class MultAligmentCoordManager {
 		return p;
 	}
 
-	/** returns the AligSeq (0 or 1) for a point
+	/** returns the AligSeq, the sequence number, for a point
 	 * returns -1 if not over an alig seq.
 	 * @param point
 	 * @return which of the two sequences a point on the panel corresponds to

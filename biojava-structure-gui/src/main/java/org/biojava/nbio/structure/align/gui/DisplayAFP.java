@@ -21,8 +21,10 @@ package org.biojava.nbio.structure.align.gui;
 
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultAligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultStatusDisplay;
+import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
@@ -612,8 +614,11 @@ public class DisplayAFP
 
 	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException {
 		
-		MultAligPanel me = new MultAligPanel(afpChain,ca1,ca2);
-		me.setStructureAlignmentJmol(jmol);
+		AligPanel me = new AligPanel();
+		me.setAlignmentJmol(jmol);
+		me.setAFPChain(afpChain);
+		me.setCa1(ca1);
+		me.setCa2(ca2);
 
 		JFrame frame = new JFrame();
 
@@ -627,22 +632,53 @@ public class DisplayAFP
 		JScrollPane scroll = new JScrollPane(me);
 		scroll.setAutoscrolls(true);
 
-		MultStatusDisplay status = new MultStatusDisplay(me.getMultipleAlignment());
+		StatusDisplay status = new StatusDisplay();
+		status.setAfpChain(afpChain);
+		status.setCa1(ca1);
+		status.setCa2(ca2);
 		me.addAlignmentPositionListener(status);
-
 
 		Box vBox = Box.createVerticalBox();
 		vBox.add(scroll);
 		vBox.add(status);
-
 
 		frame.getContentPane().add(vBox);
 
 		frame.pack();
 		frame.setVisible(true);
 		// make sure they get cleaned up correctly:
-			frame.addWindowListener(me);
-			frame.addWindowListener(status);
+		frame.addWindowListener(me);
+		frame.addWindowListener(status);
+	}
+	
+	public static void showAlignmentImage(MultipleAlignment multAln, AbstractAlignmentJmol jmol, Color[] colors) throws StructureAlignmentException, StructureException {
+		
+		MultAligPanel me = new MultAligPanel(multAln, colors);
+		JFrame frame = new JFrame();
+
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		
+		frame.setTitle("Alignment Panel for Multiple Structure Alignments - beta");
+		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
+
+		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,me,null);
+		frame.setJMenuBar(menu);
+
+		JScrollPane scroll = new JScrollPane(me);
+		scroll.setAutoscrolls(true);
+
+		MultStatusDisplay status = new MultStatusDisplay(multAln);
+		me.addAlignmentPositionListener(status);
+
+		Box vBox = Box.createVerticalBox();
+		vBox.add(scroll);
+		vBox.add(status);
+		frame.getContentPane().add(vBox);
+
+		frame.pack();
+		frame.setVisible(true);
+		//make sure they get cleaned up correctly:
+		frame.addWindowListener(me);
+		frame.addWindowListener(status);
 	}
 
 	public static void showAlignmentImage(AFPChain afpChain, String result) {

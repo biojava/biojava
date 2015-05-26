@@ -53,7 +53,8 @@ import java.util.Collections;
 import java.util.List;
 
 
-/** A JPanel that can display an AFPChain or a MultipleAlignment in a nice way and interact with Jmol.
+/** 
+ * 	A JPanel that can display an AFPChain or a MultipleAlignment in a nice way and interact with Jmol.
  * 	It has been modified from the version specific for AFPChain to include the new MultipleAlignmentDS.
  * 	The AligPanel is initialized with a constructor rather than with the setters now.
  * 
@@ -66,8 +67,8 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
    private static final long serialVersionUID = -6892229111166263764L;
 
    private MultipleAlignment multAln;
-   private int size; //number of structures
-   private int length; //number of aligned positions
+   private int size; 		//number of structures
+   private int length; 		//number of aligned positions
    private Color[] colors;
    
    private Font seqFont;
@@ -79,11 +80,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
    private BitSet selection;
 
    private boolean selectionLocked;
-   private boolean colorBySimilarity;
-   private boolean colorByAlignmentBlock;
-
-   private static final Color COLOR_EQUAL   = Color.decode("#6A93D4");
-   private static final Color COLOR_SIMILAR = Color.decode("#D460CF");
+   
    private static final Color[] DEFAULT_COLORS = ColorBrewer.Set1.getColorPalette(10);
    
    /**
@@ -92,7 +89,6 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
    public MultAligPanel(){
 	      super();
 	      this.setBackground(Color.white);
-	      coordManager = new MultAligmentCoordManager();
 	      seqFont = new Font("SansSerif",Font.PLAIN,12);
 	      eqFont = new Font("SansSerif",Font.BOLD,12);
 
@@ -102,9 +98,6 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	      mouseMoLi.addAligPosListener(this);
 
 	      selection = new BitSet();
-	      colorBySimilarity = false;
-	      colorByAlignmentBlock = false;
-	      
 	      colors = DEFAULT_COLORS;
    }
    
@@ -127,6 +120,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	   this.length = multAln.getAlnSequences().get(0).length();
 	   this.colors = colors;
 	   if (colors == null) this.colors = DEFAULT_COLORS;
+	   coordManager = new MultAligmentCoordManager(size, length);
    }
    public MultAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException{
 	   this(afpChain, ca1, ca2, DEFAULT_COLORS);
@@ -145,6 +139,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	   this.length = multAln.getAlnSequences().get(0).length();
 	   this.colors = colors;
 	   if (colors == null) this.colors = DEFAULT_COLORS;
+	   coordManager = new MultAligmentCoordManager(size, length);
    }
    public MultAligPanel(MultipleAlignment multAln) throws StructureAlignmentException{
 	   this(multAln,DEFAULT_COLORS);
@@ -177,20 +172,11 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 
       Graphics2D g2D = (Graphics2D) g;
 
-
       g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
       g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_ON);
-
-
-      // only draw within the ranges of the Clip
-      //Rectangle drawHere = g2D.getClipBounds();        
-
-
-      //int startpos = coordManager.getSeqPos(0,drawHere.x);       
-      //int endpos   = coordManager.getSeqPos(0,drawHere.x+drawHere.width-2);
 
       int startpos = 0;
       int endpos = multAln.getAlnSequences().get(0).length();
@@ -203,123 +189,54 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 
       g2D.setPaint(significantCol);
       //draw a darker background
-      Rectangle sig = new Rectangle(10,10,10,10);				
+      Rectangle sig = new Rectangle(10,10,10,10);
       g2D.fill(sig);
-      boolean isFATCAT = false;
-      if (multAln.getAlgorithmName().startsWith("jFatCat")) isFATCAT = true;
       
       List<Integer> alignedPos = new ArrayList<Integer>();
 		try {
 			alignedPos = DisplayAFP.getCoreAlignmentPos(multAln);
 		} catch (StructureAlignmentException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
       
       for (int i = startpos; i < endpos; i++){
 
-         // color amino acids by hydrophobicity
-         boolean isGapped = false;
-         g2D.setFont(seqFont);
+    	boolean isGapped = false;
+        g2D.setFont(seqFont);
          
         if (alignedPos.contains(i)) g2D.setFont(eqFont);
         else isGapped = true;
 
         //Loop through every structure to get all the points
         List<Point> points = new ArrayList<Point>();
-        for (int str=0; str<size; str++){
+        for (int str=0; str<size; str++) points.add(coordManager.getPanelPos(str,i));
+        Point p1 = points.get(0);
+        Point p2 = points.get(points.size()-1);
         
+        for (int str=0; str<size; str++){
+        	
         	char c = multAln.getAlnSequences().get(str).charAt(i);
-        	if (str==0) points.add(coordManager.getPanelPos(str,i));
-        	Point p1 = points.get(points.size()-1);
-        	Point p2 = coordManager.getPanelPos(str,i);
-	        points.add(p2);
-	         
-	         if (! isGapped) {
-	            Color bg = colors[str];
-	            //Color end1 = ColorUtils.rotateHue(colors[str],  (1.0f  / 24.0f) * blockNum  );
-	            //Color end2 = ColorUtils.rotateHue(colors[str],    (1.0f  / 24.0f) * (blockNum  +1)) ;
-	            
-	            //TODO enable coring blocks by rotation of the colors
-	            //int blockNum = afpChain.getBlockNum();
-	            /*if ( colorByAlignmentBlock) {
-	
-	               if (! alignedPos.contains(i)){
-	
-	                  // unaligned!
-	                  bg = Color.white;
-	                  bg2 = Color.white;
-	               } else  {
-	                  
-	                  int colorPos = 0;
-	                  if (isFATCAT) {
-	                     int block = 0;
-	                     char s = symb[i];
-	                     try {
-	                        block = Integer.parseInt(s+"") - 1;
-	                        bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, block);
-	                        bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, block);
-	                        //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * block  );
-	                        //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * block );
-	                     } catch (Exception e){}
-	                     
-	                     if ( colorPos > ColorUtils.colorWheel.length){
-	                        colorPos = ColorUtils.colorWheel.length % colorPos ;
-	                     }
-	                  } else {
-	                	  colorPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, i);
-	            		  bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
-	            		  bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
-	            		  //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
-	            		  //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
-	                  }
-	                  
-	               }
-	            } else {*/
-	
-	               bg = Color.LIGHT_GRAY;
-	            //}
-	            
-	            // draw a darker background
-	            g2D.setPaint(bg);
-	            Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+1);
+	        
+	        if (!isGapped){
+	        	
+	        	Color bg = colors[str];
+	        	g2D.setPaint(bg);
+	            Rectangle rec = new Rectangle(points.get(str).x-1,points.get(str).y-11, (p2.x-p1.x)+12, (p2.y-p1.y)/size);
 	            g2D.fill(rec);
-	
-	            //g2D.setPaint(Color.black);
-	            //g2D.draw(rec);
-	         }
-	         /*if ( colorBySimilarity){
-	            if ( c1 == c2){
-	               Color bg = COLOR_EQUAL;
-	               g2D.setPaint(bg);
-	               Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);				
-	               g2D.fill(rec);
-	            } else if (AFPAlignmentDisplay.aaScore(c1, c2) > 0) {
-	               Color bg = COLOR_SIMILAR;
-	               g2D.setPaint(bg);
-	               Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);				
-	               g2D.fill(rec);
-	            }
-	         }*/
-	
-	         //if ( selectionStart != null && selectionEnd != null){
-	         //	if ( i >= selectionStart.getPos1() && i <= selectionEnd.getPos1()) {
-	
-	         if ( isSelected(i)){
+	        	
+	        }
+	        
+	        if ( isSelected(i)){
 	            // draw selection
 	            Color bg = Color.YELLOW;
 	            g2D.setPaint(bg);
-	            // draw a darker backgroun
-	            Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);
+	            Rectangle rec = new Rectangle(points.get(str).x-1,points.get(str).y-11, (p2.x-p1.x)+12, (p2.y-p1.y)/size);
 	            g2D.fill(rec);
-	            //	}
 	         }
-	
+	        
 	         // draw the AA sequence
 	         g2D.setColor(Color.black);
-	         g2D.drawString(c+"",p2.x,p2.y);
-	         
-	         //System.out.println(seq1[i] + " " + xpos1 + " " + ypos1 + " " + seq2[i] + xpos2 + " " + ypos2);
+	         g2D.drawString(c+"",points.get(str).x,points.get(str).y);
         }
       }
 
@@ -544,22 +461,6 @@ public void actionPerformed(ActionEvent e) {
       } else {
          System.err.println("Unknown command:" + cmd);
       }
-
-   }
-
-
-   private void colorByAlignmentBlock() {
-      colorByAlignmentBlock = true;
-      colorBySimilarity = false;
-      this.repaint();
-
-   }
-
-
-   private void colorBySimilarity(boolean flag) {
-      this.colorBySimilarity = flag;
-      colorByAlignmentBlock = false;
-      this.repaint();
    }
 
 
