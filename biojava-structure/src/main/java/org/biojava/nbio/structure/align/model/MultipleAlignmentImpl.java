@@ -143,10 +143,8 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 
 	@Override
 	public String toString() {
-		return "MultipleAlignmentImpl [parent=" + parent + ", blockSets="
-				+ blockSets + ", alnSequences=" + alnSequences + ", length="
-				+ length + ", coreLength=" + coreLength + ", pose=" + pose
-				+ ", algScore=" + algScore + ", probability=" + probability
+		return "MultipleAlignmentImpl [length="
+				+ length + ", coreLength=" + coreLength + ", algScore=" + algScore + ", probability=" + probability
 				+ "]";
 	}
 
@@ -204,7 +202,24 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 
 	@Override
 	public void updateAlnSequences() {
-		// TODO Auto-generated method stub
+		
+		//This method is only to try the aligPanel. It does not calculate the correct sequence alignment
+		alnSequences = new ArrayList<String>();
+		try {
+			for (int str=0; str<size(); str++){
+				String seq = "";
+				for (int bs=0; bs<getBlockSetNum(); bs++){
+					for (int b=0; b<getBlockSets().get(bs).getBlockNum(); b++){
+						for (int res=0; res<getBlockSets().get(bs).getBlocks().get(b).length(); res++){
+							seq += "A";
+						}
+					}
+				}
+				alnSequences.add(seq);
+			}
+		} catch (StructureAlignmentException e) {
+			e.printStackTrace();
+		}
 		
 	}
 

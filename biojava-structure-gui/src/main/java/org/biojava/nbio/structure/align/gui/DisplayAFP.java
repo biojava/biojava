@@ -21,8 +21,8 @@ package org.biojava.nbio.structure.align.gui;
 
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
-import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
+import org.biojava.nbio.structure.align.gui.aligpanel.MultAligPanel;
+import org.biojava.nbio.structure.align.gui.aligpanel.MultStatusDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
@@ -612,7 +612,7 @@ public class DisplayAFP
 
 	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException {
 		
-		AligPanel me = new AligPanel(afpChain,ca1,ca2);
+		MultAligPanel me = new MultAligPanel(afpChain,ca1,ca2);
 		me.setStructureAlignmentJmol(jmol);
 
 		JFrame frame = new JFrame();
@@ -627,7 +627,7 @@ public class DisplayAFP
 		JScrollPane scroll = new JScrollPane(me);
 		scroll.setAutoscrolls(true);
 
-		StatusDisplay status = new StatusDisplay(me.getMultipleAlignment());
+		MultStatusDisplay status = new MultStatusDisplay(me.getMultipleAlignment());
 		me.addAlignmentPositionListener(status);
 
 

@@ -22,7 +22,7 @@ package org.biojava.nbio.structure.align.gui.aligpanel;
 
 import java.awt.*;
 
-public class AligmentCoordManager {
+public class MultAligmentCoordManager {
 	
 	int alignmentLength;     	//number of aligned residues
 	int alignmentSize;			//number of strucures aligned
@@ -88,7 +88,7 @@ public class AligmentCoordManager {
 	 * @return the preferred width
 	 */
 	public int getPreferredWidth(){
-		return 2* DEFAULT_X_SPACE + DEFAULT_LINE_LENGTH * DEFAULT_CHAR_SIZE + DEFAULT_LEGEND_SIZE +DEFAULT_RIGHT_SPACER + DEFAULT_LEGEND_SIZE;
+		return alignmentSize* DEFAULT_X_SPACE + DEFAULT_LINE_LENGTH * DEFAULT_CHAR_SIZE + DEFAULT_LEGEND_SIZE +DEFAULT_RIGHT_SPACER + DEFAULT_LEGEND_SIZE;
 	}
 	
 	/** Y coordinate size
@@ -96,7 +96,7 @@ public class AligmentCoordManager {
 	 * @return the preferred height
 	 */
 	public int getPreferredHeight(){
-		return 2* DEFAULT_Y_SPACE + (alignmentLength / DEFAULT_LINE_LENGTH) * DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
+		return alignmentSize* DEFAULT_Y_SPACE + (alignmentLength / DEFAULT_LINE_LENGTH) * DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
 	}
 	
 	/** Convert from a X position in the JPanel to alignment position
