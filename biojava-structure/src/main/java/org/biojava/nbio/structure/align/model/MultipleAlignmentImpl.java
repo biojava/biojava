@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -211,7 +212,9 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 				for (int bs=0; bs<getBlockSetNum(); bs++){
 					for (int b=0; b<getBlockSets().get(bs).getBlockNum(); b++){
 						for (int res=0; res<getBlockSets().get(bs).getBlocks().get(b).length(); res++){
-							seq += "A";
+							if (getBlockSets().get(bs).getBlocks().get(b).getAlignRes().get(str).get(res) != null)
+								seq += StructureTools.get1LetterCode(getAtomArrays().get(str)[res].getGroup().getPDBName());
+							else seq += "-";
 						}
 					}
 				}
@@ -220,7 +223,6 @@ public class MultipleAlignmentImpl implements Serializable, MultipleAlignment{
 		} catch (StructureAlignmentException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override

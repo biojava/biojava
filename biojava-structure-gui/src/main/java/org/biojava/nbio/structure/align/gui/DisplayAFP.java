@@ -653,7 +653,7 @@ public class DisplayAFP
 	
 	public static void showAlignmentImage(MultipleAlignment multAln, AbstractAlignmentJmol jmol, Color[] colors) throws StructureAlignmentException, StructureException {
 		
-		MultAligPanel me = new MultAligPanel(multAln, colors);
+		MultAligPanel me = new MultAligPanel(multAln, colors, jmol);
 		JFrame frame = new JFrame();
 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		

@@ -32,7 +32,7 @@ public class DemoCEMC {
 		//DHFR (Gerstein 1998 paper)
 		List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
 		//TIM barrels (MUSTA paper)
-		//List<String> names = Arrays.asList("1tim.A", "1vzw", "1nsj", "3tha.A", "4enl", "2mnr", "7tim.A", "1tml", "1btc", "1pii", "6xia", "5rub.A", "2taa.B");
+		//List<String> names = Arrays.asList("1tim.A", "1vzw", "1nsj", "3tha.A", "4enl", "2mnr", "7tim.A", "1tml", "1btc", "a1piia1", "6xia", "5rub.A", "2taa.B");
 		//Helix-bundle (MUSTA paper)
 		//List<String> names = Arrays.asList("1bbh.A", "1aep", "1bge.B", "256b.A", "2ccy.A", "2hmz.A", "3ink.C");
 		//Calcium Binding (MUSTA paper)

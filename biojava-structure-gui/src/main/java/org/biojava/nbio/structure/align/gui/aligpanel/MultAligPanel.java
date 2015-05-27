@@ -49,7 +49,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -58,7 +57,6 @@ import java.util.List;
  * 	It has been modified from the version specific for AFPChain to include the new MultipleAlignmentDS.
  * 	The AligPanel is initialized with a constructor rather than with the setters now.
  * 
- * @author Andreas Prlic
  * @author Aleix Lafita
  *
  */
@@ -112,7 +110,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	* @throws StructureException 
 	* @throws StructureAlignmentException 
     */
-   public MultAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, Color[] colors) throws StructureAlignmentException, StructureException{
+   public MultAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException{
 	   this();
 	   this.multAln = new MultipleAlignmentImpl(afpChain, ca1, ca2);
 	   this.size = multAln.size();
@@ -121,9 +119,10 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	   this.colors = colors;
 	   if (colors == null) this.colors = DEFAULT_COLORS;
 	   coordManager = new MultAligmentCoordManager(size, length);
+	   this.jmol = jmol;
    }
-   public MultAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException{
-	   this(afpChain, ca1, ca2, DEFAULT_COLORS);
+   public MultAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException{
+	   this(afpChain, ca1, ca2, DEFAULT_COLORS, jmol);
    }
    
    /**
@@ -132,7 +131,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
     * @param colors
  * @throws StructureAlignmentException 
     */
-   public MultAligPanel(MultipleAlignment multAln, Color[] colors) throws StructureAlignmentException{
+   public MultAligPanel(MultipleAlignment multAln, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException{
 	   this();
 	   this.multAln = multAln;
 	   this.size = multAln.size();
@@ -140,9 +139,10 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	   this.colors = colors;
 	   if (colors == null) this.colors = DEFAULT_COLORS;
 	   coordManager = new MultAligmentCoordManager(size, length);
+	   this.jmol = jmol;
    }
-   public MultAligPanel(MultipleAlignment multAln) throws StructureAlignmentException{
-	   this(multAln,DEFAULT_COLORS);
+   public MultAligPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol) throws StructureAlignmentException{
+	   this(multAln,DEFAULT_COLORS,jmol);
    }
    
    public MultAligmentCoordManager getCoordManager() {
@@ -301,24 +301,17 @@ public void mouseOverPosition(AlignedPosition p) {
       if ( jmol == null) return;
 
       StringBuffer cmd = new StringBuffer("select ");
-
       int nrSelected = 0;
       try {
 
          for (int i = 0 ; i< length ; i++){
             if ( selection.get(i)){
-            	
-            	List<String> select = new ArrayList<String>();
-            	Collections.fill(select, "");
-            	
             	for (int str=0; str<size; str++){
 	               Atom a1 = DisplayAFP.getAtomForAligPos(multAln,str,i);
-	               if ( a1 != null ) select.get(str).concat(JmolTools.getPdbInfo(a1));
-	               if ( nrSelected > 0) cmd.append(", ");
-	                cmd.append(select);
-	                cmd.append("/"+(str+1)+", ");
+	               if (a1 != null ) cmd.append(JmolTools.getPdbInfo(a1));
+	               cmd.append("/"+(str+1)+", ");
             	}
-               nrSelected++;
+            	nrSelected++;
         	}
         }
 
@@ -326,11 +319,9 @@ public void mouseOverPosition(AlignedPosition p) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
       }	
-      if (nrSelected == 0)
-         cmd.append(" none;");
-      else
-         cmd.append("; set display selected;");
-      
+      if (nrSelected == 0) cmd.append(" none;");
+      else cmd.append(" none; set display selected;");
+      //System.out.println(cmd.toString());
       jmol.evalString(cmd.toString());
    }
 

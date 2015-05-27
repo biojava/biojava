@@ -22,6 +22,13 @@ package org.biojava.nbio.structure.align.gui.aligpanel;
 
 import java.awt.*;
 
+/**
+ * Generalization of the Coodinate Manager to include an arbitrary number of sequences (lines) for Multiple\
+ * Alignment visualization.
+ * 
+ * @author Aleix Lafita
+ *
+ */
 public class MultAligmentCoordManager {
 	
 	private int alignmentLength;     	//number of aligned residues
