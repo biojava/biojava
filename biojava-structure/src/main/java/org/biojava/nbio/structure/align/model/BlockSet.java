@@ -34,6 +34,10 @@ public interface BlockSet extends ScoresCache {
 	
 	/** 
      * Set the back-reference to its parent MultipleAlignment.
+     * 
+     * Neither removes this blockset from its previous alignment, if any, nor
+     * adds it to the new parent. Calling code should assure that links to
+     * and from the ensemble are consistent and free of memory leaks.
      * @param parent the parent MultipleAlignment.
      * @see #getMultipleAlignment()
      */
@@ -49,6 +53,8 @@ public interface BlockSet extends ScoresCache {
 	
 	/**
 	 * Set the List of alignment Blocks of the BlockSet.
+	 * 
+	 * Also calls {@link Block#setBlockSet(BlockSet)} for each argument
 	 * @param blocks List of alignment Blocks.
 	 * @see #getBlocks()
 	 */
@@ -100,4 +106,11 @@ public interface BlockSet extends ScoresCache {
 	 * @see #getBlockNum()
 	 */
 	public int size() throws StructureAlignmentException;
+	
+	/**
+	 * Clear scores and other properties which depend on the specific alignment.
+	 * 
+	 * This can free memory and ensures consistency for cached variables.
+	 */
+	public void clear();
 }

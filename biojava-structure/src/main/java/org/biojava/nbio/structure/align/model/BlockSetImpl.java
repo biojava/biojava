@@ -7,7 +7,6 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 
 /**
  * A general implementation of a BlockSet to store multiple alignments.
@@ -69,6 +68,19 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 		}
 	}
 	
+	/**
+	 * Clear scores and cached properties. Recursively clears member blocks.
+	 */
+	@Override
+	public void clear() {
+		super.clear();
+		length = -1;
+		coreLength = -1;
+		for(Block a : getBlocks()) {
+			a.clear();
+		}
+	}
+	
 	@Override
 	public BlockSetImpl clone(){
 		return new BlockSetImpl(this);
@@ -76,7 +88,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	
 	@Override
 	public String toString() {
-		return "BlockSetImpl [parent=" + parent + ", blocks=" + blocks
+		return "BlockSetImpl [blocks=" + blocks
 				+ ", pose=" + pose + ", length=" + length + ", coreLength="
 				+ coreLength + "]";
 	}
@@ -88,11 +100,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 
 	@Override
 	public void setMultipleAlignment(MultipleAlignment parent) {
-		//Delete the alignment instance from the parent list
-		if (parent!=null) parent.getBlockSets().remove(this);
 		this.parent = parent;
-		//Cross-link parent and this instance
-		if (parent!=null) parent.getBlockSets().add(this);
 	}
 
 	@Override
@@ -104,6 +112,9 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	@Override
 	public void setBlocks(List<Block> blocks) {
 		this.blocks = blocks;
+		for(Block b:blocks) {
+			b.setBlockSet(this);
+		}
 	}
 	
 	/**
@@ -166,8 +177,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 		}
 	}
 
-	protected void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException {
-		//TODO updatePose(method);
+	protected void updateCache() throws StructureAlignmentException, StructureException {
 		updateCoreLength();
 		updateLength();
 	}

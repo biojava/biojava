@@ -7,7 +7,6 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 
 /**
  * A general implementation of a {@link MultipleAlignment}.
@@ -69,6 +68,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		coreLength = -1;
 	}
 
+
 	/**
 	 * Copy constructor.
 	 * @param ma MultipleAlignmentImpl to copy.
@@ -97,6 +97,21 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		
 	}
 	
+	
+	/**
+	 * Clear scores and cached properties. Recursively clears member blocksets.
+	 */
+	@Override
+	public void clear() {
+		super.clear();
+		alnSequences = null;
+		length = -1;
+		coreLength = -1;
+		for(BlockSet a : getBlockSets()) {
+			a.clear();
+		}
+	}
+	
 	@Override
 	public MultipleAlignmentImpl clone() {
 		return new MultipleAlignmentImpl(this);
@@ -104,7 +119,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 
 	@Override
 	public String toString() {
-		return "MultipleAlignmentImpl [parent=" + parent + ", blockSets="
+		return "MultipleAlignmentImpl [blockSets="
 				+ blockSets + ", alnSequences=" + alnSequences + ", length="
 				+ length + ", coreLength=" + coreLength + ", pose=" + pose
 				+ "]";
@@ -142,11 +157,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		return alnSequences;
 	}
 
-	public void updateAlnSequences() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	/**
 	 * Returns a transformation matrix for each structure giving the
 	 * 3D superimposition information of the multiple structure alignment.
@@ -171,7 +181,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 			throw new StructureAlignmentException("Wrong number of structures for this alignment");
 		}
 		// set properties that depend on the pose to null
-		//TODO clearPose();
+		clear();
 		pose = matrices;
 	}
 
@@ -182,16 +192,27 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 
 	@Override
 	public int length() throws StructureAlignmentException {
-		if (length == -1) updateLength();
+		if (length < 0 ) updateLength();
 		return length;
 	}
 
 	@Override
 	public int getCoreLength() throws StructureAlignmentException {
-		if (coreLength == -1) updateCoreLength();
+		if (coreLength < 0) updateCoreLength();
 		return coreLength;
 	}
 
+	/**
+	 * Forces recalculation of the AlnSequences based on the alignment blocks.
+	 */
+	protected void updateAlnSequences() {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * Force recalculation of the length (aligned columns) based on the block lengths
+	 * @throws StructureAlignmentException
+	 */
 	protected void updateLength() throws StructureAlignmentException {
 		if(getBlockSets().size()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
 		//Try to calculate it from the BlockSet information
@@ -201,6 +222,10 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		}
 	}
 
+	/**
+	 * Force recalculation of the core length (ungapped columns) based on the block core lengths
+	 * @throws StructureAlignmentException
+	 */
 	protected void updateCoreLength() throws StructureAlignmentException {
 		if(getBlockSets().size()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
 		//Try to calculate it from the BlockSet information
@@ -210,8 +235,12 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		}
 	}
 
-	protected void updateCache(PoseMethod method) throws StructureAlignmentException, StructureException {
-		//TODO updatePose(method);
+	/**
+	 * Updates all cached properties
+	 * @throws StructureAlignmentException
+	 * @throws StructureException
+	 */
+	protected void updateCache() throws StructureAlignmentException, StructureException {
 		updateAlnSequences();
 		updateCoreLength();
 		updateLength();
@@ -222,13 +251,18 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		return parent;
 	}
 
+	/** 
+     * Set the back-reference to its parent Ensemble.
+     * 
+     * Neither removes this alignment from its previous ensemble, if any, nor
+     * adds it to the new parent. Calling code should assure that links to
+     * and from the ensemble are consistent and free of memory leaks.
+     * @param parent the parent MultipleAlignmentEnsemble.
+     * @see #getEnsemble()
+     */
 	@Override
 	public void setEnsemble(MultipleAlignmentEnsemble parent) {
-		//Delete the alignment instance from the parent list
-		if (parent!=null) parent.getMultipleAlignments().remove(this);
 		this.parent = parent;
-		//Cross-link the two objects automatically when parent is changed.
-		if (parent!=null) parent.getMultipleAlignments().add(this);
 	}
-	
+
 }

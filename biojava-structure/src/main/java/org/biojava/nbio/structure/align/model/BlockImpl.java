@@ -32,6 +32,7 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 		coreLength = -1;							//Value -1 indicates not calculated.
 	}
 	
+	
 	/**
 	 * Copy constructor.
 	 * @param b BlockImpl object to be copied.
@@ -55,21 +56,26 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 	public Block clone(){
 		return new BlockImpl(this);
 	}
-
+	
+	
+	/**
+	 * Clear scores and cached properties. Recursively clears member blocks.
+	 */
+	@Override
+	public void clear() {
+		super.clear();
+		coreLength = -1;
+	}
+	
 	@Override
 	public String toString() {
-		return "BlockImpl [parent=" + parent + ", alignRes=" + alignRes
+		return "BlockImpl [alignRes=" + alignRes
 				+ ", coreLength=" + coreLength + "]";
 	}
 
 	@Override
 	public void setBlockSet(BlockSet parent) {
-		//Delete the alignment instance from the parent list
-		if (parent!=null) parent.getBlocks().remove(this);
 		this.parent = parent;
-		//Cross-link the parent and this instance
-		if (parent!=null) parent.getBlocks().add(this);
-		
 	}
 
 	@Override

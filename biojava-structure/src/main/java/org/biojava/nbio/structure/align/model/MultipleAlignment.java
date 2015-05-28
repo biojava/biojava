@@ -34,8 +34,12 @@ public interface MultipleAlignment extends ScoresCache {
 	
 	/** 
      * Set the back-reference to its parent Ensemble.
+     * 
+     * Neither removes this alignment from its previous ensemble, if any, nor
+     * adds it to the new parent. Calling code should assure that links to
+     * and from the ensemble are consistent and free of memory leaks.
      * @param parent the parent MultipleAlignmentEnsemble.
-     * @see #getParent()
+     * @see #getEnsemble()
      */
 	public void setEnsemble(MultipleAlignmentEnsemble parent);
 
@@ -64,6 +68,9 @@ public interface MultipleAlignment extends ScoresCache {
 
 	/**
 	 * Returns the List of Strings that represent the multiple sequence alignment of all the structures.
+	 *
+	 * All strings should be the same length and should include '-' for gaps.
+	 * These sequences are used for text-based representations of the alignment.
 	 * @return List of Strings multiple sequence alignment
 	 * @see #updateAlnSequences()
 	 */
@@ -73,6 +80,11 @@ public interface MultipleAlignment extends ScoresCache {
 	/**
 	 * Returns a transformation matrix for each structure giving the
 	 * 3D superimposition information of the multiple structure alignment.
+	 * <p>
+	 * Individual BlockSets may override the transformation matrix for particular
+	 * substructures. Flexible alignments will generally return null from
+	 * this method, while rigid-body methods would typically store the global
+	 * matrices here and return null for {@link BlockSet#getTransformations()}.
 	 * @return the 3D superimposition information of the alignment
 	 * @throws StructureAlignmentException 
 	 */
@@ -82,6 +94,8 @@ public interface MultipleAlignment extends ScoresCache {
 	 * Set a new superposition for the structures.
 	 * 
 	 * This may trigger other properties to update which depend on the superposition.
+	 * In particular, the list of scores should be reset by implementations after
+	 * changing the transformation matrices.
 	 * @param matrices
 	 */
 	public void setTransformations(List<Matrix4d> transformations) throws StructureAlignmentException;
@@ -117,4 +131,11 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #getBlockNum()
 	 */
 	public int getCoreLength() throws StructureAlignmentException;
+	
+	/**
+	 * Clear scores and other properties which depend on the specific alignment.
+	 * 
+	 * This can free memory and ensures consistency for cached variables.
+	 */
+	public void clear();
 }

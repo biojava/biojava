@@ -60,4 +60,10 @@ public abstract class AbstractScoresCache implements ScoresCache {
 	protected Object clone(Object e) throws CloneNotSupportedException {
 		throw new CloneNotSupportedException("Subclasses must override clone");
 	}
+	/**
+	 * Resets all scores
+	 */
+	public void clear() {
+		scores = null;
+	}
 }

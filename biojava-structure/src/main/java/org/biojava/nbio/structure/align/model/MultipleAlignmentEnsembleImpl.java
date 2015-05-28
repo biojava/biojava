@@ -28,15 +28,14 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	//Creation Properties
 	String algorithmName;
 	String version;
-	long ioTime;
-	long id;
-	long calculationTime;							//running time of the algorithm
+	Long ioTime;
+	Long calculationTime;							//running time of the algorithm
 	
 	//Structure Identifiers
 	private List<String> structureNames;  			//names of the structures in PDB or SCOP format
 	private List<Atom[]> atomArrays;      			//arrays of atoms for every structure in the alignment
 	private List<Matrix> distanceMatrix; 			//A list of n (l*l)-matrices that store the distance between every pair of residues for every protein
-														//n=nr. structures; l=length of the protein
+													//n=number structures; l=length of the protein
 	private List<MultipleAlignment> multipleAlignments;
 	
 	
@@ -48,9 +47,8 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 		
 		algorithmName = null;
 		version = "1.0";
-		ioTime = System.currentTimeMillis();
-		id = 0;
-		calculationTime = 0;
+		ioTime = null;
+		calculationTime = null;
 		
 		structureNames = null;
 		atomArrays = null;
@@ -79,7 +77,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 		algorithmName = e.algorithmName;
 		version = e.version;
 		ioTime = e.ioTime;
-		id = e.id;
 		calculationTime = e.calculationTime;
 		
 		atomArrays = null;
@@ -216,26 +213,36 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 
 	@Override
 	public List<Atom[]> getAtomArrays() throws StructureAlignmentException {
-		if (atomArrays == null) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: updateAtomArrays() first");
+		if (atomArrays == null)
+			try {
+				updateAtomArrays();
+			} catch (IOException e) {
+				throw new StructureAlignmentException(e.getMessage(),e);
+			} catch (StructureException e) {
+				throw new StructureAlignmentException(e.getMessage(),e);
+			}
 		return atomArrays;
 	}
 
 	@Override
 	public void setAtomArrays(List<Atom[]> atomArrays) {
 		this.atomArrays = atomArrays;
-		//If the atomArrays are changed the structure identifiers must be also changed.
-		structureNames = new ArrayList<String>();
-		for (int i=0; i<atomArrays.size(); i++)
-			structureNames.add(atomArrays.get(i)[0].getGroup().getChain().getParent().getIdentifier());
 	}
 	
-	public void updateAtomArrays() throws StructureAlignmentException, IOException, StructureException{
+	/**
+	 * Force the atom arrays to regenerate based on {@link #getStructureNames()}
+	 * @throws StructureAlignmentException
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public void updateAtomArrays() throws IOException, StructureException{
 		AtomCache cache = new AtomCache();
 		atomArrays = new ArrayList<Atom[]>();
-		for (int s=0; s<size(); s++){
-			Atom[] array = cache.getAtoms(structureNames.get(s));
+		for (String name : getStructureNames() ){
+			Atom[] array = cache.getRepresentativeAtoms(name);
 			atomArrays.add(array);
 		}
+		//TODO update superposition & other properties
 	}
 
 	@Override
@@ -249,6 +256,10 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 		return distanceMatrix;
 	}
 
+	/**
+	 * Force recalculation of the distance matrices
+	 * @throws StructureAlignmentException
+	 */
 	public void updateDistanceMatrix() throws StructureAlignmentException {
 		
 		//Reset the distance Matrix variable
@@ -279,6 +290,18 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	public void setMultipleAlignments(List<MultipleAlignment> multipleAlignments) {
 		this.multipleAlignments = multipleAlignments;
 	}
+	
+	/**
+	 * Add a new multiple alignment to the end of the ensemble and set its
+	 * ensemble to this.
+	 * @param alignment
+	 */
+	@Override
+	public void addMultipleAlignment( MultipleAlignment alignment) {
+		multipleAlignments.add(alignment);
+		alignment.setEnsemble(this);
+	}
+
 
 	@Override
 	public int size() throws StructureAlignmentException {
@@ -286,7 +309,16 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 		else return structureNames.size();
 	}
 	
-
-
+	/**
+	 * Clear scores and distance matrix. Recursively clears member alignments.
+	 */
+	@Override
+	public void clear() {
+		super.clear();
+		distanceMatrix = null;
+		for(MultipleAlignment a : getMultipleAlignments()) {
+			a.clear();
+		}
+	}
 
 }

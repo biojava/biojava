@@ -76,5 +76,12 @@ public interface Block extends ScoresCache {
 	 * @see #size()
 	 */
 	public int getCoreLength();
+	
+	/**
+	 * Clear scores and other properties which depend on the specific alignment.
+	 * 
+	 * This can free memory and ensures consistency for cached variables.
+	 */
+	public void clear();
 
 }
