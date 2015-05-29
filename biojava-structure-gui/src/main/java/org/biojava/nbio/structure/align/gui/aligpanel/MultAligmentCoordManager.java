@@ -20,14 +20,30 @@
  */
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
-import org.biojava.nbio.structure.align.model.AFPChain;
-
 import java.awt.*;
 
-public class AFPChainCoordManager {
-
+/**
+ * Generalization of the Coodinate Manager to include an arbitrary number of sequences (lines) for Multiple\
+ * Alignment visualization.
+ * 
+ * @author Aleix Lafita
+ *
+ */
+public class MultAligmentCoordManager {
 	
-	AFPChain afpChain ;
+	private int alignmentLength;     	//number of aligned residues
+	private int alignmentSize;			//number of strucures aligned
+	
+	/**
+	 * Constructor.
+	 * @param size number of structures/sequences aligned (rows).
+	 * @param length number of aligned residues (columns)
+	 */
+	public MultAligmentCoordManager(int size, int length){
+		alignmentLength = length;
+		alignmentSize = size;
+		DEFAULT_Y_STEP = 30*size;
+	}
 
 	/** Space on the right side between sequence and legend.
 	 * 
@@ -42,7 +58,7 @@ public class AFPChainCoordManager {
 	/** size of space between rows
 	 * 
 	 */
-	public static final int DEFAULT_Y_STEP = 60;
+	public final int DEFAULT_Y_STEP;
 	
 	/** size per character
 	 * 
@@ -73,7 +89,6 @@ public class AFPChainCoordManager {
 	
 	private static final int DEFAULT_LEGEND_SIZE = 50;
 	
-	
 	public int getSummaryPos(){
 		return SUMMARY_POS;
 	}
@@ -83,7 +98,7 @@ public class AFPChainCoordManager {
 	 * @return the preferred width
 	 */
 	public int getPreferredWidth(){
-		return 2* DEFAULT_X_SPACE + DEFAULT_LINE_LENGTH * DEFAULT_CHAR_SIZE + DEFAULT_LEGEND_SIZE +DEFAULT_RIGHT_SPACER + DEFAULT_LEGEND_SIZE;
+		return alignmentSize* DEFAULT_X_SPACE + DEFAULT_LINE_LENGTH * DEFAULT_CHAR_SIZE + DEFAULT_LEGEND_SIZE +DEFAULT_RIGHT_SPACER + DEFAULT_LEGEND_SIZE;
 	}
 	
 	/** Y coordinate size
@@ -91,12 +106,12 @@ public class AFPChainCoordManager {
 	 * @return the preferred height
 	 */
 	public int getPreferredHeight(){
-		return 2* DEFAULT_Y_SPACE + (afpChain.getAlnLength() / DEFAULT_LINE_LENGTH) * DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
+		return alignmentSize* DEFAULT_Y_SPACE + (alignmentLength / DEFAULT_LINE_LENGTH) * DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
 	}
 	
 	/** Convert from a X position in the JPanel to alignment position
 	 * 
-	 * @param aligSeq sequence 0 or 1 
+	 * @param aligSeq sequence number
 	 * @param p point on panel
 	 * @return the sequence position for a point on the Panel
 	 */
@@ -120,7 +135,7 @@ public class AFPChainCoordManager {
 
 	/** get the position of the sequence position on the Panel
 	 * 
-	 * @param aligSeq  0 or 1 for which of the two sequences to ask for.
+	 * @param aligSeq number of the sequence to ask for.
 	 * @param i sequence position
 	 * @return the point on a panel for a sequence position
 	 */
@@ -145,12 +160,7 @@ public class AFPChainCoordManager {
 		return p;
 	}
 
-	public void setAFPChain(AFPChain afpChain) {
-		this.afpChain = afpChain;
-		
-	}
-
-	/** returns the AligSeq (0 or 1) for a point
+	/** returns the AligSeq, the sequence number, for a point
 	 * returns -1 if not over an alig seq.
 	 * @param point
 	 * @return which of the two sequences a point on the panel corresponds to

@@ -6,7 +6,9 @@ import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 
 /**
  * A general implementation of a {@link MultipleAlignment}.
@@ -117,12 +119,14 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		return new MultipleAlignmentImpl(this);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "MultipleAlignmentImpl [blockSets="
-				+ blockSets + ", alnSequences=" + alnSequences + ", length="
-				+ length + ", coreLength=" + coreLength + ", pose=" + pose
-				+ "]";
+		return "MultipleAlignmentImpl [blockSets=" + blockSets + ", length="
+				+ length + ", coreLength=" + coreLength + "]";
 	}
 
 	@Override
@@ -205,9 +209,30 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	/**
 	 * Forces recalculation of the AlnSequences based on the alignment blocks.
 	 */
-	protected void updateAlnSequences() {
-		// TODO Auto-generated method stub
+	public void updateAlnSequences() {
+		
+		//This method is only to try the aligPanel. It does not calculate the correct sequence alignment
+		alnSequences = new ArrayList<String>();
+		try {
+			List<Atom[]> atoms = getEnsemble().getAtomArrays();
+			for (int row=0; row<size(); row++){
+				String seq = "";
+				for (BlockSet bs :getBlockSets()){
+					for (Block b: bs.getBlocks()){
+						for (int res=0; res<b.length(); res++){
+							if (b.getAlignRes().get(row).get(res) != null)
+								seq += StructureTools.get1LetterCode(atoms.get(row)[res].getGroup().getPDBName());
+							else seq += "-";
+						}
+					}
+				}
+				alnSequences.add(seq);
+			}
+		} catch (StructureAlignmentException e) {
+			e.printStackTrace();
+		}
 	}
+
 
 	/**
 	 * Force recalculation of the length (aligned columns) based on the block lengths

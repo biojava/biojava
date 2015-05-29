@@ -1,16 +1,13 @@
 package org.biojava.nbio.structure.align.gui.jmol;
 
-
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.AlignmentGui;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
-import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
+import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.swing.*;
@@ -21,7 +18,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /** A class that provides GUI for multiple alignments. Code adapted from the StructuralAlignmentJmol class.
  * 
  * @author Aleix Lafita
@@ -29,8 +25,9 @@ import java.util.List;
  */
 public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
-   MultipleAlignment multAln;
-   List<Atom[]> rotatedAtoms;    //rotated atom arrays of every structure
+	private Color[] colors;
+	private MultipleAlignment multAln;
+	private List<Atom[]> atomArrays;    //already rotated atom arrays of every structure
 
    /**
     * Default constructor creates an empty window, from where alignments can be made through the align menu.
@@ -40,6 +37,11 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
       //don't have a multiple alignment, set it to null...
       this(null, null);
    }
+   
+   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> rotatedAtoms) throws StructureAlignmentException {
+	   //Default colors: color set
+	   this(multAln, rotatedAtoms, ColorBrewer.Set1.getColorPalette(multAln.size()));
+   }
 
    /**
     * The constructor displays the Mutltiple Alignment in a Jmol panel.
@@ -47,7 +49,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
     * @param atomArrays: contains the atom coordinates to display, already rotated.
     * @throws StructureAlignmentException 
     */
-   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> rotatedAtoms) throws StructureAlignmentException {
+   public MultipleAlignmentJmol(MultipleAlignment msa, List<Atom[]> rotatedAtoms, Color[] col) throws StructureAlignmentException {
 
       AligUIManager.setLookAndFeel();
 
@@ -60,8 +62,9 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
       frame.setJMenuBar(menu);
       //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      this.multAln = multAln;
-      this.rotatedAtoms = rotatedAtoms;
+      this.multAln = msa;
+      this.atomArrays = rotatedAtoms;
+      this.colors = col;
       
       frame.addWindowListener( new WindowAdapter()
       {
@@ -78,8 +81,6 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
                frame.dispose();
             }
             else  {
-               // check if AlignmentGUI is visible..
-
                AlignmentGui gui = AlignmentGui.getInstanceNoVisibilityChange();
                if ( gui.isVisible()) {
                   frame.dispose();
@@ -141,11 +142,44 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		style.addActionListener(jmolPanel);
 
 		String[] colorModes = new String[] { "Secondary Structure", "By Chain", "Rainbow", "By Element", "By Amino Acid", "Hydrophobicity" ,"Suggest Domains" , "Show SCOP Domains"};
-		JComboBox colors = new JComboBox(colorModes);
-		colors.addActionListener(jmolPanel);
+		JComboBox jcolors = new JComboBox(colorModes);
+		jcolors.addActionListener(jmolPanel);
 		hBox1.add(Box.createGlue());
 		hBox1.add(new JLabel("Color"));
-		hBox1.add(colors);
+		hBox1.add(jcolors);
+		
+		String[] colorPattelete = new String[] {"Set1", "Set2", "Spectral", "Pastel"};
+		JComboBox pattelete = new JComboBox(colorPattelete);
+		
+		pattelete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int size = atomArrays.size();
+				JComboBox source = (JComboBox) e.getSource();
+				String value = source.getSelectedItem().toString();
+				evalString("save selection; select *; color grey; select ligand; color CPK;");
+				if (value=="Set1"){
+					colors = ColorBrewer.Set1.getColorPalette(size);
+				} else if (value=="Set2"){
+					colors = ColorBrewer.Set2.getColorPalette(size);
+				} else if (value=="Spectral"){
+					colors = ColorBrewer.Spectral.getColorPalette(size);
+				} else if (value=="Pastel"){
+					colors = ColorBrewer.Pastel1.getColorPalette(size);
+				}
+				String script="";
+				try {
+					script = getJmolString(multAln, atomArrays, colors);
+				} catch (StructureAlignmentException e1) {
+					e1.printStackTrace();
+				}
+				evalString(script+"; restore selection; ");
+			}
+		});
+
+		hBox1.add(Box.createGlue());
+		hBox1.add(new JLabel("Pattelete"));
+		hBox1.add(pattelete);
 		
 
 // CHeck boxes
@@ -239,7 +273,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
                return;
             }
          }
-         Structure artificial = DisplayAFP.getAlignedStructure(rotatedAtoms);
+         Structure artificial = DisplayAFP.getAlignedStructure(atomArrays);
          PDBHeader header = new PDBHeader();
          String title =  multAln.getAlgorithmName() + " V." +multAln.getVersion() + " : ";
          for (String name:multAln.getStructureNames()) title +=  name + " ";
@@ -255,7 +289,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
    public void destroy(){
 	  super.destroy();
       multAln =null;
-      rotatedAtoms = null;
+      atomArrays = null;
    }
 
    @Override
@@ -284,8 +318,13 @@ public void actionPerformed(ActionEvent e) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         System.out.println("Option currently not available for Multiple Alignments");
-         //DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+         try {
+			DisplayAFP.showAlignmentImage(multAln, this, colors);
+		} catch (StructureAlignmentException e1) {
+			e1.printStackTrace();
+		} catch (StructureException e1) {
+			e1.printStackTrace();
+		}
 
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
          if ( multAln == null) {
@@ -307,18 +346,14 @@ public void actionPerformed(ActionEvent e) {
     * @param atomArrays
     * @throws StructureAlignmentException 
     */
-   public String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureAlignmentException{
+   private static String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) throws StructureAlignmentException{
      
-	  /* TODO Color by block is disabled right now
-      if (multAln.getBlockSets().get(0).getBlockNum() > 1){
-         return getMultiBlockJmolString(multAln, atomArrays);
-      }*/
+	  //Color by blocks if there are flexible alignments (>1 BlockSets) or CPs (>1 Blocks)
+      if (multAln.getBlockSetNum() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
+      else if (multAln.getBlockSets().get(0).getBlockNum() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
 
       StringBuffer j = new StringBuffer();
       j.append(DEFAULT_SCRIPT);
-      
-      //Set one color for every structure in the multiple alignment
-      Color[] colors = ColorBrewer.Set1.getColorPalette(multAln.size());
       
       //Color the equivalent residues of every structure
       StringBuffer sel = new StringBuffer();
@@ -366,133 +401,86 @@ public void actionPerformed(ActionEvent e) {
       j.append(buf);
 
       return j.toString();
-   }
-   
+   }   
+
    /**
-    * Only select and color one aligned block, indicated by the blockNr.
-    * @throws StructureAlignmentException 
+    * Colors every block of the structures with a different color tonality. It colors each Block differently,
+    * no matter if it is from the same or different BlockSet.
     */
-   public static String getJmolScript4Block(MultipleAlignment multAln, List<Atom[]> atomArrays, int blockNr) throws StructureAlignmentException{
-	   
-	   BlockSet optAln = multAln.getBlockSets().get(0);
-	   int blockNum = optAln.getBlockNum();
-	   
-	   if ( blockNr >= blockNum)
-		   return DEFAULT_SCRIPT;
-	   
-	   if ( blockNum == 0)
-		   return DEFAULT_SCRIPT;
+   private static String getMultiBlockJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) throws StructureAlignmentException {
 
-	   StringWriter jmol = new StringWriter();
-	   jmol.append(DEFAULT_SCRIPT);
-
-	   jmol.append("select *; color lightgrey; ");
-	      
-	   printJmolScript4Block(atomArrays, blockNum, optAln, jmol, blockNr);
-	   
-	   jmol.append("model 0;  ");
-	   jmol.append(LIGAND_DISPLAY_SCRIPT);
-	   //System.out.println(jmol);
-	   return jmol.toString();
-
-	   
-   }
-   
-
-   private static String getMultiBlockJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays) throws StructureAlignmentException
-   {
-
-	  BlockSet optAln = multAln.getBlockSets().get(0);
-	  int blockNum = optAln.getBlockNum();      
-	
-	  if ( blockNum == 0 )
-	     return DEFAULT_SCRIPT;
-	
 	  StringWriter jmol = new StringWriter();
 	  jmol.append(DEFAULT_SCRIPT);
-	
-	  jmol.append("select */2; color lightgrey; model 2; ");
 	  
-	  //for(int bk = 0; bk < blockNum; bk ++) printJmolScript4Block(atomArrays, blockNum, optAln, jmol, bk);
-	  //TODO Print by block is disabled right now
+	  int blockNum = 0;
+	  for (int bs = 0; bs < multAln.getBlockSetNum(); bs ++) {
+		  for (int b = 0; b < multAln.getBlockSets().get(bs).getBlockNum(); b ++) {
+			  blockNum++;
+		  }
+	  }
+	  
+	  //For every structure color all the blocks with the printBlock method
+	  for (int str=0; str<atomArrays.size(); str++){
+		  jmol.append("select */"+(str+1)+"; color lightgrey; model "+(str+1)+"; ");
+		  int index = 0;
+		  
+		  for (int bs = 0; bs < multAln.getBlockSetNum(); bs ++) {
+			  for (int b = 0; b < multAln.getBlockSets().get(bs).getBlockNum(); b ++) {
+				  
+				  List<List<Integer>> alignRes = multAln.getBlockSets().get(bs).getBlocks().get(b).getAlignRes();
+				  printJmolScript4Block(atomArrays.get(str), alignRes, colors, jmol, str, index, blockNum);
+				  index++;
+			  }
+		  }
+	  }
 	  
 	  jmol.append("model 0;  ");
 	  jmol.append(LIGAND_DISPLAY_SCRIPT);
 	  
 	  return jmol.toString();
-
-
    }
-
-private static void printJmolScript4Block(List<Atom[]> atomArrays, int blockNum,
-		BlockSet optAln, StringWriter jmol, int bk) {
-	
-		//TODO disabled the coloring by block
-	 /*//the block nr determines the color...
-	 int colorPos = bk;
+   
+   private static void printJmolScript4Block(Atom[] atoms, List<List<Integer>> alignRes, Color[] colors, StringWriter jmol, int str, int colorPos, int blockNum) {
 	 
-	 Color c1;
-	 Color c2;
-	 //If the colors for the block are specified in AFPChain use them, otherwise the default ones are calculated
-		 
-	 if ( colorPos > ColorUtils.colorWheel.length){
-	    colorPos = ColorUtils.colorWheel.length % colorPos ;
-	 }
+	 Color start = colors[str%colors.length];
+	 double fraction = (colorPos*1.0)/(blockNum+1.0);
+	 Color color = ColorUtils.darker(start, fraction);
 	 
-	 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
-	 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
-	 	 
-	 c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
-	 c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
-	 
-	 List<String> pdb1 = new ArrayList<String>();
-	 List<String> pdb2 = new ArrayList<String>();
-	 for ( int i=0;i< optLen[bk];i++) {
-	    ///
-	    int pos1 = optAln[bk][0][i];
-	    pdb1.add(JmolTools.getPdbInfo(ca1[pos1]));
-	    int pos2 = optAln[bk][1][i];
-	    pdb2.add(JmolTools.getPdbInfo(ca2[pos2]));
+	 //Obtain the residues aligned in this block of the structure
+	 List<String> pdb = new ArrayList<String>();
+	 for (int i=0;i< alignRes.get(str).size(); i++) {
+		//Handle gaps - only color if it is not null
+		if (alignRes.get(str).get(i) != null){
+			int pos = alignRes.get(str).get(i);
+			pdb.add(JmolTools.getPdbInfo(atoms[pos]));
+		}
 	 }
 
-	 // and now select the aligned residues...
+	 //Select the aligned residues
 	 StringBuffer buf = new StringBuffer("select ");
 	 int count = 0;
-	 for (String res : pdb1 ){
+	 for (String res : pdb){
 	    if ( count > 0)
 	       buf.append(",");
 	    buf.append(res);
-	    buf.append("/1");
+	    buf.append("/"+(str+1));
 	    count++;
 	 }
 
-	 buf.append("; backbone 0.6 ; color [" + c1.getRed() +"," + c1.getGreen() +"," +c1.getBlue()+"]; select ");
+	 buf.append("; backbone 0.6 ; color [" + color.getRed() +"," + color.getGreen() +"," +color.getBlue()+"]; ");
 	 
-	 count = 0;
-	 for (String res :pdb2 ){
-	    if ( count > 0)
-	       buf.append(",");
-	 
-	    buf.append(res);
-	    buf.append("/2");
-	    count++;
-	 }
-	 //buf.append("; set display selected;");
-
-	 buf.append("; backbone 0.6 ; color [" + c2.getRed() +"," + c2.getGreen() +"," +c2.getBlue()+"];");
-
-	 // now color this block:
-	 jmol.append(buf);*/
+	 //Append the string to the global buffer
+	 jmol.append(buf);
 }
 
    public void resetDisplay() throws StructureAlignmentException{
 	   
       if (multAln != null) {
-         String script = getJmolString(multAln, rotatedAtoms);
+         String script = getJmolString(multAln, atomArrays,colors);
          //System.out.println(script);
          evalString(script);
-         jmolPanel.evalString("save STATE state_1");
          jmolPanel.evalString("hide ligand");
+         jmolPanel.evalString("save STATE state_1");
       }
    }
 

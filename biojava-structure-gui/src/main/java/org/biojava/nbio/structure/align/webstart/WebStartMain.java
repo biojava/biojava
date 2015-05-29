@@ -36,12 +36,14 @@ import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 
 import javax.jnlp.UnavailableServiceException;
 import javax.swing.*;
+
 import java.io.File;
 
 public class WebStartMain
@@ -363,7 +365,12 @@ public class WebStartMain
 
 		System.out.println(afpChain.toCE(ca1, ca2));
 
-		DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
+		try {
+			DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
+		} catch (StructureAlignmentException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

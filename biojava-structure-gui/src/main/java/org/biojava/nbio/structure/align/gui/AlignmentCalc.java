@@ -31,6 +31,7 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,6 +115,9 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 			e.printStackTrace();
 			logger.warn(e.getMessage());
 
+		} catch (StructureAlignmentException e) {
+			e.printStackTrace();
+			logger.warn(e.getMessage());
 		}
 
 

@@ -62,18 +62,18 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
     */
    private static final long serialVersionUID = -6892229111166263764L;
 
-   AFPChain afpChain;
-   AFPChainCoordManager coordManager ;
-   Font seqFont;
-   Font eqFont;
+   private AFPChain afpChain;
+   private AFPChainCoordManager coordManager ;
+   private Font seqFont;
+   private Font eqFont;
    private AbstractAlignmentJmol jmol;
-   AligPanelMouseMotionListener mouseMoLi;
+   private AligPanelMouseMotionListener mouseMoLi;
 
-   BitSet selection;
+   private BitSet selection;
 
    private boolean selectionLocked;
-   Atom[] ca1;
-   Atom[] ca2;
+   private Atom[] ca1;
+   private Atom[] ca2;
 
    private boolean colorBySimilarity;
 
@@ -522,7 +522,7 @@ public void toggleSelection(AlignedPosition p) {
 
 
 
-   public void setStructureAlignmentJmol(AbstractAlignmentJmol jmol) {
+   public void setAlignmentJmol(AbstractAlignmentJmol jmol) {
       this.jmol = jmol;
 
    }
@@ -661,5 +661,3 @@ public void actionPerformed(ActionEvent e) {
 
 
 }
-
-

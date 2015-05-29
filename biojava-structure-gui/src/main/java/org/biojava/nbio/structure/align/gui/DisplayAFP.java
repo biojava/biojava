@@ -22,12 +22,15 @@ package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
+import org.biojava.nbio.structure.align.gui.aligpanel.MultAligPanel;
+import org.biojava.nbio.structure.align.gui.aligpanel.MultStatusDisplay;
 import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.Block;
+import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
@@ -609,15 +612,13 @@ public class DisplayAFP
 		return jmol;
 	}
 
-	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) {
-		String result = afpChain.toFatcat(ca1, ca2);
-
-		//String rot = afpChain.toRotMat();
-		//DisplayAFP.showAlignmentImage(afpChain, result + AFPChain.newline + rot);
-
+	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException {
+		
 		AligPanel me = new AligPanel();
-		me.setStructureAlignmentJmol(jmol);		
+		me.setAlignmentJmol(jmol);
 		me.setAFPChain(afpChain);
+		me.setCa1(ca1);
+		me.setCa2(ca2);
 
 		JFrame frame = new JFrame();
 
@@ -633,26 +634,51 @@ public class DisplayAFP
 
 		StatusDisplay status = new StatusDisplay();
 		status.setAfpChain(afpChain);
-
 		status.setCa1(ca1);
 		status.setCa2(ca2);
-		me.setCa1(ca1);
-		me.setCa2(ca2);
 		me.addAlignmentPositionListener(status);
-
 
 		Box vBox = Box.createVerticalBox();
 		vBox.add(scroll);
 		vBox.add(status);
-
 
 		frame.getContentPane().add(vBox);
 
 		frame.pack();
 		frame.setVisible(true);
 		// make sure they get cleaned up correctly:
-			frame.addWindowListener(me);
-			frame.addWindowListener(status);
+		frame.addWindowListener(me);
+		frame.addWindowListener(status);
+	}
+	
+	public static void showAlignmentImage(MultipleAlignment multAln, AbstractAlignmentJmol jmol, Color[] colors) throws StructureAlignmentException, StructureException {
+		
+		MultAligPanel me = new MultAligPanel(multAln, colors, jmol);
+		JFrame frame = new JFrame();
+
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		
+		frame.setTitle("Alignment Panel for Multiple Structure Alignments - beta");
+		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
+
+		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,me,null);
+		frame.setJMenuBar(menu);
+
+		JScrollPane scroll = new JScrollPane(me);
+		scroll.setAutoscrolls(true);
+
+		MultStatusDisplay status = new MultStatusDisplay(multAln);
+		me.addAlignmentPositionListener(status);
+
+		Box vBox = Box.createVerticalBox();
+		vBox.add(scroll);
+		vBox.add(status);
+		frame.getContentPane().add(vBox);
+
+		frame.pack();
+		frame.setVisible(true);
+		//make sure they get cleaned up correctly:
+		frame.addWindowListener(me);
+		frame.addWindowListener(status);
 	}
 
 	public static void showAlignmentImage(AFPChain afpChain, String result) {
@@ -722,6 +748,60 @@ public class DisplayAFP
 		return artificial;
 	}
 
+	/**
+	 * Given an aligned position in the sequence alignment, it returns the Atom that corresponds.
+	 * It does not support gaps in the multiple alignment right now!
+	 * 
+	 * @param multAln the alignment information
+	 * @param str the structure
+	 * @param pos the position in the sequence alignment
+	 * @return Atom the aligned atom
+	 * @throws StructureAlignmentException 
+	 */
+	public static Atom getAtomForAligPos(MultipleAlignment multAln, int str, int pos) throws StructureAlignmentException {
+		
+		List<Integer> residues = new ArrayList<Integer>();
+		for (BlockSet bs:multAln.getBlockSets()){
+			for (Block b:bs.getBlocks()) residues.addAll(b.getAlignRes().get(str));
+		}
+		if (residues.size() == 0) return null;
+		
+		String sequence = multAln.getAlnSequences().get(str);
+		int aligpos = 0;
+		for (int i=0; i<pos; i++){
+			if (sequence.charAt(i) != '-') aligpos++;
+		}
+		int capos = residues.get(aligpos);
 
+		if (capos < 0 || capos > multAln.getParent().getAtomArrays().get(str).length) return null;
+		return multAln.getParent().getAtomArrays().get(str)[capos];
+	}
 
+	/**
+	 * Returns all the positions in the alignment sequence that are aligned (do not include gaps). 
+	 * The core residues for multiple alignments.
+	 * 
+	 * @param multAln
+	 * @return List with all the aligned positions
+	 * @throws StructureAlignmentException 
+	 */
+	public static List<Integer> getCoreAlignmentPos(MultipleAlignment multAln) throws StructureAlignmentException {
+		
+		List<Integer> lst = new ArrayList<Integer>();
+		
+		for (int i =0 ; i< multAln.getAlnSequences().get(0).length(); i++){
+			boolean aligned = true;
+			for (int str = 0; str<multAln.size(); str++){
+				char c = multAln.getAlnSequences().get(str).charAt(i);
+				if (c == '-'){
+					aligned = false;
+					break;
+				}
+			}
+			if (aligned == true) {
+				lst.add(i);			  
+			}
+		}
+		return lst;
+	}
 }

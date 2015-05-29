@@ -92,7 +92,7 @@ public class StructureAlignmentDisplay {
 			//Rotate the atom coordinates of all the structures
 			for (int i=0; i<size; i++){
 				Structure displayS = multAln.getAtomArrays().get(i)[0].getGroup().getChain().getParent().clone();
-				Atom[] rotCA = StructureTools.getAtomCAArray(displayS);
+				Atom[] rotCA = StructureTools.getRepresentativeAtomArray(displayS);
 				//Rotate the structure to ensure a full rotation in the display
 				Calc.rotate(rotCA[0].getGroup().getChain().getParent(), multAln.getPose().getRotation().get(i));
 				Calc.shift(rotCA[0].getGroup().getChain().getParent(), multAln.getPose().getTranslation().get(i));

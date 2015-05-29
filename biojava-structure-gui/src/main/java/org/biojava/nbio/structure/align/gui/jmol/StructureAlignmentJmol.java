@@ -35,6 +35,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -326,7 +327,12 @@ public void actionPerformed(ActionEvent e) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+	         try {
+				DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				return;
+			}
 
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
          if ( afpChain == null) {
@@ -340,7 +346,7 @@ public void actionPerformed(ActionEvent e) {
       }
    }
 
-   public String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+   private static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
      
       if ( afpChain.getBlockNum() > 1){
          return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
@@ -415,7 +421,7 @@ public void actionPerformed(ActionEvent e) {
       return j.toString();
    }
    
-   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
+   private static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
 	   int blockNum = afpChain.getBlockNum();
 	   
 	   if ( blockNr >= blockNum)
