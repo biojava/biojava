@@ -525,6 +525,21 @@ public class Calc {
 
 		}
 	}
+	
+	/**
+	 * Translates a chain object, given a Vector3d (i.e. the vecmath library 
+	 * double-precision 3-d vector)
+	 * @param chain
+	 * @param v
+	 */
+	public static final void translate (Chain chain, Vector3d v) {
+
+		for (Group g:chain.getAtomGroups()) {
+			for (Atom atom: g.getAtoms()) {
+				translate(atom,v);
+			}
+		}
+	}
 
 	/**
 	 * Translates a Structure object, given a Vector3d (i.e. the vecmath library 
