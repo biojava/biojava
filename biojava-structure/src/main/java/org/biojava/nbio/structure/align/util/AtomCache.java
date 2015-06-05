@@ -184,11 +184,14 @@ public class AtomCache {
 
 	/**
 	 * Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
-	 * 
+	 * <p>
+	 * This method only works with protein chains. Use {@link #getRepresentativeAtoms(String)}
+	 * for a more general solution.
 	 * @param name
 	 * @return an array of Atoms.
 	 * @throws IOException
 	 * @throws StructureException
+	 * @see 
 	 */
 	public Atom[] getAtoms(String name) throws IOException, StructureException {
 
@@ -205,7 +208,31 @@ public class AtomCache {
 
 		return atoms;
 	}
+	/**
+	 * Returns the representative atoms for the provided name.
+	 * See {@link #getStructure(String)} for supported naming conventions.
+	 * 
+	 * @param name
+	 * @return an array of Atoms.
+	 * @throws IOException
+	 * @throws StructureException
+	 * @see 
+	 */
+	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
 
+		Atom[] atoms = null;
+
+		// System.out.println("loading " + name);
+		Structure s = getStructure(name);
+
+		atoms = StructureTools.getRepresentativeAtomArray(s);
+
+		/*
+		 * synchronized (cache){ cache.put(name, atoms); }
+		 */
+
+		return atoms;
+	}
 	/**
 	 * Loads the biological assembly for a given PDB ID and bioAssemblyId. If a bioAssemblyId > 0 is specified, the
 	 * corresponding biological assembly file will be loaded. Note, the number of available biological unit files

@@ -30,6 +30,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
+
 import java.io.StringWriter;
 
 /**
@@ -247,6 +248,12 @@ public final class RotationAxis {
 
 		// Calculate angle
 		double c = (rotation.trace()-1)/2.0; //=cos(theta)
+		// c is sometimes slightly out of the [-1,1] range due to numerical instabilities
+		if( -1-1e-8 < c && c < -1 ) c = -1;
+		if( 1+1e-8 > c && c > 1 ) c = 1;
+		if( -1 > c || c > 1 ) {
+			throw new IllegalArgumentException("Input matrix is not a valid rotation matrix.");
+		}
 		this.theta = Math.acos(c);
 
 		if(theta < MIN_ANGLE) {

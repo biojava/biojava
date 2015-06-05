@@ -618,7 +618,7 @@ public class StructureTools {
 	 * @deprecated Use the better-named {@link #cloneAtomArray(Atom[])} instead
 	 */
 	@Deprecated
-	public static final Atom[] cloneCAArray(Atom[] ca) throws StructureException{
+	public static final Atom[] cloneCAArray(Atom[] ca) {
 		return cloneAtomArray(ca);
 	}
 	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
@@ -628,7 +628,7 @@ public class StructureTools {
 	 * @return Atom array
 	 * @since Biojava 4.1.0
 	 */
-	public static final Atom[] cloneAtomArray(Atom[] ca) throws StructureException{
+	public static final Atom[] cloneAtomArray(Atom[] ca) {
 		Atom[] newCA = new Atom[ca.length];
 
 		List<Chain> model = new ArrayList<Chain>();
@@ -701,9 +701,8 @@ public class StructureTools {
 	 * 
 	 * @param ca2 atom array
 	 * @return cloned and duplicated set of input array
-	 * @throws StructureException
 	 */
-	public static Atom[] duplicateCA2(Atom[] ca2) throws StructureException{
+	public static Atom[] duplicateCA2(Atom[] ca2) {
 		// we don't want to rotate input atoms, do we?
 		Atom[] ca2clone = new Atom[ca2.length*2];
 
