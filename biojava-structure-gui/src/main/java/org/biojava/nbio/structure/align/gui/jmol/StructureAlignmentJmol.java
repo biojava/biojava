@@ -292,7 +292,8 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
       }
    }
 
-   public void destroy(){
+   @Override
+public void destroy(){
 	  super.destroy();
       afpChain =null;
       ca1 = null;

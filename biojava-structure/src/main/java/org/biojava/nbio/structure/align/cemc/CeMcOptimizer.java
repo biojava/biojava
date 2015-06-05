@@ -18,8 +18,9 @@ import org.biojava.nbio.structure.align.model.BlockImpl;
 import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.BlockSetImpl;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
+import org.biojava.nbio.structure.align.superimpose.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -105,7 +106,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		msa = seed;
 		size = seed.size();
 		length = seed.length();
-		atomArrays = msa.getAtomArrays();
+		atomArrays = msa.getEnsemble().getAtomArrays();
 		structureLengths = new ArrayList<Integer>();
 		for (int i=0; i<size; i++) structureLengths.add(atomArrays.get(i).length);
 		
@@ -116,10 +117,10 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		//Generate the initial state of the system from the aligned blocks of the AFPChain
 		for (int i=0; i<size; i++){
 			ArrayList<Integer> residues = new ArrayList<Integer>();
-			for (int bs=0; bs<msa.getBlockSetNum(); bs++){
-				for (int b=0; b<msa.getBlockSets().get(bs).getBlockNum(); b++){
-					for (int l=0; l<msa.getBlockSets().get(bs).getBlocks().get(b).length(); l++){
-						Integer residue = msa.getBlockSets().get(bs).getBlocks().get(b).getAlignRes().get(i).get(l);
+			for (BlockSet bs : msa.getBlockSets()){
+				for (Block b : bs.getBlocks()){
+					for (int l=0; l<b.length(); l++){
+						Integer residue = b.getAlignRes().get(i).get(l);
 						residues.add(residue);
 					}
 				}
@@ -251,7 +252,8 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		bk.setAlignRes(block);
 		
 		//Update Superposition (will be changed with the superposition calculated in the algorithm)
-		msa.updateCache(PoseMethod.REFERENCE);
+		MultipleSuperimposer imposer= new ReferenceSuperimposer();
+		imposer.superimpose(msa);
 	}
 
 	/**

@@ -23,8 +23,10 @@ import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
+import org.biojava.nbio.structure.align.superimpose.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.superimpose.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
 
 /** 
  * The main class of the Java implementation of the Combinatorial Extension - Monte Carlo Algorithm (CEMC),
@@ -72,7 +74,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 		
 		int size = atomArrays.size();
 		
-		//List to store the all-to-all alignments. Contains the n^2 pairwise alignments as a 2D matrix indicies.
+		//List to store the all-to-all alignments. Contains the n^2 pairwise alignments as a 2D matrix indices.
 		List<List<AFPChain>> afpAlignments = new ArrayList<List<AFPChain>>();
 		for (int i=0; i<size; i++){
 			afpAlignments.add(new ArrayList<AFPChain>());
@@ -188,8 +190,9 @@ public class CeMcMain implements MultipleStructureAlignment{
 					gap = true;
 					break;
 				}
-				if (blockSet.getBlocks().get(blockSet.getBlockNum()-1).length() > 0){
-					if (equivalencies.get(i).get(j) < blockSet.getBlocks().get(blockSet.getBlockNum()-1).getAlignRes().get(j).get(blockSet.getBlocks().get(blockSet.getBlockNum()-1).length()-1)){
+				if (blockSet.getBlocks().get(blockSet.getBlocks().size()-1).length() > 0){
+					if (equivalencies.get(i).get(j) < blockSet.getBlocks().get(blockSet.getBlocks().size()-1)
+							.getAlignRes().get(j).get( blockSet.getBlocks().get(blockSet.getBlocks().size()-1).length()-1)){
 						cp = true;  //Because the current residue is lower than the last added for at least one structure
 					}
 				}
@@ -200,12 +203,13 @@ public class CeMcMain implements MultipleStructureAlignment{
 			
 			//Now add the equivalent residues into the Block AlignRes variable
 			for (int j=0; j<size; j++){
-				if (blockSet.getBlocks().get(blockSet.getBlockNum()-1).getAlignRes().size() == 0) //If it is empty initialize a list for every structure
-					for (int k=0; k<size; k++) blockSet.getBlocks().get(blockSet.getBlockNum()-1).getAlignRes().add(new ArrayList<Integer>());
-				blockSet.getBlocks().get(blockSet.getBlockNum()-1).getAlignRes().get(j).add(equivalencies.get(i).get(j));
+				if (blockSet.getBlocks().get(blockSet.getBlocks().size()-1).getAlignRes().size() == 0) //If it is empty initialize a list for every structure
+					for (int k=0; k<size; k++) blockSet.getBlocks().get(blockSet.getBlocks().size()-1).getAlignRes().add(new ArrayList<Integer>());
+				blockSet.getBlocks().get(blockSet.getBlocks().size()-1).getAlignRes().get(j).add(equivalencies.get(i).get(j));
 			}
 		}
-		seed.updateCache(PoseMethod.REFERENCE);
+		MultipleSuperimposer imposer= new ReferenceSuperimposer();
+		imposer.superimpose(seed);
 		return seed;
 	}
 
@@ -229,14 +233,30 @@ public class CeMcMain implements MultipleStructureAlignment{
 	  			Future<MultipleAlignment> submit = executor.submit(worker);
 	  			afpFuture.add(submit);
 			}
-			
+
+			Double resultScore = result.getScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE);
+			if(resultScore == null) {
+				resultScore = MultipleAlignmentScorer.getRefTMScore(result,0);
+				result.putScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE,resultScore);
+			}
+
 			//When all the optimizations are finished take the one with the best result (best TM-score)
 			for (int i=0; i<afpFuture.size(); i++){
-				if (afpFuture.get(i).get().getPose().getTMscore() < result.getPose().getTMscore()){
-					result = afpFuture.get(i).get();
+				MultipleAlignment align = afpFuture.get(i).get();
+				//TODO change TMScore? -SB
+				Double tmScore = align.getScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE);
+				if(tmScore == null) {
+					tmScore = MultipleAlignmentScorer.getRefTMScore(align,0);
+					align.putScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE,tmScore);
+				}
+				
+				if (tmScore > resultScore){
+					result = align;
+					resultScore = tmScore;
 				}
 			}
-			result.setEnsemble(ensemble);
+			
+			ensemble.addMultipleAlignment(result);
 			executor.shutdown();
 			return result;
 			

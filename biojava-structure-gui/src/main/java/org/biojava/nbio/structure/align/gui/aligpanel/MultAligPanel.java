@@ -20,6 +20,22 @@
  */
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
@@ -31,7 +47,8 @@ import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
@@ -40,16 +57,6 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 import org.jcolorbrewer.ColorBrewer;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
 
 
 /** 
@@ -112,9 +119,9 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
     */
    public MultAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException{
 	   this();
-	   this.multAln = new MultipleAlignmentImpl(afpChain, ca1, ca2);
+	   MultipleAlignmentEnsembleImpl ensemble = new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca2);
+	   this.multAln = ensemble.getMultipleAlignments().get(0);
 	   this.size = multAln.size();
-	   this.multAln.updateAlnSequences();
 	   this.length = multAln.getAlnSequences().get(0).length();
 	   this.colors = colors;
 	   if (colors == null) this.colors = DEFAULT_COLORS;
@@ -470,7 +477,7 @@ public void actionPerformed(ActionEvent e) {
    }
 
    public List<Atom[]> getAtomArrays() throws StructureAlignmentException {
-      return multAln.getParent().getAtomArrays();
+      return multAln.getEnsemble().getAtomArrays();
    }
 
    public static void main(String[] args){

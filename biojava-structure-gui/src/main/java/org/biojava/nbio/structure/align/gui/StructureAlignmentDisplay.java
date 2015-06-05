@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
@@ -39,10 +41,14 @@ import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
+import org.biojava.nbio.structure.align.superimpose.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StructureAlignmentDisplay {
-
+	private static final Logger logger = LoggerFactory.getLogger(StructureAlignmentDisplay.class);
    
    /** Display an AFPChain alignment
     * 
@@ -66,7 +72,7 @@ public class StructureAlignmentDisplay {
       return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2, hetatms, hetatms2);
 
    }
-   
+
    /** 
     * Display a MultipleAlignment. New structures are downloaded if they were not cached in the alignment
     * and they are entirely rotated here with the Pose information.
@@ -78,41 +84,46 @@ public class StructureAlignmentDisplay {
     * @throws IOException 
     */
    public static MultipleAlignmentJmol display(MultipleAlignment multAln) throws StructureException, StructureAlignmentException, IOException {
-	   
-	   	int size = multAln.size();
-	   	if (multAln.getAtomArrays() == null) multAln.getEnsemble().updateAtomArrays();
-	   
-		for (int i=0; i<size; i++){
-			if (multAln.getAtomArrays().get(i).length < 1) 
-				throw new StructureException("Length of atoms arrays is too short! " + multAln.getAtomArrays().get(i).length);
-		}
-		
-		try {
-			List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
-			//Rotate the atom coordinates of all the structures
-			for (int i=0; i<size; i++){
-				Structure displayS = multAln.getAtomArrays().get(i)[0].getGroup().getChain().getParent().clone();
-				Atom[] rotCA = StructureTools.getRepresentativeAtomArray(displayS);
-				//Rotate the structure to ensure a full rotation in the display
-				Calc.rotate(rotCA[0].getGroup().getChain().getParent(), multAln.getPose().getRotation().get(i));
-				Calc.shift(rotCA[0].getGroup().getChain().getParent(), multAln.getPose().getTranslation().get(i));
-				rotatedAtoms.add(rotCA);
-			}
-			
-			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
-			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
-			return jmol;
-		} 
-		catch (StructureAlignmentException e) {
-			
-			 e.printStackTrace();
-	         //The rotation matrices are not present
-	         System.err.println("No Pose information found to rotate the structures!");
-	         //TODO Calculate the rotation matrices and the translations. For now no rotation applied
-	         MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, multAln.getAtomArrays());
-	 		 jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
-	 		 return jmol;
-		}
+
+	   int size = multAln.size();
+
+	   List<Atom[]> atomArrays = multAln.getEnsemble().getAtomArrays();
+	   for (int i=0; i<size; i++){
+		   if (atomArrays.get(i).length < 1) 
+			   throw new StructureException("Length of atoms arrays is too short! " + atomArrays.get(i).length);
+	   }
+
+	   List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+
+	   List<Matrix4d> transformations = multAln.getTransformations();
+	   if( transformations == null ) {
+		   //TODO temporary hack for missing transformations
+		   logger.error("BlockSet transformations are unimplemented. Superimposing to first structure.");
+		   // clone input, since we're about to re-superimpose it
+		   multAln = multAln.clone();
+		   MultipleSuperimposer imposer = new ReferenceSuperimposer();
+		   imposer.superimpose(multAln);
+		   transformations = multAln.getTransformations();
+		   assert(transformations != null);
+	   }
+
+	   //Rotate the atom coordinates of all the structures
+	   for (int i=0; i<size; i++){
+		   //TODO handle BlockSet-level transformations for flexible alignments.
+		   // In general, make sure this method has the same behavior as the other display. -SB 2015-06
+
+		   // Assume all atoms are from the same structure
+		   Structure displayS = atomArrays.get(i)[0].getGroup().getChain().getParent().clone();
+		   Atom[] rotCA = StructureTools.getRepresentativeAtomArray(displayS);
+		   //Rotate the structure to ensure a full rotation in the display
+		   Calc.transform(rotCA[0].getGroup().getChain().getParent(), multAln.getTransformations().get(i));
+		   rotatedAtoms.add(rotCA);
+	   }
+
+
+	   MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
+	   jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
+	   return jmol;
    }
    
    /** Rotate the Atoms/Groups so they are aligned for the 3D visualisation

@@ -1,22 +1,41 @@
 package org.biojava.nbio.structure.align.gui.jmol;
 
-import org.biojava.nbio.structure.*;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JTextField;
+
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.AlignmentGui;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
+import org.biojava.nbio.structure.align.model.Block;
+import org.biojava.nbio.structure.align.model.BlockSet;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.jcolorbrewer.ColorBrewer;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 /** A class that provides GUI for multiple alignments. Code adapted from the StructuralAlignmentJmol class.
  * 
@@ -275,8 +294,8 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
          }
          Structure artificial = DisplayAFP.getAlignedStructure(atomArrays);
          PDBHeader header = new PDBHeader();
-         String title =  multAln.getAlgorithmName() + " V." +multAln.getVersion() + " : ";
-         for (String name:multAln.getStructureNames()) title +=  name + " ";
+         String title =  multAln.getEnsemble().getAlgorithmName() + " V." +multAln.getEnsemble().getVersion() + " : ";
+         for (String name:multAln.getEnsemble().getStructureNames()) title +=  name + " ";
          System.out.println(title);
          header.setTitle(title);
          artificial.setPDBHeader(header);
@@ -286,7 +305,8 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
       }
    }
 
-   public void destroy(){
+   @Override
+public void destroy(){
 	  super.destroy();
       multAln =null;
       atomArrays = null;
@@ -349,8 +369,8 @@ public void actionPerformed(ActionEvent e) {
    private static String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) throws StructureAlignmentException{
      
 	  //Color by blocks if there are flexible alignments (>1 BlockSets) or CPs (>1 Blocks)
-      if (multAln.getBlockSetNum() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
-      else if (multAln.getBlockSets().get(0).getBlockNum() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
+      if (multAln.getBlockSets().size() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
+      else if (multAln.getBlockSets().get(0).getBlocks().size() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
 
       StringBuffer j = new StringBuffer();
       j.append(DEFAULT_SCRIPT);
@@ -412,22 +432,17 @@ public void actionPerformed(ActionEvent e) {
 	  StringWriter jmol = new StringWriter();
 	  jmol.append(DEFAULT_SCRIPT);
 	  
-	  int blockNum = 0;
-	  for (int bs = 0; bs < multAln.getBlockSetNum(); bs ++) {
-		  for (int b = 0; b < multAln.getBlockSets().get(bs).getBlockNum(); b ++) {
-			  blockNum++;
-		  }
-	  }
+	  int blockNum = multAln.getBlocks().size();
 	  
 	  //For every structure color all the blocks with the printBlock method
 	  for (int str=0; str<atomArrays.size(); str++){
 		  jmol.append("select */"+(str+1)+"; color lightgrey; model "+(str+1)+"; ");
 		  int index = 0;
 		  
-		  for (int bs = 0; bs < multAln.getBlockSetNum(); bs ++) {
-			  for (int b = 0; b < multAln.getBlockSets().get(bs).getBlockNum(); b ++) {
+		  for (BlockSet bs : multAln.getBlockSets()) {
+			  for (Block b : bs.getBlocks() ) {
 				  
-				  List<List<Integer>> alignRes = multAln.getBlockSets().get(bs).getBlocks().get(b).getAlignRes();
+				  List<List<Integer>> alignRes = b.getAlignRes();
 				  printJmolScript4Block(atomArrays.get(str), alignRes, colors, jmol, str, index, blockNum);
 				  index++;
 			  }

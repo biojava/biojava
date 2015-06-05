@@ -18,12 +18,6 @@ import java.util.Set;
  *
  */
 public interface ScoresCache {
-	// Commonly used properties
-	public static final String SCORE_TMSCORE = "TMScore";
-	public static final String SCORE_PROBABILITY = "Probability";
-	public static final String SCORE_CE = "CEScore";
-	public static final String SCORE_CORE_LENGTH = "CoreLength";
-	public static final String SCORE_RMSD = "RMSD";
 
 	/**
 	 * Add a score to the list of scores.

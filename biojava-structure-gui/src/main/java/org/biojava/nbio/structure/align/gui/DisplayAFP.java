@@ -20,7 +20,26 @@
 package org.biojava.nbio.structure.align.gui;
 
 
-import org.biojava.nbio.structure.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.Box;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JScrollPane;
+
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultAligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultStatusDisplay;
@@ -36,14 +55,6 @@ import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /** A utility class for visualistion of structure alignments
  * 
@@ -153,16 +164,13 @@ public class DisplayAFP
 		List<String> lst = new ArrayList<String>();
 
 		//Loop through all the BlockSets
-		for (int bs = 0; bs < multAln.getBlockSetNum(); bs++){
+		for( BlockSet bs : multAln.getBlockSets() ) {
 			
 			//Loop through all the Blocks
-			for (int b = 0; b < multAln.getBlockSets().get(bs).getBlockNum(); b++){
+			for (Block block : bs.getBlocks() ){
 			
 				//Loop though all the residues in the Block
-				for (int i=0; i<multAln.getBlockSets().get(bs).getBlocks().get(b).length(); i++){
-					
-					Block block = multAln.getBlockSets().get(bs).getBlocks().get(b);
-					
+				for (int i=0; i<block.length(); i++){
 					Integer pos = block.getAlignRes().get(structNum).get(i);
 					if (pos==null) continue; //It means a GAP
 					else if (pos < ca.length) {
@@ -561,7 +569,7 @@ public class DisplayAFP
 			atoms.add(a);
 		}
 
-		Atom[] arr = (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		Atom[] arr = atoms.toArray(new Atom[atoms.size()]);
 
 		return arr;
 	}
@@ -582,7 +590,7 @@ public class DisplayAFP
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
+		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
 		twistedAtoms = StructureTools.cloneAtomArray(twistedAtoms);
 
 		Atom[] arr1 = getAtomArray(ca1, hetatms1);
@@ -736,7 +744,7 @@ public class DisplayAFP
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
+		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
 
 		List<Group> hetatms  = StructureTools.getUnalignedGroups(ca1);
 		List<Group> hetatms2 = StructureTools.getUnalignedGroups(ca2);
@@ -773,8 +781,8 @@ public class DisplayAFP
 		}
 		int capos = residues.get(aligpos);
 
-		if (capos < 0 || capos > multAln.getParent().getAtomArrays().get(str).length) return null;
-		return multAln.getParent().getAtomArrays().get(str)[capos];
+		if (capos < 0 || capos > multAln.getEnsemble().getAtomArrays().get(str).length) return null;
+		return multAln.getEnsemble().getAtomArrays().get(str)[capos];
 	}
 
 	/**

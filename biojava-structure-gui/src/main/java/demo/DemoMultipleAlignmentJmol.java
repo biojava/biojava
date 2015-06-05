@@ -1,9 +1,9 @@
 package demo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
@@ -18,8 +18,9 @@ import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.model.Pose.PoseMethod;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
+import org.biojava.nbio.structure.align.superimpose.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
@@ -46,9 +47,10 @@ public class DemoMultipleAlignmentJmol {
 		
 		//Generate a pairwise alignment and convert it to a MultipleAlignment
 		FatCat fatcat  = new FatCat();
-        AFPChain afpChain = fatcat.alignRigid(atomArrays.get(0),atomArrays.get(1));
-        MultipleAlignment pairwise = new MultipleAlignmentImpl(afpChain,atomArrays.get(0),atomArrays.get(1));
-        
+		AFPChain afpChain = fatcat.alignRigid(atomArrays.get(0),atomArrays.get(1));
+		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl(afpChain, atomArrays.get(0),atomArrays.get(1));
+		MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
+
 		StructureAlignmentDisplay.display(fakeMultAln);
 		//StructureAlignmentDisplay.display(pairwise);
 		//For comparison display the original AFP
@@ -115,7 +117,8 @@ public class DemoMultipleAlignmentJmol {
 			block3.getAlignRes().add(aligned43);
 			
 			//Calculating all information in the alignment is as easy as that line, once the residue equivalencies are set
-			fakeMultAln.updateCache(PoseMethod.REFERENCE);
+			MultipleSuperimposer imposer= new ReferenceSuperimposer();
+			imposer.superimpose(fakeMultAln);
 		}
 		return fakeMultAln;
 	}
