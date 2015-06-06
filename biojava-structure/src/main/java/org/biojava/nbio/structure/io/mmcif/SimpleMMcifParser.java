@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.io.mmcif;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.MMCIFFileTools;
 import org.biojava.nbio.structure.io.StructureIOFile;
 import org.biojava.nbio.structure.io.mmcif.model.*;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -30,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -238,8 +240,8 @@ public class SimpleMMcifParser implements MMcifParser {
 					if ( pos < 0 ) {
 						// looks like a chem_comp file
 						// line should start with data, otherwise something is wrong!
-						if (! line.startsWith("data_")){
-							logger.warn("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
+						if (! line.startsWith(MMCIFFileTools.MMCIF_TOP_HEADER)){
+							logger.warn("This does not look like a valid MMcif file! The first line should start with 'data_', but is '" + line+"'");
 							triggerDocumentEnd();
 							return;
 						}

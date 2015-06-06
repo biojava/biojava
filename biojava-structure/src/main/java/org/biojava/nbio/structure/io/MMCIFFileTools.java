@@ -11,10 +11,20 @@ import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Some tools for mmCIF file writing.
+ * 
+ * See http://www.iucr.org/__data/assets/pdf_file/0019/22618/cifguide.pdf
+ * 
+ * 
+ * @author duarte_j
+ *
+ */
 public class MMCIFFileTools {
 
 	private static final Logger logger = LoggerFactory.getLogger(MMCIFFileTools.class);
@@ -32,7 +42,7 @@ public class MMCIFFileTools {
 	public static final String MMCIF_DEFAULT_VALUE = ".";
 	
 	/**
-	 * The header appearing at the beginning of a mmCIF file
+	 * The header appearing at the beginning of a mmCIF file. A "block code" can be added to it of no more than 32 chars.
 	 */
 	public static final String MMCIF_TOP_HEADER = "data_";
 	
@@ -47,7 +57,7 @@ public class MMCIFFileTools {
 	public static String toLoopMmCifHeaderString(String categoryName, String className) throws ClassNotFoundException {
 		StringBuilder str = new StringBuilder();
 		
-		str.append("loop_"+newline);
+		str.append(SimpleMMcifParser.LOOP_START+newline);
 		
 		Class<?> c = Class.forName(className);
 		
@@ -72,6 +82,8 @@ public class MMCIFFileTools {
 		for (Object o:list) {
 			sb.append(toSingleLineMmCifString(o, sizes));
 		}
+		
+		sb.append(SimpleMMcifParser.LOOP_END+newline);
 		
 		return sb.toString();
 	}
