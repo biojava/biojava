@@ -814,8 +814,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private void setArray(Class c, Object o, String key, String val){
+	private void setArray(Class<?> c, Object o, String key, String val){
 
 
 		// TODO: not implemented yet!
@@ -834,12 +833,11 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
 		Object o = null;
 		try {
 			// build up the Entity object from the line data...
-			Class c = Class.forName(className);
+			Class<?> c = Class.forName(className);
 
 			o = c.newInstance();
 
