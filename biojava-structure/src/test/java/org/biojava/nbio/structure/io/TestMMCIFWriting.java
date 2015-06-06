@@ -32,9 +32,9 @@ public class TestMMCIFWriting {
 
 		FileConvert fc = new FileConvert(sCif);
 		
-		FileWriter fw = new FileWriter("/home/duarte_j/test.cif");
+		FileWriter fw = new FileWriter("/home/jose/test.cif");
 		//System.out.println(fc.toMmCif());
-		fw.write(fc.toMmCif());
+		fw.write(fc.toMMCIF());
 		fw.close();
 	}
 

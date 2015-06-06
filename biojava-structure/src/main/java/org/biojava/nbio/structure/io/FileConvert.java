@@ -47,10 +47,7 @@ public class FileConvert {
 	
 	private static final Logger logger = LoggerFactory.getLogger(FileConvert.class);
 	
-	/**
-	 * The character to be printed out in cases where a value is not assigned in mmCIF files
-	 */
-	public static final String MMCIF_MISSING_VALUE = "?";
+	
 	
 	private Structure structure ;
 
@@ -687,206 +684,52 @@ Angstroms.
 	}
 	
 	
-	public String toMmCif() {
+	public String toMMCIF() {
+		
 		StringBuilder str = new StringBuilder();
 		
-		try {
-			String header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());
-			str.append(header);
-		} catch (ClassNotFoundException e) {
-			logger.error("Class not found, will not have a header for this MMCIF category: "+e.getMessage());
-		}
+		str.append(MMCIFFileTools.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
 		
+		str.append(getAtomSiteHeader());
 		
-		
-		int nrModels = structure.nrModels();
-		
-		for (int m = 0 ; m < nrModels ; m++) {
-			List<Chain> model = structure.getModel(m);
+		@SuppressWarnings("unchecked")
+		List<Object> list = 
+		(List<Object>) (List<?>) MMCIFFileTools.structureToAtomSites(structure);
 
 
-			int nrChains = model.size();
-			for ( int c =0; c<nrChains;c++) {
-				Chain  chain   = model.get(c);
-				
-				if (chain.getCompound()==null) {
-					logger.warn("No Compound (entity) found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", chain.getChainID());
-				}
-				
-				int nrGroups = chain.getAtomLength();
-				
-				for ( int h=0; h<nrGroups;h++){
-
-					Group g= chain.getAtomGroup(h);
-
-					toMmCif(g,str,m+1);
-					
-				}
-				
-			}
-
-
-		}
+		str.append(MMCIFFileTools.toMMCIF(list));		
 		
 		return str.toString();
 	}
 	
-	public static String toMmCif(Chain chain, String chainId, String internalChainId) {
+	public static String toMMCIF(Chain chain, String chainId, String internalChainId) {
 		StringBuilder str = new StringBuilder();
 		
-		try {
-			String header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());
-			str.append(header);
-		} catch (ClassNotFoundException e) {
-			logger.error("Class not found, will not have a header for this MMCIF category: "+e.getMessage());
-		}
-		
-		if (chain.getCompound()==null) {
-			logger.warn("No Compound (entity) found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", chain.getChainID());
-		}
+		str.append(getAtomSiteHeader());
 
 		
-		int nrGroups = chain.getAtomLength();
+		@SuppressWarnings("unchecked")
+		List<Object> list = 
+		(List<Object>) (List<?>) MMCIFFileTools.chainToAtomSites(chain, 1, chainId, internalChainId);
 		
-		for ( int h=0; h<nrGroups;h++){
-
-			Group g= chain.getAtomGroup(h);
-
-			toMmCif(g,str, 1, chainId, internalChainId);			
-			
-		}
-		
+		str.append(MMCIFFileTools.toMMCIF(list));
 		return str.toString();
 	}
 	
-	public static String toMmCif(Chain chain) {
-		StringBuilder str = new StringBuilder();
-		
+	public static String toMMCIF(Chain chain) {
+		return toMMCIF(chain, chain.getChainID(),chain.getInternalChainID());						
+	}
+	
+	private static String getAtomSiteHeader() {
+		String header;
 		try {
-			String header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());
-			str.append(header);
+			header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());
+			
 		} catch (ClassNotFoundException e) {
 			logger.error("Class not found, will not have a header for this MMCIF category: "+e.getMessage());
+			header = "";
 		}
 		
-		int nrGroups = chain.getAtomLength();
-		
-		for ( int h=0; h<nrGroups;h++){
-
-			Group g= chain.getAtomGroup(h);
-
-			toMmCif(g, str, 1);			
-			
-		}
-		
-		return str.toString();		
+		return header;
 	}
-	
-	public static void toMmCif(Group g, StringBuilder str, int model) {
-		toMmCif(g, str, model, g.getChainId(), g.getChain().getInternalChainID());
-	}
-	
-	public static void toMmCif(Group g, StringBuilder str, int model, String chainId, String internalChainId) {
-		int groupsize  = g.size();
-
-		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
-			Atom a = null ;
-			
-			a = g.getAtom(atompos);
-			if ( a == null)
-				continue ;
-
-			toMmCif(a, str, model, chainId, internalChainId);
-			
-		}
-		if ( g.hasAltLoc()){
-			for (Group alt : g.getAltLocs() ) {
-				toMmCif(alt,str,model,chainId,internalChainId);
-			}
-		}
-	}
-	
-	/**
-	 * Write the atom as a mmCIF atom_site record.
-	 * @param a
-	 * @param str
-	 * @param chainId
-	 * @param internalChainId
-	 */
-	private static void toMmCif(Atom a, StringBuilder str, int model, String chainId, String internalChainId) {
-		
-		/*
-		ATOM 7    C CD  . GLU A 1 24  ? -10.109 15.374 38.853 1.00 50.05 ? ? ? ? ? ? 24  GLU A CD  1 
-		ATOM 8    O OE1 . GLU A 1 24  ? -9.659  14.764 37.849 1.00 49.80 ? ? ? ? ? ? 24  GLU A OE1 1 
-		ATOM 9    O OE2 . GLU A 1 24  ? -11.259 15.171 39.310 1.00 50.51 ? ? ? ? ? ? 24  GLU A OE2 1 
-		ATOM 10   N N   . LEU A 1 25  ? -5.907  18.743 37.412 1.00 41.55 ? ? ? ? ? ? 25  LEU A N   1 
-		ATOM 11   C CA  . LEU A 1 25  ? -5.168  19.939 37.026 1.00 37.55 ? ? ? ? ? ? 25  LEU A CA  1 		
-		*/
-		
-		Group g = a.getGroup();
-
-		String record ;
-		if ( g.getType().equals(GroupType.HETATM) ) {
-			record = "HETATM";
-		} else {
-			record = "ATOM";
-		}
-
-		String entityId = "0";
-		String labelSeqId = Integer.toString(g.getResidueNumber().getSeqNum());
-		if (g.getChain()!=null && g.getChain().getCompound()!=null) {
-			entityId = Integer.toString(g.getChain().getCompound().getMolId());
-			labelSeqId = Integer.toString(g.getChain().getCompound().getAlignedResIndex(g, g.getChain()));
-		}
-		
-		Character  altLoc = a.getAltLoc()           ;
-		String altLocStr = altLoc.toString();
-		if (altLoc==null || altLoc == ' ') {
-			altLocStr = ".";
-		}		
-		
-		Element e = a.getElement();
-		String eString = e.toString().toUpperCase();
-		if ( e.equals(Element.R)) {
-			eString = "X";
-		}
-		
-		String insCode = MMCIF_MISSING_VALUE;
-		if (g.getResidueNumber().getInsCode()!=null ) {
-			insCode = Integer.toString(g.getResidueNumber().getInsCode());
-		}
-		
-		AtomSite atomSite = new AtomSite();
-		atomSite.setGroup_PDB(record);
-		atomSite.setId(Integer.toString(a.getPDBserial()));
-		atomSite.setType_symbol(eString);
-		atomSite.setLabel_atom_id(a.getName());
-		atomSite.setLabel_alt_id(altLocStr);
-		atomSite.setLabel_comp_id(g.getPDBName());
-		atomSite.setLabel_asym_id(internalChainId);
-		atomSite.setLabel_entity_id(entityId);
-		atomSite.setLabel_seq_id(labelSeqId);
-		atomSite.setPdbx_PDB_ins_code(insCode);
-		atomSite.setCartn_x(d3.format(a.getX()));
-		atomSite.setCartn_y(d3.format(a.getY()));
-		atomSite.setCartn_z(d3.format(a.getZ()));
-		atomSite.setOccupancy(d2.format(a.getOccupancy()));
-		atomSite.setB_iso_or_equiv(d2.format(a.getTempFactor()));
-		atomSite.setCartn_x_esd(MMCIF_MISSING_VALUE);
-		atomSite.setCartn_y_esd(MMCIF_MISSING_VALUE);
-		atomSite.setCartn_z_esd(MMCIF_MISSING_VALUE);
-		atomSite.setOccupancy_esd(MMCIF_MISSING_VALUE);
-		atomSite.setB_iso_or_equiv_esd(MMCIF_MISSING_VALUE);
-		atomSite.setPdbx_formal_charge(MMCIF_MISSING_VALUE);
-		atomSite.setAuth_seq_id(Integer.toString(g.getResidueNumber().getSeqNum()));
-		atomSite.setAuth_comp_id(g.getPDBName());
-		atomSite.setAuth_asym_id(chainId);
-		atomSite.setAuth_atom_id(a.getName());
-		atomSite.setPdbx_PDB_model_num(Integer.toString(model));
-		
-		str.append(MMCIFFileTools.toSingleLineMmCifString(atomSite));
-		
-	}
-	
-	
 }
