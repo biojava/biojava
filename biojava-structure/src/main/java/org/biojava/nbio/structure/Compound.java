@@ -464,7 +464,8 @@ public class Compound implements Serializable {
 	 * </p>
 	 * @param g
 	 * @param c
-	 * @return the aligned residue index (1 to n) or {@link ResidueNumber#getSeqNum()} if no mapping exists 
+	 * @return the aligned residue index (1 to n), if no SEQRES groups are available at all then {@link ResidueNumber#getSeqNum()} 
+	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned 
 	 * for the given group and chain
 	 * @throws IllegalArgumentException if the given Chain is not a member of this Compound
 	 * @see {@link Chain#getSeqResGroup(int)} 
@@ -481,18 +482,27 @@ public class Compound implements Serializable {
 		if (!contained) 
 			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this Compound (entity): "+getChainIds().toString()); 
 		
-		if (chains2pdbResNums2ResSerials.isEmpty() || !chains2pdbResNums2ResSerials.containsKey(c.getChainID())) {
+		if (!chains2pdbResNums2ResSerials.containsKey(c.getChainID())) {
 			// we do lazy initialisation of the map
 			initResSerialsMap(c);
 		}
-		
-		Integer alignedSerial = chains2pdbResNums2ResSerials.get(c.getChainID()).get(g.getResidueNumber());
-		
-		if (alignedSerial==null) {
-			return g.getResidueNumber().getSeqNum();
+		// if no seqres groups are available at all the map will be null
+		Map<ResidueNumber,Integer> map = chains2pdbResNums2ResSerials.get(c.getChainID());
+		int serial;
+		if (map!=null) {
+			Integer alignedSerial = map.get(g.getResidueNumber());
+
+			if (alignedSerial==null) {
+				// the map doesn't contain this group, something's wrong: return -1
+				serial = -1;
+			} else {
+				serial = alignedSerial;
+			}
+		} else {
+			// no seqres groups available we resort to using the pdb residue numbers are given
+			serial = g.getResidueNumber().getSeqNum();
 		}
-		
-		return alignedSerial;
+		return serial;
 	}
 	
 	private void initResSerialsMap(Chain c) {
@@ -500,12 +510,11 @@ public class Compound implements Serializable {
 			logger.warn("No SEQRES groups found in chain {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
 					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)", 
 					c.getChainID());
+			return;
 		}
 		
 		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<ResidueNumber, Integer>();
 		chains2pdbResNums2ResSerials.put(c.getChainID(), resNums2ResSerials);
-		
-		if (c.getSeqResGroups()==null) return;
 		
 		for (int i=0;i<c.getSeqResGroups().size();i++) {
 			resNums2ResSerials.put(c.getSeqResGroup(i).getResidueNumber(), i+1);

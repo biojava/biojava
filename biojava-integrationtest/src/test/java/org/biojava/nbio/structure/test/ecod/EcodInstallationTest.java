@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  */
 
-package org.biojava.nbio.structure.test.domain;
+package org.biojava.nbio.structure.test.ecod;
 
 import static org.junit.Assert.*;
 

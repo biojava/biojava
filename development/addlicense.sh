@@ -1,3 +1,10 @@
+#!/bin/bash
+# Adds the BioJava LGPL license statement to the top of every java file
+
+find . -iname '*.java' -exec grep -L 'http://www.gnu.org/copyleft/lesser.html' '{}' ';' |
+while read file; do
+    echo "$file"
+    cat >tmp.java <<END
 /*
  *                    BioJava development code
  *
@@ -18,11 +25,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.core.exceptions;
-
-public class Messages {
-
-	public static final String ENDOFFILE = "end of file";
-	public static final String SECTIONKEYNULL = "section key is null";
-
-}
+END
+    cat "$file" >> tmp.java
+    mv tmp.java "$file"
+done

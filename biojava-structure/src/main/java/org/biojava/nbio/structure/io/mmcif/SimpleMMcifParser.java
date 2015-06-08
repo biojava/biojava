@@ -773,7 +773,10 @@ public class SimpleMMcifParser implements MMcifParser {
 		int id = Integer.parseInt(lineData.get(loopFields.indexOf("id")));
 		sNcsOper.setId(id);
 		sNcsOper.setCode(lineData.get(loopFields.indexOf("code")));
-		sNcsOper.setDetails(lineData.get(loopFields.indexOf("details")));
+
+		int detailsPos = loopFields.indexOf("details");
+		if ( detailsPos > -1)
+			sNcsOper.setDetails(lineData.get(detailsPos));
 		Matrix4d op = new Matrix4d();
 		op.setElement(3, 0, 0.0); 
 		op.setElement(3, 1, 0.0);

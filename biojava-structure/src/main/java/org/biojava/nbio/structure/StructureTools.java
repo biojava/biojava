@@ -135,7 +135,11 @@ public class StructureTools {
 	 * The atom name of the backbone phosphate in RNA
 	 */
 	public static final String P_ATOM_NAME = "P";
-	public static final String NUCLEOTIDE_REPRESENTATIVE = C4_ATOM_NAME;
+	
+	/**
+	 * The atom used as representative for nucleotides, equivalent to {@link #CA_ATOM_NAME} for proteins
+	 */
+	public static final String NUCLEOTIDE_REPRESENTATIVE = P_ATOM_NAME;
 	
 	/**
 	 * The character to use for unknown compounds in sequence strings
@@ -151,21 +155,14 @@ public class StructureTools {
 	
 
 
-	//private static final String insertionCodeRegExp = "([0-9]+)([a-zA-Z]*)";
-	//private static final Pattern insertionCodePattern = Pattern.compile(insertionCodeRegExp);
-
-
 	// there is a file format change in PDB 3.0 and nucleotides are being renamed
-	static private Map<String, Character> nucleotides30 ;
-	static private Map<String, Character> nucleotides23 ;
+	private static final Map<String, Character> nucleotides30 ;
+	private static final Map<String, Character> nucleotides23 ;
 
 	//amino acid 3 and 1 letter code definitions
 	private static final Map<String, Character> aminoAcids;
 
 	private static final Set<Element> hBondDonorAcceptors;
-	//	// for conversion 3code 1code
-	//	private static  SymbolTokenization threeLetter ;
-	//	private static  SymbolTokenization oneLetter ;
 
 
 	static {
@@ -181,7 +178,6 @@ public class StructureTools {
 		nucleotides30.put("U", 'U');
 		nucleotides30.put("I", 'I');
 
-		//TODO: check if they are always HETATMs, in that case this will not be necessary
 		// the DNA linkers - the +C , +G, +A  +T +U and +I have been replaced with these:
 		nucleotides30.put("TAF",UNKNOWN_GROUP_LABEL); // Fluorinated Thymine
 		nucleotides30.put("TC1",UNKNOWN_GROUP_LABEL); // Furanosyl
@@ -250,7 +246,7 @@ public class StructureTools {
 	}
 
 
-	/** Count how many number of Atoms are contained within a Structure object.
+	/** Count how many Atoms are contained within a Structure object.
 	 *
 	 * @param s the structure object
 	 * @return the number of Atoms in this Structure
@@ -567,9 +563,7 @@ public class StructureTools {
 	 * @param c the structure object
 	 * @return an Atom[] array
 	 * @see #getRepresentativeAtomArray(Chain)
-	 * @deprecated Use the more generic {@link #getRepresentativeAtomArray(Chain)} instead
 	 */
-	@Deprecated
 	public static final Atom[] getAtomCAArray(Chain c){
 		List<Atom> atoms = new ArrayList<Atom>();
 		
@@ -772,9 +766,8 @@ public class StructureTools {
 	 * Return an Atom array of the C-alpha atoms. Any atom that is a carbon and has CA name will be returned.
 	 * @param s the structure object
 	 * @return an Atom[] array
-	 * @deprecated Use the more generic {@link #getRepresentativeAtomArray(Structure)} instead
+	 * @see #getRepresentativeAtomArray(Structure)
 	 */
-	@Deprecated
 	public static Atom[] getAtomCAArray(Structure s){
 		
 		List<Atom> atoms = new ArrayList<Atom>();
@@ -814,7 +807,7 @@ public class StructureTools {
 					}
 					break;
 				case NUCLEOTIDE:
-					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE) && g.getAtom(NUCLEOTIDE_REPRESENTATIVE).getElement()==Element.C) {
+					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE) ) {
 						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
 					}
 					break;
@@ -877,28 +870,32 @@ public class StructureTools {
 
 	/** 
 	 * Convert three character amino acid codes into single character
-	 * e.g. convert CYS to C
-	 * @return a character
-	 * @param code3 a three character amino acid representation String
-	 * @throws UnknownPdbAminoAcidException
+	 * e.g. convert CYS to C.
+	 * Valid 3-letter codes will be those of the standard 20 amino acids plus
+	 * MSE, CSE, SEC, PYH, PYL (see the {@link #aminoAcids} map)
+	 * @return the 1 letter code, or null if the given 3 letter code does not correspond to
+	 * an amino acid code
+	 * @param groupCode3 a three character amino acid representation String
 	 * @see {@link #get1LetterCode(String)}
 	 */
-	public static final Character convert_3code_1code(String code3)
-			throws UnknownPdbAminoAcidException {
-		Character code1 = null;
-		code1 = aminoAcids.get(code3);
+	public static final Character get1LetterCodeAmino(String groupCode3) {
+		return aminoAcids.get(groupCode3);
+	}
 
-		if (code1 == null) {
-			throw new UnknownPdbAminoAcidException(code3 + " not a standard amino acid");
-		} else {
-			return code1;
-		}
-
+	/**
+	 * 
+	 * @param code3
+	 * @return
+	 * @deprecated Use {@link #get1LetterCodeAmino(String)} instead
+	 */
+	@Deprecated
+	public static final Character convert_3code_1code(String code3) {
+		return get1LetterCodeAmino(code3);
 	}
 
 	/** 
-	 * Convert a three letter aminoacid code into a single character code.
-	 * If the code does not correspond to a amino acid or nucleotide, returns
+	 * Convert a three letter amino acid or nucleotide code into a single character code.
+	 * If the code does not correspond to an amino acid or nucleotide, returns
 	 * {@link #UNKNOWN_GROUP_LABEL}.
 	 *
 	 * Returned null for nucleotides prior to version 4.0.1.
@@ -907,37 +904,38 @@ public class StructureTools {
 	 */
 	public static final Character get1LetterCode(String groupCode3){
 
-		Character aminoCode1;
-		try {
-			// is it a standard amino acid ?
-			aminoCode1 = convert_3code_1code(groupCode3);
-		} catch (UnknownPdbAminoAcidException e){
+		Character code1;
+		
+		// is it a standard amino acid ?
+		code1 = get1LetterCodeAmino(groupCode3);
+		
+		if (code1 == null) {
 			// hm groupCode3 is not standard
-			// perhaps it is an nucleotide?
+			// perhaps it is a nucleotide?
 			groupCode3 = groupCode3.trim();
 			if ( isNucleotide(groupCode3) ) {
-				//System.out.println("nucleotide, aminoCode1:"+aminoCode1);
-				aminoCode1= nucleotides30.get(groupCode3);
-				if(aminoCode1 == null) {
-					aminoCode1 = nucleotides23.get(groupCode3);
+				code1= nucleotides30.get(groupCode3);
+				if(code1 == null) {
+					code1 = nucleotides23.get(groupCode3);
 				}
-				if(aminoCode1 == null) {
-					aminoCode1 = UNKNOWN_GROUP_LABEL;
+				if(code1 == null) {
+					code1 = UNKNOWN_GROUP_LABEL;
 				}
 			} else {
 				// does not seem to be so let's assume it is
 				//  nonstandard aminoacid and label it "X"
 				//logger.warning("unknown group name "+groupCode3 );
-				aminoCode1 = UNKNOWN_GROUP_LABEL;
-			}
+				code1 = UNKNOWN_GROUP_LABEL;
+			}		
 		}
-
-		return aminoCode1;
+		
+		return code1;
 
 	}
 
 
-	/* Test if the threelettercode of an ATOM entry corresponds to a
+	/**
+	 * Test if the three-letter code of an ATOM entry corresponds to a
 	 * nucleotide or to an aminoacid.
 	 * @param a 3-character code for a group.
 	 *
@@ -1153,6 +1151,11 @@ public class StructureTools {
 
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
+			
+			if(pdbresnumEnd == null ) {
+				// Single residue range
+				pdbresnumEnd = pdbresnumStart;
+			}
 
 
 			if ( ! firstRange){
@@ -1170,7 +1173,15 @@ public class StructureTools {
 
 				ResidueNumber pdbresnum1 = ResidueNumber.fromString(pdbresnumStart);
 				ResidueNumber pdbresnum2 = ResidueNumber.fromString(pdbresnumEnd);
-
+				
+				// Trim extra residues off the range
+				Atom[] allAtoms = StructureTools.getRepresentativeAtomArray(struc);
+				AtomPositionMap map = new AtomPositionMap(allAtoms);
+				ResidueRange trimmed = map.trimToValidResidues(new ResidueRange(chain.getChainID(),pdbresnum1,pdbresnum2));
+				if(trimmed != null) {
+					pdbresnum1 = trimmed.getStart();
+					pdbresnum2 = trimmed.getEnd();
+				}
 				groups = chain.getGroupsByPDB(pdbresnum1, pdbresnum2);
 
 				name.append(chainId).append(AtomCache.UNDERSCORE).append(pdbresnumStart).append("-").append(pdbresnumEnd);
@@ -1230,11 +1241,11 @@ public class StructureTools {
 				}
 			}
 			String code3 = g.getPDBName();
-			try {
-				buf.append(convert_3code_1code(code3) );
-			} catch (UnknownPdbAminoAcidException e){
-				buf.append('X');
-			}
+			Character code1 = get1LetterCodeAmino(code3);
+			if (code1 == null) code1 = UNKNOWN_GROUP_LABEL;
+			
+			buf.append(code1);
+			
 			prevGroup = g;
 
 		}
@@ -1307,9 +1318,8 @@ public class StructureTools {
 	 * @param chain
 	 * @param cutoff
 	 * @return
-	 * @deprecated Use the more generic {@link #getRepresentativeAtomsInContact(Chain, double)} instead
+	 * @see {@link #getRepresentativeAtomsInContact(Chain, double)}
 	 */
-	@Deprecated
 	public static AtomContactSet getAtomsCAInContact(Chain chain, double cutoff) {
 		Grid grid = new Grid(cutoff);
 		

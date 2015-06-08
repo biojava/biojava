@@ -55,7 +55,8 @@ public class FileParsingParameters implements Serializable
 
 
 
-	/** flag to detect if the secondary structure info should be read
+	/** 
+	 * Flag to detect if the secondary structure info should be read
 	 * 
 	 */
 	boolean parseSecStruc;
@@ -89,7 +90,8 @@ public class FileParsingParameters implements Serializable
 
 	private boolean storeEmptySeqRes;
 
-	/** the maximum number of atoms that will be parsed before the parser switches to a CA-only
+	/** 
+	 * The maximum number of atoms that will be parsed before the parser switches to a CA-only
 	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
 	 * ignored.
 	 */
@@ -108,12 +110,13 @@ public class FileParsingParameters implements Serializable
 	 */
 	private boolean createAtomBonds;
 
-	/**  the maximum number of atoms we will add to a structure
-    this protects from memory overflows in the few really big protein structures.
+	/**  
+	 * The maximum number of atoms we will add to a structure,
+     * this protects from memory overflows in the few really big protein structures.
 	 */
+	public static final int MAX_ATOMS = Integer.MAX_VALUE; // no limit, we don't want to truncate molecules, but the user should make sure there is more memory available
 	//public static final int MAX_ATOMS = 700000; // tested with java -Xmx300M
-	public static final int MAX_ATOMS = Integer.MAX_VALUE; // no limit, we don't want to trunkate molecules, but the user should make sure there is more memory available
-
+	
 	int maxAtoms ;
 
 	String[] fullAtomNames;
@@ -148,7 +151,8 @@ public class FileParsingParameters implements Serializable
 		createAtomBonds = false;
 	}
 
-	/** is secondary structure assignment being parsed from the file?
+	/** 
+	 * Is secondary structure assignment being parsed from the file?
 	 * default is null
 	 * @return boolean if HELIX STRAND and TURN fields are being parsed
 	 */
@@ -156,7 +160,8 @@ public class FileParsingParameters implements Serializable
 		return parseSecStruc;
 	}
 
-	/** a flag to tell the parser to parse the Author's secondary structure assignment from the file
+	/** 
+	 * A flag to tell the parser to parse the Author's secondary structure assignment from the file
 	 * default is set to false, i.e. do NOT parse.
 	 * @param parseSecStruc if HELIX STRAND and TURN fields are being parsed
 	 */
@@ -208,14 +213,16 @@ public class FileParsingParameters implements Serializable
 		this.headerOnly = headerOnly;
 	}
 
-	/** the flag if only the C-alpha atoms of the structure should be parsed.
+	/** 
+	 * The flag if only the C-alpha atoms of the structure should be parsed.
 	 *
 	 * @return the flag
 	 */
 	public boolean isParseCAOnly() {
 		return parseCAOnly;
 	}
-	/** the flag if only the C-alpha atoms of the structure should be parsed.
+	/** 
+	 * Flag if only the C-alpha atoms of the structure should be parsed.
 	 *
 	 * @param parseCAOnly boolean flag to enable or disable C-alpha only parsing
 	 */
@@ -235,7 +242,8 @@ public class FileParsingParameters implements Serializable
 
 
 
-	/** define if the SEQRES in the structure should be aligned with the ATOM records
+	/** 
+	 * Define if the SEQRES in the structure should be aligned with the ATOM records
 	 * if yes, the AminoAcids in structure.getSeqRes will have the coordinates set.
 	 * @param alignSeqRes
 	 */
@@ -244,7 +252,8 @@ public class FileParsingParameters implements Serializable
 	}
 
 
-	/** a flag to detrermine if SEQRES should be stored, even if alignSeqREs is disabled.
+	/** 
+	 * A flag to detrermine if SEQRES should be stored, even if alignSeqREs is disabled.
 	 * This will provide access to the sequence in the SEQRES, without linking it up with the ATOMs.
 	 * 
 	 * @return flag
@@ -284,7 +293,8 @@ public class FileParsingParameters implements Serializable
 		this.updateRemediatedFiles = updateRemediatedFiles;
 	}
 
-	/** by default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
+	/** 
+	 * By default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
 	 * {"CA", "CB" }. Returns null if all atoms are accepted.
 	 * @return accepted atom names, or null if all atoms are accepted. default null
 	 */
@@ -293,7 +303,8 @@ public class FileParsingParameters implements Serializable
 	}
 
 
-	/** by default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
+	/** 
+	 * By default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
 	 * {"CA", "CB" }. Returns null if all atoms are accepted.
 	 * @param accepted atom names, or null if all atoms are accepted. default null
 	 */
@@ -303,7 +314,8 @@ public class FileParsingParameters implements Serializable
 	}
 
 
-	/** the maximum numbers of atoms to load in a protein structure (prevents memory overflows)
+	/** 
+	 * The maximum numbers of atoms to load in a protein structure (prevents memory overflows)
 	 * 
 	 * @return maximum nr of atoms to load, default Integer.MAX_VALUE;
 	 */
@@ -311,7 +323,8 @@ public class FileParsingParameters implements Serializable
 		return maxAtoms;
 	}
 
-	/**the maximum numbers of atoms to load in a protein structure (prevents memory overflows)
+	/**
+	 * The maximum numbers of atoms to load in a protein structure (prevents memory overflows)
 	 * 
 	 * @param maxAtoms maximun nr of atoms to load
 	 */
@@ -320,7 +333,8 @@ public class FileParsingParameters implements Serializable
 	}
 
 
-	/** the maximum number of atoms that will be parsed before the parser switches to a CA-only
+	/** 
+	 * The maximum number of atoms that will be parsed before the parser switches to a CA-only
 	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
 	 * ignored.
 	 * 
@@ -332,7 +346,8 @@ public class FileParsingParameters implements Serializable
 	}
 
 
-	/** the maximum number of atoms that will be parsed before the parser switches to a CA-only
+	/** 
+	 * The maximum number of atoms that will be parsed before the parser switches to a CA-only
 	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
 	 * ignored.
 	 * @param atomCaThreshold maximum number of atoms for all atom representation.

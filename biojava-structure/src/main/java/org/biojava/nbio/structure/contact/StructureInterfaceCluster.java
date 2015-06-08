@@ -33,6 +33,10 @@ public class StructureInterfaceCluster implements Serializable {
 	
 	private List<StructureInterface> members;
 	
+	/**
+	 * The average similarity score between all pairs of members in the cluster.
+	 */
+	private double averageScore;
 	
 	
 	public StructureInterfaceCluster() {
@@ -69,5 +73,17 @@ public class StructureInterfaceCluster implements Serializable {
 			area+=interf.getTotalArea();
 		}
 		return area/members.size();
+	}
+	
+	/**
+	 * Returns the average similarity score between all pairs of members in the cluster
+	 * @return
+	 */
+	public double getAverageScore() {
+		return averageScore;
+	}
+	
+	public void setAverageScore(double averageScore) {
+		this.averageScore = averageScore;
 	}
 }
