@@ -619,6 +619,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			addCompounds(asym);
 			
 		}
+		
+		if (structAsyms.isEmpty()) {
+			logger.warn("No _struct_asym category in file, no SEQRES groups will be added."); 
+		}
 
 		if ( params.isAlignSeqRes() ){		
 			alignSeqRes();
