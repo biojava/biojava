@@ -308,9 +308,9 @@ public class SimpleMMcifParser implements MMcifParser {
 			if ( line.startsWith(STRING_LIMIT))
 				return data;
 		}
-		boolean inString = false;
-		boolean inS1     = false;
-		boolean inS2     = false;
+		boolean inString = false; // semicolon (;) quoting
+		boolean inS1     = false; // single quote (') quoting
+		boolean inS2     = false; // double quote (") quoting
 		String word 	 = "";
 
 		for (int i=0; i< line.length(); i++ ){
@@ -321,9 +321,9 @@ public class SimpleMMcifParser implements MMcifParser {
 			if (i < line.length() - 1)
 				nextC = line.charAt(i+1);
 			
-			//Character lastC = null;
-			//if (i>0) 
-			//	lastC = line.charAt(i-1);
+			Character lastC = null;
+			if (i>0) 
+				lastC = line.charAt(i-1);
 			
 			if  (c == ' ') {
 
@@ -364,10 +364,12 @@ public class SimpleMMcifParser implements MMcifParser {
 						word += c;
 					}
 
-				} else {
+				} else if (lastC==null || lastC==' ') {
 					// the beginning of a new string
 					inString = true;
 					inS1     = true;
+				} else {
+					word += c;
 				}
 			} else if ( c == S2 ){
 				if ( inString){
@@ -394,10 +396,12 @@ public class SimpleMMcifParser implements MMcifParser {
 					} else {
 						word += c;
 					}
-				} else {
+				}  else if (lastC==null || lastC==' ') {
 					// the beginning of a new string
 					inString = true;
 					inS2     = true;
+				} else {
+					word += c;
 				}
 			} else {
 				word += c;

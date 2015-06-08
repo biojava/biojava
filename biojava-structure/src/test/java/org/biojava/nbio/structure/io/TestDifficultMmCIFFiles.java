@@ -172,7 +172,7 @@ public class TestDifficultMmCIFFiles {
 	 * For instance Phenix produces mmCIF files with non-quoted strings containing single quote characters 
 	 * @throws IOException
 	 */
-	//@Test
+	@Test
 	public void testQuotingCornerCase () throws IOException {
 		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/difficult_mmcif_quoting.cif");
 		MMcifParser parser = new SimpleMMcifParser();

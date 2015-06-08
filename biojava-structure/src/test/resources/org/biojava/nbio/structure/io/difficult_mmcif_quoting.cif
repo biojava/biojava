@@ -1,4 +1,4 @@
-data_4LUP_subset_no_quotes
+data_
 loop_
 _atom_site.group_PDB 
 _atom_site.id 
@@ -14,27 +14,59 @@ _atom_site.Cartn_x
 _atom_site.Cartn_y 
 _atom_site.Cartn_z 
 _atom_site.occupancy 
-_atom_site.B_iso_or_equiv 
-_atom_site.Cartn_x_esd 
-_atom_site.Cartn_y_esd 
-_atom_site.Cartn_z_esd 
-_atom_site.occupancy_esd 
-_atom_site.B_iso_or_equiv_esd 
-_atom_site.pdbx_formal_charge 
+_atom_site.B_iso_or_equiv  
 _atom_site.auth_seq_id 
-_atom_site.auth_comp_id 
+_atom_site.auth_comp_id
 _atom_site.auth_asym_id 
 _atom_site.auth_atom_id 
 _atom_site.pdbx_PDB_model_num 
-ATOM   1727 P P      . DT  C 2 1  ? 7.887   18.595  87.913  0.00 20.67 ? ? ? ? ? ? 107 DT  B P      1 
-ATOM   1728 O OP1    . DT  C 2 1  ? 7.732   19.982  88.407  0.00 20.42 ? ? ? ? ? ? 107 DT  B OP1    1 
-ATOM   1729 O OP2    . DT  C 2 1  ? 7.210   17.480  88.610  0.00 20.42 ? ? ? ? ? ? 107 DT  B OP2    1 
-ATOM   1730 O O5'  . DT  C 2 1  ? 7.464   18.547  86.371  0.00 21.57 ? ? ? ? ? ? 107 DT  B O5'  1 
-ATOM   1731 C C5'  . DT  C 2 1  ? 6.642   19.572  85.828  0.00 23.49 ? ? ? ? ? ? 107 DT  B C5'  1 
-ATOM   1732 C C4'  . DT  C 2 1  ? 6.943   19.784  84.356  0.00 27.33 ? ? ? ? ? ? 107 DT  B C4'  1 
-ATOM   1733 O O4'  . DT  C 2 1  ? 8.382   19.831  84.159  0.00 28.38 ? ? ? ? ? ? 107 DT  B O4'  1 
-ATOM   1734 C C3'  . DT  C 2 1  ? 6.438   18.687  83.425  1.00 31.54 ? ? ? ? ? ? 107 DT  B C3'  1 
-ATOM   1735 O O3'  . DT  C 2 1  ? 6.115   19.248  82.157  1.00 34.97 ? ? ? ? ? ? 107 DT  B O3'  1 
-ATOM   1736 C C2'  . DT  C 2 1  ? 7.641   17.758  83.333  1.00 31.47 ? ? ? ? ? ? 107 DT  B C2'  1 
-ATOM   1737 C C1'  . DT  C 2 1  ? 8.790   18.756  83.333  1.00 31.55 ? ? ? ? ? ? 107 DT  B C1'  1 
+ATOM   1728 O OP1  . DT  C 2 1  ? 7.732   19.982  88.407  0.00 20.42 107 DT  B OP1  1  
+ATOM   1730 O O5'  . DT  C 2 1  ? 7.464   18.547  86.371  0.00 21.57 107 DT  B O5'  1 
+ATOM   1738 C H2"  . DT  C 2 1  ? 8.111   19.111  84.111  0.00 29.00 107 DT  B H2"  1
+ATOM   1730 O "O3'"  . DT  C 2 1  ? 7.111   18.111  86.111  0.00 21.00 107 DT  B "O3'"  1
+# 
+loop_
+_audit_author.name 
+_audit_author.pdbx_ordinal 
+'Pederson, D.M.' 1 
+'Welsh, L.C.'    2 
+"Marvin, D.A."   3
+# 
+loop_
+_pdbx_database_related.db_name 
+_pdbx_database_related.db_id 
+_pdbx_database_related.content_type 
+_pdbx_database_related.details 
+PDB 1IFP unspecified 'INOVIRUS (FILAMENTOUS BACTERIOPHAGE) STRAIN PF3 MAJOR COATPROTEIN ASSEMBLY'                                           
+PDB 1QL1 unspecified 'INOVIRUS (FILAMENTOUS BACTERIOPHAGE) STRAIN PF1 MAJOR COAT PROTEIN ASSEMBLY' 
+# 
+loop_
+_citation.id 
+_citation.title 
+_citation.journal_abbrev 
+_citation.journal_volume 
+_citation.page_first 
+_citation.page_last 
+_citation.year 
+_citation.journal_id_ASTM 
+_citation.country 
+_citation.journal_id_ISSN 
+_citation.journal_id_CSD 
+_citation.book_publisher 
+_citation.pdbx_database_id_PubMed 
+_citation.pdbx_database_id_DOI 
+primary 'The Protein Capsid of Filamentous Bacteriophage Ph75 from Thermus Thermophilus'                                                                    
+J.Mol.Biol.                309 401 ? 2001 JMOBAK UK 0022-2836 0070 ? 11371161 10.1006/JMBI.2001.4685         
+1       'The Molecular Structure and Structural Transition of the Alpha-Helical Capsid in Filamentous Bacteriophage Pf1'                                    
+'Acta Crystallogr.,Sect.D' 56  137 ? 2000 ABCRE6 DK 0907-4449 0766 ? 10666593 10.1107/S0907444999015334      
+2       'Structure of the Capsid of Pf3 Filamentous Phage Determined from X-Ray Fibre Diffraction Data at 3.1 A Resolution'                                 
+J.Mol.Biol.                283 155 ? 1998 JMOBAK UK 0022-2836 0070 ? 9761681  10.1006/JMBI.1998.2081         
+# 
+loop_
+_citation_author.citation_id 
+_citation_author.name 
+_citation_author.ordinal 
+primary 'Pederson, D.M.'   1  
+primary "Welsh, L.C."      2  
+primary 'Marvin, D.A.'     3  
 #
