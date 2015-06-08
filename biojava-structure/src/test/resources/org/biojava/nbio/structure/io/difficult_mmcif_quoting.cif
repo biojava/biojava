@@ -1,0 +1,40 @@
+data_4LUP_subset_no_quotes
+loop_
+_atom_site.group_PDB 
+_atom_site.id 
+_atom_site.type_symbol 
+_atom_site.label_atom_id 
+_atom_site.label_alt_id 
+_atom_site.label_comp_id 
+_atom_site.label_asym_id 
+_atom_site.label_entity_id 
+_atom_site.label_seq_id 
+_atom_site.pdbx_PDB_ins_code 
+_atom_site.Cartn_x 
+_atom_site.Cartn_y 
+_atom_site.Cartn_z 
+_atom_site.occupancy 
+_atom_site.B_iso_or_equiv 
+_atom_site.Cartn_x_esd 
+_atom_site.Cartn_y_esd 
+_atom_site.Cartn_z_esd 
+_atom_site.occupancy_esd 
+_atom_site.B_iso_or_equiv_esd 
+_atom_site.pdbx_formal_charge 
+_atom_site.auth_seq_id 
+_atom_site.auth_comp_id 
+_atom_site.auth_asym_id 
+_atom_site.auth_atom_id 
+_atom_site.pdbx_PDB_model_num 
+ATOM   1727 P P      . DT  C 2 1  ? 7.887   18.595  87.913  0.00 20.67 ? ? ? ? ? ? 107 DT  B P      1 
+ATOM   1728 O OP1    . DT  C 2 1  ? 7.732   19.982  88.407  0.00 20.42 ? ? ? ? ? ? 107 DT  B OP1    1 
+ATOM   1729 O OP2    . DT  C 2 1  ? 7.210   17.480  88.610  0.00 20.42 ? ? ? ? ? ? 107 DT  B OP2    1 
+ATOM   1730 O O5'  . DT  C 2 1  ? 7.464   18.547  86.371  0.00 21.57 ? ? ? ? ? ? 107 DT  B O5'  1 
+ATOM   1731 C C5'  . DT  C 2 1  ? 6.642   19.572  85.828  0.00 23.49 ? ? ? ? ? ? 107 DT  B C5'  1 
+ATOM   1732 C C4'  . DT  C 2 1  ? 6.943   19.784  84.356  0.00 27.33 ? ? ? ? ? ? 107 DT  B C4'  1 
+ATOM   1733 O O4'  . DT  C 2 1  ? 8.382   19.831  84.159  0.00 28.38 ? ? ? ? ? ? 107 DT  B O4'  1 
+ATOM   1734 C C3'  . DT  C 2 1  ? 6.438   18.687  83.425  1.00 31.54 ? ? ? ? ? ? 107 DT  B C3'  1 
+ATOM   1735 O O3'  . DT  C 2 1  ? 6.115   19.248  82.157  1.00 34.97 ? ? ? ? ? ? 107 DT  B O3'  1 
+ATOM   1736 C C2'  . DT  C 2 1  ? 7.641   17.758  83.333  1.00 31.47 ? ? ? ? ? ? 107 DT  B C2'  1 
+ATOM   1737 C C1'  . DT  C 2 1  ? 8.790   18.756  83.333  1.00 31.55 ? ? ? ? ? ? 107 DT  B C1'  1 
+#

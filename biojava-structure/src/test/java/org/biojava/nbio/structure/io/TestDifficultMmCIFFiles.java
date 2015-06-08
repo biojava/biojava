@@ -22,11 +22,17 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.mmcif.MMcifParser;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -156,5 +162,36 @@ public class TestDifficultMmCIFFiles {
 		Chain chain2 = s.getChainByPDB("ABCD");
 		assertNotNull(chain2);
 		assertEquals(chain2, chain);
+	}
+	
+	/**
+	 * This is to test the issue discussed here:
+	 * http://www.globalphasing.com/startools/
+	 * Essentially single quote characters (') are valid not only for quoting, but also as parts of
+	 * data values as long as some rules of the STAR format are followed.
+	 * For instance Phenix produces mmCIF files with non-quoted strings containing single quote characters 
+	 * @throws IOException
+	 */
+	//@Test
+	public void testQuotingCornerCase () throws IOException {
+		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/difficult_mmcif_quoting.cif");
+		MMcifParser parser = new SimpleMMcifParser();
+
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+
+		FileParsingParameters fileParsingParams = new FileParsingParameters();
+		fileParsingParams.setAlignSeqRes(true);
+
+		consumer.setFileParsingParameters(fileParsingParams);
+
+		parser.addMMcifConsumer(consumer);
+
+		parser.parse(new BufferedReader(new InputStreamReader(inStream))); 
+
+		Structure s = consumer.getStructure();
+		
+		assertNotNull(s);
+		
+		
 	}
 }

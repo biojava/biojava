@@ -77,10 +77,23 @@ public class SimpleMMcifParser implements MMcifParser {
 	public static final String LOOP_END = "#";
 	public static final String LOOP_START = "loop_";
 	public static final String FIELD_LINE = "_";
+	
+	// the following are the 3 valid quoting characters in CIF
+	/**
+	 * Quoting character '
+	 */
+	private static final char S1 = '\'';
+	
+	/**
+	 * Quoting character "
+	 */
+	private static final char S2 = '\"';
+	
+	/**
+	 * Quoting character ; (multi-line quoting)
+	 */
 	public static final String STRING_LIMIT = ";";
-
-	private static final char s1 = '\'';
-	private static final char s2 = '\"';
+	
 
 	private List<MMcifConsumer> consumers ;
 	
@@ -170,7 +183,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			if ( inLoop){
 
-				if (line.startsWith(LOOP_END)){
+				if (line.startsWith(LOOP_END) || line.isEmpty()){
 					// reset all data
 					inLoop = false;
 					lineData.clear();
@@ -183,7 +196,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 				}
 
-				if ( line.startsWith(FIELD_LINE)){
+				if ( line.matches("\\s*"+FIELD_LINE+"\\w+.*")) {// startsWith(FIELD_LINE)){ 
 					// found another field.
 					String txt = line.trim();
 					//System.out.println("line: " + txt);
@@ -232,7 +245,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					lineData.clear();
 					logger.debug("Detected LOOP_START: '{}'. Toggling to inLoop=true", LOOP_START);
 					continue;
-				} else if (line.startsWith(LOOP_END)){
+				} else if (line.startsWith(LOOP_END) || line.isEmpty()){
 					inLoop = false;
 					if ( category != null)
 						endLineChecks(category, loopFields, lineData, loopWarnings);
@@ -284,7 +297,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 	private List<String> processSingleLine(String line){
-		//System.out.println("SS processSingleLine " + line);
+
 		List<String> data = new ArrayList<String>();
 
 		if ( line.trim().length() == 0){
@@ -300,14 +313,18 @@ public class SimpleMMcifParser implements MMcifParser {
 		boolean inS2     = false;
 		String word 	 = "";
 
-		//System.out.println(line);
 		for (int i=0; i< line.length(); i++ ){
-			//System.out.println(word);
+
 			Character c = line.charAt(i);
 
 			Character nextC = null;
 			if (i < line.length() - 1)
 				nextC = line.charAt(i+1);
+			
+			//Character lastC = null;
+			//if (i>0) 
+			//	lastC = line.charAt(i-1);
+			
 			if  (c == ' ') {
 
 				if ( ! inString){
@@ -319,7 +336,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					word += c;
 				}
 
-			} else if (c == s1 )  {
+			} else if (c == S1 )  {
 
 				if ( inString){
 
@@ -352,7 +369,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					inString = true;
 					inS1     = true;
 				}
-			} else if ( c == s2 ){
+			} else if ( c == S2 ){
 				if ( inString){
 
 					boolean wordEnd = false;
@@ -395,7 +412,8 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	/** get the content of a cif entry
+	/** 
+	 * Get the content of a cif entry
 	 *
 	 * @param line
 	 * @param buf
