@@ -22,6 +22,7 @@
 package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.biojava.nbio.core.util.XMLWriter;
 
@@ -688,7 +689,7 @@ Angstroms.
 		
 		StringBuilder str = new StringBuilder();
 		
-		str.append(MMCIFFileTools.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
 		
 		str.append(getAtomSiteHeader());
 		

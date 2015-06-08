@@ -41,10 +41,6 @@ public class MMCIFFileTools {
 	 */
 	public static final String MMCIF_DEFAULT_VALUE = ".";
 	
-	/**
-	 * The header appearing at the beginning of a mmCIF file. A "block code" can be added to it of no more than 32 chars.
-	 */
-	public static final String MMCIF_TOP_HEADER = "data_";
 	
 	/**
 	 * Produces a mmCIF loop header string for the given categoryName and className.

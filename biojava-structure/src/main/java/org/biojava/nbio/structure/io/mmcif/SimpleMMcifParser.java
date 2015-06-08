@@ -23,7 +23,6 @@ package org.biojava.nbio.structure.io.mmcif;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
-import org.biojava.nbio.structure.io.MMCIFFileTools;
 import org.biojava.nbio.structure.io.StructureIOFile;
 import org.biojava.nbio.structure.io.mmcif.model.*;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -43,7 +42,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** A simple mmCif file parser
+/** 
+ * A simple mmCif file parser
  *
  * @author Andreas Prlic
  * @since 1.7
@@ -65,8 +65,15 @@ import java.util.Set;
  */
 public class SimpleMMcifParser implements MMcifParser {
 
-	private List<MMcifConsumer> consumers ;
 
+
+	/**
+	 * The header appearing at the beginning of a mmCIF file. 
+	 * A "block code" can be added to it of no more than 32 chars.
+	 * See http://www.iucr.org/__data/assets/pdf_file/0019/22618/cifguide.pdf
+	 */
+	public static final String MMCIF_TOP_HEADER = "data_";
+	
 	public static final String LOOP_END = "#";
 	public static final String LOOP_START = "loop_";
 	public static final String FIELD_LINE = "_";
@@ -75,6 +82,8 @@ public class SimpleMMcifParser implements MMcifParser {
 	private static final char s1 = '\'';
 	private static final char s2 = '\"';
 
+	private List<MMcifConsumer> consumers ;
+	
 	private Struct struct ;
 
 	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
@@ -148,8 +157,8 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		// the first line is a data_PDBCODE line, test if this looks like a mmcif file
 		line = buf.readLine();
-		if (!line.startsWith("data_")){
-			logger.error("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
+		if (!line.startsWith(MMCIF_TOP_HEADER)){
+			logger.error("This does not look like a valid mmCIF file! The first line should start with 'data_', but is: '" + line+"'");
 			triggerDocumentEnd();
 			return;
 		}
@@ -168,6 +177,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					category=null;
 					loopFields.clear();
 					loopWarnings.clear();
+					logger.debug("Detected LOOP_END: '{}'. Toggling to inLoop=false", LOOP_END);
 					continue;
 
 
@@ -184,20 +194,24 @@ public class SimpleMMcifParser implements MMcifParser {
 						category = spl[0];
 						String attribute = spl[1];
 						loopFields.add(attribute);
+						logger.debug("Found category: {}, attribute: {}",category, attribute);
 						if ( spl.length > 2){
-							logger.warn("found nested attribute, not supported, yet!");
+							logger.warn("Found nested attribute in {}, not supported yet!",txt);
 						}
+						
 					} else {
 						category = txt;
+						logger.debug("Found category: {}",category);
 					}
-
+					 
 
 				} else {
 
 					// in loop and we found a data line
 					lineData = processLine(line, buf, loopFields.size());
+					logger.debug("Found a loop data line with {} data fields", lineData.size());
 					if ( lineData.size() != loopFields.size()){
-						logger.warn("did not find enough data fields...");
+						logger.warn("Expected {} data fields, but found {} in line: {}",loopFields.size(),lineData.size(),line);
 
 					}
 
@@ -216,6 +230,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					inLoop = true;
 					category=null;
 					lineData.clear();
+					logger.debug("Detected LOOP_START: '{}'. Toggling to inLoop=true", LOOP_START);
 					continue;
 				} else if (line.startsWith(LOOP_END)){
 					inLoop = false;
@@ -240,8 +255,8 @@ public class SimpleMMcifParser implements MMcifParser {
 					if ( pos < 0 ) {
 						// looks like a chem_comp file
 						// line should start with data, otherwise something is wrong!
-						if (! line.startsWith(MMCIFFileTools.MMCIF_TOP_HEADER)){
-							logger.warn("This does not look like a valid MMcif file! The first line should start with 'data_', but is '" + line+"'");
+						if (! line.startsWith(MMCIF_TOP_HEADER)){
+							logger.warn("This does not look like a valid mmCIF file! The first line should start with 'data_', but is '" + line+"'");
 							triggerDocumentEnd();
 							return;
 						}
@@ -456,7 +471,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	private void endLineChecks(String category,List<String> loopFields, List<String> lineData, Set<String> loopWarnings ) throws IOException{
 
-
+		logger.debug("Processing category {}, with fields: {}",category,loopFields.toString());
 		/*System.out.println("parsed the following data: " +category + " fields: "+
 				loopFields + " DATA: " +
 				lineData);
@@ -671,7 +686,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		} else {
 
-
+			logger.debug("Using a generic bean for category {}",category);
 
 			// trigger a generic bean that can deal with all missing data types...
 			triggerGeneric(category,loopFields,lineData);
