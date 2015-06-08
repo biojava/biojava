@@ -20,23 +20,27 @@
  */
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.List;
+
+import javax.swing.JTextField;
+
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.align.cemc.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
 public class MultStatusDisplay extends JTextField implements AlignmentPositionListener, WindowListener {
 
 	private static final long serialVersionUID = 6939947266417830429L;
-	MultipleAlignment multAln;
+	private MultipleAlignment multAln;
+	private List<String> alnSeq;
 
 	public MultStatusDisplay(){
 		super();
@@ -48,6 +52,8 @@ public class MultStatusDisplay extends JTextField implements AlignmentPositionLi
 	public MultStatusDisplay(MultipleAlignment multAln){
 		this();
 		this.multAln = multAln;
+		this.alnSeq = MultipleAlignmentTools.getSequencesForBlocks(multAln);
+
 	}
 	
 	public void destroy(){
@@ -63,7 +69,7 @@ public class MultStatusDisplay extends JTextField implements AlignmentPositionLi
 			String msg = "alig pos";
 			for (int str=0; str<multAln.size(); str++) {
 			
-				String alnseq  = multAln.getAlnSequences().get(str);
+				String alnseq  = alnSeq.get(str);
 				char c = alnseq.charAt(p.getPos1());
 		
 				Atom a = DisplayAFP.getAtomForAligPos(multAln, str, p.getPos1());
@@ -92,7 +98,7 @@ public class MultStatusDisplay extends JTextField implements AlignmentPositionLi
 			String msg = "Clicked pos";
 			for (int str=0; str<multAln.size(); str++) {
 			
-				String alnseq  = multAln.getAlnSequences().get(str);
+				String alnseq  = alnSeq.get(str);
 				char c = alnseq.charAt(p.getPos1());
 		
 				Atom a = DisplayAFP.getAtomForAligPos(multAln, str, p.getPos1());
@@ -115,7 +121,7 @@ public class MultStatusDisplay extends JTextField implements AlignmentPositionLi
 			String msg =  "Selected:";
 			for (int str=0; str<multAln.size(); str++) {
 				
-				String alnseq  = multAln.getAlnSequences().get(str);
+				String alnseq  = alnSeq.get(str);
 				char c1 = alnseq.charAt(start.getPos1());
 				char c2 = alnseq.charAt(end.getPos1());
 		

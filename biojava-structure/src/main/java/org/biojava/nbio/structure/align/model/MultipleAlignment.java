@@ -67,17 +67,6 @@ public interface MultipleAlignment extends ScoresCache {
 	public List<Block> getBlocks();
 
 	/**
-	 * Returns the List of Strings that represent the multiple sequence alignment of all the structures.
-	 *
-	 * All strings should be the same length and should include '-' for gaps.
-	 * These sequences are used for text-based representations of the alignment.
-	 * @return List of Strings multiple sequence alignment
-	 * @see #updateAlnSequences()
-	 */
-	public List<String> getAlnSequences();
-
-
-	/**
 	 * Returns a transformation matrix for each structure giving the
 	 * 3D superimposition information of the multiple structure alignment.
 	 * <p>

@@ -38,6 +38,7 @@ import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.cemc.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
@@ -47,7 +48,6 @@ import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -72,6 +72,8 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
    private static final long serialVersionUID = -6892229111166263764L;
 
    private MultipleAlignment multAln;
+   private List<String> alnSeq; // sequence representation of multAln
+
    private int size; 		//number of structures
    private int length; 		//number of aligned positions
    private Color[] colors;
@@ -104,6 +106,9 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 
 	      selection = new BitSet();
 	      colors = DEFAULT_COLORS;
+	      
+	      multAln = null;
+	      alnSeq = null;
    }
    
    /**
@@ -121,8 +126,9 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	   this();
 	   MultipleAlignmentEnsembleImpl ensemble = new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca2);
 	   this.multAln = ensemble.getMultipleAlignments().get(0);
+	   this.alnSeq = MultipleAlignmentTools.getSequencesForBlocks(this.multAln);
 	   this.size = multAln.size();
-	   this.length = multAln.getAlnSequences().get(0).length();
+	   this.length = alnSeq.get(0).length();
 	   this.colors = colors;
 	   if (colors == null) this.colors = DEFAULT_COLORS;
 	   coordManager = new MultAligmentCoordManager(size, length);
@@ -141,8 +147,10 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
    public MultAligPanel(MultipleAlignment multAln, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException{
 	   this();
 	   this.multAln = multAln;
+	   this.alnSeq = MultipleAlignmentTools.getSequencesForBlocks(this.multAln);
+
 	   this.size = multAln.size();
-	   this.length = multAln.getAlnSequences().get(0).length();
+	   this.length = this.alnSeq.get(0).length();
 	   this.colors = colors;
 	   if (colors == null) this.colors = DEFAULT_COLORS;
 	   coordManager = new MultAligmentCoordManager(size, length);
@@ -163,13 +171,17 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
    public void destroy(){
 
       multAln = null;
-      mouseMoLi.destroy();	
+      alnSeq = null;
+      mouseMoLi.destroy();
       jmol = null;
       selection = null;
    }
 
    public MultipleAlignment getMultipleAlignment(){
       return multAln;
+   }
+   public List<String> getAlnSequences() {
+      return alnSeq;
    }
 
 	@Override
@@ -186,7 +198,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
             RenderingHints.VALUE_ANTIALIAS_ON);
 
       int startpos = 0;
-      int endpos = multAln.getAlnSequences().get(0).length();
+      int endpos = alnSeq.get(0).length();
 
       String summary = multAln.toString();
       g2D.drawString(summary, 20, coordManager.getSummaryPos());
@@ -222,7 +234,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
         
         for (int str=0; str<size; str++){
         	
-        	char c = multAln.getAlnSequences().get(str).charAt(i);
+        	char c = alnSeq.get(str).charAt(i);
 	        
 	        if (!isGapped){
 	        	
@@ -259,7 +271,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	            
 	            int aligPos = i * MultAligmentCoordManager.DEFAULT_LINE_LENGTH;
 	            Atom a1 = DisplayAFP.getAtomForAligPos(multAln, str, aligPos);
-	            String label1 = JmolTools.getPdbInfo(a1,false);				
+	            String label1 = JmolTools.getPdbInfo(a1,false);
 	            g2D.drawString(label1, p1.x,p1.y);
 	
 	            Point p3 = coordManager.getEndLegendPosition(i,str);

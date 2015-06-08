@@ -26,7 +26,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
 
 	//Cache variables (can be updated)
-	List<String> alnSequences; 				//sequence alignment for every structure as a String with gaps (cache)
 	int length;								//total length of the alignment, including gaps: sum of BlockSet lengths (cache)
 	int coreLength;							//length of the alignment without gaps, only columns without gaps: sum of BlockSet core lengths (cache)
 	List<Matrix4d> pose;
@@ -63,7 +62,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		if (parent!=null) parent.getMultipleAlignments().add(this);
 
 		blockSets = null;
-		alnSequences = null;
 		pose = null;
 
 		length = -1;						//Value -1 reserved to indicate that has to be calculated
@@ -80,10 +78,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		super(ma);
 		
 		parent = ma.parent;
-		
-		alnSequences = null;
-		if (ma.alnSequences!=null) alnSequences = new ArrayList<String>(ma.alnSequences);
-		
+
 		pose = null;  //Because the pose is a cache variable it has to be updated/calculated again.
 		
 		blockSets = null;
@@ -106,7 +101,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	@Override
 	public void clear() {
 		super.clear();
-		alnSequences = null;
 		length = -1;
 		coreLength = -1;
 		for(BlockSet a : getBlockSets()) {
@@ -155,12 +149,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		this.blockSets = blockSets;
 	}
 
-	@Override
-	public List<String> getAlnSequences() {
-		if (alnSequences == null) updateAlnSequences();
-		return alnSequences;
-	}
-
 	/**
 	 * Returns a transformation matrix for each structure giving the
 	 * 3D superimposition information of the multiple structure alignment.
@@ -206,33 +194,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		return coreLength;
 	}
 
-	/**
-	 * Forces recalculation of the AlnSequences based on the alignment blocks.
-	 */
-	public void updateAlnSequences() {
-		
-		//This method is only to try the aligPanel. It does not calculate the correct sequence alignment
-		alnSequences = new ArrayList<String>();
-		try {
-			List<Atom[]> atoms = getEnsemble().getAtomArrays();
-			for (int row=0; row<size(); row++){
-				String seq = "";
-				for (BlockSet bs :getBlockSets()){
-					for (Block b: bs.getBlocks()){
-						for (int res=0; res<b.length(); res++){
-							if (b.getAlignRes().get(row).get(res) != null)
-								seq += StructureTools.get1LetterCode(atoms.get(row)[res].getGroup().getPDBName());
-							else seq += "-";
-						}
-					}
-				}
-				alnSequences.add(seq);
-			}
-		} catch (StructureAlignmentException e) {
-			e.printStackTrace();
-		}
-	}
-
 
 	/**
 	 * Force recalculation of the length (aligned columns) based on the block lengths
@@ -266,7 +227,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	 * @throws StructureException
 	 */
 	protected void updateCache() throws StructureAlignmentException, StructureException {
-		updateAlnSequences();
 		updateCoreLength();
 		updateLength();
 	}

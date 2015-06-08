@@ -40,6 +40,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.cemc.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultAligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultStatusDisplay;
@@ -774,7 +775,7 @@ public class DisplayAFP
 		}
 		if (residues.size() == 0) return null;
 		
-		String sequence = multAln.getAlnSequences().get(str);
+		String sequence = MultipleAlignmentTools.getSequencesForBlocks(multAln).get(str);
 		int aligpos = 0;
 		for (int i=0; i<pos; i++){
 			if (sequence.charAt(i) != '-') aligpos++;
@@ -796,18 +797,18 @@ public class DisplayAFP
 	public static List<Integer> getCoreAlignmentPos(MultipleAlignment multAln) throws StructureAlignmentException {
 		
 		List<Integer> lst = new ArrayList<Integer>();
-		
-		for (int i =0 ; i< multAln.getAlnSequences().get(0).length(); i++){
+		List<String> alnSeq = MultipleAlignmentTools.getSequencesForBlocks(multAln);
+		for (int i =0 ; i< alnSeq.get(0).length(); i++){
 			boolean aligned = true;
 			for (int str = 0; str<multAln.size(); str++){
-				char c = multAln.getAlnSequences().get(str).charAt(i);
+				char c = alnSeq.get(str).charAt(i);
 				if (c == '-'){
 					aligned = false;
 					break;
 				}
 			}
 			if (aligned == true) {
-				lst.add(i);			  
+				lst.add(i);
 			}
 		}
 		return lst;
