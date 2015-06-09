@@ -599,16 +599,17 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-	/** create a String that contains the contents of a PDB file.
-	 *
-	 * @return a String that represents the structure as a PDB file.
-	 */
 	@Override
 	public String toPDB() {
 		FileConvert f = new FileConvert(this) ;
 		return f.toPDB();
 	}
 
+	@Override
+	public String toMMCIF() {
+		FileConvert f = new FileConvert(this);
+		return f.toMMCIF();
+	}
 
 	@Override
 	public boolean hasChain(String chainId) {

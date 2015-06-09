@@ -37,10 +37,8 @@ public class TestMMCIFWriting {
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
 		
 		
-		FileConvert fc = new FileConvert(originalStruct);
-		
 		FileWriter fw = new FileWriter(outputFile);
-		fw.write(fc.toMMCIF());
+		fw.write(originalStruct.toMMCIF());
 		fw.close();
 		
 		
