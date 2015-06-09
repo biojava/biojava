@@ -22,7 +22,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	private List<Block> blocks;				//aligned positions as a list of Blocks
 	
 	//Cache variables (can be updated)
-	private List<Matrix4d> pose;						//3D superimposition information Pose
+	private List<Matrix4d> pose;			//3D superimposition information pose
 	private int length;						//total number of aligned positions, including gaps = sum of blocks lengths (cache)
 	private int coreLength;					//number of aligned positions without gaps (cache)
 	
@@ -32,7 +32,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	 * @return BlockSetImpl a BlockSetImpl instance linked to its parent MultipleAlignment.
 	 * @throws StructureAlignmentException 
 	 */
-	public BlockSetImpl(MultipleAlignment multipleAlignment) throws StructureAlignmentException{
+	public BlockSetImpl(MultipleAlignment multipleAlignment) {
 		
 		parent = multipleAlignment;
 		if (parent!=null) parent.getBlockSets().add(this);

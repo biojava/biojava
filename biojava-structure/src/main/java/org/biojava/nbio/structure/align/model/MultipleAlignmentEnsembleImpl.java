@@ -305,8 +305,9 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 
 	@Override
 	public int size() throws StructureAlignmentException {
-		if (structureNames == null) throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: structureNames == null");
-		else return structureNames.size();
+		if (structureNames != null) return structureNames.size();
+		else if (atomArrays != null) return atomArrays.size();
+		else throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: structureNames == null");
 	}
 	
 	/**

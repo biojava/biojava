@@ -62,7 +62,9 @@ public class CeMcMain implements MultipleStructureAlignment{
 	 * of the structures. The alignments are generated in parallel using the Java API for concurrency management. 
 	 * The closest structure to all others is chosen as the reference and all the alignments to it are taken to generate 
 	 * an ungapped seed MultipleAlignment.
+	 * 
 	 * This method is static because can be used outside this alignment class.
+	 * 
 	 * @param atomArrays List of Atoms to align of the structures
 	 * @return MultipleAlignment seed alignment
 	 * @throws ExecutionException 
@@ -129,6 +131,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 	 * This method takes a list of pairwise alignments to the reference structure and calculates the 
 	 * MultipleAlignment resulting from them. It ignores blocks in AFPChain (flexible parts) and builds 
 	 * the Blocks as the definition of MultipleAlignment dictates {@link Block}. Gaps are not included.
+	 * 
 	 * @param afpList the list of pairwise alignments to the reference
 	 * @param atomArrays List of Atoms of the structures
 	 * @param ref index of the reference structure

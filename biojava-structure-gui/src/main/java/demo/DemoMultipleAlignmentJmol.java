@@ -43,7 +43,8 @@ public class DemoMultipleAlignmentJmol {
 		for (String name:names) atomArrays.add(cache.getAtoms(name));
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
-		MultipleAlignment fakeMultAln = fakeMultipleAlignment("globins",atomArrays);
+		MultipleAlignment fakeMultAln = fakeMultipleAlignment("globins", atomArrays);
+		fakeMultAln.getEnsemble().setStructureNames(names);
 		
 		//Generate a pairwise alignment and convert it to a MultipleAlignment
 		FatCat fatcat  = new FatCat();
