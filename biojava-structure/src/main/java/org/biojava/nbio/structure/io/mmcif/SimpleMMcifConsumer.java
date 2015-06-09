@@ -71,7 +71,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructConn> structConn;
 	private List<StructNcsOper> structNcsOper;
 
+	/**
+	 * A map of asym ids (internal chain ids) to strand ids (author chain ids) 
+	 * extracted from pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme categories
+	 */
 	private Map<String,String> asymStrandId;
+	
+	/**
+	 * A map of asym ids (internal chain ids) to strand ids (author chain ids) 
+	 * extracted from the information in _atom_sites category. Will be used
+	 * if no mapping is found in pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme
+	 */
+	private Map<String,String> asymId2StrandIdFromAtomSites;
 	
 	private Map<String,String> asymId2entityId;
 
@@ -411,15 +422,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( params.isParseCAOnly() ){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
-			if (! (atom.getLabel_atom_id().equals("CA") && atom.getType_symbol().equals("C"))) {
+			if (! (atom.getLabel_atom_id().equals(StructureTools.CA_ATOM_NAME) && atom.getType_symbol().equals("C"))) {
 				//System.out.println("ignoring " + line);
 				//atomCount--;
 				return;
 			}
 		}
 
-
-
+		// filling the map in case there's no pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme in the file
+		asymId2StrandIdFromAtomSites.put(atom.getLabel_asym_id(), atom.getAuth_asym_id());
 
 		//see if chain_id is one of the previous chains ...
 
@@ -566,7 +577,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entityChains  = new ArrayList<Chain>();
 		structAsyms   = new ArrayList<StructAsym>();
 		asymStrandId  = new HashMap<String, String>();
-		asymId2entityId = new HashMap<String,String>();
+		asymId2StrandIdFromAtomSites = new HashMap<String, String>();
+		asymId2entityId = new HashMap<String,String>();		
 		structOpers   = new ArrayList<PdbxStructOperList>();
 		strucAssemblies = new ArrayList<PdbxStructAssembly>();
 		strucAssemblyGens = new ArrayList<PdbxStructAssemblyGen>();
@@ -635,22 +647,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//TODO: add support for structure.setConnections(connects);
 		
 
+		
+		boolean noAsymStrandIdMappingPresent = false;
+		if (asymStrandId.isEmpty()) {
+			logger.warn("No pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme categories present. Will use chain id mapping from _atom_sites category");
+			
+			asymStrandId = asymId2StrandIdFromAtomSites;
+			noAsymStrandIdMappingPresent = true;
+		}
+		
 		// mismatching Author assigned chain IDS and PDB internal chain ids:
 		// fix the chain IDS in the current model:
-
-		Set<String> asymIds = asymStrandId.keySet();
-		
-		if (asymIds.isEmpty()) {
-			logger.warn("No asym ids mapping found in file (categories pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme). Will create fake asym ids");
-
-			if (structure.nrModels()==0) {
-				logger.error("We should have some models at this point, something is wrong! We'll have an empty structure");
-			} else {
-				for (Chain chain : structure.getModel(0)) {
-					asymStrandId.put(chain.getChainID(),chain.getChainID());
-				}
-			}
-		}
 
 		for (int i =0; i< structure.nrModels() ; i++){
 			List<Chain> model = structure.getModel(i);
@@ -658,7 +665,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			List<Chain> pdbChains = new ArrayList<Chain>();
 
 			for (Chain chain : model) {
-				for (String asym : asymIds) {
+				for (String asym : asymStrandId.keySet()) {
 					if ( chain.getChainID().equals(asym)){
 						String newChainId = asymStrandId.get(asym);
 						
@@ -703,7 +710,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (entityId==null) {
 					// this can happen for instance if the cif file didn't have _struct_asym category at all
 					// and thus we have no asymId2entityId mapping at all
-					logger.warn("No entity id could be found for chain {}", chain.getInternalChainID());
+					logger.warn("No entity id could be found for chain {}", chain.getInternalChainID());					
 					continue;
 				}
 				int eId = Integer.parseInt(entityId);
@@ -736,7 +743,33 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			}			
 			
+			if (noAsymStrandIdMappingPresent) {
+				// At this point we have to make sure that all chains are polymeric (possibly with some attached non-polymers)
+				// because that's the current biojava model. 
+				// It can happen that all molecules are assigned to their own chains, for instance in mmCIF files 
+				// produced by phenix (in that case there will be noAsymStrandIdMapping present (no pdbx_poly_seq_scheme))
+				// mmCIF files produced by the PDB follow the convention: distinct asym_id for every 
+				// molecule (poly or non-poly) whilst a single author_asym_id for polymer + its ligands
+				it = pdbChains.iterator();
+				while (it.hasNext()) {
+					Chain chain = it.next();
+					GroupType predominantGroupType = StructureTools.getPredominantGroupType(chain);
+					if (StructureTools.isChainWaterOnly(chain)) {
+						it.remove();
+						logger.warn("Chain with chain id {} (asym id {}) and {} residues, contains only waters. Will ignore the chain because it doesn't fit into the BioJava structure data model.",
+								chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
+					}
+					else if (predominantGroupType != GroupType.AMINOACID && 
+							 predominantGroupType!=GroupType.NUCLEOTIDE ) {
+						logger.warn("Chain with chain id {} (asym id {}) and {} residues, does not seem to be polymeric. Will ignore the chain because it doesn't fit into the BioJava structure data model.",
+								chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
+						it.remove();
+					}
+				}
+			}
 		}
+		
+		
 
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file

@@ -377,9 +377,9 @@ public class SimpleMMcifParser implements MMcifParser {
 			if (i < line.length() - 1)
 				nextC = line.charAt(i+1);
 			
-			Character lastC = null;
+			Character prevC = null;
 			if (i>0) 
-				lastC = line.charAt(i-1);
+				prevC = line.charAt(i-1);
 			
 			if  (c == ' ') {
 
@@ -398,12 +398,9 @@ public class SimpleMMcifParser implements MMcifParser {
 
 					boolean wordEnd = false;
 					if (! inS2) {
-						if (nextC != null){
-							//System.out.println("nextC: >"+nextC+"<");
-							if ( Character.isWhitespace(nextC)){
-								i++;
-								wordEnd = true;
-							}
+						if (nextC==null || Character.isWhitespace(nextC)){
+							i++;
+							wordEnd = true;
 						}
 					}
 
@@ -420,7 +417,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						word += c;
 					}
 
-				} else if (lastC==null || lastC==' ') {
+				} else if (prevC==null || prevC==' ') {
 					// the beginning of a new string
 					inString = true;
 					inS1     = true;
@@ -432,12 +429,9 @@ public class SimpleMMcifParser implements MMcifParser {
 
 					boolean wordEnd = false;
 					if (! inS1) {
-						if (nextC != null){
-							//System.out.println("nextC: >"+nextC+"<");
-							if ( Character.isWhitespace(nextC)){
-								i++;
-								wordEnd = true;
-							}
+						if (nextC==null || Character.isWhitespace(nextC)){
+							i++;
+							wordEnd = true;
 						}
 					}
 
@@ -452,7 +446,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					} else {
 						word += c;
 					}
-				}  else if (lastC==null || lastC==' ') {
+				}  else if (prevC==null || prevC==' ') {
 					// the beginning of a new string
 					inString = true;
 					inS2     = true;

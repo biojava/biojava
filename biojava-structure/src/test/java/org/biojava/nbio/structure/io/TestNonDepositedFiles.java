@@ -194,7 +194,7 @@ public class TestNonDepositedFiles {
 	 * See github issue #234
 	 * @throws IOException
 	 */
-	//@Test
+	@Test
 	public void testPhenixFile() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phenix_output.cif.gz"));
 		MMcifParser parser = new SimpleMMcifParser();

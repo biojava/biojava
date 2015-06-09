@@ -74,6 +74,11 @@ J.Mol.Biol.                309 401 ? 2001 JMOBAK UK 0022-2836 0070 ? 11371161 10
 'Acta Crystallogr.,Sect.D' 56  137 ? 2000 ABCRE6 DK 0907-4449 0766 ? 10666593 10.1107/S0907444999015334      
 2       'Structure of the Capsid of Pf3 Filamentous Phage Determined from X-Ray Fibre Diffraction Data at 3.1 A Resolution'                                 
 J.Mol.Biol.                283 155 ? 1998 JMOBAK UK 0022-2836 0070 ? 9761681  10.1006/JMBI.1998.2081         
+#
+_space_group.name_H-M_alt         'P 1 21 1'
+_space_group.name_Hall            " P 2yb"
+_space_group.IT_number            4
+_space_group.crystal_system       monoclinic
 # 
 loop_
 _citation_author.citation_id 
@@ -82,5 +87,4 @@ _citation_author.ordinal
 primary 'Pederson, D.M.'   1  
 primary "Welsh, L.C."      2  
 primary 'Marvin, D.A.'     3  
-
 
