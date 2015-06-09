@@ -13,6 +13,10 @@ import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.Cell;
+import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
+import org.biojava.nbio.structure.xtal.CrystalCell;
+import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +67,56 @@ public class MMCIFFileTools {
 		
 		return str.toString();
 	}
+
+	/**
+	 * Converts a mmCIF bean (see {@link org.biojava.nbio.structure.io.mmcif.model} to
+	 * a String representing it in mmCIF (single-record) format.
+	 * @param categoryName
+	 * @param o
+	 * @return
+	 */
+	public static String toMMCIF(String categoryName, Object o) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		Class<?> c = o.getClass();
+		
+		int maxFieldNameLength = getMaxFieldNameLength(o);
+				
+		for (Field f : c.getDeclaredFields()) {
+			f.setAccessible(true);
+
+			sb.append(categoryName+"."+f.getName());
+
+			int spacing = maxFieldNameLength - f.getName().length() + 3;			
+			
+			try {
+				Object obj = f.get(o);
+				String val;
+				if (obj==null) {
+					logger.debug("Field {} is null, will write it out as {}",f.getName(),MMCIF_MISSING_VALUE);
+					val = MMCIF_MISSING_VALUE;
+				} else {
+					val = (String) obj;
+				}
+				for (int i=0;i<spacing;i++) sb.append(' ');
+				sb.append(addMmCifQuoting(val));
+				sb.append(newline);					
+				
+			} catch (IllegalAccessException e) {
+				logger.warn("Field {} is inaccessible", f.getName());
+				continue;
+			} catch (ClassCastException e) {
+				logger.warn("Could not cast value to String for field {}",f.getName());
+				continue;
+			}
+			
+		}
+		
+		sb.append(SimpleMMcifParser.COMMENT_CHAR+newline);
+		
+		return sb.toString();
+	}
 	
 	/**
 	 * Converts a list of mmCIF beans (see {@link org.biojava.nbio.structure.io.mmcif.model} to
@@ -76,7 +130,7 @@ public class MMCIFFileTools {
 		StringBuilder sb = new StringBuilder();
 		
 		for (Object o:list) {
-			sb.append(toSingleLineMmCifString(o, sizes));
+			sb.append(toSingleLoopLineMmCifString(o, sizes));
 		}
 		
 		sb.append(SimpleMMcifParser.COMMENT_CHAR+newline);
@@ -90,7 +144,7 @@ public class MMCIFFileTools {
 	 * @param sizes the size of each of the fields
 	 * @return
 	 */
-	public static String toSingleLineMmCifString(Object a, int[] sizes) {
+	private static String toSingleLoopLineMmCifString(Object a, int[] sizes) {
 		
 		StringBuilder str = new StringBuilder();
 		
@@ -141,7 +195,7 @@ public class MMCIFFileTools {
 		String newval;
 		
 		if (val.contains("'")) {
-			// double quoting for strings containing single quotes
+			// double quoting for strings containing single quotes (not strictly necessary but it's what the PDB usually does)
 			newval = "\""+val+"\"";
 		} else if (val.contains(" ")) {
 			// single quoting for stings containing spaces
@@ -149,13 +203,42 @@ public class MMCIFFileTools {
 		} else {
 			if (val.contains(" ") && val.contains("'")) {
 				// TODO deal with this case
-				logger.warn("Value contains both spaces and single quotes, won't format it: {}",val);
+				logger.warn("Value contains both spaces and single quotes, won't format it: {}. CIF ouptut will likely be invalid.",val);
 			}
 			newval = val;
 		}
-		// TODO deal with all the other cases: e.g. multi-line quoting
+		// TODO deal with all the other cases: e.g. multi-line quoting with ;;
 		
 		return newval;
+	}
+	
+	/**
+	 * Converts a SpaceGroup object to a {@link Symmetry} object.
+	 * @param sg
+	 * @return
+	 */
+	public static Symmetry convertSpaceGroupToSymmetry(SpaceGroup sg) {
+		Symmetry sym = new Symmetry();
+		sym.setSpace_group_name_H_M(sg.getShortSymbol());
+		// TODO do we need to fill any of the other values?
+		return sym;
+	}
+	
+	/**
+	 * Converts a CrystalCell object to a {@link Cell} object.
+	 * @param c
+	 * @return
+	 */
+	public static Cell convertCrystalCellToCell(CrystalCell c) {
+		Cell cell = new Cell();
+		cell.setLength_a(String.format("%.3f",c.getA()));
+		cell.setLength_b(String.format("%.3f",c.getB()));
+		cell.setLength_c(String.format("%.3f",c.getC()));
+		cell.setAngle_alpha(String.format("%.3f",c.getAlpha()));
+		cell.setAngle_beta(String.format("%.3f",c.getBeta()));
+		cell.setAngle_gamma(String.format("%.3f",c.getGamma()));
+		
+		return cell;
 	}
 	
 	/**
@@ -166,7 +249,7 @@ public class MMCIFFileTools {
 	 * @param internalChainId
 	 * @return
 	 */
-	private static AtomSite atomToAtomSite(Atom a, int model, String chainId, String internalChainId) {
+	private static AtomSite convertAtomToAtomSite(Atom a, int model, String chainId, String internalChainId) {
 		
 		/*
 		ATOM 7    C CD  . GLU A 1 24  ? -10.109 15.374 38.853 1.00 50.05 ? ? ? ? ? ? 24  GLU A CD  1 
@@ -242,7 +325,7 @@ public class MMCIFFileTools {
 	 * @param internalChainId
 	 * @return
 	 */
-	private static List<AtomSite> groupToAtomSites(Group g, int model, String chainId, String internalChainId) {
+	private static List<AtomSite> convertGroupToAtomSites(Group g, int model, String chainId, String internalChainId) {
 		
 		List<AtomSite> list = new ArrayList<AtomSite>();
 		
@@ -255,12 +338,12 @@ public class MMCIFFileTools {
 			if ( a == null)
 				continue ;
 
-			list.add(atomToAtomSite(a, model, chainId, internalChainId));
+			list.add(convertAtomToAtomSite(a, model, chainId, internalChainId));
 			
 		}
 		if ( g.hasAltLoc()){
 			for (Group alt : g.getAltLocs() ) {
-				list.addAll(groupToAtomSites(alt, model, chainId, internalChainId));
+				list.addAll(convertGroupToAtomSites(alt, model, chainId, internalChainId));
 			}
 		}
 		return list;
@@ -274,7 +357,7 @@ public class MMCIFFileTools {
 	 * @param internalChainId
 	 * @return
 	 */
-	public static List<AtomSite> chainToAtomSites(Chain c, int model, String chainId, String internalChainId) {
+	public static List<AtomSite> convertChainToAtomSites(Chain c, int model, String chainId, String internalChainId) {
 		
 		List<AtomSite> list = new ArrayList<AtomSite>();
 		
@@ -286,7 +369,7 @@ public class MMCIFFileTools {
 
 			Group g= c.getAtomGroup(h);
 
-			list.addAll(groupToAtomSites(g, model, chainId, internalChainId));			
+			list.addAll(convertGroupToAtomSites(g, model, chainId, internalChainId));			
 			
 		}
 		
@@ -298,12 +381,12 @@ public class MMCIFFileTools {
 	 * @param s
 	 * @return
 	 */
-	public static List<AtomSite> structureToAtomSites(Structure s) {
+	public static List<AtomSite> convertStructureToAtomSites(Structure s) {
 		List<AtomSite> list = new ArrayList<AtomSite>();
 		
 		for (int m=0;m<s.nrModels();m++) {
 			for (Chain c:s.getChains()) {
-				list.addAll(chainToAtomSites(c, m+1, c.getChainID(), c.getInternalChainID()));
+				list.addAll(convertChainToAtomSites(c, m+1, c.getChainID(), c.getInternalChainID()));
 			}
 		}
 		return list;
@@ -354,5 +437,30 @@ public class MMCIFFileTools {
 			}
 		}
 		return sizes;
+	}
+	
+	/**
+	 * Finds the max length of the field strings corresponding to the given mmCIF bean.
+	 * Useful for producing mmCIF single-record data that is aligned for all values.
+	 * @param a
+	 * @return
+	 * @see #toMMCIF(String, Object)
+	 */
+	private static int getMaxFieldNameLength(Object a) {
+
+		int size = 0;
+
+		Class<?> c = a.getClass();
+
+		for (Field f : c.getDeclaredFields()) {
+
+			f.setAccessible(true);
+
+			if (f.getName().length() > size) {
+				size = f.getName().length();
+			}
+		}
+		
+		return size;
 	}
 }

@@ -315,7 +315,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					}
 					
 					if (category!=null && !key.substring(0,pos).equals(category)) {
-						// we've changed category: need to flush the last one
+						// we've changed category: need to flush the previous one
 						endLineChecks(category, loopFields, lineData, loopWarnings);
 						resetBuffers(loopFields, lineData, loopWarnings);
 					}
@@ -333,7 +333,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 		
 		if (category!=null && lineData.size()>0 && lineData.size()==loopFields.size()) {
-			// the last category in the file will still be missing
+			// the last category in the file will still be missing, we add it now
 			endLineChecks(category, loopFields, lineData, loopWarnings);
 			resetBuffers(loopFields, lineData, loopWarnings);
 		}

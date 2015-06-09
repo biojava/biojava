@@ -691,11 +691,23 @@ Angstroms.
 		
 		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
 		
+		if (structure.getPDBHeader()!=null & structure.getPDBHeader().getCrystallographicInfo()!=null &&
+				structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup()!=null &&
+				structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()!=null) {
+			
+			str.append(MMCIFFileTools.toMMCIF("_cell", 
+					MMCIFFileTools.convertCrystalCellToCell(structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()))); 
+			str.append(MMCIFFileTools.toMMCIF("_symmetry", 
+					MMCIFFileTools.convertSpaceGroupToSymmetry(structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup())));
+			
+		}
+			
+		
 		str.append(getAtomSiteHeader());
 		
 		@SuppressWarnings("unchecked")
 		List<Object> list = 
-		(List<Object>) (List<?>) MMCIFFileTools.structureToAtomSites(structure);
+		(List<Object>) (List<?>) MMCIFFileTools.convertStructureToAtomSites(structure);
 
 
 		str.append(MMCIFFileTools.toMMCIF(list));		
@@ -711,7 +723,7 @@ Angstroms.
 		
 		@SuppressWarnings("unchecked")
 		List<Object> list = 
-		(List<Object>) (List<?>) MMCIFFileTools.chainToAtomSites(chain, 1, chainId, internalChainId);
+		(List<Object>) (List<?>) MMCIFFileTools.convertChainToAtomSites(chain, 1, chainId, internalChainId);
 		
 		str.append(MMCIFFileTools.toMMCIF(list));
 		return str.toString();
