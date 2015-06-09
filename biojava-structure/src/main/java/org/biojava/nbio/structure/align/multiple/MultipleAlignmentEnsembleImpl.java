@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.model;
+package org.biojava.nbio.structure.align.multiple;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.jama.Matrix;
 

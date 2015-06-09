@@ -1,4 +1,5 @@
-package org.biojava.nbio.structure.align.model;
+package org.biojava.nbio.structure.align.multiple;
+
 
 /**
  * An exception during the handling or calculation of a strcuture alignment.

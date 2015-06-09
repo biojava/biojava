@@ -13,14 +13,14 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.model.Block;
-import org.biojava.nbio.structure.align.model.BlockImpl;
-import org.biojava.nbio.structure.align.model.BlockSet;
-import org.biojava.nbio.structure.align.model.BlockSetImpl;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
-import org.biojava.nbio.structure.align.superimpose.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockImpl;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**

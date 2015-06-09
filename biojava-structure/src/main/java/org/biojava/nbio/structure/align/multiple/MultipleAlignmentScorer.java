@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.superimpose;
+package org.biojava.nbio.structure.align.multiple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,10 +11,6 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.model.Block;
-import org.biojava.nbio.structure.align.model.BlockSet;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 
 /**
  * Utility class for calculating common scores over multiple alignments.

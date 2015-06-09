@@ -25,8 +25,8 @@ import java.util.List;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 
 /**
  * Interface for the Multiple Structure Alignment Algorithms. The Pairwise Alignment Algorithms can also
@@ -35,7 +35,7 @@ import org.biojava.nbio.structure.align.model.StructureAlignmentException;
  * @author Aleix Lafita
  *
  */
-public interface MultipleStructureAlignment{
+public interface MultipleStructureAligner{
 	
 	/** 
 	 * Run an alignment while specifying the atoms to be aligned. 

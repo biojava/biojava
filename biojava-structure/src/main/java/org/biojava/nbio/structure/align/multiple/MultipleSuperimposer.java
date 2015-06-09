@@ -1,13 +1,10 @@
-package org.biojava.nbio.structure.align.superimpose;
+package org.biojava.nbio.structure.align.multiple;
 
 import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.model.BlockSet;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 
 public interface MultipleSuperimposer {
 	/**

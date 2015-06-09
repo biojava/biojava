@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.model;
+package org.biojava.nbio.structure.align.multiple;
 
 import java.util.List;
 
