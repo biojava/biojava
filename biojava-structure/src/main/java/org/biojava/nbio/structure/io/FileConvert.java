@@ -22,6 +22,8 @@
 package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.biojava.nbio.core.util.XMLWriter;
 
 import java.io.IOException;
@@ -34,8 +36,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** Methods to convert a structure object into different file formats.
@@ -44,7 +46,9 @@ import java.util.Map;
  */
 public class FileConvert {
 	
-	//private static final Logger logger = LoggerFactory.getLogger(FileConvert.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileConvert.class);
+	
+	
 	
 	private Structure structure ;
 
@@ -336,7 +340,8 @@ public class FileConvert {
 	}
 	
 	
-	/** Convert a Chain object to PDB representation
+	/** 
+	 * Convert a Chain object to PDB representation
 	 * 
 	 * @param chain
 	 * @return
@@ -358,7 +363,8 @@ public class FileConvert {
 		return w.toString();
 	}
 	
-	/** Convert a Group object to PDB representation
+	/** 
+	 * Convert a Group object to PDB representation
 	 * 
 	 * @param g
 	 * @return
@@ -370,7 +376,7 @@ public class FileConvert {
 	}
 
 	/**
-	 * print ATOM record in the following syntax
+	 * Print ATOM record in the following syntax
 	<pre>
     ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
 *
@@ -489,7 +495,8 @@ Angstroms.
 	}
 
 
-	/** convert a protein Structure to a DAS Structure XML response .
+	/** 
+	 * Convert a protein Structure to a DAS Structure XML response .
 	 * @param xw  a XMLWriter object
 	 * @throws IOException ...
 	 *
@@ -675,5 +682,67 @@ Angstroms.
 		//	logger.warn("Atom name "+fullName+"to be written in PDB format does not have length 4. Formatting will be incorrect");
 
 		return fullName;
+	}
+	
+	
+	public String toMMCIF() {
+		
+		StringBuilder str = new StringBuilder();
+		
+		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		
+		if (structure.getPDBHeader()!=null & structure.getPDBHeader().getCrystallographicInfo()!=null &&
+				structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup()!=null &&
+				structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()!=null) {
+			
+			str.append(MMCIFFileTools.toMMCIF("_cell", 
+					MMCIFFileTools.convertCrystalCellToCell(structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()))); 
+			str.append(MMCIFFileTools.toMMCIF("_symmetry", 
+					MMCIFFileTools.convertSpaceGroupToSymmetry(structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup())));
+			
+		}
+			
+		
+		str.append(getAtomSiteHeader());
+		
+		@SuppressWarnings("unchecked")
+		List<Object> list = 
+		(List<Object>) (List<?>) MMCIFFileTools.convertStructureToAtomSites(structure);
+
+
+		str.append(MMCIFFileTools.toMMCIF(list));		
+		
+		return str.toString();
+	}
+	
+	public static String toMMCIF(Chain chain, String chainId, String internalChainId) {
+		StringBuilder str = new StringBuilder();
+		
+		str.append(getAtomSiteHeader());
+
+		
+		@SuppressWarnings("unchecked")
+		List<Object> list = 
+		(List<Object>) (List<?>) MMCIFFileTools.convertChainToAtomSites(chain, 1, chainId, internalChainId);
+		
+		str.append(MMCIFFileTools.toMMCIF(list));
+		return str.toString();
+	}
+	
+	public static String toMMCIF(Chain chain) {
+		return toMMCIF(chain, chain.getChainID(),chain.getInternalChainID());						
+	}
+	
+	private static String getAtomSiteHeader() {
+		String header;
+		try {
+			header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("Class not found, will not have a header for this MMCIF category: "+e.getMessage());
+			header = "";
+		}
+		
+		return header;
 	}
 }

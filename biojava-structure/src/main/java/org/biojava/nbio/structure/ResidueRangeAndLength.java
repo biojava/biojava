@@ -23,7 +23,6 @@ package org.biojava.nbio.structure;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NavigableMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
