@@ -194,4 +194,37 @@ public class TestDifficultMmCIFFiles {
 		
 		
 	}
+	
+	/**
+	 * The last category in 2KLI mmCIF file is _pdbx_struct_oper_list, which is needed for 
+	 * the biounit annotation.
+	 * This tests makes sure that the last category in a mmCIF file is not missed because 
+	 * of its position as last one in file.
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void test2KLI() throws IOException, StructureException { 
+
+		AtomCache cache = new AtomCache();
+
+		StructureIO.setAtomCache(cache); 
+
+		FileParsingParameters params = cache.getFileParsingParams();
+		params.setParseBioAssembly(true);
+		StructureIO.setAtomCache(cache);
+
+
+		cache.setUseMmCif(true);
+		Structure sCif = StructureIO.getStructure("2KLI");
+
+		assertNotNull(sCif);
+
+		assertNotNull(sCif.getPDBHeader().getBioAssemblies());
+
+		Map<Integer,BioAssemblyInfo> mapCif = sCif.getPDBHeader().getBioAssemblies();
+		
+		assertNotNull(mapCif);
+
+	}
 }

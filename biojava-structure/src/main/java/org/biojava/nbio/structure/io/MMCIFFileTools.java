@@ -79,7 +79,7 @@ public class MMCIFFileTools {
 			sb.append(toSingleLineMmCifString(o, sizes));
 		}
 		
-		sb.append(SimpleMMcifParser.LOOP_END+newline);
+		sb.append(SimpleMMcifParser.COMMENT_CHAR+newline);
 		
 		return sb.toString();
 	}
