@@ -1068,7 +1068,7 @@ public class Calc {
 	 * @return 4x4 transformation matrix
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Atom trans) {
-		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
+		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
 				new Vector3d(trans.getCoords()),
 				1.0);
 	}

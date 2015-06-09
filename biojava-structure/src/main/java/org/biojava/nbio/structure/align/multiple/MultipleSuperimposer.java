@@ -2,8 +2,6 @@ package org.biojava.nbio.structure.align.multiple;
 
 import java.util.List;
 
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.StructureException;
 
 public interface MultipleSuperimposer {

@@ -119,9 +119,8 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	 * @param ensemble parent MultipleAlignmentEnsemble.
 	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
 	 * @throws StructureAlignmentException 
-	 * @throws StructureException 
 	 */
-	public MultipleAlignmentEnsembleImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException {
+	public MultipleAlignmentEnsembleImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException {
 		
 		//Copy all the creation and algorithm information
 		this();
@@ -233,7 +232,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	
 	/**
 	 * Force the atom arrays to regenerate based on {@link #getStructureNames()}
-	 * @throws StructureAlignmentException
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -245,6 +243,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 			atomArrays.add(array);
 		}
 		//TODO update superposition & other properties
+		//...I think this is not needed, because we might want to recover the atoms from a serialized alignment (but maintain cache).
 	}
 
 	@Override
@@ -253,16 +252,15 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	}
 
 	@Override
-	public List<Matrix> getDistanceMatrix() throws StructureAlignmentException {
+	public List<Matrix> getDistanceMatrix() {
 		if (distanceMatrix == null) updateDistanceMatrix();
 		return distanceMatrix;
 	}
 
 	/**
 	 * Force recalculation of the distance matrices
-	 * @throws StructureAlignmentException
 	 */
-	public void updateDistanceMatrix() throws StructureAlignmentException {
+	public void updateDistanceMatrix() {
 		
 		//Reset the distance Matrix variable
 		distanceMatrix = new ArrayList<Matrix>();
@@ -306,10 +304,10 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 
 
 	@Override
-	public int size() throws StructureAlignmentException {
+	public int size() {
 		if (structureNames != null) return structureNames.size();
 		else if (atomArrays != null) return atomArrays.size();
-		else throw new StructureAlignmentException("Empty MultipleAlignmentEnsemble: structureNames == null");
+		else throw new IndexOutOfBoundsException("Empty MultipleAlignmentEnsemble: structureNames == null && atomArrays == null");
 	}
 	
 	/**

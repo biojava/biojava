@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
-import org.biojava.nbio.structure.StructureException;
-
 /**
  * A general implementation of a BlockSet to store multiple alignments.
  *
@@ -30,7 +28,6 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	 * Constructor.
 	 * @param multipleAlignment the parent MultipleAlignment of the BlockImpl instance.
 	 * @return BlockSetImpl a BlockSetImpl instance linked to its parent MultipleAlignment.
-	 * @throws StructureAlignmentException 
 	 */
 	public BlockSetImpl(MultipleAlignment multipleAlignment) {
 		
@@ -121,10 +118,9 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	 * Returns a transformation matrix for each structure giving the
 	 * 3D superimposition information of the multiple structure alignment.
 	 * @return the 3D superimposition information of the alignment
-	 * @throws StructureAlignmentException 
 	 */
 	@Override
-	public List<Matrix4d> getTransformations() throws StructureAlignmentException {
+	public List<Matrix4d> getTransformations() {
 		return pose;
 	}
 	
@@ -135,32 +131,32 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	 * @param matrices
 	 */
 	@Override
-	public void setTransformations(List<Matrix4d> transformations) throws StructureAlignmentException {
+	public void setTransformations(List<Matrix4d> transformations) {
 		pose = transformations;
 	}
 
 	@Override
-	public int length() throws StructureAlignmentException {
+	public int length() {
 		if (length == -1) updateLength();
 		return length;
 	}
 
 	@Override
-	public int size() throws StructureAlignmentException {
+	public int size() {
 		//Get the size from the variables that can contain the information
 		if (parent != null) return parent.size();
-		else if (getBlocks().size()==0) throw new StructureAlignmentException("Empty BlockSet: parent==null && getBlockNum() == 0.");
+		else if (getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: getBlockNum() == 0.");
 		else return blocks.get(0).size();
 	}
 
 	@Override
-	public int getCoreLength() throws StructureAlignmentException {
+	public int getCoreLength() {
 		if (coreLength == -1) updateCoreLength();
 		return coreLength;
 	}
 
-	protected void updateLength() throws StructureAlignmentException {
-		if(getBlocks().size()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
+	protected void updateLength() {
+		if(getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: getBlockNum() == 0.");
 		//Try to calculate it from the Block information
 		else {
 			length = 0;
@@ -168,8 +164,8 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 		}
 	}
 
-	protected void updateCoreLength() throws StructureAlignmentException {
-		if(getBlocks().size()==0) throw new StructureAlignmentException("Empty BlockSet: getBlockNum() == 0.");
+	protected void updateCoreLength() {
+		if(getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: getBlockNum() == 0.");
 		//Try to calculate it from the Block information
 		else {
 			coreLength = 0;
@@ -177,7 +173,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 		}
 	}
 
-	protected void updateCache() throws StructureAlignmentException, StructureException {
+	protected void updateCache() {
 		updateCoreLength();
 		updateLength();
 	}

@@ -82,8 +82,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * If atoms have not previously been set using {@link #setAtomArrays(List)},
 	 * attempts to load representative atoms based on {@link #getStructureNames()}.
 	 * @return List of Atom[].
-	 * @throws StructureException If errors occur during loading
-	 * @throws IOException If atoms need to be loaded, but an IO error occurs
+	 * @throws StructureAlignmentException If errors occur during loading or if atoms need to be loaded, but an IO error occurs
 	 * @see #setAtomArrays(List)
 	 */
 	public List<Atom[]> getAtomArrays() throws StructureAlignmentException;
@@ -111,10 +110,9 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	/**
 	 * Returns the List containing the interatomic distance Matrix of each structure.
 	 * @return List of Matrix interatomic distance matrices.
-	 * @throws StructureAlignmentException 
 	 * @see #updateDistanceMatrix()
 	 */
-	public List<Matrix> getDistanceMatrix() throws StructureAlignmentException;
+	public List<Matrix> getDistanceMatrix();
 
 	/**
 	 * Returns the List of MultipleAlignments in the MultipleAlignmentEnsemble object.
@@ -142,11 +140,10 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignments.
 	 * @return int number of aligned structures.
-	 * @throws StructureAlignmentException if atomArrays is null.
 	 * @see #getStructureNames()
 	 * @see #getAtomArrays()
 	 */
-	public int size() throws StructureAlignmentException;
+	public int size();
 
 	/**
 	 * Returns the io time for this object, in milliseconds.

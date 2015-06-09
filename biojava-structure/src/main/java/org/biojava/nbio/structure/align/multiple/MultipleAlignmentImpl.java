@@ -6,9 +6,7 @@ import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
-import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
 
 /**
  * A general implementation of a {@link MultipleAlignment}.
@@ -132,7 +130,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	/**
 	 * Convenience method to get a list of all blocks from all blocksets
 	 * @return
-	 * @throws StructureAlignmentException
 	 */
 	@Override
 	public List<Block> getBlocks() {
@@ -153,11 +150,9 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	 * Returns a transformation matrix for each structure giving the
 	 * 3D superimposition information of the multiple structure alignment.
 	 * @return the 3D superimposition information of the alignment
-	 * @throws StructureAlignmentException 
 	 */
 	@Override
-	public List<Matrix4d> getTransformations()
-			throws StructureAlignmentException {
+	public List<Matrix4d> getTransformations(){
 		return pose;
 	}
 
@@ -178,18 +173,18 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	}
 
 	@Override
-	public int size() throws StructureAlignmentException {
+	public int size() {
 		return parent.size();
 	}
 
 	@Override
-	public int length() throws StructureAlignmentException {
+	public int length() {
 		if (length < 0 ) updateLength();
 		return length;
 	}
 
 	@Override
-	public int getCoreLength() throws StructureAlignmentException {
+	public int getCoreLength() {
 		if (coreLength < 0) updateCoreLength();
 		return coreLength;
 	}
@@ -197,10 +192,9 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 
 	/**
 	 * Force recalculation of the length (aligned columns) based on the block lengths
-	 * @throws StructureAlignmentException
 	 */
-	protected void updateLength() throws StructureAlignmentException {
-		if(getBlockSets().size()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
+	protected void updateLength() {
+		if(getBlockSets().size()==0) throw new IndexOutOfBoundsException("Empty MultipleAlignment: getBlockSetNum() == 0.");
 		//Try to calculate it from the BlockSet information
 		else {
 			length = 0;
@@ -210,10 +204,9 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 
 	/**
 	 * Force recalculation of the core length (ungapped columns) based on the block core lengths
-	 * @throws StructureAlignmentException
 	 */
-	protected void updateCoreLength() throws StructureAlignmentException {
-		if(getBlockSets().size()==0) throw new StructureAlignmentException("Empty MultipleAlignment: getBlockSetNum() == 0.");
+	protected void updateCoreLength() {
+		if(getBlockSets().size()==0) throw new IndexOutOfBoundsException("Empty MultipleAlignment: getBlockSetNum() == 0.");
 		//Try to calculate it from the BlockSet information
 		else {
 			coreLength = 0;
@@ -223,10 +216,9 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 
 	/**
 	 * Updates all cached properties
-	 * @throws StructureAlignmentException
 	 * @throws StructureException
 	 */
-	protected void updateCache() throws StructureAlignmentException, StructureException {
+	protected void updateCache() {
 		updateCoreLength();
 		updateLength();
 	}
