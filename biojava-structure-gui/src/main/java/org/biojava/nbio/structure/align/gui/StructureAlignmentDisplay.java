@@ -100,7 +100,7 @@ public class StructureAlignmentDisplay {
 		   //TODO temporary hack for missing transformations
 		   logger.error("BlockSet transformations are unimplemented. Superimposing to first structure.");
 		   // clone input, since we're about to re-superimpose it
-		   multAln = multAln.clone();
+		   //multAln = multAln.clone();
 		   MultipleSuperimposer imposer = new ReferenceSuperimposer();
 		   imposer.superimpose(multAln);
 		   transformations = multAln.getTransformations();

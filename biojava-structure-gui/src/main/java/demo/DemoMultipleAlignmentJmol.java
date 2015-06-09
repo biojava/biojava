@@ -53,9 +53,9 @@ public class DemoMultipleAlignmentJmol {
 		MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
 
 		StructureAlignmentDisplay.display(fakeMultAln);
-		//StructureAlignmentDisplay.display(pairwise);
+		StructureAlignmentDisplay.display(pairwise);
 		//For comparison display the original AFP
-		//StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
+		StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
 	}
 	
 	/**

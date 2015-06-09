@@ -122,6 +122,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	 * @throws StructureException 
 	 */
 	public MultipleAlignmentEnsembleImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException, StructureException {
+		
 		//Copy all the creation and algorithm information
 		this();
 		setAtomArrays(Arrays.asList(ca1,ca2));
@@ -130,10 +131,15 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 		setVersion(afpChain.getVersion());
 		setCalculationTime(afpChain.getCalculationTime());
 		
-		MultipleAlignmentImpl alignment = new MultipleAlignmentImpl(this);
-		setMultipleAlignments( Arrays.asList( (MultipleAlignment) alignment));
+		MultipleAlignment alignment = new MultipleAlignmentImpl(this);
+		setMultipleAlignments(Arrays.asList((MultipleAlignment) alignment));
 		
-		//Create a BlockSet for every block in AFPChain
+		//Convert the rotation and translation to a Matrix4D and copy it to the MultipleAlignment
+		Matrix4d ident = new Matrix4d();
+		ident.setIdentity();
+		alignment.setTransformations(Arrays.asList(ident, Calc.getTransformation(afpChain.getBlockRotationMatrix()[0], afpChain.getBlockShiftVector()[0])));
+		
+		//Create a BlockSet for every block in AFPChain and set its transformation
 		List<Block>blocks = new ArrayList<Block>(afpChain.getBlockNum());
 		for (int bs=0; bs<afpChain.getBlockNum(); bs++){
 			BlockSet blockSet = new BlockSetImpl(alignment);
@@ -141,18 +147,14 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 			block.getAlignRes().add(new ArrayList<Integer>()); //add the two chains
 			block.getAlignRes().add(new ArrayList<Integer>());
 			blocks.add(block);
+			//Set the transformation (convert as before the rotation and translation to a 4D matrix)
+			blockSet.setTransformations(Arrays.asList(ident, Calc.getTransformation(afpChain.getBlockRotationMatrix()[bs], afpChain.getBlockShiftVector()[bs])));
 			
 			for (int i=0; i<afpChain.getOptLen()[bs]; i++){
 				block.getAlignRes().get(0).add(afpChain.getOptAln()[bs][0][i]);
 				block.getAlignRes().get(1).add(afpChain.getOptAln()[bs][1][i]);
 			}
 		}
-
-		//Do superposition
-//		ReferenceSuperimposer sup = new ReferenceSuperimposer();
-//		List<Matrix4d> trans = sup.superimpose(atomArrays, blocks);
-//		alignment.setTransformationMatrices(trans);
-		//TODO
 	}
 
 	
