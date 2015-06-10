@@ -233,18 +233,6 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 			i++;
 		}
 		
-		int[][][] newAlgn = new int[size][2][length];
-		for (int su=0; su<size; su++){
-			int[] chain1 = new int[length];
-			int[] chain2 = new int[length];
-			for (int k=0; k<length; k++){
-				chain1[k] = block.get(su).get(k);
-				chain2[k] = block.get((su+1)%size).get(k);
-			}
-			newAlgn[su][0] = chain1;
-			newAlgn[su][1] = chain2;
-		}
-		
 		//Override the MultipleAlignment with the optimized alignment to return
 		msa.setBlockSets(new ArrayList<BlockSet>());
 		BlockSet bs = new BlockSetImpl(msa);

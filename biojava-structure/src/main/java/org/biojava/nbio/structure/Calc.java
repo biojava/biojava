@@ -446,6 +446,15 @@ public class Calc {
 		}
 
 	}
+	
+	/**
+	 * Transform an array of atoms at once.
+	 * @param ca array of Atoms to shift
+	 * @param t transformation Matrix4d
+	 */
+	public static void transform(Atom[] ca, Matrix4d t) {
+		for (Atom atom : ca) Calc.transform(atom, t);
+	}
 
 	/**
 	 * Transforms an atom object, given a Matrix4d (i.e. the vecmath library 
