@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +42,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** A simple mmCif file parser
+/** 
+ * A simple mmCif file parser
  *
  * @author Andreas Prlic
  * @since 1.7
@@ -63,16 +65,38 @@ import java.util.Set;
  */
 public class SimpleMMcifParser implements MMcifParser {
 
-	private List<MMcifConsumer> consumers ;
 
-	public static final String LOOP_END = "#";
+
+	/**
+	 * The header appearing at the beginning of a mmCIF file. 
+	 * A "block code" can be added to it of no more than 32 chars.
+	 * See http://www.iucr.org/__data/assets/pdf_file/0019/22618/cifguide.pdf
+	 */
+	public static final String MMCIF_TOP_HEADER = "data_";
+	
+	public static final String COMMENT_CHAR = "#";
 	public static final String LOOP_START = "loop_";
 	public static final String FIELD_LINE = "_";
+	
+	// the following are the 3 valid quoting characters in CIF
+	/**
+	 * Quoting character '
+	 */
+	private static final char S1 = '\'';
+	
+	/**
+	 * Quoting character "
+	 */
+	private static final char S2 = '\"';
+	
+	/**
+	 * Quoting character ; (multi-line quoting)
+	 */
 	public static final String STRING_LIMIT = ";";
+	
 
-	private static final char s1 = '\'';
-	private static final char s2 = '\"';
-
+	private List<MMcifConsumer> consumers ;
+	
 	private Struct struct ;
 
 	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
@@ -136,6 +160,8 @@ public class SimpleMMcifParser implements MMcifParser {
 		String line = null;
 
 		boolean inLoop = false;
+		boolean inLoopData = false;
+
 
 		List<String> loopFields = new ArrayList<String>();
 		List<String> lineData   = new ArrayList<String>();
@@ -146,88 +172,127 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		// the first line is a data_PDBCODE line, test if this looks like a mmcif file
 		line = buf.readLine();
-		if (!line.startsWith("data_")){
-			logger.error("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
+		if (!line.startsWith(MMCIF_TOP_HEADER)){
+			logger.error("This does not look like a valid mmCIF file! The first line should start with 'data_', but is: '" + line+"'");
 			triggerDocumentEnd();
 			return;
 		}
 
 		while ( (line = buf.readLine ()) != null ){
+
+			if (line.isEmpty() || line.startsWith(COMMENT_CHAR)) continue;
 			
 			logger.debug(inLoop + " " + line);
 
 
-			if ( inLoop){
+			if ( inLoop) {
 
-				if (line.startsWith(LOOP_END)){
-					// reset all data
-					inLoop = false;
-					lineData.clear();
-					category=null;
+				
+				if ( line.startsWith(LOOP_START)){
 					loopFields.clear();
-					loopWarnings.clear();
+					inLoop = true;
+					inLoopData = false;
 					continue;
-
-
 				}
 
-				if ( line.startsWith(FIELD_LINE)){
+				if ( line.matches("\\s*"+FIELD_LINE+"\\w+.*")) { 
+					
+					if (inLoopData && line.startsWith(FIELD_LINE)) {
+						logger.debug("Found a field line after reading loop data. Toggling to inLoop=false");
+						inLoop = false;
+						inLoopData = false;
+						loopFields.clear();
+						
+						
+						// a boring normal line
+						List<String> data = processLine(line, buf, 2);
+						
+						if ( data.size() < 1){
+							// this can happen if empty lines at end of file
+							lineData.clear();
+							continue;
+						}
+						String key = data.get(0);
+						int pos = key.indexOf(".");
+						if ( pos < 0 ) {
+							// looks like a chem_comp file
+							// line should start with data, otherwise something is wrong!
+							if (! line.startsWith(MMCIF_TOP_HEADER)){
+								logger.warn("This does not look like a valid mmCIF file! The first line should start with 'data_', but is '" + line+"'");
+								triggerDocumentEnd();
+								return;
+							}
+							// ignore the first line...
+							category=null;
+							lineData.clear();
+							continue;
+						}
+						category = key.substring(0,pos);
+						String value = data.get(1);
+						loopFields.add(key.substring(pos+1,key.length()));
+						lineData.add(value);
+
+						logger.debug("Found data for category {}: {}", key, value);
+						continue;
+					}
+					
 					// found another field.
 					String txt = line.trim();
-					//System.out.println("line: " + txt);
 					if ( txt.indexOf('.') > -1){
 
 						String[] spl = txt.split("\\.");
-						//System.out.println(spl.length);
 						category = spl[0];
 						String attribute = spl[1];
 						loopFields.add(attribute);
+						logger.debug("Found category: {}, attribute: {}",category, attribute);
 						if ( spl.length > 2){
-							logger.warn("found nested attribute, not supported, yet!");
+							logger.warn("Found nested attribute in {}, not supported yet!",txt);
 						}
+						
 					} else {
 						category = txt;
+						logger.debug("Found category without attribute: {}",category);
 					}
-
+					 
 
 				} else {
 
 					// in loop and we found a data line
 					lineData = processLine(line, buf, loopFields.size());
+					logger.debug("Found a loop data line with {} data fields", lineData.size());
+					logger.debug("Data fields: {}", lineData.toString());
 					if ( lineData.size() != loopFields.size()){
-						logger.warn("did not find enough data fields...");
+						logger.warn("Expected {} data fields, but found {} in line: {}",loopFields.size(),lineData.size(),line);
 
 					}
 
-					endLineChecks(category, loopFields,lineData, loopWarnings);
+					endLineChecks(category, loopFields, lineData, loopWarnings);
 
 					lineData.clear();
 
+					inLoopData = true;
 				}
 
 			} else {
 				// not in loop
 
 				if ( line.startsWith(LOOP_START)){
-					loopFields.clear();
-					loopWarnings.clear();
-					inLoop = true;
-					category=null;
-					lineData.clear();
-					continue;
-				} else if (line.startsWith(LOOP_END)){
-					inLoop = false;
 					if ( category != null)
 						endLineChecks(category, loopFields, lineData, loopWarnings);
+					
+					resetBuffers(loopFields, lineData, loopWarnings);
 					category = null;
-					loopFields.clear();
-					loopWarnings.clear();
-					lineData.clear();
+					inLoop = true;					
+					inLoopData = false;
+					logger.debug("Detected LOOP_START: '{}'. Toggling to inLoop=true", LOOP_START);					
+					continue;
 				} else {
+					logger.debug("Normal line ");
+					inLoop = false;
+					
 					// a boring normal line
-					//System.out.println("boring data line: " + line + " " + inLoop + " " );
 					List<String> data = processLine(line, buf, 2);
-					//System.out.println("got a single line " + data);
+					
 					if ( data.size() < 1){
 						// this can happen if empty lines at end of file
 						lineData.clear();
@@ -238,8 +303,8 @@ public class SimpleMMcifParser implements MMcifParser {
 					if ( pos < 0 ) {
 						// looks like a chem_comp file
 						// line should start with data, otherwise something is wrong!
-						if (! line.startsWith("data_")){
-							logger.warn("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
+						if (! line.startsWith(MMCIF_TOP_HEADER)){
+							logger.warn("This does not look like a valid mmCIF file! The first line should start with 'data_', but is '" + line+"'");
 							triggerDocumentEnd();
 							return;
 						}
@@ -248,14 +313,29 @@ public class SimpleMMcifParser implements MMcifParser {
 						lineData.clear();
 						continue;
 					}
+					
+					if (category!=null && !key.substring(0,pos).equals(category)) {
+						// we've changed category: need to flush the previous one
+						endLineChecks(category, loopFields, lineData, loopWarnings);
+						resetBuffers(loopFields, lineData, loopWarnings);
+					}
+					
 					category = key.substring(0,pos);
+					
 					String value = data.get(1);
 					loopFields.add(key.substring(pos+1,key.length()));
 					lineData.add(value);
 
+					logger.debug("Found data for category {}: {}", key, value);
 
 				}
 			}
+		}
+		
+		if (category!=null && lineData.size()>0 && lineData.size()==loopFields.size()) {
+			// the last category in the file will still be missing, we add it now
+			endLineChecks(category, loopFields, lineData, loopWarnings);
+			resetBuffers(loopFields, lineData, loopWarnings);
 		}
 
 		if (struct != null){
@@ -265,9 +345,15 @@ public class SimpleMMcifParser implements MMcifParser {
 		triggerDocumentEnd();
 
 	}
+	
+	private void resetBuffers(List<String> loopFields, List<String> lineData, Set<String> loopWarnings) {
+		loopFields.clear();
+		lineData.clear();
+		loopWarnings.clear();
+	}
 
 	private List<String> processSingleLine(String line){
-		//System.out.println("SS processSingleLine " + line);
+
 		List<String> data = new ArrayList<String>();
 
 		if ( line.trim().length() == 0){
@@ -278,19 +364,23 @@ public class SimpleMMcifParser implements MMcifParser {
 			if ( line.startsWith(STRING_LIMIT))
 				return data;
 		}
-		boolean inString = false;
-		boolean inS1     = false;
-		boolean inS2     = false;
+		boolean inString = false; // semicolon (;) quoting
+		boolean inS1     = false; // single quote (') quoting
+		boolean inS2     = false; // double quote (") quoting
 		String word 	 = "";
 
-		//System.out.println(line);
 		for (int i=0; i< line.length(); i++ ){
-			//System.out.println(word);
+
 			Character c = line.charAt(i);
 
 			Character nextC = null;
 			if (i < line.length() - 1)
 				nextC = line.charAt(i+1);
+			
+			Character prevC = null;
+			if (i>0) 
+				prevC = line.charAt(i-1);
+			
 			if  (c == ' ') {
 
 				if ( ! inString){
@@ -302,18 +392,15 @@ public class SimpleMMcifParser implements MMcifParser {
 					word += c;
 				}
 
-			} else if (c == s1 )  {
+			} else if (c == S1 )  {
 
 				if ( inString){
 
 					boolean wordEnd = false;
 					if (! inS2) {
-						if (nextC != null){
-							//System.out.println("nextC: >"+nextC+"<");
-							if ( Character.isWhitespace(nextC)){
-								i++;
-								wordEnd = true;
-							}
+						if (nextC==null || Character.isWhitespace(nextC)){
+							i++;
+							wordEnd = true;
 						}
 					}
 
@@ -330,22 +417,21 @@ public class SimpleMMcifParser implements MMcifParser {
 						word += c;
 					}
 
-				} else {
+				} else if (prevC==null || prevC==' ') {
 					// the beginning of a new string
 					inString = true;
 					inS1     = true;
+				} else {
+					word += c;
 				}
-			} else if ( c == s2 ){
+			} else if ( c == S2 ){
 				if ( inString){
 
 					boolean wordEnd = false;
 					if (! inS1) {
-						if (nextC != null){
-							//System.out.println("nextC: >"+nextC+"<");
-							if ( Character.isWhitespace(nextC)){
-								i++;
-								wordEnd = true;
-							}
+						if (nextC==null || Character.isWhitespace(nextC)){
+							i++;
+							wordEnd = true;
 						}
 					}
 
@@ -360,10 +446,12 @@ public class SimpleMMcifParser implements MMcifParser {
 					} else {
 						word += c;
 					}
-				} else {
+				}  else if (prevC==null || prevC==' ') {
 					// the beginning of a new string
 					inString = true;
 					inS2     = true;
+				} else {
+					word += c;
 				}
 			} else {
 				word += c;
@@ -378,7 +466,8 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	/** get the content of a cif entry
+	/** 
+	 * Get the content of a cif entry
 	 *
 	 * @param line
 	 * @param buf
@@ -454,7 +543,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	private void endLineChecks(String category,List<String> loopFields, List<String> lineData, Set<String> loopWarnings ) throws IOException{
 
-
+		logger.debug("Processing category {}, with fields: {}",category,loopFields.toString());
 		/*System.out.println("parsed the following data: " +category + " fields: "+
 				loopFields + " DATA: " +
 				lineData);
@@ -669,7 +758,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		} else {
 
-
+			logger.debug("Using a generic bean for category {}",category);
 
 			// trigger a generic bean that can deal with all missing data types...
 			triggerGeneric(category,loopFields,lineData);
@@ -814,8 +903,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private void setArray(Class c, Object o, String key, String val){
+	private void setArray(Class<?> c, Object o, String key, String val){
 
 
 		// TODO: not implemented yet!
@@ -834,12 +922,11 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
 		Object o = null;
 		try {
 			// build up the Entity object from the line data...
-			Class c = Class.forName(className);
+			Class<?> c = Class.forName(className);
 
 			o = c.newInstance();
 
