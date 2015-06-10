@@ -165,12 +165,8 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 		AlignedPosition pos = new AlignedPosition();
 		pos.setPos1(seqPos);
 
-		try {
-			if (DisplayAFP.getCoreAlignmentPos(multAln).contains(seqPos))
-				pos.setEquivalent(AlignedPosition.EQUIVALENT);
-		} catch (StructureAlignmentException e1) {
-			e1.printStackTrace();
-		}
+		if (DisplayAFP.getCoreAlignmentPos(multAln).contains(seqPos))
+			pos.setEquivalent(AlignedPosition.EQUIVALENT);
 
 		return pos;
 	}

@@ -212,11 +212,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
       g2D.fill(sig);
       
       List<Integer> alignedPos = new ArrayList<Integer>();
-		try {
-			alignedPos = DisplayAFP.getCoreAlignmentPos(multAln);
-		} catch (StructureAlignmentException e1) {
-			e1.printStackTrace();
-		}
+      alignedPos = DisplayAFP.getCoreAlignmentPos(multAln);
       
       for (int i = startpos; i < endpos; i++){
 

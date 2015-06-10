@@ -76,7 +76,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		super(ma);
 		
 		parent = ma.parent;
-
 		pose = null;  //Because the pose is a cache variable it has to be updated/calculated again.
 		
 		blockSets = null;
@@ -88,8 +87,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 				newBS.setMultipleAlignment(this); //This automatically adds the newBS to the blockSets list
 			}
 		}
-		
-		
 	}
 	
 	
@@ -112,13 +109,22 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	}
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * This method o return a summary of the multiple structure alignment.
 	 */
 	@Override
 	public String toString() {
-		return "MultipleAlignmentImpl [blockSets=" + blockSets + ", length="
-				+ length + ", coreLength=" + coreLength + "]";
+		String resume = "Structure Names:" + parent.getStructureNames() + 
+				" \nAlgorithm:" + parent.getAlgorithmName() + ", " + parent.getVersion() + 
+				" \nNumber of BlockSets: "+ getBlockSets().size() + 
+				" \nNumber of Blocks: " + getBlocks().size() +
+				" \nAlignment Length: " + length +
+				" \nAlignment Core Length: "+ coreLength;
+		
+		for (String score:getScores()){
+			resume += " \n"+score+": "+ getScore(score);
+		}
+		return resume;
 	}
 
 	@Override

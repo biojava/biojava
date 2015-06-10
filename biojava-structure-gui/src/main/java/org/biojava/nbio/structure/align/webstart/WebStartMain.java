@@ -365,12 +365,7 @@ public class WebStartMain
 
 		System.out.println(afpChain.toCE(ca1, ca2));
 
-		try {
-			DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
-		} catch (StructureAlignmentException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
-		}
+		DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
 
 	}
 

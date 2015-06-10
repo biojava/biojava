@@ -1,10 +1,8 @@
 package org.biojava.nbio.structure.align.multiple;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
