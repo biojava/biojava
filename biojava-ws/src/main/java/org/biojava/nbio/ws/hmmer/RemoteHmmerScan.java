@@ -32,14 +32,17 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-/** Makes remote calls to the Hmmer3 web site and returns Pfam domain annotations for an input protein sequence.
+/** Makes remote calls to the HMMER web service at the EBI web site and returns Pfam domain annotations for an input protein sequence.
  * 
  * @author Andreas Prlic
  * @since 3.0.3
  */
 public class RemoteHmmerScan implements HmmerScan {
 
-	public static String HMMER_SERVICE = "http://hmmer.janelia.org/search/hmmscan";
+	public static String HMMER_SERVICE = "http://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
+
+	// The Gathering threshold indicates to HMMER to use the threshold defined in the HMM file to be searched.
+	// This ensures that there are no false positive results.
 
 	public boolean DEFAULT_SEARCH_CUT_GA = true;
 
@@ -66,8 +69,16 @@ public class RemoteHmmerScan implements HmmerScan {
 	 */
 	public SortedSet<HmmerResult> scan(ProteinSequence sequence, URL serviceLocation) throws IOException{
 
+		StringBuffer postContent = new StringBuffer();
 
-		String urlparameters = prepareParameters(sequence, searchWithCutGA);
+		postContent.append("hmmdb=pfam");
+
+		if ( searchWithCutGA )
+			postContent.append("&cut_ga=1");
+
+		postContent.append("&seq=");
+		postContent.append(sequence.getSequenceAsString());
+
 
 		HttpURLConnection connection = (HttpURLConnection) serviceLocation.openConnection();
 		connection.setDoOutput(true);
@@ -76,24 +87,29 @@ public class RemoteHmmerScan implements HmmerScan {
 		connection.setInstanceFollowRedirects(false);
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		connection.setRequestProperty("Accept", "application/json");
+
+		connection.setRequestProperty("Accept:","application/json");
+
 
 		connection.setRequestProperty("Content-Length", "" +
-				Integer.toString(urlparameters.toString().getBytes().length));
+				Integer.toString(postContent.toString().getBytes().length));
 
 		//Send request
 		DataOutputStream wr = new DataOutputStream (
 				connection.getOutputStream ());
-		wr.writeBytes (urlparameters);
+		wr.write(postContent.toString().getBytes());
 		wr.flush ();
 		wr.close ();
 
-		//Now get the redirect URL
+
+
+
+//		//Now get the redirect URL
 		URL respUrl = new URL( connection.getHeaderField( "Location" ));
 
 		int responseCode = connection.getResponseCode();
 		if ( responseCode == 500){
-			System.err.println("something went wrong!" + urlparameters);
+			System.err.println("something went wrong!" + serviceLocation);
 			System.err.println(connection.getResponseMessage());
 		}
 
@@ -110,8 +126,11 @@ public class RemoteHmmerScan implements HmmerScan {
 		String inputLine;
 
 		StringBuffer result = new StringBuffer();
-		while ((inputLine = in.readLine()) != null)
+		while ((inputLine = in.readLine()) != null) {
+			//System.out.println(inputLine);
 			result.append(inputLine);
+		}
+
 		in.close();
 
 		// process the response and build up a container for the data.
@@ -174,6 +193,8 @@ public class RemoteHmmerScan implements HmmerScan {
 					dom.setSqTo(getInteger(d.get("alisqto")));
 					dom.setHmmName((String)d.get("alihmmname"));
 					domains.add(dom);
+
+					System.out.println(d.get("alicsline"));
 				}
 
 				hmmResult.setDomains(domains);
@@ -188,34 +209,6 @@ public class RemoteHmmerScan implements HmmerScan {
 
 	}
 
-	private String prepareParameters(ProteinSequence sequence,
-			boolean searchWithCutGA) throws UnsupportedEncodingException  {
-		StringBuffer urlParameters = new StringBuffer();
-
-
-
-		urlParameters.append("hmmdb=");
-		urlParameters.append(URLEncoder.encode("pfam","UTF-8"));
-
-
-		// search by cut_ga, not e-values
-		//cut_ga' : '',
-		if ( searchWithCutGA ) {
-			urlParameters.append("&cut_ga=");
-			//urlParameters.append(URLEncoder.encode("1","UTF-8"));
-
-
-		}
-
-		urlParameters.append("&seq=");
-
-		urlParameters.append(URLEncoder.encode(">seq\n"+sequence.toString(), "UTF-8"));
-
-
-
-
-		return urlParameters.toString();
-	}
 
 	private Integer getInteger(Object object) {
 		if ( object instanceof Integer)
