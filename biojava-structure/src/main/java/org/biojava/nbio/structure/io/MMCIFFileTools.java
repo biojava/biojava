@@ -249,7 +249,7 @@ public class MMCIFFileTools {
 	 * @param internalChainId
 	 * @return
 	 */
-	private static AtomSite convertAtomToAtomSite(Atom a, int model, String chainId, String internalChainId) {
+	public static AtomSite convertAtomToAtomSite(Atom a, int model, String chainId, String internalChainId) {
 		
 		/*
 		ATOM 7    C CD  . GLU A 1 24  ? -10.109 15.374 38.853 1.00 50.05 ? ? ? ? ? ? 24  GLU A CD  1 

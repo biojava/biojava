@@ -715,10 +715,11 @@ Angstroms.
 		return str.toString();
 	}
 	
-	public static String toMMCIF(Chain chain, String chainId, String internalChainId) {
+	public static String toMMCIF(Chain chain, String chainId, String internalChainId, boolean writeHeader) {
 		StringBuilder str = new StringBuilder();
 		
-		str.append(getAtomSiteHeader());
+		if (writeHeader)
+			str.append(getAtomSiteHeader());
 
 		
 		@SuppressWarnings("unchecked")
@@ -729,11 +730,14 @@ Angstroms.
 		return str.toString();
 	}
 	
-	public static String toMMCIF(Chain chain) {
-		return toMMCIF(chain, chain.getChainID(),chain.getInternalChainID());						
+	public static String toMMCIF(Chain chain, boolean writeHeader) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		sb.append(toMMCIF(chain, chain.getChainID(),chain.getInternalChainID(),writeHeader));
+		return sb.toString();
 	}
 	
-	private static String getAtomSiteHeader() {
+	public static String getAtomSiteHeader() {
 		String header;
 		try {
 			header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());

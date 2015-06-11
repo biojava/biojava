@@ -676,5 +676,10 @@ public class ChainImpl implements Chain, Serializable {
 	public String toPDB() {
 		return FileConvert.toPDB(this);
 	}
+	
+	@Override
+	public String toMMCIF() {
+		return FileConvert.toMMCIF(this, true);
+	}
 }
 
