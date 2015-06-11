@@ -25,6 +25,8 @@ import org.biojava.nbio.structure.asa.AsaCalculator;
 import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
@@ -702,6 +704,41 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		sb.append(System.getProperty("line.separator"));
 		sb.append("END");
 		sb.append(System.getProperty("line.separator"));
+		return sb.toString();
+	}
+	
+	/**
+	 * Return a String representing the 2 molecules of this interface in mmCIF format.
+	 * If the molecule ids (i.e. chain ids) are the same for both molecules, then the second
+	 * one will be written as chainId_operatorId (with operatorId taken from {@link #getTransforms()} 
+	 * @return
+	 */
+	public String toMMCIF() {
+		StringBuilder sb = new StringBuilder();
+		
+		String molecId1 = getMoleculeIds().getFirst();
+		String molecId2 = getMoleculeIds().getSecond();
+		
+		if (molecId2.equals(molecId1)) {
+			// if both chains are named equally we want to still named them differently in the output mmcif file
+			// so that molecular viewers can handle properly the 2 chains as separate entities 
+			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
+		}
+		
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_interface_"+getId()+System.getProperty("line.separator"));
+		
+		sb.append(FileConvert.getAtomSiteHeader());
+		
+		List<Object> atomSites = new ArrayList<Object>();
+		for (Atom atom:this.molecules.getFirst()) {
+			atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1));
+		}
+		for (Atom atom:this.molecules.getSecond()) {
+			atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2));
+		}
+		
+		sb.append(MMCIFFileTools.toMMCIF(atomSites));
+
 		return sb.toString();
 	}
 	

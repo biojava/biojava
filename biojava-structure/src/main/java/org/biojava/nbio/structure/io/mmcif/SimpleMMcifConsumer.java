@@ -258,12 +258,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		// the 3-letter name of the group:
 		String groupCode3    = atom.getLabel_comp_id();
-		if ( groupCode3.length() == 1){
-			groupCode3 = "  " + groupCode3;
-		}
-		if ( groupCode3.length() == 2){
-			groupCode3 = " " + groupCode3;
-		}
+
 		Character aminoCode1 = null;
 		if ( recordName.equals("ATOM") )
 			aminoCode1 = StructureTools.get1LetterCodeAmino(groupCode3);

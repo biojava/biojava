@@ -24,6 +24,7 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 
 import java.util.List;
 
@@ -204,7 +205,7 @@ public interface Chain {
     public Compound getCompound();
     
     /** 
-     * Set the name of this chain (Chain id in PDB file ).
+     * Sets the name of this chain (Chain id in PDB file ).
      * @param name  a String specifying the name value
      * @see #getChainID()
      */
@@ -213,14 +214,15 @@ public interface Chain {
     
     
     /** 
-     * Get the name of this chain (Chain id in PDB file ).
+     * Gets the name of this chain (Chain id in PDB file ).
      * @return a String representing the name value
      * @see #setChainID(String) 
      */
     public String getChainID();
     
     
-    /** If available, returns the internal chain ID that is used in mmCif files, otherwise null
+    /** 
+     * If available, returns the internal chain ID that is used in mmCIF files (asym_id), otherwise null
      * 
      * @return String or null
      * @since 3.0.5
@@ -228,19 +230,20 @@ public interface Chain {
     public String getInternalChainID();
     
     /** 
-     * Set the internal chain ID that is used in mmCif files
+     * Sets the internal chain ID that is used in mmCif files
      * 
      * @param internalChainID
      * @since 3.0.5
      */
     public void setInternalChainID(String internalChainID);
 
-    /** string representation.  */
+
     @Override
     public String toString();
 
 
-    /** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
+    /** 
+     * Converts the SEQRES groups of a Chain to a Biojava Sequence object.
      * 
      * @return the SEQRES groups of the Chain as a Sequence object.
      */
@@ -255,14 +258,15 @@ public interface Chain {
     public String getAtomSequence();
     
     /**
-     * Return the PDB SEQRES sequence as a one-letter sequence string.
+     * Returns the PDB SEQRES sequence as a one-letter sequence string.
      * Non-standard residues are represented by an "X".
      * @return one-letter PDB SEQRES sequence as string 
      * @see #getAtomSequence() 
      */
     public String getSeqResSequence();
     
-    /** Set the Swissprot id of this chain.
+    /** 
+     * Sets the Swissprot id of this chain.
      * @param sp_id  a String specifying the swissprot id value
      * @see #getSwissprotId()
      */
@@ -276,7 +280,7 @@ public interface Chain {
     
     
     /** 
-     * Return a List of all SEQRES groups of a special type, one of: {@link GroupType#AMINOACID},
+     * Returns a List of all SEQRES groups of a special type, one of: {@link GroupType#AMINOACID},
      * {@link GroupType#HETATM} or {@link GroupType#NUCLEOTIDE}.
      * @param type  a GroupType
      * @return an List object
@@ -285,7 +289,7 @@ public interface Chain {
     public List<Group> getSeqResGroups (GroupType type);
 
     /** 
-     * Return a list of all groups in SEQRES records of the chain, i.e.
+     * Returns a list of all groups in SEQRES records of the chain, i.e.
      * the aminoacids/nucleotides in the construct. 
      * @return a List of all Group objects of this chain
      * @see #setSeqResGroups(List)
@@ -295,21 +299,23 @@ public interface Chain {
     public List<Group> getSeqResGroups ();
  
     /** 
-     * Set the list of SeqResGroups for this chain.
+     * Sets the list of SeqResGroups for this chain.
      * 
      * @param seqResGroups a List of Group objects that from the SEQRES groups of this chain.
      * @see #getSeqResGroups()
      */
     public void setSeqResGroups(List<Group> seqResGroups);
 
-    /** Set the back-reference to its parent Structure.
+    /** 
+     * Sets the back-reference to its parent Structure.
      * @param parent the parent Structure object for this Chain
      * @see #getParent()
      *  
      */
     public void setParent(Structure parent) ; 
     
-    /** Returns the parent Structure of this chain.
+    /** 
+     * Returns the parent Structure of this chain.
      * 
      * @return the parent Structure object
      * @see #setParent(Structure)
@@ -317,10 +323,11 @@ public interface Chain {
     
     public Structure getParent() ;
     
-    /** Get all groups that are not polymer groups and that are not solvent groups.
-     *  Will automatically fetch Chemical Component files from the PDB web site, even if
-     *  PDBFileReader.setLoadChemCompInfo(flag) has not been set to true. Otherwise the Ligands could not
-     *  correctly be identified.
+    /** 
+     * Gets all groups that are not polymer groups and that are not solvent groups.
+     * Will automatically fetch Chemical Component files from the PDB web site, even if
+     * {@link FileParsingParameters#setLoadChemCompInfo(boolean)} has not been set to true. 
+     * Otherwise the Ligands could not correctly be identified.
      * @return list of Groups that are ligands
      */
     public List<Group> getAtomLigands();
@@ -330,6 +337,12 @@ public interface Chain {
      * @return
      */
     public String toPDB();
+    
+    /**
+     * Convert this Chain to a String in mmCIF format 
+     * @return
+     */
+    public String toMMCIF();
    
     
 }

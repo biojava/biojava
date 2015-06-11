@@ -1726,8 +1726,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// process group data:
 		// join residue numbers and insertion codes together
 		String recordName     = line.substring (0, 6).trim ();
-		//String pdbCode = line.substring(22,27).trim();
-		String groupCode3     = line.substring(17,20);
+
+		String groupCode3     = line.substring(17,20).trim();
 		// pdbCode is the old way of doing things...it's a concatenation
 		//of resNum and iCode which are now defined explicitly
 		String resNum  = line.substring(22,26).trim();
