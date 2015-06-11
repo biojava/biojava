@@ -22,6 +22,7 @@
 package org.biojava.nbio.structure.io.mmcif.model;
 
 public class AtomSite extends AbstractBean{
+	
 	String group_PDB;
 	String id;
 	String type_symbol;
@@ -32,22 +33,26 @@ public class AtomSite extends AbstractBean{
 	String label_entity_id;
 	String label_seq_id;
 	String pdbx_PDB_ins_code;
+	
 	String Cartn_x;
 	String Cartn_y;
 	String Cartn_z;
 	String occupancy;
 	String B_iso_or_equiv;
+	
 	String Cartn_x_esd;
 	String Cartn_y_esd;
 	String Cartn_z_esd;
+	String occupancy_esd;
+	String B_iso_or_equiv_esd;
+	String pdbx_formal_charge;
+
 	String auth_seq_id;
 	String auth_comp_id;
 	String auth_asym_id;
 	String auth_atom_id;
 	String pdbx_PDB_model_num;
-	String occupancy_esd;
-	String B_iso_or_equiv_esd;
-	String pdbx_formal_charge;
+	
 
 	public String getGroup_PDB() {
 		return group_PDB;

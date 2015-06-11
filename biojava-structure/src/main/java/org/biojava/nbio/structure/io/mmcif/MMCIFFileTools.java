@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.io;
+package org.biojava.nbio.structure.io.mmcif;
 
 
 import java.lang.reflect.Field;
@@ -11,7 +11,7 @@ import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
 import org.biojava.nbio.structure.io.mmcif.model.Symmetry;

@@ -25,7 +25,7 @@ import org.biojava.nbio.structure.asa.AsaCalculator;
 import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
