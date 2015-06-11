@@ -446,6 +446,15 @@ public class Calc {
 		}
 
 	}
+	
+	/**
+	 * Transform an array of atoms at once.
+	 * @param ca array of Atoms to shift
+	 * @param t transformation Matrix4d
+	 */
+	public static void transform(Atom[] ca, Matrix4d t) {
+		for (Atom atom : ca) Calc.transform(atom, t);
+	}
 
 	/**
 	 * Transforms an atom object, given a Matrix4d (i.e. the vecmath library 
@@ -1057,7 +1066,7 @@ public class Calc {
 	 * @return 4x4 transformation matrix
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Matrix trans) {
-		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
+		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
 				new Vector3d(trans.getColumnPackedCopy()),
 				1.0);
 	}
@@ -1068,7 +1077,7 @@ public class Calc {
 	 * @return 4x4 transformation matrix
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Atom trans) {
-		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
+		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
 				new Vector3d(trans.getCoords()),
 				1.0);
 	}

@@ -11,22 +11,22 @@ import java.util.concurrent.Future;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.CallableStructureAlignment;
-import org.biojava.nbio.structure.align.MultipleStructureAlignment;
+import org.biojava.nbio.structure.align.MultipleStructureAligner;
 import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.model.Block;
-import org.biojava.nbio.structure.align.model.BlockImpl;
-import org.biojava.nbio.structure.align.model.BlockSet;
-import org.biojava.nbio.structure.align.model.BlockSetImpl;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsembleImpl;
-import org.biojava.nbio.structure.align.model.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
-import org.biojava.nbio.structure.align.superimpose.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.align.superimpose.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockImpl;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 
 /** 
  * The main class of the Java implementation of the Combinatorial Extension - Monte Carlo Algorithm (CEMC),
@@ -38,7 +38,7 @@ import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
  * @author Aleix Lafita
  *
  */
-public class CeMcMain implements MultipleStructureAlignment{
+public class CeMcMain implements MultipleStructureAligner{
 	
 	/**
 	 *  version history:
@@ -62,7 +62,9 @@ public class CeMcMain implements MultipleStructureAlignment{
 	 * of the structures. The alignments are generated in parallel using the Java API for concurrency management. 
 	 * The closest structure to all others is chosen as the reference and all the alignments to it are taken to generate 
 	 * an ungapped seed MultipleAlignment.
+	 * 
 	 * This method is static because can be used outside this alignment class.
+	 * 
 	 * @param atomArrays List of Atoms to align of the structures
 	 * @return MultipleAlignment seed alignment
 	 * @throws ExecutionException 
@@ -129,6 +131,7 @@ public class CeMcMain implements MultipleStructureAlignment{
 	 * This method takes a list of pairwise alignments to the reference structure and calculates the 
 	 * MultipleAlignment resulting from them. It ignores blocks in AFPChain (flexible parts) and builds 
 	 * the Blocks as the definition of MultipleAlignment dictates {@link Block}. Gaps are not included.
+	 * 
 	 * @param afpList the list of pairwise alignments to the reference
 	 * @param atomArrays List of Atoms of the structures
 	 * @param ref index of the reference structure

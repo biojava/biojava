@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.superimpose;
+package org.biojava.nbio.structure.align.multiple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,6 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.model.Block;
-import org.biojava.nbio.structure.align.model.BlockSet;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 
 /**
  * Superimposes each structure in a MultipleAlignment onto a reference structure.

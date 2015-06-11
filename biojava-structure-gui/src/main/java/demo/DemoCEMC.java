@@ -10,8 +10,8 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.cemc.CeMcMain;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
@@ -42,7 +42,7 @@ public class DemoCEMC {
 		//Serine Proteases (MUSTA paper)
 		//List<String> names = Arrays.asList("1cse.E", "1sbn.E", "1pek.E", "3prk", "3tec.E");
 		//GPCRs
-		//List<String> names = Arrays.asList("4xt3", "4or2.A", "3odu.A", "2z73.A", "4ug2.A");
+		//List<String> names = Arrays.asList("2z73.A", "1u19.A", "4ug2.A", "4xt3", "4or2.A", "3odu.A");
 		//Immunoglobulins (MAMMOTH paper)
 		//List<String> names = Arrays.asList("2hla.B", "3hla.B", "1cd8", "2rhe", "1tlk", "1ten", "1ttf");
 		//Globins (MAMMOTH and MUSTA papers)

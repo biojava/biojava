@@ -1,16 +1,14 @@
-package org.biojava.nbio.structure.align.cemc;
+package org.biojava.nbio.structure.align.multiple;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.model.Block;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
 
 /**
- * Utility functions for working with multiple alignments
+ * Utility functions for working with multiple alignments. Methods for: sequence alignment calculation.
+ * TODO add the new external methods here when implemented.
  * @author Spencer Bliven
  *
  */

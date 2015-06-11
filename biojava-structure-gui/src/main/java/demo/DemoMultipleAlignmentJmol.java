@@ -10,17 +10,17 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.fatcat.FatCat;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.model.Block;
-import org.biojava.nbio.structure.align.model.BlockImpl;
-import org.biojava.nbio.structure.align.model.BlockSet;
-import org.biojava.nbio.structure.align.model.BlockSetImpl;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.model.MultipleAlignmentEnsembleImpl;
-import org.biojava.nbio.structure.align.model.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
-import org.biojava.nbio.structure.align.superimpose.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.superimpose.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockImpl;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
@@ -43,7 +43,8 @@ public class DemoMultipleAlignmentJmol {
 		for (String name:names) atomArrays.add(cache.getAtoms(name));
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
-		MultipleAlignment fakeMultAln = fakeMultipleAlignment("globins",atomArrays);
+		MultipleAlignment fakeMultAln = fakeMultipleAlignment("globins", atomArrays);
+		fakeMultAln.getEnsemble().setStructureNames(names);
 		
 		//Generate a pairwise alignment and convert it to a MultipleAlignment
 		FatCat fatcat  = new FatCat();
@@ -52,9 +53,9 @@ public class DemoMultipleAlignmentJmol {
 		MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
 
 		StructureAlignmentDisplay.display(fakeMultAln);
-		//StructureAlignmentDisplay.display(pairwise);
+		StructureAlignmentDisplay.display(pairwise);
 		//For comparison display the original AFP
-		//StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
+		StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
 	}
 	
 	/**

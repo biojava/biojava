@@ -19,7 +19,6 @@
 
 package org.biojava.nbio.structure.align.gui;
 
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.cemc.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultAligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultStatusDisplay;
@@ -49,10 +47,11 @@ import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.model.Block;
-import org.biojava.nbio.structure.align.model.BlockSet;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentTools;
+import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,13 +61,10 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Prlic
  *
  */
-public class DisplayAFP
-{
+public class DisplayAFP {
 
 	private static final Logger logger = LoggerFactory.getLogger(DisplayAFP.class);
 	
-
-
 	//TODO: same as getEqrPos??? !!!
 	public static final List<Integer> getEQRAlignmentPos(AFPChain afpChain){
 		List<Integer> lst = new ArrayList<Integer>();
@@ -158,9 +154,8 @@ public class DisplayAFP
 	 * @param aligPos
 	 * @param multAln
 	 * @param ca
-	 * @throws StructureAlignmentException 
 	 */
-	public static final List<String> getPDBresnum(int structNum, MultipleAlignment multAln, Atom[] ca) throws StructureAlignmentException{
+	public static final List<String> getPDBresnum(int structNum, MultipleAlignment multAln, Atom[] ca) {
 		
 		List<String> lst = new ArrayList<String>();
 
@@ -193,9 +188,7 @@ public class DisplayAFP
 	 */
 	@Deprecated
 	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
-		
 		return AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);
-		
 	}
 
 
@@ -579,7 +572,7 @@ public class DisplayAFP
 	/** Note: ca2, hetatoms2 and nucleotides2 should not be rotated. This will be done here...
 	 * */
 
-	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms1, List<Group> hetatms2 ) throws StructureException{
+	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms1, List<Group> hetatms2 ) throws StructureException {
 
 		List<Atom> twistedAs = new ArrayList<Atom>();
 
@@ -621,7 +614,7 @@ public class DisplayAFP
 		return jmol;
 	}
 
-	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException {
+	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureException {
 		
 		AligPanel me = new AligPanel();
 		me.setAlignmentJmol(jmol);
@@ -765,7 +758,7 @@ public class DisplayAFP
 	 * @param str the structure
 	 * @param pos the position in the sequence alignment
 	 * @return Atom the aligned atom
-	 * @throws StructureAlignmentException 
+	 * @throws StructureAlignmentException if the atoms cannot be obtained
 	 */
 	public static Atom getAtomForAligPos(MultipleAlignment multAln, int str, int pos) throws StructureAlignmentException {
 		
@@ -792,9 +785,8 @@ public class DisplayAFP
 	 * 
 	 * @param multAln
 	 * @return List with all the aligned positions
-	 * @throws StructureAlignmentException 
 	 */
-	public static List<Integer> getCoreAlignmentPos(MultipleAlignment multAln) throws StructureAlignmentException {
+	public static List<Integer> getCoreAlignmentPos(MultipleAlignment multAln) {
 		
 		List<Integer> lst = new ArrayList<Integer>();
 		List<String> alnSeq = MultipleAlignmentTools.getSequencesForBlocks(multAln);

@@ -21,10 +21,11 @@
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
-import org.biojava.nbio.structure.align.model.MultipleAlignment;
-import org.biojava.nbio.structure.align.model.StructureAlignmentException;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -164,12 +165,8 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 		AlignedPosition pos = new AlignedPosition();
 		pos.setPos1(seqPos);
 
-		try {
-			if (DisplayAFP.getCoreAlignmentPos(multAln).contains(seqPos))
-				pos.setEquivalent(AlignedPosition.EQUIVALENT);
-		} catch (StructureAlignmentException e1) {
-			e1.printStackTrace();
-		}
+		if (DisplayAFP.getCoreAlignmentPos(multAln).contains(seqPos))
+			pos.setEquivalent(AlignedPosition.EQUIVALENT);
 
 		return pos;
 	}

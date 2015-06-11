@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.model;
+package org.biojava.nbio.structure.align.multiple;
 
 import java.util.List;
 
@@ -61,8 +61,7 @@ public interface MultipleAlignment extends ScoresCache {
 
 	/**
 	 * Convenience method to get a list of all blocks from all blocksets
-	 * @return
-	 * @throws StructureAlignmentException
+	 * @return List of alignment Blocks
 	 */
 	public List<Block> getBlocks();
 
@@ -75,9 +74,8 @@ public interface MultipleAlignment extends ScoresCache {
 	 * this method, while rigid-body methods would typically store the global
 	 * matrices here and return null for {@link BlockSet#getTransformations()}.
 	 * @return the 3D superimposition information of the alignment
-	 * @throws StructureAlignmentException 
 	 */
-	public List<Matrix4d> getTransformations() throws StructureAlignmentException;
+	public List<Matrix4d> getTransformations();
 	
 	/**
 	 * Set a new superposition for the structures.
@@ -85,41 +83,39 @@ public interface MultipleAlignment extends ScoresCache {
 	 * This may trigger other properties to update which depend on the superposition.
 	 * In particular, the list of scores should be reset by implementations after
 	 * changing the transformation matrices.
-	 * @param matrices
+	 * @param matrices 4D
+	 * @throws StructureAlignmentException when the size of the alignment and the size of transformations do not match.
 	 */
 	public void setTransformations(List<Matrix4d> transformations) throws StructureAlignmentException;
 	
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignment.
 	 * @return int number of aligned structures
-	 * @throws StructureAlignmentException 
 	 * @see #length()
 	 * @see #getCoreLength()
 	 * @see #getBlockSetNum()
 	 */
-	public int size() throws StructureAlignmentException;
+	public int size();
 
 	/**
 	 * Returns the total number of aligned residues (columns) in the multiple alignment: the sum of all BlockSet lengths.
 	 * @return int the total number of aligned residues in the alignment.
-	 * @throws StructureAlignmentException if there are no BlockSets.
 	 * @see #updateLength()
 	 * @see #getCoreLength()
 	 * @see #size()
 	 * @see #getBlockSetNum()
 	 */
-	public int length() throws StructureAlignmentException;
+	public int length();
 
 	/**
 	 * Returns the number of aligned residues (columns) without gaps in the alignment: the sum of all BlockSet core lengths.
 	 * @return int the total number of aligned residues.
-	 * @throws StructureAlignmentException if there are no BlockSets.
 	 * @see #updateCoreLength()
 	 * @see #length()
 	 * @see #size()
 	 * @see #getBlockNum()
 	 */
-	public int getCoreLength() throws StructureAlignmentException;
+	public int getCoreLength();
 	
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.

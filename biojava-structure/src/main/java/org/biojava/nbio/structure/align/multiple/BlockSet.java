@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.model;
+package org.biojava.nbio.structure.align.multiple;
 
 import java.util.List;
 
@@ -64,9 +64,8 @@ public interface BlockSet extends ScoresCache {
 	 * Returns a transformation matrix for each structure giving the
 	 * 3D superimposition information of the multiple structure alignment.
 	 * @return the 3D superimposition information of the alignment
-	 * @throws StructureAlignmentException 
 	 */
-	public List<Matrix4d> getTransformations() throws StructureAlignmentException;
+	public List<Matrix4d> getTransformations();
 	
 	/**
 	 * Set a new superposition for the structures.
@@ -74,38 +73,35 @@ public interface BlockSet extends ScoresCache {
 	 * This may trigger other properties to update which depend on the superposition.
 	 * @param matrices
 	 */
-	public void setTransformations(List<Matrix4d> transformations) throws StructureAlignmentException;
+	public void setTransformations(List<Matrix4d> transformations);
 
 	/**
 	 * Returns the total number of aligned residues (columns) in the alignment: the sum of all Block lengths.
 	 * @return int the total number of aligned residues.
-	 * @throws StructureAlignmentException if there are no Blocks.
 	 * @see #updateLength()
 	 * @see #getCoreLength()
 	 * @see #size()
 	 * @see #getBlockNum()
 	 */
-	public int length() throws StructureAlignmentException;
+	public int length();
 	
 	/**
 	 * Returns the number of aligned residues (columns) without gaps in the alignment: the sum of all Block core lengths.
 	 * @return int the total number of aligned residues.
-	 * @throws StructureAlignmentException if there are no Blocks.
 	 * @see #updateCoreLength()
 	 * @see #length()
 	 * @see #size()
 	 * @see #getBlockNum()
 	 */
-	public int getCoreLength() throws StructureAlignmentException;
+	public int getCoreLength();
 
 	/**
 	 * Returns the number of aligned structures in the BlockSet.
 	 * @return int number of aligned structures
-	 * @throws StructureAlignmentException if the BlockSet is empty.
 	 * @see #length()
 	 * @see #getBlockNum()
 	 */
-	public int size() throws StructureAlignmentException;
+	public int size();
 	
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.
