@@ -31,8 +31,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 	
 	/**
 	 * Superimpose all structures in a BlockSet to the reference structure
-	 * @ param bs
-	 * @return
+	 * @param alignment The MultipleAlignment object to superimpose.
 	 * @throws StructureAlignmentException 
 	 */
 	@Override

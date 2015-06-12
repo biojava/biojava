@@ -768,7 +768,7 @@ public class DisplayAFP {
 		}
 		if (residues.size() == 0) return null;
 		
-		String sequence = MultipleAlignmentTools.getSequencesForBlocks(multAln).get(str);
+		String sequence = MultipleAlignmentTools.getSequenceAlignment(multAln).get(str);
 		int aligpos = 0;
 		for (int i=0; i<pos; i++){
 			if (sequence.charAt(i) != '-') aligpos++;
@@ -785,11 +785,12 @@ public class DisplayAFP {
 	 * 
 	 * @param multAln
 	 * @return List with all the aligned positions
+	 * @throws StructureAlignmentException 
 	 */
-	public static List<Integer> getCoreAlignmentPos(MultipleAlignment multAln) {
+	public static List<Integer> getCoreAlignmentPos(MultipleAlignment multAln) throws StructureAlignmentException {
 		
 		List<Integer> lst = new ArrayList<Integer>();
-		List<String> alnSeq = MultipleAlignmentTools.getSequencesForBlocks(multAln);
+		List<String> alnSeq = MultipleAlignmentTools.getSequenceAlignment(multAln);
 		for (int i =0 ; i< alnSeq.get(0).length(); i++){
 			boolean aligned = true;
 			for (int str = 0; str<multAln.size(); str++){

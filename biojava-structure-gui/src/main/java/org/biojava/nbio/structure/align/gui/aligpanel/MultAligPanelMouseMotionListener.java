@@ -62,7 +62,13 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 	public void mouseDragged(MouseEvent e) {
 		
 
-		AlignedPosition pos = getCurrentAlignedPosition(e);
+		AlignedPosition pos = null;
+		try {
+			pos = getCurrentAlignedPosition(e);
+		} catch (StructureAlignmentException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		if ( pos == null)
 			return;
@@ -132,7 +138,13 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if ( selectionLocked) return;
-		AlignedPosition pos = getCurrentAlignedPosition(e);
+		AlignedPosition pos = null;
+		try {
+			pos = getCurrentAlignedPosition(e);
+		} catch (StructureAlignmentException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if ( pos == null) return;
 
 		triggerMouseOverPosition(pos);
@@ -146,7 +158,7 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 
 	}
 
-	private AlignedPosition getCurrentAlignedPosition(MouseEvent e){
+	private AlignedPosition getCurrentAlignedPosition(MouseEvent e) throws StructureAlignmentException{
 		
 		MultAligmentCoordManager coordManager = parent.getCoordManager();
 		int aligSeq = coordManager.getAligSeq(e.getPoint());
@@ -228,7 +240,13 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 			//System.out.println("selection unlocked by mousePressed");
 			triggerSelectionLocked(false);
 			
-			AlignedPosition pos = getCurrentAlignedPosition(e);
+			AlignedPosition pos = null;
+			try {
+				pos = getCurrentAlignedPosition(e);
+			} catch (StructureAlignmentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if ( pos != null) {
 				prevPos = pos.getPos1();
 			}
@@ -254,7 +272,13 @@ public class MultAligPanelMouseMotionListener implements MouseMotionListener, Mo
 			
 			
 			// add to selection
-			AlignedPosition pos = getCurrentAlignedPosition(e);
+			AlignedPosition pos = null;
+			try {
+				pos = getCurrentAlignedPosition(e);
+			} catch (StructureAlignmentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if ( pos == null)
 				return;
 			

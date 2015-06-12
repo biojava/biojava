@@ -6,7 +6,7 @@ import org.biojava.nbio.structure.StructureException;
 
 public interface MultipleSuperimposer {
 	/**
-	 * Superimpose all structures from a multiple alignment.
+	 * Superimpose all structures from a {@link MultipleAlignment}.
 	 * <p>
 	 * At a minimum, this should set the transformation matrices for either
 	 * the {@link MultipleAlignment#setTransformations(List) MultipleAlignment}

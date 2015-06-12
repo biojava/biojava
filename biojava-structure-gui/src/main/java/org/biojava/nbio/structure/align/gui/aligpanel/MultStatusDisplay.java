@@ -33,6 +33,7 @@ import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentTools;
+import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
@@ -49,10 +50,10 @@ public class MultStatusDisplay extends JTextField implements AlignmentPositionLi
 		this.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 	}
 	
-	public MultStatusDisplay(MultipleAlignment multAln){
+	public MultStatusDisplay(MultipleAlignment multAln) throws StructureAlignmentException{
 		this();
 		this.multAln = multAln;
-		this.alnSeq = MultipleAlignmentTools.getSequencesForBlocks(multAln);
+		this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(multAln);
 
 	}
 	

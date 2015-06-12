@@ -126,7 +126,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	   this();
 	   MultipleAlignmentEnsembleImpl ensemble = new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca2);
 	   this.multAln = ensemble.getMultipleAlignments().get(0);
-	   this.alnSeq = MultipleAlignmentTools.getSequencesForBlocks(this.multAln);
+	   this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(this.multAln);
 	   this.size = multAln.size();
 	   this.length = alnSeq.get(0).length();
 	   this.colors = colors;
@@ -147,7 +147,7 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
    public MultAligPanel(MultipleAlignment multAln, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException{
 	   this();
 	   this.multAln = multAln;
-	   this.alnSeq = MultipleAlignmentTools.getSequencesForBlocks(this.multAln);
+	   this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(this.multAln);
 
 	   this.size = multAln.size();
 	   this.length = this.alnSeq.get(0).length();
@@ -212,7 +212,12 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
       g2D.fill(sig);
       
       List<Integer> alignedPos = new ArrayList<Integer>();
-      alignedPos = DisplayAFP.getCoreAlignmentPos(multAln);
+      try {
+		alignedPos = DisplayAFP.getCoreAlignmentPos(multAln);
+	} catch (StructureAlignmentException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
       
       for (int i = startpos; i < endpos; i++){
 

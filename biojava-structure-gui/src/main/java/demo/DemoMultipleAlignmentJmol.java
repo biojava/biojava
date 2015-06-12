@@ -18,6 +18,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
 import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
@@ -47,15 +48,16 @@ public class DemoMultipleAlignmentJmol {
 		fakeMultAln.getEnsemble().setStructureNames(names);
 		
 		//Generate a pairwise alignment and convert it to a MultipleAlignment
-		FatCat fatcat  = new FatCat();
-		AFPChain afpChain = fatcat.alignRigid(atomArrays.get(0),atomArrays.get(1));
-		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl(afpChain, atomArrays.get(0),atomArrays.get(1));
-		MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
-
+		//FatCat fatcat  = new FatCat();
+		//AFPChain afpChain = fatcat.alignRigid(atomArrays.get(0),atomArrays.get(1));
+		//MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl(afpChain, atomArrays.get(0),atomArrays.get(1));
+		//MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
+		
+		System.out.println(MultipleAlignmentWriter.toFASTA(fakeMultAln));
 		StructureAlignmentDisplay.display(fakeMultAln);
-		StructureAlignmentDisplay.display(pairwise);
+		//StructureAlignmentDisplay.display(pairwise);
 		//For comparison display the original AFP
-		StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
+		//StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
 	}
 	
 	/**
