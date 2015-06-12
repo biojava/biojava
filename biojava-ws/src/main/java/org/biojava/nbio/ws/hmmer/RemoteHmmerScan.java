@@ -41,15 +41,10 @@ public class RemoteHmmerScan implements HmmerScan {
 
 	public static String HMMER_SERVICE = "http://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
 
-	// The Gathering threshold indicates to HMMER to use the threshold defined in the HMM file to be searched.
-	// This ensures that there are no false positive results.
-
-	public boolean DEFAULT_SEARCH_CUT_GA = true;
-
-	private boolean searchWithCutGA;
 	public RemoteHmmerScan(){
-		searchWithCutGA = DEFAULT_SEARCH_CUT_GA;
+
 	}
+
 
 	@Override
 	public  SortedSet<HmmerResult> scan(ProteinSequence sequence) throws IOException {
@@ -73,8 +68,12 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		postContent.append("hmmdb=pfam");
 
-		if ( searchWithCutGA )
-			postContent.append("&cut_ga=1");
+
+		// by default hmmscan runs with the HMMER3 cut_ga parameter enabled, the "gathering freshold", which depends on
+		// the cutoffs defined in the underlying HMM files.
+		// to request a different cutoff by e-value this could be enabled:
+		//postContent.append("&E=1");
+
 
 		postContent.append("&seq=");
 		postContent.append(sequence.getSequenceAsString());
@@ -90,7 +89,6 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		connection.setRequestProperty("Accept:","application/json");
 
-
 		connection.setRequestProperty("Content-Length", "" +
 				Integer.toString(postContent.toString().getBytes().length));
 
@@ -100,8 +98,6 @@ public class RemoteHmmerScan implements HmmerScan {
 		wr.write(postContent.toString().getBytes());
 		wr.flush ();
 		wr.close ();
-
-
 
 
 //		//Now get the redirect URL
@@ -158,7 +154,8 @@ public class RemoteHmmerScan implements HmmerScan {
 				} else if ( dclO instanceof Integer){
 					dcl = (Integer) dclO;
 				} 
-				
+
+
 				hmmResult.setAcc((String)hit.get("acc"));
 				hmmResult.setDcl(dcl);
 				hmmResult.setDesc((String)hit.get("desc"));
@@ -175,9 +172,34 @@ public class RemoteHmmerScan implements HmmerScan {
 				for ( int j= 0 ; j < hmmdomains.size() ; j++){
 					JSONObject d = hmmdomains.getJSONObject(j);
 					//System.out.println(d);
-					Integer is_reported = getInteger(d.get("is_reported"));
-					if ( is_reported != 1) {
-						//System.out.println("excluding: " + d);
+					Integer is_included = getInteger(d.get("is_included"));
+					if ( is_included == 0) {
+//						System.out.println("  excluding: " + d.get("alihmmdesc") + " " + d.get("alihmmname") + " " +
+//								hit.get("evalue") + " " +
+//								d.get("alisqfrom") + " " +
+//								d.get("alisqto"));
+						continue;
+					}
+
+
+					// this filters out multiple hits to the same clan
+					Integer outcompeted = getInteger(d.get("outcompeted"));
+					if ( outcompeted != null && outcompeted == 1) {
+//						System.out.println("  outcompeted: " + d.get("alihmmdesc") + " " + d.get("alihmmname")+ " " +
+//								hit.get("evalue") + " " +
+//								d.get("alisqfrom") + " " +
+//								d.get("alisqto")
+//						);
+						continue;
+					}
+
+					Integer significant = getInteger(d.get("significant"));
+
+					if (  significant != 1) {
+//						System.out.println("  not significant: " + d.get("alihmmdesc") + " " + d.get("alihmmname")+ " " +
+//								hit.get("evalue") + " " +
+//								d.get("alisqfrom") + " " +
+//								d.get("alisqto"));
 						continue;
 					}
 
@@ -188,13 +210,15 @@ public class RemoteHmmerScan implements HmmerScan {
 
 					dom.setHmmFrom(getInteger(d.get("alihmmfrom")));
 					dom.setHmmTo(getInteger(d.get("alihmmto")));
-					dom.setSimCount((Integer)d.get("aliSimCount"));
+					dom.setSimCount((Integer) d.get("aliSimCount"));
 					dom.setSqFrom(getInteger(d.get("alisqfrom")));
 					dom.setSqTo(getInteger(d.get("alisqto")));
 					dom.setHmmName((String)d.get("alihmmname"));
+					dom.setEvalue(Float.parseFloat((String)d.get("ievalue")));
+
 					domains.add(dom);
 
-					System.out.println(d.get("alicsline"));
+
 				}
 
 				hmmResult.setDomains(domains);

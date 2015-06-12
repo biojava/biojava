@@ -44,6 +44,15 @@ public class HmmerDomain implements Comparable<HmmerDomain>, Serializable{
 	String hmmName;
 	String hmmDesc;
 	String hmmAcc;
+	Float evalue;
+
+	public Float getEvalue() {
+		return evalue;
+	}
+	public void setEvalue(Float evalue) {
+		this.evalue = evalue;
+	}
+
 	public Integer getSqFrom() {
 		return sqFrom;
 	}
