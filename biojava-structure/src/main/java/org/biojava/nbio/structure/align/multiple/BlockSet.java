@@ -5,11 +5,17 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 /**
- * A BlockSet is a Data Structure to store aligned positions of a multiple alignment as a collection of {@link Block}s.
- * It allows non-sequential alignments and circular permutations, thanks to the multiple {@link Block} format.
- * Every BlockSet has a {@link Pose} object associated, which describes the 3D superimposition of the structures and some values
- * associated with it (RMSD, TMscore, background distances, etc.).
- * A collection of BlockSets, in a {@link MultipleAlignment}, allows the description of flexible multiple alignments.
+ * A BlockSet is a Data Structure to store a flexible alignment part of a 
+ * multiple alignment as a collection of {@link Block}s.
+ * <p>
+ * It allows non-sequential alignments and circular permutations, 
+ * thanks to the multiple {@link Block} format.
+ * <p>
+ * Every BlockSet has a unique transformation 4D matrix, which describes 
+ * the 3D superimposition of the structures in this particular region of the alignment.
+ * <p>
+ * A collection of BlockSets, in a {@link MultipleAlignment}, allows the description 
+ * of multiple alignments with various flexible parts.
  * Every BlockSet object is part of a {@link MultipleAlignment} instance, its parent.
  *
  * @author Aleix Lafita
@@ -19,7 +25,7 @@ public interface BlockSet extends ScoresCache {
 	
 	/**
 	 * Creates and returns an identical copy of this blockset, including a deep
-	 * clone of all constituent blocks.
+	 * clone of all constituent {@link Block}s.
 	 * @return BlockSet identical copy of this object.
 	 */
 	public BlockSet clone();
@@ -34,8 +40,8 @@ public interface BlockSet extends ScoresCache {
 	
 	/** 
      * Set the back-reference to its parent MultipleAlignment.
-     * 
-     * Neither removes this blockset from its previous alignment, if any, nor
+     * <p>
+     * Neither removes this BlockSet from its previous alignment, if any, nor
      * adds it to the new parent. Calling code should assure that links to
      * and from the ensemble are consistent and free of memory leaks.
      * @param parent the parent MultipleAlignment.
@@ -53,7 +59,7 @@ public interface BlockSet extends ScoresCache {
 	
 	/**
 	 * Set the List of alignment Blocks of the BlockSet.
-	 * 
+	 * <p>
 	 * Also calls {@link Block#setBlockSet(BlockSet)} for each argument
 	 * @param blocks List of alignment Blocks.
 	 * @see #getBlocks()
@@ -69,7 +75,7 @@ public interface BlockSet extends ScoresCache {
 	
 	/**
 	 * Set a new superposition for the structures.
-	 * 
+	 * <p>
 	 * This may trigger other properties to update which depend on the superposition.
 	 * @param matrices
 	 */
@@ -105,7 +111,7 @@ public interface BlockSet extends ScoresCache {
 	
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.
-	 * 
+	 * <p>
 	 * This can free memory and ensures consistency for cached variables.
 	 */
 	public void clear();

@@ -46,7 +46,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	public MultipleAlignmentEnsembleImpl(){
 		
 		algorithmName = null;
-		version = "1.0";
+		version = null;
 		ioTime = null;
 		calculationTime = null;
 		

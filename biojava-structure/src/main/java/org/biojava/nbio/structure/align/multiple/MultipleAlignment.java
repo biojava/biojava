@@ -5,12 +5,16 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 /**
- * A MultipleAlignment is a Data Structure to store the core information of a multiple structure alignment, as a return type.
- * Each alignment is described as a collection of {@link BlockSet}s that define the aligned positions, 
- * a collection of structure identifiers (i,e. Atom arrays), information about the 3D superimposition in {@link Pose},
- * and creation properties (algorithm, version, etc).
- * A collection of MultipleAlignments that share the Atom arrays and creation properties form a {@link MultipleAlignmentEnsemble}.
- * Every MultipleAlignment has a {@link MultipleAlignmentEnsemble} as its parent.
+ * A MultipleAlignment is a Data Structure to store the core information of a multiple structure alignment, 
+ * as a return type.
+ * Each alignment is described as a collection of: <p>
+ * - {@link BlockSet}s that define the aligned positions, <p>
+ * - Structure identifiers (i,e. Atom arrays, structure names), <p>
+ * - Information about the 3D superimposition in a 4D transformation matrix, <p>
+ * - Creation properties (algorithm, version, etc). <p>
+ * A collection of MultipleAlignments that share the same structures and creation properties 
+ * are part of the same {@link MultipleAlignmentEnsemble}.
+ * Every MultipleAlignment has a {@link MultipleAlignmentEnsemble} as its parent, which contains this information
  *
  * @author Aleix Lafita
  * 
@@ -34,7 +38,7 @@ public interface MultipleAlignment extends ScoresCache {
 	
 	/** 
      * Set the back-reference to its parent Ensemble.
-     * 
+     * <p>
      * Neither removes this alignment from its previous ensemble, if any, nor
      * adds it to the new parent. Calling code should assure that links to
      * and from the ensemble are consistent and free of memory leaks.
@@ -53,7 +57,7 @@ public interface MultipleAlignment extends ScoresCache {
 	public List<BlockSet> getBlockSets();
 
 	/**
-	 * Sets the List of BlockSet List of the specified alignment. The optimal alignment is always stored at position 0.
+	 * Sets the List of BlockSet List of the specified alignment.
 	 * @param blockSets the List of BlockSets that describe the aligned residues.
 	 * @see #getBlockSets()
 	 */
@@ -66,7 +70,7 @@ public interface MultipleAlignment extends ScoresCache {
 	public List<Block> getBlocks();
 
 	/**
-	 * Returns a transformation matrix for each structure giving the
+	 * Returns a transformation 4D matrix for each structure giving the
 	 * 3D superimposition information of the multiple structure alignment.
 	 * <p>
 	 * Individual BlockSets may override the transformation matrix for particular
@@ -79,7 +83,7 @@ public interface MultipleAlignment extends ScoresCache {
 	
 	/**
 	 * Set a new superposition for the structures.
-	 * 
+	 * <p>
 	 * This may trigger other properties to update which depend on the superposition.
 	 * In particular, the list of scores should be reset by implementations after
 	 * changing the transformation matrices.
@@ -98,7 +102,8 @@ public interface MultipleAlignment extends ScoresCache {
 	public int size();
 
 	/**
-	 * Returns the total number of aligned residues (columns) in the multiple alignment: the sum of all BlockSet lengths.
+	 * Returns the total number of aligned residues (columns) in the multiple alignment: 
+	 * the sum of all BlockSet lengths.
 	 * @return int the total number of aligned residues in the alignment.
 	 * @see #updateLength()
 	 * @see #getCoreLength()
@@ -108,7 +113,8 @@ public interface MultipleAlignment extends ScoresCache {
 	public int length();
 
 	/**
-	 * Returns the number of aligned residues (columns) without gaps in the alignment: the sum of all BlockSet core lengths.
+	 * Returns the number of aligned residues (columns) without gaps in the alignment: 
+	 * the sum of all BlockSet core lengths.
 	 * @return int the total number of aligned residues.
 	 * @see #updateCoreLength()
 	 * @see #length()
@@ -119,7 +125,7 @@ public interface MultipleAlignment extends ScoresCache {
 	
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.
-	 * 
+	 * <p>
 	 * This can free memory and ensures consistency for cached variables.
 	 */
 	public void clear();

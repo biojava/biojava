@@ -6,10 +6,11 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
- * A MultipleAlignmentEnsemble is a collection of {@link MultipleAlignments} that share the same Atom arrays (structures) and 
- * creation properties (algorithm, version, creation time, etc.).
- * This class deals with the multiple alternatives returned by the MSTA algorithms, so that only one object is returned
- * with more than one alignment option (depending on the RMSD/length trade-offs made, for example).
+ * A MultipleAlignmentEnsemble is a collection of {@link MultipleAlignment}s that share the same structures (Atoms) 
+ * and creation properties (algorithm, version, creation time, etc.).
+ * <p>
+ * This class is the top level of the hierarchy and allows the storage of a set of alignment alternatives created by
+ * a multiple structure alignment algorithm, so that only one object is returned with more than one alignment option.
  * 
  * @author Aleix Lafita
  *
@@ -19,7 +20,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	/**
 	 * Creates and returns an identical copy of this ensemble, including a deep
 	 * clone of all constituent alignments.
-	 * @return EnsembleMSTA identical copy of this object.
+	 * @return MultipleAlignmentEnsemble identical copy of this object.
 	 */
 	public MultipleAlignmentEnsemble clone();
 	
@@ -52,7 +53,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	public void setVersion(String version);
 
 	/**
-	 * Returns a List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).
+	 * Returns a List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).<p>
 	 * The names are structure identifiers of the structures.
 	 * They are in the same order as in the alignment Blocks (same index number for same structure).
 	 * @return List of String names of the structures
@@ -62,7 +63,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	public List<String> getStructureNames();
 
 	/**
-	 * Set the List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).
+	 * Set the List containing the names of the structures aligned (i.e.: PDB code, SCOP domain, etc.).<p>
 	 * The names are structure identifiers of the structures.
 	 * @param structureNames names of the structures, structure identifiers
 	 * @see #getStructureNames()
@@ -168,7 +169,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.
-	 * 
+	 * <p>
 	 * This can free memory and ensures consistency for cached variables.
 	 */
 	public void clear();
