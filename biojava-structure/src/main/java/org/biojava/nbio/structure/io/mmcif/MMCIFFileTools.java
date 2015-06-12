@@ -250,6 +250,19 @@ public class MMCIFFileTools {
 	 * @return
 	 */
 	public static AtomSite convertAtomToAtomSite(Atom a, int model, String chainId, String internalChainId) {
+		return convertAtomToAtomSite(a, model, chainId, internalChainId, a.getPDBserial());
+	}
+	
+	/**
+	 * Converts an Atom object to an {@link AtomSite} object.
+	 * @param a
+	 * @param model
+	 * @param chainId
+	 * @param internalChainId
+	 * @param atomId the atom id to be written to AtomSite
+	 * @return
+	 */
+	public static AtomSite convertAtomToAtomSite(Atom a, int model, String chainId, String internalChainId, int atomId) {
 		
 		/*
 		ATOM 7    C CD  . GLU A 1 24  ? -10.109 15.374 38.853 1.00 50.05 ? ? ? ? ? ? 24  GLU A CD  1 
@@ -294,7 +307,7 @@ public class MMCIFFileTools {
 		
 		AtomSite atomSite = new AtomSite();
 		atomSite.setGroup_PDB(record);
-		atomSite.setId(Integer.toString(a.getPDBserial()));
+		atomSite.setId(Integer.toString(atomId));
 		atomSite.setType_symbol(eString);
 		atomSite.setLabel_atom_id(a.getName());
 		atomSite.setLabel_alt_id(altLocStr);
