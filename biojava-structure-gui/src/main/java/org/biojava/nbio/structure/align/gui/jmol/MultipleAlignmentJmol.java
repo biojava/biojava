@@ -29,6 +29,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.AlignmentGui;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -339,7 +340,7 @@ public void actionPerformed(ActionEvent e) {
             return;
          }
          try {
-			DisplayAFP.showAlignmentImage(multAln, this, colors);
+			MultipleAlignmentDisplay.showMultipleAligmentPanel(multAln, this, colors);
 		} catch (StructureAlignmentException e1) {
 			e1.printStackTrace();
 		} catch (StructureException e1) {
@@ -382,7 +383,7 @@ public void actionPerformed(ActionEvent e) {
       //Loop through all the structures and get the aligned residues
       for (int i=0; i<multAln.size(); i++){
     	  
-    	  List<String> pdb = DisplayAFP.getPDBresnum(i,multAln,atomArrays.get(i));
+    	  List<String> pdb = MultipleAlignmentDisplay.getPDBresnum(i,multAln,atomArrays.get(i));
     	  allPDB.add(pdb);
     	  sel.append("select ");
           int pos = 0;
