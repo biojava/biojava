@@ -719,7 +719,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		String molecId1 = getMoleculeIds().getFirst();
 		String molecId2 = getMoleculeIds().getSecond();
 		
-		if (molecId2.equals(molecId1)) {
+		if (isSymRelated()) {		
 			// if both chains are named equally we want to still named them differently in the output mmcif file
 			// so that molecular viewers can handle properly the 2 chains as separate entities 
 			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
@@ -729,12 +729,24 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		
 		sb.append(FileConvert.getAtomSiteHeader());
 		
+		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
+		int atomId = 1;
 		List<Object> atomSites = new ArrayList<Object>();
 		for (Atom atom:this.molecules.getFirst()) {
-			atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1));
+			if (isSymRelated()) {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1, atomId));
+			} else {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1));
+			}
+			atomId++;
 		}
 		for (Atom atom:this.molecules.getSecond()) {
-			atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2));
+			if (isSymRelated()) {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2, atomId));
+			} else {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2));
+			}
+			atomId++;
 		}
 		
 		sb.append(MMCIFFileTools.toMMCIF(atomSites));
