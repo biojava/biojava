@@ -18,6 +18,7 @@ import org.biojava.nbio.structure.align.multiple.BlockImpl;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
 import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
@@ -240,8 +241,10 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		bk.setAlignRes(block);
 		
 		//Update Superposition (will be changed with the superposition calculated in the algorithm)
-		MultipleSuperimposer imposer= new ReferenceSuperimposer();
+		MultipleSuperimposer imposer = new ReferenceSuperimposer();
 		imposer.superimpose(msa);
+		MultipleAlignmentScorer.calculateScores(msa);
+		msa.putScore(MultipleAlignmentScorer.CEMC_SCORE, mcScore);
 	}
 
 	/**

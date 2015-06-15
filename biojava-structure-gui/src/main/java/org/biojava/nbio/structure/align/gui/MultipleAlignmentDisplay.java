@@ -9,26 +9,38 @@ import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
+import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultipleAligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultipleStatusDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
+import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
 import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility Class that provides methods for the visualization of {@link MultipleAlignment}s.
  * <p>
- * Currently supported: Alignment Panel Display, select aligned residues by PDB code
+ * Currently supported: Alignment Panel Display, select aligned residues by PDB code, 
+ * JmolPanel display.
  * 
  * @author Aleix Lafita
  *
  */
 public class MultipleAlignmentDisplay {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MultipleAlignmentDisplay.class);
 
 	/**
 	 * Utility method used in the {@link MultipleAlignmentJmol} panel, when the aligned residues of a 
@@ -97,4 +109,57 @@ public class MultipleAlignmentDisplay {
 		frame.addWindowListener(me);
 		frame.addWindowListener(status);
 	}
+	
+   /** 
+    * Display a MultipleAlignment with a JmolPanel. New structures are downloaded if they were 
+    * not cached in the alignment and they are entirely transformed here with the cached
+    * superposition information.
+    * 
+    * @param multAln
+    * @return MultipleAlignmentJmol instance
+    * @throws StructureException
+    * @throws StructureAlignmentException if the Atoms cannot be obtained
+    */
+   public static MultipleAlignmentJmol display(MultipleAlignment multAln) throws StructureException,StructureAlignmentException {
+
+	   int size = multAln.size();
+
+	   List<Atom[]> atomArrays = multAln.getEnsemble().getAtomArrays();
+	   for (int i=0; i<size; i++){
+		   if (atomArrays.get(i).length < 1) 
+			   throw new StructureException("Length of atoms arrays is too short! " + atomArrays.get(i).length);
+	   }
+
+	   List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+
+	   List<Matrix4d> transformations = multAln.getTransformations();
+	   if( transformations == null ) {
+		   //TODO temporary hack for missing transformations
+		   logger.error("BlockSet transformations are unimplemented. Superimposing to first structure.");
+		   // clone input, since we're about to re-superimpose it
+		   multAln = multAln.clone();
+		   MultipleSuperimposer imposer = new ReferenceSuperimposer();
+		   imposer.superimpose(multAln);
+		   transformations = multAln.getTransformations();
+		   assert(transformations != null);
+	   }
+
+	   //Rotate the atom coordinates of all the structures
+	   for (int i=0; i<size; i++){
+		   //TODO handle BlockSet-level transformations for flexible alignments.
+		   // In general, make sure this method has the same behavior as the other display. -SB 2015-06
+
+		   // Assume all atoms are from the same structure
+		   Structure displayS = atomArrays.get(i)[0].getGroup().getChain().getParent().clone();
+		   Atom[] rotCA = StructureTools.getRepresentativeAtomArray(displayS);
+		   //Rotate the structure to ensure a full rotation in the display
+		   Calc.transform(rotCA[0].getGroup().getChain().getParent(), multAln.getTransformations().get(i));
+		   rotatedAtoms.add(rotCA);
+	   }
+
+
+	   MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
+	   jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
+	   return jmol;
+   }
 }

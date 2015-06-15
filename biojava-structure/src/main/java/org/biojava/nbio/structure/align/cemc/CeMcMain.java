@@ -237,25 +237,14 @@ public class CeMcMain implements MultipleStructureAligner{
 	  			afpFuture.add(submit);
 			}
 
-			Double resultScore = result.getScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE);
-			if(resultScore == null) {
-				resultScore = MultipleAlignmentScorer.getRefTMScore(result,0);
-				result.putScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE,resultScore);
-			}
-
-			//When all the optimizations are finished take the one with the best result (best TM-score)
+			double maxScore = Double.NEGATIVE_INFINITY;
+			//When all the optimizations are finished take the one with the best result (best CEMC-Score)
 			for (int i=0; i<afpFuture.size(); i++){
 				MultipleAlignment align = afpFuture.get(i).get();
-				//TODO change TMScore? -SB
-				Double tmScore = align.getScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE);
-				if(tmScore == null) {
-					tmScore = MultipleAlignmentScorer.getRefTMScore(align,0);
-					align.putScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE,tmScore);
-				}
-				
-				if (tmScore > resultScore){
+				double score = align.getScore(MultipleAlignmentScorer.CEMC_SCORE);
+				if (score > maxScore){
 					result = align;
-					resultScore = tmScore;
+					maxScore = score;
 				}
 			}
 			

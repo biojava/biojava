@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.cemc.CeMcMain;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
@@ -66,6 +67,6 @@ public class DemoCEMC {
 		result.getEnsemble().setAlgorithmName(algorithm.getAlgorithmName());
 		result.getEnsemble().setVersion(algorithm.getVersion());
         
-		StructureAlignmentDisplay.display(result);
+		MultipleAlignmentDisplay.display(result);
 	}
 }

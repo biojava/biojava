@@ -8,6 +8,7 @@ import java.util.List;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.fatcat.FatCat;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
@@ -18,6 +19,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
@@ -54,7 +56,7 @@ public class DemoMultipleAlignmentJmol {
 		//MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
 		
 		System.out.println(MultipleAlignmentWriter.toFASTA(fakeMultAln));
-		StructureAlignmentDisplay.display(fakeMultAln);
+		MultipleAlignmentDisplay.display(fakeMultAln);
 		//StructureAlignmentDisplay.display(pairwise);
 		//For comparison display the original AFP
 		//StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
@@ -120,8 +122,9 @@ public class DemoMultipleAlignmentJmol {
 			block3.getAlignRes().add(aligned43);
 			
 			//Calculating all information in the alignment is as easy as that line, once the residue equivalencies are set
-			MultipleSuperimposer imposer= new ReferenceSuperimposer();
+			MultipleSuperimposer imposer = new ReferenceSuperimposer();
 			imposer.superimpose(fakeMultAln);
+			MultipleAlignmentScorer.calculateScores(fakeMultAln);
 		}
 		return fakeMultAln;
 	}

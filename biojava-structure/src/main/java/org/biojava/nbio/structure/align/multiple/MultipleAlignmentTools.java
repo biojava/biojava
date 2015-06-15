@@ -8,8 +8,9 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureTools;
 
 /**
- * Utility functions for working with {@link MultipleAlignment}. External functions related to sequence
- * alignment calculations, ... (TODO add methods to this list when implemented)
+ * Utility functions for working with {@link MultipleAlignment}. 
+ * <p>
+ * Supported functions: Multiple Sequence Alignment calculation, 
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
@@ -29,7 +30,7 @@ public class MultipleAlignmentTools {
 	 * in the structure alignment. The positions not aligned have the index -1.
 	 * @param alignment input MultipleAlignment
 	 * @param mapSeqToStruct provides a link from the sequence alignment position to the structure alignment 
-	 * 		  position. Specially designed for the GUI. Has to be initialized previously, will be overwritten.
+	 * 		  position. Specially designed for the GUI. Has to be initialized previously and will be overwritten.
 	 * @return a string for each row in the alignment, giving the 1-letter code 
 	 *  		for each aligned residue.
 	 * @throws StructureAlignmentException if the Atoms cannot be obtained

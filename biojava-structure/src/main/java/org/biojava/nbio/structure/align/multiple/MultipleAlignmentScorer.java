@@ -10,10 +10,10 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
 
 /**
  * Utility class for calculating common scores over multiple alignments.
+ * 
  * @author Spencer Bliven
  *
  */
@@ -22,9 +22,9 @@ public class MultipleAlignmentScorer {
 	//	public static final String SCORE_TMSCORE = "TMScore";
 	//	public static final String SCORE_PROBABILITY = "Probability";
 	//	public static final String SCORE_CE = "CEScore";
-	//	public static final String SCORE_CORE_LENGTH = "CoreLength";
 	//	public static final String SCORE_RMSD = "RMSD";
 
+	public static final String CEMC_SCORE = "CEMCscore";
 	public static final String SCORE_REF_RMSD = "RefRMSD";
 	public static final String SCORE_REF_TMSCORE = "RefTMScore";
 
@@ -67,7 +67,7 @@ public class MultipleAlignmentScorer {
 			}
 			Atom[] curr = atomArrays.get(i); // all CA atoms from structure
 
-			// Concatenated list of all blocks for this structure
+			//Concatenated list of all blocks for this structure
 			Atom[] transformedAtoms = new Atom[alignment.length()];
 			int transformedAtomsLength = 0;
 
@@ -75,7 +75,6 @@ public class MultipleAlignmentScorer {
 			for( BlockSet bs : alignment.getBlockSets()) {
 
 				Atom[] blocksetAtoms = new Atom[bs.length()];
-				int blocksetPos = 0;
 
 				for( Block blk : bs.getBlocks() ) {
 					if( blk.size() != atomArrays.size()) {
@@ -86,14 +85,12 @@ public class MultipleAlignmentScorer {
 					//Extract aligned atoms
 					for (int j=0; j<blk.length(); j++){
 						Integer alignedPos = blk.getAlignRes().get(i).get(j);
-
-						blocksetAtoms[blocksetPos] = curr[alignedPos];
+						if (alignedPos != null) {
+							blocksetAtoms[j] = (Atom) curr[alignedPos].clone();
+						}
 					}
 				}
-
-				// clone atoms prior to transformation
-				blocksetAtoms = StructureTools.cloneAtomArray(blocksetAtoms);
-
+				
 				// transform according to (1) the blockset matrix, or (2) the alignment matrix
 				Matrix4d blockTrans = null;
 				if(bs.getTransformations() != null)
@@ -103,7 +100,7 @@ public class MultipleAlignmentScorer {
 				}
 
 				for(Atom a : blocksetAtoms) {
-					Calc.transform(a, blockTrans);
+					if (a!=null) Calc.transform(a, blockTrans);
 					transformedAtoms[transformedAtomsLength] = a;
 					transformedAtomsLength++;
 				}
@@ -189,8 +186,7 @@ public class MultipleAlignmentScorer {
 	 * @throws StructureException 
 	 */
 	public static double getRefTMScore(List<Atom[]> transformed, List<Integer> lengths, int reference)
-			throws StructureAlignmentException, StructureException
-	{
+			throws StructureAlignmentException, StructureException {
 
 
 		if(transformed.size() != lengths.size()) {
