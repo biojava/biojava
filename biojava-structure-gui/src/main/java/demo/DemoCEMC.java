@@ -10,9 +10,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.cemc.CeMcMain;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
-import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
@@ -23,7 +21,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  */
 public class DemoCEMC {
 
-	public static void main(String[] args) throws IOException, StructureException, StructureAlignmentException, InterruptedException, ExecutionException {
+	public static void main(String[] args) throws IOException, StructureException, InterruptedException, ExecutionException {
 		
 		//Specify the structures to align
 		//ASP-proteinases (CEMC paper)

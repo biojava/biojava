@@ -16,7 +16,6 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.jmol.api.JmolViewer;
 
@@ -59,9 +58,8 @@ public abstract class AbstractAlignmentJmol implements MouseMotionListener, Mous
 	   
 	   /**
 	    * Return to the initial state of the alignment visualization.
-	    * @throws StructureAlignmentException 
 	    */
-	   public abstract void resetDisplay() throws StructureAlignmentException;
+	   public abstract void resetDisplay();
 	   
 	   /**
 	    * Create and set a new structure from a given atom array.

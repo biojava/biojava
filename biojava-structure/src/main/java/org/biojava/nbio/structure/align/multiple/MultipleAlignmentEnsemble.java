@@ -80,11 +80,11 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * <p>
 	 * If atoms have not previously been set using {@link #setAtomArrays(List)},
 	 * attempts to load representative atoms based on {@link #getStructureNames()}.
+	 * If it fails to load the Atoms it gives a NullPointerException before returning null.
 	 * @return List of Atom[].
-	 * @throws StructureAlignmentException If errors occur during loading or if atoms need to be loaded, but an IO error occurs
 	 * @see #setAtomArrays(List)
 	 */
-	public List<Atom[]> getAtomArrays() throws StructureAlignmentException;
+	public List<Atom[]> getAtomArrays();
 
 	/**
 	 * Sets the List of Atom arrays. Every structure has an Atom array associated.

@@ -28,7 +28,7 @@ public class MultipleAlignmentScorer {
 	public static final String SCORE_REF_RMSD = "RefRMSD";
 	public static final String SCORE_REF_TMSCORE = "RefTMScore";
 
-	public static void calculateScores(MultipleAlignment alignment) throws StructureAlignmentException, StructureException {
+	public static void calculateScores(MultipleAlignment alignment) throws StructureException {
 		List<Atom[]> transformed = transformAtoms(alignment);
 		alignment.putScore(SCORE_REF_RMSD, getRefRMSD(transformed,0));
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
@@ -48,9 +48,8 @@ public class MultipleAlignmentScorer {
 	 * same order as in their parent structure. If the alignment blocks contain
 	 * null residue (gaps), then the returned array will also contain gaps.
 	 * @return
-	 * @throws StructureAlignmentException 
 	 */
-	public static List<Atom[]> transformAtoms(MultipleAlignment alignment) throws StructureAlignmentException {
+	public static List<Atom[]> transformAtoms(MultipleAlignment alignment) {
 		if(alignment.getEnsemble() == null ) {
 			throw new NullPointerException("No ensemble set for this alignment");
 		}
@@ -78,7 +77,7 @@ public class MultipleAlignmentScorer {
 
 				for( Block blk : bs.getBlocks() ) {
 					if( blk.size() != atomArrays.size()) {
-						throw new StructureAlignmentException(String.format(
+						throw new IllegalStateException(String.format(
 								"Mismatched block length. Expected %d structures, found %d.",
 								atomArrays.size(),blk.size() ));
 					}
@@ -113,7 +112,7 @@ public class MultipleAlignmentScorer {
 	}
 	
 
-	public static double getRefRMSD(MultipleAlignment alignment, int reference) throws StructureAlignmentException {
+	public static double getRefRMSD(MultipleAlignment alignment, int reference) {
 		List<Atom[]> transformed = transformAtoms(alignment);
 		return getRefRMSD(transformed,reference);
 	}
@@ -133,9 +132,8 @@ public class MultipleAlignmentScorer {
 	 * @param transformed
 	 * @param reference
 	 * @return
-	 * @throws StructureAlignmentException
 	 */
-	public static double getRefRMSD(List<Atom[]> transformed, int reference) throws StructureAlignmentException {
+	public static double getRefRMSD(List<Atom[]> transformed, int reference) {
 
 		double sumSqDist = 0;
 		int totalLength = 0;
@@ -165,9 +163,7 @@ public class MultipleAlignmentScorer {
 	}
 
 
-	public static double getRefTMScore(MultipleAlignment alignment, int reference)
-			throws StructureAlignmentException, StructureException
-	{
+	public static double getRefTMScore(MultipleAlignment alignment, int reference) throws StructureException {
 		List<Atom[]> transformed = transformAtoms(alignment);
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
@@ -182,11 +178,9 @@ public class MultipleAlignmentScorer {
 	 * @param lengths lengths of the full input structures
 	 * @param reference Index of the reference structure
 	 * @return
-	 * @throws StructureAlignmentException
 	 * @throws StructureException 
 	 */
-	public static double getRefTMScore(List<Atom[]> transformed, List<Integer> lengths, int reference)
-			throws StructureAlignmentException, StructureException {
+	public static double getRefTMScore(List<Atom[]> transformed, List<Integer> lengths, int reference) throws StructureException {
 
 
 		if(transformed.size() != lengths.size()) {

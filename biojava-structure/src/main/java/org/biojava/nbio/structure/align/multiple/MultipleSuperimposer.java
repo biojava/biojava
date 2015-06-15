@@ -17,7 +17,6 @@ public interface MultipleSuperimposer {
 	 *  the {@link MultipleAlignment#getBlockSets() blocksets}) and the atoms to
 	 *  align (via the {@link MultipleAlignment#getEnsemble() ensemble}).
 	 * @throws StructureException
-	 * @throws StructureAlignmentException
 	 */
-	public void superimpose(MultipleAlignment alignment) throws StructureException, StructureAlignmentException;
+	public void superimpose(MultipleAlignment alignment) throws StructureException;
 }

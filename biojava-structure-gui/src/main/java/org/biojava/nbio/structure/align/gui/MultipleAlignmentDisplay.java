@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,10 +76,9 @@ public class MultipleAlignmentDisplay {
 	 * @param multAln
 	 * @param jmol
 	 * @param colors
-	 * @throws StructureAlignmentException
 	 * @throws StructureException
 	 */
-	public static void showMultipleAligmentPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol, Color[] colors) throws StructureAlignmentException, StructureException {
+	public static void showMultipleAligmentPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol, Color[] colors) throws StructureException {
 		
 		MultipleAligPanel me = new MultipleAligPanel(multAln, colors, jmol);
 		JFrame frame = new JFrame();
@@ -118,9 +116,8 @@ public class MultipleAlignmentDisplay {
     * @param multAln
     * @return MultipleAlignmentJmol instance
     * @throws StructureException
-    * @throws StructureAlignmentException if the Atoms cannot be obtained
     */
-   public static MultipleAlignmentJmol display(MultipleAlignment multAln) throws StructureException,StructureAlignmentException {
+   public static MultipleAlignmentJmol display(MultipleAlignment multAln) throws StructureException {
 
 	   int size = multAln.size();
 

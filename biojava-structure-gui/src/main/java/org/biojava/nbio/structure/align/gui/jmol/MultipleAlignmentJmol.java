@@ -33,7 +33,6 @@ import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.jcolorbrewer.ColorBrewer;
@@ -51,14 +50,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
    /**
     * Default constructor creates an empty window, from where alignments can be made through the align menu.
-    * @throws StructureAlignmentException 
     */
-   public MultipleAlignmentJmol() throws StructureAlignmentException{
+   public MultipleAlignmentJmol() {
       //don't have a multiple alignment, set it to null...
       this(null, null);
    }
    
-   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> rotatedAtoms) throws StructureAlignmentException {
+   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> rotatedAtoms) {
 	   //Default colors: color set
 	   this(multAln, rotatedAtoms, ColorBrewer.Spectral.getColorPalette(multAln.size()));
    }
@@ -66,10 +64,9 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
    /**
     * The constructor displays the Mutltiple Alignment in a Jmol panel.
     * @param multAln: contains the aligned residues.
-    * @param atomArrays: contains the atom coordinates to display, already rotated.
-    * @throws StructureAlignmentException 
+    * @param atomArrays: contains the atom coordinates to display, already rotated. 
     */
-   public MultipleAlignmentJmol(MultipleAlignment msa, List<Atom[]> rotatedAtoms, Color[] col) throws StructureAlignmentException {
+   public MultipleAlignmentJmol(MultipleAlignment msa, List<Atom[]> rotatedAtoms, Color[] col) {
 
       AligUIManager.setLookAndFeel();
 
@@ -188,11 +185,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 					colors = ColorBrewer.Pastel1.getColorPalette(size);
 				}
 				String script="";
-				try {
-					script = getJmolString(multAln, atomArrays, colors);
-				} catch (StructureAlignmentException e1) {
-					e1.printStackTrace();
-				}
+				script = getJmolString(multAln, atomArrays, colors);
 				evalString(script+"; restore selection; ");
 			}
 		});
@@ -341,11 +334,9 @@ public void actionPerformed(ActionEvent e) {
          }
          try {
 			MultipleAlignmentDisplay.showMultipleAligmentPanel(multAln, this, colors);
-		} catch (StructureAlignmentException e1) {
+         } catch (StructureException e1) {
 			e1.printStackTrace();
-		} catch (StructureException e1) {
-			e1.printStackTrace();
-		}
+         }
 
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
          if ( multAln == null) {
@@ -365,9 +356,8 @@ public void actionPerformed(ActionEvent e) {
     * 
     * @param multAln
     * @param atomArrays
-    * @throws StructureAlignmentException 
     */
-   private static String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) throws StructureAlignmentException{
+   private static String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) {
      
 	  //Color by blocks if there are flexible alignments (>1 BlockSets) or CPs (>1 Blocks)
       if (multAln.getBlockSets().size() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
@@ -428,7 +418,7 @@ public void actionPerformed(ActionEvent e) {
     * Colors every block of the structures with a different color tonality. It colors each Block differently,
     * no matter if it is from the same or different BlockSet.
     */
-   private static String getMultiBlockJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) throws StructureAlignmentException {
+   private static String getMultiBlockJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) {
 
 	  StringWriter jmol = new StringWriter();
 	  jmol.append(DEFAULT_SCRIPT);
@@ -489,7 +479,7 @@ public void actionPerformed(ActionEvent e) {
 	 jmol.append(buf);
 }
 
-   public void resetDisplay() throws StructureAlignmentException{
+   public void resetDisplay() {
 	   
       if (multAln != null) {
          String script = getJmolString(multAln, atomArrays,colors);

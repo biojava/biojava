@@ -169,9 +169,9 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	 * @param matrices
 	 */
 	@Override
-	public void setTransformations(List<Matrix4d> matrices) throws StructureAlignmentException {
+	public void setTransformations(List<Matrix4d> matrices) {
 		if(size() != matrices.size()) {
-			throw new StructureAlignmentException("Wrong number of structures for this alignment");
+			throw new IllegalArgumentException("Wrong number of structures for this alignment");
 		}
 		// set properties that depend on the pose to null
 		clear();

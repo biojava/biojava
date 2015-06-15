@@ -88,9 +88,9 @@ public interface MultipleAlignment extends ScoresCache {
 	 * In particular, the list of scores should be reset by implementations after
 	 * changing the transformation matrices.
 	 * @param matrices 4D
-	 * @throws StructureAlignmentException when the size of the alignment and the size of transformations do not match.
+	 * @throws IllegalArgumentException when the size of the alignment and the size of transformations do not match.
 	 */
-	public void setTransformations(List<Matrix4d> transformations) throws StructureAlignmentException;
+	public void setTransformations(List<Matrix4d> transformations);
 	
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignment.

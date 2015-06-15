@@ -7,10 +7,7 @@ import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.fatcat.FatCat;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
-import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
-import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockImpl;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
@@ -23,7 +20,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
@@ -34,7 +30,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  */
 public class DemoMultipleAlignmentJmol {
 
-	public static void main(String[] args) throws IOException, StructureException, StructureAlignmentException {
+	public static void main(String[] args) throws IOException, StructureException {
 		
 		//Specify the structures to align
 		//List<String> names = Arrays.asList("1tim.a", "1vzw", "1nsj", "3tha.a");	//TIM barrels
@@ -71,7 +67,7 @@ public class DemoMultipleAlignmentJmol {
 	 * @throws StructureException
 	 * @throws StructureAlignmentException
 	 */
-	private static MultipleAlignment fakeMultipleAlignment(String family, List<Atom[]>atomArrays) throws StructureException, StructureAlignmentException{
+	private static MultipleAlignment fakeMultipleAlignment(String family, List<Atom[]>atomArrays) throws StructureException {
 		
 		//Initialize the multiple alignment parent ensemble
 		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl();

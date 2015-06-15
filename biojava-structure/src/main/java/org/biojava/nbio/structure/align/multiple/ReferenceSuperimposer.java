@@ -42,10 +42,9 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 	 * This method only calculates and sets the transformation 4D matrices. If any score is needed
 	 * it should be calculated and set separately afterwards with {@link MultipleAlignmentScorer}.
 	 * @param alignment The MultipleAlignment object to superimpose.
-	 * @throws StructureAlignmentException 
 	 */
 	@Override
-	public void superimpose(MultipleAlignment alignment) throws StructureException, StructureAlignmentException {
+	public void superimpose(MultipleAlignment alignment) throws StructureException {
 		if(alignment.getEnsemble() == null ) {
 			throw new NullPointerException("No ensemble set for this alignment");
 		}
@@ -54,7 +53,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 		List<Block> blocks = alignment.getBlocks();
 		
 		if (blocks.size() < 1)
-			throw new StructureAlignmentException("No aligned residues");
+			throw new IndexOutOfBoundsException("No aligned residues, number of Blocks == 0.");
 		
 		if (reference < 0 || atomArrays.size() <= reference ) {
 			throw new IndexOutOfBoundsException(String.format(
@@ -85,7 +84,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 			//Loop through all the Blocks that define the aligned positions
 			for( Block blk : blocks ) {
 				if( blk.size() != atomArrays.size()) {
-					throw new StructureAlignmentException(String.format(
+					throw new IllegalStateException(String.format(
 							"Mismatched block length. Expected %d structures, found %d.",
 							atomArrays.size(),blk.size() ));
 				}

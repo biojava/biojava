@@ -10,7 +10,11 @@ import org.biojava.nbio.structure.StructureTools;
 /**
  * Utility functions for working with {@link MultipleAlignment}. 
  * <p>
- * Supported functions: Multiple Sequence Alignment calculation, 
+ * Supported functions:
+ * <ul><li>Multiple Sequence Alignment Calculation
+ * <li>Mapping from Sequence Alignment Position to Structure Atom
+ * <li>Mapping from Sequence Alignment Position to Block Number
+ * </ul>
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
@@ -28,14 +32,14 @@ public class MultipleAlignmentTools {
 	 * <p>
 	 * It is possible to generate a mapping from the sequence alignment to the aligned positions
 	 * in the structure alignment. The positions not aligned have the index -1.
+	 * 
 	 * @param alignment input MultipleAlignment
 	 * @param mapSeqToStruct provides a link from the sequence alignment position to the structure alignment 
 	 * 		  position. Specially designed for the GUI. Has to be initialized previously and will be overwritten.
 	 * @return a string for each row in the alignment, giving the 1-letter code 
 	 *  		for each aligned residue.
-	 * @throws StructureAlignmentException if the Atoms cannot be obtained
 	 */
-	public static List<String> getSequenceAlignment(MultipleAlignment alignment, List<Integer> mapSeqToStruct) throws StructureAlignmentException {
+	public static List<String> getSequenceAlignment(MultipleAlignment alignment, List<Integer> mapSeqToStruct) {
 
 		//Initialize sequence variables
 		List<String> alnSequences = new ArrayList<String>();
@@ -115,12 +119,78 @@ public class MultipleAlignmentTools {
 	 * so sequences may not be sequential. Gaps between blocks are omitted,
 	 * while gaps within blocks are represented by '-'. Separation between different Blocks is
 	 * indicated by a gap in all positions, meaning that there is something unaligned inbetween.
+	 * 
 	 * @param alignment input MultipleAlignment
 	 * @return a string for each row in the alignment, giving the 1-letter code 
 	 *  		for each aligned residue.
-	 * @throws StructureAlignmentException if the Atoms cannot be obtained
 	 */
-	public static List<String> getSequenceAlignment(MultipleAlignment alignment) throws StructureAlignmentException {
+	public static List<String> getSequenceAlignment(MultipleAlignment alignment) {
 		return getSequenceAlignment(alignment, new ArrayList<Integer>());
 	}
+	
+	  
+   /**
+    * Returns the Atom of the specified structure that is aligned in the sequence alignment position specified.
+    * 
+    * @param multAln the MultipleAlignment object from where the sequence alignment has been generated
+    * @param mapSeqToStruct the mapping between sequence and structure generated with the sequence alignment
+    * @param structure the structure index of the alignment (row)
+    * @param position the sequence alignment position (column)
+    * @return Atom the atom in that position or null if there is a gap
+    */
+   public static Atom getAtomForAligPos(MultipleAlignment multAln, List<Integer> mapSeqToStruct, int structure, int position) {
+	   
+	   int seqPos = mapSeqToStruct.get(position);
+	   //Check if the position selected is an aligned position
+	   if (seqPos == -1) return null;
+	   else {
+		   Atom a = null;
+		   //Calculate the corresponding structure position (by iterating all Blocks)
+		   int sum = 0;
+		   for (Block b:multAln.getBlocks()){
+			   if (sum+b.length()<=seqPos) {
+				   sum += b.length();
+				   continue;
+			   } else {
+				   for (Integer p:b.getAlignRes().get(structure)){
+					   if (sum == seqPos) {
+						   if (p!= null) a = multAln.getEnsemble().getAtomArrays().get(structure)[p];
+						   break;
+					   }
+					   sum++;
+				   }
+				   break;
+			   }
+		   }
+		   return a;
+	   }
+   }
+   
+   /**
+    * Returns the block number of a specified position in the sequence alignment.
+    * 
+    * @param multAln the MultipleAlignment object from where the sequence alignment has been generated
+    * @param mapSeqToStruct the mapping between sequence and structure generated with the sequence alignment
+    * @param position the position in the sequence alignment (column)
+    * @return int the block index, or -1 if the position is not aligned
+    */
+   public static int getBlockForAligPos(MultipleAlignment multAln, List<Integer> mapSeqToStruct, int position){
+	   
+	   int seqPos = mapSeqToStruct.get(position);
+	   //Check if the position selected is an aligned position
+	   if (seqPos == -1) return -1;
+	   else {
+		   //Calculate the corresponding block (by iterating all Blocks)
+		   int sum = 0;
+		   int block = 0;
+		   for (Block b:multAln.getBlocks()){
+			   if (sum+b.length()<=seqPos) {
+				   sum += b.length();
+				   block++;
+				   continue;
+			   } else break;
+		   }
+		   return block;
+	   }
+   }
 }

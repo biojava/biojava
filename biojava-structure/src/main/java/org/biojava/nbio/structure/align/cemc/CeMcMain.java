@@ -26,7 +26,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 
 /** 
  * The main class of the Java implementation of the Combinatorial Extension - Monte Carlo Algorithm (CEMC),
@@ -70,9 +69,8 @@ public class CeMcMain implements MultipleStructureAligner{
 	 * @throws ExecutionException 
 	 * @throws InterruptedException 
 	 * @throws StructureException 
-	 * @throws StructureAlignmentException 
 	 */
-	public MultipleAlignment generateSeed(List<Atom[]> atomArrays) throws InterruptedException, ExecutionException, StructureAlignmentException, StructureException{
+	public MultipleAlignment generateSeed(List<Atom[]> atomArrays) throws InterruptedException, ExecutionException, StructureException{
 		
 		int size = atomArrays.size();
 		
@@ -136,10 +134,9 @@ public class CeMcMain implements MultipleStructureAligner{
 	 * @param atomArrays List of Atoms of the structures
 	 * @param ref index of the reference structure
 	 * @return MultipleAlignment seed alignment
-	 * @throws StructureAlignmentException 
 	 * @throws StructureException 
 	 */
-	private MultipleAlignment seedFromReference(List<AFPChain> afpList, List<Atom[]> atomArrays, int ref) throws StructureAlignmentException, StructureException {
+	private MultipleAlignment seedFromReference(List<AFPChain> afpList, List<Atom[]> atomArrays, int ref) throws StructureException {
 		
 		int size = atomArrays.size();  //the number of structures
 		int length = 0;  //the number of residues of the reference structure
@@ -217,7 +214,7 @@ public class CeMcMain implements MultipleStructureAligner{
 	}
 
 	@Override
-	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException, StructureAlignmentException {
+	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException {
 		
 		MultipleAlignment result = null;
 		ensemble = new MultipleAlignmentEnsembleImpl();
@@ -262,7 +259,7 @@ public class CeMcMain implements MultipleStructureAligner{
 	}
 	
 	@Override
-	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException, StructureAlignmentException {
+	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException {
 		CeMcParameters params = new CeMcParameters();
 		return align(atomArrays,params);
 	}

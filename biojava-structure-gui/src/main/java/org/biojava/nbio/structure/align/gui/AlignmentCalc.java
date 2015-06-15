@@ -31,7 +31,6 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
