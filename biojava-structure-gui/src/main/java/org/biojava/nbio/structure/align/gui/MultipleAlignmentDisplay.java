@@ -87,7 +87,7 @@ public class MultipleAlignmentDisplay {
 		frame.setTitle("Alignment Panel for Multiple Structure Alignments - alpha Version");
 		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
 
-		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,me,null);
+		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,me,multAln);
 		frame.setJMenuBar(menu);
 
 		JScrollPane scroll = new JScrollPane(me);
@@ -106,6 +106,35 @@ public class MultipleAlignmentDisplay {
 		//make sure they get cleaned up correctly:
 		frame.addWindowListener(me);
 		frame.addWindowListener(status);
+	}
+	
+	/**
+	 * Creates a new Frame with the String output representation of the {@link MultipleAlignment}.
+	 * 
+	 * @param multAln
+	 * @param result String output
+	 */
+	public static void showAlignmentImage(MultipleAlignment multAln, String result) {
+
+		JFrame frame = new JFrame();
+
+		String title = multAln.getEnsemble().getAlgorithmName() + " V."+multAln.getEnsemble().getVersion();
+		frame.setTitle(title);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		AlignmentTextPanel txtPanel = new AlignmentTextPanel();
+		txtPanel.setText(result);
+
+		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,txtPanel,multAln);
+
+		frame.setJMenuBar(menu);
+		JScrollPane js = new JScrollPane();
+		js.getViewport().add(txtPanel);
+		js.getViewport().setBorder(null);
+
+		frame.getContentPane().add(js);
+		frame.pack();      
+		frame.setVisible(true);
 	}
 	
    /** 

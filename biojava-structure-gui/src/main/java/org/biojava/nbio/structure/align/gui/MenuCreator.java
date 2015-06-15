@@ -25,6 +25,7 @@ package org.biojava.nbio.structure.align.gui;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 
@@ -59,6 +60,7 @@ public class MenuCreator {
 	public static final String SAVE_ALIGNMENT_XML = "Save Alignment XML";
 	public static final String LOAD_ALIGNMENT_XML = "Load Alignment XML";
 	public static final String FATCAT_TEXT = "View as FATCAT result";
+	public static final String FASTA_FORMAT = "View FASTA Alignment";
 	protected static final int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
 	/** provide a JMenuBar that can be added to a JFrame
@@ -347,11 +349,94 @@ public class MenuCreator {
 		menu.add(about);
 
 		return menu;
-
-
 	}	
 
+	/**
+	 * Create the menu for the "Text Only" representation of MultipleAlignments
+	 * @param frame
+	 * @param actionListener
+	 * @param multAln 
+	 * @return a JMenuBar
+	 */
+	public static JMenuBar getAlignmentTextMenu(JFrame frame, ActionListener actionListener, MultipleAlignment multAln){
 
+		JMenuBar menu = new JMenuBar();
+
+		JMenu file= new JMenu("File");
+		file.getAccessibleContext().setAccessibleDescription("File Menu");
+		menu.add(file);
+
+		ImageIcon saveicon = createImageIcon("/icons/filesave.png");
+
+		JMenuItem saveF = null;
+
+		if (saveicon != null )
+			saveF = new JMenuItem("Save text display", saveicon);
+		else 
+			saveF = new JMenuItem("Save text display");
+
+		saveF.setMnemonic(KeyEvent.VK_S);
+		MySaveFileListener listener = new MySaveFileListener(null);  //TODO save MultipleAlignment
+		listener.setFatCatOutput(true);
+		saveF.addActionListener(listener);
+		file.add(saveF);
+		file.addSeparator();
+
+		JMenuItem print = getPrintMenuItem();
+		print.addActionListener(actionListener);
+		file.add(print);
+
+		file.addSeparator();
+
+		JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
+		file.add(closeI);
+		JMenuItem exitI = MenuCreator.getExitMenuItem();		
+		file.add(exitI);
+
+		JMenu edit = new JMenu("Edit");
+		edit.setMnemonic(KeyEvent.VK_E);
+		menu.add(edit);
+
+		JMenuItem eqrI = MenuCreator.getIcon(actionListener,SELECT_EQR);
+		edit.add(eqrI);
+
+		JMenuItem eqrcI = MenuCreator.getIcon(actionListener,EQR_COLOR);
+		edit.add(eqrcI);
+
+		JMenuItem simI = MenuCreator.getIcon(actionListener, SIMILARITY_COLOR);
+		edit.add(simI);
+
+		JMenuItem fatcatI = MenuCreator.getIcon(actionListener, FATCAT_BLOCK);
+		edit.add(fatcatI);
+
+		JMenu view= new JMenu("View");
+		view.getAccessibleContext().setAccessibleDescription("View Menu");
+		view.setMnemonic(KeyEvent.VK_V);
+		menu.add(view);
+
+		JMenuItem fastaI = MenuCreator.getIcon(actionListener,FASTA_FORMAT);
+		view.add(fastaI);
+
+		JMenuItem pairsI = MenuCreator.getIcon(actionListener,PAIRS_ONLY);
+		view.add(pairsI);
+
+		JMenuItem textF = MenuCreator.getIcon(actionListener,FATCAT_TEXT);
+		view.add(textF);
+
+		JMenu about = new JMenu("Help");
+		about.setMnemonic(KeyEvent.VK_A);
+
+		JMenuItem helpM = MenuCreator.getHelpMenuItem();
+		about.add(helpM);
+
+		JMenuItem aboutM = MenuCreator.getAboutMenuItem();
+		about.add(aboutM);
+
+		menu.add(Box.createGlue());
+		menu.add(about);
+
+		return menu;
+	}	
 
 
 	protected static JMenuItem getIcon(ActionListener actionListener, String text) {
@@ -815,14 +900,4 @@ public class MenuCreator {
 
 
 	}
-
-
-
-
-
-
-
-
-
-
 }

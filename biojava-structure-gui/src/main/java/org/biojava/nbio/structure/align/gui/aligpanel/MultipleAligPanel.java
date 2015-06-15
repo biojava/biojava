@@ -38,12 +38,14 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentTools;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
@@ -417,17 +419,15 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
       String cmd = e.getActionCommand();
       if ( cmd.equals(MenuCreator.PRINT)) {
          super.actionPerformed(e);
-      /*} else if (cmd.equals(MenuCreator.TEXT_ONLY)){
-         String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2);
-         DisplayAFP.showAlignmentImage(afpChain, result);
+      } else if (cmd.equals(MenuCreator.FASTA_FORMAT)){
+    	  String result = MultipleAlignmentWriter.toFASTA(multAln);
+          MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
       } else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
-         String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
-         DisplayAFP.showAlignmentImage(afpChain, result);
+         String result = MultipleAlignmentWriter.toAlignedResidues(multAln);
+         MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
-         String result = afpChain.toFatcat(ca1, ca2);
-         result += AFPChain.newline;
-         result += afpChain.toRotMat();
-         DisplayAFP.showAlignmentImage(afpChain, result);*/
+    	  String result = MultipleAlignmentWriter.toFatCat(multAln);
+          MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
       } else if (cmd.equals(MenuCreator.SELECT_EQR)){
          selectEQR();
       } else if ( cmd.equals(MenuCreator.SIMILARITY_COLOR)){

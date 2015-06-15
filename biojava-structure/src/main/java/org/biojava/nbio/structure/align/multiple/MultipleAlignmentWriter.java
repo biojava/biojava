@@ -45,17 +45,29 @@ public class MultipleAlignmentWriter {
 	 */
 	public static String toFatCat(MultipleAlignment alignment) {
 		
-		List<Integer> mapSeqToStruc = new ArrayList<Integer>();
-		String fatcat = alignment.toString();
+		//Initialize the String and put the summary information
+		StringWriter fatcat = new StringWriter();
+		fatcat.append(alignment.toString()+"\n\n");
+		
 		//Get the alignment sequences and the mapping
-		List<String> alnSequences = MultipleAlignmentTools.getSequenceAlignment(alignment, mapSeqToStruc);
+		List<Integer> mapSeqToStruct = new ArrayList<Integer>();
+		List<String> alnSequences = MultipleAlignmentTools.getSequenceAlignment(alignment, mapSeqToStruct);
 		
+		//Get the String of the Block Numbers for Position
+		String blockNumbers = "";
+		for (int pos=0; pos<alnSequences.get(0).length(); pos++){
+			int blockNr = MultipleAlignmentTools.getBlockForAligPos(alignment, mapSeqToStruct, pos);
+			if (blockNr != -1) blockNumbers = blockNumbers.concat(""+blockNr);
+			else blockNumbers = blockNumbers.concat(" ");
+		}
 		
-		
-		
-		
-		
-		return fatcat;
+		//Write the Sequence Alignment
+		for (int str=0; str<alignment.size(); str++) {
+			if (str<9) fatcat.append("Chain 0"+(str+1)+": "+alnSequences.get(str)+"\n");
+			else fatcat.append("Chain "+(str+1)+": "+alnSequences.get(str)+"\n");
+			if (str!=alignment.size()-1) fatcat.append("          "+blockNumbers+"\n");			
+		}
+		return fatcat.toString();
 	}
 	
 	/**
@@ -89,14 +101,24 @@ public class MultipleAlignmentWriter {
 		for(Block b:multAln.getBlocks()) {
 			for(int res=0;res<b.length();res++) {
 				for (int str=0; str<multAln.size(); str++) {
-					Atom atom = multAln.getEnsemble().getAtomArrays().get(str)[b.getAlignRes().get(str).get(res)];
-	
-					residueGroup.append(atom.getGroup().getResidueNumber().toString());
-					residueGroup.append('\t');
-					residueGroup.append(atom.getGroup().getChain().getChainID());
-					residueGroup.append('\t');
-					residueGroup.append(atom.getGroup().getPDBName());
-					residueGroup.append('\t');
+					Integer residue = b.getAlignRes().get(str).get(res);
+					if (residue == null){
+						residueGroup.append("-");
+						residueGroup.append('\t');
+						residueGroup.append("-");
+						residueGroup.append('\t');
+						residueGroup.append("-");
+						residueGroup.append('\t');
+					} else {
+						Atom atom = multAln.getEnsemble().getAtomArrays().get(str)[residue];
+		
+						residueGroup.append(atom.getGroup().getResidueNumber().toString());
+						residueGroup.append('\t');
+						residueGroup.append(atom.getGroup().getChain().getChainID());
+						residueGroup.append('\t');
+						residueGroup.append(atom.getGroup().getPDBName());
+						residueGroup.append('\t');
+					}
 				}
 			residueGroup.append('\n');
 			}

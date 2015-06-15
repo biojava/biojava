@@ -33,6 +33,7 @@ import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.jcolorbrewer.ColorBrewer;
@@ -323,9 +324,8 @@ public void actionPerformed(ActionEvent e) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         System.out.println("Option currently not available for Multiple Alignments");
-         //String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
-         //DisplayAFP.showAlignmentImage(afpChain, result);
+         String result = MultipleAlignmentWriter.toAlignedResidues(multAln);
+         MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
          
       } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
          if ( multAln == null) {
@@ -343,11 +343,8 @@ public void actionPerformed(ActionEvent e) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         System.out.println("Option currently not available for Multiple Alignments");
-         //String result = afpChain.toFatcat(ca1, ca2) ;
-         //result += AFPChain.newline;
-         //result += afpChain.toRotMat();
-         //DisplayAFP.showAlignmentImage(afpChain, result);
+         String result = MultipleAlignmentWriter.toFatCat(multAln) ;
+         MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
       }
    }
 
