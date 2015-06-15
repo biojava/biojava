@@ -46,15 +46,19 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
+import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
+import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.jcolorbrewer.ColorBrewer;
 
 /** 
  * A JPanel that can display the sequence alignment of a {@link MultipleAlignment} in a 
  * nice way and interact with Jmol by selecting the aligned atoms of the sequence selection.
- * 
- * Coloring by equivalent positions is still not possible.
+ * <p>
+ * Coloring options include: sequence similarity, block number or equivalent positions.
+ * <p>
+ * The positions can be selected individually or in ranges and they will be translated to jmol commands.
  * 
  * @author Aleix Lafita
  *
@@ -83,8 +87,14 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
    private BitSet selection;
    private boolean selectionLocked;
    
+   private boolean colorBySimilarity=false;
+   private boolean colorByAlignmentBlock=false;
+
+   private static final Color COLOR_EQUAL   = Color.decode("#6A93D4");
+   private static final Color COLOR_SIMILAR = Color.decode("#D460CF");
+   
    /**
-    * Default constructor. Empty AligPanel instance.
+    * Default constructor. Empty MultipleAligPanel instance.
     */
    public MultipleAligPanel(){
 	      super();
@@ -220,65 +230,78 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
             RenderingHints.VALUE_ANTIALIAS_ON);
 
       int startpos = 0;
-      int endpos = alnSeq.get(0).length();
+      int endpos = length;
 
       String summary = multAln.toString();
       g2D.drawString(summary, 20, coordManager.getSummaryPos());
 
-      Color significantCol = Color.red;
+      Color significantCol = Color.black;
       //if (multAln.isSignificantResult()) significantCol = Color.green;
 
       g2D.setPaint(significantCol);
-      //draw a darker background
       Rectangle sig = new Rectangle(10,10,10,10);
       g2D.fill(sig);
       
       for (int i = startpos; i < endpos; i++){
 
-    	boolean isGapped = false;
-        g2D.setFont(seqFont);
-         
-        if (mapSeqToStruct.get(i)!=-1) g2D.setFont(eqFont);
-        else isGapped = true;
-
-        //Loop through every structure to get all the points
-        List<Point> points = new ArrayList<Point>();
-        for (int str=0; str<size; str++) points.add(coordManager.getPanelPos(str,i));
-        Point p1 = points.get(0);
-        Point p2 = points.get(points.size()-1);
-        
-        for (int str=0; str<size; str++){
-        	
-        	char c = alnSeq.get(str).charAt(i);
+    	  	boolean isGapped = false;
+	        g2D.setFont(seqFont);
+	         
+	        if (mapSeqToStruct.get(i)!=-1) g2D.setFont(eqFont);
+	        else isGapped = true;
+	
+	        //Loop through every structure to get all the points
+	        List<Point> points = new ArrayList<Point>();
+	        for (int str=0; str<size; str++) points.add(coordManager.getPanelPos(str,i));
+	        Point p1 = points.get(0);
+	        Point p2 = points.get(points.size()-1);
 	        
-	        if (!isGapped){
+	        for (int str=0; str<size; str++){
 	        	
-	        	Color bg = colors[str];
-	        	g2D.setPaint(bg);
-	            Rectangle rec = new Rectangle(points.get(str).x-1,points.get(str).y-11, (p2.x-p1.x)+12, (p2.y-p1.y)/size);
-	            g2D.fill(rec);
-	        	
+	        	char c = alnSeq.get(str).charAt(i);
+	        	Color bg = colors[str%colors.length];
+		        
+	        	//Color only if the position is aligned
+		        if (!isGapped){
+		        	//Color by sequence similarity (equal or similar)
+			        if (colorBySimilarity){
+			        	boolean equal = true;
+			        	boolean similar = true;
+			        	for (int st=0; st<size-1; st++){
+			        		char c1 = alnSeq.get(st).charAt(i);
+			        		char c2 = alnSeq.get(st+1).charAt(i);
+			        		if (equal && c1 == c2) continue;
+			        		else equal = false;
+			        		if (AFPAlignmentDisplay.aaScore(c1, c2) > 0) continue;
+			        		else similar = false; break;
+			        	}
+			            if (equal) bg = COLOR_EQUAL;
+			            else if (similar) bg = COLOR_SIMILAR;
+			            else bg = Color.LIGHT_GRAY;
+			         //Color by alignment block the same way as in the Jmol is done (darkening colors)
+			         } else if (colorByAlignmentBlock){
+			        	 int blockNr = getBlockForAligPos(i);
+			        	 double fraction = (blockNr*1.0)/(multAln.getBlocks().size()+1.0);
+			        	 bg = ColorUtils.darker(bg, fraction);
+			         }
+			         if (isSelected(i)) bg = Color.YELLOW;
+			        
+			         g2D.setPaint(bg);
+			         Rectangle rec = new Rectangle(points.get(str).x-1,points.get(str).y-11, (p2.x-p1.x)+12, (p2.y-p1.y)/size);
+		        	 g2D.fill(rec);
+		        }
+		        		        
+		         // draw the AA sequence
+		         g2D.setColor(Color.black);
+		         g2D.drawString(c+"",points.get(str).x,points.get(str).y);
 	        }
-	        
-	        if ( isSelected(i)){
-	            // draw selection
-	            Color bg = Color.YELLOW;
-	            g2D.setPaint(bg);
-	            Rectangle rec = new Rectangle(points.get(str).x-1,points.get(str).y-11, (p2.x-p1.x)+12, (p2.y-p1.y)/size);
-	            g2D.fill(rec);
-	         }
-	        
-	         // draw the AA sequence
-	         g2D.setColor(Color.black);
-	         g2D.drawString(c+"",points.get(str).x,points.get(str).y);
-        }
       }
 
       int nrLines = length / MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH;
 
-      for (int i = 0 ; i < nrLines ; i++){
+      for (int i = 0 ; i < nrLines+1 ; i++){
 
-         // draw legend at i
+        // draw legend at i
 		for (int str=0; str<size; str++){
 		    Point p1 = coordManager.getLegendPosition(i,str);
 		    
@@ -296,7 +319,6 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 		    String label3 = JmolTools.getPdbInfo(a3,false);
 
 		    g2D.drawString(label3, p3.x,p3.y);
-
 		}
       }
    }
@@ -304,7 +326,6 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
    private boolean isSelected(int alignmentPosition) {
       return selection.get(alignmentPosition);
    }
-
 
    @Override
    public void mouseOverPosition(AlignedPosition p) {
@@ -405,7 +426,6 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
    @Override
    public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
-      // print is handled by superclass
       if ( cmd.equals(MenuCreator.PRINT)) {
          super.actionPerformed(e);
       /*} else if (cmd.equals(MenuCreator.TEXT_ONLY)){
@@ -418,15 +438,15 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
          String result = afpChain.toFatcat(ca1, ca2);
          result += AFPChain.newline;
          result += afpChain.toRotMat();
-         DisplayAFP.showAlignmentImage(afpChain, result);
-      } else if ( cmd.equals(MenuCreator.SELECT_EQR)){
+         DisplayAFP.showAlignmentImage(afpChain, result);*/
+      } else if (cmd.equals(MenuCreator.SELECT_EQR)){
          selectEQR();
       } else if ( cmd.equals(MenuCreator.SIMILARITY_COLOR)){
          colorBySimilarity(true);
-      } else if ( cmd.equals(MenuCreator.EQR_COLOR)){
+      } else if (cmd.equals(MenuCreator.EQR_COLOR)){
          colorBySimilarity(false);
       } else if ( cmd.equals(MenuCreator.FATCAT_BLOCK)){
-         colorByAlignmentBlock();*/
+         colorByAlignmentBlock();
       } else {
          System.err.println("Unknown command:" + cmd);
       }
@@ -443,6 +463,18 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
       updateJmolDisplay();
       this.repaint();
    }
+   
+   private void colorByAlignmentBlock() {
+      colorByAlignmentBlock = true;
+      colorBySimilarity = false;
+      this.repaint();
+   }
+
+   private void colorBySimilarity(boolean flag) {
+      this.colorBySimilarity = flag;
+      colorByAlignmentBlock = false;
+      this.repaint();
+   }
 
    public List<Atom[]> getAtomArrays() throws StructureAlignmentException {
       return multAln.getEnsemble().getAtomArrays();
@@ -457,6 +489,12 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 	   return mapSeqToStruct;
    }
    
+   /**
+    * Returns the Atom of the specified structure that is aligned in the sequence alignment position specified.
+    * @param structure the structure index of the alignment (row)
+    * @param position the sequence alignment position (column)
+    * @return Atom the atom in that position or null if there is a gap
+    */
    public Atom getAtomForAligPos(int structure, int position){
 	   
 	   int seqPos = mapSeqToStruct.get(position);
@@ -467,7 +505,7 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 		   //Calculate the corresponding structure position (by iterating all Blocks)
 		   int sum = 0;
 		   for (Block b:multAln.getBlocks()){
-			   if (sum+b.length()<seqPos) {
+			   if (sum+b.length()<=seqPos) {
 				   sum += b.length();
 				   continue;
 			   } else {
@@ -482,6 +520,31 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 			   }
 		   }
 		   return a;
+	   }
+   }
+   
+   /**
+    * Returns the block number of a specified position in the sequence alignment
+    * @param position the position in the sequence alignment (column)
+    * @return int the block index, or -1 if the position is not aligned
+    */
+   public int getBlockForAligPos(int position){
+	   
+	   int seqPos = mapSeqToStruct.get(position);
+	   //Check if the position selected is an aligned position
+	   if (seqPos == -1) return -1;
+	   else {
+		   //Calculate the corresponding block (by iterating all Blocks)
+		   int sum = 0;
+		   int block = 0;
+		   for (Block b:multAln.getBlocks()){
+			   if (sum+b.length()<=seqPos) {
+				   sum += b.length();
+				   block++;
+				   continue;
+			   } else break;
+		   }
+		   return block;
 	   }
    }
 }

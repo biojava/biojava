@@ -114,15 +114,15 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	 */
 	@Override
 	public String toString() {
-		String resume = "Structure Names:" + parent.getStructureNames() + 
-				" \nAlgorithm:" + parent.getAlgorithmName() + " " + parent.getVersion() + 
-				" \nNumber of BlockSets: "+ getBlockSets().size() + 
-				" \nNumber of Blocks: " + getBlocks().size() +
-				" \nAlignment Length: " + length +
-				" \nAlignment Core Length: "+ coreLength;
+		String resume = "Structures:" + parent.getStructureNames() + 
+				" \nAlgorithm:" + parent.getAlgorithmName() + "_" + parent.getVersion() + 
+				" \nBlockSets: "+ getBlockSets().size() + 
+				" \nBlocks: " + getBlocks().size() +
+				" \nLength: " + length +
+				" \nCore Length: "+ coreLength;
 		
 		for (String score:getScores()){
-			resume += " \n"+score+": "+ getScore(score);
+			resume += " \n"+score+": "+ String.format("%.2f", getScore(score));
 		}
 		return resume;
 	}
