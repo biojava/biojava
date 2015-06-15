@@ -19,7 +19,7 @@ public class MultipleAlignmentWriter {
 	public static String toFASTA(MultipleAlignment alignment) throws StructureAlignmentException {
 		
 		//Get the alignment sequences
-		List<String> alnSequences = MultipleAlignmentTools.getSequenceAlignment(alignment, false);
+		List<String> alnSequences = MultipleAlignmentTools.getSequenceAlignment(alignment);
 		
 		String fasta = "";
 		for (int st=0; st<alignment.size(); st++){

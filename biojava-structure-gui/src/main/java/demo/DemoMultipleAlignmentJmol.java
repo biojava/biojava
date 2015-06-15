@@ -89,19 +89,19 @@ public class DemoMultipleAlignmentJmol {
 			
 			//Alignment obtained from MUSTANG multiple alignment (just some of the residues, not the whole alignment)
 			List<Integer> aligned11 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
-			List<Integer> aligned12 = Arrays.asList(29,30,31,32,33,34,35,36,37,38);
+			List<Integer> aligned12 = Arrays.asList(29,30,31,32,33,34,35,36,38);
 			List<Integer> aligned13 = Arrays.asList(123,124,125,126,127,128,129,130,131,132,133,134);
 			
 			List<Integer> aligned21 = Arrays.asList(10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,null,27,28,29,30,31);
-			List<Integer> aligned22 = Arrays.asList(39,40,41,42,43,44,45,46,47,48);
+			List<Integer> aligned22 = Arrays.asList(39,40,41,42,43,44,45,46,48);
 			List<Integer> aligned23 = Arrays.asList(133,134,135,136,137,138,139,140,141,142,143,144);
 			
 			List<Integer> aligned31 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
-			List<Integer> aligned32 = Arrays.asList(29,30,31,32,33,34,35,36,37,38);
+			List<Integer> aligned32 = Arrays.asList(29,30,31,32,33,34,35,36,38);
 			List<Integer> aligned33 = Arrays.asList(117,118,119,120,121,122,123,124,125,126,127,128);
 			
 			List<Integer> aligned41 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,null,17,18,19,20,21);
-			List<Integer> aligned42 = Arrays.asList(30,31,32,33,34,35,36,37,38,39);
+			List<Integer> aligned42 = Arrays.asList(30,31,32,33,34,35,36,37,39);
 			List<Integer> aligned43 = Arrays.asList(121,122,123,124,125,126,127,128,129,130,131,132);
 			
 			block1.getAlignRes().add(aligned11);

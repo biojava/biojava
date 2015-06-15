@@ -59,7 +59,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
    
    public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> rotatedAtoms) throws StructureAlignmentException {
 	   //Default colors: color set
-	   this(multAln, rotatedAtoms, ColorBrewer.Set1.getColorPalette(multAln.size()));
+	   this(multAln, rotatedAtoms, ColorBrewer.Spectral.getColorPalette(multAln.size()));
    }
 
    /**

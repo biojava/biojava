@@ -24,56 +24,57 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.List;
-
 import javax.swing.JTextField;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
-public class MultStatusDisplay extends JTextField implements AlignmentPositionListener, WindowListener {
+/**
+ * This class provides information of the selected positions in the {@link MultipleAligPanel}.
+ * <p>
+ * It has to be linked to a {@link MultipleAligPanel} in order to obtain the raw information and convert the mouse
+ * position to a String.
+ * 
+ * @author Aleix Lafita
+ *
+ */
+public class MultipleStatusDisplay extends JTextField implements AlignmentPositionListener, WindowListener {
 
 	private static final long serialVersionUID = 6939947266417830429L;
-	private MultipleAlignment multAln;
-	private List<String> alnSeq;
+	private MultipleAligPanel panel;
 
-	public MultStatusDisplay(){
+	public MultipleStatusDisplay(){
 		super();
 		this.setBackground(Color.white);
 		this.setEditable(false);
 		this.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 	}
 	
-	public MultStatusDisplay(MultipleAlignment multAln) throws StructureAlignmentException{
+	public MultipleStatusDisplay(MultipleAligPanel panel) throws StructureAlignmentException{
 		this();
-		this.multAln = multAln;
-		this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(multAln);
-
+		this.panel = panel;
 	}
 	
 	public void destroy(){
-		multAln = null;
+		panel = null;
 	}
 
 	@Override
 	public void mouseOverPosition(AlignedPosition p) {
 
-		if (multAln == null) return;
+		if (panel == null) return;
 				
 		try {
 			String msg = "alig pos";
-			for (int str=0; str<multAln.size(); str++) {
+			for (int str=0; str<panel.size; str++) {
 			
-				String alnseq  = alnSeq.get(str);
+				String alnseq  = panel.getAlnSequences().get(str);
 				char c = alnseq.charAt(p.getPos1());
 		
-				Atom a = DisplayAFP.getAtomForAligPos(multAln, str, p.getPos1());
+				Atom a = panel.getAtomForAligPos(str, p.getPos1());
 				String pdbInfo = JmolTools.getPdbInfo(a);
 				msg += ": "+pdbInfo + " ("+c+") ";
 			}
@@ -88,21 +89,21 @@ public class MultStatusDisplay extends JTextField implements AlignmentPositionLi
 	@Override
 	public void positionSelected(AlignedPosition p) {
 		mouseOverPosition(p);
-
 	}
+	
 	@Override
 	public void toggleSelection(AlignedPosition p) {
 		
-		if (multAln == null) return;
+		if (panel == null) return;
 		
 		try {
 			String msg = "Clicked pos";
-			for (int str=0; str<multAln.size(); str++) {
+			for (int str=0; str<panel.size; str++) {
 			
-				String alnseq  = alnSeq.get(str);
+				String alnseq  = panel.getAlnSequences().get(str);
 				char c = alnseq.charAt(p.getPos1());
 		
-				Atom a = DisplayAFP.getAtomForAligPos(multAln, str, p.getPos1());
+				Atom a = panel.getAtomForAligPos(str, p.getPos1());
 				String pdbInfo = JmolTools.getPdbInfo(a);
 
 				msg += ": "+pdbInfo + " ("+c+") ";
@@ -114,20 +115,19 @@ public class MultStatusDisplay extends JTextField implements AlignmentPositionLi
 		}
 	}
 
-
 	@Override
 	public void rangeSelected(AlignedPosition start, AlignedPosition end) {
 		
 		try {
 			String msg =  "Selected:";
-			for (int str=0; str<multAln.size(); str++) {
+			for (int str=0; str<panel.size; str++) {
 				
-				String alnseq  = alnSeq.get(str);
+				String alnseq  = panel.getAlnSequences().get(str);
 				char c1 = alnseq.charAt(start.getPos1());
 				char c2 = alnseq.charAt(end.getPos1());
 		
-				Atom a1 = DisplayAFP.getAtomForAligPos(multAln, str, start.getPos1());
-				Atom a2 = DisplayAFP.getAtomForAligPos(multAln, str, end.getPos1());
+				Atom a1 = panel.getAtomForAligPos(str, start.getPos1());
+				Atom a2 = panel.getAtomForAligPos(str, end.getPos1());
 				
 				String pdbInfo1 = JmolTools.getPdbInfo(a1);
 				String pdbInfo2 = JmolTools.getPdbInfo(a2);
@@ -140,52 +140,25 @@ public class MultStatusDisplay extends JTextField implements AlignmentPositionLi
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	public void selectionLocked() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void selectionUnlocked() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	@Override
 	public void windowClosing(WindowEvent e) {
 		destroy();
-		
 	}
 	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void selectionLocked() {}
 	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void selectionUnlocked() {}
 	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowActivated(WindowEvent e) {}
 	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowClosed(WindowEvent e) {}
+	@Override
+	public void windowDeactivated(WindowEvent e) {}
+	@Override
+	public void windowDeiconified(WindowEvent e) {}
+	@Override
+	public void windowIconified(WindowEvent e) {}
+	@Override
+	public void windowOpened(WindowEvent e) {}
 }

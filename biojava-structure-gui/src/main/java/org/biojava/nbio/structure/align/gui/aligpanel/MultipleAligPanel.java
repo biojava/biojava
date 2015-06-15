@@ -30,85 +30,80 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
-import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
-import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.align.webstart.WebStartMain;
-import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 import org.jcolorbrewer.ColorBrewer;
 
-
 /** 
- * 	A JPanel that can display an AFPChain or a MultipleAlignment in a nice way and interact with Jmol.
- * 	It has been modified from the version specific for AFPChain to include the new MultipleAlignmentDS.
- * 	The AligPanel is initialized with a constructor rather than with the setters now.
+ * A JPanel that can display the sequence alignment of a {@link MultipleAlignment} in a 
+ * nice way and interact with Jmol by selecting the aligned atoms of the sequence selection.
+ * 
+ * Coloring by equivalent positions is still not possible.
  * 
  * @author Aleix Lafita
  *
  */
-public class MultAligPanel  extends JPrintPanel implements AlignmentPositionListener, WindowListener {
+public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionListener, WindowListener {
 
    private static final long serialVersionUID = -6892229111166263764L;
 
    private MultipleAlignment multAln;
-   private List<String> alnSeq; // sequence representation of multAln
+   private List<Atom[]> atomArrays;
+   
+   private List<String> alnSeq; // sequence alignment of the MultipleAlignment
+   private List<Integer> mapSeqToStruct;  //mapping from the sequence position to the structure
 
-   private int size; 		//number of structures
-   private int length; 		//number of aligned positions
+   int size; 				//number of structures
+   int length; 				//number of aligned positions in sequence alignment
    private Color[] colors;
    
    private Font seqFont;
    private Font eqFont;
-   private AbstractAlignmentJmol jmol;
-   private MultAligPanelMouseMotionListener mouseMoLi;
-
-   private MultAligmentCoordManager coordManager;
-   private BitSet selection;
-
-   private boolean selectionLocked;
    
-   private static final Color[] DEFAULT_COLORS = ColorBrewer.Set1.getColorPalette(10);
+   private AbstractAlignmentJmol jmol;
+   private MultipleAligPanelMouseMotionListener mouseMoLi;
+   private MultipleAlignmentCoordManager coordManager;
+   
+   private BitSet selection;
+   private boolean selectionLocked;
    
    /**
     * Default constructor. Empty AligPanel instance.
     */
-   public MultAligPanel(){
+   public MultipleAligPanel(){
 	      super();
 	      this.setBackground(Color.white);
 	      seqFont = new Font("SansSerif",Font.PLAIN,12);
 	      eqFont = new Font("SansSerif",Font.BOLD,12);
 
-	      mouseMoLi = new MultAligPanelMouseMotionListener(this);
+	      mouseMoLi = new MultipleAligPanelMouseMotionListener(this);
 	      this.addMouseMotionListener(mouseMoLi);
 	      this.addMouseListener(mouseMoLi);
 	      mouseMoLi.addAligPosListener(this);
 
 	      selection = new BitSet();
-	      colors = DEFAULT_COLORS;
+	      colors = ColorBrewer.Spectral.getColorPalette(10);
 	      
+	      atomArrays = null;
 	      multAln = null;
 	      alnSeq = null;
+	      mapSeqToStruct = null;
    }
    
    /**
@@ -122,45 +117,79 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
 	* @throws StructureException 
 	* @throws StructureAlignmentException 
     */
-   public MultAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException{
+   public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException{
 	   this();
+	   
+	   //Convert the apfChain into a MultipleAlignment object
 	   MultipleAlignmentEnsembleImpl ensemble = new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca2);
 	   this.multAln = ensemble.getMultipleAlignments().get(0);
-	   this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(this.multAln);
+	   this.atomArrays = ensemble.getAtomArrays();
+	   
+	   //Create the sequence alignment and the structure-sequence mapping.
+	   this.mapSeqToStruct = new ArrayList<Integer>();
+	   this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(this.multAln, this.mapSeqToStruct);
+	   
+	   //Initialize other memeber variables of the panel
 	   this.size = multAln.size();
 	   this.length = alnSeq.get(0).length();
 	   this.colors = colors;
-	   if (colors == null) this.colors = DEFAULT_COLORS;
-	   coordManager = new MultAligmentCoordManager(size, length);
+	   if (colors == null) this.colors = ColorBrewer.Spectral.getColorPalette(size);
+	   coordManager = new MultipleAlignmentCoordManager(size, length);
 	   this.jmol = jmol;
    }
-   public MultAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException{
-	   this(afpChain, ca1, ca2, DEFAULT_COLORS, jmol);
+   /**
+    * Constructor using an afpChain and the atom arrays for pairwise alignments.
+    * The AFPChain is converted into a MultipleAlignment.
+    * Default colors are used, so they might not correlate with the jmol coloring.
+    * 
+    * @param afpChain
+    * @param ca1
+    * @param ca2
+    * @param jmol
+    * @throws StructureAlignmentException
+    * @throws StructureException
+    */
+   public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureAlignmentException, StructureException{
+	   this(afpChain, ca1, ca2, null, jmol);
    }
    
    /**
-    * Constructor using a MultipleAlignment for any other kind of alignment.
+    * Constructor using a MultipleAlignment.
+    * 
     * @param multAln
     * @param colors
- * @throws StructureAlignmentException 
+    * @throws StructureAlignmentException 
     */
-   public MultAligPanel(MultipleAlignment multAln, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException{
+   public MultipleAligPanel(MultipleAlignment multAln, Color[] colors, AbstractAlignmentJmol jmol) throws StructureAlignmentException{
 	   this();
 	   this.multAln = multAln;
-	   this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(this.multAln);
+	   this.atomArrays = multAln.getEnsemble().getAtomArrays();
+	   
+	   //Create the sequence alignment and the structure-sequence mapping.
+	   this.mapSeqToStruct = new ArrayList<Integer>();
+	   this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(this.multAln, this.mapSeqToStruct);
 
 	   this.size = multAln.size();
 	   this.length = this.alnSeq.get(0).length();
 	   this.colors = colors;
-	   if (colors == null) this.colors = DEFAULT_COLORS;
-	   coordManager = new MultAligmentCoordManager(size, length);
+	   if (colors == null) this.colors = ColorBrewer.Spectral.getColorPalette(size);
+	   coordManager = new MultipleAlignmentCoordManager(size, length);
 	   this.jmol = jmol;
    }
-   public MultAligPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol) throws StructureAlignmentException{
-	   this(multAln,DEFAULT_COLORS,jmol);
+   
+   /**
+    * Constructor using a MultipleAlignment for any other kind of alignment.
+    * Default colors are used, so they might not correlate with the jmol coloring.
+    * 
+    * @param multAln
+    * @param jmol
+    * @throws StructureAlignmentException
+    */
+   public MultipleAligPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol) throws StructureAlignmentException{
+	   this(multAln,null,jmol);
    }
    
-   public MultAligmentCoordManager getCoordManager() {
+   public MultipleAlignmentCoordManager getCoordManager() {
       return coordManager;
    }
 
@@ -175,13 +204,6 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
       mouseMoLi.destroy();
       jmol = null;
       selection = null;
-   }
-
-   public MultipleAlignment getMultipleAlignment(){
-      return multAln;
-   }
-   public List<String> getAlnSequences() {
-      return alnSeq;
    }
 
 	@Override
@@ -211,20 +233,12 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
       Rectangle sig = new Rectangle(10,10,10,10);
       g2D.fill(sig);
       
-      List<Integer> alignedPos = new ArrayList<Integer>();
-      try {
-		alignedPos = DisplayAFP.getCoreAlignmentPos(multAln);
-	} catch (StructureAlignmentException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-      
       for (int i = startpos; i < endpos; i++){
 
     	boolean isGapped = false;
         g2D.setFont(seqFont);
          
-        if (alignedPos.contains(i)) g2D.setFont(eqFont);
+        if (mapSeqToStruct.get(i)!=-1) g2D.setFont(eqFont);
         else isGapped = true;
 
         //Loop through every structure to get all the points
@@ -260,84 +274,65 @@ public class MultAligPanel  extends JPrintPanel implements AlignmentPositionList
         }
       }
 
-      int nrLines = length / MultAligmentCoordManager.DEFAULT_LINE_LENGTH;
-
+      int nrLines = length / MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH;
 
       for (int i = 0 ; i < nrLines ; i++){
 
-         try {
-            // draw legend at i
-        	for (int str=0; str<size; str++){
-	            Point p1 = coordManager.getLegendPosition(i,str);
-	            
-	            int aligPos = i * MultAligmentCoordManager.DEFAULT_LINE_LENGTH;
-	            Atom a1 = DisplayAFP.getAtomForAligPos(multAln, str, aligPos);
-	            String label1 = JmolTools.getPdbInfo(a1,false);
-	            g2D.drawString(label1, p1.x,p1.y);
-	
-	            Point p3 = coordManager.getEndLegendPosition(i,str);
-	
-	            aligPos = i * MultAligmentCoordManager.DEFAULT_LINE_LENGTH + MultAligmentCoordManager.DEFAULT_LINE_LENGTH -1 ;
-	            if (aligPos > length) aligPos = length-1;
-	            Atom a3 = DisplayAFP.getAtomForAligPos(multAln, str, aligPos);
-	
-	            String label3 = JmolTools.getPdbInfo(a3,false);
-	
-	            g2D.drawString(label3, p3.x,p3.y);
+         // draw legend at i
+		for (int str=0; str<size; str++){
+		    Point p1 = coordManager.getLegendPosition(i,str);
+		    
+		    int aligPos = i * MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH;
+		    Atom a1 = getAtomForAligPos(str, aligPos);
+		    String label1 = JmolTools.getPdbInfo(a1,false);
+		    g2D.drawString(label1, p1.x,p1.y);
 
-        	}
-         } catch (StructureAlignmentException e) {
-			e.printStackTrace();
+		    Point p3 = coordManager.getEndLegendPosition(i,str);
+
+		    aligPos = i * MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH + MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH -1 ;
+		    if (aligPos > length) aligPos = length-1;
+		    Atom a3 = getAtomForAligPos(str, aligPos);
+
+		    String label3 = JmolTools.getPdbInfo(a3,false);
+
+		    g2D.drawString(label3, p3.x,p3.y);
+
 		}
       }
    }
 
- 
-
-
    private boolean isSelected(int alignmentPosition) {
-
       return selection.get(alignmentPosition);
-
    }
 
 
    @Override
-public void mouseOverPosition(AlignedPosition p) {
-      //System.out.println("AligPanel: mouse over position " + p.getPos1() );
-
-      if ( ! selectionLocked)
-         selection.clear();
+   public void mouseOverPosition(AlignedPosition p) {
+     
+      if (!selectionLocked) selection.clear();
+      
       selection.set(p.getPos1());
-
       updateJmolDisplay();
-
       this.repaint();
-
    }
 
    private void updateJmolDisplay() {
 
-      if ( jmol == null) return;
+      if (jmol == null) return;
 
       StringBuffer cmd = new StringBuffer("select ");
       int nrSelected = 0;
-      try {
-
-         for (int i = 0 ; i< length ; i++){
-            if ( selection.get(i)){
-            	for (int str=0; str<size; str++){
-	               Atom a1 = DisplayAFP.getAtomForAligPos(multAln,str,i);
-	               if (a1 != null ) cmd.append(JmolTools.getPdbInfo(a1));
-	               cmd.append("/"+(str+1)+", ");
-            	}
-            	nrSelected++;
-        	}
-        }
-
-      } catch (StructureAlignmentException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+      for (int i=0; i<length; i++){
+    	  if (selection.get(i)){
+    		  for (int str=0; str<size; str++){
+    			  Atom a = getAtomForAligPos(str,i);
+    			  if (a != null) {
+    				  cmd.append(JmolTools.getPdbInfo(a));
+    				  cmd.append("/"+(str+1)+", ");
+    			  }
+    		  }
+    		  nrSelected++;
+    	  }
       }	
       if (nrSelected == 0) cmd.append(" none;");
       else cmd.append(" none; set display selected;");
@@ -347,105 +342,68 @@ public void mouseOverPosition(AlignedPosition p) {
 
 
    @Override
-public void positionSelected(AlignedPosition p) {
+   public void positionSelected(AlignedPosition p) {
       mouseOverPosition(p);
-
    }
 
    @Override
-public void rangeSelected(AlignedPosition start, AlignedPosition end) {
-      //System.out.println("AligPanel: range selected " + start.getPos1() + " - " + end.getPos1() + " selectionLockedL " + selectionLocked);
-      if ( ! selectionLocked )
-         selection.clear();
+   public void rangeSelected(AlignedPosition start, AlignedPosition end) {
+      
+      if (!selectionLocked) selection.clear();
       selection.set(start.getPos1(), end.getPos1()+1);
       updateJmolDisplay();
       this.repaint();
-
    }
 
    @Override
-public void selectionLocked() {
+   public void selectionLocked() {
       selectionLocked = true;
-
    }
 
    @Override
-public void selectionUnlocked() {
+   public void selectionUnlocked() {
       selectionLocked = false;
       selection.clear();
       this.repaint();
-
    }
-
 
    @Override
-public void toggleSelection(AlignedPosition p) {
+   public void toggleSelection(AlignedPosition p) {
       selection.flip(p.getPos1());
-      //System.out.println("AligPanel: toggle selection " + p.getPos1() + " " + selection.get(p.getPos1()));
       updateJmolDisplay();
       this.repaint();
-
    }
-
-
 
    public void setStructureAlignmentJmol(AbstractAlignmentJmol jmol) {
       this.jmol = jmol;
 
    }
-
+   
+   @Override
+   public void windowActivated(WindowEvent e) {}
 
    @Override
-public void windowActivated(WindowEvent e) {
-
-      // TODO Auto-generated method stub
-
-   }
-
+   public void windowClosed(WindowEvent e) {}
 
    @Override
-public void windowClosed(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-
-   @Override
-public void windowClosing(WindowEvent e) {
+   public void windowClosing(WindowEvent e) {
       destroy();
-
-   }
-
-
-   @Override
-public void windowDeactivated(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-
-   @Override
-public void windowDeiconified(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-
-   @Override
-public void windowIconified(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-
-   @Override
-public void windowOpened(WindowEvent e) {
-      // TODO Auto-generated method stub
-
    }
 
    @Override
-public void actionPerformed(ActionEvent e) {
+   public void windowDeactivated(WindowEvent e) {}
+
+   @Override
+   public void windowDeiconified(WindowEvent e) {}
+
+   @Override
+   public void windowIconified(WindowEvent e) {}
+
+   @Override
+   public void windowOpened(WindowEvent e) {}
+
+   @Override
+   public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       // print is handled by superclass
       if ( cmd.equals(MenuCreator.PRINT)) {
@@ -474,15 +432,12 @@ public void actionPerformed(ActionEvent e) {
       }
    }
 
-
-   private void selectEQR() throws StructureAlignmentException {
+   private void selectEQR() {
 
       selection.clear();
 
-      List<Integer> pos1 = DisplayAFP.getCoreAlignmentPos(multAln);
-
-      for (int pos : pos1){
-         selection.flip(pos);
+      for (int pos=0; pos<length; pos++){
+         if (mapSeqToStruct.get(pos)!=-1) selection.flip(pos);
       }
       mouseMoLi.triggerSelectionLocked(true);
       updateJmolDisplay();
@@ -492,42 +447,41 @@ public void actionPerformed(ActionEvent e) {
    public List<Atom[]> getAtomArrays() throws StructureAlignmentException {
       return multAln.getEnsemble().getAtomArrays();
    }
-
-   public static void main(String[] args){
-
-      String file = "/Users/ap3/tmp/4hhb.ce";
-
-      try {
-         BufferedReader in = new BufferedReader(new FileReader(file));
-         StringBuffer xml = new StringBuffer();
-         String str;
-         while ((str = in.readLine()) != null) {
-            xml.append(str);
-         }
-         in.close();
-
-         AFPChain[] afps = AFPChainXMLParser.parseMultiXML(xml.toString());
-         AFPChain afpChain = afps[0];
-
-         UserConfiguration config = WebStartMain.getWebStartConfig();
-         AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath());
-
-         Atom[] ca1 = cache.getAtoms(afpChain.getName1());
-         Atom[] ca2 = cache.getAtoms(afpChain.getName2());
-
-         AFPChainXMLParser.rebuildAFPChain(afpChain, ca1, ca2);
-
-
-         //StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(afpChain.getAlgorithmName());
-         StructureAlignmentJmol jmol= StructureAlignmentDisplay.display(afpChain, ca1, ca2);
-
-         DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, jmol);
-
-      } catch (Exception e){
-         e.printStackTrace();
-      }
+   public MultipleAlignment getMultipleAlignment(){
+      return multAln;
    }
-
+   public List<String> getAlnSequences(){
+      return alnSeq;
+   }
+   public List<Integer> getMapSeqToStruct(){
+	   return mapSeqToStruct;
+   }
+   
+   public Atom getAtomForAligPos(int structure, int position){
+	   
+	   int seqPos = mapSeqToStruct.get(position);
+	   //Check if the position selected is an aligned position
+	   if (seqPos == -1) return null;
+	   else {
+		   Atom a = null;
+		   //Calculate the corresponding structure position (by iterating all Blocks)
+		   int sum = 0;
+		   for (Block b:multAln.getBlocks()){
+			   if (sum+b.length()<seqPos) {
+				   sum += b.length();
+				   continue;
+			   } else {
+				   for (Integer p:b.getAlignRes().get(structure)){
+					   if (sum == seqPos) {
+						   if (p!= null) a = atomArrays.get(structure)[p];
+						   break;
+					   }
+					   sum++;
+				   }
+				   break;
+			   }
+		   }
+		   return a;
+	   }
+   }
 }
-
-

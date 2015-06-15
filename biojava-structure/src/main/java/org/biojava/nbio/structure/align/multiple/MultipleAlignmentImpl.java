@@ -115,7 +115,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	@Override
 	public String toString() {
 		String resume = "Structure Names:" + parent.getStructureNames() + 
-				" \nAlgorithm:" + parent.getAlgorithmName() + ", " + parent.getVersion() + 
+				" \nAlgorithm:" + parent.getAlgorithmName() + " " + parent.getVersion() + 
 				" \nNumber of BlockSets: "+ getBlockSets().size() + 
 				" \nNumber of Blocks: " + getBlocks().size() +
 				" \nAlignment Length: " + length +

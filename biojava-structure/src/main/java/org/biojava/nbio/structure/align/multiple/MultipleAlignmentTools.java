@@ -28,18 +28,18 @@ public class MultipleAlignmentTools {
 	 * It is possible to generate a mapping from the sequence alignment to the aligned positions
 	 * in the structure alignment. The positions not aligned have the index -1.
 	 * @param alignment input MultipleAlignment
-	 * @param seqToStr if true: the last String provides a link from the sequence alignment position to
-	 * 			the structure alignment position. Specially designed for the GUI.
+	 * @param mapSeqToStruct provides a link from the sequence alignment position to the structure alignment 
+	 * 		  position. Specially designed for the GUI. Has to be initialized previously, will be overwritten.
 	 * @return a string for each row in the alignment, giving the 1-letter code 
 	 *  		for each aligned residue.
 	 * @throws StructureAlignmentException if the Atoms cannot be obtained
 	 */
-	public static List<String> getSequenceAlignment(MultipleAlignment alignment, boolean seqToStr) throws StructureAlignmentException {
+	public static List<String> getSequenceAlignment(MultipleAlignment alignment, List<Integer> mapSeqToStruct) throws StructureAlignmentException {
 
 		//Initialize sequence variables
 		List<String> alnSequences = new ArrayList<String>();
 		for (int str=0; str<alignment.size(); str++) alnSequences.add("");
-		String alnMap = "";
+		mapSeqToStruct.clear();
 		List<Atom[]> atoms = alignment.getEnsemble().getAtomArrays();
 		int globalPos = -1;
 		
@@ -48,7 +48,7 @@ public class MultipleAlignmentTools {
 			if (b!=0){
 				//Add a gap to all structures in order to separate visually the blocks in the alignment
 				for (int str=0; str<alignment.size(); str++) alnSequences.set(str,alnSequences.get(str).concat("-"));
-				alnMap = alnMap.concat(" ");
+				mapSeqToStruct.add(-1); //means no aligned position
 			}
 			//Store the previous position added to the sequence alignment for this structure
 			int[] previousPos = new int[alignment.size()];
@@ -92,19 +92,18 @@ public class MultipleAlignmentTools {
 								alnSequences.set(str,alnSequences.get(str).concat("-"));
 							}
 						}
-						alnMap = alnMap.concat(" "); //meaning that this is an unaligned position
+						mapSeqToStruct.add(-1); //meaning that this is an unaligned position
 					} 
 					else {  //Append the provisional and update the indices otherwise
 						for (int str=0; str<alignment.size(); str++){
 							alnSequences.set(str,alnSequences.get(str).concat(""+provisionalChar[str]));
 							if (provisionalChar[str] != '-') previousPos[str] = alignment.getBlocks().get(b).getAlignRes().get(str).get(pos);
 						}
-						alnMap = alnMap.concat(""+globalPos);
+						mapSeqToStruct.add(globalPos);
 					}
 				}
 			}
 		}
-		if (seqToStr) alnSequences.add(alnMap);
 		return alnSequences;
 	}
 	
@@ -121,6 +120,6 @@ public class MultipleAlignmentTools {
 	 * @throws StructureAlignmentException if the Atoms cannot be obtained
 	 */
 	public static List<String> getSequenceAlignment(MultipleAlignment alignment) throws StructureAlignmentException {
-		return getSequenceAlignment(alignment, false);
+		return getSequenceAlignment(alignment, new ArrayList<Integer>());
 	}
 }

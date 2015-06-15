@@ -40,8 +40,8 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
-import org.biojava.nbio.structure.align.gui.aligpanel.MultAligPanel;
-import org.biojava.nbio.structure.align.gui.aligpanel.MultStatusDisplay;
+import org.biojava.nbio.structure.align.gui.aligpanel.MultipleAligPanel;
+import org.biojava.nbio.structure.align.gui.aligpanel.MultipleStatusDisplay;
 import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
@@ -148,8 +148,10 @@ public class DisplayAFP {
 	}
 	
 	/**
-	 * Return a list of pdb Strings corresponding to the aligned positions of the molecule. 
-	 * Adapted the method to a more general version for the multiple alignments, using the MultipleAlignment DS.
+	 * Return a list of pdb Strings corresponding to the aligned positions of the molecule.
+	 * <p> 
+	 * Adapted the method to a more general version for the multiple alignments, 
+	 * using the MultipleAlignment DS.
 	 * 
 	 * @param aligPos
 	 * @param multAln
@@ -655,11 +657,11 @@ public class DisplayAFP {
 	
 	public static void showAlignmentImage(MultipleAlignment multAln, AbstractAlignmentJmol jmol, Color[] colors) throws StructureAlignmentException, StructureException {
 		
-		MultAligPanel me = new MultAligPanel(multAln, colors, jmol);
+		MultipleAligPanel me = new MultipleAligPanel(multAln, colors, jmol);
 		JFrame frame = new JFrame();
 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		
-		frame.setTitle("Alignment Panel for Multiple Structure Alignments - beta");
+		frame.setTitle("Alignment Panel for Multiple Structure Alignments - alpha version");
 		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
 
 		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,me,null);
@@ -668,7 +670,7 @@ public class DisplayAFP {
 		JScrollPane scroll = new JScrollPane(me);
 		scroll.setAutoscrolls(true);
 
-		MultStatusDisplay status = new MultStatusDisplay(multAln);
+		MultipleStatusDisplay status = new MultipleStatusDisplay(me);
 		me.addAlignmentPositionListener(status);
 
 		Box vBox = Box.createVerticalBox();
@@ -760,6 +762,7 @@ public class DisplayAFP {
 	 * @return Atom the aligned atom
 	 * @throws StructureAlignmentException if the atoms cannot be obtained
 	 */
+	@Deprecated
 	public static Atom getAtomForAligPos(MultipleAlignment multAln, int str, int pos) throws StructureAlignmentException {
 		
 		List<Integer> residues = new ArrayList<Integer>();
@@ -787,6 +790,7 @@ public class DisplayAFP {
 	 * @return List with all the aligned positions
 	 * @throws StructureAlignmentException 
 	 */
+	@Deprecated
 	public static List<Integer> getCoreAlignmentPos(MultipleAlignment multAln) throws StructureAlignmentException {
 		
 		List<Integer> lst = new ArrayList<Integer>();
