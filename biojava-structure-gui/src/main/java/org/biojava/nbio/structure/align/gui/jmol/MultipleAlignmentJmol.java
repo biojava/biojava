@@ -35,102 +35,74 @@ import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
-import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+import org.biojava.nbio.structure.jama.Matrix;
 import org.jcolorbrewer.ColorBrewer;
 
-/** A class that provides GUI for multiple alignments. Code adapted from the StructuralAlignmentJmol class.
+/** 
+ * A class that provides 3D visualization in Jmol for {@link MultipleAlignment}s.
  * 
  * @author Aleix Lafita
  *
  */
 public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
-	private Color[] colors;
 	private MultipleAlignment multAln;
 	private List<Atom[]> atomArrays;    //already rotated atom arrays of every structure
+	private boolean colorByBlocks = false;
 
    /**
-    * Default constructor creates an empty window, from where alignments can be made through the align menu.
+    * Default constructor creates an empty JmolPanel window, 
+    * from where alignments can be made through the align menu.
     */
    public MultipleAlignmentJmol() {
-      //don't have a multiple alignment, set it to null...
       this(null, null);
-   }
-   
-   public MultipleAlignmentJmol(MultipleAlignment multAln, List<Atom[]> rotatedAtoms) {
-	   //Default colors: color set
-	   this(multAln, rotatedAtoms, ColorBrewer.Spectral.getColorPalette(multAln.size()));
    }
 
    /**
-    * The constructor displays the Mutltiple Alignment in a Jmol panel.
+    * The constructor displays the Mutltiple Alignment in a JmolPanel window.
     * @param multAln: contains the aligned residues.
     * @param atomArrays: contains the atom coordinates to display, already rotated. 
     */
-   public MultipleAlignmentJmol(MultipleAlignment msa, List<Atom[]> rotatedAtoms, Color[] col) {
+   public MultipleAlignmentJmol(MultipleAlignment msa, List<Atom[]> rotatedAtoms) {
 
       AligUIManager.setLookAndFeel();
-
       nrOpenWindows++;
       jmolPanel = new JmolPanel();
-
       frame = new JFrame();
-
-      JMenuBar menu = MenuCreator.initMenu(frame,this,null);
+      JMenuBar menu = MenuCreator.initJmolMenu(frame,this,null);
 
       frame.setJMenuBar(menu);
-      //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.multAln = msa;
       this.atomArrays = rotatedAtoms;
-      this.colors = col;
       
-      frame.addWindowListener( new WindowAdapter()
-      {
+      frame.addWindowListener( new WindowAdapter() {
 
          @Override
-		public void windowClosing(WindowEvent e) {
+         public void windowClosing(WindowEvent e) {
 
             nrOpenWindows--;
-            
             destroy();
             
-            if ( nrOpenWindows > 0) {
-
-               frame.dispose();
-            }
-            else  {
+            if ( nrOpenWindows > 0) frame.dispose();
+            else {
                AlignmentGui gui = AlignmentGui.getInstanceNoVisibilityChange();
-               if ( gui.isVisible()) {
+               if (gui.isVisible()) {
                   frame.dispose();
                   gui.requestFocus();
-               } else {
-                  System.exit(0);
-               }
+               } else System.exit(0);
             }
          }
       });
 
       Container contentPane = frame.getContentPane();
-
       Box vBox = Box.createVerticalBox();
-
-      //try {
-
-
 
       jmolPanel.addMouseMotionListener(this);
       jmolPanel.addMouseListener(this);
-
-      //		} catch (ClassNotFoundException e){
-      //			e.printStackTrace();
-      //			System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
-      //			return;
-      //		}
       jmolPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH,DEFAULT_HEIGHT));
       vBox.add(jmolPanel);
 
-
-      /// USER SCRIPTING COMMAND
+/// USER SCRIPTING COMMAND
       JTextField field = new JTextField();
 
       field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
@@ -143,7 +115,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
       vBox.add(field);
       
       
-      /// COMBO BOXES 
+/// COMBO BOXES 
       Box hBox1 = Box.createHorizontalBox();
       hBox1.add(Box.createGlue());
 
@@ -166,27 +138,27 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		hBox1.add(new JLabel("Color"));
 		hBox1.add(jcolors);
 		
-		String[] colorPattelete = new String[] {"Set1", "Set2", "Spectral", "Pastel"};
-		JComboBox pattelete = new JComboBox(colorPattelete);
+		String[] cPattelete = new String[] {"Set1", "Set2", "Spectral", "Pastel"};
+		JComboBox pattelete = new JComboBox(cPattelete);
 		
 		pattelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int size = atomArrays.size();
+				
 				JComboBox source = (JComboBox) e.getSource();
 				String value = source.getSelectedItem().toString();
 				evalString("save selection; select *; color grey; select ligand; color CPK;");
 				if (value=="Set1"){
-					colors = ColorBrewer.Set1.getColorPalette(size);
+					colorPattelete = ColorBrewer.Set1;
 				} else if (value=="Set2"){
-					colors = ColorBrewer.Set2.getColorPalette(size);
+					colorPattelete = ColorBrewer.Set2;
 				} else if (value=="Spectral"){
-					colors = ColorBrewer.Spectral.getColorPalette(size);
+					colorPattelete = ColorBrewer.Spectral;
 				} else if (value=="Pastel"){
-					colors = ColorBrewer.Pastel1.getColorPalette(size);
+					colorPattelete = ColorBrewer.Pastel1;
 				}
 				String script="";
-				script = getJmolString(multAln, atomArrays, colors);
+				script = getJmolString();
 				evalString(script+"; restore selection; ");
 			}
 		});
@@ -196,12 +168,11 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		hBox1.add(pattelete);
 		
 
-// CHeck boxes
+/// CHECK BOXES
 		Box hBox2 = Box.createHorizontalBox();
 		hBox2.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 		
 		JButton resetDisplay = new JButton("Reset Display");
-		
 		resetDisplay.addActionListener(new ActionListener() {
 			
 			@Override
@@ -215,44 +186,35 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		hBox2.add(resetDisplay); 
 		hBox2.add(Box.createGlue());
 		
-		
 		JCheckBox toggleSelection = new JCheckBox("Show Selection");
-		toggleSelection.addItemListener(
-			    new ItemListener() {
+		toggleSelection.addItemListener(new ItemListener() {
+				
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
+				  
+				  if (showSelection) jmolPanel.executeCmd("set display selected");
+				  else jmolPanel.executeCmd("set display off");
 					
-					@Override
-					public void itemStateChanged(ItemEvent e) {
-						  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
-						  
-						  if (showSelection){
-							  jmolPanel.executeCmd("set display selected");
-						  } else {
-							  jmolPanel.executeCmd("set display off");
-						  }
-						
-					}
-				}
-			);
-		
+			}
+		});
 		
 		
 		hBox2.add(toggleSelection);
-		
 		hBox2.add(Box.createGlue());
 		vBox.add(hBox2);	
 		
-      
-      // STATUS DISPLAY
-
+// STATUS DISPLAY
       Box hBox = Box.createHorizontalBox();
 
-      status = new JTextField();		
+      status = new JTextField();
       status.setBackground(Color.white);
       status.setEditable(false);
       status.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
       status.setPreferredSize(new Dimension(DEFAULT_WIDTH / 2,30));
       status.setMinimumSize(new Dimension(DEFAULT_WIDTH / 2,30));
-      hBox.add(status);      
+      hBox.add(status);
+      
       text = new JTextField();
       text.setBackground(Color.white);
       text.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
@@ -264,8 +226,6 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
       vBox.add(hBox);
 
-
-
       contentPane.add(vBox);
       MyJmolStatusListener li = (MyJmolStatusListener) jmolPanel.getStatusListener();
       li.setTextField(status);
@@ -273,10 +233,9 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
       frame.setVisible(true); 
 
       initCoords();
-
       resetDisplay();
-      
    }
+   
    protected void initCoords(){
       try {
          if ( multAln == null ){
@@ -301,14 +260,14 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
    }
 
    @Override
-public void destroy(){
+   public void destroy(){
 	  super.destroy();
       multAln =null;
       atomArrays = null;
    }
 
    @Override
-public void actionPerformed(ActionEvent e) {
+   public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
          if ( multAln == null) {
@@ -333,7 +292,7 @@ public void actionPerformed(ActionEvent e) {
             return;
          }
          try {
-			MultipleAlignmentDisplay.showMultipleAligmentPanel(multAln, this, colors);
+			MultipleAlignmentDisplay.showMultipleAligmentPanel(multAln, this, colorPattelete);
          } catch (StructureException e1) {
 			e1.printStackTrace();
          }
@@ -350,15 +309,12 @@ public void actionPerformed(ActionEvent e) {
 
    /**
     * Generate a Jmol command String that colors the aligned residues of every structure.
-    * 
-    * @param multAln
-    * @param atomArrays
     */
-   private static String getJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) {
+   private String getJmolString() {
      
 	  //Color by blocks if there are flexible alignments (>1 BlockSets) or CPs (>1 Blocks)
-      if (multAln.getBlockSets().size() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
-      else if (multAln.getBlockSets().get(0).getBlocks().size() > 1) return getMultiBlockJmolString(multAln, atomArrays,colors);
+      if (multAln.getBlocks().size() > 1 && colorByBlocks) return getMultiBlockJmolString();
+      Color[] colors = colorPattelete.getColorPalette(multAln.size());
 
       StringBuffer j = new StringBuffer();
       j.append(DEFAULT_SCRIPT);
@@ -415,12 +371,14 @@ public void actionPerformed(ActionEvent e) {
     * Colors every block of the structures with a different color tonality. It colors each Block differently,
     * no matter if it is from the same or different BlockSet.
     */
-   private static String getMultiBlockJmolString(MultipleAlignment multAln, List<Atom[]> atomArrays, Color[] colors) {
+   private String getMultiBlockJmolString() {
 
 	  StringWriter jmol = new StringWriter();
 	  jmol.append(DEFAULT_SCRIPT);
+	  jmol.append("select *; color lightgrey; backbone 0.1; ");
 	  
 	  int blockNum = multAln.getBlocks().size();
+	  Color[] colors = colorPattelete.getColorPalette(blockNum);
 	  
 	  //For every structure color all the blocks with the printBlock method
 	  for (int str=0; str<atomArrays.size(); str++){
@@ -431,7 +389,7 @@ public void actionPerformed(ActionEvent e) {
 			  for (Block b : bs.getBlocks() ) {
 				  
 				  List<List<Integer>> alignRes = b.getAlignRes();
-				  printJmolScript4Block(atomArrays.get(str), alignRes, colors, jmol, str, index, blockNum);
+				  printJmolScript4Block(atomArrays.get(str), alignRes, colors[index], jmol, str, index, blockNum);
 				  index++;
 			  }
 		  }
@@ -443,12 +401,8 @@ public void actionPerformed(ActionEvent e) {
 	  return jmol.toString();
    }
    
-   private static void printJmolScript4Block(Atom[] atoms, List<List<Integer>> alignRes, Color[] colors, StringWriter jmol, int str, int colorPos, int blockNum) {
-	 
-	 Color start = colors[str%colors.length];
-	 double fraction = (colorPos*1.0)/(blockNum+1.0);
-	 Color color = ColorUtils.darker(start, fraction);
-	 
+   private static void printJmolScript4Block(Atom[] atoms, List<List<Integer>> alignRes, Color blockColor, StringWriter jmol, int str, int colorPos, int blockNum) {
+	 	 
 	 //Obtain the residues aligned in this block of the structure
 	 List<String> pdb = new ArrayList<String>();
 	 for (int i=0;i< alignRes.get(str).size(); i++) {
@@ -470,7 +424,7 @@ public void actionPerformed(ActionEvent e) {
 	    count++;
 	 }
 
-	 buf.append("; backbone 0.6 ; color [" + color.getRed() +"," + color.getGreen() +"," +color.getBlue()+"]; ");
+	 buf.append("; backbone 0.4 ; color [" + blockColor.getRed() +"," + blockColor.getGreen() +"," +blockColor.getBlue()+"]; ");
 	 
 	 //Append the string to the global buffer
 	 jmol.append(buf);
@@ -479,7 +433,7 @@ public void actionPerformed(ActionEvent e) {
    public void resetDisplay() {
 	   
       if (multAln != null) {
-         String script = getJmolString(multAln, atomArrays,colors);
+         String script = getJmolString();
          //System.out.println(script);
          evalString(script);
          jmolPanel.evalString("hide ligand");
@@ -487,4 +441,9 @@ public void actionPerformed(ActionEvent e) {
       }
    }
 
+	@Override
+	public List<Matrix> getDistanceMatrices() {
+		if (multAln == null) return null;
+		else return multAln.getEnsemble().getDistanceMatrix();
+	}
 }

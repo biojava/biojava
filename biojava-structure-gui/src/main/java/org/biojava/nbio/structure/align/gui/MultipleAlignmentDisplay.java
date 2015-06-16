@@ -1,6 +1,5 @@
 package org.biojava.nbio.structure.align.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
+import org.jcolorbrewer.ColorBrewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,16 +78,16 @@ public class MultipleAlignmentDisplay {
 	 * @param colors
 	 * @throws StructureException
 	 */
-	public static void showMultipleAligmentPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol, Color[] colors) throws StructureException {
+	public static void showMultipleAligmentPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol, ColorBrewer colorPattelete) throws StructureException {
 		
-		MultipleAligPanel me = new MultipleAligPanel(multAln, colors, jmol);
+		MultipleAligPanel me = new MultipleAligPanel(multAln, jmol);
 		JFrame frame = new JFrame();
 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		
-		frame.setTitle("Alignment Panel for Multiple Structure Alignments - alpha Version");
+		frame.setTitle(jmol.getTitle());
 		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
 
-		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,me,multAln);
+		JMenuBar menu = MenuCreator.getAlignmentPanelMenu(frame,me,null);
 		frame.setJMenuBar(menu);
 
 		JScrollPane scroll = new JScrollPane(me);
@@ -125,7 +125,7 @@ public class MultipleAlignmentDisplay {
 		AlignmentTextPanel txtPanel = new AlignmentTextPanel();
 		txtPanel.setText(result);
 
-		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,txtPanel,multAln);
+		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,txtPanel,null);
 
 		frame.setJMenuBar(menu);
 		JScrollPane js = new JScrollPane();

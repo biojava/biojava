@@ -35,6 +35,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+import org.biojava.nbio.structure.jama.Matrix;
 
 import javax.swing.*;
 
@@ -42,6 +43,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -94,7 +96,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
       frame = new JFrame();
 
-      JMenuBar menu = MenuCreator.initMenu(frame,this, afpChain);
+      JMenuBar menu = MenuCreator.initJmolMenu(frame,this, afpChain);
 
       frame.setJMenuBar(menu);
       //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -293,7 +295,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
    }
 
    @Override
-public void destroy(){
+   public void destroy(){
 	  super.destroy();
       afpChain =null;
       ca1 = null;
@@ -301,7 +303,7 @@ public void destroy(){
    }
 
    @Override
-public void actionPerformed(ActionEvent e) {
+   public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
          if ( afpChain == null) {
@@ -450,8 +452,7 @@ public void actionPerformed(ActionEvent e) {
    }
    
 
-   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
-   {
+   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
       int blockNum = afpChain.getBlockNum();      
       int[] optLen = afpChain.getOptLen();
@@ -478,7 +479,7 @@ public void actionPerformed(ActionEvent e) {
 
    }
 
-private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
+   private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 		int[] optLen, int[][][] optAln, StringWriter jmol, int bk) {
 	//the block nr determines the color...
 	 int colorPos = bk;
@@ -535,7 +536,7 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 
 	 // now color this block:
 	 jmol.append(buf);
-}
+	}
 
    public void resetDisplay(){
 
@@ -547,4 +548,9 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
       }
    }
 
+	@Override
+	public List<Matrix> getDistanceMatrices() {
+		if (afpChain == null) return null;
+		else return Arrays.asList(afpChain.getDisTable1(), afpChain.getDisTable2());
+	}
 }

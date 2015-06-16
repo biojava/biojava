@@ -11,7 +11,7 @@ import org.biojava.nbio.structure.StructureTools;
  * Utility functions for working with {@link MultipleAlignment}. 
  * <p>
  * Supported functions:
- * <ul><li>Multiple Sequence Alignment Calculation
+ * <ul><li>Multiple Sequence Alignment Calculation Methods
  * <li>Mapping from Sequence Alignment Position to Structure Atom
  * <li>Mapping from Sequence Alignment Position to Block Number
  * </ul>

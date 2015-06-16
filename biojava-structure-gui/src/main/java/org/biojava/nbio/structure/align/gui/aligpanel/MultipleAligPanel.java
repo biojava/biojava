@@ -49,14 +49,13 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
-import org.biojava.nbio.structure.gui.util.color.ColorUtils;
-import org.jcolorbrewer.ColorBrewer;
 
 /** 
  * A JPanel that can display the sequence alignment of a {@link MultipleAlignment} in a 
  * nice way and interact with Jmol by selecting the aligned atoms of the sequence selection.
  * <p>
- * Coloring options include: sequence similarity, block number or equivalent positions.
+ * Coloring options include: sequence similarity, by Block or by Structure. Colors are connected
+ * with the JmolPanel.
  * <p>
  * The positions can be selected individually or in ranges and they will be translated to jmol commands.
  * 
@@ -73,7 +72,6 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 
    int size; 				//number of structures
    int length; 				//number of aligned positions in sequence alignment
-   private Color[] colors;
    
    private Font seqFont;
    private Font eqFont;
@@ -104,9 +102,7 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 	      this.addMouseMotionListener(mouseMoLi);
 	      this.addMouseListener(mouseMoLi);
 	      mouseMoLi.addAligPosListener(this);
-
 	      selection = new BitSet();
-	      colors = ColorBrewer.Spectral.getColorPalette(10);
 	      
 	      multAln = null;
 	      alnSeq = null;
@@ -120,10 +116,9 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
     * @param afpChain 
     * @param ca1 
     * @param ca2 
-    * @param color 
 	* @throws StructureException  
     */
-   public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, Color[] colors, AbstractAlignmentJmol jmol) throws StructureException{
+   public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureException{
 	   this();
 	   
 	   //Convert the apfChain into a MultipleAlignment object
@@ -137,24 +132,9 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 	   //Initialize other memeber variables of the panel
 	   this.size = multAln.size();
 	   this.length = alnSeq.get(0).length();
-	   this.colors = colors;
-	   if (colors == null) this.colors = ColorBrewer.Spectral.getColorPalette(size);
+	   
 	   coordManager = new MultipleAlignmentCoordManager(size, length);
 	   this.jmol = jmol;
-   }
-   /**
-    * Constructor using an afpChain and the atom arrays for pairwise alignments.
-    * The AFPChain is converted into a MultipleAlignment.
-    * Default colors are used, so they might not correlate with the jmol coloring.
-    * 
-    * @param afpChain
-    * @param ca1
-    * @param ca2
-    * @param jmol
-    * @throws StructureException
-    */
-   public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureException{
-	   this(afpChain, ca1, ca2, null, jmol);
    }
    
    /**
@@ -163,7 +143,7 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
     * @param multAln
     * @param colors
     */
-   public MultipleAligPanel(MultipleAlignment multAln, Color[] colors, AbstractAlignmentJmol jmol) {
+   public MultipleAligPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol) {
 	   this();
 	   this.multAln = multAln;
 	   
@@ -173,21 +153,9 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 
 	   this.size = multAln.size();
 	   this.length = this.alnSeq.get(0).length();
-	   this.colors = colors;
-	   if (colors == null) this.colors = ColorBrewer.Spectral.getColorPalette(size);
+
 	   coordManager = new MultipleAlignmentCoordManager(size, length);
 	   this.jmol = jmol;
-   }
-   
-   /**
-    * Constructor using a MultipleAlignment for any other kind of alignment.
-    * Default colors are used, so they might not correlate with the jmol coloring.
-    * 
-    * @param multAln
-    * @param jmol
-    */
-   public MultipleAligPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol) {
-	   this(multAln,null,jmol);
    }
    
    public MultipleAlignmentCoordManager getCoordManager() {
@@ -250,7 +218,7 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 	        for (int str=0; str<size; str++){
 	        	
 	        	char c = alnSeq.get(str).charAt(i);
-	        	Color bg = colors[str%colors.length];
+	        	Color bg = jmol.getColorPattelete().getColorPalette(size)[str];
 		        
 	        	//Color only if the position is aligned
 		        if (!isGapped){
@@ -269,17 +237,19 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 			            if (equal) bg = COLOR_EQUAL;
 			            else if (similar) bg = COLOR_SIMILAR;
 			            else bg = Color.LIGHT_GRAY;
+			         } 
 			         //Color by alignment block the same way as in the Jmol is done (darkening colors)
-			         } else if (colorByAlignmentBlock){
+			         else if (colorByAlignmentBlock){
 			        	 int blockNr = MultipleAlignmentTools.getBlockForAligPos(multAln,mapSeqToStruct,i);
-			        	 double fraction = (blockNr*1.0)/(multAln.getBlocks().size()+1.0);
-			        	 bg = ColorUtils.darker(bg, fraction);
+			        	 bg = jmol.getColorPattelete().getColorPalette(multAln.getBlocks().size())[blockNr];
 			         }
 			         if (isSelected(i)) bg = Color.YELLOW;
 			        
-			         g2D.setPaint(bg);
-			         Rectangle rec = new Rectangle(points.get(str).x-1,points.get(str).y-11, (p2.x-p1.x)+12, (p2.y-p1.y)/size);
-		        	 g2D.fill(rec);
+			         if (Character.isUpperCase(c) && c!='-'){
+				         g2D.setPaint(bg);
+				         Rectangle rec = new Rectangle(points.get(str).x-1,points.get(str).y-11, (p2.x-p1.x)+12, (p2.y-p1.y)/size);
+			        	 g2D.fill(rec);
+			         }
 		        }
 		        		        
 		         // draw the AA sequence

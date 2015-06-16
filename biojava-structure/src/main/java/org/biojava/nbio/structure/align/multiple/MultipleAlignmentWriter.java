@@ -57,7 +57,7 @@ public class MultipleAlignmentWriter {
 		String blockNumbers = "";
 		for (int pos=0; pos<alnSequences.get(0).length(); pos++){
 			int blockNr = MultipleAlignmentTools.getBlockForAligPos(alignment, mapSeqToStruct, pos);
-			if (blockNr != -1) blockNumbers = blockNumbers.concat(""+blockNr);
+			if (blockNr != -1) blockNumbers = blockNumbers.concat(""+(blockNr+1));
 			else blockNumbers = blockNumbers.concat(" ");
 		}
 		
@@ -89,12 +89,12 @@ public class MultipleAlignmentWriter {
 
 		//Write structure names & PDB codes
 		for (int str=0; str<multAln.size(); str++){
-			residueGroup.append("#Struct"+str+":\t");
+			residueGroup.append("#Struct"+(str+1)+":\t");
 			residueGroup.append(multAln.getEnsemble().getStructureNames().get(str));
 			residueGroup.append("\n");
 		}
 		//Whrite header for columns
-		for (int str=0; str<multAln.size(); str++) residueGroup.append("#Num"+str+"\tChain"+str+"\tAA"+str+"\t");
+		for (int str=0; str<multAln.size(); str++) residueGroup.append("#Num"+(str+1)+"\tChain"+(str+1)+"\tAA"+(str+1)+"\t");
 		residueGroup.append("\n");
 		
 		//Write optimally aligned pairs
