@@ -26,6 +26,7 @@ package org.biojava.nbio.structure.io.sifts;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -199,9 +200,9 @@ public class SiftsXMLParser {
 			
 			boolean observed = true;
 			
-			String detail = getTextValue(residue, "residueDetail");
-			//System.out.println(">"+detail+"<");
-			if ( detail != null && detail.trim().equalsIgnoreCase("Not_Observed")){
+			List<String> details = getTextValues(residue, "residueDetail");
+
+			if ( details != null && details.contains("Not_Observed")){
 				observed = false;
 			}
 			res.setNotObserved(! observed);
@@ -257,6 +258,25 @@ public class SiftsXMLParser {
 
 			return textVal;
 		}
+
+	private List<String> getTextValues(Element ele, String tagName) {
+		List<String>values = new ArrayList<String>();
+		NodeList nl = ele.getElementsByTagName(tagName);
+		if(nl != null && nl.getLength() > 0) {
+			for ( int i = 0 ;i < nl.getLength() ; i ++) {
+
+				Element n = (Element) nl.item(i);
+
+				String k = n.getNodeName();
+
+				String val = n.getFirstChild().getNodeValue();
+				if ( val != null)
+					values.add(val);
+			}
+		}
+
+		return values;
+	}
 
 
 		

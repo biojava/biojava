@@ -34,6 +34,49 @@ import java.util.List;
 
 public class TestSiftsParsing extends TestCase {
 
+
+	public void test4DIA(){
+		try {
+			List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4DIA");
+
+			assertNotNull(entities);
+
+			assertTrue(entities.size() == 1);
+
+			for (SiftsEntity e : entities){
+				//System.out.println(e.getEntityId() + " " +e.getType());
+
+
+				assertTrue(e.getSegments().size() > 0 );
+				for ( SiftsSegment seg: e.getSegments()) {
+					assertTrue(seg.getResidues().size() > 0);
+					
+					for ( SiftsResidue res: seg.getResidues() ) {
+
+						if ( res.getUniProtResName() != null ) {
+							assertNotNull(res.getUniProtAccessionId() );
+							assertNotNull(res.getUniProtResName());
+
+							// test for github ticket #280
+							if ( res.getUniProtPos() == 129) {
+
+								assertTrue(res.getNotObserved());
+							}
+
+						}
+					}
+				}
+
+			}
+
+		} catch (Exception e){
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
+
+	}
+
 	public void test4jn3(){
 		try {
 			List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4jn3");
