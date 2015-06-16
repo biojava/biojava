@@ -46,7 +46,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	public MultipleAlignmentEnsembleImpl(){
 		
 		algorithmName = null;
-		version = "1.0";
+		version = null;
 		ioTime = null;
 		calculationTime = null;
 		
@@ -118,9 +118,8 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	 * Constructor from an AFPChain instance. Creates an equivalent pairwise alignment.
 	 * @param ensemble parent MultipleAlignmentEnsemble.
 	 * @return MultipleAlignment a MultipleAlignment instance part of an MultipleAlignmentEnsemble.
-	 * @throws StructureAlignmentException 
 	 */
-	public MultipleAlignmentEnsembleImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureAlignmentException {
+	public MultipleAlignmentEnsembleImpl(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 		
 		//Copy all the creation and algorithm information
 		this();
@@ -149,7 +148,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 			//Set the transformation (convert as before the rotation and translation to a 4D matrix)
 			blockSet.setTransformations(Arrays.asList(ident, Calc.getTransformation(afpChain.getBlockRotationMatrix()[bs], afpChain.getBlockShiftVector()[bs])));
 			
-			for (int i=0; i<afpChain.getOptLen()[bs]; i++){
+			for (int i=0; i<afpChain.getOptAln()[bs][0].length; i++){
 				block.getAlignRes().get(0).add(afpChain.getOptAln()[bs][0][i]);
 				block.getAlignRes().get(1).add(afpChain.getOptAln()[bs][1][i]);
 			}
@@ -213,15 +212,16 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	}
 
 	@Override
-	public List<Atom[]> getAtomArrays() throws StructureAlignmentException {
-		if (atomArrays == null)
+	public List<Atom[]> getAtomArrays() {
+		if (atomArrays == null){
 			try {
 				updateAtomArrays();
 			} catch (IOException e) {
-				throw new StructureAlignmentException(e.getMessage(),e);
+				throw new NullPointerException(e.getMessage());
 			} catch (StructureException e) {
-				throw new StructureAlignmentException(e.getMessage(),e);
+				throw new NullPointerException(e.getMessage());
 			}
+		}
 		return atomArrays;
 	}
 
@@ -235,15 +235,13 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public void updateAtomArrays() throws IOException, StructureException{
+	public void updateAtomArrays() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		atomArrays = new ArrayList<Atom[]>();
 		for (String name : getStructureNames() ){
 			Atom[] array = cache.getRepresentativeAtoms(name);
 			atomArrays.add(array);
 		}
-		//TODO update superposition & other properties
-		//...I think this is not needed, because we might want to recover the atoms from a serialized alignment (but maintain cache).
 	}
 
 	@Override

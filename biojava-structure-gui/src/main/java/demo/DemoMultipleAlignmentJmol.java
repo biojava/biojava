@@ -7,9 +7,7 @@ import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.fatcat.FatCat;
-import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
-import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockImpl;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
@@ -18,9 +16,10 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
@@ -31,7 +30,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  */
 public class DemoMultipleAlignmentJmol {
 
-	public static void main(String[] args) throws IOException, StructureException, StructureAlignmentException {
+	public static void main(String[] args) throws IOException, StructureException {
 		
 		//Specify the structures to align
 		//List<String> names = Arrays.asList("1tim.a", "1vzw", "1nsj", "3tha.a");	//TIM barrels
@@ -47,15 +46,16 @@ public class DemoMultipleAlignmentJmol {
 		fakeMultAln.getEnsemble().setStructureNames(names);
 		
 		//Generate a pairwise alignment and convert it to a MultipleAlignment
-		FatCat fatcat  = new FatCat();
-		AFPChain afpChain = fatcat.alignRigid(atomArrays.get(0),atomArrays.get(1));
-		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl(afpChain, atomArrays.get(0),atomArrays.get(1));
-		MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
-
-		StructureAlignmentDisplay.display(fakeMultAln);
-		StructureAlignmentDisplay.display(pairwise);
+		//FatCat fatcat  = new FatCat();
+		//AFPChain afpChain = fatcat.alignRigid(atomArrays.get(0),atomArrays.get(1));
+		//MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl(afpChain, atomArrays.get(0),atomArrays.get(1));
+		//MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
+		
+		System.out.println(MultipleAlignmentWriter.toFASTA(fakeMultAln));
+		MultipleAlignmentDisplay.display(fakeMultAln);
+		//StructureAlignmentDisplay.display(pairwise);
 		//For comparison display the original AFP
-		StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
+		//StructureAlignmentDisplay.display(afpChain,atomArrays.get(0),atomArrays.get(1));
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class DemoMultipleAlignmentJmol {
 	 * @throws StructureException
 	 * @throws StructureAlignmentException
 	 */
-	private static MultipleAlignment fakeMultipleAlignment(String family, List<Atom[]>atomArrays) throws StructureException, StructureAlignmentException{
+	private static MultipleAlignment fakeMultipleAlignment(String family, List<Atom[]>atomArrays) throws StructureException {
 		
 		//Initialize the multiple alignment parent ensemble
 		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl();
@@ -87,19 +87,19 @@ public class DemoMultipleAlignmentJmol {
 			
 			//Alignment obtained from MUSTANG multiple alignment (just some of the residues, not the whole alignment)
 			List<Integer> aligned11 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
-			List<Integer> aligned12 = Arrays.asList(29,30,31,32,33,34,35,36,37,38);
+			List<Integer> aligned12 = Arrays.asList(29,30,31,32,33,34,35,36,38);
 			List<Integer> aligned13 = Arrays.asList(123,124,125,126,127,128,129,130,131,132,133,134);
 			
 			List<Integer> aligned21 = Arrays.asList(10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,null,27,28,29,30,31);
-			List<Integer> aligned22 = Arrays.asList(39,40,41,42,43,44,45,46,47,48);
+			List<Integer> aligned22 = Arrays.asList(39,40,41,42,43,44,45,46,48);
 			List<Integer> aligned23 = Arrays.asList(133,134,135,136,137,138,139,140,141,142,143,144);
 			
 			List<Integer> aligned31 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
-			List<Integer> aligned32 = Arrays.asList(29,30,31,32,33,34,35,36,37,38);
+			List<Integer> aligned32 = Arrays.asList(29,30,31,32,33,34,35,36,38);
 			List<Integer> aligned33 = Arrays.asList(117,118,119,120,121,122,123,124,125,126,127,128);
 			
 			List<Integer> aligned41 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,null,17,18,19,20,21);
-			List<Integer> aligned42 = Arrays.asList(30,31,32,33,34,35,36,37,38,39);
+			List<Integer> aligned42 = Arrays.asList(30,31,32,33,34,35,36,37,39);
 			List<Integer> aligned43 = Arrays.asList(121,122,123,124,125,126,127,128,129,130,131,132);
 			
 			block1.getAlignRes().add(aligned11);
@@ -118,8 +118,9 @@ public class DemoMultipleAlignmentJmol {
 			block3.getAlignRes().add(aligned43);
 			
 			//Calculating all information in the alignment is as easy as that line, once the residue equivalencies are set
-			MultipleSuperimposer imposer= new ReferenceSuperimposer();
+			MultipleSuperimposer imposer = new ReferenceSuperimposer();
 			imposer.superimpose(fakeMultAln);
+			MultipleAlignmentScorer.calculateScores(fakeMultAln);
 		}
 		return fakeMultAln;
 	}

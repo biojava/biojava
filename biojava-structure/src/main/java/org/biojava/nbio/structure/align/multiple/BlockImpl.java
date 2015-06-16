@@ -112,10 +112,18 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 		return coreLength;
 	}
 
-	protected int updateCoreLength() {
-		// TODO Auto-generated method stub
-		//Loop through all the columns of the alignments and count how many of them do not have gaps.
-		return 0;
+	protected void updateCoreLength() {
+		coreLength = 0;
+		//Loop through all columns of the alignment and count how many of them do not have gaps in any structure
+		for (int col=0; col<length(); col++){
+			boolean core = true;
+			for (int str=0; str<size(); str++){
+				if (alignRes.get(str).get(col) == null){
+					core = false;
+					break;
+				}
+			}
+			if (core) coreLength++;
+		}
 	}
-	
 }

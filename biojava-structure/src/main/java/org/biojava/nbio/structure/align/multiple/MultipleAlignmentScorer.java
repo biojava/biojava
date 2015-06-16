@@ -10,10 +10,10 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
 
 /**
  * Utility class for calculating common scores over multiple alignments.
+ * 
  * @author Spencer Bliven
  *
  */
@@ -22,13 +22,13 @@ public class MultipleAlignmentScorer {
 	//	public static final String SCORE_TMSCORE = "TMScore";
 	//	public static final String SCORE_PROBABILITY = "Probability";
 	//	public static final String SCORE_CE = "CEScore";
-	//	public static final String SCORE_CORE_LENGTH = "CoreLength";
 	//	public static final String SCORE_RMSD = "RMSD";
 
+	public static final String CEMC_SCORE = "CEMCscore";
 	public static final String SCORE_REF_RMSD = "RefRMSD";
 	public static final String SCORE_REF_TMSCORE = "RefTMScore";
 
-	public static void calculateScores(MultipleAlignment alignment) throws StructureAlignmentException, StructureException {
+	public static void calculateScores(MultipleAlignment alignment) throws StructureException {
 		List<Atom[]> transformed = transformAtoms(alignment);
 		alignment.putScore(SCORE_REF_RMSD, getRefRMSD(transformed,0));
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
@@ -48,9 +48,8 @@ public class MultipleAlignmentScorer {
 	 * same order as in their parent structure. If the alignment blocks contain
 	 * null residue (gaps), then the returned array will also contain gaps.
 	 * @return
-	 * @throws StructureAlignmentException 
 	 */
-	public static List<Atom[]> transformAtoms(MultipleAlignment alignment) throws StructureAlignmentException {
+	public static List<Atom[]> transformAtoms(MultipleAlignment alignment) {
 		if(alignment.getEnsemble() == null ) {
 			throw new NullPointerException("No ensemble set for this alignment");
 		}
@@ -67,7 +66,7 @@ public class MultipleAlignmentScorer {
 			}
 			Atom[] curr = atomArrays.get(i); // all CA atoms from structure
 
-			// Concatenated list of all blocks for this structure
+			//Concatenated list of all blocks for this structure
 			Atom[] transformedAtoms = new Atom[alignment.length()];
 			int transformedAtomsLength = 0;
 
@@ -75,25 +74,22 @@ public class MultipleAlignmentScorer {
 			for( BlockSet bs : alignment.getBlockSets()) {
 
 				Atom[] blocksetAtoms = new Atom[bs.length()];
-				int blocksetPos = 0;
 
 				for( Block blk : bs.getBlocks() ) {
 					if( blk.size() != atomArrays.size()) {
-						throw new StructureAlignmentException(String.format(
+						throw new IllegalStateException(String.format(
 								"Mismatched block length. Expected %d structures, found %d.",
 								atomArrays.size(),blk.size() ));
 					}
 					//Extract aligned atoms
 					for (int j=0; j<blk.length(); j++){
 						Integer alignedPos = blk.getAlignRes().get(i).get(j);
-
-						blocksetAtoms[blocksetPos] = curr[alignedPos];
+						if (alignedPos != null) {
+							blocksetAtoms[j] = (Atom) curr[alignedPos].clone();
+						}
 					}
 				}
-
-				// clone atoms prior to transformation
-				blocksetAtoms = StructureTools.cloneAtomArray(blocksetAtoms);
-
+				
 				// transform according to (1) the blockset matrix, or (2) the alignment matrix
 				Matrix4d blockTrans = null;
 				if(bs.getTransformations() != null)
@@ -103,7 +99,7 @@ public class MultipleAlignmentScorer {
 				}
 
 				for(Atom a : blocksetAtoms) {
-					Calc.transform(a, blockTrans);
+					if (a!=null) Calc.transform(a, blockTrans);
 					transformedAtoms[transformedAtomsLength] = a;
 					transformedAtomsLength++;
 				}
@@ -116,7 +112,7 @@ public class MultipleAlignmentScorer {
 	}
 	
 
-	public static double getRefRMSD(MultipleAlignment alignment, int reference) throws StructureAlignmentException {
+	public static double getRefRMSD(MultipleAlignment alignment, int reference) {
 		List<Atom[]> transformed = transformAtoms(alignment);
 		return getRefRMSD(transformed,reference);
 	}
@@ -136,9 +132,8 @@ public class MultipleAlignmentScorer {
 	 * @param transformed
 	 * @param reference
 	 * @return
-	 * @throws StructureAlignmentException
 	 */
-	public static double getRefRMSD(List<Atom[]> transformed, int reference) throws StructureAlignmentException {
+	public static double getRefRMSD(List<Atom[]> transformed, int reference) {
 
 		double sumSqDist = 0;
 		int totalLength = 0;
@@ -168,9 +163,7 @@ public class MultipleAlignmentScorer {
 	}
 
 
-	public static double getRefTMScore(MultipleAlignment alignment, int reference)
-			throws StructureAlignmentException, StructureException
-	{
+	public static double getRefTMScore(MultipleAlignment alignment, int reference) throws StructureException {
 		List<Atom[]> transformed = transformAtoms(alignment);
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
@@ -185,12 +178,9 @@ public class MultipleAlignmentScorer {
 	 * @param lengths lengths of the full input structures
 	 * @param reference Index of the reference structure
 	 * @return
-	 * @throws StructureAlignmentException
 	 * @throws StructureException 
 	 */
-	public static double getRefTMScore(List<Atom[]> transformed, List<Integer> lengths, int reference)
-			throws StructureAlignmentException, StructureException
-	{
+	public static double getRefTMScore(List<Atom[]> transformed, List<Integer> lengths, int reference) throws StructureException {
 
 
 		if(transformed.size() != lengths.size()) {
@@ -219,7 +209,7 @@ public class MultipleAlignmentScorer {
 			}
 			sumTM += SVDSuperimposer.getTMScore(ref, aln, lengths.get(reference), lengths.get(r));
 		}
-		return sumTM/transformed.size();
+		return sumTM/(transformed.size()-1);
 	}
 
 }

@@ -3,11 +3,15 @@ package org.biojava.nbio.structure.align.multiple;
 import java.util.List;
 
 /**
- * A Block is a Data Structure that stores aligned positions of a multiple alignment that fulfill the following conditions:
- * 		1- Residues are in a sequential order (increasing or decreasing)
- * 		2- At least two structures have a residue in every column (no empty columns or columns with one residue = no alignment).
- * A collection of Blocks, named {@link BlockSet}, allows the description of circular permutations (CP) and non-sequential
- * alignments.
+ * A Block is a Data Structure that stores aligned positions of a {@link MultipleAlignment}
+ * that fulfill the following conditions: <p>
+ * 		1- Residues are in a sequential order.
+ * 		2- At least two structures have a residue in every column 
+ * 		   (no empty columns or columns with one residue = no alignment).
+ * <p>
+ * A collection of Blocks, named {@link BlockSet}, allows the description of circular 
+ * permutations (CP) and non-sequential alignments.
+ * <p>
  * Every Block object is part of a {@link BlockSet} instance, its parent, which has in turn a {@link MultipleAlignment} instance as parent.
  * 
  * @author Aleix Lafita
@@ -39,6 +43,7 @@ public interface Block extends ScoresCache {
 	/**
 	 * Returns the double List containing the aligned residues for each structure.
 	 * alignRes.get(structure).get(residue) = alignRes.get(size).get(length).
+	 * <p>
 	 * Initializes the variable if it is null.
 	 * @return List a double List of aligned residues for each structure.
 	 * @see #setAlignRes()
@@ -79,7 +84,7 @@ public interface Block extends ScoresCache {
 	
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.
-	 * 
+	 * <p>
 	 * This can free memory and ensures consistency for cached variables.
 	 */
 	public void clear();

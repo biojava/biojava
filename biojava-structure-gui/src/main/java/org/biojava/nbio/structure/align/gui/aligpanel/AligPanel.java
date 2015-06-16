@@ -111,7 +111,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
          //StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(afpChain.getAlgorithmName());
          StructureAlignmentJmol jmol= StructureAlignmentDisplay.display(afpChain, ca1, ca2);
 
-         DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, jmol);
+         DisplayAFP.showAlignmentPanel(afpChain, ca1, ca2, jmol);
 
 
 

@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -16,12 +17,14 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.align.util.ResourceManager;
+import org.biojava.nbio.structure.jama.Matrix;
+import org.jcolorbrewer.ColorBrewer;
 import org.jmol.api.JmolViewer;
 
 /**
- * A SuperClass to generalize the different types of structure alignments in Jmol.
+ * An Abstract Class to generalize the visualization of AFP and 
+ * MultipleAlignment structure alignments in Jmol.
  * 
  * @author Aleix Lafita
  *
@@ -29,6 +32,7 @@ import org.jmol.api.JmolViewer;
 public abstract class AbstractAlignmentJmol implements MouseMotionListener, MouseListener, WindowListener,ActionListener {
 
 	   protected Structure structure; 
+	   protected ColorBrewer colorPattelete = ColorBrewer.Spectral;
 
 	   protected JmolPanel jmolPanel;
 	   protected JFrame frame;
@@ -59,9 +63,8 @@ public abstract class AbstractAlignmentJmol implements MouseMotionListener, Mous
 	   
 	   /**
 	    * Return to the initial state of the alignment visualization.
-	    * @throws StructureAlignmentException 
 	    */
-	   public abstract void resetDisplay() throws StructureAlignmentException;
+	   public abstract void resetDisplay();
 	   
 	   /**
 	    * Create and set a new structure from a given atom array.
@@ -79,7 +82,14 @@ public abstract class AbstractAlignmentJmol implements MouseMotionListener, Mous
 	   }
 	   
 	   /**
-	    * Return the jmolPanel instance of the AlignmentJmol
+	    * Return the color pattelete of the AlignmentJmol instance.
+	    */
+	   public ColorBrewer getColorPattelete() {
+		   return colorPattelete;
+	   }
+	   
+	   /**
+	    * Return the jmolPanel instance of the AlignmentJmol.
 	    */
 	   public JmolPanel getJmolPanel() {
 		   return jmolPanel;
@@ -111,13 +121,11 @@ public abstract class AbstractAlignmentJmol implements MouseMotionListener, Mous
 	    */
 	   public void setStructure(Structure s) {
 
-		      if ( jmolPanel == null ){
+		      if (jmolPanel == null){
 		         System.err.println("please install Jmol first");
 		         return;
 		      }
-
 		      setTitle(s.getPDBCode());
-
 		      jmolPanel.setStructure(s);
 		      
 		      // actually this is very simple
@@ -149,6 +157,12 @@ public abstract class AbstractAlignmentJmol implements MouseMotionListener, Mous
 	   }
 	   
 	   /**
+	    * Returns a List of internal Distance Matrices, one for each structure in the alignment.
+	    * Returns null if no alignment is being displayed.
+	    */
+	   public abstract List<Matrix> getDistanceMatrices();
+	   
+	   /**
 	    * Set the title of the AlignmentJmol window.
 	    * @param label
 	    */
@@ -165,115 +179,71 @@ public abstract class AbstractAlignmentJmol implements MouseMotionListener, Mous
 	   }
 
 	   @Override
-	   public void mouseDragged(MouseEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void mouseDragged(MouseEvent e) {}
 
 	   @Override
 	   public void mouseMoved(MouseEvent e) {
 
 	      JmolViewer viewer = jmolPanel.getViewer();
-
-
-	      // needs latest jmol :-/
 	      int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
 	      if ( pos == -1 ) { return ; }
 
 	      String atomInfo = viewer.getAtomInfo(pos);
 	      text.setText(atomInfo);
 
-
 	   }
 
 	   @Override
-	   public void mouseClicked(MouseEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void mouseClicked(MouseEvent e) {}
 
 	   @Override
-	   public void mouseEntered(MouseEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void mouseEntered(MouseEvent e) {}
 
 	   @Override
-	   public void mouseExited(MouseEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void mouseExited(MouseEvent e) {}
 
 	   @Override
-	   public void mousePressed(MouseEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void mousePressed(MouseEvent e) {}
 
 	   @Override
 	   public void mouseReleased(MouseEvent e) {
-	      JmolViewer viewer = jmolPanel.getViewer();
-
-
-	      int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
-	      if ( pos == -1 ) { return ; }
-
-	      String atomInfo = viewer.getAtomInfo(pos);
-	      status.setText("clicked: " + atomInfo);
-
-	      AtomInfo ai = AtomInfoParser.parse(atomInfo);
-
-	      String cmd = "select " + ai.getResidueNumber()+":" +ai.getChainId()+"/"+ai.getModelNumber() + "; set display selected;";
-
-	      evalString(cmd);
-
+		  
+		  JmolViewer viewer = jmolPanel.getViewer();
+		  int pos = viewer.findNearestAtomIndex(e.getX(), e.getY());
+		  if (pos == -1) return;
+		
+		  String atomInfo = viewer.getAtomInfo(pos);
+		  status.setText("clicked: " + atomInfo);
+		  AtomInfo ai = AtomInfoParser.parse(atomInfo);
+		
+		  String cmd = "select " + ai.getResidueNumber()+":" +ai.getChainId()+"/"+ai.getModelNumber() + "; set display selected;";
+		  evalString(cmd);
 	   }
 
 	   @Override
-	   public void windowActivated(WindowEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void windowActivated(WindowEvent e) {}
 
 	   @Override
-	   public void windowClosed(WindowEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void windowClosed(WindowEvent e) {}
 
 	   @Override
 	   public void windowClosing(WindowEvent e) {
 	      destroy();
-
 	   }
 
 	   @Override
-	   public void windowDeactivated(WindowEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void windowDeactivated(WindowEvent e) {}
 
 	   @Override
-	   public void windowDeiconified(WindowEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void windowDeiconified(WindowEvent e) {}
 
 	   @Override
-	   public void windowIconified(WindowEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void windowIconified(WindowEvent e) {}
 
 	   @Override
-	   public void windowOpened(WindowEvent e) {
-	      // TODO Auto-generated method stub
-
-	   }
+	   public void windowOpened(WindowEvent e) {}
 	   
 	   @Override
 	   public abstract void actionPerformed(ActionEvent e);
-	   
-	   
 	   
 }

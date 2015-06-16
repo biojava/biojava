@@ -92,7 +92,7 @@ public void actionPerformed(ActionEvent evt) {
             //String result = afpChain.toFatcat(ca1, ca2);
 
             //String rot = afpChain.toRotMat();
-            DisplayAFP.showAlignmentImage(afpChain, ca1,ca2,jmol);
+            DisplayAFP.showAlignmentPanel(afpChain, ca1,ca2,jmol);
 
 
 

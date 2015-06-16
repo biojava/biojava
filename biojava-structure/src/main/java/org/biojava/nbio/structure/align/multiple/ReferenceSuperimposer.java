@@ -6,15 +6,21 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 
 /**
- * Superimposes each structure in a MultipleAlignment onto a reference structure.
+ * Superimposes each structure in a {@link MultipleAlignment} onto a reference structure.
+ * Performs a global superposition of the MultipleAlignment in case there is only one 
+ * {@link BlockSet}, and a superposition for every BlockSet in case there are more than 
+ * one (flexible alignment).
+ * <p>
+ * This class uses the {@link SVDSuperimposer} algorithm.
  * 
- * Performs a global superposition over all block sets.
- * @author Spencer Bliven, Aleix Lafita
+ * @author Spencer Bliven
+ * @author Aleix Lafita
  *
  */
 public class ReferenceSuperimposer implements MultipleSuperimposer {
@@ -22,6 +28,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 	public ReferenceSuperimposer() {
 		this(0);
 	}
+	
 	/**
 	 * @param reference Index of the structure to use as a reference
 	 */
@@ -30,13 +37,14 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 	}
 	
 	/**
-	 * Superimpose all structures in a BlockSet to the reference structure
-	 * @ param bs
-	 * @return
-	 * @throws StructureAlignmentException 
+	 * Superimpose all structures in a MultipleAlignment to the reference structure.
+	 * <p>
+	 * This method only calculates and sets the transformation 4D matrices. If any score is needed
+	 * it should be calculated and set separately afterwards with {@link MultipleAlignmentScorer}.
+	 * @param alignment The MultipleAlignment object to superimpose.
 	 */
 	@Override
-	public void superimpose(MultipleAlignment alignment) throws StructureException, StructureAlignmentException {
+	public void superimpose(MultipleAlignment alignment) throws StructureException {
 		if(alignment.getEnsemble() == null ) {
 			throw new NullPointerException("No ensemble set for this alignment");
 		}
@@ -44,21 +52,17 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
 		List<Block> blocks = alignment.getBlocks();
 		
-		if(blocks.size() < 1)
-			throw new StructureAlignmentException("No aligned residues");
+		if (blocks.size() < 1)
+			throw new IndexOutOfBoundsException("No aligned residues, number of Blocks == 0.");
 		
-		if( reference < 0 || atomArrays.size() <= reference ) {
+		if (reference < 0 || atomArrays.size() <= reference ) {
 			throw new IndexOutOfBoundsException(String.format(
 					"Invalid reference structure: requested %d but only %d structures.",
 					reference,atomArrays.size()) );
 		}
 
-
-		// Output variables
+		// Output variable
 		List<Matrix4d> transforms = new ArrayList<Matrix4d>(atomArrays.size());
-		double totalDistanceSq = 0;
-		double totalLength = 0;
-		double totalTM = 0;
 
 		//Loop through structures
 		for (int i=0; i<atomArrays.size(); i++){
@@ -80,7 +84,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 			//Loop through all the Blocks that define the aligned positions
 			for( Block blk : blocks ) {
 				if( blk.size() != atomArrays.size()) {
-					throw new StructureAlignmentException(String.format(
+					throw new IllegalStateException(String.format(
 							"Mismatched block length. Expected %d structures, found %d.",
 							atomArrays.size(),blk.size() ));
 				}
@@ -101,13 +105,8 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 
 			//From the superimposer we obtain the rotation and translation information
 			SVDSuperimposer svd = new SVDSuperimposer(array1, array2);
-
+			Calc.transform(array2, svd.getTransformation());
 			transforms.add(svd.getTransformation());
-			double rmsd = SVDSuperimposer.getRMS(array1, array2);
-			totalDistanceSq += rmsd*rmsd*array1.length;
-			totalLength += array1.length;
-			
-			totalTM += SVDSuperimposer.getTMScore(array1, array2, ref.length,curr.length);
 		}
 		
 		// Set output parameters
@@ -115,9 +114,6 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 		for(BlockSet bs : alignment.getBlockSets()) {
 			bs.setTransformations(null);
 		}
-		//TODO should these be standard scores? If not, calculate standard scores -SB 2015-05
-		alignment.putScore("RefRMSD", totalDistanceSq/totalLength);
-		alignment.putScore("RefTMScore", totalTM/atomArrays.size());
 	}
 
 }

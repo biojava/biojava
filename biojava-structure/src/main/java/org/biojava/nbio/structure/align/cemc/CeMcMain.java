@@ -26,7 +26,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 
 /** 
  * The main class of the Java implementation of the Combinatorial Extension - Monte Carlo Algorithm (CEMC),
@@ -70,9 +69,8 @@ public class CeMcMain implements MultipleStructureAligner{
 	 * @throws ExecutionException 
 	 * @throws InterruptedException 
 	 * @throws StructureException 
-	 * @throws StructureAlignmentException 
 	 */
-	public MultipleAlignment generateSeed(List<Atom[]> atomArrays) throws InterruptedException, ExecutionException, StructureAlignmentException, StructureException{
+	public MultipleAlignment generateSeed(List<Atom[]> atomArrays) throws InterruptedException, ExecutionException, StructureException{
 		
 		int size = atomArrays.size();
 		
@@ -136,10 +134,9 @@ public class CeMcMain implements MultipleStructureAligner{
 	 * @param atomArrays List of Atoms of the structures
 	 * @param ref index of the reference structure
 	 * @return MultipleAlignment seed alignment
-	 * @throws StructureAlignmentException 
 	 * @throws StructureException 
 	 */
-	private MultipleAlignment seedFromReference(List<AFPChain> afpList, List<Atom[]> atomArrays, int ref) throws StructureAlignmentException, StructureException {
+	private MultipleAlignment seedFromReference(List<AFPChain> afpList, List<Atom[]> atomArrays, int ref) throws StructureException {
 		
 		int size = atomArrays.size();  //the number of structures
 		int length = 0;  //the number of residues of the reference structure
@@ -217,7 +214,7 @@ public class CeMcMain implements MultipleStructureAligner{
 	}
 
 	@Override
-	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException, StructureAlignmentException {
+	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException {
 		
 		MultipleAlignment result = null;
 		ensemble = new MultipleAlignmentEnsembleImpl();
@@ -237,25 +234,14 @@ public class CeMcMain implements MultipleStructureAligner{
 	  			afpFuture.add(submit);
 			}
 
-			Double resultScore = result.getScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE);
-			if(resultScore == null) {
-				resultScore = MultipleAlignmentScorer.getRefTMScore(result,0);
-				result.putScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE,resultScore);
-			}
-
-			//When all the optimizations are finished take the one with the best result (best TM-score)
+			double maxScore = Double.NEGATIVE_INFINITY;
+			//When all the optimizations are finished take the one with the best result (best CEMC-Score)
 			for (int i=0; i<afpFuture.size(); i++){
 				MultipleAlignment align = afpFuture.get(i).get();
-				//TODO change TMScore? -SB
-				Double tmScore = align.getScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE);
-				if(tmScore == null) {
-					tmScore = MultipleAlignmentScorer.getRefTMScore(align,0);
-					align.putScore(MultipleAlignmentScorer.SCORE_REF_TMSCORE,tmScore);
-				}
-				
-				if (tmScore > resultScore){
+				double score = align.getScore(MultipleAlignmentScorer.CEMC_SCORE);
+				if (score > maxScore){
 					result = align;
-					resultScore = tmScore;
+					maxScore = score;
 				}
 			}
 			
@@ -273,7 +259,7 @@ public class CeMcMain implements MultipleStructureAligner{
 	}
 	
 	@Override
-	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException, StructureAlignmentException {
+	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException {
 		CeMcParameters params = new CeMcParameters();
 		return align(atomArrays,params);
 	}

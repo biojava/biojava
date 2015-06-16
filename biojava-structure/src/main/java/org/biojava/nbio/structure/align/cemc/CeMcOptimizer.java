@@ -18,9 +18,9 @@ import org.biojava.nbio.structure.align.multiple.BlockImpl;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -76,10 +76,9 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	/**
 	 * Constructor.
 	 * @param seedAln MultipleAlignment to be optimize.
-	 * @throws StructureException 
-	 * @throws StructureAlignmentException 
+	 * @throws StructureException  
 	 */
-	public CeMcOptimizer(MultipleAlignment seedAln, long randomSeed) throws StructureException, StructureAlignmentException {
+	public CeMcOptimizer(MultipleAlignment seedAln, long randomSeed) throws StructureException {
 		this.msa = (MultipleAlignment) seedAln.clone();
 		rnd = new Random(randomSeed);
 		initialize(seedAln);
@@ -100,7 +99,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	 * @throws StructureException
 	 * @throws StructureAlignmentException 
 	 */
-	private void initialize(MultipleAlignment seed) throws StructureException, StructureAlignmentException {
+	private void initialize(MultipleAlignment seed) throws StructureException {
 		
 		//Initialize member variables
 		msa = seed;
@@ -148,7 +147,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	 *  	4- Split and Shrink Block: split a block in the middle and shrink one column.
 	 * 
 	 */
-	private void optimizeMC(int maxIter) throws StructureException, StructureAlignmentException{
+	private void optimizeMC(int maxIter) throws StructureException {
 		
 		//Initialize the history variables
 		lengthHistory = new ArrayList<Integer>();
@@ -240,8 +239,10 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		bk.setAlignRes(block);
 		
 		//Update Superposition (will be changed with the superposition calculated in the algorithm)
-		MultipleSuperimposer imposer= new ReferenceSuperimposer();
+		MultipleSuperimposer imposer = new ReferenceSuperimposer();
 		imposer.superimpose(msa);
+		MultipleAlignmentScorer.calculateScores(msa);
+		msa.putScore(MultipleAlignmentScorer.CEMC_SCORE, mcScore);
 	}
 
 	/**

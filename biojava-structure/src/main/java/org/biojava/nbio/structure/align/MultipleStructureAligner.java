@@ -26,7 +26,6 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.StructureAlignmentException;
 
 /**
  * Interface for the Multiple Structure Alignment Algorithms. The Pairwise Alignment Algorithms can also
@@ -44,10 +43,9 @@ public interface MultipleStructureAligner{
 	 * @param atomArrays List of Atoms of all the structures
 	 * @return MultipleAlignment object that contains the alignment.
 	 * @throws StructureException
-	 * @throws StructureAlignmentException
 	 * @see #align(List,Object)
 	 */
-	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException, StructureAlignmentException;
+	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException;
 	
 	/** 
 	 * Run an alignment and also send a bean containing the parameters.
@@ -55,10 +53,9 @@ public interface MultipleStructureAligner{
 	 * @param atomArrays List of Atoms of all the structures
 	 * @return MultipleAlignment object that contains the alignment.
 	 * @throws StructureException
-	 * @throws StructureAlignmentException
 	 * @see #align(List)
 	 */
-	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException, StructureAlignmentException;
+	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException;
 
 	/** 
 	 * Return the parameters of this algorithm instance.

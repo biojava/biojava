@@ -5,12 +5,12 @@ import java.util.Set;
 /**
  * Interface for classes which implement a temporary cache for various numeric scores,
  * e.g. RMSD, TM-Score, etc.
- * 
+ * <p> 
  * Implementations can treat this as a cache, with as much or as little persistence
  * as required. If getScore() returns null, callers should recalculate the score
- * and then store it for future calls. Implementations can therefor reset the
- * cache if things change which might impact the scores.
- * 
+ * and then store it for future calls. Implementations can therefore reset the
+ * cache if things which might impact the scores change.
+ * <p>
  * A list of common scores are included to coordinate property names, but
  * additional scores can be stored as well.
  * 
@@ -28,14 +28,14 @@ public interface ScoresCache {
 	public void putScore(String property, Double score);
 	/**
 	 * Get the value for a particular score. Scores which return null
-	 * should be recalculated and then stored using {@link #putScore(String, Double)};
+	 * should be recalculated and then stored using {@link #putScore(String, Double)}.
 	 * @param property Name of the score to fetch
 	 * @return Value of the score, or null if it is not set.
 	 */
 	public Double getScore(String property);
 	
 	/**
-	 * Get a collection of all scores that have been set
+	 * Get a collection of all scores that have been set.
 	 * @return Set of all score names
 	 */
 	public Set<String> getScores();

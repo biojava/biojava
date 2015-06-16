@@ -114,15 +114,14 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	 */
 	@Override
 	public String toString() {
-		String resume = "Structure Names:" + parent.getStructureNames() + 
-				" \nAlgorithm:" + parent.getAlgorithmName() + ", " + parent.getVersion() + 
-				" \nNumber of BlockSets: "+ getBlockSets().size() + 
-				" \nNumber of Blocks: " + getBlocks().size() +
-				" \nAlignment Length: " + length +
-				" \nAlignment Core Length: "+ coreLength;
-		
+		String resume = "Structures:" + parent.getStructureNames() + 
+				" \nAlgorithm:" + parent.getAlgorithmName() + "_" + parent.getVersion() + 
+				" \nBlockSets: "+ getBlockSets().size() + 
+				" \nBlocks: " + getBlocks().size() +
+				" \nLength: " + length() +
+				" \nCore Length: "+ getCoreLength();
 		for (String score:getScores()){
-			resume += " \n"+score+": "+ getScore(score);
+			resume += " \n"+score+": "+ String.format("%.2f", getScore(score));
 		}
 		return resume;
 	}
@@ -169,9 +168,9 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	 * @param matrices
 	 */
 	@Override
-	public void setTransformations(List<Matrix4d> matrices) throws StructureAlignmentException {
+	public void setTransformations(List<Matrix4d> matrices) {
 		if(size() != matrices.size()) {
-			throw new StructureAlignmentException("Wrong number of structures for this alignment");
+			throw new IllegalArgumentException("Wrong number of structures for this alignment");
 		}
 		// set properties that depend on the pose to null
 		clear();
