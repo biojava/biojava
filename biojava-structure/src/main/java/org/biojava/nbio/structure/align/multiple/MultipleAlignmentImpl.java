@@ -120,7 +120,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 				" \nBlocks: " + getBlocks().size() +
 				" \nLength: " + length() +
 				" \nCore Length: "+ getCoreLength();
-		
 		for (String score:getScores()){
 			resume += " \n"+score+": "+ String.format("%.2f", getScore(score));
 		}

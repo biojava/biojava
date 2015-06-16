@@ -331,7 +331,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
             return;
          }
 	         try {
-				DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+				DisplayAFP.showAlignmentPanel(afpChain, ca1, ca2, this);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return;

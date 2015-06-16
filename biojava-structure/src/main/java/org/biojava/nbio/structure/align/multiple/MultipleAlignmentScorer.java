@@ -209,7 +209,7 @@ public class MultipleAlignmentScorer {
 			}
 			sumTM += SVDSuperimposer.getTMScore(ref, aln, lengths.get(reference), lengths.get(r));
 		}
-		return sumTM/transformed.size();
+		return sumTM/(transformed.size()-1);
 	}
 
 }

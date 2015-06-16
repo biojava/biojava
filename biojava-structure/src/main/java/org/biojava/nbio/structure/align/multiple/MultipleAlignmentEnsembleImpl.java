@@ -148,7 +148,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 			//Set the transformation (convert as before the rotation and translation to a 4D matrix)
 			blockSet.setTransformations(Arrays.asList(ident, Calc.getTransformation(afpChain.getBlockRotationMatrix()[bs], afpChain.getBlockShiftVector()[bs])));
 			
-			for (int i=0; i<afpChain.getOptLen()[bs]; i++){
+			for (int i=0; i<afpChain.getOptAln()[bs][0].length; i++){
 				block.getAlignRes().get(0).add(afpChain.getOptAln()[bs][0][i]);
 				block.getAlignRes().get(1).add(afpChain.getOptAln()[bs][1][i]);
 			}

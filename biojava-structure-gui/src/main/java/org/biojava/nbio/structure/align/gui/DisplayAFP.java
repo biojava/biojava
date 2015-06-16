@@ -574,7 +574,7 @@ public class DisplayAFP {
 		return jmol;
 	}
 
-	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureException {
+	public static void showAlignmentPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureException {
 		
 		AligPanel me = new AligPanel();
 		me.setAlignmentJmol(jmol);
@@ -588,7 +588,7 @@ public class DisplayAFP {
 		frame.setTitle(afpChain.getName1() + " vs. " + afpChain.getName2() + " | " + afpChain.getAlgorithmName() + " V. " + afpChain.getVersion());
 		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
 
-		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,me,afpChain);
+		JMenuBar menu = MenuCreator.getAlignmentPanelMenu(frame,me,afpChain);
 		frame.setJMenuBar(menu);
 
 		JScrollPane scroll = new JScrollPane(me);
