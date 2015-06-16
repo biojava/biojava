@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
-import junit.framework.TestCase;
-
 import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
@@ -17,6 +15,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.StructureException;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Test the correctness of various Scores calculation for {@link MultipleAlignment}s.
@@ -29,7 +28,7 @@ import org.junit.Test;
  * @author Aleix Lafita
  *
  */
-public class MultipleAlignmentScorerTest extends TestCase {
+public class MultipleAlignmentScorerTest {
 
 	@Test
 	public void testRefRMSD() throws Exception{

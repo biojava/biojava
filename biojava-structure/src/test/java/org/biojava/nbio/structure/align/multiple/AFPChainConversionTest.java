@@ -6,6 +6,7 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Test that all relevant information (except scores and cache) is correctly copied
@@ -54,13 +55,13 @@ public class AFPChainConversionTest {
 		MultipleAlignment msa = ensemble.getMultipleAlignments().get(0);
 		
 		//Test for all the information to be equal
-		assert(afp.getName1().equals(ensemble.getStructureNames().get(0)));
-		assert(afp.getName2().equals(ensemble.getStructureNames().get(0)));
-		assert(afp.getAlgorithmName().equals(ensemble.getAlgorithmName()));
-		assert(afp.getVersion().equals(ensemble.getVersion()));
-		assert(afp.getCalculationTime() == ensemble.getCalculationTime());
-		assert(afp.getBlockNum() == msa.getBlockSets().size());
-		assert(Calc.getTransformation(afp.getBlockRotationMatrix()[0], afp.getBlockShiftVector()[0]).equals(msa.getTransformations().get(1)));
+		assertEquals(afp.getName1(),ensemble.getStructureNames().get(0));
+		assertEquals(afp.getName2(), ensemble.getStructureNames().get(1));
+		assertEquals(afp.getAlgorithmName(), ensemble.getAlgorithmName());
+		assertEquals(afp.getVersion(),ensemble.getVersion());
+		assertTrue(ensemble.getCalculationTime().equals(afp.getCalculationTime()));
+		assertEquals(afp.getBlockNum(), msa.getBlockSets().size());
+		assertEquals(Calc.getTransformation(afp.getBlockRotationMatrix()[0], afp.getBlockShiftVector()[0]), msa.getTransformations().get(1));
 		
 		//Test for the optimal alignment to be equal
 		for (int b=0; b<3; b++){
