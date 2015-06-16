@@ -19,10 +19,28 @@
 
 package org.biojava.nbio.structure.align.gui;
 
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import org.biojava.nbio.structure.*;
+import javax.swing.Box;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JScrollPane;
+
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -30,25 +48,15 @@ import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /** A utility class for visualistion of structure alignments
  * 
  * @author Andreas Prlic
  *
  */
-public class DisplayAFP
-{
+public class DisplayAFP {
 
 	private static final Logger logger = LoggerFactory.getLogger(DisplayAFP.class);
 	
-
-
 	//TODO: same as getEqrPos??? !!!
 	public static final List<Integer> getEQRAlignmentPos(AFPChain afpChain){
 		List<Integer> lst = new ArrayList<Integer>();
@@ -93,10 +101,14 @@ public class DisplayAFP
 
 	}
 
-
-
-
-
+	/**
+	 * Return a list of pdb Strings corresponding to the aligned positions of the molecule. 
+	 * Only supports a pairwise alignment with the AFPChain DS.
+	 * 
+	 * @param aligPos
+	 * @param afpChain
+	 * @param ca
+	 */
 	public static final List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
 		List<String> lst = new ArrayList<String>();
 		if ( aligPos > 1) {
@@ -136,9 +148,7 @@ public class DisplayAFP
 	 */
 	@Deprecated
 	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
-		
 		return AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);
-		
 	}
 
 
@@ -451,6 +461,8 @@ public class DisplayAFP
 	 */
 	public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) throws StructureException{
 
+		/* Previous implementation commented
+
 		Structure s = new StructureImpl();
 
 
@@ -458,6 +470,27 @@ public class DisplayAFP
 		List<Chain>model2 = getAlignedModel(ca2);
 		s.addModel(model1);
 		s.addModel(model2);
+		
+		return s;*/
+
+		return getAlignedStructure(Arrays.asList(ca1,ca2));
+	}
+	
+	/** Get an artifical Structure containing all the chains (Multiple Alignment generalization)
+	 * Does NOT rotate anything
+	 * @param ca1
+	 * @param ca2
+	 * @return a structure object containing two models, one for each set of Atoms.
+	 * @throws StructureException
+	 */
+	public static final Structure getAlignedStructure(List<Atom[]> atomArrays) throws StructureException{
+
+		Structure s = new StructureImpl();
+
+		for (int i=0; i<atomArrays.size(); i++){
+			List<Chain>model = getAlignedModel(atomArrays.get(i));
+			s.addModel(model);
+		}
 
 		return s;
 	}
@@ -490,7 +523,7 @@ public class DisplayAFP
 			atoms.add(a);
 		}
 
-		Atom[] arr = (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+		Atom[] arr = atoms.toArray(new Atom[atoms.size()]);
 
 		return arr;
 	}
@@ -499,7 +532,7 @@ public class DisplayAFP
 	/** Note: ca2, hetatoms2 and nucleotides2 should not be rotated. This will be done here...
 	 * */
 
-	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms1, List<Group> hetatms2 ) throws StructureException{
+	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms1, List<Group> hetatms2 ) throws StructureException {
 
 		List<Atom> twistedAs = new ArrayList<Atom>();
 
@@ -511,7 +544,7 @@ public class DisplayAFP
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
+		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
 		twistedAtoms = StructureTools.cloneAtomArray(twistedAtoms);
 
 		Atom[] arr1 = getAtomArray(ca1, hetatms1);
@@ -541,15 +574,13 @@ public class DisplayAFP
 		return jmol;
 	}
 
-	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1, Atom[] ca2, StructureAlignmentJmol jmol) {
-		String result = afpChain.toFatcat(ca1, ca2);
-
-		//String rot = afpChain.toRotMat();
-		//DisplayAFP.showAlignmentImage(afpChain, result + AFPChain.newline + rot);
-
+	public static void showAlignmentPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureException {
+		
 		AligPanel me = new AligPanel();
-		me.setStructureAlignmentJmol(jmol);		
+		me.setAlignmentJmol(jmol);
 		me.setAFPChain(afpChain);
+		me.setCa1(ca1);
+		me.setCa2(ca2);
 
 		JFrame frame = new JFrame();
 
@@ -557,7 +588,7 @@ public class DisplayAFP
 		frame.setTitle(afpChain.getName1() + " vs. " + afpChain.getName2() + " | " + afpChain.getAlgorithmName() + " V. " + afpChain.getVersion());
 		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
 
-		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,me,afpChain);
+		JMenuBar menu = MenuCreator.getAlignmentPanelMenu(frame,me,afpChain);
 		frame.setJMenuBar(menu);
 
 		JScrollPane scroll = new JScrollPane(me);
@@ -565,26 +596,21 @@ public class DisplayAFP
 
 		StatusDisplay status = new StatusDisplay();
 		status.setAfpChain(afpChain);
-
 		status.setCa1(ca1);
 		status.setCa2(ca2);
-		me.setCa1(ca1);
-		me.setCa2(ca2);
 		me.addAlignmentPositionListener(status);
-
 
 		Box vBox = Box.createVerticalBox();
 		vBox.add(scroll);
 		vBox.add(status);
-
 
 		frame.getContentPane().add(vBox);
 
 		frame.pack();
 		frame.setVisible(true);
 		// make sure they get cleaned up correctly:
-			frame.addWindowListener(me);
-			frame.addWindowListener(status);
+		frame.addWindowListener(me);
+		frame.addWindowListener(status);
 	}
 
 	public static void showAlignmentImage(AFPChain afpChain, String result) {
@@ -642,7 +668,7 @@ public class DisplayAFP
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
+		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
 
 		List<Group> hetatms  = StructureTools.getUnalignedGroups(ca1);
 		List<Group> hetatms2 = StructureTools.getUnalignedGroups(ca2);
@@ -653,7 +679,4 @@ public class DisplayAFP
 		Structure artificial = DisplayAFP.getAlignedStructure(arr1,arr2);
 		return artificial;
 	}
-
-
-
 }
