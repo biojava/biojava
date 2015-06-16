@@ -49,6 +49,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 	private MultipleAlignment multAln;
 	private List<Atom[]> atomArrays;    //already rotated atom arrays of every structure
 	private boolean colorByBlocks = false;
+	private List<JCheckBox> selectedStructures; //this information links the selected structures in the menu to the displaying structures
 
    /**
     * Default constructor creates an empty JmolPanel window, 
@@ -74,6 +75,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
       frame.setJMenuBar(menu);
       this.multAln = msa;
       this.atomArrays = rotatedAtoms;
+      this.selectedStructures = new ArrayList<JCheckBox>();
       
       frame.addWindowListener( new WindowAdapter() {
 
@@ -114,6 +116,43 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
       field.addKeyListener(listener);
       vBox.add(field);
       
+/// STRUCTURE SELECTION
+      Box hBox0 = Box.createHorizontalBox();
+      hBox0.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
+		
+      JButton show = new JButton("Show Only: ");
+      show.addActionListener(new ActionListener() {
+    	  
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				jmolPanel.evalString("save selection;");
+				String cmd = getJmolString();
+				cmd += "; restrict ";
+				for (int st=0; st<multAln.size(); st++){
+					if (selectedStructures.get(st).isSelected()) cmd += "*/"+(st+1)+", ";
+				}
+				cmd += "none;";
+				jmolPanel.executeCmd(cmd+" restore selection;");
+			}
+		});
+		
+		hBox0.add(show);
+		hBox0.add(Box.createGlue());
+		
+		for (int str=0; str<multAln.size(); str++){
+			JCheckBox structureSelection = new JCheckBox(multAln.getEnsemble().getStructureNames().get(str));
+			structureSelection.addItemListener(new ItemListener() {
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+				}
+			});
+			hBox0.add(structureSelection);
+			hBox0.add(Box.createGlue());
+			structureSelection.setSelected(true);
+			selectedStructures.add(structureSelection);
+		}
+		
+		vBox.add(hBox0);	
       
 /// COMBO BOXES 
       Box hBox1 = Box.createHorizontalBox();
@@ -195,7 +234,6 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				  
 				  if (showSelection) jmolPanel.executeCmd("set display selected");
 				  else jmolPanel.executeCmd("set display off");
-					
 			}
 		});
 		
