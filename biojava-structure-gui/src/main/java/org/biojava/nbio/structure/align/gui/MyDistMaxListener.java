@@ -19,60 +19,58 @@
 
 package org.biojava.nbio.structure.align.gui;
 
-import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.gui.ScaleableMatrixPanel;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class MyDistMaxListener
-implements ActionListener{
-   AFPChain parent;
-   public MyDistMaxListener(AFPChain parent){
-      this.parent = parent;
-   }
-   @Override
-public void actionPerformed(ActionEvent arg0)
-   {
+/**
+ * Shows the interatomic Distance Matrices of all the Structures aligned in different Frames.
+ */
+public class MyDistMaxListener implements ActionListener{
+	
+	AbstractAlignmentJmol parent;
+	
+	public MyDistMaxListener(AbstractAlignmentJmol parent){
+		this.parent = parent;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent a) {
 
-      System.out.println("show distance matrices");
+		System.out.println("Show interatomic Distance Matrices");
 
-      if ( parent == null) {
-         System.err.println("Not displaying any alignment currently!");
-         return;
-      }
-      showMatrix(parent.getDisTable1(), "Internal distances for Structure 1");
-      showMatrix(parent.getDisTable2(), "Internal distances for Structure 2");
+		if (parent.getDistanceMatrices() == null) {
+			System.err.println("Not displaying any alignment currently!");
+			return;
+		}
+		for (int i=0; i<parent.getDistanceMatrices().size(); i++){
+			if (parent.getDistanceMatrices().get(i)!=null) 
+				showMatrix(parent.getDistanceMatrices().get(i), "Internal Distances for Structure "+(i+1));
+		}
+	}
 
-   }
+	private void showMatrix(Matrix m, String title){
+		ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
+		JFrame frame = new JFrame(title);
+		frame.addWindowListener(new WindowAdapter(){
+			@Override
+			public void windowClosing(WindowEvent e){
+	            JFrame f = (JFrame) e.getSource();
+	            f.setVisible(false);
+	            f.dispose();
+			}
+		});
 
-   private void showMatrix(Matrix m, String title){
-      ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
-      JFrame frame = new JFrame(title);
-      frame.addWindowListener(new WindowAdapter(){
-         @Override
-		public void windowClosing(WindowEvent e){
-            JFrame f = (JFrame) e.getSource();
-            f.setVisible(false);
-            f.dispose();
-         }
-
-
-
-      });
-
-      smp.setMatrix(m);
-
-      frame.getContentPane().add(smp);
-
-      frame.pack();
-      frame.setVisible(true);
-   }
-
-
+		smp.setMatrix(m);
+		frame.getContentPane().add(smp);
+		frame.pack();
+		frame.setVisible(true);
+	}
 }
-

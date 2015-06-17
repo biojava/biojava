@@ -42,6 +42,7 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 
 import javax.jnlp.UnavailableServiceException;
 import javax.swing.*;
+
 import java.io.File;
 
 public class WebStartMain
@@ -363,7 +364,7 @@ public class WebStartMain
 
 		System.out.println(afpChain.toCE(ca1, ca2));
 
-		DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
+		DisplayAFP.showAlignmentPanel(afpChain,ca1,ca2,jmol);
 
 	}
 

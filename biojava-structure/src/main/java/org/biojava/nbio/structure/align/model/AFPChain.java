@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.align.ce.CeSideChainMain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.jama.Matrix;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;

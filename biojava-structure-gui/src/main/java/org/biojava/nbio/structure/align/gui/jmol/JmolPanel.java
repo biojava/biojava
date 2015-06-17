@@ -175,7 +175,7 @@ implements ActionListener
 		
 		JComboBox source = (JComboBox) event.getSource();
 		String value = source.getSelectedItem().toString();
-
+		evalString("save selection; ");
 
 		String selectLigand = "select ligand;wireframe 0.16;spacefill 0.5; color cpk ;";
 
@@ -240,7 +240,7 @@ implements ActionListener
 		} else if ( value.equals("Show SCOP Domains")){
 			colorBySCOP();
 		}
-
+		evalString("restore selection; ");
 	}
 
 	private void colorBySCOP() {

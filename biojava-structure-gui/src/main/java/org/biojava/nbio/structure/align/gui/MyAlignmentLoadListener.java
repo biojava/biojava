@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -30,6 +31,7 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.core.util.InputStreamProvider;
 
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -40,8 +42,8 @@ import java.io.InputStreamReader;
 
 public class MyAlignmentLoadListener implements ActionListener {
 
-   StructureAlignmentJmol jmol;
-   public MyAlignmentLoadListener(StructureAlignmentJmol jmol){
+   AbstractAlignmentJmol jmol;
+   public MyAlignmentLoadListener(AbstractAlignmentJmol jmol){
       this.jmol = jmol;
    }
    @Override
@@ -90,7 +92,7 @@ public void actionPerformed(ActionEvent evt) {
             //String result = afpChain.toFatcat(ca1, ca2);
 
             //String rot = afpChain.toRotMat();
-            DisplayAFP.showAlignmentImage(afpChain, ca1,ca2,jmol);
+            DisplayAFP.showAlignmentPanel(afpChain, ca1,ca2,jmol);
 
 
 

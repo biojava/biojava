@@ -338,7 +338,7 @@ public class DBResultTable implements ActionListener{
 
 			//String rot = afpChain.toRotMat();
 
-			DisplayAFP.showAlignmentImage(afpChain, ca1,ca2,jmol);
+			DisplayAFP.showAlignmentPanel(afpChain, ca1,ca2,jmol);
 
 
 		} catch (Exception e){
