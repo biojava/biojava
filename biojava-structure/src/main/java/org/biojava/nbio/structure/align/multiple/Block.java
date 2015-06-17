@@ -15,6 +15,7 @@ import java.util.List;
  * Every Block object is part of a {@link BlockSet} instance, its parent, which has in turn a {@link MultipleAlignment} instance as parent.
  * 
  * @author Aleix Lafita
+ * @author Spencer Bliven
  * 
  */
 public interface Block extends ScoresCache {

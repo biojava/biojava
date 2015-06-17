@@ -6,17 +6,19 @@ import javax.vecmath.Matrix4d;
 
 /**
  * A MultipleAlignment is a Data Structure to store the core information of a multiple structure alignment, 
- * as a return type.
- * Each alignment is described as a collection of: <p>
- * - {@link BlockSet}s that define the aligned positions, <p>
- * - Structure identifiers (i,e. Atom arrays, structure names), <p>
- * - Information about the 3D superimposition in a 4D transformation matrix, <p>
- * - Creation properties (algorithm, version, etc). <p>
+ * as a return type.<p>
+ * Each alignment is described as a collection of:
+ * <ul><li>{@link BlockSet}s that define the aligned positions,
+ * <li>Structure identifiers (i,e. Atom arrays, structure names),
+ * <li>Information about the 3D superimposition in a 4D transformation matrix,
+ * <li>Creation properties (algorithm, version, etc).
+ * </ul>
  * A collection of MultipleAlignments that share the same structures and creation properties 
  * are part of the same {@link MultipleAlignmentEnsemble}.
  * Every MultipleAlignment has a {@link MultipleAlignmentEnsemble} as its parent, which contains this information
  *
  * @author Aleix Lafita
+ * @author Spencer Bliven
  * 
  */
 public interface MultipleAlignment extends ScoresCache {
@@ -124,9 +126,18 @@ public interface MultipleAlignment extends ScoresCache {
 	public int getCoreLength();
 	
 	/**
-	 * Clear scores and other properties which depend on the specific alignment.
+	 * Clear scores and other properties which depend on the specific alignment. 
+	 * Recursively clears member BlockSets.
 	 * <p>
-	 * This can free memory and ensures consistency for cached variables.
+	 * This frees memory and ensures consistency for cached variables.
 	 */
 	public void clear();
+	
+	/**
+	 * Return a summary of the MultipleAlignment, containing the structures, the lengths and the
+	 * cached scores.
+	 * @return String summary of the MultipleAlignment
+	 */
+	@Override
+	public String toString();
 }

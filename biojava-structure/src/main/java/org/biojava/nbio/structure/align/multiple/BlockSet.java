@@ -19,6 +19,7 @@ import javax.vecmath.Matrix4d;
  * Every BlockSet object is part of a {@link MultipleAlignment} instance, its parent.
  *
  * @author Aleix Lafita
+ * @author Spencer Bliven
  * 
  */
 public interface BlockSet extends ScoresCache {
@@ -75,7 +76,6 @@ public interface BlockSet extends ScoresCache {
 	
 	/**
 	 * Set a new superposition for the structures.
-	 * <p>
 	 * This may trigger other properties to update which depend on the superposition.
 	 * @param matrices
 	 */

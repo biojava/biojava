@@ -141,11 +141,6 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		
 		for (int str=0; str<multAln.size(); str++){
 			JCheckBox structureSelection = new JCheckBox(multAln.getEnsemble().getStructureNames().get(str));
-			structureSelection.addItemListener(new ItemListener() {
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-				}
-			});
 			hBox0.add(structureSelection);
 			hBox0.add(Box.createGlue());
 			structureSelection.setSelected(true);
@@ -177,10 +172,10 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		hBox1.add(new JLabel("Color"));
 		hBox1.add(jcolors);
 		
-		String[] cPattelete = new String[] {"Set1", "Set2", "Spectral", "Pastel"};
-		JComboBox pattelete = new JComboBox(cPattelete);
+		String[] cPalette = new String[] {"Spectral", "Set1", "Set2", "Pastel"};
+		JComboBox palette = new JComboBox(cPalette);
 		
-		pattelete.addActionListener(new ActionListener() {
+		palette.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
@@ -188,13 +183,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				String value = source.getSelectedItem().toString();
 				evalString("save selection; select *; color grey; select ligand; color CPK;");
 				if (value=="Set1"){
-					colorPattelete = ColorBrewer.Set1;
+					colorPalette = ColorBrewer.Set1;
 				} else if (value=="Set2"){
-					colorPattelete = ColorBrewer.Set2;
+					colorPalette = ColorBrewer.Set2;
 				} else if (value=="Spectral"){
-					colorPattelete = ColorBrewer.Spectral;
+					colorPalette = ColorBrewer.Spectral;
 				} else if (value=="Pastel"){
-					colorPattelete = ColorBrewer.Pastel1;
+					colorPalette = ColorBrewer.Pastel1;
 				}
 				String script="";
 				script = getJmolString();
@@ -203,8 +198,8 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		});
 
 		hBox1.add(Box.createGlue());
-		hBox1.add(new JLabel("Pattelete"));
-		hBox1.add(pattelete);
+		hBox1.add(new JLabel("Palette"));
+		hBox1.add(palette);
 		
 
 /// CHECK BOXES
@@ -236,10 +231,20 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				  else jmolPanel.executeCmd("set display off");
 			}
 		});
-		
-		
 		hBox2.add(toggleSelection);
 		hBox2.add(Box.createGlue());
+		
+		JCheckBox blockColor = new JCheckBox("Color By Block");
+		blockColor.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				  colorByBlocks = (e.getStateChange() == ItemEvent.SELECTED);
+				  evalString("save selection; "+getJmolString()+"; restore selection;");
+			}
+		});
+		hBox2.add(blockColor);
+		hBox2.add(Box.createGlue());
+		
 		vBox.add(hBox2);	
 		
 // STATUS DISPLAY
@@ -330,7 +335,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
             return;
          }
          try {
-			MultipleAlignmentDisplay.showMultipleAligmentPanel(multAln, this, colorPattelete);
+			MultipleAlignmentDisplay.showMultipleAligmentPanel(multAln, this, colorPalette);
          } catch (StructureException e1) {
 			e1.printStackTrace();
          }
@@ -351,8 +356,8 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
    private String getJmolString() {
      
 	  //Color by blocks if there are flexible alignments (>1 BlockSets) or CPs (>1 Blocks)
-      if (multAln.getBlocks().size() > 1 && colorByBlocks) return getMultiBlockJmolString();
-      Color[] colors = colorPattelete.getColorPalette(multAln.size());
+      if (colorByBlocks) return getMultiBlockJmolString();
+      Color[] colors = colorPalette.getColorPalette(multAln.size());
 
       StringBuffer j = new StringBuffer();
       j.append(DEFAULT_SCRIPT);
@@ -416,7 +421,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 	  jmol.append("select *; color lightgrey; backbone 0.1; ");
 	  
 	  int blockNum = multAln.getBlocks().size();
-	  Color[] colors = colorPattelete.getColorPalette(blockNum);
+	  Color[] colors = colorPalette.getColorPalette(blockNum);
 	  
 	  //For every structure color all the blocks with the printBlock method
 	  for (int str=0; str<atomArrays.size(); str++){

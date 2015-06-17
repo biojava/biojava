@@ -157,16 +157,22 @@ public class MultipleAlignmentDisplay {
 	   }
 
 	   List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
-
+	   
 	   List<Matrix4d> transformations = multAln.getTransformations();
-	   if( transformations == null ) {
-		   //TODO temporary hack for missing transformations
-		   logger.error("BlockSet transformations are unimplemented. Superimposing to first structure.");
-		   // clone input, since we're about to re-superimpose it
+	   //TODO implement BlockSet superposition of the structure, now using the transformation of first Block Only
+	   if (multAln.getBlockSets().size() > 1)  transformations = multAln.getBlockSets().get(0).getTransformations();
+	   
+	   if(transformations == null) {
+		   logger.error("Alignment Transformations are not calculated. Superimposing to first structure as reference.");
+		   
 		   multAln = multAln.clone();
 		   MultipleSuperimposer imposer = new ReferenceSuperimposer();
 		   imposer.superimpose(multAln);
 		   transformations = multAln.getTransformations();
+		   
+		   //TODO implement BlockSet superposition of the structure, now using the transformation of first Block Only
+		   if (multAln.getBlockSets().size() > 1)  transformations = multAln.getBlockSets().get(0).getTransformations();
+		   
 		   assert(transformations != null);
 	   }
 
@@ -175,15 +181,14 @@ public class MultipleAlignmentDisplay {
 		   //TODO handle BlockSet-level transformations for flexible alignments.
 		   // In general, make sure this method has the same behavior as the other display. -SB 2015-06
 
-		   // Assume all atoms are from the same structure
+		   //Assume all atoms are from the same structure
 		   Structure displayS = atomArrays.get(i)[0].getGroup().getChain().getParent().clone();
 		   Atom[] rotCA = StructureTools.getRepresentativeAtomArray(displayS);
 		   //Rotate the structure to ensure a full rotation in the display
-		   Calc.transform(rotCA[0].getGroup().getChain().getParent(), multAln.getTransformations().get(i));
+		   Calc.transform(rotCA[0].getGroup().getChain().getParent(), transformations.get(i));
 		   rotatedAtoms.add(rotCA);
 	   }
-
-
+	   
 	   MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
 	   jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 	   return jmol;

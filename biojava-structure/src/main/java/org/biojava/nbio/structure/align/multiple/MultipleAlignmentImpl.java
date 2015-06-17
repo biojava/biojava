@@ -66,7 +66,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		coreLength = -1;
 	}
 
-
 	/**
 	 * Copy constructor.
 	 * @param ma MultipleAlignmentImpl to copy.
@@ -84,20 +83,18 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 			this.blockSets = new ArrayList<BlockSet>();
 			for (BlockSet bs:ma.blockSets){
 				BlockSet newBS = bs.clone();
-				newBS.setMultipleAlignment(this); //This automatically adds the newBS to the blockSets list
+				newBS.setMultipleAlignment(this);
+				this.blockSets.add(newBS);
 			}
 		}
 	}
 	
-	
-	/**
-	 * Clear scores and cached properties. Recursively clears member blocksets.
-	 */
 	@Override
 	public void clear() {
 		super.clear();
 		length = -1;
 		coreLength = -1;
+		pose = null;
 		for(BlockSet a : getBlockSets()) {
 			a.clear();
 		}
@@ -107,11 +104,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	public MultipleAlignmentImpl clone() {
 		return new MultipleAlignmentImpl(this);
 	}
-
-
-	/**
-	 * This method o return a summary of the multiple structure alignment.
-	 */
+	
 	@Override
 	public String toString() {
 		String resume = "Structures:" + parent.getStructureNames() + 
@@ -132,10 +125,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		return blockSets;
 	}
 	
-	/**
-	 * Convenience method to get a list of all blocks from all blocksets
-	 * @return
-	 */
 	@Override
 	public List<Block> getBlocks() {
 		List<Block> blocks = new ArrayList<Block>();
@@ -145,34 +134,19 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		return blocks;
 	}
 
-
 	@Override
 	public void setBlockSets(List<BlockSet> blockSets) {
 		this.blockSets = blockSets;
 	}
-
-	/**
-	 * Returns a transformation matrix for each structure giving the
-	 * 3D superimposition information of the multiple structure alignment.
-	 * @return the 3D superimposition information of the alignment
-	 */
+	
 	@Override
 	public List<Matrix4d> getTransformations(){
 		return pose;
 	}
 
-	/**
-	 * Set a new superposition for the structures.
-	 * 
-	 * This may trigger other properties to update which depend on the superposition.
-	 * @param matrices
-	 */
 	@Override
 	public void setTransformations(List<Matrix4d> matrices) {
-		if(size() != matrices.size()) {
-			throw new IllegalArgumentException("Wrong number of structures for this alignment");
-		}
-		// set properties that depend on the pose to null
+		if(size() != matrices.size()) throw new IllegalArgumentException("Wrong number of structures for this alignment");
 		clear();
 		pose = matrices;
 	}
@@ -232,19 +206,9 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	public MultipleAlignmentEnsemble getEnsemble() {
 		return parent;
 	}
-
-	/** 
-     * Set the back-reference to its parent Ensemble.
-     * 
-     * Neither removes this alignment from its previous ensemble, if any, nor
-     * adds it to the new parent. Calling code should assure that links to
-     * and from the ensemble are consistent and free of memory leaks.
-     * @param parent the parent MultipleAlignmentEnsemble.
-     * @see #getEnsemble()
-     */
+	
 	@Override
 	public void setEnsemble(MultipleAlignmentEnsemble parent) {
 		this.parent = parent;
 	}
-
 }

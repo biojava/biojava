@@ -13,6 +13,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * a multiple structure alignment algorithm, so that only one object is returned with more than one alignment option.
  * 
  * @author Aleix Lafita
+ * @author Spencer Bliven
  *
  */
 public interface MultipleAlignmentEnsemble extends ScoresCache {

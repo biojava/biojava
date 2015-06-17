@@ -218,7 +218,7 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 	        for (int str=0; str<size; str++){
 	        	
 	        	char c = alnSeq.get(str).charAt(i);
-	        	Color bg = jmol.getColorPattelete().getColorPalette(size)[str];
+	        	Color bg = jmol.getColorPalette().getColorPalette(size)[str];
 		        
 	        	//Color only if the position is aligned
 		        if (!isGapped){
@@ -226,9 +226,11 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 			        if (colorBySimilarity){
 			        	boolean equal = true;
 			        	boolean similar = true;
+			        	char c1 = '-';
 			        	for (int st=0; st<size-1; st++){
-			        		char c1 = alnSeq.get(st).charAt(i);
+			        		if (alnSeq.get(st).charAt(i) != '-') c1 = alnSeq.get(st).charAt(i);
 			        		char c2 = alnSeq.get(st+1).charAt(i);
+			        		if (c1=='-' || c2=='-') continue;     //If any position is a gap continue, not comparable
 			        		if (equal && c1 == c2) continue;
 			        		else equal = false;
 			        		if (AFPAlignmentDisplay.aaScore(c1, c2) > 0) continue;
@@ -241,7 +243,7 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 			         //Color by alignment block the same way as in the Jmol is done (darkening colors)
 			         else if (colorByAlignmentBlock){
 			        	 int blockNr = MultipleAlignmentTools.getBlockForAligPos(multAln,mapSeqToStruct,i);
-			        	 bg = jmol.getColorPattelete().getColorPalette(multAln.getBlocks().size())[blockNr];
+			        	 bg = jmol.getColorPalette().getColorPalette(multAln.getBlocks().size())[blockNr];
 			         }
 			         if (isSelected(i)) bg = Color.YELLOW;
 			        

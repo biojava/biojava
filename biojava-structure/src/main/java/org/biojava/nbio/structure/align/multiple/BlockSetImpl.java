@@ -60,19 +60,18 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 			this.blocks = new ArrayList<Block>();
 			for (Block b:bs.blocks){
 				Block newB = b.clone();
-				newB.setBlockSet(this); //This automatically adds the newB to the blocks list
+				newB.setBlockSet(this);
+				this.blocks.add(newB);
 			}
 		}
 	}
 	
-	/**
-	 * Clear scores and cached properties. Recursively clears member blocks.
-	 */
 	@Override
 	public void clear() {
 		super.clear();
 		length = -1;
 		coreLength = -1;
+		pose = null;
 		for(Block a : getBlocks()) {
 			a.clear();
 		}
@@ -114,24 +113,15 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 		}
 	}
 	
-	/**
-	 * Returns a transformation matrix for each structure giving the
-	 * 3D superimposition information of the multiple structure alignment.
-	 * @return the 3D superimposition information of the alignment
-	 */
 	@Override
 	public List<Matrix4d> getTransformations() {
 		return pose;
 	}
 	
-	/**
-	 * Set a new superposition for the structures.
-	 * 
-	 * This may trigger other properties to update which depend on the superposition.
-	 * @param matrices
-	 */
 	@Override
 	public void setTransformations(List<Matrix4d> transformations) {
+		if(size() != transformations.size())
+			throw new IllegalArgumentException("Wrong number of structures for this alignment");
 		pose = transformations;
 	}
 
@@ -145,7 +135,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	public int size() {
 		//Get the size from the variables that can contain the information
 		if (parent != null) return parent.size();
-		else if (getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: getBlockNum() == 0.");
+		else if (getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: number of Blocks == 0.");
 		else return blocks.get(0).size();
 	}
 
@@ -156,7 +146,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	}
 
 	protected void updateLength() {
-		if(getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: getBlockNum() == 0.");
+		if(getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: number of Blocks == 0.");
 		//Try to calculate it from the Block information
 		else {
 			length = 0;
@@ -165,7 +155,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	}
 
 	protected void updateCoreLength() {
-		if(getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: getBlockNum() == 0.");
+		if(getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: number of Blocks == 0.");
 		//Try to calculate it from the Block information
 		else {
 			coreLength = 0;
@@ -177,5 +167,4 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 		updateCoreLength();
 		updateLength();
 	}
-	
 }

@@ -32,7 +32,7 @@ import org.jmol.api.JmolViewer;
 public abstract class AbstractAlignmentJmol implements MouseMotionListener, MouseListener, WindowListener,ActionListener {
 
 	   protected Structure structure; 
-	   protected ColorBrewer colorPattelete = ColorBrewer.Spectral;
+	   protected ColorBrewer colorPalette = ColorBrewer.Spectral;
 
 	   protected JmolPanel jmolPanel;
 	   protected JFrame frame;
@@ -84,8 +84,8 @@ public abstract class AbstractAlignmentJmol implements MouseMotionListener, Mous
 	   /**
 	    * Return the color pattelete of the AlignmentJmol instance.
 	    */
-	   public ColorBrewer getColorPattelete() {
-		   return colorPattelete;
+	   public ColorBrewer getColorPalette() {
+		   return colorPalette;
 	   }
 	   
 	   /**
