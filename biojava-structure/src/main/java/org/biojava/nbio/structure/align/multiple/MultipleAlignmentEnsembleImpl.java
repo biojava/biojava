@@ -251,7 +251,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 
 	@Override
 	public List<Matrix> getDistanceMatrix() {
-		if (distanceMatrix == null) updateDistanceMatrix();
 		return distanceMatrix;
 	}
 
@@ -289,17 +288,12 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 		this.multipleAlignments = multipleAlignments;
 	}
 	
-	/**
-	 * Add a new multiple alignment to the end of the ensemble and set its
-	 * ensemble to this.
-	 * @param alignment
-	 */
 	@Override
 	public void addMultipleAlignment( MultipleAlignment alignment) {
+		if (multipleAlignments == null) multipleAlignments = new ArrayList<MultipleAlignment>();
 		multipleAlignments.add(alignment);
 		alignment.setEnsemble(this);
 	}
-
 
 	@Override
 	public int size() {
@@ -308,9 +302,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 		else throw new IndexOutOfBoundsException("Empty MultipleAlignmentEnsemble: structureNames == null && atomArrays == null");
 	}
 	
-	/**
-	 * Clear scores and distance matrix. Recursively clears member alignments.
-	 */
 	@Override
 	public void clear() {
 		super.clear();

@@ -44,8 +44,6 @@ public interface Block extends ScoresCache {
 	/**
 	 * Returns the double List containing the aligned residues for each structure.
 	 * alignRes.get(structure).get(residue) = alignRes.get(size).get(length).
-	 * <p>
-	 * Initializes the variable if it is null.
 	 * @return List a double List of aligned residues for each structure.
 	 * @see #setAlignRes()
 	 */

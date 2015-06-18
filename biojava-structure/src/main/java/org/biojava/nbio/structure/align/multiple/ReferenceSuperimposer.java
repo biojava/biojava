@@ -104,7 +104,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 					}
 					//Loop through all the columns of each Block (aligned residues)
 					for (int j=0; j<blk.length(); j++){
-						Integer pos1 = blk.getAlignRes().get(0).get(j);
+						Integer pos1 = blk.getAlignRes().get(reference).get(j);
 						Integer pos2 = blk.getAlignRes().get(i).get(j);
 	
 						if (pos1==null || pos2==null) continue;

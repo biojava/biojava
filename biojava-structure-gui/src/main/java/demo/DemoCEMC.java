@@ -14,7 +14,8 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
- * Demo for running a CEMC Multiple Structure Alignment and visualizing the results.
+ * Demo for running the CEMC Algorithm on a protein family and visualizing the results.
+ * Choose the family by commenting out the protein family names.
  * 
  * @author Aleix Lafita
  * 
@@ -43,11 +44,15 @@ public class DemoCEMC {
 		//GPCRs
 		//List<String> names = Arrays.asList("2z73.A", "1u19.A", "4ug2.A", "4xt3", "4or2.A", "3odu.A");
 		//Immunoglobulins (MAMMOTH paper)
-		List<String> names = Arrays.asList("2hla.B", "3hla.B", "1cd8", "2rhe", "1tlk", "1ten", "1ttf");
+		//List<String> names = Arrays.asList("2hla.B", "3hla.B", "1cd8", "2rhe", "1tlk", "1ten", "1ttf");
 		//Globins (MAMMOTH and MUSTA papers)
 		//List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.A", "1ith.A", "1idr.A", "1dlw", "1kr7.A", "1ew6.A", "1it2.A", "1eco", "3sdh.A", "1cg5.B", "1fhj.B", "1ird.A", "1mba", "2gdm", "1b0b", "1h97.A", "1ash.A", "1jl7.A");
 		//Rossman-Fold (POSA paper)
 		//List<String> names = Arrays.asList("d1heta2", "d1ek6a_", "d1obfo1", "2cmd", "d1np3a2", "d1bgva1", "d1id1a_", "d1id1a_", "d1oi7a1");
+		//Circular Permutations (Bliven CECP paper) - dynamin GTP-ase with CP G-domain
+		//List<String> names = Arrays.asList("d1u0la2", "d1jwyb_");
+		//Circular Permutations: SAND and MFPT domains
+		List<String> names = Arrays.asList("d2bjqa1", "d1h5pa_", "d1ufna_");  //"d1oqja"
 		
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();

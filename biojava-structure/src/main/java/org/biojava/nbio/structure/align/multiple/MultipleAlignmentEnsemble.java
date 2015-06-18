@@ -131,8 +131,8 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	public void setMultipleAlignments(List<MultipleAlignment> multipleAlignments);
 
 	/**
-	 * Add a new multiple alignment to the end of the ensemble and set its
-	 * ensemble to this.
+	 * Add a new MultipleAlignment to the end of the ensemble and set its
+	 * parent ensemble to this.
 	 * @param alignment
 	 */
 	public void addMultipleAlignment( MultipleAlignment alignment);

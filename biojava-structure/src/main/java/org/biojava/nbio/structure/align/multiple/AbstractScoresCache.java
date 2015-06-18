@@ -48,6 +48,7 @@ public abstract class AbstractScoresCache implements ScoresCache {
 	 */
 	@Override
 	public Set<String> getScores() {
+		if(scores == null) return Collections.emptySet();
 		return Collections.unmodifiableSet(scores.keySet());
 	}
 	

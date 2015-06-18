@@ -85,7 +85,6 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 
 	@Override
 	public List<List<Integer>> getAlignRes() {
-		if (alignRes == null) alignRes = new ArrayList<List<Integer>>();
 		return alignRes;
 	}
 
