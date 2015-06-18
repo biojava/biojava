@@ -129,10 +129,11 @@ public class MultipleAlignmentScorer {
 	
 	/**
 	 * Calculates the RMSD of all-to-all structure comparisons (distances) of the
-	 * given MultipleAlignment. Complexity: T(n) = O(n^2), if n=number of structures.
+	 * given MultipleAlignment. <p>
+	 * Complexity: T(n) = O(n^2), if n=number of structures.
 	 * <p>
 	 * The formula used is just the sqroot of the average distance
-	 * of any possible pair of atoms. Thus, for R structures
+	 * of all possible pairs of atoms. Thus, for R structures
 	 * aligned over C columns without gaps, we have
 	 * <pre>RMSD = \sqrt{  1/(C*(R*(R-1)/2)) * \sum_{r1=1}^{R-1} \sum_{r2=r1+1}^{R-1} \sum_{j=0}^{C-1} (atom[r1][c]-atom[r2][c])^2  }</pre>
 	 * 
@@ -363,16 +364,19 @@ public class MultipleAlignmentScorer {
 	 * @throws StructureException 
 	 */
 	public static double getCEMCScore(MultipleAlignment alignment) throws StructureException {
+		//Transform Atoms
 		List<Atom[]> transformed = transformAtoms(alignment);
+		//Calculate d0
 		int minLen = Integer.MAX_VALUE;
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays())
 			if (atoms.length < minLen) minLen = atoms.length;
-		//d0 is calculated as in the TM-score
-		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;
-		return getCEMCScore(transformed, d0);
+		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;	//d0 is calculated as in the TM-score
+		//Calculate gaps
+		int gaps = alignment.length()-alignment.getCoreLength();
+		return getCEMCScore(transformed, d0, gaps);
 	}
 	
-	private static double getCEMCScore(List<Atom[]> transformed, double d0) throws StructureException {
+	private static double getCEMCScore(List<Atom[]> transformed, double d0, int gaps) throws StructureException {
 
 		int length = transformed.get(0).length;
 		double[] colDistances = new double[length];
@@ -394,7 +398,10 @@ public class MultipleAlignmentScorer {
 						nonNullLength++;
 					}
 				}
-				if(nonNullLength > 0) colDistances[c] += nonNullDist/nonNullLength;
+				if(nonNullLength > 0) {
+					if (colDistances[c] == -1) colDistances[c] = 0;
+					colDistances[c] += nonNullDist/nonNullLength;
+				}
 			}
 		}
 		
@@ -402,9 +409,10 @@ public class MultipleAlignmentScorer {
 		for (int col=0; col<length; col++){
 			if (colDistances[col]==-1) continue;
 			double d1 = colDistances[col];
-			double colScore = 40/(1+(d1*d1/d0*d0))-20;  //d0=5, M=20
+			double colScore = 40.0/(1+(d1*d1)/(d0*d0))-20.0;  //d0=5, M=20
 			scoreMC += colScore;
 		}
-		return scoreMC;
+		//Apply the Gap penalty and return
+		return scoreMC - gaps*10.0;
 	}
 }

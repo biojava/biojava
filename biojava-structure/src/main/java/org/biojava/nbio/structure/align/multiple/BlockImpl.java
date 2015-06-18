@@ -57,10 +57,6 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 		return new BlockImpl(this);
 	}
 	
-	
-	/**
-	 * Clear scores and cached properties. Recursively clears member blocks.
-	 */
 	@Override
 	public void clear() {
 		super.clear();

@@ -112,7 +112,7 @@ public interface BlockSet extends ScoresCache {
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.
 	 * <p>
-	 * This can free memory and ensures consistency for cached variables.
+	 * Recursively clears the memeber Blocks.
 	 */
 	public void clear();
 }

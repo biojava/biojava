@@ -11,6 +11,9 @@ import org.biojava.nbio.structure.align.ce.CeParameters;
  */
 public class CeMcParameters extends CeParameters {
 
+	//Parameters to expose to the GUI
+	long randomSeed;	
+	
 	public CeMcParameters(){
 		super();
 	}
