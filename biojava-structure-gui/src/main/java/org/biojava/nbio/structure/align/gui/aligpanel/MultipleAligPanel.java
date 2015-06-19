@@ -230,7 +230,8 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 			        	for (int st=0; st<size-1; st++){
 			        		if (alnSeq.get(st).charAt(i) != '-') c1 = alnSeq.get(st).charAt(i);
 			        		char c2 = alnSeq.get(st+1).charAt(i);
-			        		if (c1=='-' || c2=='-') continue;     //If any position is a gap continue, not comparable
+			        		//If any position is a gap continue, not comparable
+			        		if (c1=='-' || c2=='-' || Character.isLowerCase(c1) || Character.isLowerCase(c2)) continue;
 			        		if (equal && c1 == c2) continue;
 			        		else equal = false;
 			        		if (AFPAlignmentDisplay.aaScore(c1, c2) > 0) continue;
@@ -242,7 +243,7 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 			         } 
 			         //Color by alignment block the same way as in the Jmol is done (darkening colors)
 			         else if (colorByAlignmentBlock){
-			        	 int blockNr = MultipleAlignmentTools.getBlockForAligPos(multAln,mapSeqToStruct,i);
+			        	 int blockNr = MultipleAlignmentTools.getBlockForSequencePosition(multAln,mapSeqToStruct,i);
 			        	 bg = jmol.getColorPalette().getColorPalette(multAln.getBlocks().size())[blockNr];
 			         }
 			         if (isSelected(i)) bg = Color.YELLOW;
@@ -260,24 +261,33 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
 	        }
       }
 
-      int nrLines = length / MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH;
+      int nrLines = (length-1) / (MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH);
 
       for (int i = 0 ; i < nrLines+1 ; i++){
 
         // draw legend at i
 		for (int str=0; str<size; str++){
+			
 		    Point p1 = coordManager.getLegendPosition(i,str);
 		    
 		    int aligPos = i * MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH;
-		    Atom a1 = MultipleAlignmentTools.getAtomForAligPos(multAln, mapSeqToStruct, str, aligPos);
+		    Atom a1 = null;
+		    while (a1==null && aligPos < Math.min((i+1)*MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH-1,length)){
+		    	a1 = MultipleAlignmentTools.getAtomForSequencePosition(multAln, mapSeqToStruct, str, aligPos);
+		    	aligPos++;
+		    }
 		    String label1 = JmolTools.getPdbInfo(a1,false);
 		    g2D.drawString(label1, p1.x,p1.y);
 
 		    Point p3 = coordManager.getEndLegendPosition(i,str);
-
-		    aligPos = i * MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH + MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH -1 ;
+		    
+		    aligPos = (i*MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH + MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH - 1);
 		    if (aligPos > length) aligPos = length-1;
-		    Atom a3 = MultipleAlignmentTools.getAtomForAligPos(multAln, mapSeqToStruct, str, aligPos);
+		    Atom a3 = null;
+		    while (a3==null && aligPos > Math.max(i*MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH,0)){
+		    	a3 = MultipleAlignmentTools.getAtomForSequencePosition(multAln, mapSeqToStruct, str, aligPos);
+		    	aligPos--;
+		    }
 
 		    String label3 = JmolTools.getPdbInfo(a3,false);
 
@@ -309,7 +319,7 @@ public class MultipleAligPanel extends JPrintPanel implements AlignmentPositionL
       for (int i=0; i<length; i++){
     	  if (selection.get(i)){
     		  for (int str=0; str<size; str++){
-    			  Atom a = MultipleAlignmentTools.getAtomForAligPos(multAln, mapSeqToStruct,str,i);
+    			  Atom a = MultipleAlignmentTools.getAtomForSequencePosition(multAln, mapSeqToStruct,str,i);
     			  if (a != null) {
     				  cmd.append(JmolTools.getPdbInfo(a));
     				  cmd.append("/"+(str+1)+", ");

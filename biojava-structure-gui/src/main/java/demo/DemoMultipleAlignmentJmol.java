@@ -51,7 +51,7 @@ public class DemoMultipleAlignmentJmol {
 		//MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl(afpChain, atomArrays.get(0),atomArrays.get(1));
 		//MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
 		
-		//System.out.println(MultipleAlignmentWriter.toFASTA(fakeMultAln));
+		System.out.println(MultipleAlignmentWriter.toFASTA(fakeMultAln));
 		MultipleAlignmentDisplay.display(fakeMultAln);
 		//StructureAlignmentDisplay.display(pairwise);
 		//For comparison display the original AFP
@@ -82,9 +82,11 @@ public class DemoMultipleAlignmentJmol {
 			BlockSet blockSet2 = new BlockSetImpl(fakeMultAln); //second BlockSet with 1 Block
 			
 			Block block1 = new BlockImpl(blockSet1);
+			block1.setAlignRes(new ArrayList<List<Integer>>());
 			Block block2 = new BlockImpl(blockSet1);
-			
+			block2.setAlignRes(new ArrayList<List<Integer>>());
 			Block block3 = new BlockImpl(blockSet2);
+			block3.setAlignRes(new ArrayList<List<Integer>>());
 			
 			//Alignment obtained from MUSTANG multiple alignment (just some of the residues, not the whole alignment)
 			List<Integer> aligned11 = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);

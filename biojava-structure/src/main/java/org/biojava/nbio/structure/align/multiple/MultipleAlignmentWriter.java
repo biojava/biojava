@@ -56,7 +56,7 @@ public class MultipleAlignmentWriter {
 		//Get the String of the Block Numbers for Position
 		String blockNumbers = "";
 		for (int pos=0; pos<alnSequences.get(0).length(); pos++){
-			int blockNr = MultipleAlignmentTools.getBlockForAligPos(alignment, mapSeqToStruct, pos);
+			int blockNr = MultipleAlignmentTools.getBlockForSequencePosition(alignment, mapSeqToStruct, pos);
 			if (blockNr != -1) blockNumbers = blockNumbers.concat(""+(blockNr+1));
 			else blockNumbers = blockNumbers.concat(" ");
 		}

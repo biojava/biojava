@@ -62,6 +62,8 @@ public class MenuCreator {
 	public static final String FASTA_FORMAT = "View FASTA Alignment";
 	public static final String DIST_MATRICES = "Show Distance Matrices";
 	public static final String DOT_PLOT = "Show Dot Plot";
+	public static final String PAIRWISE_ALIGN = "New Pairwise Alignment";
+	public static final String MULTIPLE_ALIGN = "New Multiple Alignment";
 	protected static final int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
 	/** 
@@ -669,9 +671,9 @@ public class MenuCreator {
 
 		JMenuItem pairI ;
 		if ( alignIcon == null) 
-			pairI = new JMenuItem("New Alignment");
+			pairI = new JMenuItem(PAIRWISE_ALIGN);
 		else 
-			pairI = new JMenuItem("New Alignment", alignIcon);
+			pairI = new JMenuItem(PAIRWISE_ALIGN, alignIcon);
 		pairI.setMnemonic(KeyEvent.VK_N);
 		pairI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, keyMask));
 		pairI.addActionListener(new ActionListener() {
@@ -679,12 +681,35 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("New Alignment")){
+				if ( cmd.equals(PAIRWISE_ALIGN)){
 					MenuCreator.showPairDialog();
 				}				
 			}
 		});
 		return pairI;
+	}
+	
+	protected static JMenuItem getMultipleAlignmentMenuItem() {
+		ImageIcon alignIcon = createImageIcon("/icons/window_new.png");
+
+		JMenuItem multipleI ;
+		if ( alignIcon == null) 
+			multipleI = new JMenuItem(MULTIPLE_ALIGN);
+		else 
+			multipleI = new JMenuItem(MULTIPLE_ALIGN, alignIcon);
+		multipleI.setMnemonic(KeyEvent.VK_N);
+		multipleI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, keyMask));
+		multipleI.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String cmd = e.getActionCommand();
+
+				if ( cmd.equals(MULTIPLE_ALIGN)){
+					MenuCreator.showPairDialog();
+				}				
+			}
+		});
+		return multipleI;
 	}
 
 	/**

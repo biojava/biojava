@@ -38,7 +38,7 @@ public class DemoCEMC {
 		//Calcium Binding (MUSTA paper)
 		//List<String> names = Arrays.asList("4cpv", "2scp.A", "2sas", "1top", "1scm.B", "3icb");
 		//Serine Rich Proteins SERP (MUSTA paper)
-		//List<String> names = Arrays.asList("7api.A", "8api.A", "1hle.A", "1ova.A", "2ach.A", "9api.A", "1psi", "1atu", "1kct", "1ath.A", "1att.A");
+		List<String> names = Arrays.asList("7api.A", "8api.A", "1hle.A", "1ova.A", "2ach.A", "9api.A", "1psi", "1atu", "1kct", "1ath.A", "1att.A");
 		//Serine Proteases (MUSTA paper)
 		//List<String> names = Arrays.asList("1cse.E", "1sbn.E", "1pek.E", "3prk", "3tec.E");
 		//GPCRs
@@ -46,13 +46,15 @@ public class DemoCEMC {
 		//Immunoglobulins (MAMMOTH paper)
 		//List<String> names = Arrays.asList("2hla.B", "3hla.B", "1cd8", "2rhe", "1tlk", "1ten", "1ttf");
 		//Globins (MAMMOTH and MUSTA papers)
-		List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.A", "1ith.A", "1idr.A", "1dlw", "1kr7.A", "1ew6.A", "1it2.A", "1eco", "3sdh.A", "1cg5.B", "1fhj.B", "1ird.A", "1mba", "2gdm", "1b0b", "1h97.A", "1ash.A", "1jl7.A");
+		//List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.A", "1ith.A", "1idr.A", "1dlw", "1kr7.A", "1ew6.A", "1it2.A", "1eco", "3sdh.A", "1cg5.B", "1fhj.B", "1ird.A", "1mba", "2gdm", "1b0b", "1h97.A", "1ash.A", "1jl7.A");
 		//Rossman-Fold (POSA paper)
 		//List<String> names = Arrays.asList("d1heta2", "d1ek6a_", "d1obfo1", "2cmd", "d1np3a2", "d1bgva1", "d1id1a_", "d1id1a_", "d1oi7a1");
 		//Circular Permutations (Bliven CECP paper) - dynamin GTP-ase with CP G-domain
 		//List<String> names = Arrays.asList("d1u0la2", "d1jwyb_");
 		//Circular Permutations: SAND and MFPT domains
 		//List<String> names = Arrays.asList("d2bjqa1", "d1h5pa_", "d1ufna_");  //"d1oqja"
+		//Ankyrin Repeats
+		//List<String> names = Arrays.asList("d1n0ra_", "3ehq.A", "1awc.B");  //ankyrin
 		
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();

@@ -39,14 +39,10 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	private MultipleSuperimposer imposer;;
 	
 	//Optimization parameters
-	private static final int Rmin = 2;   //Minimum number of aligned structures without a gap
+	private static int Rmin = 2;   //Minimum number of aligned structures without a gap (33% of initial)
 	private static final int Lmin = 15;   //Minimum alignment length of a Block
 	private static final int iterFactor = 100; //Factor to control the max number of iterations of optimization
 	private static final double C = 20; //Probability function constant (probability of acceptance for bad moves)
-	
-	//Score function parameters
-	private static final double M = 20.0; //Maximum score of a column
-	private static final double G = 10.0; //Gap penalty for partial gaps in the alignment
 	
 	//Alignment Information
 	private MultipleAlignment msa;  //alignment - seed and return type
@@ -101,6 +97,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		//Initialize member variables
 		msa = seed.clone();
 		size = seed.size();
+		Rmin = Math.max(size/3,2);
 		atomArrays = msa.getEnsemble().getAtomArrays();
 		structureLengths = new ArrayList<Integer>();
 		for (int i=0; i<size; i++) structureLengths.add(atomArrays.get(i).length);
@@ -159,7 +156,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		scoreHistory = new ArrayList<Double>();
 		
 		int conv = 0;  //Number of steps without an alignment improvement
-		int stepsToConverge = maxIter/50;
+		int stepsToConverge =maxIter/20;
 		int i = 1;
 		
 		while (i<maxIter && conv<stepsToConverge){
@@ -175,12 +172,10 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 			double lastScore = mcScore;
 			
 			boolean moved = false;
-			int options = 3;
-			if (conv > stepsToConverge/2) options = 4;   //Only allow gap insertion when the convergence is approaching
 			
 			while (!moved){
 				//Randomly select one of the steps to modify the alignment
-				int move = rnd.nextInt(options);
+				int move = rnd.nextInt(4);
 				switch (move){
 				case 0: moved = shiftRow();
 						if (debug) System.out.println("did shift");
@@ -469,7 +464,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	
 	/**
 	 *  It extends the alignment one position to the right or to the left of a randomly selected position
-	 *  by moving the consecutive residues of each subunit (if present) from the freePool to the block.
+	 *  by moving the consecutive residues of each subunit (if enough) from the freePool to the block.
 	 *  <p>
 	 *  If there are not enough residues in the freePool it introduces gaps.
 	 */
@@ -486,6 +481,21 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		case 0:
 			
 			int rightBoundary = res;
+			int[] previousPos = new int[size];
+			for (int str=0; str<size; str++) previousPos[str] = -1;
+			
+			//Search a position to the right that has at minimum Rmin non consecutive residues (otherwise not enough freePool residues to expand)
+			while (currentBlock.length()-1>rightBoundary){
+				int noncontinuous = 0;
+				for (int str=0; str<size; str++){
+					if (currentBlock.getAlignRes().get(str).get(rightBoundary) == null) continue;
+					else if (previousPos[str] == -1) previousPos[str] = currentBlock.getAlignRes().get(str).get(rightBoundary);
+					else if (currentBlock.getAlignRes().get(str).get(rightBoundary) > previousPos[str]+1) noncontinuous++;
+				}
+				if (noncontinuous < Rmin) rightBoundary++;
+				else break;
+			}
+			rightBoundary--;
 			
 			//Expand the block with the residues at the subunit boundaries
 			for (int str=0; str<size; str++){
@@ -510,6 +520,20 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		case 1:
 			
 			int leftBoundary = res;
+			int[] nextPos = new int[size];
+			for (int str=0; str<size; str++) nextPos[str] = -1;
+			
+			//Search a position to the right that has at minimum Rmin non consecutive residues (otherwise not enough freePool residues to expand)
+			while (leftBoundary>0){
+				int noncontinuous = 0;
+				for (int str=0; str<size; str++){
+					if (currentBlock.getAlignRes().get(str).get(leftBoundary) == null) continue;
+					else if (nextPos[str] == -1) nextPos[str] = currentBlock.getAlignRes().get(str).get(leftBoundary);
+					else if (currentBlock.getAlignRes().get(str).get(leftBoundary) < nextPos[str]-1) noncontinuous++;
+				}
+				if (noncontinuous < Rmin) leftBoundary--;
+				else break;
+			}
 			
 			//Expand the block with the residues at the subunit boundaries
 			for (int str=0; str<size; str++){

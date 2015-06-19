@@ -10,6 +10,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * Utility class for calculating common scores of {@link MultipleAlignment}s.
@@ -130,7 +131,7 @@ public class MultipleAlignmentScorer {
 	/**
 	 * Calculates the RMSD of all-to-all structure comparisons (distances) of the
 	 * given MultipleAlignment. <p>
-	 * Complexity: T(n) = O(n^2), if n=number of structures.
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
 	 * <p>
 	 * The formula used is just the sqroot of the average distance
 	 * of all possible pairs of atoms. Thus, for R structures
@@ -188,7 +189,7 @@ public class MultipleAlignmentScorer {
 	/**
 	 * Calculates the average RMSD from all structures to a reference structure,
 	 * given a set of superimposed atoms.<p>
-	 * Complexity: T(n) = O(n), if n=number of structures.
+	 * Complexity: T(n,l) = O(l*n), if n=number of structures and l=alignment length.
 	 * <p>
 	 * For ungapped alignments, this is just the sqroot of the average distance
 	 * from an atom to the aligned atom from the reference. Thus, for R structures
@@ -236,7 +237,7 @@ public class MultipleAlignmentScorer {
 	/**
 	 * Calculates the average TMScore all the possible pairwise structure comparisons of the
 	 * given MultipleAlignment. <p>
-	 * Complexity: T(n) = O(n^2), if n=number of structures.
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
 	 * 
 	 * @param alignment
 	 * @return double Average TMscore
@@ -253,7 +254,7 @@ public class MultipleAlignmentScorer {
 	/**
 	 * Calculates the average TMScore all the possible pairwise structure comparisons of the
 	 * given a set of superimposed Atoms and the original structure lengths.<p>
-	 * Complexity: T(n) = O(n^2), if n=number of structures.
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
 	 * 
 	 * @param transformed
 	 * @param lengths lengths of the structures in residue number
@@ -295,7 +296,7 @@ public class MultipleAlignmentScorer {
 	/**
 	 * Calculates the average TMScore from all structures to a reference structure,
 	 * given a set of superimposed atoms.<p>
-	 * Complexity: T(n) = O(n), if n=number of structures.
+	 * Complexity: T(n,l) = O(l*n), if n=number of structures and l=alignment length.
 	 * 
 	 * @param alignment
 	 * @param reference Index of the reference structure
@@ -313,7 +314,7 @@ public class MultipleAlignmentScorer {
 	/**
 	 * Calculates the average TMScore from all structures to a reference structure,
 	 * given a set of superimposed atoms.<p>
-	 * Complexity: T(n) = O(n), if n=number of structures.
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
 	 * 
 	 * @param transformed Arrays of aligned atoms, after superposition
 	 * @param lengths lengths of the full input structures
@@ -357,7 +358,7 @@ public class MultipleAlignmentScorer {
 	 * Calculates the CEMC score, specific for the MultipleAlignment algorithm.
 	 * The score function is modified from the original CEMC paper, making it
 	 * continuous and differentiable.<p>
-	 * Complexity: T(n) = O(n^2), if n=number of structures.
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
 	 * 
 	 * @param alignment
 	 * @return
@@ -371,48 +372,65 @@ public class MultipleAlignmentScorer {
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays())
 			if (atoms.length < minLen) minLen = atoms.length;
 		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;	//d0 is calculated as in the TM-score
-		//Calculate gaps
-		int gaps = alignment.length()-alignment.getCoreLength();
-		return getCEMCScore(transformed, d0, gaps);
+		return getCEMCScore(transformed, d0);
 	}
 	
-	private static double getCEMCScore(List<Atom[]> transformed, double d0, int gaps) throws StructureException {
+	private static double getCEMCScore(List<Atom[]> transformed, double d0) throws StructureException {
 
+		int size = transformed.size();
 		int length = transformed.get(0).length;
-		double[] colDistances = new double[length];
-		for (int i=0; i<length; i++) colDistances[i] = -1;
+		Matrix residueDistances = new Matrix(size,length,-1);  //A residue distance is the average distance to all others
 		double scoreMC = 0.0;
+		int gapOpen = 0;
+		int gapExtend = 0;
 		
-		//Calculate the average column distances
-		for (int r1=0; r1<transformed.size(); r1++){
+		//Calculate the average residue distances
+		for (int r1=0; r1<size; r1++){
+			boolean gapped = false;
 			for(int c=0;c<transformed.get(r1).length;c++) {
 				Atom refAtom = transformed.get(r1)[c];
-				if(refAtom == null) continue;
+				//Calculate the gap extension and opening on the fly
+				if(refAtom == null) {
+					if (gapped) gapExtend++;
+					else {
+						gapped = true;
+						gapOpen++;
+					}
+					continue;
+				} else gapped = false;
 
-				double nonNullDist = 0;
-				int nonNullLength = 0;
-				for(int r2=r1+1;r2<transformed.size();r2++) {
+				for(int r2=r1+1;r2<size;r2++) {
 					Atom atom = transformed.get(r2)[c];
 					if(atom != null) {
-						nonNullDist += Calc.getDistance(refAtom, atom);
-						nonNullLength++;
+						double distance = Calc.getDistance(refAtom, atom);
+						if (residueDistances.get(r1, c) == -1) residueDistances.set(r1, c, 1+distance);
+						else residueDistances.set(r1, c, residueDistances.get(r1, c)+distance);
+						if (residueDistances.get(r2, c) == -1) residueDistances.set(r2, c, 1+distance);
+						else residueDistances.set(r2, c, residueDistances.get(r2, c)+distance);
 					}
-				}
-				if(nonNullLength > 0) {
-					if (colDistances[c] == -1) colDistances[c] = 0;
-					colDistances[c] += nonNullDist/nonNullLength;
 				}
 			}
 		}
+		for(int c=0;c<length;c++) {
+			int nonNullRes = 0;
+			for(int r=0;r<size;r++) {
+				if (residueDistances.get(r, c) != -1) nonNullRes++;
+			}
+			for(int r=0;r<size;r++) {
+				if (residueDistances.get(r, c) != -1) residueDistances.set(r, c, residueDistances.get(r, c)/nonNullRes);
+			}
+		}
 		
-		//Loop through all the columns
-		for (int col=0; col<length; col++){
-			if (colDistances[col]==-1) continue;
-			double d1 = colDistances[col];
-			double colScore = 40.0/(1+(d1*d1)/(d0*d0))-20.0;  //d0=5, M=20
-			scoreMC += colScore;
+		//Loop through all the residue distance entries
+		for(int row=0;row<size;row++) {
+			for (int col=0; col<length; col++){
+				if (residueDistances.get(row,col)==-1) continue;
+				double d1 = residueDistances.get(row,col);
+				double resScore = 20.0/(1+(d1*d1)/(d0*d0));
+				scoreMC += resScore;
+			}
 		}
 		//Apply the Gap penalty and return
-		return scoreMC - gaps*10.0;
+		return scoreMC - (gapOpen*10.0 + gapExtend*5.0);
 	}
 }

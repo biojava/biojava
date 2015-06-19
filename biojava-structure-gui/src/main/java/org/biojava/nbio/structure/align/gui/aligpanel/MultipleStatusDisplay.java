@@ -75,7 +75,7 @@ public class MultipleStatusDisplay extends JTextField implements AlignmentPositi
 				String alnseq  = panel.getAlnSequences().get(str);
 				char c = alnseq.charAt(p.getPos1());
 		
-				Atom a = MultipleAlignmentTools.getAtomForAligPos(panel.getMultipleAlignment(), panel.getMapSeqToStruct(), str, p.getPos1());
+				Atom a = MultipleAlignmentTools.getAtomForSequencePosition(panel.getMultipleAlignment(), panel.getMapSeqToStruct(), str, p.getPos1());
 				String pdbInfo = JmolTools.getPdbInfo(a);
 				msg += ": "+pdbInfo + " ("+c+") ";
 			}
@@ -104,7 +104,7 @@ public class MultipleStatusDisplay extends JTextField implements AlignmentPositi
 				String alnseq  = panel.getAlnSequences().get(str);
 				char c = alnseq.charAt(p.getPos1());
 		
-				Atom a = MultipleAlignmentTools.getAtomForAligPos(panel.getMultipleAlignment(), panel.getMapSeqToStruct(), str, p.getPos1());
+				Atom a = MultipleAlignmentTools.getAtomForSequencePosition(panel.getMultipleAlignment(), panel.getMapSeqToStruct(), str, p.getPos1());
 				String pdbInfo = JmolTools.getPdbInfo(a);
 
 				msg += ": "+pdbInfo + " ("+c+") ";
@@ -127,8 +127,8 @@ public class MultipleStatusDisplay extends JTextField implements AlignmentPositi
 				char c1 = alnseq.charAt(start.getPos1());
 				char c2 = alnseq.charAt(end.getPos1());
 		
-				Atom a1 = MultipleAlignmentTools.getAtomForAligPos(panel.getMultipleAlignment(), panel.getMapSeqToStruct(), str, start.getPos1());
-				Atom a2 = MultipleAlignmentTools.getAtomForAligPos(panel.getMultipleAlignment(), panel.getMapSeqToStruct(), str, end.getPos1());
+				Atom a1 = MultipleAlignmentTools.getAtomForSequencePosition(panel.getMultipleAlignment(), panel.getMapSeqToStruct(), str, start.getPos1());
+				Atom a2 = MultipleAlignmentTools.getAtomForSequencePosition(panel.getMultipleAlignment(), panel.getMapSeqToStruct(), str, end.getPos1());
 				
 				String pdbInfo1 = JmolTools.getPdbInfo(a1);
 				String pdbInfo2 = JmolTools.getPdbInfo(a2);
