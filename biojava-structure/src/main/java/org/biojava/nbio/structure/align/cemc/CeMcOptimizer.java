@@ -1,5 +1,6 @@
 package org.biojava.nbio.structure.align.cemc;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,10 +37,10 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	
 	private static final boolean debug = true;  //Prints the optimization moves and saves a file of the history
 	private Random rnd;
-	private MultipleSuperimposer imposer;;
+	private MultipleSuperimposer imposer;
 	
 	//Optimization parameters
-	private static int Rmin = 2;   //Minimum number of aligned structures without a gap (33% of initial)
+	private int Rmin = 2;   //Minimum number of aligned structures without a gap (33% of initial)
 	private static final int Lmin = 15;   //Minimum alignment length of a Block
 	private static final int iterFactor = 100; //Factor to control the max number of iterations of optimization
 	private static final double C = 20; //Probability function constant (probability of acceptance for bad moves)
@@ -82,7 +83,10 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 	public MultipleAlignment call() throws Exception {
 		//The maximum number of iterations depends on the maximum possible alignment length and the number of structures
 		optimizeMC(iterFactor*Collections.min(structureLengths)*size);
-		if (debug) saveHistory("/scratch/cemc/CeMcOptimizationHistory.csv");
+		try {
+			if (debug) saveHistory("/scratch/cemc/CeMcOptimizationHistory.csv");
+		} catch(FileNotFoundException e) {}
+		
 		return msa;
 	}
 	

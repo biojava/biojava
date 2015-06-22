@@ -18,11 +18,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test the correctness of various Scores calculation for {@link MultipleAlignment}s.
+ * Test the correctness of various Score calculations for {@link MultipleAlignment}s.
  * <p>
  * Currently tested:
  * <ul><li>Reference-RMSD
  * <li>Reference-TMscore
+ * <li>CEMC-Score TODO
  * </ul>
  * 
  * @author Aleix Lafita
