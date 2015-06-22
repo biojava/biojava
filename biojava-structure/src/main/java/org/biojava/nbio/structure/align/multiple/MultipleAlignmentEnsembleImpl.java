@@ -142,6 +142,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache implement
 		for (int bs=0; bs<afpChain.getBlockNum(); bs++){
 			BlockSet blockSet = new BlockSetImpl(alignment);
 			Block block = new BlockImpl(blockSet);
+			block.setAlignRes(new ArrayList<List<Integer>>());
 			block.getAlignRes().add(new ArrayList<Integer>()); //add the two chains
 			block.getAlignRes().add(new ArrayList<Integer>());
 			blocks.add(block);
