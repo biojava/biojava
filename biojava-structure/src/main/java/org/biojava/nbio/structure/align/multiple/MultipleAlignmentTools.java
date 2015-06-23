@@ -83,6 +83,11 @@ public class MultipleAlignmentTools {
 		
 		//Loop through all the alignment Blocks in the order given
 		for (int b=0; b<alignment.getBlocks().size(); b++){
+			if (b!=0){
+				//Add a gap to all structures in order to separate visually the blocks in the alignment
+				for (int str=0; str<alignment.size(); str++) alnSequences.set(str,alnSequences.get(str).concat("-"));
+				mapSeqToStruct.add(-1); //means no aligned position
+			}
 			//Store the previous position added to the sequence alignment for this structure
 			int[] previousPos = new int[alignment.size()];
 			Arrays.fill(previousPos, -1);
@@ -159,12 +164,16 @@ public class MultipleAlignmentTools {
 				allGaps = true;
 				for (int str=0; str<alignment.size(); str++){
 					if (previousPos[str]+1 < blockEnds[str]){
-						alnSequences.set(str,alnSequences.get(str).concat(""+Character.toLowerCase(StructureTools.get1LetterCode(atoms.get(str)[previousPos[str]+1].getGroup().getPDBName()))) );
+						provisionalChar[str] = Character.toLowerCase(StructureTools.get1LetterCode(atoms.get(str)[previousPos[str]+1].getGroup().getPDBName()));
 						previousPos[str]++;
 						allGaps = false;
-					} else alnSequences.set(str,alnSequences.get(str).concat("-"));
+					} else provisionalChar[str] = '-';
 				}
-				mapSeqToStruct.add(-1);
+				if (!allGaps){
+					for (int str=0; str<alignment.size(); str++)
+						alnSequences.set(str,alnSequences.get(str).concat(""+provisionalChar[str]));
+					mapSeqToStruct.add(-1);
+				}
 			}
 		}
 		return alnSequences;

@@ -4,7 +4,11 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * This class contains functions for the conversion of {@link MultipleAlignment} to various String outputs.
@@ -71,12 +75,12 @@ public class MultipleAlignmentWriter {
 	}
 	
 	/**
-	 * Prints the alignment in the simplest form: a list of groups of aligned residues.
+	 * Converts the alignment to its simplest form: a list of groups of aligned residues.
 	 * Format is one line per residue group, tab delimited:
-	 * <ul><li>PDB number. Includes insertion code</li>
-	 * <li>Chain.</li>
-	 * <li>Amino Acid. Three letter code.</li>
-	 * </ul>
+	 * <ul><li>PDB number (includes insertion code)
+	 * <li>Chain
+	 * <li>Amino Acid (three letter code)
+	 * </li></ul>
 	 * Example:
 	 * <code>52	A	ALA	102	A	VAL	154	A	THR</code>
 	 * <p>Note that this format loses information about blocks.
@@ -124,5 +128,39 @@ public class MultipleAlignmentWriter {
 			}
 		}
 		return residueGroup.toString();
+	}
+	
+	/**
+	 * Converts the transformation Matrices of the alignment into a String output.
+	 * @param afpChain
+	 * @return String transformation Matrices
+	 */
+	public static String toTransformMatrices(MultipleAlignment alignment) {
+
+		StringBuffer txt = new StringBuffer();
+
+		for (int bs = 0; bs < alignment.getBlockSets().size(); bs++){
+			
+			List<Matrix4d> btransforms = alignment.getBlockSets().get(bs).getTransformations();
+			if (btransforms == null || btransforms.size() < 1) continue;
+
+			if (alignment.getBlockSets().size() > 1) {
+				txt.append("Operations for block " );
+				txt.append(bs+1);
+				txt.append("\n");
+			}
+			
+			for (int str=0; str<alignment.size(); str++){
+				String origString = "ref";
+				
+				txt.append(String.format("     X"+(str+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",btransforms.get(str).getElement(0,0),btransforms.get(str).getElement(0,1), btransforms.get(str).getElement(0,2), btransforms.get(str).getElement(0,3)));
+				txt.append( "\n");
+				txt.append(String.format("     Y"+(str+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",btransforms.get(str).getElement(1,0),btransforms.get(str).getElement(1,1), btransforms.get(str).getElement(1,2), btransforms.get(str).getElement(1,3)));
+				txt.append( "\n");
+				txt.append(String.format("     Z"+(str+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",btransforms.get(str).getElement(2,0),btransforms.get(str).getElement(2,1), btransforms.get(str).getElement(2,2), btransforms.get(str).getElement(2,3)));
+				txt.append("\n\n");
+			}
+		}
+		return txt.toString();
 	}
 }

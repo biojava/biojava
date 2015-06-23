@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  * Currently tested:
  * <ul><li>FASTA
  * <li>FatCat format
- * <li>Aligned Pairs
+ * <li>Aligned Residues
  * </ul>
  * 
  * @author Aleix Lafita
@@ -40,11 +40,11 @@ public class MultipleAlignmentWriterTest {
 		
 		StringBuffer expected = new StringBuffer();
 		expected.append(">2gox\n");
-		expected.append("---S-tDaErLkhl--IvTpSgAgeq----NmIgMtPt-viAv---HyL-dEt-eqWe-\n");
+		expected.append("---S-tDaErLkhl--IvTpSgAgeq----NmIgMtPt-viAv---HyL-dEt-eqWe\n");
 		expected.append(">2gox\n");
-		expected.append("GsrS-tDAeRLkh--LiVTpSGaGEqn---MiGMtPTviA-vh--YlDE-tEqwE-Kf-\n");
+		expected.append("GsrS-tDAeRLkh--LiVTpSGaGEqn---MiGMtPTviA-vh--YlDE-tEqwE-Kf\n");
 		expected.append(">2gox\n");
-		expected.append("GS-rsTDaERLkhl-IvTPSgAGEqnmig--MTPtVIavH-Yld-ETEqwEKf-G-LE-\n");
+		expected.append("GS-rsTDaERLkhl-IvTPSgAGEqnmig--MTPtVIavH-Yld-ETEqwEKf-G-LE\n");
 		
 		assertEquals(result,expected.toString());
 		
@@ -57,7 +57,7 @@ public class MultipleAlignmentWriterTest {
 	}
 	
 	@Test
-	public void testAlignedPairs(){
+	public void testAlignedResidues(){
 		
 	}
 	

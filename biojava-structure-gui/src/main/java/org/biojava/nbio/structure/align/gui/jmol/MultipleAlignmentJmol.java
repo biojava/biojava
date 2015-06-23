@@ -345,7 +345,8 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         String result = MultipleAlignmentWriter.toFatCat(multAln) ;
+         String result = MultipleAlignmentWriter.toFatCat(multAln);
+         result += "\n"+MultipleAlignmentWriter.toTransformMatrices(multAln);
          MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
       }
    }
