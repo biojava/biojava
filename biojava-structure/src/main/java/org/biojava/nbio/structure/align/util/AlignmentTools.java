@@ -841,7 +841,7 @@ public class AlignmentTools {
 		afpChain.setCa1Length(ca1.length);
 		afpChain.setCa2Length(ca2.length);
 		
-		// we need this to get the correct superposition
+		//We need this to get the correct superposition
 		int[] focusRes1 = afpChain.getFocusRes1();
 		int[] focusRes2 = afpChain.getFocusRes2();
 		if (focusRes1 == null) {
@@ -923,7 +923,7 @@ public class AlignmentTools {
 				position++;
 			}
 			if (position != afpChain.getOptLen()[k]){
-				logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLen()[k]);
+				logger.warn("AFPChainScorer getTMScore: Problems reconstructing block alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLen()[k]);
 				// we need to resize the array, because we allocated too many atoms earlier on.
 				ca1block = (Atom[]) resizeArray(ca1block, position);
 				ca2block = (Atom[]) resizeArray(ca2block, position);
@@ -932,9 +932,6 @@ public class AlignmentTools {
 			SVDSuperimposer svdb = new SVDSuperimposer(ca1block, ca2block);
 			Matrix matrixb = svdb.getRotation();
 			Atom shiftb = svdb.getTranslation();
-			afpChain.getBlockRotationMatrix()[k] = matrixb;
-			afpChain.getBlockShiftVector()[k] = shiftb;
-			afpChain.setBlockShiftVector(blockShifts);
 			for (Atom a : ca2block) {
 				Calc.rotate(a, matrixb);
 				Calc.shift(a, shiftb);

@@ -28,7 +28,7 @@ import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
  * It assumes that the seed alignment is not flexible, since only CP are supported but not
  * alignment flexibility.
  * <p>
- * It implements Callable to be run in parallel along other optimization instances.
+ * It implements Callable to be run in parallel.
  * 
  * @author Aleix Lafita
  *
@@ -160,7 +160,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 		scoreHistory = new ArrayList<Double>();
 		
 		int conv = 0;  //Number of steps without an alignment improvement
-		int stepsToConverge =maxIter/20;
+		int stepsToConverge = Math.max(maxIter/50,1000);
 		int i = 1;
 		
 		while (i<maxIter && conv<stepsToConverge){
@@ -295,6 +295,7 @@ public class CeMcOptimizer implements Callable<MultipleAlignment> {
 
 		int str = rnd.nextInt(size); //Select randomly the subunit
 		int bk = rnd.nextInt(blockNr); //Select randomly the Block if more than 1
+		if (block.getBlocks().get(bk).length() <= Lmin) return false; //Let gaps insertion only if the subunit is larger than the minimum length
 		int res = rnd.nextInt(block.getBlocks().get(bk).length()); //Position to insert a gap
 			
 		//Insert the gap at the position
