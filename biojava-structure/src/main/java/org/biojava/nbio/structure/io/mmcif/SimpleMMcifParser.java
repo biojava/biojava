@@ -184,6 +184,18 @@ public class SimpleMMcifParser implements MMcifParser {
 			
 			logger.debug(inLoop + " " + line);
 
+			if (line.startsWith(MMCIF_TOP_HEADER)){
+				// either first line in file, or beginning of new section
+				if ( inLoop) {
+					//System.out.println("new data and in loop: " + line);
+					inLoop = false;
+					inLoopData = false;
+					lineData.clear();
+					loopFields.clear();
+				}
+
+			}
+
 
 			if ( inLoop) {
 
@@ -544,12 +556,10 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void endLineChecks(String category,List<String> loopFields, List<String> lineData, Set<String> loopWarnings ) throws IOException{
 
 		logger.debug("Processing category {}, with fields: {}",category,loopFields.toString());
-		/*System.out.println("parsed the following data: " +category + " fields: "+
-				loopFields + " DATA: " +
-				lineData);
-		if (category.equals("_struct")){
-			System.exit(0);
-		}*/
+//		System.out.println("parsed the following data: " +category + " fields: "+
+//				loopFields + " DATA: " +
+//				lineData);
+
 		if ( loopFields.size() != lineData.size()){
 			logger.warn("looks like we got a problem with nested string quote characters:");
 			throw new IOException("data length ("+ lineData.size() +
@@ -696,7 +706,6 @@ public class SimpleMMcifParser implements MMcifParser {
 					ChemComp.class.getName(),
 					loopFields, lineData, loopWarnings
 					);
-
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
 			AuditAuthor aa = (AuditAuthor)buildObject(
@@ -945,8 +954,19 @@ public class SimpleMMcifParser implements MMcifParser {
 					key = key.replace('-', '_');
 
 				try {
-					Method m = c.getMethod("set" + u + key.substring(1,key.length()) , String.class);
+
+					StringBuffer methodName = new StringBuffer();
+					methodName.append("set");
+					methodName.append(u);
+					methodName.append(key.substring(1, key.length()));
+
+
+
+					Method m = c.getMethod(methodName.toString() , String.class);
 					m.invoke(o,val);
+
+
+					;
 				}
 				catch( NoSuchMethodException nex){
 
@@ -970,21 +990,17 @@ public class SimpleMMcifParser implements MMcifParser {
 					}
 				}
 			}
-		} catch (InstantiationException eix){
-			logger.warn( "Error while constructing "+className, eix.getMessage());
-		} catch (InvocationTargetException etx){
-			logger.warn( "Error while constructing "+className, etx.getMessage());
-		} catch (IllegalAccessException eax){
-			logger.warn( "Error while constructing "+className, eax.getMessage());
-		} catch (ClassNotFoundException ex){
+
+		} catch (Exception ex){
 			logger.warn( "Error while constructing "+className, ex.getMessage());
+			ex.printStackTrace();
 		}
 		return o;
 	}
 
 	public void triggerGeneric(String category, List<String> loopFields, List<String> lineData){
 		for(MMcifConsumer c : consumers){
-			c.newGenericData(category,loopFields, lineData);
+			c.newGenericData(category, loopFields, lineData);
 		}
 	}
 
@@ -1015,6 +1031,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 	}
 	public void triggerNewChemComp(ChemComp cc){
+
 		for(MMcifConsumer c : consumers){
 			c.newChemComp(cc);
 		}
