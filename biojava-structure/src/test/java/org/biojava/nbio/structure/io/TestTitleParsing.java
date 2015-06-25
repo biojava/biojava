@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 
 /**
  * Testing for title parsing in PDB and mmCIF files
- * especially mult-line titles in PDB
+ * especially multi-line titles in PDB
  * 
  * @author duarte_j
  *
@@ -71,5 +71,7 @@ public class TestTitleParsing {
 
 		
 	}
+	
+
 
 }

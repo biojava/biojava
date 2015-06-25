@@ -1150,33 +1150,31 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SOURCE_Handler(String line) {
 		// works in the same way as the pdb_COMPND_Handler.
-		boolean sourceDebug = false;
-
 		String continuationNr = line.substring(9, 10).trim();
 
-		if (sourceDebug) {
-			System.out.println("current continuationNo     is "
-					+ continuationNr);
-			System.out.println("previousContinuationField  is "
-					+ previousContinuationField);
-			System.out.println("current continuationField  is "
-					+ continuationField);
-			System.out.println("current continuationString is "
-					+ continuationString);
-			System.out.println("current compound           is "
-					+ current_compound);
-		}
+		
+		
+		logger.debug("current continuationNo     is "
+				+ continuationNr);
+		logger.debug("previousContinuationField  is "
+				+ previousContinuationField);
+		logger.debug("current continuationField  is "
+				+ continuationField);
+		logger.debug("current continuationString is "
+				+ continuationString);
+		logger.debug("current compound           is "
+				+ current_compound);
 
-		// in some PDB files the line ends with the PDB code and a serial number, chop those off!
-		if (line.length() > 72) {
-			line = line.substring(0, 72);
+
+		// following the docs, the last valid character should be 79, chop off the rest
+		if (line.length() > 79) {
+			line = line.substring(0, 79);
 		}
 
 		line = line.substring(10, line.length());
 
-		if (sourceDebug) {
-			System.out.println("LINE: >" + line + "<");
-		}
+		logger.debug("LINE: >" + line + "<");
+		
 		String[] fieldList = line.split("\\s+");
 
 		if (!fieldList[0].equals("")
@@ -1196,9 +1194,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		} else {
 			if (continuationNr.equals("")) {
-				if (sourceDebug) {
-					System.out.println("looks like an old PDB file");
-				}
+				
+				logger.debug("looks like an old PDB file");
+				
 				continuationField = "MOLECULE:";
 				if (previousContinuationField.equals("")) {
 					previousContinuationField = continuationField;
@@ -1223,12 +1221,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			if (previousContinuationField.equals(continuationField)
 					&& sourceFieldValues.contains(continuationField)) {
-				if (sourceDebug)
-					System.out.println("Still in field " + continuationField);
+				
+				logger.debug("Still in field " + continuationField);
 
 				continuationString = continuationString.concat(token + " ");
-				if (sourceDebug)
-					System.out.println("continuationString = "
+				
+				logger.debug("continuationString = "
 							+ continuationString);
 			}
 			if (!continuationField.equals(previousContinuationField)) {
