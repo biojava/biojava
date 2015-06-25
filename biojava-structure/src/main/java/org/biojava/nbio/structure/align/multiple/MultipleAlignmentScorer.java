@@ -41,7 +41,7 @@ public class MultipleAlignmentScorer {
 	public static void calculateScores(MultipleAlignment alignment) throws StructureException {
 		
 		//Put RMSD
-		List<Atom[]> transformed = transformAtoms(alignment);
+		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
 		alignment.putScore(RMSD, getRMSD(transformed));
 		
 		//Put TM-Score
@@ -50,82 +50,6 @@ public class MultipleAlignmentScorer {
 			lengths.add(atoms.length);
 		}
 		alignment.putScore(AVG_TMSCORE, getAvgTMScore(transformed,lengths));
-	}
-	
-	/**
-	 * Transforms atoms according to the superposition stored in the alignment.
-	 * <p>
-	 * For each structure in the alignment, returns an atom for each
-	 * representative atom in the aligned columns, omitting unaligned residues
-	 * (i.e. an array of length <tt>alignment.length()</tt> ).
-	 * <p>
-	 * All blocks are concatenated together, so Atoms may not appear in the
-	 * same order as in their parent structure. If the alignment blocks contain
-	 * null residues (gaps), then the returned array will also contain null Atoms.
-	 * 
-	 * @param alignment MultipleAlignment
-	 * @return
-	 */
-	public static List<Atom[]> transformAtoms(MultipleAlignment alignment) {
-		if(alignment.getEnsemble() == null ) {
-			throw new NullPointerException("No ensemble set for this alignment");
-		}
-
-		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
-		List<Atom[]> transformed = new ArrayList<Atom[]>(atomArrays.size());
-
-		//Loop through structures
-		for (int i=0; i<atomArrays.size(); i++){
-
-			Matrix4d transform = null;
-			if( alignment.getTransformations() != null) {
-				transform = alignment.getTransformations().get(i);
-			}
-			Atom[] curr = atomArrays.get(i); // all CA atoms from structure
-
-			//Concatenated list of all blocks for this structure
-			Atom[] transformedAtoms = new Atom[alignment.length()];
-			int transformedAtomsLength = 0;
-
-			// Each blockset gets transformed independently
-			for( BlockSet bs : alignment.getBlockSets()) {
-
-				Atom[] blocksetAtoms = new Atom[bs.length()];
-
-				for( Block blk : bs.getBlocks() ) {
-					if( blk.size() != atomArrays.size()) {
-						throw new IllegalStateException(String.format(
-								"Mismatched block length. Expected %d structures, found %d.",
-								atomArrays.size(),blk.size() ));
-					}
-					//Extract aligned atoms
-					for (int j=0; j<blk.length(); j++){
-						Integer alignedPos = blk.getAlignRes().get(i).get(j);
-						if (alignedPos != null) {
-							blocksetAtoms[j] = (Atom) curr[alignedPos].clone();
-						}
-					}
-				}
-				
-				// transform according to (1) the blockset matrix, or (2) the alignment matrix
-				Matrix4d blockTrans = null;
-				if(bs.getTransformations() != null)
-					blockTrans = bs.getTransformations().get(i);
-				if(blockTrans == null) {
-					blockTrans = transform;
-				}
-
-				for(Atom a : blocksetAtoms) {
-					if (a!=null) Calc.transform(a, blockTrans);
-					transformedAtoms[transformedAtomsLength] = a;
-					transformedAtomsLength++;
-				}
-			}
-			assert(transformedAtomsLength == alignment.length());
-
-			transformed.add(transformedAtoms);
-		}
-		return transformed;
 	}
 	
 	/**
@@ -142,7 +66,7 @@ public class MultipleAlignmentScorer {
 	 * @return double RMSD
 	 */
 	public static double getRMSD(MultipleAlignment alignment) {
-		List<Atom[]> transformed = transformAtoms(alignment);
+		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
 		return getRMSD(transformed);
 	}
 	/**
@@ -183,7 +107,7 @@ public class MultipleAlignmentScorer {
 	}
 	
 	public static double getRefRMSD(MultipleAlignment alignment, int reference) {
-		List<Atom[]> transformed = transformAtoms(alignment);
+		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
 		return getRefRMSD(transformed,reference);
 	}
 	/**
@@ -244,7 +168,7 @@ public class MultipleAlignmentScorer {
 	 * @throws StructureException
 	 */
 	public static double getAvgTMScore(MultipleAlignment alignment) throws StructureException {
-		List<Atom[]> transformed = transformAtoms(alignment);
+		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
 			lengths.add(atoms.length);
@@ -304,7 +228,7 @@ public class MultipleAlignmentScorer {
 	 * @throws StructureException 
 	 */
 	public static double getRefTMScore(MultipleAlignment alignment, int reference) throws StructureException {
-		List<Atom[]> transformed = transformAtoms(alignment);
+		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
 			lengths.add(atoms.length);
@@ -366,7 +290,7 @@ public class MultipleAlignmentScorer {
 	 */
 	public static double getCEMCScore(MultipleAlignment alignment) throws StructureException {
 		//Transform Atoms
-		List<Atom[]> transformed = transformAtoms(alignment);
+		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
 		//Calculate d0
 		int minLen = Integer.MAX_VALUE;
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays())
@@ -375,6 +299,17 @@ public class MultipleAlignmentScorer {
 		return getCEMCScore(transformed, d0);
 	}
 	
+	/**
+	 * Calculates the CEMC score, specific for the MultipleAlignment algorithm.
+	 * The score function is modified from the original CEMC paper, making it
+	 * continuous and differentiable.<p>
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+	 * 
+	 * @param transformed List of transformed Atom arrays
+	 * @param d0 parameter for the distance evaluation
+	 * @return
+	 * @throws StructureException 
+	 */
 	private static double getCEMCScore(List<Atom[]> transformed, double d0) throws StructureException {
 
 		int size = transformed.size();

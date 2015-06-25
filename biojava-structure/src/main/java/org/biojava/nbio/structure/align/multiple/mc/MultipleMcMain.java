@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.cemc;
+package org.biojava.nbio.structure.align.multiple.mc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,10 +29,13 @@ import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
 
 /** 
- * The main class of the Java implementation of the Combinatorial Extension - Monte Carlo (CEMC) Algorithm,
+ * Main class of the Java implementation of the Combinatorial Extension - Monte Carlo (CEMC) Algorithm,
  * as it was originally described by C.Guda, E.D.Scheeff, P.E. Bourne and I.N. Shindyalov (2001).
- * <p>
  * The original CEMC paper is available from <a href="http://psb.stanford.edu/psb-online/proceedings/psb01/guda.pdf">here</a>.
+ * <p>
+ * This implementation is a generalized version that allows any pairwise structure alignment algorithm as input,
+ * thus supporting any non-topological or flexible alignment. The seed can also directly be the input for the 
+ * optimization. For that, look at {@link MultipleAlignmentOptimizerMC}.
  * <p>
  * The usage follows the {@link MultipleStructureAligner} interface.
  * A Demo on how to use the algorithm can be found in {@link DemoCEMC}.
@@ -40,17 +43,17 @@ import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
  * @author Aleix Lafita
  *
  */
-public class CeMcMain implements MultipleStructureAligner {
+public class MultipleMcMain implements MultipleStructureAligner {
 	
 	/**
 	 *  Version history:<p>
-	 *  1.0 - Initial code implementation from CEMC article without partial gaps.<p>
-	 *  2.0 - Update to support CP and partial gaps.<p>
+	 *  1.0 - Initial code implementation from CEMC article.<p>
+	 *  1.1 - Support CP, non-topological and flexible alignments.<p>
 	 */
-	public static final String version = "2.0";
-	public static final String algorithmName = "jCEMC";
+	public static final String version = "1.1";
+	public static final String algorithmName = "jMultipleMC";
 	
-	private CeMcParameters params;
+	private MultipleMcParameters params;
 	private MultipleAlignmentEnsemble ensemble;
 	int reference = 0;
 	
@@ -58,9 +61,9 @@ public class CeMcMain implements MultipleStructureAligner {
 	 * Default constructor. 
 	 * Default parameters are used.
 	 */
-	public CeMcMain(){
+	public MultipleMcMain(){
 		ensemble = null;
-		params = new CeMcParameters();
+		params = new MultipleMcParameters();
 	}
 
 	/**
@@ -254,7 +257,7 @@ public class CeMcMain implements MultipleStructureAligner {
 			
 			//Repeat the optimization in parallel, to obtain a more robust result.
 			for (int i=0; i<1; i++){
-				Callable<MultipleAlignment> worker = new CeMcOptimizer(result, seed+i,reference);
+				Callable<MultipleAlignment> worker = new MultipleAlignmentOptimizerMC(result, seed+i,reference);
 	  			Future<MultipleAlignment> submit = executor.submit(worker);
 	  			afpFuture.add(submit);
 			}
@@ -285,7 +288,7 @@ public class CeMcMain implements MultipleStructureAligner {
 	
 	@Override
 	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException {
-		CeMcParameters params = new CeMcParameters();
+		MultipleMcParameters params = new MultipleMcParameters();
 		return align(atomArrays,params);
 	}
 
@@ -296,10 +299,10 @@ public class CeMcMain implements MultipleStructureAligner {
 
 	@Override
 	public void setParameters(ConfigStrucAligParams parameters) {
-		if (! (params instanceof CeMcParameters )){
+		if (! (params instanceof MultipleMcParameters )){
 			throw new IllegalArgumentException("Provided parameter object is not of type CeMcParameter");
 		}
-		this.params = (CeMcParameters) params;
+		this.params = (MultipleMcParameters) params;
 	}
 
 	@Override

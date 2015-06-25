@@ -25,7 +25,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	private int coreLength;					//number of aligned positions without gaps (cache)
 	
 	/**
-	 * Constructor.
+	 * Constructor. Links also the parent to this instance.
 	 * @param multipleAlignment the parent MultipleAlignment of the BlockImpl instance.
 	 * @return BlockSetImpl a BlockSetImpl instance linked to its parent MultipleAlignment.
 	 */
