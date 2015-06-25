@@ -7,8 +7,6 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * This class contains functions for the conversion of {@link MultipleAlignment} to various String outputs.

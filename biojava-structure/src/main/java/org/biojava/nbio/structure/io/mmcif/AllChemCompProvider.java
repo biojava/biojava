@@ -186,8 +186,8 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 
 
 		} catch (IOException e){
-			System.err.println("Error loading chemical components definition file " + fileName);
-			e.printStackTrace();
+			logger.error("Could not load chemical components definition file " + fileName, e);
+			//e.printStackTrace();
 		}
 	}
 

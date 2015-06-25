@@ -991,10 +991,17 @@ public class SimpleMMcifParser implements MMcifParser {
 				}
 			}
 
-		} catch (Exception ex){
+		} catch (InstantiationException eix){
+			logger.warn( "Error while constructing "+className, eix.getMessage());
+		} catch (InvocationTargetException etx){
+			logger.warn( "Error while constructing "+className, etx.getMessage());
+		} catch (IllegalAccessException eax){
+			logger.warn( "Error while constructing "+className, eax.getMessage());
+		} catch (ClassNotFoundException ex){
 			logger.warn( "Error while constructing "+className, ex.getMessage());
-			ex.printStackTrace();
 		}
+		// any other exceptions should be caught elsewhere down the line
+		
 		return o;
 	}
 

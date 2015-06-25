@@ -26,13 +26,13 @@ package org.biojava.nbio.structure.io.sifts;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -248,6 +248,7 @@ public class SiftsXMLParser {
 		 * i.e for <employee><name>John</name></employee> xml snippet if
 		 * the Element points to employee node and tagName is 'name' I will return John
 		 */
+		@SuppressWarnings("unused")
 		private String getTextValue(Element ele, String tagName) {
 			String textVal = null;
 			NodeList nl = ele.getElementsByTagName(tagName);
@@ -267,6 +268,7 @@ public class SiftsXMLParser {
 
 				Element n = (Element) nl.item(i);
 
+				@SuppressWarnings("unused")
 				String k = n.getNodeName();
 
 				String val = n.getFirstChild().getNodeValue();
