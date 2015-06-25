@@ -15,13 +15,13 @@ import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 public class MultipleMcParameters implements ConfigStrucAligParams {
 
 	//Parameters to expose to the GUI
-	int randomSeed;
-	int minBlockLen;
-	int minAlignedStructures;
-	double gapOpen;
-	double gapExtension;
-	int convergenceSteps;
-	String pairwiseAlgorithm;
+	private int randomSeed;
+	private int minBlockLen;
+	private int minAlignedStructures;
+	private double gapOpen;
+	private double gapExtension;
+	private int convergenceSteps;
+	private String pairwiseAlgorithm;
 	
 	/**
 	 * Constructor with DEFAULT values of the parameters.
@@ -82,7 +82,8 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		List<String> params =new ArrayList<String>();
 		String randomSeed = "Random seed for the optimizer random number generator.";
 		String minBlockLen = "Minimum number of aligned positions in a Block of the Multiple Alignment.";
-		String minAlignedStructures = "Minimum number of structures aligned in a column (without gaps).";
+		String minAlignedStructures = "Minimum number of structures aligned in a column (without gaps)."
+				+ "If it is 0 the minimum is calculated as a third of the total number of structures.";
 		String gapOpen = "Penalty for opening a gap in any of the structures." ;
 		String gapExtension = "Penalty for extending a gapped region in any of the structures.";
 		String convergenceSteps = "Number of steps without a change in the alignment before stopping. Proportional to the calculation time. "
@@ -115,7 +116,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		
 		randomSeed = 0;
 		minBlockLen = 15;
-		minAlignedStructures = 2;
+		minAlignedStructures = 0;
 		gapOpen = 10.0;
 		gapExtension = 5.0;
 		convergenceSteps = 0;

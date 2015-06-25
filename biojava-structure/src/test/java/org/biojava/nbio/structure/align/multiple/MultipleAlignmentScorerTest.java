@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  * Currently tested:
  * <ul><li>Reference-RMSD
  * <li>Reference-TMscore
- * <li>CEMC-Score TODO
+ * <li>MultipleMC-Score TODO
  * </ul>
  * 
  * @author Aleix Lafita

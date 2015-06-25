@@ -29,19 +29,19 @@ public class MultipleMcUserArgumentProcessor implements UserArgumentProcessor {
 	protected static class MultipleMcStartupParams extends MultipleStartupParameters {
 		
 		//Parameters to expose to the GUI
-		int randomSeed;
-		int minBlockLen;
-		int minAlignedStructures;
-		double gapOpen;
-		double gapExtension;
-		int convergenceSteps;
-		String pairwiseAlgorithm;
+		private int randomSeed;
+		private int minBlockLen;
+		private int minAlignedStructures;
+		private double gapOpen;
+		private double gapExtension;
+		private int convergenceSteps;
+		private String pairwiseAlgorithm;
 		
 		public MultipleMcStartupParams() {
 			super();
 			randomSeed = 0;
 			minBlockLen = 15;
-			minAlignedStructures = 2;
+			minAlignedStructures = 0;
 			gapOpen = 10.0;
 			gapExtension = 5.0;
 			convergenceSteps = 0;

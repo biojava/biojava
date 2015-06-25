@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
@@ -23,12 +21,12 @@ public class MultipleAlignmentScorer {
 	
 	//Names for commonly used properties
 	public static final String PROBABILITY = "Probability";  		//AFPChain conversion
-	public static final String CE_SCORE = "CEscore";			    //AFPChain conversion
+	public static final String CE_SCORE = "CE-score";			    //AFPChain conversion
 	public static final String RMSD = "RMSD";
-	public static final String AVG_TMSCORE = "Avg-TMscore";
-	public static final String CEMC_SCORE = "CEMCscore";
+	public static final String AVGTM_SCORE = "AvgTM-score";
+	public static final String MC_SCORE = "MultipleMC-score";
 	public static final String REF_RMSD = "Ref-RMSD";
-	public static final String REF_TMSCORE = "Ref-TMscore";
+	public static final String REFTM_SCORE = "RefTM-score";
 
 	/**
 	 * Calculates and puts the RMSD and the average TM-Score of the MultipleAlignment.
@@ -49,7 +47,7 @@ public class MultipleAlignmentScorer {
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
-		alignment.putScore(AVG_TMSCORE, getAvgTMScore(transformed,lengths));
+		alignment.putScore(AVGTM_SCORE, getAvgTMScore(transformed,lengths));
 	}
 	
 	/**
@@ -279,16 +277,22 @@ public class MultipleAlignmentScorer {
 	}
 	
 	/**
-	 * Calculates the CEMC score, specific for the MultipleAlignment algorithm.
+	 * Calculates the MC score, specific for the MultipleAlignment algorithm.
 	 * The score function is modified from the original CEMC paper, making it
-	 * continuous and differentiable.<p>
+	 * continuous and differentiable.
+	 * <p>
+	 * The maximum score of a match is 20, and the penalties for gaps are part of
+	 * the input. The half-score distance, d0, is chosen as in the TM-score.
+	 * <p>
 	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
 	 * 
 	 * @param alignment
+	 * @param gapOpen penalty for gap opening (reasonable values are in the range (1.0-20.0)
+	 * @param gapExtension penalty for extending a gap (reasonable values are in the range (0.5-10)
 	 * @return
 	 * @throws StructureException 
 	 */
-	public static double getCEMCScore(MultipleAlignment alignment) throws StructureException {
+	public static double getMultipleMCScore(MultipleAlignment alignment, double gapOpen, double gapExtension) throws StructureException {
 		//Transform Atoms
 		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
 		//Calculate d0
@@ -296,28 +300,34 @@ public class MultipleAlignmentScorer {
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays())
 			if (atoms.length < minLen) minLen = atoms.length;
 		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;	//d0 is calculated as in the TM-score
-		return getCEMCScore(transformed, d0);
+		return getMultipleMCScore(transformed, d0, gapOpen, gapExtension);
 	}
 	
 	/**
-	 * Calculates the CEMC score, specific for the MultipleAlignment algorithm.
+	 * Calculates the MC score, specific for the MultipleAlignment algorithm.
 	 * The score function is modified from the original CEMC paper, making it
-	 * continuous and differentiable.<p>
+	 * continuous and differentiable.
+	 * <p>
+	 * The maximum score of a match is 20, and the penalties for gaps are part of
+	 * the input.
+	 * <p>
 	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
 	 * 
 	 * @param transformed List of transformed Atom arrays
-	 * @param d0 parameter for the distance evaluation
+	 * @param d0 parameter for the half-score distance
+	 * @param gapOpen penalty for gap opening (reasonable values are in the range (1.0-20.0)
+	 * @param gapExtension penalty for extending a gap (reasonable values are in the range (0.5-10)
 	 * @return
 	 * @throws StructureException 
 	 */
-	private static double getCEMCScore(List<Atom[]> transformed, double d0) throws StructureException {
+	private static double getMultipleMCScore(List<Atom[]> transformed, double d0, double gapOpen, double gapExtension) throws StructureException {
 
 		int size = transformed.size();
 		int length = transformed.get(0).length;
 		Matrix residueDistances = new Matrix(size,length,-1);  //A residue distance is the average distance to all others
 		double scoreMC = 0.0;
-		int gapOpen = 0;
-		int gapExtend = 0;
+		int gapsOpen = 0;
+		int gapsExtend = 0;
 		
 		//Calculate the average residue distances
 		for (int r1=0; r1<size; r1++){
@@ -326,10 +336,10 @@ public class MultipleAlignmentScorer {
 				Atom refAtom = transformed.get(r1)[c];
 				//Calculate the gap extension and opening on the fly
 				if(refAtom == null) {
-					if (gapped) gapExtend++;
+					if (gapped) gapsExtend++;
 					else {
 						gapped = true;
-						gapOpen++;
+						gapsOpen++;
 					}
 					continue;
 				} else gapped = false;
@@ -366,6 +376,6 @@ public class MultipleAlignmentScorer {
 			}
 		}
 		//Apply the Gap penalty and return
-		return scoreMC - (gapOpen*10.0 + gapExtend*5.0);
+		return scoreMC - (gapsOpen*gapOpen + gapsExtend*gapExtension);
 	}
 }

@@ -41,7 +41,7 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 	public BlockImpl(BlockImpl b) {
 		
 		this.parent = b.parent;
-		this.coreLength = b.coreLength;
+		this.coreLength = -1;
 		
 		this.alignRes = null;
 		if (b.alignRes!=null){

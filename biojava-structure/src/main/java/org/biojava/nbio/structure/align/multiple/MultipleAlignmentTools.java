@@ -498,7 +498,7 @@ public class MultipleAlignmentTools {
 					blockTrans = transform;
 				}
 
-				for(Atom a : blocksetAtoms) {
+				for (Atom a : blocksetAtoms) {
 					if (a!=null) Calc.transform(a, blockTrans);
 					transformedAtoms[transformedAtomsLength] = a;
 					transformedAtomsLength++;
