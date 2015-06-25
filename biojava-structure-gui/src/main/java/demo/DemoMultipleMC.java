@@ -8,9 +8,11 @@ import java.util.concurrent.ExecutionException;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
+import org.biojava.nbio.structure.align.multiple.mc.MultipleMcParameters;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
@@ -20,7 +22,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  * @author Aleix Lafita
  * 
  */
-public class DemoCEMC {
+public class DemoMultipleMC {
 
 	public static void main(String[] args) throws IOException, StructureException, InterruptedException, ExecutionException {
 		
@@ -30,11 +32,9 @@ public class DemoCEMC {
 		//Protein Kinases (CEMC paper)
 		//List<String> names = Arrays.asList("1cdk.A", "1cja.A", "1csn", "1b6c.B", "1ir3.A", "1fgk.A", "1byg.A", "1hck", "1blx.A", "3erk", "1bmk.A", "1kob.A", "1tki.A", "1phk", "1a06");
 		//DHFR (Gerstein 1998 paper)
-		//List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
+		List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
 		//TIM barrels (MUSTA paper)
 		//List<String> names = Arrays.asList("1tim.A", "1vzw", "1nsj", "3tha.A", "4enl", "2mnr", "7tim.A", "1tml", "1btc", "a1piia1", "6xia", "5rub.A", "2taa.B");
-		//Helix-bundle (MUSTA paper)
-		//List<String> names = Arrays.asList("1bbh.A", "1aep", "1bge.B", "256b.A", "2ccy.A", "2hmz.A", "3ink.C");
 		//Calcium Binding (MUSTA paper)
 		//List<String> names = Arrays.asList("4cpv", "2scp.A", "2sas", "1top", "1scm.B", "3icb");
 		//Serine Rich Proteins SERP (MUSTA paper)
@@ -44,7 +44,7 @@ public class DemoCEMC {
 		//GPCRs
 		//List<String> names = Arrays.asList("2z73.A", "1u19.A", "4ug2.A", "4xt3", "4or2.A", "3odu.A");
 		//Immunoglobulins (MAMMOTH paper)
-		List<String> names = Arrays.asList("2hla.B", "3hla.B", "1cd8", "2rhe", "1tlk", "1ten", "1ttf");
+		//List<String> names = Arrays.asList("2hla.B", "3hla.B", "1cd8", "2rhe", "1tlk", "1ten", "1ttf");
 		//Globins (MAMMOTH, POSA, Gerstein&Levitt and MUSTA papers)
 		//List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.A", "1ith.A", "1idr.A", "1dlw", "1kr7.A", "1ew6.A", "1it2.A", "1eco", "3sdh.A", "1cg5.B", "1fhj.B", "1ird.A", "1mba", "2gdm", "1b0b", "1h97.A", "1ash.A", "1jl7.A");
 		//Rossman-Fold (POSA paper)
@@ -67,6 +67,9 @@ public class DemoCEMC {
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
 		MultipleMcMain algorithm = new MultipleMcMain();
+		MultipleMcParameters params = (MultipleMcParameters) algorithm.getParameters();
+		params.setPairwiseAlgorithm(CeCPMain.algorithmName);
+		
 		MultipleAlignment result = algorithm.align(atomArrays);
 		result.getEnsemble().setStructureNames(names);
 		
