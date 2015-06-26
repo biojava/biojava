@@ -38,7 +38,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  */
 public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment> {
 	
-	private static final boolean debug = false;  //Prints the optimization moves and saves a file of the history
+	private static final boolean debug = true;  //Prints the optimization moves and saves a file of the history
 	private Random rnd;
 	private MultipleSuperimposer imposer;
 	
@@ -46,7 +46,7 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 	private int Rmin;   	//Minimum number of aligned structures without a gap (33% of initial)
 	private int Lmin;   	//Minimum alignment length of a Block
 	private int convergenceSteps; //Steps without a score change before stopping the optimization
-	private static final double C = 20; //Probability function constant (probability of acceptance for bad moves)
+	private double C; //Probability function constant (probability of acceptance for bad moves)
 	
 	//Score function parameters - they are defined by the user
 	private double Gopen; //Penalty for opening gap
@@ -90,6 +90,7 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 		if (params.getMinAlignedStructures() == 0) Rmin = Math.max(size/3, 2);
 		else Rmin = Math.min(Math.max(params.getMinAlignedStructures(),2),size);  //has to be in the range [2-size]
 		Lmin = params.getMinBlockLen();
+		C = 10*size;
 	}
 
 	@Override
@@ -192,15 +193,15 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 				//Randomly select one of the steps to modify the alignment. 
 				//Because two moves are biased, the probabilities are not the same
 				double move = rnd.nextDouble();
-				if (move < 0.4){
+				if (move < 0.5){
 						moved = shiftRow();
 						if (debug) System.out.println("did shift");
 				}
-				else if (move < 0.7){
+				else if (move < 0.8){
 						moved = expandBlock();
 						if (debug) System.out.println("did expand");
 				}
-				else if (move < 0.85){
+				else if (move < 0.9){
 						moved = shrinkBlock();
 						if (debug) System.out.println("did shrink");
 				}
@@ -640,12 +641,12 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 	/**
 	 *  Calculates the probability of accepting a bad move given the iteration step and the score change.
 	 *  
-	 *  Function: p=(C-AS)/m   *slightly different from the CEMC algorithm.
+	 *  Function: p=(C-AS)/(m*C)   *slightly different from the CEMC algorithm.
 	 *  Added a normalization factor so that the probability approaches 0 when the maxIter is reached.
 	 */
 	private double probabilityFunction(double AS, int m, int maxIter) {
 		
-		double prob = (C+AS)/(m);
+		double prob = (C+AS)/(m*C);
 		double norm = (1-(m*1.0)/maxIter);  //Normalization factor
 		return Math.min(Math.max(prob*norm,0.0),1.0);
 	}
