@@ -21,9 +21,9 @@ import static org.junit.Assert.*;
  * Test the correctness of various Score calculations for {@link MultipleAlignment}s.
  * <p>
  * Currently tested:
- * <ul><li>Reference-RMSD
- * <li>Reference-TMscore
- * <li>MultipleMC-Score TODO
+ * <ul><li>Reference and total RMSD
+ * <li>Reference and average TM-Score
+ * <li>MultipleMC-Score
  * </ul>
  * 
  * @author Aleix Lafita
@@ -34,39 +34,96 @@ public class MultipleAlignmentScorerTest {
 	@Test
 	public void testRefRMSD() throws Exception{
 		
-		//Identity Test: RMSD has to be equal to 0.0
+		//Identity Test: RefRMSD has to be equal to 0.0
 		MultipleAlignment identMSA = identityMSTA();
 		double refRMSD1 = MultipleAlignmentScorer.getRefRMSD(identMSA, 0);
 		assertEquals(0.0, refRMSD1, 0.000001);
 		
-		//Simple Test: RMSD has to be equal to sqrt(2.5)
+		//Simple Test: RefRMSD has to be equal to sqrt(2.5)
 		MultipleAlignment simpleMSA = simpleMSTA();
 		double refRMSD2 = MultipleAlignmentScorer.getRefRMSD(simpleMSA, 0);
 		assertEquals(1.5811388, refRMSD2, 0.000001);
 		
-		//Gapped Test: RMSD has to be equal to 1.0
+		//Gapped Test: RefRMSD has to be equal to 1.0
 		MultipleAlignment gappedMSA = gappedMSTA();
 		double refRMSD3 = MultipleAlignmentScorer.getRefRMSD(gappedMSA, 0);
 		assertEquals(1.0, refRMSD3, 0.000001);
 	}
 	
 	@Test
+	public void testRMSD() throws Exception{
+		
+		//Identity Test: RMSD has to be equal to 0.0
+		MultipleAlignment identMSA = identityMSTA();
+		double RMSD1 = MultipleAlignmentScorer.getRMSD(identMSA);
+		assertEquals(0.0, RMSD1, 0.000001);
+		
+		//Simple Test: RMSD has to be equal to 1.3228756
+		MultipleAlignment simpleMSA = simpleMSTA();
+		double RMSD2 = MultipleAlignmentScorer.getRMSD(simpleMSA);
+		assertEquals(1.3228756, RMSD2, 0.000001);
+		
+		//Gapped Test: RMSD has to be equal to 1.0
+		MultipleAlignment gappedMSA = gappedMSTA();
+		double RMSD3 = MultipleAlignmentScorer.getRMSD(gappedMSA);
+		assertEquals(0.8340576, RMSD3, 0.000001);
+	}
+	
+	@Test
 	public void testRefTMScore() throws Exception{
 		
-		//Identity Test: TM-Score has to be equal to 1.0
+		//Identity Test: RefTM-Score has to be equal to 1.0
 		MultipleAlignment identMSA = identityMSTA();
 		double refTM1 = MultipleAlignmentScorer.getRefTMScore(identMSA, 0);
 		assertEquals(1.0, refTM1, 0.000001);
 		
-		//Simple Test: TM-Score has to be equal to 0.6831032
+		//Simple Test: RefTM-Score has to be equal to 0.6831032
 		MultipleAlignment simpleMSA = simpleMSTA();
 		double refTM2 = MultipleAlignmentScorer.getRefTMScore(simpleMSA, 0);
 		assertEquals(0.6831032, refTM2, 0.000001);
 		
-		//Simple Test: TM-Score has to be equal to 0.6831032
+		//Simple Test: RefTM-Score has to be equal to 0.6831032
 		MultipleAlignment gappedMSA = gappedMSTA();
 		double refTM3 = MultipleAlignmentScorer.getRefTMScore(gappedMSA, 0);
 		assertEquals(0.2672780, refTM3, 0.000001);
+	}
+	
+	@Test
+	public void testAvgTMScore() throws Exception{
+		
+		//Identity Test: AvgTM-Score has to be equal to 1.0
+		MultipleAlignment identMSA = identityMSTA();
+		double avgTM1 = MultipleAlignmentScorer.getAvgTMScore(identMSA);
+		assertEquals(1.0, avgTM1, 0.000001);
+		
+		//Simple Test: AvgTM-Score has to be equal to 0.7261305
+		MultipleAlignment simpleMSA = simpleMSTA();
+		double avgTM2 = MultipleAlignmentScorer.getAvgTMScore(simpleMSA);
+		assertEquals(0.7261305, avgTM2, 0.000001);
+		
+		//Simple Test: AvgTM-Score has to be equal to 0.2831998
+		MultipleAlignment gappedMSA = gappedMSTA();
+		double avgTM3 = MultipleAlignmentScorer.getAvgTMScore(gappedMSA);
+		assertEquals(0.2831998, avgTM3, 0.000001);
+	}
+	
+	@Test
+	public void testMultipleMCScore() throws Exception{
+		
+		//Identity Test: MultipleMC-Score has to be equal to 576.21
+		MultipleAlignment identMSA = identityMSTA();
+		double MC1 = MultipleAlignmentScorer.getMultipleMCScore(identMSA, 10, 5);
+		assertEquals(576.21, MC1, 0.01);
+		
+		//Simple Test: MultipleMC-Score has to be equal to 2351.93
+		MultipleAlignment simpleMSA = simpleMSTA();
+		double MC2 = MultipleAlignmentScorer.getMultipleMCScore(simpleMSA, 10, 5);
+		assertEquals(2351.93, MC2, 0.01);
+		
+		//Simple Test: MultipleMC-Score has to be equal to 489.74
+		MultipleAlignment gappedMSA = gappedMSTA();
+		double MC3 = MultipleAlignmentScorer.getMultipleMCScore(gappedMSA, 10, 5);
+		assertEquals(489.74, MC3, 0.01);
 	}
 	
 	/**
