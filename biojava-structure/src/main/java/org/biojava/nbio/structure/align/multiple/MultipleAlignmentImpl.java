@@ -75,7 +75,18 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		super(ma);
 		
 		parent = ma.parent;
-		pose = null;  //Because the pose is a cache variable it has to be updated/calculated again.
+		pose = null;
+		if (ma.pose != null){
+			//Make a deep copy of everything
+			this.pose = new ArrayList<Matrix4d>();
+			for (Matrix4d trans:ma.pose){
+				Matrix4d newTrans = (Matrix4d) trans.clone();
+				pose.add(newTrans);
+			}
+		}
+		
+		length = -1;
+		coreLength = -1;
 		
 		blockSets = null;
 		if (ma.blockSets!=null){

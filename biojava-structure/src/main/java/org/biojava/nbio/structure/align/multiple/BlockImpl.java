@@ -19,7 +19,7 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 	private int coreLength;							//number of residues aligned without gaps (cache)
 	
 	/**
-	 * Constructor.
+	 * Constructor. Links also the parent to this instance.
 	 * @param blockSet the parent BlockSet of the BlockImpl instance.
 	 * @return BlockImpl a BlockImpl instance linked to its parent BlockSet.
 	 */
@@ -41,7 +41,7 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 	public BlockImpl(BlockImpl b) {
 		
 		this.parent = b.parent;
-		this.coreLength = b.coreLength;
+		this.coreLength = -1;
 		
 		this.alignRes = null;
 		if (b.alignRes!=null){

@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -380,15 +383,131 @@ public class MultipleAlignmentTools {
     * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
     * 
     * @param alignment MultipleAlignment
-    * @return Matrix containing all average residue distances in alignmed columns
+    * @return Matrix containing all average residue distances
     */
    public static Matrix getAverageResidueDistances(MultipleAlignment alignment){
-	   
-	   
-	   
-	   
-	   
-	   
-	   return null;
+	   //Transform Atoms
+	   List<Atom[]> transformed = transformAtoms(alignment);
+	   return getAverageResidueDistances(transformed);
    }
+   
+   /**
+    * The average residue distance Matrix contains the average distance from each residue to all 
+    * other residues aligned with it. <p>
+    * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+    * 
+    * @param transformed List of Atom arrays containing only the aligned atoms of each structure, or null if there is a gap.
+    * @return Matrix containing all average residue distances. Entry -1 means there is a gap in the position.
+    */
+   public static Matrix getAverageResidueDistances(List<Atom[]> transformed){
+	   
+		int size = transformed.size();
+		int length = transformed.get(0).length;
+		Matrix residueDistances = new Matrix(size,length,-1);  //A residue distance is the average distance to all others
+		
+		//Calculate the average residue distances
+		for (int r1=0; r1<size; r1++){
+			for(int c=0;c<transformed.get(r1).length;c++) {
+				Atom refAtom = transformed.get(r1)[c];
+				if(refAtom == null) continue;
+				
+				for(int r2=r1+1;r2<size;r2++) {
+					Atom atom = transformed.get(r2)[c];
+					if(atom != null) {
+						double distance = Calc.getDistance(refAtom, atom);
+						if (residueDistances.get(r1, c) == -1) residueDistances.set(r1, c, 1+distance);
+						else residueDistances.set(r1, c, residueDistances.get(r1, c)+distance);
+						if (residueDistances.get(r2, c) == -1) residueDistances.set(r2, c, 1+distance);
+						else residueDistances.set(r2, c, residueDistances.get(r2, c)+distance);
+					}
+				}
+			}
+		}
+		for(int c=0;c<length;c++) {
+			int nonNullRes = 0;
+			for(int r=0;r<size;r++) {
+				if (residueDistances.get(r, c) != -1) nonNullRes++;
+			}
+			for(int r=0;r<size;r++) {
+				if (residueDistances.get(r, c) != -1) residueDistances.set(r, c, residueDistances.get(r, c)/nonNullRes);
+			}
+		}
+		return residueDistances;
+   	}
+   
+	/**
+	 * Transforms atoms according to the superposition stored in the alignment.
+	 * <p>
+	 * For each structure in the alignment, returns an atom for each
+	 * representative atom in the aligned columns, omitting unaligned residues
+	 * (i.e. an array of length <tt>alignment.length()</tt> ).
+	 * <p>
+	 * All blocks are concatenated together, so Atoms may not appear in the
+	 * same order as in their parent structure. If the alignment blocks contain
+	 * null residues (gaps), then the returned array will also contain null Atoms.
+	 * 
+	 * @param alignment MultipleAlignment
+	 * @return List of Atom arrays of only the aligned atoms of every structure (null Atom if a gap position)
+	 */
+	public static List<Atom[]> transformAtoms(MultipleAlignment alignment) {
+		if(alignment.getEnsemble() == null ) {
+			throw new NullPointerException("No ensemble set for this alignment");
+		}
+
+		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
+		List<Atom[]> transformed = new ArrayList<Atom[]>(atomArrays.size());
+
+		//Loop through structures
+		for (int i=0; i<atomArrays.size(); i++){
+
+			Matrix4d transform = null;
+			if( alignment.getTransformations() != null) {
+				transform = alignment.getTransformations().get(i);
+			}
+			Atom[] curr = atomArrays.get(i); // all CA atoms from structure
+
+			//Concatenated list of all blocks for this structure
+			Atom[] transformedAtoms = new Atom[alignment.length()];
+			int transformedAtomsLength = 0;
+
+			// Each blockset gets transformed independently
+			for( BlockSet bs : alignment.getBlockSets()) {
+
+				Atom[] blocksetAtoms = new Atom[bs.length()];
+
+				for( Block blk : bs.getBlocks() ) {
+					if( blk.size() != atomArrays.size()) {
+						throw new IllegalStateException(String.format(
+								"Mismatched block length. Expected %d structures, found %d.",
+								atomArrays.size(),blk.size() ));
+					}
+					//Extract aligned atoms
+					for (int j=0; j<blk.length(); j++){
+						Integer alignedPos = blk.getAlignRes().get(i).get(j);
+						if (alignedPos != null) {
+							blocksetAtoms[j] = (Atom) curr[alignedPos].clone();
+						}
+					}
+				}
+				
+				// transform according to (1) the blockset matrix, or (2) the alignment matrix
+				Matrix4d blockTrans = null;
+				if(bs.getTransformations() != null)
+					blockTrans = bs.getTransformations().get(i);
+				if(blockTrans == null) {
+					blockTrans = transform;
+				}
+
+				for (Atom a : blocksetAtoms) {
+					if (a!=null) Calc.transform(a, blockTrans);
+					transformedAtoms[transformedAtomsLength] = a;
+					transformedAtomsLength++;
+				}
+			}
+			assert(transformedAtomsLength == alignment.length());
+
+			transformed.add(transformedAtoms);
+		}
+		return transformed;
+	}
 }

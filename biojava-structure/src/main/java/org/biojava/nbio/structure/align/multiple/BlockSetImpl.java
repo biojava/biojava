@@ -7,7 +7,7 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 /**
- * A general implementation of a BlockSet to store multiple alignments.
+ * A general implementation of a BlockSet to store flexible parts of a multiple alignments.
  *
  * @author Aleix Lafita
  * 
@@ -25,7 +25,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	private int coreLength;					//number of aligned positions without gaps (cache)
 	
 	/**
-	 * Constructor.
+	 * Constructor. Links also the parent to this instance.
 	 * @param multipleAlignment the parent MultipleAlignment of the BlockImpl instance.
 	 * @return BlockSetImpl a BlockSetImpl instance linked to its parent MultipleAlignment.
 	 */
@@ -49,10 +49,18 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	public BlockSetImpl(BlockSetImpl bs){
 		
 		this.parent = bs.parent;
-		this.length = bs.length;
-		this.coreLength = bs.coreLength;
+		this.length = -1;
+		this.coreLength = -1;
 		
-		this.pose = null;  pose = null;  //Because the pose is a cache variable it has to be updated/calculated again.
+		this.pose = null;
+		if (bs.pose != null){
+			//Make a deep copy of everything
+			this.pose = new ArrayList<Matrix4d>();
+			for (Matrix4d trans:bs.pose){
+				Matrix4d newTrans = (Matrix4d) trans.clone();
+				pose.add(newTrans);
+			}
+		}
 		
 		blocks = null;
 		if (bs.blocks!=null){

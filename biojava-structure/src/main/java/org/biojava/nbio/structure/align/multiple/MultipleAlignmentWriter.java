@@ -136,10 +136,12 @@ public class MultipleAlignmentWriter {
 	public static String toTransformMatrices(MultipleAlignment alignment) {
 
 		StringBuffer txt = new StringBuffer();
+		List<Matrix4d> transforms = alignment.getTransformations();
 
 		for (int bs = 0; bs < alignment.getBlockSets().size(); bs++){
 			
 			List<Matrix4d> btransforms = alignment.getBlockSets().get(bs).getTransformations();
+			if (btransforms == null && bs==0) btransforms = transforms;
 			if (btransforms == null || btransforms.size() < 1) continue;
 
 			if (alignment.getBlockSets().size() > 1) {

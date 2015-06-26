@@ -1,8 +1,10 @@
-package org.biojava.nbio.structure.align.cemc;
+package org.biojava.nbio.structure.align.multiple.mc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +15,6 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.CallableStructureAlignment;
 import org.biojava.nbio.structure.align.MultipleStructureAligner;
-import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
@@ -29,28 +30,31 @@ import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
 
 /** 
- * The main class of the Java implementation of the Combinatorial Extension - Monte Carlo (CEMC) Algorithm,
+ * Main class of the Java implementation of the Combinatorial Extension - Monte Carlo (CEMC) Algorithm,
  * as it was originally described by C.Guda, E.D.Scheeff, P.E. Bourne and I.N. Shindyalov (2001).
- * <p>
  * The original CEMC paper is available from <a href="http://psb.stanford.edu/psb-online/proceedings/psb01/guda.pdf">here</a>.
  * <p>
+ * This implementation is a generalized version that allows any pairwise structure alignment algorithm as input,
+ * thus supporting any non-topological or flexible alignment. The seed can also directly be the input for the 
+ * optimization. For that, look at {@link MultipleAlignmentOptimizerMC}.
+ * <p>
  * The usage follows the {@link MultipleStructureAligner} interface.
- * A Demo on how to use the algorithm can be found in {@link DemoCEMC}.
+ * A Demo on how to use the algorithm can be found in demo/DemoMultipleMC.
  * 
  * @author Aleix Lafita
  *
  */
-public class CeMcMain implements MultipleStructureAligner {
+public class MultipleMcMain implements MultipleStructureAligner {
 	
 	/**
 	 *  Version history:<p>
-	 *  1.0 - Initial code implementation from CEMC article without partial gaps.<p>
-	 *  2.0 - Update to support CP and partial gaps.<p>
+	 *  1.0 - Initial code implementation from CEMC article.<p>
+	 *  1.1 - Support CP, non-topological and flexible alignments.<p>
 	 */
-	public static final String version = "2.0";
-	public static final String algorithmName = "jCEMC";
+	public static final String version = "1.1";
+	public static final String algorithmName = "jMultipleMC";
 	
-	private CeMcParameters params;
+	private MultipleMcParameters params;
 	private MultipleAlignmentEnsemble ensemble;
 	int reference = 0;
 	
@@ -58,9 +62,9 @@ public class CeMcMain implements MultipleStructureAligner {
 	 * Default constructor. 
 	 * Default parameters are used.
 	 */
-	public CeMcMain(){
+	public MultipleMcMain(){
 		ensemble = null;
-		params = new CeMcParameters();
+		params = new MultipleMcParameters();
 	}
 
 	/**
@@ -97,7 +101,7 @@ public class CeMcMain implements MultipleStructureAligner {
 	  	for (int i=0; i<size; i++){	  		
 	  		for (int j=i+1; j<size; j++){
 	    
-	  			Callable<AFPChain> worker = new CallableStructureAlignment(atomArrays.get(i), atomArrays.get(j), CeCPMain.algorithmName);
+	  			Callable<AFPChain> worker = new CallableStructureAlignment(atomArrays.get(i), atomArrays.get(j), params.getPairwiseAlgorithm());
 	  			Future<AFPChain> submit = executor.submit(worker);
 	  			afpFuture.add(submit);
 	  		}
@@ -117,7 +121,10 @@ public class CeMcMain implements MultipleStructureAligner {
 	    executor.shutdown(); //Finish the executor because all the pairwise alignments have been calculated.
 	    
 	    reference = chooseReferenceRMSD(afpAlignments);
-	    return combineReferenceAlignments(afpAlignments.get(reference), atomArrays, reference);
+	    boolean flexible = false;
+	    if (params.getPairwiseAlgorithm().contains("flexible")) flexible = true;
+	    
+	    return combineReferenceAlignments(afpAlignments.get(reference), atomArrays, reference, flexible);
 	}
 	
 	/**
@@ -151,21 +158,24 @@ public class CeMcMain implements MultipleStructureAligner {
 	 * This method takes a list of pairwise alignments to the reference structure and calculates a 
 	 * MultipleAlignment resulting from combining their residue equivalencies.
 	 * <p>
-	 * It uses the blocks in AFPChain as {@link Block}s in the MultipleAlignment, so only CP are considered,
-	 * and flexible parts are ignored.
+	 * It uses the blocks in AFPChain as {@link Block}s in the MultipleAlignment, so considers non-topological
+	 * alignments, if the alignment is rigid. If the alignment is flexible, it considers the blocks as 
+	 * {@link BlockSets}.
 	 * 
 	 * @param afpList the list of pairwise alignments to the reference
 	 * @param atomArrays List of Atoms of the structures
 	 * @param ref index of the reference structure
+	 * @param flexible uses BlockSets if true, uses Blocks otherwise
 	 * @return MultipleAlignment seed alignment
 	 * @throws StructureException 
 	 */
-	private static MultipleAlignment combineReferenceAlignments(List<AFPChain> afpList, List<Atom[]> atomArrays, int ref) throws StructureException {
+	private static MultipleAlignment combineReferenceAlignments(List<AFPChain> afpList, List<Atom[]> atomArrays, int ref, boolean flexible) throws StructureException {
 		
 		int size = atomArrays.size();  //the number of structures
 		int length = 0;  //the number of residues of the reference structure
 		if (ref==0) length = afpList.get(1).getCa1Length(); //because the 0-0 alignment is null
 		else length = afpList.get(0).getCa2Length();
+		SortedSet<Integer> flexibleBoundaries = new TreeSet<Integer>();
 		
 		//Stores the alignment equivalencies of all the structures as a double List: equivalencies[str][res]
 		List<List<Integer>> equivalencies = new ArrayList<List<Integer>>();
@@ -194,6 +204,9 @@ public class CeMcMain implements MultipleStructureAligner {
 						res2 = afpList.get(str).getOptAln()[bk][0][i];
 					}
 					equivalencies.get(str).set(res1,res2);
+					
+					//Add the flexible boundaries if flexible
+					if(flexible && i==0) flexibleBoundaries.add(res1);
 				}
 			}
 		}
@@ -210,6 +223,11 @@ public class CeMcMain implements MultipleStructureAligner {
 		
 		//We loop through all the equivalencies checking for CP: start new Block if CP
 		for (int pos=0; pos<length; pos++){
+			//Start a new BlockSet if the position means a boundary
+			if (flexibleBoundaries.contains(pos) && blockSet.getBlocks().get(blockSet.getBlocks().size()-1).getAlignRes() != null){
+				blockSet = new BlockSetImpl(seed);
+				new BlockImpl(blockSet);
+			}
 			boolean cp = false;
 			for (int str=0; str<size; str++){
 				if (equivalencies.get(str).get(pos) == null) continue;  //there is a gap, ignore position
@@ -250,11 +268,10 @@ public class CeMcMain implements MultipleStructureAligner {
 			result = generateSeed(atomArrays);
 			ExecutorService executor = Executors.newCachedThreadPool();
 			List<Future<MultipleAlignment>> afpFuture = new ArrayList<Future<MultipleAlignment>>();
-			int seed = 0;
 			
 			//Repeat the optimization in parallel, to obtain a more robust result.
 			for (int i=0; i<1; i++){
-				Callable<MultipleAlignment> worker = new CeMcOptimizer(result, seed+i,reference);
+				Callable<MultipleAlignment> worker = new MultipleAlignmentOptimizerMC(result, (MultipleMcParameters) params, reference);
 	  			Future<MultipleAlignment> submit = executor.submit(worker);
 	  			afpFuture.add(submit);
 			}
@@ -263,7 +280,7 @@ public class CeMcMain implements MultipleStructureAligner {
 			//When all the optimizations are finished take the one with the best result (best CEMC-Score)
 			for (int i=0; i<afpFuture.size(); i++){
 				MultipleAlignment align = afpFuture.get(i).get();
-				double score = align.getScore(MultipleAlignmentScorer.CEMC_SCORE);
+				double score = align.getScore(MultipleAlignmentScorer.MC_SCORE);
 				if (score > maxScore){
 					result = align;
 					maxScore = score;
@@ -285,7 +302,7 @@ public class CeMcMain implements MultipleStructureAligner {
 	
 	@Override
 	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException {
-		CeMcParameters params = new CeMcParameters();
+		MultipleMcParameters params = new MultipleMcParameters();
 		return align(atomArrays,params);
 	}
 
@@ -296,10 +313,10 @@ public class CeMcMain implements MultipleStructureAligner {
 
 	@Override
 	public void setParameters(ConfigStrucAligParams parameters) {
-		if (! (params instanceof CeMcParameters )){
+		if (! (params instanceof MultipleMcParameters )){
 			throw new IllegalArgumentException("Provided parameter object is not of type CeMcParameter");
 		}
-		this.params = (CeMcParameters) params;
+		this.params = (MultipleMcParameters) params;
 	}
 
 	@Override
