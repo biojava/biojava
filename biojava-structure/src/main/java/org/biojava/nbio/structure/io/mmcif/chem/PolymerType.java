@@ -80,6 +80,16 @@ public enum PolymerType implements Serializable
    otherPolymer("other"),
 
    /**
+    * cyclic peptides
+    */
+   cyclicPeptide("cyclic-pseudo-peptide"),
+   
+   /**
+    * Peptide nucleic acids
+    */
+   peptideNucleicAcid("peptide nucleic acid"),
+   
+   /**
     * if all else fails...
     */
    unknown(null);

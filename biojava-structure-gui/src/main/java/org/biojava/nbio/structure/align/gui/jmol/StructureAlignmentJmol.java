@@ -32,17 +32,18 @@ import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.AfpChainWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
-import org.jmol.api.JmolViewer;
+import org.biojava.nbio.structure.jama.Matrix;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -51,32 +52,12 @@ import java.util.List;
  * @author Andreas Prlic
  * @since 1.6
  *
- *
- *
  */
-public class StructureAlignmentJmol implements MouseMotionListener, MouseListener, WindowListener,ActionListener {
+public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
-   Structure structure; 
-
-   JmolPanel jmolPanel;
-   JFrame frame ;
-   JTextField text ;
-   JTextField status;
-
-   protected static final String COMMAND_LINE_HELP = "enter Jmol scripting command...";
-   Atom[] ca1;
-   Atom[] ca2;
-   AFPChain afpChain;
-
-   private static final int DEFAULT_HEIGHT = 500;
-
-   private static final int DEFAULT_WIDTH = 500;
-
-   public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
-
-   private static final String LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
-
-   static int nrOpenWindows = 0;
+   private Atom[] ca1;
+   private Atom[] ca2;
+   private AFPChain afpChain;
 
    public static void main(String[] args){
       try {
@@ -115,7 +96,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
       frame = new JFrame();
 
-      JMenuBar menu = MenuCreator.initMenu(frame,this, afpChain);
+      JMenuBar menu = MenuCreator.initJmolMenu(frame,this, afpChain);
 
       frame.setJMenuBar(menu);
       //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -190,6 +171,8 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 		String[] styles = new String[] { "Cartoon", "Backbone", "CPK", "Ball and Stick", "Ligands","Ligands and Pocket"};
 		JComboBox style = new JComboBox(styles);
+		
+		hBox1.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 
 		hBox1.add(new JLabel("Style"));
 		hBox1.add(style);
@@ -204,9 +187,11 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 		hBox1.add(Box.createGlue());
 		hBox1.add(new JLabel("Color"));
 		hBox1.add(colors);
+		
 
 // CHeck boxes
 		Box hBox2 = Box.createHorizontalBox();
+		hBox2.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 		
 		JButton resetDisplay = new JButton("Reset Display");
 		
@@ -286,9 +271,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       initCoords();
 
       resetDisplay();
-
+      
    }
-   private void initCoords(){
+   protected void initCoords(){
       try {
          if ( ca1 == null || ca2 == null ){
             if ( structure != null)
@@ -309,210 +294,28 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       }
    }
 
+   @Override
    public void destroy(){
-	   System.err.println("cleaning up structureAlignmentJmol window");
-      jmolPanel.removeMouseListener(this);
-      jmolPanel.removeMouseMotionListener(this);
-      jmolPanel.destroy();
+	  super.destroy();
       afpChain =null;
       ca1 = null;
       ca2 = null;
    }
 
-   public void setAtoms(Atom[] atoms){
-      Structure s = new StructureImpl();
-      Chain c = new ChainImpl();
-      c.setChainID("A");
-      for (Atom a: atoms){
-         c.addGroup(a.getGroup());
-      }
-      s.addChain(c);
-      setStructure(s);
-
-   }
-
-
-   public JmolPanel getJmolPanel() {
-      return jmolPanel;
-   }
-
-   public void setJmolPanel(JmolPanel jmolPanel) {
-      this.jmolPanel = jmolPanel;
-   }
-
-   public void evalString(String rasmolScript){
-      if ( jmolPanel == null ){
-         System.err.println("please install Jmol first");
-         return;
-      }
-      jmolPanel.evalString(rasmolScript);
-   }
-
-   public void setStructure(Structure s) {
-
-      if ( jmolPanel == null ){
-         System.err.println("please install Jmol first");
-         return;
-      }
-
-
-      setTitle(s.getPDBCode());
-
-      jmolPanel.setStructure(s);
-      
-      // actually this is very simple
-      // just convert the structure to a PDB file
-
-      //String pdb = s.toPDB();	
-      //System.out.println(s.isNmr());
-
-      //System.out.println(pdb);
-      // Jmol could also read the file directly from your file system
-      //viewer.openFile("/Path/To/PDB/1tim.pdb");
-
-      //System.out.println(pdb);
-      //jmolPanel.openStringInline(pdb);
-
-      // send the PDB file to Jmol.
-      // there are also other ways to interact with Jmol, e.g make it directly
-      // access the biojava structure object, but they require more
-      // code. See the SPICE code repository for how to do this.
-
-
-      structure = s;
-
-   }
-
-   public Structure getStructure(){
-      return structure;
-   }
-
-   public void setTitle(String label){
-      frame.setTitle(label);
-      frame.repaint();
-   }
-   public String getTitle(){
-      return frame.getTitle();
-   }
-
    @Override
-public void mouseDragged(MouseEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void mouseMoved(MouseEvent e) {
-
-      JmolViewer viewer = jmolPanel.getViewer();
-
-
-      // needs latest jmol :-/
-      int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
-      if ( pos == -1 ) { return ; }
-
-      String atomInfo = viewer.getAtomInfo(pos);
-      text.setText(atomInfo);
-
-
-   }
-
-   @Override
-public void mouseClicked(MouseEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void mouseEntered(MouseEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void mouseExited(MouseEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void mousePressed(MouseEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void mouseReleased(MouseEvent e) {
-      JmolViewer viewer = jmolPanel.getViewer();
-
-
-      int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
-      if ( pos == -1 ) { return ; }
-
-      String atomInfo = viewer.getAtomInfo(pos);
-      status.setText("clicked: " + atomInfo);
-
-      AtomInfo ai = AtomInfoParser.parse(atomInfo);
-
-      String cmd = "select " + ai.getResidueNumber()+":" +ai.getChainId()+"/"+ai.getModelNumber() + "; set display selected;";
-
-      evalString(cmd);
-
-   }
-
-   @Override
-public void windowActivated(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void windowClosed(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void windowClosing(WindowEvent e) {
-      destroy();
-
-   }
-
-   @Override
-public void windowDeactivated(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void windowDeiconified(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void windowIconified(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void windowOpened(WindowEvent e) {
-      // TODO Auto-generated method stub
-
-   }
-
-   @Override
-public void actionPerformed(ActionEvent e) {
+   public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
       if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
          if ( afpChain == null) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2) ;
+         //Clone the AFPChain to not override the FatCat numbers in alnsymb
+         AFPChain textAFP = (AFPChain) afpChain.clone();
+         String result = AfpChainWriter.toWebSiteDisplay(textAFP, ca1, ca2) ;
 
          DisplayAFP.showAlignmentImage(afpChain, result);
+         
       } else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
          if ( afpChain == null) {
             System.err.println("Currently not viewing an alignment!");
@@ -521,12 +324,18 @@ public void actionPerformed(ActionEvent e) {
          String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
 
          DisplayAFP.showAlignmentImage(afpChain, result);
+         
       } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
          if ( afpChain == null) {
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
+	         try {
+				DisplayAFP.showAlignmentPanel(afpChain, ca1, ca2, this);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				return;
+			}
 
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
          if ( afpChain == null) {
@@ -538,10 +347,9 @@ public void actionPerformed(ActionEvent e) {
          result += afpChain.toRotMat();
          DisplayAFP.showAlignmentImage(afpChain, result);
       }
-
    }
 
-   public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+   private static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
      
       if ( afpChain.getBlockNum() > 1){
          return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
@@ -616,7 +424,7 @@ public void actionPerformed(ActionEvent e) {
       return j.toString();
    }
    
-   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
+   private static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
 	   int blockNum = afpChain.getBlockNum();
 	   
 	   if ( blockNr >= blockNum)
@@ -644,8 +452,7 @@ public void actionPerformed(ActionEvent e) {
    }
    
 
-   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
-   {
+   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
       int blockNum = afpChain.getBlockNum();      
       int[] optLen = afpChain.getOptLen();
@@ -664,6 +471,7 @@ public void actionPerformed(ActionEvent e) {
          printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk);
       }
       jmol.append("model 0;  ");
+      
       jmol.append(LIGAND_DISPLAY_SCRIPT);
       //System.out.println(jmol);
       return jmol.toString();
@@ -671,10 +479,15 @@ public void actionPerformed(ActionEvent e) {
 
    }
 
-private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
+   private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 		int[] optLen, int[][][] optAln, StringWriter jmol, int bk) {
 	//the block nr determines the color...
 	 int colorPos = bk;
+	 
+	 Color c1;
+	 Color c2;
+	 //If the colors for the block are specified in AFPChain use them, otherwise the default ones are calculated
+		 
 	 if ( colorPos > ColorUtils.colorWheel.length){
 	    colorPos = ColorUtils.colorWheel.length % colorPos ;
 	 }
@@ -682,11 +495,8 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 	 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
 	 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
 	 	 
-	 Color c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
-	 Color c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
-	 
-	 
-	 
+	 c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
+	 c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
 	 
 	 List<String> pdb1 = new ArrayList<String>();
 	 List<String> pdb2 = new ArrayList<String>();
@@ -726,19 +536,21 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 
 	 // now color this block:
 	 jmol.append(buf);
-}
+	}
 
    public void resetDisplay(){
 
-      if  ( afpChain != null && ca1 != null && ca2 != null) {
+      if (afpChain != null && ca1 != null && ca2 != null) {
          String script = getJmolString( afpChain,ca1,ca2);
-         //System.out.println(j.toString());
+         //System.out.println(script);
          evalString(script);
          jmolPanel.evalString("save STATE state_1");
       }
    }
-   
-   
 
-
+	@Override
+	public List<Matrix> getDistanceMatrices() {
+		if (afpChain == null) return null;
+		else return Arrays.asList(afpChain.getDisTable1(), afpChain.getDisTable2());
+	}
 }

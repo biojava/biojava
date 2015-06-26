@@ -22,6 +22,9 @@
 package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.biojava.nbio.core.util.XMLWriter;
 
 import java.io.IOException;
@@ -34,8 +37,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** Methods to convert a structure object into different file formats.
@@ -44,20 +47,22 @@ import java.util.Map;
  */
 public class FileConvert {
 	
-	//private static final Logger logger = LoggerFactory.getLogger(FileConvert.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileConvert.class);
+	
+	
 	
 	private Structure structure ;
 
 	private boolean printConnections;
 
 	// Locale should be english, e.g. in DE separator is "," -> PDB files have "." !
-	static DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
+	public static DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d3.setMaximumIntegerDigits(4);
 		d3.setMinimumFractionDigits(3);
 		d3.setMaximumFractionDigits(3);
 	}
-	static DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
+	public static DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d2.setMaximumIntegerDigits(3);
 		d2.setMinimumFractionDigits(2);
@@ -76,43 +81,8 @@ public class FileConvert {
 		printConnections = true;
 	}
 
-	/** align a string to the right
-	 * length is the total length the new string should take, inlcuding spaces on the left
-	 * incredible that this tool is missing in java !!!
-	 */
-	private static String alignRight(String input, int length){
-
-		// TODO this can be done with String.format() using printf like strings, see http://en.wikipedia.org/wiki/Printf_format_string 
-		
-		int n = input.length();
-		if ( n >= length)
-			return input;
-
-		String spaces = "                           " ;
-		int diff = length - n ;
-		StringBuffer s = new StringBuffer();
-
-		s.append(spaces.substring(0,diff));
-		s.append(input);
-
-		return s.toString();
-	}
-
-	private static String alignLeft(String input, int length){
-		
-		// TODO this can be done with String.format() using printf like strings, see http://en.wikipedia.org/wiki/Printf_format_string
-		
-		if (input.length() >= length) {
-			return input;
-		}
-
-		String spaces = "                           " ;
-		input += spaces.substring(0, length - input.length() );
-		return input;
-
-	}
-
-	/** returns if the Connections should be added
+	/** 
+	 * Returns if the Connections should be added
 	 * default is true;
 	 * @return if the printConnections flag is set
 	 */
@@ -169,17 +139,17 @@ public class FileConvert {
 			if (con.containsKey("hyd4"))   hyd4  = con.get("hyd4").toString();
 			if (con.containsKey("salt2"))  salt2 = con.get("salt2").toString();
 
-			atomserial = alignRight(""+as,5) ;
-			bond1      = alignRight(bond1,5) ;
-			bond2      = alignRight(bond2,5) ;
-			bond3      = alignRight(bond3,5) ;
-			bond4      = alignRight(bond4,5) ;
-			hyd1       = alignRight(hyd1,5)  ;
-			hyd2       = alignRight(hyd2,5)  ;
-			salt1      = alignRight(salt1,5) ;
-			hyd3       = alignRight(hyd3,5)  ;
-			hyd4       = alignRight(hyd4,5)  ;
-			salt2      = alignRight(salt2,5) ;
+			atomserial = String.format("%5d",as) ;
+			bond1      = String.format("%5s",bond1) ;
+			bond2      = String.format("%5s",bond2) ;
+			bond3      = String.format("%5s",bond3) ;
+			bond4      = String.format("%5s",bond4) ;
+			hyd1       = String.format("%5s",hyd1)  ;
+			hyd2       = String.format("%5s",hyd2)  ;
+			salt1      = String.format("%5s",salt1) ;
+			hyd3       = String.format("%5s",hyd3)  ;
+			hyd4       = String.format("%5s",hyd4)  ;
+			salt2      = String.format("%5s",salt2) ;
 
 			String connectLine = "CONECT" + atomserial + bond1 + bond2 + bond3 +
 			bond4 + hyd1 + hyd2 + salt1 + hyd3 + hyd4 + salt2;
@@ -336,7 +306,8 @@ public class FileConvert {
 	}
 	
 	
-	/** Convert a Chain object to PDB representation
+	/** 
+	 * Convert a Chain object to PDB representation
 	 * 
 	 * @param chain
 	 * @return
@@ -358,7 +329,8 @@ public class FileConvert {
 		return w.toString();
 	}
 	
-	/** Convert a Group object to PDB representation
+	/** 
+	 * Convert a Group object to PDB representation
 	 * 
 	 * @param g
 	 * @return
@@ -370,7 +342,7 @@ public class FileConvert {
 	}
 
 	/**
-	 * print ATOM record in the following syntax
+	 * Print ATOM record in the following syntax
 	<pre>
     ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
 *
@@ -415,34 +387,31 @@ Angstroms.
 
 
 		// format output ...
-		//int groupsize  = g.size();
 		String resName = g.getPDBName(); 
 		String pdbcode = g.getResidueNumber().toString();
-		//String line    = "" ;
 
 
 		int    seri       = a.getPDBserial()        ;
-		String serial     = alignRight(""+seri,5)   ;		
+		String serial     = String.format("%5d",seri);		
 		String fullName   = formatAtomName(a);
 
-		
-		// System.out.println(" fullname: " + fullname + " : " + a.getAltLoc() + " : " + pdbcode);
+
 
 		Character  altLoc = a.getAltLoc()           ;
 		String resseq = "" ;
 		if ( hasInsertionCode(pdbcode) )
-			resseq     = alignRight(""+pdbcode,5);
+			resseq     = String.format("%5s",pdbcode);
 		else
-			resseq     = alignRight(""+pdbcode,4)+" ";
-		String x          = alignRight(""+d3.format(a.getX()),8);
-		String y          = alignRight(""+d3.format(a.getY()),8);
-		String z          = alignRight(""+d3.format(a.getZ()),8);
-		String occupancy  = alignRight(""+d2.format(a.getOccupancy()),6) ;
-		String tempfactor = alignRight(""+d2.format(a.getTempFactor()),6);
+			resseq     = String.format("%4s",pdbcode)+" ";
+		
+		String x          = String.format("%8s",d3.format(a.getX()));
+		String y          = String.format("%8s",d3.format(a.getY()));
+		String z          = String.format("%8s",d3.format(a.getZ()));
+		String occupancy  = String.format("%6s",d2.format(a.getOccupancy())) ;
+		String tempfactor = String.format("%6s",d2.format(a.getTempFactor()));
 
-		//System.out.println("fullname,size:" + fullname + " " + fullname.length());
 
-		String leftResName = alignLeft(resName,3);
+		String leftResName = String.format("%3s",resName);
 
 		StringBuffer s = new StringBuffer();
 		s.append(record);
@@ -489,7 +458,8 @@ Angstroms.
 	}
 
 
-	/** convert a protein Structure to a DAS Structure XML response .
+	/** 
+	 * Convert a protein Structure to a DAS Structure XML response .
 	 * @param xw  a XMLWriter object
 	 * @throws IOException ...
 	 *
@@ -675,5 +645,71 @@ Angstroms.
 		//	logger.warn("Atom name "+fullName+"to be written in PDB format does not have length 4. Formatting will be incorrect");
 
 		return fullName;
+	}
+	
+	
+	public String toMMCIF() {
+		
+		StringBuilder str = new StringBuilder();
+		
+		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		
+		if (structure.getPDBHeader()!=null & structure.getPDBHeader().getCrystallographicInfo()!=null &&
+				structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup()!=null &&
+				structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()!=null) {
+			
+			str.append(MMCIFFileTools.toMMCIF("_cell", 
+					MMCIFFileTools.convertCrystalCellToCell(structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()))); 
+			str.append(MMCIFFileTools.toMMCIF("_symmetry", 
+					MMCIFFileTools.convertSpaceGroupToSymmetry(structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup())));
+			
+		}
+			
+		
+		str.append(getAtomSiteHeader());
+		
+		@SuppressWarnings("unchecked")
+		List<Object> list = 
+		(List<Object>) (List<?>) MMCIFFileTools.convertStructureToAtomSites(structure);
+
+
+		str.append(MMCIFFileTools.toMMCIF(list));		
+		
+		return str.toString();
+	}
+	
+	public static String toMMCIF(Chain chain, String chainId, String internalChainId, boolean writeHeader) {
+		StringBuilder str = new StringBuilder();
+		
+		if (writeHeader)
+			str.append(getAtomSiteHeader());
+
+		
+		@SuppressWarnings("unchecked")
+		List<Object> list = 
+		(List<Object>) (List<?>) MMCIFFileTools.convertChainToAtomSites(chain, 1, chainId, internalChainId);
+		
+		str.append(MMCIFFileTools.toMMCIF(list));
+		return str.toString();
+	}
+	
+	public static String toMMCIF(Chain chain, boolean writeHeader) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		sb.append(toMMCIF(chain, chain.getChainID(),chain.getInternalChainID(),writeHeader));
+		return sb.toString();
+	}
+	
+	public static String getAtomSiteHeader() {
+		String header;
+		try {
+			header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("Class not found, will not have a header for this MMCIF category: "+e.getMessage());
+			header = "";
+		}
+		
+		return header;
 	}
 }

@@ -77,8 +77,8 @@ public class FlipAFPChainTest extends TestCase {
 		Structure s1 = cache.getStructure(name1);
 		Structure s2 = cache.getStructure(name2);
 
-		Atom[] ca1 = StructureTools.getAtomCAArray(s1);
-		Atom[] ca2 = StructureTools.getAtomCAArray(s2);
+		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(s1);
+		Atom[] ca2 = StructureTools.getRepresentativeAtomArray(s2);
 
 		StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName );
 		AFPChain afpChain = algorithm.align(ca1,ca2);
@@ -138,7 +138,7 @@ public class FlipAFPChainTest extends TestCase {
 	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2) 
 	throws StructureException {
 
-		Atom[] ca2clone = StructureTools.cloneCAArray(ca2);
+		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		rotateAtoms2(afpChain,ca2clone);
 
 		// get only the subset of Atoms that is on structurally equivalent positions

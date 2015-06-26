@@ -1,5 +1,5 @@
 <AFPChain name1="" name2="" method="unknown" version="1.0" alnLength="53" blockNum="1" gapLen="20" optLength="33" totalLenIni="0" alignScore="0.00" chainRmsd="0.00" identity="0.0377" normAlignScore="0.00" probability="0.00e+00" similarity="0.1509" similarity1="4" similarity2="3" totalRmsdIni="0.00" totalRmsdOpt="12.88" ca1Length="753" ca2Length="1287" afpNum="0" alignScoreUpdate="0.00" time="0" tmScore="0.02">
-  <block blockNr="0" blockSize="33" blockScore="0.00" blockRmsd="12.88" blockGap="20">
+  <block blockNr="0" blockSize="33" blockScore="0.02" blockRmsd="12.88" blockGap="20">
     <eqr eqrNr="0" pdbres1="361" chain1="A" pdbres2="78S" chain2="C" />
     <eqr eqrNr="1" pdbres1="362" chain1="A" pdbres2="79S" chain2="C" />
     <eqr eqrNr="2" pdbres1="363" chain1="A" pdbres2="80S" chain2="C" />

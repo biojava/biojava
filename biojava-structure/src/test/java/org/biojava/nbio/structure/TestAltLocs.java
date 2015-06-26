@@ -121,7 +121,7 @@ public class TestAltLocs {
 		Atom ca7 = lys7.getAtom("CA");			
 		assertNotNull(ca7);
 
-		Atom[] caA = StructureTools.getAtomCAArray(a);
+		Atom[] caA = StructureTools.getRepresentativeAtomArray(a);
 
 		assertEquals(caA.length,141);
 
@@ -253,7 +253,7 @@ public class TestAltLocs {
 
 		assertNotNull(structure);
 
-		Atom[] ca = StructureTools.getAtomCAArray(structure);
+		Atom[] ca = StructureTools.getRepresentativeAtomArray(structure);
 
 		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
 
@@ -314,7 +314,7 @@ public class TestAltLocs {
 
 		assertNotNull(structure);
 
-		Atom[] ca = StructureTools.getAtomCAArray(structure);
+		Atom[] ca = StructureTools.getRepresentativeAtomArray(structure);
 
 		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
 
@@ -379,7 +379,7 @@ public class TestAltLocs {
 
 		assertNotNull(structure);
 
-		Atom[] ca = StructureTools.getAtomCAArray(structure);
+		Atom[] ca = StructureTools.getRepresentativeAtomArray(structure);
 
 		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
 

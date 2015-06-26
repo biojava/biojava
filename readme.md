@@ -1,9 +1,9 @@
-# Welcome to BioJava v.3
+# Welcome to BioJava
 
-[![Build Status](https://travis-ci.org/biojava/biojava.svg?branch=master)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394) [![Version](http://img.shields.io/badge/version-3.1.0-blue.svg?style=flat)](http://biojava.org/wiki/BioJava:Download) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/biojava/biojava.svg?branch=master)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394) [![Version](http://img.shields.io/badge/version-4.0.0-blue.svg?style=flat)](http://biojava.org/wiki/BioJava:Download) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
 
 
-BioJava is an open-source project dedicated to providing a Java framework for **processing biological data**. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.
+BioJava is an open-source project dedicated to providing a Java framework for **processing biological data**. It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.
 
 Please visit our [homepage](http://www.biojava.org/).
 
@@ -20,8 +20,7 @@ The [Maven Repository](http://biojava.org/download/maven/) contains the jars of 
 
 If you are using Maven you can add the BioJava repository by adding the following XML to your project pom.xml file:
 
-``` 
-
+```xml
     <dependencies>
       <dependency>
         <groupId>org.biojava</groupId>
@@ -31,7 +30,6 @@ If you are using Maven you can add the BioJava repository by adding the followin
       <!-- other biojava jars as needed -->
     </dependencies>
 ```
-
 
 ### Mailing Lists
 

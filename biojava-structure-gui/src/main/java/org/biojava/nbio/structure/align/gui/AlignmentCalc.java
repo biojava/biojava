@@ -89,8 +89,8 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 		//aligner.setDebug(true);
 		try {
 
-			Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
-			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
+			Atom[] ca1 = StructureTools.getRepresentativeAtomArray(structure1);
+			Atom[] ca2 = StructureTools.getRepresentativeAtomArray(structure2);
 
 			//System.out.println("ca1 size:" + ca1.length + " ca2 size: " + ca2.length);
 			AFPChain afpChain = algorithm.align(ca1, ca2);
@@ -106,14 +106,13 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 				title += " " + algorithm.getParameters().toString();
 			jmol.setTitle(title);
 
-			DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);           
+			DisplayAFP.showAlignmentPanel(afpChain,ca1,ca2,jmol);
 
 			System.out.println(afpChain.toCE(ca1,ca2));
 
 		} catch (StructureException e){
 			e.printStackTrace();
 			logger.warn(e.getMessage());
-
 		}
 
 

@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -51,19 +52,6 @@ import javax.vecmath.Vector3d;
 public class Calc {
 
 	private final static Logger logger = LoggerFactory.getLogger(Calc.class);
-
-	// 180 / pi
-	static final double RADIAN = 57.29577951 ;
-
-	/** Radians per degree.
-	 *
-	 */
-	public final static float radiansPerDegree = (float) (2 * Math.PI / 360);
-
-	/** Degrees per radian.
-	 *
-	 */
-	public final static float degreesPerRadian = (float) (360 / (2 * Math.PI));
 
 
 	/**
@@ -172,7 +160,8 @@ public class Calc {
 		return a.getX() * b.getX() + a.getY() * b.getY() + a.getZ() * b.getZ();
 	}
 
-	/** Gets the length of the vector (2-norm)
+	/** 
+	 * Gets the length of the vector (2-norm)
 	 *
 	 * @param a  an Atom object
 	 * @return Square root of the sum of the squared elements
@@ -181,27 +170,26 @@ public class Calc {
 		return Math.sqrt(scalarProduct(a,a));
 	}
 
-	/** Get the angle between two vectors
+	/** 
+	 * Gets the angle between two vectors
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
-	 * @return Angle between a and b, in degrees
+	 * @return Angle between a and b in degrees, in range [0,180]. 
+	 * If either vector has length 0 then angle is not defined and NaN is returned 
 	 */
 	public static final double angle(Atom a, Atom b){
 
-		double skalar;
-		double angle;
-
-		skalar = scalarProduct(a,b);
-
-		angle = skalar/( amount(a) * amount (b) );
-		angle = Math.acos(angle);
-		angle = angle * RADIAN ;
-
-		return angle;
+		
+		Vector3d va = new Vector3d(a.getCoords());
+		Vector3d vb = new Vector3d(b.getCoords());
+		
+		return Math.toDegrees(va.angle(vb));
+		
 	}
 
-	/** return the unit vector of vector a .
+	/** 
+	 * Returns the unit vector of vector a .
 	 *
 	 * @param a  an Atom object
 	 * @return an Atom object
@@ -223,12 +211,13 @@ public class Calc {
 	/**
 	 * Calculate the torsion angle, i.e. the angle between the normal vectors of the 
 	 * two plains a-b-c and b-c-d.
-	 *
+	 * See http://en.wikipedia.org/wiki/Dihedral_angle
 	 * @param a  an Atom object
 	 * @param b  an Atom object
 	 * @param c  an Atom object
 	 * @param d  an Atom object
-	 * @return a double
+	 * @return the torsion angle in degrees, in range +-[0,180]. 
+	 * If either first 3 or last 3 atoms are colinear then torsion angle is not defined and NaN is returned
 	 */
 	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d) {
 
@@ -445,6 +434,15 @@ public class Calc {
 		}
 
 	}
+	
+	/**
+	 * Transform an array of atoms at once.
+	 * @param ca array of Atoms to shift
+	 * @param t transformation Matrix4d
+	 */
+	public static void transform(Atom[] ca, Matrix4d t) {
+		for (Atom atom : ca) Calc.transform(atom, t);
+	}
 
 	/**
 	 * Transforms an atom object, given a Matrix4d (i.e. the vecmath library 
@@ -535,6 +533,21 @@ public class Calc {
 			Atom atom = iter.next() ;
 			translate(atom,v);
 
+		}
+	}
+	
+	/**
+	 * Translates a chain object, given a Vector3d (i.e. the vecmath library 
+	 * double-precision 3-d vector)
+	 * @param chain
+	 * @param v
+	 */
+	public static final void translate (Chain chain, Vector3d v) {
+
+		for (Group g:chain.getAtomGroups()) {
+			for (Atom atom: g.getAtoms()) {
+				translate(atom,v);
+			}
 		}
 	}
 
@@ -884,7 +897,8 @@ public class Calc {
 	}
 
 
-	/**Get euler angles for a matrix given in ZYZ convention.
+	/**
+	 * Gets euler angles for a matrix given in ZYZ convention.
 	 * (as e.g. used by Jmol)
 	 *
 	 * @param m the rotation matrix
@@ -892,14 +906,14 @@ public class Calc {
 	 */
 	public static final double[] getZYZEuler(Matrix m) {
 		double m22 = m.get(2,2);
-		double rY = (float) Math.acos(m22) * degreesPerRadian;
+		double rY = Math.toDegrees(Math.acos(m22));
 		double rZ1, rZ2;
 		if (m22 > .999d || m22 < -.999d) {
-			rZ1 = Math.atan2(m.get(1,0),  m.get(1,1)) * degreesPerRadian;
+			rZ1 = Math.toDegrees(Math.atan2(m.get(1,0),  m.get(1,1)));
 			rZ2 = 0;
 		} else {
-			rZ1 = Math.atan2(m.get(2,1), -m.get(2,0)) * degreesPerRadian;
-			rZ2 = Math.atan2(m.get(1,2),  m.get(0,2)) * degreesPerRadian;
+			rZ1 = Math.toDegrees(Math.atan2(m.get(2,1), -m.get(2,0)));
+			rZ2 = Math.toDegrees(Math.atan2(m.get(1,2),  m.get(0,2)));
 		}
 		return new double[] {rZ1,rY,rZ2};
 	}
@@ -1038,6 +1052,38 @@ public class Calc {
 
 	public static void rotate(Atom[] ca, Matrix matrix) {
 		for (Atom atom : ca) Calc.rotate(atom, matrix);
+	}
+	
+	/**
+	 * Shift an array of atoms at once.
+	 * @param ca array of Atoms to shift
+	 * @param b reference Atom vector
+	 */
+	public static void shift(Atom[] ca, Atom b) {
+		for (Atom atom : ca) Calc.shift(atom, b);
+	}
+	
+	/**
+	 * Convert JAMA rotation and translation to a Vecmath transformation matrix
+	 * @param rot 3x3 Rotation matrix
+	 * @param trans 3x1 Translation matrix
+	 * @return 4x4 transformation matrix
+	 */
+	public static Matrix4d getTransformation(Matrix rot, Matrix trans) {
+		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
+				new Vector3d(trans.getColumnPackedCopy()),
+				1.0);
+	}
+	/**
+	 * Convert JAMA rotation and translation to a Vecmath transformation matrix
+	 * @param rot 3x3 Rotation matrix
+	 * @param trans 3x1 Translation matrix
+	 * @return 4x4 transformation matrix
+	 */
+	public static Matrix4d getTransformation(Matrix rot, Atom trans) {
+		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
+				new Vector3d(trans.getCoords()),
+				1.0);
 	}
 }
 

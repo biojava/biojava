@@ -753,8 +753,8 @@ public class CeCPMain extends CeMain {
 	// TODO dmyersturnbull: This should probably be in structure-gui
 	@SuppressWarnings("unused")
 	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
-		Atom[] ca1clone = StructureTools.cloneCAArray(ca1);
-		Atom[] ca2clone = StructureTools.cloneCAArray(ca2);
+		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
+		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {
 			System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
 			// display alignment in console

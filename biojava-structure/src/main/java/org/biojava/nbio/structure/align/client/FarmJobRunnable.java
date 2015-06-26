@@ -133,10 +133,8 @@ public class FarmJobRunnable implements Runnable {
 			ScopFactory.setScopDatabase(scop);
 			
 		}
-		
-		
-		// enforce to replace remediated files with new versions...
-		cache.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
+
+		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		
 		maxNrAlignments = params.getNrAlignments();
 		progressListeners = null;

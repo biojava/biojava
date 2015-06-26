@@ -53,7 +53,7 @@ import java.util.Scanner;
  *
  */
 public class OptimalCECPMain extends CeMain {
-	private static boolean debug = true;
+	private static final boolean debug = true;
 
 
 	public static final String algorithmName = "jCE Optimal Circular Permutation";
@@ -498,7 +498,7 @@ public class OptimalCECPMain extends CeMain {
 		
 		for(int cp=1;cp<ca2.length;cp++) {
 			// clone ca2 to prevent side effects from propegating
-			Atom[] ca2p = StructureTools.cloneCAArray(ca2);
+			Atom[] ca2p = StructureTools.cloneAtomArray(ca2);
 
 			//permute one each time. Alters ca2p as a side effect
 			AFPChain currentAlignment = alignPermuted(ca1,ca2p,param,cp);
@@ -507,11 +507,11 @@ public class OptimalCECPMain extends CeMain {
 			if(debug) System.out.print(".");
 			
 			// fix up names, since cloning ca2 wipes it
-			try {
+			
+			if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getParent()!=null) {
 				currentAlignment.setName2(ca2[0].getGroup().getChain().getParent().getName()+" CP="+cp);
-			} catch( Exception e) {
-				//null pointers, empty arrays, etc.
 			}
+			
 			double currentScore = currentAlignment.getAlignScore();
 			
 			if(alignments != null) {
@@ -654,8 +654,8 @@ public class OptimalCECPMain extends CeMain {
 	 * @throws StructureException
 	 */
 	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
-		Atom[] ca1clone = StructureTools.cloneCAArray(ca1);
-		Atom[] ca2clone = StructureTools.cloneCAArray(ca2);
+		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
+		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {
 			System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
 			// display alignment in console

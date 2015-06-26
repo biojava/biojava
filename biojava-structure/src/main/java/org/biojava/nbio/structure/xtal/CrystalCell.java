@@ -149,7 +149,7 @@ public class CrystalCell implements Serializable {
 	 * <p>For instance, all points in the unit cell at the origin will return (0,0,0);
 	 * Points in the unit cell one unit further along the `a` axis will return (1,0,0),
 	 * etc.
-	 * @param pt Input point
+	 * @param pt Input point (in orthonormal coordinates)
 	 * @return A new point with the three indices of the cell containing pt
 	 */
 	public Point3i getCellIndices(Tuple3d pt) {
@@ -183,7 +183,7 @@ public class CrystalCell implements Serializable {
 	 * This is useful to transform a whole chain at once, allowing some of the
 	 * atoms to be outside the unit cell, but forcing the centroid to be within it.
 	 *
-	 * @param points A set of points to transform
+	 * @param points A set of points to transform (in orthonormal coordinates)
 	 * @param reference The reference point, which is unmodified but which would
 	 *    be in the unit cell were it to have been transformed. It is safe to
 	 *    use a member of the points array here.
@@ -203,6 +203,72 @@ public class CrystalCell implements Serializable {
 			point.z -= z;
 			transfToOrthonormal(point);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param ops Set of operations in orthonormal coordinates
+	 * @param reference Reference point, which should be in the unit cell after
+	 *  each operation (also in orthonormal coordinates)
+	 * @return A set of orthonormal operators with equivalent rotation to the
+	 *  inputs, but with translation such that the reference point would fall
+	 *  within the unit cell
+	 */
+	public Matrix4d[] transfToOriginCellOrthonormal(Matrix4d[] ops, Tuple3d reference) {
+		// reference in crystal coords
+		Point3d refXtal = new Point3d(reference);
+		transfToCrystal(refXtal);
+
+		// Convert to crystal coords
+		Matrix4d[] opsXtal = new Matrix4d[ops.length];
+		for(int i=0;i<ops.length;i++) {
+			opsXtal[i] = transfToCrystal(ops[i]);
+		}
+		
+		Matrix4d[] transformed = transfToOriginCellCrystal(opsXtal, refXtal);
+		
+		// Convert back to orthonormal
+		for(int i=0;i<ops.length;i++) {
+			transformed[i] = transfToOrthonormal(transformed[i]);
+		}
+		return transformed;
+	}
+	/**
+	 * 
+	 * @param ops Set of operations in crystal coordinates
+	 * @param reference Reference point, which should be in the unit cell after
+	 *  each operation (also in crystal coordinates)
+	 * @return A set of crystal operators with equivalent rotation to the
+	 *  inputs, but with translation such that the reference point would fall
+	 *  within the unit cell
+	 */
+	public Matrix4d[] transfToOriginCellCrystal(Matrix4d[] ops, Tuple3d reference) {
+		Matrix4d[] transformed = new Matrix4d[ops.length];
+		for(int j=0;j<ops.length;j++) {
+			Matrix4d op = ops[j];
+			
+			// transform the reference point
+			Point3d xXtal = new Point3d(reference);
+			op.transform(xXtal);
+
+			// Calculate unit cell of transformed reference
+			int x = (int)Math.floor(xXtal.x);
+			int y = (int)Math.floor(xXtal.y);
+			int z = (int)Math.floor(xXtal.z);
+			
+			Matrix4d translation = new Matrix4d();
+			translation.set(new Vector3d(-x,-y,-z));
+
+			// Compose op with an additional translation operator
+			translation.mul(op);
+
+			Point3d ref2 = new Point3d(reference);
+			translation.transform(ref2);
+			
+			transformed[j] = translation;
+		}
+		
+		return transformed;
 	}
 
 	/**

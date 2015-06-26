@@ -321,8 +321,8 @@ public class DBResultTable implements ActionListener{
 			Atom[] ca1;
 			Atom[] ca2;
 
-			ca1 = StructureTools.getAtomCAArray(structure1);
-			ca2 = StructureTools.getAtomCAArray(structure2);
+			ca1 = StructureTools.getRepresentativeAtomArray(structure1);
+			ca2 = StructureTools.getRepresentativeAtomArray(structure2);
 
 			AFPChain afpChain;
 
@@ -338,7 +338,7 @@ public class DBResultTable implements ActionListener{
 
 			//String rot = afpChain.toRotMat();
 
-			DisplayAFP.showAlignmentImage(afpChain, ca1,ca2,jmol);
+			DisplayAFP.showAlignmentPanel(afpChain, ca1,ca2,jmol);
 
 
 		} catch (Exception e){

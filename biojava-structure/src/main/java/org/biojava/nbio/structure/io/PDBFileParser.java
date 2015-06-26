@@ -309,30 +309,20 @@ public class PDBFileParser  {
 
 
 		Group group;
-		if ( recordName.equals("ATOM") ) {
-			if (aminoCode1 == null)  {
-				// it is a nucleotide
-				NucleotideImpl nu = new NucleotideImpl();
-				group = nu;
+		if (aminoCode1 == null || StructureTools.UNKNOWN_GROUP_LABEL == aminoCode1 ){
+			group = new HetatomImpl();
 
-			} else if (aminoCode1 == StructureTools.UNKNOWN_GROUP_LABEL){
-				group = new HetatomImpl();
+		} else if(StructureTools.isNucleotide(aminoCode3))  {
+			// it is a nucleotide
+			NucleotideImpl nu = new NucleotideImpl();
+			group = nu;
 
-			} else {
-				AminoAcidImpl aa = new AminoAcidImpl() ;
-				aa.setAminoType(aminoCode1);
-				group = aa ;
-			}
+		} else {
+			AminoAcidImpl aa = new AminoAcidImpl() ;
+			aa.setAminoType(aminoCode1);
+			group = aa ;
 		}
-		else {
-			if (aminoCode1 != null ) {
-				AminoAcidImpl aa = new AminoAcidImpl() ;
-				aa.setAminoType(aminoCode1);
-				group = aa ;
-			} else {
-				group = new HetatomImpl();
-			}
-		}
+
 		//		System.out.println("new resNum type: "+ resNum.getType() );
 		return  group ;
 	}
@@ -1736,8 +1726,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// process group data:
 		// join residue numbers and insertion codes together
 		String recordName     = line.substring (0, 6).trim ();
-		//String pdbCode = line.substring(22,27).trim();
-		String groupCode3     = line.substring(17,20);
+
+		String groupCode3     = line.substring(17,20).trim();
 		// pdbCode is the old way of doing things...it's a concatenation
 		//of resNum and iCode which are now defined explicitly
 		String resNum  = line.substring(22,26).trim();
@@ -2052,16 +2042,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		parseCAonly = true;
 
 
-		current_model = CAConverter.getCAOnly(current_model);
+		current_model = CAConverter.getRepresentativeAtomsOnly(current_model);
 
 		for ( int i =0; i< structure.nrModels() ; i++){
 			//  iterate over all known models ...
 			List<Chain> model = structure.getModel(i);
-			model = CAConverter.getCAOnly(model);
+			model = CAConverter.getRepresentativeAtomsOnly(model);
 			structure.setModel(i,model);
 		}
 
-		current_chain = CAConverter.getCAOnly(current_chain);
+		current_chain = CAConverter.getRepresentativeAtomsOnly(current_chain);
 
 	}
 

@@ -32,21 +32,19 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-/** Makes remote calls to the Hmmer3 web site and returns Pfam domain annotations for an input protein sequence.
+/** Makes remote calls to the HMMER web service at the EBI web site and returns Pfam domain annotations for an input protein sequence.
  * 
  * @author Andreas Prlic
  * @since 3.0.3
  */
 public class RemoteHmmerScan implements HmmerScan {
 
-	public static String HMMER_SERVICE = "http://hmmer.janelia.org/search/hmmscan";
+	public static String HMMER_SERVICE = "http://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
 
-	public boolean DEFAULT_SEARCH_CUT_GA = true;
-
-	private boolean searchWithCutGA;
 	public RemoteHmmerScan(){
-		searchWithCutGA = DEFAULT_SEARCH_CUT_GA;
+
 	}
+
 
 	@Override
 	public  SortedSet<HmmerResult> scan(ProteinSequence sequence) throws IOException {
@@ -66,8 +64,20 @@ public class RemoteHmmerScan implements HmmerScan {
 	 */
 	public SortedSet<HmmerResult> scan(ProteinSequence sequence, URL serviceLocation) throws IOException{
 
+		StringBuffer postContent = new StringBuffer();
 
-		String urlparameters = prepareParameters(sequence, searchWithCutGA);
+		postContent.append("hmmdb=pfam");
+
+
+		// by default hmmscan runs with the HMMER3 cut_ga parameter enabled, the "gathering freshold", which depends on
+		// the cutoffs defined in the underlying HMM files.
+		// to request a different cutoff by e-value this could be enabled:
+		//postContent.append("&E=1");
+
+
+		postContent.append("&seq=");
+		postContent.append(sequence.getSequenceAsString());
+
 
 		HttpURLConnection connection = (HttpURLConnection) serviceLocation.openConnection();
 		connection.setDoOutput(true);
@@ -76,24 +86,26 @@ public class RemoteHmmerScan implements HmmerScan {
 		connection.setInstanceFollowRedirects(false);
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		connection.setRequestProperty("Accept", "application/json");
+
+		connection.setRequestProperty("Accept:","application/json");
 
 		connection.setRequestProperty("Content-Length", "" +
-				Integer.toString(urlparameters.toString().getBytes().length));
+				Integer.toString(postContent.toString().getBytes().length));
 
 		//Send request
 		DataOutputStream wr = new DataOutputStream (
 				connection.getOutputStream ());
-		wr.writeBytes (urlparameters);
+		wr.write(postContent.toString().getBytes());
 		wr.flush ();
 		wr.close ();
 
-		//Now get the redirect URL
+
+//		//Now get the redirect URL
 		URL respUrl = new URL( connection.getHeaderField( "Location" ));
 
 		int responseCode = connection.getResponseCode();
 		if ( responseCode == 500){
-			System.err.println("something went wrong!" + urlparameters);
+			System.err.println("something went wrong!" + serviceLocation);
 			System.err.println(connection.getResponseMessage());
 		}
 
@@ -110,8 +122,11 @@ public class RemoteHmmerScan implements HmmerScan {
 		String inputLine;
 
 		StringBuffer result = new StringBuffer();
-		while ((inputLine = in.readLine()) != null)
+		while ((inputLine = in.readLine()) != null) {
+			//System.out.println(inputLine);
 			result.append(inputLine);
+		}
+
 		in.close();
 
 		// process the response and build up a container for the data.
@@ -139,7 +154,8 @@ public class RemoteHmmerScan implements HmmerScan {
 				} else if ( dclO instanceof Integer){
 					dcl = (Integer) dclO;
 				} 
-				
+
+
 				hmmResult.setAcc((String)hit.get("acc"));
 				hmmResult.setDcl(dcl);
 				hmmResult.setDesc((String)hit.get("desc"));
@@ -156,9 +172,34 @@ public class RemoteHmmerScan implements HmmerScan {
 				for ( int j= 0 ; j < hmmdomains.size() ; j++){
 					JSONObject d = hmmdomains.getJSONObject(j);
 					//System.out.println(d);
-					Integer is_reported = getInteger(d.get("is_reported"));
-					if ( is_reported != 1) {
-						//System.out.println("excluding: " + d);
+					Integer is_included = getInteger(d.get("is_included"));
+					if ( is_included == 0) {
+//						System.out.println("  excluding: " + d.get("alihmmdesc") + " " + d.get("alihmmname") + " " +
+//								hit.get("evalue") + " " +
+//								d.get("alisqfrom") + " " +
+//								d.get("alisqto"));
+						continue;
+					}
+
+
+					// this filters out multiple hits to the same clan
+					Integer outcompeted = getInteger(d.get("outcompeted"));
+					if ( outcompeted != null && outcompeted == 1) {
+//						System.out.println("  outcompeted: " + d.get("alihmmdesc") + " " + d.get("alihmmname")+ " " +
+//								hit.get("evalue") + " " +
+//								d.get("alisqfrom") + " " +
+//								d.get("alisqto")
+//						);
+						continue;
+					}
+
+					Integer significant = getInteger(d.get("significant"));
+
+					if (  significant != 1) {
+//						System.out.println("  not significant: " + d.get("alihmmdesc") + " " + d.get("alihmmname")+ " " +
+//								hit.get("evalue") + " " +
+//								d.get("alisqfrom") + " " +
+//								d.get("alisqto"));
 						continue;
 					}
 
@@ -169,11 +210,15 @@ public class RemoteHmmerScan implements HmmerScan {
 
 					dom.setHmmFrom(getInteger(d.get("alihmmfrom")));
 					dom.setHmmTo(getInteger(d.get("alihmmto")));
-					dom.setSimCount((Integer)d.get("aliSimCount"));
+					dom.setSimCount((Integer) d.get("aliSimCount"));
 					dom.setSqFrom(getInteger(d.get("alisqfrom")));
 					dom.setSqTo(getInteger(d.get("alisqto")));
 					dom.setHmmName((String)d.get("alihmmname"));
+					dom.setEvalue(Float.parseFloat((String)d.get("ievalue")));
+
 					domains.add(dom);
+
+
 				}
 
 				hmmResult.setDomains(domains);
@@ -188,34 +233,6 @@ public class RemoteHmmerScan implements HmmerScan {
 
 	}
 
-	private String prepareParameters(ProteinSequence sequence,
-			boolean searchWithCutGA) throws UnsupportedEncodingException  {
-		StringBuffer urlParameters = new StringBuffer();
-
-
-
-		urlParameters.append("hmmdb=");
-		urlParameters.append(URLEncoder.encode("pfam","UTF-8"));
-
-
-		// search by cut_ga, not e-values
-		//cut_ga' : '',
-		if ( searchWithCutGA ) {
-			urlParameters.append("&cut_ga=");
-			//urlParameters.append(URLEncoder.encode("1","UTF-8"));
-
-
-		}
-
-		urlParameters.append("&seq=");
-
-		urlParameters.append(URLEncoder.encode(">seq\n"+sequence.toString(), "UTF-8"));
-
-
-
-
-		return urlParameters.toString();
-	}
 
 	private Integer getInteger(Object object) {
 		if ( object instanceof Integer)

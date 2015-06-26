@@ -100,7 +100,6 @@ public class StructureAlignmentFactory {
 		algorithms.clear();
 	}
 
-	@SuppressWarnings("unchecked")
 	public static StructureAlignment getAlgorithm(String name) throws StructureException{
 		for ( StructureAlignment algo : algorithms){
 			if (algo.getAlgorithmName().equalsIgnoreCase(name)) {
@@ -109,12 +108,21 @@ public class StructureAlignmentFactory {
 				// avoid issues with this in multi-threaded environments bu
 				// creating a new StructureAlignment every time this is called
 				try {
+					@SuppressWarnings("unchecked")
 					Class<StructureAlignment> c = (Class<StructureAlignment>) Class.forName(algo.getClass().getName());
 					return c.newInstance();
-				} catch (Exception e){
+				} catch (ClassNotFoundException e){
+					logger.error("Exception: ", e);
+					return null;
+				} catch (IllegalAccessException e){
+					logger.error("Exception: ", e);
+					return null;
+				} catch (InstantiationException e){
 					logger.error("Exception: ", e);
 					return null;
 				}
+
+
 			}
 		}
 

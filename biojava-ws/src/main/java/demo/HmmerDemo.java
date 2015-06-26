@@ -42,17 +42,15 @@ public class HmmerDemo {
 
 		try {
 			// first we get a UniProt sequence
-			String uniProtID = "P26663";
+			String uniProtID = "P08487";
 			ProteinSequence seq = getUniprot(uniProtID);
 
 			
 			// now we submit this sequence to the Hmmer web site
-			HmmerScan hmmer = new RemoteHmmerScan();
+			RemoteHmmerScan hmmer = new RemoteHmmerScan();
 
 			SortedSet<HmmerResult> results = hmmer.scan(seq);
 
-			
-			
 			// and now let's print out the obtained annotations
 			
 			System.out.println(String.format("#\t%15s\t%10s\t%s\t%s\t%8s\t%s",
@@ -68,7 +66,7 @@ public class HmmerDemo {
 							counter,
 							hmmerResult.getName(), domain.getHmmAcc(), 
 							domain.getSqFrom(),domain.getSqTo(),
-							hmmerResult.getEvalue(), hmmerResult.getDesc()
+							domain.getEvalue(), hmmerResult.getDesc()
 							));
 
 				}

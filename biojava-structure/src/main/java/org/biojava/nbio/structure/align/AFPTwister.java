@@ -65,8 +65,8 @@ public class AFPTwister
 
 
       //superimposing according to the initial AFP-chaining
-      Atom[] origCA      = StructureTools.cloneCAArray(ca2);
-      Atom[] iniTwistPdb = StructureTools.cloneCAArray(ca2);
+      Atom[] origCA      = StructureTools.cloneAtomArray(ca2);
+      Atom[] iniTwistPdb = StructureTools.cloneAtomArray(ca2);
 
       int[] blockResSize = afpChain.getBlockResSize();
 
@@ -324,7 +324,7 @@ public class AFPTwister
          Group g = p2[i].getGroup();
          Group newG = (Group)g.clone();
 
-         p1[i] = newG.getAtom(StructureTools.CA_ATOM_NAME);
+         p1[i] = newG.getAtom(p2[i].getName());
          Chain parentC = g.getChain();
 
          Chain newChain = null;

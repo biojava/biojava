@@ -175,7 +175,7 @@ implements ActionListener
 		
 		JComboBox source = (JComboBox) event.getSource();
 		String value = source.getSelectedItem().toString();
-
+		evalString("save selection; ");
 
 		String selectLigand = "select ligand;wireframe 0.16;spacefill 0.5; color cpk ;";
 
@@ -240,7 +240,7 @@ implements ActionListener
 		} else if ( value.equals("Show SCOP Domains")){
 			colorBySCOP();
 		}
-
+		evalString("restore selection; ");
 	}
 
 	private void colorBySCOP() {
@@ -291,7 +291,7 @@ implements ActionListener
 			return;
 
 		try {
-			Atom[] ca = StructureTools.getAtomCAArray(structure);
+			Atom[] ca = StructureTools.getRepresentativeAtomArray(structure);
 			List<Domain> domains = LocalProteinDomainParser.suggestDomains(ca);
 			int i = -1;
 			for ( Domain dom : domains){

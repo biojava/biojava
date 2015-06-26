@@ -47,6 +47,10 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemComp(ChemComp c) {
+
+		if ( c.getId() == null)
+			System.err.println("WARNING: chem comp ID == null " + c);
+
 		latestChemCompId = c.getId();
 		dictionary.addChemComp(c);		
 		if ( c.getResidueType() == ResidueType.nonPolymer)

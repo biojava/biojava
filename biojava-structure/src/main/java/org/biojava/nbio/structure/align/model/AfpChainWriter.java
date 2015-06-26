@@ -1048,12 +1048,13 @@ public class AfpChainWriter
 
 	private static char getOneLetter(Group g){
 
-		try {
-			Character c = StructureTools.get1LetterCode(g.getPDBName());
-			return c;
-		} catch (Exception e){
-			return 'X';
-		}
+		
+		if (g==null) return StructureTools.UNKNOWN_GROUP_LABEL;
+		
+		
+		return StructureTools.get1LetterCode(g.getPDBName());
+		
+		
 	}
 
 

@@ -114,7 +114,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 	}
 
 	@Test
-	public void testSubstructureMatchingProteinSequence() throws UnknownPdbAminoAcidException, CompoundNotFoundException {
+	public void testSubstructureMatchingProteinSequence() throws CompoundNotFoundException {
 		ProteinSequence seq = new ProteinSequence(seq1.substring(30, 40));
 		Structure result = StructureSequenceMatcher.getSubstructureMatchingProteinSequence(seq, struct1);
 		assertEquals("Wrong number of groups", 10, StructureTools.getNrGroups(result));
@@ -123,14 +123,14 @@ public class StructureSequenceMatcherTest extends TestCase {
 		for (Group group : result.getChain(0).getAtomGroups()) {
 			assertTrue("Contains non-amino acid group", group instanceof AminoAcid);
 			AminoAcid aa = (AminoAcid) group;
-			char c = StructureTools.convert_3code_1code(aa.getPDBName());
+			char c = StructureTools.get1LetterCodeAmino(aa.getPDBName());
 			assertEquals("Wrong amino acid", seq.getSequenceAsString().charAt(i), c);
 			i++;
 		}
 	}
 	
 	@Test
-	public void testGetProteinSequenceForStructure() throws UnknownPdbAminoAcidException {
+	public void testGetProteinSequenceForStructure() {
 		Map<Integer,Group> groupIndexPos = new HashMap<Integer,Group>();
 		ProteinSequence prot = StructureSequenceMatcher.getProteinSequenceForStructure(struct1, groupIndexPos);
 
@@ -147,7 +147,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 			Group g = groupIndexPos.get(res);
 			
 			ResidueNumber resnum = g.getResidueNumber();
-			Character aa = StructureTools.convert_3code_1code(g.getPDBName());
+			Character aa = StructureTools.get1LetterCodeAmino(g.getPDBName());
 			assertEquals("Wrong PDB number at pos "+res,pdbNum1[res],resnum.toString());
 			assertEquals("Wrong Amino acid at pos "+res,
 					Character.valueOf(seq1.charAt(res)),aa);
@@ -156,7 +156,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 	}
 
 	@Test
-	public void testMatchSequenceToStructure() throws UnknownPdbAminoAcidException, StructureException, CompoundNotFoundException {
+	public void testMatchSequenceToStructure() throws StructureException, CompoundNotFoundException {
 		// create modified sequence by removing 10 residues and adding 3
 		String sequenceStr = //>2PTC:E|PDBID|CHAIN|SEQUENCE
 			"IVGGYTCGAN" +
@@ -212,7 +212,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 				assertNotNull(g);
 				String aa3 = g.getPDBName();
 				assertNotNull(aa3);
-				Character aa = StructureTools.convert_3code_1code(aa3);
+				Character aa = StructureTools.get1LetterCodeAmino(aa3);
 				assertEquals("Wrong PDB number at position "+i,
 						correctResidues[i] ,g.getResidueNumber().toString());
 				assertEquals("Wrong amino acid at position "+i,

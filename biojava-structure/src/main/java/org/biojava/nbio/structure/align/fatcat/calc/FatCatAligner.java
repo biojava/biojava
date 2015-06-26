@@ -134,7 +134,7 @@ public class FatCatAligner
   private static Group[] chainAfp(FatCatParameters params,AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException{
      
 	// we don;t want to rotate input atoms, do we?
-	  Atom[] ca2clone = StructureTools.cloneCAArray(ca2);
+	  Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 	  
      List<AFP> afpSet = afpChain.getAfpSet();
      

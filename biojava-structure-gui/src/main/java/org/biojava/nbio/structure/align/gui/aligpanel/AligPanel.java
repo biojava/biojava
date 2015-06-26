@@ -26,6 +26,7 @@ import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -61,18 +62,18 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
     */
    private static final long serialVersionUID = -6892229111166263764L;
 
-   AFPChain afpChain;
-   AFPChainCoordManager coordManager ;
-   Font seqFont;
-   Font eqFont;
-   private StructureAlignmentJmol jmol;
-   AligPanelMouseMotionListener mouseMoLi;
+   private AFPChain afpChain;
+   private AFPChainCoordManager coordManager ;
+   private Font seqFont;
+   private Font eqFont;
+   private AbstractAlignmentJmol jmol;
+   private AligPanelMouseMotionListener mouseMoLi;
 
-   BitSet selection;
+   private BitSet selection;
 
    private boolean selectionLocked;
-   Atom[] ca1;
-   Atom[] ca2;
+   private Atom[] ca1;
+   private Atom[] ca2;
 
    private boolean colorBySimilarity;
 
@@ -110,7 +111,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
          //StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(afpChain.getAlgorithmName());
          StructureAlignmentJmol jmol= StructureAlignmentDisplay.display(afpChain, ca1, ca2);
 
-         DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, jmol);
+         DisplayAFP.showAlignmentPanel(afpChain, ca1, ca2, jmol);
 
 
 
@@ -244,7 +245,8 @@ public void paintComponent(Graphics g){
             else
                isGapped = true;
          } else {
-            if ( c1 !=  '-' && c2 != '-' ){
+        	char s = symb[i];
+            if ( c1 !=  '-' && c2 != '-' && s!= ' '){
                // no gap
                g2D.setFont(eqFont);
             } else {
@@ -276,7 +278,7 @@ public void paintComponent(Graphics g){
                } else  {
                   
                   int colorPos = 0;
-                  if (isFATCAT ) {
+                  if (isFATCAT) {
                      int block = 0;
                      char s = symb[i];
                      try {
@@ -291,15 +293,13 @@ public void paintComponent(Graphics g){
                         colorPos = ColorUtils.colorWheel.length % colorPos ;
                      }
                   } else {
-                     colorPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, i);
-                     bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
-                     bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
-                     //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
-                     //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
+                	  colorPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, i);
+            		  bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
+            		  bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
+            		  //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
+            		  //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
                   }
                   
-                   
-                 
                }
             } else {
 
@@ -522,7 +522,7 @@ public void toggleSelection(AlignedPosition p) {
 
 
 
-   public void setStructureAlignmentJmol(StructureAlignmentJmol jmol) {
+   public void setAlignmentJmol(AbstractAlignmentJmol jmol) {
       this.jmol = jmol;
 
    }
@@ -661,5 +661,3 @@ public void actionPerformed(ActionEvent e) {
 
 
 }
-
-

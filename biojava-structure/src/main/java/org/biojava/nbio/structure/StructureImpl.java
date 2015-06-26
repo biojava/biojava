@@ -170,15 +170,17 @@ public class StructureImpl implements Structure, Serializable {
 		for (Compound compound:this.compounds) {
 			Compound newCompound = new Compound(compound); // this sets everything but the chains
 			for (String chainId:compound.getChainIds()) {
-				try {
+				
 					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
-						Chain newChain = n.getChainByPDB(chainId,modelNr);
-						newChain.setCompound(newCompound);
-						newCompound.addChain(newChain);
+						try {
+							Chain newChain = n.getChainByPDB(chainId,modelNr);
+							newChain.setCompound(newCompound);
+							newCompound.addChain(newChain);
+						} catch (StructureException e) {
+							// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
+							logger.warn("Could not find chain id "+chainId+" of model "+modelNr+" while cloning compound "+compound.getMolId()+". Something is wrong!");
+						}
 					}
-				} catch (StructureException e) {
-					logger.error("Could not find chain id {} while cloning Structure's compounds. Something is wrong!", e);
-				}
 			}
 			newCompoundList.add(newCompound);
 		}
@@ -597,16 +599,17 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-	/** create a String that contains the contents of a PDB file.
-	 *
-	 * @return a String that represents the structure as a PDB file.
-	 */
 	@Override
 	public String toPDB() {
 		FileConvert f = new FileConvert(this) ;
 		return f.toPDB();
 	}
 
+	@Override
+	public String toMMCIF() {
+		FileConvert f = new FileConvert(this);
+		return f.toMMCIF();
+	}
 
 	@Override
 	public boolean hasChain(String chainId) {
@@ -841,6 +844,11 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public List<String> getRanges() {
 		return ResidueRange.toStrings(getResidueRanges());
+	}
+
+	@Override
+	public void resetModels() {
+		models = new ArrayList<List<Chain>>();
 	}
 
 }

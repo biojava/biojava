@@ -479,7 +479,7 @@ public class AFPChain implements Serializable, Cloneable
 		myResultsEQR = -1;
 		myResultsSimilarity1 = -1;
 		myResultsSimilarity2 = -1;
-		algorithmName = DEFAULT_ALGORITHM_NAME ;
+		algorithmName = "unknown";
 		version = "1.0";
 		sequentialAlignment = true;
 		distanceMatrix = null;

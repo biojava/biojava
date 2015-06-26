@@ -24,6 +24,9 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.asa.AsaCalculator;
 import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.io.FileConvert;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
@@ -359,6 +362,22 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	}
 
 	/**
+	 * Returns true if the 2 molecules of this interface are the same entity (i.e. homomeric interface), false
+	 * otherwise (i.e. heteromeric interface)
+	 * @return true if homomeric or if either of the entities is unknonw (null Compounds), false otherwise
+	 */
+	public boolean isHomomeric() {
+		Compound first = getParentChains().getFirst().getCompound();
+		Compound second = getParentChains().getSecond().getCompound();
+		if (first==null || second==null) {
+			logger.warn("Some compound of interface {} is null, can't determine whether it is homo/heteromeric. Consider it homomeric", getId());
+			return true;
+		}
+		return 
+			first.getRepresentative().getChainID().equals(second.getRepresentative().getChainID());			
+	}
+	
+	/**
 	 * Gets a map of ResidueNumbers to GroupAsas for all groups of first chain.
 	 * @return
 	 */
@@ -538,7 +557,9 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * The two sides of the given StructureInterface need to match this StructureInterface
 	 * in the sense that they must come from the same Compound (Entity), i.e.
 	 * their residue numbers need to align with 100% identity, except for unobserved 
-	 * density residues.
+	 * density residues. The SEQRES indices obtained through {@link Compound#getAlignedResIndex(Group, Chain)} are
+	 * used to match residues, thus if no SEQRES is present or if {@link FileParsingParameters#setAlignSeqRes(boolean)}
+	 * is not used, this calculation is not guaranteed to work properly.
 	 * @param other
 	 * @param invert if false the comparison will be done first-to-first and second-to-second, 
 	 * if true the match will be first-to-second and second-to-first
@@ -586,20 +607,13 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 				ResidueIdentifier second = null;
 
 				if (!invert) {
-					first = new ResidueIdentifier(
-							thisContact.getPair().getFirst().getResidueNumber().getSeqNum(), 
-							thisContact.getPair().getFirst().getResidueNumber().getInsCode());
+					first = new ResidueIdentifier(thisContact.getPair().getFirst());
 					
-					second = new ResidueIdentifier( 
-							thisContact.getPair().getSecond().getResidueNumber().getSeqNum(), 
-							thisContact.getPair().getSecond().getResidueNumber().getInsCode());
+					second = new ResidueIdentifier(thisContact.getPair().getSecond());
 				} else {
-					first = new ResidueIdentifier( 
-							thisContact.getPair().getSecond().getResidueNumber().getSeqNum(), 
-							thisContact.getPair().getSecond().getResidueNumber().getInsCode());
-					second = new ResidueIdentifier(
-							thisContact.getPair().getFirst().getResidueNumber().getSeqNum(), 
-							thisContact.getPair().getFirst().getResidueNumber().getInsCode());
+					first = new ResidueIdentifier(thisContact.getPair().getSecond());
+					
+					second = new ResidueIdentifier(thisContact.getPair().getFirst());
 				}
 
 				if (otherContacts.hasContact(first,second)) {
@@ -690,6 +704,53 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		sb.append(System.getProperty("line.separator"));
 		sb.append("END");
 		sb.append(System.getProperty("line.separator"));
+		return sb.toString();
+	}
+	
+	/**
+	 * Return a String representing the 2 molecules of this interface in mmCIF format.
+	 * If the molecule ids (i.e. chain ids) are the same for both molecules, then the second
+	 * one will be written as chainId_operatorId (with operatorId taken from {@link #getTransforms()} 
+	 * @return
+	 */
+	public String toMMCIF() {
+		StringBuilder sb = new StringBuilder();
+		
+		String molecId1 = getMoleculeIds().getFirst();
+		String molecId2 = getMoleculeIds().getSecond();
+		
+		if (isSymRelated()) {		
+			// if both chains are named equally we want to still named them differently in the output mmcif file
+			// so that molecular viewers can handle properly the 2 chains as separate entities 
+			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
+		}
+		
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_interface_"+getId()+System.getProperty("line.separator"));
+		
+		sb.append(FileConvert.getAtomSiteHeader());
+		
+		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
+		int atomId = 1;
+		List<Object> atomSites = new ArrayList<Object>();
+		for (Atom atom:this.molecules.getFirst()) {
+			if (isSymRelated()) {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1, atomId));
+			} else {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1));
+			}
+			atomId++;
+		}
+		for (Atom atom:this.molecules.getSecond()) {
+			if (isSymRelated()) {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2, atomId));
+			} else {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2));
+			}
+			atomId++;
+		}
+		
+		sb.append(MMCIFFileTools.toMMCIF(atomSites));
+
 		return sb.toString();
 	}
 	

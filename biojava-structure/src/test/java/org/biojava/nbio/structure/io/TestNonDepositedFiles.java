@@ -29,7 +29,6 @@ import org.biojava.nbio.structure.io.mmcif.MMcifParser;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.xtal.CrystalCell;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -86,6 +85,9 @@ public class TestNonDepositedFiles {
 		
 		assertEquals(2,s.getChains().size());
 		
+		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
+		assertEquals(1, s.getCompounds().size());
+		
 		//System.out.println("Chains from incomplete header file: ");
 		//checkChains(s);
 		
@@ -96,6 +98,10 @@ public class TestNonDepositedFiles {
 		inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/1b8g_raw.pdb.gz"));
 		s = pdbpars.parsePDBFile(inStream);
 		assertNotNull(s);
+		
+		assertEquals(2,s.getChains().size());
+				
+		assertEquals(1, s.getCompounds().size());
 	}
 	
 	//@Test
@@ -185,9 +191,9 @@ public class TestNonDepositedFiles {
 	/**
 	 * A test for reading a phenix-produced (ver 1.9_1692) mmCIF file.
 	 * This is the file submitted to the PDB for deposition of entry 4lup
+	 * See github issue #234
 	 * @throws IOException
 	 */
-	@Ignore // remove once issue #234 is fixed
 	@Test
 	public void testPhenixFile() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phenix_output.cif.gz"));

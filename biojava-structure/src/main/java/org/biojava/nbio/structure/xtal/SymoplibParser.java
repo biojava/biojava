@@ -51,7 +51,7 @@ public class SymoplibParser {
 	
 	private static final String newline = System.getProperty("line.separator");
 
-	private static final String SPACE_GROUPS_FILE = "org/biojava/bio/structure/xtal/spacegroups.xml";
+	private static final String SPACE_GROUPS_FILE = "org/biojava/nbio/structure/xtal/spacegroups.xml";
 
 	private static final Pattern namePat = Pattern.compile(".*\\s([A-Z]+)(\\s'.+')?\\s+'(.+)'.*");
 
