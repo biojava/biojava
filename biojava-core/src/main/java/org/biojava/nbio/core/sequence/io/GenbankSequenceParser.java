@@ -31,6 +31,7 @@
  */
 package org.biojava.nbio.core.sequence.io;
 
+import org.biojava.nbio.core.exceptions.Messages;
 import org.biojava.nbio.core.exceptions.ParserException;
 import org.biojava.nbio.core.sequence.DataSource;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -127,6 +128,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
     protected static final Pattern readableFiles = Pattern.compile(".*(g[bp]k*$|\\u002eg[bp].*)");
     protected static final Pattern headerLine = Pattern.compile("^LOCUS.*");
+	private static final String DBSOURCE = "DBSOURCE";
+	private static final String PRIMARY = "PRIMARY";
+	private static final String DBLINK = "DBLINK";
 
 //  private NCBITaxon tax = null;
     
@@ -140,7 +144,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
             section = this.readSection(bufferedReader);
             sectionKey = ((String[]) section.get(0))[0];
             if (sectionKey == null) {
-                throw new ParserException("Section key was null");
+            	//if we reach the end of the file, section contains empty strings
+            	if(section.get(0)[1]==null || section.get(0)[1]=="" ||
+            			section.get(0)[1].length()==0) {
+            		throw new ParserException(Messages.ENDOFFILE);
+            	}
+                throw new ParserException(Messages.SECTIONKEYNULL);
             }
             // process section-by-section
             if (sectionKey.equals(LOCUS_TAG)) {
@@ -279,6 +288,16 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                     seq.append(((String[]) section.get(i))[1]);
                 }
                 seqData = seq.toString().replaceAll("\\s+", "").replaceAll("[\\.|~]", "-").toUpperCase();
+            } else if(sectionKey.equals(DBSOURCE)) {
+            	//TODO
+            } else if(sectionKey.equals(PRIMARY)) {
+            	//TODO
+            } else if(sectionKey.equals(DBLINK)) {
+            	//TODO
+            } else {
+            	if(!sectionKey.equals(END_SEQUENCE_TAG)) {
+            		log.info("found unknown section key: "+sectionKey);
+            	}
             }
         } while (!sectionKey.equals(END_SEQUENCE_TAG));
         return seqData;
@@ -295,6 +314,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     private List<String[]> readSection(BufferedReader bufferedReader) {
         List<String[]> section = new ArrayList<String[]>();
         String line = "";
+
         String currKey = null;
         StringBuffer currVal = new StringBuffer();
         boolean done = false;
@@ -364,8 +384,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
         featureCollection = new HashMap<String, ArrayList<AbstractFeature>>();
         mapDB = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
         headerParser = new GenericGenbankHeaderParser<S, C>();
-
-        parse(bufferedReader);
+        try {
+        	parse(bufferedReader);
+        } catch (ParserException e) {
+        	if(e.getMessage().equalsIgnoreCase(Messages.ENDOFFILE))	return null;
+        	else throw new ParserException(e.getMessage());
+        }
 
         return seqData;
     }
