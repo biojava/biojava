@@ -193,15 +193,15 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 				//Randomly select one of the steps to modify the alignment. 
 				//Because two moves are biased, the probabilities are not the same
 				double move = rnd.nextDouble();
-				if (move < 0.5){
+				if (move < 0.4){
 						moved = shiftRow();
 						if (debug) System.out.println("did shift");
 				}
-				else if (move < 0.8){
+				else if (move < 0.7){
 						moved = expandBlock();
 						if (debug) System.out.println("did expand");
 				}
-				else if (move < 0.9){
+				else if (move < 0.85){
 						moved = shrinkBlock();
 						if (debug) System.out.println("did shrink");
 				}
@@ -319,7 +319,8 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 							if (rnd.nextDouble() > 0.5) {   //Introduce some randomness in the choice
 								structure = str;
 								block = b;
-								position = col; 
+								position = col;
+								maxDist = residueDistances.get(str, column);
 							}
 						}
 					}
