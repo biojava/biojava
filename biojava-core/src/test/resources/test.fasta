@@ -1,7 +1,9 @@
->1 test test
+>1 test test with empty line before the sequence
+
 PEPTIDEK
-> 2 test test
+> 2 test test with empty line after the sequence
 PEPTIDEK
+
 >3 test test
 PEPTIDEK
 >4 test test
@@ -16,5 +18,5 @@ PEPTIDEK
 PEPTIDEK
 >9 test test
 PEPTIDEK
->10 test test
+>10 test test with empty line at the end of the file
 PEPTIDEK
