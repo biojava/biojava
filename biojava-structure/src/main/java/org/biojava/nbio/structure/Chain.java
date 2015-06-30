@@ -25,6 +25,7 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.PDBFileReader;
 
 import java.util.List;
 
@@ -168,7 +169,7 @@ public interface Chain {
     
     
     /** 
-     * Return the number of Groups with observed density in the chain, i.e. 
+     * Returns the number of Groups with observed density in the chain, i.e. 
      * those with coordinates in ATOM and HETATMs (including waters) records
      * 
      * @return the length
@@ -179,7 +180,7 @@ public interface Chain {
     public int getAtomLength();
     
     /** 
-     * Return the number of groups in the SEQRES records of the chain, i.e.
+     * Returns the number of groups in the SEQRES records of the chain, i.e.
      * the number of aminoacids/nucleotides in the construct 
      * 
      * @return the length
@@ -190,14 +191,14 @@ public interface Chain {
     public int getSeqResLength();
     
     /** 
-     * Set the Compound
+     * Sets the Compound
      * @param compound the Compound 
      * @see #getCompound()
     */
     public void setCompound(Compound compound);
 
     /** 
-     * Return the Compound for this chain.
+     * Returns the Compound for this chain.
      * 
      * @return the Compound object 
      * @see #setCompound(Compound)
@@ -250,8 +251,9 @@ public interface Chain {
     public Sequence<?> getBJSequence()  ;
        
     /** 
-     * Return the sequence of amino acids as it has been provided in the ATOM records.
-     * 
+     * Returns the sequence of amino acids as it has been provided in the ATOM records.
+     * Non-standard residues will be present in the string only if the property 
+     * {@value PDBFileReader#LOAD_CHEM_COMP_PROPERTY} has been set.
      * @return amino acid sequence as string
      * @see #getSeqResSequence()
      */
@@ -272,7 +274,8 @@ public interface Chain {
      */
     public void setSwissprotId(String sp_id);
 
-    /** Get the Swissprot id of this chain.
+    /** 
+     * Gets the Swissprot id of this chain.
      * @return a String representing the swissprot id value
      * @see #setSwissprotId(String sp_id)
      */
