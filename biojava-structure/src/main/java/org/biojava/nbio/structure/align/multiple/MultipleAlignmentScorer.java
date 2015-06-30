@@ -12,16 +12,19 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * Utility class for calculating common scores of {@link MultipleAlignment}s.
+ * <p>
+ * 
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
+ * @since 4.1.0
  *
  */
 public class MultipleAlignmentScorer {
 	
-	//Names for commonly used properties
-	public static final String PROBABILITY = "Probability";  		//AFPChain conversion
-	public static final String CE_SCORE = "CE-score";			    //AFPChain conversion
+	//Names for commonly used scores
+	public static final String PROBABILITY = "Probability";
+	public static final String CE_SCORE = "CE-score";
 	public static final String RMSD = "RMSD";
 	public static final String AVGTM_SCORE = "AvgTM-score";
 	public static final String MC_SCORE = "MultipleMC-score";
@@ -29,44 +32,50 @@ public class MultipleAlignmentScorer {
 	public static final String REFTM_SCORE = "RefTM-score";
 
 	/**
-	 * Calculates and puts the RMSD and the average TM-Score of the MultipleAlignment.
+	 * Calculates and puts the RMSD and the average TM-Score 
+	 * of the MultipleAlignment.
 	 * 
 	 * @param alignment
 	 * @throws StructureException
 	 * @see #getAvgTMScore(MultipleAlignment)
 	 * @see #getRMSD(MultipleAlignment)
 	 */
-	public static void calculateScores(MultipleAlignment alignment) throws StructureException {
+	public static void calculateScores(MultipleAlignment alignment) 
+			throws StructureException {
 		
 		//Put RMSD
-		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
-		alignment.putScore(RMSD, getRMSD(transformed));
+		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
+		alignment.putScore(RMSD, getRMSD(trans));
 		
-		//Put TM-Score
+		//Put AvgTM-Score
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
-		alignment.putScore(AVGTM_SCORE, getAvgTMScore(transformed,lengths));
+		alignment.putScore(AVGTM_SCORE, getAvgTMScore(trans,lengths));
 	}
 	
 	/**
-	 * Calculates the RMSD of all-to-all structure comparisons (distances) of the
-	 * given MultipleAlignment. <p>
-	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+	 * Calculates the RMSD of all-to-all structure comparisons (distances) of 
+	 * the given MultipleAlignment. <p>
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and 
+	 * l=alignment length.
 	 * <p>
 	 * The formula used is just the sqroot of the average distance
 	 * of all possible pairs of atoms. Thus, for R structures
 	 * aligned over C columns without gaps, we have
-	 * <pre>RMSD = \sqrt{  1/(C*(R*(R-1)/2)) * \sum_{r1=1}^{R-1} \sum_{r2=r1+1}^{R-1} \sum_{j=0}^{C-1} (atom[r1][c]-atom[r2][c])^2  }</pre>
+	 * <pre>RMSD = \sqrt{1/(C*(R*(R-1)/2)) * \sum_{r1=1}^{R-1} 
+	 * \sum_{r2=r1+1}^{R-1} \sum_{j=0}^{C-1} (atom[r1][c]-atom[r2][c])^2}
+	 * </pre>
 	 * 
 	 * @param alignment
 	 * @return double RMSD
 	 */
 	public static double getRMSD(MultipleAlignment alignment) {
-		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
-		return getRMSD(transformed);
+		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
+		return getRMSD(trans);
 	}
+	
 	/**
 	 * Calculates the RMSD of all-to-all structure comparisons (distances),
 	 * given a set of superimposed atoms.
@@ -75,7 +84,7 @@ public class MultipleAlignmentScorer {
 	 * @return double RMSD
 	 * @see #getRMSD(MultipleAlignment)
 	 */
-	private static double getRMSD(List<Atom[]> transformed) {
+	public static double getRMSD(List<Atom[]> transformed) {
 
 		double sumSqDist = 0;
 		int comparisons = 0;
@@ -104,30 +113,57 @@ public class MultipleAlignmentScorer {
 		return Math.sqrt(sumSqDist/comparisons);
 	}
 	
-	public static double getRefRMSD(MultipleAlignment alignment, int reference) {
-		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
-		return getRefRMSD(transformed,reference);
-	}
 	/**
-	 * Calculates the average RMSD from all structures to a reference structure,
-	 * given a set of superimposed atoms.<p>
-	 * Complexity: T(n,l) = O(l*n), if n=number of structures and l=alignment length.
+	 * /**
+	 * Calculates the average RMSD from all structures to a reference s
+	 * tructure, given a set of superimposed atoms.<p>
+	 * Complexity: T(n,l) = O(l*n), if n=number of structures and 
+	 * l=alignment length.
 	 * <p>
-	 * For ungapped alignments, this is just the sqroot of the average distance
-	 * from an atom to the aligned atom from the reference. Thus, for R structures
-	 * aligned over C columns (with structure 0 as the reference), we have <br/>
-	 * <pre>RefRMSD = \sqrt{  1/(C*(R-1)) * \sum_{r=1}^{R-1} \sum_{j=0}^{C-1} (atom[1][c]-atom[r][c])^2  }</pre>
+	 * For ungapped alignments, this is just the sqroot of the average 
+	 * distance from an atom to the aligned atom from the reference. 
+	 * Thus, for R structures aligned over C columns (with structure 0 as 
+	 * the reference), we have: 
+	 * <pre>RefRMSD = \sqrt{ 1/(C*(R-1)) * \sum_{r=1}^{R-1} \sum_{j=0}^{C-1} 
+	 * (atom[1][c]-atom[r][c])^2 }</pre>
+	 * <p>
+	 * For gapped alignments, null atoms are omitted from consideration, 
+	 * so that the RMSD is the average over all columns with non-null 
+	 * reference of the average RMSD within the non-null elements of the 
+	 * column.
 	 * 
+	 * @param alignment MultipleAlignment
+	 * @param ref reference structure index
+	 * @return
+	 */
+	public static double getRefRMSD(MultipleAlignment alignment, int ref){
+		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
+		return getRefRMSD(trans, ref);
+	}
+	
+	/**
+	 * Calculates the average RMSD from all structures to a reference s
+	 * tructure, given a set of superimposed atoms.<p>
+	 * Complexity: T(n,l) = O(l*n), if n=number of structures and 
+	 * l=alignment length.
 	 * <p>
-	 * For gapped alignments, null atoms are omitted from consideration, so that
-	 * the RMSD is the average over all columns with non-null reference of the
-	 * average RMSD within the non-null elements of the column.
+	 * For ungapped alignments, this is just the sqroot of the average 
+	 * distance from an atom to the aligned atom from the reference. 
+	 * Thus, for R structures aligned over C columns (with structure 0 as 
+	 * the reference), we have: 
+	 * <pre>RefRMSD = \sqrt{ 1/(C*(R-1)) * \sum_{r=1}^{R-1} \sum_{j=0}^{C-1} 
+	 * (atom[1][c]-atom[r][c])^2 }</pre>
+	 * <p>
+	 * For gapped alignments, null atoms are omitted from consideration, 
+	 * so that the RMSD is the average over all columns with non-null 
+	 * reference of the average RMSD within the non-null elements of the 
+	 * column.
 	 * 
 	 * @param transformed
 	 * @param reference
 	 * @return
 	 */
-	private static double getRefRMSD(List<Atom[]> transformed, int reference) {
+	public static double getRefRMSD(List<Atom[]> transformed, int reference) {
 
 		double sumSqDist = 0;
 		int totalLength = 0;
@@ -157,35 +193,44 @@ public class MultipleAlignmentScorer {
 	}
 	
 	/**
-	 * Calculates the average TMScore all the possible pairwise structure comparisons of the
-	 * given MultipleAlignment. <p>
-	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+	 * Calculates the average TMScore of all the possible pairwise structure 
+	 * comparisons of the given alignment. <p>
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and 
+	 * l=alignment length.
 	 * 
 	 * @param alignment
 	 * @return double Average TMscore
 	 * @throws StructureException
 	 */
-	public static double getAvgTMScore(MultipleAlignment alignment) throws StructureException {
-		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
+	public static double getAvgTMScore(MultipleAlignment alignment) 
+			throws StructureException {
+		
+		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
+		
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
-		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
+		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()){
 			lengths.add(atoms.length);
 		}
-		return getAvgTMScore(transformed,lengths);
+		return getAvgTMScore(trans, lengths);
 	}
 	/**
-	 * Calculates the average TMScore all the possible pairwise structure comparisons of the
-	 * given a set of superimposed Atoms and the original structure lengths.<p>
-	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+	 * Calculates the average TMScore all the possible pairwise structure 
+	 * comparisons of the given a set of superimposed Atoms and the original 
+	 * structure lengths.<p>
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and 
+	 * l=alignment length.
 	 * 
-	 * @param transformed
+	 * @param transformed aligned Atoms transformed
 	 * @param lengths lengths of the structures in residue number
 	 * @return double Average TMscore
 	 * @throws StructureException
 	 */
-	private static double getAvgTMScore(List<Atom[]> transformed, List<Integer> lengths) throws StructureException {
+	public static double getAvgTMScore(List<Atom[]> transformed, 
+			List<Integer> lengths) throws StructureException {
 
-		if(transformed.size() != lengths.size()) throw new IllegalArgumentException("Input sizes differ.");
+		if(transformed.size() != lengths.size()) 
+			throw new IllegalArgumentException("Input sizes differ.");
+		
 		double sumTM = 0;
 		int comparisons = 0;
 		
@@ -197,7 +242,8 @@ public class MultipleAlignmentScorer {
 				Atom[] aln = new Atom[len];
 				int nonNullLen = 0;
 				for(int c=0;c<len;c++) {
-					if( transformed.get(r1)[c] != null && transformed.get(r2)[c] != null) {
+					if(transformed.get(r1)[c] != null 
+							&& transformed.get(r2)[c] != null) {
 						ref[nonNullLen] = transformed.get(r1)[c];
 						aln[nonNullLen] = transformed.get(r2)[c];
 						nonNullLen++;
@@ -208,7 +254,8 @@ public class MultipleAlignmentScorer {
 					ref = Arrays.copyOf(ref, nonNullLen);
 					aln = Arrays.copyOf(aln, nonNullLen);
 				}
-				sumTM += SVDSuperimposer.getTMScore(ref, aln, lengths.get(r1), lengths.get(r2));
+				sumTM += SVDSuperimposer.getTMScore(ref, aln, 
+						lengths.get(r1), lengths.get(r2));
 				comparisons++;
 			}
 		}
@@ -216,27 +263,32 @@ public class MultipleAlignmentScorer {
 	}
 
 	/**
-	 * Calculates the average TMScore from all structures to a reference structure,
-	 * given a set of superimposed atoms.<p>
-	 * Complexity: T(n,l) = O(l*n), if n=number of structures and l=alignment length.
+	 * Calculates the average TMScore from all structures to a reference 
+	 * structure, given a set of superimposed atoms.<p>
+	 * Complexity: T(n,l) = O(l*n), if n=number of structures and 
+	 * l=alignment length.
 	 * 
 	 * @param alignment
 	 * @param reference Index of the reference structure
 	 * @return
 	 * @throws StructureException 
 	 */
-	public static double getRefTMScore(MultipleAlignment alignment, int reference) throws StructureException {
-		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
+	public static double getRefTMScore(MultipleAlignment alignment, int ref) 
+			throws StructureException {
+		
+		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
+		
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
-		return getRefTMScore(transformed,lengths,reference);
+		return getRefTMScore(trans,lengths,ref);
 	}
 	/**
-	 * Calculates the average TMScore from all structures to a reference structure,
-	 * given a set of superimposed atoms.<p>
-	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+	 * Calculates the average TMScore from all structures to a reference 
+	 * structure, given a set of superimposed atoms.<p>
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and 
+	 * l=alignment length.
 	 * 
 	 * @param transformed Arrays of aligned atoms, after superposition
 	 * @param lengths lengths of the full input structures
@@ -244,9 +296,12 @@ public class MultipleAlignmentScorer {
 	 * @return
 	 * @throws StructureException 
 	 */
-	private static double getRefTMScore(List<Atom[]> transformed, List<Integer> lengths, int reference) throws StructureException {
+	public static double getRefTMScore(List<Atom[]> transformed, 
+			List<Integer> lengths, int reference) throws StructureException {
 
-		if(transformed.size() != lengths.size()) throw new IllegalArgumentException("Input sizes differ");
+		if(transformed.size() != lengths.size()) 
+			throw new IllegalArgumentException("Input sizes differ");
+		
 		double sumTM = 0;
 		int comparisons = 0;
 		
@@ -259,7 +314,8 @@ public class MultipleAlignmentScorer {
 			Atom[] aln = new Atom[len];
 			int nonNullLen = 0;
 			for(int c=0;c<len;c++) {
-				if( transformed.get(reference)[c] != null && transformed.get(r)[c] != null) {
+				if(transformed.get(reference)[c] != null 
+						&& transformed.get(r)[c] != null) {
 					ref[nonNullLen] = transformed.get(reference)[c];
 					aln[nonNullLen] = transformed.get(r)[c];
 					nonNullLen++;
@@ -270,7 +326,8 @@ public class MultipleAlignmentScorer {
 				ref = Arrays.copyOf(ref, nonNullLen);
 				aln = Arrays.copyOf(aln, nonNullLen);
 			}
-			sumTM += SVDSuperimposer.getTMScore(ref, aln, lengths.get(reference), lengths.get(r));
+			sumTM += SVDSuperimposer.getTMScore(ref, aln, 
+					lengths.get(reference), lengths.get(r));
 			comparisons++;
 		}
 		return sumTM/comparisons;
@@ -281,26 +338,32 @@ public class MultipleAlignmentScorer {
 	 * The score function is modified from the original CEMC paper, making it
 	 * continuous and differentiable.
 	 * <p>
-	 * The maximum score of a match is 20, and the penalties for gaps are part of
-	 * the input. The half-score distance, d0, is chosen as in the TM-score.
+	 * The maximum score of a match is 20, and the penalties for gaps are part 
+	 * of the input. The half-score distance, d0, is chosen as in the TM-score.
 	 * <p>
-	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and 
+	 * l=alignment length.
 	 * 
 	 * @param alignment
-	 * @param gapOpen penalty for gap opening (reasonable values are in the range (1.0-20.0)
-	 * @param gapExtension penalty for extending a gap (reasonable values are in the range (0.5-10)
+	 * @param gapOpen penalty for gap opening (reasonable values are in the range
+	 *  (1.0-20.0)
+	 * @param gapExtension penalty for extending a gap (reasonable values are 
+	 * in the range (0.5-10.0)
 	 * @return
 	 * @throws StructureException 
 	 */
-	public static double getMultipleMCScore(MultipleAlignment alignment, double gapOpen, double gapExtension) throws StructureException {
-		//Transform Atoms
-		List<Atom[]> transformed = MultipleAlignmentTools.transformAtoms(alignment);
-		//Calculate d0
+	public static double getMultipleMCScore(MultipleAlignment alignment, 
+			double gapOpen, double gapExtension) throws StructureException {
+		
+		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
+		
+		//Calculate d0: same as the one in TM score
 		int minLen = Integer.MAX_VALUE;
 		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays())
 			if (atoms.length < minLen) minLen = atoms.length;
-		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;	//d0 is calculated as in the TM-score
-		return getMultipleMCScore(transformed, d0, gapOpen, gapExtension);
+		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;
+		
+		return getMultipleMCScore(trans, d0, gapOpen, gapExtension);
 	}
 	
 	/**
@@ -308,65 +371,81 @@ public class MultipleAlignmentScorer {
 	 * The score function is modified from the original CEMC paper, making it
 	 * continuous and differentiable.
 	 * <p>
-	 * The maximum score of a match is 20, and the penalties for gaps are part of
-	 * the input.
+	 * The maximum score of a match is 20, and the penalties for gaps are part
+	 * of the input.
 	 * <p>
-	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and 
+	 * l=alignment length.
 	 * 
 	 * @param transformed List of transformed Atom arrays
 	 * @param d0 parameter for the half-score distance
-	 * @param gapOpen penalty for gap opening (reasonable values are in the range (1.0-20.0)
-	 * @param gapExtension penalty for extending a gap (reasonable values are in the range (0.5-10)
+	 * @param gapOpen penalty for gap opening (reasonable values are in the 
+	 * range (1.0-20.0)
+	 * @param gapExtension penalty for extending a gap (reasonable values 
+	 * are in the range (0.5-10.0)
 	 * @return
 	 * @throws StructureException 
 	 */
-	private static double getMultipleMCScore(List<Atom[]> transformed, double d0, double gapOpen, double gapExtension) throws StructureException {
+	private static double getMultipleMCScore(List<Atom[]> trans, double d0, 
+			double gapOpen, double gapExtension) throws StructureException {
 
-		int size = transformed.size();
-		int length = transformed.get(0).length;
-		Matrix residueDistances = new Matrix(size,length,-1);  //A residue distance is the average distance to all others
+		int size = trans.size();
+		int length = trans.get(0).length;
+		Matrix residueDistances = new Matrix(size,length,-1);
 		double scoreMC = 0.0;
-		int gapsOpen = 0;
-		int gapsExtend = 0;
+		int openGaps = 0;
+		int extensionGaps = 0;
 		
 		//Calculate the average residue distances
 		for (int r1=0; r1<size; r1++){
 			boolean gapped = false;
-			for(int c=0;c<transformed.get(r1).length;c++) {
-				Atom refAtom = transformed.get(r1)[c];
+			for(int c=0;c<trans.get(r1).length;c++) {
+				Atom refAtom = trans.get(r1)[c];
 				//Calculate the gap extension and opening on the fly
 				if(refAtom == null) {
-					if (gapped) gapsExtend++;
+					if (gapped) extensionGaps++;
 					else {
 						gapped = true;
-						gapsOpen++;
+						openGaps++;
 					}
 					continue;
 				} else gapped = false;
 
 				for(int r2=r1+1;r2<size;r2++) {
-					Atom atom = transformed.get(r2)[c];
+					Atom atom = trans.get(r2)[c];
 					if(atom != null) {
 						double distance = Calc.getDistance(refAtom, atom);
-						if (residueDistances.get(r1, c) == -1) residueDistances.set(r1, c, 1+distance);
-						else residueDistances.set(r1, c, residueDistances.get(r1, c)+distance);
-						if (residueDistances.get(r2, c) == -1) residueDistances.set(r2, c, 1+distance);
-						else residueDistances.set(r2, c, residueDistances.get(r2, c)+distance);
+						if (residueDistances.get(r1, c) == -1) {
+							residueDistances.set(r1, c, 1+distance);
+						} else {
+							residueDistances.set(r1, c, 
+									residueDistances.get(r1, c)+distance);
+						}
+						if (residueDistances.get(r2, c) == -1) {
+							residueDistances.set(r2, c, 1+distance);
+						} else {
+							residueDistances.set(r2, c, 
+									residueDistances.get(r2, c)+distance);
+						}
 					}
 				}
 			}
 		}
+		
 		for(int c=0;c<length;c++) {
 			int nonNullRes = 0;
 			for(int r=0;r<size;r++) {
 				if (residueDistances.get(r, c) != -1) nonNullRes++;
 			}
 			for(int r=0;r<size;r++) {
-				if (residueDistances.get(r, c) != -1) residueDistances.set(r, c, residueDistances.get(r, c)/nonNullRes);
+				if (residueDistances.get(r, c) != -1) {
+					residueDistances.set(r, c, 
+							residueDistances.get(r, c)/nonNullRes);
+				}
 			}
 		}
 		
-		//Loop through all the residue distance entries
+		//Sum all the aligned residue scores
 		for(int row=0;row<size;row++) {
 			for (int col=0; col<length; col++){
 				if (residueDistances.get(row,col)==-1) continue;
@@ -375,7 +454,8 @@ public class MultipleAlignmentScorer {
 				scoreMC += resScore;
 			}
 		}
+		
 		//Apply the Gap penalty and return
-		return scoreMC - (gapsOpen*gapOpen + gapsExtend*gapExtension);
+		return scoreMC - (openGaps*gapOpen + extensionGaps*gapExtension);
 	}
 }

@@ -7,50 +7,58 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 /**
- * A general implementation of a BlockSet to store flexible parts of a multiple alignments.
+ * A general implementation of a BlockSet to store a flexible part of a 
+ * multiple alignment.
  *
  * @author Aleix Lafita
+ * @since 4.1.0
  * 
  */
-public class BlockSetImpl extends AbstractScoresCache implements Serializable, BlockSet, Cloneable{
+public class BlockSetImpl extends AbstractScoresCache 
+						  implements Serializable, BlockSet, Cloneable {
 
 	private static final long serialVersionUID = -1015791986000076089L;
 	
-	private MultipleAlignment parent;		//link to the MultipleAlignment parent instance
-	private List<Block> blocks;				//aligned positions as a list of Blocks
+	//Member variables
+	private MultipleAlignment parent;
+	private List<Block> blocks;
 	
 	//Cache variables (can be updated)
-	private List<Matrix4d> pose;			//3D superimposition information pose
-	private int length;						//total number of aligned positions, including gaps = sum of blocks lengths (cache)
-	private int coreLength;					//number of aligned positions without gaps (cache)
+	private List<Matrix4d> pose; //Transformation matrices
+	private int length;
+	private int coreLength;
 	
 	/**
-	 * Constructor. Links also the parent to this instance.
-	 * @param multipleAlignment the parent MultipleAlignment of the BlockImpl instance.
-	 * @return BlockSetImpl a BlockSetImpl instance linked to its parent MultipleAlignment.
+	 * Constructor. Links also the parent to this instance by adding the
+	 * BlockSet to the parent's List.
+	 * 
+	 * @param alignment MultipleAlignment parent of the BlockSet.
+	 * @return BlockSet an instance linked to the parent alignment.
 	 */
-	public BlockSetImpl(MultipleAlignment multipleAlignment) {
+	public BlockSetImpl(MultipleAlignment alignment) {
 		
-		parent = multipleAlignment;
+		parent = alignment;
 		if (parent!=null) parent.getBlockSets().add(this);
 		blocks = null;
 		
-		//Cache variables (can be updated)
 		pose = null;
-		length = -1;						//Value -1 reserved to indicate that has to be calculated
+		length = -1; //Value -1 reserved to indicate that has to be calculated
 		coreLength = -1;
 	}
 	
 	/**
-	 * Copy constructor.
-	 * @param bs BlockSetImpl object to be copied.
-	 * @return BlockSetImpl an identical copy of the input BlockSetImpl object.
+	 * Copy constructor. Makes also a deep copy of all constituent 
+	 * {@link Block}s.
+	 * 
+	 * @param bs BlockSet object to be copied.
+	 * @return BlockSet an identical copy of the input object.
 	 */
 	public BlockSetImpl(BlockSetImpl bs){
 		
+		super(bs); //This copies the cached scores
 		this.parent = bs.parent;
-		this.length = -1;
-		this.coreLength = -1;
+		this.length = bs.length;
+		this.coreLength = bs.coreLength;
 		
 		this.pose = null;
 		if (bs.pose != null){
@@ -128,8 +136,10 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	
 	@Override
 	public void setTransformations(List<Matrix4d> transformations) {
-		if(size() != transformations.size())
-			throw new IllegalArgumentException("Wrong number of structures for this alignment");
+		if(size() != transformations.size()) {
+			throw new IllegalArgumentException(
+					"Wrong number of structures for this alignment");
+		}
 		pose = transformations;
 	}
 
@@ -143,7 +153,10 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	public int size() {
 		//Get the size from the variables that can contain the information
 		if (parent != null) return parent.size();
-		else if (getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: number of Blocks == 0.");
+		else if (getBlocks().size()==0) {
+			throw new IndexOutOfBoundsException(
+					"Empty BlockSet: number of Blocks == 0.");
+		}
 		else return blocks.get(0).size();
 	}
 
@@ -154,7 +167,10 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	}
 
 	protected void updateLength() {
-		if(getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: number of Blocks == 0.");
+		if(getBlocks().size()==0) {
+			throw new IndexOutOfBoundsException(
+					"Empty BlockSet: number of Blocks == 0.");
+		}
 		//Try to calculate it from the Block information
 		else {
 			length = 0;
@@ -163,7 +179,10 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable, B
 	}
 
 	protected void updateCoreLength() {
-		if(getBlocks().size()==0) throw new IndexOutOfBoundsException("Empty BlockSet: number of Blocks == 0.");
+		if(getBlocks().size()==0) {
+			throw new IndexOutOfBoundsException(
+					"Empty BlockSet: number of Blocks == 0.");
+		}
 		//Try to calculate it from the Block information
 		else {
 			coreLength = 0;

@@ -18,5 +18,6 @@ public interface MultipleSuperimposer {
 	 *  align (via the {@link MultipleAlignment#getEnsemble() ensemble}).
 	 * @throws StructureException
 	 */
-	public void superimpose(MultipleAlignment alignment) throws StructureException;
+	public void superimpose(MultipleAlignment alignment) 
+			throws StructureException;
 }

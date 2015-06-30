@@ -9,41 +9,48 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.Atom;
 
 /**
- * This class contains functions for the conversion of {@link MultipleAlignment} to various String outputs.
+ * This class contains functions for the conversion of 
+ * {@link MultipleAlignment} to various String outputs.
  * <p>
- * Supported formats: FASTA, FatCat, Aligned Residues
+ * Supported formats: FASTA, FatCat, Aligned Residues, Transformations
  * 
  * @author Aleix Lafita
+ * @since 4.1.0
  *
  */
 public class MultipleAlignmentWriter {
 
 	/**
-	 * Converts the {@link MultipleAlignment} into a multiple sequence alignment String in FASTA format.
+	 * Converts the {@link MultipleAlignment} into a multiple sequence 
+	 * alignment String in FASTA format.
 	 * 
 	 * @param alignment MultipleAlignment
 	 * @return String multiple sequence alignment in FASTA format
+	 * @see MultipleAlignmentTools#getSequenceAlignment(MultipleAlignment)
 	 */
 	public static String toFASTA(MultipleAlignment alignment) {
 		
 		//Get the alignment sequences
-		List<String> alnSequences = MultipleAlignmentTools.getSequenceAlignment(alignment);
+		List<String> alnSequences = 
+				MultipleAlignmentTools.getSequenceAlignment(alignment);
 		
 		String fasta = "";
 		for (int st=0; st<alignment.size(); st++){
 			//Add the structure identifier as the head of the FASTA
-			fasta += ">"+alignment.getEnsemble().getStructureNames().get(st)+"\n"+
-					alnSequences.get(st)+"\n";
+			fasta += ">"+alignment.getEnsemble().getStructureNames().get(st)+
+					"\n"+ alnSequences.get(st)+"\n";
 		}	
 		return fasta;
 	}
 	
 	/**
-	 * Converts the {@link MultipleAlignment} into a FatCat String format. Includes summary information
-	 * about the alignment in the top and a multiple sequence alignment at the bottom.
+	 * Converts the {@link MultipleAlignment} into a FatCat String format. 
+	 * Includes summary information about the alignment in the top and a 
+	 * multiple sequence alignment at the bottom.
 	 * 
 	 * @param alignment MultipleAlignment
 	 * @return String multiple sequence alignment in FASTA format
+	 * @see MultipleAlignmentTools#getSequenceAlignment(MultipleAlignment)
 	 */
 	public static String toFatCat(MultipleAlignment alignment) {
 		
@@ -53,27 +60,38 @@ public class MultipleAlignmentWriter {
 		
 		//Get the alignment sequences and the mapping
 		List<Integer> mapSeqToStruct = new ArrayList<Integer>();
-		List<String> alnSequences = MultipleAlignmentTools.getSequenceAlignment(alignment, mapSeqToStruct);
+		List<String> alnSequences = MultipleAlignmentTools.
+				getSequenceAlignment(alignment, mapSeqToStruct);
 		
 		//Get the String of the Block Numbers for Position
 		String blockNumbers = "";
 		for (int pos=0; pos<alnSequences.get(0).length(); pos++){
-			int blockNr = MultipleAlignmentTools.getBlockForSequencePosition(alignment, mapSeqToStruct, pos);
-			if (blockNr != -1) blockNumbers = blockNumbers.concat(""+(blockNr+1));
-			else blockNumbers = blockNumbers.concat(" ");
+			int blockNr = MultipleAlignmentTools.getBlockForSequencePosition(
+					alignment, mapSeqToStruct, pos);
+			if (blockNr != -1) {
+				blockNumbers = blockNumbers.concat(""+(blockNr+1));
+			} else blockNumbers = blockNumbers.concat(" ");
 		}
 		
 		//Write the Sequence Alignment
 		for (int str=0; str<alignment.size(); str++) {
-			if (str<9) fatcat.append("Chain 0"+(str+1)+": "+alnSequences.get(str)+"\n");
-			else fatcat.append("Chain "+(str+1)+": "+alnSequences.get(str)+"\n");
-			if (str!=alignment.size()-1) fatcat.append("          "+blockNumbers+"\n");			
+			if (str<9) {
+				fatcat.append("Chain 0"+(str+1)+
+						": "+alnSequences.get(str)+"\n");
+			} else {
+				fatcat.append("Chain "+(str+1)+
+						": "+alnSequences.get(str)+"\n");
+			}
+			if (str!=alignment.size()-1) {
+				fatcat.append("          "+blockNumbers+"\n");			
+			}
 		}
 		return fatcat.toString();
 	}
 	
 	/**
-	 * Converts the alignment to its simplest form: a list of groups of aligned residues.
+	 * Converts the alignment to its simplest form: a list of groups of 
+	 * aligned residues.
 	 * Format is one line per residue group, tab delimited:
 	 * <ul><li>PDB number (includes insertion code)
 	 * <li>Chain
@@ -92,11 +110,13 @@ public class MultipleAlignmentWriter {
 		//Write structure names & PDB codes
 		for (int str=0; str<multAln.size(); str++){
 			residueGroup.append("#Struct"+(str+1)+":\t");
-			residueGroup.append(multAln.getEnsemble().getStructureNames().get(str));
+			residueGroup.append(
+					multAln.getEnsemble().getStructureNames().get(str));
 			residueGroup.append("\n");
 		}
 		//Whrite header for columns
-		for (int str=0; str<multAln.size(); str++) residueGroup.append("#Num"+(str+1)+"\tChain"+(str+1)+"\tAA"+(str+1)+"\t");
+		for (int str=0; str<multAln.size(); str++) residueGroup.append(
+				"#Num"+(str+1)+"\tChain"+(str+1)+"\tAA"+(str+1)+"\t");
 		residueGroup.append("\n");
 		
 		//Write optimally aligned pairs
@@ -112,11 +132,14 @@ public class MultipleAlignmentWriter {
 						residueGroup.append("-");
 						residueGroup.append('\t');
 					} else {
-						Atom atom = multAln.getEnsemble().getAtomArrays().get(str)[residue];
+						Atom atom = multAln.getEnsemble().
+								getAtomArrays().get(str)[residue];
 		
-						residueGroup.append(atom.getGroup().getResidueNumber().toString());
+						residueGroup.append(
+								atom.getGroup().getResidueNumber().toString());
 						residueGroup.append('\t');
-						residueGroup.append(atom.getGroup().getChain().getChainID());
+						residueGroup.append(
+								atom.getGroup().getChain().getChainID());
 						residueGroup.append('\t');
 						residueGroup.append(atom.getGroup().getPDBName());
 						residueGroup.append('\t');
@@ -129,7 +152,9 @@ public class MultipleAlignmentWriter {
 	}
 	
 	/**
-	 * Converts the transformation Matrices of the alignment into a String output.
+	 * Converts the transformation Matrices of the alignment into a String 
+	 * output.
+	 * 
 	 * @param afpChain
 	 * @return String transformation Matrices
 	 */
@@ -140,7 +165,8 @@ public class MultipleAlignmentWriter {
 
 		for (int bs = 0; bs < alignment.getBlockSets().size(); bs++){
 			
-			List<Matrix4d> btransforms = alignment.getBlockSets().get(bs).getTransformations();
+			List<Matrix4d> btransforms = 
+					alignment.getBlockSets().get(bs).getTransformations();
 			if (btransforms == null && bs==0) btransforms = transforms;
 			if (btransforms == null || btransforms.size() < 1) continue;
 
@@ -149,15 +175,36 @@ public class MultipleAlignmentWriter {
 				txt.append(bs+1);
 				txt.append("\n");
 			}
-			
+
 			for (int str=0; str<alignment.size(); str++){
 				String origString = "ref";
-				
-				txt.append(String.format("     X"+(str+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",btransforms.get(str).getElement(0,0),btransforms.get(str).getElement(0,1), btransforms.get(str).getElement(0,2), btransforms.get(str).getElement(0,3)));
+
+				txt.append(String.format("     X"+(str+1)+ " = (%9.6f)*X"+ 
+						origString +" + (%9.6f)*Y"+ 
+						origString +" + (%9.6f)*Z"+ 
+						origString +" + (%12.6f)",
+						btransforms.get(str).getElement(0,0),
+						btransforms.get(str).getElement(0,1),
+						btransforms.get(str).getElement(0,2),
+						btransforms.get(str).getElement(0,3)));
 				txt.append( "\n");
-				txt.append(String.format("     Y"+(str+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",btransforms.get(str).getElement(1,0),btransforms.get(str).getElement(1,1), btransforms.get(str).getElement(1,2), btransforms.get(str).getElement(1,3)));
+				txt.append(String.format("     Y"+(str+1)+" = (%9.6f)*X"+ 
+						origString +" + (%9.6f)*Y"+ 
+						origString +" + (%9.6f)*Z"+ 
+						origString +" + (%12.6f)",
+						btransforms.get(str).getElement(1,0),
+						btransforms.get(str).getElement(1,1), 
+						btransforms.get(str).getElement(1,2), 
+						btransforms.get(str).getElement(1,3)));
 				txt.append( "\n");
-				txt.append(String.format("     Z"+(str+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",btransforms.get(str).getElement(2,0),btransforms.get(str).getElement(2,1), btransforms.get(str).getElement(2,2), btransforms.get(str).getElement(2,3)));
+				txt.append(String.format("     Z"+(str+1)+" = (%9.6f)*X"+ 
+						origString +" + (%9.6f)*Y"+ 
+						origString +" + (%9.6f)*Z"+ 
+						origString +" + (%12.6f)",
+						btransforms.get(str).getElement(2,0),
+						btransforms.get(str).getElement(2,1), 
+						btransforms.get(str).getElement(2,2), 
+						btransforms.get(str).getElement(2,3)));
 				txt.append("\n\n");
 			}
 		}
