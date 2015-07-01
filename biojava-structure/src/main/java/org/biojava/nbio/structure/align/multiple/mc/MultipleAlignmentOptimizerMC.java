@@ -23,42 +23,47 @@ import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
- * This class takes a MultipleAlignment seed previously generated and runs a Monte Carlo optimization
- * in order to improve the overall score and highlight common structural motifs.
+ * This class takes a MultipleAlignment seed previously generated and runs a 
+ * Monte Carlo optimization in order to improve the overall score and 
+ * highlight common structural motifs.
  * <p>
- * The seed alignment can be flexible, non-topological or include CP, but this optimization will not
- * change the number of flexible parts {@link BlockSet}s or non-topological regions {@link Block}. 
- * Thus, the definition of those parts depend exclusively on the pairwise alignment (or user alignment) 
- * used to generate the seed multiple alignment.
+ * The seed alignment can be flexible, non-topological or include CP, 
+ * but this optimization will not change the number of flexible parts 
+ * {@link BlockSet}s or non-topological regions {@link Block}. 
+ * Thus, the definition of those parts depend exclusively on the pairwise 
+ * alignment (or user alignment) used to generate the seed multiple alignment.
  * <p>
- * This class implements Callable, because multiple instances of the optimization can be run in parallel.
+ * This class implements Callable, because multiple instances of the 
+ * optimization can be run in parallel.
  * 
  * @author Aleix Lafita
+ * @since 4.1.0
  *
  */
-public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment> {
+public class MultipleAlignmentOptimizerMC 
+			implements Callable<MultipleAlignment> {
 	
-	private static final boolean debug = true;  //Prints the optimization moves and saves a file of the history
+	private static final boolean debug = false;
 	private Random rnd;
 	private MultipleSuperimposer imposer;
 	
 	//Optimization parameters
-	private int Rmin;   	//Minimum number of aligned structures without a gap (33% of initial)
+	private int Rmin;   	//number of aligned structures without a gap
 	private int Lmin;   	//Minimum alignment length of a Block
-	private int convergenceSteps; //Steps without a score change before stopping the optimization
-	private double C; //Probability function constant (probability of acceptance for bad moves)
+	private int convergenceSteps; //Steps without score change before stopping
+	private double C; //Probability function constant
 	
 	//Score function parameters - they are defined by the user
 	private double Gopen; //Penalty for opening gap
 	private double Gextend; //Penalty for extending gaps
 	
 	//Alignment Information
-	private int size; 				//number of structures in the alignment
-	private int blockNr;			//the number of Blocks corresponding to non-sequential aligned regions
+	private int size; 		//number of structures in the alignment
+	private int blockNr;	//the number of Blocks in the alignment
 	
 	//Multiple Alignment Residues
 	private MultipleAlignment msa;  //Alignment to optimize
-	private List<SortedSet<Integer>> freePool; 	//List to store the residues not aligned. Dimensions are: [size][residues in the pool]
+	private List<SortedSet<Integer>> freePool; 	//unaligned residues
 	
 	//Score information
 	private double mcScore;  // Optimization score, objective function
@@ -67,7 +72,7 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 	private List<Atom[]> atomArrays;
 	private List<Integer> structureLengths;
 	
-	//Variables that store the history of the optimization, in order to be able to plot the evolution of the system.
+	//Variables that store the history of the optimization
 	private List<Integer> lengthHistory;
 	private List<Double> rmsdHistory;
 	private List<Double> scoreHistory;
@@ -79,26 +84,48 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 	 * @param reference the index of the most similar structure to all others
 	 * @throws StructureException  
 	 */
-	public MultipleAlignmentOptimizerMC(MultipleAlignment seedAln, MultipleMcParameters params, int reference) throws StructureException {
+	public MultipleAlignmentOptimizerMC(MultipleAlignment seedAln, 
+			MultipleMcParameters params, int reference) 
+					throws StructureException {
+		
 		rnd = new Random(params.getRandomSeed());
 		Gopen = params.getGapOpen();
 		Gextend = params.getGapExtension();
 		imposer = new ReferenceSuperimposer(reference);
 		initialize(seedAln);
-		if (params.getConvergenceSteps() == 0) convergenceSteps = Collections.min(structureLengths)*size;
+		
+		if (params.getConvergenceSteps() == 0) {
+			convergenceSteps = Collections.min(structureLengths)*size;
+		} 
 		else convergenceSteps = params.getConvergenceSteps();
-		if (params.getMinAlignedStructures() == 0) Rmin = Math.max(size/3, 2);
-		else Rmin = Math.min(Math.max(params.getMinAlignedStructures(),2),size);  //has to be in the range [2-size]
+		
+		if (params.getMinAlignedStructures() == 0) {
+			Rmin = Math.max(size/3, 2);
+		} 
+		else {
+			Rmin = Math.min(Math.max(params.getMinAlignedStructures(),2),size);
+		}
 		Lmin = params.getMinBlockLen();
-		C = 10*size;
+		C = 20*size;
+		
+		checkGaps();
+		
+		//Update the CEMC score for the seed aligment
+		msa.clear();
+		imposer.superimpose(msa);
+		mcScore = MultipleAlignmentScorer.getMultipleMCScore(msa, Gopen, Gextend);
 	}
 
 	@Override
 	public MultipleAlignment call() throws Exception {
-		//The maximum number of iterations depends on the maximum possible alignment length and the number of structures
+		
+		//The maximum number of iterations is converge*100
 		optimizeMC(convergenceSteps*100);
+		
 		try {
-			if (debug) saveHistory("/scratch/cemc/CeMcOptimizationHistory.csv");
+			if (debug) {
+				saveHistory("/scratch/cemc/CeMcOptimizationHistory.csv");
+			}
 		} catch(FileNotFoundException e) {}
 		
 		return msa;
@@ -115,10 +142,10 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 		//Initialize member variables
 		msa = seed.clone();
 		size = seed.size();
-		Rmin = Math.max(size/3,2);
 		atomArrays = msa.getEnsemble().getAtomArrays();
 		structureLengths = new ArrayList<Integer>();
-		for (int i=0; i<size; i++) structureLengths.add(atomArrays.get(i).length);
+		for (int i=0; i<size; i++) 
+			structureLengths.add(atomArrays.get(i).length);
 		
 		//Initialize alignment variables
 		blockNr = msa.getBlocks().size();
@@ -146,17 +173,11 @@ public class MultipleAlignmentOptimizerMC implements Callable<MultipleAlignment>
 				if (!aligned.get(i).contains(k)) freePool.get(i).add(k);
 			}
 		}
-		
-		checkGaps(); //Shrink columns not consistent with the Rmin parameter
-		
-		//Update the CEMC score for the seed aligment
-		msa.clear();
-		imposer.superimpose(msa);
-		mcScore = MultipleAlignmentScorer.getMultipleMCScore(msa, Gopen, Gextend);
 	}
 	
 	/**
-	 *  Optimization method based in a Monte-Carlo approach. Starting from the refined alignment uses 4 types of moves:
+	 *  Optimization method based in a Monte-Carlo approach. 
+	 *  Starting from the refined alignment uses 4 types of moves:
 	 *  <p>
 	 *  	1- Shift Row: if there are enough freePool residues available.<p>
 	 *  	2- Expand Block: add another alignment column if there are residues available.<p>

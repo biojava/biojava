@@ -9,8 +9,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test that all relevant information (except scores and cache) is correctly copied
- * from the AFPChain to the generated MultipleAlignment object.
+ * Test that all relevant information (except scores and cache) is correctly 
+ * copied from the AFPChain to the generated MultipleAlignment object.
  * 
  * @author Aleix Lafita
  *
@@ -19,7 +19,7 @@ public class AFPChainConversionTest {
 
 	@Test
 	public void testAFPconversion() throws Exception{
-		
+
 		//Fill an AFPChain with the general information
 		AFPChain afp = new AFPChain();
 		afp.setName1("name1");
@@ -27,7 +27,7 @@ public class AFPChainConversionTest {
 		afp.setAlgorithmName("algorithm");
 		afp.setVersion("1.0");
 		afp.setCalculationTime(System.currentTimeMillis());
-		//Generate a fake optimal alignment with three blocks and 5 residues per block
+		//Generate a optimal alignment with 3 blocks and 5 residues per block
 		int[][][] optAln = new int[3][][];
 		for (int b=0; b<optAln.length; b++){
 			int[][] block = new int[2][];
@@ -39,7 +39,7 @@ public class AFPChainConversionTest {
 		}
 		afp.setOptAln(optAln);
 		afp.setBlockNum(optAln.length);
-		//Set the rotation matrix to the identity and the shift vector to the origin
+		//Set the rotation matrix to the identity and the shift to the origin
 		Matrix rot = Matrix.identity(3, 3);
 		Atom shift = new AtomImpl();
 		shift.setX(0);
@@ -49,28 +49,40 @@ public class AFPChainConversionTest {
 		afp.setBlockRotationMatrix(blockRot);
 		Atom[] blockShift = {shift,shift,shift};
 		afp.setBlockShiftVector(blockShift);
-		
+
 		//Convert the AFPChain into a MultipleAlignment (without Atoms)
-		MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl(afp,null,null);
+		MultipleAlignmentEnsemble ensemble = 
+				new MultipleAlignmentEnsembleImpl(afp,null,null,true);
 		MultipleAlignment msa = ensemble.getMultipleAlignments().get(0);
-		
-		//Test for all the information to be equal
+
+		//Test for all the information
 		assertEquals(afp.getName1(),ensemble.getStructureNames().get(0));
 		assertEquals(afp.getName2(), ensemble.getStructureNames().get(1));
 		assertEquals(afp.getAlgorithmName(), ensemble.getAlgorithmName());
 		assertEquals(afp.getVersion(),ensemble.getVersion());
 		assertTrue(ensemble.getCalculationTime().equals(afp.getCalculationTime()));
 		assertEquals(afp.getBlockNum(), msa.getBlockSets().size());
-		assertEquals(Calc.getTransformation(afp.getBlockRotationMatrix()[0], afp.getBlockShiftVector()[0]), msa.getTransformations().get(1));
-		
-		//Test for the optimal alignment to be equal
+		assertEquals(Calc.getTransformation(afp.getBlockRotationMatrix()[0], 
+				afp.getBlockShiftVector()[0]), msa.getTransformations().get(1));
+
+		//Test for the scores
+		assertEquals(msa.getScore(MultipleAlignmentScorer.CE_SCORE),
+				(Double) afp.getAlignScore());
+		assertEquals(msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE),
+				(Double) afp.getTMScore());
+		assertEquals(msa.getScore(MultipleAlignmentScorer.RMSD),
+				(Double) afp.getTotalRmsdOpt());
+
+
+		//Test for the optimal alignment
 		for (int b=0; b<3; b++){
 			for (int c=0; c<2; c++){
 				for (int res=0; res<5; res++){
-					assert(afp.getOptAln()[b][c][res] == msa.getBlocks().get(b).getAlignRes().get(c).get(res));
+					Integer afpRes = afp.getOptAln()[b][c][res];
+					assertEquals(afpRes, msa.getBlocks().get(b).
+							getAlignRes().get(c).get(res));
 				}
 			}
 		}
 	}
-		
 }

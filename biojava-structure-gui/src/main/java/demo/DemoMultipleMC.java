@@ -66,9 +66,9 @@ public class DemoMultipleMC {
 		}
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
-		MultipleMcMain algorithm = new MultipleMcMain();
+		MultipleMcMain algorithm = new MultipleMcMain(new CeCPMain());
 		MultipleMcParameters params = (MultipleMcParameters) algorithm.getParameters();
-		params.setPairwiseAlgorithm(CeCPMain.algorithmName);
+		params.setMinBlockLen(10);
 		
 		MultipleAlignment result = algorithm.align(atomArrays);
 		result.getEnsemble().setStructureNames(names);
