@@ -40,7 +40,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * @since 4.1.0
  *
  */
-public class MultipleAlignmentOptimizerMC 
+public class MultipleMcOptimizer 
 			implements Callable<MultipleAlignment> {
 	
 	private static final boolean debug = false;
@@ -84,7 +84,7 @@ public class MultipleAlignmentOptimizerMC
 	 * @param reference the index of the most similar structure to all others
 	 * @throws StructureException  
 	 */
-	public MultipleAlignmentOptimizerMC(MultipleAlignment seedAln, 
+	public MultipleMcOptimizer(MultipleAlignment seedAln, 
 			MultipleMcParameters params, int reference) 
 					throws StructureException {
 		

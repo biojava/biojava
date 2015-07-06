@@ -43,7 +43,7 @@ import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
  * This implementation is a generalized version that allows any pairwise 
  * structure alignment algorithm as input, thus supporting any non-topological
  * or flexible alignment. The seed can also directly be the input for the 
- * optimization. For that, look at {@link MultipleAlignmentOptimizerMC}.
+ * optimization. For that, look at {@link MultipleMcOptimizer}.
  * <p>
  * The usage follows the {@link MultipleStructureAligner} interface.
  * A Demo on how to use the algorithm can be found in demo.
@@ -320,7 +320,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 				paramsMC.setRandomSeed(paramsMC.getRandomSeed()+i);
 				
 				Callable<MultipleAlignment> worker = 
-						new MultipleAlignmentOptimizerMC(
+						new MultipleMcOptimizer(
 								result, paramsMC, reference);
 				
 	  			Future<MultipleAlignment> submit = executor.submit(worker);

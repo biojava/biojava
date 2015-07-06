@@ -27,7 +27,7 @@ public class MultipleAlignmentScorer {
 	public static final String CE_SCORE = "CE-score";
 	public static final String RMSD = "RMSD";
 	public static final String AVGTM_SCORE = "AvgTM-score";
-	public static final String MC_SCORE = "MultipleMC-score";
+	public static final String MC_SCORE = "MC-score";
 	public static final String REF_RMSD = "Ref-RMSD";
 	public static final String REFTM_SCORE = "RefTM-score";
 
