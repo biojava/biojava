@@ -34,9 +34,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Some utility methods for analyzing and manipulating AFPChains.
+ * Methods for analyzing and manipulating AFPChains and for
+ * other pairwise alignment utilities. <p>
+ * Current methods: replace optimal alignment, create new AFPChain,
+ * format conversion, update superposition, etc.
  *
  * @author Spencer Bliven
+ * @author Aleix Lafita
  *
  */
 public class AlignmentTools {

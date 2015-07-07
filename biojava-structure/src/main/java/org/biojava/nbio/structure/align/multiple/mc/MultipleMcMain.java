@@ -313,8 +313,8 @@ public class MultipleMcMain implements MultipleStructureAligner {
 			List<Future<MultipleAlignment>> afpFuture = 
 					new ArrayList<Future<MultipleAlignment>>();
 			
-			//Repeat the optimization in parallel 5 times
-			for (int i=0; i<5; i++){
+			//Repeat the optimization in parallel
+			for (int i=0; i<2; i++){
 				//Change the random seed for each parallelization
 				MultipleMcParameters paramsMC = (MultipleMcParameters) params;
 				paramsMC.setRandomSeed(paramsMC.getRandomSeed()+i);

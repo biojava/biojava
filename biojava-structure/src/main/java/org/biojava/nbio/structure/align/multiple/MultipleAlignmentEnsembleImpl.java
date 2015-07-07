@@ -12,6 +12,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.helper.AlignTools;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -305,18 +306,8 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 		distanceMatrix = new ArrayList<Matrix>();
 		
 		for (int s=0; s<size(); s++){
-			int n = atomArrays.get(s).length;
-			Matrix distMat = new Matrix(n,n);
-			
-			//Calculate all distances between every pair of atoms
-			for (int a1=0; a1<n; a1++){
-				for (int a2=0; a2<n; a2++){
-					Atom at1 = atomArrays.get(s)[a1];
-					Atom at2 = atomArrays.get(s)[a2];
-					double dist = Calc.getDistance(at1, at2);
-					distMat.set(a1, a2, dist);
-				}
-			}
+			Atom[] ca = atomArrays.get(s);
+			Matrix distMat =AlignTools.getDistanceMatrix(ca, ca);
 			distanceMatrix.add(distMat);
 		}
 	}

@@ -621,6 +621,7 @@ public class StructureTools {
 	public static final Atom[] cloneCAArray(Atom[] ca) {
 		return cloneAtomArray(ca);
 	}
+	
 	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
 	 * groups and chains. The chain will only contain groups that are part of the input array.
 	 * 
