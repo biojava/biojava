@@ -21,11 +21,14 @@
 package org.biojava.nbio.structure.align;
 
 /**
- * Simple Callable Class that calculates an alignment in a different thread, so that multiple 
- * pairwise alignments can be run in parallel (examples: all-to-all alignments, DB search alignments).
- * Adapted to a more general version, because before it was thought for DB search only.
+ * Simple Callable Class that calculates a pairwise alignment in a different 
+ * thread, so that multiple pairwise alignments can be run in parallel 
+ * (examples: all-to-all alignments, DB search alignments).
+ * Adapted to a more general implementation since 4.1.0, because before it
+ * was thought for DB search only.
  * 
  * @author Aleix Lafita
+ * 
  */
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
@@ -47,7 +50,8 @@ import java.util.zip.GZIPOutputStream;
 
 public class CallableStructureAlignment implements  Callable<AFPChain> {
 	
-	private final static Logger logger = LoggerFactory.getLogger(CallableStructureAlignment.class);
+	private final static Logger logger = LoggerFactory.getLogger(
+			CallableStructureAlignment.class);
 
 	//Structure information
 	private PdbPair pair;
@@ -71,19 +75,23 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 	
 	/**
 	 * Constructor for all-to-all alignment calculation.
-	 * Used for CEMC seed alignment calculation, for example.
+	 * Used for MultipleMC seed alignment calculation, for example.
+	 * 
 	 * @param ca1 Atoms to align of the first structure
 	 * @param ca2 Atoms to align of the second structure
-	 * @param algorithmName the name of the alignment algorithm to use
+	 * @param algorithmName the pairwise aligner algorithm to use, a new
+	 * 			instance will be created for each thread.
+	 * @param params parameter bean for the alignment.
 	 */
-	public CallableStructureAlignment(Atom[] ca1, Atom[] ca2, String algorithmName){
+	public CallableStructureAlignment(Atom[] ca1, Atom[] ca2, String algorithmName, ConfigStrucAligParams params){
 		this.ca1 = ca1;
 		this.ca2 = ca2;
 		this.algorithmName = algorithmName;
+		this.params = params;
 	}
 
 	@Override
-	public AFPChain  call() throws Exception {
+	public AFPChain call() throws Exception {
 		
 		//Prepare the alignment algorithm
 		StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);

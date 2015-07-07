@@ -5,21 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * General implementation of a Block that supports alignments with gaps.
+ * General implementation of a {@link Block} that supports any type of
+ * alignment with gaps.
  * 
  * @author Aleix Lafita
+ * @since 4.1.0
  * 
  */
-public class BlockImpl extends AbstractScoresCache implements Serializable, Block, Cloneable{
+public class BlockImpl extends AbstractScoresCache 
+					   implements Serializable, Block, Cloneable {
 
 	private static final long serialVersionUID = -5804042669466177641L;
 	
-	private BlockSet parent;						//BlockSet instance
-	private List<List<Integer>> alignRes;			//residues aligned as a double list of length=n and size=l (n=nr.structures; l=block length)
-	private int coreLength;							//number of residues aligned without gaps (cache)
+	private BlockSet parent;
+	private List<List<Integer>> alignRes;
+	private int coreLength;
 	
 	/**
-	 * Constructor. Links also the parent to this instance.
+	 * Constructor. Links also the parent to this instance, by adding the
+	 * Block to the parent's list.
+	 * 
 	 * @param blockSet the parent BlockSet of the BlockImpl instance.
 	 * @return BlockImpl a BlockImpl instance linked to its parent BlockSet.
 	 */
@@ -27,28 +32,29 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 		
 		parent = blockSet;
 		if (parent!=null) parent.getBlocks().add(this);
-		
 		alignRes = null;
-		coreLength = -1;							//Value -1 indicates not calculated.
+		coreLength = -1; //Value -1 indicates not yet calculated.
 	}
-	
 	
 	/**
 	 * Copy constructor.
+	 * 
 	 * @param b BlockImpl object to be copied.
 	 * @return BlockImpl an identical copy of the input BlockImpl object.
 	 */
 	public BlockImpl(BlockImpl b) {
 		
+		super(b); //This copies the cached scores
 		this.parent = b.parent;
-		this.coreLength = -1;
+		this.coreLength = b.coreLength;
 		
 		this.alignRes = null;
 		if (b.alignRes!=null){
 			//Make a deep copy of everything
 			alignRes = new ArrayList<List<Integer>>();
-			for (int k=0; k<b.size(); k++)
+			for (int k=0; k<b.size(); k++) {
 				alignRes.add(new ArrayList<Integer>(b.alignRes.get(k)));
+			}
 		}
 	}
 	
@@ -109,7 +115,7 @@ public class BlockImpl extends AbstractScoresCache implements Serializable, Bloc
 
 	protected void updateCoreLength() {
 		coreLength = 0;
-		//Loop through all columns of the alignment and count how many of them do not have gaps in any structure
+		//Count how many positions do not have gaps in any structure
 		for (int col=0; col<length(); col++){
 			boolean core = true;
 			for (int str=0; str<size(); str++){

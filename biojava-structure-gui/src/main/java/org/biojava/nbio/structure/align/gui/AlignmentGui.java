@@ -22,7 +22,6 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -42,7 +41,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-
 
 /** A JFrame that allows to trigger a pairwise structure alignment,
  * either from files in a directory,
@@ -323,10 +321,9 @@ public class AlignmentGui extends JFrame{
 	protected void configureParameters() {
 		StructureAlignment algorithm = getStructureAlignment();
 		System.out.println("configure parameters for " + algorithm.getAlgorithmName());
-
+		
 		// show a new config GUI
-		new ParameterGUI(algorithm);
-
+		new ParameterGUI(algorithm.getParameters(), algorithm.getAlgorithmName());
 	}
 
 

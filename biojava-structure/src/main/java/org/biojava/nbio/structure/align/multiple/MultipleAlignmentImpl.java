@@ -12,24 +12,25 @@ import org.biojava.nbio.structure.StructureException;
  * A general implementation of a {@link MultipleAlignment}.
  *
  * @author Aleix Lafita
+ * @since 4.1.0
  * 
  */
-public class MultipleAlignmentImpl extends AbstractScoresCache implements Serializable, MultipleAlignment, Cloneable{
+public class MultipleAlignmentImpl extends AbstractScoresCache 
+				implements Serializable, MultipleAlignment, Cloneable {
 
 	private static final long serialVersionUID = 3432043794125805139L;
 
-	MultipleAlignmentEnsemble parent;
-
-	//Multiple Alignment Positions
-	List<BlockSet> blockSets;				//aligned positions. It is a list because it can store more than one alternative MSTA. Index 0 is the optimal alignment.
+	private MultipleAlignmentEnsemble parent;
+	private List<BlockSet> blockSets;
 
 	//Cache variables (can be updated)
-	int length;								//total length of the alignment, including gaps: sum of BlockSet lengths (cache)
-	int coreLength;							//length of the alignment without gaps, only columns without gaps: sum of BlockSet core lengths (cache)
-	List<Matrix4d> pose;
+	private int length;
+	private int coreLength;
+	private List<Matrix4d> pose;
 
 	/**
 	 * Default Constructor. Empty alignment. No structures assigned.
+	 * 
 	 * @return MultipleAlignment an empty MultipleAlignment instance.
 	 */
 	public MultipleAlignmentImpl() {
@@ -37,44 +38,36 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	}
 	
 	/**
-	 * Constructor that allows creating a MultipleAlignment instance without caring about the ensemble.
-	 * Ideal for dealing with one MultipleAlignment alternative only.
-	 * @param structureNames List of Structure identifiers.
-	 * @return MultipleAlignment a MultipleAlignment instance part of its own MultipleAlignmentEnsemble.
-	 */
-	public MultipleAlignmentImpl(List<String> structureNames) {
-		this(new MultipleAlignmentEnsembleImpl(structureNames));
-	}
-	
-	/**
 	 * Constructor linking to an existing ensemble.
+	 * Automatically adds this alignment to the parent ensemble.
 	 * 
-	 * Automatically adds this alignment to the parent ensemble
 	 * @param ensemble parent MultipleAlignmentEnsemble.
-	 * @return MultipleAlignment a MultipleAlignment instance part of an ensemble.
+	 * @return MultipleAlignment an alignment instance part of an ensemble.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentEnsemble ensemble) {
+		
 		super();
-
 		parent = ensemble;
 		if (parent!=null) parent.getMultipleAlignments().add(this);
 
 		blockSets = null;
 		pose = null;
 
-		length = -1;						//Value -1 reserved to indicate that has to be calculated
+		length = -1; //Value -1 reserved to indicate that has to be calculated
 		coreLength = -1;
 	}
 
 	/**
-	 * Copy constructor.
+	 * Copy constructor. Recursively copies member BlockSets.
+	 * 
 	 * @param ma MultipleAlignmentImpl to copy.
-	 * @return MultipleAlignmentImpl identical copy of the input MultipleAlignmentImpl.
+	 * @return MultipleAlignmentImpl identical copy of the alignment.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentImpl ma) {
-		super(ma);
 		
+		super(ma); //Copy the scores
 		parent = ma.parent;
+		
 		pose = null;
 		if (ma.pose != null){
 			//Make a deep copy of everything
@@ -85,8 +78,8 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 			}
 		}
 		
-		length = -1;
-		coreLength = -1;
+		length = ma.length;
+		coreLength = ma.coreLength;
 		
 		blockSets = null;
 		if (ma.blockSets!=null){
@@ -119,13 +112,15 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	@Override
 	public String toString() {
 		String resume = "Structures:" + parent.getStructureNames() + 
-				" \nAlgorithm:" + parent.getAlgorithmName() + "_" + parent.getVersion() + 
+				" \nAlgorithm:" + parent.getAlgorithmName() + "_" + 
+								  parent.getVersion() + 
 				" \nBlockSets: "+ getBlockSets().size() + 
 				" \nBlocks: " + getBlocks().size() +
 				" \nLength: " + length() +
 				" \nCore Length: "+ getCoreLength();
 		for (String score:getScores()){
-			resume += " \n"+score+": "+ String.format("%.2f", getScore(score));
+			resume += " \n"+score+": ";
+			resume += String.format("%.2f", getScore(score));
 		}
 		return resume;
 	}
@@ -157,7 +152,9 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 
 	@Override
 	public void setTransformations(List<Matrix4d> matrices) {
-		if(size() != matrices.size()) throw new IllegalArgumentException("Wrong number of structures for this alignment");
+		if(size() != matrices.size()) 
+			throw new IllegalArgumentException(
+					"Wrong number of structures for this alignment");
 		clear();
 		pose = matrices;
 	}
@@ -179,13 +176,15 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 		return coreLength;
 	}
 
-
 	/**
-	 * Force recalculation of the length (aligned columns) based on the block lengths
+	 * Force recalculation of the length (aligned columns) based on the 
+	 * BlockSet lengths.
 	 */
 	protected void updateLength() {
-		if(getBlockSets().size()==0) throw new IndexOutOfBoundsException("Empty MultipleAlignment: getBlockSetNum() == 0.");
-		//Try to calculate it from the BlockSet information
+		if(getBlockSets().size()==0) {
+			throw new IndexOutOfBoundsException(
+					"Empty MultipleAlignment: blockSets size == 0.");
+		} //Otherwise try to calculate it from the BlockSet information
 		else {
 			length = 0;
 			for (BlockSet blockSet:blockSets) length += blockSet.length();
@@ -193,19 +192,24 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements Serial
 	}
 
 	/**
-	 * Force recalculation of the core length (ungapped columns) based on the block core lengths
+	 * Force recalculation of the core length (ungapped columns) based on the 
+	 * BlockSet core lengths.
 	 */
 	protected void updateCoreLength() {
-		if(getBlockSets().size()==0) throw new IndexOutOfBoundsException("Empty MultipleAlignment: getBlockSetNum() == 0.");
-		//Try to calculate it from the BlockSet information
+		if(getBlockSets().size()==0) {
+			throw new IndexOutOfBoundsException(
+					"Empty MultipleAlignment: blockSets size == 0.");
+		} //Otherwise try to calculate it from the BlockSet information
 		else {
 			coreLength = 0;
-			for (BlockSet blockSet:blockSets) coreLength += blockSet.getCoreLength();
+			for (BlockSet blockSet:blockSets) 
+				coreLength += blockSet.getCoreLength();
 		}
 	}
 
 	/**
 	 * Updates all cached properties
+	 * 
 	 * @throws StructureException
 	 */
 	protected void updateCache() {

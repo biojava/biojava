@@ -3,25 +3,23 @@ package org.biojava.nbio.structure.align.multiple.mc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 
 /** 
  * Contains the parameters to be sent to the MC optimization.
  * 
  * @author Aleix Lafita
+ * @since 4.1.0
  *
  */
 public class MultipleMcParameters implements ConfigStrucAligParams {
-
-	//Parameters to expose to the GUI
+	
 	private int randomSeed;
 	private int minBlockLen;
 	private int minAlignedStructures;
 	private double gapOpen;
 	private double gapExtension;
 	private int convergenceSteps;
-	private String pairwiseAlgorithm;
 	
 	/**
 	 * Constructor with DEFAULT values of the parameters.
@@ -40,7 +38,6 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add("GapOpen");
 		params.add("GapExtension");
 		params.add("ConvergenceSteps");
-		params.add("PairwiseAlgorithm");
 
 		return params;
 	}
@@ -55,7 +52,6 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add("Gap Opening Penalty");
 		params.add("Gap Extension Penalty");
 		params.add("Steps to Convergence");
-		params.add("Pairwise Algorithm Name");
 		
 		return params;
 	}
@@ -71,7 +67,6 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add(Double.class);
 		params.add(Double.class);
 		params.add(Integer.class);
-		params.add(String.class);
 		
 		return params;
 	}
@@ -80,15 +75,23 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	public List<String> getUserConfigHelp() {
 		
 		List<String> params =new ArrayList<String>();
-		String randomSeed = "Random seed for the optimizer random number generator.";
-		String minBlockLen = "Minimum number of aligned positions in a Block of the Multiple Alignment.";
-		String minAlignedStructures = "Minimum number of structures aligned in a column (without gaps)."
-				+ "If it is 0 the minimum is calculated as a third of the total number of structures.";
-		String gapOpen = "Penalty for opening a gap in any of the structures." ;
-		String gapExtension = "Penalty for extending a gapped region in any of the structures.";
-		String convergenceSteps = "Number of steps without a change in the alignment before stopping. Proportional to the calculation time. "
-				+ "If it is 0 the convergence steps are calculated proportional to the number of structures and their length.";
-		String pairwiseAlgorithm = "Name of the pairwise algorithm to generate the Multiple Alignment seed";
+		String randomSeed = 
+				"Random seed for the optimizer random number generator.";
+		String minBlockLen = 
+				"Minimum number of aligned positions in a Block of the "
+				+ "Multiple Alignment.";
+		String minAlignedStructures = 
+				"Minimum number of structures aligned in a column (without "
+				+ "gaps). If it is 0 the minimum is calculated as a third of "
+				+ "the total number of structures.";
+		String gapOpen = "Penalty for opening a gap in any of the structures.";
+		String gapExtension = "Penalty for extending a gapped region in any of"
+				+ " the structures.";
+		String convergenceSteps = 
+				"Number of steps without a change in the alignment before "
+				+ "stopping. Proportional to the calculation time. "
+				+"If it is 0 the convergence steps are calculated proportional"
+				+ " to the number of structures and their length.";
 		
 		params.add(randomSeed);
 		params.add(minBlockLen);
@@ -96,7 +99,6 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add(gapOpen);
 		params.add(gapExtension);
 		params.add(convergenceSteps);
-		params.add(pairwiseAlgorithm);
 		
 		return params;
 	}
@@ -107,8 +109,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 				+ ", minBlockLen=" + minBlockLen + ", minAlignedStructures="
 				+ minAlignedStructures + ", gapOpen=" + gapOpen
 				+ ", gapExtension=" + gapExtension + ", convergenceSteps="
-				+ convergenceSteps + ", pairwiseAlgorithm=" + pairwiseAlgorithm
-				+ "]";
+				+ convergenceSteps + "]";
 	}
 
 	@Override
@@ -120,14 +121,13 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		gapOpen = 10.0;
 		gapExtension = 5.0;
 		convergenceSteps = 0;
-		pairwiseAlgorithm = CeCPMain.algorithmName;
 	}
 
 	public int getRandomSeed() {
 		return randomSeed;
 	}
 
-	public void setRandomSeed(int randomSeed) {
+	public void setRandomSeed(Integer randomSeed) {
 		this.randomSeed = randomSeed;
 	}
 
@@ -135,7 +135,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		return minBlockLen;
 	}
 
-	public void setMinBlockLen(int minBlockLen) {
+	public void setMinBlockLen(Integer minBlockLen) {
 		this.minBlockLen = minBlockLen;
 	}
 
@@ -143,7 +143,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		return minAlignedStructures;
 	}
 
-	public void setMinAlignedStructures(int minAlignedStructures) {
+	public void setMinAlignedStructures(Integer minAlignedStructures) {
 		this.minAlignedStructures = minAlignedStructures;
 	}
 
@@ -151,7 +151,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		return gapOpen;
 	}
 
-	public void setGapOpen(double gapOpen) {
+	public void setGapOpen(Double gapOpen) {
 		this.gapOpen = gapOpen;
 	}
 
@@ -159,7 +159,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		return gapExtension;
 	}
 
-	public void setGapExtension(double gapExtension) {
+	public void setGapExtension(Double gapExtension) {
 		this.gapExtension = gapExtension;
 	}
 
@@ -167,16 +167,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		return convergenceSteps;
 	}
 
-	public void setConvergenceSteps(int convergenceSteps) {
+	public void setConvergenceSteps(Integer convergenceSteps) {
 		this.convergenceSteps = convergenceSteps;
-	}
-
-	public String getPairwiseAlgorithm() {
-		return pairwiseAlgorithm;
-	}
-
-	public void setPairwiseAlgorithm(String pairwiseAlgorithm) {
-		this.pairwiseAlgorithm = pairwiseAlgorithm;
-	}
-	
+	}	
 }

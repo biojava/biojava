@@ -24,7 +24,6 @@ package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 
@@ -122,6 +121,7 @@ public class MenuCreator {
 		//Exit
 		JMenuItem exitI = getExitMenuItem();		
 		file.add(exitI);
+		
 		menu.add(file);
 
 /// ALIGN MENU
@@ -130,7 +130,10 @@ public class MenuCreator {
 		//new Pairwise alignment
 		JMenuItem pairI = getPairwiseAlignmentMenuItem();
 		align.add(pairI);
-		//new Multiple alignment TODO
+		//new Multiple alignment
+		JMenuItem multI = getMultipleAlignmentMenuItem();
+		align.add(multI);
+		
 		menu.add(align);
 
 /// VIEW MENU
@@ -626,11 +629,19 @@ public class MenuCreator {
 	}
 
 
-	/** provide a display for the pairwise structure alignment
-	 * 
+	/** 
+	 * Provide a display for the pairwise structure alignment.
 	 */
 	private static void showPairDialog(){
 		AlignmentGui gui =  AlignmentGui.getInstance();
+		gui.setVisible(true);
+	}
+	
+	/** 
+	 * Provide a display for the multiple structure alignment.
+	 */
+	private static void showMultipleDialog(){
+		MultipleAlignmentGUI gui =  MultipleAlignmentGUI.getInstance();
 		gui.setVisible(true);
 	}
 
@@ -705,7 +716,7 @@ public class MenuCreator {
 				String cmd = e.getActionCommand();
 
 				if ( cmd.equals(MULTIPLE_ALIGN)){
-					MenuCreator.showPairDialog();
+					MenuCreator.showMultipleDialog();
 				}				
 			}
 		});

@@ -5,6 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Abstact implementation of the {@link ScoresCache} with the shared code used
+ * in all objects with a variables cache.
+ * 
+ * @author Spencer Bliven
+ * @since 4.1.0
+ *
+ */
 public abstract class AbstractScoresCache implements ScoresCache {
 	private Map<String,Double> scores = null;
 	
@@ -14,14 +22,7 @@ public abstract class AbstractScoresCache implements ScoresCache {
 	protected AbstractScoresCache(AbstractScoresCache cache) {
 		this.scores = cache.scores;
 	}
-	/**
-	 * Add a score to the list of scores.
-	 * @param property A string identifying the score and suitable for printing in headers.
-	 *  E.g. {@link #SCORE_TMSCORE}
-	 * @param score Value of the score
-	 * @param persistent Boolean indicating whether this score should be persisted
-	 *  across serialization, cloning, and other changes.
-	 */
+	
 	@Override
 	public void putScore(String property, Double score) {
 			if(scores == null) {
@@ -29,11 +30,7 @@ public abstract class AbstractScoresCache implements ScoresCache {
 			}
 			scores.put(property, score);
 	}
-	/**
-	 * Get the value for a particular score
-	 * @param property Name of the score to fetch
-	 * @return Value of the score, or null if it is not set.
-	 */
+	
 	@Override
 	public Double getScore(String property) {
 		if(scores != null && scores.containsKey(property)) {
@@ -42,10 +39,6 @@ public abstract class AbstractScoresCache implements ScoresCache {
 		return null;
 	}
 	
-	/**
-	 * Get a collection of all scores which have been set
-	 * @return Set of all score names
-	 */
 	@Override
 	public Set<String> getScores() {
 		if(scores == null) return Collections.emptySet();
@@ -54,6 +47,7 @@ public abstract class AbstractScoresCache implements ScoresCache {
 	
 	/**
 	 * Subclasses should override clone and use the copy constructor.
+	 * 
 	 * @param e
 	 * @return
 	 * @throws CloneNotSupportedException
@@ -63,7 +57,7 @@ public abstract class AbstractScoresCache implements ScoresCache {
 	}
 	
 	/**
-	 * Resets all scores
+	 * Clear the cached scores. This frees memory after the alignment changed.
 	 */
 	public void clear() {
 		scores = null;

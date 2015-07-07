@@ -17,33 +17,42 @@ import org.biojava.nbio.structure.jama.Matrix;
  * Utility functions for working with {@link MultipleAlignment}. 
  * <p>
  * Supported functions:
- * <ul><li>Multiple Sequence Alignment Calculation Methods
- * <li>Map from Sequence Alignment Position to Structure Atom
- * <li>Map from Sequence Alignment Position to Block Number
+ * <ul><li>Multiple sequence alignment calculation
+ * <li>Map from sequence alignment position to structure Atom
+ * <li>Map from sequence alignment position to Block number
+ * <li>Transform the aligned Atoms of a MultipleAlignment
+ * <li>Calculate the average residue distance of all aligned positions
  * </ul>
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
+ * @since 4.1.0
  *
  */
 public class MultipleAlignmentTools {
 	
 	/**
-	 * Calculate the sequence alignment Strings for the whole alignment. This method creates a sequence 
-	 * alignment where aligned residues are in uppercase and unaligned residues are in lowercase, thus
-	 * providing a more compact way to represent the alignment.
+	 * Calculate the sequence alignment Strings for the whole alignment. This 
+	 * method creates a sequence alignment where aligned residues are in 
+	 * uppercase and unaligned residues are in lowercase, thus providing a more
+	 * compact way to represent the alignment.
 	 * <p>
-	 * Blocks are concatenated in the order returned by {@link MultipleAlignment#getBlocks()},
-	 * so sequences may not be sequential. Gaps are represented by '-'. Separation between different 
-	 * Blocks is indicated by a gap in all positions, meaning that there is a possible discontinuity.
+	 * Blocks are concatenated in the order returned by 
+	 * {@link MultipleAlignment#getBlocks()}, so sequences may not be 
+	 * sequential. Gaps are represented by '-'. Separation between different
+	 * Blocks is indicated by a gap in all positions, meaning that there is a 
+	 * possible discontinuity.
 	 * 
 	 * @param alignment input MultipleAlignment
-	 * @param mapSeqToStruct provides a link from the sequence alignment position to the structure alignment 
-	 * 		  position. Specially designed for the GUI. Has to be initialized previously and will be overwritten.
-	 * @return a string for each row in the alignment, giving the 1-letter code 
+	 * @param mapSeqToStruct provides a link from the sequence alignment 
+	 * 			position to the structure alignment position. Specially 
+	 * 			designed for the GUI. Has to be initialized previously and will
+	 * 			be overwritten.
+	 * @return a string for each row in the alignment, giving the 1-letter code
 	 *  		for each aligned residue.
 	 */
-	public static List<String> getSequenceAlignment(MultipleAlignment alignment, List<Integer> mapSeqToStruct) {
+	public static List<String> getSequenceAlignment(
+			MultipleAlignment alignment, List<Integer> mapSeqToStruct) {
 
 		//Initialize sequence variables
 		List<String> alnSequences = new ArrayList<String>();
@@ -52,10 +61,13 @@ public class MultipleAlignmentTools {
 		List<Atom[]> atoms = alignment.getEnsemble().getAtomArrays();
 		int globalPos = -1;
 				
-		//Initialize helper variables in constucting the sequence alignment: freePool and blockStarts
-		List<SortedSet<Integer>> freePool = new ArrayList<SortedSet<Integer>>();
-		List<SortedSet<Integer>> blockStarts = new ArrayList<SortedSet<Integer>>();
-		List<List<Integer>> aligned = new ArrayList<List<Integer>>();
+		//Initialize helper variables in constucting the sequence alignment
+		List<SortedSet<Integer>> freePool = 
+				new ArrayList<SortedSet<Integer>>();
+		List<SortedSet<Integer>> blockStarts = 
+				new ArrayList<SortedSet<Integer>>();
+		List<List<Integer>> aligned = 
+				new ArrayList<List<Integer>>();
 		
 		//Generate freePool residues from the ones not aligned
 		for (int i=0; i<alignment.size(); i++){
@@ -84,73 +96,110 @@ public class MultipleAlignmentTools {
 			}
 		}
 		
-		//Loop through all the alignment Blocks in the order given
 		for (int b=0; b<alignment.getBlocks().size(); b++){
 			if (b!=0){
-				//Add a gap to all structures in order to separate visually the blocks in the alignment
-				for (int str=0; str<alignment.size(); str++) alnSequences.set(str,alnSequences.get(str).concat("-"));
-				mapSeqToStruct.add(-1); //means no aligned position
+				//Add a gap to all structures to separate visually the Blocks
+				for (int str=0; str<alignment.size(); str++) 
+					alnSequences.set(str,alnSequences.get(str).concat("-"));
+				mapSeqToStruct.add(-1); //means unaligned position
 			}
-			//Store the previous position added to the sequence alignment for this structure
+			//Store the previous position added to the sequence alignment
 			int[] previousPos = new int[alignment.size()];
 			Arrays.fill(previousPos, -1);
 			//Store provisional characters
 			char[] provisionalChar = new char[alignment.size()];
 			Arrays.fill(provisionalChar, '-');
-			//Loop through all the alignment positions in the Block
+			
 			for (int pos=0; pos<alignment.getBlocks().get(b).length(); pos++){
 				globalPos++;
-				boolean gaps = true;  //If any structure is not consecutive with the previousPos
-				//While the next position cannot be considered because there are still non consecutive residues
+				boolean gaps = true;  //true if consecutive with the previous
 				while (gaps){
 					gaps = false;
 					//Loop through all the structures
 					for (int str=0; str<alignment.size(); str++){
 						//If it is the first position or before it was null
 						if (previousPos[str] == -1){
-							Integer residue = alignment.getBlocks().get(b).getAlignRes().get(str).get(pos);
+							Integer residue = 
+									alignment.getBlocks().
+									get(b).getAlignRes().get(str).get(pos);
 							if (residue == null) provisionalChar[str] = '-';
-							else provisionalChar[str] = StructureTools.get1LetterCode(atoms.get(str)[residue].getGroup().getPDBName());
+							else {
+								Atom a = atoms.get(str)[residue];
+								String group = a.getGroup().getPDBName();
+								provisionalChar[str] = 
+										StructureTools.get1LetterCode(group);
+							}
 						}
 						else {
-							Integer residue = alignment.getBlocks().get(b).getAlignRes().get(str).get(pos);
+							Integer residue = 
+									alignment.getBlocks().
+									get(b).getAlignRes().get(str).get(pos);
+							int nextPos = previousPos[str]+1;
 							if (residue == null) {
-								if (freePool.get(str).contains(previousPos[str]+1))
-									provisionalChar[str] = Character.toLowerCase(StructureTools.get1LetterCode(atoms.get(str)[previousPos[str]+1].getGroup().getPDBName()));
+								if (freePool.get(str).contains(nextPos)){
+									Atom a = atoms.get(str)[nextPos];
+									String g = a.getGroup().getPDBName();
+									char aa = StructureTools.get1LetterCode(g);
+									provisionalChar[str] = 
+											Character.toLowerCase(aa);
+								}
 								else provisionalChar[str] = '-';
 							}
-							else if (previousPos[str]+1 == residue){
-								provisionalChar[str] = StructureTools.get1LetterCode(atoms.get(str)[residue].getGroup().getPDBName());
-							} else{
-								provisionalChar[str] = ' ';  //This means there is a spacing (non-consecutive)
+							else if (nextPos == residue){
+								Atom a = atoms.get(str)[nextPos];
+								String group = a.getGroup().getPDBName();
+								provisionalChar[str] = 
+										StructureTools.get1LetterCode(group);
+							} else {
+								//This means non-consecutive
+								provisionalChar[str] = ' ';
 								gaps = true;
 							}
 						}
 					}//End all structure analysis
+					
 					if (gaps){
 						for (int str=0; str<alignment.size(); str++){
-							if (provisionalChar[str] == ' ') {  //It means this residue was the non-consecutive one
-								alnSequences.set(str,alnSequences.get(str).concat(""+Character.toLowerCase(StructureTools.get1LetterCode(atoms.get(str)[previousPos[str]+1].getGroup().getPDBName()))) );
-								previousPos[str] ++;
-							} else { //insert a gap otherwise and do not change the index
-								alnSequences.set(str,alnSequences.get(str).concat("-"));
+							if (provisionalChar[str] == ' ') {
+								//It means this residue was non-consecutive
+								Atom a = atoms.get(str)[previousPos[str]+1];
+								String group = a.getGroup().getPDBName();
+								char aa = StructureTools.get1LetterCode(group);
+								alnSequences.set(str,alnSequences.get(str).
+										concat(""+Character.toLowerCase(aa)));
+								previousPos[str]++;
+							} else { 
+								//Insert a gap otherwise
+								alnSequences.set(str,
+										alnSequences.get(str).concat("-"));
 							}
 						}
-						mapSeqToStruct.add(-1); //meaning that this is an unaligned position
+						mapSeqToStruct.add(-1); //unaligned position
 					} 
-					else {  //Append the provisional and update the indices otherwise
+					else {  
+						//Add provisional and update the indices
 						for (int str=0; str<alignment.size(); str++){
-							alnSequences.set(str,alnSequences.get(str).concat(""+provisionalChar[str]));
+							alnSequences.set(str,alnSequences.get(str).
+									concat(""+provisionalChar[str]));
+							
 							if (provisionalChar[str] != '-') {
-								if (alignment.getBlocks().get(b).getAlignRes().get(str).get(pos)==null) previousPos[str]++;
-								else previousPos[str] = alignment.getBlocks().get(b).getAlignRes().get(str).get(pos);
+								if (alignment.getBlocks().get(b).getAlignRes().
+										get(str).get(pos)==null) {
+									previousPos[str]++;
+								}
+								else {
+									previousPos[str] = 
+											alignment.getBlocks().get(b).
+											getAlignRes().get(str).get(pos);
+								}
 							}
 						}
-						mapSeqToStruct.add(globalPos);
+						mapSeqToStruct.add(globalPos); //alignment index
 					}
 				}
-			}
-			//Now add the unaligned residues in between Blocks (lowercase), using intervals
+			} //All positions in the Block considered so far
+			
+			//Calculate the index of the next Block for every structure
 			int[] blockEnds = new int[alignment.size()];
 			for (int str=0; str<alignment.size(); str++){
 				for (int res:blockStarts.get(str)){
@@ -161,21 +210,28 @@ public class MultipleAlignmentTools {
 					}
 				}
 			}
-			//Now we have the ending residues of each Block before the others, put the residues sequentially
-			boolean allGaps = false;
+			
+			//Add the unaligned residues in between Blocks (lowercase)
+			boolean allGaps = false; //true means no more residues to add
 			while (!allGaps){
 				allGaps = true;
 				for (int str=0; str<alignment.size(); str++){
 					if (previousPos[str]+1 < blockEnds[str]){
-						provisionalChar[str] = Character.toLowerCase(StructureTools.get1LetterCode(atoms.get(str)[previousPos[str]+1].getGroup().getPDBName()));
+						Atom a = atoms.get(str)[previousPos[str]+1];
+						String group = a.getGroup().getPDBName();
+						char letter = StructureTools.get1LetterCode(group);
+						
+						provisionalChar[str] = Character.toLowerCase(letter);
 						previousPos[str]++;
 						allGaps = false;
 					} else provisionalChar[str] = '-';
 				}
 				if (!allGaps){
-					for (int str=0; str<alignment.size(); str++)
-						alnSequences.set(str,alnSequences.get(str).concat(""+provisionalChar[str]));
-					mapSeqToStruct.add(-1);
+					for (int str=0; str<alignment.size(); str++) {
+						alnSequences.set(str,alnSequences.get(str).
+								concat(""+provisionalChar[str]));
+					}
+					mapSeqToStruct.add(-1); //unaligned position
 				}
 			}
 		}
@@ -183,41 +239,51 @@ public class MultipleAlignmentTools {
 	}
 	
 	/**
-	 * Calculate the sequence alignment Strings for the whole alignment. This method creates a sequence 
-	 * alignment where aligned residues are in uppercase and unaligned residues are in lowercase, thus
+	 * Calculate the sequence alignment Strings for the whole alignment. 
+	 * This method creates a sequence alignment where aligned residues are 
+	 * in uppercase and unaligned residues are in lowercase, thus
 	 * providing a more compact way to represent the alignment.
 	 * <p>
-	 * Blocks are concatenated in the order returned by {@link MultipleAlignment#getBlocks()},
-	 * so sequences may not be sequential. Gaps are represented by '-'. Separation between different 
-	 * Blocks is indicated by a gap in all positions, meaning that there is a possible discontinuity.
+	 * Blocks are concatenated in the order returned by 
+	 * {@link MultipleAlignment#getBlocks()}, so sequences may not be 
+	 * sequential. Gaps are represented by '-'. Separation between different
+	 * Blocks is indicated by a gap in all positions, meaning that there is a
+	 * possible discontinuity.
 	 * 
 	 * @param alignment input MultipleAlignment
-	 * @return String for each row in the alignment, giving the 1-letter code 
+	 * @return String for each row in the alignment, giving the 1-letter code
 	 *  		for each aligned residue.
 	 */
-	public static List<String> getSequenceAlignment(MultipleAlignment alignment) {
-		return getSequenceAlignment(alignment, new ArrayList<Integer>());
+	public static List<String> getSequenceAlignment(MultipleAlignment msa) {
+		return getSequenceAlignment(msa, new ArrayList<Integer>());
 	}
 	
 	/**
-	 * Calculate the sequence alignment Strings for the alignment Blocks in an alignment. This method 
-	 * creates a sequence alignment where all residues are in uppercase and a residue alone with gaps
-	 * in all the other structures represents unaligned residues. Because of this latter constraint only
-	 * the residues within the Blocks are represented, for a more compact alignment. For a sequence alignment of the full protein use
-	 * {@link #getSequenceAlignment(MultipleAlignment)}.
+	 * Calculate the sequence alignment Strings for the alignment Blocks in an 
+	 * alignment. This method creates a sequence alignment where all residues 
+	 * are in uppercase and a residue alone with gaps in all the other 
+	 * structures represents unaligned residues. Because of this latter 
+	 * constraint only the residues within the Blocks are represented, for a 
+	 * more compact alignment. For a sequence alignment of the full protein 
+	 * use {@link #getSequenceAlignment(MultipleAlignment)}.
 	 * <p>
-	 * Blocks are concatenated in the order returned by {@link MultipleAlignment#getBlocks()},
+	 * Blocks are concatenated in the order returned by 
+	 * {@link MultipleAlignment#getBlocks()},
 	 * so sequences may not be sequential. Gaps between blocks are omitted,
-	 * while gaps within blocks are represented by '-'. Separation between different Blocks is
-	 * indicated by a gap in all positions, meaning that there is something unaligned inbetween.
+	 * while gaps within blocks are represented by '-'. Separation between 
+	 * different Blocks is indicated by a gap in all positions, meaning that 
+	 * there is something unaligned inbetween.
 	 *
 	 * @param alignment input MultipleAlignment
-	 * @param mapSeqToStruct provides a link from the sequence alignment position to the structure alignment 
-	 * 		  position. Specially designed for the GUI. Has to be initialized previously and will be overwritten.
-	 * @return a string for each row in the alignment, giving the 1-letter code 
+	 * @param mapSeqToStruct provides a link from the sequence alignment 
+	 * 		  position to the structure alignment 
+	 * 		  position. Specially designed for the GUI. Has to be initialized 
+	 * 		  previously and will be overwritten.
+	 * @return a string for each row in the alignment, giving the 1-letter code
 	 *  		for each aligned residue.
 	 */
-	public static List<String> getBlockSequenceAlignment(MultipleAlignment alignment, List<Integer> mapSeqToStruct) {
+	public static List<String> getBlockSequenceAlignment(
+			MultipleAlignment alignment, List<Integer> mapSeqToStruct) {
 
 		//Initialize sequence variables
 		List<String> alnSequences = new ArrayList<String>();
@@ -229,60 +295,87 @@ public class MultipleAlignmentTools {
 		//Loop through all the alignment Blocks in the order given
 		for (int b=0; b<alignment.getBlocks().size(); b++){
 			if (b!=0){
-				//Add a gap to all structures in order to separate visually the blocks in the alignment
-				for (int str=0; str<alignment.size(); str++) alnSequences.set(str,alnSequences.get(str).concat("-"));
-				mapSeqToStruct.add(-1); //means no aligned position
+				//Add a gap to all structures to separate Blocks
+				for (int str=0; str<alignment.size(); str++) 
+					alnSequences.set(str,alnSequences.get(str).concat("-"));
+				mapSeqToStruct.add(-1); //means unaligned position
 			}
-			//Store the previous position added to the sequence alignment for this structure
+			
+			//Store the previous position added to the sequence alignment
 			int[] previousPos = new int[alignment.size()];
 			Arrays.fill(previousPos, -1);
 			//Store provisional characters
 			char[] provisionalChar = new char[alignment.size()];
 			Arrays.fill(provisionalChar, '-');
-			//Loop through all the alignment positions in the Block
+			
 			for (int pos=0; pos<alignment.getBlocks().get(b).length(); pos++){
 				globalPos++;
-				boolean gaps = true;  //If any structure is not consecutive with the previousPos
-				//While the next position cannot be considered because there are still non consecutive residues
+				boolean gaps = true;
 				while (gaps){
 					gaps = false;
 					//Loop through all the structures
 					for (int str=0; str<alignment.size(); str++){
 						//If it is the first position or before it was null
 						if (previousPos[str] == -1){
-							Integer residue = alignment.getBlocks().get(b).getAlignRes().get(str).get(pos);
+							Integer residue = alignment.getBlocks().get(b).
+									getAlignRes().get(str).get(pos);
 							if (residue == null) provisionalChar[str] = '-';
-							else provisionalChar[str] = StructureTools.get1LetterCode(atoms.get(str)[residue].getGroup().getPDBName());		
+							else {
+								Atom a = atoms.get(str)[residue];
+								String g = a.getGroup().getPDBName();
+								char aa = StructureTools.get1LetterCode(g);
+								provisionalChar[str] = aa;
+							}
 						}
 						else{
-							Integer residue = alignment.getBlocks().get(b).getAlignRes().get(str).get(pos);
+							Integer residue = alignment.getBlocks().get(b).
+									getAlignRes().get(str).get(pos);
 							if (residue == null) provisionalChar[str] = '-';
 							else if (previousPos[str]+1 == residue){
-								provisionalChar[str] = StructureTools.get1LetterCode(atoms.get(str)[residue].getGroup().getPDBName());
-							}
-							else{
-								provisionalChar[str] = ' ';  //This means there is a spacing (non-consecutive)
+								Atom a = atoms.get(str)[residue];
+								String g = a.getGroup().getPDBName();
+								char aa = StructureTools.get1LetterCode(g);
+								provisionalChar[str] = aa;
+							} else {
+								provisionalChar[str] = ' ';
 								gaps = true;
 							}
 						}
 					}//End all structures analysis
+					
 					if (gaps){
 						for (int str=0; str<alignment.size(); str++){
-							if (provisionalChar[str] == ' ') {  //It means this residue was a non-consecutive one, put gaps elsewere
-								for (int str2=0; str2<alignment.size(); str2++){
-									if (str==str2) 
-										alnSequences.set(str2,alnSequences.get(str2).concat(""+StructureTools.get1LetterCode(atoms.get(str2)[previousPos[str]+1].getGroup().getPDBName())));
-									else alnSequences.set(str2,alnSequences.get(str2).concat("-")); //insert a gap otherwise and do not change the index
+							if (provisionalChar[str] == ' ') {  
+								//It means this residue was non-consecutive
+								for (int s2=0; s2<alignment.size(); s2++){
+									if (str==s2) {
+										int next = previousPos[str]+1;
+										Atom a = atoms.get(s2)[next];
+										String g = a.getGroup().getPDBName();
+										char aa = StructureTools.
+												get1LetterCode(g);
+										alnSequences.set(s2,alnSequences.
+												get(s2).concat(""+aa));
+									}
+									else {
+										alnSequences.set(s2,alnSequences.
+												get(s2).concat("-"));
+									}
 								}
-								mapSeqToStruct.add(-1); //meaning that this is an unaligned position
+								mapSeqToStruct.add(-1); //unaligned
 								previousPos[str] += 1;
 							}
 						}
 					}
-					else {  //Append the provisional and update the indices otherwise
+					else {  //Append the provisional and update the indices
 						for (int str=0; str<alignment.size(); str++){
-							alnSequences.set(str,alnSequences.get(str).concat(""+provisionalChar[str]));
-							if (provisionalChar[str] != '-') previousPos[str] = alignment.getBlocks().get(b).getAlignRes().get(str).get(pos);
+							alnSequences.set(str,alnSequences.get(str).
+									concat(""+provisionalChar[str]));
+							if (provisionalChar[str] != '-') {
+								previousPos[str] = 
+										alignment.getBlocks().get(b).
+										getAlignRes().get(str).get(pos);
+							}
 						}
 						mapSeqToStruct.add(globalPos);
 					}
@@ -293,51 +386,64 @@ public class MultipleAlignmentTools {
 	}
 	
 	/**
-	 * Calculate the sequence alignment Strings for the alignment Blocks in an alignment. This method 
-	 * creates a sequence alignment where all residues are in uppercase and a residue alone with gaps
-	 * in all the other structures represents unaligned residues. Because of this latter constraint only
-	 * the residues within the Blocks are represented, for a more compact alignment. For a sequence alignment of the full protein use
+	 * Calculate the sequence alignment Strings for the alignment Blocks in an 
+	 * alignment. This method creates a sequence alignment where all residues 
+	 * are in uppercase and a residue alone with gaps
+	 * in all the other structures represents unaligned residues. Because of 
+	 * this latter constraint only
+	 * the residues within the Blocks are represented, for a more compact 
+	 * alignment. For a sequence alignment of the full protein use
 	 * {@link #getSequenceAlignment(MultipleAlignment)}.
 	 * <p>
-	 * Blocks are concatenated in the order returned by {@link MultipleAlignment#getBlocks()},
+	 * Blocks are concatenated in the order returned by 
+	 * {@link MultipleAlignment#getBlocks()},
 	 * so sequences may not be sequential. Gaps between blocks are omitted,
-	 * while gaps within blocks are represented by '-'. Separation between different Blocks is
-	 * indicated by a gap in all positions, meaning that there is something unaligned inbetween.
+	 * while gaps within blocks are represented by '-'. Separation between 
+	 * different Blocks is indicated by a gap in all positions, meaning that 
+	 * there is something unaligned inbetween.
 	 * 
 	 * @param alignment input MultipleAlignment
 	 * @return String for each row in the alignment, giving the 1-letter code 
 	 *  		for each aligned residue.
 	 */
-	public static List<String> getBlockSequenceAlignment(MultipleAlignment alignment) {
-		return getBlockSequenceAlignment(alignment, new ArrayList<Integer>());
+	public static List<String> getBlockSequenceAlignment(MultipleAlignment ma){
+		return getBlockSequenceAlignment(ma, new ArrayList<Integer>());
 	}
 	
    /**
-    * Returns the Atom of the specified structure that is aligned in the sequence alignment position specified.
+    * Returns the Atom of the specified structure that is aligned in the 
+    * sequence alignment position specified.
     * 
-    * @param multAln the MultipleAlignment object from where the sequence alignment has been generated
-    * @param mapSeqToStruct the mapping between sequence and structure generated with the sequence alignment
-    * @param structure the structure index of the alignment (row)
+    * @param multAln the MultipleAlignment object from where the sequence 
+    * alignment has been generated
+    * @param mapSeqToStruct the mapping between sequence and structure 
+    * generated with the sequence alignment
+    * @param str the structure index of the alignment (row)
     * @param sequencePos the sequence alignment position (column)
     * @return Atom the atom in that position or null if there is a gap
     */
-   public static Atom getAtomForSequencePosition(MultipleAlignment multAln, List<Integer> mapSeqToStruct, int structure, int sequencePos) {
+   public static Atom getAtomForSequencePosition(MultipleAlignment msa, 
+		   List<Integer> mapSeqToStruct, int str, int sequencePos) {
 	   
 	   int seqPos = mapSeqToStruct.get(sequencePos);
+	   
 	   //Check if the position selected is an aligned position
 	   if (seqPos == -1) return null;
 	   else {
 		   Atom a = null;
-		   //Calculate the corresponding structure position (by iterating all Blocks)
+		   //Calculate the corresponding structure position
 		   int sum = 0;
-		   for (Block b:multAln.getBlocks()){
+		   for (Block b:msa.getBlocks()){
 			   if (sum+b.length()<=seqPos) {
 				   sum += b.length();
 				   continue;
 			   } else {
-				   for (Integer p:b.getAlignRes().get(structure)){
+				   for (Integer p:b.getAlignRes().get(str)){
 					   if (sum == seqPos) {
-						   if (p!= null) a = multAln.getEnsemble().getAtomArrays().get(structure)[p];
+						   if (p!= null){
+							   a = msa.getEnsemble().
+									   getAtomArrays().get(str)[p];
+						   }
 						   break;
 					   }
 					   sum++;
@@ -350,14 +456,18 @@ public class MultipleAlignmentTools {
    }
    
    /**
-    * Returns the block number of a specified position in the sequence alignment.
+    * Returns the block number of a specified position in the sequence 
+    * alignment, given the mapping from structure to function.
     * 
-    * @param multAln the MultipleAlignment object from where the sequence alignment has been generated
-    * @param mapSeqToStruct the mapping between sequence and structure generated with the sequence alignment
+    * @param multAln the MultipleAlignment object from where the sequence 
+    * alignment has been generated.
+    * @param mapSeqToStruct the mapping between sequence and structure 
+    * generated with the sequence alignment
     * @param sequencePos the position in the sequence alignment (column)
     * @return int the block index, or -1 if the position is not aligned
     */
-   public static int getBlockForSequencePosition(MultipleAlignment multAln, List<Integer> mapSeqToStruct, int sequencePos){
+   public static int getBlockForSequencePosition(MultipleAlignment multAln, 
+		   List<Integer> mapSeqToStruct, int sequencePos){
 	   
 	   int seqPos = mapSeqToStruct.get(sequencePos);
 	   //Check if the position selected is an aligned position
@@ -378,32 +488,37 @@ public class MultipleAlignmentTools {
    }
    
    /**
-    * The average residue distance Matrix contains the average distance from each residue to all 
-    * other residues aligned with it. <p>
-    * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+    * The average residue distance Matrix contains the average distance from 
+    * each residue to all other residues aligned with it. 
+    * <p>
+    * Complexity: T(n,l) = O(l*n^2), if n=number of structures and 
+    * l=alignment length.
     * 
     * @param alignment MultipleAlignment
     * @return Matrix containing all average residue distances
     */
-   public static Matrix getAverageResidueDistances(MultipleAlignment alignment){
-	   //Transform Atoms
-	   List<Atom[]> transformed = transformAtoms(alignment);
+   public static Matrix getAverageResidueDistances(MultipleAlignment msa){
+	   List<Atom[]> transformed = transformAtoms(msa);
 	   return getAverageResidueDistances(transformed);
    }
    
    /**
-    * The average residue distance Matrix contains the average distance from each residue to all 
-    * other residues aligned with it. <p>
-    * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment length.
+    * The average residue distance Matrix contains the average distance from 
+    * each residue to all other residues aligned with it. 
+    * <p>
+    * Complexity: T(n,l) = O(l*n^2), if n=number of structures and 
+    * l=alignment length.
     * 
-    * @param transformed List of Atom arrays containing only the aligned atoms of each structure, or null if there is a gap.
-    * @return Matrix containing all average residue distances. Entry -1 means there is a gap in the position.
+    * @param transformed List of Atom arrays containing only the aligned 
+    * atoms of each structure, or null if there is a gap.
+    * @return Matrix containing all average residue distances. Entry -1 means 
+    * there is a gap in the position.
     */
    public static Matrix getAverageResidueDistances(List<Atom[]> transformed){
 	   
 		int size = transformed.size();
 		int length = transformed.get(0).length;
-		Matrix residueDistances = new Matrix(size,length,-1);  //A residue distance is the average distance to all others
+		Matrix resDist = new Matrix(size,length,-1);
 		
 		//Calculate the average residue distances
 		for (int r1=0; r1<size; r1++){
@@ -415,24 +530,36 @@ public class MultipleAlignmentTools {
 					Atom atom = transformed.get(r2)[c];
 					if(atom != null) {
 						double distance = Calc.getDistance(refAtom, atom);
-						if (residueDistances.get(r1, c) == -1) residueDistances.set(r1, c, 1+distance);
-						else residueDistances.set(r1, c, residueDistances.get(r1, c)+distance);
-						if (residueDistances.get(r2, c) == -1) residueDistances.set(r2, c, 1+distance);
-						else residueDistances.set(r2, c, residueDistances.get(r2, c)+distance);
+						
+						if (resDist.get(r1, c) == -1) {
+							resDist.set(r1, c, 1+distance);
+						} else {
+							resDist.set(r1, c, resDist.get(r1, c)+distance);
+						}
+						
+						if (resDist.get(r2, c) == -1) {
+							resDist.set(r2, c, 1+distance);
+						} else {
+							resDist.set(r2, c, resDist.get(r2, c)+distance);
+						}
 					}
 				}
 			}
 		}
+		
 		for(int c=0;c<length;c++) {
 			int nonNullRes = 0;
 			for(int r=0;r<size;r++) {
-				if (residueDistances.get(r, c) != -1) nonNullRes++;
+				if (resDist.get(r, c) != -1) nonNullRes++;
 			}
 			for(int r=0;r<size;r++) {
-				if (residueDistances.get(r, c) != -1) residueDistances.set(r, c, residueDistances.get(r, c)/nonNullRes);
+				if (resDist.get(r, c) != -1){
+					resDist.set(r, c, 
+							resDist.get(r, c)/nonNullRes);
+				}
 			}
 		}
-		return residueDistances;
+		return resDist;
    	}
    
 	/**
@@ -444,14 +571,17 @@ public class MultipleAlignmentTools {
 	 * <p>
 	 * All blocks are concatenated together, so Atoms may not appear in the
 	 * same order as in their parent structure. If the alignment blocks contain
-	 * null residues (gaps), then the returned array will also contain null Atoms.
+	 * null residues (gaps), then the returned array will also contain null
+	 * Atoms in the same positions.
 	 * 
 	 * @param alignment MultipleAlignment
-	 * @return List of Atom arrays of only the aligned atoms of every structure (null Atom if a gap position)
+	 * @return List of Atom arrays of only the aligned atoms of every structure
+	 * (null Atom if a gap position)
 	 */
 	public static List<Atom[]> transformAtoms(MultipleAlignment alignment) {
 		if(alignment.getEnsemble() == null ) {
-			throw new NullPointerException("No ensemble set for this alignment");
+			throw new NullPointerException(
+					"No ensemble set for this alignment");
 		}
 
 		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
@@ -478,7 +608,8 @@ public class MultipleAlignmentTools {
 				for( Block blk : bs.getBlocks() ) {
 					if( blk.size() != atomArrays.size()) {
 						throw new IllegalStateException(String.format(
-								"Mismatched block length. Expected %d structures, found %d.",
+								"Mismatched block length. Expected %d "
+								+ "structures, found %d.",
 								atomArrays.size(),blk.size() ));
 					}
 					//Extract aligned atoms
@@ -490,7 +621,7 @@ public class MultipleAlignmentTools {
 					}
 				}
 				
-				// transform according to (1) the blockset matrix, or (2) the alignment matrix
+				//Transform according to the blockset or alignment matrix
 				Matrix4d blockTrans = null;
 				if(bs.getTransformations() != null)
 					blockTrans = bs.getTransformations().get(i);
