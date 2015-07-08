@@ -75,7 +75,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		nrOpenWindows++;
 		jmolPanel = new JmolPanel();
 		frame = new JFrame();
-		JMenuBar menu = MenuCreator.initJmolMenu(frame,this,null);
+		JMenuBar menu = MenuCreator.initJmolMenu(frame,this,null, msa);
 
 		frame.setJMenuBar(menu);
 		this.multAln = msa;

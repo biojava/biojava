@@ -87,7 +87,7 @@ public class MultipleAlignmentDisplay {
 		frame.setTitle(jmol.getTitle());
 		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
 
-		JMenuBar menu = MenuCreator.getAlignmentPanelMenu(frame,me,null);
+		JMenuBar menu = MenuCreator.getAlignmentPanelMenu(frame,me,null, multAln);
 		frame.setJMenuBar(menu);
 
 		JScrollPane scroll = new JScrollPane(me);
@@ -125,7 +125,7 @@ public class MultipleAlignmentDisplay {
 		AlignmentTextPanel txtPanel = new AlignmentTextPanel();
 		txtPanel.setText(result);
 
-		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,txtPanel,null);
+		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,txtPanel,null,multAln);
 
 		frame.setJMenuBar(menu);
 		JScrollPane js = new JScrollPane();

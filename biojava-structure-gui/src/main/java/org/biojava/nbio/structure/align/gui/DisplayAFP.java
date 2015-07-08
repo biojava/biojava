@@ -588,7 +588,7 @@ public class DisplayAFP {
 		frame.setTitle(afpChain.getName1() + " vs. " + afpChain.getName2() + " | " + afpChain.getAlgorithmName() + " V. " + afpChain.getVersion());
 		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
 
-		JMenuBar menu = MenuCreator.getAlignmentPanelMenu(frame,me,afpChain);
+		JMenuBar menu = MenuCreator.getAlignmentPanelMenu(frame,me,afpChain,null);
 		frame.setJMenuBar(menu);
 
 		JScrollPane scroll = new JScrollPane(me);
@@ -624,7 +624,7 @@ public class DisplayAFP {
 		AlignmentTextPanel txtPanel = new AlignmentTextPanel();
 		txtPanel.setText(result);
 
-		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,txtPanel,afpChain);
+		JMenuBar menu = MenuCreator.getAlignmentTextMenu(frame,txtPanel,afpChain,null);
 
 		frame.setJMenuBar(menu);
 		JScrollPane js = new JScrollPane();
