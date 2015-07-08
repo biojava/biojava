@@ -122,13 +122,6 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	public void setAtomArrays(List<Atom[]> atomArrays);
 
 	/**
-	 * Return the number of alternative alignments stored in the Ensemble.
-	 * @return int number of alternative alignments.
-	 * @see #size()
-	 */
-	public int getAlignmentNum();
-
-	/**
 	 * Returns the List containing the interatomic distance Matrix of each 
 	 * structure.
 	 * 
@@ -178,6 +171,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return long creation time, or null if unset
 	 */
 	public Long getIoTime();
+	
 	/**
 	 * Set the IO time to load this object
 	 * @param millis

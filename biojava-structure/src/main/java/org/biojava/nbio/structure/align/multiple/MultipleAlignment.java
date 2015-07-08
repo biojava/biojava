@@ -92,10 +92,11 @@ public interface MultipleAlignment extends ScoresCache {
 	 * Individual BlockSets may override the transformation matrix for 
 	 * particular parts of the alignment. Flexible alignments will generally
 	 * return null from this method, while rigid-body methods would typically
-	 * store the transformation matrices here and return null for 
+	 * store the transformation matrices here as well as in the only BlockSet: 
 	 * {@link BlockSet#getTransformations()}.
 	 * 
-	 * @return the 3D superposition information of the alignment
+	 * @return the 3D superposition information of the alignment or null
+	 * 			if flexible
 	 */
 	public List<Matrix4d> getTransformations();
 	

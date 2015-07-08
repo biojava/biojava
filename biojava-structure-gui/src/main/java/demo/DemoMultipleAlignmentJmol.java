@@ -17,7 +17,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -51,7 +50,6 @@ public class DemoMultipleAlignmentJmol {
 		//MultipleAlignmentEnsemble ensemble = new MultipleAlignmentEnsembleImpl(afpChain, atomArrays.get(0),atomArrays.get(1));
 		//MultipleAlignment pairwise = ensemble.getMultipleAlignments().get(0);
 		
-		System.out.println(MultipleAlignmentWriter.toFASTA(fakeMultAln));
 		MultipleAlignmentDisplay.display(fakeMultAln);
 		//StructureAlignmentDisplay.display(pairwise);
 		//For comparison display the original AFP
@@ -65,7 +63,6 @@ public class DemoMultipleAlignmentJmol {
 	 * @param atomArrays
 	 * @return MultipleAlignment
 	 * @throws StructureException
-	 * @throws StructureAlignmentException
 	 */
 	private static MultipleAlignment fakeMultipleAlignment(String family, List<Atom[]>atomArrays) throws StructureException {
 		

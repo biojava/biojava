@@ -45,9 +45,7 @@ public class AFPChainXMLConverter {
 		StringWriter result = new StringWriter();	
 		toXML(afpChain,result,ca1,ca2);
 		return result.toString();
-
 	}
-
 
 	/** Write the XML representation to a StringWriter
 	 * 
@@ -59,9 +57,9 @@ public class AFPChainXMLConverter {
 
 		PrintWriter writer = new PrintWriter(swriter);
 		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
-		
+
 		xml.openTag("AFPChain");
-		
+
 		printXMLHeader(xml,afpChain);
 
 
@@ -76,7 +74,7 @@ public class AFPChainXMLConverter {
 		//int[] optLen       = afpChain.getOptLen();
 		//int[] blockSize    = afpChain.getBlockSize();
 		for(int bk = 0; bk < blockNum; bk ++) {
-						
+
 			xml.openTag("block");
 
 			printXMLBlockHeader(xml,afpChain, bk);
@@ -116,12 +114,12 @@ public class AFPChainXMLConverter {
 		}
 
 		for ( int eqrNr = 0 ; eqrNr < optLen[blockNr] ; eqrNr++ ){
-			
+
 			String pdbResnum1 = pdbAln[blockNr][0][eqrNr];
 			String pdbResnum2 = pdbAln[blockNr][1][eqrNr];
-			
+
 			//System.out.println(eqrNr + " got resnum: " + pdbResnum1 + " " + pdbResnum2);
-			
+
 			String[] spl1 = pdbResnum1.split(":");
 			String[] spl2 = pdbResnum2.split(":");
 
@@ -144,15 +142,15 @@ public class AFPChainXMLConverter {
 
 	public static void printXMLEQRInferPositions(PrettyXMLWriter xml,			
 			AFPChain afpChain, int bk, Atom[] ca1, Atom[] ca2)  throws IOException{
-		
+
 		int[] optLen       = afpChain.getOptLen();
-		
+
 		if ( optLen == null)
 			return;
-				
+
 		int[][][] optAln   = afpChain.getOptAln();
-		
-		
+
+
 		for ( int pos=0;pos< optLen[bk];pos++){
 			int pos1 = optAln[bk][0][pos];
 			int pos2 = optAln[bk][1][pos];
@@ -162,13 +160,13 @@ public class AFPChainXMLConverter {
 			xml.attribute("chain1", ca1[pos1].getGroup().getChain().getChainID());
 			xml.attribute("pdbres2",ca2[pos2].getGroup().getResidueNumber().toString());
 			xml.attribute("chain2", ca2[pos2].getGroup().getChain().getChainID());
-			
+
 			xml.closeTag("eqr");
 			//System.out.println("aligned position: " + pos1  + ":" + pos2 + 
 			//" pdbresnum " + ca1[pos1].getGroup().getResidueNumber().toString() + " " +
 			//ca1[pos1].getParent().getPDBName()+":" + 
 			//ca2[pos2].getGroup().getResidueNumber().toString() + " " + ca2[pos2].getParent().getPDBName());
-	 
+
 		}	 
 
 	}
@@ -183,7 +181,7 @@ public class AFPChainXMLConverter {
 		//	return;
 		//}
 		int[] blockGap     = afpChain.getBlockGap();
-		
+
 		double[]blockScore = afpChain.getBlockScore();
 		double[] blockRmsd = afpChain.getBlockRmsd();
 
@@ -198,17 +196,17 @@ public class AFPChainXMLConverter {
 
 	private static void printXMLMatrixShift(PrettyXMLWriter xml,
 			AFPChain afpChain, int blockNr)  throws IOException {
-	   
-	   Matrix[] ms     = afpChain.getBlockRotationMatrix();
-	   if ( ms == null || ms.length == 0)
-          return;
-	   
-	   Matrix matrix = ms[blockNr];	
-	   if ( matrix == null)
-		   return;
-	   xml.openTag("matrix");
-		
-			
+
+		Matrix[] ms     = afpChain.getBlockRotationMatrix();
+		if ( ms == null || ms.length == 0)
+			return;
+
+		Matrix matrix = ms[blockNr];	
+		if ( matrix == null)
+			return;
+		xml.openTag("matrix");
+
+
 		for (int x=0;x<3;x++){
 			for (int y=0;y<3;y++){
 				String key = "mat"+(x+1)+(y+1);
@@ -251,7 +249,7 @@ public class AFPChainXMLConverter {
 		xml.attribute("normAlignScore", String.format("%5.2f",afpChain.getNormAlignScore()).trim());
 		xml.attribute("probability", String.format("%.2e", afpChain.getProbability() ).trim());
 		xml.attribute("similarity", String.format("%5.4f", afpChain.getSimilarity() ).trim());
-		
+
 		xml.attribute("similarity1", afpChain.getCoverage1() + "");
 		xml.attribute("similarity2", afpChain.getCoverage2() + "");
 		xml.attribute("totalRmsdIni", String.format("%5.2f",afpChain.getTotalRmsdIni() ).trim());
@@ -264,7 +262,7 @@ public class AFPChainXMLConverter {
 		if ( afpChain.getTMScore() != -1){
 			xml.attribute("tmScore", String.format("%.2f",afpChain.getTMScore()));
 		}
-		
+
 		// test if alignment is CP:
 		if ( ! AlignmentTools.isSequentialAlignment(afpChain,false)) {
 			xml.attribute("cp","true");

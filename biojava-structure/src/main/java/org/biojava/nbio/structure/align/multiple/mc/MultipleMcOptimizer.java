@@ -113,7 +113,7 @@ implements Callable<MultipleAlignment> {
 		//Update the CEMC score for the seed aligment
 		msa.clear();
 		imposer.superimpose(msa);
-		mcScore = MultipleAlignmentScorer.getMultipleMCScore(msa, Gopen, Gextend);
+		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend);
 	}
 
 	@Override
@@ -236,7 +236,7 @@ implements Callable<MultipleAlignment> {
 			//Get the score of the new alignment
 			msa.clear();
 			imposer.superimpose(msa);
-			mcScore = MultipleAlignmentScorer.getMultipleMCScore(
+			mcScore = MultipleAlignmentScorer.getMCScore(
 					msa, Gopen, Gextend);
 
 			double AS = mcScore-lastScore;

@@ -352,7 +352,7 @@ public class MultipleAlignmentScorer {
 	 * @return
 	 * @throws StructureException 
 	 */
-	public static double getMultipleMCScore(MultipleAlignment alignment, 
+	public static double getMCScore(MultipleAlignment alignment, 
 			double gapOpen, double gapExtension) throws StructureException {
 		
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
@@ -363,7 +363,7 @@ public class MultipleAlignmentScorer {
 			if (atoms.length < minLen) minLen = atoms.length;
 		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;
 		
-		return getMultipleMCScore(trans, d0, gapOpen, gapExtension);
+		return getMCScore(trans, d0, gapOpen, gapExtension);
 	}
 	
 	/**
@@ -386,7 +386,7 @@ public class MultipleAlignmentScorer {
 	 * @return
 	 * @throws StructureException 
 	 */
-	private static double getMultipleMCScore(List<Atom[]> trans, double d0, 
+	private static double getMCScore(List<Atom[]> trans, double d0, 
 			double gapOpen, double gapExtension) throws StructureException {
 
 		int size = trans.size();
