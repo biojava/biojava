@@ -219,20 +219,21 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		if ( recordName.equals("?")){
 			return null;
 		}
+
+		if ( ! fileExists(recordName)) {
+			// check if we should install all components				
+			checkDoFirstInstall();
+		}
+		if ( ! fileExists(recordName)) {
+			// we previously have installed already the definitions,
+			// just do an incrememntal update
+			downloadChemCompRecord(recordName);
+		}
+
+		String filename = getLocalFileName(recordName);
+		
 		try {
-			if ( ! fileExists(recordName)) {
-				// check if we should install all components				
-				checkDoFirstInstall();
-			}
-			if ( ! fileExists(recordName)) {
-				// we previously have installed already the definitions,
-				// just do an incrememntal update
-				downloadChemCompRecord(recordName);
-			}
 
-			String filename = getLocalFileName(recordName);
-
-//			System.out.println("reading " + filename);
 			InputStreamProvider isp = new InputStreamProvider();
 
 			InputStream inStream = isp.getInputStream(filename);
@@ -255,7 +256,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		} catch (IOException e) {
 
-			e.printStackTrace();
+			logger.error("Could not parse chemical component file "+filename, e);
+			//e.printStackTrace();
 
 		}
 		return null;
@@ -309,9 +311,11 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 //		System.out.println("downloading " + u);
 
+		URL url = null;
+		
 		try {
 
-			URL url = new URL(u);
+			url = new URL(u);
 
 			HttpURLConnection uconn = HTTPConnectionTools.openHttpURLConnection(url);
 
@@ -339,7 +343,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 
 		} catch (IOException e){
-			e.printStackTrace();
+			logger.error("Could not download "+url.toString()+" to "+localName, e);
+			//e.printStackTrace();
 		}
 
 

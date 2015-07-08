@@ -346,7 +346,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		}
 	}
 
-	private static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+   public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
 
 		if ( afpChain.getBlockNum() > 1){
 			return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
@@ -421,7 +421,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		return j.toString();
 	}
 
-	private static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
+   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
 		int blockNum = afpChain.getBlockNum();
 
 		if ( blockNr >= blockNum)

@@ -483,9 +483,8 @@ public class ChainImpl implements Chain, Serializable {
 
 	}
 
-	/** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
-	 *
-	 * @return the SEQRES groups of the Chain as a Sequence object.
+	/**
+	 * {@inheritDoc} 
 	 */
 	@Override
 	public Sequence<?> getBJSequence()  {
@@ -505,8 +504,8 @@ public class ChainImpl implements Chain, Serializable {
 
 	}
 
-	/** {@inheritDoc}
-	 *
+	/** 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getAtomSequence(){
@@ -515,7 +514,9 @@ public class ChainImpl implements Chain, Serializable {
 
 		if ( prop != null && prop.equalsIgnoreCase("true")){
 
-
+			logger.info("The property {} is true. Will use the chemical component dictionary files to produce the atom sequence",
+					PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+			
 			List<Group> groups = getAtomGroups();
 			StringBuilder sequence = new StringBuilder() ;
 
@@ -527,7 +528,7 @@ public class ChainImpl implements Chain, Serializable {
 					// an amino acid residue.. use for alignment
 					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
 					if ( oneLetter == null)
-						oneLetter = "X";
+						oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
 					sequence.append(oneLetter);
 				}
 
@@ -535,12 +536,20 @@ public class ChainImpl implements Chain, Serializable {
 			return sequence.toString();
 		}
 
-		// not using ChemCOmp records...
+		logger.info("The property {} is false or not set. Will use only amino acids for the atom sequence",
+				PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+		
+		// not using ChemComp records...
 		List<Group> aminos = getAtomGroups(GroupType.AMINOACID);
 		StringBuilder sequence = new StringBuilder() ;
 		for (Group amino : aminos) {
-			AminoAcid a = (AminoAcid) amino;
-			sequence.append(a.getAminoType());
+			if (amino instanceof AminoAcid) {				
+				AminoAcid a = (AminoAcid) amino;
+				sequence.append(a.getAminoType());
+			} else {
+				// I suppose this can't happen, but just in case...
+				logger.warn("Group {} is tagged as GroupType.AMINOACID but its class is not AminoAcid", amino.toString());
+			}
 		}
 
 		return sequence.toString();
@@ -555,7 +564,11 @@ public class ChainImpl implements Chain, Serializable {
 
 		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
 
-		if ( prop != null && prop.equalsIgnoreCase("true")){
+		if ( prop != null && prop.equalsIgnoreCase("true")) {
+			
+			logger.info("The property {} is true. Will use the chemical component dictionary files to produce the seqres sequence",
+					PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+			
 			StringBuilder str = new StringBuilder();
 			for (Group g : seqResGroups) {
 				ChemComp cc = g.getChemComp();
@@ -567,14 +580,17 @@ public class ChainImpl implements Chain, Serializable {
 					// an amino acid residue.. use for alignment
 					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
 					if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?"))
-						oneLetter = "X";
+						oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
 					str.append(oneLetter);
 				} else {
-					str.append("X");
+					str.append(StructureTools.UNKNOWN_GROUP_LABEL);
 				}
 			}
 			return str.toString();
 		}
+		
+		logger.info("The property {} is false or not set. Will use only amino acids for the seqres sequence",
+				PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
 
 		StringBuilder str = new StringBuilder();
 		for (Group group : seqResGroups) {
@@ -582,7 +598,7 @@ public class ChainImpl implements Chain, Serializable {
 				AminoAcid aa = (AminoAcid)group;
 				str.append(aa.getAminoType()) ;
 			} else {
-				str.append("X");
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
 			}
 		}
 		return str.toString();
@@ -590,8 +606,8 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 
-	/** {@inheritDoc}
-	 *
+	/** 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Group getSeqResGroup(int position) {
@@ -599,8 +615,8 @@ public class ChainImpl implements Chain, Serializable {
 		return seqResGroups.get(position);
 	}
 
-	/** {@inheritDoc}
-	 *
+	/** 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Group> getSeqResGroups(GroupType type) {
