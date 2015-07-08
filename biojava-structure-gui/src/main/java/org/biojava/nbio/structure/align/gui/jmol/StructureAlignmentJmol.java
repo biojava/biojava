@@ -57,8 +57,8 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 	private AFPChain afpChain;
 
 	public static void main(String[] args){
+		
 		try {
-
 
 			UserConfiguration config = new UserConfiguration();
 			AtomCache cache = new AtomCache(config);
@@ -346,7 +346,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		}
 	}
 
-   public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+	public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
 
 		if ( afpChain.getBlockNum() > 1){
 			return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
@@ -421,7 +421,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		return j.toString();
 	}
 
-   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
+	public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
 		int blockNum = afpChain.getBlockNum();
 
 		if ( blockNr >= blockNum)

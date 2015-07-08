@@ -78,7 +78,7 @@ public class MultipleAlignmentDisplay {
 	 * @param colors
 	 * @throws StructureException
 	 */
-	public static void showMultipleAligmentPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol, ColorBrewer colorPattelete) throws StructureException {
+	public static void showMultipleAligmentPanel(MultipleAlignment multAln, AbstractAlignmentJmol jmol) throws StructureException {
 		
 		MultipleAligPanel me = new MultipleAligPanel(multAln, jmol);
 		JFrame frame = new JFrame();
