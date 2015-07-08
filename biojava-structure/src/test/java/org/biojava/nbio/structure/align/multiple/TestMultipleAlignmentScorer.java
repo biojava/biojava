@@ -18,18 +18,19 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test the correctness of various Score calculations for {@link MultipleAlignment}s.
+ * Test the correctness of various Score calculations for 
+ * {@link MultipleAlignment}s.
  * <p>
  * Currently tested:
  * <ul><li>Reference and total RMSD
  * <li>Reference and average TM-Score
- * <li>MultipleMC-Score
+ * <li>MC-Score
  * </ul>
  * 
  * @author Aleix Lafita
  *
  */
-public class MultipleAlignmentScorerTest {
+public class TestMultipleAlignmentScorer {
 
 	@Test
 	public void testRefRMSD() throws Exception{
@@ -108,31 +109,32 @@ public class MultipleAlignmentScorerTest {
 	}
 	
 	@Test
-	public void testMultipleMCScore() throws Exception{
+	public void testMCScore() throws Exception {
 		
 		//Identity Test: MultipleMC-Score has to be equal to 576.21
 		MultipleAlignment identMSA = identityMSTA();
-		double MC1 = MultipleAlignmentScorer.getMultipleMCScore(identMSA, 10, 5);
+		double MC1 = MultipleAlignmentScorer.getMCScore(identMSA, 10, 5);
 		assertEquals(576.21, MC1, 0.01);
 		
 		//Simple Test: MultipleMC-Score has to be equal to 2351.93
 		MultipleAlignment simpleMSA = simpleMSTA();
-		double MC2 = MultipleAlignmentScorer.getMultipleMCScore(simpleMSA, 10, 5);
+		double MC2 = MultipleAlignmentScorer.getMCScore(simpleMSA, 10, 5);
 		assertEquals(2351.93, MC2, 0.01);
 		
 		//Simple Test: MultipleMC-Score has to be equal to 489.74
 		MultipleAlignment gappedMSA = gappedMSTA();
-		double MC3 = MultipleAlignmentScorer.getMultipleMCScore(gappedMSA, 10, 5);
+		double MC3 = MultipleAlignmentScorer.getMCScore(gappedMSA, 10, 5);
 		assertEquals(489.74, MC3, 0.01);
 	}
 	
 	/**
-	 * Generates an identity MultipleAlignment: 3 structures with the same Atoms and 
-	 * perfectly aligned, so that TM-score = 1 and RMSD = 0, within error.
+	 * Generates an identity MultipleAlignment: 3 structures with 
+	 * the same Atoms and perfectly aligned, so that TM-score = 1 
+	 * and RMSD = 0.
 	 * @return MultipleAlignment identity
 	 * @throws StructureException 
 	 */
-	private MultipleAlignment identityMSTA() throws StructureException{
+	private MultipleAlignment identityMSTA() throws StructureException {
 		
 		//Generate the identical Atom arrays
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>(20);
@@ -161,9 +163,9 @@ public class MultipleAlignmentScorerTest {
 	}
 	
 	/**
-	 * Generates a simple MultipleAlignment: 3 structures with the same Atoms but incorreclty 
-	 * aligned (offset of 1 position), so that scores are known, within error.
-	 * RefRMSD = sqrt(2.5), RefTMScore = 0.68, 
+	 * Generates a simple MultipleAlignment: 3 structures with the same 
+	 * Atoms but incorreclty aligned (offset of 1 position) without gaps.
+	 * 
 	 * @return MultipleAlignment simple MSTA
 	 * @throws StructureException 
 	 */
@@ -197,10 +199,10 @@ public class MultipleAlignmentScorerTest {
 	}
 	
 	/**
-	 * Generates a simple MultipleAlignment: 3 structures with the same Atoms but incorreclty 
-	 * aligned with gaps , so that scores are known, within error.
-	 * RefRMSD = 1.0, RefTMScore = 0.5, 
-	 * @return MultipleAlignment simple MSTA
+	 * Generates a simple MultipleAlignment: 3 structures with the 
+	 * same Atoms but incorreclty aligned with gaps.
+	 * 
+	 * @return MultipleAlignment gapped MSTA
 	 * @throws StructureException 
 	 */
 	private MultipleAlignment gappedMSTA() throws StructureException{
@@ -211,9 +213,12 @@ public class MultipleAlignmentScorerTest {
 		
 		//Generate alignment with nulls and some missalignments
 		List<List<Integer>> alnRes = new ArrayList<List<Integer>>(3);
-		List<Integer> chain1 = Arrays.asList(1, 2, 	  3, 5, 8, 10, 12, 	 15, 17,   19, 22, null, 24, 27);
-		List<Integer> chain2 = Arrays.asList(1, null, 3, 6, 9, 11, 12,   15, null, 18, 22, 24,   26, 28);
-		List<Integer> chain3 = Arrays.asList(1, 2,    4, 7, 9, 10, null, 15, null, 17, 22, 24,   26, 28);
+		List<Integer> chain1 = Arrays.asList(
+				1, 2, 	 3, 5, 8, 10, 12, 	 15, 17,  19, 22, null, 24, 27);
+		List<Integer> chain2 = Arrays.asList(
+				1, null, 3, 6, 9, 11, 12,   15, null, 18, 22, 24,   26, 28);
+		List<Integer> chain3 = Arrays.asList(
+				1, 2,    4, 7, 9, 10, null, 15, null, 17, 22, 24,   26, 28);
 		
 		alnRes.add(chain1);
 		alnRes.add(chain2);
@@ -226,7 +231,7 @@ public class MultipleAlignmentScorerTest {
 		Block b = new BlockImpl(bs);
 		b.setAlignRes(alnRes);
 		
-		//We want the identity transfromations to maintain the missalignments
+		//We want the identity transfromations to mantain the missalignments
 		Matrix4d ident = new Matrix4d();
 		ident.setIdentity();
 		msa.setTransformations(Arrays.asList(ident,ident,ident));
@@ -235,8 +240,8 @@ public class MultipleAlignmentScorerTest {
 	}
 	
 	/**
-	 * Makes dummy CA atoms at 1A intervals. 
-	 * From CeCPMainTest
+	 * Makes dummy CA atoms at 1A intervals. Only the x coordinate increments
+	 * by one at each consecutive Atom.
 	 */
 	private Atom[] makeDummyCA(int len) {
 		Atom[] ca1;
