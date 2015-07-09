@@ -66,7 +66,7 @@ import org.biojava.nbio.structure.gui.util.AlignedPosition;
  *
  */
 public class MultipleAligPanel extends JPrintPanel 
-			implements AlignmentPositionListener, WindowListener {
+implements AlignmentPositionListener, WindowListener {
 
 	private static final long serialVersionUID = -6892229111166263764L;
 
@@ -124,15 +124,15 @@ public class MultipleAligPanel extends JPrintPanel
 	 */
 	public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, 
 			AbstractAlignmentJmol jmol) throws StructureException {
-		
+
 		this();
-		
+
 		String algorithm = afpChain.getAlgorithmName();
 		boolean flex = false;
 		if (algorithm != null){
 			if (algorithm.contains("flexible")) flex = true;
 		}
-		
+
 		//Convert the apfChain into a MultipleAlignment object
 		MultipleAlignmentEnsembleImpl ensemble = 
 				new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca2, flex);

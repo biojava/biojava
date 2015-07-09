@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  * @author Aleix Lafita
  *
  */
-public class AFPChainConversionTest {
+public class TestAFPChainConversion {
 
 	@Test
 	public void testAFPconversion() throws Exception{
@@ -60,10 +60,12 @@ public class AFPChainConversionTest {
 		assertEquals(afp.getName2(), ensemble.getStructureNames().get(1));
 		assertEquals(afp.getAlgorithmName(), ensemble.getAlgorithmName());
 		assertEquals(afp.getVersion(),ensemble.getVersion());
-		assertTrue(ensemble.getCalculationTime().equals(afp.getCalculationTime()));
+		assertTrue(ensemble.getCalculationTime().equals(
+				afp.getCalculationTime()));
 		assertEquals(afp.getBlockNum(), msa.getBlockSets().size());
 		assertEquals(Calc.getTransformation(afp.getBlockRotationMatrix()[0], 
-				afp.getBlockShiftVector()[0]), msa.getTransformations().get(1));
+				afp.getBlockShiftVector()[0]), 
+				msa.getTransformations().get(1));
 
 		//Test for the scores
 		assertEquals(msa.getScore(MultipleAlignmentScorer.CE_SCORE),

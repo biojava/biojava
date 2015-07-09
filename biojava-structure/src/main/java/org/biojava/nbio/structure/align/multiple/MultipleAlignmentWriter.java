@@ -1,18 +1,23 @@
 package org.biojava.nbio.structure.align.multiple;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLConverter;
 
 /**
  * This class contains functions for the conversion of 
  * {@link MultipleAlignment} to various String outputs.
  * <p>
- * Supported formats: FASTA, FatCat, Aligned Residues, Transformations
+ * Supported formats: FASTA, FatCat, Aligned Residues, 
+ * Transformation Matrices, XML.
  * 
  * @author Aleix Lafita
  * @since 4.1.0
@@ -209,5 +214,29 @@ public class MultipleAlignmentWriter {
 			}
 		}
 		return txt.toString();
+	}
+	
+	/**
+	 * Converts all the information of a multiple alignment ensemble into an
+	 * XML String format. Cached variables, like transformation matrices and
+	 * scores, are also converted.
+	 * 
+	 * @param ensemble the MultipleAlignmentEnsemble to convert.
+	 * @return String XML representation of the ensemble
+	 * @throws IOException
+	 * @see MultipleAlignmentXMLConverter Helper methods for XML conversion
+	 */
+	public static String toXML(MultipleAlignmentEnsemble ensemble) 
+			throws IOException {
+		
+		StringWriter result = new StringWriter();
+		PrintWriter writer = new PrintWriter(result);
+		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
+		
+		MultipleAlignmentXMLConverter.printXMLensemble(xml, ensemble);
+		
+		writer.close();
+		
+		return result.toString();
 	}
 }

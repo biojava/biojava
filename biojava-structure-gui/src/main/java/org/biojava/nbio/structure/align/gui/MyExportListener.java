@@ -21,8 +21,6 @@ package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
-import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
-
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
@@ -57,7 +55,7 @@ public void actionPerformed(ActionEvent arg0)
             pw.println(s.toPDB());                   
             pw.close();
          } catch (IOException e){
-        	 JOptionPane.showMessageDialog(null,"Could not export file. Excetion: " + e.getMessage());
+        	 JOptionPane.showMessageDialog(null,"Could not export file. Exception: " + e.getMessage());
          }
 
 

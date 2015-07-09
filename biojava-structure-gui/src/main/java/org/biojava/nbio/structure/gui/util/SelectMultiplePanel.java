@@ -37,8 +37,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * A Text Panel that allows user to specify multiple structure identifiers,
- * space or comma separated.
+ * A Text Panel that allows the user to specify multiple structure 
+ * identifiers, space separated.
  * 
  * @author Aleix Lafita
  * @since 4.1.1
@@ -55,10 +55,10 @@ public class SelectMultiplePanel extends JPanel {
 	}
 
 	public SelectMultiplePanel(boolean show2boxes){
-		
+
 		Box vBox = Box.createVerticalBox();
-		
-		input = new JTextField("Example: 1hlb 1thb.A 1dlw");
+
+		input = new JTextField("4hhb.A 1hlb 1thb.A 1dlw");
 		Box b = getDomainPanel(input);
 		vBox.add(b);
 
@@ -68,35 +68,35 @@ public class SelectMultiplePanel extends JPanel {
 	private Box getDomainPanel(JTextField f){
 
 		JLabel l01 = new JLabel("Input structures:");
-		
+
 		Box hBox = Box.createHorizontalBox();
 		hBox.add(Box.createGlue());
 		hBox.add(l01);
-		
+
 		f.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 		f.setToolTipText("Provide structure identifiers space separated.");
-		
+
 		hBox.add(Box.createVerticalGlue());
 		hBox.add(f, BorderLayout.CENTER);
 		hBox.add(Box.createGlue());
-		
+
 		return hBox;
 	}
-	
+
 	public List<Structure> getStructures() throws StructureException {
-		
+
 		List<Structure> structures = new ArrayList<Structure>();
-		
+
 		for (String name:getNames()){
 			structures.add(getStructure(name));
 		}
 		return structures;
 	}
-	
+
 	public List<String> getNames() {
-		
+
 		List<String> names = new ArrayList<String>();
-		
+
 		String raw = input.getText().trim();
 		String[] split = raw.split(" ");
 		for (String name:split){
@@ -105,11 +105,11 @@ public class SelectMultiplePanel extends JPanel {
 		}
 		return names;
 	}
-	
+
 	private Structure getStructure(String name) throws StructureException{
-		
+
 		UserConfiguration config = WebStartMain.getWebStartConfig();
-		
+
 		AtomCache cache = new AtomCache(config);
 		cache.setStrictSCOP(false);
 
