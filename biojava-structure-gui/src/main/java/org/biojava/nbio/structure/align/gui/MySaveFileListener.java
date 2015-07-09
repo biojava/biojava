@@ -46,6 +46,9 @@ import java.io.FileWriter;
  * Action: from a sequence alignment a FatCat or FASTA formats are saved,
  * and from a Jmol view an XML format is saved.
  * 
+ * @author Aleix Lafita
+ * @version 2.0 - adapted for MultipleAligments
+ * 
  */
 public class MySaveFileListener implements ActionListener {
 

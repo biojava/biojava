@@ -26,7 +26,6 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
@@ -52,6 +51,9 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 	private List<Atom[]> transformedAtoms;
 	private JCheckBox colorByBlocks;
 	private List<JCheckBox> selectedStructures;
+
+	private static final String LIGAND_DISPLAY_SCRIPT = 
+			"select ligand; wireframe 40; spacefill 120; color CPK;";
 
 	/**
 	 * Default constructor creates an empty JmolPanel window, 
@@ -405,13 +407,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		StringBuffer sel = new StringBuffer();
 		sel.append("select *; color lightgrey; backbone 0.1; ");
 		List<List<String>> allPDB = new ArrayList<List<String>>();
-		
+
 		//Get the aligned residues of every structure
 		for (int i=0; i<multAln.size(); i++){
 
 			List<String> pdb = MultipleAlignmentDisplay.getPDBresnum(
 					i,multAln,transformedAtoms.get(i));
-			
+
 			allPDB.add(pdb);
 			sel.append("select ");
 			int pos = 0;
@@ -425,29 +427,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			}
 			if ( pos == 0)
 				sel.append("none");
-			sel.append("; backbone 0.4 ; color ["+ colors[i].getRed() +","+
-				colors[i].getGreen() +","+ colors[i].getBlue() +"]; ");
+			sel.append("; backbone 0.3 ; color ["+ colors[i].getRed() +","+
+					colors[i].getGreen() +","+ colors[i].getBlue() +"]; ");
 		}
 
 		j.append(sel);
 		j.append("model 0;  ");
 		j.append(LIGAND_DISPLAY_SCRIPT);
-
-		//Now select the aligned residues
-		StringBuffer buf = new StringBuffer("select ");
-		//Loop through all the structures and get the aligned residues
-		for (int i=0; i<multAln.size(); i++){
-			int count = 0;
-			for (String res : allPDB.get(i) ){
-				if ( count > 0) buf.append(",");
-				buf.append(res);
-				buf.append("/"+(i+1));
-				count++;
-			}
-			if (i!=multAln.size()-1) buf.append(",");
-		}
-
-		j.append(buf);
 
 		return j.toString();
 	}   
@@ -472,7 +458,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		for (int str=0; str<transformedAtoms.size(); str++){
 			jmol.append("select */"+(str+1)+"; color lightgrey; model "+
 					(str+1)+"; ");
-			
+
 			int index = 0;
 			for (BlockSet bs : multAln.getBlockSets()) {
 				for (Block b : bs.getBlocks() ) {
@@ -498,7 +484,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		//Obtain the residues aligned in this block of the structure
 		List<String> pdb = new ArrayList<String>();
 		for (int i=0;i< alignRes.get(str).size(); i++) {
-			
+
 			//Handle gaps - only color if it is not null
 			if (alignRes.get(str).get(i) != null){
 				int pos = alignRes.get(str).get(i);
@@ -530,7 +516,6 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 					colorPalette, colorByBlocks.isSelected());
 			//System.out.println(script);
 			evalString(script);
-			jmolPanel.evalString("hide ligand");
 			jmolPanel.evalString("save STATE state_1");
 		}
 	}
@@ -545,5 +530,5 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		this.colorByBlocks.setSelected(colorByBlocks);
 		resetDisplay();
 	}
-	
+
 }

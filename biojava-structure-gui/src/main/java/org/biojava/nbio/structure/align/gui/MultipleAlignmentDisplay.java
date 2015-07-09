@@ -3,7 +3,6 @@ package org.biojava.nbio.structure.align.gui;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.Box;
@@ -228,7 +227,8 @@ public class MultipleAlignmentDisplay {
 			rotatedAtoms.add(rotCA);
 		}
 
-		MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(multAln, rotatedAtoms);
+		MultipleAlignmentJmol jmol = 
+				new MultipleAlignmentJmol(multAln, rotatedAtoms);
 		jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 		return jmol;
 	}

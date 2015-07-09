@@ -53,7 +53,7 @@ import java.util.List;
  * Multiple Jmol panels can be created for that purpose.
  * 
  * @author Aleix Lafita
- * @since 4.1.1
+ * @version 2.0 - adapted for MultipleAlignments
  * 
  */
 public class MyAlignmentLoadListener implements ActionListener {

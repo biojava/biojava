@@ -43,7 +43,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 public class MultipleMcOptimizer 
 implements Callable<MultipleAlignment> {
 
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 	private Random rnd;
 	private MultipleSuperimposer imposer;
 

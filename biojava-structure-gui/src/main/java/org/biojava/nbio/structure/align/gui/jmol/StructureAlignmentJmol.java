@@ -30,6 +30,7 @@ import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.AfpChainWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
@@ -55,6 +56,10 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 	private Atom[] ca1;
 	private Atom[] ca2;
 	private AFPChain afpChain;
+	
+	private static final String LIGAND_DISPLAY_SCRIPT = 
+			ResourceManager.getResourceManager("ce").
+			getString("default.ligand.jmol.script");
 
 	public static void main(String[] args){
 		
