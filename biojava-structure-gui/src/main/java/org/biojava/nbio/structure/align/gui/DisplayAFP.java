@@ -420,7 +420,7 @@ public class DisplayAFP {
 	 * @return a list of Chains that is built up from the Atoms in the ca array
 	 * @throws StructureException
 	 */
-	private static final List<Chain> getAlignedModel(Atom[] ca){
+	static final List<Chain> getAlignedModel(Atom[] ca){
 
 		List<Chain> model = new ArrayList<Chain>();
 		for ( Atom a: ca){
@@ -473,29 +473,15 @@ public class DisplayAFP {
 		
 		return s;*/
 
-		return getAlignedStructure(Arrays.asList(ca1,ca2));
-	}
-	
-	/** Get an artifical Structure containing all the chains (Multiple Alignment generalization)
-	 * Does NOT rotate anything
-	 * @param ca1
-	 * @param ca2
-	 * @return a structure object containing two models, one for each set of Atoms.
-	 * @throws StructureException
-	 */
-	public static final Structure getAlignedStructure(List<Atom[]> atomArrays) throws StructureException{
-
 		Structure s = new StructureImpl();
 
-		for (int i=0; i<atomArrays.size(); i++){
-			List<Chain>model = getAlignedModel(atomArrays.get(i));
-			s.addModel(model);
-		}
+		List<Chain>model1 = getAlignedModel(ca1);
+		s.addModel(model1);
+		List<Chain> model2 = getAlignedModel(ca2);
+		s.addModel(model2);
 
 		return s;
 	}
-
-
 
 	/**
 	 * Returns the first atom for each group

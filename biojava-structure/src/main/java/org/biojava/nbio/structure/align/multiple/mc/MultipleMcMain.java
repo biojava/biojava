@@ -45,8 +45,7 @@ import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
  * or flexible alignment. The seed can also directly be the input for the 
  * optimization. For that, look at {@link MultipleMcOptimizer}.
  * <p>
- * The usage follows the {@link MultipleStructureAligner} interface.
- * A Demo on how to use the algorithm can be found in demo.
+ * A Demo on how to use the algorithm can be found in the demo package.
  * 
  * @author Aleix Lafita
  * @since 4.1.0
@@ -57,7 +56,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	/**
 	 *  Version history:<p>
 	 *  1.0 - Initial code implementation from CEMC article.<p>
-	 *  1.1 - Support CP, non-topological and flexible alignments.<p>
+	 *  1.1 - Support CP, non-topological and flexible seed alignments.<p>
 	 */
 	public static final String version = "1.1";
 	public static final String algorithmName = "jMultipleMC";
@@ -305,6 +304,9 @@ public class MultipleMcMain implements MultipleStructureAligner {
 		MultipleAlignment result = null;
 		ensemble = new MultipleAlignmentEnsembleImpl();
 		ensemble.setAtomArrays(atomArrays);
+		ensemble.setAlgorithmName(algorithmName);
+		ensemble.setVersion(version);
+		ensemble.setIoTime(System.currentTimeMillis());
 		
 		//Generate the seed alignment from all-to-all pairwise alignments
 		try {
@@ -337,7 +339,10 @@ public class MultipleMcMain implements MultipleStructureAligner {
 					maxScore = s;
 				}
 			}
+			Long runtime = System.currentTimeMillis()-ensemble.getIoTime();
+			ensemble.setCalculationTime(runtime);
 			
+			result.setEnsemble(ensemble);
 			ensemble.addMultipleAlignment(result);
 			executor.shutdown();
 			return result;
