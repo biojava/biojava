@@ -146,7 +146,7 @@ public class AFPChainXMLParser
 	public static void rebuildAFPChain(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
 
 	   if ( afpChain.getAlgorithmName() == null) {
-	      afpChain.setAlgorithmName(AFPChain.DEFAULT_ALGORITHM_NAME);	      
+	      afpChain.setAlgorithmName(AFPChain.DEFAULT_ALGORITHM_NAME);
 	   }
 	   if ( afpChain.getVersion() == null){
 	      afpChain.setVersion("1.0");

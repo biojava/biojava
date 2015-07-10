@@ -34,7 +34,7 @@ public class DemoMultipleMC {
 		//Protein Kinases (CEMC paper)
 		//List<String> names = Arrays.asList("1cdk.A", "1cja.A", "1csn", "1b6c.B", "1ir3.A", "1fgk.A", "1byg.A", "1hck", "1blx.A", "3erk", "1bmk.A", "1kob.A", "1tki.A", "1phk", "1a06");
 		//DHFR (Gerstein 1998 paper)
-		//List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
+		List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
 		//TIM barrels (MUSTA paper)
 		//List<String> names = Arrays.asList("1tim.A", "1vzw", "1nsj", "3tha.A", "4enl", "2mnr", "7tim.A", "1tml", "1btc", "a1piia1", "6xia", "5rub.A", "2taa.B");
 		//Calcium Binding (MUSTA paper)
@@ -60,7 +60,7 @@ public class DemoMultipleMC {
 		//Cytochrome C Oxidases (Aleix Bachelor's Thesis)
 		//List<String> names = Arrays.asList("2dyr.A","2gsm.A","2yev.A","3hb3.A","3omn.A","1fft.A","1xme.A","3o0r.B","3ayf.A");
 		//Cation Transporting ATPases (Aleix Bachelor's Thesis)
-		List<String> names = Arrays.asList("3b8e.A","2zxe.A", "3tlm.A","1iwo.A");
+		//List<String> names = Arrays.asList("3b8e.A","2zxe.A", "3tlm.A","1iwo.A");
 		//Ankyrin Repeats
 		//List<String> names = Arrays.asList("d1n0ra_", "3ehq.A", "1awc.B");  //ankyrin
 		
@@ -88,5 +88,6 @@ public class DemoMultipleMC {
 		System.out.println(MultipleAlignmentWriter.toFatCat(result));
 		//System.out.println(MultipleAlignmentWriter.toFASTA(result));
 		System.out.println(MultipleAlignmentWriter.toTransformMatrices(result));
+		System.out.println(MultipleAlignmentWriter.toXML(result.getEnsemble()));
 	}
 }

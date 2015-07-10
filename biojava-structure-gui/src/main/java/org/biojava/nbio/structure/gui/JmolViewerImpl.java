@@ -48,7 +48,7 @@ public class JmolViewerImpl implements StructureViewer {
 
         frame = new JFrame();
 
-        JMenuBar menu = MenuCreator.initJmolMenu(frame, null,null);
+        JMenuBar menu = MenuCreator.initJmolMenu(frame, null, null, null);
 
         frame.setJMenuBar(menu);
 

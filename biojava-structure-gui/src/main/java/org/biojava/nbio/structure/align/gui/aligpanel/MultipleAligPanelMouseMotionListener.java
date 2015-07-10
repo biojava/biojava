@@ -30,14 +30,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Mouse Motion Listener for the {@link MultipleAligPanel}, which provides methods to obtain 
- * positions of the mouse and connect them to the sequence alignment positions using the information 
- * in {@link MultipleAlignmentCoordManager}.
+ * Mouse Motion Listener for the {@link MultipleAligPanel}, 
+ * which provides methods to obtain positions of the mouse 
+ * and connect them to the sequence alignment positions using 
+ * the information in {@link MultipleAlignmentCoordManager}.
  * 
  * @author Aleix Lafita
  *
  */
-public class MultipleAligPanelMouseMotionListener implements MouseMotionListener, MouseListener {
+public class MultipleAligPanelMouseMotionListener 
+implements MouseMotionListener, MouseListener {
 
 	private MultipleAligPanel parent;
 	private List<AlignmentPositionListener> aligPosListeners;
@@ -64,9 +66,9 @@ public class MultipleAligPanelMouseMotionListener implements MouseMotionListener
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		
+
 		AlignedPosition pos = getCurrentAlignedPosition(e);
-		
+
 		if (pos == null) return;			
 		if (prevPos == pos.getPos1() && isDragging) return;
 
@@ -74,30 +76,33 @@ public class MultipleAligPanelMouseMotionListener implements MouseMotionListener
 			isDragging = true;
 			setSelectionLock(true);
 		}
-		
+
 		if (selectionStart == null)	selectionStart = pos;
 		if (selectionEnd == null) selectionEnd = pos;
 
 		if (pos.getPos1() <= selectionStart.getPos1()) selectionStart = pos;
 		else selectionEnd = pos;
-		
-		if (!keyPressed(e)) triggerRangeSelected(selectionStart, selectionEnd);
-		else triggerRangeSelected(selectionStart, selectionEnd);
-		
+
+		if (!keyPressed(e)) {
+			triggerRangeSelected(selectionStart, selectionEnd);
+		} else triggerRangeSelected(selectionStart, selectionEnd);
+
 		prevPos = pos.getPos1();
 	}
 
 	private boolean keyPressed(MouseEvent e) {
-		if (e.isShiftDown() || e.isControlDown() || e.isAltDown())	return true;
+		if (e.isShiftDown() || e.isControlDown() || e.isAltDown())
+			return true;
 		return false;
 	}
 
-	private void triggerRangeSelected(AlignedPosition start, AlignedPosition end) {		
+	private void triggerRangeSelected(
+			AlignedPosition start, AlignedPosition end) {		
 		for (AlignmentPositionListener li : aligPosListeners){
 			li.rangeSelected(start, end);
 		}
 	}
-	
+
 	public void triggerSelectionLocked(boolean b) {
 		selectionLocked = b;
 		for (AlignmentPositionListener li : aligPosListeners){
@@ -105,7 +110,7 @@ public class MultipleAligPanelMouseMotionListener implements MouseMotionListener
 			else li.selectionUnlocked();
 		}
 	}
-	
+
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if ( selectionLocked) return;
@@ -121,18 +126,18 @@ public class MultipleAligPanelMouseMotionListener implements MouseMotionListener
 	}
 
 	private AlignedPosition getCurrentAlignedPosition(MouseEvent e) {
-		
+
 		MultipleAlignmentCoordManager coordManager = parent.getCoordManager();
 		int aligSeq = coordManager.getAligSeq(e.getPoint());
 
 		//We are not over a position in the sequences
 		if (aligSeq == -1) return null;
-		
+
 		//Get sequence positions
 		int seqPos = coordManager.getSeqPos(aligSeq, e.getPoint());
 		if (seqPos < 0) return null;
 		if (seqPos >= parent.length) return null;
-		
+
 		AlignedPosition pos = new AlignedPosition();
 		pos.setPos1(seqPos);
 
@@ -154,7 +159,7 @@ public class MultipleAligPanelMouseMotionListener implements MouseMotionListener
 		for (AlignmentPositionListener li : aligPosListeners)
 			li.toggleSelection(pos);
 	}
-	
+
 	@Override
 	public void mouseEntered(MouseEvent e) {}
 
@@ -163,15 +168,15 @@ public class MultipleAligPanelMouseMotionListener implements MouseMotionListener
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
+
 		selectionStart = null;
 		selectionEnd = null;
-		
+
 		if (!keyPressed(e)) {
-			
+
 			setSelectionLock(false);
 			triggerSelectionLocked(false);
-			
+
 			AlignedPosition pos = getCurrentAlignedPosition(e);
 			if (pos != null) prevPos = pos.getPos1();
 		}
@@ -186,16 +191,16 @@ public class MultipleAligPanelMouseMotionListener implements MouseMotionListener
 	public void mouseReleased(MouseEvent e) {
 
 		isDragging = false;
-		//System.out.println("mouse released... " + e.isShiftDown() + " selection locked:" + selectionLocked);
-		if ( keyPressed(e)) {
+		
+		if (keyPressed(e)) {
 			boolean keepOn = false;
 			if (!selectionLocked) keepOn = true;
 			setSelectionLock(true);
-			
+
 			// add to selection
 			AlignedPosition pos = getCurrentAlignedPosition(e);
-			if ( pos == null) return;
-			
+			if (pos == null) return;
+
 			if (keepOn) triggerMouseOverPosition(pos);
 			else triggerToggleSelection(pos);
 			prevPos = pos.getPos1();

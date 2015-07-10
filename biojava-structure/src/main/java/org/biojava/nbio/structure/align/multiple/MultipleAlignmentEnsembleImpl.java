@@ -287,11 +287,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	}
 
 	@Override
-	public int getAlignmentNum() {
-		return multipleAlignments.size();
-	}
-
-	@Override
 	public List<Matrix> getDistanceMatrix() {
 		if (distanceMatrix == null) updateDistanceMatrix();
 		return distanceMatrix;
