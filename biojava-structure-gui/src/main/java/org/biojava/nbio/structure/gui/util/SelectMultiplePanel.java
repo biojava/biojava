@@ -58,7 +58,7 @@ public class SelectMultiplePanel extends JPanel {
 
 		Box vBox = Box.createVerticalBox();
 
-		input = new JTextField("4hhb.A 1hlb 1thb.A 1dlw");
+		input = new JTextField("1mbc 1hlb 1dlw 1ith.A 1thb.A 1kr7.A_0-110");
 		Box b = getDomainPanel(input);
 		vBox.add(b);
 

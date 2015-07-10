@@ -261,12 +261,12 @@ implements Callable<MultipleAlignment> {
 			if (debug){
 				System.out.println("Step: "+i+": --prob: "+prob+
 						", --score: "+AS+", --conv: "+conv);
-			}
-
-			if (i%100==1){
-				lengthHistory.add(msa.length());
-				rmsdHistory.add(MultipleAlignmentScorer.getRMSD(msa));
-				scoreHistory.add(mcScore);
+				
+				if (i%100==1){
+					lengthHistory.add(msa.length());
+					rmsdHistory.add(MultipleAlignmentScorer.getRMSD(msa));
+					scoreHistory.add(mcScore);
+				}
 			}
 
 			i++;
