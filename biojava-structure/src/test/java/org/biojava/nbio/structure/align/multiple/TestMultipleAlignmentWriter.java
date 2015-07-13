@@ -45,6 +45,7 @@ public class TestMultipleAlignmentWriter {
 	public void testFASTA1() throws IOException{
 
 		String result = MultipleAlignmentWriter.toFASTA(alignment1);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA1.fasta");
@@ -66,6 +67,7 @@ public class TestMultipleAlignmentWriter {
 	public void testFASTA2() throws IOException {
 
 		String result = MultipleAlignmentWriter.toFASTA(alignment2);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA2.fasta");
@@ -87,6 +89,7 @@ public class TestMultipleAlignmentWriter {
 	public void testFatCat1() throws IOException{
 
 		String result = MultipleAlignmentWriter.toFatCat(alignment1);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA1.fatcat");
@@ -108,6 +111,7 @@ public class TestMultipleAlignmentWriter {
 	public void testFatCat2() throws IOException{
 
 		String result = MultipleAlignmentWriter.toFatCat(alignment2);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA2.fatcat");
@@ -129,6 +133,7 @@ public class TestMultipleAlignmentWriter {
 	public void testAlignedResidues1() throws IOException{
 
 		String result = MultipleAlignmentWriter.toAlignedResidues(alignment1);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA1_alnres.tsv");
@@ -150,6 +155,7 @@ public class TestMultipleAlignmentWriter {
 	public void testAlignedResidues2() throws IOException{
 
 		String result = MultipleAlignmentWriter.toAlignedResidues(alignment2);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA2_alnres.tsv");
@@ -172,6 +178,7 @@ public class TestMultipleAlignmentWriter {
 		
 		String result = MultipleAlignmentWriter.
 				toTransformMatrices(alignment1);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA1.transforms");
@@ -218,6 +225,7 @@ public class TestMultipleAlignmentWriter {
 
 		MultipleAlignmentEnsemble ensemble = alignment1.getEnsemble();
 		String result = MultipleAlignmentWriter.toXML(ensemble);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA1.xml");
@@ -240,6 +248,7 @@ public class TestMultipleAlignmentWriter {
 
 		MultipleAlignmentEnsemble ensemble = alignment2.getEnsemble();
 		String result = MultipleAlignmentWriter.toXML(ensemble);
+		System.out.println(result);
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA2.xml");

@@ -21,23 +21,37 @@
 package org.biojava.nbio.structure.symmetry.utils;
 
 /**
- *
+ * Stores an instance of an edge for graphs.
+ * Represents an edge between two vertex objects in the graph.
+ * 
  * @author Peter
+ * 
  */
 public class Edge<V> {
     V vertex1;
     V vertex2;
     
-    /** Creates a new instance of Edge */
+    /** 
+     * Creates a new instance of Edge 
+     * 
+     * @param vertex1
+     * @param vertex2
+     */
     public Edge(V vertex1, V vertex2) {
         this.vertex1 = vertex1;
         this.vertex2 = vertex2;
     }
     
+    /**
+     * Return the first vertex of the Edge.
+     */
     public V getVertex1() {
         return vertex1;
     }
     
+    /**
+     * Return the second vertex of the Edge.
+     */
     public V getVertex2() {
         return vertex2;
     }

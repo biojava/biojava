@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -52,9 +53,11 @@ import java.io.StringWriter;
  * {@link #MIN_ANGLE}.
  * 
  * @author Spencer Bliven
+ * @author Aleix Lafita
  *
  */
 public final class RotationAxis {
+	
 	/**
 	 * Minimum angle to calculate rotation axes. 5 degrees.
 	 */
@@ -65,7 +68,8 @@ public final class RotationAxis {
 	private Atom rotationPos; // a point on the axis of rotation
 	private Atom screwTranslation; //translation parallel to the axis of rotation
 	private Atom otherTranslation; // translation perpendicular to the axis of rotation
-
+	private Atom[] atoms; //atoms used for determining the bounds of the axis
+	
 	/**
 	 * The rotation angle
 	 * @return the angle, in radians
@@ -370,15 +374,16 @@ public final class RotationAxis {
 	
 	/**
 	 * Returns a Jmol script which will display the axis of rotation. This
-	 * consists of a cyan arrow along the axis, plus an arc showing the angle
+	 * consists of an orange arrow along the axis, plus an arc showing the angle
 	 * of rotation.
 	 * <p>
 	 * As the rotation angle gets smaller, the axis of rotation becomes poorly
 	 * defined and would need to get farther and farther away from the protein.
 	 * This is not particularly useful, so we arbitrarily draw it parallel to
 	 * the translation and omit the arc.
+	 * 
 	 * @param atoms Some atoms from the protein, used for determining the bounds
-	 *  	  of the axis.
+	 *  	  of the axis. If null, the Atoms stored in this axis will be used.
 	 * 		  
 	 * @return The Jmol script, suitable for calls to
 	 * {@link org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol#evalString() jmol.evalString()}
@@ -389,15 +394,16 @@ public final class RotationAxis {
 
 	/**
 	 * Returns a Jmol script which will display the axis of rotation. This
-	 * consists of a cyan arrow along the axis, plus an arc showing the angle
+	 * consists of an orange arrow along the axis, plus an arc showing the angle
 	 * of rotation.
 	 * <p>
 	 * As the rotation angle gets smaller, the axis of rotation becomes poorly
 	 * defined and would need to get farther and farther away from the protein.
 	 * This is not particularly useful, so we arbitrarily draw it parallel to
 	 * the translation and omit the arc.
+	 * 
 	 * @param atoms Some atoms from the protein, used for determining the bounds
-	 *  	  of the axis.
+	 *  	  of the axis.If null, the Atoms stored in this axis will be used.
 	 * @param axisID in case of representing more than one axis in the same jmol 
 	 * 		  panel, indicate the ID number.
 	 * 		  
@@ -408,6 +414,7 @@ public final class RotationAxis {
 		final double width=.5;// width of JMol object
 		final String axisColor = "yellow"; //axis color
 		final String screwColor = "orange"; //screw translation color
+		if (atoms==null) atoms = this.atoms;
 
 		// Project each Atom onto the rotation axis to determine limits
 		double min, max;
@@ -566,6 +573,17 @@ public final class RotationAxis {
 	public static double getAngle(Matrix rotation) {
 		double c = (rotation.trace()-1)/2.0; //=cos(theta)
 		return Math.acos(c);
+	}
+	
+	/**
+	 * Set the Atom coordinates that determine the boundaries of the axis when
+	 * displayed in Jmol. The Atoms are cloned before stored, so that if they
+	 * change the axis is not affected.
+	 * 
+	 * @param atoms
+	 */
+	public void setAtoms(Atom[] atoms) {
+		this.atoms = StructureTools.cloneAtomArray(atoms);
 	}
 
 	/**
