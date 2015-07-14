@@ -10,7 +10,7 @@ import java.util.TreeSet;
 /**
  * Graph traverse by depth first search (DFS).
  * <p>
- * Graph iterators that can traverse any {@link Graph} 
+ * Graph iterators that can traverse {@link Graph} 
  * implementation starting from any vertex in the graph 
  * as the source.
  * 
@@ -44,6 +44,7 @@ public class GraphIteratorDFS<V> implements Iterator<V> {
 		vertex.add(source);
 		vertex.add(0);
 		stack.push(vertex);
+		visited.add(source);
 	}
 
 	@Override
@@ -62,20 +63,18 @@ public class GraphIteratorDFS<V> implements Iterator<V> {
 			path.pop();
 		}
 
-		if (!path.contains(index)){
-			path.push(index);
-			List<Integer> children = graph.getChildren(index);
+		path.push(index);
+		List<Integer> children = graph.getChildren(index);
 
-			for (Integer c : children){
-				//process all children of the vertex
-				List<Integer> child = new ArrayList<Integer>();
-				child.add(c);
-				child.add(path.size());
-				//conditions: not in path, not visited
-				if (!path.contains(c) && !visited.contains(c)){
-					stack.push(child);
-					visited.add(c);
-				}
+		for (Integer c : children){
+			//process all children of the vertex
+			List<Integer> child = new ArrayList<Integer>();
+			child.add(c);
+			child.add(path.size());
+			
+			if (!visited.contains(c)){
+				stack.push(child);
+				visited.add(c);
 			}
 		}
 		return graph.getVertex(index);
