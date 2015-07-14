@@ -7,25 +7,24 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * A directed graph implementation based on a 
- * List of vertices and a List of Edges for each 
- * vertex (adjacency List).
+ * A directed graph implementation based on a List of vertices 
+ * and a List of Edges for each vertex (adjacency List).
  * 
  * @author Aleix Lafita
+ * @since 4.1.1
  * 
  */
 public class DirectedGraph<V> implements Graph<V> {
 
-    private List<V> vertices = new ArrayList<V>();
-    private List<Set<Integer>> vertexMap = new ArrayList<Set<Integer>>();
+    protected List<V> vertices = new ArrayList<V>();
+    protected List<Set<Integer>> vertexMap = new ArrayList<Set<Integer>>();
     
     @Override
     public boolean addEdge(V vertex1, V vertex2) {
         int index1 = vertices.indexOf(vertex1);
         int index2 = vertices.indexOf(vertex2);
         if (index1 == -1 || index2 == -1) return false;
-        vertexMap.get(index1).add(index2);
-        return true;
+        return vertexMap.get(index1).add(index2);
     }
     
     @Override
@@ -137,7 +136,12 @@ public class DirectedGraph<V> implements Graph<V> {
     	
     	List<Integer> neighbors = new ArrayList<Integer>();
     	neighbors.addAll(getChildren(index));
-    	neighbors.addAll(getParents(index));
+    	for (Integer vertex : getParents(index)){
+    		if (!neighbors.contains(vertex)){
+    			//Ensure no duplicate vertices returned
+    			neighbors.add(vertex);
+    		}
+    	}
     	
     	Collections.sort(neighbors);
         return neighbors;
@@ -148,12 +152,8 @@ public class DirectedGraph<V> implements Graph<V> {
     	
         if (index1 < 0 || index2 < 0) return false;
         
-        List<Integer> children = getChildren(index1);
-        int index = children.indexOf(index2);
-        
-        if (index < 0) return false;
-        else children.remove(children.indexOf(index2));
-        return true;
+        Set<Integer> children = vertexMap.get(index1);
+        return children.remove(index2);
     }
     
     public boolean removeEdge(V vertex1, V vertex2) {
@@ -184,11 +184,8 @@ public class DirectedGraph<V> implements Graph<V> {
     	
         if (index1 < 0 || index2 < 0) return false;
 
-        List<Integer> children = getChildren(index1);
-        int index = children.indexOf(index2);
-        
-        if (index < 0) return false;
-        else return true;
+        Set<Integer> children = vertexMap.get(index1);
+        return children.contains(index2);
     }
     
     @Override
@@ -224,7 +221,7 @@ public class DirectedGraph<V> implements Graph<V> {
 				if (child == index) parents.add(v);
 			}
 		}
-		return null;
+		return parents;
 	}
 
 	@Override
@@ -233,6 +230,54 @@ public class DirectedGraph<V> implements Graph<V> {
 		List<Integer> children = new ArrayList<Integer>();
     	children.addAll(vertexMap.get(index));
         return children;
+	}
+	
+	/**
+	 * Returns the number of parents of the vertex, that is,
+	 * the IN degree of the node (number of edges pointing
+	 * inwards of the node).
+	 * 
+	 * @param index vertex index
+	 * @return int number of parents of the vertex
+	 */
+	public int getValenceIn(int index){
+		return getParents(index).size();
+	}
+	
+	/**
+	 * Returns the number of parents of the vertex, that is,
+	 * the IN degree of the node (number of edges pointing
+	 * inwards of the node).
+	 * 
+	 * @param vertex vertex object
+	 * @return int number of parents of the vertex
+	 */
+	public int getValenceIn(V vertex){
+		return getValenceIn(indexOf(vertex));
+	}
+	
+	/**
+	 * Returns the number of children of the vertex, that is,
+	 * the OUT degree of the node (number of edges pointing
+	 * outwards of the node).
+	 * 
+	 * @param index vertex index
+	 * @return int number of children of the vertex
+	 */
+	public int getValenceOut(int index){
+		return getChildren(index).size();
+	}
+	
+	/**
+	 * Returns the number of children of the vertex, that is,
+	 * the OUT degree of the node (number of edges pointing
+	 * outwards of the node).
+	 * 
+	 * @param vertex vertex object
+	 * @return int number of children of the vertex
+	 */
+	public int getValenceOut(V vertex){
+		return getValenceOut(indexOf(vertex));
 	}
 	
 }

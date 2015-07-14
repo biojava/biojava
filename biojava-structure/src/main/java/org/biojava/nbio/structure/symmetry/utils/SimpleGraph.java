@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * A simple nondirected graph implementation based on a 
- * list of edges for each vertex.
+ * List of edges for each vertex.
  * 
  * @author Peter
  * 
@@ -41,10 +41,13 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         int index1 = vertices.indexOf(vertex1);
         int index2 = vertices.indexOf(vertex2);
         if (index1 == -1 || index2 == -1) return false;
-        //TODO possible bug, check if the Edge already exists
-        vertexMap.get(index1).add(index2);
-        vertexMap.get(index2).add(index1);
-        return true;
+        
+        if (!vertexMap.get(index1).contains(index2)){
+        	vertexMap.get(index1).add(index2);
+        	vertexMap.get(index2).add(index1);
+        	return true;
+        } else 
+        	return false;
     }
     
     @Override
