@@ -23,32 +23,44 @@ package org.biojava.nbio.structure.symmetry.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * A simple nondirected graph implementation based on a list of edges for each vertex
+ * A simple nondirected graph implementation based on a 
+ * List of edges for each vertex.
+ * 
  * @author Peter
+ * 
  */
 public class SimpleGraph<V> implements Graph<V>, Cloneable {
+	
     private List<V> vertices = new ArrayList<V>();
-    private List<ArrayList<Integer>> vertexMap = new ArrayList<ArrayList<Integer>>();
+    private List<ArrayList<Integer>> vertexMap = 
+    		new ArrayList<ArrayList<Integer>>();
     
+    @Override
     public boolean addEdge(V vertex1, V vertex2) {
         int index1 = vertices.indexOf(vertex1);
         int index2 = vertices.indexOf(vertex2);
         if (index1 == -1 || index2 == -1) return false;
-        vertexMap.get(index1).add(index2);
-        vertexMap.get(index2).add(index1);
-        return true;
+        
+        if (!vertexMap.get(index1).contains(index2)){
+        	vertexMap.get(index1).add(index2);
+        	vertexMap.get(index2).add(index1);
+        	return true;
+        } else 
+        	return false;
     }
     
+    @Override
     public boolean addEdge(Edge<V> edge) {
         return addEdge(edge.getVertex1(), edge.getVertex2());
     }
     
+    @Override
     public int size() {
         return vertices.size();
     }
     
+    @Override
     public int getEdgeCount() {
         int edgeCount = 0;
         for (int i = 0; i < size(); i++)
@@ -57,10 +69,12 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return edgeCount/2;
     }
     
+    @Override
     public int getValence(V vertex) {
         return getValence(indexOf(vertex));
     }
     
+    @Override
     public int getValence(int index) {
         if (index != -1) {
             return vertexMap.get(index).size();
@@ -68,6 +82,7 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return 0;
     }
     
+    @Override
     public boolean addVertex(V vertex) {
         if (vertices == null) vertices = new ArrayList<V>();
         if (containsVertex(vertex)) return false;
@@ -77,10 +92,12 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return true;
     }
     
+    @Override
     public boolean containsVertex(V vertex) {
         return vertices.contains(vertex);
     }
     
+    @Override
     public void setVertices(List<V> list) {
         vertices = list;
         vertexMap = new ArrayList<ArrayList<Integer>>(vertices.size());
@@ -89,16 +106,19 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         }
     }
     
+    @Override
     public List<V> getVertices() {
         return vertices;
     }
     
+    @Override
     public List<Edge<V>> getEdges() {
         List<Edge<V>> edges = new ArrayList<Edge<V>>();
         for(int index1 = 0; index1 < size(); index1++) {
             for(int index2 : getNeighborIndices(index1)) {
                 if(index1 < index2) {
-                    Edge<V> e = new Edge<V>(vertices.get(index1),vertices.get(index2));
+                    Edge<V> e = new Edge<V>(vertices.get(index1),
+                    		vertices.get(index2));
                     edges.add(e);
                 }
             }
@@ -106,6 +126,7 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return edges;
     }
     
+    @Override
     public V getVertex(int index) {
         return vertices.get(index);
     }
@@ -130,14 +151,17 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return sb.toString();
     }
     
+    @Override
     public int indexOf(V vertex) {
         return vertices.indexOf(vertex);
     }
     
+    @Override
     public List<Integer> getNeighborIndices(int index) {
         return vertexMap.get(index);
     }
     
+    @Override
     public boolean removeEdge(int index1, int index2) {
         if (index1 < 0 || index2 < 0) return false;
         
@@ -159,7 +183,7 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
     }
     
     @Override
-    public Object clone() {
+    public SimpleGraph<V> clone() {
         // clone should not use constructor ??
         SimpleGraph<V> graph = new SimpleGraph<V>();
         
@@ -176,6 +200,7 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return graph;
     }
 
+    @Override
     public boolean containsEdge(int index1, int index2) {
         if (index1 < 0 || index2 < 0) return false;
 
@@ -189,6 +214,7 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         }
     }
     
+    @Override
     public SimpleGraph<V> extractSubGraph(List<Integer> indices) {
     	SimpleGraph<V> graph = new SimpleGraph<V>();
     	for (int index: indices) {
@@ -203,4 +229,14 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
     	}
     	return graph;
     }
+
+	@Override
+	public List<Integer> getParents(int index) {
+		return getNeighborIndices(index);
+	}
+
+	@Override
+	public List<Integer> getChildren(int index) {
+		return getNeighborIndices(index);
+	}
 }
