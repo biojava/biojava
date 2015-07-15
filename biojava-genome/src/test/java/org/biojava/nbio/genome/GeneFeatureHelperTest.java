@@ -102,7 +102,7 @@ public class GeneFeatureHelperTest extends TestCase {
         File gffFile = File.createTempFile("volvox_length", "gff3");
         gffFile.deleteOnExit();
         GeneFeatureHelper.outputFastaSequenceLengthGFF3(fastaSequenceFile, gffFile);
-        FileAssert.assertBinaryEquals("volvox_length.gff3 and volvox_length_output.gff3 are not equal", gffFile,
+        FileAssert.assertEquals("volvox_length.gff3 and volvox_length_output.gff3 are not equal", gffFile,
                 new File("src/test/resources/volvox_length_reference.gff3"));
 
     }
