@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.multiple;
+package org.biojava.nbio.structure.align.multiple.util;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,6 +10,9 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLConverter;
 
 /**

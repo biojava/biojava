@@ -32,7 +32,7 @@ import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.jcolorbrewer.ColorBrewer;

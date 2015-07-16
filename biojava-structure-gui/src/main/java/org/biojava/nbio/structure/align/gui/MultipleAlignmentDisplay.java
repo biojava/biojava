@@ -26,8 +26,8 @@ import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

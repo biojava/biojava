@@ -10,9 +10,9 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcParameters;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**

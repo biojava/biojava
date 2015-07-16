@@ -4,8 +4,10 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**

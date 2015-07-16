@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -27,9 +27,9 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
 
 /** 
  * Main class of the Java implementation of the Combinatorial Extension - 

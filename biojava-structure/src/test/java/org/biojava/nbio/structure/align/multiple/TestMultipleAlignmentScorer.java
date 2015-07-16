@@ -14,7 +14,10 @@ import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**

@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
+
 /**
  * General implementation of a {@link Block} that supports any type of
- * alignment with gaps.
+ * sequential alignment with gaps.
  * 
  * @author Aleix Lafita
  * @since 4.1.0
@@ -114,17 +116,6 @@ public class BlockImpl extends AbstractScoresCache
 	}
 
 	protected void updateCoreLength() {
-		coreLength = 0;
-		//Count how many positions do not have gaps in any structure
-		for (int col=0; col<length(); col++){
-			boolean core = true;
-			for (int str=0; str<size(); str++){
-				if (alignRes.get(str).get(col) == null){
-					core = false;
-					break;
-				}
-			}
-			if (core) coreLength++;
-		}
+		coreLength = MultipleAlignmentTools.getCorePositions(this).size();
 	}
 }

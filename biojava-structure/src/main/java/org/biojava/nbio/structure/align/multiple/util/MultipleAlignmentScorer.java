@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.multiple;
+package org.biojava.nbio.structure.align.multiple.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**

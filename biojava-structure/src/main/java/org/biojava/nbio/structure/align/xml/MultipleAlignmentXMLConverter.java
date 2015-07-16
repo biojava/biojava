@@ -10,8 +10,8 @@ import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.multiple.ScoresCache;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 
 /**
  * Helper methods to convert all the hierarchy levels of a MultipleAlignment

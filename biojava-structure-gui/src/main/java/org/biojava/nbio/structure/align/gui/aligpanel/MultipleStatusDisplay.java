@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentTools;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 

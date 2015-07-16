@@ -16,10 +16,10 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentTools;
-import org.biojava.nbio.structure.align.multiple.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.multiple.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
+import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
+import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**

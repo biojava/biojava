@@ -9,6 +9,7 @@ import javax.vecmath.Matrix4d;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLParser;
 import org.junit.Test;
 import org.xml.sax.SAXException;
