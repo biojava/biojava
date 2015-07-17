@@ -109,7 +109,8 @@ public class MultipleMcMain implements MultipleStructureAligner {
 				afpAlignments.get(i).add(null);
 		}
 		
-		ExecutorService executor = Executors.newCachedThreadPool();
+		int threads = params.getNrThreads();
+		ExecutorService executor = Executors.newFixedThreadPool(threads);
 	    List<Future<AFPChain>> afpFuture = new ArrayList<Future<AFPChain>>();
 	    
 	    //Create all the possible protein pairwise combinations 
@@ -298,7 +299,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	}
 
 	@Override
-	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) 
+	public MultipleAlignment align(List<Atom[]> atomArrays, Object parameters)
 			throws StructureException {
 		
 		MultipleAlignment result = null;
@@ -307,16 +308,18 @@ public class MultipleMcMain implements MultipleStructureAligner {
 		ensemble.setAlgorithmName(algorithmName);
 		ensemble.setVersion(version);
 		ensemble.setIoTime(System.currentTimeMillis());
+		setParameters((ConfigStrucAligParams) parameters);
 		
 		//Generate the seed alignment from all-to-all pairwise alignments
 		try {
 			result = generateSeed(atomArrays);
-			ExecutorService executor = Executors.newCachedThreadPool();
-			List<Future<MultipleAlignment>> afpFuture = 
+			int threads = params.getNrThreads();
+			ExecutorService executor = Executors.newFixedThreadPool(threads);
+			List<Future<MultipleAlignment>> msaFuture = 
 					new ArrayList<Future<MultipleAlignment>>();
 			
 			//Repeat the optimization in parallel
-			for (int i=0; i<2; i++){
+			for (int i=0; i<params.getNrThreads(); i++){
 				//Change the random seed for each parallelization
 				MultipleMcParameters paramsMC = (MultipleMcParameters) params;
 				paramsMC.setRandomSeed(paramsMC.getRandomSeed()+i);
@@ -326,13 +329,13 @@ public class MultipleMcMain implements MultipleStructureAligner {
 								result, paramsMC, reference);
 				
 	  			Future<MultipleAlignment> submit = executor.submit(worker);
-	  			afpFuture.add(submit);
+	  			msaFuture.add(submit);
 			}
 
 			double maxScore = Double.NEGATIVE_INFINITY;
 			//Take the one with the best result (best MC-Score)
-			for (int i=0; i<afpFuture.size(); i++){
-				MultipleAlignment align = afpFuture.get(i).get();
+			for (int i=0; i<msaFuture.size(); i++){
+				MultipleAlignment align = msaFuture.get(i).get();
 				double s = align.getScore(MultipleAlignmentScorer.MC_SCORE);
 				if (s > maxScore){
 					result = align;

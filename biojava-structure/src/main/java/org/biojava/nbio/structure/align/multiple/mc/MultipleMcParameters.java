@@ -20,6 +20,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	private double gapOpen;
 	private double gapExtension;
 	private int convergenceSteps;
+	private int nrThreads;
 	
 	/**
 	 * Constructor with DEFAULT values of the parameters.
@@ -38,6 +39,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add("GapOpen");
 		params.add("GapExtension");
 		params.add("ConvergenceSteps");
+		params.add("NrThreads");
 
 		return params;
 	}
@@ -52,6 +54,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add("Gap Opening Penalty");
 		params.add("Gap Extension Penalty");
 		params.add("Steps to Convergence");
+		params.add("Number of Threads");
 		
 		return params;
 	}
@@ -66,6 +69,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add(Integer.class);
 		params.add(Double.class);
 		params.add(Double.class);
+		params.add(Integer.class);
 		params.add(Integer.class);
 		
 		return params;
@@ -92,6 +96,9 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 				+ "stopping. Proportional to the calculation time. "
 				+"If it is 0 the convergence steps are calculated proportional"
 				+ " to the number of structures and their length.";
+		String nrThreads =
+				"Number of threads to be used for the seed calculation (all-"
+				+ "to-all pairwise alignments) and the MC optimization.";
 		
 		params.add(randomSeed);
 		params.add(minBlockLen);
@@ -99,6 +106,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add(gapOpen);
 		params.add(gapExtension);
 		params.add(convergenceSteps);
+		params.add(nrThreads);
 		
 		return params;
 	}
@@ -109,18 +117,19 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 				+ ", minBlockLen=" + minBlockLen + ", minAlignedStructures="
 				+ minAlignedStructures + ", gapOpen=" + gapOpen
 				+ ", gapExtension=" + gapExtension + ", convergenceSteps="
-				+ convergenceSteps + "]";
+				+ convergenceSteps + ", nrThreads=" + nrThreads + "]";
 	}
 
 	@Override
 	public void reset() {
 		
 		randomSeed = 0;
-		minBlockLen = 15;
+		minBlockLen = 10;
 		minAlignedStructures = 0;
 		gapOpen = 10.0;
 		gapExtension = 5.0;
 		convergenceSteps = 0;
+		nrThreads = 4;
 	}
 
 	public int getRandomSeed() {
@@ -169,5 +178,13 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 
 	public void setConvergenceSteps(Integer convergenceSteps) {
 		this.convergenceSteps = convergenceSteps;
+	}
+
+	public int getNrThreads() {
+		return nrThreads;
+	}
+
+	public void setNrThreads(Integer nrThreads) {
+		this.nrThreads = nrThreads;
 	}	
 }

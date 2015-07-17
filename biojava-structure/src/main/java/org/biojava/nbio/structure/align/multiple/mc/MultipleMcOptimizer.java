@@ -16,10 +16,11 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -43,7 +44,9 @@ import org.biojava.nbio.structure.jama.Matrix;
 public class MultipleMcOptimizer 
 implements Callable<MultipleAlignment> {
 
-	private static final boolean debug = false;
+	//Print info and save evolution history
+	private static final boolean debug = true;
+
 	private Random rnd;
 	private MultipleSuperimposer imposer;
 
@@ -58,19 +61,14 @@ implements Callable<MultipleAlignment> {
 	private double Gextend; //Penalty for extending gaps
 
 	//Alignment Information
-	private int size; 		//number of structures in the alignment
-	private int blockNr;	//the number of Blocks in the alignment
-
-	//Multiple Alignment Residues
 	private MultipleAlignment msa;  //Alignment to optimize
 	private List<SortedSet<Integer>> freePool; 	//unaligned residues
-
-	//Score information
-	private double mcScore;  // Optimization score, objective function
-
-	//Original atom arrays of all the structures
 	private List<Atom[]> atomArrays;
-	private List<Integer> structureLengths;
+
+	//Alignment Properties
+	private int size; 		//number of structures in the alignment
+	private int blockNr;	//the number of Blocks in the alignment
+	private double mcScore;  // Optimization score, objective function
 
 	//Variables that store the history of the optimization
 	private List<Integer> lengthHistory;
@@ -78,77 +76,77 @@ implements Callable<MultipleAlignment> {
 	private List<Double> scoreHistory;
 
 	/**
-	 * Constructor.
+	 * Constructor. Sets the internal variables from the parameters.
+	 * To run the optimization use the call (in a different thread)
+	 * or optimize methods.
+	 * 
 	 * @param seedAln MultipleAlignment to be optimized.
 	 * @param params the parameter beam
 	 * @param reference the index of the most similar structure to all others
 	 * @throws StructureException  
 	 */
 	public MultipleMcOptimizer(MultipleAlignment seedAln, 
-			MultipleMcParameters params, int reference) 
-					throws StructureException {
+			MultipleMcParameters params, int reference) {
+
+		MultipleAlignmentEnsemble e = seedAln.getEnsemble().clone();
+		msa = e.getMultipleAlignments().get(0);
+		atomArrays = msa.getEnsemble().getAtomArrays();
+		size = seedAln.size();
 
 		rnd = new Random(params.getRandomSeed());
 		Gopen = params.getGapOpen();
 		Gextend = params.getGapExtension();
-		imposer = new ReferenceSuperimposer(reference);
-		initialize(seedAln);
+		imposer = new CoreSuperimposer(reference);
 
 		if (params.getConvergenceSteps() == 0) {
-			convergenceSteps = Collections.min(structureLengths)*size;
+			List<Integer> lens = new ArrayList<Integer>();
+			for (int i=0; i<size; i++) lens.add(atomArrays.get(i).length);
+			convergenceSteps = Collections.min(lens)*size;
 		} 
 		else convergenceSteps = params.getConvergenceSteps();
 
 		if (params.getMinAlignedStructures() == 0) {
-			Rmin = Math.max(size/3, 2);
-		} 
-		else {
+			Rmin = Math.max(size/3, 2); //33% of the structures aligned
+		} else {
 			Rmin = Math.min(Math.max(params.getMinAlignedStructures(),2),size);
 		}
-		Lmin = params.getMinBlockLen();
 		C = 20*size;
+		Lmin = params.getMinBlockLen();
 
-		checkGaps();
-
-		//Update the CEMC score for the seed aligment
-		msa.clear();
-		imposer.superimpose(msa);
-		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend);
+		//Delete all shorter than Lmin blocks
+		List<Block> toDelete = new ArrayList<Block>();
+		for (Block b : msa.getBlocks()){
+			if (b.getCoreLength() < Lmin){
+				toDelete.add(b);
+				if (debug) System.err.println("Deleting Block: too short.");
+			}
+		}
+		for (Block b : toDelete){
+			for (BlockSet bs : msa.getBlockSets()){
+				bs.getBlocks().remove(b);
+			}
+		}
+		blockNr = msa.getBlocks().size();
+		if (blockNr < 1){
+			throw new IllegalArgumentException(
+					"Optimization: empty seed alignment, no Blocks found.");
+		}
 	}
 
 	@Override
 	public MultipleAlignment call() throws Exception {
-
-		//The maximum number of iterations is converge*100
-		optimizeMC(convergenceSteps*100);
-
-		try {
-			if (debug) {
-				saveHistory("/scratch/cemc/CeMcOptimizationHistory.csv");
-			}
-		} catch(FileNotFoundException e) {}
-
-		return msa;
+		return optimize();
 	}
 
 	/**
-	 * Initialize all the variables of the optimization.
-	 * @param seed MultipleAlignment starting point.
-	 * @throws StructureException
-	 * @throws StructureAlignmentException 
+	 * Initialize the freePool and all the variables needed for
+	 * the optimization.
+	 * 
+	 * @throws StructureException 
 	 */
-	private void initialize(MultipleAlignment seed) throws StructureException {
-
-		//Initialize member variables
-		msa = seed.clone();
-		size = seed.size();
-		atomArrays = msa.getEnsemble().getAtomArrays();
-		structureLengths = new ArrayList<Integer>();
-		for (int i=0; i<size; i++) 
-			structureLengths.add(atomArrays.get(i).length);
+	private void initialize() throws StructureException {
 
 		//Initialize alignment variables
-		blockNr = msa.getBlocks().size();
 		freePool = new ArrayList<SortedSet<Integer>>();
 		List<List<Integer>> aligned = new ArrayList<List<Integer>>();
 
@@ -173,6 +171,17 @@ implements Callable<MultipleAlignment> {
 				if (!aligned.get(i).contains(k)) freePool.get(i).add(k);
 			}
 		}
+
+		//Set the superposition and score for the seed aligment
+		checkGaps();
+		msa.clear();
+		imposer.superimpose(msa);
+		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend);
+
+		//Initialize the history variables
+		lengthHistory = new ArrayList<Integer>();
+		rmsdHistory = new ArrayList<Double>();
+		scoreHistory = new ArrayList<Double>();
 	}
 
 	/**
@@ -180,24 +189,20 @@ implements Callable<MultipleAlignment> {
 	 *  Starting from the refined alignment uses 4 types of moves:
 	 *  <p>
 	 *  	1- Shift Row: if there are enough freePool residues available.<p>
-	 *  	2- Expand Block: add another alignment column if there are residues
-	 *  		available.<p>
+	 *  	2- Expand Block: add another alignment column.<p>
 	 *  	3- Shrink Block: move a block column to the freePool.<p>
 	 *  	4- Insert gap: insert a gap in a random position of the alignment.
 	 *  
 	 */
-	private void optimizeMC(int maxIter) throws StructureException {
+	public MultipleAlignment optimize() throws StructureException {
 
-		//Initialize the history variables
-		lengthHistory = new ArrayList<Integer>();
-		rmsdHistory = new ArrayList<Double>();
-		scoreHistory = new ArrayList<Double>();
+		initialize();
 
 		int conv = 0;  //Number of steps without an alignment improvement
-		int stepsToConverge = Math.max(maxIter/50,1000);
 		int i = 1;
+		int maxIter = convergenceSteps*100;
 
-		while (i<maxIter && conv<stepsToConverge) {
+		while (i<maxIter && conv<convergenceSteps) {
 
 			//Save the state of the system
 			MultipleAlignment lastMSA = msa.clone();
@@ -213,7 +218,7 @@ implements Callable<MultipleAlignment> {
 			boolean moved = false;
 
 			while (!moved){
-				//Randomly select one of the steps to modify the alignment.
+				//Randomly select one of the steps to modify the alignment
 				double move = rnd.nextDouble();
 				if (move < 0.4){
 					moved = shiftRow();
@@ -261,7 +266,7 @@ implements Callable<MultipleAlignment> {
 			if (debug){
 				System.out.println("Step: "+i+": --prob: "+prob+
 						", --score: "+AS+", --conv: "+conv);
-				
+
 				if (i%100==1){
 					lengthHistory.add(msa.length());
 					rmsdHistory.add(MultipleAlignmentScorer.getRMSD(msa));
@@ -276,6 +281,14 @@ implements Callable<MultipleAlignment> {
 		imposer.superimpose(msa);
 		MultipleAlignmentScorer.calculateScores(msa);
 		msa.putScore(MultipleAlignmentScorer.MC_SCORE, mcScore);
+
+		try {
+			if (debug) {
+				saveHistory("/scratch/cemc/CeMcOptimizationHistory.csv");
+			}
+		} catch(FileNotFoundException e) {} catch (IOException e) {}
+
+		return msa;
 	}
 
 	/**
@@ -449,7 +462,7 @@ implements Callable<MultipleAlignment> {
 							block.getAlignRes().get(str).get(rightRes)
 							-block.getAlignRes().get(str).get(leftRes)-1)
 							+ block.getAlignRes().get(str).get(leftRes)+1;
-					
+
 					if (freePool.get(str).contains(residue)) {
 						block.getAlignRes().get(str).set(res,residue);
 						freePool.get(str).remove(residue);
@@ -504,10 +517,10 @@ implements Callable<MultipleAlignment> {
 			//Remove the residue at the right of the block
 			block.getAlignRes().get(str).remove(rightBoundary);
 			if (resR0 != null) freePool.get(str).add(resR0);
-			
+
 			//Add the residue at the left of the block
 			if (resL0 != null) resL0 -= 1;
-			
+
 			if (freePool.get(str).contains(resL0)){
 				block.getAlignRes().get(str).add(leftBoundary,resL0);
 				freePool.get(str).remove(resL0);
@@ -557,13 +570,13 @@ implements Callable<MultipleAlignment> {
 
 			//Add the residue at the right of the block
 			if (resR1 != null) resR1 += 1;
-			
+
 			if (freePool.contains(resR1)){
 				if (rightBoundary1==block.length()-1) {
 					block.getAlignRes().get(str).add(resR1);
 				}
 				else block.getAlignRes().get(str).add(rightBoundary1+1,resR1);
-				
+
 				freePool.get(str).remove(resR1);
 			} 
 			else block.getAlignRes().get(str).add(rightBoundary1+1,null);
@@ -571,7 +584,7 @@ implements Callable<MultipleAlignment> {
 			//Remove the residue at the left of the block
 			block.getAlignRes().get(str).remove(leftBoundary1);
 			if (resL1 != null) freePool.get(str).add(resL1);
-			
+
 			break;
 		}
 		checkGaps();
@@ -739,7 +752,7 @@ implements Callable<MultipleAlignment> {
 		for (int str=0; str<size; str++){
 			Integer residue = 
 					currentBlock.getAlignRes().get(str).get(position);
-			
+
 			currentBlock.getAlignRes().get(str).remove(position);
 			if (residue != null) freePool.get(str).add(residue);
 		}
