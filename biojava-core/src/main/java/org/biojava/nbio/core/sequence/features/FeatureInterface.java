@@ -29,6 +29,7 @@ import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -175,14 +176,14 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
      * @return
      */
 
-    public HashMap<String, Qualifier> getQualifiers();
+    public HashMap<String, ArrayList<Qualifier>> getQualifiers();
 
     /**
      * Set the qualifiers
      * @param qualifiers
      */
 
-    public void setQualifiers(HashMap<String, Qualifier> qualifiers);
+    public void setQualifiers(HashMap<String, ArrayList<Qualifier>> qualifiers);
     /**
      * Add a qualifier
      * @param qualifier
