@@ -530,5 +530,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		this.colorByBlocks.setSelected(colorByBlocks);
 		resetDisplay();
 	}
+	
+	public JFrame getFrame(){
+		return frame;
+	}
+	
+	public MultipleAlignment getMultipleAlignment(){
+		return multAln;
+	}
 
 }

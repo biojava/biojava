@@ -785,7 +785,7 @@ public class MenuCreator {
 		loadF.addActionListener(new MyAlignmentLoadListener());
 		file.add(loadF);
 
-		JMenuItem openPDB = MenuCreator.getShowPDBMenuItem();       
+		JMenuItem openPDB = MenuCreator.getShowPDBMenuItem();
 		file.add(openPDB);
 
 		JMenuItem openI = MenuCreator.getOpenPDBMenuItem();		
