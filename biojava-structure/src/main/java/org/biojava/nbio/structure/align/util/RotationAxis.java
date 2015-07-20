@@ -163,19 +163,15 @@ public final class RotationAxis {
 	}
 
 	/**
-	 * Create a rotation axis from a Matrix4d containing a rotational component and a translational component
+	 * Create a rotation axis from a Matrix4d containing a rotational 
+	 * component and a translational component.
+	 * 
 	 * @param transform
 	 */
 	public RotationAxis(Matrix4d transform) {
-		Atom transl = new AtomImpl();
-		double[] coords = {transform.m03, transform.m13, transform.m23};
-		transl.setCoords(coords);
-		Matrix rot = new Matrix(3,3);
-		for (int i=0;i<3;i++) {
-			for (int j=0;j<3;j++) {
-				rot.set(i, j, transform.getElement(i, j));
-			}
-		}
+		
+		Matrix rot = Calc.getRotationMatrix(transform);
+		Atom transl = Calc.getTranslationVector(transform);
 		init(rot,transl);
 	}
 

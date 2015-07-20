@@ -180,12 +180,12 @@ public class Calc {
 	 */
 	public static final double angle(Atom a, Atom b){
 
-		
+
 		Vector3d va = new Vector3d(a.getCoords());
 		Vector3d vb = new Vector3d(b.getCoords());
-		
+
 		return Math.toDegrees(va.angle(vb));
-		
+
 	}
 
 	/** 
@@ -388,7 +388,7 @@ public class Calc {
 	public static final void rotate(Atom atom, Matrix m){
 
 		double x = atom.getX();
-		double y = atom.getY() ;
+		double y = atom.getY();
 		double z = atom.getZ();
 		double[][] ad = new double[][]{{x,y,z}};
 
@@ -434,7 +434,7 @@ public class Calc {
 		}
 
 	}
-	
+
 	/**
 	 * Transform an array of atoms at once.
 	 * @param ca array of Atoms to shift
@@ -535,7 +535,7 @@ public class Calc {
 
 		}
 	}
-	
+
 	/**
 	 * Translates a chain object, given a Vector3d (i.e. the vecmath library 
 	 * double-precision 3-d vector)
@@ -1053,7 +1053,7 @@ public class Calc {
 	public static void rotate(Atom[] ca, Matrix matrix) {
 		for (Atom atom : ca) Calc.rotate(atom, matrix);
 	}
-	
+
 	/**
 	 * Shift an array of atoms at once.
 	 * @param ca array of Atoms to shift
@@ -1062,28 +1062,70 @@ public class Calc {
 	public static void shift(Atom[] ca, Atom b) {
 		for (Atom atom : ca) Calc.shift(atom, b);
 	}
-	
+
 	/**
-	 * Convert JAMA rotation and translation to a Vecmath transformation matrix
+	 * Convert JAMA rotation and translation to a Vecmath transformation matrix.
+	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
+	 * matrix is a post-multiplication one, the rotation matrix is transposed to 
+	 * ensure that the transformation they produce is the same.
+	 * 
 	 * @param rot 3x3 Rotation matrix
 	 * @param trans 3x1 Translation matrix
 	 * @return 4x4 transformation matrix
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Matrix trans) {
-		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
+		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
 				new Vector3d(trans.getColumnPackedCopy()),
 				1.0);
 	}
-	
+
 	/**
-	 * Convert JAMA rotation and translation to a Vecmath transformation matrix
+	 * Convert JAMA rotation and translation to a Vecmath transformation matrix.
+	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
+	 * matrix is a post-multiplication one, the rotation matrix is transposed to 
+	 * ensure that the transformation they produce is the same.
+	 * 
 	 * @param rot 3x3 Rotation matrix
-	 * @param trans 3x1 Translation matrix
+	 * @param trans 3x1 translation vector in Atom coordinates
 	 * @return 4x4 transformation matrix
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Atom trans) {
-		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
+		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
 				new Vector3d(trans.getCoords()),
 				1.0);
+	}
+
+	/**
+	 * Convert Vecmath transformation into a JAMA rotation matrix.
+	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
+	 * matrix is a post-multiplication one, the rotation matrix is transposed to 
+	 * ensure that the transformation they produce is the same.
+	 * 
+	 * @param transform Matrix4d with transposed rotation matrix
+	 * @return
+	 */
+	public static Matrix getRotationMatrix(Matrix4d transform){
+		
+		Matrix rot = new Matrix(3,3);
+		for (int i=0;i<3;i++) {
+			for (int j=0;j<3;j++) {
+				rot.set(j, i, transform.getElement(i, j)); //transposed
+			}
+		}
+		return rot;
+	}
+	
+	/**
+	 * Extract the translational vector of a Vecmath transformation.
+	 * 
+	 * @param transform Matrix4d
+	 * @return Atom shift vector
+	 */
+	public static Atom getTranslationVector(Matrix4d transform){
+		
+		Atom transl = new AtomImpl();
+		double[] coords = {transform.m03, transform.m13, transform.m23};
+		transl.setCoords(coords);
+		return transl;
 	}
 }
