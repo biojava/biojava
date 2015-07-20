@@ -45,7 +45,7 @@ public class MultipleMcOptimizer
 implements Callable<MultipleAlignment> {
 
 	//Print info and save evolution history
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 
 	private Random rnd;
 	private MultipleSuperimposer imposer;
@@ -113,8 +113,10 @@ implements Callable<MultipleAlignment> {
 		C = 20*size;
 		Lmin = params.getMinBlockLen();
 
-		//Delete all shorter than Lmin blocks
+		//Delete all shorter than Lmin blocks, and empty blocksets
 		List<Block> toDelete = new ArrayList<Block>();
+		List<BlockSet> emptyBs = new ArrayList<BlockSet>();
+
 		for (Block b : msa.getBlocks()){
 			if (b.getCoreLength() < Lmin){
 				toDelete.add(b);
@@ -122,10 +124,15 @@ implements Callable<MultipleAlignment> {
 			}
 		}
 		for (Block b : toDelete){
-			for (BlockSet bs : msa.getBlockSets()){
+			for (BlockSet bs : msa.getBlockSets()) {
 				bs.getBlocks().remove(b);
+				if (bs.getBlocks().size() == 0) emptyBs.add(bs);
 			}
 		}
+		for (BlockSet bs : emptyBs){
+			msa.getBlockSets().remove(bs);
+		}
+
 		blockNr = msa.getBlocks().size();
 		if (blockNr < 1){
 			throw new IllegalArgumentException(
@@ -381,7 +388,7 @@ implements Callable<MultipleAlignment> {
 			}
 		}
 		Block bk = msa.getBlocks().get(block);
-		if (bk.length() <= Lmin) return false;
+		if (bk.getCoreLength() <= Lmin) return false;
 
 		//Insert the gap at the position
 		Integer residueL = bk.getAlignRes().get(structure).get(position);
@@ -411,6 +418,7 @@ implements Callable<MultipleAlignment> {
 		int res = rnd.nextInt(msa.getBlocks().get(bk).length());
 
 		Block block = msa.getBlocks().get(bk);
+		if (block.getCoreLength() <= Lmin) return false;
 
 		//When the pivot residue is null try to add a residue from the freePool
 		if (block.getAlignRes().get(str).get(res) == null){
@@ -746,8 +754,8 @@ implements Callable<MultipleAlignment> {
 				column++;
 			}
 		}
-		if (msa.getBlocks().get(block).length() <= Lmin) return false;
 		Block currentBlock = msa.getBlocks().get(block);
+		if (currentBlock.getCoreLength() <= Lmin) return false;
 
 		for (int str=0; str<size; str++){
 			Integer residue = 
