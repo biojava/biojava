@@ -55,6 +55,7 @@ import java.io.StringWriter;
  *
  */
 public final class RotationAxis {
+	
 	/**
 	 * Minimum angle to calculate rotation axes. 5 degrees.
 	 */

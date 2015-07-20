@@ -1070,10 +1070,11 @@ public class Calc {
 	 * @return 4x4 transformation matrix
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Matrix trans) {
-		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
+		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
 				new Vector3d(trans.getColumnPackedCopy()),
 				1.0);
 	}
+	
 	/**
 	 * Convert JAMA rotation and translation to a Vecmath transformation matrix
 	 * @param rot 3x3 Rotation matrix
@@ -1081,10 +1082,8 @@ public class Calc {
 	 * @return 4x4 transformation matrix
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Atom trans) {
-		return new Matrix4d( new Matrix3d(rot.getColumnPackedCopy()),
+		return new Matrix4d( new Matrix3d(rot.getRowPackedCopy()),
 				new Vector3d(trans.getCoords()),
 				1.0);
 	}
 }
-
-

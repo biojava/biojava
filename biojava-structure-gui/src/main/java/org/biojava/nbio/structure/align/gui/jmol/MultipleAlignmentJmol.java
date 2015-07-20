@@ -128,41 +128,43 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		vBox.add(field);
 
 		/// STRUCTURE SELECTION
-		Box hBox0 = Box.createHorizontalBox();
-		hBox0.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
+		if (multAln != null) {
+			Box hBox0 = Box.createHorizontalBox();
+			hBox0.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 
-		JButton show = new JButton("Show Only: ");
-		show.addActionListener(new ActionListener() {
+			JButton show = new JButton("Show Only: ");
+			show.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				jmolPanel.evalString("save selection;");
-				String cmd = getJmolString(multAln, transformedAtoms, 
-						colorPalette, colorByBlocks.isSelected());
-				cmd += "; restrict ";
-				for (int st=0; st<multAln.size(); st++){
-					if (selectedStructures.get(st).isSelected()){
-						cmd += "*/"+(st+1)+", ";
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					jmolPanel.evalString("save selection;");
+					String cmd = getJmolString(multAln, transformedAtoms, 
+							colorPalette, colorByBlocks.isSelected());
+					cmd += "; restrict ";
+					for (int st=0; st<multAln.size(); st++){
+						if (selectedStructures.get(st).isSelected()){
+							cmd += "*/"+(st+1)+", ";
+						}
 					}
+					cmd += "none;";
+					jmolPanel.executeCmd(cmd+" restore selection;");
 				}
-				cmd += "none;";
-				jmolPanel.executeCmd(cmd+" restore selection;");
-			}
-		});
+			});
 
-		hBox0.add(show);
-		hBox0.add(Box.createGlue());
-
-		for (int str=0; str<multAln.size(); str++){
-			JCheckBox structureSelection = new JCheckBox(
-					multAln.getEnsemble().getStructureNames().get(str));
-			hBox0.add(structureSelection);
+			hBox0.add(show);
 			hBox0.add(Box.createGlue());
-			structureSelection.setSelected(true);
-			selectedStructures.add(structureSelection);
-		}
 
-		vBox.add(hBox0);	
+			for (int str=0; str<multAln.size(); str++){
+				JCheckBox structureSelection = new JCheckBox(
+						multAln.getEnsemble().getStructureNames().get(str));
+				hBox0.add(structureSelection);
+				hBox0.add(Box.createGlue());
+				structureSelection.setSelected(true);
+				selectedStructures.add(structureSelection);
+			}
+
+			vBox.add(hBox0);
+		}
 
 		/// COMBO BOXES 
 		Box hBox1 = Box.createHorizontalBox();
@@ -511,7 +513,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 	public void resetDisplay() {
 
-		if (multAln != null) {
+		if (multAln != null && transformedAtoms != null) {
 			String script = getJmolString(multAln, transformedAtoms, 
 					colorPalette, colorByBlocks.isSelected());
 			//System.out.println(script);
@@ -530,11 +532,11 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		this.colorByBlocks.setSelected(colorByBlocks);
 		resetDisplay();
 	}
-	
+
 	public JFrame getFrame(){
 		return frame;
 	}
-	
+
 	public MultipleAlignment getMultipleAlignment(){
 		return multAln;
 	}

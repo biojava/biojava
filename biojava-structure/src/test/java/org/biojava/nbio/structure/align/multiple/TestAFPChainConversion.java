@@ -41,12 +41,13 @@ public class TestAFPChainConversion {
 		}
 		afp.setOptAln(optAln);
 		afp.setBlockNum(optAln.length);
-		//Set the rotation matrix to the identity and the shift to the origin
-		Matrix rot = Matrix.identity(3, 3);
+		//Set the rotation matrix and shift to random numbers
+		double[][] mat = {{0.13,1.5,0.84},{1.3,0.44,2.3},{1.0,1.2,2.03}};
+		Matrix rot = new Matrix(mat);
 		Atom shift = new AtomImpl();
-		shift.setX(0);
-		shift.setY(0);
-		shift.setZ(0);
+		shift.setX(0.44);
+		shift.setY(0.21);
+		shift.setZ(0.89);
 		Matrix[] blockRot = {rot,rot,rot};
 		afp.setBlockRotationMatrix(blockRot);
 		Atom[] blockShift = {shift,shift,shift};
