@@ -8,7 +8,6 @@ package org.biojava.nbio.core.search.io;
 
 import java.io.File;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +21,7 @@ public class SearchIO implements Iterable<Result>{
     private HashMap<String,ResultFactory> extensionFactoryAssociation;
     
     /**
-     * this threshold applies retrieving hsp. Those having e-value below this
+     * this threshold applies in retrieving hsp. Those having e-value below this
      * will not be loaded.
      */
     private double evalueThreshold = Double.MAX_VALUE;
