@@ -247,6 +247,11 @@ public class BlastXMLQuery implements ResultFactory {
             }  
         }
     }
+
+    @Override
+    public void storeObjects(List<Result> results) throws Exception {
+        throw new UnsupportedOperationException("This parser does not support writing yet.");
+    }
 }
 
 
