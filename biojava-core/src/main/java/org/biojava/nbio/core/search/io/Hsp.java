@@ -19,6 +19,34 @@ public abstract class Hsp {
     private final int hspQueryTo;
     private final int hspHitFrom;
     private final int hspHitTo;
+    private int hspQueryFrame;
+    private int hspHitFrame;
+    private int hspIdentity;
+    private int hspPositive;
+    private int hspGaps;
+    private int hspAlignLen;
+    private String hspQseq;
+    private String hspHseq;
+    private String hspIdentityString;
+    
+    /**
+     * Experimental.
+     * Wants to return an hashcode designed to allow conceptual comparisons of search results.
+     * Fields unrelated to search are deliberately not considered.
+     * @return 
+     */
+    public int hashCode(){
+        String allInOne = hspQseq+"\n"+hspIdentityString+"\n"+hspHseq;
+        return allInOne.hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof Hsp)) return false;
+        
+        return o.hashCode() == this.hashCode();
+    }
+
 
     public int getHspNum() {
         return hspNum;
@@ -118,13 +146,5 @@ public abstract class Hsp {
         this.hspHseq = hspHseq;
         this.hspIdentityString = hspIdentityString;
     }
-      private int hspQueryFrame;
-      private int hspHitFrame;
-      private int hspIdentity;
-      private int hspPositive;
-      private int hspGaps;
-      private int hspAlignLen;
-      private String hspQseq;
-      private String hspHseq;
-      private String hspIdentityString;
+      
 }

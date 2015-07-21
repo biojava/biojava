@@ -6,7 +6,6 @@
 
 package org.biojava.nbio.core.search.io;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,7 +52,24 @@ public abstract class Result implements Iterable<Hit>{
         this.hits = hits;
         this.querySequence = querySequence;
     }
-
+    /**
+     * Experimental.
+     * Wants to return an hashcode designed to allow conceptual comparisons of search results.
+     * Fields unrelated to search are deliberately not considered.
+     * @return 
+     */
+    public int hashCode(){
+        String allInOne = queryID+queryDef;
+        return allInOne.hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof Result)) return false;
+        
+        return o.hashCode() == this.hashCode();
+    }
+    
     public int getIterationNumber() {
         return iterationNumber;
     }

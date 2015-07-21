@@ -14,7 +14,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  *
  * @author pavanpa
  */
-public  class Hit implements Iterable<Hsp>{
+public abstract class Hit implements Iterable<Hsp>{
     private final int hitNum;
     private final String hitId;
     private final String hitDef;
@@ -34,7 +34,24 @@ public  class Hit implements Iterable<Hsp>{
         this.hsps = hsps;
         this.hitSequence = hitSequence;
     }
-
+    
+    /**
+     * Experimental.
+     * Wants to return an hashcode designed to allow conceptual comparisons of search results.
+     * Fields unrelated to search are deliberately not considered.
+     * @return 
+     */
+    public int hashCode(){
+        String allInOne = hitId+hitLen;
+        return allInOne.hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof Hit)) return false;
+        
+        return o.hashCode() == this.hashCode();
+    }
     public int getHitNum() {
         return hitNum;
     }
