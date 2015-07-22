@@ -13,8 +13,6 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * Utility class for calculating common scores of {@link MultipleAlignment}s.
- * <p>
- * 
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
