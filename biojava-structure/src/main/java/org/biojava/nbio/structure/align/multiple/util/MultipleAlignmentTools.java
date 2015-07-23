@@ -13,6 +13,7 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -672,7 +673,93 @@ public class MultipleAlignmentTools {
 		}
 		return corePositions;
 	}
+	
+	/**
+	 * Outputs a pairwise alignment in I-TASSER's 3D Format for target-template
+	 * alignment.
+	 * http://zhanglab.ccmb.med.umich.edu/I-TASSER/option4.html
+	 * 
+	 * <p>The format is closely related to a standard PDB file, but contains only
+	 * CA atoms and adds two columns for specifying the alignment:
+	 * 
+	 * <pre>
+ATOM   2001  CA  MET     1      41.116 -30.727   6.866  129 THR
+ATOM   2002  CA  ALA     2      39.261 -27.408   6.496  130 ARG
+ATOM   2003  CA  ALA     3      35.665 -27.370   7.726  131 THR
+ATOM   2004  CA  ARG     4      32.662 -25.111   7.172  132 ARG
+ATOM   2005  CA  GLY     5      29.121 -25.194   8.602  133 ARG
 
+Column 1 -30: Atom & Residue records of query sequence.
+Column 31-54: Coordinates of atoms in query copied from corresponding atoms in template.
+Column 55-59: Corresponding residue number in template based on alignment
+Column 60-64: Corresponding residue name in template
+</pre>
+	 *
+	 * <p>Note that the output is a pairwise alignment. Other rows in the
+	 * MultipleAlignment will be ignored.
+	 * 
+	 * <p>This method supports topology-independent alignments. The output will
+	 * have sequence order matching the query, but include atoms from the
+	 * template.
+	 * 
+	 * @param alignment A <em>full</em> multiple alignment between proteins
+	 * @param queryIndex index of the query within the multiple alignment
+	 * @param templateIndex index of the template within the multiple alignment
+	 * @return The file contents as a string
+	 */
+	public static String to3DFormat(MultipleAlignment alignment, int queryIndex, int templateIndex) {
+		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
+		Atom[] queryAtoms = atomArrays.get(queryIndex);
+		Atom[] templateAtoms = atomArrays.get(templateIndex);
+		
+		List<Block> blocks = alignment.getBlocks();
+		sortBlocks(blocks, queryIndex);
+		
+		StringBuilder str = new StringBuilder();
+		
+		// Gather info about the template structure
+		String tNameStr = alignment.getEnsemble().getStructureNames().get(templateIndex);
+		StructureName tName = new StructureName(tNameStr);
+		String tPdbId = tName.getPdbId();
+		String tChain = tName.getChainId();
+		
+		if(tChain == null ) {
+			// Use the chain of the first template block
+			for(Integer i : blocks.get(0).getAlignRes().get(templateIndex)) {
+				if(i!=null) {
+					tChain = templateAtoms[ i ].getGroup().getChainId();
+					break;
+				}
+			}
+		}
+		str.append(String.format("REMARK Template name:%s:%s\n",tPdbId,tChain));
+		for(Block block : blocks) {
+			List<Integer> qAlign = block.getAlignRes().get(queryIndex);
+			List<Integer> tAlign = block.getAlignRes().get(templateIndex);
+			for(int i=0;i<block.length();i++) {
+				Integer qRes = qAlign.get(i);
+				Integer tRes = tAlign.get(i);
+				
+				// skip gaps
+				if(qRes == null || tRes == null)
+					continue;
+				
+				// Get PDB-format ATOM records
+				String qPDB = queryAtoms[qRes].toPDB();
+				String tPDB = templateAtoms[tRes].toPDB();
+				
+				// merge the two records into 3D format
+				str.append(qPDB.substring(0,30)); // up through coordinates
+				str.append(tPDB.substring(30, 54)); // coordinates
+				str.append(tPDB.substring(22, 27)); // residue number
+				str.append(' ');
+				str.append(tPDB.substring(17, 20));
+				str.append('\n');
+			}
+		}
+		return str.toString();
+	}
+	
 	/**
 	 * Sort blocks so that the specified row is in sequential order.
 	 * The sort happens in place.
