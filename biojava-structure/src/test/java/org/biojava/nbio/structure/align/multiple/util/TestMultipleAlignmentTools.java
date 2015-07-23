@@ -19,7 +19,7 @@ import org.junit.Test;
  * @author Spencer Bliven
  *
  */
-public class MultipleAlignmentToolsTest {
+public class TestMultipleAlignmentTools {
 
 	/**
 	 * Override the toString method to give shorter output for errors

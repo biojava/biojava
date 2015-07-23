@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.multiple;
+package org.biojava.nbio.structure.align.multiple.util;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,11 @@ import javax.vecmath.Matrix4d;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.multiple.TestSampleGenerator;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLParser;
 import org.junit.Test;

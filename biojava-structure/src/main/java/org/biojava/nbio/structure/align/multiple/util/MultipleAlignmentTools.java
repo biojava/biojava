@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * <li>Transform the aligned Atoms of a MultipleAlignment
  * <li>Get all the core alignment positions of the alignment
  * <li>Calculate the average residue distance of all aligned positions
+ * <li>Sort Blocks in a MultipleAlignment by a specified row
  * </ul>
  * 
  * @author Spencer Bliven
