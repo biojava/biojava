@@ -53,6 +53,7 @@ public class ScopFactory {
 	private static final Logger logger = LoggerFactory.getLogger(ScopFactory.class);
 
 	// berkeley 2
+	public static final String VERSION_2_0_5 = "2.05";
 	public static final String VERSION_2_0_4 = "2.04";
 	public static final String VERSION_2_0_3 = "2.03";
 	public static final String VERSION_2_0_2 = "2.02";
@@ -77,7 +78,7 @@ public class ScopFactory {
 	public static final String VERSION_1_55 = "1.55";
 
 	// The most recent version as of compilation time
-	public static final String LATEST_VERSION = VERSION_2_0_4;
+	public static final String LATEST_VERSION = VERSION_2_0_5;
 
 	// Hold one instance for each version
 	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 
