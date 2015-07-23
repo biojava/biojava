@@ -2,6 +2,8 @@ package org.biojava.nbio.structure.align.multiple.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -665,5 +667,37 @@ public class MultipleAlignmentTools {
 			if (core) corePositions.add(col);
 		}
 		return corePositions;
+	}
+
+	/**
+	 * Sort blocks so that the specified row is in sequential order.
+	 * The sort happens in place.
+	 * @param blocks List of blocks
+	 * @param sortedIndex Index of the row to be sorted
+	 */
+	public static void sortBlocks(List<Block> blocks,final int sortedIndex) {
+		Collections.sort(blocks, new Comparator<Block>() {
+			@Override
+			public int compare(Block o1, Block o2) {
+				// Compare the first non-null residue of each block
+				List<Integer> alignres1 = o1.getAlignRes().get(sortedIndex);
+				List<Integer> alignres2 = o2.getAlignRes().get(sortedIndex);
+				Integer res1 = null;
+				Integer res2 = null;
+				for(Integer r : alignres1) {
+					if( r != null) {
+						res1 = r;
+						break;
+					}
+				}
+				for(Integer r : alignres2) {
+					if( r != null) {
+						res2 = r;
+						break;
+					}
+				}
+				return res1.compareTo(res2);
+			}
+		});
 	}
 }
