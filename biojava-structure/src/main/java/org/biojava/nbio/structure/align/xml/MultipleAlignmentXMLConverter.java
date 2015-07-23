@@ -49,12 +49,6 @@ public class MultipleAlignmentXMLConverter {
 		for(BlockSet bs:msa.getBlockSets()) {
 			printXMLblockSet(xml, bs);
 		}
-		
-		if (msa.getTransformations() != null){
-			for(Matrix4d t:msa.getTransformations()){
-				printXMLmatrix4d(xml, t);
-			}
-		}
 		printXMLscoresCache(xml,msa);
 
 		xml.closeTag("MultipleAlignment");

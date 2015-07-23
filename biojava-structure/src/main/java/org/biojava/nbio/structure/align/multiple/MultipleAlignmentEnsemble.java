@@ -135,17 +135,25 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * 
 	 * @return List of MultipleAlignment in the ensemble.
 	 * @see #setMultipleAlignments()
-	 * @see #getOptimalMultipleAlignment()
 	 */
 	public List<MultipleAlignment> getMultipleAlignments();
+	
+	/**
+	 * Returns the MultipleAlignments at the specified index 
+	 * in the ensemble. Throws an exception equivalently to
+	 * accessing an index of a List
+	 * 
+	 * @return MultipleAlignment at the index in the ensemble.
+	 * @see #setMultipleAlignments()
+	 */
+	public MultipleAlignment getMultipleAlignment(int index);
 
 	/**
 	 * Set the List of MultipleAlignments in the ensemble.
 	 * 
 	 * @param alignments List of MultipleAlignments that are part of the 
 	 * ensemble.
-	 * @see #getMultipleAlignments()
-	 * @see #getOptimalMultipleAlignment()
+	 * @see #addMultipleAlignment(MultipleAlignment)
 	 */
 	public void setMultipleAlignments(List<MultipleAlignment> alignments);
 

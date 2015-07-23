@@ -48,7 +48,7 @@ public class MultipleAlignmentScorer {
 		
 		//Put AvgTM-Score
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
-		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
+		for(Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
 		alignment.putScore(AVGTM_SCORE, getAvgTMScore(trans,lengths));
@@ -207,7 +207,7 @@ public class MultipleAlignmentScorer {
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 		
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
-		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()){
+		for(Atom[] atoms : alignment.getAtomArrays()){
 			lengths.add(atoms.length);
 		}
 		return getAvgTMScore(trans, lengths);
@@ -278,7 +278,7 @@ public class MultipleAlignmentScorer {
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 		
 		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
-		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays()) {
+		for(Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
 		return getRefTMScore(trans,lengths,ref);
@@ -358,7 +358,7 @@ public class MultipleAlignmentScorer {
 		
 		//Calculate d0: same as the one in TM score
 		int minLen = Integer.MAX_VALUE;
-		for(Atom[] atoms : alignment.getEnsemble().getAtomArrays())
+		for(Atom[] atoms : alignment.getAtomArrays())
 			if (atoms.length < minLen) minLen = atoms.length;
 		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;
 		

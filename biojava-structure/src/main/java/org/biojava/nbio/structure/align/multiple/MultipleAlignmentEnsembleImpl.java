@@ -142,15 +142,15 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		//Convert the rotation and translation to a Matrix4D and set it
 		Matrix4d ident = new Matrix4d();
 		ident.setIdentity();
-		Matrix rot = afp.getBlockRotationMatrix()[0];
-		Atom shift = afp.getBlockShiftVector()[0];
-		Matrix4d transform = Calc.getTransformation(rot, shift);
-		msa.setTransformations(Arrays.asList(ident, transform));
+		Matrix[] rot = afp.getBlockRotationMatrix();
+		Atom[] shift = afp.getBlockShiftVector();
 
 		//Create a BlockSet for every block in AFPChain if flexible
 		if (flexible){
 			for (int bs=0; bs<afp.getBlockNum(); bs++){
 				BlockSet blockSet = new BlockSetImpl(msa);
+				Matrix4d blockTr = Calc.getTransformation(rot[bs], shift[bs]);
+				blockSet.setTransformations(Arrays.asList(ident, blockTr));
 				Block block = new BlockImpl(blockSet);
 				block.setAlignRes(new ArrayList<List<Integer>>());
 				block.getAlignRes().add(new ArrayList<Integer>());
@@ -171,6 +171,8 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		} //Create a Block for every block in AFPChain if not flexible
 		else {
 			BlockSet blockSet = new BlockSetImpl(msa);
+			Matrix4d blockTr = Calc.getTransformation(rot[0], shift[0]);
+			blockSet.setTransformations(Arrays.asList(ident, blockTr));
 			for (int bs=0; bs<afp.getBlockNum(); bs++){
 				Block block = new BlockImpl(blockSet);
 				block.setAlignRes(new ArrayList<List<Integer>>());
@@ -310,6 +312,11 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 			multipleAlignments = new ArrayList<MultipleAlignment>();
 		}
 		return multipleAlignments;
+	}
+	
+	@Override
+	public MultipleAlignment getMultipleAlignment(int index) {
+		return multipleAlignments.get(index);
 	}
 
 	@Override

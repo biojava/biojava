@@ -196,7 +196,7 @@ public class TestMultipleAlignmentScorer {
 		//We want the identity transfromations to maintain the missalignment
 		Matrix4d ident = new Matrix4d();
 		ident.setIdentity();
-		msa.setTransformations(Arrays.asList(ident,ident,ident));
+		bs.setTransformations(Arrays.asList(ident,ident,ident));
 		
 		return msa;
 	}
@@ -237,7 +237,7 @@ public class TestMultipleAlignmentScorer {
 		//We want the identity transfromations to mantain the missalignments
 		Matrix4d ident = new Matrix4d();
 		ident.setIdentity();
-		msa.setTransformations(Arrays.asList(ident,ident,ident));
+		bs.setTransformations(Arrays.asList(ident,ident,ident));
 		
 		return msa;
 	}

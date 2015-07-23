@@ -173,7 +173,7 @@ public class MultipleAlignmentDisplay {
 
 		int size = multAln.size();
 
-		List<Atom[]> atomArrays = multAln.getEnsemble().getAtomArrays();
+		List<Atom[]> atomArrays = multAln.getAtomArrays();
 		for (int i=0; i<size; i++){
 			if (atomArrays.get(i).length < 1) 
 				throw new StructureException(
@@ -183,13 +183,10 @@ public class MultipleAlignmentDisplay {
 
 		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
 
-		List<Matrix4d> transforms = multAln.getTransformations();
 		//TODO implement independent BlockSet superposition of the structure
-		if (multAln.getBlockSets().size() > 1) {
-			transforms = multAln.getBlockSets().get(0).getTransformations();
-		}
+		List<Matrix4d> transf = multAln.getBlockSet(0).getTransformations();
 
-		if(transforms == null) {
+		if(transf == null) {
 
 			logger.error("Alignment Transformations are not calculated. "
 					+ "Superimposing to first structure as reference.");
@@ -197,12 +194,8 @@ public class MultipleAlignmentDisplay {
 			multAln = multAln.clone();
 			MultipleSuperimposer imposer = new ReferenceSuperimposer();
 			imposer.superimpose(multAln);
-			transforms = multAln.getTransformations();
-
-			if (multAln.getBlockSets().size() > 1) {
-				transforms = multAln.getBlockSets().get(0).getTransformations();
-			}
-			assert(transforms != null);
+			transf = multAln.getBlockSet(0).getTransformations();
+			assert(transf != null);
 		}
 
 		//Rotate the atom coordinates of all the structures
@@ -223,7 +216,7 @@ public class MultipleAlignmentDisplay {
 			}
 
 			//Transform the structure to ensure a full rotation in the display
-			Calc.transform(displayS, transforms.get(i));
+			Calc.transform(displayS, transf.get(i));
 			rotatedAtoms.add(rotCA);
 		}
 

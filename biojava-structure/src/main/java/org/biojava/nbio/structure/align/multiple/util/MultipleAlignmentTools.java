@@ -62,7 +62,7 @@ public class MultipleAlignmentTools {
 		List<String> alnSequences = new ArrayList<String>();
 		for (int str=0; str<alignment.size(); str++) alnSequences.add("");
 		mapSeqToStruct.clear();
-		List<Atom[]> atoms = alignment.getEnsemble().getAtomArrays();
+		List<Atom[]> atoms = alignment.getAtomArrays();
 		int globalPos = -1;
 
 		//Initialize helper variables in constucting the sequence alignment
@@ -293,7 +293,7 @@ public class MultipleAlignmentTools {
 		List<String> alnSequences = new ArrayList<String>();
 		for (int str=0; str<alignment.size(); str++) alnSequences.add("");
 		mapSeqToStruct.clear();
-		List<Atom[]> atoms = alignment.getEnsemble().getAtomArrays();
+		List<Atom[]> atoms = alignment.getAtomArrays();
 		int globalPos = -1;
 
 		//Loop through all the alignment Blocks in the order given
@@ -445,8 +445,7 @@ public class MultipleAlignmentTools {
 					for (Integer p:b.getAlignRes().get(str)){
 						if (sum == seqPos) {
 							if (p!= null){
-								a = msa.getEnsemble().
-										getAtomArrays().get(str)[p];
+								a = msa.getAtomArrays().get(str)[p];
 							}
 							break;
 						}
@@ -588,16 +587,13 @@ public class MultipleAlignmentTools {
 					"No ensemble set for this alignment");
 		}
 
-		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
+		List<Atom[]> atomArrays = alignment.getAtomArrays();
 		List<Atom[]> transformed = new ArrayList<Atom[]>(atomArrays.size());
 
 		//Loop through structures
 		for (int i=0; i<atomArrays.size(); i++){
 
 			Matrix4d transform = null;
-			if( alignment.getTransformations() != null) {
-				transform = alignment.getTransformations().get(i);
-			}
 			Atom[] curr = atomArrays.get(i); // all CA atoms from structure
 
 			//Concatenated list of all blocks for this structure

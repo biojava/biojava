@@ -24,13 +24,10 @@ public interface MultipleSuperimposer {
 	/**
 	 * Superimpose all structures from a {@link MultipleAlignment}. The 
 	 * superposition is done for all individual BlockSets. If there is 
-	 * only one BlockSet, the superposition is also set in the 
-	 * MultipleAlignment as the global superposition.
+	 * only one BlockSet.
 	 * <p>
-	 * At a minimum, this should set the transformation matrices for either
-	 * the {@link MultipleAlignment#setTransformations(List) MultipleAlignment}
-	 * (for rigid-body superpositions) or the individual {@link
-	 * BlockSet#setTransformations(List) BlockSet}s.
+	 * At a minimum, this should set the transformation matrices for 
+	 * the individual {@link BlockSet#setTransformations(List) BlockSet}s.
 	 * <p>
 	 * This method only calculates and sets the transformation 4D Matrices.
 	 * If any score is needed it should be calculated and set separately 

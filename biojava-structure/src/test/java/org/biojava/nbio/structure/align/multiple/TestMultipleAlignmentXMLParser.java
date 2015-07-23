@@ -109,8 +109,8 @@ public class TestMultipleAlignmentXMLParser {
 		
 		//Recursively check member alignments
 		for (int i=0; i<a.getMultipleAlignments().size(); i++){
-			MultipleAlignment msa1 = a.getMultipleAlignments().get(i);
-			MultipleAlignment msa2 = b.getMultipleAlignments().get(i);
+			MultipleAlignment msa1 = a.getMultipleAlignment(i);
+			MultipleAlignment msa2 = b.getMultipleAlignment(i);
 			if (!equals(msa1,msa2)) return false;
 		}
 		
@@ -137,17 +137,6 @@ public class TestMultipleAlignmentXMLParser {
 			BlockSet bs1 = a.getBlockSets().get(i);
 			BlockSet bs2 = b.getBlockSets().get(i);
 			if (!equals(bs1,bs2)) return false;
-		}
-		//Check transformation matrices
-		if (a.getTransformations() == null){
-			if (b.getTransformations() != null) return false;
-		} else if (b.getTransformations() == null) return false;
-		else {
-			for (int i=0; i<a.getTransformations().size(); i++){
-				Matrix4d t1 = a.getTransformations().get(i);
-				Matrix4d t2 = b.getTransformations().get(i);
-				if (!t1.equals(t2)) return false;
-			}
 		}
 		return true;
 	}
