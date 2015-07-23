@@ -16,7 +16,6 @@ import java.util.List;
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
-import org.biojava.nbio.core.sequence.io.util.ClasspathResource;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -67,8 +66,8 @@ public class BlastXMLQueryTest {
     @Test
     public void testCreateObjects() throws Exception {
         System.out.println("createObjects");
-        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.xml";
         
+        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.xml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
@@ -77,7 +76,7 @@ public class BlastXMLQueryTest {
         
         //instance.setQueryReferences(null);
         //instance.setDatabaseReferences(null);
-        ArrayList<Result> result = instance.createObjects(Double.MAX_VALUE);
+        ArrayList<Result> result = instance.createObjects(1e-10);
         
         // test with random manual selected results
         BlastHsp hsp1hit1res1 = new BlastHspBuilder()
