@@ -28,8 +28,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
 
 /** 
  * Main class of the Java implementation of the Combinatorial Extension - 
@@ -293,8 +291,6 @@ public class MultipleMcMain implements MultipleStructureAligner {
 						equivalencies.get(str).get(pos));
 			}
 		}
-		MultipleSuperimposer imposer= new ReferenceSuperimposer(ref);
-		imposer.superimpose(seed);
 		return seed;
 	}
 
