@@ -126,8 +126,8 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		randomSeed = 0;
 		minBlockLen = 10;
 		minAlignedStructures = 0;
-		gapOpen = 10.0;
-		gapExtension = 5.0;
+		gapOpen = 20.0;
+		gapExtension = 15.0;
 		convergenceSteps = 0;
 		nrThreads = 4;
 	}
