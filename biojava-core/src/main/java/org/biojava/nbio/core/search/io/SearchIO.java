@@ -48,7 +48,7 @@ public class SearchIO implements Iterable<Result>{
         results = factory.createObjects(evalueThreshold);
     }
     
-    private ResultFactory getFactory(File f){
+    private ResultFactory guessFactory(File f){
         List<Class<?>> classes = FactoryLoader.find("Bio.SearchIO.ConcreteFactories");
         
         String filename = f.getAbsolutePath();
