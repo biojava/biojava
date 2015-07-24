@@ -68,8 +68,8 @@
       <ScoresCache />
     </BlockSet>
     <ScoresCache>
-      <RMSD value="1.6157522409255982" />
       <AvgTM-score value="0.20901795047594007" />
+      <RMSD value="1.6157522409255982" />
     </ScoresCache>
   </MultipleAlignment>
   <ScoresCache />
