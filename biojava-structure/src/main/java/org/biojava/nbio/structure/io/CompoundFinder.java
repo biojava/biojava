@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Heuristically finding of Compounds (called Entities in mmCIF dictionary)
+ * Heuristical finding of Compounds (called Entities in mmCIF dictionary)
  * in a given Structure. Compounds are the groups of sequence identical NCS-related polymer chains
  * in the Structure.
  * 
