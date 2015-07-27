@@ -24,6 +24,8 @@ public class BlastHspBuilder {
     private String hspQseq;
     private String hspHseq;
     private String hspIdentityString;
+    private Double percentageIdentity;
+    private Integer mismatchCount;
 
     public BlastHspBuilder() {
     }
@@ -113,8 +115,17 @@ public class BlastHspBuilder {
         return this;
     }
 
+    public BlastHspBuilder setPercentageIdentity(Double percentageIdentity) {
+        this.percentageIdentity = percentageIdentity;
+        return this;
+    }
+
+    public BlastHspBuilder setMismatchCount(Integer mismatchCount) {
+        this.mismatchCount = mismatchCount;
+        return this;
+    }
     public BlastHsp createBlastHsp() {
-        return new BlastHsp(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString);
+        return new BlastHsp(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString, percentageIdentity, mismatchCount);
     }
     
 }
