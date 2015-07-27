@@ -28,23 +28,25 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author pavanpa
  */
 public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
-    private final int hspNum;
-    private final double hspBitScore;
-    private final int hspScore;
-    private final double hspEvalue;
-    private final int hspQueryFrom;
-    private final int hspQueryTo;
-    private final int hspHitFrom;
-    private final int hspHitTo;
-    private final int hspQueryFrame;
-    private final int hspHitFrame;
-    private final int hspIdentity;
-    private final int hspPositive;
-    private final int hspGaps;
-    private final int hspAlignLen;
-    private final String hspQseq;
-    private final String hspHseq;
-    private final String hspIdentityString;
+    private Integer hspNum;
+    private Double hspBitScore;
+    private Integer hspScore;
+    private Double hspEvalue;
+    private Integer hspQueryFrom;
+    private Integer hspQueryTo;
+    private Integer hspHitFrom;
+    private Integer hspHitTo;
+    private Integer hspQueryFrame;
+    private Integer hspHitFrame;
+    private Integer hspIdentity;
+    private Integer hspPositive;
+    private Integer hspGaps;
+    private Integer hspAlignLen;
+    private String hspQseq;
+    private String hspHseq;
+    private String hspIdentityString;
+    private Double percentageIdentity = null;
+    private Integer mismatchCount = null;
     
     /**
      * Experimental.
@@ -180,10 +182,20 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     public String getHspIdentityString() {
         return hspIdentityString;
     }
-    
-    
 
-    public Hsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue, int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo, int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive, int hspGaps, int hspAlignLen, String hspQseq, String hspHseq, String hspIdentityString) {
+    public Double getPercentageIdentity() {
+        if (percentageIdentity != null) return percentageIdentity;
+        if (hspIdentity!= null && hspAlignLen != null) return (double)hspIdentity/hspAlignLen;
+        return null;
+    }
+
+    public Integer getMismatchCount() {
+        if (mismatchCount != null) return mismatchCount;
+        if (hspIdentity!= null && hspAlignLen != null) return hspIdentity-hspAlignLen;
+        return null;
+    }
+
+    public Hsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue, int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo, int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive, int hspGaps, int hspAlignLen, String hspQseq, String hspHseq, String hspIdentityString, Double percentageIdentity, Integer mismatchCount) {
         this.hspNum = hspNum;
         this.hspBitScore = hspBitScore;
         this.hspScore = hspScore;
@@ -197,10 +209,17 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         this.hspIdentity = hspIdentity;
         this.hspPositive = hspPositive;
         this.hspGaps = hspGaps;
-        this.hspAlignLen = hspAlignLen;
+        this.hspIdentity = hspAlignLen;
         this.hspQseq = hspQseq;
         this.hspHseq = hspHseq;
         this.hspIdentityString = hspIdentityString;
+        this.percentageIdentity = percentageIdentity; 
+        this.mismatchCount = mismatchCount;
+        
+        // sanity check
+        if (percentageIdentity != null && (percentageIdentity < 0 || percentageIdentity >1))
+            throw new IllegalArgumentException("Percentage identity must be between 0 and 1");
+        
     }
       
 }
