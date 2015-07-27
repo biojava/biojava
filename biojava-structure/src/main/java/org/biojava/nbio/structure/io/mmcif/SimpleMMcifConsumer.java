@@ -753,11 +753,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 						logger.warn("Chain with chain id {} (asym id {}) and {} residues, contains only waters. Will ignore the chain because it doesn't fit into the BioJava structure data model.",
 								chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
 					}
-					else if (StructureTools.isChainPureNonPolymer(chain) ) {
-						logger.warn("Chain with chain id {} (asym id {}) and {} residues, does not seem to be polymeric. Will ignore the chain because it doesn't fit into the BioJava structure data model.",
-								chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
-						it.remove();
-					}
 				}
 			}
 		}
