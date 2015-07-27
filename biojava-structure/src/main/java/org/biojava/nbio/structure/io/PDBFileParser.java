@@ -226,7 +226,7 @@ public class PDBFileParser  {
 	 */
 	public static final String TURN   = "TURN";
 
-	int atomCount;
+	private int atomCount;
 
 
 
@@ -237,7 +237,7 @@ public class PDBFileParser  {
 	private boolean atomOverflow;
 
 	/** flag to tell parser to only read Calpha coordinates **/
-	boolean parseCAonly;
+	private boolean parseCAonly;
 
 	static {
 
@@ -2139,10 +2139,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
 							c.getChainID(), c.getAtomGroups().size());
 					it.remove();
-				} else if (StructureTools.isChainPureNonPolymer(c)) {
-					logger.warn("Chain {} ({} atom groups) is composed of non-polymer molecules only. Removing it.", 
-							c.getChainID(), c.getAtomGroups().size());					
-					it.remove();
 				}
 			}
 			structure.addModel(current_model);
@@ -2926,11 +2922,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
 						c.getChainID(), c.getAtomGroups().size());
 				it.remove();
-			} else if (StructureTools.isChainPureNonPolymer(c)) {
-				logger.warn("Chain {} ({} atom groups) is composed of non-polymer molecules only. Removing it.", 
-						c.getChainID(), c.getAtomGroups().size());
-				it.remove();				
-			}
+			} 
 		}
 		structure.addModel(current_model);
 		structure.setPDBHeader(pdbHeader);

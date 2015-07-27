@@ -83,8 +83,8 @@ public class FileParsingParameters implements Serializable
 	boolean headerOnly;
 
 
-	/** update locally cached files to the latest version of remediated files
-	 * 
+	/** 
+	 * Update locally cached files to the latest version of remediated files
 	 */
 	boolean updateRemediatedFiles;
 
@@ -100,8 +100,8 @@ public class FileParsingParameters implements Serializable
 	int atomCaThreshold;
 
 
-	/** should we parse the biological assembly information from a file?
-	 * 
+	/** 
+	 * Should we parse the biological assembly information from a file?
 	 */
 	boolean parseBioAssembly;
 	
@@ -253,7 +253,7 @@ public class FileParsingParameters implements Serializable
 
 
 	/** 
-	 * A flag to detrermine if SEQRES should be stored, even if alignSeqREs is disabled.
+	 * A flag to determine if SEQRES should be stored, even if alignSeqRes is disabled.
 	 * This will provide access to the sequence in the SEQRES, without linking it up with the ATOMs.
 	 * 
 	 * @return flag
