@@ -1718,4 +1718,17 @@ public class StructureTools {
 		return waterOnly;
 	}
 
+	/**
+	 * Returns true if the given chain is composed of non-polymeric groups only
+	 * @param c
+	 * @return
+	 */
+	public static boolean isChainPureNonPolymer(Chain c) {
+		
+		for (Group g: c.getAtomGroups()) {
+			if (g.getType() == GroupType.AMINOACID || g.getType() == GroupType.NUCLEOTIDE) return false;
+
+		}
+		return true;
+	}
 }

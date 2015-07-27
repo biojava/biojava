@@ -2139,6 +2139,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
 							c.getChainID(), c.getAtomGroups().size());
 					it.remove();
+				} else if (StructureTools.isChainPureNonPolymer(c)) {
+					logger.warn("Chain {} ({} atom groups) is composed of non-polymer molecules only. Removing it.", 
+							c.getChainID(), c.getAtomGroups().size());					
+					it.remove();
 				}
 			}
 			structure.addModel(current_model);
@@ -2922,6 +2926,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
 						c.getChainID(), c.getAtomGroups().size());
 				it.remove();
+			} else if (StructureTools.isChainPureNonPolymer(c)) {
+				logger.warn("Chain {} ({} atom groups) is composed of non-polymer molecules only. Removing it.", 
+						c.getChainID(), c.getAtomGroups().size());
+				it.remove();				
 			}
 		}
 		structure.addModel(current_model);

@@ -510,6 +510,8 @@ public class Compound implements Serializable {
 			logger.warn("No SEQRES groups found in chain {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
 					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)", 
 					c.getChainID());
+			// we add a explicit null to the map so that we flag it as unavailable for this chain
+			chains2pdbResNums2ResSerials.put(c.getChainID(), null);
 			return;
 		}
 		

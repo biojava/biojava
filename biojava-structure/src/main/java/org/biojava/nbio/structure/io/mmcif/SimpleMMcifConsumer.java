@@ -748,14 +748,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				it = pdbChains.iterator();
 				while (it.hasNext()) {
 					Chain chain = it.next();
-					GroupType predominantGroupType = StructureTools.getPredominantGroupType(chain);
 					if (StructureTools.isChainWaterOnly(chain)) {
 						it.remove();
 						logger.warn("Chain with chain id {} (asym id {}) and {} residues, contains only waters. Will ignore the chain because it doesn't fit into the BioJava structure data model.",
 								chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
 					}
-					else if (predominantGroupType != GroupType.AMINOACID && 
-							 predominantGroupType!=GroupType.NUCLEOTIDE ) {
+					else if (StructureTools.isChainPureNonPolymer(chain) ) {
 						logger.warn("Chain with chain id {} (asym id {}) and {} residues, does not seem to be polymeric. Will ignore the chain because it doesn't fit into the BioJava structure data model.",
 								chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
 						it.remove();
