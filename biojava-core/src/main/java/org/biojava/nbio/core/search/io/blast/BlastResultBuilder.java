@@ -74,7 +74,7 @@ public class BlastResultBuilder {
         return this;
     }
 
-    public BlastResultBuilder setHits(ArrayList<Hit> hits) {
+    public BlastResultBuilder setHits(List<Hit> hits) {
         this.hits = hits;
         return this;
     }
