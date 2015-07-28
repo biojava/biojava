@@ -8,6 +8,7 @@ package org.biojava.nbio.core.search.io;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -20,12 +21,12 @@ public abstract class Hit implements Iterable<Hsp>{
     private final String hitDef;
     private final String hitAccession;
     private final int hitLen;
-    private final ArrayList<Hsp> hsps;
+    private final List<Hsp> hsps;
     private Sequence hitSequence;
     
     
 
-    public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, ArrayList<Hsp> hsps, Sequence hitSequence) {
+    public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp> hsps, Sequence hitSequence) {
         this.hitNum = hitNum;
         this.hitId = hitId;
         this.hitDef = hitDef;

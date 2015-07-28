@@ -8,6 +8,7 @@ package org.biojava.nbio.core.search.io.blast;
 
 import org.biojava.nbio.core.search.io.Hsp;
 import java.util.ArrayList;
+import java.util.List;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 
@@ -18,7 +19,7 @@ public class BlastHitBuilder {
     private String hitAccession;
     private int hitLen;
     private Sequence hitSequence;
-    private ArrayList<Hsp> hsps;
+    private List<Hsp> hsps;
 
     public BlastHitBuilder() {
     }
@@ -53,7 +54,7 @@ public class BlastHitBuilder {
         return this;
     }
 
-    public BlastHitBuilder setHsps(ArrayList<Hsp> hsps) {
+    public BlastHitBuilder setHsps(List<Hsp> hsps) {
         this.hsps = hsps;
         return this;
     }
