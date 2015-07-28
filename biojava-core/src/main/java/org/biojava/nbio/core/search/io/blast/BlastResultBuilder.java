@@ -9,6 +9,7 @@ package org.biojava.nbio.core.search.io.blast;
 import org.biojava.nbio.core.search.io.Hit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 
@@ -23,7 +24,7 @@ public class BlastResultBuilder {
     private String queryDef;
     private int queryLength;
     private Sequence querySequence;
-    private ArrayList<Hit> hits;
+    private List<Hit> hits;
 
     public BlastResultBuilder() {
     }

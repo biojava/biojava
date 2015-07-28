@@ -8,8 +8,8 @@ package org.biojava.nbio.core.search.io.blast;
 
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Result;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -18,7 +18,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author pavanpa
  */
 public class BlastResult extends Result{
-    public BlastResult(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, ArrayList<Hit> hits, Sequence querySequence) {
+    public BlastResult(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit> hits, Sequence querySequence) {
         super(program, version, reference, dbFile, programSpecificParameters, iterationNumber, queryID, queryDef, queryLength, hits, querySequence);
     }
     

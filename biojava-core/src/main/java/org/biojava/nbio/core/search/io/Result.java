@@ -9,6 +9,7 @@ package org.biojava.nbio.core.search.io;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
@@ -30,7 +31,7 @@ public abstract class Result implements Iterable<Hit>{
     private String queryDef;
     private int queryLength;
     private Sequence querySequence;
-    private ArrayList<Hit> hits;
+    private List<Hit> hits;
     private int hitCounter = -1;
   
     /*
@@ -39,7 +40,7 @@ public abstract class Result implements Iterable<Hit>{
     }
     */
 
-    public Result(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, ArrayList<Hit> hits, Sequence querySequence) {
+    public Result(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit> hits, Sequence querySequence) {
         this.program = program;
         this.version = version;
         this.reference = reference;
