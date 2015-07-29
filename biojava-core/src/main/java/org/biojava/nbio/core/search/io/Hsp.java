@@ -47,6 +47,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     private String hspIdentityString;
     private Double percentageIdentity = null;
     private Integer mismatchCount = null;
+    private SimpleSequencePair<S, C> returnAln;
     
     /**
      * Experimental.
@@ -67,7 +68,8 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     }
     
     public SequencePair<S,C> getAlignment(){
-        SimpleSequencePair<S, C> returnAln;
+        if (returnAln != null) return returnAln;
+        
         SimpleAlignedSequence alignedQuery, alignedHit;
         // queryFrom e hitTo?
         int numBefore, numAfter;
