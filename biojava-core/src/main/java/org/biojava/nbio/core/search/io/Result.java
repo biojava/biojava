@@ -33,12 +33,6 @@ public abstract class Result implements Iterable<Hit>{
     private Sequence querySequence;
     private List<Hit> hits;
     private int hitCounter = -1;
-  
-    /*
-    public Hit nextHit() {
-        return(hits.get(hitCounter++));
-    }
-    */
 
     public Result(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit> hits, Sequence querySequence) {
         this.program = program;
@@ -60,8 +54,16 @@ public abstract class Result implements Iterable<Hit>{
      * @return 
      */
     public int hashCode(){
-        String allInOne = queryID+queryDef;
-        return allInOne.hashCode();
+        String prefix = queryID+queryDef;
+        String suffix="";
+        if (hits != null){
+            for (Hit h: hits) {
+                String hashString = h.getHspsHashString();
+                if (hashString== null) return prefix.hashCode();
+                suffix += hashString;
+            }
+        }
+        return (prefix+suffix).hashCode();
     }
     
     @Override

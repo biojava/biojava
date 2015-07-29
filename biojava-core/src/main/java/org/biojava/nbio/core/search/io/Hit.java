@@ -40,11 +40,31 @@ public abstract class Hit implements Iterable<Hsp>{
      * Experimental.
      * Wants to return an hashcode designed to allow conceptual comparisons of search results.
      * Fields unrelated to search are deliberately not considered.
+     * 
+     * This latter wants to be a way to compare two hits such that 
+     * if two different queries hit for example chromososome 1, 
+     * with of course different alignments, they will remain still equals to comparison.
      * @return 
      */
     public int hashCode(){
         String allInOne = hitId+hitLen;
         return allInOne.hashCode();
+    }
+    /**
+     * gets a String to be hashcoded representing contained hsp.
+     * @return null if hsp does not contain alignment information.
+     * @return an hashcode representing all hsp
+     */
+    public String getHspsHashString(){
+        String cat = ""+hashCode();
+        if (hsps != null){
+            for (Hsp h: hsps){
+                //  hsp hashcode cannot be calculated
+                if (h.getHspQseq() == null && h.getHspIdentityString() == null && h.getHspHseq()==null) return null;
+                cat += h.getHspQseq()+"\n"+h.getHspIdentityString()+"\n"+h.getHspHseq()+"\n";
+            }
+        }
+        return cat;
     }
     
     @Override
