@@ -86,7 +86,7 @@ public class LocalProteinDomainParser {
 
 		Domain dom = new Domain();
 		Chain c = ca[0].getGroup().getChain();
-		dom.setId("D"+c.getParent().getPDBCode()+c.getId()+"1");
+		dom.setId("D"+c.getStructure().getPDBCode()+c.getId()+"1");
 		dom.setSize(ca.length);
 		dom.setNseg(1);
 		dom.getSegmentAtPos(0).setFrom(0);

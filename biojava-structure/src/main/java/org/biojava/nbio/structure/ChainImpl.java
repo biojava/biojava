@@ -108,7 +108,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
-	public void setParent(Structure parent) {
+	public void setStructure(Structure parent) {
 		this.parent = parent;
 	}
 
@@ -117,7 +117,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @return the parent Structure object
 	 */
 	@Override
-	public Structure getParent() {
+	public Structure getStructure() {
 
 
 		return parent;

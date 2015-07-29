@@ -312,19 +312,19 @@ public interface Chain {
     /** 
      * Sets the back-reference to its parent Structure.
      * @param parent the parent Structure object for this Chain
-     * @see #getParent()
+     * @see #getStructure()
      *  
      */
-    public void setParent(Structure parent) ; 
+    public void setStructure(Structure parent); 
     
     /** 
      * Returns the parent Structure of this chain.
      * 
      * @return the parent Structure object
-     * @see #setParent(Structure)
+     * @see #setStructure(Structure)
      */
     
-    public Structure getParent() ;
+    public Structure getStructure();
     
     /** 
      * Gets all groups that are not polymer groups and that are not solvent groups.

@@ -157,7 +157,7 @@ public class CeCPMain extends CeMain {
 
 		// since the process of creating ca2m strips the name info away, set it explicitely
 		try {
-			afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
+			afpChain.setName2(ca2[0].getGroup().getChain().getStructure().getName());
 		} catch( Exception e) {}
 
 		if(debug) {

@@ -42,6 +42,8 @@ import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.PDBFileReader;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -387,7 +389,7 @@ public class StructureTools {
 			if(g != null) {
 				Chain c = g.getChain();
 				if( c != null) {
-					s = c.getParent();
+					s = c.getStructure();
 				}
 			}
 		}
@@ -1718,4 +1720,94 @@ public class StructureTools {
 		return waterOnly;
 	}
 
+        public static String getAtomSequence(Chain c) {
+            String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		if ( prop != null && prop.equalsIgnoreCase("true")){
+
+			logger.info("The property {} is true. Will use the chemical component dictionary files to produce the atom sequence",
+					PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+			
+			List<Group> groups = c.getAtomGroups();
+			StringBuilder sequence = new StringBuilder() ;
+
+			for ( Group g: groups){
+				ChemComp cc = g.getChemComp();
+
+				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+					// an amino acid residue.. use for alignment
+					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					if ( oneLetter == null)
+						oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+					sequence.append(oneLetter);
+				}
+
+			}
+			return sequence.toString();
+		}
+
+		logger.info("The property {} is false or not set. Will use only amino acids for the atom sequence",
+				PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+		
+		// not using ChemComp records...
+		List<Group> aminos = c.getAtomGroups(GroupType.AMINOACID);
+		StringBuilder sequence = new StringBuilder() ;
+		for (Group amino : aminos) {
+			if (amino instanceof AminoAcid) {				
+				AminoAcid a = (AminoAcid) amino;
+				sequence.append(a.getAminoType());
+			} else {
+				// I suppose this can't happen, but just in case...
+				logger.warn("Group {} is tagged as GroupType.AMINOACID but its class is not AminoAcid", amino.toString());
+			}
+		}
+
+		return sequence.toString();
+        }
+        
+        public static String getSeqResSequence(Chain c){
+
+		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		if ( prop != null && prop.equalsIgnoreCase("true")) {
+			
+			logger.info("The property {} is true. Will use the chemical component dictionary files to produce the seqres sequence",
+					PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+			
+			StringBuilder str = new StringBuilder();
+			for (Group g : c.getSeqResGroups()) {
+				ChemComp cc = g.getChemComp();
+				if ( cc == null) {
+					logger.warn("Could not load ChemComp for group: ", g);
+					str.append("X");
+				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+					// an amino acid residue.. use for alignment
+					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?"))
+						oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+					str.append(oneLetter);
+				} else {
+					str.append(StructureTools.UNKNOWN_GROUP_LABEL);
+				}
+			}
+			return str.toString();
+		}
+		
+		logger.info("The property {} is false or not set. Will use only amino acids for the seqres sequence",
+				PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		StringBuilder str = new StringBuilder();
+		for (Group group : c.getSeqResGroups()) {
+			if (group instanceof AminoAcid) {
+				AminoAcid aa = (AminoAcid)group;
+				str.append(aa.getAminoType()) ;
+			} else {
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
+			}
+		}
+		return str.toString();
+
+	}
 }
