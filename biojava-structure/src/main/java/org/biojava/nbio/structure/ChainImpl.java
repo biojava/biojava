@@ -574,7 +574,7 @@ public class ChainImpl implements Chain, Serializable {
 				ChemComp cc = g.getChemComp();
 				if ( cc == null) {
 					logger.warn("Could not load ChemComp for group: ", g);
-					str.append("X");
+					str.append(StructureTools.UNKNOWN_GROUP_LABEL);
 				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
 					// an amino acid residue.. use for alignment
