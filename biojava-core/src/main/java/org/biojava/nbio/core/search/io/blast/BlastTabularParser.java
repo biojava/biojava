@@ -68,7 +68,10 @@ public class BlastTabularParser implements ResultFactory {
 
     @Override
     public List<String> getFileExtensions() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List l = new ArrayList();
+        l.add("blasttabular");
+        l.add("blasttxt");
+        return l;
     }
 
     @Override

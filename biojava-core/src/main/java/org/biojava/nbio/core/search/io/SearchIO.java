@@ -7,18 +7,20 @@
 package org.biojava.nbio.core.search.io;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  *
  * @author pavanpa
  */
 public class SearchIO implements Iterable<Result>{
-    private HashMap<String,ResultFactory> extensionFactoryAssociation;
+    static private HashMap<String,ResultFactory> extensionFactoryAssociation;
+    
+    private ResultFactory factory;
+    private File file;
     
     /**
      * this threshold applies in retrieving hsp. Those having e-value below this
@@ -31,32 +33,68 @@ public class SearchIO implements Iterable<Result>{
      */
     private List<Result> results;
     
-    private final String NOT_SUPPORTED_FILE_EXCEPTION = "This extension is not associated with any parser.";
+    private final String NOT_SUPPORTED_FILE_EXCEPTION = 
+            "This extension is not associated with any parser. You can try to specify a ResultFactory object.";
     
+    /**
+     * Build a SearchIO reader and tries to select the appropriate parser inspecting
+     * file extension.
+     * 
+     * @param f
+     * @throws Exception 
+     */
     public SearchIO (File f)  throws Exception{
-        //this(f,getFactory(f));
+        factory = guessFactory(f);
+        file = f;
+        process();
     }
     
+    /**
+     * Build a SearchIO reader and specify a ResultFactory object to be used
+     * for parsing
+     * 
+     * @param f
+     * @param factory
+     * @throws Exception 
+     */
     public SearchIO (File f, ResultFactory factory) throws Exception{
-        factory.setFile(f);
-        results = factory.createObjects(evalueThreshold);
+        file = f;
+        this.factory = factory;
+        process();
+    }
+    /**
+     * Build a SearchIO reader, specify a ResultFactory object to be used for parsing
+     * and filter hsp retrieved by a e-value threshold. 
+     * This usually increase parsing speed
+     * @param f
+     * @param factory
+     * @param maxEvalue
+     * @throws Exception 
+     */
+    public SearchIO(File f, ResultFactory factory, double maxEvalue) throws Exception{
+        file = f;
+        this.factory = factory;
+        this.evalueThreshold = maxEvalue;
+        process();
     }
     
-    public SearchIO(File f, ResultFactory factory, double maxEvalue) throws Exception{
-        this.evalueThreshold = maxEvalue;
-        factory.setFile(f);
+    private void process() throws Exception {
+        factory.setFile(file);
         results = factory.createObjects(evalueThreshold);
     }
     
     private ResultFactory guessFactory(File f){
-        List<Class<?>> classes = FactoryLoader.find("Bio.SearchIO.ConcreteFactories");
-        
+        if (extensionFactoryAssociation == null){
+            extensionFactoryAssociation = new HashMap<String, ResultFactory>();
+            ServiceLoader<ResultFactory> impl = ServiceLoader.load(ResultFactory.class);
+            for (ResultFactory loadedImpl : impl) {
+                List<String> fileExtensions = loadedImpl.getFileExtensions();
+                for (String ext: fileExtensions) extensionFactoryAssociation.put(ext, loadedImpl);
+            }
+        }
+               
         String filename = f.getAbsolutePath();
         int extensionPos = filename.lastIndexOf(".");
-        /*
-        int lastSeparator = indexOfLastSeparator(filename);
-        return (lastSeparator > extensionPos ? -1 : extensionPos);
-        */
         String extension = filename.substring(extensionPos + 1);
         if (extensionFactoryAssociation.get(extension) == null) 
             throw new UnsupportedOperationException(NOT_SUPPORTED_FILE_EXCEPTION
@@ -89,57 +127,4 @@ public class SearchIO implements Iterable<Result>{
             }
         };
     }
-    
-    
-
-    
 }
-/**
- * da :
- * http://stackoverflow.com/questions/15519626/how-to-get-all-classes-names-in-a-package
- * @author pavanpa
- */
-class FactoryLoader {
-    private static final char DOT = '.';
-
-    private static final char SLASH = '/';
-
-    private static final String CLASS_SUFFIX = ".class";
-    
-    private static final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
-    
-    public static List<Class<?>> find(String scannedPackage) {
-        String scannedPath = scannedPackage.replace(DOT, SLASH);
-        URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
-        
-        if (scannedUrl == null) {
-            throw new IllegalArgumentException(String.format(BAD_PACKAGE_ERROR, scannedPath, scannedPackage));
-        }
-        File scannedDir = new File(scannedUrl.getFile());
-        List<Class<?>> classes = new ArrayList<Class<?>>();
-        for (File file : scannedDir.listFiles()) {
-            classes.addAll(find(file, scannedPackage));
-        }
-        return classes;
-    }
-
-    private static List<Class<?>> find(File file, String scannedPackage) {
-        List<Class<?>> classes = new ArrayList<Class<?>>();
-        String resource = scannedPackage + DOT + file.getName();
-        if (file.isDirectory()) {
-            for (File child : file.listFiles()) {
-                classes.addAll(find(child, resource));
-            }
-        } else if (resource.endsWith(CLASS_SUFFIX)) {
-            int endIndex = resource.length() - CLASS_SUFFIX.length();
-            String className = resource.substring(0, endIndex);
-            try {
-                classes.add(Class.forName(className));
-            } catch (ClassNotFoundException ignore) {
-            }
-        }
-        return classes;
-    }
-
-}
-
