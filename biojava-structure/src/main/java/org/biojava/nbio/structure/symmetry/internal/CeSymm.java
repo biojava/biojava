@@ -26,21 +26,12 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
-import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
-import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
-import org.biojava.nbio.structure.symmetry.internal.OrderDetectionFailedException;
-import org.biojava.nbio.structure.symmetry.internal.OrderDetector;
-import org.biojava.nbio.structure.symmetry.internal.SequenceFunctionOrderDetector;
-import org.biojava.nbio.structure.symmetry.internal.OpenRefiner;
-import org.biojava.nbio.structure.symmetry.internal.Refiner;
-import org.biojava.nbio.structure.symmetry.internal.RefinerFailedException;
-import org.biojava.nbio.structure.symmetry.internal.SingleRefiner;
-import org.biojava.nbio.structure.symmetry.internal.SymmOptimizer;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -278,7 +269,6 @@ implements MatrixListener, MultipleStructureAligner {
 		cols = ca2.length;
 
 		if( rows == 0 || cols == 0) {
-			logger.warn("Aligning empty structure");
 			throw new StructureException("Aligning empty structure");
 		}
 
@@ -376,16 +366,17 @@ implements MatrixListener, MultipleStructureAligner {
 		try {
 			switch (type){
 			case CLOSE:
-				refiner = new SingleRefiner();
 				if (order == 1) return afpChain;
+				refiner = new SingleRefiner();
 				break;
 			default: //case OPEN
 				refiner = new OpenRefiner();
 				break;
 			}
+			
 			afpChain = refiner.refine(afpAlignments, ca1, order);
 			refined = true;
-
+			
 		} catch (RefinerFailedException e) {
 			logger.warn("Could not refine structure!");
 			return afpChain;
@@ -523,7 +514,8 @@ implements MatrixListener, MultipleStructureAligner {
 		this.params = (CESymmParameters) param;
 
 		//If the multiple axes is called, run iterative version
-		if (params.isMultipleAxes()){
+		if (params.isMultipleAxes() && 
+				params.getRefineMethod() != RefineMethod.NOT_REFINED){
 			CeSymmIterative iterative = new CeSymmIterative(params);
 			MultipleAlignment result = iterative.execute(atomArrays.get(0));
 			axes = iterative.getSymmetryAxes();
@@ -567,9 +559,9 @@ implements MatrixListener, MultipleStructureAligner {
 					executor.shutdown();
 
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.warn("Optimization failed!");
 				} catch (ExecutionException e) {
-					e.printStackTrace();
+					logger.warn("Optimization failed!");
 				}
 			}
 		} else {
