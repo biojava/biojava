@@ -360,8 +360,11 @@ implements MatrixListener, MultipleStructureAligner {
 		} catch (OrderDetectionFailedException e) {
 			e.printStackTrace();
 		}
-
-		//STEP 3: symmetry refinement, apply consistency in the subunit residues
+		
+		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) 
+			return afpChain;
+		
+		//STEP 3: symmetry refinement, apply consistency in the subunit residues		
 		Refiner refiner = null;
 		try {
 			switch (type){

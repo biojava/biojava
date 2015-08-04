@@ -73,7 +73,7 @@ public class DemoCeSymm {
 		params.setMultipleAxes(true);
 
 		//Run the alignment
-		MultipleAlignment symmetry = ceSymm.align(atoms);
+		MultipleAlignment symmetry = ceSymm.align(atoms, params);
 
 		//Display the results in FatCat format
 		System.out.println(MultipleAlignmentWriter.toFatCat(symmetry));
