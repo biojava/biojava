@@ -19,8 +19,8 @@
  *
  */
 /**<p>
- * BioJava provide a module biojava-protein-disorder for prediction disordered regions
- * from a protein sequence. Biojava-protein-disorder module for now contains one method
+ * BioJava provide a module biojava-protein-disorder-ffx for prediction disordered regions
+ * from a protein sequence. biojava-protein-disorder-ffx module for now contains one method
  * for the prediction of disordered regions. This method is based on the Java 
  * implementation of RONN predictor. 
  * <p>

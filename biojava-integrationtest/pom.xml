@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>biojava</artifactId>
+    <artifactId>biojava-ffx</artifactId>
     <groupId>org.biojava</groupId>
     <version>4.1.1-SNAPSHOT</version>
   </parent>
-  <artifactId>biojava-integrationtest</artifactId>
+  <artifactId>biojava-integrationtest-ffx</artifactId>
   <packaging>jar</packaging>
-  <name>biojava-integrationtest</name>
+  <name>biojava-integrationtest-ffx</name>
   <url>http://www.biojava.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,7 +22,7 @@
     </dependency>
     <dependency>
     	<groupId>org.biojava</groupId>
-    	<artifactId>biojava-structure</artifactId>
+    	<artifactId>biojava-structure-ffx</artifactId>
     	<version>4.1.1-SNAPSHOT</version>
     </dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->

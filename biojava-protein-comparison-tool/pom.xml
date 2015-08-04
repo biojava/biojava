@@ -29,23 +29,23 @@
 
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-alignment</artifactId>
+			<artifactId>biojava-alignment-ffx</artifactId>
 			<version>4.1.0-SNAPSHOT</version>
 
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-core</artifactId>
+			<artifactId>biojava-core-ffx</artifactId>
 			<version>4.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-structure</artifactId>
+			<artifactId>biojava-structure-ffx</artifactId>
 			<version>4.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-structure-gui</artifactId>
+			<artifactId>biojava-structure-gui-ffx</artifactId>
 			<version>4.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -101,7 +101,7 @@
 									</excludes>
 								</filter>
 								<filter>
-									<artifact>org.biojava:biojava-structure</artifact>
+									<artifact>org.biojava:biojava-structure-ffx</artifact>
 									<excludes>
 										<exclude>demo/DemoFATCAT*</exclude>
 										<exclude>demo/DemoCE*</exclude>

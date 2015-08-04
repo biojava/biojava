@@ -72,7 +72,7 @@ public class DemoMMCIFReader
 
 
 	/** An example demonstrating how to directly use the mmCif file parsing classes. This could potentially be used
-	 * to use the parser to populate a data-structure that is different from the biojava-structure data model.
+	 * to use the parser to populate a data-structure that is different from the biojava-structure-ffx data model.
 	 * 
 	 */
 	public void loadFromDirectAccess(){

@@ -12,8 +12,8 @@
 			
 			<!-- <useAllReactorProjects>true</useAllReactorProjects> -->
 			<includes>
-				<include>org.biojava:biojava-core</include>
-				<include>org.biojava:biojava-structure</include>
+				<include>org.biojava:biojava-core-ffx</include>
+				<include>org.biojava:biojava-structure-ffx</include>
 
 			</includes>
 			<binaries>

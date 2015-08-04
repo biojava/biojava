@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.biojava</groupId>
-    <artifactId>biojava</artifactId>
+    <artifactId>biojava-ffx</artifactId>
     <version>4.1.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>biojava-ontology</artifactId>
-  <name>biojava-ontology</name>
+  <artifactId>biojava-ontology-ffx</artifactId>
+  <name>biojava-ontology-ffx</name>
   <url>http://maven.apache.org</url>
   
   <dependencies>

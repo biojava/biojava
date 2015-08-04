@@ -505,7 +505,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			if ( params.isShow3d()){
 
 				if (! GuiWrapper.isGuiModuleInstalled()) {
-					System.err.println("The biojava-structure-gui module is not installed. Please install!");
+					System.err.println("The biojava-structure-gui-ffx module is not installed. Please install!");
 				} else {
 
 					try {
@@ -584,7 +584,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		String output = null;
 		if ( params.isOutputPDB()){
 			if (! GuiWrapper.isGuiModuleInstalled()) {
-				System.err.println("The biojava-structure-gui module is not installed. Please install!");
+				System.err.println("The biojava-structure-gui-ffx module is not installed. Please install!");
 				output = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 			} else {
 

@@ -642,7 +642,7 @@ public class OptimalCECPMain extends CeMain {
 	/**
 	 * Try showing a the afpChain in a GUI.
 	 * 
-	 * <p>requires additional dependencies biojava-structure-gui and JmolApplet
+	 * <p>requires additional dependencies biojava-structure-gui-ffx and JmolApplet
 	 * 
 	 * @param afpChain
 	 * @param ca1
@@ -657,7 +657,7 @@ public class OptimalCECPMain extends CeMain {
 		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {
-			System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
+			System.err.println("The biojava-structure-gui-ffx and/or JmolApplet modules are not installed. Please install!");
 			// display alignment in console
 			System.out.println(afpChain.toCE(ca1clone, ca2clone));
 		} else {

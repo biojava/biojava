@@ -10,10 +10,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biojava</groupId>
-	<artifactId>biojava</artifactId>
+	<artifactId>biojava-ffx</artifactId>
 	<packaging>pom</packaging>
 	<version>4.1.1-SNAPSHOT</version>
-	<name>biojava</name>
+	<name>biojava-ffx</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
         data. It provides analytical and statistical routines, parsers for common file formats and allows the
         manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application

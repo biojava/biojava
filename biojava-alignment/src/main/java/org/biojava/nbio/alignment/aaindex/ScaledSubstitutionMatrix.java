@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 
 
 /**
- * The biojava-alignment module represents substitution matrices with short
+ * The biojava-alignment-ffx module represents substitution matrices with short
  * values. This is for performance reasons. Some substitution matrices, however,
  * are provided as float values with up to 2 decimal places.
  * <p>

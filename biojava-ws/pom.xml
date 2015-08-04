@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>biojava</artifactId>
+		<artifactId>biojava-ffx</artifactId>
 		<groupId>org.biojava</groupId>
 		<version>4.1.1-SNAPSHOT</version>
 	</parent>	
-	<artifactId>biojava-ws</artifactId>
-	<name>biojava-ws</name>
+	<artifactId>biojava-ws-ffx</artifactId>
+	<name>biojava-ws-ffx</name>
 	<description>This module deals with bioinformatics web services that could be used to process Biojava objects in a useful manner.</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-core</artifactId>
+			<artifactId>biojava-core-ffx</artifactId>
 			<version>4.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

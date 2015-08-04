@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>biojava</artifactId>
+		<artifactId>biojava-ffx</artifactId>
 		<groupId>org.biojava</groupId>
 		<version>4.1.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>biojava-alignment</artifactId>
-	<name>biojava-alignment</name>
+	<artifactId>biojava-alignment-ffx</artifactId>
+	<name>biojava-alignment-ffx</name>
 
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -36,13 +36,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-core</artifactId>
+			<artifactId>biojava-core-ffx</artifactId>
 			<version>4.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-phylo</artifactId>
+			<artifactId>biojava-phylo-ffx</artifactId>
 			<version>4.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

@@ -2,25 +2,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>biojava</artifactId>
+		<artifactId>biojava-ffx</artifactId>
 		<groupId>org.biojava</groupId>
 		<version>4.1.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>biojava-structure</artifactId>
-	<name>biojava-structure</name>
+	<artifactId>biojava-structure-ffx</artifactId>
+	<name>biojava-structure-ffx</name>
 	<description>The protein structure modules of BioJava.</description>
 
 	<dependencies>
 
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-alignment</artifactId>
+			<artifactId>biojava-alignment-ffx</artifactId>
 			<version>4.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
-			<artifactId>biojava-core</artifactId>
+			<artifactId>biojava-core-ffx</artifactId>
 			<version>4.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
