@@ -53,14 +53,14 @@ public class ChemCompGroupFactory {
 		logger.debug("Chem comp "+recordName+" read from provider "+chemCompProvider.getClass().getCanonicalName());
 		cc = chemCompProvider.getChemComp(recordName);
 		
-		cache.put(recordName, cc);
+		if (!cc.getOne_letter_code().equals("?")){
+			cache.put(recordName, cc);
+		}
 		return cc;
 	}
 
 	public static void setChemCompProvider(ChemCompProvider provider) {
 		logger.debug("Setting new chem comp provider to "+provider.getClass().getCanonicalName());
-		logger.debug("Chem comp provider cache reset after change of provider ");
-		cache = new SoftHashMap<String, ChemComp>(0);
 		chemCompProvider = provider;
 	}
 
