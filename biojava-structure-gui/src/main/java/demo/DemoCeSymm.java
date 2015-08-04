@@ -54,7 +54,7 @@ public class DemoCeSymm {
 		 */
 
 		//Set the name of the protein structure to analyze
-		String name = "1hiv.A";
+		String name = "1u6d";
 		List<Atom[]> atoms = new ArrayList<Atom[]>();
 
 		//Download the atoms

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -52,13 +54,14 @@ public class DemoCeSymm {
 		 */
 
 		//Set the name of the protein structure to analyze
-		String name = "4F88";
+		String name = "1u6d";
 		List<Atom[]> atoms = new ArrayList<Atom[]>();
 
 		//Download the atoms
 		AtomCache cache = new AtomCache();
-		Atom[] ca = cache.getAtoms(name);
-		atoms.add(ca);
+		Structure s = cache.getStructure(name);
+		Atom[] array = StructureTools.getRepresentativeAtomArray(s);
+		atoms.add(array);
 
 		CeSymm ceSymm = new CeSymm();
 
