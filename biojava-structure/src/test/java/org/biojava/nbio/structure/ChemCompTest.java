@@ -129,10 +129,6 @@ public class ChemCompTest {
 
         assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-        // an empty description is returned as expected
-        assertNull(cc.getThree_letter_code());
-
-
         // now we change to download chem comp provider
 
         ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
