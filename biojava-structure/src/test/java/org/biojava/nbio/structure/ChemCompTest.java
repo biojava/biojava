@@ -171,8 +171,8 @@ public class ChemCompTest {
 
         assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-        // an empty description is returned as expected
-        assertNull(cc.getThree_letter_code());
+        //the cached description contains all information even with the ReducedProvider
+        assertNotNull(cc.getThree_letter_code());
 
         
     }

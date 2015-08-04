@@ -26,8 +26,6 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

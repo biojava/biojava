@@ -25,6 +25,8 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,6 +97,7 @@ public class PdbFileFormat30Test {
 		InputStream inStream = this.getClass().getResourceAsStream(fileName);
 		assertNotNull(inStream);
 		
+		ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
 		PDBFileParser pdbpars = new PDBFileParser();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(false);
