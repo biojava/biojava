@@ -25,6 +25,9 @@
 package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,7 +137,7 @@ public class FileParsingParameters implements Serializable
 		parseCAOnly = false;
 
 		// don't download ChemComp dictionary by default.
-		loadChemCompInfo = false;
+		setLoadChemCompInfo(false);
 		headerOnly = false;
 
 		storeEmptySeqRes = false;
@@ -180,17 +183,22 @@ public class FileParsingParameters implements Serializable
 		return loadChemCompInfo;
 	}
 
-	/**  Sets if chemical component defintions should be loaded from the web
+	/** 
+	 * Sets if chemical component defintions should be loaded from the web.
+	 * Modifies also the static ChemCompProvider and resets its cache.
 	 * 
 	 * @param loadChemCompInfo flag
 	 */
-	public void setLoadChemCompInfo(boolean loadChemCompInfo)
-	{
+	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
 
-		if ( loadChemCompInfo)
+		if (loadChemCompInfo){
 			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "true");
-		else
+			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+		} else {
 			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "false");
+			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
+		}
+		
 		this.loadChemCompInfo = loadChemCompInfo;
 
 	}

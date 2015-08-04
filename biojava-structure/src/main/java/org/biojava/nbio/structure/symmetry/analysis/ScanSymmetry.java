@@ -257,6 +257,5 @@ public class ScanSymmetry implements Runnable {
 //		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());	
 		params.setLoadChemCompInfo(true);
 		ChemCompGroupFactory.setChemCompProvider(new AllChemCompProvider());
-//		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 	}
 }

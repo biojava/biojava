@@ -238,15 +238,6 @@ public class PDBFileReader extends LocalPDBDirectory {
 		downloadStructure(pdbId);
 	}
 
-	@Override
-	public void setFileParsingParameters(FileParsingParameters params){
-		super.setFileParsingParameters(params);
-		if ( ! params.isLoadChemCompInfo()) {
-			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
-		}
-	}
-
-
 	/**
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
 	 * @param fetchFileEvenIfObsolete the fetchFileEvenIfObsolete to set

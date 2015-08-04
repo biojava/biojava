@@ -3544,10 +3544,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
 
-		if ( !params.isLoadChemCompInfo()) {
-			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
-		}
-
 	}
 
 	public FileParsingParameters getFileParsingParameters(){
