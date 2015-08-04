@@ -137,7 +137,9 @@ public class ChemCompGroupFactory {
 		return oneLetter;
 	}
 
-
+	public static SoftHashMap<String, ChemComp> getCache() {
+		return cache;
+	}
 
 
 }
