@@ -613,8 +613,7 @@ public class StructureTools {
 				}
 			}
 			else {
-				if (ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
-						PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())){
+				if (PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())){
 					
 					if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
 						atoms.add(g.getAtom(CA_ATOM_NAME));

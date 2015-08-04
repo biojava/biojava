@@ -44,13 +44,7 @@ public class StructureToolsTest extends TestCase {
 		InputStream inStream = this.getClass().getResourceAsStream("/5pti.pdb");
 		assertNotNull(inStream);
 
-
 		PDBFileParser pdbpars = new PDBFileParser();
-		FileParsingParameters params = new FileParsingParameters();
-		params.setAlignSeqRes(false);
-		params.setLoadChemCompInfo(false);
-
-		pdbpars.setFileParsingParameters(params);
 
 		structure = pdbpars.parsePDBFile(inStream) ;
 
@@ -96,6 +90,10 @@ public class StructureToolsTest extends TestCase {
 
 	public void testGetAtomsConsistency() throws IOException, StructureException{
 		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setLoadChemCompInfo(true);
+		cache.setFileParsingParams(params);
+		
 		Structure hivA = cache.getStructure("1hiv.A");
 		Atom[] caSa = StructureTools.getRepresentativeAtomArray(hivA);
 		Atom[] caCa = StructureTools.getRepresentativeAtomArray(hivA.getChain(0));
@@ -110,6 +108,7 @@ public class StructureToolsTest extends TestCase {
 		assertEquals(caSa.length,99);
 		assertEquals("did not find the same number of Atoms in both chains...",
 				caSa.length,caCb.length);
+		assertEquals(caSa.length, 99);
 	}
 
 	public void testGetNrAtoms(){
@@ -430,8 +429,16 @@ public class StructureToolsTest extends TestCase {
 		//mmCIF files left justify their atom names (eg "CA  "), so can have different behavior
 		AtomCache pdbCache = new AtomCache();
 		pdbCache.setUseMmCif(false);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setLoadChemCompInfo(true);
+		pdbCache.setFileParsingParams(params);
+		
 		AtomCache mmcifCache = new AtomCache();
 		mmcifCache.setUseMmCif(true);
+		FileParsingParameters params2 = new FileParsingParameters();
+		params2.setLoadChemCompInfo(true);
+		mmcifCache.setFileParsingParams(params2);
+		
 
 		Structure pdb=null, mmcif=null;
 
