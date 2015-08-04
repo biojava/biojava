@@ -183,9 +183,9 @@ public class FileParsingParameters implements Serializable
 		return loadChemCompInfo;
 	}
 
-	/** 
-	 * Sets if chemical component defintions should be loaded from the web.
-	 * Modifies also the static ChemCompProvider and resets its cache.
+	/** Sets if chemical component defintions should be loaded or not.
+	 * The decision from where the definitions are obtained is
+	 * in the static variable inside {@link ChemCompGroupFactory}. 
 	 * 
 	 * @param loadChemCompInfo flag
 	 */
@@ -193,12 +193,9 @@ public class FileParsingParameters implements Serializable
 
 		if (loadChemCompInfo){
 			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "true");
-			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 		} else {
 			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "false");
-			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
 		}
-		
 		this.loadChemCompInfo = loadChemCompInfo;
 
 	}
