@@ -28,6 +28,9 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -89,11 +92,16 @@ public class StructureToolsTest extends TestCase {
 	}
 
 	public void testGetAtomsConsistency() throws IOException, StructureException{
+
+		//Save the existing ChemCompProvider
+		ChemCompProvider provider = ChemCompGroupFactory.getChemCompProvider();
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setLoadChemCompInfo(true);
 		cache.setFileParsingParams(params);
-		
+
 		Structure hivA = cache.getStructure("1hiv.A");
 		Atom[] caSa = StructureTools.getRepresentativeAtomArray(hivA);
 		Atom[] caCa = StructureTools.getRepresentativeAtomArray(hivA.getChain(0));
@@ -109,6 +117,8 @@ public class StructureToolsTest extends TestCase {
 		assertEquals("did not find the same number of Atoms in both chains...",
 				caSa.length,caCb.length);
 		assertEquals(caSa.length, 99);
+
+		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
 
 	public void testGetNrAtoms(){
@@ -426,19 +436,24 @@ public class StructureToolsTest extends TestCase {
 	}
 
 	public void testCAmmCIF() throws StructureException {
+
+		//Save the existing ChemCompProvider
+		ChemCompProvider provider = ChemCompGroupFactory.getChemCompProvider();
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
 		//mmCIF files left justify their atom names (eg "CA  "), so can have different behavior
 		AtomCache pdbCache = new AtomCache();
 		pdbCache.setUseMmCif(false);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setLoadChemCompInfo(true);
 		pdbCache.setFileParsingParams(params);
-		
+
 		AtomCache mmcifCache = new AtomCache();
 		mmcifCache.setUseMmCif(true);
 		FileParsingParameters params2 = new FileParsingParameters();
 		params2.setLoadChemCompInfo(true);
 		mmcifCache.setFileParsingParams(params2);
-		
+
 
 		Structure pdb=null, mmcif=null;
 
@@ -455,6 +470,8 @@ public class StructureToolsTest extends TestCase {
 
 		assertEquals("PDB has wrong length",409,pdbCA.length);
 		assertEquals("PDB has wrong length",409,mmcifCA.length);
+		
+		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
 
 }
