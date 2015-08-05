@@ -538,7 +538,10 @@ public class StructureTools {
 			for (String atomName : atomNames) {
 				Atom a = g.getAtom(atomName);
 				if (a == null) {
-					logger.debug("Group " + g.getResidueNumber() + " (" + g.getPDBName() + ") does not have the required atom '" + atomName + "'");
+					logger.debug("Group " + g.getResidueNumber() + 
+							" (" + g.getPDBName() + 
+							") does not have the required atom '" 
+							+ atomName + "'");
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;
@@ -559,7 +562,9 @@ public class StructureTools {
 	}
 
 	/** 
-	 * Returns an Atom array of the C-alpha atoms. Any atom that is a carbon and has CA name will be returned.
+	 * Returns an Atom array of the C-alpha atoms. 
+	 * Any atom that is a carbon and has CA name will be returned.
+	 * 
 	 * @param c the structure object
 	 * @return an Atom[] array
 	 * @see #getRepresentativeAtomArray(Chain)
@@ -577,13 +582,17 @@ public class StructureTools {
 	}
 
 	/**
-	 * Gets a representative atom for each group.
+	 * Gets a representative atom for each group that is part of
+	 * the chain backbone. Note that modified aminoacids won't 
+	 * be returned as part of the backbone if the {@link 
+	 * ReducedChemCompProvider} is set and their {@link ChemComp}
+	 * information was not cached before.
 	 * 
 	 * For amino acids, the representative is a CA carbon.
 	 * For nucleotides, the representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}.
 	 * Other group types will be ignored.
 	 * @param c
-	 * @return
+	 * @return representative Atoms of the chain backbone
 	 * @since Biojava 4.1.0
 	 */
 	public static final Atom[] getRepresentativeAtomArray(Chain c) {
@@ -624,8 +633,6 @@ public class StructureTools {
 					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE)) {
 						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
 					}
-				} else if (PolymerType.unknown.equals(cc.getPolymerType())){
-					int a = 3;
 				}
 			}
 		}
@@ -808,13 +815,17 @@ public class StructureTools {
 	}
 
 	/**
-	 * Gets a representative atom for each group. Atoms are not cloned.
+	 * Gets a representative atom for each group that is part of
+	 * the structure backbone. Note that modified aminoacids won't 
+	 * be returned as part of the backbone if the {@link 
+	 * ReducedChemCompProvider} is set and their Chemical Component
+	 * information was not cached before.
 	 * 
 	 * For amino acids, the representative is a CA carbon.
 	 * For nucleotides, the representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}.
 	 * Other group types will be ignored.
 	 * @param s Input structure
-	 * @return
+	 * @return representative Atoms of the structure backbone
 	 * @since Biojava 4.1.0
 	 */
 	public static Atom[] getRepresentativeAtomArray(Structure s){
