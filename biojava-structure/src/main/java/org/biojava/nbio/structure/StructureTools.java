@@ -585,8 +585,7 @@ public class StructureTools {
 	 * Gets a representative atom for each group that is part of
 	 * the chain backbone. Note that modified aminoacids won't 
 	 * be returned as part of the backbone if the {@link 
-	 * ReducedChemCompProvider} is set and their {@link ChemComp}
-	 * information was not cached before.
+	 * ReducedChemCompProvider} was used to load the structure.
 	 * 
 	 * For amino acids, the representative is a CA carbon.
 	 * For nucleotides, the representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}.
@@ -599,41 +598,20 @@ public class StructureTools {
 		List<Atom> atoms = new ArrayList<Atom>();
 
 		for (Group g: c.getAtomGroups()) {
-			
-			ChemComp cc = g.getChemComp();
-			if (cc == null){
-			
-				logger.info("Chemical Component information not available. Obtaining"
-						+ " representative Atoms from Group type)");
-				
-				switch(g.getType()) {
-				case AMINOACID:
-					if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
-						atoms.add(g.getAtom(CA_ATOM_NAME));
-					}
-					break;
-				case NUCLEOTIDE:
-					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE)) {
-						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
-					}
-					break;
-				default:
-					// don't add
+
+			switch(g.getType()) {
+			case AMINOACID:
+				if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+					atoms.add(g.getAtom(CA_ATOM_NAME));
 				}
-			}
-			else {
-				if (PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())){
-					
-					if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
-						atoms.add(g.getAtom(CA_ATOM_NAME));
-					}
-					
-				} else if(PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
-					
-					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE)) {
-						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
-					}
+				break;
+			case NUCLEOTIDE:
+				if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE)) {
+					atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
 				}
+				break;
+			default:
+				// don't add
 			}
 		}
 
@@ -816,10 +794,9 @@ public class StructureTools {
 
 	/**
 	 * Gets a representative atom for each group that is part of
-	 * the structure backbone. Note that modified aminoacids won't 
+	 * the chain backbone. Note that modified aminoacids won't 
 	 * be returned as part of the backbone if the {@link 
-	 * ReducedChemCompProvider} is set and their Chemical Component
-	 * information was not cached before.
+	 * ReducedChemCompProvider} was used to load the structure.
 	 * 
 	 * For amino acids, the representative is a CA carbon.
 	 * For nucleotides, the representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}.
