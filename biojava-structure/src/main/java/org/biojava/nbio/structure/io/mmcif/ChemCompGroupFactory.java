@@ -34,7 +34,7 @@ public class ChemCompGroupFactory {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ChemCompGroupFactory.class);
 
-	private static ChemCompProvider chemCompProvider = new DownloadChemCompProvider();
+	private static ChemCompProvider chemCompProvider = new ReducedChemCompProvider();
 
 	private static SoftHashMap<String, ChemComp> cache = new SoftHashMap<String, ChemComp>(0);
 
@@ -53,14 +53,26 @@ public class ChemCompGroupFactory {
 		logger.debug("Chem comp "+recordName+" read from provider "+chemCompProvider.getClass().getCanonicalName());
 		cc = chemCompProvider.getChemComp(recordName);
 		
-		cache.put(recordName, cc);
+		if (!cc.getOne_letter_code().equals("?")){
+			cache.put(recordName, cc);
+		}
 		return cc;
 	}
 
+	/**
+	 * The new ChemCompProvider will be set in the static variable, 
+	 * so this provider will be used from now on until it is changed 
+	 * again. Note that this change can have unexpected behavior of
+	 * code executed afterwards.
+	 * <p>
+	 * Changing the provider does not reset the cache, so Chemical
+	 * Component definitions already downloaded from previous providers
+	 * will be used. To reset the cache see {@link #getCache()).
+	 * 
+	 * @param provider
+	 */
 	public static void setChemCompProvider(ChemCompProvider provider) {
 		logger.debug("Setting new chem comp provider to "+provider.getClass().getCanonicalName());
-		logger.debug("Chem comp provider cache reset after change of provider ");
-		cache = new SoftHashMap<String, ChemComp>(0);
 		chemCompProvider = provider;
 	}
 
@@ -137,7 +149,9 @@ public class ChemCompGroupFactory {
 		return oneLetter;
 	}
 
-
+	public static SoftHashMap<String, ChemComp> getCache() {
+		return cache;
+	}
 
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *                    BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -82,6 +82,7 @@ public class TestChemCompProvider {
 		ChemCompProvider prov3 = ChemCompGroupFactory.getChemCompProvider();
 		String name3 = prov3.getClass().getName();
 		
-		assertEquals( "org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider",name3);
+		//changing the load to false does not change the provider
+		assertEquals("The ChemCompProvider got modified from " + name1 + " to " + name3, name1, name3);
 	}
 }
