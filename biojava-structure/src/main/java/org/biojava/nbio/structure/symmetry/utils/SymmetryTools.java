@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.Atom;
@@ -27,7 +28,12 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
+import org.biojava.nbio.structure.symmetry.core.Subunits;
 
 /**
  * Utility methods for the internal symmetry identification and manipulation.
@@ -400,7 +406,7 @@ public class SymmetryTools {
 			List<AFPChain> afps, Atom[] atoms, boolean undirected) {
 
 		List<List<Integer>> graph = new ArrayList<List<Integer>>();
-		
+
 		for (int n=0; n<atoms.length; n++){
 			graph.add(new ArrayList<Integer>());
 		}
@@ -550,7 +556,7 @@ public class SymmetryTools {
 				start = block.getAlignRes().get(su).get(0+count);
 				count++;
 			}
-			
+
 			//Normalize aligned residues
 			for (int res=0; res<block.length(); res++) {
 				Integer residue = block.getAlignRes().get(su).get(res);
@@ -561,7 +567,7 @@ public class SymmetryTools {
 
 		return subunits;
 	}
-	
+
 	/**
 	 * Converts a refined symmetry AFPChain alignment into the standard
 	 * representation of symmetry in a MultipleAlignment, that contains
@@ -573,23 +579,23 @@ public class SymmetryTools {
 	 * @return MultipleAlignment format of the symmetry
 	 */
 	public static MultipleAlignment fromAFP(AFPChain symm, Atom[] atoms){
-		
+
 		if (!symm.getAlgorithmName().contains("symm")){
 			throw new IllegalArgumentException(
 					"The input alignment is not a symmetry alignment.");
 		}
-		
+
 		MultipleAlignmentEnsemble e = 
 				new MultipleAlignmentEnsembleImpl(symm, atoms, atoms, false);
 		e.setAtomArrays(new ArrayList<Atom[]>());
 		String name = e.getStructureNames().get(0);
 		e.setStructureNames(new ArrayList<String>());
-		
+
 		MultipleAlignment result = new MultipleAlignmentImpl();
 		BlockSet bs = new BlockSetImpl(result);
 		Block b = new BlockImpl(bs);
 		b.setAlignRes(new ArrayList<List<Integer>>());
-		
+
 		int order = symm.getBlockNum();
 		for (int su=0; su<order; su++){
 			List<Integer> residues = e.getMultipleAlignment(0).
@@ -600,13 +606,13 @@ public class SymmetryTools {
 		}
 		e.getMultipleAlignments().set(0, result);
 		result.setEnsemble(e);
-		
+
 		double tmScore = symm.getTMScore();
 		result.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Determines if two symmetry axis are equivalent inside the error
 	 * threshold. It only takes into account the direction of the vector
@@ -620,28 +626,96 @@ public class SymmetryTools {
 	 */
 	public static boolean equivalentAxes(Matrix4d axis1, Matrix4d axis2,
 			double epsilon){
-		
+
 		AxisAngle4d rot1 = new AxisAngle4d();
 		rot1.set(axis1);
 		AxisAngle4d rot2 = new AxisAngle4d();
 		rot2.set(axis2);
-		
+
 		//rot1.epsilonEquals(rot2, error); //that also compares angle
 		//L-infinite distance without comparing the angle (epsilonEquals)
 		List<Double> sameDir = new ArrayList<Double>();
 		sameDir.add(Math.abs(rot1.x-rot2.x));
 		sameDir.add(Math.abs(rot1.y-rot2.y));
 		sameDir.add(Math.abs(rot1.z-rot2.z));
-		
+
 		List<Double> otherDir = new ArrayList<Double>();
 		otherDir.add(Math.abs(rot1.x+rot2.x));
 		otherDir.add(Math.abs(rot1.y+rot2.y));
 		otherDir.add(Math.abs(rot1.z+rot2.z));
-		
+
 		Double error = Math.min(Collections.max(sameDir), 
 				Collections.max(otherDir));
-		
+
 		return error < epsilon;
 	}
-	
+
+	/** 
+	 * Given a symmetry alignment, it calculates the overall global 
+	 * symmetry, factoring out the alignment and detection steps.
+	 * 
+	 * @param symm symmetry alignment
+	 * @return global symmetry results
+	 */
+	public static QuatSymmetryResults getQuaternarySymmetry(
+			MultipleAlignment symm) {
+
+		//Obtain the clusters of aligned Atoms and subunit variables
+		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(symm);
+		List<Atom[]> alignedCA = subunits.getAtomArrays();
+		List<Integer> corePos = MultipleAlignmentTools.getCorePositions(
+				subunits.getBlock(0));
+
+		List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
+		List<Integer> folds = new ArrayList<Integer>();
+		List<Boolean> pseudo = new ArrayList<Boolean>();
+		List<String> chainIds = new ArrayList<String>();
+		List<Integer> models = new ArrayList<Integer>();
+		List<Double> seqIDmin = new ArrayList<Double>();
+		List<Double> seqIDmax = new ArrayList<Double>();
+		List<Integer> clusterIDs = new ArrayList<Integer>();
+		int fold = 1;
+		Character chain = 'A';
+
+		for (int str=0; str<alignedCA.size(); str++){
+			Atom[] array = alignedCA.get(str);
+			List<Point3d> points = new ArrayList<Point3d>();
+			List<Integer> alignedRes = 
+					subunits.getBlock(0).getAlignRes().get(str);
+			for (int pos=0; pos<alignedRes.size(); pos++){
+				Integer residue = alignedRes.get(pos);
+				if (residue == null) continue;
+				else if (!corePos.contains(pos)) continue;
+				Atom a = array[residue];
+				points.add(new Point3d(a.getCoords()));
+			}
+			caCoords.add(points.toArray(new Point3d[points.size()]));
+			if (alignedCA.size() % fold == 0){
+				folds.add(fold); //the folds are the common denominators
+			}
+			fold++;
+			pseudo.add(false);
+			chainIds.add(chain+"");
+			chain++;
+			models.add(0);
+			seqIDmax.add(1.0);
+			seqIDmin.add(1.0);
+			clusterIDs.add(0);
+		}
+
+		//Create directly the subunits, because we know the aligned CA
+		Subunits globalSubunits = new Subunits(caCoords, clusterIDs, 
+				pseudo, seqIDmin, seqIDmax, 
+				folds, chainIds, models);
+
+		//Quaternary Symmetry Detection
+		QuatSymmetryParameters param = new QuatSymmetryParameters();
+		param.setRmsdThreshold(symm.size() * 1.5);
+
+		QuatSymmetryResults gSymmetry = 
+				QuatSymmetryDetector.calcQuatSymmetry(globalSubunits, param);
+
+		return gSymmetry;
+	}
+
 }

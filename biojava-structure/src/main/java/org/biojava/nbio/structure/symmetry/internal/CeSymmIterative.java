@@ -114,6 +114,8 @@ public class CeSymmIterative {
 	 */
 	private void iterate(Atom[] atoms, int first) throws StructureException {
 
+		if (atoms.length < 8) return;
+				
 		//Perform the CeSymm alignment
 		CeSymm aligner = new CeSymm();
 		List<Atom[]> array = new ArrayList<Atom[]>();

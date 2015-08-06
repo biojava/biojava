@@ -112,11 +112,11 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 		if (order == 1) {
 			throw new RefinerFailedException(
-					"Optimization: Non-symmetric seed slignment. Order = 1");
+					"Non-symmetric seed slignment: order = 1");
 		}
 		if (subunitCore < Lmin) {
 			throw new RefinerFailedException(
-					"Optimization: Seed alignment too short. length < Lmin");
+					"Seed alignment too short: coreLength < Lmin");
 		}
 
 		C = 20*order;

@@ -185,61 +185,9 @@ public class SymmetryDisplay {
 	 */
 	public static String printPointGroupAxes(MultipleAlignment symm){
 
-		//Obtain the clusters of aligned Atoms and subunit variables
-		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(symm);
-		List<Atom[]> alignedCA = subunits.getAtomArrays();
-		List<Integer> corePos = MultipleAlignmentTools.getCorePositions(
-				subunits.getBlock(0));
-
-		List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
-		List<Integer> folds = new ArrayList<Integer>();
-		List<Boolean> pseudo = new ArrayList<Boolean>();
-		List<String> chainIds = new ArrayList<String>();
-		List<Integer> models = new ArrayList<Integer>();
-		List<Double> seqIDmin = new ArrayList<Double>();
-		List<Double> seqIDmax = new ArrayList<Double>();
-		List<Integer> clusterIDs = new ArrayList<Integer>();
-		int fold = 1;
-		Character chain = 'A';
-
-		for (int str=0; str<alignedCA.size(); str++){
-			Atom[] array = alignedCA.get(str);
-			List<Point3d> points = new ArrayList<Point3d>();
-			List<Integer> alignedRes = 
-					subunits.getBlock(0).getAlignRes().get(str);
-			for (int pos=0; pos<alignedRes.size(); pos++){
-				Integer residue = alignedRes.get(pos);
-				if (residue == null) continue;
-				else if (!corePos.contains(pos)) continue;
-				Atom a = array[residue];
-				points.add(new Point3d(a.getCoords()));
-			}
-			caCoords.add(points.toArray(new Point3d[points.size()]));
-			if (alignedCA.size() % fold == 0){
-				folds.add(fold); //the folds are the common denominators
-			}
-			fold++;
-			pseudo.add(false);
-			chainIds.add(chain+"");
-			chain++;
-			models.add(0);
-			seqIDmax.add(1.0);
-			seqIDmin.add(1.0);
-			clusterIDs.add(0);
-		}
-
-		//Create directly the subunits, because we know the aligned CA
-		Subunits globalSubunits = new Subunits(caCoords, clusterIDs, 
-				pseudo, seqIDmin, seqIDmax, 
-				folds, chainIds, models);
-
-		//Quaternary Symmetry Detection
-		QuatSymmetryParameters param = new QuatSymmetryParameters();
-		param.setRmsdThreshold(symm.size() * 1.5);
-
 		QuatSymmetryResults gSymmetry = 
-				QuatSymmetryDetector.calcQuatSymmetry(globalSubunits, param);
-
+				SymmetryTools.getQuaternarySymmetry(symm);
+		
 		AxisAligner axes = AxisAligner.getInstance(gSymmetry);
 
 		//Draw the axes as in the quaternary symmetry

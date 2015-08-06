@@ -335,6 +335,11 @@ implements MatrixListener, MultipleStructureAligner {
 		String name = ca1[0].getGroup().getChain().getParent().getIdentifier();
 		afpChain.setName1(name);
 		afpChain.setName2(name);
+		
+		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
+			logger.warn("NOT_REFINED: returning optimal self-alignment.");
+			return afpChain;
+		}
 
 		//Determine the symmetry Type or get the one in params
 		type = params.getSymmetryType();
@@ -349,23 +354,24 @@ implements MatrixListener, MultipleStructureAligner {
 			}
 		}
 
-		//STEP 2: calculate the order of symmetry for CLOSED symmetry
+		//STEP 2: calculate the order of symmetry for CLOSE symmetry
 		int order = 1;
-		OrderDetector orderDetector = null;
-		switch (params.getOrderDetectorMethod()) {
-		case SEQUENCE_FUNCTION: 
-			orderDetector = new SequenceFunctionOrderDetector(
-					params.getMaxSymmOrder(), 0.4f);
-			break;
+		if (type == SymmetryType.CLOSE) {
+			OrderDetector orderDetector = null;
+			switch (params.getOrderDetectorMethod()) {
+			case SEQUENCE_FUNCTION: 
+				orderDetector = new SequenceFunctionOrderDetector(
+						params.getMaxSymmOrder(), 0.4f);
+				break;
+			}
+			try {
+				order = orderDetector.calculateOrder(afpChain, ca1);
+			} catch (OrderDetectionFailedException e) {
+				logger.warn("Order Detection failed: returning optimal "
+						+ "self-alignment.",e);
+				return afpChain;
+			}
 		}
-		try {
-			order = orderDetector.calculateOrder(afpChain, ca1);
-		} catch (OrderDetectionFailedException e) {
-			logger.warn("Order Detector failed: "+e.getMessage());
-		}
-
-		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) 
-			return afpChain;
 
 		//STEP 3: symmetry refinement, apply consistency in the subunit residues		
 		Refiner refiner = null;
@@ -383,7 +389,8 @@ implements MatrixListener, MultipleStructureAligner {
 			refined = true;
 
 		} catch (RefinerFailedException e) {
-			logger.warn(e.getMessage()+". Returning unrefined alignment.");
+			logger.warn("Refinement failed: "
+					+ "returning optimal self-alignment.",e);
 			return afpChain;
 		}
 
@@ -466,7 +473,7 @@ implements MatrixListener, MultipleStructureAligner {
 					new SequenceFunctionOrderDetector(8, 0.4f);
 			order = orderDetector.calculateOrder(afpChain, ca1);
 		} catch (OrderDetectionFailedException e) {
-			logger.warn("Order Detector failed: "+e.getMessage());
+			logger.warn("Order Detector failed.",e);
 			// try another method
 		}
 
@@ -513,14 +520,17 @@ implements MatrixListener, MultipleStructureAligner {
 					"For symmetry analysis only one Structure is needed, "+
 							atomArrays.size()+" Structures given.");
 		}
-		if (!(params instanceof CESymmParameters))
+		if (!(params instanceof CESymmParameters)) {
 			throw new IllegalArgumentException("CE-Symm algorithm needs an "
 					+ "object of call CESymmParameters as argument.");
+		}
 		this.params = (CESymmParameters) param;
 
 		//If the multiple axes is called, run iterative version
 		if (params.isMultipleAxes() && 
 				params.getRefineMethod() != RefineMethod.NOT_REFINED){
+			
+			logger.info("Running iteratively CeSymm: ignore warnings.");
 			CeSymmIterative iterative = new CeSymmIterative(params);
 			MultipleAlignment result = iterative.execute(atomArrays.get(0));
 			axes = iterative.getSymmetryAxes();
@@ -537,37 +547,39 @@ implements MatrixListener, MultipleStructureAligner {
 			if (this.params.getOptimization()){
 
 				//Perform several optimizations in different threads
-				try {
-					ExecutorService executor = Executors.newCachedThreadPool();
-					List<Future<MultipleAlignment>> future = 
-							new ArrayList<Future<MultipleAlignment>>();
-					int seed = this.params.getSeed();
+				ExecutorService executor = Executors.newCachedThreadPool();
+				List<Future<MultipleAlignment>> future = 
+						new ArrayList<Future<MultipleAlignment>>();
+				int seed = this.params.getSeed();
 
-					//Repeat the optimization in parallel
-					for (int rep=0; rep<2; rep++){
-						Callable<MultipleAlignment> worker = 
-								new SymmOptimizer(msa, axes, seed+rep);
-						Future<MultipleAlignment> submit = executor.submit(worker);
-						future.add(submit);
-					}
-
-					//When finished take the one with the best MC-score
-					double maxScore = Double.NEGATIVE_INFINITY;
-					for (int rep=0; rep<future.size(); rep++){
-						double score = future.get(rep).get().
-								getScore(MultipleAlignmentScorer.MC_SCORE);
-						if (score > maxScore){
-							msa = future.get(rep).get();
-							maxScore = score;
-						}
-					}
-					executor.shutdown();
-
-				} catch (InterruptedException e) {
-					logger.warn("Optimization failed:"+e.getMessage());
-				} catch (ExecutionException e) {
-					logger.warn("Optimization failed:"+e.getMessage());
+				//Repeat the optimization in parallel
+				for (int rep=0; rep<2; rep++){
+					Callable<MultipleAlignment> worker = 
+							new SymmOptimizer(msa, axes, seed+rep);
+					Future<MultipleAlignment> submit = executor.submit(worker);
+					future.add(submit);
 				}
+
+				//When finished take the one with the best MC-score
+				double maxScore = Double.NEGATIVE_INFINITY;
+				double score = maxScore;
+				MultipleAlignment result = msa;
+				for (int rep=0; rep<future.size(); rep++){
+					try {
+						result = future.get(rep).get();
+						score = result.getScore(
+								MultipleAlignmentScorer.MC_SCORE);
+					} catch (InterruptedException e) {
+						logger.warn("Optimization interrupted.",e);
+					} catch (ExecutionException e) {
+						logger.warn("Optimization failed.",e);
+					}
+					if (score > maxScore){
+						msa = result;
+						maxScore = score;
+					}
+				}
+				executor.shutdown();
 			}
 		} else {
 			MultipleAlignmentEnsemble e = 
