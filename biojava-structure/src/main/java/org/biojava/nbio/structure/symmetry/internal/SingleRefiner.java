@@ -32,11 +32,18 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  */
 public class SingleRefiner implements Refiner {
 
-	public SingleRefiner() {}
+	private int order;
+	
+	public SingleRefiner(int order) {
+		this.order = order;
+	}
 	
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms, int order)
+	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms)
 			throws RefinerFailedException, StructureException {
+		
+		if (order == 1)	throw new RefinerFailedException(
+				"Cannot refine an order 1 symmetry.");
 		
 		return refineSymmetry(afpAlignments.get(0), atoms, atoms, order);
 	}

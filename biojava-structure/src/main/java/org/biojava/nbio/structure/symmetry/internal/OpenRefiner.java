@@ -34,13 +34,11 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  */
 public class OpenRefiner implements Refiner {
 
-	public OpenRefiner() {
-		super();
-	}
+	private int order;
 
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms, 
-			int order) throws RefinerFailedException, StructureException {
+	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms) 
+			throws RefinerFailedException, StructureException {
 
 		//The two vertices of the graph mean (previous, next)
 		List<List<Integer>> graph = 

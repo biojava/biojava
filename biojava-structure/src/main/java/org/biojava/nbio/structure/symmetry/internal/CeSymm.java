@@ -339,8 +339,14 @@ implements MatrixListener, MultipleStructureAligner {
 		//Determine the symmetry Type or get the one in params
 		type = params.getSymmetryType();
 		if (type == SymmetryType.AUTO){
-			if (afpChain.getBlockNum() == 1) type = SymmetryType.OPEN;
-			else type = SymmetryType.CLOSE;
+			if (afpChain.getBlockNum() == 1) {
+				type = SymmetryType.OPEN;
+				logger.info("Open Symmetry detected");
+			}
+			else {
+				type = SymmetryType.CLOSE;
+				logger.info("Close Symmetry detected");
+			}
 		}
 
 		//STEP 2: calculate the order of symmetry for CLOSED symmetry
@@ -355,7 +361,7 @@ implements MatrixListener, MultipleStructureAligner {
 		try {
 			order = orderDetector.calculateOrder(afpChain, ca1);
 		} catch (OrderDetectionFailedException e) {
-			e.printStackTrace();
+			logger.warn("Order Detector failed: "+e.getMessage());
 		}
 
 		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) 
@@ -366,19 +372,18 @@ implements MatrixListener, MultipleStructureAligner {
 		try {
 			switch (type){
 			case CLOSE:
-				if (order == 1) return afpChain;
-				refiner = new SingleRefiner();
+				refiner = new SingleRefiner(order);
 				break;
 			default: //case OPEN
 				refiner = new OpenRefiner();
 				break;
 			}
 
-			afpChain = refiner.refine(afpAlignments, ca1, order);
+			afpChain = refiner.refine(afpAlignments, ca1);
 			refined = true;
 
 		} catch (RefinerFailedException e) {
-			logger.warn("Could not refine structure!");
+			logger.warn(e.getMessage()+". Returning unrefined alignment.");
 			return afpChain;
 		}
 
@@ -461,7 +466,7 @@ implements MatrixListener, MultipleStructureAligner {
 					new SequenceFunctionOrderDetector(8, 0.4f);
 			order = orderDetector.calculateOrder(afpChain, ca1);
 		} catch (OrderDetectionFailedException e) {
-			e.printStackTrace();
+			logger.warn("Order Detector failed: "+e.getMessage());
 			// try another method
 		}
 
@@ -559,9 +564,9 @@ implements MatrixListener, MultipleStructureAligner {
 					executor.shutdown();
 
 				} catch (InterruptedException e) {
-					logger.warn("Optimization failed!");
+					logger.warn("Optimization failed:"+e.getMessage());
 				} catch (ExecutionException e) {
-					logger.warn("Optimization failed!");
+					logger.warn("Optimization failed:"+e.getMessage());
 				}
 			}
 		} else {
