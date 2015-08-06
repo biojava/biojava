@@ -28,7 +28,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
  * This class uses the {@link SVDSuperimposer} algorithm.
  * 
  * @author Aleix Lafita
- * @since 4.1.1
+ * @since 4.2.0
  *
  */
 public class CoreSuperimposer implements MultipleSuperimposer {

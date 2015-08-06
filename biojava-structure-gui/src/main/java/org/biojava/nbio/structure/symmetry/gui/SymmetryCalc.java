@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
  * for the symmetry axis recovery.
  *  
  * @author Aleix Lafita
+ * @since 4.2.0
  * 
  */
 public class SymmetryCalc implements AlignmentCalculationRunnable {

@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Prlic
  * @author Spencer Bliven
  * @author Aleix Lafita
+ * @since 4.2.0
  * 
  */
 public class CeSymm extends AbstractStructureAlignment 

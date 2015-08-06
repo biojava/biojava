@@ -58,7 +58,7 @@ import org.biojava.nbio.structure.gui.util.SelectMultiplePanel;
  * the multiple alignment algorithm.
  *
  * @author Aleix Lafita
- * @since 4.1.1
+ * @since 4.2.0
  * 
  */
 public class MultipleAlignmentGUI extends JFrame {

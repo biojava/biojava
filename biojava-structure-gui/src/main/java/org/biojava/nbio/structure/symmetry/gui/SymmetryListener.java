@@ -13,6 +13,7 @@ import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
  * Trigger various symmetry analysis.
  * 
  * @author Aleix Lafita
+ * @since 4.2.0
  *
  */
 public class SymmetryListener implements ActionListener{

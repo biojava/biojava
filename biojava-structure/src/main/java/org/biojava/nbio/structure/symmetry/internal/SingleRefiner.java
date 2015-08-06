@@ -22,12 +22,13 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
- * Creates a refined alignment with the CE alternative self-alignment.
+ * Creates a refined alignment with the CE-Symm alternative self-alignment.
  * Needs the order of symmetry and assumes that the last subunit aligns
  * with the first, being thus a CLOSE symmetry.
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
+ * @since 4.2.0
  * 
  */
 public class SingleRefiner implements Refiner {

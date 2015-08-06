@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
  * an artificial PDB structure with a new model for every aligned structure.
  * 
  * @author Aleix Lafita
+ * @since 4.2.0
  *
  */
 public class MultipleAlignmentDisplay {

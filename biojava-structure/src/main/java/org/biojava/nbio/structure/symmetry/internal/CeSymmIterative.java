@@ -31,7 +31,7 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
  * </ul></li>
  * 
  * @author Aleix Lafita
- *
+ * @since 4.2.0
  */
 public class CeSymmIterative {
 

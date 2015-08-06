@@ -9,7 +9,10 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
 
 /**
  * Calls Spencer's method for determining order.
+ * 
  * @author dmyersturnbull
+ * @since 4.2.0
+ * 
  */
 public class SequenceFunctionOrderDetector implements OrderDetector {
 

@@ -30,6 +30,7 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  * ocurred in the first alignment.
  * 
  * @author Aleix Lafita
+ * @since 4.2.0
  * 
  */
 public class OpenRefiner implements Refiner {

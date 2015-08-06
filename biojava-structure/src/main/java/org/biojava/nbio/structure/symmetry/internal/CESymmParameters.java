@@ -9,7 +9,7 @@ import org.biojava.nbio.structure.align.ce.CeParameters;
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
- *
+ * @since 4.2.0
  */
 public class CESymmParameters extends CeParameters {
 

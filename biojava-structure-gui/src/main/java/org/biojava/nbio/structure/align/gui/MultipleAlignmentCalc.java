@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  *  the download has finished.
  *  
  * @author Aleix Lafita
- * @since 4.1.1
+ * @since 4.2.0
  * 
  */
 public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {

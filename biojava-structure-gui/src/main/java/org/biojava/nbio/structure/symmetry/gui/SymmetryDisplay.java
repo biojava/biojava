@@ -25,6 +25,7 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  * visualization of symmetry.
  * 
  * @author Aleix Lafita
+ * @since 4.2.0
  * 
  */
 public class SymmetryDisplay {

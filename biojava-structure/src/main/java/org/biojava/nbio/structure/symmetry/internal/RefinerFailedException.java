@@ -1,9 +1,11 @@
 package org.biojava.nbio.structure.symmetry.internal;
 
 /**
- * Refinement of the symmetry alignment failed.
+ * Refinement of the self-alignment failed.
  * 
  * @author Aleix Lafita
+ * @since 4.2.0
+ * 
  */
 public class RefinerFailedException extends Exception {
 	

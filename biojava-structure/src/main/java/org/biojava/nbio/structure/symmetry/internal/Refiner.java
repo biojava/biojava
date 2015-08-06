@@ -11,6 +11,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
  * self-alignments in order to make the subunits consistent.
  * 
  * @author Aleix Lafita
+ * @since 4.2.0
  * 
  */
 public interface Refiner {

@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
  * Only one structure is inputted and only the CeSymm algorihm can be chosen.
  *
  * @author Aleix Lafita
+ * @since 4.2.0
  *
  */
 public class SymmetryGui extends JFrame {

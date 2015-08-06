@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
  * format is returned.
  * 
  * @author Aleix Lafita
+ * @since 4.2.0
  * 
  */
 public class SymmOptimizer implements Callable<MultipleAlignment> {
