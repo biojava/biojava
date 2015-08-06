@@ -9,8 +9,6 @@ import java.util.concurrent.ExecutionException;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
-import org.biojava.nbio.structure.align.ce.CeCPMain;
-import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;

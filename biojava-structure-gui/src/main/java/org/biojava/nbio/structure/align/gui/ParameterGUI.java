@@ -197,7 +197,6 @@ public class ParameterGUI extends JFrame{
 
 			Class type = types.get(i);
 			Object data = getValue(keys.get(i));
-			String name = keys.get(i);
 			if( type.isEnum()) {
 				JComboBox field = (JComboBox)  textFields.get(i);
 				field.setSelectedItem(data);

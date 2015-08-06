@@ -28,6 +28,7 @@ import org.jmol.api.JmolStatusListener;
 import org.jmol.constant.EnumCallback;
 
 import javax.swing.*;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -67,8 +68,8 @@ public class MyJmolStatusListener implements JmolStatusListener {
 		return null;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	@SuppressWarnings("rawtypes")
 	public Hashtable getRegistryInfo() {
 		// TODO Auto-generated method stub
 		return null;

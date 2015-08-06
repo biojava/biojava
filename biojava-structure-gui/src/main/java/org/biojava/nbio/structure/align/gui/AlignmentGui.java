@@ -34,9 +34,6 @@ import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -56,8 +53,6 @@ import java.io.File;
 public class AlignmentGui extends JFrame{
 
 	private final static long serialVersionUID =0l;
-
-	private static final Logger logger = LoggerFactory.getLogger(AlignmentGui.class);
 
 	StructureAlignment algorithm;
 

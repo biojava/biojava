@@ -131,9 +131,6 @@ public class SymmetryGui extends JFrame {
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				JComboBox cb = (JComboBox)evt.getSource();
-				String algorithmName = (String) cb.getSelectedItem();
-				// Perform action...
 				updateAlgorithm();
 			}
 		};

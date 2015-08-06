@@ -199,8 +199,6 @@ public class MultipleAlignmentGUI extends JFrame {
 			public static final long serialVersionUID = 0l;
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				JComboBox cb = (JComboBox)evt.getSource();
-				String algorithmName = (String) cb.getSelectedItem();
 				updateMultipleAlgorithm();
 			}
 		};

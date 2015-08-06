@@ -49,7 +49,6 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MultipleAlignmentCalc.class);
 
-	private boolean interrupted = false;
 	private List<String> names;
 	private List<Structure> structures;
 
@@ -98,9 +97,7 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 	}
 
 	@Override
-	public void interrupt() {
-		interrupted = true;
-	}
+	public void interrupt() {}
 
 	@Override
 	public void cleanup() {
