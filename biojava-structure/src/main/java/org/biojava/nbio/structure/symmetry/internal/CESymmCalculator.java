@@ -44,6 +44,7 @@ public class CESymmCalculator extends CECalculator {
 
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void traceFragmentMatrix( AFPChain afpChain,
 			Atom[] ca1, Atom[] ca2) {

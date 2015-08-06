@@ -30,9 +30,6 @@ import org.biojava.nbio.structure.Compound;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;

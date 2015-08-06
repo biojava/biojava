@@ -23,7 +23,6 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;

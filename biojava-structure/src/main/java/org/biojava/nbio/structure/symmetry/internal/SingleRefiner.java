@@ -433,6 +433,7 @@ public class SingleRefiner implements Refiner {
 
 			// CE-Symm alignment
 			long startTime = System.currentTimeMillis();
+			@SuppressWarnings("deprecation")
 			AFPChain afpChain = ce.align(ca1, ca2);
 			long alignTime = System.currentTimeMillis()-startTime;
 

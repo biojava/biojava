@@ -337,7 +337,6 @@ implements MatrixListener, MultipleStructureAligner {
 		afpChain.setName2(name);
 		
 		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
-			logger.warn("NOT_REFINED: returning optimal self-alignment.");
 			return afpChain;
 		}
 
@@ -367,8 +366,7 @@ implements MatrixListener, MultipleStructureAligner {
 			try {
 				order = orderDetector.calculateOrder(afpChain, ca1);
 			} catch (OrderDetectionFailedException e) {
-				logger.warn("Order Detection failed: returning optimal "
-						+ "self-alignment.",e);
+				logger.warn("Order Detection failed.",e);
 				return afpChain;
 			}
 		}
@@ -389,8 +387,7 @@ implements MatrixListener, MultipleStructureAligner {
 			refined = true;
 
 		} catch (RefinerFailedException e) {
-			logger.warn("Refinement failed: "
-					+ "returning optimal self-alignment.",e);
+			logger.warn("Refinement failed.",e);
 			return afpChain;
 		}
 
@@ -530,7 +527,7 @@ implements MatrixListener, MultipleStructureAligner {
 		if (params.isMultipleAxes() && 
 				params.getRefineMethod() != RefineMethod.NOT_REFINED){
 			
-			logger.info("Running iteratively CeSymm: ignore warnings.");
+			logger.warn("Running iteratively CeSymm: ignore Warnings.");
 			CeSymmIterative iterative = new CeSymmIterative(params);
 			MultipleAlignment result = iterative.execute(atomArrays.get(0));
 			axes = iterative.getSymmetryAxes();
@@ -585,6 +582,8 @@ implements MatrixListener, MultipleStructureAligner {
 			MultipleAlignmentEnsemble e = 
 					new MultipleAlignmentEnsembleImpl(afp, ca1, ca1, false);
 			msa = e.getMultipleAlignment(0);
+			logger.warn("No symmetry found in the structure, "
+					+ "returning optimal self-alignment");
 		}
 
 		return msa;
