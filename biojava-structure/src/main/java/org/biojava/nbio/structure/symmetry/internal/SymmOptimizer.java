@@ -22,6 +22,8 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Optimizes a symmetry alignment by a Monte Carlo score optimization 
@@ -46,8 +48,9 @@ import org.biojava.nbio.structure.jama.Matrix;
  */
 public class SymmOptimizer implements Callable<MultipleAlignment> {
 
-	//if debug: save history and print info (slower)
-	private static final boolean debug = false;
+	private static final Logger logger = 
+			LoggerFactory.getLogger(SymmOptimizer.class);
+	
 	private Random rnd;
 
 	//Optimization parameters
@@ -73,8 +76,9 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	private List<Integer> freePool; //residues not aligned
 	private double mcScore; //alignment score to optimize
 
-	//Optimization history
-	private List<Integer> subunitLenHistory;
+	//Variables that store the history of the optimization - slower if on
+	private static final boolean history = false;
+	private List<Integer> lengthHistory;
 	private List<Double> rmsdHistory;
 	private List<Double> scoreHistory;
 
@@ -112,8 +116,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		}
 		if (subunitCore < Lmin) {
 			throw new RefinerFailedException(
-					"Optimization: Seed alignment too short. Length = "
-							+ subunitCore);
+					"Optimization: Seed alignment too short. length < Lmin");
 		}
 
 		C = 20*order;
@@ -166,7 +169,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		initialize();
 
 		//Initialize the history variables
-		subunitLenHistory = new ArrayList<Integer>();
+		lengthHistory = new ArrayList<Integer>();
 		rmsdHistory = new ArrayList<Double>();
 		scoreHistory = new ArrayList<Double>();
 
@@ -197,19 +200,19 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 				double move = rnd.nextDouble();
 				if (move < 0.4){
 					moved = shiftRow();
-					if (debug) System.out.println("did shift");
+					logger.debug("did shift");
 				}
 				else if (move < 0.7){
 					moved = expandBlock();
-					if (debug) System.out.println("did expand");
+					logger.debug("did expand");
 				}
 				else if (move < 0.85){
 					moved = shrinkBlock();
-					if (debug) System.out.println("did shrink");
+					logger.debug("did shrink");
 				}
 				else {
 					moved = insertGap();
-					if (debug) System.out.println("did insert gap");
+					logger.debug("did insert gap");
 				}
 			}
 
@@ -240,16 +243,16 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 			} else conv=0; //if positive change
 
-			if (debug) {
-				System.out.println(i+": --prob: "+prob+", --score: "+AS+
+			logger.debug(i+": --prob: "+prob+", --score: "+AS+
 						", --conv: "+conv);
 
+			if (history){
 				if (i%100==1){
 					//Get the correct superposition again
 					updateMultipleAlignment();
 					double rmsd = MultipleAlignmentScorer.getRMSD(msa);
 
-					subunitLenHistory.add(length);
+					lengthHistory.add(length);
 					rmsdHistory.add(rmsd);
 					scoreHistory.add(mcScore);
 				}	
@@ -270,9 +273,13 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 		//Save the history to the results folder of the symmetry project
 		try {
-			if (debug) 
-				saveHistory("src/main/java/results/SymmOptimizerHistory.csv");
-		} catch(FileNotFoundException e) {} catch (IOException e) {}
+			if (history)
+				saveHistory("SymmOptimizerHistory.csv");
+		} catch(FileNotFoundException e) {
+			logger.warn("Could not save history file: "+e.getMessage());
+		} catch (IOException e) {
+			logger.warn("Could not save history file: "+e.getMessage());
+		}
 
 		return msa;
 	}
@@ -828,9 +835,9 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		FileWriter writer = new FileWriter(filePath);
 		writer.append("Step,Length,RMSD,Score\n");
 
-		for (int i=0; i<subunitLenHistory.size(); i++){
+		for (int i=0; i<lengthHistory.size(); i++){
 			writer.append(
-					i*100+","+subunitLenHistory.get(i)+
+					i*100+","+lengthHistory.get(i)+
 					","+rmsdHistory.get(i)+","+scoreHistory.get(i)+"\n");
 		}
 

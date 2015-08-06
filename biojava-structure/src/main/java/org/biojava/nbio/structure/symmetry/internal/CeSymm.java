@@ -59,8 +59,6 @@ import org.slf4j.LoggerFactory;
 public class CeSymm extends AbstractStructureAlignment 
 implements MatrixListener, MultipleStructureAligner {
 
-	private static final boolean debug = false;
-
 	/**
 	 * Version History:<p>
 	 * <li>1.0 - initial implementation of CeSymm.
@@ -304,11 +302,10 @@ implements MatrixListener, MultipleStructureAligner {
 			//Calculate and set the TM score for the newAFP alignment
 			double tmScore3 = AFPChainScorer.getTMScore(newAFP, ca1, ca2);
 			newAFP.setTMScore(tmScore3);
-			if (debug) 
-				logger.info("Alignment "+(i+1)+" score: "+newAFP.getTMScore());
+			logger.debug("Alignment "+(i+1)+" score: "+newAFP.getTMScore());
 			//Determine if the alignment is significant, stop if true
 			if (tmScore3 < params.getSymmetryThreshold()){
-				if(debug) logger.info("Not symmetric alignment with TM score: "
+				logger.debug("Not symmetric alignment with TM score: "
 						+ newAFP.getTMScore());
 				//If it is the first alignment save it anyway
 				if (i==0) afpAlignments.add(newAFP);
@@ -360,10 +357,10 @@ implements MatrixListener, MultipleStructureAligner {
 		} catch (OrderDetectionFailedException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) 
 			return afpChain;
-		
+
 		//STEP 3: symmetry refinement, apply consistency in the subunit residues		
 		Refiner refiner = null;
 		try {
@@ -376,10 +373,10 @@ implements MatrixListener, MultipleStructureAligner {
 				refiner = new OpenRefiner();
 				break;
 			}
-			
+
 			afpChain = refiner.refine(afpAlignments, ca1, order);
 			refined = true;
-			
+
 		} catch (RefinerFailedException e) {
 			logger.warn("Could not refine structure!");
 			return afpChain;

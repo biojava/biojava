@@ -15,14 +15,14 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
  * 
  */
 public class BlockImpl extends AbstractScoresCache 
-					   implements Serializable, Block, Cloneable {
+implements Serializable, Block, Cloneable {
 
 	private static final long serialVersionUID = -5804042669466177641L;
-	
+
 	private BlockSet parent;
 	private List<List<Integer>> alignRes;
 	private int coreLength;
-	
+
 	/**
 	 * Constructor. Links also the parent to this instance, by adding the
 	 * Block to the parent's list.
@@ -31,13 +31,13 @@ public class BlockImpl extends AbstractScoresCache
 	 * @return BlockImpl a BlockImpl instance linked to its parent BlockSet.
 	 */
 	public BlockImpl(BlockSet blockSet) {
-		
+
 		parent = blockSet;
 		if (parent!=null) parent.getBlocks().add(this);
 		alignRes = null;
 		coreLength = -1; //Value -1 indicates not yet calculated.
 	}
-	
+
 	/**
 	 * Copy constructor.
 	 * 
@@ -45,11 +45,11 @@ public class BlockImpl extends AbstractScoresCache
 	 * @return BlockImpl an identical copy of the input BlockImpl object.
 	 */
 	public BlockImpl(BlockImpl b) {
-		
+
 		super(b); //This copies the cached scores
 		this.parent = b.parent;
 		this.coreLength = b.coreLength;
-		
+
 		this.alignRes = null;
 		if (b.alignRes!=null){
 			//Make a deep copy of everything
@@ -59,18 +59,18 @@ public class BlockImpl extends AbstractScoresCache
 			}
 		}
 	}
-	
+
 	@Override
 	public Block clone(){
 		return new BlockImpl(this);
 	}
-	
+
 	@Override
 	public void clear() {
 		super.clear();
 		coreLength = -1;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "BlockImpl [alignRes=" + alignRes

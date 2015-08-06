@@ -22,6 +22,8 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class takes a MultipleAlignment seed previously generated and runs a 
@@ -44,8 +46,8 @@ import org.biojava.nbio.structure.jama.Matrix;
 public class MultipleMcOptimizer 
 implements Callable<MultipleAlignment> {
 
-	//Print info and save evolution history
-	private static final boolean debug = false;
+	private static final Logger logger = 
+			LoggerFactory.getLogger(MultipleMcOptimizer.class);
 
 	private Random rnd;
 	private MultipleSuperimposer imposer;
@@ -70,7 +72,8 @@ implements Callable<MultipleAlignment> {
 	private int blockNr;	//the number of Blocks in the alignment
 	private double mcScore;  // Optimization score, objective function
 
-	//Variables that store the history of the optimization
+	//Variables that store the history of the optimization - slower if on
+	private static final boolean history = false;
 	private List<Integer> lengthHistory;
 	private List<Double> rmsdHistory;
 	private List<Double> scoreHistory;
@@ -120,7 +123,7 @@ implements Callable<MultipleAlignment> {
 		for (Block b : msa.getBlocks()){
 			if (b.getCoreLength() < Lmin){
 				toDelete.add(b);
-				if (debug) System.err.println("Deleting Block: too short.");
+				logger.warn("Deleting a Block: coreLength < Lmin.");
 			}
 		}
 		for (Block b : toDelete){
@@ -186,9 +189,11 @@ implements Callable<MultipleAlignment> {
 		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend);
 
 		//Initialize the history variables
-		lengthHistory = new ArrayList<Integer>();
-		rmsdHistory = new ArrayList<Double>();
-		scoreHistory = new ArrayList<Double>();
+		if (history){
+			lengthHistory = new ArrayList<Integer>();
+			rmsdHistory = new ArrayList<Double>();
+			scoreHistory = new ArrayList<Double>();
+		}
 	}
 
 	/**
@@ -229,19 +234,19 @@ implements Callable<MultipleAlignment> {
 				double move = rnd.nextDouble();
 				if (move < 0.4){
 					moved = shiftRow();
-					if (debug) System.out.println("did shift");
+					logger.debug("did shift");
 				}
 				else if (move < 0.7){
 					moved = expandBlock();
-					if (debug) System.out.println("did expand");
+					logger.debug("did expand");
 				}
 				else if (move < 0.85){
 					moved = shrinkBlock();
-					if (debug) System.out.println("did shrink");
+					logger.debug("did shrink");
 				}
 				else {
 					moved = insertGap();
-					if (debug) System.out.println("did insert gap");
+					logger.debug("did insert gap");
 				}
 			}
 
@@ -270,10 +275,10 @@ implements Callable<MultipleAlignment> {
 
 			} else conv=0;
 
-			if (debug){
-				System.out.println("Step: "+i+": --prob: "+prob+
-						", --score: "+AS+", --conv: "+conv);
-
+			logger.debug("Step: "+i+": --prob: "+prob+
+					", --score change: "+AS+", --conv: "+conv);
+			
+			if (history){
 				if (i%100==1){
 					lengthHistory.add(msa.length());
 					rmsdHistory.add(MultipleAlignmentScorer.getRMSD(msa));
@@ -290,10 +295,14 @@ implements Callable<MultipleAlignment> {
 		msa.putScore(MultipleAlignmentScorer.MC_SCORE, mcScore);
 
 		try {
-			if (debug) {
-				saveHistory("/scratch/cemc/CeMcOptimizationHistory.csv");
+			if (history) {
+				saveHistory("McOptimizationHistory.csv");
 			}
-		} catch(FileNotFoundException e) {} catch (IOException e) {}
+		} catch(FileNotFoundException e) {
+			logger.warn("Could not save history file: "+e.getMessage());
+		} catch (IOException e) {
+			logger.warn("Could not save history file: "+e.getMessage());
+		}
 
 		return msa;
 	}

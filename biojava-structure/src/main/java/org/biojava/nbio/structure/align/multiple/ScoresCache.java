@@ -32,7 +32,7 @@ public interface ScoresCache {
 	 * @param score Value of the score
 	 */
 	public void putScore(String property, Double score);
-	
+
 	/**
 	 * Get the value for a particular score. Scores which return null
 	 * should be recalculated and then stored using 
@@ -42,7 +42,7 @@ public interface ScoresCache {
 	 * @return Value of the score, or null if it is not set.
 	 */
 	public Double getScore(String property);
-	
+
 	/**
 	 * Get a collection of all scores that have been set.
 	 * 

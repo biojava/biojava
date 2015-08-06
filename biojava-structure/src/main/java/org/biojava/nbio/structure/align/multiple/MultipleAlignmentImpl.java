@@ -17,7 +17,7 @@ import org.biojava.nbio.structure.StructureException;
  * 
  */
 public class MultipleAlignmentImpl extends AbstractScoresCache 
-				implements Serializable, MultipleAlignment, Cloneable {
+implements Serializable, MultipleAlignment, Cloneable {
 
 	private static final long serialVersionUID = 3432043794125805139L;
 
@@ -37,7 +37,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 	public MultipleAlignmentImpl() {
 		this(new MultipleAlignmentEnsembleImpl());  //assign an empty ensemble.
 	}
-	
+
 	/**
 	 * Constructor linking to an existing ensemble.
 	 * Automatically adds this alignment to the parent ensemble.
@@ -46,7 +46,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 	 * @return MultipleAlignment an alignment instance part of an ensemble.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentEnsemble ensemble) {
-		
+
 		super();
 		parent = ensemble;
 		if (parent!=null) parent.getMultipleAlignments().add(this);
@@ -65,10 +65,10 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 	 * @return MultipleAlignmentImpl identical copy of the alignment.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentImpl ma) {
-		
+
 		super(ma); //Copy the scores
 		parent = ma.parent;
-		
+
 		pose = null;
 		if (ma.pose != null){
 			//Make a deep copy of everything
@@ -78,10 +78,10 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 				pose.add(newTrans);
 			}
 		}
-		
+
 		length = ma.length;
 		coreLength = ma.coreLength;
-		
+
 		blockSets = null;
 		if (ma.blockSets!=null){
 			//Make a deep copy of everything
@@ -93,7 +93,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 			}
 		}
 	}
-	
+
 	@Override
 	public void clear() {
 		super.clear();
@@ -104,17 +104,17 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 			a.clear();
 		}
 	}
-	
+
 	@Override
 	public MultipleAlignmentImpl clone() {
 		return new MultipleAlignmentImpl(this);
 	}
-	
+
 	@Override
 	public String toString() {
 		String resume = "Structures:" + parent.getStructureNames() + 
 				" \nAlgorithm:" + parent.getAlgorithmName() + "_" + 
-								  parent.getVersion() + 
+				parent.getVersion() + 
 				" \nBlockSets: "+ getBlockSets().size() + 
 				" \nBlocks: " + getBlocks().size() +
 				" \nLength: " + length() +
@@ -131,7 +131,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 		if (blockSets == null) blockSets = new ArrayList<BlockSet>();
 		return blockSets;
 	}
-	
+
 	@Override
 	public List<Block> getBlocks() {
 		List<Block> blocks = new ArrayList<Block>();
@@ -145,12 +145,12 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 	public void setBlockSets(List<BlockSet> blockSets) {
 		this.blockSets = blockSets;
 	}
-	
+
 	@Override
 	public BlockSet getBlockSet(int index){
 		return blockSets.get(index);
 	}
-	
+
 	@Override
 	public Block getBlock(int index){
 		List<Block> blocks = getBlocks();
@@ -224,7 +224,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 	public MultipleAlignmentEnsemble getEnsemble() {
 		return parent;
 	}
-	
+
 	@Override
 	public void setEnsemble(MultipleAlignmentEnsemble parent) {
 		this.parent = parent;

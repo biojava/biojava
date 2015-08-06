@@ -109,7 +109,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #getBlockSets()
 	 */
 	public Block getBlock(int index);
-	
+
 	/**
 	 * Returns the array of Atoms for each structure from its parent
 	 * Ensemble.
@@ -168,5 +168,5 @@ public interface MultipleAlignment extends ScoresCache {
 	 */
 	@Override
 	public String toString();
-	
+
 }

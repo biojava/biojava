@@ -313,7 +313,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		}
 		return multipleAlignments;
 	}
-	
+
 	@Override
 	public MultipleAlignment getMultipleAlignment(int index) {
 		return multipleAlignments.get(index);

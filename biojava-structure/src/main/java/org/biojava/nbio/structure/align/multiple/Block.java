@@ -19,29 +19,29 @@ import java.util.List;
  * 
  */
 public interface Block extends ScoresCache {
-	
+
 	/**
 	 * Creates and returns an identical copy of this block.
 	 * 
 	 * @return Block identical copy of this object.
 	 */
 	public Block clone();
-	
+
 	/** 
-     * Set the back-reference to its parent BlockSet.
-     * 
-     * @param parent the parent BlockSet.
-     * @see #getBlockSet()
-     */
+	 * Set the back-reference to its parent BlockSet.
+	 * 
+	 * @param parent the parent BlockSet.
+	 * @see #getBlockSet()
+	 */
 	public void setBlockSet(BlockSet parent);
 
 	/** 
-     * Returns the parent BlockSet of the Block.
-     * Returns null if there is no referenced object. 
-     * 
-     * @return BlockSet the parent BlockSet of the Block, or null.
-     * @see #setBlockSet(BlockSet)
-     */
+	 * Returns the parent BlockSet of the Block.
+	 * Returns null if there is no referenced object. 
+	 * 
+	 * @return BlockSet the parent BlockSet of the Block, or null.
+	 * @see #setBlockSet(BlockSet)
+	 */
 	public BlockSet getBlockSet();
 
 	/**
@@ -70,7 +70,7 @@ public interface Block extends ScoresCache {
 	 * @see #size()
 	 */
 	public int length();
-	
+
 	/**
 	 * Returns the number of aligned structures (rows) in the Block.
 	 * 
@@ -79,7 +79,7 @@ public interface Block extends ScoresCache {
 	 * @see #getCoreLength()
 	 */
 	public int size();
-	
+
 	/**
 	 * Returns the number of aligned positions (columns) without gaps in the 
 	 * Block.
@@ -90,7 +90,7 @@ public interface Block extends ScoresCache {
 	 * @see #size()
 	 */
 	public int getCoreLength();
-	
+
 	/**
 	 * Clear scores and other properties which depend on the specific 
 	 * alignment. This frees memory and ensures consistency of the cached 

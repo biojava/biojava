@@ -28,6 +28,8 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 
  * Main class of the Java implementation of the Combinatorial Extension - 
@@ -50,6 +52,9 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
  *
  */
 public class MultipleMcMain implements MultipleStructureAligner {
+	
+	private static final Logger logger = 
+			LoggerFactory.getLogger(MultipleMcMain.class);
 	
 	/**
 	 *  Version history:<p>
@@ -173,6 +178,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	    for (int i=1; i<size; i++){
 	    	if (RMSDs.get(i) < RMSDs.get(reference)) reference = i;
 	    }
+	    logger.info("Reference structure is "+reference);
 	    return reference;
 	}
 	
@@ -291,6 +297,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 						equivalencies.get(str).get(pos));
 			}
 		}
+		logger.info("Seed alignment has "+seed.getBlocks()+" Blocks.");
 		return seed;
 	}
 
@@ -347,9 +354,9 @@ public class MultipleMcMain implements MultipleStructureAligner {
 			return result;
 			
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.warn("Optimization run failed: "+e.getMessage());
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			logger.warn("Optimization run failed: "+e.getMessage());
 		}
 		
 		return result;
@@ -360,6 +367,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 			throws StructureException {
 		
 		if (params == null) {
+			logger.info("Using DEFAULT MultipleMc Parameters");
 			params = new MultipleMcParameters();
 		}
 		return align(atomArrays,params);

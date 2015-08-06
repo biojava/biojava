@@ -29,7 +29,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return MultipleAlignmentEnsemble identical copy of this object.
 	 */
 	public MultipleAlignmentEnsemble clone();
-	
+
 	/**
 	 * Returns the name of the multiple structure alignment algorithm that 
 	 * created the MultipleAlignment objects.
@@ -137,7 +137,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @see #setMultipleAlignments()
 	 */
 	public List<MultipleAlignment> getMultipleAlignments();
-	
+
 	/**
 	 * Returns the MultipleAlignments at the specified index 
 	 * in the ensemble. Throws an exception equivalently to
@@ -164,7 +164,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @param alignment
 	 */
 	public void addMultipleAlignment(MultipleAlignment alignment);
-	
+
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignments.
 	 * 
@@ -179,7 +179,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return long creation time, or null if unset
 	 */
 	public Long getIoTime();
-	
+
 	/**
 	 * Set the IO time to load this object
 	 * @param millis
@@ -194,7 +194,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @see #getIoTime()
 	 */
 	public Long getCalculationTime();
-	
+
 	/**
 	 * Set the running time spent to calculate this alignment.
 	 * 
