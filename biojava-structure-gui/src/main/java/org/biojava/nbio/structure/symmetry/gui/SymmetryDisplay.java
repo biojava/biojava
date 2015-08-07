@@ -78,8 +78,7 @@ public class SymmetryDisplay {
 
 		addSymmetryMenu(jmol, axes);
 
-		//Show all the axes and point group symmetry
-		if (axes!=null) jmol.evalString(printSymmetryAxes(msa, axes, false));
+		//Show point group symmetry
 		jmol.evalString(printPointGroupAxes(msa));
 
 		return jmol;

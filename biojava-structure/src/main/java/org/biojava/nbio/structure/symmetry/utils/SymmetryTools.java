@@ -435,7 +435,7 @@ public class SymmetryTools {
 	 * 
 	 * @return Structure with different chains for every symmetric unit
 	 */
-	public static Structure toQuaternary(MultipleAlignment symmetry) {
+	public static Structure getQuaternaryStructure(MultipleAlignment symmetry) {
 
 		if (!symmetry.getEnsemble().getAlgorithmName().contains("symm")){
 			throw new IllegalArgumentException(
@@ -532,7 +532,7 @@ public class SymmetryTools {
 
 		//Modify atom arrays to include the subunit atoms only
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
-		Structure divided = SymmetryTools.toQuaternary(symm);
+		Structure divided = SymmetryTools.getQuaternaryStructure(symm);
 		for (int i=0; i<symm.size(); i++){
 			Structure newStr = new StructureImpl();
 			Chain newCh = divided.getChain(i);
@@ -710,7 +710,6 @@ public class SymmetryTools {
 
 		//Quaternary Symmetry Detection
 		QuatSymmetryParameters param = new QuatSymmetryParameters();
-		param.setRmsdThreshold(symm.size() * 1.5);
 
 		QuatSymmetryResults gSymmetry = 
 				QuatSymmetryDetector.calcQuatSymmetry(globalSubunits, param);

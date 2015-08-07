@@ -46,7 +46,7 @@ public class DemoCeSymm {
 		 * helical: 1d0b.A
 		 * 
 		 * MULTIPLE AXES
-		 * dihedral: 4hhb, 1vym, 1hiv
+		 * dihedral: 4hhb, 1vym, 1mmi, 1hiv
 		 * hierarchical: 4gcr, 1ppr.O, 1hiv
 		 * monoclonal Ab: 4NZU
 		 * 
@@ -54,7 +54,7 @@ public class DemoCeSymm {
 		 */
 
 		//Set the name of the protein structure to analyze
-		String name = "1u6d";
+		String name = "1vym";
 		List<Atom[]> atoms = new ArrayList<Atom[]>();
 
 		//Download the atoms
