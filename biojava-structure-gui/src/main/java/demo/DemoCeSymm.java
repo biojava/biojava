@@ -1,9 +1,6 @@
 package demo;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -55,13 +52,11 @@ public class DemoCeSymm {
 
 		//Set the name of the protein structure to analyze
 		String name = "1vym";
-		List<Atom[]> atoms = new ArrayList<Atom[]>();
 
 		//Download the atoms
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure(name);
-		Atom[] array = StructureTools.getRepresentativeAtomArray(s);
-		atoms.add(array);
+		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
 
 		CeSymm ceSymm = new CeSymm();
 
@@ -73,7 +68,7 @@ public class DemoCeSymm {
 		params.setMultipleAxes(true);
 
 		//Run the alignment
-		MultipleAlignment symmetry = ceSymm.align(atoms, params);
+		MultipleAlignment symmetry = ceSymm.analyze(atoms, params);
 
 		//Display the results in jmol
 		SymmetryDisplay.display(symmetry, ceSymm.getSymmetryAxes());

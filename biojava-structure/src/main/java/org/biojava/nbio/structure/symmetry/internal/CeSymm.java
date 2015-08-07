@@ -15,11 +15,8 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.AbstractStructureAlignment;
-import org.biojava.nbio.structure.align.MultipleStructureAligner;
 import org.biojava.nbio.structure.align.ce.CECalculator;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
-import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.ce.MatrixListener;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -57,8 +54,7 @@ import org.slf4j.LoggerFactory;
  * @since 4.2.0
  * 
  */
-public class CeSymm extends AbstractStructureAlignment 
-implements MatrixListener, MultipleStructureAligner {
+public class CeSymm implements MatrixListener {
 
 	/**
 	 * Version History:<p>
@@ -90,13 +86,6 @@ implements MatrixListener, MultipleStructureAligner {
 		super();
 		params = new CESymmParameters();
 		refined = false;
-	}
-
-	public static void main(String[] args) {
-		// Responsible for creating a CeSymm instance
-		CeSymmUserArgumentProcessor processor = 
-				new CeSymmUserArgumentProcessor();
-		processor.process(args);
 	}
 
 	public static String toDBSearchResult(AFPChain afpChain) {
@@ -242,17 +231,7 @@ implements MatrixListener, MultipleStructureAligner {
 		this.calculator = calculator;
 	}
 
-	@Deprecated
-	@Override
-	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
-
-		if (params == null)	params = new CESymmParameters();
-		return align(ca1, ca2, params);
-	}
-
-	@Deprecated
-	@Override
-	public AFPChain align(Atom[] ca10, Atom[] ca2O, Object param) 
+	private AFPChain align(Atom[] ca10, Atom[] ca2O, Object param) 
 			throws StructureException {
 
 		//STEP 0: prepare all the information for the symmetry alignment
@@ -433,27 +412,18 @@ implements MatrixListener, MultipleStructureAligner {
 		return afpChain;
 	}
 
-	@Override
-	public ConfigStrucAligParams getParameters() {
+	public CESymmParameters getParameters() {
 		return params;
 	}
 
-	@Override
-	public void setParameters(ConfigStrucAligParams parameters) {
-		if (!(parameters instanceof CESymmParameters)) {
-			throw new IllegalArgumentException(
-					"Need to provide CESymmParameters, but provided "
-							+ parameters.getClass().getName());
-		}
-		params = (CESymmParameters) parameters;
+	public void setParameters(CESymmParameters parameters) {
+		params = parameters;
 	}
 
-	@Override
 	public String getAlgorithmName() {
 		return algorithmName;
 	}
 
-	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -501,28 +471,20 @@ implements MatrixListener, MultipleStructureAligner {
 		return afpAlignments;
 	}
 
-	@Override
-	public MultipleAlignment align(List<Atom[]> atomArrays) 
+	public MultipleAlignment analyze(Atom[] atomArrays) 
 			throws StructureException {
 
 		if (params == null)	params = new CESymmParameters();
-		return align(atomArrays, params);
+		return analyze(atomArrays, params);
 	}
 
-	@Override
-	public MultipleAlignment align(List<Atom[]> atomArrays, Object param) 
+	public MultipleAlignment analyze(Atom[] atoms, CESymmParameters param) 
 			throws StructureException {
 
-		if (atomArrays.size() != 1) {
-			throw new IllegalArgumentException(
-					"For symmetry analysis only one Structure is needed, "+
-							atomArrays.size()+" Structures given.");
+		if (atoms.length < 1) {
+			throw new IllegalArgumentException("Empty Atom array given.");
 		}
-		if (!(params instanceof CESymmParameters)) {
-			throw new IllegalArgumentException("CE-Symm algorithm needs an "
-					+ "object of call CESymmParameters as argument.");
-		}
-		this.params = (CESymmParameters) param;
+		this.params = param;
 
 		//If the multiple axes is called, run iterative version
 		if (params.isMultipleAxes() && 
@@ -530,13 +492,13 @@ implements MatrixListener, MultipleStructureAligner {
 			
 			logger.warn("Running iteratively CeSymm: ignore Warnings.");
 			CeSymmIterative iterative = new CeSymmIterative(params);
-			MultipleAlignment result = iterative.execute(atomArrays.get(0));
+			MultipleAlignment result = iterative.execute(atoms);
 			axes = iterative.getSymmetryAxes();
 			return result;
 		}
 
 		//Otherwise perform only one CeSymm alignment
-		AFPChain afp = align(atomArrays.get(0), atomArrays.get(0), params);
+		AFPChain afp = align(atoms, atoms, params);
 
 		if (refined){
 			msa = SymmetryTools.fromAFP(afp, ca1);

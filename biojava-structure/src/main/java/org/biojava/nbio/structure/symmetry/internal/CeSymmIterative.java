@@ -108,7 +108,7 @@ public class CeSymmIterative {
 	 * This method runs iteratively CeSymm on the symmetric units
 	 * until no more symmetries exist.
 	 * 
-	 * @param atoms Coordinates of the symmetric structure
+	 * @param atoms Coordinates of the structure atoms
 	 * @param first starting position of the atom array in the original array
 	 * @throws StructureException
 	 */
@@ -118,9 +118,7 @@ public class CeSymmIterative {
 				
 		//Perform the CeSymm alignment
 		CeSymm aligner = new CeSymm();
-		List<Atom[]> array = new ArrayList<Atom[]>();
-		array.add(atoms);
-		MultipleAlignment align = aligner.align(array, params);
+		MultipleAlignment align = aligner.analyze(atoms, params);
 		if (name == null) 
 			name = align.getEnsemble().getStructureNames().get(0);
 

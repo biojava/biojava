@@ -28,6 +28,8 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -1114,4 +1116,80 @@ public class AlignmentTools {
 		}
 		return blockGap;
 	}
+	
+	/**
+	 * Creates a simple interaction format (SIF) file for an alignment.
+	 *
+	 * The SIF file can be read by network software (eg Cytoscape) to analyze
+	 * alignments as graphs.
+	 *
+	 * This function creates a graph with residues as nodes and two types of edges:
+	 *   1. backbone edges, which connect adjacent residues in the aligned protein
+	 *   2. alignment edges, which connect aligned residues
+	 *   
+	 * @param out Stream to write to
+	 * @param afpChain alignment to write
+	 * @param ca1 First protein, used to generate node names
+	 * @param ca2 Second protein, used to generate node names
+	 * @param backboneInteraction Two-letter string used to identify backbone edges
+	 * @param alignmentInteraction Two-letter string used to identify alignment edges
+	 * @throws IOException
+	 */
+	public static void alignmentToSIF(Writer out,AFPChain afpChain, 
+			Atom[] ca1,Atom[] ca2, String backboneInteraction, 
+			String alignmentInteraction) throws IOException {
+		
+		//out.write("Res1\tInteraction\tRes2\n");
+		String name1 = afpChain.getName1();
+		String name2 = afpChain.getName2();
+		if(name1==null) name1=""; else name1+=":";
+		if(name2==null) name2=""; else name2+=":";
+
+		// Print alignment edges
+		int nblocks = afpChain.getBlockNum();
+		int[] blockLen = afpChain.getOptLen();
+		int[][][] optAlign = afpChain.getOptAln();
+		for(int b=0;b<nblocks;b++) {
+			for(int r=0;r<blockLen[b];r++) {
+				int res1 = optAlign[b][0][r];
+				int res2 = optAlign[b][1][r];
+
+				ResidueNumber rn1 = ca1[res1].getGroup().getResidueNumber();
+				ResidueNumber rn2 = ca2[res2].getGroup().getResidueNumber();
+
+				String node1 = name1+rn1.getChainId()+rn1.toString();
+				String node2 = name2+rn2.getChainId()+rn2.toString();
+
+				out.write(String.format("%s\t%s\t%s\n",node1, alignmentInteraction, node2));
+			}
+		}
+
+		// Print first backbone edges
+		ResidueNumber rn = ca1[0].getGroup().getResidueNumber();
+		String last = name1+rn.getChainId()+rn.toString();
+		for(int i=1;i<ca1.length;i++) {
+			rn = ca1[i].getGroup().getResidueNumber();
+			String curr = name1+rn.getChainId()+rn.toString();
+			out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
+			last = curr;
+		}
+
+		// Print second backbone edges, if the proteins differ
+		// Do some quick checks for whether the proteins differ
+		// (Not perfect, but should detect major differences and CPs.)
+		if(!name1.equals(name2) ||
+				ca1.length!=ca2.length ||
+				(ca1.length>0 && ca1[0].getGroup()!=null && ca2[0].getGroup()!=null &&
+						!ca1[0].getGroup().getResidueNumber().equals(ca2[0].getGroup().getResidueNumber()) ) ) {
+			rn = ca2[0].getGroup().getResidueNumber();
+			last = name2+rn.getChainId()+rn.toString();
+			for(int i=1;i<ca2.length;i++) {
+				rn = ca2[i].getGroup().getResidueNumber();
+				String curr = name2+rn.getChainId()+rn.toString();
+				out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
+				last = curr;
+			}
+		}
+	}
+	
 }
