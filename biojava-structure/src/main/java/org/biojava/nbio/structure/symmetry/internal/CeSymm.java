@@ -1,6 +1,5 @@
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -24,7 +23,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
@@ -54,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * @since 4.2.0
  * 
  */
-public class CeSymm implements MatrixListener {
+public class CeSymm {
 
 	/**
 	 * Version History:<p>
@@ -86,47 +84,6 @@ public class CeSymm implements MatrixListener {
 		super();
 		params = new CESymmParameters();
 		refined = false;
-	}
-
-	public static String toDBSearchResult(AFPChain afpChain) {
-		StringBuffer str = new StringBuffer();
-
-		str.append(afpChain.getName1());
-		str.append("\t");
-		str.append(afpChain.getName2());
-		str.append("\t");
-		str.append(String.format("%.2f", afpChain.getAlignScore()));
-		str.append("\t");
-		str.append(String.format("%.2f", afpChain.getProbability()));
-		str.append("\t");
-		str.append(String.format("%.2f", afpChain.getTotalRmsdOpt()));
-		str.append("\t");
-		str.append(afpChain.getCa1Length());
-		str.append("\t");
-		str.append(afpChain.getCa2Length());
-		str.append("\t");
-		str.append(afpChain.getCoverage1());
-		str.append("\t");
-		str.append(afpChain.getCoverage2());
-		str.append("\t");
-		str.append(String.format("%.2f", afpChain.getTMScore()));
-		str.append("\t");
-		str.append(afpChain.getOptLength());
-		return str.toString();
-	}
-
-	public AFPChain indentifyAllSymmetries(String name1, String name2,
-			AtomCache cache, int fragmentLength) throws StructureException,
-			IOException {
-
-		params = new CESymmParameters();
-
-		params.setWinSize(fragmentLength);
-
-		Atom[] ca1 = cache.getAtoms(name1);
-		Atom[] ca2 = cache.getAtoms(name2);
-
-		return align(ca1, ca2, params);
 	}
 
 	private static Matrix align(AFPChain afpChain, Atom[] ca1, Atom[] ca2, 
@@ -201,28 +158,6 @@ public class CeSymm implements MatrixListener {
 
 	}
 
-	@Override
-	public double[][] matrixInOptimizer(double[][] max) {
-
-		return CECalculator.updateMatrixWithSequenceConservation(max, ca1, ca2,
-				params);
-	}
-
-	@Override
-	public boolean[][] initializeBreakFlag(boolean[][] breakFlag) {
-		int fragmentLength = params.getWinSize();
-		try {
-			if (afpChain != null) {
-				breakFlag = SymmetryTools.blankOutBreakFlag(afpChain, ca2,
-						rows, cols, calculator, breakFlag, fragmentLength);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return breakFlag;
-
-	}
-
 	public CECalculator getCalculator() {
 		return calculator;
 	}
@@ -255,7 +190,6 @@ public class CeSymm implements MatrixListener {
 		afpAlignments = new ArrayList<AFPChain>();
 
 		calculator = new CECalculator(params);
-		calculator.addMatrixListener(this);
 
 		//Set multiple to true if multiple alignments are needed for refinement
 		boolean multiple = (params.getRefineMethod() == RefineMethod.MULTIPLE);
