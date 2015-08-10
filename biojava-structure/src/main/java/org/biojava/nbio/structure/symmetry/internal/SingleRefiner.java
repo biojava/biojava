@@ -26,15 +26,18 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
  */
 public class SingleRefiner implements Refiner {
 
-	private int order;
+	private OrderDetector orderDetector;
 	
-	public SingleRefiner(int order) {
-		this.order = order;
+	public SingleRefiner(OrderDetector orderDetector) {
+		this.orderDetector = orderDetector;
 	}
 	
 	@Override
 	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms)
 			throws RefinerFailedException, StructureException {
+		
+		AFPChain afpChain = afpAlignments.get(0);
+		int order = orderDetector.calculateOrder(afpChain, atoms);
 		
 		if (order == 1)	throw new RefinerFailedException(
 				"Cannot refine an order 1 symmetry.");

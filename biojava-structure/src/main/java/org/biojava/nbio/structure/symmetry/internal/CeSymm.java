@@ -169,7 +169,7 @@ public class CeSymm {
 	private AFPChain align(Atom[] ca10, Atom[] ca2O, Object param) 
 			throws StructureException {
 
-		//STEP 0: prepare all the information for the symmetry alignment
+		//STEP 1: prepare all the information for the symmetry alignment
 		if (!(params instanceof CESymmParameters))
 			throw new IllegalArgumentException("CE-Symm algorithm needs an "
 					+ "object of call CESymmParameters as argument.");
@@ -195,7 +195,7 @@ public class CeSymm {
 		boolean multiple = (params.getRefineMethod() == RefineMethod.MULTIPLE);
 		Matrix lastMatrix = null;
 
-		//STEP 1: perform the self-alignments of the structure with CECP
+		//STEP 2: perform the self-alignments of the structure with CECP
 		int i = 0;
 		do {
 
@@ -249,7 +249,7 @@ public class CeSymm {
 		String name = ca1[0].getGroup().getChain().getParent().getIdentifier();
 		afpChain.setName1(name);
 		afpChain.setName2(name);
-		
+
 		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
 			return afpChain;
 		}
@@ -267,30 +267,19 @@ public class CeSymm {
 			}
 		}
 
-		//STEP 2: calculate the order of symmetry for CLOSE symmetry
-		int order = 1;
-		if (type == SymmetryType.CLOSE) {
-			OrderDetector orderDetector = null;
-			switch (params.getOrderDetectorMethod()) {
-			case SEQUENCE_FUNCTION: 
-				orderDetector = new SequenceFunctionOrderDetector(
-						params.getMaxSymmOrder(), 0.4f);
-				break;
-			}
-			try {
-				order = orderDetector.calculateOrder(afpChain, ca1);
-			} catch (OrderDetectionFailedException e) {
-				logger.warn("Order Detection failed.",e);
-				return afpChain;
-			}
-		}
-
 		//STEP 3: symmetry refinement, apply consistency in the subunit residues		
 		Refiner refiner = null;
 		try {
 			switch (type){
 			case CLOSE:
-				refiner = new SingleRefiner(order);
+				OrderDetector orderDetector = null;
+				switch (params.getOrderDetectorMethod()) {
+				case SEQUENCE_FUNCTION: 
+					orderDetector = new SequenceFunctionOrderDetector(
+							params.getMaxSymmOrder(), 0.4f);
+					break;
+				}
+				refiner = new SingleRefiner(orderDetector);
 				break;
 			default: //case OPEN
 				refiner = new OpenRefiner();
@@ -306,7 +295,7 @@ public class CeSymm {
 		}
 
 		//STEP4: determine the symmetry axis and its subunit dependencies
-		order = afpChain.getBlockNum();
+		int order = afpChain.getBlockNum();
 		axes = new SymmetryAxes();
 		Matrix rot = afpChain.getBlockRotationMatrix()[0];
 		Atom shift = afpChain.getBlockShiftVector()[0];
@@ -374,7 +363,7 @@ public class CeSymm {
 			OrderDetector orderDetector = 
 					new SequenceFunctionOrderDetector(8, 0.4f);
 			order = orderDetector.calculateOrder(afpChain, ca1);
-		} catch (OrderDetectionFailedException e) {
+		} catch (RefinerFailedException e) {
 			logger.warn("Order Detector failed.",e);
 			// try another method
 		}
@@ -423,7 +412,7 @@ public class CeSymm {
 		//If the multiple axes is called, run iterative version
 		if (params.isMultipleAxes() && 
 				params.getRefineMethod() != RefineMethod.NOT_REFINED){
-			
+
 			logger.warn("Running iteratively CeSymm: ignore Warnings.");
 			CeSymmIterative iterative = new CeSymmIterative(params);
 			MultipleAlignment result = iterative.execute(atoms);
