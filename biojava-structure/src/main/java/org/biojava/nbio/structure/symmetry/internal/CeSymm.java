@@ -425,6 +425,7 @@ public class CeSymm {
 
 		if (refined){
 			msa = SymmetryTools.fromAFP(afp, ca1);
+			msa.putScore("isRefined", 1.0);
 
 			//STEP 5: symmetry alignment optimization
 			if (this.params.getOptimization()){
@@ -462,6 +463,7 @@ public class CeSymm {
 						maxScore = score;
 					}
 				}
+				msa.putScore("isRefined", 1.0);
 				executor.shutdown();
 			}
 		} else {
@@ -470,6 +472,7 @@ public class CeSymm {
 			msa = e.getMultipleAlignment(0);
 			logger.warn("No symmetry found in the structure, "
 					+ "returning optimal self-alignment");
+			msa.putScore("isRefined", 0.0);
 		}
 
 		return msa;

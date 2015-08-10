@@ -97,6 +97,7 @@ public class CeSymmIterative {
 		try {
 			SymmOptimizer optimizer = new SymmOptimizer(msa, axes, 0);
 			msa = optimizer.optimize();
+			msa.putScore("isRefined", 1.0);
 		} catch (RefinerFailedException e) {
 			e.printStackTrace();
 		}
