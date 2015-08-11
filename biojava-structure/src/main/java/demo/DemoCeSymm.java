@@ -1,6 +1,7 @@
 package demo;
 
 import java.io.IOException;
+
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -8,10 +9,12 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
  * Quick demo of how to call CE-Symm programmatically.
@@ -69,9 +72,13 @@ public class DemoCeSymm {
 
 		//Run the alignment
 		MultipleAlignment symmetry = ceSymm.analyze(atoms, params);
-
+		
 		//Display the results in FatCat format
 		System.out.println(MultipleAlignmentWriter.toFatCat(symmetry));
+		
+		//Obtain the point group symmetry
+		QuatSymmetryResults pg = SymmetryTools.getQuaternarySymmetry(symmetry);
+		System.out.println("Point group internal symmetry: "+pg.getSymmetry());
 	}
 	
 }
