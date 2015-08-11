@@ -56,7 +56,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 	//Optimization parameters
 	private static final int Rmin = 2; //min aligned subunits per column
-	private static final int Lmin = 8; //min subunit length
+	private int Lmin; //min subunit length
 	private int maxIterFactor = 100; //max iterations constant
 	private double C = 20; //probability of accept bad moves constant
 
@@ -91,14 +91,17 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	 * @param seedMSA multiple aligment with the symmetry subunits. It will be
 	 * 			completely cloned, including its ensemble.
 	 * @param axes symmetry axes to contrain optimization
+	 * @param params CESymmParameters
 	 * @param seed random seed
 	 * @throws RefinerFailedException 
 	 * @throws StructureException 
 	 */
-	public SymmOptimizer(MultipleAlignment mul, SymmetryAxes axes, long seed){
+	public SymmOptimizer(MultipleAlignment mul, SymmetryAxes axes,
+			CESymmParameters params, long seed){
 
 		this.axes = axes;
 		this.rnd = new Random(seed);
+		this.Lmin = params.getMinSubunitLength();
 		
 		MultipleAlignmentEnsemble e = mul.getEnsemble().clone();
 		this.msa = e.getMultipleAlignment(0);
@@ -115,9 +118,9 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 			throw new RefinerFailedException(
 					"Non-symmetric seed slignment: order = 1");
 		}
-		if (subunitCore < Lmin) {
+		if (subunitCore < 1) {
 			throw new RefinerFailedException(
-					"Seed alignment too short: coreLength < Lmin");
+					"Seed alignment too short: subunit length == 0");
 		}
 
 		C = 20*order;
@@ -291,8 +294,10 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	 * methods to score MultipleAlignments.
 	 * 
 	 * @throws StructureException 
+	 * @throws RefinerFailedException 
 	 */
-	private void updateMultipleAlignment() throws StructureException {
+	private void updateMultipleAlignment() 
+			throws StructureException, RefinerFailedException {
 
 		msa.clear();
 
@@ -300,6 +305,10 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		Block b = msa.getBlock(0);
 		b.setAlignRes(block);
 		subunitCore = b.getCoreLength();
+		if (subunitCore < 1) {
+			throw new RefinerFailedException(
+					"Optimization converged to length == 0");
+		}
 		
 		updateTransformation();
 		if (axes == null) return;
@@ -360,8 +369,10 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	 * A gap is a null in the block.
 	 * 
 	 * @throws StructureException 
+	 * @throws RefinerFailedException 
 	 */
-	private boolean insertGap() throws StructureException {
+	private boolean insertGap() 
+			throws StructureException, RefinerFailedException {
 
 		//Let gaps only if the subunit is larger than the minimum length
 		if (subunitCore <= Lmin) return false;
@@ -720,8 +731,10 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	/**
 	 * Deletes an alignment column at a randomly selected position.
 	 * @throws StructureException 
+	 * @throws RefinerFailedException 
 	 */
-	private boolean shrinkBlock() throws StructureException{
+	private boolean shrinkBlock() 
+			throws StructureException, RefinerFailedException{
 
 		//Let shrink moves only if the subunit is larger enough
 		if (subunitCore <= Lmin) return false;

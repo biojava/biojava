@@ -437,9 +437,9 @@ public class CeSymm {
 				int seed = this.params.getSeed();
 
 				//Repeat the optimization in parallel
-				for (int rep=0; rep<2; rep++){
+				for (int rep=0; rep<4; rep++){
 					Callable<MultipleAlignment> worker = 
-							new SymmOptimizer(msa, axes, seed+rep);
+							new SymmOptimizer(msa, axes, params, seed++);
 					Future<MultipleAlignment> submit = executor.submit(worker);
 					future.add(submit);
 				}
