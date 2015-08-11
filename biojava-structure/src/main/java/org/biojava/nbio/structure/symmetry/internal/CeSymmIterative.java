@@ -94,16 +94,6 @@ public class CeSymmIterative {
 		buildAlignment();
 		recoverAxes();
 
-		//Run a final optimization once all subunits are known
-		try {
-			SymmOptimizer optimizer = 
-					new SymmOptimizer(msa, axes, params, params.getSeed());
-			msa = optimizer.optimize();
-			msa.putScore("isRefined", 1.0);
-		} catch (RefinerFailedException e) {
-			e.printStackTrace();
-		}
-
 		return msa;
 	}
 

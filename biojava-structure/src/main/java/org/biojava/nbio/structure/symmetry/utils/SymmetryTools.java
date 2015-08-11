@@ -738,7 +738,7 @@ public class SymmetryTools {
 			if (symm.getBlocks().size() > 1){
 				symm.putScore("isRefined", 0.0);
 				return false;
-			}
+			} else if (symm.size() < 2) return false;
 			else {
 				List<Integer> alreadySeen = new ArrayList<Integer>();
 				List<List<Integer>> align = symm.getBlock(0).getAlignRes();

@@ -415,16 +415,20 @@ public class CeSymm {
 
 			logger.warn("Running iteratively CeSymm: ignore Warnings.");
 			CeSymmIterative iterative = new CeSymmIterative(params);
-			MultipleAlignment result = iterative.execute(atoms);
+			msa = iterative.execute(atoms);
 			axes = iterative.getSymmetryAxes();
-			return result;
+			if (SymmetryTools.isRefined(msa)) {
+				refined = true;
+			} else {
+				afpChain = align(atoms, atoms, params);
+			}
+		} else {
+			//Otherwise perform only one CeSymm alignment
+			afpChain = align(atoms, atoms, params);
 		}
 
-		//Otherwise perform only one CeSymm alignment
-		AFPChain afp = align(atoms, atoms, params);
-
 		if (refined){
-			msa = SymmetryTools.fromAFP(afp, ca1);
+			if (msa == null) msa = SymmetryTools.fromAFP(afpChain, ca1);
 			msa.putScore("isRefined", 1.0);
 
 			//STEP 5: symmetry alignment optimization
@@ -468,7 +472,7 @@ public class CeSymm {
 			}
 		} else {
 			MultipleAlignmentEnsemble e = 
-					new MultipleAlignmentEnsembleImpl(afp, ca1, ca1, false);
+					new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca1, false);
 			msa = e.getMultipleAlignment(0);
 			logger.warn("No symmetry found in the structure, "
 					+ "returning optimal self-alignment");
