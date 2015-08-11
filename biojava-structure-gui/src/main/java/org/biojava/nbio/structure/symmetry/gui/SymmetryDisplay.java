@@ -82,6 +82,7 @@ public class SymmetryDisplay {
 		} else {
 			//Show the optimal alignment if it was not refined
 			jmol = MultipleAlignmentDisplay.display(msa);
+			addSymmetryMenu(null, null);
 			jmol.setColorByBlocks(true);
 		}
 
