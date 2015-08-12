@@ -23,7 +23,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
-import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
@@ -351,37 +350,27 @@ public class CeSymm {
 		return version;
 	}
 
-	public static boolean isSignificant(AFPChain afpChain, Atom[] ca1, 
+	public static boolean isSignificant(MultipleAlignment msa, 
 			double symmetryThreshold) throws StructureException {
 
-		// TM-score cutoff
-		if (afpChain.getTMScore() < symmetryThreshold) return false;
-
-		// sequence-function order cutoff
-		int order = 1;
-		try {
-			OrderDetector orderDetector = 
-					new SequenceFunctionOrderDetector(8, 0.4f);
-			order = orderDetector.calculateOrder(afpChain, ca1);
-		} catch (RefinerFailedException e) {
-			logger.warn("Order Detector failed.",e);
-			// try another method
+		//Order/refinement check
+		if (!SymmetryTools.isRefined(msa)) return false;
+			
+		//TM-score cutoff
+		if (msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE) == null){
+			double tm = MultipleAlignmentScorer.getAvgTMScore(msa);
+			if (tm < symmetryThreshold) return false;
+		} else {
+			double tm = msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
+			if (tm < symmetryThreshold) return false;
 		}
-
-		if (order > 1) return true;
-
-		// angle order cutoff
-		RotationAxis rot = new RotationAxis(afpChain);
-		order = rot.guessOrderFromAngle(Math.toRadians(1.0), 8);
-		if (order > 1) return true;
-
-		// asymmetric
-		return false;
+		
+		return true;
 	}
 
 	public boolean isSignificant() throws StructureException {
 		double symmetryThreshold = this.params.getSymmetryThreshold();
-		return isSignificant(this.afpChain,this.ca1, symmetryThreshold);
+		return isSignificant(this.msa, symmetryThreshold);
 	}
 
 	/**
