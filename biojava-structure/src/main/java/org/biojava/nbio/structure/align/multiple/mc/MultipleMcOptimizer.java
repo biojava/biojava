@@ -61,6 +61,7 @@ implements Callable<MultipleAlignment> {
 	//Score function parameters - they are defined by the user
 	private double Gopen; //Penalty for opening gap
 	private double Gextend; //Penalty for extending gaps
+	private double dCutoff; //max allowed residue distance
 
 	//Alignment Information
 	private MultipleAlignment msa;  //Alignment to optimize
@@ -99,6 +100,7 @@ implements Callable<MultipleAlignment> {
 		rnd = new Random(params.getRandomSeed());
 		Gopen = params.getGapOpen();
 		Gextend = params.getGapExtension();
+		dCutoff = params.getDistanceCutoff();
 		imposer = new CoreSuperimposer(reference);
 
 		if (params.getConvergenceSteps() == 0) {
@@ -186,7 +188,8 @@ implements Callable<MultipleAlignment> {
 		checkGaps();
 		msa.clear();
 		imposer.superimpose(msa);
-		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend);
+		mcScore = MultipleAlignmentScorer.getMCScore(
+				msa, Gopen, Gextend, dCutoff);
 
 		//Initialize the history variables
 		if (history){
@@ -254,7 +257,7 @@ implements Callable<MultipleAlignment> {
 			msa.clear();
 			imposer.superimpose(msa);
 			mcScore = MultipleAlignmentScorer.getMCScore(
-					msa, Gopen, Gextend);
+					msa, Gopen, Gextend, dCutoff);
 
 			double AS = mcScore-lastScore;
 			double prob=1.0;

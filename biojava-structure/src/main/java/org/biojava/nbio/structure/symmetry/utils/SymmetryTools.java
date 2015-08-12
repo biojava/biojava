@@ -716,5 +716,47 @@ public class SymmetryTools {
 
 		return gSymmetry;
 	}
+	
+	/**
+	 * Returns true if the symmetry alignment has been refined, 
+	 * false otherwise. 
+	 * <p>
+	 * For a refined alignment only one Block with no repeated 
+	 * residues is necessary. Sufficient condition is not tested 
+	 * (only known from the algorithm).
+	 * 
+	 * @param symm the symmetry alignment
+	 * @return true if the alignment is refined
+	 */
+	public static boolean isRefined(MultipleAlignment symm){
+		
+		if (symm.getScore("isRefined") != null) {
+			if (symm.getScore("isRefined") > 0) return true;
+			else return false;
+		}
+		else { //Recalculate
+			if (symm.getBlocks().size() > 1){
+				symm.putScore("isRefined", 0.0);
+				return false;
+			} else if (symm.size() < 2) return false;
+			else {
+				List<Integer> alreadySeen = new ArrayList<Integer>();
+				List<List<Integer>> align = symm.getBlock(0).getAlignRes();
+				for (int str=0; str<symm.size(); str++){
+					for (int res=0; res<align.get(str).size(); res++){
+						Integer residue = align.get(str).get(res);
+						if (residue == null) continue;
+						if (alreadySeen.contains(residue)){
+							symm.putScore("isRefined", 0.0);
+							return false;
+						} else {
+							alreadySeen.add(residue);
+						}
+					}
+				} //end of all structures
+				return true;
+			}
+		}
+	}
 
 }

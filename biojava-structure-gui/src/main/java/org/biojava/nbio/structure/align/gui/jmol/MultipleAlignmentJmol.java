@@ -36,6 +36,8 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.jcolorbrewer.ColorBrewer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 
  * A class that provides a 3D visualization Frame in Jmol for
@@ -54,6 +56,9 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 	private static final String LIGAND_DISPLAY_SCRIPT = 
 			"select ligand; wireframe 40; spacefill 120; color CPK;";
+	
+	private static final Logger logger = 
+			LoggerFactory.getLogger(MultipleAlignmentJmol.class);
 
 	/**
 	 * Default constructor creates an empty JmolPanel window, 
@@ -235,7 +240,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("reset!!");
+				logger.info("reset!!");
 				jmolPanel.executeCmd("restore STATE state_1");
 
 			}
@@ -315,13 +320,10 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				if ( structure != null)
 					setStructure(structure);
 				else  {
-					System.err.println("could not find anything to display!");
+					logger.error("Could not find anything to display!");
 					return;
 				}
 			}
-			Structure artificial = MultipleAlignmentDisplay.
-					getAlignedStructure(transformedAtoms);
-
 			PDBHeader header = new PDBHeader();
 			String title =  multAln.getEnsemble().getAlgorithmName() + 
 					" V." +multAln.getEnsemble().getVersion() + " : ";
@@ -329,11 +331,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			for (String name:multAln.getEnsemble().getStructureNames()){
 				title +=  name + " ";
 			}
+			Structure artificial = MultipleAlignmentDisplay.
+					getAlignedStructure(transformedAtoms);
 
-			System.out.println(title);
-			header.setTitle(title);
 			artificial.setPDBHeader(header);
 			setStructure(artificial);
+			header.setTitle(title);
+			logger.info(title);
 
 		} catch (StructureException e){
 			e.printStackTrace();
@@ -352,15 +356,14 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		String cmd = e.getActionCommand();
 		if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
 			if ( multAln == null) {
-				System.err.println("Currently not viewing an alignment!");
+				logger.error("Currently not viewing an alignment!");
 				return;
 			}
-			System.out.println(
-					"Option currently not available for Multiple Alignments");
+			logger.warn("Option not available for MultipleAlignments");
 
 		} else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
 			if ( multAln == null) {
-				System.err.println("Currently not viewing an alignment!");
+				logger.error("Currently not viewing an alignment!");
 				return;
 			}
 			String result = MultipleAlignmentWriter.toAlignedResidues(multAln);
@@ -368,7 +371,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		} else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
 			if ( multAln == null) {
-				System.err.println("Currently not viewing an alignment!");
+				logger.error("Currently not viewing an alignment!");
 				return;
 			}
 			try {
@@ -380,7 +383,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		} else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
 			if ( multAln == null) {
-				System.err.println("Currently not viewing an alignment!");
+				logger.error("Currently not viewing an alignment!");
 				return;
 			}
 			String result = MultipleAlignmentWriter.toFatCat(multAln)+"\n";
@@ -516,7 +519,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		if (multAln != null && transformedAtoms != null) {
 			String script = getJmolString(multAln, transformedAtoms, 
 					colorPalette, colorByBlocks.isSelected());
-			//System.out.println(script);
+			logger.debug(script);
 			evalString(script);
 			jmolPanel.evalString("save STATE state_1");
 		}

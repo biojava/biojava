@@ -48,15 +48,14 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 	public void run() {
 
 		//The structure has been downloaded, now calculate the alignment ...
-		CeSymm algorithm = parent.getSymmetryAlgorithm();
-		CESymmParameters params = (CESymmParameters) algorithm.getParameters();
+		CeSymm ceSymm = parent.getSymmetryAlgorithm();
+		CESymmParameters params = (CESymmParameters) ceSymm.getParameters();
 		
 		try {
 
-			List<Atom[]> atoms = new ArrayList<Atom[]>();
-			atoms.add(StructureTools.getRepresentativeAtomArray(structure));
+			Atom[] atoms = StructureTools.getRepresentativeAtomArray(structure);
 			
-			MultipleAlignment msa = algorithm.align(atoms);
+			MultipleAlignment msa = ceSymm.analyze(atoms);
 
 			List<String> names = new ArrayList<String>();
 			for (int su=0; su<msa.size(); su++){
@@ -65,7 +64,7 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 			msa.getEnsemble().setStructureNames(names);
 
 			MultipleAlignmentJmol jmol = 
-					SymmetryDisplay.display(msa, algorithm.getSymmetryAxes());
+					SymmetryDisplay.display(msa, ceSymm.getSymmetryAxes());
 			String title = jmol.getTitle();
 			
 			if (params != null) 

@@ -122,18 +122,18 @@ public class TestMultipleAlignmentScorer {
 		
 		//Identity Test: MultipleMC-Score has to be equal to 576.21
 		MultipleAlignment identMSA = identityMSTA();
-		double MC1 = MultipleAlignmentScorer.getMCScore(identMSA, 10, 5);
-		assertEquals(576.21, MC1, 0.01);
+		double MC1 = MultipleAlignmentScorer.getMCScore(identMSA, 10, 5, 10);
+		assertEquals(574.98, MC1, 0.01);
 		
 		//Simple Test: MultipleMC-Score has to be equal to 2351.93
 		MultipleAlignment simpleMSA = simpleMSTA();
-		double MC2 = MultipleAlignmentScorer.getMCScore(simpleMSA, 10, 5);
-		assertEquals(2351.93, MC2, 0.01);
+		double MC2 = MultipleAlignmentScorer.getMCScore(simpleMSA, 10, 5, 10);
+		assertEquals(2197.20, MC2, 0.01);
 		
 		//Simple Test: MultipleMC-Score has to be equal to 489.74
 		MultipleAlignment gappedMSA = gappedMSTA();
-		double MC3 = MultipleAlignmentScorer.getMCScore(gappedMSA, 10, 5);
-		assertEquals(489.74, MC3, 0.01);
+		double MC3 = MultipleAlignmentScorer.getMCScore(gappedMSA, 10, 5, 10);
+		assertEquals(478.52, MC3, 0.01);
 	}
 	
 	/**

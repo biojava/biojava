@@ -16,6 +16,7 @@ import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
  * Iterative version of CeSymm that aims at identifying all symmetry axis 
@@ -93,14 +94,6 @@ public class CeSymmIterative {
 		buildAlignment();
 		recoverAxes();
 
-		//Run a final optimization once all subunits are known
-		try {
-			SymmOptimizer optimizer = new SymmOptimizer(msa, axes, 0);
-			msa = optimizer.optimize();
-		} catch (RefinerFailedException e) {
-			e.printStackTrace();
-		}
-
 		return msa;
 	}
 
@@ -108,26 +101,23 @@ public class CeSymmIterative {
 	 * This method runs iteratively CeSymm on the symmetric units
 	 * until no more symmetries exist.
 	 * 
-	 * @param atoms Coordinates of the symmetric structure
+	 * @param atoms Coordinates of the structure atoms
 	 * @param first starting position of the atom array in the original array
 	 * @throws StructureException
 	 */
 	private void iterate(Atom[] atoms, int first) throws StructureException {
-
-		if (atoms.length < 8) return;
 				
 		//Perform the CeSymm alignment
 		CeSymm aligner = new CeSymm();
-		List<Atom[]> array = new ArrayList<Atom[]>();
-		array.add(atoms);
-		MultipleAlignment align = aligner.align(array, params);
+		MultipleAlignment align = aligner.analyze(atoms, params);
 		if (name == null) 
 			name = align.getEnsemble().getStructureNames().get(0);
 
 		//End iterations if non symmetric
-		if (align == null) return;
+		if (!SymmetryTools.isRefined(align)) return;
 		else if (align.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < 
-				params.getSymmetryThreshold() || align.getCoreLength() < 8) {
+				params.getSymmetryThreshold() || 
+				align.getCoreLength() < params.getMinSubunitLength()) {
 			return;
 		}
 

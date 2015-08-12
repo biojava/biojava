@@ -21,6 +21,8 @@ public class CESymmParameters extends CeParameters {
 	private int seed; //random seed
 	private boolean multipleAxes;
 	private double symmetryThreshold;
+	private int minSubunitLength;
+	private double distanceCutoff;
 
 	public static enum OrderDetectorMethod {
 		SEQUENCE_FUNCTION;
@@ -33,7 +35,7 @@ public class CESymmParameters extends CeParameters {
 		MULTIPLE;
 		public static final RefineMethod DEFAULT = SINGLE;
 	}
-	
+
 	public static final double DEFAULT_SYMMETRY_THRESHOLD = 0.4;
 
 	/**
@@ -68,15 +70,16 @@ public class CESymmParameters extends CeParameters {
 				+ orderDetectorMethod + ", refineMethod=" + refineMethod
 				+ ", optimization=" + optimization + ", seed=" + seed
 				+ ", multipleAxes=" + multipleAxes + ", symmetryThreshold="
-				+ symmetryThreshold + ", winSize=" + winSize + ", rmsdThr="
-				+ rmsdThr + ", rmsdThrJoin=" + rmsdThrJoin + ", maxOptRMSD="
-				+ maxOptRMSD + ", scoringStrategy=" + scoringStrategy
-				+ ", maxGapSize=" + maxGapSize + ", showAFPRanges="
-				+ showAFPRanges + ", sideChainScoringType="
-				+ sideChainScoringType + ", gapOpen=" + gapOpen
-				+ ", gapExtension=" + gapExtension + ", distanceIncrement="
-				+ distanceIncrement + ", oRmsdThr=" + oRmsdThr
-				+ ", maxNrIterationsForOptimization="
+				+ symmetryThreshold + ", minSubunitLength=" + minSubunitLength
+				+ ", distanceCutoff=" + distanceCutoff + ", winSize=" + winSize
+				+ ", rmsdThr=" + rmsdThr + ", rmsdThrJoin=" + rmsdThrJoin
+				+ ", maxOptRMSD=" + maxOptRMSD + ", scoringStrategy="
+				+ scoringStrategy + ", maxGapSize=" + maxGapSize
+				+ ", showAFPRanges=" + showAFPRanges
+				+ ", sideChainScoringType=" + sideChainScoringType
+				+ ", gapOpen=" + gapOpen + ", gapExtension=" + gapExtension
+				+ ", distanceIncrement=" + distanceIncrement + ", oRmsdThr="
+				+ oRmsdThr + ", maxNrIterationsForOptimization="
 				+ maxNrIterationsForOptimization + ", substitutionMatrix="
 				+ substitutionMatrix + ", seqWeight=" + seqWeight + "]";
 	}
@@ -92,6 +95,8 @@ public class CESymmParameters extends CeParameters {
 		seed = 0;
 		multipleAxes = true;
 		symmetryThreshold = DEFAULT_SYMMETRY_THRESHOLD;
+		minSubunitLength = 15;
+		distanceCutoff = 7.0;
 	}
 
 	@Override
@@ -154,6 +159,12 @@ public class CESymmParameters extends CeParameters {
 		//threshold
 		params.add("Symmetry threshold: TM-score values below the "
 				+ "threshold will be considered asymmetric.");
+		//min subunit length
+		params.add("Subunit length: the minimum number of non-gapped "
+				+ "residues in every symmetric subunit.");
+		//distance cutoff
+		params.add("Distance Cutoff: the maximum allowed distance (in A) "
+				+ "between two aligned residues.");
 
 		return params;
 	}
@@ -169,6 +180,8 @@ public class CESymmParameters extends CeParameters {
 		params.add("Seed");
 		params.add("MultipleAxes");
 		params.add("SymmetryThreshold");
+		params.add("MinSubunitLength");
+		params.add("DistanceCutoff");
 		return params;
 	}
 
@@ -183,6 +196,8 @@ public class CESymmParameters extends CeParameters {
 		params.add("Random Seed");
 		params.add("Multiple Axes");
 		params.add("Symmetry Threshold");
+		params.add("Minimum Subunit Length");
+		params.add("DistanceCutoff");
 		return params;
 	}
 
@@ -196,6 +211,8 @@ public class CESymmParameters extends CeParameters {
 		params.add(Boolean.class);
 		params.add(Integer.class);
 		params.add(Boolean.class);
+		params.add(Double.class);
+		params.add(Integer.class);
 		params.add(Double.class);
 		return params;
 	}
@@ -272,6 +289,22 @@ public class CESymmParameters extends CeParameters {
 
 	public void setSymmetryThreshold(Double symmetryThreshold) {
 		this.symmetryThreshold = symmetryThreshold;
+	}
+
+	public int getMinSubunitLength() {
+		return minSubunitLength;
+	}
+
+	public void setMinSubunitLength(Integer minSubunitLength) {
+		this.minSubunitLength = minSubunitLength;
+	}
+
+	public double getDistanceCutoff() {
+		return distanceCutoff;
+	}
+
+	public void setDistanceCutoff(Double distanceCutoff) {
+		this.distanceCutoff = distanceCutoff;
 	}
 
 }
