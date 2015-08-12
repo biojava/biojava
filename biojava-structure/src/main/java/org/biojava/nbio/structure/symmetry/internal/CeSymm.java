@@ -165,7 +165,7 @@ public class CeSymm {
 		this.calculator = calculator;
 	}
 
-	private AFPChain align(Atom[] ca10, Atom[] ca2O, Object param) 
+	protected AFPChain align(Atom[] ca10, Atom[] ca2O, Object param) 
 			throws StructureException {
 
 		//STEP 1: prepare all the information for the symmetry alignment
@@ -383,11 +383,11 @@ public class CeSymm {
 		return afpAlignments;
 	}
 
-	public MultipleAlignment analyze(Atom[] atomArrays) 
+	public MultipleAlignment analyze(Atom[] atoms) 
 			throws StructureException {
 
 		if (params == null)	params = new CESymmParameters();
-		return analyze(atomArrays, params);
+		return analyze(atoms, params);
 	}
 
 	public MultipleAlignment analyze(Atom[] atoms, CESymmParameters param) 
@@ -463,8 +463,7 @@ public class CeSymm {
 			MultipleAlignmentEnsemble e = 
 					new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca1, false);
 			msa = e.getMultipleAlignment(0);
-			logger.warn("No symmetry found in the structure, "
-					+ "returning optimal self-alignment");
+			logger.warn("Returning optimal self-alignment");
 			msa.putScore("isRefined", 0.0);
 		}
 

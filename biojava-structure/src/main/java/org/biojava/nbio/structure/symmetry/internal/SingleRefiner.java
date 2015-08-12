@@ -40,7 +40,7 @@ public class SingleRefiner implements Refiner {
 		int order = orderDetector.calculateOrder(afpChain, atoms);
 		
 		if (order == 1)	throw new RefinerFailedException(
-				"Cannot refine an order 1 symmetry.");
+				"Symmetry not found in the structure: order = 1.");
 		
 		return refineSymmetry(afpAlignments.get(0), atoms, atoms, order);
 	}
