@@ -63,6 +63,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	//Score function parameters
 	private static final double Gopen = 20.0; //Penalty for opening gap
 	private static final double Gextend = 10.0; //Penalty for extending gaps
+	private double dCutoff;
 
 	//Alignment Information
 	private MultipleAlignment msa;
@@ -102,6 +103,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		this.axes = axes;
 		this.rnd = new Random(seed);
 		this.Lmin = params.getMinSubunitLength();
+		this.dCutoff = params.getDistanceCutoff();
 		
 		MultipleAlignmentEnsemble e = mul.getEnsemble().clone();
 		this.msa = e.getMultipleAlignment(0);
@@ -146,7 +148,8 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 		//Set the MC score and RMSD of the initial state (seed alignment)
 		updateMultipleAlignment();
-		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend);
+		mcScore = MultipleAlignmentScorer.getMCScore(
+				msa, Gopen, Gextend, dCutoff);
 	}
 
 	@Override
@@ -222,7 +225,8 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 			//Get the properties of the new alignment
 			updateMultipleAlignment();
-			mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend);
+			mcScore = MultipleAlignmentScorer.getMCScore(
+					msa, Gopen, Gextend, dCutoff);
 
 			//Calculate change in the optimization Score
 			double AS = mcScore-lastScore;
@@ -266,7 +270,8 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		}
 		//Superimpose and calculate scores
 		updateMultipleAlignment();
-		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend);
+		mcScore = MultipleAlignmentScorer.getMCScore(
+				msa, Gopen, Gextend, dCutoff);
 		double tmScore = MultipleAlignmentScorer.getAvgTMScore(msa) * order;
 		double rmsd = MultipleAlignmentScorer.getRMSD(msa);
 

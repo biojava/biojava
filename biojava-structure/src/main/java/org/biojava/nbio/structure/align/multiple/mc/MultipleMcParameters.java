@@ -19,6 +19,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	private int minAlignedStructures;
 	private double gapOpen;
 	private double gapExtension;
+	private double distanceCutoff;
 	private int convergenceSteps;
 	private int nrThreads;
 	
@@ -38,9 +39,9 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add("MinAlignedStructures");
 		params.add("GapOpen");
 		params.add("GapExtension");
+		params.add("DistanceCutoff");
 		params.add("ConvergenceSteps");
 		params.add("NrThreads");
-
 		return params;
 	}
 
@@ -53,9 +54,9 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add("Minimum Structures per Column");
 		params.add("Gap Opening Penalty");
 		params.add("Gap Extension Penalty");
+		params.add("Distance Cutoff");
 		params.add("Steps to Convergence");
 		params.add("Number of Threads");
-		
 		return params;
 	}
 
@@ -69,9 +70,9 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add(Integer.class);
 		params.add(Double.class);
 		params.add(Double.class);
+		params.add(Double.class);
 		params.add(Integer.class);
 		params.add(Integer.class);
-		
 		return params;
 	}
 
@@ -91,6 +92,8 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		String gapOpen = "Penalty for opening a gap in any of the structures.";
 		String gapExtension = "Penalty for extending a gapped region in any of"
 				+ " the structures.";
+		String dCutoff = "Distance Cutoff: the maximum allowed distance (in A) "
+				+ "between two aligned residues.";
 		String convergenceSteps = 
 				"Number of steps without a change in the alignment before "
 				+ "stopping. Proportional to the calculation time. "
@@ -105,9 +108,9 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		params.add(minAlignedStructures);
 		params.add(gapOpen);
 		params.add(gapExtension);
+		params.add(dCutoff);
 		params.add(convergenceSteps);
 		params.add(nrThreads);
-		
 		return params;
 	}
 
@@ -116,8 +119,9 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		return "MultipleMcParameters [randomSeed=" + randomSeed
 				+ ", minBlockLen=" + minBlockLen + ", minAlignedStructures="
 				+ minAlignedStructures + ", gapOpen=" + gapOpen
-				+ ", gapExtension=" + gapExtension + ", convergenceSteps="
-				+ convergenceSteps + ", nrThreads=" + nrThreads + "]";
+				+ ", gapExtension=" + gapExtension + ", distanceCutoff="
+				+ distanceCutoff + ", convergenceSteps=" + convergenceSteps
+				+ ", nrThreads=" + nrThreads + "]";
 	}
 
 	@Override
@@ -128,6 +132,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		minAlignedStructures = 0;
 		gapOpen = 20.0;
 		gapExtension = 15.0;
+		distanceCutoff = 7.0;
 		convergenceSteps = 0;
 		nrThreads = 4;
 	}
@@ -186,5 +191,13 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 
 	public void setNrThreads(Integer nrThreads) {
 		this.nrThreads = nrThreads;
+	}
+
+	public double getDistanceCutoff() {
+		return distanceCutoff;
+	}
+
+	public void setDistanceCutoff(Double distanceCutoff) {
+		this.distanceCutoff = distanceCutoff;
 	}	
 }

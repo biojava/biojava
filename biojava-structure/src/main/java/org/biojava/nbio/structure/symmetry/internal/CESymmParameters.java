@@ -22,6 +22,7 @@ public class CESymmParameters extends CeParameters {
 	private boolean multipleAxes;
 	private double symmetryThreshold;
 	private int minSubunitLength;
+	private double distanceCutoff;
 
 	public static enum OrderDetectorMethod {
 		SEQUENCE_FUNCTION;
@@ -70,10 +71,11 @@ public class CESymmParameters extends CeParameters {
 				+ ", optimization=" + optimization + ", seed=" + seed
 				+ ", multipleAxes=" + multipleAxes + ", symmetryThreshold="
 				+ symmetryThreshold + ", minSubunitLength=" + minSubunitLength
-				+ ", winSize=" + winSize + ", rmsdThr=" + rmsdThr
-				+ ", rmsdThrJoin=" + rmsdThrJoin + ", maxOptRMSD=" + maxOptRMSD
-				+ ", scoringStrategy=" + scoringStrategy + ", maxGapSize="
-				+ maxGapSize + ", showAFPRanges=" + showAFPRanges
+				+ ", distanceCutoff=" + distanceCutoff + ", winSize=" + winSize
+				+ ", rmsdThr=" + rmsdThr + ", rmsdThrJoin=" + rmsdThrJoin
+				+ ", maxOptRMSD=" + maxOptRMSD + ", scoringStrategy="
+				+ scoringStrategy + ", maxGapSize=" + maxGapSize
+				+ ", showAFPRanges=" + showAFPRanges
 				+ ", sideChainScoringType=" + sideChainScoringType
 				+ ", gapOpen=" + gapOpen + ", gapExtension=" + gapExtension
 				+ ", distanceIncrement=" + distanceIncrement + ", oRmsdThr="
@@ -94,6 +96,7 @@ public class CESymmParameters extends CeParameters {
 		multipleAxes = true;
 		symmetryThreshold = DEFAULT_SYMMETRY_THRESHOLD;
 		minSubunitLength = 15;
+		distanceCutoff = 7.0;
 	}
 
 	@Override
@@ -159,6 +162,9 @@ public class CESymmParameters extends CeParameters {
 		//min subunit length
 		params.add("Subunit length: the minimum number of non-gapped "
 				+ "residues in every symmetric subunit.");
+		//distance cutoff
+		params.add("Distance Cutoff: the maximum allowed distance (in A) "
+				+ "between two aligned residues.");
 
 		return params;
 	}
@@ -175,6 +181,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("MultipleAxes");
 		params.add("SymmetryThreshold");
 		params.add("MinSubunitLength");
+		params.add("DistanceCutoff");
 		return params;
 	}
 
@@ -190,6 +197,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("Multiple Axes");
 		params.add("Symmetry Threshold");
 		params.add("Minimum Subunit Length");
+		params.add("DistanceCutoff");
 		return params;
 	}
 
@@ -205,6 +213,7 @@ public class CESymmParameters extends CeParameters {
 		params.add(Boolean.class);
 		params.add(Double.class);
 		params.add(Integer.class);
+		params.add(Double.class);
 		return params;
 	}
 
@@ -288,6 +297,14 @@ public class CESymmParameters extends CeParameters {
 
 	public void setMinSubunitLength(Integer minSubunitLength) {
 		this.minSubunitLength = minSubunitLength;
+	}
+
+	public double getDistanceCutoff() {
+		return distanceCutoff;
+	}
+
+	public void setDistanceCutoff(Double distanceCutoff) {
+		this.distanceCutoff = distanceCutoff;
 	}
 
 }
