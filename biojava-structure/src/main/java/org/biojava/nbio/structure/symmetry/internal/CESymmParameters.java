@@ -62,6 +62,39 @@ public class CESymmParameters extends CeParameters {
 	public CESymmParameters() {
 		reset();
 	}
+	
+	@Override
+	public CESymmParameters clone(){
+		
+		CESymmParameters p = new CESymmParameters();
+		
+		p.maxSymmOrder = maxSymmOrder;
+		p.symmetryType = symmetryType;
+		p.orderDetectorMethod = orderDetectorMethod;
+		p.refineMethod = refineMethod;
+		p.optimization = optimization;
+		p.seed = seed;
+		p.multipleAxes = multipleAxes;
+		p.symmetryThreshold = symmetryThreshold;
+		p.minSubunitLength = minSubunitLength;
+		p.distanceCutoff = distanceCutoff;
+		
+		p.winSize = winSize;
+		p.rmsdThr = rmsdThr;
+		p.rmsdThrJoin = rmsdThrJoin;
+		p.scoringStrategy = scoringStrategy;
+		p.maxGapSize = maxGapSize;
+		p.showAFPRanges = showAFPRanges;
+		p.maxOptRMSD = maxOptRMSD;
+		p.gapOpen = gapOpen;
+		p.gapExtension = gapExtension;
+		p.distanceIncrement = distanceIncrement;
+		p.oRmsdThr = oRmsdThr;
+		p.maxNrIterationsForOptimization = maxNrIterationsForOptimization;
+		p.seqWeight = seqWeight;
+		
+		return p;
+	}
 
 	@Override
 	public String toString() {

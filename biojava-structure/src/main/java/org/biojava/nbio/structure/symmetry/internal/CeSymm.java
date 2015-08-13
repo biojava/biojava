@@ -403,7 +403,7 @@ public class CeSymm {
 				params.getRefineMethod() != RefineMethod.NOT_REFINED){
 
 			logger.warn("Running iteratively CeSymm: ignore Warnings.");
-			CeSymmIterative iterative = new CeSymmIterative(params);
+			CeSymmIterative iterative = new CeSymmIterative(params.clone());
 			msa = iterative.execute(atoms);
 			axes = iterative.getSymmetryAxes();
 			if (SymmetryTools.isRefined(msa)) {
