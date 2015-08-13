@@ -77,6 +77,7 @@ public class SymmetryDisplay {
 		if (SymmetryTools.isRefined(msa)){
 			List<Atom[]> atoms = msa.getAtomArrays();
 			jmol = new MultipleAlignmentJmol(msa, atoms);
+			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 			addSymmetryMenu(jmol, axes);
 			jmol.evalString(printPointGroupAxes(msa));
 		} else {
