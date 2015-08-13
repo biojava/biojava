@@ -404,6 +404,7 @@ public class CeSymm {
 				refined = true;
 			} else {
 				afpChain = align(atoms, atoms, params);
+				msa = null;
 			}
 		} else {
 			//Otherwise perform only one CeSymm alignment

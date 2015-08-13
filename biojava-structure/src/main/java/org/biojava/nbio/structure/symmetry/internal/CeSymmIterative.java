@@ -49,7 +49,7 @@ public class CeSymmIterative {
 	 * optimization options should be turned on, because the alignment
 	 * has to be consistent at every recursive step.
 	 * 
-	 * @param params CeSymm parameters
+	 * @param params CeSymm parameters, make sure they are cloned
 	 */
 	public CeSymmIterative(CESymmParameters params) {
 		//Disable the iteration mode, because otherwise we get infinite calls
