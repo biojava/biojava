@@ -2,12 +2,6 @@ package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
@@ -423,8 +417,8 @@ public class CeSymm {
 			//STEP 5: symmetry alignment optimization
 			if (this.params.getOptimization()){
 
-				//Perform several optimizations in different threads
-				ExecutorService executor = Executors.newCachedThreadPool();
+				//Perform several optimizations in different threads - DISALLOWED
+				/*ExecutorService executor = Executors.newCachedThreadPool();
 				List<Future<MultipleAlignment>> future = 
 						new ArrayList<Future<MultipleAlignment>>();
 				int seed = this.params.getSeed();
@@ -457,7 +451,17 @@ public class CeSymm {
 					}
 				}
 				msa.putScore("isRefined", 1.0);
-				executor.shutdown();
+				executor.shutdown();*/
+				
+				//Use a single Thread for the optimization
+				try {
+					SymmOptimizer optimizer = new SymmOptimizer(
+							msa, axes, params, params.getSeed());
+					msa = optimizer.optimize();
+				} catch (RefinerFailedException e) {
+					logger.warn("Optimization failed.",e);
+				}
+				
 			}
 		} else {
 			MultipleAlignmentEnsemble e = 

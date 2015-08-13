@@ -27,7 +27,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,10 +51,10 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MultipleMcMain implements MultipleStructureAligner {
-	
+
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MultipleMcMain.class);
-	
+
 	/**
 	 *  Version history:<p>
 	 *  1.0 - Initial code implementation from CEMC article.<p>
@@ -63,12 +62,12 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	 */
 	public static final String version = "1.1";
 	public static final String algorithmName = "jMultipleMC";
-	
+
 	private MultipleMcParameters params;
 	private MultipleAlignmentEnsemble ensemble;
 	private StructureAlignment pairwise;
 	private int reference = 0;
-	
+
 	/**
 	 * Default constructor. 
 	 * Default parameters are used.
@@ -89,7 +88,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	 * the Java API.
 	 * <li>Choose the closest structure to all others as the reference.
 	 * <li>Generate a MultipleAlignment by combining all the alignments to 
-	 * the reference.
+	 * the reference, that will be used as a seed for the MC optimization.
 	 * </ul>
 	 * 
 	 * @param atomArrays List of Atoms to align of the structures
@@ -101,9 +100,9 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	private MultipleAlignment generateSeed(List<Atom[]> atomArrays) 
 			throws InterruptedException, 
 			ExecutionException, StructureException {
-		
+
 		int size = atomArrays.size();
-		
+
 		//List to store the all-to-all alignments
 		List<List<AFPChain>> afpAlignments = new ArrayList<List<AFPChain>>();
 		for (int i=0; i<size; i++){
@@ -111,47 +110,47 @@ public class MultipleMcMain implements MultipleStructureAligner {
 			for (int j=0; j<size; j++)
 				afpAlignments.get(i).add(null);
 		}
-		
+
 		int threads = params.getNrThreads();
 		ExecutorService executor = Executors.newFixedThreadPool(threads);
-	    List<Future<AFPChain>> afpFuture = new ArrayList<Future<AFPChain>>();
-	    
-	    //Create all the possible protein pairwise combinations 
-	    //(N*(N-1)/2) and call the pairwise alignment algorithm
-	  	for (int i=0; i<size; i++){	  		
-	  		for (int j=i+1; j<size; j++){
-	    
-	  			Callable<AFPChain> worker = new CallableStructureAlignment(
-	  					atomArrays.get(i), atomArrays.get(j), 
-	  					pairwise.getAlgorithmName(), pairwise.getParameters());
-	  			
-	  			Future<AFPChain> submit = executor.submit(worker);
-	  			afpFuture.add(submit);
-	  		}
-	  	}
-	  	
-	  	//Store the resulting AFPChains in the 2D List
-	  	int index = 0;  //the alignment index
-	  	for (int i=0; i<size; i++){
-	  		for (int j=i; j<size; j++){
-	  			if (i!=j){
-		  			afpAlignments.get(i).add(j,afpFuture.get(index).get());
-		  			afpAlignments.get(j).add(i,afpFuture.get(index).get());
-		  			index++;
-	  			}
-	  		}
-	  	}
-	    executor.shutdown();
-	    
-	    reference = chooseReferenceRMSD(afpAlignments);
-	    boolean flexible = false;
-	    if (pairwise.getAlgorithmName().contains("flexible"))
-	    	flexible = true;
-	    
-	    return combineReferenceAlignments(afpAlignments.get(reference),
-	    		atomArrays, reference, flexible);
+		List<Future<AFPChain>> afpFuture = new ArrayList<Future<AFPChain>>();
+
+		//Create all the possible protein pairwise combinations 
+		//(N*(N-1)/2) and call the pairwise alignment algorithm
+		for (int i=0; i<size; i++){	  		
+			for (int j=i+1; j<size; j++){
+
+				Callable<AFPChain> worker = new CallableStructureAlignment(
+						atomArrays.get(i), atomArrays.get(j), 
+						pairwise.getAlgorithmName(), pairwise.getParameters());
+
+				Future<AFPChain> submit = executor.submit(worker);
+				afpFuture.add(submit);
+			}
+		}
+
+		//Store the resulting AFPChains in the 2D List
+		int index = 0;  //the alignment index
+		for (int i=0; i<size; i++){
+			for (int j=i; j<size; j++){
+				if (i!=j){
+					afpAlignments.get(i).add(j,afpFuture.get(index).get());
+					afpAlignments.get(j).add(i,afpFuture.get(index).get());
+					index++;
+				}
+			}
+		}
+		executor.shutdown();
+
+		reference = chooseReferenceRMSD(afpAlignments);
+		boolean flexible = false;
+		if (pairwise.getAlgorithmName().contains("flexible"))
+			flexible = true;
+
+		return combineReferenceAlignments(afpAlignments.get(reference),
+				atomArrays, reference, flexible);
 	}
-	
+
 	/**
 	 * This method takes the all-to-all pairwise alignments Matrix (as a 
 	 * double List of AFPChain) and calculates the structure with the 
@@ -162,26 +161,26 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	 * @return int reference index
 	 */
 	private static int chooseReferenceRMSD(List<List<AFPChain>> afpAlignments){
-		
+
 		int size = afpAlignments.size();
-		
-	    List<Double> RMSDs = new ArrayList<Double>();
-	    for (int i=0; i<afpAlignments.size(); i++){
-	    	double rmsd=0.0;
-	    	for (int j=0; j<size; j++){
-	    		if (i!=j) 
-	    			rmsd += afpAlignments.get(i).get(j).getTotalRmsdOpt();
-	    	}
-	    	RMSDs.add(rmsd);
-	    }
-	    int reference = 0;
-	    for (int i=1; i<size; i++){
-	    	if (RMSDs.get(i) < RMSDs.get(reference)) reference = i;
-	    }
-	    logger.info("Reference structure is "+reference);
-	    return reference;
+
+		List<Double> RMSDs = new ArrayList<Double>();
+		for (int i=0; i<afpAlignments.size(); i++){
+			double rmsd=0.0;
+			for (int j=0; j<size; j++){
+				if (i!=j) 
+					rmsd += afpAlignments.get(i).get(j).getTotalRmsdOpt();
+			}
+			RMSDs.add(rmsd);
+		}
+		int reference = 0;
+		for (int i=1; i<size; i++){
+			if (RMSDs.get(i) < RMSDs.get(reference)) reference = i;
+		}
+		logger.info("Reference structure is "+reference);
+		return reference;
 	}
-	
+
 	/**
 	 * This method takes a list of pairwise alignments to the reference 
 	 * structure and calculates a MultipleAlignment resulting from combining 
@@ -202,13 +201,13 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	private static MultipleAlignment combineReferenceAlignments(
 			List<AFPChain> afpList, List<Atom[]> atomArrays, 
 			int ref, boolean flexible) throws StructureException {
-		
+
 		int size = atomArrays.size();
 		int length = 0;  //the number of residues of the reference structure
 		if (ref==0) length = afpList.get(1).getCa1Length();
 		else length = afpList.get(0).getCa2Length();
 		SortedSet<Integer> flexibleBoundaries = new TreeSet<Integer>();
-		
+
 		//Stores the equivalencies of all the structures as a double List
 		List<List<Integer>> equivalencies = new ArrayList<List<Integer>>();
 		for (int str=0; str<size; str++){
@@ -218,7 +217,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 				else equivalencies.get(str).add(null);
 			}
 		}
-		
+
 		//Now we parse the AFPChains adding the residue equivalencies
 		for (int str=0; str<size; str++){
 			if (str==ref) continue;  //avoid self-comparison
@@ -236,34 +235,34 @@ public class MultipleMcMain implements MultipleStructureAligner {
 						res2 = afpList.get(str).getOptAln()[bk][0][i];
 					}
 					equivalencies.get(str).set(res1,res2);
-					
+
 					//Add the flexible boundaries if flexible
 					if(flexible && i==0) flexibleBoundaries.add(res1);
 				}
 			}
 		}
-		
+
 		//We have translated the equivalencies, we create the MultipleAlignment
 		MultipleAlignment seed = new MultipleAlignmentImpl();
 		seed.getEnsemble().setAtomArrays(atomArrays);
 		BlockSet blockSet = new BlockSetImpl(seed);
 		new BlockImpl(blockSet);
-		
+
 		//Store last positions in the block different than null to detect CP
 		int[] lastResidues = new int[size];
 		Arrays.fill(lastResidues, -1);
-		
+
 		//We loop through all the equivalencies checking for CP
 		for (int pos=0; pos<length; pos++){
 			//Start a new BlockSet if the position means a boundary
 			if (flexibleBoundaries.contains(pos) && 
 					blockSet.getBlocks().get(blockSet.getBlocks().size()-1).
 					getAlignRes() != null){
-				
+
 				blockSet = new BlockSetImpl(seed);
 				new BlockImpl(blockSet);
 			}
-			
+
 			boolean cp = false;
 			for (int str=0; str<size; str++){
 				if (equivalencies.get(str).get(pos) == null){
@@ -277,17 +276,17 @@ public class MultipleMcMain implements MultipleStructureAligner {
 				new BlockImpl(blockSet);
 				Arrays.fill(lastResidues,-1);
 			}
-			
+
 			//Now add the equivalent residues into the Block AlignRes variable
 			for (int str=0; str<size; str++){
 				Block lastB = blockSet.getBlocks().get(
 						blockSet.getBlocks().size()-1);
-				
+
 				if (lastB.getAlignRes() == null){
 					//Initialize the aligned residues list
 					List<List<Integer>> alnRes = 
 							new ArrayList<List<Integer>>(size);
-					
+
 					for (int k=0; k<size; k++) {
 						alnRes.add(new ArrayList<Integer>());
 					}
@@ -304,7 +303,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	@Override
 	public MultipleAlignment align(List<Atom[]> atomArrays, Object parameters)
 			throws StructureException {
-		
+
 		MultipleAlignment result = null;
 		ensemble = new MultipleAlignmentEnsembleImpl();
 		ensemble.setAtomArrays(atomArrays);
@@ -312,25 +311,31 @@ public class MultipleMcMain implements MultipleStructureAligner {
 		ensemble.setVersion(version);
 		ensemble.setIoTime(System.currentTimeMillis());
 		setParameters((ConfigStrucAligParams) parameters);
-		
-		//Generate the seed alignment from all-to-all pairwise alignments
+
+		//Generate the seed alignment and optimize it
 		try {
 			result = generateSeed(atomArrays);
-			int threads = params.getNrThreads();
+		} catch (InterruptedException e) {
+			logger.warn("Seed generation failed.",e);
+		} catch (ExecutionException e) {
+			logger.warn("Seed generation failed.",e);
+		}
+
+		//Repeat the optimization in parallel - DISALLOWED
+		/*int threads = params.getNrThreads();
 			ExecutorService executor = Executors.newFixedThreadPool(threads);
 			List<Future<MultipleAlignment>> msaFuture = 
 					new ArrayList<Future<MultipleAlignment>>();
-			
-			//Repeat the optimization in parallel
+
 			for (int i=0; i<params.getNrThreads(); i++){
 				//Change the random seed for each parallelization
 				MultipleMcParameters paramsMC = (MultipleMcParameters) params;
 				paramsMC.setRandomSeed(paramsMC.getRandomSeed()+i);
-				
+
 				Callable<MultipleAlignment> worker = 
 						new MultipleMcOptimizer(
 								result, paramsMC, reference);
-				
+
 	  			Future<MultipleAlignment> submit = executor.submit(worker);
 	  			msaFuture.add(submit);
 			}
@@ -347,25 +352,29 @@ public class MultipleMcMain implements MultipleStructureAligner {
 			}
 			Long runtime = System.currentTimeMillis()-ensemble.getIoTime();
 			ensemble.setCalculationTime(runtime);
-			
+
 			result.setEnsemble(ensemble);
 			ensemble.addMultipleAlignment(result);
-			executor.shutdown();
-			return result;
-			
-		} catch (InterruptedException e) {
-			logger.warn("Optimization run failed: "+e.getMessage());
-		} catch (ExecutionException e) {
-			logger.warn("Optimization run failed: "+e.getMessage());
-		}
-		
+			executor.shutdown();*/
+
+		MultipleMcOptimizer optimizer = new MultipleMcOptimizer(
+				result, params, reference);
+
+		Long runtime = System.currentTimeMillis()-ensemble.getIoTime();
+		ensemble.setCalculationTime(runtime);
+
+		result = optimizer.optimize();
+		result.setEnsemble(ensemble);
+		ensemble.addMultipleAlignment(result);
+
 		return result;
+
 	}
-	
+
 	@Override
 	public MultipleAlignment align(List<Atom[]> atomArrays) 
 			throws StructureException {
-		
+
 		if (params == null) {
 			logger.info("Using DEFAULT MultipleMc Parameters");
 			params = new MultipleMcParameters();
