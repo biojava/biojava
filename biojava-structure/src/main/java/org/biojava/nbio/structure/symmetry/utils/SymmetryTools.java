@@ -468,7 +468,7 @@ public class SymmetryTools {
 			}
 			count = 1;
 			Integer end = null;
-			while (end == null && count<align.length()){
+			while (end == null && count<=align.length()){
 				end = align.getAlignRes().get(i).get(align.length()-count);
 				count++;
 			}
