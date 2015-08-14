@@ -413,6 +413,7 @@ public class CeSymm {
 
 		if (refined){
 			if (msa == null) msa = SymmetryTools.fromAFP(afpChain, ca1);
+			MultipleAlignmentScorer.calculateScores(msa);
 			msa.putScore("isRefined", 1.0);
 
 			//STEP 5: symmetry alignment optimization
@@ -459,10 +460,10 @@ public class CeSymm {
 					SymmOptimizer optimizer = new SymmOptimizer(
 							msa, axes, params, params.getSeed());
 					msa = optimizer.optimize();
+					msa.putScore("isRefined", 1.0);
 				} catch (RefinerFailedException e) {
 					logger.warn("Optimization failed.",e);
 				}
-				
 			}
 		} else {
 			MultipleAlignmentEnsemble e = 
