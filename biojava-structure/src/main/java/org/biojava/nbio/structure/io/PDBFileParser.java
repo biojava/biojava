@@ -2295,7 +2295,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (icode2.equals(" "))
 			icode2 = "";
 
-		SSBond ssbond = new SSBond();
+		SSBond ssbond = new SSBondImpl();
 
 		ssbond.setChainID1(chain1);
 		ssbond.setResnum1(seqNum1);
@@ -2825,7 +2825,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			// TODO determine what the actual bond order of this bond is; for
 			// now, we're assuming they're single bonds
-			new Bond(a, b, 1);
+			new BondImpl(a, b, 1);
 		} catch (StructureException e) {
 			// Note, in Calpha only mode the link atoms may not be present.
 			if (! parseCAonly) {
@@ -2848,7 +2848,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
 					disulfideBond.getInsCode2());
 			
-			new Bond(a, b, 1);
+			new BondImpl(a, b, 1);
 		} catch (StructureException e) {
 			// Note, in Calpha only mode the CYS SG's are not present.
 			if (! parseCAonly) {
