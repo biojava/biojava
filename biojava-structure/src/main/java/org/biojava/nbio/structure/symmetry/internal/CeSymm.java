@@ -285,7 +285,7 @@ public class CeSymm {
 			refined = true;
 
 		} catch (RefinerFailedException e) {
-			logger.warn("Refinement failed.",e);
+			logger.info("Refinement failed: "+e.getMessage());
 			return afpChain;
 		}
 
@@ -398,7 +398,7 @@ public class CeSymm {
 		if (params.isMultipleAxes() && 
 				params.getRefineMethod() != RefineMethod.NOT_REFINED){
 
-			logger.warn("Running iteratively CeSymm: ignore Warnings.");
+			logger.info("Running iteratively CeSymm.");
 			CeSymmIterative iterative = new CeSymmIterative(params.clone());
 			msa = iterative.execute(atoms);
 			axes = iterative.getSymmetryAxes();
@@ -466,14 +466,14 @@ public class CeSymm {
 					msa = optimizer.optimize();
 					msa.putScore("isRefined", 1.0);
 				} catch (RefinerFailedException e) {
-					logger.warn("Optimization failed.",e);
+					logger.info("Optimization failed:"+e.getMessage());
 				}
 			}
 		} else {
 			MultipleAlignmentEnsemble e = 
 					new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca1, false);
 			msa = e.getMultipleAlignment(0);
-			logger.warn("Returning optimal self-alignment");
+			logger.info("Returning optimal self-alignment");
 			msa.putScore("isRefined", 0.0);
 		}
 
