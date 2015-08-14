@@ -2,6 +2,7 @@ package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
@@ -15,6 +16,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
+import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -413,6 +415,8 @@ public class CeSymm {
 
 		if (refined){
 			if (msa == null) msa = SymmetryTools.fromAFP(afpChain, ca1);
+			CoreSuperimposer imposer = new CoreSuperimposer();
+			imposer.superimpose(msa);
 			MultipleAlignmentScorer.calculateScores(msa);
 			msa.putScore("isRefined", 1.0);
 
