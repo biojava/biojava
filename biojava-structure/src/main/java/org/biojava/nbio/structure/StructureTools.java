@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * @version %I% %G%
  */
 public class StructureTools {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(StructureTools.class);
 
 	// Amino Acid backbone
@@ -80,18 +80,18 @@ public class StructureTools {
 	 * The atom name for the backbone carbonyl
 	 */
 	public static final String C_ATOM_NAME = "C";
-	
+
 	/**
 	 * The atom name for the backbone carbonyl oxygen
 	 */
 	public static final String O_ATOM_NAME = "O";
-	
+
 	/**
 	 * The atom name of the side-chain C-beta atom
 	 */
 	public static final String CB_ATOM_NAME = "CB";
 
-	
+
 	// Nucleotide backbone
 	/**
 	 * The atom name of the backbone C1' in RNA
@@ -137,12 +137,12 @@ public class StructureTools {
 	 * The atom name of the backbone phosphate in RNA
 	 */
 	public static final String P_ATOM_NAME = "P";
-	
+
 	/**
 	 * The atom used as representative for nucleotides, equivalent to {@link #CA_ATOM_NAME} for proteins
 	 */
 	public static final String NUCLEOTIDE_REPRESENTATIVE = P_ATOM_NAME;
-	
+
 	/**
 	 * The character to use for unknown compounds in sequence strings
 	 */
@@ -154,7 +154,7 @@ public class StructureTools {
 	 * of the chain (protein/nucleotide) 
 	 */
 	public static final double RATIO_RESIDUES_TO_TOTAL = 0.95;
-	
+
 
 
 	// there is a file format change in PDB 3.0 and nucleotides are being renamed
@@ -348,7 +348,7 @@ public class StructureTools {
 		}
 		return atoms.toArray(new Atom[atoms.size()]);	
 	}
-	
+
 	/** 
 	 * Returns and array of all atoms of the chain (first model), including 
 	 * Hydrogens (if present) and all HETATOMs.
@@ -381,7 +381,7 @@ public class StructureTools {
 	public static List<Group> getUnalignedGroups(Atom[] ca) {
 		Set<Chain> chains = new HashSet<Chain>();
 		Set<Group> caGroups = new HashSet<Group>();
-		
+
 		// Create list of all chains in this structure
 		Structure s = null;
 		if( ca.length > 0 ) {
@@ -412,7 +412,7 @@ public class StructureTools {
 				}
 			}
 		}
-		
+
 		// Iterate through all chains, finding groups not in ca
 		List<Group> unadded = new ArrayList<Group>();
 		for(Chain c : chains) {
@@ -424,7 +424,7 @@ public class StructureTools {
 		}
 		return unadded;
 	}
-	
+
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure, 
 	 * optionally including HET atoms or not.
@@ -452,7 +452,7 @@ public class StructureTools {
 		}
 		return atoms.toArray(new Atom[atoms.size()]);			
 	}
-	
+
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Chain, 
 	 * optionally including HET atoms or not
@@ -463,7 +463,7 @@ public class StructureTools {
 	 */
 	public static final Atom[] getAllNonHAtomArray(Chain c, boolean hetAtoms) {
 		List<Atom> atoms = new ArrayList<Atom>();
-		
+
 		for (Group g:c.getAtomGroups()){
 			if (g.isWater()) continue;
 			for (Atom a:g.getAtoms()) {
@@ -477,7 +477,7 @@ public class StructureTools {
 		}
 		return atoms.toArray(new Atom[atoms.size()]);			
 	}
-	
+
 	/**
 	 * Adds to the given atoms list, all atoms of groups that contained all requested atomNames,
 	 * i.e. if a group does not contain all of the requested atom names, its atoms won't be added. 
@@ -486,7 +486,7 @@ public class StructureTools {
 	 * @param atoms
 	 */
 	private static void extractAtoms(String[] atomNames, List<Chain> chains, List<Atom> atoms) {
-		
+
 		for ( Chain c : chains) {
 
 			for ( Group g : c.getAtomGroups()) {
@@ -568,21 +568,21 @@ public class StructureTools {
 	 */
 	public static final Atom[] getAtomCAArray(Chain c){
 		List<Atom> atoms = new ArrayList<Atom>();
-		
+
 		for (Group g: c.getAtomGroups()) {
 			if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
 				atoms.add(g.getAtom(CA_ATOM_NAME));
 			}
 		}
-		
+
 		return atoms.toArray(new Atom[atoms.size()]);
 	}
-	
+
 	/**
 	 * Gets a representative atom for each group.
 	 * 
 	 * For amino acids, the representative is a CA carbon.
-	 * For nucleotides, the representative is the C3' carbon.
+	 * For nucleotides, the representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}.
 	 * Other group types will be ignored.
 	 * @param c
 	 * @return
@@ -590,24 +590,48 @@ public class StructureTools {
 	 */
 	public static final Atom[] getRepresentativeAtomArray(Chain c) {
 		List<Atom> atoms = new ArrayList<Atom>();
-		
+
 		for (Group g: c.getAtomGroups()) {
-			switch(g.getType()) {
-			case AMINOACID:
-				if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
-					atoms.add(g.getAtom(CA_ATOM_NAME));
+			
+			ChemComp cc = g.getChemComp();
+			if (cc == null){
+			
+				logger.info("Chemical Component information not available. Obtaining"
+						+ " representative Atoms from Group type)");
+				
+				switch(g.getType()) {
+				case AMINOACID:
+					if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+						atoms.add(g.getAtom(CA_ATOM_NAME));
+					}
+					break;
+				case NUCLEOTIDE:
+					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE)) {
+						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
+					}
+					break;
+				default:
+					// don't add
 				}
-				break;
-			case NUCLEOTIDE:
-				if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE) && g.getAtom(NUCLEOTIDE_REPRESENTATIVE).getElement()==Element.C) {
-					atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
+			}
+			else {
+				if (PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())){
+					
+					if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+						atoms.add(g.getAtom(CA_ATOM_NAME));
+					}
+					
+				} else if(PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+					
+					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE)) {
+						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
+					}
+				} else if (PolymerType.unknown.equals(cc.getPolymerType())){
+					int a = 3;
 				}
-				break;
-			default:
-				// don't add
 			}
 		}
-		
+
 		return atoms.toArray(new Atom[atoms.size()]);
 
 	}
@@ -623,7 +647,7 @@ public class StructureTools {
 	public static final Atom[] cloneCAArray(Atom[] ca) {
 		return cloneAtomArray(ca);
 	}
-	
+
 	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
 	 * groups and chains. The chain will only contain groups that are part of the input array.
 	 * 
@@ -771,9 +795,9 @@ public class StructureTools {
 	 * @see #getRepresentativeAtomArray(Structure)
 	 */
 	public static Atom[] getAtomCAArray(Structure s){
-		
+
 		List<Atom> atoms = new ArrayList<Atom>();
-		
+
 		for (Chain c: s.getChains()) {
 			for (Group g: c.getAtomGroups()) {
 				if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
@@ -784,36 +808,25 @@ public class StructureTools {
 
 		return atoms.toArray(new Atom[atoms.size()]);
 	}
-	
+
 	/**
 	 * Gets a representative atom for each group. Atoms are not cloned.
 	 * 
 	 * For amino acids, the representative is a CA carbon.
-	 * For nucleotides, the representative is the C3' carbon.
+	 * For nucleotides, the representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}.
 	 * Other group types will be ignored.
 	 * @param s Input structure
 	 * @return
 	 * @since Biojava 4.1.0
 	 */
 	public static Atom[] getRepresentativeAtomArray(Structure s){
-		
+
 		List<Atom> atoms = new ArrayList<Atom>();
-		
+
 		for (Chain c: s.getChains()) {
-			for (Group g: c.getAtomGroups()) {
-				switch(g.getType()) {
-				default:
-				case AMINOACID:
-					if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
-						atoms.add(g.getAtom(CA_ATOM_NAME));
-					}
-					break;
-				case NUCLEOTIDE:
-					if (g.hasAtom(NUCLEOTIDE_REPRESENTATIVE) ) {
-						atoms.add(g.getAtom(NUCLEOTIDE_REPRESENTATIVE));
-					}
-					break;
-				}
+			Atom[] chainAtoms = getRepresentativeAtomArray(c);
+			for (Atom a : chainAtoms){
+				atoms.add(a);
 			}
 		}
 
@@ -827,9 +840,9 @@ public class StructureTools {
 	 * @return an Atom[] array
 	 */
 	public static Atom[] getBackboneAtomArray(Structure s){
-		
+
 		List<Atom> atoms = new ArrayList<Atom>();
-		
+
 		for (Chain c: s.getChains()) {
 			for (Group g: c.getAtomGroups()) {
 				if (g.hasAminoAtoms()) {
@@ -863,9 +876,9 @@ public class StructureTools {
 					}
 				}
 			}
-			
+
 		}
-		
+
 		return atoms.toArray(new Atom[atoms.size()]);
 	}
 
@@ -907,10 +920,10 @@ public class StructureTools {
 	public static final Character get1LetterCode(String groupCode3){
 
 		Character code1;
-		
+
 		// is it a standard amino acid ?
 		code1 = get1LetterCodeAmino(groupCode3);
-		
+
 		if (code1 == null) {
 			// hm groupCode3 is not standard
 			// perhaps it is a nucleotide?
@@ -930,7 +943,7 @@ public class StructureTools {
 				code1 = UNKNOWN_GROUP_LABEL;
 			}		
 		}
-		
+
 		return code1;
 
 	}
@@ -1082,7 +1095,7 @@ public class StructureTools {
 	 */
 	public static final Structure getSubRanges(Structure s, String ranges ) 
 			throws StructureException
-			{
+	{
 		Structure struc = getReducedStructure(s, null);
 
 		if ( ranges == null || ranges.equals(""))
@@ -1153,7 +1166,7 @@ public class StructureTools {
 
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
-			
+
 			if(pdbresnumEnd == null ) {
 				// Single residue range
 				pdbresnumEnd = pdbresnumStart;
@@ -1175,7 +1188,7 @@ public class StructureTools {
 
 				ResidueNumber pdbresnum1 = ResidueNumber.fromString(pdbresnumStart);
 				ResidueNumber pdbresnum2 = ResidueNumber.fromString(pdbresnumEnd);
-				
+
 				// Trim extra residues off the range
 				Atom[] allAtoms = StructureTools.getRepresentativeAtomArray(struc);
 				AtomPositionMap map = new AtomPositionMap(allAtoms);
@@ -1228,7 +1241,7 @@ public class StructureTools {
 		newS.setName(name.toString());
 
 		return newS;
-			}
+	}
 
 	public static final String convertAtomsToSeq(Atom[] atoms) {
 
@@ -1245,9 +1258,9 @@ public class StructureTools {
 			String code3 = g.getPDBName();
 			Character code1 = get1LetterCodeAmino(code3);
 			if (code1 == null) code1 = UNKNOWN_GROUP_LABEL;
-			
+
 			buf.append(code1);
-			
+
 			prevGroup = g;
 
 		}
@@ -1285,19 +1298,19 @@ public class StructureTools {
 	 */
 	public static AtomContactSet getAtomsInContact(Chain chain, String[] atomNames, double cutoff) {
 		Grid grid = new Grid(cutoff);
-		
+
 		Atom[] atoms = null;
 		if (atomNames==null) {
 			atoms = getAllNonHAtomArray(chain, false);
 		} else {
 			atoms = getAtomArray(chain, atomNames);
 		}
-				
+
 		grid.addAtoms(atoms);
-		
+
 		return grid.getContacts();
 	}
-	
+
 	/**
 	 * Returns the set of intra-chain contacts for the given chain for all non-H atoms of non-hetatoms, i.e. the contact map.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
@@ -1324,14 +1337,14 @@ public class StructureTools {
 	 */
 	public static AtomContactSet getAtomsCAInContact(Chain chain, double cutoff) {
 		Grid grid = new Grid(cutoff);
-		
+
 		Atom[] atoms = getAtomCAArray(chain);
-				
+
 		grid.addAtoms(atoms);
-		
+
 		return grid.getContacts();
 	}
-	
+
 	/**
 	 * Returns the set of intra-chain contacts for the given chain for C-alpha or C3' atoms (including non-standard 
 	 * aminoacids appearing as HETATM groups), i.e. the contact map.
@@ -1343,15 +1356,15 @@ public class StructureTools {
 	 */
 	public static AtomContactSet getRepresentativeAtomsInContact(Chain chain, double cutoff) {
 		Grid grid = new Grid(cutoff);
-		
+
 		Atom[] atoms = getRepresentativeAtomArray(chain);
-				
+
 		grid.addAtoms(atoms);
-		
+
 		return grid.getContacts();
 	}
-	
-	
+
+
 	/**
 	 * Returns the set of inter-chain contacts between the two given chains for the given atom names.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
@@ -1377,10 +1390,10 @@ public class StructureTools {
 			atoms2 = getAtomArray(chain2, atomNames);
 		}
 		grid.addAtoms(atoms1, atoms2);
-		
+
 		return grid.getContacts();		
 	}
-	
+
 	/**
 	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.
@@ -1395,7 +1408,7 @@ public class StructureTools {
 	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, double cutoff, boolean hetAtoms) {
 		return getAtomsInContact(chain1, chain2, null, cutoff, hetAtoms);
 	}
-	
+
 	/**
 	 * Finds Groups in {@code structure} that contain at least one Atom that is within {@code radius} Angstroms of {@code centroid}.
 	 * @param structure The structure from which to find Groups
@@ -1627,7 +1640,7 @@ public class StructureTools {
 			return cache.getStructure(name);
 		}
 	}
-	
+
 	/**
 	 * Tell whether given chain is a protein chain
 	 * @param c
@@ -1637,7 +1650,7 @@ public class StructureTools {
 	public static boolean isProtein(Chain c) {
 		return getPredominantGroupType(c) == GroupType.AMINOACID;
 	}
-	
+
 	/**
 	 * Tell whether given chain is DNA or RNA
 	 * @param c
@@ -1647,7 +1660,7 @@ public class StructureTools {
 	public static boolean isNucleicAcid(Chain c) {
 		return getPredominantGroupType(c) == GroupType.NUCLEOTIDE;
 	}
-	
+
 	/**
 	 * Get the predominant {@link GroupType} for a given Chain, following these rules:
 	 * <li>if the ratio of number of residues of a certain {@link GroupType} to total 
@@ -1672,15 +1685,15 @@ public class StructureTools {
 			if (g.isWater()) sizeWaters++;
 		}
 		int sizeHetatomsWithoutWater = sizeHetatoms - sizeWaters;
-		
+
 		int fullSize = sizeAminos + sizeNucleotides + sizeHetatomsWithoutWater;
-		
+
 		if ((double)sizeAminos/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return GroupType.AMINOACID;
-		
+
 		if ((double)sizeNucleotides/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return GroupType.NUCLEOTIDE;
-		
+
 		if ((double)(sizeHetatomsWithoutWater)/(double)fullSize > RATIO_RESIDUES_TO_TOTAL) return GroupType.HETATM;
-		
+
 		// finally if neither condition works, we try based on majority, but log it
 		GroupType max;
 		if(sizeNucleotides > sizeAminos) {
@@ -1705,7 +1718,7 @@ public class StructureTools {
 
 		return max;
 	}
-	
+
 	/**
 	 * Returns true if the given chain is composed of water molecules only
 	 * @param c
@@ -1805,9 +1818,25 @@ public class StructureTools {
 				str.append(aa.getAminoType()) ;
 			} else {
 				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
-			}
-		}
-		return str.toString();
+            }
+        }
+        return str.toString();
+    }
 
-	}
+    /**
+     * Returns true if the given chain is composed of non-polymeric groups only
+     *
+     * @param c
+     * @return
+     */
+    public static boolean isChainPureNonPolymer(Chain c) {
+
+        for (Group g : c.getAtomGroups()) {
+            if (g.getType() == GroupType.AMINOACID || g.getType() == GroupType.NUCLEOTIDE) {
+                return false;
+            }
+
+        }
+        return true;
+    }
 }

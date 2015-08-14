@@ -42,28 +42,26 @@ public class DBRef implements PDBRecord, Serializable{
 
 	private final static Logger logger = LoggerFactory.getLogger(DBRef.class);
 
-	/**
-    *
-    */
-   private static final long serialVersionUID = -1050178577542224379L;
-   Structure parent;
-	String idCode;
-    String chainId;
-    int seqbegin;
-    char insertBegin;
-    int seqEnd;
-    char insertEnd;
+	private static final long serialVersionUID = -1050178577542224379L;
 
-    String database;
-    String dbAccession;
-    String dbIdCode;
+	private Structure parent;
+	private String idCode;
+	private String chainId;
+	private int seqbegin;
+	private char insertBegin;
+	private int seqEnd;
+	private char insertEnd;
 
-    int dbSeqBegin;
-    char idbnsBegin;
-    int dbSeqEnd;
-    char idbnsEnd;
+	private String database;
+	private String dbAccession;
+	private String dbIdCode;
 
-    private Long id;
+	private int dbSeqBegin;
+	private char idbnsBegin;
+	private int dbSeqEnd;
+	private char idbnsEnd;
+
+	private Long id;
 
     public DBRef() {
     	insertBegin = ' ';
@@ -153,7 +151,7 @@ public class DBRef implements PDBRecord, Serializable{
         try {
 
             @SuppressWarnings("rawtypes")
-			Class c = Class.forName("org.biojava.nbio.structure.DBRef");
+			Class c = Class.forName(DBRef.class.getName());
             Method[] methods  = c.getMethods();
 
             for (Method m : methods) {

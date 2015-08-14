@@ -140,8 +140,7 @@ public class MultipleAlignmentWriter {
 						residueGroup.append("-");
 						residueGroup.append('\t');
 					} else {
-						Atom atom = multAln.getEnsemble().
-								getAtomArrays().get(str)[residue];
+						Atom atom = multAln.getAtomArrays().get(str)[residue];
 		
 						residueGroup.append(
 								atom.getGroup().getResidueNumber().toString());
@@ -169,13 +168,11 @@ public class MultipleAlignmentWriter {
 	public static String toTransformMatrices(MultipleAlignment alignment) {
 
 		StringBuffer txt = new StringBuffer();
-		List<Matrix4d> transforms = alignment.getTransformations();
 
 		for (int bs = 0; bs < alignment.getBlockSets().size(); bs++){
 			
 			List<Matrix4d> btransforms = 
-					alignment.getBlockSets().get(bs).getTransformations();
-			if (btransforms == null && bs==0) btransforms = transforms;
+					alignment.getBlockSet(bs).getTransformations();
 			if (btransforms == null || btransforms.size() < 1) continue;
 
 			if (alignment.getBlockSets().size() > 1) {

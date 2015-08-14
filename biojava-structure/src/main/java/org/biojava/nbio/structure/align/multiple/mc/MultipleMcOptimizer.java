@@ -89,8 +89,8 @@ implements Callable<MultipleAlignment> {
 			MultipleMcParameters params, int reference) {
 
 		MultipleAlignmentEnsemble e = seedAln.getEnsemble().clone();
-		msa = e.getMultipleAlignments().get(0);
-		atomArrays = msa.getEnsemble().getAtomArrays();
+		msa = e.getMultipleAlignment(0);
+		atomArrays = msa.getAtomArrays();
 		size = seedAln.size();
 
 		rnd = new Random(params.getRandomSeed());
@@ -334,7 +334,7 @@ implements Callable<MultipleAlignment> {
 		for (int b=0; b<blockNr; b++){
 			for (int col=shrinkColumns.get(b).size()-1; col>=0; col--){
 				for (int str=0; str<size; str++){
-					Block bk = msa.getBlocks().get(b);
+					Block bk = msa.getBlock(b);
 					Integer residue = bk.getAlignRes().get(str).get(
 							shrinkColumns.get(b).get(col));
 					bk.getAlignRes().get(str).remove(
@@ -370,7 +370,7 @@ implements Callable<MultipleAlignment> {
 		int position = 0;
 		int column = 0;
 		for (int b=0; b<blockNr; b++){
-			for (int col=0; col<msa.getBlocks().get(b).length(); col++){
+			for (int col=0; col<msa.getBlock(b).length(); col++){
 				for (int str=0; str<size; str++){
 					if (residueDistances.get(str, column) != -1){
 						if (residueDistances.get(str, column) > maxDist){
@@ -387,7 +387,7 @@ implements Callable<MultipleAlignment> {
 				column++;
 			}
 		}
-		Block bk = msa.getBlocks().get(block);
+		Block bk = msa.getBlock(block);
 		if (bk.getCoreLength() <= Lmin) return false;
 
 		//Insert the gap at the position
@@ -415,9 +415,9 @@ implements Callable<MultipleAlignment> {
 		int str = rnd.nextInt(size); //Select randomly the subunit
 		int rl = rnd.nextInt(2);  //Select between moving right (0) or left (1)
 		int bk = rnd.nextInt(blockNr); //Select randomly the Block
-		int res = rnd.nextInt(msa.getBlocks().get(bk).length());
+		int res = rnd.nextInt(msa.getBlock(bk).length());
 
-		Block block = msa.getBlocks().get(bk);
+		Block block = msa.getBlock(bk);
 		if (block.getCoreLength() <= Lmin) return false;
 
 		//When the pivot residue is null try to add a residue from the freePool
@@ -611,9 +611,9 @@ implements Callable<MultipleAlignment> {
 
 		int rl = rnd.nextInt(2);  //Select expanding right (0) or left (1)
 		int bk = rnd.nextInt(blockNr); //Select randomly the Block
-		int res = rnd.nextInt(msa.getBlocks().get(bk).length());
+		int res = rnd.nextInt(msa.getBlock(bk).length());
 
-		Block block = msa.getBlocks().get(bk);
+		Block block = msa.getBlock(bk);
 		int gaps = 0; //store the number of gaps in the expansion
 
 		switch (rl) {
@@ -735,7 +735,7 @@ implements Callable<MultipleAlignment> {
 		int block = 0;
 		int column = 0;
 		for (int b=0; b<msa.getBlocks().size(); b++){
-			for (int col=0; col<msa.getBlocks().get(b).length(); col++){
+			for (int col=0; col<msa.getBlock(b).length(); col++){
 				int normalize = 0;
 				for (int s=0; s<size; s++){
 					if (residueDistances.get(s, column) != -1){
@@ -754,7 +754,7 @@ implements Callable<MultipleAlignment> {
 				column++;
 			}
 		}
-		Block currentBlock = msa.getBlocks().get(block);
+		Block currentBlock = msa.getBlock(block);
 		if (currentBlock.getCoreLength() <= Lmin) return false;
 
 		for (int str=0; str<size; str++){

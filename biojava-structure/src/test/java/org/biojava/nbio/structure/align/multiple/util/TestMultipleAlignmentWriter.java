@@ -1,10 +1,13 @@
-package org.biojava.nbio.structure.align.multiple;
+package org.biojava.nbio.structure.align.multiple.util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.multiple.TestSampleGenerator;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.junit.Test;
 

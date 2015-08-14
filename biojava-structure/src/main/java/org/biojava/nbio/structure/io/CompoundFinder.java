@@ -42,10 +42,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
- * Heuristically finding of Compounds (called Entities in mmCIF dictionary)
+ * Heuristical finding of Compounds (called Entities in mmCIF dictionary)
  * in a given Structure. Compounds are the groups of sequence identical NCS-related polymer chains
  * in the Structure.
  * 
@@ -162,15 +164,29 @@ public class CompoundFinder {
 	
 	private TreeMap<String,Compound> findCompoundsFromAlignment() {
 		
+		// first we determine which chains to consider: anything not looking 
+		// polymeric (protein or nucleotide chain) should be discarded
+		Set<Integer> polyChainIndices = new TreeSet<Integer>();
+		for (int i=0;i<s.getChains().size();i++) {
+			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
+				logger.warn("Chain {} is purely non-polymeric, will not assign a Compound (entity) to it", s.getChain(i).getChainID());
+				continue; 
+			}
+				
+			polyChainIndices.add(i);
+		}
+		
 		
 		TreeMap<String, Compound> chainIds2compounds = new TreeMap<String,Compound>();
 		
 		int molId = 1;
 
 		outer:
-			for (int i=0;i<s.getChains().size();i++) {
-				for (int j=i+1;j<s.getChains().size();j++) {
+			for (int i:polyChainIndices) {
+				for (int j:polyChainIndices) {
 
+					if (j<=i) continue;
+					
 					Chain c1 = s.getChain(i);
 					Chain c2 = s.getChain(j);
 					
@@ -268,13 +284,14 @@ public class CompoundFinder {
 						logger.warn("\n"+pair.toString(100));
 					}
 
-					if (chainIds2compounds.size()==s.getChains().size()) // we've got all chains in entities
+					if (chainIds2compounds.size()==polyChainIndices.size()) // we've got all chains in entities
 						break outer;
 				}
 			}
 		
 		// anything not in a Compound will be its own Compound
-		for (Chain c:s.getChains()) {
+		for (int i:polyChainIndices) {
+			Chain c = s.getChain(i);
 			if (!chainIds2compounds.containsKey(c.getChainID())) {
 				logger.debug("Creating a 1-member Compound for chain {}",c.getChainID());
 

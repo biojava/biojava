@@ -36,8 +36,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
@@ -53,28 +51,22 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void test2LetterResidueName() {
-		try {
+	public void test2LetterResidueName() throws IOException {
+		// from 1a4w:
+		String t =
+				"HETATM 2242 NA    NA L 541       5.845 -14.122  30.560  0.88 23.48          NA"+newline+
+				"HETATM 2243 NA    NA L 542      18.411 -16.475  38.464  0.88 24.77          NA"+newline;
+		BufferedReader br = new BufferedReader(new StringReader(t));
+		Structure s = parser.parsePDBFile(br);
+		String pdb = s.toPDB();
 
-			// from 1a4w:
-			String t =
-					"HETATM 2242 NA    NA   541       5.845 -14.122  30.560  0.88 23.48          NA"+newline+
-					"HETATM 2243 NA    NA   542      18.411 -16.475  38.464  0.88 24.77          NA"+newline;
-			BufferedReader br = new BufferedReader(new StringReader(t));
-			Structure s = parser.parsePDBFile(br);
-			String pdb = s.toPDB();
+		assertEquals("two letter residue names are not dealt with correctly! ",t,pdb);
 
-			assertEquals("two letter residue names are not dealt with correctly! ",t,pdb);
-
-
-		} catch (Exception e){
-			fail(e.getMessage());
-		}
 
 	}
 
 	@Test
-	public void testCorrectFloatingPointDisplay() {
+	public void testCorrectFloatingPointDisplay() throws IOException {
 
 		// from 1a4w:
 
@@ -96,19 +88,17 @@ public class PDBFileParserTest {
 				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55           S"+newline;
 
 		BufferedReader br = new BufferedReader(new StringReader(t));
-		try {
-			Structure s = parser.parsePDBFile(br);
-			String pdb = s.toPDB();
 
-			assertTrue("the created PDB file does not match the input file", pdb.equals(t));
-		} catch (Exception e){
-			fail(e.getMessage());
-		}
+		Structure s = parser.parsePDBFile(br);
+		String pdb = s.toPDB();
+
+		assertTrue("the created PDB file does not match the input file", pdb.equals(t));
+
 
 	}
 
 	@Test
-	public void testPDBHeader(){
+	public void testPDBHeader() throws IOException {
 
 		String t =
 				"HEADER    COMPLEX (SERINE PROTEASE/INHIBITORS)    06-FEB-98   1A4W "+newline+
@@ -120,22 +110,20 @@ public class PDBFileParserTest {
 				//"REMARK   2 RESOLUTION. 2.00 ANGSTROMS.                             "+newline;
 
 		BufferedReader br = new BufferedReader(new StringReader(t));
-		try {
-			Structure s = parser.parsePDBFile(br);
-			String pdb = s.toPDB();
 
-			if (! pdb.equalsIgnoreCase(t)){
-				StringManipulationTestsHelper.compareString(t, pdb);
-				System.out.println(t);
-				System.out.println(pdb);
-			}
+		Structure s = parser.parsePDBFile(br);
+		String pdb = s.toPDB();
 
-			// we ignore the case here, since the month FEB is written as Feb, which should be ok...
-			assertTrue("the created header does not match the PDB file" ,pdb.equalsIgnoreCase(t));
-
-		} catch (IOException e){
-			fail(e.getMessage());
+		if (! pdb.equalsIgnoreCase(t)){
+			StringManipulationTestsHelper.compareString(t, pdb);
+			System.out.println(t);
+			System.out.println(pdb);
 		}
+
+		// we ignore the case here, since the month FEB is written as Feb, which should be ok...
+		assertTrue("the created header does not match the PDB file" ,pdb.equalsIgnoreCase(t));
+
+		
 
 	}
 
@@ -228,7 +216,7 @@ public class PDBFileParserTest {
 	//        }
 
 	@Test
-	public void testSITE() {
+	public void testSITE() throws IOException {
 		// from 1a4w:
 		String remark800Test =
 				//don't add these here - they are present in the PDB file but are added in the structure.toPDB()
@@ -269,57 +257,53 @@ public class PDBFileParserTest {
 				"SITE     1 AC6  5 HIS H  57  TRP H  60D LYS H  60F 2EP H 375                    " + newline +
 				"SITE     2 AC6  5 HOH H 532                                                     " + newline;
 		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
-		try {
-			Structure s = parser.parsePDBFile(inStream);
-			//                        System.out.print(s.getSites());
-			Chain chain = new ChainImpl();
-			chain.setChainID("H");
-			for (Site site : s.getSites()) {
-				//System.out.println("Site: " + site.getSiteID());
-				for (Group group : site.getGroups()) {
-					//manually add the chain as this is added later once the ATOM recrds are parsed usually
-					group.setChain(chain);
-					//					System.out.println("    PDBName: " + group.getPDBName());
-					//					System.out.println("    PDBCode: " + group.getPDBCode());
-					//					System.out.println("    Type: " + group.getType());
-					//					System.out.println("    Parent: " + group.getChainId());
-				}
-
-			}
-			StringBuilder remark800 = new StringBuilder();
-			StringBuilder sites = new StringBuilder();
-
-			for (Site site : s.getSites()) {
-				remark800.append(site.remark800toPDB());
-				sites.append(site.toPDB());
+		Structure s = parser.parsePDBFile(inStream);
+		//                        System.out.print(s.getSites());
+		Chain chain = new ChainImpl();
+		chain.setChainID("H");
+		for (Site site : s.getSites()) {
+			//System.out.println("Site: " + site.getSiteID());
+			for (Group group : site.getGroups()) {
+				//manually add the chain as this is added later once the ATOM recrds are parsed usually
+				group.setChain(chain);
+				//					System.out.println("    PDBName: " + group.getPDBName());
+				//					System.out.println("    PDBCode: " + group.getPDBCode());
+				//					System.out.println("    Type: " + group.getType());
+				//					System.out.println("    Parent: " + group.getChainId());
 			}
 
-			//                        System.out.println("testSITE: " + newline  + pdb);
-			if (!remark800.toString().equals(remark800Test)) {
-				//				System.out.println("Expected:");
-				//				System.out.println(remark800Test);
-				//				System.out.println("Got:");
-				//				System.out.println(remark800.toString());
-			}
-			assertTrue("the created PDB REMARK800 section does not match the input file", remark800.toString().equals(remark800Test));
-
-			if (!sites.toString().equals(sitesTest)) {
-				System.out.println("Expected:");
-				System.out.println(sitesTest);
-				System.out.println("Got:");
-				System.out.println(sites.toString());
-			}
-			assertEquals("the created PDB SITE section does not match the input file", sites.toString(),sitesTest);
-
-
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
 		}
+		StringBuilder remark800 = new StringBuilder();
+		StringBuilder sites = new StringBuilder();
+
+		for (Site site : s.getSites()) {
+			remark800.append(site.remark800toPDB());
+			sites.append(site.toPDB());
+		}
+
+		//                        System.out.println("testSITE: " + newline  + pdb);
+		if (!remark800.toString().equals(remark800Test)) {
+			//				System.out.println("Expected:");
+			//				System.out.println(remark800Test);
+			//				System.out.println("Got:");
+			//				System.out.println(remark800.toString());
+		}
+		assertTrue("the created PDB REMARK800 section does not match the input file", remark800.toString().equals(remark800Test));
+
+		if (!sites.toString().equals(sitesTest)) {
+			System.out.println("Expected:");
+			System.out.println(sitesTest);
+			System.out.println("Got:");
+			System.out.println(sites.toString());
+		}
+		assertEquals("the created PDB SITE section does not match the input file", sites.toString(),sitesTest);
+
+
+
 	}
 
 	@Test
-	public void testMultiLineJRNL(){
+	public void testMultiLineJRNL() throws IOException { 
 		//            System.out.println("Testing JRNL record parsing from 3pfk");
 		String jrnlString =
 				"JRNL        AUTH   P.R.EVANS,G.W.FARRANTS,P.J.HUDSON                            " + newline +
@@ -332,11 +316,9 @@ public class PDBFileParserTest {
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
 		Structure s = null;
-		try {
-			s = parser.parsePDBFile(br);
-		} catch (IOException ex) {
-			Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		
+		s = parser.parsePDBFile(br);
+		
 		// String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
 		JournalArticle journalArticle = s.getJournalArticle();
@@ -347,7 +329,7 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void testIncorrectDateFormatMultiLineJRNL(){
+	public void testIncorrectDateFormatMultiLineJRNL() throws IOException{
 		//            System.out.println("Testing JRNL record parsing from 3pfk");
 		String jrnlString =
 				"JRNL        AUTH   P.R.EVANS,G.W.FARRANTS,P.J.HUDSON                            " + newline +
@@ -360,11 +342,7 @@ public class PDBFileParserTest {
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
 		Structure s = null;
-		try {
-			s = parser.parsePDBFile(br);
-		} catch (IOException ex) {
-			Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		s = parser.parsePDBFile(br);
 		//    String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
 		JournalArticle journalArticle = s.getJournalArticle();
@@ -375,7 +353,7 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void testInvalidFormatREFsectionJRNL(){
+	public void testInvalidFormatREFsectionJRNL() throws IOException{
 		//            System.out.println("Testing JRNL record parsing from 3pfk");
 		String jrnlString =
 				"JRNL        AUTH   P.R.EVANS,G.W.FARRANTS,P.J.HUDSON                            " + newline +
@@ -387,11 +365,7 @@ public class PDBFileParserTest {
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
 		Structure s = null;
-		try {
-			s = parser.parsePDBFile(br);
-		} catch (IOException ex) {
-			Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		s = parser.parsePDBFile(br);
 		// String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
 		JournalArticle journalArticle = s.getJournalArticle();
@@ -402,7 +376,7 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void testSecondMultiLineJRNL(){
+	public void testSecondMultiLineJRNL() throws IOException{
 		//            System.out.println("Testing JRNL record parsing from 1gpb");
 		String jrnlString =
 				"JRNL        AUTH   K.R.ACHARYA,D.I.STUART,K.M.VARVILL,L.N.JOHNSON               " + newline +
@@ -417,11 +391,7 @@ public class PDBFileParserTest {
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
 		Structure s = null;
-		try {
-			s = parser.parsePDBFile(br);
-		} catch (IOException ex) {
-			Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		s = parser.parsePDBFile(br);
 		// String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
 		JournalArticle journalArticle = s.getJournalArticle();
@@ -432,7 +402,7 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void testSingleLineJRNL(){
+	public void testSingleLineJRNL() throws IOException{
 		//            System.out.println("Testing JRNL record parsing from 2bln");
 		String jrnlString =
 				"JRNL        AUTH   G.J.WILLIAMS,S.D.BREAZEALE,C.R.H.RAETZ,J.H.NAISMITH          " + newline +
@@ -448,11 +418,7 @@ public class PDBFileParserTest {
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
 		Structure s = null;
-		try {
-			s = parser.parsePDBFile(br);
-		} catch (IOException ex) {
-			Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		s = parser.parsePDBFile(br);
 		//   String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
 		JournalArticle journalArticle = s.getJournalArticle();
@@ -464,7 +430,7 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void testToBePublishedJRNL(){
+	public void testToBePublishedJRNL() throws IOException{
 		//            System.out.println("Testing JRNL record parsing from 1i2c");
 		String jrnlString =
 				"JRNL        AUTH   M.J.THEISEN,S.L.SANDA,S.L.GINELL,C.BENNING,                  " + newline +
@@ -478,11 +444,7 @@ public class PDBFileParserTest {
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
 		Structure s = null;
-		try {
-			s = parser.parsePDBFile(br);
-		} catch (IOException ex) {
-			Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		s = parser.parsePDBFile(br);
 
 		JournalArticle journalArticle = s.getJournalArticle();
 		assertNull(journalArticle.getVolume());
@@ -492,7 +454,7 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void test4hhbAcceptedAtomNames(){
+	public void test4hhbAcceptedAtomNames() throws IOException, StructureException{ 
 
 		FileParsingParameters params = new FileParsingParameters();
 
@@ -501,25 +463,20 @@ public class PDBFileParserTest {
 		AtomCache cache = new AtomCache();
 
 		cache.setFileParsingParams(params);
-		try {
-			Structure s = cache.getStructure("4HHB");
+		Structure s = cache.getStructure("4HHB");
 
-			//System.out.println(s.toPDB());
-			Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
-			Atom[] cb = StructureTools.getAtomArray(s, new String[]{StructureTools.CB_ATOM_NAME,});
+		//System.out.println(s.toPDB());
+		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
+		Atom[] cb = StructureTools.getAtomArray(s, new String[]{StructureTools.CB_ATOM_NAME,});
 
-			// gly does not have cb...
-			assertTrue(ca.length > cb.length);
-			assertTrue(cb.length > 500);
+		// gly does not have cb...
+		assertTrue(ca.length > cb.length);
+		assertTrue(cb.length > 500);
 
-			Atom[] allwithoutGLY = StructureTools.getAtomArray(s, acceptedAtoms);
+		Atom[] allwithoutGLY = StructureTools.getAtomArray(s, acceptedAtoms);
 
-			assertEquals(allwithoutGLY.length, (ca.length + cb.length - (ca.length-cb.length)));
+		assertEquals(allwithoutGLY.length, (ca.length + cb.length - (ca.length-cb.length)));
 
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
 	}
 	
 	@Test
@@ -527,7 +484,6 @@ public class PDBFileParserTest {
 		
 		// from 1a4w:
 		String atomLines = 
-				
 				"HETATM 2242 NA    NA H 541       5.845 -14.122  30.560  0.88 23.48          NA"+newline+
 				"HETATM 2243 NA    NA H 542      18.411 -16.475  38.464  0.88 24.77          NA"+newline+
 				"HETATM 2244  C1  QWE H 373      17.735 -17.178  22.612  1.00 26.29           C"+newline+

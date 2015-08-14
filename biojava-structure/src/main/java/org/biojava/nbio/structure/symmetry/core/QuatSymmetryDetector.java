@@ -481,7 +481,12 @@ public class QuatSymmetryDetector {
 		return denominators;
 	}
 	
-	private QuatSymmetryResults calcQuatSymmetry(Subunits subunits) {
+	private QuatSymmetryResults calcQuatSymmetry(Subunits subunits){
+		return calcQuatSymmetry(subunits, parameters);
+	}
+	
+	public static QuatSymmetryResults calcQuatSymmetry(Subunits subunits,
+			QuatSymmetryParameters parameters) {
 		if (subunits.getSubunitCount() == 0) {
 			return null;
 		}

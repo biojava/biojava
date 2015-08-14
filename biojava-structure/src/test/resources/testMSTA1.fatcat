@@ -4,8 +4,8 @@ BlockSets: 2
 Blocks: 4 
 Length: 40 
 Core Length: 7 
-RMSD: 14.53 
-AvgTM-score: 0.01
+AvgTM-score: 0.01 
+RMSD: 14.53
 
 Chain 01: ---S-tDaErLkhl--IvTpSgAgeq----NmIgMtPt-viAv---HyL-dEt-eqWe
           11 1 1111111   2222222222     33333333 3 3   4444 444 4 44

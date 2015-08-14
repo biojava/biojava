@@ -109,7 +109,6 @@ public class MultipleAlignmentXMLParser {
 			MultipleAlignmentEnsemble ensemble) {
 
 		MultipleAlignment msa = new MultipleAlignmentImpl(ensemble);
-		List<Matrix4d> transforms = new ArrayList<Matrix4d>();
 		NodeList children = root.getChildNodes();
 		
 		for (int i=0; i<children.getLength(); i++) {
@@ -119,17 +118,9 @@ public class MultipleAlignmentXMLParser {
 			if (child.getNodeName().equals("BlockSet")){
 				parseBlockSet(child, msa);
 			}
-			else if (child.getNodeName().equals("Matrix4d")){
-				Matrix4d t = parseMatrix4d(child);
-				transforms.add(t);
-			}
 			else if (child.getNodeName().equals("ScoresCache")){
 				parseScoresCache(child, msa);
 			}
-		}
-		//Because if it is 0 means that there were no transformations
-		if (transforms.size() != 0){
-			msa.setTransformations(transforms);
 		}
 		return msa;
 	}

@@ -33,6 +33,9 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.biojava.nbio.structure.io.mmcif.MMcifParser;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.nbio.structure.scop.*;
@@ -40,8 +43,7 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -1048,19 +1050,50 @@ public class AtomCache {
 			chainId = queryS.substring(8);
 		}
 		
-		
-		
+		if ( fullu.contains(".cif")) {
 
-		PDBFileReader reader = new PDBFileReader(path);
-		reader.setFetchBehavior(fetchBehavior);
-		reader.setObsoleteBehavior(obsoleteBehavior);
+			// need to do mmcif parsing!
 
-		reader.setFileParsingParameters(params);
-		Structure s = reader.getStructure(url);
-		if (chainId == null) {
-			return StructureTools.getReducedStructure(s, -1);
+			InputStreamProvider prov = new InputStreamProvider();
+			InputStream inStream =  prov.getInputStream(url);
+
+			MMcifParser parser = new SimpleMMcifParser();
+
+			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+			consumer.setFileParsingParameters(params);
+
+
+			parser.addMMcifConsumer(consumer);
+
+			try {
+				parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+
+			// now get the protein structure.
+			Structure cifStructure = consumer.getStructure();
+			if (chainId == null) {
+				return StructureTools.getReducedStructure(cifStructure, -1);
+			} else {
+				return StructureTools.getReducedStructure(cifStructure, chainId);
+			}
+
 		} else {
-			return StructureTools.getReducedStructure(s, chainId);
+
+			// pdb file based parsing
+
+			PDBFileReader reader = new PDBFileReader(path);
+			reader.setFetchBehavior(fetchBehavior);
+			reader.setObsoleteBehavior(obsoleteBehavior);
+
+			reader.setFileParsingParameters(params);
+			Structure s = reader.getStructure(url);
+			if (chainId == null) {
+				return StructureTools.getReducedStructure(s, -1);
+			} else {
+				return StructureTools.getReducedStructure(s, chainId);
+			}
 		}
 	}
 

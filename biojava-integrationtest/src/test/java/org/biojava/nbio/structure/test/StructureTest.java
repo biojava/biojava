@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.test;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
@@ -31,6 +30,10 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -39,13 +42,13 @@ import java.util.Set;
  */
 
 
-public class StructureTest extends TestCase {
+public class StructureTest {
 
-	Structure structure;
+	private Structure structure;
 
-	protected void setUp()
-	{
-		InputStream inStream = this.getClass().getResourceAsStream("/5pti_old.pdb");
+	@Before
+	public void setUp() throws IOException {
+		InputStream inStream = StructureTest.class.getResourceAsStream("/5pti_old.pdb");
 		assertNotNull(inStream);
 
 		PDBFileParser pdbpars = new PDBFileParser();
@@ -53,17 +56,14 @@ public class StructureTest extends TestCase {
 		params.setAlignSeqRes(true);
 		pdbpars.setFileParsingParameters(params);
 		
-		try {
-			structure = pdbpars.parsePDBFile(inStream) ;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		structure = pdbpars.parsePDBFile(inStream) ;
 
 		assertNotNull(structure);
 
 		assertEquals("structure does not contain one chain ", 2 ,structure.size());
 	}
 
+	@Test
 	public void testSeqResParsing() {
 
 		// System.out.println(structure);
@@ -94,8 +94,11 @@ public class StructureTest extends TestCase {
 	}
 
 
-	/** test if a PDB file can be parsed
-	 * @throws Exception */
+	/** 
+	 * Tests if a PDB file can be parsed
+	 * @throws Exception 
+	 */
+	@Test
 	public void testReadPDBFile() throws Exception {
 
 		assertEquals("pdb code not set!","5PTI",structure.getPDBCode());
@@ -115,7 +118,7 @@ public class StructureTest extends TestCase {
 		assertTrue(mol.getMolName().startsWith("TRYPSIN INHIBITOR"));
 	}
 
-
+	@Test
 	public void testSSBondParsing() throws Exception {
 		assertNotNull(structure);
 
@@ -141,8 +144,11 @@ public class StructureTest extends TestCase {
 
 	}
 
-	/** Tests that standard amino acids are working properly
-	 * @throws Exception */
+	/** 
+	 * Tests that standard amino acids are working properly
+	 * @throws Exception 
+	 */
+	@Test
 	public void testStandardAmino() throws Exception {
 
 		AminoAcid arg = StandardAminoAcid.getAminoAcid("ARG");
@@ -153,7 +159,7 @@ public class StructureTest extends TestCase {
 
 	}
 
-
+	@Test
 	public void testPDBHeader(){
 		
 		PDBHeader header = structure.getPDBHeader();
@@ -189,6 +195,7 @@ public class StructureTest extends TestCase {
 		assertEquals("the chain ID did not match", chainIds.get(0),chains.get(0).getChainID());
 	}
 
+	@Test
 	public void testCreateVirtualCBAtom(){
 
 		Group g1 = structure.getChain(0).getAtomGroup(11);
@@ -207,6 +214,7 @@ public class StructureTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMutation() throws Exception {
 
 		Group g1 = (Group)structure.getChain(0).getAtomGroup(21).clone();
@@ -267,6 +275,7 @@ public class StructureTest extends TestCase {
 
 	}
 
+	@Test
 	public void testElement() throws Exception {
 		// there should be no wild card elements
 		// in a structure (!= Element.R)

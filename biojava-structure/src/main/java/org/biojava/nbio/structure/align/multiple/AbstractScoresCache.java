@@ -1,9 +1,9 @@
 package org.biojava.nbio.structure.align.multiple;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Abstact implementation of the {@link ScoresCache} with the shared code used
@@ -15,22 +15,22 @@ import java.util.Set;
  */
 public abstract class AbstractScoresCache implements ScoresCache {
 	private Map<String,Double> scores = null;
-	
+
 	protected AbstractScoresCache() {
 		scores = null;
 	}
 	protected AbstractScoresCache(AbstractScoresCache cache) {
 		this.scores = cache.scores;
 	}
-	
+
 	@Override
 	public void putScore(String property, Double score) {
-			if(scores == null) {
-				scores = new HashMap<String, Double>();
-			}
-			scores.put(property, score);
+		if(scores == null) {
+			scores = new TreeMap<String, Double>();
+		}
+		scores.put(property, score);
 	}
-	
+
 	@Override
 	public Double getScore(String property) {
 		if(scores != null && scores.containsKey(property)) {
@@ -38,13 +38,13 @@ public abstract class AbstractScoresCache implements ScoresCache {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Set<String> getScores() {
 		if(scores == null) return Collections.emptySet();
 		return Collections.unmodifiableSet(scores.keySet());
 	}
-	
+
 	/**
 	 * Subclasses should override clone and use the copy constructor.
 	 * 
@@ -55,7 +55,7 @@ public abstract class AbstractScoresCache implements ScoresCache {
 	protected Object clone(Object e) throws CloneNotSupportedException {
 		throw new CloneNotSupportedException("Subclasses must override clone");
 	}
-	
+
 	/**
 	 * Clear the cached scores. This frees memory after the alignment changed.
 	 */

@@ -56,7 +56,7 @@ public class TestAFPChainConversion {
 		//Convert the AFPChain into a MultipleAlignment (without Atoms)
 		MultipleAlignmentEnsemble ensemble = 
 				new MultipleAlignmentEnsembleImpl(afp,null,null,true);
-		MultipleAlignment msa = ensemble.getMultipleAlignments().get(0);
+		MultipleAlignment msa = ensemble.getMultipleAlignment(0);
 
 		//Test for all the information
 		assertEquals(afp.getName1(),ensemble.getStructureNames().get(0));
@@ -66,9 +66,12 @@ public class TestAFPChainConversion {
 		assertTrue(ensemble.getCalculationTime().equals(
 				afp.getCalculationTime()));
 		assertEquals(afp.getBlockNum(), msa.getBlockSets().size());
-		assertEquals(Calc.getTransformation(afp.getBlockRotationMatrix()[0], 
-				afp.getBlockShiftVector()[0]), 
-				msa.getTransformations().get(1));
+		for (int b = 0; b<afp.getBlockNum(); b++){
+			assertEquals(Calc.getTransformation(
+					afp.getBlockRotationMatrix()[b],
+					afp.getBlockShiftVector()[b]),
+					msa.getBlockSet(b).getTransformations().get(1));
+		}
 
 		//Test for the scores
 		assertEquals(msa.getScore(MultipleAlignmentScorer.CE_SCORE),
@@ -84,7 +87,7 @@ public class TestAFPChainConversion {
 			for (int c=0; c<2; c++){
 				for (int res=0; res<5; res++){
 					Integer afpRes = afp.getOptAln()[b][c][res];
-					assertEquals(afpRes, msa.getBlocks().get(b).
+					assertEquals(afpRes, msa.getBlock(b).
 							getAlignRes().get(c).get(res));
 				}
 			}

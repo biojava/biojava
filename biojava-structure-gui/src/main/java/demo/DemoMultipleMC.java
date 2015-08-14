@@ -8,7 +8,10 @@ import java.util.concurrent.ExecutionException;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
+import org.biojava.nbio.structure.align.ce.CeMain;
+import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
@@ -32,7 +35,11 @@ public class DemoMultipleMC {
 		//Protein Kinases (CEMC paper)
 		//List<String> names = Arrays.asList("1cdk.A", "1cja.A", "1csn", "1b6c.B", "1ir3.A", "1fgk.A", "1byg.A", "1hck", "1blx.A", "3erk", "1bmk.A", "1kob.A", "1tki.A", "1phk", "1a06");
 		//DHFR (Gerstein 1998 paper)
-		List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
+		//List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
+		//Beta-propeller (MATT paper)
+		List<String> names = Arrays.asList("d1nr0a1", "d1nr0a2", "d1p22a2", "d1tbga_");
+		//Beta-helix (MATT paper)
+		//List<String> names = Arrays.asList("d1hm9a1", "d1kk6a_", "d1krra_", "d1lxaa_", "d1ocxa_", "d1qrea_", "d1xata_", "d3tdta_");
 		//TIM barrels (MUSTA paper)
 		//List<String> names = Arrays.asList("1tim.A", "1vzw", "1nsj", "3tha.A", "4enl", "2mnr", "7tim.A", "1tml", "1btc", "a1piia1", "6xia", "5rub.A", "2taa.B");
 		//Calcium Binding (MUSTA paper)
@@ -73,9 +80,12 @@ public class DemoMultipleMC {
 		}
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
-		MultipleMcMain algorithm = new MultipleMcMain(new CeCPMain());
+		StructureAlignment pairwise = new FatCatFlexible();
+		//StructureAlignment pairwise = new CeMain();
+		MultipleMcMain algorithm = new MultipleMcMain(pairwise);
 		MultipleMcParameters params = (MultipleMcParameters) algorithm.getParameters();
 		params.setMinBlockLen(10);
+		params.setGapExtension(20.0);
 		
 		MultipleAlignment result = algorithm.align(atomArrays);
 		result.getEnsemble().setStructureNames(names);

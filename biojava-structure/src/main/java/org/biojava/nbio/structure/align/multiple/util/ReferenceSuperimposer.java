@@ -73,7 +73,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 					"Alignment too short, core alignment length < 1.");
 		}
 
-		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
+		List<Atom[]> atomArrays = alignment.getAtomArrays();
 		if (atomArrays.size() <= reference) {
 			throw new IndexOutOfBoundsException(String.format(
 					"Invalid reference structure: requested %d but "
@@ -136,11 +136,6 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 			}
 			//Set transformation of the BlockSet
 			bs.setTransformations(transforms);
-		}
-		//Set transformation of the MultipleAlignment
-		if (alignment.getBlockSets().size() == 1) {
-			alignment.setTransformations(
-					alignment.getBlockSets().get(0).getTransformations());
 		}
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 
 /**
@@ -146,17 +147,19 @@ public class MultipleAlignmentImpl extends AbstractScoresCache
 	}
 	
 	@Override
-	public List<Matrix4d> getTransformations(){
-		return pose;
+	public BlockSet getBlockSet(int index){
+		return blockSets.get(index);
+	}
+	
+	@Override
+	public Block getBlock(int index){
+		List<Block> blocks = getBlocks();
+		return blocks.get(index);
 	}
 
 	@Override
-	public void setTransformations(List<Matrix4d> matrices) {
-		if(size() != matrices.size()) 
-			throw new IllegalArgumentException(
-					"Wrong number of structures for this alignment");
-		clear();
-		pose = matrices;
+	public List<Atom[]> getAtomArrays() {
+		return parent.getAtomArrays();
 	}
 
 	@Override

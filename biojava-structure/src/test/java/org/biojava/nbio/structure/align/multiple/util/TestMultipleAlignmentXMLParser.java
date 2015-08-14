@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.multiple;
+package org.biojava.nbio.structure.align.multiple.util;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,11 @@ import javax.vecmath.Matrix4d;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.multiple.TestSampleGenerator;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLParser;
 import org.junit.Test;
@@ -109,8 +114,8 @@ public class TestMultipleAlignmentXMLParser {
 		
 		//Recursively check member alignments
 		for (int i=0; i<a.getMultipleAlignments().size(); i++){
-			MultipleAlignment msa1 = a.getMultipleAlignments().get(i);
-			MultipleAlignment msa2 = b.getMultipleAlignments().get(i);
+			MultipleAlignment msa1 = a.getMultipleAlignment(i);
+			MultipleAlignment msa2 = b.getMultipleAlignment(i);
 			if (!equals(msa1,msa2)) return false;
 		}
 		
@@ -137,17 +142,6 @@ public class TestMultipleAlignmentXMLParser {
 			BlockSet bs1 = a.getBlockSets().get(i);
 			BlockSet bs2 = b.getBlockSets().get(i);
 			if (!equals(bs1,bs2)) return false;
-		}
-		//Check transformation matrices
-		if (a.getTransformations() == null){
-			if (b.getTransformations() != null) return false;
-		} else if (b.getTransformations() == null) return false;
-		else {
-			for (int i=0; i<a.getTransformations().size(); i++){
-				Matrix4d t1 = a.getTransformations().get(i);
-				Matrix4d t2 = b.getTransformations().get(i);
-				if (!t1.equals(t2)) return false;
-			}
 		}
 		return true;
 	}

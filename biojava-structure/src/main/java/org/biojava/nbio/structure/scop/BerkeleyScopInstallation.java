@@ -28,7 +28,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Structural Classification of Proteins at Berkeley Lab and UC Berkeley (<a href="http://scop.berkeley.edu/">http://scop.berkeley.edu/</a>).
+ * SCOPe:
+ * 
+ * The Structural Classification of Proteins (extended) at Berkeley Lab and UC Berkeley
+ * (<a href="http://scop.berkeley.edu/">http://scop.berkeley.edu/</a>).
+ * 
+ * <p>This provides updates to the MRC SCOP hierarchical classification.
  */
 public class BerkeleyScopInstallation extends ScopInstallation {
 
@@ -37,7 +42,8 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 	String defaultBerkeleyScopVersion=ScopFactory.LATEST_VERSION;
 
 	/**
-	 * A map from SCOP version names which the Berkeley server offers as a download to an array of equivalent deprecated SCOP version names.
+	 * A map from SCOP version names which the Berkeley server offers as a
+	 * download to an array of equivalent deprecated SCOP version names.
 	 */
 	public static final Map<String,String[]> EQUIVALENT_VERSIONS = new HashMap<String,String[]>();
 

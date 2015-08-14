@@ -2,6 +2,8 @@ package org.biojava.nbio.structure.align.multiple.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -26,6 +28,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * <li>Transform the aligned Atoms of a MultipleAlignment
  * <li>Get all the core alignment positions of the alignment
  * <li>Calculate the average residue distance of all aligned positions
+ * <li>Sort Blocks in a MultipleAlignment by a specified row
  * </ul>
  * 
  * @author Spencer Bliven
@@ -62,7 +65,7 @@ public class MultipleAlignmentTools {
 		List<String> alnSequences = new ArrayList<String>();
 		for (int str=0; str<alignment.size(); str++) alnSequences.add("");
 		mapSeqToStruct.clear();
-		List<Atom[]> atoms = alignment.getEnsemble().getAtomArrays();
+		List<Atom[]> atoms = alignment.getAtomArrays();
 		int globalPos = -1;
 
 		//Initialize helper variables in constucting the sequence alignment
@@ -293,7 +296,7 @@ public class MultipleAlignmentTools {
 		List<String> alnSequences = new ArrayList<String>();
 		for (int str=0; str<alignment.size(); str++) alnSequences.add("");
 		mapSeqToStruct.clear();
-		List<Atom[]> atoms = alignment.getEnsemble().getAtomArrays();
+		List<Atom[]> atoms = alignment.getAtomArrays();
 		int globalPos = -1;
 
 		//Loop through all the alignment Blocks in the order given
@@ -445,8 +448,7 @@ public class MultipleAlignmentTools {
 					for (Integer p:b.getAlignRes().get(str)){
 						if (sum == seqPos) {
 							if (p!= null){
-								a = msa.getEnsemble().
-										getAtomArrays().get(str)[p];
+								a = msa.getAtomArrays().get(str)[p];
 							}
 							break;
 						}
@@ -588,16 +590,13 @@ public class MultipleAlignmentTools {
 					"No ensemble set for this alignment");
 		}
 
-		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
+		List<Atom[]> atomArrays = alignment.getAtomArrays();
 		List<Atom[]> transformed = new ArrayList<Atom[]>(atomArrays.size());
 
 		//Loop through structures
 		for (int i=0; i<atomArrays.size(); i++){
 
 			Matrix4d transform = null;
-			if( alignment.getTransformations() != null) {
-				transform = alignment.getTransformations().get(i);
-			}
 			Atom[] curr = atomArrays.get(i); // all CA atoms from structure
 
 			//Concatenated list of all blocks for this structure
@@ -669,5 +668,37 @@ public class MultipleAlignmentTools {
 			if (core) corePositions.add(col);
 		}
 		return corePositions;
+	}
+
+	/**
+	 * Sort blocks so that the specified row is in sequential order.
+	 * The sort happens in place.
+	 * @param blocks List of blocks
+	 * @param sortedIndex Index of the row to be sorted
+	 */
+	public static void sortBlocks(List<Block> blocks,final int sortedIndex) {
+		Collections.sort(blocks, new Comparator<Block>() {
+			@Override
+			public int compare(Block o1, Block o2) {
+				// Compare the first non-null residue of each block
+				List<Integer> alignres1 = o1.getAlignRes().get(sortedIndex);
+				List<Integer> alignres2 = o2.getAlignRes().get(sortedIndex);
+				Integer res1 = null;
+				Integer res2 = null;
+				for(Integer r : alignres1) {
+					if( r != null) {
+						res1 = r;
+						break;
+					}
+				}
+				for(Integer r : alignres2) {
+					if( r != null) {
+						res2 = r;
+						break;
+					}
+				}
+				return res1.compareTo(res2);
+			}
+		});
 	}
 }

@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.multiple;
+package org.biojava.nbio.structure.align.multiple.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +14,12 @@ import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockImpl;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
 import org.junit.Test;
@@ -196,7 +202,7 @@ public class TestMultipleAlignmentScorer {
 		//We want the identity transfromations to maintain the missalignment
 		Matrix4d ident = new Matrix4d();
 		ident.setIdentity();
-		msa.setTransformations(Arrays.asList(ident,ident,ident));
+		bs.setTransformations(Arrays.asList(ident,ident,ident));
 		
 		return msa;
 	}
@@ -237,7 +243,7 @@ public class TestMultipleAlignmentScorer {
 		//We want the identity transfromations to mantain the missalignments
 		Matrix4d ident = new Matrix4d();
 		ident.setIdentity();
-		msa.setTransformations(Arrays.asList(ident,ident,ident));
+		bs.setTransformations(Arrays.asList(ident,ident,ident));
 		
 		return msa;
 	}
