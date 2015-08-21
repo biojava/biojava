@@ -64,29 +64,40 @@ public class HspTest {
      * Test of hashCode method, of class Hsp.
      */
     @Test
-    @Ignore public void testHashCode() {
+    public void testHashCode() {
         System.out.println("hashCode");
-        Hsp instance = null;
-        int expResult = 0;
+        Hsp instance = hspImpl;
+        int expResult = 879126434;
         int result = instance.hashCode();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
      * Test of equals method, of class Hsp.
      */
     @Test
-    @Ignore public void testEquals() {
+    public void testEquals() {
         System.out.println("equals");
-        Object o = null;
-        Hsp instance = null;
-        boolean expResult = false;
-        boolean result = instance.equals(o);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Object o = new BlastHspBuilder()
+                .setHspNum(1)
+                .setHspBitScore(377.211)
+                .setHspEvalue(8.04143e-093)
+                .setHspQueryFrom(1)
+                .setHspQueryTo(224)
+                .setHspHitFrom(1035)
+                .setHspHitTo(811)
+                .setHspQueryFrame(-1)
+                .setHspIdentity(213)
+                .setHspPositive(213)
+                .setHspGaps(5)
+                .setHspAlignLen(227)
+                .setHspQseq("CTGACGACAGCCATGCACCACCTGTCTCGACTTTCCCCCGAAGGGCACCTAATGTATCTCTACCTCGTTAGTCGGATGTCAAGACCTGGTAAGGTTTTTTCGCGTATCTTCGAATTAAACCACATACTCCACTGCTTGTGCGG-CCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGCCGTACTCCC-AGGTGGA-TACTTATTGTGTTAACTCCGGCACGGAAGG")
+                .setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
+                .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
+                .createBlastHsp();
+        Hsp instance = hspImpl;
+        
+        assertEquals(o, instance);
     }
 
     /**

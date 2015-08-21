@@ -51,11 +51,13 @@ public class BlastTabularParserTest {
     public void testGetFileExtensions() {
         System.out.println("getFileExtensions");
         BlastTabularParser instance = new BlastTabularParser();
-        List<String> expResult = null;
+        
+        List<String> expResult = new ArrayList();
+        expResult.add("blasttabular");
+        expResult.add("blasttxt");
+        
         List<String> result = instance.getFileExtensions();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -67,8 +69,6 @@ public class BlastTabularParserTest {
         File f = null;
         BlastTabularParser instance = new BlastTabularParser();
         instance.setFile(f);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -167,17 +167,6 @@ public class BlastTabularParserTest {
         assertEquals(expHsp1hit1res1, hsp1Hit1Res1);
     }
 
-    /**
-     * Test of storeObjects method, of class BlastTabularParser.
-     */
-    @Test
-    public void testStoreObjects() throws Exception {
-        System.out.println("storeObjects");
-        List<Result> results = null;
-        BlastTabularParser instance = new BlastTabularParser();
-        instance.storeObjects(results);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+    
     
 }

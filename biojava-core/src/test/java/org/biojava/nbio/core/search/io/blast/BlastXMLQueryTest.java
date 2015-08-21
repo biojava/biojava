@@ -131,14 +131,11 @@ public class BlastXMLQueryTest {
      * Test of getFileExtensions method, of class BlastXMLQuery.
      */
     @Test
-    @Ignore public void testGetFileExtensions() {
+    public void testGetFileExtensions() {
         System.out.println("getFileExtensions");
         BlastXMLQuery instance = new BlastXMLQuery();
-        List<String> expResult = null;
         List<String> result = instance.getFileExtensions();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(result.contains("blastxml"));
     }
 
     /**
