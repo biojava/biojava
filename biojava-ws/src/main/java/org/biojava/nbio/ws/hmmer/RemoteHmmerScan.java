@@ -112,7 +112,7 @@ public class RemoteHmmerScan implements HmmerScan {
 		HttpURLConnection connection2 = (HttpURLConnection) respUrl.openConnection();
 		connection2.setRequestMethod("GET");
 		connection2.setRequestProperty("Accept", "application/json");
-
+		connection2.setConnectTimeout(60000); // 1 minute
 
 		//Get the response 
 		BufferedReader in = new BufferedReader(
