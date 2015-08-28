@@ -318,6 +318,11 @@ public interface Chain {
      */
     public void setParent(Structure parent) ;
 
+    /** Sets the back-reference to its parent Structure.
+     *
+     * @param parent
+     */
+
     public void setStructure(Structure parent) ;
 
     /** 

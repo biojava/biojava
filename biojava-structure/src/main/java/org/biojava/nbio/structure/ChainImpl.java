@@ -109,6 +109,14 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	@Override
 	public void setParent(Structure parent) {
+		setStructure(parent);
+	}
+
+	/** {@inheritDoc}
+	 *
+	 */
+	@Override
+	public void setStructure(Structure parent){
 		this.parent = parent;
 	}
 
