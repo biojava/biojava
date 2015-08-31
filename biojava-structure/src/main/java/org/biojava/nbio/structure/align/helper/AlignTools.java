@@ -160,13 +160,15 @@ public class AlignTools {
 
 	}
 
-	/** matrix of all distances between two sets of 3d coords"
+	/** 
+	 * Matrix of all distances between two sets of Atoms. Does not
+	 * superimpose or modify the Atoms.
 	 * 
 	 * @param ca1
 	 * @param ca2
-	 * @return a Matrixd
+	 * @return a Matrix
 	 */
-	public static Matrix getDistanceMatrix(Atom[] ca1, Atom[]ca2){
+	public static Matrix getDistanceMatrix(Atom[] ca1, Atom[] ca2){
 
 		int r = ca1.length;
 		int c = ca2.length;
@@ -180,11 +182,9 @@ public class AlignTools {
 
 				double d = Calc.getDistance(a1,b1);
 				out.set(i,j,d);
-
 			}
 		}
 		return out;  
 	}   
-
 
 }

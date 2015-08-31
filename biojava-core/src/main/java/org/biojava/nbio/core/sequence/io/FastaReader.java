@@ -43,7 +43,7 @@ import java.util.LinkedHashMap;
  */
 public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
-	private final static Logger logger = LoggerFactory.getLogger(FastaReader.class);
+    private final static Logger logger = LoggerFactory.getLogger(FastaReader.class);
 
     SequenceCreatorInterface<C> sequenceCreator;
     SequenceHeaderParserInterface<S,C> headerParser;
@@ -54,17 +54,17 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
     long sequenceIndex = 0;
     String line = "";
     String header= "";
-    
+
     /**
      * If you are going to use FileProxyProteinSequenceCreator then do not use this constructor because we need details about
      * local file offsets for quick reads. InputStreams does not give you the name of the stream to access quickly via file seek. A seek in
      * an inputstream is forced to read all the data so you don't gain anything.
-     * @param br
+     * @param is inputStream
      * @param headerParser
      * @param sequenceCreator
      */
     public FastaReader(InputStream is, SequenceHeaderParserInterface<S,C> headerParser,
-    		SequenceCreatorInterface<C> sequenceCreator) {
+                       SequenceCreatorInterface<C> sequenceCreator) {
         this.headerParser = headerParser;
         isr = new InputStreamReader(is);
         this.br = new BufferedReaderBytesRead(isr);
@@ -85,7 +85,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * 	method denies read access to the file.
      */
     public FastaReader(File file, SequenceHeaderParserInterface<S,C> headerParser,
-    		SequenceCreatorInterface<C> sequenceCreator) throws FileNotFoundException {
+                       SequenceCreatorInterface<C> sequenceCreator) throws FileNotFoundException {
         this.headerParser = headerParser;
         fi = new FileInputStream(file);
         isr = new InputStreamReader(fi);
@@ -105,9 +105,10 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * @throws IOException if an error occurs reading the input file
      */
     public LinkedHashMap<String,S> process() throws IOException {
-    	LinkedHashMap<String,S> sequences = process(-1);
-    	close();
-    	return sequences;
+        LinkedHashMap<String,S> sequences = process(-1);
+        close();
+
+        return sequences;
     }
 
     /**
@@ -130,45 +131,47 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * present, starting current fileIndex onwards.
      * @throws IOException if an error occurs reading the input file
      */
-	public LinkedHashMap<String,S> process(int max) throws IOException {
-        LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
+    public LinkedHashMap<String,S> process(int max) throws IOException {
+
 
         String line = "";
         if(this.line != null && this.line.length() > 0){
-        	line=this.line;
+            line=this.line;
         }
         String header = "";
         if(this.header != null && this.header.length() > 0){
-        	header=this.header;
+            header=this.header;
         }
-        
+
         StringBuilder sb = new StringBuilder();
         int processedSequences=0;
         boolean keepGoing = true;
+
+
+        LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
 
         do {
             line = line.trim(); // nice to have but probably not needed
             if (line.length() != 0) {
                 if (line.startsWith(">")) {//start of new fasta record
-                    if (sb.length() > 0) {//i.e. if there is already a sequence before
-                    //    logger.debug("Sequence index=" + sequenceIndex);
-                    	
-                    	try {    
-                    	    @SuppressWarnings("unchecked")
-                    		S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
+
+                    if (sb.length() > 0) {
+                        //i.e. if there is already a sequence before
+                        //logger.info("Sequence index=" + sequenceIndex);
+
+                        try {
+                            @SuppressWarnings("unchecked")
+                            S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
                             headerParser.parseHeader(header, sequence);
                             sequences.put(sequence.getAccession().getID(),sequence);
                             processedSequences++;
 
-                    	} catch (CompoundNotFoundException e) {
-                    		logger.warn("Sequence with header '{}' has unrecognised compounds ({}), it will be ignored", 
-                    				header, e.getMessage());
-                    	}
-//                        if (maxSequenceLength < sb.length()) {
-//                            maxSequenceLength = sb.length();
-//                        }
-//                        sb = new StringBuilder(maxSequenceLength);
-                        sb.setLength(0); //this is faster, better memory utilization (same buffer)
+                        } catch (CompoundNotFoundException e) {
+                            logger.warn("Sequence with header '{}' has unrecognised compounds ({}), it will be ignored",
+                                    header, e.getMessage());
+                        }
+
+                        sb.setLength(0); //this is faster than allocating new buffers, better memory utilization (same buffer)
                     }
                     header = line.substring(1);
                 } else if (line.startsWith(";")) {
@@ -181,68 +184,85 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
                 }
             }
             fileIndex = br.getBytesRead();
+
             line = br.readLine();
-			if (line == null) {//i.e. EOF
+
+            if (line == null) {
+
+
+                // Fix for #282
+                if ( sequences.size() == 0 && max != -1) {
+                    return null;
+                }
+
+                //i.e. EOF
                 String seq = sb.toString();
                 if ( seq.length() == 0) {
                     logger.warn("Can't parse sequence {}. Got sequence of length 0!", sequenceIndex);
                     logger.warn("header: {}", header);
                 }
-                //    logger.debug("Sequence index=" + sequenceIndex + " " + fileIndex );
+                //logger.info("Sequence index=" + sequenceIndex + " " + fileIndex );
                 try {
-                	@SuppressWarnings("unchecked")
-                	S sequence = (S)sequenceCreator.getSequence(seq, sequenceIndex);
-                	headerParser.parseHeader(header, sequence);
-                	sequences.put(sequence.getAccession().getID(),sequence);
-                	processedSequences++;                	
+                    @SuppressWarnings("unchecked")
+                    S sequence = (S)sequenceCreator.getSequence(seq, sequenceIndex);
+                    headerParser.parseHeader(header, sequence);
+                    sequences.put(sequence.getAccession().getID(),sequence);
+                    processedSequences++;
                 } catch (CompoundNotFoundException e) {
-            		logger.warn("Sequence with header '{}' has unrecognised compounds ({}), it will be ignored", 
-            				header, e.getMessage());
-            	}
+                    logger.warn("Sequence with header '{}' has unrecognised compounds ({}), it will be ignored",
+                            header, e.getMessage());
+                }
                 keepGoing = false;
             }
-			if (max > -1 && processedSequences>=max) {
-				keepGoing=false;
-			}
+            if (max > -1 && processedSequences>=max) {
+                keepGoing=false;
+            }
+            if ( this.line == null)
+                keepGoing = false;
         } while (keepGoing);
+
         this.line  = line;
         this.header= header;
+
         return sequences;
     }
 
-	public void close() throws IOException {
-		br.close();
+    public void close() throws IOException {
+        br.close();
         isr.close();
         //If stream was created from File object then we need to close it
         if (fi != null) {
             fi.close();
         }
         this.line=this.header = null;
-	}
+    }
 
     public static void main(String[] args) {
         try {
-            String inputFile = "src/test/resources/PF00104_small.fasta";
-            FileInputStream is = new FileInputStream(inputFile);
+            String inputFile = "/PF00104_small.fasta";
+            InputStream is = FastaReader.class.getResourceAsStream(inputFile);
 
+
+            if ( is == null)
+                System.err.println("Could not get input file " + inputFile);
             FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
             LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
             is.close();
 
 
-            logger.info("Protein Sequences: {}", proteinSequences);
+            //logger.info("Protein Sequences: {}", proteinSequences);
 
             File file = new File(inputFile);
-            FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader = 
-            		new FastaReader<ProteinSequence,AminoAcidCompound>(
-            				file, 
-            				new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(),
-            				new FileProxyProteinSequenceCreator(
-            						file, 
-            						AminoAcidCompoundSet.getAminoAcidCompoundSet(), 
-            						new FastaSequenceParser()
-        						) 
-        				);
+            FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader =
+                    new FastaReader<ProteinSequence,AminoAcidCompound>(
+                            file,
+                            new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(),
+                            new FileProxyProteinSequenceCreator(
+                                    file,
+                                    AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+                                    new FastaSequenceParser()
+                            )
+                    );
             LinkedHashMap<String,ProteinSequence> proteinProxySequences = fastaProxyReader.process();
 
             for(String key : proteinProxySequences.keySet()){

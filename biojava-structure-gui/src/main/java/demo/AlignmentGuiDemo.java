@@ -24,20 +24,20 @@ package demo;
 
 
 import org.biojava.nbio.structure.align.gui.AlignmentGui;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
 
 /**
+ * Get an instance of the two alignment GUIs.
+ * Try to align 2hyn vs. 1zll, for example.
  * 
  * @author Andreas Prlic
  *
  */
 public class AlignmentGuiDemo {
 
-	/** e.g. try to align 2hyn vs 1zll
-	 * 
-	 */
 	public static void main(String[] args) {
-			
+
 		AlignmentGui.getInstance();
-		
+		MultipleAlignmentGUI.getInstance();
 	}
 }

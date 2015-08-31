@@ -91,7 +91,7 @@ public class CookBook
          jmol.setTitle(algorithm.getAlgorithmName() + " : " + name1 + " vs. " + name2);
 
          // here we open up the alignment - text panel that can interact with the 3D jmol display.
-         DisplayAFP.showAlignmentImage(afpChain, ca1,ca2,jmol);
+         DisplayAFP.showAlignmentPanel(afpChain, ca1,ca2,jmol);
          
          // we can print an XML version 
          //System.out.println(AFPChainXMLConverter.toXML(afpChain, ca1, ca2));

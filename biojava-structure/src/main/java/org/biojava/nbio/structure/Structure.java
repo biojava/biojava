@@ -486,13 +486,19 @@ public interface Structure extends Cloneable, StructureIdentifier {
 
 
     /** 
-     * Create a String that contains the contents of a PDB file .
+     * Create a String that contains this Structure's contents in PDB file format.
      *
      * @return a String that looks like a PDB file
      * @see FileConvert
      */
     public String toPDB();
 
+    /**
+     * Create a String that contains this Structure's contents in MMCIF file format.
+     * @return
+     */
+    public String toMMCIF();
+    
     /** 
      * Set the Compounds
      *

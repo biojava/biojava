@@ -106,14 +106,13 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 				title += " " + algorithm.getParameters().toString();
 			jmol.setTitle(title);
 
-			DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);           
+			DisplayAFP.showAlignmentPanel(afpChain,ca1,ca2,jmol);
 
 			System.out.println(afpChain.toCE(ca1,ca2));
 
 		} catch (StructureException e){
 			e.printStackTrace();
 			logger.warn(e.getMessage());
-
 		}
 
 

@@ -1,0 +1,74 @@
+<MultipleAlignmentEnsemble Algorithm="testAlignment" Version="1.0" IOTime="null" CalculationTime="1000000000">
+  <Structures name1="2gox" name2="2gox" name3="2gox" />
+  <MultipleAlignment>
+    <BlockSet>
+      <Block>
+        <eqr0 str1="null" str2="0" str3="0" />
+        <eqr1 str1="null" str2="null" str3="1" />
+        <eqr2 str1="3" str2="3" str3="null" />
+        <eqr3 str1="null" str2="null" str3="4" />
+        <eqr4 str1="5" str2="5" str3="5" />
+        <eqr5 str1="null" str2="6" str3="null" />
+        <eqr6 str1="7" str2="null" str3="7" />
+        <eqr7 str1="null" str2="8" str3="8" />
+        <eqr8 str1="9" str2="9" str3="9" />
+        <eqr9 str1="null" str2="null" str3="null" />
+        <ScoresCache />
+      </Block>
+      <Block>
+        <eqr0 str1="null" str2="12" str3="13" />
+        <eqr1 str1="13" str2="null" str3="null" />
+        <eqr2 str1="null" str2="14" str3="15" />
+        <eqr3 str1="15" str2="15" str3="16" />
+        <eqr4 str1="null" str2="null" str3="17" />
+        <eqr5 str1="17" str2="17" str3="null" />
+        <eqr6 str1="null" str2="18" str3="19" />
+        <eqr7 str1="19" str2="null" str3="20" />
+        <eqr8 str1="null" str2="20" str3="21" />
+        <eqr9 str1="null" str2="21" str3="null" />
+        <ScoresCache />
+      </Block>
+      <Matrix4d mat11="1.0" mat12="0.0" mat13="0.0" mat14="0.0" mat21="0.0" mat22="1.0" mat23="0.0" mat24="0.0" mat31="0.0" mat32="0.0" mat33="1.0" mat34="0.0" mat41="0.0" mat42="0.0" mat43="0.0" mat44="1.0" />
+      <Matrix4d mat11="0.9999999999999998" mat12="-1.3877787807814457E-16" mat13="-5.551115123125783E-17" mat14="-5.329070518200751E-15" mat21="-4.85722573273506E-16" mat22="1.0000000000000002" mat23="-5.551115123125783E-17" mat24="1.4210854715202004E-14" mat31="0.0" mat32="0.0" mat33="0.9999999999999996" mat34="5.329070518200751E-15" mat41="0.0" mat42="0.0" mat43="0.0" mat44="1.0" />
+      <Matrix4d mat11="0.994348216355437" mat12="0.09895754574434604" mat13="0.03845814310411494" mat14="3.279491305519117" mat21="-0.10290675836692936" mat22="0.9874402157720017" mat23="0.11988335730431307" mat24="-1.3410721747086214" mat31="-0.02611175431049062" mat32="-0.12316340534590153" mat33="0.9920428175590155" mat34="-4.769127046965279" mat41="0.0" mat42="0.0" mat43="0.0" mat44="1.0" />
+      <ScoresCache />
+    </BlockSet>
+    <BlockSet>
+      <Block>
+        <eqr0 str1="23" str2="24" str3="null" />
+        <eqr1 str1="null" str2="null" str3="27" />
+        <eqr2 str1="25" str2="26" str3="28" />
+        <eqr3 str1="null" str2="27" str3="29" />
+        <eqr4 str1="27" str2="null" str3="null" />
+        <eqr5 str1="null" str2="29" str3="31" />
+        <eqr6 str1="29" str2="30" str3="32" />
+        <eqr7 str1="null" str2="null" str3="null" />
+        <eqr8 str1="null" str2="33" str3="35" />
+        <eqr9 str1="33" str2="null" str3="36" />
+        <ScoresCache />
+      </Block>
+      <Block>
+        <eqr0 str1="null" str2="36" str3="39" />
+        <eqr1 str1="35" str2="null" str3="40" />
+        <eqr2 str1="null" str2="38" str3="41" />
+        <eqr3 str1="37" str2="39" str3="null" />
+        <eqr4 str1="null" str2="null" str3="44" />
+        <eqr5 str1="39" str2="41" str3="45" />
+        <eqr6 str1="null" str2="null" str3="null" />
+        <eqr7 str1="null" str2="44" str3="47" />
+        <eqr8 str1="43" str2="45" str3="48" />
+        <eqr9 str1="null" str2="null" str3="49" />
+        <ScoresCache />
+      </Block>
+      <Matrix4d mat11="1.0" mat12="0.0" mat13="0.0" mat14="0.0" mat21="0.0" mat22="1.0" mat23="0.0" mat24="0.0" mat31="0.0" mat32="0.0" mat33="1.0" mat34="0.0" mat41="0.0" mat42="0.0" mat43="0.0" mat44="1.0" />
+      <Matrix4d mat11="0.9805068812079987" mat12="-0.03588276834775134" mat13="0.1931804411410898" mat14="-2.8151104063957693" mat21="0.022122857672738513" mat22="0.9970923606046889" mat23="0.07292052929156059" mat24="-2.7508804169434597" mat31="-0.1952353325403891" mat32="-0.0672253773471832" mat33="0.9784497501498856" mat34="-1.900286453132292" mat41="0.0" mat42="0.0" mat43="0.0" mat44="1.0" />
+      <Matrix4d mat11="0.41840270137937385" mat12="0.8368883259896656" mat13="-0.35292649277244365" mat14="46.91869126015278" mat21="-0.8345173275231217" mat22="0.5075944812432771" mat23="0.21430975870229269" mat24="-15.83530551510134" mat31="0.35849687521944906" mat32="0.20485549158756677" mat33="0.910776711397644" mat34="2.596739054526955" mat41="0.0" mat42="0.0" mat43="0.0" mat44="1.0" />
+      <ScoresCache />
+    </BlockSet>
+    <ScoresCache>
+      <AvgTM-score value="0.011220778229159392" />
+      <RMSD value="14.534137323749885" />
+    </ScoresCache>
+  </MultipleAlignment>
+  <ScoresCache />
+</MultipleAlignmentEnsemble>

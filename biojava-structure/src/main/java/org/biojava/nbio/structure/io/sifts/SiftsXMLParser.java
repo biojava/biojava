@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -199,9 +200,9 @@ public class SiftsXMLParser {
 			
 			boolean observed = true;
 			
-			String detail = getTextValue(residue, "residueDetail");
-			//System.out.println(">"+detail+"<");
-			if ( detail != null && detail.trim().equalsIgnoreCase("Not_Observed")){
+			List<String> details = getTextValues(residue, "residueDetail");
+
+			if ( details != null && details.contains("Not_Observed")){
 				observed = false;
 			}
 			res.setNotObserved(! observed);
@@ -247,6 +248,7 @@ public class SiftsXMLParser {
 		 * i.e for <employee><name>John</name></employee> xml snippet if
 		 * the Element points to employee node and tagName is 'name' I will return John
 		 */
+		@SuppressWarnings("unused")
 		private String getTextValue(Element ele, String tagName) {
 			String textVal = null;
 			NodeList nl = ele.getElementsByTagName(tagName);
@@ -257,6 +259,26 @@ public class SiftsXMLParser {
 
 			return textVal;
 		}
+
+	private List<String> getTextValues(Element ele, String tagName) {
+		List<String>values = new ArrayList<String>();
+		NodeList nl = ele.getElementsByTagName(tagName);
+		if(nl != null && nl.getLength() > 0) {
+			for ( int i = 0 ;i < nl.getLength() ; i ++) {
+
+				Element n = (Element) nl.item(i);
+
+				@SuppressWarnings("unused")
+				String k = n.getNodeName();
+
+				String val = n.getFirstChild().getNodeValue();
+				if ( val != null)
+					values.add(val);
+			}
+		}
+
+		return values;
+	}
 
 
 		

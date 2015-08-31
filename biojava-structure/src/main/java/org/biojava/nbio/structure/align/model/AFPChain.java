@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.align.ce.CeSideChainMain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.jama.Matrix;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -480,7 +479,7 @@ public class AFPChain implements Serializable, Cloneable
 		myResultsEQR = -1;
 		myResultsSimilarity1 = -1;
 		myResultsSimilarity2 = -1;
-		algorithmName = DEFAULT_ALGORITHM_NAME ;
+		algorithmName = "unknown";
 		version = "1.0";
 		sequentialAlignment = true;
 		distanceMatrix = null;

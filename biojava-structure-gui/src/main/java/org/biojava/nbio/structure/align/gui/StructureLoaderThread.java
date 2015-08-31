@@ -63,7 +63,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 					// uh oh, we are probably going to exceed 512 MB usage...
 					// scale down to something smaller
 					System.err.println("Structure very large. Reducing display to C alpha atoms only");
-					s = BioAssemblyTools.getReducedCAStructure(s);
+					s = BioAssemblyTools.getReducedStructure(s);
 				}
 
 			} else {

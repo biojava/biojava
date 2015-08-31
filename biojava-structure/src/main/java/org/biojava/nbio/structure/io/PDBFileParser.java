@@ -23,7 +23,6 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
@@ -153,17 +152,18 @@ public class PDBFileParser  {
 	private Map<String, Site> siteMap = new LinkedHashMap<String, Site>();
 	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
 	
-	private Matrix4d currentNcsOp = null;
+	private Matrix4d currentNcsOp;
 	private List<Matrix4d> ncsOperators;
 
 	// for storing LINK until we have all the atoms parsed
 	private List<LinkRecord> linkRecords;
 	
 	// for parsing COMPOUND and SOURCE Header lines
-	private int molTypeCounter = 1;
-	//private int continuationNo;
+	private int prevMolId;
+	private String previousContinuationField;
 	private String continuationField;
-	private String continuationString = "";
+	private String continuationString;
+	
 	private DateFormat dateFormat;
 	
 	// for rfree parsing
@@ -205,9 +205,6 @@ public class PDBFileParser  {
 
 
 
-
-	private String previousContinuationField = "";
-
 	/** Secondary strucuture assigned by the PDB author/
 	 *
 	 */
@@ -228,7 +225,7 @@ public class PDBFileParser  {
 	 */
 	public static final String TURN   = "TURN";
 
-	int atomCount;
+	private int atomCount;
 
 
 
@@ -239,7 +236,7 @@ public class PDBFileParser  {
 	private boolean atomOverflow;
 
 	/** flag to tell parser to only read Calpha coordinates **/
-	boolean parseCAonly;
+	private boolean parseCAonly;
 
 	static {
 
@@ -264,7 +261,7 @@ public class PDBFileParser  {
 		helixList     = new ArrayList<Map<String,String>>();
 		strandList    = new ArrayList<Map<String,String>>();
 		turnList      = new ArrayList<Map<String,String>>();
-		current_compound = new Compound();
+		current_compound = null;
 		dbrefs        = new ArrayList<DBRef>();
 		siteMap = null;
 		dateFormat = new SimpleDateFormat("dd-MMM-yy", Locale.US);
@@ -739,23 +736,7 @@ public class PDBFileParser  {
 	 */
 	private void pdb_SEQRES_Handler(String line) {
 			
-		//		System.out.println("PDBFileParser.pdb_SEQRES_Handler: BEGIN");
-		//		System.out.println(line);
-
-		//TODO: treat the following residues as amino acids?
 		/*
-        MSE Selenomethionine
-        CSE Selenocysteine
-        PTR Phosphotyrosine
-        SEP Phosphoserine
-        TPO Phosphothreonine
-        HYP 4-hydroxyproline
-        5HP Pyroglutamic acid; 5-hydroxyproline
-        PCA Pyroglutamic Acid
-        LYZ 5-hydroxylysine
-        GLX Glu or Gln
-        ASX Asp or Asn
-        GLA gamma-carboxy-glutamic acid
                  1         2         3         4         5         6         7
         1234567890123456789012345678901234567890123456789012345678901234567890
         SEQRES   1 A  376  LYS PRO VAL THR VAL LYS LEU VAL ASP SER GLN ALA THR
@@ -916,10 +897,6 @@ public class PDBFileParser  {
 	 */
 	private void pdb_COMPND_Handler(String line) {
 
-		String continuationNr = line.substring(9, 10).trim();
-		
-		logger.debug("current continuationNo     is "
-					+ continuationNr);
 		logger.debug("previousContinuationField  is "
 					+ previousContinuationField);
 		logger.debug("current continuationField  is "
@@ -941,41 +918,29 @@ public class PDBFileParser  {
 			line = line.substring(0, 72);
 		}
 
-		//String beginningOfLine = line.substring(0, 10);
-		//line = line.replace(beginningOfLine, "");
 		line = line.substring(10, line.length());
 
-		
-		logger.debug("LINE: >" + line + "<");
-		
-		String[] fieldList = line.split("\\s+");
+				
+		String[] fieldList = line.trim().split("\\s+");
 		int fl = fieldList.length;
-		if ((fl >0 ) && (!fieldList[0].equals(""))
-				&& compndFieldValues.contains(fieldList[0])) {
-			//			System.out.println("[PDBFileParser.pdb_COMPND_Handler] Setting continuationField to '" + fieldList[0] + "'");
+		if ((fl >0 ) && compndFieldValues.contains(fieldList[0])) {
+
 			continuationField = fieldList[0];
 			if (previousContinuationField.equals("")) {
 				previousContinuationField = continuationField;
 			}
-
-		} else if ((fl >1 ) && compndFieldValues.contains(fieldList[1])) {
-			//			System.out.println("[PDBFileParser.pdb_COMPND_Handler] Setting continuationField to '" + fieldList[1] + "'");
-			continuationField = fieldList[1];
-			if (previousContinuationField.equals("")) {
-				previousContinuationField = continuationField;
+			
+		} else if (fl>0) {
+			// the ':' character indicates the end of a field name and should be invalid as part the first data token
+			// e.g. obsolete file 1hhb has a malformed COMPND line that can only be caught with this kind of check
+			if (fieldList[0].contains(":") ) {  
+				logger.info("COMPND line does not follow the PDB 3.0 format. Note that COMPND parsing is not supported any longer in format 2.3 or earlier");
+				return;
 			}
 
 		} else {
-			if (continuationNr.equals("")) {
-				
-				logger.debug("looks like an old PDB file");
-				
-				continuationField = "MOLECULE:";
-				if (previousContinuationField.equals("")) {
-					previousContinuationField = continuationField;
-				}
-			}
-
+			
+			// the line will be added as data to the previous field 
 		}
 
 		line = line.replace(continuationField, "").trim();
@@ -1025,12 +990,12 @@ public class PDBFileParser  {
 			//			System.out.println("[pdb_COMPND_Handler] Final COMPND line - Finishing off final MolID header.");
 			compndValueSetter(continuationField, continuationString);
 			continuationString = "";
-			compounds.add(current_compound);
+			if (current_compound!=null) compounds.add(current_compound);
 		}
 	}
 
-	/** set the value in the currrent molId object
-	 *
+	/** 
+	 * Set the value in the currrent molId object
 	 * @param field
 	 * @param value
 	 */
@@ -1038,28 +1003,33 @@ public class PDBFileParser  {
 
 		value = value.trim().replace(";", "");
 		if (field.equals("MOL_ID:")) {
-
-			//TODO: find out why an extra mol or chain gets added  and why 1H1J, 1J1H ATOM records are missing, but not 1H1H....
-			
-			logger.debug("molTypeCounter " + molTypeCounter + " "
-						+ value);
+						
 			int i = -1;
 			try {
 				i = Integer.valueOf(value);
 			} catch (NumberFormatException e){
-				logger.warn(e.getMessage() + " while trying to parse COMPND MOL_ID line.");
+				logger.warn("Value '{}' does not look like a number, while trying to parse COMPND MOL_ID line.",value);
 			}
-			if (molTypeCounter != i) {
-				molTypeCounter++;
+			if (i>0 && prevMolId!=i) {
+				
+				if (current_compound!=null) compounds.add(current_compound);
 
-				compounds.add(current_compound);
-				current_compound = null;
+				logger.debug("Initialising new Compound with mol_id {}", i);
+				
 				current_compound = new Compound();
-
+				
+				current_compound.setMolId(i);
+				
+				prevMolId = i;
 			}
 
-			current_compound.setMolId(i);
 		}
+		
+		// if for some reason (e.g. missing mol_id line) the current_compound is null we can't add anything to it, return
+		if (current_compound==null) {
+			return;
+		}
+		
 		if (field.equals("MOLECULE:")) {
 			current_compound.setMolName(value);
 
@@ -1150,33 +1120,31 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SOURCE_Handler(String line) {
 		// works in the same way as the pdb_COMPND_Handler.
-		boolean sourceDebug = false;
-
 		String continuationNr = line.substring(9, 10).trim();
 
-		if (sourceDebug) {
-			System.out.println("current continuationNo     is "
-					+ continuationNr);
-			System.out.println("previousContinuationField  is "
-					+ previousContinuationField);
-			System.out.println("current continuationField  is "
-					+ continuationField);
-			System.out.println("current continuationString is "
-					+ continuationString);
-			System.out.println("current compound           is "
-					+ current_compound);
-		}
+		
+		
+		logger.debug("current continuationNo     is "
+				+ continuationNr);
+		logger.debug("previousContinuationField  is "
+				+ previousContinuationField);
+		logger.debug("current continuationField  is "
+				+ continuationField);
+		logger.debug("current continuationString is "
+				+ continuationString);
+		logger.debug("current compound           is "
+				+ current_compound);
 
-		// in some PDB files the line ends with the PDB code and a serial number, chop those off!
-		if (line.length() > 72) {
-			line = line.substring(0, 72);
+
+		// following the docs, the last valid character should be 79, chop off the rest
+		if (line.length() > 79) {
+			line = line.substring(0, 79);
 		}
 
 		line = line.substring(10, line.length());
 
-		if (sourceDebug) {
-			System.out.println("LINE: >" + line + "<");
-		}
+		logger.debug("LINE: >" + line + "<");
+		
 		String[] fieldList = line.split("\\s+");
 
 		if (!fieldList[0].equals("")
@@ -1196,9 +1164,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		} else {
 			if (continuationNr.equals("")) {
-				if (sourceDebug) {
-					System.out.println("looks like an old PDB file");
-				}
+				
+				logger.debug("looks like an old PDB file");
+				
 				continuationField = "MOLECULE:";
 				if (previousContinuationField.equals("")) {
 					previousContinuationField = continuationField;
@@ -1223,12 +1191,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			if (previousContinuationField.equals(continuationField)
 					&& sourceFieldValues.contains(continuationField)) {
-				if (sourceDebug)
-					System.out.println("Still in field " + continuationField);
+				
+				logger.debug("Still in field " + continuationField);
 
 				continuationString = continuationString.concat(token + " ");
-				if (sourceDebug)
-					System.out.println("continuationString = "
+				
+				logger.debug("continuationString = "
 							+ continuationString);
 			}
 			if (!continuationField.equals(previousContinuationField)) {
@@ -1726,8 +1694,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// process group data:
 		// join residue numbers and insertion codes together
 		String recordName     = line.substring (0, 6).trim ();
-		//String pdbCode = line.substring(22,27).trim();
-		String groupCode3     = line.substring(17,20);
+
+		String groupCode3     = line.substring(17,20).trim();
 		// pdbCode is the old way of doing things...it's a concatenation
 		//of resNum and iCode which are now defined explicitly
 		String resNum  = line.substring(22,26).trim();
@@ -2327,7 +2295,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (icode2.equals(" "))
 			icode2 = "";
 
-		SSBond ssbond = new SSBond();
+		SSBond ssbond = new SSBondImpl();
 
 		ssbond.setChainID1(chain1);
 		ssbond.setResnum1(seqNum1);
@@ -2667,14 +2635,15 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		current_group = null           ;
 		pdbHeader     = new PDBHeader();
 		connects      = new ArrayList<Map<String,Integer>>();
+		previousContinuationField = "";
 		continuationField = "";
 		continuationString = "";
-		current_compound = new Compound();
+		current_compound = null;
 		sourceLines.clear();
 		compndLines.clear();
 		isLastCompndLine = false;
 		isLastSourceLine = false;
-		molTypeCounter = 1;
+		prevMolId = -1;
 		compounds.clear();
 		helixList.clear();
 		strandList.clear();
@@ -2856,7 +2825,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			// TODO determine what the actual bond order of this bond is; for
 			// now, we're assuming they're single bonds
-			new Bond(a, b, 1);
+			new BondImpl(a, b, 1);
 		} catch (StructureException e) {
 			// Note, in Calpha only mode the link atoms may not be present.
 			if (! parseCAonly) {
@@ -2879,7 +2848,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
 					disulfideBond.getInsCode2());
 			
-			new Bond(a, b, 1);
+			new BondImpl(a, b, 1);
 		} catch (StructureException e) {
 			// Note, in Calpha only mode the CYS SG's are not present.
 			if (! parseCAonly) {
@@ -2952,7 +2921,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
 						c.getChainID(), c.getAtomGroups().size());
 				it.remove();
-			}
+			} 
 		}
 		structure.addModel(current_model);
 		structure.setPDBHeader(pdbHeader);
@@ -3573,10 +3542,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// set the correct max values for parsing...
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
-
-		if ( !params.isLoadChemCompInfo()) {
-			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
-		}
 
 	}
 

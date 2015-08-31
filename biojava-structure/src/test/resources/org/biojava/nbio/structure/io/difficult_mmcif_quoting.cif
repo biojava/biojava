@@ -1,0 +1,90 @@
+data_
+loop_
+_atom_site.group_PDB 
+_atom_site.id 
+_atom_site.type_symbol 
+_atom_site.label_atom_id 
+_atom_site.label_alt_id 
+_atom_site.label_comp_id 
+_atom_site.label_asym_id 
+_atom_site.label_entity_id 
+# a comment line
+_atom_site.label_seq_id 
+_atom_site.pdbx_PDB_ins_code 
+_atom_site.Cartn_x 
+_atom_site.Cartn_y 
+_atom_site.Cartn_z 
+_atom_site.occupancy 
+_atom_site.B_iso_or_equiv  
+_atom_site.auth_seq_id 
+_atom_site.auth_comp_id
+_atom_site.auth_asym_id 
+_atom_site.auth_atom_id 
+_atom_site.pdbx_PDB_model_num 
+ATOM   1728 O OP1  . DT  C 2 1  ? 7.732   19.982  88.407  0.00 20.42 107 DT  B OP1  1  
+ATOM   1730 O O5'  . DT  C 2 1  ? 7.464   18.547  86.371  0.00 21.57 107 DT  B O5'  1 
+# a comment line
+ATOM   1738 C H2"  . DT  C 2 1  ? 8.111   19.111  84.111  0.00 29.00 107 DT  B H2"  1
+ATOM   1730 O "O3'"  . DT  C 2 1  ? 7.111   18.111  86.111  0.00 21.00 107 DT  B "O3'"  1
+# 
+loop_
+_audit_author.name 
+_audit_author.pdbx_ordinal 
+'Pederson, D.M.' 1 
+'Welsh, L.C.'    2 
+"Marvin, D.A."   3
+# 
+_exptl_crystal.id                    1 
+_exptl_crystal.density_meas          ? 
+_exptl_crystal.density_Matthews      ? 
+# a comment line
+_exptl_crystal.density_percent_sol   ? 
+_exptl_crystal.description           
+;THE DATA IS DERIVED FROM CONTINUOUS TRANSFORM DATA AND THEREFORE THE NUMBER OF UNIQUE REFLECTIONS IS A MEANINGLESS NUMBER. THE STRUCTURE WAS REFINED AGAI THE SAME STRUCTURE FACTORS AS PDB ENTRY 1HGV, USIN
+G DIFFERENT REFINEMENT PROTOCOL. THEREFORE, THE STRUCT FACTORS FOR 1HHO, CAN BE TAKEN FROM R1HGVSF
+;
+# 
+# a comment line
+loop_
+_pdbx_database_related.db_name 
+_pdbx_database_related.db_id 
+_pdbx_database_related.content_type 
+_pdbx_database_related.details 
+PDB 1IFP unspecified 'INOVIRUS (FILAMENTOUS BACTERIOPHAGE) STRAIN PF3 MAJOR COATPROTEIN ASSEMBLY'                                           
+PDB 1QL1 unspecified 'INOVIRUS (FILAMENTOUS BACTERIOPHAGE) STRAIN PF1 MAJOR COAT PROTEIN ASSEMBLY' 
+# 
+loop_
+_citation.id 
+_citation.title
+_citation.journal_abbrev 
+_citation.journal_volume 
+_citation.page_first 
+_citation.page_last 
+_citation.year 
+_citation.journal_id_ASTM 
+_citation.country 
+_citation.journal_id_ISSN 
+_citation.journal_id_CSD 
+_citation.book_publisher 
+_citation.pdbx_database_id_PubMed 
+_citation.pdbx_database_id_DOI 
+primary 'The Protein Capsid of Filamentous Bacteriophage Ph75 from Thermus Thermophilus'                                                                    
+J.Mol.Biol.                309 401 ? 2001 JMOBAK UK 0022-2836 0070 ? 11371161 10.1006/JMBI.2001.4685         
+1       'The Molecular Structure and Structural Transition of the Alpha-Helical Capsid in Filamentous Bacteriophage Pf1'                                    
+'Acta Crystallogr.,Sect.D' 56  137 ? 2000 ABCRE6 DK 0907-4449 0766 ? 10666593 10.1107/S0907444999015334      
+2       'Structure of the Capsid of Pf3 Filamentous Phage Determined from X-Ray Fibre Diffraction Data at 3.1 A Resolution'                                 
+J.Mol.Biol.                283 155 ? 1998 JMOBAK UK 0022-2836 0070 ? 9761681  10.1006/JMBI.1998.2081         
+#
+_space_group.name_H-M_alt         'P 1 21 1'
+_space_group.name_Hall            " P 2yb"
+_space_group.IT_number            4
+_space_group.crystal_system       monoclinic
+# 
+loop_
+_citation_author.citation_id 
+_citation_author.name 
+_citation_author.ordinal 
+primary 'Pederson, D.M.'   1  
+primary "Welsh, L.C."      2  
+primary 'Marvin, D.A.'     3  
+

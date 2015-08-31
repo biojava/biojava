@@ -20,9 +20,9 @@
 package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
-
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -32,8 +32,8 @@ import java.io.PrintWriter;
 
 public class MyExportListener implements ActionListener{
 
-   StructureAlignmentJmol parent;
-   MyExportListener(StructureAlignmentJmol parent){
+   AbstractAlignmentJmol parent;
+   MyExportListener(AbstractAlignmentJmol parent){
       this.parent = parent;
    }
    @Override
@@ -51,11 +51,11 @@ public void actionPerformed(ActionEvent arg0)
          Structure s = parent.getStructure();
 
          try {
-            PrintWriter pw = new PrintWriter(new FileWriter(file));                 
+            PrintWriter pw = new PrintWriter(new FileWriter(file));
             pw.println(s.toPDB());                   
             pw.close();
          } catch (IOException e){
-        	 JOptionPane.showMessageDialog(null,"Could not export file. Excetion: " + e.getMessage());
+        	 JOptionPane.showMessageDialog(null,"Could not export file. Exception: " + e.getMessage());
          }
 
 

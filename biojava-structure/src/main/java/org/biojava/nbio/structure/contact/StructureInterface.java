@@ -25,6 +25,8 @@ import org.biojava.nbio.structure.asa.AsaCalculator;
 import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
@@ -161,6 +163,11 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		this.molecules = molecules;
 	}
 
+	/**
+	 * Return the pair of identifiers identifying each of the 2 molecules of this interface
+	 * in the asymmetry unit (usually the chain identifier if this interface is between 2 chains)
+	 * @return
+	 */
 	public Pair<String> getMoleculeIds() {
 		return moleculeIds;
 	}
@@ -647,7 +654,11 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return (scoreInverse>SELF_SCORE_FOR_ISOLOGOUS);
 	}
 	
-	private Pair<Chain> getParentChains() {
+	/**
+	 * Finds the parent chains by looking up the references of first atom of each side of this interface
+	 * @return
+	 */
+	public Pair<Chain> getParentChains() {
 		Atom[] firstMol = this.molecules.getFirst();
 		Atom[] secondMol = this.molecules.getSecond();
 		if (firstMol.length==0 || secondMol.length==0) {
@@ -656,6 +667,19 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		}
 		
 		return new Pair<Chain>(firstMol[0].getGroup().getChain(), secondMol[0].getGroup().getChain());
+	}
+	
+	/**
+	 * Finds the parent compounds by looking up the references of first atom of each side of this interface
+	 * @return
+	 */
+	public Pair<Compound> getParentCompounds() {
+		Pair<Chain> chains = getParentChains();
+		if (chains == null) {
+			logger.warn("Could not find parents chains, compounds will be null");
+			return null;
+		}
+		return new Pair<Compound>(chains.getFirst().getCompound(), chains.getSecond().getCompound());
 	}
 	
 	private Structure getParentStructure() {
@@ -702,6 +726,53 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		sb.append(System.getProperty("line.separator"));
 		sb.append("END");
 		sb.append(System.getProperty("line.separator"));
+		return sb.toString();
+	}
+	
+	/**
+	 * Return a String representing the 2 molecules of this interface in mmCIF format.
+	 * If the molecule ids (i.e. chain ids) are the same for both molecules, then the second
+	 * one will be written as chainId_operatorId (with operatorId taken from {@link #getTransforms()} 
+	 * @return
+	 */
+	public String toMMCIF() {
+		StringBuilder sb = new StringBuilder();
+		
+		String molecId1 = getMoleculeIds().getFirst();
+		String molecId2 = getMoleculeIds().getSecond();
+		
+		if (isSymRelated()) {		
+			// if both chains are named equally we want to still named them differently in the output mmcif file
+			// so that molecular viewers can handle properly the 2 chains as separate entities 
+			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
+		}
+		
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_interface_"+getId()+System.getProperty("line.separator"));
+		
+		sb.append(FileConvert.getAtomSiteHeader());
+		
+		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
+		int atomId = 1;
+		List<Object> atomSites = new ArrayList<Object>();
+		for (Atom atom:this.molecules.getFirst()) {
+			if (isSymRelated()) {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1, atomId));
+			} else {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1));
+			}
+			atomId++;
+		}
+		for (Atom atom:this.molecules.getSecond()) {
+			if (isSymRelated()) {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2, atomId));
+			} else {
+				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2));
+			}
+			atomId++;
+		}
+		
+		sb.append(MMCIFFileTools.toMMCIF(atomSites));
+
 		return sb.toString();
 	}
 	

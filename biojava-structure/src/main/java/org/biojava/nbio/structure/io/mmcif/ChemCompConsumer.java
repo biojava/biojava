@@ -23,11 +23,15 @@ package org.biojava.nbio.structure.io.mmcif;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ChemCompConsumer implements MMcifConsumer {
 
+	private static final Logger logger = LoggerFactory.getLogger(ChemCompConsumer.class);
+	
 	ChemicalComponentDictionary dictionary;
 
 	String latestChemCompId;
@@ -47,6 +51,10 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemComp(ChemComp c) {
+
+		if ( c.getId() == null)
+			logger.warn("chem comp ID == null " + c);
+
 		latestChemCompId = c.getId();
 		dictionary.addChemComp(c);		
 		if ( c.getResidueType() == ResidueType.nonPolymer)

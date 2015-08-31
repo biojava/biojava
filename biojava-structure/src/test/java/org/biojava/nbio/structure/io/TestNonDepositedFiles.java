@@ -29,7 +29,6 @@ import org.biojava.nbio.structure.io.mmcif.MMcifParser;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.xtal.CrystalCell;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -192,11 +191,11 @@ public class TestNonDepositedFiles {
 	/**
 	 * A test for reading a phenix-produced (ver 1.9_1692) mmCIF file.
 	 * This is the file submitted to the PDB for deposition of entry 4lup
+	 * See github issue #234
 	 * @throws IOException
 	 */
-	@Ignore // remove once issue #234 is fixed
 	@Test
-	public void testPhenixFile() throws IOException {
+	public void testPhenixCifFile() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phenix_output.cif.gz"));
 		MMcifParser parser = new SimpleMMcifParser();
 
@@ -216,6 +215,74 @@ public class TestNonDepositedFiles {
 		assertNotNull(s);
 		
 		assertTrue(s.isCrystallographic());
+		
+		// all ligands are into their own chains, so we have 2 proteins, 2 nucleotide chains and 1 ligand chain
+		assertEquals(5, s.getChains().size());
+		
+		assertEquals(2, s.getCompounds().size());
+
+	}
+
+	@Test
+	public void testPhenixPdbFile() throws IOException {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phenix_output.pdb.gz"));
+
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+
+		Structure s = pdbpars.parsePDBFile(inStream) ;
+		
+		assertNotNull(s);
+		
+		assertTrue(s.isCrystallographic());
+		
+		// all ligands are into their own chains, so we have 2 proteins, 2 nucleotide chains and 1 ligand chain
+		assertEquals(5, s.getChains().size());
+		
+		assertEquals(2, s.getCompounds().size());
+	}
+
+	@Test
+	public void testPhaserPdbFile() throws IOException {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phaser_output.pdb.gz"));
+
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+
+		Structure s = pdbpars.parsePDBFile(inStream) ;
+		
+		assertNotNull(s);
+		
+		assertTrue(s.isCrystallographic());
+		
+		assertEquals(2, s.getChains().size());
+		
+		assertEquals(1, s.getCompounds().size());
+	}
+	
+	
+	@Test
+	public void testRefmacPdbFile() throws IOException {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/rnase_refmac_output.pdb.gz"));
+
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+
+		Structure s = pdbpars.parsePDBFile(inStream) ;
+		
+		assertNotNull(s);
+		
+		assertTrue(s.isCrystallographic());
+		
+		assertEquals(2, s.getChains().size());
+		
+		assertEquals(1, s.getCompounds().size());
 	}
 
 }

@@ -20,6 +20,16 @@
  */
 package org.biojava.nbio.structure.align;
 
+/**
+ * Simple Callable Class that calculates a pairwise alignment in a different 
+ * thread, so that multiple pairwise alignments can be run in parallel 
+ * (examples: all-to-all alignments, DB search alignments).
+ * Adapted to a more general implementation since 4.1.0, because before it
+ * was thought for DB search only.
+ * 
+ * @author Aleix Lafita
+ * 
+ */
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
@@ -40,70 +50,93 @@ import java.util.zip.GZIPOutputStream;
 
 public class CallableStructureAlignment implements  Callable<AFPChain> {
 	
-	private final static Logger logger = LoggerFactory.getLogger(CallableStructureAlignment.class);
+	private final static Logger logger = LoggerFactory.getLogger(
+			CallableStructureAlignment.class);
 
-	PdbPair pair ;
-	
-	AtomCache cache;
-	
-	SynchronizedOutFile outFile;
-	
-	
-	Atom[] ca1;
+	//Structure information
+	private PdbPair pair;
+	private AtomCache cache;
+	private Atom[] ca1;
+	private Atom[] ca2;
 
+	//File output information - for DB searches
+	private SynchronizedOutFile outFile;
 	private File outFileDir;
-
+	
+	//Algorithm information
 	private String algorithmName;
-
 	private ConfigStrucAligParams params;
 	
-	public CallableStructureAlignment( ) {
-		
+	/**
+	 * Default constructor. Used in DB search.
+	 * Instantiates an empty object, everything has to be set independently.
+	 */
+	public CallableStructureAlignment() {}
+	
+	/**
+	 * Constructor for all-to-all alignment calculation.
+	 * Used for MultipleMC seed alignment calculation, for example.
+	 * 
+	 * @param ca1 Atoms to align of the first structure
+	 * @param ca2 Atoms to align of the second structure
+	 * @param algorithmName the pairwise aligner algorithm to use, a new
+	 * 			instance will be created for each thread.
+	 * @param params parameter bean for the alignment.
+	 */
+	public CallableStructureAlignment(Atom[] ca1, Atom[] ca2, String algorithmName, ConfigStrucAligParams params){
+		this.ca1 = ca1;
+		this.ca2 = ca2;
+		this.algorithmName = algorithmName;
+		this.params = params;
 	}
 
 	@Override
-	public AFPChain  call() throws Exception {
+	public AFPChain call() throws Exception {
 		
-		
+		//Prepare the alignment algorithm
 		StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
-		algorithm.setParameters(params);
+		if (params!=null) algorithm.setParameters(params);
 		
 		AFPChain afpChain = null;
 		try {
-			// ca1 can be set from outside...
+			//Download the Atoms if they are not provided from the outisde (DB searches usually)
 			if (ca1 == null) {
 				Structure structure1 = cache.getStructure(pair.getName1());
 				ca1 =  StructureTools.getRepresentativeAtomArray(structure1);
-			} else {
-				ca1 = StructureTools.cloneAtomArray(ca1);
-			}
-			Structure structure2 = cache.getStructure(pair.getName2());
+			} else ca1 = StructureTools.cloneAtomArray(ca1);
 			
-			Atom[] ca2;
-
-		
-			ca2 = StructureTools.getRepresentativeAtomArray(structure2);
+			Structure structure2 = null;
+			if (ca2 == null) {
+				structure2 = cache.getStructure(pair.getName2());
+				ca2 = StructureTools.getRepresentativeAtomArray(structure2);
+			} else ca2 = StructureTools.cloneAtomArray(ca2);
 
 			afpChain = algorithm.align(ca1, ca2);
-			afpChain.setName1(pair.getName1());
-			afpChain.setName2(pair.getName2());
 			
-			String desc2 = structure2.getPDBHeader().getDescription();
-			if ( desc2 == null)
-				desc2="";
-			afpChain.setDescription2(desc2);
-			String result = afpChain.toDBSearchResult();
-			logger.info("{}", result);
-
-			outFile.write(result);
-
-			String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
-			writeXML(outFileDir,pair.getName1(), pair.getName2(), xml);
+			if (pair!=null){
+				afpChain.setName1(pair.getName1());
+				afpChain.setName2(pair.getName2());
+			}
+			
+			//Do not output anything if there is no File information
+			if (outFile != null && outFileDir != null){
+				String desc2 = structure2.getPDBHeader().getDescription();
+				if ( desc2 == null)
+					desc2="";
+				afpChain.setDescription2(desc2);
+				String result = afpChain.toDBSearchResult();
+				logger.info("{}", result);
+	
+				outFile.write(result);
+	
+				String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
+				writeXML(outFileDir,pair.getName1(), pair.getName2(), xml);
+			}
 
 		} catch ( Exception e){
 			logger.error("Exception: ", e);
 		}
-		return null;
+		return afpChain;
 	}
 
 	public PdbPair getPair() {
@@ -138,7 +171,6 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 		this.ca1 = ca1;
 	}
 	
-	
 	private void writeXML(File outFileF, String name1, String name2, String xml)
 	{
 		try{
@@ -158,7 +190,6 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 
 	public void setOutputDir(File outFileF) {
 		this.outFileDir = outFileF;
-		
 	}
 
 	public void setAlgorithmName(String algorithmName) {

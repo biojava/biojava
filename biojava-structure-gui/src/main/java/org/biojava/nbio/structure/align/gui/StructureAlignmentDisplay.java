@@ -36,9 +36,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
 
 public class StructureAlignmentDisplay {
-
    
-   /** Display the alignment
+   /** Display an AFPChain alignment
     * 
     * @param afpChain
     * @param ca1
@@ -57,7 +56,7 @@ public class StructureAlignmentDisplay {
       List<Group> hetatms  = StructureTools.getUnalignedGroups(ca1);
       List<Group> hetatms2 = StructureTools.getUnalignedGroups(ca2);
          
-      return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, hetatms2);
+      return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2, hetatms, hetatms2);
 
    }
    
@@ -132,24 +131,17 @@ public class StructureAlignmentDisplay {
       
       return twistedGroups;
    }
-   
-
-     
-
-   
 
   /** only shift CA positions.
    * 
-  
    */
-   public static void shiftCA2(AFPChain afpChain, Atom[] ca2,  Matrix m, Atom shift, Group[] twistedGroups)
-   {
+   public static void shiftCA2(AFPChain afpChain, Atom[] ca2,  Matrix m, Atom shift, Group[] twistedGroups) {
+	   
       int i = -1;
       for (Atom a: ca2){
          i++;
          Group g = a.getGroup();
         
-         
          Calc.rotate(g,m);
          Calc.shift(g, shift);
          
@@ -163,13 +155,8 @@ public class StructureAlignmentDisplay {
         		 }
         	 }
          }
-         
-         
          twistedGroups[i]=g;
       }
-
-    
    }
-
 
 }

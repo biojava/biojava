@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
-import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 
 import javax.swing.*;
@@ -51,31 +50,27 @@ import java.util.List;
  *
  */
 public class ParameterGUI extends JFrame{
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 723386061184110161L;
 
-	ConfigStrucAligParams params ;
-	List<Component> textFields;
-
-
-
-
+	private ConfigStrucAligParams params ;
+	private List<Component> textFields;
+	
+	/**
+	 * Constructor for a ParameterGUI. Generalization for any type of 
+	 * Structural Alignment algorithm that implements the parameter interface.
+	 * 
+	 * @param params parameter bean
+	 * @param algorithm name of the algorithm
+	 */
 	@SuppressWarnings("rawtypes")
-	public ParameterGUI(StructureAlignment alignment){
+	public ParameterGUI(ConfigStrucAligParams params, String algorithm) {
 
-		ConfigStrucAligParams params = alignment.getParameters();
-
-		if ( params == null)
-			return;
+		if (params == null) return;
 		this.params = params;
-
-		String method = alignment.getAlgorithmName();
-		this.setTitle("Parameters for " + method);
-
-
+		
+		this.setTitle("Parameters for " + algorithm);
+		
 		List<String> names = params.getUserConfigParameterNames();
 		List<String> keys  = params.getUserConfigParameters();
 		List<Class> types  = params.getUserConfigTypes();
@@ -189,8 +184,6 @@ public class ParameterGUI extends JFrame{
 		this.getContentPane().add(vBox);
 		this.pack();
 		this.setVisible(true);
-
-
 	}
 
 	@SuppressWarnings({  "rawtypes" })
@@ -204,7 +197,6 @@ public class ParameterGUI extends JFrame{
 
 			Class type = types.get(i);
 			Object data = getValue(keys.get(i));
-			String name = keys.get(i);
 			if( type.isEnum()) {
 				JComboBox field = (JComboBox)  textFields.get(i);
 				field.setSelectedItem(data);
@@ -309,7 +301,8 @@ public class ParameterGUI extends JFrame{
 			}
 
 			if (data == null){
-				System.err.println("Could not set value " + value + " for field " + name);
+				System.err.println("Could not set value " + value + 
+						" for field " + name);
 				return;
 			}
 			m.invoke(params, data);
