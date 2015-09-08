@@ -12,7 +12,6 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -24,7 +23,7 @@ import org.biojava.nbio.core.search.io.ResultFactory;
 
 /**
  *
- * @author Paolo Pavan, Genomnia srl
+ * @author Paolo Pavan
  * https://it.linkedin.com/pub/paolo-pavan/6/15a/956
  */
 public class BlastTabularParser implements ResultFactory {

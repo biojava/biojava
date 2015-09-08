@@ -7,7 +7,6 @@
 package org.biojava.nbio.core.search.io.blast;
 
 import org.biojava.nbio.core.search.io.Hit;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.biojava.nbio.core.sequence.template.Sequence;
