@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.biojava.nbio.core.search.io.blast;
 
 import java.io.File;
@@ -22,10 +16,14 @@ import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
 
 /**
- *
+ * Designed by Paolo Pavan.
+ * You may want to find my contacts on Github and LinkedIn for code info 
+ * or discuss major changes.
+ * https://github.com/paolopavan
+ * 
  * @author Paolo Pavan
- * https://it.linkedin.com/pub/paolo-pavan/6/15a/956
  */
+
 public class BlastTabularParser implements ResultFactory {
     private final String blastReference = 
             "Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb Miller (2000), A greedy algorithm for aligning DNA sequences&quot;, J Comput Biol 2000; 7(1-2):203-14.";

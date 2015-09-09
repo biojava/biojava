@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.core.search.io;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Iterator;
 import org.biojava.nbio.core.search.io.blast.BlastXMLQuery;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,12 +9,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
- *
- * @author pavanpa
+ * Designed by Paolo Pavan.
+ * You may want to find my contacts on Github and LinkedIn for code info 
+ * or discuss major changes.
+ * https://github.com/paolopavan
+ * 
+ * @author Paolo Pavan
  */
+
 public class SearchIOTest {
     
     public SearchIOTest() {
@@ -41,10 +39,11 @@ public class SearchIOTest {
     @After
     public void tearDown() {
     }
-    
+    /**
+     * Constructor test with GuessFactory
+     */
     @Test
     public void testConstructorWithFactoryGuess() {
-        System.out.println("Constructor test with GuessFactory");
         String resource = "/org/biojava/nbio/core/search/io/blast/test.two-query.blasttxt";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
@@ -56,10 +55,11 @@ public class SearchIOTest {
             fail("test failed:\n"+e.getMessage());
         }
     }
-    
+    /**
+     * Constructor test specifying Factory
+     */
     @Test
     public void testConstructorWithoutFactoryGuess() {
-        System.out.println("Constructor test specifying Factory");
         String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.xml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
@@ -72,10 +72,12 @@ public class SearchIOTest {
             fail("test failed:\n"+e.getMessage());
         }
     }
-    
+    /**
+     * Constructor test specifying Factory and using a evalue threshold filter
+     */
     @Test
     public void testConstructorWithEvalueHspFilter() {
-        System.out.println("Constructor test specifying Factory");
+        //
         String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.xml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());

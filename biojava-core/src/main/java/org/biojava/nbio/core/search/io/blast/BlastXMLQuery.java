@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.core.search.io.blast;
 
 
@@ -22,9 +18,13 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.core.util.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
+ * Re-designed by Paolo Pavan.
+ * You may want to find my contacts on Github and LinkedIn for code info 
+ * or discuss major changes.
+ * https://github.com/paolopavan
+ * 
  *
  * @author Scooter Willis <willishf at gmail dot com>
  * @author Paolo Pavan

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.biojava.nbio.core.search.io;
 
 import java.util.Iterator;
@@ -11,9 +5,16 @@ import java.util.List;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
- *
- * @author pavanpa
+ * This class models a search Hit.
+ * You will retrieve a list of this using iterator of a Result
+ * Designed by Paolo Pavan.
+ * You may want to find my contacts on Github and LinkedIn for code info 
+ * or discuss major changes.
+ * https://github.com/paolopavan
+ * 
+ * @author Paolo Pavan
  */
+
 public abstract class Hit implements Iterable<Hsp>{
     private final int hitNum;
     private final String hitId;
