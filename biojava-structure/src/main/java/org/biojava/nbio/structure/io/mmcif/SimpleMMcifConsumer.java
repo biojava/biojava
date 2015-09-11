@@ -70,6 +70,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<EntitySrcSyn> entitySrcSyns;
 	private List<StructConn> structConn;
 	private List<StructNcsOper> structNcsOper;
+	private List<StructRefSeqDif> sequenceDifs;
 
 	/**
 	 * A map of asym ids (internal chain ids) to strand ids (author chain ids) 
@@ -582,6 +583,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entitySrcSyns = new ArrayList<EntitySrcSyn>();
 		structConn = new ArrayList<StructConn>();
 		structNcsOper = new ArrayList<StructNcsOper>();
+		sequenceDifs = new ArrayList<StructRefSeqDif>();
 	}
 
 
@@ -841,6 +843,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getCrystallographicInfo().setNcsOperators(
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
+
+
+		//TODO: hook up the sequence difs to chains
+		//define a biojava object to contain the sequence mismatches.
+
+//		for (StructRefSeqDif sdif : sequenceDifs) {
+
+
+//		}
 		
 	}
 
@@ -1403,6 +1414,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		structure.setDBRefs(dbrefs);
 
+	}
+
+	public void newStructRefSeqDif(StructRefSeqDif sref) {
+		sequenceDifs.add(sref);
 	}
 
 	private static Chain getChainFromList(List<Chain> chains, String name){

@@ -641,6 +641,12 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields,lineData, loopWarnings);
 
 			triggerNewStrucRefSeq(sref);
+		}else if ( category.equals("_struct_ref_seq_dif")){
+			StructRefSeqDif sref  = (StructRefSeqDif) buildObject(
+					StructRefSeqDif.class.getName(),
+					loopFields,lineData, loopWarnings);
+
+			triggerNewStrucRefSeqDif(sref);
 		} else if ( category.equals("_entity_poly_seq")){
 			EntityPolySeq exptl  = (EntityPolySeq) buildObject(
 					EntityPolySeq.class.getName(),
@@ -1105,6 +1111,12 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void triggerNewStrucRefSeq(StructRefSeq sref){
 		for(MMcifConsumer c : consumers){
 			c.newStructRefSeq(sref);
+		}
+	}
+
+	private void triggerNewStrucRefSeqDif(StructRefSeqDif sref){
+		for(MMcifConsumer c : consumers){
+			c.newStructRefSeqDif(sref);
 		}
 	}
 

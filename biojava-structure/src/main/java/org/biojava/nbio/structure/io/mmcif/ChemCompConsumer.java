@@ -176,6 +176,12 @@ public class ChemCompConsumer implements MMcifConsumer {
 	}
 
 	@Override
+	public void newStructRefSeqDif(StructRefSeqDif sref) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void setStruct(Struct struct) {
 		// TODO Auto-generated method stub
 

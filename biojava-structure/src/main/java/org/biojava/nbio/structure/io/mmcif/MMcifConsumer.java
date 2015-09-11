@@ -62,6 +62,7 @@ public interface MMcifConsumer {
 	public void newStructNcsOper(StructNcsOper sNcsOper);
 	public void newStructRef(StructRef sref);
 	public void newStructRefSeq(StructRefSeq sref);
+	public void newStructRefSeqDif(StructRefSeqDif sref);
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss);
 	public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss);
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen);
