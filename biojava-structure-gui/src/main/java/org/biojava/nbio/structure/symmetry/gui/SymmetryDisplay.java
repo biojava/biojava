@@ -72,14 +72,19 @@ public class SymmetryDisplay {
 	public static MultipleAlignmentJmol display(MultipleAlignment msa,
 			SymmetryAxes axes) throws StructureException {
 
-		List<Atom[]> atoms = msa.getAtomArrays();
-
-		MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(msa, atoms);
-
-		addSymmetryMenu(jmol, axes);
-
-		//Show point group symmetry
-		jmol.evalString(printPointGroupAxes(msa));
+		MultipleAlignmentJmol jmol = null;
+		
+		if (SymmetryTools.isRefined(msa)){
+			List<Atom[]> atoms = msa.getAtomArrays();
+			jmol = new MultipleAlignmentJmol(msa, atoms);
+			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
+			addSymmetryMenu(jmol, axes);
+			jmol.evalString(printPointGroupAxes(msa));
+		} else {
+			//Show the optimal alignment if it was not refined
+			jmol = MultipleAlignmentDisplay.display(msa);
+			jmol.setColorByBlocks(true);
+		}
 
 		return jmol;
 	}

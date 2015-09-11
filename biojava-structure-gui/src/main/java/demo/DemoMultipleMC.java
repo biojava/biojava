@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
-import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
+import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
@@ -78,8 +78,8 @@ public class DemoMultipleMC {
 		}
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
-		StructureAlignment pairwise = new FatCatFlexible();
-		//StructureAlignment pairwise = new CeMain();
+		//StructureAlignment pairwise = new FatCatFlexible();
+		StructureAlignment pairwise = new CeMain();
 		MultipleMcMain algorithm = new MultipleMcMain(pairwise);
 		MultipleMcParameters params = (MultipleMcParameters) algorithm.getParameters();
 		params.setMinBlockLen(10);

@@ -1,9 +1,5 @@
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,12 +10,9 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.StructureAlignmentFactory;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
-import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
  * Creates a refined alignment with the CE-Symm alternative self-alignment.
@@ -33,18 +26,21 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  */
 public class SingleRefiner implements Refiner {
 
-	private int order;
+	private OrderDetector orderDetector;
 	
-	public SingleRefiner(int order) {
-		this.order = order;
+	public SingleRefiner(OrderDetector orderDetector) {
+		this.orderDetector = orderDetector;
 	}
 	
 	@Override
 	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms)
 			throws RefinerFailedException, StructureException {
 		
+		AFPChain afpChain = afpAlignments.get(0);
+		int order = orderDetector.calculateOrder(afpChain, atoms);
+		
 		if (order == 1)	throw new RefinerFailedException(
-				"Cannot refine an order 1 symmetry.");
+				"Symmetry not found in the structure: order = 1.");
 		
 		return refineSymmetry(afpAlignments.get(0), atoms, atoms, order);
 	}
@@ -403,163 +399,18 @@ public class SingleRefiner implements Refiner {
 		return error;
 	}
 	
-	public static void main(String[] args) {
-		try {
-			String name;
-
-			name = "1itb.A"; // b-trefoil, C3
-			//name = "1tim.A"; // tim-barrel, C8
-			//name = "d1p9ha_"; // not rotational symmetry
-			name = "3HKE.A"; // very questionable alignment
-			//name = "d1jlya1"; // C3 with minimum RSSE at C6
-			//name = "1YOX(A:95-160)";
-			name = "3jut.A"; // b-trefoil FGF-1, C3
-			name = "2jaj.A"; //C5
-			name = "d1poqa_"; //superantigen Ypm
-			name = "1hiv"; // hiv protease
-
-			// Write a SIF (graph) file
-			boolean writeSIF = false;
-			String path = "/Users/blivens/dev/bourne/symmetry/refinement/";
-			if( !(new File(path)).exists() ) {
-				writeSIF = false;
-			}
-
-			AtomCache cache = new AtomCache();
-			Atom[] ca1 = cache.getAtoms(name);
-			Atom[] ca2 = cache.getAtoms(name);
-
-			StructureAlignmentFactory.addAlgorithm(new CeSymm());
-			CeSymm ce = (CeSymm) StructureAlignmentFactory.getAlgorithm(CeSymm.algorithmName);
-
-			// CE-Symm alignment
-			long startTime = System.currentTimeMillis();
-			@SuppressWarnings("deprecation")
-			AFPChain afpChain = ce.align(ca1, ca2);
-			long alignTime = System.currentTimeMillis()-startTime;
-
-			afpChain.setName1(name);
-			afpChain.setName2(name);
-
-			System.out.format("Alignment took %dms%n", alignTime);
-
-			startTime = System.currentTimeMillis();
-			int symm = new SequenceFunctionOrderDetector().calculateOrder(afpChain, ca1);
-			long orderTime = System.currentTimeMillis()-startTime;
-			System.out.println("Symmetry="+symm);
-
-			System.out.format("Finding order took %dms%n", orderTime);
-
-			//Output SIF file
-			String filename = path+name+".sif";
-			Writer out = null;
-			if(writeSIF) {
-				System.out.println("Writing alignment to "+filename);
-				out = new FileWriter(filename);
-				alignmentToSIF(out, afpChain, ca1, ca2, "bb","ur");
-			}
-
-			//Refine alignment
-			startTime = System.currentTimeMillis();
-			AFPChain refinedAFP = refineSymmetry(afpChain, ca1, ca2, symm);
-			long refineTime = System.currentTimeMillis()-startTime;
-
-			refinedAFP.setAlgorithmName(refinedAFP.getAlgorithmName()+"-refine");
-
-			//Output refined to SIF
-			System.out.format("Refinement took %dms%n", refineTime);
-			if(writeSIF) {
-				alignmentToSIF(out, refinedAFP, ca1, ca2,"bb","rr");
-				out.close();
-			}
-
-			//display jmol of alignment
-			System.out.println("Original rmsd:"+afpChain.getTotalRmsdOpt());
-			System.out.println("New rmsd:"+refinedAFP.getTotalRmsdOpt());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Creates a simple interaction format (SIF) file for an alignment.
-	 *
-	 * The SIF file can be read by network software (eg Cytoscape) to analyze
-	 * alignments as graphs.
-	 *
-	 * This function creates a graph with residues as nodes and two types of edges:
-	 *   1. backbone edges, which connect adjacent residues in the aligned protein
-	 *   2. alignment edges, which connect aligned residues
-	 *   
-	 * @param out Stream to write to
-	 * @param afpChain alignment to write
-	 * @param ca1 First protein, used to generate node names
-	 * @param ca2 Second protein, used to generate node names
-	 * @param backboneInteraction Two-letter string used to identify backbone edges
-	 * @param alignmentInteraction Two-letter string used to identify alignment edges
-	 * @throws IOException
-	 */
-	private static void alignmentToSIF(Writer out,
-			AFPChain afpChain, Atom[] ca1,Atom[] ca2, String backboneInteraction, String alignmentInteraction) throws IOException {
-		//out.write("Res1\tInteraction\tRes2\n");
-		String name1 = afpChain.getName1();
-		String name2 = afpChain.getName2();
-		if(name1==null) name1=""; else name1+=":";
-		if(name2==null) name2=""; else name2+=":";
-
-		// Print alignment edges
-		int nblocks = afpChain.getBlockNum();
-		int[] blockLen = afpChain.getOptLen();
-		int[][][] optAlign = afpChain.getOptAln();
-		for(int b=0;b<nblocks;b++) {
-			for(int r=0;r<blockLen[b];r++) {
-				int res1 = optAlign[b][0][r];
-				int res2 = optAlign[b][1][r];
-
-				ResidueNumber rn1 = ca1[res1].getGroup().getResidueNumber();
-				ResidueNumber rn2 = ca2[res2].getGroup().getResidueNumber();
-
-				String node1 = name1+rn1.getChainId()+rn1.toString();
-				String node2 = name2+rn2.getChainId()+rn2.toString();
-
-				out.write(String.format("%s\t%s\t%s\n",node1, alignmentInteraction, node2));
-			}
-		}
-
-		// Print first backbone edges
-		ResidueNumber rn = ca1[0].getGroup().getResidueNumber();
-		String last = name1+rn.getChainId()+rn.toString();
-		for(int i=1;i<ca1.length;i++) {
-			rn = ca1[i].getGroup().getResidueNumber();
-			String curr = name1+rn.getChainId()+rn.toString();
-			out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
-			last = curr;
-		}
-
-		// Print second backbone edges, if the proteins differ
-		// Do some quick checks for whether the proteins differ
-		// (Not perfect, but should detect major differences and CPs.)
-		if(!name1.equals(name2) ||
-				ca1.length!=ca2.length ||
-				(ca1.length>0 && ca1[0].getGroup()!=null && ca2[0].getGroup()!=null &&
-						!ca1[0].getGroup().getResidueNumber().equals(ca2[0].getGroup().getResidueNumber()) ) ) {
-			rn = ca2[0].getGroup().getResidueNumber();
-			last = name2+rn.getChainId()+rn.toString();
-			for(int i=1;i<ca2.length;i++) {
-				rn = ca2[i].getGroup().getResidueNumber();
-				String curr = name2+rn.getChainId()+rn.toString();
-				out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
-				last = curr;
-			}
-		}
-
-	}
-	
 	/**
 	 *  Partitions an afpChain alignment into order blocks of aligned residues.
+	 * 
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @param order
+	 * @return
+	 * @throws StructureException
 	 */
-	private static AFPChain partitionAFPchain(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int order) throws StructureException{
+	private static AFPChain partitionAFPchain(AFPChain afpChain, 
+			Atom[] ca1, Atom[] ca2, int order) throws StructureException{
 		
 		int[][][] newAlgn = new int[order][][];
 		int subunitLen = afpChain.getOptLength()/order;
@@ -579,7 +430,8 @@ public class SingleRefiner implements Refiner {
 			newAlgn[su][1] = new  int[subunitLen];
 			for (int i=0; i<subunitLen; i++){
 				newAlgn[su][0][i] = alignedRes.get(subunitLen*su+i);
-				newAlgn[su][1][i] = alignedRes.get((subunitLen*(su+1)+i)%alignedRes.size());
+				newAlgn[su][1][i] = alignedRes.get(
+						(subunitLen*(su+1)+i)%alignedRes.size());
 			}
 		}
 		

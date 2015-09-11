@@ -109,6 +109,14 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	@Override
 	public void setParent(Structure parent) {
+		setStructure(parent);
+	}
+
+	/** {@inheritDoc}
+	 *
+	 */
+	@Override
+	public void setStructure(Structure parent){
 		this.parent = parent;
 	}
 
@@ -117,12 +125,23 @@ public class ChainImpl implements Chain, Serializable {
 	 * @return the parent Structure object
 	 */
 	@Override
-	public Structure getParent() {
-
+	public Structure getStructure() {
 
 		return parent;
 	}
 
+
+	/** Returns the parent Structure of this chain.
+	 *
+	 * @return the parent Structure object
+	 * @deprecated  use getStructure instead.
+	 */
+	@Override
+	public Structure getParent() {
+
+
+		return getStructure();
+	}
 
 	/** Returns an identical copy of this Chain .
 	 * @return an identical copy of this Chain
@@ -161,7 +180,7 @@ public class ChainImpl implements Chain, Serializable {
 			}
 
 			Chain tmp = new ChainImpl();
-			// that's a bit confusing, but that's how to set the seqres so that SeqRes2AtomAligner can use them 
+			// that's a bit confusing, but that's how to set the seqres so that SeqRes2AtomAligner can use them
 			tmp.setAtomGroups(tmpSeqRes);
 
 			// now match them up..
@@ -484,7 +503,7 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Sequence<?> getBJSequence()  {
@@ -504,7 +523,7 @@ public class ChainImpl implements Chain, Serializable {
 
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -516,7 +535,7 @@ public class ChainImpl implements Chain, Serializable {
 
 			logger.info("The property {} is true. Will use the chemical component dictionary files to produce the atom sequence",
 					PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-			
+
 			List<Group> groups = getAtomGroups();
 			StringBuilder sequence = new StringBuilder() ;
 
@@ -538,12 +557,12 @@ public class ChainImpl implements Chain, Serializable {
 
 		logger.info("The property {} is false or not set. Will use only amino acids for the atom sequence",
 				PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-		
+
 		// not using ChemComp records...
 		List<Group> aminos = getAtomGroups(GroupType.AMINOACID);
 		StringBuilder sequence = new StringBuilder() ;
 		for (Group amino : aminos) {
-			if (amino instanceof AminoAcid) {				
+			if (amino instanceof AminoAcid) {
 				AminoAcid a = (AminoAcid) amino;
 				sequence.append(a.getAminoType());
 			} else {
@@ -565,10 +584,10 @@ public class ChainImpl implements Chain, Serializable {
 		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
 
 		if ( prop != null && prop.equalsIgnoreCase("true")) {
-			
+
 			logger.info("The property {} is true. Will use the chemical component dictionary files to produce the seqres sequence",
 					PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-			
+
 			StringBuilder str = new StringBuilder();
 			for (Group g : seqResGroups) {
 				ChemComp cc = g.getChemComp();
@@ -588,7 +607,7 @@ public class ChainImpl implements Chain, Serializable {
 			}
 			return str.toString();
 		}
-		
+
 		logger.info("The property {} is false or not set. Will use only amino acids for the seqres sequence",
 				PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
 
@@ -606,7 +625,7 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -615,7 +634,7 @@ public class ChainImpl implements Chain, Serializable {
 		return seqResGroups.get(position);
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -692,7 +711,7 @@ public class ChainImpl implements Chain, Serializable {
 	public String toPDB() {
 		return FileConvert.toPDB(this);
 	}
-	
+
 	@Override
 	public String toMMCIF() {
 		return FileConvert.toMMCIF(this, true);

@@ -348,11 +348,13 @@ public class MultipleAlignmentScorer {
 	 *  (1.0-20.0)
 	 * @param gapExtension penalty for extending a gap (reasonable values are 
 	 * in the range (0.5-10.0)
-	 * @return
+	 * @param dCutoff the distance cutoff
+	 * @return the value of the score
 	 * @throws StructureException 
 	 */
 	public static double getMCScore(MultipleAlignment alignment, 
-			double gapOpen, double gapExtension) throws StructureException {
+			double gapOpen, double gapExtension, double dCutoff) 
+					throws StructureException {
 		
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 		
@@ -362,7 +364,10 @@ public class MultipleAlignmentScorer {
 			if (atoms.length < minLen) minLen = atoms.length;
 		double d0 =  1.24 * Math.cbrt((minLen) - 15.) - 1.8;
 		
-		return getMCScore(trans, d0, gapOpen, gapExtension);
+		//Calculate the distance cutoff penalization
+		double A = 20.0/(1+(dCutoff*dCutoff)/(d0*d0));
+		
+		return getMCScore(trans, d0, gapOpen, gapExtension, A);
 	}
 	
 	/**
@@ -382,11 +387,13 @@ public class MultipleAlignmentScorer {
 	 * range (1.0-20.0)
 	 * @param gapExtension penalty for extending a gap (reasonable values 
 	 * are in the range (0.5-10.0)
-	 * @return
+	 * @param A the distance cutoff penalization
+	 * @return the value of the score
 	 * @throws StructureException 
 	 */
 	private static double getMCScore(List<Atom[]> trans, double d0, 
-			double gapOpen, double gapExtension) throws StructureException {
+			double gapOpen, double gapExtension, double A) 
+					throws StructureException {
 
 		int size = trans.size();
 		int length = trans.get(0).length;
@@ -450,7 +457,7 @@ public class MultipleAlignmentScorer {
 				if (residueDistances.get(row,col)==-1) continue;
 				double d1 = residueDistances.get(row,col);
 				double resScore = 20.0/(1+(d1*d1)/(d0*d0));
-				scoreMC += resScore;
+				scoreMC += resScore - A;
 			}
 		}
 		

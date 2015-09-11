@@ -16,6 +16,9 @@ import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Iterative version of CeSymm that aims at identifying all symmetry axis 
@@ -34,6 +37,8 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
  * @since 4.2.0
  */
 public class CeSymmIterative {
+	
+	private static Logger logger = LoggerFactory.getLogger(CeSymmIterative.class);
 
 	private CESymmParameters params;
 	private MultipleAlignment msa;
@@ -48,7 +53,7 @@ public class CeSymmIterative {
 	 * optimization options should be turned on, because the alignment
 	 * has to be consistent at every recursive step.
 	 * 
-	 * @param params CeSymm parameters
+	 * @param params CeSymm parameters, make sure they are cloned
 	 */
 	public CeSymmIterative(CESymmParameters params) {
 		//Disable the iteration mode, because otherwise we get infinite calls
@@ -89,17 +94,9 @@ public class CeSymmIterative {
 			alignment.add(new ArrayList<Integer>());
 		}
 
-		iterate(atoms, 0);
+		iterate(atoms);
 		buildAlignment();
 		recoverAxes();
-
-		//Run a final optimization once all subunits are known
-		try {
-			SymmOptimizer optimizer = new SymmOptimizer(msa, axes, 0);
-			msa = optimizer.optimize();
-		} catch (RefinerFailedException e) {
-			e.printStackTrace();
-		}
 
 		return msa;
 	}
@@ -108,26 +105,25 @@ public class CeSymmIterative {
 	 * This method runs iteratively CeSymm on the symmetric units
 	 * until no more symmetries exist.
 	 * 
-	 * @param atoms Coordinates of the symmetric structure
-	 * @param first starting position of the atom array in the original array
+	 * @param atoms Coordinates of the structure atoms
 	 * @throws StructureException
 	 */
-	private void iterate(Atom[] atoms, int first) throws StructureException {
-
-		if (atoms.length < 8) return;
-				
+	private void iterate(Atom[] atoms) throws StructureException {
+		if( atoms.length <= params.getWinSize() || atoms.length <= params.getMinSubunitLength()) {
+			logger.debug("Aborting iteration due to insufficient length: %d",atoms.length);
+			return;
+		}
 		//Perform the CeSymm alignment
 		CeSymm aligner = new CeSymm();
-		List<Atom[]> array = new ArrayList<Atom[]>();
-		array.add(atoms);
-		MultipleAlignment align = aligner.align(array, params);
+		MultipleAlignment align = aligner.analyze(atoms, params);
 		if (name == null) 
 			name = align.getEnsemble().getStructureNames().get(0);
 
 		//End iterations if non symmetric
-		if (align == null) return;
+		if (!SymmetryTools.isRefined(align)) return;
 		else if (align.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < 
-				params.getSymmetryThreshold() || align.getCoreLength() < 8) {
+				params.getSymmetryThreshold() || 
+				align.getCoreLength() < params.getMinSubunitLength()) {
 			return;
 		}
 
@@ -160,7 +156,8 @@ public class CeSymmIterative {
 		}
 		//Iterate further
 		Atom[] atomsR = Arrays.copyOfRange(atoms, start, end+1);
-		iterate(atomsR, start+first);
+		
+		iterate(atomsR);
 	}
 
 	private void buildAlignment() throws StructureException {

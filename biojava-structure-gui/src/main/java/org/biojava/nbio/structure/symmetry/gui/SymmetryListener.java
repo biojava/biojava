@@ -7,6 +7,8 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action Listener for the symmetry menu.
@@ -21,10 +23,13 @@ public class SymmetryListener implements ActionListener{
 	private MultipleAlignmentJmol jmol;
 	private MultipleAlignment msa;
 	private SymmetryAxes axes;
+	
+	private static final Logger logger = 
+			LoggerFactory.getLogger(SymmetryListener.class);
 
 	public SymmetryListener(MultipleAlignmentJmol jmol, SymmetryAxes axes) {
 		this.jmol = jmol;
-		this.msa = jmol.getMultipleAlignment();
+		if (jmol != null) this.msa = jmol.getMultipleAlignment();
 		this.axes = axes;
 	}
 
@@ -34,7 +39,7 @@ public class SymmetryListener implements ActionListener{
 		String cmd = ae.getActionCommand();
 		if (cmd.equals("Subunit Superposition")){
 			if (msa == null) {
-				System.err.println("Currently not displaying a symmetry!");
+				logger.error("Currently not displaying a symmetry!");
 				return;
 			}
 			try {
@@ -47,7 +52,7 @@ public class SymmetryListener implements ActionListener{
 
 		} else if (cmd.equals("Multiple Structure Alignment")){
 			if (msa == null) {
-				System.err.println("Currently not displaying a symmetry!");
+				logger.error("Currently not displaying a symmetry!");
 				return;
 			}
 			try {
@@ -59,18 +64,20 @@ public class SymmetryListener implements ActionListener{
 			}
 
 		} else if (cmd.equals("Point Group Symmetry")){
-			if (msa != null) {
-				String script = SymmetryDisplay.printPointGroupAxes(msa);
-				jmol.evalString(script);
+			if (msa == null) {
+				logger.error("Currently not displaying a symmetry!");
 				return;
 			}
+			String script = SymmetryDisplay.printPointGroupAxes(msa);
+			jmol.evalString(script);
+			return;
 			
 		} else if (cmd.equals("Show Symmetry Axes")){
 			if (axes != null) {
 				String s = SymmetryDisplay.printSymmetryAxes(msa, axes, false);
 				jmol.evalString(s);
 				return;
-			} else System.err.println("No axes for this symmetry");
+			} else logger.error("No axes found for this symmetry result");
 			
 		} else if (cmd.equals("New Symmetry Analysis")){
 			SymmetryGui.getInstance();
