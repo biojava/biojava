@@ -17,6 +17,8 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Iterative version of CeSymm that aims at identifying all symmetry axis 
@@ -35,6 +37,8 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  * @since 4.2.0
  */
 public class CeSymmIterative {
+	
+	private static Logger logger = LoggerFactory.getLogger(CeSymmIterative.class);
 
 	private CESymmParameters params;
 	private MultipleAlignment msa;
@@ -90,7 +94,7 @@ public class CeSymmIterative {
 			alignment.add(new ArrayList<Integer>());
 		}
 
-		iterate(atoms, 0);
+		iterate(atoms);
 		buildAlignment();
 		recoverAxes();
 
@@ -102,11 +106,13 @@ public class CeSymmIterative {
 	 * until no more symmetries exist.
 	 * 
 	 * @param atoms Coordinates of the structure atoms
-	 * @param first starting position of the atom array in the original array
 	 * @throws StructureException
 	 */
-	private void iterate(Atom[] atoms, int first) throws StructureException {
-				
+	private void iterate(Atom[] atoms) throws StructureException {
+		if( atoms.length <= params.getWinSize() || atoms.length <= params.getMinSubunitLength()) {
+			logger.debug("Aborting iteration due to insufficient length: %d",atoms.length);
+			return;
+		}
 		//Perform the CeSymm alignment
 		CeSymm aligner = new CeSymm();
 		MultipleAlignment align = aligner.analyze(atoms, params);
@@ -150,7 +156,8 @@ public class CeSymmIterative {
 		}
 		//Iterate further
 		Atom[] atomsR = Arrays.copyOfRange(atoms, start, end+1);
-		iterate(atomsR, start+first);
+		
+		iterate(atomsR);
 	}
 
 	private void buildAlignment() throws StructureException {

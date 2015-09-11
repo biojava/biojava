@@ -241,7 +241,7 @@ public class CeSymm {
 
 		//Save the results to the CeSymm member variables
 		afpChain = afpAlignments.get(0);
-		String name = ca1[0].getGroup().getChain().getParent().getIdentifier();
+		String name = ca1[0].getGroup().getChain().getStructure().getIdentifier();
 		afpChain.setName1(name);
 		afpChain.setName2(name);
 
