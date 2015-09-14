@@ -201,6 +201,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		return alignment;
 	}
 	
+	@Override
 	public Object clone() {
 	    SequenceAlignmentCluster copy = null;
 		try {
@@ -216,6 +217,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		return copy;
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		for (UniqueSequenceList u: uniqueSequenceList) {

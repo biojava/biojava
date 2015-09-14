@@ -56,6 +56,7 @@ public class ScanSymmetry implements Runnable {
 		new ScanSymmetry().run();
 	}
 
+	@Override
 	public void run() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 
@@ -152,7 +153,7 @@ public class ScanSymmetry implements Runnable {
 					if (detector.hasProteinSubunits()) {	
 						long ts2 = System.nanoTime();
 
-						int time = Math.round((float)(ts2-ts1)/1000000.0f);
+						int time = Math.round((ts2-ts1)/1000000.0f);
 
 						// save global symmetry results
 						List<QuatSymmetryResults> globalResults = detector.getGlobalSymmetry();

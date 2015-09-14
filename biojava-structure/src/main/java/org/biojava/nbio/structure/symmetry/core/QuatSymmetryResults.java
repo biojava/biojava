@@ -155,6 +155,7 @@ public class QuatSymmetryResults {
 		this.sequenceIdentityThreshold = sequenceIdentityThreshold;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		

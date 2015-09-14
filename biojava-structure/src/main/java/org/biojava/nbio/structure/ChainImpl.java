@@ -110,6 +110,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
+	@Deprecated
 	public void setParent(Structure parent) {
 		setStructure(parent);
 	}
@@ -139,6 +140,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @deprecated  use getStructure instead.
 	 */
 	@Override
+	@Deprecated
 	public Structure getParent() {
 
 

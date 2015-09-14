@@ -688,7 +688,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			logger.warn("No atoms found in first molecule, can't get parent Structure");
 			return null;
 		}
-		return firstMol[0].getGroup().getChain().getParent();
+		return firstMol[0].getGroup().getChain().getStructure();
 	}
 	
 	/**

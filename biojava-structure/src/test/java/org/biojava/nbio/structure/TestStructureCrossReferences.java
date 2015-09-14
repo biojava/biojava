@@ -193,8 +193,8 @@ public class TestStructureCrossReferences {
 		// structure, chain, group, atom linking
 		for (Chain c:s.getChains()) {
 			logger.debug("Expected parent structure mem hashCode: {}",System.identityHashCode(s));
-			logger.debug("Actual parent structure mem hashCode: {}",System.identityHashCode(c.getParent()));
-			assertSame(s, c.getParent()); 
+			logger.debug("Actual parent structure mem hashCode: {}",System.identityHashCode(c.getStructure()));
+			assertSame(s, c.getStructure()); 
 			testChainRefs(c);			
 		}
 		

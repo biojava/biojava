@@ -312,10 +312,11 @@ public interface Chain {
     /** 
      * Sets the back-reference to its parent Structure.
      * @param parent the parent Structure object for this Chain
-     * @see #getParent()
+     * @see #getStructure()
      * @deprecated  use setStructure instead
      *  
      */
+    @Deprecated
     public void setParent(Structure parent) ;
 
     /** Sets the back-reference to its parent Structure.
@@ -329,10 +330,10 @@ public interface Chain {
      * Returns the parent Structure of this chain.
      * 
      * @return the parent Structure object
-     * @see #setParent(Structure)
+     * @see #setStructure(Structure)
      * @deprecated use getStructure(Structure) instead.
      */
-
+    @Deprecated
     public Structure getParent() ;
 
 

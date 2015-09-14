@@ -57,7 +57,8 @@ public class SystematicSolver implements QuatSymmetrySolver {
         this.parameters = parameters;
     }
 
-    public RotationGroup getSymmetryOperations() {
+    @Override
+	public RotationGroup getSymmetryOperations() {
         if (rotations.getOrder() == 0) {
             solve();
             rotations.complete();

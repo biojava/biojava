@@ -234,6 +234,7 @@ public class CESymmParameters extends CeParameters {
 		return params;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
 		List<Class> params = super.getUserConfigTypes();

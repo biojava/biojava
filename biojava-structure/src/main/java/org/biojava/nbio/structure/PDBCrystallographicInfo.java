@@ -132,6 +132,7 @@ public class PDBCrystallographicInfo implements Serializable {
 	 * @return 0
 	 * @deprecated As of 4.0, use {@link SpaceGroup#getMultiplicity()} and {@link Structure#size()}
 	 */
+	@Deprecated
 	public int getZ() {		
 		return 0;
 	}

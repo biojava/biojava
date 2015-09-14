@@ -165,7 +165,7 @@ public class CeSymm {
 			throws StructureException {
 
 		//STEP 1: prepare all the information for the symmetry alignment
-		if (!(params instanceof CESymmParameters))
+		if (!(param instanceof CESymmParameters))
 			throw new IllegalArgumentException("CE-Symm algorithm needs an "
 					+ "object of call CESymmParameters as argument.");
 

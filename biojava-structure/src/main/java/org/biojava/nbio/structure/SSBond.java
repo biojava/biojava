@@ -34,14 +34,16 @@ import java.io.Serializable;
  *
  */
 public interface SSBond extends PDBRecord, Serializable, Cloneable {
-    public String toPDB();
+    @Override
+	public String toPDB();
 
     /**
      * append the PDB representation of this SSBOND to the provided StringBUffer
      *
      * @param buf a StringBuffer to print the PDB representation to
      */
-    public void toPDB(StringBuffer buf);
+    @Override
+	public void toPDB(StringBuffer buf);
 
     public String getInsCode1();
 

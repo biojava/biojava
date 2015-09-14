@@ -84,7 +84,7 @@ public class StructureSequenceMatcher {
 			if (currentChain == null || !currentChain.getChainID().equals(chain.getChainID())) {
 				structure.addChain(chain);
 				chain.setCompound(group.getChain().getCompound());
-				chain.setParent(structure);
+				chain.setStructure(structure);
 				chain.setSwissprotId(group.getChain().getSwissprotId());
 				chain.setInternalChainID(group.getChain().getInternalChainID());
 				chain.setId(group.getChain().getId());
@@ -213,7 +213,7 @@ public class StructureSequenceMatcher {
 				logger.warn("Chain {} residue {} in the Structure {} has no corresponding amino acid in the sequence.",
 						g.getChainId(),
 						g.getResidueNumber().toString(),
-						g.getChain().getParent().getPDBCode() );
+						g.getChain().getStructure().getPDBCode() );
 				continue;
 			}
 

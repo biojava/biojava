@@ -75,6 +75,7 @@ public class RectangularPrism implements Polyhedron {
 	 * rectangular prism/2, that goes through at least four vertices
 	 * @return the cirumscribedRadius
 	 */
+	@Override
 	public double getCirumscribedRadius() {
 		return 0.5* Math.sqrt(width*width + height*height + length*length);
 	}
@@ -86,6 +87,7 @@ public class RectangularPrism implements Polyhedron {
 	 * @param center
 	 * @return
 	 */ 
+	@Override
 	public Point3d[] getVertices() {
 		double x = 0.5 * width;
 		double y = 0.5 * height;
@@ -103,18 +105,22 @@ public class RectangularPrism implements Polyhedron {
 		return vertices;
 	};
 	
+	@Override
 	public List<int[]> getLineLoops() {
 		return Arrays.asList(lineLoop1, lineLoop2, lineLoop3, lineLoop4);
 	}
 	
+	@Override
 	public int getViewCount() {
 		return viewNames.length;
 	}
 	
+	@Override
 	public String getViewName(int index) {
 		return viewNames[index];
 	}
 	
+	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {

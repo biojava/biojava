@@ -1443,6 +1443,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
+	@Override
 	public void newStructRefSeqDif(StructRefSeqDif sref) {
 		sequenceDifs.add(sref);
 	}

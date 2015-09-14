@@ -389,11 +389,11 @@ public class MultipleMcMain implements MultipleStructureAligner {
 
 	@Override
 	public void setParameters(ConfigStrucAligParams parameters) {
-		if (!(params instanceof MultipleMcParameters)){
+		if (!(parameters instanceof MultipleMcParameters)){
 			throw new IllegalArgumentException(
 					"Provided parameter object is not of type MultipleMC");
 		}
-		this.params = (MultipleMcParameters) params;
+		this.params = (MultipleMcParameters) parameters;
 	}
 
 	@Override

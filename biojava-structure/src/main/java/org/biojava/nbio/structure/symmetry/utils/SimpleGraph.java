@@ -32,7 +32,8 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
     private List<V> vertices = new ArrayList<V>();
     private List<ArrayList<Integer>> vertexMap = new ArrayList<ArrayList<Integer>>();
     
-    public boolean addEdge(V vertex1, V vertex2) {
+    @Override
+	public boolean addEdge(V vertex1, V vertex2) {
         int index1 = vertices.indexOf(vertex1);
         int index2 = vertices.indexOf(vertex2);
         if (index1 == -1 || index2 == -1) return false;
@@ -41,15 +42,18 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return true;
     }
     
-    public boolean addEdge(Edge<V> edge) {
+    @Override
+	public boolean addEdge(Edge<V> edge) {
         return addEdge(edge.getVertex1(), edge.getVertex2());
     }
     
-    public int size() {
+    @Override
+	public int size() {
         return vertices.size();
     }
     
-    public int getEdgeCount() {
+    @Override
+	public int getEdgeCount() {
         int edgeCount = 0;
         for (int i = 0; i < size(); i++)
             edgeCount += getValence(i);
@@ -57,18 +61,21 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return edgeCount/2;
     }
     
-    public int getValence(V vertex) {
+    @Override
+	public int getValence(V vertex) {
         return getValence(indexOf(vertex));
     }
     
-    public int getValence(int index) {
+    @Override
+	public int getValence(int index) {
         if (index != -1) {
             return vertexMap.get(index).size();
         }
         return 0;
     }
     
-    public boolean addVertex(V vertex) {
+    @Override
+	public boolean addVertex(V vertex) {
         if (vertices == null) vertices = new ArrayList<V>();
         if (containsVertex(vertex)) return false;
         vertices.add(vertex);
@@ -77,11 +84,13 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return true;
     }
     
-    public boolean containsVertex(V vertex) {
+    @Override
+	public boolean containsVertex(V vertex) {
         return vertices.contains(vertex);
     }
     
-    public void setVertices(List<V> list) {
+    @Override
+	public void setVertices(List<V> list) {
         vertices = list;
         vertexMap = new ArrayList<ArrayList<Integer>>(vertices.size());
         for (int i = 0; i < vertices.size(); i++) {
@@ -89,11 +98,13 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         }
     }
     
-    public List<V> getVertices() {
+    @Override
+	public List<V> getVertices() {
         return vertices;
     }
     
-    public List<Edge<V>> getEdges() {
+    @Override
+	public List<Edge<V>> getEdges() {
         List<Edge<V>> edges = new ArrayList<Edge<V>>();
         for(int index1 = 0; index1 < size(); index1++) {
             for(int index2 : getNeighborIndices(index1)) {
@@ -106,7 +117,8 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return edges;
     }
     
-    public V getVertex(int index) {
+    @Override
+	public V getVertex(int index) {
         return vertices.get(index);
     }
     
@@ -130,15 +142,18 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return sb.toString();
     }
     
-    public int indexOf(V vertex) {
+    @Override
+	public int indexOf(V vertex) {
         return vertices.indexOf(vertex);
     }
     
-    public List<Integer> getNeighborIndices(int index) {
+    @Override
+	public List<Integer> getNeighborIndices(int index) {
         return vertexMap.get(index);
     }
     
-    public boolean removeEdge(int index1, int index2) {
+    @Override
+	public boolean removeEdge(int index1, int index2) {
         if (index1 < 0 || index2 < 0) return false;
         
         List<Integer> neighbors = getNeighborIndices(index1);
@@ -154,7 +169,8 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return true;
     }
     
-    public boolean removeEdge(V vertex1, V vertex2) {
+    @Override
+	public boolean removeEdge(V vertex1, V vertex2) {
         return removeEdge(indexOf(vertex1), indexOf(vertex2));
     }
     
@@ -176,7 +192,8 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         return graph;
     }
 
-    public boolean containsEdge(int index1, int index2) {
+    @Override
+	public boolean containsEdge(int index1, int index2) {
         if (index1 < 0 || index2 < 0) return false;
 
         List<Integer> neighbors = getNeighborIndices(index1);
@@ -189,7 +206,8 @@ public class SimpleGraph<V> implements Graph<V>, Cloneable {
         }
     }
     
-    public SimpleGraph<V> extractSubGraph(List<Integer> indices) {
+    @Override
+	public SimpleGraph<V> extractSubGraph(List<Integer> indices) {
     	SimpleGraph<V> graph = new SimpleGraph<V>();
     	for (int index: indices) {
     		V vertex = vertices.get(index);

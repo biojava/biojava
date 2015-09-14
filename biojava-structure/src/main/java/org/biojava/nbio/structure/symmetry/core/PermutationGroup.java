@@ -81,7 +81,8 @@ public class PermutationGroup {
     	}
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Permutation Group: " + permutations.size() + " permutation");
         for (List<Integer> permutation : permutations) {
@@ -134,7 +135,8 @@ public class PermutationGroup {
     	return builder.toString();
     }
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
     	return getGroupTable().hashCode();
     }
 }

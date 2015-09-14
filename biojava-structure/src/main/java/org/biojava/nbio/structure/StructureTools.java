@@ -387,7 +387,7 @@ public class StructureTools {
 			if(g != null) {
 				Chain c = g.getChain();
 				if( c != null) {
-					s = c.getParent();
+					s = c.getStructure();
 				}
 			}
 		}

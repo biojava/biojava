@@ -137,7 +137,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		calculationTime = afp.getCalculationTime();
 
 		MultipleAlignment msa = new MultipleAlignmentImpl(this);
-		setMultipleAlignments(Arrays.asList((MultipleAlignment) msa));
+		setMultipleAlignments(Arrays.asList(msa));
 
 		//Convert the rotation and translation to a Matrix4D and set it
 		Matrix4d ident = new Matrix4d();

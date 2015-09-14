@@ -75,6 +75,7 @@ public class PairwiseAlignment {
 		this.alignment = alignment;
 	}
 	
+	@Override
 	public String toString() {
 		StringBuffer s = new StringBuffer();
 		s.append("cluster1:");

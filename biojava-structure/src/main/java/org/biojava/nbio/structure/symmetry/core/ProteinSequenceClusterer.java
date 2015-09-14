@@ -69,6 +69,7 @@ public class ProteinSequenceClusterer {
 
 	public static void sortSequenceClustersBySize(List<SequenceAlignmentCluster> clusters) {
 		Collections.sort(clusters, new Comparator<SequenceAlignmentCluster>() {
+			@Override
 			public int compare(SequenceAlignmentCluster c1, SequenceAlignmentCluster c2) {
 				int sign = Math.round(Math.signum(c2.getSequenceCount() - c1.getSequenceCount()));
 				if (sign != 0) {

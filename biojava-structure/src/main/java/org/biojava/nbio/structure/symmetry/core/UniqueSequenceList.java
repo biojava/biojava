@@ -114,6 +114,7 @@ public class UniqueSequenceList implements Cloneable {
 		this.alignment2 = alignment2;
 	}
 	
+	@Override
 	public Object clone() {
 		UniqueSequenceList copy = null;
 		try {
@@ -145,6 +146,7 @@ public class UniqueSequenceList implements Cloneable {
 		return builder.toString();
 	}
      
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("length: ");

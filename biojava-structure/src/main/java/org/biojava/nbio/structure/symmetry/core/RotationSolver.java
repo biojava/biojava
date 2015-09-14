@@ -62,6 +62,7 @@ public class RotationSolver implements QuatSymmetrySolver {
         this.parameters = parameters;
     }
 
+	@Override
 	public RotationGroup getSymmetryOperations() {
 		if (rotations.getOrder() == 0) {
             solve();
