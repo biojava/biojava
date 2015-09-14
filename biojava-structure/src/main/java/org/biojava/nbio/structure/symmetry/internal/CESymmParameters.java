@@ -125,7 +125,7 @@ public class CESymmParameters extends CeParameters {
 		orderDetectorMethod = OrderDetectorMethod.DEFAULT;
 		refineMethod = RefineMethod.DEFAULT;
 		optimization = true;
-		seed = 0;
+		seed = (int)(System.currentTimeMillis()%1000000);
 		multipleAxes = true;
 		symmetryThreshold = DEFAULT_SYMMETRY_THRESHOLD;
 		minSubunitLength = 15;
