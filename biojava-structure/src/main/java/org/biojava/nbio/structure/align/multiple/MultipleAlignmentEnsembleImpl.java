@@ -154,6 +154,8 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 					blockTr = Calc.getTransformation(rot[bs], shift[bs]);
 				} catch (IndexOutOfBoundsException e){
 					blockTr = ident;
+				} catch (NullPointerException e){
+					blockTr = ident;
 				}
 				blockSet.setTransformations(Arrays.asList(ident, blockTr));
 				Block block = new BlockImpl(blockSet);
@@ -180,6 +182,8 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 			try {
 				blockTr = Calc.getTransformation(rot[0], shift[0]);
 			} catch (IndexOutOfBoundsException e){
+				blockTr = ident;
+			} catch (NullPointerException e){
 				blockTr = ident;
 			}
 			blockSet.setTransformations(Arrays.asList(ident, blockTr));

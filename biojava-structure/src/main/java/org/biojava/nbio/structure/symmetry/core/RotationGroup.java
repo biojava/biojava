@@ -307,6 +307,10 @@ public class RotationGroup {
 	public int getTwoFoldsPerpendicular(){
 		return twoFoldsPerpendicular;
 	}
+	
+	public int getPrincipalAxisIndex(){
+		return principalAxisIndex;
+	}
 
 	private void calcPointGroup() {
 		complete = false;
