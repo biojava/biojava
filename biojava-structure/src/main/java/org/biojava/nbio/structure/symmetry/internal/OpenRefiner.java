@@ -134,6 +134,10 @@ public class OpenRefiner implements Refiner {
 				if (group.size()==order) subunits.add(group);
 			}
 		}
+		
+		if (subunits.size() == 0){
+			throw new RefinerFailedException("Empty alignment");
+		}
 
 		int[][][] optAln = new int[order][2][subunits.size()];
 		for (int bk=0; bk<order; bk++){

@@ -38,7 +38,8 @@ import org.slf4j.LoggerFactory;
  */
 public class CeSymmIterative {
 	
-	private static Logger logger = LoggerFactory.getLogger(CeSymmIterative.class);
+	private static Logger logger = 
+			LoggerFactory.getLogger(CeSymmIterative.class);
 
 	private CESymmParameters params;
 	private MultipleAlignment msa;
@@ -109,17 +110,23 @@ public class CeSymmIterative {
 	 * @throws StructureException
 	 */
 	private void iterate(Atom[] atoms) throws StructureException {
-		if( atoms.length <= params.getWinSize() || atoms.length <= params.getMinSubunitLength()) {
-			logger.debug("Aborting iteration due to insufficient length: %d",atoms.length);
+		
+		logger.debug("Starting new iteration...");
+		
+		if( atoms.length <= params.getWinSize() || 
+				atoms.length <= params.getMinSubunitLength()) {
+			logger.debug("Aborting iteration due to insufficient Atom "
+					+ "array length: %d", atoms.length);
 			return;
 		}
+		
 		//Perform the CeSymm alignment
 		CeSymm aligner = new CeSymm();
 		MultipleAlignment align = aligner.analyze(atoms, params);
 		if (name == null) 
 			name = align.getEnsemble().getStructureNames().get(0);
 
-		//End iterations if non symmetric
+		//End iterations if asymmetric
 		if (!SymmetryTools.isRefined(align)) return;
 		else if (align.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < 
 				params.getSymmetryThreshold() || 

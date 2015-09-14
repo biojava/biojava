@@ -443,7 +443,7 @@ public class SymmetryTools {
 		}
 
 		Atom[] atoms = symmetry.getAtomArrays().get(0);
-		Structure cloned = atoms[0].getGroup().getChain().getParent().clone();
+		Structure cloned = atoms[0].getGroup().getChain().getStructure().clone();
 		atoms = StructureTools.getRepresentativeAtomArray(cloned);
 
 		Structure symm = new StructureImpl();

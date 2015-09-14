@@ -371,8 +371,7 @@ public class CeSymm {
 
 	/**
 	 * If available, get the list of subalignments.<p>
-	 * Should be length one unless {@link CESymmParameters#getMaxSymmOrder()}
-	 * was set.
+	 * Should be length one unless using the MULTIPLE refiner.
 	 * @return List of AFP alignments
 	 */
 	public List<AFPChain> getAfpAlignments() {
