@@ -21,7 +21,7 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment.template;
+package org.biojava.nbio.core.alignment.template;
 
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.template.Compound;
@@ -35,6 +35,7 @@ import java.util.List;
  * the class implements the subinterface {@link MutableProfile}.
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */

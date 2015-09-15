@@ -21,13 +21,14 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment;
+package org.biojava.nbio.core.alignment;
 
-import org.biojava.nbio.alignment.template.AlignedSequence;
-import org.biojava.nbio.alignment.template.AlignedSequence.Step;
-import org.biojava.nbio.alignment.template.Profile;
-import org.biojava.nbio.alignment.template.ProfileView;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
+import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.ProfileView;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -44,6 +45,7 @@ import java.util.*;
  * Implements a data structure for the results of sequence alignment.  Every {@link List} returned is unmodifiable.
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */

@@ -21,10 +21,10 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment;
+package org.biojava.nbio.core.alignment;
 
-import org.biojava.nbio.alignment.template.AlignedSequence.Step;
-import org.biojava.nbio.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
+import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;

@@ -21,8 +21,9 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment.template;
+package org.biojava.nbio.core.alignment.template;
 
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
@@ -31,6 +32,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * Defines a mutable (editable) data structure for an {@link AlignedSequence}.
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  * @param <C> each element of the {@link AlignedSequence} is a {@link Compound} of type C
  */
 public interface MutableAlignedSequence<S extends Sequence<C>, C extends Compound> extends AlignedSequence<S, C> {

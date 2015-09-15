@@ -18,8 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.alignment.aaindex;
-
+package org.biojava.nbio.core.alignment.matrices;
 
 /** Factory class to get Providers for substitution matrices the are provided by the AAINDEX database.
  *  

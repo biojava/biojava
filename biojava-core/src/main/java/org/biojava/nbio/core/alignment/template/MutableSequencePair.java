@@ -21,8 +21,10 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment.template;
+package org.biojava.nbio.core.alignment.template;
 
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
@@ -30,6 +32,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * Defines a mutable (editable) data structure for the results of pairwise sequence alignment.
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */

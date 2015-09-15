@@ -21,9 +21,9 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment;
+package org.biojava.nbio.core.alignment.matrices;
 
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.template.Compound;
@@ -38,6 +38,7 @@ import java.util.*;
  *
  * @author Mark Chapman
  * @author Daniel Cameron
+ * @author Paolo Pavan
  * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
  */
 public class SimpleSubstitutionMatrix<C extends Compound> implements SubstitutionMatrix<C> {
@@ -52,7 +53,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum62() {
         return new SimpleSubstitutionMatrix<AminoAcidCompound>(AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
-                SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt")), "blosum62");
+                SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum62.txt")), "blosum62");
     }
 
     /**

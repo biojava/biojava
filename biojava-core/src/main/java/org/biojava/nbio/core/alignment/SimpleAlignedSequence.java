@@ -19,11 +19,12 @@
  *
  * Created on June 14, 2010
  * Author: Mark Chapman
+ * @author Paolo Pavan
  */
 
-package org.biojava.nbio.alignment;
+package org.biojava.nbio.core.alignment;
 
-import org.biojava.nbio.alignment.template.AlignedSequence;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.Strand;
 import org.biojava.nbio.core.sequence.location.SimpleLocation;

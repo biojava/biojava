@@ -21,7 +21,7 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment.template;
+package org.biojava.nbio.core.alignment.template;
 
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.location.template.Point;
@@ -32,6 +32,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * Defines a data structure for a {@link Sequence} within an alignment.
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  * @param <C> each element of the {@link Sequence} is a {@link Compound} of type C
  */
 public interface AlignedSequence<S extends Sequence<C>, C extends Compound> extends Sequence<C> {

@@ -21,7 +21,7 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment.template;
+package org.biojava.nbio.core.alignment.template;
 
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
@@ -33,6 +33,7 @@ import java.util.Map;
  * {@link Compound} in a sequence for another.
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
  */
 public interface SubstitutionMatrix<C extends Compound> {

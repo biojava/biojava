@@ -18,9 +18,9 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.alignment.aaindex;
+package org.biojava.nbio.core.alignment.matrices;
 
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 
 

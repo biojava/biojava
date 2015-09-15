@@ -90,7 +90,7 @@ public class BlastXMLQuery implements ResultFactory {
     }
     
     private void readFile(String blastFile) throws Exception{
-        log.info("Start read of " + blastFile);
+        log.info("Start reading " + blastFile);
         blastDoc = XMLHelper.loadXML(blastFile);
         log.info("Read finished");
     }

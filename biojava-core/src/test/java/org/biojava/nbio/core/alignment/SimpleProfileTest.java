@@ -21,12 +21,12 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment;
+package org.biojava.nbio.core.alignment;
 
-import org.biojava.nbio.alignment.template.AlignedSequence;
-import org.biojava.nbio.alignment.template.AlignedSequence.Step;
-import org.biojava.nbio.alignment.template.Profile;
-import org.biojava.nbio.alignment.template.Profile.StringFormat;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
+import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.Profile.StringFormat;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.ProteinSequence;

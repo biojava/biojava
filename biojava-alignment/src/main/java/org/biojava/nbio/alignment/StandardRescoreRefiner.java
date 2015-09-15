@@ -26,7 +26,7 @@ package org.biojava.nbio.alignment;
 import org.biojava.nbio.alignment.Alignments.PairInProfileScorerType;
 import org.biojava.nbio.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava.nbio.alignment.template.AbstractScorer;
-import org.biojava.nbio.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.alignment.template.RescoreRefiner;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;

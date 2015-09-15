@@ -21,12 +21,12 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment;
+package org.biojava.nbio.core.alignment;
 
-import org.biojava.nbio.alignment.template.AlignedSequence;
-import org.biojava.nbio.alignment.template.AlignedSequence.Step;
-import org.biojava.nbio.alignment.template.Profile;
-import org.biojava.nbio.alignment.template.ProfilePair;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
+import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.ProfilePair;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
@@ -36,6 +36,7 @@ import java.util.List;
  * Implements a data structure for the results of the alignment of a pair of {@link Profile}s.
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  * @param <S> each element of an alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */

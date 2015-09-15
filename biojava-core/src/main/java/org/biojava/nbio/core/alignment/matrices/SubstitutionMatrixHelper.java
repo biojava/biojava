@@ -21,10 +21,9 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment;
+package org.biojava.nbio.core.alignment.matrices;
 
-import org.biojava.nbio.alignment.aaindex.AAindexFactory;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -34,12 +33,12 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Static utility to access substitution matrices that come bundled with BioJava.  All matrices were downloaded from
  * ftp://ftp.ncbi.nih.gov/blast/matrices/
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  */
 public class SubstitutionMatrixHelper {
 
@@ -263,8 +262,9 @@ public class SubstitutionMatrixHelper {
 
     // reads in a substitution matrix from a resource file
     private static InputStreamReader getReader(String file) {
+        String resourcePathPrefix = "matrices/";
         return new InputStreamReader(SubstitutionMatrixHelper.class.getResourceAsStream(String.format("/%s.txt",
-                file)));
+                resourcePathPrefix+file)));
     }
 
 }

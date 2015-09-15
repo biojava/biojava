@@ -21,29 +21,40 @@
  * Author: Mark Chapman
  */
 
-package org.biojava.nbio.alignment.template;
+package org.biojava.nbio.core.alignment.template;
 
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
-import java.util.List;
-
 /**
- * Defines a mutable (editable) data structure for a {@link Profile}.  Returned {@link List}s are modifiable.
+ * Defines a data structure for a view of sequence alignment.
  *
  * @author Mark Chapman
+ * @author Paolo Pavan
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public interface MutableProfile<S extends Sequence<C>, C extends Compound> extends Profile<S, C> {
+public interface ProfileView<S extends Sequence<C>, C extends Compound> extends Profile<S, C> {
 
     /**
-     * Sets entirely new set of {@link AlignedSequence}s.
+     * Returns the column index of the viewed {@link Profile} corresponding to the final element in this view
      *
-     * @param sequences new set of sequences
-     * @throws IllegalArgumentException if sequences have different lengths
+     * @return column index of this view's final element
      */
-    void setSequences(List<AlignedSequence<S, C>> sequences);
+    int getEnd();
 
-    // TODO? - make compatible with core.sequence.MultipleSequenceAlignment
+    /**
+     * Returns the column index of the viewed {@link Profile} corresponding to the first element in this view
+     *
+     * @return column index of this view's first element
+     */
+    int getStart();
+
+    /**
+     * Returns the entire {@link Profile} being viewed
+     *
+     * @return the entire alignment profile
+     */
+    Profile<S, C> getViewedProfile();
+
 }

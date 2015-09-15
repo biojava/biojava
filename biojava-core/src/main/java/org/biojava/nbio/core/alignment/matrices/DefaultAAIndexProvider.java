@@ -18,10 +18,9 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.alignment.aaindex;
+package org.biojava.nbio.core.alignment.matrices;
 
-import org.biojava.nbio.alignment.SubstitutionMatrixHelper;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-
 
 /** The default provider for AAINDEX loads substitution matrices from the AAINDEX file in the resources directory
  * 
@@ -67,7 +65,7 @@ public class DefaultAAIndexProvider implements AAIndexProvider {
 	}
 	
 	public InputStream getInputStreamToAAindexFile(){
-		 return SubstitutionMatrixHelper.class.getResourceAsStream(String.format("/AAINDEX.txt"));
+		 return SubstitutionMatrixHelper.class.getResourceAsStream(String.format("/matrices/AAINDEX.txt"));
 	}
 
 }
