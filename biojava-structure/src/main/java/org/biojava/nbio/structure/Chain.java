@@ -364,6 +364,17 @@ public interface Chain {
      * @return
      */
     public String toMMCIF();
-   
-    
+
+
+    /** Set annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
+     *
+     * @param seqMisMatches
+     */
+    public void setSeqMisMatches(List<SeqMisMatch> seqMisMatches);
+
+    /** Get annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
+     *
+     * @returns a list of sequence mismatches (or null if none found)
+     */
+    public List<SeqMisMatch> getSeqMisMatches();
 }

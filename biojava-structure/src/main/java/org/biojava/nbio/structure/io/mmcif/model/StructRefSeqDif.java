@@ -31,7 +31,7 @@ public class StructRefSeqDif {
     String pdbx_pdb_id_code;
     String mon_id;
     String pdbx_pdb_strand_id;
-    int seq_num;
+    Integer seq_num;
     String pdbx_pdb_ins_code;
     String pdbx_seq_db_name;
     String pdbx_seq_db_accession_code;
@@ -39,7 +39,7 @@ public class StructRefSeqDif {
     String pdbx_seq_db_seq_num;
     String details;
     String pdbx_auth_seq_num;
-    int pdbx_ordinal;
+    Integer pdbx_ordinal;
 
     public String getAlign_id() {
         return align_id;
@@ -73,11 +73,11 @@ public class StructRefSeqDif {
         this.pdbx_pdb_strand_id = pdbx_pdb_strand_id;
     }
 
-    public int getSeq_num() {
+    public Integer getSeq_num() {
         return seq_num;
     }
 
-    public void setSeq_num(int seq_num) {
+    public void setSeq_num(Integer seq_num) {
         this.seq_num = seq_num;
     }
 
@@ -137,11 +137,11 @@ public class StructRefSeqDif {
         this.pdbx_auth_seq_num = pdbx_auth_seq_num;
     }
 
-    public int getPdbx_ordinal() {
+    public Integer getPdbx_ordinal() {
         return pdbx_ordinal;
     }
 
-    public void setPdbx_ordinal(int pdbx_ordinal) {
+    public void setPdbx_ordinal(Integer pdbx_ordinal) {
         this.pdbx_ordinal = pdbx_ordinal;
     }
 }

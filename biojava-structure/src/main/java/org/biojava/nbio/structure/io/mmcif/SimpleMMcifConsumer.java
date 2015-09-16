@@ -845,13 +845,40 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 
-		//TODO: hook up the sequence difs to chains
-		//define a biojava object to contain the sequence mismatches.
+		Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<String, List<SeqMisMatch>>();
+		for (StructRefSeqDif sdif : sequenceDifs) {
+			SeqMisMatch misMatch = new SeqMisMatchImpl();
+			misMatch.setDetails(sdif.getDetails());
 
-//		for (StructRefSeqDif sdif : sequenceDifs) {
+			String insCode = sdif.getPdbx_pdb_ins_code();
+			if ( insCode != null && insCode.equals("?"))
+				insCode = null;
+			misMatch.setInsCode(insCode);
+			misMatch.setOrigGroup(sdif.getDb_mon_id());
+			misMatch.setPdbGroup(sdif.getMon_id());
+			misMatch.setPdbResNum(sdif.getPdbx_auth_seq_num());
+			misMatch.setUniProtId(sdif.getPdbx_seq_db_accession_code());
+			misMatch.setSeqNum(sdif.getSeq_num());
 
 
-//		}
+			List<SeqMisMatch> mms = misMatchMap.get(sdif.getPdbx_pdb_strand_id());
+			if ( mms == null) {
+				mms = new ArrayList<SeqMisMatch>();
+				misMatchMap.put(sdif.getPdbx_pdb_strand_id(),mms);
+			}
+			mms.add(misMatch);
+
+		}
+
+		for (String chainId : misMatchMap.keySet()){
+			try {
+				Chain c = structure.getChainByPDB(chainId);
+				c.setSeqMisMatches(misMatchMap.get(chainId));
+			} catch (Exception e){
+				logger.warn("could not set mismatches for chain " + chainId);
+
+			}
+		}
 		
 	}
 

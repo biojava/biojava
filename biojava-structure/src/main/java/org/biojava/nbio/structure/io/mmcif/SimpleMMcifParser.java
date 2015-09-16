@@ -37,29 +37,27 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Type;
+import java.util.*;
 
-/** 
+/**
  * A simple mmCif file parser
  *
  * @author Andreas Prlic
  * @since 1.7
  * Usage:
  * <pre>
-   		String file = "path/to/mmcif/file";
-  		StructureIOFile pdbreader = new MMCIFFileReader();
-		try {
-			Structure s = pdbreader.getStructure(file);
-			System.out.println(s);
+String file = "path/to/mmcif/file";
+StructureIOFile pdbreader = new MMCIFFileReader();
+try {
+Structure s = pdbreader.getStructure(file);
+System.out.println(s);
 
-			// you can convert it to a PDB file...
-			System.out.println(s.toPDB());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+// you can convert it to a PDB file...
+System.out.println(s.toPDB());
+} catch (IOException e) {
+e.printStackTrace();
+}
  * </pre>
  * For more documentation see <a href="http://biojava.org/wiki/BioJava:CookBook#Protein_Structure">http://biojava.org/wiki/BioJava:CookBook#Protein_Structure</a>.
  */
@@ -73,30 +71,30 @@ public class SimpleMMcifParser implements MMcifParser {
 	 * See http://www.iucr.org/__data/assets/pdf_file/0019/22618/cifguide.pdf
 	 */
 	public static final String MMCIF_TOP_HEADER = "data_";
-	
+
 	public static final String COMMENT_CHAR = "#";
 	public static final String LOOP_START = "loop_";
 	public static final String FIELD_LINE = "_";
-	
+
 	// the following are the 3 valid quoting characters in CIF
 	/**
 	 * Quoting character '
 	 */
 	private static final char S1 = '\'';
-	
+
 	/**
 	 * Quoting character "
 	 */
 	private static final char S2 = '\"';
-	
+
 	/**
 	 * Quoting character ; (multi-line quoting)
 	 */
 	public static final String STRING_LIMIT = ";";
-	
+
 
 	private List<MMcifConsumer> consumers ;
-	
+
 	private Struct struct ;
 
 	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
@@ -181,7 +179,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		while ( (line = buf.readLine ()) != null ){
 
 			if (line.isEmpty() || line.startsWith(COMMENT_CHAR)) continue;
-			
+
 			logger.debug(inLoop + " " + line);
 
 			if (line.startsWith(MMCIF_TOP_HEADER)){
@@ -199,7 +197,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			if ( inLoop) {
 
-				
+
 				if ( line.startsWith(LOOP_START)){
 					loopFields.clear();
 					inLoop = true;
@@ -207,18 +205,18 @@ public class SimpleMMcifParser implements MMcifParser {
 					continue;
 				}
 
-				if ( line.matches("\\s*"+FIELD_LINE+"\\w+.*")) { 
-					
+				if ( line.matches("\\s*"+FIELD_LINE+"\\w+.*")) {
+
 					if (inLoopData && line.startsWith(FIELD_LINE)) {
 						logger.debug("Found a field line after reading loop data. Toggling to inLoop=false");
 						inLoop = false;
 						inLoopData = false;
 						loopFields.clear();
-						
-						
+
+
 						// a boring normal line
 						List<String> data = processLine(line, buf, 2);
-						
+
 						if ( data.size() < 1){
 							// this can happen if empty lines at end of file
 							lineData.clear();
@@ -247,7 +245,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						logger.debug("Found data for category {}: {}", key, value);
 						continue;
 					}
-					
+
 					// found another field.
 					String txt = line.trim();
 					if ( txt.indexOf('.') > -1){
@@ -260,12 +258,12 @@ public class SimpleMMcifParser implements MMcifParser {
 						if ( spl.length > 2){
 							logger.warn("Found nested attribute in {}, not supported yet!",txt);
 						}
-						
+
 					} else {
 						category = txt;
 						logger.debug("Found category without attribute: {}",category);
 					}
-					 
+
 
 				} else {
 
@@ -291,20 +289,20 @@ public class SimpleMMcifParser implements MMcifParser {
 				if ( line.startsWith(LOOP_START)){
 					if ( category != null)
 						endLineChecks(category, loopFields, lineData, loopWarnings);
-					
+
 					resetBuffers(loopFields, lineData, loopWarnings);
 					category = null;
-					inLoop = true;					
+					inLoop = true;
 					inLoopData = false;
-					logger.debug("Detected LOOP_START: '{}'. Toggling to inLoop=true", LOOP_START);					
+					logger.debug("Detected LOOP_START: '{}'. Toggling to inLoop=true", LOOP_START);
 					continue;
 				} else {
 					logger.debug("Normal line ");
 					inLoop = false;
-					
+
 					// a boring normal line
 					List<String> data = processLine(line, buf, 2);
-					
+
 					if ( data.size() < 1){
 						// this can happen if empty lines at end of file
 						lineData.clear();
@@ -325,15 +323,15 @@ public class SimpleMMcifParser implements MMcifParser {
 						lineData.clear();
 						continue;
 					}
-					
+
 					if (category!=null && !key.substring(0,pos).equals(category)) {
 						// we've changed category: need to flush the previous one
 						endLineChecks(category, loopFields, lineData, loopWarnings);
 						resetBuffers(loopFields, lineData, loopWarnings);
 					}
-					
+
 					category = key.substring(0,pos);
-					
+
 					String value = data.get(1);
 					loopFields.add(key.substring(pos+1,key.length()));
 					lineData.add(value);
@@ -343,7 +341,7 @@ public class SimpleMMcifParser implements MMcifParser {
 				}
 			}
 		}
-		
+
 		if (category!=null && lineData.size()>0 && lineData.size()==loopFields.size()) {
 			// the last category in the file will still be missing, we add it now
 			endLineChecks(category, loopFields, lineData, loopWarnings);
@@ -357,7 +355,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		triggerDocumentEnd();
 
 	}
-	
+
 	private void resetBuffers(List<String> loopFields, List<String> lineData, Set<String> loopWarnings) {
 		loopFields.clear();
 		lineData.clear();
@@ -388,11 +386,11 @@ public class SimpleMMcifParser implements MMcifParser {
 			Character nextC = null;
 			if (i < line.length() - 1)
 				nextC = line.charAt(i+1);
-			
+
 			Character prevC = null;
-			if (i>0) 
+			if (i>0)
 				prevC = line.charAt(i-1);
-			
+
 			if  (c == ' ') {
 
 				if ( ! inString){
@@ -478,7 +476,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	/** 
+	/**
 	 * Get the content of a cif entry
 	 *
 	 * @param line
@@ -486,9 +484,9 @@ public class SimpleMMcifParser implements MMcifParser {
 	 * @return
 	 */
 	private List<String> processLine(String line,
-			BufferedReader buf,
-			int fieldLength)
-					throws IOException{
+									 BufferedReader buf,
+									 int fieldLength)
+			throws IOException{
 
 		//System.out.println("XX processLine " + fieldLength + " " + line);
 		// go through the line and process each character
@@ -627,7 +625,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			// this guy is special because of the [] in the field names
 			StructNcsOper sNcsOper = getStructNcsOper(loopFields,lineData);
 			triggerNewStructNcsOper(sNcsOper);
-			
+
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
 					StructRef.class.getName(),
@@ -641,7 +639,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields,lineData, loopWarnings);
 
 			triggerNewStrucRefSeq(sref);
-		}else if ( category.equals("_struct_ref_seq_dif")){
+		} else if ( category.equals("_struct_ref_seq_dif")){
 			StructRefSeqDif sref  = (StructRefSeqDif) buildObject(
 					StructRefSeqDif.class.getName(),
 					loopFields,lineData, loopWarnings);
@@ -693,25 +691,25 @@ public class SimpleMMcifParser implements MMcifParser {
 			PdbxEntityNonPoly pen = (PdbxEntityNonPoly) buildObject(
 					PdbxEntityNonPoly.class.getName(),
 					loopFields,lineData, loopWarnings
-					);
+			);
 			triggerNewPdbxEntityNonPoly(pen);
 		} else if ( category.equals("_struct_keywords")){
 			StructKeywords kw = (StructKeywords)buildObject(
 					StructKeywords.class.getName(),
 					loopFields,lineData, loopWarnings
-					);
+			);
 			triggerNewStructKeywords(kw);
 		} else if (category.equals("_refine")){
 			Refine r = (Refine)buildObject(
 					Refine.class.getName(),
 					loopFields,lineData, loopWarnings
-					);
+			);
 			triggerNewRefine(r);
 		} else if (category.equals("_chem_comp")){
 			ChemComp c = (ChemComp)buildObject(
 					ChemComp.class.getName(),
 					loopFields, lineData, loopWarnings
-					);
+			);
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
 			AuditAuthor aa = (AuditAuthor)buildObject(
@@ -826,7 +824,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 
 	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
-			List<String> lineData) {
+													 List<String> lineData) {
 		PdbxStructOperList so = new PdbxStructOperList();
 
 		//System.out.println(loopFields);
@@ -870,10 +868,10 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
-	
+
 	private StructNcsOper getStructNcsOper(List<String> loopFields, List<String> lineData) {
 		StructNcsOper sNcsOper = new StructNcsOper();
-		
+
 		int id = Integer.parseInt(lineData.get(loopFields.indexOf("id")));
 		sNcsOper.setId(id);
 		sNcsOper.setCode(lineData.get(loopFields.indexOf("code")));
@@ -882,11 +880,11 @@ public class SimpleMMcifParser implements MMcifParser {
 		if ( detailsPos > -1)
 			sNcsOper.setDetails(lineData.get(detailsPos));
 		Matrix4d op = new Matrix4d();
-		op.setElement(3, 0, 0.0); 
+		op.setElement(3, 0, 0.0);
 		op.setElement(3, 1, 0.0);
 		op.setElement(3, 2, 0.0);
 		op.setElement(3, 3, 1.0);
-		
+
 		for (int i = 1 ; i <=3 ; i++){
 			for (int j =1 ; j <= 3 ; j++){
 				String max = String.format("matrix[%d][%d]",i,j);
@@ -898,7 +896,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			}
 		}
 
-		
+
 		for ( int i = 1; i <=3 ; i++){
 			String v = String.format("vector[%d]",i);
 			String val = lineData.get(loopFields.indexOf(v));
@@ -907,7 +905,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 		sNcsOper.setOperator(op);
-		
+
 		return sNcsOper;
 	}
 
@@ -917,7 +915,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
-	
+
 	private void setArray(Class<?> c, Object o, String key, String val){
 
 
@@ -945,6 +943,12 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			o = c.newInstance();
 
+			Method[] methods = c.getMethods();
+
+			Map<String,Method> methodMap = new HashMap<String, Method>();
+			for (Method m : methods) {
+				methodMap.put(m.getName(),m);
+			}
 
 			int pos = -1 ;
 			for (String key: loopFields){
@@ -956,7 +960,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 				// a necessary fix in order to be able to handle keys that contain hyphens (e.g. _symmetry.space_group_name_H-M)
 				// java can't use hyphens in variable names thus the corresponding bean can't use the hyphen and we replace it by underscore
-				if (key.contains("-")) 
+				if (key.contains("-"))
 					key = key.replace('-', '_');
 
 				try {
@@ -966,10 +970,25 @@ public class SimpleMMcifParser implements MMcifParser {
 					methodName.append(u);
 					methodName.append(key.substring(1, key.length()));
 
+					Method m = methodMap.get(methodName.toString());
 
+					if ( m == null)
+						throw new NoSuchMethodException("could not find method " + methodName.toString());
 
-					Method m = c.getMethod(methodName.toString() , String.class);
-					m.invoke(o,val);
+					Class<?>[] pType  = m.getParameterTypes();
+					Type[] gpType = m.getGenericParameterTypes();
+
+					// all of the mmCif container classes have only one argument (they are beans)
+					if ( pType[0].getTypeName().equals(Integer.class.getName())) {
+						if ( val != null && ! val.equals("?")) {
+
+							Integer intVal = Integer.parseInt(val);
+							m.invoke(o, intVal);
+						}
+					} else {
+						// default val is a String
+						m.invoke(o, val);
+					}
 
 
 					;
@@ -1007,7 +1026,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			logger.warn( "Error while constructing "+className, ex.getMessage());
 		}
 		// any other exceptions should be caught elsewhere down the line
-		
+
 		return o;
 	}
 
@@ -1101,7 +1120,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newSymmetry(symmetry);
 		}
 	}
-	
+
 	private void triggerNewStrucRef(StructRef sref){
 		for(MMcifConsumer c : consumers){
 			c.newStructRef(sref);
