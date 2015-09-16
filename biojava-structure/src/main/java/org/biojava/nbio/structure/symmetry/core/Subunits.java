@@ -31,7 +31,8 @@ import java.util.Map.Entry;
 
 
 /**
- *
+ * A bean to represent info about the set of subunits being considered for a
+ * QuatSymmetryDetector alignment.
  * @author Peter Rose
  */
 public class Subunits {
@@ -52,6 +53,17 @@ public class Subunits {
     private Point3d centroid;
     private MomentsOfInertia momentsOfInertia = new MomentsOfInertia();
 
+    /**
+     * All inputs should contain one element per subunit.
+     * @param caCoords CA coordinates of all subunits
+     * @param sequenceClusterIds ID of the cluster that each subunit belongs to
+     * @param pseudoStoichiometry Whether pseudosymmetry was used when clustering the subunit
+     * @param minSequenceIdentity Minimum sequence identity to other cluster members
+     * @param maxSequenceIdentity Maximum sequence identity to other cluster members
+     * @param folds Valid symmetry orders for this stoichiometry
+     * @param chainIds Chain ID for the subunit
+     * @param modelNumbers Model number for the subunit
+     */
     public Subunits(List<Point3d[]> caCoords, List<Integer> sequenceClusterIds, List<Boolean> pseudoStoichiometry, List<Double> minSequenceIdentity, List<Double> maxSequenceIdentity, List<Integer> folds, List<String> chainIds, List<Integer> modelNumbers) {
     	this.caCoords = caCoords;
     	this.sequenceClusterIds = sequenceClusterIds;
