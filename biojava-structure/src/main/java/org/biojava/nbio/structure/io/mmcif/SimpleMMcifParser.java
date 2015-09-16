@@ -979,7 +979,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					Type[] gpType = m.getGenericParameterTypes();
 
 					// all of the mmCif container classes have only one argument (they are beans)
-					if ( pType[0].getTypeName().equals(Integer.class.getName())) {
+					if ( pType[0].getName().equals(Integer.class.getName())) {
 						if ( val != null && ! val.equals("?")) {
 
 							Integer intVal = Integer.parseInt(val);
