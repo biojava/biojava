@@ -2992,7 +2992,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				Chain atomRes;
 			
 				atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomList);
-				atomRes.setSeqResGroups(seqRes.getAtomGroups());
+
+				if ( atomRes != null)
+					atomRes.setSeqResGroups(seqRes.getAtomGroups());
+				else
+					logger.warn("Could not find atom records for chain " + seqRes.getChainID());
+
 				
 			}
 		}
