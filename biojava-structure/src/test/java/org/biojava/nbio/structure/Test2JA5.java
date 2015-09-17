@@ -26,8 +26,6 @@ public class Test2JA5 extends TestCase {
 
         try {
             Structure s1 = StructureIO.getStructure("2ja5");
-            //System.out.println(s1.getPDBCode() + " asym unit has nr atoms:");
-            //System.out.println(StructureTools.getNrAtoms(s1));
 
             assertTrue(StructureTools.getNrAtoms(s1) == 0);
 
@@ -37,7 +35,6 @@ public class Test2JA5 extends TestCase {
             try {
                 nChain = s1.getChainByPDB("N");
             } catch (StructureException e){
-                //e.printStackTrace();
                 // this is expected here, since there is no chain N
             }
             assertNull(nChain);
