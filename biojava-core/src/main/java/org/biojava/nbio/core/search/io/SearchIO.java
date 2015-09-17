@@ -18,8 +18,8 @@ import java.util.ServiceLoader;
 public class SearchIO implements Iterable<Result>{
     static private HashMap<String,ResultFactory> extensionFactoryAssociation;
     
-    private ResultFactory factory;
-    private File file;
+    final private ResultFactory factory;
+    final private File file;
     
     /**
      * this threshold applies in retrieving hsp. Those having e-value below this
@@ -45,7 +45,7 @@ public class SearchIO implements Iterable<Result>{
     public SearchIO (File f)  throws Exception{
         factory = guessFactory(f);
         file = f;
-        process();
+        if (file.exists()) readResults();
     }
     
     /**
@@ -59,7 +59,7 @@ public class SearchIO implements Iterable<Result>{
     public SearchIO (File f, ResultFactory factory) throws Exception{
         file = f;
         this.factory = factory;
-        process();
+        if (file.exists()) readResults();
     }
     /**
      * Build a SearchIO reader, specify a ResultFactory object to be used for parsing
@@ -74,14 +74,40 @@ public class SearchIO implements Iterable<Result>{
         file = f;
         this.factory = factory;
         this.evalueThreshold = maxEvalue;
-        process();
+        if (file.exists()) readResults();
     }
     
-    private void process() throws Exception {
+    /**
+     * This method is declared private because it is the default action of constructor
+     * when file exists
+     * 
+     * @throws Exception 
+     */
+    private void readResults() throws Exception {
         factory.setFile(file);
         results = factory.createObjects(evalueThreshold);
     }
     
+    /**
+     * used to write a search report using the guessed or specified factory
+     * @throws Exception 
+     */
+    void writeResults() throws Exception {
+        factory.setFile(file);
+        factory.createObjects(evalueThreshold);
+    }
+    
+    /**
+     * Guess factory class to be used using file extension.
+     * It can be used both for read and for in write.
+     * To be ResultFactory classes automatically available to this subsystem 
+     * they must be listed in the file org.biojava.nbio.core.search.io.ResultFactory
+     * located in src/main/resources
+     * 
+     * @param f: file. Its last extension (text after last dot) will be compared
+     * to default extensions of known ResultFactory implementing classes
+     * @return the guessed factory
+     */
     private ResultFactory guessFactory(File f){
         if (extensionFactoryAssociation == null){
             extensionFactoryAssociation = new HashMap<String, ResultFactory>();
