@@ -119,21 +119,21 @@ public class ChainClusterer  {
 	public static List<Integer> getValidFolds(List<Integer> stoichiometry){
 		List<Integer> denominators = new ArrayList<Integer>();
 
-		int nChains = stoichiometry.size();
+		int nChains = Collections.max(stoichiometry);
 		
 		// Remove duplicate stoichiometries
 		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
 
 		// find common denominators
 		for (int d = 1; d <= nChains; d++) {
-
-			int count = 0;
-			for (Iterator<Integer> iter = nominators.iterator(); iter.hasNext();) {
-				if (iter.next() % d == 0) {
-					count++;
+			boolean isDivisable=true;
+			for (Integer n : nominators) {
+				if (n % d != 0) {
+					isDivisable = false;
+					break;
 				}
 			}
-			if (count == nominators.size()) {
+			if(isDivisable) {
 				denominators.add(d);
 			}
 		}
