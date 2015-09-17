@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <!-- 
+        <Logger name="org.biojava.nbio.core.sequence.loader.GenbankProxySequenceReader" level="debug">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        -->
+        <!--
+        <Logger name="org.biojava.nbio.core.sequence.location.InsdcParserTest" level="debug" />
+        -->
+        
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

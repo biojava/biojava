@@ -1,8 +1,9 @@
-# Welcome to BioJava v.3
+# Welcome to BioJava
 
-BioJava is an open-source project dedicated to providing a Java framework for **processing biological data**. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.
+[![Build Status](https://travis-ci.org/biojava/biojava.svg?branch=master)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394) [![Version](http://img.shields.io/badge/version-4.1.0-blue.svg?style=flat)](http://biojava.org/wiki/BioJava:Download) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
 
-BioJava is licensed under LGPL 2.1.
+
+BioJava is an open-source project dedicated to providing a Java framework for **processing biological data**. It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.
 
 Please visit our [homepage](http://www.biojava.org/).
 
@@ -19,29 +20,35 @@ The [Maven Repository](http://biojava.org/download/maven/) contains the jars of 
 
 If you are using Maven you can add the BioJava repository by adding the following XML to your project pom.xml file:
 
-``` 
-    <repositories>
-      <repository>
-        <id>biojava-maven-repo</id>
-        <name>BioJava repository</name>
-        <url>http://www.biojava.org/download/maven/</url>			
-      </repository>
-    </repositories>
-
+```xml
     <dependencies>
       <dependency>
         <groupId>org.biojava</groupId>
-        <artifactId>biojava3-core</artifactId>
-        <version>3.0.8</version>
+        <artifactId>biojava-core</artifactId>
+        <version>4.1.0</version>
       </dependency>
       <!-- other biojava jars as needed -->
     </dependencies>
 ```
 
-Note: for the upcoming BioJava 4.0.0 release we are planning to migrate the hosting to Maven Central and this step should not be required.
+### Snapshot builds
 
-### Build Status
-[![Build Status](https://travis-ci.org/biojava/biojava.png)](https://travis-ci.org/biojava/biojava)
+To use the latest builds from BioJava, you can add the following config your project's pom.xml:
+
+```xml
+<repositories>
+    <repository>
+      <id>oss.sonatype.org-snapshot</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  ```
 
 ### Mailing Lists
 
@@ -58,3 +65,11 @@ This list is intended for general discussion, advice, questions, offers of help,
 * [biojava-dev@biojava.org](http://lists.open-bio.org/mailman/listinfo/biojava-dev)
 
 This list is intended for more technical discussions about API design, bugs in git development code, performance issues and things that might not be of interest to the more casual user.
+
+### Please cite
+
+
+**BioJava: an open-source framework for bioinformatics in 2012**<br/>
+*Andreas Prlic; Andrew Yates; Spencer E. Bliven; Peter W. Rose; Julius Jacobsen; Peter V. Troshin; Mark Chapman; Jianjiong Gao; Chuan Hock Koh; Sylvain Foisy; Richard Holland; Gediminas Rimsa; Michael L. Heuer; H. Brandstatter-Muller; Philip E. Bourne; Scooter Willis* <br/>
+[Bioinformatics (2012) 28 (20): 2693-2695.](http://bioinformatics.oxfordjournals.org/content/28/20/2693.abstract) <br/>
+[![doi](http://img.shields.io/badge/doi-10.1093%2Fbioinformatics%2Fbts494-blue.svg?style=flat)](http://bioinformatics.oxfordjournals.org/content/28/20/2693.abstract) [![pubmed](http://img.shields.io/badge/pubmed-22877863-blue.svg?style=flat)](http://www.ncbi.nlm.nih.gov/pubmed/22877863)

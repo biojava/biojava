@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>biojava</artifactId>
+        <groupId>org.biojava</groupId>
+        <version>4.1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>biojava-structure-gui</artifactId>
+    <name>biojava-structure-gui</name>
+    <url>http://www.biojava.org</url>
+    <repositories>
+        <repository>
+            <id>biojava-maven-repo</id>
+            <name>BioJava repository</name>
+            <url>http://www.biojava.org/download/maven/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javaws</groupId>
+            <artifactId>javaws</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-structure</artifactId>
+            <version>4.1.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-core</artifactId>
+            <version>4.1.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Include jMol LAST, as it shades in several unwanted dependencies,
+            notably commons-cli:1.1 -->
+        <dependency>
+            <groupId>net.sourceforge.jmol</groupId>
+            <artifactId>jmol</artifactId>
+            <version>13.0.14</version>
+        </dependency>
+        <!-- logging dependencies (managed by parent pom, don't set versions or
+            scopes here) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <!-- binding for log4j2, scope=runTime set in parent pom -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>jcolorbrewer</artifactId>
+            <version>5.2</version>
+        </dependency>
+    </dependencies>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>demo/**.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
