@@ -180,7 +180,7 @@ public class StructureSequenceMatcher {
 		matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>(
 				AminoAcidCompoundSet.getAminoAcidCompoundSet(),
 				new InputStreamReader(
-						SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum100.txt")),
+						SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum100.txt")),
 		"blosum100");
 		SequencePair<ProteinSequence, AminoAcidCompound> pair = 
 			Alignments.getPairwiseAlignment(seq, structSeq,
