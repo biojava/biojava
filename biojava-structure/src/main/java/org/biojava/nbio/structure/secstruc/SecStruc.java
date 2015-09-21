@@ -22,12 +22,13 @@
  * @since 1.5
  *
  */
-
 package org.biojava.nbio.structure.secstruc;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,28 +36,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
-
-/** Assign secondary structure to a Structure object.
- * tries to use the rules as defined by DSSP
+/** 
+ * Calculate and assign the secondary structure (SS) to the AminoAcid 
+ * Groups of a Structure object.
+ * <p>
+ * The rules for SS calculation are the ones defined by DSSP:
  * Kabsch,W. and Sander,C. (1983) Biopolymers 22, 2577-2637.
- * original DSSP article see at : <a href="http://www.cmbi.kun.nl/gv/dssp/dssp.pdf">dssp.pdf</a>
- *
- * some bits also taken from
- * T.E.Creighton
- * Proteins - Structure and Molecular Properties
- * 2nd Edition, Freeman 1994
+ * original DSSP article see at:
+ * <a href="http://www.cmbi.kun.nl/gv/dssp/dssp.pdf">dssp.pdf</a>. 
+ * Some parts are also taken from: T.E.Creighton, Proteins - 
+ * Structure and Molecular Properties, 2nd Edition, Freeman 1994.
+ * 
+ * @author Andreas Prlic
+ * @author Aleix Lafita
+ * 
  */
 public class SecStruc {
-	private static final boolean debug = false;
+
+	private static final Logger logger = 
+			LoggerFactory.getLogger(SecStruc.class);
 
 	/** the minimal distance between two residues */
-	public static double MINDIST       = 0.5      ;
+	public static double MINDIST = 0.5;
 
-	/** the minimal distance of two CA atoms if H-bonds are allowed to form.
-	 *
-	 */
+	/** the minimal distance of two CA atoms if H-bonds are allowed to form */
 	public static int CA_MIN_DIST = 9;
 
 	/** Minimal H-bond energy in cal / mol */
@@ -75,8 +78,8 @@ public class SecStruc {
 	 * (+q1,-q1) and N,H (-q2,+q2)
 	 */
 
-	public static double Q            = -27888.0 ;
-	//public static double Q            = ( -332 * 0.42 * 0.2 * 1000 ); // -27888.0
+	public static double Q = -27888.0;
+	//public static double Q = ( -332 * 0.42 * 0.2 * 1000 ); // -27888.0
 
 	private SecStrucGroup[] groups;
 
@@ -86,13 +89,10 @@ public class SecStruc {
 	public SecStruc(){
 		distVsEnergy = new ArrayList<DistEn>();
 		ladders = new ArrayList<Ladder>();
-
 	}
 
 	public static void main(String[] args){
 		try {
-
-
 
 			AtomCache cache = new AtomCache();
 			cache.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
@@ -173,12 +173,10 @@ public class SecStruc {
 
 
 	private void updateSheets() {
-		if ( debug)
-			System.out.println(" got "  +ladders.size() + "  ladders!");
+		logger.debug(" got "  +ladders.size() + "  ladders!");
 		for (Ladder ladder : ladders){
 
-			if ( debug)
-				System.out.println(ladder);
+			logger.debug(ladder.toString());
 
 			for ( int lcount = ladder.from;
 					lcount <= ladder.to;
@@ -374,9 +372,6 @@ public class SecStruc {
 								(( end == ladder.getLfrom() - 1 ) &&
 										(btype.equals(BridgeType.parallel) ))										
 						) );
-
-
-
 	}
 
 	private void testBridge(int i) {
@@ -440,7 +435,6 @@ public class SecStruc {
 				state.setBend(true);
 				//d[i].bend = 'S';
 			}
-
 		}
 	}
 
@@ -618,15 +612,13 @@ public class SecStruc {
 		return groupList.toArray(new SecStrucGroup[groupList.size()]);
 	}
 
-
-
 	/** calculate the coordinates for the H atoms. They are usually
 	 * missing in the PDB files as only few experimental methods allow
 	 * to resolve their location
 	 */
 	private  void calculateHAtoms()
 			throws StructureException
-			{
+	{
 
 		for ( int i = 0 ; i < groups.length-1  ; i++) {
 
@@ -654,7 +646,7 @@ public class SecStruc {
 			}
 
 		}
-			}
+	}
 
 	/** calculate the HBonds between different groups ...
 	 * see Creighton page 147 f
@@ -662,7 +654,7 @@ public class SecStruc {
 	 */
 	private void calculateHBonds()
 			throws StructureException
-			{
+	{
 		//System.out.println("groups length: " + groups.length);
 
 		if ( groups.length < 5)
@@ -702,17 +694,13 @@ public class SecStruc {
 				//System.out.println(" ");
 			}
 		}
-
-
-			}
-
+	}
 
 	private void checkAddHBond(int i, int j){
 		SecStrucGroup one = groups[i];
 
 		if (one.getPDBName().equals("PRO")){
-			if (debug)
-				System.out.println("     ignore: PRO " +     one.getResidueNumber().toString());
+			logger.debug("     ignore: PRO " +     one.getResidueNumber().toString());
 			return ;
 		}
 
@@ -734,7 +722,6 @@ public class SecStruc {
 		//System.out.println(" " + energy);
 
 		trackHBondEnergy(i,j,energy);
-
 	}
 
 	/** calculate HBond energy of two groups in cal/mol ...
@@ -748,11 +735,8 @@ public class SecStruc {
 	 *  Energies are given as 40-14, 15-4, and <4 kcal/mol respectively.
 	 *
 	 */
-
-
 	public  double calculateHBondEnergy(SecStrucGroup one, SecStrucGroup two )
 			throws StructureException{
-
 
 		//System.out.println("calcHBondEnergy" + one + "|" + two);
 
@@ -767,13 +751,10 @@ public class SecStruc {
 		double dho = Calc.getDistance(O,H);
 		double dnc = Calc.getDistance(C,N);
 
-		if  ( debug ){
-
-			System.out.println("     cccc: " + one.getResidueNumber().toString() + " " + one.getPDBName() + " " +two.getResidueNumber().toString() + " " + two.getPDBName() +
+		logger.debug("     cccc: " + one.getResidueNumber().toString() + " " + one.getPDBName() + " " +two.getResidueNumber().toString() + " " + two.getPDBName() +
 					String.format(" O ("+O.getPDBserial()+")..N ("+ N.getPDBserial()+"):%4.1f  |  ho:%4.1f - hc:%4.1f + nc:%4.1f - no:%4.1f " , dno,dho,dhc,dnc,dno));
 
-		}
-		//System.out.println( cn > ch && oh < 3.0f);
+		//logger.debug( cn > ch && oh < 3.0f);
 
 		double contact = MINDIST ;
 
@@ -788,8 +769,7 @@ public class SecStruc {
 
 		double energy = e1 + e2;
 
-		if ( debug )
-			System.out.println(String.format("      N (%d) O(%d): %4.1f : %4.2f ",N.getPDBserial(),O.getPDBserial(), (float)dno , energy));
+		logger.debug(String.format("      N (%d) O(%d): %4.1f : %4.2f ",N.getPDBserial(),O.getPDBserial(), (float)dno , energy));
 
 		// bond too weak
 		//if ( energy > HBONDHIGHENERGY)
@@ -801,7 +781,6 @@ public class SecStruc {
 
 
 		return HBONDLOWENERGY ;
-
 	}
 
 	/**
@@ -814,7 +793,7 @@ public class SecStruc {
 	 */
 	public static BigDecimal getPreciseDistance(Atom a, Atom b)
 			throws StructureException
-			{
+	{
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();
@@ -825,9 +804,7 @@ public class SecStruc {
 		BigDecimal dist = sqrt.sqrt(d);
 
 		return dist ;
-			}
-
-
+	}
 
 	/** store Hbonds inamino acids
 	 * DSSP allows two HBonds / aminoacids to allow bifurcated bonds ...
@@ -933,7 +910,6 @@ public class SecStruc {
 		}
 	}
 
-
 	/** test if two groups are forming an H-Bond
 	 * DSSP defines H-Bonds if the energy < -500 cal /mol
 	 * @param one group one
@@ -967,8 +943,6 @@ public class SecStruc {
 		return false ;
 	}
 
-
-
 	/**
 	 * Use unit vectors NC and NCalpha Add them. Calc unit vector and
 	 * substract it from N.
@@ -983,9 +957,7 @@ public class SecStruc {
 	@SuppressWarnings("unused")
 	private static Atom calc_H(Atom C, Atom N, Atom CA)
 			throws StructureException
-			{
-
-
+	{
 
 		Atom nc  = Calc.subtract(N,C);
 		Atom nca = Calc.subtract(N,CA);
@@ -1004,9 +976,7 @@ public class SecStruc {
 		// this atom does not have a pdbserial number ...
 		return H;
 
-
-			}
-
+	}
 
 	private static Atom calcSimple_H(Atom c,Atom o, Atom n) throws StructureException{
 
@@ -1023,8 +993,6 @@ public class SecStruc {
 
 		h.setName("H");
 		return h;
-
-
 	}
 
 	public SecStrucGroup[] getGroups(){
@@ -1139,16 +1107,13 @@ public class SecStruc {
 					//System.out.println("   " + i + " range: " + prange + " " + range);
 					SecStrucType cstate = getSecStrucType(curr);
 
-					if (  cstate.isHelixType()){
+					if (cstate.isHelixType()){
 
 						empty = false;
 
 						break;
-
 					}
-
 				}
-
 
 				// none is assigned yet, set to helix type
 
@@ -1159,33 +1124,23 @@ public class SecStruc {
 						setSecStrucType(curr,type);
 
 					}
-
 				}
-
 			}
-
 		}
-
 	}
 
 	private void setSecStrucType(int pos, SecStrucType state){
 
 		Group g = groups[pos];
-
 		SecStrucState s= (SecStrucState) g.getProperty("secstruc");
-
 		s.setSecStruc(state);
-
 	}
 
 	private SecStrucType getSecStrucType(int pos){
 
 		SecStrucState s = getSecStrucState(pos);
-
 		return s.getSecStruc();
-
 	}
-
 
 	private SecStrucState getSecStrucState(int pos){
 		Group g = groups[pos];
@@ -1193,17 +1148,4 @@ public class SecStruc {
 		return state;
 	}
 
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
