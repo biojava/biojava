@@ -847,20 +847,43 @@ public class StructureTools {
 	 * representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}. Other group
 	 * types will be ignored.
 	 * 
-	 * @param s
-	 *            Input structure
+	 * @param s Input structure: only chains in the first model will be 
+	 * 			considered (if s is NMR or biological assembly)
 	 * @return representative Atoms of the structure backbone
 	 * @since Biojava 4.1.0
 	 */
 	public static Atom[] getRepresentativeAtomArray(Structure s) {
+		return getRepresentativeAtomArray(s, false);
+	}
+	
+	/**
+	 * Gets a representative atom for each group that is part of the chain
+	 * backbone. Note that modified aminoacids won't be returned as part of the
+	 * backbone if the {@link ReducedChemCompProvider} was used to load the
+	 * structure.
+	 * 
+	 * For amino acids, the representative is a CA carbon. For nucleotides, the
+	 * representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}. Other group
+	 * types will be ignored.
+	 * 
+	 * @param s Input structure
+	 * @param all if true all models are used, if false only model 0 used
+	 * @return representative Atoms of the structure backbone
+	 * @since Biojava 4.1.0
+	 */
+	public static Atom[] getRepresentativeAtomArray(Structure s, boolean all) {
 
 		List<Atom> atoms = new ArrayList<Atom>();
 
-		for (Chain c : s.getChains()) {
-			Atom[] chainAtoms = getRepresentativeAtomArray(c);
-			for (Atom a : chainAtoms) {
-				atoms.add(a);
+		//Consider all models
+		for (int m=0; m < s.nrModels(); m++){
+			for (Chain c : s.getChains(m)){
+				Atom[] chainAtoms = getRepresentativeAtomArray(c);
+				for (Atom a : chainAtoms) {
+					atoms.add(a);
+				}
 			}
+			if (!all) break; //Only consider first model
 		}
 
 		return atoms.toArray(new Atom[atoms.size()]);
