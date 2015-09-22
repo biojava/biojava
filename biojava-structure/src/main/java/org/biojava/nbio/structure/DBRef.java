@@ -131,13 +131,13 @@ public class DBRef implements PDBRecord, Serializable{
 //        DBREF  3EH2 A    2   767  UNP    P53992   SC24C_HUMAN    329   1094
 //        DBREF 3EH2 A    2   767     UNP   P53992  SC24C_HUMAN   329   1094
 //        DBREF  3ETA A  990  1295  UNP    P06213   INSR_HUMAN    1017   1322
-        formatter.format("DBREF  %4s %1s %4d%1s %4d%1s %-6s %-8s %-12s%6d%1c%6d%1c",
+        formatter.format("DBREF  %4s %1s %4d%1s %4d%1s %-6s %-8s %-12s%6d%1c%6d%1c            ",
                 idCode, chainId,seqbegin,insertBegin,seqEnd,insertEnd,
                 database,dbAccession,dbIdCode,
                 dbSeqBegin,idbnsBegin,dbSeqEnd,idbnsEnd
                 );
 
-        buf.append(formatter.toString().trim());
+        buf.append(formatter.toString());
         formatter.close();
 
     }
