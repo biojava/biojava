@@ -2678,6 +2678,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				continue;
 			}
 
+			//Ensure that all lines are 80 chars long as per spec - this should ensure no parsers fail
+			if(line.length()<80){
+				line = String.format("%1$-80s", line);
+			}
+			
 			String recordName = line.substring (0, 6).trim ();
 
 			if (recordName.equals("ATOM"))
