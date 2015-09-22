@@ -91,35 +91,6 @@ public class SecStruc {
 		ladders = new ArrayList<Ladder>();
 	}
 
-	public static void main(String[] args){
-		try {
-
-			AtomCache cache = new AtomCache();
-			cache.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
-
-			// a small one
-			Structure s = cache.getStructure("5pti");
-			//Structure s = pdbr.getStructureById("1bsp");
-			//Structure s = pdbr.getStructureById("1co7");
-
-			//Structure s = pdbr.getStructureById("1buz");
-
-			//BiojavaJmol jmol = new BiojavaJmol();
-
-
-			SecStruc sec = new SecStruc();
-			sec.assign(s);
-			//jmol.setStructure(s);
-			//jmol.evalString("select *.HC2 ; spacefill 0.4 ; color green ; select 2,5 ; set display selected;");
-			//System.out.println(s.toPDB());
-
-			System.out.println(sec);
-
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-
 	/** assigns the secondary structure to the groups in this Structure object
 	 * and set the results in the group properties.
 	 *
