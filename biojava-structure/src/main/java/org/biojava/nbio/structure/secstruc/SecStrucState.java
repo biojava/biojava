@@ -19,15 +19,8 @@
 
 package org.biojava.nbio.structure.secstruc;
 
-public class SecStrucState{
-	public boolean isBend() {
-		return bend;
-	}
-
-	public void setBend(boolean bend) {
-		this.bend = bend;
-	}
-
+public class SecStrucState {
+	
 	double phi;
 	double psi;
 	double omega;
@@ -44,6 +37,14 @@ public class SecStrucState{
 	
 	SecStrucType secStruc;
 	SecStrucType threeState;
+	
+	public boolean isBend() {
+		return bend;
+	}
+
+	public void setBend(boolean bend) {
+		this.bend = bend;
+	}
 
 	public SecStrucState(){
 		phi = 360;
@@ -123,7 +124,6 @@ public class SecStrucState{
 		this.psi = psi;
 	}
 
-
 	public SecStrucType getSecStruc() {
 		return secStruc;
 	}
@@ -140,7 +140,6 @@ public class SecStrucState{
 		this.threeState = threeState;
 	}
 
-
 	public double getOmega() {
 		return omega;
 	}
@@ -148,8 +147,5 @@ public class SecStrucState{
 	public void setOmega(double omega) {
 		this.omega = omega;
 	}
-
-
-
 
 }

@@ -25,8 +25,6 @@
 package org.biojava.nbio.structure.secstruc;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,16 +55,16 @@ public class SecStruc {
 			LoggerFactory.getLogger(SecStruc.class);
 
 	/** the minimal distance between two residues */
-	public static double MINDIST = 0.5;
+	public static final double MINDIST = 0.5;
 
 	/** the minimal distance of two CA atoms if H-bonds are allowed to form */
-	public static int CA_MIN_DIST = 9;
+	public static final int CA_MIN_DIST = 9;
 
 	/** Minimal H-bond energy in cal / mol */
-	public static int HBONDLOWENERGY  = -9900   ;
+	public static final int HBONDLOWENERGY  = -9900   ;
 
 	/** higher limit for H-bond energy */
-	public static double HBONDHIGHENERGY = -500.0     ;
+	public static final double HBONDHIGHENERGY = -500.0     ;
 
 	/** constant for electrostatic energy
 	 * <pre>
@@ -77,24 +75,23 @@ public class SecStruc {
 	 * q1 and q2 are partial charges which are placed on the C,O
 	 * (+q1,-q1) and N,H (-q2,+q2)
 	 */
-
-	public static double Q = -27888.0;
+	public static final double Q = -27888.0;
 	//public static double Q = ( -332 * 0.42 * 0.2 * 1000 ); // -27888.0
 
 	private SecStrucGroup[] groups;
-
-	List<DistEn> distVsEnergy;
-	List<Ladder> ladders;
+	private List<DistEn> distVsEnergy;
+	private List<Ladder> ladders;
 
 	public SecStruc(){
 		distVsEnergy = new ArrayList<DistEn>();
 		ladders = new ArrayList<Ladder>();
 	}
 
-	/** assigns the secondary structure to the groups in this Structure object
-	 * and set the results in the group properties.
+	/** 
+	 * Assigns the secondary structure to the groups in this Structure object
+	 * and sets the results in the Group properties.
 	 *
-	 * @param s
+	 * @param s Structure to assign the SS
 	 */
 	public void assign(Structure s)
 			throws StructureException {
@@ -449,11 +446,6 @@ public class SecStruc {
 
 	}
 
-	/*
-	 *
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
@@ -972,16 +964,8 @@ public class SecStruc {
 
 	private void buildHelices(){
 
-
-
 		// check for minimum size
-
-		if ( groups.length < 5 )
-
-			return;
-
-
-
+		if ( groups.length < 5 ) return;
 
 		/** test if two groups are forming an H-Bond
 
@@ -995,15 +979,9 @@ public class SecStruc {
 
 		 */
 
-
 		// Alpha Helix (i+4)
-
-
-
 		checkSetHelix(4, SecStrucType.helix4);
-
 		checkSetHelix(3, SecStrucType.helix3);
-
 		checkSetHelix(5, SecStrucType.helix5);
 
 		checkSetTurns();

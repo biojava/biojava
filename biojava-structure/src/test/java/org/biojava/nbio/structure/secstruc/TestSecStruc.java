@@ -23,6 +23,7 @@ public class TestSecStruc {
 		
 			AtomCache cache = new AtomCache();
 			cache.getFileParsingParams().setParseSecStruc(true);
+			cache.setUseMmCif(false);
 			Structure s = cache.getStructure("5pti");
 
 			SecStruc sec = new SecStruc();
