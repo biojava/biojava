@@ -55,7 +55,7 @@ public abstract class Hit implements Iterable<Hsp>{
      * @return null if hsp does not contain alignment information.
      * @return an hashcode representing all hsp
      */
-    public String getHspsHashString(){
+    String getHspsHashString(){
         String cat = ""+hashCode();
         if (hsps != null){
             for (Hsp h: hsps){
