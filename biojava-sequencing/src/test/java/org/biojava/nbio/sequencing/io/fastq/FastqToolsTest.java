@@ -363,6 +363,106 @@ public final class FastqToolsTest extends TestCase
         }
     }
 
+    public void testConvertNullFastq()
+    {
+        try
+        {
+            FastqTools.convert(null, FastqVariant.FASTQ_SANGER);
+            fail("expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
+
+    public void testConvertNullVariant()
+    {
+        try
+        {
+            FastqTools.convert(builder.build(), null);
+            fail("expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
+
+    public void testConvertSameVariant()
+    {
+        Fastq fastq = builder.build();
+        assertEquals(fastq, FastqTools.convert(fastq, fastq.getVariant()));
+    }
+
+    public void testConvertQualitiesNullFastq()
+    {
+        try
+        {
+            FastqTools.convertQualities(null, FastqVariant.FASTQ_SANGER);
+            fail("expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
+
+    public void testConvertQualitiesNullVariant()
+    {
+        try
+        {
+            FastqTools.convertQualities(builder.build(), null);
+            fail("expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
+    }
+
+    public void testConvertQualitiesSameVariant()
+    {
+        Fastq fastq = builder.build();
+        assertEquals(fastq.getQuality(), FastqTools.convertQualities(fastq, fastq.getVariant()));
+    }
+
+    public void testConvertQualitiesSangerToSolexa()
+    {
+        Fastq fastq = builder.build();
+        assertEquals("yyyy", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SOLEXA));
+    }
+
+    public void testConvertQualitiesSangerToIllumina()
+    {
+        Fastq fastq = builder.build();
+        assertEquals("yyyy", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_ILLUMINA));
+    }
+
+    public void testConvertQualitiesSolexaToSanger()
+    {
+        Fastq fastq = builder.withVariant(FastqVariant.FASTQ_SOLEXA).build();
+        assertEquals(";;;;", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SANGER));
+    }
+
+    public void testConvertQualitiesIlluminaToSanger()
+    {
+        Fastq fastq = builder.withVariant(FastqVariant.FASTQ_ILLUMINA).build();
+        assertEquals(";;;;", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SANGER));
+    }
+
+    public void testConvertQualitiesSolexaToIllumina()
+    {
+        Fastq fastq = builder.withVariant(FastqVariant.FASTQ_SOLEXA).build();
+        assertEquals("ZZZZ", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_ILLUMINA));
+    }
+
+    public void testConvertQualitiesIlluminaToSolexa()
+    {
+        Fastq fastq = builder.withVariant(FastqVariant.FASTQ_ILLUMINA).build();
+        assertEquals("ZZZZ", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SOLEXA));
+    }
+
     public void testToList()
     {
         List<String> list = new ArrayList<String>();
