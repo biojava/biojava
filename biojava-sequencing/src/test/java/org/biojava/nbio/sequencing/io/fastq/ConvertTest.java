@@ -80,7 +80,7 @@ public final class ConvertTest
                 FileWriter fileWriter = new FileWriter(tmp);
 
                 for (Fastq fastq : reader.read(getClass().getResource(inputFileName))) {
-                    writer.append(fileWriter, fastq.convertTo(variant2));
+                    writer.append(fileWriter, fastq);
                 }
 
                 try

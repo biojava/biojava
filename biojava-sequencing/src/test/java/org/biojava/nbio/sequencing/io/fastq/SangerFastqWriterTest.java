@@ -46,7 +46,7 @@ public final class SangerFastqWriterTest
             .build();
     }
 
-    public void testValidateNotSangerVariant()
+    public void testConvertNotSangerVariant() throws Exception
     {
         SangerFastqWriter writer = new SangerFastqWriter();
         Appendable appendable = new StringBuilder();
@@ -56,14 +56,7 @@ public final class SangerFastqWriterTest
             .withQuality("quality_")
             .withVariant(FastqVariant.FASTQ_SOLEXA)
             .build();
-        try
-        {
-            writer.append(appendable, invalid);
-            fail("validate not fastq-sanger variant expected IOException");
-        }
-        catch (IOException e)
-        {
-            // expected
-        }
+
+        writer.append(appendable, invalid);
     }
 }
