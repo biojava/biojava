@@ -6,18 +6,22 @@ import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.core.util.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Re-designed by Paolo Pavan.
@@ -89,21 +93,25 @@ public class BlastXMLQuery implements ResultFactory {
         return hitsHashMap;
     }
     
-    private void readFile(String blastFile) throws Exception{
+    private void readFile(String blastFile) throws IOException, ParseException{
         log.info("Start reading " + blastFile);
-        blastDoc = XMLHelper.loadXML(blastFile);
+        try {
+            blastDoc = XMLHelper.loadXML(blastFile);
+        } catch (SAXException ex) {
+            Logger.getLogger(BlastXMLQuery.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ParseException(ex.getMessage(),0);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(BlastXMLQuery.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ParseException(ex.getMessage(),0);
+        }
         log.info("Read finished");
     }
     
-    public ArrayList<Result> createObjects(double maxEScore) throws ParseException {
+    public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
         if (targetFile == null) throw new IllegalStateException("File to be parsed not specified.");
         
-        try {
-            // getAbsolutePath throws SecurityException
-            readFile(targetFile.getAbsolutePath());
-        } catch (Exception e){
-            throw new ParseException(e.getMessage(),0);
-        }
+        // getAbsolutePath throws SecurityException
+        readFile(targetFile.getAbsolutePath());
         // create mappings between sequences and blast id
         mapIds();
         
@@ -249,7 +257,7 @@ public class BlastXMLQuery implements ResultFactory {
     }
 
     @Override
-    public void storeObjects(List<Result> results) throws Exception {
+    public void storeObjects(List<Result> results) throws IOException, ParseException {
         throw new UnsupportedOperationException("This parser does not support writing yet.");
     }
 }

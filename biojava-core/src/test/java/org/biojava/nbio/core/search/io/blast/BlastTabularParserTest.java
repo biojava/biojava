@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.core.search.io.blast;
 
 import java.io.File;
@@ -21,7 +16,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author pavanpa
+ * @author Paolo Pavan
  */
 public class BlastTabularParserTest {
     

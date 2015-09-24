@@ -3,13 +3,14 @@ package org.biojava.nbio.core.search.io.blast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.LineNumberReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
-import org.biojava.nbio.core.exceptions.ParserException;
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
@@ -77,7 +78,7 @@ public class BlastTabularParser implements ResultFactory {
     }
 
     @Override
-    public List<Result> createObjects(double maxEScore) throws Exception {
+    public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
         List<Result> results = new ArrayList();
         
         log.info("Query for hits");
@@ -91,6 +92,7 @@ public class BlastTabularParser implements ResultFactory {
         Scanner scanner = new Scanner(fileInputStream);
         
         String line = fetchData(scanner);
+        int lineNumber=1;
         while (scanner.hasNext()){
             try {
                 BlastResultBuilder resultBuilder = new BlastResultBuilder();
@@ -113,6 +115,7 @@ public class BlastTabularParser implements ResultFactory {
                     while (currentSubjectId.equals(subjectId) && scanner.hasNext()){
                         if (new Double(evalue) > maxEScore) {
                             line = fetchData(scanner);
+                            lineNumber++;
                             continue;
                         }
                         BlastHspBuilder hspBuilder = new BlastHspBuilder();
@@ -129,12 +132,13 @@ public class BlastTabularParser implements ResultFactory {
                             .setMismatchCount(new Integer(mismatchCount));
                         hsps.add(hspBuilder.createBlastHsp());
                         line = fetchData(scanner);
+                        lineNumber++;
                     }
                     hits.add(hitBuilder.setHsps(hsps).createBlastHit());
                 }
                 results.add(resultBuilder.setHits(hits).createBlastResult());
             } catch (NumberFormatException e) {
-                throw new ParserException("Invalid numeric value met in:\n"+line);
+                throw new ParseException("Invalid numeric value met at line "+ lineNumber+" in:\n"+line,0);
             }
         }
         return results;
@@ -190,8 +194,8 @@ public class BlastTabularParser implements ResultFactory {
     }
 
     @Override
-    public void storeObjects(List<Result> results) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void storeObjects(List<Result> results) throws IOException, ParseException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     /**

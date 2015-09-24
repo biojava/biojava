@@ -1,6 +1,8 @@
 package org.biojava.nbio.core.search.io;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +44,7 @@ public class SearchIO implements Iterable<Result>{
      * @param f
      * @throws Exception 
      */
-    public SearchIO (File f)  throws Exception{
+    public SearchIO (File f)  throws IOException, ParseException{
         factory = guessFactory(f);
         file = f;
         if (file.exists()) readResults();
@@ -54,9 +56,11 @@ public class SearchIO implements Iterable<Result>{
      * 
      * @param f
      * @param factory
-     * @throws Exception 
+     * 
+     * @throws java.io.IOException for file access related issues
+     * @throws java.text.ParseException for file format related issues
      */
-    public SearchIO (File f, ResultFactory factory) throws Exception{
+    public SearchIO (File f, ResultFactory factory) throws IOException, ParseException{
         file = f;
         this.factory = factory;
         if (file.exists()) readResults();
@@ -68,9 +72,11 @@ public class SearchIO implements Iterable<Result>{
      * @param f
      * @param factory
      * @param maxEvalue
-     * @throws Exception 
+     * 
+     * @throws java.io.IOException for file access related issues
+     * @throws java.text.ParseException for file format related issues
      */
-    public SearchIO(File f, ResultFactory factory, double maxEvalue) throws Exception{
+    public SearchIO(File f, ResultFactory factory, double maxEvalue) throws IOException, ParseException{
         file = f;
         this.factory = factory;
         this.evalueThreshold = maxEvalue;
@@ -81,18 +87,21 @@ public class SearchIO implements Iterable<Result>{
      * This method is declared private because it is the default action of constructor
      * when file exists
      * 
-     * @throws Exception 
+     * @throws java.io.IOException for file access related issues
+     * @throws java.text.ParseException for file format related issues
      */
-    private void readResults() throws Exception {
+    private void readResults() throws IOException, ParseException {
         factory.setFile(file);
         results = factory.createObjects(evalueThreshold);
     }
     
     /**
      * used to write a search report using the guessed or specified factory
-     * @throws Exception 
+     * 
+     * @throws java.io.IOException for file access related issues
+     * @throws java.text.ParseException for file format related issues
      */
-    void writeResults() throws Exception {
+    public void writeResults() throws IOException, ParseException {
         factory.setFile(file);
         factory.createObjects(evalueThreshold);
     }

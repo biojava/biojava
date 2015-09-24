@@ -26,7 +26,7 @@ import org.junit.Ignore;
 
 /**
  *
- * @author pavanpa
+ * @author Paolo Pavan
  */
 public class BlastXMLQueryTest {
     
@@ -76,7 +76,7 @@ public class BlastXMLQueryTest {
         
         //instance.setQueryReferences(null);
         //instance.setDatabaseReferences(null);
-        ArrayList<Result> result = instance.createObjects(1e-10);
+        List<Result> result = instance.createObjects(1e-10);
         
         // test with random manual selected results
         BlastHsp hsp1hit1res1 = new BlastHspBuilder()
@@ -171,41 +171,4 @@ public class BlastXMLQueryTest {
     public void testStoreObjects() throws Exception {
         // not implemented yet
     }
-    
-    private File unpackResourceFile(String resource) {
-        
-        File file = null;
-        URL res = getClass().getResource(resource);
-        if (res == null) {
-            throw new RuntimeException(" not supported");
-        }
-        if (res.toString().startsWith("jar:")) {
-            try {
-                InputStream input = getClass().getResourceAsStream(resource);
-                file = File.createTempFile("javawrapped", ".exe");
-                //if (!DEBUG) file.deleteOnExit();
-                file.setExecutable(true, true);
-                OutputStream out = new FileOutputStream(file);
-                int read;
-                byte[] bytes = new byte[1024];
-
-                while ((read = input.read(bytes)) != -1) {
-                    out.write(bytes, 0, read);
-                }
-                out.close();
-                out.flush();
-            } catch (IOException ex) {
-                throw new RuntimeException("Resource not available for this OS!");
-            } 
-        } else {
-            //this will probably work in your IDE, but not from a JAR
-            file = new File(res.getFile());
-        }
-
-        if (file == null) {
-            throw new RuntimeException("Error: File " + file + " not found!");
-        }
-        return file;
-    }
-    
 }

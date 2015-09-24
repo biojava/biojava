@@ -1,6 +1,8 @@
 package org.biojava.nbio.core.search.io;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -28,7 +30,7 @@ public interface ResultFactory {
      * @return
      * @throws Exception 
      */
-    List<Result> createObjects(double maxEScore) throws Exception;
+    List<Result> createObjects(double maxEScore) throws IOException, ParseException;
     /**
      * The factory that implements this method will be able to save the Search results
      * to a file in the same format that it is able to read.
@@ -36,7 +38,7 @@ public interface ResultFactory {
      * @param results
      * @throws Exception 
      */
-    void storeObjects(List<Result> results) throws Exception;
+    void storeObjects(List<Result> results) throws IOException, ParseException;
     
     /**
      * Specify the collection of sequences objects used as queries in the Search run. 
