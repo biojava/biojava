@@ -32,16 +32,8 @@ public final class SangerFastqWriter
 {
 
     @Override
-    protected void validate(final Fastq fastq) throws IOException
+    protected Fastq convert(final Fastq fastq)
     {
-        if (fastq == null)
-        {
-            return;
-        }
-        if (!fastq.getVariant().isSanger())
-        {
-            throw new IOException("sequence " + fastq.getDescription()
-                                  + " not fastq-sanger format, was " + fastq.getVariant().lowercaseName());
-        }
+        return fastq.convertTo(FastqVariant.FASTQ_SANGER);
     }
 }
