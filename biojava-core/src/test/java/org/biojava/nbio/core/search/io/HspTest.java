@@ -41,6 +41,19 @@ public class HspTest {
                 .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
                 .createBlastHsp();
     
+    Hsp uncompleteHsp = new BlastHspBuilder()
+                .setPercentageIdentity(100.00/100)
+                .setHspAlignLen(48)
+                .setMismatchCount(0)
+                .setHspGaps(0)
+                .setHspQueryFrom(1)
+                .setHspQueryTo(48)
+                .setHspHitFrom(344)
+                .setHspHitTo(391)
+                .setHspEvalue(4e-19)
+                .setHspBitScore(95.6)
+                .createBlastHsp();
+    
     public HspTest() {
     }
     
@@ -66,10 +79,34 @@ public class HspTest {
     @Test
     public void testHashCode() {
         System.out.println("hashCode");
-        Hsp instance = hspImpl;
-        int expResult = 879126434;
-        int result = instance.hashCode();
+        Hsp instance;
+        int expResult;
+        int result;
+        
+        instance = hspImpl;
+        expResult = 71782805;
+        result = instance.hashCode();
         assertEquals(expResult, result);
+        
+        instance = uncompleteHsp;
+        expResult = 679;
+        result = instance.hashCode();
+        assertEquals(expResult, result);
+        
+        Hsp uncompleteHsp2 = new BlastHspBuilder()
+                .setPercentageIdentity(100.00/100)
+                .setHspAlignLen(48)
+                .setMismatchCount(0)
+                .setHspGaps(0)
+                .setHspQueryFrom(1)
+                .setHspQueryTo(48)
+                .setHspHitFrom(344)
+                .setHspHitTo(391)
+                .setHspEvalue(4e-19)
+                .setHspBitScore(95.6)
+                .createBlastHsp();
+        
+        assertFalse(uncompleteHsp.hashCode() == uncompleteHsp2.hashCode());
     }
 
     /**
@@ -78,7 +115,8 @@ public class HspTest {
     @Test
     public void testEquals() {
         System.out.println("equals");
-        Object o = new BlastHspBuilder()
+        Object o;
+        o = new BlastHspBuilder()
                 .setHspNum(1)
                 .setHspBitScore(377.211)
                 .setHspEvalue(8.04143e-093)
@@ -98,6 +136,24 @@ public class HspTest {
         Hsp instance = hspImpl;
         
         assertEquals(o, instance);
+        
+        // example of Hsp retrieved from uncomplete report. The result is null, hance false
+        // (Those HSP may come from a tabular format, for example)
+        o = new BlastHspBuilder()
+                .setPercentageIdentity(100.00/100)
+                .setHspAlignLen(48)
+                .setMismatchCount(0)
+                .setHspGaps(0)
+                .setHspQueryFrom(1)
+                .setHspQueryTo(48)
+                .setHspHitFrom(344)
+                .setHspHitTo(391)
+                .setHspEvalue(4e-19)
+                .setHspBitScore(95.6)
+                .createBlastHsp();
+        
+        // At now, check will return false as it could be not determined
+        assertFalse(uncompleteHsp.equals(o));
     }
 
     /**

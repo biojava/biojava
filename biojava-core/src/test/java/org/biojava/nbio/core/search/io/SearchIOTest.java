@@ -60,7 +60,7 @@ public class SearchIOTest {
      */
     @Test
     public void testConstructorWithoutFactoryGuess() {
-        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.xml";
+        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
@@ -78,7 +78,7 @@ public class SearchIOTest {
     @Test
     public void testConstructorWithEvalueHspFilter() {
         //
-        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.xml";
+        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         

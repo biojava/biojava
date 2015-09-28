@@ -54,6 +54,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     /**
      * Experimental.
      * Wants to return an hashcode designed to allow conceptual comparisons of search results.
+     * Wants to implement conceptual comparisons of search results.
      * Fields unrelated to search are deliberately not considered.
      * @return 
      */
@@ -65,6 +66,8 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     @Override
     public boolean equals(Object o){
         if (!(o instanceof Hsp)) return false;
+        Hsp other = (Hsp)o;
+        //if (this.getRepresentationString()==null || other.getRepresentationString()==null) return false;
         
         return o.hashCode() == this.hashCode();
     }
@@ -85,6 +88,8 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     }
     
     private Sequence getSequence(String gappedSequenceString){
+        if (gappedSequenceString == null) return null;
+        
         Sequence returnSeq = null;
         String sequenceString = gappedSequenceString.replace("-", "");
         

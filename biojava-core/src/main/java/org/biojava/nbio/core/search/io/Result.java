@@ -50,6 +50,7 @@ public abstract class Result implements Iterable<Hit>{
     /**
      * Experimental.
      * Wants to return an hashcode designed to allow conceptual comparisons of search results.
+     * Wants to implement conceptual comparisons of search results.
      * Fields unrelated to search are deliberately not considered.
      * @return 
      */

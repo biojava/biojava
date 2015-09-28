@@ -6,12 +6,7 @@
 package org.biojava.nbio.core.search.io.blast;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
@@ -67,7 +62,7 @@ public class BlastXMLQueryTest {
     public void testCreateObjects() throws Exception {
         System.out.println("createObjects");
         
-        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.xml";
+        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
