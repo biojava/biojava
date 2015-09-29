@@ -31,6 +31,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Extracts information about all the chains in a structure, including
+ * chain Ids, sequences, and atoms. Includes both protein and nucleic acid chains.
+ */
 public class ProteinChainExtractor  {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProteinChainExtractor.class);
@@ -108,7 +112,7 @@ public class ProteinChainExtractor  {
 			for (Chain c : structure.getChains(i)) {
 				if (isNucleicAcidChain(c)) {
 					nucleicAcidChainCount++;
-				}
+				} //TODO Should we break here for DNA? If "CA" atoms are present, could cause bugs. -Spencer 9-2015 
 				Atom[] ca = StructureTools.getAtomCAArray(c);
 				ca = retainStandardAminoAcidResidues(ca);
 

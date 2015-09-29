@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Bean for a single sequence. These are intended to be unique sequences (100% id)
+ * as an imput to clustering.
+ *
+ */
 public class UniqueSequenceList implements Cloneable {
 	private String sequenceString = "";
 	private String seqResSequence = "";
