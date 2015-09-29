@@ -25,6 +25,8 @@ package org.biojava.nbio.structure;
 
 import java.util.Map;
 
+import org.biojava.nbio.structure.secstruc.SecStrucInfo;
+
 
 /**
  * <p>
@@ -64,21 +66,21 @@ public interface AminoAcid extends Group {
 	public static final String SEQRESRECORD = "SEQRES";
 	
     /**
-     * Set the secondary structure as a Map.
+     * Set the secondary structure information.
      *
-     * @param secstr  a Map object specifying the sec struc 
+     * @param secstr a {@link SecStrucInfo} object describing the SS.
      * @see #getSecStruc
      */
-    public void setSecStruc(Map<String,String> secstr) ;
+    public void setSecStruc(SecStrucInfo secstr) ;
     
     /** 
-     * Get secondary structure data .
+     * Get secondary structure data.
      *
-     * @return a Map object representing the sec struc value
+     * @return a {@link SecStrucInfo} object describing the SS.
      *
      * @see #setSecStruc
      */
-    public Map<String,String> getSecStruc() ;
+    public SecStrucInfo getSecStruc() ;
 
     /** 
      * Get N atom.

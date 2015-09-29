@@ -24,6 +24,8 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
+import org.biojava.nbio.structure.secstruc.SecStrucInfo;
+import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
@@ -31,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -203,31 +206,7 @@ public class PDBFileParser  {
 					"EXPRESSION_SYSTEM_VECTOR:", "EXPRESSION_SYSTEM_PLASMID:",
 					"EXPRESSION_SYSTEM_GENE:", "OTHER_DETAILS:"));
 
-
-
-	/** Secondary strucuture assigned by the PDB author/
-	 *
-	 */
-	public static final String PDB_AUTHOR_ASSIGNMENT = "PDB_AUTHOR_ASSIGNMENT";
-
-	/** Helix secondary structure assignment.
-	 *
-	 */
-	public static final String HELIX  = "HELIX";
-
-	/** Strand secondary structure assignment.
-	 *
-	 */
-	public static final String STRAND = "STRAND";
-
-	/** Turn secondary structure assignment.
-	 *
-	 */
-	public static final String TURN   = "TURN";
-
 	private int atomCount;
-
-
 
 	private int my_ATOM_CA_THRESHOLD ;
 
@@ -3005,13 +2984,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	private void setSecStruc(){
 
-		setSecElement(helixList,  PDB_AUTHOR_ASSIGNMENT, HELIX  );
-		setSecElement(strandList, PDB_AUTHOR_ASSIGNMENT, STRAND );
-		setSecElement(turnList,   PDB_AUTHOR_ASSIGNMENT, TURN   );
+		setSecElement(helixList,  SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, SecStrucType.helix4 );
+		setSecElement(strandList, SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, SecStrucType.extended );
+		setSecElement(turnList,   SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, SecStrucType.coil );
 
 	}
 
-	private void setSecElement(List<Map<String,String>> secList, String assignment, String type){
+	private void setSecElement(List<Map<String,String>> secList, String assignment, SecStrucType type){
 
 
 		Iterator<Map<String,String>> iter = secList.iterator();
@@ -3052,10 +3031,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					if ( inRange){
 						if ( g instanceof AminoAcid) {
 							AminoAcid aa = (AminoAcid)g;
-
-							Map<String,String> assignmentMap = new HashMap<String,String>();
-							assignmentMap.put(assignment,type);
-							aa.setSecStruc(assignmentMap);
+							SecStrucInfo ss = new SecStrucInfo(aa, assignment, type);
+							aa.setSecStruc(ss);
 						}
 
 					}

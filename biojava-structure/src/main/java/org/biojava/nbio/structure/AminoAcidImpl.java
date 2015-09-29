@@ -22,15 +22,13 @@
  *
  */
 package org.biojava.nbio.structure;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
+import java.io.Serializable;
+import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
 /**
- *
- *  AminoAcid inherits most from Hetatom.  Adds a few AminoAcid
- *  specific methods.
+ * AminoAcid inherits most from Hetatom.  Adds a few AminoAcid
+ * specific methods.
  * @author Andreas Prlic
  * @author Jules Jacobsen
  * @since 1.4
@@ -48,7 +46,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	 */
 	private Character amino_char ;
 
-	private Map<String,String>   secstruc;
+	private SecStrucInfo secstruc;
 
 	private String recordType; // allows to distinguish between AAs that have been created from SEQRES records and ATOM records
 
@@ -59,7 +57,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 		super();
 
 		amino_char = null;
-		secstruc = new HashMap<String,String>();
+		secstruc = null;
 		recordType = ATOMRECORD;
 	}
 
@@ -70,7 +68,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	 * {@inheritDoc} 
 	 */
 	@Override
-	public void setSecStruc(Map<String,String> secstr) {
+	public void setSecStruc(SecStrucInfo secstr) {
 		this.secstruc = secstr ;
 	}
 
@@ -78,7 +76,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	 * {@inheritDoc} 
 	 */
 	@Override
-	public Map<String,String> getSecStruc(){
+	public SecStrucInfo getSecStruc(){
 		return secstruc ;
 	}
 

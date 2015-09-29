@@ -27,8 +27,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 
-import java.util.Map;
-
 public class DemoLoadSecStruc {
     public static void main(String[] args){
 
@@ -48,9 +46,12 @@ public class DemoLoadSecStruc {
 
                         AminoAcid aa = (AminoAcid)g;
 
-                        Map<String,String> sec = aa.getSecStruc();
+                        String sec = aa.getSecStruc().getAssignment() 
+                        		+ " : " + aa.getSecStruc().getType();
 
-                        System.out.println(c.getChainID() + " " + g.getResidueNumber() + " " + g.getPDBName() + " " + " " +sec);
+                        System.out.println(c.getChainID() + 
+                        		" " + g.getResidueNumber() + " " 
+                        		+ g.getPDBName() + " " + " " +sec);
                     }
                 }
             }

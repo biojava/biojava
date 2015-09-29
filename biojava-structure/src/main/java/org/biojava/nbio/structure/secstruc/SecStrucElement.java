@@ -17,7 +17,7 @@ public class SecStrucElement {
 	private SecStrucType type;
 	private ResidueRange range;
 	private int index;
-	private int length = -1;
+	private int length;
 
 	/**
 	 * Create a new SSE object. 
@@ -27,13 +27,14 @@ public class SecStrucElement {
 	 * @param start first residue of the SSE
 	 * @param end final residue of the SSE
 	 * @param length number of residues included in the SSE
+	 * @param chainID the chain ID
 	 */
 	public SecStrucElement(SecStrucType type, ResidueNumber start, 
-			ResidueNumber end, int length){
+			ResidueNumber end, int length, String chainID){
 
 		this.type = type;
 		this.length = length;
-		range = new ResidueRange(start.getChainId(), start, end);
+		range = new ResidueRange(chainID, start, end);
 		if (start.equals(end)) throw new IllegalArgumentException(
 				"start and end residues cannot be equal in a SecStrucElement");
 	}
