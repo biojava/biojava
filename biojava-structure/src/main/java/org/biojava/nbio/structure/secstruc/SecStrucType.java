@@ -20,23 +20,30 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-import java.io.Serializable;
+/**
+ * This enum contains all of the secondary structure types found
+ * in the DSSP output. It also contains some methods to operate
+ * with the SS types.
+ * 
+ * @author Andreas Prlic
+ * @author Aleix Lafita
+ *
+ */
+public enum SecStrucType {
 
-public enum SecStrucType implements Serializable {
-
-	coil("Coil",' '),
 	helix4("alpha Helix",'H'),
 	helix3("3-10 Helix",'G'),
-	helix5("pi helix",'I'),
-	turn("Turn",'T'),	
-	bend("Bend",'S'),
+	helix5("pi Helix",'I'),
 	extended("Extended",'E'),
-	bridge("Bridge",'B');
+	turn("Turn",'T'),
+	bend("Bend",'S'),
+	bridge("Bridge",'B'),
+	coil("Coil",' ');
 
 	public final Character type;
 	public final String name;
 
-	private SecStrucType(String name,Character stype){
+	private SecStrucType(String name, Character stype){
 		this.name = name;
 		this.type = stype;
 	}

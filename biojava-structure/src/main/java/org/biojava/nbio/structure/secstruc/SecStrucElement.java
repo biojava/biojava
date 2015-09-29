@@ -1,8 +1,12 @@
 package org.biojava.nbio.structure.secstruc;
 
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.ResidueRange;
+
 /**
  * A secondary structure element (SSE) is an object representing a block
- * of sequential residues that share the same secondary structure type.
+ * of sequential residues that share the same secondary structure type
+ * inside a protein chain.
  * 
  * @author Aleix Lafita
  * @since 4.1.1
@@ -11,36 +15,65 @@ package org.biojava.nbio.structure.secstruc;
 public class SecStrucElement {
 
 	private SecStrucType type;
-	private int start;
-	private int end;
+	private ResidueRange range;
+	private int index;
+	private int length = -1;
 
 	/**
-	 * Create a new SSE object. The start will be the smallest index residue
-	 * and the end will be the biggest. The two indices cannot be the same, 
-	 * since the SSE will have length 0.
+	 * Create a new SSE object. 
+	 * The start and end residue numbers cannot be the same.
 	 * 
-	 * @param type
-	 * @param res1
-	 * @param res2
+	 * @param type object describing the type of SS
+	 * @param start first residue of the SSE
+	 * @param end final residue of the SSE
+	 * @param length number of residues included in the SSE
 	 */
-	public SecStrucElement(SecStrucType type, int res1, int res2){
-		
+	public SecStrucElement(SecStrucType type, ResidueNumber start, 
+			ResidueNumber end, int length){
+
 		this.type = type;
-		if (res1 < res2){
-			this.start = res1;
-			this.end = res2;
-		} else if (res2 < res1){
-			this.start = res2;
-			this.end = res1;
-		} else throw new IllegalArgumentException(
-				"start and end residues cannot be equal in SecStrucElement");
+		this.length = length;
+		range = new ResidueRange(start.getChainId(), start, end);
+		if (start.equals(end)) throw new IllegalArgumentException(
+				"start and end residues cannot be equal in a SecStrucElement");
 	}
-	
+
+	/** 
+	 * Returns the {@link SecStrucType} of this element.
+	 * @return
+	 */ 
 	public SecStrucType getType(){
 		return type;
 	}
-	
+
+	/**
+	 * Return the number of residues in the SSE.
+	 * @return
+	 */
 	public int getLength(){
-		return end-start;
+		return length;
 	}
+
+	/** 
+	 * Returns the ID of this element. 
+	 * The ID is the concatenation of the type letter and the 
+	 * numerical element identifier (e.g. H1, S1, ...).
+	 * @return
+	 */
+	public String getId() {
+		return type.type+index+"";
+	}
+
+	/** 
+	 * Returns the residue range of this SSE.
+	 * @return 
+	 */ 
+	public ResidueRange getRange() {
+		return range;
+	}
+
+	public String toString() {
+		return getId() + ": " + range.getStart() + " - " + range.getEnd();
+	}
+	
 }
