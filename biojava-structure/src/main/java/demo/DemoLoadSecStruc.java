@@ -36,6 +36,7 @@ public class DemoLoadSecStruc {
 
             AtomCache cache = new AtomCache();
             cache.setFileParsingParams(params);
+            cache.setUseMmCif(false);
 
             Structure s = cache.getStructure("4hhb");
 
@@ -44,7 +45,7 @@ public class DemoLoadSecStruc {
 
                     if ( g instanceof AminoAcid ){
 
-                        AminoAcid aa = (AminoAcid)g;
+                        AminoAcid aa = (AminoAcid) g;
 
                         String sec = aa.getSecStruc().getAssignment() 
                         		+ " : " + aa.getSecStruc().getType();

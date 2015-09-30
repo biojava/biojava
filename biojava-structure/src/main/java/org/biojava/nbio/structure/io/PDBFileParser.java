@@ -2984,10 +2984,28 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	private void setSecStruc(){
 
-		setSecElement(helixList,  SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, SecStrucType.helix4 );
-		setSecElement(strandList, SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, SecStrucType.extended );
-		setSecElement(turnList,   SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, SecStrucType.coil );
-
+		setSecElement(helixList,  SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, 
+				SecStrucType.helix4 );
+		setSecElement(strandList, SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, 
+				SecStrucType.extended );
+		setSecElement(turnList,   SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, 
+				SecStrucType.turn );
+		
+		//Now insert random coil to the Groups that did not have SS information
+		GroupIterator gi = new GroupIterator(structure);
+		while (gi.hasNext()){
+			Group g = gi.next();
+			if (g instanceof AminoAcid){
+				AminoAcid aa = (AminoAcid) g;
+				if (aa.getSecStruc() == null){
+					SecStrucInfo ss = new SecStrucInfo(aa, 
+							SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, 
+							SecStrucType.coil);
+					aa.setSecStruc(ss);
+				}
+			}
+		}
+		
 	}
 
 	private void setSecElement(List<Map<String,String>> secList, String assignment, SecStrucType type){
@@ -3013,8 +3031,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				if (endICode.equals(" "))
 					endICode = "";
 
-
-
 				GroupIterator gi = new GroupIterator(structure);
 				boolean inRange = false;
 				while (gi.hasNext()){
@@ -3030,7 +3046,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					}
 					if ( inRange){
 						if ( g instanceof AminoAcid) {
-							AminoAcid aa = (AminoAcid)g;
+							AminoAcid aa = (AminoAcid) g;
 							SecStrucInfo ss = new SecStrucInfo(aa, assignment, type);
 							aa.setSecStruc(ss);
 						}
@@ -3043,9 +3059,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 							continue nextElement;
 						}
 					}
-
 				}
-
 			}
 	}
 
