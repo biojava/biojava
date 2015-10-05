@@ -50,26 +50,43 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     private Double percentageIdentity = null;
     private Integer mismatchCount = null;
     private SimpleSequencePair<S, C> returnAln;
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + (this.hspQseq != null ? this.hspQseq.hashCode() : 0);
+        hash = 67 * hash + (this.hspHseq != null ? this.hspHseq.hashCode() : 0);
+        hash = 67 * hash + (this.hspIdentityString != null ? this.hspIdentityString.hashCode() : 0);
+        return hash;
+    }
     /**
      * Experimental.
-     * Wants to return an hashcode designed to allow conceptual comparisons of search results.
      * Wants to implement conceptual comparisons of search results.
      * Fields unrelated to search are deliberately not considered.
-     * @return 
+     * 
+     * In HSP case, alignment representation strings are considered.
+     * @return true if HSP alignments are the same, 
+     * false otherwise or if alignment strings are undetermined
      */
-    public int hashCode(){
-        String allInOne = hspQseq+"\n"+hspIdentityString+"\n"+hspHseq;
-        return allInOne.hashCode();
-    }
-    
     @Override
-    public boolean equals(Object o){
-        if (!(o instanceof Hsp)) return false;
-        Hsp other = (Hsp)o;
-        //if (this.getRepresentationString()==null || other.getRepresentationString()==null) return false;
-        
-        return o.hashCode() == this.hashCode();
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Hsp<?, ?> other = (Hsp<?, ?>) obj;
+        if ((this.hspQseq == null) ? (other.hspQseq != null) : !this.hspQseq.equals(other.hspQseq)) {
+            return false;
+        }
+        if ((this.hspHseq == null) ? (other.hspHseq != null) : !this.hspHseq.equals(other.hspHseq)) {
+            return false;
+        }
+        if ((this.hspIdentityString == null) ? (other.hspIdentityString != null) : !this.hspIdentityString.equals(other.hspIdentityString)) {
+            return false;
+        }
+        return true;
     }
     
     public SequencePair<S,C> getAlignment(){

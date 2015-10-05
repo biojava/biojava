@@ -20,6 +20,9 @@ public abstract class Hit implements Iterable<Hsp>{
     private final String hitId;
     private final String hitDef;
     private final String hitAccession;
+    /**
+     * the length of the hit sequence
+     */
     private final int hitLen;
     private final List<Hsp> hsps;
     private Sequence hitSequence;
@@ -35,44 +38,37 @@ public abstract class Hit implements Iterable<Hsp>{
         this.hsps = hsps;
         this.hitSequence = hitSequence;
     }
-    
-    /**
-     * Experimental.
-     * Wants to return an hashcode designed to allow conceptual comparisons of search results.
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 89 * hash + this.hitLen;
+        hash = 89 * hash + (this.hsps != null ? this.hsps.hashCode() : 0);
+        return hash;
+    }
+     /**
+     * Implements conceptual comparisons of search results.
      * Fields unrelated to search are deliberately not considered.
-     * 
-     * This latter wants to be a way to compare two hits such that 
-     * if two different queries hit for example chromososome 1, 
-     * with of course different alignments, they will remain still equals to comparison.
      * @return 
      */
-    public int hashCode(){
-        String allInOne = hitId+hitLen;
-        return allInOne.hashCode();
-    }
-    /**
-     * gets a String to be hashcoded representing contained hsp.
-     * @return null if hsp does not contain alignment information.
-     * @return an hashcode representing all hsp
-     */
-    String getHspsHashString(){
-        String cat = ""+hashCode();
-        if (hsps != null){
-            for (Hsp h: hsps){
-                //  hsp hashcode cannot be calculated
-                if (h.getHspQseq() == null && h.getHspIdentityString() == null && h.getHspHseq()==null) return null;
-                cat += h.getHspQseq()+"\n"+h.getHspIdentityString()+"\n"+h.getHspHseq()+"\n";
-            }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
         }
-        return cat;
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Hit other = (Hit) obj;
+        if (this.hitLen != other.hitLen) {
+            return false;
+        }
+        if (this.hsps != other.hsps && (this.hsps == null || !this.hsps.equals(other.hsps))) {
+            return false;
+        }
+        return true;
     }
     
-    @Override
-    public boolean equals(Object o){
-        if (!(o instanceof Hit)) return false;
-        
-        return o.hashCode() == this.hashCode();
-    }
     public int getHitNum() {
         return hitNum;
     }

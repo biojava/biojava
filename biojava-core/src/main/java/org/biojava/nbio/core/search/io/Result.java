@@ -47,6 +47,15 @@ public abstract class Result implements Iterable<Hit>{
         this.hits = hits;
         this.querySequence = querySequence;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + (this.queryID != null ? this.queryID.hashCode() : 0);
+        hash = 29 * hash + (this.queryDef != null ? this.queryDef.hashCode() : 0);
+        hash = 29 * hash + (this.hits != null ? this.hits.hashCode() : 0);
+        return hash;
+    }
     /**
      * Experimental.
      * Wants to return an hashcode designed to allow conceptual comparisons of search results.
@@ -54,24 +63,25 @@ public abstract class Result implements Iterable<Hit>{
      * Fields unrelated to search are deliberately not considered.
      * @return 
      */
-    public int hashCode(){
-        String prefix = queryID+queryDef;
-        String suffix="";
-        if (hits != null){
-            for (Hit h: hits) {
-                String hashString = h.getHspsHashString();
-                if (hashString== null) return prefix.hashCode();
-                suffix += hashString;
-            }
-        }
-        return (prefix+suffix).hashCode();
-    }
-    
     @Override
-    public boolean equals(Object o){
-        if (!(o instanceof Result)) return false;
-        
-        return o.hashCode() == this.hashCode();
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Result other = (Result) obj;
+        if ((this.queryID == null) ? (other.queryID != null) : !this.queryID.equals(other.queryID)) {
+            return false;
+        }
+        if ((this.queryDef == null) ? (other.queryDef != null) : !this.queryDef.equals(other.queryDef)) {
+            return false;
+        }
+        if (this.hits != other.hits && (this.hits == null || !this.hits.equals(other.hits))) {
+            return false;
+        }
+        return true;
     }
     
     public int getIterationNumber() {

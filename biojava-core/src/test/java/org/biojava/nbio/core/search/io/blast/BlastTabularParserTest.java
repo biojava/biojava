@@ -76,7 +76,7 @@ public class BlastTabularParserTest {
         Hit expHit1res1;
         Hsp expHsp1hit1res1;
         
-        String resource = "/org/biojava/nbio/core/search/io/blast/test.two-query.blasttxt";
+        String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blasttxt";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
@@ -87,25 +87,47 @@ public class BlastTabularParserTest {
         
         BlastHsp hsp1Hit1Res1 = new BlastHspBuilder()
                 .setHspNum(1)
-                .setPercentageIdentity(97.40/100)
-                .setHspAlignLen(77)
-                .setMismatchCount(2)
+                .setPercentageIdentity(100.0/100)
+                .setHspAlignLen(1567)
+                .setMismatchCount(0)
                 .setHspGaps(0)
-                .setHspQueryFrom(774)
-                .setHspQueryTo(850)
-                .setHspHitFrom(45396566)
-                .setHspQueryTo(45396336)
-                .setHspEvalue(1e-46)
-                .setHspBitScore(157)
+                .setHspQueryFrom(1)
+                .setHspQueryTo(1567)
+                .setHspHitFrom(616309)
+                .setHspQueryTo(617875)
+                .setHspEvalue(0)
+                .setHspBitScore(2894)
                 .createBlastHsp();
         
+        BlastHsp hsp1Hit1Res2 = new BlastHspBuilder()
+                .setHspNum(1)
+                .setPercentageIdentity(100.0/100)
+                .setHspAlignLen(1567)
+                .setMismatchCount(0)
+                .setHspGaps(0)
+                .setHspQueryFrom(1)
+                .setHspQueryTo(1567)
+                .setHspHitFrom(1278699)
+                .setHspQueryTo(1277133)
+                .setHspEvalue(0)
+                .setHspBitScore(2894)
+                .createBlastHsp();
+        
+        List<Hsp> hsplist = new ArrayList();
+        hsplist.add(hsp1Hit1Res1);
+        hsplist.add(hsp1Hit1Res2);
+        
         BlastHit hit1Res1 = new BlastHitBuilder()
-                .setHitDef("chr15")
+                .setHitDef("CP000411")
+                .setHsps(hsplist)
                 .createBlastHit();
+        List<Hit> hitlist = new ArrayList();
+        hitlist.add(hit1Res1);
         
         BlastResult res1 = new BlastResultBuilder()
-                .setQueryID("Query_1")
-                .setQueryDef("Dual oxidase (DUOX1_RAT)")
+                .setQueryID("CP000411_-_16S_rRNA")
+                .setQueryDef("CP000411_-_16S_rRNA")
+                .setHits(hitlist)
                 .createBlastResult();
         
         expRes1 = results.get(0);
@@ -145,20 +167,10 @@ public class BlastTabularParserTest {
                 .setHspBitScore(95.6)
                 .createBlastHsp();
         
-        hit1Res1 = new BlastHitBuilder()
-                .setHitDef("KF031625.1.1775")
-                .createBlastHit();
-        
-        res1 = new BlastResultBuilder()
-                .setQueryID("1_759_906_F3")
-                .setQueryDef("1_759_906_F3")
-                .createBlastResult();
-        
         // results test
-        assertEquals(expRes1, res1);
-        // hit test
-        assertEquals(expHit1res1, hit1Res1);
-        // hsp test
+        assertEquals(expRes1.getQueryID(), "1_759_906_F3");
+        assertEquals(results2.size(), 298);
+        // only one hsp test
         assertEquals(expHsp1hit1res1, hsp1Hit1Res1);
     }
 
