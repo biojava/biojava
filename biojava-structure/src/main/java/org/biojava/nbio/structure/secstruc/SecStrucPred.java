@@ -525,7 +525,7 @@ public class SecStrucPred {
 				// calculate the coordinate for the H atom
 				//Atom H = calc_H(a.getC(), b.getN(), b.getCA());
 				Atom H = calcSimple_H(a.getC(), a.getO(), b.getN());
-				//TODO possible error because a is not set
+				//TODO possible error because first H bond is not set (a)
 				b.setH(H);
 				
 			}

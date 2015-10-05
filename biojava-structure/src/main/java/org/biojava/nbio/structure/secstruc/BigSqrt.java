@@ -16,13 +16,13 @@
  * Created by Andreas Prlic
  *
  */
-
 package org.biojava.nbio.structure.secstruc;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-/** calculate a more precise SQRT.
+/** 
+ * Calculate a more precise SQRT.
  *
  * Modified from:
  * http://www.merriampark.com/bigsqrt.htm

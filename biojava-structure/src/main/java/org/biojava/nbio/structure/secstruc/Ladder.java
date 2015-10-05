@@ -20,12 +20,14 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-/** Connects two connected strand regions to form larger sheets
+/** 
+ * Connects two connected strand regions to form larger sheets
  * 
- * @author andreas
+ * @author Andreas Prlic
  *
  */
 public class Ladder {
+	
 	int from ;
 	int to;
 	int lfrom;
@@ -83,5 +85,4 @@ public class Ladder {
 				+ connectedTo + ", connectedFrom=" + connectedFrom + "]";
 	}
 	
-
 }

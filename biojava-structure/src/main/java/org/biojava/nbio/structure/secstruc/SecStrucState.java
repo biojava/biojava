@@ -187,10 +187,10 @@ public class SecStrucState extends SecStrucInfo {
 		buf.append("    ");
 		
 		//N-H-->O
-		int p1 = getAccept1().getPartner();
+		int p1 = accept1.getPartner();
 		if ( p1 != 0)
 			p1 -= index;
-		double e1 =  (getAccept1().getEnergy() / 1000.0);
+		double e1 =  (accept1.getEnergy() / 1000.0);
 		buf.append(String.format( "%6d,%4.1f",p1,e1));
 
 		//O-->H-N
@@ -201,7 +201,7 @@ public class SecStrucState extends SecStrucInfo {
 		buf.append(String.format( "%6d,%4.1f",p2,e2 ));
 
 		//N-H-->O
-		int p3 = accept1.getPartner() ;
+		int p3 = accept2.getPartner() ;
 		if ( p3 != 0)
 			p3 -= index;
 		double e3 =  (accept2.getEnergy() / 1000.0);

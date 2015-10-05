@@ -43,9 +43,7 @@ public enum BridgeType implements Serializable{
 				return c;
 			}
 		}
-
 		return null;
-
 	}
 
 	@Override
