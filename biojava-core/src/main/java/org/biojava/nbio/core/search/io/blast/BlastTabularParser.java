@@ -29,11 +29,11 @@ public class BlastTabularParser implements ResultFactory {
     private final String blastReference = 
             "Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb Miller (2000), A greedy algorithm for aligning DNA sequences&quot;, J Comput Biol 2000; 7(1-2):203-14.";
     /**
-     * Tries to define a different level of consistency during parsing
+     * Tries to define a different level of consistency during parsing.
      * LITERAL is intended a strict parsing much tight to the report.
      * IMPROVED consistency tries to import data much tight to the data model
-     * (I hope you got the idea, if not have a look to the code.
-     * I'm not very sure I will leave to the user the possibility to choose)
+     * (I hope you got the idea, if not, have a look to the code.
+     * I suggest to use improved unless you have reasons to do not)
      */
     private enum PARSING_CONSISTENCY {
         IMPROVED,
@@ -92,8 +92,8 @@ public class BlastTabularParser implements ResultFactory {
         Scanner scanner = new Scanner(fileInputStream);
         
         String line = fetchData(scanner);
-        int lineNumber=1;
-        while (scanner.hasNext()){
+        int lineNumber=0;
+        while (lineNumber < fileLinesCount){
             try {
                 BlastResultBuilder resultBuilder = new BlastResultBuilder();
                 resultBuilder
@@ -106,13 +106,13 @@ public class BlastTabularParser implements ResultFactory {
                 List<Hit> hits = new ArrayList();
                 
                 String currentQueryId = queryId;
-                while (currentQueryId.equals(queryId) && scanner.hasNext()){
+                while (currentQueryId.equals(queryId) && lineNumber < fileLinesCount){
                     BlastHitBuilder hitBuilder = new BlastHitBuilder();
                     
                     List<Hsp> hsps = new ArrayList();
                     
                     String currentSubjectId=subjectId;
-                    while (currentSubjectId.equals(subjectId) && scanner.hasNext()){
+                    while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
                         if (new Double(evalue) > maxEScore) {
                             line = fetchData(scanner);
                             lineNumber++;
@@ -131,7 +131,7 @@ public class BlastTabularParser implements ResultFactory {
                             .setPercentageIdentity(new Double(percIdentity)/100)
                             .setMismatchCount(new Integer(mismatchCount));
                         hsps.add(hspBuilder.createBlastHsp());
-                        line = fetchData(scanner);
+                        if (scanner.hasNext()) line = fetchData(scanner);
                         lineNumber++;
                     }
                     hits.add(hitBuilder.setHsps(hsps).createBlastHit());
