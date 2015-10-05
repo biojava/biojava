@@ -26,10 +26,10 @@ public class SecStrucInfo {
 	protected String assignment;
 	protected Group parent;
 	
-	public SecStrucInfo(Group aa,String ass, SecStrucType t){
+	public SecStrucInfo(Group g, String ass, SecStrucType t){
 		type = t;
 		assignment = ass;
-		parent = aa;
+		parent = g;
 	}
 
 	public SecStrucType getType() {
@@ -44,7 +44,7 @@ public class SecStrucInfo {
 		return assignment;
 	}
 	
-	public Group getAminoAcid() {
+	public Group getGroup() {
 		return parent;
 	}
 	

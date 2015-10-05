@@ -19,7 +19,9 @@
 
 package org.biojava.nbio.structure.secstruc;
 
-import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.StructureTools;
 
 /**
  * This class extends the basic container for secondary structure
@@ -45,8 +47,8 @@ public class SecStrucState extends SecStrucInfo {
 	private boolean[] turn;
 	private boolean bend;
 
-	public SecStrucState(AminoAcid aa, String ass, SecStrucType t){
-		super(aa, ass, t);
+	public SecStrucState(Group g, String ass, SecStrucType t){
+		super(g, ass, t);
 		
 		phi = 360;
 		psi = 360;
@@ -138,58 +140,96 @@ public class SecStrucState extends SecStrucInfo {
 	public String printDSSPline(int index) {
 		
 		StringBuffer buf = new StringBuffer();
-		buf.append(index + 1).append(" ");
+		
+		//#
+		if (index < 9) buf.append("    ");
+		else if (index < 99) buf.append("   ");
+		else buf.append("  ");
+		buf.append(index + 1);
+		
+		//RESIDUE
+		int resnum = parent.getResidueNumber().getSeqNum();
+		if (resnum < 10) buf.append("    ");
+		else if (resnum < 100) buf.append("   ");
+		else buf.append("  ");
+		buf.append(resnum);
+		Character insCode = parent.getResidueNumber().getInsCode();
+		if (insCode != null) buf.append(insCode);
+		else buf.append(" ");
 		buf.append(parent.getChainId()).append(" ");
-		buf.append(parent.getPDBName()).append(" ");
-		buf.append(parent.getResidueNumber().toString()).append("\t");
+		
+		//AA
+		char aaLetter = StructureTools.get1LetterCode(parent.getPDBName());
+		buf.append(aaLetter+"  ");
 
-		boolean[] turns = getTurn();
-		for (int t=0;t<3;t++){
-			if (turns[t]) {
-				buf.append('>');
-			} else {
-				buf.append(' ');
-			}
+		//STRUCTURE
+		buf.append(type).append(" ");
+		
+		for (int t=0; t<3; t++){
+			if (turn[t]) buf.append('>');
+			else buf.append(" ");
 		}
-
-		buf.append(type);
+		
 		buf.append(" ");
 		
-		if ( isBend())
-			buf.append('S');
-		else 
-			buf.append(" ");
-		buf.append("                 ");
+		if (isBend()) buf.append('S');
+		else buf.append(" ");
+		
+		buf.append("    ");
 
+		//BP1 TODO
+		buf.append("    ");
+		
+		//BP2 TODO
+		buf.append("    ");
+		
+		//ACC TODO
+		buf.append("    ");
+		
+		//N-H-->O
 		int p1 = getAccept1().getPartner();
 		if ( p1 != 0)
 			p1 -= index;
 		double e1 =  (getAccept1().getEnergy() / 1000.0);
 		buf.append(String.format( "%6d,%4.1f",p1,e1));
 
+		//O-->H-N
 		int p2 = donor1.getPartner();
 		if ( p2 != 0)
 			p2 -= index;
 		double e2 = (donor1.getEnergy() / 1000.0);
 		buf.append(String.format( "%6d,%4.1f",p2,e2 ));
 
+		//N-H-->O
 		int p3 = accept1.getPartner() ;
 		if ( p3 != 0)
 			p3 -= index;
 		double e3 =  (accept2.getEnergy() / 1000.0);
 		buf.append(String.format( "%6d,%4.1f",p3,e3));
 
+		//O-->H-N
 		int p4 = donor2.getPartner();
 		if ( p4 != 0)
 			p4 -= index;
 		double e4 = (donor2.getEnergy() / 1000.0);
 		buf.append(String.format( "%6d,%4.1f",p4,e4 ));
 		
+		//TCO
 		buf.append("        ");
+		
+		//KAPPA
 		buf.append(String.format("%6.1f",kappa));
-		buf.append("       ");
-		buf.append(String.format("%6.1f %6.1f %6.1f", phi,psi, omega));
-		buf.append(System.getProperty("line.separator"));
+		
+		//ALPHA
+		buf.append("      ");
+		
+		//PHI PSI
+		buf.append(String.format("%6.1f %6.1f ", phi, psi));
+		
+		//X-CA Y-CA Z-CA
+		Atom ca = parent.getAtom("CA");
+		buf.append(String.format("%6.1f %6.1f %6.1f", 
+				ca.getX(), ca.getY(), ca.getZ()));
 		
 		return buf.toString();
 	}

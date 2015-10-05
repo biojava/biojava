@@ -43,12 +43,9 @@ public class SecStrucGroup extends HetatomImpl {
 			str.append(" atoms: ");
 			str.append(atoms.size());
 		}
-
-
+		
 		return str.toString() ;
-
 	}
-
 
 	public Group getOriginal() {
 		return original;
