@@ -1,10 +1,9 @@
 package org.biojava.nbio.structure.secstruc;
 
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.align.multiple.AbstractScoresCache;
+import org.biojava.nbio.structure.Group;
 
 /**
- * Container for the SS information of a single residue.
+ * Container for the secondary structure information of a single residue.
  * This class is designed to be stored inside an Amino Acid object.
  * It can also contain a back-reference to its parent AA.
  * 
@@ -12,35 +11,46 @@ import org.biojava.nbio.structure.align.multiple.AbstractScoresCache;
  * @since 4.1.1
  *
  */
-public class SecStrucInfo extends AbstractScoresCache {
+public class SecStrucInfo {
 
 	/** Secondary strucuture assigned by the PDB author */
 	public static final String PDB_AUTHOR_ASSIGNMENT = "PDB_AUTHOR_ASSIGNMENT";
 	
-	/** Secondary strucuture predicted by the DSSP program */
-	public static final String DSSP_ASSIGNMENT = "DSSP_ASSIGNMENT";
+	/** Secondary strucuture parsed from a DSSP output file */
+	public static final String DSSP_FILE_ASSIGNMENT = "DSSP_ASSIGNMENT";
 	
-	private final SecStrucType type;
-	private final String assignment;
-	private AminoAcid parent;
+	/** Secondary strucuture calculated and assigned by DSSP of BioJava */
+	public static final String BIOJAVA_ASSIGNMENT = "BIOJAVA_ASSIGNMENT";
 	
-	public SecStrucInfo(AminoAcid parent,String assignment,SecStrucType type){
-		super();
-		this.type = type;
-		this.assignment = assignment;
-		this.parent = parent;
+	protected SecStrucType type;
+	protected String assignment;
+	protected Group parent;
+	
+	public SecStrucInfo(Group aa,String ass, SecStrucType t){
+		type = t;
+		assignment = ass;
+		parent = aa;
 	}
 
 	public SecStrucType getType() {
 		return type;
+	}
+	
+	public void setType(SecStrucType t){
+		type = t;
 	}
 
 	public String getAssignment() {
 		return assignment;
 	}
 	
-	public AminoAcid getParent() {
+	public Group getAminoAcid() {
 		return parent;
+	}
+	
+	@Override
+	public String toString() {
+		return assignment + ": " + type;
 	}
 	
 }

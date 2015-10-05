@@ -20,14 +20,15 @@
  */
 package demo;
 
-import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
 public class DemoLoadSecStruc {
+	
     public static void main(String[] args){
 
         try {
@@ -38,21 +39,19 @@ public class DemoLoadSecStruc {
             cache.setFileParsingParams(params);
             cache.setUseMmCif(false);
 
-            Structure s = cache.getStructure("4hhb");
+            Structure s = cache.getStructure("4pti");
 
             for ( Chain c : s.getChains()) {
                 for (Group g: c.getAtomGroups()){
 
-                    if ( g instanceof AminoAcid ){
+                    if ( g.hasAminoAtoms() ){
 
-                        AminoAcid aa = (AminoAcid) g;
-
-                        String sec = aa.getSecStruc().getAssignment() 
-                        		+ " : " + aa.getSecStruc().getType();
+                        SecStrucInfo ss = 
+                        		(SecStrucInfo) g.getProperty(Group.SEC_STRUC);
 
                         System.out.println(c.getChainID() + 
                         		" " + g.getResidueNumber() + " " 
-                        		+ g.getPDBName() + " " + " " +sec);
+                        		+ g.getPDBName() + " " + ss);
                     }
                 }
             }

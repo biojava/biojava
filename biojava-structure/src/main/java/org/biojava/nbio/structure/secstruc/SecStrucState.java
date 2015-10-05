@@ -19,24 +19,52 @@
 
 package org.biojava.nbio.structure.secstruc;
 
-public class SecStrucState {
-	
-	double phi;
-	double psi;
-	double omega;
+import org.biojava.nbio.structure.AminoAcid;
 
-	float kappa;
+/**
+ * This class extends the basic container for secondary structure
+ * annotation, including all the information used in the DSSP algorithm.
+ * 
+ * @author Andreas Prlic
+ * @author Aleix Lafita
+ *
+ */
+public class SecStrucState extends SecStrucInfo {
 	
-	HBond accept1;
-	HBond accept2;
-	HBond donor1;
-	HBond donor2;
+	private double phi;
+	private double psi;
+	private double omega;
 
-	boolean[] turn;
-	boolean bend;
+	private float kappa;
 	
-	SecStrucType secStruc;
-	SecStrucType threeState;
+	private HBond accept1;
+	private HBond accept2;
+	private HBond donor1;
+	private HBond donor2;
+
+	private boolean[] turn;
+	private boolean bend;
+
+	public SecStrucState(AminoAcid aa, String ass, SecStrucType t){
+		super(aa, ass, t);
+		
+		phi = 360;
+		psi = 360;
+		omega = 360;
+		
+		accept1 = new HBond();
+		accept2 = new HBond();
+		donor1  = new HBond();
+		donor2  = new HBond();
+		
+		turn = new boolean[3];
+		turn[0] = false;
+		turn[1] = false;
+		turn[2] = false;
+		bend = false;
+		
+		kappa = 360;
+	}
 	
 	public boolean isBend() {
 		return bend;
@@ -46,37 +74,12 @@ public class SecStrucState {
 		this.bend = bend;
 	}
 
-	public SecStrucState(){
-		phi = 360;
-		psi = 360 ;
-		omega = 360;
-		accept1 = new HBond();
-		accept2 = new HBond();
-		donor1  = new HBond();
-		donor2  = new HBond();
-		turn = new boolean[3];
-		turn[0] = false;
-		turn[1] = false;
-		turn[2] = false;
-		bend = false;
-		secStruc = SecStrucType.coil;
-		threeState = SecStrucType.coil;
-		kappa = 360;
-	}
-
 	public float getKappa() {
 		return kappa;
 	}
 
 	public void setKappa(float kappa) {
 		this.kappa = kappa;
-	}
-
-	@Override
-	public String toString(){
-		StringBuffer buf = new StringBuffer();
-		buf.append(secStruc.toString()+threeState.toString() + " a1:"+accept1 + " a2:" + accept2 + " d1:" + donor1 + " d2:" + donor2);
-		return buf.toString();
 	}
 
 	public boolean[] getTurn() {
@@ -124,28 +127,71 @@ public class SecStrucState {
 		this.psi = psi;
 	}
 
-	public SecStrucType getSecStruc() {
-		return secStruc;
-	}
-
-	public void setSecStruc(SecStrucType secStruc) {
-		this.secStruc = secStruc;
-	}
-
-	public SecStrucType getThreeState() {
-		return threeState;
-	}
-
-	public void setThreeState(SecStrucType threeState) {
-		this.threeState = threeState;
-	}
-
 	public double getOmega() {
 		return omega;
 	}
 
 	public void setOmega(double omega) {
 		this.omega = omega;
+	}
+	
+	public String printDSSPline(int index) {
+		
+		StringBuffer buf = new StringBuffer();
+		buf.append(index + 1).append(" ");
+		buf.append(parent.getChainId()).append(" ");
+		buf.append(parent.getPDBName()).append(" ");
+		buf.append(parent.getResidueNumber().toString()).append("\t");
+
+		boolean[] turns = getTurn();
+		for (int t=0;t<3;t++){
+			if (turns[t]) {
+				buf.append('>');
+			} else {
+				buf.append(' ');
+			}
+		}
+
+		buf.append(type);
+		buf.append(" ");
+		
+		if ( isBend())
+			buf.append('S');
+		else 
+			buf.append(" ");
+		buf.append("                 ");
+
+		int p1 = getAccept1().getPartner();
+		if ( p1 != 0)
+			p1 -= index;
+		double e1 =  (getAccept1().getEnergy() / 1000.0);
+		buf.append(String.format( "%6d,%4.1f",p1,e1));
+
+		int p2 = donor1.getPartner();
+		if ( p2 != 0)
+			p2 -= index;
+		double e2 = (donor1.getEnergy() / 1000.0);
+		buf.append(String.format( "%6d,%4.1f",p2,e2 ));
+
+		int p3 = accept1.getPartner() ;
+		if ( p3 != 0)
+			p3 -= index;
+		double e3 =  (accept2.getEnergy() / 1000.0);
+		buf.append(String.format( "%6d,%4.1f",p3,e3));
+
+		int p4 = donor2.getPartner();
+		if ( p4 != 0)
+			p4 -= index;
+		double e4 = (donor2.getEnergy() / 1000.0);
+		buf.append(String.format( "%6d,%4.1f",p4,e4 ));
+		
+		buf.append("        ");
+		buf.append(String.format("%6.1f",kappa));
+		buf.append("       ");
+		buf.append(String.format("%6.1f %6.1f %6.1f", phi,psi, omega));
+		buf.append(System.getProperty("line.separator"));
+		
+		return buf.toString();
 	}
 
 }

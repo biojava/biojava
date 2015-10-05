@@ -23,11 +23,6 @@
  */
 package org.biojava.nbio.structure;
 
-import java.util.Map;
-
-import org.biojava.nbio.structure.secstruc.SecStrucInfo;
-
-
 /**
  * <p>
  * A {@link Group} that represents an AminoAcid.
@@ -65,23 +60,6 @@ public interface AminoAcid extends Group {
 	 */
 	public static final String SEQRESRECORD = "SEQRES";
 	
-    /**
-     * Set the secondary structure information.
-     *
-     * @param secstr a {@link SecStrucInfo} object describing the SS.
-     * @see #getSecStruc
-     */
-    public void setSecStruc(SecStrucInfo secstr) ;
-    
-    /** 
-     * Get secondary structure data.
-     *
-     * @return a {@link SecStrucInfo} object describing the SS.
-     *
-     * @see #setSecStruc
-     */
-    public SecStrucInfo getSecStruc() ;
-
     /** 
      * Get N atom.
      *
@@ -112,9 +90,6 @@ public interface AminoAcid extends Group {
      * @return an Atom object or null if CB atom does not exist
      */
     public Atom getCB()   ;
-
-    
-
 
     /** 
      * Returns the name of the AA, in single letter code.
@@ -147,9 +122,5 @@ public interface AminoAcid extends Group {
 	 * @see #setRecordType(String)
 	 */
     public String getRecordType();
-
-    /** string representation. */
-    @Override
-    public String toString() ;
 
 }
