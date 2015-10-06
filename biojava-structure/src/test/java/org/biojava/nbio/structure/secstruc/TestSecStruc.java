@@ -49,7 +49,7 @@ public class TestSecStruc {
 		System.out.println("DSSP Parser output:");
 		
 		List<SecStrucState> secstruc = 
-				DSSPParser.parseDSSP("src/test/resources/5pti.dssp", s, false);
+				DSSPParser.parseFile("src/test/resources/5pti.dssp", s, false);
 		
 		for (int i=0; i<secstruc.size(); i++){
 			System.out.println(secstruc.get(i).printDSSPline(i));

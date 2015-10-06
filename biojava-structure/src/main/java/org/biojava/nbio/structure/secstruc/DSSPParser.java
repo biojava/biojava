@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,27 +47,76 @@ public class DSSPParser {
 	 * @param assign assigns the SS to the structure if true
 	 * @return a List of SS annotation objects
 	 * @throws StructureException 
-	 * 
+	 * @throws IOException
 	 */
-	public static List<SecStrucState> parseDSSP(String dsspPath, 
+	public static List<SecStrucState> parseFile(String dsspPath, 
 			Structure structure, boolean assign) 
 					throws IOException, StructureException {
 
+		File file = new File(dsspPath);
+		Reader read = new FileReader(file);
+		BufferedReader reader = new BufferedReader(read);
+		return generalParse(reader, structure, assign);
+	}
+	
+	/** 
+	 * Fetch and parse the DSSP file of the specified pdb code
+	 * from the PDB web server and return the secondary structure 
+	 * annotation as a List of {@link SecStrucState} objects.
+	 * 
+	 * @param pdb path to the DSSP file to parse
+	 * @param structure Structure object associated to the dssp
+	 * @param assign assigns the SS to the structure if true
+	 * @return a List of SS annotation objects
+	 * @throws StructureException 
+	 * @throws IOException
+	 */
+	public static List<SecStrucState> fetch(String pdb, 
+			Structure structure, boolean assign) 
+					throws IOException, StructureException {
+		
+		InputStream in = new URL("http://www.rcsb.org/pdb/files/"+
+				pdb+".dssp").openStream();
+		Reader read = new InputStreamReader(in);
+		BufferedReader reader = new BufferedReader(read);
+		return generalParse(reader, structure, assign);
+	}
+	
+	/** 
+	 * Parse a DSSP format String and return the secondary structure 
+	 * annotation as a List of {@link SecStrucState} objects.
+	 * 
+	 * @param dsspOut String with the DSSP output to parse
+	 * @param structure Structure object associated to the dssp
+	 * @param assign assigns the SS to the structure if true
+	 * @return a List of SS annotation objects
+	 * @throws StructureException 
+	 * @throws IOException
+	 */
+	public static List<SecStrucState> parseString(String dsspOut, 
+			Structure structure, boolean assign) 
+					throws IOException, StructureException {
+		
+		Reader read = new StringReader(dsspOut);
+		BufferedReader reader = new BufferedReader(read);
+		return generalParse(reader, structure, assign);
+	}
+	
+	private static List<SecStrucState> generalParse(BufferedReader reader, 
+			Structure structure, boolean assign) 
+					throws IOException, StructureException {
+		
 		String startLine = "  #  RESIDUE AA STRUCTURE BP1 BP2  ACC";
 		String line;
-		
-		File file = new File(dsspPath);
-		Reader reader = new FileReader(file);
-		BufferedReader dsspOutput = new BufferedReader(reader);
 		
 		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
 		
 		//Find the first line of the DSSP output
-		while((line = dsspOutput.readLine()) != null) {
+		while((line = reader.readLine()) != null) {
 			if(line.startsWith(startLine)) break;
 		}
 		
-		while((line = dsspOutput.readLine()) != null) {
+		while((line = reader.readLine()) != null) {
 			
 			String indexStr = line.substring(0,5).trim();
 			String resNumStr = line.substring(5,10).trim();
@@ -86,8 +139,8 @@ public class DSSPParser {
 						SecStrucInfo.DSSP_FILE_ASSIGNMENT, ssType);
 				
 				//TODO ignore for now
-				int BP1 = Integer.valueOf(line.charAt(28));
-				int BP2 = Integer.valueOf(line.charAt(32));
+				/*int BP1 = Integer.valueOf(line.charAt(28));
+				int BP2 = Integer.valueOf(line.charAt(32));*/
 				
 				//Parse the energy terms of donor and acceptor
 				for (int i=0; i<4; i++){
@@ -146,7 +199,6 @@ public class DSSPParser {
 		}
 		
 		reader.close();
-		dsspOutput.close();
 		return secstruc;
 	}
 
