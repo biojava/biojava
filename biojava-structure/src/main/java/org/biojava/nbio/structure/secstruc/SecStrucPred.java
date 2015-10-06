@@ -58,11 +58,11 @@ public class SecStrucPred {
 	/** the minimal distance of two CA atoms if H-bonds are allowed to form */
 	public static final int CA_MIN_DIST = 9;
 
-	/** Minimal H-bond energy in cal / mol */
-	public static final int HBONDLOWENERGY  = -9900   ;
+	/** Minimal H-bond energy in cal/mol */
+	public static final int HBONDLOWENERGY  = -9900;
 
 	/** higher limit for H-bond energy */
-	public static final double HBONDHIGHENERGY = -500.0     ;
+	public static final double HBONDHIGHENERGY = -500.0;
 
 	/** constant for electrostatic energy
 	 * <pre>
@@ -95,38 +95,32 @@ public class SecStrucPred {
 
 		groups = initGroupArray(s);
 
-		if ( groups.length < 5) {
+		if (groups.length < 5) {
 			// not enough groups to do anything
-			throw new StructureException("not enough groups in structure to calculate secondary structure ("+ groups.length+")" );
+			throw new StructureException("Not enough backbone groups in the"
+					+ " Structure to calculate the secondary structure ("
+					+ groups.length+" given, minimum 5)" );
 		}
 
-
 		calculateHAtoms();
-
-		/*for (int j=0 ; j<3;j++ ) {
-         Group g = groups[j];
-         System.out.println(g);
-         for (int i=0 ; i< g.size();i++){
-            Atom a = g.getAtom(i);
-            System.out.println(a);
-         }
-      }*/
-
 		calculateHBonds();
-		calculateTurns();
 		calculateDihedralAngles();
-		buildHelices();
 
+		calculateTurns();
+		buildHelices();
+		
 		detectBends();
 		detectStrands();
 		
 		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
-		for (SecStrucGroup g : groups){
-			SecStrucState ss = (SecStrucState) g.getProperty(Group.SEC_STRUC);
+		for (SecStrucGroup sg : groups){
+			SecStrucState ss = (SecStrucState) 
+					sg.getProperty(Group.SEC_STRUC);
+			//Add to return list and assign to original if flag is true
 			secstruc.add(ss);
+			if (assign) sg.getOriginal().setProperty(Group.SEC_STRUC, ss);
 		}
-		return secstruc;
-
+		return secstruc;	
 	}
 
 	private void detectStrands() {
@@ -144,15 +138,13 @@ public class SecStrucPred {
 
 
 	private void updateSheets() {
-		logger.debug(" got "  +ladders.size() + "  ladders!");
+		
+		logger.debug(" got " +ladders.size() + "  ladders!");
+		
 		for (Ladder ladder : ladders){
-
 			logger.debug(ladder.toString());
 
-			for ( int lcount = ladder.from;
-					lcount <= ladder.to;
-					lcount++  ) {
-
+			for (int lcount = ladder.from; lcount <= ladder.to; lcount++) {
 
 				SecStrucState state = getSecStrucState(lcount);
 				SecStrucType stype = state.getType();
@@ -164,37 +156,28 @@ public class SecStrucPred {
 				SecStrucType stype2 = state2.getType();
 
 				if ( ladder.from != ladder.to ) {
-					if ( ! stype.isHelixType())
-						setSecStrucType(lcount, SecStrucType.extended);
-
-					if ( ! stype2.isHelixType()){
-						setSecStrucType(l2count,SecStrucType.extended);
-					}			    	  				
+					testSetExtendedSecStrucState(lcount);
+					testSetExtendedSecStrucState(l2count);
 				}
 				else {
-					if ( ! stype.isHelixType() && 
-							( ! stype.equals(SecStrucType.extended))) {
+					if ( !stype.isHelixType() && 
+							( !stype.equals(SecStrucType.extended)))
 						setSecStrucType(lcount,SecStrucType.bridge);
-					}
 
 					if ( ! stype2.isHelixType() &&
-							(! stype2.equals(SecStrucType.extended))) {
+							(! stype2.equals(SecStrucType.extended)))
 						setSecStrucType(l2count,SecStrucType.bridge);
-					}	
 				}
 			}
 
-			// Check if two ladders are connected. both sides are 'E'  
+			// Check if two ladders are connected. both sides are 'E'
 
-			if ( ladder.connectedTo == 0) 
-				continue;
-
+			if (ladder.connectedTo == 0) continue;
 			Ladder conladder = ladders.get(ladder.connectedTo);
 
-			if ( ladder.getBtype().equals(BridgeType.antiparallel)) {
+			if (ladder.btype.equals(BridgeType.antiparallel)) {
 				/* set one side */
-				for ( int lcount = ladder.from;
-						lcount <= conladder.to;
+				for (int lcount = ladder.from; lcount <= conladder.to;
 						lcount++) {
 					testSetExtendedSecStrucState(lcount);
 
@@ -239,15 +222,14 @@ public class SecStrucPred {
 
 	private void connectLadders() {
 
-		for ( int i = 0 ; i < ladders.size(); i++) {
+		for (int i = 0 ; i < ladders.size(); i++) {
 			for ( int j = i ; j < ladders.size() ; j++){
 				Ladder l1 = ladders.get(i);
 				Ladder l2 = ladders.get(j);
-				if ( hasBulge(l1,l2) ) {
-
+				if (hasBulge(l1,l2) ) {
 					l1.connectedTo = j;
 					l2.connectedFrom = i;
-					//					System.out.println("BUlge from " + i + " to " + j);
+					logger.debug("Bulge from " + i + " to " + j);
 				}
 			}
 		}
@@ -256,149 +238,136 @@ public class SecStrucPred {
 	}
 
 	private boolean hasBulge(Ladder l1, Ladder l2) {
-		boolean bulge =  ( (l1.getBtype().equals(l2.getBtype()) ) &&
+		
+		boolean bulge = ( (l1.btype.equals(l2.btype) ) &&
 				( l2.from - l1.to < 6) &&
 				( l1.to < l2.from) &&
 				(l2.connectedTo == 0) );
 
-		//	    		 ( ( ladder1->type == ladder2->type) &&
-		//	  	       ( ladder2->from - ladder1->to < 6 ) &&
-		//	  	       ( ladder1->to < ladder2->from) &&
-		//	  	       ( ladder2->conto == 0 ) ) ;
+		if (!bulge) return bulge;
 
-		if ( ! bulge )
-			return bulge;
-
-		if ( l1.getBtype().equals(BridgeType.parallel)) {
+		switch(l1.btype){
+		case parallel:
 			bulge = ( (l2.lfrom - l1.lto > 0) &&
 					((( l2.lfrom -l1.lto < 6) &&
 							(l2.from - l1.to < 3)) ||
 							( l2.lfrom - l1.lto <3)));
-			//case parallel:
-			//			 bulge = ( ( ladder2->lfrom - ladder1->lto > 0 ) &&
-			//				   ((( ladder2->lfrom - ladder1->lto < 6 ) &&
-			//				    ( ladder2->from  - ladder1->to  < 3 )) ||
-			//				   ( ladder2->lfrom - ladder1->lto < 3 )) );
-			//			 break;
-		} else {
+			
+			break;
+			
+		case antiparallel:
 			bulge = ( (l1.lfrom - l2.lto > 0) &&
 					(((l1.lfrom -l2.lto < 6) &&
-							( l2.from - l1.to <3  )) ||
+							( l2.from - l1.to < 3)) ||
 							(l1.lfrom - l2.lto < 3))
 					);
+			
+			break;
 		}
+		
 		return bulge;
-
-
-		//	       case antiparallel:
-		//		 bulge = ( ( ladder1->lfrom - ladder2->lto > 0 ) &&
-		//			   ((( ladder1->lfrom - ladder2->lto < 6 ) &&
-		//			     ( ladder2->from - ladder1->to  < 3 )) ||
-		//			    ( ladder1->lfrom - ladder2->lto < 3 ))   );
-		//		 break;
-		//	       }
-		//	     }
-
 	}
 
-	private void registerBridge(int start, int end, BridgeType btype){
-		if ( start > end)
+	private void registerBridge(int i, int j, BridgeType btype) {
+		
+		if (i > j) {
+			logger.warn("Trying to connect ladder where i > j");
 			return;
+		}
 
 		boolean found = false;
 		for (Ladder ladder : ladders){
-			if (shouldExtendLadder(ladder, start,end,btype)) {
-				// extend laddder
+			if (shouldExtendLadder(ladder, i, j, btype)) {
 				found = true;
-				ladder.to++;
-				if ( btype.equals(BridgeType.parallel)) {
-					ladder.lto++;
-				} else {
-					ladder.lfrom--;
+				ladder.to++; //we go forward in this direction
+				switch(btype){
+				case parallel:
+					ladder.lto++; //increment second strand
+					break;
+				case antiparallel:
+					ladder.lfrom--; //decrement second strand
+					break;
 				}
 				break;
-
 			}
 		}
-		if ( ! found){
-			// create new ladder!
+		if (!found){
+			// create new ladder with a single bridge
 			Ladder l = new Ladder();
-			l.setFrom(start);
-			l.setTo(end);
-			l.setBtype(btype);
-			l.setLfrom(start);
-			l.setLto(end);
+			l.from = i;
+			l.to = i;
+			l.lfrom = j;
+			l.lto = j;
+			l.btype = btype;
 			ladders.add(l);
 		}
 
 	}
 
-	private boolean shouldExtendLadder(Ladder ladder, int start, int end,
-			BridgeType btype) {
+	private boolean shouldExtendLadder(Ladder ladder, int start, 
+			int end, BridgeType btype) {
 
-		return ( (btype.equals(ladder.getBtype()) ) &&
-				( start  == ladder.getTo() +1) &&
+		return ( (btype.equals(ladder.btype) ) &&
+				( start  == ladder.to +1) &&
 				(
-						(( end == ladder.getLto() + 1) &&
+						(( end == ladder.lto + 1) &&
 								( btype.equals(BridgeType.parallel) )) ||
-								(( end == ladder.getLfrom() - 1 ) &&
-										(btype.equals(BridgeType.parallel) ))										
+								(( end == ladder.lfrom - 1 ) &&
+										(btype.equals(BridgeType.parallel)))										
 						) );
+		//TODO suspicious that antiparallel is not used...
 	}
 
 	private void testBridge(int i) {
-
-		int currpos = i + 3;
-		for ( int foundNrBridges = 0 ; foundNrBridges < 2 && ( currpos < groups.length-1); currpos++){
+		
+		int j = i + 3; //sum 3 for the non-overlapping condition
+		
+		for (int foundNrBridges = 0; foundNrBridges < 2
+				&& (j < groups.length-1); j++){
 
 			BridgeType btype = null;
 
-			if ( (isBonded(i+1, currpos) && isBonded(currpos, i-1) ) ||
-					( isBonded(currpos +1 , i) && isBonded(i, currpos-1)) ) {
-				// parallel
+			if ((isBonded(i-1, j) && isBonded(j, i+1) ) ||
+					(isBonded(j-1, i) && isBonded(i, j+1)) ) {
 				btype = BridgeType.parallel;
 			}
-			else if ( (isBonded(i, currpos) && isBonded(currpos, i)) ||
-					(isBonded(i+1, currpos -1 ) && (isBonded(currpos + 1 , i - 1)))) {
-				// antiparallel
+			else if ((isBonded(i, j) && isBonded(j, i)) ||
+					(isBonded(i-1,j+1) && (isBonded(j-1, i+1)))) {
 				btype = BridgeType.antiparallel;
 			}
 			if (btype != null){
 				foundNrBridges++;
-				registerBridge(i, currpos, btype);
+				registerBridge(i, j, btype);
 			}
 		}
 
 	}
 
 	private void detectBends() {
-		if ( groups.length < 5)
-			return;
 
-		for (int i =2 ; i < groups.length -2 ;i++){
+		for (int i = 2 ; i < groups.length -2 ;i++){
 
-			//Create vectors ( Ca i to Ca i-2 ) ; ( Ca i to CA i +2 )
+			//Create vectors ( Ca i to Ca i-2 ) ; ( Ca i to CA i + 2 )
 
 			SecStrucGroup im2 = groups[i-2];
 			SecStrucGroup g = groups[i];
 			SecStrucGroup ip2 = groups[i+2];
-
 
 			Atom caim2 = im2.getCA();
 			Atom cag   = g.getCA();
 			Atom caip2 = ip2.getCA();
 
 			Atom caminus2 = Calc.subtract(caim2,cag);
-
 			Atom caplus2  = Calc.subtract(cag,caip2);
 
-			double angle    = Calc.angle(caminus2,caplus2);
+			double angle = Calc.angle(caminus2, caplus2);
 
 			SecStrucState state = getSecStrucState(i); 
 
-			state.setKappa((float)angle);
+			state.setKappa((float) angle);
 
-			if (angle > 70.0) {
+			//Angles = 360 should be discarded
+			if (angle > 70.0 && angle < 359.9) {
 				if (state.getType().equals(SecStrucType.coil)) {
 					state.setType(SecStrucType.bend);
 				}
@@ -432,17 +401,17 @@ public class SecStrucPred {
 			Atom b_C  = b.getC();
 
 			double phi = Calc.torsionAngle(a_C,b_N,b_CA,b_C);
-
 			double psi = Calc.torsionAngle(a_N,a_CA,a_C,b_N);
-
 			double omega = Calc.torsionAngle(a_CA,a_C,b_N,b_CA);
 
-			SecStrucState state1 = (SecStrucState) a.getProperty(Group.SEC_STRUC);
-			SecStrucState state2 = (SecStrucState) b.getProperty(Group.SEC_STRUC);
+			SecStrucState state1 = (SecStrucState) 
+					a.getProperty(Group.SEC_STRUC);
+			SecStrucState state2 = (SecStrucState) 
+					b.getProperty(Group.SEC_STRUC);
+			
 			state2.setPhi(phi);
 			state1.setPsi(psi);
 			state1.setOmega(omega);
-
 		}
 	}
 
@@ -521,13 +490,10 @@ public class SecStrucPred {
 			SecStrucGroup b  = groups[i+1];
 
 			if ( !b.hasAtom("H") ) {
-
 				// calculate the coordinate for the H atom
 				//Atom H = calc_H(a.getC(), b.getN(), b.getCA());
 				Atom H = calcSimple_H(a.getC(), a.getO(), b.getN());
-				//TODO possible error because first H bond is not set (a)
 				b.setH(H);
-				
 			}
 		}
 	}
@@ -538,19 +504,19 @@ public class SecStrucPred {
 	 */
 	private void calculateHBonds() throws StructureException {
 
-		if ( groups.length < 5 )	return;
+		if (groups.length < 5) return;
 
 		//Skip the first residue, unable to calc H for it
-		for (int i=1 ; i < groups.length ;  i++){
+		for (int i=1 ; i < groups.length ; i++){
 
 			SecStrucGroup one = groups[i];
 
-			if ( ! one.hasAtom("H")) {
-				logger.info("No H at position " + i);
+			if (! one.hasAtom("H")) {
+				logger.warn("Residue "+one.getResidueNumber()+" has no H");
 				continue;
 			}
 
-			for ( int j=i+1 ; j<groups.length ; j++){
+			for (int j=i+1 ; j<groups.length ; j++){
 
 				SecStrucGroup two = groups[j];
 
@@ -567,6 +533,7 @@ public class SecStrucPred {
 	}
 
 	private void checkAddHBond(int i, int j){
+		
 		SecStrucGroup one = groups[i];
 
 		if (one.getPDBName().equals("PRO")){
@@ -577,7 +544,7 @@ public class SecStrucPred {
 		SecStrucGroup two = groups[j];
 		
 		if (!two.hasAtom("H")) {
-			logger.error("Residue "+two.getResidueNumber()+" has no H");
+			logger.warn("Residue "+two.getResidueNumber()+" has no H");
 			return;
 		}
 
@@ -586,7 +553,7 @@ public class SecStrucPred {
 		try {
 			energy = calculateHBondEnergy(one,two);
 		} catch (Exception e){
-			logger.warn("Energy calculation failed",e);
+			logger.warn("Energy calculation failed", e);
 			return;
 		}
 		logger.debug("Energy between positions ("+i+","+j+"): "+energy);
@@ -631,7 +598,6 @@ public class SecStrucPred {
 		if ( (dno < MINDIST) || (dhc < MINDIST) || 
 				(dnc < MINDIST) || (dno < MINDIST)) {
 			return HBONDLOWENERGY;
-			//TODO why returning now?
 		}
 
 		double e1 = Q / dho - Q / dhc;
@@ -642,7 +608,7 @@ public class SecStrucPred {
 		logger.debug(String.format("      N (%d) O(%d): %4.1f : %4.2f ",
 				N.getPDBserial(),O.getPDBserial(), (float) dno, energy));
 		
-		// test to avoid bond too strong
+		//Avoid too strong energy
 		if (energy > HBONDLOWENERGY) return energy;
 
 		return HBONDLOWENERGY ;
@@ -656,10 +622,10 @@ public class SecStrucPred {
 	 * @return a double
 	 * @throws StructureException
 	 */
-	public static BigDecimal getPreciseDistance(Atom a, Atom b)
+	@SuppressWarnings("unused")
+	private static BigDecimal getPreciseDistance(Atom a, Atom b)
 			throws StructureException {
 		
-		//TODO not used ...
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();
@@ -682,12 +648,15 @@ public class SecStrucPred {
 		Group one = groups[i];
 		Group two = groups[j];
 
-		if (one.getPDBName().equals("PRO")) return;
+		if (one.getPDBName().equals("PRO")) {
+			logger.debug("Ignore: PRO " + one.getResidueNumber());
+			return;
+		}
 
-		SecStrucState stateOne = 
-				(SecStrucState) one.getProperty(Group.SEC_STRUC);
-		SecStrucState stateTwo = 
-				(SecStrucState) two.getProperty(Group.SEC_STRUC);
+		SecStrucState stateOne = (SecStrucState) 
+				one.getProperty(Group.SEC_STRUC);
+		SecStrucState stateTwo = (SecStrucState) 
+				two.getProperty(Group.SEC_STRUC);
 
 		double acc1e = stateOne.getAccept1().getEnergy();
 		double acc2e = stateOne.getAccept2().getEnergy();
@@ -696,7 +665,7 @@ public class SecStrucPred {
 		double don2e = stateTwo.getDonor2().getEnergy();
 
 		if (energy < acc1e) {
-			//System.out.println(energy +"<"+acc1e) ;
+			logger.debug(energy +"<"+acc1e);
 			stateOne.setAccept2(stateOne.getAccept1());
 
 			HBond bond = new HBond();
@@ -706,7 +675,7 @@ public class SecStrucPred {
 			stateOne.setAccept1(bond);
 
 		} else if ( energy < acc2e ) {
-			//System.out.println(energy +"<"+acc2e) ;
+			logger.debug(energy +"<"+acc2e) ;
 			HBond bond = new HBond();
 			bond.setEnergy(energy);
 			bond.setPartner(j);
@@ -716,8 +685,8 @@ public class SecStrucPred {
 
 		// and now the other side of the bond ..
 
-
 		if (energy <  don1e) {
+			logger.debug(energy +"<"+don1e);
 			stateTwo.setDonor2(stateTwo.getDonor1());
 
 			HBond bond = new HBond();
@@ -727,60 +696,49 @@ public class SecStrucPred {
 			stateTwo.setDonor1(bond);
 
 		} else if ( energy < don2e ) {
-
-			//System.out.println(energy +"<"+don2e) ;
+			logger.debug(energy +"<"+don2e);
 
 			HBond bond = new HBond();
 			bond.setEnergy(energy);
 			bond.setPartner(i);
 
 			stateTwo.setDonor2(bond);
-
 		}
-
-		//System.out.println(stateOne);
-		//one.setProperty(Group.SEC_STRUC, stateOne);
-		//two.setProperty(Group.SEC_STRUC, stateTwo);
-		/*groups[i] = one;
-      groups[j] = two;
-		 */
 	}
 
-	/** detect helical turn patterns
-	 *
-	 *
+	/** 
+	 * Detect helical turn patterns.
 	 */
 	private void calculateTurns(){
 
-		int l = groups.length;
-		for (int i = 0 ; i< l ; i++){
+		for (int i = 0 ; i< groups.length; i++){
+			for (int turn = 3; turn <= 5 ; turn++) {
+				
+				if (i+turn >= groups.length) continue;
 
-			for ( int turn = 3; turn <= 5 ; turn++ ) {
-				if (i+turn >= l)
-					continue;
-
-				if ( isBonded(i+turn, i)){
-					//System.out.println("is bondend " + (i+turn) + i );
-					for ( int j=i;j<i+turn+1;j++){
-						//System.out.println("turn at i:" + i + " j:" + j + " turn" + turn);
+				if (isBonded(i+turn, i)) {
+					logger.debug("is bondend " + (i+turn) + i);
+					for (int j=i;j<i+turn+1;j++){
+						logger.debug("turn at i:"+i+" j:"+j+" turn"+turn);
 						SecStrucGroup group = groups[j];
-						SecStrucState state = (SecStrucState) group.getProperty(Group.SEC_STRUC);
+						SecStrucState state = (SecStrucState) 
+								group.getProperty(Group.SEC_STRUC);
 						boolean[] turns = state.getTurn();
 						turns[turn-3] = true;
-
 					}
 				}
 			}
 		}
 	}
 
-	/** test if two groups are forming an H-Bond
-	 * DSSP defines H-Bonds if the energy < -500 cal /mol
+	/** 
+	 * Test if two groups are forming an H-Bond.
+	 * DSSP defines H-Bonds if the energy < -500 cal/mol
+	 * 
 	 * @param one group one
 	 * @param two group two
 	 * @return flag if the two are forming an Hbond
 	 */
-
 	private boolean isBonded(int i, int j) {
 
 		Group one = groups[i];
@@ -813,15 +771,12 @@ public class SecStrucPred {
 	 * C coordinates are from amino acid i-1
 	 * N, CA atoms from amino acid i
 	 *
-	 * see also:
-	 * @link{http://openbioinformatics.blogspot.com/2009/08/how-to-calculate-h-atoms-for-nitrogens.html}
-	 *
-	 *
+	 * @link http://openbioinformatics.blogspot.com/
+	 * 		2009/08/how-to-calculate-h-atoms-for-nitrogens.html
 	 */
 	@SuppressWarnings("unused")
 	private static Atom calc_H(Atom C, Atom N, Atom CA)
-			throws StructureException
-	{
+			throws StructureException {
 
 		Atom nc  = Calc.subtract(N,C);
 		Atom nca = Calc.subtract(N,CA);
@@ -831,7 +786,7 @@ public class SecStrucPred {
 
 		Atom added = Calc.add(u_nc,u_nca);
 
-		Atom U     = Calc.unitVector(added);
+		Atom U = Calc.unitVector(added);
 
 		// according to Creighton distance N-H is 1.03 +/- 0.02A
 		Atom H = Calc.add(N,U);
@@ -842,7 +797,8 @@ public class SecStrucPred {
 
 	}
 
-	private static Atom calcSimple_H(Atom c,Atom o, Atom n) throws StructureException{
+	private static Atom calcSimple_H(Atom c, Atom o, Atom n) 
+			throws StructureException {
 
 		Atom h = Calc.subtract(c,o);
 		double dist = Calc.getDistance(o,c);
@@ -861,28 +817,12 @@ public class SecStrucPred {
 
 	private void buildHelices(){
 
-		// check for minimum size
-		if ( groups.length < 5 ) return;
-
-		/** test if two groups are forming an H-Bond
-
-		 * DSSP defines H-Bonds if the energy < -500 cal /mol
-
-		 * @param one group one
-
-		 * @param two group two
-
-		 * @return flag if the two are forming an Hbond
-
-		 */
-
-		// Alpha Helix (i+4)
+		//Alpha-helix (i+4), 3-10-helix (i+3), Pi-helix (i+5)
 		checkSetHelix(4, SecStrucType.helix4);
 		checkSetHelix(3, SecStrucType.helix3);
 		checkSetHelix(5, SecStrucType.helix5);
 
 		checkSetTurns();
-
 	}
 
 	private void checkSetTurns() {
@@ -890,24 +830,23 @@ public class SecStrucPred {
 
 			Group g = groups[i];
 
-			SecStrucState state = 
-					(SecStrucState) g.getProperty(Group.SEC_STRUC);
+			SecStrucState state = (SecStrucState) 
+					g.getProperty(Group.SEC_STRUC);
 
 			SecStrucType type = state.getType();
 
-			if ( type.isHelixType() )
-				continue;
+			if ( type.isHelixType() ) continue;
 
 			boolean[] turns = state.getTurn();
+			
 			for ( int t = 0 ; t < 3 ; t ++){
-				if ( turns[t])
-				{
+				if ( turns[t]) {
 
 					for ( int l = i+1 ; l < i+t+3; l++) {
-						//System.out.println("turn: " + i + " " + type);
-						if ( l >= groups.length)
-							break;
-						SecStrucType typel =getSecStrucType(l);
+						logger.debug("turn: " + i + " " + type);
+						if ( l >= groups.length) break;
+						
+						SecStrucType typel = getSecStrucType(l);
 						if ( typel.equals(SecStrucType.coil))
 							setSecStrucType(l, SecStrucType.turn);
 
@@ -917,59 +856,52 @@ public class SecStrucPred {
 		}
 	}
 
-	private void checkSetHelix( int prange,SecStrucType type){
+	private void checkSetHelix(int prange, SecStrucType type){
 
 		int range = prange - 3;
-		//System.out.println("set helix " + type + " " + prange + " " + range);
+		logger.debug("set helix " + type + " " + prange + " " + range);
+		
 		for (int i =1 ; i < groups.length -range -1 ;i++){
 
 			Group g = groups[i];
-
-			SecStrucState state = (SecStrucState) g.getProperty(Group.SEC_STRUC);
-
+			SecStrucState state = (SecStrucState) 
+					g.getProperty(Group.SEC_STRUC);
 
 			Group prevG = groups[i-1];
-
-			SecStrucState prevState = (SecStrucState) prevG.getProperty(Group.SEC_STRUC);
+			
+			SecStrucState prevState = (SecStrucState) 
+					prevG.getProperty(Group.SEC_STRUC);
 
 			Group nextG = groups[i+1];
-
-			SecStrucState nextState = (SecStrucState) nextG.getProperty(Group.SEC_STRUC);
+			SecStrucState nextState = (SecStrucState) 
+					nextG.getProperty(Group.SEC_STRUC);
 
 			boolean[] turns = state.getTurn();
-
 			boolean[] pturns = prevState.getTurn();
-
 			boolean[] nturns = nextState.getTurn();
 
 			// DSSP sets helices one amino acid too short....
 
-			if ( turns[range] && pturns[range] && nturns[range]) {
+			if (turns[range] && pturns[range] && nturns[range]) {
 
 				//Check if no secstruc assigned
-
 				boolean empty = true;
 
-				for ( int curr =i; curr <= i+range ;curr++){
-					//System.out.println("   " + i + " range: " + prange + " " + range);
+				for (int curr=i; curr <= i+range; curr++){
+					logger.debug("   " +i+ " range: " + prange + " " + range);
+					
 					SecStrucType cstate = getSecStrucType(curr);
-
 					if (cstate.isHelixType()){
-
 						empty = false;
-
 						break;
 					}
 				}
 
 				// none is assigned yet, set to helix type
+				if (empty) {
 
-				if ( empty ) {
-
-					for ( int curr =i; curr <= i+range ;curr++){
-
-						setSecStrucType(curr,type);
-
+					for (int curr =i; curr <= i+range ;curr++){
+						setSecStrucType(curr, type);
 					}
 				}
 			}
