@@ -200,8 +200,8 @@ public class BlastTabularParser implements ResultFactory {
     
     /**
      * Intended for use with run module. 
-     * Although possible does not make a lot of sense to have it with limited 
-     * information in report
+     * Although possible, does not make a lot of sense to have it with limited 
+     * information such those in tabular report
      * @param sequences 
      */
     @Override
@@ -210,13 +210,23 @@ public class BlastTabularParser implements ResultFactory {
     }
     /**
      * Intended for use with run module. 
-     * Although possible does not make a lot of sense to have it with limited 
-     * information in report
+     * Although possible, does not make a lot of sense to have it with limited 
+     * information such those in tabular report
      * @param sequences 
      */
     @Override
     public void setDatabaseReferences(List sequences) {
         throw new UnsupportedOperationException("Not supported for this parser.");
     }
-
+     /**
+     * Tries to define a different level of consistency during parsing.
+     * LITERAL is intended a strict parsing much tight to the report.
+     * IMPROVED consistency tries to import data much tight to the data model
+     * (I hope you got the idea, if not, have a look to the code.
+     * I suggest to use improved unless you have reasons to do not)
+     */
+    public void setParsingConsistency(PARSING_CONSISTENCY parsingConsistency) {
+        this.parsingConsistency = parsingConsistency;
+    }
+    
 }
