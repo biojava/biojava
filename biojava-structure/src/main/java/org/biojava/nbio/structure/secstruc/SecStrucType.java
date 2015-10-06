@@ -23,21 +23,25 @@ package org.biojava.nbio.structure.secstruc;
 /**
  * This enum contains all of the secondary structure types found
  * in the DSSP output. It also contains some methods to operate
- * with the SS types.
+ * with the SS types. 
+ * <p>
+ * When compared, the types are sorted in the
+ * declaration order of the enum, which is the DSSP preference of
+ * type assignment.
  * 
  * @author Andreas Prlic
  * @author Aleix Lafita
  *
  */
-public enum SecStrucType {
+public enum SecStrucType implements Comparable<SecStrucType> {
 
 	helix4("alpha Helix",'H'),
+	bridge("Bridge",'B'),
+	extended("Extended",'E'),
 	helix3("3-10 Helix",'G'),
 	helix5("pi Helix",'I'),
-	extended("Extended",'E'),
 	turn("Turn",'T'),
 	bend("Bend",'S'),
-	bridge("Bridge",'B'),
 	coil("Coil",' ');
 
 	public final Character type;

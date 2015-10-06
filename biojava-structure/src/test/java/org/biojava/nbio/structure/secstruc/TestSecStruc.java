@@ -34,22 +34,25 @@ public class TestSecStruc {
 	}
 
 	@Test
-	public void testDSSPImplementation() throws StructureException {
+	public void testSecStrucPred() throws StructureException {
 
-			SecStrucPred sec = new SecStrucPred();
-			sec.predict(s, false);
-			
-			System.out.println(sec);
+		SecStrucPred sec = new SecStrucPred();
+		sec.predict(s, false);
+		
+		System.out.println("SecStrucPred output:");
+		System.out.println(sec);
 	}
 	
 	@Test
 	public void testDSSPParser() throws IOException, StructureException {
 		
+		System.out.println("DSSP Parser output:");
+		
 		List<SecStrucState> secstruc = 
 				DSSPParser.parseDSSP("src/test/resources/5pti.dssp", s, false);
 		
 		for (int i=0; i<secstruc.size(); i++){
-			//System.out.println(secstruc.get(i).printDSSPline(i));
+			System.out.println(secstruc.get(i).printDSSPline(i));
 		}
 	}
 	

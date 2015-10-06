@@ -96,7 +96,10 @@ public class DSSPParser {
 					int b = a + 8;
 					
 					String val = line.substring(a,b).trim();
-					if (val == "") continue;
+					if (val == "") {
+						logger.warn("Unable to parse energy for resn "+index);
+						continue;
+					}
 					
 					String[] p = val.split(",");
 					
@@ -127,12 +130,15 @@ public class DSSPParser {
 				//Angle properties
 				String val = line.substring(91,97).trim();
 				if (val != "") ss.setKappa(Float.valueOf(val));
+				else logger.warn("Unable to parse kappa for resn "+index);
 				
 				val = line.substring(103,109).trim();
 				if (val != "") ss.setPhi(Float.valueOf(val));
+				else logger.warn("Unable to parse phi for resn "+index);
 				
 				val = line.substring(109,116).trim();
 				if (val != "") ss.setPsi(Float.valueOf(val));
+				else logger.warn("Unable to parse psi for resn "+index);
 				
 				if (assign) parent.setProperty(Group.SEC_STRUC, ss);
 				secstruc.add(ss);

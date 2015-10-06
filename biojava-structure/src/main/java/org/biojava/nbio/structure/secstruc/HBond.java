@@ -34,7 +34,6 @@ public class HBond{
     private int partner;
     
     public HBond() {
-    	//TODO why initialize to 0? better Double.MAX_VALUE
         energy = 0;
         partner = 0;
     }
