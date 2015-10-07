@@ -490,10 +490,10 @@ public class SecStrucPred {
 			SecStrucGroup b  = groups[i+1];
 
 			if ( !b.hasAtom("H") ) {
-				// calculate the coordinate for the H atom
 				//Atom H = calc_H(a.getC(), b.getN(), b.getCA());
 				Atom H = calcSimple_H(a.getC(), a.getO(), b.getN());
 				b.setH(H);
+				//First residue skipped, unable to calc H for it TODO
 			}
 		}
 	}
@@ -506,21 +506,15 @@ public class SecStrucPred {
 
 		if (groups.length < 5) return;
 
-		//Skip the first residue, unable to calc H for it
-		for (int i=1 ; i < groups.length ; i++){
+		for (int i=0 ; i < groups.length ; i++){
 
 			SecStrucGroup one = groups[i];
-
-			if (! one.hasAtom("H")) {
-				logger.warn("Residue "+one.getResidueNumber()+" has no H");
-				continue;
-			}
 
 			for (int j=i+1 ; j<groups.length ; j++){
 
 				SecStrucGroup two = groups[j];
 
-				//if distance too big - for sure no HBonds
+				//if distance too big - for sure no HBonds - sppedup
 				double dist = Calc.getDistance(one.getCA(),two.getCA());
 				if (dist >= CA_MIN_DIST) continue;
 
@@ -540,14 +534,13 @@ public class SecStrucPred {
 			logger.debug("Ignore: PRO " + one.getResidueNumber());
 			return;
 		}
-
-		SecStrucGroup two = groups[j];
-		
-		if (!two.hasAtom("H")) {
-			logger.warn("Residue "+two.getResidueNumber()+" has no H");
+		if (!one.hasAtom("H")) {
+			logger.warn("Residue "+one.getResidueNumber()+" has no H");
 			return;
 		}
 
+		SecStrucGroup two = groups[j];
+		
 		double energy = 0;
 		
 		try {
@@ -744,22 +737,21 @@ public class SecStrucPred {
 		Group one = groups[i];
 		//Group two = groups[j];
 
-		SecStrucState stateOne = (SecStrucState)one.getProperty(Group.SEC_STRUC);
-		//SecStrucState stateTwo = (SecStrucState)two.getProperty(Group.SEC_STRUC);
+		SecStrucState stateOne = (SecStrucState)
+				one.getProperty(Group.SEC_STRUC);
+		//SecStrucState stateTwo = two.getProperty(Group.SEC_STRUC);
 
-		//System.out.println("*** bonded? " + i + " " + j + " " + stateOne);
 		double acc1e    = stateOne.getAccept1().getEnergy();
 		double acc2e    = stateOne.getAccept2().getEnergy();
 
 		int partnerAcc1 = stateOne.getAccept1().getPartner();
 		int partnerAcc2 = stateOne.getAccept2().getPartner();
 
-		if (
-				( ( partnerAcc1 == j ) && (acc1e < HBONDHIGHENERGY) )
+		if (	( ( partnerAcc1 == j ) && (acc1e < HBONDHIGHENERGY) )
 				||
 				( ( partnerAcc2 == j ) && (acc2e < HBONDHIGHENERGY) )
 				) {
-			//System.out.println("*** yes is bonded " + i + " " + j);
+			logger.debug("*** H-bond between " + i + " " + j);
 			return true ;
 		}
 		return false ;
