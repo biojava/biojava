@@ -53,4 +53,14 @@ public class SecStrucInfo {
 		return assignment + ": " + type;
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if (!(o instanceof SecStrucInfo)) return false;
+		else {
+			SecStrucInfo ss = (SecStrucInfo) o;
+			if (type == ss.type) return true;
+			else return false;
+		}
+	}
+	
 }

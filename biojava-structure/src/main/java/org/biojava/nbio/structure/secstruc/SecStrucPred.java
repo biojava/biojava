@@ -33,8 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** 
- * Calculate and assign the secondary structure (SS) to the AminoAcid 
- * Groups of a Structure object.
+ * Calculate and assign the secondary structure (SS) to the 
+ * Groups of a Structure object. This object also stores the result
+ * of the prediction.
  * <p>
  * The rules for SS calculation are the ones defined by DSSP:
  * Kabsch,W. and Sander,C. (1983) Biopolymers 22, 2577-2637.
@@ -435,6 +436,23 @@ public class SecStrucPred {
 
 		return buf.toString();
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		
+		if (!(o instanceof SecStrucPred)) return false;
+		else {
+			SecStrucPred ss = (SecStrucPred) o;
+			if (groups.length != ss.groups.length) return false;
+			
+			for (int g=0; g<groups.length; g++){
+				SecStrucInfo g1 = getSecStrucState(g);
+				SecStrucInfo g2 = ss.getSecStrucState(g);
+				if (!g1.equals(g2)) return false;
+			}
+			return true;
+		}
+	}
 
 	private static SecStrucGroup[] initGroupArray(Structure s) {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
@@ -535,7 +553,7 @@ public class SecStrucPred {
 			return;
 		}
 		if (!one.hasAtom("H")) {
-			logger.warn("Residue "+one.getResidueNumber()+" has no H");
+			logger.debug("Residue "+one.getResidueNumber()+" has no H");
 			return;
 		}
 
