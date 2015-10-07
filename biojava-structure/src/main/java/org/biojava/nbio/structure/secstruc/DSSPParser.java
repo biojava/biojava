@@ -71,7 +71,7 @@ public class DSSPParser {
 	 * @throws StructureException 
 	 * @throws IOException
 	 */
-	public static List<SecStrucState> fetch(String pdb, 
+	public static List<SecStrucState> fetch(String pdb,
 			Structure structure, boolean assign) 
 					throws IOException, StructureException {
 		
@@ -128,7 +128,7 @@ public class DSSPParser {
 				//Get the group of the structure corresponding to the residue
 				int resNum = Integer.valueOf(resNumStr);
 				char insCode = line.charAt(10);
-				String chainId = line.charAt(11)+"";
+				String chainId = line.substring(11,13).trim();
 				ResidueNumber r = new ResidueNumber(chainId, resNum, insCode);
 				Group parent = structure.getChainByPDB(chainId)
 						.getGroupByPDB(r);

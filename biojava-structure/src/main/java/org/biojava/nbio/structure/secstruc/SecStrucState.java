@@ -156,7 +156,8 @@ public class SecStrucState extends SecStrucInfo {
 		Character insCode = parent.getResidueNumber().getInsCode();
 		if (insCode != null) buf.append(insCode);
 		else buf.append(" ");
-		buf.append(parent.getChainId()).append(" ");
+		buf.append(parent.getChainId());
+		if (parent.getChainId().length() == 1) buf.append(" ");
 		
 		//AA
 		char aaLetter = StructureTools.get1LetterCode(parent.getPDBName());
