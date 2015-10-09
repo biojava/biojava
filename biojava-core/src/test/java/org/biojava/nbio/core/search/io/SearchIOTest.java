@@ -2,7 +2,7 @@ package org.biojava.nbio.core.search.io;
 
 import java.io.File;
 import java.net.URL;
-import org.biojava.nbio.core.search.io.blast.BlastXMLQuery;
+import org.biojava.nbio.core.search.io.blast.BlastXMLParser;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -64,7 +64,7 @@ public class SearchIOTest {
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
-        ResultFactory blastResultFactory = new BlastXMLQuery();
+        ResultFactory blastResultFactory = new BlastXMLParser();
         final SearchIO instance;
         try {
             instance = new SearchIO(file, blastResultFactory);
@@ -82,7 +82,7 @@ public class SearchIOTest {
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
-        ResultFactory blastResultFactory = new BlastXMLQuery();
+        ResultFactory blastResultFactory = new BlastXMLParser();
         final SearchIO instance;
         try {
             instance = new SearchIO(file, blastResultFactory, 10e-10);
