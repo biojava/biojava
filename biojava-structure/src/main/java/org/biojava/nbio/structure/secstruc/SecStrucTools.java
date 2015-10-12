@@ -3,7 +3,6 @@ package org.biojava.nbio.structure.secstruc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupIterator;
 import org.biojava.nbio.structure.Structure;
@@ -30,10 +29,8 @@ public class SecStrucTools {
 		while (iter.hasNext()){
 			Group g = iter.next();
 
-			if (g instanceof AminoAcid){
-				AminoAcid aa = (AminoAcid) g;
-				//TODO
-				
+			if (g.hasAminoAtoms()){
+				//TODO create a SSE
 			}
 		}
 		

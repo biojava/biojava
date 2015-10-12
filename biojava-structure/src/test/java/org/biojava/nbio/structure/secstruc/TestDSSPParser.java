@@ -51,11 +51,11 @@ public class TestDSSPParser {
 					pred.size() == file.size());
 			
 			for (int i=0; i<file.size(); i++){
-				assertEquals("SS assignment position "+i+" does not match", 
+				assertEquals("SS assignment position "+(i+1)+" does not match",
 						file.get(i), pdb.get(i));
-				assertEquals("SS assignment position "+i+" does not match", 
+				assertEquals("SS assignment position "+(i+1)+" does not match",
 						pred.get(i), parseBack.get(i));
-				assertEquals("SS assignment position "+i+" does not match", 
+				assertEquals("SS assignment position "+(i+1)+" does not match",
 						file.get(i), pred.get(i));
 			}
 		}

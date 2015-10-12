@@ -44,6 +44,7 @@ public class SecStrucState extends SecStrucInfo {
 	private HBond donor1;
 	private HBond donor2;
 
+	//Change that to symbols to know if comming < or going > or X
 	private boolean[] turn;
 	private boolean bend;
 

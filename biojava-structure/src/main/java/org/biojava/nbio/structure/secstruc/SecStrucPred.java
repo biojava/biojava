@@ -305,18 +305,42 @@ public class SecStrucPred {
 
 	}
 
-	private boolean shouldExtendLadder(Ladder ladder, int start, 
-			int end, BridgeType btype) {
+	/**
+	 * Conditions to extend a ladder with a given beta Bridge:
+	 * <li>The bridge and ladder are of the same type.
+	 * <li>The smallest bridge residue is sequential to the first
+	 * 		strand ladder.
+	 * <li>The second bridge residue is either sequential (parallel)
+	 * 		or previous (antiparallel) to the second strand of the ladder
+	 * </li>
+	 * @param ladder the ladder candidate to extend
+	 * @param i index of the first bridge residue
+	 * @param j index of the second bridge residue
+	 * @param btype type of beta bridge
+	 * @return true if the bridge (i,j) extends the ladder
+	 */
+	private boolean shouldExtendLadder(Ladder ladder, int i, 
+			int j, BridgeType btype) {
 
-		return ( (btype.equals(ladder.btype) ) &&
-				( start  == ladder.to +1) &&
-				(
-						(( end == ladder.lto + 1) &&
-								( btype.equals(BridgeType.parallel) )) ||
-								(( end == ladder.lfrom - 1 ) &&
-										(btype.equals(BridgeType.parallel)))										
-						) );
-		//TODO suspicious that antiparallel is not used...
+		//Only extend if they are of the same type
+		boolean sameType = btype.equals(ladder.btype);
+		if (!sameType) return false;
+		
+		//Only extend if residue i is sequential to ladder strand
+		boolean sequential = (i == ladder.to+1);
+		if (!sequential) return false;
+		
+		switch(btype){
+		case parallel:
+			//Residue j should be sequential to second strand
+			if (j == ladder.lto+1) return true;
+			break;
+		case antiparallel:
+			//Residue j should be previous to second strand
+			if (j == ladder.lfrom-1) return true;
+			break;
+		}
+		return false;
 	}
 
 	private void testBridge(int i) {
@@ -429,8 +453,7 @@ public class SecStrucPred {
 
 		for (int i =0 ; i < groups.length ;i++){
 			buf.append(nl);
-			SecStrucState ss = 
-					(SecStrucState) groups[i].getProperty(Group.SEC_STRUC);
+			SecStrucState ss = getSecStrucState(i);
 			buf.append(ss.printDSSPline(i));
 		}
 
@@ -531,7 +554,7 @@ public class SecStrucPred {
 			for (int j=i+1 ; j<groups.length ; j++){
 
 				SecStrucGroup two = groups[j];
-
+				//TODO use contacts package to speed up n^2 distance
 				//if distance too big - for sure no HBonds - sppedup
 				double dist = Calc.getDistance(one.getCA(),two.getCA());
 				if (dist >= CA_MIN_DIST) continue;
@@ -731,9 +754,8 @@ public class SecStrucPred {
 					logger.debug("is bondend " + (i+turn) + i);
 					for (int j=i;j<i+turn+1;j++){
 						logger.debug("turn at i:"+i+" j:"+j+" turn"+turn);
-						SecStrucGroup group = groups[j];
-						SecStrucState state = (SecStrucState) 
-								group.getProperty(Group.SEC_STRUC);
+						
+						SecStrucState state = getSecStrucState(j);
 						boolean[] turns = state.getTurn();
 						turns[turn-3] = true;
 					}
@@ -752,15 +774,10 @@ public class SecStrucPred {
 	 */
 	private boolean isBonded(int i, int j) {
 
-		Group one = groups[i];
-		//Group two = groups[j];
+		SecStrucState stateOne = getSecStrucState(i);
 
-		SecStrucState stateOne = (SecStrucState)
-				one.getProperty(Group.SEC_STRUC);
-		//SecStrucState stateTwo = two.getProperty(Group.SEC_STRUC);
-
-		double acc1e    = stateOne.getAccept1().getEnergy();
-		double acc2e    = stateOne.getAccept2().getEnergy();
+		double acc1e = stateOne.getAccept1().getEnergy();
+		double acc2e = stateOne.getAccept2().getEnergy();
 
 		int partnerAcc1 = stateOne.getAccept1().getPartner();
 		int partnerAcc2 = stateOne.getAccept2().getPartner();
@@ -770,7 +787,7 @@ public class SecStrucPred {
 				( ( partnerAcc2 == j ) && (acc2e < HBONDHIGHENERGY) )
 				) {
 			logger.debug("*** H-bond between " + i + " " + j);
-			return true ;
+			return true;
 		}
 		return false ;
 	}
@@ -838,14 +855,11 @@ public class SecStrucPred {
 	private void checkSetTurns() {
 		for (int i =0 ; i < groups.length -3 ;i++){
 
-			Group g = groups[i];
-
-			SecStrucState state = (SecStrucState) 
-					g.getProperty(Group.SEC_STRUC);
-
+			SecStrucState state = getSecStrucState(i);
 			SecStrucType type = state.getType();
 
-			if ( type.isHelixType() ) continue;
+			//TODO use ordering of the SS types instead
+			if (type.isHelixType()) continue;
 
 			boolean[] turns = state.getTurn();
 			
@@ -873,24 +887,16 @@ public class SecStrucPred {
 		
 		for (int i =1 ; i < groups.length -range -1 ;i++){
 
-			Group g = groups[i];
-			SecStrucState state = (SecStrucState) 
-					g.getProperty(Group.SEC_STRUC);
-
-			Group prevG = groups[i-1];
-			
-			SecStrucState prevState = (SecStrucState) 
-					prevG.getProperty(Group.SEC_STRUC);
-
-			Group nextG = groups[i+1];
-			SecStrucState nextState = (SecStrucState) 
-					nextG.getProperty(Group.SEC_STRUC);
+			SecStrucState state = getSecStrucState(i);
+			SecStrucState prevState = getSecStrucState(i-1);
+			SecStrucState nextState = getSecStrucState(i+1);
 
 			boolean[] turns = state.getTurn();
 			boolean[] pturns = prevState.getTurn();
 			boolean[] nturns = nextState.getTurn();
 
-			// DSSP sets helices one amino acid too short....
+			//DSSP sets helices one amino acid too short....
+			//TODO review
 
 			if (turns[range] && pturns[range] && nturns[range]) {
 
@@ -909,7 +915,6 @@ public class SecStrucPred {
 
 				// none is assigned yet, set to helix type
 				if (empty) {
-
 					for (int curr =i; curr <= i+range ;curr++){
 						setSecStrucType(curr, type);
 					}
@@ -920,18 +925,18 @@ public class SecStrucPred {
 
 	private void setSecStrucType(int pos, SecStrucType type){
 
-		Group g = groups[pos];
-		SecStrucState s = (SecStrucState) g.getProperty(Group.SEC_STRUC);
+		SecStrucState s = getSecStrucState(pos);
 		s.setType(type);
 	}
 
 	private SecStrucType getSecStrucType(int pos){
-
+		
 		SecStrucState s = getSecStrucState(pos);
 		return s.getType();
 	}
 
 	private SecStrucState getSecStrucState(int pos){
+		//TODO consider using a List of SecStrucState to avoid this method
 		Group g = groups[pos];
 		SecStrucState state = (SecStrucState) g.getProperty(Group.SEC_STRUC);
 		return state;
