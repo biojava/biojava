@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.secstruc;
 
 /** 
- * Connects two strand regions to form larger sheets.
  * A Ladder is a set of one or more consecutive bridges of identical type.
  * A Bridge is a Ladder of length one.
  * 
@@ -38,7 +37,7 @@ public class Ladder {
 	
 	BridgeType btype;
 	
-	int connectedTo;
-	int connectedFrom;
+	int connectedTo; //another ladder with higher index connected to this
+	int connectedFrom; //another ladder with lower index connected to this
 	
 }

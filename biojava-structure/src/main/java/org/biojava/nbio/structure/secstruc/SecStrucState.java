@@ -36,7 +36,6 @@ public class SecStrucState extends SecStrucInfo {
 	private double phi;
 	private double psi;
 	private double omega;
-
 	private float kappa;
 	
 	private HBond accept1;
@@ -47,6 +46,9 @@ public class SecStrucState extends SecStrucInfo {
 	//Change that to symbols to know if comming < or going > or X
 	private boolean[] turn;
 	private boolean bend;
+	
+	private BetaBridge bridge1;
+	private BetaBridge bridge2;
 
 	public SecStrucState(Group g, String ass, SecStrucType t){
 		super(g, ass, t);
@@ -59,6 +61,9 @@ public class SecStrucState extends SecStrucInfo {
 		accept2 = new HBond();
 		donor1  = new HBond();
 		donor2  = new HBond();
+		
+		bridge1 = null;
+		bridge2 = null;
 		
 		turn = new boolean[3];
 		turn[0] = false;
@@ -138,6 +143,23 @@ public class SecStrucState extends SecStrucInfo {
 		this.omega = omega;
 	}
 	
+	public BetaBridge getBridge1() {
+		return bridge1;
+	}
+
+	public void setBridge(BetaBridge bridge) {
+		if (bridge1 == null) bridge1 = bridge;
+		else if (bridge1.equals(bridge)) return;
+		else if (bridge2 == null) bridge2 = bridge;
+		else if (bridge2.equals(bridge)) return; 
+		else throw new IllegalStateException(
+				"Cannot store more than 2 beta Bridge in one residue");
+	}
+
+	public BetaBridge getBridge2() {
+		return bridge2;
+	}
+
 	public String printDSSPline(int index) {
 		
 		StringBuffer buf = new StringBuffer();
@@ -145,7 +167,8 @@ public class SecStrucState extends SecStrucInfo {
 		//#
 		if (index < 9) buf.append("    ");
 		else if (index < 99) buf.append("   ");
-		else buf.append("  ");
+		else if (index < 999) buf.append("  ");
+		else buf.append(" ");
 		buf.append(index + 1);
 		
 		//RESIDUE
@@ -177,44 +200,58 @@ public class SecStrucState extends SecStrucInfo {
 		if (isBend()) buf.append('S');
 		else buf.append(" ");
 		
-		buf.append("    ");
+		buf.append(" ");
 
-		//BP1 TODO
-		buf.append("    ");
+		int bp1 = 0;
+		if (bridge1 != null){
+			if (bridge1.partner1 != index) bp1 = bridge1.partner1+1;
+			else bp1 = bridge1.partner2+1;
+		}
+		//TODO a clever way to do this?
+		if (bp1 < 10) buf.append("   "+bp1);
+		else if (bp1 < 100) buf.append("  "+bp1);
+		else if (bp1 < 1000) buf.append(" "+bp1);
+		else buf.append(bp1);
 		
-		//BP2 TODO
-		buf.append("    ");
+		int bp2 = 0;
+		if (bridge2 != null){
+			if (bridge2.partner1 != index) bp2 = bridge2.partner1+1;
+			else bp2 = bridge2.partner2+1;
+		}
+		if (bp2 < 10) buf.append("   "+bp2);
+		else if (bp2 < 100) buf.append("  "+bp2);
+		else if (bp2 < 1000) buf.append(" "+bp2);
+		else buf.append(bp2);
+		
+		//TODO beta-sheet label
+		buf.append(" ");
 		
 		//ACC TODO
-		buf.append("    ");
+		buf.append("      ");
 		
 		//N-H-->O
 		int p1 = accept1.getPartner();
-		if ( p1 != 0)
-			p1 -= index;
 		double e1 =  (accept1.getEnergy() / 1000.0);
+		if (e1 < 0.0) p1 -= index;
 		buf.append(String.format( "%6d,%4.1f",p1,e1));
 
 		//O-->H-N
 		int p2 = donor1.getPartner();
-		if ( p2 != 0)
-			p2 -= index;
 		double e2 = (donor1.getEnergy() / 1000.0);
-		buf.append(String.format( "%6d,%4.1f",p2,e2 ));
+		if (e2 < 0.0) p2 -= index;
+		buf.append(String.format( "%6d,%4.1f",p2,e2));
 
 		//N-H-->O
-		int p3 = accept2.getPartner() ;
-		if ( p3 != 0)
-			p3 -= index;
+		int p3 = accept2.getPartner();
 		double e3 =  (accept2.getEnergy() / 1000.0);
+		if (e3 < 0.0) p3 -= index;
 		buf.append(String.format( "%6d,%4.1f",p3,e3));
 
 		//O-->H-N
 		int p4 = donor2.getPartner();
-		if ( p4 != 0)
-			p4 -= index;
 		double e4 = (donor2.getEnergy() / 1000.0);
-		buf.append(String.format( "%6d,%4.1f",p4,e4 ));
+		if (e4 < 0.0) p4 -= index;
+		buf.append(String.format( "%6d,%4.1f",p4,e4));
 		
 		//TCO
 		buf.append("        ");

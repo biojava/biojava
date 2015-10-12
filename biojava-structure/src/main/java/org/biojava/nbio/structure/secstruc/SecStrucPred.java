@@ -78,9 +78,11 @@ public class SecStrucPred {
 
 	private SecStrucGroup[] groups;
 	private List<Ladder> ladders;
+	private List<BetaBridge> bridges;
 
 	public SecStrucPred(){
 		ladders = new ArrayList<Ladder>();
+		bridges = new ArrayList<BetaBridge>();
 	}
 
 	/** 
@@ -126,15 +128,49 @@ public class SecStrucPred {
 
 	private void detectStrands() {
 
-		for (int i =1 ; i < groups.length -1 ;i++){
-			testBridge(i);
-		}
+		//Find all the beta bridges of the structure
+		for (int i = 1; i < groups.length -1; i++) findBridges(i);
 
-		// detect beta bulges
+		//Create Ladders
+		createLadders();
+		
+		//Detect beta bulges between ladders
 		connectLadders();
 
-		// and store results for Sheets and Strands
+		//AND store SS assignments for Sheets, Strands and Bridges
 		updateSheets();
+	}
+	
+	private void createLadders(){
+		
+		for (BetaBridge b : bridges){
+			boolean found = false;
+			for (Ladder ladder : ladders){
+				if (shouldExtendLadder(ladder, b)) {
+					found = true;
+					ladder.to++; //we go forward in this direction
+					switch(b.type){
+					case parallel:
+						ladder.lto++; //increment second strand
+						break;
+					case antiparallel:
+						ladder.lfrom--; //decrement second strand
+						break;
+					}
+					break;
+				}
+			}
+			if (!found){
+				// create new ladder with a single bridge
+				Ladder l = new Ladder();
+				l.from = b.partner1;
+				l.to = b.partner1;
+				l.lfrom = b.partner2;
+				l.lto = b.partner2;
+				l.btype = b.type;
+				ladders.add(l);
+			}
+		}
 	}
 
 
@@ -205,11 +241,8 @@ public class SecStrucPred {
 
 					testSetExtendedSecStrucState(lcount);
 				}
-
 			}
-
 		}
-
 	}
 
 	private void testSetExtendedSecStrucState(int lcount) {
@@ -224,10 +257,10 @@ public class SecStrucPred {
 	private void connectLadders() {
 
 		for (int i = 0 ; i < ladders.size(); i++) {
-			for ( int j = i ; j < ladders.size() ; j++){
+			for ( int j = i ; j < ladders.size(); j++){
 				Ladder l1 = ladders.get(i);
 				Ladder l2 = ladders.get(j);
-				if (hasBulge(l1,l2) ) {
+				if (hasBulge(l1,l2)) {
 					l1.connectedTo = j;
 					l2.connectedFrom = i;
 					logger.debug("Bulge from " + i + " to " + j);
@@ -240,10 +273,10 @@ public class SecStrucPred {
 
 	private boolean hasBulge(Ladder l1, Ladder l2) {
 		
-		boolean bulge = ( (l1.btype.equals(l2.btype) ) &&
-				( l2.from - l1.to < 6) &&
-				( l1.to < l2.from) &&
-				(l2.connectedTo == 0) );
+		boolean bulge = ((l1.btype.equals(l2.btype)) &&
+				(l2.from - l1.to < 6) &&
+				(l1.to < l2.from) &&
+				(l2.connectedTo == 0));
 
 		if (!bulge) return bulge;
 
@@ -260,8 +293,7 @@ public class SecStrucPred {
 			bulge = ( (l1.lfrom - l2.lto > 0) &&
 					(((l1.lfrom -l2.lto < 6) &&
 							( l2.from - l1.to < 3)) ||
-							(l1.lfrom - l2.lto < 3))
-					);
+							(l1.lfrom - l2.lto < 3)));
 			
 			break;
 		}
@@ -272,37 +304,23 @@ public class SecStrucPred {
 	private void registerBridge(int i, int j, BridgeType btype) {
 		
 		if (i > j) {
-			logger.warn("Trying to connect ladder where i > j");
-			return;
+			logger.error("Trying to connect BetaBridge where i > j. "
+					+ "Swapping indices...");
+			int tmp = i;
+			i=j;
+			j=tmp;
 		}
+		
+		BetaBridge bridge = new BetaBridge();
+		bridge.partner1 = i;
+		bridge.partner2 = j;
+		bridge.type = btype;
+		
+		getSecStrucState(i).setBridge(bridge);
+		getSecStrucState(j).setBridge(bridge);
 
-		boolean found = false;
-		for (Ladder ladder : ladders){
-			if (shouldExtendLadder(ladder, i, j, btype)) {
-				found = true;
-				ladder.to++; //we go forward in this direction
-				switch(btype){
-				case parallel:
-					ladder.lto++; //increment second strand
-					break;
-				case antiparallel:
-					ladder.lfrom--; //decrement second strand
-					break;
-				}
-				break;
-			}
-		}
-		if (!found){
-			// create new ladder with a single bridge
-			Ladder l = new Ladder();
-			l.from = i;
-			l.to = i;
-			l.lfrom = j;
-			l.lto = j;
-			l.btype = btype;
-			ladders.add(l);
-		}
-
+		bridges.add(bridge);
+		
 	}
 
 	/**
@@ -314,54 +332,48 @@ public class SecStrucPred {
 	 * 		or previous (antiparallel) to the second strand of the ladder
 	 * </li>
 	 * @param ladder the ladder candidate to extend
-	 * @param i index of the first bridge residue
-	 * @param j index of the second bridge residue
-	 * @param btype type of beta bridge
-	 * @return true if the bridge (i,j) extends the ladder
+	 * @param b the beta bridge that would extend the ladder
+	 * @return true if the bridge b extends the ladder
 	 */
-	private boolean shouldExtendLadder(Ladder ladder, int i, 
-			int j, BridgeType btype) {
+	private boolean shouldExtendLadder(Ladder ladder, BetaBridge b) {
 
 		//Only extend if they are of the same type
-		boolean sameType = btype.equals(ladder.btype);
+		boolean sameType = b.type.equals(ladder.btype);
 		if (!sameType) return false;
 		
-		//Only extend if residue i is sequential to ladder strand
-		boolean sequential = (i == ladder.to+1);
+		//Only extend if residue 1 is sequential to ladder strand
+		boolean sequential = (b.partner1 == ladder.to+1);
 		if (!sequential) return false;
 		
-		switch(btype){
+		switch(b.type){
 		case parallel:
-			//Residue j should be sequential to second strand
-			if (j == ladder.lto+1) return true;
+			//Residue 2 should be sequential to second strand
+			if (b.partner2 == ladder.lto+1) return true;
 			break;
 		case antiparallel:
-			//Residue j should be previous to second strand
-			if (j == ladder.lfrom-1) return true;
+			//Residue 2 should be previous to second strand
+			if (b.partner2 == ladder.lfrom-1) return true;
 			break;
 		}
 		return false;
 	}
 
-	private void testBridge(int i) {
+	private void findBridges(int i) {
 		
-		int j = i + 3; //sum 3 for the non-overlapping condition
-		
-		for (int foundNrBridges = 0; foundNrBridges < 2
-				&& (j < groups.length-1); j++){
+		for (int j = i+3; j < groups.length-1; j++){
 
 			BridgeType btype = null;
 
-			if ((isBonded(i-1, j) && isBonded(j, i+1) ) ||
-					(isBonded(j-1, i) && isBonded(i, j+1)) ) {
+			if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
+					(isBonded(j-1,i) && isBonded(i,j+1))) {
 				btype = BridgeType.parallel;
 			}
-			else if ((isBonded(i, j) && isBonded(j, i)) ||
-					(isBonded(i-1,j+1) && (isBonded(j-1, i+1)))) {
+			else if ((isBonded(i,j) && isBonded(j,i)) ||
+					(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
 				btype = BridgeType.antiparallel;
 			}
+			
 			if (btype != null){
-				foundNrBridges++;
 				registerBridge(i, j, btype);
 			}
 		}
@@ -413,9 +425,7 @@ public class SecStrucPred {
 		for (int i=0 ; i < groups.length-1 ;  i++){
 
 			SecStrucGroup a = groups[i];
-
 			SecStrucGroup b = groups[i+1];
-
 
 			Atom a_N   = a.getN();
 			Atom a_CA  = a.getCA();
@@ -534,7 +544,6 @@ public class SecStrucPred {
 				//Atom H = calc_H(a.getC(), b.getN(), b.getCA());
 				Atom H = calcSimple_H(a.getC(), a.getO(), b.getN());
 				b.setH(H);
-				//First residue skipped, unable to calc H for it TODO
 			}
 		}
 	}
@@ -678,19 +687,14 @@ public class SecStrucPred {
 	 * DSSP allows two HBonds per aminoacids to allow bifurcated bonds.
 	 */
 	private  void trackHBondEnergy(int i, int j, double energy) {
-
-		Group one = groups[i];
-		Group two = groups[j];
-
-		if (one.getPDBName().equals("PRO")) {
-			logger.debug("Ignore: PRO " + one.getResidueNumber());
+		
+		if (groups[i].getPDBName().equals("PRO")) {
+			logger.debug("Ignore: PRO " + groups[i].getResidueNumber());
 			return;
 		}
 
-		SecStrucState stateOne = (SecStrucState) 
-				one.getProperty(Group.SEC_STRUC);
-		SecStrucState stateTwo = (SecStrucState) 
-				two.getProperty(Group.SEC_STRUC);
+		SecStrucState stateOne = getSecStrucState(i);
+		SecStrucState stateTwo = getSecStrucState(j);
 
 		double acc1e = stateOne.getAccept1().getEnergy();
 		double acc2e = stateOne.getAccept2().getEnergy();
@@ -698,6 +702,7 @@ public class SecStrucPred {
 		double don1e = stateTwo.getDonor1().getEnergy();
 		double don2e = stateTwo.getDonor2().getEnergy();
 
+		//Acceptor: N-H-->O
 		if (energy < acc1e) {
 			logger.debug(energy +"<"+acc1e);
 			stateOne.setAccept2(stateOne.getAccept1());
@@ -709,7 +714,8 @@ public class SecStrucPred {
 			stateOne.setAccept1(bond);
 
 		} else if ( energy < acc2e ) {
-			logger.debug(energy +"<"+acc2e) ;
+			logger.debug(energy +"<"+acc2e);
+			
 			HBond bond = new HBond();
 			bond.setEnergy(energy);
 			bond.setPartner(j);
@@ -717,8 +723,7 @@ public class SecStrucPred {
 			stateOne.setAccept2(bond);
 		}
 
-		// and now the other side of the bond ..
-
+		//The other side of the bond: donor O-->N-H
 		if (energy <  don1e) {
 			logger.debug(energy +"<"+don1e);
 			stateTwo.setDonor2(stateTwo.getDonor1());
