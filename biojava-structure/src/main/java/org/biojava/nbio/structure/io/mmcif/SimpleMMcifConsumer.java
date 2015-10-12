@@ -1125,6 +1125,27 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	@Override
+	public void newDatabasePDBrevRecord(DatabasePdbrevRecord record) {
+
+		PDBHeader header = structure.getPDBHeader();
+
+		if ( header == null) {
+			header = new PDBHeader();
+			structure.setPDBHeader(header);
+		}
+
+		List<DatabasePdbrevRecord> revRecords = header.getRevisionRecords();
+		if ( revRecords == null) {
+			revRecords = new ArrayList<DatabasePdbrevRecord>();
+			header.setRevisionRecords(revRecords);
+		}
+		revRecords.add(record);
+
+
+	}
+
+
+	@Override
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
 		//System.out.println("got a database revision:" + dbrev);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
