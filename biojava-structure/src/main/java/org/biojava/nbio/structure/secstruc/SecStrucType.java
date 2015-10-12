@@ -25,15 +25,14 @@ package org.biojava.nbio.structure.secstruc;
  * in the DSSP output. It also contains some methods to operate
  * with the SS types. 
  * <p>
- * When compared, the types are sorted in the
- * declaration order of the enum, which is the DSSP preference of
- * type assignment.
+ * When compared, the types are sorted in the declaration order of
+ * the enum, which is the DSSP preference of type assignment.
  * 
  * @author Andreas Prlic
  * @author Aleix Lafita
  *
  */
-public enum SecStrucType implements Comparable<SecStrucType> {
+public enum SecStrucType {
 
 	helix4("alpha Helix",'H'),
 	bridge("Bridge",'B'),

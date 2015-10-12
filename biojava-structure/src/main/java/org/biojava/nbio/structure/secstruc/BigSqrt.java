@@ -30,6 +30,7 @@ import java.math.BigInteger;
  * @author Andreas Prlic
  *
  */
+@Deprecated
 public class BigSqrt {
 
    private static BigDecimal ZERO = new BigDecimal ("0");

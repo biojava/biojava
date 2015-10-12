@@ -1,27 +1,3 @@
-/*
- *                    BioJava development code
- *
- * This code may be freely distributed and modified under the
- * terms of the GNU Lesser General Public Licence.  This should
- * be distributed with the code.  If you do not have a copy,
- * see:
- *
- *      http://www.gnu.org/copyleft/lesser.html
- *
- * Copyright for this code is held jointly by the individual
- * authors.  These should be listed in @author doc comments.
- *
- * For more information on the BioJava project and its aims,
- * or to join the biojava-l mailing list, visit the home page
- * at:
- *
- *      http://www.biojava.org/
- *
- * Created on 26.04.2004
- * @author Andreas Prlic
- * @since 1.5
- *
- */
 package org.biojava.nbio.structure.secstruc;
 
 import org.biojava.nbio.structure.*;
@@ -49,6 +25,15 @@ import java.util.List;
  * 
  */
 public class SecStrucPred {
+	
+	/** 
+	 * DSSP assigns helices one residue shorter at each end, because the
+	 * residues at (i-1) and (i+n+1) are not assigned helix type although
+	 * they contain a consistent turn (H-bond). If this parameter
+	 * is true, the helices will be the length of the original DSSP
+	 * convention. If it is false, they will be two residue longer.
+	 */
+	private static final boolean DSSP_HELICES = true;
 
 	private static final Logger logger = 
 			LoggerFactory.getLogger(SecStrucPred.class);
@@ -193,8 +178,8 @@ public class SecStrucPred {
 				SecStrucType stype2 = state2.getType();
 
 				if ( ladder.from != ladder.to ) {
-					testSetExtendedSecStrucState(lcount);
-					testSetExtendedSecStrucState(l2count);
+					setSecStrucType(lcount, SecStrucType.extended);
+					setSecStrucType(l2count, SecStrucType.extended);
 				}
 				else {
 					if ( !stype.isHelixType() && 
@@ -216,14 +201,14 @@ public class SecStrucPred {
 				/* set one side */
 				for (int lcount = ladder.from; lcount <= conladder.to;
 						lcount++) {
-					testSetExtendedSecStrucState(lcount);
+					setSecStrucType(lcount, SecStrucType.extended);
 
 				}
 				/* set other side */
 				for (int lcount = conladder.lto;
 						lcount <= ladder.lfrom;
 						lcount++) {
-					testSetExtendedSecStrucState(lcount);
+					setSecStrucType(lcount, SecStrucType.extended);
 				}
 
 			} else {
@@ -232,25 +217,16 @@ public class SecStrucPred {
 						lcount <= conladder.to;
 						lcount++) {
 
-					testSetExtendedSecStrucState(lcount);
+					setSecStrucType(lcount, SecStrucType.extended);
 				}
 				/* set other side */
 				for ( int lcount =  ladder.lfrom;
 						lcount <= conladder.lto;
 						lcount++) {
 
-					testSetExtendedSecStrucState(lcount);
+					setSecStrucType(lcount, SecStrucType.extended);
 				}
 			}
-		}
-	}
-
-	private void testSetExtendedSecStrucState(int lcount) {
-		
-		SecStrucState state = getSecStrucState(lcount);
-		SecStrucType stype = state.getType();
-		if (!stype.isHelixType()){
-			setSecStrucType(lcount, SecStrucType.extended);
 		}
 	}
 
@@ -665,7 +641,6 @@ public class SecStrucPred {
 	 * @return a double
 	 * @throws StructureException
 	 */
-	@SuppressWarnings("unused")
 	private static BigDecimal getPreciseDistance(Atom a, Atom b)
 			throws StructureException {
 		
@@ -683,7 +658,7 @@ public class SecStrucPred {
 	}
 
 	/**
-	 * Store Hbonds in amino acids.
+	 * Store Hbonds in the Groups.
 	 * DSSP allows two HBonds per aminoacids to allow bifurcated bonds.
 	 */
 	private  void trackHBondEnergy(int i, int j, double energy) {
@@ -751,18 +726,20 @@ public class SecStrucPred {
 	private void calculateTurns(){
 
 		for (int i = 0 ; i< groups.length; i++){
-			for (int turn = 3; turn <= 5 ; turn++) {
+			for (int turn = 3; turn <= 5; turn++) {
 				
 				if (i+turn >= groups.length) continue;
 
+				//Check for H bond from NH(i+n) to CO(i)
 				if (isBonded(i+turn, i)) {
-					logger.debug("is bondend " + (i+turn) + i);
-					for (int j=i;j<i+turn+1;j++){
-						logger.debug("turn at i:"+i+" j:"+j+" turn"+turn);
-						
-						SecStrucState state = getSecStrucState(j);
-						boolean[] turns = state.getTurn();
-						turns[turn-3] = true;
+					logger.debug("Turn at ("+i+","+(i+turn)+") turn "+turn);
+					getSecStrucState(i).setTurn('>', turn);
+					getSecStrucState(i+turn).setTurn('<', turn);
+					//Bracketed residues get the helix number
+					for (int j=i+1; j<i+turn; j++){
+						Integer t = turn;
+						char helix = t.toString().charAt(0);
+						getSecStrucState(j).setTurn(helix, turn);
 					}
 				}
 			}
@@ -770,8 +747,9 @@ public class SecStrucPred {
 	}
 
 	/** 
-	 * Test if two groups are forming an H-Bond.
-	 * DSSP defines H-Bonds if the energy < -500 cal/mol
+	 * Test if two groups are forming an H-Bond. The bond tested is
+	 * from the NH of group i to the CO of group j.
+	 * DSSP defines H-Bonds if the energy < -500 cal/mol.
 	 * 
 	 * @param one group one
 	 * @param two group two
@@ -791,7 +769,7 @@ public class SecStrucPred {
 				||
 				( ( partnerAcc2 == j ) && (acc2e < HBONDHIGHENERGY) )
 				) {
-			logger.debug("*** H-bond between " + i + " " + j);
+			logger.debug("*** H-bond between " + i + " and " + j);
 			return true;
 		}
 		return false ;
@@ -858,80 +836,102 @@ public class SecStrucPred {
 	}
 
 	private void checkSetTurns() {
-		for (int i =0 ; i < groups.length -3 ;i++){
-
-			SecStrucState state = getSecStrucState(i);
-			SecStrucType type = state.getType();
-
-			//TODO use ordering of the SS types instead
-			if (type.isHelixType()) continue;
-
-			boolean[] turns = state.getTurn();
-			
-			for ( int t = 0 ; t < 3 ; t ++){
-				if ( turns[t]) {
-
-					for ( int l = i+1 ; l < i+t+3; l++) {
-						logger.debug("turn: " + i + " " + type);
-						if ( l >= groups.length) break;
-						
-						SecStrucType typel = getSecStrucType(l);
-						if ( typel.equals(SecStrucType.coil))
-							setSecStrucType(l, SecStrucType.turn);
-
-					}
-				}
-			}
-		}
-	}
-
-	private void checkSetHelix(int prange, SecStrucType type){
-
-		int range = prange - 3;
-		logger.debug("set helix " + type + " " + prange + " " + range);
 		
-		for (int i =1 ; i < groups.length -range -1 ;i++){
-
-			SecStrucState state = getSecStrucState(i);
-			SecStrucState prevState = getSecStrucState(i-1);
-			SecStrucState nextState = getSecStrucState(i+1);
-
-			boolean[] turns = state.getTurn();
-			boolean[] pturns = prevState.getTurn();
-			boolean[] nturns = nextState.getTurn();
-
-			//DSSP sets helices one amino acid too short....
-			//TODO review
-
-			if (turns[range] && pturns[range] && nturns[range]) {
-
-				//Check if no secstruc assigned
-				boolean empty = true;
-
-				for (int curr=i; curr <= i+range; curr++){
-					logger.debug("   " +i+ " range: " + prange + " " + range);
+		SecStrucType type = SecStrucType.turn;
+		
+		for (int idx = 0; idx < 3; idx++) {
+			for (int i = 0; i < groups.length; i++) {
+				
+				SecStrucState state = getSecStrucState(i);
+				char[] turn = state.getTurn();
+			
+				//Any turn opening matters
+				if (turn[idx] == '>') {
+					if (!DSSP_HELICES) setSecStrucType(i, type);
+					setSecStrucType(i+1, type);
+					i+=2;
+					SecStrucState nextState = getSecStrucState(i);
+					char nturn = nextState.getTurn()[idx];
 					
-					SecStrucType cstate = getSecStrucType(curr);
-					if (cstate.isHelixType()){
-						empty = false;
-						break;
+					boolean closing = false;
+					boolean stop = false;
+					
+					while (!stop){
+						setSecStrucType(i-1, type);
+						i++;
+						nextState = getSecStrucState(i);
+						nturn = nextState.getTurn()[idx];
+						if (!closing && nturn == '<') closing = true;
+						if (closing && nturn == '>') stop = true;
+						if (nturn == ' ') stop = true;
 					}
-				}
-
-				// none is assigned yet, set to helix type
-				if (empty) {
-					for (int curr =i; curr <= i+range ;curr++){
-						setSecStrucType(curr, type);
-					}
+					if (!DSSP_HELICES) setSecStrucType(i-1, type);
 				}
 			}
 		}
 	}
 
+	/**
+	 * A minimal helix is defined by two consecutive n-turns.
+	 * For example, a 4-helix, of minimal length 4 from residues 
+	 * i to (i+3), requires turns (of type 4) at residues (i-1) and i.
+	 * <p>
+	 * Note that the orignal DSSP implementation does not assign
+	 * helix type to residue (i-1) and residue (i+n+1), although 
+	 * they contain a helix turn. As they state in the original paper,
+	 * "the helices are one residue shorter than they would be according
+	 * to rule 6.3 of IUPAC-IUB".
+	 * 
+	 * @param n
+	 * @param type
+	 */
+	private void checkSetHelix(int n, SecStrucType type){
+
+		int idx = n - 3;
+		logger.debug("Set helix " + type + " " + n + " " + idx);
+		
+		for (int i = 1; i < groups.length; i++) {
+
+			SecStrucState state = getSecStrucState(i);
+			SecStrucState previousState = getSecStrucState(i-1);
+
+			char turn = state.getTurn()[idx];
+			char pturn = previousState.getTurn()[idx];
+
+			//Two consecutive n-turns present to define a n-helix
+			if (turn == '>' && pturn == '>') {
+				if (!DSSP_HELICES) setSecStrucType(i-1, type);
+				i++;
+				SecStrucState nextState = getSecStrucState(i);
+				char nturn = nextState.getTurn()[idx];
+				
+				boolean closing = false;
+				boolean stop = false;
+				
+				while (!stop){
+					setSecStrucType(i-1, type);
+					i++;
+					nextState = getSecStrucState(i);
+					nturn = nextState.getTurn()[idx];
+					if (!closing && nturn == '<') closing = true;
+					if (closing && nturn == '>') stop = true;
+					if (nturn == ' ') stop = true;
+				}
+				if (!DSSP_HELICES) setSecStrucType(i-1, type);
+			}
+		}
+	}
+
+	/**
+	 * Set the new type only if it has more preference than the
+	 * current residue SS type.
+	 * @param pos
+	 * @param type
+	 */
 	private void setSecStrucType(int pos, SecStrucType type){
 
-		SecStrucState s = getSecStrucState(pos);
-		s.setType(type);
+		SecStrucState ss = getSecStrucState(pos);
+		if (type.compareTo(ss.getType()) < 0) ss.setType(type);
 	}
 
 	private SecStrucType getSecStrucType(int pos){

@@ -1,22 +1,3 @@
-/*
- *                    PDB web development code
- *
- * This code may be freely distributed and modified under the
- * terms of the GNU Lesser General Public Licence.  This should
- * be distributed with the code.  If you do not have a copy,
- * see:
- *
- *      http://www.gnu.org/copyleft/lesser.html
- *
- * Copyright for this code is held jointly by the individual
- * authors.  These should be listed in @author doc comments.
- *
- *
- * Created on Aug 5, 2009
- * Created by ap3
- *
- */
-
 package org.biojava.nbio.structure.secstruc;
 
 import org.biojava.nbio.structure.Atom;
@@ -43,8 +24,9 @@ public class SecStrucState extends SecStrucInfo {
 	private HBond donor1;
 	private HBond donor2;
 
-	//Change that to symbols to know if comming < or going > or X
-	private boolean[] turn;
+	//Symbols: starting '>', ending '<', or both 'X'. 
+	//Number means bracketed n-turn residue without h-bond
+	private char[] turn;
 	private boolean bend;
 	
 	private BetaBridge bridge1;
@@ -65,10 +47,10 @@ public class SecStrucState extends SecStrucInfo {
 		bridge1 = null;
 		bridge2 = null;
 		
-		turn = new boolean[3];
-		turn[0] = false;
-		turn[1] = false;
-		turn[2] = false;
+		turn = new char[3];
+		turn[0] = ' ';
+		turn[1] = ' ';
+		turn[2] = ' ';
 		bend = false;
 		
 		kappa = 360;
@@ -90,12 +72,25 @@ public class SecStrucState extends SecStrucInfo {
 		this.kappa = kappa;
 	}
 
-	public boolean[] getTurn() {
+	public char[] getTurn() {
 		return turn;
 	}
 
-	public void setTurn(boolean[] turn) {
-		this.turn = turn;
+	/**
+	 * Set the turn column corresponding to 3,4 or 5 helix patterns.
+	 * If starting > or ending < was set and the opposite is being set,
+	 * the value will be converted to X. If a number was set, it will be
+	 * overwritten by the new character.
+	 * @param c character in the column
+	 * @param t turn of the helix {3,4,5}
+	 */
+	public void setTurn(char c, int t) {
+		if (turn[t-3] == 'X') return;
+		else if (turn[t-3] == '<' && c == '>' 
+				|| turn[t-3] == '>' && c == '<'){
+			turn[t-3] = 'X';
+		} else if (turn[t-3] == '<' || turn[t-3] == '>') return;
+		else turn[t-3] = c;
 	}
 
 	public HBond getAccept1() {
@@ -191,11 +186,10 @@ public class SecStrucState extends SecStrucInfo {
 		buf.append(type).append(" ");
 		
 		for (int t=0; t<3; t++){
-			if (turn[t]) buf.append('>');
-			else buf.append(" ");
+			buf.append(turn[t]);
 		}
 		
-		buf.append(" ");
+		buf.append("  ");
 		
 		if (isBend()) buf.append('S');
 		else buf.append(" ");
@@ -223,11 +217,11 @@ public class SecStrucState extends SecStrucInfo {
 		else if (bp2 < 1000) buf.append(" "+bp2);
 		else buf.append(bp2);
 		
-		//TODO beta-sheet label
+		//beta-sheet label TODO
 		buf.append(" ");
 		
 		//ACC TODO
-		buf.append("      ");
+		buf.append("     ");
 		
 		//N-H-->O
 		int p1 = accept1.getPartner();
@@ -253,13 +247,13 @@ public class SecStrucState extends SecStrucInfo {
 		if (e4 < 0.0) p4 -= index;
 		buf.append(String.format( "%6d,%4.1f",p4,e4));
 		
-		//TCO
+		//TCO TODO
 		buf.append("        ");
 		
 		//KAPPA
 		buf.append(String.format("%6.1f",kappa));
 		
-		//ALPHA
+		//ALPHA TODO
 		buf.append("      ");
 		
 		//PHI PSI
