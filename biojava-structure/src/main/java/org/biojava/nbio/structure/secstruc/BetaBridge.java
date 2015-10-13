@@ -14,6 +14,12 @@ public class BetaBridge {
     int partner1;
     int partner2;
     
+    public BetaBridge(int i, int j, BridgeType t) {
+		partner1 = Math.min(i, j);
+		partner2 = Math.max(i, j);
+		type = t;
+	}
+    
     @Override
     public boolean equals(Object o){
     	

@@ -4,7 +4,6 @@ import org.biojava.nbio.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +37,14 @@ public class SecStrucPred {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(SecStrucPred.class);
 
-	/** the minimal distance between two residues */
+	/** min distance between two residues */
 	public static final double MINDIST = 0.5;
 
-	/** the minimal distance of two CA atoms if H-bonds are allowed to form */
-	public static final int CA_MIN_DIST = 9;
+	/** min distance of two CA atoms if H-bonds are allowed to form */
+	public static final double CA_MIN_DIST = 9.0;
+	
+	/** max distance CA atoms in peptide bond (backbone discontinuity) */
+	public static final double MAX_PEPTIDE_BOND_LENGTH = 2.5;
 
 	/** Minimal H-bond energy in cal/mol */
 	public static final int HBONDLOWENERGY  = -9900;
@@ -114,7 +116,7 @@ public class SecStrucPred {
 	private void detectStrands() {
 
 		//Find all the beta bridges of the structure
-		for (int i = 1; i < groups.length -1; i++) findBridges(i);
+		for (int i = 1; i < groups.length-1; i++) findBridges(i);
 
 		//Create Ladders
 		createLadders();
@@ -146,7 +148,7 @@ public class SecStrucPred {
 				}
 			}
 			if (!found){
-				// create new ladder with a single bridge
+				//Create new ladder with a single Bridge
 				Ladder l = new Ladder();
 				l.from = b.partner1;
 				l.to = b.partner1;
@@ -247,6 +249,14 @@ public class SecStrucPred {
 
 	}
 
+	/**
+	 * For beta structures, we define explicitly: a bulge-linked 
+	 * ladder consists of two (perfect) ladder or bridges of the 
+	 * same type connected by at most one extra residue on one 
+	 * strand and at most four extra residues on the other strand,
+	 * all residues in bulge-linked ladders are marked "E,"
+	 * including the extra residues.
+	 */
 	private boolean hasBulge(Ladder l1, Ladder l2) {
 		
 		boolean bulge = ((l1.btype.equals(l2.btype)) &&
@@ -278,25 +288,13 @@ public class SecStrucPred {
 	}
 
 	private void registerBridge(int i, int j, BridgeType btype) {
-		
-		if (i > j) {
-			logger.error("Trying to connect BetaBridge where i > j. "
-					+ "Swapping indices...");
-			int tmp = i;
-			i=j;
-			j=tmp;
-		}
-		
-		BetaBridge bridge = new BetaBridge();
-		bridge.partner1 = i;
-		bridge.partner2 = j;
-		bridge.type = btype;
+				
+		BetaBridge bridge = new BetaBridge(i,j,btype);
 		
 		getSecStrucState(i).setBridge(bridge);
 		getSecStrucState(j).setBridge(bridge);
 
 		bridges.add(bridge);
-		
 	}
 
 	/**
@@ -334,6 +332,19 @@ public class SecStrucPred {
 		return false;
 	}
 
+	/**
+	 * Two nonoverlapping stretches of three residues each, i-1,i,i+1 and
+	 * j-1,j,j+1, form either a parallel or antiparallel bridge, depending on
+	 * which of two basic patterns is matched. We assign a bridge between
+	 * residues i and j if there are two H bonds characteristic of beta-
+	 * structure; in particular:
+	 * <p>
+	 * Parallel Bridge(i,j) =: [Hbond(i-1,j) and Hbond(j,i+1)] 
+	 * 							or [Hbond(j-1,i) and Hbond(i,j+1)]
+	 * <p>
+	 * Antiparallel Bridge(i,j) =: [Hbond(i,j) and Hbond(j,i)] 
+	 * 								or [Hbond(i-1,j+1) and Hbond(j-1,i+1)]
+	 */
 	private void findBridges(int i) {
 		
 		for (int j = i+3; j < groups.length-1; j++){
@@ -358,10 +369,22 @@ public class SecStrucPred {
 
 	private void detectBends() {
 
-		for (int i = 2 ; i < groups.length -2 ;i++){
-
-			//Create vectors ( Ca i to Ca i-2 ) ; ( Ca i to CA i + 2 )
-
+		for (int i = 2 ; i < groups.length-2 ;i++){
+						
+			//Check if all atoms form peptide bonds (backbone discontinuity)
+			boolean bonded = true;
+			for (int k=0; k<4; k++){
+				int index = i+k-2;
+				Atom C = groups[index].getC();
+				Atom N = groups[index+1].getN();
+				//Peptide bond C-N
+				if (Calc.getDistance(C, N) > MAX_PEPTIDE_BOND_LENGTH){
+					bonded = false;
+					break;
+				}
+			}
+			if (!bonded) continue;
+			
 			SecStrucGroup im2 = groups[i-2];
 			SecStrucGroup g = groups[i];
 			SecStrucGroup ip2 = groups[i+2];
@@ -369,21 +392,19 @@ public class SecStrucPred {
 			Atom caim2 = im2.getCA();
 			Atom cag   = g.getCA();
 			Atom caip2 = ip2.getCA();
-
+			
+			//Create vectors ( Ca i to Ca i-2 ) ; ( Ca i to CA i + 2 )
 			Atom caminus2 = Calc.subtract(caim2,cag);
 			Atom caplus2  = Calc.subtract(cag,caip2);
 
 			double angle = Calc.angle(caminus2, caplus2);
 
 			SecStrucState state = getSecStrucState(i); 
-
 			state.setKappa((float) angle);
 
 			//Angles = 360 should be discarded
-			if (angle > 70.0 && angle < 359.9) {
-				if (state.getType().equals(SecStrucType.coil)) {
-					state.setType(SecStrucType.bend);
-				}
+			if (angle > 70.0 && angle < 359.99) {
+				setSecStrucType(i, SecStrucType.bend);
 				state.setBend(true);
 			}
 		}
@@ -634,30 +655,6 @@ public class SecStrucPred {
 	}
 
 	/**
-	 * Calculate distance between two atoms with high precision.
-	 *
-	 * @param a  an Atom object
-	 * @param b  an Atom object
-	 * @return a double
-	 * @throws StructureException
-	 */
-	private static BigDecimal getPreciseDistance(Atom a, Atom b)
-			throws StructureException {
-		
-		double x = a.getX() - b.getX();
-		double y = a.getY() - b.getY();
-		double z = a.getZ() - b.getZ();
-
-		double s  = x * x  + y * y + z * z;
-		
-		BigSqrt sqrt = new BigSqrt();
-		BigDecimal d = new BigDecimal(s);
-		BigDecimal dist = sqrt.sqrt(d);
-
-		return dist ;
-	}
-
-	/**
 	 * Store Hbonds in the Groups.
 	 * DSSP allows two HBonds per aminoacids to allow bifurcated bonds.
 	 */
@@ -731,7 +728,7 @@ public class SecStrucPred {
 				if (i+turn >= groups.length) continue;
 
 				//Check for H bond from NH(i+n) to CO(i)
-				if (isBonded(i+turn, i)) {
+				if (isBonded(i, i+turn)) {
 					logger.debug("Turn at ("+i+","+(i+turn)+") turn "+turn);
 					getSecStrucState(i).setTurn('>', turn);
 					getSecStrucState(i+turn).setTurn('<', turn);
@@ -748,7 +745,9 @@ public class SecStrucPred {
 
 	/** 
 	 * Test if two groups are forming an H-Bond. The bond tested is
-	 * from the NH of group i to the CO of group j.
+	 * from the CO of group i to the NH of group j. Acceptor (i) and
+	 * donor (j). The donor of i has to be j, and the acceptor of j 
+	 * has to be i.
 	 * DSSP defines H-Bonds if the energy < -500 cal/mol.
 	 * 
 	 * @param one group one
@@ -757,19 +756,27 @@ public class SecStrucPred {
 	 */
 	private boolean isBonded(int i, int j) {
 
-		SecStrucState stateOne = getSecStrucState(i);
+		SecStrucState one = getSecStrucState(i);
+		SecStrucState two = getSecStrucState(j);
 
-		double acc1e = stateOne.getAccept1().getEnergy();
-		double acc2e = stateOne.getAccept2().getEnergy();
+		double don1e = one.getDonor1().getEnergy();
+		double don2e = one.getDonor2().getEnergy();
+		double acc1e = two.getAccept1().getEnergy();
+		double acc2e = two.getAccept2().getEnergy();
+		
+		int don1p = one.getDonor1().getPartner();
+		int don2p = one.getDonor2().getPartner();
+		int acc1p = two.getAccept1().getPartner();
+		int acc2p = two.getAccept2().getPartner();
 
-		int partnerAcc1 = stateOne.getAccept1().getPartner();
-		int partnerAcc2 = stateOne.getAccept2().getPartner();
-
-		if (	( ( partnerAcc1 == j ) && (acc1e < HBONDHIGHENERGY) )
-				||
-				( ( partnerAcc2 == j ) && (acc2e < HBONDHIGHENERGY) )
-				) {
-			logger.debug("*** H-bond between " + i + " and " + j);
+		//Either donor from i is j, or accept from j is i
+		boolean hbond = (don1p == j && don1e < HBONDHIGHENERGY) ||
+				(don2p == j && don2e < HBONDHIGHENERGY) ||
+				(acc1p == i && acc1e < HBONDHIGHENERGY) ||
+				(acc2p == i && acc2e < HBONDHIGHENERGY);
+				
+		if (hbond){				
+			logger.debug("*** H-bond from CO of " + i + " to NH of " + j);
 			return true;
 		}
 		return false ;
@@ -846,7 +853,7 @@ public class SecStrucPred {
 				char[] turn = state.getTurn();
 			
 				//Any turn opening matters
-				if (turn[idx] == '>') {
+				if (turn[idx] == '>' || turn[idx] == 'X') {
 					if (!DSSP_HELICES) setSecStrucType(i, type);
 					setSecStrucType(i+1, type);
 					i+=2;
@@ -862,10 +869,13 @@ public class SecStrucPred {
 						nextState = getSecStrucState(i);
 						nturn = nextState.getTurn()[idx];
 						if (!closing && nturn == '<') closing = true;
-						if (closing && nturn == '>') stop = true;
+						if (closing && (nturn != '<' && nturn != 'X')) 
+							stop = true;
 						if (nturn == ' ') stop = true;
 					}
-					if (!DSSP_HELICES) setSecStrucType(i-1, type);
+					i--;
+					if (!DSSP_HELICES) setSecStrucType(i, type);
+					i-=2; //Go to positions behind in case there was two final X
 				}
 			}
 		}
@@ -890,34 +900,42 @@ public class SecStrucPred {
 		int idx = n - 3;
 		logger.debug("Set helix " + type + " " + n + " " + idx);
 		
-		for (int i = 1; i < groups.length; i++) {
+		for (int i = 1; i < groups.length-1; i++) {
 
 			SecStrucState state = getSecStrucState(i);
 			SecStrucState previousState = getSecStrucState(i-1);
+			
+			//If next is already marked as helix ignore
+			if (state.type.isHelixType()) continue;
+			if (getSecStrucState(i+1).type.isHelixType()) continue;
 
 			char turn = state.getTurn()[idx];
 			char pturn = previousState.getTurn()[idx];
 
 			//Two consecutive n-turns present to define a n-helix
-			if (turn == '>' && pturn == '>') {
+			if ((turn=='>' || turn=='X') && (pturn=='>' || pturn=='X')) {
 				if (!DSSP_HELICES) setSecStrucType(i-1, type);
 				i++;
 				SecStrucState nextState = getSecStrucState(i);
 				char nturn = nextState.getTurn()[idx];
 				
+				//Count the number of open helix turns
+				int counter = 2;
 				boolean closing = false;
-				boolean stop = false;
 				
-				while (!stop){
+				while (counter > 0){
 					setSecStrucType(i-1, type);
 					i++;
+					if (nturn == 'X' && closing) counter--; //X in context
+					if (nturn == '<') counter--; //closing turn
+					if (nturn == '>') counter++; //opening turn
+					if (nturn == '<') closing = true;
 					nextState = getSecStrucState(i);
 					nturn = nextState.getTurn()[idx];
-					if (!closing && nturn == '<') closing = true;
-					if (closing && nturn == '>') stop = true;
-					if (nturn == ' ') stop = true;
 				}
-				if (!DSSP_HELICES) setSecStrucType(i-1, type);
+				i--;
+				if (!DSSP_HELICES) setSecStrucType(i, type);
+				i--; //Go to positions behind in case there was two final X
 			}
 		}
 	}
@@ -929,19 +947,11 @@ public class SecStrucPred {
 	 * @param type
 	 */
 	private void setSecStrucType(int pos, SecStrucType type){
-
 		SecStrucState ss = getSecStrucState(pos);
 		if (type.compareTo(ss.getType()) < 0) ss.setType(type);
 	}
 
-	private SecStrucType getSecStrucType(int pos){
-		
-		SecStrucState s = getSecStrucState(pos);
-		return s.getType();
-	}
-
 	private SecStrucState getSecStrucState(int pos){
-		//TODO consider using a List of SecStrucState to avoid this method
 		Group g = groups[pos];
 		SecStrucState state = (SecStrucState) g.getProperty(Group.SEC_STRUC);
 		return state;

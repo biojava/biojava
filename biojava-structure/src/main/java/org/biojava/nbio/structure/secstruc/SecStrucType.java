@@ -35,8 +35,8 @@ package org.biojava.nbio.structure.secstruc;
 public enum SecStrucType {
 
 	helix4("alpha Helix",'H'),
-	bridge("Bridge",'B'),
 	extended("Extended",'E'),
+	bridge("Bridge",'B'),
 	helix3("3-10 Helix",'G'),
 	helix5("pi Helix",'I'),
 	turn("Turn",'T'),

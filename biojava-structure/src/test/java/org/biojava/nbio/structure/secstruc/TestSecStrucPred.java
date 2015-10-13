@@ -31,7 +31,7 @@ public class TestSecStrucPred {
 	public void testSecStrucPred() throws StructureException, IOException {
 		
 		//List of names to test the DSSP prediction
-		List<String> names = Arrays.asList("5pti", "4hhb", "5pti", "1how");
+		List<String> names = Arrays.asList("5pti", "1ze3", "4hhb", "1how");
 		
 		for (String name : names) {
 			

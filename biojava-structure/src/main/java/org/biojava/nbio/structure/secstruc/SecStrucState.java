@@ -19,10 +19,10 @@ public class SecStrucState extends SecStrucInfo {
 	private double omega;
 	private float kappa;
 	
-	private HBond accept1;
-	private HBond accept2;
-	private HBond donor1;
-	private HBond donor2;
+	private HBond accept1; //from CO of partner to NH of this
+	private HBond accept2; //this is the donor of accept partner
+	private HBond donor1; //from CO of this to NH of partner
+	private HBond donor2; //this is the acceptor of donor partner
 
 	//Symbols: starting '>', ending '<', or both 'X'. 
 	//Number means bracketed n-turn residue without h-bond
