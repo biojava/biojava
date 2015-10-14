@@ -27,16 +27,16 @@ public class SecStrucElement {
 	 * @param start first residue of the SSE
 	 * @param end final residue of the SSE
 	 * @param length number of residues included in the SSE
+	 * @param index
 	 * @param chainID the chain ID
 	 */
 	public SecStrucElement(SecStrucType type, ResidueNumber start, 
-			ResidueNumber end, int length, String chainID){
+			ResidueNumber end, int length, int index, String chainID){
 
 		this.type = type;
 		this.length = length;
+		this.index = index;
 		range = new ResidueRange(chainID, start, end);
-		if (start.equals(end)) throw new IllegalArgumentException(
-				"start and end residues cannot be equal in a SecStrucElement");
 	}
 
 	/** 
@@ -62,7 +62,7 @@ public class SecStrucElement {
 	 * @return
 	 */
 	public String getId() {
-		return type.type+index+"";
+		return type.toString()+index+"";
 	}
 
 	/** 

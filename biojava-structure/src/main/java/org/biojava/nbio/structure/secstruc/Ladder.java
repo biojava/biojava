@@ -20,4 +20,26 @@ public class Ladder {
 	int connectedTo; //another ladder with higher index connected to this
 	int connectedFrom; //another ladder with lower index connected to this
 	
+	public int getFrom() {
+		return from;
+	}
+	public int getTo() {
+		return to;
+	}
+	public int getLfrom() {
+		return lfrom;
+	}
+	public int getLto() {
+		return lto;
+	}
+	public BridgeType getBtype() {
+		return btype;
+	}
+	public int getConnectedTo() {
+		return connectedTo;
+	}
+	public int getConnectedFrom() {
+		return connectedFrom;
+	}
+	
 }

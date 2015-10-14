@@ -41,7 +41,7 @@ public class TestSecStrucPred {
 			
 			//Predict with BioJava the SS
 			SecStrucPred sec = new SecStrucPred();
-			List<SecStrucState> biojava = sec.predict(s, false);
+			List<SecStrucState> biojava = sec.predict(s, true);
 			
 			//Download the original DSSP implementation output
 			List<SecStrucState> dssp = DSSPParser.fetch(name, s, false);
@@ -53,6 +53,9 @@ public class TestSecStrucPred {
 				assertEquals("SS assignment position "+(i+1)+" does not match", 
 						biojava.get(i), dssp.get(i));
 			}
+			
+			List<SecStrucElement> sse = SecStrucTools.getSSE(s);
+			for (SecStrucElement se : sse) System.out.println(se);
 			
 		}
 	}

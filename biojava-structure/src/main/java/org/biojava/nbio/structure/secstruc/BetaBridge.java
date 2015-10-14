@@ -31,4 +31,17 @@ public class BetaBridge {
     	if (partner2 != b.partner2) return false;
     	return true;
     }
+
+	public BridgeType getType() {
+		return type;
+	}
+
+	public int getPartner1() {
+		return partner1;
+	}
+
+	public int getPartner2() {
+		return partner2;
+	}
+    
 }
