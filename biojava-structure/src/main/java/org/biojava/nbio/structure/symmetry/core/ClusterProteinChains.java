@@ -25,6 +25,9 @@ import org.biojava.nbio.structure.Structure;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Clusters the chains of one or two structures by sequence.
+ */
 public class ClusterProteinChains {
 	private Structure structure = null;
 	private Structure structure2 = null;
@@ -46,6 +49,11 @@ public class ClusterProteinChains {
 		run();
 	}
 	
+	/**
+	 * Get a non-redundent set of clusters for a given sequence cutoff
+	 * @param sequenceIdentityThreshold
+	 * @return
+	 */
 	public List<SequenceAlignmentCluster> getSequenceAlignmentClusters(double sequenceIdentityThreshold) {
 		if (merger == null) {
 			return Collections.emptyList();

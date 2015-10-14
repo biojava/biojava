@@ -46,7 +46,7 @@ public final class IlluminaFastqWriterTest
             .build();
     }
 
-    public void testValidateNotIlluminaVariant()
+    public void testConvertNotIlluminaVariant() throws Exception
     {
         IlluminaFastqWriter writer = new IlluminaFastqWriter();
         Appendable appendable = new StringBuilder();
@@ -56,14 +56,7 @@ public final class IlluminaFastqWriterTest
             .withQuality("quality_")
             .withVariant(FastqVariant.FASTQ_SANGER)
             .build();
-        try
-        {
-            writer.append(appendable, invalid);
-            fail("validate not fastq-illumina variant expected IOException");
-        }
-        catch (IOException e)
-        {
-            // expected
-        }
+
+        writer.append(appendable, invalid);
     }
 }

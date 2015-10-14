@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +75,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	private Map<Integer,BioAssemblyInfo> bioAssemblies ;
 
+	List<DatabasePdbrevRecord> revisionRecords;
+
 	public PDBHeader(){
 
 		depDate = new Date(0);
@@ -83,6 +86,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		rFree = DEFAULT_RFREE;
 		bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
 		crystallographicInfo = new PDBCrystallographicInfo();
+
 	}
 
 	/** String representation
@@ -613,6 +617,11 @@ public class PDBHeader implements PDBRecord, Serializable{
 		return this.bioAssemblies.size();
 	}
 
+	public List<DatabasePdbrevRecord> getRevisionRecords() {
+		return revisionRecords;
+	}
 
-
+	public void setRevisionRecords(List<DatabasePdbrevRecord> revisionRecords) {
+		this.revisionRecords = revisionRecords;
+	}
 }

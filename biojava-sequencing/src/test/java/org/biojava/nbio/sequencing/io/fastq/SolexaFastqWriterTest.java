@@ -46,7 +46,7 @@ public final class SolexaFastqWriterTest
             .build();
     }
 
-    public void testValidateNotSolexaVariant()
+    public void testConvertNotSolexaVariant() throws Exception
     {
         SolexaFastqWriter writer = new SolexaFastqWriter();
         Appendable appendable = new StringBuilder();
@@ -56,14 +56,7 @@ public final class SolexaFastqWriterTest
             .withQuality("quality_")
             .withVariant(FastqVariant.FASTQ_ILLUMINA)
             .build();
-        try
-        {
-            writer.append(appendable, invalid);
-            fail("validate not fastq-solexa variant expected IOException");
-        }
-        catch (IOException e)
-        {
-            // expected
-        }
+
+        writer.append(appendable, invalid);
     }
 }

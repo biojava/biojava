@@ -55,6 +55,7 @@ public interface MMcifConsumer {
 	public void newStructAsym(StructAsym sasym);
 	public void setStruct(Struct struct);
 	public void newDatabasePDBrev(DatabasePDBrev dbrev);
+	public void newDatabasePDBrevRecord(DatabasePdbrevRecord dbrev);
 	public void newDatabasePDBremark(DatabasePDBremark remark);
 	public void newExptl(Exptl exptl);
 	public void newCell(Cell cell);

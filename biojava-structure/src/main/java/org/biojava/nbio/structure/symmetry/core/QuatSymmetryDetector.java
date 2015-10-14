@@ -91,6 +91,7 @@ public class QuatSymmetryDetector {
 			return;
 		}
 		complete = true;
+		//Cluster chains by sequence
 		ClusterProteinChains clusterer = new ClusterProteinChains(structure, parameters);
 		proteinChainCount = clusterer.getProteinChainCount();
 		
@@ -105,6 +106,7 @@ public class QuatSymmetryDetector {
 		Arrays.sort(thresholds);
 		
 		for (int index = 0; index < thresholds.length; index++) {
+			// Map structure info to the sequence cluster
 			ChainClusterer chainClusterer = new ChainClusterer(clusterer.getSequenceAlignmentClusters(thresholds[index]));
 			
 			// determine global symmetry

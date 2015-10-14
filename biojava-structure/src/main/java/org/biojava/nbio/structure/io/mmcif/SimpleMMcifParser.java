@@ -594,7 +594,14 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewDatabasePDBrev(dbrev);
 
-		} else if (  category.equals("_database_PDB_remark")){
+		} else if ( category.equals("_database_PDB_rev_record")){
+			DatabasePdbrevRecord dbrev = (DatabasePdbrevRecord) buildObject(
+					DatabasePdbrevRecord.class.getName(),
+					loopFields, lineData, loopWarnings);
+
+			triggerNewDatabasePDBrevRecord(dbrev);
+
+		}else if (  category.equals("_database_PDB_remark")){
 			DatabasePDBremark remark = (DatabasePDBremark) buildObject(
 					DatabasePDBremark.class.getName(),
 					loopFields, lineData, loopWarnings);
@@ -1094,6 +1101,11 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void triggerNewDatabasePDBrev(DatabasePDBrev dbrev){
 		for(MMcifConsumer c : consumers){
 			c.newDatabasePDBrev(dbrev);
+		}
+	}
+	private void triggerNewDatabasePDBrevRecord(DatabasePdbrevRecord dbrev){
+		for(MMcifConsumer c : consumers){
+			c.newDatabasePDBrevRecord(dbrev);
 		}
 	}
 

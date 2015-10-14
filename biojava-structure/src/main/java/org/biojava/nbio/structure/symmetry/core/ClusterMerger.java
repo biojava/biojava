@@ -22,6 +22,11 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import java.util.*;
 
+/**
+ * Merges clusters based on their sequence identity. This class does the actual
+ * agglomerative clustering calculation, while {@link SequenceAlignmentCluster}
+ * stores the results.
+ */
 public class ClusterMerger {
 	private List<SequenceAlignmentCluster> clusters = null;
     private QuatSymmetryParameters parameters = null;
@@ -33,6 +38,9 @@ public class ClusterMerger {
 		this.parameters = parameters;
 	}
 	
+	/**
+	 * Aligns all pairs of input clusters, calculating their pairwise alignments
+	 */
 	public void calcPairwiseAlignments() {
 		pairwiseAlignments = new ArrayList<PairwiseAlignment>();
 
@@ -60,6 +68,11 @@ public class ClusterMerger {
 		}
 	}
 	
+	/**
+	 * Combine clusters based on the given sequence identity
+	 * @param sequenceIdentityCutoff
+	 * @return
+	 */
 	public List<SequenceAlignmentCluster> getMergedClusters(double sequenceIdentityCutoff) {		
 		List<SequenceAlignmentCluster> mergedClusters = new ArrayList<SequenceAlignmentCluster>();
 		Map<SequenceAlignmentCluster, Integer> map = getClusterMap();

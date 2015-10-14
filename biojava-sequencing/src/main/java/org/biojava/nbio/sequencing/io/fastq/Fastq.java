@@ -122,6 +122,20 @@ public final class Fastq
     }
 
     /**
+     * Create and return a new FASTQ formatted sequence from this converted to the
+     * specified FASTQ sequence format variant.
+     *
+     * @since 4.2
+     * @param variant FASTQ sequence format variant, must not be null
+     * @return a new FASTQ formatted sequence from this converted to the
+     *    specified FASTQ sequence format variant
+     */
+    public Fastq convertTo(final FastqVariant variant)
+    {
+        return FastqTools.convert(this, variant);
+    }
+
+    /**
      * Create and return a new FastqBuilder.
      * The FastqBuilder will not be null.
      *

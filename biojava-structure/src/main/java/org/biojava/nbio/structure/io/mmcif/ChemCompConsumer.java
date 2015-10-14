@@ -95,6 +95,11 @@ public class ChemCompConsumer implements MMcifConsumer {
 	}
 
 	@Override
+	public void newDatabasePDBrevRecord(DatabasePdbrevRecord dbrev) {
+
+	}
+
+	@Override
 	public void newEntity(Entity entity) {
 		// TODO Auto-generated method stub
 

@@ -269,6 +269,67 @@ public final class FastqTools
     }
 
     /**
+     * Convert the specified FASTQ formatted sequence to the
+     * specified FASTQ sequence format variant.
+     *
+     * @since 4.2
+     * @param fastq FASTQ formatted sequence, must not be null
+     * @param variant FASTQ sequence format variant, must not be null
+     * @return the specified FASTQ formatted sequence converted to the
+     *    specified FASTQ sequence format variant
+     */
+    public static Fastq convert(final Fastq fastq, final FastqVariant variant)
+    {
+        if (fastq == null)
+        {
+            throw new IllegalArgumentException("fastq must not be null");
+        }
+        if (variant == null)
+        {
+            throw new IllegalArgumentException("variant must not be null");
+        }
+        if (fastq.getVariant().equals(variant))
+        {
+            return fastq;
+        }
+        return new Fastq(fastq.getDescription(), fastq.getSequence(), convertQualities(fastq, variant), variant);
+    }
+
+    /**
+     * Convert the qualities in the specified FASTQ formatted sequence to the
+     * specified FASTQ sequence format variant.
+     *
+     * @since 4.2
+     * @param fastq FASTQ formatted sequence, must not be null
+     * @param variant FASTQ sequence format variant, must not be null
+     * @return the qualities in the specified FASTQ formatted sequence converted to the
+     *    specified FASTQ sequence format variant
+     */
+    static String convertQualities(final Fastq fastq, final FastqVariant variant)
+    {
+        if (fastq == null)
+        {
+            throw new IllegalArgumentException("fastq must not be null");
+        }
+        if (variant == null)
+        {
+            throw new IllegalArgumentException("variant must not be null");
+        }
+        if (fastq.getVariant().equals(variant))
+        {
+            return fastq.getQuality();
+        }
+        int size = fastq.getQuality().length();
+        double[] errorProbabilities = errorProbabilities(fastq, new double[size]);
+        StringBuilder sb = new StringBuilder(size);
+        for (int i = 0; i < size; i++)
+        {
+            sb.append(variant.quality(variant.qualityScore(errorProbabilities[i])));
+        }
+        return sb.toString();
+    }
+
+    /**
      * Return the specified iterable as a list.
      *
      * @paam <T> element type
