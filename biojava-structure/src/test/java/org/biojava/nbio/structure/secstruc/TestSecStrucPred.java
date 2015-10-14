@@ -31,7 +31,8 @@ public class TestSecStrucPred {
 	public void testSecStrucPred() throws StructureException, IOException {
 		
 		//List of names to test the DSSP prediction
-		List<String> names = Arrays.asList("5pti", "1ze3", "4hhb", "1how");
+		List<String> names = Arrays.asList(
+				"5pti", "1tim", "4hhb", "1how", "4i4q");
 		
 		for (String name : names) {
 			
@@ -41,7 +42,6 @@ public class TestSecStrucPred {
 			//Predict with BioJava the SS
 			SecStrucPred sec = new SecStrucPred();
 			List<SecStrucState> biojava = sec.predict(s, false);
-			System.out.println(sec);
 			
 			//Download the original DSSP implementation output
 			List<SecStrucState> dssp = DSSPParser.fetch(name, s, false);

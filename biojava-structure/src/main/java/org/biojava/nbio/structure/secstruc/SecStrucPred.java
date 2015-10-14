@@ -847,35 +847,21 @@ public class SecStrucPred {
 		SecStrucType type = SecStrucType.turn;
 		
 		for (int idx = 0; idx < 3; idx++) {
-			for (int i = 0; i < groups.length; i++) {
+			for (int i = 0; i < groups.length-1; i++) {
 				
 				SecStrucState state = getSecStrucState(i);
 				char[] turn = state.getTurn();
 			
 				//Any turn opening matters
 				if (turn[idx] == '>' || turn[idx] == 'X') {
-					if (!DSSP_HELICES) setSecStrucType(i, type);
-					setSecStrucType(i+1, type);
-					i+=2;
-					SecStrucState nextState = getSecStrucState(i);
-					char nturn = nextState.getTurn()[idx];
-					
-					boolean closing = false;
-					boolean stop = false;
-					
-					while (!stop){
-						setSecStrucType(i-1, type);
-						i++;
-						nextState = getSecStrucState(i);
-						nturn = nextState.getTurn()[idx];
-						if (!closing && nturn == '<') closing = true;
-						if (closing && (nturn != '<' && nturn != 'X')) 
-							stop = true;
-						if (nturn == ' ') stop = true;
+					//Mark following n residues as turn
+					for (int k=1; k<idx+3; k++){
+						setSecStrucType(i+k, type);
 					}
-					i--;
-					if (!DSSP_HELICES) setSecStrucType(i, type);
-					i-=2; //Go to positions behind in case there was two final X
+					if (!DSSP_HELICES) {
+						setSecStrucType(i, type);
+						setSecStrucType(i+idx+3, type);
+					}
 				}
 			}
 		}
@@ -900,42 +886,28 @@ public class SecStrucPred {
 		int idx = n - 3;
 		logger.debug("Set helix " + type + " " + n + " " + idx);
 		
-		for (int i = 1; i < groups.length-1; i++) {
+		for (int i = 1; i < groups.length-n; i++) {
 
 			SecStrucState state = getSecStrucState(i);
 			SecStrucState previousState = getSecStrucState(i-1);
 			
-			//If next is already marked as helix ignore
-			if (state.type.isHelixType()) continue;
-			if (getSecStrucState(i+1).type.isHelixType()) continue;
+			//Check that no other helix was assgined to this range
+			if (state.getType().compareTo(type) < 0) continue;
+			if (getSecStrucState(i+1).getType().compareTo(type) < 0) continue;
 
 			char turn = state.getTurn()[idx];
 			char pturn = previousState.getTurn()[idx];
 
 			//Two consecutive n-turns present to define a n-helix
 			if ((turn=='>' || turn=='X') && (pturn=='>' || pturn=='X')) {
-				if (!DSSP_HELICES) setSecStrucType(i-1, type);
-				i++;
-				SecStrucState nextState = getSecStrucState(i);
-				char nturn = nextState.getTurn()[idx];
-				
-				//Count the number of open helix turns
-				int counter = 2;
-				boolean closing = false;
-				
-				while (counter > 0){
-					setSecStrucType(i-1, type);
-					i++;
-					if (nturn == 'X' && closing) counter--; //X in context
-					if (nturn == '<') counter--; //closing turn
-					if (nturn == '>') counter++; //opening turn
-					if (nturn == '<') closing = true;
-					nextState = getSecStrucState(i);
-					nturn = nextState.getTurn()[idx];
+				//Mark following n residues as turn
+				for (int k=0; k<n; k++){
+					setSecStrucType(i+k, type);
 				}
-				i--;
-				if (!DSSP_HELICES) setSecStrucType(i, type);
-				i--; //Go to positions behind in case there was two final X
+				if (!DSSP_HELICES) {
+					setSecStrucType(i-1, type);
+					setSecStrucType(i+n, type);
+				}
 			}
 		}
 	}
