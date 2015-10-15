@@ -14,11 +14,13 @@ import java.util.TreeMap;
  *
  */
 public abstract class AbstractScoresCache implements ScoresCache {
+	
 	private Map<String,Double> scores = null;
 
 	protected AbstractScoresCache() {
 		scores = null;
 	}
+	
 	protected AbstractScoresCache(AbstractScoresCache cache) {
 		this.scores = cache.scores;
 	}
