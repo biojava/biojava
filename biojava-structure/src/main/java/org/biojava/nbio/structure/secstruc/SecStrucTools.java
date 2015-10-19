@@ -24,12 +24,19 @@ import org.biojava.nbio.structure.Structure;
  */
 public class SecStrucTools {
 
+	/**
+	 * Obtain a List of SSE of the Structure, with the proper IDs
+	 * and residue ranges.
+	 * 
+	 * @param s Structure with SS assignments
+	 * @return List of SecStrucElement objects
+	 */
 	public static List<SecStrucElement> getSSE(Structure s){
 		
 		List<SecStrucElement> listSSE = new ArrayList<SecStrucElement>();
 		GroupIterator iter = new GroupIterator(s);
 		
-		//SecStruc information
+		//SecStruc information - initialize
 		SecStrucType type = SecStrucType.coil;
 		ResidueNumber previous = new ResidueNumber();
 		ResidueNumber start = new ResidueNumber();

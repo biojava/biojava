@@ -60,6 +60,8 @@ public class DemoLoadSecStruc {
         //If the more detailed DSSP prediction is required call this
         DSSPParser.fetch(pdbID, s, true);
 
+        //Print the assignment residue by residue
+        System.out.println("Residue assignment: ");
         for (Chain c : s.getChains()) {
             for (Group g: c.getAtomGroups()){
 

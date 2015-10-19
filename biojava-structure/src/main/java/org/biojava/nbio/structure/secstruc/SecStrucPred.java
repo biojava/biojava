@@ -449,10 +449,23 @@ public class SecStrucPred {
 
 	@Override
 	public String toString() {
+		return printDSSP();
+	}
+	
+	/**
+	 * Generate a DSSP file format ouput String of this SS prediction.
+	 * @return String in DSSP output file format
+	 */
+	public String printDSSP() {
 		
 		StringBuffer buf = new StringBuffer();
 		String nl = System.getProperty("line.separator");
 		
+		//Header Line
+		buf.append("==== Secondary Structure Definition by BioJava"
+				+ " DSSP implementation, Version October 2015 ===="+nl);
+		
+		//First line with column definition
 		buf.append("  #  RESIDUE AA STRUCTURE BP1 BP2  ACC     "
 				+ "N-H-->O    O-->H-N    N-H-->O    O-->H-N    "
 				+ "TCO  KAPPA ALPHA  PHI    PSI    "
@@ -464,6 +477,61 @@ public class SecStrucPred {
 			buf.append(ss.printDSSPline(i));
 		}
 
+		return buf.toString();
+	}
+	
+	/**
+	 * Generate a summary of this SS prediction with information about 
+	 * the three types of helix turns in different row sequences.
+	 * <p>
+	 * This is similar to the summary output of Jmol, and useful to visualize
+	 * the helix patterns.
+	 * 
+	 * @return String helix summary
+	 */
+	public String printHelixSummary() {
+		
+		StringBuffer g = new StringBuffer(); //3-10 helix
+		StringBuffer h = new StringBuffer(); //alpha helix
+		StringBuffer i = new StringBuffer(); //pi-helix
+		StringBuffer ss = new StringBuffer(); //SS summary
+		StringBuffer aa = new StringBuffer(); //AA one-letter
+		String nl = System.getProperty("line.separator");
+		
+		g.append(	"3 turn: ");
+		h.append(	"4 turn: ");
+		i.append(	"5 turn: ");
+		ss.append(	"SS:     ");
+		aa.append(	"AA:     ");
+		
+		for (int k = 0; k < groups.length; k++){
+			
+			SecStrucState state = getSecStrucState(k);
+			g.append(state.getTurn()[0]);
+			h.append(state.getTurn()[1]);
+			i.append(state.getTurn()[2]);
+			ss.append(state.getType());
+			aa.append(StructureTools.get1LetterCode(groups[k].getPDBName()));
+		}
+		
+		return g.toString()+nl+h.toString()+nl+
+				i.toString()+nl+ss.toString()+nl+aa.toString();
+	}
+	
+	/**
+	 * Generate a FASTA sequence with the SS annotation letters in the
+	 * aminoacid sequence order. 
+	 * @return String in FASTA sequence format
+	 */
+	public String printFASTA() {
+		
+		StringBuffer buf = new StringBuffer();
+		String nl = System.getProperty("line.separator");
+		buf.append(">"+groups[0].getChain().getStructure().getIdentifier()+nl);
+		
+		for (int g = 0; g < groups.length; g++){
+			buf.append(getSecStrucState(g).getType());
+		}
 		return buf.toString();
 	}
 	
