@@ -53,10 +53,6 @@ public class TestSecStrucPred {
 				assertEquals("SS assignment position "+(i+1)+" does not match", 
 						biojava.get(i), dssp.get(i));
 			}
-			
-			List<SecStrucElement> sse = SecStrucTools.getSSE(s);
-			for (SecStrucElement se : sse) System.out.println(se);
-			
 		}
 	}
 		
