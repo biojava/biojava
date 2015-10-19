@@ -31,6 +31,14 @@ import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.secstruc.DSSPParser;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
+/**
+ * Demonstration of how to load a Structure with the SS information,
+ * either from the PDB file annotation (Author's assignment) or from
+ * the DSSP file in the PDB servers (DSSP assignment).
+ * 
+ * @author Aleix Lafita
+ *
+ */
 public class DemoLoadSecStruc {
 	
     public static void main(String[] args) 
@@ -62,7 +70,7 @@ public class DemoLoadSecStruc {
 
                     System.out.println(c.getChainID() + 
                     		" " + g.getResidueNumber() + " " 
-                    		+ g.getPDBName() + ": " + ss.getType());
+                    		+ g.getPDBName() + " -> " + ss);
                 }
             }
         }
