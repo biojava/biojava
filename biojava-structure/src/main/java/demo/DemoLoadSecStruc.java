@@ -20,45 +20,51 @@
  */
 package demo;
 
+import java.io.IOException;
+
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.secstruc.DSSPParser;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
 public class DemoLoadSecStruc {
 	
-    public static void main(String[] args){
+    public static void main(String[] args) 
+    		throws IOException, StructureException {
+    	
+    	String pdbID = "5pti";
+    	
+        FileParsingParameters params = new FileParsingParameters();
+        //Only change needed to the normal Structure loading
+        params.setParseSecStruc(true); //this is false as DEFAULT
 
-        try {
-            FileParsingParameters params = new FileParsingParameters();
-            params.setParseSecStruc(true);
+        AtomCache cache = new AtomCache();
+        cache.setFileParsingParams(params);
+        cache.setUseMmCif(false);
 
-            AtomCache cache = new AtomCache();
-            cache.setFileParsingParams(params);
-            cache.setUseMmCif(false);
+        //The loaded Structure contains the SS assigned by Author
+        Structure s = cache.getStructure(pdbID);
+        
+        //If the more detailed DSSP prediction is required call this
+        DSSPParser.fetch(pdbID, s, true);
 
-            Structure s = cache.getStructure("4pti");
+        for (Chain c : s.getChains()) {
+            for (Group g: c.getAtomGroups()){
 
-            for ( Chain c : s.getChains()) {
-                for (Group g: c.getAtomGroups()){
+                if (g.hasAminoAtoms()){
 
-                    if ( g.hasAminoAtoms() ){
+                    SecStrucInfo ss = 
+                    		(SecStrucInfo) g.getProperty(Group.SEC_STRUC);
 
-                        SecStrucInfo ss = 
-                        		(SecStrucInfo) g.getProperty(Group.SEC_STRUC);
-
-                        System.out.println(c.getChainID() + 
-                        		" " + g.getResidueNumber() + " " 
-                        		+ g.getPDBName() + " " + ss);
-                    }
+                    System.out.println(c.getChainID() + 
+                    		" " + g.getResidueNumber() + " " 
+                    		+ g.getPDBName() + ": " + ss.getType());
                 }
             }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }        
+        }
     }
 }
