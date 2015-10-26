@@ -55,7 +55,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	private Random rnd;
 
 	//Optimization parameters
-	private static final int Rmin = 2; //min aligned subunits per column
+	private int Rmin = 2; //min aligned subunits per column
 	private int Lmin; //min subunit length
 	private int maxIterFactor = 100; //max iterations constant
 	private double C = 20; //probability of accept bad moves constant
@@ -111,6 +111,10 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		this.atoms = msa.getAtomArrays().get(0);
 		this.order = msa.size();
 		this.subunitCore = msa.getCoreLength();
+		
+		//50% of the structures aligned (minimum) or all (no gaps)
+		if (params.isGaps()) Rmin = Math.max(order/2, 2);
+		else Rmin = order;
 	}
 
 	private void initialize() 

@@ -1,6 +1,7 @@
 package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.List;
+import java.util.Random;
 
 import org.biojava.nbio.structure.align.ce.CeParameters;
 
@@ -23,6 +24,7 @@ public class CESymmParameters extends CeParameters {
 	private double symmetryThreshold;
 	private int minSubunitLength;
 	private double distanceCutoff;
+	private boolean gaps;
 
 	public static enum OrderDetectorMethod {
 		SEQUENCE_FUNCTION;
@@ -47,8 +49,8 @@ public class CESymmParameters extends CeParameters {
 	 * all the subunits have the same 3D transformation.
 	 * <p>
 	 * AUTO option automatically identifies the type. 
-	 * The criterion is that the CLOSE symmetry generates
-	 * CeSymm alignments with circular permutations 
+	 * The criterion for classification is that the CLOSE symmetry 
+	 * generates CeSymm alignments with circular permutations 
 	 * (2 blocks in AFPChain), whereas the OPEN symmetry
 	 * generates alignments without a CP (only one block in AFPChain).
 	 */
@@ -78,6 +80,7 @@ public class CESymmParameters extends CeParameters {
 		p.symmetryThreshold = symmetryThreshold;
 		p.minSubunitLength = minSubunitLength;
 		p.distanceCutoff = distanceCutoff;
+		p.gaps = gaps;
 		
 		p.winSize = winSize;
 		p.rmsdThr = rmsdThr;
@@ -104,11 +107,11 @@ public class CESymmParameters extends CeParameters {
 				+ ", optimization=" + optimization + ", seed=" + seed
 				+ ", multipleAxes=" + multipleAxes + ", symmetryThreshold="
 				+ symmetryThreshold + ", minSubunitLength=" + minSubunitLength
-				+ ", distanceCutoff=" + distanceCutoff + ", winSize=" + winSize
-				+ ", rmsdThr=" + rmsdThr + ", rmsdThrJoin=" + rmsdThrJoin
-				+ ", maxOptRMSD=" + maxOptRMSD + ", scoringStrategy="
-				+ scoringStrategy + ", maxGapSize=" + maxGapSize
-				+ ", showAFPRanges=" + showAFPRanges
+				+ ", distanceCutoff=" + distanceCutoff + ", gaps=" + gaps
+				+ ", winSize=" + winSize + ", rmsdThr=" + rmsdThr
+				+ ", rmsdThrJoin=" + rmsdThrJoin + ", maxOptRMSD=" + maxOptRMSD
+				+ ", scoringStrategy=" + scoringStrategy + ", maxGapSize="
+				+ maxGapSize + ", showAFPRanges=" + showAFPRanges
 				+ ", sideChainScoringType=" + sideChainScoringType
 				+ ", gapOpen=" + gapOpen + ", gapExtension=" + gapExtension
 				+ ", distanceIncrement=" + distanceIncrement + ", oRmsdThr="
@@ -125,11 +128,12 @@ public class CESymmParameters extends CeParameters {
 		orderDetectorMethod = OrderDetectorMethod.DEFAULT;
 		refineMethod = RefineMethod.DEFAULT;
 		optimization = true;
-		seed = (int)(System.currentTimeMillis()%1000000);
+		seed = new Random().nextInt(10000);
 		multipleAxes = true;
 		symmetryThreshold = DEFAULT_SYMMETRY_THRESHOLD;
 		minSubunitLength = 15;
 		distanceCutoff = 7.0;
+		gaps = true;
 	}
 
 	@Override
@@ -198,6 +202,9 @@ public class CESymmParameters extends CeParameters {
 		//distance cutoff
 		params.add("Distance Cutoff: the maximum allowed distance (in A) "
 				+ "between two aligned residues.");
+		
+		//gaps
+		params.add("Gaps: allow gaps in the alignment if true.");
 
 		return params;
 	}
@@ -215,6 +222,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("SymmetryThreshold");
 		params.add("MinSubunitLength");
 		params.add("DistanceCutoff");
+		params.add("Gaps");
 		return params;
 	}
 
@@ -230,7 +238,8 @@ public class CESymmParameters extends CeParameters {
 		params.add("Multiple Axes");
 		params.add("Symmetry Threshold");
 		params.add("Minimum Subunit Length");
-		params.add("DistanceCutoff");
+		params.add("Distance Cutoff");
+		params.add("Gaps");
 		return params;
 	}
 
@@ -248,6 +257,7 @@ public class CESymmParameters extends CeParameters {
 		params.add(Double.class);
 		params.add(Integer.class);
 		params.add(Double.class);
+		params.add(Boolean.class);
 		return params;
 	}
 
@@ -339,6 +349,14 @@ public class CESymmParameters extends CeParameters {
 
 	public void setDistanceCutoff(Double distanceCutoff) {
 		this.distanceCutoff = distanceCutoff;
+	}
+
+	public boolean isGaps() {
+		return gaps;
+	}
+
+	public void setGaps(Boolean gaps) {
+		this.gaps = gaps;
 	}
 
 }
