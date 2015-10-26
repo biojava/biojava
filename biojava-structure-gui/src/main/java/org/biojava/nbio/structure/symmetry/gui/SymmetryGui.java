@@ -13,6 +13,7 @@ import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 
 import javax.swing.*;
@@ -34,7 +35,7 @@ public class SymmetryGui extends JFrame {
 
 	private final static long serialVersionUID = 0l;
 
-	private CeSymm ceSymm;
+	private CeSymm ceSymm = new CeSymm();
 	private JButton abortB;
 
 	private SelectPDBPanel  tab1 ;
@@ -311,8 +312,10 @@ public class SymmetryGui extends JFrame {
 	}
 
 	private void updateAlgorithm() {
-		//There is only one algorithm for symmetry
+		//Conserve the previous parameters used
+		CESymmParameters oldParams = ceSymm.getParameters();
 		ceSymm = new CeSymm();
+		ceSymm.setParameters(oldParams);
 	}
 
 }
