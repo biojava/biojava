@@ -66,6 +66,7 @@ public class CeSymm {
 	private SymmetryType type;
 	private SymmetryAxes axes;
 	private boolean refined;
+	int order;
 
 	private Atom[] ca1;
 	private Atom[] ca2;
@@ -272,16 +273,21 @@ public class CeSymm {
 				case SEQUENCE_FUNCTION: 
 					orderDetector = new SequenceFunctionOrderDetector(
 							params.getMaxSymmOrder(), 0.4f);
+					order = orderDetector.calculateOrder(afpChain, ca1);
+					break;
+				case USER_INPUT:
+					order = params.getUserOrder();
 					break;
 				}
-				refiner = new SingleRefiner(orderDetector);
+				refiner = new SingleRefiner();
 				break;
 			default: //case OPEN
 				refiner = new OpenRefiner();
+				order = params.getUserOrder();
 				break;
 			}
 
-			afpChain = refiner.refine(afpAlignments, ca1);
+			afpChain = refiner.refine(afpAlignments, ca1, order);
 			refined = true;
 
 		} catch (RefinerFailedException e) {

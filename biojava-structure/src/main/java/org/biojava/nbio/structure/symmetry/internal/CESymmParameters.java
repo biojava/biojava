@@ -11,12 +11,14 @@ import org.biojava.nbio.structure.align.ce.CeParameters;
  * @author Spencer Bliven
  * @author Aleix Lafita
  * @since 4.2.0
+ * 
  */
 public class CESymmParameters extends CeParameters {
 
 	private int maxSymmOrder;
 	private SymmetryType symmetryType;
 	private OrderDetectorMethod orderDetectorMethod;
+	private int userOrder;
 	private RefineMethod refineMethod;
 	private boolean optimization;
 	private int seed; //random seed
@@ -27,8 +29,9 @@ public class CESymmParameters extends CeParameters {
 	private boolean gaps;
 
 	public static enum OrderDetectorMethod {
-		SEQUENCE_FUNCTION;
-		public static OrderDetectorMethod DEFAULT = SEQUENCE_FUNCTION;
+		SEQUENCE_FUNCTION,
+		USER_INPUT;
+		public static final OrderDetectorMethod DEFAULT = SEQUENCE_FUNCTION;
 	}
 
 	public static enum RefineMethod {
@@ -73,6 +76,7 @@ public class CESymmParameters extends CeParameters {
 		p.maxSymmOrder = maxSymmOrder;
 		p.symmetryType = symmetryType;
 		p.orderDetectorMethod = orderDetectorMethod;
+		p.userOrder = userOrder;
 		p.refineMethod = refineMethod;
 		p.optimization = optimization;
 		p.seed = seed;
@@ -100,32 +104,12 @@ public class CESymmParameters extends CeParameters {
 	}
 
 	@Override
-	public String toString() {
-		return "CESymmParameters [maxSymmOrder=" + maxSymmOrder
-				+ ", symmetryType=" + symmetryType + ", orderDetectorMethod="
-				+ orderDetectorMethod + ", refineMethod=" + refineMethod
-				+ ", optimization=" + optimization + ", seed=" + seed
-				+ ", multipleAxes=" + multipleAxes + ", symmetryThreshold="
-				+ symmetryThreshold + ", minSubunitLength=" + minSubunitLength
-				+ ", distanceCutoff=" + distanceCutoff + ", gaps=" + gaps
-				+ ", winSize=" + winSize + ", rmsdThr=" + rmsdThr
-				+ ", rmsdThrJoin=" + rmsdThrJoin + ", maxOptRMSD=" + maxOptRMSD
-				+ ", scoringStrategy=" + scoringStrategy + ", maxGapSize="
-				+ maxGapSize + ", showAFPRanges=" + showAFPRanges
-				+ ", sideChainScoringType=" + sideChainScoringType
-				+ ", gapOpen=" + gapOpen + ", gapExtension=" + gapExtension
-				+ ", distanceIncrement=" + distanceIncrement + ", oRmsdThr="
-				+ oRmsdThr + ", maxNrIterationsForOptimization="
-				+ maxNrIterationsForOptimization + ", substitutionMatrix="
-				+ substitutionMatrix + ", seqWeight=" + seqWeight + "]";
-	}
-
-	@Override
 	public void reset(){
 		super.reset();
 		maxSymmOrder = 8;
 		symmetryType = SymmetryType.DEFAULT;
 		orderDetectorMethod = OrderDetectorMethod.DEFAULT;
+		userOrder = 0;
 		refineMethod = RefineMethod.DEFAULT;
 		optimization = true;
 		seed = new Random().nextInt(10000);
@@ -170,6 +154,12 @@ public class CESymmParameters extends CeParameters {
 			orderTypes.append(vals[vals.length-1].name());
 		}
 		params.add(orderTypes.toString());
+		
+		//userOrder help explanation
+		params.add("Order of symmetry determined by the user. "
+				+ "Use it with the USER_INPUT order option. Imposes an order"
+				+ " of symmetry to the alignment. If 0 the order is set "
+				+ "automatically.");
 
 		StringBuilder refineTypes = new StringBuilder("Refinement Method: ");
 		RefineMethod[] values = RefineMethod.values();
@@ -215,6 +205,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("MaxSymmOrder");
 		params.add("SymmetryType");
 		params.add("OrderDetectorMethod");
+		params.add("UserOrder");
 		params.add("RefineMethod");
 		params.add("Optimization");
 		params.add("Seed");
@@ -232,6 +223,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("Maximum Order of Symmetry");
 		params.add("Type of Symmetry");
 		params.add("Order Detection Method");
+		params.add("User Input Order");
 		params.add("Refinement Method");
 		params.add("Optimization");
 		params.add("Random Seed");
@@ -250,6 +242,7 @@ public class CESymmParameters extends CeParameters {
 		params.add(Integer.class);
 		params.add(SymmetryType.class);
 		params.add(OrderDetectorMethod.class);
+		params.add(Integer.class);
 		params.add(RefineMethod.class);
 		params.add(Boolean.class);
 		params.add(Integer.class);
@@ -285,6 +278,14 @@ public class CESymmParameters extends CeParameters {
 
 	public void setOrderDetectorMethod(OrderDetectorMethod orderDetectorMethod) {
 		this.orderDetectorMethod = orderDetectorMethod;
+	}
+	
+	public void setUserOrder(Integer userOrder) {
+		this.userOrder = userOrder;
+	}
+
+	public int getUserOrder() {
+		return userOrder;
 	}
 
 	public void setMaxSymmOrder(Integer maxSymmOrder) {

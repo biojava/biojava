@@ -35,11 +35,9 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  */
 public class OpenRefiner implements Refiner {
 
-	private int order;
-
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms) 
-			throws RefinerFailedException, StructureException {
+	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms,
+			int order) throws RefinerFailedException, StructureException {
 
 		//The two vertices of the graph mean (previous, next)
 		List<List<Integer>> graph = 
@@ -79,19 +77,22 @@ public class OpenRefiner implements Refiner {
 			}
 		}
 
-		//Calculate the most common group size
-		List<Integer> sizes = new ArrayList<Integer>(atoms.length);
-		for (int p=0; p<atoms.length; p++) sizes.add(0);
-
-		for (int i=0; i<groups.size(); i++){
-			int gorder = groups.get(i).size();
-			sizes.set(gorder, sizes.get(gorder)+1);
-		}
-		int maxNr = 0; //the total number of residues aligned
-		for (int s=2; s<sizes.size(); s++){
-			if (sizes.get(s)*s > maxNr) {
-				order = s;
-				maxNr = sizes.get(s)*s;
+		//Determine the order
+		if (order == 0) {
+			//Calculate the most common group size
+			List<Integer> sizes = new ArrayList<Integer>(atoms.length);
+			for (int p=0; p<atoms.length; p++) sizes.add(0);
+	
+			for (int i=0; i<groups.size(); i++){
+				int gorder = groups.get(i).size();
+				sizes.set(gorder, sizes.get(gorder)+1);
+			}
+			int maxNr = 0; //the total number of residues aligned
+			for (int s=2; s<sizes.size(); s++){
+				if (sizes.get(s)*s > maxNr) {
+					order = s;
+					maxNr = sizes.get(s)*s;
+				}
 			}
 		}
 

@@ -25,22 +25,13 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
  * 
  */
 public class SingleRefiner implements Refiner {
-
-	private OrderDetector orderDetector;
-	
-	public SingleRefiner(OrderDetector orderDetector) {
-		this.orderDetector = orderDetector;
-	}
 	
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms)
-			throws RefinerFailedException, StructureException {
+	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms, 
+			int order) throws RefinerFailedException, StructureException {
 		
-		AFPChain afpChain = afpAlignments.get(0);
-		int order = orderDetector.calculateOrder(afpChain, atoms);
-		
-		if (order == 1)	throw new RefinerFailedException(
-				"Symmetry not found in the structure: order = 1.");
+		if (order < 2)	throw new RefinerFailedException(
+				"Symmetry not found in the structure: order < 2.");
 		
 		return refineSymmetry(afpAlignments.get(0), atoms, atoms, order);
 	}
