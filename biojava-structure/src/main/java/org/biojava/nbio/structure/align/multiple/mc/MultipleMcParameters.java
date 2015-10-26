@@ -2,6 +2,7 @@ package org.biojava.nbio.structure.align.multiple.mc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 
@@ -127,14 +128,14 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	@Override
 	public void reset() {
 		
-		randomSeed = 0;
+		randomSeed = new Random().nextInt(10000);
 		minBlockLen = 10;
 		minAlignedStructures = 0;
 		gapOpen = 20.0;
 		gapExtension = 15.0;
 		distanceCutoff = 7.0;
 		convergenceSteps = 0;
-		nrThreads = 4;
+		nrThreads = Runtime.getRuntime().availableProcessors();
 	}
 
 	public int getRandomSeed() {
