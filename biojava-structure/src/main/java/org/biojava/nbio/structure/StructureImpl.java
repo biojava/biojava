@@ -249,7 +249,7 @@ public class StructureImpl implements Structure, Serializable {
 				return c;
 			}
 		}
-		throw new StructureException("could not find chain \"" + chainId + "\" for PDB id " + pdb_id);
+		throw new StructureException("Could not find chain \"" + chainId + "\" for PDB id " + pdb_id);
 	}
 
 

@@ -3086,7 +3086,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (StructureException e){
 					// usually if this happens something is wrong with the PDB header
 					// e.g. 2brd - there is no Chain A, although it is specified in the header
-					logger.error("Unexpected exception",e);
+					// Some bona-fide cases exist, e.g. 2ja5, chain N is described in SEQRES
+					// but the authors didn't observe in the density so it's completely missing
+					// from the ATOM lines
+					logger.warn("Could not find chain {} to link to compound (entity) {}. The chain will be missing in the compound.", chainId, comp.getMolId());
 				}
 			}
 			comp.setChains(chains);
@@ -3117,7 +3120,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					Chain c = s.getChainByPDB(chainId);
 					c.setCompound(comp);
 				} catch (StructureException e){
-					logger.error("Unexpected exception",e);
+					logger.warn("Chain {} was not found, can't assign a compound (entity) to it.",chainId);
 				}
 			}
 		}
