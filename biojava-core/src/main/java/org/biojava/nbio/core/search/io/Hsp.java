@@ -2,8 +2,6 @@ package org.biojava.nbio.core.search.io;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.biojava.nbio.core.alignment.SimpleAlignedSequence;
 import org.biojava.nbio.core.alignment.SimpleSequencePair;
 import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
@@ -16,6 +14,8 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class models a search Hsp.
@@ -30,6 +30,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 
 public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
+    private static final Logger logger = LoggerFactory.getLogger(Hsp.class);
     private Integer hspNum;
     private Double hspBitScore;
     private Integer hspScore;
@@ -118,7 +119,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
             else
                 returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
         } catch (CompoundNotFoundException ex) {
-            Logger.getLogger(Hsp.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Unexpected error, could not find compound when creating Sequence object from Hsp", ex);
         }
         return returnSeq;
     }

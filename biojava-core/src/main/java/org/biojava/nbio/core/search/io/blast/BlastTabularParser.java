@@ -41,6 +41,7 @@ public class BlastTabularParser implements ResultFactory {
     }
     private static final Logger log = Logger.getLogger(BlastTabularParser.class.getName());
     
+    
     private File targetFile;
     private int fileLinesCount;
     private PARSING_CONSISTENCY parsingConsistency = PARSING_CONSISTENCY.IMPROVED;
