@@ -71,6 +71,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructConn> structConn;
 	private List<StructNcsOper> structNcsOper;
 	private List<StructRefSeqDif> sequenceDifs;
+	private List<StructSiteGen> structSiteGens;
 
 	/**
 	 * A map of asym ids (internal chain ids) to strand ids (author chain ids) 
@@ -642,8 +643,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		//TODO: add support for structure.setConnections(connects);
-		
 
+		//TODO: add support for structure.setSites(sites);
+		addSites();
 		
 		boolean noAsymStrandIdMappingPresent = false;
 		if (asymStrandId.isEmpty()) {
@@ -1816,6 +1818,32 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		this.structConn.add(structConn);
 	}
 
+	@Override
+	public void newStructSiteGen(StructSiteGen siteGen) { this.structSiteGens.add(siteGen);	}
+
+	private void addSites() {
+		// TODO: build the missing sites.
+		List<Site> sites = new ArrayList<Site>();
+
+		for (StructSiteGen siteGen : structSiteGens) {
+			// For each StructSiteGen, find the residues involved, if they exist then
+			String id = siteGen.getId(); // unique per each
+			String site_id = siteGen.getSite_id(); // multiple could be in same site.
+			String comp_id = siteGen.getLabel_comp_id();  // PDBName
+			String asym_id = siteGen.getLabel_asym_id(); // ChainID
+			String seq_id = siteGen.getLabel_seq_id(); // ResID
+
+			// 1. if exists this residue above in the data model,
+
+			// 2. find the site_id, if not existing, create anew.
+
+			// 3. add this residue to the site.
+
+			// TODO finish above.
+		}
+
+		structure.setSites(sites);
+	}
 }
 
 
