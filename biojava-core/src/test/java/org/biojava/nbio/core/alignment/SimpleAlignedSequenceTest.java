@@ -23,7 +23,6 @@
 
 package org.biojava.nbio.core.alignment;
 
-import org.biojava.nbio.core.alignment.SimpleAlignedSequence;
 import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;

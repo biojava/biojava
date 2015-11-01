@@ -47,7 +47,7 @@ public class BlastTabularParserTest {
         System.out.println("getFileExtensions");
         BlastTabularParser instance = new BlastTabularParser();
         
-        List<String> expResult = new ArrayList();
+        List<String> expResult = new ArrayList<String>();
         expResult.add("blasttabular");
         expResult.add("blasttxt");
         
@@ -113,7 +113,7 @@ public class BlastTabularParserTest {
                 .setHspBitScore(2894)
                 .createBlastHsp();
         
-        List<Hsp> hsplist = new ArrayList();
+        List<Hsp> hsplist = new ArrayList<Hsp>();
         hsplist.add(hsp1Hit1Res1);
         hsplist.add(hsp1Hit1Res2);
         
@@ -121,7 +121,7 @@ public class BlastTabularParserTest {
                 .setHitDef("CP000411")
                 .setHsps(hsplist)
                 .createBlastHit();
-        List<Hit> hitlist = new ArrayList();
+        List<Hit> hitlist = new ArrayList<Hit>();
         hitlist.add(hit1Res1);
         
         BlastResult res1 = new BlastResultBuilder()

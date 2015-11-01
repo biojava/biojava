@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * Designed by Paolo Pavan.
@@ -45,11 +46,11 @@ public interface ResultFactory {
      * They will be associated back to the query during the construction of the Result object.
      * @param sequences 
      */
-    void setQueryReferences(List sequences);
+    void setQueryReferences(List<Sequence> sequences);
     /**
      * Specify the collection of sequences objects used as database in the Search run. 
      * They will be associated back to the Hit during the construction of the Hit object.
      * @param sequences 
      */
-    void setDatabaseReferences(List sequences);
+    void setDatabaseReferences(List<Sequence> sequences);
 }

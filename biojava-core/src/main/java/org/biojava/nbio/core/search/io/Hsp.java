@@ -93,7 +93,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     public SequencePair<S,C> getAlignment(){
         if (returnAln != null) return returnAln;
         
-        SimpleAlignedSequence alignedQuery, alignedHit;
+        SimpleAlignedSequence<S,C> alignedQuery, alignedHit;
         // queryFrom e hitTo?
         int numBefore, numAfter;
         
@@ -125,7 +125,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     }
     
     private List<Step> getAlignmentsSteps(String gappedSequenceString){
-        List<Step> returnList = new ArrayList();
+        List<Step> returnList = new ArrayList<Step>();
         
         for (char c: gappedSequenceString.toCharArray()){
             if (c=='-') returnList.add(Step.GAP); else returnList.add(Step.COMPOUND);

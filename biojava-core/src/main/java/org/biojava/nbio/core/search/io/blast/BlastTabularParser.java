@@ -15,6 +15,7 @@ import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
+import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * Designed by Paolo Pavan.
@@ -49,7 +50,7 @@ public class BlastTabularParser implements ResultFactory {
     
     // data imported private:
     int queryIdNumber = 0;
-    HashMap<String,String> queryIdMapping = new HashMap();
+    HashMap<String,String> queryIdMapping = new HashMap<String,String>();
     String programName=null, queryName = null, databaseFile = null;
     private String queryId      ;
     private String subjectId    ;
@@ -67,7 +68,7 @@ public class BlastTabularParser implements ResultFactory {
 
     @Override
     public List<String> getFileExtensions() {
-        List l = new ArrayList();
+        List<String> l = new ArrayList<String>();
         l.add("blasttabular");
         l.add("blasttxt");
         return l;
@@ -80,7 +81,7 @@ public class BlastTabularParser implements ResultFactory {
 
     @Override
     public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
-        List<Result> results = new ArrayList();
+        List<Result> results = new ArrayList<Result>();
         
         log.info("Query for hits");
         LineNumberReader  lnr = new LineNumberReader(new FileReader(targetFile));
@@ -104,13 +105,13 @@ public class BlastTabularParser implements ResultFactory {
                         .setQueryDef(queryName)
                         .setReference(blastReference);
                 
-                List<Hit> hits = new ArrayList();
+                List<Hit> hits = new ArrayList<Hit>();
                 
                 String currentQueryId = queryId;
                 while (currentQueryId.equals(queryId) && lineNumber < fileLinesCount){
                     BlastHitBuilder hitBuilder = new BlastHitBuilder();
                     
-                    List<Hsp> hsps = new ArrayList();
+                    List<Hsp> hsps = new ArrayList<Hsp>();
                     
                     String currentSubjectId=subjectId;
                     while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
@@ -206,7 +207,7 @@ public class BlastTabularParser implements ResultFactory {
      * @param sequences 
      */
     @Override
-    public void setQueryReferences(List sequences) {
+    public void setQueryReferences(List<Sequence> sequences) {
         throw new UnsupportedOperationException("Not supported for this parser.");
     }
     /**
@@ -216,7 +217,7 @@ public class BlastTabularParser implements ResultFactory {
      * @param sequences 
      */
     @Override
-    public void setDatabaseReferences(List sequences) {
+    public void setDatabaseReferences(List<Sequence> sequences) {
         throw new UnsupportedOperationException("Not supported for this parser.");
     }
      /**

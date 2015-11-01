@@ -83,7 +83,7 @@ public class BlastXMLParser implements ResultFactory {
             ArrayList<Element> IterationsList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
             logger.info(IterationsList.size() + " results");
 
-            resultsCollection = new ArrayList();
+            resultsCollection = new ArrayList<Result>();
             for (Element element : IterationsList) {
                 BlastResultBuilder resultBuilder = new BlastResultBuilder();
                 // will add BlastOutput* key sections in the result object
@@ -109,7 +109,7 @@ public class BlastXMLParser implements ResultFactory {
                 Element iterationHitsElement = XMLHelper.selectSingleElement(element, "Iteration_hits");
                 ArrayList<Element> hitList = XMLHelper.selectElements(iterationHitsElement, "Hit");
 
-                hitsCollection = new ArrayList();
+                hitsCollection = new ArrayList<Hit>();
                 for (Element hitElement : hitList) {
                     BlastHitBuilder blastHitBuilder = new BlastHitBuilder();
                     blastHitBuilder
@@ -126,7 +126,7 @@ public class BlastXMLParser implements ResultFactory {
                     Element hithspsElement = XMLHelper.selectSingleElement(hitElement, "Hit_hsps");
                     ArrayList<Element> hspList = XMLHelper.selectElements(hithspsElement, "Hsp");
 
-                    hspsCollection = new ArrayList();
+                    hspsCollection = new ArrayList<Hsp>();
                     for (Element hspElement : hspList) {
                         Double evalue = new Double(XMLHelper.selectSingleElement(hspElement, "Hsp_evalue").getTextContent());
 
@@ -172,18 +172,18 @@ public class BlastXMLParser implements ResultFactory {
     }
     
     public List<String> getFileExtensions(){
-        ArrayList<String> extensions = new ArrayList(1);
+        ArrayList<String> extensions = new ArrayList<String>(1);
         extensions.add("blastxml");
         return extensions;
     }
 
     @Override
-    public void setQueryReferences(List sequences) {
+    public void setQueryReferences(List<Sequence> sequences) {
         queryReferences = sequences;
     }
 
     @Override
-    public void setDatabaseReferences(List sequences) {
+    public void setDatabaseReferences(List<Sequence> sequences) {
         databaseReferences = sequences;
     }
     
@@ -192,7 +192,7 @@ public class BlastXMLParser implements ResultFactory {
      */
     private void mapIds() {
         if (queryReferences != null) {
-            queryReferencesMap = new HashMap(queryReferences.size());
+            queryReferencesMap = new HashMap<String,Sequence>(queryReferences.size());
             for (int counter=0; counter < queryReferences.size() ; counter ++){
                 String id = "Query_"+(counter+1);
                 queryReferencesMap.put(id, queryReferences.get(counter));
@@ -200,7 +200,7 @@ public class BlastXMLParser implements ResultFactory {
         }
         
         if (databaseReferences != null) {
-            databaseReferencesMap = new HashMap(databaseReferences.size());
+            databaseReferencesMap = new HashMap<String,Sequence>(databaseReferences.size());
             for (int counter=0; counter < databaseReferences.size() ; counter ++){
                 // this is strange: while Query_id are 1 based, Hit (database) id are 0 based
                 String id = "gnl|BL_ORD_ID|"+(counter);
