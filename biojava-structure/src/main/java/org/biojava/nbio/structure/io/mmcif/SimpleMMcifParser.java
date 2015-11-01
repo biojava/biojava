@@ -645,12 +645,18 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields,lineData, loopWarnings);
 
 			triggerNewStrucRefSeq(sref);
-		} else if ( category.equals("_struct_ref_seq_dif")){
-			StructRefSeqDif sref  = (StructRefSeqDif) buildObject(
+		} else if ( category.equals("_struct_ref_seq_dif")) {
+			StructRefSeqDif sref = (StructRefSeqDif) buildObject(
 					StructRefSeqDif.class.getName(),
-					loopFields,lineData, loopWarnings);
+					loopFields, lineData, loopWarnings);
 
 			triggerNewStrucRefSeqDif(sref);
+		} else if ( category.equals("_struct_site_gen")) {
+			StructSiteGen sref = (StructSiteGen) buildObject(
+					StructSiteGen.class.getName(),
+					loopFields, lineData, loopWarnings);
+
+			triggerNewStructSiteGen(sref);
 		} else if ( category.equals("_entity_poly_seq")){
 			EntityPolySeq exptl  = (EntityPolySeq) buildObject(
 					EntityPolySeq.class.getName(),
@@ -1150,6 +1156,12 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 	}
 
+	private void triggetNewStructSiteGen(StructSiteGen sref) {
+		for (MMcifConsumer c : consumers) {
+			c.newStructSiteGen(sref);
+		}
+	}
+
 	private void triggerNewPdbxPolySeqScheme(PdbxPolySeqScheme ppss){
 		for(MMcifConsumer c : consumers){
 			c.newPdbxPolySeqScheme(ppss);
@@ -1226,6 +1238,11 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void triggerNewStructConn(StructConn id) {
 		for(MMcifConsumer c : consumers){
 			c.newStructConn(id);
+		}
+	}
+	private void triggerNewStructSiteGen(StructSiteGen id) {
+		for (MMcifConsumer c : consumers) {
+			c.newStructSiteGen(id);
 		}
 	}
 }
