@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Matt on 10/31/2015.
+ * Created by larsonmattr on 10/31/2015.
  */
 public class TestParseMmCIFFeatures {
     @Test
@@ -31,5 +31,22 @@ public class TestParseMmCIFFeatures {
 
         // 4HHB has 6 sites from ligands.
         assertEquals(6, sites.size());
+
+        // Check for each site that it has parsed all residues.
+        assertEquals(1, getGroupsInSite(sCif, "AC1"));
+        assertEquals(1, getGroupsInSite(sCif, "AC2"));
+        assertEquals(16, getGroupsInSite(sCif, "AC3"));
+        assertEquals(13, getGroupsInSite(sCif, "AC4"));
+        assertEquals(15, getGroupsInSite(sCif, "AC5"));
+        assertEquals(7, getGroupsInSite(sCif, "AC6"));
+    }
+
+    private int getGroupsInSite(Structure structure, String site) {
+        for (Site a_site : structure.getSites()) {
+            if (a_site.getSiteID().equals(site)) {
+                return a_site.getGroups().size();
+            }
+        }
+        return 0;
     }
 }
