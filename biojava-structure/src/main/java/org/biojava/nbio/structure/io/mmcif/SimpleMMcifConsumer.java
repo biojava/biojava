@@ -585,6 +585,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structConn = new ArrayList<StructConn>();
 		structNcsOper = new ArrayList<StructNcsOper>();
 		sequenceDifs = new ArrayList<StructRefSeqDif>();
+		structSiteGens = new ArrayList<StructSiteGen>();
 	}
 
 
@@ -643,9 +644,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		//TODO: add support for structure.setConnections(connects);
-
-		//TODO: add support for structure.setSites(sites);
-		addSites();
 		
 		boolean noAsymStrandIdMappingPresent = false;
 		if (asymStrandId.isEmpty()) {
@@ -760,8 +758,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 			}
 		}
-		
-		
+
+		// Do structure.setSites(sites) after any chain renaming to be like PDB.
+		addSites();
 
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
@@ -1821,25 +1820,69 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void newStructSiteGen(StructSiteGen siteGen) { this.structSiteGens.add(siteGen);	}
 
+	/**
+	 * Build sites in a BioJava Structure using the original author chain id & residue numbers.
+	 * Sites are built from struct_site_gen records that have been parsed.
+	 */
 	private void addSites() {
-		// TODO: build the missing sites.
 		List<Site> sites = new ArrayList<Site>();
 
 		for (StructSiteGen siteGen : structSiteGens) {
-			// For each StructSiteGen, find the residues involved, if they exist then
-			String id = siteGen.getId(); // unique per each
-			String site_id = siteGen.getSite_id(); // multiple could be in same site.
-			String comp_id = siteGen.getLabel_comp_id();  // PDBName
-			String asym_id = siteGen.getLabel_asym_id(); // ChainID
-			String seq_id = siteGen.getLabel_seq_id(); // ResID
+				// For each StructSiteGen, find the residues involved, if they exist then
+				String site_id = siteGen.getSite_id(); // multiple could be in same site.
+				if (site_id == null) site_id = "";
+				String comp_id = siteGen.getLabel_comp_id();  // PDBName
+				// Assumption: the author chain ID and residue number for the site is consistent with the original
+				// author chain id and residue numbers.
+				String chain_id = siteGen.getAuth_asym_id(); // ChainID
+				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
 
-			// 1. if exists this residue above in the data model,
+				// 1. if exists this residue above in the data model,
+				boolean haveResidue = false;
+				// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
+				Group g = null;
+				try {
+					Chain chain = structure.getChainByPDB(chain_id);
+					if (null != chain) {
+						try {
+							g = chain.getGroupByPDB(new ResidueNumber(chain_id, Integer.parseInt(auth_seq_id), ' '));
+						} catch (NumberFormatException e) {
+							logger.warn("Could not lookup residue : " + chain_id + auth_seq_id);
+						}
+					}
+				} catch (StructureException e) {
+					logger.warn("Problem finding residue in site entry " + siteGen.getSite_id() + " - " + e.getMessage(), e.getMessage());
+				}
 
-			// 2. find the site_id, if not existing, create anew.
+				if (g != null) {
+					// 2. find the site_id, if not existing, create anew.
+					Site site = null;
+					for (Site asite: sites) {
+						if (site_id.equals(asite.getSiteID())) site = asite;
+					}
 
-			// 3. add this residue to the site.
+					boolean addSite = false;
 
-			// TODO finish above.
+					// 3. add this residue to the site.
+					if (site == null) {
+						addSite = true;
+						site = new Site();
+						site.setSiteID(site_id);
+						// logger.warn("Creating a new site " + site_id);
+					}
+
+					List<Group> groups = site.getGroups();
+					if (groups == null) groups = new ArrayList<Group>();
+
+					// Check the self-consistency of the residue reference from auth_seq_id and chain_id
+					if (!comp_id.equals(g.getPDBName())) {
+						logger.warn("comp_id doesn't match the residue at " + chain_id + auth_seq_id + " - skipping");
+					} else {
+						groups.add(g);
+						site.setGroups(groups);
+					}
+					if (addSite) sites.add(site);
+				}
 		}
 
 		structure.setSites(sites);
