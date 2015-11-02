@@ -1820,12 +1820,35 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void newStructSiteGen(StructSiteGen siteGen) { this.structSiteGens.add(siteGen);	}
 
+	@Override
+	public void newStructSite(StructSite structSite) {
+		// Simply implement the method.
+		List<Site> sites = structure.getSites();
+		if (sites == null) sites = new ArrayList<Site>();
+
+		Site site = null;
+		for (Site asite : sites) {
+			if (asite.getSiteID().equals(structSite.getId())) {
+				site = asite; 		// Prevent duplicate siteIds
+			}
+		}
+		boolean addSite = false;
+		if (site == null) { site = new Site(); addSite = true; }
+		site.setSiteID(structSite.getId());
+		site.setDescription(structSite.getDetails());
+		// site.setPdbxEvidenceCode(structSite.getPdbxEvidenceCode()); // TODO - add addition fields in Sites
+		if (addSite) sites.add(site);
+
+		structure.setSites(sites);
+	}
+
 	/**
 	 * Build sites in a BioJava Structure using the original author chain id & residue numbers.
 	 * Sites are built from struct_site_gen records that have been parsed.
 	 */
 	private void addSites() {
-		List<Site> sites = new ArrayList<Site>();
+		List<Site> sites = structure.getSites();
+		if (sites == null) sites = new ArrayList<Site>();
 
 		for (StructSiteGen siteGen : structSiteGens) {
 				// For each StructSiteGen, find the residues involved, if they exist then
@@ -1868,7 +1891,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 						addSite = true;
 						site = new Site();
 						site.setSiteID(site_id);
-						// logger.warn("Creating a new site " + site_id);
 					}
 
 					List<Group> groups = site.getGroups();
@@ -1884,9 +1906,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					if (addSite) sites.add(site);
 				}
 		}
-
 		structure.setSites(sites);
 	}
 }
-
-

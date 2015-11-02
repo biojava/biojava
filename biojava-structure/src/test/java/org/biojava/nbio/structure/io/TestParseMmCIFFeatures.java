@@ -39,6 +39,14 @@ public class TestParseMmCIFFeatures {
         assertEquals(13, getGroupsInSite(sCif, "AC4"));
         assertEquals(15, getGroupsInSite(sCif, "AC5"));
         assertEquals(7, getGroupsInSite(sCif, "AC6"));
+
+        // Check that struct_site parsing worked, and they have descriptions.
+        assertEquals(getDescription(sCif, "AC1"), "BINDING SITE FOR RESIDUE PO4 D 147");
+        assertEquals(getDescription(sCif, "AC2"), "BINDING SITE FOR RESIDUE PO4 B 147");
+        assertEquals(getDescription(sCif, "AC3"), "BINDING SITE FOR RESIDUE HEM A 142");
+        assertEquals(getDescription(sCif, "AC4"), "BINDING SITE FOR RESIDUE HEM B 148");
+        assertEquals(getDescription(sCif, "AC5"), "BINDING SITE FOR RESIDUE HEM C 142");
+        assertEquals(getDescription(sCif, "AC6"), "BINDING SITE FOR RESIDUE HEM D 148");
     }
 
     private int getGroupsInSite(Structure structure, String site) {
@@ -48,5 +56,14 @@ public class TestParseMmCIFFeatures {
             }
         }
         return 0;
+    }
+
+    private String getDescription(Structure structure, String site) {
+        for (Site a_site : structure.getSites()) {
+            if (a_site.getSiteID().equals(site)) {
+                return a_site.getDescription();
+            }
+        }
+        return "";
     }
 }
