@@ -21,11 +21,78 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import org.biojava.nbio.structure.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.vecmath.Matrix4d;
+
+import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.AminoAcidImpl;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.DBRef;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.HetatomImpl;
+import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.SSBond;
+import org.biojava.nbio.structure.SSBondImpl;
+import org.biojava.nbio.structure.SeqMisMatch;
+import org.biojava.nbio.structure.SeqMisMatchImpl;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.BondMaker;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
-import org.biojava.nbio.structure.io.mmcif.model.*;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.nbio.structure.io.mmcif.model.Cell;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompBond;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompDescriptor;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBremark;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBrev;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
+import org.biojava.nbio.structure.io.mmcif.model.Entity;
+import org.biojava.nbio.structure.io.mmcif.model.EntityPolySeq;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
+import org.biojava.nbio.structure.io.mmcif.model.Exptl;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxNonPolyScheme;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxPolySeqScheme;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList;
+import org.biojava.nbio.structure.io.mmcif.model.Refine;
+import org.biojava.nbio.structure.io.mmcif.model.Struct;
+import org.biojava.nbio.structure.io.mmcif.model.StructAsym;
+import org.biojava.nbio.structure.io.mmcif.model.StructConn;
+import org.biojava.nbio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.nbio.structure.io.mmcif.model.StructNcsOper;
+import org.biojava.nbio.structure.io.mmcif.model.StructRef;
+import org.biojava.nbio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.nbio.structure.io.mmcif.model.StructRefSeqDif;
+import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -34,11 +101,6 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.vecmath.Matrix4d;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -759,6 +821,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		
+		createSSBonds();
 		
 
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
@@ -1816,6 +1879,65 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		this.structConn.add(structConn);
 	}
 
+	void createSSBonds() {
+		List<SSBond> bonds = structure.getSSBonds();
+		if (bonds == null) bonds = new ArrayList<SSBond>();
+		
+		// For SSBond equivalent, parse through the struct_conn records
+		int internalId = 0;
+		for (StructConn conn : structConn) {
+			String ptnr1_chainId = conn.getPtnr1_auth_asym_id();
+			String ptnr1_seqId = conn.getPtnr1_auth_seq_id();
+			String ptnr2_chainId = conn.getPtnr2_auth_asym_id();
+			String ptnr2_seqId = conn.getPtnr2_auth_seq_id();
+			// conn.getId() would equal disulf#.
+			
+			// if we can find both of these residues - 
+			Group s1 = lookupResidue(ptnr1_chainId, ptnr1_seqId);
+			Group s2 = lookupResidue(ptnr2_chainId, ptnr2_seqId);
+			
+			// and is SS - then we should create a new disulfide bond.
+			if (null != s1 && null != s2) {
+				if ("CYS".equals(s1.getPDBName()) && "CYS".equals(s2.getPDBName())) {
+					SSBondImpl bond = new SSBondImpl();
+					
+					bond.setSerNum(internalId++); // An internal label what bond # 
+					bond.setChainID1(ptnr1_chainId);
+					bond.setResnum1(ptnr1_seqId);
+					bond.setInsCode1(conn.getPdbx_ptnr1_PDB_ins_code());
+					bond.setChainID2(ptnr2_chainId);
+					bond.setResnum2(ptnr2_seqId);
+					bond.setInsCode2(conn.getPdbx_ptnr2_PDB_ins_code());
+					bonds.add(bond);
+				}
+			}
+		}
+		
+		structure.setSSBonds(bonds);
+	}
+	
+	/**
+	 * Lookup a residue - not found exceptions are handled with logger warnings.
+	 * @param chainId
+	 * @param seqId
+	 * @return Successful = Group, Failure = null
+	 */
+	Group lookupResidue(String chainId, String seqId) {
+		try {
+            Chain chain = structure.getChainByPDB(chainId);
+            if (null != chain) {
+                try {
+                	return chain.getGroupByPDB(new ResidueNumber(chainId, Integer.parseInt(seqId), ' '));
+                } catch (NumberFormatException e) {
+                	logger.warn("Could not lookup residue : " + chainId + seqId);
+                }   
+            }
+		} catch (StructureException e) {
+			logger.warn("Problem finding residue in site entry " + chainId + seqId + " - " + e.getMessage(), e.getMessage());
+		}
+		// Could not find.
+		return null;
+	}
 }
 
 
