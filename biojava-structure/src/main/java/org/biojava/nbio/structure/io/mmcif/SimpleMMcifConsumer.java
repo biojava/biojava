@@ -24,6 +24,7 @@ package org.biojava.nbio.structure.io.mmcif;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.BondMaker;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.LigandConnectMaker;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.model.*;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
@@ -640,7 +641,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( params.shouldCreateAtomBonds()) {
 			addBonds();
 		}
-
+		
+		if ( params.shouldCreateLigandConects()) {
+			addLigandConnections();
+		}
+		
 		//TODO: add support for structure.setConnections(connects);
 		
 
@@ -918,6 +923,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private void addBonds() {
 		BondMaker maker = new BondMaker(structure);
 		maker.makeBonds();	
+	}
+
+	private void addLigandConnections(){
+		LigandConnectMaker maker = new LigandConnectMaker(structure);
+		maker.addLigandConnections();
 	}
 
 	private void alignSeqRes() {
