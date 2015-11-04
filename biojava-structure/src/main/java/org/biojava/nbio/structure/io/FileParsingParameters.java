@@ -67,6 +67,11 @@ public class FileParsingParameters implements Serializable
 	 */
 	boolean alignSeqRes;
 
+	
+	/** Should we create connections instead of bonds for ligands?
+	 *
+	 */
+	boolean createConects;
 
 	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
 	 * 
@@ -150,6 +155,8 @@ public class FileParsingParameters implements Serializable
 		parseBioAssembly = false;
 		
 		createAtomBonds = false;
+		
+		createConects = false;
 	}
 
 	/** 
@@ -396,4 +403,18 @@ public class FileParsingParameters implements Serializable
 		this.createAtomBonds = createAtomBonds;
 	}
 
+	/**Should we create connections between atoms in ligands when parsing 
+	 * a file?
+	 * */
+	public boolean shouldCreateLigandConects(){
+		return createConects;
+	}
+	
+	/**Should we create connections between atoms in ligands when parsing 
+	 * a file? Setting this to true must also set AlignSeqRes true.
+	 * */
+	public void setCreateLigandConects(boolean createLigandConects){
+		this.createConects = createLigandConects;
+		this.alignSeqRes = true;
+	}
 }
