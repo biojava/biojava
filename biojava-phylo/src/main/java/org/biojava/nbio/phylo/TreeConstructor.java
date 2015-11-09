@@ -25,12 +25,6 @@
 package org.biojava.nbio.phylo;
 
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
-import org.biojava.nbio.core.sequence.ProteinSequence;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava.nbio.core.sequence.io.FastaReader;
-import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
-import org.biojava.nbio.core.sequence.io.ProteinSequenceCreator;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.forester.evoinference.distance.NeighborJoining;
@@ -41,13 +35,10 @@ import org.forester.phylogeny.Phylogeny;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -267,44 +258,4 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
         }
     }
 
-    public static void main(String[] args) {
-
-        try {
-
-
-            InputStream inStream = TreeConstructor.class.getResourceAsStream("/PF00104_small.fasta");
-
-
-
-            FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-            LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
-            inStream.close();
-
-
-            MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> multipleSequenceAlignment = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
-            for (ProteinSequence proteinSequence : proteinSequences.values()) {
-
-                multipleSequenceAlignment.addAlignedSequence(proteinSequence);
-            }
-
-            long readTime = System.currentTimeMillis();
-            TreeConstructor<ProteinSequence, AminoAcidCompound> treeConstructor = new TreeConstructor<ProteinSequence, AminoAcidCompound>(multipleSequenceAlignment, TreeType.NJ, TreeConstructionAlgorithm.PID, new ProgressListenerStub());
-            treeConstructor.process();
-            long treeTime = System.currentTimeMillis();
-            String newick = treeConstructor.getNewickString(true, true);
-
-
-
-
-            logger.info("Tree time {}", (treeTime - readTime));
-            logger.info(newick);
-
-            // treeConstructor.outputPhylipDistances("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta.phylip");
-
-        } catch (FileNotFoundException ex) {
-            logger.error("Can't find file specified by args[0]", ex);
-        } catch (Exception e) {
-            logger.error("Exception: ", e);
-        }
-    }
 }
