@@ -60,7 +60,7 @@ public class DemoTreeConstructor {
 		String newick = treeConstructor.getNewickString(true, true);
 
 		System.out.println(newick);
-		System.out.println("Tree time {" + (treeTime - readTime) + "}");
+		System.out.println("Tree Construction time " + (treeTime - readTime) + " ms.");
 		
 	}
 }
