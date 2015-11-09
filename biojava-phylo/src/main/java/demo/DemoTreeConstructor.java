@@ -40,6 +40,7 @@ public class DemoTreeConstructor {
 				new TreeConstructor<ProteinSequence, AminoAcidCompound>(
 				msa, TreeType.NJ, TreeConstructionAlgorithm.PID, 
 				new ProgressListenerStub());
+		
 		treeConstructor.process();
 		String newick = treeConstructor.getNewickString(true, true);
 

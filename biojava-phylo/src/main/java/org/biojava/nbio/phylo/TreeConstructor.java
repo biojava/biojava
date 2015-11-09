@@ -110,7 +110,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
         int numberOfSequences = multipleSequenceAlignment.getSize();
         String[] sequenceString = new String[numberOfSequences];
         for (int i = 0; i < multipleSequenceAlignment.getSize(); i++) {
-            sequenceString[i] = multipleSequenceAlignment.getAlignedSequence(i).getSequenceAsString();
+            sequenceString[i] = multipleSequenceAlignment.getAlignedSequence(i+1).getSequenceAsString();
 
         }
 
@@ -198,7 +198,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
             double[][] distances = calculateDistanceMatrix(multipleSequenceAlignment, treeConstructionAlgorithm);
             matrix = new BasicSymmetricalDistanceMatrix(multipleSequenceAlignment.getSize());
             for (int i = 0; i < matrix.getSize(); i++) {
-                matrix.setIdentifier(i, multipleSequenceAlignment.getAlignedSequence(i).getAccession().getID());
+                matrix.setIdentifier(i, multipleSequenceAlignment.getAlignedSequence(i+1).getAccession().getID());
             }
             for (int col = 0; col < matrix.getSize(); col++) {
                 for (int row = 0; row < matrix.getSize(); row++) {
