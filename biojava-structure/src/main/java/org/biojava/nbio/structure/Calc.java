@@ -1145,4 +1145,17 @@ public class Calc {
 		transl.setCoords(coords);
 		return transl;
 	}
+	
+	/**
+	 * Convert an array of atoms into an array of vecmath points
+	 * @param atoms list of atoms
+	 * @return list of Point3ds storing the x,y,z coordinates of each atom
+	 */
+	public static Point3d[] atomsToPoints(Atom[] atoms) {
+		Point3d[] points = new Point3d[atoms.length];
+		for(int i = 0; i< atoms.length;i++) {
+			points[i] = new Point3d(atoms[i].getCoords());
+		}
+		return points;
+	}
 }
