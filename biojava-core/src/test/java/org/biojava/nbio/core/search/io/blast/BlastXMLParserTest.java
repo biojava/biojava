@@ -63,7 +63,7 @@ public class BlastXMLParserTest {
     public void testCreateObjects() throws Exception {
         System.out.println("createObjects");
         
-        String resource = "/org/biojava/nbio/core/search/io/blast/small-blastReport.blastxml";
+        String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blastxml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
