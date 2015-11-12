@@ -23,7 +23,7 @@
 
 package org.biojava.nbio.alignment.routines;
 
-import org.biojava.nbio.alignment.template.AlignedSequence.Step;
+import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
 
 import java.util.ArrayList;
 import java.util.Collections;

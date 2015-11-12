@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.io.FastaReaderHelper;
