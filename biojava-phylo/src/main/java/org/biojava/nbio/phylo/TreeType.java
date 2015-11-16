@@ -25,22 +25,27 @@
 package org.biojava.nbio.phylo;
 
 /**
- * The TreeType specified the aligorithm used to construct the tree. Only suppo
- * for one algorithm is implemented, that is why this Enum is not used. It can
- * be used in the future as an interface to add more algorithm types.
+ * The TreeType specifies the optimization criteria used to generate the tree.
  * 
- * @author willishf
  * @author Aleix Lafita
+ * @since 4.1.1
  * 
  */
 public enum TreeType {
 
-	/** Neighbor Joining Algorithm */
-	NJ,
+	/** Maximum Likelihood Tree */
+	ML("ML-Tree"),
 
-	/** Unweighted Pair Group Method with Arithmetic Mean */
-	UPGMA,
+	/** Distance Tree */
+	DISTANCE("Distance-Tree"),
 
-	/** What does this stand for? */
-	AV;
+	/** Parsimony Tree */
+	PARSIMONY("Parsimony-Tree");
+	
+	/** Description name of the Tree Type */
+	protected final String name;
+	
+	private TreeType(String name){
+		this.name = name;
+	}
 }
