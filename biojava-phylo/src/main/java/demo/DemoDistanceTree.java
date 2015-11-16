@@ -3,6 +3,8 @@ package demo;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -54,8 +56,9 @@ public class DemoDistanceTree {
 
 		long readT = System.currentTimeMillis();
 
-		// 1. Calculate the evolutionary distance matrix
-		DistanceMatrix DM = DistanceMatrixCalculator.kimuraDistance(msa);
+		// 1. Calculate the evolutionary distance matrix (can take long)
+		SubstitutionMatrix<AminoAcidCompound> M = SubstitutionMatrixHelper.getBlosum62();
+		DistanceMatrix DM = DistanceMatrixCalculator.fractionalDissimilarityScore(msa, M);
 
 		// 2. Construct a distance tree using the NJ algorithm
 		Phylogeny phylo = TreeConstructor.distanceTree(
