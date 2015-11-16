@@ -5,8 +5,10 @@ import java.util.List;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceScorerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.core.util.ConcurrencyTools;
@@ -227,7 +229,7 @@ public class DistanceMatrixCalculator {
 				msa.getAlignedSequences(),
 				PairwiseSequenceScorerType.GLOBAL_SIMILARITIES,
 				new SimpleGapPenalty(0, 0), M);
-		
+
 		ConcurrencyTools.shutdown();
 
 		// The maximum score that can be obtained for this alignment
@@ -373,24 +375,64 @@ public class DistanceMatrixCalculator {
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix pamDistance(
 			MultipleSequenceAlignment<C, D> msa) {
-		// TODO
+
+		// Need to import PAM1 matrix to biojava TODO
+		SubstitutionMatrix<AminoAcidCompound> PAM1 = SubstitutionMatrixHelper
+				.getPAM250();
+
 		return null;
 	}
 
 	/**
 	 * The structural distance (d<sub>S</sub>) uses the structural similarity
 	 * (or dissimilarity) from a the structural alignment of two protein
-	 * strutures. It is based on the diffusive model for protein fold evolution.
-	 * The structural deviations are captured as RMS deviations.
+	 * strutures. It is based on the diffusive model for protein fold evolution
+	 * (Grishin 1995). The structural deviations are captured as RMS deviations.
+	 * 
+	 * <pre>
+	 * d<sub>Sij</sub> = (rmsd<sub>max</sub><sup>2</sup> / alpha<sup>2</sup>) * 
+	 *        ln( (rmsd<sub>max</sub><sup>2</sup> - rmsd<sub>0</sub><sup>2</sup>) / 
+	 *        (rmsd<sub>max</sub><sup>2</sup> - (rmsd<sub>ij</sub><sup>2</sup>) )
+	 * </pre>
 	 * 
 	 * @param rmsdMat
 	 *            RMSD matrix for all structure pairs (symmetric matrix)
+	 * @param alpha
+	 *            change in CA positions introduced by a single AA substitution
+	 *            (Grishin 1995: 1 A)
+	 * @param rmsdMax
+	 *            estimated RMSD between proteins of the same fold when the
+	 *            percentage of identity is infinitely low (the maximum allowed
+	 *            RMSD of proteins with the same fold). (Grishin 1995: 5 A)
+	 * @param rmsd0
+	 *            arithmetical mean of squares of the RMSD for identical
+	 *            proteins (Grishin 1995: 0.4 A)
 	 * @return DistanceMatrix
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix structuralDistance(
-			double[][] rmsdMat) {
-		// TODO
-		return null;
+			double[][] rmsdMat, double alpha, double rmsdMax, double rmsd0) {
+
+		int n = rmsdMat.length;
+		DistanceMatrix DM = new BasicSymmetricalDistanceMatrix(n);
+
+		// Transform raw RMSD into distances and create matrix
+		for (int i = 0; i < n; i++) {
+			for (int j = i; j < n; j++) {
+				if (i == j)
+					DM.setValue(i, j, 0.0);
+				else {
+					double d = (rmsdMax * rmsdMax)
+							/ (alpha * alpha)
+							* Math.log((rmsdMax * rmsdMax - rmsd0 * rmsd0)
+									/ (rmsdMax * rmsdMax - rmsdMat[i][j]
+											* rmsdMat[i][j]));
+					DM.setValue(i, j, d);
+					DM.setValue(j, i, d);
+				}
+			}
+		}
+
+		return DM;
 	}
 
 	/**

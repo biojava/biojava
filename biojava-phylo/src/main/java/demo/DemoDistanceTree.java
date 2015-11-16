@@ -58,7 +58,7 @@ public class DemoDistanceTree {
 
 		// 1. Calculate the evolutionary distance matrix (can take long)
 		SubstitutionMatrix<AminoAcidCompound> M = SubstitutionMatrixHelper.getBlosum62();
-		DistanceMatrix DM = DistanceMatrixCalculator.fractionalDissimilarityScore(msa, M);
+		DistanceMatrix DM = DistanceMatrixCalculator.fractionalDissimilarity(msa);
 
 		// 2. Construct a distance tree using the NJ algorithm
 		Phylogeny phylo = TreeConstructor.distanceTree(
