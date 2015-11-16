@@ -20,9 +20,10 @@
  */
 package org.biojava.nbio.alignment.aaindex;
 
+import org.biojava.nbio.core.alignment.matrices.ScaledSubstitutionMatrix;
 import junit.framework.TestCase;
-import org.biojava.nbio.alignment.SubstitutionMatrixHelper;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 
