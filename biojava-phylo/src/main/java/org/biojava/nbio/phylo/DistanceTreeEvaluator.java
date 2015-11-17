@@ -116,7 +116,7 @@ public class DistanceTreeEvaluator {
 		logger.info("Average tree distance: {}", averageTreeDistance);
 		logger.info("Average LS error: {}", averageTreeErrorDistance);
 
-		return Math.sqrt((averageTreeErrorDistance)) / (averageMatrixDistance);
+		return Math.sqrt(averageTreeErrorDistance) / averageMatrixDistance;
 	}
 
 	private static double getNodeDistance(PhylogenyNode parentNode,

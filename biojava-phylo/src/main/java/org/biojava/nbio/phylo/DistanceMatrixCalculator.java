@@ -263,7 +263,7 @@ public class DistanceMatrixCalculator {
 	 * itself). Calculation of the score is as follows:
 	 * 
 	 * <pre>
-	 * Ds = maxScore - sum(M<sub>ai,bi</sub>)
+	 * Ds = maxScore - sum<sub>i</sub>(M<sub>ai,bi</sub>)
 	 * </pre>
 	 * 
 	 * It is recommended to use the method
@@ -307,17 +307,20 @@ public class DistanceMatrixCalculator {
 
 			// Obtain the similarity scores
 			for (int j = i; j < n; j++) {
+
 				double score = 0;
 				loopcount++;
+
 				for (int k = 0; k < end; k++) {
 					if (Comparison.isGap(sequenceString[i].charAt(k))
 							|| Comparison.isGap(sequenceString[j].charAt(k)))
 						continue;
-					// TODO bug
-					score += M.getValue(seqs.get(i).getCompoundAt(k),
-							seqs.get(j).getCompoundAt(k));
+					score += M.getValue(seqs.get(i).getCompoundAt(k + 1),
+							seqs.get(j).getCompoundAt(k + 1));
 				}
-				DM.setValue(i, j, score);
+
+				if (i != j)
+					DM.setValue(i, j, score);
 
 				if (score > maxscore) {
 					maxscore = score;

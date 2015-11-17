@@ -23,7 +23,7 @@ import org.forester.phylogeny.Phylogeny;
 
 /**
  * This demo contains the CookBook example to create a phylogenetic tree from a
- * given multiple sequence alignment (MSA).
+ * multiple sequence alignment (MSA).
  * 
  * @author Scooter Willis
  * @author Aleix Lafita
