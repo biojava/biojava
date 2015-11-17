@@ -37,18 +37,20 @@ public class DemoDistanceTree {
 		InputStream inStream = TreeConstructor.class
 				.getResourceAsStream("/PF00104_small.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = 
+				new FastaReader<ProteinSequence, AminoAcidCompound>(
 				inStream,
 				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
 				new ProteinSequenceCreator(AminoAcidCompoundSet
 						.getAminoAcidCompoundSet()));
 
-		LinkedHashMap<String, ProteinSequence> proteinSequences = fastaReader
-				.process();
+		LinkedHashMap<String, ProteinSequence> proteinSequences = 
+				fastaReader.process();
 
 		inStream.close();
 
-		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = 
+				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
 
 		for (ProteinSequence proteinSequence : proteinSequences.values()) {
 			msa.addAlignedSequence(proteinSequence);
@@ -57,8 +59,10 @@ public class DemoDistanceTree {
 		long readT = System.currentTimeMillis();
 
 		// 1. Calculate the evolutionary distance matrix (can take long)
-		SubstitutionMatrix<AminoAcidCompound> M = SubstitutionMatrixHelper.getBlosum62();
-		DistanceMatrix DM = DistanceMatrixCalculator.fractionalDissimilarity(msa);
+		SubstitutionMatrix<AminoAcidCompound> M = SubstitutionMatrixHelper
+				.getBlosum62();
+		DistanceMatrix DM = DistanceMatrixCalculator
+				.dissimilarityScore(msa, M);
 
 		// 2. Construct a distance tree using the NJ algorithm
 		Phylogeny phylo = TreeConstructor.distanceTree(
@@ -71,7 +75,7 @@ public class DemoDistanceTree {
 
 		// 3. Evaluate the goodness of fit of the tree
 		double cv = DistanceTreeEvaluator.evaluate(phylo, DM);
-		System.out.println("CV of the tree: " + (int) (cv*100) + " %");
+		System.out.println("CV of the tree: " + (int) (cv * 100) + " %");
 
 	}
 }
