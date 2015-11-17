@@ -9,7 +9,6 @@ import org.biojava.nbio.core.sequence.io.template.FastaHeaderFormatInterface;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
-import org.forester.evoinference.matrix.distance.DistanceMatrix;
 import org.forester.io.parsers.FastaParser;
 import org.forester.io.writers.PhylogenyWriter;
 import org.forester.msa.Msa;
@@ -26,7 +25,8 @@ import org.forester.phylogeny.Phylogeny;
 public class ForesterWrapper {
 
 	/** Prevent instantiation */
-	private ForesterWrapper() {}
+	private ForesterWrapper() {
+	}
 
 	/**
 	 * Convert a BioJava {@link MultipleSequenceAlignment} to a forester
@@ -79,21 +79,24 @@ public class ForesterWrapper {
 				writeDistances);
 		return newickString.toString();
 	}
-	
+
 	/**
-	 * Helper function to clone a forester DistanceMatrix.
+	 * Helper function to clone a forester symmetrical DistanceMatrix.
 	 * 
-	 * @param distM forester DistanceMatrix
-	 * @return identical copy of the forester DistanceMatrix
+	 * @param distM
+	 *            forester symmetrical DistanceMatrix
+	 * @return identical copy of the forester symmetrical DistanceMatrix
 	 */
-	public static DistanceMatrix cloneDM(DistanceMatrix distM) {
-		
+	public static BasicSymmetricalDistanceMatrix cloneDM(
+			BasicSymmetricalDistanceMatrix distM) {
+
 		int n = distM.getSize();
-		DistanceMatrix cloneDM = new BasicSymmetricalDistanceMatrix(n);
-		
+		BasicSymmetricalDistanceMatrix cloneDM = 
+				new BasicSymmetricalDistanceMatrix(n);
+
 		for (int i = 0; i < n; i++) {
 			cloneDM.setIdentifier(i, distM.getIdentifier(i));
-			for (int j = 0; j < n; j++) {
+			for (int j = i + 1; j < n; j++) {
 				cloneDM.setValue(i, j, distM.getValue(i, j));
 			}
 		}
