@@ -2,16 +2,12 @@ package org.biojava.nbio.phylo;
 
 import java.util.List;
 
-import org.biojava.nbio.alignment.Alignments;
-import org.biojava.nbio.alignment.Alignments.PairwiseSequenceScorerType;
-import org.biojava.nbio.alignment.SimpleGapPenalty;
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
-import org.biojava.nbio.core.util.ConcurrencyTools;
 import org.forester.evoinference.distance.PairwiseDistanceCalculator;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.evoinference.matrix.distance.DistanceMatrix;
@@ -192,22 +188,20 @@ public class DistanceMatrixCalculator {
 	}
 
 	/**
-	 * The fractional dissimilarity score (Ds) is the average character
+	 * The fractional dissimilarity score (Ds) is a relative measure of the
 	 * dissimilarity between two aligned sequences. It is calculated as:
 	 * 
 	 * <pre>
-	 * Ds = sum(max(M) - M<sub>ai,bi</sub>) / L
+	 * Ds = sum( max(M) - M<sub>ai,bi</sub> ) / (max(M)-min(M)) ) / L
 	 * </pre>
 	 * 
 	 * Where the sum through i runs for all the alignment positions, ai and bi
 	 * are the AA at position i in the first and second aligned sequences,
 	 * respectively, and L is the total length of the alignment (normalization).
 	 * <p>
-	 * The fractional dissimilarity score (Ds) is defined in the interval [0,
-	 * 1], where 0 means that the sequences are identical and 1 that the
-	 * sequences are completely different (similarity score of 0). Note that a
-	 * value higher than one can be obtained, if the similarity score of the
-	 * alignment is negative (big evolutionary distance).
+	 * The fractional dissimilarity score (Ds) is in the interval [0, 1], where
+	 * 0 means that the sequences are identical and 1 that the sequences are
+	 * completely different.
 	 * <p>
 	 * Gaps do not have a contribution to the similarity score calculation (gap
 	 * penalty = 0)
@@ -221,34 +215,48 @@ public class DistanceMatrixCalculator {
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix fractionalDissimilarityScore(
 			MultipleSequenceAlignment<C, D> msa, SubstitutionMatrix<D> M) {
 
+		// Calculate the similarity scores using the alignment package
+		logger.info("{}:{}", "Determing Distances", 0);
+
 		int n = msa.getSize();
 		DistanceMatrix DM = new BasicSymmetricalDistanceMatrix(n);
+		int totalloopcount = (n / 2) * (n + 1);
+		int end = msa.getLength();
 
-		// Calculate the similarity scores using the alignment package
-		double[] scores = Alignments.getAllPairsScores(
-				msa.getAlignedSequences(),
-				PairwiseSequenceScorerType.GLOBAL_SIMILARITIES,
-				new SimpleGapPenalty(0, 0), M);
-
-		ConcurrencyTools.shutdown();
-
-		// The maximum score that can be obtained for this alignment
-		int maxScore = M.getMaxValue() * msa.getLength();
-
-		// Convert and copy the dissimilarity scores to the matrix
-		int indx = 0;
+		String[] sequenceString = new String[n];
 		for (int i = 0; i < n; i++) {
-			DM.setIdentifier(i, msa.getAlignedSequence(i + 1).getAccession()
-					.getID());
+			sequenceString[i] = msa.getAlignedSequence(i + 1)
+					.getSequenceAsString();
+		}
+		List<C> seqs = msa.getAlignedSequences();
 
+		int loopcount = 0;
+		for (int i = 0; i < (n - 1); i++) {
+			logger.info("{}:{}", "Determining Distances", (loopcount * 100)
+					/ totalloopcount);
+
+			// Obtain the similarity scores
 			for (int j = i; j < n; j++) {
+
+				double score = 0;
+				loopcount++;
+
+				for (int k = 0; k < end; k++) {
+					if (Comparison.isGap(sequenceString[i].charAt(k))
+							|| Comparison.isGap(sequenceString[j].charAt(k)))
+						continue;
+					score += M.getValue(seqs.get(i).getCompoundAt(k + 1), seqs
+							.get(j).getCompoundAt(k + 1));
+				}
+
 				if (i == j)
 					DM.setValue(i, j, 0.0);
 				else {
-					double dS = (maxScore - scores[indx]) / msa.getLength();
+					double dS = (M.getMaxValue() - score / msa.getLength())
+							/ (M.getMaxValue() - M.getMinValue());
+					
 					DM.setValue(i, j, dS);
 					DM.setValue(j, i, dS);
-					indx++;
 				}
 			}
 		}
@@ -315,8 +323,8 @@ public class DistanceMatrixCalculator {
 					if (Comparison.isGap(sequenceString[i].charAt(k))
 							|| Comparison.isGap(sequenceString[j].charAt(k)))
 						continue;
-					score += M.getValue(seqs.get(i).getCompoundAt(k + 1),
-							seqs.get(j).getCompoundAt(k + 1));
+					score += M.getValue(seqs.get(i).getCompoundAt(k + 1), seqs
+							.get(j).getCompoundAt(k + 1));
 				}
 
 				if (i != j)
