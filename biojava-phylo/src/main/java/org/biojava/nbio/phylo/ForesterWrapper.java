@@ -8,6 +8,8 @@ import org.biojava.nbio.core.sequence.io.FastaWriter;
 import org.biojava.nbio.core.sequence.io.template.FastaHeaderFormatInterface;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
+import org.forester.evoinference.matrix.distance.DistanceMatrix;
 import org.forester.io.parsers.FastaParser;
 import org.forester.io.writers.PhylogenyWriter;
 import org.forester.msa.Msa;
@@ -76,6 +78,26 @@ public class ForesterWrapper {
 		StringBuffer newickString = w.toNewHampshire(phylo, simpleNewick,
 				writeDistances);
 		return newickString.toString();
+	}
+	
+	/**
+	 * Helper function to clone a forester DistanceMatrix.
+	 * 
+	 * @param distM forester DistanceMatrix
+	 * @return identical copy of the forester DistanceMatrix
+	 */
+	public static DistanceMatrix cloneDM(DistanceMatrix distM) {
+		
+		int n = distM.getSize();
+		DistanceMatrix cloneDM = new BasicSymmetricalDistanceMatrix(n);
+		
+		for (int i = 0; i < n; i++) {
+			cloneDM.setIdentifier(i, distM.getIdentifier(i));
+			for (int j = 0; j < n; j++) {
+				cloneDM.setValue(i, j, distM.getValue(i, j));
+			}
+		}
+		return cloneDM;
 	}
 
 }
