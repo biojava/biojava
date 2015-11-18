@@ -2,6 +2,7 @@ package org.biojava.nbio.phylo;
 
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 public class TestDistanceTreeEvaluator {
 
 	@Test
+	@Ignore
 	public void testErrorFree() throws Exception {
 
 		// Create a perfect additive distance matrix
@@ -46,6 +48,7 @@ public class TestDistanceTreeEvaluator {
 	}
 
 	@Test
+	@Ignore
 	public void testErrorEstimation() throws Exception {
 
 		// Matrix taken from forester test
