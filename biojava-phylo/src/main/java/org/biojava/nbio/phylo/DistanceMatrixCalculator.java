@@ -384,7 +384,7 @@ public class DistanceMatrixCalculator {
 	 *            MultipleSequenceAlignment
 	 * @return
 	 */
-	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix pamDistance(
+	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix pamMLdistance(
 			MultipleSequenceAlignment<C, D> msa) {
 
 		// Need to import PAM1 matrix to biojava TODO

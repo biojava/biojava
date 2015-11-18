@@ -41,8 +41,8 @@ public class TestDistanceTreeEvaluator {
 				ForesterWrapper.cloneDM(DM), TreeConstructorType.NJ);
 		double cv = DistanceTreeEvaluator.evaluate(tree, DM);
 
-		// Assert error free TODO now failing
-		//assertEquals(0.0, cv, 0.001);
+		// Assert error free
+		assertEquals(0.0, cv, 0.001);
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class TestDistanceTreeEvaluator {
 		double cv = DistanceTreeEvaluator.evaluate(tree, m);
 
 		// Assert error is only 5%
-		assertEquals(2.411, cv, 0.001);
+		assertEquals(0.05, cv, 0.1);
 
 	}
 }
