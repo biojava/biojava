@@ -63,10 +63,5 @@
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
   		</dependency>
-  		<dependency>
-  			<groupId>org.biojava</groupId>
-  			<artifactId>biojava-phylo</artifactId>
-  			<version>4.1.1-SNAPSHOT</version>
-  		</dependency>
 	</dependencies>
 </project>
