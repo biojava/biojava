@@ -353,7 +353,7 @@ public class CeSymm {
 	public MultipleAlignment analyze(Atom[] atoms, CESymmParameters param)
 			throws StructureException {
 
-		//reset();
+		reset();
 		if (atoms.length < 1) {
 			throw new IllegalArgumentException("Empty Atom array given.");
 		}
