@@ -60,26 +60,15 @@ public class CeSymm {
 	public static final String algorithmName = "jCE-symmetry";
 	private static final Logger logger = LoggerFactory.getLogger(CeSymm.class);
 
-	private AFPChain afpChain;
 	private MultipleAlignment msa;
-	private List<AFPChain> afpAlignments;
-	private SymmetryType type;
+	private List<AFPChain> selfAlignments;
 	private SymmetryAxes axes;
 	private boolean refined;
-	int order;
 
-	private Atom[] ca1;
-	private Atom[] ca2;
-	private int rows;
-	private int cols;
-
-	private CECalculator calculator;
 	private CESymmParameters params;
 
 	public CeSymm() {
-		super();
-		params = new CESymmParameters();
-		refined = false;
+		reset();
 	}
 
 	private static Matrix align(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
@@ -97,7 +86,7 @@ public class CeSymm {
 
 		int blankWindowSize = fragmentLength;
 		if (origM == null) {
-			
+
 			// Build alignment ca1 to ca2-ca2
 			afpChain = calculator.extractFragments(afpChain, ca1, ca2clone);
 
@@ -154,28 +143,12 @@ public class CeSymm {
 
 	}
 
-	public CECalculator getCalculator() {
-		return calculator;
-	}
-
-	public void setCalculator(CECalculator calculator) {
-		this.calculator = calculator;
-	}
-
-	protected AFPChain align(Atom[] ca10, Atom[] ca2O, Object param)
-			throws StructureException {
+	protected AFPChain align(Atom[] ca1) throws StructureException {
 
 		// STEP 1: prepare all the information for the symmetry alignment
-		if (!(param instanceof CESymmParameters))
-			throw new IllegalArgumentException("CE-Symm algorithm needs an "
-					+ "object of call CESymmParameters as argument.");
-
-		this.params = (CESymmParameters) param;
-
-		ca1 = ca10;
-		ca2 = StructureTools.duplicateCA2(ca2O);
-		rows = ca1.length;
-		cols = ca2.length;
+		Atom[] ca2 = StructureTools.duplicateCA2(ca1);
+		int rows = ca1.length;
+		int cols = ca2.length;
 
 		if (rows == 0 || cols == 0) {
 			throw new StructureException("Aligning empty structure");
@@ -183,9 +156,7 @@ public class CeSymm {
 
 		Matrix origM = null;
 		AFPChain myAFP = new AFPChain();
-		afpAlignments = new ArrayList<AFPChain>();
-
-		calculator = new CECalculator(params);
+		CECalculator calculator = new CECalculator(params);
 
 		// Set multiple to true if multiple alignments are needed for refinement
 		boolean multiple = (params.getRefineMethod() == RefineMethod.MULTIPLE);
@@ -221,21 +192,21 @@ public class CeSymm {
 						+ newAFP.getTMScore());
 				// If it is the first alignment save it anyway
 				if (i == 0)
-					afpAlignments.add(newAFP);
+					selfAlignments.add(newAFP);
 				// store final matrix &
 				lastMatrix = newAFP.getDistanceMatrix().copy();
 				break;
 			}
 			// If it is a symmetric alignment add it to the allAlignments list
-			afpAlignments.add(newAFP);
+			selfAlignments.add(newAFP);
 
 			i++;
 
 		} while (i < params.getMaxSymmOrder() && multiple);
 
-		if (lastMatrix == null && afpAlignments.size() > 1) {
+		if (lastMatrix == null && selfAlignments.size() > 1) {
 			// We reached the maximum order, so blank out the final alignment
-			AFPChain last = afpAlignments.get(afpAlignments.size() - 1);
+			AFPChain last = selfAlignments.get(selfAlignments.size() - 1);
 			lastMatrix = SymmetryTools.blankOutPreviousAlignment(last, ca2,
 					last.getCa1Length(), last.getCa2Length(), calculator,
 					origM, params.getWinSize());
@@ -243,21 +214,23 @@ public class CeSymm {
 					last.getCa2Length() - 1);
 		}
 
-		// Save the results to the CeSymm member variables
-		afpChain = afpAlignments.get(0);
-		String name = ca1[0].getGroup().getChain().getStructure()
-				.getIdentifier();
-		afpChain.setName1(name);
-		afpChain.setName2(name);
+		// Extract the optimal alignment
+		AFPChain optimalAFP = selfAlignments.get(0);
+		if (ca1.length != 0 && ca1[0].getGroup().getChain() != null
+				&& ca1[0].getGroup().getChain().getStructure() != null) {
+			String name = ca1[0].getGroup().getChain().getStructure().getName();
+			optimalAFP.setName1(name);
+			optimalAFP.setName2(name);
+		}
 
 		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
-			return afpChain;
+			return optimalAFP;
 		}
 
 		// Determine the symmetry Type or get the one in params
-		type = params.getSymmetryType();
+		SymmetryType type = params.getSymmetryType();
 		if (type == SymmetryType.AUTO) {
-			if (afpChain.getBlockNum() == 1) {
+			if (optimalAFP.getBlockNum() == 1) {
 				type = SymmetryType.OPEN;
 				logger.info("Open Symmetry detected");
 			} else {
@@ -269,6 +242,7 @@ public class CeSymm {
 		// STEP 3: symmetry refinement, apply consistency in the subunit
 		// residues
 		Refiner refiner = null;
+		int order = 1;
 		try {
 			switch (type) {
 			case CLOSE:
@@ -277,7 +251,7 @@ public class CeSymm {
 				case SEQUENCE_FUNCTION:
 					orderDetector = new SequenceFunctionOrderDetector(
 							params.getMaxSymmOrder(), 0.4f);
-					order = orderDetector.calculateOrder(afpChain, ca1);
+					order = orderDetector.calculateOrder(optimalAFP, ca1);
 					break;
 				case USER_INPUT:
 					order = params.getUserOrder();
@@ -291,19 +265,18 @@ public class CeSymm {
 				break;
 			}
 
-			afpChain = refiner.refine(afpAlignments, ca1, order);
+			optimalAFP = refiner.refine(selfAlignments, ca1, order);
 			refined = true;
 
 		} catch (RefinerFailedException e) {
 			logger.info("Refinement failed: " + e.getMessage());
-			return afpChain;
+			return optimalAFP;
 		}
 
 		// STEP4: determine the symmetry axis and its subunit dependencies
-		int order = afpChain.getBlockNum();
-		axes = new SymmetryAxes();
-		Matrix rot = afpChain.getBlockRotationMatrix()[0];
-		Atom shift = afpChain.getBlockShiftVector()[0];
+		order = optimalAFP.getBlockNum();
+		Matrix rot = optimalAFP.getBlockRotationMatrix()[0];
+		Atom shift = optimalAFP.getBlockShiftVector()[0];
 		Matrix4d axis = Calc.getTransformation(rot, shift);
 
 		List<List<Integer>> superposition = new ArrayList<List<Integer>>();
@@ -337,7 +310,7 @@ public class CeSymm {
 			break;
 		}
 
-		return afpChain;
+		return optimalAFP;
 	}
 
 	public CESymmParameters getParameters() {
@@ -356,41 +329,18 @@ public class CeSymm {
 		return version;
 	}
 
-	public static boolean isSignificant(MultipleAlignment msa,
-			double symmetryThreshold) throws StructureException {
-
-		// Order/refinement check
-		if (!SymmetryTools.isRefined(msa))
-			return false;
-
-		// TM-score cutoff
-		if (msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE) == null) {
-			double tm = MultipleAlignmentScorer.getAvgTMScore(msa);
-			if (tm < symmetryThreshold)
-				return false;
-		} else {
-			double tm = msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
-			if (tm < symmetryThreshold)
-				return false;
-		}
-
-		return true;
-	}
-
 	public boolean isSignificant() throws StructureException {
-		double symmetryThreshold = this.params.getSymmetryThreshold();
-		return isSignificant(this.msa, symmetryThreshold);
+		double symmetryThreshold = params.getSymmetryThreshold();
+		return SymmetryTools.isSignificant(msa, symmetryThreshold);
 	}
 
 	/**
-	 * If available, get the list of subalignments.
-	 * <p>
-	 * Should be length one unless using the MULTIPLE refiner.
+	 * Get the list of all self-alignments.
 	 * 
-	 * @return List of AFP alignments
+	 * @return List of AFPChain self-alignments
 	 */
-	public List<AFPChain> getAfpAlignments() {
-		return afpAlignments;
+	public List<AFPChain> getSelfAlignments() {
+		return selfAlignments;
 	}
 
 	public MultipleAlignment analyze(Atom[] atoms) throws StructureException {
@@ -403,10 +353,12 @@ public class CeSymm {
 	public MultipleAlignment analyze(Atom[] atoms, CESymmParameters param)
 			throws StructureException {
 
+		//reset();
 		if (atoms.length < 1) {
 			throw new IllegalArgumentException("Empty Atom array given.");
 		}
 		this.params = param;
+		AFPChain selfAFP = null;
 
 		// If the multiple axes is called, run iterative version
 		if (params.isMultipleAxes()
@@ -419,17 +371,17 @@ public class CeSymm {
 			if (SymmetryTools.isRefined(msa)) {
 				refined = true;
 			} else {
-				afpChain = align(atoms, atoms, params);
+				selfAFP = align(atoms);
 				msa = null;
 			}
 		} else {
 			// Otherwise perform only one CeSymm alignment
-			afpChain = align(atoms, atoms, params);
+			selfAFP = align(atoms);
 		}
 
 		if (refined) {
 			if (msa == null)
-				msa = SymmetryTools.fromAFP(afpChain, ca1);
+				msa = SymmetryTools.fromAFP(selfAFP, atoms);
 			CoreSuperimposer imposer = new CoreSuperimposer();
 			imposer.superimpose(msa);
 			MultipleAlignmentScorer.calculateScores(msa);
@@ -438,33 +390,40 @@ public class CeSymm {
 			// STEP 5: symmetry alignment optimization
 			if (this.params.getOptimization()) {
 
-				// Perform several optimizations in different threads -
-				// DISALLOWED
-				/*
-				 * ExecutorService executor = Executors.newCachedThreadPool();
-				 * List<Future<MultipleAlignment>> future = new
-				 * ArrayList<Future<MultipleAlignment>>(); int seed =
-				 * this.params.getSeed();
-				 * 
-				 * //Repeat the optimization in parallel for (int rep=0; rep<4;
-				 * rep++){ Callable<MultipleAlignment> worker = new
-				 * SymmOptimizer(msa, axes, params, seed++);
-				 * Future<MultipleAlignment> submit = executor.submit(worker);
-				 * future.add(submit); }
-				 * 
-				 * //When finished take the one with the best MC-score double
-				 * maxScore = Double.NEGATIVE_INFINITY; double score = maxScore;
-				 * MultipleAlignment result = msa; for (int rep=0;
-				 * rep<future.size(); rep++){ try { result =
-				 * future.get(rep).get(); score = result.getScore(
-				 * MultipleAlignmentScorer.MC_SCORE); } catch
-				 * (InterruptedException e) {
-				 * logger.warn("Optimization interrupted.",e); } catch
-				 * (ExecutionException e) {
-				 * logger.warn("Optimization failed.",e); } if (score >
-				 * maxScore){ msa = result; maxScore = score; } }
-				 * msa.putScore("isRefined", 1.0); executor.shutdown();
-				 */
+				// // Perform several optimizations in different threads -
+				// // DISALLOWED
+				// ExecutorService executor = Executors.newCachedThreadPool();
+				// List<Future<MultipleAlignment>> future =
+				// new ArrayList<Future<MultipleAlignment>>();
+				// int seed = this.params.getSeed();
+				//
+				// //Repeat the optimization in parallel
+				// for (int rep=0; rep<4; rep++) {
+				// Callable<MultipleAlignment> worker =
+				// new SymmOptimizer(msa, axes, params, seed++);
+				// Future<MultipleAlignment> submit = executor.submit(worker);
+				// future.add(submit);
+				// }
+				//
+				// //When finished take the one with the best MC-score double
+				// maxScore = Double.NEGATIVE_INFINITY;
+				// double score = maxScore;
+				// MultipleAlignment result = msa;
+				// for (int rep=0; rep<future.size(); rep++){
+				// try {
+				// result = future.get(rep).get(); score = result.getScore(
+				// MultipleAlignmentScorer.MC_SCORE);
+				// } catch (InterruptedException e) {
+				// logger.warn("Optimization interrupted.",e);
+				// } catch (ExecutionException e) {
+				// logger.warn("Optimization failed.",e);
+				// }
+				// if (score > maxScore){
+				// msa = result;
+				// maxScore = score;
+				// }
+				// }
+				// msa.putScore("isRefined", 1.0); executor.shutdown();
 
 				// Use a single Thread for the optimization
 				try {
@@ -478,7 +437,7 @@ public class CeSymm {
 			}
 		} else {
 			MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(
-					afpChain, ca1, ca1, false);
+					selfAFP, atoms, atoms, false);
 			msa = e.getMultipleAlignment(0);
 			logger.info("Returning optimal self-alignment");
 			msa.putScore("isRefined", 0.0);
@@ -489,5 +448,17 @@ public class CeSymm {
 
 	public SymmetryAxes getSymmetryAxes() {
 		return axes;
+	}
+
+	/**
+	 * Set the object to its construction state. This method resets all the
+	 * member variables and sets the parameters to the default ones.
+	 */
+	private void reset() {
+		params = new CESymmParameters();
+		refined = false;
+		msa = null;
+		selfAlignments = new ArrayList<AFPChain>();
+		axes = new SymmetryAxes();
 	}
 }
