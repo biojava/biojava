@@ -27,6 +27,7 @@ import org.biojava.nbio.structure.symmetry.core.RotationAxisAligner;
 import javax.vecmath.Color4f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Tuple3d;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -91,7 +92,10 @@ public abstract class JmolSymmetryScriptGenerator {
 	 * @param index orientation index
 	 * @return Jmol script
 	 */
-	public abstract String getInstantaneousOrientation(int index);
+	public String getInstantaneousOrientation(int index){
+		String s = getOrientation(index);
+		return s.replaceAll("moveto 4", "moveto 0");
+	}
 
 	/**
 	 * Returns a Jmol script that sets a specific orientation and zoom
