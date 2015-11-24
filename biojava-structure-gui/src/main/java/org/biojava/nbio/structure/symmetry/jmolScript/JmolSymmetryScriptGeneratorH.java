@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.vecmath.*;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -643,6 +644,35 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		StringBuilder s = new StringBuilder();
 		s.append("center");
 		s.append(getJmolPoint(centroid));
+		s.append(";");
+		return s.toString();
+	}
+
+	@Override
+	public String getInstantaneousOrientation(int index) {
+		StringBuilder s = new StringBuilder();
+		s.append(setCentroid());
+
+		// calculate  orientation
+		Matrix4d matrix = new Matrix4d();
+		matrix.setIdentity();
+		matrix.setRotation(new AxisAngle4d(1,0,0,Math.PI/2*(index+1)));
+		Quat4d r = new Quat4d();
+		r.set(new AxisAngle4d(1,0,0,index*Math.PI/2));
+		Quat4d q = new Quat4d();
+		q.set(helixAxisAligner.getRotationMatrix());	
+		r.mul(q);
+
+		// set orientation
+		s.append("moveto 0 quaternion{");
+		s.append(jMolFloat(r.x));
+		s.append(",");
+		s.append(jMolFloat(r.y));
+		s.append(",");
+		s.append(jMolFloat(r.z));
+		s.append(",");
+		s.append(jMolFloat(r.w));
+		s.append("}");
 		s.append(";");
 		return s.toString();
 	}

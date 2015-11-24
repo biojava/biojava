@@ -31,6 +31,7 @@ import org.biojava.nbio.structure.symmetry.geometry.Polyhedron;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.vecmath.*;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -127,6 +128,38 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		
 		// set orientation
 		s.append("moveto 4 quaternion{");
+		s.append(jMolFloat(q.x));
+		s.append(",");
+		s.append(jMolFloat(q.y));
+		s.append(",");
+		s.append(jMolFloat(q.z));
+		s.append(",");
+		s.append(jMolFloat(q.w));
+		s.append("}");
+		s.append(";");
+		return s.toString();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getOrientation(int)
+	 */
+	@Override
+	public String getInstantaneousOrientation(int index) {
+		StringBuilder s = new StringBuilder();
+		s.append(setCentroid());
+		
+		// calculate  orientation
+		Quat4d q = new Quat4d();
+		q.set(polyhedron.getViewMatrix(index));
+		q.normalize();
+		Quat4d r = new Quat4d();
+		r.set(rotationAxisAligner.getRotationMatrix());
+		r.normalize();
+		q.mul(r);
+		q.normalize();
+		
+		// set orientation
+		s.append("moveto 0 quaternion{");
 		s.append(jMolFloat(q.x));
 		s.append(",");
 		s.append(jMolFloat(q.y));

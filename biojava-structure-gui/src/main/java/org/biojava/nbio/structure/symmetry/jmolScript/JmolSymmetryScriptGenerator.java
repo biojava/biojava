@@ -85,6 +85,13 @@ public abstract class JmolSymmetryScriptGenerator {
 	 * @return Jmol script
 	 */
 	public abstract String getOrientation(int index);
+	
+	/**
+	 * Returns a Jmol script that sets a specific orientation instantaneously
+	 * @param index orientation index
+	 * @return Jmol script
+	 */
+	public abstract String getInstantaneousOrientation(int index);
 
 	/**
 	 * Returns a Jmol script that sets a specific orientation and zoom
