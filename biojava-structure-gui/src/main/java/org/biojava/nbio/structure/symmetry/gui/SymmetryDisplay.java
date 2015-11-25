@@ -83,6 +83,7 @@ public class SymmetryDisplay {
 			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 			addSymmetryMenu(jmol, axes);
 			jmol.evalString(printPointGroupAxes(msa));
+			jmol.evalString(printSymmetryAxes(msa, axes, false));
 		} else {
 			// Show the optimal alignment if it was not refined
 			jmol = MultipleAlignmentDisplay.display(msa);
