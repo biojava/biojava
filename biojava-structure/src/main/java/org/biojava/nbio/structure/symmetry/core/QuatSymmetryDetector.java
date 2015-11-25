@@ -145,8 +145,8 @@ public class QuatSymmetryDetector {
 						
 						double time = (System.nanoTime()- start)/1000000000;
 						if (time > parameters.getLocalTimeLimit()) {
-							System.out.println("Warning: QuatSymmetryDetector: Exceeded time limit for local symmetry calculations: " + time +
-									" seconds. Results may be incomplete");
+							logger.warn("Exceeded time limit for local symmetry calculations: " + time +
+									" seconds. Quat symmetry results may be incomplete");
 							break;
 						}
 					}
@@ -397,7 +397,7 @@ public class QuatSymmetryDetector {
 
 		SubunitGraph subunitGraph = new SubunitGraph(subList);
 		UndirectedGraph<Integer, DefaultEdge> graph = subunitGraph.getProteinGraph();
-		logger.debug("Graph: " + graph);
+		logger.debug("Graph: {}", graph.toString());
 
 		for (int i = last; i > 1; i--) {
 			CombinationGenerator generator = new CombinationGenerator(last, i);
@@ -406,8 +406,9 @@ public class QuatSymmetryDetector {
 			
 			// avoid combinatorial explosion, i.e. for 1FNT
 			BigInteger maxCombinations = BigInteger.valueOf(parameters.getMaximumLocalCombinations());
-			logger.debug("maxCombinations: " + generator.getTotal());
+			logger.debug("Number of combinations: {}", generator.getTotal());
 		    if (generator.getTotal().compareTo(maxCombinations) > 0) {
+		    	logger.warn("Number of combinations exceeds limit for biounit with {} subunits in groups of {} subunits. Will not check local symmetry for them", last, i);
 		    	continue;
 		    }
 			
