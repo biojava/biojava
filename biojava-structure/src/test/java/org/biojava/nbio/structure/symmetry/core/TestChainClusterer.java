@@ -25,24 +25,11 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
-import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.symmetry.core.ChainClusterer;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TestChainClusterer {
 
-	private static final Logger logger = LoggerFactory.getLogger(TestChainClusterer.class);
-	
 	/**
 	 * Test ChainClusterer.getValidFolds
 	 */
