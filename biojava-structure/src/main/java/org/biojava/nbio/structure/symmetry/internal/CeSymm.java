@@ -18,6 +18,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
@@ -36,14 +37,14 @@ import org.slf4j.LoggerFactory;
  * <p>
  * The alignment is then refined to obtain a consistent alignment among all
  * residues of the structure and organized into different parts, called
- * symmetric subunits. Optionally, after refinement of the initial alignment, an
+ * symmetric subunits. After refinement of the initial alignment, an
  * optimization step can be used to improve the overall score of the subunit
- * alignment (multiple alignment).
+ * multiple alignment.
  * 
  * @author Andreas Prlic
  * @author Spencer Bliven
  * @author Aleix Lafita
- * @since 4.2.0
+ * @since 4.1.1
  * 
  */
 public class CeSymm {
@@ -51,13 +52,18 @@ public class CeSymm {
 	/**
 	 * Version History:
 	 * <p>
-	 * <li>1.0 - initial implementation of CeSymm.
-	 * <li>1.1 - enable multiple CeSymm runs to calculate all self-alignments.
+	 * <ul>
+	 * <li>1.0 - initial implementation of CE-Symm.
+	 * <li>1.1 - enable multiple CE-Symm runs to calculate all self-alignments.
 	 * <li>2.0 - refine the alignment for consistency of subunit definition.
 	 * <li>2.1 - optimize the alignment to improve the score.
+	 * <li>2.2 - run multiple symmetry levels recursively to find PG and
+	 * hierarchical symmetries.
+	 * </ul>
+	 * </li>
 	 */
-	public static final String version = "2.1";
-	public static final String algorithmName = "jCE-symmetry";
+	public static final String version = "2.2";
+	public static final String algorithmName = "jCE-symm";
 	private static final Logger logger = LoggerFactory.getLogger(CeSymm.class);
 
 	private MultipleAlignment msa;
@@ -187,7 +193,7 @@ public class CeSymm {
 			logger.debug("Alignment " + (i + 1) + " score: "
 					+ newAFP.getTMScore());
 			// Determine if the alignment is significant, stop if true
-			if (tmScore3 < params.getSymmetryThreshold()) {
+			if (tmScore3 < params.getScoreThreshold()) {
 				logger.debug("Not symmetric alignment with TM score: "
 						+ newAFP.getTMScore());
 				// If it is the first alignment save it anyway
@@ -228,7 +234,7 @@ public class CeSymm {
 		}
 
 		// Determine the symmetry Type or get the one in params
-		SymmetryType type = params.getSymmetryType();
+		SymmetryType type = params.getSymmType();
 		if (type == SymmetryType.AUTO) {
 			if (optimalAFP.getBlockNum() == 1) {
 				type = SymmetryType.OPEN;
@@ -306,7 +312,6 @@ public class CeSymm {
 				subunitTrans.add(bk + 1);
 			}
 			axes.addAxis(axis, superposition, subunitTrans, order);
-
 			break;
 		}
 
@@ -330,7 +335,7 @@ public class CeSymm {
 	}
 
 	public boolean isSignificant() throws StructureException {
-		double symmetryThreshold = params.getSymmetryThreshold();
+		double symmetryThreshold = params.getScoreThreshold();
 		return SymmetryTools.isSignificant(msa, symmetryThreshold);
 	}
 
@@ -343,6 +348,15 @@ public class CeSymm {
 		return selfAlignments;
 	}
 
+	/**
+	 * Analyze the symmetries of the input Atom array using the DEFAULT or
+	 * previously set parameters.
+	 * 
+	 * @param atoms
+	 *            representative Atom array of the Structure
+	 * @return
+	 * @throws StructureException
+	 */
 	public MultipleAlignment analyze(Atom[] atoms) throws StructureException {
 
 		if (params == null)
@@ -350,6 +364,17 @@ public class CeSymm {
 		return analyze(atoms, params);
 	}
 
+	/**
+	 * Analyze the symmetries of the input Atom array using the provided
+	 * parameters.
+	 * 
+	 * @param atoms
+	 *            representative Atom array of the Structure
+	 * @param param
+	 *            CeSymm Parameter bean
+	 * @return
+	 * @throws StructureException
+	 */
 	public MultipleAlignment analyze(Atom[] atoms, CESymmParameters param)
 			throws StructureException {
 
@@ -358,91 +383,75 @@ public class CeSymm {
 			throw new IllegalArgumentException("Empty Atom array given.");
 		}
 		this.params = param;
-		AFPChain selfAFP = null;
-
-		// If the multiple axes is called, run iterative version
-		if (params.isMultipleAxes()
-				&& params.getRefineMethod() != RefineMethod.NOT_REFINED) {
-
-			logger.info("Running iteratively CeSymm.");
-			CeSymmIterative iterative = new CeSymmIterative(params.clone());
-			msa = iterative.execute(atoms);
-			axes = iterative.getSymmetryAxes();
-			if (SymmetryTools.isRefined(msa)) {
-				refined = true;
-			} else {
-				selfAFP = align(atoms);
-				msa = null;
-			}
-		} else {
-			// Otherwise perform only one CeSymm alignment
-			selfAFP = align(atoms);
-		}
-
-		if (refined) {
-			if (msa == null)
-				msa = SymmetryTools.fromAFP(selfAFP, atoms);
+		
+		CeSymmIterative iter = new CeSymmIterative(param);
+		msa = iter.execute(atoms);
+		axes = iter.getSymmetryAxes();
+		
+		if (SymmetryTools.isRefined(msa)) {
 			CoreSuperimposer imposer = new CoreSuperimposer();
 			imposer.superimpose(msa);
 			MultipleAlignmentScorer.calculateScores(msa);
-			msa.putScore("isRefined", 1.0);
 
-			// STEP 5: symmetry alignment optimization
+			// Optimize the global alignment once more (as final step)
 			if (this.params.getOptimization()) {
-
-				// // Perform several optimizations in different threads -
-				// // DISALLOWED
-				// ExecutorService executor = Executors.newCachedThreadPool();
-				// List<Future<MultipleAlignment>> future =
-				// new ArrayList<Future<MultipleAlignment>>();
-				// int seed = this.params.getSeed();
-				//
-				// //Repeat the optimization in parallel
-				// for (int rep=0; rep<4; rep++) {
-				// Callable<MultipleAlignment> worker =
-				// new SymmOptimizer(msa, axes, params, seed++);
-				// Future<MultipleAlignment> submit = executor.submit(worker);
-				// future.add(submit);
-				// }
-				//
-				// //When finished take the one with the best MC-score double
-				// maxScore = Double.NEGATIVE_INFINITY;
-				// double score = maxScore;
-				// MultipleAlignment result = msa;
-				// for (int rep=0; rep<future.size(); rep++){
-				// try {
-				// result = future.get(rep).get(); score = result.getScore(
-				// MultipleAlignmentScorer.MC_SCORE);
-				// } catch (InterruptedException e) {
-				// logger.warn("Optimization interrupted.",e);
-				// } catch (ExecutionException e) {
-				// logger.warn("Optimization failed.",e);
-				// }
-				// if (score > maxScore){
-				// msa = result;
-				// maxScore = score;
-				// }
-				// }
-				// msa.putScore("isRefined", 1.0); executor.shutdown();
-
-				// Use a single Thread for the optimization
 				try {
 					SymmOptimizer optimizer = new SymmOptimizer(msa, axes,
-							params, params.getSeed());
+							params, params.getRndSeed());
 					msa = optimizer.optimize();
-					msa.putScore("isRefined", 1.0);
 				} catch (RefinerFailedException e) {
 					logger.info("Optimization failed:" + e.getMessage());
 				}
 			}
+			msa.putScore("isRefined", 1.0);
+		}
+		return msa;
+	}
+
+	/**
+	 * Analyze a single level of symmetry.
+	 * 
+	 * @param atoms
+	 *            Atom array of the current level
+	 * @return
+	 * @throws StructureException
+	 */
+	MultipleAlignment analyzeLevel(Atom[] atoms) throws StructureException {
+
+		// Reset all the variables from previous calls
+		reset();
+
+		if (atoms.length < 1) {
+			throw new IllegalArgumentException("Empty Atom array given.");
+		}
+
+		AFPChain selfAFP = align(atoms);
+
+		if (refined) {
+			msa = SymmetryTools.fromAFP(selfAFP, atoms);
+			CoreSuperimposer imposer = new CoreSuperimposer();
+			imposer.superimpose(msa);
+			MultipleAlignmentScorer.calculateScores(msa);
+
+			// STEP 5: symmetry alignment optimization
+			if (this.params.getOptimization()) {
+				try {
+					SymmOptimizer optimizer = new SymmOptimizer(msa, axes,
+							params, params.getRndSeed());
+					msa = optimizer.optimize();
+				} catch (RefinerFailedException e) {
+					logger.debug("Optimization failed:" + e.getMessage());
+				}
+			}
+			msa.putScore("isRefined", 1.0);
 		} else {
+			// Convert the optimal pairwise alignment to MSA
 			MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(
 					selfAFP, atoms, atoms, false);
 			msa = e.getMultipleAlignment(0);
-			logger.info("Returning optimal self-alignment");
+			logger.debug("Returning optimal self-alignment");
 			msa.putScore("isRefined", 0.0);
 		}
-
 		return msa;
 	}
 
