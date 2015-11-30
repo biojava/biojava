@@ -40,7 +40,7 @@ public class TestSequenceFunctionOrderDetector {
 			ce.getParameters().setRefineMethod(RefineMethod.NOT_REFINED);
 			Atom[] ca1 = cache.getAtoms(name);
 			
-			ce.analyze(ca1);
+			ce.analyzeLevel(ca1);
 			AFPChain afpChain = ce.getSelfAlignments().get(0);
 			
 			int order = new SequenceFunctionOrderDetector().calculateOrder(afpChain, ca1);

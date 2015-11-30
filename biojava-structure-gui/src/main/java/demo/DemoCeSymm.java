@@ -61,8 +61,8 @@ public class DemoCeSymm {
 		CeSymm ceSymm = new CeSymm();
 
 		//Choose some parameters
-		CESymmParameters params = (CESymmParameters) ceSymm.getParameters();
-		params.setRefineMethod(RefineMethod.SINGLE);
+		CESymmParameters params = ceSymm.getParameters();
+		params.setRefineMethod(RefineMethod.NOT_REFINED);
 		params.setSymmType(SymmetryType.AUTO);
 		params.setOptimization(true);
 		params.setSymmLevels(0);
