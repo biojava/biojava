@@ -69,6 +69,7 @@ public class DemoCeSymm {
 		params.setSymmType(SymmetryType.AUTO);
 		params.setOptimization(true);
 		params.setSymmLevels(0);
+		params.setSSEThreshold(2);
 
 		//Run the alignment
 		MultipleAlignment symmetry = ceSymm.analyze(atoms, params);

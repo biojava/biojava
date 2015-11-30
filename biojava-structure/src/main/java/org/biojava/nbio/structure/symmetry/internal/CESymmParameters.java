@@ -111,7 +111,7 @@ public class CESymmParameters extends CeParameters {
 		rndSeed = new Random().nextInt(10000);
 		symmLevels = 0;
 		scoreThreshold = DEFAULT_SYMMETRY_THRESHOLD;
-		sseThreshold = 1;
+		sseThreshold = 2;
 		minCoreLength = 15;
 		distanceCutoff = 7.0;
 		gaps = true;
