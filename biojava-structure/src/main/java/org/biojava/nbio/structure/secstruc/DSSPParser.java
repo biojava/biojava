@@ -136,7 +136,7 @@ public class DSSPParser {
 						SecStrucType.fromCharacter(line.charAt(16));
 				
 				SecStrucState ss = new SecStrucState(parent, 
-						SecStrucInfo.DSSP_FILE_ASSIGNMENT, ssType);
+						SecStrucInfo.DSSP_ASSIGNMENT, ssType);
 				
 				//TODO ignore for now
 				/*int BP1 = Integer.valueOf(line.charAt(28));

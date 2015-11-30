@@ -46,8 +46,8 @@ public class TestSecStrucPred {
 			//Download the original DSSP implementation output
 			List<SecStrucState> dssp = DSSPParser.fetch(name, s, false);
 			
-			assertTrue("SS assignment lengths do not match",
-					biojava.size()==dssp.size());
+			assertEquals("SS assignment lengths do not match",
+					biojava.size(), dssp.size());
 			
 			for (int i=0; i<dssp.size(); i++){
 				assertEquals("SS assignment position "+(i+1)+" does not match", 

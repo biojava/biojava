@@ -20,36 +20,37 @@ import org.biojava.nbio.structure.secstruc.SecStrucTools;
  */
 public class DemoSecStrucPred {
 
-    public static void main(String[] args) 
-    		throws IOException, StructureException {
-	
-    	String pdbID = "5pti";
-    	
-        AtomCache cache = new AtomCache();
-        
-        //Load structure without any SS assignment
-        Structure s = cache.getStructure(pdbID);
-        
-        //Predict and assign the SS of the Structure
-        SecStrucPred ssp = new SecStrucPred();
-        ssp.predict(s, true);
-        
-        //Print the DSSP output
-        System.out.println("******DSSP output: ");
-        System.out.println(ssp.printDSSP());
-        
-        //Print the FASTA sequence of SS
-        System.out.println("\n******FASTA output: ");
-        System.out.println(ssp.printFASTA());
-        
-        //Print the Helix Summary
-        System.out.println("\n******Helix Summary: ");
-        System.out.println(ssp.printHelixSummary());
-	    
-	    //Obtain and print the SS elements of the Structure
-	    List<SecStrucElement> sse = SecStrucTools.getSSE(s);
-	    System.out.println("\n******SecStrucElements: ");
-	    for (SecStrucElement e : sse) System.out.println(e);
-	    
-    }
+	public static void main(String[] args) throws IOException,
+			StructureException {
+
+		String pdbID = "5pti";
+
+		AtomCache cache = new AtomCache();
+
+		// Load structure without any SS assignment
+		Structure s = cache.getStructure(pdbID);
+
+		// Predict and assign the SS of the Structure
+		SecStrucPred ssp = new SecStrucPred();
+		ssp.predict(s, true);
+
+		// Print the DSSP output
+		System.out.println("******DSSP output: ");
+		System.out.println(ssp.printDSSP());
+
+		// Print the FASTA sequence of SS
+		System.out.println("\n******FASTA output: ");
+		System.out.println(ssp.printFASTA());
+
+		// Print the Helix Summary
+		System.out.println("\n******Helix Summary: ");
+		System.out.println(ssp.printHelixSummary());
+
+		// Obtain and print the SS elements of the Structure
+		List<SecStrucElement> sse = SecStrucTools.getSecStrucElements(s);
+		System.out.println("\n******SecStrucElements: ");
+		for (SecStrucElement e : sse)
+			System.out.println(e);
+
+	}
 }
