@@ -49,7 +49,8 @@ public class FileDownloadUtils {
      * @param dst
      * @throws IOException
      */
-    public static void copy(File src, File dst) throws IOException {
+    @SuppressWarnings("resource")
+	public static void copy(File src, File dst) throws IOException {
 
 		// Took following recipe from 
         // http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
@@ -58,6 +59,8 @@ public class FileDownloadUtils {
         FileChannel destination = null;
 
         try {
+        	// we need the supress warnings here (the warning that the stream is not closed is harmless)
+        	// see http://stackoverflow.com/questions/12970407/does-filechannel-close-close-the-underlying-stream
             source = new FileInputStream(src).getChannel();
             destination = new FileOutputStream(dst).getChannel();
             destination.transferFrom(source, 0, source.size());
