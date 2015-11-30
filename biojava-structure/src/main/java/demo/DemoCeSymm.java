@@ -66,9 +66,10 @@ public class DemoCeSymm {
 		//Choose some parameters
 		CESymmParameters params = (CESymmParameters) ceSymm.getParameters();
 		params.setRefineMethod(RefineMethod.SINGLE);
-		params.setSymmetryType(SymmetryType.AUTO);
+		params.setSymmType(SymmetryType.AUTO);
 		params.setOptimization(true);
-		params.setMultipleAxes(true);
+		params.setSymmLevels(0);
+		params.setSSEThreshold(2);
 
 		//Run the alignment
 		MultipleAlignment symmetry = ceSymm.analyze(atoms, params);

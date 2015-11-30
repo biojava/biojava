@@ -35,6 +35,8 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for the internal symmetry identification and manipulation.
@@ -42,7 +44,7 @@ import org.biojava.nbio.structure.symmetry.core.Subunits;
  * Methods include: blank out regions of DP Matrix, build symmetry graphs, get
  * rotation symmetry angles, split subunits in quaternary structure chains,
  * convert between symmetry formats (full, subunits, rotations), determine if
- * two symmetry axes are equivalent.
+ * two symmetry axes are equivalent, get groups from representative Atoms.
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
@@ -50,9 +52,11 @@ import org.biojava.nbio.structure.symmetry.core.Subunits;
  */
 public class SymmetryTools {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(SymmetryTools.class);
+
 	/** Prevent instantiation. */
-	private SymmetryTools() {
-	}
+	private SymmetryTools() {}
 
 	/**
 	 * Returns the "reset value" for graying out the main diagonal. If we're
@@ -806,8 +810,30 @@ public class SymmetryTools {
 			if (tm < symmetryThreshold)
 				return false;
 		}
-
 		return true;
 	}
 
+	/**
+	 * Returns the List of Groups of the corresponding representative Atom
+	 * array. The representative Atom array needs to fulfill: no two Atoms are
+	 * from the same Group and Groups are sequential (connected in the original
+	 * Structure), except if they are from different Chains.
+	 * 
+	 * @param rAtoms
+	 *            array of representative Atoms (CA, P, etc).
+	 * @return List of Groups
+	 */
+	public static List<Group> getGroups(Atom[] rAtoms) {
+
+		List<Group> groups = new ArrayList<Group>(rAtoms.length);
+
+		for (Atom a : rAtoms) {
+			Group g = a.getGroup();
+			if (g != null)
+				groups.add(g);
+			else
+				logger.info("Group not found for representative Atom {}", a);
+		}
+		return groups;
+	}
 }
