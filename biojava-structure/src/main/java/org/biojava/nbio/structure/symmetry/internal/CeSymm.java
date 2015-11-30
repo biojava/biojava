@@ -18,7 +18,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
@@ -464,7 +463,6 @@ public class CeSymm {
 	 * member variables and sets the parameters to the default ones.
 	 */
 	private void reset() {
-		params = new CESymmParameters();
 		refined = false;
 		msa = null;
 		selfAlignments = new ArrayList<AFPChain>();
