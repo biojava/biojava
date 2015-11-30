@@ -16,6 +16,9 @@ import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.secstruc.SecStrucElement;
+import org.biojava.nbio.structure.secstruc.SecStrucTools;
+import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +52,6 @@ public class CeSymmIterative {
 
 	private Atom[] allAtoms;
 	private MultipleAlignment msa;
-	private String name;
 	private SymmetryAxes axes;
 
 	private List<List<Integer>> alignGraph; // msa as graph representation
@@ -69,20 +71,9 @@ public class CeSymmIterative {
 		this.aligner = new CeSymm();
 		aligner.setParameters(params);
 
-		msa = new MultipleAlignmentImpl();
-		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());
-		msa.getEnsemble().setAlgorithmName(CeSymm.algorithmName);
-		msa.getEnsemble().setVersion(CeSymm.version);
-		msa.getEnsemble().setStructureNames(new ArrayList<String>());
-
-		BlockSet bs = new BlockSetImpl(msa);
-		Block b = new BlockImpl(bs);
-		b.setAlignRes(new ArrayList<List<Integer>>());
-
 		alignGraph = new ArrayList<List<Integer>>();
 		levels = new ArrayList<MultipleAlignment>();
 		axes = new SymmetryAxes();
-		name = null;
 	}
 
 	/**
@@ -103,8 +94,12 @@ public class CeSymmIterative {
 			alignGraph.add(new ArrayList<Integer>());
 		}
 
-		iterate(atoms);
-		buildAlignment();
+		boolean symm = iterate(atoms);
+		if (symm)
+			buildAlignment();
+		else {
+			levels.add(msa);
+		}
 		recoverAxes();
 
 		return msa;
@@ -116,9 +111,10 @@ public class CeSymmIterative {
 	 * 
 	 * @param atoms
 	 *            representative Atom array of the Structure
+	 * @return true if any symmetry was found, false if asymmetric
 	 * @throws StructureException
 	 */
-	private void iterate(Atom[] atoms) throws StructureException {
+	private boolean iterate(Atom[] atoms) throws StructureException {
 
 		logger.debug("Starting new iteration...");
 
@@ -127,35 +123,48 @@ public class CeSymmIterative {
 				|| atoms.length <= params.getMinCoreLength()) {
 			logger.debug("Aborting iteration due to insufficient Atom "
 					+ "array length: %d", atoms.length);
-			return;
+			return !levels.isEmpty();
 		}
-		
+
 		// Return if the maximum levels of symmetry have been reached
 		if (params.getSymmLevels() > 0) {
 			if (levels.size() == params.getSymmLevels())
-				return;
+				return true;
 		}
 
 		// Perform one level CeSymm alignment
 		CeSymm aligner = new CeSymm();
-		MultipleAlignment align = aligner.analyzeLevel(atoms);
-		if (name == null)
-			name = align.getEnsemble().getStructureNames().get(0);
+		msa = aligner.analyzeLevel(atoms);
 
 		// End iterations if asymmetric (not refined, or lower thresholds)
-		if (!SymmetryTools.isRefined(align) ||
-				align.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
-				.getScoreThreshold() ||
-				align.getCoreLength() < params.getMinCoreLength()) {
-			//TODO consider SSE also
-			if (levels.isEmpty())
-				levels.add(align);
-			return;
+		if (!SymmetryTools.isRefined(msa)
+				|| msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
+						.getScoreThreshold()
+				|| msa.getCoreLength() < params.getMinCoreLength()) {
+			return !levels.isEmpty();
 		}
 
-		levels.add(align);
+		// Generate the Atoms of one of the symmetric subunit
+		Integer start = null;
+		int it = 0;
+		while (start == null) {
+			start = msa.getBlocks().get(0).getAlignRes().get(0).get(it);
+			it++;
+		}
+		Integer end = null;
+		it = msa.getBlocks().get(0).getAlignRes().get(0).size() - 1;
+		while (end == null) {
+			end = msa.getBlocks().get(0).getAlignRes().get(0).get(it);
+			it--;
+		}
+		Atom[] atomsR = Arrays.copyOfRange(atoms, start, end + 1);
+
+		// Check the SSE requirement
+		if (countHelixStrandSSE(atomsR) < params.getSSEThreshold())
+			return !levels.isEmpty();
+
 		// If symmetric store the residue dependencies in alignment graph
-		Block b = align.getBlock(0);
+		Block b = msa.getBlock(0);
 		for (int pos = 0; pos < b.length(); pos++) {
 			for (int su = 0; su < b.size() - 1; su++) {
 				Integer pos1 = b.getAlignRes().get(su).get(pos);
@@ -167,22 +176,9 @@ public class CeSymmIterative {
 			}
 		}
 
-		// Generate the Atoms of one of the symmetric subunit
-		Integer start = null;
-		int it = 0;
-		while (start == null) {
-			start = align.getBlocks().get(0).getAlignRes().get(0).get(it);
-			it++;
-		}
-		Integer end = null;
-		it = align.getBlocks().get(0).getAlignRes().get(0).size() - 1;
-		while (end == null) {
-			end = align.getBlocks().get(0).getAlignRes().get(0).get(it);
-			it--;
-		}
-		// Iterate further on those Atoms (of only one subunit)
-		Atom[] atomsR = Arrays.copyOfRange(atoms, start, end + 1);
-		iterate(atomsR);
+		// Iterate further on those Atoms (of the first subunit only)
+		levels.add(msa);
+		return iterate(atomsR);
 	}
 
 	/**
@@ -192,6 +188,17 @@ public class CeSymmIterative {
 	 * @throws StructureException
 	 */
 	private void buildAlignment() throws StructureException {
+		
+		// Initialize a new multiple alignment
+		msa = new MultipleAlignmentImpl();
+		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());
+		msa.getEnsemble().setAlgorithmName(CeSymm.algorithmName);
+		msa.getEnsemble().setVersion(CeSymm.version);
+		msa.getEnsemble().setStructureNames(new ArrayList<String>());
+
+		BlockSet bs = new BlockSetImpl(msa);
+		Block b = new BlockImpl(bs);
+		b.setAlignRes(new ArrayList<List<Integer>>());
 
 		List<List<Integer>> groups = new ArrayList<List<Integer>>();
 		List<Integer> alreadySeen = new ArrayList<Integer>();
@@ -221,10 +228,9 @@ public class CeSymmIterative {
 			}
 		}
 
-		Block b = msa.getBlock(0);
 		// Construct the resulting MultipleAlignment
 		for (int su = 0; su < size; su++) {
-			msa.getEnsemble().getStructureNames().add(name);
+			msa.getEnsemble().getStructureNames().add("S" + (su + 1));
 			msa.getEnsemble().getAtomArrays().add(allAtoms);
 			b.getAlignRes().add(new ArrayList<Integer>());
 
@@ -289,6 +295,27 @@ public class CeSymmIterative {
 	 */
 	public SymmetryAxes getSymmetryAxes() {
 		return axes;
+	}
+
+	/**
+	 * Calculate the number of helix and strand SSE of a subunit.
+	 * 
+	 * @param atoms
+	 *            Atom array of the subunit found
+	 * @return int number of helix or strand SSE
+	 */
+	private static int countHelixStrandSSE(Atom[] atoms) {
+
+		List<SecStrucElement> sses = SecStrucTools
+				.getSecStrucElements(SymmetryTools.getGroups(atoms));
+		int count = 0;
+		for (SecStrucElement sse : sses) {
+			SecStrucType t = sse.getType();
+			if (t.isBetaStrand() || t.isHelixType()) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 }

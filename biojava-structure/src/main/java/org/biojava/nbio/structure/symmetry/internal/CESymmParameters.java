@@ -190,7 +190,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("SSE threshold: The minimum number of secondary structure "
 				+ "elements (strands or helices) in each symmetrical subunit. "
 				+ "If the subunits do not have enough SSE, the structure will "
-				+ "be considered asymmetric.");
+				+ "be considered asymmetric. 0 means no restriction.");
 		// min core subunit length
 		params.add("Minimum core length: the minimum number of non-gapped "
 				+ "residues in every symmetric subunit.");
@@ -209,7 +209,7 @@ public class CESymmParameters extends CeParameters {
 		List<String> params = super.getUserConfigParameters();
 		params.add("MaxSymmOrder");
 		params.add("UserOrder");
-		params.add("SymmetryType");
+		params.add("SymmType");
 		params.add("OrderDetectorMethod");
 		params.add("RefineMethod");
 		params.add("Optimization");
@@ -347,7 +347,7 @@ public class CESymmParameters extends CeParameters {
 		return sseThreshold;
 	}
 
-	public void setSSEThrehold(Integer sseThreshold) {
+	public void setSSEThreshold(Integer sseThreshold) {
 		this.sseThreshold = sseThreshold;
 	}
 

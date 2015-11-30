@@ -7,6 +7,7 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.ce.CECalculator;
@@ -20,6 +21,8 @@ import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.biojava.nbio.structure.secstruc.SecStrucPred;
+import org.biojava.nbio.structure.secstruc.SecStrucTools;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
@@ -70,7 +73,7 @@ public class CeSymm {
 	private SymmetryAxes axes;
 	private boolean refined;
 
-	private CESymmParameters params;
+	private CESymmParameters params = new CESymmParameters();
 
 	public CeSymm() {
 		reset();
@@ -382,6 +385,15 @@ public class CeSymm {
 			throw new IllegalArgumentException("Empty Atom array given.");
 		}
 		this.params = param;
+		
+		// If the SSE information is needed, we calculate it if the user did not
+		if (params.getSSEThreshold() > 0) {
+			Structure s = atoms[0].getGroup().getChain().getStructure();
+			if (SecStrucTools.getSecStrucInfo(s).isEmpty()){
+				SecStrucPred ssp = new SecStrucPred();
+				ssp.predict(s, true);
+			}
+		}
 		
 		CeSymmIterative iter = new CeSymmIterative(param);
 		msa = iter.execute(atoms);
