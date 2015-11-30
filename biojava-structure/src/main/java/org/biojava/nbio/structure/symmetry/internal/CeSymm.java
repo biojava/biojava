@@ -436,10 +436,10 @@ public class CeSymm {
 			throw new IllegalArgumentException("Empty Atom array given.");
 		}
 
-		selfAlignments.add(align(atoms));
+		AFPChain selfAFP = align(atoms);
 
 		if (refined) {
-			msa = SymmetryTools.fromAFP(selfAlignments.get(0), atoms);
+			msa = SymmetryTools.fromAFP(selfAFP, atoms);
 			CoreSuperimposer imposer = new CoreSuperimposer();
 			imposer.superimpose(msa);
 			MultipleAlignmentScorer.calculateScores(msa);
@@ -458,7 +458,7 @@ public class CeSymm {
 		} else {
 			// Convert the optimal pairwise alignment to MSA
 			MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(
-					selfAlignments.get(0), atoms, atoms, false);
+					selfAFP, atoms, atoms, false);
 			msa = e.getMultipleAlignment(0);
 			logger.debug("Returning optimal self-alignment");
 			msa.putScore("isRefined", 0.0);
