@@ -133,7 +133,6 @@ public class CeSymmIterative {
 		}
 
 		// Perform one level CeSymm alignment
-		CeSymm aligner = new CeSymm();
 		msa = aligner.analyzeLevel(atoms);
 
 		// End iterations if asymmetric (not refined, or lower thresholds)
