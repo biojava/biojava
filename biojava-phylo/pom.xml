@@ -37,9 +37,6 @@
     <dependency>
     	<groupId>org.biojava.thirdparty</groupId>
     	<artifactId>forester</artifactId>
-    	<version>1.005</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
     </dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
 		<dependency>
