@@ -39,7 +39,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import org.biojava.nbio.core.sequence.features.AbstractFeature;
 import org.biojava.nbio.core.sequence.features.Qualifier;
-import org.junit.Ignore;
 
 /**
  * Testing example for issue #834
