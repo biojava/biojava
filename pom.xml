@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<!-- for releasing to Maven Central / OSS Sonatype -->
 	<parent>
@@ -37,15 +38,15 @@
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
 		<slf4j.version>1.7.12</slf4j.version>
-		<log4j.version>2.3</log4j.version>
+		<log4j.version>2.4.1</log4j.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
 		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
 		<url>https://github.com/biojava/biojava</url>
 
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<!-- This section required for release at Maven Central. For a full list 
 		of Developers, please see https://github.com/orgs/biojava/members For a list 
@@ -344,11 +345,11 @@
 				</configuration>
 			</plugin>
 
-            <plugin>
-                <groupId>com.versioneye</groupId>
-                <artifactId>versioneye-maven-plugin</artifactId>
-                <version>3.5.1</version>
-            </plugin>
+			<plugin>
+				<groupId>com.versioneye</groupId>
+				<artifactId>versioneye-maven-plugin</artifactId>
+				<version>3.5.1</version>
+			</plugin>
 
 		</plugins>
 
@@ -371,33 +372,39 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-        		<groupId>org.slf4j</groupId>
-        		<artifactId>slf4j-api</artifactId>
-        		<version>${slf4j.version}</version>
-    		</dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
 			<!-- binding for log4j 2 -->
-  			<dependency>
-    			<groupId>org.apache.logging.log4j</groupId>
-    			<artifactId>log4j-slf4j-impl</artifactId>
-    			<version>${log4j.version}</version>
-    			<!-- runtime scope includes the test scope as well -->
-    			<scope>runtime</scope>
-  			</dependency>
-  			<!-- Log4j API and Core implementation required for binding -->
-  			<dependency>
-    			<groupId>org.apache.logging.log4j</groupId>
-    			<artifactId>log4j-api</artifactId>
-    			<version>${log4j.version}</version>
-    			<!-- runtime scope includes the test scope as well -->
-    			<scope>runtime</scope>    			
-  			</dependency>
-  			<dependency>
-    			<groupId>org.apache.logging.log4j</groupId>
-    			<artifactId>log4j-core</artifactId>
-    			<version>${log4j.version}</version>
-    			<!-- runtime scope includes the test scope as well -->
-    			<scope>runtime</scope>    			
-  			</dependency>			
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-slf4j-impl</artifactId>
+				<version>${log4j.version}</version>
+				<!-- runtime scope includes the test scope as well -->
+				<scope>runtime</scope>
+			</dependency>
+			<!-- Log4j API and Core implementation required for binding -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j.version}</version>
+				<!-- runtime scope includes the test scope as well -->
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
+				<!-- runtime scope includes the test scope as well -->
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.biojava.thirdparty</groupId>
+				<artifactId>forester</artifactId>
+				<version>1.005</version>
+				<scope>compile</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

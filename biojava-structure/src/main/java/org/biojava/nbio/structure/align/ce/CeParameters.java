@@ -24,8 +24,8 @@
 
 package org.biojava.nbio.structure.align.ce;
 
-import org.biojava.nbio.alignment.SubstitutionMatrixHelper;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.structure.align.util.CliTools;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 
@@ -33,7 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** Contains the parameters that can be sent to CE
+/** 
+ * Contains the parameters that can be sent to CE
  * 
  * @author Andreas Prlic
  *
@@ -71,9 +72,10 @@ public class CeParameters implements ConfigStrucAligParams  {
 	protected int  sideChainScoringType;
 
 	protected static final double DEFAULT_GAP_OPEN = 5.0;
-	protected static final double DEFAULT_GAP_EXTENSION  = 0.5;
-	protected static final double DISTANCE_INCREMENT=0.5;
-	protected static final double DEFAULT_oRmsdThr = 2.0; 
+	protected static final double DEFAULT_GAP_EXTENSION = 0.5;
+	protected static final double DISTANCE_INCREMENT = 0.5;
+	protected static final double DEFAULT_oRmsdThr = 2.0;
+	protected static final String DEFAULT_SUBSTITUTION_MATRIX = "PRLA000101";
 
 	protected double gapOpen;
 	protected double gapExtension;
@@ -88,8 +90,6 @@ public class CeParameters implements ConfigStrucAligParams  {
 	public CeParameters(){
 		reset();
 	}
-
-
 
 	@Override
 	public String toString() {
@@ -401,8 +401,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	 */
 	public SubstitutionMatrix<AminoAcidCompound> getSubstitutionMatrix() {
 		if ( substitutionMatrix == null){
-			String matrixName = "PRLA000101";
-			substitutionMatrix = SubstitutionMatrixHelper.getMatrixFromAAINDEX(matrixName);
+			substitutionMatrix = SubstitutionMatrixHelper.getMatrixFromAAINDEX(DEFAULT_SUBSTITUTION_MATRIX);
 
 		}
 		return substitutionMatrix;

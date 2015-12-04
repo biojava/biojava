@@ -22,16 +22,16 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
 
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-import org.biojava.nbio.structure.symmetry.core.ChainClusterer;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
@@ -83,11 +83,32 @@ public class TestQuatSymmetryDetection {
 		assertEquals("D2",symmetries[2]);
 		assertEquals("A4",symmetries[3]);		
 	}
+	
+	@Test
+	public void test4p2c() throws IOException, StructureException {
+		// a structure with no global symmetry and some local symmetry
+		FileParsingParameters params = new FileParsingParameters();
+		params.setParseBioAssembly(true);
+		params.setAlignSeqRes(true);
+		AtomCache cache = new AtomCache();
+		cache.setFileParsingParams(params);
+		StructureIO.setAtomCache(cache);
+		Structure pdb = StructureIO.getStructure("4p2c");
+		String[] symmetries = getSymmetry(pdb, 1);
+		
+		// C1 global symmetry
+		assertEquals("C1",symmetries[0]);
+		assertEquals("A5B5C",symmetries[1]);
+		
+		// C3 local symmetry
+		assertEquals("C5", symmetries[4]);
+		assertEquals("A5B5", symmetries[5]);
+	}
 
 	/**
 	 * Finds the symmetry of the biounit with the biojava quat symmetry algorithms
 	 * @param bioUnitNumber
-	 * @return an array of size 4 with members: symmetry, stoichiometry, pseudosymmetry, pseudoStoichiometry
+	 * @return an array of size 6 with members: symmetry, stoichiometry, pseudosymmetry, pseudoStoichiometry, localSymmetry, localStoichiometry
 	 */
 	private String[] getSymmetry(Structure pdb, int bioUnitNumber) {
 		
@@ -107,12 +128,8 @@ public class TestQuatSymmetryDetection {
 
 		QuatSymmetryDetector detector = new QuatSymmetryDetector(bioAssembly, parameters);
 
-		if (!detector.hasProteinSubunits()) {	
-			logger.info("No protein chains in biounit {}, can't calculate symmetry. Will not assign a symmetry value to it.", bioUnitNumber);
-			return new String[]{null,null,null,null};
-		}		
-
-		List<QuatSymmetryResults> globalResults = detector.getGlobalSymmetry();
+		List<QuatSymmetryResults> globalResults = detector.getGlobalSymmetry(); 
+		List<List<QuatSymmetryResults>> localResults = detector.getLocalSymmetries();
 		
 		if (globalResults.isEmpty()) {
 			logger.warn("No global symmetry found for biounit {}. Will not assign a symmetry value to it.",  bioUnitNumber);
@@ -123,6 +140,8 @@ public class TestQuatSymmetryDetection {
 		String stoichiometry = null;
 		String pseudoSymmetry = null;
 		String pseudoStoichiometry = null;
+		String localSymmetry = null;
+		String localStoichiometry = null;
 
 		
 		if (globalResults.size()>2) {
@@ -147,19 +166,16 @@ public class TestQuatSymmetryDetection {
 		}
 		// note: if there's no pseudosymmetry in the results then it remains null
 
+		for (List<QuatSymmetryResults> r: localResults) {
+			
+			for (QuatSymmetryResults l:r) {
+				localSymmetry = l.getSymmetry();
+				localStoichiometry = l.getSubunits().getStoichiometry();
+			}
+		}
 
-		if (symmetry==null) {
-			// this should not happen, will there ever be no global symmetry (non-pseudo) in the results?
-			logger.warn("Could not find global symmetry for biounit {}. Will not assign a symmetry value to it.", bioUnitNumber);
-		} else if (stoichiometry==null){
-			logger.warn("Symmetry found for biounit {}, but no stoichiometry value associated to it.", bioUnitNumber);
-		}
 		
-		if (pseudoSymmetry!=null && pseudoStoichiometry==null) {
-			logger.warn("Pseudosymmetry found for biounit {}, but no stoichiometry value associated to it", bioUnitNumber);
-		}
-		
-		return new String[]{symmetry, stoichiometry, pseudoSymmetry, pseudoStoichiometry};
+		return new String[]{symmetry, stoichiometry, pseudoSymmetry, pseudoStoichiometry, localSymmetry, localStoichiometry};
 		
 	}
 }
