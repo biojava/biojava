@@ -29,6 +29,7 @@ import java.util.Set;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.multiple.Block;
@@ -341,11 +342,27 @@ public class CeSymmIterative {
 		List<SecStrucElement> sses = SecStrucTools
 				.getSecStrucElements(SymmetryTools.getGroups(atoms));
 		int count = 0;
+
+		//keep track of different helix types
+		boolean helix = false;
+		int hEnd = 0;
+
 		for (SecStrucElement sse : sses) {
 			SecStrucType t = sse.getType();
-			if (t.isBetaStrand() || t.isHelixType()) {
+			if (t.isBetaStrand()) {
+				helix = false;
 				count++;
-			}
+			} else if (t.isHelixType()){
+				if (helix){
+					// If this helix is contiguous to the previous
+					if (sse.getRange().getStart().getSeqNum() + 1 == hEnd)
+						hEnd = sse.getRange().getEnd().getSeqNum();
+					else
+						count++;
+				} else
+					count++;
+			} else
+				helix = false;
 		}
 		return count;
 	}
