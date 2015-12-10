@@ -30,6 +30,7 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -305,9 +306,10 @@ public class MultipleAlignmentWriter {
 	 * @param templateIndex
 	 *            index of the template within the multiple alignment
 	 * @return The file contents as a string
+	 * @throws StructureException If an error occurs parsing the alignment's structure names
 	 */
 	public static String to3DFormat(MultipleAlignment alignment,
-			int queryIndex, int templateIndex) {
+			int queryIndex, int templateIndex) throws StructureException {
 		List<Atom[]> atomArrays = alignment.getEnsemble().getAtomArrays();
 		Atom[] queryAtoms = atomArrays.get(queryIndex);
 		Atom[] templateAtoms = atomArrays.get(templateIndex);

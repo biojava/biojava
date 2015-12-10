@@ -157,9 +157,12 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 	 * The string representation can be a integer followed by a character.
 	 * 
 	 * @param pdb_code
-	 * @return a ResidueNumber object
+	 * @return a ResidueNumber object, or null if the input was null
 	 */
 	public static ResidueNumber fromString(String pdb_code) {
+		if(pdb_code == null)
+			return null;
+		
 		ResidueNumber residueNumber = new ResidueNumber();
 		Integer resNum = null;
 		String icode = null;		

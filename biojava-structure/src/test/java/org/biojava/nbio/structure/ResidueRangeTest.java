@@ -235,7 +235,7 @@ public class ResidueRangeTest {
 				"NotAG00dID", 1, 'R'), range.getEnd());
 
 		// Wildcard chains
-		rangeStr = "_,__,_:1-5";
+		rangeStr = "_,__,_:1-5,_:+1-+5";
 		ranges = ResidueRange.parseMultiple(rangeStr);
 		range = ranges.get(0);
 		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
@@ -246,6 +246,12 @@ public class ResidueRangeTest {
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(2);
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 1,
+				null), range.getStart());
+		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 5,
+				null), range.getEnd());
+		range = ranges.get(3);
 		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 1,
 				null), range.getStart());
@@ -330,7 +336,8 @@ public class ResidueRangeTest {
 				"A_-5S--100S", "ABC:-5--200S", "A", "ABCD", "A_1", 
 				"A1", // valid multi-char chain name
 				"3A:1-100", // Weird chain name
-				"_", "_:1-10", "__-2--1", "__"// catch-all chain
+				"_", "_:1-10", "__-2--1", "__", // catch-all chain
+				"A:-3-+1","A:-3-+1","A:+1-6", // Positive numbers ok, although weird
 		};
 		for (String s : yes) {
 			assertTrue(s + " was not considered a valid range format",
@@ -338,7 +345,9 @@ public class ResidueRangeTest {
 		}
 		// invalid ranges
 		String[] no = new String[] { "A_1-", "A_1S-", "A_1-100-",
-				"A_-10-1000_", "", "-", "___", "__:" };
+				"A_-10-1000_", "", "-", "___", "__:",
+				"A:1-","A:--5","A:-+5", // Partial ranges
+		};
 		for (String s : no) {
 			assertFalse(s + " was considered a valid range format",
 					ResidueRange.RANGE_REGEX.matcher(s).matches());
