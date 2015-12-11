@@ -20,9 +20,12 @@
  */
 package org.biojava.nbio.core.search.io;
 
+import org.biojava.nbio.core.alignment.SimpleSequencePair;
 import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.search.io.blast.BlastHspBuilder;
 import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -218,6 +221,55 @@ public class HspTest {
         String result = aln.toString();
         
         assertEquals(expResult, result);
+        
+        // test for type checking
+        Hsp<DNASequence,NucleotideCompound> o1 = new BlastHspBuilder()
+                .setHspNum(1)
+                .setHspBitScore(377.211)
+                .setHspEvalue(8.04143e-093)
+                .setHspQueryFrom(1)
+                .setHspQueryTo(224)
+                .setHspHitFrom(1035)
+                .setHspHitTo(811)
+                .setHspQueryFrame(-1)
+                .setHspIdentity(213)
+                .setHspPositive(213)
+                .setHspGaps(5)
+                .setHspAlignLen(227)
+                .setHspQseq("CTGACGACAGCCATGCACCACCTGTCTCGACTTTCCCCCGAAGGGCACCTAATGTATCTCTACCTCGTTAGTCGGATGTCAAGACCTGGTAAGGTTTTTTCGCGTATCTTCGAATTAAACCACATACTCCACTGCTTGTGCGG-CCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGCCGTACTCCC-AGGTGGA-TACTTATTGTGTTAACTCCGGCACGGAAGG")
+                .setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
+                .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
+                .setSequence(new DNASequence())
+                .setCompound(new NucleotideCompound("C", null, "G"))
+                .createBlastHsp();
+        
+        
+        SequencePair<DNASequence,NucleotideCompound> alignment1 = o1.getAlignment();
+        
+        
+        // test for not specified sequence type at construction time
+        Hsp<DNASequence,NucleotideCompound> o2 = new BlastHspBuilder()
+                .setHspNum(1)
+                .setHspBitScore(377.211)
+                .setHspEvalue(8.04143e-093)
+                .setHspQueryFrom(1)
+                .setHspQueryTo(224)
+                .setHspHitFrom(1035)
+                .setHspHitTo(811)
+                .setHspQueryFrame(-1)
+                .setHspIdentity(213)
+                .setHspPositive(213)
+                .setHspGaps(5)
+                .setHspAlignLen(227)
+                .setHspQseq("CTGACGACAGCCATGCACCACCTGTCTCGACTTTCCCCCGAAGGGCACCTAATGTATCTCTACCTCGTTAGTCGGATGTCAAGACCTGGTAAGGTTTTTTCGCGTATCTTCGAATTAAACCACATACTCCACTGCTTGTGCGG-CCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGCCGTACTCCC-AGGTGGA-TACTTATTGTGTTAACTCCGGCACGGAAGG")
+                .setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
+                .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
+                .createBlastHsp();
+        // why?
+        SequencePair<DNASequence,NucleotideCompound> alignment2 = o2.getAlignment();
+        
+        //new SimpleSequencePair<ProteinSequence,AminoAcidCompound>(new DNASequence("ACGT"), new DNASequence("ACGT"));
+        //new SimpleSequencePair;
     }
     
 }
