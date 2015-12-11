@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.core.search.io.blast;
 
+import org.biojava.nbio.core.sequence.template.Compound;
+import org.biojava.nbio.core.sequence.template.Sequence;
+
 /**
  * Designed by Paolo Pavan.
  * You may want to find my contacts on Github and LinkedIn for code info 
@@ -29,7 +32,7 @@ package org.biojava.nbio.core.search.io.blast;
  * @author Paolo Pavan
  */
 
-public class BlastHspBuilder {
+public class BlastHspBuilder<S extends Sequence<C>, C extends Compound> {
     private int hspNum;
     private double hspBitScore;
     private int hspScore;
@@ -49,6 +52,8 @@ public class BlastHspBuilder {
     private String hspIdentityString;
     private Double percentageIdentity;
     private Integer mismatchCount;
+    private S sequence;
+    private C compound;
 
     public BlastHspBuilder() {
     }
@@ -147,8 +152,19 @@ public class BlastHspBuilder {
         this.mismatchCount = mismatchCount;
         return this;
     }
+
+    public BlastHspBuilder setSequence(S sequence) {
+        this.sequence = sequence;
+        return this;
+    }
+
+    public BlastHspBuilder setCompound(C compound) {
+        this.compound = compound;
+        return this;
+    }
+    
     public BlastHsp createBlastHsp() {
-        return new BlastHsp(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString, percentageIdentity, mismatchCount);
+        return new BlastHsp(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString, percentageIdentity, mismatchCount, sequence, compound);
     }
     
 }

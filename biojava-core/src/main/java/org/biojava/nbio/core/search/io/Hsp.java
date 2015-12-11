@@ -71,6 +71,8 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     private Double percentageIdentity = null;
     private Integer mismatchCount = null;
     private SimpleSequencePair<S, C> returnAln;
+    private S sequence;
+    private C compound;
 
     @Override
     public int hashCode() {
@@ -132,12 +134,23 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         String sequenceString = gappedSequenceString.replace("-", "");
         
         try {
-            if (sequenceString.matches("^[ACTG]+$")) 
+            if (sequence instanceof DNASequence) 
                 returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
-            else if (sequenceString.matches("^[ACUG]+$"))
+            else if (sequence instanceof RNASequence)
                 returnSeq = new RNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
-            else
+            else if (sequence instanceof ProteinSequence)
                 returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+            else if (sequence == null){
+                // try to guess
+                if (sequenceString.matches("^[ACTG]+$")) 
+                    returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+                else if (sequenceString.matches("^[ACUG]+$"))
+                    returnSeq = new RNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+                else
+                    returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+            }
+            // else it is a non considered case
+            else throw new IllegalStateException();
         } catch (CompoundNotFoundException ex) {
             logger.error("Unexpected error, could not find compound when creating Sequence object from Hsp", ex);
         }
@@ -242,7 +255,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         return null;
     }
 
-    public Hsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue, int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo, int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive, int hspGaps, int hspAlignLen, String hspQseq, String hspHseq, String hspIdentityString, Double percentageIdentity, Integer mismatchCount) {
+    public Hsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue, int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo, int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive, int hspGaps, int hspAlignLen, String hspQseq, String hspHseq, String hspIdentityString, Double percentageIdentity, Integer mismatchCount, S sequence, C compound) {
         this.hspNum = hspNum;
         this.hspBitScore = hspBitScore;
         this.hspScore = hspScore;
@@ -262,6 +275,8 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         this.hspIdentityString = hspIdentityString;
         this.percentageIdentity = percentageIdentity; 
         this.mismatchCount = mismatchCount;
+        this.sequence = sequence;
+        this.compound = compound;
         
         // sanity check
         if (percentageIdentity != null && (percentageIdentity < 0 || percentageIdentity >1))
