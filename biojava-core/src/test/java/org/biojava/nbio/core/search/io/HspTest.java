@@ -26,6 +26,7 @@ import org.biojava.nbio.core.search.io.blast.BlastHspBuilder;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -243,9 +244,18 @@ public class HspTest {
                 .setCompound(new NucleotideCompound("C", null, "G"))
                 .createBlastHsp();
         
+        // this returns the alignment of the correct type:
+        SequencePair<DNASequence,NucleotideCompound> aln1 = o1.getAlignment();
+        String result1 = aln1.toString();
+        assertEquals(expResult, result1);
         
-        SequencePair<DNASequence,NucleotideCompound> alignment1 = o1.getAlignment();
+        // this is still valid:
+        SequencePair aln2 = o1.getAlignment();
+        String result2 = aln2.toString();
+        assertEquals(expResult, result2);
         
+        // the next does not compile. It is type safe:
+        //SequencePair<ProteinSequence,AminoAcidCompound> alignment4 = o1.getAlignment();
         
         // test for not specified sequence type at construction time
         Hsp<DNASequence,NucleotideCompound> o2 = new BlastHspBuilder()
@@ -265,11 +275,11 @@ public class HspTest {
                 .setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
                 .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
                 .createBlastHsp();
-        // why?
-        SequencePair<DNASequence,NucleotideCompound> alignment2 = o2.getAlignment();
         
-        //new SimpleSequencePair<ProteinSequence,AminoAcidCompound>(new DNASequence("ACGT"), new DNASequence("ACGT"));
-        //new SimpleSequencePair;
+        // this returns the alignment of the correct type because guessed by HSP class:
+        SequencePair<DNASequence,NucleotideCompound> aln3 = o2.getAlignment();
+        String result3 = aln3.toString();
+        assertEquals(expResult, result3);
     }
     
 }

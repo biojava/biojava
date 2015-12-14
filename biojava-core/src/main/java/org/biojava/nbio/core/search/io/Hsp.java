@@ -32,6 +32,7 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
@@ -137,7 +138,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
             if (sequence instanceof DNASequence) 
                 returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
             else if (sequence instanceof RNASequence)
-                returnSeq = new RNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+                returnSeq = new RNASequence(sequenceString, RNACompoundSet.getRNACompoundSet());
             else if (sequence instanceof ProteinSequence)
                 returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
             else if (sequence == null){
