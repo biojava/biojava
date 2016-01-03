@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 
 public class JronnTest {
 
-	@Test
+	// Implemented with two platform checks.
 	public void verifyRanges() { 
   
 	Range[]	ranges = Jronn.getDisorder(new FastaSequence("name", "LLRGRHLMNGTMIMRPWNFLNDHHFPKFFPHLIEQQAIWLADWWRKKHC" +
@@ -50,5 +50,53 @@ public class JronnTest {
 	assertEquals(305, ranges[3].from);
 	assertEquals(313, ranges[3].to);
 	//System.out.println(Arrays.toString(ranges));
+	}
+
+	/**
+	 * Jronn was breaking on Windows platform due to the different System.getProperty("line.separator") values
+	 * (CRLF vs LF).  This wraps the existing unit testing to show that it works on windows or unix.
+	 */
+	@Test
+	public void checkJronn() {
+		// Windows CRLF
+		ScopedProperty lineSepProp = new ScopedProperty("line.separator", "\r\n");
+		verifyRanges();
+		lineSepProp.close();
+
+		// UNIX LF
+		ScopedProperty lineSepPropUnix = new ScopedProperty("line.separator", "\n");
+		verifyRanges();
+		lineSepPropUnix.close();
+	}
+
+	/**
+	 * A scoped property helper class to check with Windows style CRLF.
+	 * Credit Thomas Klambauer, but here have removed the implement of
+	 * AutoCloseable (Java 7) for BioJava support of Java 6.
+	 */
+	public class ScopedProperty {
+
+		private final String key;
+		private final String oldValue;
+
+		/**
+		 *
+		 * @param key The System.setProperty key
+		 * @param value The System.setProperty value to switch to.
+		 */
+		public ScopedProperty(final String key, final String value) {
+			this.key = key;
+			oldValue = System.setProperty(key, value);
+		}
+
+		public void close() {
+			// Can't use setProperty(key, null) -> Throws NullPointerException.
+			if( oldValue == null ) {
+				// Previously there was no entry.
+				System.clearProperty(key);
+			} else {
+				System.setProperty(key, oldValue);
+			}
+		}
 	}
 }
