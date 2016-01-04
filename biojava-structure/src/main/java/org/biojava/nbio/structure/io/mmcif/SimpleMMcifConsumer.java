@@ -21,11 +21,75 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import org.biojava.nbio.structure.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.vecmath.Matrix4d;
+
+import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.AminoAcidImpl;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.DBRef;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.HetatomImpl;
+import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.SeqMisMatch;
+import org.biojava.nbio.structure.SeqMisMatchImpl;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.BondMaker;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
-import org.biojava.nbio.structure.io.mmcif.model.*;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.nbio.structure.io.mmcif.model.Cell;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompBond;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompDescriptor;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBremark;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBrev;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
+import org.biojava.nbio.structure.io.mmcif.model.Entity;
+import org.biojava.nbio.structure.io.mmcif.model.EntityPolySeq;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
+import org.biojava.nbio.structure.io.mmcif.model.Exptl;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxNonPolyScheme;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxPolySeqScheme;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList;
+import org.biojava.nbio.structure.io.mmcif.model.Refine;
+import org.biojava.nbio.structure.io.mmcif.model.Struct;
+import org.biojava.nbio.structure.io.mmcif.model.StructAsym;
+import org.biojava.nbio.structure.io.mmcif.model.StructConn;
+import org.biojava.nbio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.nbio.structure.io.mmcif.model.StructNcsOper;
+import org.biojava.nbio.structure.io.mmcif.model.StructRef;
+import org.biojava.nbio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.nbio.structure.io.mmcif.model.StructRefSeqDif;
+import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -34,11 +98,6 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.vecmath.Matrix4d;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -1590,7 +1649,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	/**
 	 * Returns the chains from all models that have the provided chainId
-	 *
+	 * This method may be called before endDocument.  Not all models
+	 * may be added to the Structure before that point.
 	 */
 	private List<Chain> getChainsFromAllModels(String chainId){
 		List<Chain> chains = new ArrayList<Chain>();
@@ -1599,6 +1659,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		for (int i=0 ; i < structure.nrModels();i++){
 			List<Chain> model = structure.getModel(i);
 			for (Chain c: model){
+				if (c.getChainID().equals(chainId)) {
+					chains.add(c);
+				}
+			}
+		}
+		
+		// May have active model that has not yet been added to the structure.
+		if (null != current_model) {
+			for (Chain c: current_model) {
 				if (c.getChainID().equals(chainId)) {
 					chains.add(c);
 				}
@@ -1682,7 +1751,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//	return;
 
 		// replace the group asym ids with the real PDB ids!
-		replaceGroupSeqPos(ppss);
+		replaceGroupSeqPos(ppss);  // This might be incorrect in some pdb, to use auth_seq_id of the pdbx_poly_seq_scheme.
 
 		// merge the EntityPolySeq info and the AtomSite chains into one...
 		//already known ignore:
