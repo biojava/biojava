@@ -22,8 +22,8 @@ package org.biojava.nbio.alignment;
 
 import org.biojava.nbio.alignment.template.AbstractScorer;
 import org.biojava.nbio.alignment.template.PairwiseSequenceScorer;
-import org.biojava.nbio.alignment.template.SequencePair;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 

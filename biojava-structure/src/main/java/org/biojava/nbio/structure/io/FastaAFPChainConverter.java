@@ -24,8 +24,8 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.alignment.template.AlignedSequence;
-import org.biojava.nbio.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
+import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AlignmentTools;

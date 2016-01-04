@@ -23,9 +23,9 @@
 
 package org.biojava.nbio.alignment.routines;
 
-import org.biojava.nbio.alignment.template.AlignedSequence;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.alignment.template.GapPenalty;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 

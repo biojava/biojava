@@ -20,14 +20,23 @@
  */
 package org.biojava.nbio.structure.contact;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.asa.AsaCalculator;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
 import org.biojava.nbio.core.util.SingleLinkageClusterer;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.asa.AsaCalculator;
+import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.*;
 
 
 /**
@@ -318,6 +327,24 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	@Override
 	public String toString() {
 		return list.toString();
+	}
+
+	/**
+	 * Calculates the interfaces for a structure using default parameters
+	 * @param struc
+	 * @return
+	 */
+	public static StructureInterfaceList calculateInterfaces(Structure struc) {
+		CrystalBuilder builder = new CrystalBuilder(struc);
+		StructureInterfaceList interfaces = builder.getUniqueInterfaces();
+		logger.debug("Calculating ASA for "+interfaces.size()+" potential interfaces");
+		interfaces.calcAsas(StructureInterfaceList.DEFAULT_ASA_SPHERE_POINTS, //fewer for performance
+				Runtime.getRuntime().availableProcessors(),
+				StructureInterfaceList.DEFAULT_MIN_COFACTOR_SIZE);
+		interfaces.removeInterfacesBelowArea();
+		interfaces.getClusters();
+		logger.debug("Found "+interfaces.size()+" interfaces");
+		return interfaces;
 	}
 
 }

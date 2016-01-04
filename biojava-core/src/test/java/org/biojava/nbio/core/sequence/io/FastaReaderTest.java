@@ -36,9 +36,6 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
@@ -58,10 +55,12 @@ public class FastaReaderTest extends TestCase{
 	public static void tearDownClass() throws Exception {
 	}
 
+	@Override
 	@Before
 	public void setUp() {
 	}
 
+	@Override
 	@After
 	public void tearDown() {
 	}

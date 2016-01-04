@@ -29,16 +29,18 @@ import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 public class IOUtils {
 
+	private static final Logger logger = LoggerFactory.getLogger(IOUtils.class);
+	
 	private static final int BUFFER = 4096;
 
 	/**
@@ -54,8 +56,7 @@ public class IOUtils {
 				c.close();
 			}
 		} catch (IOException e) {
-			Logger log = Logger.getLogger(IOUtils.class.getName());
-			log.log(Level.WARNING, "Cannot close down the given Closeable object", e);
+			logger.warn("Cannot close down the given Closeable object", e);
 		}
 	}
 
@@ -142,10 +143,9 @@ public class IOUtils {
 	 *
 	 * @param file File which is a text file
 	 * @return List of Strings representing the lines of the files
-	 * @throws ParserException Can throw this if the file is not a file or we
-	 * cannot parse it
+	 * @throws IOException
 	 */
-	public static List<String> getList(File file) throws ParserException {
+	public static List<String> getList(File file) throws IOException {
 		return getList(openFile(file));
 	}
 
@@ -157,26 +157,22 @@ public class IOUtils {
 	 *
 	 * @param file File which may or may not be GZipped
 	 * @return The final stream
-	 * @throws ParserException Can throw this if the file is not a file or we
-	 * cannot open it for processing
+	 * @throws IOExceptio n 
 	 */
-	public static InputStream openFile(File file) throws ParserException {
+	public static InputStream openFile(File file) throws IOException {
 		final InputStream is;
 		if(!file.isFile()) {
 			throw new ParserException("The file "+file+" is not a file.");
 		}
 		String name = file.getName();
-		try {
-			if(name.endsWith(".gz")) {
-				is = new GZIPInputStream(new FileInputStream(file));
-			}
-			else {
-				is = new FileInputStream(file);
-			}
+
+		if(name.endsWith(".gz")) {
+			is = new GZIPInputStream(new FileInputStream(file));
 		}
-		catch(IOException e) {
-			throw new ParserException("Cannot open "+file+" for processing", e);
+		else {
+			is = new FileInputStream(file);
 		}
+
 		return is;
 	}
 
