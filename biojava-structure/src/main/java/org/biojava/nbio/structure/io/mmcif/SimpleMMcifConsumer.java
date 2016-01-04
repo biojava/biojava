@@ -1905,13 +1905,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					bond.setChainID1(ptnr1_chainId);
 					bond.setResnum1(ptnr1_seqId);
 					if ("?".equals(conn.getPdbx_ptnr1_PDB_ins_code())) {
-						conn.setPdbx_ptnr1_PDB_ins_code(" ");
+						conn.setPdbx_ptnr1_PDB_ins_code(null);
 					}
 					bond.setInsCode1(conn.getPdbx_ptnr1_PDB_ins_code());
 					bond.setChainID2(ptnr2_chainId);
 					bond.setResnum2(ptnr2_seqId);
 					if ("?".equals(conn.getPdbx_ptnr2_PDB_ins_code())) {
-						conn.setPdbx_ptnr2_PDB_ins_code(" ");
+						conn.setPdbx_ptnr2_PDB_ins_code(null);
 					}
 					bond.setInsCode2(conn.getPdbx_ptnr2_PDB_ins_code());
 					bonds.add(bond);
