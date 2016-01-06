@@ -1751,7 +1751,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//	return;
 
 		// replace the group asym ids with the real PDB ids!
-		replaceGroupSeqPos(ppss);  // This might be incorrect in some pdb, to use auth_seq_id of the pdbx_poly_seq_scheme.
+		// replaceGroupSeqPos(ppss);  // This might be incorrect in some pdb, to use auth_seq_id of the pdbx_poly_seq_scheme.
 
 		// merge the EntityPolySeq info and the AtomSite chains into one...
 		//already known ignore:

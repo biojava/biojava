@@ -90,7 +90,7 @@ public class TestDifficultMmCIFFiles {
 			
 			// Chain A first residue should start at ASP 2.. 
 			// but if replaceGroupSeqPos(PdbxPolySeqScheme ppss) is used, this is incorrect and will be 1.
-			assertEquals(1, chains.get(0).getAtomGroup(0).getResidueNumber().getSeqNum().intValue());
+			assertEquals(2, chains.get(0).getAtomGroup(0).getResidueNumber().getSeqNum().intValue());
 		}
 	}
 	
