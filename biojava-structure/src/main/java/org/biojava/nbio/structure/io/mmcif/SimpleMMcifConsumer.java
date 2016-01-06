@@ -492,7 +492,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		Element element = Element.R;
 		try {
 			element = Element.valueOfIgnoreCase(atom.getType_symbol());
-		}  catch (IllegalArgumentException e){}
+		}  catch (IllegalArgumentException e) {
+			logger.warn("Element {} was not recognised as a BioJava-known element, the element will be represented as the generic element {}", atom.getType_symbol(), Element.R.name());
+		}
 		a.setElement(element);
 
 		return a;
@@ -1690,7 +1692,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (asymStrandId.containsKey(ppss.getAsym_id()))
 			return;
 
-		// this is one of the interal mmcif rules it seems...
+		// this is one of the internal mmcif rules it seems...
 		if ( ppss.getPdb_strand_id() == null) {
 			asymStrandId.put(ppss.getAsym_id(), ppss.getAuth_mon_id());
 			return;
