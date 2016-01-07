@@ -164,33 +164,32 @@ public final class ModelLoader {
 
     void loadModels() throws NumberFormatException, IOException {
 
-	for (int i = 0; i < 10; i++) {
-	    final BufferedReader bfr = new BufferedReader(
-		    new InputStreamReader(ModelLoader.class.getResourceAsStream(
-			    "model" + i + ".rec"),
-			    "ISO-8859-1"));
-	    String line = null;
-	    final Scanner scan = new Scanner(bfr);
-	    scan.useDelimiter(System.getProperty("line.separator"));
-	    final int numberOfSeqs = scan.nextInt();
-	    final Model model = new Model(i, numberOfSeqs);
-	    // ignore this one, its always 19 defined in RonnConstrain
-	    scan.nextInt();
-	    for (int j = 0; j < numberOfSeqs; j++) {
-		line = scan.next();
-		final char[] dbseq = line.trim().toCharArray();
-		assert dbseq.length < Short.MAX_VALUE;
-		model.Length[j] = (short) dbseq.length;
-		for (int dResidue = 0; dResidue < dbseq.length; dResidue++) {
-		    model.dbAA[j][dResidue] = RonnConstraint.INDEX[dbseq[dResidue] - 'A'];
-		    assert !((model.dbAA[j][dResidue] < 0) || (model.dbAA[j][dResidue] > 19));
-		}
-		model.W[j] = scan.nextFloat();
-	    }
-	    ModelLoader.models.put(model.modelNum, model);
-	    bfr.close();
-	    scan.close();
-	}
+        for (int i = 0; i < 10; i++) {
+            final BufferedReader bfr = new BufferedReader(
+                    new InputStreamReader(ModelLoader.class.getResourceAsStream(
+                            "model" + i + ".rec"),
+                            "ISO-8859-1"));
+            String line = null;
+            line = bfr.readLine().trim();
+            final int numberOfSeqs = Integer.parseInt(line);
+            final Model model = new Model(i, numberOfSeqs);
+            // ignore this one, its always 19 defined in RonnConstrain
+            line = bfr.readLine();
+            for (int j = 0; j < numberOfSeqs; j++) {
+                line = bfr.readLine();
+                final char[] dbseq = line.trim().toCharArray();
+                assert dbseq.length < Short.MAX_VALUE;
+                model.Length[j] = (short) dbseq.length;
+                for (int dResidue = 0; dResidue < dbseq.length; dResidue++) {
+                    model.dbAA[j][dResidue] = RonnConstraint.INDEX[dbseq[dResidue] - 'A'];
+                    assert !((model.dbAA[j][dResidue] < 0) || (model.dbAA[j][dResidue] > 19));
+                }
+                line = bfr.readLine().trim();
+                model.W[j] = Float.parseFloat(line);
+            }
+            ModelLoader.models.put(model.modelNum, model);
+            bfr.close();
+        }
     }
 
     public static void main(final String[] args) throws NumberFormatException,

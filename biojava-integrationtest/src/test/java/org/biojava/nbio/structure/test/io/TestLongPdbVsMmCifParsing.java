@@ -418,8 +418,8 @@ public class TestLongPdbVsMmCifParsing {
 		}
 
 		
-		assertNotNull("getParent is null in pdb (chain "+chainId+")",cPdb.getParent());
-		assertNotNull("getParent is null in cif (chain "+chainId+")",cCif.getParent());
+		assertNotNull("getParent is null in pdb (chain "+chainId+")",cPdb.getStructure());
+		assertNotNull("getParent is null in cif (chain "+chainId+")",cCif.getStructure());
 
 			
 		assertEquals("failed for getAtomLength (chain "+chainId+"):",cPdb.getAtomLength(),cCif.getAtomLength());
