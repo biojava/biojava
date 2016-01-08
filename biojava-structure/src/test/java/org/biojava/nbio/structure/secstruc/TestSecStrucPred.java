@@ -60,8 +60,8 @@ public class TestSecStrucPred {
 			Structure s = cache.getStructure(name);
 			
 			//Predict with BioJava the SS
-			SecStrucPred sec = new SecStrucPred();
-			List<SecStrucState> biojava = sec.predict(s, true);
+			SecStrucCalc sec = new SecStrucCalc();
+			List<SecStrucState> biojava = sec.calculate(s, true);
 			
 			//Download the original DSSP implementation output
 			List<SecStrucState> dssp = DSSPParser.fetch(name, s, false);

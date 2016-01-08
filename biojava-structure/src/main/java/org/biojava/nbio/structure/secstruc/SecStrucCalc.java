@@ -43,7 +43,7 @@ import java.util.List;
  * @author Aleix Lafita
  * 
  */
-public class SecStrucPred {
+public class SecStrucCalc {
 	
 	/** 
 	 * DSSP assigns helices one residue shorter at each end, because the
@@ -55,7 +55,7 @@ public class SecStrucPred {
 	private static final boolean DSSP_HELICES = true;
 
 	private static final Logger logger = 
-			LoggerFactory.getLogger(SecStrucPred.class);
+			LoggerFactory.getLogger(SecStrucCalc.class);
 
 	/** min distance between two residues */
 	public static final double MINDIST = 0.5;
@@ -87,7 +87,7 @@ public class SecStrucPred {
 	private List<Ladder> ladders;
 	private List<BetaBridge> bridges;
 
-	public SecStrucPred(){
+	public SecStrucCalc(){
 		ladders = new ArrayList<Ladder>();
 		bridges = new ArrayList<BetaBridge>();
 	}
@@ -100,7 +100,7 @@ public class SecStrucPred {
 	 * @param assign sets the SS information to the Groups of s
 	 * @return a List of SS annotation objects
 	 */
-	public List<SecStrucState> predict(Structure s, boolean assign) 
+	public List<SecStrucState> calculate(Structure s, boolean assign)
 			throws StructureException {
 
 		groups = initGroupArray(s);
@@ -558,9 +558,9 @@ public class SecStrucPred {
 	@Override
 	public boolean equals(Object o){
 		
-		if (!(o instanceof SecStrucPred)) return false;
+		if (!(o instanceof SecStrucCalc)) return false;
 		else {
-			SecStrucPred ss = (SecStrucPred) o;
+			SecStrucCalc ss = (SecStrucCalc) o;
 			if (groups.length != ss.groups.length) return false;
 			
 			for (int g=0; g<groups.length; g++){
