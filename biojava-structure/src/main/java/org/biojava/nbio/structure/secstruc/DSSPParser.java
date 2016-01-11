@@ -158,9 +158,20 @@ public class DSSPParser {
 				SecStrucState ss = new SecStrucState(parent, 
 						SecStrucInfo.DSSP_ASSIGNMENT, ssType);
 				
-				//TODO ignore for now
-				/*int BP1 = Integer.valueOf(line.charAt(28));
-				int BP2 = Integer.valueOf(line.charAt(32));*/
+				//Parse the Bridge partners - TODO parallel or antiparallel?
+				String bp = line.substring(25,29).trim();
+				if (bp != "") {
+					BetaBridge bb = new BetaBridge(
+							index, Integer.valueOf(bp), BridgeType.parallel);
+					ss.addBridge(bb);
+				} else logger.warn("Unable to parse beta Bridge for resn "+index);
+				
+				bp = line.substring(29,33).trim();
+				if (bp != "") {
+					BetaBridge bb = new BetaBridge(
+							index, Integer.valueOf(bp), BridgeType.parallel);
+					ss.addBridge(bb);
+				} else logger.warn("Unable to parse beta Bridge for resn "+index);
 				
 				//Parse the energy terms of donor and acceptor
 				for (int i=0; i<4; i++){

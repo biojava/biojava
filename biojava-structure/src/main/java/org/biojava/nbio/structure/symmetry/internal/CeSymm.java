@@ -41,7 +41,7 @@ import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.jama.Matrix;
-import org.biojava.nbio.structure.secstruc.SecStrucPred;
+import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
@@ -410,8 +410,8 @@ public class CeSymm {
 		if (params.getSSEThreshold() > 0) {
 			Structure s = atoms[0].getGroup().getChain().getStructure();
 			if (SecStrucTools.getSecStrucInfo(s).isEmpty()){
-				SecStrucPred ssp = new SecStrucPred();
-				ssp.predict(s, true);
+				SecStrucCalc ssp = new SecStrucCalc();
+				ssp.calculate(s, true);
 			}
 		}
 		

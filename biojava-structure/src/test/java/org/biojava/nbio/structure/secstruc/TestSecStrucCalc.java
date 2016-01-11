@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test the correctness of the DSSP implementation in BioJava
- * for the prediction of secondary structure in a Structure object.
+ * for the calculation of secondary structure in a Structure object.
  * 
  * EXAMPLES:
  * 			Big structures: 4v7r, 4V60 (use mmCif parser)
@@ -41,18 +41,19 @@ import static org.junit.Assert.*;
  * 			Mixed small: 5pti
  * 			First sheet: 1ze3, 3k19
  * 			Insertion code: 1how
+ *          More than 2 Beta-Bridges: 2k4t
  * 
  * @author Aleix Lafita
  *
  */
-public class TestSecStrucPred {
+public class TestSecStrucCalc {
 
 	@Test
 	public void testSecStrucPred() throws StructureException, IOException {
 		
 		//List of names to test the DSSP prediction
 		List<String> names = Arrays.asList(
-				"5pti", "1tim", "4hhb", "1how", "4i4q");
+				"5pti", "1tim", "4hhb", "1how", "4i4q", "2k4t");
 		
 		for (String name : names) {
 			
@@ -60,8 +61,8 @@ public class TestSecStrucPred {
 			Structure s = cache.getStructure(name);
 			
 			//Predict with BioJava the SS
-			SecStrucPred sec = new SecStrucPred();
-			List<SecStrucState> biojava = sec.predict(s, true);
+			SecStrucCalc sec = new SecStrucCalc();
+			List<SecStrucState> biojava = sec.calculate(s, true);
 			
 			//Download the original DSSP implementation output
 			List<SecStrucState> dssp = DSSPParser.fetch(name, s, false);

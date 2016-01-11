@@ -27,7 +27,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.secstruc.SecStrucElement;
-import org.biojava.nbio.structure.secstruc.SecStrucPred;
+import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
 
 /**
@@ -38,7 +38,7 @@ import org.biojava.nbio.structure.secstruc.SecStrucTools;
  * @author Aleix Lafita
  *
  */
-public class DemoSecStrucPred {
+public class DemoSecStrucCalc {
 
 	public static void main(String[] args) throws IOException,
 			StructureException {
@@ -51,8 +51,8 @@ public class DemoSecStrucPred {
 		Structure s = cache.getStructure(pdbID);
 
 		// Predict and assign the SS of the Structure
-		SecStrucPred ssp = new SecStrucPred();
-		ssp.predict(s, true);
+		SecStrucCalc ssp = new SecStrucCalc();
+		ssp.calculate(s, true);
 
 		// Print the DSSP output
 		System.out.println("******DSSP output: ");

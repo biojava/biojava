@@ -1660,7 +1660,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	/**
 	 * Returns the chains from all models that have the provided chainId
-	 *
+	 * This method may be called before endDocument.  Not all models
+	 * may be added to the Structure before that point.
 	 */
 	private List<Chain> getChainsFromAllModels(String chainId){
 		List<Chain> chains = new ArrayList<Chain>();
@@ -1669,6 +1670,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		for (int i=0 ; i < structure.nrModels();i++){
 			List<Chain> model = structure.getModel(i);
 			for (Chain c: model){
+				if (c.getChainID().equals(chainId)) {
+					chains.add(c);
+				}
+			}
+		}
+		
+		// May have active model that has not yet been added to the structure.
+		if (null != current_model) {
+			for (Chain c: current_model) {
 				if (c.getChainID().equals(chainId)) {
 					chains.add(c);
 				}
@@ -1752,7 +1762,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//	return;
 
 		// replace the group asym ids with the real PDB ids!
-		replaceGroupSeqPos(ppss);
+		// replaceGroupSeqPos(ppss);  // This might be incorrect in some pdb, to use auth_seq_id of the pdbx_poly_seq_scheme.
 
 		// merge the EntityPolySeq info and the AtomSite chains into one...
 		//already known ignore:
