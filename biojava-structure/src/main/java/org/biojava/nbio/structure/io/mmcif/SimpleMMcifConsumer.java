@@ -1879,9 +1879,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		this.structConn.add(structConn);
 	}
 
-	void createSSBonds() {
+	private void createSSBonds() {
 		List<SSBond> bonds = structure.getSSBonds();
 		if (bonds == null) bonds = new ArrayList<SSBond>();
+		
+		final String symop = "1_555"; // For now - accept bonds within origin asymmetric unit.
 		
 		// For SSBond equivalent, parse through the struct_conn records
 		int internalId = 0;
@@ -1895,10 +1897,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// if we can find both of these residues - 
 			Group s1 = lookupResidue(ptnr1_chainId, ptnr1_seqId);
 			Group s2 = lookupResidue(ptnr2_chainId, ptnr2_seqId);
+
+			// TODO: when issue 220 is implemented, add robust symmetry handling 
+			// to allow disulfide bonds between symmetry-related molecules.
 			
 			// and is SS - then we should create a new disulfide bond.
 			if (null != s1 && null != s2) {
-				if ("CYS".equals(s1.getPDBName()) && "CYS".equals(s2.getPDBName())) {
+				if ("CYS".equals(s1.getPDBName()) && symop.equals(conn.getPtnr1_symmetry())
+						&& "CYS".equals(s2.getPDBName()) && symop.equals(conn.getPtnr2_symmetry())) {
 					SSBondImpl bond = new SSBondImpl();
 					
 					bond.setSerNum(internalId++); // An internal label what bond # 
