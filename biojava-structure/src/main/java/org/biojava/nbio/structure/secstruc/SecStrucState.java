@@ -23,6 +23,8 @@ package org.biojava.nbio.structure.secstruc;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class extends the basic container for secondary structure annotation,
@@ -33,6 +35,9 @@ import org.biojava.nbio.structure.StructureTools;
  *
  */
 public class SecStrucState extends SecStrucInfo {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(SecStrucState.class);
 
 	private double phi;
 	private double psi;
@@ -71,8 +76,8 @@ public class SecStrucState extends SecStrucInfo {
 		turn[0] = ' ';
 		turn[1] = ' ';
 		turn[2] = ' ';
-		bend = false;
 
+		bend = false;
 		kappa = 360;
 	}
 
@@ -179,7 +184,17 @@ public class SecStrucState extends SecStrucInfo {
 		return bridge1;
 	}
 
-	public void setBridge(BetaBridge bridge) {
+	public BetaBridge getBridge2() {
+		return bridge2;
+	}
+
+	/**
+	 * Adds a Bridge to the residue. Each residue can only store two bridges. If
+	 * the residue contains already two Bridges, the Bridge will not be added.
+	 * 
+	 * @param bridge
+	 */
+	public void addBridge(BetaBridge bridge) {
 		if (bridge1 == null)
 			bridge1 = bridge;
 		else if (bridge1.equals(bridge))
@@ -189,12 +204,16 @@ public class SecStrucState extends SecStrucInfo {
 		else if (bridge2.equals(bridge))
 			return;
 		else
-			throw new IllegalStateException(
-					"Cannot store more than 2 beta Bridge in one residue");
+			logger.warn("Residue forms more than 2 beta Bridges, "
+					+ "DSSP assignment may differ.");
 	}
 
-	public BetaBridge getBridge2() {
-		return bridge2;
+	public void setBridge1(BetaBridge bridge1) {
+		this.bridge1 = bridge1;
+	}
+
+	public void setBridge2(BetaBridge bridge2) {
+		this.bridge2 = bridge2;
 	}
 
 	public String printDSSPline(int index) {

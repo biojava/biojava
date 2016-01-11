@@ -52,7 +52,7 @@ public class TestSecStrucPred {
 		
 		//List of names to test the DSSP prediction
 		List<String> names = Arrays.asList(
-				"5pti", "1tim", "4hhb", "1how", "4i4q");
+				"5pti", "1tim", "4hhb", "1how", "4i4q", "2k4t");
 		
 		for (String name : names) {
 			

@@ -30,11 +30,11 @@ import java.util.List;
 /** 
  * Calculate and assign the secondary structure (SS) to the 
  * Groups of a Structure object. This object also stores the result
- * of the prediction.
+ * of the calculation.
  * <p>
  * The rules for SS calculation are the ones defined by DSSP:
  * Kabsch,W. and Sander,C. (1983) Biopolymers 22, 2577-2637.
- * original DSSP article see at:
+ * Original DSSP article see at:
  * <a href="http://www.cmbi.kun.nl/gv/dssp/dssp.pdf">dssp.pdf</a>. 
  * Some parts are also taken from: T.E.Creighton, Proteins - 
  * Structure and Molecular Properties, 2nd Edition, Freeman 1994.
@@ -311,8 +311,8 @@ public class SecStrucCalc {
 				
 		BetaBridge bridge = new BetaBridge(i,j,btype);
 		
-		getSecStrucState(i).setBridge(bridge);
-		getSecStrucState(j).setBridge(bridge);
+		getSecStrucState(i).addBridge(bridge);
+		getSecStrucState(j).addBridge(bridge);
 
 		bridges.add(bridge);
 	}
