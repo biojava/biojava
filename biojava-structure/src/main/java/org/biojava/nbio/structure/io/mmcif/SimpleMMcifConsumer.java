@@ -48,6 +48,8 @@ import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.SSBond;
+import org.biojava.nbio.structure.SSBondImpl;
 import org.biojava.nbio.structure.SeqMisMatch;
 import org.biojava.nbio.structure.SeqMisMatchImpl;
 import org.biojava.nbio.structure.Site;
@@ -823,10 +825,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 			}
 		}
+		
+		createSSBonds();
 
 		// Do structure.setSites(sites) after any chain renaming to be like PDB.
 		addSites();
-
+		
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		List<Compound> compounds = structure.getCompounds();
@@ -1890,6 +1894,78 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void newStructConn(StructConn structConn) {
 		this.structConn.add(structConn);
+	}
+
+	private void createSSBonds() {
+		List<SSBond> bonds = structure.getSSBonds();
+		if (bonds == null) bonds = new ArrayList<SSBond>();
+		
+		final String symop = "1_555"; // For now - accept bonds within origin asymmetric unit.
+		
+		// For SSBond equivalent, parse through the struct_conn records
+		int internalId = 0;
+		for (StructConn conn : structConn) {
+			String ptnr1_chainId = conn.getPtnr1_auth_asym_id();
+			String ptnr1_seqId = conn.getPtnr1_auth_seq_id();
+			String ptnr2_chainId = conn.getPtnr2_auth_asym_id();
+			String ptnr2_seqId = conn.getPtnr2_auth_seq_id();
+			// conn.getId() would equal disulf#.
+			
+			// if we can find both of these residues - 
+			Group s1 = lookupResidue(ptnr1_chainId, ptnr1_seqId);
+			Group s2 = lookupResidue(ptnr2_chainId, ptnr2_seqId);
+
+			// TODO: when issue 220 is implemented, add robust symmetry handling 
+			// to allow disulfide bonds between symmetry-related molecules.
+			
+			// and is SS - then we should create a new disulfide bond.
+			if (null != s1 && null != s2) {
+				if ("CYS".equals(s1.getPDBName()) && symop.equals(conn.getPtnr1_symmetry())
+						&& "CYS".equals(s2.getPDBName()) && symop.equals(conn.getPtnr2_symmetry())) {
+					SSBondImpl bond = new SSBondImpl();
+					
+					bond.setSerNum(internalId++); // An internal label what bond # 
+					bond.setChainID1(ptnr1_chainId);
+					bond.setResnum1(ptnr1_seqId);
+					if ("?".equals(conn.getPdbx_ptnr1_PDB_ins_code())) {
+						conn.setPdbx_ptnr1_PDB_ins_code(null);
+					}
+					bond.setInsCode1(conn.getPdbx_ptnr1_PDB_ins_code());
+					bond.setChainID2(ptnr2_chainId);
+					bond.setResnum2(ptnr2_seqId);
+					if ("?".equals(conn.getPdbx_ptnr2_PDB_ins_code())) {
+						conn.setPdbx_ptnr2_PDB_ins_code(null);
+					}
+					bond.setInsCode2(conn.getPdbx_ptnr2_PDB_ins_code());
+					bonds.add(bond);
+				}
+			}
+		}
+		
+		structure.setSSBonds(bonds);
+	}
+	
+	/**
+	 * Lookup a residue - not found exceptions are handled with logger warnings.
+	 * @param chainId
+	 * @param seqId
+	 * @return Successful = Group, Failure = null
+	 */
+	Group lookupResidue(String chainId, String seqId) {
+		try {
+            Chain chain = structure.getChainByPDB(chainId);
+            if (null != chain) {
+                try {
+                	return chain.getGroupByPDB(new ResidueNumber(chainId, Integer.parseInt(seqId), ' '));
+                } catch (NumberFormatException e) {
+                	logger.warn("Could not lookup residue : " + chainId + seqId);
+                }   
+            }
+		} catch (StructureException e) {
+			logger.warn("Problem finding residue in site entry " + chainId + seqId + " - " + e.getMessage(), e.getMessage());
+		}
+		// Could not find.
+		return null;
 	}
 
 	@Override
