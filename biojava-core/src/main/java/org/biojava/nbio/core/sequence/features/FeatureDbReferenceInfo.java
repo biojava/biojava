@@ -49,7 +49,7 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
     private String description = "";
     private String shortDescription = "";
     private Object userObject;
-    private HashMap<String,Qualifier> qualifiers = new HashMap<String,Qualifier>();
+    private HashMap<String,ArrayList<Qualifier>> qualifiers = new HashMap<String,ArrayList<Qualifier>>();
     
     
     public FeatureDbReferenceInfo(String database, String id) {
@@ -137,22 +137,30 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
     }
 
     @Override
-    public HashMap<String, Qualifier> getQualifiers() {
+    public HashMap<String, ArrayList<Qualifier>> getQualifiers() {
         return qualifiers;
     }
 
     @Override
-    public void setQualifiers(HashMap<String, Qualifier> qualifiers) {
+    public void setQualifiers(HashMap<String, ArrayList<Qualifier>> qualifiers) {
         this.qualifiers = qualifiers;
     }
 
     @Override
     public void addQualifier(String key, Qualifier qualifier) {
         if (qualifiers == null) {
-            qualifiers = new HashMap<String, Qualifier>();
+            qualifiers = new HashMap<String, ArrayList<Qualifier>>();
         }
-        
-        qualifiers.put(key, qualifier);
+        // Check for key. Update list of values
+        if (qualifiers.containsKey(key)){
+            ArrayList<Qualifier> vals = qualifiers.get(key);
+            vals.add(qualifier);
+            qualifiers.put(key, vals);
+        } else {
+            ArrayList<Qualifier> vals = new ArrayList<Qualifier>();
+            vals.add(qualifier);
+            qualifiers.put(key, vals);
+        }
+
     }
-    
 }

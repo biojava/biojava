@@ -47,7 +47,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     private String description = "";
     private String shortDescription = "";
     private Object userObject = null;
-	private HashMap<String,Qualifier> Qualifiers = new HashMap<String,Qualifier>();
+	private HashMap<String, ArrayList<Qualifier>> Qualifiers = new HashMap<String, ArrayList<Qualifier>>();
 
     /**
      * A feature has a type and a source
@@ -271,13 +271,13 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     }
     
 	@Override
-	public HashMap<String, Qualifier> getQualifiers() {
+	public HashMap<String, ArrayList<Qualifier>> getQualifiers() {
 		// TODO Auto-generated method stub
 		return Qualifiers;
 	}
 
 	@Override
-	public void setQualifiers(HashMap<String, Qualifier> qualifiers) {
+	public void setQualifiers(HashMap<String, ArrayList<Qualifier>> qualifiers) {
 		// TODO Auto-generated method stub
 		Qualifiers = qualifiers;
 		
@@ -285,8 +285,17 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 
 	@Override
 	public void addQualifier(String key, Qualifier qualifier) {
-		// TODO Auto-generated method stub
-		Qualifiers.put(key, qualifier);
+		// Check for key. Update list of values
+        if (Qualifiers.containsKey(key)){
+            ArrayList<Qualifier> vals = Qualifiers.get(key);
+            vals.add(qualifier);
+            Qualifiers.put(key, vals);
+        } else {
+            ArrayList<Qualifier> vals = new ArrayList<Qualifier>();
+            vals.add(qualifier);
+            Qualifiers.put(key, vals);
+        }
 		
 	}
+
 }
