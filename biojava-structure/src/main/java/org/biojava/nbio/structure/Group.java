@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  *
  * This is the data structure for a single Group of atoms.  A protein
@@ -50,9 +49,12 @@ import java.util.Map;
  * @author Horvath Tamas
  * @since 1.4
  * @version %I% %G%
+ * 
  */
 public interface Group {
 
+	/** Group property key for secondary structure annotation */
+	public static final String SEC_STRUC = "secstruc";
 
 	/** 
 	 * Get number of atoms.
@@ -180,7 +182,7 @@ public interface Group {
 	 * Properties of this amino acid. Currently available properties are:
 	 * phi
 	 * psi
-	 *
+	 * secstruc
 	 *
 	 * @param properties  a Map object specifying the properties value
 	 * @see #getProperties

@@ -243,6 +243,7 @@ public class QuatSymmetryParameters {
 		this.verbose = verbose;
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append("Minimum protein sequence length   : ");

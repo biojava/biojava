@@ -69,7 +69,7 @@ public class MultipleAlignmentGUI extends JFrame {
 	private MultipleStructureAligner multiple;
 	private StructureAlignment pairwise;
 	
-	private SelectMultiplePanel  tab;
+	private SelectMultiplePanel tab;
 	private JTabbedPane tabPane;
 
 	private Thread thread;

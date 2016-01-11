@@ -160,6 +160,7 @@ public class QuatSymmetryScores {
 	public void setSymDeviation(double symDeviation) {
 		this.symDeviation = symDeviation;
 	}
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("minimum RMSD: ");

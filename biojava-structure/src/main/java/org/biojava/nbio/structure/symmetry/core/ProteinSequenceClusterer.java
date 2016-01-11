@@ -25,6 +25,9 @@ import org.biojava.nbio.structure.Structure;
 
 import java.util.*;
 
+/**
+ * Represents a set of non-identical protein sequences.
+ */
 public class ProteinSequenceClusterer {
 	private Structure structure = null;
 	private Structure structure2 = null;
@@ -69,6 +72,7 @@ public class ProteinSequenceClusterer {
 
 	public static void sortSequenceClustersBySize(List<SequenceAlignmentCluster> clusters) {
 		Collections.sort(clusters, new Comparator<SequenceAlignmentCluster>() {
+			@Override
 			public int compare(SequenceAlignmentCluster c1, SequenceAlignmentCluster c2) {
 				int sign = Math.round(Math.signum(c2.getSequenceCount() - c1.getSequenceCount()));
 				if (sign != 0) {
@@ -86,7 +90,9 @@ public class ProteinSequenceClusterer {
 			modified = false;
 		}
 	}
-	
+	/**
+	 * Populate all fields. If two structres are give, concatenate their chains.
+	 */
 	private void extractProteinChains() {
 		ProteinChainExtractor extractor = new ProteinChainExtractor(structure,  parameters);
 		caUnaligned = extractor.getCalphaTraces();
@@ -104,6 +110,10 @@ public class ProteinSequenceClusterer {
 		}
 	}
 	
+	/**
+	 * Cluster chains based on their sequence. Initializes seqClusters to the set
+	 * of non-identical sequences.
+	 */
 	private void clusterChains() {
 		boolean[] processed = new boolean[caUnaligned.size()];
 		Arrays.fill(processed, false);
@@ -123,13 +133,14 @@ public class ProteinSequenceClusterer {
             	if (processed[j]) {
             		continue;
             	}
+            	// Mark any future identical sequences as processed
             	for (SequenceAlignmentCluster c: seqClusters) {
             			if (c.identityMatch(caUnaligned.get(j), chainIds.get(j), modelNumbers.get(j), 0, sequences.get(j))) {
             				processed[j] = true;
             				//System.out.println("found identity match: " + i + " - " + j);
             				break;
             			}
-            	} 
+            	}
             }
 		}
 		sortSequenceClustersBySize(seqClusters);

@@ -145,7 +145,7 @@ public final class SuperPosition {
         for (int i = 0; i < x.length; i++) {
             sum += x[i].distanceSquared(y[i]);
         }
-        return (double)Math.sqrt(sum/x.length);
+        return Math.sqrt(sum/x.length);
     }
 
     public static double rmsdMin(Point3d[] x, Point3d[] y) {
@@ -157,7 +157,7 @@ public final class SuperPosition {
             }
             sum += minDist;
         }
-        return (double)Math.sqrt(sum/x.length);
+        return Math.sqrt(sum/x.length);
     }
 
     /**

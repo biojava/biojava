@@ -24,6 +24,8 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
+import org.biojava.nbio.structure.secstruc.SecStrucInfo;
+import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
@@ -31,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -203,31 +206,7 @@ public class PDBFileParser  {
 					"EXPRESSION_SYSTEM_VECTOR:", "EXPRESSION_SYSTEM_PLASMID:",
 					"EXPRESSION_SYSTEM_GENE:", "OTHER_DETAILS:"));
 
-
-
-	/** Secondary strucuture assigned by the PDB author/
-	 *
-	 */
-	public static final String PDB_AUTHOR_ASSIGNMENT = "PDB_AUTHOR_ASSIGNMENT";
-
-	/** Helix secondary structure assignment.
-	 *
-	 */
-	public static final String HELIX  = "HELIX";
-
-	/** Strand secondary structure assignment.
-	 *
-	 */
-	public static final String STRAND = "STRAND";
-
-	/** Turn secondary structure assignment.
-	 *
-	 */
-	public static final String TURN   = "TURN";
-
 	private int atomCount;
-
-
 
 	private int my_ATOM_CA_THRESHOLD ;
 
@@ -2992,7 +2971,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				Chain atomRes;
 			
 				atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomList);
-				atomRes.setSeqResGroups(seqRes.getAtomGroups());
+
+				if ( atomRes != null)
+					atomRes.setSeqResGroups(seqRes.getAtomGroups());
+				else
+					logger.warn("Could not find atom records for chain " + seqRes.getChainID());
+
 				
 			}
 		}
@@ -3000,13 +2984,30 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	private void setSecStruc(){
 
-		setSecElement(helixList,  PDB_AUTHOR_ASSIGNMENT, HELIX  );
-		setSecElement(strandList, PDB_AUTHOR_ASSIGNMENT, STRAND );
-		setSecElement(turnList,   PDB_AUTHOR_ASSIGNMENT, TURN   );
-
+		setSecElement(helixList, SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, 
+				SecStrucType.helix4);
+		setSecElement(strandList, SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, 
+				SecStrucType.extended);
+		setSecElement(turnList, SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, 
+				SecStrucType.turn);
+		
+		//Now insert random coil to the Groups that did not have SS information
+		GroupIterator gi = new GroupIterator(structure);
+		while (gi.hasNext()){
+			Group g = gi.next();
+			if (g.hasAminoAtoms()){
+				if (g.getProperty(Group.SEC_STRUC) == null){
+					SecStrucInfo ss = new SecStrucInfo(g, 
+							SecStrucInfo.PDB_AUTHOR_ASSIGNMENT, 
+							SecStrucType.coil);
+					g.setProperty(Group.SEC_STRUC, ss);
+				}
+			}
+		}
+		
 	}
 
-	private void setSecElement(List<Map<String,String>> secList, String assignment, String type){
+	private void setSecElement(List<Map<String,String>> secList, String assignment, SecStrucType type){
 
 
 		Iterator<Map<String,String>> iter = secList.iterator();
@@ -3029,8 +3030,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				if (endICode.equals(" "))
 					endICode = "";
 
-
-
 				GroupIterator gi = new GroupIterator(structure);
 				boolean inRange = false;
 				while (gi.hasNext()){
@@ -3045,12 +3044,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						}
 					}
 					if ( inRange){
-						if ( g instanceof AminoAcid) {
-							AminoAcid aa = (AminoAcid)g;
-
-							Map<String,String> assignmentMap = new HashMap<String,String>();
-							assignmentMap.put(assignment,type);
-							aa.setSecStruc(assignmentMap);
+						if (g.hasAminoAtoms()) {
+							SecStrucInfo ss = new SecStrucInfo(g, assignment, type);
+							g.setProperty(Group.SEC_STRUC, ss);
 						}
 
 					}
@@ -3061,9 +3057,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 							continue nextElement;
 						}
 					}
-
 				}
-
 			}
 	}
 
@@ -3092,7 +3086,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (StructureException e){
 					// usually if this happens something is wrong with the PDB header
 					// e.g. 2brd - there is no Chain A, although it is specified in the header
-					logger.error("Unexpected exception",e);
+					// Some bona-fide cases exist, e.g. 2ja5, chain N is described in SEQRES
+					// but the authors didn't observe in the density so it's completely missing
+					// from the ATOM lines
+					logger.warn("Could not find chain {} to link to compound (entity) {}. The chain will be missing in the compound.", chainId, comp.getMolId());
 				}
 			}
 			comp.setChains(chains);
@@ -3123,7 +3120,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					Chain c = s.getChainByPDB(chainId);
 					c.setCompound(comp);
 				} catch (StructureException e){
-					logger.error("Unexpected exception",e);
+					logger.warn("Chain {} was not found, can't assign a compound (entity) to it.",chainId);
 				}
 			}
 		}

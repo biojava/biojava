@@ -25,6 +25,9 @@ import junit.framework.TestCase;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
 /** test for https://redmine.open-bio.org/issues/3282
  * 
@@ -41,7 +44,16 @@ public class test1DARSeqAlign extends TestCase {
 		params.setLoadChemCompInfo(true);
 		
 		cache.setFileParsingParams(params);
-		
+
+		boolean usingReducedChemCompProvider = false;
+
+		ChemCompProvider ccp =ChemCompGroupFactory.getChemCompProvider();
+		if (ccp.getClass().getName().contains("ReducedChemCompProvider") ) {
+			usingReducedChemCompProvider = true;
+
+			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+		}
+
 		
 		try {
 			Structure struc = cache.getStructure("1DAR");
@@ -75,7 +87,8 @@ public class test1DARSeqAlign extends TestCase {
 		}
 		
 		
-		
+		if (usingReducedChemCompProvider)
+			ChemCompGroupFactory.setChemCompProvider(ccp);
 		
 		cache.setFileParsingParams(orig);
 	}

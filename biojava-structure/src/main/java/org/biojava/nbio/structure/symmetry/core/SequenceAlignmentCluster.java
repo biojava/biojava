@@ -33,6 +33,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * Represents a cluster of equivalent sequences
+ *
+ */
 public class SequenceAlignmentCluster implements Cloneable {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SequenceAlignmentCluster.class);
@@ -82,6 +86,9 @@ public class SequenceAlignmentCluster implements Cloneable {
 		modified = true;
 	}
 
+	/**
+	 * @return the number of sequences which have been added to this cluster
+	 */
 	public int getSequenceCount() {
 		return uniqueSequenceList.size();
 	}
@@ -124,6 +131,20 @@ public class SequenceAlignmentCluster implements Cloneable {
 		return alignedCAlphaAtoms;
 	}
 	
+	/**
+	 * Match a sequence to this cluster at 100% identity.
+	 * 
+	 * If the given sequence matches the cluster seed (100%), then performs an
+	 * alignment to the seed and adds it to the {@link #getUniqueSequenceList()
+	 * unique sequence list}.
+	 *  
+	 * @param cAlphaAtoms
+	 * @param chainId
+	 * @param modelNumber
+	 * @param structureId
+	 * @param sequence
+	 * @return
+	 */
 	public boolean identityMatch(Atom[] cAlphaAtoms, String chainId, int modelNumber, int structureId, String sequence) {
 		UniqueSequenceList u = uniqueSequenceList.get(0);
 
@@ -173,7 +194,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 			return null;
 		}
 		
-		AFPChain afp = alignPairByStructure(referenceAtoms1, referenceAtoms2);
+		AFPChain afp = alignPairByStructure(referenceAtoms1, referenceAtoms2,parameters.isVerbose());
 		if (afp == null) {
 			return null;
 		}
@@ -201,6 +222,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		return alignment;
 	}
 	
+	@Override
 	public Object clone() {
 	    SequenceAlignmentCluster copy = null;
 		try {
@@ -216,6 +238,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		return copy;
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		for (UniqueSequenceList u: uniqueSequenceList) {
@@ -233,19 +256,19 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 	}
 
-	private AFPChain alignPairBySequence(Atom[] ca1Seq, Atom[] ca2Seq) throws StructureException { 
+	private static AFPChain alignPairBySequence(Atom[] ca1Seq, Atom[] ca2Seq) throws StructureException { 
 		SmithWaterman3Daligner aligner = new SmithWaterman3Daligner();
 		return aligner.align(ca1Seq, ca2Seq);
 	}
 	
-	private AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq) {
+	private static AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq, boolean verbose) {
        CeParameters params = new CeParameters();
 
         AFPChain afp = null;
 		try {
 			StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			afp = algorithm.align(ca1Seq,ca2Seq,params);
-			if (parameters.isVerbose()) {
+			if (verbose) {
 				System.out.println(afp.toFatcat(ca1Seq, ca2Seq));
 			}
 		} catch (StructureException e) {
@@ -255,7 +278,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 	}
 	
 	
-	private int alignIdenticalSequence(Atom[] ca1Seq, Atom[] ca2Seq, List<Integer> align1, List<Integer> align2) throws StructureException {
+	private static int alignIdenticalSequence(Atom[] ca1Seq, Atom[] ca2Seq, List<Integer> align1, List<Integer> align2) throws StructureException {
 		AFPChain afp = alignPairBySequence(ca1Seq, ca2Seq);
 		int[][][] align = afp.getOptAln();
 		if (align == null) {

@@ -25,10 +25,10 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.alignment.SimpleSubstitutionMatrix;
-import org.biojava.nbio.alignment.template.AlignedSequence;
-import org.biojava.nbio.alignment.template.SequencePair;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.matrices.SimpleSubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -84,7 +84,7 @@ public class StructureSequenceMatcher {
 			if (currentChain == null || !currentChain.getChainID().equals(chain.getChainID())) {
 				structure.addChain(chain);
 				chain.setCompound(group.getChain().getCompound());
-				chain.setParent(structure);
+				chain.setStructure(structure);
 				chain.setSwissprotId(group.getChain().getSwissprotId());
 				chain.setInternalChainID(group.getChain().getInternalChainID());
 				chain.setId(group.getChain().getId());
@@ -180,7 +180,7 @@ public class StructureSequenceMatcher {
 		matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>(
 				AminoAcidCompoundSet.getAminoAcidCompoundSet(),
 				new InputStreamReader(
-						SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum100.txt")),
+						SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum100.txt")),
 		"blosum100");
 		SequencePair<ProteinSequence, AminoAcidCompound> pair = 
 			Alignments.getPairwiseAlignment(seq, structSeq,
@@ -213,7 +213,7 @@ public class StructureSequenceMatcher {
 				logger.warn("Chain {} residue {} in the Structure {} has no corresponding amino acid in the sequence.",
 						g.getChainId(),
 						g.getResidueNumber().toString(),
-						g.getChain().getParent().getPDBCode() );
+						g.getChain().getStructure().getPDBCode() );
 				continue;
 			}
 

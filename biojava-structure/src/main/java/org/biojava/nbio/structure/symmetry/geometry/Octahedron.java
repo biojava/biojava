@@ -36,6 +36,7 @@ public class Octahedron implements Polyhedron {
 	 * through all vertices
 	 * @return the cirumscribedRadius
 	 */
+	@Override
 	public double getCirumscribedRadius() {
 		return cirumscribedRadius;
 	}
@@ -96,6 +97,7 @@ public class Octahedron implements Polyhedron {
 	 * @param center
 	 * @return
 	 */ 
+	@Override
 	public Point3d[] getVertices() {
 		Point3d[] octahedron = new Point3d[6];
 	    octahedron[0] = new Point3d(-cirumscribedRadius, 0, 0);
@@ -108,6 +110,7 @@ public class Octahedron implements Polyhedron {
 		return octahedron;
 	};
 	
+	@Override
 	public List<int[]> getLineLoops() {
 		return Arrays.asList(lineLoop1);
 	}
@@ -124,10 +127,12 @@ public class Octahedron implements Polyhedron {
 		return new Point3d(cirumscribedRadius*scale*s, cirumscribedRadius*scale*s, 0);
 	}
 	
+	@Override
 	public int getViewCount() {
 		return 3;
 	}
 	
+	@Override
 	public String getViewName(int index) {
 		String name;
 		switch (index) {
@@ -142,6 +147,7 @@ public class Octahedron implements Polyhedron {
         return name;
 	}
 	
+	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {

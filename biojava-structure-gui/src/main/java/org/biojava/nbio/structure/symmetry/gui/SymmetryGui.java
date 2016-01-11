@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.symmetry.gui;
 
 import org.biojava.nbio.structure.Structure;
@@ -34,7 +54,7 @@ public class SymmetryGui extends JFrame {
 
 	private final static long serialVersionUID = 0l;
 
-	private CeSymm ceSymm;
+	private CeSymm ceSymm = new CeSymm();
 	private JButton abortB;
 
 	private SelectPDBPanel  tab1 ;
@@ -120,23 +140,10 @@ public class SymmetryGui extends JFrame {
 	private Box setupAlgorithm() {
 
 		String[] algorithms = {"JCE-symmetry"};
-		updateAlgorithm();
-
 		JLabel algoLabel = new JLabel("Symmetry algorithm: ");
 
 		JComboBox algorithmList = new JComboBox(algorithms);
 		algorithmList.setSelectedIndex(0);
-
-		Action actionAlgorithm = new AbstractAction("Algorithm") {
-			public static final long serialVersionUID = 0l;
-			// This method is called when the button is pressed
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				updateAlgorithm();
-			}
-		};
-
-		algorithmList.addActionListener(actionAlgorithm);
 
 		Action paramAction = new AbstractAction("Parameters") {
 			public static final long serialVersionUID = 0l;
@@ -288,7 +295,6 @@ public class SymmetryGui extends JFrame {
 			JOptionPane.showMessageDialog(null,
 					"Could not align structures. Exception: " + e.getMessage());
 		}
-		updateAlgorithm();
 	}
 
 	public void notifyCalcFinished(){
@@ -308,11 +314,6 @@ public class SymmetryGui extends JFrame {
 
 	public CeSymm getSymmetryAlgorithm() {
 		return ceSymm;
-	}
-
-	private void updateAlgorithm() {
-		//There is only one algorithm for symmetry
-		ceSymm = new CeSymm();
 	}
 
 }

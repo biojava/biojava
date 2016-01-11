@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.ArrayList;
@@ -35,11 +55,9 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  */
 public class OpenRefiner implements Refiner {
 
-	private int order;
-
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms) 
-			throws RefinerFailedException, StructureException {
+	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms,
+			int order) throws RefinerFailedException, StructureException {
 
 		//The two vertices of the graph mean (previous, next)
 		List<List<Integer>> graph = 
@@ -79,19 +97,22 @@ public class OpenRefiner implements Refiner {
 			}
 		}
 
-		//Calculate the most common group size
-		List<Integer> sizes = new ArrayList<Integer>(atoms.length);
-		for (int p=0; p<atoms.length; p++) sizes.add(0);
-
-		for (int i=0; i<groups.size(); i++){
-			int gorder = groups.get(i).size();
-			sizes.set(gorder, sizes.get(gorder)+1);
-		}
-		int maxNr = 0; //the total number of residues aligned
-		for (int s=2; s<sizes.size(); s++){
-			if (sizes.get(s)*s > maxNr) {
-				order = s;
-				maxNr = sizes.get(s)*s;
+		//Determine the order
+		if (order == 0) {
+			//Calculate the most common group size
+			List<Integer> sizes = new ArrayList<Integer>(atoms.length);
+			for (int p=0; p<atoms.length; p++) sizes.add(0);
+	
+			for (int i=0; i<groups.size(); i++){
+				int gorder = groups.get(i).size();
+				sizes.set(gorder, sizes.get(gorder)+1);
+			}
+			int maxNr = 0; //the total number of residues aligned
+			for (int s=2; s<sizes.size(); s++){
+				if (sizes.get(s)*s > maxNr) {
+					order = s;
+					maxNr = sizes.get(s)*s;
+				}
 			}
 		}
 
@@ -133,6 +154,10 @@ public class OpenRefiner implements Refiner {
 				}
 				if (group.size()==order) subunits.add(group);
 			}
+		}
+		
+		if (subunits.size() == 0){
+			throw new RefinerFailedException("Empty alignment");
 		}
 
 		int[][][] optAln = new int[order][2][subunits.size()];

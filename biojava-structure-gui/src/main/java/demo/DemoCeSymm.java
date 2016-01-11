@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package demo;
 
 import java.io.IOException;
@@ -51,7 +71,7 @@ public class DemoCeSymm {
 		 */
 
 		//Set the name of the protein structure to analyze
-		String name = "1vym";
+		String name = "1u6d";
 
 		//Download the atoms
 		AtomCache cache = new AtomCache();
@@ -61,11 +81,12 @@ public class DemoCeSymm {
 		CeSymm ceSymm = new CeSymm();
 
 		//Choose some parameters
-		CESymmParameters params = (CESymmParameters) ceSymm.getParameters();
+		CESymmParameters params = ceSymm.getParameters();
 		params.setRefineMethod(RefineMethod.SINGLE);
-		params.setSymmetryType(SymmetryType.AUTO);
+		params.setSymmType(SymmetryType.AUTO);
 		params.setOptimization(true);
-		params.setMultipleAxes(true);
+		params.setSymmLevels(0);
+		params.setSSEThreshold(2);
 
 		//Run the alignment
 		MultipleAlignment symmetry = ceSymm.analyze(atoms, params);

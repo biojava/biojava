@@ -24,8 +24,8 @@
 
 package org.biojava.nbio.structure.align.ce;
 
-import org.biojava.nbio.alignment.aaindex.ScaledSubstitutionMatrix;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.matrices.ScaledSubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Group;
@@ -399,7 +399,7 @@ public class CECalculator {
 						// is this abs or floor? check!
 						d+=Math.abs(dist1[ise1+is1][ise1+is2]-dist2[ise2+is1][ise2+is2]);							
 					}					
-				mat[ise1][ise2]=d/winSizeComb1;					
+				mat[ise1][ise2]=d/winSizeComb1;
 
 				//System.out.println("mat ["+ise1+"]["+ise2+"]="+mat[ise1][ise2]);
 			}

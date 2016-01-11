@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.ArrayList;
@@ -25,22 +45,13 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
  * 
  */
 public class SingleRefiner implements Refiner {
-
-	private OrderDetector orderDetector;
-	
-	public SingleRefiner(OrderDetector orderDetector) {
-		this.orderDetector = orderDetector;
-	}
 	
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms)
-			throws RefinerFailedException, StructureException {
+	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms, 
+			int order) throws RefinerFailedException, StructureException {
 		
-		AFPChain afpChain = afpAlignments.get(0);
-		int order = orderDetector.calculateOrder(afpChain, atoms);
-		
-		if (order == 1)	throw new RefinerFailedException(
-				"Symmetry not found in the structure: order = 1.");
+		if (order < 2)	throw new RefinerFailedException(
+				"Symmetry not found in the structure: order < 2.");
 		
 		return refineSymmetry(afpAlignments.get(0), atoms, atoms, order);
 	}

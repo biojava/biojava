@@ -23,11 +23,12 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.alignment.template.AlignedSequence.Step;
+import org.biojava.nbio.core.alignment.SimpleProfilePair;
+import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
 import org.biojava.nbio.alignment.template.GapPenalty;
-import org.biojava.nbio.alignment.template.Profile;
-import org.biojava.nbio.alignment.template.ProfilePair;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.ProfilePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -35,6 +36,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import org.biojava.nbio.alignment.NeedlemanWunsch;
+import org.biojava.nbio.alignment.SimpleGapPenalty;
+import org.biojava.nbio.core.alignment.SimpleProfilePair;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 
 import static org.junit.Assert.assertEquals;
 

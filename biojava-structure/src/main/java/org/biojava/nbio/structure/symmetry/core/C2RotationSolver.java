@@ -52,7 +52,8 @@ public class C2RotationSolver implements QuatSymmetrySolver {
         this.parameters = parameters;
     }
    
-    public RotationGroup getSymmetryOperations() {
+    @Override
+	public RotationGroup getSymmetryOperations() {
         if (rotations.getOrder() == 0) {
             solve();
         }

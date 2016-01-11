@@ -61,6 +61,7 @@ public class Prism implements Polyhedron {
 	 * through all vertices
 	 * @return the cirumscribedRadius
 	 */
+	@Override
 	public double getCirumscribedRadius() {
 		return circumscribedRadius;
 	}
@@ -97,6 +98,7 @@ public class Prism implements Polyhedron {
 	 * Returns the vertices of an n-fold polygon of given radius and center	
 	 * @return
 	 */ 
+	@Override
 	public Point3d[] getVertices() {
 		Point3d[] polygon = new Point3d[2*n];
 		Matrix3d m = new Matrix3d();
@@ -115,6 +117,7 @@ public class Prism implements Polyhedron {
 		return polygon;
 	};
 	
+	@Override
 	public List<int[]> getLineLoops() {
 		List<int[]> list = new ArrayList<int[]>();
 		int[] l1 = new int[2*n+2];
@@ -154,10 +157,12 @@ public class Prism implements Polyhedron {
 		return polygon;
 	}
 	
+	@Override
 	public int getViewCount() {
 		return 4;
 	}
 	
+	@Override
 	public String getViewName(int index) {
 		String name;
 		switch (index) {
@@ -174,6 +179,7 @@ public class Prism implements Polyhedron {
         return name;
 	}
 	
+	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {

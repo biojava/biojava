@@ -30,7 +30,12 @@
 			<artifactId>vecmath</artifactId>
 			<version>1.3.1</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>org.jgrapht</groupId>
+  			<artifactId>jgrapht-core</artifactId>
+  			<version>0.9.1</version>
+		</dependency>
 
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
 		<dependency>

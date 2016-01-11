@@ -41,6 +41,7 @@ public class Icosahedron implements Polyhedron {
 	 * through all vertices
 	 * @return the cirumscribedRadius
 	 */
+	@Override
 	public double getCirumscribedRadius() {
 		return circumscribedRadius;
 	}
@@ -130,10 +131,12 @@ public class Icosahedron implements Polyhedron {
 		return Arrays.asList(lineLoop1, lineLoop2, lineLoop3, lineLoop4, lineLoop5, lineLoop6);
 	}
 	
+	@Override
 	public int getViewCount() {
 		return 3;
 	}
 	
+	@Override
 	public String getViewName(int index) {
 		String name;
 		switch (index) {
@@ -148,6 +151,7 @@ public class Icosahedron implements Polyhedron {
         return name;
 	}
 	
+	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {

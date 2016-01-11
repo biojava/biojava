@@ -23,10 +23,11 @@
 
 package org.biojava.nbio.alignment;
 
+import org.biojava.nbio.core.alignment.SimpleProfile;
 import org.biojava.nbio.alignment.template.GuideTreeNode;
 import org.biojava.nbio.alignment.template.PairwiseSequenceScorer;
-import org.biojava.nbio.alignment.template.Profile;
-import org.biojava.nbio.alignment.template.ProfilePair;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.ProfilePair;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;

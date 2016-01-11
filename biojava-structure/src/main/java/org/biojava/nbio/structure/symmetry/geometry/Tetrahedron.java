@@ -38,6 +38,7 @@ public class Tetrahedron implements Polyhedron {
 	 * through all vertices
 	 * @return the cirumscribedRadius
 	 */
+	@Override
 	public double getCirumscribedRadius() {
 		return circumscribedRadius;
 	}
@@ -98,6 +99,7 @@ public class Tetrahedron implements Polyhedron {
 	 * @param center
 	 * @return
 	 */ 
+	@Override
 	public  Point3d[] getVertices() {
 		double x = getSideLengthFromCircumscribedRadius(circumscribedRadius)/2;
 		double z = x/Math.sqrt(2);
@@ -118,14 +120,17 @@ public class Tetrahedron implements Polyhedron {
 		return tetrahedron;
 	};
 	
+	@Override
 	public List<int[]> getLineLoops() {
 		return Arrays.asList(lineLoop1, lineLoop2);
 	}
 	
+	@Override
 	public int getViewCount() {
 		return 3;
 	}
 	
+	@Override
 	public String getViewName(int index) {
 		String name;
 		switch (index) {
@@ -140,6 +145,7 @@ public class Tetrahedron implements Polyhedron {
         return name;
 	}
 	
+	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {

@@ -73,6 +73,8 @@ public class ChainImpl implements Chain, Serializable {
 	private Map<String, Integer> pdbResnumMap;
 	private String internalChainID; // the chain identifier used in mmCIF files
 
+
+	private List<SeqMisMatch> seqMisMatches = null;
 	/**
 	 *  Constructs a ChainImpl object.
 	 */
@@ -108,6 +110,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
+	@Deprecated
 	public void setParent(Structure parent) {
 		setStructure(parent);
 	}
@@ -137,6 +140,7 @@ public class ChainImpl implements Chain, Serializable {
 	 * @deprecated  use getStructure instead.
 	 */
 	@Override
+	@Deprecated
 	public Structure getParent() {
 
 
@@ -715,6 +719,16 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public String toMMCIF() {
 		return FileConvert.toMMCIF(this, true);
+	}
+
+	@Override
+	public void setSeqMisMatches(List<SeqMisMatch> seqMisMatches) {
+		this.seqMisMatches = seqMisMatches;
+	}
+
+	@Override
+	public List<SeqMisMatch> getSeqMisMatches() {
+		return seqMisMatches;
 	}
 }
 

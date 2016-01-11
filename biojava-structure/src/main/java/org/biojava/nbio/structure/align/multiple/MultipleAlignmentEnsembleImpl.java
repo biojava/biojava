@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.align.multiple;
 
 import java.io.IOException;
@@ -137,7 +157,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		calculationTime = afp.getCalculationTime();
 
 		MultipleAlignment msa = new MultipleAlignmentImpl(this);
-		setMultipleAlignments(Arrays.asList((MultipleAlignment) msa));
+		setMultipleAlignments(Arrays.asList(msa));
 
 		//Convert the rotation and translation to a Matrix4D and set it
 		Matrix4d ident = new Matrix4d();
@@ -149,7 +169,14 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		if (flexible){
 			for (int bs=0; bs<afp.getBlockNum(); bs++){
 				BlockSet blockSet = new BlockSetImpl(msa);
-				Matrix4d blockTr = Calc.getTransformation(rot[bs], shift[bs]);
+				Matrix4d blockTr = null;
+				try {
+					blockTr = Calc.getTransformation(rot[bs], shift[bs]);
+				} catch (IndexOutOfBoundsException e){
+					blockTr = ident;
+				} catch (NullPointerException e){
+					blockTr = ident;
+				}
 				blockSet.setTransformations(Arrays.asList(ident, blockTr));
 				Block block = new BlockImpl(blockSet);
 				block.setAlignRes(new ArrayList<List<Integer>>());
@@ -171,7 +198,14 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		} //Create a Block for every block in AFPChain if not flexible
 		else {
 			BlockSet blockSet = new BlockSetImpl(msa);
-			Matrix4d blockTr = Calc.getTransformation(rot[0], shift[0]);
+			Matrix4d blockTr = null;
+			try {
+				blockTr = Calc.getTransformation(rot[0], shift[0]);
+			} catch (IndexOutOfBoundsException e){
+				blockTr = ident;
+			} catch (NullPointerException e){
+				blockTr = ident;
+			}
 			blockSet.setTransformations(Arrays.asList(ident, blockTr));
 			for (int bs=0; bs<afp.getBlockNum(); bs++){
 				Block block = new BlockImpl(blockSet);

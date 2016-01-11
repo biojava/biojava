@@ -192,6 +192,7 @@ public class RotationGroup {
 		return complete;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Rotations: " + rotations.size() + "\n");
@@ -307,6 +308,10 @@ public class RotationGroup {
 	public int getTwoFoldsPerpendicular(){
 		return twoFoldsPerpendicular;
 	}
+	
+	public int getPrincipalAxisIndex(){
+		return principalAxisIndex;
+	}
 
 	private void calcPointGroup() {
 		complete = false;
@@ -352,6 +357,7 @@ public class RotationGroup {
 
 	public void sortByFoldDecending() {
 		Collections.sort(rotations, new Comparator<Rotation>() {
+			@Override
 			public int compare(Rotation o1, Rotation o2) {
 				int delta = o1.getDirection() - o2.getDirection();
 				if (delta != 0) {

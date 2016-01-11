@@ -1,7 +1,28 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.align.multiple.mc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 
@@ -127,14 +148,14 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	@Override
 	public void reset() {
 		
-		randomSeed = 0;
+		randomSeed = new Random().nextInt(10000);
 		minBlockLen = 10;
 		minAlignedStructures = 0;
 		gapOpen = 20.0;
 		gapExtension = 15.0;
 		distanceCutoff = 7.0;
 		convergenceSteps = 0;
-		nrThreads = 4;
+		nrThreads = Runtime.getRuntime().availableProcessors();
 	}
 
 	public int getRandomSeed() {

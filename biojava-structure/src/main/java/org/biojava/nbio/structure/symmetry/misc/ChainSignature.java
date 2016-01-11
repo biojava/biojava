@@ -64,6 +64,7 @@ public class ChainSignature implements Comparable<ChainSignature> {
 		return chainCount == other.chainCount && representative.equals(other.representative);
 	}
 
+	@Override
 	public int compareTo(ChainSignature other) {		
 		if (other.chainCount < this.chainCount) {
 			return -1;

@@ -155,7 +155,7 @@ public class StructureImpl implements Structure, Serializable {
 				Chain cloned_chain  = (Chain) getChain(i,j).clone();
 
 				// setting the parent: can only be done from the parent
-				cloned_chain.setParent(n);
+				cloned_chain.setStructure(n);
 
 				cloned_model.add(cloned_chain);
 				
@@ -249,7 +249,7 @@ public class StructureImpl implements Structure, Serializable {
 				return c;
 			}
 		}
-		throw new StructureException("could not find chain \"" + chainId + "\" for PDB id " + pdb_id);
+		throw new StructureException("Could not find chain \"" + chainId + "\" for PDB id " + pdb_id);
 	}
 
 
@@ -302,7 +302,7 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public void addChain(Chain chain, int modelnr) {
 		// if model has not been initialized, init it!
-		chain.setParent(this);
+		chain.setStructure(this);
 		if (models.isEmpty()) {
 			List<Chain> model = new ArrayList<Chain>() ;
 			model.add(chain);
@@ -341,7 +341,7 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public void addModel(List<Chain> model){
 		for (Chain c: model){
-			c.setParent(this);
+			c.setStructure(this);
 		}
 		models.add(model);
 	}
@@ -361,7 +361,7 @@ public class StructureImpl implements Structure, Serializable {
 			throw new IllegalArgumentException("trying to set model to null!");
 
 		for (Chain c: model)
-			c.setParent(this);
+			c.setStructure(this);
 
 		//System.out.println("model size:" + models.size());
 
@@ -556,7 +556,7 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public void setChains(int modelnr, List<Chain> chains){
 		for (Chain c: chains){
-			c.setParent(this);
+			c.setStructure(this);
 		}
 		models.remove(modelnr);
 		models.add(modelnr, chains);
