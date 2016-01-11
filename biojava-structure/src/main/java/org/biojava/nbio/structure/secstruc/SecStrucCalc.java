@@ -311,8 +311,12 @@ public class SecStrucCalc {
 				
 		BetaBridge bridge = new BetaBridge(i,j,btype);
 		
-		getSecStrucState(i).addBridge(bridge);
-		getSecStrucState(j).addBridge(bridge);
+		boolean b1 = getSecStrucState(i).addBridge(bridge);
+		boolean b2 = getSecStrucState(j).addBridge(bridge);
+		
+		if (!b1 && !b2)
+			logger.warn("Ignoring Bridge between residues" + i + " and " + j
+					+ ". DSSP assignment might differ.");
 
 		bridges.add(bridge);
 	}

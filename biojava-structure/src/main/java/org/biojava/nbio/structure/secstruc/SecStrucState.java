@@ -190,22 +190,28 @@ public class SecStrucState extends SecStrucInfo {
 
 	/**
 	 * Adds a Bridge to the residue. Each residue can only store two bridges. If
-	 * the residue contains already two Bridges, the Bridge will not be added.
+	 * the residue contains already two Bridges, the Bridge will not be added
+	 * and the method returns false.
 	 * 
 	 * @param bridge
+	 * @return false if the Bridge was not added, true otherwise
 	 */
-	public void addBridge(BetaBridge bridge) {
-		if (bridge1 == null)
+	public boolean addBridge(BetaBridge bridge) {
+		if (bridge1 == null) {
 			bridge1 = bridge;
-		else if (bridge1.equals(bridge))
-			return;
-		else if (bridge2 == null)
+			return true;
+		} else if (bridge1.equals(bridge)) {
+			return true;
+		} else if (bridge2 == null) {
 			bridge2 = bridge;
-		else if (bridge2.equals(bridge))
-			return;
-		else
-			logger.warn("Residue forms more than 2 beta Bridges, "
-					+ "DSSP assignment may differ.");
+			return true;
+		} else if (bridge2.equals(bridge)) {
+			return true;
+		} else { //no space left, cannot add the bridge
+			logger.info("Residue forms more than 2 beta Bridges, "
+					+ "DSSP output might differ in Bridges column.");
+			return false;
+		}
 	}
 
 	public void setBridge1(BetaBridge bridge1) {
