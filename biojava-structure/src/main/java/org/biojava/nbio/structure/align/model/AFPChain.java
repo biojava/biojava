@@ -41,16 +41,10 @@ import java.util.Map;
 public class AFPChain implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -4474029015606617947L;
-
 	public static final String newline = System.getProperty("line.separator");
-
-	/** the default algorithm used in the RCSB PDB all vs. all database searches
-	 * 
-	 */
-	public static final String DEFAULT_ALGORITHM_NAME = "jFatCat_rigid";
+	public static final String UNKNOWN_ALGORITHM = "unknown";
 
 	private String algorithmName;
-
 	private String version;
 
 	private String name1;
@@ -157,7 +151,15 @@ public class AFPChain implements Serializable, Cloneable {
 	
 	private String description2;
 
-	public AFPChain(){
+	/**
+	 * Construction of an AFPChain needs the algorithm name, since downstream
+	 * analysis methods (scores, display, etc) behave differently if the
+	 * alignment is flexible (created with FatCat).
+	 * 
+	 * @param algorithmName
+	 */
+	public AFPChain(String algorithmName){
+		this.algorithmName = algorithmName;
 		init();
 	}
 
@@ -475,7 +477,6 @@ public class AFPChain implements Serializable, Cloneable {
 		myResultsEQR = -1;
 		myResultsSimilarity1 = -1;
 		myResultsSimilarity2 = -1;
-		algorithmName = "unknown";
 		version = "1.0";
 		sequentialAlignment = true;
 		distanceMatrix = null;
@@ -1283,6 +1284,13 @@ public class AFPChain implements Serializable, Cloneable {
 		return algorithmName;
 	}
 
+	/**
+	 * Caution has to be made when changing the algorithmName of an AFPChain,
+	 * since downstream analysis methods (scores, display, etc) behave 
+	 * differently if the alignment is flexible (created with FatCat).
+	 * 
+	 * @param algorithmName
+	 */
 	public void setAlgorithmName(String algorithmName) {
 		this.algorithmName = algorithmName;
 	}

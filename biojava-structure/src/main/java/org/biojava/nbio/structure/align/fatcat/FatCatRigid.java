@@ -34,7 +34,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 
 public class FatCatRigid extends FatCat implements StructureAlignment{
 
-	public static String algorithmName = "jFatCat_rigid";
+	public static final String algorithmName = "jFatCat_rigid";
 
 	FatCatParameters params;
 
