@@ -24,26 +24,31 @@
  */
 package org.biojava.nbio.core.sequence.io;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.Qualifier;
-import org.junit.*;
+import org.biojava.nbio.core.sequence.template.AbstractSequence;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedHashMap;
-import org.biojava.nbio.core.sequence.features.FeatureInterface;
-import org.biojava.nbio.core.sequence.template.AbstractSequence;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  *
@@ -122,7 +127,6 @@ public class GenbankReaderTest {
                         new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),
                         new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
                 );
-        @SuppressWarnings("unused")
         LinkedHashMap<String, ProteinSequence> proteinSequences = GenbankProtein.process();
         inStream.close();
 
@@ -134,8 +138,8 @@ public class GenbankReaderTest {
         
         FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> cdsFeature = protein.getFeaturesByType("CDS").get(0);
         String codedBy = cdsFeature.getQualifiers().get("coded_by").get(0).getValue();
-        HashMap<String, ArrayList<Qualifier>> quals = cdsFeature.getQualifiers();
-        ArrayList<Qualifier> dbrefs = quals.get("db_xref");
+        Map<String, List<Qualifier>> quals = cdsFeature.getQualifiers();
+        List<Qualifier> dbrefs = quals.get("db_xref");
 
         Assert.assertNotNull(codedBy);
         Assert.assertTrue(!codedBy.isEmpty());

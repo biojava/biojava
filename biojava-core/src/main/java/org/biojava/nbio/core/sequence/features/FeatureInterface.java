@@ -25,13 +25,12 @@
 
 package org.biojava.nbio.core.sequence.features;
 
+import java.util.List;
+import java.util.Map;
+
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Interface class to handle describing arbitrary features. A feature can be found at multiple locations in a sequence such as
@@ -176,14 +175,14 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
      * @return
      */
 
-    public HashMap<String, ArrayList<Qualifier>> getQualifiers();
+    public Map<String, List<Qualifier>> getQualifiers();
 
     /**
      * Set the qualifiers
      * @param qualifiers
      */
 
-    public void setQualifiers(HashMap<String, ArrayList<Qualifier>> qualifiers);
+    public void setQualifiers(Map<String, List<Qualifier>> qualifiers);
     /**
      * Add a qualifier
      * @param qualifier

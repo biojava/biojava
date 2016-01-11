@@ -34,6 +34,7 @@ import org.biojava.nbio.core.util.StringManipulationHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Formatter;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -121,7 +122,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		formatter.close();
 		
 		//Now the qualifiers...
-		for(ArrayList<Qualifier>  qualifiers : feature.getQualifiers().values()) {
+		for(List<Qualifier>  qualifiers : feature.getQualifiers().values()) {
 			for(Qualifier q : qualifiers){
 				line += _write_feature_qualifier(q.getName(), q.getValue(), q.needsQuotes());
 			}

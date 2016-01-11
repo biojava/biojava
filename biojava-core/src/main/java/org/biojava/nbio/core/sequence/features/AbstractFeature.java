@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A feature is currently any descriptive item that can be associated with a sequence position(s)
@@ -47,7 +48,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     private String description = "";
     private String shortDescription = "";
     private Object userObject = null;
-	private HashMap<String, ArrayList<Qualifier>> Qualifiers = new HashMap<String, ArrayList<Qualifier>>();
+	private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
 
     /**
      * A feature has a type and a source
@@ -271,13 +272,13 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     }
     
 	@Override
-	public HashMap<String, ArrayList<Qualifier>> getQualifiers() {
+	public Map<String, List<Qualifier>> getQualifiers() {
 		// TODO Auto-generated method stub
 		return Qualifiers;
 	}
 
 	@Override
-	public void setQualifiers(HashMap<String, ArrayList<Qualifier>> qualifiers) {
+	public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
 		// TODO Auto-generated method stub
 		Qualifiers = qualifiers;
 		
@@ -287,11 +288,11 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	public void addQualifier(String key, Qualifier qualifier) {
 		// Check for key. Update list of values
         if (Qualifiers.containsKey(key)){
-            ArrayList<Qualifier> vals = Qualifiers.get(key);
+            List<Qualifier> vals = Qualifiers.get(key);
             vals.add(qualifier);
             Qualifiers.put(key, vals);
         } else {
-            ArrayList<Qualifier> vals = new ArrayList<Qualifier>();
+            List<Qualifier> vals = new ArrayList<Qualifier>();
             vals.add(qualifier);
             Qualifiers.put(key, vals);
         }
