@@ -162,6 +162,16 @@ public class AFPChain implements Serializable, Cloneable {
 		this.algorithmName = algorithmName;
 		init();
 	}
+	
+	/**
+	 * Use the constructor with the algorithmName (design condition).
+	 * @see AFPChain#AFPChain(String)
+	 */
+	@Deprecated 
+	public AFPChain(){
+		algorithmName = UNKNOWN_ALGORITHM;
+		init();
+	}
 
 	/**
 	 * Copy constructor
