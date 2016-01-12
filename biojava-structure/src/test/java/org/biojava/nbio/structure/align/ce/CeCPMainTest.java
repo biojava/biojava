@@ -293,7 +293,7 @@ public class CeCPMainTest extends TestCase {
 	 * @return
 	 */
 	private AFPChain makeDummyAFPChain(int[][][] dupAlign, Atom[] ca1,Atom[] ca2) {
-		AFPChain afp = new AFPChain();
+		AFPChain afp = new AFPChain(AFPChain.UNKNOWN_ALGORITHM);
 		afp.setOptAln(dupAlign);
 		afp.setOptLength(dupAlign[0][1].length);
 		afp.setCa1Length(ca1.length);

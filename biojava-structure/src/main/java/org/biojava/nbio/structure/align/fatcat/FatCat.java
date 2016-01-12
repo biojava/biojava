@@ -49,7 +49,7 @@ public class FatCat
 
    FatCatAligner aligner;
 
-
+   public static final String algorithmName = "jFatCat";
 
 
    /** See demo/FatCatDemo.java for an example how to run.

@@ -38,7 +38,7 @@ public class FatCatFlexible  extends FatCat implements StructureAlignment{
 
 
 
-	public static String algorithmName = "jFatCat_flexible";
+	public static final String algorithmName = "jFatCat_flexible";
 
 	FatCatParameters params;
 

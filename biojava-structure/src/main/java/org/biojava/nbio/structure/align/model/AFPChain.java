@@ -16,7 +16,6 @@
  * Created by ap3
  *
  */
-
 package org.biojava.nbio.structure.align.model;
 
 import org.biojava.nbio.structure.Atom;
@@ -31,137 +30,146 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-
-/** a bean to contain the core of an alignment
- * 
+/** 
+ * A bean to contain the core of a structure alignment.
  * The FatCat aligner class is working on the AFPChain class.
  * 
  * @author Andreas Prlic
- * 
+ * @author Aleix Lafita
  *
  */
+public class AFPChain implements Serializable, Cloneable {
 
-public class AFPChain implements Serializable, Cloneable
-{
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4474029015606617947L;
-
 	public static final String newline = System.getProperty("line.separator");
+	public static final String UNKNOWN_ALGORITHM = "unknown";
 
-	/** the default algorithm used in the RCSB PDB all vs. all database searches
-	 * 
-	 */
-	public static final String DEFAULT_ALGORITHM_NAME = "jFatCat_rigid";
+	private String algorithmName;
+	private String version;
 
-	String algorithmName;
-
-	String version;
-
-	String name1;
-	String name2;
-	long ioTime;
-	long calculationTime;
-	long id;
+	private String name1;
+	private String name2;
+	private long ioTime;
+	private long calculationTime;
+	private long id;
+	
 	// results:
-	double alignScore;
-	double alignScoreUpdate;
-	int afpChainTwiNum;
+	private double alignScore;
+	private double alignScoreUpdate;
+	private int afpChainTwiNum;
+	
 	// end of results
-	double tmScore;
+	private double tmScore;
+	
 	// utility
-	int minLen ; // the length of the shorter 2 proteins.
+	private int minLen ; // the length of the shorter 2 proteins.
 
 
-	List<AFP> afpSet;
-	int[][] afpIndex;
-	int[][] afpAftIndex;
-	int[][] afpBefIndex;
+	private List<AFP> afpSet;
+	private int[][] afpIndex;
+	private int[][] afpAftIndex;
+	private int[][] afpBefIndex;
 
-	Matrix disTable1;
-	Matrix disTable2;
+	private Matrix disTable1;
+	private Matrix disTable2;
 
-	int[] twi = null ; //the number of twists making the best score ending at each AFP
+	private int[] twi = null ; //the number of twists making the best score ending at each AFP
 
-	int afpChainLen;
-	int[] afpChainList;
-	double[] afpChainTwiBin;
-	double[] afpChainTwiList;
-	double chainRmsd;
+	private int afpChainLen;
+	private int[] afpChainList;
+	private double[] afpChainTwiBin;
+	private double[] afpChainTwiList;
+	private double chainRmsd;
 
-	int chainLen,misLen,gapLen;
-	int     blockNum;       //the final block number
-	int     blockNumIni;    //block number before block clustering and split
-	int     blockNumClu;    //block number after clustering blocks
-	int     blockNumSpt;    //block number after spliting blocks
-	double[]  blockRmsd;     //the RMSD of each block
-	int[]     block2Afp;     //the index of afp for each block
-	int[]     blockSize;     //the number of AFPs involved in a block
-	double[]  blockScore;    //the score associated with each block
-	int[]     blockGap;      //the gaps in each block
-	int[]     blockResSize;  //the number of residues involved in a block
-	int[][][]     blockResList;//the list of AFP for each block
-	Matrix[] blockRotationMatrix;
-	Atom[]   blockShiftVector;
+	private int chainLen,misLen,gapLen;
+	private int     blockNum;       //the final block number
+	private int     blockNumIni;    //block number before block clustering and split
+	private int     blockNumClu;    //block number after clustering blocks
+	private int     blockNumSpt;    //block number after spliting blocks
+	private double[]  blockRmsd;     //the RMSD of each block
+	private int[]     block2Afp;     //the index of afp for each block
+	private int[]     blockSize;     //the number of AFPs involved in a block
+	private double[]  blockScore;    //the score associated with each block
+	private int[]     blockGap;      //the gaps in each block
+	private int[]     blockResSize;  //the number of residues involved in a block
+	private int[][][]     blockResList;//the list of AFP for each block
+	private Matrix[] blockRotationMatrix;
+	private Atom[]   blockShiftVector;
 
-	int     focusResn;      //the size of the set
-	int[]     focusRes1;     //the residues from protein 1
-	int[]     focusRes2;     //the residues from protein 2
-	int     focusAfpn;      //the AFP number
-	int[]     focusAfpList;  //the AFP list
+	private int     focusResn;      //the size of the set
+	private int[]     focusRes1;     //the residues from protein 1
+	private int[]     focusRes2;     //the residues from protein 2
+	private int     focusAfpn;      //the AFP number
+	private int[]     focusAfpList;  //the AFP list
 
-	boolean shortAlign;
+	private boolean shortAlign;
 
-	String [][][] pdbAln; // only needed temp. during XML serialization, since we don;t have coordinates loaded at that time and can map from PDB res numbers to atom positions.
-	int[][][] optAln;
-	int[] optLen ;
-	double[] optRmsd ;
-	int optLength;
+	private String [][][] pdbAln; // only needed temp. during XML serialization, since we don;t have coordinates loaded at that time and can map from PDB res numbers to atom positions.
+	private int[][][] optAln;
+	private int[] optLen ;
+	private double[] optRmsd ;
+	private int optLength;
 
-	char[] alnsymb;
-	char[] alnseq1;
-	char[] alnseq2;
-	int alnLength;
-	int alnbeg1;
-	int alnbeg2;
+	private char[] alnsymb;
+	private char[] alnseq1;
+	private char[] alnseq2;
+	private int alnLength;
+	private int alnbeg1;
+	private int alnbeg2;
 
-	int totalLenIni;
-	int totalLenOpt = 0;
+	private int totalLenIni;
+	private int totalLenOpt = 0;
 
-	double totalRmsdIni;
-	double totalRmsdOpt;
+	private double totalRmsdIni;
+	private double totalRmsdOpt;
 
-	int ca1Length;
-	int ca2Length;
+	private int ca1Length;
+	private int ca2Length;
 
 	// this one is special. it comes from the FatCatParameters...
 	// default is flexible alignment...
-	int maxTra = 5;
+	private int maxTra = 5;
 
-	Double conn;
-	Double dvar;
+	private Double conn;
+	private Double dvar;
 
-	double probability;
-	double identity;
-	double similarity;
-	double normAlignScore;
+	private double probability;
+	private double identity;
+	private double similarity;
+	private double normAlignScore;
 
-	int myResultsEQR;
-	int myResultsSimilarity1;
-	int myResultsSimilarity2;
+	private int myResultsEQR;
+	private int myResultsSimilarity1;
+	private int myResultsSimilarity2;
 
 	// Mark whether the alignment topology is sequential
 	// false if a circular permutation has occured
-	boolean sequentialAlignment;
+	private boolean sequentialAlignment;
 
 	// background distances
-	Matrix distanceMatrix;
+	private Matrix distanceMatrix;
 	
-	String description2;
+	private String description2;
 
+	/**
+	 * Construction of an AFPChain needs the algorithm name, since downstream
+	 * analysis methods (scores, display, etc) behave differently if the
+	 * alignment is flexible (created with FatCat).
+	 * 
+	 * @param algorithmName
+	 */
+	public AFPChain(String algorithmName){
+		this.algorithmName = algorithmName;
+		init();
+	}
+	
+	/**
+	 * Use the constructor with the algorithmName (design condition).
+	 * @see AFPChain#AFPChain(String)
+	 */
+	@Deprecated 
 	public AFPChain(){
+		algorithmName = UNKNOWN_ALGORITHM;
 		init();
 	}
 
@@ -479,7 +487,6 @@ public class AFPChain implements Serializable, Cloneable
 		myResultsEQR = -1;
 		myResultsSimilarity1 = -1;
 		myResultsSimilarity2 = -1;
-		algorithmName = "unknown";
 		version = "1.0";
 		sequentialAlignment = true;
 		distanceMatrix = null;
@@ -1287,6 +1294,13 @@ public class AFPChain implements Serializable, Cloneable
 		return algorithmName;
 	}
 
+	/**
+	 * Caution has to be made when changing the algorithmName of an AFPChain,
+	 * since downstream analysis methods (scores, display, etc) behave 
+	 * differently if the alignment is flexible (created with FatCat).
+	 * 
+	 * @param algorithmName
+	 */
 	public void setAlgorithmName(String algorithmName) {
 		this.algorithmName = algorithmName;
 	}

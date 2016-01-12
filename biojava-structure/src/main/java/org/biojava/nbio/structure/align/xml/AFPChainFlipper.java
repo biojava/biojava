@@ -42,8 +42,7 @@ public class AFPChainFlipper {
 	 */
 	public static AFPChain flipChain(AFPChain o) throws StructureException{
 
-		AFPChain n = new AFPChain();
-		n.setAlgorithmName(o.getAlgorithmName());
+		AFPChain n = new AFPChain(o.getAlgorithmName());
 		n.setVersion(o.getVersion());
 
 		n.setName2(o.getName1());
