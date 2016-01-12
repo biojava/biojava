@@ -9,7 +9,15 @@
 	<artifactId>biojava-alignment</artifactId>
 	<name>biojava-alignment</name>
 
-	<url>http://maven.apache.org</url>
+	<licenses>
+		<license>
+			<name>GNU LGPL v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<url>http://www.biojava.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
