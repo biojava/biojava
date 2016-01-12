@@ -9,13 +9,6 @@
 	<artifactId>biojava-structure</artifactId>
 	<name>biojava-structure</name>
 	<description>The protein structure modules of BioJava.</description>
-	<licenses>
-		<license>
-			<name>GNU LGPL v2</name>
-			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
 
 	<dependencies>
 
@@ -75,7 +68,7 @@
 		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>
-			<version>1.5</version>
+			<version>1.6</version>
 			<scope>test</scope>
 		</dependency>
 
