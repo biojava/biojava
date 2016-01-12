@@ -54,7 +54,6 @@ mvn verify</description>
     <plugins>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.14.1</version>
         <executions>
           <execution>
             <goals>
