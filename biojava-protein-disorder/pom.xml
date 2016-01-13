@@ -9,6 +9,13 @@
 	<packaging>jar</packaging>
 	<name>biojava-protein-disorder</name>
 	<description>This module is for predicting disordered regions in protein sequences</description>
+	<licenses>
+		<license>
+			<name>GNU LGPL v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<build>
 		<plugins>
 			<plugin>

@@ -9,7 +9,15 @@
     <artifactId>biojava-structure-gui</artifactId>
     <name>biojava-structure-gui</name>
     <url>http://www.biojava.org</url>
+    <licenses>
+        <license>
+            <name>GNU LGPL v2</name>
+            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <repositories>
+        <!-- Used for javaws:javaws -->
         <repository>
             <id>biojava-maven-repo</id>
             <name>BioJava repository</name>

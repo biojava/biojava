@@ -8,20 +8,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>biojava-sequencing</artifactId>
 	<name>biojava-sequencing</name>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>18.0</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	<licenses>
+		<license>
+			<name>GNU LGPL v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<scope>compile</scope>
+			<version>19.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -31,7 +30,7 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>${project.version}</version>
+			<version>4.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
