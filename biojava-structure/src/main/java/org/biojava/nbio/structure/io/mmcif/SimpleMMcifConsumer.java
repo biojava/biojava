@@ -1657,104 +1657,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-	/**
-	 * Returns the chains from all models that have the provided chainId
-	 * This method may be called before endDocument.  Not all models
-	 * may be added to the Structure before that point.
-	 */
-	private List<Chain> getChainsFromAllModels(String chainId){
-		List<Chain> chains = new ArrayList<Chain>();
-
-
-		for (int i=0 ; i < structure.nrModels();i++){
-			List<Chain> model = structure.getModel(i);
-			for (Chain c: model){
-				if (c.getChainID().equals(chainId)) {
-					chains.add(c);
-				}
-			}
-		}
-		
-		// May have active model that has not yet been added to the structure.
-		if (null != current_model) {
-			for (Chain c: current_model) {
-				if (c.getChainID().equals(chainId)) {
-					chains.add(c);
-				}
-			}
-		}
-
-		return chains;
-	}
-
-	/** 
-	 * Finds the residue in the internal representation and fixes the residue number and insertion code
-	 *
-	 * @param ppss
-	 */
-	private void replaceGroupSeqPos(PdbxPolySeqScheme ppss){
-
-		if (ppss.getAuth_seq_num().equals("?"))
-			return;
-
-		//logger.info("replacegroupSeqPos " + ppss);
-		// at this stage we are still using the internal asym ids...
-		List<Chain> matchinChains = getChainsFromAllModels(ppss.getAsym_id());
-
-		long sid = Long.parseLong(ppss.getSeq_id());
-		for (Chain c: matchinChains){
-			Group target = null;
-			for (Group g: c.getAtomGroups()){
-
-				if ( g instanceof AminoAcidImpl){
-					AminoAcidImpl aa = (AminoAcidImpl)g;
-					if (aa.getId() == sid ) {
-						// found it:
-						target = g;
-						break;
-					}
-				}
-				else if ( g instanceof NucleotideImpl) {
-					NucleotideImpl n = (NucleotideImpl)g;
-					if ( n.getId() == sid) {
-						target = g;
-						break;
-					}
-				} else if ( g instanceof HetatomImpl){
-					HetatomImpl h = (HetatomImpl)g;
-					if ( h.getId() == sid){
-						target =h;
-						break;
-					}
-				}
-			}
-			if (target == null){
-				logger.info("could not find group at seq. position " + 
-						ppss.getSeq_id() + " in internal chain " + c.getChainID() + ". " + ppss);
-				continue;
-			}
-
-			if (! target.getPDBName().trim().equals(ppss.getMon_id())){
-				logger.info("could not match PdbxPolySeqScheme to chain:" + target.getPDBName() + " " + ppss);
-				continue;
-			}
-
-			// fix the residue number to the one used in the PDB files...
-			Integer pdbResNum = Integer.parseInt(ppss.getAuth_seq_num());
-			// check the insertion code...
-			String insCodeS = ppss.getPdb_ins_code();
-			Character insCode = null;
-			if ( ( insCodeS != null) && (! insCodeS.equals(".")) && insCodeS.length()>0){
-				//pdbResNum += insCode
-				insCode = insCodeS.charAt(0);
-			}
-
-			ResidueNumber residueNumber = new ResidueNumber(null, pdbResNum,insCode);
-			//logger.info("setting residue number for " + target +" to: " + residueNumber);
-			target.setResidueNumber(residueNumber);
-		}
-	}
 	@Override
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {
 
@@ -2012,7 +1914,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
 
 				// 1. if exists this residue above in the data model,
-				boolean haveResidue = false;
+				//boolean haveResidue = false;
 				// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
 				Group g = null;
 				try {
