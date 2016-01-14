@@ -179,6 +179,7 @@ public class ChainImpl implements Chain, Serializable {
 			// nested relationship (some of the atoms can be in the seqres, but not all)
 			
 			for (Group seqResGroup : seqResGroups) {
+				
 				int i = findMathingGroupIndex(groups, seqResGroup);
 				
 				Group g = null;
