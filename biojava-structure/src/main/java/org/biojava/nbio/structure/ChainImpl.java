@@ -26,7 +26,6 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -171,32 +170,43 @@ public class ChainImpl implements Chain, Serializable {
 			g.setChain(n);
 		}
 
-		if (!seqResGroups.isEmpty()){
+		List<Group> tmpSeqRes = new ArrayList<Group>();
+		
+		if (seqResGroups!=null){
+
 
 			// cloning seqres and atom groups is ugly, due to their
 			// nested relationship (some of the atoms can be in the seqres, but not all)
-
-			List<Group> tmpSeqRes = new ArrayList<Group>();
+			
 			for (Group seqResGroup : seqResGroups) {
-				Group g = (Group) seqResGroup.clone();
+				int i = findMathingGroupIndex(groups, seqResGroup);
+				
+				Group g = null;
+				
+				if (i!=-1) {
+					// group found in atom groups, we get the equivalent reference from the newly cloned atom groups
+					g = n.getAtomGroup(i);				
+				} else {
+					// group not found in atom groups, we clone the seqres group
+					g = (Group) seqResGroup.clone();
+				}
 				g.setChain(n);
 				tmpSeqRes.add(g);
 			}
 
-			Chain tmp = new ChainImpl();
-			// that's a bit confusing, but that's how to set the seqres so that SeqRes2AtomAligner can use them
-			tmp.setAtomGroups(tmpSeqRes);
-
-			// now match them up..
-			SeqRes2AtomAligner seqresaligner = new SeqRes2AtomAligner();
-
-			seqresaligner.mapSeqresRecords(n, tmp);
-
-
 		}
-
+		n.setSeqResGroups(tmpSeqRes);
 
 		return n ;
+	}
+	
+	private static int findMathingGroupIndex(List<Group> atomGroups, Group g) {
+		int i = 0;
+		for (Group atomGroup: atomGroups) {
+			if (g==atomGroup) return i;
+			i++;
+		}
+		return -1;
 	}
 
 

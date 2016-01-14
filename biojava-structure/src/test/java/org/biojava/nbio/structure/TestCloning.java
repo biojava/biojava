@@ -25,92 +25,73 @@
 package org.biojava.nbio.structure;
 
 
-import junit.framework.TestCase;
+import java.io.IOException;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class TestCloning extends TestCase{
+public class TestCloning {
 	
 	@Test
-	public void test1a4wCloning(){
-		
+	public void test1a4wCloning() throws StructureException, IOException {
+
 		Structure s;
-		try {
-			
-			AtomCache cache = new AtomCache();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setAlignSeqRes(true);
-			cache.setFileParsingParams(params);
-			
-			StructureIO.setAtomCache(cache);
-			
-			s = StructureIO.getStructure("1a4w");
-			
-			Structure c = s.clone();
-		
-			compareCloned(s,c);
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-		
-			
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+
+		StructureIO.setAtomCache(cache);
+
+		s = StructureIO.getStructure("1a4w");
+
+		Structure c = s.clone();
+
+		compareCloned(s,c);			
 		
 	}
 	
 	
 	
 	@Test
-	public void testAsymUnitCloning(){
-		
+	public void testAsymUnitCloning() throws StructureException, IOException {
+
 		Structure s;
-		try {
-			
-			AtomCache cache = new AtomCache();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setAlignSeqRes(false);
-			cache.setFileParsingParams(params);
-			
-			StructureIO.setAtomCache(cache);
-			
-			s = StructureIO.getStructure("1stp");
-			
-			Structure c = s.clone();
-		
-			compareCloned(s,c);
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(false);
+		cache.setFileParsingParams(params);
+
+		StructureIO.setAtomCache(cache);
+
+		s = StructureIO.getStructure("1stp");
+
+		Structure c = s.clone();
+
+		compareCloned(s,c);
+
+
 		
 			
 		
 	}
 	
 	@Test
-	public void testBioUnitCloning(){
-		
+	public void testBioUnitCloning() throws StructureException, IOException {
+
 		Structure s;
-		try {
-			s = StructureIO.getBiologicalAssembly("1stp",1);
-			
-			Structure c = s.clone();
-			
-			compareCloned(s,c);
-			
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-		
-			
+		s = StructureIO.getBiologicalAssembly("1stp",1);
+
+		Structure c = s.clone();
+
+		compareCloned(s,c);
+
+
 		
 	}
 
