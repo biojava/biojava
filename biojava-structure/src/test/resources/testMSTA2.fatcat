@@ -4,8 +4,8 @@ BlockSets: 2
 Blocks: 3 
 Length: 43 
 Core Length: 39 
-AvgTM-score: 0.21 
-RMSD: 1.62
+AvgTM-score: 0.26 
+RMSD: 1.64
 
 Chain 01: VLSEGEWQLVLHVWAKVEADVAghgqdil--IRLFKSHPeTlekfdrfkhlkteaemkasedlkkhgvtvltalgailkkkghheaelkplaqshatkhkipikylefiseaiihvlhsrhpgdf-GADAQGAMNKAL
           1111111111111111111111         22222222 2                                                                                     333333333333
