@@ -658,11 +658,12 @@ public class MultipleAlignmentTools {
 			for (BlockSet bs : alignment.getBlockSets()) {
 
 				Atom[] blocksetAtoms = new Atom[bs.length()];
+				int blockPos = 0;
 
 				for (Block blk : bs.getBlocks()) {
 					if (blk.size() != atomArrays.size()) {
 						throw new IllegalStateException(String.format(
-								"Mismatched block length. Expected %d "
+								"Mismatched block size. Expected %d "
 										+ "structures, found %d.",
 								atomArrays.size(), blk.size()));
 					}
@@ -670,8 +671,9 @@ public class MultipleAlignmentTools {
 					for (int j = 0; j < blk.length(); j++) {
 						Integer alignedPos = blk.getAlignRes().get(i).get(j);
 						if (alignedPos != null) {
-							blocksetAtoms[j] = (Atom) curr[alignedPos].clone();
+							blocksetAtoms[blockPos] = (Atom) curr[alignedPos].clone();
 						}
+						blockPos++;
 					}
 				}
 
