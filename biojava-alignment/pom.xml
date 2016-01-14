@@ -49,12 +49,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.biojava</groupId>
-			<artifactId>biojava-phylo</artifactId>
-			<version>4.1.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.biojava.thirdparty</groupId>
 			<artifactId>forester</artifactId>
 		</dependency>
@@ -75,6 +69,11 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>			
+  		</dependency>
+  		<dependency>
+  			<groupId>org.biojava</groupId>
+  			<artifactId>biojava-phylo</artifactId>
+  			<version>4.1.1-SNAPSHOT</version>
+  		</dependency>
 	</dependencies>
 </project>
