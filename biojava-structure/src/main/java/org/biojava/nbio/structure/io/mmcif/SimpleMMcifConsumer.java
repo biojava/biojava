@@ -1945,7 +1945,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					if (null != chain) {
 						try {
 							Character insChar = null;
-							if (null != insCode) insChar = insCode.charAt(0);
+							if (null != insCode && insCode.length() > 0) insChar = insCode.charAt(0);
 							g = chain.getGroupByPDB(new ResidueNumber(chain_id, Integer.parseInt(auth_seq_id), insChar));
 						} catch (NumberFormatException e) {
 							logger.warn("Could not lookup residue : " + chain_id + auth_seq_id);
