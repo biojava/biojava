@@ -1934,7 +1934,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// author chain id and residue numbers.
 				String chain_id = siteGen.getAuth_asym_id(); // ChainID
 				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
-
+				String insCode = siteGen.getPdbx_auth_ins_code();
+				if ( insCode != null && insCode.equals("?"))
+					insCode = null;
+				
 				// 1. if exists this residue above in the data model,
 				boolean haveResidue = false;
 				// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
@@ -1943,7 +1946,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					Chain chain = structure.getChainByPDB(chain_id);
 					if (null != chain) {
 						try {
-							g = chain.getGroupByPDB(new ResidueNumber(chain_id, Integer.parseInt(auth_seq_id), ' '));
+							Character insChar = null;
+							if (null != insCode) insChar = insCode.charAt(0);
+							g = chain.getGroupByPDB(new ResidueNumber(chain_id, Integer.parseInt(auth_seq_id), insChar));
 						} catch (NumberFormatException e) {
 							logger.warn("Could not lookup residue : " + chain_id + auth_seq_id);
 						}

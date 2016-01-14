@@ -1,15 +1,17 @@
 package org.biojava.nbio.structure.io;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.IOException;
+import java.util.List;
+
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by larsonmattr on 10/31/2015.
@@ -47,6 +49,27 @@ public class TestParseMmCIFFeatures {
         assertEquals(getDescription(sCif, "AC4"), "BINDING SITE FOR RESIDUE HEM B 148");
         assertEquals(getDescription(sCif, "AC5"), "BINDING SITE FOR RESIDUE HEM C 142");
         assertEquals(getDescription(sCif, "AC6"), "BINDING SITE FOR RESIDUE HEM D 148");
+    }
+    
+    @Test
+    public void testSiteWithInsCode()throws IOException, StructureException {
+        AtomCache cache = new AtomCache();
+
+        StructureIO.setAtomCache(cache);
+
+        cache.setUseMmCif(true);
+        Structure sCif = StructureIO.getStructure("1A4W");
+
+        assertNotNull(sCif);
+
+        // After it has read the file, it should check that expected SITES are present.
+        List<Site> sites = sCif.getSites();
+
+        // 1A4W has 5 sites from ligands.
+        assertEquals(5, sites.size());
+
+        // Check for each site that it has parsed all residues.
+        assertEquals(6, getGroupsInSite(sCif, "AC1"));  // AC1 references an insertion code.
     }
 
     private int getGroupsInSite(Structure structure, String site) {
