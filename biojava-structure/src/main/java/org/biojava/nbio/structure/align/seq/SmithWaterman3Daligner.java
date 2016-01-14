@@ -98,7 +98,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			throw new IllegalArgumentException("provided parameter object is not of type SmithWaterman3DParameters, but " + parameters.getClass().getName());
 
 		params = (SmithWaterman3DParameters) parameters;
-		AFPChain afpChain = new AFPChain();
+		AFPChain afpChain = new AFPChain(algorithmName);
 
 		
 			// covert input to sequences
@@ -155,7 +155,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	 */
 	private AFPChain convert(Atom[] ca1, Atom[] ca2,  SequencePair<ProteinSequence, 
 			AminoAcidCompound> pair, PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman) throws StructureException {
-		AFPChain afpChain = new AFPChain();
+		AFPChain afpChain = new AFPChain(algorithmName);
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;		
 

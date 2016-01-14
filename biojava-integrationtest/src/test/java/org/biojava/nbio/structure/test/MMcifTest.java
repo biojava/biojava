@@ -226,8 +226,8 @@ public class MMcifTest extends TestCase {
 	private void checkGroups(Group g1, Group g2){
 
 		//System.out.print("comparing " +g1 + " " + g2);
-		String pdbId1 = g1.getChain().getParent().getPDBCode();
-		String pdbId2 = g1.getChain().getParent().getPDBCode();
+		String pdbId1 = g1.getChain().getStructure().getPDBCode();
+		String pdbId2 = g1.getChain().getStructure().getPDBCode();
 		assertEquals(pdbId1, pdbId2);
 
 		assertEquals(g1.getType(),g2.getType());

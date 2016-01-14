@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.align.multiple;
 
 import org.biojava.nbio.structure.Atom;
@@ -23,10 +43,9 @@ public class TestAFPChainConversion {
 	public void testAFPconversion() throws Exception{
 
 		//Fill an AFPChain with the general information
-		AFPChain afp = new AFPChain();
+		AFPChain afp = new AFPChain("algorithm");
 		afp.setName1("name1");
 		afp.setName2("name2");
-		afp.setAlgorithmName("algorithm");
 		afp.setVersion("1.0");
 		afp.setCalculationTime(System.currentTimeMillis());
 		//Generate a optimal alignment with 3 blocks and 5 residues per block

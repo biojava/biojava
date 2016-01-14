@@ -8,6 +8,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>biojava-genome</artifactId>
 	<name>biojava-genome</name>
+
+	<licenses>
+		<license>
+			<name>GNU LGPL v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<repositories>
 		<repository>
 			<id>biojava-maven-repo</id>

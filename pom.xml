@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<!-- for releasing to Maven Central / OSS Sonatype -->
 	<parent>
@@ -36,7 +37,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
-		<slf4j.version>1.7.12</slf4j.version>
+		<slf4j.version>1.7.13</slf4j.version>
+		<!-- DO NOT CHANGE. Log4j 2.3 is the most recent version that works with Java 1.6 -->
 		<log4j.version>2.3</log4j.version>
 	</properties>
 	<scm>
@@ -44,8 +46,8 @@
 		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
 		<url>https://github.com/biojava/biojava</url>
 
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<!-- This section required for release at Maven Central. For a full list 
 		of Developers, please see https://github.com/orgs/biojava/members For a list 
@@ -148,7 +150,7 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.6.1</version>
+					<version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -174,7 +176,10 @@
 					<artifactId>maven-source-plugin</artifactId>
 					<version>2.4</version>
 				</plugin>
-
+				<plugin>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.19.1</version>
+				</plugin>
 				<plugin>
 					<groupId>net.sf</groupId>
 					<artifactId>stat-scm</artifactId>
@@ -183,7 +188,7 @@
 				<plugin>
 					<groupId>org.jvnet.jaxb2.maven2</groupId>
 					<artifactId>maven-jaxb2-plugin</artifactId>
-					<version>0.13.0</version>
+					<version>0.13.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -215,11 +220,11 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>2.4.1</version>
+					<version>2.4.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5.5</version>
+					<version>2.6</version>
 					<configuration>
 						<descriptors>
 							<descriptor>src/main/assembly/assembly.xml</descriptor>
@@ -241,14 +246,25 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>findbugs-maven-plugin</artifactId>
-					<version>3.0.2</version>
+					<version>3.0.3</version>
 				</plugin>
 
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>buildnumber-maven-plugin</artifactId>
+					<version>1.4</version>
+				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.16</version>
+					<version>2.17</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.7</version>
 				</plugin>
 
 			</plugins>
@@ -289,7 +305,7 @@
 			<!-- give more memory for junit tests -->
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18.1</version>
+				<version>2.19.1</version>
 				<configuration>
 					<argLine>-Xmx1500M</argLine>
 					<reuseForks>false</reuseForks>
@@ -344,11 +360,11 @@
 				</configuration>
 			</plugin>
 
-            <plugin>
-                <groupId>com.versioneye</groupId>
-                <artifactId>versioneye-maven-plugin</artifactId>
-                <version>3.5.1</version>
-            </plugin>
+			<plugin>
+				<groupId>com.versioneye</groupId>
+				<artifactId>versioneye-maven-plugin</artifactId>
+				<version>3.5.1</version>
+			</plugin>
 
 		</plugins>
 
@@ -371,33 +387,39 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-        		<groupId>org.slf4j</groupId>
-        		<artifactId>slf4j-api</artifactId>
-        		<version>${slf4j.version}</version>
-    		</dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
 			<!-- binding for log4j 2 -->
-  			<dependency>
-    			<groupId>org.apache.logging.log4j</groupId>
-    			<artifactId>log4j-slf4j-impl</artifactId>
-    			<version>${log4j.version}</version>
-    			<!-- runtime scope includes the test scope as well -->
-    			<scope>runtime</scope>
-  			</dependency>
-  			<!-- Log4j API and Core implementation required for binding -->
-  			<dependency>
-    			<groupId>org.apache.logging.log4j</groupId>
-    			<artifactId>log4j-api</artifactId>
-    			<version>${log4j.version}</version>
-    			<!-- runtime scope includes the test scope as well -->
-    			<scope>runtime</scope>    			
-  			</dependency>
-  			<dependency>
-    			<groupId>org.apache.logging.log4j</groupId>
-    			<artifactId>log4j-core</artifactId>
-    			<version>${log4j.version}</version>
-    			<!-- runtime scope includes the test scope as well -->
-    			<scope>runtime</scope>    			
-  			</dependency>			
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-slf4j-impl</artifactId>
+				<version>${log4j.version}</version>
+				<!-- runtime scope includes the test scope as well -->
+				<scope>runtime</scope>
+			</dependency>
+			<!-- Log4j API and Core implementation required for binding -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j.version}</version>
+				<!-- runtime scope includes the test scope as well -->
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
+				<!-- runtime scope includes the test scope as well -->
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.biojava.thirdparty</groupId>
+				<artifactId>forester</artifactId>
+				<version>1.005</version>
+				<scope>compile</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -437,13 +459,13 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.0.3</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.15</version>
+				<version>2.17</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

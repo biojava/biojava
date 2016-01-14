@@ -24,10 +24,15 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.symmetry.utils.CombinationGenerator;
-import org.biojava.nbio.structure.symmetry.utils.ComponentFinder;
-import org.biojava.nbio.structure.symmetry.utils.Graph;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.UndirectedSubgraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Point3d;
+
 import java.math.BigInteger;
 import java.util.*;
 
@@ -40,6 +45,10 @@ import java.util.*;
  *
  */
 public class QuatSymmetryDetector {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(QuatSymmetryDetector.class);
+	
 	private Structure structure = null;
 	private QuatSymmetryParameters parameters = null;
 
@@ -136,8 +145,8 @@ public class QuatSymmetryDetector {
 						
 						double time = (System.nanoTime()- start)/1000000000;
 						if (time > parameters.getLocalTimeLimit()) {
-							System.out.println("Warning: QuatSymmetryDetector: Exceeded time limit for local symmetry calculations: " + time +
-									" seconds. Results may be incomplete");
+							logger.warn("Exceeded time limit for local symmetry calculations: " + time +
+									" seconds. Quat symmetry results may be incomplete");
 							break;
 						}
 					}
@@ -387,8 +396,8 @@ public class QuatSymmetryDetector {
 		}
 
 		SubunitGraph subunitGraph = new SubunitGraph(subList);
-		Graph<Integer> graph = subunitGraph.getProteinGraph();
-//		System.out.println("Graph: " + graph);
+		UndirectedGraph<Integer, DefaultEdge> graph = subunitGraph.getProteinGraph();
+		logger.debug("Graph: {}", graph.toString());
 
 		for (int i = last; i > 1; i--) {
 			CombinationGenerator generator = new CombinationGenerator(last, i);
@@ -397,8 +406,9 @@ public class QuatSymmetryDetector {
 			
 			// avoid combinatorial explosion, i.e. for 1FNT
 			BigInteger maxCombinations = BigInteger.valueOf(parameters.getMaximumLocalCombinations());
-//			System.out.println("maxCombinations: " + generator.getTotal());
+			logger.debug("Number of combinations: {}", generator.getTotal());
 		    if (generator.getTotal().compareTo(maxCombinations) > 0) {
+		    	logger.warn("Number of combinations exceeds limit for biounit with {} subunits in groups of {} subunits. Will not check local symmetry for them", last, i);
 		    	continue;
 		    }
 			
@@ -424,8 +434,8 @@ public class QuatSymmetryDetector {
 				}
 
 				// check if this subset of subunits interact with each other
-				Graph<Integer> subGraph = graph.extractSubGraph(subSet);		
-				if (isConnectedGraph(subGraph)) {		
+				UndirectedGraph<Integer, DefaultEdge> subGraph = new UndirectedSubgraph<Integer, DefaultEdge>(graph, new HashSet<Integer>(subSet), null);
+				if (isConnectedGraph(subGraph)) {
 					subClusters.add(subSet);
 					if (subClusters.size() > parameters.getMaximumLocalResults()) {
 						return subClusters;
@@ -454,10 +464,9 @@ public class QuatSymmetryDetector {
 		return clusterIds.size();
 	}
 	
-	private static boolean isConnectedGraph(Graph<Integer> graph) {
-		ComponentFinder<Integer> finder = new ComponentFinder<Integer>();
-		finder.setGraph(graph);
-		return finder.getComponentCount() == 1;
+	private static boolean isConnectedGraph(UndirectedGraph<Integer, DefaultEdge> graph) {
+		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(graph);
+		return inspector.isGraphConnected();
 	}
 	
 	private static List<Integer> getFolds(Integer[] subCluster, int size) {
