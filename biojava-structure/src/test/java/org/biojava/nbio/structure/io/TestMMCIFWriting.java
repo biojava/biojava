@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io;
 
 import static org.junit.Assert.*;
@@ -61,6 +81,72 @@ public class TestMMCIFWriting {
 		assertNotNull(readStruct); 
 		
 		assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
+		
+		for (int i=0;i<originalStruct.getChains().size();i++) {
+			assertEquals(originalStruct.getChains().get(i).getAtomGroups().size(),
+							readStruct.getChains().get(i).getAtomGroups().size());
+			
+			Chain origChain = originalStruct.getChains().get(i);
+			Chain readChain = readStruct.getChains().get(i);
+			
+			assertEquals(origChain.getAtomGroups().size(), readChain.getAtomGroups().size());
+			//assertEquals(origChain.getSeqResGroups().size(), readChain.getSeqResGroups().size());
+		}
+		
+	}
+
+	/**
+	 * MMCIF write test for an NMR structure with 2 chains
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void test2N3J() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		
+		StructureIO.setAtomCache(cache); 
+
+		cache.setUseMmCif(true);
+		
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+		
+		Structure originalStruct = StructureIO.getStructure("2N3J");
+				
+		File outputFile = File.createTempFile("biojava_testing_", ".cif");
+		
+		
+		FileWriter fw = new FileWriter(outputFile);
+		fw.write(originalStruct.toMMCIF());
+		fw.close();
+		
+		
+		MMcifParser parser = new SimpleMMcifParser();
+
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+
+		FileParsingParameters fileParsingParams = new FileParsingParameters();
+		fileParsingParams.setAlignSeqRes(true);
+
+		consumer.setFileParsingParameters(fileParsingParams);
+
+		parser.addMMcifConsumer(consumer);
+
+		//parser.parse(new BufferedReader(new FileReader(new File("/home/duarte_j/test.cif")))); 
+		parser.parse(new BufferedReader(new FileReader(outputFile)));
+		
+		Structure readStruct = consumer.getStructure();
+		
+		assertNotNull(readStruct); 
+		
+		assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
+		
+		assertEquals(originalStruct.nrModels(), readStruct.nrModels());
+		
+		for (int i=0; i<originalStruct.nrModels();i++) {
+			assertEquals(originalStruct.getModel(i).size(), readStruct.getModel(i).size());
+		}
 		
 		for (int i=0;i<originalStruct.getChains().size();i++) {
 			assertEquals(originalStruct.getChains().get(i).getAtomGroups().size(),

@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.secstruc;
 
 import java.io.BufferedReader;
@@ -136,11 +156,22 @@ public class DSSPParser {
 						SecStrucType.fromCharacter(line.charAt(16));
 				
 				SecStrucState ss = new SecStrucState(parent, 
-						SecStrucInfo.DSSP_FILE_ASSIGNMENT, ssType);
+						SecStrucInfo.DSSP_ASSIGNMENT, ssType);
 				
-				//TODO ignore for now
-				/*int BP1 = Integer.valueOf(line.charAt(28));
-				int BP2 = Integer.valueOf(line.charAt(32));*/
+				//Parse the Bridge partners - TODO parallel or antiparallel?
+				String bp = line.substring(25,29).trim();
+				if (bp != "") {
+					BetaBridge bb = new BetaBridge(
+							index, Integer.valueOf(bp), BridgeType.parallel);
+					ss.addBridge(bb);
+				} else logger.warn("Unable to parse beta Bridge for resn "+index);
+				
+				bp = line.substring(29,33).trim();
+				if (bp != "") {
+					BetaBridge bb = new BetaBridge(
+							index, Integer.valueOf(bp), BridgeType.parallel);
+					ss.addBridge(bb);
+				} else logger.warn("Unable to parse beta Bridge for resn "+index);
 				
 				//Parse the energy terms of donor and acceptor
 				for (int i=0; i<4; i++){

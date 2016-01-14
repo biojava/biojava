@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.vecmath.*;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;

@@ -313,14 +313,14 @@ public class TranscriptionEngine {
 			if (dnaCompounds != null) {
 				return dnaCompounds;
 			}
-			return DNACompoundSet.getDNACompoundSet();
+			return AmbiguityDNACompoundSet.getDNACompoundSet();
 		}
 
 		private CompoundSet<NucleotideCompound> getRnaCompounds() {
 			if (rnaCompounds != null) {
 				return rnaCompounds;
 			}
-			return RNACompoundSet.getRNACompoundSet();
+			return AmbiguityRNACompoundSet.getRNACompoundSet();
 		}
 
 		private CompoundSet<AminoAcidCompound> getAminoAcidCompounds() {

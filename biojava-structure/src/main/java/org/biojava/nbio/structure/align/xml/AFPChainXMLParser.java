@@ -50,6 +50,7 @@ public class AFPChainXMLParser
 {
 
 	private static final Logger logger = LoggerFactory.getLogger(AFPChainXMLParser.class);
+	public static final String DEFAULT_ALGORITHM_NAME = "jFatCat_rigid";
 	
 	/** new utility method that checks that the order of the pair in the XML alignment is correct and flips the direction if needed
 	 * 
@@ -129,7 +130,7 @@ public class AFPChainXMLParser
 		if ( afps.length == 1) {
 			AFPChain newChain = AFPChainFlipper.flipChain(afps[0]);
 			if ( newChain.getAlgorithmName() == null) {
-			   newChain.setAlgorithmName(AFPChain.DEFAULT_ALGORITHM_NAME);
+			   newChain.setAlgorithmName(DEFAULT_ALGORITHM_NAME);
 			}
 			return AFPChainXMLConverter.toXML(newChain);
 		}
@@ -146,7 +147,7 @@ public class AFPChainXMLParser
 	public static void rebuildAFPChain(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
 
 	   if ( afpChain.getAlgorithmName() == null) {
-	      afpChain.setAlgorithmName(AFPChain.DEFAULT_ALGORITHM_NAME);
+	      afpChain.setAlgorithmName(DEFAULT_ALGORITHM_NAME);
 	   }
 	   if ( afpChain.getVersion() == null){
 	      afpChain.setVersion("1.0");
@@ -245,8 +246,7 @@ public class AFPChainXMLParser
 			for(int afpPos=0; afpPos<listOfAFPChains.getLength() ; afpPos++)
 			{
 
-				AFPChain a = new AFPChain();
-				a.setAlgorithmName(AFPChain.DEFAULT_ALGORITHM_NAME);
+				AFPChain a = new AFPChain(DEFAULT_ALGORITHM_NAME);
 				a.setVersion("1.0");
 				Node rootElement       = listOfAFPChains.item(afpPos);
 

@@ -849,18 +849,37 @@ public class Location implements Iterable<Location>
 		return new String( "[L=" + (mEnd - mStart) + "; S=" + mStart + "; E=" + mEnd +"]" );
 	}
 	
-	/**	
-	 * Compare locations for equality.
-	 *
-	 * @param other The location to compare.
-	 * @return True if locations are the same.
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
 	 */
-	public boolean equals( Location other )
-	{
-		return mStart == other.mStart && mEnd == other.mEnd;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + mEnd;
+		result = prime * result + mStart;
+		return result;
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Location other = (Location) obj;
+		if (mEnd != other.mEnd)
+			return false;
+		if (mStart != other.mStart)
+			return false;
+		return true;
+	}
+
 	/**	
 	 * 
 	 */
