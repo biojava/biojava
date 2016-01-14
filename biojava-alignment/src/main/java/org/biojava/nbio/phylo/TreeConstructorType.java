@@ -22,13 +22,25 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.biojava.nbio.phylo;
 
 /**
- *
- * @author willishf
+ * The TreeConstructorType specifies the aligorithm used to construct the tree
+ * (clustering algorithm). Only support for the NJ algorithm (from forester) is
+ * currently implemented.
+ * 
+ * @author Aleix Lafita
+ * @since 4.1.1
+ * 
  */
-public enum TreeConstructionAlgorithm {
-    PID, BLOSUM62;
+public enum TreeConstructorType {
+
+	/** Neighbor Joining Algorithm */
+	NJ,
+
+	/** Unweighted Pair-Group Method with Arithmetic mean */
+	UPGMA,
+
+	/** What does this stand for? (Aleix: Nov 2015) */
+	AV;
 }

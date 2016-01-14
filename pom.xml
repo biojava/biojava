@@ -556,9 +556,7 @@
 	</profiles>
 
 	<modules>
-
 		<module>biojava-core</module>
-		<module>biojava-phylo</module>
 		<module>biojava-alignment</module>
 		<module>biojava-structure</module>
 		<module>biojava-integrationtest</module>

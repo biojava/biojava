@@ -18,41 +18,34 @@
  *      http://www.biojava.org/
  *
  */
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.biojava.nbio.phylo;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 /**
- * Unit test for simple App.
+ * The TreeType specifies the optimization criteria used to generate the tree.
+ * 
+ * @author Aleix Lafita
+ * @since 4.1.1
+ * 
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+public enum TreeType {
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+	/** Maximum Likelihood Tree */
+	ML("ML-Tree"),
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+	/** Distance Tree */
+	DISTANCE("Distance-Tree"),
+
+	/** Parsimony Tree */
+	PARSIMONY("Parsimony-Tree");
+	
+	/** Description name of the Tree Type */
+	protected final String name;
+	
+	private TreeType(String name){
+		this.name = name;
+	}
 }
