@@ -1938,8 +1938,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if ( insCode != null && insCode.equals("?"))
 					insCode = null;
 				
-				// 1. if exists this residue above in the data model,
-				boolean haveResidue = false;
 				// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
 				Group g = null;
 				try {
