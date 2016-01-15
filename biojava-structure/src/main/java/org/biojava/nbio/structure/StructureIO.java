@@ -20,16 +20,19 @@
  */
 package org.biojava.nbio.structure;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProvider;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
 
 /** A class that provides static access methods for easy lookup of protein structure related components
  * 
@@ -209,5 +212,42 @@ public class StructureIO {
 
 		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
 			pathToPDBFiles += FILE_SEPARATOR;
+	}
+	
+
+	public static enum StructureFiletype {
+		PDB( (new PDBFileReader()).getExtensions()),
+		CIF( new MMCIFFileReader().getExtensions()),
+		UNKNOWN(Collections.<String>emptyList());
+
+		private List<String> extensions;
+		/**
+		 * @param extensions List of supported extensions, including leading period
+		 */
+		private StructureFiletype(List<String> extensions) {
+			this.extensions = extensions;
+		}
+		/**
+		 * @return a list of file extensions associated with this type
+		 */
+		public List<String> getExtensions() {
+			return extensions;
+		}
+	}
+
+	/**
+	 * Attempts to guess the type of a structure file based on the extension
+	 * @param filename
+	 * @return
+	 */
+	public StructureFiletype guessFiletype(String filename) {
+		for(StructureFiletype type : StructureFiletype.values()) {
+			for(String ext : type.getExtensions()) {
+				if(filename.endsWith(ext)) {
+					return type;
+				}
+			}
+		}
+		return StructureFiletype.UNKNOWN;
 	}
 }
