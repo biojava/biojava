@@ -344,7 +344,13 @@ public class HetatomImpl implements Group,Serializable {
 			atom.setGroup(n);
 		}
 		
-		// TODO alt locs are not cloned! do we need to clone them? - JD 2014-12-17
+		// copying the alt loc groups if present, otherwise they stay null
+		if (altLocs!=null) {
+			for (Group altLocGroup:this.altLocs) {
+				Group nAltLocGroup = (Group)altLocGroup.clone();
+				n.addAltLoc(nAltLocGroup);
+			}
+		}
 		
 		return n;
 	}

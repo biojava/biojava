@@ -1229,19 +1229,22 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (dbrev.getNum().equals("1")){
 
 			try {
-
-				String date = dbrev.getDate_original();
-				//System.out.println(date);
-				Date dep = dateFormat.parse(date);
-				//System.out.println(dep);
+				Date dep = dateFormat.parse(dbrev.getDate_original());
 				header.setDepDate(dep);
-				Date mod = dateFormat.parse(dbrev.getDate());
-
-				header.setModDate(mod);
-
+				
 			} catch (ParseException e){
-				e.printStackTrace();
+				logger.warn("Could not parse date string '{}', deposition date will be unavailable", dbrev.getDate_original());
 			}
+			
+			try {
+				Date mod = dateFormat.parse(dbrev.getDate());
+				header.setModDate(mod);
+				
+			} catch (ParseException e){
+				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
+			}
+
+			
 		} else {
 			try {
 
@@ -1249,7 +1252,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				header.setModDate(mod);
 
 			} catch (ParseException e){
-				e.printStackTrace();
+				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
 			}
 		}
 

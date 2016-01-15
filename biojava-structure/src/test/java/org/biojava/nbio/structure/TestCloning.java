@@ -25,93 +25,90 @@
 package org.biojava.nbio.structure;
 
 
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.util.Iterator;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class TestCloning extends TestCase{
+public class TestCloning {
 	
 	@Test
-	public void test1a4wCloning(){
-		
+	public void test1a4wCloning() throws StructureException, IOException {
+
 		Structure s;
-		try {
-			
-			AtomCache cache = new AtomCache();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setAlignSeqRes(true);
-			cache.setFileParsingParams(params);
-			
-			StructureIO.setAtomCache(cache);
-			
-			s = StructureIO.getStructure("1a4w");
-			
-			Structure c = s.clone();
-		
-			compareCloned(s,c);
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-		
-			
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+
+		StructureIO.setAtomCache(cache);
+
+		s = StructureIO.getStructure("1a4w");
+
+		Structure c = s.clone();
+
+		compareCloned(s,c);			
 		
 	}
 	
 	
 	
 	@Test
-	public void testAsymUnitCloning(){
-		
+	public void testAsymUnitCloning() throws StructureException, IOException {
+
 		Structure s;
-		try {
-			
-			AtomCache cache = new AtomCache();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setAlignSeqRes(false);
-			cache.setFileParsingParams(params);
-			
-			StructureIO.setAtomCache(cache);
-			
-			s = StructureIO.getStructure("1stp");
-			
-			Structure c = s.clone();
-		
-			compareCloned(s,c);
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-		
-			
-		
+
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(false);
+		cache.setFileParsingParams(params);
+
+		StructureIO.setAtomCache(cache);
+
+		s = StructureIO.getStructure("1stp");
+
+		Structure c = s.clone();
+
+		compareCloned(s,c);
 	}
 	
 	@Test
-	public void testBioUnitCloning(){
-		
+	public void testBioUnitCloning() throws StructureException, IOException {
+
 		Structure s;
-		try {
-			s = StructureIO.getBiologicalAssembly("1stp",1);
-			
-			Structure c = s.clone();
-			
-			compareCloned(s,c);
-			
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		s = StructureIO.getBiologicalAssembly("1stp",1);
+
+		Structure c = s.clone();
+
+		compareCloned(s,c);
+
+	}
+	
+	/**
+	 * A Structure with alt locs, we make sure they are being cloned too
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	@Test
+	public void test3piuCloning() throws StructureException, IOException {
 		
-			
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+
+		StructureIO.setAtomCache(cache);
+
+		Structure s = StructureIO.getStructure("3piu");
 		
+		Structure c = s.clone();
+		
+		compareCloned(s, c);
 	}
 
 	private void compareCloned(Structure s, Structure c) throws StructureException {
@@ -125,6 +122,15 @@ public class TestCloning extends TestCase{
 			assertEquals("Could not correctly clone seqres for chain " + chain.getChainID() , chain.getSeqResLength(),test.getSeqResLength());
 		
 			assertEquals("Could not correctly clone atom records for chain " + chain.getChainID() , chain.getAtomLength(),test.getAtomLength());
+			
+			Iterator<Group> it = test.getAtomGroups().iterator();
+			for (Group g : chain.getAtomGroups()) {
+				Group testGroup = it.next();
+				//if (g.hasAltLoc()) {
+				//	System.out.println(g.toString());
+				//}
+				assertEquals(g.getAltLocs().size(), testGroup.getAltLocs().size());
+			}
 		}
 				
 		Atom[] allAtoms = StructureTools.getAllAtomArray(s);
