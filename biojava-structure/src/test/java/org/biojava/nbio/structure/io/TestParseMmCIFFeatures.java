@@ -45,7 +45,7 @@ public class TestParseMmCIFFeatures {
         assertEquals("B487-B497", printBond(bonds.get(5)));
     }
     
-    String printBond(SSBond bond) {
+    private String printBond(SSBond bond) {
     	StringBuilder str = new StringBuilder();
     	
     	str.append(bond.getChainID1());
@@ -57,6 +57,7 @@ public class TestParseMmCIFFeatures {
     	return str.toString();
     }
 
+    @Test
 	public void testSites()throws IOException, StructureException {
         Structure sCif = StructureIO.getStructure("4HHB");
 
