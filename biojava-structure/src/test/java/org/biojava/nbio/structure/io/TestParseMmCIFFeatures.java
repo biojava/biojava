@@ -1,6 +1,5 @@
 package org.biojava.nbio.structure.io;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -84,6 +83,27 @@ public class TestParseMmCIFFeatures {
         assertEquals(getDescription(sCif, "AC4"), "BINDING SITE FOR RESIDUE HEM B 148");
         assertEquals(getDescription(sCif, "AC5"), "BINDING SITE FOR RESIDUE HEM C 142");
         assertEquals(getDescription(sCif, "AC6"), "BINDING SITE FOR RESIDUE HEM D 148");
+    }
+    
+    @Test
+	public void testSites1a4w()throws IOException, StructureException {
+        Structure sCif = StructureIO.getStructure("1A4W");
+
+        assertNotNull(sCif);
+
+        // After it has read the file, it should check that expected SITES are present.
+        List<Site> sites = sCif.getSites();
+
+        // 1a4w has 5 sites from ligands.
+        assertEquals(5, sites.size());
+
+        // Check for each site that it has parsed all residues.
+        assertEquals(3, getGroupsInSite(sCif, "CAT"));
+        assertEquals(6, getGroupsInSite(sCif, "AC1")); // Site has residue with insertion code.
+        assertEquals(6, getGroupsInSite(sCif, "AC2"));
+        assertEquals(14, getGroupsInSite(sCif, "AC3"));
+        assertEquals(14, getGroupsInSite(sCif, "AC4"));
+
     }
 
     private int getGroupsInSite(Structure structure, String site) {
