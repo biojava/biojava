@@ -9,7 +9,15 @@
 	<artifactId>biojava-alignment</artifactId>
 	<name>biojava-alignment</name>
 
-	<url>http://maven.apache.org</url>
+	<licenses>
+		<license>
+			<name>GNU LGPL v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<url>http://www.biojava.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -41,12 +49,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.biojava</groupId>
-			<artifactId>biojava-phylo</artifactId>
-			<version>4.1.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.biojava.thirdparty</groupId>
 			<artifactId>forester</artifactId>
 		</dependency>
@@ -67,6 +69,11 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>			
+  		</dependency>
+  		<dependency>
+  			<groupId>org.biojava</groupId>
+  			<artifactId>biojava-phylo</artifactId>
+  			<version>4.1.1-SNAPSHOT</version>
+  		</dependency>
 	</dependencies>
 </project>

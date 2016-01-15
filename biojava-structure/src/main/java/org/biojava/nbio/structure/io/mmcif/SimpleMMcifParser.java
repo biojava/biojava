@@ -997,7 +997,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 					// all of the mmCif container classes have only one argument (they are beans)
 					if ( pType[0].getName().equals(Integer.class.getName())) {
-						if ( val != null && ! val.equals("?")) {
+						if ( val != null && ! val.equals("?") && !val.equals(".")) {
 
 							Integer intVal = Integer.parseInt(val);
 							m.invoke(o, intVal);
@@ -1158,12 +1158,6 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void triggerNewStrucRefSeqDif(StructRefSeqDif sref){
 		for(MMcifConsumer c : consumers){
 			c.newStructRefSeqDif(sref);
-		}
-	}
-
-	private void triggetNewStructSiteGen(StructSiteGen sref) {
-		for (MMcifConsumer c : consumers) {
-			c.newStructSiteGen(sref);
 		}
 	}
 

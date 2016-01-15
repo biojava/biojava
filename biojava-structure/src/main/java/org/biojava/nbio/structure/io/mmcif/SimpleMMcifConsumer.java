@@ -48,6 +48,8 @@ import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.SSBond;
+import org.biojava.nbio.structure.SSBondImpl;
 import org.biojava.nbio.structure.SeqMisMatch;
 import org.biojava.nbio.structure.SeqMisMatchImpl;
 import org.biojava.nbio.structure.Site;
@@ -823,10 +825,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 			}
 		}
+		
+		createSSBonds();
 
 		// Do structure.setSites(sites) after any chain renaming to be like PDB.
 		addSites();
-
+		
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		List<Compound> compounds = structure.getCompounds();
@@ -1225,19 +1229,22 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (dbrev.getNum().equals("1")){
 
 			try {
-
-				String date = dbrev.getDate_original();
-				//System.out.println(date);
-				Date dep = dateFormat.parse(date);
-				//System.out.println(dep);
+				Date dep = dateFormat.parse(dbrev.getDate_original());
 				header.setDepDate(dep);
-				Date mod = dateFormat.parse(dbrev.getDate());
-
-				header.setModDate(mod);
-
+				
 			} catch (ParseException e){
-				e.printStackTrace();
+				logger.warn("Could not parse date string '{}', deposition date will be unavailable", dbrev.getDate_original());
 			}
+			
+			try {
+				Date mod = dateFormat.parse(dbrev.getDate());
+				header.setModDate(mod);
+				
+			} catch (ParseException e){
+				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
+			}
+
+			
 		} else {
 			try {
 
@@ -1245,7 +1252,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				header.setModDate(mod);
 
 			} catch (ParseException e){
-				e.printStackTrace();
+				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
 			}
 		}
 
@@ -1653,104 +1660,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-	/**
-	 * Returns the chains from all models that have the provided chainId
-	 * This method may be called before endDocument.  Not all models
-	 * may be added to the Structure before that point.
-	 */
-	private List<Chain> getChainsFromAllModels(String chainId){
-		List<Chain> chains = new ArrayList<Chain>();
-
-
-		for (int i=0 ; i < structure.nrModels();i++){
-			List<Chain> model = structure.getModel(i);
-			for (Chain c: model){
-				if (c.getChainID().equals(chainId)) {
-					chains.add(c);
-				}
-			}
-		}
-		
-		// May have active model that has not yet been added to the structure.
-		if (null != current_model) {
-			for (Chain c: current_model) {
-				if (c.getChainID().equals(chainId)) {
-					chains.add(c);
-				}
-			}
-		}
-
-		return chains;
-	}
-
-	/** 
-	 * Finds the residue in the internal representation and fixes the residue number and insertion code
-	 *
-	 * @param ppss
-	 */
-	private void replaceGroupSeqPos(PdbxPolySeqScheme ppss){
-
-		if (ppss.getAuth_seq_num().equals("?"))
-			return;
-
-		//logger.info("replacegroupSeqPos " + ppss);
-		// at this stage we are still using the internal asym ids...
-		List<Chain> matchinChains = getChainsFromAllModels(ppss.getAsym_id());
-
-		long sid = Long.parseLong(ppss.getSeq_id());
-		for (Chain c: matchinChains){
-			Group target = null;
-			for (Group g: c.getAtomGroups()){
-
-				if ( g instanceof AminoAcidImpl){
-					AminoAcidImpl aa = (AminoAcidImpl)g;
-					if (aa.getId() == sid ) {
-						// found it:
-						target = g;
-						break;
-					}
-				}
-				else if ( g instanceof NucleotideImpl) {
-					NucleotideImpl n = (NucleotideImpl)g;
-					if ( n.getId() == sid) {
-						target = g;
-						break;
-					}
-				} else if ( g instanceof HetatomImpl){
-					HetatomImpl h = (HetatomImpl)g;
-					if ( h.getId() == sid){
-						target =h;
-						break;
-					}
-				}
-			}
-			if (target == null){
-				logger.info("could not find group at seq. position " + 
-						ppss.getSeq_id() + " in internal chain " + c.getChainID() + ". " + ppss);
-				continue;
-			}
-
-			if (! target.getPDBName().trim().equals(ppss.getMon_id())){
-				logger.info("could not match PdbxPolySeqScheme to chain:" + target.getPDBName() + " " + ppss);
-				continue;
-			}
-
-			// fix the residue number to the one used in the PDB files...
-			Integer pdbResNum = Integer.parseInt(ppss.getAuth_seq_num());
-			// check the insertion code...
-			String insCodeS = ppss.getPdb_ins_code();
-			Character insCode = null;
-			if ( ( insCodeS != null) && (! insCodeS.equals(".")) && insCodeS.length()>0){
-				//pdbResNum += insCode
-				insCode = insCodeS.charAt(0);
-			}
-
-			ResidueNumber residueNumber = new ResidueNumber(null, pdbResNum,insCode);
-			//logger.info("setting residue number for " + target +" to: " + residueNumber);
-			target.setResidueNumber(residueNumber);
-		}
-	}
 	@Override
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {
 
@@ -1892,6 +1801,78 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		this.structConn.add(structConn);
 	}
 
+	private void createSSBonds() {
+		List<SSBond> bonds = structure.getSSBonds();
+		if (bonds == null) bonds = new ArrayList<SSBond>();
+		
+		final String symop = "1_555"; // For now - accept bonds within origin asymmetric unit.
+		
+		// For SSBond equivalent, parse through the struct_conn records
+		int internalId = 0;
+		for (StructConn conn : structConn) {
+			String ptnr1_chainId = conn.getPtnr1_auth_asym_id();
+			String ptnr1_seqId = conn.getPtnr1_auth_seq_id();
+			String ptnr2_chainId = conn.getPtnr2_auth_asym_id();
+			String ptnr2_seqId = conn.getPtnr2_auth_seq_id();
+			// conn.getId() would equal disulf#.
+			
+			// if we can find both of these residues - 
+			Group s1 = lookupResidue(ptnr1_chainId, ptnr1_seqId);
+			Group s2 = lookupResidue(ptnr2_chainId, ptnr2_seqId);
+
+			// TODO: when issue 220 is implemented, add robust symmetry handling 
+			// to allow disulfide bonds between symmetry-related molecules.
+			
+			// and is SS - then we should create a new disulfide bond.
+			if (null != s1 && null != s2) {
+				if ("CYS".equals(s1.getPDBName()) && symop.equals(conn.getPtnr1_symmetry())
+						&& "CYS".equals(s2.getPDBName()) && symop.equals(conn.getPtnr2_symmetry())) {
+					SSBondImpl bond = new SSBondImpl();
+					
+					bond.setSerNum(internalId++); // An internal label what bond # 
+					bond.setChainID1(ptnr1_chainId);
+					bond.setResnum1(ptnr1_seqId);
+					if ("?".equals(conn.getPdbx_ptnr1_PDB_ins_code())) {
+						conn.setPdbx_ptnr1_PDB_ins_code(null);
+					}
+					bond.setInsCode1(conn.getPdbx_ptnr1_PDB_ins_code());
+					bond.setChainID2(ptnr2_chainId);
+					bond.setResnum2(ptnr2_seqId);
+					if ("?".equals(conn.getPdbx_ptnr2_PDB_ins_code())) {
+						conn.setPdbx_ptnr2_PDB_ins_code(null);
+					}
+					bond.setInsCode2(conn.getPdbx_ptnr2_PDB_ins_code());
+					bonds.add(bond);
+				}
+			}
+		}
+		
+		structure.setSSBonds(bonds);
+	}
+	
+	/**
+	 * Lookup a residue - not found exceptions are handled with logger warnings.
+	 * @param chainId
+	 * @param seqId
+	 * @return Successful = Group, Failure = null
+	 */
+	Group lookupResidue(String chainId, String seqId) {
+		try {
+            Chain chain = structure.getChainByPDB(chainId);
+            if (null != chain) {
+                try {
+                	return chain.getGroupByPDB(new ResidueNumber(chainId, Integer.parseInt(seqId), ' '));
+                } catch (NumberFormatException e) {
+                	logger.warn("Could not lookup residue : " + chainId + seqId);
+                }   
+            }
+		} catch (StructureException e) {
+			logger.warn("Problem finding residue in site entry " + chainId + seqId + " - " + e.getMessage(), e.getMessage());
+		}
+		// Could not find.
+		return null;
+	}
+
 	@Override
 	public void newStructSiteGen(StructSiteGen siteGen) { this.structSiteGens.add(siteGen);	}
 
@@ -1934,6 +1915,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// author chain id and residue numbers.
 				String chain_id = siteGen.getAuth_asym_id(); // ChainID
 				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
+
 				String insCode = siteGen.getPdbx_auth_ins_code();
 				if ( insCode != null && insCode.equals("?"))
 					insCode = null;

@@ -31,6 +31,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.AFPTwister;
+import org.biojava.nbio.structure.align.fatcat.FatCat;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
@@ -76,7 +77,7 @@ public class FatCatAligner
 
 	  long tstart = System.currentTimeMillis();
     
-      afpChain = new AFPChain();
+      afpChain = new AFPChain(FatCat.algorithmName);
       afpChain.setCa1Length(ca1.length);
       afpChain.setCa2Length(ca2.length);
  

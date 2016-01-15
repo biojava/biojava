@@ -183,7 +183,7 @@ public class CeSymm {
 		}
 
 		Matrix origM = null;
-		AFPChain myAFP = new AFPChain();
+		AFPChain myAFP = new AFPChain(algorithmName);
 		CECalculator calculator = new CECalculator(params);
 
 		// Set multiple to true if multiple alignments are needed for refinement

@@ -10,6 +10,15 @@
   <name>biojava-phylo</name>
 
   <url>http://www.biojava.org</url>
+
+  <licenses>
+    <license>
+      <name>GNU LGPL v2</name>
+      <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <build>
     <plugins>
       <plugin>
@@ -55,6 +64,6 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>			
+  		</dependency>
   </dependencies>
 </project>

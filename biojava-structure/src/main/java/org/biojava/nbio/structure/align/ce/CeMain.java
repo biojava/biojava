@@ -104,7 +104,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		calculator = new CECalculator(params);
 
 		//Build alignment ca1 to ca2-ca2
-		AFPChain afpChain = new AFPChain();
+		AFPChain afpChain = new AFPChain(algorithmName);
 		afpChain = calculator.extractFragments(afpChain, ca1, ca2clone);
 		calculator.traceFragmentMatrix( afpChain,ca1, ca2clone);
 		calculator.nextStep( afpChain,ca1, ca2clone);
