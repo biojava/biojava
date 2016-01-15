@@ -52,12 +52,7 @@ public class TestParseMmCIFFeatures {
     }
     
     @Test
-    public void testSiteWithInsCode()throws IOException, StructureException {
-        AtomCache cache = new AtomCache();
-
-        StructureIO.setAtomCache(cache);
-
-        cache.setUseMmCif(true);
+	public void testSites1a4w()throws IOException, StructureException {
         Structure sCif = StructureIO.getStructure("1A4W");
 
         assertNotNull(sCif);
@@ -65,11 +60,16 @@ public class TestParseMmCIFFeatures {
         // After it has read the file, it should check that expected SITES are present.
         List<Site> sites = sCif.getSites();
 
-        // 1A4W has 5 sites from ligands.
+        // 1a4w has 5 sites from ligands.
         assertEquals(5, sites.size());
 
         // Check for each site that it has parsed all residues.
-        assertEquals(6, getGroupsInSite(sCif, "AC1"));  // AC1 references an insertion code.
+        assertEquals(3, getGroupsInSite(sCif, "CAT"));
+        assertEquals(6, getGroupsInSite(sCif, "AC1")); // Site has residue with insertion code.
+        assertEquals(6, getGroupsInSite(sCif, "AC2"));
+        assertEquals(14, getGroupsInSite(sCif, "AC3"));
+        assertEquals(14, getGroupsInSite(sCif, "AC4"));
+
     }
 
     private int getGroupsInSite(Structure structure, String site) {
