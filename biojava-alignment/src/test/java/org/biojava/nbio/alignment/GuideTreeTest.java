@@ -123,8 +123,9 @@ public class GuideTreeTest {
 
     @Test
     public void testToString() {
-        assertEquals(tree.toString(),
-                "(((1:0.0,2:0.0):-1.4,3:0.8999999999999999):-0.7,4:-0.7)");
+        assertEquals("(((1:0.0,2:0.0):[0.19999999999999996,3:0.8):"
+        		+ "0.09999999999999998,4:0.09999999999999998])", 
+        		tree.toString());
     }
 
 }
