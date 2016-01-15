@@ -240,10 +240,11 @@ public class StructureIO {
 	 * @param filename
 	 * @return
 	 */
-	public StructureFiletype guessFiletype(String filename) {
+	public static StructureFiletype guessFiletype(String filename) {
+		String lower = filename.toLowerCase();
 		for(StructureFiletype type : StructureFiletype.values()) {
 			for(String ext : type.getExtensions()) {
-				if(filename.endsWith(ext)) {
+				if(lower.endsWith(ext.toLowerCase())) {
 					return type;
 				}
 			}

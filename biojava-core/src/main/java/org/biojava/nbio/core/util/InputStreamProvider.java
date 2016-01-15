@@ -130,9 +130,9 @@ public class InputStreamProvider {
          return openCompressedURL(u);
       } else if (magic == GZIP_MAGIC ) {
          return openGZIPURL(u); 
-      } else if ( u.toString().endsWith(".gz")) {
+      } else if ( u.getPath().endsWith(".gz")) {
          return openGZIPURL(u);
-      } else if ( u.toString().endsWith(".Z")) {
+      } else if ( u.getPath().endsWith(".Z")) {
          // unix compressed 
          return openCompressedURL(u);
 

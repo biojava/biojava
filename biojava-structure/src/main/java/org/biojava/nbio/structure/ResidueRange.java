@@ -190,6 +190,10 @@ public class ResidueRange {
 
 	@Override
 	public String toString() {
+		if( start == null && end == null) {
+			// Indicates the full chain
+			return chain;
+		}
 		return chain + "_" + start + "-" + end;
 	}
 

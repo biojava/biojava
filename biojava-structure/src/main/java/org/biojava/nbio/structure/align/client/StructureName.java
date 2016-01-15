@@ -32,12 +32,14 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.biojava.nbio.structure.FileIdentifier;
 import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.URLIdentifier;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cath.CathFactory;
 import org.biojava.nbio.structure.domain.PDPDomain;
@@ -288,8 +290,14 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				realized = ScopFactory.getSCOP().getDomainByScopID(getIdentifier());
 				break;
 			case FILE:
+				realized = new FileIdentifier(name);
+				break;
 			case URL:
-				realized = new PassthroughIdentifier(name);
+				try {
+					realized = new URLIdentifier(name);
+				} catch (MalformedURLException e) {
+					throw new StructureException("Invalid URL: "+name,e);
+				}
 				break;
 			case PDP:
 				//TODO -sbliven 2015-01-28
@@ -297,13 +305,14 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 					PDPProvider provider = new RemotePDPProvider(false);
 					realized = provider.getPDPDomain(name);
 				} catch (IOException e) {
-					// This is really bad, but the SCOP and CATH factories do it internally too -sbliven
 					throw new StructureException("Unable to fetch PDP domain "+name, e);
 				}
 				break;
 			case PDB:
-			default:
 				realized = new SubstructureIdentifier(getIdentifier());
+				break;
+			default:
+				realized = new PassthroughIdentifier(name);
 				break;
 			}
 		}
