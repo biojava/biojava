@@ -417,8 +417,7 @@
 			<dependency>
 				<groupId>org.biojava.thirdparty</groupId>
 				<artifactId>forester</artifactId>
-				<version>1.005</version>
-				<scope>compile</scope>
+				<version>1.038</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
