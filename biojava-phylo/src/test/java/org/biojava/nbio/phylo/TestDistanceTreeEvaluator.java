@@ -2,7 +2,6 @@ package org.biojava.nbio.phylo;
 
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -16,7 +15,6 @@ import static org.junit.Assert.*;
 public class TestDistanceTreeEvaluator {
 
 	@Test
-	@Ignore
 	public void testErrorFree() throws Exception {
 
 		// Create a perfect additive distance matrix
@@ -48,7 +46,6 @@ public class TestDistanceTreeEvaluator {
 	}
 
 	@Test
-	@Ignore
 	public void testErrorEstimation() throws Exception {
 
 		// Matrix taken from forester test
@@ -57,18 +54,18 @@ public class TestDistanceTreeEvaluator {
 		m.setIdentifier(1, "B");
 		m.setIdentifier(2, "C");
 		m.setIdentifier(3, "D");
-		m.setRow("0.00 0.95 0.17 0.98", 0);
-		m.setRow("0.95 0.00 1.02 1.83", 1);
-		m.setRow("0.17 1.02 0.00 1.01", 2);
-		m.setRow("0.98 1.83 1.01 0.00", 3);
+		m.setRow("0 1 0 1", 0);
+		m.setRow("1 0 0 1", 1);
+		m.setRow("0 0 0 1", 2);
+		m.setRow("1 1 1 0", 3);
 
 		// Calculate error free tree and get the cv
 		Phylogeny tree = TreeConstructor.distanceTree(
 				ForesterWrapper.cloneDM(m), TreeConstructorType.NJ);
 		double cv = DistanceTreeEvaluator.evaluate(tree, m);
 
-		// Assert error is only 5%
-		assertEquals(0.05, cv, 0.1);
+		// Assert error is about 30%
+		assertEquals(0.3, cv, 0.05);
 
 	}
 }

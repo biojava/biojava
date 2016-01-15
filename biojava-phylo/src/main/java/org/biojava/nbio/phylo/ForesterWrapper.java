@@ -65,18 +65,16 @@ public class ForesterWrapper {
 	 * 
 	 * @param phylo
 	 *            Phylogeny phylogenetic tree
-	 * @param simpleNewick
 	 * @param writeDistances
 	 *            write the branch lengths if true
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getNewickString(Phylogeny phylo, boolean simpleNewick,
+	public static String getNewickString(Phylogeny phylo,
 			boolean writeDistances) throws Exception {
 
 		PhylogenyWriter w = new PhylogenyWriter();
-		StringBuffer newickString = w.toNewHampshire(phylo, simpleNewick,
-				writeDistances);
+		StringBuffer newickString = w.toNewHampshire(phylo, writeDistances);
 		return newickString.toString();
 	}
 

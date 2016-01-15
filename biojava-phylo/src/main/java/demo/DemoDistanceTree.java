@@ -69,7 +69,7 @@ public class DemoDistanceTree {
 				(BasicSymmetricalDistanceMatrix) DM, TreeConstructorType.NJ);
 
 		long treeT = System.currentTimeMillis();
-		String newick = ForesterWrapper.getNewickString(phylo, true, true);
+		String newick = ForesterWrapper.getNewickString(phylo, true);
 		System.out.println(newick);
 		System.out.println("Tree Construction: " + (treeT - readT) + " ms.");
 
