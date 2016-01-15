@@ -170,10 +170,11 @@ public class ChainImpl implements Chain, Serializable {
 			g.setChain(n);
 		}
 
-		List<Group> tmpSeqRes = new ArrayList<Group>();
+		
 		
 		if (seqResGroups!=null){
 
+			List<Group> tmpSeqRes = new ArrayList<Group>();
 
 			// cloning seqres and atom groups is ugly, due to their
 			// nested relationship (some of the atoms can be in the seqres, but not all)
@@ -195,8 +196,9 @@ public class ChainImpl implements Chain, Serializable {
 				tmpSeqRes.add(g);
 			}
 
+			n.setSeqResGroups(tmpSeqRes);
 		}
-		n.setSeqResGroups(tmpSeqRes);
+		
 
 		return n ;
 	}
