@@ -20,19 +20,11 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.Atom;
@@ -57,9 +49,6 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
@@ -91,8 +80,6 @@ public class AtomCache {
 
 	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
 
-	public static final Pattern scopIDregex = Pattern.compile("d(....)(.)(.)");
-
 	public static final String UNDERSCORE = "_";
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -110,7 +97,6 @@ public class AtomCache {
 
 	private String path;
 
-	private boolean strictSCOP;
 	private boolean useMmCif;
 
 	/**
@@ -169,8 +155,6 @@ public class AtomCache {
 		// no secstruc either
 		params.setParseSecStruc(false);
 		//
-
-		strictSCOP = true;
 
 		setUseMmCif(true);
 
@@ -711,13 +695,17 @@ public class AtomCache {
 
 
 	/**
-	 * Reports whether strict scop naming will be enforced, or whether this AtomCache should try to guess some simple
-	 * variants on scop domains.
+	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
+	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
+	 * For strictSCOP==False, create a {@link StructureName} or use
+	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
 	 * 
-	 * @return true if scop names should be used strictly with no guessing
+	 * @return false; ignored
+	 * @deprecated since 4.2
 	 */
+	@Deprecated
 	public boolean isStrictSCOP() {
-		return strictSCOP;
+		return false;
 	}
 
 	/**
@@ -885,17 +873,18 @@ public class AtomCache {
 
 
 	/**
-	 * When strictSCOP is enabled, SCOP domain identifiers (eg 'd1gbga_') are matched literally to the SCOP database.
+	 * This method does nothing.
 	 * 
-	 * When disabled, some simple mistakes are corrected automatically. For instance, the invalid identifier 'd1gbg__'
-	 * would be corrected to 'd1gbga_' automatically.
+	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
+	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
+	 * For strictSCOP==False, create a {@link StructureName} or use
+	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
 	 * 
-	 * @param strictSCOP
-	 *            Indicates whether strict scop names should be used.
+	 * @param strictSCOP Ignored
+	 * @deprecated Removed in 4.2.0
 	 */
-	public void setStrictSCOP(boolean strictSCOP) {
-		this.strictSCOP = strictSCOP;
-	}
+	@Deprecated
+	public void setStrictSCOP(boolean ignored) {}
 
 	/**
 	 * @return the useMmCif
@@ -948,21 +937,6 @@ public class AtomCache {
 		return s;
 	}
 
-	private Structure getPDPStructure(String pdpDomainName) throws IOException, StructureException {
-
-		// System.out.println("loading PDP domain from server " + pdpDomainName);
-		if (pdpprovider == null) {
-			pdpprovider = new RemotePDPProvider(true);
-		}
-
-		return pdpprovider.getDomain(pdpDomainName, this);
-
-	}
-
-	private ScopDomain getScopDomain(String scopId) {
-		return ScopFactory.getSCOP().getDomainByScopID(scopId);
-	}
-
 	/**
 	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the the {@link CathDatabase}
 	 * at {@link CathFactory#getCathDatabase()}.
@@ -994,114 +968,6 @@ public class AtomCache {
 		}
 
 		return n;
-	}
-
-	private Structure getStructureFromSCOPDomain(String name) throws IOException, StructureException {
-		// looks like a SCOP domain!
-		ScopDomain domain;
-		if (strictSCOP) {
-			domain = getScopDomain(name);
-		} else {
-			domain = guessScopDomain(name);
-		}
-
-		//System.out.println(domain);
-		if (domain != null) {
-			Structure s = getStructureForDomain(domain);
-			return s;
-		}
-
-		// Guessing didn't work, so just use the PDBID and Chain from name
-		if (!strictSCOP) {
-			Matcher scopMatch = scopIDregex.matcher(name);
-			if (scopMatch.matches()) {
-				String pdbID = scopMatch.group(1);
-				String chainID = scopMatch.group(2);
-
-				// None of the actual SCOP domains match. Guess that '_' means 'whole chain'
-				if (!chainID.equals("_")) {
-					// Add chain identifier
-					pdbID += "." + scopMatch.group(2);
-				}
-				// Fetch the structure by pdb id
-				Structure struct = getStructure(pdbID);
-				if (struct != null) {
-					logger.error("Unable to find {}, so using {}",name,pdbID);
-				}
-
-				return struct;
-			}
-		}
-
-		throw new StructureException("Unable to get structure for SCOP domain: " + name);
-	}
-
-	/**
-	 * <p>
-	 * Guess a scop domain. If an exact match is found, return that.
-	 * 
-	 * <p>
-	 * Otherwise, return the first scop domain found for the specified protein such that
-	 * <ul>
-	 * <li>The chains match, or one of the chains is '_' or '.'.
-	 * <li>The domains match, or one of the domains is '_'.
-	 * </ul>
-	 * 
-	 * 
-	 * @param name
-	 * @return
-	 * @throws IOException
-	 * @throws StructureException
-	 */
-	private ScopDomain guessScopDomain(String name) throws IOException, StructureException {
-		List<ScopDomain> matches = new LinkedList<ScopDomain>();
-
-		// Try exact match first
-		ScopDomain domain = getScopDomain(name);
-		if (domain != null) {
-			return domain;
-		}
-
-		// Didn't work. Guess it!
-		logger.warn("Warning, could not find SCOP domain: " + name);
-
-		Matcher scopMatch = scopIDregex.matcher(name);
-		if (scopMatch.matches()) {
-			String pdbID = scopMatch.group(1);
-			String chainID = scopMatch.group(2);
-			String domainID = scopMatch.group(3);
-
-			for (ScopDomain potentialSCOP : ScopFactory.getSCOP().getDomainsForPDB(pdbID)) {
-				Matcher potMatch = scopIDregex.matcher(potentialSCOP.getScopId());
-				if (potMatch.matches()) {
-					if (chainID.equals(potMatch.group(2)) || chainID.equals("_") || chainID.equals(".")
-							|| potMatch.group(2).equals("_") || potMatch.group(2).equals(".")) {
-						if (domainID.equals(potMatch.group(3)) || domainID.equals("_") || potMatch.group(3).equals("_")) {
-							// Match, or near match
-							matches.add(potentialSCOP);
-						}
-					}
-				}
-			}
-		}
-
-		Iterator<ScopDomain> match = matches.iterator();
-		if (match.hasNext()) {
-			ScopDomain bestMatch = match.next();
-			StringBuilder warnMsg = new StringBuilder();
-			warnMsg.append("Trying domain " + bestMatch.getScopId() + ".");
-			if (match.hasNext()) {
-				warnMsg.append(" Other possibilities: ");
-				while (match.hasNext()) {
-					warnMsg.append(match.next().getScopId() + " ");
-				}
-			}
-			warnMsg.append(System.getProperty("line.separator"));
-			logger.warn(warnMsg.toString());
-			return bestMatch;
-		} else {
-			return null;
-		}
 	}
 
 	protected void flagLoading(String name) {

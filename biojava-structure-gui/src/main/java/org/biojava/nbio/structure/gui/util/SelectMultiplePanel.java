@@ -111,7 +111,6 @@ public class SelectMultiplePanel extends JPanel {
 		UserConfiguration config = WebStartMain.getWebStartConfig();
 
 		AtomCache cache = new AtomCache(config);
-		cache.setStrictSCOP(false);
 
 		Structure s = null;
 		try {

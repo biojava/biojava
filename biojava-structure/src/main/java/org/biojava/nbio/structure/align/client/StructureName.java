@@ -26,13 +26,14 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.biojava.nbio.structure.FileIdentifier;
 import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
@@ -46,7 +47,11 @@ import org.biojava.nbio.structure.domain.PDPDomain;
 import org.biojava.nbio.structure.domain.PDPProvider;
 import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.structure.scop.ScopDatabase;
+import org.biojava.nbio.structure.scop.ScopDomain;
 import org.biojava.nbio.structure.scop.ScopFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A utility class that makes working with names of structures, domains and ranges easier.
@@ -54,16 +59,14 @@ import org.biojava.nbio.structure.scop.ScopFactory;
  * @see #getName the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
  */
 public class StructureName implements Comparable<StructureName>, Serializable, StructureIdentifier {
-	
-	//private static final Logger logger = LoggerFactory.getLogger(StructureName.class);
-
 	private static final long serialVersionUID = 4021229518711762957L;
+	private static final Logger logger = LoggerFactory.getLogger(StructureName.class);
+
 	protected String name;
 	protected String pdbId;
 	protected String chainId;
 
 	private static final Pattern cathPattern = Pattern.compile("^([0-9][a-z0-9]{3})(\\w)([0-9]{2})$",Pattern.CASE_INSENSITIVE);
-	// More specific than AtomCache.scopIDregex
 	private static final Pattern scopPattern = Pattern.compile("^d([0-9][a-z0-9]{3})(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
 
 	private enum Source {
@@ -287,10 +290,26 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				realized = CathFactory.getCathDatabase().getDescriptionByCathId(getIdentifier());
 				break;
 			case SCOP:
-				realized = ScopFactory.getSCOP().getDomainByScopID(getIdentifier());
+				// Fuzzy matching of the domain name to the current default factory
+				realized = guessScopDomain(getIdentifier(),ScopFactory.getSCOP());
+				if(realized == null) {
+					// Guessing didn't work, so just use the PDBID and Chain from name
+					// Guess that '_' means 'whole structure'
+					if (chainId.equals("_")) {
+						realized = new SubstructureIdentifier(pdbId);
+					} else {
+						realized = new SubstructureIdentifier(pdbId,ResidueRange.parseMultiple(chainId));
+					}
+					logger.error("Unable to find {}, so using {}",name,realized);
+				}
 				break;
 			case FILE:
-				realized = new FileIdentifier(name);
+				try {
+					realized = new URLIdentifier(new File(name).toURI().toURL());
+				} catch (MalformedURLException e) {
+					// Should never happen
+					throw new StructureException("Unable to get URL for file: "+name,e);
+				}
 				break;
 			case URL:
 				try {
@@ -402,4 +421,78 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		// Throws NPE for nulls
 		return pdb1.compareTo(pdb2);
 	}
+	
+	/**
+	 * <p>
+	 * Guess a scop domain. If an exact match is found, return that.
+	 * 
+	 * <p>
+	 * Otherwise, return the first scop domain found for the specified protein such that
+	 * <ul>
+	 * <li>The chains match, or one of the chains is '_' or '.'.
+	 * <li>The domains match, or one of the domains is '_'.
+	 * </ul>
+	 * 
+	 * In some cases there may be several valid matches. In this case a warning
+	 * will be logged.
+	 * 
+	 * @param name SCOP domain name, or a guess thereof
+	 * @param scopDB SCOP domain provider
+	 * @return The best match for name among the domains of scopDB, or null if none match.
+	 */
+	public static ScopDomain guessScopDomain(String name, ScopDatabase scopDB) {
+		List<ScopDomain> matches = new LinkedList<ScopDomain>();
+
+		// Try exact match first
+		ScopDomain domain = scopDB.getDomainByScopID(name);
+		if (domain != null) {
+			return domain;
+		}
+
+		// Didn't work. Guess it!
+		logger.warn("Warning, could not find SCOP domain: " + name);
+
+		Matcher scopMatch = scopPattern.matcher(name);
+		if (scopMatch.matches()) {
+			String pdbID = scopMatch.group(1);
+			String chainID = scopMatch.group(2);
+			String domainID = scopMatch.group(3);
+
+			for (ScopDomain potentialSCOP : scopDB.getDomainsForPDB(pdbID)) {
+				Matcher potMatch = scopPattern.matcher(potentialSCOP.getScopId());
+				if (potMatch.matches()) {
+					if (chainID.equals(potMatch.group(2)) || chainID.equals("_") || chainID.equals(".")
+							|| potMatch.group(2).equals("_") || potMatch.group(2).equals(".")) {
+						if (domainID.equals(potMatch.group(3)) || domainID.equals("_") || potMatch.group(3).equals("_")) {
+							// Match, or near match
+							matches.add(potentialSCOP);
+						}
+					}
+				}
+			}
+		}
+
+		Iterator<ScopDomain> match = matches.iterator();
+		if (match.hasNext()) {
+			ScopDomain bestMatch = match.next();
+			if(logger.isWarnEnabled()) {
+				StringBuilder warnMsg = new StringBuilder();
+				warnMsg.append("Trying domain " + bestMatch.getScopId() + ".");
+				if (match.hasNext()) {
+					warnMsg.append(" Other possibilities: ");
+					while (match.hasNext()) {
+						warnMsg.append(match.next().getScopId() + " ");
+					}
+				}
+				warnMsg.append(System.getProperty("line.separator"));
+				logger.warn(warnMsg.toString());
+			}
+			return bestMatch;
+		} else {
+			return null;
+		}
+	}
+
+	
+	
 }
