@@ -183,7 +183,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 
-
+		newS.setStructureIdentifier(this);
 
 		for( int modelNr=0;modelNr<s.nrModels();modelNr++) {
 			String prevChainId = null;

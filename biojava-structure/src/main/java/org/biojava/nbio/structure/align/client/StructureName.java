@@ -54,10 +54,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** A utility class that makes working with names of structures, domains and ranges easier.
+/** 
+ * A utility class that makes working with names of structures, domains and ranges easier.
+ * 
+ * Accepts a wide range of identifier formats, including {@link ScopDomain},
+ * {@link CathDomain}, PDP domains, and {@link SubstructureIdentifier} residue
+ * ranges.
+ * 
+ * Where possible, data is extracted from the input string. Otherwise, range 
+ * information may be loaded from one of the factory classes:
+ * {@link CathFactory},{@link ScopFactory}, etc.
  * 
  * @see #getName the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
  */
+
 public class StructureName implements Comparable<StructureName>, Serializable, StructureIdentifier {
 	private static final long serialVersionUID = 4021229518711762957L;
 	private static final Logger logger = LoggerFactory.getLogger(StructureName.class);
@@ -221,6 +231,9 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		return getIdentifier();
 	}
 
+	/**
+	 * Get the original form of the identifier
+	 */
 	@Override
 	public String getIdentifier() {
 		return name;

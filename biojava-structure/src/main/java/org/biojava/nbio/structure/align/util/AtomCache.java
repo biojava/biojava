@@ -386,7 +386,9 @@ public class AtomCache {
 	 */
 	public Structure getStructure(StructureIdentifier strucId) throws IOException, StructureException {
 		Structure s = strucId.loadStructure(this);
-		return strucId.reduce(s);
+		Structure r = strucId.reduce(s);
+		r.setStructureIdentifier(strucId);
+		return r;
 	
 //		if (name.length() < 4) {
 //			throw new IllegalArgumentException("Can't interpret IDs that are shorter than 4 characters!");

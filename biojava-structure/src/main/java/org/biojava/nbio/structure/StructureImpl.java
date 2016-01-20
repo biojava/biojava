@@ -53,6 +53,7 @@ public class StructureImpl implements Structure, Serializable {
 	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
 	private String pdb_id ;
+
 	/* models is an ArrayList of ArrayLists */
 	private List<List<Chain>> models;
 
@@ -63,12 +64,12 @@ public class StructureImpl implements Structure, Serializable {
 	private List<Site> sites;
 	private List<Group> hetAtoms;
 	private String name ;
+	private StructureIdentifier structureIdentifier;
 
 	private PDBHeader pdbHeader;
 
 	private Long id;
 	private boolean biologicalAssembly;
-
 
 	/**
 	 *  Constructs a StructureImpl object.
@@ -283,6 +284,22 @@ public class StructureImpl implements Structure, Serializable {
 	public String getName()           { return name;  }
 
 
+
+	/**
+	 * @return The StructureIdentifier used to create this structure
+	 */
+	@Override
+	public StructureIdentifier getStructureIdentifier() {
+		return structureIdentifier;
+	}
+
+	/**
+	 * @param structureIdentifier the structureIdentifier corresponding to this structure
+	 */
+	@Override
+	public void setStructureIdentifier(StructureIdentifier structureIdentifier) {
+		this.structureIdentifier = structureIdentifier;
+	}
 
 	@Override
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }

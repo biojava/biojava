@@ -42,6 +42,8 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  * dir.cla.scop.txt_1.75
  * 
  * e.g d1dlwa_	1dlw	A:	a.1.1.1	14982	cl=46456,cf=46457,sf=46458,fa=46459,dm=46460,sp=46461,px=14982
+ * 
+ * Instantiated using {@link ScopDatabase#getDomainByScopID(String)}
  * @author Andreas Prlic
  *
  */
