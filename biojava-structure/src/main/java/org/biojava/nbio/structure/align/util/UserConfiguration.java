@@ -95,7 +95,7 @@ public class UserConfiguration
 		// note that in initCacheFilePath, we set to the provided one (if readable) or to the same as pdbFilePath
 		cacheFilePath = initCacheFilePath();
 		
-		fileFormat = PDB_FORMAT;//TODO switch to mmcif (SB 2015-01)
+		fileFormat = MMCIF_FORMAT;
 	}
 	
 	private String initPdbFilePath() {
