@@ -20,8 +20,26 @@
  */
 package org.biojava.nbio.structure.symmetry.gui;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
+
+import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.gui.AlignmentCalculationRunnable;
@@ -34,11 +52,6 @@ import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
 
 /** 
  * A JFrame that allows to trigger a symmetry analysis, either from files
@@ -271,12 +284,12 @@ public class SymmetryGui extends JFrame {
 				return ;
 			}
 
-			String name = "custom";
+			StructureIdentifier name = new PassthroughIdentifier("custom");
 
 			if  ( pos == 0){
 				name = tab1.getName1();
 			} else {
-				name = s.getName();
+				name = s.getStructureIdentifier();
 			}
 
 			System.out.println("Analyzing: " + name);
@@ -292,6 +305,9 @@ public class SymmetryGui extends JFrame {
 			ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
 			drawer.start();
 		} catch (StructureException e){
+			JOptionPane.showMessageDialog(null,
+					"Could not align structures. Exception: " + e.getMessage());
+		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null,
 					"Could not align structures. Exception: " + e.getMessage());
 		}

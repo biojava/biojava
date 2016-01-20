@@ -78,8 +78,8 @@ public class TestAFPChainConversion {
 		MultipleAlignment msa = ensemble.getMultipleAlignment(0);
 
 		//Test for all the information
-		assertEquals(afp.getName1(),ensemble.getStructureNames().get(0));
-		assertEquals(afp.getName2(), ensemble.getStructureNames().get(1));
+		assertEquals(afp.getName1(),ensemble.getStructureIdentifiers().get(0));
+		assertEquals(afp.getName2(), ensemble.getStructureIdentifiers().get(1));
 		assertEquals(afp.getAlgorithmName(), ensemble.getAlgorithmName());
 		assertEquals(afp.getVersion(),ensemble.getVersion());
 		assertTrue(ensemble.getCalculationTime().equals(

@@ -187,6 +187,7 @@ public class AtomCache {
 		this(config.getPdbFilePath(), config.getCacheFilePath());
 		fetchBehavior = config.getFetchBehavior();
 		obsoleteBehavior = config.getObsoleteBehavior();
+		useMmCif = config.getFileFormat().equals( UserConfiguration.MMCIF_FORMAT );
 	}
 
 	/**
@@ -201,6 +202,9 @@ public class AtomCache {
 	 * @see 
 	 */
 	public Atom[] getAtoms(String name) throws IOException, StructureException {
+		return getAtoms(new StructureName(name));
+	}
+	public Atom[] getAtoms(StructureIdentifier name) throws IOException, StructureException {
 
 		Atom[] atoms = null;
 
@@ -226,10 +230,12 @@ public class AtomCache {
 	 * @see 
 	 */
 	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
+		return getRepresentativeAtoms(new StructureName(name));
+	}
+	public Atom[] getRepresentativeAtoms(StructureIdentifier name) throws IOException, StructureException {
 
 		Atom[] atoms = null;
 
-		// System.out.println("loading " + name);
 		Structure s = getStructure(name);
 
 		atoms = StructureTools.getRepresentativeAtomArray(s);

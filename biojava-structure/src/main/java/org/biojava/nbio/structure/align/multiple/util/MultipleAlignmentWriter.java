@@ -30,8 +30,10 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.client.StructureName;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
@@ -68,7 +70,7 @@ public class MultipleAlignmentWriter {
 		String fasta = "";
 		for (int st = 0; st < alignment.size(); st++) {
 			// Add the structure identifier as the head of the FASTA
-			fasta += ">" + alignment.getEnsemble().getStructureNames().get(st)
+			fasta += ">" + alignment.getEnsemble().getStructureIdentifiers().get(st)
 					+ "\n" + alnSequences.get(st) + "\n";
 		}
 		return fasta;
@@ -144,8 +146,8 @@ public class MultipleAlignmentWriter {
 		// Write structure names & PDB codes
 		for (int str = 0; str < multAln.size(); str++) {
 			residueGroup.append("#Struct" + (str + 1) + ":\t");
-			residueGroup.append(multAln.getEnsemble().getStructureNames()
-					.get(str));
+			residueGroup.append(multAln.getEnsemble().getStructureIdentifiers()
+					.get(str).getIdentifier());
 			residueGroup.append("\n");
 		}
 		// Whrite header for columns
@@ -320,11 +322,15 @@ public class MultipleAlignmentWriter {
 		StringBuilder str = new StringBuilder();
 
 		// Gather info about the template structure
-		String tNameStr = alignment.getEnsemble().getStructureNames()
+		StructureIdentifier tName = alignment.getEnsemble().getStructureIdentifiers()
 				.get(templateIndex);
-		StructureName tName = new StructureName(tNameStr);
-		String tPdbId = tName.getPdbId();
-		String tChain = tName.getChainId();
+		SubstructureIdentifier canon = tName.toCanonical();
+		String tPdbId = canon.getPdbId();
+		String tChain = null;
+		for(ResidueRange range : canon.getResidueRanges()) {
+			tChain = range.getChainId();
+			break;
+		}
 
 		if (tChain == null) {
 			// Use the chain of the first template block

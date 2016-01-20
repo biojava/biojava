@@ -22,8 +22,27 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
+
+import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
 import org.biojava.nbio.structure.align.ce.AbstractUserArgumentProcessor;
@@ -34,10 +53,6 @@ import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.File;
 
 /** A JFrame that allows to trigger a pairwise structure alignment,
  * either from files in a directory,
@@ -368,8 +383,8 @@ public class AlignmentGui extends JFrame{
 			String name2 = "custom2";
 
 			if  ( pos == 0){
-				name1 = tab1.getName1();
-				name2 = tab1.getName2();
+				name1 = tab1.getName1().getIdentifier();
+				name2 = tab1.getName2().getIdentifier();
 			} else {
 				name1 = s1.getName();
 				name2 = s2.getName();
@@ -388,6 +403,8 @@ public class AlignmentGui extends JFrame{
 			ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
 			drawer.start();
 		} catch (StructureException e){
+			JOptionPane.showMessageDialog(null,"Could not align structures. Exception: " + e.getMessage());
+		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null,"Could not align structures. Exception: " + e.getMessage());
 		}
 

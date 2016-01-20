@@ -20,20 +20,25 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.io.IOException;
+
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+
+import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
-import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.io.StructureProvider;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 
 
 /** A Panel that allows user to specify PDB & chain ID, as well as sub-ranges
@@ -100,101 +105,46 @@ implements StructurePairSelector{
 		this.add(vBox);
 	}
 
-	public String getName1() {
-		
+	public StructureIdentifier getName1() {
+		String pdbId = f1.getText().trim();
 		String chainId = c1.getText().trim();
-		
-		String name = f1.getText().trim(); 
-		
-		if ( ! chainId.equals("") ){
-			name += "." + chainId;
+		String range = r1.getText().trim();
+
+		// Prefer range over chain
+		if( ! range.isEmpty() ) {
+			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(range));
+		} else if ( ! chainId.isEmpty() ){
+			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainId));
 		}
-		return  name;
+		return new SubstructureIdentifier(pdbId);
 	}
-	public String getName2() {
+	public StructureIdentifier getName2() {
+		String pdbId = f2.getText().trim();
 		String chainId = c2.getText().trim();
-		
-		String name = f2.getText().trim();
-		
-		if ( ! chainId.equals("") ){
-			name += "." + chainId;
+		String range = r2.getText().trim();
+
+		// Prefer range over chain
+		if( ! range.isEmpty() ) {
+			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(range));
+		} else if ( ! chainId.isEmpty() ){
+			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainId));
 		}
-		return  name;
+		return new SubstructureIdentifier(pdbId);
 	}
 	@Override
-	public Structure getStructure1() throws StructureException{
-		return fromPDB(f1,c1,r1);
+	public Structure getStructure1() throws StructureException, IOException{
+		return getStructure(getName1());
 	}
 
 	@Override
-	public Structure getStructure2() throws StructureException{    
-		return fromPDB(f2,c2,r2);
+	public Structure getStructure2() throws StructureException, IOException{    
+		return getStructure(getName2());
 	}
 
-
-	
-	
-	
-	
-	private Structure fromPDB(JTextField f, JTextField c,JTextField r) throws StructureException{
-		String pdb = f.getText().trim();
-
+	private Structure getStructure(StructureIdentifier name) throws IOException, StructureException {
 		UserConfiguration config = WebStartMain.getWebStartConfig();
-
-		if ( pdb.length() < 4) {
-			f.setText("!!!");
-			return null;
-		}
-
-		String chain = c.getText().trim();
-		if ( debug )
-			System.out.println("file :" + pdb + " " +  chain);
-
-
-		String range = r.getText().trim();
-
-		String fileFormat = config.getFileFormat();
-
-		StructureProvider reader = null;
-		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
-			PDBFileReader re = new PDBFileReader(config.getPdbFilePath());
-			re.setFetchBehavior(config.getFetchBehavior());
-			reader = re;
-		} else if ( fileFormat.equals(UserConfiguration.MMCIF_FORMAT)){
-			MMCIFFileReader re = new MMCIFFileReader(config.getPdbFilePath());
-			re.setFetchBehavior(config.getFetchBehavior());
-			reader = re;
-		} else {
-			throw new StructureException("Unkown file format " + fileFormat);
-		}
-
-		FileParsingParameters params = new FileParsingParameters();
-		params.setAlignSeqRes(false);
-		reader.setFileParsingParameters(params);
-
-
-		Structure structure ;
-		try {
-			structure = reader.getStructureById(pdb);
-		} catch (IOException e) {
-			throw new StructureException("Could not read structure " + pdb ,e);
-		}
-
-
-		//System.out.println(" got range: " + range);
-		if ( range != null && ( ! range.equals(""))){
-			if ( structure.getName() == null || structure.getName().equals(""))
-				structure.setName(pdb);
-			Structure s = StructureTools.getSubRanges(structure, range);
-			//System.out.println("got atoms: " + StructureTools.getAtomCAArray(s).length);
-			return s;
-		} 
-		Structure s = StructureTools.getReducedStructure(structure,chain);
-		//System.out.println("got atoms: " + StructureTools.getAtomCAArray(s).length);
-		if ( s.getName() == null || s.getName().equals(""))
-			s.setName(pdb+"."+chain);
-		return s;
-
+		AtomCache cache = new AtomCache(config);
+		return cache.getStructure(name);
 	}
 
 	private Box getPDBFilePanel(int pos ,JTextField f, JTextField c, JTextField r){

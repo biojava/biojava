@@ -30,6 +30,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockImpl;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
@@ -274,8 +276,8 @@ public class MultipleAlignmentXMLParser {
 	public static void parseStructures(Node root, 
 			MultipleAlignmentEnsemble ensemble) {
 		
-		List<String> names = new ArrayList<String>();
-		ensemble.setStructureNames(names);
+		List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
+		ensemble.setStructureIdentifiers(names);
 
 		NamedNodeMap atts = root.getAttributes();
 
@@ -285,7 +287,7 @@ public class MultipleAlignmentXMLParser {
 		while (node!=null){
 
 			String name = node.getTextContent();
-			names.add(name);
+			names.add(new StructureName(name));
 
 			str++;
 			node = atts.getNamedItem("name"+str);

@@ -132,7 +132,7 @@ implements Serializable, MultipleAlignment, Cloneable {
 
 	@Override
 	public String toString() {
-		String resume = "Structures:" + parent.getStructureNames() + 
+		String resume = "Structures:" + parent.getStructureIdentifiers() + 
 				" \nAlgorithm:" + parent.getAlgorithmName() + "_" + 
 				parent.getVersion() + 
 				" \nBlockSets: "+ getBlockSets().size() + 

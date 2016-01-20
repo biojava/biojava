@@ -28,6 +28,7 @@ import java.util.List;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.MultipleStructureAligner;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -49,7 +50,7 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MultipleAlignmentCalc.class);
 
-	private List<String> names;
+	private List<StructureIdentifier> names;
 	private List<Structure> structures;
 
 	private MultipleAlignmentGUI parent;
@@ -63,7 +64,7 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 	 * @param names
 	 */
 	public MultipleAlignmentCalc(MultipleAlignmentGUI parent, 
-			List<Structure> structures, List<String> names) {
+			List<Structure> structures, List<StructureIdentifier> names) {
 
 		this.parent= parent;
 		this.structures = structures;
@@ -84,7 +85,7 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 			}
 
 			MultipleAlignment msa = algorithm.align(atomArrays);
-			msa.getEnsemble().setStructureNames(names);
+			msa.getEnsemble().setStructureIdentifiers(names);
 
 			MultipleAlignmentDisplay.display(msa);
 
