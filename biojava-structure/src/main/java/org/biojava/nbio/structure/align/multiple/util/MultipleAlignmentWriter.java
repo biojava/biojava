@@ -70,7 +70,7 @@ public class MultipleAlignmentWriter {
 		String fasta = "";
 		for (int st = 0; st < alignment.size(); st++) {
 			// Add the structure identifier as the head of the FASTA
-			fasta += ">" + alignment.getEnsemble().getStructureIdentifiers().get(st)
+			fasta += ">" + alignment.getEnsemble().getStructureIdentifiers().get(st).getIdentifier()
 					+ "\n" + alnSequences.get(st) + "\n";
 		}
 		return fasta;

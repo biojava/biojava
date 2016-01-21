@@ -242,25 +242,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	@Override
 	public String toString(){
 
-		StringBuilder s = new StringBuilder();
-
-		s.append(name);
-		s.append("[");
-
-		try {
-			String id = getPdbId();
-			s.append("PDB ID: ");
-			s.append(id);
-			s.append(",");
-		} catch (StructureException e) {
-			// ignore errors
-		}
-		s.append("Source: ");
-		s.append(mySource);
-		s.append("]");
-
-		return s.toString();
-
+		return name;
 	}
 
 

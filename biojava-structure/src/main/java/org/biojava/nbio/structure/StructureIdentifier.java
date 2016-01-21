@@ -46,6 +46,9 @@ public interface StructureIdentifier {
 
 	/**
 	 * Get the String form of this identifier.
+	 * 
+	 * It is recommended that the {@link #toString()} method also return the
+	 * identifier, for consistency during serialization.
 	 * @return The String form of this identifier
 	 */
 	String getIdentifier();
