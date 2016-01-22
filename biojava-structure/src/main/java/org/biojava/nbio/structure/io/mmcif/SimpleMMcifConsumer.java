@@ -58,6 +58,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.BondMaker;
+import org.biojava.nbio.structure.io.ChargeAdder;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
@@ -709,6 +710,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( params.shouldCreateAtomBonds()) {
 			addBonds();
 		}
+		
+		if ( params.shouldCreateAtomCharges()) {
+			addCharges();
+		}
 
 		//TODO: add support for structure.setConnections(connects);
 		
@@ -950,6 +955,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		
+	}
+	
+	private void addCharges() {
+		ChargeAdder adder = new ChargeAdder(structure);
+		adder.addCharges();
 	}
 
 	/**
