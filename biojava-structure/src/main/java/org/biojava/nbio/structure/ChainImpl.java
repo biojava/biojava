@@ -255,6 +255,11 @@ public class ChainImpl implements Chain, Serializable {
 	public void addGroup(Group group) {
 
 		group.setChain(this);
+		
+		// Set the altlocs chain as well
+		for(Group g : group.getAltLocs()) {
+			g.setChain(this);
+		}
 
 		groups.add(group);
 
