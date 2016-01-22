@@ -23,6 +23,8 @@ import org.junit.Test;
 public class TestParseMmCIFLigands {
 	
 	int HEM_COUNT_4HHB = 172;	//Number of atoms in HEM groups of 4HHB (manually determined from CIF file)
+	int ATOM_COUNT_3UCB = 114;      //number of atoms in 3UCB, including alternate ligand conformations
+
 	
 	@Test
 	public void testLigandConnections()throws IOException, StructureException {
@@ -61,4 +63,28 @@ public class TestParseMmCIFLigands {
 		}
 		return uniqueIDs.size();
 	}
+	
+	@Test
+	public void testMultipleConformations()throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		
+		StructureIO.setAtomCache(cache);
+		
+		cache.setUseMmCif(true);
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+		 
+		FileParsingParameters params = cache.getFileParsingParams();
+		params.setCreateLigandConects(true);
+		StructureIO.setAtomCache(cache);
+		
+		Structure sCif = StructureIO.getStructure("3UCB");
+		List<Map<String, Integer>> conects = sCif.getConnections();
+		
+		assertNotNull(conects);
+		Assert.assertFalse(conects.isEmpty());
+		//Verify that we have all atoms from all conformations of the ligands
+		System.out.println(countUniqueAtomsInConnectionsList(conects));
+		Assert.assertTrue(countUniqueAtomsInConnectionsList(conects) == ATOM_COUNT_3UCB);
+	}
+
 }

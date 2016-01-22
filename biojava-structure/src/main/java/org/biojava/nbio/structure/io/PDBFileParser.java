@@ -2721,7 +2721,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 
 
-		if (params.shouldCreateLigandConects()){
+		if (params.isCreateLigandConects()){
 			addLigandConnections();
 		}
 		

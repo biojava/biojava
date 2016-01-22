@@ -642,13 +642,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			addBonds();
 		}
 		
-		if ( params.shouldCreateLigandConects()) {
+		// Adds the equivalent CONECT-style records as a PDB has for ligands.
+		if ( params.isCreateLigandConects()) {
 			addLigandConnections();
 		}
-		
-		//TODO: add support for structure.setConnections(connects);
-		
-
 		
 		boolean noAsymStrandIdMappingPresent = false;
 		if (asymStrandId.isEmpty()) {
