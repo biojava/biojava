@@ -482,6 +482,27 @@ public class CeSymm {
 			msa = e.getMultipleAlignment(0);
 			logger.debug("Returning optimal self-alignment");
 			msa.putScore("isRefined", 0.0);
+			if (params.getRefineMethod() == RefineMethod.NOT_REFINED 
+					&& selfAFP.getTMScore() > params.getScoreThreshold()){
+				// Store the order for future reference - TODO provisional
+				OrderDetector orderDetector = null;
+				double order = 0;
+				try {
+					switch (params.getOrderDetectorMethod()) {
+					case SEQUENCE_FUNCTION:
+						orderDetector = new SequenceFunctionOrderDetector(
+								params.getMaxSymmOrder(), 0.4f);
+						order = orderDetector.calculateOrder(selfAFP, atoms);
+						break;
+					case USER_INPUT:
+						order = params.getUserOrder();
+						break;
+					}
+				} catch (RefinerFailedException e1){
+					order = 1;
+				}
+				msa.putScore("SymmetryOrder", order);
+			}
 		}
 		return msa;
 	}
