@@ -37,8 +37,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
-		<slf4j.version>1.7.12</slf4j.version>
-		<log4j.version>2.4.1</log4j.version>
+		<slf4j.version>1.7.13</slf4j.version>
+		<!-- DO NOT CHANGE. Log4j 2.3 is the most recent version that works with Java 1.6 -->
+		<log4j.version>2.3</log4j.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
@@ -149,7 +150,7 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.6.1</version>
+					<version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -175,7 +176,10 @@
 					<artifactId>maven-source-plugin</artifactId>
 					<version>2.4</version>
 				</plugin>
-
+				<plugin>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.19.1</version>
+				</plugin>
 				<plugin>
 					<groupId>net.sf</groupId>
 					<artifactId>stat-scm</artifactId>
@@ -184,7 +188,7 @@
 				<plugin>
 					<groupId>org.jvnet.jaxb2.maven2</groupId>
 					<artifactId>maven-jaxb2-plugin</artifactId>
-					<version>0.13.0</version>
+					<version>0.13.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -216,11 +220,11 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>2.4.1</version>
+					<version>2.4.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5.5</version>
+					<version>2.6</version>
 					<configuration>
 						<descriptors>
 							<descriptor>src/main/assembly/assembly.xml</descriptor>
@@ -242,14 +246,25 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>findbugs-maven-plugin</artifactId>
-					<version>3.0.2</version>
+					<version>3.0.3</version>
 				</plugin>
 
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>buildnumber-maven-plugin</artifactId>
+					<version>1.4</version>
+				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.16</version>
+					<version>2.17</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.7</version>
 				</plugin>
 
 			</plugins>
@@ -290,7 +305,7 @@
 			<!-- give more memory for junit tests -->
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18.1</version>
+				<version>2.19.1</version>
 				<configuration>
 					<argLine>-Xmx1500M</argLine>
 					<reuseForks>false</reuseForks>
@@ -402,8 +417,7 @@
 			<dependency>
 				<groupId>org.biojava.thirdparty</groupId>
 				<artifactId>forester</artifactId>
-				<version>1.005</version>
-				<scope>compile</scope>
+				<version>1.038</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -444,13 +458,13 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.0.3</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.15</version>
+				<version>2.17</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

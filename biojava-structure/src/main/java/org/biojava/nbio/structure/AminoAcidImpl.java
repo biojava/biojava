@@ -175,6 +175,15 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}
+
+		// copying the alt loc groups if present, otherwise they stay null
+		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
+			for (Group altLocGroup:this.getAltLocs()) {
+				Group nAltLocGroup = (Group)altLocGroup.clone();
+				n.addAltLoc(nAltLocGroup);
+			}
+		}
+		
 		return n;
 	}
 

@@ -106,13 +106,14 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
             StringBuilder groupsString = new StringBuilder();
             for (int i = 0; i < 4 && groupsWritten < groups.size(); i++) {
                 Group group = groups.get(groupNum);
-                String groupString = String.format(Locale.UK, "%s %s",
+                // Make sure the pdbName is formatted as 3 width string.
+                String groupString = String.format(Locale.UK, "%3s %s",
                         group.getPDBName(), group.getResidueNumber().toPDB());
                 groupsWritten++;
                 groupNum++;
-                //remove the trailing whitespace of the last element of a line
                 if (i == 3 || groupsWritten == groups.size()) {
-                    groupString = groupString.trim();
+                    // groupString = groupString.trim();
+                	groupString.replaceFirst("\\s+$", ""); // remove only trailing whitespace.
                 }
                 groupsString.append(groupString);
             }

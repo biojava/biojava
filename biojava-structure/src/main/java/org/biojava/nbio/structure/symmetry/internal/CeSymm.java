@@ -41,7 +41,7 @@ import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.jama.Matrix;
-import org.biojava.nbio.structure.secstruc.SecStrucPred;
+import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
@@ -183,7 +183,7 @@ public class CeSymm {
 		}
 
 		Matrix origM = null;
-		AFPChain myAFP = new AFPChain();
+		AFPChain myAFP = new AFPChain(algorithmName);
 		CECalculator calculator = new CECalculator(params);
 
 		// Set multiple to true if multiple alignments are needed for refinement
@@ -410,8 +410,8 @@ public class CeSymm {
 		if (params.getSSEThreshold() > 0) {
 			Structure s = atoms[0].getGroup().getChain().getStructure();
 			if (SecStrucTools.getSecStrucInfo(s).isEmpty()){
-				SecStrucPred ssp = new SecStrucPred();
-				ssp.predict(s, true);
+				SecStrucCalc ssp = new SecStrucCalc();
+				ssp.calculate(s, true);
 			}
 		}
 		
@@ -482,6 +482,27 @@ public class CeSymm {
 			msa = e.getMultipleAlignment(0);
 			logger.debug("Returning optimal self-alignment");
 			msa.putScore("isRefined", 0.0);
+			if (params.getRefineMethod() == RefineMethod.NOT_REFINED 
+					&& selfAFP.getTMScore() > params.getScoreThreshold()){
+				// Store the order for future reference - TODO provisional
+				OrderDetector orderDetector = null;
+				double order = 0;
+				try {
+					switch (params.getOrderDetectorMethod()) {
+					case SEQUENCE_FUNCTION:
+						orderDetector = new SequenceFunctionOrderDetector(
+								params.getMaxSymmOrder(), 0.4f);
+						order = orderDetector.calculateOrder(selfAFP, atoms);
+						break;
+					case USER_INPUT:
+						order = params.getUserOrder();
+						break;
+					}
+				} catch (RefinerFailedException e1){
+					order = 1;
+				}
+				msa.putScore("SymmetryOrder", order);
+			}
 		}
 		return msa;
 	}

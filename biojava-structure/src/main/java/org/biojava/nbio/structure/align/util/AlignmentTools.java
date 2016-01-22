@@ -559,7 +559,7 @@ public class AlignmentTools {
 			throw new IllegalArgumentException("Alignment lengths are not equal");
 		}
 
-		AFPChain a = new AFPChain();
+		AFPChain a = new AFPChain(AFPChain.UNKNOWN_ALGORITHM);
 		try {
 			a.setName1(ca1[0].getGroup().getChain().getStructure().getName());
 			if(ca2[0].getGroup().getChain().getStructure() != null) {

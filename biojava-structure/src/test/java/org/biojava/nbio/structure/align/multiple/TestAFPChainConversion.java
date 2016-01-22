@@ -43,10 +43,9 @@ public class TestAFPChainConversion {
 	public void testAFPconversion() throws Exception{
 
 		//Fill an AFPChain with the general information
-		AFPChain afp = new AFPChain();
+		AFPChain afp = new AFPChain("algorithm");
 		afp.setName1("name1");
 		afp.setName2("name2");
-		afp.setAlgorithmName("algorithm");
 		afp.setVersion("1.0");
 		afp.setCalculationTime(System.currentTimeMillis());
 		//Generate a optimal alignment with 3 blocks and 5 residues per block

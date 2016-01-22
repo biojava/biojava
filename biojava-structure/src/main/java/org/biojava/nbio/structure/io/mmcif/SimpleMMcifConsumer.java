@@ -21,12 +21,82 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import org.biojava.nbio.structure.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.vecmath.Matrix4d;
+
+import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.AminoAcidImpl;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.DBRef;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.HetatomImpl;
+import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.SSBond;
+import org.biojava.nbio.structure.SSBondImpl;
+import org.biojava.nbio.structure.SeqMisMatch;
+import org.biojava.nbio.structure.SeqMisMatchImpl;
+import org.biojava.nbio.structure.Site;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.BondMaker;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.LigandConnectMaker;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
-import org.biojava.nbio.structure.io.mmcif.model.*;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.nbio.structure.io.mmcif.model.Cell;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompBond;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompDescriptor;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBremark;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBrev;
+import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
+import org.biojava.nbio.structure.io.mmcif.model.Entity;
+import org.biojava.nbio.structure.io.mmcif.model.EntityPolySeq;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
+import org.biojava.nbio.structure.io.mmcif.model.Exptl;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxNonPolyScheme;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxPolySeqScheme;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList;
+import org.biojava.nbio.structure.io.mmcif.model.Refine;
+import org.biojava.nbio.structure.io.mmcif.model.Struct;
+import org.biojava.nbio.structure.io.mmcif.model.StructAsym;
+import org.biojava.nbio.structure.io.mmcif.model.StructConn;
+import org.biojava.nbio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.nbio.structure.io.mmcif.model.StructNcsOper;
+import org.biojava.nbio.structure.io.mmcif.model.StructRef;
+import org.biojava.nbio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.nbio.structure.io.mmcif.model.StructRefSeqDif;
+import org.biojava.nbio.structure.io.mmcif.model.StructSite;
+import org.biojava.nbio.structure.io.mmcif.model.StructSiteGen;
+import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -35,11 +105,6 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.vecmath.Matrix4d;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -72,6 +137,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructConn> structConn;
 	private List<StructNcsOper> structNcsOper;
 	private List<StructRefSeqDif> sequenceDifs;
+	private List<StructSiteGen> structSiteGens;
 
 	/**
 	 * A map of asym ids (internal chain ids) to strand ids (author chain ids) 
@@ -492,7 +558,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		Element element = Element.R;
 		try {
 			element = Element.valueOfIgnoreCase(atom.getType_symbol());
-		}  catch (IllegalArgumentException e){}
+		}  catch (IllegalArgumentException e) {
+			logger.warn("Element {} was not recognised as a BioJava-known element, the element will be represented as the generic element {}", atom.getType_symbol(), Element.R.name());
+		}
 		a.setElement(element);
 
 		return a;
@@ -585,6 +653,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structConn = new ArrayList<StructConn>();
 		structNcsOper = new ArrayList<StructNcsOper>();
 		sequenceDifs = new ArrayList<StructRefSeqDif>();
+		structSiteGens = new ArrayList<StructSiteGen>();
 	}
 
 
@@ -761,8 +830,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		
-		
+		createSSBonds();
 
+		// Do structure.setSites(sites) after any chain renaming to be like PDB.
+		addSites();
+		
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		List<Compound> compounds = structure.getCompounds();
@@ -1166,19 +1238,22 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (dbrev.getNum().equals("1")){
 
 			try {
-
-				String date = dbrev.getDate_original();
-				//System.out.println(date);
-				Date dep = dateFormat.parse(date);
-				//System.out.println(dep);
+				Date dep = dateFormat.parse(dbrev.getDate_original());
 				header.setDepDate(dep);
-				Date mod = dateFormat.parse(dbrev.getDate());
-
-				header.setModDate(mod);
-
+				
 			} catch (ParseException e){
-				e.printStackTrace();
+				logger.warn("Could not parse date string '{}', deposition date will be unavailable", dbrev.getDate_original());
 			}
+			
+			try {
+				Date mod = dateFormat.parse(dbrev.getDate());
+				header.setModDate(mod);
+				
+			} catch (ParseException e){
+				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
+			}
+
+			
 		} else {
 			try {
 
@@ -1186,7 +1261,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				header.setModDate(mod);
 
 			} catch (ParseException e){
-				e.printStackTrace();
+				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
 			}
 		}
 
@@ -1594,94 +1669,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-	/**
-	 * Returns the chains from all models that have the provided chainId
-	 *
-	 */
-	private List<Chain> getChainsFromAllModels(String chainId){
-		List<Chain> chains = new ArrayList<Chain>();
-
-
-		for (int i=0 ; i < structure.nrModels();i++){
-			List<Chain> model = structure.getModel(i);
-			for (Chain c: model){
-				if (c.getChainID().equals(chainId)) {
-					chains.add(c);
-				}
-			}
-		}
-
-		return chains;
-	}
-
-	/** 
-	 * Finds the residue in the internal representation and fixes the residue number and insertion code
-	 *
-	 * @param ppss
-	 */
-	private void replaceGroupSeqPos(PdbxPolySeqScheme ppss){
-
-		if (ppss.getAuth_seq_num().equals("?"))
-			return;
-
-		//logger.info("replacegroupSeqPos " + ppss);
-		// at this stage we are still using the internal asym ids...
-		List<Chain> matchinChains = getChainsFromAllModels(ppss.getAsym_id());
-
-		long sid = Long.parseLong(ppss.getSeq_id());
-		for (Chain c: matchinChains){
-			Group target = null;
-			for (Group g: c.getAtomGroups()){
-
-				if ( g instanceof AminoAcidImpl){
-					AminoAcidImpl aa = (AminoAcidImpl)g;
-					if (aa.getId() == sid ) {
-						// found it:
-						target = g;
-						break;
-					}
-				}
-				else if ( g instanceof NucleotideImpl) {
-					NucleotideImpl n = (NucleotideImpl)g;
-					if ( n.getId() == sid) {
-						target = g;
-						break;
-					}
-				} else if ( g instanceof HetatomImpl){
-					HetatomImpl h = (HetatomImpl)g;
-					if ( h.getId() == sid){
-						target =h;
-						break;
-					}
-				}
-			}
-			if (target == null){
-				logger.info("could not find group at seq. position " + 
-						ppss.getSeq_id() + " in internal chain " + c.getChainID() + ". " + ppss);
-				continue;
-			}
-
-			if (! target.getPDBName().trim().equals(ppss.getMon_id())){
-				logger.info("could not match PdbxPolySeqScheme to chain:" + target.getPDBName() + " " + ppss);
-				continue;
-			}
-
-			// fix the residue number to the one used in the PDB files...
-			Integer pdbResNum = Integer.parseInt(ppss.getAuth_seq_num());
-			// check the insertion code...
-			String insCodeS = ppss.getPdb_ins_code();
-			Character insCode = null;
-			if ( ( insCodeS != null) && (! insCodeS.equals(".")) && insCodeS.length()>0){
-				//pdbResNum += insCode
-				insCode = insCodeS.charAt(0);
-			}
-
-			ResidueNumber residueNumber = new ResidueNumber(null, pdbResNum,insCode);
-			//logger.info("setting residue number for " + target +" to: " + residueNumber);
-			target.setResidueNumber(residueNumber);
-		}
-	}
 	@Override
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {
 
@@ -1689,14 +1676,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//	return;
 
 		// replace the group asym ids with the real PDB ids!
-		replaceGroupSeqPos(ppss);
+		// replaceGroupSeqPos(ppss);  // This might be incorrect in some pdb, to use auth_seq_id of the pdbx_poly_seq_scheme.
 
 		// merge the EntityPolySeq info and the AtomSite chains into one...
 		//already known ignore:
 		if (asymStrandId.containsKey(ppss.getAsym_id()))
 			return;
 
-		// this is one of the interal mmcif rules it seems...
+		// this is one of the internal mmcif rules it seems...
 		if ( ppss.getPdb_strand_id() == null) {
 			asymStrandId.put(ppss.getAsym_id(), ppss.getAuth_mon_id());
 			return;
@@ -1823,6 +1810,171 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		this.structConn.add(structConn);
 	}
 
+	private void createSSBonds() {
+		List<SSBond> bonds = structure.getSSBonds();
+		if (bonds == null) bonds = new ArrayList<SSBond>();
+		
+		final String symop = "1_555"; // For now - accept bonds within origin asymmetric unit.
+		
+		// For SSBond equivalent, parse through the struct_conn records
+		int internalId = 0;
+		for (StructConn conn : structConn) {
+			String ptnr1_chainId = conn.getPtnr1_auth_asym_id();
+			String ptnr1_seqId = conn.getPtnr1_auth_seq_id();
+			String ptnr2_chainId = conn.getPtnr2_auth_asym_id();
+			String ptnr2_seqId = conn.getPtnr2_auth_seq_id();
+			// conn.getId() would equal disulf#.
+			
+			// if we can find both of these residues - 
+			Group s1 = lookupResidue(ptnr1_chainId, ptnr1_seqId);
+			Group s2 = lookupResidue(ptnr2_chainId, ptnr2_seqId);
+
+			// TODO: when issue 220 is implemented, add robust symmetry handling 
+			// to allow disulfide bonds between symmetry-related molecules.
+			
+			// and is SS - then we should create a new disulfide bond.
+			if (null != s1 && null != s2) {
+				if ("CYS".equals(s1.getPDBName()) && symop.equals(conn.getPtnr1_symmetry())
+						&& "CYS".equals(s2.getPDBName()) && symop.equals(conn.getPtnr2_symmetry())) {
+					SSBondImpl bond = new SSBondImpl();
+					
+					bond.setSerNum(internalId++); // An internal label what bond # 
+					bond.setChainID1(ptnr1_chainId);
+					bond.setResnum1(ptnr1_seqId);
+					if ("?".equals(conn.getPdbx_ptnr1_PDB_ins_code())) {
+						conn.setPdbx_ptnr1_PDB_ins_code(null);
+					}
+					bond.setInsCode1(conn.getPdbx_ptnr1_PDB_ins_code());
+					bond.setChainID2(ptnr2_chainId);
+					bond.setResnum2(ptnr2_seqId);
+					if ("?".equals(conn.getPdbx_ptnr2_PDB_ins_code())) {
+						conn.setPdbx_ptnr2_PDB_ins_code(null);
+					}
+					bond.setInsCode2(conn.getPdbx_ptnr2_PDB_ins_code());
+					bonds.add(bond);
+				}
+			}
+		}
+		
+		structure.setSSBonds(bonds);
+	}
+	
+	/**
+	 * Lookup a residue - not found exceptions are handled with logger warnings.
+	 * @param chainId
+	 * @param seqId
+	 * @return Successful = Group, Failure = null
+	 */
+	Group lookupResidue(String chainId, String seqId) {
+		try {
+            Chain chain = structure.getChainByPDB(chainId);
+            if (null != chain) {
+                try {
+                	return chain.getGroupByPDB(new ResidueNumber(chainId, Integer.parseInt(seqId), ' '));
+                } catch (NumberFormatException e) {
+                	logger.warn("Could not lookup residue : " + chainId + seqId);
+                }   
+            }
+		} catch (StructureException e) {
+			logger.warn("Problem finding residue in site entry " + chainId + seqId + " - " + e.getMessage(), e.getMessage());
+		}
+		// Could not find.
+		return null;
+	}
+
+	@Override
+	public void newStructSiteGen(StructSiteGen siteGen) { this.structSiteGens.add(siteGen);	}
+
+	@Override
+	public void newStructSite(StructSite structSite) {
+		// Simply implement the method.
+		List<Site> sites = structure.getSites();
+		if (sites == null) sites = new ArrayList<Site>();
+
+		Site site = null;
+		for (Site asite : sites) {
+			if (asite.getSiteID().equals(structSite.getId())) {
+				site = asite; 		// Prevent duplicate siteIds
+			}
+		}
+		boolean addSite = false;
+		if (site == null) { site = new Site(); addSite = true; }
+		site.setSiteID(structSite.getId());
+		site.setDescription(structSite.getDetails());
+		// site.setPdbxEvidenceCode(structSite.getPdbxEvidenceCode()); // TODO - add addition fields in Sites
+		if (addSite) sites.add(site);
+
+		structure.setSites(sites);
+	}
+
+	/**
+	 * Build sites in a BioJava Structure using the original author chain id & residue numbers.
+	 * Sites are built from struct_site_gen records that have been parsed.
+	 */
+	private void addSites() {
+		List<Site> sites = structure.getSites();
+		if (sites == null) sites = new ArrayList<Site>();
+
+		for (StructSiteGen siteGen : structSiteGens) {
+				// For each StructSiteGen, find the residues involved, if they exist then
+				String site_id = siteGen.getSite_id(); // multiple could be in same site.
+				if (site_id == null) site_id = "";
+				String comp_id = siteGen.getLabel_comp_id();  // PDBName
+				// Assumption: the author chain ID and residue number for the site is consistent with the original
+				// author chain id and residue numbers.
+				String chain_id = siteGen.getAuth_asym_id(); // ChainID
+				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
+
+				String insCode = siteGen.getPdbx_auth_ins_code();
+				if ( insCode != null && insCode.equals("?"))
+					insCode = null;
+				
+				// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
+				Group g = null;
+				try {
+					Chain chain = structure.getChainByPDB(chain_id);
+					if (null != chain) {
+						try {
+							Character insChar = null;
+							if (null != insCode && insCode.length() > 0) insChar = insCode.charAt(0);
+							g = chain.getGroupByPDB(new ResidueNumber(chain_id, Integer.parseInt(auth_seq_id), insChar));
+						} catch (NumberFormatException e) {
+							logger.warn("Could not lookup residue : " + chain_id + auth_seq_id);
+						}
+					}
+				} catch (StructureException e) {
+					logger.warn("Problem finding residue in site entry " + siteGen.getSite_id() + " - " + e.getMessage(), e.getMessage());
+				}
+
+				if (g != null) {
+					// 2. find the site_id, if not existing, create anew.
+					Site site = null;
+					for (Site asite: sites) {
+						if (site_id.equals(asite.getSiteID())) site = asite;
+					}
+
+					boolean addSite = false;
+
+					// 3. add this residue to the site.
+					if (site == null) {
+						addSite = true;
+						site = new Site();
+						site.setSiteID(site_id);
+					}
+
+					List<Group> groups = site.getGroups();
+					if (groups == null) groups = new ArrayList<Group>();
+
+					// Check the self-consistency of the residue reference from auth_seq_id and chain_id
+					if (!comp_id.equals(g.getPDBName())) {
+						logger.warn("comp_id doesn't match the residue at " + chain_id + auth_seq_id + " - skipping");
+					} else {
+						groups.add(g);
+						site.setGroups(groups);
+					}
+					if (addSite) sites.add(site);
+				}
+		}
+		structure.setSites(sites);
+	}
 }
-
-

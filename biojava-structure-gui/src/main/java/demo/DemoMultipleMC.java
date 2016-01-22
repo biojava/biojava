@@ -53,9 +53,9 @@ public class DemoMultipleMC {
 		//Protein Kinases (CEMC paper)
 		//List<String> names = Arrays.asList("1cdk.A", "1cja.A", "1csn", "1b6c.B", "1ir3.A", "1fgk.A", "1byg.A", "1hck", "1blx.A", "3erk", "1bmk.A", "1kob.A", "1tki.A", "1phk", "1a06");
 		//DHFR (Gerstein 1998 paper)
-		//List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
+		List<String> names = Arrays.asList("d1dhfa_", "8dfr", "d4dfra_", "3dfr");
 		//Beta-propeller (MATT paper)
-		List<String> names = Arrays.asList("d1nr0a1", "d1nr0a2", "d1p22a2", "d1tbga_");
+		//List<String> names = Arrays.asList("d1nr0a1", "d1nr0a2", "d1p22a2", "d1tbga_");
 		//Beta-helix (MATT paper)
 		//List<String> names = Arrays.asList("d1hm9a1", "d1kk6a_", "d1krra_", "d1lxaa_", "d1ocxa_", "d1qrea_", "d1xata_", "d3tdta_");
 		//TIM barrels (MUSTA paper)
@@ -76,6 +76,8 @@ public class DemoMultipleMC {
 		//List<String> names = Arrays.asList("d1heta2", "d1ek6a_", "d1obfo1", "2cmd", "d1np3a2", "d1bgva1", "d1id1a_", "d1id1a_", "d1oi7a1");
 		//Circular Permutations (Bliven CECP paper) - dynamin GTP-ase with CP G-domain
 		//List<String> names = Arrays.asList("d1u0la2", "d1jwyb_");
+		//Circular Permutations (Bliven CECP paper) - Legume lectins
+		//List<String> names = Arrays.asList("2pel.A", "2eig.A", "1uzy.A", "1lec.A", "3cna.A", "4i30.A", "4z8b.A", "2d3p.A");
 		//Circular Permutations: SAND and MFPT domains
 		//List<String> names = Arrays.asList("d2bjqa1", "d1h5pa_", "d1ufna_");  //"d1oqja"
 		//Flexible domain family of proteins (FatCat paper?)

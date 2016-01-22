@@ -108,9 +108,11 @@ public class PDBFileParser  {
 
 	
 
-	// parsing options:
-
 	private static final Logger logger = LoggerFactory.getLogger(PDBFileParser.class);
+
+	// for printing
+	private static final String NEWLINE = System.getProperty("line.separator");
+
 	
 	// required for parsing:
 	private String pdbId; //the actual id of the entry
@@ -126,9 +128,7 @@ public class PDBFileParser  {
 	//(pdb_COMPOUND_handler for example)
 	private boolean isLegacyFormat = false;
 
-	// for printing
-	private static final String NEWLINE;
-
+	
 	// for re-creating the biological assembly
 	
 	private PDBBioAssemblyParser bioAssemblyParser = null;
@@ -208,6 +208,8 @@ public class PDBFileParser  {
 
 	private int atomCount;
 
+	// parsing options:
+
 	private int my_ATOM_CA_THRESHOLD ;
 
 	private int load_max_atoms;
@@ -217,11 +219,6 @@ public class PDBFileParser  {
 	/** flag to tell parser to only read Calpha coordinates **/
 	private boolean parseCAonly;
 
-	static {
-
-		NEWLINE = System.getProperty("line.separator");
-
-	}
 
 	private FileParsingParameters params;
 
@@ -255,23 +252,6 @@ public class PDBFileParser  {
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
 
 		linkRecords = new ArrayList<LinkRecord>();
-	}
-
-
-
-	/**
-	 * Returns a time stamp.
-	 * @return a String representing the time stamp value
-	 */
-	protected String getTimeStamp(){
-
-		Calendar cal = Calendar.getInstance() ;
-		// Get the components of the time
-		int hour24 = cal.get(Calendar.HOUR_OF_DAY);     // 0..23
-		int min = cal.get(Calendar.MINUTE);             // 0..59
-		int sec = cal.get(Calendar.SECOND);             // 0..59
-		String s = "time: "+hour24+" "+min+" "+sec;
-		return s ;
 	}
 
 	/** initiate new resNum, either Hetatom, Nucleotide, or AminoAcid */
@@ -1970,6 +1950,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// drop atoms from cloned group...
 			// https://redmine.open-bio.org/issues/3307
 			altLocG.setAtoms(new ArrayList<Atom>());
+			altLocG.getAltLocs().clear();
 			current_group.addAltLoc(altLocG);
 			return altLocG;	
 		}
@@ -2576,16 +2557,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	public Structure parsePDBFile(InputStream inStream)
 			throws IOException
-			{
+	{
 
-		//System.out.println("preparing buffer");
 		BufferedReader buf = getBufferedReader(inStream);
-
-		//System.out.println("done");
 
 		return parsePDBFile(buf);
 
-			}
+	}
 
 	/** 
 	 * Parse a PDB file and return a datastructure implementing

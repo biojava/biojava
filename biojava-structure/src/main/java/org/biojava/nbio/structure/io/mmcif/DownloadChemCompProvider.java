@@ -87,6 +87,13 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		initPath();
 	}
 	
+	public DownloadChemCompProvider(String cacheFilePath){
+		logger.debug("Initialising DownloadChemCompProvider");
+		
+		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
+		path = new File(cacheFilePath);
+	}
+	
 	private static void initPath(){
 		
 		if (path==null) {
