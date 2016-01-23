@@ -155,7 +155,7 @@ public class FileParsingParameters implements Serializable
 		
 		createAtomBonds = false;
 		
-		createAtomCharges = false;
+		createAtomCharges = true;
 	}
 
 	/** 
