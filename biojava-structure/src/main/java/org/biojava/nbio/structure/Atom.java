@@ -218,4 +218,18 @@ public interface Atom extends Cloneable, PDBRecord {
      * @return a list of {@link Bond}s.
      */
     public List<Bond> getBonds();
+    
+    /**
+     * Get the charge of this atom
+     * 
+     * @return a the integer charge.
+     */
+    public short getCharge();
+    
+    /**
+     * Set the charge of this atom
+     * 
+     * @return void.
+     */
+    public void setCharge(short charge);
 }

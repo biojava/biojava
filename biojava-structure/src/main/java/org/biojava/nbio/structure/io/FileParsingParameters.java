@@ -111,6 +111,10 @@ public class FileParsingParameters implements Serializable
 	 */
 	private boolean createAtomBonds;
 
+	/**
+	 * Should we create charges on atoms when parsing a file?
+	 */	
+	private boolean createAtomCharges;
 	/**  
 	 * The maximum number of atoms we will add to a structure,
      * this protects from memory overflows in the few really big protein structures.
@@ -150,6 +154,8 @@ public class FileParsingParameters implements Serializable
 		parseBioAssembly = false;
 		
 		createAtomBonds = false;
+		
+		createAtomCharges = true;
 	}
 
 	/** 
@@ -394,6 +400,25 @@ public class FileParsingParameters implements Serializable
 	 */
 	public void setCreateAtomBonds(boolean createAtomBonds) {
 		this.createAtomBonds = createAtomBonds;
+	}
+	
+	/**
+	 * Should we create charges on atoms when parsing a file?
+	 * 
+	 * @return true if we should create the charges, false if not
+	 */
+	public boolean shouldCreateAtomCharges() {
+		return createAtomCharges;
+	}
+
+	/**
+	 * Should we create charges on atoms when parsing a file?
+	 * 
+	 * @param createAtomCharges
+	 *            true if we should create the charges, false if not
+	 */
+	public void setCreateAtomCharges(boolean createAtomCharges) {
+		this.createAtomCharges = createAtomCharges;
 	}
 
 }
