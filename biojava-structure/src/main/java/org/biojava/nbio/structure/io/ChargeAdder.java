@@ -47,6 +47,9 @@ public class ChargeAdder {
 				ChemComp thisChemComp = ChemCompGroupFactory.getChemComp(g.getPDBName());
 				List<ChemCompAtom> chemAtoms = thisChemComp.getAtoms();
 				List<Atom> protAtoms = g.getAtoms();
+				if(protAtoms.size()!=chemAtoms.size()){
+					continue;
+				}
 				for(int i=0; i<protAtoms.size();i++){
 					ChemCompAtom cca = chemAtoms.get(i);
 					Atom a = protAtoms.get(i);
