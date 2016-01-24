@@ -2697,7 +2697,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (params.shouldCreateAtomBonds()) {
 			formBonds();
 		}
-
+		
+		if ( params.shouldCreateAtomCharges()) {
+			addCharges();
+		}
 
 		if (params.isCreateLigandConects()){
 			addLigandConnections();
@@ -2711,6 +2714,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		return structure;
 
 			}
+
+	private void addCharges() {
+		ChargeAdder adder = new ChargeAdder(structure);
+		adder.addCharges();
+	}
 
 	/**
 	 * This is the new method for building the COMPND and SOURCE records. Now each method is self-contained.

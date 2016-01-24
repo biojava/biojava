@@ -58,6 +58,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.BondMaker;
+import org.biojava.nbio.structure.io.ChargeAdder;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.LigandConnectMaker;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
@@ -715,7 +716,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( params.isCreateLigandConects()) {
 			addLigandConnections();
 		}
-		
+
+		if ( params.shouldCreateAtomCharges()) {
+			addCharges();
+		}
+
 		boolean noAsymStrandIdMappingPresent = false;
 		if (asymStrandId.isEmpty()) {
 			logger.warn("No pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme categories present. Will use chain id mapping from _atom_sites category");
@@ -954,6 +959,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		
+	}
+	
+	private void addCharges() {
+		ChargeAdder adder = new ChargeAdder(structure);
+		adder.addCharges();
 	}
 
 	/**
