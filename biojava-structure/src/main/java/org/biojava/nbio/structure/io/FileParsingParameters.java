@@ -24,12 +24,12 @@
 
 package org.biojava.nbio.structure.io;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
 
 /** A class that configures parameters that can be sent to the PDB file parsers
  * 
@@ -67,6 +67,11 @@ public class FileParsingParameters implements Serializable
 	 */
 	boolean alignSeqRes;
 
+	
+	/** Should we create connections instead of bonds for ligands?
+	 *
+	 */
+	boolean createConects;
 
 	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
 	 * 
@@ -155,6 +160,8 @@ public class FileParsingParameters implements Serializable
 		
 		createAtomBonds = false;
 		
+		createConects = false;
+
 		createAtomCharges = true;
 	}
 
@@ -421,4 +428,21 @@ public class FileParsingParameters implements Serializable
 		this.createAtomCharges = createAtomCharges;
 	}
 
+	/**Should we create Bonds for ligands when parsing an mmCIF file?
+	 * 
+	 * @return true if we should create bonds based on ChemComp information.
+	 */
+	public boolean isCreateLigandConects(){
+		return createConects;
+	}
+	
+	/**Should we create connections between atoms in ligands when parsing 
+	 * a file? Setting this to true must also set AlignSeqRes true.
+	 * 
+	 * @param createLigandConects boolean flag yes/no
+	 */
+	public void setCreateLigandConects(boolean createLigandConects){
+		this.createConects = createLigandConects;
+		this.alignSeqRes = true;
+	}
 }
