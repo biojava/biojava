@@ -20,12 +20,13 @@
  */
 package org.biojava.nbio.structure;
 
-import junit.framework.TestCase;
+import java.io.IOException;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Before;
 
-import java.io.IOException;
+import junit.framework.TestCase;
 
 public class TestBond extends TestCase {
 	private Structure s;
@@ -39,8 +40,7 @@ public class TestBond extends TestCase {
 
 		FileParsingParameters params = cache.getFileParsingParams();
 
-		params.setStoreEmptySeqRes(true);
-		params.setAlignSeqRes(true);
+		params.setAlignSeqRes(false);
 		params.setLoadChemCompInfo(true);
 		params.setCreateAtomBonds(true);
 

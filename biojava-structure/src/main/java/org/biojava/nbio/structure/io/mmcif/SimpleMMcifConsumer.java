@@ -316,7 +316,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// later one needs to map the asym id to the pdb_strand_id
 
 		//TODO: add support for FileParsingParams.getMaxAtoms()
-
+		
+		// isHeaderOnly() could break here instead of after parsing chain information,
+		// but the obtained chain information is currently used by other _loop sections.
 		boolean startOfNewChain = false;
 
 		String chain_id      = atom.getLabel_asym_id();		
@@ -704,8 +706,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.warn("No _struct_asym category in file, no SEQRES groups will be added."); 
 		}
 
-		if ( params.isAlignSeqRes() ){		
+		// Only align if requested (default) and not when headerOnly mode with no Atoms.
+		// Otherwise, we store the empty SeqRes Groups unchanged in the right chains.
+		if ( params.isAlignSeqRes() && !params.isHeaderOnly() ){		
+			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			alignSeqRes();
+		} else {
+			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
+			storeEmptySeqRes();
 		}
 
 		if ( params.shouldCreateAtomBonds()) {
@@ -1061,6 +1069,34 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 						seqresG.setResidueNumber(null);
 				}
 				atomChain.setSeqResGroups(seqResGroups);
+
+			}
+		}
+	}
+	
+	/**
+	 * Instead of aligning, and replacing Groups with the Atom containing AtomGroups,
+	 * we simply matching up the chains and store empty SeqRes Groups.
+	 */
+	private void storeEmptySeqRes() {
+
+		logger.debug("Parsing mode no_align_seqres, will only store SEQRES sequence");
+		
+		// fix SEQRES residue numbering for all models
+
+		for (int model=0;model<structure.nrModels();model++) {
+			
+			List<Chain> atomList   = structure.getModel(model);
+			
+			for (Chain seqResChain: seqResChains){
+
+				// this extracts the matching atom chain from atomList
+				Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList);
+				
+				if ( atomChain != null)
+					atomChain.setSeqResGroups(seqResChain.getAtomGroups());
+				else
+					logger.warn("Could not find atom records for chain " + seqResChain.getChainID());
 
 			}
 		}

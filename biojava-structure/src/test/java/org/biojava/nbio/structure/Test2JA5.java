@@ -20,14 +20,14 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.junit.Test;
 
 /**
  * Created by andreas on 9/16/15.
@@ -38,7 +38,7 @@ public class Test2JA5 {
     public void test2JA5() throws IOException, StructureException {
 
         FileParsingParameters fileParsingParameters = new FileParsingParameters();
-        fileParsingParameters.setStoreEmptySeqRes(true);
+        fileParsingParameters.setAlignSeqRes(false);
         fileParsingParameters.setLoadChemCompInfo(true);
         fileParsingParameters.setHeaderOnly(true);
 
