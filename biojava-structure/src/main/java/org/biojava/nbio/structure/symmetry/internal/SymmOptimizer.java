@@ -335,10 +335,9 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		Block b = msa.getBlock(0);
 		b.setAlignRes(block);
 		subunitCore = b.getCoreLength();
-		if (subunitCore < 1) {
+		if (subunitCore < 1)
 			throw new RefinerFailedException(
-					"Optimization converged to length == 0");
-		}
+					"Optimization converged to length 0");
 
 		updateTransformation();
 		if (axes == null)
@@ -778,7 +777,6 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 			return false;
 
 		// Select column by maximum distance
-		updateTransformation();
 		updateMultipleAlignment();
 		Matrix residueDistances = MultipleAlignmentTools
 				.getAverageResidueDistances(msa);
@@ -824,8 +822,13 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	 * If the SymmetryAxes object is null, the superposition of the subunits is
 	 * done without contraint.
 	 */
-	private void updateTransformation() throws StructureException {
+	private void updateTransformation() throws StructureException, RefinerFailedException {
 
+		// If the alignment has core length 0 the optimization failed
+		if (msa.getCoreLength() == 0)
+			throw new RefinerFailedException(
+					"Optimization converged to length 0.");
+		
 		if (axes != null) {
 			for (int t = 0; t < axes.getElementaryAxes().size(); t++) {
 
