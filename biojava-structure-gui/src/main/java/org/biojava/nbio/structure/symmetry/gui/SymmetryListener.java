@@ -24,84 +24,95 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
+import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Action Listener for the symmetry menu.
- * Trigger various symmetry analysis.
+ * Action Listener for the symmetry menu. Trigger various symmetry analysis.
  * 
  * @author Aleix Lafita
  * @since 4.2.0
  *
  */
-public class SymmetryListener implements ActionListener{
+public class SymmetryListener implements ActionListener {
 
 	private MultipleAlignmentJmol jmol;
-	private MultipleAlignment msa;
-	private SymmetryAxes axes;
-	
-	private static final Logger logger = 
-			LoggerFactory.getLogger(SymmetryListener.class);
+	private CeSymmResult symm;
 
-	public SymmetryListener(MultipleAlignmentJmol jmol, SymmetryAxes axes) {
+	private static final Logger logger = LoggerFactory
+			.getLogger(SymmetryListener.class);
+
+	public SymmetryListener(MultipleAlignmentJmol jmol, CeSymmResult symm) {
 		this.jmol = jmol;
-		if (jmol != null) this.msa = jmol.getMultipleAlignment();
-		this.axes = axes;
+		this.symm = symm;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 
 		String cmd = ae.getActionCommand();
-		if (cmd.equals("Subunit Superposition")){
-			if (msa == null) {
+		if (cmd.equals("Subunit Superposition")) {
+			if (symm == null) {
 				logger.error("Currently not displaying a symmetry!");
 				return;
 			}
 			try {
-				MultipleAlignmentJmol j = SymmetryDisplay.displaySubunits(msa);
-				String s = SymmetryDisplay.printSymmetryAxes(msa, axes, true);
+				MultipleAlignmentJmol j = SymmetryDisplay.displaySubunits(symm
+						.getMultipleAlignment());
+				String s = SymmetryDisplay.printSymmetryAxes(symm, true);
 				j.evalString(s);
 			} catch (StructureException e) {
 				e.printStackTrace();
 			}
 
-		} else if (cmd.equals("Multiple Structure Alignment")){
-			if (msa == null) {
+		} else if (cmd.equals("Multiple Structure Alignment")) {
+			if (symm == null) {
 				logger.error("Currently not displaying a symmetry!");
 				return;
 			}
 			try {
-				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(msa);
-				String s = SymmetryDisplay.printSymmetryAxes(msa, axes, false);
+				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm
+						.getMultipleAlignment());
+				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
 				j.evalString(s);
 			} catch (StructureException e) {
 				e.printStackTrace();
 			}
 
-		} else if (cmd.equals("Point Group Symmetry")){
-			if (msa == null) {
+		} else if (cmd.equals("Optimal Self-Alignment")) {
+			if (symm == null) {
 				logger.error("Currently not displaying a symmetry!");
 				return;
 			}
-			String script = SymmetryDisplay.printPointGroupAxes(msa);
+			try {
+				StructureAlignmentDisplay.display(symm.getSelfAlignment(),
+						symm.getAtoms(), symm.getAtoms());
+			} catch (StructureException e) {
+				e.printStackTrace();
+			}
+
+		} else if (cmd.equals("Point Group Symmetry")) {
+			if (symm == null) {
+				logger.error("Currently not displaying a symmetry!");
+				return;
+			}
+			String script = SymmetryDisplay.printPointGroupAxes(symm);
 			jmol.evalString(script);
 			return;
-			
-		} else if (cmd.equals("Show Symmetry Axes")){
-			if (axes != null) {
-				String s = SymmetryDisplay.printSymmetryAxes(msa, axes, false);
+
+		} else if (cmd.equals("Show Symmetry Axes")) {
+			if (symm != null) {
+				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
 				jmol.evalString(s);
 				return;
-			} else logger.error("No axes found for this symmetry result");
-			
-		} else if (cmd.equals("New Symmetry Analysis")){
+			} else
+				logger.error("Currently not displaying a symmetry!");
+
+		} else if (cmd.equals("New Symmetry Analysis")) {
 			SymmetryGui.getInstance();
 		}
 	}
-	
 }

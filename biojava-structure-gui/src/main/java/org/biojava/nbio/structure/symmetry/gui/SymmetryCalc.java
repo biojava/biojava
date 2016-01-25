@@ -33,6 +33,7 @@ import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
+import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,23 +70,22 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 	public void run() {
 
 		//The structure has been downloaded, now calculate the alignment ...
-		CeSymm ceSymm = parent.getSymmetryAlgorithm();
-		CESymmParameters params = ceSymm.getParameters();
+		CESymmParameters params = parent.getParameters();
 		
 		try {
 
 			Atom[] atoms = StructureTools.getRepresentativeAtomArray(structure);
 			
-			MultipleAlignment msa = ceSymm.analyze(atoms);
+			CeSymmResult result = CeSymm.analyze(atoms, params);
 
 			List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
-			for (int su=0; su<msa.size(); su++){
+			for (int su=0; su<result.getSymmOrder(); su++){
 				names.add(name);
 			}
-			msa.getEnsemble().setStructureIdentifiers(names);
+			result.getMultipleAlignment().getEnsemble().setStructureIdentifiers(names);
 
 			MultipleAlignmentJmol jmol = 
-					SymmetryDisplay.display(msa, ceSymm.getSymmetryAxes());
+					SymmetryDisplay.display(result);
 			String title = jmol.getTitle();
 			
 			if (params != null) 

@@ -1,5 +1,6 @@
 package org.biojava.nbio.structure.symmetry.internal;
 
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
@@ -19,6 +20,7 @@ public class CeSymmResult {
 
 	private MultipleAlignment multipleAlignment;
 	private AFPChain selfAlignment;
+	private Atom[] atoms;
 
 	private CESymmParameters params = new CESymmParameters();
 	private SymmetryAxes axes;
@@ -123,6 +125,14 @@ public class CeSymmResult {
 
 	public void setType(SymmetryType type) {
 		this.type = type;
+	}
+
+	public Atom[] getAtoms() {
+		return atoms;
+	}
+
+	public void setAtoms(Atom[] atoms) {
+		this.atoms = atoms;
 	}
 
 }

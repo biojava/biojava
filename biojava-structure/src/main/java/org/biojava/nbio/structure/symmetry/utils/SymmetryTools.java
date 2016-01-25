@@ -626,7 +626,13 @@ public class SymmetryTools {
 		MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(symm,
 				atoms, atoms, false);
 		e.setAtomArrays(new ArrayList<Atom[]>());
-		StructureIdentifier name = e.getStructureIdentifiers().get(0);
+		StructureIdentifier name = null;
+		if (e.getStructureIdentifiers() != null) {
+			if (!e.getStructureIdentifiers().isEmpty())
+				name = e.getStructureIdentifiers().get(0);
+		} else
+			name = atoms[0].getGroup().getChain().getStructure().getStructureIdentifier();
+		
 		e.setStructureIdentifiers(new ArrayList<StructureIdentifier>());
 
 		MultipleAlignment result = new MultipleAlignmentImpl();
@@ -694,7 +700,7 @@ public class SymmetryTools {
 	 * factoring out the alignment and detection steps.
 	 * 
 	 * @param symm
-	 *            symmetry alignment
+	 *            symmetry result
 	 * @return global symmetry results
 	 */
 	public static QuatSymmetryResults getQuaternarySymmetry(

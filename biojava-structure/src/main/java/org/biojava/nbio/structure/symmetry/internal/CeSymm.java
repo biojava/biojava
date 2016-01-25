@@ -171,15 +171,16 @@ public class CeSymm {
 	}
 
 	@SuppressWarnings("unused")
-	protected static CeSymmResult align(Atom[] ca1, CESymmParameters params) 
+	protected static CeSymmResult align(Atom[] atoms, CESymmParameters params) 
 			throws StructureException {
 		
 		CeSymmResult result = new CeSymmResult();
 		result.setParams(params);
+		result.setAtoms(atoms);
 
 		// STEP 1: prepare all the information for the symmetry alignment
-		Atom[] ca2 = StructureTools.duplicateCA2(ca1);
-		int rows = ca1.length;
+		Atom[] ca2 = StructureTools.duplicateCA2(atoms);
+		int rows = atoms.length;
 		int cols = ca2.length;
 
 		if (rows == 0 || cols == 0) {
@@ -199,17 +200,17 @@ public class CeSymm {
 			if (origM != null)
 				myAFP.setDistanceMatrix((Matrix) origM.clone());
 
-			origM = align(myAFP, ca1, ca2, params, origM, calculator, i);
+			origM = align(myAFP, atoms, ca2, params, origM, calculator, i);
 
-			double tmScore2 = AFPChainScorer.getTMScore(myAFP, ca1, ca2);
+			double tmScore2 = AFPChainScorer.getTMScore(myAFP, atoms, ca2);
 			myAFP.setTMScore(tmScore2);
 
 			AFPChain newAFP = (AFPChain) myAFP.clone();
 			newAFP = CeCPMain
-					.postProcessAlignment(newAFP, ca1, ca2, calculator);
+					.postProcessAlignment(newAFP, atoms, ca2, calculator);
 
 			// Calculate and set the TM score for the newAFP alignment
-			double tmScore3 = AFPChainScorer.getTMScore(newAFP, ca1, ca2);
+			double tmScore3 = AFPChainScorer.getTMScore(newAFP, atoms, ca2);
 			newAFP.setTMScore(tmScore3);
 
 			// Determine if the alignment is significant, stop if false
@@ -267,7 +268,7 @@ public class CeSymm {
 					orderDetector = new SequenceFunctionOrderDetector(
 							params.getMaxSymmOrder(), 0.4f);
 					order = orderDetector.calculateOrder(
-							result.getSelfAlignment(), ca1);
+							result.getSelfAlignment(), atoms);
 					break;
 				case USER_INPUT:
 					order = params.getUserOrder();
@@ -292,7 +293,7 @@ public class CeSymm {
 				break;
 			}
 
-			refinedAFP = refiner.refine(result.getSelfAlignment(), ca1, order);
+			refinedAFP = refiner.refine(result.getSelfAlignment(), atoms, order);
 
 		} catch (RefinerFailedException e) {
 			logger.info("Refinement failed: " + e.getMessage());
@@ -443,34 +444,6 @@ public class CeSymm {
 					logger.debug("Optimization failed:" + e.getMessage());
 				}
 			}
-		} else {
-			// Convert the optimal pairwise alignment to MSA
-//			MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(
-//					selfAFP, atoms, atoms, false);
-//			msa = e.getMultipleAlignment(0);
-//			logger.debug("Returning optimal self-alignment");
-//			msa.putScore("isRefined", 0.0);
-//			if (params.getRefineMethod() == RefineMethod.NOT_REFINED
-//					&& selfAFP.getTMScore() > params.getScoreThreshold()) {
-//				// Store the order for future reference - TODO provisional
-//				OrderDetector orderDetector = null;
-//				double order = 0;
-//				try {
-//					switch (params.getOrderDetectorMethod()) {
-//					case SEQUENCE_FUNCTION:
-//						orderDetector = new SequenceFunctionOrderDetector(
-//								params.getMaxSymmOrder(), 0.4f);
-//						order = orderDetector.calculateOrder(selfAFP, atoms);
-//						break;
-//					case USER_INPUT:
-//						order = params.getUserOrder();
-//						break;
-//					}
-//				} catch (RefinerFailedException e1) {
-//					order = 1;
-//				}
-//				msa.putScore("SymmetryOrder", order);
-//			}
 		}
 		return result;
 	}

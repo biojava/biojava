@@ -28,8 +28,10 @@ import java.util.concurrent.ExecutionException;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeMain;
+import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
@@ -95,8 +97,11 @@ public class DemoMultipleMC {
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+		List<StructureIdentifier> ids = new ArrayList<StructureIdentifier>();
 		for (String name:names)	{
-			atomArrays.add(cache.getAtoms(name));
+			StructureIdentifier id = new StructureName(name);
+			ids.add(id);
+			atomArrays.add(cache.getAtoms(id));
 		}
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
@@ -108,7 +113,7 @@ public class DemoMultipleMC {
 		params.setGapExtension(20.0);
 		
 		MultipleAlignment result = algorithm.align(atomArrays);
-		result.getEnsemble().setStructureNames(names);
+		result.getEnsemble().setStructureIdentifiers(ids);
 		
 		//Information about the alignment
 		result.getEnsemble().setAlgorithmName(algorithm.getAlgorithmName());
