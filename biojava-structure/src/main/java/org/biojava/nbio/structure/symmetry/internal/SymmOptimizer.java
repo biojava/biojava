@@ -823,11 +823,6 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	 * done without contraint.
 	 */
 	private void updateTransformation() throws StructureException, RefinerFailedException {
-
-		// If the alignment has core length 0 the optimization failed
-		if (msa.getCoreLength() == 0)
-			throw new RefinerFailedException(
-					"Optimization converged to length 0.");
 		
 		if (axes != null) {
 			for (int t = 0; t < axes.getElementaryAxes().size(); t++) {
@@ -858,9 +853,11 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 				Atom[] arr2 = list2.toArray(new Atom[list2.size()]);
 
 				// Calculate the new transformation information
-				SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
-				axis = svd.getTransformation();
-				axes.updateAxis(t, axis);
+				if (arr1.length > 0 && arr2.length > 0) {
+					SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
+					axis = svd.getTransformation();
+					axes.updateAxis(t, axis);
+				}
 			}
 		} else {
 			MultipleSuperimposer imposer = new CoreSuperimposer();

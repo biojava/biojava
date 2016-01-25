@@ -115,11 +115,12 @@ public class CeSymmIterative {
 		}
 
 		boolean symm = iterate(atoms);
+		
 		if (symm)
 			buildAlignment();
-		else {
+		else
 			levels.add(msa);
-		}
+		
 		recoverAxes();
 
 		return msa;
@@ -221,7 +222,6 @@ public class CeSymmIterative {
 
 		List<List<Integer>> groups = new ArrayList<List<Integer>>();
 		List<Integer> alreadySeen = new ArrayList<Integer>();
-		int size = 0;
 
 		// Calculate the connected groups of the alignment graph
 		for (int i = 0; i < alignGraph.size(); i++) {
@@ -242,19 +242,22 @@ public class CeSymmIterative {
 				}
 				Collections.sort(group);
 				groups.add(group);
-				if (group.size() > size)
-					size = group.size();
 			}
 		}
+		
+		// Calculate thr order of symmetry from levels
+		int order = 01;
+		for (MultipleAlignment m : levels)
+			order *= m.size();
 
 		// Construct the resulting MultipleAlignment
-		for (int su = 0; su < size; su++) {
+		for (int su = 0; su < order; su++) {
 			msa.getEnsemble().getStructureNames().add("S" + (su + 1));
 			msa.getEnsemble().getAtomArrays().add(allAtoms);
 			b.getAlignRes().add(new ArrayList<Integer>());
 
 			for (List<Integer> group : groups) {
-				if (group.size() != size)
+				if (group.size() != order)
 					continue;
 				b.getAlignRes().get(su).add(group.get(su));
 			}
