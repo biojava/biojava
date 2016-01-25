@@ -26,7 +26,6 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
@@ -34,6 +33,7 @@ import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
+import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
@@ -81,10 +81,8 @@ public class DemoCeSymm {
 		Structure s = cache.getStructure(name);
 		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
 
-		CeSymm ceSymm = new CeSymm();
-
 		//Choose some parameters
-		CESymmParameters params = (CESymmParameters) ceSymm.getParameters();
+		CESymmParameters params = new CESymmParameters();
 		params.setRefineMethod(RefineMethod.SINGLE);
 		params.setSymmType(SymmetryType.AUTO);
 		params.setOptimization(true);
@@ -92,13 +90,13 @@ public class DemoCeSymm {
 		params.setSSEThreshold(2);
 
 		//Run the alignment
-		MultipleAlignment symmetry = ceSymm.analyze(atoms, params);
+		CeSymmResult result = CeSymm.analyze(atoms, params);
 		
 		//Display the results in FatCat format
-		System.out.println(MultipleAlignmentWriter.toFatCat(symmetry));
+		System.out.println(MultipleAlignmentWriter.toFatCat(result.getMultipleAlignment()));
 		
 		//Obtain the point group symmetry
-		QuatSymmetryResults pg = SymmetryTools.getQuaternarySymmetry(symmetry);
+		QuatSymmetryResults pg = SymmetryTools.getQuaternarySymmetry(result.getMultipleAlignment());
 		System.out.println("Point group internal symmetry: "+pg.getSymmetry());
 	}
 	

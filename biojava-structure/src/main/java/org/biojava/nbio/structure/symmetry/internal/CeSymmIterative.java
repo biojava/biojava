@@ -37,10 +37,10 @@ import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.secstruc.SecStrucElement;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,32 +70,23 @@ public class CeSymmIterative {
 			.getLogger(CeSymmIterative.class);
 
 	private CESymmParameters params;
-	private CeSymm aligner;
-
 	private Atom[] allAtoms;
-	private MultipleAlignment msa;
-	private SymmetryAxes axes;
-
 	private List<List<Integer>> alignGraph; // msa as graph representation
 	private List<MultipleAlignment> levels; // msa at each level of symmetry
+	private CeSymmResult result;
 
 	/**
 	 * For the iterative algorithm to work properly the refinement and
 	 * optimization options should be turned on, because the alignment has to be
 	 * consistent at every recursive step.
 	 * 
-	 * @param params
+	 * @param param
 	 *            CeSymm parameters, make sure they are cloned
 	 */
-	public CeSymmIterative(CESymmParameters params) {
-
-		this.params = params;
-		this.aligner = new CeSymm();
-		aligner.setParameters(params);
-
+	public CeSymmIterative(CESymmParameters param) {
+		params = param;
 		alignGraph = new ArrayList<List<Integer>>();
 		levels = new ArrayList<MultipleAlignment>();
-		axes = new SymmetryAxes();
 	}
 
 	/**
@@ -105,27 +96,26 @@ public class CeSymmIterative {
 	 * 
 	 * @param atoms
 	 *            atoms
-	 * @return MultipleAlignment of the subunits
+	 * @return CeSymmResult
 	 * 
 	 * @throws StructureException
 	 */
-	public MultipleAlignment execute(Atom[] atoms) throws StructureException {
+	public CeSymmResult execute(Atom[] atoms) throws StructureException {
 
 		allAtoms = atoms;
 		for (Integer res = 0; res < allAtoms.length; res++) {
 			alignGraph.add(new ArrayList<Integer>());
 		}
 
+		// True if symmetry found
 		boolean symm = iterate(atoms);
-		
-		if (symm)
-			buildAlignment();
-		else
-			levels.add(msa);
-		
-		recoverAxes();
 
-		return msa;
+		if (symm) {
+			buildAlignment();
+			recoverAxes();
+		}
+
+		return result;
 	}
 
 	/**
@@ -156,27 +146,29 @@ public class CeSymmIterative {
 		}
 
 		// Perform one level CeSymm alignment
-		msa = aligner.analyzeLevel(atoms);
+		CeSymmResult r = CeSymm.analyzeLevel(atoms, params);
+		if (result == null)
+			result = r;
 
-		// End iterations if asymmetric (not refined, or lower thresholds)
-		if (!SymmetryTools.isRefined(msa)
-				|| msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
-						.getScoreThreshold()
-				|| msa.getCoreLength() < params.getMinCoreLength()) {
+		if (params.getRefineMethod() == RefineMethod.NOT_REFINED)
+			return false;
+		else if (!result.isSignificant())
 			return !levels.isEmpty();
-		}
 
 		// Generate the Atoms of one of the symmetric subunit
 		Integer start = null;
 		int it = 0;
 		while (start == null) {
-			start = msa.getBlocks().get(0).getAlignRes().get(0).get(it);
+			start = result.getMultipleAlignment().getBlocks().get(0)
+					.getAlignRes().get(0).get(it);
 			it++;
 		}
 		Integer end = null;
-		it = msa.getBlocks().get(0).getAlignRes().get(0).size() - 1;
+		it = result.getMultipleAlignment().getBlocks().get(0).getAlignRes()
+				.get(0).size() - 1;
 		while (end == null) {
-			end = msa.getBlocks().get(0).getAlignRes().get(0).get(it);
+			end = result.getMultipleAlignment().getBlocks().get(0)
+					.getAlignRes().get(0).get(it);
 			it--;
 		}
 		Atom[] atomsR = Arrays.copyOfRange(atoms, start, end + 1);
@@ -186,7 +178,7 @@ public class CeSymmIterative {
 			return !levels.isEmpty();
 
 		// If symmetric store the residue dependencies in alignment graph
-		Block b = msa.getBlock(0);
+		Block b = result.getMultipleAlignment().getBlock(0);
 		for (int pos = 0; pos < b.length(); pos++) {
 			for (int su = 0; su < b.size() - 1; su++) {
 				Integer pos1 = b.getAlignRes().get(su).get(pos);
@@ -199,7 +191,7 @@ public class CeSymmIterative {
 		}
 
 		// Iterate further on those Atoms (of the first subunit only)
-		levels.add(msa);
+		levels.add(result.getMultipleAlignment());
 		return iterate(atomsR);
 	}
 
@@ -210,13 +202,14 @@ public class CeSymmIterative {
 	 * @throws StructureException
 	 */
 	private void buildAlignment() throws StructureException {
-		
+
 		// Initialize a new multiple alignment
-		msa = new MultipleAlignmentImpl();
+		MultipleAlignment msa = new MultipleAlignmentImpl();
 		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());
 		msa.getEnsemble().setAlgorithmName(CeSymm.algorithmName);
 		msa.getEnsemble().setVersion(CeSymm.version);
-		msa.getEnsemble().setStructureIdentifiers(new ArrayList<StructureIdentifier>());
+		msa.getEnsemble().setStructureIdentifiers(
+				new ArrayList<StructureIdentifier>());
 
 		BlockSet bs = new BlockSetImpl(msa);
 		Block b = new BlockImpl(bs);
@@ -246,7 +239,7 @@ public class CeSymmIterative {
 				groups.add(group);
 			}
 		}
-		
+
 		// Calculate thr order of symmetry from levels
 		int order = 1;
 		for (MultipleAlignment m : levels)
@@ -254,8 +247,9 @@ public class CeSymmIterative {
 
 		// Construct the resulting MultipleAlignment
 		for (int su = 0; su < order; su++) {
-			//TODO Set the identifier to the true range of the repeat
-			msa.getEnsemble().getStructureIdentifiers().add(new PassthroughIdentifier("S" + (su + 1)));
+			// TODO Set the identifier to the true range of the repeat
+			msa.getEnsemble().getStructureIdentifiers()
+					.add(new PassthroughIdentifier("S" + (su + 1)));
 			msa.getEnsemble().getAtomArrays().add(allAtoms);
 			b.getAlignRes().add(new ArrayList<Integer>());
 
@@ -265,6 +259,9 @@ public class CeSymmIterative {
 				b.getAlignRes().get(su).add(group.get(su));
 			}
 		}
+		result.setMultipleAlignment(msa);
+		result.setRefined(true);
+		result.setSymmOrder(order);
 	}
 
 	/**
@@ -274,7 +271,9 @@ public class CeSymmIterative {
 	 */
 	private void recoverAxes() {
 
-		int size = msa.size();
+		SymmetryAxes axes = new SymmetryAxes();
+
+		int size = result.getSymmOrder();
 		int parents = 1;
 
 		for (int m = 0; m < levels.size(); m++) {
@@ -311,15 +310,7 @@ public class CeSymmIterative {
 			}
 			axes.addAxis(axis, superpose, subunitTransform, subsize);
 		}
-	}
-
-	/**
-	 * Return the symmetry axes.
-	 * 
-	 * @return SymmetryAxes
-	 */
-	public SymmetryAxes getSymmetryAxes() {
-		return axes;
+		result.setAxes(axes);
 	}
 
 	/**
