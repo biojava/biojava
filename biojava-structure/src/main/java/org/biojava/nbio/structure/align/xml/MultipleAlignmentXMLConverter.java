@@ -26,6 +26,7 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.core.util.PrettyXMLWriter;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -156,8 +157,8 @@ public class MultipleAlignmentXMLConverter {
 		//Structure Identifiers
 		xml.openTag("Structures");
 		for (int i=0; i<ensemble.size(); i++){
-			String name = ensemble.getStructureNames().get(i);
-			xml.attribute("name"+(i+1), name);
+			StructureIdentifier name = ensemble.getStructureIdentifiers().get(i);
+			xml.attribute("name"+(i+1), name.getIdentifier());
 		}
 		xml.closeTag("Structures");
 	}

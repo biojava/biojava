@@ -29,13 +29,14 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.ce.CECalculator;
 import org.biojava.nbio.structure.align.helper.AlignTools;
@@ -625,8 +626,8 @@ public class SymmetryTools {
 		MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(symm,
 				atoms, atoms, false);
 		e.setAtomArrays(new ArrayList<Atom[]>());
-		String name = e.getStructureNames().get(0);
-		e.setStructureNames(new ArrayList<String>());
+		StructureIdentifier name = e.getStructureIdentifiers().get(0);
+		e.setStructureIdentifiers(new ArrayList<StructureIdentifier>());
 
 		MultipleAlignment result = new MultipleAlignmentImpl();
 		BlockSet bs = new BlockSetImpl(result);
@@ -638,7 +639,7 @@ public class SymmetryTools {
 			List<Integer> residues = e.getMultipleAlignment(0).getBlock(su)
 					.getAlignRes().get(0);
 			b.getAlignRes().add(residues);
-			e.getStructureNames().add(name);
+			e.getStructureIdentifiers().add(name);
 			e.getAtomArrays().add(atoms);
 		}
 		e.getMultipleAlignments().set(0, result);

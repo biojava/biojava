@@ -57,7 +57,6 @@ public class AtomCacheTest {
 		previousPDB_DIR = System.getProperty(UserConfiguration.PDB_DIR, null);
 		cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
-		cache.setStrictSCOP(false);
 		// Use a fixed SCOP version for stability
 		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
 	}

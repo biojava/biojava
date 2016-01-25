@@ -122,10 +122,10 @@ public class TestMultipleAlignmentXMLParser {
 				return false;
 		} else if (b.getCalculationTime()!=null) return false;
 		
-		if (a.getStructureNames()!=null){
-			if (!a.getStructureNames().equals(b.getStructureNames()))
+		if (a.getStructureIdentifiers()!=null){
+			if (!a.getStructureIdentifiers().equals(b.getStructureIdentifiers()))
 				return false;
-		} else if (b.getStructureNames()!=null) return false;
+		} else if (b.getStructureIdentifiers()!=null) return false;
 		
 		//Check sizes and lengths
 		if (a.size() != b.size()) return false;

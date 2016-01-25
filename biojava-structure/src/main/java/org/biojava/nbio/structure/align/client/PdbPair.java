@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.align.client;
 
+import org.biojava.nbio.structure.StructureException;
+
 /** A pair for structure alignment
  * 
  * @author Andreas Prlic
@@ -29,45 +31,35 @@ package org.biojava.nbio.structure.align.client;
  */
 public class PdbPair implements Comparable<PdbPair> {
 
-	
 	StructureName name1;
 	StructureName name2;
 	public PdbPair(String name1, String name2) {
+		this(new StructureName(name1),new StructureName(name2));
+	}
+	public PdbPair(StructureName name1, StructureName name2) {
 		super();
-		
-	
-		// always make sure the first 4 chars are upper case...
-			
-		this.name1= getCheckName(name1);
-		this.name2= getCheckName(name2);
-				
+		this.name1 = name1;
+		this.name2 = name2;
 	}
-	private StructureName getCheckName(String name) {
-		
-		StructureName rname = new StructureName(name);
-		
-		return rname;
-		
-		
-	}
+
 	public String getName1() {
-		return name1.getName();
+		return name1.getIdentifier();
 	}
 	public void setName1(String name1) {
 		this.name1 = new StructureName(name1);
 	}
 	public String getName2() {
-		return name2.getName();
+		return name2.getIdentifier();
 	}
 	public void setName2(String name2) {
 		this.name2 = new StructureName(name2);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "PdbPair [name1=" + name1 + ", name2=" + name2 + "]";
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -76,7 +68,7 @@ public class PdbPair implements Comparable<PdbPair> {
 		result = prime * result + ((name2 == null) ? 0 : name2.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -98,43 +90,34 @@ public class PdbPair implements Comparable<PdbPair> {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public int compareTo(PdbPair o) {
 		if ( this.equals(o))
 			return 0;
-		
-		int c = name1.getName().compareTo(o.getName1()); 
-		if ( c == 0 )
-			return name2.getName().compareTo(o.getName2());
-		 else
+		// Use StructureName's compareTo method		
+		int c = name1.compareTo(o.name1);
+		if ( c != 0 )
 			return c;
+		return name2.compareTo(o.name2);
 	}
-	
-	public String getPDBCode1() {
-		return name1.getPdbId();
-	
-	}
-	
 
-	public String getPDBCode2(){
-		return name2.getPdbId();
-		
+	public String getPDBCode1() throws StructureException {
+		return name1.getPdbId();
 	}
+	public String getPDBCode2() throws StructureException{
+		return name2.getPdbId();
+	}
+
 	public String getChainId1(){
 		return  name1.getChainId();
-		
 	}
 	public String getChainId2(){
 		return name2.getChainId();
-		
 	}
-	
+
 	public PdbPair getReverse() {
-		PdbPair newPair = new PdbPair(name2.getName(), name1.getName());
+		PdbPair newPair = new PdbPair(name2, name1);
 		return newPair;
 	}
-	
-	
-	
 }

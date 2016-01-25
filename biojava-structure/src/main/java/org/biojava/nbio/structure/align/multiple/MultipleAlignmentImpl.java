@@ -28,6 +28,7 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 
 /**
  * A general implementation of a {@link MultipleAlignment}.
@@ -132,7 +133,11 @@ implements Serializable, MultipleAlignment, Cloneable {
 
 	@Override
 	public String toString() {
-		String resume = "Structures:" + parent.getStructureNames() + 
+		List<String> ids = new ArrayList<String>(parent.getStructureIdentifiers().size());
+		for(StructureIdentifier i : parent.getStructureIdentifiers()) {
+			ids.add(i.getIdentifier());
+		}
+		String resume = "Structures:" + ids + 
 				" \nAlgorithm:" + parent.getAlgorithmName() + "_" + 
 				parent.getVersion() + 
 				" \nBlockSets: "+ getBlockSets().size() + 

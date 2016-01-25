@@ -46,6 +46,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
@@ -181,7 +182,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 			for (int str=0; str<multAln.size(); str++){
 				JCheckBox structureSelection = new JCheckBox(
-						multAln.getEnsemble().getStructureNames().get(str));
+						multAln.getEnsemble().getStructureIdentifiers().get(str).getIdentifier());
 				hBox0.add(structureSelection);
 				hBox0.add(Box.createGlue());
 				structureSelection.setSelected(true);
@@ -334,6 +335,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		resetDisplay();
 	}
 
+	@Override
 	protected void initCoords(){
 		try {
 			if ( multAln == null ){
@@ -348,8 +350,8 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			String title =  multAln.getEnsemble().getAlgorithmName() + 
 					" V." +multAln.getEnsemble().getVersion() + " : ";
 
-			for (String name:multAln.getEnsemble().getStructureNames()){
-				title +=  name + " ";
+			for (StructureIdentifier name:multAln.getEnsemble().getStructureIdentifiers()){
+				title +=  name.getIdentifier() + " ";
 			}
 			Structure artificial = MultipleAlignmentDisplay.
 					getAlignedStructure(transformedAtoms);
@@ -534,6 +536,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		jmol.append(buf);
 	}
 
+	@Override
 	public void resetDisplay() {
 
 		if (multAln != null && transformedAtoms != null) {

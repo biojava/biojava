@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.domain;
 
+import java.io.IOException;
+
 
 /** A simple factory object that returns the system wide default DomainProvider
  * 
@@ -41,7 +43,7 @@ public class DomainProviderFactory {
 		
 	}
 	
-	public static DomainProvider getDomainProvider(){
+	public static DomainProvider getDomainProvider() throws IOException{
 		if ( domainProvider == null)
 			domainProvider = new RemoteDomainProvider(true);
 		

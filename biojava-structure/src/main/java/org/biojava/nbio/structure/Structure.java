@@ -213,6 +213,16 @@ public interface Structure extends Cloneable, StructureIdentifier {
      * @see #setName
      */
     public String getName();
+    /**
+     * Get an identifier corresponding to this structure
+     * @return The StructureIdentifier used to create this structure
+     */
+    public StructureIdentifier getStructureIdentifier();
+    /**
+     * Set the identifier corresponding to this structure
+     * @param structureIdentifier the structureIdentifier corresponding to this structure
+     */
+    public void setStructureIdentifier(StructureIdentifier structureIdentifier);
 
     /**
        sets/gets an List of  Maps which corresponds to the CONECT lines in the PDB file:

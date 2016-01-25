@@ -20,11 +20,31 @@
  */
 package org.biojava.nbio.structure.domain;
 
+import java.io.IOException;
 import java.util.SortedSet;
 
+import org.biojava.nbio.structure.StructureException;
+
+/**
+ * Decomposes a structure from the PDB into representative domains
+ */
 public interface DomainProvider {
 	
-	public SortedSet<String> getDomainNames(String name);
-	
-	public SortedSet<String> getRepresentativeDomains();
+	/**
+	 * Get a list of constituent domain identifiers
+	 * @param name a structure identifier
+	 * @return A list of domain names
+	 * @throws IOException For IO errors getting the domains
+	 * @throws StructureException For errors converting name to a valid identifier
+	 */
+	public SortedSet<String> getDomainNames(String name) throws IOException, StructureException;
+	/**
+	 * Get the full list of representative domains for the PDB.
+	 *
+	 * The exact definition representatives is implementation-specific, but
+	 * should cover as many structures as possible.
+	 * @return A full list of all representative domains recognized by this provider
+	 * @throws IOException For IO errors getting the representatives
+	 */
+	public SortedSet<String> getRepresentativeDomains() throws IOException;
 }

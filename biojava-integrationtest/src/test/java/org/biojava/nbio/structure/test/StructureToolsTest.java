@@ -126,6 +126,7 @@ public class StructureToolsTest extends TestCase {
 		assertEquals("did not find the expected number of Atoms (1087), but got " + length,1087,length);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testGetSubRanges() throws StructureException {
 		String range;
 		Structure substr;
@@ -230,13 +231,13 @@ public class StructureToolsTest extends TestCase {
 		try {
 			range = "7-10";
 			substr = StructureTools.getSubRanges(structure2, range);
-			fail("Illegal range '"+range+"'. Should throw StructureException");
-		} catch(StructureException ex) {} //expected 
+			fail("Illegal range '"+range+"'. Should throw IllegalArgumentException");
+		} catch(IllegalArgumentException ex) {} //expected 
 		try {
 			range = "A7-10";
 			substr = StructureTools.getSubRanges(structure2, range);
-			fail("Illegal range '"+range+"'. Should throw StructureException");
-		} catch(StructureException ex) {} //expected 
+			fail("Illegal range '"+range+"'. Should throw IllegalArgumentException");
+		} catch(IllegalArgumentException ex) {} //expected 
 	}
 
 	public void testRevisedConvention() throws IOException, StructureException{
@@ -319,6 +320,7 @@ public class StructureToolsTest extends TestCase {
 	 * Test some subranges that we used to have problems with
 	 * @throws StructureException
 	 */
+	@SuppressWarnings("deprecation")
 	public void testGetSubRangesExtended() throws StructureException {
 		String range;
 		Structure substr;
@@ -379,6 +381,7 @@ public class StructureToolsTest extends TestCase {
 	 * Test insertion codes
 	 * @throws StructureException
 	 */
+	@SuppressWarnings("deprecation")
 	public void testGetSubRangesInsertionCodes() throws StructureException {
 		String range;
 		Structure substr;
