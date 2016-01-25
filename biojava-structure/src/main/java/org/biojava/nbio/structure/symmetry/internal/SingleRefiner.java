@@ -65,8 +65,10 @@ public class SingleRefiner implements Refiner {
 	 * @param k Symmetry order. This can be guessed by {@link CeSymm#getSymmetryOrder(AFPChain)}
 	 * @return The refined alignment
 	 * @throws StructureException
+	 * @throws RefinerFailedException 
 	 */
-	public static AFPChain refineSymmetry(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int k) throws StructureException {
+	public static AFPChain refineSymmetry(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int k)
+			throws StructureException, RefinerFailedException {
 		// The current alignment
 		Map<Integer, Integer> alignment = AlignmentTools.alignmentAsMap(afpChain);
 
@@ -75,7 +77,10 @@ public class SingleRefiner implements Refiner {
 		
 		//Substitute and partition the alignment
 		AFPChain refinedAFP = AlignmentTools.replaceOptAln(afpChain, ca1, ca2, refined);
-		return partitionAFPchain(refinedAFP, ca1, ca2, k);
+		refinedAFP = partitionAFPchain(refinedAFP, ca1, ca2, k);
+		if (refinedAFP.getOptLength() < 1) 
+			throw new RefinerFailedException("Refiner returned empty alignment");
+		return refinedAFP;
 	}
 
 	/**
