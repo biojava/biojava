@@ -50,12 +50,12 @@ public class CESymmParameters extends CeParameters {
 	private boolean gaps;
 
 	public static enum OrderDetectorMethod {
-		SEQUENCE_FUNCTION, USER_INPUT;
+		SEQUENCE_FUNCTION, GRAPH, USER_INPUT;
 		public static final OrderDetectorMethod DEFAULT = SEQUENCE_FUNCTION;
 	}
 
 	public static enum RefineMethod {
-		NOT_REFINED, SINGLE, MULTIPLE;
+		NOT_REFINED, SINGLE, GRAPH;
 		public static final RefineMethod DEFAULT = SINGLE;
 	}
 
