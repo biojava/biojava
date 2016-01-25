@@ -44,16 +44,16 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
  * @since 4.2.0
  * 
  */
-public class SingleRefiner implements Refiner {
+public class SingleRefiner implements SymmetryRefiner {
 	
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms, 
+	public AFPChain refine(AFPChain selfAlignment, Atom[] atoms, 
 			int order) throws RefinerFailedException, StructureException {
 		
 		if (order < 2)	throw new RefinerFailedException(
 				"Symmetry not found in the structure: order < 2.");
 		
-		return refineSymmetry(afpAlignments.get(0), atoms, atoms, order);
+		return refineSymmetry(selfAlignment, atoms, atoms, order);
 	}
 	
 	/**

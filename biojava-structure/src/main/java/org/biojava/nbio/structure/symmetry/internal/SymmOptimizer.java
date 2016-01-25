@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Callable;
-
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
@@ -64,7 +62,7 @@ import org.slf4j.LoggerFactory;
  * @since 4.1.1
  * 
  */
-public class SymmOptimizer implements Callable<MultipleAlignment> {
+public class SymmOptimizer {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SymmOptimizer.class);
@@ -107,27 +105,20 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	 * alignment of the subunits. To perform the optimization use the call or
 	 * optimize methods after instantiation.
 	 * 
-	 * @param seedMSA
-	 *            multiple aligment with the symmetry subunits. It will be
-	 *            completely cloned, including its ensemble.
-	 * @param axes
-	 *            symmetry axes to contrain optimization
-	 * @param params
-	 *            CESymmParameters
-	 * @param seed
-	 *            random seed
+	 * @param symmResult
+	 *            CeSymmResult with all the information
 	 * @throws RefinerFailedException
 	 * @throws StructureException
 	 */
-	public SymmOptimizer(MultipleAlignment mul, SymmetryAxes axes,
-			CESymmParameters params, long seed) {
+	public SymmOptimizer(CeSymmResult symmResult) {
 
-		this.axes = axes;
-		this.rnd = new Random(seed);
-		this.Lmin = params.getMinCoreLength();
-		this.dCutoff = params.getDistanceCutoff();
+		this.axes = symmResult.getAxes();
+		this.rnd = new Random(symmResult.getParams().getRndSeed());
+		this.Lmin = symmResult.getParams().getMinCoreLength();
+		this.dCutoff = symmResult.getParams().getDistanceCutoff();
 
-		MultipleAlignmentEnsemble e = mul.getEnsemble().clone();
+		MultipleAlignmentEnsemble e = symmResult.getMultipleAlignment()
+				.getEnsemble().clone();
 		this.msa = e.getMultipleAlignment(0);
 
 		this.atoms = msa.getAtomArrays().get(0);
@@ -135,7 +126,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		this.subunitCore = msa.getCoreLength();
 
 		// 50% of the structures aligned (minimum) or all (no gaps)
-		if (params.isGaps())
+		if (symmResult.getParams().isGaps())
 			Rmin = Math.max(order / 2, 2);
 		else
 			Rmin = order;
@@ -177,11 +168,6 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		updateMultipleAlignment();
 		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend,
 				dCutoff);
-	}
-
-	@Override
-	public MultipleAlignment call() throws Exception {
-		return optimize();
 	}
 
 	/**
@@ -822,8 +808,9 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	 * If the SymmetryAxes object is null, the superposition of the subunits is
 	 * done without contraint.
 	 */
-	private void updateTransformation() throws StructureException, RefinerFailedException {
-		
+	private void updateTransformation() throws StructureException,
+			RefinerFailedException {
+
 		if (axes != null) {
 			for (int t = 0; t < axes.getElementaryAxes().size(); t++) {
 
