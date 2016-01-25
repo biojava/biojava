@@ -330,4 +330,9 @@ public interface Group {
 	 */
 	public void trimToSize();
 	
+	/**
+	 * Function to get the Group as an MDL molblock
+	 * @return the string of the MDL molblock
+	 */
+	public String toSDF();
 }
