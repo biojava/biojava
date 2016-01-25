@@ -27,13 +27,20 @@ package org.biojava.nbio.structure.cath;
  * @author Daniel Asarnow
  */
 
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.StructureIdentifier;
-
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.biojava.nbio.structure.ResidueRange;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
  * A class which represents a single CATH domain.
@@ -161,7 +168,6 @@ public class CathDomain implements Serializable, StructureIdentifier {
      * For example: {@code 1hiv.A}.
      * @deprecated This method is poorly named; use {@link #getThePdbId()} or {@link #getPdbIdAndChain()} instead
      */
-    @Override
 	@Deprecated
     public String getPdbId() {
          return getPdbIdAndChain();
@@ -422,24 +428,42 @@ public class CathDomain implements Serializable, StructureIdentifier {
 				+ "]";
 	}
 
-	@Override
-	public String getIdentifier() {
-		return getThePdbId() + "." + ResidueRange.toString(getResidueRanges());
+	/**
+	 * Returns the chains this domain is defined over; contains more than 1 element only if this domains is a multi-chain domain.
+	 */
+	public Set<String> getChains() {
+		Set<String> chains = new HashSet<String>();
+		List<ResidueRange> rrs = toCanonical().getResidueRanges();
+		for (ResidueRange rr : rrs) chains.add(rr.getChainId());
+		return chains;
 	}
 
 	@Override
-	public List<ResidueRange> getResidueRanges() {
+	public String getIdentifier() {
+		return getCATH();
+	}
+
+	@Override
+	public SubstructureIdentifier toCanonical() {
 		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
 		String chain = String.valueOf(getDomainName().charAt(getDomainName().length() - 3));
 		for (CathSegment segment : this.getSegments()) {
 			ranges.add(new ResidueRange(chain, segment.getStart(), segment.getStop()));
 		}
-		return ranges;
+
+		return new SubstructureIdentifier(getThePdbId(), ranges);
 	}
 
 	@Override
-	public List<String> getRanges() {
-		return ResidueRange.toStrings(getResidueRanges());
+	public Structure reduce(Structure input) throws StructureException {
+		return toCanonical().reduce(input);
 	}
+
+	@Override
+	public Structure loadStructure(AtomCache cache) throws StructureException,
+			IOException {
+		return cache.getStructure(getThePdbId());
+	}
+
 
 }

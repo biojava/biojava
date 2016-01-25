@@ -26,6 +26,7 @@ package org.biojava.nbio.structure.align;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.ce.*;
 import org.biojava.nbio.structure.align.client.FarmJobParameters;
@@ -261,38 +262,55 @@ public class MultiThreadedDBSearch {
 			interrupt();
 			cleanup();
 			return;
+		} catch (StructureException e) {
+			logger.error("Error while loading representative structure {}", name1, e);
+			interrupt();
+			cleanup();
+			return;
 		}
 
-		
-
-		DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
-
-		ConcurrencyTools.setThreadPoolSize(nrCPUs);
-
-		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(structure1);
 
 		int nrJobs = 0;
-		for (String repre : representatives){
+		DomainProvider domainProvider;
+		try {
+			domainProvider = DomainProviderFactory.getDomainProvider();
 
-			if( domainSplit ) {
-				SortedSet<String> domainNames = domainProvider.getDomainNames(repre);
-				//logger.debug(repre +" got domains: " +domainNames);
-				if( domainNames == null || domainNames.size()==0){
-					// no domains found, use whole chain.
+			ConcurrencyTools.setThreadPoolSize(nrCPUs);
+
+			Atom[] ca1 = StructureTools.getRepresentativeAtomArray(structure1);
+
+			for (String repre : representatives){
+
+				if( domainSplit ) {
+					SortedSet<String> domainNames = domainProvider.getDomainNames(repre);
+					//logger.debug(repre +" got domains: " +domainNames);
+					if( domainNames == null || domainNames.size()==0){
+						// no domains found, use whole chain.
+						submit(name1, repre, ca1, algorithm, outFileF, out, cache);
+						nrJobs++;
+						continue;
+					}
+					//logger.debug("got " + domainNames.size() + " for " + repre);
+					for( String domain : domainNames){
+						submit(name1, domain, ca1, algorithm, outFileF, out, cache);
+						nrJobs++;
+					}
+				} else {
 					submit(name1, repre, ca1, algorithm, outFileF, out, cache);
 					nrJobs++;
-					continue;
-				}
-				//logger.debug("got " + domainNames.size() + " for " + repre);
-				for( String domain : domainNames){
-					submit(name1, domain, ca1, algorithm, outFileF, out, cache);
-					nrJobs++;
-				}
-			} else {
-				submit(name1, repre, ca1, algorithm, outFileF, out, cache);
-				nrJobs++;
-			}			
+				}			
 
+			}
+		} catch(IOException e) {
+			logger.error("Error while fetching representative domains", e);
+			interrupt();
+			cleanup();
+			return;
+		} catch (StructureException e) {
+			logger.error("Error while fetching representative domains", e);
+			interrupt();
+			cleanup();
+			return;
 		}
 
 
@@ -336,7 +354,7 @@ public class MultiThreadedDBSearch {
 	
 	
 
-	private void checkLocalFiles() throws IOException {
+	private void checkLocalFiles() throws IOException, StructureException {
 		
 		logger.info("Checking local PDB installation in directory: {}", cache.getPath());
 		
@@ -389,7 +407,7 @@ public class MultiThreadedDBSearch {
 	}
 
 
-	private void checkFile(String repre) throws IOException {
+	private void checkFile(String repre) throws IOException, StructureException {
 		
 		StructureName name = new StructureName(repre);
 		
@@ -432,10 +450,14 @@ public class MultiThreadedDBSearch {
 		interrupted.set(true);
 		ExecutorService pool = ConcurrencyTools.getThreadPool();
 		pool.shutdownNow();
-		DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
-		if (domainProvider instanceof RemoteDomainProvider){
-			RemoteDomainProvider remote = (RemoteDomainProvider) domainProvider;
-			remote.flushCache();
+		try {
+			DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
+			if (domainProvider instanceof RemoteDomainProvider){
+				RemoteDomainProvider remote = (RemoteDomainProvider) domainProvider;
+				remote.flushCache();
+			}
+		} catch (IOException e) {
+			// If errors occur, the cache should be empty anyways
 		}
 
 	}

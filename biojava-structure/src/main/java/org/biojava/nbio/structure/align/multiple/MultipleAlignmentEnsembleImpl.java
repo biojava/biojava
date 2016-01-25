@@ -31,6 +31,8 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.helper.AlignTools;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
@@ -56,7 +58,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	private Long calculationTime;
 
 	//Structure Identifiers
-	private List<String> structureNames;
+	private List<StructureIdentifier> structureIdentifiers;
 	private List<Atom[]> atomArrays;
 	private List<Matrix> distanceMatrix;
 
@@ -74,7 +76,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		ioTime = null;
 		calculationTime = null;
 
-		structureNames = null;
+		structureIdentifiers = null;
 		atomArrays = null;
 		distanceMatrix = null;
 		multipleAlignments = null;
@@ -83,13 +85,13 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	/**
 	 * Constructor using structure identifiers.
 	 * 
-	 * @param structureNames List of Structure names, that can be 
+	 * @param structureIdentifiers List of Structure names, that can be 
 	 * parsed by {@link AtomCache}.
 	 * @return MultipleAlignmentEnsemble an ensemble with the structures.
 	 */
-	public MultipleAlignmentEnsembleImpl(List<String> structureNames){
+	public MultipleAlignmentEnsembleImpl(List<StructureIdentifier> structureIdentifiers){
 		this();
-		setStructureNames(structureNames);
+		setStructureIdentifiers(structureIdentifiers);
 	}
 
 	/**
@@ -130,8 +132,8 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		if (e.atomArrays != null){
 			atomArrays = new ArrayList<Atom[]>(e.atomArrays);
 		}
-		if (e.structureNames != null){
-			structureNames = new ArrayList<String>(e.structureNames);
+		if (e.structureIdentifiers != null){
+			structureIdentifiers = new ArrayList<StructureIdentifier>(e.structureIdentifiers);
 		}
 	}
 
@@ -151,7 +153,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		this();
 		//Copy all the creation and algorithm information
 		atomArrays = Arrays.asList(ca1,ca2);
-		structureNames = Arrays.asList(afp.getName1(),afp.getName2());
+		structureIdentifiers = Arrays.<StructureIdentifier>asList(new StructureName(afp.getName1()),new StructureName(afp.getName2()));
 		algorithmName = afp.getAlgorithmName();
 		version = afp.getVersion();
 		calculationTime = afp.getCalculationTime();
@@ -274,13 +276,13 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	}
 
 	@Override
-	public List<String> getStructureNames() {
-		return structureNames;
+	public List<StructureIdentifier> getStructureIdentifiers() {
+		return structureIdentifiers;
 	}
 
 	@Override
-	public void setStructureNames(List<String> structureNames) {
-		this.structureNames = structureNames;
+	public void setStructureIdentifiers(List<StructureIdentifier> structureNames) {
+		this.structureIdentifiers = structureNames;
 	}
 
 	@Override
@@ -304,7 +306,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 
 	/**
 	 * Force the atom arrays to regenerate based on 
-	 * {@link #getStructureNames()}.
+	 * {@link #getStructureIdentifiers()}.
 	 * 
 	 * @throws IOException
 	 * @throws StructureException
@@ -312,7 +314,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	public void updateAtomArrays() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		atomArrays = new ArrayList<Atom[]>();
-		for (String name : getStructureNames() ){
+		for (StructureIdentifier name : getStructureIdentifiers() ){
 			Atom[] array = cache.getRepresentativeAtoms(name);
 			atomArrays.add(array);
 		}
@@ -369,7 +371,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 
 	@Override
 	public int size() {
-		if (structureNames != null) return structureNames.size();
+		if (structureIdentifiers != null) return structureIdentifiers.size();
 		else if (atomArrays != null) return atomArrays.size();
 		else {
 			throw new IndexOutOfBoundsException(

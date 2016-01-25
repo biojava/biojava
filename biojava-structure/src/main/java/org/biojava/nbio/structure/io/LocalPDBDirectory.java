@@ -362,7 +362,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	protected InputStream getInputStream(String pdbId) throws IOException{
 
-		if ( pdbId.length() < 4)
+		if ( pdbId.length() != 4)
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// Check existing
@@ -387,7 +387,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException 
 	 */
 	public void prefetchStructure(String pdbId) throws IOException {
-		if ( pdbId.length() < 4)
+		if ( pdbId.length() != 4)
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// Check existing
@@ -452,7 +452,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	@SuppressWarnings("deprecation") //for isUpdateRemediatedFiles()
 	protected File downloadStructure(String pdbId) throws IOException{
-		if ( pdbId.length() < 4)
+		if ( pdbId.length() != 4)
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// decide whether download is required

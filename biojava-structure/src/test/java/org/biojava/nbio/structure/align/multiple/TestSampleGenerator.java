@@ -29,7 +29,9 @@ import java.util.List;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
@@ -87,7 +89,7 @@ public class TestSampleGenerator {
 		ensemble.setAlgorithmName("testAlignment");
 		ensemble.setVersion("1.0");
 		ensemble.setCalculationTime((long) 1000000000);
-		ensemble.setStructureNames(Arrays.asList("2gox","2gox","2gox"));
+		ensemble.setStructureIdentifiers(Arrays.<StructureIdentifier>asList(new StructureName("2gox"),new StructureName("2gox"),new StructureName("2gox")));
 
 		//Generate the MultipleAlignment - 2 blocks with 2 blocksets each
 		int[] nextResidue = new int[3];
@@ -136,10 +138,12 @@ public class TestSampleGenerator {
 			throws StructureException, IOException {
 
 		//Download the globin structures
-		List<String> names = Arrays.asList("1mbc", "1hlb", "1thb.A", "1ith.A");
+		List<StructureIdentifier> names = Arrays.<StructureIdentifier>asList(
+				new StructureName("1mbc"), new StructureName("1hlb"),
+				new StructureName("1thb.A"), new StructureName("1ith.A"));
 		AtomCache cache = new AtomCache();
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
-		for (String name:names) atomArrays.add(cache.getAtoms(name));
+		for (StructureIdentifier name:names) atomArrays.add(cache.getAtoms(name));
 
 		MultipleAlignmentEnsemble ensemble = 
 				new MultipleAlignmentEnsembleImpl();
@@ -148,7 +152,7 @@ public class TestSampleGenerator {
 		//Set the ensemble properties (all filled)
 		ensemble.setAtomArrays(atomArrays);
 		ensemble.getDistanceMatrix();
-		ensemble.setStructureNames(names);
+		ensemble.setStructureIdentifiers(names);
 		ensemble.setAlgorithmName("testAlignment");
 		ensemble.setVersion("2.0");
 		ensemble.setIoTime((long) 1000000000);

@@ -28,7 +28,9 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockImpl;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
@@ -213,7 +215,7 @@ public class CeSymmIterative {
 		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());
 		msa.getEnsemble().setAlgorithmName(CeSymm.algorithmName);
 		msa.getEnsemble().setVersion(CeSymm.version);
-		msa.getEnsemble().setStructureNames(new ArrayList<String>());
+		msa.getEnsemble().setStructureIdentifiers(new ArrayList<StructureIdentifier>());
 
 		BlockSet bs = new BlockSetImpl(msa);
 		Block b = new BlockImpl(bs);
@@ -249,7 +251,8 @@ public class CeSymmIterative {
 
 		// Construct the resulting MultipleAlignment
 		for (int su = 0; su < size; su++) {
-			msa.getEnsemble().getStructureNames().add("S" + (su + 1));
+			//TODO Set the identifier to the true range of the repeat
+			msa.getEnsemble().getStructureIdentifiers().add(new PassthroughIdentifier("S" + (su + 1)));
 			msa.getEnsemble().getAtomArrays().add(allAtoms);
 			b.getAlignRes().add(new ArrayList<Integer>());
 

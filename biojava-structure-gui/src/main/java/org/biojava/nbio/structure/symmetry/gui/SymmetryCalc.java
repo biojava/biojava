@@ -26,6 +26,7 @@ import java.util.List;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.AlignmentCalculationRunnable;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
@@ -52,13 +53,13 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 	
 	boolean interrupted = false;
 	
-	private String name;
+	private StructureIdentifier name;
 	private Structure structure;
 	private SymmetryGui parent;
 
 	/** Requests for a structure to analyze.
 	 */
-	public SymmetryCalc(SymmetryGui p, Structure s, String n) {
+	public SymmetryCalc(SymmetryGui p, Structure s, StructureIdentifier n) {
 		parent = p;
 		structure = s;
 		name = n;
@@ -69,7 +70,7 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 
 		//The structure has been downloaded, now calculate the alignment ...
 		CeSymm ceSymm = parent.getSymmetryAlgorithm();
-		CESymmParameters params = (CESymmParameters) ceSymm.getParameters();
+		CESymmParameters params = ceSymm.getParameters();
 		
 		try {
 
@@ -77,11 +78,11 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 			
 			MultipleAlignment msa = ceSymm.analyze(atoms);
 
-			List<String> names = new ArrayList<String>();
+			List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
 			for (int su=0; su<msa.size(); su++){
 				names.add(name);
 			}
-			msa.getEnsemble().setStructureNames(names);
+			msa.getEnsemble().setStructureIdentifiers(names);
 
 			MultipleAlignmentJmol jmol = 
 					SymmetryDisplay.display(msa, ceSymm.getSymmetryAxes());

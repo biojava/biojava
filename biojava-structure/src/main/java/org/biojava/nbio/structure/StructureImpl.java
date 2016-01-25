@@ -23,15 +23,17 @@
  */
 package org.biojava.nbio.structure;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.CompoundFinder;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation of a PDB Structure. This class
@@ -46,11 +48,12 @@ import java.util.Map;
  */
 public class StructureImpl implements Structure, Serializable {
 
-	private static final long serialVersionUID = -8344837138032851347L;
+	private static final long serialVersionUID = -8344837138032851348L;
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
 	private String pdb_id ;
+
 	/* models is an ArrayList of ArrayLists */
 	private List<List<Chain>> models;
 
@@ -61,12 +64,12 @@ public class StructureImpl implements Structure, Serializable {
 	private List<Site> sites;
 	private List<Group> hetAtoms;
 	private String name ;
+	private StructureIdentifier structureIdentifier;
 
 	private PDBHeader pdbHeader;
 
 	private Long id;
 	private boolean biologicalAssembly;
-
 
 	/**
 	 *  Constructs a StructureImpl object.
@@ -131,6 +134,8 @@ public class StructureImpl implements Structure, Serializable {
 	 */
 	@Override
 	public Structure clone() {
+		// Note: structures are also cloned in SubstructureIdentifier.reduce().
+		// Changes might need to be made there as well
 
 		Structure n = new StructureImpl();
 		// go through whole substructure and clone ...
@@ -279,6 +284,22 @@ public class StructureImpl implements Structure, Serializable {
 	public String getName()           { return name;  }
 
 
+
+	/**
+	 * @return The StructureIdentifier used to create this structure
+	 */
+	@Override
+	public StructureIdentifier getStructureIdentifier() {
+		return structureIdentifier;
+	}
+
+	/**
+	 * @param structureIdentifier the structureIdentifier corresponding to this structure
+	 */
+	@Override
+	public void setStructureIdentifier(StructureIdentifier structureIdentifier) {
+		this.structureIdentifier = structureIdentifier;
+	}
 
 	@Override
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
@@ -827,28 +848,61 @@ public class StructureImpl implements Structure, Serializable {
 		return pdb_id;
 	}
 
-	@Override
 	public String getPdbId() {
 		return pdb_id;
 	}
 
 	@Override
-	public List<ResidueRange> getResidueRanges() {
-		List<ResidueRange> range = new ArrayList<ResidueRange>();
-		for (Chain chain : getChains()) {
-			range.add(ResidueRange.parse(pdb_id + "." + chain.getChainID()));
-		}
-		return range;
+	public void resetModels() {
+		models = new ArrayList<List<Chain>>();
 	}
 
-	@Override
+	public List<ResidueRange> getResidueRanges() {
+		return toCanonical().getResidueRanges();
+	}
+
 	public List<String> getRanges() {
 		return ResidueRange.toStrings(getResidueRanges());
 	}
+	
+	@Override
+	public Structure loadStructure(AtomCache cache) {
+		return this;
+	}
 
 	@Override
-	public void resetModels() {
-		models = new ArrayList<List<Chain>>();
+	public SubstructureIdentifier toCanonical() {
+		List<ResidueRange> range = new ArrayList<ResidueRange>();
+		for (Chain chain : getChains()) {
+			List<Group> groups = chain.getAtomGroups();
+			ListIterator<Group> groupsIt = groups.listIterator();
+			if(!groupsIt.hasNext()) {
+				continue; // no groups in chain
+			}
+			Group g = groupsIt.next();
+			ResidueNumber first = g.getResidueNumber();
+
+			//TODO Detect missing intermediate residues -sbliven, 2015-01-28
+			//Already better than previous whole-chain representation
+
+			// get last residue
+			while(groupsIt.hasNext()) {
+				g = groupsIt.next();
+			}
+			ResidueNumber last = g.getResidueNumber();
+
+			range.add(new ResidueRange(chain.getChainID(),first,last));
+		}
+		return new SubstructureIdentifier(getPdbId(),range);
+	}
+
+	@Override
+	public Structure reduce(Structure input) throws StructureException {
+		// In common case, nothing to do
+		if(this == input)
+			return this;
+		// If given a different input, reduce to the residues given in this structure
+		return toCanonical().reduce(input);
 	}
 
 }

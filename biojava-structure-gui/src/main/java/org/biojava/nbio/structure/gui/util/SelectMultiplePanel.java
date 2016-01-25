@@ -23,18 +23,23 @@
  */
 package org.biojava.nbio.structure.gui.util;
 
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.align.webstart.WebStartMain;
-
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import java.awt.*;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.align.client.StructureName;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.align.webstart.WebStartMain;
 
 /**
  * A Text Panel that allows the user to specify multiple structure 
@@ -87,36 +92,35 @@ public class SelectMultiplePanel extends JPanel {
 
 		List<Structure> structures = new ArrayList<Structure>();
 
-		for (String name:getNames()){
+		for (StructureIdentifier name:getNames()){
 			structures.add(getStructure(name));
 		}
 		return structures;
 	}
 
-	public List<String> getNames() {
+	public List<StructureIdentifier> getNames() {
 
-		List<String> names = new ArrayList<String>();
+		List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
 
 		String raw = input.getText().trim();
 		String[] split = raw.split(" ");
 		for (String name:split){
-			if (name != null || name!="")
-				names.add(name.trim());
+			if (name != null && !name.isEmpty())
+				names.add(new StructureName(name.trim()));
 		}
 		return names;
 	}
 
-	private Structure getStructure(String name) throws StructureException{
+	private Structure getStructure(StructureIdentifier name) throws StructureException{
 
 		UserConfiguration config = WebStartMain.getWebStartConfig();
 
 		AtomCache cache = new AtomCache(config);
-		cache.setStrictSCOP(false);
 
 		Structure s = null;
 		try {
-			s =	cache.getStructure(name);
-			s.setName(name);
+			s = cache.getStructure(name);
+			s.setName(name.getIdentifier());
 		} catch (Exception e){
 			e.printStackTrace();
 		}

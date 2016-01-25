@@ -50,6 +50,7 @@ public class TestQuatSymmetryDetection {
 		params.setParseBioAssembly(true);
 		params.setAlignSeqRes(true);		
 		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		Structure pdb = StructureIO.getStructure("1b4c");
