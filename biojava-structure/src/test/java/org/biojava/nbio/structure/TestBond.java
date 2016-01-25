@@ -39,8 +39,8 @@ public class TestBond extends TestCase {
 		cache.setUseMmCif(false);
 
 		FileParsingParameters params = cache.getFileParsingParams();
-
-		params.setAlignSeqRes(false);
+		
+		params.setAlignSeqRes(true);
 		params.setLoadChemCompInfo(true);
 		params.setCreateAtomBonds(true);
 
