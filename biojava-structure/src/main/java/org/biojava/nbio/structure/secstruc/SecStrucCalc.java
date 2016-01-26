@@ -164,8 +164,13 @@ public class SecStrucCalc {
 			atoms[i] = one.getCA();
 		}
 		Grid grid = new Grid(CA_MIN_DIST);
+		if(atoms.length==0){
+			contactSet = new AtomContactSet(CA_MIN_DIST);
+		}
+		else{
 		grid.addAtoms(atoms);
 		contactSet = grid.getContacts();
+		}
 	}
 
 	/**
