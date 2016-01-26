@@ -19,15 +19,20 @@
  */
 package org.biojava.nbio.structure.ecod;
 
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author Spencer Bliven
  *
  */
-public class EcodDomain implements Serializable, Cloneable {
+public class EcodDomain implements Serializable, Cloneable, StructureIdentifier {
 
 	/*
 Column 1: ECOD uid - internal domain unique identifier
@@ -380,6 +385,31 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 		} else if (!xGroupName.equals(other.xGroupName))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return getDomainId();
+	}
+
+	public List<ResidueRange> getResidueRanges() {
+		return ResidueRange.parseMultiple(range);
+	}
+
+	@Override
+	public SubstructureIdentifier toCanonical() {
+		return new SubstructureIdentifier(getPdbId(), ResidueRange.parseMultiple(getRange()));
+	}
+
+	@Override
+	public Structure reduce(Structure input) throws StructureException {
+		return toCanonical().reduce(input);
+	}
+
+	@Override
+	public Structure loadStructure(AtomCache cache) throws StructureException,
+			IOException {
+		return cache.getStructureForPdbId(pdbId);
 	}
 
 }
