@@ -29,6 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -98,7 +100,7 @@ public class SecStrucCalc {
 	private Atom[] atoms;
 	// Added by Anthony - to speed up intergroup calculations
 	private AtomContactSet contactSet;
-	private Map<String, Integer> indResMap;;
+	private Map<String, Integer> indResMap;
 	public SecStrucCalc(){
 		ladders = new ArrayList<Ladder>();
 		bridges = new ArrayList<BetaBridge>();
@@ -412,13 +414,77 @@ public class SecStrucCalc {
 	 */
 	private void findBridges() {
 		// Get the interator of contacts
-		for (int i = 1; i < groups.length-1; i++){
-			for (int j = i+3; j < groups.length-1; j++){
-				// Check if this contact exists
-				AtomContact ac = contactSet.getContact(atoms[i], atoms[j]);
-				if(ac==null){
-					continue;
+		Iterator<AtomContact> myIter = contactSet.iterator();
+		List<Pair<Integer>> outList = new ArrayList<Pair<Integer>>();
+		
+		// Now iterate through this
+		while(myIter.hasNext()){
+			// Get the next atom contact
+			AtomContact ac = myIter.next();
+			Group g1 = ac.getPair().getFirst().getGroup();
+			Group g2 = ac.getPair().getSecond().getGroup();
+			// Get the indices
+			int i = indResMap.get(g1.getResidueNumber().getChainId()+g1.getResidueNumber().getSeqNum());
+			int j = indResMap.get(g2.getResidueNumber().getChainId()+g2.getResidueNumber().getSeqNum());
+			// If i>j switch them over
+			if(i>j){
+				// Switch them over
+				int old = i;
+				i = j;
+				j = old;
+			}
+			// Only these
+			if(j<i+3){
+				continue;
+			}
+			// If it's the first
+			if(i==0){
+				continue;
+			}
+			if(j==0){
+				continue;
+			}
+			// If it's the last
+			if(i==groups.length-1){
+				continue;
+			}
+			if(j==groups.length-1){
+				continue;
+			}
+			
+			Pair<Integer> thisPair = new Pair<Integer>(i,j);
+			outList.add(thisPair);
+		}
+		//
+		Collections.sort(outList, new Comparator<Pair<Integer>>() {
+			@Override
+			public int compare(Pair<Integer> o1, Pair<Integer> o2) {
+				// TODO Auto-generated method stub
+				if(o1.getFirst()<o2.getFirst()){
+					return -1;
 				}
+				else if(o1.getFirst()>o2.getFirst()){
+					return +1;
+				}
+				else{
+					if(o1.getSecond()<o2.getSecond()){
+						return -1;
+					}
+					else if(o1.getSecond()>o2.getSecond()){
+						return 1;
+					}
+					else{
+						return 0;
+					}
+				}
+			}
+		});
+		
+		
+
+		for(Pair<Integer> p: outList){
+				int i = p.getFirst();
+				int j = p.getSecond();
 				BridgeType btype = null;
 				// Now do the bonding
 				if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
@@ -433,7 +499,7 @@ public class SecStrucCalc {
 					registerBridge(i, j, btype);
 				}
 			}
-		}
+
 
 	}
 
