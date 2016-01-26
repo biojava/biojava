@@ -71,6 +71,16 @@ public class BlastXMLParserTest {
         instance.setFile(f);
     }
 
+    protected  File getFileForResource(String resource){
+        URL resourceURL = this.getClass().getResource(resource);
+        String filepath = resourceURL.getFile();
+        filepath = filepath.replaceAll("%20"," ");
+
+        File file = new File(filepath);
+
+        return file;
+    }
+
     /**
      * Test of createObjects method, of class BlastXMLParser.
      */
@@ -79,8 +89,9 @@ public class BlastXMLParserTest {
         System.out.println("createObjects");
         
         String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blastxml";
-        URL resourceURL = getClass().getResource(resource);
-        File file = new File(resourceURL.getFile());
+
+
+        File file = getFileForResource(resource);
         
         BlastXMLParser instance = new BlastXMLParser();
         instance.setFile(file);

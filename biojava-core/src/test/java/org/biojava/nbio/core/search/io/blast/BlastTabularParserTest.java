@@ -86,6 +86,17 @@ public class BlastTabularParserTest {
         instance.setFile(f);
     }
 
+
+    protected  File getFileForResource(String resource){
+        URL resourceURL = this.getClass().getResource(resource);
+        String filepath = resourceURL.getFile();
+        filepath = filepath.replaceAll("%20"," ");
+
+        File file = new File(filepath);
+
+        return file;
+    }
+
     /**
      * Test of createObjects method, of class BlastTabularParser.
      */
@@ -97,8 +108,7 @@ public class BlastTabularParserTest {
         Hsp expHsp1hit1res1;
         
         String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blasttxt";
-        URL resourceURL = getClass().getResource(resource);
-        File file = new File(resourceURL.getFile());
+        File file = getFileForResource(resource);
         
         BlastTabularParser instance = new BlastTabularParser();
         instance.setFile(file);
@@ -163,8 +173,8 @@ public class BlastTabularParserTest {
         
         
         String resource2 = "/org/biojava/nbio/core/search/io/blast/testBlastTabularReport.txt";
-        URL resourceURL2 = getClass().getResource(resource2);
-        File file2 = new File(resourceURL2.getFile());
+
+        File file2 = getFileForResource(resource2);
         
         BlastTabularParser instance2 = new BlastTabularParser();
         instance2.setFile(file2);
