@@ -29,6 +29,7 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
@@ -54,7 +55,7 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 public class OpenRefiner implements SymmetryRefiner {
 
 	@Override
-	public AFPChain refine(AFPChain selfAlignment, Atom[] atoms, int order)
+	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, int order)
 			throws RefinerFailedException, StructureException {
 
 		// The two vertices of the graph mean (previous, next)
@@ -158,9 +159,8 @@ public class OpenRefiner implements SymmetryRefiner {
 			}
 		}
 
-		if (subunits.size() == 0) {
+		if (subunits.size() == 0)
 			throw new RefinerFailedException("Empty alignment");
-		}
 
 		int[][][] optAln = new int[order][2][subunits.size()];
 		for (int bk = 0; bk < order; bk++) {
@@ -172,7 +172,8 @@ public class OpenRefiner implements SymmetryRefiner {
 				optAln[bk][1][su] = subunits.get(su).get((bk + 1) % order);
 			}
 		}
-		return AlignmentTools.replaceOptAln(optAln, selfAlignment, atoms, atoms);
+		AFPChain afp = AlignmentTools.replaceOptAln(optAln, selfAlignment, atoms, atoms);
+		return SymmetryTools.fromAFP(afp, atoms);
 	}
 
 }

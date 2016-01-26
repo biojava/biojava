@@ -32,7 +32,9 @@ import java.util.TreeSet;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
  * Creates a refined alignment with the CE-Symm alternative self-alignment.
@@ -47,13 +49,14 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
 public class SingleRefiner implements SymmetryRefiner {
 	
 	@Override
-	public AFPChain refine(AFPChain selfAlignment, Atom[] atoms, 
+	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, 
 			int order) throws RefinerFailedException, StructureException {
 		
 		if (order < 2)	throw new RefinerFailedException(
 				"Symmetry not found in the structure: order < 2.");
 		
-		return refineSymmetry(selfAlignment, atoms, atoms, order);
+		AFPChain afp = refineSymmetry(selfAlignment, atoms, atoms, order);
+		return SymmetryTools.fromAFP(afp, atoms);
 	}
 	
 	/**

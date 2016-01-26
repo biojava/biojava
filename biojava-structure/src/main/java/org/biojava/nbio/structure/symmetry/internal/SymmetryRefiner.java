@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.symmetry.internal;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 
 /**
  * Interface for all symmetry refinement implementations.
@@ -35,19 +36,19 @@ public interface SymmetryRefiner {
 
 	/**
 	 * Returns a refined symmetry alignment, where the subunit residues are
-	 * aligned consistently and separated into the blocks of the AFPChain.
+	 * aligned consistently in a MultipleAlignment.
 	 * 
 	 * @param selfAlignment
 	 *            optimal self-alignment calculated by CeSymm
 	 * @param atoms
 	 *            coordinates of the structure
 	 * @param order
-	 *            order of symmetry to use.
-	 * @return AFPChain refined symmetry alignment
+	 *            order of symmetry to use
+	 * @return MultipleAlignment refined symmetry alignment
 	 * @throws RefinerFailedException
 	 * @throws StructureException
 	 */
-	public AFPChain refine(AFPChain selfAlignment, Atom[] atoms, int order)
+	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, int order)
 			throws RefinerFailedException, StructureException;
 
 }
