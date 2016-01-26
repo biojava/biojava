@@ -29,9 +29,9 @@ import java.util.concurrent.ExecutionException;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeMain;
-import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
@@ -96,12 +96,13 @@ public class DemoMultipleMC {
 		
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
+
+		List<StructureIdentifier> identifiers = new ArrayList<StructureIdentifier>();
+
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
-		List<StructureIdentifier> ids = new ArrayList<StructureIdentifier>();
 		for (String name:names)	{
-			StructureIdentifier id = new StructureName(name);
-			ids.add(id);
-			atomArrays.add(cache.getAtoms(id));
+			atomArrays.add(cache.getAtoms(name));
+			identifiers.add(new SubstructureIdentifier(name));
 		}
 		
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
@@ -113,7 +114,7 @@ public class DemoMultipleMC {
 		params.setGapExtension(20.0);
 		
 		MultipleAlignment result = algorithm.align(atomArrays);
-		result.getEnsemble().setStructureIdentifiers(ids);
+		result.getEnsemble().setStructureIdentifiers(identifiers);
 		
 		//Information about the alignment
 		result.getEnsemble().setAlgorithmName(algorithm.getAlgorithmName());

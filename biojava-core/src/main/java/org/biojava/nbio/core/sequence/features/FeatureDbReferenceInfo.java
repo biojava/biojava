@@ -32,6 +32,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * It is {@link DBReferenceInfo} which implements {@link FeatureInterface}. It allows to keep a dbReferenceInfo as a feature.
@@ -49,7 +50,7 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
     private String description = "";
     private String shortDescription = "";
     private Object userObject;
-    private HashMap<String,Qualifier> qualifiers = new HashMap<String,Qualifier>();
+    private Map<String, List<Qualifier>> qualifiers = new HashMap<String,List<Qualifier>>();
     
     
     public FeatureDbReferenceInfo(String database, String id) {
@@ -137,22 +138,30 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
     }
 
     @Override
-    public HashMap<String, Qualifier> getQualifiers() {
+    public Map<String, List<Qualifier>> getQualifiers() {
         return qualifiers;
     }
 
     @Override
-    public void setQualifiers(HashMap<String, Qualifier> qualifiers) {
+    public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
         this.qualifiers = qualifiers;
     }
 
     @Override
     public void addQualifier(String key, Qualifier qualifier) {
         if (qualifiers == null) {
-            qualifiers = new HashMap<String, Qualifier>();
+            qualifiers = new HashMap<String, List<Qualifier>>();
         }
-        
-        qualifiers.put(key, qualifier);
+        // Check for key. Update list of values
+        if (qualifiers.containsKey(key)){
+            List<Qualifier> vals = qualifiers.get(key);
+            vals.add(qualifier);
+            qualifiers.put(key, vals);
+        } else {
+            List<Qualifier> vals = new ArrayList<Qualifier>();
+            vals.add(qualifier);
+            qualifiers.put(key, vals);
+        }
+
     }
-    
 }
