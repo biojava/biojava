@@ -610,6 +610,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// drop atoms from cloned group...
 			// https://redmine.open-bio.org/issues/3307
 			altLocG.setAtoms(new ArrayList<Atom>());
+			altLocG.getAltLocs().clear();
 			current_group.addAltLoc(altLocG);
 			return altLocG;	
 		}
