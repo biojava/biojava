@@ -24,29 +24,46 @@
 package org.biojava.nbio.structure.io;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
-import org.biojava.nbio.core.sequence.compound.*;
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.AmbiguityRNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.HetatomImpl;
+import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 
 /** Aligns the SEQRES residues to the ATOM residues.
@@ -762,4 +779,38 @@ public class SeqRes2AtomAligner {
 
 	}
 
+	/**
+	 * Storing unaligned SEQRES groups in a Structure.
+	 * @param structure
+	 * @param seqResChains
+	 */
+	public static void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains, boolean headerOnly) {
+
+		for (int i = 0; i < structure.nrModels(); i++) {
+			List<Chain> atomChains   = structure.getModel(i);
+
+			for (Chain seqRes: seqResChains){
+				Chain atomRes;
+			
+				if (headerOnly) {
+					// In header-only mode skip ATOM records.  
+					// Here we store chains with SEQRES instead of AtomGroups.
+					seqRes.setSeqResGroups(seqRes.getAtomGroups());
+					seqRes.setAtomGroups(new ArrayList<Group>()); // clear out the atom groups.
+					atomChains.add(seqRes);
+				} else {
+					// Otherwise, we find a chain with AtomGroups
+					// and set this as SEQRES groups.
+					atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomChains);
+					if ( atomRes != null)
+						atomRes.setSeqResGroups(seqRes.getAtomGroups());
+					else
+						logger.warn("Could not find atom records for chain " + seqRes.getChainID());
+				} 				
+			}
+			if (headerOnly) {
+				structure.setChains(i, atomChains);
+			}
+		}
+	}
 }

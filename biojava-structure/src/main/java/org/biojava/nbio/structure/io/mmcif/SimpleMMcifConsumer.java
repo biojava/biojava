@@ -309,6 +309,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void newAtomSite(AtomSite atom) {
 
+		if (params.isHeaderOnly()) return;
+		
 		// Warning: getLabel_asym_id is not the "chain id" in the PDB file
 		// it is the internally used chain id.
 		// later on we will fix this...
@@ -475,9 +477,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 			}
 		}
-
-		if ( params.isHeaderOnly())
-			return;
 
 		//atomCount++;
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
@@ -662,15 +661,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void documentEnd() {
 
-		// a problem occurred earlier so current_chain = null ...
-		// most likely the buffered reader did not provide data ...
+		// Expected that there is one current_chain that needs to be added to the model
+		// When in headerOnly mode, no Atoms are read, and there will not be an active
+		// current_chain.
 		if ( current_chain != null ) {
 
 			current_chain.addGroup(current_group);
 			if (isKnownChain(current_chain.getChainID(),current_model) == null) {
 				current_model.add(current_chain);
 			}
-		} else {
+		} else if (!params.isHeaderOnly()){
 			logger.warn("current chain is null at end of document.");			
 		}
 
@@ -705,21 +705,30 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.warn("No _struct_asym category in file, no SEQRES groups will be added."); 
 		}
 
-		if ( params.isAlignSeqRes() ){		
+		// Only align if requested (default) and not when headerOnly mode with no Atoms.
+		// Otherwise, we store the empty SeqRes Groups unchanged in the right chains.
+		if ( params.isAlignSeqRes() && !params.isHeaderOnly() ){		
+			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			alignSeqRes();
+		} else {
+			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
+			SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
 		}
 
-		if ( params.shouldCreateAtomBonds()) {
-			addBonds();
-		}
-		
-		// Adds the equivalent CONECT-style records as a PDB has for ligands.
-		if ( params.isCreateLigandConects()) {
-			addLigandConnections();
-		}
-
-		if ( params.shouldCreateAtomCharges()) {
-			addCharges();
+		// Various tasks that require Atoms can be skipped.
+		if (!params.isHeaderOnly()) {
+			if ( params.shouldCreateAtomBonds()) {
+				addBonds();
+			}
+			
+			// Adds the equivalent CONECT-style records as a PDB has for ligands.
+			if ( params.isCreateLigandConects()) {
+				addLigandConnections();
+			}
+	
+			if ( params.shouldCreateAtomCharges()) {
+				addCharges();
+			}
 		}
 
 		boolean noAsymStrandIdMappingPresent = false;
@@ -836,10 +845,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		
-		createSSBonds();
-
-		// Do structure.setSites(sites) after any chain renaming to be like PDB.
-		addSites();
+		if (!params.isHeaderOnly()) {
+			createSSBonds();
+	
+			// Do structure.setSites(sites) after any chain renaming to be like PDB.
+			addSites();
+		}
 		
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
@@ -1898,6 +1909,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newStructSite(StructSite structSite) {
+		
+		if (params.isHeaderOnly()) {
+			return;
+		}
+		
 		// Simply implement the method.
 		List<Site> sites = structure.getSites();
 		if (sites == null) sites = new ArrayList<Site>();
