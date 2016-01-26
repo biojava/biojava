@@ -95,8 +95,7 @@ public class CeSymm {
 	/**
 	 * Prevent instantiation. Static class.
 	 */
-	private CeSymm(){
-	}
+	private CeSymm(){}
 
 	private static Matrix align(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
 			CESymmParameters params, Matrix origM, CECalculator calculator,

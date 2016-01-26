@@ -56,6 +56,9 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +80,8 @@ public class SymmetryTools {
 			.getLogger(SymmetryTools.class);
 
 	/** Prevent instantiation. */
-	private SymmetryTools() {}
+	private SymmetryTools() {
+	}
 
 	/**
 	 * Returns the "reset value" for graying out the main diagonal. If we're
@@ -455,6 +459,34 @@ public class SymmetryTools {
 	}
 
 	/**
+	 * Converts a self alignment into a directed jGraphT of aligned residues,
+	 * where each vertex is a residue and each edge means the equivalence
+	 * between the two residues in the self-alignment.
+	 * 
+	 * @param selfAlignment
+	 *            AFPChain
+	 * 
+	 * @return alignment Graph
+	 */
+	public static UndirectedGraph<Integer, DefaultEdge> buildSymmetryGraph(
+			AFPChain selfAlignment) {
+
+		UndirectedGraph<Integer, DefaultEdge> graph = 
+				new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
+
+		for (int i = 0; i < selfAlignment.getOptAln().length; i++) {
+			for (int j = 0; j < selfAlignment.getOptAln()[i][0].length; j++) {
+				Integer res1 = selfAlignment.getOptAln()[i][0][j];
+				Integer res2 = selfAlignment.getOptAln()[i][1][j];
+				graph.addVertex(res1);
+				graph.addVertex(res2);
+				graph.addEdge(res1, res2);
+			}
+		}
+		return graph;
+	}
+
+	/**
 	 * Method that converts the symmetric units of a structure into different
 	 * chains, so that internal symmetry can be translated into quaternary.
 	 * <p>
@@ -631,8 +663,9 @@ public class SymmetryTools {
 			if (!e.getStructureIdentifiers().isEmpty())
 				name = e.getStructureIdentifiers().get(0);
 		} else
-			name = atoms[0].getGroup().getChain().getStructure().getStructureIdentifier();
-		
+			name = atoms[0].getGroup().getChain().getStructure()
+					.getStructureIdentifier();
+
 		e.setStructureIdentifiers(new ArrayList<StructureIdentifier>());
 
 		MultipleAlignment result = new MultipleAlignmentImpl();
@@ -765,8 +798,8 @@ public class SymmetryTools {
 	}
 
 	/**
-	 * Returns true a symmetry multiple alignment has been refined, 
-	 * false otherwise.
+	 * Returns true a symmetry multiple alignment has been refined, false
+	 * otherwise.
 	 * <p>
 	 * For a refined alignment only one Block with no repeated residues is
 	 * necessary. Sufficient condition is not tested (only known from the
