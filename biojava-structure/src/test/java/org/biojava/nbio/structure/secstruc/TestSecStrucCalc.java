@@ -55,13 +55,15 @@ public class TestSecStrucCalc {
 		List<String> names = Arrays.asList(
 				"5pti", "1tim", "4hhb", "1how", "4i4q", "2k4t");
 		
+		//Predict with BioJava the SS -> Anthony has moved this out of the loop.
+		//SecStrucCalc does not need to be reinitialised every time
+		SecStrucCalc sec = new SecStrucCalc();
 		for (String name : names) {
 			
 			AtomCache cache = new AtomCache();		
 			Structure s = cache.getStructure(name);
 			
-			//Predict with BioJava the SS
-			SecStrucCalc sec = new SecStrucCalc();
+			
 			List<SecStrucState> biojava = sec.calculate(s, true);
 			
 			//Download the original DSSP implementation output
