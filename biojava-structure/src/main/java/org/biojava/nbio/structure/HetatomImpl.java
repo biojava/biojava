@@ -23,6 +23,7 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.io.GroupToSDF;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
@@ -525,6 +526,17 @@ public class HetatomImpl implements Group,Serializable {
 		}
 
 
-	}
+		}
+	
+	
+		@Override
+		public String toSDF() {
+			// Function to return the SDF of a given strucutre
+			GroupToSDF gts = new GroupToSDF();
+			return gts.getText(this);
+		}
+
+
+
 
 }

@@ -109,7 +109,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
         // cases if a protein has more than 1 parent are not supported yet
         if (CDSFeatures.size() == 1) {
-            Qualifier codedBy = CDSFeatures.get(0).getQualifiers().get("coded_by");
+            Qualifier codedBy = CDSFeatures.get(0).getQualifiers().get("coded_by").get(0);
 
             if (codedBy != null) {
                 String codedBySeq = codedBy.getValue();
