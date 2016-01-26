@@ -30,7 +30,6 @@ import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.AlignmentCalculationRunnable;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;

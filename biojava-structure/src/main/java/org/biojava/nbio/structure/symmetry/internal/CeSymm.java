@@ -26,7 +26,6 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
@@ -91,11 +90,12 @@ public class CeSymm {
 	public static final String algorithmName = "jCE-symm";
 	private static final Logger logger = LoggerFactory.getLogger(CeSymm.class);
 	private final static boolean multiPass = false; // multiple self-alignments
-	
+
 	/**
 	 * Prevent instantiation. Static class.
 	 */
-	private CeSymm(){}
+	private CeSymm() {
+	}
 
 	private static Matrix align(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
 			CESymmParameters params, Matrix origM, CECalculator calculator,
@@ -170,9 +170,9 @@ public class CeSymm {
 	}
 
 	@SuppressWarnings("unused")
-	protected static CeSymmResult align(Atom[] atoms, CESymmParameters params) 
+	protected static CeSymmResult align(Atom[] atoms, CESymmParameters params)
 			throws StructureException {
-		
+
 		CeSymmResult result = new CeSymmResult();
 		result.setParams(params);
 		result.setAtoms(atoms);
@@ -205,8 +205,8 @@ public class CeSymm {
 			myAFP.setTMScore(tmScore2);
 
 			AFPChain newAFP = (AFPChain) myAFP.clone();
-			newAFP = CeCPMain
-					.postProcessAlignment(newAFP, atoms, ca2, calculator);
+			newAFP = CeCPMain.postProcessAlignment(newAFP, atoms, ca2,
+					calculator);
 
 			// Calculate and set the TM score for the newAFP alignment
 			double tmScore3 = AFPChainScorer.getTMScore(newAFP, atoms, ca2);
@@ -256,12 +256,12 @@ public class CeSymm {
 
 		// STEP 3: order detection & symmetry refinement, apply consistency
 		SymmetryRefiner refiner = null;
-		AFPChain refinedAFP = null;
+		OrderDetector orderDetector = null;
 		int order = 1;
 		try {
 			switch (type) {
 			case CLOSE:
-				OrderDetector orderDetector = null;
+				// ORDER DETECTION
 				switch (params.getOrderDetectorMethod()) {
 				case SEQUENCE_FUNCTION:
 					orderDetector = new SequenceFunctionOrderDetector(
@@ -272,17 +272,23 @@ public class CeSymm {
 				case USER_INPUT:
 					order = params.getUserOrder();
 					break;
-				case GRAPH:
-					// TODO refiner = new GraphRefiner();
-					break;
 				}
-				if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
+				// REFINEMENT METHOD
+				switch (params.getRefineMethod()) {
+				case NOT_REFINED:
 					result.setSymmOrder(order);
 					return result;
-				} else
+				case GRAPH:
+					refiner = new GraphRefiner();
+					break;
+				case SINGLE:
 					refiner = new SingleRefiner();
+					break;
+				}
 				break;
-			default: // case OPEN
+			// case OPEN
+			default:
+				// REFINEMENT METHOD
 				if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
 					return result;
 				} else {
@@ -292,23 +298,24 @@ public class CeSymm {
 				break;
 			}
 
-			refinedAFP = refiner.refine(result.getSelfAlignment(), atoms, order);
+			MultipleAlignment msa = refiner.refine(result.getSelfAlignment(),
+					atoms, order);
+			
+			// Refinement succeeded, store results
+			result.setMultipleAlignment(msa);
+			result.setSymmOrder(msa.size());
+			result.setRefined(true);
 
 		} catch (RefinerFailedException e) {
 			logger.info("Refinement failed: " + e.getMessage());
 			return result;
 		}
 
-		// Refinement succeeded, store results then
-		result.setRefined(true);
-		result.setSymmOrder(refinedAFP.getBlockNum());
-
 		// STEP4: determine the symmetry axis and its subunit dependencies
 		SymmetryAxes axes = new SymmetryAxes();
-		order = refinedAFP.getBlockNum();
-		Matrix rot = refinedAFP.getBlockRotationMatrix()[0];
-		Atom shift = refinedAFP.getBlockShiftVector()[0];
-		Matrix4d axis = Calc.getTransformation(rot, shift);
+		order = result.getSymmOrder();
+		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)
+				.getTransformations().get(1);
 
 		List<List<Integer>> superposition = new ArrayList<List<Integer>>();
 		List<Integer> chain1 = new ArrayList<Integer>();
@@ -417,8 +424,8 @@ public class CeSymm {
 	 * @return CeSymmResult
 	 * @throws StructureException
 	 */
-	public static CeSymmResult analyzeLevel(Atom[] atoms, CESymmParameters params) 
-			throws StructureException {
+	public static CeSymmResult analyzeLevel(Atom[] atoms,
+			CESymmParameters params) throws StructureException {
 
 		if (atoms.length < 1)
 			throw new IllegalArgumentException("Empty Atom array given.");
@@ -426,8 +433,7 @@ public class CeSymm {
 		CeSymmResult result = align(atoms, params);
 
 		if (result.isRefined()) {
-			MultipleAlignment msa = SymmetryTools.fromAFP(
-					result.getSelfAlignment(), atoms);
+			MultipleAlignment msa = result.getMultipleAlignment();
 			CoreSuperimposer imposer = new CoreSuperimposer();
 			imposer.superimpose(msa);
 			MultipleAlignmentScorer.calculateScores(msa);

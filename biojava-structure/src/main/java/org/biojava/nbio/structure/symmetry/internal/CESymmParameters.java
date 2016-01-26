@@ -50,7 +50,7 @@ public class CESymmParameters extends CeParameters {
 	private boolean gaps;
 
 	public static enum OrderDetectorMethod {
-		SEQUENCE_FUNCTION, GRAPH, USER_INPUT;
+		SEQUENCE_FUNCTION, USER_INPUT;
 		public static final OrderDetectorMethod DEFAULT = SEQUENCE_FUNCTION;
 	}
 
