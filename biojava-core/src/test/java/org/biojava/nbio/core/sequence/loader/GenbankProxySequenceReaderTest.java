@@ -108,14 +108,14 @@ public class GenbankProxySequenceReaderTest {
         Assert.assertNotNull(Integer.decode(seq.getTaxonomy().getID().split(":")[1]));
 
         // test taxonomy name
-        String taxonName = seq.getFeaturesByType("source").get(0).getQualifiers().get("organism").getValue();
+        String taxonName = seq.getFeaturesByType("source").get(0).getQualifiers().get("organism").get(0).getValue();
         logger.info("taxonomy name '{}'", taxonName);
         Assert.assertNotNull(taxonName);
 
         if (seq.getFeaturesByType("CDS").size() > 0) {
             FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> CDS = seq.getFeaturesByType("CDS").get(0);
             logger.info("CDS: {}", CDS);
-            String codedBy = CDS.getQualifiers().get("coded_by").getValue();
+            String codedBy = CDS.getQualifiers().get("coded_by").get(0).getValue();
             Assert.assertNotNull(codedBy);
             Assert.assertTrue(!codedBy.isEmpty());
             logger.info("\t\tcoded_by: {}", codedBy);
@@ -138,7 +138,8 @@ public class GenbankProxySequenceReaderTest {
 
         if (CDSs != null) {
             if (CDSs.size() == 1) {
-                Qualifier codedBy = (Qualifier) CDSs.get(0).getQualifiers().get("coded_by");
+                ArrayList<Qualifier> qualifiers = (ArrayList)CDSs.get(0).getQualifiers().get("coded_by");
+                Qualifier codedBy = (Qualifier) qualifiers.get(0);
                 if (codedBy != null) {
 
                     AbstractSequence<?> parentSeq = seq.getParentSequence();
