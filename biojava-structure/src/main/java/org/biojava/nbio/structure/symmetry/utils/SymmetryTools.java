@@ -49,6 +49,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -471,8 +472,8 @@ public class SymmetryTools {
 	public static UndirectedGraph<Integer, DefaultEdge> buildSymmetryGraph(
 			AFPChain selfAlignment) {
 
-		UndirectedGraph<Integer, DefaultEdge> graph = 
-				new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
+		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+				DefaultEdge.class);
 
 		for (int i = 0; i < selfAlignment.getOptAln().length; i++) {
 			for (int j = 0; j < selfAlignment.getOptAln()[i][0].length; j++) {
@@ -647,8 +648,10 @@ public class SymmetryTools {
 	 * @param atoms
 	 *            Atom array of the entire structure
 	 * @return MultipleAlignment format of the symmetry
+	 * @throws StructureException
 	 */
-	public static MultipleAlignment fromAFP(AFPChain symm, Atom[] atoms) {
+	public static MultipleAlignment fromAFP(AFPChain symm, Atom[] atoms)
+			throws StructureException {
 
 		if (!symm.getAlgorithmName().contains("symm")) {
 			throw new IllegalArgumentException(
@@ -684,8 +687,9 @@ public class SymmetryTools {
 		e.getMultipleAlignments().set(0, result);
 		result.setEnsemble(e);
 
-		double tmScore = symm.getTMScore();
-		result.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
+		CoreSuperimposer imposer = new CoreSuperimposer();
+		imposer.superimpose(result);
+		MultipleAlignmentScorer.calculateScores(result);
 
 		return result;
 	}

@@ -434,10 +434,6 @@ public class CeSymm {
 
 		if (result.isRefined()) {
 			MultipleAlignment msa = result.getMultipleAlignment();
-			CoreSuperimposer imposer = new CoreSuperimposer();
-			imposer.superimpose(msa);
-			MultipleAlignmentScorer.calculateScores(msa);
-			result.setMultipleAlignment(msa);
 
 			// STEP 5: symmetry alignment optimization
 			if (result.getParams().getOptimization()) {

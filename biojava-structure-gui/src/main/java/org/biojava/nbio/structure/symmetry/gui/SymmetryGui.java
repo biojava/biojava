@@ -293,7 +293,7 @@ public class SymmetryGui extends JFrame {
 			System.out.println("Analyzing: " + name);
 
 
-			alicalc = new SymmetryCalc(this,s,name);
+			alicalc = new SymmetryCalc(this, s);
 
 
 			thread = new Thread(alicalc);

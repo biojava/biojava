@@ -20,16 +20,12 @@
  */
 package org.biojava.nbio.structure.symmetry.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.AlignmentCalculationRunnable;
-import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
@@ -41,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * Linked to the SymmetryGUI.
  * Does not generalize, uses CeSymm class directly to allow
  * for the symmetry axis recovery.
- *  
+ * 
  * @author Aleix Lafita
  * @since 4.2.0
  * 
@@ -53,16 +49,14 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 	
 	boolean interrupted = false;
 	
-	private StructureIdentifier name;
 	private Structure structure;
 	private SymmetryGui parent;
 
 	/** Requests for a structure to analyze.
 	 */
-	public SymmetryCalc(SymmetryGui p, Structure s, StructureIdentifier n) {
+	public SymmetryCalc(SymmetryGui p, Structure s) {
 		parent = p;
 		structure = s;
-		name = n;
 	}
 
 	@Override
@@ -74,17 +68,9 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 		try {
 
 			Atom[] atoms = StructureTools.getRepresentativeAtomArray(structure);
-			
 			CeSymmResult result = CeSymm.analyze(atoms, params);
 
-			List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
-			for (int su=0; su<result.getSymmOrder(); su++){
-				names.add(name);
-			}
-			result.getMultipleAlignment().getEnsemble().setStructureIdentifiers(names);
-
-			MultipleAlignmentJmol jmol = 
-					SymmetryDisplay.display(result);
+			AbstractAlignmentJmol jmol = SymmetryDisplay.display(result);
 			String title = jmol.getTitle();
 			
 			if (params != null) 

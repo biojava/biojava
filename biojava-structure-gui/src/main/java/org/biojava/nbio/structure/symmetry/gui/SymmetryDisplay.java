@@ -31,6 +31,7 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.RotationAxis;
@@ -93,27 +94,25 @@ public class SymmetryDisplay {
 	 *            the symmetry result obtained from CeSymm
 	 * @throws StructureException
 	 */
-	public static MultipleAlignmentJmol display(CeSymmResult symmResult)
+	public static AbstractAlignmentJmol display(CeSymmResult symmResult)
 			throws StructureException {
 
-		MultipleAlignmentJmol jmol = null;
-		MultipleAlignment msa = symmResult.getMultipleAlignment();
-
 		if (symmResult.isRefined()) {
+			MultipleAlignment msa = symmResult.getMultipleAlignment();
 			List<Atom[]> atoms = msa.getAtomArrays();
-			jmol = new MultipleAlignmentJmol(msa, atoms);
+			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(msa, atoms);
 			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 			addSymmetryMenu(jmol, symmResult);
 			jmol.evalString(printPointGroupAxes(symmResult));
 			jmol.evalString(printSymmetryAxes(symmResult, false));
+			return jmol;
 		} else {
 			// Show the optimal alignment only if it was not refined
 			Logger.info("Showing optimal self-alignment");
-			StructureAlignmentDisplay.display(symmResult.getSelfAlignment(),
-					symmResult.getAtoms(), symmResult.getAtoms());
+			return StructureAlignmentDisplay.display(
+					symmResult.getSelfAlignment(), symmResult.getAtoms(),
+					symmResult.getAtoms());
 		}
-
-		return jmol;
 	}
 
 	/**
