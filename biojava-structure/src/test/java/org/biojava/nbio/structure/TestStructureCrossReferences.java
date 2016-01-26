@@ -20,6 +20,15 @@
  */
 package org.biojava.nbio.structure;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.List;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.StructureInterface;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
@@ -28,11 +37,6 @@ import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class TestStructureCrossReferences {
 
@@ -43,12 +47,13 @@ public class TestStructureCrossReferences {
 			
 	@Test
 	public void testCrossReferencesMmCif() throws IOException, StructureException {
+		boolean emptySeqRes = true;
 		
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		
 		FileParsingParameters params = new FileParsingParameters();
-		params.setAlignSeqRes(false); 
+		params.setAlignSeqRes(false); // Store empty seqres groups.
 		cache.setFileParsingParams(params);
 		
 		StructureIO.setAtomCache(cache); 
@@ -56,15 +61,16 @@ public class TestStructureCrossReferences {
 		Structure structure = StructureIO.getStructure(PDBCODE1);
 		
 		System.out.println("Testing references in mmCIF loading with NO alignSeqRes");
-		doFullTest(structure);
+		doFullTest(structure, emptySeqRes);
 		
 		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
-		doFullTest(structure);
+		doFullTest(structure, emptySeqRes);
 		
 	}
 	
 	@Test
 	public void testCrossReferencesMmCifAlignSeqRes() throws IOException, StructureException {
+		boolean emptySeqRes = false;
 		
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
@@ -78,10 +84,10 @@ public class TestStructureCrossReferences {
 		Structure structure = StructureIO.getStructure(PDBCODE1);
 		
 		System.out.println("Testing references in mmCIF loading with alignSeqRes");
-		doFullTest(structure);
+		doFullTest(structure, emptySeqRes);
 		
 		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
-		doFullTest(structure);
+		doFullTest(structure, emptySeqRes);
 
 		
 	}
@@ -89,29 +95,29 @@ public class TestStructureCrossReferences {
 	
 	@Test
 	public void testCrossReferencesPdb() throws IOException, StructureException {
-		
+		boolean emptySeqRes = true;
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(false);
 		
 		FileParsingParameters params = new FileParsingParameters();
-		params.setAlignSeqRes(false); 
+		params.setAlignSeqRes(false);  // Store empty seqres groups
 		cache.setFileParsingParams(params);
 		
 		StructureIO.setAtomCache(cache); 
 		
 		Structure structure = StructureIO.getStructure(PDBCODE1);
 		
-		System.out.println("Testing references in PDB loading with NO alignSeqRes");
-		doFullTest(structure);
+
+		doFullTest(structure, emptySeqRes);
 		
 		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
-		doFullTest(structure);
+		doFullTest(structure, emptySeqRes);
 
 	}
 	
 	@Test
 	public void testCrossReferencesPdbAlignSeqRes() throws IOException, StructureException {
-		
+		boolean emptySeqRes = false;
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(false);
 		
@@ -124,10 +130,10 @@ public class TestStructureCrossReferences {
 		System.out.println("Testing references in PDB loading with alignSeqRes");
 		Structure structure = StructureIO.getStructure(PDBCODE1);
 		
-		doFullTest(structure);
+		doFullTest(structure, emptySeqRes);
 		
 		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
-		doFullTest(structure);
+		doFullTest(structure, emptySeqRes);
 
 		
 	}
@@ -137,11 +143,11 @@ public class TestStructureCrossReferences {
 		// TODO implement
 	}
 
-	private void doFullTest(Structure structure) throws StructureException {
+	private void doFullTest(Structure structure, boolean emptySeqRes) throws StructureException {
 		
 		System.out.println("Testing references in original structure");
 		
-		testStructureRefs(structure);
+		testStructureRefs(structure, emptySeqRes);
 		logger.debug("Original structure mem hashCode: {}",System.identityHashCode(structure));
 		
 		Structure structureCopy = structure.clone();
@@ -152,7 +158,7 @@ public class TestStructureCrossReferences {
 		
 		System.out.println("Testing references in cloned structure");
 		
-		testStructureRefs(structureCopy);
+		testStructureRefs(structureCopy, emptySeqRes);
 
 		logger.debug("Original structure mem hashCode after cloning: {}",System.identityHashCode(structure));
 		
@@ -160,13 +166,13 @@ public class TestStructureCrossReferences {
 		System.out.println("Testing references in original structure after having cloned it");
 		// we test again the original after cloning it, perhaps some references were mixed while cloning
 		// there is a bug in ChainImpl.clone() that mixes them up!
-		testStructureRefs(structure);
+		testStructureRefs(structure, emptySeqRes);
 
 		
 		System.out.println("Testing references of chain clones");
 		for (Chain c:structure.getChains()) {
 			Chain clonedChain = (Chain) c.clone();
-			testChainRefs(clonedChain);
+			testChainRefs(clonedChain, emptySeqRes);
 		}
 		
 		System.out.println("Testing references in atom arrays");
@@ -185,17 +191,17 @@ public class TestStructureCrossReferences {
 		}
 		
 		System.out.println("Testing references in original structure after getUniqueInterfaces");
-		testStructureRefs(structure);
+		testStructureRefs(structure, emptySeqRes);
 	}
 	
-	private void testStructureRefs(Structure s) throws StructureException {
+	private void testStructureRefs(Structure s, boolean emptySeqRes) throws StructureException {
 		
 		// structure, chain, group, atom linking
 		for (Chain c:s.getChains()) {
 			logger.debug("Expected parent structure mem hashCode: {}",System.identityHashCode(s));
 			logger.debug("Actual parent structure mem hashCode: {}",System.identityHashCode(c.getStructure()));
 			assertSame(s, c.getStructure()); 
-			testChainRefs(c);			
+			testChainRefs(c, emptySeqRes);			
 		}
 		
 		// compounds linking
@@ -213,7 +219,7 @@ public class TestStructureCrossReferences {
 		}
 	}
 	
-	private void testChainRefs(Chain c) {
+	private void testChainRefs(Chain c, boolean emptySeqRes) {
 		
 		assertNotNull(c.getCompound());
 		
@@ -224,19 +230,23 @@ public class TestStructureCrossReferences {
 				assertSame(g, a.getGroup());
 				assertSame(c, a.getGroup().getChain());
 			}
-						
+				
 			// the SEQRES groups should contain a reference to each and every ATOM group
 			// (of course they will also contain some extra groups: those that are only in SEQRES)
 			if (c.getSeqResGroups().size()>0) {
 				// we don't want to test hetatoms that are most likely outside of the seqres defined chains
 				if (g.getType() == GroupType.HETATM) continue;
 				
+				// Only test for expected Atom(s) if we parsed Atoms into Structure.
+				if (!emptySeqRes)
 				assertTrue("SeqResGroups should contain ATOM group "+g.toString(), 
 						containsReference(g, c.getSeqResGroups()) );
 			}
 		}
 		
 		for (Group g:c.getSeqResGroups()) {
+			// When not aligned, this can be different.
+			if (!emptySeqRes)
 			assertSame("Failed parent chain for group "+g.toString(), c, g.getChain());
 			
 			for (Atom a:g.getAtoms()) {

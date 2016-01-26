@@ -21,7 +21,57 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.structure.*;
+import static java.lang.Math.min;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.vecmath.Matrix4d;
+
+import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.AminoAcidImpl;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Author;
+import org.biojava.nbio.structure.BondImpl;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.DBRef;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupIterator;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.HetatomImpl;
+import org.biojava.nbio.structure.JournalArticle;
+import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.PDBCrystallographicInfo;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.SSBond;
+import org.biojava.nbio.structure.SSBondImpl;
+import org.biojava.nbio.structure.Site;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
@@ -31,21 +81,6 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.vecmath.Matrix4d;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static java.lang.Math.min;
 
 //import org.biojava.nbio.structure.Calc;
 
@@ -413,6 +448,8 @@ public class PDBFileParser  {
 
 	private void pdb_HELIX_Handler(String line){
 		
+		if (params.isHeaderOnly()) return;
+		
 		if (line.length()<38) {
 			logger.info("HELIX line has length under 38. Ignoring it.");
 			return;
@@ -499,6 +536,8 @@ public class PDBFileParser  {
 
 	 */
 	private void pdb_SHEET_Handler( String line){
+		
+		if (params.isHeaderOnly()) return;
 
 		if (line.length()<38) {
 			logger.info("SHEET line has length under 38. Ignoring it.");
@@ -563,6 +602,8 @@ public class PDBFileParser  {
 	 * @param line
 	 */
 	private void pdb_TURN_Handler( String line){
+		
+		if (params.isHeaderOnly()) return;
 				
 		if (line.length()<36) {
 			logger.info("TURN line has length under 36. Ignoring it.");
@@ -1601,6 +1642,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void  pdb_ATOM_Handler(String line)	{
 		// build up chains first.
 		// headerOnly just goes down to chain resolution.
+		
+		if ( params.isHeaderOnly())
+			return;
 
 		boolean startOfNewChain = false;
 
@@ -1749,11 +1793,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 			}
 		}
-
-
-
-		if ( params.isHeaderOnly())
-			return;
 
 		atomCount++;
 
@@ -2029,6 +2068,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( atomOverflow) {
 			return ;
 		}
+		if (params.isHeaderOnly()) {
+			return;
+		}
 		try {
 			int atomserial = Integer.parseInt (line.substring(6 ,11).trim());
 			Integer bond1      = conect_helper(line,11,16);
@@ -2076,6 +2118,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 
 	private void pdb_MODEL_Handler(String line) {
+		
+		if (params.isHeaderOnly()) return;
+		
 		// check beginning of file ...
 		if (current_chain != null) {
 			if (current_group != null) {
@@ -2238,6 +2283,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SSBOND_Handler(String line){
 		
+		if (params.isHeaderOnly()) return;
+		
 		if (line.length()<36) {
 			logger.info("SSBOND line has length under 36. Ignoring it.");
 			return;
@@ -2295,6 +2342,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @param line the LINK record line to parse.
 	 */
 	private void pdb_LINK_Handler(String line) {
+		
+		if (params.isHeaderOnly()) return;
+		
 		String name1 = line.substring(12, 16).trim();
 		String altLoc1 = line.substring(16, 17).trim();
 		String resName1 = line.substring(17, 20).trim();
@@ -2366,6 +2416,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SITE_Handler(String line){		
 
+		if (params.isHeaderOnly()) return;
+		
 		//  make a map of: SiteId to List<ResidueNumber>
 		
 		logger.debug("Site Line:"+line);
@@ -2450,6 +2502,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	//Site variable related to parsing the REMARK 800 records.
 	Site site;
 	private void pdb_REMARK_800_Handler(String line){
+		
+		if (params.isHeaderOnly()) return;
 		
 		// 'REMARK 800 SITE_IDENTIFIER: CAT                                                 '
 		line = line.substring(11);
@@ -2706,8 +2760,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			addLigandConnections();
 		}
 		
-
-		if ( params.isParseSecStruc())
+		if ( params.isParseSecStruc() && !params.isHeaderOnly())
 			setSecStruc();
 
 
@@ -2905,16 +2958,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		structure.setDBRefs(dbrefs);
 
-		if ( params.isAlignSeqRes() ){
+		// Only align if requested (default) and not when headerOnly mode with no Atoms.
+		// Otherwise, we store the empty SeqRes Groups unchanged in the right chains.
+		if ( params.isAlignSeqRes() && !params.isHeaderOnly() ){	
 			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
 
-		} else if ( params.getStoreEmptySeqRes() ){
+		} else {
 			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
-			// user wants to know about the seqres, but not align them
-
-			storeUnAlignedSeqRes(structure, seqResChains);
+			SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
 		}
 
 
@@ -2923,7 +2976,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		//associate the temporary Groups in the siteMap to the ones
 		 
-		linkSitesToGroups(); // will work now that setSites is called
+		if (!params.isHeaderOnly()) {
+			// Only can link SITES if Atom Groups were parsed.
+			linkSitesToGroups(); // will work now that setSites is called
+		}
 		
 		if ( bioAssemblyParser != null){
 			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
@@ -2955,27 +3011,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		structure.getCompounds();
-	}
-
-
-	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
-
-		for (int i = 0; i < structure.nrModels(); i++) {
-			List<Chain> atomList   = structure.getModel(i);
-
-			for (Chain seqRes: seqResChains){
-				Chain atomRes;
-			
-				atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomList);
-
-				if ( atomRes != null)
-					atomRes.setSeqResGroups(seqRes.getAtomGroups());
-				else
-					logger.warn("Could not find atom records for chain " + seqRes.getChainID());
-
-				
-			}
-		}
 	}
 
 	private void setSecStruc(){
