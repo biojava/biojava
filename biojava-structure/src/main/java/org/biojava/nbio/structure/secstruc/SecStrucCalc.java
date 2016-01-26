@@ -392,6 +392,9 @@ public class SecStrucCalc {
 		return false;
 	}
 
+
+
+
 	/**
 	 * Two nonoverlapping stretches of three residues each, i-1,i,i+1 and
 	 * j-1,j,j+1, form either a parallel or antiparallel bridge, depending on
@@ -404,35 +407,11 @@ public class SecStrucCalc {
 	 * <p>
 	 * Antiparallel Bridge(i,j) =: [Hbond(i,j) and Hbond(j,i)] 
 	 * 								or [Hbond(i-1,j+1) and Hbond(j-1,i+1)]
-	 */
-	private void findBridges(int i) {
-
-		for (int j = i+3; j < groups.length-1; j++){
-
-			BridgeType btype = null;
-
-			if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
-					(isBonded(j-1,i) && isBonded(i,j+1))) {
-				btype = BridgeType.parallel;
-			}
-			else if ((isBonded(i,j) && isBonded(j,i)) ||
-					(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
-				btype = BridgeType.antiparallel;
-			}
-
-			if (btype != null){
-				registerBridge(i, j, btype);
-			}
-		}
-
-	}
-
-	/**
-	 * Same code as above - but using the contact set to find the groups
+	 * 
+	 * Optimised to use the contact set
 	 */
 	private void findBridges() {
 		// Get the interator of contacts
-		Iterator<AtomContact> otu = contactSet.iterator();
 		for (int i = 1; i < groups.length-1; i++){
 			for (int j = i+3; j < groups.length-1; j++){
 				// Check if this contact exists
@@ -450,7 +429,6 @@ public class SecStrucCalc {
 						(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
 					btype = BridgeType.antiparallel;
 				}
-
 				if (btype != null){
 					registerBridge(i, j, btype);
 				}
@@ -502,7 +480,7 @@ public class SecStrucCalc {
 		}
 	}
 
-	private void calculateDihedralAngles() throws StructureException {
+	private void calculateDihedralAngles()  {
 
 		// dihedral angles
 		// phi: C-N-CA-C
@@ -774,7 +752,7 @@ public class SecStrucCalc {
 	 * Energies are given as 40-14, 15-4, and <4 kcal/mol respectively.
 	 */
 	private static double calculateHBondEnergy(SecStrucGroup one, 
-			SecStrucGroup two) throws StructureException {
+			SecStrucGroup two) {
 
 		Atom N = one.getN();
 		Atom H = one.getH();
@@ -975,8 +953,7 @@ public class SecStrucCalc {
 
 	}
 
-	private static Atom calcSimple_H(Atom c, Atom o, Atom n) 
-			throws StructureException {
+	private static Atom calcSimple_H(Atom c, Atom o, Atom n)  {
 
 		Atom h = Calc.subtract(c,o);
 		double dist = Calc.getDistance(o,c);
