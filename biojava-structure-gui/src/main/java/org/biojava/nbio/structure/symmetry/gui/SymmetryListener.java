@@ -23,7 +23,9 @@ package org.biojava.nbio.structure.symmetry.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
@@ -82,14 +84,15 @@ public class SymmetryListener implements ActionListener {
 				e.printStackTrace();
 			}
 
-		} else if (cmd.equals("Optimal Self-Alignment")) {
+		} else if (cmd.equals("Optimal Self Alignment")) {
 			if (symm == null) {
 				logger.error("Currently not displaying a symmetry!");
 				return;
 			}
 			try {
-				StructureAlignmentDisplay.display(symm.getSelfAlignment(),
-						symm.getAtoms(), symm.getAtoms());
+				Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
+				StructureAlignmentDisplay.display(symm.getSelfAlignment(), 
+						symm.getAtoms(), cloned);
 			} catch (StructureException e) {
 				e.printStackTrace();
 			}

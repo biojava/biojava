@@ -71,7 +71,7 @@ public class GraphRefiner implements SymmetryRefiner {
 		// Filter components with size != order, and transform to ResidueGroups
 		List<ResidueGroup> groups = new ArrayList<ResidueGroup>();
 		for (Set<Integer> comp : components) {
-			if (comp.size() != order) {
+			if (comp.size() == order) {
 				ResidueGroup group = new ResidueGroup(comp);
 				groups.add(group);
 			}
@@ -86,8 +86,10 @@ public class GraphRefiner implements SymmetryRefiner {
 		for (int i = 0; i < size; i++) {
 			for (int j = i; j < size; j++) {
 				// The diagonal is always 0
-				if (i == j)
+				if (i == j){
 					matrix.setElement(i, j, 0);
+					continue;
+				}
 				// If compatible put 1, otherwise 0
 				ResidueGroup g1 = groups.get(i);
 				ResidueGroup g2 = groups.get(j);
@@ -108,7 +110,7 @@ public class GraphRefiner implements SymmetryRefiner {
 			matrix.getRow(i, row);
 			// because element={0,1}, this is the sum
 			int rowScore = (int) row.normSquared();
-			rowScores.set(i, rowScore);
+			rowScores.add(rowScore);
 		}
 
 		// Refined multiple alignment Block as a result

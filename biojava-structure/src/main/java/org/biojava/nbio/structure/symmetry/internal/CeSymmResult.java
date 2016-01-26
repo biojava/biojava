@@ -53,14 +53,13 @@ public class CeSymmResult {
 			// Condition is over min size and score threshold
 			if (multipleAlignment.getScore(MultipleAlignmentScorer.AVGTM_SCORE) > params
 					.getScoreThreshold()
-					&& multipleAlignment.getCoreLength() < params
+					&& multipleAlignment.getCoreLength() > params
 							.getMinCoreLength())
 				return true;
 			else
 				return false;
 		} else
 			return false;
-
 	}
 
 	public MultipleAlignment getMultipleAlignment() {

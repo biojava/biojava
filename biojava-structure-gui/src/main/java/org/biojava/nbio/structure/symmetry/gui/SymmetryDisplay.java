@@ -109,9 +109,11 @@ public class SymmetryDisplay {
 		} else {
 			// Show the optimal alignment only if it was not refined
 			Logger.info("Showing optimal self-alignment");
+			Atom[] cloned = StructureTools
+					.cloneAtomArray(symmResult.getAtoms());
 			return StructureAlignmentDisplay.display(
 					symmResult.getSelfAlignment(), symmResult.getAtoms(),
-					symmResult.getAtoms());
+					cloned);
 		}
 	}
 
@@ -141,7 +143,7 @@ public class SymmetryDisplay {
 		JMenuItem multiple = new JMenuItem("Multiple Structure Alignment");
 		multiple.addActionListener(li);
 		symm.add(multiple);
-		
+
 		JMenuItem self = new JMenuItem("Optimal Self Alignment");
 		self.addActionListener(li);
 		symm.add(self);

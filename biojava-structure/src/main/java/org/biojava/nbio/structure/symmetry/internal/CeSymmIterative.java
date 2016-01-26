@@ -37,6 +37,8 @@ import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.secstruc.SecStrucElement;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
@@ -152,22 +154,22 @@ public class CeSymmIterative {
 
 		if (params.getRefineMethod() == RefineMethod.NOT_REFINED)
 			return false;
-		else if (!result.isSignificant())
+		else if (!r.isSignificant())
 			return !levels.isEmpty();
 
 		// Generate the Atoms of one of the symmetric subunit
 		Integer start = null;
 		int it = 0;
 		while (start == null) {
-			start = result.getMultipleAlignment().getBlocks().get(0)
+			start = r.getMultipleAlignment().getBlocks().get(0)
 					.getAlignRes().get(0).get(it);
 			it++;
 		}
 		Integer end = null;
-		it = result.getMultipleAlignment().getBlocks().get(0).getAlignRes()
+		it = r.getMultipleAlignment().getBlocks().get(0).getAlignRes()
 				.get(0).size() - 1;
 		while (end == null) {
-			end = result.getMultipleAlignment().getBlocks().get(0)
+			end = r.getMultipleAlignment().getBlocks().get(0)
 					.getAlignRes().get(0).get(it);
 			it--;
 		}
@@ -178,7 +180,7 @@ public class CeSymmIterative {
 			return !levels.isEmpty();
 
 		// If symmetric store the residue dependencies in alignment graph
-		Block b = result.getMultipleAlignment().getBlock(0);
+		Block b = r.getMultipleAlignment().getBlock(0);
 		for (int pos = 0; pos < b.length(); pos++) {
 			for (int su = 0; su < b.size() - 1; su++) {
 				Integer pos1 = b.getAlignRes().get(su).get(pos);
@@ -191,7 +193,7 @@ public class CeSymmIterative {
 		}
 
 		// Iterate further on those Atoms (of the first subunit only)
-		levels.add(result.getMultipleAlignment());
+		levels.add(r.getMultipleAlignment());
 		return iterate(atomsR);
 	}
 
@@ -259,6 +261,10 @@ public class CeSymmIterative {
 				b.getAlignRes().get(su).add(group.get(su));
 			}
 		}
+		CoreSuperimposer imposer = new CoreSuperimposer();
+		imposer.superimpose(msa);
+		MultipleAlignmentScorer.calculateScores(msa);
+		
 		result.setMultipleAlignment(msa);
 		result.setRefined(true);
 		result.setSymmOrder(order);

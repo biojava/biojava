@@ -243,8 +243,7 @@ public class CeSymm {
 		result.setSelfAlignment(selfAlignments.get(0));
 
 		// Determine the symmetry Type or get the one in params
-		SymmetryType type = params.getSymmType();
-		if (type == SymmetryType.AUTO) {
+		if (params.getSymmType() == SymmetryType.AUTO) {
 			if (result.getSelfAlignment().getBlockNum() == 1) {
 				result.setType(SymmetryType.OPEN);
 				logger.info("Open Symmetry detected");
@@ -259,7 +258,7 @@ public class CeSymm {
 		OrderDetector orderDetector = null;
 		int order = 1;
 		try {
-			switch (type) {
+			switch (result.getType()) {
 			case CLOSE:
 				// ORDER DETECTION
 				switch (params.getOrderDetectorMethod()) {
@@ -279,6 +278,7 @@ public class CeSymm {
 					result.setSymmOrder(order);
 					return result;
 				case GRAPH:
+					order = 0;
 					refiner = new GraphRefiner();
 					break;
 				case SINGLE:
@@ -324,7 +324,7 @@ public class CeSymm {
 		superposition.add(chain2);
 		List<Integer> subunitTrans = new ArrayList<Integer>();
 
-		switch (type) {
+		switch (result.getType()) {
 		case CLOSE:
 
 			for (int bk = 0; bk < order; bk++) {
