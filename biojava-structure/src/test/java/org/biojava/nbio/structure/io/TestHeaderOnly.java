@@ -1,7 +1,11 @@
 package org.biojava.nbio.structure.io;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
@@ -9,6 +13,10 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.biojava.nbio.structure.io.mmcif.MMcifParser;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.junit.Assert;
 import org.junit.Test;
@@ -90,6 +98,76 @@ public class TestHeaderOnly {
 		Assert.assertEquals(true, doSeqResHaveAtoms(sCIF));
 		check1REPChainC(sCIF); // Check particular residues to be aligned.
 	}
+	
+	// A better test follows that uses local files.
+	// @Test
+    public void testSpeed() {
+    	// Force using a file reader.
+        MMCIFFileReader fr = new MMCIFFileReader();
+        FileParsingParameters par = new FileParsingParameters();
+        //par.setAlignSeqRes(true);
+        // par.setHeaderOnly(true);
+        par.setHeaderOnly(false);
+        fr.setFileParsingParameters(par);
+        fr.setFetchBehavior(FetchBehavior.FETCH_FILES);
+
+        Structure s = null;
+        long start = System.nanoTime();
+        try {
+            // Medium sized structure parsed in 0.549s (no header) vs .676s (header) ~ 20% faster
+        	s = fr.getStructureById("4WZ6");
+        	// A larger structure could be parsed ~ 4.991s (no header) vs 5.867s (header) ~ 16% faster
+        	// s = fr.getStructureById("4V60");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        long stop = System.nanoTime();
+        double diff = (stop - start) / 1000000000.0;
+        System.out.println(String.format("[%s] Elapsed time: %.3f s", s.getIdentifier(), diff));
+    }
+    
+    // Test using local files.
+    @Test
+    public void testSpeed2() throws StructureException, IOException {
+    	// Test the file parsing speed when the files are already downloaded.
+    	
+		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.cif.gz"));
+		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.pdb.gz"));
+		
+		assertNotNull(cifStream);
+		
+		FileParsingParameters params = new FileParsingParameters();
+		params.setHeaderOnly(true);  // Flip this true/false to compare parsing speed.
+		
+		System.out.println("Testing PDB parsing speed");
+		PDBFileParser pdbpars = new PDBFileParser();
+		pdbpars.setFileParsingParameters(params);
+		//pdbpars.setLoadChemCompInfo(true);
+        long start = System.nanoTime();
+		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
+        long stop = System.nanoTime();
+        double diff = (stop - start) / 1000000000.0;
+        System.out.println(String.format("[%s] Elapsed time: %.3f s", s1.getIdentifier(), diff));
+
+		MMcifParser mmcifpars = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		consumer.setFileParsingParameters(params);
+		mmcifpars.addMMcifConsumer(consumer);
+
+		System.out.println("Testing mmCIF parsing speed");
+        start = System.nanoTime();
+		mmcifpars.parse(cifStream) ;
+		Structure s2 = consumer.getStructure();
+        stop = System.nanoTime();
+        diff = (stop - start) / 1000000000.0;
+        System.out.println(String.format("[%s] Elapsed time: %.3f s", s2.getIdentifier(), diff));
+        
+        /* Running from an SSD..
+         * PDB .165s (all atom) -> 0.009s (only header)  95% faster.
+         * mmCIF 0.323s (no header) -> 0.175s (only header) 45% faster.
+         */
+    }
 	
 	/**
 	 * Scan through SeqResGroups, returns true if any have Atoms.

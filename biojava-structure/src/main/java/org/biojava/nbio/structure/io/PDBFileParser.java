@@ -448,6 +448,8 @@ public class PDBFileParser  {
 
 	private void pdb_HELIX_Handler(String line){
 		
+		if (params.isHeaderOnly()) return;
+		
 		if (line.length()<38) {
 			logger.info("HELIX line has length under 38. Ignoring it.");
 			return;
@@ -534,6 +536,8 @@ public class PDBFileParser  {
 
 	 */
 	private void pdb_SHEET_Handler( String line){
+		
+		if (params.isHeaderOnly()) return;
 
 		if (line.length()<38) {
 			logger.info("SHEET line has length under 38. Ignoring it.");
@@ -598,6 +602,8 @@ public class PDBFileParser  {
 	 * @param line
 	 */
 	private void pdb_TURN_Handler( String line){
+		
+		if (params.isHeaderOnly()) return;
 				
 		if (line.length()<36) {
 			logger.info("TURN line has length under 36. Ignoring it.");
@@ -1636,6 +1642,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void  pdb_ATOM_Handler(String line)	{
 		// build up chains first.
 		// headerOnly just goes down to chain resolution.
+		
+		if ( params.isHeaderOnly())
+			return;
 
 		boolean startOfNewChain = false;
 
@@ -1784,11 +1793,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 			}
 		}
-
-
-
-		if ( params.isHeaderOnly())
-			return;
 
 		atomCount++;
 
@@ -2064,6 +2068,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( atomOverflow) {
 			return ;
 		}
+		if (params.isHeaderOnly()) {
+			return;
+		}
 		try {
 			int atomserial = Integer.parseInt (line.substring(6 ,11).trim());
 			Integer bond1      = conect_helper(line,11,16);
@@ -2111,6 +2118,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 
 	private void pdb_MODEL_Handler(String line) {
+		
+		if (params.isHeaderOnly()) return;
+		
 		// check beginning of file ...
 		if (current_chain != null) {
 			if (current_group != null) {
@@ -2273,6 +2283,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SSBOND_Handler(String line){
 		
+		if (params.isHeaderOnly()) return;
+		
 		if (line.length()<36) {
 			logger.info("SSBOND line has length under 36. Ignoring it.");
 			return;
@@ -2330,6 +2342,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @param line the LINK record line to parse.
 	 */
 	private void pdb_LINK_Handler(String line) {
+		
+		if (params.isHeaderOnly()) return;
+		
 		String name1 = line.substring(12, 16).trim();
 		String altLoc1 = line.substring(16, 17).trim();
 		String resName1 = line.substring(17, 20).trim();
@@ -2401,6 +2416,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SITE_Handler(String line){		
 
+		if (params.isHeaderOnly()) return;
+		
 		//  make a map of: SiteId to List<ResidueNumber>
 		
 		logger.debug("Site Line:"+line);
@@ -2485,6 +2502,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	//Site variable related to parsing the REMARK 800 records.
 	Site site;
 	private void pdb_REMARK_800_Handler(String line){
+		
+		if (params.isHeaderOnly()) return;
 		
 		// 'REMARK 800 SITE_IDENTIFIER: CAT                                                 '
 		line = line.substring(11);
@@ -2741,8 +2760,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			addLigandConnections();
 		}
 		
-
-		if ( params.isParseSecStruc())
+		if ( params.isParseSecStruc() && !params.isHeaderOnly())
 			setSecStruc();
 
 
@@ -2949,7 +2967,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		} else {
 			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
-			storeUnAlignedSeqRes(structure, seqResChains);
+			SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
 		}
 
 
@@ -2958,7 +2976,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		//associate the temporary Groups in the siteMap to the ones
 		 
-		linkSitesToGroups(); // will work now that setSites is called
+		if (!params.isHeaderOnly()) {
+			// Only can link SITES if Atom Groups were parsed.
+			linkSitesToGroups(); // will work now that setSites is called
+		}
 		
 		if ( bioAssemblyParser != null){
 			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
@@ -2990,27 +3011,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		structure.getCompounds();
-	}
-
-
-	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
-
-		for (int i = 0; i < structure.nrModels(); i++) {
-			List<Chain> atomList   = structure.getModel(i);
-
-			for (Chain seqRes: seqResChains){
-				Chain atomRes;
-			
-				atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomList);
-
-				if ( atomRes != null)
-					atomRes.setSeqResGroups(seqRes.getAtomGroups());
-				else
-					logger.warn("Could not find atom records for chain " + seqRes.getChainID());
-
-				
-			}
-		}
 	}
 
 	private void setSecStruc(){
