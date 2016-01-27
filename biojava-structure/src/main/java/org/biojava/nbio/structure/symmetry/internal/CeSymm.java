@@ -40,7 +40,6 @@ import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
-import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
@@ -248,59 +247,56 @@ public class CeSymm {
 				result.setType(SymmetryType.OPEN);
 				logger.info("Open Symmetry detected");
 			} else {
-				result.setType(SymmetryType.CLOSE);
+				result.setType(SymmetryType.CLOSED);
 				logger.info("Close Symmetry detected");
 			}
-		}
+		} else
+			result.setType(params.getSymmType());
 
 		// STEP 3: order detection & symmetry refinement, apply consistency
-		SymmetryRefiner refiner = null;
-		OrderDetector orderDetector = null;
-		int order = 1;
 		try {
-			switch (result.getType()) {
-			case CLOSE:
-				// ORDER DETECTION
-				switch (params.getOrderDetectorMethod()) {
-				case SEQUENCE_FUNCTION:
+			// ORDER DETECTION
+			OrderDetector orderDetector = null;
+			int order = 1;
+			switch (params.getOrderDetectorMethod()) {
+			case USER_INPUT:
+				order = params.getUserOrder();
+				break;
+			case SEQUENCE_FUNCTION:
+				// Does not work for OPEN alignments
+				if (result.getType() == SymmetryType.CLOSED) {
 					orderDetector = new SequenceFunctionOrderDetector(
 							params.getMaxSymmOrder(), 0.4f);
 					order = orderDetector.calculateOrder(
 							result.getSelfAlignment(), atoms);
 					break;
-				case USER_INPUT:
-					order = params.getUserOrder();
-					break;
 				}
-				// REFINEMENT METHOD
-				switch (params.getRefineMethod()) {
-				case NOT_REFINED:
-					result.setSymmOrder(order);
-					return result;
-				case GRAPH:
-					order = 0;
-					refiner = new GraphRefiner();
-					break;
-				case SINGLE:
-					refiner = new SingleRefiner();
-					break;
-				}
+			case GRAPH_COMPONENT:
+				orderDetector = new GraphComponentOrderDetector();
+				order = orderDetector.calculateOrder(result.getSelfAlignment(),
+						atoms);
 				break;
-			// case OPEN
-			default:
-				// REFINEMENT METHOD
-				if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
-					return result;
-				} else {
-					refiner = new OpenRefiner();
-					order = params.getUserOrder();
+			}
+			// REFINEMENT
+			SymmetryRefiner refiner = null;
+			switch (params.getRefineMethod()) {
+			case NOT_REFINED:
+				result.setSymmOrder(order);
+				return result;
+			case SEQUENCE_FUNCTION:
+				// Does not work for OPEN alignments
+				if (result.getType() == SymmetryType.CLOSED) {
+					refiner = new SequenceFunctionRefiner();
+					break;
 				}
+			case GRAPH_COMPONENT:
+				refiner = new GraphComponentRefiner();
 				break;
 			}
 
 			MultipleAlignment msa = refiner.refine(result.getSelfAlignment(),
 					atoms, order);
-			
+
 			// Refinement succeeded, store results
 			result.setMultipleAlignment(msa);
 			result.setSymmOrder(msa.size());
@@ -313,7 +309,7 @@ public class CeSymm {
 
 		// STEP4: determine the symmetry axis and its subunit dependencies
 		SymmetryAxes axes = new SymmetryAxes();
-		order = result.getSymmOrder();
+		int order = result.getSymmOrder();
 		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)
 				.getTransformations().get(1);
 
@@ -325,7 +321,7 @@ public class CeSymm {
 		List<Integer> subunitTrans = new ArrayList<Integer>();
 
 		switch (result.getType()) {
-		case CLOSE:
+		case CLOSED:
 
 			for (int bk = 0; bk < order; bk++) {
 				chain1.add(bk);

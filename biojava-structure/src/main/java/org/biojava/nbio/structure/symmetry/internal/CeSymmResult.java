@@ -83,7 +83,7 @@ public class CeSymmResult {
 	}
 
 	public void setParams(CESymmParameters params) {
-		this.params = params;
+		this.params = params.clone();
 	}
 
 	public SymmetryAxes getAxes() {
