@@ -2,9 +2,7 @@ package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.vecmath.GMatrix;
@@ -21,20 +19,20 @@ import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
 
 /**
- * This refinement transforms the self-alignment into a Graph and extracts its
+ * The GraphRefiner transforms the self-alignment into a Graph and extracts its
  * maximally connected Components. It then refines the alignment by combining
  * the compatible Components with the following heuristic:
  * 
  * <pre>
  * Given a set of components and their pairwise compatibilities, iteratively 
  * add the most compatible component, which is compatible to all the components
- * already added, to the refined alignment.
+ * already added, to the final alignment.
  * </pre>
  * 
  * @author Aleix Lafita
  * 
  */
-public class GraphRefiner implements SymmetryRefiner {
+public class GraphComponentRefiner implements SymmetryRefiner {
 
 	@Override
 	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, int order)
@@ -48,25 +46,6 @@ public class GraphRefiner implements SymmetryRefiner {
 		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(
 				graph);
 		List<Set<Integer>> components = inspector.connectedSets();
-
-		// Determine the order of symmetry if not set before
-		if (order == 0) {
-			// The order is the most common component size (map: size -> count)
-			Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
-			for (Set<Integer> c : components) {
-				if (counts.containsKey(c.size()))
-					counts.put(c.size(), counts.get(c.size()) + 1);
-				else
-					counts.put(c.size(), 1);
-			}
-			int maxCounts = 0;
-			for (Integer ord : counts.keySet()) {
-				if (counts.get(ord) > maxCounts) {
-					order = ord;
-					maxCounts = counts.get(ord);
-				}
-			}
-		}
 
 		// Filter components with size != order, and transform to ResidueGroups
 		List<ResidueGroup> groups = new ArrayList<ResidueGroup>();

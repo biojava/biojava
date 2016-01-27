@@ -50,13 +50,13 @@ public class CESymmParameters extends CeParameters {
 	private boolean gaps;
 
 	public static enum OrderDetectorMethod {
-		SEQUENCE_FUNCTION, USER_INPUT;
+		SEQUENCE_FUNCTION, GRAPH_COMPONENT, USER_INPUT;
 		public static final OrderDetectorMethod DEFAULT = SEQUENCE_FUNCTION;
 	}
 
 	public static enum RefineMethod {
-		NOT_REFINED, SINGLE, GRAPH;
-		public static final RefineMethod DEFAULT = SINGLE;
+		NOT_REFINED, SEQUENCE_FUNCTION, GRAPH_COMPONENT;
+		public static final RefineMethod DEFAULT = SEQUENCE_FUNCTION;
 	}
 
 	public static final double DEFAULT_SYMMETRY_THRESHOLD = 0.4;
@@ -75,7 +75,7 @@ public class CESymmParameters extends CeParameters {
 	 * symmetry generates alignments without a CP (only one block in AFPChain).
 	 */
 	public enum SymmetryType {
-		CLOSE, OPEN, AUTO;
+		CLOSED, OPEN, AUTO;
 		public static final SymmetryType DEFAULT = AUTO;
 	}
 

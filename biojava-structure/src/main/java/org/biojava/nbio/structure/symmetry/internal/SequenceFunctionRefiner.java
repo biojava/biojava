@@ -46,7 +46,7 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  * @since 4.2.0
  * 
  */
-public class SingleRefiner implements SymmetryRefiner {
+public class SequenceFunctionRefiner implements SymmetryRefiner {
 	
 	@Override
 	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, 
