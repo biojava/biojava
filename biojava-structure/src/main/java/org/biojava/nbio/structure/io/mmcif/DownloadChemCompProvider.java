@@ -238,12 +238,12 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		}
 
 		String filename = getLocalFileName(recordName);
-		
+		InputStream inStream = null;
 		try {
 
 			InputStreamProvider isp = new InputStreamProvider();
 
-			InputStream inStream = isp.getInputStream(filename);
+			inStream = isp.getInputStream(filename);
 
 			MMcifParser parser = new SimpleMMcifParser();
 
@@ -264,8 +264,19 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		} catch (IOException e) {
 
 			logger.error("Could not parse chemical component file "+filename, e);
-			//e.printStackTrace();
 
+		}
+		finally{
+			// Now close it
+			if(inStream!=null){
+				try {
+					inStream.close();
+				} catch (IOException e) {
+					// This would be weird...
+					logger.error("COULD NOT CLOSE CHEMICAL COMPONENT FILE ->>>>> RESOURCE LEAK RESOURCE LEAK. MAYDAY!!!!!!!!! MAYDAY!!!!");
+				}
+			}
+			
 		}
 		return null;
 
