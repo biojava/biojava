@@ -268,6 +268,7 @@ public class CeSymmIterative {
 		result.setMultipleAlignment(msa);
 		result.setRefined(true);
 		result.setSymmOrder(order);
+		result.setSymmLevels(levels.size());
 	}
 
 	/**

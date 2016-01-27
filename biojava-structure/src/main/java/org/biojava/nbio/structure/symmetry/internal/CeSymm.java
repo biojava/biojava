@@ -28,14 +28,13 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.ce.CECalculator;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.ce.MatrixListener;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
@@ -191,6 +190,7 @@ public class CeSymm {
 		Matrix lastMatrix = null;
 
 		List<AFPChain> selfAlignments = new ArrayList<AFPChain>();
+		AFPChain optimalAFP = null;
 
 		// STEP 2: perform the self-alignments of the structure
 		int i = 0;
@@ -223,6 +223,7 @@ public class CeSymm {
 
 			// If it is a symmetric alignment add it to the allAlignments list
 			selfAlignments.add(newAFP);
+			optimalAFP = newAFP;
 
 			i++;
 
@@ -238,8 +239,15 @@ public class CeSymm {
 					last.getCa2Length() - 1);
 		}
 
+		// Extract the structure identifier
+		StructureIdentifier id = atoms[0].getGroup().getChain().getStructure()
+				.getStructureIdentifier();
+		optimalAFP.setName1(id.getIdentifier());
+		optimalAFP.setName2(id.getIdentifier());
+
 		// Store the optimal self-alignment
-		result.setSelfAlignment(selfAlignments.get(0));
+		result.setSelfAlignment(optimalAFP);
+		result.setStructureId(id);
 
 		// Determine the symmetry Type or get the one in params
 		if (params.getSymmType() == SymmetryType.AUTO) {
@@ -391,9 +399,8 @@ public class CeSymm {
 		CeSymmResult result = iter.execute(atoms);
 
 		if (result.isRefined()) {
-
 			// Optimize the global alignment once more (final step)
-			if (params.getOptimization()) {
+			if (params.getOptimization() && result.getSymmLevels() > 1) {
 				try {
 					SymmOptimizer optimizer = new SymmOptimizer(result);
 					MultipleAlignment optimized = optimizer.optimize();
@@ -401,13 +408,12 @@ public class CeSymm {
 				} catch (RefinerFailedException e) {
 					logger.info("Optimization failed:" + e.getMessage());
 					// Return the un-optimized result instead
-					CoreSuperimposer imposer = new CoreSuperimposer();
-					imposer.superimpose(result.getMultipleAlignment());
-					MultipleAlignmentScorer.calculateScores(result
-							.getMultipleAlignment());
 					return result;
 				}
 			}
+			// Calculate the symmetry group
+			result.setSymmGroup(SymmetryTools.getQuaternarySymmetry(result
+					.getMultipleAlignment()));
 		}
 		return result;
 	}

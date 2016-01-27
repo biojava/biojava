@@ -34,8 +34,10 @@ import org.jgrapht.graph.DefaultEdge;
 
 /**
  * The GraphOrderDetector transforms the self-alignment into a Graph and
- * extracts its maximally connected Components. The order reported is the most
- * common component size of the Graph.
+ * extracts its maximally connected Components.
+ * <p>
+ * The order reported is the one that maximizes the number of residues aligned,
+ * i.e. the highest order (component size) times the frequency of the Component.
  * 
  * @author Aleix Lafita
  * @since 4.2.0
@@ -46,23 +48,23 @@ public class GraphComponentOrderDetector implements OrderDetector {
 	@Override
 	public int calculateOrder(AFPChain selfAlignment, Atom[] ca)
 			throws RefinerFailedException {
-		
+
 		// Construct the alignment graph with jgrapht
 		UndirectedGraph<Integer, DefaultEdge> graph = SymmetryTools
 				.buildSymmetryGraph(selfAlignment);
 
 		// Find the maximally connected components of the graph
-		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(
-				graph);
+		ConnectivityInspector<Integer, DefaultEdge> inspector = 
+				new ConnectivityInspector<Integer, DefaultEdge>(graph);
 		List<Set<Integer>> components = inspector.connectedSets();
 
-		// The order is the most common component size (map: size -> count)
+		// The order maximizes the residues aligned
 		Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
 		for (Set<Integer> c : components) {
 			if (counts.containsKey(c.size()))
-				counts.put(c.size(), counts.get(c.size()) + 1);
+				counts.put(c.size(), counts.get(c.size()) + c.size());
 			else
-				counts.put(c.size(), 1);
+				counts.put(c.size(), c.size());
 		}
 		int maxCounts = 0;
 		int order = 1;

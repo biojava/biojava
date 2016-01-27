@@ -1,6 +1,7 @@
 package org.biojava.nbio.structure.symmetry.internal;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
@@ -9,7 +10,7 @@ import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMetho
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 
 /**
- * This class stores all the relevant information of an internal symmetry result
+ * This Class stores all the relevant information of an internal symmetry result
  * obtained with CeSymm. The purpose is to carry all the information packed
  * during the calculations and return a single object.
  * 
@@ -20,19 +21,23 @@ public class CeSymmResult {
 
 	private MultipleAlignment multipleAlignment;
 	private AFPChain selfAlignment;
+
+	private StructureIdentifier structureId;
 	private Atom[] atoms;
 
-	private CESymmParameters params = new CESymmParameters();
+	private CESymmParameters params;
 	private SymmetryAxes axes;
-	private QuatSymmetryResults PG;
+	private QuatSymmetryResults symmGroup;
 
-	private int symmOrder = 1;
+	private int symmOrder;
+	private int symmLevels;
 	private boolean refined;
 	private SymmetryType type;
 
 	/**
-	 * Return true if the symmetry result is significant, false
-	 * otherwise.
+	 * Return true if the symmetry result is significant, false otherwise.
+	 * 
+	 * @return true if significant, false otherwise
 	 */
 	public boolean isSignificant() {
 
@@ -50,14 +55,17 @@ public class CeSymmResult {
 
 		// For the new version
 		if (refined) {
-			// Condition is over min size and score threshold
-			if (multipleAlignment.getScore(MultipleAlignmentScorer.AVGTM_SCORE) > params
-					.getScoreThreshold()
-					&& multipleAlignment.getCoreLength() > params
-							.getMinCoreLength())
-				return true;
-			else
+			// Length is over min length
+			if (multipleAlignment.getCoreLength() < params.getMinCoreLength())
 				return false;
+			else if (symmLevels > 1)
+				return true; // more than one level -> score already checked
+			else if (multipleAlignment
+					.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
+					.getScoreThreshold())
+				return false;
+			else
+				return true;
 		} else
 			return false;
 	}
@@ -94,8 +102,17 @@ public class CeSymmResult {
 		this.axes = axes;
 	}
 
+	/**
+	 * Return the symmetry order determined by the order detector if the
+	 * symmetry is significant. Return 1 otherwise.
+	 * 
+	 * @return
+	 */
 	public int getSymmOrder() {
-		return symmOrder;
+		if (isSignificant())
+			return symmOrder;
+		else
+			return 1;
 	}
 
 	public void setSymmOrder(int symmOrder) {
@@ -110,12 +127,12 @@ public class CeSymmResult {
 		this.refined = refined;
 	}
 
-	public QuatSymmetryResults getPG() {
-		return PG;
+	public QuatSymmetryResults getSymmGroup() {
+		return symmGroup;
 	}
 
-	public void setPG(QuatSymmetryResults pG) {
-		PG = pG;
+	public void setSymmGroup(QuatSymmetryResults symmGroup) {
+		this.symmGroup = symmGroup;
 	}
 
 	public SymmetryType getType() {
@@ -132,6 +149,49 @@ public class CeSymmResult {
 
 	public void setAtoms(Atom[] atoms) {
 		this.atoms = atoms;
+	}
+
+	public int getSymmLevels() {
+		return symmLevels;
+	}
+
+	public void setSymmLevels(int symmLevels) {
+		this.symmLevels = symmLevels;
+	}
+
+	public StructureIdentifier getStructureId() {
+		return structureId;
+	}
+
+	public void setStructureId(StructureIdentifier structureId) {
+		this.structureId = structureId;
+	}
+
+	/**
+	 * Returns the TM-Score of the symmetry alignment, independently of the
+	 * state of the result (MultipleAlignment or AFPChain).
+	 * 
+	 * @return TM-score
+	 */
+	public double getTMScore() {
+		if (multipleAlignment != null)
+			return multipleAlignment
+					.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
+		else
+			return selfAlignment.getTMScore();
+	}
+
+	/**
+	 * Returns the RMSD of the symmetry alignment, independently of the state of
+	 * the result (MultipleAlignment or AFPChain).
+	 * 
+	 * @return RMSD
+	 */
+	public double getRMSD() {
+		if (multipleAlignment != null)
+			return multipleAlignment.getScore(MultipleAlignmentScorer.RMSD);
+		else
+			return selfAlignment.getTotalRmsdOpt();
 	}
 
 }

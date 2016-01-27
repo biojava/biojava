@@ -205,8 +205,7 @@ public class SymmetryDisplay {
 	 */
 	public static String printPointGroupAxes(CeSymmResult symm) {
 
-		QuatSymmetryResults gSymmetry = SymmetryTools
-				.getQuaternarySymmetry(symm.getMultipleAlignment());
+		QuatSymmetryResults gSymmetry = symm.getSymmGroup();
 
 		AxisAligner axes = AxisAligner.getInstance(gSymmetry);
 
