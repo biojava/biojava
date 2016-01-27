@@ -42,23 +42,24 @@ import java.util.*;
 /**
  * A simple mmCif file parser
  *
- * @author Andreas Prlic
- * @since 1.7
+ * 
  * Usage:
  * <pre>
 String file = "path/to/mmcif/file";
 StructureIOFile pdbreader = new MMCIFFileReader();
-try {
+
 Structure s = pdbreader.getStructure(file);
 System.out.println(s);
 
 // you can convert it to a PDB file...
 System.out.println(s.toPDB());
-} catch (IOException e) {
-e.printStackTrace();
-}
+
  * </pre>
  * For more documentation see <a href="http://biojava.org/wiki/BioJava:CookBook#Protein_Structure">http://biojava.org/wiki/BioJava:CookBook#Protein_Structure</a>.
+ * 
+ * @author Andreas Prlic
+ * @author Jose Duarte
+ * @since 1.7
  */
 public class SimpleMMcifParser implements MMcifParser {
 
@@ -628,6 +629,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewSymmetry(symmetry);
 		} else if ( category.equals("_struct_ncs_oper")) {
+			
 			// this guy is special because of the [] in the field names
 			StructNcsOper sNcsOper = getStructNcsOper(loopFields,lineData);
 			triggerNewStructNcsOper(sNcsOper);
@@ -739,11 +741,9 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields, lineData, loopWarnings);
 			triggerNewChemCompDescriptor(ccd);
 		} else if (category.equals("_pdbx_struct_oper_list")) {
-			/* PdbxStructOperList structOper = (PdbxStructOperList) buildObject(
-					"org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList",
-			         loopFields, lineData); */
 
 			// this guy is special since we convert to Matrices and shift vectors...
+			// and because it contains [] in field names
 			PdbxStructOperList structOper = getPdbxStructOperList(loopFields,lineData);
 			triggerNewPdbxStructOper(structOper);
 
@@ -796,48 +796,6 @@ public class SimpleMMcifParser implements MMcifParser {
 
 
 	}
-
-
-
-	//	@SuppressWarnings({ "rawtypes", "unchecked"})
-	//	private void setPair(Object o, List<String> lineData){
-	//		Class c = o.getClass();
-	//
-	//		if (lineData.size() == 2){
-	//			String key = lineData.get(0);
-	//			String val = lineData.get(1);
-	//
-	//			int dotPos = key.indexOf('.');
-	//
-	//			if ( dotPos > -1){
-	//				key = key.substring(dotPos+1,key.length());
-	//			}
-	//
-	//			String u = key.substring(0,1).toUpperCase();
-	//			try {
-	//				Method m = c.getMethod("set" + u + key.substring(1,key.length()) , String.class);
-	//				m.invoke(o,val);
-	//			}
-	//			catch (InvocationTargetException iex){
-	//				iex.printStackTrace();
-	//			}
-	//			catch (IllegalAccessException aex){
-	//				aex.printStackTrace();
-	//			}
-	//			catch( NoSuchMethodException nex){
-	//				if ( val.equals("?") || val.equals(".")) {
-	//					logger.info("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found. Since value is >"+val+"<  most probably just ignore this.");
-	//				} else {
-	//					logger.warn("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
-	//				}
-	//			}
-	//		} else {
-	//			System.err.println("trying to set key/value pair on object " +o.getClass().getName() + " but did not find in " + lineData);
-	//		}
-	//	}
-
-
-
 
 
 	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
@@ -933,116 +891,94 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	private void setArray(Class<?> c, Object o, String key, String val){
-
-
-		// TODO: not implemented yet!
-		//logger.info("Setting of array not implemented at the present for " + key + " " + val);
-		/*
-		int pos = key.indexOf("[");
-		String varName = key.substring(0,pos);
-		String u = varName.substring(0,1).toUpperCase();
-		try {
-			Method m = c.getMethod("set" + u + varName.substring(1,varName.length()) , String.class);
-			m.invoke(o,val);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		 */
-
-	}
-
 	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
+		
 		Object o = null;
+		Class<?> c = null;
+
 		try {
 			// build up the Entity object from the line data...
-			Class<?> c = Class.forName(className);
+			c = Class.forName(className);
 
 			o = c.newInstance();
 
-			Method[] methods = c.getMethods();
-
-			Map<String,Method> methodMap = new HashMap<String, Method>();
-			for (Method m : methods) {
-				methodMap.put(m.getName(),m);
-			}
-
-			int pos = -1 ;
-			for (String key: loopFields){
-				pos++;
-
-				String val = lineData.get(pos);
-				//System.out.println(key + " " + val);
-				String u = key.substring(0,1).toUpperCase();
-
-				// a necessary fix in order to be able to handle keys that contain hyphens (e.g. _symmetry.space_group_name_H-M)
-				// java can't use hyphens in variable names thus the corresponding bean can't use the hyphen and we replace it by underscore
-				if (key.contains("-"))
-					key = key.replace('-', '_');
-
-				try {
-
-					StringBuffer methodName = new StringBuffer();
-					methodName.append("set");
-					methodName.append(u);
-					methodName.append(key.substring(1, key.length()));
-
-					Method m = methodMap.get(methodName.toString());
-
-					if ( m == null)
-						throw new NoSuchMethodException("could not find method " + methodName.toString());
-
-					Class<?>[] pType  = m.getParameterTypes();
-					//Type[] gpType = m.getGenericParameterTypes();
-
-					// all of the mmCif container classes have only one argument (they are beans)
-					if ( pType[0].getName().equals(Integer.class.getName())) {
-						if ( val != null && ! val.equals("?") && !val.equals(".")) {
-
-							Integer intVal = Integer.parseInt(val);
-							m.invoke(o, intVal);
-						}
-					} else {
-						// default val is a String
-						m.invoke(o, val);
-					}
-
-
-					;
-				}
-				catch( NoSuchMethodException nex){
-
-					if (key.indexOf("[") > -1) {
-						setArray(c,o,key,val);
-
-					} else {
-						String warning = "Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")";
-						String warnkey = key+"-"+c.getName();
-						// Suppress duplicate warnings or attempts to store empty data
-						if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
-							logger.debug(warning);
-						} else {
-							logger.warn(warning);
-						}
-
-						if(warnings != null) {
-							warnings.add(warnkey);
-						}
-						//System.err.println(lineData);
-					}
-				}
-			}
-
-		} catch (InstantiationException eix){
-			logger.warn( "Error while constructing "+className, eix.getMessage());
-		} catch (InvocationTargetException etx){
-			logger.warn( "Error while constructing "+className, etx.getMessage());
-		} catch (IllegalAccessException eax){
-			logger.warn( "Error while constructing "+className, eax.getMessage());
-		} catch (ClassNotFoundException ex){
-			logger.warn( "Error while constructing "+className, ex.getMessage());
+		} catch (InstantiationException e){
+			logger.error( "Error while constructing {}: {}", className, e.getMessage());
+			return null;
+		} catch (ClassNotFoundException e){
+			logger.error( "Error while constructing {}: {}", className, e.getMessage());
+			return null;
+		} catch (IllegalAccessException e) {
+			logger.error( "Error while constructing {}: {}", className, e.getMessage());
+			return null;
 		}
-		// any other exceptions should be caught elsewhere down the line
+
+		Method[] methods = c.getMethods();
+
+		Map<String,Method> methodMap = new HashMap<String, Method>();
+		for (Method m : methods) {
+			methodMap.put(m.getName(),m);
+		}
+
+		int pos = -1 ;
+		for (String key: loopFields){
+			pos++;
+
+			String val = lineData.get(pos);
+
+			// a necessary fix in order to be able to handle keys that contain hyphens (e.g. _symmetry.space_group_name_H-M)
+			// java can't use hyphens in variable names thus the corresponding bean can't use the hyphen and we replace it by underscore
+			if (key.contains("-"))
+				key = key.replace('-', '_');
+
+			// building up the setter method name: need to upper case the first letter, leave the rest untouched
+			String methodName = "set" + key.substring(0,1).toUpperCase() + key.substring(1, key.length());
+
+			Method m = methodMap.get(methodName);
+
+			if ( m == null) { 	// no method found in model class with the name found in file
+
+				if (!key.contains("[")) { // the fields with square brackets are handled elsewhere, see for instance getStructNcsOper						
+
+					String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
+					String warnkey = key+"-"+c.getName();
+					// Suppress duplicate warnings or attempts to store empty data
+					if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
+						logger.debug(warning);
+					} else {
+						logger.warn(warning);
+					}
+
+					if(warnings != null) {
+						warnings.add(warnkey);
+					}
+				}
+				continue;
+			}
+			
+			// now we populate the object with the values by invoking the corresponding setter method,
+			// note that all of the mmCif container classes have only one argument (they are beans)
+
+			Class<?>[] pType  = m.getParameterTypes();
+
+			try {
+				if ( pType[0].getName().equals(Integer.class.getName())) {
+					if ( val != null && ! val.equals("?") && !val.equals(".")) {
+
+						Integer intVal = Integer.parseInt(val);
+						m.invoke(o, intVal);
+					}
+				} else {
+					// default val is a String
+					m.invoke(o, val);
+				}
+			} catch (IllegalAccessException e) {
+				logger.error("Could not invoke setter {} with value {} for class {}", m, val, className);
+			} catch (InvocationTargetException e) {
+				logger.error("Could not invoke setter {} with value {} for class {}", m, val, className);
+			}
+
+		}
 
 		return o;
 	}
