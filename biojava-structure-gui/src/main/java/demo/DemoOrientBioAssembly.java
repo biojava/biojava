@@ -221,7 +221,6 @@ public class DemoOrientBioAssembly {
         cache.setUseMmCif(true);
 
         FileParsingParameters params = new FileParsingParameters();
-        params.setStoreEmptySeqRes(true);
         params.setParseCAOnly(true);
         params.setLoadChemCompInfo(true);
         params.setAtomCaThreshold(Integer.MAX_VALUE);
