@@ -118,6 +118,9 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 				break;
 		}
 		
+		for (int i = 0; i < order; i++)
+			Collections.sort(alignRes.get(i));
+		
 		int length = alignRes.get(0).size();
 		if (length == 0)
 			throw new RefinerFailedException("Empty alignment");

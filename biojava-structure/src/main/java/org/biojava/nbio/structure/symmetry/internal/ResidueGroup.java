@@ -47,8 +47,9 @@ public class ResidueGroup {
 	 * 
 	 * <pre>
 	 * Two maximally connected components of the self-alignment Graph are 
-	 * compatible if there exists one, and only one, residue in c1 between
-	 * each sorted pair of residues in c2, or viceversa.
+	 * compatible if they can be combined in a consistent multiple alignment
+	 * of subunits, i.e.there exists one residue in c1 between each sorted
+	 * pair of residues in c2.
 	 * </pre>
 	 * 
 	 * Compatibility is an intransitive relation, which means that for three
