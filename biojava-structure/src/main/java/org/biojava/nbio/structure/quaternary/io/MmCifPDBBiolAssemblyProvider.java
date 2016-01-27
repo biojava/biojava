@@ -29,6 +29,8 @@ import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +45,8 @@ import java.util.List;
  */
 public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 
+	private static final Logger logger = LoggerFactory.getLogger(MmCifPDBBiolAssemblyProvider.class);
+	
 	private String pdbId;
 	private List<PdbxStructAssembly> pdbxStructAssemblies;
 	private List<PdbxStructAssemblyGen> pdbxStructAssemblyGens;
@@ -103,8 +107,8 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 			// reset the consumer data to avoid memory leaks
 			consumer.documentStart();
 		} catch (IOException e){
-			// TODO shouldn't this be thrown?
-			e.printStackTrace();
+			// TODO this should be thrown but setPdbId doesn't have a throws in contract, we need a better solution - JD 2016-01-27
+			logger.error("IOException caught when reading mmcif file to get bioassembly for PDB " + pdbId, e);
 			
 		}
 	}
