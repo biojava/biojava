@@ -398,7 +398,7 @@ public class CeSymm {
 		CeSymmIterative iter = new CeSymmIterative(params);
 		CeSymmResult result = iter.execute(atoms);
 
-		if (result.isRefined()) {
+		if (result.isSignificant()) {
 			// Optimize the global alignment once more (final step)
 			if (params.getOptimization() && result.getSymmLevels() > 1) {
 				try {
@@ -412,8 +412,7 @@ public class CeSymm {
 				}
 			}
 			// Calculate the symmetry group
-			result.setSymmGroup(SymmetryTools.getQuaternarySymmetry(result
-					.getMultipleAlignment()));
+			result.setSymmGroup(SymmetryTools.getQuaternarySymmetry(result));
 		}
 		return result;
 	}

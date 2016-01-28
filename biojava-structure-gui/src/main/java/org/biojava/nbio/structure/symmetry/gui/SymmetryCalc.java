@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.AlignmentCalculationRunnable;
-import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
@@ -61,22 +60,14 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 
 	@Override
 	public void run() {
-
-		//The structure has been downloaded, now calculate the alignment ...
+		
 		CESymmParameters params = parent.getParameters();
 		
 		try {
 
 			Atom[] atoms = StructureTools.getRepresentativeAtomArray(structure);
 			CeSymmResult result = CeSymm.analyze(atoms, params);
-
-			AbstractAlignmentJmol jmol = SymmetryDisplay.display(result);
-			String title = jmol.getTitle();
-			
-			if (params != null) 
-				title += " | OrderDetector=" + params.getOrderDetectorMethod()+
-				" Refiner: "+params.getRefineMethod();
-			jmol.setTitle(title);
+			SymmetryDisplay.display(result);
 
 		} catch (StructureException e){
 			logger.warn(e.getMessage());

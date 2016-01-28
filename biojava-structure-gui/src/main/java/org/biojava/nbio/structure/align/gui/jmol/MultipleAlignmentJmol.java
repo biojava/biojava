@@ -182,7 +182,8 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 			for (int str=0; str<multAln.size(); str++){
 				JCheckBox structureSelection = new JCheckBox(
-						multAln.getEnsemble().getStructureIdentifiers().get(str).getIdentifier());
+						multAln.getEnsemble().getStructureIdentifiers().
+						get(str).getIdentifier());
 				hBox0.add(structureSelection);
 				hBox0.add(Box.createGlue());
 				structureSelection.setSelected(true);

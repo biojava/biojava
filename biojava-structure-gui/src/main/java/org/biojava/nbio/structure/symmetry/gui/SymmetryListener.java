@@ -62,8 +62,7 @@ public class SymmetryListener implements ActionListener {
 				return;
 			}
 			try {
-				MultipleAlignmentJmol j = SymmetryDisplay.displaySubunits(symm
-						.getMultipleAlignment());
+				MultipleAlignmentJmol j = SymmetryDisplay.displaySubunits(symm);
 				String s = SymmetryDisplay.printSymmetryAxes(symm, true);
 				j.evalString(s);
 			} catch (StructureException e) {
@@ -76,8 +75,7 @@ public class SymmetryListener implements ActionListener {
 				return;
 			}
 			try {
-				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm
-						.getMultipleAlignment());
+				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm);
 				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
 				j.evalString(s);
 			} catch (StructureException e) {
@@ -91,7 +89,7 @@ public class SymmetryListener implements ActionListener {
 			}
 			try {
 				Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
-				StructureAlignmentDisplay.display(symm.getSelfAlignment(), 
+				StructureAlignmentDisplay.display(symm.getSelfAlignment(),
 						symm.getAtoms(), cloned);
 			} catch (StructureException e) {
 				e.printStackTrace();

@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.multiple.Block;
@@ -45,10 +44,8 @@ import org.biojava.nbio.structure.secstruc.SecStrucTools;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;
-import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
@@ -165,16 +162,16 @@ public class CeSymmIterative {
 		Integer start = null;
 		int it = 0;
 		while (start == null) {
-			start = r.getMultipleAlignment().getBlocks().get(0)
-					.getAlignRes().get(0).get(it);
+			start = r.getMultipleAlignment().getBlocks().get(0).getAlignRes()
+					.get(0).get(it);
 			it++;
 		}
 		Integer end = null;
-		it = r.getMultipleAlignment().getBlocks().get(0).getAlignRes()
-				.get(0).size() - 1;
+		it = r.getMultipleAlignment().getBlocks().get(0).getAlignRes().get(0)
+				.size() - 1;
 		while (end == null) {
-			end = r.getMultipleAlignment().getBlocks().get(0)
-					.getAlignRes().get(0).get(it);
+			end = r.getMultipleAlignment().getBlocks().get(0).getAlignRes()
+					.get(0).get(it);
 			it--;
 		}
 		Atom[] atomsR = Arrays.copyOfRange(atoms, start, end + 1);
@@ -214,18 +211,18 @@ public class CeSymmIterative {
 		// Initialize a new multiple alignment
 		MultipleAlignment msa = new MultipleAlignmentImpl();
 		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());
-		msa.getEnsemble().setAlgorithmName(CeSymm.algorithmName);
-		msa.getEnsemble().setVersion(CeSymm.version);
 		msa.getEnsemble().setStructureIdentifiers(
 				new ArrayList<StructureIdentifier>());
+		msa.getEnsemble().setAlgorithmName(CeSymm.algorithmName);
+		msa.getEnsemble().setVersion(CeSymm.version);
 
 		BlockSet bs = new BlockSetImpl(msa);
 		Block b = new BlockImpl(bs);
 		b.setAlignRes(new ArrayList<List<Integer>>());
 
 		// Calculate the connected groups of the alignment graph
-		ConnectivityInspector<Integer, DefaultEdge> inspector = 
-				new ConnectivityInspector<Integer, DefaultEdge>(alignGraph);
+		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(
+				alignGraph);
 		List<Set<Integer>> comps = inspector.connectedSets();
 		List<ResidueGroup> groups = new ArrayList<ResidueGroup>(comps.size());
 		for (Set<Integer> comp : comps)
@@ -238,25 +235,24 @@ public class CeSymmIterative {
 		for (int su = 0; su < order; su++)
 			b.getAlignRes().add(new ArrayList<Integer>());
 
-		// Construct the resulting MultipleAlignment from components
+		// Construct the resulting MultipleAlignment from ResidueGroups
 		for (ResidueGroup group : groups) {
 			if (group.order() != order)
 				continue;
 			group.combineWith(b.getAlignRes());
 		}
-		
+
 		for (int su = 0; su < order; su++) {
 			Collections.sort(b.getAlignRes().get(su));
-			// TODO Set the identifier to the true range of the repeat
-			msa.getEnsemble().getStructureIdentifiers()
-					.add(new PassthroughIdentifier("S" + (su + 1)));
 			msa.getEnsemble().getAtomArrays().add(allAtoms);
+			msa.getEnsemble().getStructureIdentifiers()
+					.add(result.getStructureId());
 		}
-		
+
 		CoreSuperimposer imposer = new CoreSuperimposer();
 		imposer.superimpose(msa);
 		MultipleAlignmentScorer.calculateScores(msa);
-		
+
 		result.setMultipleAlignment(msa);
 		result.setRefined(true);
 		result.setSymmOrder(order);

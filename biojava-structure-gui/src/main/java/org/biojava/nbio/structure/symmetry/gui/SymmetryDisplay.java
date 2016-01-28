@@ -56,29 +56,29 @@ public class SymmetryDisplay {
 	/**
 	 * Displays a multiple alignment of the symmetry subunits.
 	 * 
-	 * @param msa
-	 *            the symmetry multiple alignment obtained from CeSymm
+	 * * @param symm
+	 *            CeSymmResult
 	 * @throws StructureException
 	 */
-	public static MultipleAlignmentJmol displaySubunits(MultipleAlignment msa)
+	public static MultipleAlignmentJmol displaySubunits(CeSymmResult symm)
 			throws StructureException {
 
-		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(msa);
+		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(symm);
 		return MultipleAlignmentDisplay.display(subunits);
 	}
 
 	/**
 	 * Displays a multiple alignment of the whole structure transformations
-	 * colored by blocks, corresponding to the subunits.
+	 * colored by blocks, corresponding to the symmetric protodomains.
 	 * 
-	 * @param msa
-	 *            the symmetry multiple alignment obtained from CeSymm
+	 * @param symm
+	 *            CeSymmResult
 	 * @throws StructureException
 	 */
-	public static MultipleAlignmentJmol displayFull(MultipleAlignment msa)
+	public static MultipleAlignmentJmol displayFull(CeSymmResult symm)
 			throws StructureException {
 
-		MultipleAlignment full = SymmetryTools.toFullAlignment(msa);
+		MultipleAlignment full = SymmetryTools.toFullAlignment(symm);
 
 		MultipleAlignmentJmol jmol = MultipleAlignmentDisplay.display(full);
 		jmol.setColorByBlocks(true);
@@ -97,7 +97,7 @@ public class SymmetryDisplay {
 	public static AbstractAlignmentJmol display(CeSymmResult symmResult)
 			throws StructureException {
 
-		if (symmResult.isRefined()) {
+		if (symmResult.isSignificant()) {
 			MultipleAlignment msa = symmResult.getMultipleAlignment();
 			List<Atom[]> atoms = msa.getAtomArrays();
 			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(msa, atoms);
@@ -201,6 +201,7 @@ public class SymmetryDisplay {
 	 * steps.
 	 * 
 	 * @param symm
+	 *            CeSymmResult
 	 * @return
 	 */
 	public static String printPointGroupAxes(CeSymmResult symm) {

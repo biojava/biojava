@@ -57,6 +57,7 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -495,34 +496,33 @@ public class SymmetryTools {
 	 * symmetry code in biojava or calculate independent subunit properties.
 	 * 
 	 * @param symmetry
-	 *            MultipleAlignment of the subunits only
-	 * 
+	 *            CeSymmResult
 	 * @return Structure with different chains for every symmetric unit
 	 */
-	public static Structure getQuaternaryStructure(MultipleAlignment symmetry) {
+	public static Structure getQuaternaryStructure(CeSymmResult symmetry) {
 
-		if (!symmetry.getEnsemble().getAlgorithmName().contains("symm")) {
-			throw new IllegalArgumentException(
-					"The input alignment is not a symmetry alignment.");
-		}
+		if (!symmetry.isRefined())
+			throw new IllegalArgumentException("The symmetry result "
+					+ "is not refined, subunits cannot be defined");
 
-		Atom[] atoms = symmetry.getAtomArrays().get(0);
+		Atom[] atoms = symmetry.getAtoms();
 		Structure cloned = atoms[0].getGroup().getChain().getStructure()
 				.clone();
 		atoms = StructureTools.getRepresentativeAtomArray(cloned);
 
 		Structure symm = new StructureImpl();
+		symm.setStructureIdentifier(symmetry.getStructureId());
 		symm.setChains(new ArrayList<Chain>());
 		char chainID = 'A';
 
 		// Create new structure containing the subunit atoms
-		for (int i = 0; i < symmetry.size(); i++) {
+		for (int i = 0; i < symmetry.getSymmOrder(); i++) {
 			Chain newCh = new ChainImpl();
 			newCh.setChainID(chainID + "");
 			chainID++;
 
 			symm.addChain(newCh);
-			Block align = symmetry.getBlock(0);
+			Block align = symmetry.getMultipleAlignment().getBlock(0);
 
 			// Determine start and end of the subunit
 			int count = 0;
@@ -540,9 +540,10 @@ public class SymmetryTools {
 			end++;
 
 			Atom[] subunit = Arrays.copyOfRange(atoms, start, end);
-
+			Group[] g = StructureTools.cloneGroups(subunit);
+			
 			for (int k = 0; k < subunit.length; k++)
-				newCh.addGroup((Group) subunit[k].getGroup().clone());
+				newCh.addGroup(g[k]);
 		}
 		return symm;
 	}
@@ -554,18 +555,17 @@ public class SymmetryTools {
 	 * Example: if the structure has subunits A,B and C, the original alignment
 	 * is A-B-C, and the returned alignment is ABC-BCA-CAB.
 	 * 
-	 * @param symmetry
-	 *            MultipleAlignment of the subunits only
+	 * @param symm
+	 *            CeSymmResult
 	 * @return MultipleAlignment of the full structure superpositions
 	 */
-	public static MultipleAlignment toFullAlignment(MultipleAlignment symm) {
+	public static MultipleAlignment toFullAlignment(CeSymmResult symm) {
 
-		if (!symm.getEnsemble().getAlgorithmName().contains("symm")) {
-			throw new IllegalArgumentException(
-					"The input alignment is not a symmetry alignment.");
-		}
+		if (!symm.isRefined())
+			throw new IllegalArgumentException("The symmetry result "
+					+ "is not refined, subunits cannot be defined");
 
-		MultipleAlignment full = symm.clone();
+		MultipleAlignment full = symm.getMultipleAlignment().clone();
 
 		for (int str = 1; str < full.size(); str++) {
 			// Create a new Block with swapped AlignRes (move first to last)
@@ -587,33 +587,37 @@ public class SymmetryTools {
 	 * <p>
 	 * Application: display superimposed subunits in Jmol.
 	 * 
-	 * @param symmetry
-	 *            MultipleAlignment of the symmetry
+	 * @param result
+	 *            CeSymmResult of symmetry
 	 * @return MultipleAlignment of the subunits
+	 * @throws StructureException
 	 */
-	public static MultipleAlignment toSubunitAlignment(MultipleAlignment symm) {
+	public static MultipleAlignment toSubunitAlignment(CeSymmResult result)
+			throws StructureException {
 
-		if (!symm.getEnsemble().getAlgorithmName().contains("symm")) {
-			throw new IllegalArgumentException(
-					"The input alignment is not a symmetry alignment.");
-		}
+		if (!result.isRefined())
+			throw new IllegalArgumentException("The symmetry result "
+					+ "is not refined, subunits cannot be defined");
+
+		MultipleAlignment msa = result.getMultipleAlignment();
+		MultipleAlignmentEnsemble newEnsemble = msa.getEnsemble().clone();
+		newEnsemble.setStructureIdentifiers(result.getProtodomains());
 
 		// Modify atom arrays to include the subunit atoms only
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
-		Structure divided = SymmetryTools.getQuaternaryStructure(symm);
-		for (int i = 0; i < symm.size(); i++) {
+		Structure divided = SymmetryTools.getQuaternaryStructure(result);
+
+		MultipleAlignment subunits = newEnsemble.getMultipleAlignment(0);
+		Block block = subunits.getBlock(0);
+
+		for (int i = 0; i < result.getMultipleAlignment().size(); i++) {
 			Structure newStr = new StructureImpl();
 			Chain newCh = divided.getChain(i);
 			newStr.addChain(newCh);
 			Atom[] subunit = StructureTools.getRepresentativeAtomArray(newCh);
 			atomArrays.add(subunit);
 		}
-
-		MultipleAlignmentEnsemble newEnsemble = symm.getEnsemble().clone();
 		newEnsemble.setAtomArrays(atomArrays);
-
-		MultipleAlignment subunits = newEnsemble.getMultipleAlignment(0);
-		Block block = subunits.getBlock(0);
 
 		for (int su = 0; su < block.size(); su++) {
 
@@ -733,18 +737,20 @@ public class SymmetryTools {
 	}
 
 	/**
-	 * Given a symmetry alignment, it calculates the overall global symmetry,
-	 * factoring out the alignment and detection steps.
+	 * Given a symmetry result, it calculates the overall global symmetry,
+	 * factoring out the alignment and detection steps of
+	 * {@link QuatSymmetryDetector} algorithm.
 	 * 
-	 * @param symm
+	 * @param result
 	 *            symmetry result
 	 * @return global symmetry results
+	 * @throws StructureException
 	 */
-	public static QuatSymmetryResults getQuaternarySymmetry(
-			MultipleAlignment symm) {
+	public static QuatSymmetryResults getQuaternarySymmetry(CeSymmResult result)
+			throws StructureException {
 
 		// Obtain the clusters of aligned Atoms and subunit variables
-		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(symm);
+		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(result);
 		List<Atom[]> alignedCA = subunits.getAtomArrays();
 		List<Integer> corePos = MultipleAlignmentTools
 				.getCorePositions(subunits.getBlock(0));
@@ -842,7 +848,10 @@ public class SymmetryTools {
 	 * Returns true if the symmetry alignment is significant, false otherwise.
 	 * <p>
 	 * For a symmetry alignment to be significant, the alignment has to be
-	 * refined and the TM-score has to be higher than the threshold
+	 * refined and the TM-score has to be higher than the threshold.
+	 * <p>
+	 * It is recommended to use the {@link CeSymmResult#isSignificant()} method
+	 * instead.
 	 * 
 	 * @param msa
 	 * @param symmetryThreshold

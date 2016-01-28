@@ -1,8 +1,17 @@
 package org.biojava.nbio.structure.symmetry.internal;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.ResidueRange;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
@@ -56,10 +65,11 @@ public class CeSymmResult {
 		// For the new version
 		if (refined) {
 			// Length is over min length
-			if (multipleAlignment.getCoreLength() < params.getMinCoreLength())
+			if (symmLevels > 1)
+				return true; // significance already checked
+			else if (multipleAlignment.getCoreLength() < params
+					.getMinCoreLength())
 				return false;
-			else if (symmLevels > 1)
-				return true; // more than one level -> score already checked
 			else if (multipleAlignment
 					.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
 					.getScoreThreshold())
@@ -68,6 +78,54 @@ public class CeSymmResult {
 				return true;
 		} else
 			return false;
+	}
+
+	/**
+	 * Return the symmetric protodomains as structure identifiers.
+	 * 
+	 * @return List of StructureIdentifiers
+	 * @throws StructureException
+	 */
+	public List<StructureIdentifier> getProtodomains()
+			throws StructureException {
+
+		List<StructureIdentifier> protodomains = new ArrayList<StructureIdentifier>(
+				symmOrder);
+
+		if (!isSignificant())
+			return protodomains;
+
+		String pdbId = structureId.toCanonical().getPdbId();
+		Block align = multipleAlignment.getBlocks().get(0);
+
+		for (int su = 0; su < symmOrder; su++) {
+			// Determine start and end of the subunit
+			int count = 0;
+			Integer start = null;
+			while (start == null && count < align.length()) {
+				start = align.getAlignRes().get(su).get(0 + count);
+				count++;
+			}
+			count = 1;
+			Integer end = null;
+			while (end == null && count <= align.length()) {
+				end = align.getAlignRes().get(su).get(align.length() - count);
+				count++;
+			}
+			end++;
+
+			ResidueNumber res1 = atoms[start].getGroup().getResidueNumber();
+			ResidueNumber res2 = atoms[end].getGroup().getResidueNumber();
+			ResidueRange range = new ResidueRange(res1.getChainId(), res1, res2);
+
+			StructureIdentifier id = new SubstructureIdentifier(pdbId,
+					Arrays.asList(range));
+			
+			protodomains.add(id);
+		}
+
+		return protodomains;
+
 	}
 
 	public MultipleAlignment getMultipleAlignment() {
