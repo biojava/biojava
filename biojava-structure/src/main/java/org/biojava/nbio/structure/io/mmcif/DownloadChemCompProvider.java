@@ -102,9 +102,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		}
 	}
 
-	/** checks if the chemical components already have been installed into the PDB directory.
-	 *  If not, will download the chemical components definitions file and split it up into small
-	 *  subfiles.
+	/** 
+	 * Checks if the chemical components already have been installed into the PDB directory.
+	 * If not, will download the chemical components definitions file and split it up into small
+	 * subfiles.
 	 */
 	public void checkDoFirstInstall(){ 
 
@@ -135,12 +136,17 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			String[] files = dir.list(filter);
 			if ( files.length < 500) {
 				// not all did get unpacked
-				split();
+				try {
+					split();
+				} catch (IOException e) {
+					logger.error("Could not split file {} into individual chemical component files. Error: {}", 
+							f.toString(), e.getMessage());
+				}
 			}
 		}
 	}
 
-	private void split(){
+	private void split() throws IOException {
 
 		logger.info("Installing individual chem comp files ...");
 		
@@ -150,50 +156,47 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		int counter = 0;
 		InputStreamProvider prov = new InputStreamProvider();
-		try {
-			InputStream inStream = prov.getInputStream(f);
 
-			BufferedReader buf = new BufferedReader (new InputStreamReader (inStream));
+		InputStream inStream = prov.getInputStream(f);
 
-			String line = null;
-			line = buf.readLine ();
-			StringWriter writer = new StringWriter();
+		BufferedReader buf = new BufferedReader (new InputStreamReader (inStream));
 
-			String currentID = null;
-			while (line != null){
+		String line = null;
+		line = buf.readLine ();
+		StringWriter writer = new StringWriter();
 
-				if ( line.startsWith("data_")) {
-					// a new record found!
+		String currentID = null;
+		while (line != null){
 
-					if ( currentID != null) {
-						writeID(writer, currentID);
-						counter++;
-					}
+			if ( line.startsWith("data_")) {
+				// a new record found!
 
-					currentID = line.substring(5);
-					writer = new StringWriter();
+				if ( currentID != null) {
+					writeID(writer, currentID);
+					counter++;
 				}
 
-				writer.append(line);
-				writer.append(NEWLINE);
-
-				line = buf.readLine ();
+				currentID = line.substring(5);
+				writer = new StringWriter();
 			}
 
-			// write the last record...
-			writeID(writer,currentID);
-			counter++;
-		} catch (IOException e){
-			e.printStackTrace();
+			writer.append(line);
+			writer.append(NEWLINE);
+
+			line = buf.readLine ();
 		}
+
+		// write the last record...
+		writeID(writer,currentID);
+		counter++;
+		
+		inStream.close();
+
 		logger.info("Created " + counter + " chemical component files.");
 	}
 
 	private void writeID(StringWriter writer, String currentID) throws IOException{
 
-		//System.out.println("writing ID " + currentID);
-
-		
 		
 		String localName = DownloadChemCompProvider.getLocalFileName(currentID);
 
@@ -212,7 +215,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-	/** Loads the definitions for this {@link ChemComp} from a local file and instantiates a new object.
+	/** 
+	 * Loads the definitions for this {@link ChemComp} from a local file and instantiates a new object.
 	 * 
 	 * @param recordName the ID of the {@link ChemComp}
 	 * @return a new {@link ChemComp} definition.
@@ -263,7 +267,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		} catch (IOException e) {
 
-			logger.error("Could not parse chemical component file "+filename, e);
+			logger.error("Could not parse chemical component file {}. Error: {}. "
+					+ "There will be no chemical component info available for {}", filename, e.getMessage(), recordName);
 
 		}
 		finally{
@@ -273,7 +278,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 					inStream.close();
 				} catch (IOException e) {
 					// This would be weird...
-					logger.error("COULD NOT CLOSE CHEMICAL COMPONENT FILE ->>>>> RESOURCE LEAK RESOURCE LEAK. MAYDAY!!!!!!!!! MAYDAY!!!!");
+					logger.error("Could not close chemical component file {}. A resource leak could occur!!", filename);
 				}
 			}
 			
@@ -403,10 +408,21 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		try {
 			AllChemCompProvider.downloadFile();
 		} catch (IOException e){
-			e.printStackTrace();
+			logger.error("Could not download the all chemical components file. Error: {}. "
+					+ "Chemical components information won't be available", e.getMessage());
+			// no point in trying to split if the file could not be downloaded
+			loading.set(false);
+			return;
 		}
-		
-		split();
+		try {
+			split();
+		} catch (IOException e) {
+			logger.error("Could not split all chem comp file into individual chemical component files. Error: {}", 
+				 e.getMessage());
+			// no point in reporting time
+			loading.set(false);
+			return;
+		}
 		long timeE = System.currentTimeMillis();		
 		logger.info("time to install chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");		
 		loading.set(false);

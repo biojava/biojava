@@ -35,7 +35,10 @@ import org.biojava.nbio.structure.Atom;
  */
 public class Grid {
 	
-	private static final int SCALE=100; // i.e. we use units of hundreds of Amstrongs (thus cutoffs can be specified with a maximum precision of 0.01A)
+	/**
+	 * The scale: we use units of hundredths of Angstroms (thus cutoffs can be specified with a maximum precision of 0.01A)
+	 */
+	private static final int SCALE=100;
 	
 	private GridCell[][][] cells;
 	
@@ -160,7 +163,6 @@ public class Grid {
 	 * the 2 grids (i and j) are no more than one cell size apart. If they don't
 	 * overlap then they are too far apart so there's nothing to calculate, we set
 	 * the noOverlap flag and then {@link #getContacts()} will do no calculation at all.
-
 	 */
 	private void fillGrid() {
 

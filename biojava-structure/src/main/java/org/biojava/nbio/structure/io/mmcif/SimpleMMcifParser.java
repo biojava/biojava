@@ -973,9 +973,9 @@ public class SimpleMMcifParser implements MMcifParser {
 					m.invoke(o, val);
 				}
 			} catch (IllegalAccessException e) {
-				logger.error("Could not invoke setter {} with value {} for class {}", m, val, className);
+				logger.error("Could not invoke setter {} with value {} for class {}", methodName, val, className);
 			} catch (InvocationTargetException e) {
-				logger.error("Could not invoke setter {} with value {} for class {}", m, val, className);
+				logger.error("Could not invoke setter {} with value {} for class {}", methodName, val, className);
 			}
 
 		}
