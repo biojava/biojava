@@ -54,7 +54,6 @@ public class HetatomImpl implements Group,Serializable {
 	 */
 	public static final GroupType type = GroupType.HETATM ;
 
-
 	private Map<String, Object> properties ;
 
 	private long id;
@@ -568,14 +567,20 @@ public class HetatomImpl implements Group,Serializable {
 			ArrayList<Group> myAltLocs = (ArrayList<Group>) altLocs;
 			myAltLocs.trimToSize();
 		}
-		if ( atomNameLookup != null)
-			atomNameLookup = new HashMap<String,Atom>(atomNameLookup);
 
 		if ( hasAltLoc()) {
 			for (Group alt : getAltLocs()){
 				alt.trimToSize();
 			}
 		}
+
+		properties = new HashMap<String, Object>(properties);
+		
+		if ( atomNameLookup != null)
+			atomNameLookup = new HashMap<String,Atom>(atomNameLookup);
+
+
+
 
 
 	}
