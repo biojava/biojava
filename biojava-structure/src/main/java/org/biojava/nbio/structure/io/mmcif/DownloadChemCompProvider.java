@@ -212,7 +212,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-	/** Loads the definitions for this {@link ChemComp} from a local file and instantiates a new object.
+	/** 
+	 * Loads the definitions for this {@link ChemComp} from a local file and instantiates a new object.
 	 * 
 	 * @param recordName the ID of the {@link ChemComp}
 	 * @return a new {@link ChemComp} definition.
@@ -263,7 +264,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		} catch (IOException e) {
 
-			logger.error("Could not parse chemical component file "+filename, e);
+			logger.error("Could not parse chemical component file {}. Error: {}. "
+					+ "There will be no chemical component info available for {}", filename, e.getMessage(), recordName);
 
 		}
 		finally{
@@ -273,7 +275,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 					inStream.close();
 				} catch (IOException e) {
 					// This would be weird...
-					logger.error("COULD NOT CLOSE CHEMICAL COMPONENT FILE ->>>>> RESOURCE LEAK RESOURCE LEAK. MAYDAY!!!!!!!!! MAYDAY!!!!");
+					logger.error("Could not close chemical component file {}. A resource leak could occur!!", filename);
 				}
 			}
 			
