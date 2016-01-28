@@ -44,12 +44,12 @@ import java.util.*;
  * @since 1.4
  */
 public class HetatomImpl implements Group,Serializable {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(HetatomImpl.class);
 
 	private static final long serialVersionUID = 4491470432023820382L;
 
-	/** 
+	/**
 	 * The GroupType is HETATM
 	 */
 	public static final GroupType type = GroupType.HETATM ;
@@ -71,6 +71,22 @@ public class HetatomImpl implements Group,Serializable {
 
 	private Chain parent;
 
+	/**
+	 * Behaviors for how to balance memory vs. performance.
+	 * @author Andreas Prlic
+	 */
+	public static enum PerformanceBehavior {
+
+		/** use a built-in HashMap for faster access to memory, at the price of more memory consumption */
+		BETTER_PERFORMANCE_MORE_MEMORY,
+
+		/** Try to minimize memory consumption, at the price of slower speed when accessing atoms by name */
+		LESS_MEMORY_SLOWER_PERFORMANCE
+
+	}
+
+	public static PerformanceBehavior performanceBehavior=PerformanceBehavior.LESS_MEMORY_SLOWER_PERFORMANCE;
+
 	private Map<String,Atom> atomNameLookup;
 
 	private ChemComp chemComp ;
@@ -78,7 +94,7 @@ public class HetatomImpl implements Group,Serializable {
 	private List<Group> altLocs;
 
 	/**
-	 *  Construct a Hetatom instance. 
+	 *  Construct a Hetatom instance.
 	 */
 	public HetatomImpl() {
 		super();
@@ -92,8 +108,11 @@ public class HetatomImpl implements Group,Serializable {
 		parent = null;
 		chemComp = null;
 		altLocs = null;
-		
-		atomNameLookup = new HashMap<String,Atom>();
+
+		if ( performanceBehavior == PerformanceBehavior.BETTER_PERFORMANCE_MORE_MEMORY)
+			atomNameLookup = new HashMap<String,Atom>();
+		else
+			atomNameLookup = null;
 	}
 
 
@@ -128,7 +147,7 @@ public class HetatomImpl implements Group,Serializable {
 		//}
 		if (s != null && s.equals("?")) logger.info("invalid pdbname: ?");
 		pdb_name =s ;
-		
+
 	}
 
 	/**
@@ -141,7 +160,7 @@ public class HetatomImpl implements Group,Serializable {
 	public String getPDBName() { return pdb_name;}
 
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void addAtom(Atom atom){
@@ -151,15 +170,19 @@ public class HetatomImpl implements Group,Serializable {
 			// we have got coordinates!
 			setPDBFlag(true);
 		}
-		Atom existingAtom = atomNameLookup.put(atom.getName(),atom);
-		
-		// if an atom with same name is added to the group that has to be some kind of problem, 
-		// we need to warn properly
-		if (existingAtom!=null) {
-			String altLocStr = "";
-			char altLoc = atom.getAltLoc();
-			if (altLoc!=' ') altLocStr = "(alt loc '"+altLoc+"')";
-			logger.warn("An atom with name "+atom.getName()+" "+altLocStr+" is already present in group: "+this.toString()+". The atom with serial "+atom.getPDBserial()+" will be ignored in look-ups."); 
+
+		if (atomNameLookup != null){
+
+			Atom existingAtom = atomNameLookup.put(atom.getName(), atom);
+
+			// if an atom with same name is added to the group that has to be some kind of problem,
+			// we need to warn properly
+			if (existingAtom != null) {
+				String altLocStr = "";
+				char altLoc = atom.getAltLoc();
+				if (altLoc != ' ') altLocStr = "(alt loc '" + altLoc + "')";
+				logger.warn("An atom with name " + atom.getName() + " " + altLocStr + " is already present in group: " + this.toString() + ". The atom with serial " + atom.getPDBserial() + " will be ignored in look-ups.");
+			}
 		}
 	};
 
@@ -171,16 +194,17 @@ public class HetatomImpl implements Group,Serializable {
 	public void clearAtoms() {
 		atoms.clear();
 		setPDBFlag(false);
-		atomNameLookup.clear();
+		if ( atomNameLookup != null)
+			atomNameLookup.clear();
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public int size(){ return atoms.size();   }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -188,18 +212,20 @@ public class HetatomImpl implements Group,Serializable {
 		return atoms ;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void setAtoms(List<Atom> atoms) {
-		
+
 		// important we are resetting atoms to a new list, we need to reset the lookup too!
-		atomNameLookup.clear();
-		
+		if ( atomNameLookup != null)
+			atomNameLookup.clear();
+
 		for (Atom a: atoms){
 			a.setGroup(this);
-			atomNameLookup.put(a.getName(),a);
+			if ( atomNameLookup != null)
+				atomNameLookup.put(a.getName(),a);
 		}
 		this.atoms = atoms;
 		if (!atoms.isEmpty()) {
@@ -208,20 +234,32 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
-	/**  
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Atom getAtom(String name) {		
-		return atomNameLookup.get(name);
+	public Atom getAtom(String name) {
+		if ( atomNameLookup != null)
+			return atomNameLookup.get(name);
+		else {
+			/** This is the performance penalty we pay for NOT using the atomnameLookup in PerformanceBehaviour.LESS_MEMORY_SLOWER_PERFORMANCE
+			 */
+
+			for (Atom a : atoms) {
+				if (a.getName().equals(name)) {
+					return a;
+				}
+			}
+			return null;
+		}
 	}
 
-	/** 
-	 * {@inheritDoc}	
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Atom getAtom(int position) {			
-			
+	public Atom getAtom(int position) {
+
 		if ((position < 0)|| ( position >= atoms.size())) {
 			//throw new StructureException("No atom found at position "+position);
 			return null;
@@ -230,18 +268,31 @@ public class HetatomImpl implements Group,Serializable {
 	}
 
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean hasAtom(String fullName) {
 
-		Atom a = atomNameLookup.get(fullName.trim());
-		return a != null;
+		if ( atomNameLookup != null) {
+			Atom a = atomNameLookup.get(fullName.trim());
+			return a != null;
+		} else {
+			/** This is the performance penalty we pay for NOT using the atomnameLookup in PerformanceBehaviour.LESS_MEMORY_SLOWER_PERFORMANCE
+			 */
+			for (Atom a : atoms) {
+				if (a.getName().equals(fullName)) {
+					return true;
+				}
+			}
+			return false;
+
+
+		}
 
 	}
 
 	/**
-	 * {@inheritDoc}	 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public GroupType getType(){ return type;}
@@ -254,7 +305,7 @@ public class HetatomImpl implements Group,Serializable {
 			str = str + " atoms: "+atoms.size();
 		}
 		if ( altLocs != null)
-			str += " has altLocs :" + altLocs.size(); 
+			str += " has altLocs :" + altLocs.size();
 
 
 		return str ;
@@ -277,7 +328,7 @@ public class HetatomImpl implements Group,Serializable {
 	}
 
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -335,16 +386,16 @@ public class HetatomImpl implements Group,Serializable {
 		HetatomImpl n = new HetatomImpl();
 		n.setPDBFlag(has3D());
 		n.setResidueNumber(residueNumber);
-		
+
 		n.setPDBName(getPDBName());
-		
+
 		// copy the atoms
 		for (Atom atom1 : atoms) {
 			Atom atom = (Atom) atom1.clone();
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}
-		
+
 		// copying the alt loc groups if present, otherwise they stay null
 		if (altLocs!=null) {
 			for (Group altLocGroup:this.altLocs) {
@@ -352,7 +403,7 @@ public class HetatomImpl implements Group,Serializable {
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
-		
+
 		return n;
 	}
 
@@ -456,34 +507,34 @@ public class HetatomImpl implements Group,Serializable {
 
 	@Override
 	public Group getAltLocGroup(Character altLoc) {
-		
-			Atom a = getAtom(0);
-			if ( a == null) {
-				return null;
-			}
-		
-			// maybe the alt loc group in question is myself
-			if (a.getAltLoc().equals(altLoc)) {
-				return this;
-			}
 
-			if (altLocs == null || altLocs.isEmpty())
-				return null;
+		Atom a = getAtom(0);
+		if ( a == null) {
+			return null;
+		}
 
-			for (Group group : altLocs) {
-				if (group.getAtoms().isEmpty())
-					continue;
+		// maybe the alt loc group in question is myself
+		if (a.getAltLoc().equals(altLoc)) {
+			return this;
+		}
 
-				// determine this group's alt-loc character code by looking
-				// at its first atom's alt-loc character
-				Atom b = group.getAtom(0);
-				if ( b == null)
-					continue;
-				
-				if (b.getAltLoc().equals(altLoc)) {
-					return group;
-				}
+		if (altLocs == null || altLocs.isEmpty())
+			return null;
+
+		for (Group group : altLocs) {
+			if (group.getAtoms().isEmpty())
+				continue;
+
+			// determine this group's alt-loc character code by looking
+			// at its first atom's alt-loc character
+			Atom b = group.getAtom(0);
+			if ( b == null)
+				continue;
+
+			if (b.getAltLoc().equals(altLoc)) {
+				return group;
 			}
+		}
 
 		return null;
 	}
@@ -502,9 +553,9 @@ public class HetatomImpl implements Group,Serializable {
 		return GroupType.WATERNAMES.contains(pdb_name);
 	}
 
-	/** attempts to reduce the memory imprint of this group by trimming 
+	/** attempts to reduce the memory imprint of this group by trimming
 	 * all internal Collection objects to the required size.
-	 * 
+	 *
 	 */
 	@Override
 	public void trimToSize(){
@@ -517,7 +568,8 @@ public class HetatomImpl implements Group,Serializable {
 			ArrayList<Group> myAltLocs = (ArrayList<Group>) altLocs;
 			myAltLocs.trimToSize();
 		}
-		atomNameLookup = new HashMap<String,Atom>(atomNameLookup);
+		if ( atomNameLookup != null)
+			atomNameLookup = new HashMap<String,Atom>(atomNameLookup);
 
 		if ( hasAltLoc()) {
 			for (Group alt : getAltLocs()){
@@ -526,15 +578,15 @@ public class HetatomImpl implements Group,Serializable {
 		}
 
 
-		}
-	
-	
-		@Override
-		public String toSDF() {
-			// Function to return the SDF of a given strucutre
-			GroupToSDF gts = new GroupToSDF();
-			return gts.getText(this);
-		}
+	}
+
+
+	@Override
+	public String toSDF() {
+		// Function to return the SDF of a given strucutre
+		GroupToSDF gts = new GroupToSDF();
+		return gts.getText(this);
+	}
 
 
 
