@@ -51,7 +51,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	private float occupancy ;
 	private float tempfactor;
 
-	private Character altLoc ;
+	private char altLoc ;
 	private Group parent;
 
 	private List<Bond> bonds;
@@ -62,7 +62,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		coords     = new double[3];
 		occupancy  = 0.0f       ;
 		tempfactor = 0.0f       ;
-		altLoc 	   = null;
+		altLoc 	   = 0;
 		parent     = null;
 		bonds      = Collections.emptyList();
 		charge     = 0				;
@@ -141,7 +141,11 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	 */
 	@Override
 	public void setAltLoc(Character c) {
-		altLoc = c ;
+		// after changing altLoc from Character to char, we do this to keep the interface the same as it used to be - JD 2016-01-27
+		if (c==null) 
+			altLoc = 0;
+		else 
+			altLoc = c ;
 	}
 	
 	/** 
@@ -151,6 +155,8 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	 */
 	@Override
 	public Character getAltLoc() {
+		// after changing altLoc from Character to char, we do this to keep the interface the same as it used to be - JD 2016-01-27
+		if (altLoc==0 ) return null;
 		return altLoc ;
 	}
 
@@ -187,7 +193,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		AtomImpl n = new AtomImpl();
 		n.setOccupancy(getOccupancy());
 		n.setTempFactor(getTempFactor());
-		n.setAltLoc(getAltLoc());
+		n.altLoc = altLoc; // since char is a primitive we can do this (to avoid going through getter/setter that check for nulls)
 		n.setCharge(getCharge());
 		double[] coords = getCoords();
 		n.setX(coords[0]);
