@@ -542,10 +542,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		a.setY(y);
 		a.setZ(z);
 
-		double occupancy = Double.parseDouble(atom.getOccupancy());
+		float occupancy = Float.parseFloat (atom.getOccupancy());
 		a.setOccupancy(occupancy);
 
-		double temp = Double.parseDouble(atom.getB_iso_or_equiv());
+		float temp = Float.parseFloat (atom.getB_iso_or_equiv());
 		a.setTempFactor(temp);
 
 		String alt = atom.getLabel_alt_id();

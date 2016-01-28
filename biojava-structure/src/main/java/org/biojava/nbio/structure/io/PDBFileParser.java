@@ -1875,18 +1875,18 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		coords[2] = z ;
 		atom.setCoords(coords);
 
-		double occu  = 1.0;
+		float occu  = 1.0f;
 		if ( line.length() > 59 ) {
 			try {
 				// occu and tempf are sometimes not used :-/
-				occu = Double.parseDouble (line.substring (54, 60).trim());
+				occu = Float.parseFloat (line.substring (54, 60).trim());
 			}  catch (NumberFormatException e){}
 		}
 
-		double tempf = 0.0;
+		float tempf = 0.0f;
 		if ( line.length() > 65) {
 			try {
-				tempf = Double.parseDouble (line.substring (60, 66).trim());
+				tempf = Float.parseFloat (line.substring (60, 66).trim());
 			}  catch (NumberFormatException e){}
 		}
 

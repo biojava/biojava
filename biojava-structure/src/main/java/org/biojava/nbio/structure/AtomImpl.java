@@ -48,8 +48,8 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	private int pdbserial   ;
 	private short charge		;
 
-	private double occupancy ;
-	private double tempfactor;
+	private float occupancy ;
+	private float tempfactor;
 
 	private Character altLoc ;
 	private Group parent;
@@ -60,8 +60,8 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		name       = null        ;
 		element    = Element.R;
 		coords     = new double[3];
-		occupancy  = 0.0       ;
-		tempfactor = 0.0       ;
+		occupancy  = 0.0f       ;
+		tempfactor = 0.0f       ;
 		altLoc 	   = null;
 		parent     = null;
 		bonds      = Collections.emptyList();
@@ -160,15 +160,24 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	}
 
 	@Override
-	public void   setOccupancy(double occu){ occupancy = occu ;} ;
-	@Override
-	public double getOccupancy(){ return occupancy; } ;
-
-	@Override
-	public void   setTempFactor(double temp){ tempfactor = temp ;} ;
+	public void   setOccupancy(float occu){ 
+		occupancy = occu ;
+	}
 	
 	@Override
-	public double getTempFactor(){ return tempfactor; } ;
+	public float getOccupancy(){ 
+		return occupancy; 
+	}
+
+	@Override
+	public void   setTempFactor(float temp) { 
+		tempfactor = temp ;
+	}
+	
+	@Override
+	public float getTempFactor() { 
+		return tempfactor; 
+	}
 
 	/** returns and identical copy of this  object .
 	 * @return  and identical copy of this  object
