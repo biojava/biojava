@@ -223,7 +223,6 @@ public class CeSymm {
 
 			// If it is a symmetric alignment add it to the allAlignments list
 			selfAlignments.add(newAFP);
-			optimalAFP = newAFP;
 
 			i++;
 
@@ -240,6 +239,7 @@ public class CeSymm {
 		}
 
 		// Extract the structure identifier
+		optimalAFP = selfAlignments.get(0);
 		StructureIdentifier id = atoms[0].getGroup().getChain().getStructure()
 				.getStructureIdentifier();
 		optimalAFP.setName1(id.getIdentifier());
@@ -317,7 +317,7 @@ public class CeSymm {
 
 		// STEP4: determine the symmetry axis and its subunit dependencies
 		SymmetryAxes axes = new SymmetryAxes();
-		int order = result.getSymmOrder();
+		int order = result.getMultipleAlignment().size();
 		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)
 				.getTransformations().get(1);
 

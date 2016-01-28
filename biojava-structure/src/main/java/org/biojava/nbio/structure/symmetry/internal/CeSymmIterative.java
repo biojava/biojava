@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.vecmath.Matrix4d;
 
@@ -44,6 +45,12 @@ import org.biojava.nbio.structure.secstruc.SecStrucTools;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,8 +80,8 @@ public class CeSymmIterative {
 
 	private CESymmParameters params;
 	private Atom[] allAtoms;
-	private List<List<Integer>> alignGraph; // msa as graph representation
-	private List<MultipleAlignment> levels; // msa at each level of symmetry
+	private UndirectedGraph<Integer, DefaultEdge> alignGraph; // alignment graph
+	private List<MultipleAlignment> levels; // msa at each level
 	private CeSymmResult result;
 
 	/**
@@ -87,7 +94,7 @@ public class CeSymmIterative {
 	 */
 	public CeSymmIterative(CESymmParameters param) {
 		params = param;
-		alignGraph = new ArrayList<List<Integer>>();
+		alignGraph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
 		levels = new ArrayList<MultipleAlignment>();
 	}
 
@@ -105,9 +112,6 @@ public class CeSymmIterative {
 	public CeSymmResult execute(Atom[] atoms) throws StructureException {
 
 		allAtoms = atoms;
-		for (Integer res = 0; res < allAtoms.length; res++) {
-			alignGraph.add(new ArrayList<Integer>());
-		}
 
 		// True if symmetry found
 		boolean symm = iterate(atoms);
@@ -187,7 +191,9 @@ public class CeSymmIterative {
 				Integer pos2 = b.getAlignRes().get(su + 1).get(pos);
 				// Add edge from lower to higher positions
 				if (pos1 != null && pos2 != null) {
-					alignGraph.get(pos1).add(pos2);
+					alignGraph.addVertex(pos1);
+					alignGraph.addVertex(pos2);
+					alignGraph.addEdge(pos1, pos2);
 				}
 			}
 		}
@@ -217,50 +223,36 @@ public class CeSymmIterative {
 		Block b = new BlockImpl(bs);
 		b.setAlignRes(new ArrayList<List<Integer>>());
 
-		List<List<Integer>> groups = new ArrayList<List<Integer>>();
-		List<Integer> alreadySeen = new ArrayList<Integer>();
-
 		// Calculate the connected groups of the alignment graph
-		for (int i = 0; i < alignGraph.size(); i++) {
-			if (!alreadySeen.contains(i)) {
-				List<Integer> group = new ArrayList<Integer>();
-				List<Integer> residues = new ArrayList<Integer>();
-				residues.add(i);
-
-				while (residues.size() > 0) {
-					List<Integer> newResidues = new ArrayList<Integer>();
-					for (Integer residue : residues) {
-						group.add(residue);
-						alreadySeen.add(residue);
-						List<Integer> children = alignGraph.get(residue);
-						newResidues.addAll(children);
-					}
-					residues = newResidues;
-				}
-				Collections.sort(group);
-				groups.add(group);
-			}
-		}
+		ConnectivityInspector<Integer, DefaultEdge> inspector = 
+				new ConnectivityInspector<Integer, DefaultEdge>(alignGraph);
+		List<Set<Integer>> comps = inspector.connectedSets();
+		List<ResidueGroup> groups = new ArrayList<ResidueGroup>(comps.size());
+		for (Set<Integer> comp : comps)
+			groups.add(new ResidueGroup(comp));
 
 		// Calculate thr order of symmetry from levels
 		int order = 1;
 		for (MultipleAlignment m : levels)
 			order *= m.size();
+		for (int su = 0; su < order; su++)
+			b.getAlignRes().add(new ArrayList<Integer>());
 
-		// Construct the resulting MultipleAlignment
+		// Construct the resulting MultipleAlignment from components
+		for (ResidueGroup group : groups) {
+			if (group.order() != order)
+				continue;
+			group.combineWith(b.getAlignRes());
+		}
+		
 		for (int su = 0; su < order; su++) {
+			Collections.sort(b.getAlignRes().get(su));
 			// TODO Set the identifier to the true range of the repeat
 			msa.getEnsemble().getStructureIdentifiers()
 					.add(new PassthroughIdentifier("S" + (su + 1)));
 			msa.getEnsemble().getAtomArrays().add(allAtoms);
-			b.getAlignRes().add(new ArrayList<Integer>());
-
-			for (List<Integer> group : groups) {
-				if (group.size() != order)
-					continue;
-				b.getAlignRes().get(su).add(group.get(su));
-			}
 		}
+		
 		CoreSuperimposer imposer = new CoreSuperimposer();
 		imposer.superimpose(msa);
 		MultipleAlignmentScorer.calculateScores(msa);
