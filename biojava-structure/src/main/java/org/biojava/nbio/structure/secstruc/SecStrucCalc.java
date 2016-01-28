@@ -464,7 +464,6 @@ public class SecStrucCalc {
 		Collections.sort(outList, new Comparator<Pair<Integer>>() {
 			@Override
 			public int compare(Pair<Integer> o1, Pair<Integer> o2) {
-				// TODO Auto-generated method stub
 				if(o1.getFirst()<o2.getFirst()){
 					return -1;
 				}
