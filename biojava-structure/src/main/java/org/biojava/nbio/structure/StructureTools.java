@@ -390,7 +390,7 @@ public class StructureTools {
 	 * Unaligned groups are searched from all chains referenced in ca, as well
 	 * as any chains in the first model of the structure from ca[0], if any.
 	 * 
-	 * @param ca2
+	 * @param ca an array of atoms
 	 * @return
 	 */
 	public static List<Group> getUnalignedGroups(Atom[] ca) {
@@ -615,7 +615,7 @@ public class StructureTools {
 	/**
 	 * Gets a representative atom for each group that is part of the chain
 	 * backbone. Note that modified aminoacids won't be returned as part of the
-	 * backbone if the {@link ReducedChemCompProvider} was used to load the
+	 * backbone if the {@link org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider} was used to load the
 	 * structure.
 	 * 
 	 * For amino acids, the representative is a CA carbon. For nucleotides, the
@@ -839,7 +839,7 @@ public class StructureTools {
 	/**
 	 * Gets a representative atom for each group that is part of the chain
 	 * backbone. Note that modified aminoacids won't be returned as part of the
-	 * backbone if the {@link ReducedChemCompProvider} was used to load the
+	 * backbone if the {@link org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider} was used to load the
 	 * structure.
 	 * 
 	 * For amino acids, the representative is a CA carbon. For nucleotides, the
@@ -1006,7 +1006,7 @@ public class StructureTools {
 	 * Test if the three-letter code of an ATOM entry corresponds to a
 	 * nucleotide or to an aminoacid.
 	 * 
-	 * @param a
+	 * @param groupCode3
 	 *            3-character code for a group.
 	 *
 	 */
