@@ -574,14 +574,11 @@ public class HetatomImpl implements Group,Serializable {
 			}
 		}
 
+		// now let's fit the hashmaps to size
 		properties = new HashMap<String, Object>(properties);
-		
+
 		if ( atomNameLookup != null)
 			atomNameLookup = new HashMap<String,Atom>(atomNameLookup);
-
-
-
-
 
 	}
 
@@ -592,8 +589,6 @@ public class HetatomImpl implements Group,Serializable {
 		GroupToSDF gts = new GroupToSDF();
 		return gts.getText(this);
 	}
-
-
 
 
 }
