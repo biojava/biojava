@@ -44,7 +44,6 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	String name     ;
 	Element element;
 	double[] coords ;
-	String pdbline  ;
 	int pdbserial   ;
 	short charge		;
 
@@ -53,7 +52,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 
 	Character altLoc ;
 	Group parent;
-	long id;
+
 
 	private List<Bond> bonds;
 
@@ -61,7 +60,6 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		name     = null        ;
 		element = Element.R;
 		coords   = new double[3];
-		pdbline  = ""          ;
 		occupancy  = 0.0       ;
 		tempfactor = 0.0       ;
 		altLoc = ' ';
@@ -69,23 +67,6 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		parent = null;
 		bonds = Collections.emptyList();
 		charge = 0				;
-	}
-	/** Get the Hibernate database ID.
-	 *
-	 * @return the id
-	 * @see #setId(long)
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/** Set the Hibernate database ID.
-	 *
-	 * @param id the hibernate id
-	 * @see #getId()
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	/** 
