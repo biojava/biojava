@@ -24,8 +24,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
@@ -48,7 +46,6 @@ implements Serializable, MultipleAlignment, Cloneable {
 	//Cache variables (can be updated)
 	private int length;
 	private int coreLength;
-	private List<Matrix4d> pose;
 
 	/**
 	 * Default Constructor. Empty alignment. No structures assigned.
@@ -73,7 +70,6 @@ implements Serializable, MultipleAlignment, Cloneable {
 		if (parent!=null) parent.getMultipleAlignments().add(this);
 
 		blockSets = null;
-		pose = null;
 
 		length = -1; //Value -1 reserved to indicate that has to be calculated
 		coreLength = -1;
@@ -89,16 +85,6 @@ implements Serializable, MultipleAlignment, Cloneable {
 
 		super(ma); //Copy the scores
 		parent = ma.parent;
-
-		pose = null;
-		if (ma.pose != null){
-			//Make a deep copy of everything
-			this.pose = new ArrayList<Matrix4d>();
-			for (Matrix4d trans:ma.pose){
-				Matrix4d newTrans = (Matrix4d) trans.clone();
-				pose.add(newTrans);
-			}
-		}
 
 		length = ma.length;
 		coreLength = ma.coreLength;
@@ -120,7 +106,6 @@ implements Serializable, MultipleAlignment, Cloneable {
 		super.clear();
 		length = -1;
 		coreLength = -1;
-		pose = null;
 		for(BlockSet a : getBlockSets()) {
 			a.clear();
 		}
