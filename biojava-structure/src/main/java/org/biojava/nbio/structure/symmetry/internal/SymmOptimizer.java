@@ -26,19 +26,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
-import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -325,16 +322,7 @@ public class SymmOptimizer {
 			throw new RefinerFailedException(
 					"Optimization converged to length 0");
 
-		updateTransformation();
-		if (axes == null)
-			return;
-
-		// Get the transformations from the SymmetryAxes
-		List<Matrix4d> transformations = new ArrayList<Matrix4d>();
-		for (int su = 0; su < order; su++) {
-			transformations.add(axes.getSubunitTransform(su));
-		}
-		msa.getBlockSet(0).setTransformations(transformations);
+		SymmetryTools.updateSymmetryTransformation(axes, msa, atoms);
 	}
 
 	/**
@@ -798,58 +786,6 @@ public class SymmOptimizer {
 		length--;
 		checkGaps();
 		return true;
-	}
-
-	/**
-	 * Calculates the set of symmetry operation Matrices (transformations) of
-	 * the new alignment, based on the symmetry relations in the SymmetryAxes
-	 * object.
-	 * <p>
-	 * If the SymmetryAxes object is null, the superposition of the subunits is
-	 * done without contraint.
-	 */
-	private void updateTransformation() throws StructureException,
-			RefinerFailedException {
-
-		if (axes != null) {
-			for (int t = 0; t < axes.getElementaryAxes().size(); t++) {
-
-				Matrix4d axis = axes.getElementaryAxes().get(t);
-				List<Integer> chain1 = axes.getSubunitRelation(t).get(0);
-				List<Integer> chain2 = axes.getSubunitRelation(t).get(1);
-
-				// Calculate the aligned atom arrays
-				List<Atom> list1 = new ArrayList<Atom>();
-				List<Atom> list2 = new ArrayList<Atom>();
-
-				for (int pair = 0; pair < chain1.size(); pair++) {
-					int p1 = chain1.get(pair);
-					int p2 = chain2.get(pair);
-
-					for (int k = 0; k < length; k++) {
-						Integer pos1 = block.get(p1).get(k);
-						Integer pos2 = block.get(p2).get(k);
-						if (pos1 != null && pos2 != null) {
-							list1.add(atoms[pos1]);
-							list2.add(atoms[pos2]);
-						}
-					}
-				}
-
-				Atom[] arr1 = list1.toArray(new Atom[list1.size()]);
-				Atom[] arr2 = list2.toArray(new Atom[list2.size()]);
-
-				// Calculate the new transformation information
-				if (arr1.length > 0 && arr2.length > 0) {
-					SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
-					axis = svd.getTransformation();
-					axes.updateAxis(t, axis);
-				}
-			}
-		} else {
-			MultipleSuperimposer imposer = new CoreSuperimposer();
-			imposer.superimpose(msa);
-		}
 	}
 
 	/**

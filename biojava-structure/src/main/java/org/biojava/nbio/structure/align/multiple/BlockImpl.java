@@ -141,13 +141,13 @@ implements Serializable, Block, Cloneable {
 
 	@Override
 	public int getStartIndex(int str) {
-		int count = 0;
+		int index = 0;
 		Integer start = null;
-		while (start == null && count < alignRes.size()) {
-			start = alignRes.get(str).get(0 + count);
-			count++;
+		while (start == null && index < alignRes.get(str).size()) {
+			start = alignRes.get(str).get(index);
+			index++;
 		}
-		return start;
+		return index;
 	}
 
 	@Override
@@ -157,13 +157,13 @@ implements Serializable, Block, Cloneable {
 
 	@Override
 	public int getFinalIndex(int str) {
-		int count = 1;
+		int index = alignRes.get(str).size();
 		Integer end = null;
-		while (end == null && count <= alignRes.size()) {
-			end = alignRes.get(str).get(alignRes.size() - count);
-			count++;
+		while (end == null && index >= 0) {
+			index--;
+			end = alignRes.get(str).get(index);
 		}
-		return end;
+		return index;
 	}
 
 	@Override

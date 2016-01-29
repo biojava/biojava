@@ -33,6 +33,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
@@ -52,12 +53,14 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
+import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
+import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -524,22 +527,11 @@ public class SymmetryTools {
 			symm.addChain(newCh);
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
 
-			// Determine start and end of the subunit
-			int count = 0;
-			Integer start = null;
-			while (start == null && count < align.length()) {
-				start = align.getAlignRes().get(i).get(0 + count);
-				count++;
-			}
-			count = 1;
-			Integer end = null;
-			while (end == null && count <= align.length()) {
-				end = align.getAlignRes().get(i).get(align.length() - count);
-				count++;
-			}
-			end++;
+			// Get the start and end of the subunit
+			int res1 = align.getStartResidue(i);
+			int res2 = align.getFinalResidue(i);
 
-			Atom[] subunit = Arrays.copyOfRange(atoms, start, end);
+			Atom[] subunit = Arrays.copyOfRange(atoms, res1, res2+1);
 			Group[] g = StructureTools.cloneGroups(subunit);
 			
 			for (int k = 0; k < subunit.length; k++)
@@ -900,5 +892,75 @@ public class SymmetryTools {
 				logger.info("Group not found for representative Atom {}", a);
 		}
 		return groups;
+	}
+	
+	/**
+	 * Calculates the set of symmetry operation Matrices (transformations) of
+	 * the new alignment, based on the symmetry relations in the SymmetryAxes
+	 * object. It sets the transformations to the input MultipleAlignment and 
+	 * SymmetryAxes objects.
+	 * <p>
+	 * If the SymmetryAxes object is null, the superposition of the subunits is
+	 * done without symmetry constraints.
+	 * 
+	 * @param axes
+	 *            SymmetryAxes object. It will be modified.
+	 * @param msa
+	 *            MultipleAlignment. It will be modified.
+	 * @param atoms
+	 *            Atom array of the structure
+	 */
+	public static void updateSymmetryTransformation(SymmetryAxes axes,
+			MultipleAlignment msa, Atom[] atoms) throws StructureException {
+
+		List<List<Integer>> block = msa.getBlocks().get(0).getAlignRes();
+		int length = block.get(0).size();
+
+		if (axes != null) {
+			for (int t = 0; t < axes.getElementaryAxes().size(); t++) {
+
+				Matrix4d axis = axes.getElementaryAxes().get(t);
+				List<Integer> chain1 = axes.getSubunitRelation(t).get(0);
+				List<Integer> chain2 = axes.getSubunitRelation(t).get(1);
+
+				// Calculate the aligned atom arrays
+				List<Atom> list1 = new ArrayList<Atom>();
+				List<Atom> list2 = new ArrayList<Atom>();
+
+				for (int pair = 0; pair < chain1.size(); pair++) {
+					int p1 = chain1.get(pair);
+					int p2 = chain2.get(pair);
+
+					for (int k = 0; k < length; k++) {
+						Integer pos1 = block.get(p1).get(k);
+						Integer pos2 = block.get(p2).get(k);
+						if (pos1 != null && pos2 != null) {
+							list1.add(atoms[pos1]);
+							list2.add(atoms[pos2]);
+						}
+					}
+				}
+
+				Atom[] arr1 = list1.toArray(new Atom[list1.size()]);
+				Atom[] arr2 = list2.toArray(new Atom[list2.size()]);
+
+				// Calculate the new transformation information
+				if (arr1.length > 0 && arr2.length > 0) {
+					SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
+					axis = svd.getTransformation();
+					axes.updateAxis(t, axis);
+				}
+				
+				// Get the transformations from the SymmetryAxes
+				List<Matrix4d> transformations = new ArrayList<Matrix4d>();
+				for (int su = 0; su < msa.size(); su++) {
+					transformations.add(axes.getSubunitTransform(su));
+				}
+				msa.getBlockSet(0).setTransformations(transformations);
+			}
+		} else {
+			MultipleSuperimposer imposer = new CoreSuperimposer();
+			imposer.superimpose(msa);
+		}
 	}
 }

@@ -17,6 +17,7 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
  * This Class stores all the relevant information of an internal symmetry result
@@ -99,28 +100,16 @@ public class CeSymmResult {
 		Block align = multipleAlignment.getBlocks().get(0);
 
 		for (int su = 0; su < symmOrder; su++) {
-			// Determine start and end of the subunit
-			int count = 0;
-			Integer start = null;
-			while (start == null && count < align.length()) {
-				start = align.getAlignRes().get(su).get(0 + count);
-				count++;
-			}
-			count = 1;
-			Integer end = null;
-			while (end == null && count <= align.length()) {
-				end = align.getAlignRes().get(su).get(align.length() - count);
-				count++;
-			}
-			end++;
-
-			ResidueNumber res1 = atoms[start].getGroup().getResidueNumber();
-			ResidueNumber res2 = atoms[end].getGroup().getResidueNumber();
+			// Get the start and end residues of the subunit
+			ResidueNumber res1 = atoms[align.getStartResidue(su)].getGroup()
+					.getResidueNumber();
+			ResidueNumber res2 = atoms[align.getFinalResidue(su)].getGroup()
+					.getResidueNumber();
 			ResidueRange range = new ResidueRange(res1.getChainId(), res1, res2);
 
 			StructureIdentifier id = new SubstructureIdentifier(pdbId,
 					Arrays.asList(range));
-			
+
 			protodomains.add(id);
 		}
 
@@ -164,7 +153,7 @@ public class CeSymmResult {
 	 * Return the symmetry order determined by the order detector if the
 	 * symmetry is significant. Return 1 otherwise.
 	 * 
-	 * @return
+	 * @return the order of symmetry if the result is significant
 	 */
 	public int getSymmOrder() {
 		if (isSignificant())
@@ -186,6 +175,14 @@ public class CeSymmResult {
 	}
 
 	public QuatSymmetryResults getSymmGroup() {
+		// Lazily calculate the symmetry group
+		if (symmGroup == null) {
+			try {
+				symmGroup = SymmetryTools.getQuaternarySymmetry(this);
+			} catch (StructureException e) {
+				e.printStackTrace();
+			}
+		}
 		return symmGroup;
 	}
 

@@ -37,7 +37,6 @@ import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.secstruc.SecStrucElement;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
@@ -116,6 +115,16 @@ public class CeSymmIterative {
 		if (symm) {
 			buildAlignment();
 			recoverAxes();
+
+			// Set the transformations and scores of the final alignment
+			MultipleAlignment msa = result.getMultipleAlignment();
+			SymmetryTools.updateSymmetryTransformation(result.getAxes(), msa,
+					atoms);
+			double tmScore = MultipleAlignmentScorer.getAvgTMScore(msa)
+					* msa.size();
+			double rmsd = MultipleAlignmentScorer.getRMSD(msa);
+			msa.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
+			msa.putScore(MultipleAlignmentScorer.RMSD, rmsd);
 		}
 
 		return result;
@@ -249,10 +258,6 @@ public class CeSymmIterative {
 					.add(result.getStructureId());
 		}
 
-		CoreSuperimposer imposer = new CoreSuperimposer();
-		imposer.superimpose(msa);
-		MultipleAlignmentScorer.calculateScores(msa);
-
 		result.setMultipleAlignment(msa);
 		result.setRefined(true);
 		result.setSymmOrder(order);
@@ -268,7 +273,7 @@ public class CeSymmIterative {
 
 		SymmetryAxes axes = new SymmetryAxes();
 
-		int size = result.getSymmOrder();
+		int size = result.getMultipleAlignment().size();
 		int parents = 1;
 
 		for (int m = 0; m < levels.size(); m++) {

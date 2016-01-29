@@ -406,13 +406,11 @@ public class CeSymm {
 					MultipleAlignment optimized = optimizer.optimize();
 					result.setMultipleAlignment(optimized);
 				} catch (RefinerFailedException e) {
-					logger.info("Optimization failed:" + e.getMessage());
+					logger.info("Final optimization failed:" + e.getMessage());
 					// Return the un-optimized result instead
 					return result;
 				}
 			}
-			// Calculate the symmetry group
-			result.setSymmGroup(SymmetryTools.getQuaternarySymmetry(result));
 		}
 		return result;
 	}
@@ -434,11 +432,10 @@ public class CeSymm {
 		CeSymmResult result = align(atoms, params);
 
 		if (result.isRefined()) {
-			MultipleAlignment msa = result.getMultipleAlignment();
-
 			// STEP 5: symmetry alignment optimization
 			if (result.getParams().getOptimization()) {
 				try {
+					MultipleAlignment msa = result.getMultipleAlignment();
 					SymmOptimizer optimizer = new SymmOptimizer(result);
 					msa = optimizer.optimize();
 					result.setMultipleAlignment(msa);
