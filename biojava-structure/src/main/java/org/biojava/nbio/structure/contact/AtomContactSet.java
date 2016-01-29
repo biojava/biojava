@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.contact;
 
 import org.biojava.nbio.structure.Atom;
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -31,8 +32,11 @@ import java.util.*;
  * @author duarte_j
  *
  */
-public class AtomContactSet implements Iterable<AtomContact> {
+public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 
+	
+	private static final long serialVersionUID = 1L;
+	
 	private HashMap<Pair<AtomIdentifier>, AtomContact> contacts;
 	private double cutoff;
 	

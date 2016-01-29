@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.asa;
 
 import org.biojava.nbio.structure.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,10 +33,12 @@ import java.util.List;
  * 
  * @author duarte_j
  *
- */
-public class GroupAsa {
+ */ 
+public class GroupAsa implements Serializable {
 
 	
+	private static final long serialVersionUID = 1L;
+
 	// ASA in extended tripeptide conformation (GLY-X-GLY) 
 	private static final HashMap<Character,Double> tripeptAsa = initTriPeptAsas();
 	

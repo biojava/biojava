@@ -43,7 +43,10 @@ import java.util.List;
 public class SimpleProfilePair<S extends Sequence<C>, C extends Compound> extends SimpleProfile<S, C>
         implements ProfilePair<S, C> {
 
-    private Profile<S, C> query, target;
+    
+	private static final long serialVersionUID = 1L;
+	
+	private Profile<S, C> query, target;
 
     /**
      * Creates a pair profile for the given profiles.

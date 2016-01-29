@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.contact;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Compound;
 import org.biojava.nbio.structure.Group;
@@ -34,7 +36,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author duarte_j
  */
-class ResidueIdentifier {
+class ResidueIdentifier implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(ResidueIdentifier.class);
 	

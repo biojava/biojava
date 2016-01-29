@@ -38,6 +38,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -49,8 +50,11 @@ import java.util.*;
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements Profile<S, C> {
+public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements Serializable, Profile<S, C> {
 
+	
+	private static final long serialVersionUID = 1L;
+	
 	private List<AlignedSequence<S, C>> list;
 	private List<S> originals;
 	private int length;

@@ -44,6 +44,9 @@ import java.util.List;
 public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> extends SimpleProfile<S, C>
 implements SequencePair<S, C> {
 
+	
+	private static final long serialVersionUID = 1L;
+	
 	private int identicals = -1, similars = -1;
 
 	/**
