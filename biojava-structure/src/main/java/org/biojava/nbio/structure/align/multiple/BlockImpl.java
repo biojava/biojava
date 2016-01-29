@@ -141,11 +141,11 @@ implements Serializable, Block, Cloneable {
 
 	@Override
 	public int getStartIndex(int str) {
-		int index = 0;
+		int index = -1;
 		Integer start = null;
 		while (start == null && index < alignRes.get(str).size()) {
-			start = alignRes.get(str).get(index);
 			index++;
+			start = alignRes.get(str).get(index);
 		}
 		return index;
 	}

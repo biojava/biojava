@@ -612,14 +612,7 @@ public class SymmetryTools {
 		newEnsemble.setAtomArrays(atomArrays);
 
 		for (int su = 0; su < block.size(); su++) {
-
-			// Determine start of the subunit
-			int count = 0;
-			Integer start = null;
-			while (start == null && count < block.length()) {
-				start = block.getAlignRes().get(su).get(0 + count);
-				count++;
-			}
+			Integer start = block.getStartResidue(su);
 
 			// Normalize aligned residues
 			for (int res = 0; res < block.length(); res++) {
