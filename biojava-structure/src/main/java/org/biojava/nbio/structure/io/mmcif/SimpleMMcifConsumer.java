@@ -802,6 +802,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// TODO: add all entities and unique compounds and add methods to directly get polymer or non-polymer
 				// asyms (chains).  Either create a unique StructureImpl or modify existing for a better representation of the
 				// mmCIF internal data structures but is compatible with Structure interface.
+				// Some examples of PDB entries with this kind of problem:
+				//   - 2uub: asym_id X, chainId Z, entity_id 24: fully non-polymeric but still with its own chainId
+				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
+				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone 
+
 				Compound compound = structure.getCompoundById(eId);
 				if (compound==null) {
 					// Supports the case where the only chain members were from non-polymeric entity that is missing.
@@ -811,6 +816,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					compound = new Compound();
 					compound.setId((long)eId);
 					compound.addChain(chain);
+					chain.setCompound(compound);
 					structure.addCompound(compound);
 				} else {
 					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
