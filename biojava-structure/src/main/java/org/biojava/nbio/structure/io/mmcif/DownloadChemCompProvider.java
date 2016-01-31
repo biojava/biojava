@@ -283,8 +283,13 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			}
 			
 		}
-		return null;
 
+		// see https://github.com/biojava/biojava/issues/315
+		// probably a network error happened. Try to use the ReducedChemCOmpProvider
+		ReducedChemCompProvider reduced = new ReducedChemCompProvider();
+
+		return reduced.getChemComp(recordName);
+		
 	}
 
 	/** Returns the file name that contains the definition for this {@link ChemComp}
