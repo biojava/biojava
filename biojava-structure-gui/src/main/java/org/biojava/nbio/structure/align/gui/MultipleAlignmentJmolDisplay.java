@@ -76,7 +76,7 @@ public class MultipleAlignmentJmolDisplay  {
 	 * @return List of pdb Strings corresponding to the aligned positions 
 	 * 			of the structure.
 	 */
-	public List<String> getPDBresnum(int structNum,
+	public static List<String> getPDBresnum(int structNum,
 			MultipleAlignment multAln, Atom[] ca){
 
 		List<String> lst = new ArrayList<String>();
