@@ -105,7 +105,7 @@ public class MultipleAlignmentJmolDisplay  {
 
 	 * @throws StructureException
 	 */
-	public void showMultipleAligmentPanel(MultipleAlignment multAln,
+	public static void showMultipleAligmentPanel(MultipleAlignment multAln,
 			AbstractAlignmentJmol jmol) throws StructureException {
 
 		MultipleAligPanel me = new MultipleAligPanel(multAln, jmol);
