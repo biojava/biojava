@@ -38,7 +38,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
-import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -441,13 +441,13 @@ implements AlignmentPositionListener, WindowListener {
 			super.actionPerformed(e);
 		} else if (cmd.equals(MenuCreator.FASTA_FORMAT)){
 			String result = MultipleAlignmentWriter.toFASTA(multAln);
-			MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
+			MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
 		} else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
 			String result = MultipleAlignmentWriter.toAlignedResidues(multAln);
-			MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
+			MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
 		} else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
 			String result = MultipleAlignmentWriter.toFatCat(multAln);
-			MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
+			MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
 		} else if (cmd.equals(MenuCreator.SELECT_EQR)){
 			selectEQR();
 		} else if ( cmd.equals(MenuCreator.SIMILARITY_COLOR)){

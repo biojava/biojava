@@ -28,7 +28,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.RotationAxis;
@@ -60,7 +60,7 @@ public class SymmetryDisplay {
 			throws StructureException {
 
 		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(msa);
-		return MultipleAlignmentDisplay.display(subunits);
+		return MultipleAlignmentJmolDisplay.display(subunits);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class SymmetryDisplay {
 
 		MultipleAlignment full = SymmetryTools.toFullAlignment(msa);
 
-		MultipleAlignmentJmol jmol = MultipleAlignmentDisplay.display(full);
+		MultipleAlignmentJmol jmol = MultipleAlignmentJmolDisplay.display(full);
 		jmol.setColorByBlocks(true);
 
 		return jmol;
@@ -106,7 +106,7 @@ public class SymmetryDisplay {
 			jmol.evalString(printSymmetryAxes(msa, axes, false));
 		} else {
 			// Show the optimal alignment if it was not refined
-			jmol = MultipleAlignmentDisplay.display(msa);
+			jmol = MultipleAlignmentJmolDisplay.display(msa);
 			jmol.setColorByBlocks(true);
 		}
 

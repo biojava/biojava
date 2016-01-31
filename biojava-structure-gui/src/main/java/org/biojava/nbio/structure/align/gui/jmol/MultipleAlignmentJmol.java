@@ -48,7 +48,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
-import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
@@ -353,7 +353,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			for (StructureIdentifier name:multAln.getEnsemble().getStructureIdentifiers()){
 				title +=  name.getIdentifier() + " ";
 			}
-			Structure artificial = MultipleAlignmentDisplay.
+			Structure artificial = MultipleAlignmentJmolDisplay.
 					getAlignedStructure(transformedAtoms);
 
 			artificial.setPDBHeader(header);
@@ -389,7 +389,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				return;
 			}
 			String result = MultipleAlignmentWriter.toAlignedResidues(multAln);
-			MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
+			MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
 
 		} else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
 			if ( multAln == null) {
@@ -397,7 +397,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				return;
 			}
 			try {
-				MultipleAlignmentDisplay.showMultipleAligmentPanel(
+				MultipleAlignmentJmolDisplay.showMultipleAligmentPanel(
 						multAln, this);
 			} catch (StructureException e1) {
 				e1.printStackTrace();
@@ -410,7 +410,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			}
 			String result = MultipleAlignmentWriter.toFatCat(multAln)+"\n";
 			result += MultipleAlignmentWriter.toTransformMatrices(multAln);
-			MultipleAlignmentDisplay.showAlignmentImage(multAln, result);
+			MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
 		}
 	}
 
@@ -438,7 +438,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		//Get the aligned residues of every structure
 		for (int i=0; i<multAln.size(); i++){
 
-			List<String> pdb = MultipleAlignmentDisplay.getPDBresnum(
+			List<String> pdb = MultipleAlignmentJmolDisplay.getPDBresnum(
 					i,multAln,transformedAtoms.get(i));
 
 			allPDB.add(pdb);
