@@ -20,6 +20,18 @@
  */
 package org.biojava.nbio.structure.io;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
+
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -30,14 +42,6 @@ import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.junit.Test;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.zip.GZIPInputStream;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for non-deposited PDB/mmCIF files, i.e. any kind of "raw" file
@@ -285,4 +289,46 @@ public class TestNonDepositedFiles {
 		assertEquals(1, s.getCompounds().size());
 	}
 
+	/**
+	 * This test represents a common situation for a non-deposited structure.
+	 * When building with common crystallography software, the user often adds new
+	 * ligands (or solvent) molecules as new chains.  Only prior to deposition 
+	 * then relabel them so that they belong to the same chain as the polymeric residues.
+	 * 
+	 * In this case, the ligands represent valuable information and should not be discarded.
+	 */
+	@Test
+	public void testNewLigandChain() throws IOException, StructureException {
+    	// Test the file parsing speed when the files are already downloaded.
+    	
+		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/ligandTest.pdb.gz"));
+		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/ligandTest.cif.gz"));
+		
+		assertNotNull(cifStream);
+		assertNotNull(pdbStream);
+		
+		FileParsingParameters params = new FileParsingParameters();
+		PDBFileParser pdbpars = new PDBFileParser();
+		pdbpars.setFileParsingParameters(params);
+		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
+
+		// The chain B should be present with 1 ligand HEM
+		Chain c1 = s1.getChainByPDB("B");
+		assertNotNull(c1);
+		
+		int expectedNumLigands = 1;
+		assertEquals(expectedNumLigands, c1.getAtomGroups().size());
+
+		MMcifParser mmcifpars = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		consumer.setFileParsingParameters(params);
+		mmcifpars.addMMcifConsumer(consumer);
+		mmcifpars.parse(cifStream) ;
+		Structure s2 = consumer.getStructure();
+        
+		// The chain B should be present with 1 ligand HEM
+		Chain c2 = s2.getChainByPDB("B");
+		assertNotNull(c2);
+		assertEquals(expectedNumLigands, c2.getAtomGroups().size());
+	}
 }
