@@ -7,6 +7,10 @@ public class StructSite {
     String id;
     String details;
     String pdbx_evidence_code;
+    String pdbx_auth_asym_id;
+    String pdbx_auth_comp_id;
+    String pdbx_auth_seq_id;
+    String pdbx_num_residues;
 
     public String getId() {
         return id;
@@ -31,4 +35,60 @@ public class StructSite {
     public void setPdbx_evidence_code(String pdbx_evidence_code) {
         this.pdbx_evidence_code = pdbx_evidence_code;
     }
+
+	/**
+	 * @return the pdbx_auth_asym_id
+	 */
+	public String getPdbx_auth_asym_id() {
+		return pdbx_auth_asym_id;
+	}
+
+	/**
+	 * @param pdbx_auth_asym_id the pdbx_auth_asym_id to set
+	 */
+	public void setPdbx_auth_asym_id(String pdbx_auth_asym_id) {
+		this.pdbx_auth_asym_id = pdbx_auth_asym_id;
+	}
+
+	/**
+	 * @return the pdbx_auth_comp_id
+	 */
+	public String getPdbx_auth_comp_id() {
+		return pdbx_auth_comp_id;
+	}
+
+	/**
+	 * @param pdbx_auth_comp_id the pdbx_auth_comp_id to set
+	 */
+	public void setPdbx_auth_comp_id(String pdbx_auth_comp_id) {
+		this.pdbx_auth_comp_id = pdbx_auth_comp_id;
+	}
+
+	/**
+	 * @return the pdbx_auth_seq_id
+	 */
+	public String getPdbx_auth_seq_id() {
+		return pdbx_auth_seq_id;
+	}
+
+	/**
+	 * @param pdbx_auth_seq_id the pdbx_auth_seq_id to set
+	 */
+	public void setPdbx_auth_seq_id(String pdbx_auth_seq_id) {
+		this.pdbx_auth_seq_id = pdbx_auth_seq_id;
+	}
+
+	/**
+	 * @return the pdbx_num_residues
+	 */
+	public String getPdbx_num_residues() {
+		return pdbx_num_residues;
+	}
+
+	/**
+	 * @param pdbx_num_residues the pdbx_num_residues to set
+	 */
+	public void setPdbx_num_residues(String pdbx_num_residues) {
+		this.pdbx_num_residues = pdbx_num_residues;
+	}
 }

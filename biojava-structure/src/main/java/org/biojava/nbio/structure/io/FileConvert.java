@@ -443,20 +443,7 @@ Angstroms.
 	}
 
 	public static void toPDB(Atom a, StringBuffer str) {
-
-		if ( a.getGroup() == null){
-			System.err.println("atom does not have group! " + a.toPDB());
-			return;
-		}
-
-		String chainId ;
-		if ( a.getGroup().getChain() == null){
-			System.err.println("groupd does not have chain!" + a.getGroup().toString());
-			chainId = " ";
-		} else {
-			chainId = a.getGroup().getChain().getChainID();
-		}
-		toPDB(a,str,chainId);
+		toPDB(a,str,a.getGroup().getChainId());
 	}
 	
 

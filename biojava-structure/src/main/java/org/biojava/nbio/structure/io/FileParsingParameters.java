@@ -94,8 +94,6 @@ public class FileParsingParameters implements Serializable
 	 */
 	boolean updateRemediatedFiles;
 
-	private boolean storeEmptySeqRes;
-
 	/** 
 	 * The maximum number of atoms that will be parsed before the parser switches to a CA-only
 	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
@@ -138,16 +136,13 @@ public class FileParsingParameters implements Serializable
 	public void setDefault(){
 
 		parseSecStruc = false;
-
-		// by default we now do NOT align Atom and SeqRes records
-		alignSeqRes   = false;
+		// Default is to align / when false the unaligned SEQRES is stored.
+		alignSeqRes   = true; 
 		parseCAOnly = false;
 
 		// don't download ChemComp dictionary by default.
 		setLoadChemCompInfo(false);
 		headerOnly = false;
-
-		storeEmptySeqRes = false;
 
 		updateRemediatedFiles = false;
 		fullAtomNames = null;
@@ -266,23 +261,6 @@ public class FileParsingParameters implements Serializable
 	public void setAlignSeqRes(boolean alignSeqRes) {
 		this.alignSeqRes = alignSeqRes;
 	}
-
-
-	/** 
-	 * A flag to determine if SEQRES should be stored, even if alignSeqRes is disabled.
-	 * This will provide access to the sequence in the SEQRES, without linking it up with the ATOMs.
-	 * 
-	 * @return flag
-	 */
-	public boolean getStoreEmptySeqRes() {
-
-		return storeEmptySeqRes;
-	}
-
-	public void setStoreEmptySeqRes(boolean storeEmptySeqRes){
-		this.storeEmptySeqRes = storeEmptySeqRes;
-	}
-
 
 	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
 	 * 

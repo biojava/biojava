@@ -32,7 +32,7 @@ import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeMain;
-import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcParameters;
@@ -120,6 +120,6 @@ public class DemoMultipleMC {
 		result.getEnsemble().setAlgorithmName(algorithm.getAlgorithmName());
 		result.getEnsemble().setVersion(algorithm.getVersion());
         
-		MultipleAlignmentDisplay.display(result);
+		MultipleAlignmentJmolDisplay.display(result);
 	}
 }

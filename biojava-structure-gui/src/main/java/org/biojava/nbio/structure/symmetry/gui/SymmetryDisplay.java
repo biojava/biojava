@@ -28,10 +28,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.vecmath.Matrix4d;
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.gui.MultipleAlignmentDisplay;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.RotationAxis;
@@ -64,7 +66,7 @@ public class SymmetryDisplay {
 			throws StructureException {
 
 		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(symm);
-		return MultipleAlignmentDisplay.display(subunits);
+		return MultipleAlignmentJmolDisplay.display(subunits);
 	}
 
 	/**
@@ -80,7 +82,7 @@ public class SymmetryDisplay {
 
 		MultipleAlignment full = SymmetryTools.toFullAlignment(symm);
 
-		MultipleAlignmentJmol jmol = MultipleAlignmentDisplay.display(full);
+		MultipleAlignmentJmol jmol = MultipleAlignmentJmolDisplay.display(full);
 		jmol.setColorByBlocks(true);
 
 		return jmol;
@@ -90,8 +92,8 @@ public class SymmetryDisplay {
 	 * Displays a single structure in a cartoon representation with each
 	 * symmetric subunit colored differently.
 	 * 
-	 * @param symmResult
-	 *            the symmetry result obtained from CeSymm
+	 * @param msa
+	 *            the symmetry multiple alignment obtained from CeSymm
 	 * @throws StructureException
 	 */
 	public static AbstractAlignmentJmol display(CeSymmResult symmResult)

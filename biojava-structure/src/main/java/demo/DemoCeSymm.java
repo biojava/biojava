@@ -83,7 +83,7 @@ public class DemoCeSymm {
 
 		//Choose some parameters
 		CESymmParameters params = new CESymmParameters();
-		params.setRefineMethod(RefineMethod.SINGLE);
+		params.setRefineMethod(RefineMethod.SEQUENCE_FUNCTION);
 		params.setSymmType(SymmetryType.AUTO);
 		params.setOptimization(true);
 		params.setSymmLevels(0);
@@ -96,7 +96,7 @@ public class DemoCeSymm {
 		System.out.println(MultipleAlignmentWriter.toFatCat(result.getMultipleAlignment()));
 		
 		//Obtain the point group symmetry
-		QuatSymmetryResults pg = SymmetryTools.getQuaternarySymmetry(result.getMultipleAlignment());
+		QuatSymmetryResults pg = SymmetryTools.getQuaternarySymmetry(result);
 		System.out.println("Point group internal symmetry: "+pg.getSymmetry());
 	}
 	

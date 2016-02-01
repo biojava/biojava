@@ -52,6 +52,7 @@ public class EntitySrcGen {
 	String  host_org_strain	 ;
 	String  pdbx_src_id;
 	String  pdbx_seq_type;
+	String  pdbx_alt_source_flag;
 	String  pdbx_beg_seq_num;
 	String  pdbx_end_seq_num;
 	String  pdbx_description;	 
@@ -188,6 +189,18 @@ public class EntitySrcGen {
 	}
 	public void setPdbx_seq_type(String pdbx_seq_type) {
 		this.pdbx_seq_type = pdbx_seq_type;
+	}
+	/**
+	 * @return the pdbx_alt_source_flag
+	 */
+	public String getPdbx_alt_source_flag() {
+		return pdbx_alt_source_flag;
+	}
+	/**
+	 * @param pdbx_alt_source_flag the pdbx_alt_source_flag to set
+	 */
+	public void setPdbx_alt_source_flag(String pdbx_alt_source_flag) {
+		this.pdbx_alt_source_flag = pdbx_alt_source_flag;
 	}
 	public String getPdbx_beg_seq_num() {
 		return pdbx_beg_seq_num;

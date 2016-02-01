@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -35,7 +36,9 @@ import java.util.Iterator;
  * @author duarte_j
  * @see ResidueIdentifier
  */
-public class GroupContactSet implements Iterable<GroupContact>{ 
+public class GroupContactSet implements Serializable, Iterable<GroupContact>{ 
+
+	private static final long serialVersionUID = 1L;
 
 	private HashMap<Pair<ResidueIdentifier>, GroupContact> contacts;
 	

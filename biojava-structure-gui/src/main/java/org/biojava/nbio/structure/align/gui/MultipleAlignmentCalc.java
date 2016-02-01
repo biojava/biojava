@@ -87,7 +87,7 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 			MultipleAlignment msa = algorithm.align(atomArrays);
 			msa.getEnsemble().setStructureIdentifiers(names);
 
-			MultipleAlignmentDisplay.display(msa);
+			MultipleAlignmentJmolDisplay.display(msa);
 
 		} catch (StructureException e) {
 			e.printStackTrace();

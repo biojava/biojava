@@ -668,4 +668,34 @@ public interface Structure extends Cloneable, StructureIdentifier {
 	 * @since 4.0.1
 	 */
     public void resetModels();
+    
+	/**
+	 * Returns the PDB identifier associated with this StructureIdentifier.
+	 * @deprecated From BioJava 4.2, use {@link #getPDBCode()} or
+	 *  <code>getStructureIdentifier().toCanonical().getPdbId()</code>
+	 */
+    @Deprecated
+	String getPdbId();
+	
+	/**
+	 * Returns the list of {@link ResidueRange ResidueRanges} that this StructureIdentifier defines.
+	 * This is a unique representation.
+	 * @deprecated From BioJava 4.2, use
+	 *  <code>getStructureIdentifier().toCanonical().getResidueRanges()</code>
+	 */
+    @Deprecated
+	List<? extends ResidueRange> getResidueRanges();
+	
+	/**
+	 * Returns a list of ranges of the form described in {@link #getIdentifier()}. For example:
+	 * <pre>
+	 * getRanges().get(0): 'A'
+	 * getRanges().get(1): 'B_5-100'
+	 * </pre>
+	 * This is a unique representation.
+	 * @deprecated From BioJava 4.2, use
+	 *  <code>getStructureIdentifier().toCanonical().getRanges()</code>
+	 */
+    @Deprecated
+	List<String> getRanges();
 }

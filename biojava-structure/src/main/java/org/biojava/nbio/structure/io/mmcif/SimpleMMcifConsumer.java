@@ -309,6 +309,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void newAtomSite(AtomSite atom) {
 
+		if (params.isHeaderOnly()) return;
+		
 		// Warning: getLabel_asym_id is not the "chain id" in the PDB file
 		// it is the internally used chain id.
 		// later on we will fix this...
@@ -476,9 +478,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 
-		if ( params.isHeaderOnly())
-			return;
-
 		//atomCount++;
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
@@ -543,10 +542,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		a.setY(y);
 		a.setZ(z);
 
-		double occupancy = Double.parseDouble(atom.getOccupancy());
+		float occupancy = Float.parseFloat (atom.getOccupancy());
 		a.setOccupancy(occupancy);
 
-		double temp = Double.parseDouble(atom.getB_iso_or_equiv());
+		float temp = Float.parseFloat (atom.getB_iso_or_equiv());
 		a.setTempFactor(temp);
 
 		String alt = atom.getLabel_alt_id();
@@ -662,15 +661,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void documentEnd() {
 
-		// a problem occurred earlier so current_chain = null ...
-		// most likely the buffered reader did not provide data ...
+		// Expected that there is one current_chain that needs to be added to the model
+		// When in headerOnly mode, no Atoms are read, and there will not be an active
+		// current_chain.
 		if ( current_chain != null ) {
 
 			current_chain.addGroup(current_group);
 			if (isKnownChain(current_chain.getChainID(),current_model) == null) {
 				current_model.add(current_chain);
 			}
-		} else {
+		} else if (!params.isHeaderOnly()){
 			logger.warn("current chain is null at end of document.");			
 		}
 
@@ -705,21 +705,30 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.warn("No _struct_asym category in file, no SEQRES groups will be added."); 
 		}
 
-		if ( params.isAlignSeqRes() ){		
+		// Only align if requested (default) and not when headerOnly mode with no Atoms.
+		// Otherwise, we store the empty SeqRes Groups unchanged in the right chains.
+		if ( params.isAlignSeqRes() && !params.isHeaderOnly() ){		
+			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			alignSeqRes();
+		} else {
+			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
+			SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
 		}
 
-		if ( params.shouldCreateAtomBonds()) {
-			addBonds();
-		}
-		
-		// Adds the equivalent CONECT-style records as a PDB has for ligands.
-		if ( params.isCreateLigandConects()) {
-			addLigandConnections();
-		}
-
-		if ( params.shouldCreateAtomCharges()) {
-			addCharges();
+		// Various tasks that require Atoms can be skipped.
+		if (!params.isHeaderOnly()) {
+			if ( params.shouldCreateAtomBonds()) {
+				addBonds();
+			}
+			
+			// Adds the equivalent CONECT-style records as a PDB has for ligands.
+			if ( params.isCreateLigandConects()) {
+				addLigandConnections();
+			}
+	
+			if ( params.shouldCreateAtomCharges()) {
+				addCharges();
+			}
 		}
 
 		boolean noAsymStrandIdMappingPresent = false;
@@ -788,26 +797,27 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					continue;
 				}
 				int eId = Integer.parseInt(entityId);
-				// We didn't add above compounds for nonpolymeric entities, thus here if a chain is nonpolymeric 
-				// its compound won't be found. In biojava Structure data model a nonpolymeric chain does not really
-				// make much sense, since all small molecules are associated to a polymeric chain (the same data  
-				// model as PDB files).
-				// In any case it happens in rare cases that a non-polymeric chain is not associated to any polymeric
-				// chain, e.g. 
+				
+				// Compounds are not added for non-polymeric entities, if a chain is non-polymeric its compound won't be found. 
+				// TODO: add all entities and unique compounds and add methods to directly get polymer or non-polymer
+				// asyms (chains).  Either create a unique StructureImpl or modify existing for a better representation of the
+				// mmCIF internal data structures but is compatible with Structure interface.
+				// Some examples of PDB entries with this kind of problem:
 				//   - 2uub: asym_id X, chainId Z, entity_id 24: fully non-polymeric but still with its own chainId
 				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
 				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone 
-				// We will discard those chains here, because they don't fit into the current data model and thus
-				// can cause problems, e.g. 
-				//  a) they would not be linked to a compound and give null pointers
-				//  b) StructureTools.getAllAtoms() methods that return all atoms except waters would have 
-				//     empty lists for water-only chains
+
 				Compound compound = structure.getCompoundById(eId);
 				if (compound==null) {
-					logger.warn("Could not find a compound for entity_id {} corresponding to chain id {} (asym id {})."
-							+ " Most likely it is a purely non-polymeric chain ({} groups). Removing it from this structure.",
-							eId,chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
-					it.remove();
+					// Supports the case where the only chain members were from non-polymeric entity that is missing.
+					// Solved by creating a new Compound(entity) to which this chain will belong.
+					logger.warn("Could not find a compound for entity_id {}, for chain id {}, creating a new compound.",
+					                   eId, chain.getChainID());
+					compound = new Compound();
+					compound.setId((long)eId);
+					compound.addChain(chain);
+					chain.setCompound(compound);
+					structure.addCompound(compound);
 				} else {
 					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
 							chain.getChainID(), chain.getInternalChainID(), eId);
@@ -836,10 +846,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		
-		createSSBonds();
-
-		// Do structure.setSites(sites) after any chain renaming to be like PDB.
-		addSites();
+		if (!params.isHeaderOnly()) {
+			createSSBonds();
+	
+			// Do structure.setSites(sites) after any chain renaming to be like PDB.
+			addSites();
+		}
 		
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
@@ -1098,12 +1110,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// get the corresponding Entity
 			Compound c = structure.getCompoundById(eId);
 			if ( c == null){
-				if (e!=null && e.getType().equals("polymer")) {
-					c = createNewCompoundFromESG(esg, eId);
-					c.setMolName(e.getPdbx_description());
-					structure.addCompound(c);
-					logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eId,c.getMolName());
-				}
+				if (e!=null) { 
+					if (e.getType().equals("polymer")) {
+						c = createNewCompoundFromESG(esg, eId);
+						c.setMolName(e.getPdbx_description());
+						structure.addCompound(c);
+						logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eId,c.getMolName());
+					} else if (e.getType().equals("non-solvent")) {
+						// TODO handle non-polymer compounds.
+					} else if (e.getType().equals("water")) {
+						// TODO handle solvent entity.
+					} else {
+						logger.warn("Could not add entity id " + esg.getEntity_id() + " that has unknown _entity.type");
+					}
+				} 
 			}
 
 		}
@@ -1898,6 +1918,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newStructSite(StructSite structSite) {
+		
+		if (params.isHeaderOnly()) {
+			return;
+		}
+		
 		// Simply implement the method.
 		List<Site> sites = structure.getSites();
 		if (sites == null) sites = new ArrayList<Site>();

@@ -24,6 +24,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class QuatSymmetryParameters implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private int minimumSequenceLength = 20;
 	private int absoluteMinimumSequenceLength = 5;
 	// if the shortest sequence length is >= 0.75 * the median sequence length,

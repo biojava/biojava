@@ -30,6 +30,9 @@ import java.util.*;
 
 
 public class BlastClustReader implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private int sequenceIdentity = 0;
 	private List<List<String>> clusters = new ArrayList<List<String>>();
 	private static final String coreUrl = "ftp://resources.rcsb.org/sequence/clusters/";

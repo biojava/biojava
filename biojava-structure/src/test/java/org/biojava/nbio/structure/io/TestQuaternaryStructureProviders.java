@@ -53,6 +53,20 @@ public class TestQuaternaryStructureProviders {
 	@Test
 	public void test5LDH() throws IOException, StructureException{
 		testID("5LDH",1);
+		testID("5LDH",2);
+		// in 5ldh there's also PAU and XAU but those are ignored, see github issue #230
+		MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
+		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());
+		
+		boolean gotException = false;
+		try {
+			StructureIO.getBiologicalAssembly("5LDH",3);
+		} catch (StructureException e) {
+			gotException = true;
+		}
+		
+		assertTrue("Bioassembly 3 for PDB id 5LDH should fail with a StructureException!", gotException);
+
 	}
 	
 	@Test
@@ -69,6 +83,11 @@ public class TestQuaternaryStructureProviders {
 //	public void test1EI7(){
 //		testID("1ei7",1);
 //	}
+	
+	@Test
+	public void testGetNrBioAssemblies5LDH() throws IOException, StructureException {
+		assertEquals("There should be only 2 bioassemblies for 5LDH, see github issue #230", 2, StructureIO.getNrBiologicalAssemblies("5LDH"));
+	}
 	
 		
 	private void testID(String pdbId, int bioMolecule) throws IOException, StructureException{

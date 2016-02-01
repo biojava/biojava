@@ -34,7 +34,8 @@ import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A class that provides static access methods for easy lookup of protein structure related components
+/** 
+ * A class that provides static access methods for easy lookup of protein structure related components
  * 
  * @author Andreas Prlic
  *
@@ -119,7 +120,8 @@ public class StructureIO {
 		cache = c;
 	}
 
-	/** Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
+	/** 
+	 * Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
 	 * {@link http://www.pdb.org/pdb/101/static101.do?p=education_discussion/Looking-at-Structures/bioassembly_tutorial.html}
 	 * 
 	 * 
@@ -133,12 +135,13 @@ public class StructureIO {
 		return getBiologicalAssembly(pdbId,1);
 	}
 
-	/** By default the getStructure method loads asym units. This access method allows to recreate the quaternary structure for a protein if it is available.
+	/** 
+	 * By default the getStructure method loads asym units. This access method allows to recreate the quaternary structure for a protein if it is available.
 	 * 
 	 * @param pdbId
 	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
 	 * @return a Structure object or null if that assembly is not available
-	 * @throws StructureException 
+	 * @throws StructureException if there is no bioassembly available for given biolAssemblyNr or some other problems encountered while loading it
 	 * @throws IOException 
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
@@ -154,8 +157,12 @@ public class StructureIO {
 		
 		// 0 ... asym unit
 		if ( biolAssemblyNr == 0) {
-			logger.info("Requested biological assembly 0, returning asymmetric unit");
+			logger.info("Requested biological assembly 0 for PDB id "+pdbId+", returning asymmetric unit");
 			return asymUnit;
+		}
+		// does it exist?
+		if (!asymUnit.getPDBHeader().getBioAssemblies().containsKey(biolAssemblyNr)) {
+			throw new StructureException("No biological assembly available for biological assembly nr " + biolAssemblyNr + " of " + pdbId);
 		}
 		
 		List<BiologicalAssemblyTransformation> transformations = 
@@ -176,7 +183,8 @@ public class StructureIO {
 
 	}
 
-	/** Does the provider PDB ID have a biological assembly?
+	/** 
+	 * Does the provider PDB ID have a biological assembly?
 	 * 
 	 * @param pdbId
 	 * @return flag if one or more biological assemblies are available
@@ -204,7 +212,8 @@ public class StructureIO {
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-	/** Utility method to set the location where PDB files can be found
+	/** 
+	 * Utility method to set the location where PDB files can be found
 	 * 
 	 * @param pathToPDBFiles
 	 */

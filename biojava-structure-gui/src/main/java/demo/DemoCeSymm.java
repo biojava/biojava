@@ -21,12 +21,10 @@
 package demo;
 
 import java.io.IOException;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.symmetry.gui.SymmetryDisplay;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
@@ -82,7 +80,7 @@ public class DemoCeSymm {
 
 		//Choose some parameters
 		CESymmParameters params = new CESymmParameters();
-		params.setRefineMethod(RefineMethod.SINGLE);
+		params.setRefineMethod(RefineMethod.SEQUENCE_FUNCTION);
 		params.setSymmType(SymmetryType.AUTO);
 		params.setOptimization(true);
 		params.setSymmLevels(0);

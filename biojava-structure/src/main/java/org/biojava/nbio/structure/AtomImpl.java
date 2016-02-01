@@ -41,53 +41,33 @@ import java.util.List;
 public class AtomImpl implements Atom, Serializable, PDBRecord {
 
 	private static final long serialVersionUID = -2258364127420562883L;
-	String name     ;
-	Element element;
-	double[] coords ;
-	String pdbline  ;
-	int pdbserial   ;
-	short charge		;
+	
+	private String name     ;
+	private Element element;
+	private double[] coords ;
+	private int pdbserial   ;
+	private short charge		;
 
-	double occupancy ;
-	double tempfactor;
+	private float occupancy ;
+	private float tempfactor;
 
-	Character altLoc ;
-	Group parent;
-	long id;
+	private char altLoc ;
+	private Group parent;
 
 	private List<Bond> bonds;
 
 	public AtomImpl () {
-		name     = null        ;
-		element = Element.R;
-		coords   = new double[3];
-		pdbline  = ""          ;
-		occupancy  = 0.0       ;
-		tempfactor = 0.0       ;
-		altLoc = ' ';
-		altLoc = null;
-		parent = null;
-		bonds = Collections.emptyList();
-		charge = 0				;
+		name       = null        ;
+		element    = Element.R;
+		coords     = new double[3];
+		occupancy  = 0.0f       ;
+		tempfactor = 0.0f       ;
+		altLoc 	   = 0;
+		parent     = null;
+		bonds      = Collections.emptyList();
+		charge     = 0				;
 	}
-	/** Get the Hibernate database ID.
-	 *
-	 * @return the id
-	 * @see #setId(long)
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/** Set the Hibernate database ID.
-	 *
-	 * @param id the hibernate id
-	 * @see #getId()
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
-
+	
 	/** 
 	 * {@inheritDoc}
 	 */
@@ -155,37 +135,55 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	@Override
 	public double getZ() { return coords[2]; }
 
-	/** set alternate Location.
+	/** 
+	 * Set alternate Location.
 	 * @see #getAltLoc
 	 */
 	@Override
 	public void setAltLoc(Character c) {
-		altLoc = c ;
+		// after changing altLoc from Character to char, we do this to keep the interface the same as it used to be - JD 2016-01-27
+		if (c==null) 
+			altLoc = 0;
+		else 
+			altLoc = c ;
 	}
-	/** get alternate Location.
+	
+	/** 
+	 * Get alternate Location.
 	 * @return a Character object representing the alt loc value
 	 * @see #setAltLoc
 	 */
 	@Override
 	public Character getAltLoc() {
+		// after changing altLoc from Character to char, we do this to keep the interface the same as it used to be - JD 2016-01-27
+		if (altLoc==0 ) return null;
 		return altLoc ;
 	}
 
-	/** string representation. */
 	@Override
 	public String toString() {
 		return name + " " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
 	}
 
 	@Override
-	public void   setOccupancy(double occu){ occupancy = occu ;} ;
+	public void   setOccupancy(float occu){ 
+		occupancy = occu ;
+	}
+	
 	@Override
-	public double getOccupancy(){ return occupancy; } ;
+	public float getOccupancy(){ 
+		return occupancy; 
+	}
 
 	@Override
-	public void   setTempFactor(double temp){ tempfactor = temp ;} ;
+	public void   setTempFactor(float temp) { 
+		tempfactor = temp ;
+	}
+	
 	@Override
-	public double getTempFactor(){ return tempfactor; } ;
+	public float getTempFactor() { 
+		return tempfactor; 
+	}
 
 	/** returns and identical copy of this  object .
 	 * @return  and identical copy of this  object
@@ -195,7 +193,8 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		AtomImpl n = new AtomImpl();
 		n.setOccupancy(getOccupancy());
 		n.setTempFactor(getTempFactor());
-		n.setAltLoc(getAltLoc());
+		n.altLoc = altLoc; // since char is a primitive we can do this (to avoid going through getter/setter that check for nulls)
+		n.setCharge(getCharge());
 		double[] coords = getCoords();
 		n.setX(coords[0]);
 		n.setY(coords[1]);
@@ -203,6 +202,9 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		n.setPDBserial(getPDBserial());
 		n.setName(getName());
 		n.setElement(getElement());
+		
+		// TODO bonds are not cloned here, do we need to clone them? - JD 2016-01-27
+		
 		return n ;
 	}
 
@@ -264,11 +266,13 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		}
 		bonds.add(bond);
 	}
+	
 	@Override
 	public short getCharge() {
 		// Get the charge
 		return charge;
 	}
+	
 	@Override
 	public void setCharge(short inputCharge) {
 		// Set the charge

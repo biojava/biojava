@@ -124,7 +124,7 @@ public class TestLongPdbVsMmCifParsing {
 	
 	@Test
 	public void testSingle() throws IOException, StructureException {
-		testAll(Arrays.asList("4mml"));
+		testAll(Arrays.asList("4a10"));
 	}
 	
 	@After
@@ -211,7 +211,7 @@ public class TestLongPdbVsMmCifParsing {
 		// sugar polymers are not in pdb at all: we avoid them		
 		boolean canCompareCompoundsSize = true;
 		for (Compound compound: sCif.getCompounds()) {
-			if (compound.getMolName().contains("SUGAR")) {
+			if (compound.getMolName()==null || compound.getMolName().contains("SUGAR")) {
 				canCompareCompoundsSize = false;
 				break;
 			}

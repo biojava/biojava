@@ -94,7 +94,7 @@ public class MyAlignmentLoadListener implements ActionListener {
 					//Display all ensembles, and all its alignments
 					for (MultipleAlignmentEnsemble e:ensembles){
 						for (MultipleAlignment msa:e.getMultipleAlignments()){
-							MultipleAlignmentDisplay.display(msa);
+							MultipleAlignmentJmolDisplay.display(msa);
 						}
 					}
 
