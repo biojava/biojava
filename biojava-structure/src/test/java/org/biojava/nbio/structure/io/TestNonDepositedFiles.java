@@ -20,11 +20,7 @@
  */
 package org.biojava.nbio.structure.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -330,5 +326,60 @@ public class TestNonDepositedFiles {
 		Chain c2 = s2.getChainByPDB("B");
 		assertNotNull(c2);
 		assertEquals(expectedNumLigands, c2.getAtomGroups().size());
+		
+		// pdb and mmcif should have same number of chains
+		assertEquals(s1.getChains().size(), s2.getChains().size());
+	}
+	
+	@Test
+	public void testWaterOnlyChain() throws IOException, StructureException {
+		
+		// following 2 files are cut-down versions of 4a10
+		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.pdb.gz"));
+		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.cif.gz"));
+		
+		PDBFileParser pdbpars = new PDBFileParser();
+		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
+		
+		assertEquals(2, s1.getChains().size());
+		
+		Chain c1 = null;
+		try {
+			c1 = s1.getChainByPDB("F");
+			
+		} catch (StructureException e) {
+			fail("Got StructureException while looking for water-only chain F");
+		}
+		
+		// checking that compounds are linked
+		assertNotNull(c1.getCompound());
+		
+		// checking that the water molecule was assigned an ad-hoc compound
+		assertEquals(2,s1.getCompounds().size());
+		
+		
+		
+		MMcifParser mmcifpars = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		mmcifpars.addMMcifConsumer(consumer);
+		mmcifpars.parse(cifStream) ;
+		Structure s2 = consumer.getStructure();
+		
+		
+		assertEquals(2, s2.getChains().size());
+		
+		Chain c = null;
+		try {
+			c = s2.getChainByPDB("F");
+			
+		} catch (StructureException e) {
+			fail("Got StructureException while looking for water-only chain F");
+		}
+		
+		// checking that compounds are linked
+		assertNotNull(c.getCompound());
+		
+		// checking that the water molecule was assigned an ad-hoc compound
+		assertEquals(2,s2.getCompounds().size());
 	}
 }
