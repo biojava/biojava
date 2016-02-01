@@ -113,7 +113,9 @@ public class CeSymmIterative {
 		boolean symm = iterate(atoms);
 
 		if (symm) {
-			buildAlignment();
+			if (!buildAlignment())
+				return result;
+
 			recoverAxes();
 
 			// Set the transformations and scores of the final alignment
@@ -213,9 +215,11 @@ public class CeSymmIterative {
 	 * After all the analysis iteratives have finished, the final
 	 * MultipleAlignment object is constructed using the alignment graph.
 	 * 
+	 * @return true if the MultipleAlignment could be reconstructed, false
+	 *         otherwise
 	 * @throws StructureException
 	 */
-	private void buildAlignment() throws StructureException {
+	private boolean buildAlignment() throws StructureException {
 
 		// Initialize a new multiple alignment
 		MultipleAlignment msa = new MultipleAlignmentImpl();
@@ -250,6 +254,8 @@ public class CeSymmIterative {
 				continue;
 			group.combineWith(b.getAlignRes());
 		}
+		if (b.length() == 0)
+			return false;
 
 		for (int su = 0; su < order; su++) {
 			Collections.sort(b.getAlignRes().get(su));
@@ -262,6 +268,8 @@ public class CeSymmIterative {
 		result.setRefined(true);
 		result.setSymmOrder(order);
 		result.setSymmLevels(levels.size());
+
+		return true;
 	}
 
 	/**
