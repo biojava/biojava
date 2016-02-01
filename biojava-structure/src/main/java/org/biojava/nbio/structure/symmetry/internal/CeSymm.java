@@ -279,6 +279,15 @@ public class CeSymm {
 							result.getSelfAlignment(), atoms);
 					break;
 				}
+			case ANGLE:
+				// Does not work for OPEN alignments
+				if (result.getType() == SymmetryType.CLOSED) {
+					orderDetector = new AngleOrderDetectorPlus(
+							params.getMaxSymmOrder());
+					order = orderDetector.calculateOrder(
+							result.getSelfAlignment(), atoms);
+					break;
+				}
 			case GRAPH_COMPONENT:
 				orderDetector = new GraphComponentOrderDetector();
 				order = orderDetector.calculateOrder(result.getSelfAlignment(),

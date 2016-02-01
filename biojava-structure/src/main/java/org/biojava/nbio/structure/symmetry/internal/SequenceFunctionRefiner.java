@@ -64,6 +64,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 	 *
 	 * The resulting alignment will have a one-to-one correspondance between
 	 * aligned residues of each symmetric part.
+	 * 
 	 * @param afpChain Input alignment from CE-Symm
 	 * @param k Symmetry order. This can be guessed by {@link CeSymm#getSymmetryOrder(AFPChain)}
 	 * @return The refined alignment
@@ -72,17 +73,18 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 	 */
 	public static AFPChain refineSymmetry(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int k)
 			throws StructureException, RefinerFailedException {
-		// The current alignment
+		
+		// Transform alignment to a Map
 		Map<Integer, Integer> alignment = AlignmentTools.alignmentAsMap(afpChain);
 
-		// Do the alignment
+		// Refine the alignment Map
 		Map<Integer, Integer> refined = refineSymmetry(alignment, k);
+		if (refined.size() < 1)
+			throw new RefinerFailedException("Refiner returned empty alignment");
 		
 		//Substitute and partition the alignment
 		AFPChain refinedAFP = AlignmentTools.replaceOptAln(afpChain, ca1, ca2, refined);
 		refinedAFP = partitionAFPchain(refinedAFP, ca1, ca2, k);
-		if (refinedAFP.getOptLength() < 1) 
-			throw new RefinerFailedException("Refiner returned empty alignment");
 		return refinedAFP;
 	}
 

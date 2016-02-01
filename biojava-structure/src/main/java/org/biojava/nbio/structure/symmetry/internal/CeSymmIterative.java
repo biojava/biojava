@@ -148,9 +148,11 @@ public class CeSymmIterative {
 		// Return if the Atom array is too short
 		if (atoms.length <= params.getWinSize()
 				|| atoms.length <= params.getMinCoreLength()) {
-			logger.debug("Aborting iteration due to insufficient Atom "
-					+ "array length: %d", atoms.length);
-			return !levels.isEmpty();
+			if (result != null) {
+				logger.debug("Aborting iteration due to insufficient Atom "
+						+ "array length: %d", atoms.length);
+				return !levels.isEmpty();
+			}
 		}
 
 		// Return if the maximum levels of symmetry have been reached
