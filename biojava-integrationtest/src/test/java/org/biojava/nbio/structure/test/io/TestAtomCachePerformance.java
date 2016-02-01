@@ -49,16 +49,16 @@ public class TestAtomCachePerformance {
 	private static final String[] PDB_IDS = { 
 		"1zjo",		"2dqc",		"4af2",		"1r52",		"4f3u",		"1f9v",		"3kuq",		"2yr4",		"3m4f",		"4j5p",
 		"7ccp",		"4kro",		"1x7q",		"2gaw",		"2kli",		"2bdo",		"3csf",		"1muu",		"190l",		"2ecm"
-	 	};//,
-		//"2f0y",		"3ind",		"3uu6",		"1p9j",		"1vm7",		"2y2c",		"2hez",		"1yrm",		"1yzx",		"1ps9",
-		//"3ue0",		"2o0o",		"2g59",		"4ees",		"2yfc",		"2anr",		"3cxk",		"2e7t",		"3kmh",		"3h00",
-		//"3gdm",		"1c0t",		"1fi0",		"2kqt",		"1ky8",		"169l",		"1z6h",		"1wbm",		"4g1j",		"1v3c",
-		//"2chm",		"4f0n",		"2vxb",		"2w0q",		"1g1n",		"3o6g",		"4eug",		"3nrm",		"3heo",		"4ewe",
-		//"2xjb",		"1vgj",		"3tpp",		"2gnl",		"3jpz",		"2pgt",		"1fn2",		"2h13",		"1xyj",		"1ds7",
-		//"2x93",		"4j5y",		"2bk2",		"1v83",		"4lj9",		"4ahc",		"1m34",		"1jo4",		"3flb",		"2cb2",
-		//"4k3p",		"1yq8",		"2h7z",		"2lbp",		"3vas",		"4jwn",		"2e47",		"3r43",		"3edd",		"3kss",
-		//"2dnk",		"1kg2",		"2pwh",		"1sjh",		"4cc0",		"3a7c",		"1o5a",		"4fu7",		"3hc4",		"3hoz" 
-		//};
+	 	,
+		"2f0y",		"3ind",		"3uu6",		"1p9j",		"1vm7",		"2y2c",		"2hez",		"1yrm",		"1yzx",		"1ps9",
+		"3ue0",		"2o0o",		"2g59",		"4ees",		"2yfc",		"2anr",		"3cxk",		"2e7t",		"3kmh",		"3h00",
+		"3gdm",		"1c0t",		"1fi0",		"2kqt",		"1ky8",		"169l",		"1z6h",		"1wbm",		"4g1j",		"1v3c",
+		"2chm",		"4f0n",		"2vxb",		"2w0q",		"1g1n",		"3o6g",		"4eug",		"3nrm",		"3heo",		"4ewe",
+		"2xjb",		"1vgj",		"3tpp",		"2gnl",		"3jpz",		"2pgt",		"1fn2",		"2h13",		"1xyj",		"1ds7",
+		"2x93",		"4j5y",		"2bk2",		"1v83",		"4lj9",		"4ahc",		"1m34",		"1jo4",		"3flb",		"2cb2",
+		"4k3p",		"1yq8",		"2h7z",		"2lbp",		"3vas",		"4jwn",		"2e47",		"3r43",		"3edd",		"3kss",
+		"2dnk",		"1kg2",		"2pwh",		"1sjh",		"4cc0",		"3a7c",		"1o5a",		"4fu7",		"3hc4",		"3hoz" 
+		};
 	
 	private static AtomCache cache;
 	

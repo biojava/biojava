@@ -112,10 +112,16 @@ public class CeSymmResult {
 
 			protodomains.add(id);
 		}
-
 		return protodomains;
-
 	}
+	
+	@Override
+	public String toString() {
+		return "CeSymmResult [structureId=" + structureId + ", symmGroup="
+				+ symmGroup + ", symmOrder=" + symmOrder + ", symmLevels="
+				+ symmLevels + ", refined=" + refined + ", type=" + type + "]";
+	}
+	
 
 	public MultipleAlignment getMultipleAlignment() {
 		return multipleAlignment;
