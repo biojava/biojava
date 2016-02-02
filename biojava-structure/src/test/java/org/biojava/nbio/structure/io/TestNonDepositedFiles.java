@@ -216,10 +216,11 @@ public class TestNonDepositedFiles {
 		
 		assertTrue(s.isCrystallographic());
 		
-		// all ligands are into their own chains, so we have 2 proteins, 2 nucleotide chains and 1 ligand chain
-		assertEquals(5, s.getChains().size());
+		// all ligands are into their own chains, so we have 2 proteins, 2 nucleotide chains, 1 ligand chain and 1 purely water chain
+		assertEquals(6, s.getChains().size());
 		
-		assertEquals(2, s.getCompounds().size());
+		// 4 entities: 1 protein, 1 nucleotide, 1 water, 1 ligand (EDO)
+		assertEquals(4, s.getCompounds().size());
 
 	}
 
@@ -238,10 +239,11 @@ public class TestNonDepositedFiles {
 		
 		assertTrue(s.isCrystallographic());
 		
-		// all ligands are into their own chains, so we have 2 proteins, 2 nucleotide chains and 1 ligand chain
-		assertEquals(5, s.getChains().size());
+		// all ligands are into their own chains, so we have 2 proteins, 2 nucleotide chains, 1 ligand chain and 1 purely water chain
+		assertEquals(6, s.getChains().size());
 		
-		assertEquals(2, s.getCompounds().size());
+		// 4 entities: 1 protein, 1 nucleotide, 1 water, 1 ligand (EDO)
+		assertEquals(4, s.getCompounds().size());
 	}
 
 	@Test
@@ -280,9 +282,11 @@ public class TestNonDepositedFiles {
 		
 		assertTrue(s.isCrystallographic());
 		
-		assertEquals(2, s.getChains().size());
+		// 2 polymer chains with ligands, 1 purely water chain
+		assertEquals(3, s.getChains().size());
 		
-		assertEquals(1, s.getCompounds().size());
+		// 1 polymer entity, 1 water entity
+		assertEquals(2, s.getCompounds().size());
 	}
 
 	/**

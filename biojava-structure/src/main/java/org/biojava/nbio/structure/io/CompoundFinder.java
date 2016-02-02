@@ -39,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +95,11 @@ public class CompoundFinder {
 		
 		TreeMap<String,Compound> chainIds2entities = findCompoundsFromAlignment();
 
-		return findUniqueCompounds(chainIds2entities);
+		List<Compound> compounds = findUniqueCompounds(chainIds2entities); 
+		
+		createPurelyNonPolyCompounds(compounds);		
+		
+		return compounds;
 	}
 	
 	/**
@@ -116,6 +122,42 @@ public class CompoundFinder {
 		}
 		return list;
 	} 
+	
+	private void createPurelyNonPolyCompounds(List<Compound> compounds) {
+
+		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
+		for (int i=0;i<s.getChains().size();i++) {
+			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
+				pureNonPolymerChains.add(s.getChain(i));
+			}
+		}
+		
+		if (!pureNonPolymerChains.isEmpty()) {
+			
+			int maxMolId = 0; // if we have no compounds at all we just use 0, so that first assignment is 1
+			if (!compounds.isEmpty()) {
+				Collections.max(compounds, new Comparator<Compound>() {
+					@Override
+					public int compare(Compound o1, Compound o2) {
+						return new Integer(o1.getMolId()).compareTo(o2.getMolId());
+					}				
+				}).getMolId();
+			}
+
+			int molId = maxMolId + 1;
+			// for the purely non-polymeric chains we assign additional compounds
+			for (Chain c: pureNonPolymerChains) {
+				Compound comp = new Compound();
+				comp.addChain(c);
+				comp.setMolId(molId);
+				logger.warn("Chain {} is purely non-polymeric, will assign a new Compound (entity) to it (entity id {})", c.getChainID(), molId);
+				molId++;
+
+				compounds.add(comp);
+			}
+
+		}
+	}
 	
 	
 	private static boolean areResNumbersAligned(Chain c1, Chain c2) {
@@ -167,13 +209,13 @@ public class CompoundFinder {
 		// first we determine which chains to consider: anything not looking 
 		// polymeric (protein or nucleotide chain) should be discarded
 		Set<Integer> polyChainIndices = new TreeSet<Integer>();
+		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
 		for (int i=0;i<s.getChains().size();i++) {
 			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
-				logger.warn("Chain {} is purely non-polymeric, will not assign a Compound (entity) to it", s.getChain(i).getChainID());
-				continue; 
+				pureNonPolymerChains.add(s.getChain(i));
+			} else {				
+				polyChainIndices.add(i);
 			}
-				
-			polyChainIndices.add(i);
 		}
 		
 		

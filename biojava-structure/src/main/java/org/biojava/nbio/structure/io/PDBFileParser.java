@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -3154,11 +3155,15 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	}
 	
 	private static int findMaxCompoundId(List<Compound> compounds) {
-		List<Integer> allIds = new ArrayList<Integer>(compounds.size());
-		for (Compound compound: compounds) {
-			allIds.add(compound.getMolId());
-		}
-		return Collections.max(allIds);
+		
+		return 
+				
+		Collections.max(compounds, new Comparator<Compound>() {
+			@Override
+			public int compare(Compound o1, Compound o2) {
+				return new Integer(o1.getMolId()).compareTo(o2.getMolId());
+			}
+		}).getMolId();
 	}
 
 	/**
