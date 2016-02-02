@@ -958,38 +958,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 		
-		if (asymStrandId.isEmpty() && !asymId2entityId.isEmpty()) {
-			
-			// TODO we need to check whether this piece of code is useful anymore, I think it is redundant now - JD 2016-02-02
-			
-			// At this point we have to make sure that all chains are polymeric (possibly with some attached non-polymers)
-			// because that's the current biojava model. 
-			// It can happen that all molecules are assigned to their own chains, for instance in mmCIF files 
-			// produced by phenix (in that case there will be noAsymStrandIdMapping present (no pdbx_poly_seq_scheme))
-			// mmCIF files produced by the PDB follow the convention: distinct asym_id for every 
-			// molecule (poly or non-poly) whilst a single author_asym_id for polymer + its ligands
-
-			for (int i =0; i< structure.nrModels() ; i++){
-				for (Chain chain : structure.getModel(i)) {
-
-					if (StructureTools.isChainWaterOnly(chain)) {
-						if (chain.getCompound()==null) {
-							logger.warn("Chain with chain id {} (asym id {}) and {} residues, contains only waters. Will assign a new Compound to it.",
-									chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());				
-							Compound compound = new Compound();
-							
-							// TODO is 0 a good id to assign? could we do better? - JD 2016-02-01
-							compound.setMolId(0); 
-
-							compound.addChain(chain);
-							chain.setCompound(compound);
-							structure.addCompound(compound);
-						}
-					}
-				}
-			}
-		}
-		
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		List<Compound> compounds = structure.getCompounds();
