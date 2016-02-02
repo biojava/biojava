@@ -50,7 +50,6 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 public class ZipChemCompProvider implements ChemCompProvider{
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	private static ZipChemCompProvider s_provider = null;
 	private String tempdir = "";  // Base path where $zipRootDir/ will be downloaded to.
 	private String zipRootDir = "chemcomp/"; 
 	private ZipFile zipDictionary;
@@ -92,19 +91,6 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		
 		// Setup an instance of the download chemcomp provider.
 		dlProvider = new DownloadChemCompProvider(this.tempdir);
-	}
-
-	/**
-	 * Get a singleton instance of the provider.
-	 * @return
-	 */
-	public static ZipChemCompProvider getInstance() throws IOException {
-		ZipChemCompProvider provider = s_provider;
-		if (provider == null){
-			s_provider = provider = new ZipChemCompProvider();
-		}
-
-		return provider;
 	}
 	
 	/* (non-Javadoc)
@@ -225,10 +211,10 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	/**
 	 * Cleanup the temporary files that have been created within tmpdir.
 	 */
-	public void purgeAllTempFiles() {
-		File[] ccOutFiles = finder(System.getProperty("java.io.tmpdir"),"cif");
+	public static void purgeAllTempFiles(String tempdir) {
+		File[] ccOutFiles = finder(tempdir,"cif");
 		for(File f : ccOutFiles) f.delete();
-		File[] chemcompTempFiles = finderPrefix(System.getProperty("java.io.tmpdir"), "chemcomp.zip");
+		File[] chemcompTempFiles = finderPrefix(tempdir, "chemcomp.zip");
 		for(File f : chemcompTempFiles)f.delete();
 		File chemcompDir = new File(System.getProperty("java.io.tmpdir") + FILE_SEPARATOR +"chemcomp");
 		chemcompDir.delete();
@@ -258,7 +244,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * @param suffix
 	 * @return
 	 */
-	private File[] finder( String dirName, final String suffix){
+	static private File[] finder( String dirName, final String suffix){
 		File dir = new File(dirName);
 		return dir.listFiles(new FilenameFilter() { 
 			public boolean accept(File dir, String filename)
@@ -273,20 +259,12 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * @param prefix
 	 * @return
 	 */
-	private File[] finderPrefix( String dirName, final String prefix){
+	static private File[] finderPrefix( String dirName, final String prefix){
 		File dir = new File(dirName);
 		return dir.listFiles(new FilenameFilter() { 
 			public boolean accept(File dir, String filename)
 			{ return filename.startsWith(prefix); }
 		} );
-	}
-	
-	/**
-	 * Construct a provider for a singleton instance.
-	 */
-	private ZipChemCompProvider() throws IOException {
-		this.tempdir = System.getProperty("java.io.tmpdir");	
-		init();
 	}
 	
 	private void createNewZip(File f) throws IOException {

@@ -1,5 +1,7 @@
 package org.biojava.nbio.structure.io.mmcif;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -109,6 +111,6 @@ public class TestChemCompProvider {
 		pdbreader.setFileParsingParameters(params);
 		
 		Structure s = pdbreader.getStructure(testPDB);
-		
+		assertEquals(5, s.getChain(0).getAtomGroups().size());
 	}
 }
