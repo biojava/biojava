@@ -20,20 +20,29 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.biojava.nbio.core.util.InputStreamProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
+
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -227,6 +236,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		// make sure we work with upper case records		
 		recordName = recordName.toUpperCase().trim();
 
+		boolean haveFile = true;
 		if ( recordName.equals("?")){
 			return null;
 		}
@@ -238,50 +248,53 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		if ( ! fileExists(recordName)) {
 			// we previously have installed already the definitions,
 			// just do an incrememntal update
-			downloadChemCompRecord(recordName);
+			haveFile = downloadChemCompRecord(recordName);
 		}
 
-		String filename = getLocalFileName(recordName);
-		InputStream inStream = null;
-		try {
-
-			InputStreamProvider isp = new InputStreamProvider();
-
-			inStream = isp.getInputStream(filename);
-
-			MMcifParser parser = new SimpleMMcifParser();
-
-			ChemCompConsumer consumer = new ChemCompConsumer();
-
-			// The Consumer builds up the BioJava - structure object.
-			// you could also hook in your own and build up you own data model.
-			parser.addMMcifConsumer(consumer);
-
-			parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-
-			ChemicalComponentDictionary dict = consumer.getDictionary();
-
-			ChemComp chemComp = dict.getChemComp(recordName);
-
-			return chemComp;
-
-		} catch (IOException e) {
-
-			logger.error("Could not parse chemical component file {}. Error: {}. "
-					+ "There will be no chemical component info available for {}", filename, e.getMessage(), recordName);
-
-		}
-		finally{
-			// Now close it
-			if(inStream!=null){
-				try {
-					inStream.close();
-				} catch (IOException e) {
-					// This would be weird...
-					logger.error("Could not close chemical component file {}. A resource leak could occur!!", filename);
-				}
+		// Added check that download was successful and chemical component is available.
+		if (haveFile) {
+			String filename = getLocalFileName(recordName);
+			InputStream inStream = null;
+			try {
+	
+				InputStreamProvider isp = new InputStreamProvider();
+	
+				inStream = isp.getInputStream(filename);
+	
+				MMcifParser parser = new SimpleMMcifParser();
+	
+				ChemCompConsumer consumer = new ChemCompConsumer();
+	
+				// The Consumer builds up the BioJava - structure object.
+				// you could also hook in your own and build up you own data model.
+				parser.addMMcifConsumer(consumer);
+	
+				parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+	
+				ChemicalComponentDictionary dict = consumer.getDictionary();
+	
+				ChemComp chemComp = dict.getChemComp(recordName);
+	
+				return chemComp;
+	
+			} catch (IOException e) {
+	
+				logger.error("Could not parse chemical component file {}. Error: {}. "
+						+ "There will be no chemical component info available for {}", filename, e.getMessage(), recordName);
+	
 			}
-			
+			finally{
+				// Now close it
+				if(inStream!=null){
+					try {
+						inStream.close();
+					} catch (IOException e) {
+						// This would be weird...
+						logger.error("Could not close chemical component file {}. A resource leak could occur!!", filename);
+					}
+				}
+				
+			}
 		}
 
 		// see https://github.com/biojava/biojava/issues/315
@@ -331,7 +344,11 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-	private static void downloadChemCompRecord(String recordName) {
+	/**
+	 * @param recordName : three-letter name
+	 * @return true if successful download
+	 */
+	private static boolean downloadChemCompRecord(String recordName) {
 		
 		String localName = getLocalFileName(recordName);
 
@@ -369,13 +386,15 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			outPut.close();
 			conn.close();
 
-
+			return true;
+		} catch (FileNotFoundException e) {
+			// Possible that there is no ChemComp matching this group.
+			logger.warn(recordName + " is not available from " + SERVER_LOCATION + " and will be skipped");
 		} catch (IOException e){
 			logger.error("Could not download "+url.toString()+" to "+localName, e);
 			//e.printStackTrace();
 		}
-
-
+		return false;
 	}
 
 	private void downloadAllDefinitions() {
