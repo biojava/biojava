@@ -562,7 +562,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		try {
 			element = Element.valueOfIgnoreCase(atom.getType_symbol());
 		}  catch (IllegalArgumentException e) {
-			logger.warn("Element {} was not recognised as a BioJava-known element, the element will be represented as the generic element {}", atom.getType_symbol(), Element.R.name());
+			logger.info("Element {} was not recognised as a BioJava-known element, the element will be represented as the generic element {}", atom.getType_symbol(), Element.R.name());
 		}
 		a.setElement(element);
 
