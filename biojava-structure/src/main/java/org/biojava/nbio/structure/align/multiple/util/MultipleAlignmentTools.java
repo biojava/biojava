@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -794,13 +796,20 @@ public class MultipleAlignmentTools {
 
 		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
 
-		// Extract the sequences and add them to the MSA
+		Map<String, Integer> uniqueID = new HashMap<String, Integer>();
 		List<String> seqs = getSequenceAlignment(msta);
 		for (int i = 0; i < msta.size(); i++) {
-			AccessionID id = new AccessionID(msta.getStructureIdentifier(i)
-					.toString());
+			// Make sure the identifiers are unique (required by AccessionID)
+			String id = msta.getStructureIdentifier(i).toString();
+			if (uniqueID.containsKey(id)) {
+				uniqueID.put(id, uniqueID.get(id) + 1);
+				id += "_" + uniqueID.get(id);
+			} else
+				uniqueID.put(id, 1);
+
+			AccessionID acc = new AccessionID(id);
 			ProteinSequence pseq = new ProteinSequence(seqs.get(i));
-			pseq.setAccession(id);
+			pseq.setAccession(acc);
 			msa.addAlignedSequence(pseq);
 		}
 		return msa;
@@ -857,8 +866,8 @@ public class MultipleAlignmentTools {
 	}
 
 	/**
-	 * Calculate a phylogenetic tree of the MultipleAlignment using fractional
-	 * dissimilarity scores (FDS), based in BLOSUM40 Substitution Matrix (ideal
+	 * Calculate a phylogenetic tree of the MultipleAlignment using
+	 * dissimilarity scores (DS), based in BLOSUM40 Substitution Matrix (ideal
 	 * for distantly related proteins, often the case in structural alignments)
 	 * and the Neighbor Joining algorithm from forester.
 	 * 
@@ -868,16 +877,15 @@ public class MultipleAlignmentTools {
 	 * @throws CompoundNotFoundException
 	 * @throws IOException
 	 */
-	public static Phylogeny getFDSBLOSUM40Tree(MultipleAlignment msta)
+	public static Phylogeny getBLOSUM40Tree(MultipleAlignment msta)
 			throws CompoundNotFoundException, IOException {
 		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = MultipleAlignmentTools
 				.toProteinMSA(msta);
 		BasicSymmetricalDistanceMatrix distmat = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
-				.fractionalDissimilarityScore(msa,
-						SubstitutionMatrixHelper.getBlosum40());
+				.dissimilarityScore(msa, SubstitutionMatrixHelper.getBlosum40());
 		Phylogeny tree = TreeConstructor.distanceTree(distmat,
 				TreeConstructorType.NJ);
-		tree.setName("FDS-BLOSUM40 Tree");
+		tree.setName("BLOSUM40 Tree");
 		return tree;
 	}
 
@@ -895,8 +903,18 @@ public class MultipleAlignmentTools {
 				.getArray();
 		BasicSymmetricalDistanceMatrix rmsdDist = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
 				.structuralDistance(rmsdMat, 1, 5, 0.4);
-		for (int i = 0; i < msta.size(); i++)
-			rmsdDist.setIdentifier(i, msta.getStructureIdentifier(i).toString());
+		// Set the identifiers of the matrix
+		Map<String, Integer> alreadySeen = new HashMap<String, Integer>();
+		for (int i = 0; i < msta.size(); i++) {
+			// Make sure the identifiers are unique
+			String id = msta.getStructureIdentifier(i).toString();
+			if (alreadySeen.containsKey(id)) {
+				alreadySeen.put(id, alreadySeen.get(id) + 1);
+				id += "_" + alreadySeen.get(id);
+			} else
+				alreadySeen.put(id, 1);
+			rmsdDist.setIdentifier(i, id);
+		}
 		Phylogeny tree = TreeConstructor.distanceTree(rmsdDist,
 				TreeConstructorType.NJ);
 		tree.setName("Structural Tree");

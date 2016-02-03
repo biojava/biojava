@@ -182,7 +182,7 @@ public class MenuCreator {
 			}
 			//Phylogenetics - only if it is a MultipleAlignment
 			if (afpChain == null){
-				JMenuItem tree = new JMenuItem(PHYLOGENETIC_TREE);
+				JMenuItem tree = getIcon(parent, PHYLOGENETIC_TREE);
 				tree.setMnemonic(KeyEvent.VK_T);
 				view.add(tree);
 			}

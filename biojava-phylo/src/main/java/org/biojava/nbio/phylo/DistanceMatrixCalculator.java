@@ -2,7 +2,6 @@ package org.biojava.nbio.phylo;
 
 import java.io.IOException;
 import java.util.List;
-
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.template.Compound;
@@ -240,6 +239,7 @@ public class DistanceMatrixCalculator {
 				}
 			}
 		}
+		
 		return DM;
 	}
 

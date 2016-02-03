@@ -410,10 +410,10 @@ public class CeSymm {
 		if (result.isSignificant()) {
 			// Optimize the global alignment freely once more (final step)
 			if (params.getOptimization() && result.getSymmLevels() > 1) {
+				//Remove the axes to do free superposition optimization
+				SymmetryAxes axes = result.getAxes();
+				result.setAxes(null);
 				try {
-					//Remove the axes to do free superposition optimization
-					SymmetryAxes axes = result.getAxes();
-					result.setAxes(null);
 					SymmOptimizer optimizer = new SymmOptimizer(result);
 					MultipleAlignment optimized = optimizer.optimize();
 					// Set the optimized MultipleAlignment and the axes
@@ -422,6 +422,7 @@ public class CeSymm {
 				} catch (RefinerFailedException e) {
 					logger.info("Final optimization failed:" + e.getMessage());
 					// Return the un-optimized result instead
+					result.setAxes(axes);
 					return result;
 				}
 			}

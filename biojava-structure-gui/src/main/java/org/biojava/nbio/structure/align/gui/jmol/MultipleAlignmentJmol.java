@@ -415,7 +415,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				Phylogeny kimura = MultipleAlignmentTools
 						.getKimuraTree(multAln);
 				Phylogeny blosum = MultipleAlignmentTools
-						.getFDSBLOSUM40Tree(multAln);
+						.getBLOSUM40Tree(multAln);
 				Phylogeny structural = MultipleAlignmentTools
 						.getStructuralTree(multAln);
 
