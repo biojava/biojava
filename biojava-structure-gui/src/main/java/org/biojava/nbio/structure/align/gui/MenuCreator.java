@@ -180,6 +180,12 @@ public class MenuCreator {
 				dotplot.addActionListener(new DotPlotListener(afpChain));
 				view.add(dotplot);
 			}
+			//Phylogenetics - only if it is a MultipleAlignment
+			if (afpChain == null){
+				JMenuItem tree = new JMenuItem(PHYLOGENETIC_TREE);
+				tree.setMnemonic(KeyEvent.VK_T);
+				view.add(tree);
+			}
 		}
 		menu.add(view);
 

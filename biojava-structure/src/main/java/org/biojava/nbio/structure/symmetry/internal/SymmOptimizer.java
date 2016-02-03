@@ -196,7 +196,7 @@ public class SymmOptimizer {
 
 		int conv = 0; // Number of steps without an alignment improvement
 		int i = 1;
-		int stepsToConverge = Math.max(maxIter / 20, 1000);
+		int stepsToConverge = Math.max(maxIter / 50, 1000);
 
 		while (i < maxIter && conv < stepsToConverge) {
 
