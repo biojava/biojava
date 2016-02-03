@@ -1,7 +1,9 @@
 package org.biojava.nbio.structure.rcsb;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -11,8 +13,12 @@ import java.util.Map;
 
 public class RCSBUpdates {
 
-
-	public Map<String,String[]> getUpdates(){
+	/**
+	 * 
+	 * @return A map mapping each field (defined by a seperate FTP page and defined in newStringList to the PDB ids in this field
+	 * @throws IOException 
+	 */
+	public Map<String,String[]> getUpdates() throws IOException{
 		// The URL for acquiring the data
 		String baseURL = "ftp://ftp.rcsb.org/pub/pdb/data/status/latest/";
 		Map<String,String[]> outMap = new HashMap<String, String[]>();
@@ -28,33 +34,32 @@ public class RCSBUpdates {
 	}
 
 
-	private String[] readURL(String urlIn){
+	/**
+	 * 
+	 * @param urlIn The url to be read
+	 * @return A list of PDB ids as strings
+	 * @throws IOException
+	 */
+	private String[] readURL(String urlIn) throws IOException{
 		List<String> outList = new ArrayList<String>();
-		try
+		// create a url object
+		URL url = new URL(urlIn);
+
+		// create a urlconnection object
+		URLConnection urlConnection = url.openConnection();
+
+		// wrap the urlconnection in a bufferedreader
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+		String line;
+
+		// read from the urlconnection via the bufferedreader
+		while ((line = bufferedReader.readLine()) != null)
 		{
-			// create a url object
-			URL url = new URL(urlIn);
-
-			// create a urlconnection object
-			URLConnection urlConnection = url.openConnection();
-
-			// wrap the urlconnection in a bufferedreader
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-			String line;
-
-			// read from the urlconnection via the bufferedreader
-			while ((line = bufferedReader.readLine()) != null)
-			{
-				outList.add(line);
-			}
-			bufferedReader.close();
+			outList.add(line);
 		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
+		bufferedReader.close();
+
 		return outList.toArray(new String[0]);
 	}
 }
