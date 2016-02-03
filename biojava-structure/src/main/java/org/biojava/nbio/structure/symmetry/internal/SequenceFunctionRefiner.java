@@ -86,6 +86,8 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 		try {
 			AFPChain refinedAFP = AlignmentTools.replaceOptAln(afpChain, ca1, ca2, refined);
 			refinedAFP = partitionAFPchain(refinedAFP, ca1, ca2, k);
+			if (refinedAFP.getOptLength() < 1)
+				throw new IndexOutOfBoundsException("Refined alignment is empty.");
 			return refinedAFP;
 		} catch (IndexOutOfBoundsException e){
 			// This Exception is thrown when the refined alignment is not consistent

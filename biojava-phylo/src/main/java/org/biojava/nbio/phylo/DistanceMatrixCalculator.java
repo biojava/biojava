@@ -307,12 +307,13 @@ public class DistanceMatrixCalculator {
 							.get(j).getCompoundAt(k + 1));
 				}
 
-				if (i != j)
+				if (i != j){
+					score = Math.max(score, 0.0);
 					DM.setValue(i, j, score);
-
-				if (score > maxscore) {
-					maxscore = score;
 				}
+
+				if (score > maxscore)
+					maxscore = score;
 			}
 		}
 
@@ -324,7 +325,7 @@ public class DistanceMatrixCalculator {
 				if (i == j)
 					DM.setValue(i, j, 0.0);
 				else {
-					double dS = maxscore - DM.getValue(i, j);
+					double dS = Math.max(maxscore - DM.getValue(i, j), 0);
 					DM.setValue(i, j, dS);
 					DM.setValue(j, i, dS);
 				}
