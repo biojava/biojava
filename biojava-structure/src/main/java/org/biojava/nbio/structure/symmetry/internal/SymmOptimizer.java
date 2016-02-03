@@ -69,7 +69,7 @@ public class SymmOptimizer {
 	// Optimization parameters
 	private int Rmin = 2; // min aligned subunits per column
 	private int Lmin; // min subunit length
-	private int maxIterFactor = 100; // max iterations constant
+	private int maxIter; // max iterations
 	private double C = 20; // probability of accept bad moves constant
 
 	// Score function parameters
@@ -127,6 +127,10 @@ public class SymmOptimizer {
 			Rmin = Math.max(order / 2, 2);
 		else
 			Rmin = order;
+		
+		maxIter = symmResult.getParams().getOptimizationSteps();
+		if (maxIter < 1)
+			maxIter = 100 * atoms.length;
 	}
 
 	private void initialize() throws StructureException, RefinerFailedException {
@@ -192,8 +196,7 @@ public class SymmOptimizer {
 
 		int conv = 0; // Number of steps without an alignment improvement
 		int i = 1;
-		int maxIter = maxIterFactor * atoms.length;
-		int stepsToConverge = Math.max(maxIter / 50, 1000);
+		int stepsToConverge = Math.max(maxIter / 20, 1000);
 
 		while (i < maxIter && conv < stepsToConverge) {
 
