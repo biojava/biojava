@@ -24,7 +24,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
@@ -33,7 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Action Listener for the symmetry menu. Trigger various symmetry analysis.
+ * Action Listener for the symmetry menu. Trigger various internal symmetry
+ * specific analysis.
  * 
  * @author Aleix Lafita
  * @since 4.2.0
@@ -54,66 +54,40 @@ public class SymmetryListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-
 		String cmd = ae.getActionCommand();
-		if (cmd.equals("Subunit Superposition")) {
-			if (symm == null) {
-				logger.error("Currently not displaying a symmetry!");
-				return;
-			}
-			try {
+		if (cmd.equals("New Symmetry Analysis"))
+			SymmetryGui.getInstance();
+
+		if (symm == null)
+			logger.error("Currently not displaying a symmetry!");
+
+		try {
+			if (cmd.equals("Subunit Superposition")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displaySubunits(symm);
 				String s = SymmetryDisplay.printSymmetryAxes(symm, true);
 				j.evalString(s);
-			} catch (StructureException e) {
-				e.printStackTrace();
-			}
 
-		} else if (cmd.equals("Multiple Structure Alignment")) {
-			if (symm == null) {
-				logger.error("Currently not displaying a symmetry!");
-				return;
-			}
-			try {
+			} else if (cmd.equals("Multiple Structure Alignment")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm);
 				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
 				j.evalString(s);
-			} catch (StructureException e) {
-				e.printStackTrace();
-			}
 
-		} else if (cmd.equals("Optimal Self Alignment")) {
-			if (symm == null) {
-				logger.error("Currently not displaying a symmetry!");
-				return;
-			}
-			try {
+			} else if (cmd.equals("Optimal Self Alignment")) {
 				Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
 				StructureAlignmentDisplay.display(symm.getSelfAlignment(),
 						symm.getAtoms(), cloned);
-			} catch (StructureException e) {
-				e.printStackTrace();
-			}
 
-		} else if (cmd.equals("Point Group Symmetry")) {
-			if (symm == null) {
-				logger.error("Currently not displaying a symmetry!");
-				return;
-			}
-			String script = SymmetryDisplay.printPointGroupAxes(symm);
-			jmol.evalString(script);
-			return;
+			} else if (cmd.equals("Show Symmetry Group")) {
+				String script = SymmetryDisplay.printSymmetryGroup(symm);
+				jmol.evalString(script);
 
-		} else if (cmd.equals("Show Symmetry Axes")) {
-			if (symm != null) {
+			} else if (cmd.equals("Show Symmetry Axes")) {
 				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
 				jmol.evalString(s);
-				return;
-			} else
-				logger.error("Currently not displaying a symmetry!");
+			}
 
-		} else if (cmd.equals("New Symmetry Analysis")) {
-			SymmetryGui.getInstance();
+		} catch (Exception e) {
+			logger.error("Could not complete display option", e);
 		}
 	}
 }

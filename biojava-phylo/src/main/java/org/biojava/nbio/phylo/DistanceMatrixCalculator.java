@@ -28,8 +28,7 @@ public class DistanceMatrixCalculator {
 			.getLogger(DistanceMatrixCalculator.class);
 
 	/** Prevent instantiation */
-	private DistanceMatrixCalculator() {
-	}
+	private DistanceMatrixCalculator() {}
 
 	/**
 	 * The fractional dissimilarity (D) is defined as the percentage of sites

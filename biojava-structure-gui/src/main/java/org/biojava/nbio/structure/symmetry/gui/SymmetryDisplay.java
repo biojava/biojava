@@ -58,8 +58,8 @@ public class SymmetryDisplay {
 	/**
 	 * Displays a multiple alignment of the symmetry subunits.
 	 * 
-	 * * @param symm
-	 *            CeSymmResult
+	 * * @param symm CeSymmResult
+	 * 
 	 * @throws StructureException
 	 */
 	public static MultipleAlignmentJmol displaySubunits(CeSymmResult symm)
@@ -105,7 +105,7 @@ public class SymmetryDisplay {
 			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(msa, atoms);
 			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 			addSymmetryMenu(jmol, symmResult);
-			jmol.evalString(printPointGroupAxes(symmResult));
+			jmol.evalString(printSymmetryGroup(symmResult));
 			jmol.evalString(printSymmetryAxes(symmResult, false));
 			return jmol;
 		} else {
@@ -150,7 +150,7 @@ public class SymmetryDisplay {
 		self.addActionListener(li);
 		symm.add(self);
 
-		JMenuItem pg = new JMenuItem("Point Group Symmetry");
+		JMenuItem pg = new JMenuItem("Show Symmetry Group");
 		pg.addActionListener(li);
 		symm.add(pg);
 
@@ -197,8 +197,8 @@ public class SymmetryDisplay {
 	}
 
 	/**
-	 * Given a symmetry alignment, it draws the point group symmetry axes and
-	 * the polyhedron box around the structure. It uses the quaternary symmetry
+	 * Given a symmetry alignment, it draws the symmetry group axes and the
+	 * polyhedron box around the structure. It uses the quaternary symmetry
 	 * detection code, but tries to factor out the alignment and detection
 	 * steps.
 	 * 
@@ -206,7 +206,7 @@ public class SymmetryDisplay {
 	 *            CeSymmResult
 	 * @return
 	 */
-	public static String printPointGroupAxes(CeSymmResult symm) {
+	public static String printSymmetryGroup(CeSymmResult symm) {
 
 		QuatSymmetryResults gSymmetry = symm.getSymmGroup();
 

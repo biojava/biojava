@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,11 +31,15 @@ import java.util.TreeSet;
 
 import javax.vecmath.Matrix4d;
 
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.phylo.DistanceMatrixCalculator;
+import org.biojava.nbio.phylo.TreeConstructor;
+import org.biojava.nbio.phylo.TreeConstructorType;
 import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
@@ -44,6 +49,8 @@ import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
+import org.forester.phylogeny.Phylogeny;
 
 /**
  * Utility functions for working with {@link MultipleAlignment}.
@@ -772,7 +779,7 @@ public class MultipleAlignmentTools {
 	 * @param msta
 	 *            Multiple Structure Alignment
 	 * @return MultipleSequenceAlignment of protein sequences
-	 * @throws CompoundNotFoundException 
+	 * @throws CompoundNotFoundException
 	 */
 	public static MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> toProteinMSA(
 			MultipleAlignment msta) throws CompoundNotFoundException {
@@ -785,34 +792,33 @@ public class MultipleAlignmentTools {
 							+ "the structures aligned are not proteins");
 		}
 
-		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = 
-				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
 
 		// Extract the sequences and add them to the MSA
 		List<String> seqs = getSequenceAlignment(msta);
 		for (int i = 0; i < msta.size(); i++) {
-			AccessionID id = new AccessionID(msta.getStructureIdentifier(i).toString());
+			AccessionID id = new AccessionID(msta.getStructureIdentifier(i)
+					.toString());
 			ProteinSequence pseq = new ProteinSequence(seqs.get(i));
 			pseq.setAccession(id);
 			msa.addAlignedSequence(pseq);
 		}
 		return msa;
 	}
-	
+
 	/**
-	 * Calculate the RMSD matrix of a MultipleAlignment, that is, entry (i,j)
-	 * of the matrix contains the RMSD between structures i and j.
+	 * Calculate the RMSD matrix of a MultipleAlignment, that is, entry (i,j) of
+	 * the matrix contains the RMSD between structures i and j.
 	 * 
 	 * @param msa
 	 *            Multiple Structure Alignment
-	 * @return Matrix of RMSD with size the number of structures
-	 * 			squared
+	 * @return Matrix of RMSD with size the number of structures squared
 	 */
-	public static Matrix getRMSDMatrix(MultipleAlignment msa){
-		
+	public static Matrix getRMSDMatrix(MultipleAlignment msa) {
+
 		Matrix rmsdMat = new Matrix(msa.size(), msa.size());
 		List<Atom[]> superposed = transformAtoms(msa);
-		
+
 		for (int i = 0; i < msa.size(); i++) {
 			for (int j = i; j < msa.size(); j++) {
 				if (i == j)
@@ -827,5 +833,74 @@ public class MultipleAlignmentTools {
 		}
 		return rmsdMat;
 	}
-	
+
+	/**
+	 * Calculate a phylogenetic tree of the MultipleAlignment using Kimura
+	 * distances and the Neighbor Joining algorithm from forester.
+	 * 
+	 * @param msta
+	 *            MultipleAlignment of protein structures
+	 * @return Phylogeny phylogenetic tree
+	 * @throws CompoundNotFoundException
+	 * @throws IOException
+	 */
+	public static Phylogeny getKimuraTree(MultipleAlignment msta)
+			throws CompoundNotFoundException, IOException {
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = MultipleAlignmentTools
+				.toProteinMSA(msta);
+		BasicSymmetricalDistanceMatrix distmat = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
+				.kimuraDistance(msa);
+		Phylogeny tree = TreeConstructor.distanceTree(distmat,
+				TreeConstructorType.NJ);
+		tree.setName("Kimura Tree");
+		return tree;
+	}
+
+	/**
+	 * Calculate a phylogenetic tree of the MultipleAlignment using fractional
+	 * dissimilarity scores (FDS), based in BLOSUM40 Substitution Matrix (ideal
+	 * for distantly related proteins, often the case in structural alignments)
+	 * and the Neighbor Joining algorithm from forester.
+	 * 
+	 * @param msta
+	 *            MultipleAlignment of protein structures
+	 * @return Phylogeny phylogenetic tree
+	 * @throws CompoundNotFoundException
+	 * @throws IOException
+	 */
+	public static Phylogeny getFDSBLOSUM40Tree(MultipleAlignment msta)
+			throws CompoundNotFoundException, IOException {
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = MultipleAlignmentTools
+				.toProteinMSA(msta);
+		BasicSymmetricalDistanceMatrix distmat = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
+				.fractionalDissimilarityScore(msa,
+						SubstitutionMatrixHelper.getBlosum40());
+		Phylogeny tree = TreeConstructor.distanceTree(distmat,
+				TreeConstructorType.NJ);
+		tree.setName("FDS-BLOSUM40 Tree");
+		return tree;
+	}
+
+	/**
+	 * Calculate a phylogenetic tree of the MultipleAlignment using RMSD
+	 * distances and the Neighbor Joining algorithm from forester.
+	 * 
+	 * @param msta
+	 *            MultipleAlignment of protein structures
+	 * @return Phylogeny phylogenetic tree
+	 * @throws CompoundNotFoundException
+	 */
+	public static Phylogeny getStructuralTree(MultipleAlignment msta) {
+		double[][] rmsdMat = MultipleAlignmentTools.getRMSDMatrix(msta)
+				.getArray();
+		BasicSymmetricalDistanceMatrix rmsdDist = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
+				.structuralDistance(rmsdMat, 1, 5, 0.4);
+		for (int i = 0; i < msta.size(); i++)
+			rmsdDist.setIdentifier(i, msta.getStructureIdentifier(i).toString());
+		Phylogeny tree = TreeConstructor.distanceTree(rmsdDist,
+				TreeConstructorType.NJ);
+		tree.setName("Structural Tree");
+		return tree;
+	}
+
 }
