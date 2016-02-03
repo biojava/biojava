@@ -30,11 +30,15 @@ import java.util.TreeSet;
 
 import javax.vecmath.Matrix4d;
 
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
@@ -671,7 +675,8 @@ public class MultipleAlignmentTools {
 					for (int j = 0; j < blk.length(); j++) {
 						Integer alignedPos = blk.getAlignRes().get(i).get(j);
 						if (alignedPos != null) {
-							blocksetAtoms[blockPos] = (Atom) curr[alignedPos].clone();
+							blocksetAtoms[blockPos] = (Atom) curr[alignedPos]
+									.clone();
 						}
 						blockPos++;
 					}
@@ -762,25 +767,65 @@ public class MultipleAlignmentTools {
 
 	/**
 	 * Convert a MultipleAlignment into a MultipleSequenceAlignment of AminoAcid
-	 * residues. This method is only valid for protein alignments.
+	 * residues. This method is only valid for protein structure alignments.
 	 * 
-	 * @param msta Multiple Structure Alignment
-	 * @return MultipleSequenceAlignment
+	 * @param msta
+	 *            Multiple Structure Alignment
+	 * @return MultipleSequenceAlignment of protein sequences
+	 * @throws CompoundNotFoundException 
 	 */
-	@SuppressWarnings("unused")
 	public static MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> toProteinMSA(
-			MultipleAlignment msta) {
-		
-		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
-		
-		// Extract the sequences and add them to the MSA
-		List<String> sequences = getSequenceAlignment(msta);
-		for (String seq : sequences) {
-			// TODO convert String to ProteinSequence and add it to the MSA
-			// Additionally set the identifier
+			MultipleAlignment msta) throws CompoundNotFoundException {
+
+		// Check that the alignment is of protein structures
+		Group g = msta.getAtomArrays().get(0)[0].getGroup();
+		if (!(g instanceof AminoAcid)) {
+			throw new IllegalArgumentException(
+					"Cannot convert to multiple sequence alignment: "
+							+ "the structures aligned are not proteins");
 		}
-		throw new NullPointerException("Method not implemented yet!");
-		
-		//return msa;
+
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = 
+				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+
+		// Extract the sequences and add them to the MSA
+		List<String> seqs = getSequenceAlignment(msta);
+		for (int i = 0; i < msta.size(); i++) {
+			AccessionID id = new AccessionID(msta.getStructureIdentifier(i).toString());
+			ProteinSequence pseq = new ProteinSequence(seqs.get(i));
+			pseq.setAccession(id);
+			msa.addAlignedSequence(pseq);
+		}
+		return msa;
 	}
+	
+	/**
+	 * Calculate the RMSD matrix of a MultipleAlignment, that is, entry (i,j)
+	 * of the matrix contains the RMSD between structures i and j.
+	 * 
+	 * @param msa
+	 *            Multiple Structure Alignment
+	 * @return Matrix of RMSD with size the number of structures
+	 * 			squared
+	 */
+	public static Matrix getRMSDMatrix(MultipleAlignment msa){
+		
+		Matrix rmsdMat = new Matrix(msa.size(), msa.size());
+		List<Atom[]> superposed = transformAtoms(msa);
+		
+		for (int i = 0; i < msa.size(); i++) {
+			for (int j = i; j < msa.size(); j++) {
+				if (i == j)
+					rmsdMat.set(i, j, 0.0);
+				List<Atom[]> compared = new ArrayList<Atom[]>();
+				compared.add(superposed.get(i));
+				compared.add(superposed.get(j));
+				double rmsd = MultipleAlignmentScorer.getRMSD(compared);
+				rmsdMat.set(i, j, rmsd);
+				rmsdMat.set(j, i, rmsd);
+			}
+		}
+		return rmsdMat;
+	}
+	
 }

@@ -171,6 +171,11 @@ implements Serializable, MultipleAlignment, Cloneable {
 	public List<Atom[]> getAtomArrays() {
 		return parent.getAtomArrays();
 	}
+	
+	@Override
+	public StructureIdentifier getStructureIdentifier(int index) {
+		return parent.getStructureIdentifiers().get(index);
+	}
 
 	@Override
 	public int size() {
@@ -239,4 +244,5 @@ implements Serializable, MultipleAlignment, Cloneable {
 	public void setEnsemble(MultipleAlignmentEnsemble parent) {
 		this.parent = parent;
 	}
+
 }

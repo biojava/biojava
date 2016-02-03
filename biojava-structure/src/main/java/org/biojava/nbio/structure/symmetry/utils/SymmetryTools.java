@@ -956,4 +956,5 @@ public class SymmetryTools {
 			imposer.superimpose(msa);
 		}
 	}
+	
 }
