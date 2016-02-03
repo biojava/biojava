@@ -138,4 +138,38 @@ implements Serializable, Block, Cloneable {
 	protected void updateCoreLength() {
 		coreLength = MultipleAlignmentTools.getCorePositions(this).size();
 	}
+
+	@Override
+	public int getStartIndex(int str) {
+		int index = -1;
+		Integer start = null;
+		while (start == null && index < alignRes.get(str).size()) {
+			index++;
+			start = alignRes.get(str).get(index);
+		}
+		return index;
+	}
+
+	@Override
+	public int getStartResidue(int str) {
+		return alignRes.get(str).get(getStartIndex(str));
+	}
+
+	@Override
+	public int getFinalIndex(int str) {
+		int index = alignRes.get(str).size();
+		Integer end = null;
+		while (end == null && index >= 0) {
+			index--;
+			end = alignRes.get(str).get(index);
+		}
+		return index;
+	}
+
+	@Override
+	public int getFinalResidue(int str) {
+		return alignRes.get(str).get(getFinalIndex(str));
+	}
+
+	
 }

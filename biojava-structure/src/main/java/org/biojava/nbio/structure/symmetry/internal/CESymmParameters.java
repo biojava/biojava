@@ -48,15 +48,16 @@ public class CESymmParameters extends CeParameters {
 	private int minCoreLength;
 	private double distanceCutoff;
 	private boolean gaps;
+	private int optimizationSteps;
 
 	public static enum OrderDetectorMethod {
-		SEQUENCE_FUNCTION, USER_INPUT;
+		SEQUENCE_FUNCTION, GRAPH_COMPONENT, ANGLE, USER_INPUT;
 		public static final OrderDetectorMethod DEFAULT = SEQUENCE_FUNCTION;
 	}
 
 	public static enum RefineMethod {
-		NOT_REFINED, SINGLE, MULTIPLE;
-		public static final RefineMethod DEFAULT = SINGLE;
+		NOT_REFINED, SEQUENCE_FUNCTION, GRAPH_COMPONENT;
+		public static final RefineMethod DEFAULT = SEQUENCE_FUNCTION;
 	}
 
 	public static final double DEFAULT_SYMMETRY_THRESHOLD = 0.4;
@@ -75,7 +76,7 @@ public class CESymmParameters extends CeParameters {
 	 * symmetry generates alignments without a CP (only one block in AFPChain).
 	 */
 	public enum SymmetryType {
-		CLOSE, OPEN, AUTO;
+		CLOSED, OPEN, AUTO;
 		public static final SymmetryType DEFAULT = AUTO;
 	}
 
@@ -101,6 +102,7 @@ public class CESymmParameters extends CeParameters {
 		p.minCoreLength = minCoreLength;
 		p.distanceCutoff = distanceCutoff;
 		p.gaps = gaps;
+		p.optimizationSteps = optimizationSteps;
 
 		p.winSize = winSize;
 		p.rmsdThr = rmsdThr;
@@ -135,6 +137,7 @@ public class CESymmParameters extends CeParameters {
 		minCoreLength = 15;
 		distanceCutoff = 7.0;
 		gaps = true;
+		optimizationSteps = 0;
 	}
 
 	@Override
@@ -220,6 +223,10 @@ public class CESymmParameters extends CeParameters {
 
 		// gaps
 		params.add("MStA Gaps: allow gaps in the multiple alignment if true.");
+		
+		// optimization steps
+		params.add("Optimization Steps: maximum number of optimization steps:"
+				+ " 0 means calculated automatically with the alignment length.");
 
 		return params;
 	}
@@ -240,6 +247,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("MinCoreLength");
 		params.add("DistanceCutoff");
 		params.add("Gaps");
+		params.add("OptimizationSteps");
 		return params;
 	}
 
@@ -259,6 +267,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("Minimum Core Length");
 		params.add("Distance Cutoff");
 		params.add("MStA Gaps");
+		params.add("Optimization Steps");
 		return params;
 	}
 
@@ -279,6 +288,7 @@ public class CESymmParameters extends CeParameters {
 		params.add(Integer.class);
 		params.add(Double.class);
 		params.add(Boolean.class);
+		params.add(Integer.class);
 		return params;
 	}
 
@@ -393,6 +403,14 @@ public class CESymmParameters extends CeParameters {
 
 	public void setGaps(Boolean gaps) {
 		this.gaps = gaps;
+	}
+
+	public int getOptimizationSteps() {
+		return optimizationSteps;
+	}
+
+	public void setOptimizationSteps(Integer optimizationSteps) {
+		this.optimizationSteps = optimizationSteps;
 	}
 
 }

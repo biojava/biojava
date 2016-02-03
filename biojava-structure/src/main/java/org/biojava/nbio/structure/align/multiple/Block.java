@@ -23,15 +23,15 @@ package org.biojava.nbio.structure.align.multiple;
 import java.util.List;
 
 /**
- * A Block is a Data Structure that stores aligned positions of a 
- * {@link MultipleAlignment} with the condition that residues are in a 
+ * A Block is a Data Structure that stores aligned positions of a
+ * {@link MultipleAlignment} with the condition that residues are in a
  * sequential order.
  * <p>
- * A collection of Blocks, named {@link BlockSet}, allows the description of 
+ * A collection of Blocks, named {@link BlockSet}, allows the description of
  * circular permutations (CP) and non-topological alignments.
  * <p>
- * Every Block object is part of a {@link BlockSet} instance, its parent, 
- * which has in turn a {@link MultipleAlignment} instance as parent.
+ * Every Block object is part of a {@link BlockSet} instance, its parent, which
+ * has in turn a {@link MultipleAlignment} instance as parent.
  * 
  * @author Aleix Lafita
  * @author Spencer Bliven
@@ -47,17 +47,18 @@ public interface Block extends ScoresCache {
 	 */
 	public Block clone();
 
-	/** 
+	/**
 	 * Set the back-reference to its parent BlockSet.
 	 * 
-	 * @param parent the parent BlockSet.
+	 * @param parent
+	 *            the parent BlockSet.
 	 * @see #getBlockSet()
 	 */
 	public void setBlockSet(BlockSet parent);
 
-	/** 
-	 * Returns the parent BlockSet of the Block.
-	 * Returns null if there is no referenced object. 
+	/**
+	 * Returns the parent BlockSet of the Block. Returns null if there is no
+	 * referenced object.
 	 * 
 	 * @return BlockSet the parent BlockSet of the Block, or null.
 	 * @see #setBlockSet(BlockSet)
@@ -65,8 +66,9 @@ public interface Block extends ScoresCache {
 	public BlockSet getBlockSet();
 
 	/**
-	 * Returns the double List containing the aligned residues for each 
-	 * structure.<p>
+	 * Returns the double List containing the aligned residues for each
+	 * structure.
+	 * <p>
 	 * alignRes.get(structure).get(residue) = alignRes.get(size).get(length).
 	 * 
 	 * @return List a double List of aligned residues for each structure.
@@ -77,7 +79,8 @@ public interface Block extends ScoresCache {
 	/**
 	 * Set the double List containing the aligned residues for each structure.
 	 * 
-	 * @param alignRes a double List of Integers with the aligned residues.
+	 * @param alignRes
+	 *            a double List of Integers with the aligned residues.
 	 * @see #getAlignRes()
 	 */
 	public void setAlignRes(List<List<Integer>> alignRes);
@@ -101,7 +104,7 @@ public interface Block extends ScoresCache {
 	public int size();
 
 	/**
-	 * Returns the number of aligned positions (columns) without gaps in the 
+	 * Returns the number of aligned positions (columns) without gaps in the
 	 * Block.
 	 * 
 	 * @return int number of aligned residues.
@@ -112,9 +115,56 @@ public interface Block extends ScoresCache {
 	public int getCoreLength();
 
 	/**
-	 * Clear scores and other properties which depend on the specific 
-	 * alignment. This frees memory and ensures consistency of the cached 
-	 * variables.
+	 * Calculates and returns the first position of the specified structure in
+	 * the alignment that is not null. This will return the aligment index, not
+	 * the reisude aligned in that position.
+	 * 
+	 * @param str
+	 *            structure index
+	 * 
+	 * @return the first non null aligned position of the structure
+	 */
+	public int getStartIndex(int str);
+
+	/**
+	 * Calculates and returns the first residue of the specified structure in
+	 * the alignment that is not null. This will return the aligned residue, not
+	 * the alignment index.
+	 * 
+	 * @param str
+	 *            structure index
+	 * 
+	 * @return the first non null aligned residue of the structure
+	 */
+	public int getStartResidue(int str);
+
+	/**
+	 * Calculates and returns the last position of the specified structure in
+	 * the alignment that is not null. This will return the aligment index, not
+	 * the reisude aligned in that position.
+	 * 
+	 * @param str
+	 *            structure index
+	 * 
+	 * @return the last non null aligned position of the structure
+	 */
+	public int getFinalIndex(int str);
+
+	/**
+	 * Calculates and returns the last residue of the specified structure in the
+	 * alignment that is not null. This will return the aligned residue, not the
+	 * alignment index.
+	 * 
+	 * @param str
+	 *            structure index
+	 * 
+	 * @return the last non null aligned residue of the structure
+	 */
+	public int getFinalResidue(int str);
+
+	/**
+	 * Clear scores and other properties which depend on the specific alignment.
+	 * This frees memory and ensures consistency of the cached variables.
 	 */
 	public void clear();
 

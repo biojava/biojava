@@ -1,11 +1,9 @@
 package org.biojava.nbio.phylo;
 
+import java.io.IOException;
 import java.util.List;
-
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.forester.evoinference.distance.PairwiseDistanceCalculator;
@@ -17,10 +15,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The DistanceMatrixCalculator methods generate a {@link DistanceMatrix} from a
- * {@link MultipleSequenceAlignment}.
- * <p>
- * The implementations differ in the information required to calculate the
- * distances. Thus, the difference resides in their constructor.
+ * {@link MultipleSequenceAlignment} or other indirect distance infomation (RMSD).
  * 
  * @author Aleix Lafita
  * @since 4.1.1
@@ -32,8 +27,7 @@ public class DistanceMatrixCalculator {
 			.getLogger(DistanceMatrixCalculator.class);
 
 	/** Prevent instantiation */
-	private DistanceMatrixCalculator() {
-	}
+	private DistanceMatrixCalculator() {}
 
 	/**
 	 * The fractional dissimilarity (D) is defined as the percentage of sites
@@ -51,17 +45,12 @@ public class DistanceMatrixCalculator {
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return DistanceMatrix
+	 * @throws Exception 
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix fractionalDissimilarity(
-			MultipleSequenceAlignment<C, D> msa) {
+			MultipleSequenceAlignment<C, D> msa) throws IOException {
 
-		Msa fMsa = null;
-		try {
-			fMsa = ForesterWrapper.convert(msa);
-		} catch (Exception e) {
-			logger.warn("Could not convert BioJava MSA to forester MSA", e);
-		}
-
+		Msa fMsa = ForesterWrapper.convert(msa);
 		DistanceMatrix DM = PairwiseDistanceCalculator
 				.calcFractionalDissimilarities(fMsa);
 
@@ -83,17 +72,12 @@ public class DistanceMatrixCalculator {
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return DistanceMatrix
+	 * @throws IOException 
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix poissonDistance(
-			MultipleSequenceAlignment<C, D> msa) {
+			MultipleSequenceAlignment<C, D> msa) throws IOException {
 
-		Msa fMsa = null;
-		try {
-			fMsa = ForesterWrapper.convert(msa);
-		} catch (Exception e) {
-			logger.warn("Could not convert BioJava MSA to forester MSA", e);
-		}
-
+		Msa fMsa = ForesterWrapper.convert(msa);
 		DistanceMatrix DM = PairwiseDistanceCalculator
 				.calcPoissonDistances(fMsa);
 
@@ -120,17 +104,12 @@ public class DistanceMatrixCalculator {
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return DistanceMatrix
+	 * @throws IOException 
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix kimuraDistance(
-			MultipleSequenceAlignment<C, D> msa) {
+			MultipleSequenceAlignment<C, D> msa) throws IOException {
 
-		Msa fMsa = null;
-		try {
-			fMsa = ForesterWrapper.convert(msa);
-		} catch (Exception e) {
-			logger.warn("Could not convert BioJava MSA to forester MSA", e);
-		}
-
+		Msa fMsa = ForesterWrapper.convert(msa);
 		DistanceMatrix DM = PairwiseDistanceCalculator
 				.calcPoissonDistances(fMsa);
 
@@ -260,6 +239,7 @@ public class DistanceMatrixCalculator {
 				}
 			}
 		}
+		
 		return DM;
 	}
 
@@ -327,12 +307,13 @@ public class DistanceMatrixCalculator {
 							.get(j).getCompoundAt(k + 1));
 				}
 
-				if (i != j)
+				if (i != j){
+					score = Math.max(score, 0.0);
 					DM.setValue(i, j, score);
-
-				if (score > maxscore) {
-					maxscore = score;
 				}
+
+				if (score > maxscore)
+					maxscore = score;
 			}
 		}
 
@@ -344,7 +325,7 @@ public class DistanceMatrixCalculator {
 				if (i == j)
 					DM.setValue(i, j, 0.0);
 				else {
-					double dS = maxscore - DM.getValue(i, j);
+					double dS = Math.max(maxscore - DM.getValue(i, j), 0);
 					DM.setValue(i, j, dS);
 					DM.setValue(j, i, dS);
 				}
@@ -388,8 +369,7 @@ public class DistanceMatrixCalculator {
 			MultipleSequenceAlignment<C, D> msa) {
 
 		// Need to import PAM1 matrix to biojava TODO
-		SubstitutionMatrix<AminoAcidCompound> PAM1 = SubstitutionMatrixHelper
-				.getPAM250();
+		//SubstitutionMatrix<AminoAcidCompound> PAM1 = SubstitutionMatrixHelper.getPAM250();
 
 		return null;
 	}
@@ -437,6 +417,7 @@ public class DistanceMatrixCalculator {
 							* Math.log((rmsdMax * rmsdMax - rmsd0 * rmsd0)
 									/ (rmsdMax * rmsdMax - rmsdMat[i][j]
 											* rmsdMat[i][j]));
+					d = Math.max(d, 0.0);
 					DM.setValue(i, j, d);
 					DM.setValue(j, i, d);
 				}

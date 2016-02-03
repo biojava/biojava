@@ -20,26 +20,39 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.vecmath.Matrix4d;
 
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.phylo.DistanceMatrixCalculator;
+import org.biojava.nbio.phylo.TreeConstructor;
+import org.biojava.nbio.phylo.TreeConstructorType;
+import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
+import org.forester.phylogeny.Phylogeny;
 
 /**
  * Utility functions for working with {@link MultipleAlignment}.
@@ -671,7 +684,8 @@ public class MultipleAlignmentTools {
 					for (int j = 0; j < blk.length(); j++) {
 						Integer alignedPos = blk.getAlignRes().get(i).get(j);
 						if (alignedPos != null) {
-							blocksetAtoms[blockPos] = (Atom) curr[alignedPos].clone();
+							blocksetAtoms[blockPos] = (Atom) curr[alignedPos]
+									.clone();
 						}
 						blockPos++;
 					}
@@ -762,25 +776,149 @@ public class MultipleAlignmentTools {
 
 	/**
 	 * Convert a MultipleAlignment into a MultipleSequenceAlignment of AminoAcid
-	 * residues. This method is only valid for protein alignments.
+	 * residues. This method is only valid for protein structure alignments.
 	 * 
-	 * @param msta Multiple Structure Alignment
-	 * @return MultipleSequenceAlignment
+	 * @param msta
+	 *            Multiple Structure Alignment
+	 * @return MultipleSequenceAlignment of protein sequences
+	 * @throws CompoundNotFoundException
 	 */
-	@SuppressWarnings("unused")
 	public static MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> toProteinMSA(
-			MultipleAlignment msta) {
-		
-		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
-		
-		// Extract the sequences and add them to the MSA
-		List<String> sequences = getSequenceAlignment(msta);
-		for (String seq : sequences) {
-			// TODO convert String to ProteinSequence and add it to the MSA
-			// Additionally set the identifier
+			MultipleAlignment msta) throws CompoundNotFoundException {
+
+		// Check that the alignment is of protein structures
+		Group g = msta.getAtomArrays().get(0)[0].getGroup();
+		if (!(g instanceof AminoAcid)) {
+			throw new IllegalArgumentException(
+					"Cannot convert to multiple sequence alignment: "
+							+ "the structures aligned are not proteins");
 		}
-		throw new NullPointerException("Method not implemented yet!");
-		
-		//return msa;
+
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+
+		Map<String, Integer> uniqueID = new HashMap<String, Integer>();
+		List<String> seqs = getSequenceAlignment(msta);
+		for (int i = 0; i < msta.size(); i++) {
+			// Make sure the identifiers are unique (required by AccessionID)
+			String id = msta.getStructureIdentifier(i).toString();
+			if (uniqueID.containsKey(id)) {
+				uniqueID.put(id, uniqueID.get(id) + 1);
+				id += "_" + uniqueID.get(id);
+			} else
+				uniqueID.put(id, 1);
+
+			AccessionID acc = new AccessionID(id);
+			ProteinSequence pseq = new ProteinSequence(seqs.get(i));
+			pseq.setAccession(acc);
+			msa.addAlignedSequence(pseq);
+		}
+		return msa;
 	}
+
+	/**
+	 * Calculate the RMSD matrix of a MultipleAlignment, that is, entry (i,j) of
+	 * the matrix contains the RMSD between structures i and j.
+	 * 
+	 * @param msa
+	 *            Multiple Structure Alignment
+	 * @return Matrix of RMSD with size the number of structures squared
+	 */
+	public static Matrix getRMSDMatrix(MultipleAlignment msa) {
+
+		Matrix rmsdMat = new Matrix(msa.size(), msa.size());
+		List<Atom[]> superposed = transformAtoms(msa);
+
+		for (int i = 0; i < msa.size(); i++) {
+			for (int j = i; j < msa.size(); j++) {
+				if (i == j)
+					rmsdMat.set(i, j, 0.0);
+				List<Atom[]> compared = new ArrayList<Atom[]>();
+				compared.add(superposed.get(i));
+				compared.add(superposed.get(j));
+				double rmsd = MultipleAlignmentScorer.getRMSD(compared);
+				rmsdMat.set(i, j, rmsd);
+				rmsdMat.set(j, i, rmsd);
+			}
+		}
+		return rmsdMat;
+	}
+
+	/**
+	 * Calculate a phylogenetic tree of the MultipleAlignment using Kimura
+	 * distances and the Neighbor Joining algorithm from forester.
+	 * 
+	 * @param msta
+	 *            MultipleAlignment of protein structures
+	 * @return Phylogeny phylogenetic tree
+	 * @throws CompoundNotFoundException
+	 * @throws IOException
+	 */
+	public static Phylogeny getKimuraTree(MultipleAlignment msta)
+			throws CompoundNotFoundException, IOException {
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = MultipleAlignmentTools
+				.toProteinMSA(msta);
+		BasicSymmetricalDistanceMatrix distmat = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
+				.kimuraDistance(msa);
+		Phylogeny tree = TreeConstructor.distanceTree(distmat,
+				TreeConstructorType.NJ);
+		tree.setName("Kimura Tree");
+		return tree;
+	}
+
+	/**
+	 * Calculate a phylogenetic tree of the MultipleAlignment using
+	 * dissimilarity scores (DS), based in BLOSUM40 Substitution Matrix (ideal
+	 * for distantly related proteins, often the case in structural alignments)
+	 * and the Neighbor Joining algorithm from forester.
+	 * 
+	 * @param msta
+	 *            MultipleAlignment of protein structures
+	 * @return Phylogeny phylogenetic tree
+	 * @throws CompoundNotFoundException
+	 * @throws IOException
+	 */
+	public static Phylogeny getBLOSUM40Tree(MultipleAlignment msta)
+			throws CompoundNotFoundException, IOException {
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = MultipleAlignmentTools
+				.toProteinMSA(msta);
+		BasicSymmetricalDistanceMatrix distmat = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
+				.dissimilarityScore(msa, SubstitutionMatrixHelper.getBlosum40());
+		Phylogeny tree = TreeConstructor.distanceTree(distmat,
+				TreeConstructorType.NJ);
+		tree.setName("BLOSUM40 Tree");
+		return tree;
+	}
+
+	/**
+	 * Calculate a phylogenetic tree of the MultipleAlignment using RMSD
+	 * distances and the Neighbor Joining algorithm from forester.
+	 * 
+	 * @param msta
+	 *            MultipleAlignment of protein structures
+	 * @return Phylogeny phylogenetic tree
+	 * @throws CompoundNotFoundException
+	 */
+	public static Phylogeny getStructuralTree(MultipleAlignment msta) {
+		double[][] rmsdMat = MultipleAlignmentTools.getRMSDMatrix(msta)
+				.getArray();
+		BasicSymmetricalDistanceMatrix rmsdDist = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
+				.structuralDistance(rmsdMat, 1, 5, 0.4);
+		// Set the identifiers of the matrix
+		Map<String, Integer> alreadySeen = new HashMap<String, Integer>();
+		for (int i = 0; i < msta.size(); i++) {
+			// Make sure the identifiers are unique
+			String id = msta.getStructureIdentifier(i).toString();
+			if (alreadySeen.containsKey(id)) {
+				alreadySeen.put(id, alreadySeen.get(id) + 1);
+				id += "_" + alreadySeen.get(id);
+			} else
+				alreadySeen.put(id, 1);
+			rmsdDist.setIdentifier(i, id);
+		}
+		Phylogeny tree = TreeConstructor.distanceTree(rmsdDist,
+				TreeConstructorType.NJ);
+		tree.setName("Structural Tree");
+		return tree;
+	}
+
 }

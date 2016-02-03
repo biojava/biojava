@@ -32,7 +32,9 @@ import java.util.TreeSet;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
  * Creates a refined alignment with the CE-Symm alternative self-alignment.
@@ -44,16 +46,17 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
  * @since 4.2.0
  * 
  */
-public class SingleRefiner implements Refiner {
+public class SequenceFunctionRefiner implements SymmetryRefiner {
 	
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms, 
+	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, 
 			int order) throws RefinerFailedException, StructureException {
 		
 		if (order < 2)	throw new RefinerFailedException(
 				"Symmetry not found in the structure: order < 2.");
 		
-		return refineSymmetry(afpAlignments.get(0), atoms, atoms, order);
+		AFPChain afp = refineSymmetry(selfAlignment, atoms, atoms, order);
+		return SymmetryTools.fromAFP(afp, atoms);
 	}
 	
 	/**
@@ -61,6 +64,7 @@ public class SingleRefiner implements Refiner {
 	 *
 	 * The resulting alignment will have a one-to-one correspondance between
 	 * aligned residues of each symmetric part.
+	 * 
 	 * @param afpChain Input alignment from CE-Symm
 	 * @param k Symmetry order. This can be guessed by {@link CeSymm#getSymmetryOrder(AFPChain)}
 	 * @return The refined alignment
@@ -69,18 +73,26 @@ public class SingleRefiner implements Refiner {
 	 */
 	public static AFPChain refineSymmetry(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int k)
 			throws StructureException, RefinerFailedException {
-		// The current alignment
+		
+		// Transform alignment to a Map
 		Map<Integer, Integer> alignment = AlignmentTools.alignmentAsMap(afpChain);
 
-		// Do the alignment
+		// Refine the alignment Map
 		Map<Integer, Integer> refined = refineSymmetry(alignment, k);
+		if (refined.size() < 1)
+			throw new RefinerFailedException("Refiner returned empty alignment");
 		
 		//Substitute and partition the alignment
-		AFPChain refinedAFP = AlignmentTools.replaceOptAln(afpChain, ca1, ca2, refined);
-		refinedAFP = partitionAFPchain(refinedAFP, ca1, ca2, k);
-		if (refinedAFP.getOptLength() < 1) 
-			throw new RefinerFailedException("Refiner returned empty alignment");
-		return refinedAFP;
+		try {
+			AFPChain refinedAFP = AlignmentTools.replaceOptAln(afpChain, ca1, ca2, refined);
+			refinedAFP = partitionAFPchain(refinedAFP, ca1, ca2, k);
+			if (refinedAFP.getOptLength() < 1)
+				throw new IndexOutOfBoundsException("Refined alignment is empty.");
+			return refinedAFP;
+		} catch (IndexOutOfBoundsException e){
+			// This Exception is thrown when the refined alignment is not consistent
+			throw new RefinerFailedException("Refiner failure", e);
+		}
 	}
 
 	/**

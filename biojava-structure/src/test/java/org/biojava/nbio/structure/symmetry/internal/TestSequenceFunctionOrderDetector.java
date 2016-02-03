@@ -56,12 +56,12 @@ public class TestSequenceFunctionOrderDetector {
 		AtomCache cache = new AtomCache();
 		
 		for(String name : orderMap.keySet()) {
-			CeSymm ce = new CeSymm();
-			ce.getParameters().setRefineMethod(RefineMethod.NOT_REFINED);
+			CESymmParameters params = new CESymmParameters();
+			params.setRefineMethod(RefineMethod.NOT_REFINED);
 			Atom[] ca1 = cache.getAtoms(name);
 			
-			ce.analyzeLevel(ca1);
-			AFPChain afpChain = ce.getSelfAlignments().get(0);
+			CeSymmResult result = CeSymm.analyzeLevel(ca1, params);
+			AFPChain afpChain = result.getSelfAlignment();
 			
 			int order = new SequenceFunctionOrderDetector().calculateOrder(afpChain, ca1);
 			

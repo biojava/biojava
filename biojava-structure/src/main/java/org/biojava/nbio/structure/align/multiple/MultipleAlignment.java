@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.align.multiple;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureIdentifier;
 
 /**
  * A MultipleAlignment is a Data Structure to store the core information of a 
@@ -140,6 +141,17 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #getEnsemble()
 	 */
 	public List<Atom[]> getAtomArrays();
+	
+	/**
+	 * Returns the StructureIdentifier associated with the structure index from
+	 * its parent Ensemble.
+	 * Throws an Exception if the parent ensemble is null or the 
+	 * StructureIdentifiers are not previously set.
+	 * 
+	 * @return StructureIdentifier
+	 * @see #getEnsemble()
+	 */
+	public StructureIdentifier getStructureIdentifier(int index);
 
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignment.
