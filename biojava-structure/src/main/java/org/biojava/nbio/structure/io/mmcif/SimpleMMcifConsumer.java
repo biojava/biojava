@@ -1850,23 +1850,38 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// For SSBond equivalent, parse through the struct_conn records
 		int internalId = 0;
 		for (StructConn conn : structConn) {
+			
+			if (!conn.getConn_type_id().equals("disulf")) continue;
+			
+			
 			String ptnr1_chainId = conn.getPtnr1_auth_asym_id();
-			String ptnr1_seqId = conn.getPtnr1_auth_seq_id();
+			
+			String insCode1 = "";
+			if (!conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
+			String insCode2 = "";
+			if (!conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
+			
+			String ptnr1_seqId = conn.getPtnr1_auth_seq_id() + insCode1 ;
 			String ptnr2_chainId = conn.getPtnr2_auth_asym_id();
-			String ptnr2_seqId = conn.getPtnr2_auth_seq_id();
+			String ptnr2_seqId = conn.getPtnr2_auth_seq_id() + insCode2;
 			// conn.getId() would equal disulf#.
 			
 			// if we can find both of these residues - 
 			Group s1 = lookupResidue(ptnr1_chainId, ptnr1_seqId);
 			Group s2 = lookupResidue(ptnr2_chainId, ptnr2_seqId);
-
-			// TODO: when issue 220 is implemented, add robust symmetry handling 
-			// to allow disulfide bonds between symmetry-related molecules.
 			
 			// and is SS - then we should create a new disulfide bond.
 			if (null != s1 && null != s2) {
-				if ("CYS".equals(s1.getPDBName()) && symop.equals(conn.getPtnr1_symmetry())
-						&& "CYS".equals(s2.getPDBName()) && symop.equals(conn.getPtnr2_symmetry())) {
+				if ("CYS".equals(s1.getPDBName()) && "CYS".equals(s2.getPDBName()) ) {
+
+					// TODO: when issue 220 is implemented, add robust symmetry handling 
+					// to allow disulfide bonds between symmetry-related molecules.
+					if (!conn.getPtnr1_symmetry().equals(symop) || !conn.getPtnr2_symmetry().equals(symop) ) {
+						logger.info("Skipping ss bond between groups {} and {} belonging to different symmetry partners, because it is not supported yet", s1.getResidueNumber(), s2.getResidueNumber());
+						continue;
+					}
+
+					
 					SSBondImpl bond = new SSBondImpl();
 					
 					bond.setSerNum(internalId++); // An internal label what bond # 
@@ -1882,7 +1897,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 						conn.setPdbx_ptnr2_PDB_ins_code(null);
 					}
 					bond.setInsCode2(conn.getPdbx_ptnr2_PDB_ins_code());
-					bonds.add(bond);
+					
+					if (bonds.contains(bond)) {
+						if (s1.getAltLocs().isEmpty() && s1.getAltLocs().isEmpty()) {
+							// no alt locs in either group: there's something weird with the file having to ss bonds for same pair
+							logger.warn("SS bond between residues {} and {} is repeated in file and neither group has alt locations, won't add it to list of SS bonds. ", s1.getResidueNumber(), s2.getResidueNumber());
+						} else {
+							// there is alt locs in either group. This is normal: an ssbond per alt loc is in file, e.g. 3dvf
+							logger.info("SS bond between residues {} and {} is repeated in file and one of the 2 groups has alt locations. Adding only 1 SS bond for it. ", s1.getResidueNumber(), s2.getResidueNumber());
+						}
+					} else {					
+						bonds.add(bond);
+					}
 				}
 			}
 		}
@@ -1896,18 +1922,25 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param seqId
 	 * @return Successful = Group, Failure = null
 	 */
-	Group lookupResidue(String chainId, String seqId) {
+	private Group lookupResidue(String chainId, String seqId) {
 		try {
             Chain chain = structure.getChainByPDB(chainId);
             if (null != chain) {
-                try {
-                	return chain.getGroupByPDB(new ResidueNumber(chainId, Integer.parseInt(seqId), ' '));
-                } catch (NumberFormatException e) {
-                	logger.warn("Could not lookup residue : " + chainId + seqId);
-                }   
+            	try {
+            		ResidueNumber resNum = null;
+            		if (Character.isAlphabetic( seqId.charAt(seqId.length()-1 )) ) {
+            			resNum = new ResidueNumber(chainId, Integer.parseInt(seqId.substring(0,seqId.length()-1)), seqId.charAt(seqId.length()-1));
+            		} else {
+            			resNum = new ResidueNumber(chainId, Integer.parseInt(seqId), ' ');
+            		}
+
+            		return chain.getGroupByPDB(resNum);
+            	} catch (NumberFormatException e) {
+            		logger.warn("Could not parse number for residue number {} specified in _struct_conn record", chainId + "-" + seqId);
+            	}
             }
 		} catch (StructureException e) {
-			logger.warn("Problem finding residue in site entry " + chainId + seqId + " - " + e.getMessage(), e.getMessage());
+			logger.warn("Problem finding residue " + chainId + "-" + seqId + " specified in _struct_conn record." );
 		}
 		// Could not find.
 		return null;

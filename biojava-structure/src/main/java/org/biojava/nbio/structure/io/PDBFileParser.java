@@ -139,6 +139,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andreas Prlic
  * @author Jules Jacobsen
+ * @author Jose Duarte
  * @since 1.4
  */
 public class PDBFileParser  {
@@ -2252,7 +2253,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	//}
 
-	/* process the disulfid bond info provided by an SSBOND record
+	/**
+	 * Process the disulfide bond info provided by an SSBOND record
 	 *
 	 *
 	COLUMNS        DATA TYPE       FIELD         DEFINITION
@@ -2285,7 +2287,19 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String chain2      = line.substring(29,30);
 		String seqNum2     = line.substring(31,35).trim();
 		String icode2      = line.substring(35,36);
+		
+		if (line.length()>=72) {
+			String symop1 = line.substring(59, 65).trim();
+			String symop2 = line.substring(66, 72).trim();
 
+			// until we implement proper treatment of symmetry in biojava #220, we can't deal with sym-related parteners properly, skipping them
+			if (!symop1.equals("") && !symop2.equals("") && // in case the field is missing
+					(!symop1.equals("1555") || !symop2.equals("1555")) ) {
+				logger.info("Skipping ss bond between groups {} and {} belonging to different symmetry partners, because it is not supported yet", seqNum1+icode1, seqNum2+icode2);
+				return;
+			}
+		}
+		
 		if (icode1.equals(" "))
 			icode1 = "";
 		if (icode2.equals(" "))

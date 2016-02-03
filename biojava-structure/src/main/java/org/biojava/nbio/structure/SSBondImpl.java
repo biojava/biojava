@@ -25,7 +25,8 @@ package org.biojava.nbio.structure;
 
 import java.io.Serializable;
 
-/** A simple bean to store disulfide bridge information, the SSBOND records in the PDB files.
+/** 
+ * A simple bean to store disulfide bridge information, the SSBOND records in the PDB files.
  *
  * The two residues specified here are CYS residues that form a Disulfide bridge.
  *
@@ -38,13 +39,14 @@ public class SSBondImpl implements PDBRecord, Serializable, Cloneable, SSBond {
 
 	private static final long serialVersionUID = -8663681100691188647L;
 
-	int serNum;
-	String chainID1;
-	String chainID2;
-	String resnum1;
-	String resnum2;
-	String insCode1;
-	String insCode2;
+	private int serNum;
+	
+	private String chainID1;
+	private String chainID2;
+	private String resnum1;
+	private String resnum2;
+	private String insCode1;
+	private String insCode2;
 
 	public SSBondImpl(){
 		serNum = 0;
@@ -59,7 +61,8 @@ public class SSBondImpl implements PDBRecord, Serializable, Cloneable, SSBond {
 		return buf.toString();
 	}
 
-	/** append the PDB representation of this SSBOND to the provided StringBUffer
+	/** 
+	 * Append the PDB representation of this SSBOND to the provided StringBuffer
 	 *
 	 * @param buf a StringBuffer to print the PDB representation to
 	 */
@@ -110,10 +113,7 @@ public class SSBondImpl implements PDBRecord, Serializable, Cloneable, SSBond {
 		this.insCode2 = insCode2;
 	}
 
-	/** set serial number of this SSBOND in PDB file
-	 *
-	 * @return the serial number
-	 */
+	
         @Override
 	public int getSerNum() {
 		return serNum;
@@ -155,12 +155,7 @@ public class SSBondImpl implements PDBRecord, Serializable, Cloneable, SSBond {
 		this.chainID2 = chainID2;
 	}
 
-	/** get residue number for first CYS.
-	 *  number and insertion code are joint together.
-	 *
-	 * @return the residue number of the first CYS.
-	 *
-	 */
+	
         @Override
 	public String getResnum1() {
 		return resnum1;
@@ -170,12 +165,7 @@ public class SSBondImpl implements PDBRecord, Serializable, Cloneable, SSBond {
 		this.resnum1 = resnum1;
 	}
 
-	/** get residue number for second CYS.
-	 *  number and insertion code are joint together.
-	 *
-	 * @return the residue number of the second CYS.
-	 *
-	 */
+	
         @Override
 	public String getResnum2() {
 		return resnum2;
@@ -202,5 +192,66 @@ public class SSBondImpl implements PDBRecord, Serializable, Cloneable, SSBond {
 		s += "]";
 
 		return s;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((chainID1 == null) ? 0 : chainID1.hashCode());
+		result = prime * result + ((chainID2 == null) ? 0 : chainID2.hashCode());
+		result = prime * result + ((insCode1 == null) ? 0 : insCode1.hashCode());
+		result = prime * result + ((insCode2 == null) ? 0 : insCode2.hashCode());
+		result = prime * result + ((resnum1 == null) ? 0 : resnum1.hashCode());
+		result = prime * result + ((resnum2 == null) ? 0 : resnum2.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SSBondImpl other = (SSBondImpl) obj;
+		if (chainID1 == null) {
+			if (other.chainID1 != null)
+				return false;
+		} else if (!chainID1.equals(other.chainID1))
+			return false;
+		if (chainID2 == null) {
+			if (other.chainID2 != null)
+				return false;
+		} else if (!chainID2.equals(other.chainID2))
+			return false;
+		if (insCode1 == null) {
+			if (other.insCode1 != null)
+				return false;
+		} else if (!insCode1.equals(other.insCode1))
+			return false;
+		if (insCode2 == null) {
+			if (other.insCode2 != null)
+				return false;
+		} else if (!insCode2.equals(other.insCode2))
+			return false;
+		if (resnum1 == null) {
+			if (other.resnum1 != null)
+				return false;
+		} else if (!resnum1.equals(other.resnum1))
+			return false;
+		if (resnum2 == null) {
+			if (other.resnum2 != null)
+				return false;
+		} else if (!resnum2.equals(other.resnum2))
+			return false;
+		return true;
 	}
 }

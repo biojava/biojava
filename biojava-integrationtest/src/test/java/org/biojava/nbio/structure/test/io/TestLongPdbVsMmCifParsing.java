@@ -124,7 +124,7 @@ public class TestLongPdbVsMmCifParsing {
 	
 	@Test
 	public void testSingle() throws IOException, StructureException {
-		testAll(Arrays.asList("4a10"));
+		testAll(Arrays.asList("2h5d"));
 	}
 	
 	@After
@@ -220,6 +220,12 @@ public class TestLongPdbVsMmCifParsing {
 		if (canCompareCompoundsSize)
 			assertEquals("failed number of Compounds pdb vs cif", sPdb.getCompounds().size(), sCif.getCompounds().size());
 		
+		
+		// ss bonds		
+		// 4ab9 contains an error in ssbond in pdb file (misses 1 ssbond)
+		// 2bdi contains also errors, the counts in both differ a lot 80 vs 92
+		if (!sPdb.getPDBCode().equals("4AB9") && !sPdb.getPDBCode().equals("2BDI")) 
+			assertEquals("number of ss bonds should coincide pdb vs cif", sPdb.getSSBonds().size(), sCif.getSSBonds().size());
 		
 	}
 	
