@@ -26,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -153,6 +152,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	private Map<String,String> asymId2StrandIdFromAtomSites;
 	
+	/**
+	 * A map of asym ids (internal chain ids) to entity ids extracted from 
+	 * the _struct_asym category
+	 */
 	private Map<String,String> asymId2entityId;
 
 	private String current_nmr_model ;
@@ -559,7 +562,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		try {
 			element = Element.valueOfIgnoreCase(atom.getType_symbol());
 		}  catch (IllegalArgumentException e) {
-			logger.warn("Element {} was not recognised as a BioJava-known element, the element will be represented as the generic element {}", atom.getType_symbol(), Element.R.name());
+			logger.info("Element {} was not recognised as a BioJava-known element, the element will be represented as the generic element {}", atom.getType_symbol(), Element.R.name());
 		}
 		a.setElement(element);
 
@@ -730,13 +733,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				addCharges();
 			}
 		}
-
-		boolean noAsymStrandIdMappingPresent = false;
+		
 		if (asymStrandId.isEmpty()) {
 			logger.warn("No pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme categories present. Will use chain id mapping from _atom_sites category");
 			
 			asymStrandId = asymId2StrandIdFromAtomSites;
-			noAsymStrandIdMappingPresent = true;
 		}
 		
 		// mismatching Author assigned chain IDS and PDB internal chain ids:
@@ -784,67 +785,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			structure.setModel(i,pdbChains);
-			
-			Iterator<Chain> it = pdbChains.iterator();
-			// finally setting chains to compounds and compounds to chains now that we have the final chains
-			while (it.hasNext()) {
-				Chain chain = it.next();
-				String entityId = asymId2entityId.get(chain.getInternalChainID());
-				if (entityId==null) {
-					// this can happen for instance if the cif file didn't have _struct_asym category at all
-					// and thus we have no asymId2entityId mapping at all
-					logger.warn("No entity id could be found for chain {}", chain.getInternalChainID());					
-					continue;
-				}
-				int eId = Integer.parseInt(entityId);
-				
-				// Compounds are not added for non-polymeric entities, if a chain is non-polymeric its compound won't be found. 
-				// TODO: add all entities and unique compounds and add methods to directly get polymer or non-polymer
-				// asyms (chains).  Either create a unique StructureImpl or modify existing for a better representation of the
-				// mmCIF internal data structures but is compatible with Structure interface.
-				// Some examples of PDB entries with this kind of problem:
-				//   - 2uub: asym_id X, chainId Z, entity_id 24: fully non-polymeric but still with its own chainId
-				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
-				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone 
-
-				Compound compound = structure.getCompoundById(eId);
-				if (compound==null) {
-					// Supports the case where the only chain members were from non-polymeric entity that is missing.
-					// Solved by creating a new Compound(entity) to which this chain will belong.
-					logger.warn("Could not find a compound for entity_id {}, for chain id {}, creating a new compound.",
-					                   eId, chain.getChainID());
-					compound = new Compound();
-					compound.setId((long)eId);
-					compound.addChain(chain);
-					chain.setCompound(compound);
-					structure.addCompound(compound);
-				} else {
-					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
-							chain.getChainID(), chain.getInternalChainID(), eId);
-					compound.addChain(chain);
-					chain.setCompound(compound);
-				}
-
-			}			
-			
-			if (noAsymStrandIdMappingPresent) {
-				// At this point we have to make sure that all chains are polymeric (possibly with some attached non-polymers)
-				// because that's the current biojava model. 
-				// It can happen that all molecules are assigned to their own chains, for instance in mmCIF files 
-				// produced by phenix (in that case there will be noAsymStrandIdMapping present (no pdbx_poly_seq_scheme))
-				// mmCIF files produced by the PDB follow the convention: distinct asym_id for every 
-				// molecule (poly or non-poly) whilst a single author_asym_id for polymer + its ligands
-				it = pdbChains.iterator();
-				while (it.hasNext()) {
-					Chain chain = it.next();
-					if (StructureTools.isChainWaterOnly(chain)) {
-						it.remove();
-						logger.warn("Chain with chain id {} (asym id {}) and {} residues, contains only waters. Will ignore the chain because it doesn't fit into the BioJava structure data model.",
-								chain.getChainID(),chain.getInternalChainID(),chain.getAtomGroups().size());
-					}
-				}
-			}
 		}
+		
+		// compounds (entities)
+		// In addCompounds above we created the compounds if they were present in the file
+		// Now we need to make sure that they are linked to chains and also that if they are not present in the file we need to add them now
+		linkCompounds();
 		
 		if (!params.isHeaderOnly()) {
 			createSSBonds();
@@ -853,18 +799,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			addSites();
 		}
 		
-		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
-		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
-		List<Compound> compounds = structure.getCompounds();
-		// final sanity check: it can happen that from the annotated compounds some are not linked to any chains
-		// e.g. 3s26: a sugar entity does not have any chains associated to it (it seems to be happening with many sugar compounds)
-		// we simply log it, this can sign some other problems if the compounds are used down the line
-		for (Compound compound:compounds) {
-			if (compound.getChains().isEmpty()) {
-				logger.info("Compound {} '{}' has no chains associated to it",
-						compound.getId()==null?"with no entity id":compound.getId(), compound.getMolName());
-			}
-		}
 
 
 		// set the oligomeric state info in the header...
@@ -972,6 +906,72 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		
+	}
+	
+	/**
+	 * Here we link compounds (entities) to chains.
+	 * Also if compounds are not present in file, this initialises the compounds with some heuristics, see {@link CompoundFinder}
+	 */
+	private void linkCompounds() {
+		
+		
+		for (int i =0; i< structure.nrModels() ; i++){
+			for (Chain chain : structure.getModel(i)) {
+				
+				String entityId = asymId2entityId.get(chain.getInternalChainID());
+				if (entityId==null) {
+					// this can happen for instance if the cif file didn't have _struct_asym category at all
+					// and thus we have no asymId2entityId mapping at all
+					logger.warn("No entity id could be found for chain {}", chain.getInternalChainID());					
+					continue;
+				}
+				int eId = Integer.parseInt(entityId);
+
+				// Compounds are not added for non-polymeric entities, if a chain is non-polymeric its compound won't be found. 
+				// TODO: add all entities and unique compounds and add methods to directly get polymer or non-polymer
+				// asyms (chains).  Either create a unique StructureImpl or modify existing for a better representation of the
+				// mmCIF internal data structures but is compatible with Structure interface.
+				// Some examples of PDB entries with this kind of problem:
+				//   - 2uub: asym_id X, chainId Z, entity_id 24: fully non-polymeric but still with its own chainId
+				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
+				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone 
+
+				Compound compound = structure.getCompoundById(eId);
+				if (compound==null) {
+					// Supports the case where the only chain members were from non-polymeric entity that is missing.
+					// Solved by creating a new Compound(entity) to which this chain will belong.
+					logger.warn("Could not find a compound for entity_id {}, for chain id {}, creating a new compound.",
+							eId, chain.getChainID());
+					compound = new Compound();
+					compound.setMolId(eId);
+					compound.addChain(chain);
+					chain.setCompound(compound);
+					structure.addCompound(compound);
+				} else {
+					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
+							chain.getChainID(), chain.getInternalChainID(), eId);
+					compound.addChain(chain);
+					chain.setCompound(compound);
+				}
+
+			}			
+
+		}
+		
+		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
+		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
+		List<Compound> compounds = structure.getCompounds();
+		
+		// final sanity check: it can happen that from the annotated compounds some are not linked to any chains
+		// e.g. 3s26: a sugar entity does not have any chains associated to it (it seems to be happening with many sugar compounds)
+		// we simply log it, this can sign some other problems if the compounds are used down the line
+		for (Compound compound:compounds) {
+			if (compound.getChains().isEmpty()) {
+				logger.info("Compound {} '{}' has no chains associated to it",
+						compound.getId()==null?"with no entity id":compound.getId(), compound.getMolName());
+			}
+		}
+
 	}
 	
 	private void addCharges() {
@@ -1850,23 +1850,38 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// For SSBond equivalent, parse through the struct_conn records
 		int internalId = 0;
 		for (StructConn conn : structConn) {
+			
+			if (!conn.getConn_type_id().equals("disulf")) continue;
+			
+			
 			String ptnr1_chainId = conn.getPtnr1_auth_asym_id();
-			String ptnr1_seqId = conn.getPtnr1_auth_seq_id();
+			
+			String insCode1 = "";
+			if (!conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
+			String insCode2 = "";
+			if (!conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
+			
+			String ptnr1_seqId = conn.getPtnr1_auth_seq_id() + insCode1 ;
 			String ptnr2_chainId = conn.getPtnr2_auth_asym_id();
-			String ptnr2_seqId = conn.getPtnr2_auth_seq_id();
+			String ptnr2_seqId = conn.getPtnr2_auth_seq_id() + insCode2;
 			// conn.getId() would equal disulf#.
 			
 			// if we can find both of these residues - 
 			Group s1 = lookupResidue(ptnr1_chainId, ptnr1_seqId);
 			Group s2 = lookupResidue(ptnr2_chainId, ptnr2_seqId);
-
-			// TODO: when issue 220 is implemented, add robust symmetry handling 
-			// to allow disulfide bonds between symmetry-related molecules.
 			
 			// and is SS - then we should create a new disulfide bond.
 			if (null != s1 && null != s2) {
-				if ("CYS".equals(s1.getPDBName()) && symop.equals(conn.getPtnr1_symmetry())
-						&& "CYS".equals(s2.getPDBName()) && symop.equals(conn.getPtnr2_symmetry())) {
+				if ("CYS".equals(s1.getPDBName()) && "CYS".equals(s2.getPDBName()) ) {
+
+					// TODO: when issue 220 is implemented, add robust symmetry handling 
+					// to allow disulfide bonds between symmetry-related molecules.
+					if (!conn.getPtnr1_symmetry().equals(symop) || !conn.getPtnr2_symmetry().equals(symop) ) {
+						logger.info("Skipping ss bond between groups {} and {} belonging to different symmetry partners, because it is not supported yet", s1.getResidueNumber(), s2.getResidueNumber());
+						continue;
+					}
+
+					
 					SSBondImpl bond = new SSBondImpl();
 					
 					bond.setSerNum(internalId++); // An internal label what bond # 
@@ -1882,7 +1897,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 						conn.setPdbx_ptnr2_PDB_ins_code(null);
 					}
 					bond.setInsCode2(conn.getPdbx_ptnr2_PDB_ins_code());
-					bonds.add(bond);
+					
+					if (bonds.contains(bond)) {
+						if (s1.getAltLocs().isEmpty() && s1.getAltLocs().isEmpty()) {
+							// no alt locs in either group: there's something weird with the file having to ss bonds for same pair
+							logger.warn("SS bond between residues {} and {} is repeated in file and neither group has alt locations, won't add it to list of SS bonds. ", s1.getResidueNumber(), s2.getResidueNumber());
+						} else {
+							// there is alt locs in either group. This is normal: an ssbond per alt loc is in file, e.g. 3dvf
+							logger.info("SS bond between residues {} and {} is repeated in file and one of the 2 groups has alt locations. Adding only 1 SS bond for it. ", s1.getResidueNumber(), s2.getResidueNumber());
+						}
+					} else {					
+						bonds.add(bond);
+					}
 				}
 			}
 		}
@@ -1896,18 +1922,25 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param seqId
 	 * @return Successful = Group, Failure = null
 	 */
-	Group lookupResidue(String chainId, String seqId) {
+	private Group lookupResidue(String chainId, String seqId) {
 		try {
             Chain chain = structure.getChainByPDB(chainId);
             if (null != chain) {
-                try {
-                	return chain.getGroupByPDB(new ResidueNumber(chainId, Integer.parseInt(seqId), ' '));
-                } catch (NumberFormatException e) {
-                	logger.warn("Could not lookup residue : " + chainId + seqId);
-                }   
+            	try {
+            		ResidueNumber resNum = null;
+            		if (Character.isAlphabetic( seqId.charAt(seqId.length()-1 )) ) {
+            			resNum = new ResidueNumber(chainId, Integer.parseInt(seqId.substring(0,seqId.length()-1)), seqId.charAt(seqId.length()-1));
+            		} else {
+            			resNum = new ResidueNumber(chainId, Integer.parseInt(seqId), ' ');
+            		}
+
+            		return chain.getGroupByPDB(resNum);
+            	} catch (NumberFormatException e) {
+            		logger.warn("Could not parse number for residue number {} specified in _struct_conn record", chainId + "-" + seqId);
+            	}
             }
 		} catch (StructureException e) {
-			logger.warn("Problem finding residue in site entry " + chainId + seqId + " - " + e.getMessage(), e.getMessage());
+			logger.warn("Problem finding residue " + chainId + "-" + seqId + " specified in _struct_conn record." );
 		}
 		// Could not find.
 		return null;

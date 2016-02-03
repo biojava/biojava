@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -44,10 +44,10 @@ import static org.junit.Assert.*;
 
 public class StructureTest {
 
-	private Structure structure;
+	private static Structure structure;
 
-	@Before
-	public void setUp() throws IOException {
+	@BeforeClass
+	public static void setUp() throws IOException {
 		InputStream inStream = StructureTest.class.getResourceAsStream("/5pti_old.pdb");
 		assertNotNull(inStream);
 
@@ -113,7 +113,10 @@ public class StructureTest {
 		assertTrue(c2.getAtomGroups(GroupType.NUCLEOTIDE).size() == 0 );
 
 		List<Compound> compounds= structure.getCompounds();
-		assertTrue(compounds.size() == 1);
+		
+		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
+		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
+		assertEquals(2, compounds.size());
 		Compound mol = compounds.get(0);
 		assertTrue(mol.getMolName().startsWith("TRYPSIN INHIBITOR"));
 	}
@@ -183,7 +186,10 @@ public class StructureTest {
 
 
 		List <Compound> compounds = structure.getCompounds();
-		assertEquals("did not find the right number of compounds! ", 1, compounds.size());
+		
+		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
+		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
+		assertEquals("did not find the right number of compounds! ", 2, compounds.size());
 
 		Compound comp = compounds.get(0);
 		assertEquals("did not get the right compounds info",true,comp.getMolName().startsWith("TRYPSIN INHIBITOR"));
