@@ -32,6 +32,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -137,6 +139,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andreas Prlic
  * @author Jules Jacobsen
+ * @author Jose Duarte
  * @since 1.4
  */
 public class PDBFileParser  {
@@ -2107,7 +2110,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 	}
 
-	/*
+	/**
 	 Handler for
 	 MODEL Record Format
 
@@ -2116,7 +2119,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 1 -  6       Record name    "MODEL "
 	 11 - 14       Integer        serial        Model serial number.
 	 */
-
 	private void pdb_MODEL_Handler(String line) {
 		
 		if (params.isHeaderOnly()) return;
@@ -2127,24 +2129,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				current_chain.addGroup(current_group);
 				current_group.trimToSize();
 			}
-			//System.out.println("starting new model "+(structure.nrModels()+1));
 
 			Chain ch = isKnownChain(current_chain.getChainID(),current_model) ;
 			if ( ch == null ) {
 				current_model.add(current_chain);
 			}
-			// removing water-only chains, they don't follow the standard data modeling practices. 
-			// We have to remove them or otherwise they can cause problems down the line, 
-			// e.g. 3o6j has chain Z with a single water molecule
-			Iterator<Chain> it = current_model.iterator();
-			while (it.hasNext()) {
-				Chain c = it.next();
-				if (StructureTools.isChainWaterOnly(c)) {
-					logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
-							c.getChainID(), c.getAtomGroups().size());
-					it.remove();
-				}
-			}
+			
 			structure.addModel(current_model);
 			current_model = new ArrayList<Chain>();
 			current_chain = null;
@@ -2263,7 +2253,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	//}
 
-	/* process the disulfid bond info provided by an SSBOND record
+	/**
+	 * Process the disulfide bond info provided by an SSBOND record
 	 *
 	 *
 	COLUMNS        DATA TYPE       FIELD         DEFINITION
@@ -2296,7 +2287,19 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String chain2      = line.substring(29,30);
 		String seqNum2     = line.substring(31,35).trim();
 		String icode2      = line.substring(35,36);
+		
+		if (line.length()>=72) {
+			String symop1 = line.substring(59, 65).trim();
+			String symop2 = line.substring(66, 72).trim();
 
+			// until we implement proper treatment of symmetry in biojava #220, we can't deal with sym-related parteners properly, skipping them
+			if (!symop1.equals("") && !symop2.equals("") && // in case the field is missing
+					(!symop1.equals("1555") || !symop2.equals("1555")) ) {
+				logger.info("Skipping ss bond between groups {} and {} belonging to different symmetry partners, because it is not supported yet", seqNum1+icode1, seqNum2+icode2);
+				return;
+			}
+		}
+		
 		if (icode1.equals(" "))
 			icode1 = "";
 		if (icode2.equals(" "))
@@ -2939,18 +2942,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			pdbHeader.setJournalArticle(journalArticle);
 		}
 
-		// removing water-only chains, they don't follow the standard data modeling practices. 
-		// We have to remove them or otherwise they can cause problems down the line, 
-		// e.g. 3o6j has chain Z with a single water molecule
-		Iterator<Chain> it = current_model.iterator();
-		while (it.hasNext()) {
-			Chain c = it.next();
-			if (StructureTools.isChainWaterOnly(c)) {
-				logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
-						c.getChainID(), c.getAtomGroups().size());
-				it.remove();
-			} 
-		}
+		
 		structure.addModel(current_model);
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
@@ -3156,6 +3148,36 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 		}
 
+		// in rare cases where a purely non-polymer or purely water chain is present we have missed it above
+		// we need now to assign a new compound to it so that at least the structure is consistent
+		// see https://github.com/biojava/biojava/pull/394
+
+		if (compounds!=null && !compounds.isEmpty()) {
+			for (Chain c: s.getChains()) {
+				if (c.getCompound() == null) {
+
+					Compound compound = new Compound();
+					compound.addChain(c);
+					compound.setMolId(findMaxCompoundId(compounds)+1);
+					c.setCompound(compound);
+					compounds.add(compound);
+
+					logger.warn("No compound (entity) found in file for chain {}. Creating new compound {} for it.", c.getChainID(), compound.getMolId());
+				}
+			}
+		}
+	}
+	
+	private static int findMaxCompoundId(List<Compound> compounds) {
+		
+		return 
+				
+		Collections.max(compounds, new Comparator<Compound>() {
+			@Override
+			public int compare(Compound o1, Compound o2) {
+				return new Integer(o1.getMolId()).compareTo(o2.getMolId());
+			}
+		}).getMolId();
 	}
 
 	/**
