@@ -867,9 +867,9 @@ public class MultipleAlignmentTools {
 
 	/**
 	 * Calculate a phylogenetic tree of the MultipleAlignment using
-	 * dissimilarity scores (DS), based in BLOSUM40 Substitution Matrix (ideal
-	 * for distantly related proteins, often the case in structural alignments)
-	 * and the Neighbor Joining algorithm from forester.
+	 * dissimilarity scores (DS), based in HSDM Substitution Matrix (ideal for
+	 * distantly related proteins, structure-derived) and the Neighbor Joining
+	 * algorithm from forester.
 	 * 
 	 * @param msta
 	 *            MultipleAlignment of protein structures
@@ -877,15 +877,15 @@ public class MultipleAlignmentTools {
 	 * @throws CompoundNotFoundException
 	 * @throws IOException
 	 */
-	public static Phylogeny getBLOSUM40Tree(MultipleAlignment msta)
+	public static Phylogeny getHSDMTree(MultipleAlignment msta)
 			throws CompoundNotFoundException, IOException {
 		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = MultipleAlignmentTools
 				.toProteinMSA(msta);
 		BasicSymmetricalDistanceMatrix distmat = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
-				.dissimilarityScore(msa, SubstitutionMatrixHelper.getBlosum40());
+				.dissimilarityScore(msa, SubstitutionMatrixHelper.getAminoAcidSubstitutionMatrix("PRLA000102"));
 		Phylogeny tree = TreeConstructor.distanceTree(distmat,
 				TreeConstructorType.NJ);
-		tree.setName("BLOSUM40 Tree");
+		tree.setName("HSDM Tree");
 		return tree;
 	}
 
