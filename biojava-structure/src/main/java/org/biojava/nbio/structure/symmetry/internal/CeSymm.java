@@ -53,15 +53,15 @@ import org.slf4j.LoggerFactory;
  * set of self-alignments (disabled, because none improvements were shown, but
  * can be turn on manually).
  * <p>
- * Multiple levels of symmetry can be analyzed by finding symmetries in subunits
+ * Multiple levels of symmetry can be analyzed by finding symmetries in repeats
  * of previous results. This feature allows to find multiple symmetry axes.
  * <p>
  * The alignment is then refined to obtain a consistent alignment among all
  * residues of the structure and organized into different parts, called
- * symmetric subunits.
+ * symmetric repeats.
  * <p>
  * After refinement of the initial alignment, an optimization step can be used
- * to improve the overall score of the subunit multiple alignment.
+ * to improve the overall score of the repeat multiple alignment.
  * 
  * @author Andreas Prlic
  * @author Spencer Bliven
@@ -77,7 +77,7 @@ public class CeSymm {
 	 * <ul>
 	 * <li>1.0 - initial implementation of CE-Symm.
 	 * <li>1.1 - enable multiple CE-Symm runs to calculate all self-alignments.
-	 * <li>2.0 - refine the alignment for consistency of subunit definition.
+	 * <li>2.0 - refine the alignment for consistency of repeat definition.
 	 * <li>2.1 - optimize the alignment to improve the score.
 	 * <li>2.2 - run multiple symmetry levels recursively to find PG and
 	 * hierarchical symmetries.
@@ -324,7 +324,7 @@ public class CeSymm {
 			return result;
 		}
 
-		// STEP4: determine the symmetry axis and its subunit dependencies
+		// STEP4: determine the symmetry axis and its repeat dependencies
 		SymmetryAxes axes = new SymmetryAxes();
 		int order = result.getMultipleAlignment().size();
 		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)
@@ -335,7 +335,7 @@ public class CeSymm {
 		List<Integer> chain2 = new ArrayList<Integer>();
 		superposition.add(chain1);
 		superposition.add(chain2);
-		List<Integer> subunitTrans = new ArrayList<Integer>();
+		List<Integer> repeatTrans = new ArrayList<Integer>();
 
 		switch (result.getType()) {
 		case CLOSED:
@@ -343,20 +343,20 @@ public class CeSymm {
 			for (int bk = 0; bk < order; bk++) {
 				chain1.add(bk);
 				chain2.add((bk + 1) % order);
-				subunitTrans.add(bk);
+				repeatTrans.add(bk);
 			}
-			axes.addAxis(axis, superposition, subunitTrans, order);
+			axes.addAxis(axis, superposition, repeatTrans, order);
 			break;
 
 		default: // case OPEN:
 
-			subunitTrans.add(0);
+			repeatTrans.add(0);
 			for (int bk = 0; bk < order - 1; bk++) {
 				chain1.add(bk);
 				chain2.add(bk + 1);
-				subunitTrans.add(bk + 1);
+				repeatTrans.add(bk + 1);
 			}
-			axes.addAxis(axis, superposition, subunitTrans, order);
+			axes.addAxis(axis, superposition, repeatTrans, order);
 			break;
 		}
 		result.setAxes(axes);

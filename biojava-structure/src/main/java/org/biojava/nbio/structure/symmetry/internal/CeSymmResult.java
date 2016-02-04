@@ -82,12 +82,12 @@ public class CeSymmResult {
 	}
 
 	/**
-	 * Return the symmetric protodomains as structure identifiers.
+	 * Return the symmetric repeats as structure identifiers.
 	 * 
 	 * @return List of StructureIdentifiers
 	 * @throws StructureException
 	 */
-	public List<StructureIdentifier> getProtodomains()
+	public List<StructureIdentifier> getRepeatsID()
 			throws StructureException {
 
 		List<StructureIdentifier> protodomains = new ArrayList<StructureIdentifier>(
@@ -100,7 +100,7 @@ public class CeSymmResult {
 		Block align = multipleAlignment.getBlocks().get(0);
 
 		for (int su = 0; su < symmOrder; su++) {
-			// Get the start and end residues of the subunit
+			// Get the start and end residues of the repeat
 			ResidueNumber res1 = atoms[align.getStartResidue(su)].getGroup()
 					.getResidueNumber();
 			ResidueNumber res2 = atoms[align.getFinalResidue(su)].getGroup()

@@ -62,8 +62,8 @@ public class SymmetryListener implements ActionListener {
 			logger.error("Currently not displaying a symmetry!");
 
 		try {
-			if (cmd.equals("Subunit Superposition")) {
-				MultipleAlignmentJmol j = SymmetryDisplay.displaySubunits(symm);
+			if (cmd.equals("Repeats Superposition")) {
+				MultipleAlignmentJmol j = SymmetryDisplay.displayRepeats(symm);
 				String s = SymmetryDisplay.printSymmetryAxes(symm, true);
 				j.evalString(s);
 

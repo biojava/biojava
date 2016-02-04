@@ -78,8 +78,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 	private JCheckBox colorByBlocks;
 	private List<JCheckBox> selectedStructures;
 
-	private static final String LIGAND_DISPLAY_SCRIPT = 
-			"select ligand; wireframe 40; spacefill 120; color CPK;";
+	private static final String LIGAND_DISPLAY_SCRIPT = "select ligand; wireframe 40; spacefill 120; color CPK;";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(MultipleAlignmentJmol.class);
@@ -414,13 +413,12 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				// Kimura, Structural and Fractional Dissimilarity Score
 				Phylogeny kimura = MultipleAlignmentTools
 						.getKimuraTree(multAln);
-				Phylogeny blosum = MultipleAlignmentTools
-						.getBLOSUM40Tree(multAln);
-				Phylogeny structural = MultipleAlignmentTools
-						.getStructuralTree(multAln);
+				Phylogeny hsdm = MultipleAlignmentTools.getHSDMTree(multAln);
+				// Phylogeny structural = MultipleAlignmentTools
+				// .getStructuralTree(multAln);
 
-				Archaeopteryx.createApplication(new Phylogeny[] { kimura,
-						blosum, structural });
+				Archaeopteryx
+						.createApplication(new Phylogeny[] { kimura, hsdm });
 			}
 		} catch (Exception e) {
 			logger.error("Could not complete display option.", e);
