@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * <li>Calculate the symmetric unit boundaries.
  * <li>Run CeSymm on one of the symmetric units to find further symmetries.
  * <li>Repeat the last two steps until no more significant results are found.
- * <li>Map back all residues in a multiple alignment of the subunits.
+ * <li>Map back all residues in a multiple alignment of the repeats.
  * <li>Run a final optimization of all symmetric units correctly superimposed.
  * </ul>
  * </li>
@@ -97,7 +97,7 @@ public class CeSymmIterative {
 	/**
 	 * This method uses iteratively CeSymm to calculate all symmetries in the
 	 * input array of atoms and organize them in a multiple alignment of the
-	 * subunits.
+	 * repeats.
 	 * 
 	 * @param atoms
 	 *            atoms
@@ -171,7 +171,7 @@ public class CeSymmIterative {
 		else if (!r.isSignificant())
 			return !levels.isEmpty();
 
-		// Generate the Atoms of one of the symmetric subunit
+		// Generate the Atoms of one of the symmetric repeat
 		Integer start = null;
 		int it = 0;
 		while (start == null) {
@@ -208,7 +208,7 @@ public class CeSymmIterative {
 			}
 		}
 
-		// Iterate further on those Atoms (of the first subunit only)
+		// Iterate further on those Atoms (of the first repeat only)
 		levels.add(r.getMultipleAlignment());
 		return iterate(atomsR);
 	}
@@ -295,9 +295,9 @@ public class CeSymmIterative {
 			parents *= subsize;
 			size /= subsize;
 
-			List<Integer> subunitTransform = new ArrayList<Integer>();
+			List<Integer> repeatTransform = new ArrayList<Integer>();
 			for (int i = 0; i < size * parents; i++) {
-				subunitTransform.add(0);
+				repeatTransform.add(0);
 			}
 
 			List<List<Integer>> superpose = new ArrayList<List<Integer>>();
@@ -315,19 +315,19 @@ public class CeSymmIterative {
 
 			for (int p = 0; p < parents; p++) {
 				for (int s = 0; s < size; s++) {
-					subunitTransform.set(p * size + s, p % subsize);
+					repeatTransform.set(p * size + s, p % subsize);
 				}
 			}
-			axes.addAxis(axis, superpose, subunitTransform, subsize);
+			axes.addAxis(axis, superpose, repeatTransform, subsize);
 		}
 		result.setAxes(axes);
 	}
 
 	/**
-	 * Calculate the number of helix and strand SSE of a subunit.
+	 * Calculate the number of helix and strand SSE of a repeat.
 	 * 
 	 * @param atoms
-	 *            Atom array of the subunit found
+	 *            Atom array of the repeat found
 	 * @return int number of helix or strand SSE
 	 */
 	private static int countHelixStrandSSE(Atom[] atoms) {

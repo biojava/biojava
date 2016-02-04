@@ -10,7 +10,7 @@ import java.util.Set;
  * component of the self-Alignment Graph in symmetry analysis.
  * <p>
  * This class provides an interface for comparing and combining them to refine
- * self-Alignments into consistent MultipleAlignments of subunits.
+ * self-Alignments into consistent MultipleAlignments of repeats.
  * 
  * @author Aleix Lafita
  * @since 4.2.0
@@ -48,7 +48,7 @@ public class ResidueGroup {
 	 * <pre>
 	 * Two maximally connected components of the self-alignment Graph are 
 	 * compatible if they can be combined in a consistent multiple alignment
-	 * of subunits, i.e.there exists one residue in c1 between each sorted
+	 * of repeats, i.e.there exists one residue in c1 between each sorted
 	 * pair of residues in c2.
 	 * </pre>
 	 * 

@@ -56,17 +56,17 @@ import org.jmol.util.Logger;
 public class SymmetryDisplay {
 
 	/**
-	 * Displays a multiple alignment of the symmetry subunits.
+	 * Displays a multiple alignment of the symmetry repeats.
 	 * 
 	 * * @param symm CeSymmResult
 	 * 
 	 * @throws StructureException
 	 */
-	public static MultipleAlignmentJmol displaySubunits(CeSymmResult symm)
+	public static MultipleAlignmentJmol displayRepeats(CeSymmResult symm)
 			throws StructureException {
 
-		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(symm);
-		return MultipleAlignmentJmolDisplay.display(subunits);
+		MultipleAlignment repeats = SymmetryTools.toRepeatsAlignment(symm);
+		return MultipleAlignmentJmolDisplay.display(repeats);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class SymmetryDisplay {
 
 	/**
 	 * Displays a single structure in a cartoon representation with each
-	 * symmetric subunit colored differently.
+	 * symmetric repeat colored differently.
 	 * 
 	 * @param msa
 	 *            the symmetry multiple alignment obtained from CeSymm
@@ -138,9 +138,9 @@ public class SymmetryDisplay {
 
 		SymmetryListener li = new SymmetryListener(jmol, symmResult);
 
-		JMenuItem subunits = new JMenuItem("Subunit Superposition");
-		subunits.addActionListener(li);
-		symm.add(subunits);
+		JMenuItem repeats = new JMenuItem("Repeats Superposition");
+		repeats.addActionListener(li);
+		symm.add(repeats);
 
 		JMenuItem multiple = new JMenuItem("Multiple Structure Alignment");
 		multiple.addActionListener(li);

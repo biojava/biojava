@@ -35,7 +35,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 public interface SymmetryRefiner {
 
 	/**
-	 * Returns a refined symmetry alignment, where the subunit residues are
+	 * Returns a refined symmetry alignment, where the repeat residues are
 	 * aligned consistently in a MultipleAlignment.
 	 * 
 	 * @param selfAlignment

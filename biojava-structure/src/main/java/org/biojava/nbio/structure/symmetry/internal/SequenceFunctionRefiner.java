@@ -38,7 +38,7 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
  * Creates a refined alignment with the CE-Symm alternative self-alignment.
- * Needs the order of symmetry and assumes that the last subunit aligns
+ * Needs the order of symmetry and assumes that the last repeat aligns
  * with the first, being thus a CLOSE symmetry.
  * 
  * @author Spencer Bliven
@@ -441,7 +441,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 			Atom[] ca1, Atom[] ca2, int order) throws StructureException{
 		
 		int[][][] newAlgn = new int[order][][];
-		int subunitLen = afpChain.getOptLength()/order;
+		int repeatLen = afpChain.getOptLength()/order;
 		
 		//Extract all the residues considered in the first chain of the alignment
 		List<Integer> alignedRes = new ArrayList<Integer>();
@@ -454,12 +454,12 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 		//Build the new alignment
 		for (int su=0; su<order; su++){
 			newAlgn[su] = new int[2][];
-			newAlgn[su][0] = new  int[subunitLen];
-			newAlgn[su][1] = new  int[subunitLen];
-			for (int i=0; i<subunitLen; i++){
-				newAlgn[su][0][i] = alignedRes.get(subunitLen*su+i);
+			newAlgn[su][0] = new  int[repeatLen];
+			newAlgn[su][1] = new  int[repeatLen];
+			for (int i=0; i<repeatLen; i++){
+				newAlgn[su][0][i] = alignedRes.get(repeatLen*su+i);
 				newAlgn[su][1][i] = alignedRes.get(
-						(subunitLen*(su+1)+i)%alignedRes.size());
+						(repeatLen*(su+1)+i)%alignedRes.size());
 			}
 		}
 		

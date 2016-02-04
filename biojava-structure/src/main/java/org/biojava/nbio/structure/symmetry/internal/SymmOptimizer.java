@@ -41,18 +41,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Optimizes a symmetry alignment by a Monte Carlo score optimization of the
- * subunit multiple alignment. The superposition of the subunits is not free
+ * repeat multiple alignment. The superposition of the repeats is not free
  * (felxible), because it is constrained on the symmetry axes found in the
  * structure. This is the main difference to the {@link MultipleMC} algorithm in
  * biojava. Another major difference is that the free Pool is shared for all
- * subunits, so that no residue can appear to more than one subunit at a time.
+ * repeats, so that no residue can appear to more than one repeat at a time.
  * <p>
  * This algorithm does not use a unfiform distribution for selecting moves,
  * farther residues have more probability to be shrinked or gapped. This
  * modification of the algorithm improves convergence and running time.
  * <p>
  * Use call method to parallelize optimizations, or use optimize method instead.
- * Because gaps are allowed in the subunits, a {@link MultipleAlignment} format
+ * Because gaps are allowed in the repeats, a {@link MultipleAlignment} format
  * is returned.
  * 
  * @author Aleix Lafita
@@ -67,8 +67,8 @@ public class SymmOptimizer {
 	private Random rnd;
 
 	// Optimization parameters
-	private int Rmin = 2; // min aligned subunits per column
-	private int Lmin; // min subunit length
+	private int Rmin = 2; // min aligned repeats per column
+	private int Lmin; // min repeat length
 	private int maxIter; // max iterations
 	private double C = 20; // probability of accept bad moves constant
 
@@ -83,7 +83,7 @@ public class SymmOptimizer {
 	private Atom[] atoms;
 	private int order;
 	private int length; // total alignment columns (block size)
-	private int subunitCore; // core length (without gaps)
+	private int repeatCore; // core length (without gaps)
 
 	// Aligned Residues and Score
 	private List<List<Integer>> block; // residues aligned
@@ -99,7 +99,7 @@ public class SymmOptimizer {
 
 	/**
 	 * Constructor with a seed MultipleAligment storing a refined symmetry
-	 * alignment of the subunits. To perform the optimization use the call or
+	 * alignment of the repeats. To perform the optimization use the call or
 	 * optimize methods after instantiation.
 	 * 
 	 * @param symmResult
@@ -120,7 +120,7 @@ public class SymmOptimizer {
 
 		this.atoms = msa.getAtomArrays().get(0);
 		this.order = msa.size();
-		this.subunitCore = msa.getCoreLength();
+		this.repeatCore = msa.getCoreLength();
 
 		// 50% of the structures aligned (minimum) or all (no gaps)
 		if (symmResult.getParams().isGaps())
@@ -139,9 +139,9 @@ public class SymmOptimizer {
 			throw new RefinerFailedException(
 					"Non-symmetric seed slignment: order = 1");
 		}
-		if (subunitCore < 1) {
+		if (repeatCore < 1) {
 			throw new RefinerFailedException(
-					"Seed alignment too short: subunit core length == 0");
+					"Seed alignment too short: repeat core length == 0");
 		}
 
 		C = 20 * order;
@@ -210,7 +210,7 @@ public class SymmOptimizer {
 				lastBlock.add(b);
 			}
 			double lastScore = mcScore;
-			int lastSubunitCore = subunitCore;
+			int lastRepeatCore = repeatCore;
 
 			boolean moved = false;
 
@@ -253,7 +253,7 @@ public class SymmOptimizer {
 					block = lastBlock;
 					freePool = lastFreePool;
 					length = block.get(0).size();
-					subunitCore = lastSubunitCore;
+					repeatCore = lastRepeatCore;
 					mcScore = lastScore;
 					conv++; // no change in score if rejected
 
@@ -306,7 +306,7 @@ public class SymmOptimizer {
 
 	/**
 	 * This method translates the internal data structures to a
-	 * MultipleAlignment of the subunits in order to use the methods to score
+	 * MultipleAlignment of the repeats in order to use the methods to score
 	 * MultipleAlignments.
 	 * 
 	 * @throws StructureException
@@ -320,8 +320,8 @@ public class SymmOptimizer {
 		// Override the alignment with the new information
 		Block b = msa.getBlock(0);
 		b.setAlignRes(block);
-		subunitCore = b.getCoreLength();
-		if (subunitCore < 1)
+		repeatCore = b.getCoreLength();
+		if (repeatCore < 1)
 			throw new RefinerFailedException(
 					"Optimization converged to length 0");
 
@@ -344,7 +344,7 @@ public class SymmOptimizer {
 		// Loop for each column
 		for (int res = 0; res < length; res++) {
 			int gapCount = 0;
-			// Loop for each subunit and count the gaps
+			// Loop for each repeat and count the gaps
 			for (int su = 0; su < order; su++) {
 				if (block.get(su).get(res) == null)
 					gapCount++;
@@ -374,7 +374,7 @@ public class SymmOptimizer {
 	}
 
 	/**
-	 * Insert a gap in one of the subunits into selected position (by higher
+	 * Insert a gap in one of the repeats into selected position (by higher
 	 * distances) in the alignment. Calculates the average residue distance to
 	 * make the choice. A gap is a null in the block.
 	 * 
@@ -384,8 +384,8 @@ public class SymmOptimizer {
 	private boolean insertGap() throws StructureException,
 			RefinerFailedException {
 
-		// Let gaps only if the subunit is larger than the minimum length
-		if (subunitCore <= Lmin)
+		// Let gaps only if the repeat is larger than the minimum length
+		if (repeatCore <= Lmin)
 			return false;
 
 		// Select residue by maximum distance
@@ -425,7 +425,7 @@ public class SymmOptimizer {
 	}
 
 	/**
-	 * Move all the block residues of one subunit one position to the left or
+	 * Move all the block residues of one repeat one position to the left or
 	 * right and move the corresponding boundary residues from the freePool to
 	 * the block, and viceversa.
 	 * <p>
@@ -434,7 +434,7 @@ public class SymmOptimizer {
 	 */
 	private boolean shiftRow() {
 
-		int su = rnd.nextInt(order); // Select the subunit
+		int su = rnd.nextInt(order); // Select the repeat
 		int rl = rnd.nextInt(2); // Select between moving right (0) or left (1)
 		int res = rnd.nextInt(length); // Residue as a pivot
 
@@ -628,7 +628,7 @@ public class SymmOptimizer {
 	/**
 	 * It extends the alignment one position to the right or to the left of a
 	 * randomly selected position by moving the consecutive residues of each
-	 * subunit (if present) from the freePool to the block.
+	 * repeat (if present) from the freePool to the block.
 	 * <p>
 	 * If there are not enough residues in the freePool it introduces gaps.
 	 */
@@ -667,7 +667,7 @@ public class SymmOptimizer {
 			if (rightBoundary > 0)
 				rightBoundary--;
 
-			// Expand the block with the residues at the subunit boundaries
+			// Expand the block with the residues at the repeat boundaries
 			for (int su = 0; su < order; su++) {
 				Integer residueR = block.get(su).get(rightBoundary);
 				if (residueR == null) {
@@ -718,7 +718,7 @@ public class SymmOptimizer {
 					break;
 			}
 
-			// Expand the block with the residues at the subunit boundaries
+			// Expand the block with the residues at the repeat boundaries
 			for (int su = 0; su < order; su++) {
 				Integer residueL = block.get(su).get(leftBoundary);
 				if (residueL == null) {
@@ -749,8 +749,8 @@ public class SymmOptimizer {
 	private boolean shrinkBlock() throws StructureException,
 			RefinerFailedException {
 
-		// Let shrink moves only if the subunit is larger enough
-		if (subunitCore <= Lmin)
+		// Let shrink moves only if the repeat is larger enough
+		if (repeatCore <= Lmin)
 			return false;
 
 		// Select column by maximum distance
