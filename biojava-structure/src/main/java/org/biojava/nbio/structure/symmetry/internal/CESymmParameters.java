@@ -413,4 +413,15 @@ public class CESymmParameters extends CeParameters {
 		this.optimizationSteps = optimizationSteps;
 	}
 
+	@Override
+	public String toString() {
+		return "CESymmParameters [orderDetectorMethod=" + orderDetectorMethod
+				+ ", refineMethod=" + refineMethod + ", optimization="
+				+ optimization + ", symmLevels=" + symmLevels
+				+ ", scoreThreshold=" + scoreThreshold + ", sseThreshold="
+				+ sseThreshold + ", minCoreLength=" + minCoreLength
+				+ ", distanceCutoff=" + distanceCutoff + ", gaps=" + gaps
+				+ ", optimizationSteps=" + optimizationSteps + "]";
+	}
+
 }

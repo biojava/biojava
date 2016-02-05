@@ -107,15 +107,18 @@ public class SymmetryDisplay {
 			addSymmetryMenu(jmol, symmResult);
 			jmol.evalString(printSymmetryGroup(symmResult));
 			jmol.evalString(printSymmetryAxes(symmResult, false));
+			jmol.setTitle(getSymmTitle(symmResult));
 			return jmol;
 		} else {
 			// Show the optimal alignment only if it was not refined
 			Logger.info("Showing optimal self-alignment");
 			Atom[] cloned = StructureTools
 					.cloneAtomArray(symmResult.getAtoms());
-			return StructureAlignmentDisplay.display(
+			AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
 					symmResult.getSelfAlignment(), symmResult.getAtoms(),
 					cloned);
+			jmol.setTitle(jmol.getTitle() + " Optimal Self-Alignment");
+			return jmol;
 		}
 	}
 
@@ -226,6 +229,30 @@ public class SymmetryDisplay {
 		script += "draw axes* on; draw poly* on; ";
 
 		return script;
+	}
+
+	/**
+	 * Create a symmetry title for a display frame (Jmol, alignment, etc). The
+	 * title contains information about the algorithm, structure id and
+	 * parameters used.
+	 * 
+	 * @param result
+	 * @return title String
+	 */
+	public static String getSymmTitle(CeSymmResult result) {
+		
+		StringBuffer buff = new StringBuffer();
+		
+		// Add algorithm name and version
+		buff.append(result.getMultipleAlignment().getEnsemble()
+				.getAlgorithmName());
+		buff.append(" V");
+		buff.append(result.getMultipleAlignment().getEnsemble().getVersion());
+		buff.append(": ");
+		
+		// Add the result summary string
+		buff.append(result.toString());
+		return buff.toString();
 	}
 
 }

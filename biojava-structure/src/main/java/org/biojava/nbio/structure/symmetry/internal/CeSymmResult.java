@@ -25,6 +25,7 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  * during the calculations and return a single object.
  * 
  * @author Aleix Lafita
+ * @since 4.2.0
  *
  */
 public class CeSymmResult {
@@ -82,19 +83,22 @@ public class CeSymmResult {
 	}
 
 	/**
-	 * Return the symmetric repeats as structure identifiers.
+	 * Return the symmetric repeats as structure identifiers, if the result is
+	 * symmetric and it was refined, return null otherwise.
 	 * 
-	 * @return List of StructureIdentifiers
+	 * @return List of StructureIdentifiers or null if not defined
 	 * @throws StructureException
 	 */
-	public List<StructureIdentifier> getRepeatsID()
-			throws StructureException {
-
-		List<StructureIdentifier> protodomains = new ArrayList<StructureIdentifier>(
-				symmOrder);
+	public List<StructureIdentifier> getRepeatsID() throws StructureException {
 
 		if (!isSignificant())
-			return protodomains;
+			return null;
+		
+		if(!isRefined())
+			return null;
+		
+		List<StructureIdentifier> repeats = new ArrayList<StructureIdentifier>(
+				symmOrder);
 
 		String pdbId = structureId.toCanonical().getPdbId();
 		Block align = multipleAlignment.getBlocks().get(0);
@@ -110,18 +114,17 @@ public class CeSymmResult {
 			StructureIdentifier id = new SubstructureIdentifier(pdbId,
 					Arrays.asList(range));
 
-			protodomains.add(id);
+			repeats.add(id);
 		}
-		return protodomains;
+		return repeats;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "CeSymmResult [structureId=" + structureId + ", symmGroup="
-				+ symmGroup + ", symmOrder=" + symmOrder + ", symmLevels="
-				+ symmLevels + ", refined=" + refined + ", type=" + type + "]";
+		return structureId + ", symmGroup=" + symmGroup.getSymmetry()
+				+ ", symmOrder=" + symmOrder + ", symmLevels=" + symmLevels
+				+ ", refined=" + refined + ", type=" + type + " | " + params;
 	}
-	
 
 	public MultipleAlignment getMultipleAlignment() {
 		return multipleAlignment;
