@@ -66,7 +66,9 @@ public class SymmetryDisplay {
 			throws StructureException {
 
 		MultipleAlignment repeats = SymmetryTools.toRepeatsAlignment(symm);
-		return MultipleAlignmentJmolDisplay.display(repeats);
+		MultipleAlignmentJmol jmol = MultipleAlignmentJmolDisplay.display(repeats);
+		jmol.setTitle(getSymmTitle(symm));
+		return jmol;
 	}
 
 	/**
@@ -84,6 +86,7 @@ public class SymmetryDisplay {
 
 		MultipleAlignmentJmol jmol = MultipleAlignmentJmolDisplay.display(full);
 		jmol.setColorByBlocks(true);
+		jmol.setTitle(getSymmTitle(symm));
 
 		return jmol;
 	}

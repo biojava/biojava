@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
+import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
@@ -74,8 +75,9 @@ public class SymmetryListener implements ActionListener {
 
 			} else if (cmd.equals("Optimal Self Alignment")) {
 				Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
-				StructureAlignmentDisplay.display(symm.getSelfAlignment(),
-						symm.getAtoms(), cloned);
+				AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
+						symm.getSelfAlignment(), symm.getAtoms(), cloned);
+				jmol.setTitle(jmol.getTitle() + " Optimal Self-Alignment");
 
 			} else if (cmd.equals("Show Symmetry Group")) {
 				String script = SymmetryDisplay.printSymmetryGroup(symm);
