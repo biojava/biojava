@@ -156,7 +156,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		// File
 		// TODO detect non-existent files
 		File file = new File(FileDownloadUtils.expandUserHome(name));
-		if( file.exists() ) {
+		if( file.canRead() && !file.isDirectory() ) {
 			mySource = Source.FILE;
 			pdbId = null;
 			chainId = null;
