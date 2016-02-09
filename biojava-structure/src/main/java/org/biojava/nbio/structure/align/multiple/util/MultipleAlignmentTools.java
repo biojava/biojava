@@ -867,7 +867,7 @@ public class MultipleAlignmentTools {
 
 	/**
 	 * Calculate a phylogenetic tree of the MultipleAlignment using
-	 * dissimilarity scores (DS), based in HSDM Substitution Matrix (ideal for
+	 * dissimilarity scores (DS), based in SDM Substitution Matrix (ideal for
 	 * distantly related proteins, structure-derived) and the Neighbor Joining
 	 * algorithm from forester.
 	 * 
@@ -877,15 +877,15 @@ public class MultipleAlignmentTools {
 	 * @throws CompoundNotFoundException
 	 * @throws IOException
 	 */
-	public static Phylogeny getHSDMTree(MultipleAlignment msta)
+	public static Phylogeny getSDMTree(MultipleAlignment msta)
 			throws CompoundNotFoundException, IOException {
 		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = MultipleAlignmentTools
 				.toProteinMSA(msta);
 		BasicSymmetricalDistanceMatrix distmat = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
-				.dissimilarityScore(msa, SubstitutionMatrixHelper.getAminoAcidSubstitutionMatrix("PRLA000102"));
+				.dissimilarityScore(msa, SubstitutionMatrixHelper.getAminoAcidSubstitutionMatrix("PRLA000101"));
 		Phylogeny tree = TreeConstructor.distanceTree(distmat,
 				TreeConstructorType.NJ);
-		tree.setName("HSDM Tree");
+		tree.setName("SDM Tree");
 		return tree;
 	}
 

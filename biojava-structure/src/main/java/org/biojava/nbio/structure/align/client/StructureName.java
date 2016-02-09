@@ -155,7 +155,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		} catch(MalformedURLException e) {}
 		// File
 		File file = new File(FileDownloadUtils.expandUserHome(name));
-		if( file.exists() || (file.getParentFile() != null && file.getParentFile().exists() )) {
+		if( file.canRead() && !file.isDirectory() ) {
 			mySource = Source.FILE;
 			pdbId = null;
 			chainId = null;
