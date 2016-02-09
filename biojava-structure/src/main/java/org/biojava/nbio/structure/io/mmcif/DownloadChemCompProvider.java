@@ -166,62 +166,57 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		int counter = 0;
 		InputStreamProvider prov = new InputStreamProvider();
 
-		InputStream inStream = prov.getInputStream(f);
+		try( BufferedReader buf = new BufferedReader (new InputStreamReader (prov.getInputStream(f)));
+				) {
+			String line = null;
+			line = buf.readLine ();
+			StringWriter writer = new StringWriter();
 
-		BufferedReader buf = new BufferedReader (new InputStreamReader (inStream));
+			String currentID = null;
+			while (line != null){
 
-		String line = null;
-		line = buf.readLine ();
-		StringWriter writer = new StringWriter();
+				if ( line.startsWith("data_")) {
+					// a new record found!
 
-		String currentID = null;
-		while (line != null){
+					if ( currentID != null) {
+						writeID(writer.toString(), currentID);
+						counter++;
+					}
 
-			if ( line.startsWith("data_")) {
-				// a new record found!
-
-				if ( currentID != null) {
-					writeID(writer, currentID);
-					counter++;
+					currentID = line.substring(5);
+					writer = new StringWriter();
 				}
 
-				currentID = line.substring(5);
-				writer = new StringWriter();
+				writer.append(line);
+				writer.append(NEWLINE);
+
+				line = buf.readLine ();
 			}
 
-			writer.append(line);
-			writer.append(NEWLINE);
+			// write the last record...
+			writeID(writer.toString(),currentID);
+			counter++;
 
-			line = buf.readLine ();
 		}
-
-		// write the last record...
-		writeID(writer,currentID);
-		counter++;
-		
-		inStream.close();
 
 		logger.info("Created " + counter + " chemical component files.");
 	}
 
-	private void writeID(StringWriter writer, String currentID) throws IOException{
+	/**
+	 * Output chemical contents to a file
+	 * @param contents File contents
+	 * @param currentID Chemical ID, used to determine the filename
+	 * @throws IOException
+	 */
+	private void writeID(String contents, String currentID) throws IOException{
 
-		
 		String localName = DownloadChemCompProvider.getLocalFileName(currentID);
 
-		FileOutputStream outPut = new FileOutputStream(localName);
+		try ( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName))) ) {
 
-		GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
-
-		PrintWriter pw = new PrintWriter(gzOutPut);
-
-		pw.print(writer.toString());
-		writer.close();
-		pw.flush();
-		pw.close();
-
-		outPut.close();
-
+			pw.print(contents.toString());
+			pw.flush();
+		}
 	}
 
 	/** 
@@ -354,7 +349,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		String u = SERVER_LOCATION + recordName + ".cif";
 
-//		System.out.println("downloading " + u);
+		logger.debug("downloading " + u);
 
 		URL url = null;
 		
@@ -364,29 +359,20 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			HttpURLConnection uconn = HTTPConnectionTools.openHttpURLConnection(url);
 
-			InputStream conn = uconn.getInputStream();
+			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName)));
+					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));
+					) {
 
-			FileOutputStream outPut = new FileOutputStream(localName);
+				String line;
 
-			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
+				while ((line = fileBuffer.readLine()) != null) {
+					pw.println(line);
+				}
 
-			PrintWriter pw = new PrintWriter(gzOutPut);
+				pw.flush();
 
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-
-			String line;
-
-			while ((line = fileBuffer.readLine()) != null) {
-				pw.println(line);
+				return true;
 			}
-
-			pw.flush();
-			pw.close();
-
-			outPut.close();
-			conn.close();
-
-			return true;
 		} catch (FileNotFoundException e) {
 			// Possible that there is no ChemComp matching this group.
 			logger.warn(recordName + " is not available from " + SERVER_LOCATION + " and will be skipped");
