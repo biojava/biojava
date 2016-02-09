@@ -509,9 +509,6 @@ public class SymmetryTools {
 					+ "is not refined, repeats cannot be defined");
 
 		Atom[] atoms = symmetry.getAtoms();
-		Structure cloned = atoms[0].getGroup().getChain().getStructure()
-				.clone();
-		atoms = StructureTools.getRepresentativeAtomArray(cloned);
 
 		Structure symm = new StructureImpl();
 		symm.setStructureIdentifier(symmetry.getStructureId());
@@ -520,11 +517,9 @@ public class SymmetryTools {
 
 		// Create new structure containing the repeat atoms
 		for (int i = 0; i < symmetry.getSymmOrder(); i++) {
+			
 			Chain newCh = new ChainImpl();
-			newCh.setChainID(chainID + "");
-			chainID++;
 
-			symm.addChain(newCh);
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
 
 			// Get the start and end of the repeat
@@ -532,10 +527,15 @@ public class SymmetryTools {
 			int res2 = align.getFinalResidue(i);
 
 			Atom[] repeat = Arrays.copyOfRange(atoms, res1, res2+1);
-			Group[] g = StructureTools.cloneGroups(repeat);
 			
-			for (int k = 0; k < repeat.length; k++)
-				newCh.addGroup(g[k]);
+			for (int k = 0; k < repeat.length; k++) {
+				Group g = (Group) repeat[k].getGroup().clone();
+				newCh.addGroup(g);
+			}
+			newCh.setChainID(chainID + "");
+			chainID++;
+			symm.addChain(newCh);
+			
 		}
 		return symm;
 	}
@@ -749,7 +749,6 @@ public class SymmetryTools {
 		List<Double> seqIDmax = new ArrayList<Double>();
 		List<Integer> clusterIDs = new ArrayList<Integer>();
 		int fold = 1;
-		Character chain = 'A';
 
 		for (int str = 0; str < alignedCA.size(); str++) {
 			Atom[] array = alignedCA.get(str);
@@ -771,8 +770,7 @@ public class SymmetryTools {
 			}
 			fold++;
 			pseudo.add(false);
-			chainIds.add(chain + "");
-			chain++;
+			chainIds.add(alignedCA.get(str)[0].getGroup().getChainId());
 			models.add(0);
 			seqIDmax.add(1.0);
 			seqIDmin.add(1.0);

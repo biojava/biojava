@@ -82,27 +82,4 @@ public class TestURLIdentifier {
 		assertEquals("wrong length for chainId=A", 94, StructureTools.getRepresentativeAtomArray(reduced).length);
 
 	}
-	
-	@Test
-	public void testHomeDir() throws URISyntaxException, IOException, StructureException {
-		// Sanity check. Maybe some weird systems like Travis don't have homes?
-		assumeNotNull(System.getProperty("user.home"));
-		assumeTrue(new File(System.getProperty("user.home")).exists());
-		
-		// Test that ~ gets expanded to the home directory properly
-		StructureName name = new StructureName("~/");
-		assertTrue(name.isFile());
-		
-		name = new StructureName("~/1abc_this_file_should_not_exits_98nb2.pdb");
-		assertTrue(name.isFile());
-		
-		// Should guess the PDB code, but of course nothing to load
-		SubstructureIdentifier canon = name.toCanonical();
-		assertEquals("1abc", canon.getPdbId());
-		
-		try {
-			name.loadStructure(new AtomCache());
-			fail("Our oddly-named test file exists!?!");
-		} catch(FileNotFoundException e) {}
-	}
 }
