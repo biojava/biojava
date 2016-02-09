@@ -2,6 +2,9 @@ package org.biojava.nbio.structure.align.client;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.biojava.nbio.structure.StructureException;
 import org.junit.Test;
 
@@ -67,5 +70,14 @@ public class TestStructureName {
 		
 	}
 
+	@Test
+	public void testFiles() throws IOException {
+		File f = new File("hopefully_this_doesnt_exist_nalkjas3");
+		assertFalse(f.exists());
+		assertNull(f.getParentFile());
+		StructureName sn = new StructureName("hopefully_this_doesnt_exist_nalkjas3");
+		assertFalse(sn.isFile());
+		assertTrue(sn.isPdbId());
+	}
 
 }
