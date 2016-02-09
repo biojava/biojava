@@ -117,10 +117,6 @@ public class ChemCompTest {
 	@Test
     public void testChangingProviders(){
 
-		//reset the cache
-		SoftHashMap<String, ChemComp> cache = ChemCompGroupFactory.getCache();
-		cache.clear();
-		
 		// test for issue #145
 
         String chemID = "MEA";
@@ -134,7 +130,7 @@ public class ChemCompTest {
 
         assertTrue(" is not mea" , cc.getId().equals(chemID));
         
-        assertNull(cc.getThree_letter_code());
+        assertTrue(cc.isEmpty());
 
         // now we change to download chem comp provider
 
@@ -151,7 +147,6 @@ public class ChemCompTest {
         
         
         // now testing in opposite order
-        cache.clear();
 
         // first we test with download chem comp provider
 

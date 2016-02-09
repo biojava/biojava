@@ -57,10 +57,8 @@ public class ChemCompGroupFactory {
 		logger.debug("Chem comp "+recordName+" read from provider "+chemCompProvider.getClass().getCanonicalName());
 		cc = chemCompProvider.getChemComp(recordName);
 		
-		// If chemCompProvider fails don't try to cache null & one letter code may be null.
-		if (null != cc && !cc.isEmpty()){
-			cache.put(recordName, cc);
-		}
+		// Note that this also caches null or empty responses
+		cache.put(recordName, cc);
 		return cc;
 	}
 
@@ -79,6 +77,8 @@ public class ChemCompGroupFactory {
 	public static void setChemCompProvider(ChemCompProvider provider) {
 		logger.debug("Setting new chem comp provider to "+provider.getClass().getCanonicalName());
 		chemCompProvider = provider;
+		// clear cache
+		cache.clear();
 	}
 
 	public static ChemCompProvider getChemCompProvider(){
@@ -153,10 +153,5 @@ public class ChemCompGroupFactory {
 		}
 		return oneLetter;
 	}
-
-	public static SoftHashMap<String, ChemComp> getCache() {
-		return cache;
-	}
-
 
 }

@@ -594,7 +594,7 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 		ChemComp comp = new ChemComp();
 
 		comp.setOne_letter_code("?");
-		comp.setThree_letter_code("???");
+		comp.setThree_letter_code("???"); // Main signal for isEmpty()
 		comp.setPolymerType(PolymerType.unknown);
 		comp.setResidueType(ResidueType.atomn);
 		return comp;
@@ -606,7 +606,7 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	 */
 	public boolean isEmpty() {
 		// Is this the best flag for it being empty?
-		return id == null || getThree_letter_code().equals("???");
+		return id == null || getThree_letter_code() == null || getThree_letter_code().equals("???");
 	}
 
 }
