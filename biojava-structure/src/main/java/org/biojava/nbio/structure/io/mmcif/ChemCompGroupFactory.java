@@ -58,7 +58,7 @@ public class ChemCompGroupFactory {
 		cc = chemCompProvider.getChemComp(recordName);
 		
 		// If chemCompProvider fails don't try to cache null & one letter code may be null.
-		if (null != cc && !"?".equals(cc.getOne_letter_code())){
+		if (null != cc && !cc.isEmpty()){
 			cache.put(recordName, cc);
 		}
 		return cc;

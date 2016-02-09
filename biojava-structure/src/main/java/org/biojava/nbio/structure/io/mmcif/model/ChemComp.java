@@ -40,40 +40,40 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	 */
 	private static final long serialVersionUID = -4736341142030215915L;
 
-	String id ;
-	String name;
-	String type;
-	String pdbx_type;
-	String formula;
-	String mon_nstd_parent_comp_id;
-	String pdbx_synonyms;
-	String pdbx_formal_charge;
-	String pdbx_initial_date ;
-	String pdbx_modified_date;
-	String pdbx_ambiguous_flag;
-	String pdbx_release_status ;
-	String pdbx_replaced_by;
-	String pdbx_replaces;
-	String formula_weight;
-	String one_letter_code;
-	String three_letter_code;
-	String pdbx_model_coordinates_details;
-	String pdbx_model_coordinates_missing_flag;
-	String pdbx_ideal_coordinates_details;
-	String pdbx_ideal_coordinates_missing_flag;
-	String pdbx_model_coordinates_db_code;
-	String pdbx_subcomponent_list;
-	String pdbx_processing_site;
-	String mon_nstd_flag;
+	private String id ;
+	private String name;
+	private String type;
+	private String pdbx_type;
+	private String formula;
+	private String mon_nstd_parent_comp_id;
+	private String pdbx_synonyms;
+	private String pdbx_formal_charge;
+	private String pdbx_initial_date ;
+	private String pdbx_modified_date;
+	private String pdbx_ambiguous_flag;
+	private String pdbx_release_status ;
+	private String pdbx_replaced_by;
+	private String pdbx_replaces;
+	private String formula_weight;
+	private String one_letter_code;
+	private String three_letter_code;
+	private String pdbx_model_coordinates_details;
+	private String pdbx_model_coordinates_missing_flag;
+	private String pdbx_ideal_coordinates_details;
+	private String pdbx_ideal_coordinates_missing_flag;
+	private String pdbx_model_coordinates_db_code;
+	private String pdbx_subcomponent_list;
+	private String pdbx_processing_site;
+	private String mon_nstd_flag;
 
-	List<ChemCompDescriptor> descriptors = new ArrayList<ChemCompDescriptor>();
-	List<ChemCompBond> bonds = new ArrayList<ChemCompBond>();
-	List<ChemCompAtom> atoms = new ArrayList<ChemCompAtom>();
+	private List<ChemCompDescriptor> descriptors = new ArrayList<ChemCompDescriptor>();
+	private List<ChemCompBond> bonds = new ArrayList<ChemCompBond>();
+	private List<ChemCompAtom> atoms = new ArrayList<ChemCompAtom>();
 
 	// and some derived data for easier processing...
-	ResidueType residueType;
-	PolymerType polymerType;
-	boolean standard;
+	private ResidueType residueType;
+	private PolymerType polymerType;
+	private boolean standard;
 
 	@Override
 	public String toString(){
@@ -585,6 +585,28 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 			return false;
 		return true;
 	}
+	
+	/**
+	 * Creates a new instance of the dummy empty ChemComp.
+	 * @return
+	 */
+	public static ChemComp getEmptyChemComp(){
+		ChemComp comp = new ChemComp();
 
+		comp.setOne_letter_code("?");
+		comp.setThree_letter_code("???");
+		comp.setPolymerType(PolymerType.unknown);
+		comp.setResidueType(ResidueType.atomn);
+		return comp;
+	}
+
+	/**
+	 * Indicates whether this compound was created with 
+	 * @return
+	 */
+	public boolean isEmpty() {
+		// Is this the best flag for it being empty?
+		return id == null || getThree_letter_code().equals("???");
+	}
 
 }

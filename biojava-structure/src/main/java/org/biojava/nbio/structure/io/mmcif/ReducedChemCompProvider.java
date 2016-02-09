@@ -46,54 +46,46 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 	public ReducedChemCompProvider(){
 		logger.debug("Initialising ReducedChemCompProvider");
 	}
-	
-	
-	public ChemComp getEmptyChemComp(){
-		ChemComp comp = new ChemComp();
-		
-		comp.setOne_letter_code("?");
-		comp.setPolymerType(PolymerType.unknown);
-		comp.setResidueType(ResidueType.atomn);
-		return comp;
-	}
-	
+
+
 	@Override
 	public ChemComp getChemComp(String recordName) {
 		String name = recordName.toUpperCase().trim();
-		InputStream inStream = this.getClass().getResourceAsStream("/chemcomp/"+name + ".cif.gz");
-
-		if ( inStream == null){
-			//System.out.println("Could not find chem comp: " + name + " ... using generic Chem Comp");
-			// could not find the chem comp definition for this in the jar file
-			logger.debug("Getting empty chem comp for {}",name);
-			ChemComp cc = getEmptyChemComp();
-			cc.setId(name);
-			return cc;
-		}
-
-		MMcifParser parser = new SimpleMMcifParser();
-
-		ChemCompConsumer consumer = new ChemCompConsumer();
-
-		// The Consumer builds up the BioJava - structure object.
-		// you could also hook in your own and build up you own data model.
-		parser.addMMcifConsumer(consumer);
-
 		try {
-			parser.parse(new BufferedReader(new InputStreamReader(new GZIPInputStream(inStream))));
+			try(InputStream inStream = this.getClass().getResourceAsStream("/chemcomp/"+name + ".cif.gz")) {
 
-			ChemicalComponentDictionary dict = consumer.getDictionary();
+				logger.debug("Reading chemcomp/"+name+".cif.gz");
+				
+				if ( inStream == null){
+					//System.out.println("Could not find chem comp: " + name + " ... using generic Chem Comp");
+					// could not find the chem comp definition for this in the jar file
+					logger.debug("Getting empty chem comp for {}",name);
+					ChemComp cc = ChemComp.getEmptyChemComp();
+					cc.setId(name);
+					return cc;
+				}
 
-			ChemComp chemComp = dict.getChemComp(name);
-			
-			return chemComp;
+				MMcifParser parser = new SimpleMMcifParser();
+
+				ChemCompConsumer consumer = new ChemCompConsumer();
+
+				// The Consumer builds up the BioJava - structure object.
+				// you could also hook in your own and build up you own data model.
+				parser.addMMcifConsumer(consumer);
+
+				parser.parse(new BufferedReader(new InputStreamReader(new GZIPInputStream(inStream))));
+
+				ChemicalComponentDictionary dict = consumer.getDictionary();
+
+				ChemComp chemComp = dict.getChemComp(name);
+
+				return chemComp;
+			}
 		} catch (IOException e){
-			logger.error("IOException caught while reading chem comp {}. Error: {}",name,e.getMessage());
-			//e.printStackTrace();
-
+			logger.error("IOException caught while reading chem comp {}.",name,e);
 		}
 		logger.warn("Problem when loading chem comp {}, will use an empty chem comp for it", name);
-		ChemComp cc = getEmptyChemComp();
+		ChemComp cc = ChemComp.getEmptyChemComp();
 		cc.setId(name);
 		return cc;
 	}
