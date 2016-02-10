@@ -20,20 +20,29 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.biojava.nbio.core.util.InputStreamProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
+
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -157,62 +166,57 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		int counter = 0;
 		InputStreamProvider prov = new InputStreamProvider();
 
-		InputStream inStream = prov.getInputStream(f);
+		try( BufferedReader buf = new BufferedReader (new InputStreamReader (prov.getInputStream(f)));
+				) {
+			String line = null;
+			line = buf.readLine ();
+			StringWriter writer = new StringWriter();
 
-		BufferedReader buf = new BufferedReader (new InputStreamReader (inStream));
+			String currentID = null;
+			while (line != null){
 
-		String line = null;
-		line = buf.readLine ();
-		StringWriter writer = new StringWriter();
+				if ( line.startsWith("data_")) {
+					// a new record found!
 
-		String currentID = null;
-		while (line != null){
+					if ( currentID != null) {
+						writeID(writer.toString(), currentID);
+						counter++;
+					}
 
-			if ( line.startsWith("data_")) {
-				// a new record found!
-
-				if ( currentID != null) {
-					writeID(writer, currentID);
-					counter++;
+					currentID = line.substring(5);
+					writer = new StringWriter();
 				}
 
-				currentID = line.substring(5);
-				writer = new StringWriter();
+				writer.append(line);
+				writer.append(NEWLINE);
+
+				line = buf.readLine ();
 			}
 
-			writer.append(line);
-			writer.append(NEWLINE);
+			// write the last record...
+			writeID(writer.toString(),currentID);
+			counter++;
 
-			line = buf.readLine ();
 		}
-
-		// write the last record...
-		writeID(writer,currentID);
-		counter++;
-		
-		inStream.close();
 
 		logger.info("Created " + counter + " chemical component files.");
 	}
 
-	private void writeID(StringWriter writer, String currentID) throws IOException{
+	/**
+	 * Output chemical contents to a file
+	 * @param contents File contents
+	 * @param currentID Chemical ID, used to determine the filename
+	 * @throws IOException
+	 */
+	private void writeID(String contents, String currentID) throws IOException{
 
-		
 		String localName = DownloadChemCompProvider.getLocalFileName(currentID);
 
-		FileOutputStream outPut = new FileOutputStream(localName);
+		try ( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName))) ) {
 
-		GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
-
-		PrintWriter pw = new PrintWriter(gzOutPut);
-
-		pw.print(writer.toString());
-		writer.close();
-		pw.flush();
-		pw.close();
-
-		outPut.close();
-
+			pw.print(contents.toString());
+			pw.flush();
+		}
 	}
 
 	/** 
@@ -227,6 +231,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		// make sure we work with upper case records		
 		recordName = recordName.toUpperCase().trim();
 
+		boolean haveFile = true;
 		if ( recordName.equals("?")){
 			return null;
 		}
@@ -238,50 +243,53 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		if ( ! fileExists(recordName)) {
 			// we previously have installed already the definitions,
 			// just do an incrememntal update
-			downloadChemCompRecord(recordName);
+			haveFile = downloadChemCompRecord(recordName);
 		}
 
-		String filename = getLocalFileName(recordName);
-		InputStream inStream = null;
-		try {
-
-			InputStreamProvider isp = new InputStreamProvider();
-
-			inStream = isp.getInputStream(filename);
-
-			MMcifParser parser = new SimpleMMcifParser();
-
-			ChemCompConsumer consumer = new ChemCompConsumer();
-
-			// The Consumer builds up the BioJava - structure object.
-			// you could also hook in your own and build up you own data model.
-			parser.addMMcifConsumer(consumer);
-
-			parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-
-			ChemicalComponentDictionary dict = consumer.getDictionary();
-
-			ChemComp chemComp = dict.getChemComp(recordName);
-
-			return chemComp;
-
-		} catch (IOException e) {
-
-			logger.error("Could not parse chemical component file {}. Error: {}. "
-					+ "There will be no chemical component info available for {}", filename, e.getMessage(), recordName);
-
-		}
-		finally{
-			// Now close it
-			if(inStream!=null){
-				try {
-					inStream.close();
-				} catch (IOException e) {
-					// This would be weird...
-					logger.error("Could not close chemical component file {}. A resource leak could occur!!", filename);
-				}
+		// Added check that download was successful and chemical component is available.
+		if (haveFile) {
+			String filename = getLocalFileName(recordName);
+			InputStream inStream = null;
+			try {
+	
+				InputStreamProvider isp = new InputStreamProvider();
+	
+				inStream = isp.getInputStream(filename);
+	
+				MMcifParser parser = new SimpleMMcifParser();
+	
+				ChemCompConsumer consumer = new ChemCompConsumer();
+	
+				// The Consumer builds up the BioJava - structure object.
+				// you could also hook in your own and build up you own data model.
+				parser.addMMcifConsumer(consumer);
+	
+				parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+	
+				ChemicalComponentDictionary dict = consumer.getDictionary();
+	
+				ChemComp chemComp = dict.getChemComp(recordName);
+	
+				return chemComp;
+	
+			} catch (IOException e) {
+	
+				logger.error("Could not parse chemical component file {}. Error: {}. "
+						+ "There will be no chemical component info available for {}", filename, e.getMessage(), recordName);
+	
 			}
-			
+			finally{
+				// Now close it
+				if(inStream!=null){
+					try {
+						inStream.close();
+					} catch (IOException e) {
+						// This would be weird...
+						logger.error("Could not close chemical component file {}. A resource leak could occur!!", filename);
+					}
+				}
+				
+			}
 		}
 
 		// see https://github.com/biojava/biojava/issues/315
@@ -331,13 +339,17 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-	private static void downloadChemCompRecord(String recordName) {
+	/**
+	 * @param recordName : three-letter name
+	 * @return true if successful download
+	 */
+	private static boolean downloadChemCompRecord(String recordName) {
 		
 		String localName = getLocalFileName(recordName);
 
 		String u = SERVER_LOCATION + recordName + ".cif";
 
-//		System.out.println("downloading " + u);
+		logger.debug("downloading " + u);
 
 		URL url = null;
 		
@@ -347,35 +359,28 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			HttpURLConnection uconn = HTTPConnectionTools.openHttpURLConnection(url);
 
-			InputStream conn = uconn.getInputStream();
+			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName)));
+					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));
+					) {
 
-			FileOutputStream outPut = new FileOutputStream(localName);
+				String line;
 
-			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
+				while ((line = fileBuffer.readLine()) != null) {
+					pw.println(line);
+				}
 
-			PrintWriter pw = new PrintWriter(gzOutPut);
+				pw.flush();
 
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-
-			String line;
-
-			while ((line = fileBuffer.readLine()) != null) {
-				pw.println(line);
+				return true;
 			}
-
-			pw.flush();
-			pw.close();
-
-			outPut.close();
-			conn.close();
-
-
+		} catch (FileNotFoundException e) {
+			// Possible that there is no ChemComp matching this group.
+			logger.warn(recordName + " is not available from " + SERVER_LOCATION + " and will be skipped");
 		} catch (IOException e){
 			logger.error("Could not download "+url.toString()+" to "+localName, e);
 			//e.printStackTrace();
 		}
-
-
+		return false;
 	}
 
 	private void downloadAllDefinitions() {

@@ -25,13 +25,13 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.symmetry.gui.SymmetryDisplay;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
+import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 
 /**
  * Quick demo of how to call CE-Symm programmatically.
@@ -78,21 +78,19 @@ public class DemoCeSymm {
 		Structure s = cache.getStructure(name);
 		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
 
-		CeSymm ceSymm = new CeSymm();
-
 		//Choose some parameters
-		CESymmParameters params = ceSymm.getParameters();
-		params.setRefineMethod(RefineMethod.SINGLE);
+		CESymmParameters params = new CESymmParameters();
+		params.setRefineMethod(RefineMethod.SEQUENCE_FUNCTION);
 		params.setSymmType(SymmetryType.AUTO);
 		params.setOptimization(true);
 		params.setSymmLevels(0);
 		params.setSSEThreshold(2);
 
 		//Run the alignment
-		MultipleAlignment symmetry = ceSymm.analyze(atoms, params);
+		CeSymmResult result = CeSymm.analyze(atoms, params);
 
 		//Display the results in jmol
-		SymmetryDisplay.display(symmetry, ceSymm.getSymmetryAxes());
+		SymmetryDisplay.display(result);
 	}
 	
 }

@@ -20,15 +20,20 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
+
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.junit.Test;
 
 /**
- * Test for the old bug of non-independent CeSymm runs.
+ * Run two easy cases of internal symmetry and test that results are significant
+ * and order is correct.
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
@@ -39,21 +44,18 @@ public class TestCeSymm {
 	@Test
 	public void testIndependence() throws IOException, StructureException {
 
-		// Only instantiate one CeSymm class
-		CeSymm ce = new CeSymm();
-		String name;
-		Atom[] atoms;
+		String[] names = new String[] { "1hiv.A", "4i4q", "1n0r.A"};
+		int[] orders = new int[] { 2, 3, 4 };
 
-		name = "1MER.A";
-		atoms = StructureTools.getRepresentativeAtomArray(StructureTools
-				.getStructure(name));
-		ce.analyze(atoms);
+		for (int i = 0; i < names.length; i++) {
 
-		name = "1ijq.A:377-641";
-		atoms = StructureTools.getRepresentativeAtomArray(StructureTools
-				.getStructure(name));
-		// This was causing an assertion error if runs are dependent
-		ce.analyze(atoms);
+			Structure s = StructureTools.getStructure(names[i]);
+			Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
+
+			CeSymmResult result = CeSymm.analyze(atoms);
+
+			assertTrue(result.isSignificant());
+			assertEquals(result.getSymmOrder(), orders[i]);
+		}
 	}
-
 }

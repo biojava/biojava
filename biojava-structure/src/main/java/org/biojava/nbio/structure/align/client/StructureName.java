@@ -154,9 +154,8 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			return;
 		} catch(MalformedURLException e) {}
 		// File
-		// TODO detect non-existent files
 		File file = new File(FileDownloadUtils.expandUserHome(name));
-		if( file.exists() ) {
+		if( file.canRead() && !file.isDirectory() ) {
 			mySource = Source.FILE;
 			pdbId = null;
 			chainId = null;
@@ -300,7 +299,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				break;
 			case FILE:
 				try {
-					realized = new URLIdentifier(new File(name).toURI().toURL());
+					realized = new URLIdentifier(new File(FileDownloadUtils.expandUserHome(name)).toURI().toURL());
 				} catch (MalformedURLException e) {
 					// Should never happen
 					throw new StructureException("Unable to get URL for file: "+name,e);

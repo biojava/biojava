@@ -41,7 +41,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.ce.AbstractUserArgumentProcessor;
-import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.gui.AlignmentCalculationRunnable;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.ParameterGUI;
@@ -51,6 +50,7 @@ import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 
 /** 
@@ -67,7 +67,7 @@ public class SymmetryGui extends JFrame {
 
 	private final static long serialVersionUID = 0l;
 
-	private CeSymm ceSymm = new CeSymm();
+	private CESymmParameters params = new CESymmParameters();
 	private JButton abortB;
 
 	private SelectPDBPanel  tab1 ;
@@ -244,13 +244,11 @@ public class SymmetryGui extends JFrame {
 	}
 
 	protected void configureParameters() {
-		CeSymm algorithm = getSymmetryAlgorithm();
 		System.out.println("configure parameters for " + 
-				algorithm.getAlgorithmName());
+				CeSymm.algorithmName);
 
 		// show a new config GUI
-		ConfigStrucAligParams params = algorithm.getParameters();
-		new ParameterGUI(params, algorithm.getAlgorithmName());
+		new ParameterGUI(params, CeSymm.algorithmName);
 	}
 
 	public void cleanUp() {
@@ -295,7 +293,7 @@ public class SymmetryGui extends JFrame {
 			System.out.println("Analyzing: " + name);
 
 
-			alicalc = new SymmetryCalc(this,s,name);
+			alicalc = new SymmetryCalc(this, s);
 
 
 			thread = new Thread(alicalc);
@@ -328,8 +326,8 @@ public class SymmetryGui extends JFrame {
 	}
 
 
-	public CeSymm getSymmetryAlgorithm() {
-		return ceSymm;
+	public CESymmParameters getParameters() {
+		return params;
 	}
 
 }

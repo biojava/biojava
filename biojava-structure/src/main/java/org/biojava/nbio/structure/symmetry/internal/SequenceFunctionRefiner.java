@@ -32,11 +32,13 @@ import java.util.TreeSet;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
  * Creates a refined alignment with the CE-Symm alternative self-alignment.
- * Needs the order of symmetry and assumes that the last subunit aligns
+ * Needs the order of symmetry and assumes that the last repeat aligns
  * with the first, being thus a CLOSE symmetry.
  * 
  * @author Spencer Bliven
@@ -44,16 +46,17 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
  * @since 4.2.0
  * 
  */
-public class SingleRefiner implements Refiner {
+public class SequenceFunctionRefiner implements SymmetryRefiner {
 	
 	@Override
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms, 
+	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, 
 			int order) throws RefinerFailedException, StructureException {
 		
 		if (order < 2)	throw new RefinerFailedException(
 				"Symmetry not found in the structure: order < 2.");
 		
-		return refineSymmetry(afpAlignments.get(0), atoms, atoms, order);
+		AFPChain afp = refineSymmetry(selfAlignment, atoms, atoms, order);
+		return SymmetryTools.fromAFP(afp, atoms);
 	}
 	
 	/**
@@ -61,6 +64,7 @@ public class SingleRefiner implements Refiner {
 	 *
 	 * The resulting alignment will have a one-to-one correspondance between
 	 * aligned residues of each symmetric part.
+	 * 
 	 * @param afpChain Input alignment from CE-Symm
 	 * @param k Symmetry order. This can be guessed by {@link CeSymm#getSymmetryOrder(AFPChain)}
 	 * @return The refined alignment
@@ -69,18 +73,26 @@ public class SingleRefiner implements Refiner {
 	 */
 	public static AFPChain refineSymmetry(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int k)
 			throws StructureException, RefinerFailedException {
-		// The current alignment
+		
+		// Transform alignment to a Map
 		Map<Integer, Integer> alignment = AlignmentTools.alignmentAsMap(afpChain);
 
-		// Do the alignment
+		// Refine the alignment Map
 		Map<Integer, Integer> refined = refineSymmetry(alignment, k);
+		if (refined.size() < 1)
+			throw new RefinerFailedException("Refiner returned empty alignment");
 		
 		//Substitute and partition the alignment
-		AFPChain refinedAFP = AlignmentTools.replaceOptAln(afpChain, ca1, ca2, refined);
-		refinedAFP = partitionAFPchain(refinedAFP, ca1, ca2, k);
-		if (refinedAFP.getOptLength() < 1) 
-			throw new RefinerFailedException("Refiner returned empty alignment");
-		return refinedAFP;
+		try {
+			AFPChain refinedAFP = AlignmentTools.replaceOptAln(afpChain, ca1, ca2, refined);
+			refinedAFP = partitionAFPchain(refinedAFP, ca1, ca2, k);
+			if (refinedAFP.getOptLength() < 1)
+				throw new IndexOutOfBoundsException("Refined alignment is empty.");
+			return refinedAFP;
+		} catch (IndexOutOfBoundsException e){
+			// This Exception is thrown when the refined alignment is not consistent
+			throw new RefinerFailedException("Refiner failure", e);
+		}
 	}
 
 	/**
@@ -429,7 +441,7 @@ public class SingleRefiner implements Refiner {
 			Atom[] ca1, Atom[] ca2, int order) throws StructureException{
 		
 		int[][][] newAlgn = new int[order][][];
-		int subunitLen = afpChain.getOptLength()/order;
+		int repeatLen = afpChain.getOptLength()/order;
 		
 		//Extract all the residues considered in the first chain of the alignment
 		List<Integer> alignedRes = new ArrayList<Integer>();
@@ -442,12 +454,12 @@ public class SingleRefiner implements Refiner {
 		//Build the new alignment
 		for (int su=0; su<order; su++){
 			newAlgn[su] = new int[2][];
-			newAlgn[su][0] = new  int[subunitLen];
-			newAlgn[su][1] = new  int[subunitLen];
-			for (int i=0; i<subunitLen; i++){
-				newAlgn[su][0][i] = alignedRes.get(subunitLen*su+i);
+			newAlgn[su][0] = new  int[repeatLen];
+			newAlgn[su][1] = new  int[repeatLen];
+			for (int i=0; i<repeatLen; i++){
+				newAlgn[su][0][i] = alignedRes.get(repeatLen*su+i);
 				newAlgn[su][1][i] = alignedRes.get(
-						(subunitLen*(su+1)+i)%alignedRes.size());
+						(repeatLen*(su+1)+i)%alignedRes.size());
 			}
 		}
 		

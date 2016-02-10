@@ -41,7 +41,7 @@ import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentUtils;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,7 +186,7 @@ public class MultipleAlignmentJmolDisplay  {
 	public static MultipleAlignmentJmol display(MultipleAlignment multAln) 
 			throws StructureException {
 
-		List<Atom[]> rotatedAtoms = MultipleAlignmentUtils.getRotatedAtoms(multAln);
+		List<Atom[]> rotatedAtoms = MultipleAlignmentDisplay.getRotatedAtoms(multAln);
 
 		MultipleAlignmentJmol jmol = 
 				new MultipleAlignmentJmol(multAln, rotatedAtoms);

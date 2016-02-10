@@ -57,6 +57,14 @@ public class PdbFileFormat30Test {
 		
 		int shouldNr = 20;
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr ,nrNuc);	
+
+		List<Compound> compounds= s.getCompounds();
+		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
+		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
+		assertEquals(2, compounds.size());
+		Compound mol = compounds.get(0);		
+		assertTrue(mol.getMolName().startsWith("DNA"));
+
 		
 		Structure s2 = getStructure("/104D_v30.pdb");		
 		
@@ -64,10 +72,6 @@ public class PdbFileFormat30Test {
 		int shouldNr2 = 24;
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr2 , nrNuc2);	
 		
-		List<Compound> compounds= s.getCompounds();
-		assertTrue(compounds.size() == 1);
-		Compound mol = compounds.get(0);		
-		assertTrue(mol.getMolName().startsWith("DNA"));
 		
 	}
 	
@@ -78,18 +82,22 @@ public class PdbFileFormat30Test {
 		int nrNuc = getNrNucleotides(s);		
 		int shouldNr = 24;
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr , nrNuc);	
-				
+
+		List<Compound> compounds= s.getCompounds();
+		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
+		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
+		assertEquals(2, compounds.size());
+		Compound mol = compounds.get(0);
+		
+		assertTrue(mol.getMolName().startsWith("DNA"));
+
+		
 		Structure s2 = getStructure("/104D_v23.pdb");	
 		
 		int nrNuc2 = getNrNucleotides(s2);		
 		int shouldNr2 = 24;
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr2 , nrNuc2);	
 		
-		List<Compound> compounds= s.getCompounds();
-		assertTrue(compounds.size() == 1);
-		Compound mol = compounds.get(0);
-		
-		assertTrue(mol.getMolName().startsWith("DNA"));
 	}
 	
 	private Structure getStructure(String fileName) throws IOException{

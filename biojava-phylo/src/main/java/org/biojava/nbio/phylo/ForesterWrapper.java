@@ -1,8 +1,8 @@
 package org.biojava.nbio.phylo;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
-
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.io.FastaWriter;
 import org.biojava.nbio.core.sequence.io.template.FastaHeaderFormatInterface;
@@ -36,12 +36,12 @@ public class ForesterWrapper {
 	 * @param msa
 	 *            BioJava MultipleSequenceAlignment
 	 * @return forester Msa object
-	 * @throws Exception
+	 * @throws IOException 
 	 *             if the conversion was not possible
 	 */
 	public static <C extends Sequence<D>, D extends Compound> Msa convert(
-			MultipleSequenceAlignment<C, D> msa) throws Exception {
-
+			MultipleSequenceAlignment<C, D> msa) throws IOException {
+		
 		// Convert the biojava MSA to a FASTA String
 		OutputStream os = new ByteArrayOutputStream();
 		FastaWriter<C, D> fastaW = new FastaWriter<C, D>(os,
@@ -52,6 +52,7 @@ public class ForesterWrapper {
 						return sequence.getAccession().toString();
 					};
 				});
+		
 		fastaW.process();
 		String fastaMSA = os.toString();
 
@@ -68,10 +69,10 @@ public class ForesterWrapper {
 	 * @param writeDistances
 	 *            write the branch lengths if true
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
 	public static String getNewickString(Phylogeny phylo,
-			boolean writeDistances) throws Exception {
+			boolean writeDistances) throws IOException {
 
 		PhylogenyWriter w = new PhylogenyWriter();
 		StringBuffer newickString = w.toNewHampshire(phylo, writeDistances);

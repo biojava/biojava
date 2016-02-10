@@ -20,35 +20,35 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 
 /**
- * A method to refine the AFP alignment from one or more alternative 
- * self-alignments in order to define consistent subunits.
- * 
+ * Interface for all symmetry refinement implementations.
+ *  
  * @author Aleix Lafita
  * @since 4.2.0
  * 
  */
-public interface Refiner {
+public interface SymmetryRefiner {
 
 	/**
-	 * Returns a refined symmetry alignment, where the subunit 
-	 * residues are aligned consistently and separated into the 
-	 * blocks of the AFPChain.
+	 * Returns a refined symmetry alignment, where the repeat residues are
+	 * aligned consistently in a MultipleAlignment.
 	 * 
-	 * @param afpAlignments List of returned self-alignments in CeSymm
-	 * @param atoms coordinates of the structure
-	 * @param order order of symmetry to use.
-	 * @return AFPChain refined symmetry alignment
+	 * @param selfAlignment
+	 *            optimal self-alignment calculated by CeSymm
+	 * @param atoms
+	 *            coordinates of the structure
+	 * @param order
+	 *            order of symmetry to use
+	 * @return MultipleAlignment refined symmetry alignment
 	 * @throws RefinerFailedException
 	 * @throws StructureException
 	 */
-	public AFPChain refine(List<AFPChain> afpAlignments, Atom[] atoms,
-			int order) throws RefinerFailedException, StructureException;
-	
+	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, int order)
+			throws RefinerFailedException, StructureException;
+
 }
