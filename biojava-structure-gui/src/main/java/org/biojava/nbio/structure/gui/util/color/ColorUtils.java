@@ -53,7 +53,11 @@ public class ColorUtils
          //System.out.println(rotateHue(color, 0.1f));
       }
    }
-   
+
+    public static String toHexColor(Color col){
+        return Integer.toHexString((col.getRGB() & 0xffffff) | 0x1000000).substring(1);
+    }
+
    /**
     * Rotate a color through HSB space
     * @param color Starting color
