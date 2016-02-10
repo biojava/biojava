@@ -38,7 +38,7 @@ public class ChemCompGroupFactory {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ChemCompGroupFactory.class);
 
-	private static ChemCompProvider chemCompProvider = new ReducedChemCompProvider();
+	private static ChemCompProvider chemCompProvider = new DownloadChemCompProvider();
 
 	private static SoftHashMap<String, ChemComp> cache = new SoftHashMap<String, ChemComp>(0);
 
