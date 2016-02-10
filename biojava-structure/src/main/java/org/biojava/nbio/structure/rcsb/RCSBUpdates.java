@@ -3,7 +3,6 @@ package org.biojava.nbio.structure.rcsb;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -12,15 +11,19 @@ import java.util.List;
 import java.util.Map;
 
 public class RCSBUpdates {
+	
+	// The URL for acquiring the data
+	public static final String baseURL = "ftp://ftp.rcsb.org/pub/pdb/data/status/latest/";
 
 	/**
 	 * 
-	 * @return A map mapping each field (defined by a seperate FTP page and defined in newStringList to the PDB ids in this field
+	 * @return A map mapping each field (defined by a separate FTP file) to the PDB ids in the field. The possible fields
+	 * are: added.models, added.nmr, added.pdb, added.sf, modified.cs, modified.models, modified.nmr, modified.pdb, modified.sf, 
+	 * obsolete.cs, obsolete.models, obsolete.nmr, obsolete.pdb, obsolete.sf
 	 * @throws IOException 
 	 */
 	public Map<String,String[]> getUpdates() throws IOException{
-		// The URL for acquiring the data
-		String baseURL = "ftp://ftp.rcsb.org/pub/pdb/data/status/latest/";
+		
 		Map<String,String[]> outMap = new HashMap<String, String[]>();
 		// A list of files to get
 		String[] newStringList = {"added.models","added.nmr","added.pdb","added.sf","modified.cs","modified.models",
@@ -49,17 +52,18 @@ public class RCSBUpdates {
 		URLConnection urlConnection = url.openConnection();
 
 		// wrap the urlconnection in a bufferedreader
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
 
-		String line;
+			String line;
 
-		// read from the urlconnection via the bufferedreader
-		while ((line = bufferedReader.readLine()) != null)
-		{
-			outList.add(line);
+			// read from the urlconnection via the bufferedreader
+			while ((line = bufferedReader.readLine()) != null)
+			{
+				outList.add(line);
+			}
+
 		}
-		bufferedReader.close();
 
-		return outList.toArray(new String[0]);
+		return outList.toArray(new String[outList.size()]);
 	}
 }

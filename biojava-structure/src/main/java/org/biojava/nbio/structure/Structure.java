@@ -166,7 +166,7 @@ public void calcPhiPsi({@link Structure} structure){
  * @since 1.4
  * @version %I% %G%
  */
-public interface Structure extends Cloneable, StructureIdentifier {
+public interface Structure extends Cloneable {
 
 
 	/** 
@@ -312,11 +312,11 @@ public interface Structure extends Cloneable, StructureIdentifier {
 	 */
 	public boolean isCrystallographic();
 	
-    @Deprecated
     /** set NMR flag.
      *
      * @param nmr  true to declare that this Structure has been solved by NMR.
      */
+	@Deprecated
     public void setNmr(boolean nmr);
 
 
@@ -687,7 +687,7 @@ public interface Structure extends Cloneable, StructureIdentifier {
 	List<? extends ResidueRange> getResidueRanges();
 	
 	/**
-	 * Returns a list of ranges of the form described in {@link #getIdentifier()}. For example:
+	 * Returns a list of residue ranges. For example:
 	 * <pre>
 	 * getRanges().get(0): 'A'
 	 * getRanges().get(1): 'B_5-100'
@@ -698,4 +698,20 @@ public interface Structure extends Cloneable, StructureIdentifier {
 	 */
     @Deprecated
 	List<String> getRanges();
+    
+	/**
+	 * Get a string representing this structure's contents. The following places
+	 * are searched for a non-null value, with the first being returned:
+	 * <ol>
+	 * <li>{@link #getStructureIdentifier()}.getIdentifier(), which should give
+	 *     the string originally used to create the structure
+	 * <li>{@link #getName()}
+	 * <li>A combination of {@link #getPDBCode()} with a heuristic description
+	 *     of the residue ranges, in {@link SubstructureIdentifier} format.
+	 * </ol>
+	 * @return A {@link SubstructureIdentifier}-format string describing the residue ranges in this structure
+	 * @since The behavior of this method changed in BioJava 4.2. Previously it
+	 *  returned the same value as {@link #getPDBCode()}
+	 */
+	String getIdentifier();
 }

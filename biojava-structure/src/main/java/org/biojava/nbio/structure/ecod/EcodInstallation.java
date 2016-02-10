@@ -466,6 +466,38 @@ public class EcodInstallation implements EcodDatabase {
 
 
 	public static class EcodParser {
+		/*
+Version Notes
+
+Current version (1.4) contains the following columns:
+
+Column 1: ECOD uid - internal domain unique identifier
+Column 2: ECOD domain id - domain identifier
+Column 3: ECOD representative status - manual (curated) or automated nonrep
+Column 4: ECOD hierachy identifier - [X-group].[H-group].[T-group].[F-group]
+	* In develop45-66 these also include single numbers in the range 1-265
+Column 5: PDB identifier
+Column 6: Chain identifier (note: case-sensitive)
+Column 7: PDB residue number range
+	* These are sometimes incorrect up to at least develop124. Examples are:
+	  e4lxaA2 (should be A:184-385), e4lxmC3 (should be C:46P-183)
+Column 8: seq_id number range (based on internal PDB indices)
+Column 9: Architecture name
+Column 10: X-group name
+Column 11: H-group name
+Column 12: T-group name
+Column 13: F-group name (F_UNCLASSIFIED denotes that domain has not been assigned to an F-group)
+Column 14: Domain assembly status (if domain is member of assembly, partners' ecod domain ids listed)
+Column 15: Comma-separated value list of non-polymer entities within 4 A of at least one residue of domain
+
+Notes older versions:
+changelog:
+v1.0 - original version (8/04/2014)
+v1.1 - added rep/nonrep data (1/15/2015)
+v1.2 - added f-group identifiers to fasta file, domain description file. ECODf identifiers now used when available for F-group name. 
+	Domain assemblies now represented by assembly uid in domain assembly status.
+v1.4 - added seqid_range and headers (develop101)
+		 */
 
 		/** String for unclassified F-groups */
 		public static final String F_UNCLASSIFIED = "F_UNCLASSIFIED";
@@ -523,13 +555,17 @@ public class EcodInstallation implements EcodDatabase {
 						} else {
 							// data line
 							String[] fields = line.split("\t");
-							if( fields.length == 13 || fields.length == 14 ) {
+							if( fields.length == 13 || fields.length == 14 || fields.length == 15) {
 								try {
 									int i = 0; // field number, to allow future insertion of fields
 
+									//Column 1: ECOD uid - internal domain unique identifier
 									Long uid = Long.parseLong(fields[i++]);
+									//Column 2: ECOD domain id - domain identifier
 									String domainId = fields[i++];
-									// Manual column may be missing
+									
+									//Column 3: ECOD representative status - manual (curated) or automated nonrep
+									// Manual column may be missing in version 1.0 files
 									Boolean manual = null;
 									if( fields.length >= 14) {
 										String manualString = fields[i++];
@@ -542,6 +578,7 @@ public class EcodInstallation implements EcodDatabase {
 										}
 									}
 
+									//Column 4: ECOD hierachy identifier - [X-group].[H-group].[T-group].[F-group]
 									// hierarchical field, e.g. "1.1.4.1"
 									String[] xhtGroup = fields[i++].split("\\.");
 									if(xhtGroup.length < 3 || 4 < xhtGroup.length) {
@@ -558,17 +595,35 @@ public class EcodInstallation implements EcodDatabase {
 									Integer tGroup = xhtGroup.length>2 ? Integer.parseInt(xhtGroup[2]) : null;
 									Integer fGroup = xhtGroup.length>3 ? Integer.parseInt(xhtGroup[3]) : null;
 
+									//Column 5: PDB identifier
 									String pdbId = fields[i++];
+									//Column 6: Chain identifier (note: case-sensitive)
 									String chainId = fields[i++];
+									//Column 7: PDB residue number range
 									String range = fields[i++];
 
+									//Column 8: seq_id number range (based on internal PDB indices)
+									//Added in version 1.4
+									String seqId = null;
+									if( fields.length >= 15) {
+										seqId = fields[i++];
+									}
+									
+									//Column 9: Architecture name
 									// Intern strings likely to be shared by many domains
 									String architectureName = fields[i++].intern();
+									//Column 10: X-group name
 									String xGroupName = fields[i++].intern();
+									//Column 11: H-group name
 									String hGroupName = fields[i++].intern();
+									//Column 12: T-group name
 									String tGroupName = fields[i++].intern();
+									//Column 13: F-group name (F_UNCLASSIFIED denotes that domain has not been assigned to an F-group)
+									//Contents changed in version 1.3
 									String fGroupName = fields[i++].intern();
 
+									//Column 14: Domain assembly status (if domain is member of assembly, partners' ecod domain ids listed)
+									//Column 15: Comma-separated value list of non-polymer entities within 4 A of at least one residue of domain
 									Long assemblyId = null;
 									String assemblyStr = fields[i++];
 									if(assemblyStr.equals(NOT_DOMAIN_ASSEMBLY)) {
@@ -599,7 +654,7 @@ public class EcodInstallation implements EcodDatabase {
 									}
 
 
-									EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, fGroup,pdbId, chainId, range, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, assemblyId, ligands);
+									EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, fGroup,pdbId, chainId, range, seqId, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, assemblyId, ligands);
 									domainsList.add(domain);
 								} catch(NumberFormatException e) {
 									logger.warn("Error in ECOD parsing at line "+lineNum,e);
