@@ -52,7 +52,9 @@ import org.slf4j.LoggerFactory;
  * error messages to print.
  * 
  * Filtering log4j messages to the 'error' level will filter all but the most
- * grevious errors.
+ * grievous errors.
+ * 
+ * Faster unit tests go in {@link EcodInstallationTest}.
  * 
  * @author blivens
  *
@@ -61,14 +63,22 @@ public class EcodParseTest {
 	private static final Logger logger = LoggerFactory.getLogger(EcodParseTest.class);
 
 	public static void main(String[] args) throws IOException {
-		String ecodVersion = "develop83";
+		String ecodVersion = "develop124";
+//		String ecodVersion = "latest";
+		
+		int errors = testVersion(ecodVersion);
+		logger.info("Done. {} errors.",errors);
+		
+	}
+
+	private static int testVersion(String ecodVersion) throws IOException {
 		EcodDatabase ecod = EcodFactory.getEcodDatabase(ecodVersion);
 		AtomCache cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 		List<EcodDomain> domains = ecod.getAllDomains();
 //		domains = Arrays.asList(ecod.getDomainsById("e1yfbB2"));
 //		domains = Arrays.asList(ecod.getDomainsById("e1w50A2"));
-		domains = Arrays.asList(ecod.getDomainsById("e2ftlE1"));
+//		domains = Arrays.asList(ecod.getDomainsById("e2ftlE1"));
 		int errors = 0;
 		for(EcodDomain d : domains) {
 			Atom[] ca1;
@@ -184,6 +194,6 @@ public class EcodParseTest {
 			//All test passed
 			logger.info("OK "+d.getDomainId());
 		}
-		logger.info("Done. {} errors.",errors);
+		return errors;
 	}
 }

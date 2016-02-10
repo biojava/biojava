@@ -174,7 +174,7 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @param name Input filename
 	 * @return A 4-character id-like string, or null if none is found
 	 */
-	private static String guessPDBID(String name) {
+	public static String guessPDBID(String name) {
 		Matcher match = PDBID_REGEX.matcher(name);
 		if(match.matches()) {
 			return match.group(1);

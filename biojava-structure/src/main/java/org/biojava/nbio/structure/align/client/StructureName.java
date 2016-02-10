@@ -46,6 +46,7 @@ import org.biojava.nbio.structure.cath.CathFactory;
 import org.biojava.nbio.structure.domain.PDPDomain;
 import org.biojava.nbio.structure.domain.PDPProvider;
 import org.biojava.nbio.structure.domain.RemotePDPProvider;
+import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
@@ -77,7 +78,10 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	protected String chainId;
 
 	private static final Pattern cathPattern = Pattern.compile("^([0-9][a-z0-9]{3})(\\w)([0-9]{2})$",Pattern.CASE_INSENSITIVE);
-	private static final Pattern scopPattern = Pattern.compile("^d([0-9][a-z0-9]{3})(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
+	// ds046__ is a special case with no PDB entry
+	private static final Pattern scopPattern = Pattern.compile("^d([0-9][a-z0-9]{3}|s046)(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
+	// ECOD chains and domains can't be automatically distinguished. Ex: e3j9zS13 is chain 'S1', e1wz2B14 is chain 'B'
+	private static final Pattern ecodPattern = Pattern.compile("^e([0-9][a-zA-Z0-9]{3})(?:\\w|\\.)\\w+$",Pattern.CASE_INSENSITIVE);
 
 	private enum Source {
 		PDB,
@@ -86,6 +90,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		CATH,
 		URL,
 		FILE,
+		ECOD,
 	};
 
 	private Source mySource = null; 
@@ -145,11 +150,20 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			chainId = matcher.group(2);
 			return;
 		}
+		// ECOD
+		matcher = ecodPattern.matcher(name);
+		if ( matcher.matches() ){
+			mySource = Source.ECOD;
+			pdbId = matcher.group(1);
+			chainId = null;
+			return;
+		}
 		// URL
 		try {
-			new URL(name);
+			URL url = new URL(name);
 			mySource = Source.URL;
-			pdbId = null;
+			String path = url.getPath();
+			pdbId = URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) );
 			chainId = null;
 			return;
 		} catch(MalformedURLException e) {}
@@ -268,6 +282,10 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	public boolean isFile() {
 		return mySource == Source.FILE;
 	}
+	
+	public boolean isEcodDomain() {
+		return mySource == Source.ECOD;
+	}
 
 	/**
 	 * 
@@ -282,6 +300,13 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			switch(mySource) {
 			case CATH:
 				realized = CathFactory.getCathDatabase().getDescriptionByCathId(getIdentifier());
+				break;
+			case ECOD:
+				try {
+					realized = EcodFactory.getEcodDatabase().getDomainsById(name);
+				} catch (IOException e) {
+					throw new StructureException("Unable to get ECOD domain "+name,e);
+				}
 				break;
 			case SCOP:
 				// Fuzzy matching of the domain name to the current default factory
