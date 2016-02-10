@@ -31,7 +31,7 @@ import java.util.*;
  *  Utility classes for retrieving lists of PDB IDs.
  *
  *  @author  Andreas Prlic
- *  @since 4.1.0
+ *  @since 4.2.0
  */
 public class PdbIdLists {
 
@@ -199,15 +199,16 @@ public class PdbIdLists {
         Set<String> pdbIds = new TreeSet<String>();
 
 
-        BufferedReader rd = new BufferedReader(new InputStreamReader(in));
+        try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
 
-        String line;
-        while ((line = rd.readLine()) != null) {
+            String line;
+            while ((line = rd.readLine()) != null) {
 
-            pdbIds.add(line);
+                pdbIds.add(line);
 
+            }
+            rd.close();
         }
-        rd.close();
 
 
         return pdbIds;
@@ -234,10 +235,11 @@ public class PdbIdLists {
 
         conn.setDoOutput(true);
 
-        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        try(OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())) {
 
-        wr.write(data);
-        wr.flush();
+            wr.write(data);
+            wr.flush();
+        }
 
 
         // Get the response
