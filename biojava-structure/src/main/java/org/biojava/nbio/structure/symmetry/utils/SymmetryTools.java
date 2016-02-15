@@ -72,8 +72,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Methods include: blank out regions of DP Matrix, build symmetry graphs, get
  * rotation symmetry angles, split repeats in quaternary structure chains,
- * convert between symmetry formats (full, repeats, rotations), determine if
- * two symmetry axes are equivalent, get groups from representative Atoms.
+ * convert between symmetry formats (full, repeats, rotations), determine if two
+ * symmetry axes are equivalent, get groups from representative Atoms.
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
@@ -517,7 +517,7 @@ public class SymmetryTools {
 
 		// Create new structure containing the repeat atoms
 		for (int i = 0; i < symmetry.getSymmOrder(); i++) {
-			
+
 			Chain newCh = new ChainImpl();
 
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
@@ -526,8 +526,8 @@ public class SymmetryTools {
 			int res1 = align.getStartResidue(i);
 			int res2 = align.getFinalResidue(i);
 
-			Atom[] repeat = Arrays.copyOfRange(atoms, res1, res2+1);
-			
+			Atom[] repeat = Arrays.copyOfRange(atoms, res1, res2 + 1);
+
 			for (int k = 0; k < repeat.length; k++) {
 				Group g = (Group) repeat[k].getGroup().clone();
 				newCh.addGroup(g);
@@ -535,7 +535,7 @@ public class SymmetryTools {
 			newCh.setChainID(chainID + "");
 			chainID++;
 			symm.addChain(newCh);
-			
+
 		}
 		return symm;
 	}
@@ -629,8 +629,8 @@ public class SymmetryTools {
 	/**
 	 * Converts a refined symmetry AFPChain alignment into the standard
 	 * representation of symmetry in a MultipleAlignment, that contains the
-	 * entire Atom array of the strcuture and the symmetric repeats are
-	 * orgaized in different rows in a single Block.
+	 * entire Atom array of the strcuture and the symmetric repeats are orgaized
+	 * in different rows in a single Block.
 	 * 
 	 * @param symm
 	 *            AFPChain created with a symmetry algorithm and refined
@@ -678,7 +678,7 @@ public class SymmetryTools {
 
 		CoreSuperimposer imposer = new CoreSuperimposer();
 		imposer.superimpose(result);
-		MultipleAlignmentScorer.calculateScores(result);
+		updateSymmetryScores(result);
 
 		return result;
 	}
@@ -737,8 +737,8 @@ public class SymmetryTools {
 		// Obtain the clusters of aligned Atoms and repeat variables
 		MultipleAlignment repeats = SymmetryTools.toRepeatsAlignment(result);
 		List<Atom[]> alignedCA = repeats.getAtomArrays();
-		List<Integer> corePos = MultipleAlignmentTools
-				.getCorePositions(repeats.getBlock(0));
+		List<Integer> corePos = MultipleAlignmentTools.getCorePositions(repeats
+				.getBlock(0));
 
 		List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
 		List<Integer> folds = new ArrayList<Integer>();
@@ -884,15 +884,16 @@ public class SymmetryTools {
 		}
 		return groups;
 	}
-	
+
 	/**
 	 * Calculates the set of symmetry operation Matrices (transformations) of
 	 * the new alignment, based on the symmetry relations in the SymmetryAxes
-	 * object. It sets the transformations to the input MultipleAlignment and 
-	 * SymmetryAxes objects.
+	 * object. It sets the transformations to the input MultipleAlignment and
+	 * SymmetryAxes objects. If the SymmetryAxes object is null, the
+	 * superposition of the repeats is done without symmetry constraints.
 	 * <p>
-	 * If the SymmetryAxes object is null, the superposition of the repeats is
-	 * done without symmetry constraints.
+	 * This method also sets the scores (RMSD and TM-score) after the new
+	 * superposition has been updated.
 	 * 
 	 * @param axes
 	 *            SymmetryAxes object. It will be modified.
@@ -941,7 +942,7 @@ public class SymmetryTools {
 					axis = svd.getTransformation();
 					axes.updateAxis(t, axis);
 				}
-				
+
 				// Get the transformations from the SymmetryAxes
 				List<Matrix4d> transformations = new ArrayList<Matrix4d>();
 				for (int su = 0; su < msa.size(); su++) {
@@ -953,6 +954,27 @@ public class SymmetryTools {
 			MultipleSuperimposer imposer = new CoreSuperimposer();
 			imposer.superimpose(msa);
 		}
+		updateSymmetryScores(msa);
 	}
-	
+
+	/**
+	 * Update the scores (TM-score and RMSD) of a symmetry multiple alignment.
+	 * This method does not redo the superposition of the alignment.
+	 * 
+	 * @param symm
+	 *            Symmetry Multiple Alignment of Repeats
+	 * @throws StructureException
+	 */
+	public static void updateSymmetryScores(MultipleAlignment symm)
+			throws StructureException {
+
+		// Multiply by the order of symmetry to normalize score
+		double tmScore = MultipleAlignmentScorer.getAvgTMScore(symm)
+				* symm.size();
+		double rmsd = MultipleAlignmentScorer.getRMSD(symm);
+
+		symm.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
+		symm.putScore(MultipleAlignmentScorer.RMSD, rmsd);
+	}
+
 }

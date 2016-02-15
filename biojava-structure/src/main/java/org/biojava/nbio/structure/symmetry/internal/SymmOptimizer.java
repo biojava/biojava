@@ -165,7 +165,7 @@ public class SymmOptimizer {
 		}
 		checkGaps();
 
-		// Set the MC score and RMSD of the initial state (seed alignment)
+		// Set the MC score of the initial state (seed alignment)
 		updateMultipleAlignment();
 		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend,
 				dCutoff);
@@ -280,17 +280,11 @@ public class SymmOptimizer {
 
 			i++;
 		}
-		// Superimpose and calculate scores
+		// Superimpose and calculate final scores
 		updateMultipleAlignment();
 		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend,
 				dCutoff);
-		double tmScore = MultipleAlignmentScorer.getAvgTMScore(msa) * order;
-		double rmsd = MultipleAlignmentScorer.getRMSD(msa);
-
-		// Set the scores
 		msa.putScore(MultipleAlignmentScorer.MC_SCORE, mcScore);
-		msa.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
-		msa.putScore(MultipleAlignmentScorer.RMSD, rmsd);
 
 		// Save the history to the results folder of the symmetry project
 		if (history) {
