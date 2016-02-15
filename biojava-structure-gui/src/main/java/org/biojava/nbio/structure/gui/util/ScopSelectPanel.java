@@ -137,7 +137,6 @@ public Structure getStructure2() throws StructureException
       //String cacheLocation = config.getPdbFilePath();
       
       AtomCache cache = new AtomCache(config);
-      cache.setStrictSCOP(false);
       
      Structure s = null;
      try {

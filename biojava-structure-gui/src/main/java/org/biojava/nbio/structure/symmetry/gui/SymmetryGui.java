@@ -20,10 +20,27 @@
  */
 package org.biojava.nbio.structure.symmetry.gui;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
+
+import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.ce.AbstractUserArgumentProcessor;
-import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.gui.AlignmentCalculationRunnable;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.ParameterGUI;
@@ -33,12 +50,8 @@ import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
 
 /** 
  * A JFrame that allows to trigger a symmetry analysis, either from files
@@ -54,7 +67,7 @@ public class SymmetryGui extends JFrame {
 
 	private final static long serialVersionUID = 0l;
 
-	private CeSymm ceSymm = new CeSymm();
+	private CESymmParameters params = new CESymmParameters();
 	private JButton abortB;
 
 	private SelectPDBPanel  tab1 ;
@@ -231,13 +244,11 @@ public class SymmetryGui extends JFrame {
 	}
 
 	protected void configureParameters() {
-		CeSymm algorithm = getSymmetryAlgorithm();
 		System.out.println("configure parameters for " + 
-				algorithm.getAlgorithmName());
+				CeSymm.algorithmName);
 
 		// show a new config GUI
-		ConfigStrucAligParams params = algorithm.getParameters();
-		new ParameterGUI(params, algorithm.getAlgorithmName());
+		new ParameterGUI(params, CeSymm.algorithmName);
 	}
 
 	public void cleanUp() {
@@ -271,18 +282,18 @@ public class SymmetryGui extends JFrame {
 				return ;
 			}
 
-			String name = "custom";
+			StructureIdentifier name = new PassthroughIdentifier("custom");
 
 			if  ( pos == 0){
 				name = tab1.getName1();
 			} else {
-				name = s.getName();
+				name = s.getStructureIdentifier();
 			}
 
 			System.out.println("Analyzing: " + name);
 
 
-			alicalc = new SymmetryCalc(this,s,name);
+			alicalc = new SymmetryCalc(this, s);
 
 
 			thread = new Thread(alicalc);
@@ -292,6 +303,9 @@ public class SymmetryGui extends JFrame {
 			ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
 			drawer.start();
 		} catch (StructureException e){
+			JOptionPane.showMessageDialog(null,
+					"Could not align structures. Exception: " + e.getMessage());
+		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null,
 					"Could not align structures. Exception: " + e.getMessage());
 		}
@@ -312,8 +326,8 @@ public class SymmetryGui extends JFrame {
 	}
 
 
-	public CeSymm getSymmetryAlgorithm() {
-		return ceSymm;
+	public CESymmParameters getParameters() {
+		return params;
 	}
 
 }

@@ -20,12 +20,28 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import org.biojava.nbio.structure.*;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeSet;
+
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomPositionMap;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.ResidueRange;
+import org.biojava.nbio.structure.ResidueRangeAndLength;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.cath.CathDatabase;
 import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathFactory;
-import org.biojava.nbio.structure.cath.CathSegment;
 import org.biojava.nbio.structure.domain.PDPProvider;
 import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -33,21 +49,15 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
-import org.biojava.nbio.structure.scop.*;
-import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
+import org.biojava.nbio.structure.scop.ScopDatabase;
+import org.biojava.nbio.structure.scop.ScopDescription;
+import org.biojava.nbio.structure.scop.ScopDomain;
+import org.biojava.nbio.structure.scop.ScopFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A utility class that provides easy access to Structure objects. If you are running a script that is frequently
@@ -70,8 +80,6 @@ public class AtomCache {
 
 	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
 
-	public static final Pattern scopIDregex = Pattern.compile("d(....)(.)(.)");
-
 	public static final String UNDERSCORE = "_";
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -89,7 +97,6 @@ public class AtomCache {
 
 	private String path;
 
-	private boolean strictSCOP;
 	private boolean useMmCif;
 
 	/**
@@ -149,8 +156,6 @@ public class AtomCache {
 		params.setParseSecStruc(false);
 		//
 
-		strictSCOP = true;
-
 		setUseMmCif(true);
 
 	}
@@ -182,6 +187,7 @@ public class AtomCache {
 		this(config.getPdbFilePath(), config.getCacheFilePath());
 		fetchBehavior = config.getFetchBehavior();
 		obsoleteBehavior = config.getObsoleteBehavior();
+		useMmCif = config.getFileFormat().equals( UserConfiguration.MMCIF_FORMAT );
 	}
 
 	/**
@@ -196,6 +202,9 @@ public class AtomCache {
 	 * @see 
 	 */
 	public Atom[] getAtoms(String name) throws IOException, StructureException {
+		return getAtoms(new StructureName(name));
+	}
+	public Atom[] getAtoms(StructureIdentifier name) throws IOException, StructureException {
 
 		Atom[] atoms = null;
 
@@ -221,10 +230,12 @@ public class AtomCache {
 	 * @see 
 	 */
 	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
+		return getRepresentativeAtoms(new StructureName(name));
+	}
+	public Atom[] getRepresentativeAtoms(StructureIdentifier name) throws IOException, StructureException {
 
 		Atom[] atoms = null;
 
-		// System.out.println("loading " + name);
 		Structure s = getStructure(name);
 
 		atoms = StructureTools.getRepresentativeAtomArray(s);
@@ -351,6 +362,8 @@ public class AtomCache {
 	 * <li>URLs are accepted as well</li>
 	 * </ul>
 	 * 
+	 * <p>Note that this method should not be used in StructureIdentifier
+	 * implementations to avoid circular calls.
 	 * @param name
 	 * @return a Structure object, or null if name appears improperly formated (eg too short, etc)
 	 * @throws IOException
@@ -360,137 +373,159 @@ public class AtomCache {
 	 *             errors, eg for poorly formatted subranges.
 	 */
 	public Structure getStructure(String name) throws IOException, StructureException {
-
-		if (name.length() < 4) {
-			throw new IllegalArgumentException("Can't interpret IDs that are shorter than 4 characters!");
-		}
-
-		Structure n = null;
-
-		boolean useChainNr = false;
-		boolean useDomainInfo = false;
-		String range = null;
-		int chainNr = -1;
-
-
 		StructureName structureName = new StructureName(name);
 
-		String pdbId = null;
-		String chainId = null;
+		return getStructure(structureName);
+	}
 
-		if (name.length() == 4) {
-
-			pdbId = name;
-			Structure s;
-			if (useMmCif) {
-				s = loadStructureFromCifByPdbId(pdbId);
-			} else {
-				s = loadStructureFromPdbByPdbId(pdbId);
-			}
-			return s;
-		} else if (structureName.isScopName()) {
-
-			// return based on SCOP domain ID
-			return getStructureFromSCOPDomain(name);
-		} else if (structureName.isCathID()) {
-			return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
-		} else if (name.length() == 6) {
-			// name is PDB.CHAINID style (e.g. 4hhb.A)
-
-			pdbId = name.substring(0, 4);
-			if (name.substring(4, 5).equals(CHAIN_SPLIT_SYMBOL)) {
-				chainId = name.substring(5, 6);
-			} else if (name.substring(4, 5).equals(CHAIN_NR_SYMBOL)) {
-
-				useChainNr = true;
-				chainNr = Integer.parseInt(name.substring(5, 6));
-			}
-
-		} else if (name.startsWith("file:/") || name.startsWith("http:/")) {
-			// this is a URL
-			
-			URL url = new URL(name);
-			return getStructureFromURL(url);
-			
-
-		} else if (structureName.isPDPDomain()) {
-
-			// this is a PDP domain definition
-
-			return getPDPStructure(name);
-			
-		} else if (name.startsWith(BIOL_ASSEMBLY_IDENTIFIER)) {
-
-			return getBioAssembly(name);
-
-		} else if (name.length() > 6 && !name.startsWith(PDP_DOMAIN_IDENTIFIER)
-				&& (name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE))
-				&& !(name.startsWith("file:/") || name.startsWith("http:/"))
-
-				) {
-
-			// this is a name + range
-
-			pdbId = name.substring(0, 4);
-			// this ID has domain split information...
-			useDomainInfo = true;
-			range = name.substring(5);
-
-		}
-
-		// System.out.println("got: >" + name + "< " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " "
-		// +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
-
-		if (pdbId == null) {
-
-			return null;
-		}
-
-		while (checkLoading(pdbId)) {
-			// waiting for loading to be finished...
-
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage());
-			}
-
-		}
-
-		// long start = System.currentTimeMillis();
-
-		Structure s;
-		if (useMmCif) {
-			s = loadStructureFromCifByPdbId(pdbId);
-		} else {
-			s = loadStructureFromPdbByPdbId(pdbId);
-		}
-
-		// long end = System.currentTimeMillis();
-		// System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" +
-		// StructureTools.getNrAtoms(s) + "\t cached: " + cache.size());
-
-		if (chainId == null && chainNr < 0 && range == null) {
-			// we only want the 1st model in this case
-			n = StructureTools.getReducedStructure(s, -1);
-		} else {
-
-			if (useChainNr) {
-				// System.out.println("using ChainNr");
-				n = StructureTools.getReducedStructure(s, chainNr);
-			} else if (useDomainInfo) {
-				// System.out.println("calling getSubRanges");
-				n = StructureTools.getSubRanges(s, range);
-			} else {
-				// System.out.println("reducing Chain Id " + chainId);
-				n = StructureTools.getReducedStructure(s, chainId);
-			}
-		}
-
-
-
-		n.setName(name);
-		return n;
+	/**
+	 * Get the structure corresponding to the given {@link StructureIdentifier}.
+	 * Equivalent to calling {@link StructureIdentifier#loadStructure(AtomCache)}
+	 * followed by {@link StructureIdentifier#reduce(Structure)}.
+	 * 
+	 * <p>Note that this method should not be used in StructureIdentifier
+	 * implementations to avoid circular calls.
+	 * @param strucId
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructure(StructureIdentifier strucId) throws IOException, StructureException {
+		Structure s = strucId.loadStructure(this);
+		Structure r = strucId.reduce(s);
+		r.setStructureIdentifier(strucId);
+		return r;
+	
+//		if (name.length() < 4) {
+//			throw new IllegalArgumentException("Can't interpret IDs that are shorter than 4 characters!");
+//		}
+//
+//		Structure n = null;
+//
+//		boolean useChainNr = false;
+//		boolean useDomainInfo = false;
+//		String range = null;
+//		int chainNr = -1;
+//
+//
+//		StructureName structureName = new StructureName(name);
+//
+//		String pdbId = null;
+//		String chainId = null;
+//
+//		if (name.length() == 4) {
+//
+//			pdbId = name;
+//			Structure s;
+//			if (useMmCif) {
+//				s = loadStructureFromCifByPdbId(pdbId);
+//			} else {
+//				s = loadStructureFromPdbByPdbId(pdbId);
+//			}
+//			return s;
+//		} else if (structureName.isScopName()) {
+//
+//			// return based on SCOP domain ID
+//			return getStructureFromSCOPDomain(name);
+//		} else if (structureName.isCathID()) {
+//			return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
+//		} else if (name.length() == 6) {
+//			// name is PDB.CHAINID style (e.g. 4hhb.A)
+//
+//			pdbId = name.substring(0, 4);
+//			if (name.substring(4, 5).equals(CHAIN_SPLIT_SYMBOL)) {
+//				chainId = name.substring(5, 6);
+//			} else if (name.substring(4, 5).equals(CHAIN_NR_SYMBOL)) {
+//
+//				useChainNr = true;
+//				chainNr = Integer.parseInt(name.substring(5, 6));
+//			}
+//
+//		} else if (name.startsWith("file:/") || name.startsWith("http:/")) {
+//			// this is a URL
+//			
+//			URL url = new URL(name);
+//			return getStructureFromURL(url);
+//			
+//
+//		} else if (structureName.isPDPDomain()) {
+//
+//			// this is a PDP domain definition
+//
+//			return getPDPStructure(name);
+//			
+//		} else if (name.startsWith(BIOL_ASSEMBLY_IDENTIFIER)) {
+//
+//			return getBioAssembly(name);
+//
+//		} else if (name.length() > 6 && !name.startsWith(PDP_DOMAIN_IDENTIFIER)
+//				&& (name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE))
+//				&& !(name.startsWith("file:/") || name.startsWith("http:/"))
+//
+//				) {
+//
+//			// this is a name + range
+//
+//			pdbId = name.substring(0, 4);
+//			// this ID has domain split information...
+//			useDomainInfo = true;
+//			range = name.substring(5);
+//
+//		}
+//
+//		// System.out.println("got: >" + name + "< " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " "
+//		// +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
+//
+//		if (pdbId == null) {
+//
+//			return null;
+//		}
+//
+//		while (checkLoading(pdbId)) {
+//			// waiting for loading to be finished...
+//
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				logger.error(e.getMessage());
+//			}
+//
+//		}
+//
+//		// long start = System.currentTimeMillis();
+//
+//		Structure s;
+//		if (useMmCif) {
+//			s = loadStructureFromCifByPdbId(pdbId);
+//		} else {
+//			s = loadStructureFromPdbByPdbId(pdbId);
+//		}
+//
+//		// long end = System.currentTimeMillis();
+//		// System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" +
+//		// StructureTools.getNrAtoms(s) + "\t cached: " + cache.size());
+//
+//		if (chainId == null && chainNr < 0 && range == null) {
+//			// we only want the 1st model in this case
+//			n = StructureTools.getReducedStructure(s, -1);
+//		} else {
+//
+//			if (useChainNr) {
+//				// System.out.println("using ChainNr");
+//				n = StructureTools.getReducedStructure(s, chainNr);
+//			} else if (useDomainInfo) {
+//				// System.out.println("calling getSubRanges");
+//				n = StructureTools.getSubRanges(s, range);
+//			} else {
+//				// System.out.println("reducing Chain Id " + chainId);
+//				n = StructureTools.getReducedStructure(s, chainId);
+//			}
+//		}
+//
+//
+//
+//		n.setName(name);
+//		return n;
 
 	}
 
@@ -542,20 +577,11 @@ public class AtomCache {
 			throws IOException, StructureException {
 
 		String pdbId = domain.getPdbId();
-		Structure fullStructure = getStructure(pdbId);
+		Structure fullStructure = getStructureForPdbId(pdbId);
+		Structure structure = domain.reduce(fullStructure);
 
-		// build the substructure
-		StringBuilder rangeString = new StringBuilder();
-		Iterator<String> iter = domain.getRanges().iterator();
-		while (iter.hasNext()) {
-			rangeString.append(iter.next());
-			if (iter.hasNext()) {
-				rangeString.append(",");
-			}
-		}
-		Structure structure = StructureTools.getSubRanges(fullStructure, rangeString.toString());
-		structure.setName(domain.getScopId());
-		structure.setPDBCode(domain.getScopId());
+		// TODO It would be better to move all of this into the reduce method,
+		// but that would require ligand handling properties in StructureIdentifiers
 
 		// because ligands sometimes occur after TER records in PDB files, we may need to add some ligands back in
 		// specifically, we add a ligand if and only if it occurs within the domain
@@ -677,13 +703,17 @@ public class AtomCache {
 
 
 	/**
-	 * Reports whether strict scop naming will be enforced, or whether this AtomCache should try to guess some simple
-	 * variants on scop domains.
+	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
+	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
+	 * For strictSCOP==False, create a {@link StructureName} or use
+	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
 	 * 
-	 * @return true if scop names should be used strictly with no guessing
+	 * @return false; ignored
+	 * @deprecated since 4.2
 	 */
+	@Deprecated
 	public boolean isStrictSCOP() {
-		return strictSCOP;
+		return false;
 	}
 
 	/**
@@ -851,17 +881,18 @@ public class AtomCache {
 
 
 	/**
-	 * When strictSCOP is enabled, SCOP domain identifiers (eg 'd1gbga_') are matched literally to the SCOP database.
+	 * This method does nothing.
 	 * 
-	 * When disabled, some simple mistakes are corrected automatically. For instance, the invalid identifier 'd1gbg__'
-	 * would be corrected to 'd1gbga_' automatically.
+	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
+	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
+	 * For strictSCOP==False, create a {@link StructureName} or use
+	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
 	 * 
-	 * @param strictSCOP
-	 *            Indicates whether strict scop names should be used.
+	 * @param strictSCOP Ignored
+	 * @deprecated Removed in 4.2.0
 	 */
-	public void setStrictSCOP(boolean strictSCOP) {
-		this.strictSCOP = strictSCOP;
-	}
+	@Deprecated
+	public void setStrictSCOP(boolean ignored) {}
 
 	/**
 	 * @return the useMmCif
@@ -914,21 +945,6 @@ public class AtomCache {
 		return s;
 	}
 
-	private Structure getPDPStructure(String pdpDomainName) {
-
-		// System.out.println("loading PDP domain from server " + pdpDomainName);
-		if (pdpprovider == null) {
-			pdpprovider = new RemotePDPProvider(true);
-		}
-
-		return pdpprovider.getDomain(pdpDomainName, this);
-
-	}
-
-	private ScopDomain getScopDomain(String scopId) {
-		return ScopFactory.getSCOP().getDomainByScopID(scopId);
-	}
-
 	/**
 	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the the {@link CathDatabase}
 	 * at {@link CathFactory#getCathDatabase()}.
@@ -942,36 +958,11 @@ public class AtomCache {
 	 */
 	public Structure getStructureForCathDomain(StructureName structureName, CathDatabase cathInstall) throws IOException, StructureException {
 
-		CathDomain cathDomain = cathInstall.getDomainByCathId(structureName.getName());
+		CathDomain cathDomain = cathInstall.getDomainByCathId(structureName.getIdentifier());
 
-		List<CathSegment> segments = cathDomain.getSegments();
+		Structure s = getStructureForPdbId(cathDomain.getIdentifier());
+		Structure n = cathDomain.reduce(s);
 
-		StringWriter range = new StringWriter();
-
-		int rangePos = 0;
-		String chainId = structureName.getChainId();
-		for (CathSegment segment : segments) {
-			rangePos++;
-
-			range.append(chainId);
-			range.append("_");
-
-			range.append(segment.getStart());
-			range.append("-");
-			range.append(segment.getStop());
-			if (segments.size() > 1 && rangePos < segments.size()) {
-				range.append(",");
-			}
-		}
-
-		String pdbId = structureName.getPdbId();
-
-		Structure s = getStructure(pdbId);
-
-		String rangeS = range.toString();
-		
-		Structure n = StructureTools.getSubRanges(s, rangeS);
-		
 		// add the ligands of the chain...
 
 		Chain newChain = n.getChainByPDB(structureName.getChainId());
@@ -984,185 +975,7 @@ public class AtomCache {
 			}
 		}
 
-		// set new Header..
-		n.setName(structureName.getName());
-		n.setPDBCode(structureName.getPdbId());
-
-		n.getPDBHeader().setDescription(cathDomain.getDomainName());
-
 		return n;
-	}
-
-	private Structure getStructureFromSCOPDomain(String name) throws IOException, StructureException {
-		// looks like a SCOP domain!
-		ScopDomain domain;
-		if (strictSCOP) {
-			domain = getScopDomain(name);
-		} else {
-			domain = guessScopDomain(name);
-		}
-
-		//System.out.println(domain);
-		if (domain != null) {
-			Structure s = getStructureForDomain(domain);
-			return s;
-		}
-
-		// Guessing didn't work, so just use the PDBID and Chain from name
-		if (!strictSCOP) {
-			Matcher scopMatch = scopIDregex.matcher(name);
-			if (scopMatch.matches()) {
-				String pdbID = scopMatch.group(1);
-				String chainID = scopMatch.group(2);
-
-				// None of the actual SCOP domains match. Guess that '_' means 'whole chain'
-				if (!chainID.equals("_")) {
-					// Add chain identifier
-					pdbID += "." + scopMatch.group(2);
-				}
-				// Fetch the structure by pdb id
-				Structure struct = getStructure(pdbID);
-				if (struct != null) {
-					System.err.println("Trying chain " + pdbID);
-				}
-
-				return struct;
-			}
-		}
-
-		throw new StructureException("Unable to get structure for SCOP domain: " + name);
-	}
-
-	private Structure getStructureFromURL(URL url) throws IOException, StructureException {
-		// looks like a URL for a file was provided:
-		System.out.println("fetching structure from URL:" + url);
-
-		String queryS = url.getQuery();
-		String chainId = null;
-		
-		String fullu = url.toString();
-		if (fullu.startsWith("file:") && fullu.endsWith("?" + queryS)) {
-			String newu = fullu.substring(0, fullu.length() - ("?" + queryS).length());
-			url = new URL(newu);
-		}
-		
-		if (queryS != null && queryS.startsWith("chainId=")) {
-			chainId = queryS.substring(8);
-		}
-		
-		if ( fullu.contains(".cif")) {
-
-			// need to do mmcif parsing!
-
-			InputStreamProvider prov = new InputStreamProvider();
-			InputStream inStream =  prov.getInputStream(url);
-
-			MMcifParser parser = new SimpleMMcifParser();
-
-			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-			consumer.setFileParsingParameters(params);
-
-
-			parser.addMMcifConsumer(consumer);
-
-			try {
-				parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-			} catch (IOException e){
-				e.printStackTrace();
-			}
-
-			// now get the protein structure.
-			Structure cifStructure = consumer.getStructure();
-			if (chainId == null) {
-				return StructureTools.getReducedStructure(cifStructure, -1);
-			} else {
-				return StructureTools.getReducedStructure(cifStructure, chainId);
-			}
-
-		} else {
-
-			// pdb file based parsing
-
-			PDBFileReader reader = new PDBFileReader(path);
-			reader.setFetchBehavior(fetchBehavior);
-			reader.setObsoleteBehavior(obsoleteBehavior);
-
-			reader.setFileParsingParameters(params);
-			Structure s = reader.getStructure(url);
-			if (chainId == null) {
-				return StructureTools.getReducedStructure(s, -1);
-			} else {
-				return StructureTools.getReducedStructure(s, chainId);
-			}
-		}
-	}
-
-	/**
-	 * <p>
-	 * Guess a scop domain. If an exact match is found, return that.
-	 * 
-	 * <p>
-	 * Otherwise, return the first scop domain found for the specified protein such that
-	 * <ul>
-	 * <li>The chains match, or one of the chains is '_' or '.'.
-	 * <li>The domains match, or one of the domains is '_'.
-	 * </ul>
-	 * 
-	 * 
-	 * @param name
-	 * @return
-	 * @throws IOException
-	 * @throws StructureException
-	 */
-	private ScopDomain guessScopDomain(String name) throws IOException, StructureException {
-		List<ScopDomain> matches = new LinkedList<ScopDomain>();
-
-		// Try exact match first
-		ScopDomain domain = getScopDomain(name);
-		if (domain != null) {
-			return domain;
-		}
-
-		// Didn't work. Guess it!
-		logger.warn("Warning, could not find SCOP domain: " + name);
-
-		Matcher scopMatch = scopIDregex.matcher(name);
-		if (scopMatch.matches()) {
-			String pdbID = scopMatch.group(1);
-			String chainID = scopMatch.group(2);
-			String domainID = scopMatch.group(3);
-
-			for (ScopDomain potentialSCOP : ScopFactory.getSCOP().getDomainsForPDB(pdbID)) {
-				Matcher potMatch = scopIDregex.matcher(potentialSCOP.getScopId());
-				if (potMatch.matches()) {
-					if (chainID.equals(potMatch.group(2)) || chainID.equals("_") || chainID.equals(".")
-							|| potMatch.group(2).equals("_") || potMatch.group(2).equals(".")) {
-						if (domainID.equals(potMatch.group(3)) || domainID.equals("_") || potMatch.group(3).equals("_")) {
-							// Match, or near match
-							matches.add(potentialSCOP);
-						}
-					}
-				}
-			}
-		}
-
-		Iterator<ScopDomain> match = matches.iterator();
-		if (match.hasNext()) {
-			ScopDomain bestMatch = match.next();
-			StringBuilder warnMsg = new StringBuilder();
-			warnMsg.append("Trying domain " + bestMatch.getScopId() + ".");
-			if (match.hasNext()) {
-				warnMsg.append(" Other possibilities: ");
-				while (match.hasNext()) {
-					warnMsg.append(match.next().getScopId() + " ");
-				}
-			}
-			warnMsg.append(System.getProperty("line.separator"));
-			logger.warn(warnMsg.toString());
-			return bestMatch;
-		} else {
-			return null;
-		}
 	}
 
 	protected void flagLoading(String name) {
@@ -1176,6 +989,40 @@ public class AtomCache {
 	
 		currentlyLoading.remove(name);
 	}
+	
+	/**
+	 * Loads a structure directly by PDB ID
+	 * @param pdbId
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForPdbId(String pdbId) throws IOException, StructureException {
+		if(pdbId == null)
+			return null;
+		if(pdbId.length() != 4) {
+			throw new StructureException("Unrecognized PDB ID: "+pdbId);
+		}
+		while (checkLoading(pdbId)) {
+			// waiting for loading to be finished...
+
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage());
+			}
+
+		}
+
+		Structure s;
+		if (useMmCif) {
+			s = loadStructureFromCifByPdbId(pdbId);
+		} else {
+			s = loadStructureFromPdbByPdbId(pdbId);
+		}
+		return s;
+	}
+
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
 
@@ -1191,7 +1038,7 @@ public class AtomCache {
 			s = reader.getStructureById(pdbId.toLowerCase());
 
 		} finally {
-			flagLoadingFinished(pdbId);			
+			flagLoadingFinished(pdbId);
 		}
 
 		return s;
@@ -1213,7 +1060,7 @@ public class AtomCache {
 		} finally {
 			flagLoadingFinished(pdbId);
 		}
-		
+
 		return s;
 	}
 

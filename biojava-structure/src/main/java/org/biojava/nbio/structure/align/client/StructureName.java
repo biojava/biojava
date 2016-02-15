@@ -21,105 +21,356 @@
 package org.biojava.nbio.structure.align.client;
 
 
-import org.biojava.nbio.structure.align.util.AtomCache;
-
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.biojava.nbio.structure.PassthroughIdentifier;
+import org.biojava.nbio.structure.ResidueRange;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.URLIdentifier;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.cath.CathFactory;
+import org.biojava.nbio.structure.domain.PDPDomain;
+import org.biojava.nbio.structure.domain.PDPProvider;
+import org.biojava.nbio.structure.domain.RemotePDPProvider;
+import org.biojava.nbio.structure.ecod.EcodFactory;
+import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.structure.scop.ScopDatabase;
+import org.biojava.nbio.structure.scop.ScopDomain;
+import org.biojava.nbio.structure.scop.ScopFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-/** A utility class that makes working with names of structures, domains and ranges easier.
+/** 
+ * A utility class that makes working with names of structures, domains and ranges easier.
+ * 
+ * Accepts a wide range of identifier formats, including {@link ScopDomain},
+ * {@link CathDomain}, PDP domains, and {@link SubstructureIdentifier} residue
+ * ranges.
+ * 
+ * Where possible, data is extracted from the input string. Otherwise, range 
+ * information may be loaded from one of the factory classes:
+ * {@link CathFactory},{@link ScopFactory}, etc.
  * 
  * @see #getName the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
  */
-public class StructureName implements Comparable<StructureName>, Serializable {
 
-	private static final long serialVersionUID = 4021229518711762954L;
+public class StructureName implements Comparable<StructureName>, Serializable, StructureIdentifier {
+	private static final long serialVersionUID = 4021229518711762957L;
+	private static final Logger logger = LoggerFactory.getLogger(StructureName.class);
+
 	protected String name;
 	protected String pdbId;
 	protected String chainId;
 
-	String cathPattern = "[0-9][a-z0-9][a-z0-9][a-z0-9].[0-9][0-9]";
+	private static final Pattern cathPattern = Pattern.compile("^([0-9][a-z0-9]{3})(\\w)([0-9]{2})$",Pattern.CASE_INSENSITIVE);
+	// ds046__ is a special case with no PDB entry
+	private static final Pattern scopPattern = Pattern.compile("^d([0-9][a-z0-9]{3}|s046)(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
+	// ECOD chains and domains can't be automatically distinguished. Ex: e3j9zS13 is chain 'S1', e1wz2B14 is chain 'B'
+	private static final Pattern ecodPattern = Pattern.compile("^e([0-9][a-zA-Z0-9]{3})(?:\\w|\\.)\\w+$",Pattern.CASE_INSENSITIVE);
 
 	private enum Source {
 		PDB,
 		SCOP,
 		PDP,
-		CATH
+		CATH,
+		URL,
+		FILE,
+		ECOD,
 	};
 
-	Source mySource = null;
-	
-	public StructureName(String name){
-		if ( name.length() <  4)
-			throw new IllegalArgumentException("This is not a valid StructureName:" + name);
+	private Source mySource = null; 
 
+	// cache for realize() method
+	private StructureIdentifier realized = null;
+	
+	/**
+	 * Create a new StructureName from the given identifier, which may be a 
+	 * domain name, a substructure identifier, etc.
+	 * 
+	 * The source and PDB-Id are extracted at compile time, but fully
+	 * interpreting the ID, which may require additional parsing or remote
+	 * calls, is done lazily.
+	 * @param name An identifier string
+	 * @throws IllegalArgumentException if the name has a recognizable source but is semantically invalid
+	 */
+	public StructureName(String name){
 		this.name = name;
 
-		this.pdbId = parsePdbId();
-
-		this.chainId = parseChainId();
-
+		init();//sets pdbId and mySource
 	}
 
-	/** PDB IDs are always returned as upper case
-	 * 
-	 * @return upper case PDB ID
+
+	/**
+	 * Tries to determine the source and pdbId without fully realizing the identifier,
+	 * which could require I/O depending on the source
+	 * @throws IllegalArgumentException if the source is recognizable but invalid
 	 */
-	public String getPdbId(){
+	private void init(){
+		// SCOP domain
+		Matcher matcher = scopPattern.matcher(name);
+		if ( matcher.matches() ) {
+			mySource = Source.SCOP;
+			pdbId = matcher.group(1);
+			chainId = matcher.group(2);
+			return;
+		}
+		// PDP
+		if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
+			// starts with PDP:
+			// eg: PDP:3LGFAa
+			mySource = Source.PDP;
+			matcher = PDPDomain.PDP_NAME_PATTERN.matcher(name);
+			if(! matcher.matches() ) {
+				throw new IllegalArgumentException("Malformed PDP domain name");
+			}
+			pdbId = matcher.group(1);
+			chainId = matcher.group(2);
+			return;
+		}
+		// CATH
+		matcher = cathPattern.matcher(name);
+		if ( matcher.matches() ){
+			mySource = Source.CATH;
+			pdbId = matcher.group(1);
+			chainId = matcher.group(2);
+			return;
+		}
+		// ECOD
+		matcher = ecodPattern.matcher(name);
+		if ( matcher.matches() ){
+			mySource = Source.ECOD;
+			pdbId = matcher.group(1);
+			chainId = null;
+			return;
+		}
+		// URL
+		try {
+			URL url = new URL(name);
+			mySource = Source.URL;
+			String path = url.getPath();
+			pdbId = URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) );
+			chainId = null;
+			return;
+		} catch(MalformedURLException e) {}
+		// File
+		File file = new File(FileDownloadUtils.expandUserHome(name));
+		if( file.canRead() && !file.isDirectory() ) {
+			mySource = Source.FILE;
+			pdbId = null;
+			chainId = null;
+			return;
+		}
 
-		return pdbId;
+		// Default to PDB
+		mySource = Source.PDB;
+		SubstructureIdentifier si = new SubstructureIdentifier(getIdentifier());
+		realized = si; // Safe to realize immediately
+
+		pdbId = si.getPdbId();
+		// Set chainId if unique
+		Set<String> chains = getChainIds(si);
+		if(chains.size() == 1) {
+			this.chainId = chains.iterator().next();
+		} else if(chains.size() > 1) {
+			this.chainId = ".";
+		} else {
+			this.chainId = null;
+		}
 	}
 
+	private static Set<String> getChainIds(SubstructureIdentifier si) {
+		Set<String> chains = new TreeSet<String>();
+		List<ResidueRange> ranges = si.getResidueRanges();
+		for(ResidueRange range : ranges) {
+			String chain = range.getChainId();
+			if(chain != null) {
+				chains.add(chain);
+			}
+		}
+		return chains;
+	}
 
-	public String getChainId(){
+	/**
+	 * Get the PDB ID for this name, if any.
+	 * 
+	 * Equivalent to {@link SubstructureIdentifier#getPdbId()
+	 * toCanonical().getPdbId()}
+	 * @return The upper-case PDB Name, or null if not applicable
+	 * @throws StructureException Wraps errors which occur when converting to canonical form
+	 */
+	public String getPdbId() throws StructureException {
+		if( pdbId == null) {
+			pdbId = toCanonical().getPdbId();
+		}
+		return pdbId.toUpperCase();
+	}
 
+	/**
+	 * Gets the chain ID, for structures where it is unique and well-defined.
+	 * May return '.' for multi-chain ranges, '_' for wildcard chains, or
+	 * null if the information is unavailable.
+	 * 
+	 * <p>This method should only be used casually. For precise chainIds, it
+	 * is better to use {@link #toCanonical()} and iterate through the
+	 * residue ranges.
+	 * @return
+	 */
+	public String getChainId() {
 		return chainId;
 	}
-
+	/**
+	 * 
+	 * @return the identifier string
+	 * @deprecated use {@link #getIdentifier()}
+	 */
+	@Deprecated
 	public String getName(){
 
+		return getIdentifier();
+	}
+
+	/**
+	 * Get the original form of the identifier
+	 */
+	@Override
+	public String getIdentifier() {
 		return name;
 	}
 
 	@Override
 	public String toString(){
 
-		StringBuilder s = new StringBuilder();
-
-		s.append(name);
-
-		s.append(" PDB ID: ");
-		s.append(getPdbId());
-
-		if ( isScopName()) {
-			s.append(" is a SCOP name");
-		}
-
-		String chainID= getChainId();
-		if ( chainID != null) {
-			s.append(" has chain ID: ");
-			s.append(chainID);
-		}
-
-		if ( isPDPDomain())
-			s.append(" is a PDP domain");
-
-		return s.toString();
-
+		return name;
 	}
+
 
 	public boolean isScopName() {
-		return name.startsWith("d") && name.length() > 6;
-	}
-
-
-
-	public boolean hasChainID(){
-		return chainId != null;
+		return mySource == Source.SCOP;
 	}
 
 	public boolean isPDPDomain(){
-		return name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER);
+		return mySource == Source.PDP;
+	}
+
+	public boolean isCathID(){
+		return mySource == Source.CATH;
+	}
+
+	public boolean isPdbId(){
+		return mySource == Source.PDB;
+	}
+
+	public boolean isURL() {
+		return mySource == Source.URL;
+	}
+
+	public boolean isFile() {
+		return mySource == Source.FILE;
+	}
+	
+	public boolean isEcodDomain() {
+		return mySource == Source.ECOD;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws StructureException Wraps exceptions that may be thrown by
+	 *  individual implementations. For example, a SCOP identifier may require
+	 *  that the domain definitions be available for download.
+	 */
+	private StructureIdentifier realize() throws StructureException {
+		if( realized == null ) {
+
+			switch(mySource) {
+			case CATH:
+				realized = CathFactory.getCathDatabase().getDescriptionByCathId(getIdentifier());
+				break;
+			case ECOD:
+				try {
+					realized = EcodFactory.getEcodDatabase().getDomainsById(name);
+				} catch (IOException e) {
+					throw new StructureException("Unable to get ECOD domain "+name,e);
+				}
+				break;
+			case SCOP:
+				// Fuzzy matching of the domain name to the current default factory
+				realized = guessScopDomain(getIdentifier(),ScopFactory.getSCOP());
+				if(realized == null) {
+					// Guessing didn't work, so just use the PDBID and Chain from name
+					// Guess that '_' means 'whole structure'
+					if (chainId.equals("_")) {
+						realized = new SubstructureIdentifier(pdbId);
+					} else {
+						realized = new SubstructureIdentifier(pdbId,ResidueRange.parseMultiple(chainId));
+					}
+					logger.error("Unable to find {}, so using {}",name,realized);
+				}
+				break;
+			case FILE:
+				try {
+					realized = new URLIdentifier(new File(FileDownloadUtils.expandUserHome(name)).toURI().toURL());
+				} catch (MalformedURLException e) {
+					// Should never happen
+					throw new StructureException("Unable to get URL for file: "+name,e);
+				}
+				break;
+			case URL:
+				try {
+					realized = new URLIdentifier(name);
+				} catch (MalformedURLException e) {
+					throw new StructureException("Invalid URL: "+name,e);
+				}
+				break;
+			case PDP:
+				//TODO -sbliven 2015-01-28
+				try {
+					PDPProvider provider = new RemotePDPProvider(false);
+					realized = provider.getPDPDomain(name);
+				} catch (IOException e) {
+					throw new StructureException("Unable to fetch PDP domain "+name, e);
+				}
+				break;
+			case PDB:
+				realized = new SubstructureIdentifier(getIdentifier());
+				break;
+			default:
+				realized = new PassthroughIdentifier(name);
+				break;
+			}
+		}
+		return realized;
+	}
+
+	@Override
+	public SubstructureIdentifier toCanonical() throws StructureException {
+		return realize().toCanonical();
+	}
+
+	@Override
+	public Structure reduce(Structure input) throws StructureException {
+		return realize().reduce(input);
+	}
+	
+	@Override
+	public Structure loadStructure(AtomCache cache) throws StructureException,
+			IOException {
+		return realize().loadStructure(cache);
 	}
 
 	@Override
@@ -147,85 +398,120 @@ public class StructureName implements Comparable<StructureName>, Serializable {
 		return true;
 	}
 
+	/**
+	 * Orders identifiers lexicographically by PDB ID and then full Identifier
+	 */
 	@Override
 	public int compareTo(StructureName o) {
 		if ( this.equals(o))
 			return 0;
-		if ( o.getPdbId() == null)
-			return -1;
-		if ( this.getPdbId() == null)
-			return 1;
 
-		if ( ! o.getPdbId().equals(this.getPdbId())){
-			return this.getPdbId().compareTo(o.getPdbId());
-		}
+		String pdb1 = null;
+		String pdb2 = null;
+		try {
+			pdb1 = this.getPdbId();
+		} catch (StructureException e) {}
+		try {
+			pdb2 = this.getPdbId();
+		} catch (StructureException e) {}
 
-		return this.getName().compareTo(o.getName());
+		int comp = 0;
 
-	}
-
-	private String parsePdbId(){
-
-		// TODO dmyersturnbull: Why do we uppercase? It seems like it does more harm than good.
-
-		if ( isScopName() ) {
-			mySource = Source.SCOP;
-			return name.substring(1,5).toUpperCase();
-		}
-		else if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
-			// starts with PDP:
-			// eg: PDP:3LGFAa
-			mySource = Source.PDP;
-			return name.substring(4,8).toUpperCase();
-		} else  if ( isCathID()){
-			mySource = Source.CATH;
-			return name.substring(0,4);
-		} else  {
-			mySource = Source.PDB;
-			// all other names start with PDB id
-			return name.substring(0,4).toUpperCase();
-		}
-
-	}
-
-
-	private String parseChainId(){
-
-		if (name.length() == 6){
-			// name is PDB.CHAINID style (e.g. 4hhb.A)
-			if ( name.substring(4,5).equals(AtomCache.CHAIN_SPLIT_SYMBOL)) {
-				return name.substring(5,6);
+		// Sort those with PDBIDs before those without
+		if( pdb1 == null ) {
+			if( pdb2 != null) {
+				return 1; // this > o
 			}
-
-		}  else if ( isCathID()){
-			return name.substring(4,5);
-
-		} else  if ( name.startsWith("d")){
-
-			Matcher scopMatch = AtomCache.scopIDregex.matcher(name);
-			if( scopMatch.matches() ) {
-				//String pdbID = scopMatch.group(1);
-				String chainID = scopMatch.group(2);
-				//String domainID = scopMatch.group(3);
-				// unfortunately SCOP chain IDS are lowercase!
-				return chainID.toUpperCase();
-			}
-
-		} else if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
-			// eg. PDP:4HHBAa
-			return name.substring(8,9);
+			// both null
+		} else if( pdb2 == null){
+			return -1; // this < o
+		} else {
+			// neither null
+			comp = pdb1.compareTo(pdb2);
+		}
+		if( comp != 0 ) {
+			return comp;
 		}
 
-		return null;
+		// break tie with full identifiers
+		pdb1 = this.getIdentifier();
+		pdb2 = o.getIdentifier();
+
+		// Throws NPE for nulls
+		return pdb1.compareTo(pdb2);
+	}
+	
+	/**
+	 * <p>
+	 * Guess a scop domain. If an exact match is found, return that.
+	 * 
+	 * <p>
+	 * Otherwise, return the first scop domain found for the specified protein such that
+	 * <ul>
+	 * <li>The chains match, or one of the chains is '_' or '.'.
+	 * <li>The domains match, or one of the domains is '_'.
+	 * </ul>
+	 * 
+	 * In some cases there may be several valid matches. In this case a warning
+	 * will be logged.
+	 * 
+	 * @param name SCOP domain name, or a guess thereof
+	 * @param scopDB SCOP domain provider
+	 * @return The best match for name among the domains of scopDB, or null if none match.
+	 */
+	public static ScopDomain guessScopDomain(String name, ScopDatabase scopDB) {
+		List<ScopDomain> matches = new LinkedList<ScopDomain>();
+
+		// Try exact match first
+		ScopDomain domain = scopDB.getDomainByScopID(name);
+		if (domain != null) {
+			return domain;
+		}
+
+		// Didn't work. Guess it!
+		logger.warn("Warning, could not find SCOP domain: " + name);
+
+		Matcher scopMatch = scopPattern.matcher(name);
+		if (scopMatch.matches()) {
+			String pdbID = scopMatch.group(1);
+			String chainID = scopMatch.group(2);
+			String domainID = scopMatch.group(3);
+
+			for (ScopDomain potentialSCOP : scopDB.getDomainsForPDB(pdbID)) {
+				Matcher potMatch = scopPattern.matcher(potentialSCOP.getScopId());
+				if (potMatch.matches()) {
+					if (chainID.equals(potMatch.group(2)) || chainID.equals("_") || chainID.equals(".")
+							|| potMatch.group(2).equals("_") || potMatch.group(2).equals(".")) {
+						if (domainID.equals(potMatch.group(3)) || domainID.equals("_") || potMatch.group(3).equals("_")) {
+							// Match, or near match
+							matches.add(potentialSCOP);
+						}
+					}
+				}
+			}
+		}
+
+		Iterator<ScopDomain> match = matches.iterator();
+		if (match.hasNext()) {
+			ScopDomain bestMatch = match.next();
+			if(logger.isWarnEnabled()) {
+				StringBuilder warnMsg = new StringBuilder();
+				warnMsg.append("Trying domain " + bestMatch.getScopId() + ".");
+				if (match.hasNext()) {
+					warnMsg.append(" Other possibilities: ");
+					while (match.hasNext()) {
+						warnMsg.append(match.next().getScopId() + " ");
+					}
+				}
+				warnMsg.append(System.getProperty("line.separator"));
+				logger.warn(warnMsg.toString());
+			}
+			return bestMatch;
+		} else {
+			return null;
+		}
 	}
 
-	public boolean isCathID() {
-		return name.length() == 7 && name.matches(cathPattern);
-	}
-
-	public boolean isPdbId(){
-		return name.length() == 4;
-	}
-
-
+	
+	
 }

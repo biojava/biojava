@@ -32,6 +32,7 @@ import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.sequence.template.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -43,9 +44,12 @@ import java.util.List;
  * @author Mark Chapman
  * @param <C> each element of the {@link Sequence} is a {@link Compound} of type C
  */
-public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> implements AlignedSequence<S, C> {
+public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> implements Serializable, AlignedSequence<S, C> {
 
-    private static final String gap = "-";
+    
+	private static final long serialVersionUID = 1L;
+
+	private static final String gap = "-";
 
     // always stored
     private AlignedSequence<S, C> prev;

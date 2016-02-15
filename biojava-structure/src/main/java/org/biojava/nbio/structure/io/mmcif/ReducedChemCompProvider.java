@@ -20,17 +20,15 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
+
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** Unlike the {@link DownloadChemCompProvider}, this  {@link ChemCompProvider} does not download any chem comp definitions. 
@@ -46,54 +44,45 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 	public ReducedChemCompProvider(){
 		logger.debug("Initialising ReducedChemCompProvider");
 	}
-	
-	
-	public ChemComp getEmptyChemComp(){
-		ChemComp comp = new ChemComp();
-		
-		comp.setOne_letter_code("?");
-		comp.setPolymerType(PolymerType.unknown);
-		comp.setResidueType(ResidueType.atomn);
-		return comp;
-	}
-	
+
+
 	@Override
 	public ChemComp getChemComp(String recordName) {
 		String name = recordName.toUpperCase().trim();
-		InputStream inStream = this.getClass().getResourceAsStream("/chemcomp/"+name + ".cif.gz");
+		try(InputStream inStream = this.getClass().getResourceAsStream("/chemcomp/"+name + ".cif.gz")) {
 
-		if ( inStream == null){
-			//System.out.println("Could not find chem comp: " + name + " ... using generic Chem Comp");
-			// could not find the chem comp definition for this in the jar file
-			logger.debug("Getting empty chem comp for {}",name);
-			ChemComp cc = getEmptyChemComp();
-			cc.setId(name);
-			return cc;
-		}
+			logger.debug("Reading chemcomp/"+name+".cif.gz");
 
-		MMcifParser parser = new SimpleMMcifParser();
+			if ( inStream == null){
+				//System.out.println("Could not find chem comp: " + name + " ... using generic Chem Comp");
+				// could not find the chem comp definition for this in the jar file
+				logger.debug("Getting empty chem comp for {}",name);
+				ChemComp cc = ChemComp.getEmptyChemComp();
+				cc.setId(name);
+				return cc;
+			}
 
-		ChemCompConsumer consumer = new ChemCompConsumer();
+			MMcifParser parser = new SimpleMMcifParser();
 
-		// The Consumer builds up the BioJava - structure object.
-		// you could also hook in your own and build up you own data model.
-		parser.addMMcifConsumer(consumer);
+			ChemCompConsumer consumer = new ChemCompConsumer();
 
-		try {
+			// The Consumer builds up the BioJava - structure object.
+			// you could also hook in your own and build up you own data model.
+			parser.addMMcifConsumer(consumer);
+
 			parser.parse(new BufferedReader(new InputStreamReader(new GZIPInputStream(inStream))));
 
 			ChemicalComponentDictionary dict = consumer.getDictionary();
 
 			ChemComp chemComp = dict.getChemComp(name);
-			
-			return chemComp;
-		} catch (IOException e){
-			logger.error("IOException caught while reading chem comp {}. Error: {}",name,e.getMessage());
-			//e.printStackTrace();
 
+			return chemComp;
+
+		} catch (IOException e){
+			logger.error("IOException caught while reading chem comp {}.",name,e);
 		}
 		logger.warn("Problem when loading chem comp {}, will use an empty chem comp for it", name);
-		ChemComp cc = getEmptyChemComp();
+		ChemComp cc = ChemComp.getEmptyChemComp();
 		cc.setId(name);
 		return cc;
 	}

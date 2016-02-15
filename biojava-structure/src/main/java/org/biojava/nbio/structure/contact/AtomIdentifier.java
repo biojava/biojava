@@ -20,8 +20,12 @@
  */
 package org.biojava.nbio.structure.contact;
 
-public class AtomIdentifier {
+import java.io.Serializable;
 
+public class AtomIdentifier implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private int pdbSerial;
 	private String chainId;
 	

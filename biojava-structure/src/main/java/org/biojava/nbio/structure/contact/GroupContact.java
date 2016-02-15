@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.contact;
 
 import org.biojava.nbio.structure.Group;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,10 @@ import java.util.List;
  * @author duarte_j
  *
  */
-public class GroupContact {
+public class GroupContact implements Serializable {
+
+	
+	private static final long serialVersionUID = 1L;
 
 	private Pair<Group> pair;
 	

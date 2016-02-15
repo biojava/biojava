@@ -26,45 +26,40 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Callable;
-
-import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
-import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Optimizes a symmetry alignment by a Monte Carlo score optimization of the
- * subunit multiple alignment. The superposition of the subunits is not free
+ * repeat multiple alignment. The superposition of the repeats is not free
  * (felxible), because it is constrained on the symmetry axes found in the
  * structure. This is the main difference to the {@link MultipleMC} algorithm in
  * biojava. Another major difference is that the free Pool is shared for all
- * subunits, so that no residue can appear to more than one subunit at a time.
+ * repeats, so that no residue can appear to more than one repeat at a time.
  * <p>
  * This algorithm does not use a unfiform distribution for selecting moves,
  * farther residues have more probability to be shrinked or gapped. This
  * modification of the algorithm improves convergence and running time.
  * <p>
  * Use call method to parallelize optimizations, or use optimize method instead.
- * Because gaps are allowed in the subunits, a {@link MultipleAlignment} format
+ * Because gaps are allowed in the repeats, a {@link MultipleAlignment} format
  * is returned.
  * 
  * @author Aleix Lafita
  * @since 4.1.1
  * 
  */
-public class SymmOptimizer implements Callable<MultipleAlignment> {
+public class SymmOptimizer {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SymmOptimizer.class);
@@ -72,9 +67,9 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	private Random rnd;
 
 	// Optimization parameters
-	private int Rmin = 2; // min aligned subunits per column
-	private int Lmin; // min subunit length
-	private int maxIterFactor = 100; // max iterations constant
+	private int Rmin = 2; // min aligned repeats per column
+	private int Lmin; // min repeat length
+	private int maxIter; // max iterations
 	private double C = 20; // probability of accept bad moves constant
 
 	// Score function parameters
@@ -88,7 +83,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	private Atom[] atoms;
 	private int order;
 	private int length; // total alignment columns (block size)
-	private int subunitCore; // core length (without gaps)
+	private int repeatCore; // core length (without gaps)
 
 	// Aligned Residues and Score
 	private List<List<Integer>> block; // residues aligned
@@ -104,41 +99,38 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 	/**
 	 * Constructor with a seed MultipleAligment storing a refined symmetry
-	 * alignment of the subunits. To perform the optimization use the call or
+	 * alignment of the repeats. To perform the optimization use the call or
 	 * optimize methods after instantiation.
 	 * 
-	 * @param seedMSA
-	 *            multiple aligment with the symmetry subunits. It will be
-	 *            completely cloned, including its ensemble.
-	 * @param axes
-	 *            symmetry axes to contrain optimization
-	 * @param params
-	 *            CESymmParameters
-	 * @param seed
-	 *            random seed
+	 * @param symmResult
+	 *            CeSymmResult with all the information
 	 * @throws RefinerFailedException
 	 * @throws StructureException
 	 */
-	public SymmOptimizer(MultipleAlignment mul, SymmetryAxes axes,
-			CESymmParameters params, long seed) {
+	public SymmOptimizer(CeSymmResult symmResult) {
 
-		this.axes = axes;
-		this.rnd = new Random(seed);
-		this.Lmin = params.getMinCoreLength();
-		this.dCutoff = params.getDistanceCutoff();
+		this.axes = symmResult.getAxes();
+		this.rnd = new Random(symmResult.getParams().getRndSeed());
+		this.Lmin = symmResult.getParams().getMinCoreLength();
+		this.dCutoff = symmResult.getParams().getDistanceCutoff();
 
-		MultipleAlignmentEnsemble e = mul.getEnsemble().clone();
+		MultipleAlignmentEnsemble e = symmResult.getMultipleAlignment()
+				.getEnsemble().clone();
 		this.msa = e.getMultipleAlignment(0);
 
 		this.atoms = msa.getAtomArrays().get(0);
 		this.order = msa.size();
-		this.subunitCore = msa.getCoreLength();
+		this.repeatCore = msa.getCoreLength();
 
 		// 50% of the structures aligned (minimum) or all (no gaps)
-		if (params.isGaps())
+		if (symmResult.getParams().isGaps())
 			Rmin = Math.max(order / 2, 2);
 		else
 			Rmin = order;
+		
+		maxIter = symmResult.getParams().getOptimizationSteps();
+		if (maxIter < 1)
+			maxIter = 100 * atoms.length;
 	}
 
 	private void initialize() throws StructureException, RefinerFailedException {
@@ -147,9 +139,9 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 			throw new RefinerFailedException(
 					"Non-symmetric seed slignment: order = 1");
 		}
-		if (subunitCore < 1) {
+		if (repeatCore < 1) {
 			throw new RefinerFailedException(
-					"Seed alignment too short: subunit core length == 0");
+					"Seed alignment too short: repeat core length == 0");
 		}
 
 		C = 20 * order;
@@ -173,15 +165,10 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		}
 		checkGaps();
 
-		// Set the MC score and RMSD of the initial state (seed alignment)
+		// Set the MC score of the initial state (seed alignment)
 		updateMultipleAlignment();
 		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend,
 				dCutoff);
-	}
-
-	@Override
-	public MultipleAlignment call() throws Exception {
-		return optimize();
 	}
 
 	/**
@@ -209,7 +196,6 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 		int conv = 0; // Number of steps without an alignment improvement
 		int i = 1;
-		int maxIter = maxIterFactor * atoms.length;
 		int stepsToConverge = Math.max(maxIter / 50, 1000);
 
 		while (i < maxIter && conv < stepsToConverge) {
@@ -224,7 +210,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 				lastBlock.add(b);
 			}
 			double lastScore = mcScore;
-			int lastSubunitCore = subunitCore;
+			int lastRepeatCore = repeatCore;
 
 			boolean moved = false;
 
@@ -267,7 +253,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 					block = lastBlock;
 					freePool = lastFreePool;
 					length = block.get(0).size();
-					subunitCore = lastSubunitCore;
+					repeatCore = lastRepeatCore;
 					mcScore = lastScore;
 					conv++; // no change in score if rejected
 
@@ -294,17 +280,11 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 			i++;
 		}
-		// Superimpose and calculate scores
+		// Superimpose and calculate final scores
 		updateMultipleAlignment();
 		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend,
 				dCutoff);
-		double tmScore = MultipleAlignmentScorer.getAvgTMScore(msa) * order;
-		double rmsd = MultipleAlignmentScorer.getRMSD(msa);
-
-		// Set the scores
 		msa.putScore(MultipleAlignmentScorer.MC_SCORE, mcScore);
-		msa.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
-		msa.putScore(MultipleAlignmentScorer.RMSD, rmsd);
 
 		// Save the history to the results folder of the symmetry project
 		if (history) {
@@ -320,7 +300,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 
 	/**
 	 * This method translates the internal data structures to a
-	 * MultipleAlignment of the subunits in order to use the methods to score
+	 * MultipleAlignment of the repeats in order to use the methods to score
 	 * MultipleAlignments.
 	 * 
 	 * @throws StructureException
@@ -334,22 +314,12 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		// Override the alignment with the new information
 		Block b = msa.getBlock(0);
 		b.setAlignRes(block);
-		subunitCore = b.getCoreLength();
-		if (subunitCore < 1) {
+		repeatCore = b.getCoreLength();
+		if (repeatCore < 1)
 			throw new RefinerFailedException(
-					"Optimization converged to length == 0");
-		}
+					"Optimization converged to length 0");
 
-		updateTransformation();
-		if (axes == null)
-			return;
-
-		// Get the transformations from the SymmetryAxes
-		List<Matrix4d> transformations = new ArrayList<Matrix4d>();
-		for (int su = 0; su < order; su++) {
-			transformations.add(axes.getSubunitTransform(su));
-		}
-		msa.getBlockSet(0).setTransformations(transformations);
+		SymmetryTools.updateSymmetryTransformation(axes, msa, atoms);
 	}
 
 	/**
@@ -368,7 +338,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		// Loop for each column
 		for (int res = 0; res < length; res++) {
 			int gapCount = 0;
-			// Loop for each subunit and count the gaps
+			// Loop for each repeat and count the gaps
 			for (int su = 0; su < order; su++) {
 				if (block.get(su).get(res) == null)
 					gapCount++;
@@ -398,7 +368,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	}
 
 	/**
-	 * Insert a gap in one of the subunits into selected position (by higher
+	 * Insert a gap in one of the repeats into selected position (by higher
 	 * distances) in the alignment. Calculates the average residue distance to
 	 * make the choice. A gap is a null in the block.
 	 * 
@@ -408,8 +378,8 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	private boolean insertGap() throws StructureException,
 			RefinerFailedException {
 
-		// Let gaps only if the subunit is larger than the minimum length
-		if (subunitCore <= Lmin)
+		// Let gaps only if the repeat is larger than the minimum length
+		if (repeatCore <= Lmin)
 			return false;
 
 		// Select residue by maximum distance
@@ -449,7 +419,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	}
 
 	/**
-	 * Move all the block residues of one subunit one position to the left or
+	 * Move all the block residues of one repeat one position to the left or
 	 * right and move the corresponding boundary residues from the freePool to
 	 * the block, and viceversa.
 	 * <p>
@@ -458,7 +428,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	 */
 	private boolean shiftRow() {
 
-		int su = rnd.nextInt(order); // Select the subunit
+		int su = rnd.nextInt(order); // Select the repeat
 		int rl = rnd.nextInt(2); // Select between moving right (0) or left (1)
 		int res = rnd.nextInt(length); // Residue as a pivot
 
@@ -652,7 +622,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	/**
 	 * It extends the alignment one position to the right or to the left of a
 	 * randomly selected position by moving the consecutive residues of each
-	 * subunit (if present) from the freePool to the block.
+	 * repeat (if present) from the freePool to the block.
 	 * <p>
 	 * If there are not enough residues in the freePool it introduces gaps.
 	 */
@@ -691,7 +661,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 			if (rightBoundary > 0)
 				rightBoundary--;
 
-			// Expand the block with the residues at the subunit boundaries
+			// Expand the block with the residues at the repeat boundaries
 			for (int su = 0; su < order; su++) {
 				Integer residueR = block.get(su).get(rightBoundary);
 				if (residueR == null) {
@@ -742,7 +712,7 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 					break;
 			}
 
-			// Expand the block with the residues at the subunit boundaries
+			// Expand the block with the residues at the repeat boundaries
 			for (int su = 0; su < order; su++) {
 				Integer residueL = block.get(su).get(leftBoundary);
 				if (residueL == null) {
@@ -773,12 +743,11 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 	private boolean shrinkBlock() throws StructureException,
 			RefinerFailedException {
 
-		// Let shrink moves only if the subunit is larger enough
-		if (subunitCore <= Lmin)
+		// Let shrink moves only if the repeat is larger enough
+		if (repeatCore <= Lmin)
 			return false;
 
 		// Select column by maximum distance
-		updateTransformation();
 		updateMultipleAlignment();
 		Matrix residueDistances = MultipleAlignmentTools
 				.getAverageResidueDistances(msa);
@@ -814,55 +783,6 @@ public class SymmOptimizer implements Callable<MultipleAlignment> {
 		length--;
 		checkGaps();
 		return true;
-	}
-
-	/**
-	 * Calculates the set of symmetry operation Matrices (transformations) of
-	 * the new alignment, based on the symmetry relations in the SymmetryAxes
-	 * object.
-	 * <p>
-	 * If the SymmetryAxes object is null, the superposition of the subunits is
-	 * done without contraint.
-	 */
-	private void updateTransformation() throws StructureException {
-
-		if (axes != null) {
-			for (int t = 0; t < axes.getElementaryAxes().size(); t++) {
-
-				Matrix4d axis = axes.getElementaryAxes().get(t);
-				List<Integer> chain1 = axes.getSubunitRelation(t).get(0);
-				List<Integer> chain2 = axes.getSubunitRelation(t).get(1);
-
-				// Calculate the aligned atom arrays
-				List<Atom> list1 = new ArrayList<Atom>();
-				List<Atom> list2 = new ArrayList<Atom>();
-
-				for (int pair = 0; pair < chain1.size(); pair++) {
-					int p1 = chain1.get(pair);
-					int p2 = chain2.get(pair);
-
-					for (int k = 0; k < length; k++) {
-						Integer pos1 = block.get(p1).get(k);
-						Integer pos2 = block.get(p2).get(k);
-						if (pos1 != null && pos2 != null) {
-							list1.add(atoms[pos1]);
-							list2.add(atoms[pos2]);
-						}
-					}
-				}
-
-				Atom[] arr1 = list1.toArray(new Atom[list1.size()]);
-				Atom[] arr2 = list2.toArray(new Atom[list2.size()]);
-
-				// Calculate the new transformation information
-				SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
-				axis = svd.getTransformation();
-				axes.updateAxis(t, axis);
-			}
-		} else {
-			MultipleSuperimposer imposer = new CoreSuperimposer();
-			imposer.superimpose(msa);
-		}
 	}
 
 	/**

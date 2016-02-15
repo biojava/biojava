@@ -24,12 +24,12 @@
 
 package org.biojava.nbio.structure.io;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
 
 /** A class that configures parameters that can be sent to the PDB file parsers
  * 
@@ -67,6 +67,11 @@ public class FileParsingParameters implements Serializable
 	 */
 	boolean alignSeqRes;
 
+	
+	/** Should we create connections instead of bonds for ligands?
+	 *
+	 */
+	boolean createConects;
 
 	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
 	 * 
@@ -89,8 +94,6 @@ public class FileParsingParameters implements Serializable
 	 */
 	boolean updateRemediatedFiles;
 
-	private boolean storeEmptySeqRes;
-
 	/** 
 	 * The maximum number of atoms that will be parsed before the parser switches to a CA-only
 	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
@@ -111,6 +114,10 @@ public class FileParsingParameters implements Serializable
 	 */
 	private boolean createAtomBonds;
 
+	/**
+	 * Should we create charges on atoms when parsing a file?
+	 */	
+	private boolean createAtomCharges;
 	/**  
 	 * The maximum number of atoms we will add to a structure,
      * this protects from memory overflows in the few really big protein structures.
@@ -129,16 +136,13 @@ public class FileParsingParameters implements Serializable
 	public void setDefault(){
 
 		parseSecStruc = false;
-
-		// by default we now do NOT align Atom and SeqRes records
-		alignSeqRes   = false;
+		// Default is to align / when false the unaligned SEQRES is stored.
+		alignSeqRes   = true; 
 		parseCAOnly = false;
 
 		// don't download ChemComp dictionary by default.
 		setLoadChemCompInfo(false);
 		headerOnly = false;
-
-		storeEmptySeqRes = false;
 
 		updateRemediatedFiles = false;
 		fullAtomNames = null;
@@ -150,6 +154,10 @@ public class FileParsingParameters implements Serializable
 		parseBioAssembly = false;
 		
 		createAtomBonds = false;
+		
+		createConects = false;
+
+		createAtomCharges = true;
 	}
 
 	/** 
@@ -253,23 +261,6 @@ public class FileParsingParameters implements Serializable
 	public void setAlignSeqRes(boolean alignSeqRes) {
 		this.alignSeqRes = alignSeqRes;
 	}
-
-
-	/** 
-	 * A flag to determine if SEQRES should be stored, even if alignSeqRes is disabled.
-	 * This will provide access to the sequence in the SEQRES, without linking it up with the ATOMs.
-	 * 
-	 * @return flag
-	 */
-	public boolean getStoreEmptySeqRes() {
-
-		return storeEmptySeqRes;
-	}
-
-	public void setStoreEmptySeqRes(boolean storeEmptySeqRes){
-		this.storeEmptySeqRes = storeEmptySeqRes;
-	}
-
 
 	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
 	 * 
@@ -395,5 +386,41 @@ public class FileParsingParameters implements Serializable
 	public void setCreateAtomBonds(boolean createAtomBonds) {
 		this.createAtomBonds = createAtomBonds;
 	}
+	
+	/**
+	 * Should we create charges on atoms when parsing a file?
+	 * 
+	 * @return true if we should create the charges, false if not
+	 */
+	public boolean shouldCreateAtomCharges() {
+		return createAtomCharges;
+	}
 
+	/**
+	 * Should we create charges on atoms when parsing a file?
+	 * 
+	 * @param createAtomCharges
+	 *            true if we should create the charges, false if not
+	 */
+	public void setCreateAtomCharges(boolean createAtomCharges) {
+		this.createAtomCharges = createAtomCharges;
+	}
+
+	/**Should we create Bonds for ligands when parsing an mmCIF file?
+	 * 
+	 * @return true if we should create bonds based on ChemComp information.
+	 */
+	public boolean isCreateLigandConects(){
+		return createConects;
+	}
+	
+	/**Should we create connections between atoms in ligands when parsing 
+	 * a file? Setting this to true must also set AlignSeqRes true.
+	 * 
+	 * @param createLigandConects boolean flag yes/no
+	 */
+	public void setCreateLigandConects(boolean createLigandConects){
+		this.createConects = createLigandConects;
+		this.alignSeqRes = true;
+	}
 }

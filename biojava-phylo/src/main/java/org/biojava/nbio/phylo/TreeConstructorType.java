@@ -18,41 +18,29 @@
  *      http://www.biojava.org/
  *
  */
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.biojava.nbio.phylo;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 /**
- * Unit test for simple App.
+ * The TreeConstructorType specifies the aligorithm used to construct the tree
+ * (clustering algorithm). Only support for the NJ algorithm (from forester) is
+ * currently implemented.
+ * 
+ * @author Aleix Lafita
+ * @since 4.1.1
+ * 
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+public enum TreeConstructorType {
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+	/** Neighbor Joining Algorithm */
+	NJ,
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+	/** Unweighted Pair-Group Method with Arithmetic mean */
+	UPGMA,
+
+	/** What does this stand for? (Aleix: Nov 2015) */
+	AV;
 }

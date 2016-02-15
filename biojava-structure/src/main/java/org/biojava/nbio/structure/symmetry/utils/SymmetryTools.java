@@ -29,13 +29,15 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.ce.CECalculator;
 import org.biojava.nbio.structure.align.helper.AlignTools;
@@ -48,13 +50,20 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
+import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
+import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +71,9 @@ import org.slf4j.LoggerFactory;
  * Utility methods for the internal symmetry identification and manipulation.
  * <p>
  * Methods include: blank out regions of DP Matrix, build symmetry graphs, get
- * rotation symmetry angles, split subunits in quaternary structure chains,
- * convert between symmetry formats (full, subunits, rotations), determine if
- * two symmetry axes are equivalent, get groups from representative Atoms.
+ * rotation symmetry angles, split repeats in quaternary structure chains,
+ * convert between symmetry formats (full, repeats, rotations), determine if two
+ * symmetry axes are equivalent, get groups from representative Atoms.
  * 
  * @author Spencer Bliven
  * @author Aleix Lafita
@@ -76,7 +85,8 @@ public class SymmetryTools {
 			.getLogger(SymmetryTools.class);
 
 	/** Prevent instantiation. */
-	private SymmetryTools() {}
+	private SymmetryTools() {
+	}
 
 	/**
 	 * Returns the "reset value" for graying out the main diagonal. If we're
@@ -454,84 +464,100 @@ public class SymmetryTools {
 	}
 
 	/**
+	 * Converts a self alignment into a directed jGraphT of aligned residues,
+	 * where each vertex is a residue and each edge means the equivalence
+	 * between the two residues in the self-alignment.
+	 * 
+	 * @param selfAlignment
+	 *            AFPChain
+	 * 
+	 * @return alignment Graph
+	 */
+	public static UndirectedGraph<Integer, DefaultEdge> buildSymmetryGraph(
+			AFPChain selfAlignment) {
+
+		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+				DefaultEdge.class);
+
+		for (int i = 0; i < selfAlignment.getOptAln().length; i++) {
+			for (int j = 0; j < selfAlignment.getOptAln()[i][0].length; j++) {
+				Integer res1 = selfAlignment.getOptAln()[i][0][j];
+				Integer res2 = selfAlignment.getOptAln()[i][1][j];
+				graph.addVertex(res1);
+				graph.addVertex(res2);
+				graph.addEdge(res1, res2);
+			}
+		}
+		return graph;
+	}
+
+	/**
 	 * Method that converts the symmetric units of a structure into different
 	 * chains, so that internal symmetry can be translated into quaternary.
 	 * <p>
 	 * Application: obtain the internal symmetry axis with the quaternary
-	 * symmetry code in biojava or calculate independent subunit properties.
+	 * symmetry code in biojava or calculate independent repeat properties.
 	 * 
 	 * @param symmetry
-	 *            MultipleAlignment of the subunits only
-	 * 
+	 *            CeSymmResult
 	 * @return Structure with different chains for every symmetric unit
 	 */
-	public static Structure getQuaternaryStructure(MultipleAlignment symmetry) {
+	public static Structure getQuaternaryStructure(CeSymmResult symmetry) {
 
-		if (!symmetry.getEnsemble().getAlgorithmName().contains("symm")) {
-			throw new IllegalArgumentException(
-					"The input alignment is not a symmetry alignment.");
-		}
+		if (!symmetry.isRefined())
+			throw new IllegalArgumentException("The symmetry result "
+					+ "is not refined, repeats cannot be defined");
 
-		Atom[] atoms = symmetry.getAtomArrays().get(0);
-		Structure cloned = atoms[0].getGroup().getChain().getStructure()
-				.clone();
-		atoms = StructureTools.getRepresentativeAtomArray(cloned);
+		Atom[] atoms = symmetry.getAtoms();
 
 		Structure symm = new StructureImpl();
+		symm.setStructureIdentifier(symmetry.getStructureId());
 		symm.setChains(new ArrayList<Chain>());
 		char chainID = 'A';
 
-		// Create new structure containing the subunit atoms
-		for (int i = 0; i < symmetry.size(); i++) {
+		// Create new structure containing the repeat atoms
+		for (int i = 0; i < symmetry.getSymmOrder(); i++) {
+
 			Chain newCh = new ChainImpl();
+
+			Block align = symmetry.getMultipleAlignment().getBlock(0);
+
+			// Get the start and end of the repeat
+			int res1 = align.getStartResidue(i);
+			int res2 = align.getFinalResidue(i);
+
+			Atom[] repeat = Arrays.copyOfRange(atoms, res1, res2 + 1);
+
+			for (int k = 0; k < repeat.length; k++) {
+				Group g = (Group) repeat[k].getGroup().clone();
+				newCh.addGroup(g);
+			}
 			newCh.setChainID(chainID + "");
 			chainID++;
-
 			symm.addChain(newCh);
-			Block align = symmetry.getBlock(0);
 
-			// Determine start and end of the subunit
-			int count = 0;
-			Integer start = null;
-			while (start == null && count < align.length()) {
-				start = align.getAlignRes().get(i).get(0 + count);
-				count++;
-			}
-			count = 1;
-			Integer end = null;
-			while (end == null && count <= align.length()) {
-				end = align.getAlignRes().get(i).get(align.length() - count);
-				count++;
-			}
-			end++;
-
-			Atom[] subunit = Arrays.copyOfRange(atoms, start, end);
-
-			for (int k = 0; k < subunit.length; k++)
-				newCh.addGroup((Group) subunit[k].getGroup().clone());
 		}
 		return symm;
 	}
 
 	/**
-	 * Method that converts a subunit symmetric alignment into an alignment of
+	 * Method that converts a repeats symmetric alignment into an alignment of
 	 * whole structures.
 	 * <p>
-	 * Example: if the structure has subunits A,B and C, the original alignment
+	 * Example: if the structure has repeats A,B and C, the original alignment
 	 * is A-B-C, and the returned alignment is ABC-BCA-CAB.
 	 * 
-	 * @param symmetry
-	 *            MultipleAlignment of the subunits only
+	 * @param symm
+	 *            CeSymmResult
 	 * @return MultipleAlignment of the full structure superpositions
 	 */
-	public static MultipleAlignment toFullAlignment(MultipleAlignment symm) {
+	public static MultipleAlignment toFullAlignment(CeSymmResult symm) {
 
-		if (!symm.getEnsemble().getAlgorithmName().contains("symm")) {
-			throw new IllegalArgumentException(
-					"The input alignment is not a symmetry alignment.");
-		}
+		if (!symm.isRefined())
+			throw new IllegalArgumentException("The symmetry result "
+					+ "is not refined, repeats cannot be defined");
 
-		MultipleAlignment full = symm.clone();
+		MultipleAlignment full = symm.getMultipleAlignment().clone();
 
 		for (int str = 1; str < full.size(); str++) {
 			// Create a new Block with swapped AlignRes (move first to last)
@@ -545,51 +571,48 @@ public class SymmetryTools {
 
 	/**
 	 * Method that converts a symmetry alignment into an alignment of the
-	 * subunits only, as new independent structures.
+	 * repeats only, as new independent structures.
 	 * <p>
 	 * This method changes the structure identifiers, the Atom arrays and
 	 * re-scles the aligned residues in the Blocks corresponding to those
 	 * changes.
 	 * <p>
-	 * Application: display superimposed subunits in Jmol.
+	 * Application: display superimposed repeats in Jmol.
 	 * 
-	 * @param symmetry
-	 *            MultipleAlignment of the symmetry
-	 * @return MultipleAlignment of the subunits
+	 * @param result
+	 *            CeSymmResult of symmetry
+	 * @return MultipleAlignment of the repeats
+	 * @throws StructureException
 	 */
-	public static MultipleAlignment toSubunitAlignment(MultipleAlignment symm) {
+	public static MultipleAlignment toRepeatsAlignment(CeSymmResult result)
+			throws StructureException {
 
-		if (!symm.getEnsemble().getAlgorithmName().contains("symm")) {
-			throw new IllegalArgumentException(
-					"The input alignment is not a symmetry alignment.");
-		}
+		if (!result.isRefined())
+			throw new IllegalArgumentException("The symmetry result "
+					+ "is not refined, repeats cannot be defined");
 
-		// Modify atom arrays to include the subunit atoms only
+		MultipleAlignment msa = result.getMultipleAlignment();
+		MultipleAlignmentEnsemble newEnsemble = msa.getEnsemble().clone();
+		newEnsemble.setStructureIdentifiers(result.getRepeatsID());
+
+		// Modify atom arrays to include the repeat atoms only
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
-		Structure divided = SymmetryTools.getQuaternaryStructure(symm);
-		for (int i = 0; i < symm.size(); i++) {
+		Structure divided = SymmetryTools.getQuaternaryStructure(result);
+
+		MultipleAlignment repeats = newEnsemble.getMultipleAlignment(0);
+		Block block = repeats.getBlock(0);
+
+		for (int i = 0; i < result.getMultipleAlignment().size(); i++) {
 			Structure newStr = new StructureImpl();
 			Chain newCh = divided.getChain(i);
 			newStr.addChain(newCh);
-			Atom[] subunit = StructureTools.getRepresentativeAtomArray(newCh);
-			atomArrays.add(subunit);
+			Atom[] repeat = StructureTools.getRepresentativeAtomArray(newCh);
+			atomArrays.add(repeat);
 		}
-
-		MultipleAlignmentEnsemble newEnsemble = symm.getEnsemble().clone();
 		newEnsemble.setAtomArrays(atomArrays);
 
-		MultipleAlignment subunits = newEnsemble.getMultipleAlignment(0);
-		Block block = subunits.getBlock(0);
-
 		for (int su = 0; su < block.size(); su++) {
-
-			// Determine start of the subunit
-			int count = 0;
-			Integer start = null;
-			while (start == null && count < block.length()) {
-				start = block.getAlignRes().get(su).get(0 + count);
-				count++;
-			}
+			Integer start = block.getStartResidue(su);
 
 			// Normalize aligned residues
 			for (int res = 0; res < block.length(); res++) {
@@ -600,22 +623,24 @@ public class SymmetryTools {
 			}
 		}
 
-		return subunits;
+		return repeats;
 	}
 
 	/**
 	 * Converts a refined symmetry AFPChain alignment into the standard
 	 * representation of symmetry in a MultipleAlignment, that contains the
-	 * entire Atom array of the strcuture and the symmetric subunits are
-	 * orgaized in different rows in a single Block.
+	 * entire Atom array of the strcuture and the symmetric repeats are orgaized
+	 * in different rows in a single Block.
 	 * 
 	 * @param symm
 	 *            AFPChain created with a symmetry algorithm and refined
 	 * @param atoms
 	 *            Atom array of the entire structure
 	 * @return MultipleAlignment format of the symmetry
+	 * @throws StructureException
 	 */
-	public static MultipleAlignment fromAFP(AFPChain symm, Atom[] atoms) {
+	public static MultipleAlignment fromAFP(AFPChain symm, Atom[] atoms)
+			throws StructureException {
 
 		if (!symm.getAlgorithmName().contains("symm")) {
 			throw new IllegalArgumentException(
@@ -625,8 +650,15 @@ public class SymmetryTools {
 		MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(symm,
 				atoms, atoms, false);
 		e.setAtomArrays(new ArrayList<Atom[]>());
-		String name = e.getStructureNames().get(0);
-		e.setStructureNames(new ArrayList<String>());
+		StructureIdentifier name = null;
+		if (e.getStructureIdentifiers() != null) {
+			if (!e.getStructureIdentifiers().isEmpty())
+				name = e.getStructureIdentifiers().get(0);
+		} else
+			name = atoms[0].getGroup().getChain().getStructure()
+					.getStructureIdentifier();
+
+		e.setStructureIdentifiers(new ArrayList<StructureIdentifier>());
 
 		MultipleAlignment result = new MultipleAlignmentImpl();
 		BlockSet bs = new BlockSetImpl(result);
@@ -638,14 +670,15 @@ public class SymmetryTools {
 			List<Integer> residues = e.getMultipleAlignment(0).getBlock(su)
 					.getAlignRes().get(0);
 			b.getAlignRes().add(residues);
-			e.getStructureNames().add(name);
+			e.getStructureIdentifiers().add(name);
 			e.getAtomArrays().add(atoms);
 		}
 		e.getMultipleAlignments().set(0, result);
 		result.setEnsemble(e);
 
-		double tmScore = symm.getTMScore();
-		result.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
+		CoreSuperimposer imposer = new CoreSuperimposer();
+		imposer.superimpose(result);
+		updateSymmetryScores(result);
 
 		return result;
 	}
@@ -689,21 +722,23 @@ public class SymmetryTools {
 	}
 
 	/**
-	 * Given a symmetry alignment, it calculates the overall global symmetry,
-	 * factoring out the alignment and detection steps.
+	 * Given a symmetry result, it calculates the overall global symmetry,
+	 * factoring out the alignment and detection steps of
+	 * {@link QuatSymmetryDetector} algorithm.
 	 * 
-	 * @param symm
-	 *            symmetry alignment
+	 * @param result
+	 *            symmetry result
 	 * @return global symmetry results
+	 * @throws StructureException
 	 */
-	public static QuatSymmetryResults getQuaternarySymmetry(
-			MultipleAlignment symm) {
+	public static QuatSymmetryResults getQuaternarySymmetry(CeSymmResult result)
+			throws StructureException {
 
-		// Obtain the clusters of aligned Atoms and subunit variables
-		MultipleAlignment subunits = SymmetryTools.toSubunitAlignment(symm);
-		List<Atom[]> alignedCA = subunits.getAtomArrays();
-		List<Integer> corePos = MultipleAlignmentTools
-				.getCorePositions(subunits.getBlock(0));
+		// Obtain the clusters of aligned Atoms and repeat variables
+		MultipleAlignment repeats = SymmetryTools.toRepeatsAlignment(result);
+		List<Atom[]> alignedCA = repeats.getAtomArrays();
+		List<Integer> corePos = MultipleAlignmentTools.getCorePositions(repeats
+				.getBlock(0));
 
 		List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
 		List<Integer> folds = new ArrayList<Integer>();
@@ -714,12 +749,11 @@ public class SymmetryTools {
 		List<Double> seqIDmax = new ArrayList<Double>();
 		List<Integer> clusterIDs = new ArrayList<Integer>();
 		int fold = 1;
-		Character chain = 'A';
 
 		for (int str = 0; str < alignedCA.size(); str++) {
 			Atom[] array = alignedCA.get(str);
 			List<Point3d> points = new ArrayList<Point3d>();
-			List<Integer> alignedRes = subunits.getBlock(0).getAlignRes()
+			List<Integer> alignedRes = repeats.getBlock(0).getAlignRes()
 					.get(str);
 			for (int pos = 0; pos < alignedRes.size(); pos++) {
 				Integer residue = alignedRes.get(pos);
@@ -736,15 +770,14 @@ public class SymmetryTools {
 			}
 			fold++;
 			pseudo.add(false);
-			chainIds.add(chain + "");
-			chain++;
+			chainIds.add(alignedCA.get(str)[0].getGroup().getChainId());
 			models.add(0);
 			seqIDmax.add(1.0);
 			seqIDmin.add(1.0);
 			clusterIDs.add(0);
 		}
 
-		// Create directly the subunits, because we know the aligned CA
+		// Create directly the repeats, because we know the aligned CA
 		Subunits globalSubunits = new Subunits(caCoords, clusterIDs, pseudo,
 				seqIDmin, seqIDmax, folds, chainIds, models);
 
@@ -758,11 +791,12 @@ public class SymmetryTools {
 	}
 
 	/**
-	 * Returns true if the symmetry alignment has been refined, false otherwise.
+	 * Returns true a symmetry multiple alignment has been refined, false
+	 * otherwise.
 	 * <p>
 	 * For a refined alignment only one Block with no repeated residues is
 	 * necessary. Sufficient condition is not tested (only known from the
-	 * algorithm).
+	 * algorithm or CeSymmResult).
 	 * 
 	 * @param symm
 	 *            the symmetry alignment
@@ -770,35 +804,26 @@ public class SymmetryTools {
 	 */
 	public static boolean isRefined(MultipleAlignment symm) {
 
-		if (symm.getScore("isRefined") != null) {
-			if (symm.getScore("isRefined") > 0)
-				return true;
-			else
-				return false;
-		} else { // Recalculate
-			if (symm.getBlocks().size() > 1) {
-				symm.putScore("isRefined", 0.0);
-				return false;
-			} else if (symm.size() < 2)
-				return false;
-			else {
-				List<Integer> alreadySeen = new ArrayList<Integer>();
-				List<List<Integer>> align = symm.getBlock(0).getAlignRes();
-				for (int str = 0; str < symm.size(); str++) {
-					for (int res = 0; res < align.get(str).size(); res++) {
-						Integer residue = align.get(str).get(res);
-						if (residue == null)
-							continue;
-						if (alreadySeen.contains(residue)) {
-							symm.putScore("isRefined", 0.0);
-							return false;
-						} else {
-							alreadySeen.add(residue);
-						}
+		if (symm.getBlocks().size() > 1) {
+			return false;
+		} else if (symm.size() < 2)
+			return false;
+		else {
+			List<Integer> alreadySeen = new ArrayList<Integer>();
+			List<List<Integer>> align = symm.getBlock(0).getAlignRes();
+			for (int str = 0; str < symm.size(); str++) {
+				for (int res = 0; res < align.get(str).size(); res++) {
+					Integer residue = align.get(str).get(res);
+					if (residue == null)
+						continue;
+					if (alreadySeen.contains(residue)) {
+						return false;
+					} else {
+						alreadySeen.add(residue);
 					}
-				} // end of all structures
-				return true;
-			}
+				}
+			} // end of all repeats
+			return true;
 		}
 	}
 
@@ -806,7 +831,10 @@ public class SymmetryTools {
 	 * Returns true if the symmetry alignment is significant, false otherwise.
 	 * <p>
 	 * For a symmetry alignment to be significant, the alignment has to be
-	 * refined and the TM-score has to be higher than the threshold
+	 * refined and the TM-score has to be higher than the threshold.
+	 * <p>
+	 * It is recommended to use the {@link CeSymmResult#isSignificant()} method
+	 * instead.
 	 * 
 	 * @param msa
 	 * @param symmetryThreshold
@@ -856,4 +884,97 @@ public class SymmetryTools {
 		}
 		return groups;
 	}
+
+	/**
+	 * Calculates the set of symmetry operation Matrices (transformations) of
+	 * the new alignment, based on the symmetry relations in the SymmetryAxes
+	 * object. It sets the transformations to the input MultipleAlignment and
+	 * SymmetryAxes objects. If the SymmetryAxes object is null, the
+	 * superposition of the repeats is done without symmetry constraints.
+	 * <p>
+	 * This method also sets the scores (RMSD and TM-score) after the new
+	 * superposition has been updated.
+	 * 
+	 * @param axes
+	 *            SymmetryAxes object. It will be modified.
+	 * @param msa
+	 *            MultipleAlignment. It will be modified.
+	 * @param atoms
+	 *            Atom array of the structure
+	 */
+	public static void updateSymmetryTransformation(SymmetryAxes axes,
+			MultipleAlignment msa, Atom[] atoms) throws StructureException {
+
+		List<List<Integer>> block = msa.getBlocks().get(0).getAlignRes();
+		int length = block.get(0).size();
+
+		if (axes != null) {
+			for (int t = 0; t < axes.getElementaryAxes().size(); t++) {
+
+				Matrix4d axis = axes.getElementaryAxes().get(t);
+				List<Integer> chain1 = axes.getRepeatRelation(t).get(0);
+				List<Integer> chain2 = axes.getRepeatRelation(t).get(1);
+
+				// Calculate the aligned atom arrays
+				List<Atom> list1 = new ArrayList<Atom>();
+				List<Atom> list2 = new ArrayList<Atom>();
+
+				for (int pair = 0; pair < chain1.size(); pair++) {
+					int p1 = chain1.get(pair);
+					int p2 = chain2.get(pair);
+
+					for (int k = 0; k < length; k++) {
+						Integer pos1 = block.get(p1).get(k);
+						Integer pos2 = block.get(p2).get(k);
+						if (pos1 != null && pos2 != null) {
+							list1.add(atoms[pos1]);
+							list2.add(atoms[pos2]);
+						}
+					}
+				}
+
+				Atom[] arr1 = list1.toArray(new Atom[list1.size()]);
+				Atom[] arr2 = list2.toArray(new Atom[list2.size()]);
+
+				// Calculate the new transformation information
+				if (arr1.length > 0 && arr2.length > 0) {
+					SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
+					axis = svd.getTransformation();
+					axes.updateAxis(t, axis);
+				}
+
+				// Get the transformations from the SymmetryAxes
+				List<Matrix4d> transformations = new ArrayList<Matrix4d>();
+				for (int su = 0; su < msa.size(); su++) {
+					transformations.add(axes.getRepeatTransform(su));
+				}
+				msa.getBlockSet(0).setTransformations(transformations);
+			}
+		} else {
+			MultipleSuperimposer imposer = new CoreSuperimposer();
+			imposer.superimpose(msa);
+		}
+		updateSymmetryScores(msa);
+	}
+
+	/**
+	 * Update the scores (TM-score and RMSD) of a symmetry multiple alignment.
+	 * This method does not redo the superposition of the alignment.
+	 * 
+	 * @param symm
+	 *            Symmetry Multiple Alignment of Repeats
+	 * @throws StructureException
+	 */
+	public static void updateSymmetryScores(MultipleAlignment symm)
+			throws StructureException {
+
+		// Multiply by the order of symmetry to normalize score
+		double tmScore = MultipleAlignmentScorer.getAvgTMScore(symm)
+				* symm.size();
+		double rmsd = MultipleAlignmentScorer.getRMSD(symm);
+
+		symm.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
+		symm.putScore(MultipleAlignmentScorer.RMSD, rmsd);
+	}
+
 }

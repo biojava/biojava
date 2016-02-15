@@ -40,6 +40,7 @@ import javax.swing.JTabbedPane;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.MultipleStructureAligner;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
@@ -291,11 +292,11 @@ public class MultipleAlignmentGUI extends JFrame {
 				return;
 			}
 
-			List<String> names = tab.getNames();
+			List<StructureIdentifier> names = tab.getNames();
 			
 			String message = "aligning: ";
-			for (String name:names){
-				message += name + " ";
+			for (StructureIdentifier name:names){
+				message += name.getIdentifier() + " ";
 			}
 			System.out.println(message);
 

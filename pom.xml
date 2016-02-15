@@ -33,13 +33,12 @@
 		</license>
 	</licenses>
 	<properties>
-		<jdk.version>1.6</jdk.version>
+		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
-		<slf4j.version>1.7.13</slf4j.version>
-		<!-- DO NOT CHANGE. Log4j 2.3 is the most recent version that works with Java 1.6 -->
-		<log4j.version>2.3</log4j.version>
+		<slf4j.version>1.7.14</slf4j.version>
+		<log4j.version>2.5</log4j.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
@@ -417,8 +416,7 @@
 			<dependency>
 				<groupId>org.biojava.thirdparty</groupId>
 				<artifactId>forester</artifactId>
-				<version>1.005</version>
-				<scope>compile</scope>
+				<version>1.038</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

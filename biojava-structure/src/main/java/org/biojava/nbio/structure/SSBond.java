@@ -24,7 +24,8 @@ package org.biojava.nbio.structure;
 
 import java.io.Serializable;
 
-/** A simple bean to store disulfide bridge information, the SSBOND records in the PDB files.
+/** 
+ * A simple bean to store disulfide bridge information, the SSBOND records in the PDB files.
  *
  * The two residues specified here are CYS residues that form a Disulfide bridge.
  *
@@ -38,7 +39,7 @@ public interface SSBond extends PDBRecord, Serializable, Cloneable {
 	public String toPDB();
 
     /**
-     * append the PDB representation of this SSBOND to the provided StringBUffer
+     * Append the PDB representation of this SSBOND to the provided StringBUffer
      *
      * @param buf a StringBuffer to print the PDB representation to
      */
@@ -54,14 +55,14 @@ public interface SSBond extends PDBRecord, Serializable, Cloneable {
     public void setInsCode2(String insCode2);
 
     /**
-     * set serial number of this SSBOND in PDB file
+     * Set serial number of this SSBOND in PDB file
      *
      * @return the serial number
      */
     public int getSerNum();
 
     /**
-     * get serial number of this SSBOND in PDB file
+     * Get serial number of this SSBOND in PDB file
      *
      * @param serNum
      */
@@ -76,7 +77,7 @@ public interface SSBond extends PDBRecord, Serializable, Cloneable {
     public void setChainID2(String chainID2);
 
     /**
-     * get residue number for first CYS. number and insertion code are joint
+     * Get residue number for first CYS. number and insertion code are joined
      * together.
      *
      * @return the residue number of the first CYS.
@@ -87,7 +88,7 @@ public interface SSBond extends PDBRecord, Serializable, Cloneable {
     public void setResnum1(String resnum1);
 
     /**
-     * get residue number for second CYS. number and insertion code are joint
+     * Get residue number for second CYS. number and insertion code are joined
      * together.
      *
      * @return the residue number of the second CYS.

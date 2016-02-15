@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.align.multiple;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -94,21 +95,21 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * for same structure).
 	 * 
 	 * @return List of String names of the structures
-	 * @see #setStructureNames(List)
+	 * @see #setStructureIdentifiers(List)
 	 * @see #getAtomArrays()
 	 */
-	public List<String> getStructureNames();
+	public List<StructureIdentifier> getStructureIdentifiers();
 
 	/**
 	 * Set the List containing the names of the structures aligned 
 	 * (i.e.: PDB code, SCOP domain, etc.).<p>
 	 * The names are structure identifiers of the structures.
 	 * 
-	 * @param structureNames names of the structures, structure identifiers
-	 * @see #getStructureNames()
+	 * @param structureIdentifiers names of the structures, structure identifiers
+	 * @see #getStructureIdentifiers()
 	 * @see #setAtomArrays(List)
 	 */
-	public void setStructureNames(List<String> structureNames);
+	public void setStructureIdentifiers(List<StructureIdentifier> structureIdentifiers);
 
 	/**
 	 * Get an array of representative atoms for each structure (CA atoms for 
@@ -118,7 +119,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * to the transformation matrix.<p>
 	 * If atoms have not previously been set using 
 	 * {@link #setAtomArrays(List)}, attempts to load representative atoms 
-	 * based on {@link #getStructureNames()}.
+	 * based on {@link #getStructureIdentifiers()}.
 	 * If it fails to load the Atoms it gives a NullPointerException before 
 	 * returning null.
 	 * 
@@ -130,14 +131,14 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	/**
 	 * Sets the List of Atom arrays. Every structure has an Atom array 
 	 * associated. Note that this should be called in conjunction with 
-	 * {@link #setStructureNames(List)}.<p>
+	 * {@link #setStructureIdentifiers(List)}.<p>
 	 * Setting the atom arrays to null will cause them to be automatically
-	 * regenerated based on {@link #getStructureNames()} during the next call 
+	 * regenerated based on {@link #getStructureIdentifiers()} during the next call 
 	 * to {@link #getAtomArrays()}.
 	 * 
 	 * @param atomArrays the List of representative (C-alpha) atom arrays
 	 * @see #getAtomArrays()
-	 * @see #setStructureNames(List)
+	 * @see #setStructureIdentifiers(List)
 	 */
 	public void setAtomArrays(List<Atom[]> atomArrays);
 
@@ -189,7 +190,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * Returns the number of aligned structures in the MultipleAlignments.
 	 * 
 	 * @return int number of aligned structures.
-	 * @see #getStructureNames()
+	 * @see #getStructureIdentifiers()
 	 * @see #getAtomArrays()
 	 */
 	public int size();

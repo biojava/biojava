@@ -32,6 +32,7 @@ import org.biojava.nbio.core.sequence.views.ComplementSequenceView;
 import org.biojava.nbio.core.sequence.views.ReversedSequenceView;
 import org.biojava.nbio.core.util.Hashcoder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -48,9 +49,11 @@ import static org.biojava.nbio.core.util.Equals.equal;
  * @author ayates
  * @author Paolo Pavan
  */
-public abstract class AbstractLocation implements Location {
+public abstract class AbstractLocation implements Serializable, Location {
 
-    //TODO Need to have the Sequence lookup resolver here; see the next one as well
+	private static final long serialVersionUID = 1L;
+
+	//TODO Need to have the Sequence lookup resolver here; see the next one as well
     //TODO Need a way of late binding of start/stop
 
     private Point start;

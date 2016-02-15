@@ -65,6 +65,7 @@ public class MenuCreator {
 	public static final String DOT_PLOT = "Show Dot Plot";
 	public static final String PAIRWISE_ALIGN = "New Pairwise Alignment";
 	public static final String MULTIPLE_ALIGN = "New Multiple Alignment";
+	public static final String PHYLOGENETIC_TREE = "Phylogenetic Tree";
 	protected static final int keyMask = 
 			Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
@@ -178,6 +179,12 @@ public class MenuCreator {
 				dotplot.setMnemonic(KeyEvent.VK_O);
 				dotplot.addActionListener(new DotPlotListener(afpChain));
 				view.add(dotplot);
+			}
+			//Phylogenetics - only if it is a MultipleAlignment
+			if (afpChain == null){
+				JMenuItem tree = getIcon(parent, PHYLOGENETIC_TREE);
+				tree.setMnemonic(KeyEvent.VK_T);
+				view.add(tree);
 			}
 		}
 		menu.add(view);

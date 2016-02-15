@@ -29,9 +29,12 @@ import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -43,6 +46,8 @@ import java.util.List;
  */
 public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 
+	private static final Logger logger = LoggerFactory.getLogger(MmCifPDBBiolAssemblyProvider.class);
+	
 	private String pdbId;
 	private List<PdbxStructAssembly> pdbxStructAssemblies;
 	private List<PdbxStructAssemblyGen> pdbxStructAssemblyGens;
@@ -102,9 +107,23 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 			
 			// reset the consumer data to avoid memory leaks
 			consumer.documentStart();
+			
+			
+			// here we trim in the same way as we do in SimpleMmcifConsumer, removing PAU and XAU bioassemblies, see #230 in github
+			Iterator<PdbxStructAssembly> it = pdbxStructAssemblies.iterator();
+			while (it.hasNext()) {
+				PdbxStructAssembly psa = it.next();
+				try {
+					Integer.parseInt(psa.getId());
+				} catch (NumberFormatException e) {
+					logger.info("Ignoring bioassembly with id {} for PDB id {}", psa.getId(), pdbId);
+					it.remove();
+				}
+			}
+			
 		} catch (IOException e){
-			// TODO shouldn't this be thrown?
-			e.printStackTrace();
+			// TODO this should be thrown but setPdbId doesn't have a throws in contract, we need a better solution - JD 2016-01-27
+			logger.error("IOException caught when reading mmcif file to get bioassembly for PDB " + pdbId, e);
 			
 		}
 	}

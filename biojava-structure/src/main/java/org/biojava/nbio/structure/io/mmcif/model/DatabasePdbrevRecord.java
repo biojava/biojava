@@ -23,10 +23,14 @@
 
 package org.biojava.nbio.structure.io.mmcif.model;
 
+import java.io.Serializable;
 
-public class DatabasePdbrevRecord {
+public class DatabasePdbrevRecord implements Serializable {
 
-    String rev_num;
+   
+	private static final long serialVersionUID = 1L;
+	
+	String rev_num;
     String type;
     String details;
 

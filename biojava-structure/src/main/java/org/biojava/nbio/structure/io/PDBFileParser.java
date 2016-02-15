@@ -21,7 +21,59 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.structure.*;
+import static java.lang.Math.min;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.vecmath.Matrix4d;
+
+import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.AminoAcidImpl;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Author;
+import org.biojava.nbio.structure.BondImpl;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.DBRef;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupIterator;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.HetatomImpl;
+import org.biojava.nbio.structure.JournalArticle;
+import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.PDBCrystallographicInfo;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.SSBond;
+import org.biojava.nbio.structure.SSBondImpl;
+import org.biojava.nbio.structure.Site;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
@@ -31,21 +83,6 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.vecmath.Matrix4d;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static java.lang.Math.min;
 
 //import org.biojava.nbio.structure.Calc;
 
@@ -102,15 +139,18 @@ import static java.lang.Math.min;
  *
  * @author Andreas Prlic
  * @author Jules Jacobsen
+ * @author Jose Duarte
  * @since 1.4
  */
 public class PDBFileParser  {
 
 	
 
-	// parsing options:
-
 	private static final Logger logger = LoggerFactory.getLogger(PDBFileParser.class);
+
+	// for printing
+	private static final String NEWLINE = System.getProperty("line.separator");
+
 	
 	// required for parsing:
 	private String pdbId; //the actual id of the entry
@@ -126,9 +166,7 @@ public class PDBFileParser  {
 	//(pdb_COMPOUND_handler for example)
 	private boolean isLegacyFormat = false;
 
-	// for printing
-	private static final String NEWLINE;
-
+	
 	// for re-creating the biological assembly
 	
 	private PDBBioAssemblyParser bioAssemblyParser = null;
@@ -208,6 +246,8 @@ public class PDBFileParser  {
 
 	private int atomCount;
 
+	// parsing options:
+
 	private int my_ATOM_CA_THRESHOLD ;
 
 	private int load_max_atoms;
@@ -217,11 +257,6 @@ public class PDBFileParser  {
 	/** flag to tell parser to only read Calpha coordinates **/
 	private boolean parseCAonly;
 
-	static {
-
-		NEWLINE = System.getProperty("line.separator");
-
-	}
 
 	private FileParsingParameters params;
 
@@ -255,23 +290,6 @@ public class PDBFileParser  {
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
 
 		linkRecords = new ArrayList<LinkRecord>();
-	}
-
-
-
-	/**
-	 * Returns a time stamp.
-	 * @return a String representing the time stamp value
-	 */
-	protected String getTimeStamp(){
-
-		Calendar cal = Calendar.getInstance() ;
-		// Get the components of the time
-		int hour24 = cal.get(Calendar.HOUR_OF_DAY);     // 0..23
-		int min = cal.get(Calendar.MINUTE);             // 0..59
-		int sec = cal.get(Calendar.SECOND);             // 0..59
-		String s = "time: "+hour24+" "+min+" "+sec;
-		return s ;
 	}
 
 	/** initiate new resNum, either Hetatom, Nucleotide, or AminoAcid */
@@ -433,6 +451,8 @@ public class PDBFileParser  {
 
 	private void pdb_HELIX_Handler(String line){
 		
+		if (params.isHeaderOnly()) return;
+		
 		if (line.length()<38) {
 			logger.info("HELIX line has length under 38. Ignoring it.");
 			return;
@@ -519,6 +539,8 @@ public class PDBFileParser  {
 
 	 */
 	private void pdb_SHEET_Handler( String line){
+		
+		if (params.isHeaderOnly()) return;
 
 		if (line.length()<38) {
 			logger.info("SHEET line has length under 38. Ignoring it.");
@@ -583,6 +605,8 @@ public class PDBFileParser  {
 	 * @param line
 	 */
 	private void pdb_TURN_Handler( String line){
+		
+		if (params.isHeaderOnly()) return;
 				
 		if (line.length()<36) {
 			logger.info("TURN line has length under 36. Ignoring it.");
@@ -1621,6 +1645,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void  pdb_ATOM_Handler(String line)	{
 		// build up chains first.
 		// headerOnly just goes down to chain resolution.
+		
+		if ( params.isHeaderOnly())
+			return;
 
 		boolean startOfNewChain = false;
 
@@ -1770,11 +1797,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 		}
 
-
-
-		if ( params.isHeaderOnly())
-			return;
-
 		atomCount++;
 
 		if ( atomCount == my_ATOM_CA_THRESHOLD ) {
@@ -1856,18 +1878,18 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		coords[2] = z ;
 		atom.setCoords(coords);
 
-		double occu  = 1.0;
+		float occu  = 1.0f;
 		if ( line.length() > 59 ) {
 			try {
 				// occu and tempf are sometimes not used :-/
-				occu = Double.parseDouble (line.substring (54, 60).trim());
+				occu = Float.parseFloat (line.substring (54, 60).trim());
 			}  catch (NumberFormatException e){}
 		}
 
-		double tempf = 0.0;
+		float tempf = 0.0f;
 		if ( line.length() > 65) {
 			try {
-				tempf = Double.parseDouble (line.substring (60, 66).trim());
+				tempf = Float.parseFloat (line.substring (60, 66).trim());
 			}  catch (NumberFormatException e){}
 		}
 
@@ -1970,6 +1992,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// drop atoms from cloned group...
 			// https://redmine.open-bio.org/issues/3307
 			altLocG.setAtoms(new ArrayList<Atom>());
+			altLocG.getAltLocs().clear();
 			current_group.addAltLoc(altLocG);
 			return altLocG;	
 		}
@@ -2048,6 +2071,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( atomOverflow) {
 			return ;
 		}
+		if (params.isHeaderOnly()) {
+			return;
+		}
 		try {
 			int atomserial = Integer.parseInt (line.substring(6 ,11).trim());
 			Integer bond1      = conect_helper(line,11,16);
@@ -2084,7 +2110,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 	}
 
-	/*
+	/**
 	 Handler for
 	 MODEL Record Format
 
@@ -2093,32 +2119,22 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 1 -  6       Record name    "MODEL "
 	 11 - 14       Integer        serial        Model serial number.
 	 */
-
 	private void pdb_MODEL_Handler(String line) {
+		
+		if (params.isHeaderOnly()) return;
+		
 		// check beginning of file ...
 		if (current_chain != null) {
 			if (current_group != null) {
 				current_chain.addGroup(current_group);
 				current_group.trimToSize();
 			}
-			//System.out.println("starting new model "+(structure.nrModels()+1));
 
 			Chain ch = isKnownChain(current_chain.getChainID(),current_model) ;
 			if ( ch == null ) {
 				current_model.add(current_chain);
 			}
-			// removing water-only chains, they don't follow the standard data modeling practices. 
-			// We have to remove them or otherwise they can cause problems down the line, 
-			// e.g. 3o6j has chain Z with a single water molecule
-			Iterator<Chain> it = current_model.iterator();
-			while (it.hasNext()) {
-				Chain c = it.next();
-				if (StructureTools.isChainWaterOnly(c)) {
-					logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
-							c.getChainID(), c.getAtomGroups().size());
-					it.remove();
-				}
-			}
+			
 			structure.addModel(current_model);
 			current_model = new ArrayList<Chain>();
 			current_chain = null;
@@ -2237,7 +2253,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	//}
 
-	/* process the disulfid bond info provided by an SSBOND record
+	/**
+	 * Process the disulfide bond info provided by an SSBOND record
 	 *
 	 *
 	COLUMNS        DATA TYPE       FIELD         DEFINITION
@@ -2257,6 +2274,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SSBOND_Handler(String line){
 		
+		if (params.isHeaderOnly()) return;
+		
 		if (line.length()<36) {
 			logger.info("SSBOND line has length under 36. Ignoring it.");
 			return;
@@ -2268,7 +2287,19 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String chain2      = line.substring(29,30);
 		String seqNum2     = line.substring(31,35).trim();
 		String icode2      = line.substring(35,36);
+		
+		if (line.length()>=72) {
+			String symop1 = line.substring(59, 65).trim();
+			String symop2 = line.substring(66, 72).trim();
 
+			// until we implement proper treatment of symmetry in biojava #220, we can't deal with sym-related parteners properly, skipping them
+			if (!symop1.equals("") && !symop2.equals("") && // in case the field is missing
+					(!symop1.equals("1555") || !symop2.equals("1555")) ) {
+				logger.info("Skipping ss bond between groups {} and {} belonging to different symmetry partners, because it is not supported yet", seqNum1+icode1, seqNum2+icode2);
+				return;
+			}
+		}
+		
 		if (icode1.equals(" "))
 			icode1 = "";
 		if (icode2.equals(" "))
@@ -2314,6 +2345,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @param line the LINK record line to parse.
 	 */
 	private void pdb_LINK_Handler(String line) {
+		
+		if (params.isHeaderOnly()) return;
+		
 		String name1 = line.substring(12, 16).trim();
 		String altLoc1 = line.substring(16, 17).trim();
 		String resName1 = line.substring(17, 20).trim();
@@ -2385,6 +2419,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SITE_Handler(String line){		
 
+		if (params.isHeaderOnly()) return;
+		
 		//  make a map of: SiteId to List<ResidueNumber>
 		
 		logger.debug("Site Line:"+line);
@@ -2469,6 +2505,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	//Site variable related to parsing the REMARK 800 records.
 	Site site;
 	private void pdb_REMARK_800_Handler(String line){
+		
+		if (params.isHeaderOnly()) return;
 		
 		// 'REMARK 800 SITE_IDENTIFIER: CAT                                                 '
 		line = line.substring(11);
@@ -2576,16 +2614,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	public Structure parsePDBFile(InputStream inStream)
 			throws IOException
-			{
+	{
 
-		//System.out.println("preparing buffer");
 		BufferedReader buf = getBufferedReader(inStream);
-
-		//System.out.println("done");
 
 		return parsePDBFile(buf);
 
-			}
+	}
 
 	/** 
 	 * Parse a PDB file and return a datastructure implementing
@@ -2719,16 +2754,27 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (params.shouldCreateAtomBonds()) {
 			formBonds();
 		}
+		
+		if ( params.shouldCreateAtomCharges()) {
+			addCharges();
+		}
 
-
-
-		if ( params.isParseSecStruc())
+		if (params.isCreateLigandConects()){
+			addLigandConnections();
+		}
+		
+		if ( params.isParseSecStruc() && !params.isHeaderOnly())
 			setSecStruc();
 
 
 		return structure;
 
 			}
+
+	private void addCharges() {
+		ChargeAdder adder = new ChargeAdder(structure);
+		adder.addCharges();
+	}
 
 	/**
 	 * This is the new method for building the COMPND and SOURCE records. Now each method is self-contained.
@@ -2783,6 +2829,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		BondMaker maker = new BondMaker(structure);
 		maker.makeBonds();
+	}
+	
+	//Builds a list of connections from ligands in a Structure
+	private void addLigandConnections(){
+		LigandConnectMaker maker = new LigandConnectMaker(structure);
+		maker.addLigandConnections();
 	}
 	
 	private void formLinkRecordBond(LinkRecord linkRecord) {
@@ -2890,18 +2942,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			pdbHeader.setJournalArticle(journalArticle);
 		}
 
-		// removing water-only chains, they don't follow the standard data modeling practices. 
-		// We have to remove them or otherwise they can cause problems down the line, 
-		// e.g. 3o6j has chain Z with a single water molecule
-		Iterator<Chain> it = current_model.iterator();
-		while (it.hasNext()) {
-			Chain c = it.next();
-			if (StructureTools.isChainWaterOnly(c)) {
-				logger.warn("Chain {} ({} atom groups) is composed of water molecules only. Removing it.", 
-						c.getChainID(), c.getAtomGroups().size());
-				it.remove();
-			} 
-		}
+		
 		structure.addModel(current_model);
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
@@ -2909,16 +2950,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		structure.setDBRefs(dbrefs);
 
-		if ( params.isAlignSeqRes() ){
+		// Only align if requested (default) and not when headerOnly mode with no Atoms.
+		// Otherwise, we store the empty SeqRes Groups unchanged in the right chains.
+		if ( params.isAlignSeqRes() && !params.isHeaderOnly() ){	
 			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
 
-		} else if ( params.getStoreEmptySeqRes() ){
+		} else {
 			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
-			// user wants to know about the seqres, but not align them
-
-			storeUnAlignedSeqRes(structure, seqResChains);
+			SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
 		}
 
 
@@ -2927,7 +2968,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		//associate the temporary Groups in the siteMap to the ones
 		 
-		linkSitesToGroups(); // will work now that setSites is called
+		if (!params.isHeaderOnly()) {
+			// Only can link SITES if Atom Groups were parsed.
+			linkSitesToGroups(); // will work now that setSites is called
+		}
 		
 		if ( bioAssemblyParser != null){
 			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
@@ -2959,27 +3003,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
 		structure.getCompounds();
-	}
-
-
-	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
-
-		for (int i = 0; i < structure.nrModels(); i++) {
-			List<Chain> atomList   = structure.getModel(i);
-
-			for (Chain seqRes: seqResChains){
-				Chain atomRes;
-			
-				atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomList);
-
-				if ( atomRes != null)
-					atomRes.setSeqResGroups(seqRes.getAtomGroups());
-				else
-					logger.warn("Could not find atom records for chain " + seqRes.getChainID());
-
-				
-			}
-		}
 	}
 
 	private void setSecStruc(){
@@ -3125,6 +3148,36 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 		}
 
+		// in rare cases where a purely non-polymer or purely water chain is present we have missed it above
+		// we need now to assign a new compound to it so that at least the structure is consistent
+		// see https://github.com/biojava/biojava/pull/394
+
+		if (compounds!=null && !compounds.isEmpty()) {
+			for (Chain c: s.getChains()) {
+				if (c.getCompound() == null) {
+
+					Compound compound = new Compound();
+					compound.addChain(c);
+					compound.setMolId(findMaxCompoundId(compounds)+1);
+					c.setCompound(compound);
+					compounds.add(compound);
+
+					logger.warn("No compound (entity) found in file for chain {}. Creating new compound {} for it.", c.getChainID(), compound.getMolId());
+				}
+			}
+		}
+	}
+	
+	private static int findMaxCompoundId(List<Compound> compounds) {
+		
+		return 
+				
+		Collections.max(compounds, new Comparator<Compound>() {
+			@Override
+			public int compare(Compound o1, Compound o2) {
+				return new Integer(o1.getMolId()).compareTo(o2.getMolId());
+			}
+		}).getMolId();
 	}
 
 	/**

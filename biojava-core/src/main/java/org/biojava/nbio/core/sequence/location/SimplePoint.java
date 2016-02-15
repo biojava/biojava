@@ -21,6 +21,8 @@
  */
 package org.biojava.nbio.core.sequence.location;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
@@ -30,9 +32,12 @@ import org.biojava.nbio.core.util.Hashcoder;
  *
  * @author ayates
  */
-public class SimplePoint implements Point {
+public class SimplePoint implements Serializable, Point {
 
-    private int position;
+    
+	private static final long serialVersionUID = 1L;
+	
+	private int position;
     private boolean unknown;
     private boolean uncertain;
 

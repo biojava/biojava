@@ -120,7 +120,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		return provider.hasBiolAssembly();
 	}
 	
-	public Structure getBiolAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException{
+	public Structure getBiolAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
 
 		
 		provider.setPdbId(pdbId);
@@ -132,9 +132,8 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		if (  provider.getNrBiolAssemblies() <= biolAssemblyNr){
 			return null;
 		}
-		/** First we read the required data from wherever we get it from (configured in the factory)
-		 * 
-		 */
+
+		// First we read the required data from wherever we get it from (configured in the factory)
 		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr) ;
 		
 		List<PdbxStructAssemblyGen> psags = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
@@ -143,10 +142,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
 		
 		
-		/** now we start to rebuild the quaternary structure
-		 * 
-		 */
-		
+		// now we start to rebuild the quaternary structure
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		
 		// these are the transformations that need to be applied to our model

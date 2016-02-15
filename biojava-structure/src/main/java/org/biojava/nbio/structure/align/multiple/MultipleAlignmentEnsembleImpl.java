@@ -31,6 +31,8 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.helper.AlignTools;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
@@ -44,19 +46,19 @@ import org.biojava.nbio.structure.jama.Matrix;
  * @since 4.1.0
  *
  */
-public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache 
-implements MultipleAlignmentEnsemble, Serializable, Cloneable {
+public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
+		implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 
 	private static final long serialVersionUID = -5732485866623431898L;
 
-	//Creation Properties
+	// Creation Properties
 	private String algorithmName;
 	private String version;
 	private Long ioTime;
 	private Long calculationTime;
 
-	//Structure Identifiers
-	private List<String> structureNames;
+	// Structure Identifiers
+	private List<StructureIdentifier> structureIdentifiers;
 	private List<Atom[]> atomArrays;
 	private List<Matrix> distanceMatrix;
 
@@ -67,14 +69,14 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	 * 
 	 * @return MultipleAlignmentEnsemble an empty ensemble instance.
 	 */
-	public MultipleAlignmentEnsembleImpl(){
+	public MultipleAlignmentEnsembleImpl() {
 
 		algorithmName = null;
 		version = null;
 		ioTime = null;
 		calculationTime = null;
 
-		structureNames = null;
+		structureIdentifiers = null;
 		atomArrays = null;
 		distanceMatrix = null;
 		multipleAlignments = null;
@@ -83,75 +85,87 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	/**
 	 * Constructor using structure identifiers.
 	 * 
-	 * @param structureNames List of Structure names, that can be 
-	 * parsed by {@link AtomCache}.
+	 * @param structureIdentifiers
+	 *            List of Structure names, that can be parsed by
+	 *            {@link AtomCache}.
 	 * @return MultipleAlignmentEnsemble an ensemble with the structures.
 	 */
-	public MultipleAlignmentEnsembleImpl(List<String> structureNames){
+	public MultipleAlignmentEnsembleImpl(
+			List<StructureIdentifier> structureIdentifiers) {
 		this();
-		setStructureNames(structureNames);
+		setStructureIdentifiers(structureIdentifiers);
 	}
 
 	/**
-	 * Copy constructor. This copies recursively all member variables, 
-	 * including MultipleAlignments, Atom arrays and cached variables.
+	 * Copy constructor. This copies recursively all member variables, including
+	 * MultipleAlignments, Atom arrays and cached variables.
 	 * 
-	 * @param e MultipleAlignmentEnsemble to copy.
+	 * @param e
+	 *            MultipleAlignmentEnsemble to copy.
 	 * @return MultipleAlignmentEnsemble identical copy of the input ensemble.
 	 */
-	public MultipleAlignmentEnsembleImpl(MultipleAlignmentEnsembleImpl e){
+	public MultipleAlignmentEnsembleImpl(MultipleAlignmentEnsembleImpl e) {
 
-		super(e); //Copy the scores
+		super(e); // Copy the scores
 		algorithmName = e.algorithmName;
 		version = e.version;
 		ioTime = e.ioTime;
 		calculationTime = e.calculationTime;
 
 		distanceMatrix = null;
-		if (e.distanceMatrix!=null){
-			//Make a deep copy of everything
+		if (e.distanceMatrix != null) {
+			// Make a deep copy of everything
 			distanceMatrix = new ArrayList<Matrix>();
-			for (Matrix mat:e.distanceMatrix){
+			for (Matrix mat : e.distanceMatrix) {
 				distanceMatrix.add((Matrix) mat.clone());
 			}
 		}
 
 		multipleAlignments = null;
-		if (e.multipleAlignments!=null){
-			//Make a deep copy of everything
+		if (e.multipleAlignments != null) {
+			// Make a deep copy of everything
 			multipleAlignments = new ArrayList<MultipleAlignment>();
-			for (MultipleAlignment msa:e.multipleAlignments){
+			for (MultipleAlignment msa : e.multipleAlignments) {
 				MultipleAlignment newMSA = msa.clone();
 				newMSA.setEnsemble(this);
 				multipleAlignments.add(newMSA);
 			}
 		}
 
-		if (e.atomArrays != null){
+		if (e.atomArrays != null) {
 			atomArrays = new ArrayList<Atom[]>(e.atomArrays);
 		}
-		if (e.structureNames != null){
-			structureNames = new ArrayList<String>(e.structureNames);
+		if (e.structureIdentifiers != null) {
+			structureIdentifiers = new ArrayList<StructureIdentifier>(
+					e.structureIdentifiers);
 		}
 	}
 
 	/**
-	 * Constructor from an AFPChain instance. Creates an equivalent pairwise 
+	 * Constructor from an AFPChain instance. Creates an equivalent pairwise
 	 * alignment, but in the MultipleAlignment format.
 	 * 
-	 * @param afp pairwise alignment
-	 * @param ca1 Atoms of the first strcuture
-	 * @param ca2 Atoms of the second structure
-	 * @param flexible true if the alignment is flexible (use BlockSets)
+	 * @param afp
+	 *            pairwise alignment
+	 * @param ca1
+	 *            Atoms of the first strcuture
+	 * @param ca2
+	 *            Atoms of the second structure
+	 * @param flexible
+	 *            true if the alignment is flexible (use BlockSets)
 	 * @return MultipleAlignmentEnsemble an ensemble
 	 */
-	public MultipleAlignmentEnsembleImpl(
-			AFPChain afp, Atom[] ca1, Atom[] ca2, boolean flexible){
+	public MultipleAlignmentEnsembleImpl(AFPChain afp, Atom[] ca1, Atom[] ca2,
+			boolean flexible) {
 
 		this();
-		//Copy all the creation and algorithm information
-		atomArrays = Arrays.asList(ca1,ca2);
-		structureNames = Arrays.asList(afp.getName1(),afp.getName2());
+		// Copy all the creation and algorithm information
+		atomArrays = Arrays.asList(ca1, ca2);
+		if (afp.getName1() != null && afp.getName2() != null) {
+			structureIdentifiers = Arrays.<StructureIdentifier> asList(
+					new StructureName(afp.getName1()),
+					new StructureName(afp.getName2()));
+		}
 		algorithmName = afp.getAlgorithmName();
 		version = afp.getVersion();
 		calculationTime = afp.getCalculationTime();
@@ -159,22 +173,22 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 		MultipleAlignment msa = new MultipleAlignmentImpl(this);
 		setMultipleAlignments(Arrays.asList(msa));
 
-		//Convert the rotation and translation to a Matrix4D and set it
+		// Convert the rotation and translation to a Matrix4D and set it
 		Matrix4d ident = new Matrix4d();
 		ident.setIdentity();
 		Matrix[] rot = afp.getBlockRotationMatrix();
 		Atom[] shift = afp.getBlockShiftVector();
 
-		//Create a BlockSet for every block in AFPChain if flexible
-		if (flexible){
-			for (int bs=0; bs<afp.getBlockNum(); bs++){
+		// Create a BlockSet for every block in AFPChain if flexible
+		if (flexible) {
+			for (int bs = 0; bs < afp.getBlockNum(); bs++) {
 				BlockSet blockSet = new BlockSetImpl(msa);
 				Matrix4d blockTr = null;
 				try {
 					blockTr = Calc.getTransformation(rot[bs], shift[bs]);
-				} catch (IndexOutOfBoundsException e){
+				} catch (IndexOutOfBoundsException e) {
 					blockTr = ident;
-				} catch (NullPointerException e){
+				} catch (NullPointerException e) {
 					blockTr = ident;
 				}
 				blockSet.setTransformations(Arrays.asList(ident, blockTr));
@@ -183,48 +197,48 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 				block.getAlignRes().add(new ArrayList<Integer>());
 				block.getAlignRes().add(new ArrayList<Integer>());
 
-				//Set the transformation of the BlockSet
+				// Set the transformation of the BlockSet
 				Matrix rotB = afp.getBlockRotationMatrix()[bs];
 				Atom shiftB = afp.getBlockShiftVector()[bs];
 				Matrix4d transformB = Calc.getTransformation(rotB, shiftB);
 				blockSet.setTransformations(Arrays.asList(ident, transformB));
 
-				//Convert the optimal alignment to a Block
-				for (int i=0; i<afp.getOptAln()[bs][0].length; i++){
+				// Convert the optimal alignment to a Block
+				for (int i = 0; i < afp.getOptAln()[bs][0].length; i++) {
 					block.getAlignRes().get(0).add(afp.getOptAln()[bs][0][i]);
 					block.getAlignRes().get(1).add(afp.getOptAln()[bs][1][i]);
 				}
 			}
-		} //Create a Block for every block in AFPChain if not flexible
+		} // Create a Block for every block in AFPChain if not flexible
 		else {
 			BlockSet blockSet = new BlockSetImpl(msa);
 			Matrix4d blockTr = null;
 			try {
 				blockTr = Calc.getTransformation(rot[0], shift[0]);
-			} catch (IndexOutOfBoundsException e){
+			} catch (IndexOutOfBoundsException e) {
 				blockTr = ident;
-			} catch (NullPointerException e){
+			} catch (NullPointerException e) {
 				blockTr = ident;
 			}
 			blockSet.setTransformations(Arrays.asList(ident, blockTr));
-			for (int bs=0; bs<afp.getBlockNum(); bs++){
+			for (int bs = 0; bs < afp.getBlockNum(); bs++) {
 				Block block = new BlockImpl(blockSet);
 				block.setAlignRes(new ArrayList<List<Integer>>());
 				block.getAlignRes().add(new ArrayList<Integer>());
 				block.getAlignRes().add(new ArrayList<Integer>());
 
-				//Convert the optimal alignment to a Block
-				for (int i=0; i<afp.getOptAln()[bs][0].length; i++){
+				// Convert the optimal alignment to a Block
+				for (int i = 0; i < afp.getOptAln()[bs][0].length; i++) {
 					block.getAlignRes().get(0).add(afp.getOptAln()[bs][0][i]);
 					block.getAlignRes().get(1).add(afp.getOptAln()[bs][1][i]);
 				}
 			}
 		}
 
-		//Copy the scores stored in the AFPChain
-		msa.putScore(MultipleAlignmentScorer.PROBABILITY,afp.getProbability());
-		msa.putScore(MultipleAlignmentScorer.AVGTM_SCORE,afp.getTMScore());
-		msa.putScore(MultipleAlignmentScorer.CE_SCORE,afp.getAlignScore());
+		// Copy the scores stored in the AFPChain
+		msa.putScore(MultipleAlignmentScorer.PROBABILITY, afp.getProbability());
+		msa.putScore(MultipleAlignmentScorer.AVGTM_SCORE, afp.getTMScore());
+		msa.putScore(MultipleAlignmentScorer.CE_SCORE, afp.getAlignScore());
 		msa.putScore(MultipleAlignmentScorer.RMSD, afp.getTotalRmsdOpt());
 	}
 
@@ -274,18 +288,18 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	}
 
 	@Override
-	public List<String> getStructureNames() {
-		return structureNames;
+	public List<StructureIdentifier> getStructureIdentifiers() {
+		return structureIdentifiers;
 	}
 
 	@Override
-	public void setStructureNames(List<String> structureNames) {
-		this.structureNames = structureNames;
+	public void setStructureIdentifiers(List<StructureIdentifier> structureNames) {
+		this.structureIdentifiers = structureNames;
 	}
 
 	@Override
 	public List<Atom[]> getAtomArrays() {
-		if (atomArrays == null){
+		if (atomArrays == null) {
 			try {
 				updateAtomArrays();
 			} catch (IOException e) {
@@ -303,8 +317,8 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	}
 
 	/**
-	 * Force the atom arrays to regenerate based on 
-	 * {@link #getStructureNames()}.
+	 * Force the atom arrays to regenerate based on
+	 * {@link #getStructureIdentifiers()}.
 	 * 
 	 * @throws IOException
 	 * @throws StructureException
@@ -312,7 +326,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	public void updateAtomArrays() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		atomArrays = new ArrayList<Atom[]>();
-		for (String name : getStructureNames() ){
+		for (StructureIdentifier name : getStructureIdentifiers()) {
 			Atom[] array = cache.getRepresentativeAtoms(name);
 			atomArrays.add(array);
 		}
@@ -320,7 +334,8 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 
 	@Override
 	public List<Matrix> getDistanceMatrix() {
-		if (distanceMatrix == null) updateDistanceMatrix();
+		if (distanceMatrix == null)
+			updateDistanceMatrix();
 		return distanceMatrix;
 	}
 
@@ -329,12 +344,12 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	 */
 	public void updateDistanceMatrix() {
 
-		//Reset the distance Matrix variable
+		// Reset the distance Matrix variable
 		distanceMatrix = new ArrayList<Matrix>();
 
-		for (int s=0; s<size(); s++){
+		for (int s = 0; s < size(); s++) {
 			Atom[] ca = atomArrays.get(s);
-			Matrix distMat =AlignTools.getDistanceMatrix(ca, ca);
+			Matrix distMat = AlignTools.getDistanceMatrix(ca, ca);
 			distanceMatrix.add(distMat);
 		}
 	}
@@ -342,7 +357,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	@Override
 	public List<MultipleAlignment> getMultipleAlignments() {
 
-		if (multipleAlignments == null){
+		if (multipleAlignments == null) {
 			multipleAlignments = new ArrayList<MultipleAlignment>();
 		}
 		return multipleAlignments;
@@ -360,7 +375,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 
 	@Override
 	public void addMultipleAlignment(MultipleAlignment alignment) {
-		if (multipleAlignments == null){
+		if (multipleAlignments == null) {
 			multipleAlignments = new ArrayList<MultipleAlignment>();
 		}
 		multipleAlignments.add(alignment);
@@ -369,8 +384,10 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 
 	@Override
 	public int size() {
-		if (structureNames != null) return structureNames.size();
-		else if (atomArrays != null) return atomArrays.size();
+		if (structureIdentifiers != null)
+			return structureIdentifiers.size();
+		else if (atomArrays != null)
+			return atomArrays.size();
 		else {
 			throw new IndexOutOfBoundsException(
 					"Empty ensemble: names == null && atoms == null");
@@ -381,7 +398,7 @@ implements MultipleAlignmentEnsemble, Serializable, Cloneable {
 	public void clear() {
 		super.clear();
 		distanceMatrix = null;
-		for(MultipleAlignment a : getMultipleAlignments())
+		for (MultipleAlignment a : getMultipleAlignments())
 			a.clear();
 	}
 }

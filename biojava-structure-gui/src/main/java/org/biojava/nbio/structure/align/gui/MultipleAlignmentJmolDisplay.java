@@ -22,23 +22,18 @@ package org.biojava.nbio.structure.align.gui;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
-import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultipleAligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultipleStatusDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
@@ -46,8 +41,7 @@ import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
-import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,10 +58,10 @@ import org.slf4j.LoggerFactory;
  * @since 4.2.0
  *
  */
-public class MultipleAlignmentDisplay {
+public class MultipleAlignmentJmolDisplay  {
 
 	private static final Logger logger = 
-			LoggerFactory.getLogger(MultipleAlignmentDisplay.class);
+			LoggerFactory.getLogger(MultipleAlignmentJmolDisplay.class);
 
 	/**
 	 * Utility method used in the {@link MultipleAlignmentJmol} Frame, 
@@ -82,7 +76,7 @@ public class MultipleAlignmentDisplay {
 	 * @return List of pdb Strings corresponding to the aligned positions 
 	 * 			of the structure.
 	 */
-	public static final List<String> getPDBresnum(int structNum, 
+	public static List<String> getPDBresnum(int structNum,
 			MultipleAlignment multAln, Atom[] ca){
 
 		List<String> lst = new ArrayList<String>();
@@ -108,7 +102,7 @@ public class MultipleAlignmentDisplay {
 	 * 
 	 * @param multAln
 	 * @param jmol
-	 * @param colors
+
 	 * @throws StructureException
 	 */
 	public static void showMultipleAligmentPanel(MultipleAlignment multAln,
@@ -192,57 +186,11 @@ public class MultipleAlignmentDisplay {
 	public static MultipleAlignmentJmol display(MultipleAlignment multAln) 
 			throws StructureException {
 
-		int size = multAln.size();
-
-		List<Atom[]> atomArrays = multAln.getAtomArrays();
-		for (int i=0; i<size; i++){
-			if (atomArrays.get(i).length < 1) 
-				throw new StructureException(
-						"Length of atoms arrays is too short! Size: " 
-								+ atomArrays.get(i).length);
-		}
-
-		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
-
-		//TODO implement independent BlockSet superposition of the structure
-		List<Matrix4d> transf = multAln.getBlockSet(0).getTransformations();
-
-		if(transf == null) {
-
-			logger.error("Alignment Transformations are not calculated. "
-					+ "Superimposing to first structure as reference.");
-
-			multAln = multAln.clone();
-			MultipleSuperimposer imposer = new ReferenceSuperimposer();
-			imposer.superimpose(multAln);
-			transf = multAln.getBlockSet(0).getTransformations();
-			assert(transf != null);
-		}
-
-		//Rotate the atom coordinates of all the structures
-		for (int i=0; i<size; i++){
-			//TODO handle BlockSet-level transformations
-			//make sure this method has the same behavior as the other display.
-			//-SB 2015-06
-
-			//Assume all atoms are from the same structure
-			Structure displayS = atomArrays.get(i)[0].getGroup().
-					getChain().getParent().clone();
-			//Get all the atoms and include ligands and hetatoms
-			Atom[] rotCA = StructureTools.getRepresentativeAtomArray(displayS);
-			List<Group> hetatms = StructureTools.getUnalignedGroups(rotCA);
-			for (Group g:hetatms){
-				rotCA = Arrays.copyOf(rotCA, rotCA.length + 1);
-				rotCA[rotCA.length - 1] = g.getAtom(0);
-			}
-
-			//Transform the structure to ensure a full rotation in the display
-			Calc.transform(displayS, transf.get(i));
-			rotatedAtoms.add(rotCA);
-		}
+		List<Atom[]> rotatedAtoms = MultipleAlignmentDisplay.getRotatedAtoms(multAln);
 
 		MultipleAlignmentJmol jmol = 
 				new MultipleAlignmentJmol(multAln, rotatedAtoms);
+
 		jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 		return jmol;
 	}

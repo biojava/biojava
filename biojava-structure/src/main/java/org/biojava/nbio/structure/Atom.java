@@ -157,31 +157,31 @@ public interface Atom extends Cloneable, PDBRecord {
     
     /** 
      * Set occupancy. 
-     * @param occupancy  a double specifying the occupancy value
+     * @param occupancy  a float specifying the occupancy value
      * @see #getOccupancy
      */
-    public void setOccupancy(double occupancy) ;
+    public void setOccupancy(float occupancy) ;
     
     /** 
      * Get occupancy. 
-     * @return a double representing the occupancy value
+     * @return a float representing the occupancy value
      * @see #setOccupancy
      */
-    public double getOccupancy();
+    public float getOccupancy();
     
     /** 
      * Set temp factor .
-     * @param temp  a double specifying the temp factor value
+     * @param temp  a float specifying the temp factor value
      * @see #getTempFactor
      */
-    public void   setTempFactor(double temp) ;
+    public void   setTempFactor(float temp) ;
     
     /** 
      * Get temp factor. 
-     * @return a double representing the temp factor value
+     * @return a float representing the temp factor value
      * @see #setTempFactor
      */
-    public double getTempFactor() ;
+    public float getTempFactor() ;
     
     /** 
      * Return an identical copy of this  object .
@@ -218,4 +218,18 @@ public interface Atom extends Cloneable, PDBRecord {
      * @return a list of {@link Bond}s.
      */
     public List<Bond> getBonds();
+    
+    /**
+     * Get the charge of this atom
+     * 
+     * @return a the integer charge.
+     */
+    public short getCharge();
+    
+    /**
+     * Set the charge of this atom
+     * 
+     * @return void.
+     */
+    public void setCharge(short charge);
 }

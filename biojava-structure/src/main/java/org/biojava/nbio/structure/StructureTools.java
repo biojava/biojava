@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,8 +34,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
@@ -54,7 +51,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andreas Prlic, Jules Jacobsen
  * @since 1.0
- * @version %I% %G%
  */
 public class StructureTools {
 
@@ -391,7 +387,7 @@ public class StructureTools {
 	 * Unaligned groups are searched from all chains referenced in ca, as well
 	 * as any chains in the first model of the structure from ca[0], if any.
 	 * 
-	 * @param ca2
+	 * @param ca an array of atoms
 	 * @return
 	 */
 	public static List<Group> getUnalignedGroups(Atom[] ca) {
@@ -616,7 +612,7 @@ public class StructureTools {
 	/**
 	 * Gets a representative atom for each group that is part of the chain
 	 * backbone. Note that modified aminoacids won't be returned as part of the
-	 * backbone if the {@link ReducedChemCompProvider} was used to load the
+	 * backbone if the {@link org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider} was used to load the
 	 * structure.
 	 * 
 	 * For amino acids, the representative is a CA carbon. For nucleotides, the
@@ -840,7 +836,7 @@ public class StructureTools {
 	/**
 	 * Gets a representative atom for each group that is part of the chain
 	 * backbone. Note that modified aminoacids won't be returned as part of the
-	 * backbone if the {@link ReducedChemCompProvider} was used to load the
+	 * backbone if the {@link org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider} was used to load the
 	 * structure.
 	 * 
 	 * For amino acids, the representative is a CA carbon. For nucleotides, the
@@ -1007,7 +1003,7 @@ public class StructureTools {
 	 * Test if the three-letter code of an ATOM entry corresponds to a
 	 * nucleotide or to an aminoacid.
 	 * 
-	 * @param a
+	 * @param groupCode3
 	 *            3-character code for a group.
 	 *
 	 */
@@ -1027,7 +1023,9 @@ public class StructureTools {
 	 * @param chainId
 	 * @return Structure
 	 * @since 3.0
+	 * @deprecated Use {@link StructureIdentifier#reduce(Structure)} instead (v. 4.2.0)
 	 */
+	@Deprecated
 	public static final Structure getReducedStructure(Structure s,
 			String chainId) throws StructureException {
 		// since we deal here with structure alignments,
@@ -1095,7 +1093,9 @@ public class StructureTools {
 	 *            only add chain at this position
 	 * @return Structure object
 	 * @since 3.0
+	 * @deprecated Use {@link StructureIdentifier#reduce(Structure)} instead (v. 4.2.0)
 	 */
+	@Deprecated
 	public static final Structure getReducedStructure(Structure s, int chainNr)
 			throws StructureException {
 		// since we deal here with structure alignments,
@@ -1159,14 +1159,17 @@ public class StructureTools {
 	 * @param s
 	 *            The full structure
 	 * @param ranges
-	 *            A comma-seperated list of ranges, optionally surrounded by
+	 *            A comma-separated list of ranges, optionally surrounded by
 	 *            parentheses
 	 * @return Substructure of s specified by ranges
+	 * @throws IllegalArgumentException for malformed range strings
+	 * @throws StructureException for errors when reducing the Structure
+	 * @deprecated Use {@link StructureIdentifier} instead (4.2.0)
 	 */
-	public static final Structure getSubRanges(Structure s, String ranges)
-			throws StructureException {
-		Structure struc = getReducedStructure(s, null);
-
+	@Deprecated
+	public static final Structure getSubRanges(Structure s, String ranges ) 
+			throws StructureException
+	{
 		if (ranges == null || ranges.equals(""))
 			throw new IllegalArgumentException("ranges can't be null or empty");
 
@@ -1183,148 +1186,9 @@ public class StructureTools {
 			return s;
 		}
 
-		Structure newS = new StructureImpl();
-
-		newS.setPDBCode(s.getPDBCode());
-		newS.setPDBHeader(s.getPDBHeader());
-		newS.setName(s.getName());
-		newS.setDBRefs(s.getDBRefs());
-		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-		newS.getPDBHeader().setDescription(
-				"sub-range " + ranges + " of " + newS.getPDBCode() + " "
-						+ s.getPDBHeader().getDescription());
-		newS.setCrystallographicInfo(s.getCrystallographicInfo());
-		// TODO The following should be only copied for atoms which are present
-		// in the range.
-		// newS.setCompounds(s.getCompounds());
-		// newS.setConnections(s.getConnections());
-		// newS.setSSBonds(s.getSSBonds());
-		// newS.setSites(s.getSites());
-
-		String[] rangS = ranges.split(",");
-
-		StringWriter name = new StringWriter();
-		name.append(s.getName());
-		boolean firstRange = true;
-		String prevChainId = null;
-
-		// parse the ranges, adding the specified residues to newS
-		for (String r : rangS) {
-
-			// Match a single range, eg "A_4-27"
-
-			Matcher matcher = ResidueRange.RANGE_REGEX.matcher(r);
-			if (!matcher.matches()) {
-				throw new StructureException(
-						"wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2: "
-								+ ranges);
-			}
-			String chainId = matcher.group(1);
-			Chain chain;
-
-			if (chainId.equals("_")) {
-				// Handle special case of "_" chain for single-chain proteins
-				chain = struc.getChain(0);
-
-				if (struc.size() != 1) {
-					// SCOP 1.71 uses this for some proteins with multiple
-					// chains
-					// Print a warning in this ambiguous case
-					logger.warn(
-							"Multiple possible chains match '_'. Using chain {}",
-							chain.getChainID());
-				}
-			} else {
-				// Explicit chain
-				chain = struc.getChainByPDB(chainId);
-			}
-
-			Group[] groups;
-
-			String pdbresnumStart = matcher.group(2);
-			String pdbresnumEnd = matcher.group(3);
-
-			if (pdbresnumEnd == null) {
-				// Single residue range
-				pdbresnumEnd = pdbresnumStart;
-			}
-
-			if (!firstRange) {
-				name.append(",");
-			} else {
-				name.append(AtomCache.CHAIN_SPLIT_SYMBOL);
-			}
-			if (pdbresnumStart != null && pdbresnumEnd != null) {
-				// not a full chain
-				// since Java doesn't allow '+' before integers, fix this up.
-				if (pdbresnumStart.charAt(0) == '+')
-					pdbresnumStart = pdbresnumStart.substring(1);
-				if (pdbresnumEnd.charAt(0) == '+')
-					pdbresnumEnd = pdbresnumEnd.substring(1);
-
-				ResidueNumber pdbresnum1 = ResidueNumber
-						.fromString(pdbresnumStart);
-				ResidueNumber pdbresnum2 = ResidueNumber
-						.fromString(pdbresnumEnd);
-
-				// Trim extra residues off the range
-				Atom[] allAtoms = StructureTools
-						.getRepresentativeAtomArray(struc);
-				AtomPositionMap map = new AtomPositionMap(allAtoms);
-				ResidueRange trimmed = map
-						.trimToValidResidues(new ResidueRange(chain
-								.getChainID(), pdbresnum1, pdbresnum2));
-				if (trimmed != null) {
-					pdbresnum1 = trimmed.getStart();
-					pdbresnum2 = trimmed.getEnd();
-				}
-				groups = chain.getGroupsByPDB(pdbresnum1, pdbresnum2);
-
-				name.append(chainId).append(AtomCache.UNDERSCORE)
-						.append(pdbresnumStart).append("-")
-						.append(pdbresnumEnd);
-
-			} else {
-				// full chain
-				groups = chain.getAtomGroups().toArray(
-						new Group[chain.getAtomGroups().size()]);
-				name.append(chainId);
-			}
-
-			firstRange = true;
-
-			// Create new chain, if needed
-			Chain c = null;
-			if (prevChainId == null) {
-				// first chain...
-				c = new ChainImpl();
-				c.setChainID(chain.getChainID());
-				newS.addChain(c);
-			} else if (prevChainId.equals(chain.getChainID())) {
-				c = newS.getChainByPDB(prevChainId);
-
-			} else {
-				try {
-					c = newS.getChainByPDB(chain.getChainID());
-				} catch (StructureException e) {
-					// chain not in structure yet...
-					c = new ChainImpl();
-					c.setChainID(chain.getChainID());
-					newS.addChain(c);
-				}
-			}
-
-			// add the groups to the chain:
-			for (Group g : groups) {
-				c.addGroup(g);
-			}
-
-			prevChainId = c.getChainID();
-		}
-
-		newS.setName(name.toString());
-
-		return newS;
+		List<ResidueRange> resRanges = ResidueRange.parseMultiple(ranges);
+		SubstructureIdentifier structId = new SubstructureIdentifier(null,resRanges);
+		return structId.reduce(s);
 	}
 
 	public static final String convertAtomsToSeq(Atom[] atoms) {

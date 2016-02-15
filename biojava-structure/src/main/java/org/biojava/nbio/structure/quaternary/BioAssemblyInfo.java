@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.quaternary;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -31,7 +32,10 @@ import java.util.List;
  * 
  * @author duarte_j
  */
-public class BioAssemblyInfo {
+public class BioAssemblyInfo implements Serializable {
+	
+	
+	private static final long serialVersionUID = 1L;
 	
 	private int id;
 	private List<BiologicalAssemblyTransformation> transforms;

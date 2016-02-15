@@ -39,6 +39,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.nbio.core.util.ConcurrencyTools;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.ResidueRange;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.ecod.EcodDatabase;
 import org.biojava.nbio.structure.ecod.EcodDomain;
 import org.biojava.nbio.structure.ecod.EcodFactory;
@@ -56,7 +60,13 @@ import org.slf4j.LoggerFactory;
 public class EcodInstallationTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(EcodInstallationTest.class);
-	private static final String VERSION = "develop78";
+	private static final String VERSION = "develop124"; // Should be updated periodically
+	
+	// Info about known versions, for testing
+	private static final int DEVELOP_FIRST_VERSION = 45;
+	private static final int DEVELOP_LATEST_VERSTION = 124; // Should be updated periodically
+	//versions known to be unreleased
+	private static final List<Integer> DEVELOP_VERSIONS_BLACKLIST = Arrays.asList( 85, 107, 113 );
 
 	static {
 		//System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
@@ -85,8 +95,21 @@ public class EcodInstallationTest {
 		EcodDatabase ecod = EcodFactory.getEcodDatabase(VERSION);
 
 		List<EcodDomain> domains = ecod.getAllDomains();
-		expected = 423779; //version77
-		expected = 423869; //version78
+		// Taken from the official ecod stats file
+		switch(VERSION) {
+		case "develop77":
+			expected = 423825; //version77
+			break;
+		case "develop78":
+			expected = 423869; //version78
+			break;
+		case "develop124":
+			expected = 468680; //version124
+			break;
+		default:
+			fail("Unrecognized version "+VERSION);
+			return;
+		}
 		assertEquals("Wrong number of domains",expected,domains.size());
 	}
 
@@ -128,11 +151,12 @@ public class EcodInstallationTest {
 				20669l, "e1lyw.1", false,
 				//				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 				1,1,1,2,"1lyw",
-				//				String chainId, String range, String architectureName,
-				".", "A:3-97,B:106-346", "beta barrels",
+				//				String chainId, String range, String seqId, String architectureName,
+				".", "A:3-97,B:106-346", "A:3-97,B:1-241", "beta barrels",
 				//				String xGroupName, String hGroupName, String tGroupName,
+				"cradle loop barrel", "RIFT-related",
+				"NO_T_NAME",// should be "acid protease" except for bug in develop124
 				//				String fGroupName, Boolean isAssembly, List<String> ligands
-				"cradle loop barrel", "RIFT-related", "acid protease",
 				"EF00710",//"UNK_F_TYPE",
 				20669l, Collections.singleton("EPE")
 				);
@@ -235,23 +259,9 @@ public class EcodInstallationTest {
 	//@Ignore // Very slow parsing test
 	@Test
 	public void testAllVersions() throws IOException {
-		// Fetch latest version
-		EcodDatabase latest = EcodFactory.getEcodDatabase("latest");
-		String latestVersionStr = latest.getVersion();
-		int latestVersion = 0;
-		Matcher match = Pattern.compile("develop([0-9]+)",Pattern.CASE_INSENSITIVE).matcher(latestVersionStr);
-		if(match.matches())
-			latestVersion = Integer.parseInt(match.group(1));
-		latest = null;
-
 		// List all versions
-		int firstVersion = 45;
-		int lastVersion = Math.max(78,latestVersion);
-		List<String> versions = new ArrayList<String>();
-		versions.add("latest");
-		for(int version = firstVersion; version<= lastVersion;version++) {
-			versions.add("develop"+version);
-		}
+		List<String> versions = getKnownEcodVersions();
+		versions.add(EcodFactory.DEFAULT_VERSION);
 		
 		// Parse all versions
 		for(String version : versions) {
@@ -273,5 +283,68 @@ public class EcodInstallationTest {
 				// Ignore OME
 			}
 		}
+	}
+	
+	@Test
+	public void testGetStructure() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		
+		// Save ECOD version, since AtomCache uses the global default
+		String prevECOD = EcodFactory.getEcodDatabase().getVersion();
+		EcodFactory.setEcodDatabase("develop124");
+		EcodDatabase ecod = EcodFactory.getEcodDatabase();
+		
+		String name;
+		EcodDomain id;
+		List<ResidueRange> ranges;
+		
+		// Test some cases where Chain and domain number are ambiguous
+		name = "e1wz2B14";
+		id = ecod.getDomainsById(name);
+		assertEquals(name, id.getIdentifier());
+		ranges = id.getResidueRanges();
+		assertEquals(1,ranges.size());
+		assertEquals(new ResidueRange("B", new ResidueNumber("B", 200,null), new ResidueNumber("B",445,null)),ranges.get(0));
+		cache.getStructure(name);
+		
+		name = "e3j9zS13";
+		id = ecod.getDomainsById(name);
+		assertEquals(name, id.getIdentifier());
+		ranges = id.getResidueRanges();
+		assertEquals(1,ranges.size());
+		assertEquals(new ResidueRange("S1", new ResidueNumber("S1", 288,null), new ResidueNumber("S1",410,null)),ranges.get(0));
+		cache.getStructure(name);
+
+		
+		// Restore previous ECOD database
+		EcodFactory.setEcodDatabase(prevECOD);
+	}
+	
+	/**
+	 * Get a list of all develop versions, generated based on the DEVELOP_*
+	 * static variables.
+	 * @return A list of all development versions: "develop45","develop46",...
+	 */
+	public static List<String> getKnownEcodVersions() {
+		// Parse version from latest. 
+		int latestVersion = DEVELOP_LATEST_VERSTION;
+		try {
+			EcodDatabase latest = EcodFactory.getEcodDatabase(EcodFactory.DEFAULT_VERSION);
+			String latestVersionStr;
+			latestVersionStr = latest.getVersion();
+			Matcher match = Pattern.compile("develop([0-9]+)",Pattern.CASE_INSENSITIVE).matcher(latestVersionStr);
+			if(match.matches())
+				latestVersion = Integer.parseInt(match.group(1));
+			latest = null;
+		} catch (IOException e) {}
+		latestVersion = Math.max(latestVersion, DEVELOP_LATEST_VERSTION);
+
+		List<String> versions = new ArrayList<>(latestVersion-DEVELOP_FIRST_VERSION+2);
+		for(int version=DEVELOP_FIRST_VERSION;version<=latestVersion;version++) {
+			if( !DEVELOP_VERSIONS_BLACKLIST.contains(version) ) {
+				versions.add("develop"+version);
+			}
+		}
+		return versions;
 	}
 }
