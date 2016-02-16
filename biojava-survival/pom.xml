@@ -9,7 +9,14 @@
 
     <artifactId>biojava-survival</artifactId>
     <name>biojava-survival</name>
-    <url>http://maven.apache.org</url>
+    <url>http://www.biojava.org</url>
+    <licenses>
+        <license>
+            <name>GNU LGPL v2</name>
+            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <dependencies>
         <dependency>
@@ -52,14 +59,20 @@
     </properties>
     <build>
         <plugins>
+			<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>demo/**</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.5</version>
             </plugin>
 
         </plugins>

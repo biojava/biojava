@@ -356,7 +356,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		conn.setRequestProperty("User-Agent", "Biojava/NCBIQBlastService");
 		conn.setRequestProperty("Connection", "Keep-Alive");
 		conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-		conn.setRequestProperty("Content-length", "2000");
+		conn.setRequestProperty("Content-length", "200");
 		return conn;
 	}
 

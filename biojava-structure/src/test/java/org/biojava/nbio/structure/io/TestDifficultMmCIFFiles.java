@@ -20,13 +20,12 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,9 +37,18 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeNotNull;
-import static org.junit.Assume.assumeTrue;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.mmcif.MMcifParser;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
+import org.junit.Test;
 
 /**
  * Testing parsing of some difficult mmCIF files. 
@@ -53,6 +61,39 @@ import static org.junit.Assume.assumeTrue;
  */
 public class TestDifficultMmCIFFiles {
 
+	/**
+	 * The 2KSA mmCIF contains a 5 model NMR structure.  The first residue of the sequence is not visible
+	 * and the models should all begin with Asp indexed as residue #2.  
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void test2KSA() throws IOException, StructureException { 
+		AtomCache cache = new AtomCache();
+
+		StructureIO.setAtomCache(cache); 
+
+		FileParsingParameters params = cache.getFileParsingParams();
+		params.setParseBioAssembly(true);
+		params.setAlignSeqRes(true);
+		StructureIO.setAtomCache(cache);
+
+
+		cache.setUseMmCif(true);
+		Structure sCif = StructureIO.getStructure("2KSA");
+
+		assertNotNull(sCif);
+
+		// Unit test for each of the chains to show they begin with the correct first residue.
+		for (int i = 0; i < sCif.nrModels(); i++) {
+			List<Chain> chains = sCif.getModel(i);
+			
+			// Chain A first residue should start at ASP 2.. 
+			// but if replaceGroupSeqPos(PdbxPolySeqScheme ppss) is used, this is incorrect and will be 1.
+			assertEquals(2, chains.get(0).getAtomGroup(0).getResidueNumber().getSeqNum().intValue());
+		}
+	}
+	
 	@Test
 	public void test2BI6() throws IOException, StructureException {
 		
@@ -75,6 +116,9 @@ public class TestDifficultMmCIFFiles {
 		assertFalse(sCif.isCrystallographic());
 
 		assertTrue(sCif.isNmr());
+		
+		assertTrue(sCif.getPDBHeader().getRevisionRecords().size() > 1);
+
 	
 	}
 	

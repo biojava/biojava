@@ -20,7 +20,13 @@
  */
 package org.biojava.nbio.structure;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProvider;
@@ -28,10 +34,8 @@ import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.List;
-
-/** A class that provides static access methods for easy lookup of protein structure related components
+/** 
+ * A class that provides static access methods for easy lookup of protein structure related components
  * 
  * @author Andreas Prlic
  *
@@ -116,7 +120,8 @@ public class StructureIO {
 		cache = c;
 	}
 
-	/** Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
+	/** 
+	 * Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
 	 * {@link http://www.pdb.org/pdb/101/static101.do?p=education_discussion/Looking-at-Structures/bioassembly_tutorial.html}
 	 * 
 	 * 
@@ -130,12 +135,13 @@ public class StructureIO {
 		return getBiologicalAssembly(pdbId,1);
 	}
 
-	/** By default the getStructure method loads asym units. This access method allows to recreate the quaternary structure for a protein if it is available.
+	/** 
+	 * By default the getStructure method loads asym units. This access method allows to recreate the quaternary structure for a protein if it is available.
 	 * 
 	 * @param pdbId
 	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
 	 * @return a Structure object or null if that assembly is not available
-	 * @throws StructureException 
+	 * @throws StructureException if there is no bioassembly available for given biolAssemblyNr or some other problems encountered while loading it
 	 * @throws IOException 
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
@@ -151,8 +157,12 @@ public class StructureIO {
 		
 		// 0 ... asym unit
 		if ( biolAssemblyNr == 0) {
-			logger.info("Requested biological assembly 0, returning asymmetric unit");
+			logger.info("Requested biological assembly 0 for PDB id "+pdbId+", returning asymmetric unit");
 			return asymUnit;
+		}
+		// does it exist?
+		if (!asymUnit.getPDBHeader().getBioAssemblies().containsKey(biolAssemblyNr)) {
+			throw new StructureException("No biological assembly available for biological assembly nr " + biolAssemblyNr + " of " + pdbId);
 		}
 		
 		List<BiologicalAssemblyTransformation> transformations = 
@@ -173,7 +183,8 @@ public class StructureIO {
 
 	}
 
-	/** Does the provider PDB ID have a biological assembly?
+	/** 
+	 * Does the provider PDB ID have a biological assembly?
 	 * 
 	 * @param pdbId
 	 * @return flag if one or more biological assemblies are available
@@ -201,7 +212,8 @@ public class StructureIO {
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-	/** Utility method to set the location where PDB files can be found
+	/** 
+	 * Utility method to set the location where PDB files can be found
 	 * 
 	 * @param pathToPDBFiles
 	 */
@@ -209,5 +221,43 @@ public class StructureIO {
 
 		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
 			pathToPDBFiles += FILE_SEPARATOR;
+	}
+	
+
+	public static enum StructureFiletype {
+		PDB( (new PDBFileReader()).getExtensions()),
+		CIF( new MMCIFFileReader().getExtensions()),
+		UNKNOWN(Collections.<String>emptyList());
+
+		private List<String> extensions;
+		/**
+		 * @param extensions List of supported extensions, including leading period
+		 */
+		private StructureFiletype(List<String> extensions) {
+			this.extensions = extensions;
+		}
+		/**
+		 * @return a list of file extensions associated with this type
+		 */
+		public List<String> getExtensions() {
+			return extensions;
+		}
+	}
+
+	/**
+	 * Attempts to guess the type of a structure file based on the extension
+	 * @param filename
+	 * @return
+	 */
+	public static StructureFiletype guessFiletype(String filename) {
+		String lower = filename.toLowerCase();
+		for(StructureFiletype type : StructureFiletype.values()) {
+			for(String ext : type.getExtensions()) {
+				if(lower.endsWith(ext.toLowerCase())) {
+					return type;
+				}
+			}
+		}
+		return StructureFiletype.UNKNOWN;
 	}
 }

@@ -508,8 +508,8 @@ public class OptimalCECPMain extends CeMain {
 			
 			// fix up names, since cloning ca2 wipes it
 			
-			if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getParent()!=null) {
-				currentAlignment.setName2(ca2[0].getGroup().getChain().getParent().getName()+" CP="+cp);
+			if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getStructure()!=null) {
+				currentAlignment.setName2(ca2[0].getGroup().getChain().getStructure().getName()+" CP="+cp);
 			}
 			
 			double currentScore = currentAlignment.getAlignScore();

@@ -312,19 +312,38 @@ public interface Chain {
     /** 
      * Sets the back-reference to its parent Structure.
      * @param parent the parent Structure object for this Chain
-     * @see #getParent()
+     * @see #getStructure()
+     * @deprecated  use setStructure instead
      *  
      */
-    public void setParent(Structure parent) ; 
-    
+    @Deprecated
+    public void setParent(Structure parent) ;
+
+    /** Sets the back-reference to its parent Structure.
+     *
+     * @param parent
+     */
+
+    public void setStructure(Structure parent) ;
+
     /** 
      * Returns the parent Structure of this chain.
      * 
      * @return the parent Structure object
-     * @see #setParent(Structure)
+     * @see #setStructure(Structure)
+     * @deprecated use getStructure(Structure) instead.
      */
-    
+    @Deprecated
     public Structure getParent() ;
+
+
+    /**
+     * Returns the parent Structure of this chain.
+     *
+     * @return the parent Structure object
+     * @see #setStructure(Structure)
+     */
+    public Structure getStructure() ;
     
     /** 
      * Gets all groups that are not polymer groups and that are not solvent groups.
@@ -346,6 +365,17 @@ public interface Chain {
      * @return
      */
     public String toMMCIF();
-   
-    
+
+
+    /** Set annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
+     *
+     * @param seqMisMatches
+     */
+    public void setSeqMisMatches(List<SeqMisMatch> seqMisMatches);
+
+    /** Get annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
+     *
+     * @returns a list of sequence mismatches (or null if none found)
+     */
+    public List<SeqMisMatch> getSeqMisMatches();
 }

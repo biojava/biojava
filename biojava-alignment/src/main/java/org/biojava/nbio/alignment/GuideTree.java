@@ -23,19 +23,23 @@
 
 package org.biojava.nbio.alignment;
 
+import org.biojava.nbio.core.alignment.SimpleProfile;
 import org.biojava.nbio.alignment.template.GuideTreeNode;
 import org.biojava.nbio.alignment.template.PairwiseSequenceScorer;
-import org.biojava.nbio.alignment.template.Profile;
-import org.biojava.nbio.alignment.template.ProfilePair;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.ProfilePair;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
-import org.forester.evoinference.distance.NeighborJoining;
+import org.biojava.nbio.phylo.ForesterWrapper;
+import org.biojava.nbio.phylo.TreeConstructor;
+import org.biojava.nbio.phylo.TreeConstructorType;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
 import org.forester.phylogeny.PhylogenyNode;
 
 import javax.swing.tree.TreeNode;
+
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -66,20 +70,17 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
         this.sequences = Collections.unmodifiableList(sequences);
         this.scorers = Collections.unmodifiableList(scorers);
         distances = new BasicSymmetricalDistanceMatrix(sequences.size());
-        BasicSymmetricalDistanceMatrix distclone = new BasicSymmetricalDistanceMatrix(sequences.size());
         for (int i = 0, n = 0; i < sequences.size(); i++) {
             AccessionID id = sequences.get(i).getAccession();
             String str = (id == null) ? Integer.toString(i + 1) : id.getID();
             distances.setIdentifier(i, str);
-            distclone.setIdentifier(i, str);
             for (int j = i+1; j < sequences.size(); j++) {
                 double dist = scorers.get(n++).getDistance();
                 distances.setValue(i, j, dist);
-                distclone.setValue(i, j, dist);
             }
         }
-        // TODO UPGMA and other hierarchical clustering routines
-        Phylogeny phylogeny = NeighborJoining.createInstance().execute(distclone);
+        BasicSymmetricalDistanceMatrix distclone = ForesterWrapper.cloneDM(distances);
+        Phylogeny phylogeny = TreeConstructor.distanceTree(distclone, TreeConstructorType.NJ);
         newick = phylogeny.toString();
         root = new Node(phylogeny.getRoot(), null);
     }

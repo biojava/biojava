@@ -180,7 +180,8 @@ public class Rotation {
         return nStart;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("fold       : ");
         sb.append(fold);

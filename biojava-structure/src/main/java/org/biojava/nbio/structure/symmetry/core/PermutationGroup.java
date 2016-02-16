@@ -22,7 +22,9 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -47,27 +49,40 @@ public class PermutationGroup {
     
  
     /**
+     * Starts with an incomplete set of group generators in `permutations` and
+     * expands it to include all possible combinations.
+     *
      * Ways to complete group: 
      * - combinations of permutations pi x pj
      * - combinations with itself p^k
      * 
      */
     public void completeGroup() {
-    	int n = permutations.size();
-        for (int i = 0; i < permutations.size(); i++) {
-            for (int j = i; j < permutations.size(); j++) {
-                List<Integer> p = combine(permutations.get(i), permutations.get(j));
-                addPermutation(p);
-//                System.out.println("complete group: adding " + p);
-            }
-        }
-        // repeat iteratively until no new permutation are created
-        if (permutations.size() > n) {
-        	completeGroup();
-        }
+    	// Copy initial set to allow permutations to grow
+    	List<List<Integer>> gens = new ArrayList<List<Integer>>(permutations);
+    	// Keep HashSet version of permutations for fast lookup.
+    	Set<List<Integer>> known = new HashSet<List<Integer>>(permutations);
+    	//breadth-first search through the map of all members
+    	List<List<Integer>> currentLevel = new ArrayList<List<Integer>>(permutations);
+    	while( currentLevel.size() > 0) {
+    		List<List<Integer>> nextLevel = new ArrayList<List<Integer>>();
+    		for( List<Integer> p : currentLevel) {
+    			for(List<Integer> gen : gens) {
+    				List<Integer> y = combine(p,gen);
+    				if(!known.contains(y)) {
+    					nextLevel.add(y);
+    					//bypass addPermutation(y) for performance
+    					permutations.add(y);
+    					known.add(y);
+    				}
+    			}
+    		}
+    		currentLevel = nextLevel;
+    	}
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Permutation Group: " + permutations.size() + " permutation");
         for (List<Integer> permutation : permutations) {
@@ -120,7 +135,8 @@ public class PermutationGroup {
     	return builder.toString();
     }
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
     	return getGroupTable().hashCode();
     }
 }

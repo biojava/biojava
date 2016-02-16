@@ -20,51 +20,83 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-import java.io.Serializable;
+/**
+ * This enum contains all of the secondary structure types found in the DSSP
+ * output. It also contains some methods to operate with the SS types.
+ * <p>
+ * When compared, the types are sorted in the declaration order of the enum,
+ * which is the DSSP preference of type assignment.
+ * 
+ * @author Andreas Prlic
+ * @author Aleix Lafita
+ *
+ */
+public enum SecStrucType {
 
-public enum SecStrucType implements Serializable{
-
-	coil("Coil",' '),
-	helix4("alpha Helix",'H'),
-	helix3("3-10 Helix",'G'),
-	helix5("pi helix",'I'),
-	turn("Turn",'T'),	
-	bend("Bend",'S'),
-	extended("Extended",'E'),
-	bridge("Bridge",'B');
-	;
+	helix4("alpha Helix", 'H'), 
+	extended("Extended", 'E'), 
+	bridge("Bridge", 'B'), 
+	helix3("3-10 Helix", 'G'), 
+	helix5("pi Helix", 'I'), 
+	turn("Turn", 'T'), 
+	bend("Bend", 'S'), 
+	coil("Coil", ' ');
 
 	public final Character type;
 	public final String name;
 
-
-	private SecStrucType(String name,Character stype){
+	private SecStrucType(String name, Character stype) {
 		this.name = name;
 		this.type = stype;
 	}
 
-	public static SecStrucType fromCharacter(Character stype){
+	/**
+	 * Converts a Character representing a Secondary Structure type into the
+	 * corresponding enum object.
+	 * 
+	 * @param stype
+	 *            the character representing the SS type
+	 * @return SecStrucType or null if the character is invalid
+	 */
+	public static SecStrucType fromCharacter(Character stype) {
 
-		for ( SecStrucType c : SecStrucType.values()){
-			if ( c.type.equals(stype)){
+		for (SecStrucType c : SecStrucType.values()) {
+			if (c.type.equals(stype)) {
 				return c;
 			}
 		}
-
 		return null;
-
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return type.toString();
 	}
 
+	/**
+	 * Helix type can be 3-10 helix, pi-helix or alpha-helix.
+	 * 
+	 * @return true if the type is any of the helix types, false otherwise
+	 */
 	public boolean isHelixType() {
-		if ( type.equals(helix4.type) || type.equals(helix3.type) || type.equals(helix5.type))
+		if (type.equals(helix4.type) || type.equals(helix3.type)
+				|| type.equals(helix5.type))
 			return true;
-		return false;
+		else
+			return false;
 	}
-	
+
+	/**
+	 * A Beta-Strand is an extended set of sequential Bridges that, together
+	 * with other Beta-Strands, is part of a Beta-Sheet.
+	 * 
+	 * @return true if the type is a Beta-Strand
+	 */
+	public boolean isBetaStrand() {
+		if (type.equals(extended.type))
+			return true;
+		else
+			return false;
+	}
 
 }

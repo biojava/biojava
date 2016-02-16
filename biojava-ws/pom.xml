@@ -8,6 +8,13 @@
 	<artifactId>biojava-ws</artifactId>
 	<name>biojava-ws</name>
 	<description>This module deals with bioinformatics web services that could be used to process Biojava objects in a useful manner.</description>
+	<licenses>
+		<license>
+			<name>GNU LGPL v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<dependencies>
 		<dependency>
 			<groupId>org.biojava</groupId>
@@ -47,15 +54,18 @@
 	</dependencies>
     <build>
         <plugins>
+        
+			<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>demo/**.java</exclude>
+                        <exclude>demo/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
+        
         </plugins>
     </build>
 </project>

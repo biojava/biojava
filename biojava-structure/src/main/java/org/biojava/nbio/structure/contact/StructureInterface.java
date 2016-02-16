@@ -163,6 +163,11 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		this.molecules = molecules;
 	}
 
+	/**
+	 * Return the pair of identifiers identifying each of the 2 molecules of this interface
+	 * in the asymmetry unit (usually the chain identifier if this interface is between 2 chains)
+	 * @return
+	 */
 	public Pair<String> getMoleculeIds() {
 		return moleculeIds;
 	}
@@ -649,7 +654,11 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return (scoreInverse>SELF_SCORE_FOR_ISOLOGOUS);
 	}
 	
-	private Pair<Chain> getParentChains() {
+	/**
+	 * Finds the parent chains by looking up the references of first atom of each side of this interface
+	 * @return
+	 */
+	public Pair<Chain> getParentChains() {
 		Atom[] firstMol = this.molecules.getFirst();
 		Atom[] secondMol = this.molecules.getSecond();
 		if (firstMol.length==0 || secondMol.length==0) {
@@ -660,13 +669,26 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return new Pair<Chain>(firstMol[0].getGroup().getChain(), secondMol[0].getGroup().getChain());
 	}
 	
+	/**
+	 * Finds the parent compounds by looking up the references of first atom of each side of this interface
+	 * @return
+	 */
+	public Pair<Compound> getParentCompounds() {
+		Pair<Chain> chains = getParentChains();
+		if (chains == null) {
+			logger.warn("Could not find parents chains, compounds will be null");
+			return null;
+		}
+		return new Pair<Compound>(chains.getFirst().getCompound(), chains.getSecond().getCompound());
+	}
+	
 	private Structure getParentStructure() {
 		Atom[] firstMol = this.molecules.getFirst();
 		if (firstMol.length==0) {
 			logger.warn("No atoms found in first molecule, can't get parent Structure");
 			return null;
 		}
-		return firstMol[0].getGroup().getChain().getParent();
+		return firstMol[0].getGroup().getChain().getStructure();
 	}
 	
 	/**

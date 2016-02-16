@@ -25,6 +25,9 @@ import org.biojava.nbio.structure.Atom;
 import javax.vecmath.Point3d;
 import java.util.*;
 
+/**
+ * Wraps a sequence clustering with structural information
+ */
 public class ChainClusterer  {	
 	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();	
 	private boolean modified = true;
@@ -93,31 +96,47 @@ public class ChainClusterer  {
 		return formula.toString();
 	}
 
+	/**
+	 * Get valid symmetry order for this stoichiometry.
+	 * @return
+	 */
 	public List<Integer> getFolds() {
 		run();
-		List<Integer> denominators = new ArrayList<Integer>();
-        Set<Integer> nominators = new TreeSet<Integer>();
-		int nChains = caCoords.size();
-		
+		List<Integer> stoichiometry = new ArrayList<Integer>(seqClusters.size());
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
-			nominators.add(seqCount);
+			stoichiometry.add(seqCount);
 		}
+		return getValidFolds(stoichiometry);
+	}
+	/**
+	 * Find valid symmetry orders for a given stoichiometry. For instance,
+	 * an A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
+	 * decompositions.
+	 * @param stoichiometry List giving the number of copies in each chain cluster
+	 * @return The common factors of the stoichiometry
+	 */
+	public static List<Integer> getValidFolds(List<Integer> stoichiometry){
+		List<Integer> denominators = new ArrayList<Integer>();
+
+		int nChains = Collections.max(stoichiometry);
 		
+		// Remove duplicate stoichiometries
+		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
+
 		// find common denominators
 		for (int d = 1; d <= nChains; d++) {
-
-			int count = 0;
-			for (Iterator<Integer> iter = nominators.iterator(); iter.hasNext();) {
-				if (iter.next() % d == 0) {
-					count++;
+			boolean isDivisable=true;
+			for (Integer n : nominators) {
+				if (n % d != 0) {
+					isDivisable = false;
+					break;
 				}
 			}
-			if (count == nominators.size()) {
+			if(isDivisable) {
 				denominators.add(d);
 			}
 		}
-		
 		return denominators;
 	}
 	
@@ -186,6 +205,7 @@ public class ChainClusterer  {
 		return list;
 	}
 	
+	@Override
 	public String toString() {
 		run();
 		StringBuilder builder = new StringBuilder();

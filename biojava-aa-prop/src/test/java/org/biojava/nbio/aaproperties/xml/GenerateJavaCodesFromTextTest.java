@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.aaproperties.xml;
 
-import org.junit.Test;
+//import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,8 @@ public class GenerateJavaCodesFromTextTest {
 	/*
 	 * Generate java codes from two text files; Symbol2Name.txt and Symbol2Weight.txt
 	 */
-	@Test
+	// commenting out since there's no assertions here - JD 2015-07-28
+	//@Test 
 	public void generateCodes() throws IOException{
 		BufferedReader input = new BufferedReader(new FileReader("./src/test/resources/Symbol2Name.txt"));
 		Map<String, String> symbol2Name = new HashMap<String, String>();

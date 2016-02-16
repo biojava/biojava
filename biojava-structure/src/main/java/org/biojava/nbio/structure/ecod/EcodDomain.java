@@ -19,31 +19,37 @@
  */
 package org.biojava.nbio.structure.ecod;
 
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author Spencer Bliven
  *
  */
-public class EcodDomain implements Serializable, Cloneable {
+public class EcodDomain implements Serializable, Cloneable, StructureIdentifier {
 
 	/*
 Column 1: ECOD uid - internal domain unique identifier
 Column 2: ECOD domain id - domain identifier
 Column 3: ECOD representative status - manual (curated) or automated nonrep
-Column 4: ECOD hierachy identifier - [X-group].[H-group].{T-group].[F-group]
+Column 4: ECOD hierachy identifier - [X-group].[H-group].[T-group].[F-group]
 Column 5: PDB identifier
 Column 6: Chain identifier (note: case-sensitive)
 Column 7: PDB residue number range
-Column 8: Architecture name
-Column 9: X-group name
-Column 10: H-group name
-Column 11: T-group name
-Column 12: F-group name (F_UNCLASSIFIED denotes that domain has not been assigned to an F-group)
-Column 13: Domain assembly status (if domain is member of assembly, partners' ecod domain ids listed)
-Column 14: Comma-separated value list of non-polymer entities within 4 A of at least one residue of domain
+Column 8: seq_id number range (based on internal PDB indices)
+Column 9: Architecture name
+Column 10: X-group name
+Column 11: H-group name
+Column 12: T-group name
+Column 13: F-group name (F_UNCLASSIFIED denotes that domain has not been assigned to an F-group)
+Column 14: Domain assembly status (if domain is member of assembly, partners' ecod domain ids listed)
+Column 15: Comma-separated value list of non-polymer entities within 4 A of at least one residue of domain
 
 
 001502751       e4s1gA1 1.1.1   4s1g    A       A:68-251        beta barrels    cradle loop barrel      RIFT-related    acid protease   F_UNCLASSIFIED  NOT_DOMAIN_ASSEMBLY     NO_LIGANDS_4A
@@ -64,6 +70,7 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 	private String pdbId;
 	private String chainId;
 	private String range;
+	private String seqIdRange;
 	private String architectureName;
 	private String xGroupName;
 	private String hGroupName;
@@ -80,6 +87,17 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 			String chainId, String range, String architectureName,
 			String xGroupName, String hGroupName, String tGroupName,
 			String fGroupName, Long assemblyId, Set<String> ligands) {
+		this(uid, domainId, manual,
+				xGroup, hGroup, tGroup, fGroup, pdbId,
+				chainId, range, null, architectureName,
+				xGroupName, hGroupName, tGroupName,
+				fGroupName, assemblyId, ligands);
+	}
+	public EcodDomain(Long uid, String domainId, Boolean manual,
+				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
+				String chainId, String range, String seqId, String architectureName,
+				String xGroupName, String hGroupName, String tGroupName,
+				String fGroupName, Long assemblyId, Set<String> ligands) {
 		this.uid = uid;
 		this.domainId = domainId;
 		this.manual = manual;
@@ -90,6 +108,7 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.pdbId = pdbId;
 		this.chainId = chainId;
 		this.range = range;
+		this.seqIdRange = seqId;
 		this.architectureName = architectureName;
 		this.xGroupName = xGroupName;
 		this.hGroupName = hGroupName;
@@ -112,6 +131,7 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.pdbId = o.pdbId;
 		this.chainId = o.chainId;
 		this.range = o.range;
+		this.seqIdRange = o.seqIdRange;
 		this.architectureName = o.architectureName;
 		this.xGroupName = o.xGroupName;
 		this.hGroupName = o.hGroupName;
@@ -120,6 +140,8 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.assemblyId = o.assemblyId;
 		this.ligands = new HashSet<String>(o.ligands);
 	}
+
+
 
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
@@ -180,11 +202,29 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 	public void setChainId(String chainId) {
 		this.chainId = chainId;
 	}
+	/**
+	 * Get the range of this domain, in PDB residue numbers (mmCif's
+	 * _pdbx_poly_seq_scheme.pdb_seq_num and pdb_ins_code).
+	 * @return The chain and residue range, e.g. "A:1-100"
+	 */
 	public String getRange() {
 		return range;
 	}
 	public void setRange(String range) {
 		this.range = range;
+	}
+	/**
+	 * Get the range of this domain, in 1-based residue indices (mmCif's
+	 * _pdbx_poly_seq_scheme.seq_id)
+	 * 
+	 * Note that {@link #getRange()} is used when constructing the domain.
+	 * @return The chain and residue range, e.g. "A:1-100"
+	 */
+	public String getSeqIdRange() {
+		return seqIdRange;
+	}
+	public void setSeqIdRange(String seqIdRange) {
+		this.seqIdRange = seqIdRange;
 	}
 	public String getArchitectureName() {
 		return architectureName;
@@ -380,6 +420,31 @@ Column 14: Comma-separated value list of non-polymer entities within 4 A of at l
 		} else if (!xGroupName.equals(other.xGroupName))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return getDomainId();
+	}
+
+	public List<ResidueRange> getResidueRanges() {
+		return ResidueRange.parseMultiple(range);
+	}
+
+	@Override
+	public SubstructureIdentifier toCanonical() {
+		return new SubstructureIdentifier(getPdbId(), ResidueRange.parseMultiple(getRange()));
+	}
+
+	@Override
+	public Structure reduce(Structure input) throws StructureException {
+		return toCanonical().reduce(input);
+	}
+
+	@Override
+	public Structure loadStructure(AtomCache cache) throws StructureException,
+			IOException {
+		return cache.getStructureForPdbId(pdbId);
 	}
 
 }

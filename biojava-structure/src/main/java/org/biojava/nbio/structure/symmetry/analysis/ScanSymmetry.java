@@ -20,7 +20,18 @@
  */
 package org.biojava.nbio.structure.symmetry.analysis;
 
-import org.biojava.nbio.structure.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
+
+import org.biojava.nbio.structure.PDBCrystallographicInfo;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.AllChemCompProvider;
@@ -33,14 +44,6 @@ import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.biojava.nbio.structure.symmetry.misc.ProteinComplexSignature;
 import org.biojava.nbio.structure.symmetry.utils.BlastClustReader;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
 
 
 public class ScanSymmetry implements Runnable {
@@ -56,6 +59,7 @@ public class ScanSymmetry implements Runnable {
 		new ScanSymmetry().run();
 	}
 
+	@Override
 	public void run() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 
@@ -152,7 +156,7 @@ public class ScanSymmetry implements Runnable {
 					if (detector.hasProteinSubunits()) {	
 						long ts2 = System.nanoTime();
 
-						int time = Math.round((float)(ts2-ts1)/1000000.0f);
+						int time = Math.round((ts2-ts1)/1000000.0f);
 
 						// save global symmetry results
 						List<QuatSymmetryResults> globalResults = detector.getGlobalSymmetry();
@@ -250,8 +254,6 @@ public class ScanSymmetry implements Runnable {
 		cache = new AtomCache();
 		FileParsingParameters params = cache.getFileParsingParams();
 		cache.setUseMmCif(true);
-		params.setStoreEmptySeqRes(true);
-		params.setAlignSeqRes(true);
 		params.setParseCAOnly(true);
 //		MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
 //		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());	

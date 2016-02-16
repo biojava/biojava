@@ -9,6 +9,13 @@
 	<artifactId>biojava-structure</artifactId>
 	<name>biojava-structure</name>
 	<description>The protein structure modules of BioJava.</description>
+	<licenses>
+		<license>
+			<name>GNU LGPL v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<dependencies>
 
@@ -30,7 +37,12 @@
 			<artifactId>vecmath</artifactId>
 			<version>1.3.1</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>org.jgrapht</groupId>
+  			<artifactId>jgrapht-core</artifactId>
+  			<version>0.9.1</version>
+		</dependency>
 
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
 		<dependency>
@@ -63,7 +75,7 @@
 		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>
-			<version>1.5</version>
+			<version>1.6</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -81,20 +93,20 @@
 
 		<plugins>
 
-			<plugin>
+			<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>demo/**.java</exclude>
+                        <exclude>demo/**</exclude>
                     </excludes>
                 </configuration>
-			</plugin>
+            </plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
 			</plugin>
 
 		</plugins>

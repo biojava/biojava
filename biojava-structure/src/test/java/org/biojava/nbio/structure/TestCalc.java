@@ -1,7 +1,31 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure;
 
 import static org.junit.Assert.*;
 
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+
+import org.biojava.nbio.structure.jama.Matrix;
 import org.junit.Test;
 
 public class TestCalc {
@@ -35,7 +59,6 @@ public class TestCalc {
 		assertTrue(Calc.angle(ref, a6)>=0 && Calc.angle(ref,a6)<=180.0);
 		assertTrue(Calc.angle(ref, a7)>=0 && Calc.angle(ref,a7)<=180.0);
 		
-	
 		Atom c = getAtom(0,0,0);
 		Atom d = getAtom(0,0,0);
 		
@@ -80,7 +103,59 @@ public class TestCalc {
 		assertEquals(0, Calc.torsionAngle(a, b, c, d),0.00001);
 	}
 	
+	@Test
+	public void testJamaTransformation() {
+		
+		Atom atom = getAtom(1.0, 1.0, 1.0);
+		
+		//Identity transform
+		Matrix identR = Matrix.identity(3, 3);
+		Atom identT = getAtom(0, 0, 0);
+		Calc.rotate(atom, identR);
+		Calc.shift(atom, identT);
+		
+		Point3d expected = new Point3d(1.0, 1.0, 1.0);
+		Point3d actual = new Point3d(atom.getCoords());
+		
+		assertEquals(expected, actual);
+		
+		//Sample transform: calc transposes automatically the matrix
+		//because it is a pre-multiplication rotation matrix
+		Matrix sampleR = Calc.getRotationMatrix(getSampleTransform());
+		Atom sampleT = Calc.getTranslationVector(getSampleTransform());
+		Calc.rotate(atom, sampleR);
+		Calc.shift(atom, sampleT);
+		
+		expected = new Point3d(2.0, 7.0, -1.3);
+		actual = new Point3d(atom.getCoords());
+		
+		assertEquals(expected, actual);
+	}
 	
+	@Test
+	public void testVecmathTransformation() {
+		
+		Atom atom = getAtom(1.0, 1.0, 1.0);
+		
+		//Identity transform
+		Matrix4d ident = new Matrix4d();
+		ident.setIdentity();
+		Calc.transform(atom, ident);
+		
+		Point3d expected = new Point3d(1.0, 1.0, 1.0);
+		Point3d actual = new Point3d(atom.getCoords());
+		
+		assertEquals(expected, actual);
+		
+		//Sample transform
+		Matrix4d sample = getSampleTransform();
+		Calc.transform(atom, sample);
+		
+		expected = new Point3d(2.0, 7.0, -1.3);
+		actual = new Point3d(atom.getCoords());
+		
+		assertEquals(expected, actual);
+	}
 	
 	private static Atom getAtom(double x, double y, double z) {
 		Atom a = new AtomImpl();
@@ -89,6 +164,14 @@ public class TestCalc {
 		a.setZ(z);
 		return a;
 	}
-
 	
+	private static Matrix4d getSampleTransform(){
+		
+		Matrix4d sample = new Matrix4d(new double[] {1.0,1.5,0.5,-1.0,
+		                                0.5,0.5,1.0,5.0,
+		                                0.3,0.4,0.5,-2.5,
+		                                0.0,0.0,0.0,1.0});
+		return sample;
+	}
+
 }

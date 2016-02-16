@@ -71,11 +71,13 @@ public class RotationAxisAligner extends AxisAligner{
 		return rotationGroup.getPointGroup();
 	}
 	
+	@Override
 	public Matrix4d getTransformation() {
 		run();   
 		return transformationMatrix;
 	}
 	
+	@Override
 	public Matrix3d getRotationMatrix() {
 		run();
 		Matrix3d m = new Matrix3d();
@@ -83,26 +85,31 @@ public class RotationAxisAligner extends AxisAligner{
 	    return m;
 	}
 	
+	@Override
 	public Matrix4d getReverseTransformation() {
 		run();   
 		return reverseTransformationMatrix;
 	}
 	
+	@Override
 	public Vector3d getPrincipalRotationAxis() {
 		run();
 		return principalRotationVector;
 	}
 	
+	@Override
 	public Vector3d getRotationReferenceAxis() {
 		run();
 		return referenceVector;
 	}
 	
+	@Override
 	public Vector3d[] getPrincipalAxesOfInertia() {
 		run();
 		return principalAxesOfInertia;
 	}
 	
+	@Override
 	public Vector3d getDimension() {
 		run();
 		Vector3d dimension = new Vector3d();
@@ -115,6 +122,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 * Returns the radius for drawing the minor rotation axis in the xy-plane
 	 * @return double radius in xy-plane
 	 */
+	@Override
 	public double getRadius() {
 		run();
 		return xyRadiusMax;
@@ -126,6 +134,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 * In Cn structures those are usually not the same.
 	 * @return
 	 */
+	@Override
 	public Matrix4d getGeometicCenterTransformation() {
 		run();
 	
@@ -141,6 +150,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 * identical.
 	 * @return
 	 */
+	@Override
 	public Point3d getGeometricCenter() {
 		run();
 		
@@ -160,10 +170,12 @@ public class RotationAxisAligner extends AxisAligner{
 		return geometricCenter;
 	}
 
+	@Override
 	public Point3d getCentroid() {
 		return new Point3d(subunits.getCentroid());
 	}
 
+	@Override
 	public Subunits getSubunits() {
 		return subunits;
 	}
@@ -172,6 +184,7 @@ public class RotationAxisAligner extends AxisAligner{
 		return rotationGroup;
 	}
 	
+	@Override
 	public List<List<Integer>> getOrbits() {
 		return alignedOrbits;
 	}

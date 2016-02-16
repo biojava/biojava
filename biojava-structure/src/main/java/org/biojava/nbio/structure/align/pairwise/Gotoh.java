@@ -269,7 +269,7 @@ public class Gotoh {
         // switch order
         IndexPair[] newpath = new IndexPair[pathsize];
         for (int i = 0 ; i < pathsize; i++){
-            IndexPair o = (IndexPair)path.get(pathsize-1-i);
+            IndexPair o = path.get(pathsize-1-i);
             IndexPair np = new IndexPair((short)(o.getRow()-1),(short)(o.getCol()-1));
             newpath[i] = np;
         }

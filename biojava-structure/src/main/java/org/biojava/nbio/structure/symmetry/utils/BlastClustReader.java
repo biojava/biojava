@@ -24,17 +24,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
 
-public class BlastClustReader {
+public class BlastClustReader implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private int sequenceIdentity = 0;
 	private List<List<String>> clusters = new ArrayList<List<String>>();
 	private static final String coreUrl = "ftp://resources.rcsb.org/sequence/clusters/";
 	private static List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
 
-	public BlastClustReader(int sequenceIdentity) {
+	public BlastClustReader(int sequenceIdentity)  {
 		this.sequenceIdentity = sequenceIdentity;
 	}
 	

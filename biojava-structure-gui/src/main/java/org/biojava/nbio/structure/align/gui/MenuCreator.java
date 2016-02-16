@@ -38,10 +38,11 @@ import java.io.File;
 /**
  * Create the menus for structure alignment GUI windows (JFrames).
  * <p>
- * Examples: Text Frames, Alignment Panels, Jmol Panels, etc.
+ * Examples: Text Frames, Alignment Panels, Jmol Panels.
  * 
  * @author Andreas Prlic
  * @author Aleix Lafita
+ * @author Spencer Bliven
  * @since 1.7
  * 
  */
@@ -64,20 +65,27 @@ public class MenuCreator {
 	public static final String DOT_PLOT = "Show Dot Plot";
 	public static final String PAIRWISE_ALIGN = "New Pairwise Alignment";
 	public static final String MULTIPLE_ALIGN = "New Multiple Alignment";
-	protected static final int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	public static final String PHYLOGENETIC_TREE = "Phylogenetic Tree";
+	protected static final int keyMask = 
+			Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
 	/** 
-	 * Provide a JMenuBar that can be added to a JFrame containing a JmolPanel.<p>
+	 * Provide a JMenuBar that can be added to a JFrame containing 
+	 * a JmolPanel. The alignment has to be either an AFPChain or a
+	 * MultipleAlignment: set the other parameter to null.<p>
 	 * Menus included:
 	 * <ul><li>File: open, save, export, import, exit.
 	 * <li>Align: new pairwise alignment, new multiple alignment.
-	 * <li>View: aligment panel, aligned pairs, text format, FatCat format, distance matrices, dot plot.
+	 * <li>View: aligment panel, aligned pairs, text format, 
+	 * FatCat format, distance matrices, dot plot.
 	 * <li>Help
 	 * </ul>
 	 * 
 	 * @return a JMenuBar
 	 */
-	public static JMenuBar initJmolMenu(JFrame frame, AbstractAlignmentJmol parent, AFPChain afpChain){
+	public static JMenuBar initJmolMenu(JFrame frame,
+			AbstractAlignmentJmol parent, AFPChain afpChain,
+			MultipleAlignment msa) {
 
 		JMenuBar menu = new JMenuBar();
 
@@ -88,11 +96,11 @@ public class MenuCreator {
 		//Load
 		if (parent != null){
 			JMenuItem loadF = getLoadMenuItem();
-			loadF.addActionListener(new MyAlignmentLoadListener(parent));
+			loadF.addActionListener(new MyAlignmentLoadListener());
 			file.add(loadF);
 		}
 		//Save
-		JMenuItem saveF = getSaveAlignmentMenuItem(afpChain);  //TODO generalize saving afpChain and MultipleAlignment
+		JMenuItem saveF = getSaveAlignmentMenuItem(afpChain, msa);
 		file.add(saveF);
 		//Open PDB
 		JMenuItem openPDB = getShowPDBMenuItem();
@@ -122,6 +130,7 @@ public class MenuCreator {
 		//Exit
 		JMenuItem exitI = getExitMenuItem();		
 		file.add(exitI);
+		
 		menu.add(file);
 
 /// ALIGN MENU
@@ -130,7 +139,10 @@ public class MenuCreator {
 		//new Pairwise alignment
 		JMenuItem pairI = getPairwiseAlignmentMenuItem();
 		align.add(pairI);
-		//new Multiple alignment TODO
+		//new Multiple alignment
+		JMenuItem multI = getMultipleAlignmentMenuItem();
+		align.add(multI);
+		
 		menu.add(align);
 
 /// VIEW MENU
@@ -140,10 +152,10 @@ public class MenuCreator {
 
 		if ( parent != null){
 			//Alignment Panel
-			JMenuItem aligpI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
-			aligpI.setMnemonic(KeyEvent.VK_M);
-			aligpI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, keyMask));
-			view.add(aligpI);
+			JMenuItem apI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
+			apI.setMnemonic(KeyEvent.VK_M);
+			apI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, keyMask));
+			view.add(apI);
 			//Text Format
 			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
 			textI.setMnemonic(KeyEvent.VK_T);
@@ -167,6 +179,12 @@ public class MenuCreator {
 				dotplot.setMnemonic(KeyEvent.VK_O);
 				dotplot.addActionListener(new DotPlotListener(afpChain));
 				view.add(dotplot);
+			}
+			//Phylogenetics - only if it is a MultipleAlignment
+			if (afpChain == null){
+				JMenuItem tree = getIcon(parent, PHYLOGENETIC_TREE);
+				tree.setMnemonic(KeyEvent.VK_T);
+				view.add(tree);
 			}
 		}
 		menu.add(view);
@@ -265,15 +283,20 @@ public class MenuCreator {
 
 
 	/**
-	 * Create the menu for the Alignment Panel representation of Structural Alignments.
+	 * Create the menu for the Alignment Panel representation of 
+	 * Structural Alignments. The alignment can be in AFPChain format
+	 * or in the MultipleAlignment format.
+	 * 
 	 * @param frame
 	 * @param actionListener
 	 * @param afpChain
+	 * @param MultipleAlignment
 	 * @return a JMenuBar
 	 */
-	public static JMenuBar getAlignmentPanelMenu(JFrame frame, ActionListener actionListener,AFPChain afpChain){
-
-
+	public static JMenuBar getAlignmentPanelMenu(JFrame frame, 
+			ActionListener actionListener, AFPChain afpChain, 
+			MultipleAlignment msa){
+		
 		JMenuBar menu = new JMenuBar();
 
 		JMenu file= new JMenu("File");
@@ -284,14 +307,14 @@ public class MenuCreator {
 
 		JMenuItem saveF = null;
 
-		if (saveicon != null )
+		if (saveicon != null)
 			saveF = new JMenuItem("Save text display", saveicon);
 		else 
 			saveF = new JMenuItem("Save text display");
 
 		saveF.setMnemonic(KeyEvent.VK_S);
-		MySaveFileListener listener = new MySaveFileListener(afpChain);
-		listener.setFatCatOutput(true);
+		MySaveFileListener listener = new MySaveFileListener(afpChain, msa);
+		listener.setTextOutput(true);
 		saveF.addActionListener(listener);
 		file.add(saveF);
 
@@ -362,9 +385,12 @@ public class MenuCreator {
 	 * @param frame
 	 * @param actionListener
 	 * @param afpChain
+	 * @param msa
 	 * @return a JMenuBar
 	 */
-	public static JMenuBar getAlignmentTextMenu(JFrame frame, ActionListener actionListener, AFPChain afpChain){
+	public static JMenuBar getAlignmentTextMenu(JFrame frame, 
+			ActionListener actionListener, AFPChain afpChain,
+			MultipleAlignment msa){
 
 		JMenuBar menu = new JMenuBar();
 
@@ -382,8 +408,9 @@ public class MenuCreator {
 			saveF = new JMenuItem("Save text display");
 
 		saveF.setMnemonic(KeyEvent.VK_S);
-		MySaveFileListener listener = new MySaveFileListener(afpChain);  //TODO save MultipleAlignment not implemented
-		listener.setFatCatOutput(true);
+		MySaveFileListener listener = 
+				new MySaveFileListener(afpChain, msa);
+		listener.setTextOutput(true);
 		saveF.addActionListener(listener);
 		file.add(saveF);
 		file.addSeparator();
@@ -473,7 +500,9 @@ public class MenuCreator {
 		return exportI;
 	}
 
-	public static JMenuItem getSaveAlignmentMenuItem(AFPChain afpChain) {
+	public static JMenuItem getSaveAlignmentMenuItem(AFPChain afpChain,
+			MultipleAlignment msa){
+		
 		ImageIcon saveicon = createImageIcon("/icons/filesave.png");
 		JMenuItem saveF = null;
 
@@ -484,7 +513,7 @@ public class MenuCreator {
 
 		saveF.setMnemonic(KeyEvent.VK_S);
 		saveF.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, keyMask));
-		saveF.addActionListener(new MySaveFileListener(afpChain));
+		saveF.addActionListener(new MySaveFileListener(afpChain, msa));
 
 		return saveF;
 	}
@@ -626,11 +655,19 @@ public class MenuCreator {
 	}
 
 
-	/** provide a display for the pairwise structure alignment
-	 * 
+	/** 
+	 * Provide a display for the pairwise structure alignment.
 	 */
 	private static void showPairDialog(){
 		AlignmentGui gui =  AlignmentGui.getInstance();
+		gui.setVisible(true);
+	}
+	
+	/** 
+	 * Provide a display for the multiple structure alignment.
+	 */
+	private static void showMultipleDialog(){
+		MultipleAlignmentGUI gui =  MultipleAlignmentGUI.getInstance();
 		gui.setVisible(true);
 	}
 
@@ -705,7 +742,7 @@ public class MenuCreator {
 				String cmd = e.getActionCommand();
 
 				if ( cmd.equals(MULTIPLE_ALIGN)){
-					MenuCreator.showPairDialog();
+					MenuCreator.showMultipleDialog();
 				}				
 			}
 		});
@@ -714,9 +751,7 @@ public class MenuCreator {
 
 	/**
 	 * Creates a frame to display a DotPlotPanel.
-	 * 
 	 * Used by the 'View>Show Dot Plot' menu item
-	 * @author Spencer Bliven
 	 *
 	 */
 	public static class DotPlotListener implements ActionListener {
@@ -726,7 +761,8 @@ public class MenuCreator {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String title = String.format("%s vs. %s", afpChain.getName1(),afpChain.getName2());
+			String title = String.format("%s vs. %s", 
+					afpChain.getName1(),afpChain.getName2());
 
 			// Create window
 			JFrame frame = new JFrame(title);
@@ -749,15 +785,14 @@ public class MenuCreator {
 
 	public static JMenuBar initAlignmentGUIMenu(JFrame frame) {
 
-
 		JMenu file= new JMenu("File");
 		file.getAccessibleContext().setAccessibleDescription("File Menu");
 
 		JMenuItem loadF = MenuCreator.getLoadMenuItem();
-		loadF.addActionListener(new MyAlignmentLoadListener(null));
+		loadF.addActionListener(new MyAlignmentLoadListener());
 		file.add(loadF);
 
-		JMenuItem openPDB = MenuCreator.getShowPDBMenuItem();       
+		JMenuItem openPDB = MenuCreator.getShowPDBMenuItem();
 		file.add(openPDB);
 
 		JMenuItem openI = MenuCreator.getOpenPDBMenuItem();		

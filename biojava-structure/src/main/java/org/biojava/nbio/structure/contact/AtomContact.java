@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.contact;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.structure.Atom;
 
 /**
@@ -28,8 +30,10 @@ import org.biojava.nbio.structure.Atom;
  * @author duarte_j
  *
  */
-public class AtomContact {
+public class AtomContact implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private Pair<Atom> pair;
 	
 	private double distance;

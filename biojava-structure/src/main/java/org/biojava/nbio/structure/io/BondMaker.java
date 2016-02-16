@@ -100,7 +100,7 @@ public class BondMaker {
 
 
 				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
-					new Bond(carboxylC, aminoN, 1);
+					new BondImpl(carboxylC, aminoN, 1);
 				}
 
 			}
@@ -134,7 +134,7 @@ public class BondMaker {
 
 
 				if (Calc.getDistance(phosphorous, oThreePrime) < MAX_NUCLEOTIDE_BOND_LENGTH) {
-					new Bond(phosphorous, oThreePrime, 1);
+					new BondImpl(phosphorous, oThreePrime, 1);
 				}
 
 			}
@@ -162,7 +162,7 @@ public class BondMaker {
 
 						int bondOrder = chemCompBond.getNumericalBondOrder();
 
-						new Bond(a, b, bondOrder);
+						new BondImpl(a, b, bondOrder);
 					} else  {
 
 						// Some of the atoms were missing. That's fine, there's

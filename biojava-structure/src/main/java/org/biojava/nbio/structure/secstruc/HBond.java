@@ -16,52 +16,55 @@
  * Created by ap3
  *
  */
-
 package org.biojava.nbio.structure.secstruc;
 
+/**
+ * Container that represents a hidrogen bond. It contains the energy of the bond
+ * in cal/mol and the partner index.
+ * 
+ * @author Andreas Prlic
+ * @author Aleix Lafita
+ *
+ */
+public class HBond {
 
-public class HBond{
-    double energy;
-    int partner;
-    
-    public HBond() {
-        energy = 0;
-        partner = 0;
-    }
-    
-    @Override
-	public Object clone(){
-        
-        HBond n = new HBond();
-        n.setEnergy(energy);
-        n.setPartner(partner);
-        
-        return n;
-        
-    }
-    
-    @Override
-	public String toString(){
-        StringBuffer buf = new StringBuffer();
-        
-        buf.append(partner+"|"+(energy/1000.0));
-        return buf.toString();
-            
-        
-    }
-    public double getEnergy() {
-        return energy;
-    }
-    public void setEnergy(double energy) {
-        this.energy = energy;
-    }
+	private double energy;
+	private int partner;
 
-    public int getPartner() {
-        return partner;
-    }
+	public HBond() {
+		energy = 0;
+		partner = 0;
+	}
 
-    public void setPartner(int partner) {
-        this.partner = partner;
-    }
-    
+	public HBond(HBond o) {
+		this.energy = o.energy;
+		this.partner = o.partner;
+	}
+
+	@Override
+	public HBond clone() {
+		return new HBond(this);
+	}
+
+	@Override
+	public String toString() {
+		return partner + " | " + (energy / 1000.0);
+	}
+
+	public double getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(double energy) {
+		this.energy = energy;
+	}
+
+	public int getPartner() {
+		return partner;
+	}
+
+	public void setPartner(int partner) {
+		this.partner = partner;
+	}
+
 }

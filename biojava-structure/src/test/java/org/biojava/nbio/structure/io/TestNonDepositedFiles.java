@@ -20,6 +20,14 @@
  */
 package org.biojava.nbio.structure.io;
 
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
+
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -30,14 +38,6 @@ import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.junit.Test;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.zip.GZIPInputStream;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for non-deposited PDB/mmCIF files, i.e. any kind of "raw" file
@@ -195,7 +195,7 @@ public class TestNonDepositedFiles {
 	 * @throws IOException
 	 */
 	@Test
-	public void testPhenixFile() throws IOException {
+	public void testPhenixCifFile() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phenix_output.cif.gz"));
 		MMcifParser parser = new SimpleMMcifParser();
 
@@ -215,6 +215,175 @@ public class TestNonDepositedFiles {
 		assertNotNull(s);
 		
 		assertTrue(s.isCrystallographic());
+		
+		// all ligands are into their own chains, so we have 2 proteins, 2 nucleotide chains, 1 ligand chain and 1 purely water chain
+		assertEquals(6, s.getChains().size());
+		
+		// 4 entities: 1 protein, 1 nucleotide, 1 water, 1 ligand (EDO)
+		assertEquals(4, s.getCompounds().size());
+
 	}
 
+	@Test
+	public void testPhenixPdbFile() throws IOException {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phenix_output.pdb.gz"));
+
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+
+		Structure s = pdbpars.parsePDBFile(inStream) ;
+		
+		assertNotNull(s);
+		
+		assertTrue(s.isCrystallographic());
+		
+		// all ligands are into their own chains, so we have 2 proteins, 2 nucleotide chains, 1 ligand chain and 1 purely water chain
+		assertEquals(6, s.getChains().size());
+		
+		// 4 entities: 1 protein, 1 nucleotide, 1 water, 1 ligand (EDO)
+		assertEquals(4, s.getCompounds().size());
+	}
+
+	@Test
+	public void testPhaserPdbFile() throws IOException {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phaser_output.pdb.gz"));
+
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+
+		Structure s = pdbpars.parsePDBFile(inStream) ;
+		
+		assertNotNull(s);
+		
+		assertTrue(s.isCrystallographic());
+		
+		assertEquals(2, s.getChains().size());
+		
+		assertEquals(1, s.getCompounds().size());
+	}
+	
+	
+	@Test
+	public void testRefmacPdbFile() throws IOException {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/rnase_refmac_output.pdb.gz"));
+
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+
+		Structure s = pdbpars.parsePDBFile(inStream) ;
+		
+		assertNotNull(s);
+		
+		assertTrue(s.isCrystallographic());
+		
+		// 2 polymer chains with ligands, 1 purely water chain
+		assertEquals(3, s.getChains().size());
+		
+		// 1 polymer entity, 1 water entity
+		assertEquals(2, s.getCompounds().size());
+	}
+
+	/**
+	 * This test represents a common situation for a non-deposited structure.
+	 * When building with common crystallography software, the user often adds new
+	 * ligands (or solvent) molecules as new chains.  Only prior to deposition 
+	 * then relabel them so that they belong to the same chain as the polymeric residues.
+	 * 
+	 * In this case, the ligands represent valuable information and should not be discarded.
+	 */
+	@Test
+	public void testNewLigandChain() throws IOException, StructureException {
+    	// Test the file parsing speed when the files are already downloaded.
+    	
+		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/ligandTest.pdb.gz"));
+		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/ligandTest.cif.gz"));
+		
+		assertNotNull(cifStream);
+		assertNotNull(pdbStream);
+		
+		FileParsingParameters params = new FileParsingParameters();
+		PDBFileParser pdbpars = new PDBFileParser();
+		pdbpars.setFileParsingParameters(params);
+		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
+
+		// The chain B should be present with 1 ligand HEM
+		Chain c1 = s1.getChainByPDB("B");
+		assertNotNull(c1);
+		
+		int expectedNumLigands = 1;
+		assertEquals(expectedNumLigands, c1.getAtomGroups().size());
+
+		MMcifParser mmcifpars = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		consumer.setFileParsingParameters(params);
+		mmcifpars.addMMcifConsumer(consumer);
+		mmcifpars.parse(cifStream) ;
+		Structure s2 = consumer.getStructure();
+        
+		// The chain B should be present with 1 ligand HEM
+		Chain c2 = s2.getChainByPDB("B");
+		assertNotNull(c2);
+		assertEquals(expectedNumLigands, c2.getAtomGroups().size());
+		
+		// pdb and mmcif should have same number of chains
+		assertEquals(s1.getChains().size(), s2.getChains().size());
+	}
+	
+	@Test
+	public void testWaterOnlyChain() throws IOException, StructureException {
+		
+		// following 2 files are cut-down versions of 4a10
+		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.pdb.gz"));
+		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.cif.gz"));
+		
+		PDBFileParser pdbpars = new PDBFileParser();
+		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
+		
+		assertEquals(2, s1.getChains().size());
+		
+		Chain c1 = null;
+		try {
+			c1 = s1.getChainByPDB("F");
+			
+		} catch (StructureException e) {
+			fail("Got StructureException while looking for water-only chain F");
+		}
+		
+		// checking that compounds are linked
+		assertNotNull(c1.getCompound());
+		
+		// checking that the water molecule was assigned an ad-hoc compound
+		assertEquals(2,s1.getCompounds().size());
+		
+		
+		
+		MMcifParser mmcifpars = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		mmcifpars.addMMcifConsumer(consumer);
+		mmcifpars.parse(cifStream) ;
+		Structure s2 = consumer.getStructure();
+		
+		
+		assertEquals(2, s2.getChains().size());
+		
+		Chain c = null;
+		try {
+			c = s2.getChainByPDB("F");
+			
+		} catch (StructureException e) {
+			fail("Got StructureException while looking for water-only chain F");
+		}
+		
+		// checking that compounds are linked
+		assertNotNull(c.getCompound());
+		
+		// checking that the water molecule was assigned an ad-hoc compound
+		assertEquals(2,s2.getCompounds().size());
+	}
 }

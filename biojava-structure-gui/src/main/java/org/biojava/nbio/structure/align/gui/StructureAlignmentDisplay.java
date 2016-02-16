@@ -34,11 +34,8 @@ import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StructureAlignmentDisplay {
-	private static final Logger logger = LoggerFactory.getLogger(StructureAlignmentDisplay.class);
    
    /** Display an AFPChain alignment
     * 
@@ -134,11 +131,6 @@ public class StructureAlignmentDisplay {
       
       return twistedGroups;
    }
-   
-
-     
-
-   
 
   /** only shift CA positions.
    * 

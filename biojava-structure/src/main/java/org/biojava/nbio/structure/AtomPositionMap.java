@@ -165,6 +165,15 @@ public class AtomPositionMap {
 		treeMap = new TreeMap<ResidueNumber, Integer>(vc);
 		treeMap.putAll(hashMap);
 	}
+	
+	/**
+	 * Creates a new AtomPositionMap containing representative atoms
+	 * from a structure.
+	 * @param s
+	 */
+	public AtomPositionMap(Structure s) {
+		this(StructureTools.getRepresentativeAtomArray(s));
+	}
 
 	/**
 	 * Calculates the number of residues of the specified chain in a given range, inclusive.

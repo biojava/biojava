@@ -60,23 +60,19 @@ public class TestLoadStructureFromURL {
 		File subdir = f;
 		for(String dir :PDBFileReader.PDB_SPLIT_DIR) {
 			subdir = new File(subdir,dir);
+			subdir.deleteOnExit();
 		}
 		subdir = new File(subdir,"zn");
 		File newFile = new File(subdir, "pdb1znf.ent.gz");
 
 		subdir.deleteOnExit();
 		newFile.deleteOnExit();
-		
-		URL u = newFile.toURI().toURL();
 
-		System.out.println(u);
+		URL u = newFile.toURI().toURL();
 
 		Structure s = c.getStructure(u.toString()+"?args=test");
 
-		System.out.println(s);
-
 		assertNotNull(s);
-		
 
 	}
 }

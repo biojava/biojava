@@ -37,31 +37,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-/** 
+/**
  * A simple mmCif file parser
  *
- * @author Andreas Prlic
- * @since 1.7
+ * 
  * Usage:
  * <pre>
-   		String file = "path/to/mmcif/file";
-  		StructureIOFile pdbreader = new MMCIFFileReader();
-		try {
-			Structure s = pdbreader.getStructure(file);
-			System.out.println(s);
+String file = "path/to/mmcif/file";
+StructureIOFile pdbreader = new MMCIFFileReader();
 
-			// you can convert it to a PDB file...
-			System.out.println(s.toPDB());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+Structure s = pdbreader.getStructure(file);
+System.out.println(s);
+
+// you can convert it to a PDB file...
+System.out.println(s.toPDB());
+
  * </pre>
  * For more documentation see <a href="http://biojava.org/wiki/BioJava:CookBook#Protein_Structure">http://biojava.org/wiki/BioJava:CookBook#Protein_Structure</a>.
+ * 
+ * @author Andreas Prlic
+ * @author Jose Duarte
+ * @since 1.7
  */
 public class SimpleMMcifParser implements MMcifParser {
 
@@ -73,30 +71,30 @@ public class SimpleMMcifParser implements MMcifParser {
 	 * See http://www.iucr.org/__data/assets/pdf_file/0019/22618/cifguide.pdf
 	 */
 	public static final String MMCIF_TOP_HEADER = "data_";
-	
+
 	public static final String COMMENT_CHAR = "#";
 	public static final String LOOP_START = "loop_";
 	public static final String FIELD_LINE = "_";
-	
+
 	// the following are the 3 valid quoting characters in CIF
 	/**
 	 * Quoting character '
 	 */
 	private static final char S1 = '\'';
-	
+
 	/**
 	 * Quoting character "
 	 */
 	private static final char S2 = '\"';
-	
+
 	/**
 	 * Quoting character ; (multi-line quoting)
 	 */
 	public static final String STRING_LIMIT = ";";
-	
+
 
 	private List<MMcifConsumer> consumers ;
-	
+
 	private Struct struct ;
 
 	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
@@ -181,7 +179,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		while ( (line = buf.readLine ()) != null ){
 
 			if (line.isEmpty() || line.startsWith(COMMENT_CHAR)) continue;
-			
+
 			logger.debug(inLoop + " " + line);
 
 			if (line.startsWith(MMCIF_TOP_HEADER)){
@@ -199,7 +197,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			if ( inLoop) {
 
-				
+
 				if ( line.startsWith(LOOP_START)){
 					loopFields.clear();
 					inLoop = true;
@@ -207,18 +205,18 @@ public class SimpleMMcifParser implements MMcifParser {
 					continue;
 				}
 
-				if ( line.matches("\\s*"+FIELD_LINE+"\\w+.*")) { 
-					
+				if ( line.matches("\\s*"+FIELD_LINE+"\\w+.*")) {
+
 					if (inLoopData && line.startsWith(FIELD_LINE)) {
 						logger.debug("Found a field line after reading loop data. Toggling to inLoop=false");
 						inLoop = false;
 						inLoopData = false;
 						loopFields.clear();
-						
-						
+
+
 						// a boring normal line
 						List<String> data = processLine(line, buf, 2);
-						
+
 						if ( data.size() < 1){
 							// this can happen if empty lines at end of file
 							lineData.clear();
@@ -247,7 +245,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						logger.debug("Found data for category {}: {}", key, value);
 						continue;
 					}
-					
+
 					// found another field.
 					String txt = line.trim();
 					if ( txt.indexOf('.') > -1){
@@ -260,12 +258,12 @@ public class SimpleMMcifParser implements MMcifParser {
 						if ( spl.length > 2){
 							logger.warn("Found nested attribute in {}, not supported yet!",txt);
 						}
-						
+
 					} else {
 						category = txt;
 						logger.debug("Found category without attribute: {}",category);
 					}
-					 
+
 
 				} else {
 
@@ -291,20 +289,20 @@ public class SimpleMMcifParser implements MMcifParser {
 				if ( line.startsWith(LOOP_START)){
 					if ( category != null)
 						endLineChecks(category, loopFields, lineData, loopWarnings);
-					
+
 					resetBuffers(loopFields, lineData, loopWarnings);
 					category = null;
-					inLoop = true;					
+					inLoop = true;
 					inLoopData = false;
-					logger.debug("Detected LOOP_START: '{}'. Toggling to inLoop=true", LOOP_START);					
+					logger.debug("Detected LOOP_START: '{}'. Toggling to inLoop=true", LOOP_START);
 					continue;
 				} else {
 					logger.debug("Normal line ");
 					inLoop = false;
-					
+
 					// a boring normal line
 					List<String> data = processLine(line, buf, 2);
-					
+
 					if ( data.size() < 1){
 						// this can happen if empty lines at end of file
 						lineData.clear();
@@ -325,15 +323,15 @@ public class SimpleMMcifParser implements MMcifParser {
 						lineData.clear();
 						continue;
 					}
-					
+
 					if (category!=null && !key.substring(0,pos).equals(category)) {
 						// we've changed category: need to flush the previous one
 						endLineChecks(category, loopFields, lineData, loopWarnings);
 						resetBuffers(loopFields, lineData, loopWarnings);
 					}
-					
+
 					category = key.substring(0,pos);
-					
+
 					String value = data.get(1);
 					loopFields.add(key.substring(pos+1,key.length()));
 					lineData.add(value);
@@ -343,7 +341,7 @@ public class SimpleMMcifParser implements MMcifParser {
 				}
 			}
 		}
-		
+
 		if (category!=null && lineData.size()>0 && lineData.size()==loopFields.size()) {
 			// the last category in the file will still be missing, we add it now
 			endLineChecks(category, loopFields, lineData, loopWarnings);
@@ -357,7 +355,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		triggerDocumentEnd();
 
 	}
-	
+
 	private void resetBuffers(List<String> loopFields, List<String> lineData, Set<String> loopWarnings) {
 		loopFields.clear();
 		lineData.clear();
@@ -388,11 +386,11 @@ public class SimpleMMcifParser implements MMcifParser {
 			Character nextC = null;
 			if (i < line.length() - 1)
 				nextC = line.charAt(i+1);
-			
+
 			Character prevC = null;
-			if (i>0) 
+			if (i>0)
 				prevC = line.charAt(i-1);
-			
+
 			if  (c == ' ') {
 
 				if ( ! inString){
@@ -478,7 +476,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	/** 
+	/**
 	 * Get the content of a cif entry
 	 *
 	 * @param line
@@ -486,9 +484,9 @@ public class SimpleMMcifParser implements MMcifParser {
 	 * @return
 	 */
 	private List<String> processLine(String line,
-			BufferedReader buf,
-			int fieldLength)
-					throws IOException{
+									 BufferedReader buf,
+									 int fieldLength)
+			throws IOException{
 
 		//System.out.println("XX processLine " + fieldLength + " " + line);
 		// go through the line and process each character
@@ -596,7 +594,14 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewDatabasePDBrev(dbrev);
 
-		} else if (  category.equals("_database_PDB_remark")){
+		} else if ( category.equals("_database_PDB_rev_record")){
+			DatabasePdbrevRecord dbrev = (DatabasePdbrevRecord) buildObject(
+					DatabasePdbrevRecord.class.getName(),
+					loopFields, lineData, loopWarnings);
+
+			triggerNewDatabasePDBrevRecord(dbrev);
+
+		}else if (  category.equals("_database_PDB_remark")){
 			DatabasePDBremark remark = (DatabasePDBremark) buildObject(
 					DatabasePDBremark.class.getName(),
 					loopFields, lineData, loopWarnings);
@@ -624,10 +629,11 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewSymmetry(symmetry);
 		} else if ( category.equals("_struct_ncs_oper")) {
+			
 			// this guy is special because of the [] in the field names
 			StructNcsOper sNcsOper = getStructNcsOper(loopFields,lineData);
 			triggerNewStructNcsOper(sNcsOper);
-			
+
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
 					StructRef.class.getName(),
@@ -641,6 +647,23 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields,lineData, loopWarnings);
 
 			triggerNewStrucRefSeq(sref);
+		} else if ( category.equals("_struct_ref_seq_dif")) {
+			StructRefSeqDif sref = (StructRefSeqDif) buildObject(
+					StructRefSeqDif.class.getName(),
+					loopFields, lineData, loopWarnings);
+
+			triggerNewStrucRefSeqDif(sref);
+		} else if ( category.equals("_struct_site_gen")) {
+			StructSiteGen sref = (StructSiteGen) buildObject(
+					StructSiteGen.class.getName(),
+					loopFields, lineData, loopWarnings);
+
+			triggerNewStructSiteGen(sref);
+		} else if ( category.equals("_struct_site")) {
+			StructSite sref = (StructSite) buildObject(
+					StructSite.class.getName(),
+					loopFields, lineData, loopWarnings);
+			triggerNewStructSite(sref);
 		} else if ( category.equals("_entity_poly_seq")){
 			EntityPolySeq exptl  = (EntityPolySeq) buildObject(
 					EntityPolySeq.class.getName(),
@@ -687,25 +710,25 @@ public class SimpleMMcifParser implements MMcifParser {
 			PdbxEntityNonPoly pen = (PdbxEntityNonPoly) buildObject(
 					PdbxEntityNonPoly.class.getName(),
 					loopFields,lineData, loopWarnings
-					);
+			);
 			triggerNewPdbxEntityNonPoly(pen);
 		} else if ( category.equals("_struct_keywords")){
 			StructKeywords kw = (StructKeywords)buildObject(
 					StructKeywords.class.getName(),
 					loopFields,lineData, loopWarnings
-					);
+			);
 			triggerNewStructKeywords(kw);
 		} else if (category.equals("_refine")){
 			Refine r = (Refine)buildObject(
 					Refine.class.getName(),
 					loopFields,lineData, loopWarnings
-					);
+			);
 			triggerNewRefine(r);
 		} else if (category.equals("_chem_comp")){
 			ChemComp c = (ChemComp)buildObject(
 					ChemComp.class.getName(),
 					loopFields, lineData, loopWarnings
-					);
+			);
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
 			AuditAuthor aa = (AuditAuthor)buildObject(
@@ -718,11 +741,9 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields, lineData, loopWarnings);
 			triggerNewChemCompDescriptor(ccd);
 		} else if (category.equals("_pdbx_struct_oper_list")) {
-			/* PdbxStructOperList structOper = (PdbxStructOperList) buildObject(
-					"org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList",
-			         loopFields, lineData); */
 
 			// this guy is special since we convert to Matrices and shift vectors...
+			// and because it contains [] in field names
 			PdbxStructOperList structOper = getPdbxStructOperList(loopFields,lineData);
 			triggerNewPdbxStructOper(structOper);
 
@@ -777,50 +798,8 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 
-
-	//	@SuppressWarnings({ "rawtypes", "unchecked"})
-	//	private void setPair(Object o, List<String> lineData){
-	//		Class c = o.getClass();
-	//
-	//		if (lineData.size() == 2){
-	//			String key = lineData.get(0);
-	//			String val = lineData.get(1);
-	//
-	//			int dotPos = key.indexOf('.');
-	//
-	//			if ( dotPos > -1){
-	//				key = key.substring(dotPos+1,key.length());
-	//			}
-	//
-	//			String u = key.substring(0,1).toUpperCase();
-	//			try {
-	//				Method m = c.getMethod("set" + u + key.substring(1,key.length()) , String.class);
-	//				m.invoke(o,val);
-	//			}
-	//			catch (InvocationTargetException iex){
-	//				iex.printStackTrace();
-	//			}
-	//			catch (IllegalAccessException aex){
-	//				aex.printStackTrace();
-	//			}
-	//			catch( NoSuchMethodException nex){
-	//				if ( val.equals("?") || val.equals(".")) {
-	//					logger.info("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found. Since value is >"+val+"<  most probably just ignore this.");
-	//				} else {
-	//					logger.warn("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
-	//				}
-	//			}
-	//		} else {
-	//			System.err.println("trying to set key/value pair on object " +o.getClass().getName() + " but did not find in " + lineData);
-	//		}
-	//	}
-
-
-
-
-
 	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
-			List<String> lineData) {
+													 List<String> lineData) {
 		PdbxStructOperList so = new PdbxStructOperList();
 
 		//System.out.println(loopFields);
@@ -864,10 +843,10 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
-	
+
 	private StructNcsOper getStructNcsOper(List<String> loopFields, List<String> lineData) {
 		StructNcsOper sNcsOper = new StructNcsOper();
-		
+
 		int id = Integer.parseInt(lineData.get(loopFields.indexOf("id")));
 		sNcsOper.setId(id);
 		sNcsOper.setCode(lineData.get(loopFields.indexOf("code")));
@@ -876,11 +855,11 @@ public class SimpleMMcifParser implements MMcifParser {
 		if ( detailsPos > -1)
 			sNcsOper.setDetails(lineData.get(detailsPos));
 		Matrix4d op = new Matrix4d();
-		op.setElement(3, 0, 0.0); 
+		op.setElement(3, 0, 0.0);
 		op.setElement(3, 1, 0.0);
 		op.setElement(3, 2, 0.0);
 		op.setElement(3, 3, 1.0);
-		
+
 		for (int i = 1 ; i <=3 ; i++){
 			for (int j =1 ; j <= 3 ; j++){
 				String max = String.format("matrix[%d][%d]",i,j);
@@ -892,7 +871,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			}
 		}
 
-		
+
 		for ( int i = 1; i <=3 ; i++){
 			String v = String.format("vector[%d]",i);
 			String val = lineData.get(loopFields.indexOf(v));
@@ -901,7 +880,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 		sNcsOper.setOperator(op);
-		
+
 		return sNcsOper;
 	}
 
@@ -911,97 +890,96 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
-	
-	private void setArray(Class<?> c, Object o, String key, String val){
-
-
-		// TODO: not implemented yet!
-		//logger.info("Setting of array not implemented at the present for " + key + " " + val);
-		/*
-		int pos = key.indexOf("[");
-		String varName = key.substring(0,pos);
-		String u = varName.substring(0,1).toUpperCase();
-		try {
-			Method m = c.getMethod("set" + u + varName.substring(1,varName.length()) , String.class);
-			m.invoke(o,val);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		 */
-
-	}
 
 	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
+		
 		Object o = null;
+		Class<?> c = null;
+
 		try {
 			// build up the Entity object from the line data...
-			Class<?> c = Class.forName(className);
+			c = Class.forName(className);
 
 			o = c.newInstance();
 
+		} catch (InstantiationException e){
+			logger.error( "Error while constructing {}: {}", className, e.getMessage());
+			return null;
+		} catch (ClassNotFoundException e){
+			logger.error( "Error while constructing {}: {}", className, e.getMessage());
+			return null;
+		} catch (IllegalAccessException e) {
+			logger.error( "Error while constructing {}: {}", className, e.getMessage());
+			return null;
+		}
 
-			int pos = -1 ;
-			for (String key: loopFields){
-				pos++;
+		Method[] methods = c.getMethods();
 
-				String val = lineData.get(pos);
-				//System.out.println(key + " " + val);
-				String u = key.substring(0,1).toUpperCase();
+		Map<String,Method> methodMap = new HashMap<String, Method>();
+		for (Method m : methods) {
+			methodMap.put(m.getName(),m);
+		}
 
-				// a necessary fix in order to be able to handle keys that contain hyphens (e.g. _symmetry.space_group_name_H-M)
-				// java can't use hyphens in variable names thus the corresponding bean can't use the hyphen and we replace it by underscore
-				if (key.contains("-")) 
-					key = key.replace('-', '_');
+		int pos = -1 ;
+		for (String key: loopFields){
+			pos++;
 
-				try {
+			String val = lineData.get(pos);
 
-					StringBuffer methodName = new StringBuffer();
-					methodName.append("set");
-					methodName.append(u);
-					methodName.append(key.substring(1, key.length()));
+			// a necessary fix in order to be able to handle keys that contain hyphens (e.g. _symmetry.space_group_name_H-M)
+			// java can't use hyphens in variable names thus the corresponding bean can't use the hyphen and we replace it by underscore
+			if (key.contains("-"))
+				key = key.replace('-', '_');
 
+			// building up the setter method name: need to upper case the first letter, leave the rest untouched
+			String methodName = "set" + key.substring(0,1).toUpperCase() + key.substring(1, key.length());
 
+			Method m = methodMap.get(methodName);
 
-					Method m = c.getMethod(methodName.toString() , String.class);
-					m.invoke(o,val);
+			if ( m == null) { 	// no method found in model class with the name found in file
 
+				if (!key.contains("[")) { // the fields with square brackets are handled elsewhere, see for instance getStructNcsOper						
 
-					;
-				}
-				catch( NoSuchMethodException nex){
-
-					if (key.indexOf("[") > -1) {
-						setArray(c,o,key,val);
-
+					String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
+					String warnkey = key+"-"+c.getName();
+					// Suppress duplicate warnings or attempts to store empty data
+					if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
+						logger.debug(warning);
 					} else {
-						String warning = "Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")";
-						String warnkey = key+"-"+c.getName();
-						// Suppress duplicate warnings or attempts to store empty data
-						if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
-							logger.debug(warning);
-						} else {
-							logger.warn(warning);
-						}
+						logger.warn(warning);
+					}
 
-						if(warnings != null) {
-							warnings.add(warnkey);
-						}
-						//System.err.println(lineData);
+					if(warnings != null) {
+						warnings.add(warnkey);
 					}
 				}
+				continue;
+			}
+			
+			// now we populate the object with the values by invoking the corresponding setter method,
+			// note that all of the mmCif container classes have only one argument (they are beans)
+
+			Class<?>[] pType  = m.getParameterTypes();
+
+			try {
+				if ( pType[0].getName().equals(Integer.class.getName())) {
+					if ( val != null && ! val.equals("?") && !val.equals(".")) {
+
+						Integer intVal = Integer.parseInt(val);
+						m.invoke(o, intVal);
+					}
+				} else {
+					// default val is a String
+					m.invoke(o, val);
+				}
+			} catch (IllegalAccessException e) {
+				logger.error("Could not invoke setter {} with value {} for class {}", methodName, val, className);
+			} catch (InvocationTargetException e) {
+				logger.error("Could not invoke setter {} with value {} for class {}", methodName, val, className);
 			}
 
-		} catch (InstantiationException eix){
-			logger.warn( "Error while constructing "+className, eix.getMessage());
-		} catch (InvocationTargetException etx){
-			logger.warn( "Error while constructing "+className, etx.getMessage());
-		} catch (IllegalAccessException eax){
-			logger.warn( "Error while constructing "+className, eax.getMessage());
-		} catch (ClassNotFoundException ex){
-			logger.warn( "Error while constructing "+className, ex.getMessage());
 		}
-		// any other exceptions should be caught elsewhere down the line
-		
+
 		return o;
 	}
 
@@ -1071,6 +1049,11 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newDatabasePDBrev(dbrev);
 		}
 	}
+	private void triggerNewDatabasePDBrevRecord(DatabasePdbrevRecord dbrev){
+		for(MMcifConsumer c : consumers){
+			c.newDatabasePDBrevRecord(dbrev);
+		}
+	}
 
 	private void triggerNewDatabasePDBremark(DatabasePDBremark remark){
 		for(MMcifConsumer c : consumers){
@@ -1095,7 +1078,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newSymmetry(symmetry);
 		}
 	}
-	
+
 	private void triggerNewStrucRef(StructRef sref){
 		for(MMcifConsumer c : consumers){
 			c.newStructRef(sref);
@@ -1105,6 +1088,12 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void triggerNewStrucRefSeq(StructRefSeq sref){
 		for(MMcifConsumer c : consumers){
 			c.newStructRefSeq(sref);
+		}
+	}
+
+	private void triggerNewStrucRefSeqDif(StructRefSeqDif sref){
+		for(MMcifConsumer c : consumers){
+			c.newStructRefSeqDif(sref);
 		}
 	}
 
@@ -1184,6 +1173,16 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void triggerNewStructConn(StructConn id) {
 		for(MMcifConsumer c : consumers){
 			c.newStructConn(id);
+		}
+	}
+	private void triggerNewStructSiteGen(StructSiteGen id) {
+		for (MMcifConsumer c : consumers) {
+			c.newStructSiteGen(id);
+		}
+	}
+	private void triggerNewStructSite(StructSite id) {
+		for (MMcifConsumer c : consumers) {
+			c.newStructSite(id);
 		}
 	}
 }

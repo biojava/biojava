@@ -23,11 +23,12 @@
 
 package org.biojava.nbio.alignment;
 
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceScorerType;
 import org.biojava.nbio.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.GuideTreeNode;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -122,8 +123,9 @@ public class GuideTreeTest {
 
     @Test
     public void testToString() {
-        assertEquals(tree.toString(),
-                "(((1:0.0,2:0.0):-1.4,3:0.8999999999999999):-0.7,4:-0.7)");
+        assertEquals("(((1:0.0,2:0.0):0.19999999999999996,3:0.8):"
+        		+ "0.09999999999999998,4:0.09999999999999998)", 
+        		tree.toString());
     }
 
 }

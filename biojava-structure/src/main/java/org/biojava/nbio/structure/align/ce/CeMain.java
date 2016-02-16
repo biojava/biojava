@@ -104,7 +104,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		calculator = new CECalculator(params);
 
 		//Build alignment ca1 to ca2-ca2
-		AFPChain afpChain = new AFPChain();
+		AFPChain afpChain = new AFPChain(algorithmName);
 		afpChain = calculator.extractFragments(afpChain, ca1, ca2clone);
 		calculator.traceFragmentMatrix( afpChain,ca1, ca2clone);
 		calculator.nextStep( afpChain,ca1, ca2clone);
@@ -114,11 +114,11 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		
 		// Try to guess names
 
-		if (ca1.length!=0 && ca1[0].getGroup().getChain()!=null && ca1[0].getGroup().getChain().getParent()!=null)
-			afpChain.setName1(ca1[0].getGroup().getChain().getParent().getName());
+		if (ca1.length!=0 && ca1[0].getGroup().getChain()!=null && ca1[0].getGroup().getChain().getStructure()!=null)
+			afpChain.setName1(ca1[0].getGroup().getChain().getStructure().getName());
 
-		if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getParent()!=null)
-			afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
+		if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getStructure()!=null)
+			afpChain.setName2(ca2[0].getGroup().getChain().getStructure().getName());
 		
 		if ( afpChain.getNrEQR() == 0)
 		   return afpChain;

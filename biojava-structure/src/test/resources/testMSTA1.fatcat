@@ -1,0 +1,14 @@
+Structures:[2gox, 2gox, 2gox] 
+Algorithm:testAlignment_1.0 
+BlockSets: 2 
+Blocks: 4 
+Length: 40 
+Core Length: 7 
+AvgTM-score: 0.02 
+RMSD: 3.85
+
+Chain 01: ---S-tDaErLkhl--IvTpSgAgeq----NmIgMtPt-viAv---HyL-dEt-eqWe
+          11 1 1111111   2222222222     33333333 3 3   4444 444 4 44
+Chain 02: GsrS-tDAeRLkh--LiVTpSGaGEqn---MiGMtPTviA-vh--YlDE-tEqwE-Kf
+          11 1 1111111   2222222222     33333333 3 3   4444 444 4 44
+Chain 03: GS-rsTDaERLkhl-IvTPSgAGEqnmig--MTPtVIavH-Yld-ETEqwEKf-G-LE

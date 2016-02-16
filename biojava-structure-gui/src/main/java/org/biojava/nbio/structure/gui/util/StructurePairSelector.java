@@ -21,6 +21,8 @@
  */
 package org.biojava.nbio.structure.gui.util;
 
+import java.io.IOException;
+
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 
@@ -33,7 +35,7 @@ import org.biojava.nbio.structure.StructureException;
  */
 public interface StructurePairSelector {
 
-	public Structure getStructure1() throws StructureException;
-	public Structure getStructure2() throws StructureException;
+	public Structure getStructure1() throws StructureException, IOException;
+	public Structure getStructure2() throws StructureException, IOException;
 	
 }

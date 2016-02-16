@@ -53,7 +53,17 @@ public class ColorUtils
          //System.out.println(rotateHue(color, 0.1f));
       }
    }
-   
+
+    public static String toHexColor(Color col){
+        return Integer.toHexString((col.getRGB() & 0xffffff) | 0x1000000).substring(1);
+    }
+
+   /**
+    * Rotate a color through HSB space
+    * @param color Starting color
+    * @param fraction Amount to add to the hue. The integer part is discarded to leave a number in [0,1)
+    * @return
+    */
    public static Color rotateHue (Color color, float fraction) {
       
       float af[] = Color.RGBtoHSB(color.getRed(),color.getGreen(),color.getBlue(), null);
@@ -62,17 +72,10 @@ public class ColorUtils
       float saturation = af[1];
       float brightness = af[2];
       
-      //System.out.println(hue + " " + saturation + " " + brightness);
-      
       float hueNew = hue  + fraction;
       
-      //System.out.println(hue + " " + hueNew);
-      
-      if ( hueNew > 1 ){
-         hueNew = hueNew - 1;
-      }
-     
-      return Color.getHSBColor(hueNew, saturation, brightness);
+      Color hsb = Color.getHSBColor(hueNew, saturation, brightness);
+      return new Color(hsb.getRed(), hsb.getGreen(), hsb.getBlue(), color.getAlpha());
    }
    
    public static Color getIntermediate(Color start, Color end, int stepSize, int position ){

@@ -490,14 +490,39 @@ public class Compound implements Serializable {
 		Map<ResidueNumber,Integer> map = chains2pdbResNums2ResSerials.get(c.getChainID());
 		int serial;
 		if (map!=null) {
-			Integer alignedSerial = map.get(g.getResidueNumber());
+			
+			ResidueNumber resNum = g.getResidueNumber();
+			// the resNum will be null for groups that are SEQRES only and not in ATOM, 
+			// still it can happen that a group is in ATOM in one chain but not in other of the same compound.
+			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):			
+			if (resNum==null && c.getSeqResGroups()!=null && !c.getSeqResGroups().isEmpty()) {
+				int index = -1;
+				for (int i=0;i<c.getSeqResGroups().size();i++) {
+					if (g==c.getSeqResGroup(i)) {
+						index = i; break; 
+					}
+				}
+				
+				resNum = findResNumInOtherChains(index, c);
+								
+			}  
 
-			if (alignedSerial==null) {
-				// the map doesn't contain this group, something's wrong: return -1
+			if (resNum == null) { 
+				// still null, we really can't map
 				serial = -1;
-			} else {
-				serial = alignedSerial;
 			}
+			else {
+
+				Integer alignedSerial = map.get(resNum);
+
+				if (alignedSerial==null) {
+					// the map doesn't contain this group, something's wrong: return -1
+					serial = -1;
+				} else {
+					serial = alignedSerial;
+				}
+			}
+			
 		} else {
 			// no seqres groups available we resort to using the pdb residue numbers are given
 			serial = g.getResidueNumber().getSeqNum();
@@ -510,6 +535,8 @@ public class Compound implements Serializable {
 			logger.warn("No SEQRES groups found in chain {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
 					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)", 
 					c.getChainID());
+			// we add a explicit null to the map so that we flag it as unavailable for this chain
+			chains2pdbResNums2ResSerials.put(c.getChainID(), null);
 			return;
 		}
 		
@@ -517,8 +544,43 @@ public class Compound implements Serializable {
 		chains2pdbResNums2ResSerials.put(c.getChainID(), resNums2ResSerials);
 		
 		for (int i=0;i<c.getSeqResGroups().size();i++) {
-			resNums2ResSerials.put(c.getSeqResGroup(i).getResidueNumber(), i+1);
+			
+			// The seqres group will have a null residue number whenever its corresponding atom group doesn't exist
+			// because it is missing in the electron density.
+			// However, it can be observed in the density in other chains of the same compound,
+			// to be complete we go and look for the residue number in other chains, so that we have a 
+			// seqres to atom mapping as complete as possible (with all known atom groups of any chain of this compound)
+			
+			ResidueNumber resNum = c.getSeqResGroup(i).getResidueNumber();
+			
+			if (resNum==null) {
+				resNum = findResNumInOtherChains(i,c);
+			}
+			
+			// NOTE that resNum will still be null here for cases where the residue 
+			// is missing in atom groups (not observed in density) in all chains
+			// Thus the mapping will not be possible for residues that are only in SEQRES groups
+			resNums2ResSerials.put(resNum, i+1);
 		}
+	}
+	
+	private ResidueNumber findResNumInOtherChains(int i, Chain chain) {
+		for (Chain c: getChains()) {
+			if (c == chain) continue;
+			
+			Group seqResGroup = c.getSeqResGroup(i);
+			
+			if (seqResGroup==null) {
+				logger.warn("The SEQRES group is null for index {} in chain {}, whilst it wasn't null in chain {}",
+						 i, c.getChainID(), chain.getChainID());
+				continue;
+			}
+			
+			if (seqResGroup.getResidueNumber()!=null) return seqResGroup.getResidueNumber();
+			
+		}
+		
+		return null;
 	}
 
 	/**

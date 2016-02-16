@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.core.util.SoftHashMap;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
@@ -128,10 +129,8 @@ public class ChemCompTest {
         assertNotNull(cc);
 
         assertTrue(" is not mea" , cc.getId().equals(chemID));
-
-        // an empty description is returned as expected
-        assertNull(cc.getThree_letter_code());
-
+        
+        assertTrue(cc.isEmpty());
 
         // now we change to download chem comp provider
 
@@ -148,7 +147,6 @@ public class ChemCompTest {
         
         
         // now testing in opposite order
-        
 
         // first we test with download chem comp provider
 
@@ -171,8 +169,8 @@ public class ChemCompTest {
 
         assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-        // an empty description is returned as expected
-        assertNull(cc.getThree_letter_code());
+        //the cached description contains all information even with the ReducedProvider
+        assertNotNull(cc.getThree_letter_code());
 
         
     }

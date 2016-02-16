@@ -29,6 +29,8 @@
 package org.biojava.nbio.structure.validation;
 
 import javax.xml.bind.annotation.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,9 +63,11 @@ import java.util.List;
     "programs"
 })
 @XmlRootElement(name = "wwPDB-validation-information")
-public class WwPDBValidationInformation {
+public class WwPDBValidationInformation implements Serializable {
 
-    @XmlElement(name = "Entry", required = true)
+	private static final long serialVersionUID = -996804963717482650L;
+	
+	@XmlElement(name = "Entry", required = true)
     protected Entry entry;
     @XmlElement(name = "ModelledSubgroup", required = true)
     protected List<ModelledSubgroup> modelledSubgroup;

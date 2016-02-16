@@ -443,7 +443,7 @@ Angstroms.
 	}
 
 	public static void toPDB(Atom a, StringBuffer str) {
-		toPDB(a,str,a.getGroup().getChain().getChainID());
+		toPDB(a,str,a.getGroup().getChainId());
 	}
 	
 

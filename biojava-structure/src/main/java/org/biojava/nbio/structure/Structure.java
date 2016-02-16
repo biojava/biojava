@@ -166,7 +166,7 @@ public void calcPhiPsi({@link Structure} structure){
  * @since 1.4
  * @version %I% %G%
  */
-public interface Structure extends Cloneable, StructureIdentifier {
+public interface Structure extends Cloneable {
 
 
 	/** 
@@ -213,6 +213,16 @@ public interface Structure extends Cloneable, StructureIdentifier {
      * @see #setName
      */
     public String getName();
+    /**
+     * Get an identifier corresponding to this structure
+     * @return The StructureIdentifier used to create this structure
+     */
+    public StructureIdentifier getStructureIdentifier();
+    /**
+     * Set the identifier corresponding to this structure
+     * @param structureIdentifier the structureIdentifier corresponding to this structure
+     */
+    public void setStructureIdentifier(StructureIdentifier structureIdentifier);
 
     /**
        sets/gets an List of  Maps which corresponds to the CONECT lines in the PDB file:
@@ -302,11 +312,11 @@ public interface Structure extends Cloneable, StructureIdentifier {
 	 */
 	public boolean isCrystallographic();
 	
-    @Deprecated
     /** set NMR flag.
      *
      * @param nmr  true to declare that this Structure has been solved by NMR.
      */
+	@Deprecated
     public void setNmr(boolean nmr);
 
 
@@ -658,4 +668,50 @@ public interface Structure extends Cloneable, StructureIdentifier {
 	 * @since 4.0.1
 	 */
     public void resetModels();
+    
+	/**
+	 * Returns the PDB identifier associated with this StructureIdentifier.
+	 * @deprecated From BioJava 4.2, use {@link #getPDBCode()} or
+	 *  <code>getStructureIdentifier().toCanonical().getPdbId()</code>
+	 */
+    @Deprecated
+	String getPdbId();
+	
+	/**
+	 * Returns the list of {@link ResidueRange ResidueRanges} that this StructureIdentifier defines.
+	 * This is a unique representation.
+	 * @deprecated From BioJava 4.2, use
+	 *  <code>getStructureIdentifier().toCanonical().getResidueRanges()</code>
+	 */
+    @Deprecated
+	List<? extends ResidueRange> getResidueRanges();
+	
+	/**
+	 * Returns a list of residue ranges. For example:
+	 * <pre>
+	 * getRanges().get(0): 'A'
+	 * getRanges().get(1): 'B_5-100'
+	 * </pre>
+	 * This is a unique representation.
+	 * @deprecated From BioJava 4.2, use
+	 *  <code>getStructureIdentifier().toCanonical().getRanges()</code>
+	 */
+    @Deprecated
+	List<String> getRanges();
+    
+	/**
+	 * Get a string representing this structure's contents. The following places
+	 * are searched for a non-null value, with the first being returned:
+	 * <ol>
+	 * <li>{@link #getStructureIdentifier()}.getIdentifier(), which should give
+	 *     the string originally used to create the structure
+	 * <li>{@link #getName()}
+	 * <li>A combination of {@link #getPDBCode()} with a heuristic description
+	 *     of the residue ranges, in {@link SubstructureIdentifier} format.
+	 * </ol>
+	 * @return A {@link SubstructureIdentifier}-format string describing the residue ranges in this structure
+	 * @since The behavior of this method changed in BioJava 4.2. Previously it
+	 *  returned the same value as {@link #getPDBCode()}
+	 */
+	String getIdentifier();
 }

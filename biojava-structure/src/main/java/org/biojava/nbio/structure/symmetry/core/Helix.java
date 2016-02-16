@@ -149,7 +149,8 @@ public class Helix {
 		this.contacts = contacts;
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Permutation   : " + getPermutation() + "\n");
         sb.append("Repeat units  : " + getRepeatUnits() + "\n");

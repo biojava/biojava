@@ -23,6 +23,11 @@
 
 package org.biojava.nbio.alignment;
 
+import org.biojava.nbio.core.alignment.template.ProfilePair;
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.alignment.template.*;
 import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;

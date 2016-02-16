@@ -30,9 +30,6 @@ import org.biojava.nbio.structure.Compound;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -237,15 +234,6 @@ public class PDBFileReader extends LocalPDBDirectory {
 	public void downloadPDB(String pdbId) throws IOException {
 		downloadStructure(pdbId);
 	}
-
-	@Override
-	public void setFileParsingParameters(FileParsingParameters params){
-		super.setFileParsingParameters(params);
-		if ( ! params.isLoadChemCompInfo()) {
-			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
-		}
-	}
-
 
 	/**
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.

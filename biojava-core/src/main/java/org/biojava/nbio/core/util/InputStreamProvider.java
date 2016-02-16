@@ -78,8 +78,10 @@ public class InputStreamProvider {
 
    }
 
-   /** get an InputStream for this file 
-    * 
+   /** 
+    * Get an InputStream for given file path.
+    * The caller is responsible for closing the stream or otherwise 
+    * a resource leak can occur.
     * @param pathToFile the path of the file.
     * @return an InputStream for the file located at the path.
     * @throws IOException
@@ -130,9 +132,9 @@ public class InputStreamProvider {
          return openCompressedURL(u);
       } else if (magic == GZIP_MAGIC ) {
          return openGZIPURL(u); 
-      } else if ( u.toString().endsWith(".gz")) {
+      } else if ( u.getPath().endsWith(".gz")) {
          return openGZIPURL(u);
-      } else if ( u.toString().endsWith(".Z")) {
+      } else if ( u.getPath().endsWith(".Z")) {
          // unix compressed 
          return openCompressedURL(u);
 
@@ -144,8 +146,10 @@ public class InputStreamProvider {
    }
 
 
-   /** get an InputStream for the file
-    * 
+   /** 
+    * Get an InputStream for the file.
+    * The caller is responsible for closing the stream or otherwise 
+    * a resource leak can occur.
     * @param f a File
     * @return an InputStream for the file
     * @throws IOException
@@ -184,8 +188,7 @@ public class InputStreamProvider {
 
       else if ( fileName.endsWith(".zip")){
 
-         @SuppressWarnings("resource")
-		ZipFile zipfile = new ZipFile(f);
+         ZipFile zipfile = new ZipFile(f);
 
          // stream to first entry is returned ...
          ZipEntry entry;
@@ -201,8 +204,7 @@ public class InputStreamProvider {
 
       else if ( fileName.endsWith(".jar")) {
 
-         @SuppressWarnings("resource")
-		JarFile jarFile = new JarFile(f);
+         JarFile jarFile = new JarFile(f);
 
          // stream to first entry is returned
          JarEntry entry;
@@ -231,7 +233,8 @@ public class InputStreamProvider {
    }
 
 
-   /** Wrapper for new FileInputStream. if System.property biojava.cache.files is set, will try to load files from memory cache.
+   /** 
+    * Wrapper for new FileInputStream. if System.property biojava.cache.files is set, will try to load files from memory cache.
     * 
     * @param f
     * @return

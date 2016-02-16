@@ -23,11 +23,11 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.alignment.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
-import org.biojava.nbio.alignment.template.SequencePair;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -39,13 +39,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
- * Heuristically finding of Compounds (called Entities in mmCIF dictionary)
+ * Heuristical finding of Compounds (called Entities in mmCIF dictionary)
  * in a given Structure. Compounds are the groups of sequence identical NCS-related polymer chains
  * in the Structure.
  * 
@@ -91,7 +95,11 @@ public class CompoundFinder {
 		
 		TreeMap<String,Compound> chainIds2entities = findCompoundsFromAlignment();
 
-		return findUniqueCompounds(chainIds2entities);
+		List<Compound> compounds = findUniqueCompounds(chainIds2entities); 
+		
+		createPurelyNonPolyCompounds(compounds);		
+		
+		return compounds;
 	}
 	
 	/**
@@ -114,6 +122,42 @@ public class CompoundFinder {
 		}
 		return list;
 	} 
+	
+	private void createPurelyNonPolyCompounds(List<Compound> compounds) {
+
+		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
+		for (int i=0;i<s.getChains().size();i++) {
+			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
+				pureNonPolymerChains.add(s.getChain(i));
+			}
+		}
+		
+		if (!pureNonPolymerChains.isEmpty()) {
+			
+			int maxMolId = 0; // if we have no compounds at all we just use 0, so that first assignment is 1
+			if (!compounds.isEmpty()) {
+				Collections.max(compounds, new Comparator<Compound>() {
+					@Override
+					public int compare(Compound o1, Compound o2) {
+						return new Integer(o1.getMolId()).compareTo(o2.getMolId());
+					}				
+				}).getMolId();
+			}
+
+			int molId = maxMolId + 1;
+			// for the purely non-polymeric chains we assign additional compounds
+			for (Chain c: pureNonPolymerChains) {
+				Compound comp = new Compound();
+				comp.addChain(c);
+				comp.setMolId(molId);
+				logger.warn("Chain {} is purely non-polymeric, will assign a new Compound (entity) to it (entity id {})", c.getChainID(), molId);
+				molId++;
+
+				compounds.add(comp);
+			}
+
+		}
+	}
 	
 	
 	private static boolean areResNumbersAligned(Chain c1, Chain c2) {
@@ -162,15 +206,29 @@ public class CompoundFinder {
 	
 	private TreeMap<String,Compound> findCompoundsFromAlignment() {
 		
+		// first we determine which chains to consider: anything not looking 
+		// polymeric (protein or nucleotide chain) should be discarded
+		Set<Integer> polyChainIndices = new TreeSet<Integer>();
+		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
+		for (int i=0;i<s.getChains().size();i++) {
+			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
+				pureNonPolymerChains.add(s.getChain(i));
+			} else {				
+				polyChainIndices.add(i);
+			}
+		}
+		
 		
 		TreeMap<String, Compound> chainIds2compounds = new TreeMap<String,Compound>();
 		
 		int molId = 1;
 
 		outer:
-			for (int i=0;i<s.getChains().size();i++) {
-				for (int j=i+1;j<s.getChains().size();j++) {
+			for (int i:polyChainIndices) {
+				for (int j:polyChainIndices) {
 
+					if (j<=i) continue;
+					
 					Chain c1 = s.getChain(i);
 					Chain c2 = s.getChain(j);
 					
@@ -268,13 +326,14 @@ public class CompoundFinder {
 						logger.warn("\n"+pair.toString(100));
 					}
 
-					if (chainIds2compounds.size()==s.getChains().size()) // we've got all chains in entities
+					if (chainIds2compounds.size()==polyChainIndices.size()) // we've got all chains in entities
 						break outer;
 				}
 			}
 		
 		// anything not in a Compound will be its own Compound
-		for (Chain c:s.getChains()) {
+		for (int i:polyChainIndices) {
+			Chain c = s.getChain(i);
 			if (!chainIds2compounds.containsKey(c.getChainID())) {
 				logger.debug("Creating a 1-member Compound for chain {}",c.getChainID());
 

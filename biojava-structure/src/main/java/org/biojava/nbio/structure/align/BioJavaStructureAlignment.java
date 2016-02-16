@@ -99,7 +99,7 @@ implements StructureAlignment  {
 		}
 		this.params = (StrucAligParameters) params;
 
-		AFPChain afpChain = new AFPChain();
+		AFPChain afpChain = new AFPChain(algorithmName);
 		StructurePairAligner aligner = new StructurePairAligner();
 		aligner.align(ca1,ca2,this.params);
 

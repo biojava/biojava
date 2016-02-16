@@ -24,11 +24,11 @@ package org.biojava.nbio.structure.align.seq;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.alignment.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
-import org.biojava.nbio.alignment.template.SequencePair;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureException;
@@ -98,7 +98,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			throw new IllegalArgumentException("provided parameter object is not of type SmithWaterman3DParameters, but " + parameters.getClass().getName());
 
 		params = (SmithWaterman3DParameters) parameters;
-		AFPChain afpChain = new AFPChain();
+		AFPChain afpChain = new AFPChain(algorithmName);
 
 		
 			// covert input to sequences
@@ -155,7 +155,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	 */
 	private AFPChain convert(Atom[] ca1, Atom[] ca2,  SequencePair<ProteinSequence, 
 			AminoAcidCompound> pair, PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman) throws StructureException {
-		AFPChain afpChain = new AFPChain();
+		AFPChain afpChain = new AFPChain(algorithmName);
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;		
 
