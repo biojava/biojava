@@ -24,20 +24,31 @@
  */
 package org.biojava.nbio.structure.test;
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.test.util.StringManipulationTestsHelper;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.JournalArticle;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.Site;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.test.util.StringManipulationTestsHelper;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PDBFileParserTest {
 
@@ -55,7 +66,8 @@ public class PDBFileParserTest {
 		// from 1a4w:
 		String t =
 				"HETATM 2242 NA    NA L 541       5.845 -14.122  30.560  0.88 23.48          NA"+newline+
-				"HETATM 2243 NA    NA L 542      18.411 -16.475  38.464  0.88 24.77          NA"+newline;
+				"HETATM 2243 NA    NA L 542      18.411 -16.475  38.464  0.88 24.77          NA"+newline+
+				"TER"+newline;
 		BufferedReader br = new BufferedReader(new StringReader(t));
 		Structure s = parser.parsePDBFile(br);
 		String pdb = s.toPDB();
@@ -85,7 +97,8 @@ public class PDBFileParserTest {
 				"ATOM     11  C   CYS L   1       9.580  14.524  21.006  1.00 18.64           C"+newline+  
 				"ATOM     12  O   CYS L   1       9.110  15.220  21.912  1.00 19.03           O"+newline+  
 				"ATOM     13  CB  CYS L   1      12.117  14.468  20.771  1.00 21.77           C"+newline+  
-				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55           S"+newline;
+				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55           S"+newline+
+				"TER"+newline;
 
 		BufferedReader br = new BufferedReader(new StringReader(t));
 
@@ -527,7 +540,8 @@ public class PDBFileParserTest {
 				"HETATM 2282  C22 QWE H 373      16.864 -13.556  14.739  1.00 42.63           C"+newline+
 				"HETATM 2283 C2'1 QWE H 373      16.825 -12.903  16.107  1.00 40.59           C"+newline+
 				"HETATM 2284  C42 QWE H 373      18.146 -14.734  13.451  1.00 43.96           C"+newline+
-				"HETATM 2285  N3  QWE H 373      18.049 -13.554  14.106  1.00 43.46           N"+newline;
+				"HETATM 2285  N3  QWE H 373      18.049 -13.554  14.106  1.00 43.46           N"+newline+
+				"TER"+newline;
 		
 		BufferedReader br = new BufferedReader(new StringReader(atomLines));
 		
