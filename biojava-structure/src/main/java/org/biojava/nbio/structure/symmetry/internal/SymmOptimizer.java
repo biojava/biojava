@@ -92,7 +92,8 @@ public class SymmOptimizer {
 
 	// Variables that store the history of the optimization - slower if on
 	private static final boolean history = false;
-	private static final String pathToHistory = "SymmOptHistory.csv";
+	private static final int saveStep = 100;
+	private static final String pathToHistory = "./results/";
 	private List<Integer> lengthHistory;
 	private List<Double> rmsdHistory;
 	private List<Double> scoreHistory;
@@ -165,7 +166,7 @@ public class SymmOptimizer {
 		}
 		checkGaps();
 
-		// Set the MC score and RMSD of the initial state (seed alignment)
+		// Set the MC score of the initial state (seed alignment)
 		updateMultipleAlignment();
 		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend,
 				dCutoff);
@@ -267,30 +268,23 @@ public class SymmOptimizer {
 					+ ", --conv: " + conv);
 
 			if (history) {
-				if (i % 100 == 1) {
+				if (i % saveStep == 1) {
 					// Get the correct superposition again
 					updateMultipleAlignment();
-					double rmsd = MultipleAlignmentScorer.getRMSD(msa);
 
 					lengthHistory.add(length);
-					rmsdHistory.add(rmsd);
-					scoreHistory.add(mcScore);
+					rmsdHistory.add(msa.getScore(MultipleAlignmentScorer.RMSD));
+					scoreHistory.add(msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE));
 				}
 			}
 
 			i++;
 		}
-		// Superimpose and calculate scores
+		// Superimpose and calculate final scores
 		updateMultipleAlignment();
 		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend,
 				dCutoff);
-		double tmScore = MultipleAlignmentScorer.getAvgTMScore(msa) * order;
-		double rmsd = MultipleAlignmentScorer.getRMSD(msa);
-
-		// Set the scores
 		msa.putScore(MultipleAlignmentScorer.MC_SCORE, mcScore);
-		msa.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
-		msa.putScore(MultipleAlignmentScorer.RMSD, rmsd);
 
 		// Save the history to the results folder of the symmetry project
 		if (history) {
@@ -808,14 +802,18 @@ public class SymmOptimizer {
 	/**
 	 * Save the evolution of the optimization process as a csv file.
 	 */
-	private void saveHistory(String filePath) throws IOException {
+	private void saveHistory(String folder) throws IOException {
 
-		FileWriter writer = new FileWriter(filePath);
-		writer.append("Step,Length,RMSD,Score\n");
+		String name = msa.getStructureIdentifier(0).getIdentifier();
+		FileWriter writer = new FileWriter(folder + name + "-symm_optimization.csv");
+		writer.append("Structure,Step,Repeat Length,RMSD,TM-Score\n");
 
 		for (int i = 0; i < lengthHistory.size(); i++) {
-			writer.append(i * 100 + "," + lengthHistory.get(i) + ","
-					+ rmsdHistory.get(i) + "," + scoreHistory.get(i) + "\n");
+			writer.append(name + ",");
+			writer.append(i * saveStep + ",");
+			writer.append(lengthHistory.get(i) + ",");
+			writer.append(rmsdHistory.get(i) + ",");
+			writer.append(scoreHistory.get(i) + "\n");
 		}
 
 		writer.flush();

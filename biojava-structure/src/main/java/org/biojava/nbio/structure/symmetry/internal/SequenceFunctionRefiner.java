@@ -91,7 +91,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 			return refinedAFP;
 		} catch (IndexOutOfBoundsException e){
 			// This Exception is thrown when the refined alignment is not consistent
-			throw new RefinerFailedException("Refiner failure", e);
+			throw new RefinerFailedException("Refiner failure: non-consistent result", e);
 		}
 	}
 
