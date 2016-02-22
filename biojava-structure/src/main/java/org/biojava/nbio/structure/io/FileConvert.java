@@ -21,12 +21,6 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
-import org.biojava.nbio.core.util.XMLWriter;
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -37,6 +31,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.biojava.nbio.core.util.XMLWriter;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.DBRef;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.SSBond;
+import org.biojava.nbio.structure.Site;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -237,6 +245,8 @@ public class FileConvert {
 					
 					
 				}
+				// End any chains with a "TER" record.
+				if (nrGroups > 0) str.append("TER").append(newline);
 			}
 
 			if ( nrModels>1) {

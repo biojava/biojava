@@ -41,10 +41,15 @@ public class PdbIdLists {
      * @throws IOException
      */
     public static Set<String> getCurrentPDBIds() throws IOException {
-        Set<String> currentPDBIds = PDBStatus.getCurrentPDBIds();
+       String xml ="<orgPdbQuery>\n" +
+               "    <version>head</version>\n" +
+               "    <queryType>org.pdb.query.simple.HoldingsQuery</queryType>\n" +
+               "    <description>Holdings : All Structures</description>\n" +
+               "    <experimentalMethod>ignore</experimentalMethod>\n" +
+               "    <moleculeType>ignore</moleculeType>\n" +
+               "  </orgPdbQuery>";
 
-
-        return currentPDBIds;
+        return postQuery(xml);
     }
 
 
@@ -175,6 +180,31 @@ public class PdbIdLists {
         return postQuery(xml);
     }
 
+    public static Set<String> getNucleotides() throws IOException{
+        String xml ="<orgPdbQuery>\n" +
+                "    <version>head</version>\n" +
+                "    <queryType>org.pdb.query.simple.ChainTypeQuery</queryType>\n" +
+                "    <description>Chain Type: there is not any Protein chain</description>\n" +
+                "    <containsProtein>N</containsProtein>\n" +
+                "    <containsDna>?</containsDna>\n" +
+                "    <containsRna>?</containsRna>\n" +
+                "    <containsHybrid>?</containsHybrid>\n" +
+                "  </orgPdbQuery>";
+        return postQuery(xml);
+    }
+
+    public static Set<String>getRibosomes() throws IOException{
+        String xml = "<orgPdbQuery>\n" +
+                "    <version>head</version>\n" +
+                "    <queryType>org.pdb.query.simple.StructureKeywordsQuery</queryType>\n" +
+                "    <description>StructureKeywordsQuery: struct_keywords.pdbx_keywords.comparator=contains struct_keywords.pdbx_keywords.value=RIBOSOME </description>\n" +
+                "    <struct_keywords.pdbx_keywords.comparator>contains</struct_keywords.pdbx_keywords.comparator>\n" +
+                "    <struct_keywords.pdbx_keywords.value>RIBOSOME</struct_keywords.pdbx_keywords.value>\n" +
+                "  </orgPdbQuery>";
+
+        return postQuery(xml);
+    }
+
     public static final String SERVICELOCATION="http://www.rcsb.org/pdb/rest/search";
 
 
@@ -186,6 +216,7 @@ public class PdbIdLists {
     public static Set<String> postQuery(String xml)
             throws IOException{
 
+        //System.out.println(xml);
 
 
         URL u = new URL(SERVICELOCATION);
@@ -228,7 +259,7 @@ public class PdbIdLists {
 
             throws IOException
     {
-
+        
         // Send data
 
         URLConnection conn = url.openConnection();
@@ -254,6 +285,8 @@ public class PdbIdLists {
             System.out.println("NMR structures: " + getNMRStructures().size());
             System.out.println("Gag-polyproteins: " + getGagPolyproteins().size());
             System.out.println("Transmembrane proteins: " + getTransmembraneProteins().size());
+            System.out.println("Nucleotide: " + getNucleotides().size());
+            System.out.println("Ribosomes: " + getRibosomes().size());
         } catch ( Exception e){
             e.printStackTrace();
         }
