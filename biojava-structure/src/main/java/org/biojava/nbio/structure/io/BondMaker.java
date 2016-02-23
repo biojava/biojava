@@ -145,33 +145,44 @@ public class BondMaker {
 		for (Chain chain : structure.getChains()) {
 			List<Group> groups = chain.getAtomGroups();
 
-			for (Group group : groups) {
+			for (Group mainGroup : groups) {
 				// atoms with no residue number don't have atom information
-				if (group.getResidueNumber() == null) {
+				if (mainGroup.getResidueNumber() == null) {
 					continue;
 				}
 
-				ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group
-						.getPDBName());
+				// Now add support for altLocGroup
+				List<Group> totList = new ArrayList<Group>();
+				totList.add(mainGroup);
+				for(Group altLoc: mainGroup.getAltLocs()){
+					totList.add(altLoc);
+				}
+				// Now iterate through this list
+				for(Group group : totList){
 
-				for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
+					ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group
+							.getPDBName());
 
-					Atom a = group.getAtom(chemCompBond.getAtom_id_1());
-					Atom b = group.getAtom(chemCompBond.getAtom_id_2());
-					if ( a != null && b != null){
+					for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
 
-						int bondOrder = chemCompBond.getNumericalBondOrder();
+						Atom a = group.getAtom(chemCompBond.getAtom_id_1());
+						Atom b = group.getAtom(chemCompBond.getAtom_id_2());
+						if ( a != null && b != null){
 
-						new BondImpl(a, b, bondOrder);
-					} else  {
+							int bondOrder = chemCompBond.getNumericalBondOrder();
 
-						// Some of the atoms were missing. That's fine, there's
-						// nothing to do in this case.
+							new BondImpl(a, b, bondOrder);
+						} else  {
+
+							// Some of the atoms were missing. That's fine, there's
+							// nothing to do in this case.
+						}
 					}
 				}
-			}
+			}				
 		}
 	}
+
 
 	private void trimBondLists() {
 		for (Chain chain : structure.getChains()) {
