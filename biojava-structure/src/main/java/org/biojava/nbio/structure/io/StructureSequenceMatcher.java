@@ -125,7 +125,7 @@ public class StructureSequenceMatcher {
 			int prevLen = seqStr.length();
 
 			// get the sequence for this chain
-			String chainSeq = SeqRes2AtomAligner.getFullAtomSequence(groups, chainIndexPosition);
+			String chainSeq = SeqRes2AtomAligner.getFullAtomSequence(groups, chainIndexPosition, false);
 			seqStr.append(chainSeq);
 
 
