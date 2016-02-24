@@ -297,6 +297,74 @@ public class TestAltLocs {
 
 
 	}
+
+	
+	
+	@Test
+	public void test4CUPBonds() throws IOException, StructureException{ 
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		params.setCreateAtomBonds(true);
+		cache.setFileParsingParams(params);
+		
+		
+		StructureIO.setAtomCache(cache); 
+
+		cache.setUseMmCif(false);
+
+		Structure structure = StructureIO.getStructure("4CUP");
+
+		assertNotNull(structure);
+
+		Atom[] ca = StructureTools.getAtomCAArray(structure);
+
+		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
+
+		List<Atom> caList = new ArrayList<Atom>();
+		for ( Chain c: structure.getChains()){
+			for (Group g: c.getAtomGroups()){
+
+				for (Group altLocGroup:g.getAltLocs()) {
+					ensureAllAtomsSameAltCode(altLocGroup);
+					List<Atom> theseAtoms = new ArrayList<Atom>();
+					for (Atom a:altLocGroup.getAtoms()) {
+						theseAtoms.add(a);
+					}
+					for (Atom a:altLocGroup.getAtoms()) {
+						// Check the bonds are all part of this altLoc group
+						assertNotEquals(0, a.getBonds().size());
+					}
+				}
+
+				List<Atom> atoms = g.getAtoms();
+				boolean caInMain = false;
+				for (Atom a: atoms){
+					assertNotNull(a.getGroup());
+					assertNotNull(a.getGroup().getChain());
+
+					if ( a.getName().equals(StructureTools.CA_ATOM_NAME)) {
+						caList.add(a);
+						caInMain = true;
+						break;
+
+					}
+
+
+				}
+				if (! caInMain && g.hasAtom(StructureTools.CA_ATOM_NAME)){
+					// g.hasAtom checks altLocs
+					fail("CA is not in main group, but in altLoc");
+				}
+
+			}
+		}
+
+		assertTrue(ca.length == caList.size());
+
+
+	}
 	
 	@Test
 	public void test3PIUmmcif() throws IOException, StructureException{ 
