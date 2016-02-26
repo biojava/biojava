@@ -242,7 +242,7 @@ public class SingleLinkageClusterer {
 	/**
 	 * Get the clusters by cutting the dendrogram at given cutoff
 	 * @param cutoff
-	 * @return
+	 * @return Map from cluster numbers to indices of the cluster members
 	 */
 	public Map<Integer, Set<Integer>> getClusters(double cutoff) {
 		
