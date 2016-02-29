@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.io.mmcif;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -346,7 +345,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	private static boolean downloadChemCompRecord(String recordName) {
 		
 		String localName = getLocalFileName(recordName);
-
+		File newFile = new File(localName);
 		String u = SERVER_LOCATION + recordName + ".cif";
 
 		logger.debug("downloading " + u);
@@ -359,7 +358,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			HttpURLConnection uconn = HTTPConnectionTools.openHttpURLConnection(url);
 
-			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName)));
+			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
 					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));
 					) {
 
@@ -370,14 +369,11 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 				}
 
 				pw.flush();
-
 				return true;
 			}
-		} catch (FileNotFoundException e) {
-			// Possible that there is no ChemComp matching this group.
-			logger.warn(recordName + " is not available from " + SERVER_LOCATION + " and will be skipped");
-		} catch (IOException e){
-			logger.error("Could not download "+url.toString()+" to "+localName, e);
+		}  catch (IOException e){
+			logger.error("Could not download "+url.toString()+" OR store locally to "+localName+" Error ="+e.getMessage());
+			newFile.delete();
 			//e.printStackTrace();
 		}
 		return false;
