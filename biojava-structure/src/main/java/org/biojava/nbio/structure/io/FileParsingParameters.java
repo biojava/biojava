@@ -118,6 +118,10 @@ public class FileParsingParameters implements Serializable
 	 * Should we create charges on atoms when parsing a file?
 	 */	
 	private boolean createAtomCharges;
+	/**
+	 * Should we use internal or public facing chain ids
+	 */
+	private boolean useInternalChainIds;
 	/**  
 	 * The maximum number of atoms we will add to a structure,
      * this protects from memory overflows in the few really big protein structures.
@@ -158,6 +162,8 @@ public class FileParsingParameters implements Serializable
 		createConects = false;
 
 		createAtomCharges = true;
+		
+		setUseInternalChainIds(false);
 	}
 
 	/** 
@@ -422,5 +428,23 @@ public class FileParsingParameters implements Serializable
 	public void setCreateLigandConects(boolean createLigandConects){
 		this.createConects = createLigandConects;
 		this.alignSeqRes = true;
+	}
+
+	/**
+	 * Should we use the internal chain id for generating structures?
+	 * @return
+	 */
+	public boolean isUseInternalChainIds() {
+		return useInternalChainIds;
+	}
+	
+	/**
+	 * Setter to set whether we should use interal or public facing chain ids
+	 * False uses public facing chain ids
+	 * True uses internal chain ids
+	 * @param useInternalChainIds
+	 */
+	public void setUseInternalChainIds(boolean useInternalChainIds) {
+		this.useInternalChainIds = useInternalChainIds;
 	}
 }
