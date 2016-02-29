@@ -347,7 +347,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		String localName = getLocalFileName(recordName);
 		File newFile;
 		try{
-			newFile = File.createTempFile(recordName, "cif");
+			newFile = File.createTempFile("chemcomp"+recordName, "cif");
 		}
 		catch(IOException e){
 			logger.error("Could not write to temp directory {} to create the chemical component download temp file", System.getProperty("java.io.tmpdir"));
