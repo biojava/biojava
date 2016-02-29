@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.io.mmcif;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -41,6 +40,7 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.jgrapht.alg.TarjanLowestCommonAncestor.LcaRequestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -346,20 +346,26 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	private static boolean downloadChemCompRecord(String recordName) {
 		
 		String localName = getLocalFileName(recordName);
-
+		File newFile;
+		try{
+		 newFile = File.createTempFile(recordName, "cif");
+		}
+		catch(IOException e){
+			return false;
+		}
 		String u = SERVER_LOCATION + recordName + ".cif";
 
 		logger.debug("downloading " + u);
 
 		URL url = null;
 		
+		
 		try {
-
 			url = new URL(u);
 
 			HttpURLConnection uconn = HTTPConnectionTools.openHttpURLConnection(url);
 
-			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName)));
+			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
 					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));
 					) {
 
@@ -370,14 +376,14 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 				}
 
 				pw.flush();
-
+				// Now we move this across to where it actually wants to be
+				newFile.renameTo(new File(localName));
+				
 				return true;
 			}
-		} catch (FileNotFoundException e) {
-			// Possible that there is no ChemComp matching this group.
-			logger.warn(recordName + " is not available from " + SERVER_LOCATION + " and will be skipped");
-		} catch (IOException e){
-			logger.error("Could not download "+url.toString()+" to "+localName, e);
+		}  catch (IOException e){
+			logger.error("Could not download "+url.toString()+" OR store locally to "+localName+" Error ="+e.getMessage());
+			newFile.delete();
 			//e.printStackTrace();
 		}
 		return false;
