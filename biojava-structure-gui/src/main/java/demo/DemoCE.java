@@ -36,6 +36,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.AfpChainWriter;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
 public class DemoCE
 {
@@ -45,12 +47,18 @@ public class DemoCE
        //String name1 = "4hhb.A";
        //String name2 = "4hhb.B";
        
-       String name1 = "1cdg.A";
-       String name2 = "1tim.B";
+       String name1 = "d1pqsa_";
+       String name2 = "d1poha_";
        
-   
-       
+//	   String name1 = "5AZQ.A";
+//	   String name2 = "4ODC.A";
+      
        AtomCache cache = new AtomCache();
+       
+       DownloadChemCompProvider prov = new DownloadChemCompProvider();      
+       prov.setDownloadAll(true);
+              
+       ChemCompGroupFactory.setChemCompProvider(prov);
                
        Structure structure1 = null;
        Structure structure2 = null;
