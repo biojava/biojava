@@ -40,7 +40,6 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.jgrapht.alg.TarjanLowestCommonAncestor.LcaRequestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -348,9 +347,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		String localName = getLocalFileName(recordName);
 		File newFile;
 		try{
-		 newFile = File.createTempFile(recordName, "cif");
+			newFile = File.createTempFile("chemcomp"+recordName, "cif");
 		}
 		catch(IOException e){
+			logger.error("Could not write to temp directory {} to create the chemical component download temp file", System.getProperty("java.io.tmpdir"));
 			return false;
 		}
 		String u = SERVER_LOCATION + recordName + ".cif";
@@ -377,14 +377,18 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 				pw.flush();
 				// Now we move this across to where it actually wants to be
-				newFile.renameTo(new File(localName));
+				boolean couldRename = newFile.renameTo(new File(localName));
+				
+				if (!couldRename) {
+					
+					throw new IOException("Could not rename temp file "+newFile.toString()+" to file " + localName);
+				}
 				
 				return true;
 			}
 		}  catch (IOException e){
 			logger.error("Could not download "+url.toString()+" OR store locally to "+localName+" Error ="+e.getMessage());
 			newFile.delete();
-			//e.printStackTrace();
 		}
 		return false;
 	}
