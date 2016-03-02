@@ -739,6 +739,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			
 			asymStrandId = asymId2StrandIdFromAtomSites;
 		}
+		// If we only parse the header - we have no option but to use the other mapping (which can be broken)
+		if (asymId2StrandIdFromAtomSites.isEmpty()){
+			
+			logger.warn("No  _atom_sites category auth to asymid mappings. Will use chain id mapping from pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme categories");
+			asymId2StrandIdFromAtomSites = asymStrandId;
+		}
 		
 		// mismatching Author assigned chain IDS and PDB internal chain ids:
 		// fix the chain IDS in the current model:
@@ -748,11 +754,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				List<Chain> model = structure.getModel(i);
 
 				List<Chain> pdbChains = new ArrayList<Chain>();
-
 				for (Chain chain : model) {
-					for (String asym : asymStrandId.keySet()) {
+					for (String asym : asymId2StrandIdFromAtomSites.keySet()) {
 						if ( chain.getChainID().equals(asym)){
-							String newChainId = asymStrandId.get(asym);
+							String newChainId = asymId2StrandIdFromAtomSites.get(asym);
 
 							logger.debug("Renaming chain with asym_id {} ({} atom groups) to author_asym_id/strand_id  {}", 
 									asym, chain.getAtomGroups().size(), newChainId);
@@ -789,13 +794,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		else{
+			System.out.println(asymId2StrandIdFromAtomSites);
 			// Just set the internal id as the auth id -> if we're using the asymid 
 			for (int i =0; i< structure.nrModels() ; i++){
 				List<Chain> model = structure.getModel(i);
 				for (Chain chain : model) {
-					for (String asym : asymStrandId.keySet()) {
-						if ( chain.getChainID().equals(asym)){
-							String authChainId = asymStrandId.get(asym);
+					for (String asym : asymId2StrandIdFromAtomSites.keySet()) {
+						if (chain.getChainID().equals(asym)){
+							String authChainId = asymId2StrandIdFromAtomSites.get(asym);
 							chain.setInternalChainID(authChainId);
 							break;
 						}
