@@ -794,7 +794,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		else{
-			System.out.println(asymId2StrandIdFromAtomSites);
 			// Just set the internal id as the auth id -> if we're using the asymid 
 			for (int i =0; i< structure.nrModels() ; i++){
 				List<Chain> model = structure.getModel(i);
