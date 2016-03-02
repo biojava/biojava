@@ -28,9 +28,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A feature is currently any descriptive item that can be associated with a sequence position(s)
@@ -39,264 +37,352 @@ import java.util.Map;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends Compound>
-		implements FeatureInterface<S, C> {
-	List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
-	FeatureInterface<S, C> parentFeature;
-	AbstractLocation sequenceLocation;
-	String type = "";
-	String source = "";
-	private String description = "";
-	private String shortDescription = "";
-	private Object userObject = null;
-	private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
+        implements FeatureInterface<S, C> {
+    List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
+    FeatureInterface<S, C> parentFeature;
+    AbstractLocation sequenceLocation;
+    String type = "";
+    String source = "";
+    private String description = "";
+    private String shortDescription = "";
+    private Object userObject = null;
+	private GenBankQualifierMap qualifierMap = new GenBankQualifierMap();
+	//private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
 
-	/**
-	 * A feature has a type and a source
-	 * @param type
-	 * @param source
-	 */
-	public AbstractFeature(String type,String source){
-		this.type = type;
-		this.source = source;
-	}
+    /**
+     * A feature has a type and a source
+     * @param type
+     * @param source
+     */
+    public AbstractFeature(String type,String source){
+        this.type = type;
+        this.source = source;
+    }
 
-	/**
-	 * A feature could be a single sequence position like a mutation or a post translational modification of an amino acid.
-	 * It could also be the docking interface of N number of amino acids on the surface. The location wold then be a collection
-	 * of sequence positions instead of a single sequence position or the begin and end of a sequence segment.
-	 * @return
-	 */
+    /**
+     * A feature could be a single sequence position like a mutation or a post translational modification of an amino acid.
+     * It could also be the docking interface of N number of amino acids on the surface. The location wold then be a collection
+     * of sequence positions instead of a single sequence position or the begin and end of a sequence segment.
+     * @return
+     */
 
-	@Override
-	public AbstractLocation getLocations() {
-		return sequenceLocation;
-	}
+    @Override
+    public AbstractLocation getLocations() {
+        return sequenceLocation;
+    }
 
-	/**
-	 *  A feature could be a single sequence position like a mutation or a post translational modification of an amino acid.
-	 * It could also be the docking interface of N number of amino acids on the surface. The location wold then be a collection
-	 * of sequence positions instead of a single sequence position or the begin and end of a sequence segment.
-	 * @param loc
-	 */
-	@Override
-	public void setLocation(AbstractLocation loc) {
-		sequenceLocation = loc;
-	}
+    /**
+     *  A feature could be a single sequence position like a mutation or a post translational modification of an amino acid.
+     * It could also be the docking interface of N number of amino acids on the surface. The location wold then be a collection
+     * of sequence positions instead of a single sequence position or the begin and end of a sequence segment.
+     * @param loc
+     */
+    @Override
+    public void setLocation(AbstractLocation loc) {
+        sequenceLocation = loc;
+    }
 
-	/**
-	 * The feature type
-	 * @return
-	 */
-	@Override
-	public String getType() {
-		return type;
-	}
+    /**
+     * The feature type
+     * @return
+     */
+    @Override
+    public String getType() {
+        return type;
+    }
 
-	/**
-	 * Set the feature type
-	 * @param type
-	 */
-	@Override
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * Set the feature type
+     * @param type
+     */
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	/**
-	 * The feature source
-	 * @return
-	 */
+    /**
+     * The feature source
+     * @return
+     */
 
-	@Override
-	public String getSource() {
-		return source;
-	}
+    @Override
+    public String getSource() {
+        return source;
+    }
 
-	/**
-	 * Set the feature source
-	 * @param source
-	 */
-	@Override
-	public void setSource(String source) {
-		this.source = source;
-	}
+    /**
+     * Set the feature source
+     * @param source
+     */
+    @Override
+    public void setSource(String source) {
+        this.source = source;
+    }
 
-	/**
-	 * A feature can be the child or contained by a parent feature. An example is a Helix feature could contain
-	 * children features. A PFAM domain could contain secondary structures.
-	 * @param feature
-	 */
-	@Override
-	public void setParentFeature(FeatureInterface<S, C> feature) {
-		parentFeature = feature;
-	}
+    /**
+     * A feature can be the child or contained by a parent feature. An example is a Helix feature could contain
+     * children features. A PFAM domain could contain secondary structures.
+     * @param feature
+     */
+    @Override
+    public void setParentFeature(FeatureInterface<S, C> feature) {
+        parentFeature = feature;
+    }
 
-	/**
-	 * Get the parent Feature
-	 * @return
-	 */
-	@Override
-	public FeatureInterface<S, C> getParentFeature() {
-	   return parentFeature;
-	}
+    /**
+     * Get the parent Feature
+     * @return
+     */
+    @Override
+    public FeatureInterface<S, C> getParentFeature() {
+       return parentFeature;
+    }
 
-	/**
-	 * Get the children features
-	 * @return
-	 */
-	@Override
-	public List<FeatureInterface<S, C>> getChildrenFeatures() {
-		return childrenFeatures;
-	}
+    /**
+     * Get the children features
+     * @return
+     */
+    @Override
+    public List<FeatureInterface<S, C>> getChildrenFeatures() {
+        return childrenFeatures;
+    }
 
-	/**
-	 * Set the children features
-	 * @param features
-	 */
-	@Override
-	public void setChildrenFeatures(List<FeatureInterface<S, C>> features) {
-		childrenFeatures = features;
+    /**
+     * Set the children features
+     * @param features
+     */
+    @Override
+    public void setChildrenFeatures(List<FeatureInterface<S, C>> features) {
+        childrenFeatures = features;
 
-	}
+    }
 
-	/**
-	 * @return the description
-	 */
-	@Override
+    /**
+     * @return the description
+     */
+    @Override
 	public String getDescription() {
-		return description;
-	}
+        return description;
+    }
 
-	/**
-	 * @param description the description to set
-	 */
-	@Override
+    /**
+     * @param description the description to set
+     */
+    @Override
 	public void setDescription(String description) {
-		this.description = description;
-	}
+        this.description = description;
+    }
 
-	/**
-	 * @return the shortDescription
-	 */
-	@Override
+    /**
+     * @return the shortDescription
+     */
+    @Override
 	public String getShortDescription() {
-		return shortDescription;
-	}
+        return shortDescription;
+    }
 
-	/**
-	 * @param shortDescription the shortDescription to set
-	 */
-	@Override
+    /**
+     * @param shortDescription the shortDescription to set
+     */
+    @Override
 	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
-	}
+        this.shortDescription = shortDescription;
+    }
 
-	/**
-	 * Sort features by start position and then longest length. When features are added
-	 * having them sorted by start position and then longest length helps on the layout
-	 * of overlapping features so they are delivered in a proper order.
-	 */
+    /**
+     * Sort features by start position and then longest length. When features are added
+     * having them sorted by start position and then longest length helps on the layout
+     * of overlapping features so they are delivered in a proper order.
+     */
 
-	public static final Comparator<FeatureInterface<?, ?>> LOCATION_LENGTH = new Comparator<FeatureInterface<?, ?>>() {
+    public static final Comparator<FeatureInterface<?, ?>> LOCATION_LENGTH = new Comparator<FeatureInterface<?, ?>>() {
 
-		@Override
+        @Override
 		public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
-			double v1 = e1.getLocations().getStart().getPosition();
-			double v2 = e2.getLocations().getStart().getPosition();
-			if (v1 < v2) {
-				return -1;
-			} else if (v1 > v2) {
-				return 1;
-			} else {
-				double end1 = e1.getLocations().getEnd().getPosition();
-				double end2 = e2.getLocations().getEnd().getPosition();
-				if(end1 > end2)
-					return -1;
-				else if(end1 < end2)
-					return 1;
-				else
-				return 0;
-			}
+            double v1 = e1.getLocations().getStart().getPosition();
+            double v2 = e2.getLocations().getStart().getPosition();
+            if (v1 < v2) {
+                return -1;
+            } else if (v1 > v2) {
+                return 1;
+            } else {
+                double end1 = e1.getLocations().getEnd().getPosition();
+                double end2 = e2.getLocations().getEnd().getPosition();
+                if(end1 > end2)
+                    return -1;
+                else if(end1 < end2)
+                    return 1;
+                else
+                return 0;
+            }
 
-		}
-	};
+        }
+    };
 
-	 /**
-	 * Sort features by length. //TODO need to handle cases where features have multiple locations, strand etc
-	 *
-	 */
+     /**
+     * Sort features by length. //TODO need to handle cases where features have multiple locations, strand etc
+     *
+     */
 
-	static public final Comparator<FeatureInterface<?, ?>> LENGTH = new Comparator<FeatureInterface<?, ?>>() {
+    static public final Comparator<FeatureInterface<?, ?>> LENGTH = new Comparator<FeatureInterface<?, ?>>() {
 
-		@Override
+        @Override
 		public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
-			double v1 = Math.abs(e1.getLocations().getEnd().getPosition()- e1.getLocations().getStart().getPosition());
-			double v2 = Math.abs(e2.getLocations().getEnd().getPosition() -  e2.getLocations().getStart().getPosition());
-			if (v1 < v2) {
-				return -1;
-			} else if (v1 > v2) {
-				return 1;
-			} else {
-				return 0;
-			}
+            double v1 = Math.abs(e1.getLocations().getEnd().getPosition()- e1.getLocations().getStart().getPosition());
+            double v2 = Math.abs(e2.getLocations().getEnd().getPosition() -  e2.getLocations().getStart().getPosition());
+            if (v1 < v2) {
+                return -1;
+            } else if (v1 > v2) {
+                return 1;
+            } else {
+                return 0;
+            }
 
-		}
-	};
+        }
+    };
+    
+    /**
+     * Sort features by type
+     */
+    public static final Comparator<FeatureInterface<?, ?>> TYPE = new Comparator<FeatureInterface<?, ?>>() {
 
-	/**
-	 * Sort features by type
-	 */
-	public static final Comparator<FeatureInterface<?, ?>> TYPE = new Comparator<FeatureInterface<?, ?>>() {
+        @Override
+        public int compare(FeatureInterface<?, ?> o1, FeatureInterface<?, ?> o2) {
+            return o1.getType().compareTo(o2.getType());
+        }
+    };
 
-		@Override
-		public int compare(FeatureInterface<?, ?> o1, FeatureInterface<?, ?> o2) {
-			return o1.getType().compareTo(o2.getType());
-		}
-	};
-
-	/**
-	 * @return the userObject
-	 */
-	@Override
+    /**
+     * @return the userObject
+     */
+    @Override
 	public Object getUserObject() {
-		return userObject;
-	}
+        return userObject;
+    }
 
-	/**
-	 * Allow the user to associate an object with the feature. This way if a feature which is displayed in a GUI
-	 * is clicked on the application can then get a user defined object associated with the feature.
-	 * @param userObject the userObject to set
-	 */
-	@Override
+    /**
+     * Allow the user to associate an object with the feature. This way if a feature which is displayed in a GUI
+     * is clicked on the application can then get a user defined object associated with the feature.
+     * @param userObject the userObject to set
+     */
+    @Override
 	public void setUserObject(Object userObject) {
-		this.userObject = userObject;
+        this.userObject = userObject;
+    }
+    /**
+     * map implementation to store qualifiers where only qualifier hold its key and value pair
+     * @return
+     */
+    public GenBankQualifierMap getQualifierMap() {
+    	return qualifierMap;
+    }
+    /**
+     * 
+     * @return
+     */
+	public Qualifier[] getQualifiers() {
+		return qualifierMap.entrySet();
 	}
-
-	@Override
-	public Map<String, List<Qualifier>> getQualifiers() {
-		// TODO Auto-generated method stub
-		return Qualifiers;
+	/**
+	 * 
+	 * @param qualifierMap
+	 */
+	public void setQualifierMap(GenBankQualifierMap qualifierMap) {
+		this.qualifierMap = qualifierMap;
 	}
-
-	@Override
-	public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
-		// TODO Auto-generated method stub
-		Qualifiers = qualifiers;
-
+	/**
+	 * 
+	 * @param qualifiers
+	 */
+	public void setQualifiers(Qualifier[] qualifiers) {
+		this.qualifierMap=new GenBankQualifierMap(qualifiers);
 	}
-
-	@Override
-	public void addQualifier(String key, Qualifier qualifier) {
-		// Check for key. Update list of values
-		if (Qualifiers.containsKey(key)){
-			List<Qualifier> vals = Qualifiers.get(key);
-			vals.add(qualifier);
-			Qualifiers.put(key, vals);
-		} else {
-			List<Qualifier> vals = new ArrayList<Qualifier>();
-			vals.add(qualifier);
-			Qualifiers.put(key, vals);
+	/**
+	 * 
+	 * @param qualifier
+	 */
+	public void addQualifier(Qualifier qualifier) {
+		qualifierMap.add(qualifier);
+	}
+	/**
+	 * 
+	 * @param qa
+	 */
+	public void addQualifiers(Qualifier[] qa) {
+		qualifierMap.addQualifiers(qa);
+		
+	}
+	public Qualifier getQualifierByName(String qName) { return qualifierMap.getQualifierNyName(qName); }
+	public Qualifier getFirstQualifierByValue(String value) { return qualifierMap.getFirstQualifierByValue(value); };
+	public Qualifier[] getQualifiersByValue(String value) { return qualifierMap.getQualifiersByValue(value); };
+	//cb refernce info stuff one could remove DBReferenceInfo and use qualifier
+	/**
+	 * returns database name and the sequence reference for this database as a string array
+	 * @return
+	 */
+	public String[] getFirstDatabaseReferenceInfo() {
+		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
+		return q.getFirstValue().split(":");
+	}
+	/**
+	 * returns all database names and the sequence references for the corresponding database in a String[][2]
+	 * @return
+	 */
+	public String[][] getAllDatabasesReferenceInfos() {
+		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
+		String[][] info=new String[q.valueSize()][2];
+		for(int i=0;i<q.valueSize();i++) {
+			String str[]=q.getValue(i).split(":");
+			info[i][0]=str[0];
+			info[i][1]=str[1];
 		}
-
+		return info;
 	}
-
+	/**
+	 * returns all sequence references for all databases
+	 * @return
+	 */
+	public String[] getAllDatabaseReferences() {
+		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
+		String[] info=new String[q.valueSize()];
+		for(int i=0;i<q.valueSize();i++) {
+			String str[]=q.getValue(i).split(":");
+			info[i]=str[0];
+		}
+		return info;
+	}
+	public String getFirstDatabaseReference() {
+		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
+		return q.getFirstValue().split(":")[1];
+	}
+	/**
+	 * get the sequence record for the database in question
+	 * @param database
+	 * @return
+	 */
+	public String getFirstDatabaseReference(String database) {
+		for(String s: this.qualifierMap.getQualifierNyName("db_xref").getValues()) if(s.startsWith(database)) return s.split(":")[1];
+		return null;
+	}
+	public String[] getAllDatabaseReference(String database) {
+		ArrayList<String> als=new ArrayList<String>();
+		for(String s: this.qualifierMap.getQualifierNyName("db_xref").getValues()) if(s.startsWith(database)) als.add(s.split(":")[1]);
+		return als.toArray(new String[als.size()]);
+	}
+	public void setDatabaseReferenceInfo(String database, String reference) {
+		this.qualifierMap.add(new Qualifier("db_xref", database+":"+reference));
+	}
+	
+	public String getDatabase() {
+		return getFirstDatabaseReference();
+	}
+	public String getDatabaseReference() {
+		return getFirstDatabaseReference();
+	}
+	
+	// */
+	@Deprecated
+	public void addQualifier(String str, Qualifier q) {
+		this.qualifierMap.add(q);
+	}
 }

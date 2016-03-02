@@ -31,8 +31,11 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
 import org.biojava.nbio.core.sequence.features.DatabaseReferenceInterface;
+import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.FeaturesKeyWordInterface;
+import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
+import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -178,7 +181,32 @@ public class GFF3FromUniprotBlastHits {
 
 								}
 
-								DatabaseReferenceInterface databaseReferences = proteinSequence.getDatabaseReferences();
+                                // what is this for?? no tests fail if I comment out big chunks of this. 
+                                //DatabaseReferenceInterface databaseReferences = proteinSequence.getDatabaseReferences();
+                                //why do you declare an interface for this while there is already the feature interface which should be used
+                                //which improves the readability enormous (compare below)
+                                
+
+                                if (notes.length() == 0) notes = ";Note=";
+                                String dbRec;
+                                 //for all features of the sequence: 
+                                for(FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> feature:proteinSequence.getFeatures()) {
+                                	//for all qualifiers:
+                                	for(Qualifier q : feature.getQualifiers()) {
+                                		//for all db_xref qualifier values:
+                                		if(q.getName().equals("db_xref")) for(String str:q.getValues()) {
+                                			//split out the database record 
+                                			dbRec=str.split(":")[1];
+                                			//if it is in the list store it.
+                                			if(str.startsWith("Pfam") || str.startsWith("CAZy") || str.startsWith("GO") || str.startsWith("BRENDA")) {
+                                				notes=notes+" "+dbRec;
+                                				geneSequence.addNote(dbRec);
+                                			}
+                                		}
+                                	}
+                                }                               
+                                /*   // former version
+                                DatabaseReferenceInfo dbRef=proteinSequence.getFeatures();
 								if (databaseReferences != null) {
 									LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferenceHashMap = databaseReferences.getDatabaseReferences();
 									ArrayList<DBReferenceInfo> pfamList = databaseReferenceHashMap.get("Pfam");
@@ -246,7 +274,7 @@ public class GFF3FromUniprotBlastHits {
 									}
 
 								}
-
+                                // end of former version */
 
 								line = line + "Name=" + hitLabel + ";Alias=" + uniprotBestHit + notes + "\n";
 							} else {

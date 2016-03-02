@@ -30,9 +30,19 @@ import org.biojava.nbio.core.sequence.template.Compound;
  */
 public class TextFeature<S extends AbstractSequence<C>, C extends Compound> extends AbstractFeature<S, C> {
 
-	public TextFeature(String type, String source,String shortDescription,String description) {
-		super(type, source);
-		this.setDescription(description);
-		this.setShortDescription(shortDescription);
-	}
+    public TextFeature(String type, String source,String shortDescription,String description) {
+        super(type, source);
+        this.setDescription(description);
+        this.setShortDescription(shortDescription);
+    }
+    /**
+     * apparently we only need two parameters...
+     * @param type
+     * @param source
+     */
+    public TextFeature(String type, String source) {
+    	super(type, source);
+    	this.setDescription(type);
+    	this.setShortDescription(source);
+    }
 }
