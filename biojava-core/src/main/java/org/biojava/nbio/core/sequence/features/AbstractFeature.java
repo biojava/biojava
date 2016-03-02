@@ -28,9 +28,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A feature is currently any descriptive item that can be associated with a sequence position(s)
@@ -48,7 +46,8 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     private String description = "";
     private String shortDescription = "";
     private Object userObject = null;
-	private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
+	private GenBankQualifierMap qualifierMap = new GenBankQualifierMap();
+	//private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
 
     /**
      * A feature has a type and a source
@@ -270,33 +269,120 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	public void setUserObject(Object userObject) {
         this.userObject = userObject;
     }
-    
-	@Override
-	public Map<String, List<Qualifier>> getQualifiers() {
-		// TODO Auto-generated method stub
-		return Qualifiers;
+    /**
+     * map implementation to store qualifiers where only qualifier hold its key and value pair
+     * @return
+     */
+    public GenBankQualifierMap getQualifierMap() {
+    	return qualifierMap;
+    }
+    /**
+     * 
+     * @return
+     */
+	public Qualifier[] getQualifiers() {
+		return qualifierMap.entrySet();
 	}
-
-	@Override
-	public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
-		// TODO Auto-generated method stub
-		Qualifiers = qualifiers;
+	/**
+	 * 
+	 * @param qualifierMap
+	 */
+	public void setQualifierMap(GenBankQualifierMap qualifierMap) {
+		this.qualifierMap = qualifierMap;
+	}
+	/**
+	 * 
+	 * @param qualifiers
+	 */
+	public void setQualifiers(Qualifier[] qualifiers) {
+		this.qualifierMap=new GenBankQualifierMap(qualifiers);
+	}
+	/**
+	 * 
+	 * @param qualifier
+	 */
+	public void addQualifier(Qualifier qualifier) {
+		qualifierMap.add(qualifier);
+	}
+	/**
+	 * 
+	 * @param qa
+	 */
+	public void addQualifiers(Qualifier[] qa) {
+		qualifierMap.addQualifiers(qa);
 		
 	}
-
-	@Override
-	public void addQualifier(String key, Qualifier qualifier) {
-		// Check for key. Update list of values
-        if (Qualifiers.containsKey(key)){
-            List<Qualifier> vals = Qualifiers.get(key);
-            vals.add(qualifier);
-            Qualifiers.put(key, vals);
-        } else {
-            List<Qualifier> vals = new ArrayList<Qualifier>();
-            vals.add(qualifier);
-            Qualifiers.put(key, vals);
-        }
-		
+	public Qualifier getQualifierByName(String qName) { return qualifierMap.getQualifierNyName(qName); }
+	public Qualifier getFirstQualifierByValue(String value) { return qualifierMap.getFirstQualifierByValue(value); };
+	public Qualifier[] getQualifiersByValue(String value) { return qualifierMap.getQualifiersByValue(value); };
+	//cb refernce info stuff one could remove DBReferenceInfo and use qualifier
+	/**
+	 * returns database name and the sequence reference for this database as a string array
+	 * @return
+	 */
+	public String[] getFirstDatabaseReferenceInfo() {
+		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
+		return q.getFirstValue().split(":");
 	}
-
+	/**
+	 * returns all database names and the sequence references for the corresponding database in a String[][2]
+	 * @return
+	 */
+	public String[][] getAllDatabasesReferenceInfos() {
+		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
+		String[][] info=new String[q.valueSize()][2];
+		for(int i=0;i<q.valueSize();i++) {
+			String str[]=q.getValue(i).split(":");
+			info[i][0]=str[0];
+			info[i][1]=str[1];
+		}
+		return info;
+	}
+	/**
+	 * returns all sequence references for all databases
+	 * @return
+	 */
+	public String[] getAllDatabaseReferences() {
+		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
+		String[] info=new String[q.valueSize()];
+		for(int i=0;i<q.valueSize();i++) {
+			String str[]=q.getValue(i).split(":");
+			info[i]=str[0];
+		}
+		return info;
+	}
+	public String getFirstDatabaseReference() {
+		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
+		return q.getFirstValue().split(":")[1];
+	}
+	/**
+	 * get the sequence record for the database in question
+	 * @param database
+	 * @return
+	 */
+	public String getFirstDatabaseReference(String database) {
+		for(String s: this.qualifierMap.getQualifierNyName("db_xref").getValues()) if(s.startsWith(database)) return s.split(":")[1];
+		return null;
+	}
+	public String[] getAllDatabaseReference(String database) {
+		ArrayList<String> als=new ArrayList<String>();
+		for(String s: this.qualifierMap.getQualifierNyName("db_xref").getValues()) if(s.startsWith(database)) als.add(s.split(":")[1]);
+		return als.toArray(new String[als.size()]);
+	}
+	public void setDatabaseReferenceInfo(String database, String reference) {
+		this.qualifierMap.add(new Qualifier("db_xref", database+":"+reference));
+	}
+	
+	public String getDatabase() {
+		return getFirstDatabaseReference();
+	}
+	public String getDatabaseReference() {
+		return getFirstDatabaseReference();
+	}
+	
+	// */
+	@Deprecated
+	public void addQualifier(String str, Qualifier q) {
+		this.qualifierMap.add(q);
+	}
 }

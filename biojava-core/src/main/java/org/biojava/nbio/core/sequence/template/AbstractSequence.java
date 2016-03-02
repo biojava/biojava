@@ -129,11 +129,11 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
                 }
             }
             // success of next statement guaranteed because source is a compulsory field
-            //DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifiers().get("db_xref");
-            ArrayList<DBReferenceInfo> dbQualifiers = (ArrayList)ff.get("source").get(0).getQualifiers().get("db_xref");
-            DBReferenceInfo dbQualifier = dbQualifiers.get(0);
+            DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifierMap().get("db_xref");
+            //ArrayList<DBReferenceInfo> dbQualifiers = (ArrayList)ff.get("source").get(0).getQualifiers().get("db_xref");
+            //DBReferenceInfo dbQualifier = dbQualifiers.get(0);
 
-            if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getDatabase()+":"+dbQualifier.getId(), DataSource.UNKNOWN));
+            if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getFirstValue(), DataSource.UNKNOWN));
         }
         
         if(getAccession() == null && proxyLoader instanceof UniprotProxySequenceReader){ // we have lots of unsupported operations for this call so quick fix to allow this tow rork

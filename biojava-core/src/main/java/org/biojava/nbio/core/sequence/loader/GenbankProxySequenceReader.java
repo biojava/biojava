@@ -74,7 +74,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
             String genbankDirectoryCache,
             String accessionID,
             CompoundSet<C> compoundSet ) throws IOException, InterruptedException, CompoundNotFoundException {
-
+    	
         setGenbankDirectoryCache(genbankDirectoryCache);
         setCompoundSet(compoundSet);
 
@@ -176,7 +176,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     }
 
     @Override
-    public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
+    public DBReferenceInfo getDatabaseReferences() {
         return genbankParser.getDatabaseReferences();
     }
 

@@ -42,7 +42,7 @@ import java.util.Map;
  * @param <S>
  * @param <C>
  */
-public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Compound> extends DBReferenceInfo implements FeatureInterface<S,C> {
+public class FatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Compound> extends DBReferenceInfo implements FeatureInterface<S,C> {
     
     private AbstractLocation location;
     private FeatureInterface<S,C> parentFeature;
@@ -50,11 +50,11 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
     private String description = "";
     private String shortDescription = "";
     private Object userObject;
-    private Map<String, List<Qualifier>> qualifiers = new HashMap<String,List<Qualifier>>();
+    private GenBankQualifierMap qualifierMap = new GenBankQualifierMap();
     
     
-    public FeatureDbReferenceInfo(String database, String id) {
-        super(database, id);
+    public FatureDbReferenceInfo(String database, String id) {
+        super(database+":"+id);
     }
     
     @Override
@@ -87,6 +87,7 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
         location = loc;
     }
 
+/*
     @Override
     public String getType() {
         return super.getDatabase();
@@ -106,7 +107,7 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
     public void setSource(String source) {
         super.setId(source);
     }
-
+*/
     @Override
     public void setParentFeature(FeatureInterface<S,C> feature) {
         this.parentFeature = feature;
@@ -137,31 +138,79 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
         this.userObject = userObject;
     }
 
-    @Override
-    public Map<String, List<Qualifier>> getQualifiers() {
-        return qualifiers;
+    public void setQualifierMap(GenBankQualifierMap qMap) {
+        this.qualifierMap = qMap;
     }
 
-    @Override
-    public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
-        this.qualifiers = qualifiers;
+
+    public void addQualifier(Qualifier qualifier) {
+    	qualifierMap.add(qualifier);
     }
 
-    @Override
-    public void addQualifier(String key, Qualifier qualifier) {
-        if (qualifiers == null) {
-            qualifiers = new HashMap<String, List<Qualifier>>();
-        }
-        // Check for key. Update list of values
-        if (qualifiers.containsKey(key)){
-            List<Qualifier> vals = qualifiers.get(key);
-            vals.add(qualifier);
-            qualifiers.put(key, vals);
-        } else {
-            List<Qualifier> vals = new ArrayList<Qualifier>();
-            vals.add(qualifier);
-            qualifiers.put(key, vals);
-        }
-
+    public void addQualifiers(Qualifier[] qa) {
+    	qualifierMap.addQualifiers(qa);
     }
+    
+    public void setQualifiers(Qualifier[] qa) {
+    	qualifierMap.set(qa);
+    }
+    
+	public Qualifier[] getQualifiers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	public GenBankQualifierMap getQualifierMap() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setType(String type) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getSource() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSource(String source) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Qualifier getQualifierByName(String qName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Qualifier getFirstQualifierByValue(String value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Qualifier[] getQualifiersByValue(String value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addQualifier(String str, Qualifier q) {
+		// TODO Auto-generated method stub
+		
+	}
 }

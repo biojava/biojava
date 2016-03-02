@@ -30,7 +30,9 @@ import java.util.LinkedHashMap;
  * has a list of cross reference id(s)
  * @author Scooter Willis <willishf at gmail dot com>
  */
+@Deprecated  //use feature interface
 public interface DatabaseReferenceInterface {
 
-    public LinkedHashMap<String,ArrayList<DBReferenceInfo>> getDatabaseReferences();
+	@Deprecated
+    public DBReferenceInfo getDatabaseReferences();
 }

@@ -150,6 +150,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
         	
         	// add features to new sequence
         	for (String k: genbankParser.getFeatures().keySet()){
+        		//here stefan harjes::: in parser.getFeatures und parser.getDatabaseReferences???? we need to apply the new system!!
         		for (AbstractFeature f: genbankParser.getFeatures(k)){
         			//f.getLocations().setSequence(sequence);  // can't set proper sequence source to features. It is actually needed? Don't think so...
         			sequence.addFeature(f);
@@ -157,11 +158,13 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
         	}
         
         	// add taxonomy ID to new sequence
-        	ArrayList<DBReferenceInfo> dbQualifier = genbankParser.getDatabaseReferences().get("db_xref");
-        	if (dbQualifier != null){
-        		DBReferenceInfo q = dbQualifier.get(0);
-        		sequence.setTaxonomy(new TaxonomyID(q.getDatabase()+":"+q.getId(), DataSource.GENBANK));
-        	}
+        	//ArrayList<DBReferenceInfo> dbQualifier = genbankParser.getDatabaseReferences().get("db_xref");
+        	//if (dbQualifier != null){
+        	//	DBReferenceInfo q = dbQualifier.get(0);
+        	//	sequence.setTaxonomy(new TaxonomyID(q.getDatabase()+":"+q.getId(), DataSource.GENBANK));
+        	//}
+        	DBReferenceInfo dbRef=genbankParser.getDatabaseReferences();
+        	if(dbRef!=null) sequence.setTaxonomy(new TaxonomyID(dbRef.getFirstValue(), DataSource.GENBANK));
         	
         	sequences.put(sequence.getAccession().getID(), sequence);
         }

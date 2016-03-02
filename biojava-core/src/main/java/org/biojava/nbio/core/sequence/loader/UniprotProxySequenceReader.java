@@ -625,11 +625,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @return
      */
     @Override
-	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences()  {
-        LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
-        if (uniprotDoc == null) {
-            return databaseReferencesHashMap;
-        }
+	public DBReferenceInfo getDatabaseReferences()  {
+    	ArrayList<String> dbEntries=new ArrayList<String>();
+    	//DBReferenceInfo dbRef=null;
+        //LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+        if (uniprotDoc == null) return null;
+        //    return databaseReferencesHashMap;
+        //}
 
         try {
         	Element uniprotElement = uniprotDoc.getDocumentElement();
@@ -638,26 +640,33 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         	for (Element element : dbreferenceElementList) {
         		String type = element.getAttribute("type");
         		String id = element.getAttribute("id");
-        		ArrayList<DBReferenceInfo> idlist = databaseReferencesHashMap.get(type);
-        		if (idlist == null) {
-        			idlist = new ArrayList<DBReferenceInfo>();
-        			databaseReferencesHashMap.put(type, idlist);
-        		}
-        		DBReferenceInfo dbreferenceInfo = new DBReferenceInfo(type, id);
+        		//ArrayList<DBReferenceInfo> idlist = databaseReferencesHashMap.get(type);
+        		//if (idlist == null) {
+        		//	idlist = new ArrayList<DBReferenceInfo>();
+        		//	databaseReferencesHashMap.put(type, idlist);
+        		//}
+        		//DBReferenceInfo dbreferenceInfo = new DBReferenceInfo(type, id);
         		ArrayList<Element> propertyElementList = XMLHelper.selectElements(element, "property");
         		for (Element propertyElement : propertyElementList) {
         			String propertyType = propertyElement.getAttribute("type");
         			String propertyValue = propertyElement.getAttribute("value");
-        			dbreferenceInfo.addProperty(propertyType, propertyValue);
+        			//dbreferenceInfo.addProperty(propertyType, propertyValue);
+        			
+        			System.out.println("here comes a dbxref, with: type: "+type+", id: "+id+", propertyType: "+propertyType+", propertyValue: "+propertyValue);
+        			//this is just a preliminary guess// stefan
+        			//if(dbRef==null) dbRef=new DBReferenceInfo(propertyType+":"+propertyValue);
+        			//else dbRef.addValue(propertyType+":"+propertyValue);
+        			dbEntries.add(propertyType+":"+propertyValue);
         		}
-
-        		idlist.add(dbreferenceInfo);
+        		
+        		//idlist.add(dbreferenceInfo);
         	}
         } catch (XPathExpressionException e) {
         	logger.error("Problems while parsing db references in UniProt XML: {}. No db references will be available.",e.getMessage());
-        	return new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+        	//return new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+        	return null;
         }
 
-        return databaseReferencesHashMap;
+        return new DBReferenceInfo(dbEntries.toArray(new String[dbEntries.size()]));
     }
 }

@@ -169,25 +169,26 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
      */
     public void setUserObject(Object userObject);
 
-    
-	/**
-     * Get the qualifiers for this feature
-     * @return
+    /* new feature interface methods for accessing qualifers and the new map 
+     * see abstract feature for implementation 
      */
-
-    public Map<String, List<Qualifier>> getQualifiers();
-
-    /**
-     * Set the qualifiers
-     * @param qualifiers
-     */
-
-    public void setQualifiers(Map<String, List<Qualifier>> qualifiers);
-    /**
-     * Add a qualifier
-     * @param qualifier
-     */
-
-    public void addQualifier(String key, Qualifier qualifier);
-
+    public GenBankQualifierMap getQualifierMap();
+    public Qualifier[] getQualifiers();
+	public void setQualifierMap(GenBankQualifierMap qualifierMap);
+	public void setQualifiers(Qualifier[] qualifiers);
+	public void addQualifier(Qualifier qualifier);
+	public void addQualifiers(Qualifier[] qa);
+    public Qualifier getQualifierByName(String qName);
+    public Qualifier getFirstQualifierByValue(String value);
+    public Qualifier[] getQualifiersByValue(String value);
+	//DBreferenceInfo one could remove DBReferenceInfo and use qualifier
+	/*
+	public String[] getFirstDatabaseInfo();
+	public String[][] getDatabaseInfo();
+	public String[] getAllDatabaseReferences();
+	 */
+	//old stuff to be removed
+	@Deprecated //use addQualifier(Qualifier q)
+	public void addQualifier(String str, Qualifier q);
+		
 }

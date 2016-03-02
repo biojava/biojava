@@ -118,16 +118,17 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb,Locale.US);
 		formatter.format(QUALIFIER_INDENT_TMP, f_type);
-		String line = formatter.toString().substring(0, QUALIFIER_INDENT) + _wrap_location(location) + lineSep;
+		StringBuilder nsb=new StringBuilder();
+		nsb.append(formatter.toString().substring(0, QUALIFIER_INDENT) + _wrap_location(location) + lineSep);
 		formatter.close();
 		
 		//Now the qualifiers...
-		for(List<Qualifier>  qualifiers : feature.getQualifiers().values()) {
-			for(Qualifier q : qualifiers){
-				line += _write_feature_qualifier(q.getName(), q.getValue(), q.needsQuotes());
-			}
+		//for(List<Qualifier>  qualifiers : feature.getQualifiers().values()) {
+		
+		for(Qualifier q : feature.getQualifiers()) for(String s : q.getValues()) {
+			nsb.append(_write_feature_qualifier(q.getName(), s, q.needsQuotes()));
 		}
-		return line;
+		return nsb.toString();
 		/*
         self.handle.write(line)
         #Now the qualifiers...

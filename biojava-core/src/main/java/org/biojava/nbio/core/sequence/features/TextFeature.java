@@ -35,4 +35,14 @@ public class TextFeature<S extends AbstractSequence<C>, C extends Compound> exte
         this.setDescription(description);
         this.setShortDescription(shortDescription);
     }
+    /**
+     * apparently we only need two parameters...
+     * @param type
+     * @param source
+     */
+    public TextFeature(String type, String source) {
+    	super(type, source);
+    	this.setDescription(type);
+    	this.setShortDescription(source);
+    }
 }
