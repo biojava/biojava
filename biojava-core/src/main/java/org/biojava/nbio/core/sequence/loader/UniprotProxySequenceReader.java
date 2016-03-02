@@ -24,6 +24,26 @@
  */
 package org.biojava.nbio.core.sequence.loader;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.DataSource;
@@ -35,25 +55,18 @@ import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
 import org.biojava.nbio.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava.nbio.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava.nbio.core.sequence.storage.SequenceAsStringHelper;
-import org.biojava.nbio.core.sequence.template.*;
+import org.biojava.nbio.core.sequence.template.Compound;
+import org.biojava.nbio.core.sequence.template.CompoundSet;
+import org.biojava.nbio.core.sequence.template.ProxySequenceReader;
+import org.biojava.nbio.core.sequence.template.SequenceMixin;
+import org.biojava.nbio.core.sequence.template.SequenceProxyView;
+import org.biojava.nbio.core.sequence.template.SequenceView;
 import org.biojava.nbio.core.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * 
@@ -320,6 +333,28 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         }
 
         return accessionList;
+    }
+    
+    /**
+     * Pull uniprot protein aliases associated with this sequence
+     * @return
+     * @throws XPathExpressionException 
+     */
+    public ArrayList<String> getAliases() throws XPathExpressionException { 
+        ArrayList<String> aliasList = new ArrayList<String>();
+        if (uniprotDoc == null) {
+            return aliasList;
+        }
+        Element uniprotElement = uniprotDoc.getDocumentElement();
+        Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
+        Element proteinElement = XMLHelper.selectSingleElement(entryElement, "protein");
+        ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "alternativeName");
+        for (Element element : keyWordElementList) {
+            Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
+            aliasList.add(fullNameElement.getTextContent());
+        }
+                
+        return aliasList;
     }
 
     /**

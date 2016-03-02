@@ -718,7 +718,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			name = DEFAULT_PDB_FILE_SERVER;
 			logger.debug("Using default PDB file server {}",name);
 		} else {
-			if (!name.startsWith("http://") || !name.startsWith("ftp://")) {
+			if (!name.startsWith("http://") && !name.startsWith("ftp://")) {
 				logger.warn("Server name {} read from system property {} does not have a leading protocol string. Adding http:// to it", name, PDB_FILE_SERVER_PROPERTY);
 				name = "http://"+name;
 			}

@@ -324,8 +324,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		boolean startOfNewChain = false;
 
-		String chain_id      = atom.getLabel_asym_id();		
-				
+		String chain_id = atom.getLabel_asym_id();	
+		
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
 		Integer residueNrInt = Integer.parseInt(residueNumberS);
@@ -739,52 +739,74 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			
 			asymStrandId = asymId2StrandIdFromAtomSites;
 		}
+		// If we only parse the header - we have no option but to use the other mapping (which can be broken)
+		if (asymId2StrandIdFromAtomSites.isEmpty()){
+			
+			logger.warn("No  _atom_sites category auth to asymid mappings. Will use chain id mapping from pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme categories");
+			asymId2StrandIdFromAtomSites = asymStrandId;
+		}
 		
 		// mismatching Author assigned chain IDS and PDB internal chain ids:
 		// fix the chain IDS in the current model:
 
-		for (int i =0; i< structure.nrModels() ; i++){
-			List<Chain> model = structure.getModel(i);
+		if(params.isUseInternalChainId()==false){
+			for (int i =0; i< structure.nrModels() ; i++){
+				List<Chain> model = structure.getModel(i);
 
-			List<Chain> pdbChains = new ArrayList<Chain>();
+				List<Chain> pdbChains = new ArrayList<Chain>();
+				for (Chain chain : model) {
+					for (String asym : asymId2StrandIdFromAtomSites.keySet()) {
+						if ( chain.getChainID().equals(asym)){
+							String newChainId = asymId2StrandIdFromAtomSites.get(asym);
 
-			for (Chain chain : model) {
-				for (String asym : asymStrandId.keySet()) {
-					if ( chain.getChainID().equals(asym)){
-						String newChainId = asymStrandId.get(asym);
-						
-						logger.debug("Renaming chain with asym_id {} ({} atom groups) to author_asym_id/strand_id  {}", 
-								asym, chain.getAtomGroups().size(), newChainId);
+							logger.debug("Renaming chain with asym_id {} ({} atom groups) to author_asym_id/strand_id  {}", 
+									asym, chain.getAtomGroups().size(), newChainId);
 
-						chain.setChainID(newChainId);
-						chain.setInternalChainID(asym);
-						// set chain of all groups
-						for(Group g : chain.getAtomGroups()) {
-							ResidueNumber resNum = g.getResidueNumber();
-							if(resNum != null)
-								resNum.setChainId(newChainId);
-						}
-						for(Group g : chain.getSeqResGroups()) {
-							ResidueNumber resNum = g.getResidueNumber();
-							if(resNum != null)
-								resNum.setChainId(newChainId);
-						}
-						Chain known =  isKnownChain(chain.getChainID(), pdbChains);
-						if ( known == null ){
-							pdbChains.add(chain);
-						} else {
-							// and now we join the 2 chains together again, because in cif files the data can be split up...
-							for ( Group g : chain.getAtomGroups()){
-								known.addGroup(g);
+							chain.setChainID(newChainId);
+							chain.setInternalChainID(asym);
+							// set chain of all groups
+							for(Group g : chain.getAtomGroups()) {
+								ResidueNumber resNum = g.getResidueNumber();
+								if(resNum != null)
+									resNum.setChainId(newChainId);
 							}
-						}
+							for(Group g : chain.getSeqResGroups()) {
+								ResidueNumber resNum = g.getResidueNumber();
+								if(resNum != null)
+									resNum.setChainId(newChainId);
+							}
+							Chain known =  isKnownChain(chain.getChainID(), pdbChains);
+							if ( known == null ){
+								pdbChains.add(chain);
+							} else {
+								// and now we join the 2 chains together again, because in cif files the data can be split up...
+								for ( Group g : chain.getAtomGroups()){
+									known.addGroup(g);
+								}
+							}
 
-						break;
+							break;
+						}
+					}
+				}
+
+				structure.setModel(i,pdbChains);
+			}
+		}
+		else{
+			// Just set the internal id as the auth id -> if we're using the asymid 
+			for (int i =0; i< structure.nrModels() ; i++){
+				List<Chain> model = structure.getModel(i);
+				for (Chain chain : model) {
+					for (String asym : asymId2StrandIdFromAtomSites.keySet()) {
+						if (chain.getChainID().equals(asym)){
+							String authChainId = asymId2StrandIdFromAtomSites.get(asym);
+							chain.setInternalChainID(authChainId);
+							break;
+						}
 					}
 				}
 			}
-
-			structure.setModel(i,pdbChains);
 		}
 		
 		// compounds (entities)

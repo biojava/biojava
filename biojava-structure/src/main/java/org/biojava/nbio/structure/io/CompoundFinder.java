@@ -234,8 +234,9 @@ public class CompoundFinder {
 					
 					Map<Integer,Integer> positionIndex1 = new HashMap<Integer, Integer>();
 					Map<Integer,Integer> positionIndex2 = new HashMap<Integer, Integer>();
-					String str1 = SeqRes2AtomAligner.getFullAtomSequence(c1.getAtomGroups(), positionIndex1);
-					String str2 = SeqRes2AtomAligner.getFullAtomSequence(c2.getAtomGroups(), positionIndex2);
+					// here we use false, which means that X will be used for unknown compounds
+					String str1 = SeqRes2AtomAligner.getFullAtomSequence(c1.getAtomGroups(), positionIndex1, false);
+					String str2 = SeqRes2AtomAligner.getFullAtomSequence(c2.getAtomGroups(), positionIndex2, false);
 					
 					int seq1Length = 0;
 					int seq2Length = 0;

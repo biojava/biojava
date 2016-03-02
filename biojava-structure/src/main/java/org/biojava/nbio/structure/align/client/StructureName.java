@@ -170,6 +170,13 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		// File
 		File file = new File(FileDownloadUtils.expandUserHome(name));
 		if( file.canRead() && !file.isDirectory() ) {
+			// an attempt to mitigate issue #398. It doesn't fix it but it catches the most common case of passing a pdb id and finding a file in working dir matching it
+			if (name.matches("\\d\\w\\w\\w")) {
+				// the plain pdb id case, this is unlikely to be what the user wants: let's let it through but warn about it
+				logger.warn("Provided 4-letter structure name '{}' matches file name in directory {}. Will read structure data from file {} and not consider the name as a structure identifier. If this is not what you want remove the file from the directory.", name, file.getAbsoluteFile().getParent(), file.getAbsolutePath());
+			} else {
+				logger.info("Provided structure name '{}' matches file name in directory {}. Will read structure data from file {}.", name, file.getAbsoluteFile().getParent(), file.getAbsolutePath());
+			}
 			mySource = Source.FILE;
 			pdbId = null;
 			chainId = null;

@@ -43,6 +43,7 @@ import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
 import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNARNAHybridCompoundSet;
 import org.biojava.nbio.core.sequence.compound.AmbiguityRNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -66,13 +67,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** Aligns the SEQRES residues to the ATOM residues.
+/** 
+ * Aligns the SEQRES residues to the ATOM residues.
  * The AminoAcids that can be matched between the two of them will be set in the SEQRES
  * chains
  *
  *
  * @author Andreas Prlic
- *
+ * @author Jose Duarte
  */
 public class SeqRes2AtomAligner {
 
@@ -338,9 +340,11 @@ public class SeqRes2AtomAligner {
 	 * that it allows us to also align HETATM groups back to the SEQRES.
 	 * @param groups the list of groups in a parent
 	 * @param positionIndex a Map to keep track of which group is at which sequence position
+	 * @param isNucleotideChain whether the atom groups are predominantly nucleotides (the groups represent a nucleotide chain), if true
+	 * non-standard nucleotides will be represented with ambiguous letter 'N' instead of 'X', if false all non-standard residues will be 'X'
 	 * @return string representations
 	 */
-	public static String getFullAtomSequence(List<Group> groups, Map<Integer, Integer> positionIndex){
+	public static String getFullAtomSequence(List<Group> groups, Map<Integer, Integer> positionIndex, boolean isNucleotideChain){
 
 		StringBuffer sequence = new StringBuffer() ;
 		int seqIndex = 0; // track sequence.length()
@@ -386,8 +390,14 @@ public class SeqRes2AtomAligner {
 						) {
 					//System.out.println(cc.getOne_letter_code());
 					String c = cc.getOne_letter_code();
-					if ( c.equals("?"))
-						c = "X";
+					if ( c.equals("?")) {
+						if (isNucleotideChain && PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())) {
+							// the way to represent unknown nucleotides is with 'N', see https://en.wikipedia.org/wiki/Nucleic_acid_notation
+							c = "N";
+						} else {
+							c = "X";
+						}
+					}
 
 					// For some unusual cases the het residue can map to 2 or more standard aas and thus give an 
 					// insertion of length >1. 
@@ -425,9 +435,9 @@ public class SeqRes2AtomAligner {
 		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
 		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
 
-		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition);
+		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition, true);
 		//
-		String seq2 = getFullAtomSequence(atomRes, atomIndexPosition);
+		String seq2 = getFullAtomSequence(atomRes, atomIndexPosition, true);
 
 		if (seq1.isEmpty() || seq2.isEmpty()) {
 			logger.warn("Could not align nucleotide sequences, at least one of them is empty");
@@ -436,34 +446,11 @@ public class SeqRes2AtomAligner {
 
 		logger.debug("align seq1 ("+ seq1.length()+") " + seq1);
 		logger.debug("align seq2 ("+ seq2.length()+") " + seq2);
-		
 
+		Sequence<NucleotideCompound> s1 = getNucleotideSequence(seq1);
+		Sequence<NucleotideCompound> s2 = getNucleotideSequence(seq2);
 
-		Sequence<NucleotideCompound> s1;
-		Sequence<NucleotideCompound> s2;
-
-		try {
-			s1 = new DNASequence(seq1,AmbiguityDNACompoundSet.getDNACompoundSet());
-		} catch (CompoundNotFoundException e){
-			///oops perhaps a RNA sequence?
-			try {
-				s1 = new RNASequence(seq1,AmbiguityRNACompoundSet.getRNACompoundSet());
-			} catch (CompoundNotFoundException ex) {
-				logger.warn("Could not determine compound set for sequence 1 " + seq1);
-				return true;
-			}
-		}
-		try {
-			s2 = new DNASequence(seq2,AmbiguityDNACompoundSet.getDNACompoundSet());
-		} catch (CompoundNotFoundException e){
-			///oops perhaps a RNA sequence?
-			try {
-				s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
-			} catch (CompoundNotFoundException ex) {
-				logger.warn("Could not determine compound set for sequence 2 " + seq2);
-				return true;
-			}
-		}
+		if (s1==null || s2==null) return true;		
 
 		if ( ! s1.getCompoundSet().equals(s2.getCompoundSet()) ) {
 			// e.g. trying to align a DNA and an RNA sequence...
@@ -477,15 +464,15 @@ public class SeqRes2AtomAligner {
 					return true;
 				}
 			}
-			
+
 			if( ! s2.getCompoundSet().equals(AmbiguityRNACompoundSet.getRNACompoundSet())) {
-					try {
-						s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
-					} catch (CompoundNotFoundException ex) {
-						logger.warn("Could not align DNA and RNA compound sets: " + seq2);
-						return true;
-					}
+				try {
+					s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
+				} catch (CompoundNotFoundException ex) {
+					logger.warn("Could not align DNA and RNA compound sets: " + seq2);
+					return true;
 				}
+			}
 		}
 		
 		
@@ -521,6 +508,35 @@ public class SeqRes2AtomAligner {
 		return noMatchFound;
 
 	}
+	
+	private Sequence<NucleotideCompound> getNucleotideSequence(String seq) {
+		Sequence<NucleotideCompound> s = null;
+		
+		// first we try DNA, then RNA, them hybrid
+		
+		try {
+		
+			s = new DNASequence(seq, AmbiguityDNACompoundSet.getDNACompoundSet());
+		} catch (CompoundNotFoundException e){
+
+			try {
+				s= new RNASequence(seq, AmbiguityRNACompoundSet.getRNACompoundSet());
+			} catch (CompoundNotFoundException ex) {
+				
+				try {
+					// it could still be a hybrid, e.g. 3hoz, chain T, what to do in that case?
+					s = new DNASequence(seq, AmbiguityDNARNAHybridCompoundSet.getDNARNAHybridCompoundSet());
+					logger.warn("Hybrid RNA/DNA sequence detected for sequence {}", seq);
+				} catch (CompoundNotFoundException exc) {
+					// not DNA, nor RNA, nor hybrid
+					logger.warn("Could not determine compound set (neither DNA, RNA nor hybrid) for nucleotide sequence " + seq);
+					return null;					
+				}
+				
+			}
+		}
+		return s;
+	}
 
 
 	/** 
@@ -539,9 +555,9 @@ public class SeqRes2AtomAligner {
 		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
 		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
 
-		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition);
+		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition, false);
 		//
-		String seq2 = getFullAtomSequence(atomRes, atomIndexPosition);
+		String seq2 = getFullAtomSequence(atomRes, atomIndexPosition, false);
 
 		
 		logger.debug("Protein seq1 to align (length "+ seq1.length()+"): " + seq1);
@@ -597,15 +613,10 @@ public class SeqRes2AtomAligner {
 
 
 
-		// at the present stage the future seqREs are still stored as Atom groups in the seqRes parent...
+		// at the present stage the future seqRes are still stored as Atom groups in the seqRes parent...
 
 
 		int aligLength = pair.getLength();
-
-		//		System.out.println("sequence length seqres:");
-		//		System.out.println(seqresIndexPosition.keySet().size());
-		//		System.out.println("alignment length: " + aligLength);
-		// System.out.println(gapSymbol.getName());
 
 		// make sure we actually find an alignment
 		boolean noMatchFound = true;
@@ -616,11 +627,11 @@ public class SeqRes2AtomAligner {
 			for (int i = 1; i <= aligLength ; i++) {
 
 				Compound s =  pair.getCompoundAt(1, i);
-				Compound a =  pair.getCompoundAt(2,i);
+				Compound a =  pair.getCompoundAt(2, i);
 
 				// alignment is using internal index start at 1...
-				int posSeq = pair.getIndexInQueryAt(i)  -1;
-				int posAtom = pair.getIndexInTargetAt(i) -1;
+				int posSeq  = pair.getIndexInQueryAt(i)  - 1;
+				int posAtom = pair.getIndexInTargetAt(i) - 1;
 
 				if (  s.equals(gapSymbol) || a.equals(gapSymbol)){
 					continue;				
@@ -644,24 +655,24 @@ public class SeqRes2AtomAligner {
 					// pdb1b2m
 					String pdbNameS = s1.getPDBName();
 					String pdbNameA = a1.getPDBName();
+					
 					if ( pdbNameS == null || pdbNameA == null ){
 						logger.warn("null value for group.getPDBName found at {} when trying to align {} and {} {}",posSeq, s1, a1, posAtom);
 						logger.warn("ATOM and SEQRES sequences will not be aligned.");
 						return true;
 					}
-					if (! pdbNameA.equals(pdbNameS)){
-						if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
-							logger.info(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom + " should be: " + s + " : " + a);
-							if ( s1.getType().equals(HetatomImpl.type) && a1.getType().equals(HetatomImpl.type)){
-								logger.info("they seem to be hetatoms, so ignoring mismatch.");
-							}
-							else {
-								//System.out.println(lst1.seqString());
-								//System.out.println(lst2.seqString());
-								logger.warn("Could not match residues {} {}", s1, a1);
-							}
+					
+					if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
 
+						String msg = "'"+ s1 + "' (position " + posSeq + ") does not align with '" + a1+ "' (position " + posAtom + "), should be: " + s + " : " + a; 						
+						
+						if ( s1.getType().equals(HetatomImpl.type) && a1.getType().equals(HetatomImpl.type)){
+							logger.info(msg + ". They seem to be hetatoms, so ignoring mismatch.");
 						}
+						else {
+							logger.warn(msg + ". This could be a problem because they aren't both hetatoms");
+						}
+
 					}
 
 					// do the actual replacing of the SEQRES group with the ATOM group

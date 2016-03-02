@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.io.mmcif;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -346,20 +345,27 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	private static boolean downloadChemCompRecord(String recordName) {
 		
 		String localName = getLocalFileName(recordName);
-
+		File newFile;
+		try{
+			newFile = File.createTempFile("chemcomp"+recordName, "cif");
+		}
+		catch(IOException e){
+			logger.error("Could not write to temp directory {} to create the chemical component download temp file", System.getProperty("java.io.tmpdir"));
+			return false;
+		}
 		String u = SERVER_LOCATION + recordName + ".cif";
 
 		logger.debug("downloading " + u);
 
 		URL url = null;
 		
+		
 		try {
-
 			url = new URL(u);
 
 			HttpURLConnection uconn = HTTPConnectionTools.openHttpURLConnection(url);
 
-			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName)));
+			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
 					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));
 					) {
 
@@ -370,15 +376,19 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 				}
 
 				pw.flush();
-
+				// Now we move this across to where it actually wants to be
+				boolean couldRename = newFile.renameTo(new File(localName));
+				
+				if (!couldRename) {
+					
+					throw new IOException("Could not rename temp file "+newFile.toString()+" to file " + localName);
+				}
+				
 				return true;
 			}
-		} catch (FileNotFoundException e) {
-			// Possible that there is no ChemComp matching this group.
-			logger.warn(recordName + " is not available from " + SERVER_LOCATION + " and will be skipped");
-		} catch (IOException e){
-			logger.error("Could not download "+url.toString()+" to "+localName, e);
-			//e.printStackTrace();
+		}  catch (IOException e){
+			logger.error("Could not download "+url.toString()+" OR store locally to "+localName+" Error ="+e.getMessage());
+			newFile.delete();
 		}
 		return false;
 	}
