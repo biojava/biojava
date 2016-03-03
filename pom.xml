@@ -425,15 +425,15 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
+				<version>2.10.1</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
-					<source>1.5</source>
+					<source>1.7</source>
 					<verbose>false</verbose>
 					<linksource>true</linksource>
-					<detectlinks>true</detectlinks>
+
 				</configuration>
 			</plugin>
 			<plugin>
