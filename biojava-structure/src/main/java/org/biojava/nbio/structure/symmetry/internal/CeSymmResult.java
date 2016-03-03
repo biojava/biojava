@@ -111,7 +111,7 @@ public class CeSymmResult {
 
 	@Override
 	public String toString() {
-		return structureId + ", symmGroup=" + symmGroup + ", symmOrder="
+		return structureId + ", symmGroup=" + getSymmGroup() + ", symmOrder="
 				+ symmOrder + ", symmLevels=" + symmLevels + ", refined="
 				+ refined + ", type=" + type + " | " + params;
 	}
@@ -176,17 +176,25 @@ public class CeSymmResult {
 	public String getSymmGroup() {
 		// Lazily calculate the symmetry group if significant
 		if (symmGroup == null) {
-			if (isRefined() && isSignificant()) {
-				try {
-					symmGroup = SymmetryTools.getQuaternarySymmetry(this)
-							.getSymmetry();
-				} catch (StructureException e) {
-					symmGroup = "C1";
+			if (isSignificant()) {
+				if (isRefined()) {
+					try {
+						symmGroup = SymmetryTools.getQuaternarySymmetry(this)
+								.getSymmetry();
+					} catch (StructureException e) {
+						symmGroup = "C1";
+					}
+					if (symmGroup.equals("C1"))
+						symmGroup = "R"; // could not find group
+				} else { 
+					// in case significant but not refined
+					if (type.equals(SymmetryType.OPEN))
+						symmGroup = "C" + symmOrder;
+					else 
+						symmGroup = "R";
 				}
-				if (symmGroup.equals("C1"))
-					symmGroup = "R";
-			}
-			symmGroup = "C1";
+			} else // case asymmetric
+				symmGroup = "C1";
 		}
 		return symmGroup;
 	}
