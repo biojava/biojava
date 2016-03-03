@@ -267,7 +267,9 @@ public interface Structure extends Cloneable {
      * Return the connections value.
      * @return a List object representing the connections value
      * @see #setConnections
+     * @deprecated use {@link Atom#getBonds()} instead
      */
+    @Deprecated
     public List<Map<String,Integer>> getConnections();
 
     /** 

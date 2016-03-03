@@ -59,7 +59,6 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.BondMaker;
 import org.biojava.nbio.structure.io.ChargeAdder;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.LigandConnectMaker;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
@@ -723,11 +722,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			if ( params.shouldCreateAtomBonds()) {
 				addBonds();
 			}
-			
-			// Adds the equivalent CONECT-style records as a PDB has for ligands.
-			if ( params.isCreateLigandConects()) {
-				addLigandConnections();
-			}
 	
 			if ( params.shouldCreateAtomCharges()) {
 				addCharges();
@@ -1037,11 +1031,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private void addBonds() {
 		BondMaker maker = new BondMaker(structure);
 		maker.makeBonds();	
-	}
-
-	private void addLigandConnections(){
-		LigandConnectMaker maker = new LigandConnectMaker(structure);
-		maker.addLigandConnections();
 	}
 
 	private void alignSeqRes() {

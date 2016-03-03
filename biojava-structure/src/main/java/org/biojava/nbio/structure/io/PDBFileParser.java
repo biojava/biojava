@@ -2758,10 +2758,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( params.shouldCreateAtomCharges()) {
 			addCharges();
 		}
-
-		if (params.isCreateLigandConects()){
-			addLigandConnections();
-		}
 		
 		if ( params.isParseSecStruc() && !params.isHeaderOnly())
 			setSecStruc();
@@ -2829,12 +2825,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		BondMaker maker = new BondMaker(structure);
 		maker.makeBonds();
-	}
-	
-	//Builds a list of connections from ligands in a Structure
-	private void addLigandConnections(){
-		LigandConnectMaker maker = new LigandConnectMaker(structure);
-		maker.addLigandConnections();
 	}
 	
 	private void formLinkRecordBond(LinkRecord linkRecord) {
