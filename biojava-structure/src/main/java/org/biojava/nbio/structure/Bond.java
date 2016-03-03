@@ -28,17 +28,7 @@ package org.biojava.nbio.structure;
  * @author Ulysse Carion
  */
 public interface Bond {
-    /**
-	 * Adds this Bond to its atoms bond lists. If this method is not called,
-	 * then the list returned from calling {@link Atom#getBonds()} will not
-	 * include this bond.
-	 * <p>
-	 * If you created your Bond with the constructor
-	 * {@link #Bond(Atom, Atom, int)}, this method has already been called for
-	 * you and should not be called again.
-	 */
-	public void addSelfToAtoms();
-
+    
 	/**
 	 * Gets atom 'A' of this bond. There is no meaning to which atom is 'A' and
 	 * which is 'B'; the atoms are labeled 'A' or 'B' based on the order in

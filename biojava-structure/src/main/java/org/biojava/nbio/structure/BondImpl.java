@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,11 +88,16 @@ public class BondImpl implements Serializable, Bond {
      * you and should not be called again.
      */
     // TODO first check if those bonds haven't been made already
-    @Override
-    public void addSelfToAtoms() {
+    private void addSelfToAtoms() {
         List<Bond> bonds = atomA.getBonds();
+        if (bonds==null) {
+        	bonds = new ArrayList<Bond>(AtomImpl.BONDS_INITIAL_CAPACITY);
+        	atomA.setBonds(bonds);
+        }
+        
         boolean exists = false;
         for (Bond bond : bonds) {
+        	// TODO is it equals() what we want here, or is it == ? - JD 2016-03-02 
             if (bond.getOther(atomA).equals(atomB)) {
                 exists = true;
                 break;
@@ -188,4 +194,6 @@ public class BondImpl implements Serializable, Bond {
         return "Bond [atomA=" + atomA + ", atomB=" + atomB + ", bondOrder="
                 + bondOrder + "]";
     }
+    
+
 }
