@@ -188,7 +188,7 @@ public class CeSymmResult {
 						symmGroup = "R"; // could not find group
 				} else { 
 					// in case significant but not refined
-					if (type.equals(SymmetryType.OPEN))
+					if (type.equals(SymmetryType.CLOSED))
 						symmGroup = "C" + symmOrder;
 					else 
 						symmGroup = "R";
