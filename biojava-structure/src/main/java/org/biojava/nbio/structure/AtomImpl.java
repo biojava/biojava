@@ -27,7 +27,6 @@ import org.biojava.nbio.structure.io.FileConvert;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -41,6 +40,12 @@ import java.util.List;
 public class AtomImpl implements Atom, Serializable, PDBRecord {
 
 	private static final long serialVersionUID = -2258364127420562883L;
+	
+	/**
+	 * The inital capacity of the bonds list. 
+	 * Most atoms have a maximum of 3 heavy atom neighbors.
+	 */
+	public static final int BONDS_INITIAL_CAPACITY = 3;
 	
 	private String name     ;
 	private Element element;
@@ -64,7 +69,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		tempfactor = 0.0f       ;
 		altLoc 	   = 0;
 		parent     = null;
-		bonds      = Collections.emptyList();
+		bonds      = null; // let's save some memory and let's not initialise this until it's needed - JD 2016-03-02
 		charge     = 0				;
 	}
 	
@@ -202,8 +207,8 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		n.setPDBserial(getPDBserial());
 		n.setName(getName());
 		n.setElement(getElement());
-		
-		// TODO bonds are not cloned here, do we need to clone them? - JD 2016-01-27
+		// NOTE bonds can't be cloned here, they would need to be cloned at the 
+		//      chain or group level (depending if they are intra or inter group bonds) -- JD 2016-03-02
 		
 		return n ;
 	}
@@ -253,16 +258,26 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<Bond> getBonds() {
 		return bonds;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setBonds(List<Bond> bonds) {
+		this.bonds = bonds;
+	}
 
 	@Override
 	public void addBond(Bond bond) {
-		if (bonds.isEmpty()) {
-			// most atoms have a maximum of 3 heavy atom neighbors, so use this as the default size
-			bonds = new ArrayList<Bond>(3);
+		if (bonds==null) {
+			bonds = new ArrayList<Bond>(BONDS_INITIAL_CAPACITY);
 		}
 		bonds.add(bond);
 	}

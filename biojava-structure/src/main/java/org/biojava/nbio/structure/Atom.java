@@ -215,9 +215,15 @@ public interface Atom extends Cloneable, PDBRecord {
     /**
      * Get all {@link Bond}s this atom is part of.
      * 
-     * @return a list of {@link Bond}s.
+     * @return a list of {@link Bond}s or null if no bonds exist for this Atom
      */
     public List<Bond> getBonds();
+    
+    /**
+     * Sets the bonds 
+     * @param bonds
+     */
+    public void setBonds(List<Bond> bonds);
     
     /**
      * Get the charge of this atom

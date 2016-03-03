@@ -22,8 +22,8 @@ import org.junit.Test;
  */
 public class TestParseMmCIFLigands {
 	
-	int HEM_COUNT_4HHB = 172;	//Number of atoms in HEM groups of 4HHB (manually determined from CIF file)
-	int ATOM_COUNT_3UCB = 114;      //number of atoms in 3UCB, including alternate ligand conformations
+	private static final int HEM_COUNT_4HHB = 172;	//Number of atoms in HEM groups of 4HHB (manually determined from CIF file)
+	private static final int ATOM_COUNT_3UCB = 114;      //number of atoms in 3UCB, including alternate ligand conformations
 
 	
 	@Test

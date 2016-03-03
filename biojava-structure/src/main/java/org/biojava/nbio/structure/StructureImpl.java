@@ -308,16 +308,14 @@ public class StructureImpl implements Structure, Serializable {
 		this.structureIdentifier = structureIdentifier;
 	}
 
-	/** {@inheritDoc} */
+	/** 
+	 * {@inheritDoc} 
+	 */
 	@Override
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
 
 	/**
-	 * Return the connections value.
-	 *
-	 * @return a List object representing the connections value
-	 * @see Structure interface
-	 * @see #setConnections
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Map<String,Integer>> getConnections()                { return connections ;}

@@ -42,7 +42,7 @@ import org.junit.Test;
 public class TestCeSymm {
 
 	@Test
-	public void testIndependence() throws IOException, StructureException {
+	public void testEasyCases() throws IOException, StructureException {
 
 		String[] names = new String[] { "1hiv.A", "4i4q", "1n0r.A"};
 		int[] orders = new int[] { 2, 3, 4 };

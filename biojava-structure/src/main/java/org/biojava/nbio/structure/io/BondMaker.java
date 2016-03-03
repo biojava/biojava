@@ -188,7 +188,7 @@ public class BondMaker {
 		for (Chain chain : structure.getChains()) {
 			for (Group group : chain.getAtomGroups()) {
 				for (Atom atom : group.getAtoms()) {
-					if (atom.getBonds().size() > 0) {
+					if (atom.getBonds()!=null && atom.getBonds().size() > 0) {
 						((ArrayList<Bond>) atom.getBonds()).trimToSize();
 					}
 				}

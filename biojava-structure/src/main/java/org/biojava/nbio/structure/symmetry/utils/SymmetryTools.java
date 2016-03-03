@@ -516,7 +516,7 @@ public class SymmetryTools {
 		char chainID = 'A';
 
 		// Create new structure containing the repeat atoms
-		for (int i = 0; i < symmetry.getSymmOrder(); i++) {
+		for (int i = 0; i < symmetry.getMultipleAlignment().size(); i++) {
 
 			Chain newCh = new ChainImpl();
 
@@ -849,15 +849,15 @@ public class SymmetryTools {
 			return false;
 
 		// TM-score cutoff
-		if (msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE) == null) {
-			double tm = MultipleAlignmentScorer.getAvgTMScore(msa);
-			if (tm < symmetryThreshold)
-				return false;
-		} else {
-			double tm = msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
-			if (tm < symmetryThreshold)
-				return false;
-		}
+		double tm = 0.0;
+		if (msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE) == null)
+			tm = MultipleAlignmentScorer.getAvgTMScore(msa);
+		else
+			tm = msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
+		
+		if (tm < symmetryThreshold)
+			return false;
+		
 		return true;
 	}
 
