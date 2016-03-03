@@ -102,7 +102,7 @@ public class SymmetryDisplay {
 	public static AbstractAlignmentJmol display(CeSymmResult symmResult)
 			throws StructureException {
 
-		if (symmResult.isSignificant()) {
+		if (symmResult.isRefined()) {
 			MultipleAlignment msa = symmResult.getMultipleAlignment();
 			List<Atom[]> atoms = msa.getAtomArrays();
 			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(msa, atoms);
@@ -211,10 +211,11 @@ public class SymmetryDisplay {
 	 * @param symm
 	 *            CeSymmResult
 	 * @return
+	 * @throws StructureException 
 	 */
-	public static String printSymmetryGroup(CeSymmResult symm) {
+	public static String printSymmetryGroup(CeSymmResult symm) throws StructureException {
 
-		QuatSymmetryResults gSymmetry = symm.getSymmGroup();
+		QuatSymmetryResults gSymmetry = SymmetryTools.getQuaternarySymmetry(symm);
 
 		AxisAligner axes = AxisAligner.getInstance(gSymmetry);
 

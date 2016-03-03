@@ -248,6 +248,12 @@ public class CeSymm {
 		// Store the optimal self-alignment
 		result.setSelfAlignment(optimalAFP);
 		result.setStructureId(id);
+		
+		// Do not try the refinement if the self-alignment is not significant
+		if (optimalAFP.getTMScore() < params.getScoreThreshold()){
+			result.setSymmOrder(1);
+			return result;
+		}
 
 		// Determine the symmetry Type or get the one in params
 		if (params.getSymmType() == SymmetryType.AUTO) {
@@ -407,7 +413,7 @@ public class CeSymm {
 		CeSymmIterative iter = new CeSymmIterative(params);
 		CeSymmResult result = iter.execute(atoms);
 
-		if (result.isSignificant()) {
+		if (result.isRefined()) {
 			// Optimize the global alignment freely once more (final step)
 			if (params.getOptimization() && result.getSymmLevels() > 1) {
 				// Remove the axes to do free superposition optimization TODO

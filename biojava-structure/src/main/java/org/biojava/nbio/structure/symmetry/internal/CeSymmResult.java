@@ -14,7 +14,6 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
@@ -38,7 +37,7 @@ public class CeSymmResult {
 
 	private CESymmParameters params;
 	private SymmetryAxes axes;
-	private QuatSymmetryResults symmGroup;
+	private String symmGroup;
 
 	private int symmOrder;
 	private int symmLevels;
@@ -46,40 +45,34 @@ public class CeSymmResult {
 	private SymmetryType type;
 
 	/**
-	 * Return true if the symmetry result is significant, false otherwise.
+	 * Conditions checked are: score above the threshold, order higher than 1
+	 * and refinement succeeded.
 	 * 
 	 * @return true if significant, false otherwise
 	 */
 	public boolean isSignificant() {
 
 		// In any case if the order is 1 it is asymmetric
-		if (symmOrder < 1)
+		if (symmOrder < 2)
 			return false;
 
-		// If the old version was turned ON
-		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
-			if (selfAlignment.getTMScore() < params.getScoreThreshold())
+		// If the TM-Score is below the threshold
+		if (selfAlignment.getTMScore() < params.getScoreThreshold())
+			return false;
+
+		// If the refinement was attempted
+		if (params.getRefineMethod() != RefineMethod.NOT_REFINED) {
+			// Check for minimum length
+			if (multipleAlignment.getCoreLength() < params.getMinCoreLength())
 				return false;
-			else
-				return true;
+			// Allow 90% of original TM-Score theshold
+			if (multipleAlignment.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
+					.getScoreThreshold() * 0.9)
+				return false;
+			return true;
 		}
 
-		// For the new version
-		if (refined) {
-			// Length is over min length
-			if (symmLevels > 1)
-				return true; // significance already checked
-			else if (multipleAlignment.getCoreLength() < params
-					.getMinCoreLength())
-				return false;
-			else if (multipleAlignment
-					.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
-					.getScoreThreshold())
-				return false;
-			else
-				return true;
-		} else
-			return false;
+		return true;
 	}
 
 	/**
@@ -91,12 +84,9 @@ public class CeSymmResult {
 	 */
 	public List<StructureIdentifier> getRepeatsID() throws StructureException {
 
-		if (!isSignificant())
+		if (!isRefined())
 			return null;
-		
-		if(!isRefined())
-			return null;
-		
+
 		List<StructureIdentifier> repeats = new ArrayList<StructureIdentifier>(
 				symmOrder);
 
@@ -121,9 +111,9 @@ public class CeSymmResult {
 
 	@Override
 	public String toString() {
-		return structureId + ", symmGroup=" + symmGroup.getSymmetry()
-				+ ", symmOrder=" + symmOrder + ", symmLevels=" + symmLevels
-				+ ", refined=" + refined + ", type=" + type + " | " + params;
+		return structureId + ", symmGroup=" + symmGroup + ", symmOrder="
+				+ symmOrder + ", symmLevels=" + symmLevels + ", refined="
+				+ refined + ", type=" + type + " | " + params;
 	}
 
 	public MultipleAlignment getMultipleAlignment() {
@@ -183,19 +173,25 @@ public class CeSymmResult {
 		this.refined = refined;
 	}
 
-	public QuatSymmetryResults getSymmGroup() {
-		// Lazily calculate the symmetry group
+	public String getSymmGroup() {
+		// Lazily calculate the symmetry group if significant
 		if (symmGroup == null) {
-			try {
-				symmGroup = SymmetryTools.getQuaternarySymmetry(this);
-			} catch (StructureException e) {
-				e.printStackTrace();
+			if (isRefined() && isSignificant()) {
+				try {
+					symmGroup = SymmetryTools.getQuaternarySymmetry(this)
+							.getSymmetry();
+				} catch (StructureException e) {
+					symmGroup = "C1";
+				}
+				if (symmGroup.equals("C1"))
+					symmGroup = "R";
 			}
+			symmGroup = "C1";
 		}
 		return symmGroup;
 	}
 
-	public void setSymmGroup(QuatSymmetryResults symmGroup) {
+	public void setSymmGroup(String symmGroup) {
 		this.symmGroup = symmGroup;
 	}
 
@@ -229,33 +225,6 @@ public class CeSymmResult {
 
 	public void setStructureId(StructureIdentifier structureId) {
 		this.structureId = structureId;
-	}
-
-	/**
-	 * Returns the TM-Score of the symmetry alignment, independently of the
-	 * state of the result (MultipleAlignment or AFPChain).
-	 * 
-	 * @return TM-score
-	 */
-	public double getTMScore() {
-		if (multipleAlignment != null)
-			return multipleAlignment
-					.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
-		else
-			return selfAlignment.getTMScore();
-	}
-
-	/**
-	 * Returns the RMSD of the symmetry alignment, independently of the state of
-	 * the result (MultipleAlignment or AFPChain).
-	 * 
-	 * @return RMSD
-	 */
-	public double getRMSD() {
-		if (multipleAlignment != null)
-			return multipleAlignment.getScore(MultipleAlignmentScorer.RMSD);
-		else
-			return selfAlignment.getTotalRmsdOpt();
 	}
 
 }
