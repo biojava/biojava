@@ -192,23 +192,21 @@ public class GFF3FromUniprotBlastHits {
                                 
 
                                 if (notes.length() == 0) notes = ";Note=";
-                                String dbRec;
                                  //for all features of the sequence: 
                                 for(FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> feature:proteinSequence.getFeatures()) {
-                                	//for all qualifiers:
-                                	for(Qualifier q : feature.getQualifiers()) {
-                                		//for all db_xref qualifier values:
-                                		if(q.getName().equals("db_xref")) for(String str:q.getValues()) {
-                                			//split out the database record 
-                                			dbRec=str.split(":")[1];
-                                			//if it is in the list store it.
-                                			if(str.startsWith("Pfam") || str.startsWith("CAZy") || str.startsWith("GO") || str.startsWith("BRENDA")) {
-                                				notes=notes+" "+dbRec;
-                                				geneSequence.addNote(dbRec);
-                                			}
+                                	//put all database reference infos of that feature in a string [][]; array[0] holds the databases, array[1] the 
+                                	//corresponding records
+                                	String[][] dbRefI = feature.getAllDatabasesReferenceInfos();
+                                	int infoC = 0;
+                                	while(infoC<dbRefI[0].length) {
+                                		//if it is in the list store it.
+                                		if(dbRefI[0][infoC].startsWith("Pfam") || dbRefI[0][infoC].startsWith("CAZy") || dbRefI[0][infoC].startsWith("GO") || dbRefI[0][infoC].startsWith("BRENDA")) {
+                                			notes=notes+" "+dbRefI[1][infoC];
+                                			geneSequence.addNote(dbRefI[1][infoC]);
+                                			infoC++;
                                 		}
                                 	}
-                                }                               
+                                }
                                 /*   // former version
                                 DatabaseReferenceInfo dbRef=proteinSequence.getFeatures();
                                 if (databaseReferences != null) {
