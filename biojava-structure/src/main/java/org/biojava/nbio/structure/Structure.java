@@ -260,7 +260,9 @@ public interface Structure extends Cloneable {
        *
        * @param connections  a List object specifying the connections
        * @see #getConnections
+       * @deprecated use {@link Atom#addBond(Bond)} instead
     */
+    @Deprecated
     public void setConnections(List<Map<String,Integer>> connections);
 
     /**

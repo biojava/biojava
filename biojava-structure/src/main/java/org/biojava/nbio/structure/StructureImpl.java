@@ -146,8 +146,7 @@ public class StructureImpl implements Structure, Serializable {
 		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
-		n.setConnections(getConnections());
-		n.setSites(getSites());
+		n.setSites(getSites()); 
 				
 
 		// go through each chain and clone chain

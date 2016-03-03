@@ -116,6 +116,8 @@ public class FileConvert {
 
 		StringBuffer str = new StringBuffer();
 
+		// TODO this needs to be rewritten so that the data comes from Atom.getBonds(). Structure.getConnections will be removed in upcoming releases (after 4.2) - JD 2016-03-03 
+		
 		List<Map<String, Integer>> cons = structure.getConnections();
 		for (int cnr = 0; cnr<cons.size();cnr++){
 			Map<String,Integer> con =  cons.get(cnr);

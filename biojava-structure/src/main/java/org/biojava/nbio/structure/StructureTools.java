@@ -1576,9 +1576,8 @@ public class StructureTools {
 		// TODO: do deep copying of data!
 		n.setPDBHeader(s.getPDBHeader());
 		n.setDBRefs(s.getDBRefs());
-		n.setConnections(s.getConnections());
+		
 		n.setSites(s.getSites());
-		n.setCrystallographicInfo(s.getCrystallographicInfo());
 
 		n.setChains(s.getModel(0));
 
