@@ -175,4 +175,8 @@ public class GenBankQualifierMap {
 		// TODO Auto-generated method stub
 		
 	}
+	public DBReferenceInfo getDBReferenceInfo() {
+		return (DBReferenceInfo) this.getQualifierNyName("db_xref");
+	}
+	
 }

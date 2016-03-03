@@ -177,12 +177,21 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
     public Qualifier getQualifierByName(String qName);
     public Qualifier getFirstQualifierByValue(String value);
     public Qualifier[] getQualifiersByValue(String value);
-	//DBreferenceInfo one could remove DBReferenceInfo and use qualifier
-	/*
-	public String[] getFirstDatabaseInfo();
-	public String[][] getDatabaseInfo();
+	//DBreferenceInfo 
+	public String[][] getAllDatabasesReferenceInfos();
+	public String[] getAllDatabases();
 	public String[] getAllDatabaseReferences();
-	 */
+	public String[] getDatabaseReferenceInfo(int i);
+	public String getDatabase(int i);
+	public String getDatabaseReference(int i);
+	public String[] getFirstDatabaseReferenceInfo();
+	public String getFirstDatabaseReference();
+	public String getFirstDatabase();
+	public String getDatabaseReference(String database, int i);
+	public String[] getAllDatabaseReferences(String database);
+	public String getFirstDatabaseReference(String database);
+	public void setDatabaseReferenceInfo(String database, String reference);
+	public boolean addDatabaseReferenceInfos(String[][] entries);
 	//old stuff to be removed
 	@Deprecated //use addQualifier(Qualifier q)
 	public void addQualifier(String str, Qualifier q);

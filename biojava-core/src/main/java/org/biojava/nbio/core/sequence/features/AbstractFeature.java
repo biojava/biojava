@@ -315,72 +315,130 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	public Qualifier getQualifierByName(String qName) { return qualifierMap.getQualifierNyName(qName); }
 	public Qualifier getFirstQualifierByValue(String value) { return qualifierMap.getFirstQualifierByValue(value); };
 	public Qualifier[] getQualifiersByValue(String value) { return qualifierMap.getQualifiersByValue(value); };
-	//cb refernce info stuff one could remove DBReferenceInfo and use qualifier
-	/**
-	 * returns database name and the sequence reference for this database as a string array
-	 * @return
-	 */
-	public String[] getFirstDatabaseReferenceInfo() {
-		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
-		return q.getFirstValue().split(":");
-	}
+	//
+	//db reference info stuff 
+	//
 	/**
 	 * returns all database names and the sequence references for the corresponding database in a String[][2]
 	 * @return
 	 */
 	public String[][] getAllDatabasesReferenceInfos() {
-		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
-		String[][] info=new String[q.valueSize()][2];
-		for(int i=0;i<q.valueSize();i++) {
-			String str[]=q.getValue(i).split(":");
-			info[i][0]=str[0];
-			info[i][1]=str[1];
-		}
-		return info;
+		DBReferenceInfo dbRefI =  this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getAllDatabaseReferenceInfos();
+		else return null;
 	}
 	/**
-	 * returns all sequence references for all databases
+	 * returns all databases in a string[]
+	 * @return
+	 */
+	public String[] getAllDatabases() {
+		DBReferenceInfo dbRefI =  this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getAllDatabases();		
+		else return null;
+	}
+	/**
+	 * returns all sequence database references for all databases in a string[] 
 	 * @return
 	 */
 	public String[] getAllDatabaseReferences() {
-		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
-		String[] info=new String[q.valueSize()];
-		for(int i=0;i<q.valueSize();i++) {
-			String str[]=q.getValue(i).split(":");
-			info[i]=str[0];
-		}
-		return info;
-	}
-	public String getFirstDatabaseReference() {
-		Qualifier q=this.qualifierMap.getQualifierNyName("db_xref");
-		return q.getFirstValue().split(":")[1];
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getAllDatabaseReferences();
+		else return null;
 	}
 	/**
-	 * get the sequence record for the database in question
+	 * get database reference info #i as string[2]
+	 * @param i
+	 * @return
+	 */
+	public String[] getDatabaseReferenceInfo(int i) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getDatabaseReferenceInfo(i);
+		else return null;
+	}
+	/**
+	 * get database #i 
+	 * @param i
+	 * @return
+	 */
+	public String getDatabase(int i) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getDatabase(i);
+		else return null;
+	}
+	/**
+	 * get sequence database reference #i
+	 * @param i
+	 * @return
+	 */
+	public String getDatabaseReference(int i) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getDatabaseReference(i);
+		else return null;
+	}
+	
+	/**
+	 * convenience method to point out that there are several
+	 * @return
+	 */
+	public String[] getFirstDatabaseReferenceInfo() {
+		return getDatabaseReferenceInfo(0);
+	}
+	/**
+	 * convenience method to point out that there are several
+	 * @return
+	 */
+	public String getFirstDatabaseReference() {
+		return getDatabaseReference(0);
+	}
+	/**
+	 * convenience method to point out that there are several
+	 * @return
+	 */
+	public String getFirstDatabase() {
+		return getDatabase(0);
+	}
+	/**
+	 * get the sequence record i for the database with name database
+	 * @param database
+	 * @return null if no such record
+	 */
+	public String getDatabaseReference(String database, int i) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getDatabaseReference(database,i); 
+		else return null;
+	}
+	
+	/**
+	 * get all references of a sequence in a particular database
+	 * in the same database
+	 * @param database
+	 * @return string[] of all references
+	 */
+	public String[] getAllDatabaseReferences(String database) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getAllDatabaseReferences(database); 
+		else return null;
+	}
+
+	/**
+	 * convenience method to point out that a sequence can have several database references
+	 * in the same database
 	 * @param database
 	 * @return
 	 */
 	public String getFirstDatabaseReference(String database) {
-		for(String s: this.qualifierMap.getQualifierNyName("db_xref").getValues()) if(s.startsWith(database)) return s.split(":")[1];
-		return null;
+		return getDatabaseReference(database, 0);
 	}
-	public String[] getAllDatabaseReference(String database) {
-		ArrayList<String> als=new ArrayList<String>();
-		for(String s: this.qualifierMap.getQualifierNyName("db_xref").getValues()) if(s.startsWith(database)) als.add(s.split(":")[1]);
-		return als.toArray(new String[als.size()]);
-	}
+
 	public void setDatabaseReferenceInfo(String database, String reference) {
-		this.qualifierMap.add(new Qualifier("db_xref", database+":"+reference));
+		qualifierMap.add(new DBReferenceInfo(database,reference));
 	}
-	
-	public String getDatabase() {
-		return getFirstDatabaseReference();
+	public boolean addDatabaseReferenceInfos(String[][] entries) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.setDBReferenceInfos(entries);
+		else return false;
 	}
-	public String getDatabaseReference() {
-		return getFirstDatabaseReference();
-	}
-	
-	// */
+
 	@Deprecated
 	public void addQualifier(String str, Qualifier q) {
 		this.qualifierMap.add(q);

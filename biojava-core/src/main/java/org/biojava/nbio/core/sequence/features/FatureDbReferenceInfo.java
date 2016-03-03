@@ -42,6 +42,7 @@ import java.util.Map;
  * @param <S>
  * @param <C>
  */
+@Deprecated
 public class FatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Compound> extends DBReferenceInfo implements FeatureInterface<S,C> {
     
     private AbstractLocation location;
@@ -212,5 +213,35 @@ public class FatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Comp
 	public void addQualifier(String str, Qualifier q) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public String[][] getAllDatabasesReferenceInfos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFirstDatabase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFirstDatabaseReference(String database) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDatabaseReferenceInfo(String database, String reference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean addDatabaseReferenceInfos(String[][] entries) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
