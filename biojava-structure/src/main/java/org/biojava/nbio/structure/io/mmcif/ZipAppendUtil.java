@@ -20,139 +20,99 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.nio.file.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
-import java.util.zip.CRC32;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.*;
 
 /**
-* Singleton helper class to add entries to zip archives.
-* @since Feb 8, 2013
-* @author edlunde
-* 
-*/
+ * Singleton helper class to add entries to zip archives.
+ * @since Feb 8, 2013
+ * @author edlunde
+ * @author larsonm
+ *
+ */
 public class ZipAppendUtil {
 	private static final Logger s_logger = Logger.getLogger( ZipAppendUtil.class.getPackage().getName() );
-	private boolean busy;
-	private static ZipAppendUtil s_instance;
-	
+	private static ZipAppendUtil s_instance = null; // Singleton instance
+	private boolean m_busy = false;
+
 	/**
 	 * Get a singleton instance.
 	 * @return
 	 */
 	public static ZipAppendUtil getInstance() {
-
 		if (s_instance == null) {
 			s_instance = new ZipAppendUtil();
 		}
 		return s_instance;
-
 	}
-	
+
 	/**
-	 * Extract contents of sourceArchive to a temporary file, append files to pathWithinArchive, and rezip.
-	 * @param sourceArchive
-	 * @param files
-	 * @param pathWithinArchive
-	 * @return
-	 */
-	public boolean addToZipArchive(File sourceArchive, File[] files, String pathWithinArchive){
-		if (busy) return false;
-		
-		busy = true;
-		if (files == null) return false;
-		if(files.length >0){
-			try{
+	 * Add an array of files to a zip archive.
+	 *
+	 * @param zipFile is a destination zip archive
+	 * @param files is an array of files to be added
+	 * @param pathWithinArchive is the path within the archive to add files to
+     * @return true if successfully appended these files.
+     */
+	public boolean addToZipFileSystem(Path zipFile, File[] files, Path pathWithinArchive) {
+		boolean ret = false;
+		if (m_busy) return ret; // If another thread is adding files, return immediately.
+		m_busy = true;
 
-				File tmpZip = File.createTempFile(sourceArchive.getName(), null);
-				tmpZip.delete();
-				if(!sourceArchive.renameTo(tmpZip)){
-					s_logger.info("\nDictionary archive is occupied. Reading from a temporary copy instead.");
-					copyFile(sourceArchive, tmpZip); //Since the chemcomp.zip file cannot be renamed while in use (Win only), copy it to tmpZip
+		// Copy in each file.
+		try (FileSystem zipfs = createZipFileSystem(zipFile.toString())) {
+			for (File f : files) {
+				if (!f.isDirectory() && f.exists()) {
+					Path externalFile = f.toPath();
+					Path pathInZipFile = zipfs.getPath(pathWithinArchive.resolve(f.getName()).toString());
+					Files.copy(externalFile, pathInZipFile,
+							StandardCopyOption.REPLACE_EXISTING);
 				}
-				byte[] buffer = new byte[1024];
-				ZipInputStream zin = new ZipInputStream(new FileInputStream(tmpZip));
-				ZipOutputStream out = new ZipOutputStream(new FileOutputStream(sourceArchive));
-				for(int i = 0; i < files.length; i++){
-					InputStream in = new FileInputStream(files[i]);
-					ZipEntry entry =new ZipEntry(pathWithinArchive + files[i].getName());
-					entry.setSize(files[i].length());
-					entry.setTime(files[i].lastModified());
-					CRC32 crc32 = new CRC32();
-					out.putNextEntry(entry);
-					for(int read = in.read(buffer); read > -1; read = in.read(buffer)){
-						out.write(buffer, 0, read);
-						crc32.update(buffer,0,read);
-					}
-					entry.setCrc(crc32.getValue());
-					out.closeEntry();
-					in.close();
-				}
-				for(ZipEntry ze = zin.getNextEntry(); ze != null; ze = zin.getNextEntry()){
-					if(!zipEntryMatch(ze.getName(), files, pathWithinArchive)){
-						ZipEntry destEntry = new ZipEntry(ze.getName());
-						CRC32 crc32 = new CRC32();
-						out.putNextEntry(destEntry);
-						for(int read = zin.read(buffer); read > -1; read = zin.read(buffer)){
-							out.write(buffer, 0, read);
-							crc32.update(buffer,0,read);
-						}
-
-						destEntry.setCrc(crc32.getValue());
-						out.closeEntry();
-					}
-				}
-				out.close();
-				zin.close();
-				/*
-				if(tmpZip.delete()) {
-					s_logger.info("Successfully deleted temp zip file");
-				}	
-				s_logger.info("Wrote downloaded file(s) to "+sourceArchive.getAbsolutePath());
-				*/
-				busy = false;
-				return true;
-			}catch(Exception e){
-				busy = false;
-				s_logger.info(e.getMessage());
-				return false;
 			}
+			ret = true;
+		} catch (IOException ex) {
+			s_logger.severe("Unable to add entries to Chemical Component zip archive : " + ex.getMessage());
+			ret = false;
 		}
-		busy = false;
-		return false;
+		m_busy = false;
+		return ret;
 	}
-	
+
 	/**
-	 * Check for an entry.
-	 * @param zeName
-	 * @param files
-	 * @param path
-	 * @return
+	 * Returns a zip file system
+	 * @param zipFilename to construct the file system from
+	 * @return a zip file system
+	 * @throws IOException
 	 */
-	private boolean zipEntryMatch(String zeName, File[] files, String path){
-		for(int i = 0; i < files.length; i++){
-			if((path + files[i].getName()).equals(zeName)){
-				return true;
-			}
-		}
-		return false;
+	private static FileSystem createZipFileSystem(String zipFilename) throws IOException {
+		// convert the filename to a URI
+		final Path path = Paths.get(zipFilename);
+		final URI uri = URI.create("jar:file:" + path.toUri().getPath());
+
+		final Map<String, String> env = new HashMap<>();
+		return FileSystems.newFileSystem(uri, env);
 	}
 
 	/**
 	 * Create a copy for a file.
+	 * May be necessary to use a copy of the zip archive when appending.
+	 *
 	 * @param src
 	 * @param dst
 	 * @throws IOException
 	 */
-	public void copyFile(File src, File dst) throws IOException {
+	private void copyFile(File src, File dst) throws IOException {
 	    InputStream is = null;
 	    OutputStream os = null;
 	    try {
@@ -164,21 +124,20 @@ public class ZipAppendUtil {
 	            os.write(buffer, 0, length);
 	        }
 	    } finally {
-	        is.close();
-	        os.close();
+	        if (is != null) is.close();
+	        if (os != null) os.close();
 	    }
-	}
-	
-	/**
-	 * Check if the zip archive is being modified or referenced.
-	 * @return
-	 */
-	public boolean isBusy() {
-		return this.busy;
 	}
 	
 	/* Prevent direct access to the constructor*/
 	private ZipAppendUtil() {
 		super();
+	}
+
+	/**
+	 * @return true if zipFile is in use
+     */
+	public boolean isBusy() {
+		return m_busy;
 	}
 }

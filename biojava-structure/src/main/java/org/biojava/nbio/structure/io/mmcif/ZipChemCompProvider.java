@@ -20,11 +20,9 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -48,49 +46,62 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
  * 
  */
 public class ZipChemCompProvider implements ChemCompProvider{
-
-	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	private String tempdir = "";  // Base path where $zipRootDir/ will be downloaded to.
-	private String zipRootDir = "chemcomp/"; 
-	private ZipFile zipDictionary;
-	private String zipFile;
 	private static final Logger s_logger = Logger.getLogger( ZipChemCompProvider.class.getPackage().getName() );
-	private DownloadChemCompProvider dlProvider;
+
+	private final Path m_tempDir;  // Base path where $m_zipRootDir/ will be downloaded to.
+	private final Path m_zipRootDir;
+	private final Path m_zipFile;
+	private final DownloadChemCompProvider m_dlProvider;
+	// private final ZipFile m_zipDictionary;
 	
 	// Missing IDs from library that cannot be download added here to prevent delays.
 	private Set<String> unavailable = new HashSet<String>();
 
 	/**
-	 * 
-	 * @param chemicalComponentDictionaryFile : zip filename
-	 * @param tempDir : directory of the zip filename
+	 * Constructor for a ZipChemCompProvider, a Chemical Component provider that stores chemical component
+	 * files in a single zip archive.  Missing chemical components will be downloaded and appended to this
+	 * archive.
+	 *
+	 * @param chemicalComponentDictionaryFile : path to zip archive for chemical components. If non-existent,
+	 *                                        an empty zip archive will be created and populated.
+	 * @param tempDir : path for temporary directory, (null) will system default property "java.io.tmpdir".
 	 * @throws IOException
 	 */
-	public ZipChemCompProvider(String chemicalComponentDictionaryFile, String tempDir) throws IOException{
-		this.zipFile = chemicalComponentDictionaryFile;
-		this.tempdir = tempDir;
-		
-		init();
+	public ZipChemCompProvider(String chemicalComponentDictionaryFile, String tempDir) throws IOException {
+		this.m_zipFile = Paths.get(chemicalComponentDictionaryFile);
+
+		// Use a default temporary directory if not passed a value.
+		if (tempDir == null || tempDir.equals("")) {
+			this.m_tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
+		} else {
+			this.m_tempDir = Paths.get(tempDir);
+		}
+
+		this.m_zipRootDir = Paths.get("chemcomp");
+
+		// Setup an instance of the download chemcomp provider.
+		this.m_dlProvider = new DownloadChemCompProvider(m_tempDir.toString());
+
+		// Create a new zip dictionary file if one isn't already created.
+		initializeZipFile();
 	}
 	
 	// Create the zip file and setup a fallback DownloadChemCompProvider.
-	private void init() throws IOException {
-		try{
-			s_logger.info("Using chemical component dictionary: " + zipFile.toString());
-			
-			// Check if file exists, if not create.
-			File zipFile = new File(this.zipFile);
-			if (!zipFile.exists()) {
-				createNewZip(zipFile);
+	private void initializeZipFile() throws IOException {
+		s_logger.info("Using chemical component dictionary: " + m_zipFile.toString());
+
+		// Check if file exists, if not create.
+		final File zipFile = m_zipFile.toFile();
+		if (!zipFile.exists()) {
+			FileOutputStream f = new FileOutputStream(zipFile);
+			ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(f));
+			try {
+				zip.putNextEntry(new ZipEntry("chemcomp/"));
+				zip.closeEntry();
+			} finally {
+				zip.close();
 			}
-			
-			this.zipDictionary = new ZipFile(this.zipFile);
-		}catch(ZipException e){
-			s_logger.info(e.getMessage());
 		}
-		
-		// Setup an instance of the download chemcomp provider.
-		dlProvider = new DownloadChemCompProvider(this.tempdir);
 	}
 	
 	/* (non-Javadoc)
@@ -101,123 +112,93 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 */
 	@Override
 	public ChemComp getChemComp(String recordName) {
-		
 		if (null == recordName) return null;
 		
 		// handle non-existent ChemComp codes and do not repeatedly attempt to add these.
 		for (String str : unavailable) {
 			if (recordName.equals(str)) return getEmptyChemComp(recordName);
 		}
-		
+
+		ChemComp cc = null; // Will find in zip or download
+		String filename = "chemcomp/" + recordName+".cif.gz";
+
+		// Try to pull from zip.
 		try {
-			ZipEntry ccEntry = zipDictionary.getEntry(zipRootDir+recordName+".cif.gz");
-			
-			//read single gzipped cif from archive and write to temporary file 
-			InputStream zipStream = zipDictionary.getInputStream(ccEntry);
-			InputStream inputStream = new GZIPInputStream(zipStream);
-			s_logger.fine("reading "+recordName+" from " + zipFile); 
-			MMcifParser parser = new SimpleMMcifParser();
-			ChemCompConsumer consumer = new ChemCompConsumer();
-			parser.addMMcifConsumer(consumer);
-			parser.parse(inputStream);
-			
-			ChemicalComponentDictionary dict = consumer.getDictionary();
-			ChemComp cc = dict.getChemComp(recordName);
-			zipStream.close();
-			if (cc != null){
-				return cc;
+			ZipFile m_zip = new ZipFile(m_zipFile.toFile());
+			ZipEntry ccEntry = m_zip.getEntry(filename);
+			if (ccEntry != null) {
+				final InputStream zipStream = m_zip.getInputStream(ccEntry);
+				final InputStream inputStream = new GZIPInputStream(zipStream);
+				s_logger.fine("reading " + recordName + " from " + m_zipFile);
+				final MMcifParser parser = new SimpleMMcifParser();
+				final ChemCompConsumer consumer = new ChemCompConsumer();
+				parser.addMMcifConsumer(consumer);
+				parser.parse(inputStream);
+
+				final ChemicalComponentDictionary dict = consumer.getDictionary();
+				cc = dict.getChemComp(recordName);
+				inputStream.close();
 			}
-		}catch(NullPointerException npe){
-			s_logger.info(npe.getMessage()+"\n"+"File "+recordName+" not found in archive. Attempting download from PDB.");
+			m_zip.close();
+		} catch (IOException ex) {
+			s_logger.severe("Error reading " + m_zipFile.toString() + " " + ex.getMessage());
 		}
-		catch (Exception e) {
-			s_logger.info(e.getMessage());
-		}
-		
-		//if file isn't found in archive, download it/add to archive
-		ChemComp cc = downloadAndAdd(recordName);
-		
+
+		// Try to download next.
 		if (cc == null) {
-			// Could not find this ChemComp, add this to a list of unavailable. 
+			s_logger.info("File "+recordName+" not found in archive. Attempting download from PDB.");
+			cc = downloadAndAdd(recordName);
+		}
+
+		// Still failed, mark unavailable and return empty chemcomp
+		if (cc == null) {
+			// Could not find this ChemComp, add this to a list of unavailable.
+			s_logger.info("Unable to find or download " + recordName + " - excluding from future searches.");
 			unavailable.add(recordName);
 			return getEmptyChemComp(recordName);
 		}
-		
 		return cc;
-
 	}
-	/**	Use DownloadChemCompProvider to grab a gzipped cif record from the PDB. Zip all downloaded cif.gz files into the dictionary. 
-	 * */ 
-	public ChemComp downloadAndAdd(String recordName){
-		ChemComp cc = dlProvider.getChemComp(recordName);
+
+	/** Use DownloadChemCompProvider to grab a gzipped cif record from the PDB.
+	 *  Zip all downloaded cif.gz files into the dictionary.
+	 *
+	 * @param recordName is the three-letter chemical component code (i.e. residue name).
+	 * @return ChemComp matching recordName
+     */
+	private ChemComp downloadAndAdd(String recordName){
+		final ChemComp cc = m_dlProvider.getChemComp(recordName);
 		
 		if (cc != null && "?".equals(cc.getOne_letter_code())) {
 			// Failed to find this chemical component and defaulted back to reduced chemical component.
 			unavailable.add(recordName);
 			return cc;  // Don't try to add this to the chemcomp.zip.
 		}
-		
-		if(ZipAppendUtil.getInstance().isBusy()) {
-			return cc;
-		}
-		
-		String tmpdir = this.tempdir;
 
-		// Fall-back to java temporary directory if not set.
-		if (tmpdir == null || tmpdir.equals("")) {
-			tmpdir = System.getProperty("java.io.tmpdir");	
+		//DownloadProvider places files in default temp dir\chemcomp
+		final File [] files = finder(m_tempDir.resolve("chemcomp").toString(), "cif.gz");
+		if (files != null) {
+			ZipAppendUtil.getInstance().addToZipFileSystem(m_zipFile, files, m_zipRootDir);
+			for (File f : files) f.delete();
 		}
-		if ( !(tmpdir.endsWith(FILE_SEPARATOR) ) ) {
-			tmpdir += FILE_SEPARATOR;
-		}
-		tmpdir+="chemcomp";
-		
-		final File [] files;
-		final File source;
-		try{
-			files = finder(tmpdir, "cif.gz");	//DownloadProvider places files in default temp dir\chemcomp
-			source = new File(zipDictionary.getName());
-		}catch(NullPointerException npe){
-			return cc;
-		}
-
-		// Adding files could run on a separate thread, but more care is needed to prevent race
-		// conditions such as having asssembled a list of files to add/adding files while still writing an individual
-		// file to the temporary directory.  Keeping this on one thread to prevent race conditions.
-		
-		// TODO: assess race conditions and make reassembling the zip a background task.
-		
-		//Thread updateArchiveThread = new Thread(new Runnable(){
-		//	public void run(){
-				
-		if(! ZipAppendUtil.getInstance().isBusy()) {
-			ZipAppendUtil.getInstance().addToZipArchive(source, files, zipRootDir);
-			for (File f : files){
-				f.delete();
-			}
-			try {
-				zipDictionary.close();
-			} catch (IOException e) {
-				s_logger.info(e.getMessage());
-			}
-		}
-		//	}
-		//});
-		//updateArchiveThread.start();
-		
 		return cc;
 	}
 
 	/**
-	 * Cleanup the temporary files that have been created within tmpdir.
-	 */
+	 * Cleanup any temporary chemical component files that have been created within tmpdir.
+	 * @param tempdir : path to temporary directory for chemical component downloads.
+     */
 	public static void purgeAllTempFiles(String tempdir) {
-		File[] ccOutFiles = finder(tempdir,"cif");
-		for(File f : ccOutFiles) f.delete();
-		File[] chemcompTempFiles = finderPrefix(tempdir, "chemcomp.zip");
-		for(File f : chemcompTempFiles)f.delete();
-		File chemcompDir = new File(System.getProperty("java.io.tmpdir") + FILE_SEPARATOR +"chemcomp");
-		chemcompDir.delete();
+		if (null != tempdir) {
+			File[] chemCompOutFiles = finder(tempdir, "cif");
+			for (File f : chemCompOutFiles) f.delete();
+
+			File[] chemCompTempFiles = finderPrefix(tempdir, "chemcomp.zip");
+			for (File f : chemCompTempFiles) f.delete();
+		}
+
+		Path chemCompDirPath = Paths.get(System.getProperty(tempdir)).resolve("chemcomp");
+		chemCompDirPath.toFile().delete();
 	}
 
 	/**
@@ -226,11 +207,11 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * @return
 	 */
     private ChemComp getEmptyChemComp(String resName){
-    	String pdbName = "";
+    	String pdbName = ""; // Empty string is default
     	if (null != resName && resName.length() >= 3) {
     		pdbName = resName.substring(0,3);
     	}
-    	ChemComp comp = new ChemComp();   
+    	final ChemComp comp = new ChemComp();
     	comp.setOne_letter_code("?");
     	comp.setThree_letter_code(pdbName);
     	comp.setPolymerType(PolymerType.unknown);
@@ -245,12 +226,15 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * @return
 	 */
 	static private File[] finder( String dirName, final String suffix){
-		File dir = new File(dirName);
+		if (null == dirName || null == suffix) {
+			return null;
+		}
+
+		final File dir = new File(dirName);
 		return dir.listFiles(new FilenameFilter() { 
 			public boolean accept(File dir, String filename)
 			{ return filename.endsWith(suffix); }
 		} );
-
 	}
 	
 	/**
@@ -260,15 +244,10 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * @return
 	 */
 	static private File[] finderPrefix( String dirName, final String prefix){
-		File dir = new File(dirName);
+		final File dir = new File(dirName);
 		return dir.listFiles(new FilenameFilter() { 
 			public boolean accept(File dir, String filename)
 			{ return filename.startsWith(prefix); }
 		} );
-	}
-	
-	private void createNewZip(File f) throws IOException {
-	      final ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
-	      out.close();
 	}
 }
