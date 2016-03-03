@@ -877,15 +877,15 @@ public class MultipleAlignmentTools {
 	 * @throws CompoundNotFoundException
 	 * @throws IOException
 	 */
-	public static Phylogeny getSDMTree(MultipleAlignment msta)
+	public static Phylogeny getHSDMTree(MultipleAlignment msta)
 			throws CompoundNotFoundException, IOException {
 		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = MultipleAlignmentTools
 				.toProteinMSA(msta);
 		BasicSymmetricalDistanceMatrix distmat = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
-				.dissimilarityScore(msa, SubstitutionMatrixHelper.getAminoAcidSubstitutionMatrix("PRLA000101"));
+				.dissimilarityScore(msa, SubstitutionMatrixHelper.getAminoAcidSubstitutionMatrix("PRLA000102"));
 		Phylogeny tree = TreeConstructor.distanceTree(distmat,
 				TreeConstructorType.NJ);
-		tree.setName("SDM Tree");
+		tree.setName("HSDM Tree");
 		return tree;
 	}
 
