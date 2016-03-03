@@ -42,11 +42,11 @@ public class TestParseMmCIFLigands {
 		Structure sCif = StructureIO.getStructure("4HHB");
 
 		//Verify that we have all HEM atoms from the CIF file.
-		assertEquals( HEM_COUNT_4HHB, countUniqueAtomsInLigandGroups(sCif) );
+		assertEquals( HEM_COUNT_4HHB, countBondedAtomsInLigandGroups(sCif) );
 		
 	}
 	
-	private int countUniqueAtomsInLigandGroups(Structure s){
+	private int countBondedAtomsInLigandGroups(Structure s){
 
 		int count = 0;
 		
@@ -86,7 +86,7 @@ public class TestParseMmCIFLigands {
 		
 		//Verify that we have all atoms from all conformations of the ligands
 		
-		assertEquals(ATOM_COUNT_3UCB, countUniqueAtomsInLigandGroups(sCif));
+		assertEquals(ATOM_COUNT_3UCB, countBondedAtomsInLigandGroups(sCif));
 	}
 
 }
