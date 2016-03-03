@@ -24,7 +24,7 @@ package org.biojava.nbio.core.sequence.features;
 
 import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 
 /**
  * If you have a uniprot ID then it is possible to get a collection
@@ -39,7 +39,7 @@ import java.util.LinkedHashMap;
  * this is just like a normal qualifier, except that the value has a certain notation ("database:databaseRecord")
  * the only difference from qualifier is how to extract the value (see getDatabaseRecord)
  */
-@Deprecated  //please use feature interface methods.
+
 public class DBReferenceInfo extends Qualifier {
     //private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
     //private String database = "";
@@ -53,7 +53,6 @@ public class DBReferenceInfo extends Qualifier {
      * The name is always db_xref
      * @param database
      */
-	@Deprecated
     public DBReferenceInfo(String value){
         super("db_xref", value);
         //this.database = database;
@@ -61,20 +60,49 @@ public class DBReferenceInfo extends Qualifier {
     }
 
     /**
-     * initialize qualifier db_xref with string array of database:record 
+     * initialize qualifier db_xref with string array where each string must be in the format database:record 
      * @param entries
      */
-	@Deprecated
 	public DBReferenceInfo(String[] entries) {
 		super("db_xref", entries);
 	}
-
+	/**
+	 * initialize qualifier "db_xref" with string in the format database:record 
+	 * @param database
+	 * @param reference
+	 */
+	public DBReferenceInfo(String database, String reference) {
+		super("db_xref", database+":"+reference);
+	}
+	/**
+	 * initialize qualifier with string[2][] where the array [0] stores several entries of database and the array [1] the corresponding references
+	 * @param entries
+	 * @return 
+	 */
+	public boolean setDBReferenceInfos(String[][] databaseReferenceInfos) {
+		if(databaseReferenceInfos !=null && databaseReferenceInfos.length==2 && databaseReferenceInfos[0].length==databaseReferenceInfos[1].length) {
+			int i=0;
+			while(i<databaseReferenceInfos[0].length) {
+				this.addValue(databaseReferenceInfos[0][i]+":"+databaseReferenceInfos[1][i]);
+				i++;
+			}
+			return true;
+		} else return false;
+	}
+	/**
+	 * add a database reference info where database is in string[0] and reference in string [1]
+	 * @param databaseReferenceInfo
+	 */
+	public void addDbReferenceInfo(String[] databaseReferenceInfo) {
+		if(databaseReferenceInfo!=null && databaseReferenceInfo.length==2) {
+			this.addValue(databaseReferenceInfo[0]+":"+databaseReferenceInfo[1]);
+		}
+	}
 	/**
 	 * get the sequence record for the database in question
 	 * @param database
 	 * @return
 	 */
-	@Deprecated
 	public String getDatabaseRecord(String database) {
 		for(String s: super.getValues()) if(s.startsWith(database)) return s.split(":")[1];
 		return null;
@@ -108,7 +136,6 @@ public class DBReferenceInfo extends Qualifier {
     //public void setProperties(LinkedHashMap<String, String> properties) {
     //    this.properties = properties;
     //}
-	@Deprecated
 	public String[] getFirstDatabaseReferenceInfo() {
 		if(super.getValues() !=null && super.getValues().length>0) return super.getValue(0).split(":");
 		else return null;
@@ -117,15 +144,13 @@ public class DBReferenceInfo extends Qualifier {
     /**
      * @return the database
      */
-	@Deprecated
     public String getDatabase() {
-        return getFirstDatabaseReferenceInfo()[0];
+        return getDatabase(0);
         
     }
  
-	@Deprecated
     public String getId() {
-        return getFirstDatabaseReferenceInfo()[1];
+        return getDatabaseReference(0);
     }
 
 
@@ -150,7 +175,76 @@ public class DBReferenceInfo extends Qualifier {
    public String toString() {
 		return super.getFirstValue();
    }
+   /**
+    * return all database reference infos as a string array [2][],
+    * i.e. the databases are in array [0] and the references in [1]
+    * both array have the same length
+    * @return
+    */
+   public String[][] getAllDatabaseReferenceInfos() {
+	   String[][] info=new String[2][valueSize()];
+	   for(int i=0;i<valueSize();i++) {
+		   String str[]=getValue(i).split(":");
+		   info[0][i]=str[0];
+		   info[1][i]=str[1];
+	   }
+	   return info;
+   }
+   /**
+    * returns all databses in a string[]
+    * @return
+    */
+   public String[] getAllDatabases() {
+	   return getAllDatabaseReferenceInfos()[0];
+   }
+   /**
+    * returns all references in a string[]
+    * @return
+    */
+   public String[] getAllDatabaseReferences() {
+	   return getAllDatabaseReferenceInfos()[1];
+   }
 
+   
+   public String getFirstDatabaseReference() {
+	   return getDatabaseReference(0);
+   }
+   /**
+    * get db ref info (i.e. string[2] with database in 0 and db ref in [1]
+    *
+    * @param i
+    * @return
+    */
+   public String[] getDatabaseReferenceInfo(int i) {
+	   if(valueSize()>i) return getValue(i).split(":");
+	   else return null;
+   }
+   /**
+    * get dbref for database i
+    * @param i
+    * @return
+    */
+   public String getDatabaseReference(int i) {
+	   String[] strA = getDatabaseReferenceInfo(i);
+	   if(strA!=null && strA.length>0) return strA[1];
+	   else return null;
+   }
+   public String getDatabase(int i) {
+	   String[] strA = getDatabaseReferenceInfo(i);
+	   if(strA!=null && strA.length>0) return strA[0];
+	   else return null;
+   }
 
+   public String getDatabaseReference(String database, int i) {
+	   String[] refs = getAllDatabaseReferences(database);
+	   if(refs!=null && refs.length>i) return refs[i];
+	   return null;
+   }
 
+   public String[] getAllDatabaseReferences(String database) {
+	   ArrayList<String> als=new ArrayList<String>();
+	   for(String s : getValues()) if(s.startsWith(database)) als.add(s.split(":")[1]);
+	   return als.toArray(new String[als.size()]);
+   }
 }
+
