@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.test;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.SSBondImpl;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.IOException;

@@ -66,7 +66,6 @@ import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.SSBondImpl;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -2815,14 +2814,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void formBonds() {
 		
-		BondMaker maker = new BondMaker(structure);
+		BondMaker maker = new BondMaker(structure, params);
 		
 		// TODO do we want link records at all? aren't they overlapping with other bonds that we infer (peptide/nucleotide bonds) or get from chemical components (intra-molecule bonds) - JD 2016-03-03
 		for (LinkRecord linkRecord : linkRecords) {
-			maker.formLinkRecordBond(linkRecord, parseCAonly);
+			maker.formLinkRecordBond(linkRecord);
 		}
 		
-		maker.formDisulfideBonds(ssbonds, parseCAonly);
+		maker.formDisulfideBonds(ssbonds);
 		
 		maker.makeBonds();
 	}

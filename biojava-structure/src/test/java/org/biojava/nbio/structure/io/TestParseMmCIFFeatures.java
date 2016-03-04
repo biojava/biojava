@@ -1,12 +1,12 @@
 package org.biojava.nbio.structure.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.biojava.nbio.structure.Bond;
+import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
@@ -49,6 +49,63 @@ public class TestParseMmCIFFeatures {
         assertDisulfideBond("B", "B", 459, 517, bonds.get(4));
         assertDisulfideBond("B", "B", 487, 497, bonds.get(5));
         
+    }
+    
+    @Test
+    public void testSSBondAltLocs() throws IOException, StructureException {
+    	 AtomCache cache = new AtomCache();
+
+         StructureIO.setAtomCache(cache);
+
+         cache.setUseMmCif(true);
+         FileParsingParameters params = new FileParsingParameters();
+         params.setCreateAtomBonds(true);
+         cache.setFileParsingParams(params);
+         Structure sCif = StructureIO.getStructure("3DVF");
+
+         assertNotNull(sCif);
+
+         // After it has read the file, it should check that expected SSBONDs are present.
+         List<Bond> bonds = sCif.getSSBonds();
+
+         // 3DVF has 2 ssbonds including 1 in an alt loc
+         assertEquals(2, bonds.size());
+         
+         
+         // Check the bonds
+         assertDisulfideBond("A", "A", 23, 88, bonds.get(0));
+         assertDisulfideBond("A", "A", 23, 88, bonds.get(1));
+         
+         // check that we have the bonds correctly assigned to both atom and its altgroup atom
+         Group g = sCif.getChainByPDB("A").getGroupByPDB(new ResidueNumber("A", 23, ' '));
+         Group altG = g.getAltLocGroup('B');
+         Group g2 = sCif.getChainByPDB("A").getGroupByPDB(new ResidueNumber("A", 88, ' '));
+         List<Bond> bs = g.getAtom("SG").getBonds();
+         Bond b = null;
+         for (Bond bn:bs){
+        	 if (bn.getAtomA().getName().equals("SG") && bn.getAtomB().getName().equals("SG")) {
+        		 b = bn;
+        	 }
+         }
+         List<Bond> altbs = altG.getAtom("SG").getBonds();
+         Bond bAltG = null;
+         for (Bond bn:altbs){
+        	 if (bn.getAtomA().getName().equals("SG") && bn.getAtomB().getName().equals("SG")) {
+        		 bAltG = bn;
+        	 }
+         }
+         
+         assertNotNull(b);
+         assertNotNull(bAltG);
+         
+         //System.out.println(g);
+         //System.out.println(altG);
+         assertSame(g.getAtom("SG") , b.getAtomA());
+         assertSame(altG.getAtom("SG"), bAltG.getAtomA());
+         assertSame(g2.getAtom("SG"), b.getAtomB());
+         assertSame(g2.getAtom("SG"), bAltG.getAtomB());
+         
+         
     }
     
 	private void assertDisulfideBond(String expectedChainId1, String expectedChainId2, int expectedResSerial1, int expectedResSerial2, Bond bond) {

@@ -39,7 +39,6 @@ import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.SSBondImpl;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
