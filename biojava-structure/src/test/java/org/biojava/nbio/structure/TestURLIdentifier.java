@@ -1,20 +1,19 @@
 package org.biojava.nbio.structure;
 
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestURLIdentifier {
+	private static final Logger logger = LoggerFactory.getLogger(TestURLIdentifier.class);
 	@Test
 	public void testFileIdentifiers() throws StructureException, IOException {
 		AtomCache cache = new AtomCache();
@@ -81,5 +80,16 @@ public class TestURLIdentifier {
 		reduced = id.reduce(full);
 		assertEquals("wrong length for chainId=A", 94, StructureTools.getRepresentativeAtomArray(reduced).length);
 
+		try {
+			url = new URL("http://www.rcsb.org/pdb/files/1B8G.pdb.gz");
+			id = new URLIdentifier(url);
+
+			full = id.loadStructure(cache);
+			assertNotNull(full);
+			assertEquals("1B8G",id.toCanonical().getPdbId());
+		} catch(UnknownHostException e) {
+			logger.error("Unable to connect to rcsb.org");
+			// still pass
+		}
 	}
 }

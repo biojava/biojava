@@ -68,8 +68,17 @@ public interface BioUnitDataProvider {
 	
 	public void setAsymUnit(Structure asymUnit);
 	
+	/**
+	 * Set an AtomCache to use when fetching asymmetric units. If null, a new
+	 * cache will be created with default parameters.
+	 * @param cache
+	 */
 	public void setAtomCache(AtomCache cache);
 	
+	/**
+	 * 
+	 * @return The current cache, or null if no cache has been initialized
+	 */
 	public AtomCache getAtomCache();
 	
 }

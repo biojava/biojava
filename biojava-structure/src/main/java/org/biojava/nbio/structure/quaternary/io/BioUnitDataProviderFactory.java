@@ -91,5 +91,13 @@ public class BioUnitDataProviderFactory {
 		setBioUnitDataProvider(castClass);
 	}
 
+	/**
+	 * Get the class of providers to be instantiated.
+	 * @return
+	 */
+	public static Class<? extends BioUnitDataProvider> getBioUnitDataProviderClass() {
+		return providerClass;
+	}
+
 
 }

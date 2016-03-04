@@ -1,6 +1,7 @@
 package org.biojava.nbio.structure.align.client;
 
 import static org.junit.Assert.*;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +79,86 @@ public class TestStructureName {
 		StructureName sn = new StructureName("hopefully_this_doesnt_exist_nalkjas3");
 		assertFalse(sn.isFile());
 		assertTrue(sn.isPdbId());
+	}
+	/**
+	 * Test explicit prefixes
+	 * @throws StructureException
+	 */
+	@Test
+	public void testPrefixes() throws StructureException {
+		StructureName sn;
+		
+		// Basic case
+		sn = new StructureName("PDB:4hhb");
+		assertTrue(sn.isPdbId());
+		assertTrue(sn.getSource() == PDB);
+		assertEquals("4HHB",sn.getPdbId());
+		sn = new StructureName("PDB:4hhb.A:1-50");
+		assertTrue(sn.isPdbId());
+		assertTrue(sn.getSource() == PDB);
+		assertEquals("4HHB",sn.getPdbId());
+		// Invalid strings work too, they just don't load
+		sn = new StructureName("PDB:x");
+		assertTrue(sn.isPdbId());
+		assertTrue(sn.getSource() == PDB);
+		assertEquals("X",sn.getPdbId());
+		// SCOP
+		sn = new StructureName("SCOP:d2gs2a_");
+		assertTrue(sn.isScopName());
+		assertTrue(sn.getSource() == SCOP);
+		assertEquals("2GS2",sn.getPdbId());
+		// CATH
+		sn = new StructureName("CATH:1qvrC03");
+		assertTrue(sn.isCathID());
+		assertTrue(sn.getSource() == CATH);
+		assertEquals("1QVR",sn.getPdbId());
+		// PDP
+		sn = new StructureName("PDP:4HHBAa");
+		assertTrue(sn.isPDPDomain());
+		assertTrue(sn.getSource() == PDP);
+		assertEquals("4HHB",sn.getPdbId());
+		// URL
+		sn = new StructureName("URL:http://www.rcsb.org/pdb/files/1B8G.pdb.gz");
+		assertTrue(sn.isURL());
+		assertTrue(sn.getSource() == URL);
+		assertEquals("1B8G",sn.getPdbId());
+		sn = new StructureName("URL:file:///4hhb.pdb");
+		assertTrue(sn.isURL());
+		assertTrue(sn.getSource() == URL);
+		assertEquals("4HHB",sn.getPdbId());
+//		// File
+//		sn = new StructureName("FILE:~/4hhb.pdb");
+//		assertTrue(sn.isFile());
+//		assertTrue(sn.getSource() == FILE);
+//		assertEquals("4HHB",sn.getPdbId());
+//		// files are slightly different from URLs
+//		sn = new StructureName("file:/4hhb.pdb");
+//		assertTrue(sn.isFile());
+//		assertTrue(sn.getSource() == FILE);
+//		assertEquals("4HHB",sn.getPdbId());
+//		// files are slightly different from URLs
+//		sn = new StructureName("file:/4hhb_other.pdb");
+//		assertTrue(sn.isFile());
+//		assertTrue(sn.getSource() == FILE);
+//		assertEquals("4hhb_other",sn.getPdbId());
+
+		// ECOD
+		sn = new StructureName("e1lyw.1");
+		assertTrue(sn.isEcodDomain());
+		assertTrue(sn.getSource() == ECOD);
+		assertEquals("1LYW",sn.getPdbId());
+		// BIO
+		sn = new StructureName("BIO:2ehz:1");
+		assertTrue(sn.isBioAssembly());
+		assertTrue(sn.getSource() == BIO);
+		assertEquals("2EHZ",sn.getPdbId());
+		
+		// Invalid prefix
+		sn = new StructureName("XXX:2ehz");
+		assertTrue(sn.isPdbId());
+		assertTrue(sn.getSource() == PDB);
+		assertEquals("XXX:2EHZ",sn.getPdbId());
+
 	}
 
 }

@@ -145,13 +145,30 @@ public class StructureIO {
 	 * @throws IOException 
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
+		checkInitAtomCache();
+		return getBiologicalAssembly(pdbId,biolAssemblyNr,StructureIO.cache);
+	}
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, AtomCache cache) throws IOException, StructureException {
+
+		BioUnitDataProvider provider = null;
+		try {
+			provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
+			provider.setAtomCache(cache);
+			Structure bio = getBiologicalAssembly(pdbId, biolAssemblyNr,cache,BioUnitDataProviderFactory.getBioUnitDataProvider());
+			return bio;
+		} finally {
+			if(provider != null) {
+				//cleanup to avoid memory leaks
+				provider.setAsymUnit(null);
+				provider.setAtomCache(null);
+			}
+		}
+	}
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, AtomCache cache, BioUnitDataProvider provider) throws IOException, StructureException {
 
 		pdbId = pdbId.toLowerCase();
 		
-		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
 		
-		checkInitAtomCache();
-		provider.setAtomCache(cache);
 		
 		Structure asymUnit = provider.getAsymUnit(pdbId);
 		
@@ -168,9 +185,6 @@ public class StructureIO {
 		List<BiologicalAssemblyTransformation> transformations = 
 				asymUnit.getPDBHeader().getBioAssemblies().get(biolAssemblyNr).getTransforms();
 		
-		//cleanup to avoid memory leaks
-		provider.setAsymUnit(null);
-		provider.setAtomCache(null);
 		
 		if ( transformations == null || transformations.size() == 0){
 			
@@ -179,8 +193,6 @@ public class StructureIO {
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations);
-
-
 	}
 
 	/** 
