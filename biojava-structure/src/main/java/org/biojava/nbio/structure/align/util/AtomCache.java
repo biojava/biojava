@@ -51,6 +51,8 @@ import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
+import org.biojava.nbio.structure.quaternary.io.MmCifBiolAssemblyProvider;
+import org.biojava.nbio.structure.quaternary.io.PDBBioUnitDataProvider;
 import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDescription;
@@ -911,11 +913,11 @@ public class AtomCache {
 		if ( useMmCif) {
 			// get bio assembly from mmcif file
 
-			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.mmcifProviderClassName);
+			BioUnitDataProviderFactory.setBioUnitDataProvider(MmCifBiolAssemblyProvider.class);
 
 		} else {
 		
-			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
+			BioUnitDataProviderFactory.setBioUnitDataProvider(PDBBioUnitDataProvider.class);
 			
 		}
 	}
