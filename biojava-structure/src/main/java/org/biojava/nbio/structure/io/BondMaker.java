@@ -348,13 +348,15 @@ public class BondMaker {
 				a1 = getAtomFromRecord(atomName1, altLoc1, resName1, chainId1, seqId1, insCode1);
 				
 			} catch (StructureException e) {
-				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {}", seqId1, insCode1, resName1, chainId1, atomName1);
+				String altLocStr1 = altLoc1.isEmpty()? "" : "(alt loc "+altLoc1+")";
+				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId1, insCode1, resName1, chainId1, atomName1, altLocStr1);
 				continue;
 			}
 			try {
 				a2 = getAtomFromRecord(atomName2, altLoc2, resName2, chainId2, seqId2, insCode2);
 			} catch (StructureException e) {
-				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {}", seqId2, insCode2, resName2, chainId2, atomName2);
+				String altLocStr2 = altLoc2.isEmpty()? "" : "(alt loc "+altLoc2+")";
+				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId2, insCode2, resName2, chainId2, atomName2, altLocStr2);
 				continue;
 			}
 			
