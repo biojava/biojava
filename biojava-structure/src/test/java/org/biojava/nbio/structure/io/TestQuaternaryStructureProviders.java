@@ -56,7 +56,7 @@ public class TestQuaternaryStructureProviders {
 		testID("5LDH",2);
 		// in 5ldh there's also PAU and XAU but those are ignored, see github issue #230
 		MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
-		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());
+		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass());
 		
 		boolean gotException = false;
 		try {
@@ -94,15 +94,15 @@ public class TestQuaternaryStructureProviders {
 		
 		// get bio assembly from PDB file
 		PDBBioUnitDataProvider pdbProvider = new PDBBioUnitDataProvider();
-		BioUnitDataProviderFactory.setBioUnitDataProvider(pdbProvider.getClass().getCanonicalName());
+		BioUnitDataProviderFactory.setBioUnitDataProvider(pdbProvider.getClass());
 		Structure pdbS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
 
 		// get bio assembly from mmcif file
 		MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
-		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());			
+		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass());
 		Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
 
-		BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.DEFAULT_PROVIDER_CLASSNAME);
+		BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.DEFAULT_PROVIDER_CLASS);
 
 
 
