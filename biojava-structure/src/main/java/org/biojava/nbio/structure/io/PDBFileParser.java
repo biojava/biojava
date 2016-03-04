@@ -52,7 +52,6 @@ import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Author;
-import org.biojava.nbio.structure.BondImpl;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Compound;
@@ -67,7 +66,6 @@ import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.SSBond;
 import org.biojava.nbio.structure.SSBondImpl;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
@@ -84,7 +82,6 @@ import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import org.biojava.nbio.structure.Calc;
 
 
 /**
@@ -192,6 +189,8 @@ public class PDBFileParser  {
 	private List<DBRef> dbrefs;
 	private Map<String, Site> siteMap = new LinkedHashMap<String, Site>();
 	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
+	
+	private List<SSBondImpl> ssbonds = new ArrayList<>();
 	
 	private Matrix4d currentNcsOp;
 	private List<Matrix4d> ncsOperators;
@@ -2305,7 +2304,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (icode2.equals(" "))
 			icode2 = "";
 
-		SSBond ssbond = new SSBondImpl();
+		SSBondImpl ssbond = new SSBondImpl();
 
 		ssbond.setChainID1(chain1);
 		ssbond.setResnum1(seqNum1);
@@ -2313,7 +2312,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		ssbond.setResnum2(seqNum2);
 		ssbond.setInsCode1(icode1);
 		ssbond.setInsCode2(icode2);
-		structure.addSSBond(ssbond);
+		ssbonds.add(ssbond);
 	}
 	
 
@@ -2815,91 +2814,20 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * structure. This may need to be fixed in the future.
 	 */
 	private void formBonds() {
-		for (LinkRecord linkRecord : linkRecords) {
-			formLinkRecordBond(linkRecord);
-		}
-
-		for (SSBond disulfideBond : structure.getSSBonds()) {
-			formDisulfideBond(disulfideBond);
-		}
-
+		
 		BondMaker maker = new BondMaker(structure);
+		
+		// TODO do we want link records at all? aren't they overlapping with other bonds that we infer (peptide/nucleotide bonds) or get from chemical components (intra-molecule bonds) - JD 2016-03-03
+		for (LinkRecord linkRecord : linkRecords) {
+			maker.formLinkRecordBond(linkRecord, parseCAonly);
+		}
+		
+		maker.formDisulfideBonds(ssbonds, parseCAonly);
+		
 		maker.makeBonds();
 	}
 	
-	private void formLinkRecordBond(LinkRecord linkRecord) {
-		// only work with atoms that aren't alternate locations
-		if (linkRecord.getAltLoc1().equals(" ")
-				|| linkRecord.getAltLoc2().equals(" "))
-			return;
-
-		try {
-			Atom a = getAtomFromRecord(linkRecord.getName1(),
-					linkRecord.getAltLoc1(), linkRecord.getResName1(),
-					linkRecord.getChainID1(), linkRecord.getResSeq1(),
-					linkRecord.getiCode1());
-
-			Atom b = getAtomFromRecord(linkRecord.getName2(),
-					linkRecord.getAltLoc2(), linkRecord.getResName2(),
-					linkRecord.getChainID2(), linkRecord.getResSeq2(),
-					linkRecord.getiCode2());
-
-			// TODO determine what the actual bond order of this bond is; for
-			// now, we're assuming they're single bonds
-			new BondImpl(a, b, 1);
-		} catch (StructureException e) {
-			// Note, in Calpha only mode the link atoms may not be present.
-			if (! parseCAonly) {
-				logger.error("Error with the following link record: {}",linkRecord.toString());
-				//e.printStackTrace();
-				throw new RuntimeException(e);
-			} else {
-				logger.debug("StructureException caught while forming link record bonds in parseCAonly mode. Error: "+e.getMessage());
-			}
-			
-		}
-	}
 	
-	private void formDisulfideBond(SSBond disulfideBond) {
-		try {
-			Atom a = getAtomFromRecord("SG", "", "CYS",
-					disulfideBond.getChainID1(), disulfideBond.getResnum1(),
-					disulfideBond.getInsCode1());
-			Atom b = getAtomFromRecord("SG", "", "CYS",
-					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
-					disulfideBond.getInsCode2());
-			
-			new BondImpl(a, b, 1);
-		} catch (StructureException e) {
-			// Note, in Calpha only mode the CYS SG's are not present.
-			if (! parseCAonly) {
-				logger.error("Error with the following SSBond: {}",disulfideBond.toString());
-				//e.printStackTrace();
-				throw new RuntimeException(e);
-			} else {
-				logger.debug("StructureException caught while forming disulfide bonds in parseCAonly mode. Error: "+e.getMessage());
-			}
-		}
-	}
-
-	private Atom getAtomFromRecord(String name, String altLoc,
-			String resName, String chainID, String resSeq, String iCode)
-			throws StructureException {
-		if (iCode.isEmpty()) {
-			iCode = " "; // an insertion code of ' ' is ignored
-		}
-		
-		Chain chain = structure.getChainByPDB(chainID);
-		ResidueNumber resNum = new ResidueNumber(chainID, Integer.parseInt(resSeq), iCode.charAt(0));
-		Group group = chain.getGroupByPDB(resNum);
-		
-		// there is an alternate location
-		if (!altLoc.isEmpty()) {
-			group = group.getAltLocGroup(altLoc.charAt(0));
-		}
-		
-		return group.getAtom(name);
-	}
 
 	private void triggerEndFileChecks(){
 		// finish and add ...

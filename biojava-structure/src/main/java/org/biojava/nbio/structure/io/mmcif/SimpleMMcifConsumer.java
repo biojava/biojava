@@ -36,6 +36,7 @@ import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Compound;
@@ -47,7 +48,6 @@ import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.SSBond;
 import org.biojava.nbio.structure.SSBondImpl;
 import org.biojava.nbio.structure.SeqMisMatch;
 import org.biojava.nbio.structure.SeqMisMatchImpl;
@@ -721,6 +721,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (!params.isHeaderOnly()) {
 			if ( params.shouldCreateAtomBonds()) {
 				addBonds();
+				createSSBonds();
 			}
 	
 			if ( params.shouldCreateAtomCharges()) {
@@ -809,8 +810,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		linkCompounds();
 		
 		if (!params.isHeaderOnly()) {
-			createSSBonds();
-	
+			
 			// Do structure.setSites(sites) after any chain renaming to be like PDB.
 			addSites();
 		}
@@ -1853,8 +1853,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	private void createSSBonds() {
-		List<SSBond> bonds = structure.getSSBonds();
-		if (bonds == null) bonds = new ArrayList<SSBond>();
+		
+		List<SSBondImpl> bonds = new ArrayList<>();
 		
 		final String symop = "1_555"; // For now - accept bonds within origin asymmetric unit.
 		
@@ -1924,7 +1924,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		
-		structure.setSSBonds(bonds);
+		BondMaker maker = new BondMaker(structure);
+		
+		List<Bond> bs = maker.formDisulfideBonds(bonds, params.isParseCAOnly());
+		
+		structure.setSSBonds(bs);
 	}
 	
 	/**

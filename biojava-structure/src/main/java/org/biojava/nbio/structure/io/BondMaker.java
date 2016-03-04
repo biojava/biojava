@@ -24,8 +24,12 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.mmcif.model.ChemCompBond;
+import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +48,10 @@ import java.util.List;
  *
  */
 public class BondMaker {
+	
+	
+	private static final Logger logger = LoggerFactory.getLogger(BondMaker.class);
+	
 	/**
 	 * Maximum peptide (C - N) bond length considered for bond formation
 	 */
@@ -59,6 +67,18 @@ public class BondMaker {
 		this.structure = structure;
 	}
 
+	/**
+	 * Creates bond objects and corresponding references in Atom objects:
+	 * <li>
+	 * peptide bonds: inferred from sequence and distances
+	 * </li>
+	 * <li>
+	 * nucleotide bonds: inferred from sequence and distances
+	 * </li>
+	 * <li>
+	 * intra-group (residue) bonds: read from the chemical component dictionary, via {@link ChemCompProvider}
+	 * </li> 
+	 */
 	public void makeBonds() {
 		formPeptideBonds();
 		formNucleotideBonds();
@@ -196,4 +216,103 @@ public class BondMaker {
 		}
 	}
 
+	/**
+	 * Creates disulfide bond objects and references in the corresponding Atoms objects, given 
+	 * a list of {@link SSBondImpl}s parsed from a PDB/mmCIF file.
+	 * @param disulfideBonds
+	 * @param parseCAonly
+	 * @return the list of bonds
+	 */
+	public List<Bond> formDisulfideBonds(List<SSBondImpl> disulfideBonds, boolean parseCAonly) {
+		List<Bond> bonds = new ArrayList<>();
+		for (SSBondImpl disulfideBond : disulfideBonds) {
+			Bond bond = formDisulfideBond(disulfideBond, parseCAonly);
+			if (bond!=null) bonds.add(bond);
+		}
+		return bonds;
+	}
+	
+	private Bond formDisulfideBond(SSBondImpl disulfideBond, boolean parseCAonly) {
+		try {
+			Atom a = getAtomFromRecord("SG", "", "CYS",
+					disulfideBond.getChainID1(), disulfideBond.getResnum1(),
+					disulfideBond.getInsCode1());
+			Atom b = getAtomFromRecord("SG", "", "CYS",
+					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
+					disulfideBond.getInsCode2());
+			
+			Bond ssbond = new BondImpl(a, b, 1);
+			
+			structure.addSSBond(ssbond);
+			
+			return ssbond;
+			
+		} catch (StructureException e) {
+			// Note, in Calpha only mode the CYS SG's are not present.
+			if (! parseCAonly) {
+				logger.error("Error with the following SSBond: {}",disulfideBond.toString());
+				throw new RuntimeException(e);
+			} else {
+				logger.debug("StructureException caught while forming disulfide bonds in parseCAonly mode. Error: "+e.getMessage());
+			}
+			
+			return null;
+		}
+	}
+	
+	/**
+	 * Creates bond objects from a LinkRecord as parsed from a PDB file
+	 * @param linkRecord
+	 * @param parseCAonly
+	 */
+	public void formLinkRecordBond(LinkRecord linkRecord, boolean parseCAonly) {
+		// only work with atoms that aren't alternate locations
+		if (linkRecord.getAltLoc1().equals(" ")
+				|| linkRecord.getAltLoc2().equals(" "))
+			return;
+
+		try {
+			Atom a = getAtomFromRecord(linkRecord.getName1(),
+					linkRecord.getAltLoc1(), linkRecord.getResName1(),
+					linkRecord.getChainID1(), linkRecord.getResSeq1(),
+					linkRecord.getiCode1());
+
+			Atom b = getAtomFromRecord(linkRecord.getName2(),
+					linkRecord.getAltLoc2(), linkRecord.getResName2(),
+					linkRecord.getChainID2(), linkRecord.getResSeq2(),
+					linkRecord.getiCode2());
+
+			// TODO determine what the actual bond order of this bond is; for
+			// now, we're assuming they're single bonds
+			new BondImpl(a, b, 1);
+		} catch (StructureException e) {
+			// Note, in Calpha only mode the link atoms may not be present.
+			if (! parseCAonly) {
+				logger.error("Error with the following link record: {}",linkRecord.toString());
+				//e.printStackTrace();
+				throw new RuntimeException(e);
+			} else {
+				logger.debug("StructureException caught while forming link record bonds in parseCAonly mode. Error: "+e.getMessage());
+			}
+			
+		}
+	}
+	
+	private Atom getAtomFromRecord(String name, String altLoc, String resName, String chainID, String resSeq, String iCode)
+			throws StructureException {
+		if (iCode==null || iCode.isEmpty()) {
+			iCode = " "; // an insertion code of ' ' is ignored
+		}
+		
+		Chain chain = structure.getChainByPDB(chainID);
+		ResidueNumber resNum = new ResidueNumber(chainID, Integer.parseInt(resSeq), iCode.charAt(0));
+		Group group = chain.getGroupByPDB(resNum);
+		
+		// there is an alternate location
+		if (!altLoc.isEmpty()) {
+			group = group.getAltLocGroup(altLoc.charAt(0));
+		}
+		
+		return group.getAtom(name);
+	}
 }
