@@ -95,6 +95,23 @@ public class BoundingBox implements Serializable {
 		}
 
 	}
+
+
+	/** Returns the dimensions of this bounding box.
+	 *
+	 * @return a double array (x,y,z) with the dimensions of the box.
+     */
+	public double[] getDimensions(){
+
+		double[] dim = new double[3];
+		
+		dim[0] = xmax-xmin;
+		dim[1] = ymax-ymin;
+		dim[2] = zmax-zmin;
+
+		return dim;
+
+	}
 	
 	/**
 	 * Given a set of bounding boxes returns a bounding box that bounds all of them. 
