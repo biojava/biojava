@@ -43,7 +43,12 @@ import java.util.*;
  */
 public class SimpleSubstitutionMatrix<C extends Compound> implements SubstitutionMatrix<C>, Serializable {
 	
-    private static final String comment = "#";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2645265638108462479L;
+
+	private static final String comment = "#";
 
     private CompoundSet<C> compoundSet;
     private String description, name;
