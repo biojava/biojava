@@ -20,23 +20,29 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import java.io.*;
-import java.net.URI;
-import java.nio.file.*;
-import java.util.HashMap;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** This chemical component provider retrieves and caches chemical component definition files from a
  * zip archive specified in its construction.  If the archive does not contain the record, an attempt is
@@ -51,7 +57,7 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
  * updated 3/5/2016 for Java 7 ZipFileSystem
  */
 public class ZipChemCompProvider implements ChemCompProvider{
-	private static final Logger s_logger = Logger.getLogger( ZipChemCompProvider.class.getPackage().getName() );
+	private static final Logger s_logger = LoggerFactory.getLogger(ZipChemCompProvider.class);
 
 	private final Path m_tempDir;  // Base path where $m_zipRootDir/ will be downloaded to.
 	private final Path m_zipRootDir;
@@ -235,7 +241,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 			if (Files.exists(cif)) {
 				final InputStream zipStream = Files.newInputStream(cif);
 				final InputStream inputStream = new GZIPInputStream(zipStream);
-				s_logger.fine("reading " + recordName + " from " + m_zipFile);
+				s_logger.debug("reading " + recordName + " from " + m_zipFile);
 				final MMcifParser parser = new SimpleMMcifParser();
 				final ChemCompConsumer consumer = new ChemCompConsumer();
 				parser.addMMcifConsumer(consumer);
@@ -246,7 +252,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 				cc = dict.getChemComp(recordName);
 			}
 		} catch (IOException e) {
-			s_logger.severe("Unable to read from zip file : " + e.getMessage());
+			s_logger.error("Unable to read from zip file : " + e.getMessage());
 		}
 
 		return cc;
@@ -298,7 +304,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 			}
 			ret = true;
 		} catch (IOException ex) {
-			s_logger.severe("Unable to add entries to Chemical Component zip archive : " + ex.getMessage());
+			s_logger.error("Unable to add entries to Chemical Component zip archive : " + ex.getMessage());
 			ret = false;
 		}
 		return ret;
