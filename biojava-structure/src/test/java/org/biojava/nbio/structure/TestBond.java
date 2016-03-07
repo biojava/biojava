@@ -33,11 +33,13 @@ import static org.junit.Assert.*;
 public class TestBond {
 	
 
+	private static AtomCache cache;
+	
 	@BeforeClass
 	public static void setUp() throws IOException, StructureException {		
-		AtomCache cache = new AtomCache();
+		cache = new AtomCache();
 
-		cache.setUseMmCif(false);
+		cache.setUseMmCif(true);
 
 		FileParsingParameters params = cache.getFileParsingParams();
 		
@@ -93,6 +95,8 @@ public class TestBond {
 
 	@Test
 	public void testLINKBonds() throws StructureException, IOException {
+		
+		cache.setUseMmCif(false);
 
 		Structure s = StructureIO.getStructure("1kh9");
 		
@@ -109,6 +113,8 @@ public class TestBond {
 		assertNotNull(atom1);
 		assertNotNull(atom2);
 		assertTrue(areBonded(atom1, atom2));
+		
+		cache.setUseMmCif(true);
 	}
 
 	@Test
@@ -161,4 +167,5 @@ public class TestBond {
 	public void test1BDX() throws IOException, StructureException {
 		StructureIO.getStructure("1BDX");
 	}
+	
 }
