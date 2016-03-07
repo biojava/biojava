@@ -86,6 +86,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 
 		// Setup an instance of the download chemcomp provider.
 		this.m_dlProvider = new DownloadChemCompProvider(m_tempDir.toString());
+		this.m_removeCif = true;
 		initializeZip();
 	}
 
