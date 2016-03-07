@@ -716,17 +716,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
 		}
 
-		// Various tasks that require Atoms can be skipped.
-		if (!params.isHeaderOnly()) {
-			if ( params.shouldCreateAtomBonds()) {
-				addBonds();
-			}
-	
-			if ( params.shouldCreateAtomCharges()) {
-				addCharges();
-			}
-		}
-		
 		if (asymStrandId.isEmpty()) {
 			logger.warn("No pdbx_poly_seq_scheme/pdbx_non_poly_seq_scheme categories present. Will use chain id mapping from _atom_sites category");
 			
@@ -799,6 +788,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 						}
 					}
 				}
+			}
+		}
+		
+		// NOTE bonds and charges can only be done at this point that the chain id mapping is properly sorted out 
+		if (!params.isHeaderOnly()) {
+			if ( params.shouldCreateAtomBonds()) {
+				addBonds();
+			}
+	
+			if ( params.shouldCreateAtomCharges()) {
+				addCharges();
 			}
 		}
 		
