@@ -25,6 +25,7 @@ package org.biojava.nbio.core.sequence.compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -37,9 +38,13 @@ import java.util.*;
  * @author Scooter Willis
  * @author Mark Chapman
  */
-public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
+public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Serializable {
 
-    private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<String, AminoAcidCompound>();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4000344194364133456L;
+	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<String, AminoAcidCompound>();
     private final Map<String, AminoAcidCompound> aminoAcidCompoundCache3Letter = new HashMap<String, AminoAcidCompound>();
 
     private final Map<AminoAcidCompound, Set<AminoAcidCompound>> equivalentsCache =
