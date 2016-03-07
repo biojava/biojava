@@ -248,12 +248,6 @@ public class CeSymm {
 		// Store the optimal self-alignment
 		result.setSelfAlignment(optimalAFP);
 		result.setStructureId(id);
-		
-		// Do not try the refinement if the self-alignment is not significant
-		if (optimalAFP.getTMScore() < params.getScoreThreshold()){
-			result.setSymmOrder(1);
-			return result;
-		}
 
 		// Determine the symmetry Type or get the one in params
 		if (params.getSymmType() == SymmetryType.AUTO) {
@@ -266,6 +260,12 @@ public class CeSymm {
 			}
 		} else
 			result.setType(params.getSymmType());
+		
+		// Do not try the refinement if the self-alignment is not significant
+		if (optimalAFP.getTMScore() < params.getScoreThreshold()){
+			result.setSymmOrder(1);
+			return result;
+		}
 
 		// STEP 3: order detection & symmetry refinement, apply consistency
 		try {
@@ -416,19 +416,14 @@ public class CeSymm {
 		if (result.isRefined()) {
 			// Optimize the global alignment freely once more (final step)
 			if (params.getOptimization() && result.getSymmLevels() > 1) {
-				// Remove the axes to do free superposition optimization TODO
-				SymmetryAxes axes = result.getAxes();
-				result.setAxes(null);
 				try {
 					SymmOptimizer optimizer = new SymmOptimizer(result);
 					MultipleAlignment optimized = optimizer.optimize();
 					// Set the optimized MultipleAlignment and the axes
 					result.setMultipleAlignment(optimized);
-					result.setAxes(axes);
 				} catch (RefinerFailedException e) {
 					logger.info("Final optimization failed:" + e.getMessage());
 				}
-				result.setAxes(axes);
 			}
 			result.getMultipleAlignment().getEnsemble()
 					.setStructureIdentifiers(result.getRepeatsID());
