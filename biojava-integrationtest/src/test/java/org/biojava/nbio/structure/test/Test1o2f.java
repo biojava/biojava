@@ -1,7 +1,6 @@
 package org.biojava.nbio.structure.test;
 
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;

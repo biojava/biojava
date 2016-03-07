@@ -67,12 +67,6 @@ public class FileParsingParameters implements Serializable
 	 */
 	boolean alignSeqRes;
 
-	
-	/** Should we create connections instead of bonds for ligands?
-	 *
-	 */
-	boolean createConects;
-
 	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
 	 * 
 	 */
@@ -158,8 +152,6 @@ public class FileParsingParameters implements Serializable
 		parseBioAssembly = false;
 		
 		createAtomBonds = false;
-		
-		createConects = false;
 
 		createAtomCharges = true;
 		
@@ -410,24 +402,6 @@ public class FileParsingParameters implements Serializable
 	 */
 	public void setCreateAtomCharges(boolean createAtomCharges) {
 		this.createAtomCharges = createAtomCharges;
-	}
-
-	/**Should we create Bonds for ligands when parsing an mmCIF file?
-	 * 
-	 * @return true if we should create bonds based on ChemComp information.
-	 */
-	public boolean isCreateLigandConects(){
-		return createConects;
-	}
-	
-	/**Should we create connections between atoms in ligands when parsing 
-	 * a file? Setting this to true must also set AlignSeqRes true.
-	 * 
-	 * @param createLigandConects boolean flag yes/no
-	 */
-	public void setCreateLigandConects(boolean createLigandConects){
-		this.createConects = createLigandConects;
-		this.alignSeqRes = true;
 	}
 
 	public boolean isUseInternalChainId() {

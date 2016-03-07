@@ -39,7 +39,6 @@ import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.SSBond;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
@@ -116,6 +115,8 @@ public class FileConvert {
 
 		StringBuffer str = new StringBuffer();
 
+		// TODO this needs to be rewritten so that the data comes from Atom.getBonds(). Structure.getConnections will be removed in upcoming releases (after 4.2) - JD 2016-03-03 
+		
 		List<Map<String, Integer>> cons = structure.getConnections();
 		for (int cnr = 0; cnr<cons.size();cnr++){
 			Map<String,Integer> con =  cons.get(cnr);
@@ -200,7 +201,8 @@ public class FileConvert {
 			str.append(newline);
 		}
 		//SSBOND
-		for (SSBond ssbond : structure.getSSBonds()){
+		List<SSBondImpl> ssbonds = SSBondImpl.getSsBondListFromBondList(structure.getSSBonds());
+		for (SSBondImpl ssbond : ssbonds){			
 			ssbond.toPDB(str);
 			str.append(newline);
 		}

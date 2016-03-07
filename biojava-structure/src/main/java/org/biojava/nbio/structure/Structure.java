@@ -260,14 +260,18 @@ public interface Structure extends Cloneable {
        *
        * @param connections  a List object specifying the connections
        * @see #getConnections
+       * @deprecated use {@link Atom#addBond(Bond)} instead
     */
+    @Deprecated
     public void setConnections(List<Map<String,Integer>> connections);
 
     /**
      * Return the connections value.
      * @return a List object representing the connections value
      * @see #setConnections
+     * @deprecated use {@link Atom#getBonds()} instead
      */
+    @Deprecated
     public List<Map<String,Integer>> getConnections();
 
     /** 
@@ -582,25 +586,25 @@ public interface Structure extends Cloneable {
     public void setJournalArticle(JournalArticle journalArticle);
 
     /** 
-     * Get the list of SSBonds as they have been defined in the PDB files
+     * Get the list of disulfide Bonds as they have been defined in the PDB files
      *
-     * @return a list of SSBonds
+     * @return a list of Bonds
      */
-    public List<SSBond> getSSBonds();
+    public List<Bond> getSSBonds();
 
     /** 
      * Set the list of SSBonds for this structure
      *
      * @param ssbonds
      */
-    public void setSSBonds(List<SSBond> ssbonds);
+    public void setSSBonds(List<Bond> ssbonds);
 
     /** 
-     * Add a single SSBond to this structure
+     * Add a single disulfide Bond to this structure
      *
      * @param ssbond
      */
-    public void addSSBond(SSBond ssbond);
+    public void addSSBond(Bond ssbond);
 
     /** 
      * Set the the header information for this PDB file

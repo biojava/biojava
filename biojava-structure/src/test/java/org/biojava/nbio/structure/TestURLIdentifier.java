@@ -1,16 +1,12 @@
 package org.biojava.nbio.structure;
 
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 
-import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 

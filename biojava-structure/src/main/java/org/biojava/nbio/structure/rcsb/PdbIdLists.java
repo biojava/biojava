@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.rcsb;
 
-import org.biojava.nbio.structure.PDBStatus;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;

@@ -178,11 +178,10 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.getPDBHeader().setDescription(
 				"sub-range " + ranges + " of "  + newS.getPDBCode() + " "
-						+ s.getPDBHeader().getDescription());
-		newS.setCrystallographicInfo(s.getCrystallographicInfo());
+						+ s.getPDBHeader().getDescription());		
 		// TODO The following should be only copied for atoms which are present in the range.
 		newS.setCompounds(s.getCompounds());
-		newS.setConnections(s.getConnections());
+		
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 
@@ -198,7 +197,6 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 			if(getResidueRanges().isEmpty()) {
 				// Include all residues
 				newS.setCompounds(s.getCompounds());
-				newS.setConnections(s.getConnections());
 				newS.setSSBonds(s.getSSBonds());
 				newS.setSites(s.getSites());
 
