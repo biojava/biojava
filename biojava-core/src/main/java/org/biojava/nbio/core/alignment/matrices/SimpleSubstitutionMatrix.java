@@ -41,8 +41,8 @@ import java.util.*;
  * @author Paolo Pavan
  * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
  */
-public class SimpleSubstitutionMatrix<C extends Compound> implements SubstitutionMatrix<C> {
-
+public class SimpleSubstitutionMatrix<C extends Compound> implements SubstitutionMatrix<C>, Serializable {
+	
     private static final String comment = "#";
 
     private CompoundSet<C> compoundSet;
