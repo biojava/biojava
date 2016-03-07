@@ -23,6 +23,8 @@
 
 package org.biojava.nbio.core.sequence.compound;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.core.sequence.template.AbstractCompound;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
@@ -33,7 +35,7 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
  * @author Scooter Willis
  * @author Andy Yates
  */
-public class AminoAcidCompound extends AbstractCompound {
+public class AminoAcidCompound extends AbstractCompound implements Serializable {
 
   private final AminoAcidCompoundSet compoundSet;
 
