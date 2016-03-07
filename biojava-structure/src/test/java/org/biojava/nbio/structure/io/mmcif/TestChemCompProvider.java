@@ -7,14 +7,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.junit.Test;
 
 public class TestChemCompProvider {
+	private static final Logger s_logger = Logger.getLogger( TestChemCompProvider.class.getPackage().getName() );
 	
 	// Short test with bad ligand name (QNA is bogus)
 	final	String DNAexample = 
@@ -100,8 +105,10 @@ public class TestChemCompProvider {
 		Path chemComp = pdbdir.resolve("chemcomp.zip");
 		
 		System.out.println("Using PDB_DIR=" + pdbdir.toString() + " as temporary file directory");
-		
-		ChemCompGroupFactory.setChemCompProvider(new ZipChemCompProvider(chemComp.toString(), pdbdir.toString()));
+		ZipChemCompProvider zp = new ZipChemCompProvider(chemComp.toString(), pdbdir.toString());
+		// Keep the .cif.gz files - avoid re-downloading for unit testing.
+		zp.setRemoveCif(false);
+		ChemCompGroupFactory.setChemCompProvider(zp);
 		
 		// Parameters
 		FileParsingParameters params = new FileParsingParameters();
@@ -112,5 +119,50 @@ public class TestChemCompProvider {
 		
 		Structure s = pdbreader.getStructure(testPDB);
 		assertEquals(5, s.getChain(0).getAtomGroups().size());
+		// Not wanted here for testing, but useful for cleaning up downloaded .cif.gz files.
+		// ZipChemCompProvider.purgeTempFiles(pdbdir.toString());
+	}
+
+	@Test
+	public void testNormalStructure() throws StructureException, IOException {
+		// we just need this to track where to store PDB files
+		// this checks the PDB_DIR property (and uses a tmp location if not set)
+		UserConfiguration config = new UserConfiguration();
+		String cachePath = config.getCacheFilePath();
+
+		// Setup a ChemCompProvider
+		Path pdbdir = Paths.get(cachePath);
+		Path chemComp = pdbdir.resolve("chemcomp.zip");
+
+		System.out.println("Using PDB_DIR=" + pdbdir.toString() + " as temporary file directory");
+
+		AtomCache cache = new AtomCache();
+		StructureIO.setAtomCache(cache);
+		FileParsingParameters params = cache.getFileParsingParams();
+		params.setParseBioAssembly(true);
+		params.setLoadChemCompInfo(true);
+
+		/*
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+		StructureIO.setAtomCache(cache);
+		cache.setUseMmCif(true);
+		long startTime = System.currentTimeMillis();
+		Structure sCif = StructureIO.getStructure("4HHM");
+		long finishTime = System.currentTimeMillis();
+		s_logger.info("DownloadChemComp time: "+(finishTime-startTime)+ " ms");
+		*/
+
+		ZipChemCompProvider zp = new ZipChemCompProvider(chemComp.toString(), pdbdir.toString());
+		// Keep the .cif.gz files - avoid re-downloading for unit testing.
+		zp.setRemoveCif(false);
+		ChemCompGroupFactory.setChemCompProvider(zp);
+
+		long startTime = System.currentTimeMillis();
+		Structure sCif = StructureIO.getStructure("4HHM");
+		long finishTime = System.currentTimeMillis();
+		s_logger.info("ZipChemComp time: "+(finishTime-startTime)+ " ms");
+
+		// Not wanted here for testing, but useful for cleaning up downloaded .cif.gz files.
+		// ZipChemCompProvider.purgeTempFiles(pdbdir.toString());
 	}
 }
