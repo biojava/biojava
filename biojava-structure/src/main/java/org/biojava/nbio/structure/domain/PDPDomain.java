@@ -15,7 +15,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 public class PDPDomain implements StructureIdentifier {
 	String identifier;
 	SubstructureIdentifier canonical;
-	public static final Pattern PDP_NAME_PATTERN = Pattern.compile("^PDP:([0-9][a-z0-9]{3})(\\w)(\\w)$",Pattern.CASE_INSENSITIVE);
+	public static final Pattern PDP_NAME_PATTERN = Pattern.compile("^(?:PDP:)([0-9][a-z0-9]{3})(\\w)(\\w)$",Pattern.CASE_INSENSITIVE);
 
 	public PDPDomain(String pdpDomainName, List<ResidueRange> ranges) {
 		this.identifier = pdpDomainName;

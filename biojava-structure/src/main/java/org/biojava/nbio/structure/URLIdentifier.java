@@ -177,7 +177,7 @@ public class URLIdentifier implements StructureIdentifier {
 	public static String guessPDBID(String name) {
 		Matcher match = PDBID_REGEX.matcher(name);
 		if(match.matches()) {
-			return match.group(1);
+			return match.group(1).toUpperCase();
 		} else {
 			// Give up if doesn't match
 			return null;

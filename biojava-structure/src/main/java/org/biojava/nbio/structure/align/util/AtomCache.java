@@ -259,7 +259,7 @@ public class AtomCache {
 	 * @param pdbId
 	 *            the PDB ID
 	 * @param bioAssemblyId
-	 *            the ID of the biological assembly
+	 *            the 1-based index of the biological assembly (0 gets the asymmetric unit)
 	 * @param bioAssemblyFallback
 	 *            if true, try reading original PDB file in case the biological assembly file is not available
 	 * @return a structure object
@@ -271,21 +271,38 @@ public class AtomCache {
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean bioAssemblyFallback)
 			throws StructureException, IOException {
 
-		if (bioAssemblyId < 1) {
-			throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + " bioAssemblyId "
+		if (bioAssemblyId < 0) {
+			throw new StructureException("bioAssemblyID must be nonnegative: " + pdbId + " bioAssemblyId "
 					+ bioAssemblyId);
 		}	
-		Structure s = StructureIO.getBiologicalAssembly(pdbId, bioAssemblyId);
+		Structure s = StructureIO.getBiologicalAssembly(pdbId, bioAssemblyId,this);
 		
 		if ( s == null && bioAssemblyFallback)
-			return StructureIO.getBiologicalAssembly(pdbId, 0);
+			return StructureIO.getBiologicalAssembly(pdbId, 0,this);
 		
 		return s;
 	}
 
 	/**
-	 * Loads the default biological unit (*.pdb1.gz) file. If it is not available, the original PDB file will be loaded,
-	 * i.e., for NMR structures, where the original files is also the biological assembly.
+	 * Loads the default biological unit (e.g. *.pdb1.gz). If it is not available,
+	 * the asymmetric unit will be loaded, i.e. for NMR structures.
+	 * 
+	 * <p>Biological assemblies can also be accessed using
+	 * <tt>getStructure("BIO:<i>[pdbId]</i>")</tt>
+	 * @param pdbId
+	 *            the PDB ID
+	 * @return a structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 * @since 4.2
+	 */
+	public Structure getBiologicalAssembly(String pdbId) throws StructureException, IOException {
+		int bioAssemblyId = 1;
+		return getBiologicalAssembly(pdbId, bioAssemblyId);
+	}
+	/**
+	 * Loads the default biological unit (e.g. *.pdb1.gz). If it is not available,
+	 * the asymmetric unit will be loaded, i.e. for NMR structures.
 	 * 
 	 * @param pdbId
 	 *            the PDB ID
@@ -293,9 +310,26 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 * @since 3.2
+	 * @deprecated Renamed to {@link #getBiologicalAssembly(String)} in 4.2
 	 */
+	@Deprecated
 	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException {
-		int bioAssemblyId = 1;
+		return getBiologicalAssembly(pdbId);
+	}
+	/**
+	 * Loads the default biological unit (e.g. *.pdb1.gz). If it is not available,
+	 * the asymmetric unit will be loaded, i.e. for NMR structures.
+	 * 
+	 * @param pdbId
+	 *            the PDB ID
+	 * @param bioAssemblyId
+	 *            the 1-based index of the biological assembly (0 gets the asymmetric unit)
+	 * @return a structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 * @since 4.2
+	 */
+	public Structure getBiologicalAssembly(String pdbId,int bioAssemblyId) throws StructureException, IOException {
 		boolean bioAssemblyFallback = true;
 		return getBiologicalAssembly(pdbId, bioAssemblyId, bioAssemblyFallback);
 	}
@@ -925,26 +959,6 @@ public class AtomCache {
 	private boolean checkLoading(String name) {
 		return currentlyLoading.contains(name);
 
-	}
-
-	private Structure getBioAssembly(String name) throws IOException, StructureException {
-
-	
-		// can be specified as:
-		// BIO:1fah - first one
-		// BIO:1fah:0 - asym unit
-		// BIO:1fah:1 - first one
-		// BIO:1fah:2 - second one
-
-		String pdbId = name.substring(4, 8);
-		int biolNr = 1;
-		if (name.length() > 8) {
-			biolNr = Integer.parseInt(name.substring(9, name.length()));
-		}
-
-		Structure s= StructureIO.getBiologicalAssembly(pdbId, biolNr);
-
-		return s;
 	}
 
 	/**
