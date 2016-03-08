@@ -43,7 +43,7 @@ public class TestLoadStructureFromURL {
 		// we use the cache path because there's no guarantee that the PDB dir is writable
 		String path = new UserConfiguration().getCacheFilePath();
 
-		File f = new File(path, "SUB DIR"); 
+		File f = new File(path, "TEST DIR"); 
 		f.deleteOnExit();
 		if ( ! f.exists()) {
 			System.out.println("making dir with space:" + f);

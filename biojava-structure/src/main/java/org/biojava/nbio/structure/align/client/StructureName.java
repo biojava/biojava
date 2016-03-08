@@ -83,7 +83,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private static final Pattern scopPattern = Pattern.compile("^(?:SCOP:)?d([0-9][a-z0-9]{3}|s046)(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
 	// ECOD chains and domains can't be automatically distinguished. Ex: e3j9zS13 is chain 'S1', e1wz2B14 is chain 'B'
 	private static final Pattern ecodPattern = Pattern.compile("^(?:ECOD:)?e([0-9][a-z0-9]{3})(?:\\w|\\.)\\w+$",Pattern.CASE_INSENSITIVE);
-	
+
 	// Names are automatically used as prefixes
 	public enum Source {
 		PDB,
@@ -100,7 +100,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 
 	// cache for getBaseIdentifier() method
 	private StructureIdentifier base = null;
-	
+
 	/**
 	 * Create a new StructureName from the given identifier, which may be a 
 	 * domain name, a substructure identifier, etc.
@@ -130,7 +130,8 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * <li><b>FILE</b> A file path. Supports relative paths and expands ~ to
 	 *     the user's home directory. Only existing files will be automatically
 	 *     detected; to refer to a potentially not-yet existing file, prepend
-	 *     the prefix. Example: ~/custom_protein.pdb
+	 *     the prefix. Internally represented as a {@link URLIdentifier}
+	 *     after path expansion. Example: ~/custom_protein.pdb
 	 * <li><b>ECOD</b> ECOD domain. Example: e1lyw.1
 	 * <li><b>BIO</b> Biological assembly. These are not guessed, making
 	 *     the BIO: prefix obligatory. Example: BIO:2ehz:1
@@ -151,135 +152,191 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * @throws IllegalArgumentException if the source is recognizable but invalid
 	 */
 	private void init(){
+
 		// First try identifying a prefix
 		String[] prefix = name.split(":", 2);
 		mySource = null;
 		if(prefix.length > 1) {
 			// Match Source prefixes
+			String suffix = prefix[1];
 			try {
 				mySource = Source.valueOf(prefix[0].toUpperCase());
-			} catch( IllegalArgumentException e) {
-				// not a known prefix; revert to guessing
+			} catch( IllegalArgumentException e ) {
+				// unrecognized prefix; fall back on guessing
 				mySource = null;
 			}
-		}
-		// SCOP domain
-		if( mySource == Source.SCOP || mySource == null) {
-			Matcher matcher = scopPattern.matcher(name);
-			if ( matcher.matches() ) {
-				mySource = Source.SCOP;
-				pdbId = matcher.group(1);
-				chainId = matcher.group(2);
-				return;
+			if(mySource != null) {
+				switch( mySource) {
+				case SCOP:
+					if( ! initFromScop(suffix) )
+						throw new IllegalArgumentException("Malformed SCOP domain name:"+suffix);
+					return;
+				case PDP:
+					if( ! initFromPDP(name) )
+						throw new IllegalArgumentException("Malformed PDP domain name:"+suffix);
+					return;
+				case CATH:
+					if( ! initFromCATH(suffix) )
+						throw new IllegalArgumentException("Malformed CATH domain name:"+suffix);
+					return;
+				case BIO:
+					if( ! initFromBIO(name) )
+						throw new IllegalArgumentException("Malformed BIO name:"+suffix);
+					return;
+				case ECOD:
+					if( ! initFromECOD(suffix) )
+						throw new IllegalArgumentException("Malformed ECOD domain name:"+suffix);
+					return;
+				case PDB:
+					if( ! initFromPDB(suffix) )
+						throw new IllegalArgumentException("Malformed PDB specification:"+suffix);
+					return;
+				case FILE:
+					// Treat file:/ prefixes as URLs
+					if( ! suffix.startsWith("/")) {
+						// Otherwise, treat as file
+						initFromFile();
+						return;
+					}
+					// fall through to URL case
+				case URL:
+					if( ! initFromURL(name))
+						throw new IllegalArgumentException("Malformed URL specification:"+suffix);
+					return;
+				default:
+					throw new IllegalStateException("Unimplemented Source "+mySource);
+				}
 			}
 		}
-		// PDP
-		if( mySource == Source.PDP ) { // prefix is required
-			Matcher matcher = PDPDomain.PDP_NAME_PATTERN.matcher(name);
-			if(! matcher.matches() ) {
-				throw new IllegalArgumentException("Malformed PDP domain name");
-			}
-			pdbId = matcher.group(1);
-			chainId = matcher.group(2);
-			return;
-		}
-		// CATH
-		if( mySource == Source.CATH || mySource == null) {
-			Matcher matcher = cathPattern.matcher(name);
-			if ( matcher.matches() ){
-				mySource = Source.CATH;
-				pdbId = matcher.group(1);
-				chainId = matcher.group(2);
-				return;
-			}
-		}
-		// ECOD
-		if( mySource == Source.ECOD || mySource == null) {
 
-			Matcher matcher = ecodPattern.matcher(name);
-			if ( matcher.matches() ){
-				mySource = Source.ECOD;
-				pdbId = matcher.group(1);
-				chainId = null;
-				return;
-			}
-		}
-		// BIO
-		if( mySource == Source.BIO ) { // prefix is required
-			Matcher matcher = BioAssemblyIdentifier.BIO_NAME_PATTERN.matcher(name);
-			if(! matcher.matches() ) {
-				throw new IllegalArgumentException("Malformed BIO domain name");
-			}
-			pdbId = matcher.group(1);
+		// No known prefix, so revert to guessing
+
+		// First guess regex-based identifiers
+		// SCOP domain
+		if( initFromScop(name) )
 			return;
-		}
+		// CATH
+		if( initFromCATH(name) )
+			return;
+		// ECOD
+		if( initFromECOD(name) )
+			return;
+		// Never guess BIO or PDP
 
 		// URL
-		if( mySource == Source.URL || mySource == Source.FILE || mySource == null) {
-			// Note that file: is a valid scheme and prefix, so need to check if it's a valid URL
-			String urlStr;
-			if( mySource == Source.URL) {
-				urlStr = prefix[1]; // Strip URL: prefix
-			} else {
-				urlStr = name;
-			}
-			try {
-				URL url = new URL(urlStr);
-				mySource = Source.URL;
-				String path = url.getPath();
-				pdbId = URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) );
-				chainId = null;
-				return;
-			} catch(MalformedURLException e) {}
-		}
-		// File
-		if( mySource == Source.FILE || mySource == null) {
-			String suffix = mySource == null ? name : prefix[1];
-			File file = new File(FileDownloadUtils.expandUserHome(suffix));
-			if( file.canRead() && !file.isDirectory() ) {
-				// an attempt to mitigate issue #398. It doesn't fix it but it catches the most common case of passing a pdb id and finding a file in working dir matching it
-				if (suffix.matches("\\d\\w\\w\\w")) {
-					// the plain pdb id case, this is unlikely to be what the user wants: let's let it through but warn about it
-					logger.warn("Provided 4-letter structure name '{}' matches "
-							+ "file name in directory {}. Will read structure "
-							+ "data from file {} and not consider the name as a "
-							+ "structure identifier. If this is not what you "
-							+ "want, use 'FILE:{}'",
-							name, file.getAbsoluteFile().getParent(),
-							file.getAbsolutePath(), name);
-				} else {
-					logger.info("Provided structure name '{}' matches "
-							+ "file name in directory {}. Will read structure "
-							+ "data from file {}.",
-							name, file.getAbsoluteFile().getParent(),
-							file.getAbsolutePath());
-				}
-				mySource = Source.FILE;
-				pdbId = null;
-				chainId = null;
-				return;
+		if( initFromURL(name) )
+			return;
 
+		// Guess FILE based on file existence
+		File file = new File(FileDownloadUtils.expandUserHome(name));
+		if( file.canRead() && !file.isDirectory() ) {
+			// an attempt to mitigate issue #398. It doesn't fix it but it catches the most common case of passing a pdb id and finding a file in working dir matching it
+			if (name.matches("\\d\\w\\w\\w")) {
+				// the plain pdb id case, this is unlikely to be what the user wants: let's let it through but warn about it
+				logger.warn("Provided 4-letter structure name '{}' matches "
+						+ "file name in directory {}. Will read structure "
+						+ "data from file {} and not consider the name as a "
+						+ "structure identifier. If this is not what you "
+						+ "want, use 'FILE:{}'",
+						name, file.getAbsoluteFile().getParent(),
+						file.getAbsolutePath(), name);
+			} else {
+				logger.info("Provided structure name '{}' matches "
+						+ "file name in directory {}. Will read structure "
+						+ "data from file {}.",
+						name, file.getAbsoluteFile().getParent(),
+						file.getAbsolutePath());
 			}
+
+			initFromFile();
+			return;
 		}
 
 		// Default to PDB
-		if( mySource == Source.PDB || mySource == null) {
-			String suffix = mySource == null ? name : prefix[1];
-			mySource = Source.PDB;
-			SubstructureIdentifier si = new SubstructureIdentifier(suffix);
-			base = si; // Safe to realize immediately
+		initFromPDB( name );
+	}
 
-			pdbId = si.getPdbId();
-			// Set chainId if unique
-			Set<String> chains = getChainIds(si);
-			if(chains.size() == 1) {
-				this.chainId = chains.iterator().next();
-			} else if(chains.size() > 1) {
-				this.chainId = ".";
-			} else {
-				this.chainId = null;
-			}
+	private boolean initFromScop(String name) {
+		Matcher matcher = scopPattern.matcher(name);
+		if ( matcher.matches() ) {
+			mySource = Source.SCOP;
+			pdbId = matcher.group(1).toUpperCase();
+			chainId = matcher.group(2);
+			return true;
 		}
+		return false;
+	}
+	private boolean initFromPDP(String name) {
+		Matcher matcher = PDPDomain.PDP_NAME_PATTERN.matcher(name);
+		if( matcher.matches() ) {
+			pdbId = matcher.group(1).toUpperCase();
+			chainId = matcher.group(2);
+			return true;
+		}
+		return false;
+	}
+	private boolean initFromCATH(String name) {
+		Matcher matcher = cathPattern.matcher(name);
+		if ( matcher.matches() ){
+			mySource = Source.CATH;
+			pdbId = matcher.group(1).toUpperCase();
+			chainId = matcher.group(2);
+			return true;
+		}
+		return false;
+	}
+	private boolean initFromECOD(String name) {
+		Matcher matcher = ecodPattern.matcher(name);
+		if ( matcher.matches() ){
+			mySource = Source.ECOD;
+			pdbId = matcher.group(1).toUpperCase();
+			chainId = null;
+			return true;
+		}
+		return false;
+	}
+	private boolean initFromBIO(String name) {
+		Matcher matcher = BioAssemblyIdentifier.BIO_NAME_PATTERN.matcher(name);
+		if( matcher.matches() ) {
+			pdbId = matcher.group(1).toUpperCase();
+			return true;
+		}
+		return false;
+	}
+	private boolean initFromPDB(String suffix) {
+		mySource = Source.PDB;
+		SubstructureIdentifier si = new SubstructureIdentifier(suffix);
+		base = si; // Safe to realize immediately
+
+		pdbId = si.getPdbId();
+		// Set chainId if unique
+		Set<String> chains = getChainIds(si);
+		if(chains.size() == 1) {
+			this.chainId = chains.iterator().next();
+		} else if(chains.size() > 1) {
+			this.chainId = ".";
+		} else {
+			this.chainId = null;
+		}
+		return true;
+	}
+	private boolean initFromURL(String suffix) {
+		try {
+			URL url = new URL(suffix);
+			String path = url.getPath();
+			mySource = Source.URL;
+			pdbId = URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) );
+			chainId = null; // Don't bother checking query params here
+			return true;
+		} catch(MalformedURLException e) {
+			return false;
+		}
+	}
+	private boolean initFromFile() {
+		mySource = Source.FILE;
+		pdbId = null;
+		chainId = null;
+		return true;
 	}
 
 	private static Set<String> getChainIds(SubstructureIdentifier si) {
@@ -306,7 +363,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		if( pdbId == null) {
 			pdbId = toCanonical().getPdbId();
 		}
-		return pdbId.toUpperCase();
+		return pdbId;
 	}
 
 	/**
@@ -368,18 +425,24 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		return mySource == Source.URL;
 	}
 
+	/**
+	 * Indicates that the identifier was determined to correspond to a file.
+	 * Note that some file identifiers may also be valid URLs; in that case,
+	 * the URL source is preferred.
+	 * @return
+	 */
 	public boolean isFile() {
 		return mySource == Source.FILE;
 	}
-	
+
 	public boolean isEcodDomain() {
 		return mySource == Source.ECOD;
 	}
-	
+
 	public boolean isBioAssembly() {
 		return mySource == Source.BIO;
 	}
-	
+
 	public Source getSource() {
 		return mySource;
 	}
@@ -428,7 +491,15 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				break;
 			case FILE:
 				try {
-					base = new URLIdentifier(new File(FileDownloadUtils.expandUserHome(name)).toURI().toURL());
+					String[] prefix = name.split(":", 2);
+					String filename;
+					if(prefix.length > 1) {
+						filename = prefix[1];
+					} else {
+						filename = name;
+					}
+					filename = FileDownloadUtils.expandUserHome(filename);
+					base = new URLIdentifier(new File(filename).toURI().toURL());
 				} catch (MalformedURLException e) {
 					// Should never happen
 					throw new StructureException("Unable to get URL for file: "+name,e);
@@ -470,10 +541,10 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	public Structure reduce(Structure input) throws StructureException {
 		return getBaseIdentifier().reduce(input);
 	}
-	
+
 	@Override
 	public Structure loadStructure(AtomCache cache) throws StructureException,
-			IOException {
+	IOException {
 		return getBaseIdentifier().loadStructure(cache);
 	}
 
@@ -544,7 +615,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		// Throws NPE for nulls
 		return pdb1.compareTo(pdb2);
 	}
-	
+
 	/**
 	 * <p>
 	 * Guess a scop domain. If an exact match is found, return that.
@@ -616,6 +687,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		}
 	}
 
-	
-	
+
+
 }

@@ -59,12 +59,12 @@ public class TestURLIdentifier {
 
 		full = id.loadStructure(cache);
 		assertNotNull(full);
-		assertEquals("2pos",id.toCanonical().getPdbId());
-//		assertEquals("2pos",full.getName()); // What should this get set to with identifiers?
+		assertEquals("2POS",id.toCanonical().getPdbId());
+//		assertEquals("2POS",full.getName()); // What should this get set to with identifiers?
 
 		url = new URL("file://" + base + "?residues=A:1-5");
 		id = new URLIdentifier(url);
-		assertEquals("wrong canonical for residues=A:1-5","2pos.A_1-5",id.toCanonical().toString());
+		assertEquals("wrong canonical for residues=A:1-5","2POS.A_1-5",id.toCanonical().toString());
 		
 		full = id.loadStructure(cache);
 		assertNotNull(full);
@@ -73,7 +73,7 @@ public class TestURLIdentifier {
 
 		url = new URL("file://" + base + "?chainId=A");
 		id = new URLIdentifier(url);
-		assertEquals("wrong canonical for chainId=A","2pos.A",id.toCanonical().toString());
+		assertEquals("wrong canonical for chainId=A","2POS.A",id.toCanonical().toString());
 
 		full = id.loadStructure(cache);
 		assertNotNull(full);

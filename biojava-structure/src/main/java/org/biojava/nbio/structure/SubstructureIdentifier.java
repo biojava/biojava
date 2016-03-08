@@ -86,10 +86,12 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		if(1 > idRange.length || idRange.length > 2 ) {
 			throw new IllegalArgumentException(String.format("Malformed %s: %s",getClass().getSimpleName(),id));
 		}
-		this.pdbId = idRange[0];
-		if(this.pdbId.length() != 4) {
+		if(idRange[0].length() != 4) {
+			this.pdbId = idRange[0];
 			// Changed from Exception to a warning to support files and stuff -sbliven 2015/01/22
 			logger.warn(String.format("Unrecognized PDB code %s",this.pdbId));
+		} else {
+			this.pdbId = idRange[0].toUpperCase();
 		}
 		
 		if( idRange.length == 2) {
