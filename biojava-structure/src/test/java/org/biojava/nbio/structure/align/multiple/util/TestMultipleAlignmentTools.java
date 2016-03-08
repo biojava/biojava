@@ -59,7 +59,7 @@ public class TestMultipleAlignmentTools {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+
 	@Test
 	public void testSortBlocks() {
 		

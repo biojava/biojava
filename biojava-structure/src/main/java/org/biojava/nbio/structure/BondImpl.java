@@ -194,6 +194,7 @@ public class BondImpl implements Serializable, Bond {
         return "Bond [atomA=" + atomA + ", atomB=" + atomB + ", bondOrder="
                 + bondOrder + "]";
     }
-    
+
+
 
 }

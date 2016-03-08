@@ -23,7 +23,7 @@ package org.biojava.nbio.structure.io.mmcif.model;
  * @author Peter Rose
  *
  */ 
-public class StructConn
+public class StructConn extends AbstractBean
 {
 	private String id;
 	private String conn_type_id;

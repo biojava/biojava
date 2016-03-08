@@ -102,7 +102,8 @@ public class SymmetryDisplay {
 	public static AbstractAlignmentJmol display(CeSymmResult symmResult)
 			throws StructureException {
 
-		if (symmResult.isRefined()) {
+		if (symmResult.isSignificant() && symmResult.isRefined()) {
+			// Show the structure colored by repeat
 			MultipleAlignment msa = symmResult.getMultipleAlignment();
 			List<Atom[]> atoms = msa.getAtomArrays();
 			MultipleAlignmentJmol jmol = new MultipleAlignmentJmol(msa, atoms);
@@ -113,14 +114,16 @@ public class SymmetryDisplay {
 			jmol.setTitle(getSymmTitle(symmResult));
 			return jmol;
 		} else {
-			// Show the optimal alignment only if it was not refined
+			// Show the optimal self-alignment
 			Logger.info("Showing optimal self-alignment");
 			Atom[] cloned = StructureTools
 					.cloneAtomArray(symmResult.getAtoms());
 			AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
 					symmResult.getSelfAlignment(), symmResult.getAtoms(),
 					cloned);
-			jmol.setTitle(jmol.getTitle() + " Optimal Self-Alignment");
+			RotationAxis axis = new RotationAxis(symmResult.getSelfAlignment());
+			jmol.evalString(axis.getJmolScript(symmResult.getAtoms()));
+			jmol.setTitle(getSymmTitle(symmResult));
 			return jmol;
 		}
 	}

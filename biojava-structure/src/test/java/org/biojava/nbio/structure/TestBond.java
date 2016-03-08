@@ -24,19 +24,22 @@ import java.io.IOException;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class TestBond extends TestCase {
-	private Structure s;
 
-	@Override
-	@Before
-	public void setUp() throws IOException, StructureException {		
-		AtomCache cache = new AtomCache();
+public class TestBond {
+	
 
-		cache.setUseMmCif(false);
+	private static AtomCache cache;
+	
+	@BeforeClass
+	public static void setUp() throws IOException, StructureException {		
+		cache = new AtomCache();
+
+		cache.setUseMmCif(true);
 
 		FileParsingParameters params = cache.getFileParsingParams();
 		
@@ -49,15 +52,12 @@ public class TestBond extends TestCase {
 
 	}
 
+	@Test
 	public void testIntraResidueBonds() throws StructureException, IOException {
 
-		if ( s == null) {
-			setUp();
-			s = StructureIO.getStructure("1kh9");
-		}
-
-	
-
+		
+		Structure s = StructureIO.getStructure("1kh9");
+		
 
 		Group g = s.getChainByPDB("A").getSeqResGroup(274);
 		Atom cg = g.getAtom("CG");
@@ -78,11 +78,11 @@ public class TestBond extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPeptideBonds() throws StructureException, IOException {
-		if ( s == null) {
-			setUp();
-			s = StructureIO.getStructure("1kh9");
-		}
+		
+		Structure s = StructureIO.getStructure("1kh9");
+		
 
 		AminoAcidImpl residue1 = (AminoAcidImpl) s.getChainByPDB("A").getSeqResGroup(273);
 		AminoAcidImpl residue2 = (AminoAcidImpl) s.getChainByPDB("A").getSeqResGroup(274);
@@ -93,11 +93,12 @@ public class TestBond extends TestCase {
 		assertTrue(areBonded(carboxylC, aminoN));
 	}
 
+	@Test
 	public void testLINKBonds() throws StructureException, IOException {
-		if ( s == null) {
-			setUp();
-			s = StructureIO.getStructure("1kh9");
-		}
+		
+		cache.setUseMmCif(false);
+
+		Structure s = StructureIO.getStructure("1kh9");
 		
 		Group g1 = s.getChainByPDB("A").getSeqResGroup(50);
 		assertNotNull(g1);
@@ -112,24 +113,26 @@ public class TestBond extends TestCase {
 		assertNotNull(atom1);
 		assertNotNull(atom2);
 		assertTrue(areBonded(atom1, atom2));
+		
+		cache.setUseMmCif(true);
 	}
 
+	@Test
 	public void testDisulfideBonds() throws StructureException, IOException {
-		if ( s == null) {
-			setUp();
-			s = StructureIO.getStructure("1kh9");
-		}
+		
+		Structure s = StructureIO.getStructure("1kh9");
+		
 		Atom atom1 = s.getChainByPDB("A").getSeqResGroup(177).getAtom("SG");
 		Atom atom2 = s.getChainByPDB("A").getSeqResGroup(167).getAtom("SG");
 
 		assertTrue(areBonded(atom1, atom2));
 	}
 
+	@Test
 	public void testLigandBonds() throws StructureException, IOException {
-		if ( s == null) {
-			setUp();
-			s = StructureIO.getStructure("1kh9");
-		}
+		
+		Structure s = StructureIO.getStructure("1kh9");
+		
 		Atom phosphateP = s.getChainByPDB("A").getAtomGroup(447).getAtom("P");
 		Atom phosphateO = s.getChainByPDB("A").getAtomGroup(447).getAtom("O1");
 
@@ -150,15 +153,19 @@ public class TestBond extends TestCase {
 	 * Each of the following PDB IDs used to make formBonds() crash.
 	 */
 
+	@Test
 	public void test145D() throws IOException, StructureException {
 		StructureIO.getStructure("145D");
 	}
 
+	@Test
 	public void test1APJ() throws IOException, StructureException {
 		StructureIO.getStructure("1APJ");
 	}
 
+	@Test
 	public void test1BDX() throws IOException, StructureException {
 		StructureIO.getStructure("1BDX");
 	}
+	
 }

@@ -59,7 +59,7 @@ public class StructureImpl implements Structure, Serializable {
 	private List<Map <String,Integer>> connections ;
 	private List<Compound> compounds;
 	private List<DBRef> dbrefs;
-	private List<SSBond> ssbonds;
+	private List<Bond> ssbonds;
 	private List<Site> sites;
 	private List<Group> hetAtoms;
 	private String name ;
@@ -82,7 +82,7 @@ public class StructureImpl implements Structure, Serializable {
 		compounds      = new ArrayList<Compound>();
 		dbrefs         = new ArrayList<DBRef>();
 		pdbHeader      = new PDBHeader();
-		ssbonds        = new ArrayList<SSBond>();
+		ssbonds        = new ArrayList<Bond>();
 		sites          = new ArrayList<Site>();
 		hetAtoms       = new ArrayList<Group>();
 	}
@@ -146,8 +146,7 @@ public class StructureImpl implements Structure, Serializable {
 		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
-		n.setConnections(getConnections());
-		n.setSites(getSites());
+		n.setSites(getSites()); 
 				
 
 		// go through each chain and clone chain
@@ -190,10 +189,7 @@ public class StructureImpl implements Structure, Serializable {
 		}
 		n.setCompounds(newCompoundList); 
 
-
-		for (SSBond ssbond: ssbonds){
-			n.addSSBond(ssbond.clone());
-		}
+		// TODO ssbonds are complicated to clone: there are deep references inside Atom objects, how would we do it? - JD 2016-03-03
 
 		return n ;
 	}
@@ -743,32 +739,27 @@ public class StructureImpl implements Structure, Serializable {
 		this.pdbHeader = pdbHeader;
 	}
 
-	/** get the list of SSBonds as they have been defined in the PDB files
-	 *
-	 * @return a list of SSBonds
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public List<SSBond> getSSBonds(){
+	public List<Bond> getSSBonds(){
 		return ssbonds;
 
 	}
-	/** set the list of SSBonds for this structure
-	 *
-	 * @param ssbonds
-	 */
+	
+	/** {@inheritDoc} */
 	@Override
-	public void setSSBonds(List<SSBond> ssbonds){
+	public void setSSBonds(List<Bond> ssbonds){
 		this.ssbonds = ssbonds;
 	}
 
-	/** add a single SSBond to this structure
+	/** 
+	 * Adds a single disulfide Bond to this structure
 	 *
 	 * @param ssbond the SSBond.
 	 */
 	@Override
-	public void addSSBond(SSBond ssbond){
+	public void addSSBond(Bond ssbond){
 		ssbonds.add(ssbond);
-		ssbond.setSerNum(ssbonds.size());
 	}
 
 	/**

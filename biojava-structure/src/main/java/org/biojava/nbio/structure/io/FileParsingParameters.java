@@ -39,8 +39,10 @@ import org.slf4j.LoggerFactory;
  *      If true the assignment can be accessed through {@link AminoAcid}.getSecStruc(); </li>
  * <li> {@link #setAlignSeqRes(boolean)} - should the AminoAcid sequences from the SEQRES
  *      and ATOM records of a PDB file be aligned? (default:yes)</li>
- *  <li> {@link# setUpdateRemediatedFiles} - Shall local files be automatically be replaced with the 
- *  latest version of remediated PDB files? Default: no </li>    
+ * <li> {@link #setHeaderOnly(boolean)} - parse only the PDB/mmCIF file header, ignoring coordinates
+ * </li>
+ * <li> {@link #setCreateAtomBonds(boolean)} - create atom bonds from parsed bonds in PDB/mmCIF files and chemical component files 
+ * </li?
  * </ul>
  * 
  * @author Andreas Prlic
@@ -60,39 +62,33 @@ public class FileParsingParameters implements Serializable
 	 * Flag to detect if the secondary structure info should be read
 	 * 
 	 */
-	boolean parseSecStruc;
+	private boolean parseSecStruc;
 
-	/** Flag to control if SEQRES and ATOM records should be aligned
-	 * 
+	/** 
+	 * Flag to control if SEQRES and ATOM records should be aligned
 	 */
-	boolean alignSeqRes;
+	private boolean alignSeqRes;
 
-	
-	/** Should we create connections instead of bonds for ligands?
-	 *
+	/** 
+	 * Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
 	 */
-	boolean createConects;
+	private boolean loadChemCompInfo;
 
-	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
-	 * 
+	/** 
+	 * Flag to control reading in only Calpha atoms - this is useful for parsing large structures like 1htq.
 	 */
-	boolean loadChemCompInfo;
-
-	/** Set the flag to only read in Ca atoms - this is useful for parsing large structures like 1htq.
-	 *
-	 */
-	boolean parseCAOnly;
+	private boolean parseCAOnly;
 
 	/** Flag to parse header only
 	 * 
 	 */
-	boolean headerOnly;
+	private boolean headerOnly;
 
 
 	/** 
 	 * Update locally cached files to the latest version of remediated files
 	 */
-	boolean updateRemediatedFiles;
+	private boolean updateRemediatedFiles;
 
 	/** 
 	 * The maximum number of atoms that will be parsed before the parser switches to a CA-only
@@ -101,13 +97,13 @@ public class FileParsingParameters implements Serializable
 	 */
 	public static final int ATOM_CA_THRESHOLD = 500000;
 
-	int atomCaThreshold;
+	private int atomCaThreshold;
 
 
 	/** 
 	 * Should we parse the biological assembly information from a file?
 	 */
-	boolean parseBioAssembly;
+	private boolean parseBioAssembly;
 	
 	/**
 	 * Should we create bonds between atoms when parsing a file?
@@ -158,8 +154,6 @@ public class FileParsingParameters implements Serializable
 		parseBioAssembly = false;
 		
 		createAtomBonds = false;
-		
-		createConects = false;
 
 		createAtomCharges = true;
 		
@@ -384,10 +378,13 @@ public class FileParsingParameters implements Serializable
 	}
 
 	/**
-	 * Should we create bonds between atoms when parsing a file?
+	 * Should we create bonds between atoms when parsing a file.
+	 * Will create intra-group bonds from information available in chemical component files and
+	 * some other bonds from struc_conn category in mmCIF file.
 	 * 
 	 * @param createAtomBonds
 	 *            true if we should create the bonds, false if not
+	 * @see BondMaker
 	 */
 	public void setCreateAtomBonds(boolean createAtomBonds) {
 		this.createAtomBonds = createAtomBonds;
@@ -410,24 +407,6 @@ public class FileParsingParameters implements Serializable
 	 */
 	public void setCreateAtomCharges(boolean createAtomCharges) {
 		this.createAtomCharges = createAtomCharges;
-	}
-
-	/**Should we create Bonds for ligands when parsing an mmCIF file?
-	 * 
-	 * @return true if we should create bonds based on ChemComp information.
-	 */
-	public boolean isCreateLigandConects(){
-		return createConects;
-	}
-	
-	/**Should we create connections between atoms in ligands when parsing 
-	 * a file? Setting this to true must also set AlignSeqRes true.
-	 * 
-	 * @param createLigandConects boolean flag yes/no
-	 */
-	public void setCreateLigandConects(boolean createLigandConects){
-		this.createConects = createLigandConects;
-		this.alignSeqRes = true;
 	}
 
 	public boolean isUseInternalChainId() {

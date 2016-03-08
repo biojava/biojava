@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.core.util.SoftHashMap;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;

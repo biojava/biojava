@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.test.ecod;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
