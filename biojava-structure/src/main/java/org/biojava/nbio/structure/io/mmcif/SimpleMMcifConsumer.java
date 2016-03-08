@@ -229,23 +229,21 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	/** initiate new group, either Hetatom, Nucleotide, or AminoAcid */
 	private Group getNewGroup(String recordName,Character aminoCode1, long seq_id,String groupCode3) {
 
-		if ( params.isLoadChemCompInfo() ){
-			Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(groupCode3);
-			if ( g != null) {
-				if ( g instanceof AminoAcidImpl) {
-					AminoAcidImpl aa = (AminoAcidImpl) g;
-					aa.setId(seq_id);
-				} else if ( g instanceof NucleotideImpl) {
-					NucleotideImpl nuc =  (NucleotideImpl) g;
-					nuc.setId(seq_id);
-				} else if ( g instanceof HetatomImpl) {
-					HetatomImpl het = (HetatomImpl)g;
-					het.setId(seq_id);
-				}
-				return g;
+		Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(groupCode3);
+		if ( g != null && !g.getChemComp().isEmpty()) {
+			if ( g instanceof AminoAcidImpl) {
+				AminoAcidImpl aa = (AminoAcidImpl) g;
+				aa.setId(seq_id);
+			} else if ( g instanceof NucleotideImpl) {
+				NucleotideImpl nuc =  (NucleotideImpl) g;
+				nuc.setId(seq_id);
+			} else if ( g instanceof HetatomImpl) {
+				HetatomImpl het = (HetatomImpl)g;
+				het.setId(seq_id);
 			}
-
+			return g;
 		}
+
 
 
 		Group group;

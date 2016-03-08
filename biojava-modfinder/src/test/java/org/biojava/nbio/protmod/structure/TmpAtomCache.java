@@ -34,7 +34,6 @@ public class TmpAtomCache
    public static AtomCache cache = new AtomCache(tmpDir, tmpDir);
    static {
 	   FileParsingParameters params = new FileParsingParameters();
-	   params.setLoadChemCompInfo(true);
 	   params.setAlignSeqRes(true);
 	   params.setParseSecStruc(false);
 	   cache.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);

@@ -40,7 +40,6 @@ public class Test2JA5 {
 
         FileParsingParameters fileParsingParameters = new FileParsingParameters();
         fileParsingParameters.setAlignSeqRes(true); // Need to align seqres to match chains.
-        fileParsingParameters.setLoadChemCompInfo(true);
         fileParsingParameters.setHeaderOnly(false); // Need header only off to have chains to match.
 
         AtomCache cache = new AtomCache();
@@ -71,7 +70,6 @@ public class Test2JA5 {
     public void test2JA5noHeader() throws IOException, StructureException {
 
         FileParsingParameters fileParsingParameters = new FileParsingParameters();
-        fileParsingParameters.setLoadChemCompInfo(true);
         fileParsingParameters.setHeaderOnly(true);
 
         AtomCache cache = new AtomCache();

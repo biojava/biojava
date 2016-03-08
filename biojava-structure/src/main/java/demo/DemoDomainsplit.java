@@ -57,7 +57,6 @@ public class DemoDomainsplit {
 
 			// should the ATOM and SEQRES residues be aligned when creating the internal data model?
 			params.setAlignSeqRes(true);
-			params.setLoadChemCompInfo(true);
 			// should secondary structure get parsed from the file
 			params.setParseSecStruc(false);
 

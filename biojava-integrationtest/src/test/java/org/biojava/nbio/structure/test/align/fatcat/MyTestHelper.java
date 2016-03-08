@@ -49,7 +49,6 @@ public class MyTestHelper
       
       FileParsingParameters params = new FileParsingParameters();
       params.setAlignSeqRes(true);
-      params.setLoadChemCompInfo(false);
       params.setParseCAOnly(true);
       pdbpars.setFileParsingParameters(params);
       

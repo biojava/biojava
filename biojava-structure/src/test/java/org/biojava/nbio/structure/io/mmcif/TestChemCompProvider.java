@@ -113,7 +113,6 @@ public class TestChemCompProvider {
 		
 		// Parameters
 		FileParsingParameters params = new FileParsingParameters();
-		params.setLoadChemCompInfo(true);
 		
 		PDBFileReader pdbreader = new PDBFileReader();
 		pdbreader.setFileParsingParameters(params);
@@ -141,7 +140,6 @@ public class TestChemCompProvider {
 		StructureIO.setAtomCache(cache);
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setParseBioAssembly(true);
-		params.setLoadChemCompInfo(true);
 
 		/*
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
@@ -159,7 +157,7 @@ public class TestChemCompProvider {
 		ChemCompGroupFactory.setChemCompProvider(zp);
 
 		long startTime = System.currentTimeMillis();
-		Structure sCif = StructureIO.getStructure("4HHM");
+		StructureIO.getStructure("4HHM");
 		long finishTime = System.currentTimeMillis();
 		s_logger.info("ZipChemComp time: "+(finishTime-startTime)+ " ms");
 

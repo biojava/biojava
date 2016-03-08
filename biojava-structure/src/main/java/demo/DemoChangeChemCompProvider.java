@@ -98,7 +98,6 @@ public class DemoChangeChemCompProvider {
 			params.setAlignSeqRes(true);
 			
 			// 
-			params.setLoadChemCompInfo(loadChemComp);
 			// should secondary structure get parsed from the file
 			params.setParseSecStruc(false);
 

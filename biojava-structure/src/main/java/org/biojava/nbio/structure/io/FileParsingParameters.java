@@ -27,7 +27,6 @@ package org.biojava.nbio.structure.io;
 import java.io.Serializable;
 
 import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,12 +67,7 @@ public class FileParsingParameters implements Serializable
 	 * Flag to control if SEQRES and ATOM records should be aligned
 	 */
 	private boolean alignSeqRes;
-
-	/** 
-	 * Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
-	 */
-	private boolean loadChemCompInfo;
-
+	
 	/** 
 	 * Flag to control reading in only Calpha atoms - this is useful for parsing large structures like 1htq.
 	 */
@@ -140,8 +134,6 @@ public class FileParsingParameters implements Serializable
 		alignSeqRes   = true; 
 		parseCAOnly = false;
 
-		// don't download ChemComp dictionary by default.
-		setLoadChemCompInfo(false);
 		headerOnly = false;
 
 		updateRemediatedFiles = false;
@@ -176,34 +168,6 @@ public class FileParsingParameters implements Serializable
 	 */
 	public void setParseSecStruc(boolean parseSecStruc) {
 		this.parseSecStruc = parseSecStruc;
-	}
-
-
-
-	/** Should the chemical component information be automatically downloaded from the web?
-	 * If set to false, a limited set of ChemComps is being used.
-	 * @return flag if the data should be loaded
-	 */
-	public boolean isLoadChemCompInfo()
-	{
-		return loadChemCompInfo;
-	}
-
-	/** Sets if chemical component defintions should be loaded or not.
-	 * The decision from where the definitions are obtained is
-	 * in the static variable inside {@link ChemCompGroupFactory}. 
-	 * 
-	 * @param loadChemCompInfo flag
-	 */
-	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
-
-		if (loadChemCompInfo){
-			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "true");
-		} else {
-			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "false");
-		}
-		this.loadChemCompInfo = loadChemCompInfo;
-
 	}
 
 	/** Parse only the PDB file header out of the files

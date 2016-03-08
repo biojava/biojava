@@ -21,7 +21,6 @@ public class Test1o2f extends TestCase{
 		cache.setUseMmCif(true);
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		FileParsingParameters params = cache.getFileParsingParams();
-		params.setLoadChemCompInfo(true);
 		params.setUseInternalChainId(true);
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);

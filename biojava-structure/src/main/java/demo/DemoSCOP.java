@@ -118,7 +118,6 @@ public class DemoSCOP
       AtomCache cache = new AtomCache();      
       FileParsingParameters fileparams = new FileParsingParameters() ;
       fileparams.setAlignSeqRes(false);
-      fileparams.setLoadChemCompInfo(true);
       fileparams.setParseSecStruc(false);
       cache.setFileParsingParams(fileparams);
       

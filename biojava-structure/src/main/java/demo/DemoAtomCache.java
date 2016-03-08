@@ -60,7 +60,6 @@ public class DemoAtomCache {
 
 		FileParsingParameters params = cache.getFileParsingParams();
 
-		params.setLoadChemCompInfo(false);
 		params.setAlignSeqRes(true);
 		params.setHeaderOnly(false);
 		params.setParseCAOnly(false);

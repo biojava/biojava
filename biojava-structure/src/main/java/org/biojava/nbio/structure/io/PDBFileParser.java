@@ -293,11 +293,9 @@ public class PDBFileParser  {
 	/** initiate new resNum, either Hetatom, Nucleotide, or AminoAcid */
 	private Group getNewGroup(String recordName,Character aminoCode1, String aminoCode3) {
 
-		if ( params.isLoadChemCompInfo() ){
-			Group g =  ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
-			if ( g != null)
-				return g;
-		}
+		Group g =  ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
+		if ( g != null && !g.getChemComp().isEmpty())
+			return g;
 
 
 		Group group;

@@ -122,8 +122,6 @@ public class PDBFileReader extends LocalPDBDirectory {
 	//  "1ml5",
 	//  "1n8r",
 
-	public static final String LOAD_CHEM_COMP_PROPERTY = "loadChemCompInfo";
-
 	public static final String[] PDB_SPLIT_DIR    = new String[]{"data","structures","divided" ,"pdb"};
 	public static final String[] PDB_OBSOLETE_DIR = new String[]{"data","structures","obsolete","pdb"};
 

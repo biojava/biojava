@@ -49,26 +49,23 @@ public class Test1a4w extends TestCase{
 		
 		if ( structure != null )
 			return;
-		try {
-			InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
-			assertNotNull(inStream);
 
-			PDBFileParser pdbpars = new PDBFileParser();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setLoadChemCompInfo(true);
-			params.setAlignSeqRes(true);
-			
-			pdbpars.setFileParsingParameters(params);
+		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
+		assertNotNull(inStream);
 
-			structure = pdbpars.parsePDBFile(inStream) ;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+
+		pdbpars.setFileParsingParameters(params);
+
+		structure = pdbpars.parsePDBFile(inStream) ;
+
 	}
 
 
 
-	public void test1a4wPDBFile()
+	public void test1a4wPDBFile() throws IOException
 	{
 
 		//		structure = null;
@@ -83,25 +80,21 @@ public class Test1a4w extends TestCase{
 
 
 		Structure structure2 = null;
-		try {
-			InputStream inStream = this.getClass().getResourceAsStream("/1a4w.cif");
-			assertNotNull(inStream);
 
-			MMcifParser pdbpars = new SimpleMMcifParser();
-			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setLoadChemCompInfo(true);
-			params.setAlignSeqRes(true);
-			consumer.setFileParsingParameters(params);
-			pdbpars.addMMcifConsumer(consumer);
+		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.cif");
+		assertNotNull(inStream);
 
-			pdbpars.parse(inStream) ;
-			structure2 = consumer.getStructure();
+		MMcifParser pdbpars = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		consumer.setFileParsingParameters(params);
+		pdbpars.addMMcifConsumer(consumer);
+
+		pdbpars.parse(inStream) ;
+		structure2 = consumer.getStructure();
 
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		assertNotNull(structure2);
 
