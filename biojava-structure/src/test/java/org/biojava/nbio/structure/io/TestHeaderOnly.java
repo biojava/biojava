@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class TestHeaderOnly {
 
-	final String pdbID = "1REP";
+	private final String pdbID = "1REP";
 	
 	/**
 	 * All groups are expected to be empty.

@@ -1590,9 +1590,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		sequenceDifs.add(sref);
 	}
 
-	private static Chain getChainFromList(List<Chain> chains, String name){
-		for (Chain chain : chains) {
-			if ( chain.getChainID().equals(name)){
+	private Chain getEntityChain(String entity_id){
+		
+		for (Chain chain : entityChains) {
+			if ( chain.getChainID().equals(entity_id)){
 
 				return chain;
 			}
@@ -1600,15 +1601,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// does not exist yet, so create...
 
 		Chain	chain = new ChainImpl();
-		chain.setChainID(name);
-		chains.add(chain);
+		chain.setChainID(entity_id);
+		entityChains.add(chain);
 
 		return chain;
-	}
 
-	private Chain getEntityChain(String entity_id){
-
-		return getChainFromList(entityChains,entity_id);
 	}
 
 	//private Chain getSeqResChain(String chainID){
@@ -1646,7 +1643,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entitySrcSyns.add(entitySrcSyn);
 	}
 
-	/** The EntityPolySeq object provide the amino acid sequence objects for the Entities.
+	/** 
+	 * The EntityPolySeq object provide the amino acid sequence objects for the Entities.
 	 * Later on the entities are mapped to the BioJava Chain and Compound objects.
 	 * @param epolseq the EntityPolySeq record for one amino acid
 	 */
@@ -1671,40 +1669,48 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		Chain entityChain = getEntityChain(epolseq.getEntity_id());
 
 
-		// create group from epolseq;
-		// by default this are the SEQRES records...
+		// first we check through the chemcomp provider, if it fails we do some heuristics to guess the type of group
+		// TODO some of this code is analogous to getNewGroup() and we should try to unify them - JD 2016-03-08
+		
+		Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(epolseq.getMon_id());
+		//int seqId = Integer.parseInt(epolseq.getNum());
+		if ( g != null && !g.getChemComp().isEmpty()) {
+			if ( g instanceof AminoAcidImpl) {
+				AminoAcidImpl aa = (AminoAcidImpl) g;
+				aa.setRecordType(AminoAcid.SEQRESRECORD);
+				//aa.setId(seqId);
+			} 
+		} else {
 
+			if (epolseq.getMon_id().length()==3 && StructureTools.get1LetterCodeAmino(epolseq.getMon_id())!=null){
+				AminoAcidImpl a = new AminoAcidImpl();
+				a.setRecordType(AminoAcid.SEQRESRECORD);
+				Character code1 = StructureTools.get1LetterCodeAmino(epolseq.getMon_id());
+				a.setAminoType(code1);
+				g = a;
 
-		if (epolseq.getMon_id().length()==3 && StructureTools.get1LetterCodeAmino(epolseq.getMon_id())!=null){
-			AminoAcid g = new AminoAcidImpl();
+			} else if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
+				// the group is actually a nucleotide group...
+				NucleotideImpl n = new NucleotideImpl();
+				g = n;
+								
+			} else {				
+				logger.debug("Residue {} {} is not a standard aminoacid or nucleotide, will create a het group for it", epolseq.getNum(),epolseq.getMon_id());
+				HetatomImpl h = new HetatomImpl();				
+				g = h;
 
-			g.setRecordType(AminoAcid.SEQRESRECORD);
-
-			g.setPDBName(epolseq.getMon_id());
-
-			Character code1 = StructureTools.get1LetterCodeAmino(epolseq.getMon_id());
-			g.setAminoType(code1);
-
-			g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-			// ARGH at this stage we don't know about insertion codes
-			// this has to be obtained from _pdbx_poly_seq_scheme
-			entityChain.addGroup(g);
-
-		} else if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
-			// the group is actually a nucleotide group...
-			NucleotideImpl n = new NucleotideImpl();
+			}
 			
-			n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-			n.setPDBName(epolseq.getMon_id());
-			entityChain.addGroup(n);				
-		} else {				
-			logger.debug("Residue {} {} is not a standard aminoacid or nucleotide, will create a het group for it", epolseq.getNum(),epolseq.getMon_id());
-			HetatomImpl h = new HetatomImpl();				
-			h.setPDBName(epolseq.getMon_id());
-			h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-			entityChain.addGroup(h);
 
 		}
+		// at this stage we don't know about author residue numbers (insertion codes)
+		// we abuse now the ResidueNumber field setting the internal residue numbers (label_seq_id, strictly sequential and follow the seqres sequence 1 to n)
+		// later the actual ResidueNumbers (author residue numbers) have to be corrected in alignSeqRes()
+		g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
+		
+		g.setPDBName(epolseq.getMon_id());
+		
+		entityChain.addGroup(g);
 
 	}
 
