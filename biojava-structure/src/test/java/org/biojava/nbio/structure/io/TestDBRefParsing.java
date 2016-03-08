@@ -14,34 +14,30 @@ public class TestDBRefParsing {
 
 	@Test
 	public void testShortLine() throws IOException, StructureException {
-		String shortLine = "DBREF  2W6E A  -42   510  UNP    P19483   ATPA1_BOVIN      1    553";
-		InputStream is = new ByteArrayInputStream(shortLine.getBytes());
+		Structure s,ref;
 		PDBFileParser pdbPars = new PDBFileParser();
-		Structure s;
-		try {
+
+		String shortLine = "DBREF  2W6E A  -42   510  UNP    P19483   ATPA1_BOVIN      1    553";
+		// Parse short
+		try(InputStream is = new ByteArrayInputStream(shortLine.getBytes())) {
 			s = pdbPars.parsePDBFile(is);
-		} catch (Exception e) {
-			is.close();
-			throw new AssertionError("Unable to process truncated DBRef line");
 		}
-		is = new ByteArrayInputStream(String.format("%1$-80s", shortLine)
-				.getBytes());
-		Structure ref = pdbPars.parsePDBFile(is);
-		is.close();
+		// Parse padded
+		String longline = String.format("%1$-80s", shortLine);
+		try(InputStream is = new ByteArrayInputStream(longline.getBytes()) ){
+			ref = pdbPars.parsePDBFile(is);
+		}
 		assertEquals(ref.getDBRefs().get(0), s.getDBRefs().get(0));
 	}
 
 	@Test
 	public void testToPdbLength() throws IOException {
-		String shortLine = "DBREF  2W6E A  -42   510  UNP    P19483   ATPA1_BOVIN      1    553";
-		InputStream is = new ByteArrayInputStream(shortLine.getBytes());
-		PDBFileParser pdbPars = new PDBFileParser();
 		Structure s;
-		try {
+		String shortLine = "DBREF  2W6E A  -42   510  UNP    P19483   ATPA1_BOVIN      1    553";
+		PDBFileParser pdbPars = new PDBFileParser();
+		// Parse short
+		try(InputStream is = new ByteArrayInputStream(shortLine.getBytes()) ) {
 			s = pdbPars.parsePDBFile(is);
-		} catch (Exception e) {
-			is.close();
-			throw new AssertionError("Unable to process truncated DBRef line");
 		}
 		//Make sure that the record is true to the input
 		assertEquals(shortLine, s.getDBRefs().get(0).toPDB().trim());
