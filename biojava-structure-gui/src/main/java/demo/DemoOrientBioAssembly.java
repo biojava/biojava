@@ -228,7 +228,7 @@ public class DemoOrientBioAssembly {
 
         Structure structure = null;
         try {
-            structure = StructureIO.getBiologicalAssembly(pdbId, bioAssemblyId);
+            structure = cache.getBiologicalAssembly(pdbId, bioAssemblyId);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
