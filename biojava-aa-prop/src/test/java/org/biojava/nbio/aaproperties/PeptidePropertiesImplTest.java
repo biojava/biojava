@@ -152,8 +152,8 @@ public class PeptidePropertiesImplTest {
 
 	@Test (expected = NullPointerException.class)
 	public void testEnrichmentNull(){
-		assertNull(PeptideProperties.getEnrichment(sequence, "1"));
 		assertEquals(0.0, PeptideProperties.getEnrichment(sequence, ""), delta);
+		assertNull(PeptideProperties.getEnrichment(sequence, "1"));		
 	}
 
 	@Test
