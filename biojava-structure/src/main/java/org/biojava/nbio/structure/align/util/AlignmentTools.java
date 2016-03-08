@@ -383,6 +383,12 @@ public class AlignmentTools {
 	 * to determine the the symmetry order. For the identity alignment, sorts
 	 * the aligned residues of each protein sequentially, then defines the ith
 	 * residues of each protein to be equivalent.
+	 * 
+	 * <p>Note that the selection of the identity alignment here is <i>very</i>
+	 * naive, and only works for proteins with very good coverage. Wherever
+	 * possible, it is better to construct an identity function explicitly
+	 * from a sequence alignment (or use an {@link IdentityMap} for internally
+	 * symmetric proteins) and use {@link #getSymmetryOrder(Map, Map, int, float)}.
 	 */
 	public static int getSymmetryOrder(AFPChain afpChain, int maxSymmetry, float minimumMetricChange) throws StructureException {
 		// alignment comes from the afpChain alignment
