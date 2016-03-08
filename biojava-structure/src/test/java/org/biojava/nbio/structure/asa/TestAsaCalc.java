@@ -58,6 +58,7 @@ public class TestAsaCalc extends TestCase {
 		}
 		
 		for (GroupAsa groupAsa: groupAsas) {
+			//System.out.println(groupAsa.getGroup().getPDBName() + " " + groupAsa.getGroup().getResidueNumber() + " " + groupAsa.getAsaU());
 			totResidues+=groupAsa.getAsaU();
 			
 			assertTrue(groupAsa.getRelativeAsaU()<=1.0);
@@ -65,7 +66,7 @@ public class TestAsaCalc extends TestCase {
 		
 		assertEquals(totAtoms, totResidues,0.000001);
 		
-		assertEquals(17638.0, totAtoms, 1.0);
+		assertEquals(17462.0, totAtoms, 1.0);
 		
 	}
 }

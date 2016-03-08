@@ -108,11 +108,16 @@ public class StructureTest {
 		Chain c = structure.getChain(0);
 		assertEquals("did not find the expected 58 amino acids!",58,c.getAtomGroups(GroupType.AMINOACID).size());
 
-		assertTrue(c.getAtomGroups(GroupType.HETATM).size()     == 0);
+		assertEquals(0 , c.getAtomGroups(GroupType.HETATM).size());
 
 		Chain c2 = structure.getChain(1);
-		assertTrue(c2.getAtomGroups(GroupType.HETATM).size()     == 65);
-		assertTrue(c2.getAtomGroups(GroupType.NUCLEOTIDE).size() == 0 );
+		
+		// The second (unnamed) chain in te file contains 63 molecules of deutarated 
+		// water + 1 PO4 molecule + 1 UNK hetatom molecule
+		// Since the UNK chemcomp is considered a peptide linked molecule (unknown aminoacid), 
+		// then we have only 64 HETATMs
+		assertEquals(64, c2.getAtomGroups(GroupType.HETATM).size());
+		assertEquals(0, c2.getAtomGroups(GroupType.NUCLEOTIDE).size());
 
 		List<Compound> compounds= structure.getCompounds();
 		

@@ -124,7 +124,7 @@ public class TestLongPdbVsMmCifParsing {
 	
 	@Test
 	public void testSingle() throws IOException, StructureException {
-		testAll(Arrays.asList("4imj"));
+		testAll(Arrays.asList("1jnv"));
 	}
 	
 	@After
