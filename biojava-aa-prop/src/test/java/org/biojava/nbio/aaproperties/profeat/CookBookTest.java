@@ -25,7 +25,7 @@ import org.biojava.nbio.aaproperties.profeat.IProfeatProperties.DISTRIBUTION;
 import org.biojava.nbio.aaproperties.profeat.IProfeatProperties.GROUPING;
 import org.biojava.nbio.aaproperties.profeat.IProfeatProperties.TRANSITION;
 import org.biojava.nbio.aaproperties.profeat.ProfeatProperties;
-import org.junit.Test;
+//import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,8 @@ public class CookBookTest {
 	
 	private final static Logger logger = LoggerFactory.getLogger(CookBookTest.class);
 
-	@Test
+	// TODO there's no assertions here, i.e. this is not a test! must fix! For the moment removed test tags - JD 2016-03-08
+	
 	public void shortExample1() throws Exception{
 		/*
 		 * Composition
@@ -50,7 +51,7 @@ public class CookBookTest {
 		}
 	}
 	
-	@Test
+	
 	public void shortExample2() throws Exception{
 		/*
 		 * Transition 
@@ -68,7 +69,7 @@ public class CookBookTest {
 		}
 	}
 	
-	@Test
+	
 	public void shortExample3() throws Exception{
 		/*
 		 * Distribution
