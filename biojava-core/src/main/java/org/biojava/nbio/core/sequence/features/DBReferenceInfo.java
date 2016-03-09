@@ -46,15 +46,17 @@ public class DBReferenceInfo extends Qualifier {
     //private String id = "";
     
 	
-    /**
-     * qualifier with name "db_xref"
+    public static final String DBXREF = "db_xref";
+
+	/**
+     * qualifier with name DBXREF
      * whose (string) values consists of a DB:record pair in the given notation (syntax) 
      * and can hold several entries (like qualifier anyhow)
      * The name is always db_xref
      * @param database
      */
     public DBReferenceInfo(String value){
-        super("db_xref", value);
+        super(DBXREF, value);
         //this.database = database;
         //this.id = id;
     }
@@ -64,15 +66,15 @@ public class DBReferenceInfo extends Qualifier {
      * @param entries
      */
 	public DBReferenceInfo(String[] entries) {
-		super("db_xref", entries);
+		super(DBXREF, entries);
 	}
 	/**
-	 * initialize qualifier "db_xref" with string in the format database:record 
+	 * initialize qualifier DBXREF with string in the format database:record 
 	 * @param database
 	 * @param reference
 	 */
 	public DBReferenceInfo(String database, String reference) {
-		super("db_xref", database+":"+reference);
+		super(DBXREF, database+":"+reference);
 	}
 	/**
 	 * initialize qualifier with string[2][] where the array [0] stores several entries of database and the array [1] the corresponding references
@@ -90,13 +92,12 @@ public class DBReferenceInfo extends Qualifier {
 		} else return false;
 	}
 	/**
-	 * add a database reference info where database is in string[0] and reference in string [1]
-	 * @param databaseReferenceInfo
+	 * add db reference in the form database:reference
+	 * @param database
+	 * @param reference
 	 */
-	public void addDbReferenceInfo(String[] databaseReferenceInfo) {
-		if(databaseReferenceInfo!=null && databaseReferenceInfo.length==2) {
-			this.addValue(databaseReferenceInfo[0]+":"+databaseReferenceInfo[1]);
-		}
+	public void addDBReferenceInfo(String database, String reference) {
+		this.addValue(database+":"+reference);
 	}
 	/**
 	 * get the sequence record for the database in question
@@ -245,6 +246,17 @@ public class DBReferenceInfo extends Qualifier {
 	   ArrayList<String> als=new ArrayList<String>();
 	   for(String s : getValues()) if(s.startsWith(database)) als.add(s.split(":")[1]);
 	   return als.toArray(new String[als.size()]);
+   }
+   /**
+    * add all values stored in a DBReferenceInfo to this
+    * @param dbRefI
+    */
+   public void add(DBReferenceInfo dbRefI) {
+	   int i=0;
+	   while(i<dbRefI.valueSize()) {
+		   this.addValue(dbRefI.getValue(i));
+		   i++;
+	   }
    }
 }
 

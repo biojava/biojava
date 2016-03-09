@@ -277,58 +277,82 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     	return qualifierMap;
     }
     /**
-     * 
+     * get all qualifiers of this feature
      * @return
      */
 	public Qualifier[] getQualifiers() {
 		return qualifierMap.entrySet();
 	}
 	/**
-	 * 
+	 * overwrite qualifiermap
 	 * @param qualifierMap
 	 */
 	public void setQualifierMap(GenBankQualifierMap qualifierMap) {
 		this.qualifierMap = qualifierMap;
 	}
 	/**
-	 * 
+	 * overwrite qualifiers 
 	 * @param qualifiers
 	 */
 	public void setQualifiers(Qualifier[] qualifiers) {
 		this.qualifierMap=new GenBankQualifierMap(qualifiers);
 	}
 	/**
-	 * 
+	 * overwrite this qualifier 
+	 * @param qualifiers
+	 */
+	public void setQualifier(Qualifier q) {
+		qualifierMap.set(q);
+	}
+	/**
+	 * add this qualifier
 	 * @param qualifier
 	 */
 	public void addQualifier(Qualifier qualifier) {
 		qualifierMap.add(qualifier);
 	}
 	/**
-	 * 
+	 * add a bunch of qualifiers  
 	 * @param qa
 	 */
 	public void addQualifiers(Qualifier[] qa) {
-		qualifierMap.addQualifiers(qa);
-		
+		for(Qualifier q:qa) this.addQualifier(q);
 	}
+	/**
+	 * get qualifier by name
+	 * 
+	 */
 	public Qualifier getQualifierByName(String qName) { return qualifierMap.getQualifierNyName(qName); }
+	/**
+	 * get the first qualifier which has the given value
+	 */
 	public Qualifier getFirstQualifierByValue(String value) { return qualifierMap.getFirstQualifierByValue(value); };
+	/**
+	 * get all qualifiers which have the given value
+	 */
 	public Qualifier[] getQualifiersByValue(String value) { return qualifierMap.getQualifiersByValue(value); };
 	//
 	//db reference info stuff 
 	//
-	/**
+	/*
 	 * returns all database names and the sequence references for the corresponding database in a String[][2]
 	 * @return
-	 */
+	 *
 	public String[][] getAllDatabasesReferenceInfos() {
 		DBReferenceInfo dbRefI =  this.qualifierMap.getDBReferenceInfo();
 		if(dbRefI!=null) return dbRefI.getAllDatabaseReferenceInfos();
 		else return null;
+	}*/
+	/**
+	 * returns the dbreferenceinfo of this feature, which can contain lots of 
+	 * entries 
+	 * * @return
+	 */
+	public DBReferenceInfo getAllDatabaseReferenceInfos() {
+		return this.qualifierMap.getDBReferenceInfo();
 	}
 	/**
-	 * returns all databases in a string[]
+	 * returns all databases of this feature in a string[]
 	 * @return
 	 */
 	public String[] getAllDatabases() {
@@ -337,7 +361,8 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 		else return null;
 	}
 	/**
-	 * returns all sequence database references for all databases in a string[] 
+	 * returns all sequence database references for all databases in a string[]
+	 * for this feature 
 	 * @return
 	 */
 	public String[] getAllDatabaseReferences() {
@@ -346,13 +371,13 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 		else return null;
 	}
 	/**
-	 * get database reference info #i as string[2]
+	 * get database reference info #i as new DBReferenceInfo
 	 * @param i
 	 * @return
 	 */
-	public String[] getDatabaseReferenceInfo(int i) {
+	public DBReferenceInfo getDatabaseReferenceInfo(int i) {
 		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
-		if(dbRefI!=null) return dbRefI.getDatabaseReferenceInfo(i);
+		if(dbRefI!=null) return new DBReferenceInfo(dbRefI.getDatabaseReferenceInfo(i));
 		else return null;
 	}
 	/**
@@ -375,23 +400,27 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 		if(dbRefI!=null) return dbRefI.getDatabaseReference(i);
 		else return null;
 	}
-	
 	/**
-	 * convenience method to point out that there are several
+	 * convenience method to point out that there can be several
+	 * databases each with several references. This method returns
+	 * only one database with one reference
+	 * 
 	 * @return
 	 */
-	public String[] getFirstDatabaseReferenceInfo() {
+	public DBReferenceInfo getFirstDatabaseReferenceInfo() {
 		return getDatabaseReferenceInfo(0);
 	}
 	/**
-	 * convenience method to point out that there are several
+	 * convenience method to point out that there can be several
+	 * database references per database
 	 * @return
 	 */
 	public String getFirstDatabaseReference() {
 		return getDatabaseReference(0);
 	}
 	/**
-	 * convenience method to point out that there are several
+	 * convenience method to point out that there can be several 
+	 * databases
 	 * @return
 	 */
 	public String getFirstDatabase() {
@@ -407,7 +436,6 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 		if(dbRefI!=null) return dbRefI.getDatabaseReference(database,i); 
 		else return null;
 	}
-	
 	/**
 	 * get all references of a sequence in a particular database
 	 * in the same database
@@ -430,15 +458,17 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 		return getDatabaseReference(database, 0);
 	}
 
-	public void setDatabaseReferenceInfo(String database, String reference) {
-		qualifierMap.add(new DBReferenceInfo(database,reference));
+	public void setDatabaseReferenceInfo(DBReferenceInfo dbRefI) {
+		qualifierMap.set(dbRefI);
 	}
-	public boolean addDatabaseReferenceInfos(String[][] entries) {
-		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
-		if(dbRefI!=null) return dbRefI.setDBReferenceInfos(entries);
-		else return false;
+	
+	public void addDatabaseReferenceInfo(DBReferenceInfo dbRefI) {
+		this.qualifierMap.add(dbRefI);
 	}
-
+	/**
+	 * 
+	 *  @Deprecated use addQualifier(Qualifier q)
+	 */
 	@Deprecated
 	public void addQualifier(String str, Qualifier q) {
 		this.qualifierMap.add(q);

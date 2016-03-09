@@ -192,13 +192,14 @@ public class GFF3FromUniprotBlastHits {
                                 for(FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> feature:proteinSequence.getFeatures()) {
                                 	//put all database reference infos of that feature in a string [][]; array[0] holds the databases, array[1] the 
                                 	//corresponding records
-                                	String[][] dbRefI = feature.getAllDatabasesReferenceInfos();
+                                	DBReferenceInfo dbRefI = feature.getAllDatabaseReferenceInfos();
                                 	int infoC = 0;
-                                	while(infoC<dbRefI[0].length) {
+                                	while(infoC<dbRefI.valueSize()) {
                                 			//if it is in the list store it.
-                                		if(dbRefI[0][infoC].startsWith("Pfam") || dbRefI[0][infoC].startsWith("CAZy") || dbRefI[0][infoC].startsWith("GO") || dbRefI[0][infoC].startsWith("BRENDA")) {
-                                			notes=notes+" "+dbRefI[1][infoC];
-                                			geneSequence.addNote(dbRefI[1][infoC]);
+                                		if(dbRefI.getValue(infoC).startsWith("Pfam") || dbRefI.getValue(infoC).startsWith("CAZy") || 
+                                				dbRefI.getValue(infoC).startsWith("GO") || dbRefI.getValue(infoC).startsWith("BRENDA")) {
+                                			notes=notes+" "+dbRefI.getValue(infoC);
+                                			geneSequence.addNote(dbRefI.getValue(infoC));
                                 			infoC++;
                                 		}
                                 	}

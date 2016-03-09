@@ -167,16 +167,25 @@ public class GenBankQualifierMap {
 		}
 		return qal.toArray(new Qualifier[qal.size()]);
 	}
-	public void addQualifiers(Qualifier[] qa) {
-		// TODO Auto-generated method stub
-		
-	}
-	public void set(Qualifier[] qa) {
-		// TODO Auto-generated method stub
-		
-	}
-	public DBReferenceInfo getDBReferenceInfo() {
-		return (DBReferenceInfo) this.getQualifierNyName("db_xref");
+	/**
+	 * overwrite qualifier q with the given values if it exists,
+	 * else just add it
+	 * @param qa
+	 */
+	public void set(Qualifier q){
+		Qualifier oldQualifier = this.getByName(q.getName());
+		if(oldQualifier!=null) oldQualifier.setValues(q.getValues());
+		else this.add(q);
 	}
 	
+	public DBReferenceInfo getDBReferenceInfo() {
+		return (DBReferenceInfo) this.getQualifierNyName(DBReferenceInfo.DBXREF);
+	}
+	/**
+	 * overwrite dbreferenceinfo with the below values
+	 * @param dbRefI
+	 */
+	public void set(DBReferenceInfo dbRefI) {
+		this.set(dbRefI);		
+	}
 }

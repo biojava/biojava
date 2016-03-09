@@ -77,5 +77,12 @@ public class QualityFeature<S extends AbstractSequence<C>, C extends Compound> e
     public List<Number> getQualities(int biostart, int bioend) {
         return qualities.subList(biostart - 1, bioend - 1);
     }
+/////////////////////////
 
+	@Override
+	public DBReferenceInfo getAllDatabaseReferenceInfos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+    
 }
