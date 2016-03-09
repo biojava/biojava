@@ -31,7 +31,8 @@ import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A class that configures parameters that can be sent to the PDB file parsers
+/** 
+ * A class that configures parameters that can be sent to the PDB file parsers
  * 
  * <ul>
  * <li> {@link #setParseCAOnly(boolean)} - parse only the Atom records for C-alpha atoms</li>
@@ -41,7 +42,7 @@ import org.slf4j.LoggerFactory;
  *      and ATOM records of a PDB file be aligned? (default:yes)</li>
  * <li> {@link #setHeaderOnly(boolean)} - parse only the PDB/mmCIF file header, ignoring coordinates
  * </li>
- * <li> {@link #setCreateAtomBonds(boolean)} - create atom bonds from parsed bonds in PDB/mmCIF files and chemical component files 
+ * <li> {@link #setCreateAtomBonds(boolean)} - create atom bonds from parsed bonds in PDB/mmCIF files and chemical component cif files 
  * </li?
  * </ul>
  * 
@@ -79,8 +80,8 @@ public class FileParsingParameters implements Serializable
 	 */
 	private boolean parseCAOnly;
 
-	/** Flag to parse header only
-	 * 
+	/** 
+	 * Flag to parse header only
 	 */
 	private boolean headerOnly;
 
@@ -114,8 +115,9 @@ public class FileParsingParameters implements Serializable
 	 * Should we create charges on atoms when parsing a file?
 	 */	
 	private boolean createAtomCharges;
+	
 	/**
-	 * Should we use internal or public facign chain ids?
+	 * Should we use internal (asym_id) or public facing (author) chain ids
 	 */
 	private boolean useInternalChainId;
 	/**  
@@ -409,10 +411,25 @@ public class FileParsingParameters implements Serializable
 		this.createAtomCharges = createAtomCharges;
 	}
 
+	/**
+	 * Should we use internal (asym_id) or public facing (author) chain ids
+	 * @return
+	 * @since 4.2
+	 */
 	public boolean isUseInternalChainId() {
 		return useInternalChainId;
 	}
 
+	/**
+	 * Set the useInternalChainId parsing mode. This is an experimental
+	 * parsing mode that applies only to the mmCIF parser. It will create chains 
+	 * following the model specified in the mmCIF dictionary where both polymer and 
+	 * non-polymer entities are assigned separate chains. The chain identifiers
+	 * used are the asym_ids specified in mmCIF file. Some BioJava features might not 
+	 * work properly in this parsing mode. 
+	 * @param useInternalChainId
+	 * @since 4.2
+	 */
 	public void setUseInternalChainId(boolean useInternalChainId) {
 		this.useInternalChainId = useInternalChainId;
 	}
