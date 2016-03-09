@@ -19,10 +19,6 @@ package org.biojava.nbio.structure.gui;
  *      http://www.biojava.org/
  *
  */
-///*
-// * To change this template, choose Tools | Templates
-// * and open the template in the editor.
-// */
 //package org.biojava.nbio.structure.gui;
 //
 //import astex.MoleculeRenderer;
