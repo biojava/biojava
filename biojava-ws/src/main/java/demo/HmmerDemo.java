@@ -26,7 +26,6 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava.nbio.ws.hmmer.HmmerDomain;
 import org.biojava.nbio.ws.hmmer.HmmerResult;
-import org.biojava.nbio.ws.hmmer.HmmerScan;
 import org.biojava.nbio.ws.hmmer.RemoteHmmerScan;
 
 import java.util.SortedSet;

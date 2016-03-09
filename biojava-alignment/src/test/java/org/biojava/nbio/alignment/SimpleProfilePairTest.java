@@ -38,7 +38,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import org.biojava.nbio.alignment.NeedlemanWunsch;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.core.alignment.SimpleProfilePair;
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 
 import static org.junit.Assert.assertEquals;

@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.sequencing.io.fastq;
 
-import java.io.IOException;
-
 /**
  * Unit test for IlluminaFastqWriter.
  */
