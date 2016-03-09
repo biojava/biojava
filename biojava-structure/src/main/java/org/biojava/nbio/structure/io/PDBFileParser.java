@@ -2186,7 +2186,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String dbseqBegin  = line.substring(55,60);
 		String idbnsBeg    = line.substring(60,61);
 		String dbseqEnd    = line.substring(62,67);
-		String dbinsEnd    = line.substring(67,68);
+		// Support implicit space character at end
+		String dbinsEnd;
+		if(line.length() >= 68)
+			dbinsEnd       = line.substring(67,68);
+		else
+			dbinsEnd       = " ";
 
 		dbref.setIdCode(idCode);
 		dbref.setChainId(chainId);
