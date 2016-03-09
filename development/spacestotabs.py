@@ -55,9 +55,12 @@ def max_compatible(distribution, threshold=.8, possible=[8,4,3,2]):
                 compat += count
             else:
                 incompat += count
+        # unambiguous case
+        if compat > 0 and incompat == 0:
+            return poss
         # require sufficient lines with spaces
         if threshold < 1 and (compat+incompat)*(1-threshold) < 2:
-            return None
+            continue
         if compat >= (compat+incompat)*threshold:
             return poss
 
