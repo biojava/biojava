@@ -30,6 +30,7 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,9 +41,14 @@ import java.util.Map;
  * @author Mark Chapman
  * @author Paolo Pavan
  */
-public class SubstitutionMatrixHelper {
+public class SubstitutionMatrixHelper implements Serializable {
 
-    private static Map<String, SubstitutionMatrix<AminoAcidCompound>> aminoAcidMatrices =
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 148491724604653225L;
+	
+	private static Map<String, SubstitutionMatrix<AminoAcidCompound>> aminoAcidMatrices =
             new HashMap<String, SubstitutionMatrix<AminoAcidCompound>>();
     private static Map<String, SubstitutionMatrix<NucleotideCompound>> nucleotideMatrices =
             new HashMap<String, SubstitutionMatrix<NucleotideCompound>>();
