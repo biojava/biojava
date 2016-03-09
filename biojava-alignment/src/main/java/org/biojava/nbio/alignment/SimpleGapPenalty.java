@@ -34,10 +34,8 @@ import org.biojava.nbio.alignment.template.GapPenalty;
  */
 public class SimpleGapPenalty implements GapPenalty, Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 3945671344135815456L;
+
 	private static int dgop = 10, dgep = 1;
 
     /**
