@@ -40,12 +40,12 @@ import org.slf4j.LoggerFactory;
 /**
  * This class models a search Hsp.
  * You will retrieve a list of this using iterator of a Hit
- * 
+ *
  * Designed by Paolo Pavan.
- * You may want to find my contacts on Github and LinkedIn for code info 
+ * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
- * 
+ *
  * @author Paolo Pavan
  */
 
@@ -84,9 +84,9 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
      * Experimental.
      * Wants to implement conceptual comparisons of search results.
      * Fields unrelated to search are deliberately not considered.
-     * 
+     *
      * In HSP case, alignment representation strings are considered.
-     * @return true if HSP alignments are the same, 
+     * @return true if HSP alignments are the same,
      * false otherwise or if alignment strings are undetermined
      */
     @Override
@@ -109,30 +109,30 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         }
         return true;
     }
-    
+
     public SequencePair<S,C> getAlignment(){
         if (returnAln != null) return returnAln;
-        
+
         SimpleAlignedSequence<S,C> alignedQuery, alignedHit;
         // queryFrom e hitTo?
         int numBefore, numAfter;
-        
+
         alignedQuery = new SimpleAlignedSequence(getSequence(hspQseq), getAlignmentsSteps(hspQseq));
         alignedHit = new SimpleAlignedSequence(getSequence(hspHseq), getAlignmentsSteps(hspHseq));
-        
+
         returnAln = new SimpleSequencePair<S, C>(alignedQuery, alignedHit);
-        
+
         return returnAln;
     }
-    
+
     private Sequence getSequence(String gappedSequenceString){
         if (gappedSequenceString == null) return null;
-        
+
         Sequence returnSeq = null;
         String sequenceString = gappedSequenceString.replace("-", "");
-        
+
         try {
-            if (sequenceString.matches("^[ACTG]+$")) 
+            if (sequenceString.matches("^[ACTG]+$"))
                 returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
             else if (sequenceString.matches("^[ACUG]+$"))
                 returnSeq = new RNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
@@ -143,10 +143,10 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         }
         return returnSeq;
     }
-    
+
     private List<Step> getAlignmentsSteps(String gappedSequenceString){
         List<Step> returnList = new ArrayList<Step>();
-        
+
         for (char c: gappedSequenceString.toCharArray()){
             if (c=='-') returnList.add(Step.GAP); else returnList.add(Step.COMPOUND);
         }
@@ -210,21 +210,21 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     }
     /**
      * HSP aligned query sequence string
-     * @return 
+     * @return
      */
     public String getHspQseq() {
         return hspQseq;
     }
     /**
      * HSP aligned hit sequence string
-     * @return 
+     * @return
      */
     public String getHspHseq() {
         return hspHseq;
     }
     /**
      * Identity string representing correspondence between aligned residues
-     * @return 
+     * @return
      */
     public String getHspIdentityString() {
         return hspIdentityString;
@@ -260,13 +260,13 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         this.hspQseq = hspQseq;
         this.hspHseq = hspHseq;
         this.hspIdentityString = hspIdentityString;
-        this.percentageIdentity = percentageIdentity; 
+        this.percentageIdentity = percentageIdentity;
         this.mismatchCount = mismatchCount;
-        
+
         // sanity check
         if (percentageIdentity != null && (percentageIdentity < 0 || percentageIdentity >1))
             throw new IllegalArgumentException("Percentage identity must be between 0 and 1");
-        
+
     }
-      
+
 }

@@ -42,14 +42,14 @@ import static org.junit.Assert.assertTrue;
 public class GuanUberbacherTest {
 
 	private static final double PRECISION = 0.00000001;
-	
+
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
     private GuanUberbacher<ProteinSequence, AminoAcidCompound> alignment, self;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         gaps = new SimpleGapPenalty(10, 1);
@@ -105,7 +105,7 @@ public class GuanUberbacherTest {
         assertEquals(String.format("ARND%nARND%n"), self.getPair().toString());
     }
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void should_align_shorter_query() throws CompoundNotFoundException {
@@ -115,7 +115,7 @@ public class GuanUberbacherTest {
 		assertEquals(String.format("A-%nAT%n"), aligner.getPair().toString());
     }
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void should_align_shorter_target() throws CompoundNotFoundException {
@@ -125,7 +125,7 @@ public class GuanUberbacherTest {
 		assertEquals(String.format("AT%nA-%n"), aligner.getPair().toString());
     }
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void should_align_multiple_cuts() throws CompoundNotFoundException {

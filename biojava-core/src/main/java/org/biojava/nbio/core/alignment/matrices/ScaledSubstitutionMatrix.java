@@ -39,31 +39,31 @@ import java.util.StringTokenizer;
  * In order to be able to use them in the alignment module these are scaled in
  * order to be able to represent as short values.
  * The method {@link #getScale()} provides access to the scaling factor.
- *  
- *  
+ *
+ *
  * @author Andreas Prlic
  *
  */
 public class ScaledSubstitutionMatrix implements
 		SubstitutionMatrix<AminoAcidCompound> {
-	
+
     private static final String comment = "#";
-    
+
     private String description, name;
     private short[][] matrix;
     private short max, min;
     private AminoAcidCompoundSet compoundSet;
-    
+
     private List<AminoAcidCompound> rows, cols;
-	
+
     private int scale;
-    
+
     public ScaledSubstitutionMatrix(){
     	compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
     }
-    
-    
-    
+
+
+
     public int getScale() {
 		return scale;
 	}
@@ -122,18 +122,18 @@ public class ScaledSubstitutionMatrix implements
 	public static String getComment() {
 		return comment;
 	}
-	
+
 	  /**
      * Returns in a format similar to the standard NCBI files.
      */
     @Override
     public String toString() {
-    	
+
     	String newline = System.getProperty("line.separator");
         StringBuilder s = new StringBuilder();
-        
-        
-               
+
+
+
         StringTokenizer st = new StringTokenizer(description, newline);
         while (st.hasMoreTokens()) {
             String line = st.nextToken();
@@ -142,15 +142,15 @@ public class ScaledSubstitutionMatrix implements
             }
             s.append(String.format("%s%n", line));
         }
-        
+
         if ( scale != 1)
         	s.append("# Matrix scaled by a factor of " + scale + newline );
         s.append(getMatrixAsString());
         return s.toString();
     }
-	
-	
-	
+
+
+
 	@Override
 	public CompoundSet<AminoAcidCompound> getCompoundSet() {
 		return compoundSet;
@@ -158,15 +158,15 @@ public class ScaledSubstitutionMatrix implements
 	  @Override
 	    public String getMatrixAsString() {
 	        StringBuilder s = new StringBuilder();
-	        
-	        
-	        
+
+
+
 	        int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
 	                Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
-	        
+
 	        String padCompound = "%" + Integer.toString(lengthCompound) + "s",
 	                padRest = "%" + Integer.toString(lengthRest);
-	        
+
 	        for (int i = 0; i < lengthCompound; i++) {
 	            s.append(" ");
 	        }
@@ -203,15 +203,15 @@ public class ScaledSubstitutionMatrix implements
 	        }
 	        return matrix[row][col];
 
-		
+
 	}
-	
-	
+
+
 	@Override
 	public SubstitutionMatrix<AminoAcidCompound> normalizeMatrix(short scale) {
 		return null;
 	}
-    
+
 
 	@Override
 	public Map<AminoAcidCompound, Short> getRow(AminoAcidCompound row) {

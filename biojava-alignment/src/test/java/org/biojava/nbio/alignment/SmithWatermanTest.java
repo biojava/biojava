@@ -37,14 +37,14 @@ import static org.junit.Assert.*;
 public class SmithWatermanTest {
 
 	private static final double PRECISION = 0.00000001;
-	
+
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
     private SmithWaterman<ProteinSequence, AminoAcidCompound> alignment, self;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         query = new ProteinSequence("AERNDKK");
         target = new ProteinSequence("ERDNKGFPS");
         gaps = new SimpleGapPenalty((short) 2, (short) 1);

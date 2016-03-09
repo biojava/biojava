@@ -26,7 +26,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.ProxySequenceReader;
 
 /**
- * A location which is bound to an AccessionID. This is common in 
+ * A location which is bound to an AccessionID. This is common in
  * INSDC locations where a location actually points to a remote sequence. This
  * is especially common in records describing Genomic sequence assembly.
  *

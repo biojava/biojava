@@ -48,7 +48,7 @@ public class GuideTreeTest {
     private GuideTree<ProteinSequence, AminoAcidCompound> tree;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         proteins = Arrays.asList(new ProteinSequence[] {new ProteinSequence("ARND"), new ProteinSequence("ARND"),
                 new ProteinSequence("HILK"), new ProteinSequence("ANDR")});
         gaps = new SimpleGapPenalty((short) 2, (short) 1);
@@ -124,7 +124,7 @@ public class GuideTreeTest {
     @Test
     public void testToString() {
         assertEquals("(((1:0.0,2:0.0):0.19999999999999996,3:0.8):"
-        		+ "0.09999999999999998,4:0.09999999999999998)", 
+        		+ "0.09999999999999998,4:0.09999999999999998)",
         		tree.toString());
     }
 

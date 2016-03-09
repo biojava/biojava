@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jul 17, 2006
  *
  */
@@ -29,16 +29,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 class JTableMouseButtonListener implements MouseListener {
-    
+
     private JTable __table;
 
     private void __forwardEventToButton(MouseEvent e) {
       TableColumnModel columnModel = __table.getColumnModel();
       int column = columnModel.getColumnIndexAtX(e.getX());
       int row    = e.getY() / __table.getRowHeight();
-    
+
       Component component;
-      
+
 
       //System.out.println("row " + row + " col " + column);
       if(row >= __table.getRowCount() || row < 0 ||
@@ -46,7 +46,7 @@ class JTableMouseButtonListener implements MouseListener {
         return;
 
       Object value = __table.getValueAt(row, column);
-     
+
       if(!(value instanceof Component))
         return;
 
@@ -54,9 +54,9 @@ class JTableMouseButtonListener implements MouseListener {
       component = (Component)value;
 
       MouseEvent mevent = (MouseEvent) SwingUtilities.convertMouseEvent(__table, e, component);
-      
+
       //System.out.println(mevent);
-      
+
       component.dispatchEvent(mevent);
       // This is necessary so that when a button is pressed and released
       // it gets rendered properly.  Otherwise, the button may still appear

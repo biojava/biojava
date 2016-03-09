@@ -36,7 +36,7 @@ import java.util.Locale;
    The Java Matrix Class provides the fundamental operations of numerical
    linear algebra.  Various constructors create Matrices from two dimensional
    arrays of double precision floating point numbers.  Various "gets" and
-   "sets" provide access to submatrices and matrix elements.  Several methods 
+   "sets" provide access to submatrices and matrix elements.  Several methods
    implement basic matrix arithmetic, including matrix addition and
    multiplication, matrix norms, and element-by-element array operations.
    Methods for reading and printing matrices are also included.  All the
@@ -76,8 +76,8 @@ import java.util.Locale;
 public class Matrix implements Cloneable, java.io.Serializable {
 
     static final long serialVersionUID = 8492558293015348719l;
-    
-    
+
+
 /* ------------------------
    Class variables
  * ------------------------ */
@@ -97,7 +97,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
    Constructors
  * ------------------------ */
 
-   /** Construct an m-by-n matrix of zeros. 
+   /** Construct an m-by-n matrix of zeros.
    @param m    Number of rows.
    @param n    Number of colums.
    */
@@ -936,7 +936,7 @@ public String toString(){
 	   print(printWriter,getColumnDimension(),3);
 	   return writer.toString();
    }
-   
+
 
    /** Print the matrix to stdout.   Line the elements up in columns
      * with a Fortran-like 'Fw.d' style format.
@@ -988,7 +988,7 @@ public String toString(){
      * Note that is the matrix is to be read back in, you probably will want
      * to use a NumberFormat that is set to US Locale.
    @param output the output stream.
-   @param format A formatting object to format the matrix elements 
+   @param format A formatting object to format the matrix elements
    @param width  Column width.
    @see java.text.DecimalFormat#setDecimalFormatSymbols
    */

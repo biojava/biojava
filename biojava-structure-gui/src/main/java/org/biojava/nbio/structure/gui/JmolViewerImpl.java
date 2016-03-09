@@ -34,7 +34,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class JmolViewerImpl implements StructureViewer {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(JmolViewerImpl.class);
 
     public static final String viewer = "org.jmol.api.JmolSimpleViewer";
@@ -179,12 +179,12 @@ public class JmolViewerImpl implements StructureViewer {
          *
          */
         private static final long serialVersionUID = -3661941083797644242L;
-        
+
 		Class viewerC;
-        
+
         Class adapterC;
-        
-        
+
+
 		Class smartAdapterC;
         Object viewerO;
         Object adapterO;
@@ -234,7 +234,7 @@ public class JmolViewerImpl implements StructureViewer {
 
         }
 
-        
+
         public Class getViewer() {
             return viewerC;
         }

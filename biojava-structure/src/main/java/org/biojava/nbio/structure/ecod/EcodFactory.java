@@ -67,9 +67,9 @@ public class EcodFactory {
 		logger.trace("Waiting for EcodFactory lock to get version "+version);
 		synchronized(versionedEcodDBs) {
 			logger.trace("Got EcodFactory lock to get version "+version);
-			
+
 			releaseReferences();
-			
+
 			SoftReference<EcodDatabase> ecodRef = versionedEcodDBs.get(version.toLowerCase());
 			EcodDatabase ecod = null;
 			if(ecodRef != null) {
@@ -96,7 +96,7 @@ public class EcodFactory {
 			return ecod;
 		}
 	}
-	
+
 	/**
 	 * removes SoftReferences which have already been garbage collected
 	 */

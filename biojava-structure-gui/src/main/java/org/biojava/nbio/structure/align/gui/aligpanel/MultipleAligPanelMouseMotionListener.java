@@ -30,15 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Mouse Motion Listener for the {@link MultipleAligPanel}, 
- * which provides methods to obtain positions of the mouse 
- * and connect them to the sequence alignment positions using 
+ * Mouse Motion Listener for the {@link MultipleAligPanel},
+ * which provides methods to obtain positions of the mouse
+ * and connect them to the sequence alignment positions using
  * the information in {@link MultipleAlignmentCoordManager}.
- * 
+ *
  * @author Aleix Lafita
  *
  */
-public class MultipleAligPanelMouseMotionListener 
+public class MultipleAligPanelMouseMotionListener
 implements MouseMotionListener, MouseListener {
 
 	private MultipleAligPanel parent;
@@ -69,7 +69,7 @@ implements MouseMotionListener, MouseListener {
 
 		AlignedPosition pos = getCurrentAlignedPosition(e);
 
-		if (pos == null) return;			
+		if (pos == null) return;
 		if (prevPos == pos.getPos1() && isDragging) return;
 
 		if (!isDragging) {
@@ -97,7 +97,7 @@ implements MouseMotionListener, MouseListener {
 	}
 
 	private void triggerRangeSelected(
-			AlignedPosition start, AlignedPosition end) {		
+			AlignedPosition start, AlignedPosition end) {
 		for (AlignmentPositionListener li : aligPosListeners){
 			li.rangeSelected(start, end);
 		}
@@ -191,7 +191,7 @@ implements MouseMotionListener, MouseListener {
 	public void mouseReleased(MouseEvent e) {
 
 		isDragging = false;
-		
+
 		if (keyPressed(e)) {
 			boolean keepOn = false;
 			if (!selectionLocked) keepOn = true;
@@ -204,6 +204,6 @@ implements MouseMotionListener, MouseListener {
 			if (keepOn) triggerMouseOverPosition(pos);
 			else triggerToggleSelection(pos);
 			prevPos = pos.getPos1();
-		} 
+		}
 	}
 }

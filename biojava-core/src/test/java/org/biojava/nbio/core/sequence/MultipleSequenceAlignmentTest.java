@@ -49,7 +49,7 @@ public class MultipleSequenceAlignmentTest {
         }
         msaDNA = new MultipleSequenceAlignment<DNASequence, NucleotideCompound>();
         for (int i = 0; i < 7; i++) {
-            msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG")); 
+            msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
         }
     }
 

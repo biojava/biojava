@@ -1,8 +1,8 @@
-/* 
+/*
  * @(#)ORonnModel.java	1.0 June 2010
- * 
+ *
  * Copyright (c) 2010 Peter Troshin
- *  
+ *
  *        BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -38,7 +38,7 @@ import java.io.PrintWriter;
 /**
  * Fully re-factored version of RONN model. Based on the code in C version of
  * RONN.
- * 
+ *
  * @author Peter Troshin
  * @version 1.0
  * @since 3.0.2

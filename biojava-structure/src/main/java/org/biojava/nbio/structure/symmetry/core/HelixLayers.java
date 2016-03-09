@@ -43,11 +43,11 @@ public class HelixLayers {
 	public void addHelix(Helix helix) {
 		helices.add(helix);
 	}
-	
+
 	public Helix getHelix(int index) {
 		return helices.get(index);
 	}
-	
+
 	/*
 	 * Returns Helix with lowest twist angle
 	 */
@@ -62,7 +62,7 @@ public class HelixLayers {
 		}
 		return lowest;
 	}
-	
+
 	/*
 	 * Returns Helix with largest number of intermolecular contacts
 	 * between repeat units
@@ -78,8 +78,8 @@ public class HelixLayers {
 		}
 		return largest;
 	}
-	
-	/* 
+
+	/*
 	 * Returns Helix that has the largest number of contacts, besides
 	 * the Helix with the lowest twist angle
 	 */
@@ -103,9 +103,9 @@ public class HelixLayers {
 		}
 		return largest;
 	}
-	
+
 	/**
-	 * Returns QuatSymmetryScores averaged over all rotations 
+	 * Returns QuatSymmetryScores averaged over all rotations
 	 * (except the first rotation, which is the unit operation E)
 	 * @return mean scores average over rotations
 	 */
@@ -149,13 +149,13 @@ public class HelixLayers {
 			values[i] = helices.get(i).getScores().getTm();
 		}
 		scores.setTm(averageScores(values));
-		
+
 		// Rmsd subunit centers
 		for (int i = 0; i < helices.size(); i++) {
 			values[i] = helices.get(i).getScores().getRmsdCenters();
 		}
 		scores.setRmsdCenters(averageScores(values));
-	
+
 		// TmIntra
 		for (int i = 0; i < helices.size(); i++) {
 			values[i] = helices.get(i).getScores().getTmIntra();
@@ -170,10 +170,10 @@ public class HelixLayers {
 
 		// SymDeviation
 		scores.setSymDeviation(symmetryDeviation);
-		
+
 		return scores;
 	}
-	
+
 	/**
 	 * @param symmetryDeviation the symmetryDeviation to set
 	 */
@@ -188,7 +188,7 @@ public class HelixLayers {
 		}
 		return sum/scores.length;
 	}
-	
+
 	private double minScores(double[] scores) {
 		double score = Double.MAX_VALUE;
 		for (double s: scores) {
@@ -196,7 +196,7 @@ public class HelixLayers {
 		}
 		return score;
 	}
-	
+
 	private double maxScores(double[] scores) {
 		double score = Double.MIN_VALUE;
 		for (double s: scores) {
@@ -204,11 +204,11 @@ public class HelixLayers {
 		}
 		return score;
 	}
-	
+
 	public void clear() {
 		helices.clear();
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -219,6 +219,6 @@ public class HelixLayers {
 		return sb.toString();
 	}
 
-	
+
 
 }

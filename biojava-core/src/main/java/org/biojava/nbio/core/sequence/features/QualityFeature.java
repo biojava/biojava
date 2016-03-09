@@ -68,7 +68,7 @@ public class QualityFeature<S extends AbstractSequence<C>, C extends Compound> e
     public Number getQualityAt(int bioindex) {
         return qualities.get(bioindex - 1);
     }
-    
+
     /**
      * @param biostart biological start index (starts with 1)
      * @param bioend biological end index (starts with 1)

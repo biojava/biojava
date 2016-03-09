@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 2, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -37,7 +37,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 
 /** Wrapper for the BioJava Structure Alignment Implementation
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -62,7 +62,7 @@ implements StructureAlignment  {
 	public ConfigStrucAligParams getParameters() {
 		return null;//TODO shall we update it?
 	}
-	
+
 	@Override
 	public void setParameters(ConfigStrucAligParams o){
 		//TODO what is the relation between StrucAligParameters and ConfigStrucAligParams?
@@ -87,7 +87,7 @@ implements StructureAlignment  {
 	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
 		StrucAligParameters params = StrucAligParameters.getDefaultParameters();
 		return align(ca1,ca2,params);
-		
+
 	}
 
 
@@ -128,34 +128,34 @@ implements StructureAlignment  {
 		afpChain.setBlockRotationMatrix(new Matrix[]{altAlig.getRotationMatrix()});
 		afpChain.setBlockShiftVector(new Atom[]{altAlig.getShift() });
 		afpChain.setBlockNum(1);
-		
+
 		double rmsd = altAlig.getRmsd();
 		afpChain.setBlockRmsd(new double[]{rmsd});
-		
-		
+
+
 		int nAtom = altAlig.getEqr();
 		int lcmp = altAlig.getPath().length;
 		int[] optLen = new int[]{nAtom};
 		afpChain.setOptLen(optLen);
-		afpChain.setOptLength(nAtom);		
+		afpChain.setOptLength(nAtom);
 		afpChain.setAlnLength(lcmp);
-				
+
 		int[][][] optAln = new int[1][2][lcmp];
 		afpChain.setOptAln(optAln);
-		
+
 		afpChain.setOptRmsd(new double[]{rmsd});
 		afpChain.setTotalRmsdOpt(rmsd);
 		afpChain.setChainRmsd(rmsd);
 		//afpChain.setProbability(-1);
 		int nse1 = ca1.length;
 		int nse2 = ca2.length;
-		
+
 		char[] alnseq1 = new char[nse1+nse2+1];
 		char[] alnseq2 = new char[nse1+nse2+1] ;
 		char[] alnsymb = new char[nse1+nse2+1];
-     
-		IndexPair[] path = altAlig.getPath(); 
-        
+
+		IndexPair[] path = altAlig.getPath();
+
 		int pos = 0;
 		for(int ia=0; ia<lcmp; ia++) {
 
@@ -165,15 +165,15 @@ implements StructureAlignment  {
 
 				optAln[0][0][pos] = align_se.getRow();
 				optAln[0][1][pos] = align_se.getCol();
-				
+
 				char l1 = getOneLetter(ca1[align_se.getRow()].getGroup());
 				char l2 = getOneLetter(ca2[align_se.getCol()].getGroup());
-				
+
 				alnseq1[ia] = Character.toUpperCase(l1);
 				alnseq2[ia] = Character.toUpperCase(l2);
 				alnsymb[ia] = '1';
 				pos++;
-								
+
 			} else {
 				// there is a gap on this position
 				alnsymb[ia] = ' ';
@@ -189,7 +189,7 @@ implements StructureAlignment  {
 					char l2 = getOneLetter(ca2[align_se.getCol()].getGroup());
 					alnseq2[ia] = Character.toLowerCase(l2);
 				}
-				
+
 			}
 		}
 		afpChain.setAlnseq1(alnseq1);
@@ -197,11 +197,11 @@ implements StructureAlignment  {
         afpChain.setAlnsymb(alnsymb);
 
 	}
-	
+
 	private static char getOneLetter(Group g){
 
 		if (g==null) return StructureTools.UNKNOWN_GROUP_LABEL;
-		
+
 		return StructureTools.get1LetterCode(g.getPDBName());
 
 	}

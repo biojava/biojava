@@ -42,15 +42,15 @@ import org.jgrapht.graph.DefaultEdge;
  * The GraphRefiner transforms the self-alignment into a Graph and extracts its
  * maximally connected Components. It then refines the alignment by combining
  * the compatible Components with the following heuristic:
- * 
+ *
  * <pre>
- * Given a set of components and their pairwise compatibilities, iteratively 
+ * Given a set of components and their pairwise compatibilities, iteratively
  * add the most compatible component, which is compatible to all the components
  * already added, to the final alignment.
  * </pre>
- * 
+ *
  * @author Aleix Lafita
- * 
+ *
  */
 public class GraphComponentRefiner implements SymmetryRefiner {
 
@@ -101,7 +101,7 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 				}
 			}
 		}
-		
+
 		// The compatibility score is the sum of rows of the matrix
 		List<Integer> rowScores = new ArrayList<Integer>(size);
 		for (int i = 0; i < size; i++) {
@@ -125,7 +125,7 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 
 			// Add the group to the alignment Block
 			groups.get(index).combineWith(alignRes);
-			
+
 			// Zero all the scores of incompatible groups
 			boolean allZero = true;
 			for (int i=0; i<size; i++){
@@ -137,10 +137,10 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 			if (allZero)
 				break;
 		}
-		
+
 		for (int i = 0; i < order; i++)
 			Collections.sort(alignRes.get(i));
-		
+
 		int length = alignRes.get(0).size();
 		if (length == 0)
 			throw new RefinerFailedException("Empty alignment");
@@ -158,5 +158,5 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 		AFPChain afp = AlignmentTools.replaceOptAln(optAln, selfAlignment, atoms, atoms);
 		return SymmetryTools.fromAFP(afp, atoms);
 	}
-	
+
 }

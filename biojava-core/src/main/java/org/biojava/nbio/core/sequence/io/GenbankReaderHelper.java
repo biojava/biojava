@@ -58,13 +58,13 @@ public class GenbankReaderHelper {
             return readGenbankDNASequence(file);
         }
 
-        GenbankReader<DNASequence, NucleotideCompound> GenbankProxyReader = 
+        GenbankReader<DNASequence, NucleotideCompound> GenbankProxyReader =
         		new GenbankReader<DNASequence, NucleotideCompound>(
-        				file, 
-        				new GenericGenbankHeaderParser<DNASequence, NucleotideCompound>(), 
+        				file,
+        				new GenericGenbankHeaderParser<DNASequence, NucleotideCompound>(),
         				new FileProxyDNASequenceCreator(
-        						file, 
-        						DNACompoundSet.getDNACompoundSet(), 
+        						file,
+        						DNACompoundSet.getDNACompoundSet(),
         						new GenbankSequenceParser<AbstractSequence<NucleotideCompound>, NucleotideCompound>()
     						)
     				);
@@ -86,12 +86,12 @@ public class GenbankReaderHelper {
             return readGenbankProteinSequence(file);
         }
 
-        GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProxyReader = 
+        GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProxyReader =
         		new GenbankReader<ProteinSequence, AminoAcidCompound>(
-        				file, 
+        				file,
         				new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),
         				new FileProxyProteinSequenceCreator(
-        						file, 
+        						file,
         						AminoAcidCompoundSet.getAminoAcidCompoundSet(),
         						new GenbankSequenceParser<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>()
     						)

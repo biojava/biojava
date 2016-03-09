@@ -78,7 +78,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * @param file
      * @param headerParser
      * @param sequenceCreator
-     * @throws FileNotFoundException if the file does not exist, is a directory 
+     * @throws FileNotFoundException if the file does not exist, is a directory
      * 	rather than a regular file, or for some other reason cannot be opened
      * 	for reading.
      * @throws SecurityException if a security manager exists and its checkRead
@@ -95,12 +95,12 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
     /**
      * The parsing is done in this method.<br>
-     * This method tries to process all the available fasta records 
-     * in the File or InputStream, closes the underlying resource, 
+     * This method tries to process all the available fasta records
+     * in the File or InputStream, closes the underlying resource,
      * and return the results in {@link LinkedHashMap}.<br>
      * You don't need to call {@link #close()} after calling this method.
      * @see #process(int)
-     * @return {@link HashMap} containing all the parsed fasta records 
+     * @return {@link HashMap} containing all the parsed fasta records
      * present, starting current fileIndex onwards.
      * @throws IOException if an error occurs reading the input file
      */
@@ -120,14 +120,14 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * time before the first result is available.<br>
      * <b>N.B.</b>
      * <ul>
-     * <li>This method can't be called after calling its NO-ARGUMENT twin.</li> 
-     * <li>remember to close the underlying resource when you are done.</li> 
+     * <li>This method can't be called after calling its NO-ARGUMENT twin.</li>
+     * <li>remember to close the underlying resource when you are done.</li>
      * </ul>
      * @see #process()
      * @author Amr AL-Hossary
      * @since 3.0.6
      * @param max maximum number of records to return, <code>-1</code> for infinity.
-     * @return {@link HashMap} containing maximum <code>max</code> parsed fasta records 
+     * @return {@link HashMap} containing maximum <code>max</code> parsed fasta records
      * present, starting current fileIndex onwards.
      * @throws IOException if an error occurs reading the input file
      */

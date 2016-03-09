@@ -38,7 +38,7 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 public class AminoAcidCompound extends AbstractCompound implements Serializable {
 
   /**
-	 * 
+	 *
 	 */
 private static final long serialVersionUID = -1955116496725902319L;
 private final AminoAcidCompoundSet compoundSet;

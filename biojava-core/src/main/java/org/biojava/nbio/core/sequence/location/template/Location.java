@@ -36,7 +36,7 @@ import java.util.List;
  * location can be a single set of bounds or composed of multiple
  * sub-locations. Each sub-location is a Location and therefore subject to the
  * same rules.
- * 
+ *
  * @author ayates
  */
 public interface Location extends Iterable<Location>, Accessioned {
@@ -227,7 +227,7 @@ public interface Location extends Iterable<Location>, Accessioned {
          */
         public static Location getMin(List<Location> locations) {
             return scanLocations(locations, new LocationPredicate() {
-                
+
                 @Override
 				public boolean accept(Location previous, Location current) {
                     int res = current.getStart().compareTo(previous.getStart());
@@ -242,7 +242,7 @@ public interface Location extends Iterable<Location>, Accessioned {
          */
         public static Location getMax(List<Location> locations) {
             return scanLocations(locations, new LocationPredicate() {
-                
+
                 @Override
 				public boolean accept(Location previous, Location current) {
                     int res = current.getEnd().compareTo(previous.getEnd());

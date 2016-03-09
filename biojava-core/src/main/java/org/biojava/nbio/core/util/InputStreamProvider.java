@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Dec 28, 2005
  *
  */
@@ -35,19 +35,19 @@ import java.util.zip.ZipFile;
 //import org.slf4j.LoggerFactory;
 
 
-/** A class that provides an InputStream from a File. The file can be compressed or uncompressed. 
- *  
+/** A class that provides an InputStream from a File. The file can be compressed or uncompressed.
+ *
  * Currently supported
  * compressions:
  * <ul>
  * <li>Gzip (extension .gz)</li>
- * <li>Zip (extension .zip) in this case a stream to the first entry in the zip file is returned </li> 
+ * <li>Zip (extension .zip) in this case a stream to the first entry in the zip file is returned </li>
  * <li>Jar (extension .jar) same as .Zip; only stream to first entry is returned </li>
  * <li>Z (extension .Z) compressed using the unix compress command </li>
  * <li>for any other extension, no compression is assumed </li>
  * </ul>
- * 
- * 
+ *
+ *
  * @author Andreas Prlic
  * @since 1.5
  * @version %I% %G%
@@ -62,7 +62,7 @@ public class InputStreamProvider {
     */
    public static final int GZIP_MAGIC = 0x1f8b;
    public static final String CACHE_PROPERTY = "biojava.cache.files";
-  
+
    private boolean cacheRawFiles ;
 
    FlatFileCache cache ;
@@ -78,9 +78,9 @@ public class InputStreamProvider {
 
    }
 
-   /** 
+   /**
     * Get an InputStream for given file path.
-    * The caller is responsible for closing the stream or otherwise 
+    * The caller is responsible for closing the stream or otherwise
     * a resource leak can occur.
     * @param pathToFile the path of the file.
     * @return an InputStream for the file located at the path.
@@ -96,12 +96,12 @@ public class InputStreamProvider {
 
    /** open the file and read the magic number from the beginning
     * this is used to determine the compression type
-    * 
+    *
     * @param in an input stream to read from
     * @return the magic number
     * @throws IOException
     */
-   private int getMagicNumber(InputStream in) 
+   private int getMagicNumber(InputStream in)
    throws IOException {
 
 
@@ -121,21 +121,21 @@ public class InputStreamProvider {
 
       int magic = 0;
 
-      
-      InputStream inStream = u.openStream(); 
+
+      InputStream inStream = u.openStream();
       magic = getMagicNumber(inStream);
       inStream.close();
-      
+
 
       if (magic == UncompressInputStream.LZW_MAGIC ) {
          // a Z compressed file
          return openCompressedURL(u);
       } else if (magic == GZIP_MAGIC ) {
-         return openGZIPURL(u); 
+         return openGZIPURL(u);
       } else if ( u.getPath().endsWith(".gz")) {
          return openGZIPURL(u);
       } else if ( u.getPath().endsWith(".Z")) {
-         // unix compressed 
+         // unix compressed
          return openCompressedURL(u);
 
       } else {
@@ -146,20 +146,20 @@ public class InputStreamProvider {
    }
 
 
-   /** 
+   /**
     * Get an InputStream for the file.
-    * The caller is responsible for closing the stream or otherwise 
+    * The caller is responsible for closing the stream or otherwise
     * a resource leak can occur.
     * @param f a File
     * @return an InputStream for the file
     * @throws IOException
     */
-   public  InputStream getInputStream(File f) 
+   public  InputStream getInputStream(File f)
    throws IOException
    {
 
-      // use the magic numbers to determine the compression type, 
-      // use file extension only as 2nd choice 
+      // use the magic numbers to determine the compression type,
+      // use file extension only as 2nd choice
 
       int magic = 0;
 
@@ -179,12 +179,12 @@ public class InputStreamProvider {
       }
 
       else if (magic == GZIP_MAGIC ) {
-         return openGZIPFile(f); 
+         return openGZIPFile(f);
       }
 
       else if ( fileName.endsWith(".gz")) {
          return openGZIPFile(f);
-      } 
+      }
 
       else if ( fileName.endsWith(".zip")){
 
@@ -200,7 +200,7 @@ public class InputStreamProvider {
             throw new IOException ("Zip file has no entries");
          }
 
-      } 
+      }
 
       else if ( fileName.endsWith(".jar")) {
 
@@ -215,10 +215,10 @@ public class InputStreamProvider {
          } else {
             throw new IOException ("Jar file has no entries");
          }
-      } 
+      }
 
       else if ( fileName.endsWith(".Z")) {
-         // unix compressed 
+         // unix compressed
          return openCompressedFile(f);
 
       }
@@ -233,9 +233,9 @@ public class InputStreamProvider {
    }
 
 
-   /** 
+   /**
     * Wrapper for new FileInputStream. if System.property biojava.cache.files is set, will try to load files from memory cache.
-    * 
+    *
     * @param f
     * @return
     * @throws FileNotFoundException
@@ -255,8 +255,8 @@ public class InputStreamProvider {
       }
 
       if ( stream == null)
-         stream = new FileInputStream(f);    		   
-      
+         stream = new FileInputStream(f);
+
       return stream;
    }
 
@@ -278,7 +278,7 @@ public class InputStreamProvider {
    }
 
 
-   private InputStream openGZIPFile(File f) 
+   private InputStream openGZIPFile(File f)
    throws IOException{
 
       InputStream is      = getInputStreamFromFile(f);
@@ -286,7 +286,7 @@ public class InputStreamProvider {
       return inputStream;
    }
 
-   private InputStream openGZIPURL(URL u) 
+   private InputStream openGZIPURL(URL u)
    throws IOException{
 
       InputStream is      = u.openStream();

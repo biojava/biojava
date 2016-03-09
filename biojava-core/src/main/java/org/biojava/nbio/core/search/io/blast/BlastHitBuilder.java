@@ -27,10 +27,10 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * Designed by Paolo Pavan.
- * You may want to find my contacts on Github and LinkedIn for code info 
+ * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
- * 
+ *
  * @author Paolo Pavan
  */
 public class BlastHitBuilder {
@@ -69,7 +69,7 @@ public class BlastHitBuilder {
         this.hitLen = hitLen;
         return this;
     }
-    
+
     public BlastHitBuilder setHitSequence(Sequence s) {
         this.hitSequence = s;
         return this;
@@ -83,5 +83,5 @@ public class BlastHitBuilder {
     public BlastHit createBlastHit() {
         return new BlastHit(hitNum, hitId, hitDef, hitAccession, hitLen, hsps, hitSequence);
     }
-    
+
 }

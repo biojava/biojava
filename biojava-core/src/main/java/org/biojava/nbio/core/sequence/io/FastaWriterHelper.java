@@ -164,7 +164,7 @@ public class FastaWriterHelper {
     }
 
     /**
-     * 
+     *
      * @param sequence
      * @return
      */

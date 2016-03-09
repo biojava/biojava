@@ -32,7 +32,7 @@ import org.biojava.nbio.survival.cox.CoxVariables;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class CoxVariablesVariableComparator implements CoxComparatorInterface {
- 
+
     String variables = "";
     String variable = "";
 
@@ -92,5 +92,5 @@ public class CoxVariablesVariableComparator implements CoxComparatorInterface {
     }
 
 
-    
+
 }

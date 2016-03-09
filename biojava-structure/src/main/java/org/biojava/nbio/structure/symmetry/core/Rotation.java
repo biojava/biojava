@@ -74,7 +74,7 @@ public class Rotation {
     public void setTraceTmScoreMin(double traceTmScoreMin) {
         this.traceTmScoreMin = traceTmScoreMin;
     }
-    
+
     /**
      * @return the traceTmScoreMin
      */
@@ -82,7 +82,7 @@ public class Rotation {
         return traceTmScoreMin;
     }
 
-    
+
     /**
      * @return the permutation
      */
@@ -166,7 +166,7 @@ public class Rotation {
     public void setAxisAngle(AxisAngle4d axisAngle) {
         this.axisAngle = axisAngle;
     }
-    
+
     /**
      * Returns the number of starts if this rotation represents a helical rotation
      */

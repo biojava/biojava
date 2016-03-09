@@ -19,7 +19,7 @@
  *
  */
 /*
- * /* Ported from $Id: coxmart.c 11166 2008-11-24 22:10:34Z therneau $ 
+ * /* Ported from $Id: coxmart.c 11166 2008-11-24 22:10:34Z therneau $
  *
  ** Compute the martingale residual for a Cox model
  **
@@ -122,7 +122,7 @@ public class CoxMart {
                 denom = expect[i];
    //         si.setResidual(status[i]);//expect[i] = status[i];
             expect[i] = status[i];
-            
+
             deaths += status[i]; //status[i];
             wtsum += status[i] * wt[i]; // status[i]*wt[i];
             e_denom += score[i] * status[i] * wt[i];//score[i]*status[i] *wt[i];
@@ -135,7 +135,7 @@ public class CoxMart {
                    //     double res =  sj.getResidual() - score[j] * hazard;
                         expect[j] -= score[j] * hazard;
                    //     sj.setResidual(res); //expect[j] -= score[j]*hazard;
-                         
+
                     }
                 } else {
                     temp = hazard;
@@ -169,11 +169,11 @@ public class CoxMart {
             }
         }
 
-        
-        for (j = lastone; j < n; j++) {           
+
+        for (j = lastone; j < n; j++) {
             expect[j] -= score[j] * hazard;
         }
-      
+
         return expect;
     }
 

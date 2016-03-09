@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The DistanceMatrixCalculator methods generate a {@link DistanceMatrix} from a
  * {@link MultipleSequenceAlignment} or other indirect distance infomation (RMSD).
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
  *
@@ -53,19 +53,19 @@ public class DistanceMatrixCalculator {
 	 * The fractional dissimilarity (D) is defined as the percentage of sites
 	 * that differ between two aligned sequences. The percentage of identity
 	 * (PID) is the fraction of identical sites between two aligned sequences.
-	 * 
+	 *
 	 * <pre>
 	 * D = 1 - PID
 	 * </pre>
-	 * 
+	 *
 	 * The gapped positons in the alignment are ignored in the calculation. This
 	 * method is a wrapper to the forester implementation of the calculation:
 	 * {@link PairwiseDistanceCalculator#calcFractionalDissimilarities(Msa)}
-	 * 
+	 *
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return DistanceMatrix
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix fractionalDissimilarity(
 			MultipleSequenceAlignment<C, D> msa) throws IOException {
@@ -80,19 +80,19 @@ public class DistanceMatrixCalculator {
 	/**
 	 * The Poisson (correction) evolutionary distance (d) is a function of the
 	 * fractional dissimilarity (D), given by:
-	 * 
+	 *
 	 * <pre>
 	 * d = -log(1 - D)
 	 * </pre>
-	 * 
+	 *
 	 * The gapped positons in the alignment are ignored in the calculation. This
 	 * method is a wrapper to the forester implementation of the calculation:
 	 * {@link PairwiseDistanceCalculator#calcPoissonDistances(Msa)}
-	 * 
+	 *
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return DistanceMatrix
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix poissonDistance(
 			MultipleSequenceAlignment<C, D> msa) throws IOException {
@@ -108,11 +108,11 @@ public class DistanceMatrixCalculator {
 	 * The Kimura evolutionary distance (d) is a correction of the fractional
 	 * dissimilarity (D) specially needed for large evolutionary distances. It
 	 * is given by:
-	 * 
+	 *
 	 * <pre>
 	 * d = -log(1 - D - 0.2 * D<sup>2</sup>)
 	 * </pre>
-	 * 
+	 *
 	 * The equation is derived by fitting the relationship between the
 	 * evolutionary distance (d) and the fractional dissimilarity (D) according
 	 * to the PAM model of evolution (it is an empirical approximation for the
@@ -120,11 +120,11 @@ public class DistanceMatrixCalculator {
 	 * positons in the alignment are ignored in the calculation. This method is
 	 * a wrapper to the forester implementation of the calculation:
 	 * {@link PairwiseDistanceCalculator#calcKimuraDistances(Msa)}.
-	 * 
+	 *
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return DistanceMatrix
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix kimuraDistance(
 			MultipleSequenceAlignment<C, D> msa) throws IOException {
@@ -144,7 +144,7 @@ public class DistanceMatrixCalculator {
 	 * It is recommended to use the method
 	 * {@link DistanceMatrixCalculator#fractionalDissimilarity(MultipleSequenceAlignment)}
 	 * instead of this one.
-	 * 
+	 *
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return DistanceMatrix
@@ -189,11 +189,11 @@ public class DistanceMatrixCalculator {
 	/**
 	 * The fractional dissimilarity score (Ds) is a relative measure of the
 	 * dissimilarity between two aligned sequences. It is calculated as:
-	 * 
+	 *
 	 * <pre>
 	 * Ds = sum( max(M) - M<sub>ai,bi</sub> ) / (max(M)-min(M)) ) / L
 	 * </pre>
-	 * 
+	 *
 	 * Where the sum through i runs for all the alignment positions, ai and bi
 	 * are the AA at position i in the first and second aligned sequences,
 	 * respectively, and L is the total length of the alignment (normalization).
@@ -204,7 +204,7 @@ public class DistanceMatrixCalculator {
 	 * <p>
 	 * Gaps do not have a contribution to the similarity score calculation (gap
 	 * penalty = 0)
-	 * 
+	 *
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @param M
@@ -253,13 +253,13 @@ public class DistanceMatrixCalculator {
 				else {
 					double dS = (M.getMaxValue() - score / msa.getLength())
 							/ (M.getMaxValue() - M.getMinValue());
-					
+
 					DM.setValue(i, j, dS);
 					DM.setValue(j, i, dS);
 				}
 			}
 		}
-		
+
 		return DM;
 	}
 
@@ -269,11 +269,11 @@ public class DistanceMatrixCalculator {
 	 * (Substitution Matrix). The maximum dissimilarity score is taken to be the
 	 * maximum similarity score between self-alignments (each sequence against
 	 * itself). Calculation of the score is as follows:
-	 * 
+	 *
 	 * <pre>
 	 * Ds = maxScore - sum<sub>i</sub>(M<sub>ai,bi</sub>)
 	 * </pre>
-	 * 
+	 *
 	 * It is recommended to use the method
 	 * {@link #fractionalDissimilarityScore(MultipleSequenceAlignment, SubstitutionMatrix)}
 	 * , since the maximum similarity score is not relative to the data set, but
@@ -282,7 +282,7 @@ public class DistanceMatrixCalculator {
 	 * <p>
 	 * Gaps do not have a contribution to the similarity score calculation (gap
 	 * penalty = 0).
-	 * 
+	 *
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @param M
@@ -361,26 +361,26 @@ public class DistanceMatrixCalculator {
 	 * distance in protein sequences. The PAM unit represents an average
 	 * substitution rate of 1% per site. The fractional dissimilarity (D) of two
 	 * aligned sequences is related with the PAM distance (d) by the equation:
-	 * 
+	 *
 	 * <pre>
 	 * D = sum(fi * (1 - M<sub>ii</sub><sup>d</sup>))
 	 * </pre>
-	 * 
+	 *
 	 * Where the sum is for all 20 AA, fi denotes the natural fraction of the
 	 * given AA and M is the substitution matrix (in this case the PAM1 matrix).
 	 * <p>
 	 * To calculate the PAM distance between two aligned sequences the maximum
 	 * likelihood (ML) approach is used, which consists in finding d that
 	 * maximazies the function:
-	 * 
+	 *
 	 * <pre>
 	 * L(d) = product(f<sub>ai</sub> * (1 - M<sub>ai,bi</sub><sup>d</sup>))
 	 * </pre>
-	 * 
+	 *
 	 * Where the product is for every position i in the alignment, and ai and bi
 	 * are the AA at position i in the first and second aligned sequences,
 	 * respectively.
-	 * 
+	 *
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return
@@ -399,13 +399,13 @@ public class DistanceMatrixCalculator {
 	 * (or dissimilarity) from a the structural alignment of two protein
 	 * strutures. It is based on the diffusive model for protein fold evolution
 	 * (Grishin 1995). The structural deviations are captured as RMS deviations.
-	 * 
+	 *
 	 * <pre>
-	 * d<sub>Sij</sub> = (rmsd<sub>max</sub><sup>2</sup> / alpha<sup>2</sup>) * 
-	 *        ln( (rmsd<sub>max</sub><sup>2</sup> - rmsd<sub>0</sub><sup>2</sup>) / 
+	 * d<sub>Sij</sub> = (rmsd<sub>max</sub><sup>2</sup> / alpha<sup>2</sup>) *
+	 *        ln( (rmsd<sub>max</sub><sup>2</sup> - rmsd<sub>0</sub><sup>2</sup>) /
 	 *        (rmsd<sub>max</sub><sup>2</sup> - (rmsd<sub>ij</sub><sup>2</sup>) )
 	 * </pre>
-	 * 
+	 *
 	 * @param rmsdMat
 	 *            RMSD matrix for all structure pairs (symmetric matrix)
 	 * @param alpha
@@ -450,7 +450,7 @@ public class DistanceMatrixCalculator {
 	/**
 	 * The joint sequence-structure distance (d<sub>SS</sub>) is a combination
 	 * of the sequence-based and the structure-based distances.
-	 * 
+	 *
 	 * @param rmsdMat
 	 *            RMSD matrix for all structure pairs (symmetric matrix)
 	 * @return DistanceMatrix

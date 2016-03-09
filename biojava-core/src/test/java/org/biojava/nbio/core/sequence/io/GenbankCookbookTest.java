@@ -80,7 +80,7 @@ public class GenbankCookbookTest {
         genbankProteinReader.getHeaderParser().parseHeader(genbankProteinReader.getHeader(), proteinSequence);
         logger.info("Sequence({},{}) = {}...", proteinSequence.getAccession(), proteinSequence.getLength(), proteinSequence.getSequenceAsString().substring(0, 10));
 
-	GenbankProxySequenceReader<NucleotideCompound> genbankDNAReader 
+	GenbankProxySequenceReader<NucleotideCompound> genbankDNAReader
 	= new GenbankProxySequenceReader<NucleotideCompound>(System.getProperty("java.io.tmpdir"), "NM_001126", DNACompoundSet.getDNACompoundSet());
 	DNASequence dnaSequence = new DNASequence(genbankDNAReader);
 	genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
@@ -104,7 +104,7 @@ public class GenbankCookbookTest {
             logger.info("Protein Sequence: {}", sequence.getSequenceAsString());
         }
         /*
-         * Method 3: With the GenbankReader Object 
+         * Method 3: With the GenbankReader Object
          */
         //Try reading with the GanbankReader
 

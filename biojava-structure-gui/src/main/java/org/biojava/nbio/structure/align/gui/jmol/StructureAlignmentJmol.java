@@ -46,7 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /** A class that provides a simple GUI for Jmol
- * 
+ *
  * @author Andreas Prlic
  * @since 1.6
  *
@@ -56,13 +56,13 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 	private Atom[] ca1;
 	private Atom[] ca2;
 	private AFPChain afpChain;
-	
-	private static final String LIGAND_DISPLAY_SCRIPT = 
+
+	private static final String LIGAND_DISPLAY_SCRIPT =
 			ResourceManager.getResourceManager("ce").
 			getString("default.ligand.jmol.script");
 
 	public static void main(String[] args){
-		
+
 		try {
 
 			UserConfiguration config = new UserConfiguration();
@@ -70,7 +70,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
 			Structure struc = cache.getStructure("5pti");
 
-			StructureAlignmentJmol jmolPanel = 
+			StructureAlignmentJmol jmolPanel =
 					new StructureAlignmentJmol(null,null,null);
 
 			jmolPanel.setStructure(struc);
@@ -157,7 +157,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		/// USER SCRIPTING COMMAND
 		JTextField field = new JTextField();
 
-		field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
+		field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 		field.setText(COMMAND_LINE_HELP);
 		RasmolCommandListener listener = new RasmolCommandListener(jmolPanel,field) ;
 
@@ -167,7 +167,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		vBox.add(field);
 
 
-		/// COMBO BOXES 
+		/// COMBO BOXES
 		Box hBox1 = Box.createHorizontalBox();
 		hBox1.add(Box.createGlue());
 
@@ -207,7 +207,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 			}
 		});
 
-		hBox2.add(resetDisplay); 
+		hBox2.add(resetDisplay);
 		hBox2.add(Box.createGlue());
 
 
@@ -234,20 +234,20 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		hBox2.add(toggleSelection);
 
 		hBox2.add(Box.createGlue());
-		vBox.add(hBox2);	
+		vBox.add(hBox2);
 
 
 		// STATUS DISPLAY
 
 		Box hBox = Box.createHorizontalBox();
 
-		status = new JTextField();		
+		status = new JTextField();
 		status.setBackground(Color.white);
 		status.setEditable(false);
 		status.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 		status.setPreferredSize(new Dimension(DEFAULT_WIDTH / 2,30));
 		status.setMinimumSize(new Dimension(DEFAULT_WIDTH / 2,30));
-		hBox.add(status);      
+		hBox.add(status);
 		text = new JTextField();
 		text.setBackground(Color.white);
 		text.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
@@ -265,7 +265,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		MyJmolStatusListener li = (MyJmolStatusListener) jmolPanel.getStatusListener();
 		li.setTextField(status);
 		frame.pack();
-		frame.setVisible(true); 
+		frame.setVisible(true);
 
 
 		// init coordinates
@@ -373,7 +373,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 				sel.append(",");
 			pos++;
 
-			sel.append(res);    
+			sel.append(res);
 			sel.append("/1");
 		}
 		if ( pos == 0)
@@ -381,7 +381,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		sel.append(";");
 		sel.append("backbone 0.6 ;   color orange;");
 		sel.append("select */2; color lightgrey; model 2; ");
-		//jmol.evalString("select */2; color lightgrey; model 2; ");        
+		//jmol.evalString("select */2; color lightgrey; model 2; ");
 		List<String> pdb2 = DisplayAFP.getPDBresnum(1,afpChain,ca2);
 		sel.append("select ");
 		pos = 0;
@@ -401,7 +401,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		// now show both models again.
 		j.append("model 0;  ");
 		j.append(LIGAND_DISPLAY_SCRIPT);
-		//color [object] cpk , set defaultColors Jmol , set defaultColors Rasmol  
+		//color [object] cpk , set defaultColors Jmol , set defaultColors Rasmol
 
 		// and now select the aligned residues...
 		StringBuffer buf = new StringBuffer("select ");
@@ -456,7 +456,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
 	private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
-		int blockNum = afpChain.getBlockNum();      
+		int blockNum = afpChain.getBlockNum();
 		int[] optLen = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
 

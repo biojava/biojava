@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * @author Scooter Willis
  */
 public class DNASequence extends AbstractSequence<NucleotideCompound> {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(DNASequence.class);
 /**
  * The type of DNA sequence
@@ -106,7 +106,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
      * Allow a user to pass in a rules engine to do the DNA to RNA translation
      * @param engine
      * @return RNA sequence
-     */ 
+     */
     public RNASequence getRNASequence(TranscriptionEngine engine) {
       return getRNASequence(engine, Frame.getDefaultFrame());
     }

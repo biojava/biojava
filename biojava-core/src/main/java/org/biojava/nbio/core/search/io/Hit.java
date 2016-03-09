@@ -28,10 +28,10 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * This class models a search Hit.
  * You will retrieve a list of this using iterator of a Result
  * Designed by Paolo Pavan.
- * You may want to find my contacts on Github and LinkedIn for code info 
+ * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
- * 
+ *
  * @author Paolo Pavan
  */
 
@@ -46,8 +46,8 @@ public abstract class Hit implements Iterable<Hsp>{
     private final int hitLen;
     private final List<Hsp> hsps;
     private Sequence hitSequence;
-    
-    
+
+
 
     public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp> hsps, Sequence hitSequence) {
         this.hitNum = hitNum;
@@ -69,7 +69,7 @@ public abstract class Hit implements Iterable<Hsp>{
      /**
      * Implements conceptual comparisons of search results.
      * Fields unrelated to search are deliberately not considered.
-     * @return 
+     * @return
      */
     @Override
     public boolean equals(Object obj) {
@@ -88,7 +88,7 @@ public abstract class Hit implements Iterable<Hsp>{
         }
         return true;
     }
-    
+
     public int getHitNum() {
         return hitNum;
     }
@@ -108,7 +108,7 @@ public abstract class Hit implements Iterable<Hsp>{
     public int getHitLen() {
         return hitLen;
     }
-    
+
     /**
      * returns the reference to the original and whole sequence hit in the database.
      * Available only if the ResultFactory implements setHitReferences and
@@ -118,7 +118,7 @@ public abstract class Hit implements Iterable<Hsp>{
     public Sequence getHitSequence() {
         return hitSequence;
     }
-    
+
     @Override
     public Iterator<Hsp> iterator() {
         return new Iterator<Hsp>() {

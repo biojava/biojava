@@ -26,7 +26,7 @@ package org.biojava.nbio.survival.data;
 
 import java.io.*;
 import java.util.*;
- 
+
 /**
  * Need to handle very large spreadsheets of expression data so keep memory
  * footprint low
@@ -1289,7 +1289,7 @@ public class WorkSheet {
         CompactCharSequence[][] data = new CompactCharSequence[rows.size()][numcolumns];
         for (int i = 0; i < rows.size(); i++) {
             CompactCharSequence[] row = rows.get(i);
-            for (int j = 0; j < row.length; j++) { // 
+            for (int j = 0; j < row.length; j++) { //
                 if (row[j].length() > 1 && row[j].charAt(0) == '"') {
                     // System.out.println(row[j]);
                     if (row[j].length() > 2) {

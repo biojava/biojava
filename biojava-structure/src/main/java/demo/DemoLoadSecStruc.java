@@ -35,7 +35,7 @@ import org.biojava.nbio.structure.secstruc.SecStrucTools;
  * Demonstration of how to load a Structure with the SS information, either from
  * the PDB file annotation (Author's assignment) or from the DSSP file in the
  * PDB servers (DSSP assignment).
- * 
+ *
  * @author Aleix Lafita
  *
  */

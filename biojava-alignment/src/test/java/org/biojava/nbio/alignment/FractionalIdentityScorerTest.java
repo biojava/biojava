@@ -39,7 +39,7 @@ import static org.junit.Assert.assertNotNull;
 public class FractionalIdentityScorerTest {
 
 	private static final double PRECISION = 0.00000001;
-	
+
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
@@ -47,7 +47,7 @@ public class FractionalIdentityScorerTest {
     private PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound> scorer1, scorer2;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         gaps = new SimpleGapPenalty((short) 10, (short) 1);

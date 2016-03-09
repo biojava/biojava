@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Action Listener for the symmetry menu. Trigger various internal symmetry
  * specific analysis.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
  *

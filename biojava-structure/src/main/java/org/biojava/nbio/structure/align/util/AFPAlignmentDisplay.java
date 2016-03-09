@@ -138,10 +138,10 @@ public class AFPAlignmentDisplay
      * two blocks 1 and 2. The residues between labeled residues are non-equivalent,
      * with '-' filling in their resulting gaps.
      * <p>
-     * The three lines can be accessed using 
+     * The three lines can be accessed using
      * {@link AFPChain#getAlnseq1()}, {@link AFPChain#getAlnsymb()},
      * and {@link AFPChain#getAlnseq2()}.
-     * 
+     *
 	 */
 	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2) {
 		getAlign(afpChain, ca1, ca2, false);
@@ -154,7 +154,7 @@ public class AFPAlignmentDisplay
 	 *  {@link AFPChain#setAlnseq2(char[]) alnseq2},
 	 *  and {@link AFPChain#setAlnsymb(char[]) alnsymb}</li>
 	 * <li>{@link AFPChain#setAlnbeg1(int) alnbeg1} and 2</li>
-	 * <li>{@link AFPChain#setAlnLength(int) alnLength} and 
+	 * <li>{@link AFPChain#setAlnLength(int) alnLength} and
 	 *  {@link AFPChain#setGapLen(int) gapLen}</li>
 	 * </ul>
 	 * <p>
@@ -162,11 +162,11 @@ public class AFPAlignmentDisplay
 	 * <ul>
 	 * <li>{@link AFPChain#getOptAln()} and lengths
 	 * </ul>
-	 * 
+	 *
 	 * <section>Known Bugs</section>
 	 * Expects the alignment to have linear topology. May give odd results
 	 * for circular permutations and other complicated topologies.
-	 * 
+	 *
 	 * @param afpChain Alignment between ca1 and ca2
 	 * @param ca1 CA atoms of the first protein
 	 * @param ca2 CA atoms of the second protein
@@ -216,7 +216,7 @@ public class AFPAlignmentDisplay
 				optLen[oi] = 0;
 		}
 		int     len = 0;
-		for(i = 0; i < blockNum; i ++)  {        	
+		for(i = 0; i < blockNum; i ++)  {
 			for(j = 0; j < optLen[i]; j ++) {
 				p1 = optAln[i][0][j];
 				p2 = optAln[i][1][j];
@@ -246,10 +246,10 @@ public class AFPAlignmentDisplay
 					alnbeg1 = p1; //the first position of sequence in alignment
 					alnbeg2 = p2;
 				}
-				
+
 				if ( p1 < ca1.length && p2<ca2.length) {
-				
-					alnseq1[len] = getOneLetter(ca1[p1].getGroup());              
+
+					alnseq1[len] = getOneLetter(ca1[p1].getGroup());
 					alnseq2[len] = getOneLetter(ca2[p2].getGroup());
 				} else {
 					//TODO handle permutations
@@ -264,7 +264,7 @@ public class AFPAlignmentDisplay
 
 						if ( score > 1)
 							alnsymb[len ++] = ':';
-						else 
+						else
 							alnsymb[len ++] = '.';
 					}
 				} else {
@@ -320,7 +320,7 @@ public class AFPAlignmentDisplay
 	public static Map<String,Double> calcIdSimilarity(char[] seq1, char[] seq2, int alnLength){
 		double identity = 0.0;
 		double similarity = 0.0;
-		
+
 		if ( seq1 == null || seq2 == null){
 			logger.warn("Can't calc %ID for an empty alignment! ");
 			Map<String, Double> m = new HashMap<String, Double>();
@@ -328,11 +328,11 @@ public class AFPAlignmentDisplay
 			m.put("identity", identity);
 			return m;
 		}
-		
+
 		int     i;
 
 		for(i = 0; i < alnLength; i ++) {
-		
+
 				if(seq1[i] == seq2[i])  {
 
 					identity += 1.0;
@@ -349,13 +349,13 @@ public class AFPAlignmentDisplay
 		Map<String, Double> m = new HashMap<String, Double>();
 		m.put("similarity", similarity);
 		m.put("identity", identity);
-		
+
 		return m;
 	}
 
 
 	/**
-	 * 
+	 *
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
@@ -415,9 +415,9 @@ public class AFPAlignmentDisplay
 
 		return GuiWrapper.getAlignedStructure(arr1,arr2);
 	}
-	
+
 	/** get the block number for an aligned position
-	 * 
+	 *
 	 * @param afpChain
 	 * @param aligPos
 	 * @return
@@ -434,7 +434,7 @@ public class AFPAlignmentDisplay
 		int p1b=0;
 		int p2b=0;
 
-		for(int i = 0; i < blockNum; i ++)  {   
+		for(int i = 0; i < blockNum; i ++)  {
 
 			for(int j = 0; j < optLen[i]; j ++) {
 
@@ -449,7 +449,7 @@ public class AFPAlignmentDisplay
 					}
 				}
 
-				
+
 				p1b = p1;
 				p2b = p2;
 				if ( len >= aligPos) {

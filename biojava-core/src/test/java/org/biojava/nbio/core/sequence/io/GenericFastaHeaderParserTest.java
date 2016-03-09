@@ -77,7 +77,7 @@ public class GenericFastaHeaderParserTest {
      * NCBI Reference Sequence           ref|accession|locus
      * Local Sequence identifier         lcl|identifier
      *
-     * @author Scooter Willis <willishf at gmail dot com> 
+     * @author Scooter Willis <willishf at gmail dot com>
      */
     @Test
     public void testParseHeader() throws CompoundNotFoundException {

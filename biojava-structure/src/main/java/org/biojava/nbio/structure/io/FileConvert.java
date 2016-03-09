@@ -53,11 +53,11 @@ import org.slf4j.LoggerFactory;
  * @since 1.4
  */
 public class FileConvert {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(FileConvert.class);
-	
-	
-	
+
+
+
 	private Structure structure ;
 
 	private boolean printConnections;
@@ -88,7 +88,7 @@ public class FileConvert {
 		printConnections = true;
 	}
 
-	/** 
+	/**
 	 * Returns if the Connections should be added
 	 * default is true;
 	 * @return if the printConnections flag is set
@@ -115,8 +115,8 @@ public class FileConvert {
 
 		StringBuffer str = new StringBuffer();
 
-		// TODO this needs to be rewritten so that the data comes from Atom.getBonds(). Structure.getConnections will be removed in upcoming releases (after 4.2) - JD 2016-03-03 
-		
+		// TODO this needs to be rewritten so that the data comes from Atom.getBonds(). Structure.getConnections will be removed in upcoming releases (after 4.2) - JD 2016-03-03
+
 		List<Map<String, Integer>> cons = structure.getConnections();
 		for (int cnr = 0; cnr<cons.size();cnr++){
 			Map<String,Integer> con =  cons.get(cnr);
@@ -202,7 +202,7 @@ public class FileConvert {
 		}
 		//SSBOND
 		List<SSBondImpl> ssbonds = SSBondImpl.getSsBondListFromBondList(structure.getSSBonds());
-		for (SSBondImpl ssbond : ssbonds){			
+		for (SSBondImpl ssbond : ssbonds){
 			ssbond.toPDB(str);
 			str.append(newline);
 		}
@@ -242,10 +242,10 @@ public class FileConvert {
 
 					Group g= chain.getAtomGroup(h);
 
-					
+
 					toPDB(g,str);
-					
-					
+
+
 				}
 				// End any chains with a "TER" record.
 				if (nrGroups > 0) str.append("TER").append(newline);
@@ -272,7 +272,7 @@ public class FileConvert {
 
 		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
 			Atom a = null ;
-			
+
 			a = g.getAtom(atompos);
 			if ( a == null)
 				continue ;
@@ -292,11 +292,11 @@ public class FileConvert {
 				toPDB(alt,str);
 			}
 		}
-		
+
 	}
 
 	/** Prints the content of an Atom object as a PDB formatted line.
-	 * 
+	 *
 	 * @param a
 	 * @return
 	 */
@@ -308,42 +308,42 @@ public class FileConvert {
 		return w.toString();
 
 	}
-	
+
 	public static String toPDB(Atom a, String chainId) {
 		StringBuffer w = new StringBuffer();
-	
+
 		toPDB(a,w, chainId);
 
-		return w.toString();		
+		return w.toString();
 	}
-	
-	
-	/** 
+
+
+	/**
 	 * Convert a Chain object to PDB representation
-	 * 
+	 *
 	 * @param chain
 	 * @return
 	 */
 	public static String toPDB(Chain chain){
 		StringBuffer w = new StringBuffer();
 		int nrGroups = chain.getAtomLength();
-		
+
 		for ( int h=0; h<nrGroups;h++){
 
 			Group g= chain.getAtomGroup(h);
 
-			
+
 			toPDB(g,w);
-			
-			
+
+
 		}
-		
+
 		return w.toString();
 	}
-	
-	/** 
+
+	/**
 	 * Convert a Group object to PDB representation
-	 * 
+	 *
 	 * @param g
 	 * @return
 	 */
@@ -399,12 +399,12 @@ Angstroms.
 
 
 		// format output ...
-		String resName = g.getPDBName(); 
+		String resName = g.getPDBName();
 		String pdbcode = g.getResidueNumber().toString();
 
 
 		int    seri       = a.getPDBserial()        ;
-		String serial     = String.format("%5d",seri);		
+		String serial     = String.format("%5d",seri);
 		String fullName   = formatAtomName(a);
 
 
@@ -415,7 +415,7 @@ Angstroms.
 			resseq     = String.format("%5s",pdbcode);
 		else
 			resseq     = String.format("%4s",pdbcode)+" ";
-		
+
 		String x          = String.format("%8s",d3.format(a.getX()));
 		String y          = String.format("%8s",d3.format(a.getY()));
 		String z          = String.format("%8s",d3.format(a.getZ()));
@@ -443,9 +443,9 @@ Angstroms.
 		s.append(tempfactor);
 
 		Element e = a.getElement();
-		
+
 		String eString = e.toString().toUpperCase();
-		
+
 		if ( e.equals(Element.R)) {
 			eString = "X";
 		}
@@ -457,7 +457,7 @@ Angstroms.
 	public static void toPDB(Atom a, StringBuffer str) {
 		toPDB(a,str,a.getGroup().getChainId());
 	}
-	
+
 
 	/** test if pdbserial has an insertion code */
 	private static boolean hasInsertionCode(String pdbserial) {
@@ -470,7 +470,7 @@ Angstroms.
 	}
 
 
-	/** 
+	/**
 	 * Convert a protein Structure to a DAS Structure XML response .
 	 * @param xw  a XMLWriter object
 	 * @throws IOException ...
@@ -624,104 +624,104 @@ Angstroms.
 	}
 
 	private static String formatAtomName(Atom a) {
-		
+
 		String fullName = null;
 		String name = a.getName();
 		Element element = a.getElement();
-		
+
 		// RULES FOR ATOM NAME PADDING: 4 columns in total: 13, 14, 15, 16
-		
+
 		// if length 4: nothing to do
-		if (name.length()==4) 
+		if (name.length()==4)
 			fullName = name;
-		
+
 		// if length 3: they stay at 14
-		else if (name.length()==3) 
+		else if (name.length()==3)
 			fullName = " "+name;
-		
-		// for length 2 it depends: 
+
+		// for length 2 it depends:
 		//    carbon, oxygens, nitrogens, phosphorous stay at column 14
-		//    elements with 2 letters (e.g. NA, FE) will go to column 13		 
+		//    elements with 2 letters (e.g. NA, FE) will go to column 13
 		else if (name.length()==2) {
-			if (element == Element.C || element == Element.N || element == Element.O || element == Element.P || element == Element.S) 
-				fullName = " "+name+" "; 
-			else 
+			if (element == Element.C || element == Element.N || element == Element.O || element == Element.P || element == Element.S)
+				fullName = " "+name+" ";
+			else
 				fullName = name+"  ";
 		}
-		
+
 		// for length 1 (e.g. K but also C, O) they stay in column 14
-		else if (name.length()==1) 
+		else if (name.length()==1)
 			fullName = " "+name+"  ";
 
-		//if (fullName.length()!=4) 
+		//if (fullName.length()!=4)
 		//	logger.warn("Atom name "+fullName+"to be written in PDB format does not have length 4. Formatting will be incorrect");
 
 		return fullName;
 	}
-	
-	
+
+
 	public String toMMCIF() {
-		
+
 		StringBuilder str = new StringBuilder();
-		
+
 		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
-		
+
 		if (structure.getPDBHeader()!=null & structure.getPDBHeader().getCrystallographicInfo()!=null &&
 				structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup()!=null &&
 				structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()!=null) {
-			
-			str.append(MMCIFFileTools.toMMCIF("_cell", 
-					MMCIFFileTools.convertCrystalCellToCell(structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()))); 
-			str.append(MMCIFFileTools.toMMCIF("_symmetry", 
+
+			str.append(MMCIFFileTools.toMMCIF("_cell",
+					MMCIFFileTools.convertCrystalCellToCell(structure.getPDBHeader().getCrystallographicInfo().getCrystalCell())));
+			str.append(MMCIFFileTools.toMMCIF("_symmetry",
 					MMCIFFileTools.convertSpaceGroupToSymmetry(structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup())));
-			
+
 		}
-			
-		
+
+
 		str.append(getAtomSiteHeader());
-		
+
 		@SuppressWarnings("unchecked")
-		List<Object> list = 
+		List<Object> list =
 		(List<Object>) (List<?>) MMCIFFileTools.convertStructureToAtomSites(structure);
 
 
-		str.append(MMCIFFileTools.toMMCIF(list));		
-		
+		str.append(MMCIFFileTools.toMMCIF(list));
+
 		return str.toString();
 	}
-	
+
 	public static String toMMCIF(Chain chain, String chainId, String internalChainId, boolean writeHeader) {
 		StringBuilder str = new StringBuilder();
-		
+
 		if (writeHeader)
 			str.append(getAtomSiteHeader());
 
-		
+
 		@SuppressWarnings("unchecked")
-		List<Object> list = 
+		List<Object> list =
 		(List<Object>) (List<?>) MMCIFFileTools.convertChainToAtomSites(chain, 1, chainId, internalChainId);
-		
+
 		str.append(MMCIFFileTools.toMMCIF(list));
 		return str.toString();
 	}
-	
+
 	public static String toMMCIF(Chain chain, boolean writeHeader) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
 		sb.append(toMMCIF(chain, chain.getChainID(),chain.getInternalChainID(),writeHeader));
 		return sb.toString();
 	}
-	
+
 	public static String getAtomSiteHeader() {
 		String header;
 		try {
 			header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());
-			
+
 		} catch (ClassNotFoundException e) {
 			logger.error("Class not found, will not have a header for this MMCIF category: "+e.getMessage());
 			header = "";
 		}
-		
+
 		return header;
 	}
 }

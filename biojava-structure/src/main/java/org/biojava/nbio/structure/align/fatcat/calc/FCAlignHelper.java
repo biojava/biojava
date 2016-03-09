@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,15 +20,15 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align.fatcat.calc;
 
 public class FCAlignHelper
 {
-   
+
    int     M; //length of protein 1
    int     N; //length of protein 2
    double  g; //gap-create
@@ -57,7 +57,7 @@ public class FCAlignHelper
    char[]    mark;
 
    /** do an alignment given the provided matrix sij0
-    * 
+    *
     * @param sij0 - the matrix to perform the calculations on.
     * @param M0
     * @param N0
@@ -68,12 +68,12 @@ public class FCAlignHelper
       init(M0, N0, g0, h0);
       int     i, j;
       for(i = 0; i < M; i ++) {
-         for(j = 0; j < N; j ++){ 
+         for(j = 0; j < N; j ++){
             sij[i][j] = sij0[i][j];
             //System.out.println(i+"-"+j+":" +sij[i][j]);
-         }         
+         }
       }
-      
+
       doAlign();
    }
 
@@ -179,8 +179,8 @@ public class FCAlignHelper
 
       //check-alignment
       checkAlign();
-      
-      
+
+
    }
 
 
@@ -224,7 +224,7 @@ public class FCAlignHelper
    {
       //if(last < 0)    last = sapp[-1] -= (k);
       //else            last = *sapp++ = -(k);
-      
+
       if(last < 0)    last = sapp[sappPos-1]   -=  (k);
       else            last = sapp[(sappPos++)]  = -(k);
    }
@@ -243,7 +243,7 @@ public class FCAlignHelper
    //-----------------------------------------------------------------------------
    private void rep()
    {
-      
+
       // last = *sapp++ = 0;
       last = sapp[(sappPos++)] = 0;
    }
@@ -310,7 +310,7 @@ public class FCAlignHelper
       int     op;
       while(i <= E1 && j <= E2)       {
          op = sapp0[s ++];
-        
+
          if (op == 0)    {
             alignList[0][a] = i - 1; //i - 1
             alignList[1][a] = j - 1;

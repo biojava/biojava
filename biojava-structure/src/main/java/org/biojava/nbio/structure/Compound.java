@@ -41,7 +41,7 @@ import java.util.TreeSet;
 /**
  * An object to contain the info from the PDB header for a Molecule.
  * In mmCIF dictionary, it is called an Entity. In the case of polymers it
- * is defined as each group of sequence identical NCS-related chains 
+ * is defined as each group of sequence identical NCS-related chains
  *
  * Now PDB file format 3.2 aware - contains the new TAX_ID fields for the
  * organism studied and the expression system.
@@ -51,23 +51,23 @@ import java.util.TreeSet;
  * @since 1.5
  */
 public class Compound implements Serializable {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(Compound.class);
 
-	
+
 	//TODO we should consider having the data here as it is in mmCIF dictionary - JD 2014-12-11
 	//     Especially useful would be to have the polymer/non-polymer/water classification present in mmCIF
 	//     We could drop a lot of the stuff here that is PDB-file related (actually many PDB files don't contain many of these fields)
 	//     The only really essential part of a Compound is the member chains and the entity_id/mol_id
 	// See also issue https://github.com/biojava/biojava/issues/219
-	
+
 	private static final long serialVersionUID = 2991897825657586356L;
-	
+
 	/**
-	 * The list of chains that are described by this Compound 
+	 * The list of chains that are described by this Compound
 	 */
 	private List<Chain> chains;
-	
+
 	/**
 	 * The Molecule identifier, called entity_id in mmCIF dictionary
 	 */
@@ -78,7 +78,7 @@ public class Compound implements Serializable {
 	 * Initialised lazily upon call to {@link #getAlignedResIndex(Group, Chain)}
 	 */
 	private Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
-	
+
 	private String refChainId;
 
 	private String molName = null;
@@ -129,7 +129,7 @@ public class Compound implements Serializable {
 	private String expressionSystemOtherDetails = null;
 
 	private Long id;
-	
+
 	public Compound () {
 		chains = new ArrayList<Chain>();
 		chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
@@ -142,18 +142,18 @@ public class Compound implements Serializable {
 	 * @param c
 	 */
 	public Compound (Compound c) {
-		
+
 		this.chains = new ArrayList<Chain>();
-		
+
 		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
-		
+
 		this.molId = c.molId;
-		
+
 		this.refChainId = c.refChainId;
 
 		this.molName = c.molName;
 		this.title = c.title;
-		
+
 		if (c.synonyms!=null) {
 			this.synonyms = new ArrayList<String>();
 			synonyms.addAll(c.synonyms);
@@ -162,7 +162,7 @@ public class Compound implements Serializable {
 			this.ecNums = new ArrayList<String>();
 			ecNums.addAll(c.ecNums);
 		}
-		
+
 		this.engineered = c.engineered;
 		this.mutation = c.mutation;
 		this.biologicalUnit = c.biologicalUnit;
@@ -206,7 +206,7 @@ public class Compound implements Serializable {
 		this.expressionSystemGene = c.expressionSystemGene;
 		this.expressionSystemOtherDetails = c.expressionSystemOtherDetails;
 
-		
+
 	}
 
 	@Override
@@ -229,17 +229,17 @@ public class Compound implements Serializable {
 	/**
 	 * Get the representative Chain for this Compound.
 	 * We choose the Chain with the first chain identifier after
-	 * lexicographical sorting (case insensitive), 
+	 * lexicographical sorting (case insensitive),
 	 * e.g. chain A if Compound is composed of chains A,B,C,D,E
 	 * @return
 	 */
 	public Chain getRepresentative() {
-		
+
 		List<String> chainIds = new ArrayList<String>();
 		for (Chain chain:chains) {
 			chainIds.add(chain.getChainID());
 		}
-		
+
 		Collections.sort(chainIds, String.CASE_INSENSITIVE_ORDER);
 
 		for (Chain chain:chains) {
@@ -247,12 +247,12 @@ public class Compound implements Serializable {
 				return chain;
 			}
 		}
-		
+
 		logger.error("Could not find a representative chain for compound '{}'", this.toString());
-		
+
 		return null;
 	}
-	
+
 	/** get the ID used by Hibernate
 	 *
 	 * @return the ID used by Hibernate
@@ -432,17 +432,17 @@ public class Compound implements Serializable {
 	}
 
 	/**
-	 * Return the list of member chain IDs that are described by this Compound, 
-	 * only unique chain IDs are contained in the list. 
+	 * Return the list of member chain IDs that are described by this Compound,
+	 * only unique chain IDs are contained in the list.
 	 * Note that in the case of multimodel structures this will return just the unique
-	 * chain identifiers whilst {@link #getChains()} will return a corresponding chain 
-	 * per model. 
+	 * chain identifiers whilst {@link #getChains()} will return a corresponding chain
+	 * per model.
 	 * @return the list of unique ChainIDs that are described by this Compound
 	 * @see #setChains(List)
 	 * @see #getChains()
 	 */
 	public List<String> getChainIds() {
-		
+
 		Set<String> uniqChainIds = new TreeSet<String>();
 		for (int i=0;i<getChains().size();i++) {
 			uniqChainIds.add(getChains().get(i).getChainID());
@@ -450,28 +450,28 @@ public class Compound implements Serializable {
 
 		return new ArrayList<String>(uniqChainIds);
 	}
-	
+
 	/**
-	 * Given a Group g of Chain c (member of this Compound) return the corresponding position in the 
+	 * Given a Group g of Chain c (member of this Compound) return the corresponding position in the
 	 * alignment of all member sequences (1-based numbering), i.e. the index (1-based) in the SEQRES sequence.
 	 * This allows for comparisons of residues belonging to different chains of the same Compound (entity).
 	 * <p>
-	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping 
+	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping
 	 * will not be available and this method will return {@link ResidueNumber#getSeqNum()} for all residues, which
-	 * in some cases will be correctly aligned indices (when no insertion codes are 
+	 * in some cases will be correctly aligned indices (when no insertion codes are
 	 * used and when all chains within the entity are numbered in the same way), but
 	 * in general they will be neither unique (because of insertion codes) nor aligned.
 	 * </p>
 	 * @param g
 	 * @param c
-	 * @return the aligned residue index (1 to n), if no SEQRES groups are available at all then {@link ResidueNumber#getSeqNum()} 
-	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned 
+	 * @return the aligned residue index (1 to n), if no SEQRES groups are available at all then {@link ResidueNumber#getSeqNum()}
+	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned
 	 * for the given group and chain
 	 * @throws IllegalArgumentException if the given Chain is not a member of this Compound
-	 * @see {@link Chain#getSeqResGroup(int)} 
+	 * @see {@link Chain#getSeqResGroup(int)}
 	 */
 	public int getAlignedResIndex(Group g, Chain c) {
-		
+
 		boolean contained = false;
 		for (Chain member:getChains()) {
 			if (c.getChainID().equals(member.getChainID())) {
@@ -479,9 +479,9 @@ public class Compound implements Serializable {
 				break;
 			}
 		}
-		if (!contained) 
-			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this Compound (entity): "+getChainIds().toString()); 
-		
+		if (!contained)
+			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this Compound (entity): "+getChainIds().toString());
+
 		if (!chains2pdbResNums2ResSerials.containsKey(c.getChainID())) {
 			// we do lazy initialisation of the map
 			initResSerialsMap(c);
@@ -490,24 +490,24 @@ public class Compound implements Serializable {
 		Map<ResidueNumber,Integer> map = chains2pdbResNums2ResSerials.get(c.getChainID());
 		int serial;
 		if (map!=null) {
-			
+
 			ResidueNumber resNum = g.getResidueNumber();
-			// the resNum will be null for groups that are SEQRES only and not in ATOM, 
+			// the resNum will be null for groups that are SEQRES only and not in ATOM,
 			// still it can happen that a group is in ATOM in one chain but not in other of the same compound.
-			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):			
+			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):
 			if (resNum==null && c.getSeqResGroups()!=null && !c.getSeqResGroups().isEmpty()) {
 				int index = -1;
 				for (int i=0;i<c.getSeqResGroups().size();i++) {
 					if (g==c.getSeqResGroup(i)) {
-						index = i; break; 
+						index = i; break;
 					}
 				}
-				
-				resNum = findResNumInOtherChains(index, c);
-								
-			}  
 
-			if (resNum == null) { 
+				resNum = findResNumInOtherChains(index, c);
+
+			}
+
+			if (resNum == null) {
 				// still null, we really can't map
 				serial = -1;
 			}
@@ -522,64 +522,64 @@ public class Compound implements Serializable {
 					serial = alignedSerial;
 				}
 			}
-			
+
 		} else {
 			// no seqres groups available we resort to using the pdb residue numbers are given
 			serial = g.getResidueNumber().getSeqNum();
 		}
 		return serial;
 	}
-	
+
 	private void initResSerialsMap(Chain c) {
 		if (c.getSeqResGroups()==null || c.getSeqResGroups().isEmpty()) {
 			logger.warn("No SEQRES groups found in chain {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
-					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)", 
+					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)",
 					c.getChainID());
 			// we add a explicit null to the map so that we flag it as unavailable for this chain
 			chains2pdbResNums2ResSerials.put(c.getChainID(), null);
 			return;
 		}
-		
+
 		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<ResidueNumber, Integer>();
 		chains2pdbResNums2ResSerials.put(c.getChainID(), resNums2ResSerials);
-		
+
 		for (int i=0;i<c.getSeqResGroups().size();i++) {
-			
+
 			// The seqres group will have a null residue number whenever its corresponding atom group doesn't exist
 			// because it is missing in the electron density.
 			// However, it can be observed in the density in other chains of the same compound,
-			// to be complete we go and look for the residue number in other chains, so that we have a 
+			// to be complete we go and look for the residue number in other chains, so that we have a
 			// seqres to atom mapping as complete as possible (with all known atom groups of any chain of this compound)
-			
+
 			ResidueNumber resNum = c.getSeqResGroup(i).getResidueNumber();
-			
+
 			if (resNum==null) {
 				resNum = findResNumInOtherChains(i,c);
 			}
-			
-			// NOTE that resNum will still be null here for cases where the residue 
+
+			// NOTE that resNum will still be null here for cases where the residue
 			// is missing in atom groups (not observed in density) in all chains
 			// Thus the mapping will not be possible for residues that are only in SEQRES groups
 			resNums2ResSerials.put(resNum, i+1);
 		}
 	}
-	
+
 	private ResidueNumber findResNumInOtherChains(int i, Chain chain) {
 		for (Chain c: getChains()) {
 			if (c == chain) continue;
-			
+
 			Group seqResGroup = c.getSeqResGroup(i);
-			
+
 			if (seqResGroup==null) {
 				logger.warn("The SEQRES group is null for index {} in chain {}, whilst it wasn't null in chain {}",
 						 i, c.getChainID(), chain.getChainID());
 				continue;
 			}
-			
+
 			if (seqResGroup.getResidueNumber()!=null) return seqResGroup.getResidueNumber();
-			
+
 		}
-		
+
 		return null;
 	}
 
@@ -963,8 +963,8 @@ public class Compound implements Serializable {
 		this.expressionSystemOtherDetails = expressionSystemOtherDetails;
 	}
 
-	/** 
-	 * Get the list of chains that are part of this Compound. Note that for multi-model 
+	/**
+	 * Get the list of chains that are part of this Compound. Note that for multi-model
 	 * structures chains from all models are returned.
 	 *
 	 * @return a List of Chain objects
@@ -986,6 +986,6 @@ public class Compound implements Serializable {
 	 * @param chains
 	 */
 	public void setChains(List<Chain> chains){
-		this.chains = chains;		
+		this.chains = chains;
 	}
 }

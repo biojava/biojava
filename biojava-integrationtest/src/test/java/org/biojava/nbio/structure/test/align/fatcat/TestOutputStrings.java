@@ -62,7 +62,7 @@ public class TestOutputStrings extends TestCase
                System.err.println("line2: " + line2.substring(0,j+1));
 
                System.err.println("mismatch at position " + (j+1) + " c1: "+ c1 + " " + c2);
-             
+
                return;
             }
          }
@@ -80,7 +80,7 @@ public class TestOutputStrings extends TestCase
       System.err.println(mine);
    }
 
-   
+
    //
    // a bad mismatch!
    // looks like a bug in the optimizer still...
@@ -103,7 +103,7 @@ public class TestOutputStrings extends TestCase
 //      "              111111111111111111           1111111111111111111       111111111111111" +newline +
 //      "Chain 2:    2 DSGTVWGALGHGINLNIPNFQMTDDIDEVRWERGSTLVAEFKRKMKPF-------LKSGAFEILANGDLK" +newline +
 //      "" +newline +
-//      "" +newline +              
+//      "" +newline +
 //      "Chain 1:   88 ILD" +newline +
 //      "              111" +newline +
 //      "Chain 2:   65 IKN" +newline +
@@ -116,10 +116,10 @@ public class TestOutputStrings extends TestCase
 //         printMismatch(originalOutput,result);
 //         printFirstMismatch(result, originalOutput);
 //         fail(msg);
-//         
-//      }		
+//
+//      }
 //   }
-   
+
 // disabled since so slow...
 //   public void test1jbe1ord(){
 //      String pdb1 = "1jbe";
@@ -127,8 +127,8 @@ public class TestOutputStrings extends TestCase
 //      String pdb2 = "1ord";
 //      String chain2 ="A";
 //
-//      
-//      
+//
+//
 //      String originalOutput="Align 1jbeA.pdb 126 with 1ordA.pdb 730" + newline +
 //      "Twists 0 ini-len 72 ini-rmsd 3.09 opt-equ 101 opt-rmsd 3.03 chain-rmsd 3.09 Score 123.13 align-len 127 gaps 26 (20.47%)" + newline +
 //      "P-value 3.45e-01 Afp-num 30029 Identity 11.02% Similarity 22.05%" + newline +
@@ -274,7 +274,7 @@ public class TestOutputStrings extends TestCase
 //         printMismatch(originalOutput,result);
 //         printFirstMismatch(result, originalOutput);
 //         fail(msg);
-//      }     
+//      }
 //   }
 
    // speed up of junit tests
@@ -312,11 +312,11 @@ public class TestOutputStrings extends TestCase
 //         printMismatch(originalOutput,result);
 //         printFirstMismatch(result, originalOutput);
 //         fail(msg);
-//      }     
+//      }
 //   }
-//   
+//
 
-  
+
 
 
    public void test1a641hngFlexible(){
@@ -447,7 +447,7 @@ public class TestOutputStrings extends TestCase
 //      }
 //   }
 
-   
+
    // 100% identical
 //   public void test1cdg8timFlexible(){
 //
@@ -511,7 +511,7 @@ public class TestOutputStrings extends TestCase
       "P-value 1.15e-05 Afp-num 12696 Identity 9.52% Similarity 19.05%" +newline +
       "Block  0 afp  4 score 66.42 rmsd  2.03 gap 6 (0.16%)" +newline +
       "Block  1 afp 11 score 184.29 rmsd  3.24 gap 69 (0.44%)" +newline +
-      "" +newline +     
+      "" +newline +
       "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
       "Chain 1:    6 RAYNLTWKSTN-FKTILEWEPKSIDHVYTVQISTRLENWKSKCFLTAE---TECDLTDEVVKDVGQTYMA" +newline +
       "              11111111111 111111111     111111111111111111       222222222   222222 " +newline +

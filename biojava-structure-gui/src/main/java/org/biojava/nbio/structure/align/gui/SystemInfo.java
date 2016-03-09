@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 18, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -124,21 +124,21 @@ public class SystemInfo
          append("Strange Exception getting system properties: " + e);
       }
    }
-   
+
    private void append(String txt){
       msg += txt;
    }
-   
+
    /**
     * Stripped-down QuickSort.
     * @param   vector      The vector of strings to sort
     * @param   startIndex  The first element to sort
     * @param   endIndex    The last element to sort
-    * 
-    * example use: 
+    *
+    * example use:
     * <pre>
     *    JavaInfo.quickSort(vector, 0, vector.length - 1);
-    *  </pre>  
+    *  </pre>
     */
    public static void quickSort(
            String[]        vector,
@@ -174,7 +174,7 @@ public class SystemInfo
        }
    }
 
-   
+
    public void addOneSystemProperty(
          String          name
    )
@@ -259,7 +259,7 @@ public class SystemInfo
    )
    {
       return ((c >= '\u0000' && c <= '\u001f')
-            || (c >= '\u007f' && c <= '\u009f')); 
+            || (c >= '\u007f' && c <= '\u009f'));
    }
 
    public String getMessage(){
@@ -293,7 +293,7 @@ public class SystemInfo
                // change the mouse curor
                vBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
-            if (e.getEventType() == HyperlinkEvent.EventType.EXITED) { 
+            if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
                vBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
          }

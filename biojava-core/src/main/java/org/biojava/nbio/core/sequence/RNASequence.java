@@ -47,9 +47,9 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
     /**
      * Create a RNA sequence from a String
      * @param seqString
-     * @throws CompoundNotFoundException 
+     * @throws CompoundNotFoundException
      */
-  public RNASequence(String seqString) throws CompoundNotFoundException { 
+  public RNASequence(String seqString) throws CompoundNotFoundException {
     super(seqString, RNACompoundSet.getRNACompoundSet());
   }
 

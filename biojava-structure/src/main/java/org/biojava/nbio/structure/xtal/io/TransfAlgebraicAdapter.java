@@ -18,16 +18,16 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 29, 2014
- * Author: andreas 
+ * Author: andreas
  *
  */
- 
+
 package org.biojava.nbio.structure.xtal.io;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.ArrayList;
 import java.util.List;
- 
+
 public class TransfAlgebraicAdapter extends XmlAdapter<String[], List<String>>{
 
 	@Override

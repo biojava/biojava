@@ -37,7 +37,7 @@ package org.biojava.nbio.structure.jama;
 public class QRDecomposition implements java.io.Serializable {
 
     static final long serialVersionUID = 10293720387423l;
-    
+
 /* ------------------------
    Class variables
  * ------------------------ */
@@ -95,7 +95,7 @@ public class QRDecomposition implements java.io.Serializable {
 
             // Apply transformation to remaining columns.
             for (int j = k+1; j < n; j++) {
-               double s = 0.0; 
+               double s = 0.0;
                for (int i = k; i < m; i++) {
                   s += QR[i][k]*QR[i][j];
                }
@@ -207,7 +207,7 @@ public class QRDecomposition implements java.io.Serializable {
       if (!this.isFullRank()) {
          throw new RuntimeException("Matrix is rank deficient.");
       }
-      
+
       // Copy right hand side
       int nx = B.getColumnDimension();
       double[][] X = B.getArrayCopy();
@@ -215,7 +215,7 @@ public class QRDecomposition implements java.io.Serializable {
       // Compute Y = transpose(Q)*B
       for (int k = 0; k < n; k++) {
          for (int j = 0; j < nx; j++) {
-            double s = 0.0; 
+            double s = 0.0;
             for (int i = k; i < m; i++) {
                s += QR[i][k]*X[i][j];
             }

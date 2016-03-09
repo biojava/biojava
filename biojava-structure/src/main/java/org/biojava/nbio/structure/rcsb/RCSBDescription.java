@@ -29,9 +29,9 @@ import java.util.List;
 
 /**
  * Corresponds to the wrapper element in an RCSB {@code describeMol} XML file.
- * 
+ *
  * @see <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB RESTful</a>
- * 
+ *
  * @author dmyerstu
  * @since 3.0.6
  */

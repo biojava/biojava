@@ -28,28 +28,28 @@ import java.util.*;
 /**
  * Wraps a sequence clustering with structural information
  */
-public class ChainClusterer  {	
-	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();	
+public class ChainClusterer  {
+	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();
 	private boolean modified = true;
 
 	private List<Atom[]> caAligned = new ArrayList<Atom[]>();
 	private List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
-	
+
 	public ChainClusterer(List<SequenceAlignmentCluster> seqClusters) {
 		this.seqClusters = seqClusters;
 		this.modified = true;
 	}
-	
+
 	public List<Point3d[]> getCalphaCoordinates() {
         run();
 		return caCoords;
 	}
-	
+
 	public List<Atom[]> getCalphaTraces() {
 		run();
 		return caAligned;
 	}
-	
+
 	public List<String> getChainIds() {
 		run();
 		List<String> chainIdList = new ArrayList<String>();
@@ -62,8 +62,8 @@ public class ChainClusterer  {
 		}
 		return chainIdList;
 	}
-	
-	
+
+
 	public List<Integer> getModelNumbers() {
 		run();
 		List<Integer> modNumbers = new ArrayList<Integer>();
@@ -76,7 +76,7 @@ public class ChainClusterer  {
 		}
 		return modNumbers;
 	}
-	
+
 	public String getStoichiometry() {
 		run();
 		StringBuilder formula = new StringBuilder();
@@ -120,7 +120,7 @@ public class ChainClusterer  {
 		List<Integer> denominators = new ArrayList<Integer>();
 
 		int nChains = Collections.max(stoichiometry);
-		
+
 		// Remove duplicate stoichiometries
 		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
 
@@ -139,11 +139,11 @@ public class ChainClusterer  {
 		}
 		return denominators;
 	}
-	
+
 	public List<Integer> getSequenceClusterIds() {
 		run();
 		List<Integer> list = new ArrayList<Integer>();
-		
+
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
 			for (int i = 0; i < seqCount; i++) {
@@ -152,21 +152,21 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-	
-	
+
+
 	public int getSequenceClusterCount() {
 		run();
 		return seqClusters.size();
 	}
-	
+
 	public List<SequenceAlignmentCluster> getSequenceAlignmentClusters() {
 		return seqClusters;
 	}
-	
+
 	public List<Boolean> getPseudoStoichiometry() {
 		run();
 		List<Boolean> list = new ArrayList<Boolean>();
-		
+
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
 			Boolean pseudo = seqClusters.get(id).isPseudoStoichiometric();
@@ -176,11 +176,11 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-	
+
 	public List<Double> getMinSequenceIdentity() {
 		run();
 		List<Double> list = new ArrayList<Double>();
-		
+
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
 			double minSequenceIdentity = seqClusters.get(id).getMinSequenceIdentity();
@@ -190,11 +190,11 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-	
+
 	public List<Double> getMaxSequenceIdentity() {
 		run();
 		List<Double> list = new ArrayList<Double>();
-		
+
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
 			double maxSequenceIdentity = seqClusters.get(id).getMaxSequenceIdentity();
@@ -204,7 +204,7 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public String toString() {
 		run();
@@ -220,7 +220,7 @@ public class ChainClusterer  {
 		}
 		return builder.toString();
 	}
-	
+
 	private void run() {
 		if (modified) {
 			modified = false;
@@ -228,15 +228,15 @@ public class ChainClusterer  {
 			createCalphaTraces();
 		}
 	}
-	
+
 
 	private void calcAlignedSequences() {
 		caAligned = new ArrayList<Atom[]>();
 		for (SequenceAlignmentCluster cluster: seqClusters) {
-			caAligned.addAll(cluster.getAlignedCalphaAtoms());	
+			caAligned.addAll(cluster.getAlignedCalphaAtoms());
 		}
 	}
-	
+
 	private void createCalphaTraces() {
 		for (Atom[] atoms: caAligned) {
 			Point3d[] trace = new Point3d[atoms.length];

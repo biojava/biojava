@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at Aug 12, 2013
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  */
 
 package org.biojava.nbio.structure.io.mmcif.model;
@@ -30,17 +30,17 @@ package org.biojava.nbio.structure.io.mmcif.model;
 public class EntitySrcNat {
 	String  common_name	;
 	String  details	;
-	String  entity_id ;	
+	String  entity_id ;
 	String  genus	 ;
-	String  pdbx_atcc	; 
+	String  pdbx_atcc	;
 	String  pdbx_cell	 ;
-	String  pdbx_cell_line ;	 
-	String  pdbx_cellular_location;	 
+	String  pdbx_cell_line ;
+	String  pdbx_cellular_location;
 	String  pdbx_fragment	 ;
-	String  pdbx_ncbi_taxonomy_id;	 
+	String  pdbx_ncbi_taxonomy_id;
 	String  pdbx_organ	 ;
-	String  pdbx_organelle;	 
-	String  pdbx_organism_scientific;	 
+	String  pdbx_organelle;
+	String  pdbx_organism_scientific;
 	String  pdbx_plasmid_details	 ;
 	String  pdbx_plasmid_name	 ;
 	String  pdbx_secretion	 ;

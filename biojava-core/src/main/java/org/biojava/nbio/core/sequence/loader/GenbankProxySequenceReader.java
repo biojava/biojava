@@ -10,7 +10,7 @@
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
- * 
+ *
  * @author Karl Nicholas <github:karlnicholas>
  *
  * For more information on the BioJava project and its aims,
@@ -62,13 +62,13 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     private GenericGenbankHeaderParser<AbstractSequence<C>, C> headerParser;
     private String header;
     private HashMap<String, ArrayList<AbstractFeature>> features;
-    
+
 
     /**
-     * 
-     * @throws InterruptedException 
-     * @throws IOException 
-     * @throws CompoundNotFoundException 
+     *
+     * @throws InterruptedException
+     * @throws IOException
+     * @throws CompoundNotFoundException
      */
     public GenbankProxySequenceReader(
             String genbankDirectoryCache,
@@ -91,7 +91,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         if (compoundSet.getClass().equals(AminoAcidCompoundSet.class)) {
             if (!genbankParser.getCompoundType().equals(compoundSet)) {
                 logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
-                throw new IOException("Wrong declared compound type for: " + accessionID); 
+                throw new IOException("Wrong declared compound type for: " + accessionID);
             }
         }
 
@@ -262,22 +262,22 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
          sequence = genbankProxyReader.getDNASequence(new AccessionID("NM_000266"));
          System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-		
+
          sequence = genbankProxyReader.getProteinSequence(new AccessionID("NP_000257"));
          System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-		
+
          sequence = genbankProxyReader.getProteinSequence(new AccessionID("AV254721"));
          System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-		
+
          sequence = genbankProxyReader.getProteinSequence(new AccessionID("AV254721.2"));
          System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-		
+
          sequence = genbankProxyReader.getProteinSequence(new AccessionID("U49845"));
          System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-		
+
          sequence = genbankProxyReader.getProteinSequence(new AccessionID("GI:1293613"));
          System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-		
+
          sequence = genbankProxyReader.getProteinSequence(new AccessionID("14109166"));
          System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
          */

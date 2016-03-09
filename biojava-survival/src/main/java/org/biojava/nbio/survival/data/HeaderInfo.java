@@ -73,6 +73,6 @@ public class HeaderInfo {
     public void setHide(boolean hide) {
         this.hide = hide;
     }
-    
-    
+
+
 }

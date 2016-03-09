@@ -215,7 +215,7 @@ public class SourceCompoundTest extends TestCase{
             assertEquals("HAMMEL", firstAuthor.getSurname());
             assertEquals("M.", firstAuthor.getInitials());
             //check the other publication details
-            assertEquals("A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY STAPHYLOCOCCUS AUREUS.", journal.getTitle());               
+            assertEquals("A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY STAPHYLOCOCCUS AUREUS.", journal.getTitle());
             assertEquals("NAT.IMMUNOL.", journal.getJournalName());
             assertEquals(2007, journal.getPublicationDate());
             assertEquals("8", journal.getVolume());

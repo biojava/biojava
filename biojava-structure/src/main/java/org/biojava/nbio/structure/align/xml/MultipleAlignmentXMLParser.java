@@ -54,7 +54,7 @@ import org.xml.sax.SAXException;
  * <p>
  * Atoms need to be downloaded, either manually or using the method
  * getAtomArrays() in MultipleAlignmentEnsemble.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
  *
@@ -66,7 +66,7 @@ public class MultipleAlignmentXMLParser {
 	 * This recovers only the information that was previously stored.
 	 * If the Atoms are needed, the method getAtomArrays() will automatically
 	 * download the structures from the stored structure identifiers.
-	 * 
+	 *
 	 * @param xml String XML file containing any number of ensembles
 	 * @return List of ensembles in the file
 	 * @throws ParserConfigurationException
@@ -76,7 +76,7 @@ public class MultipleAlignmentXMLParser {
 	public static List<MultipleAlignmentEnsemble> parseXMLfile(String xml)
 			throws ParserConfigurationException, SAXException, IOException {
 
-		List<MultipleAlignmentEnsemble> ensembles = 
+		List<MultipleAlignmentEnsemble> ensembles =
 				new ArrayList<MultipleAlignmentEnsemble>();
 
 		//Convert string to XML document
@@ -88,7 +88,7 @@ public class MultipleAlignmentXMLParser {
 		doc.getDocumentElement().normalize();
 
 		//In case there are more than one ensemble in the document (generalize)
-		NodeList listOfEnsembles = 
+		NodeList listOfEnsembles =
 				doc.getElementsByTagName("MultipleAlignmentEnsemble");
 
 		//Explore all the ensembles, if multiple ones
@@ -103,11 +103,11 @@ public class MultipleAlignmentXMLParser {
 
 	public static MultipleAlignmentEnsemble parseEnsemble(Node root){
 
-		MultipleAlignmentEnsemble ensemble = 
+		MultipleAlignmentEnsemble ensemble =
 				new MultipleAlignmentEnsembleImpl();
-		
+
 		parseHeader(root, ensemble);
-		
+
 		NodeList children = root.getChildNodes();
 
 		for (int i=0; i<children.getLength(); i++) {
@@ -123,7 +123,7 @@ public class MultipleAlignmentXMLParser {
 				parseScoresCache(child, ensemble);
 			}
 		}
-		
+
 		return ensemble;
 	}
 
@@ -132,11 +132,11 @@ public class MultipleAlignmentXMLParser {
 
 		MultipleAlignment msa = new MultipleAlignmentImpl(ensemble);
 		NodeList children = root.getChildNodes();
-		
+
 		for (int i=0; i<children.getLength(); i++) {
 
 			Node child = children.item(i);
-			
+
 			if (child.getNodeName().equals("BlockSet")){
 				parseBlockSet(child, msa);
 			}
@@ -152,11 +152,11 @@ public class MultipleAlignmentXMLParser {
 		BlockSet bs = new BlockSetImpl(msa);
 		List<Matrix4d> transforms = new ArrayList<Matrix4d>();
 		NodeList children = root.getChildNodes();
-		
+
 		for (int i=0; i<children.getLength(); i++) {
 
 			Node child = children.item(i);
-			
+
 			if (child.getNodeName().equals("Block")){
 				parseBlock(child, bs);
 			}
@@ -186,25 +186,25 @@ public class MultipleAlignmentXMLParser {
 
 			Node child = children.item(i);
 			if (child.getNodeName().contains("eqr")){
-				
+
 				NamedNodeMap atts = child.getAttributes();
-	
+
 				int str = 1;
 				Node node = atts.getNamedItem("str"+str);
-	
+
 				while (node!=null){
-	
+
 					if (alignRes.size() < str) {
 						alignRes.add(new ArrayList<Integer>());
 					}
-					
+
 					String residue = node.getTextContent();
 					if (residue.equals("null")){
 						alignRes.get(str-1).add(null);
 					} else {
 						alignRes.get(str-1).add(new Integer(residue));
 					}
-					
+
 					str++;
 					node = atts.getNamedItem("str"+str);
 				}
@@ -246,10 +246,10 @@ public class MultipleAlignmentXMLParser {
 			}
 		}
 	}
-	
-	public static void parseHeader(Node node, 
+
+	public static void parseHeader(Node node,
 			MultipleAlignmentEnsemble ensemble) {
-		
+
 		NamedNodeMap atts = node.getAttributes();
 
 		String algo = atts.getNamedItem("Algorithm").getTextContent();
@@ -272,10 +272,10 @@ public class MultipleAlignmentXMLParser {
 			ensemble.setCalculationTime(new Long(time));
 		}
 	}
-	
-	public static void parseStructures(Node root, 
+
+	public static void parseStructures(Node root,
 			MultipleAlignmentEnsemble ensemble) {
-		
+
 		List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
 		ensemble.setStructureIdentifiers(names);
 

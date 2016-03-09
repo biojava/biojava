@@ -42,7 +42,7 @@ import java.util.List;
 public class AlignerHelper {
 
 	//private static final Logger logger = LoggerFactory.getLogger(AlignerHelper.class);
-	
+
     // types
 
     /**
@@ -179,7 +179,7 @@ public class AlignerHelper {
         if (k < m) {
             cuts = new Cut[k];
             int firstCutIndex = subproblem.getQueryStartIndex() + (anchor0 ? 1 : 0);
-            for (int i = 0; i < k; i++) {            	
+            for (int i = 0; i < k; i++) {
             	cuts[i] = new Cut(firstCutIndex + i * (m - 1) / (k - 1), dim);
             }
         } else {
@@ -522,7 +522,7 @@ public class AlignerHelper {
             pointers = new Last[ye + 1][scores[0][0].length];
         } else {
             pointers = new Last[ye + 1][];
-            pointers[0] = new Last[scores[0][0].length];   
+            pointers[0] = new Last[scores[0][0].length];
             for (int y = 1; y < scores[0].length; y++) {
                 pointers[y] = setScorePoint(x, y, gop, gep, subs[y], scores);
                 for (int z = 0; z < scores[0][0].length; z++) {
@@ -540,7 +540,7 @@ public class AlignerHelper {
         }
         return pointers;
     }
-    
+
     /**
      * Score local alignment for a given position in the query sequence for a linear gap penalty
      * @param x
@@ -594,13 +594,13 @@ public class AlignerHelper {
         }
         return pointers;
     }
-    
+
     private static void ensureScoringMatrixColumn(int x, boolean storingFullMatrix, int[][][] scores) {
     	if (!storingFullMatrix && x > 1) {
             scores[x] = scores[x - 2];
         }
     }
-    
+
     /**
      * Find alignment path through traceback matrix
      * @param traceback
@@ -649,21 +649,21 @@ public class AlignerHelper {
     public static int[] setSteps(Last[][][] traceback, int[][][] scores, List<Step> sx, List<Step> sy) {
         int xMax = scores.length - 1, yMax = scores[xMax].length - 1;
         boolean linear = (traceback[xMax][yMax].length == 1);
-        
-        Last last = 
-        		
-        	linear ? 
-        		traceback[xMax][yMax][0] : 
-        			
+
+        Last last =
+
+        	linear ?
+        		traceback[xMax][yMax][0] :
+
         		(scores[xMax][yMax][1] > scores[xMax][yMax][0] &&
-        		 scores[xMax][yMax][1] > scores[xMax][yMax][2] ) ? 
-        						
-        				Last.DELETION : 
-        					(scores[xMax][yMax][0] > scores[xMax][yMax][2]) ? 
-        							Last.SUBSTITUTION : 
+        		 scores[xMax][yMax][1] > scores[xMax][yMax][2] ) ?
+
+        				Last.DELETION :
+        					(scores[xMax][yMax][0] > scores[xMax][yMax][2]) ?
+        							Last.SUBSTITUTION :
         							Last.INSERTION;
-        
-        		
+
+
         return setSteps(traceback, false, new int[] {xMax, yMax}, last, sx, sy);
     }
 
@@ -678,7 +678,7 @@ public class AlignerHelper {
     public static int[] setSteps(Last[][][] traceback, int[] xyMax, List<Step> sx, List<Step> sy) {
         return setSteps(traceback, true, xyMax, Last.SUBSTITUTION, sx, sy);
     }
-    
+
     public static String tracebackToString(Last[][][] traceback) {
     	StringBuilder sb = new StringBuilder();
     	for (int z = 0; z < 3; z++) {

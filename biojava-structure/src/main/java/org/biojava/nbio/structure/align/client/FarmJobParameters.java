@@ -24,7 +24,7 @@ import org.biojava.nbio.structure.align.util.ResourceManager;
 
 public class FarmJobParameters {
 
-	
+
 	public static final int DEFAULT_JOB_TIME = -1;
 	public static final int DEFAULT_NR_ALIGNMENTS = -1;
 	public static final int DEFAULT_NR_THREADS = 1;
@@ -36,10 +36,10 @@ public class FarmJobParameters {
 	}
 	public static final String DEFAULT_PDB_PATH = "/tmp/";
 	public static final int DEFAULT_BATCH_SIZE         = 100;
-	
+
 	private static final String DEFAULT_BATCH_SIZE_PROP = "request.pair.size";
-	
-	int nrAlignments;	
+
+	int nrAlignments;
 	int time;
 	int threads;
 	String server;
@@ -51,7 +51,7 @@ public class FarmJobParameters {
 	int stepSize;
 	String cacheFilePath;
 
-		
+
 	public FarmJobParameters(){
 		nrAlignments = DEFAULT_NR_ALIGNMENTS;
 		time = DEFAULT_JOB_TIME;
@@ -62,16 +62,16 @@ public class FarmJobParameters {
 		cacheFilePath = DEFAULT_PDB_PATH;
 		updateRemediatedFiles = false;
 		String nrPairsProp = resourceManager.getString(DEFAULT_BATCH_SIZE_PROP);
-		
+
 		stepSize = 	DEFAULT_BATCH_SIZE;
-		
+
 		username = FarmJobRunnable.getRandomUsername();
 		if ( nrPairsProp != null){
 			stepSize = Integer.parseInt(nrPairsProp);
 		}
-		
+
 	}
-	
+
 	public String getPdbFilePath() {
 		return pdbFilePath;
 	}
@@ -127,7 +127,7 @@ public class FarmJobParameters {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
+
 	/** Flag if a job that only runs one parallell job should be run in its own thread or in the main thread.
 	 * For User interface related apps should be set to true. Default: false;
 	 * @return flag
@@ -141,7 +141,7 @@ public class FarmJobParameters {
 
 
 	/** how many pairs should be requested for alignment from server?
-	 * 
+	 *
 	 * @return stepsize
 	 */
 	public int getStepSize() {
@@ -152,9 +152,9 @@ public class FarmJobParameters {
 		this.stepSize = stepSize;
 	}
 
-	
+
 	/** Flag if the job should be run in verbose mode. Default: false
-	 * 
+	 *
 	 * @return flag if the job should be run in verbose mode
 	 */
 	public boolean isVerbose() {
@@ -184,7 +184,7 @@ public class FarmJobParameters {
 				+ ", stepSize=" + stepSize + ", cacheFilePath=" + cacheFilePath
 				+ "]";
 	}
-	
-	
-	
+
+
+
 }

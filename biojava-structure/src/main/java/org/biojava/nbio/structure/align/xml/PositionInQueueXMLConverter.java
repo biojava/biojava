@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 10, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -53,12 +53,12 @@ public class PositionInQueueXMLConverter
       xml.attribute("position", position+"");
       xml.closeTag("queue");
       xml.close();
-      return swriter.toString(); 
+      return swriter.toString();
    }
-   
+
    public int fromXML(String xml){
       int position = Integer.MIN_VALUE;
-      
+
       try
       {
          //Convert string to XML document
@@ -75,29 +75,29 @@ public class PositionInQueueXMLConverter
          //Element rootElement = doc.getDocumentElement();
 
          NodeList listOfAlignments = doc.getElementsByTagName("queue");
-         //int numArrays = listOfAlignments.getLength();    
+         //int numArrays = listOfAlignments.getLength();
          //System.out.println("got " + numArrays + " alignment results.");
          // go over the blocks
-         
-       
+
+
          for(int afpPos=0; afpPos<listOfAlignments.getLength() ; afpPos++)
          {
-            
+
             Node rootElement       = listOfAlignments.item(afpPos);
 
             String pos = getAttribute(rootElement,"position");
-          
+
             try {
-               position = Integer.parseInt(pos); 
+               position = Integer.parseInt(pos);
             } catch (NumberFormatException f){
                f.printStackTrace();
             }
 
          }
-      } 
-      catch (SAXParseException err) 
+      }
+      catch (SAXParseException err)
       {
-         System.out.println ("** Parsing error" + ", line " 
+         System.out.println ("** Parsing error" + ", line "
                + err.getLineNumber () + ", uri " + err.getSystemId ());
          System.out.println(" " + err.getMessage ());
       }
@@ -113,10 +113,10 @@ public class PositionInQueueXMLConverter
 
       return position;
    }
-   
+
 
    private static String getAttribute(Node node, String attr){
-      if( ! node.hasAttributes()) 
+      if( ! node.hasAttributes())
          return null;
 
       NamedNodeMap atts = node.getAttributes();

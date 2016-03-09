@@ -16,7 +16,7 @@
  *
  *      http://www.biojava.org/
  *
- * Created on Oct 5, 2011 
+ * Created on Oct 5, 2011
  * Created by Andreas Prlic
  *
  * @since 3.0.2
@@ -46,7 +46,7 @@ import java.util.List;
 public class TestDNAAlignment extends TestCase {
 
 	private static final double PRECISION = 0.00000001;
-	
+
 
     public void testDNAAlignment() {
 
@@ -86,7 +86,7 @@ public class TestDNAAlignment extends TestCase {
     }
 
     /**
-     * @author brandstaetter 
+     * @author brandstaetter
      */
     public void testDNAMultipleAlignmentWithMixedCompoundSets() throws CompoundNotFoundException {
 
@@ -116,7 +116,7 @@ public class TestDNAAlignment extends TestCase {
         SimpleGapPenalty gapP = new SimpleGapPenalty();
         gapP.setOpenPenalty((short) 5);
         gapP.setExtensionPenalty((short) 2);
-        
+
         try {
         	@SuppressWarnings("unused")
 			SequencePair<DNASequence, NucleotideCompound> psa = Alignments.getPairwiseAlignment(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);

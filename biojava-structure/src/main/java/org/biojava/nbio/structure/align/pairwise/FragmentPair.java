@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 7, 2006
  *
  */
@@ -29,49 +29,49 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 
 /** a pair of fragments of two protein structures
- * 
+ *
  * @author Andreas Prlic
  * @since 1.5
  * @version %I% %G%
  */
 public class FragmentPair {
 
-  
+
     int length;
     int pos1;
     int pos2;
 
     // parameter below may be used in different approaches
-  
+
     int contacts;
     int cluster;
     double rms;
     int used;
     int covered;
-    
+
     //filled if fragments are superimposed
     Matrix rot;
     Atom trans;
 
     //this unit vector indicates the rotation of j onto i
     Atom unitv;
-    
+
     Atom center1;
     Atom center2;
-    
-    
+
+
     public FragmentPair(int length, int p1, int p2) {
         super();
         this.length = length ;
          pos1 = p1;
          pos2 = p2;
-         
+
          contacts = 0;
          cluster = 0;
          rms = 0.0;
          used = 0;
          covered = 0;
-         
+
          unitv = new AtomImpl();
          unitv.setX(0);
          unitv.setY(0);
@@ -84,14 +84,14 @@ public class FragmentPair {
     }
     @Override
     public Object clone(){
-        
+
         FragmentPair n = new FragmentPair(length,pos1,pos2);
         if ( center1 !=null)
             n.setCenter1((Atom)center1.clone());
-        
+
         if ( center2 != null)
             n.setCenter2((Atom)center2.clone());
-        
+
         n.setCluster(cluster);
         n.setContacts(contacts);
         n.setCovered(covered);
@@ -99,7 +99,7 @@ public class FragmentPair {
         n.setLength(length);
         n.setRot((Matrix)rot.clone());
         n.setUnitv((Atom)unitv.clone());
-        
+
         return n;
     }
     public int getCluster() {
@@ -205,7 +205,7 @@ public class FragmentPair {
     public void setCenter2(Atom center2) {
         this.center2 = center2;
     }
-    
+
     @Override
     public String toString() {
     	return String.format("Fragment (%d,%d) len %d", pos1, pos2, length);

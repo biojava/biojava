@@ -37,7 +37,7 @@ public class PdbxChemCompDescriptor {
 	String program;
 	String program_version;
 	String identifier;
-	
+
 	public String getComp_id() {
 		return comp_id;
 	}

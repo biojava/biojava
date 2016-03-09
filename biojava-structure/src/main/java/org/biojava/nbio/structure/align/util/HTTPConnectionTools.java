@@ -141,8 +141,8 @@ public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
    {
       return getInputStream(url,true, timeout);
    }
-   
-   
+
+
    /** connect to DAS server and return result as an InputStream.
     * always asks for response to be in GZIP encoded
     *
@@ -201,45 +201,45 @@ public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, in
    }
 
    /** do a POST to a URL and return the response stream for further processing elsewhere.
-    * 
-    * 
+    *
+    *
     * @param url
     * @return InputStream of response
     * @throws IOException
     */
    public static InputStream doPOST(URL url, String data)
-   throws IOException 
+   throws IOException
    {
-	   return doPOST(url,data,DEFAULT_CONNECTION_TIMEOUT); 
+	   return doPOST(url,data,DEFAULT_CONNECTION_TIMEOUT);
    }
-   
+
    /** do a POST to a URL and return the response stream for further processing elsewhere.
-    * 
-    * 
+    *
+    *
     * @param url
     * @return InputStream of response
     * @throws IOException
     */
    public static InputStream doPOST(URL url, String data, int timeout)
-   throws IOException 
+   throws IOException
    {
 
    // Send data
-      
+
 	  HttpURLConnection conn = openHttpURLConnection(url, timeout);
-	   
+
 	   //URLConnection conn = url.openConnection();
-      conn.setDoOutput(true);      
-      
+      conn.setDoOutput(true);
+
       OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
       wr.write(data);
       wr.flush();
-  
+
       // Get the response
       return conn.getInputStream();
-      
-          
+
+
    }
-   
-   
+
+
 }

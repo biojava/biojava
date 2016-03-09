@@ -47,7 +47,7 @@ public class AccessionID {
 
     public AccessionID(){
         id = "";
-        
+
     }
 
     /**
@@ -58,7 +58,7 @@ public class AccessionID {
         this.id = id.trim();
         this.source = DataSource.LOCAL;
     }
-    
+
 
     /**
      *
@@ -69,7 +69,7 @@ public class AccessionID {
         this.id = id.trim();
         this.source = source;
     }
-    
+
     public AccessionID(String id, DataSource source, Integer version, String identifier) {
         this.id = id;
         this.source = source;
@@ -133,8 +133,8 @@ public class AccessionID {
 
     /**
      * In case if {@link #getID() } in not unique keeps the alternative id, eg. NCBI GI number.
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getIdentifier() {
         return identifier;
@@ -143,8 +143,8 @@ public class AccessionID {
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
-    
-    
+
+
     @Override
     public String toString() {
         return id;

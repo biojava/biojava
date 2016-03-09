@@ -42,20 +42,20 @@ public class PermutationGroup {
     public List<Integer> getPermutation(int index) {
     	return permutations.get(index);
     }
-    
+
     public int getOrder() {
     	return permutations.size();
     }
-    
- 
+
+
     /**
      * Starts with an incomplete set of group generators in `permutations` and
      * expands it to include all possible combinations.
      *
-     * Ways to complete group: 
+     * Ways to complete group:
      * - combinations of permutations pi x pj
      * - combinations with itself p^k
-     * 
+     *
      */
     public void completeGroup() {
     	// Copy initial set to allow permutations to grow
@@ -109,7 +109,7 @@ public class PermutationGroup {
         }
         return 0;
     }
-    
+
     public String getGroupTable() {
     	StringBuilder builder = new StringBuilder();
     	builder.append("  |");
@@ -134,7 +134,7 @@ public class PermutationGroup {
     	}
     	return builder.toString();
     }
-    
+
     @Override
 	public int hashCode() {
     	return getGroupTable().hashCode();

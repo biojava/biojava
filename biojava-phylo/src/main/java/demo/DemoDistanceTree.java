@@ -44,7 +44,7 @@ import org.forester.phylogeny.Phylogeny;
 /**
  * This demo contains the CookBook example to create a phylogenetic tree from a
  * multiple sequence alignment (MSA).
- * 
+ *
  * @author Scooter Willis
  * @author Aleix Lafita
  *
@@ -57,19 +57,19 @@ public class DemoDistanceTree {
 		InputStream inStream = TreeConstructor.class
 				.getResourceAsStream("/PF00104_small.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = 
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
 				new FastaReader<ProteinSequence, AminoAcidCompound>(
 				inStream,
 				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
 				new ProteinSequenceCreator(AminoAcidCompoundSet
 						.getAminoAcidCompoundSet()));
 
-		LinkedHashMap<String, ProteinSequence> proteinSequences = 
+		LinkedHashMap<String, ProteinSequence> proteinSequences =
 				fastaReader.process();
 
 		inStream.close();
 
-		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = 
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa =
 				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
 
 		for (ProteinSequence proteinSequence : proteinSequences.values()) {

@@ -30,13 +30,13 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 
 /**
- * Used to work with SurvivalInfo 
+ * Used to work with SurvivalInfo
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SurvivalInfoHelper {
 
     /**
-     * For each analysis this allows outputing of the data used in the calculations to a printstream/file. This then 
+     * For each analysis this allows outputing of the data used in the calculations to a printstream/file. This then
      * allows the file to be loaded into R and calculations can be verified.
      * @param DataT
      * @param ps
@@ -49,7 +49,7 @@ public class SurvivalInfoHelper {
             ps.print(variable + delimiter);
         }
         ps.print("TIME" + delimiter + "STATUS" + delimiter + "WEIGHT" + delimiter + "STRATA");
-        
+
         ps.println();
         for (SurvivalInfo si : DataT) {
             ps.print(si.getOrder() + delimiter);
@@ -57,9 +57,9 @@ public class SurvivalInfoHelper {
                 Double value = si.getVariable(variable);
                 ps.print(value + delimiter);
             }
-            
+
             ps.print(si.getTime() + delimiter + si.getStatus() + delimiter + si.getWeight() + delimiter + si.getStrata());
-            
+
             ps.println();
         }
 
@@ -69,7 +69,7 @@ public class SurvivalInfoHelper {
     /**
      * If any not numeric value then categorical
      * @param values
-     * @return 
+     * @return
      */
     private static boolean isCategorical(LinkedHashMap<String, Double> values) {
         try {
@@ -144,7 +144,7 @@ public class SurvivalInfoHelper {
     }
 
     /**
-     * To test for interactions use two variables and create a third variable where the two are multiplied together. 
+     * To test for interactions use two variables and create a third variable where the two are multiplied together.
      * @param variable1
      * @param variable2
      * @param survivalInfoList

@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Mar. 6, 2014
  *
  */
@@ -41,11 +41,11 @@ import java.util.Set;
  * Adds polymer bonds for peptides and nucleotides based on distance cutoffs and
  * intra-group (residue) bonds based on data from the Chemical Component Dictionary
  * to the Structure object.
- * 
+ *
  * TODO the current implementation adds bonds to the first model only. This
  * should be sufficient for homogeneous models, but here are a few inhomogeneous models
  * in the PDB. A better handling of models should be considered in the future.
- * 
+ *
  * @author Peter Rose
  * @author Ulysse Carion
  *
@@ -97,7 +97,7 @@ public class BondMaker {
 	 * </li>
 	 * <li>
 	 * intra-group (residue) bonds: read from the chemical component dictionary, via {@link ChemCompProvider}
-	 * </li> 
+	 * </li>
 	 */
 	public void makeBonds() {
 		formPeptideBonds();
@@ -219,7 +219,7 @@ public class BondMaker {
 						}
 					}
 				}
-			}				
+			}
 		}
 	}
 
@@ -237,7 +237,7 @@ public class BondMaker {
 	}
 
 	/**
-	 * Creates disulfide bond objects and references in the corresponding Atoms objects, given 
+	 * Creates disulfide bond objects and references in the corresponding Atoms objects, given
 	 * a list of {@link SSBondImpl}s parsed from a PDB/mmCIF file.
 	 * @param disulfideBonds
 	 */
@@ -336,12 +336,12 @@ public class BondMaker {
 			String insCode2 = "";
 			if (!conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
 
-			String seqId1 = conn.getPtnr1_auth_seq_id();	
+			String seqId1 = conn.getPtnr1_auth_seq_id();
 			String seqId2 = conn.getPtnr2_auth_seq_id();
 			String resName1 = conn.getPtnr1_label_comp_id();
 			String resName2 = conn.getPtnr2_label_comp_id();
-			String atomName1 = conn.getPtnr1_label_atom_id(); 
-			String atomName2 = conn.getPtnr2_label_atom_id(); 
+			String atomName1 = conn.getPtnr1_label_atom_id();
+			String atomName2 = conn.getPtnr2_label_atom_id();
 			String altLoc1 = "";
 			if (!conn.getPdbx_ptnr1_label_alt_id().equals("?")) altLoc1 = conn.getPdbx_ptnr1_label_alt_id();
 			String altLoc2 = "";
@@ -369,7 +369,7 @@ public class BondMaker {
 
 			// TODO: when issue 220 is implemented, add robust symmetry handling to allow bonds between symmetry-related molecules.
 			if (!conn.getPtnr1_symmetry().equals(symop) || !conn.getPtnr2_symmetry().equals(symop) ) {
-				logger.info("Skipping bond between atoms {}({}) and {}({}) belonging to different symmetry partners, because it is not supported yet", 
+				logger.info("Skipping bond between atoms {}({}) and {}({}) belonging to different symmetry partners, because it is not supported yet",
 						a1.getPDBserial(), a1.getName(), a2.getPDBserial(), a2.getName());
 				continue;
 			}
@@ -401,7 +401,7 @@ public class BondMaker {
 		// there is an alternate location
 		if (!altLoc.isEmpty()) {
 			g = group.getAltLocGroup(altLoc.charAt(0));
-			if (g==null) 
+			if (g==null)
 				throw new StructureException("Could not find altLoc code "+altLoc+" in group "+resSeq+iCode+" of chain "+ chainID);
 		}
 

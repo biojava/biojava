@@ -28,8 +28,8 @@ import java.util.*;
 
 
 /** A in memory cache using soft references. (can be garbage collected)
- * 
- * This code is based on: http://java-interview-faqs.blogspot.com/2008/09/building-faster-and-efficient-cache.html 
+ *
+ * This code is based on: http://java-interview-faqs.blogspot.com/2008/09/building-faster-and-efficient-cache.html
  * */
 
 
@@ -214,9 +214,9 @@ public synchronized V put(K key, V value) {
       clearGCCollected();
 
       logger.debug("Putting {} on cache. size: {}", key, size());
-      
+
       map.put(key, new SoftValue<K, V>(value, key, queue));
-      
+
       return value;
 
    }

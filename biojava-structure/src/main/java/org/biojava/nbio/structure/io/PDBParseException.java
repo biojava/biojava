@@ -34,7 +34,7 @@ public class PDBParseException extends Exception{
      *
      * @param s  a String ...
      */
-    
+
     public PDBParseException(String s) {
         super(s);
     }
@@ -43,7 +43,7 @@ public class PDBParseException extends Exception{
      *
      * @param t  a Throwable object
      * @param s  a String ...
-     */ 
+     */
     public PDBParseException ( String s,Throwable t) {
         super(s, t);
     }

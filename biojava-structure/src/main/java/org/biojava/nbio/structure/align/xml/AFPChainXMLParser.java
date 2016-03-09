@@ -51,9 +51,9 @@ public class AFPChainXMLParser
 
 	private static final Logger logger = LoggerFactory.getLogger(AFPChainXMLParser.class);
 	public static final String DEFAULT_ALGORITHM_NAME = "jFatCat_rigid";
-	
+
 	/** new utility method that checks that the order of the pair in the XML alignment is correct and flips the direction if needed
-	 * 
+	 *
 	 * @param xml
 	 * @param name1
 	 * @param name1
@@ -66,15 +66,15 @@ public class AFPChainXMLParser
 			if ( afps.length > 0 ) {
 
 				AFPChain afpChain = afps[0];
-				
+
 				String n1 = afpChain.getName1();
 				String n2 = afpChain.getName2();
-				
+
 				if ( n1 == null )
 					n1 = "";
 				if ( n2 == null)
 					n2 = "";
-				
+
 				//System.out.println("from AFPCHAIN: " + n1 + " " + n2);
 				if ( n1.equals(name2) && n2.equals(name1)){
 					// flipped order
@@ -86,9 +86,9 @@ public class AFPChainXMLParser
 				return afpChain;
 			}
 			return null;
-		 
+
 	 }
-	
+
    public static AFPChain fromXML(String xml, Atom[] ca1, Atom[] ca2) throws IOException
 	{
 		AFPChain[] afps = parseMultiXML( xml);
@@ -103,28 +103,28 @@ public class AFPChainXMLParser
 	}
 
    /** returns true if the alignment XML contains an error message
-    * 
+    *
     * @param xml
-    * @return flag if there was an Error while processing the alignment. 
+    * @return flag if there was an Error while processing the alignment.
     */
    public static boolean isErrorXML(String xml){
-      
+
       if ( xml.contains("error=\""))
          return true;
-      
+
       return false;
-         
-      
+
+
    }
-   
+
 	/** Takes an XML representation of the alignment and flips the positions of name1 and name2
-	 * 
+	 *
 	 * @param xml String representing the alignment
 	 * @return XML representation of the flipped alignment
 	 */
 	public static String flipAlignment(String xml) throws IOException,StructureException{
 		AFPChain[] afps = parseMultiXML( xml);
-		if ( afps.length < 1 ) 
+		if ( afps.length < 1 )
 			return null;
 
 		if ( afps.length == 1) {
@@ -139,7 +139,7 @@ public class AFPChainXMLParser
 
 
 	/**  replace the PDB res nums with atom positions:
-	 * 
+	 *
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
@@ -152,14 +152,14 @@ public class AFPChainXMLParser
 	   if ( afpChain.getVersion() == null){
 	      afpChain.setVersion("1.0");
 	   }
-	   
+
 		int blockNum  = afpChain.getBlockNum();
 		int ca1Length = afpChain.getCa1Length();
 		int ca2Length = afpChain.getCa2Length();
 
 		int minLength = Math.min(ca1Length, ca2Length);
 		int[][][] optAln = new int[blockNum][2][minLength];
-				
+
 		int[][][] blockResList = afpChain.getBlockResList();
 		if ( blockResList == null){
 		   blockResList = new int[blockNum][2][minLength];
@@ -195,10 +195,10 @@ public class AFPChainXMLParser
 
 				int pos1 = getPositionForPDBresunm(pdbres1,chain1,ca1);
 				int pos2 = getPositionForPDBresunm(pdbres2,chain2,ca2);
-				
+
 				if ( pos1 == -1 || pos2 == -1 ){
 				   // this can happen when parsing old files that contained Calcium atoms...
-				   logger.warn("pos1: {} (residue {}), pos2: {} (residue {}), should never be -1. Probably parsing an old file.",  
+				   logger.warn("pos1: {} (residue {}), pos2: {} (residue {}), should never be -1. Probably parsing an old file.",
 						   pos1, pdbResnum1, pos2, pdbResnum2);
 				   verifiedOptLen[blockNr]-- ;
 				   continue;
@@ -241,7 +241,7 @@ public class AFPChainXMLParser
 			//Element rootElement = doc.getDocumentElement();
 
 			NodeList listOfAFPChains = doc.getElementsByTagName("AFPChain");
-			//int numArrays = listOfArrays.getLength();			
+			//int numArrays = listOfArrays.getLength();
 			// go over the blocks
 			for(int afpPos=0; afpPos<listOfAFPChains.getLength() ; afpPos++)
 			{
@@ -250,11 +250,11 @@ public class AFPChainXMLParser
 				a.setVersion("1.0");
 				Node rootElement       = listOfAFPChains.item(afpPos);
 
-				a.setName1(getAttribute(rootElement,"name1"));				
+				a.setName1(getAttribute(rootElement,"name1"));
 				a.setName2(getAttribute(rootElement,"name2"));
 				String algoname = getAttribute(rootElement,"method");
 				if ( algoname != null) {
-					a.setAlgorithmName(algoname);					
+					a.setAlgorithmName(algoname);
 				}
 				String version = getAttribute(rootElement,"version");
 				if ( version != null)
@@ -270,12 +270,12 @@ public class AFPChainXMLParser
 				if ( a.getAlgorithmName().equals(CeCPMain.algorithmName)){
                    a.setSequentialAlignment(a.getBlockNum() == 1);
                 }
-				
+
 				a.setAlignScore(new Double(getAttribute(rootElement,"alignScore")).doubleValue());
 				a.setChainRmsd(new Double(getAttribute(rootElement,"chainRmsd")).doubleValue());
-				Double identity = new Double(getAttribute(rootElement,"identity")).doubleValue();				
+				Double identity = new Double(getAttribute(rootElement,"identity")).doubleValue();
 				a.setIdentity(identity);
-				
+
 				a.setNormAlignScore(new Double(getAttribute(rootElement,"normAlignScore")).doubleValue());
 				a.setProbability(new Double(getAttribute(rootElement,"probability")).doubleValue());
 				a.setSimilarity(new Double(getAttribute(rootElement,"similarity")).doubleValue());
@@ -284,7 +284,7 @@ public class AFPChainXMLParser
 				a.setAlignScoreUpdate(new Double(getAttribute(rootElement,"alignScoreUpdate")).doubleValue());
 				int ca1Length = new Integer(getAttribute(rootElement,"ca1Length")).intValue();
 				a.setCa1Length(ca1Length);
-				int ca2Length = new Integer(getAttribute(rootElement,"ca2Length")).intValue();						
+				int ca2Length = new Integer(getAttribute(rootElement,"ca2Length")).intValue();
 				a.setCa2Length(ca2Length);
 
 				String tmScoreS = getAttribute(rootElement,"tmScore");
@@ -292,24 +292,24 @@ public class AFPChainXMLParser
 					Double tmScore = null;
 					try {
 					 tmScore = Double.parseDouble(tmScoreS);
-					} catch (Exception e){						
+					} catch (Exception e){
 					}
 					a.setTMScore(tmScore);
 				}
-				
+
 				String calcTimeS = getAttribute(rootElement,"time");
 				Long calcTime = -1L;
 				if ( calcTimeS != null){
-				
+
 					try {
 						calcTime = Long.parseLong(calcTimeS);
-						
+
 					} catch (Exception e){
 						e.printStackTrace();
-					}					
+					}
 				}
 				a.setCalculationTime(calcTime);
-				
+
 				Matrix[] ms = new Matrix[a.getBlockNum()];
 				a.setBlockRotationMatrix(ms);
 				Atom[] blockShiftVector = new Atom[a.getBlockNum()];
@@ -318,7 +318,7 @@ public class AFPChainXMLParser
 				int afpNum = new Integer(getAttribute(rootElement,"afpNum")).intValue();
 				List<AFP> afpSet = new ArrayList<AFP>();
 				for (int afp=0;afp<afpNum;afp++){
-					afpSet.add( new AFP());	
+					afpSet.add( new AFP());
 				}
 
 				a.setAfpSet(afpSet);
@@ -349,8 +349,8 @@ public class AFPChainXMLParser
 
 				afpChains.add(a);
 			}
-		}	
-		
+		}
+
 		// TODO these 2 exceptions should be thrown forward, it's not a good idea to catch them so early
 		catch (SAXException e)
 		{
@@ -374,7 +374,7 @@ public class AFPChainXMLParser
 		int blockNum = a.getBlockNum();
 
 		int[] 	  optLen 			= a.getOptLen();
-		if ( optLen == null ) 
+		if ( optLen == null )
 			optLen = new int[blockNum];
 
 		String[][][] pdbAln = a.getPdbAln();
@@ -455,7 +455,7 @@ public class AFPChainXMLParser
 						double val = Double.parseDouble(att);
 						m.set(i-1,j-1,val);
 
-					}	
+					}
 				}
 				ms[blockNr] = m;
 
@@ -491,7 +491,7 @@ public class AFPChainXMLParser
 	}
 
 	private static String getAttribute(Node node, String attr){
-		if( ! node.hasAttributes()) 
+		if( ! node.hasAttributes())
 			return null;
 
 		NamedNodeMap atts = node.getAttributes();
@@ -510,7 +510,7 @@ public class AFPChainXMLParser
 	}
 
 	/** get the position of PDB residue nr X in the ato marray
-	 * 
+	 *
 	 * @param pdbresnum
 	 * @param chainId
 	 * @param atoms
@@ -521,7 +521,7 @@ public class AFPChainXMLParser
 		residueNumber.setChainId(chainId);
 
 		boolean blankChain = chainId == null || chainId.equalsIgnoreCase("null") || chainId.equals("_");
-		
+
 		for ( int i =0; i< atoms.length ;i++){
 			Group g = atoms[i].getGroup();
 

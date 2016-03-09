@@ -1,7 +1,7 @@
 /*  @(#)FastaSequence.java 1.0  September 2009
- * 
+ *
  *  Copyright (c) 2009 Peter Troshin
- *  
+ *
  *        BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  * assumptions as to what sequence it store e.g. it could be nucleotide, protein
  * or even gapped alignment sequence! The only guarantee it makes is that the
  * sequence does not contain white space characters e.g. spaces, new lines etc
- * 
+ *
  * @author pvtroshin
  * @version 1.0
  * @since 3.0.2
@@ -62,7 +62,7 @@ public final class FastaSequence implements Comparable<FastaSequence>{
     /**
      * Upon construction the any whitespace characters are removed from the
      * sequence
-     * 
+     *
      * @param id
      * @param sequence
      */
@@ -73,7 +73,7 @@ public final class FastaSequence implements Comparable<FastaSequence>{
 
     /**
      * Gets the value of id
-     * 
+     *
      * @return the value of id
      */
     public String getId() {
@@ -82,7 +82,7 @@ public final class FastaSequence implements Comparable<FastaSequence>{
 
     /**
      * Gets the value of sequence
-     * 
+     *
      * @return the value of sequence
      */
     public String getSequence() {
@@ -105,7 +105,7 @@ public final class FastaSequence implements Comparable<FastaSequence>{
     }
 
     /**
-     * 
+     *
      * @return one line name, next line sequence, no matter what the sequence
      *         length is
      */
@@ -117,9 +117,9 @@ public final class FastaSequence implements Comparable<FastaSequence>{
 
     /**
      * Format sequence per width letter in one string. Without spaces.
-     * 
+     *
      * @return multiple line formated sequence, one line width letters length
-     * 
+     *
      */
     public String getFormatedSequence(final int width) {
 	if (sequence == null) {
@@ -148,7 +148,7 @@ public final class FastaSequence implements Comparable<FastaSequence>{
     }
 
     /**
-     * 
+     *
      * @return sequence length
      */
     public int getLength() {
@@ -204,9 +204,9 @@ public final class FastaSequence implements Comparable<FastaSequence>{
 
 	@Override
 	public int compareTo(FastaSequence o) {
-		if(o==null || o.id==null) 
+		if(o==null || o.id==null)
 			return 1;
-		
+
 		return this.getId().compareTo(o.id);
 	}
 

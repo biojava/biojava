@@ -40,9 +40,9 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 
 /** Container for the information for a domain. Contains a line in the file
  * dir.cla.scop.txt_1.75
- * 
+ *
  * e.g d1dlwa_	1dlw	A:	a.1.1.1	14982	cl=46456,cf=46457,sf=46458,fa=46459,dm=46460,sp=46461,px=14982
- * 
+ *
  * Instantiated using {@link ScopDatabase#getDomainByScopID(String)}
  * @author Andreas Prlic
  *
@@ -52,7 +52,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 public class ScopDomain implements Serializable, Cloneable, StructureIdentifier {
 
 	private static final long serialVersionUID = 5890476209571654301L;
-	
+
 	String scopId;
 	String pdbId;
 	List<String> ranges;
@@ -92,7 +92,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		buf.append("\t") ;
         buf.append(String.valueOf(sunid));
 		buf.append("\t") ;
-		
+
 		buf.append("cl=");
         buf.append(String.valueOf(classId));
 		buf.append(",cf=");
@@ -100,15 +100,15 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		buf.append(",sf=");
 		buf.append(String.valueOf(superfamilyId));
 		buf.append(",fa=");
-		buf.append(String.valueOf(familyId));        
+		buf.append(String.valueOf(familyId));
 		buf.append(",dm=");
         buf.append(String.valueOf(domainId));
 		buf.append(",sp=");
         buf.append(String.valueOf(speciesId));
 		buf.append(",px=");
         buf.append(String.valueOf(px));
-		
-		
+
+
 		return buf.toString();
 	}
 
@@ -189,7 +189,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	protected Object clone() throws CloneNotSupportedException {
 
 		super.clone();
-		
+
 		ScopDomain n = new ScopDomain();
 		n.setClassId(getClassId());
 		n.setClassificationId(getClassificationId());
@@ -203,11 +203,11 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		n.setSpeciesId(getSpeciesId());
 		n.setSunid(getSunid());
 		n.setSuperfamilyId(getSuperfamilyId());
-		
-		
+
+
 		return n;
-		
-		
+
+
 	}
 
 	/**

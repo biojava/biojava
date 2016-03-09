@@ -542,7 +542,7 @@ public class HetatomImplTest extends TestCase{
 
     @Test
     public void testSetResidueNumberUsage() {
-     
+
         List<Group> resNumgroups = new ArrayList<Group>();
 
         for (int i = 0; i < bigTestNumber; i++) {
@@ -554,10 +554,10 @@ public class HetatomImplTest extends TestCase{
         int groupsSize = resNumgroups.size();
         assertEquals(bigTestNumber, groupsSize);
     }
-    
+
     @Test
     public void testHasAminoAtoms() {
-    	
+
     	Atom CA = new AtomImpl();
     	CA.setName("CA");
     	CA.setElement(Element.C);
@@ -580,43 +580,43 @@ public class HetatomImplTest extends TestCase{
     	OXT.setPDBserial(5);
 
     	Group g = new HetatomImpl();
-    	g.addAtom(CA); 
+    	g.addAtom(CA);
     	g.addAtom(C);
     	g.addAtom(N);
     	g.addAtom(O);
-    	
+
     	assertTrue(g.hasAminoAtoms());
-    	
+
     	g = new HetatomImpl();
-    	g.addAtom(CA); 
+    	g.addAtom(CA);
     	g.addAtom(C);
     	g.addAtom(N);
     	g.addAtom(O);
     	g.addAtom(OXT);
-    	
+
     	assertTrue(g.hasAminoAtoms());
-    	
+
     	g = new AminoAcidImpl();
-    	g.addAtom(CA); 
+    	g.addAtom(CA);
     	g.addAtom(C);
     	g.addAtom(N);
     	g.addAtom(O);
-    	
+
     	assertTrue(g.hasAminoAtoms());
-    	
+
     	g = new HetatomImpl();
-    	g.addAtom(CA); 
+    	g.addAtom(CA);
     	g.addAtom(C);
     	g.addAtom(N);
     	assertFalse(g.hasAminoAtoms());
-    	
+
     	g = new HetatomImpl();
-    	g.addAtom(CA); 
+    	g.addAtom(CA);
     	g.addAtom(C);
     	g.addAtom(N);
     	g.addAtom(OXT);
-    	
+
     	assertFalse(g.hasAminoAtoms());
-    	
+
     }
 }

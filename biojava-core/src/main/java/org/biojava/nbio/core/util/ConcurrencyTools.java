@@ -95,8 +95,8 @@ public class ConcurrencyTools {
     	setThreadPool(   new ThreadPoolExecutor(threads, threads,
                                       0L, TimeUnit.MILLISECONDS,
                                       new LinkedBlockingQueue<Runnable>()));
-    	
-        
+
+
     }
 
     /**

@@ -640,7 +640,7 @@ public class GeneFeatureHelper {
             if (geneSequence == null) {
                 geneSequence = seq.addGene(geneAccessionID, startCodonBegin, stopCodonEnd, strand);
                 geneSequence.setSource(source);
-            } 
+            }
             /*
             else {
 
@@ -850,7 +850,7 @@ public class GeneFeatureHelper {
 
                     try {
                         ProteinSequence proteinSequence = transcriptSequence.getProteinSequence();
-                       
+
 //                        logger.info("{} {}", proteinSequence.getAccession().getID(), proteinSequence);
                         if (proteinSequenceHashMap.containsKey(proteinSequence.getAccession().getID())) {
                             throw new Exception("Duplicate protein sequence id=" + proteinSequence.getAccession().getID() + " found at Gene id=" + geneSequence.getAccession().getID());

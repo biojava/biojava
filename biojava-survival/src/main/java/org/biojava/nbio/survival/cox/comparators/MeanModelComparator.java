@@ -48,21 +48,21 @@ public class MeanModelComparator implements Comparator<CoxVariables> {
     public int compare(CoxVariables coxVariables1, CoxVariables coxVariables2) {
         CoxInfo ci1LTMean = coxVariables1.getCoxInfo("<MEAN");
         CoxInfo ci1GTMean = coxVariables1.getCoxInfo(">MEAN");
-        
+
         if(ci1LTMean == null || ci1GTMean == null)
             return 0;
-        
+
         double c1LTpvalue = ci1LTMean.getCoefficient(variable).getPvalue();
         double c1GTpvalue = ci1GTMean.getCoefficient(variable).getPvalue();
-        
+
         double c1ratio = Math.min(c1LTpvalue, c1GTpvalue) / Math.max(c1LTpvalue, c1GTpvalue);
-        
+
         CoxInfo ci2LTMean = coxVariables2.getCoxInfo("<MEAN");
         CoxInfo ci2GTMean = coxVariables2.getCoxInfo(">MEAN");
-        
+
         double c2LTpvalue = ci2LTMean.getCoefficient(variable).getPvalue();
         double c2GTpvalue = ci2GTMean.getCoefficient(variable).getPvalue();
-        
+
        double c2ratio = Math.min(c2LTpvalue, c2GTpvalue) / Math.max(c2LTpvalue, c2GTpvalue);
 
         if (c1ratio > c2ratio) {

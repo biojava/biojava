@@ -31,7 +31,7 @@ import java.util.Set;
  * <p>
  * This class provides an interface for comparing and combining them to refine
  * self-Alignments into consistent MultipleAlignments of repeats.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
  *
@@ -42,7 +42,7 @@ public class ResidueGroup {
 
 	/**
 	 * Create a ResidueGroup object from a maximally connected component.
-	 * 
+	 *
 	 * @param component
 	 *            set of residues connected
 	 */
@@ -54,7 +54,7 @@ public class ResidueGroup {
 
 	/**
 	 * The order of symmetry of the group is the number of connected residues.
-	 * 
+	 *
 	 * @return size of residues List
 	 */
 	public int order() {
@@ -64,18 +64,18 @@ public class ResidueGroup {
 	/**
 	 * Determine if two Residuegroups (maximally connected components of the
 	 * alignment Graph) are compatible, based in the following criterion:
-	 * 
+	 *
 	 * <pre>
-	 * Two maximally connected components of the self-alignment Graph are 
+	 * Two maximally connected components of the self-alignment Graph are
 	 * compatible if they can be combined in a consistent multiple alignment
 	 * of repeats, i.e.there exists one residue in c1 between each sorted
 	 * pair of residues in c2.
 	 * </pre>
-	 * 
+	 *
 	 * Compatibility is an intransitive relation, which means that for three
 	 * ResidueGroups {A,B,C}, if A is compatible with B and B is compatible with
 	 * C, then A is not necessarily compatible with C.
-	 * 
+	 *
 	 * @param c2
 	 *            second maximally connected component
 	 * @return true if compatible, false otherwise
@@ -103,7 +103,7 @@ public class ResidueGroup {
 
 	/**
 	 * Combine the ResidueGroup with the alignment block.
-	 * 
+	 *
 	 * @param alignRes
 	 *            the alignment block, will be modified.
 	 */

@@ -51,7 +51,7 @@ public class SimpleProfilePairTest {
     private Profile<ProteinSequence, AminoAcidCompound> pair1, pair2;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         protein1 = new ProteinSequence("ARND");
         protein2 = new ProteinSequence("ARND");
         protein3 = new ProteinSequence("HILK");

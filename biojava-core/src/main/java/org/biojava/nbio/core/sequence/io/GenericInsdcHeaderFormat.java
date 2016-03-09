@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.core.sequence.io;
 
@@ -63,7 +63,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		if(quote) {  // quote should be true for numerics
 			line = QUALIFIER_INDENT_STR + "/" + key + "=\"" + value + "\"";
 		} else {
-			line = QUALIFIER_INDENT_STR + "/" + key + "=" + value;			
+			line = QUALIFIER_INDENT_STR + "/" + key + "=" + value;
 		}
 		if(line.length() <= MAX_WIDTH) {
 			return line + lineSep;
@@ -120,7 +120,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		formatter.format(QUALIFIER_INDENT_TMP, f_type);
 		String line = formatter.toString().substring(0, QUALIFIER_INDENT) + _wrap_location(location) + lineSep;
 		formatter.close();
-		
+
 		//Now the qualifiers...
 		for(List<Qualifier>  qualifiers : feature.getQualifiers().values()) {
 			for(Qualifier q : qualifiers){
@@ -249,7 +249,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 				formatter.format("%s%d^%d", ref, sequenceLocation.getStart().getPosition(), sequenceLocation.getEnd().getPosition());
 				String output = formatter.toString();
 				formatter.close();
-				return output;				
+				return output;
 			}
 		}
 		if(!sequenceLocation.getStart().isUncertain() && !sequenceLocation.getEnd().isUncertain() && sequenceLocation.getStart().getPosition() + 1 == sequenceLocation.getEnd().getPosition()) {
@@ -260,7 +260,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			formatter.format("%s%d", ref, sequenceLocation.getEnd().getPosition());
 			String output = formatter.toString();
 			formatter.close();
-			return output;							
+			return output;
 		} else if(sequenceLocation.getStart().isUnknown() || sequenceLocation.getEnd().isUnknown()) {
 			//Special case for features from SwissProt/UniProt files
 			if(sequenceLocation.getStart().isUnknown() && sequenceLocation.getEnd().isUnknown()) {
@@ -272,7 +272,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 				formatter.format("%s<%d..%s", ref, sequenceLocation.getEnd().getPosition(), _insdc_feature_position_string(sequenceLocation.getEnd()));
 				String output = formatter.toString();
 				formatter.close();
-				return output;				
+				return output;
 			} else {
 				//Treat the unknown start position as an AfterPosition
 				StringBuilder sb = new StringBuilder();
@@ -280,7 +280,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 				formatter.format("%s%s..>%d", ref, _insdc_feature_position_string(sequenceLocation.getStart()), sequenceLocation.getStart().getPosition());
 				String output = formatter.toString();
 				formatter.close();
-				return output;								
+				return output;
 			}
 		} else {
 			//Typical case, e.g. 12..15 gets mapped to 11:15
@@ -291,7 +291,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		// TODO Auto-generated method stub
 		return _insdc_feature_position_string(location, 0);
 	}
-	
+
 	/**
 	 * Build a GenBank/EMBL position string (PRIVATE).
 	 * @param location
@@ -328,10 +328,10 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
         raise ValueError("Expected a SeqFeature position object.")
 		 */
 	}
-	
+
 	/**
 	 * Returns a list of strings.
-     *   
+     *
      *   Any single words which are too long get returned as a whole line
      *   (e.g. URLs) without an exception or warning.
 	 * @param text
@@ -345,7 +345,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			output.add(text);
 			return output;
 		}
-		
+
 		ArrayList<String> words = new ArrayList<String>();
 		Collections.addAll(words, text.split("\\s+"));
 		while(!words.isEmpty()) {

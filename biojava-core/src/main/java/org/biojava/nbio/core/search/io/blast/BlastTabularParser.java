@@ -39,15 +39,15 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * Designed by Paolo Pavan.
- * You may want to find my contacts on Github and LinkedIn for code info 
+ * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
- * 
+ *
  * @author Paolo Pavan
  */
 
 public class BlastTabularParser implements ResultFactory {
-    private final String blastReference = 
+    private final String blastReference =
             "Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb Miller (2000), A greedy algorithm for aligning DNA sequences&quot;, J Comput Biol 2000; 7(1-2):203-14.";
     /**
      * Tries to define a different level of consistency during parsing.
@@ -61,13 +61,13 @@ public class BlastTabularParser implements ResultFactory {
         LITERAL
     }
     private static final Logger log = Logger.getLogger(BlastTabularParser.class.getName());
-    
-    
+
+
     private File targetFile;
     private int fileLinesCount;
     private PARSING_CONSISTENCY parsingConsistency = PARSING_CONSISTENCY.IMPROVED;
-    
-    
+
+
     // data imported private:
     int queryIdNumber = 0;
     HashMap<String,String> queryIdMapping = new HashMap<String,String>();
@@ -84,7 +84,7 @@ public class BlastTabularParser implements ResultFactory {
     private String subjectEnd   ;
     private String evalue       ;
     private String bitScore     ;
-    
+
 
     @Override
     public List<String> getFileExtensions() {
@@ -102,17 +102,17 @@ public class BlastTabularParser implements ResultFactory {
     @Override
     public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
         List<Result> results = new ArrayList<Result>();
-        
+
         log.info("Query for hits");
         LineNumberReader  lnr = new LineNumberReader(new FileReader(targetFile));
         lnr.skip(Long.MAX_VALUE);
         fileLinesCount = lnr.getLineNumber();
         log.info(fileLinesCount + " hits approximately in all results");
         lnr.close();
-        
+
         FileInputStream fileInputStream = new FileInputStream(targetFile);
         Scanner scanner = new Scanner(fileInputStream);
-        
+
         String line = fetchData(scanner);
         int lineNumber=0;
         while (lineNumber < fileLinesCount){
@@ -124,15 +124,15 @@ public class BlastTabularParser implements ResultFactory {
                         .setProgram(programName)
                         .setQueryDef(queryName)
                         .setReference(blastReference);
-                
+
                 List<Hit> hits = new ArrayList<Hit>();
-                
+
                 String currentQueryId = queryId;
                 while (currentQueryId.equals(queryId) && lineNumber < fileLinesCount){
                     BlastHitBuilder hitBuilder = new BlastHitBuilder();
-                    
+
                     List<Hsp> hsps = new ArrayList<Hsp>();
-                    
+
                     String currentSubjectId=subjectId;
                     while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
                         if (new Double(evalue) > maxEScore) {
@@ -165,26 +165,26 @@ public class BlastTabularParser implements ResultFactory {
         }
         return results;
     }
-    
+
     private String fetchData(Scanner scanner){
         String line;
         String[] split;
-        
-        line = scanner.nextLine();    
+
+        line = scanner.nextLine();
         while (line.startsWith("#")){
             // blast tabular with header options contains some more informations
             if (line.matches("#\\s.?BLAST.+")) programName = line.replace("#\\s","");
             if (line.startsWith("# Query:")) queryName = line.replace("# Query: ","");
             if (line.startsWith("# Database:")) databaseFile = line.replace("# Database: ","");
-            
+
             // needed because blast report can end with a comment...
             if (!scanner.hasNext()) return null;
-            line = scanner.nextLine(); 
+            line = scanner.nextLine();
         }
-        
+
         // Here, programName != null checks if there was a header in the file
         boolean headerFound = programName != null;
-        
+
         split = line.split("\\t");
         queryId      =split[0];
         subjectId    =split[1];
@@ -198,8 +198,8 @@ public class BlastTabularParser implements ResultFactory {
         subjectEnd   =split[9];
         evalue       =split[10];
         bitScore     =split[11];
-        
-        // blast tabular reports only the first word of the query name. 
+
+        // blast tabular reports only the first word of the query name.
         // If it was specified in the header it is better to use that definition
         if (parsingConsistency == PARSING_CONSISTENCY.IMPROVED && headerFound) {
             if (queryIdMapping.get(queryId)==null) {
@@ -211,7 +211,7 @@ public class BlastTabularParser implements ResultFactory {
             queryId = queryIdMapping.get(queryId);
         }
         if (!headerFound) queryName = queryId;
-        
+
         return line;
     }
 
@@ -219,22 +219,22 @@ public class BlastTabularParser implements ResultFactory {
     public void storeObjects(List<Result> results) throws IOException, ParseException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /**
-     * Intended for use with run module. 
-     * Although possible, does not make a lot of sense to have it with limited 
+     * Intended for use with run module.
+     * Although possible, does not make a lot of sense to have it with limited
      * information such those in tabular report
-     * @param sequences 
+     * @param sequences
      */
     @Override
     public void setQueryReferences(List<Sequence> sequences) {
         throw new UnsupportedOperationException("Not supported for this parser.");
     }
     /**
-     * Intended for use with run module. 
-     * Although possible, does not make a lot of sense to have it with limited 
+     * Intended for use with run module.
+     * Although possible, does not make a lot of sense to have it with limited
      * information such those in tabular report
-     * @param sequences 
+     * @param sequences
      */
     @Override
     public void setDatabaseReferences(List<Sequence> sequences) {
@@ -250,5 +250,5 @@ public class BlastTabularParser implements ResultFactory {
     public void setParsingConsistency(PARSING_CONSISTENCY parsingConsistency) {
         this.parsingConsistency = parsingConsistency;
     }
-    
+
 }

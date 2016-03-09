@@ -38,10 +38,10 @@ import java.util.LinkedHashMap;
  * @author Scooter Willis
  */
 public class GeneSequence extends DNASequence {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(GeneSequence.class);
 
-    private final LinkedHashMap<String, TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<String, TranscriptSequence>();    
+    private final LinkedHashMap<String, TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<String, TranscriptSequence>();
     private final LinkedHashMap<String, IntronSequence> intronSequenceHashMap = new LinkedHashMap<String, IntronSequence>();
     private final LinkedHashMap<String, ExonSequence> exonSequenceHashMap = new LinkedHashMap<String, ExonSequence>();
     private final ArrayList<IntronSequence> intronSequenceList = new ArrayList<IntronSequence>();
@@ -280,7 +280,7 @@ public class GeneSequence extends DNASequence {
 
     /**
      * Get the introns as an ArrayList
-     * @return introns 
+     * @return introns
      */
     public ArrayList<IntronSequence> getIntronSequences() {
         return intronSequenceList;

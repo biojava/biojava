@@ -62,12 +62,12 @@ public class TestParseOnAsymId {
 		assertArrayEquals(authChainListTest, authChainList);
 		assertArrayEquals(asymChainListTest, asymChainList);
 
-		
+
 		params.setUseInternalChainId(false);
 		Structure bioJavaStructDiff = StructureIO.getStructure("4cup");
 		List<Chain> chainListDiff = bioJavaStructDiff.getChains();
 		assertEquals(1,chainListDiff.size());
-		
+
 		String[] authChainListTestDiff = new String[1];
 		String[] asymChainListTestDiff = new String[1];
 		for(int i=0; i<chainListDiff.size();i++){
@@ -77,7 +77,7 @@ public class TestParseOnAsymId {
 		}
 		assertArrayEquals(authChainListTestDiff, asymChainListTestDiff);
 		assertArrayEquals(new String[] {"A"}, asymChainListTestDiff);
-		
+
 	}
 
 }

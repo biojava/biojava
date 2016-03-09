@@ -63,7 +63,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
   }
 
   protected void addCompounds(F source, T... targets) {
-	  
+
 	 List<T> l = mapper.get(source);
 	 if ( l == null) {
 		 l = new ArrayList<T>();

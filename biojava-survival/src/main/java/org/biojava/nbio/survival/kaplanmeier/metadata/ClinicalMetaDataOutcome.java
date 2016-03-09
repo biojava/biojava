@@ -56,7 +56,7 @@ public class ClinicalMetaDataOutcome {
         for (MetaDataInfo metaDataInfo : metaDataInfoList) {
             int numberValues = metaDataInfo.getNumberDiscreteValues();
             for(int i = 0; i < numberValues; i++){
-                
+
             }
 
         }

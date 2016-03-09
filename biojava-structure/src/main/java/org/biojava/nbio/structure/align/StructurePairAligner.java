@@ -344,19 +344,19 @@ public class StructurePairAligner {
 
 
 	/** Align two chains from the structures. Uses default parameters.
-	 * 
+	 *
 	 * @param s1
 	 * @param chainId1
 	 * @param s2
 	 * @param chainId2
 	 */
-	public void align(Structure s1, String chainId1, Structure s2, String chainId2) 
+	public void align(Structure s1, String chainId1, Structure s2, String chainId2)
 	throws StructureException{
 		align(s1,chainId1,s2,chainId2, params);
 	}
-	
+
 	/** Aligns two chains from the structures using user provided parameters.
-	 * 
+	 *
 	 * @param s1
 	 * @param chainId1
 	 * @param s2
@@ -368,25 +368,25 @@ public class StructurePairAligner {
 	throws StructureException{
 		reset();
 		this.params = params;
-		
+
 		Chain c1 = s1.getChainByPDB(chainId1);
 		Chain c2 = s2.getChainByPDB(chainId2);
-		
+
 		Structure s3 = new StructureImpl();
 		s3.addChain(c1);
-		
+
 		Structure s4 = new StructureImpl();
 		s4.addChain(c2);
-		
+
 		Atom[] ca1 = getAlignmentAtoms(s3);
-		Atom[] ca2 = getAlignmentAtoms(s4); 
-				
+		Atom[] ca2 = getAlignmentAtoms(s4);
+
 		notifyStartingAlignment(s1.getName(),ca1,s2.getName(),ca2);
 		align(ca1,ca2,params);
 	}
-	
+
 	/** Returns the atoms that are being used for the alignment. (E.g. Calpha only, etc.)
-	 * 
+	 *
 	 * @param s
 	 * @return an array of Atoms objects
 	 */
@@ -410,7 +410,7 @@ public class StructurePairAligner {
 
 		reset();
 		this.params = params;
-		
+
 		long timeStart = System.currentTimeMillis();
 
 //		step 1 get all Diagonals of length X that are similar between both structures
@@ -539,7 +539,7 @@ public class StructurePairAligner {
 		notifyJointFragments(frags);
 
 		logger.debug(" number joint fragments: ", frags.length);
-		
+
 		logger.debug("step 3 - refine alignments");
 
 		List<AlternativeAlignment> aas = new ArrayList<AlternativeAlignment>();

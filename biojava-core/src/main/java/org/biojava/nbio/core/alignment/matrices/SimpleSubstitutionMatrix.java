@@ -42,9 +42,9 @@ import java.util.*;
  * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
  */
 public class SimpleSubstitutionMatrix<C extends Compound> implements SubstitutionMatrix<C>, Serializable {
-	
+
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2645265638108462479L;
 

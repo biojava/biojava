@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
 public class SimpleProfileProfileAlignerTest {
 
 	private static final double PRECISION = 0.00000001;
-	
+
     private ProteinSequence protein1, protein2, protein3, protein4;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
@@ -49,7 +49,7 @@ public class SimpleProfileProfileAlignerTest {
     private ProfilePair<ProteinSequence, AminoAcidCompound> pp1, pp2, all;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         protein1 = new ProteinSequence("ARND");
         protein2 = new ProteinSequence("ARND");
         protein3 = new ProteinSequence("HILK");

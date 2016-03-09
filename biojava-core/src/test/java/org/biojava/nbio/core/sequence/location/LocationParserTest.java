@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * TODO: Temporary test is switched off. Currently results are messy:
- * 
+ *
  * <code>
  * to test: complement(order(1,2..34,complement(34..45),A00001.5:34..45))	expected: 1..45(.)	received: 1..45(.)
  * to test: 1	expected: 1..1(+)	received: 1..1(+)
@@ -44,10 +44,10 @@ import org.slf4j.LoggerFactory;
  * to test: join(1..2,join(4..5,complement(6..8))	expected: 1..8(.)	received: 1..8(.)
  * to test: join(5..10,1..3)	expected: 5..13(+ - circular)	received: 1..10(+)
  * </code>
- * 
+ *
  * Serialisation to string should be fixed as well.
- * 
- * 
+ *
+ *
  * @author Jacek Grzebyta
  */
 public class LocationParserTest {
@@ -55,7 +55,7 @@ public class LocationParserTest {
     public static final InsdcParser PARSER = new InsdcParser();
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    
+
     @Test
     @Ignore
     public void basicLocationTests() {

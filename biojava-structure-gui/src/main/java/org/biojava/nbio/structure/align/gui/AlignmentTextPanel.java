@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 9, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -30,24 +30,24 @@ import java.awt.*;
 
 public class AlignmentTextPanel extends JPrintPanel {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 5092386365924879073L;
 	JEditorPane tp;
-	
+
 	public AlignmentTextPanel(){
 		super();
 		String html = "<html><body><pre></pre></body></html>";
 
 		tp = new JEditorPane("text/html", html);
 		tp.setEditable(false);
-			
+
 		//this.setBorder(null);
 		this.setBackground(Color.white);
 		this.add(tp);
 
 	}
-	
+
 	public void setText(String result){
 		String html = "<html><body><pre>"+result+"</pre></body></html>";
 

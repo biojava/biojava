@@ -64,7 +64,7 @@ public class SmallMap extends AbstractMap implements Serializable {
     public Object get(Object key) {
         // Doesn't actually need to check if mappings is null, since numMappings
         // will necessarily be zero.
-        
+
         int keyHash = key.hashCode();
         for (int i = 0; i < numMappings * 2; i += 2) {
             if (keyHash == mappings[i].hashCode() && key.equals(mappings[i])) {
@@ -79,7 +79,7 @@ public class SmallMap extends AbstractMap implements Serializable {
      */
     public Object put(Object key, Object value) {
         int keyHash = key.hashCode();
-        
+
         for (int i = 0; i < numMappings * 2; i += 2) {
             if (keyHash == mappings[i].hashCode() && key.equals(mappings[i])) {
                 Object oldValue = mappings[i+1];
@@ -87,7 +87,7 @@ public class SmallMap extends AbstractMap implements Serializable {
                 return oldValue;
             }
         }
-        
+
         int newPos = numMappings * 2;
         int oldLength = 0;
         if (mappings != null) {
@@ -100,11 +100,11 @@ public class SmallMap extends AbstractMap implements Serializable {
             }
             mappings = newMappings;
         }
-        
+
         mappings[newPos] = key;
         mappings[newPos + 1] = value;
         numMappings++;
-        
+
         return null;
     }
 
@@ -153,11 +153,11 @@ public class SmallMap extends AbstractMap implements Serializable {
 
     private class KeyIterator implements Iterator {
         int pos = 0;
-        
+
         public boolean hasNext() {
             return pos < numMappings;
         }
-        
+
         public Object next() {
             if (pos >= numMappings) {
                 throw new NoSuchElementException();
@@ -166,7 +166,7 @@ public class SmallMap extends AbstractMap implements Serializable {
             ++pos;
             return mappings[offset];
         }
-        
+
         public void remove() {
             removeMapping(pos);
             pos -= 1;
@@ -185,11 +185,11 @@ public class SmallMap extends AbstractMap implements Serializable {
 
     private class EntryIterator implements Iterator {
         int pos = 0;
-        
+
         public boolean hasNext() {
             return pos < numMappings;
         }
-        
+
         public Object next() {
             if (pos >= numMappings) {
                 throw new NoSuchElementException();
@@ -198,7 +198,7 @@ public class SmallMap extends AbstractMap implements Serializable {
             ++pos;
             return new MapEntry(offset);
         }
-        
+
         public void remove() {
             removeMapping(pos);
             pos -= 1;
@@ -207,35 +207,35 @@ public class SmallMap extends AbstractMap implements Serializable {
 
     private class MapEntry implements Map.Entry {
         private int offset;
-        
+
         private MapEntry(int offset) {
             this.offset = offset;
         }
-        
+
         public Object getKey() {
             return mappings[offset];
         }
-        
+
         public Object getValue() {
             return mappings[offset + 1];
         }
-        
+
         public Object setValue(Object v) {
             Object oldValue = mappings[offset + 1];
             mappings[offset + 1] = v;
             return oldValue;
         }
-        
+
         public boolean equals(Object o) {
             if (! (o instanceof Map.Entry)) {
                 return false;
             }
-            
+
             Map.Entry mo = (Map.Entry) o;
             return ((getKey() == null ? mo.getKey() == null : getKey().equals(mo.getKey())) &&
 		    (getValue() == null ? mo.getValue() == null : getValue().equals(mo.getValue())));
         }
-        
+
         public int hashCode() {
             return (getKey() == null ? 0 : getKey().hashCode()) ^ (getValue() == null ? 0 : getValue().hashCode());
         }

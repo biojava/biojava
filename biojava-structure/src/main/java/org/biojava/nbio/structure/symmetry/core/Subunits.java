@@ -86,11 +86,11 @@ public class Subunits {
         }
         return centers.size();
     }
-    
+
     public List<Integer> getSequenceClusterIds() {
     	return sequenceClusterIds;
     }
-    
+
     public boolean isPseudoStoichiometric() {
     	for (Boolean b: pseudoStoichiometry) {
     		if (b) {
@@ -99,7 +99,7 @@ public class Subunits {
     	}
     	return false;
     }
-    
+
     public boolean isPseudoSymmetric() {
 		return pseudoSymmetric;
 	}
@@ -115,7 +115,7 @@ public class Subunits {
     	}
     	return minId;
     }
-    
+
     public double getMaxSequenceIdentity() {
     	double maxId = 1.0;
     	for (double seqId: maxSequenceIdentity) {
@@ -123,20 +123,20 @@ public class Subunits {
     	}
     	return maxId;
     }
-      
+
     public List<String> getChainIds() {
     	return chainIds;
     }
-    
+
     public List<Integer> getModelNumbers() {
     	return modelNumbers;
     }
-    
+
     public List<Integer>getFolds() {
     	return folds;
     }
-    
-    public String getStoichiometry() {	
+
+    public String getStoichiometry() {
 		// count number of members in each cluster
     	Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
 		for (Integer id: sequenceClusterIds) {
@@ -148,7 +148,7 @@ public class Subunits {
 			}
 			map.put(id, value);
 		}
-		
+
 		// build formula string
     	String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		StringBuilder formula = new StringBuilder();
@@ -166,7 +166,7 @@ public class Subunits {
 
         return formula.toString();
     }
-    
+
     public int getCalphaCount() {
     	int count = 0;
     	for (Point3d[] trace: caCoords) {
@@ -174,7 +174,7 @@ public class Subunits {
     	}
     	return count;
     }
-    
+
     public int getLargestSubunit() {
     	int index = -1;
     	int maxLength = 0;
@@ -191,7 +191,7 @@ public class Subunits {
         run();
         return centers;
     }
-    
+
     public List<Vector3d> getUnitVectors() {
         run();
         return unitVectors;
@@ -211,7 +211,7 @@ public class Subunits {
     	run();
     	return momentsOfInertia;
     }
-    
+
     /**
 	 * @return the nucleicAcidChainCount
 	 */
@@ -233,13 +233,13 @@ public class Subunits {
     	set1.retainAll(set2);
     	return set1.size() > 0;
     }
-    
+
     public boolean contains(Subunits subunits) {
     	Set<String> set1 = getSignatures(this);
     	Set<String> set2 = getSignatures(subunits);
     	return set1.containsAll(set2);
     }
-    
+
     private static Set<String> getSignatures(Subunits subunits) {
     	Set<String> set = new HashSet<String>(subunits.getSubunitCount());
     	for (int i = 0; i < subunits.getSubunitCount(); i++) {
@@ -247,7 +247,7 @@ public class Subunits {
     	}
     	return set;
     }
-    
+
     private void run() {
         if (centers.size() > 0) {
             return;
@@ -280,7 +280,7 @@ public class Subunits {
             unitVectors.add(v);
         }
     }
-    
+
     public Point3d getLowerBound() {
     	Point3d lower = new Point3d();
     	for (Point3d p: centers) {
@@ -296,7 +296,7 @@ public class Subunits {
     	}
     	return lower;
     }
-    
+
     public Point3d getUpperBound() {
     	Point3d upper = new Point3d();
     	for (Point3d p: centers) {
@@ -312,7 +312,7 @@ public class Subunits {
     	}
     	return upper;
     }
-    
+
     private void calcMomentsOfIntertia() {
     	for (Point3d[] trace: caCoords) {
     		for (Point3d p: trace) {

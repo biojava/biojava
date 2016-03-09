@@ -32,15 +32,15 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
- 
+
 /**
- * 
+ *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class NumbersAtRiskPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	KaplanMeierFigure kmf = null;
     Double timePercentage = .20;
 
@@ -51,21 +51,21 @@ public class NumbersAtRiskPanel extends JPanel {
 
     /**
      * Pick up needed info and details from the KM Figure
-     * @param kmf 
+     * @param kmf
      */
     public void setKaplanMeierFigure(KaplanMeierFigure kmf) {
         this.kmf = kmf;
-    
+
         int numRows = kmf.getSurvivalFitInfo().getStrataInfoHashMap().size();
         int height = (numRows + 1) * getFontMetrics(getFont()).getHeight();
         int width = kmf.getWidth();
         setPreferredSize(new Dimension(width,height));
         this.setSize(width, height);
-        
+
     }
 
     private void paintTable(Graphics g) {
-        
+
         if(kmf == null)
             return;
         KMFigureInfo kmfi = kmf.getKMFigureInfo();
@@ -79,28 +79,28 @@ public class NumbersAtRiskPanel extends JPanel {
         }else{
             sfiHashMap = sfi.getStrataInfoHashMap();
         }
-        
+
         if(sfiHashMap.size() == 0)
             return;
         //int height = this.getHeight();
-        
+
         int row = 0;
         int left = kmf.getLeft();
         //int right = kmf.getRight();
         //int width = right - left;
         Font f = g2.getFont();
         Font nf = new Font(f.getName(), Font.BOLD, f.getSize());
-        g2.setFont(nf); 
+        g2.setFont(nf);
         FontMetrics fm = getFontMetrics(nf);
         int index = 0;
         int fontHeight = getFontMetrics(getFont()).getHeight();
         int increment = fontHeight;
         ArrayList<Double> xaxisTimeValues = kmf.getxAxisTimeValues();
         ArrayList<Integer> xAxisTimeCoordinates = kmf.getxAxisTimeCoordinates();
-        
+
         ArrayList<String> labels = new ArrayList<String>(sfiHashMap.keySet());
         Collections.sort(labels);
-        
+
         for (String group : labels) {
             row = row + increment;
             g2.setColor(kmfi.getColor(index));
@@ -130,7 +130,7 @@ public class NumbersAtRiskPanel extends JPanel {
                     g2.drawString(nrisk , xvalue - w/2, row);
                 }
             }
-           
+
         }
     }
 
@@ -140,7 +140,7 @@ public class NumbersAtRiskPanel extends JPanel {
         super.paintComponent(g); //To change body of generated methods, choose Tools | Templates.
         g.setColor(Color.white);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
-        
+
         this.paintTable(g);
     }
 

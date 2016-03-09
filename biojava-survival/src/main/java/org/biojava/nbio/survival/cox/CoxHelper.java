@@ -31,15 +31,15 @@ import java.util.ArrayList;
 
 /**
  * The CoxHelper class is provided to start with a tab delimited file in a similar process in R and return the results as a CoxInfo class.
- * Given the number of options for adjusting the calculations using weighting, strata, clustering etc the helper class can be used to hide 
+ * Given the number of options for adjusting the calculations using weighting, strata, clustering etc the helper class can be used to hide
  * the complexity for typical use case.
- * 
+ *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class CoxHelper {
 
     /**
-     * 
+     *
      * @param datafile The tab delimited file containing survival data and variables. The first column needs to be unique index
      * @param timeColumn The column representing the event/censor time
      * @param statusColumn The column representing an event=1 and censor=0
@@ -50,10 +50,10 @@ public class CoxHelper {
      * @param useStrata Boolean to indicate if strata column should be used
      * @param useWeights Boolean to indicate if weight column should be used
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
-    
-    
+
+
     public static CoxInfo process(String datafile, String timeColumn, String statusColumn, String weightColumn, String strataColumn, String clusterColumn, ArrayList<String> variables, boolean useStrata, boolean useWeights) throws Exception {
         WorkSheet worksheet = WorkSheet.readCSV(datafile, '\t');
         return process(worksheet, timeColumn, statusColumn, weightColumn, strataColumn, clusterColumn, variables, useStrata, useWeights);
@@ -121,7 +121,7 @@ public class CoxHelper {
                 i++;
             }
 
-            
+
 
             boolean cluster = false;
             boolean robust = false;
@@ -165,17 +165,17 @@ public class CoxHelper {
                 CoxInfo ci = CoxHelper.process(datafile, "ttr", "recind", "wt", "sstrat", "Seq", variables, false, true);
 
               //  ci.dump();
-                
+
                 System.out.println(ci);
                 System.out.println();
 
                 CoxCC.process(ci);
 
                 ci.dump();
-               
+
             }
 
- 
+
         } catch (Exception e) {
             e.printStackTrace();
         }

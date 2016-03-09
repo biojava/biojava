@@ -22,7 +22,7 @@ package org.biojava.nbio.core.sequence.compound;
 
 /**
  * Ambiguity set for hybrid DNA/RNA sequences. Needed for some instances of synthetic nucleotide sequences present in protein structures from the PDB.
- * 
+ *
  * @author Jose Duarte
  *
  */
@@ -41,8 +41,8 @@ public class AmbiguityDNARNAHybridCompoundSet extends DNACompoundSet {
 
 	    // this is the only one needed to make it a hybrid DNA/RNA. The rest are the usual DNA/RNA ambiguity letters
 	    addNucleotideCompound("U", "A");
-	    
-	    
+
+
 	    addNucleotideCompound("M", "K",
 	        "A", "C");
 	    addNucleotideCompound("R", "Y",
@@ -67,8 +67,8 @@ public class AmbiguityDNARNAHybridCompoundSet extends DNACompoundSet {
 
 	    addNucleotideCompound("I", "I", "N", "A", "C", "G", "T");
 
-	    
+
 	    calculateIndirectAmbiguities();
-	    
+
 	  }
 }

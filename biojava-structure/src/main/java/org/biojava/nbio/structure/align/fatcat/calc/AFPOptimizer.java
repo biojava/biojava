@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,8 +20,8 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align.fatcat.calc;
@@ -62,7 +62,7 @@ public class AFPOptimizer
 
       int blockNum = afpChain.getBlockNum();
 
-      if(optAln == null)      {        
+      if(optAln == null)      {
          optAln     = new int[maxTra+1][2][minLen];
          afpChain.setOptAln(optAln);
          optLen     = new int[maxTra+1];
@@ -81,7 +81,7 @@ public class AFPOptimizer
 
       if (debug)
          System.out.println("AFPOptimizer got blockNum: " +blockNum);
-      //optimize each alignment defined by a block           
+      //optimize each alignment defined by a block
       b1 = b2 = e1 = e2 = optLength = 0;
       for(bk = 0; bk < blockNum; bk ++)       {
          //initial aligned position
@@ -117,7 +117,7 @@ public class AFPOptimizer
          if(debug) {
             System.err.println(String.format("optimize block %d (%d afp), region %d-%d(len %d), %d-%d(len %d)\n",
                   bk, blockSize[bk], b1, e1, e1-b1, b2, e2, e2-b2));
-            
+
             System.err.println(" initial alignment Length: " + iniLen );
          }
 
@@ -125,7 +125,7 @@ public class AFPOptimizer
          opt.runOptimization(maxi);
          optRmsd[bk] = opt.optimizeResult(optLen,bk,optAln[bk]);
 
-         //System.out.println(optRmsd[bk]);         
+         //System.out.println(optRmsd[bk]);
          // SALNOPT *opt = new SALNOPT(e1-b1, &pro1->caCod[3 * b1], e2-b2, &pro2->caCod[3 * b2], iniLen, iniSet, maxi);
          // optRmsd[bk] = opt->OptimizeResult(&optLen[bk], optAln[bk]);
 
@@ -202,7 +202,7 @@ public class AFPOptimizer
 
 
       afpChain.setConn(0d);
-      afpChain.setDVar(0d);      
+      afpChain.setDVar(0d);
 
       int blockNum = afpChain.getBlockNum();
       int alignScoreUpdate = 0;

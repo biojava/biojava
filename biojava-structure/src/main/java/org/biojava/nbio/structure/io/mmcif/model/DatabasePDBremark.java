@@ -36,6 +36,6 @@ public class DatabasePDBremark extends AbstractBean {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
-	
+
+
 }

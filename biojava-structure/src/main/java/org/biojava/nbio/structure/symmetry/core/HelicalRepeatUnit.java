@@ -80,7 +80,7 @@ private List<Point3d> calcRepeatUnitCenters() {
 	List<Point3d> repeatCenters = new ArrayList<Point3d>();
 	List<Point3d> centers = subunits.getCenters();
 	List<Integer> models = subunits.getModelNumbers();
-	
+
 //	if (modelCount == maxFold && subunits.getSubunitCount() > 3) {
 	if (maxFold%modelCount == 0 && modelCount > 1 && subunits.getSubunitCount() > 3) {
 //		System.out.println("calcRepeatUnitCenters case 1");
@@ -117,13 +117,13 @@ private List<Point3d> calcRepeatUnitCenters() {
 			}
 		}
 	}
-	
+
 	// helixes should have at least 3 repeat centers
 //	System.out.println("Number of repeat centers: " + repeatCenters.size());
 	if (repeatCenters.size() < 3) {
 		repeatCenters.clear();
 	}
-	
+
 	return repeatCenters;
 }
 
@@ -136,7 +136,7 @@ private List<Point3d[]> calcRepeatUnits() {
 	List<Point3d[]> repeatTraces = new ArrayList<Point3d[]>();
 	List<Integer> models = subunits.getModelNumbers();
 	List<Point3d[]> traces = subunits.getTraces();
-	
+
 //	if (modelCount == maxFold && subunitCount > 3) {
 	if (maxFold%modelCount == 0 && modelCount > 1 && subunits.getSubunitCount() > 3) {
 		for (int i = 0; i < modelCount; i++) {
@@ -160,7 +160,7 @@ private List<Point3d[]> calcRepeatUnits() {
 			}
 		}
 	}
-	
+
 //	for (int i = 0; i < repeatTraces.size(); i++) {
 //		System.out.println("Repeat " + i);
 //		System.out.println(Arrays.toString(repeatTraces.get(i)));
@@ -170,7 +170,7 @@ private List<Point3d[]> calcRepeatUnits() {
 
 private Map<Integer[], Integer> findInteractingNeigbors() {
 	Map<Integer[], Integer>  contactMap = new HashMap<Integer[], Integer>();
-	
+
 	Map<Integer, List<Integer[]>> distanceMap = findClosestPairs(8);
 	for (List<Integer[]> pairs: distanceMap.values())
 	for (Integer[] pair: pairs) {
@@ -180,7 +180,7 @@ private Map<Integer[], Integer> findInteractingNeigbors() {
 			contactMap.put(pair, contacts);
 		}
 	}
-	
+
 	return contactMap;
 }
 
@@ -201,7 +201,7 @@ private Map<Integer, List<Integer[]>> findClosestPairs(int maxNeighbors) {
 			List<Integer[]> pairs = distanceMap.get(intDist);
 			// save only one representative pair for each distance
 			if (pairs == null) {
-				pairs = new ArrayList<Integer[]>();	
+				pairs = new ArrayList<Integer[]>();
 			}
 			Integer[] pair = new Integer[2];
 			pair[0] = i;

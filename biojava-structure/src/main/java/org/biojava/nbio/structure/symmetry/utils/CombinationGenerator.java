@@ -61,17 +61,17 @@ import java.math.BigInteger;
 import java.util.NoSuchElementException;
 
 public class CombinationGenerator {
-    
+
     private int[] a;
     private int n;
     private int r;
     private BigInteger numLeft;
     private BigInteger total;
-    
+
     //------------
     // Constructor
     //------------
-    
+
     public CombinationGenerator(int n, int r) {
         if (r > n) {
             throw new IllegalArgumentException();
@@ -88,46 +88,46 @@ public class CombinationGenerator {
         total = nFact.divide(rFact.multiply(nminusrFact));
         reset();
     }
-    
+
     //------
     // Reset
     //------
-    
+
     public void reset() {
         for (int i = 0; i < a.length; i++) {
             a[i] = i;
         }
         numLeft = new BigInteger(total.toString());
     }
-    
+
     //------------------------------------------------
     // Return number of combinations not yet generated
     //------------------------------------------------
-    
+
     public BigInteger getNumLeft() {
         return numLeft;
     }
-    
+
     //-----------------------------
     // Are there more combinations?
     //-----------------------------
-    
+
     public boolean hasNext() {
         return numLeft.compareTo(BigInteger.ZERO) == 1;
     }
-    
+
     //------------------------------------
     // Return total number of combinations
     //------------------------------------
-    
+
     public BigInteger getTotal() {
         return total;
     }
-    
+
     //------------------
     // Compute factorial
     //------------------
-    
+
     private static BigInteger getFactorial(int n) {
         BigInteger fact = BigInteger.ONE;
         for (int i = n; i > 1; i--) {
@@ -135,18 +135,18 @@ public class CombinationGenerator {
         }
         return fact;
     }
-    
+
     //--------------------------------------------------------
     // Generate next combination (algorithm from Rosen p. 286)
     //--------------------------------------------------------
-    
+
     public int[] getNext() {
         if (hasNext()) {
             if (numLeft.equals(total)) {
                 numLeft = numLeft.subtract(BigInteger.ONE);
                 return a;
             }
-            
+
             int i = r - 1;
             while (a[i] == n - r + i) {
                 i--;
@@ -155,12 +155,12 @@ public class CombinationGenerator {
             for (int j = i + 1; j < r; j++) {
                 a[j] = a[i] + j - i;
             }
-            
+
             numLeft = numLeft.subtract(BigInteger.ONE);
             return a;
         } else {
             throw new NoSuchElementException();
         }
     }
-    
+
 }

@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jul 17, 2006
  *
  */
@@ -25,20 +25,20 @@ package org.biojava.nbio.structure.gui.util;
 import javax.swing.table.AbstractTableModel;
 
 class JTableDataButtonModel extends AbstractTableModel {
-    
+
     public static final long serialVersionUID = 0l;
-    
+
     Object[][] __rows;
     String[]   __columns;
-    
+
     public JTableDataButtonModel(Object[][] rows, String[] columns){
         __rows = rows;
         __columns = columns;
     }
-    
-    
+
+
     @Override
-	public String getColumnName(int column) { 
+	public String getColumnName(int column) {
       return __columns[column];
     }
 
@@ -53,7 +53,7 @@ class JTableDataButtonModel extends AbstractTableModel {
     }
 
     @Override
-	public Object getValueAt(int row, int column) { 
+	public Object getValueAt(int row, int column) {
         return __rows[row][column];
     }
 

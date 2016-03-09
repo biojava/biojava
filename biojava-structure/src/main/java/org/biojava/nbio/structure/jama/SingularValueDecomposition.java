@@ -37,7 +37,7 @@ package org.biojava.nbio.structure.jama;
 public class SingularValueDecomposition implements java.io.Serializable {
 
     static final long serialVersionUID = 640239472093534756l;
-    
+
 /* ------------------------
    Class variables
  * ------------------------ */
@@ -75,7 +75,7 @@ public class SingularValueDecomposition implements java.io.Serializable {
       m = Arg.getRowDimension();
       n = Arg.getColumnDimension();
 
-      /* Apparently the failing cases are only a proper subset of (m<n), 
+      /* Apparently the failing cases are only a proper subset of (m<n),
 	 so let's not throw error.  Correct fix to come later?
       if (m<n) {
 	  throw new IllegalArgumentException("Jama SVD only works for m >= n"); }
@@ -307,7 +307,7 @@ public class SingularValueDecomposition implements java.io.Serializable {
                if (ks == k) {
                   break;
                }
-               double t = (ks != p ? Math.abs(e[ks]) : 0.) + 
+               double t = (ks != p ? Math.abs(e[ks]) : 0.) +
                           (ks != k+1 ? Math.abs(e[ks-1]) : 0.);
                if (Math.abs(s[ks]) <= tiny + eps*t)  {
                   s[ks] = 0.0;
@@ -382,9 +382,9 @@ public class SingularValueDecomposition implements java.io.Serializable {
             case 3: {
 
                // Calculate the shift.
-   
+
                double scale = Math.max(Math.max(Math.max(Math.max(
-                       Math.abs(s[p-1]),Math.abs(s[p-2])),Math.abs(e[p-2])), 
+                       Math.abs(s[p-1]),Math.abs(s[p-2])),Math.abs(e[p-2])),
                        Math.abs(s[k])),Math.abs(e[k]));
                double sp = s[p-1]/scale;
                double spm1 = s[p-2]/scale;
@@ -403,9 +403,9 @@ public class SingularValueDecomposition implements java.io.Serializable {
                }
                double f = (sk + sp)*(sk - sp) + shift;
                double g = sk*ek;
-   
+
                // Chase zeros.
-   
+
                for (int j = k; j < p-1; j++) {
                   double t = Maths.hypot(f,g);
                   double cs = f/t;
@@ -450,7 +450,7 @@ public class SingularValueDecomposition implements java.io.Serializable {
             case 4: {
 
                // Make the singular values positive.
-   
+
                if (s[k] <= 0.0) {
                   s[k] = (s[k] < 0.0 ? -s[k] : 0.0);
                   if (wantv) {
@@ -459,9 +459,9 @@ public class SingularValueDecomposition implements java.io.Serializable {
                      }
                   }
                }
-   
+
                // Order the singular values.
-   
+
                while (k < pp) {
                   if (s[k] >= s[k+1]) {
                      break;

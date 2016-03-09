@@ -20,7 +20,7 @@ package org.biojava.nbio.structure.align;
  *      http://www.biojava.org/
  *
  * Created on Feb 11, 2013
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /** Performs a multi threaded database search for an input protein structure
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -66,29 +66,29 @@ public class MultiThreadedDBSearch {
 	AtomicBoolean interrupted  ;
 
 	StructureAlignment algorithm;
-	
+
 	String outFile;
-	
+
 	String name1;
-	
+
 	int nrCPUs;
-	
+
 	AtomCache cache;
 	File resultList;
 	SortedSet<String> representatives;
-	
+
 	boolean domainSplit;
-	
+
 	Structure structure1;
-	
+
 	String customFile1;
 	String customChain1;
-	
+
 	public MultiThreadedDBSearch(String name, Structure structure,
-			String outFile, 
+			String outFile,
 			StructureAlignment algorithm,
 			int nrCPUs, boolean domainSplit){
-		
+
 		interrupted = new AtomicBoolean(false);
 		this.name1= name;
 		this.structure1 = structure;
@@ -97,7 +97,7 @@ public class MultiThreadedDBSearch {
 		this.nrCPUs = nrCPUs;
 		this.domainSplit = domainSplit;
 		cache  = new AtomCache();
-		
+
 		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
 		if ( representatives == null){
 			SortedSet<String> repre = JFatCatClient.getRepresentatives(serverLocation,40);
@@ -105,15 +105,15 @@ public class MultiThreadedDBSearch {
 			representatives = repre;
 		}
 	}
-	
-	
+
+
 	public String getCustomFile1() {
 		return customFile1;
 	}
 
 
 	/** set the file path for a custom, user provided file, not a standard PDB file.
-	 * 
+	 *
 	 * @param customFile1
 	 */
 	public void setCustomFile1(String customFile1) {
@@ -121,13 +121,13 @@ public class MultiThreadedDBSearch {
 	}
 
 
-	
+
 	public String getCustomChain1() {
 		return customChain1;
 	}
 
 	/** sets a chain in a custom, user provided file
-	 * 
+	 *
 	 * @param customChain1
 	 */
 	public void setCustomChain1(String customChain1) {
@@ -152,8 +152,8 @@ public class MultiThreadedDBSearch {
 	public void setAlgorithm(StructureAlignment algo) {
 		this.algorithm = algo;
 	}
-	
-	
+
+
 	public String getOutFile() {
 		return outFile;
 	}
@@ -166,7 +166,7 @@ public class MultiThreadedDBSearch {
 
 	public static String getLegend(String algorithmName){
 
-		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || 
+		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) ||
 				algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName) ||
 				algorithmName.equalsIgnoreCase(CeCPMain.algorithmName)) {
 			return "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
@@ -177,9 +177,9 @@ public class MultiThreadedDBSearch {
 		return "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
 
 	}
-	
-	
-	
+
+
+
 	public File getResultFile() {
 		return resultList;
 	}
@@ -213,7 +213,7 @@ public class MultiThreadedDBSearch {
 				cleanup();
 			}
 
-			if ( name1 == null) 
+			if ( name1 == null)
 				name1 = "CUSTOM";
 
 
@@ -298,7 +298,7 @@ public class MultiThreadedDBSearch {
 				} else {
 					submit(name1, repre, ca1, algorithm, outFileF, out, cache);
 					nrJobs++;
-				}			
+				}
 
 			}
 		} catch(IOException e) {
@@ -324,7 +324,7 @@ public class MultiThreadedDBSearch {
 				//long now = System.currentTimeMillis();
 				//logger.debug( pool.getCompletedTaskCount() + " " + (now-startTime)/1000 + " " + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
 				//				if ((now-startTime)/1000 > 60) {
-				//					
+				//
 				//					interrupt();
 				//					logger.debug("completed: " + pool.getCompletedTaskCount());
 				//				}
@@ -351,31 +351,31 @@ public class MultiThreadedDBSearch {
 		logger.info("Calculation took : {} sec.", (now-startTime)/1000);
 		logger.info("{} {} {} {}", pool.getCompletedTaskCount(), pool.getPoolSize(), pool.getActiveCount(), pool.getTaskCount());
 	}
-	
-	
+
+
 
 	private void checkLocalFiles() throws IOException, StructureException {
-		
+
 		logger.info("Checking local PDB installation in directory: {}", cache.getPath());
-		
+
 		File f = new File(cache.getPath());
 		if ( ! f.isDirectory()) {
 			logger.error("The path {} should point to a directory!", f.getAbsolutePath());
 		}
-		
+
 		if ( ! f.canWrite()) {
 			logger.error("You do not have permission to write to {}. There could be a problem if the PDB installation is not up-to-date with fetching missing PDB files.", f.getAbsolutePath());
 		}
-		
+
 		DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
-		
-		
-		
+
+
+
 		for (String repre : representatives){
 
 			if ( interrupted.get())
 				return;
-			
+
 			if( domainSplit ) {
 				SortedSet<String> domainNames = domainProvider.getDomainNames(repre);
 				//logger.debug(repre +" got domains: " +domainNames);
@@ -393,24 +393,24 @@ public class MultiThreadedDBSearch {
 			} else {
 				//submit(name1, repre, ca1, algorithm, outFileF, out, cache);
 				checkFile(repre);
-			}			
+			}
 
 		}
-		
+
 		if ( domainProvider instanceof RemoteDomainProvider ) {
 			RemoteDomainProvider remoteP = (RemoteDomainProvider) domainProvider;
 			remoteP.flushCache();
 		}
 
 		logger.info("done checking local files...");
-		
+
 	}
 
 
 	private void checkFile(String repre) throws IOException, StructureException {
-		
+
 		StructureName name = new StructureName(repre);
-		
+
 		PDBFileReader reader = new PDBFileReader();
 		reader.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
 		reader.setPath(cache.getPath());
@@ -433,17 +433,17 @@ public class MultiThreadedDBSearch {
 		ali.setAlgorithmName(algorithm.getAlgorithmName());
 		ali.setParameters(algorithm.getParameters());
 		ali.setPair(pair);
-		ali.setOutFile(out);			
+		ali.setOutFile(out);
 		ali.setOutputDir(outFileF);
 		ali.setCache(cache);
 
 		ConcurrencyTools.submit(ali);
 
 	}
-	
-	
+
+
 	/** stops what is currently happening and does not continue
-	 * 
+	 *
 	 *
 	 */
 	public void interrupt() {
@@ -461,12 +461,12 @@ public class MultiThreadedDBSearch {
 		}
 
 	}
-	
+
 	public void cleanup()
 	{
-	
+
 		structure1 = null;
-		
+
 
 	}
 

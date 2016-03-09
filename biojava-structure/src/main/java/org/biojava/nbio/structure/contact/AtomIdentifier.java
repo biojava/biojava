@@ -25,27 +25,27 @@ import java.io.Serializable;
 public class AtomIdentifier implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private int pdbSerial;
 	private String chainId;
-	
+
 	public AtomIdentifier(int pdbSerial, String chainId) {
 		this.pdbSerial = pdbSerial;
 		this.chainId = chainId;
 	}
-	
+
 	public int getPdbSerial() {
 		return pdbSerial;
 	}
-	
+
 	public void setPdbSerial(int pdbSerial) {
 		this.pdbSerial = pdbSerial;
 	}
-	
+
 	public String getChainId() {
 		return chainId;
 	}
-	
+
 	public void setChainId(String chainId) {
 		this.chainId = chainId;
 	}
@@ -83,6 +83,6 @@ public class AtomIdentifier implements Serializable {
 		return " [" + pdbSerial + " - "
 				+ chainId + "]";
 	}
-	
+
 
 }

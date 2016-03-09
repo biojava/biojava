@@ -35,10 +35,10 @@ import java.util.Map;
  * @author Matthew Pocock
  * @since 1.2
  *
- * 
+ *
  * A minimal-memory alternative to SimpleAnnotation
  *
- * 
+ *
  * When creating a large number of small Annotation instances, it is worth
  * instantiating SmallAnnotation. Small is anything up to at least 30 properties
  * but will vary with the JavaVM and underlying platform.
@@ -46,14 +46,14 @@ import java.util.Map;
 
 public class SmallAnnotation extends AbstractAnnotation {
   private Map properties;
-  
+
   protected final Map getProperties() {
     if(!propertiesAllocated()) {
       properties = new SmallMap();
     }
     return properties;
   }
-  
+
   protected final boolean propertiesAllocated() {
     return properties != null;
   }

@@ -74,12 +74,12 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
      * The first dimension has the length of the first (query) sequence + 1
      * The second has the length of the second (target) sequence + 1
      * The third has length 1 for linear gap penalty and 3 for affine/constant gap
-     * (one each for match/substitution, deletion, insertion) 
+     * (one each for match/substitution, deletion, insertion)
      */
     protected int[][][] scores;
     /**
      * Friendly name of each copy of the scoring matrix.
-     * The number of elements must match the number of elements in third dimension of @see scores 
+     * The number of elements must match the number of elements in third dimension of @see scores
      */
     private String[] types;
     protected long time = -1;
@@ -323,12 +323,12 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
             for (int i = 0; i < problems.size(); i++) {
             	Subproblem subproblem = problems.get(i);
             	for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
-                	
-            		traceback[x] = 
-                		
-            		  linear ? 
-                		setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) : 
-                		
+
+            		traceback[x] =
+
+            		  linear ?
+                		setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) :
+
                 		setScoreVector(x, subproblem, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
                 }
             }
@@ -340,14 +340,14 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
             }
         } else {
             for (int x = 0; x < dim[0]; x++) {
-            	
-            	traceback[x] = 
-            			
-            	  linear ? 
+
+            	traceback[x] =
+
+            	  linear ?
            			setScoreVector(x, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
-                    
+
            			setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
-           				
+
                 if (xyMax[0] == x) {
                     score = scores[x][xyMax[1]][0];
                 }

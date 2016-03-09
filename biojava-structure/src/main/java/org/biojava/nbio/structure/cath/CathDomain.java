@@ -172,14 +172,14 @@ public class CathDomain implements Serializable, StructureIdentifier {
     public String getPdbId() {
          return getPdbIdAndChain();
     }
-    
+
     /**
      * Returns the PDB ID.
      */
     public String getThePdbId() {
     	return domainName.substring(0, 4);
     }
-    
+
     /**
      * Returns a string of the form {@code PDBID.CHAIN}.
      * For example: {@code 1hiv.A}.

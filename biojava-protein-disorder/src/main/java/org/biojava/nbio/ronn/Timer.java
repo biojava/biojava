@@ -1,8 +1,8 @@
-/* 
+/*
  * @(#)Timer.java	1.0 June 2010
- * 
+ *
  * Copyright (c) 2010 Peter Troshin
- *  
+ *
  *        BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * counters, one for long time intervals, to measure time between the start and
  * end of the application for instance, and another for short events, to measure
  * how long it took to reach a next block of code.
- * 
+ *
  * @author Peter Troshin
  * @version 1.0
  * @since 3.0.2

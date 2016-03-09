@@ -78,16 +78,16 @@ public class SystematicSolver implements QuatSymmetrySolver {
             for (int j = 0; j < n; j++) {
                 permutation.add(perm[j]);
             }
-            
+
             if (! isValidPermutation(permutation)) {
                 continue;
             }
-            
+
             boolean newPermutation = evaluatePermutation(permutation);
             if (newPermutation) {
             	completeRotationGroup();
             }
-            
+
             if (rotations.getOrder() >= subunits.getSubunitCount()) {
             	return;
             }
@@ -114,7 +114,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
         s.setScores(scores);
         return s;
     }
-    
+
     private void completeRotationGroup() {
     	PermutationGroup g = new PermutationGroup();
     	for (int i = 0; i < rotations.getOrder(); i++) {
@@ -122,14 +122,14 @@ public class SystematicSolver implements QuatSymmetrySolver {
     		g.addPermutation(s.getPermutation());
     	}
     	g.completeGroup();
-    	
+
  //   	System.out.println("Completing rotation group from: " +symmetryOperations.getSymmetryOperationCount() + " to " + g.getPermutationCount());
-    	
+
     	// the group is complete, nothing to do
     	if (g.getOrder() == rotations.getOrder()) {
     		return;
     	}
-    	
+
   //  	System.out.println("complete group: " +  rotations.getOrder() +"/" + g.getOrder());
     	// try to complete the group
     	for (int i = 0; i < g.getOrder(); i++) {
@@ -140,22 +140,22 @@ public class SystematicSolver implements QuatSymmetrySolver {
     		}
     	}
     }
-    
+
     private boolean isValidPermutation(List<Integer> permutation) {
     	if (permutation.size() == 0) {
     		return false;
     	}
-        
+
     	// if this permutation is a duplicate, return false
     	if (hashCodes.contains(permutation)) {
     		return false;
     	}
-        
+
         // check if permutation is pseudosymmetric
         if (! isAllowedPermuation(permutation)) {
         	return false;
         }
-        
+
         // get fold and make sure there is only one E (fold=1) permutation
         int fold = PermutationGroup.getOrder(permutation);
         if (rotations.getOrder() > 1 && fold == 1) {
@@ -164,7 +164,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
         if (fold == 0 || subunits.getSubunitCount() % fold != 0) {
         	return false;
         }
-        
+
         // if this permutation is a duplicate, returns false
         return hashCodes.add(permutation);
     }
@@ -179,7 +179,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
     	}
     	return true;
     }
-    
+
 	private boolean evaluatePermutation(List<Integer> permutation) {
 		// permutate subunits
 		for (int j = 0, n = subunits.getSubunitCount(); j < n; j++) {

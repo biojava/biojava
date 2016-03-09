@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 21, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -43,7 +43,7 @@ import static org.junit.Assert.assertNotNull;
 public class LoadOldXMLfileTest {
 
 	@Test
-	public void testLoadOldXMLFile1() throws IOException, StructureException { 
+	public void testLoadOldXMLFile1() throws IOException, StructureException {
 
 
 		String name1="1P80.D";
@@ -53,7 +53,7 @@ public class LoadOldXMLfileTest {
 
 
 	}
-   
+
 	@Test
 	public void testLoadOldXMLFile2() throws IOException, StructureException {
 
@@ -66,7 +66,7 @@ public class LoadOldXMLfileTest {
 
 	}
 
-   
+
    private void loadOldXMLFile(String name1, String name2) throws IOException, StructureException {
 
       System.out.println("loading " + name1 + " " + name2);
@@ -89,7 +89,7 @@ public class LoadOldXMLfileTest {
 
 
    }
-   
+
    public static String convertStreamToString(InputStream stream) throws IOException {
       BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
       StringBuilder sb = new StringBuilder();

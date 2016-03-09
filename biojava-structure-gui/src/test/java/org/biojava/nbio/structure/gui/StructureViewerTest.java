@@ -35,7 +35,7 @@ import java.awt.*;
  * @author Jules
  */
 public class StructureViewerTest extends TestCase {
-    
+
     public StructureViewerTest(String testName) {
         super(testName);
     }
@@ -54,7 +54,7 @@ public class StructureViewerTest extends TestCase {
      * Test of setStructure method, of class StructureViewer.
      */
     public void testSetStructure() {
-        
+
     	if (  java.awt.GraphicsEnvironment.isHeadless())
     		return;
         Structure structure = null;
@@ -70,7 +70,7 @@ public class StructureViewerTest extends TestCase {
     public void testRepaint() {
     	if (  java.awt.GraphicsEnvironment.isHeadless())
     		return;
-        
+
         StructureViewer instance = new StructureViewerImpl();
         instance.repaint();
         // TODO review the generated test code and remove the default call to fail.
@@ -83,7 +83,7 @@ public class StructureViewerTest extends TestCase {
     public void testSetSelection() {
     	if (  java.awt.GraphicsEnvironment.isHeadless())
     		return;
-        
+
         Selection selection = null;
         StructureViewer instance = new StructureViewerImpl();
         instance.setSelection(selection);
@@ -97,7 +97,7 @@ public class StructureViewerTest extends TestCase {
     public void testGetSelection() {
     	if (  java.awt.GraphicsEnvironment.isHeadless())
     		return;
-        
+
         StructureViewer instance = new StructureViewerImpl();
         Selection expResult = null;
         Selection result = instance.getSelection();
@@ -112,8 +112,8 @@ public class StructureViewerTest extends TestCase {
     public void testSetColor() {
     	if (  java.awt.GraphicsEnvironment.isHeadless())
     		return;
-    	
-        
+
+
         Color red = null;
         StructureViewer instance = new StructureViewerImpl();
         instance.setColor(red);
@@ -127,7 +127,7 @@ public class StructureViewerTest extends TestCase {
     public void testGetColor() {
     	if (  java.awt.GraphicsEnvironment.isHeadless())
     		return;
-        
+
         StructureViewer instance = new StructureViewerImpl();
         Color expResult = null;
         Color result = instance.getColor();
@@ -142,7 +142,7 @@ public class StructureViewerTest extends TestCase {
     public void testSetStyle() {
     	if (  java.awt.GraphicsEnvironment.isHeadless())
     		return;
-        
+
         RenderStyle wireframe = null;
         StructureViewer instance = new StructureViewerImpl();
         instance.setStyle(wireframe);

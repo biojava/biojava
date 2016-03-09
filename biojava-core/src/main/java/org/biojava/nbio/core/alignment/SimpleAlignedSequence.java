@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> implements Serializable, AlignedSequence<S, C> {
 
-    
+
 	private static final long serialVersionUID = 1L;
 
 	private static final String gap = "-";

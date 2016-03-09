@@ -145,13 +145,13 @@ public class GenbankProxySequenceReaderTest {
                     AbstractSequence<?> parentSeq = seq.getParentSequence();
                     Assert.assertNotNull(parentSeq);
 
-                    /* 
+                    /*
                      Sometimes protein might have many 'parents' with different accessions
                      so accession is not set.
-                
+
                      That test is always failed
                      */
-                    //Assert.assertTrue(parentSeq.getAccession()); 
+                    //Assert.assertTrue(parentSeq.getAccession());
                     Assert.assertTrue(!parentSeq.getSequenceAsString().isEmpty());
                 }
             }

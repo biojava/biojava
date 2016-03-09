@@ -78,7 +78,7 @@ public class SiftsXMLParser {
 		}
 	}
 
-	
+
 
 		private void parseDocument(){
 			//get the root element
@@ -134,7 +134,7 @@ public class SiftsXMLParser {
 		}
 
 		/** segId="4hhb_A_1_140" start="1" end="140"
-		 * 
+		 *
 		 * @param el
 		 * @return
 		 */
@@ -147,7 +147,7 @@ public class SiftsXMLParser {
 
 			if ( debug )
 				System.out.println("parsed " + seg);
-			
+
 			// get nodelist of segments...
 			NodeList nl = el.getElementsByTagName("listResidue");
 			if(nl != null && nl.getLength() > 0) {
@@ -191,15 +191,15 @@ public class SiftsXMLParser {
 		private SiftsResidue getResidue(Element residue) {
 
 			SiftsResidue res = new SiftsResidue();
-			
+
 			String dbResNumS = residue.getAttribute("dbResNum");
 			res.setNaturalPos(Integer.parseInt(dbResNumS));
-			
+
 			String seqResName = residue.getAttribute("dbResName");
 			res.setSeqResName(seqResName);
-			
+
 			boolean observed = true;
-			
+
 			List<String> details = getTextValues(residue, "residueDetail");
 
 			if ( details != null && details.contains("Not_Observed")){
@@ -209,7 +209,7 @@ public class SiftsXMLParser {
 			//else if ( detail != null && detail.trim().equalsIgnoreCase("Conflict")){
 				//
 			//}
-						
+
 			NodeList nl = residue.getElementsByTagName("crossRefDb");
 			if(nl != null && nl.getLength() > 0) {
 				for(int i = 0 ; i < nl.getLength();i++) {
@@ -224,7 +224,7 @@ public class SiftsXMLParser {
 					String dbChainId = crossRefEl.getAttribute("dbChainId");
 
 				//	System.out.println(dbSource + " " + dbCoordSys + " " + dbAccessionId + " " + dbResNum + " " + dbResName + " " + dbChainId);
-					
+
 					if ( dbSource.equals("PDB") && ( dbCoordSys.equals("PDBresnum"))){
 						res.setPdbResNum(dbResNum);
 						res.setPdbResName(dbResName);
@@ -281,9 +281,9 @@ public class SiftsXMLParser {
 	}
 
 
-		
 
-		
+
+
 
 
 	}

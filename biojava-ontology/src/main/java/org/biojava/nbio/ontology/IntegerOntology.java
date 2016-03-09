@@ -49,7 +49,7 @@ implements Ontology {
 		return "Ontology containing all integers";
 	}
 
-	public void setDescription(String description){		
+	public void setDescription(String description){
 	}
 
 	public Set getTerms() {

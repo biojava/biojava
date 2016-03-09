@@ -241,7 +241,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 
         }
     };
-    
+
     /**
      * Sort features by type
      */
@@ -270,7 +270,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	public void setUserObject(Object userObject) {
         this.userObject = userObject;
     }
-    
+
 	@Override
 	public Map<String, List<Qualifier>> getQualifiers() {
 		// TODO Auto-generated method stub
@@ -281,7 +281,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
 		// TODO Auto-generated method stub
 		Qualifiers = qualifiers;
-		
+
 	}
 
 	@Override
@@ -296,7 +296,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
             vals.add(qualifier);
             Qualifiers.put(key, vals);
         }
-		
+
 	}
 
 }

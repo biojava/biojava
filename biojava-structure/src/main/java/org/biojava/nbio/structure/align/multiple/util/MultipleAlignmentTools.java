@@ -68,7 +68,7 @@ import org.forester.phylogeny.Phylogeny;
  * <li>Sort Blocks in a MultipleAlignment by a specified row
  * <li>Convert a MultipleAlignment to a MultipleSequenceAlignment
  * </ul>
- * 
+ *
  * @author Spencer Bliven
  * @author Aleix Lafita
  * @since 4.1.0
@@ -87,7 +87,7 @@ public class MultipleAlignmentTools {
 	 * sequential. Gaps are represented by '-'. Separation between different
 	 * Blocks is indicated by a gap in all positions, meaning that there is a
 	 * possible discontinuity.
-	 * 
+	 *
 	 * @param alignment
 	 *            input MultipleAlignment
 	 * @param mapSeqToStruct
@@ -301,7 +301,7 @@ public class MultipleAlignmentTools {
 	 * sequential. Gaps are represented by '-'. Separation between different
 	 * Blocks is indicated by a gap in all positions, meaning that there is a
 	 * possible discontinuity.
-	 * 
+	 *
 	 * @param alignment
 	 *            input MultipleAlignment
 	 * @return String for each row in the alignment, giving the 1-letter code
@@ -458,7 +458,7 @@ public class MultipleAlignmentTools {
 	 * represented by '-'. Separation between different Blocks is indicated by a
 	 * gap in all positions, meaning that there is something unaligned
 	 * inbetween.
-	 * 
+	 *
 	 * @param alignment
 	 *            input MultipleAlignment
 	 * @return String for each row in the alignment, giving the 1-letter code
@@ -471,7 +471,7 @@ public class MultipleAlignmentTools {
 	/**
 	 * Returns the Atom of the specified structure that is aligned in the
 	 * sequence alignment position specified.
-	 * 
+	 *
 	 * @param multAln
 	 *            the MultipleAlignment object from where the sequence alignment
 	 *            has been generated
@@ -520,7 +520,7 @@ public class MultipleAlignmentTools {
 	/**
 	 * Returns the block number of a specified position in the sequence
 	 * alignment, given the mapping from structure to function.
-	 * 
+	 *
 	 * @param multAln
 	 *            the MultipleAlignment object from where the sequence alignment
 	 *            has been generated.
@@ -560,7 +560,7 @@ public class MultipleAlignmentTools {
 	 * <p>
 	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment
 	 * length.
-	 * 
+	 *
 	 * @param alignment
 	 *            MultipleAlignment
 	 * @return Matrix containing all average residue distances
@@ -576,7 +576,7 @@ public class MultipleAlignmentTools {
 	 * <p>
 	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment
 	 * length.
-	 * 
+	 *
 	 * @param transformed
 	 *            List of Atom arrays containing only the aligned atoms of each
 	 *            structure, or null if there is a gap.
@@ -643,7 +643,7 @@ public class MultipleAlignmentTools {
 	 * order as in their parent structure. If the alignment blocks contain null
 	 * residues (gaps), then the returned array will also contain null Atoms in
 	 * the same positions.
-	 * 
+	 *
 	 * @param alignment
 	 *            MultipleAlignment
 	 * @return List of Atom arrays of only the aligned atoms of every structure
@@ -716,7 +716,7 @@ public class MultipleAlignmentTools {
 	/**
 	 * Calculate a List of alignment indicies that correspond to the core of a
 	 * Block, which means that all structures have a residue in that positon.
-	 * 
+	 *
 	 * @param block
 	 *            alignment Block
 	 * @return List of positions in the core of the alignment
@@ -742,7 +742,7 @@ public class MultipleAlignmentTools {
 	/**
 	 * Sort blocks so that the specified row is in sequential order. The sort
 	 * happens in place.
-	 * 
+	 *
 	 * @param blocks
 	 *            List of blocks
 	 * @param sortedIndex
@@ -777,7 +777,7 @@ public class MultipleAlignmentTools {
 	/**
 	 * Convert a MultipleAlignment into a MultipleSequenceAlignment of AminoAcid
 	 * residues. This method is only valid for protein structure alignments.
-	 * 
+	 *
 	 * @param msta
 	 *            Multiple Structure Alignment
 	 * @return MultipleSequenceAlignment of protein sequences
@@ -818,7 +818,7 @@ public class MultipleAlignmentTools {
 	/**
 	 * Calculate the RMSD matrix of a MultipleAlignment, that is, entry (i,j) of
 	 * the matrix contains the RMSD between structures i and j.
-	 * 
+	 *
 	 * @param msa
 	 *            Multiple Structure Alignment
 	 * @return Matrix of RMSD with size the number of structures squared
@@ -846,7 +846,7 @@ public class MultipleAlignmentTools {
 	/**
 	 * Calculate a phylogenetic tree of the MultipleAlignment using Kimura
 	 * distances and the Neighbor Joining algorithm from forester.
-	 * 
+	 *
 	 * @param msta
 	 *            MultipleAlignment of protein structures
 	 * @return Phylogeny phylogenetic tree
@@ -870,7 +870,7 @@ public class MultipleAlignmentTools {
 	 * dissimilarity scores (DS), based in SDM Substitution Matrix (ideal for
 	 * distantly related proteins, structure-derived) and the Neighbor Joining
 	 * algorithm from forester.
-	 * 
+	 *
 	 * @param msta
 	 *            MultipleAlignment of protein structures
 	 * @return Phylogeny phylogenetic tree
@@ -892,7 +892,7 @@ public class MultipleAlignmentTools {
 	/**
 	 * Calculate a phylogenetic tree of the MultipleAlignment using RMSD
 	 * distances and the Neighbor Joining algorithm from forester.
-	 * 
+	 *
 	 * @param msta
 	 *            MultipleAlignment of protein structures
 	 * @return Phylogeny phylogenetic tree

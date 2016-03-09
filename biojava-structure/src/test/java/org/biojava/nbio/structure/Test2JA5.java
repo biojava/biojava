@@ -66,7 +66,7 @@ public class Test2JA5 {
         }
         assertNull(nChain);
     }
-    
+
     @Test
     public void test2JA5noHeader() throws IOException, StructureException {
 

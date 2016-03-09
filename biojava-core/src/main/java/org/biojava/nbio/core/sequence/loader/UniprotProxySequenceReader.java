@@ -69,7 +69,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- * 
+ *
  * Pass in a Uniprot ID and this ProxySequenceReader when passed to a ProteinSequence will get the sequence data and other data elements
  * associated with the ProteinSequence by Uniprot. This is an example of how to map external databases of proteins and features to the BioJava3
  * ProteinSequence.
@@ -87,7 +87,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	private static final String SPID_PATTERN = "[OPQ][0-9][A-Z0-9]{3}[0-9]";
 	private static final String TREMBLID_PATTERN = "[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}";
 	public static final Pattern UP_AC_PATTERN = Pattern.compile("(" + SPID_PATTERN + "|" + TREMBLID_PATTERN + ")");
-	
+
     private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
     private static String uniprotDirectoryCache = null;
     private String sequence;
@@ -134,7 +134,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @param compoundSet
      * @return UniprotProxySequenceReader
      * @throws Exception
-     */    
+     */
     public static <C extends Compound> UniprotProxySequenceReader<C> parseUniprotXMLString(String xml, CompoundSet<C> compoundSet) {
         try {
             Document document = XMLHelper.inputStreamToDocument(new ByteArrayInputStream(xml.getBytes()));
@@ -153,10 +153,10 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
     /**
      * Once the sequence is retrieved set the contents and make sure everything this is valid
      * @param sequence
-     * @throws CompoundNotFoundException 
+     * @throws CompoundNotFoundException
      */
     @Override
-	public void setContents(String sequence) throws CompoundNotFoundException { 
+	public void setContents(String sequence) throws CompoundNotFoundException {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
         this.sequence = sequence;
@@ -317,9 +317,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
     /**
      * Pull uniprot accessions associated with this sequence
      * @return
-     * @throws XPathExpressionException 
+     * @throws XPathExpressionException
      */
-    public ArrayList<AccessionID> getAccessions() throws XPathExpressionException { 
+    public ArrayList<AccessionID> getAccessions() throws XPathExpressionException {
         ArrayList<AccessionID> accessionList = new ArrayList<AccessionID>();
         if (uniprotDoc == null) {
             return accessionList;
@@ -334,13 +334,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
         return accessionList;
     }
-    
+
     /**
      * Pull uniprot protein aliases associated with this sequence
      * @return
-     * @throws XPathExpressionException 
+     * @throws XPathExpressionException
      */
-    public ArrayList<String> getAliases() throws XPathExpressionException { 
+    public ArrayList<String> getAliases() throws XPathExpressionException {
         ArrayList<String> aliasList = new ArrayList<String>();
         if (uniprotDoc == null) {
             return aliasList;
@@ -353,7 +353,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
             Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
             aliasList.add(fullNameElement.getTextContent());
         }
-                
+
         return aliasList;
     }
 
@@ -379,19 +379,19 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         if (uniprotDirectoryCache != null && uniprotDirectoryCache.length() > 0) {
             sb = fetchFromCache(accession);
         }
-        
+
         // http://www.uniprot.org/uniprot/?query=SORBIDRAFT_03g027040&format=xml
         if (sb.length() == 0) {
         	String uniprotURL = getUniprotbaseURL() + "/uniprot/" + accession.toUpperCase() + ".xml";
             logger.info("Loading: {}", uniprotURL);
             sb = fetchUniprotXML(uniprotURL);
-            
+
             int index = sb.indexOf("xmlns="); //strip out name space stuff to make it easier on xpath
             if (index != -1) {
                 int lastIndex = sb.indexOf(">", index);
                 sb.replace(index, lastIndex, "");
             }
-            if (uniprotDirectoryCache != null && uniprotDirectoryCache.length() > 0) 
+            if (uniprotDirectoryCache != null && uniprotDirectoryCache.length() > 0)
             	writeCache(sb,accession);
         }
 
@@ -417,7 +417,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	private StringBuilder fetchUniprotXML(String uniprotURL)
 			throws IOException, CompoundNotFoundException {
-		
+
 		StringBuilder sb = new StringBuilder();
 		URL uniprot = new URL(uniprotURL);
 		int attempt = 5;
@@ -478,7 +478,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @return
      */
     private String getSequence(Document uniprotDoc)  {
-    	
+
     	try {
     		Element uniprotElement = uniprotDoc.getDocumentElement();
     		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
@@ -529,7 +529,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
     }
 
     public static void main(String[] args) {
-    	
+
         try {
             UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>("YA745_GIBZE", AminoAcidCompoundSet.getAminoAcidCompoundSet());
             ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
@@ -542,10 +542,10 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
     }
 
     /**
-     * Get the gene name associated with this sequence. 
+     * Get the gene name associated with this sequence.
      * @return
      */
-    public String getGeneName() { 
+    public String getGeneName() {
     	if (uniprotDoc == null) {
     		return "";
     	}
@@ -571,7 +571,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * Get the organism name assigned to this sequence
      * @return
      */
-    public String getOrganismName() { 
+    public String getOrganismName() {
         if (uniprotDoc == null) {
             return "";
         }
@@ -599,7 +599,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @return
      */
     @Override
-	public ArrayList<String> getKeyWords() {	
+	public ArrayList<String> getKeyWords() {
         ArrayList<String> keyWordsList = new ArrayList<String>();
         if (uniprotDoc == null) {
             return keyWordsList;

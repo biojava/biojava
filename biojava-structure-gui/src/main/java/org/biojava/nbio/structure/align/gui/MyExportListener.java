@@ -52,7 +52,7 @@ public void actionPerformed(ActionEvent arg0)
 
          try {
             PrintWriter pw = new PrintWriter(new FileWriter(file));
-            pw.println(s.toPDB());                   
+            pw.println(s.toPDB());
             pw.close();
          } catch (IOException e){
         	 JOptionPane.showMessageDialog(null,"Could not export file. Exception: " + e.getMessage());

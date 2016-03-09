@@ -36,18 +36,18 @@ import java.util.List;
 public class MomentsOfInertia {
     private List<Point3d> points = new ArrayList<Point3d>();
     private List<Double> masses = new ArrayList<Double>();
-    
+
     private boolean modified = true;
-    
+
     private double[] principalMomentsOfInertia = new double[3];
     private Vector3d[] principalAxes = new Vector3d[3];
 
     public enum SymmetryClass {LINEAR, PROLATE, OBLATE, SYMMETRIC, ASYMMETRIC};
-    
+
     /** Creates a new instance of MomentsOfInertia */
     public MomentsOfInertia() {
     }
-    
+
     public void addPoint(Point3d point, double mass) {
         points.add(point);
         masses.add(mass);
@@ -58,10 +58,10 @@ public class MomentsOfInertia {
     	if (points.size() == 0) {
     		throw new IllegalStateException("MomentsOfInertia: no points defined");
     	}
-    	
+
         Point3d center = new Point3d();
         double totalMass = 0.0;
-        
+
         for (int i = 0, n = points.size(); i < n; i++) {
             double mass = masses.get(i);
             totalMass += mass;
@@ -70,7 +70,7 @@ public class MomentsOfInertia {
         center.scale(1.0/totalMass);
         return center;
     }
-    
+
     public double[] getPrincipalMomentsOfInertia() {
         if (modified) {
             diagonalizeTensor();
@@ -78,7 +78,7 @@ public class MomentsOfInertia {
         }
         return principalMomentsOfInertia;
     }
-    
+
     public Vector3d[] getPrincipalAxes() {
         if (modified) {
             diagonalizeTensor();
@@ -106,7 +106,7 @@ public class MomentsOfInertia {
     	}
     	return r;
     }
-    
+
     public double getRadiusOfGyration() {
     	Point3d c = centerOfMass();
     	Point3d t = new Point3d();
@@ -154,7 +154,7 @@ public class MomentsOfInertia {
         double c2 = 1.0f - (ic - ib) / (ic + ib);
         return Math.max(c1, c2);
     }
-    
+
     public double getAsymmetryParameter(double threshold) {
        if (modified) {
             diagonalizeTensor();
@@ -168,38 +168,38 @@ public class MomentsOfInertia {
        double c = 1.0/principalMomentsOfInertia[2];
        return (2 * b - a - c) / (a - c);
     }
-    
+
     public double[][] getInertiaTensor() {
-        Point3d p = new Point3d();      
+        Point3d p = new Point3d();
         double[][] tensor = new double[3][3];
-        
+
         // calculate the inertia tensor at center of mass
         Point3d com = centerOfMass();
-        
+
         for (int i = 0, n = points.size(); i < n; i++) {
             double mass = masses.get(i);
             p.sub(points.get(i), com);
-            
+
             tensor[0][0] += mass * (p.y * p.y + p.z * p.z);
             tensor[1][1] += mass * (p.x * p.x + p.z * p.z);
             tensor[2][2] += mass * (p.x * p.x + p.y * p.y);
-            
+
             tensor[0][1] -= mass * p.x * p.y;
             tensor[0][2] -= mass * p.x * p.z;
             tensor[1][2] -= mass * p.y * p.z;
         }
-        
+
         tensor[1][0] = tensor[0][1];
         tensor[2][0] = tensor[0][2];
         tensor[2][1] = tensor[1][2];
-        
+
         return tensor;
     }
-    
+
     private void diagonalizeTensor() {
-        Matrix m = new Matrix(getInertiaTensor());     
+        Matrix m = new Matrix(getInertiaTensor());
         EigenvalueDecomposition eig = m.eig();
-        
+
         principalMomentsOfInertia = eig.getRealEigenvalues();
         double[][] eigenVectors = eig.getV().getArray();
         principalAxes[0] = new Vector3d(eigenVectors[0][0], eigenVectors[1][0],eigenVectors[2][0]);

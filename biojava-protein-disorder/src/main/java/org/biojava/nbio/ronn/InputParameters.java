@@ -1,9 +1,9 @@
 /*
- *  
+ *
  * @(#)InputParameters.java 1.0 September 2009
- * 
+ *
  * Copyright (c) 2009 Peter Troshin
- * 
+ *
  *                    BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -32,7 +32,7 @@ import java.io.*;
 
 /**
  * Holder for input parameters of the {@link ORonn} class
- * 
+ *
  * @author Peter Troshin
  * @version 1.0
  * @since 3.0.2
@@ -116,7 +116,7 @@ final class InputParameters {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      * @throws NumberFormatException

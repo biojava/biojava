@@ -33,7 +33,7 @@ import java.io.Serializable;
 public class AFP implements Serializable {
 
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = 3901209995477111829L;
    int p1;
@@ -70,7 +70,7 @@ public String toString(){
       return buf.toString();
    }
 
- 
+
    public long getId()
    {
       return id;

@@ -228,7 +228,7 @@ public class DNATest {
     }
 
     @Test
-    public void kmerNonOverlap() throws CompoundNotFoundException { 
+    public void kmerNonOverlap() throws CompoundNotFoundException {
         DNASequence d = new DNASequence("ATGTGCA");
         List<SequenceView<NucleotideCompound>> l =
                 SequenceMixin.nonOverlappingKmers(d, 3);
@@ -238,7 +238,7 @@ public class DNATest {
     }
 
     @Test
-    public void kmerOverlap() throws CompoundNotFoundException { 
+    public void kmerOverlap() throws CompoundNotFoundException {
         DNASequence d = new DNASequence("ATGTT");
         List<SequenceView<NucleotideCompound>> l =
                 SequenceMixin.overlappingKmers(d, 3);
@@ -249,7 +249,7 @@ public class DNATest {
     }
 
     @Test
-    public void kmerOverlapExceedingSequenceLength() throws CompoundNotFoundException { 
+    public void kmerOverlapExceedingSequenceLength() throws CompoundNotFoundException {
         DNASequence d = new DNASequence("ATGTT");
         List<SequenceView<NucleotideCompound>> l =
                 SequenceMixin.overlappingKmers(d, 2);
@@ -273,7 +273,7 @@ public class DNATest {
 
         assertTrue("Asserting sequences are identical; backing stores differ", SequenceMixin.sequenceEquality(d, bsr));
         assertTrue("Asserting sequences are identical ignoring case; backing stores differ", SequenceMixin.sequenceEqualityIgnoreCase(d, bsrCI));
-    }   
+    }
 
 //  @Test
 //  public void randomTwoBit() throws Exception {
@@ -318,7 +318,7 @@ public class DNATest {
         return getSeq(null);
     }
 
-    private DNASequence getSeq(final String seq) throws CompoundNotFoundException { 
+    private DNASequence getSeq(final String seq) throws CompoundNotFoundException {
         String target = (seq == null) ? "ATGC" : seq;
         return new DNASequence(target);
     }

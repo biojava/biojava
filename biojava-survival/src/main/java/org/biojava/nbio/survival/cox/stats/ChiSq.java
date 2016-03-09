@@ -38,7 +38,7 @@ public class ChiSq {
     public static double norm(double z) {
         return ChiSq.chiSq(z * z, 1);
     }
-    
+
     /**
      *
      * @param x
@@ -65,8 +65,8 @@ public class ChiSq {
         return 1 - p;
     }
 
-    
-    
+
+
     /**
      * @param args the command line arguments
      */

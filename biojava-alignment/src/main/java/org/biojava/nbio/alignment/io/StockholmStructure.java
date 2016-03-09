@@ -1,18 +1,18 @@
 /*
  * BioJava development code
- * 
+ *
  * This code may be freely distributed and modified under the terms of the GNU Lesser General Public Licence. This
  * should be distributed with the code. If you do not have a copy, see:
- * 
+ *
  * http://www.gnu.org/copyleft/lesser.html
- * 
+ *
  * Copyright for this code is held jointly by the individual authors. These should be listed in @author doc comments.
- * 
+ *
  * For more information on the BioJava project and its aims, or to join the biojava-l mailing list, visit the home page
  * at:
- * 
+ *
  * http://www.biojava.org/
- * 
+ *
  * Created on August 13, 2010 Author: Mark Chapman
  */
 
@@ -34,10 +34,10 @@ import java.util.Map;
 /**
  * Stores all the content of a Stockholm file. <i><b>N.B.: This structure will undergo several enhancements later on.
  * Don't depend on it in a final code, otherwise it will be hard to maintain.</b></i>
- * 
+ *
  * In general, Stockholm File contains the alignment mark-up lines.<br>
  * <br>
- * 
+ *
  * <Table border="1" align="center">
  * <tr>
  * <td><b>Header Section</b></td>
@@ -52,10 +52,10 @@ import java.util.Map;
  * <td><B>Alignment Section</B></td>
  * </tr>
  * </table>
- * 
+ *
  * Sequence letters may include any characters except whitespace. Gaps may be indicated by "." or "-".<br>
  * Mark-up lines may include any characters except whitespace. Use underscore ("_") instead of space.<br>
- * 
+ *
  * <Table border="1">
  * <th>section field</th>
  * <th>preferred location</th>
@@ -73,14 +73,14 @@ import java.util.Map;
  * <td>Just below the corresponding sequence</td>
  * </tr>
  * </table>
- * 
+ *
  * @since 3.0.5
  * @author Amr AL-Hossary
  * @author Marko Vaz
- * 
+ *
  */
 public class StockholmStructure {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(StockholmStructure.class);
 
     public static final String PFAM = "PFAM";
@@ -109,7 +109,7 @@ public class StockholmStructure {
 
     /**
      * Actually this function should be called appendToSequence
-     * 
+     *
      * @param seqName
      * @param seqText
      * @deprecated Use {@link #appendToSequence(String,String)} instead
@@ -222,7 +222,7 @@ public class StockholmStructure {
 
     /**
      * used to retrieve sequences from the structure
-     * 
+     *
      * @return Biosequences (case sensitive)
      * @see #getBioSequences(boolean)
      * @see #getBioSequences(boolean, String)
@@ -233,7 +233,7 @@ public class StockholmStructure {
 
     /**
      * This function tolerates mixed case letters, and allows for forcing the output biosequence type (PFAM/RFAM).
-     * 
+     *
      * @param ignoreCase
      *            if <code>true</code>, the function will deal with small letters as if they are capital ones
      * @param forcedSequenceType
@@ -280,7 +280,7 @@ public class StockholmStructure {
     /**
      * Because some database files have incorrectly small letters (e.g. Pfam23 structure PF00389.22 sequence
      * TKRA_BACSU/6-322), this function is used to ignore the small letters case.
-     * 
+     *
      * @param ignoreCase
      * @return
      * @see #getBioSequences()
@@ -292,7 +292,7 @@ public class StockholmStructure {
 
     /**
      * Returns an array with the following sequence related content: name, start, end.
-     * 
+     *
      * @param sequenceName
      *            the sequence from where to extract the content. It is supposed that it follows the following
      *            convention name/start-end (e.g.: COATB_BPIKE/30-81)

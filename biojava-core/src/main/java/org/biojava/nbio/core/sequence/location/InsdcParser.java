@@ -50,14 +50,14 @@ import java.util.regex.Pattern;
 public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
     private final DataSource dataSource;
-    
+
         /**
      * parse a location. if group(1) is null than the feature is on the positive
      * strand, group(2) start position, group(3) end position.
      */
     // why in the location the first character was ignored?
     //protected static final Pattern singleLocationPattern = Pattern.compile("(?:[A-Z]([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
-    
+
     // fixed issue #254
     protected static final Pattern singleLocationPattern = Pattern.compile("(?:([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
     /**
@@ -94,10 +94,10 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
      * features
      */
     protected Integer featureGlobalStart, featureGlobalEnd;
-    
+
     //private S referenceSequence = new org.biojava.nbio.core.sequence.DNASequence();
     private AbstractSequence referenceSequence = new DNASequence();
-    
+
     enum complexFeaturesAppendEnum {
 
         FLATTEN, HIERARCHICAL;
@@ -126,7 +126,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
         return dataSource;
     }
 
-    
+
 
     /**
      * Main method for parsing a location from a String instance
@@ -138,19 +138,19 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
     public Location parse(String locationString) throws ParserException {
         featureGlobalStart = Integer.MAX_VALUE;
         featureGlobalEnd = 1;
-        
+
         Location l;
         List<Location> ll = parseLocationString(locationString, 1);
-        
+
         if (ll.size() == 1) {
             l = ll.get(0);
         } else {
             l = new SimpleLocation(
-                    featureGlobalStart, 
+                    featureGlobalStart,
                     featureGlobalEnd,
                     Strand.UNDEFINED,
                     ll);
-        }  
+        }
         return l;
     }
 
@@ -167,7 +167,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
         // use parse(String s) instead!
         return null;
     }
-    
+
     private List<Location> parseLocationString(String string, int versus) throws ParserException {
         Matcher m;
         List<Location> boundedLocationsCollection = new ArrayList<Location>();
@@ -200,7 +200,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                             Point max = Location.Tools.getMax(subLocations).getEnd();
                             AbstractLocation motherLocation
                                     = new SimpleLocation(
-                                            min, 
+                                            min,
                                             max
                                     );
 
@@ -243,7 +243,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                         end,
                         s
                 );
-                
+
                 if(m.group(4) != null && m.group(4).equals("^")) l.setBetweenCompounds(true);
 
                 if (m.group(2).equals("<")) {
@@ -252,7 +252,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                 if (m.group(5) != null && (m.group(5).equals(">") || m.group(7).equals(">"))) {
                     l.setPartialOn3prime(true);
                 }
-                
+
                 if (!(accession == null || "".equals(accession))) l.setAccession(new AccessionID(accession));
 
                 boundedLocationsCollection.add(l);
@@ -262,8 +262,8 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
         return boundedLocationsCollection;
     }
-    
-    
+
+
     private List<String> splitString(String input) {
         List<String> result = new ArrayList<String>();
         int start = 0;
@@ -285,17 +285,17 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
         }
         return result;
     }
-    
+
     private Strand getGroupLocationStrand(List<Location> ll){
         Strand returnStrand = null;
-        
+
         for (Location l: ll) {
             if (returnStrand == null) returnStrand = l.getStrand();
             if (returnStrand != l.getStrand()) return Strand.UNDEFINED;
         }
         return returnStrand;
     }
-    
+
     public static void main(String args[]){
         String[] testStrings = {
             "J00194.1:100..202",
@@ -306,16 +306,16 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
             "order(complement(30,40),70..80),bond(34,35),join(56,80),complement(45..56)",
             "join(join(complement(30,40),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
             "complement(join(complement(2000..4000),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
-            
+
         };
         InsdcParser p = new InsdcParser();
         p.setComplexFeaturesAppendMode(complexFeaturesAppendEnum.HIERARCHICAL);
-        
+
         for (String s: testStrings){
             Location l = p.parse(s);
             System.out.println(l.toString());
         }
-        
+
     }
-    
+
 }

@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test for the evaluation of distance trees.
- * 
+ *
  * @author Aleix Lafita
  *
  */

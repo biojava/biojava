@@ -31,14 +31,14 @@ import java.lang.reflect.Field;
 public class StaticMemberPlaceHolder implements Serializable {
   private String className;
   private String fieldName;
-  
+
   public StaticMemberPlaceHolder(Field field) {
     this.className = field.getDeclaringClass().getName();
     this.fieldName = field.getName();
   }
-  
+
   protected StaticMemberPlaceHolder() {}
-  
+
   public Object readResolve() throws ObjectStreamException {
     try {
       Class c = Class.forName(className);
@@ -46,7 +46,7 @@ public class StaticMemberPlaceHolder implements Serializable {
       return f.get(null);
     } catch (Exception e) {
       throw new InvalidObjectException(
-        "Unable to retrieve static field " + fieldName + 
+        "Unable to retrieve static field " + fieldName +
         "for class " + className + " because:\n" +
         e.getMessage()
       );

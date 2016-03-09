@@ -1,18 +1,18 @@
 /*
  * BioJava development code
- * 
+ *
  * This code may be freely distributed and modified under the terms of the GNU Lesser General Public Licence. This
  * should be distributed with the code. If you do not have a copy, see:
- * 
+ *
  * http://www.gnu.org/copyleft/lesser.html
- * 
+ *
  * Copyright for this code is held jointly by the individual authors. These should be listed in @author doc comments.
- * 
+ *
  * For more information on the BioJava project and its aims, or to join the biojava-l mailing list, visit the home page
  * at:
- * 
+ *
  * http://www.biojava.org/
- * 
+ *
  * Created on August 13, 2010 Author: Mark Chapman
  */
 
@@ -43,13 +43,13 @@ import java.util.Scanner;
  * /USERMAN</a>.</li>
  * <li><a href="http://sonnhammer.sbc.su.se/Stockholm.html">http://sonnhammer.sbc.su.se/Stockholm.html</a>.</li>
  * </ul>
- * 
+ *
  * <pre>
  * Pfam DESCRIPTION OF FIELDS
- * 
+ *
  *    Compulsory fields:
  *    ------------------
- * 
+ *
  *    AC   Accession number:           Accession number in form PFxxxxx.version or PBxxxxxx.
  *    ID   Identification:             One word name for family.
  *    DE   Definition:                 Short description of family.
@@ -61,10 +61,10 @@ import java.util.Scanner;
  *    TP   Type:                       Type of family -- presently Family, Domain, Motif or Repeat.
  *    SQ   Sequence:                   Number of sequences in alignment.
  *    //                               End of alignment.
- * 
+ *
  *    Optional fields:
  *    ----------------
- * 
+ *
  *    DC   Database Comment:           Comment about database reference.
  *    DR   Database Reference:         Reference to external database.
  *    RC   Reference Comment:          Comment about literature reference.
@@ -79,18 +79,18 @@ import java.util.Scanner;
  *    NE   Pfam accession:             Indicates a nested domain.
  *    NL   Location:                   Location of nested domains - sequence ID, start and end of insert.
  *    WK   Wikipedia Reference:        Reference to wikipedia.
- * 
+ *
  *    Obsolete fields:
  *    -----------
  *    AL   Alignment method of seed:   The method used to align the seed members.
  *    AM   Alignment Method:	    The order ls and fs hits are aligned to the model to build the full align.
- * 
+ *
  * </pre>
- * 
+ *
  * @since 3.0.5
  * @author Amr AL-Hossary
  * @author Marko Vaz
- * 
+ *
  */
 public class StockholmFileParser {
 
@@ -274,7 +274,7 @@ public class StockholmFileParser {
      * This function is meant to be used for single access to specific file and it closes the file after doing its
      * assigned job. Any subsequent call to {@link #parseNext(int)} will throw an exception or will function with
      * unpredicted behavior.
-     * 
+     *
      * @param filename
      *            complete(?) path to the file from where to read the content
      * @return stockholm file content
@@ -294,9 +294,9 @@ public class StockholmFileParser {
      * Parses a Stockholm file and returns a {@link StockholmStructure} object with its content.<br>
      * This function doesn't close the file after doing its assigned job; to allow for further calls of
      * {@link #parseNext(int)}.
-     * 
+     *
      * @see #parseNext(int)
-     * 
+     *
      * @param filename
      *            file from where to read the content. see {@link InputStreamProvider} for more details.
      * @param max
@@ -317,7 +317,7 @@ public class StockholmFileParser {
      * parses {@link InputStream} and returns a the first contained alignment in a {@link StockholmStructure} object.
      * Used mainly for multiple files within the same input stream, (e.g. when reading from Pfam flat files. <br>
      * This method leaves the stream open for further calls of {@link #parseNext(int)}.
-     * 
+     *
      * @see #parseNext(int)
      * @param inStream
      *            the {@link InputStream} containing the file to read.
@@ -333,7 +333,7 @@ public class StockholmFileParser {
      * parses an {@link InputStream} and returns at maximum <code>max</code> objects contained in that file.<br>
      * This method leaves the stream open for further calls of {@link #parse(InputStream, int)} (same function) or
      * {@link #parseNext(int)}.
-     * 
+     *
      * @see #parseNext(int)
      * @param inStream
      *            the stream to parse
@@ -372,7 +372,7 @@ public class StockholmFileParser {
      * Tries to parse and return as maximum as <code>max</code> structures in the last used file or input stream.<br>
      * Please consider calling either {@link #parse(InputStream)}, {@link #parse(InputStream, int)}, or
      * {@link #parse(String, int)} before calling this function.
-     * 
+     *
      * @param max
      * @return
      * @throws IOException
@@ -384,7 +384,7 @@ public class StockholmFileParser {
     /**
      * Parses a Stockholm file and returns a {@link StockholmStructure} object with its content. This method returns
      * just after reaching the end of structure delimiter line ("//"), leaving any remaining empty lines unconsumed.
-     * 
+     *
      * @param scanner
      *            from where to read the file content
      * @return Stockholm file content, <code>null</code> if couldn't or no more structures.
@@ -523,7 +523,7 @@ public class StockholmFileParser {
      * Handles a line that corresponds to a sequence. <br>
      * e.g.: COATB_BPIKE/30-81 AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA<br>
      * N.B.: This function can't tolerate sequences with intrinsic white space.
-     * 
+     *
      * @param line
      *            the line to be parsed
      * @throws Exception
@@ -538,7 +538,7 @@ public class StockholmFileParser {
 
     /**
      * #=GF &lt;feature&gt; &lt;Generic per-File annotation, free text&gt;
-     * 
+     *
      * @param featureName
      * @param value
      *            the line to be parsed
@@ -623,7 +623,7 @@ public class StockholmFileParser {
     /**
      * usually a single line of:<br>
      * #=GC &lt;feature&gt; &lt;Generic per-Column annotation, exactly 1 char per column&gt;
-     * 
+     *
      * @param featureName
      *            the feature name :)
      * @param value
@@ -662,7 +662,7 @@ public class StockholmFileParser {
 
     /**
      * #=GS &lt;seqname&gt; &lt;feature&gt; &lt;Generic per-Sequence annotation, free text&gt;
-     * 
+     *
      * @param line
      *            the line to be parsed
      */
@@ -687,7 +687,7 @@ public class StockholmFileParser {
 
     /**
      * #=GR &lt;seqname&gt; &lt;feature&gt; &lt;Generic per-Residue annotation, exactly 1 char per residue&gt;
-     * 
+     *
      * @param line
      *            the line to be parsed
      */

@@ -22,7 +22,7 @@
 * Uses reflection to access JNLP services.
 *
 * @see
-*   <a target="_blank" 
+*   <a target="_blank"
 *     href="http://croftsoft.com/library/tutorials/browser/">
 *   Launching a Browser from Java</a>
 *
@@ -84,7 +84,7 @@ public static boolean  showDocument ( URL  url )
       method.invoke ( basicServiceObject, new Object [ ] { url } );
 
     boolean success = resultBoolean.booleanValue ( );
-    if ( ! success ) 
+    if ( ! success )
     System.out.println("invocation of method failed!");
     return success;
   }

@@ -30,7 +30,7 @@ import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
 /** test for https://redmine.open-bio.org/issues/3282
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -42,7 +42,7 @@ public class test1DARSeqAlign extends TestCase {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		params.setLoadChemCompInfo(true);
-		
+
 		cache.setFileParsingParams(params);
 
 		boolean usingReducedChemCompProvider = false;
@@ -54,42 +54,42 @@ public class test1DARSeqAlign extends TestCase {
 			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 		}
 
-		
+
 		try {
 			Structure struc = cache.getStructure("1DAR");
 			//System.out.println(struc);
 			Chain c = struc.getChainByPDB("A");
 			//System.out.println(c.getSeqResGroups());
-			
+
 			Group g = c.getGroupByPDB(ResidueNumber.fromString("692"));
 			//System.out.println(g);
 			//System.out.println(FileConvert.toPDB(g.getAtom(0)));
-			
+
 			Group g3 = c.getGroupByPDB(ResidueNumber.fromString("689"));
 			//System.out.println(g3);
 			//System.out.println(FileConvert.toPDB(g3.getAtom(0)));
-			
+
 			assertTrue(! c.getSeqResGroups().contains(g));
-			
+
 			assertTrue( g instanceof NucleotideImpl);
-			
+
 			assertTrue(g.getType().equals(GroupType.NUCLEOTIDE));
-			
+
 			assertTrue( g3.getPDBName().equals("LYS"));
 			assertTrue( c.getSeqResGroups().contains(g3));
-			
+
 			assertTrue( g3 instanceof AminoAcid);
-					
-			
+
+
 		}
 		catch (Exception e){
 			fail(e.getMessage());
 		}
-		
-		
+
+
 		if (usingReducedChemCompProvider)
 			ChemCompGroupFactory.setChemCompProvider(ccp);
-		
+
 		cache.setFileParsingParams(orig);
 	}
 }

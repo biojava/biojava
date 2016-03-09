@@ -29,12 +29,12 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 /**
  * This class models a search result.
  * You will find one of this for every query sequence specified in the run.
- * 
+ *
  * Designed by Paolo Pavan.
- * You may want to find my contacts on Github and LinkedIn for code info 
+ * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
- * 
+ *
  * @author Paolo Pavan
  */
 
@@ -45,7 +45,7 @@ public abstract class Result implements Iterable<Hit>{
     private String dbFile;
 
     private HashMap<String,String> programSpecificParameters;
-    
+
     private int iterationNumber;
     private String queryID;
     private String queryDef;
@@ -81,7 +81,7 @@ public abstract class Result implements Iterable<Hit>{
      * Wants to return an hashcode designed to allow conceptual comparisons of search results.
      * Wants to implement conceptual comparisons of search results.
      * Fields unrelated to search are deliberately not considered.
-     * @return 
+     * @return
      */
     @Override
     public boolean equals(Object obj) {
@@ -103,7 +103,7 @@ public abstract class Result implements Iterable<Hit>{
         }
         return true;
     }
-    
+
     public int getIterationNumber() {
         return iterationNumber;
     }
@@ -123,7 +123,7 @@ public abstract class Result implements Iterable<Hit>{
     public int getHitCounter() {
         return hitCounter;
     }
-    
+
     public String getProgram() {
         return program;
     }
@@ -143,7 +143,7 @@ public abstract class Result implements Iterable<Hit>{
     public Set<String> getProgramSpecificParametersList() {
         return programSpecificParameters.keySet();
     }
-    
+
     public String getProgramSpecificParameter(String key) {
         return programSpecificParameters.get(key);
     }
@@ -156,7 +156,7 @@ public abstract class Result implements Iterable<Hit>{
     public Sequence getQuerySequence() {
         return querySequence;
     }
-    
+
     @Override
     public Iterator<Hit> iterator() {
         return new Iterator<Hit>() {

@@ -25,7 +25,7 @@
 package org.biojava.nbio.survival.kaplanmeier.figure;
 
 /**
- * 
+ *
  * @author willishf@gmail.com
  */
 public class CensorStatus implements Comparable<CensorStatus> {
@@ -58,8 +58,8 @@ public class CensorStatus implements Comparable<CensorStatus> {
      *
      */
     public Double weight = 1.0; // assume default weight 1.0
-    
-    
+
+
     private Double percentage = null; //allow the percentage to be set externally for various weighted correction methods.
     /**
      *
@@ -106,7 +106,7 @@ public class CensorStatus implements Comparable<CensorStatus> {
         cs.zscore = zscore;
         return cs;
     }
-    
+
     public String toString() {
         return time + " " + censored + " " + group + " " + row;
     }

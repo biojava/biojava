@@ -39,7 +39,7 @@ import java.util.ArrayList;
  * The default fasta header parser where some headers are well defined based on the source
  * database which allows us to set the source of the protein sequence and the identifier
  * that can be used in future implementations to load features from external sources
- * 
+ *
  * If the user has a custom header with local data then they can create their own implementation
  * of a FastaHeaderParserInterface
  *<pre>
@@ -172,7 +172,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
     }
 
     /**
-     * 
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -228,7 +228,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         instance.parseHeader(header, sequence);
         logger.info("entry:chain = {}", sequence.getAccession());
         logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.PDB2);
-        
+
         header = "PDB:1ECY_A mol:protein length:142  ECOTIN";
         instance.parseHeader(header, sequence);
         logger.info("1ECY_A = {}", sequence.getAccession());

@@ -42,13 +42,13 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- * Re-designed by Paolo Pavan on the footprint of: 
+ * Re-designed by Paolo Pavan on the footprint of:
  * org.biojava.nbio.genome.query.BlastXMLQuery by Scooter Willis <willishf at gmail dot com>
- * 
- * You may want to find my contacts on Github and LinkedIn for code info 
+ *
+ * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
- * 
+ *
  *
  * @author Paolo Pavan
  */
@@ -58,14 +58,14 @@ public class BlastXMLParser implements ResultFactory {
     private File targetFile;
     private List<Sequence> queryReferences, databaseReferences;
     private Map<String,Sequence> queryReferencesMap, databaseReferencesMap;
-    
+
     public BlastXMLParser() {
-        
+
     }
     public void setFile(File f){
         targetFile = f;
     }
-    
+
     private void readFile(String blastFile) throws IOException, ParseException{
         logger.info("Start reading " + blastFile);
         try {
@@ -79,19 +79,19 @@ public class BlastXMLParser implements ResultFactory {
         }
         logger.info("Read finished");
     }
-    
+
     public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
         if (targetFile == null) throw new IllegalStateException("File to be parsed not specified.");
-        
+
         // getAbsolutePath throws SecurityException
         readFile(targetFile.getAbsolutePath());
         // create mappings between sequences and blast id
         mapIds();
-        
+
         ArrayList<Result> resultsCollection;
         ArrayList<Hit> hitsCollection;
         ArrayList<Hsp> hspsCollection;
-        
+
         try {
             // select top level elements
             String program = XMLHelper.selectSingleElement(blastDoc.getDocumentElement(),"BlastOutput_program").getTextContent();
@@ -119,7 +119,7 @@ public class BlastXMLParser implements ResultFactory {
                     .setQueryID(XMLHelper.selectSingleElement(element,"Iteration_query-ID").getTextContent())
                     .setQueryDef(XMLHelper.selectSingleElement(element, "Iteration_query-def").getTextContent())
                     .setQueryLength(new Integer(XMLHelper.selectSingleElement(element,"Iteration_query-len").getTextContent()));
-                
+
                 if (queryReferences != null) resultBuilder.setQuerySequence(queryReferencesMap.get(
                         XMLHelper.selectSingleElement(element,"Iteration_query-ID").getTextContent()
                 ));
@@ -138,7 +138,7 @@ public class BlastXMLParser implements ResultFactory {
                         .setHitDef(XMLHelper.selectSingleElement(hitElement, "Hit_def").getTextContent())
                         .setHitAccession(XMLHelper.selectSingleElement(hitElement, "Hit_accession").getTextContent())
                         .setHitLen(new Integer(XMLHelper.selectSingleElement(hitElement, "Hit_len").getTextContent()));
-                    
+
                     if (databaseReferences != null) blastHitBuilder.setHitSequence(databaseReferencesMap.get(
                         XMLHelper.selectSingleElement(hitElement, "Hit_id").getTextContent()
                     ));
@@ -187,10 +187,10 @@ public class BlastXMLParser implements ResultFactory {
             throw new ParseException(e.getMessage(),0);
         }
         logger.info("Parsing of "+targetFile+" finished.");
-        
+
         return resultsCollection;
     }
-    
+
     public List<String> getFileExtensions(){
         ArrayList<String> extensions = new ArrayList<String>(1);
         extensions.add("blastxml");
@@ -206,7 +206,7 @@ public class BlastXMLParser implements ResultFactory {
     public void setDatabaseReferences(List<Sequence> sequences) {
         databaseReferences = sequences;
     }
-    
+
     /**
      * fill the map association between sequences an a unique id
      */
@@ -216,16 +216,16 @@ public class BlastXMLParser implements ResultFactory {
             for (int counter=0; counter < queryReferences.size() ; counter ++){
                 String id = "Query_"+(counter+1);
                 queryReferencesMap.put(id, queryReferences.get(counter));
-            }  
+            }
         }
-        
+
         if (databaseReferences != null) {
             databaseReferencesMap = new HashMap<String,Sequence>(databaseReferences.size());
             for (int counter=0; counter < databaseReferences.size() ; counter ++){
                 // this is strange: while Query_id are 1 based, Hit (database) id are 0 based
                 String id = "gnl|BL_ORD_ID|"+(counter);
                 databaseReferencesMap.put(id, databaseReferences.get(counter));
-            }  
+            }
         }
     }
 
@@ -240,12 +240,12 @@ class BlastHsp extends org.biojava.nbio.core.search.io.Hsp {
     public BlastHsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue, int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo, int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive, int hspGaps, int hspAlignLen, String hspQseq, String hspHseq, String hspIdentityString, Double percentageIdentity, Integer mismatchCount) {
         super(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString, percentageIdentity, mismatchCount);
     }
-    
+
 }
 
 class BlastHit extends org.biojava.nbio.core.search.io.Hit {
     public BlastHit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp> hitHsps, Sequence hitSequence) {
         super(hitNum, hitId, hitDef, hitAccession, hitLen, hitHsps, hitSequence);
     }
-    
+
 }

@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,8 +20,8 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align.fatcat.calc;
@@ -36,7 +36,7 @@ public class StructureAlignmentOptimizer
 {
 
    //private static final boolean showAlig = false;
-   
+
    int pro1Len;
    int pro2Len;
    int maxLen;
@@ -71,28 +71,28 @@ public class StructureAlignmentOptimizer
       input: len1 the length of structure 1; c1: the structure information of 1
              len2 the length of structure 2; c2: the structure information of 2
              iniLen and iniSet is the length and list of initial equivalent residues
-           
+
 
     */
 
    public StructureAlignmentOptimizer(int b1, int end1, Atom[] c1, int b2, int end2, Atom[] c2,
          int iniLen, int[][] iniSet) throws StructureException{
-      
+
       //System.err.println("optimizing range:" + b1 + "-" + end1 + "("+ (end1-b1) + ") b2:  " + b2 + "-" + end2+ "("+ (end2-b2) + ") iniLen " + iniLen);
       //System.out.println("ca1: " + c1.length + " ca2: " + c2.length);
 
       int len1 = end1-b1;
       int len2 = end2-b2;
-           
+
       //System.err.println("len1: " + len1 + " len2:" + len2);
-      
+
       pro1Len = len1;
       pro2Len = len2;
-            
+
       cod1 = new Atom[len1];
       cod2 = new Atom[len2];
-      
-      for(int i = 0; i < len1; i ++)      {           
+
+      for(int i = 0; i < len1; i ++)      {
          Atom a = c1[i+b1];
          //cod1[i] = (Atom)a.clone();
          Group parent = (Group)a.getGroup().clone();
@@ -119,7 +119,7 @@ public class StructureAlignmentOptimizer
          equSet[0][i] = iniSet[0][i];
          equSet[1][i] = iniSet[1][i];
          if(iniSet[0][i] > len1 || iniSet[1][i] > len2)  {
-            throw new RuntimeException(String.format("StructureAlignmentOptimizer: focus exceeds the protein 1 or 2 length!"));            
+            throw new RuntimeException(String.format("StructureAlignmentOptimizer: focus exceeds the protein 1 or 2 length!"));
          }
       }
 
@@ -130,7 +130,7 @@ public class StructureAlignmentOptimizer
 
       sij =  new double[pro1Len][pro2Len];
 
-//      if (showAlig) 
+//      if (showAlig)
 //         showCurrentAlignment(iniLen, equSet, "initial alignment");
 
    }
@@ -201,7 +201,7 @@ public class StructureAlignmentOptimizer
       if ( debug)
          System.err.println("   initial rmsd " + rmsd);
 
-//      if (showAlig) 
+//      if (showAlig)
 //         showCurrentAlignment(equLen, equSet, "after initial superimposeBySet Len:" +equLen + " rmsd:" +rmsd);
 
       maxKeepStep = 4;
@@ -241,7 +241,7 @@ public class StructureAlignmentOptimizer
       Atom[] tmp2 = new Atom[equLen];
       int     i,  r1, r2;
 
-     
+
       for(i = 0; i < equLen; i ++)    {
          r1 = equSet[0][i];
          r2 = equSet[1][i];
@@ -249,7 +249,7 @@ public class StructureAlignmentOptimizer
          tmp1[i] =       cod1[ r1 ];
          tmp2[i] = (Atom)cod2[ r2 ].clone(); // have to be cloned!
          //tmp2[i] = cod2[ r2 ];
-         
+
 
          /*try {
             System.out.println("before superimpos: " + equSet[0][i]+"-"+ equSet[1][i]+ " dist:" + Calc.getDistance(tmp1[i], cod2[equSet[1][i]]));
@@ -265,12 +265,12 @@ public class StructureAlignmentOptimizer
       Atom      t = svd.getTranslation();
 
       for (Atom a: tmp2) {
-         
+
          Calc.rotate(a,m);
          Calc.shift(a,t);
-         
+
       }
-      
+
       // weird, why does it take the RMSD before the rotation?
       // the rmsd is only for the subset contained in the tmp arrays.
       rmsd = SVDSuperimposer.getRMS(tmp1,tmp2);
@@ -282,11 +282,11 @@ public class StructureAlignmentOptimizer
          Atom a = cod2[i];
          Calc.rotate(a,m);
          Calc.shift(a,t);
-         
+
       }
 
-  
-      
+
+
 //      for(i = 0; i < equLen; i ++)    {
 //         try {
 //            System.err.println("after superimpos: " + equSet[0][i]+"-"+ equSet[1][i]+ " dist:" + Calc.getDistance(tmp1[i], cod2[equSet[1][i]]));
@@ -294,8 +294,8 @@ public class StructureAlignmentOptimizer
 //            e.printStackTrace();
 //         }
 //      }
-      
-       
+
+
 
    }
 
@@ -328,9 +328,9 @@ public class StructureAlignmentOptimizer
          if(ifstop)      break;
          Dc += increase;
 
-//         if (showAlig) 
+//         if (showAlig)
 //            if ( i == 0 )
-//               showCurrentAlignment(alnLen, alnList,  "optimizing alignment - after " + i + " iterations alnLen:" + alnLen + " rmsd " + rmsd);     
+//               showCurrentAlignment(alnLen, alnList,  "optimizing alignment - after " + i + " iterations alnLen:" + alnLen + " rmsd " + rmsd);
       }
 
       if  (debug){
@@ -341,8 +341,8 @@ public class StructureAlignmentOptimizer
          System.out.println("optimization time: " + (System.currentTimeMillis() - optStart) + " ms.");
       }
 
-//      if (showAlig) 
-//         showCurrentAlignment(alnLen, alnList,  "optimizing alignment - after " + i + " iterations alnLen:" + alnLen + " rmsd " + rmsd);     
+//      if (showAlig)
+//         showCurrentAlignment(alnLen, alnList,  "optimizing alignment - after " + i + " iterations alnLen:" + alnLen + " rmsd " + rmsd);
    }
 
    //--------------------------------------------------------------------------------------------------------
@@ -359,7 +359,7 @@ public class StructureAlignmentOptimizer
             dis = Calc.getDistance(cod1[i],cod2[j]);
 
             if(dis < Dc) {
-               sij[i][j] = Dc - dis;               
+               sij[i][j] = Dc - dis;
             }
             else  {
                sij[i][j] = 0;
@@ -390,9 +390,9 @@ public class StructureAlignmentOptimizer
       for(i = 0; i < alnLen; i ++)    {
          r1 = alnList[0][i];
          r2 = alnList[1][i];
-         dis = Calc.getDistance(cod1[r1],cod2[r2]);         
+         dis = Calc.getDistance(cod1[r1],cod2[r2]);
          if(dis <= Dc)   {
-            //System.out.println(r1 + "-"  + r2 + " d:" + dis); 
+            //System.out.println(r1 + "-"  + r2 + " d:" + dis);
             equSet[0][equLen] = r1;
             equSet[1][equLen] = r2;
             equLen ++;
@@ -410,7 +410,7 @@ public class StructureAlignmentOptimizer
 //         System.out.print(" OPT: rmsd diff: " + Math.abs(rmsd - rmsdOld) + " equLens: " + equLenOld + ":"+ equLen);
 //         if ( Math.abs(rmsd - rmsdOld) < 1e-10)
 //            System.out.println(" NO DIFF!");
-//         else 
+//         else
 //            System.out.println(" DIFF!");
 //      }
 

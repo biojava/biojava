@@ -73,7 +73,7 @@ public final class FastqTools
      *
      * @param fastq FASTQ formatted sequence, must not be null
      * @return a new {@link DNASequence} with quality scores from the specified FASTQ formatted sequence
-     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds 
+     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds
      */
     public static DNASequence createDNASequenceWithQualityScores(final Fastq fastq) throws CompoundNotFoundException
     {
@@ -89,7 +89,7 @@ public final class FastqTools
      *
      * @param fastq FASTQ formatted sequence, must not be null
      * @return a new {@link DNASequence} with error probabilities from the specified FASTQ formatted sequence
-     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds 
+     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds
      */
     public static DNASequence createDNASequenceWithErrorProbabilities(final Fastq fastq) throws CompoundNotFoundException
     {
@@ -108,7 +108,7 @@ public final class FastqTools
      * @param fastq FASTQ formatted sequence, must not be null
      * @return a new {@link DNASequence} with quality scores and error probabilities from the specified
      *    FASTQ formatted sequence
-     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds     
+     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds
      */
     public static DNASequence createDNASequenceWithQualityScoresAndErrorProbabilities(final Fastq fastq) throws CompoundNotFoundException
     {

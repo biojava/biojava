@@ -53,7 +53,7 @@ import org.biojava.nbio.structure.gui.util.StructurePairSelector;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 
-/** 
+/**
  * A JFrame that allows to trigger a symmetry analysis, either from files
  * in a directory or after manual upload
  * Adapted from the AlignmentGui class in biojava.
@@ -84,10 +84,10 @@ public class SymmetryGui extends JFrame {
 		SymmetryGui.getInstance();
 	}
 
-	static final ResourceManager resourceManager = 
+	static final ResourceManager resourceManager =
 			ResourceManager.getResourceManager("ce");
 
-	private static final String MAIN_TITLE = 
+	private static final String MAIN_TITLE =
 			"Symmetry Analysis Tool: CE-Symm - V.1.0";
 
 	private static final SymmetryGui me = new SymmetryGui();
@@ -172,7 +172,7 @@ public class SymmetryGui extends JFrame {
 
 		Box hBoxAlgo = Box.createHorizontalBox();
 		hBoxAlgo.add(Box.createGlue());
-		hBoxAlgo.add(algoLabel);      
+		hBoxAlgo.add(algoLabel);
 		hBoxAlgo.add(algorithmList);
 		hBoxAlgo.add(Box.createGlue());
 		hBoxAlgo.add(parameterButton);
@@ -244,7 +244,7 @@ public class SymmetryGui extends JFrame {
 	}
 
 	protected void configureParameters() {
-		System.out.println("configure parameters for " + 
+		System.out.println("configure parameters for " +
 				CeSymm.algorithmName);
 
 		// show a new config GUI
@@ -264,7 +264,7 @@ public class SymmetryGui extends JFrame {
 		StructurePairSelector tab = null;
 
 		if (pos == 0 ){
-			tab = tab1;         
+			tab = tab1;
 
 		} else if (pos == 1){
 			tab = tab3;

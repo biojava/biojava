@@ -41,7 +41,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
- * 
+ *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GeneFeatureHelperTest extends TestCase {
@@ -70,7 +70,7 @@ public class GeneFeatureHelperTest extends TestCase {
 
     /**
      * Test of loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile method, of class GeneFeatureHelper.
-     * 
+     *
      * @throws Exception
      */
 
@@ -109,7 +109,7 @@ public class GeneFeatureHelperTest extends TestCase {
 
     /**
      * Test if the note from a gff3 file is added to the gene sequence
-     * 
+     *
      * @throws Exception
      */
 

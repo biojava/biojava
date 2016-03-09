@@ -50,29 +50,29 @@ public interface OntologyTerm extends Term {
     /**
      * Get the remote ontology referenced by this term
      */
-    
+
     public Ontology getOntology();
-    
+
     /**
      * Simple in-memory implementation of a remote ontology term.
      *
      * This can be used to implement Ontology.importTerm
      */
-    
+
     public final static class Impl
-     
+
     implements OntologyTerm, java.io.Serializable {
-        
+
 		private static final long serialVersionUID = 1L;
 		private final Ontology ontology;
         private final Ontology target;
-        
+
         private Set synonyms;
-        
+
         public Impl(Ontology ontology, Ontology target) {
             this(ontology, target, null);
         }
-         
+
         public Impl(Ontology ontology, Ontology target, Object[] synonyms) {
             if (ontology == null) {
                 throw new NullPointerException("The ontology may not be null");
@@ -82,7 +82,7 @@ public interface OntologyTerm extends Term {
             }
             this.ontology = ontology;
             this.target = target;
-            
+
             this.synonyms = new TreeSet();
             if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
         }
@@ -90,42 +90,42 @@ public interface OntologyTerm extends Term {
         public void addSynonym(Object synonym) {
             this.synonyms.add(synonym);
         }
-        
+
         public void removeSynonym(Object synonym) {
             this.synonyms.remove(synonym);
         }
-        
+
         public Object[] getSynonyms() {
             return this.synonyms.toArray();
         }
-        
+
         public String getName() {
             return target.getName();
         }
-                
+
         public String getDescription() {
             return target.getDescription();
         }
         public void setDescription(String description) {
              target.setDescription(description);
         }
-        
+
         public Ontology getOntology() {
             return ontology;
         }
-        
+
         public Ontology getTargetOntology() {
             return target;
         }
-        
+
         public String toString() {
             return "Remote ontology: " + getName();
         }
-        
+
         public Annotation getAnnotation() {
             return Annotation.EMPTY_ANNOTATION;
         }
-        
-        
+
+
     }
 }

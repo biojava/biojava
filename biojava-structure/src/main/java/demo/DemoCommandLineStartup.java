@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Feb 3, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -34,8 +34,8 @@ public class DemoCommandLineStartup
       // demo how to use with command line parameters
       String commandLine = "-file1 /tmp/cd/pdb1cdg.ent.gz -file2 file:///tmp/ti/pdb1tim.ent.gz -printCE";
       String[] args = commandLine.split(" ");
-      
+
       CeMain.main(args);
-      
+
    }
 }

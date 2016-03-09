@@ -46,7 +46,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
     private Integer length = null;
 
     /**
-     * A sequence that has been aligned to other sequences will have inserts. 
+     * A sequence that has been aligned to other sequences will have inserts.
      * @param sequence
      */
     public void addAlignedSequence(S sequence){
@@ -75,7 +75,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
      * @param listIndex
      * @return sequence
      */
-     
+
 
     @Override
     public S getAlignedSequence(int listIndex) {

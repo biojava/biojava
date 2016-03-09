@@ -328,7 +328,7 @@ public class Matrix {
         }
         return y;
     }
-    
+
     /**
      *
      * @param A
@@ -338,7 +338,7 @@ public class Matrix {
     public static double[][] scale(double[][] A, double x) {
         int m = A.length;
         int n = A[0].length;
-        
+
         double[][] y = new double[m][n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
@@ -347,7 +347,7 @@ public class Matrix {
         }
         return y;
     }
-    
+
 
     // vector-matrix multiplication (y = x^T A)
     /**

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 30, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -35,24 +35,24 @@ public class MyTableRowSorter extends TableRowSorter<TableModel>
    {
       super(tm);
    }
-   
+
    @Override
    public Comparator<?> getComparator(int column)
    {
-     
+
       return new MyComparator(column);
-      
+
    }
-  
+
 }
 
  class MyComparator implements Comparator<String> {
-  
+
     int column;
     public MyComparator(int column){
        this.column = column;
     }
-    
+
   @Override
 public int compare(String s1, String s2){
 	  if (( column >= 2 && column <= 4)|| (column==9)){
@@ -62,7 +62,7 @@ public int compare(String s1, String s2){
      } else
         return s1.compareTo(s2);
   }
-    
+
   public int compare(Float f1, Float f2){
      return f1.compareTo(f2);
   }

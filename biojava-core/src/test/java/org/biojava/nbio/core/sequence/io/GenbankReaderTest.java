@@ -120,7 +120,7 @@ public class GenbankReaderTest {
 
         InputStream inStream = this.getClass().getResourceAsStream("/BondFeature.gb");
         assertNotNull(inStream);
-        
+
         GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProtein
                 = new GenbankReader<ProteinSequence, AminoAcidCompound>(
                         inStream,
@@ -133,9 +133,9 @@ public class GenbankReaderTest {
 
         Assert.assertTrue(proteinSequences.size() == 1);
         logger.info("protein sequences: {}", proteinSequences);
-        
+
         ProteinSequence protein = new ArrayList<ProteinSequence>(proteinSequences.values()).get(0);
-        
+
         FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> cdsFeature = protein.getFeaturesByType("CDS").get(0);
         String codedBy = cdsFeature.getQualifiers().get("coded_by").get(0).getValue();
         Map<String, List<Qualifier>> quals = cdsFeature.getQualifiers();

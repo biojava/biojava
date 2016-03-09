@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * Provides parameters to {@link CeCPMain}
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -36,8 +36,8 @@ public class CECPParameters extends CeParameters {
 		SHORTER("Shorter of the two"),
 		LEFT("Left"),
 		RIGHT("Right");
-		
-		
+
+
 		private String name;
 		private DuplicationHint(String name) {
 			this.name = name;
@@ -47,10 +47,10 @@ public class CECPParameters extends CeParameters {
 			return name;
 		}
 	}
-	
+
 	protected DuplicationHint duplicationHint;
 	protected Integer minCPLength;
-	
+
 	public CECPParameters() {
 		super();
 		// super calls reset();
@@ -58,12 +58,12 @@ public class CECPParameters extends CeParameters {
 
 	@Override
 	public String toString() {
-		return "CECPParameters [scoringStrategy=" + scoringStrategy 
-		+ ", maxGapSize=" + maxGapSize 
-		+ ", rmsdThr=" + rmsdThr 
-		+ ", rmsdThrJoin="+ rmsdThrJoin 
-		+ ", winSize=" + winSize 
-		+ ", showAFPRanges=" + showAFPRanges 
+		return "CECPParameters [scoringStrategy=" + scoringStrategy
+		+ ", maxGapSize=" + maxGapSize
+		+ ", rmsdThr=" + rmsdThr
+		+ ", rmsdThrJoin="+ rmsdThrJoin
+		+ ", winSize=" + winSize
+		+ ", showAFPRanges=" + showAFPRanges
 		+ ", maxOptRMSD=" + maxOptRMSD
 		+ ", seqWeight=" + seqWeight
 		+ ", duplicationHint=" + duplicationHint
@@ -100,7 +100,7 @@ public class CECPParameters extends CeParameters {
 	@Override
 	public List<String> getUserConfigParameterNames(){
 		List<String> params = super.getUserConfigParameterNames();
-		
+
 		params.add("Which to duplicate");
 		params.add("Min CP Length");
 		return params;
@@ -114,7 +114,7 @@ public class CECPParameters extends CeParameters {
 		params.add(Integer.class);
 		return params;
 	}
-	
+
 	public DuplicationHint getDuplicationHint() {
 		return duplicationHint;
 	}

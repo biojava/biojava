@@ -44,10 +44,10 @@ import java.util.Map;
 public class SubstitutionMatrixHelper implements Serializable {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 148491724604653225L;
-	
+
 	private static Map<String, SubstitutionMatrix<AminoAcidCompound>> aminoAcidMatrices =
             new HashMap<String, SubstitutionMatrix<AminoAcidCompound>>();
     private static Map<String, SubstitutionMatrix<NucleotideCompound>> nucleotideMatrices =
@@ -56,23 +56,23 @@ public class SubstitutionMatrixHelper implements Serializable {
     // prevents instantiation
     private SubstitutionMatrixHelper() { }
 
-    
+
     /** Returns any matrix from the AAINDEX database file
-     * 
+     *
      * @param matrixName
      * @return a {@link SubstitutionMatrix}
      */
     public static SubstitutionMatrix<AminoAcidCompound> getMatrixFromAAINDEX(String matrixName){
-    	
+
     	return AAindexFactory.getAAIndexProvider().getMatrix(matrixName);
-    	
+
     }
-    
-    
+
+
     public static SubstitutionMatrix<AminoAcidCompound> getIdentity() {
     	return getAminoAcidMatrix("identity");
     }
-    
+
     /**
      * Returns Blosum 100 matrix by Henikoff & Henikoff
      * @return Blosum 100 matrix
@@ -247,7 +247,7 @@ public class SubstitutionMatrixHelper implements Serializable {
     	if (matrix != null) return matrix;
         return getAminoAcidMatrix(name);
     }
-    
+
     // reads in an amino acid substitution matrix, if necessary
     private static SubstitutionMatrix<AminoAcidCompound> getAminoAcidMatrix(String file) {
         if (!aminoAcidMatrices.containsKey(file)) {

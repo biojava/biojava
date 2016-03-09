@@ -41,7 +41,7 @@ import static org.junit.Assert.assertEquals;
 public class RCSBDescriptionFactoryTest {
 
 	private static final String TEST_DIR = "src/test/resources/";
-	
+
 	/**
 	 * Opens the file as a {@link FileInputStream}. Copied from ResourceList, which is not in biojava.
 	 */
@@ -64,18 +64,18 @@ public class RCSBDescriptionFactoryTest {
 	public void testUrl() {
 		RCSBDescriptionFactory.get("1w0p"); // just make sure it doesn't throw an exception
 	}
-	
+
 	/**
 	 * Covers all the basic features, including EC numbers. Does not cover multiple polymers or multiple chains.
 	 */
 	@Test
 	public void test1() {
 		RCSBDescription description = RCSBDescriptionFactory.get(openStream("describeMol/1w0p.xml"));
-		
+
 		assertEquals("1W0P", description.getPdbId());
 		List<RCSBPolymer> polymers = description.getPolymers();
 		assertEquals(1, polymers.size());
-		
+
 		RCSBPolymer polymer = polymers.get(0);
 		assertEquals("protein", polymer.getType());
 		assertEquals(1, polymer.getIndex().intValue());
@@ -83,20 +83,20 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals("3.2.1.18", polymer.getEnzClass());
 		assertEquals(781, polymer.getLength().intValue());
 		assertEquals(85675.5, polymer.getWeight(), 0);
-		
+
 		List<Character> chains = polymer.getChains();
 		assertEquals(1, chains.size());
 		assertEquals('A', (char) chains.get(0));
-		
+
 		List<String> synonyms = polymer.getSynonyms();
 		assertEquals(2, synonyms.size());
 		assertEquals("NEURAMINIDASE", synonyms.get(0));
 		assertEquals("NANASE", synonyms.get(1));
-		
+
 		RCSBTaxonomy tax = polymer.getTaxonomy();
 		assertEquals(666, tax.getId());
 		assertEquals("Vibrio cholerae", tax.getName());
-		
+
 		RCSBMacromolecule mol = polymer.getMolecule();
 		assertEquals("Sialidase", mol.getName());
 		List<String> accessions = mol.getAccessions();
@@ -124,7 +124,7 @@ public class RCSBDescriptionFactoryTest {
 	 */
 	@Test
 	public void testAlmostEmpty() {
-		
+
 		RCSBDescription description = RCSBDescriptionFactory.get(openStream("describeMol/almost_empty.xml"));
 		assertEquals("almost_empty", description.getPdbId());
 		List<RCSBPolymer> polymers = description.getPolymers();
@@ -145,9 +145,9 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals(null, polymer.getEnzClass());
 		assertEquals(null, polymer.getLength());
 		assertEquals(null, polymer.getWeight());
-		
+
 	}
-	
+
 	/**
 	 * Covers multiple polymers and multiple chains.
 	 */
@@ -157,7 +157,7 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals("4HHB", description.getPdbId());
 		List<RCSBPolymer> polymers = description.getPolymers();
 		assertEquals(2, polymers.size());
-		
+
 		// first polymer
 		RCSBPolymer polymer = polymers.get(0);
 		assertEquals("protein", polymer.getType());
@@ -166,19 +166,19 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals(null, polymer.getEnzClass());
 		assertEquals(141, polymer.getLength().intValue());
 		assertEquals(15150.5, polymer.getWeight(), 0);
-		
+
 		List<Character> chains = polymer.getChains();
 		assertEquals(2, chains.size());
 		assertEquals('A', (char) chains.get(0));
 		assertEquals('C', (char) chains.get(1));
-		
+
 		List<String> synonyms = polymer.getSynonyms();
 		assertEquals(0, synonyms.size());
-		
+
 		RCSBTaxonomy tax = polymer.getTaxonomy();
 		assertEquals(9606, tax.getId());
 		assertEquals("Homo sapiens", tax.getName());
-		
+
 		RCSBMacromolecule mol = polymer.getMolecule();
 		assertEquals("Hemoglobin subunit alpha", mol.getName());
 		List<String> accessions = mol.getAccessions();
@@ -191,7 +191,7 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals("Q96KF1", accessions.get(5));
 		assertEquals("Q9NYR7", accessions.get(6));
 		assertEquals("Q9UCM0", accessions.get(7));
-		
+
 		// second polymer
 		polymer = polymers.get(1);
 		assertEquals("protein", polymer.getType());
@@ -200,19 +200,19 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals(null, polymer.getEnzClass());
 		assertEquals(146, polymer.getLength().intValue());
 		assertEquals(15890.4, polymer.getWeight(), 0);
-		
+
 		chains = polymer.getChains();
 		assertEquals(2, chains.size());
 		assertEquals('B', (char) chains.get(0));
 		assertEquals('D', (char) chains.get(1));
-		
+
 		synonyms = polymer.getSynonyms();
 		assertEquals(0, synonyms.size());
-		
+
 		tax = polymer.getTaxonomy();
 		assertEquals(9606, tax.getId());
 		assertEquals("Homo sapiens", tax.getName());
-		
+
 		mol = polymer.getMolecule();
 		assertEquals("Hemoglobin subunit beta", mol.getName());
 		accessions = mol.getAccessions();
@@ -233,7 +233,7 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals("Q9UCD6", accessions.get(13));
 		assertEquals("Q9UCP8", accessions.get(14));
 		assertEquals("Q9UCP9", accessions.get(15));
-		
+
 	}
 
 }

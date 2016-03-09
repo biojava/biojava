@@ -178,7 +178,7 @@ public class TranscriptSequence extends DNASequence {
 
 
             //    logger.debug("Coding Sequence: {}", codingSequence);
-            
+
             DNASequence dnaCodingSequence = null;
             try {
             	dnaCodingSequence = new DNASequence(codingSequence.toString().toUpperCase());
@@ -204,7 +204,7 @@ public class TranscriptSequence extends DNASequence {
         for (CDSSequence cdsSequence : cdsSequenceList) {
         	sb.append(cdsSequence.getCodingSequence());
         }
-        
+
         DNASequence dnaSequence = null;
         try {
         	dnaSequence = new DNASequence(sb.toString().toUpperCase());
@@ -234,7 +234,7 @@ public class TranscriptSequence extends DNASequence {
         RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(engine);
         ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(engine);
         proteinSequence.setAccession(new AccessionID(this.getAccession().getID()));
-        
+
         return proteinSequence;
     }
 

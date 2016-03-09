@@ -1,10 +1,10 @@
-/* 
+/*
  *  @(#)ModelLoader.java	1.0 June 2010
- * 
+ *
  *  Copyright (c) 2010 Peter Troshin
- *  
- *  JRONN version: 3.1     
- * 
+ *
+ *  JRONN version: 3.1
+ *
  *        BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -24,7 +24,7 @@
  *      http://www.biojava.org/
  *
  */
- 
+
 package org.biojava.nbio.ronn;
 
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ import java.util.Scanner;
 
 /**
  * Class that loads data from the model files into {@link Model} objects
- * 
+ *
  * @author Peter Troshin
  * @version 1.0
  * @since 3.0.2
@@ -52,7 +52,7 @@ public final class ModelLoader {
 
     /**
      * Represents a Threshold
-     * 
+     *
      */
     public final static class Threshold {
 
@@ -74,13 +74,13 @@ public final class ModelLoader {
 
     /**
      * Represent a RONN model
-     * 
+     *
      */
     public static class Model {
 
 	/**
 	 * Stores encoded sequences from the model similar to seqAA
-	 * 
+	 *
 	 * 190 is a maximum length of the sequence in the model
 	 */
 	final short[][] dbAA;// = new short[RonnConstraint.maxD][190];

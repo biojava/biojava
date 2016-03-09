@@ -116,7 +116,7 @@ extends Term {
 
 	implements Triple, java.io.Serializable {
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 3807331980372839221L;
 		private final Term subject;

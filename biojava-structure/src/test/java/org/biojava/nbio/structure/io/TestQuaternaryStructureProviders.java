@@ -43,13 +43,13 @@ public class TestQuaternaryStructureProviders {
 	public void test1STP() throws IOException, StructureException{
 		testID("1stp",1);
 	}
-	
+
 	@Test
 	public void test3FAD() throws IOException, StructureException{
 		testID("3fad",1);
 		testID("3fad",2);
 	}
-	
+
 	@Test
 	public void test5LDH() throws IOException, StructureException{
 		testID("5LDH",1);
@@ -57,41 +57,41 @@ public class TestQuaternaryStructureProviders {
 		// in 5ldh there's also PAU and XAU but those are ignored, see github issue #230
 		MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
 		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass());
-		
+
 		boolean gotException = false;
 		try {
 			StructureIO.getBiologicalAssembly("5LDH",3);
 		} catch (StructureException e) {
 			gotException = true;
 		}
-		
+
 		assertTrue("Bioassembly 3 for PDB id 5LDH should fail with a StructureException!", gotException);
 
 	}
-	
+
 	@Test
 	public void test3NTU() throws IOException, StructureException{
 		testID("3NTU",1);
 	}
-	
+
 	@Test
 	public void test1A29() throws IOException, StructureException{
 		testID("1A29",1);
 	}
-	
+
 //	@Test
 //	public void test1EI7(){
 //		testID("1ei7",1);
 //	}
-	
+
 	@Test
 	public void testGetNrBioAssemblies5LDH() throws IOException, StructureException {
 		assertEquals("There should be only 2 bioassemblies for 5LDH, see github issue #230", 2, StructureIO.getNrBiologicalAssemblies("5LDH"));
 	}
-	
-		
+
+
 	private void testID(String pdbId, int bioMolecule) throws IOException, StructureException{
-		
+
 		// get bio assembly from PDB file
 		PDBBioUnitDataProvider pdbProvider = new PDBBioUnitDataProvider();
 		BioUnitDataProviderFactory.setBioUnitDataProvider(pdbProvider.getClass());
@@ -131,7 +131,7 @@ public class TestQuaternaryStructureProviders {
 			assertTrue(mMap.containsKey(k));
 
 			assertEquals("Macromolecular sizes don't coincide!",pMap.get(k).getMacromolecularSize(), mMap.get(k).getMacromolecularSize());
-			
+
 			List<BiologicalAssemblyTransformation> pL = pMap.get(k).getTransforms();
 
 			// mmcif list can be longer due to the use of internal chain IDs
@@ -147,8 +147,8 @@ public class TestQuaternaryStructureProviders {
 
 					if  (! m1.getChainId().equals(m2.getChainId()))
 						continue;
-					
-					if ( ! m1.getTransformationMatrix().epsilonEquals(m2.getTransformationMatrix(), 0.0001)) 
+
+					if ( ! m1.getTransformationMatrix().epsilonEquals(m2.getTransformationMatrix(), 0.0001))
 						continue;
 
 					found = true;
@@ -191,5 +191,5 @@ public class TestQuaternaryStructureProviders {
 		assertEquals(pdbS.nrModels(),flatFileS.nrModels());
 
 	}
-	
+
 }

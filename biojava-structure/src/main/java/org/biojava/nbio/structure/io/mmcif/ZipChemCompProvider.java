@@ -122,17 +122,17 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	public void setRemoveCif(boolean doRemove) {
 		m_removeCif = doRemove;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.io.mmcif.ChemCompProvider#getChemComp(java.lang.String)
-	 * 
+	 *
 	 * @param recordName : three letter PDB name for a residue
 	 * @return ChemComp from .zip or ChemComp from repository.  Will return empty ChemComp when unable to find a residue and will return null if not provided a valid recordName.
 	 */
 	@Override
 	public ChemComp getChemComp(String recordName) {
 		if (null == recordName) return null;
-		
+
 		// handle non-existent ChemComp codes and do not repeatedly attempt to add these.
 		for (String str : unavailable) {
 			if (recordName.equals(str)) return getEmptyChemComp(recordName);
@@ -205,7 +205,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
     	comp.setResidueType(ResidueType.atomn);
     	return comp;
     }
-    
+
 	/**
 	 * Return File(s) in dirName that match suffix.
 	 * @param dirName
@@ -218,7 +218,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		}
 
 		final File dir = new File(dirName);
-		return dir.listFiles(new FilenameFilter() { 
+		return dir.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String filename)
 			{ return filename.endsWith(suffix); }
 		} );

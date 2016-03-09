@@ -34,16 +34,16 @@ import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
 /**
- * This class provides information of the selected positions in the 
+ * This class provides information of the selected positions in the
  * {@link MultipleAligPanel}.
  * <p>
  * It has to be linked to a {@link MultipleAligPanel} in order to obtain
  * the raw information and convert the mouse position to a String.
- * 
+ *
  * @author Aleix Lafita
  *
  */
-public class MultipleStatusDisplay extends JTextField 
+public class MultipleStatusDisplay extends JTextField
 implements AlignmentPositionListener, WindowListener {
 
 	private static final long serialVersionUID = 6939947266417830429L;
@@ -59,7 +59,7 @@ implements AlignmentPositionListener, WindowListener {
 	/**
 	 * Constructor using an alignment panel as a parent, where the
 	 * information will be displayed.
-	 * 
+	 *
 	 * @param panel
 	 */
 	public MultipleStatusDisplay(MultipleAligPanel panel) {
@@ -84,8 +84,8 @@ implements AlignmentPositionListener, WindowListener {
 				char c = alnseq.charAt(p.getPos1());
 
 				Atom a = MultipleAlignmentTools.getAtomForSequencePosition(
-						panel.getMultipleAlignment(), 
-						panel.getMapSeqToStruct(), 
+						panel.getMultipleAlignment(),
+						panel.getMapSeqToStruct(),
 						str, p.getPos1());
 
 				String pdbInfo = JmolTools.getPdbInfo(a);
@@ -117,8 +117,8 @@ implements AlignmentPositionListener, WindowListener {
 				char c = alnseq.charAt(p.getPos1());
 
 				Atom a = MultipleAlignmentTools.getAtomForSequencePosition(
-						panel.getMultipleAlignment(), 
-						panel.getMapSeqToStruct(), 
+						panel.getMultipleAlignment(),
+						panel.getMapSeqToStruct(),
 						str, p.getPos1());
 
 				String pdbInfo = JmolTools.getPdbInfo(a);
@@ -144,19 +144,19 @@ implements AlignmentPositionListener, WindowListener {
 				char c2 = alnseq.charAt(end.getPos1());
 
 				Atom a1 = MultipleAlignmentTools.getAtomForSequencePosition(
-						panel.getMultipleAlignment(), 
-						panel.getMapSeqToStruct(), 
+						panel.getMultipleAlignment(),
+						panel.getMapSeqToStruct(),
 						str, start.getPos1());
 
 				Atom a2 = MultipleAlignmentTools.getAtomForSequencePosition(
-						panel.getMultipleAlignment(), 
-						panel.getMapSeqToStruct(), 
+						panel.getMultipleAlignment(),
+						panel.getMapSeqToStruct(),
 						str, end.getPos1());
 
 				String pdbInfo1 = JmolTools.getPdbInfo(a1);
 				String pdbInfo2 = JmolTools.getPdbInfo(a2);
 
-				msg +=  " range"+str+": " + pdbInfo1 + 
+				msg +=  " range"+str+": " + pdbInfo1 +
 						" ("+c1+") - " + pdbInfo2 + " ("+c2+")";
 			}
 			this.setText(msg);

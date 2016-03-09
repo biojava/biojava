@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Apr 7, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -44,7 +44,7 @@ public class AFPChainScorer {
 		if ( align.getNrEQR() == 0)
 			return -1;
 
-		
+
 		// Create new arrays for the subset of atoms in the alignment.
 		Atom[] ca1aligned = new Atom[align.getOptLength()];
 		Atom[] ca2aligned = new Atom[align.getOptLength()];
@@ -52,9 +52,9 @@ public class AFPChainScorer {
 		int[] blockLens = align.getOptLen();
 		int[][][] optAln = align.getOptAln();
 		assert(align.getBlockNum() <= optAln.length);
-		
+
 		for(int block=0;block< align.getBlockNum();block++) {
-		
+
 			if ( ! ( blockLens[block] <= optAln[block][0].length)) {
 				logger.warn("AFPChainScorer getTMScore: errors reconstructing alignment block [" + block + "]. Length is " + blockLens[block] + " but should be <=" + optAln[block][0].length);
 			}
@@ -64,14 +64,14 @@ public class AFPChainScorer {
 				int pos2 = optAln[block][1][i];
 				Atom a1 = ca1[pos1];
 				Atom a2 = (Atom) ca2[pos2].clone();
-								
+
 				ca1aligned[pos] = a1;
 				ca2aligned[pos] = a2;
 				pos++;
 			}
 		}
-		
-		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.		
+
+		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.
 		if ( pos != align.getOptLength()){
 			logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + align.getOptLength());
 			// we need to resize the array, because we allocated too many atoms earlier on.

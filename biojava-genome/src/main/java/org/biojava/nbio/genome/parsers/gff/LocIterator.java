@@ -29,7 +29,7 @@ import java.util.Iterator;
 /**
 * Move a sliding window over a Location.
 * Window size and increment can be specified.
-* If the increment is negative, the iteration starts 
+* If the increment is negative, the iteration starts
 * at end of Location and moves toward beginning.
 *
 * @author Hanno Hinsch
@@ -38,19 +38,19 @@ public class LocIterator implements Iterator<Location> {
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 
 	Location mBounds;
-	int mPosition;			
-	int mWindowSize;			
-	int mIncrement;		
-	
+	int mPosition;
+	int mWindowSize;
+	int mIncrement;
+
 	@SuppressWarnings("unused")
 	private LocIterator() {};
-	
+
 	/**
 	 * Construct an iterator that slides a window over a Location.
 	 *
 	 * @param bounds The location over which to iterate.
 	 * @param windowSize The size of the moving window.
-	 * @param increment The increment by which to move the window at each iteration. 
+	 * @param increment The increment by which to move the window at each iteration.
 	 * If increment is positive, the iteration starts at the beginning of the bounding location
 	 * and moves toward the end; if the increment is negative, the iteration starts at the end and moves
 	 * toward the begnning.
@@ -60,22 +60,22 @@ public class LocIterator implements Iterator<Location> {
 		mWindowSize= windowSize;
 		mIncrement= increment;
 		mBounds= bounds;
-		
+
 		if( windowSize <= 0 )
 		{
 			throw new IllegalArgumentException( "Window size must be positive." );
 		}
-		
+
 		if( increment == 0 )
 		{
 			throw new IllegalArgumentException( "Increment must be non-zero." );
 		}
-		
+
 		mPosition= 0;
-		
+
 	}
-		
-	
+
+
 
 	/**
 	* Check if next window of specified size is available.
@@ -86,14 +86,14 @@ public class LocIterator implements Iterator<Location> {
 	* the direction of the iteration.
 	* @return True if window of specified size is available.
 	* @throws IllegalArgumentException Window size parameter was not positive.
-	*/	
+	*/
 	public boolean hasNext( int windowSize, int increment )
 	{
 		if( windowSize <= 0 )
 		{
 			throw new IllegalArgumentException( "Window size must be positive." );
 		}
-		
+
 		try
 		{
 			if( increment > 0 )
@@ -117,19 +117,19 @@ public class LocIterator implements Iterator<Location> {
 			return false;
 		}
 	}
-		
+
 	/**
 	* Check if next window of default size is available.
 	*
 	* @return True if window of default size is available. The default size
 	* is the size specified in the LocIterator constructor.
-	*/	
+	*/
 	@Override
 	public boolean hasNext()
 	{
 		return hasNext( mWindowSize, mIncrement );
 	}
-	
+
     /**
      * Get portion of bounding location that has not yet been retrieved by next() method.
      *
@@ -138,7 +138,7 @@ public class LocIterator implements Iterator<Location> {
     public Location remainder()
     {
         Location remainder= null;
-              
+
         if( mPosition == 0 )
         {
             remainder= mBounds;
@@ -154,11 +154,11 @@ public class LocIterator implements Iterator<Location> {
                 remainder = mBounds.prefix( mPosition );
             }
         }
-        
+
         return remainder;
-      
+
     }
-    
+
     /**
 	 * Get next window of default size, then increment position by default amount. Both
 	 * defaults are specified in the LocIterator constructor.
@@ -171,9 +171,9 @@ public class LocIterator implements Iterator<Location> {
 	{
 		return next( mWindowSize, mIncrement );
 	}
-	
+
 	/**
-	 * Get next window of specified size, then increment position by specified amount. 
+	 * Get next window of specified size, then increment position by specified amount.
 	 *
 	 * @return Location of next window.
 	 * @param windowSize Size of window to get.
@@ -189,14 +189,14 @@ public class LocIterator implements Iterator<Location> {
 		{
 			throw new IllegalArgumentException( "Window size must be positive." );
 		}
-		
+
 		if( increment == 0 )
 		{
 			throw new IllegalArgumentException( "Increment must be non-zero." );
 		}
-		
+
 		Location r;
-		
+
 		try
 		{
 			if( increment > 0 )
@@ -214,18 +214,18 @@ public class LocIterator implements Iterator<Location> {
                     r= mBounds.prefix( mPosition ).suffix( - windowSize );
                 }
 			}
-			
+
 			mPosition+= increment;
-			
+
 		}
 		catch( Exception e )
 		{
 			throw new IndexOutOfBoundsException( e.toString() );
 		}
-		
+
 		return r;
 	}
-	
+
 	/**
 	 * Get string representation of iterator.
 	 *
@@ -236,7 +236,7 @@ public class LocIterator implements Iterator<Location> {
 	{
 		return "bounds=" + mBounds.toString() + "; pos=" + mPosition + "; winsize=" + mWindowSize + "; inc=" + mIncrement;
 	}
-	
+
 	/**
 	 * Unsupported.
 	 *
@@ -247,104 +247,104 @@ public class LocIterator implements Iterator<Location> {
 	{
 		throw new UnsupportedOperationException();
 	}
-	
+
      /**
      * @deprecated
      */
     @Deprecated
 	public static void main( String args[] )
     {
-        
+
        Location r= new Location( 10, 21 );
-       
+
        logger.info( "10 to 21, 1 by 1" );
        for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by 3" );
        for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by 1" );
        for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
-     
+
        logger.info( "10 to 21, 11 by 1" );
        for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 12 by 1" );
        for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 1 by -1" );
        for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by -3" );
        for( Location t: r.window( 3, -3 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by -1" );
        for( Location t: r.window( 3, -1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 1 by 1" );
        for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by 3" );
        for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by 1" );
        for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
-     
+
        logger.info( "10 to 21, 11 by 1" );
        for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 12 by 1" );
        for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 1 by -1" );
        for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
-       
+
        //reverse strand
        r= r.opposite();
        logger.info( "reverse strand" );
-       
+
        logger.info( "10 to 21, 1 by 1" );
        for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by 3" );
        for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by 1" );
        for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
-     
+
        logger.info( "10 to 21, 11 by 1" );
        for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 12 by 1" );
        for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 1 by -1" );
        for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by -3" );
        for( Location t: r.window( 3, -3 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by -1" );
        for( Location t: r.window( 3, -1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 1 by 1" );
        for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by 3" );
        for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 3 by 1" );
        for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
-     
+
        logger.info( "10 to 21, 11 by 1" );
        for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 12 by 1" );
        for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 1 by -1" );
        for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
-       
+
        logger.info( "10 to 21, 1 by 1 (+2)" );
        LocIterator i= r.iterator();
        int chunk= 1;
@@ -354,9 +354,9 @@ public class LocIterator implements Iterator<Location> {
         logger.info( t.toString() );
         chunk+= 2;
        }
-       
+
        //FIXME test remainder()
-       
+
        logger.info("JavaGene.LocIterator Passed.");
     }
 

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Dec 1, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -44,7 +44,7 @@ import java.util.List;
 
 public class TestFlexibleRotationMatrices extends TestCase{
 
-  
+
 
 
    public void testFlexibleRotationMatrices(){
@@ -79,7 +79,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
          String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
          //System.out.println(xml);
          AFPChain newChain = AFPChainXMLParser.fromXML (xml, ca1, ca3);
-         
+
          Matrix[] maxs1 = afpChain.getBlockRotationMatrix();
          //Atom[] shifts1 = afpChain.getBlockShiftVector();
          double[] blockRmsd = afpChain.getBlockRmsd();
@@ -88,7 +88,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
          // make sure the XML conversion worked OK.
          for ( int i = 0 ; i < newChain.getBlockNum();i++) {
-        	
+
             assertTrue(compareMatrices(maxs1[i],newChain.getBlockRotationMatrix()[i]));
             //assertTrue(compareVectors(shifts1[i],newChain.getBlockShiftVector()[i]));
             assertTrue(compareRmsd(blockRmsd[i], newChain.getBlockRmsd()[i]) );
@@ -106,8 +106,8 @@ public class TestFlexibleRotationMatrices extends TestCase{
             for ( int y = 0 ; y < blocks1[x].length ; y++){
                for ( int z = 0 ; z < blocks1[x][y].length && z < blockSize[x] ; z++){
                   //System.out.println(x + " " + y + " " + z);
-                  assertEquals("The values in the optAln arrays don't match! " + 
-                        x + " " + z + " " + blocks1[x][y][z]+ " " + 
+                  assertEquals("The values in the optAln arrays don't match! " +
+                        x + " " + z + " " + blocks1[x][y][z]+ " " +
                         blocks2[x][y][z],blocks1[x][y][z], blocks2[x][y][z]);
                }
             }
@@ -141,7 +141,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
    private void compareBlock(int blockNr, AFPChain afpChain, AFPChain newChain,
          Atom[] ca1, Atom[] ca2) throws StructureException {
-      
+
 
 
       Atom[] ca1Copy = StructureTools.cloneAtomArray(ca1);
@@ -200,7 +200,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
       // calc RMSD
 
 
-      double rmsdFile = SVDSuperimposer.getRMS(blockSet1, blockSet2);		
+      double rmsdFile = SVDSuperimposer.getRMS(blockSet1, blockSet2);
 
       // this is the value from the file. it never seems to match precisely, probably is calculated from initial block.
       // we can't reproduce the initial block, since we don;t serialize it.
@@ -216,15 +216,15 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
       Matrix max   = maxs2[blockNr];
       Atom   shift = shifts2[blockNr];
-    
+
       compareMatrices(max, m);
 
-      
+
       if ( blockNr == 0) {
     	  compareVectors(shift, s);
       } else {
     	  System.err.println("Not testing shift vectors for blocks > 1. There is still a problem...");
-    	  
+
       }
 
       for ( Atom a : ca2Copy2){
@@ -273,7 +273,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
       if ( doRigid)
          fatCat = new FatCatRigid();
-      else 
+      else
          fatCat = new FatCatFlexible();
 
       AFPChain afpChain = fatCat.align(ca1,ca2,params);

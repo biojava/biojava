@@ -32,34 +32,34 @@ import org.biojava.nbio.survival.data.WorkSheet;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-   
+
 /*
  *   This is a port of the R survival code used for doing Cox Regression. The algorithm was a fairly easy port from C code to Java where the challenge was
  *   making the code a little more object friendly. In the R code everything is passed around as an array and a large portion of the code is spent extracting
- *   data from the array for use in different calculations. By organizing the data in a class for each data point was able to simplify much of the code. 
+ *   data from the array for use in different calculations. By organizing the data in a class for each data point was able to simplify much of the code.
  *   Not all variants of different methods that you can select for doing various statistical calculations are implemented. Wouldn't be difficult to go back in
  *   add them in if they are important.
- * 
+ *
  *   In R you can pass in different paramaters to override defaults which requires parsing of the paramaters. In the Java code tried to be a little more exact
  *   in the code related to paramaters where using strata, weighting, robust and cluster are advance options. Additionaly code is implemented from Bob Gray
- *   to do variance correction when using weighted paramaters in a data set. 
+ *   to do variance correction when using weighted paramaters in a data set.
  *   /Users/Scooter/NetBeansProjects/biojava3-survival/docs/wtexamples.docx
- * 
+ *
  *   The CoxHelper class is meant to hide some of the implementation details.
- * 
+ *
  *   Issues - sign in CoxMart?
  *   double toler_chol = 1.818989e-12; Different value for some reason
  *   In robust linear_predictor set to 0 which implies score = 1 but previous score value doesn't get reset
- * 
- * 
+ *
+ *
  ** Cox regression fit, replacement for coxfit2 in order
- **   to be more frugal about memory: specificly that we 
+ **   to be more frugal about memory: specificly that we
  **   don't make copies of the input data.
- * 
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
+ *
  **
  **  the input parameters are
  **
@@ -223,7 +223,7 @@ public class CoxR {
         cmat = new double[nvar][nvar]; //dmatrix(scale + nvar,   nvar, nvar);
         cmat2 = new double[nvar][nvar]; //dmatrix(scale + nvar +nvar*nvar, nvar, nvar);
 
-        /* 
+        /*
          ** create output variables
          */
 //    PROTECT(beta2 = duplicate(ibeta));
@@ -241,7 +241,7 @@ public class CoxR {
         //   u = REAL(u2);
         u = new double[nvar];
         //   u = u2;
-//    PROTECT(loglik2 = allocVector(REALSXP, 2)); 
+//    PROTECT(loglik2 = allocVector(REALSXP, 2));
 //    loglik = REAL(loglik2);
         loglik = new double[2];
         //   loglik = loglik2;
@@ -271,7 +271,7 @@ public class CoxR {
 
         double[][] covar = new double[nvar][nused];
         ArrayList<String> clusterList = null;
-        
+
         if(cluster){
             clusterList = new ArrayList<String>();
         }
@@ -678,7 +678,7 @@ public class CoxR {
 
         if (gotofinish == false) {
             /*
-             ** We end up here only if we ran out of iterations 
+             ** We end up here only if we ran out of iterations
              */
             loglik[1] = newlk;
             chinv2(imat, nvar);
@@ -709,7 +709,7 @@ public class CoxR {
          coe.hazardRatioLoCI = Math.exp(b[j] - 1.95 * SE[j]);
          coe.hazardRatioHiCI = Math.exp(b[j] + 1.95 * SE[j]);
          }
-        
+
          */
 
         coxInfo.setScoreLogrankTest(sctest);
@@ -719,7 +719,7 @@ public class CoxR {
         coxInfo.u = u;
 
         //     for (int n = 0; n < beta.length; n++) {
-        //         se[n] = Math.sqrt(imat[n][n]); // / sd[n];            
+        //         se[n] = Math.sqrt(imat[n][n]); // / sd[n];
         //     }
 
 
@@ -773,7 +773,7 @@ public class CoxR {
         //          System.out.println(si.order + " " + si.getScore());
         //      }
 //        coxInfo.dump();
-   
+
 
         coxphfitSCleanup(coxInfo, useWeighted, robust,clusterList);
         return coxInfo;
@@ -827,7 +827,7 @@ public class CoxR {
             lp = lp + offset - sumcoefmeans;
             si.setLinearPredictor(lp);
             si.setScore(Math.exp(lp));
-            
+
  //           System.out.println("lp score " + si.order + " " + si.time + " " + si.getWeight() + " " + si.getClusterValue() + " " + lp + " " + Math.exp(lp));
         }
  //       ci.dump();
@@ -841,10 +841,10 @@ public class CoxR {
             SurvivalInfo si = ci.survivalInfoList.get(i);
             si.setResidual(res[i]);
         }
-        
+
         //this represents the end of coxph.fit.S code and we pickup
-        //after call to fit <- fitter(X, Y, strats ....) in coxph.R 
-       
+        //after call to fit <- fitter(X, Y, strats ....) in coxph.R
+
         if (robust) {
             ci.setNaiveVariance(ci.getVariance());
             double[][] temp;
@@ -856,10 +856,10 @@ public class CoxR {
                 //# get score for null model
                 //    if (is.null(init))
                 //          fit2$linear.predictors <- 0*fit$linear.predictors
-                //    else 
+                //    else
                 //          fit2$linear.predictors <- c(X %*% init)
                 //Set score to 1
-                
+
                 double[] templp = new double[ci.survivalInfoList.size()];
                 double[] tempscore = new double[ci.survivalInfoList.size()];
                 int i = 0;
@@ -879,7 +879,7 @@ public class CoxR {
                     si.setScore(tempscore[i]); //this erases stored value which isn't how the R code does it
                     i++;
                 }
-                
+
 
             } else {
                 temp = ResidualsCoxph.process(ci, ResidualsCoxph.Type.dfbeta, useWeighted, null);
@@ -894,7 +894,7 @@ public class CoxR {
                     si.setScore(1.0);
                 }
                 temp0 = ResidualsCoxph.process(ci, ResidualsCoxph.Type.score, useWeighted, null);
-                
+
                 i = 0;
                 for (SurvivalInfo si : ci.survivalInfoList) {
                     si.setLinearPredictor(templp[i]);
@@ -922,7 +922,7 @@ public class CoxR {
             ci.setRscore(wti.getTest());
         }
         calculateWaldTestInfo(ci);
-        
+
 
 
 
@@ -941,22 +941,22 @@ public class CoxR {
             ci.setWaldTestInfo(WaldTest.process(ci.getVariance(), b, toler_chol));
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
         CoxR coxr = new CoxR();
-        
+
 
         if (true) {
             try {
                InputStream is = coxr.getClass().getClassLoader().getResourceAsStream("uis-complete.txt");
 
 
-                
-                
+
+
                 WorkSheet worksheet = WorkSheet.readCSV(is, '\t');
                 ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
                 int i = 0;
@@ -1160,7 +1160,7 @@ public class CoxR {
         }
     }
 
- 
+
 
     /**
      *

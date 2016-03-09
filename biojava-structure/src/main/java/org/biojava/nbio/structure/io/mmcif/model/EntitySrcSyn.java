@@ -26,15 +26,15 @@ package org.biojava.nbio.structure.io.mmcif.model;
 /**
  * PDBX_ENTITY_SRC_SYN records the details about each chemically
              synthesized molecule (entity) in the asymmetric unit.
-             
+
  * @author Andreas Prlic
  *
  */
 public class EntitySrcSyn {
 	 String  details ;
-	 String  entity_id ;	
+	 String  entity_id ;
 	 String  ncbi_taxonomy_id ;
-	 String  organism_common_name ;	
+	 String  organism_common_name ;
 	 String  organism_scientific	 ;
 	 String  strain	;
 	public String getDetails() {
@@ -74,6 +74,6 @@ public class EntitySrcSyn {
 		this.strain = strain;
 	}
 
-	 
-	 
+
+
 }

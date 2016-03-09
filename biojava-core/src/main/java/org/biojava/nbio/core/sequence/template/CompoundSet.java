@@ -51,7 +51,7 @@ public interface CompoundSet<C extends Compound> {
 	public String getStringForCompound(C compound);
 
 	public boolean compoundsEquivalent(C compoundOne, C compoundTwo);
-   
+
     public boolean isValidSequence(Sequence<C> sequence);
 
 	public Set<C> getEquivalentCompounds(C compound);

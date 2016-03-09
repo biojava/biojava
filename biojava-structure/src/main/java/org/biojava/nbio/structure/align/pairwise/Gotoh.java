@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 29, 2006
  *
  */
@@ -107,7 +107,7 @@ public class Gotoh {
 
                 currentCell = aligmat[rowCounter][colCounter];
 
-                // no gap 
+                // no gap
                 currentCell.setValue( aligmat[rowCounter-1][colCounter-1].getValue() + currentCell.getValue());
                 currentCell.setRow((short)(rowCounter-1));
                 currentCell.setCol((short)(colCounter-1));
@@ -188,8 +188,8 @@ public class Gotoh {
             }
         }
 
-        // scan row i for gap, gap in SeqA 
-        // do not penalyze gaps 
+        // scan row i for gap, gap in SeqA
+        // do not penalyze gaps
         for (int k=1;k<=colCount;k++) {
             int val = aligmat[rowCount][colCount-k].getValue();
             if ( val > currentCell.getValue()){

@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,8 +20,8 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align.fatcat.calc;
@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import java.util.List;
 
 /** does post processing after alignment chaingin
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -58,7 +58,7 @@ public class AFPPostProcessor
       if ( debug){
          System.err.println("AFPPOstProcessor: postProcess blocknum = blocknumSpt:" + blockNum);
       }
-      
+
       //redo: merge blocks with similar transformations & remove small blocks
       //if(blockNum >= 2)     ClustBlock();
 
@@ -110,11 +110,11 @@ public class AFPPostProcessor
          maxt = 0;
          cut = 0;
          for(i = 1; i < blockSize[bk]; i ++)     {
-            a = i + block2Afp[bk];            
+            a = i + block2Afp[bk];
             if(afpChainTwiList[a] > maxt)   {
                maxt = afpChainTwiList[a];
                cut = i;
-               
+
             }
          }
          if(debug)
@@ -133,10 +133,10 @@ public class AFPPostProcessor
 
 
          int[] afpChainList = afpChain.getAfpChainList();
-         //int[] subrange1    = getSubrange(afpChainList, block2Afp[bk + 1] );                           
+         //int[] subrange1    = getSubrange(afpChainList, block2Afp[bk + 1] );
          blockRmsd[bk + 1]  = AFPChainer.calAfpRmsd(blockSize[bk + 1],  afpChainList, block2Afp[bk + 1] , afpChain, ca1, ca2);
 
-         //int[] subrange2    = getSubrange(afpChainList, block2Afp[bk] );   
+         //int[] subrange2    = getSubrange(afpChainList, block2Afp[bk] );
          blockRmsd[bk]      = AFPChainer.calAfpRmsd(blockSize[bk],      afpChainList, block2Afp[bk], afpChain, ca1, ca2);
 
          //split a block at the biggest position
@@ -152,12 +152,12 @@ public class AFPPostProcessor
          }
       }
 
-      
+
       afpChain.setBlockNum(blockNum);
       afpChain.setBlockSize(blockSize);
       afpChain.setBlockRmsd(blockRmsd);
       afpChain.setBlock2Afp(block2Afp);
-     
+
 
    }
 
@@ -318,7 +318,7 @@ public class AFPPostProcessor
          System.err.println("AFPPostProcessor: mergeBlock end blocknum:" + blockNum);
       }
       afpChain.setBlock2Afp(block2Afp);
-      afpChain.setBlockSize(blockSize);      
+      afpChain.setBlockSize(blockSize);
       afpChain.setBlockNum(blockNum);
       afpChain.setBlockRmsd(blockRmsd);
       afpChain.setAfpChainTwiNum(afpChainTwiNum);
@@ -349,7 +349,7 @@ public class AFPPostProcessor
       double  rmsd = AFPChainer.calAfpRmsd(afpn, list,0, afpChain,ca1,ca2);
 
       afpChain.setBlock2Afp(block2Afp);
-      afpChain.setBlockSize(blockSize);  
+      afpChain.setBlockSize(blockSize);
       afpChain.setAfpChainList(afpChainList);
 
       return rmsd;

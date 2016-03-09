@@ -30,10 +30,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A bean for identifying groups in GroupContactSets.
- * Used only within the contact package to be able to compare 
- * contacts between chains of same entity/compound based on residue numbers 
+ * Used only within the contact package to be able to compare
+ * contacts between chains of same entity/compound based on residue numbers
  * and independently from chain identifiers.
- * 
+ *
  * @author duarte_j
  */
 class ResidueIdentifier implements Serializable {
@@ -41,10 +41,10 @@ class ResidueIdentifier implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(ResidueIdentifier.class);
-	
+
 	private int seqResIndex;
-	
-	
+
+
 	public ResidueIdentifier(Group g) {
 
 		Chain c = g.getChain();
@@ -62,7 +62,7 @@ class ResidueIdentifier implements Serializable {
 
 		}
 	}
-	
+
 	public int getSeqResIndex() {
 		return seqResIndex;
 	}
@@ -85,7 +85,7 @@ class ResidueIdentifier implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ResidueIdentifier other = (ResidueIdentifier) obj;
-		
+
 		return this.seqResIndex == other.seqResIndex;
 	}
 

@@ -33,7 +33,7 @@ import java.io.InputStreamReader;
  * @author Matthew Pocock
  */
 public final class OntoTools {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(OntoTools.class);
 
   private static final Ontology CORE_ONTOLOGY;
@@ -101,7 +101,7 @@ public final class OntoTools {
       NONE = CORE_ONTOLOGY.getTerm("none");
       IS_A = CORE_ONTOLOGY.getTerm("is-a");
       PART_OF = CORE_ONTOLOGY.getTerm("part-of");
-      
+
       // SUB_TYPE_OF = CORE_ONTOLOGY.getTerm("sub_type_of");
       // INSTANCE_OF = CORE_ONTOLOGY.getTerm("instance_of");
       // DOMAIN = CORE_ONTOLOGY.getTerm("domain");

@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jul 16, 2006
  *
  */
@@ -35,19 +35,19 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
+/**
  *  A class that obtains structures via DAS and aligns them.
  *  This is done in a separate thread.
- *  It is possible to register Event listeners to get notification of when 
+ *  It is possible to register Event listeners to get notification of when
  *  the download has finished.
- *  
+ *
  * @author Aleix Lafita
  * @since 4.2.0
- * 
+ *
  */
 public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 
-	private static final Logger logger = 
+	private static final Logger logger =
 			LoggerFactory.getLogger(MultipleAlignmentCalc.class);
 
 	private List<StructureIdentifier> names;
@@ -55,15 +55,15 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 
 	private MultipleAlignmentGUI parent;
 
-	/** 
+	/**
 	 * Requests an alignment of the pdbs.
 	 * If they are empty strings, they are ignored.
-	 * 
-	 * @param parent the gui frame that interacts with this class          
+	 *
+	 * @param parent the gui frame that interacts with this class
 	 * @param structures
 	 * @param names
 	 */
-	public MultipleAlignmentCalc(MultipleAlignmentGUI parent, 
+	public MultipleAlignmentCalc(MultipleAlignmentGUI parent,
 			List<Structure> structures, List<StructureIdentifier> names) {
 
 		this.parent= parent;
@@ -74,7 +74,7 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 	@Override
 	public void run() {
 
-		MultipleStructureAligner algorithm = 
+		MultipleStructureAligner algorithm =
 				parent.getMultipleStructureAligner();
 		try {
 

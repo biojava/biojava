@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 27 Mar 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.xtal.io;
@@ -56,14 +56,14 @@ public class SpaceGroupMapRoot {
 	}
 
 
-	public  String toXML() throws JAXBException { 
+	public  String toXML() throws JAXBException {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-		PrintStream ps = new PrintStream(baos);		
+		PrintStream ps = new PrintStream(baos);
 
 		JAXBContext jaxbContext = JAXBContext.newInstance(SpaceGroupMapRoot.class);
-		
+
 		Marshaller xmlConverter = jaxbContext.createMarshaller();
 		xmlConverter.setProperty("jaxb.formatted.output",true);
 		xmlConverter.marshal(this,ps);
@@ -73,7 +73,7 @@ public class SpaceGroupMapRoot {
 
 	public static SpaceGroupMapRoot fromXML(String xml) throws JAXBException{
 		SpaceGroupMapRoot job = null;
-		
+
 		JAXBContext jaxbContext = JAXBContext.newInstance(SpaceGroupMapRoot.class);
 
 		Unmarshaller un = jaxbContext.createUnmarshaller();

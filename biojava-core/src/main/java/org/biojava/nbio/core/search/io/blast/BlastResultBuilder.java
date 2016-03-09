@@ -27,10 +27,10 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * Designed by Paolo Pavan.
- * You may want to find my contacts on Github and LinkedIn for code info 
+ * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
- * 
+ *
  * @author Paolo Pavan
  */
 
@@ -99,7 +99,7 @@ public class BlastResultBuilder {
         this.hits = hits;
         return this;
     }
-    
+
     public BlastResultBuilder setQuerySequence(Sequence s) {
         this.querySequence = s;
         return this;

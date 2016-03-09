@@ -55,7 +55,7 @@ public class Icosahedron implements Polyhedron {
 		this.circumscribedRadius = cirumscribedRadius;
 	}
 	/**
-	 * Returns the radius of an inscribed sphere, that is tangent to each 
+	 * Returns the radius of an inscribed sphere, that is tangent to each
 	 * of the icosahedron's faces
 	 * @return the inscribedRadius
 	 */
@@ -65,7 +65,7 @@ public class Icosahedron implements Polyhedron {
 	}
 
 	/**
-	 * Sets the radius of an inscribed sphere, that is tangent to each 
+	 * Sets the radius of an inscribed sphere, that is tangent to each
 	 * of the icosahedron's faces
 	 * @param inscribedRadius the inscribedRadius to set
 	 */
@@ -75,7 +75,7 @@ public class Icosahedron implements Polyhedron {
 	}
 
 	/**
-	 * Returns the radius of a sphere, that is tangent to each 
+	 * Returns the radius of a sphere, that is tangent to each
 	 * of the icosahedron's edges
 	 *
 	 * @return the midRadius
@@ -86,7 +86,7 @@ public class Icosahedron implements Polyhedron {
 	}
 
 	/**
-	 * Sets the radius of radius of a sphere, that is tangent to each 
+	 * Sets the radius of radius of a sphere, that is tangent to each
 	 * of the icosahedron's edges
 	 * @param midRadius the midRadius to set
 	 */
@@ -122,20 +122,20 @@ public class Icosahedron implements Polyhedron {
 		for (Point3d p: icosahedron) {
 			m.transform(p);
 		}
-		
+
 		return icosahedron;
 	};
-	
+
 	@Override
 	public List<int[]> getLineLoops() {
 		return Arrays.asList(lineLoop1, lineLoop2, lineLoop3, lineLoop4, lineLoop5, lineLoop6);
 	}
-	
+
 	@Override
 	public int getViewCount() {
 		return 3;
 	}
-	
+
 	@Override
 	public String getViewName(int index) {
 		String name;
@@ -150,7 +150,7 @@ public class Icosahedron implements Polyhedron {
 		}
         return name;
 	}
-	
+
 	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
@@ -168,27 +168,27 @@ public class Icosahedron implements Polyhedron {
 		}
 		return m;
 	}
-	
+
 	private static double getSideLengthFromInscribedRadius(double radius) {
 		return radius / (Math.sqrt(3)/12 * (3 + Math.sqrt(5)));
 	}
-	
+
 	private static double getInscribedRadiusFromSideLength(double sideLength) {
 		return sideLength * (Math.sqrt(3)/12 * (3 + Math.sqrt(5)));
 	}
-	
+
 	private static double getSideLengthFromMiddleRadius(double radius) {
 		return radius * 4 /(1 + Math.sqrt(5));
 	}
-	
+
 	private static double getMiddleRadiusFromSideLength(double sideLength) {
 		return sideLength / 4 * (1 + Math.sqrt(5));
 	}
-	
+
 	private static double getSideLengthFromCircumscribedRadius(double radius) {
 		return radius * 4 / Math.sqrt(10 + 2 * Math.sqrt(5));
 	}
-	
+
 	private static double getCircumscribedRadiusFromSideLength(double sideLength) {
 		return sideLength / 4 * Math.sqrt(10 + 2 * Math.sqrt(5));
 	}

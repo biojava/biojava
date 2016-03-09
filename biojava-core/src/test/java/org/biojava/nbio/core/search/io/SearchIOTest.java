@@ -32,30 +32,30 @@ import static org.junit.Assert.*;
 
 /**
  * Designed by Paolo Pavan.
- * You may want to find my contacts on Github and LinkedIn for code info 
+ * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
- * 
+ *
  * @author Paolo Pavan
  */
 
 public class SearchIOTest {
-    
+
     public SearchIOTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -67,7 +67,7 @@ public class SearchIOTest {
         String resource = "/org/biojava/nbio/core/search/io/blast/test.two-query.blasttxt";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
-        
+
         final SearchIO instance;
         try {
             instance = new SearchIO(file);
@@ -83,7 +83,7 @@ public class SearchIOTest {
         String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
-        
+
         ResultFactory blastResultFactory = new BlastXMLParser();
         final SearchIO instance;
         try {
@@ -101,7 +101,7 @@ public class SearchIOTest {
         String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
-        
+
         ResultFactory blastResultFactory = new BlastXMLParser();
         final SearchIO instance;
         try {

@@ -40,7 +40,7 @@ public class PrettyXMLWriter implements XMLWriter {
     private boolean isOpeningTag = false;
     private boolean afterNewline = true;
     private int indent = 0;
-    
+
     private Map<String, String> namespacePrefixes = new HashMap<String, String>();
     private int namespaceSeed = 0;
     private LinkedList<List<String>> namespaceBindings = new LinkedList<List<String>>();
@@ -51,7 +51,7 @@ public class PrettyXMLWriter implements XMLWriter {
     }
 
     @Override
-	public void declareNamespace(String nsURI, String prefixHint) 
+	public void declareNamespace(String nsURI, String prefixHint)
         throws IOException
     {
         if (!namespacePrefixes.containsKey(nsURI)) {
@@ -63,8 +63,8 @@ public class PrettyXMLWriter implements XMLWriter {
             }
         }
     }
-    
-    private void handleDeclaredNamespaces() 
+
+    private void handleDeclaredNamespaces()
         throws IOException
     {
         if (namespacesDeclared.size() == 0) {
@@ -78,7 +78,7 @@ public class PrettyXMLWriter implements XMLWriter {
             namespacesDeclared.clear();
         }
     }
-    
+
     protected void writeIndent()
         throws IOException
     {
@@ -102,7 +102,7 @@ public class PrettyXMLWriter implements XMLWriter {
         afterNewline = false;
         namespaceBindings.add(null);
     }
-    
+
     private String allocPrefix(String nsURI) {
         String prefix = "ns" + (++namespaceSeed);
         namespacePrefixes.put(nsURI, prefix);
@@ -115,7 +115,7 @@ public class PrettyXMLWriter implements XMLWriter {
         bindings.add(nsURI);
         return prefix;
     }
-    
+
     @Override
 	public void openTag(String nsURI, String localName)
         throws IOException
@@ -140,7 +140,7 @@ public class PrettyXMLWriter implements XMLWriter {
         }
         handleDeclaredNamespaces();
     }
-    
+
     @Override
 	public void openTag(String qName)
         throws IOException
@@ -164,7 +164,7 @@ public class PrettyXMLWriter implements XMLWriter {
             prefix = allocPrefix(nsURI);
             attribute("xmlns:" + prefix, nsURI);
         }
-        
+
         writer.print(' ');
         writer.print(prefix);
         writer.print(':');
@@ -173,7 +173,7 @@ public class PrettyXMLWriter implements XMLWriter {
         printAttributeValue(value);
         writer.print('"');
     }
-    
+
     @Override
 	public void attribute(String qName, String value)
         throws IOException
@@ -199,7 +199,7 @@ public class PrettyXMLWriter implements XMLWriter {
             }
         }
     }
-    
+
     @Override
 	public void closeTag(String nsURI, String localName)
         throws IOException
@@ -224,9 +224,9 @@ public class PrettyXMLWriter implements XMLWriter {
         }
         _closeTag();
     }
-    
+
     @Override
-	public void closeTag(String qName) 
+	public void closeTag(String qName)
         throws IOException
     {
         indent--;
@@ -276,7 +276,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	writer.println(data);
     }
 
-    protected void printChars(String data) 
+    protected void printChars(String data)
         throws IOException
     {
 	if (data == null) {
@@ -294,7 +294,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
     }
 
-    protected void printAttributeValue(String data) 
+    protected void printAttributeValue(String data)
         throws IOException
     {
 	if (data == null) {
@@ -319,7 +319,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	writer.print((int) c);
 	writer.print(';');
     }
-    
+
     @Override
 	public void close()
         throws IOException

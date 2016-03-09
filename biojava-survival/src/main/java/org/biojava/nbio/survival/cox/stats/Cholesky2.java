@@ -29,7 +29,7 @@ package org.biojava.nbio.survival.cox.stats;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class Cholesky2 {
-   
+
        /* $Id: cholesky2.c 11357 2009-09-04 15:22:46Z therneau $
      **
      ** subroutine to do Cholesky decompostion on a matrix: C = FDF'
@@ -99,5 +99,5 @@ public class Cholesky2 {
         }
         return (rank * nonneg);
     }
-    
+
 }

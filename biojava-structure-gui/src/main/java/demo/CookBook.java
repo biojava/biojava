@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 11, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -47,7 +47,7 @@ public class CookBook
 
       String name1="1HNG.B";
       String name2="1A64.A";
-      
+
 
       try {
 
@@ -63,7 +63,7 @@ public class CookBook
          // no need to change anything below this line
          // ////////////////////////////
 
-         // load the structures 
+         // load the structures
          Structure structure1 = cache.getStructure(name1);
          Structure structure2 = cache.getStructure(name2);
 
@@ -74,7 +74,7 @@ public class CookBook
          // do the actual alignment
          AFPChain afpChain = algorithm.align(ca1,ca2);
 
-         // just name the two molecules 
+         // just name the two molecules
          afpChain.setName1(name1);
          afpChain.setName2(name2);
 
@@ -86,22 +86,22 @@ public class CookBook
 
          // show the alignment in 3D in jmol
          StructureAlignmentJmol jmol= StructureAlignmentDisplay.display(afpChain, ca1, ca2);
-                 
+
          // set the display title for the frame
          jmol.setTitle(algorithm.getAlgorithmName() + " : " + name1 + " vs. " + name2);
 
          // here we open up the alignment - text panel that can interact with the 3D jmol display.
          DisplayAFP.showAlignmentPanel(afpChain, ca1,ca2,jmol);
-         
-         // we can print an XML version 
+
+         // we can print an XML version
          //System.out.println(AFPChainXMLConverter.toXML(afpChain, ca1, ca2));
 
-         // or print the same output as original FATCAT 
+         // or print the same output as original FATCAT
          System.out.println(AfpChainWriter.toFatCat(afpChain, ca1, ca2));
-         
-   
 
-       
+
+
+
 
       } catch (Exception e){
          e.printStackTrace();

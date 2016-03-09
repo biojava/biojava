@@ -25,11 +25,11 @@ package org.biojava.nbio.alignment.io;
 
 /**
  * Stores all the content parsed from the #=GR lines
- * 
+ *
  * @since 3.0.5
  * @author Amr AL-Hossary
  * @author Marko Vaz
- * 
+ *
  */
 class StockholmResidueAnnotation {
 	//TODO use proper data types
@@ -96,6 +96,6 @@ class StockholmResidueAnnotation {
 	public void setIntron(String intron) {
 		this.intron = intron;
 	}
-	
-	
+
+
 }

@@ -35,7 +35,7 @@ public class ClusterDomains {
 
 		ndom = domains.size();
 
-		
+
 		int Si = -1;
 		int Sj = -1;
 		int Sis = -1;
@@ -48,7 +48,7 @@ public class ClusterDomains {
 		double maximum_values = PDPParameters.CUT_OFF_VALUE1S;
 		double maximum_valuem = PDPParameters.CUT_OFF_VALUE1M;
 		double maximum_value  = PDPParameters.CUT_OFF_VALUE1;
-		
+
 
 
 		if (ndom < 2) return domains;
@@ -71,12 +71,12 @@ public class ClusterDomains {
 					int size2dom2=domains.get(j).size;
 					double minDomSize=Math.min(size1dom1,size2dom2);
 					double maxDomSize=Math.max(size1dom1,size2dom2);
-					
-					
+
+
 					// set some limits on how big the domains can get
 					if(minDomSize>150&&maxDomSize>1.5*minDomSize) maxDomSize=1.5*minDomSize;
 					else if(maxDomSize>2*minDomSize) maxDomSize=2*minDomSize;
-					
+
 					long size1= new Double(Math.min(PDPParameters.MAXSIZE,minDomSize)).longValue();
 					long size2= new Double(Math.min(PDPParameters.MAXSIZE,maxDomSize)).longValue();
 					minDomSize=Math.min(Math.pow(minDomSize,1.6/3)+PDPParameters.RG1,Math.pow(minDomSize,1.4/3)+Math.pow(PDPParameters.TD1,1.6/3)+PDPParameters.RG1);
@@ -97,12 +97,12 @@ public class ClusterDomains {
 
 				S_value=(double)total_contacts/total_max_contacts/avd;
 					 */
-					
+
 					double S_value= total_contacts/(double)total_max_contacts;
 					if(verbose) System.out.println(String.format(" size1=%d size2=%d minDomSize=%5.2f maxDomSize=%5.2f total_contacts = %d ", size1,size2,minDomSize,maxDomSize,total_contacts));
 					if(verbose) System.out.println(String.format(" total_contacts = %d total_max_contacts = %d", total_contacts, total_max_contacts));
 					if(verbose) System.out.println(String.format(" maximum_value = %f S_value = %f\n",maximum_value, S_value));
-					
+
 					if (S_value > maximum_value) {
 						maximum_value = S_value;
 						Si = i;
@@ -128,7 +128,7 @@ public class ClusterDomains {
 				System.out.println("                     " + maximum_valuem + " 1M:" + PDPParameters.CUT_OFF_VALUE1M );
 				System.out.println("                     " + maximum_values + " 1S:" + PDPParameters.CUT_OFF_VALUE1S);
 			}
-			
+
 			if (maximum_value > PDPParameters.CUT_OFF_VALUE1) {
 				/*
 			avd=(domains.get(Si).avd+domains.get(Sj).avd)/2;
@@ -202,13 +202,13 @@ public class ClusterDomains {
 	private static long getTotalContacts(List<Domain> domains,
 			PDPDistanceMatrix pdpDistMatrix, Domain i, Domain j) {
 		long total_contacts=0;
-		
-		
-		
-		
+
+
+
+
 		for(int k=0;k<i.nseg;k++) {
 			for(int l=0;l<j.nseg;l++) {
-				long contacts = calc_S(j.getSegmentAtPos(l).getFrom(), 
+				long contacts = calc_S(j.getSegmentAtPos(l).getFrom(),
 						j.getSegmentAtPos(l).getTo(),
 						i.getSegmentAtPos(k).getFrom(),
 						i.getSegmentAtPos(k).getTo(),
@@ -225,7 +225,7 @@ public class ClusterDomains {
 
 		if ( verbose)
 			System.out.println("  +++  combining domains " + Si + " " + Sj);
-		
+
 		List<Domain> newdoms = new ArrayList<Domain>();
 
 		//int ndom = domains.size();
@@ -252,22 +252,22 @@ public class ClusterDomains {
 		ndom--;
 		return newdoms;
 
-	} 
+	}
 
 	private static long calc_S (int a1,int b1,int a2,int b2, PDPDistanceMatrix pdpDistMatrix)
 	{
-		
+
 		long contacts = 0;
 
 		int[][] dist = pdpDistMatrix.getDist();
 
-		for(int i=a1;i<=b1;i++) 
-			for(int j=a2;j<=b2;j++) 
+		for(int i=a1;i<=b1;i++)
+			for(int j=a2;j<=b2;j++)
 				contacts+=dist[i][j];
 
 		return contacts;
 	}
-	
+
 	private static final void listdomains(List<Domain> domains){
 
 		int i = -1;

@@ -166,7 +166,7 @@ public class ChemCompTools {
 
         // standard residues have no parent
         if ((pid == null) || (pid.equals("?"))){
-          
+
         	// and they have a one letter code
             if ( ( one != null) && ( ! one.equals("?") )){
 

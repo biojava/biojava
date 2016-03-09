@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
@@ -38,7 +38,7 @@ import java.util.List;
  * @author Peter
  *
  */
-public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator { 
+public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	private static double AXIS_SCALE_FACTOR = 1.2;
 	private static double SIDE_CHAIN_EXTENSION = 6.0;
 	private HelixAxisAligner helixAxisAligner = null;
@@ -50,27 +50,27 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
         this.helixAxisAligner = helixAxisAligner;
         this.name = name;
 	}
-	
+
 	public void setOnTheFly(boolean onTheFly) {
 		this.onTheFly = onTheFly;
 	}
-	
+
 	public int getZoom() {
 		int zoom = (int) Math.round(100.0/AXIS_SCALE_FACTOR);
 		return zoom;
 	}
-	
+
 	/**
 	 * Returns a Jmol script to set the default orientation for a structure
 	 * @return Jmol script
 	 */
-	public String getDefaultOrientation() {	
+	public String getDefaultOrientation() {
 		StringBuilder s = new StringBuilder();
 		s.append(setCentroid());
 
 		Quat4d q = new Quat4d();
 		q.set(helixAxisAligner.getRotationMatrix());
-		
+
 		// set orientation
 		s.append("moveto 0 quaternion{");
 		s.append(jMolFloat(q.x));
@@ -83,11 +83,11 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		s.append("};");
 		return s.toString();
 	}
-	
+
 	public int getOrientationCount() {
 		return 4;
 	}
-	
+
 	@Override
 	public String getOrientation(int index) {
 		StringBuilder s = new StringBuilder();
@@ -100,7 +100,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		Quat4d r = new Quat4d();
 		r.set(new AxisAngle4d(1,0,0,index*Math.PI/2));
 		Quat4d q = new Quat4d();
-		q.set(helixAxisAligner.getRotationMatrix());	
+		q.set(helixAxisAligner.getRotationMatrix());
 		r.mul(q);
 
 		// set orientation
@@ -116,7 +116,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		s.append(";");
 		return s.toString();
 	}
-	
+
 	/**
 	 * Returns a Jmol script that sets a specific orientation and zoom
 	 * to draw either axes or polyhedron
@@ -128,14 +128,14 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		s.append(getOrientation(index));
 		s.insert(s.length()-1, getZoom());
 		return s.toString();
-		
+
 	}
 	/**
 	 * Returns the name of a specific orientation
 	 * @param index orientation index
 	 * @return name of orientation
 	 */
-	public String getOrientationName(int index) {	
+	public String getOrientationName(int index) {
 		switch (index) {
 		    case 0: return "Side";
 		    case 1: return "Front";
@@ -148,15 +148,15 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getTransformation()
 	 */
-	public Matrix4d getTransformation() {	
+	public Matrix4d getTransformation() {
 	    return helixAxisAligner.getTransformation();
 	}
-	
-	
+
+
 	public void setDefaultColoring(String colorScript) {
 		this.defaultColoring = colorScript;
 	}
-	
+
 	/**
 	 * Returns a Jmol script that draws an invisible polyhedron around a structure.
 	 * Use showPolyhedron() and hidePolyhedron() to toggle visibility.
@@ -164,7 +164,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 */
 	public String drawPolyhedron() {
 		StringBuilder s = new StringBuilder();
-		
+
 		// for now, return empty script until this has been implemented properly
 //		if (s.length() == 0)
 //			return s.toString();
@@ -172,7 +172,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 //		Point3d[] vertices = getRepeatUnitCenters();
 		List<Point3d> vertices = helixAxisAligner.getSubunits().getOriginalCenters();
 		vertices = extendUnitCenters(vertices);
-		
+
 		int index = 0;
 		Color4f c = new Color4f(Color.MAGENTA);
 //		double width = getMaxExtension()*0.015;
@@ -182,7 +182,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 //		layerLines.addAll(helixAxisAligner.getHelixLayers().getByLowestAngle().getLayerLines());
 		List<List<Integer>> layerLines = helixAxisAligner.getHelixLayers().getByLargestContacts().getLayerLines();
 
-		
+
 		for (List<Integer> line : layerLines) {
 			s.append("draw polyhedron");
 			s.append(name);
@@ -197,9 +197,9 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			s.append(getJmolColor(c));
 			s.append(" off;");
 		}
-		
+
 		List<Point3d> interiorVertices = interiorCenters(vertices);
-		
+
 		for (int i = 0; i < vertices.size(); i++) {
 			s.append("draw polyhedron");
 			s.append(name);
@@ -213,14 +213,14 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			s.append(getJmolColor(c));
 			s.append(" off;");
 		}
-		
+
 //		Matrix4d transformation = helixAxisTransformation.getHelixLayers().getByLowestAngle().getTransformation();
-//		
+//
 //		Point3d[] vertices2 = SuperPosition.clonePoint3dArray(vertices);
 //		for (Point3d p: vertices2) {
 //			transformation.transform(p);
 //		}
-//		
+//
 //		// extend grid by one turn in +z direction
 //		for (int[] lineLoop: getLayerLines()) {
 //			s.append("draw line");
@@ -247,8 +247,8 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 //			s.append(getJmolColor(c));
 //			s.append(" off;");
 //		}
-//		
-//		
+//
+//
 //		// extend grid by one turn into -z direction
 //		Point3d[] vertices3 = SuperPosition.clonePoint3dArray(vertices);
 //		Matrix4d m = new Matrix4d();
@@ -282,18 +282,18 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 //			s.append(getJmolColor(c));
 //			s.append(" off;");
 //		}
-		
+
 		return s.toString();
 	}
-	
+
 	public String hidePolyhedron() {
 		return "draw polyhedron* off;";
 	}
-	
+
 	public String showPolyhedron() {
 		return "draw polyhedron* on;";
 	}
-	
+
 	/**
 	 * Returns a Jmol script that draws symmetry or inertia axes for a structure.
 	 * Use showAxes() and hideAxes() to toggle visibility.
@@ -327,7 +327,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		s.append(" off;");
 		return s.toString();
 	}
-	
+
 	/**
 	 * Returns a Jmol script to hide axes
 	 * @return Jmol script
@@ -335,7 +335,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	public String hideAxes() {
 		return "draw axes* off;";
 	}
-	
+
 	/**
 	 * Returns a Jmol script to show axes
 	 * @return Jmol script
@@ -343,7 +343,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	public String showAxes() {
 		return "draw axes* on;";
 	}
-	
+
 	/**
 	 * Returns a Jmol script that displays a symmetry polyhedron and symmetry axes
 	 * and then loop through different orientations
@@ -351,18 +351,18 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 */
 	public String playOrientations() {
 		StringBuilder s = new StringBuilder();
-		
-		// draw footer	
+
+		// draw footer
 		s.append(drawFooter("Symmetry Helical", "white"));
-		
+
 		// draw polygon
 		s.append(drawPolyhedron()); // draw invisibly
 		s.append(showPolyhedron());
-			
+
 		// draw axes
 		s.append(drawAxes());
 		s.append(showAxes());
-		
+
 		// loop over all orientations with 4 sec. delay
 		for (int i = 0; i < getOrientationCount(); i++) {
 			s.append(deleteHeader());
@@ -370,16 +370,16 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			s.append(drawHeader(getOrientationName(i), "white"));
 			s.append("delay 4;");
 		}
-		
+
 		// go back to first orientation
 		s.append(deleteHeader());
 		s.append(getOrientationWithZoom(0));
 		s.append(drawHeader(getOrientationName(0), "white"));
-		
+
 		return s.toString();
 	}
-	
-	
+
+
 	/**
 	 * Returns a Jmol script that colors the subunits of a structure by different colors
 	 * @return
@@ -401,7 +401,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			}
 		}
 	    Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
-	    
+
 		for (int i = 0; i < orbits.size(); i++) {
 				for (Integer j: orbits.get(i)) {
 					Color4f c = colors[i];
@@ -417,7 +417,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		String coloring = defaultColoring + getJmolColorScript(colorMap);
 		return coloring;
 	}
-	
+
 	/**
 	 * Returns a Jmol script that colors subunits by their sequence cluster ids.
 	 * @return Jmol script
@@ -432,7 +432,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	    Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
 	    Color4f[] colors = ColorConverter.convertColor4f(col);
 		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
-		
+
 		for (int i = 0; i < n; i++) {
 			Color4f c = colors[seqClusterIds.get(i)];
 			List<String> ids = colorMap.get(c);
@@ -447,8 +447,8 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		String coloring = defaultColoring + getJmolColorScript(colorMap);
 		return coloring;
 	}
-	
-	
+
+
 	/**
 	 * Returns a Jmol script that colors subunits to highlight the symmetry within a structure
 	 * Different subunits should have a consistent color scheme or different shade of the same colors
@@ -463,17 +463,17 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		List<Integer> clusterIds = subunits.getSequenceClusterIds();
 		int clusterCount = Collections.max(clusterIds) + 1;
 
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>(); 
+		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
 
 		int maxLen = 0;
 		for (List<Integer> unit: units) {
 			maxLen = Math.max(maxLen,  unit.size());
 		}
-	
-//		Color4f[] colors = getSymmetryColors(permutation.size()); 
-		Color4f[] colors = getSymmetryColors(subunits.getSubunitCount()); 
+
+//		Color4f[] colors = getSymmetryColors(permutation.size());
+		Color4f[] colors = getSymmetryColors(subunits.getSubunitCount());
 		int count = 0;
-		
+
 		for (int i = 0; i < maxLen; i++) {
 			for (int j = 0; j < units.size(); j++) {
 				int m = units.get(j).size();
@@ -494,11 +494,11 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 				}
 			}
 		}
-		
+
 		String coloring = defaultColoring + getJmolColorScript(colorMap);
 		return coloring;
 	}
-	
+
 	private String getChainSpecification(List<Integer> modelNumbers, List<String> chainIds, int subunit) {
 		if (onTheFly) {
 			if (Collections.max(modelNumbers) > 1) {
@@ -511,27 +511,27 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		    return chainIds.get(subunit) + "/" + (modelNumbers.get(subunit)+1);
 		}
 	}
-	
+
 	/**
 	 * Orients layer lines from lowest y-axis value to largest y-axis value
 	 */
 	private List<List<Integer>> orientLayerLines(List<List<Integer>> layerLines) {
 		Matrix4d transformation = helixAxisAligner.getTransformation();
 		List<Point3d> centers = helixAxisAligner.getSubunits().getOriginalCenters();
-		
+
 		for (int i = 0; i < layerLines.size(); i++) {
 			List<Integer> layerLine = layerLines.get(i);
-			
+
 			// get center of first subunit in layerline and transform to standard orientation (helix axis aligned with y-axis)
 			int first = layerLine.get(0);
 			Point3d firstSubunit = new Point3d(centers.get(first));
 			transformation.transform(firstSubunit);
-			
+
 			// get center of last subunit in layerline and transform to standard orientation (helix axis aligned with y-axis)
 			int last = layerLine.get(layerLine.size()-1);
 			Point3d lastSubunit = new Point3d(centers.get(last));
 			transformation.transform(lastSubunit);
-			
+
 			// a layerline should start at the lowest y-value, so all layerlines have a consistent direction from -y value to +y value
 			if (firstSubunit.y > lastSubunit.y) {
 //				System.out.println("reorienting layer line: " + layerLine);
@@ -540,7 +540,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		}
 		return layerLines;
 	}
-		
+
 	// --- protected methods ---
 	/**
 	 * Returns the maximum extension (length) of structure
@@ -552,14 +552,14 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		maxExtension = Math.max(maxExtension, dimension.z);
 		return maxExtension;
 	}
-	
+
 	private List<Point3d> extendUnitCenters(List<Point3d> points) {
 		Matrix4d transformation = helixAxisAligner.getTransformation();
 		Matrix4d reversetransformation = helixAxisAligner.getReverseTransformation();
 		double radius = helixAxisAligner.getRadius();
 		radius += SIDE_CHAIN_EXTENSION; // add space for side chains
 //		System.out.println("XZRadius: " + radius);
-		
+
 
 		List<Point3d> ePoints = new ArrayList<Point3d>(points.size());
 		for (Point3d p: points) {
@@ -574,11 +574,11 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		}
 		return ePoints;
 	}
-	
+
 	private List<Point3d> interiorCenters(List<Point3d> points) {
 		Matrix4d transformation = helixAxisAligner.getTransformation();
 		Matrix4d reversetransformation = helixAxisAligner.getReverseTransformation();
-		
+
 		List<Point3d> ePoints = new ArrayList<Point3d>(points.size());
 		for (Point3d p: points) {
 			Point3d q = new Point3d(p);
@@ -590,7 +590,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		}
 		return ePoints;
 	}
-	
+
 	private String drawHeader(String text, String color) {
 		StringBuilder s = new StringBuilder();
 		s.append("set echo top center;");
@@ -603,11 +603,11 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		s.append(";");
 		return s.toString();
 	}
-	
+
 	private String deleteHeader() {
 		return "set echo top center;echo ;";
 	}
-	
+
 	private String drawFooter(String text, String color) {
 		StringBuilder s = new StringBuilder();
 		s.append("set echo bottom center;");
@@ -631,15 +631,15 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		Color[] col = ColorBrewer.Spectral.getColorPalette(dMax);
 	    Color4f[] colors = ColorConverter.convertColor4f(col);
 		System.arraycopy(colors, offset, colors, 0, dMax-offset);
-		return colors;	
+		return colors;
 	}
-	
+
  	private String setCentroid() {
 		// calculate center of rotation
 	//	Point3d centroid = axisTransformation.getGeometricCenter();
 	//	Point3d centroid = helixAxisAligner.getCentroid();
 		Point3d centroid = helixAxisAligner.calcCenterOfRotation();
-			
+
 		// set centroid
 		StringBuilder s = new StringBuilder();
 		s.append("center");
@@ -647,5 +647,5 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		s.append(";");
 		return s.toString();
 	}
-	
+
 }

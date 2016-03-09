@@ -34,9 +34,9 @@ import org.biojava.nbio.core.util.Hashcoder;
  */
 public class SimplePoint implements Serializable, Point {
 
-    
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private int position;
     private boolean unknown;
     private boolean uncertain;

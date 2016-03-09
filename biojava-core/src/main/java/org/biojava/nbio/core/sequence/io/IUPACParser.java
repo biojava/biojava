@@ -261,7 +261,7 @@ public class IUPACParser {
      * Returns a list of codons where the source and target compounds
      * are the same as those given by the parameters.
      *
-     * @param nucleotides The nucleotide set to use when building BioJava 
+     * @param nucleotides The nucleotide set to use when building BioJava
      * representations of codons
      * @param aminoAcids The target amino acid compounds objects
      */

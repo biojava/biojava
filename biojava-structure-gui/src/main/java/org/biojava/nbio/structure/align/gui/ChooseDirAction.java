@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 28, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -33,7 +33,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 
-/** Ask the user to provide a directory containting PDB files. 
+/** Ask the user to provide a directory containting PDB files.
  * Sets the idr in the provided textField.
  * @author Andreas Prlic
  *
@@ -54,7 +54,7 @@ public class ChooseDirAction extends AbstractAction{
 		// Perform action...
 		JFileChooser chooser = new JFileChooser();
 		String txt = textField.getText();
-		
+
 		if ( config == null) {
 			System.out.println("config == null, calling getWebStartConfig...");
 			config = WebStartMain.getWebStartConfig();
@@ -70,14 +70,14 @@ public class ChooseDirAction extends AbstractAction{
 			} catch (Exception e){
 				e.printStackTrace();
 			}
-		} 
+		}
 		chooser.setDialogTitle("Choose directory that contains your PDB files");
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		//
 		// disable the "All files" option.
 		//
 		chooser.setAcceptAllFileFilterUsed(false);
-		//    
+		//
 
 
 //		In response to a button click:

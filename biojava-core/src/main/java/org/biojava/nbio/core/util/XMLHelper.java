@@ -93,7 +93,7 @@ public class XMLHelper {
         // Use a Transformer for output
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer();
-        //    transformer.setOutputProperty(OutputKeys.INDENT, "yes"); 
+        //    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
         DOMSource source = new DOMSource(document);
         StreamResult result = new StreamResult(outputStream);

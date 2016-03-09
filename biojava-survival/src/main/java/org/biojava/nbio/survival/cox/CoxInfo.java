@@ -34,8 +34,8 @@ import java.util.LinkedHashMap;
 
 //import org.biojava.nbio.survival.cox.comparators.SurvivalInfoComparator;
 
-/** 
- * Holds the results of a cox analysis where calling dump(), toString() will give an output similar to R 
+/**
+ * Holds the results of a cox analysis where calling dump(), toString() will give an output similar to R
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class CoxInfo {

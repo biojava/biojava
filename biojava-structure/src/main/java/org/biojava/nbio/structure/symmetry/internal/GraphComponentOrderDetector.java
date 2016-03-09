@@ -38,10 +38,10 @@ import org.jgrapht.graph.DefaultEdge;
  * <p>
  * The order reported is the one that maximizes the number of residues aligned,
  * i.e. the highest order (component size) times the frequency of the Component.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
- * 
+ *
  */
 public class GraphComponentOrderDetector implements OrderDetector {
 
@@ -54,7 +54,7 @@ public class GraphComponentOrderDetector implements OrderDetector {
 				.buildSymmetryGraph(selfAlignment);
 
 		// Find the maximally connected components of the graph
-		ConnectivityInspector<Integer, DefaultEdge> inspector = 
+		ConnectivityInspector<Integer, DefaultEdge> inspector =
 				new ConnectivityInspector<Integer, DefaultEdge>(graph);
 		List<Set<Integer>> components = inspector.connectedSets();
 

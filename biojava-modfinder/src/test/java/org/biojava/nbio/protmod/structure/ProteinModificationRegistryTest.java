@@ -18,7 +18,7 @@
  *	  http://www.biojava.org/
  *
  * Created on Jun 2, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -33,12 +33,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
 public class ProteinModificationRegistryTest extends TestCase {
-	
+
 	//private static final Logger logger = LoggerFactory.getLogger(ProteinModificationRegistryTest.class);
 
 	/**
@@ -58,8 +58,8 @@ public class ProteinModificationRegistryTest extends TestCase {
 		ModificationCondition condition = new ModificationConditionImpl(components, Collections.singletonList(linkage));
 
 		// build a modification
-		ProteinModification mod = 
-			new ProteinModificationImpl.Builder("0018_test", 
+		ProteinModification mod =
+			new ProteinModificationImpl.Builder("0018_test",
 				ModificationCategory.CROSS_LINK_2,
 				ModificationOccurrenceType.NATURAL,
 				condition)
@@ -78,22 +78,22 @@ public class ProteinModificationRegistryTest extends TestCase {
 		ProteinModificationRegistry.register(mod);
 		assertNotNull(ProteinModificationRegistry.getById("0018_test"));
 	}
-	
+
 	/**
-	 * Test the initialization registry of common protein modifications. 
+	 * Test the initialization registry of common protein modifications.
 	 * Note: if you change this unit test, also change the cook book:
 		 * http://www.biojava.org/wiki/BioJava:CookBook3:SupportedProtMod
 	 */
-	public void testRegisterCommonModification() {		
+	public void testRegisterCommonModification() {
 		Set<ProteinModification> mods = ProteinModificationRegistry.allModifications();
 		assertTrue(mods!=null && !mods.isEmpty());
-		
+
 //		logger.info("There are totally "+mods.size()
 //				+" protein modifications registered.");
-//		
+//
 //		printModifications(mods);
 	}
-	
+
 	/**
 	 * Note: if you change this unit test, also change the cook book:
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:SupportedProtMod
@@ -133,15 +133,15 @@ public class ProteinModificationRegistryTest extends TestCase {
 		mods = ProteinModificationRegistry.getByComponent(Component.of("FAD"));
 		assertNotNull(mods);
 	}
-	
+
 //	/**
 //	 * Print modifications.
 //	 * @param mods {@link ProteinModification}s.
 //	 */
 //	private void printModifications(Set<ProteinModification> mods) {
 //		for (ProteinModification mod:mods) {
-//			logger.info(mod);	
+//			logger.info(mod);
 //		}
 //	}
-	
+
 }

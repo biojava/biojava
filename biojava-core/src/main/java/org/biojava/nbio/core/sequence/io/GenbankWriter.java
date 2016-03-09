@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.core.sequence.io;
 
@@ -35,7 +35,7 @@ import java.util.Collection;
 
 /**
  * @author mckeee1
- * 
+ *
  */
 public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	int SEQUENCE_INDENT = 9;
@@ -48,7 +48,7 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	// byte[] lineSep = System.getProperty("line.separator").getBytes();
 	/**
 	 * Use default line length of 60
-	 * 
+	 *
 	 * @param os
 	 * @param sequences
 	 * @param headerFormat
@@ -63,7 +63,7 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 
 	/**
 	 * Set custom lineLength
-	 * 
+	 *
 	 * @param os
 	 * @param sequences
 	 * @param headerFormat
@@ -81,7 +81,7 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	/**
 	 * Allow an override of operating system line separator for programs that
 	 * needs a specific CRLF or CR or LF option
-	 * 
+	 *
 	 * @param lineSeparator
 	 */
 
@@ -135,22 +135,22 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	/*
 	 * public static void main(String[] args) { try { FileInputStream is = new
 	 * FileInputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds.faa");
-	 * 
-	 * 
+	 *
+	 *
 	 * FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new
 	 * FastaReader<ProteinSequence, AminoAcidCompound>(is, new
 	 * GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new
 	 * ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 	 * LinkedHashMap<String, ProteinSequence> proteinSequences =
 	 * fastaReader.process(); is.close();
-	 * 
-	 * 
+	 *
+	 *
 	 * // System.out.println(proteinSequences);
-	 * 
+	 *
 	 * FileOutputStream fileOutputStream = new
 	 * FileOutputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds_temp.faa"
 	 * );
-	 * 
+	 *
 	 * BufferedOutputStream bo = new BufferedOutputStream(fileOutputStream);
 	 * long start = System.currentTimeMillis(); FastaWriter<ProteinSequence,
 	 * AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence,
@@ -158,10 +158,10 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	 * GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
 	 * fastaWriter.process(); bo.close(); long end = System.currentTimeMillis();
 	 * System.out.println("Took " + (end - start) + " seconds");
-	 * 
+	 *
 	 * fileOutputStream.close();
-	 * 
-	 * 
+	 *
+	 *
 	 * } catch (Exception e) { e.printStackTrace(); } }
 	 */
 	/**
@@ -178,5 +178,5 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	public void setLineLength(int lineLength) {
 		this.lineLength = lineLength;
 	}
-	
+
 }

@@ -52,7 +52,7 @@ import static org.biojava.nbio.ws.alignment.qblast.BlastOutputParameterEnum.RID;
  * <p>
  * Presently, only blastall programs are accessible.
  * </p>
- * 
+ *
  * @author Sylvain Foisy, Diploide BioIT
  * @author Gediminas Rimsa
  */
@@ -84,7 +84,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	/**
 	 * A simple method to check the availability of the QBlast service. Sends {@code Info} command to QBlast
-	 * 
+	 *
 	 * @return QBlast info output concatenated to String
 	 * @throws Exception if unable to connect to the NCBI QBlast service
 	 */
@@ -132,7 +132,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	/**
 	 * Sends the Blast request via the Put command of the CGI-BIN interface. Uses all of the parameters specified in
 	 * {@code alignmentProperties} (parameters PROGRAM and DATABASE are required).
-	 * 
+	 *
 	 * @param query : a {@code String} representing a sequence or Genbank ID
 	 * @param alignmentProperties : a {@code RemotePairwiseAlignmentProperties} object representing alignment properties
 	 * @return the request id for this sequence, necessary to fetch results after completion
@@ -216,7 +216,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	/**
 	 * Wrapper method for {@link #isReady(String, long)}, omitting unnecessary {@code present} property.
-	 * 
+	 *
 	 * @see #isReady(String, long)
 	 */
 	public boolean isReady(String id) throws Exception {
@@ -228,7 +228,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * <p/>
 	 * If expected execution time (RTOE) is available for request, this method will always return false until that time
 	 * passes. This is done to prevent sending unnecessary requests to the server.
-	 * 
+	 *
 	 * @param id : request id, which was returned by {@code sendAlignmentRequest} method
 	 * @param present : is not used, can be any value
 	 * @return a boolean value telling if the request has been completed
@@ -287,7 +287,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * <p/>
 	 * If the results are not ready yet, sleeps until they are available. If sleeping is not desired, call this method
 	 * after {@code isReady} returns true
-	 * 
+	 *
 	 * @param id : request id, which was returned by {@code sendAlignmentRequest} method
 	 * @param outputProperties : an object specifying output formatting options
 	 * @return an {@code InputStream} of results
@@ -326,7 +326,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	/**
 	 * Sends a delete request for given request id. Optional operation, ignores IOExceptions.<br/>
 	 * Can be used after results of given search are no longer needed to be kept on Blast server
-	 * 
+	 *
 	 * @param id request id, as returned by {@code sendAlignmentRequest} method
 	 */
 	public void sendDeleteRequest(String id) {
@@ -346,7 +346,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	/**
 	 * Sets properties for given URLConnection
-	 * 
+	 *
 	 * @param conn URLConnection to set properties for
 	 * @return given object after setting properties
 	 */
@@ -362,7 +362,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	/**
 	 * Set the tool identifier for QBlast. Defaults to {@value #DEFAULT_TOOL}
-	 * 
+	 *
 	 * @param tool the new identifier
 	 */
 	public void setTool(String tool) {
@@ -371,7 +371,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	/**
 	 * Get the tool identifier for QBlast. Defaults to {@value #DEFAULT_TOOL}
-	 * 
+	 *
 	 * @return the identifier
 	 */
 	public String getTool() {
@@ -380,7 +380,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	/**
 	 * Set the email for QBlast. Defaults to {@value #DEFAULT_EMAIL}
-	 * 
+	 *
 	 * @param email the new email
 	 */
 	public void setEmail(String email) {
@@ -389,7 +389,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	/**
 	 * Get the email for QBlast. Defaults to {@value #DEFAULT_EMAIL}.
-	 * 
+	 *
 	 * @return the email
 	 */
 	public String getEmail() {

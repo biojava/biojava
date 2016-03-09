@@ -33,7 +33,7 @@ import java.util.concurrent.Future;
 
 /**
  * Defines a data structure for the node in a guide tree used during progressive multiple sequence alignment.
- * 
+ *
  * @author Mark Chapman
  * @param <S> each {@link Sequence} in the tree is of type S
  * @param <C> each element of a {@link Sequence} is a {@link Compound} of type C

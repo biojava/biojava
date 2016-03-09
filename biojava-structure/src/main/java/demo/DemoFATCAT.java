@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 15, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -65,7 +65,7 @@ public class DemoFATCAT
          // the default parameters
          FatCatParameters params = new FatCatParameters();
 
-         AFPChain afpChain = algorithm.align(ca1,ca2,params);            
+         AFPChain afpChain = algorithm.align(ca1,ca2,params);
 
          afpChain.setName1(name1);
          afpChain.setName2(name2);

@@ -158,12 +158,12 @@ public class Alignments {
             @SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
             SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) SubstitutionMatrixHelper.getNuc4_4();
             subMatrix = temp;
-            
+
         } else if (cs == AmbiguityDNACompoundSet.getDNACompoundSet()) {
             @SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
             SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) SubstitutionMatrixHelper.getNuc4_4();
             subMatrix = temp;
-            
+
         }
         ProfileProfileAlignerType pa = ProfileProfileAlignerType.GLOBAL;
         for (Object o : settings) {

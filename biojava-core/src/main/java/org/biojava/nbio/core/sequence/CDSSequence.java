@@ -37,7 +37,7 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 public class CDSSequence extends DNASequence {
 
     //private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
-    Integer phase = 0; // 0, 1, 2 
+    Integer phase = 0; // 0, 1, 2
     TranscriptSequence parentTranscriptSequence;
 
     /**
@@ -88,7 +88,7 @@ public class CDSSequence extends DNASequence {
      */
     public String getCodingSequence() {
         String sequence = this.getSequenceAsString(getBioBegin(), getBioEnd(), getStrand());
-        
+
         if (getStrand() == Strand.NEGATIVE) {
             //need to take complement of sequence because it is negative and we are returning a coding sequence
             StringBuilder b = new StringBuilder(getLength());

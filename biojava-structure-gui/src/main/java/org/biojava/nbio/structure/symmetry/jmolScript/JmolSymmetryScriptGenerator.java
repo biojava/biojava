@@ -42,7 +42,7 @@ public abstract class JmolSymmetryScriptGenerator {
 	 */
 	public static JmolSymmetryScriptGenerator getInstance(AxisAligner axisAligner, String name) {
 		String symmetry = axisAligner.getSymmetry();
-		
+
 		if (symmetry.equals("C1")) {
 			return new JmolSymmetryScriptGeneratorC1((RotationAxisAligner)axisAligner, name);
 		} else if (symmetry.startsWith("C")) {
@@ -58,7 +58,7 @@ public abstract class JmolSymmetryScriptGenerator {
 		} else if (symmetry.equals("H")) {
 			return new JmolSymmetryScriptGeneratorH((HelixAxisAligner)axisAligner, name);
 		}
-		
+
 		return null;
 	}
 	/**
@@ -86,7 +86,7 @@ public abstract class JmolSymmetryScriptGenerator {
 	 * @return Jmol script
 	 */
 	public abstract String getOrientation(int index);
-	
+
 	/**
 	 * Returns a Jmol script that sets a specific orientation instantaneously
 	 * @param index orientation index
@@ -117,14 +117,14 @@ public abstract class JmolSymmetryScriptGenerator {
 	 * @return transformation matrix
 	 */
 	public abstract Matrix4d getTransformation();
-	
+
 	/** Sets a default Jmol script used for coloring. This method is
 	 * used in local symmetry cases to color those subunits that are
 	 * not related by symmetry.
 	 * @param colorScript
-	 */	
+	 */
 	public abstract void setDefaultColoring(String colorScript);
-	
+
 	/**
 	 * Sets the type of bioassembly to be colored. If set to true,
 	 * it will generate a Jmol script for a bioassembly generated
@@ -132,7 +132,7 @@ public abstract class JmolSymmetryScriptGenerator {
 	 * a bioassembly file read by Jmol.
 	 */
 	public abstract void setOnTheFly(boolean onTheFly);
-	
+
 	/**
 	 * Returns a Jmol script that draws an invisible polyhedron around a structure.
 	 * Use showPolyhedron() and hidePolyhedron() to toggle visibility.
@@ -187,7 +187,7 @@ public abstract class JmolSymmetryScriptGenerator {
 	 * @return Jmol script
 	 */
 	public abstract String colorBySymmetry();
-	
+
 	protected static String getJmolColorScript(Map<Color4f, List<String>> map) {
 		StringBuilder s = new StringBuilder();
 		s.append("color cartoons none;");
@@ -201,18 +201,18 @@ public abstract class JmolSymmetryScriptGenerator {
 			    s.append("|");
 				}
 			}
-			s.append("}");	
+			s.append("}");
 			s.append(getJmolColor(entry.getKey()));
-			s.append(";");		
+			s.append(";");
 		}
 		return s.toString();
 	}
-	
+
 	protected static String getJmolColor(Color4f color) {
         String hex = Integer.toHexString((color.get().getRGB() & 0xffffff) | 0x1000000).substring(1);
         return " [x" + hex + "]";
 	}
-	
+
 	protected static String getJmolPoint(Tuple3d point) {
 		StringBuilder s = new StringBuilder();
 		s.append("{");
@@ -224,15 +224,15 @@ public abstract class JmolSymmetryScriptGenerator {
 		s.append("}");
 		return s.toString();
 	}
-	
+
 	protected static String f1Dot2(float number) {
 		return String.format("%1.2f", number);
 	}
-	
+
 	protected static String fDot2(double number) {
 		return String.format("%.2f", number);
 	}
-	
+
 	/**
 	 * Returns a lower precision floating point number for Jmol
 	 * @param f
@@ -241,7 +241,7 @@ public abstract class JmolSymmetryScriptGenerator {
 	protected static float jMolFloat(double f) {
 		return (float)f;
 	}
-	
+
 	protected static String getJmolLigandScript() {
 		return "select ligand;wireframe 0.16;spacefill 23%;color cpk;";
 	}

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 15, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -33,9 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** 
+/**
  * Contains the parameters that can be sent to CE
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -84,7 +84,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	protected int maxNrIterationsForOptimization;
 
-	protected SubstitutionMatrix<AminoAcidCompound> substitutionMatrix;	
+	protected SubstitutionMatrix<AminoAcidCompound> substitutionMatrix;
 	protected double seqWeight;
 
 	public CeParameters(){
@@ -93,12 +93,12 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	@Override
 	public String toString() {
-		return "CeParameters [scoringStrategy=" + scoringStrategy 
-		+ ", maxGapSize=" + maxGapSize 
-		+ ", rmsdThr=" + rmsdThr 
-		+ ", rmsdThrJoin="+ rmsdThrJoin 
-		+ ", winSize=" + winSize 
-		+ ", showAFPRanges=" + showAFPRanges 
+		return "CeParameters [scoringStrategy=" + scoringStrategy
+		+ ", maxGapSize=" + maxGapSize
+		+ ", rmsdThr=" + rmsdThr
+		+ ", rmsdThrJoin="+ rmsdThrJoin
+		+ ", winSize=" + winSize
+		+ ", showAFPRanges=" + showAFPRanges
 		+ ", maxOptRMSD=" + maxOptRMSD
 		+ ", seqWeight=" + seqWeight
 		+ "]";
@@ -126,7 +126,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 	/** The window size to look at
-	 * 
+	 *
 	 * @return window size
 	 */
 	public Integer getWinSize() {
@@ -137,7 +137,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 	/** RMSD Threshold
-	 * 
+	 *
 	 * @return RMSD threshold
 	 */
 	public Double getRmsdThr() {
@@ -148,7 +148,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 	/** RMSD threshold for joining of AFPs
-	 * 
+	 *
 	 * @return rmsd threshold
 	 */
 	public Double getRmsdThrJoin() {
@@ -166,7 +166,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	/** Set the scoring strategy to use. 0 is default CE scoring scheme. 1 uses
 	 * Side chain orientation.
-	 * 
+	 *
 	 * @param scoringStrategy
 	 */
 	public void setScoringStrategy(ScoringStrategy scoringStrategy)
@@ -177,7 +177,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 	/** Set the Max gap size parameter. Default 30. For unlimited gaps set to -1
-	 * 
+	 *
 	 * @param maxGapSize
 	 */
 	public void setMaxGapSize(Integer maxGapSize){
@@ -187,8 +187,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 	/** the Max gap size parameter G . default is 30, which was
 	 * described to obtained empirically in the CE paper.
 	 * the larger the max gap size, the longer the compute time,
-	 * but in same cases drastically improved results. Set to -1 for unlimited gap size. 
-	 * 
+	 * but in same cases drastically improved results. Set to -1 for unlimited gap size.
+	 *
 	 * @return max gap size parameter
 	 */
 	public Integer getMaxGapSize() {
@@ -273,7 +273,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 	/** set the maximum RMSD cutoff to be applied during alignment optimization. (default: 99 = unlimited)
-	 * 
+	 *
 	 * @param param maxOptRMSD
 	 */
 	public void setMaxOptRMSD(Double param){
@@ -283,7 +283,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 	/** Returns the maximum RMSD cutoff to be applied during alignment optimization (default: 99 = unlimited)
-	 * 
+	 *
 	 * @return maxOptRMSD
 	 */
 	public Double getMaxOptRMSD()
@@ -336,7 +336,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 	/** Get the Original RMSD threshold from which the alignment optimization is started
-	 * 
+	 *
 	 * @return oRMSDThreshold
 	 */
 	public Double getORmsdThr()
@@ -347,7 +347,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 	/** Set the Original RMSD threshold from which the alignment optimization is started
-	 * 
+	 *
 	 * @param oRmsdThr the threshold
 	 */
 	public void setORmsdThr(Double oRmsdThr)
@@ -357,7 +357,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 	/** Get the maximum nr of times the (slow) optimiziation of alignment should iterate. Default: unlimited
-	 * 
+	 *
 	 * @param maxNrIterationsForOptimization
 	 */
 	public int getMaxNrIterationsForOptimization() {
@@ -366,7 +366,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 	/** Set the maximum nr of times the (slow) optimiziation of alignment should iterate. Default: unlimited
-	 * 
+	 *
 	 * @param maxNrIterationsForOptimization
 	 */
 	public void setMaxNrIterationsForOptimization(int maxNrIterationsForOptimization) {
@@ -376,7 +376,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	/** Should sequence conservation be considered as part of the alignment? If yes, this weight factor allows to determine how much.
 	 *  By default this is set to 0, meaning no contribution of the sequence alignment score.
-	 * 
+	 *
 	 * @return seqWeight the weight factor (default 0)
 	 */
 
@@ -387,7 +387,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	/** Should sequence conservation be considered as part of the alignment? If yes, this weight factor allows to determine how much.
 	 *  By default this is set to 0, meaning no contribution of the sequence alignment score.
-	 * 
+	 *
 	 * @param seqWeight the weight factor (default 0)
 	 */
 	public void setSeqWeight(double seqWeight) {
@@ -397,7 +397,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	/** Sets the  substitution matrix to be used for influencing the alignment with sequence conservation information.
 	 * Default: SDM matrix (Prlic et al 2000)
-	 * @return substitutionMatrix 
+	 * @return substitutionMatrix
 	 */
 	public SubstitutionMatrix<AminoAcidCompound> getSubstitutionMatrix() {
 		if ( substitutionMatrix == null){
@@ -410,7 +410,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	/** Sets the  substitution matrix to be used for influencing the alignment with sequence conservation information.
 	 * Default: SDM matrix (Prlic et al 2000)
-	 * @param substitutionMatrix 
+	 * @param substitutionMatrix
 	 */
 	public void setSubstitutionMatrix(
 			SubstitutionMatrix<AminoAcidCompound> substitutionMatrix) {

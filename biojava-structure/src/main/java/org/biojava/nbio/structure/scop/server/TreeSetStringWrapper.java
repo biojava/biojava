@@ -42,13 +42,13 @@ import java.util.TreeSet;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class TreeSetStringWrapper implements Serializable{
 
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4193799052494327416L;
 	TreeSet<String> data;
-	
+
 	static JAXBContext jaxbContext;
 	static {
 		try {
@@ -57,7 +57,7 @@ public class TreeSetStringWrapper implements Serializable{
 			throw new RuntimeException("Could not initialize JAXB context for " + TreeSetStringWrapper.class, e);
 		}
 	}
-	
+
 	public TreeSetStringWrapper(){
 		data = new TreeSet<String>();
 	}
@@ -110,6 +110,6 @@ public class TreeSetStringWrapper implements Serializable{
 
 		return job;
 	}
-	
-	
+
+
 }

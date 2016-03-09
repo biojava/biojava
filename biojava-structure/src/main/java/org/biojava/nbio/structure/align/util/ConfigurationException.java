@@ -22,9 +22,9 @@ package org.biojava.nbio.structure.align.util;
 
 
 public class ConfigurationException extends Exception {
-    
+
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8047100079715000276L;
 

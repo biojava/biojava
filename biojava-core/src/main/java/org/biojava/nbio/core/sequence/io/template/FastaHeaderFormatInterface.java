@@ -31,7 +31,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface FastaHeaderFormatInterface<S extends Sequence<?>, C extends Compound> {
     /**
-     * 
+     *
      * @param sequence
      * @return
      */

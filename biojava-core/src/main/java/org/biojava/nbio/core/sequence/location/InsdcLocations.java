@@ -84,12 +84,12 @@ public class InsdcLocations {
                     Location.Tools.getMin(subLocations).getStart(),
                     Location.Tools.getMax(subLocations).getEnd()
             );
-            
+
             setStrand(Strand.UNDEFINED);
             setSubLocations(subLocations);
             assertLocation();
         }
-        
+
         public OrderLocation(Location... subLocations) {
             this(Arrays.asList(subLocations));
         }
@@ -137,12 +137,12 @@ public class InsdcLocations {
                     Location.Tools.getMin(subLocations).getStart(),
                     Location.Tools.getMax(subLocations).getEnd()
             );
-            
+
             setStrand(Strand.UNDEFINED);
             setSubLocations(subLocations);
             assertLocation();
         }
-        
+
         public GroupLocation(Location... subLocations) {
             this(Arrays.asList(subLocations));
         }

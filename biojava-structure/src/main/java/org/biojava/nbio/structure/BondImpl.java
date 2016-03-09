@@ -94,10 +94,10 @@ public class BondImpl implements Serializable, Bond {
         	bonds = new ArrayList<Bond>(AtomImpl.BONDS_INITIAL_CAPACITY);
         	atomA.setBonds(bonds);
         }
-        
+
         boolean exists = false;
         for (Bond bond : bonds) {
-        	// TODO is it equals() what we want here, or is it == ? - JD 2016-03-02 
+        	// TODO is it equals() what we want here, or is it == ? - JD 2016-03-02
             if (bond.getOther(atomA).equals(atomB)) {
                 exists = true;
                 break;

@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
  */
 package org.biojava.nbio.structure.gui.util.color;
@@ -39,7 +39,7 @@ public class LinearColorInterpolator implements ColorInterpolator {
 
 	private ColorSpace colorSpace;
 	private InterpolationDirection[] interpolationDirection;
-	
+
 	public LinearColorInterpolator() {
 		this(ColorSpace.getInstance(ColorSpace.CS_sRGB));
 	}
@@ -47,7 +47,7 @@ public class LinearColorInterpolator implements ColorInterpolator {
 		super();
 		this.setColorSpace(colorSpace);
 	}
-	
+
 	/**
 	 * Interpolates to a color between a and b
 	 * @param a First color
@@ -74,7 +74,7 @@ public class LinearColorInterpolator implements ColorInterpolator {
 		}
 
 		float[] compMixed = new float[compA.length];
-		
+
 		for(int i=0;i<compA.length;i++){
 			//Normalizing to [0,1] after the interpolation,
 			// INNER means between a and b
@@ -113,10 +113,10 @@ public class LinearColorInterpolator implements ColorInterpolator {
 				break;
 			default: throw new IllegalStateException("Unkown interpolation Direction "+interpolationDirection[i]);
 			}
-			
+
 			//Perform mixing
 			compMixed[i] = mixing*left + (1-mixing)*right;
-			
+
 			if(dir != InterpolationDirection.INNER) {
 				//Normalize to [0,1]
 				if(compMixed[i] < 0)
@@ -125,18 +125,18 @@ public class LinearColorInterpolator implements ColorInterpolator {
 					compMixed[i] -= 1f;
 			}
 		}
-				
+
 		return new Color(colorSpace,compMixed,compMixed[compMixed.length-1]);
 	}
 
 
 	/**
 	 * Sets the ColorSpace to use for interpolation.
-	 * 
+	 *
 	 * The most common scheme for color spaces is to use linear components
 	 * between 0 and 1 (for instance red,green,blue). For such a component, a
 	 * linear interpolation between two colors is used.
-	 * 
+	 *
 	 * Sometimes a component may be in cylindrical coordinates. In this case,
 	 * the component can be mapped in a number of ways. These are set by
 	 * InterpolationDirections.
@@ -160,10 +160,10 @@ public class LinearColorInterpolator implements ColorInterpolator {
 			dir[i] = InterpolationDirection.INNER;
 		this.setColorSpace(colorSpace, dir);
 	}
-	
+
 	public void setInterpolationDirection(int componentIndex, InterpolationDirection dir) {
 		interpolationDirection[componentIndex] = dir;
 	}
-	
-	
+
+
 }

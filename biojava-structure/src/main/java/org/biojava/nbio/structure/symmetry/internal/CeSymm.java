@@ -62,12 +62,12 @@ import org.slf4j.LoggerFactory;
  * <p>
  * After refinement of the initial alignment, an optimization step can be used
  * to improve the overall score of the repeat multiple alignment.
- * 
+ *
  * @author Andreas Prlic
  * @author Spencer Bliven
  * @author Aleix Lafita
  * @since 4.1.1
- * 
+ *
  */
 public class CeSymm {
 
@@ -260,7 +260,7 @@ public class CeSymm {
 			}
 		} else
 			result.setType(params.getSymmType());
-		
+
 		// Do not try the refinement if the self-alignment is not significant
 		if (optimalAFP.getTMScore() < params.getScoreThreshold()){
 			result.setSymmOrder(1);
@@ -372,7 +372,7 @@ public class CeSymm {
 	/**
 	 * Analyze the symmetries of the input Atom array using the DEFAULT
 	 * parameters.
-	 * 
+	 *
 	 * @param atoms
 	 *            representative Atom array of the Structure
 	 * @return CeSymmResult
@@ -386,7 +386,7 @@ public class CeSymm {
 	/**
 	 * Analyze the symmetries of the input Atom array using the provided
 	 * parameters.
-	 * 
+	 *
 	 * @param atoms
 	 *            representative Atom array of the Structure
 	 * @param param
@@ -433,7 +433,7 @@ public class CeSymm {
 
 	/**
 	 * Analyze a single level of symmetry.
-	 * 
+	 *
 	 * @param atoms
 	 *            Atom array of the current level
 	 * @return CeSymmResult

@@ -50,7 +50,7 @@ import java.util.*;
 public abstract class AbstractSequence<C extends Compound> implements Sequence<C> {
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractSequence.class);
-	
+
     private TaxonomyID taxonomy;
     private AccessionID accession;
     private SequenceReader<C> sequenceStorage = null;
@@ -80,7 +80,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * Create a Sequence from a simple string where the values should be found in compoundSet
      * @param seqString
      * @param compoundSet
-     * @throws CompoundNotFoundException 
+     * @throws CompoundNotFoundException
      */
     public AbstractSequence(String seqString, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
         setCompoundSet(compoundSet);
@@ -107,8 +107,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      * Very important method that allows external mappings of sequence data and features. This method
      * will gain additional interface inspection that allows external data sources with knowledge
-     * of features for a sequence to be supported. 
-     *  
+     * of features for a sequence to be supported.
+     *
      * @param proxyLoader
      */
     public void setProxySequenceReader(SequenceReader<C> proxyLoader) {
@@ -119,7 +119,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         if (proxyLoader instanceof DatabaseReferenceInterface) {
             this.setDatabaseReferences((DatabaseReferenceInterface) sequenceStorage);
         }
-        
+
         if (proxyLoader instanceof FeatureRetriever) {
             this.setFeatureRetriever((FeatureRetriever) sequenceStorage);
             HashMap<String, ArrayList<AbstractFeature>> ff = getFeatureRetriever().getFeatures();
@@ -135,7 +135,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
             if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getDatabase()+":"+dbQualifier.getId(), DataSource.UNKNOWN));
         }
-        
+
         if(getAccession() == null && proxyLoader instanceof UniprotProxySequenceReader){ // we have lots of unsupported operations for this call so quick fix to allow this tow rork
             this.setAccession(proxyLoader.getAccession());
         }
@@ -462,8 +462,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     public void setFeatureRetriever(FeatureRetriever featureRetriever) {
         this.featureRetriever = featureRetriever;
     }
-    
-    
+
+
 
     public enum AnnotationType {
 
@@ -530,9 +530,9 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
             return sequenceStorage;
         }
         if (parentSequence != null) {
-        
+
         	//return parentSequence.getSequenceStorage();
-        	        	
+
             if ( this.compoundSet.equals(parentSequence.getCompoundSet())){
             	sequenceStorage = new ArrayListSequenceReader<C>();
                 sequenceStorage.setCompoundSet(this.getCompoundSet());
@@ -540,13 +540,13 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
                 	sequenceStorage.setContents(parentSequence.getSequenceAsString());
                 } catch (CompoundNotFoundException e) {
                 	// TODO is there a better way to handle this exception?
-                	logger.error("Problem setting contents from parent sequence, some unrecognised compound: {}",e.getMessage());                	
+                	logger.error("Problem setting contents from parent sequence, some unrecognised compound: {}",e.getMessage());
                 }
                 return sequenceStorage;
             }
-            
+
         }
-        
+
         return null;
     }
 
@@ -554,11 +554,11 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *
      * @param begin
      * @param end
-     * @param strand 
+     * @param strand
      * @return
      */
     public String getSequenceAsString(Integer bioStart, Integer bioEnd, Strand strand) {
-    	    	
+
         Location loc = new SimpleLocation(bioStart, bioEnd, strand);
         return loc.getSubSequence(this).getSequenceAsString();
     }
@@ -589,7 +589,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      */
     @Override
 	public C getCompoundAt(int position) {
-    	
+
         return getSequenceStorage().getCompoundAt(position);
     }
 
@@ -660,6 +660,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);
     }
-    
+
     //TODO needs equals and hashcode
 }

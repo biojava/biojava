@@ -41,7 +41,7 @@ public class SimpleSequencePairTest {
     private SequencePair<ProteinSequence, AminoAcidCompound> global, local;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         global = new SimpleSequencePair<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 20 Mar 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.test.io;
@@ -42,16 +42,16 @@ public class TestSeqResParsing extends TestCase {
 		try {
 			AtomCache cache = new AtomCache();
 			cache.getFileParsingParams().setAlignSeqRes(true);
-			
+
 			StructureIO.setAtomCache(cache);
-			
+
 			s = StructureIO.getStructure(pdbID);
 			assertNotNull(s);
 			assertTrue(s.getChains().size() > 0);
 			Chain c = s.getChain(0);
 
 			assertTrue(c.getSeqResGroups().size() > 2);
-			
+
 			Group first  = c.getSeqResGroup(0);
 			Group second = c.getSeqResGroup(1);
 			Group third  = c.getSeqResGroup(2);
@@ -59,22 +59,22 @@ public class TestSeqResParsing extends TestCase {
 			assertTrue(first instanceof AminoAcid);
 			assertTrue(second instanceof AminoAcid);
 			assertTrue(third instanceof AminoAcid);
-			
+
 			AminoAcid aafirst = (AminoAcid) first;
 			AminoAcid aasecond = (AminoAcid)second;
 			AminoAcid aathird = (AminoAcid) third;
-			
+
 			assertTrue(aafirst.getRecordType().equals(AminoAcid.SEQRESRECORD));
 			assertTrue(aasecond.getRecordType().equals(AminoAcid.SEQRESRECORD));
 			assertTrue(aathird.getRecordType().equals(AminoAcid.ATOMRECORD));
-		
+
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		
+
 
 	}
 }

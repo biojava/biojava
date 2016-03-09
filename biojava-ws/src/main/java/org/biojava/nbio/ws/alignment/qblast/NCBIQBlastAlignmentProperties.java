@@ -38,7 +38,7 @@ import static org.biojava.nbio.ws.alignment.qblast.BlastAlignmentParameterEnum.*
  * {@link #setAlignmentOption(BlastAlignmentParameterEnum, String)}
  * <p/>
  * Required parameters are {@code PROGRAM} and {@code DATABASE}, other parameters are optional
- * 
+ *
  * @author Sylvain Foisy, Diploide BioIT
  * @author Gediminas Rimsa
  */
@@ -107,7 +107,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 
 	/**
 	 * Sets the program to be used with blastall
-	 * 
+	 *
 	 * @param program : one of blastall programs
 	 */
 	public void setBlastProgram(BlastProgramEnum program) {
@@ -139,7 +139,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	 * A list of available databases can be acquired by calling {@link NCBIQBlastService#printRemoteBlastInfo()}
 	 * <p>
 	 * Blastall equivalent: -d
-	 * 
+	 *
 	 * @param db : a valid name to a NCBI blastable database
 	 */
 	public void setBlastDatabase(String database) {
@@ -162,7 +162,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	 * Example: if you want a EXPECT of 1e-10, pass {@code Double.parseDouble("1e-10")} as a parameter
 	 * <p>
 	 * Blastall equivalent: -e
-	 * 
+	 *
 	 * @param expect: a double value of EXPECT parameter
 	 */
 	public void setBlastExpect(double expect) {
@@ -171,7 +171,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 
 	/**
 	 * Returns the value of the WORD_SIZE parameter used for this blast run
-	 * 
+	 *
 	 * @return int value of WORD_SIZE used by this search
 	 * @throws IllegalArgumentException when program type is not set and program type is not supported
 	 */
@@ -210,7 +210,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	 * More at http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node74.html
 	 * <p>
 	 * Blastall equivalent: -W
-	 * 
+	 *
 	 * @param word: an int used to set WORD_SIZE
 	 */
 	public void setBlastWordSize(int word) {
@@ -219,7 +219,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 
 	/**
 	 * Returns the value for the GAP_CREATION parameter (first half of GAPCOSTS parameter)
-	 * 
+	 *
 	 * @return an integer value for gap creation used by this search, -1 if not set or not a number
 	 */
 	public int getBlastGapCreation() {
@@ -234,7 +234,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 
 	/**
 	 * Returns the value for the gap extension parameter (second half of GAPCOSTS parameter)
-	 * 
+	 *
 	 * @return an integer for the value for gap extension used by this search, -1 if not set or not a number
 	 */
 	public int getBlastGapExtension() {
@@ -249,7 +249,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 
 	/**
 	 * Returns the actual string for the GAPCOSTS parameter which is used to build the URL
-	 * 
+	 *
 	 * @return the string representation of the GAPCOSTS parameter formatted for the URL
 	 */
 	public String getBlastGapCosts() {
@@ -258,7 +258,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 
 	/**
 	 * Sets the GAPCOSTS parameter
-	 * 
+	 *
 	 * @param gapCreation integer to use as gap creation value
 	 * @param gapExtension integer to use as gap extension value
 	 */
@@ -270,7 +270,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 
 	/**
 	 * Returns the value of the specified substitution matrix
-	 * 
+	 *
 	 * @return matrix: the name of the specified substitution matrix
 	 */
 	public String getBlastMatrix() {
@@ -281,7 +281,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	 * Sets the value for the MATRIX parameter to use for blastall
 	 * <p>
 	 * Blastall equivalent: -M
-	 * 
+	 *
 	 * @param matrix : a String to use as gap creation value
 	 * @see BlastMatrixEnum
 	 */
@@ -327,7 +327,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	/**
 	 * Sets the QUERY_FROM and QUERY_TO parameters to be use by blast. Do not use if you want to use the whole sequence.<br/>
 	 * Blastall equivalent: -L
-	 * 
+	 *
 	 * @param start QUERY_FROM parameter
 	 * @param end QUERY_TO parameter
 	 */
@@ -380,7 +380,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	 * <p>
 	 * You have to be aware that at no moment is there any error checking on the use of these parameters by this class.
 	 * </p>
-	 * 
+	 *
 	 * @param advancedOptions : a String with any number of optional parameters with an associated value.
 	 */
 	public void setBlastAdvancedOptions(String advancedOptions) {

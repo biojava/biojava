@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * This tests the correctness of the {@link Structure} data structure, in terms
  * of correct implementation, given the expected behavior, of the methods.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
  *

@@ -37,15 +37,15 @@ import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.junit.Test;
 
 /**
- * Created by edlunde-dnastar 
+ * Created by edlunde-dnastar
  * @since 10/30/2015.
  */
 public class TestParseMmCIFLigands {
-	
+
 	private static final int HEM_COUNT_4HHB = 172;	//Number of atoms in HEM groups of 4HHB (manually determined from CIF file)
 	private static final int ATOM_COUNT_3UCB = 114;      //number of atoms in 3UCB, including alternate ligand conformations
 
-	
+
 	@Test
 	public void testLigandConnections()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
@@ -63,17 +63,17 @@ public class TestParseMmCIFLigands {
 
 		//Verify that we have all HEM atoms from the CIF file.
 		assertEquals( HEM_COUNT_4HHB, countBondedAtomsInLigandGroups(sCif) );
-		
+
 	}
-	
+
 	private int countBondedAtomsInLigandGroups(Structure s){
 
 		int count = 0;
-		
+
 		for (Chain c:s.getChains()) {
 			for (Group g:c.getAtomGroups()) {
 				if (!g.isWater() && !PolymerType.ALL_POLYMER_TYPES.contains(g.getChemComp().getPolymerType())) {
-					System.out.println(g); 
+					System.out.println(g);
 					for (Atom a:g.getAtoms()) {
 						if (a.getBonds()!=null) count++;
 					}
@@ -87,25 +87,25 @@ public class TestParseMmCIFLigands {
 		}
 		return count;
 	}
-	
+
 	@Test
 	public void testMultipleConformations()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		
+
 		StructureIO.setAtomCache(cache);
-		
+
 		cache.setUseMmCif(true);
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
-		 
+
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setCreateAtomBonds(true);
 		StructureIO.setAtomCache(cache);
-		
+
 		Structure sCif = StructureIO.getStructure("3UCB");
 
-		
+
 		//Verify that we have all atoms from all conformations of the ligands
-		
+
 		assertEquals(ATOM_COUNT_3UCB, countBondedAtomsInLigandGroups(sCif));
 	}
 

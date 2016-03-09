@@ -34,7 +34,7 @@ import java.util.LinkedHashMap;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class StrataInfo {
-  
+
     private ArrayList<Double> time = new ArrayList<Double>();
     private ArrayList<Integer> status = new ArrayList<Integer>();
     private ArrayList<Double> nevent = new ArrayList<Double>();
@@ -112,7 +112,7 @@ public class StrataInfo {
         }
 **/
         DecimalFormat newFormat = new DecimalFormat("#.#"); //used to round on expected precision of time. Not correct but trying to match the other packages
-       
+
         for (int i = 0; i < time.size(); i++) {
             Double compareTime = time.get(i);
           //  compareTime = new Double(Math.round(compareTime)); //this is rounding up so that we stop on the first match trying to get this to match another report. Not correct or the other report is wrong

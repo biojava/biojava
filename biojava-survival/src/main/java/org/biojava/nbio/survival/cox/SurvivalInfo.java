@@ -29,10 +29,10 @@ import java.util.LinkedHashMap;
 
 /**
  * Data class to represent a single sample where time and event/censor status is required
- * Additionally each variable and data associated with that variable. 
+ * Additionally each variable and data associated with that variable.
  * The code handles figuring out if a variables is continuous or categorical. If categorical will
  * convert to numerical values.
- * 
+ *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SurvivalInfo implements Comparable<SurvivalInfo> {
@@ -48,9 +48,9 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
     private double linearPredictor = 0.0;
     private double residual = 0.0;
     private String clusterValue = "";
-    
+
     LinkedHashMap<String,Double> residualVariableMap = new LinkedHashMap<String,Double>();
-    
+
      LinkedHashMap<String, Double> data = new LinkedHashMap<String, Double>();
  //    LinkedHashMap<String, Double> discreteData = new LinkedHashMap<String, Double>();
      LinkedHashMap<String, String> unknownDataType = new LinkedHashMap<String, String>();
@@ -99,16 +99,16 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
         originalMetaData.put(variable, d + "");
     }
 
-    
+
     /**
      * Set the residual value for the variable for this sample. Called from CoxScore.java
      * @param variable
-     * @param value 
+     * @param value
      */
     public void setResidualVariable(String variable, Double value){
         residualVariableMap.put(variable, value);
     }
-    
+
     /**
      *
      * @param variable
@@ -116,9 +116,9 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
      */
     public Double getResidualVariable(String variable){
         return residualVariableMap.get(variable);
-        
+
     }
-    
+
     /**
      *
      * @param variable
@@ -127,7 +127,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
     public String getUnknownDataTypeVariable(String variable){
         return unknownDataType.get(variable);
     }
-    
+
     /**
      *
      * @param variable
@@ -136,7 +136,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
     public String getOriginalMetaData(String variable){
         return originalMetaData.get(variable);
     }
-    
+
     /**
      *
      * @param variable
@@ -155,7 +155,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
     public void updateContinousVariable(String variable, Double value){
         data.put(variable, value);
     }
-    
+
     /**
      *
      * @param variable
@@ -206,10 +206,10 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
         ArrayList<String> v = new ArrayList<String>();
         v.addAll(data.keySet());
         v.addAll(unknownDataType.keySet());
-        
+
         return v;
     }
-    
+
     /**
      *
      * @return
@@ -217,7 +217,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
     public int getNumberVariables(){
         return data.size();
     }
-    
+
     /**
      *
      * @param variable
@@ -225,7 +225,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
      */
     public Double getVariable(String variable) {
         Double value = data.get(variable);
-     
+
         return value;
     }
 

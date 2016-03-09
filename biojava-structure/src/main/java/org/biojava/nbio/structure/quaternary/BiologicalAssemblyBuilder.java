@@ -33,22 +33,22 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-/** 
+/**
  * Reconstructs the quaternary structure of a protein from an asymmetric unit
- * 
+ *
  * @author Peter Rose
  * @author Andreas Prlic
  *
  */
 public class BiologicalAssemblyBuilder {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(BiologicalAssemblyBuilder.class);
-	
+
 	private OperatorResolver operatorResolver;
 	private List<PdbxStructAssemblyGen> psags;
 
 	private List<BiologicalAssemblyTransformation> modelTransformations;
-	
+
 	private List<String> modelIndex = new ArrayList<String>();
 
 	public BiologicalAssemblyBuilder(){
@@ -58,17 +58,17 @@ public class BiologicalAssemblyBuilder {
 	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations){
 		// ensure that new chains are build in the same order as they appear in the asymmetric unit
         orderTransformationsByChainId(asymUnit, transformations);
-        
+
 		Structure s = asymUnit.clone();
-		// this resets all models (not only the first one): this is important for NMR (multi-model) 
-		// structures, otherwise we could not add new models below 
+		// this resets all models (not only the first one): this is important for NMR (multi-model)
+		// structures, otherwise we could not add new models below
 		s.resetModels();
 
 		for (BiologicalAssemblyTransformation transformation : transformations){
-			
+
 			// note: for NMR structures (or any multi-model) we use the first model only and throw away the rest
 			for (Chain c : asymUnit.getChains()){
-                
+
 				String intChainID = c.getInternalChainID();
 				if (intChainID == null) {
 					logger.info("No internal chain ID found while building bioassembly, using chain ID instead: " + c.getChainID());
@@ -77,7 +77,7 @@ public class BiologicalAssemblyBuilder {
 
 				if (transformation.getChainId().equals(intChainID)){
 					Chain chain = (Chain)c.clone();
-					
+
 					for (Group g : chain.getAtomGroups()) {
 
 						for (Atom a: g.getAtoms()) {
@@ -86,18 +86,18 @@ public class BiologicalAssemblyBuilder {
 
 						}
 					}
-	
+
 					String transformId = transformation.getId();
-				
+
 					addChainAndModel(s, chain, transformId);
-				}								
+				}
 			}
 		}
 
 		s.setBiologicalAssembly(true);
 		return s;
 	}
-	
+
 	/**
 	 * Orders model transformations by chain ids in the same order as in the asymmetric unit
 	 * @param asymUnit
@@ -116,7 +116,7 @@ public class BiologicalAssemblyBuilder {
 		    }
 		});
 	}
-	
+
 	/**
 	 * Returns a list of chain ids in the order they are specified in the ATOM
 	 * records in the asymmetric unit
@@ -125,7 +125,7 @@ public class BiologicalAssemblyBuilder {
 	 */
 	private List<String> getChainIds(Structure asymUnit) {
 		List<String> chainIds = new ArrayList<String>();
-		for ( Chain c : asymUnit.getChains()){      
+		for ( Chain c : asymUnit.getChains()){
 			String intChainID = c.getInternalChainID();
 			if ( intChainID == null) {
 				//System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
@@ -134,19 +134,19 @@ public class BiologicalAssemblyBuilder {
 			chainIds.add(intChainID);
 		}
 		return chainIds;
-	}	
-	
+	}
+
 	private void addChainAndModel(Structure s, Chain newChain, String modelId) {
-		
+
 		if ( modelIndex.size() == 0)
 			modelIndex.add("PLACEHOLDER FOR ASYM UNIT");
-		
+
 		int modelCount = modelIndex.indexOf(modelId);
 		if ( modelCount == -1)  {
 			modelIndex.add(modelId);
 			modelCount = modelIndex.indexOf(modelId);
 		}
-	
+
 		if (modelCount == 0) {
 			s.addChain(newChain);
 		} else if (modelCount > s.nrModels()) {
@@ -160,8 +160,8 @@ public class BiologicalAssemblyBuilder {
 
 	/**
 	 * Returns a list of transformation matrices for the generation of a macromolecular
-	 * assembly for the specified assembly Id. 
-	 * 
+	 * assembly for the specified assembly Id.
+	 *
 	 * @param assemblyId Id of the macromolecular assembly to be generated
 	 * @return list of transformation matrices to generate macromolecular assembly
 	 */
@@ -172,7 +172,7 @@ public class BiologicalAssemblyBuilder {
 		this.psags = psags;
 
 		//psa.getId();
-		
+
 		for (PdbxStructOperList oper: operators){
 			BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
 			transform.setId(oper.getId());
@@ -194,7 +194,7 @@ public class BiologicalAssemblyBuilder {
 		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
 
 		List<OrderedPair<String>> operators = operatorResolver.getBinaryOperators();
-	
+
 
 		for ( PdbxStructAssemblyGen psag : psags){
 			if ( psag.getAssembly_id().equals(assemblyId)) {
@@ -237,22 +237,22 @@ public class BiologicalAssemblyBuilder {
 		return new BiologicalAssemblyTransformation();
 	}
 
-	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListUnaryOperators(String assemblyId) {	
+	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListUnaryOperators(String assemblyId) {
 		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
 
-		
+
 		for ( PdbxStructAssemblyGen psag : psags){
 			if ( psag.getAssembly_id().equals(assemblyId)) {
-		
+
 				operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
 				List<String> operators = operatorResolver.getUnaryOperators();
-				
+
 				List<String>asymIds= Arrays.asList(psag.getAsym_id_list().split(","));
-				
+
 				// apply unary operators to the specified chains
 				for (String chainId : asymIds) {
 					for (String operator : operators) {
-				
+
 						BiologicalAssemblyTransformation original = getModelTransformationMatrix(operator);
 						BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation(original);
 						transform.setChainId(chainId);
@@ -265,7 +265,7 @@ public class BiologicalAssemblyBuilder {
 
 		return transformations;
 	}
-	
+
 	private void init(){
 		operatorResolver= new OperatorResolver();
 		modelTransformations = new ArrayList<BiologicalAssemblyTransformation>(1);

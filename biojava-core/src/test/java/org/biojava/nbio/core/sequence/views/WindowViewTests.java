@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 public class WindowViewTests {
 
   @Test
-  public void basicWindow() throws CompoundNotFoundException { 
+  public void basicWindow() throws CompoundNotFoundException {
     RNASequence rna = new RNASequence("AUGCCU");
     WindowedSequence<NucleotideCompound> window = new WindowedSequence<NucleotideCompound>(rna, 3);
 

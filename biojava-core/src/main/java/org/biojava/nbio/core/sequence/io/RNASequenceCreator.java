@@ -75,7 +75,7 @@ public AbstractSequence<NucleotideCompound> getSequence(
     return new RNASequence(proxyLoader, compoundSet);
   }
 /**
- * 
+ *
  * @param list
  * @return
  */

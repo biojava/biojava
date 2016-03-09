@@ -83,12 +83,12 @@ public enum PolymerType implements Serializable
     * cyclic peptides
     */
    cyclicPeptide("cyclic-pseudo-peptide"),
-   
+
    /**
     * Peptide nucleic acids
     */
    peptideNucleicAcid("peptide nucleic acid"),
-   
+
    /**
     * if all else fails...
     */

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 30, 2010
- * Author: ap3 
+ * Author: ap3
  *
  */
 
@@ -31,8 +31,8 @@ import org.biojava.nbio.structure.scop.ScopInstallation;
 
 public class ScopInstallationInstance
 {
-   
-   
+
+
    static ScopInstallationInstance me = new ScopInstallationInstance();
    ScopDatabase install;
    private ScopInstallationInstance(){
@@ -42,7 +42,7 @@ public class ScopInstallationInstance
        install = new ScopInstallation(cacheLocation);
    }
 
-   
+
    public static ScopInstallationInstance getInstance(){
       return me;
    }

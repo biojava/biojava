@@ -60,46 +60,46 @@ public abstract class AbstractFastqReaderTest
             "error_trunc_in_seq.fastq",
             "error_trunc_in_title.fastq"
         };
-  
+
     /**
      * Create and return a new FASTQ formatted sequence suitable for testing.
      *
      * @return a new FASTQ formatted sequence suitable for testing.
      */
     public abstract Fastq createFastq();
-  
+
     /**
      * Create and return a new instance of an implementation of FastqReader to test.
      *
      * @return a new instance of an implementation of FastqReader to test
      */
     public abstract FastqReader createFastqReader();
-  
+
     /**
      * Create and return a new instance of an implementation of FastqWriter to test round-tripping.
      *
      * @return a new instance of an implementation of FastqWriter to test round-tripping.
      */
     public abstract FastqWriter createFastqWriter();
-  
+
     public void testCreateFastq()
     {
         Fastq fastq = createFastq();
         assertNotNull(fastq);
     }
-  
+
     public void testCreateFastqReader()
     {
         FastqReader reader = createFastqReader();
         assertNotNull(reader);
     }
-  
+
     public void testCreateFastqWriter()
     {
         FastqWriter writer = createFastqWriter();
         assertNotNull(writer);
     }
-  
+
     public void testReadFile() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -123,7 +123,7 @@ public abstract class AbstractFastqReaderTest
             // expected
         }
     }
-  
+
     public void testReadEmptyFile() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -156,7 +156,7 @@ public abstract class AbstractFastqReaderTest
         }
         assertEquals(1, count);
     }
-  
+
     public void testReadRoundTripMultipleFile() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -200,7 +200,7 @@ public abstract class AbstractFastqReaderTest
             // expected
         }
     }
- 
+
     public void testReadEmptyURL() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -215,7 +215,7 @@ public abstract class AbstractFastqReaderTest
         }
         assertEquals(0, count);
     }
-  
+
     public void testReadInputStream() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -229,7 +229,7 @@ public abstract class AbstractFastqReaderTest
             // expected
         }
     }
-  
+
     public void testReadEmptyInputStream() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -245,7 +245,7 @@ public abstract class AbstractFastqReaderTest
         assertEquals(0, count);
         empty.close();
     }
-  
+
     public void testWrappedSequence() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -262,7 +262,7 @@ public abstract class AbstractFastqReaderTest
         assertEquals(1, count);
         wrappedSequence.close();
     }
-  
+
     public void testWrappedQuality() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -279,7 +279,7 @@ public abstract class AbstractFastqReaderTest
         assertEquals(1, count);
         wrappedQuality.close();
     }
-  
+
     public void testMultipleWrappedQuality() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -296,7 +296,7 @@ public abstract class AbstractFastqReaderTest
         assertEquals(4, count);
         wrappedQuality.close();
     }
-  
+
     public void testErrorExamples() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -338,27 +338,27 @@ public abstract class AbstractFastqReaderTest
                          public void description(final String description) throws IOException {
                              // empty
                          }
- 
+
                          @Override
                          public void sequence(final String sequence) throws IOException {
                              // empty
                          }
- 
+
                          @Override
                          public void appendSequence(final String sequence) throws IOException {
                              // empty
                          }
- 
+
                          @Override
                          public void repeatDescription(final String repeatDescription) throws IOException {
                              // empty
                          }
- 
+
                          @Override
                          public void quality(final String quality) throws IOException {
                              // empty
                          }
- 
+
                          @Override
                          public void appendQuality(final String quality) throws IOException {
                              // empty
@@ -370,7 +370,7 @@ public abstract class AbstractFastqReaderTest
                          }
                      });
     }
- 
+
     public void testParseNullReadable() throws Exception
     {
         FastqReader reader = createFastqReader();
@@ -381,27 +381,27 @@ public abstract class AbstractFastqReaderTest
                              public void description(final String description) throws IOException {
                                  // empty
                              }
- 
+
                              @Override
                              public void sequence(final String sequence) throws IOException {
                                  // empty
                              }
- 
+
                              @Override
                              public void appendSequence(final String sequence) throws IOException {
                                  // empty
                              }
- 
+
                              @Override
                              public void repeatDescription(final String repeatDescription) throws IOException {
                                  // empty
                              }
- 
+
                              @Override
                              public void quality(final String quality) throws IOException {
                                  // empty
                              }
- 
+
                              @Override
                              public void appendQuality(final String quality) throws IOException {
                                  // empty
@@ -419,7 +419,7 @@ public abstract class AbstractFastqReaderTest
             // expected
         }
     }
- 
+
     public void testParseNullParseListener() throws Exception
     {
         FastqReader reader = createFastqReader();

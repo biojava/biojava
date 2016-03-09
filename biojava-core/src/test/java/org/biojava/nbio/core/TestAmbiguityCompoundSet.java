@@ -68,7 +68,7 @@ public class TestAmbiguityCompoundSet extends TestCase{
             Sequence<NucleotideCompound> translated = translator.createSequence(dna);
 
             assertEquals("AGUCS", translated.toString());
-            
+
         } catch (CompoundNotFoundException e) {
             e.printStackTrace();
             fail(e.getMessage());

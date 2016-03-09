@@ -60,8 +60,8 @@ public interface Edit<C extends Compound> {
      */
     public static abstract class AbstractEdit<C extends Compound> implements Edit<C> {
 
-    	private final static Logger logger = LoggerFactory.getLogger(AbstractEdit.class); 
-    			
+    	private final static Logger logger = LoggerFactory.getLogger(AbstractEdit.class);
+
         /**
          * Should return the 5-prime end of the given Sequence according to
          * the edit. An empty Sequence is valid.
@@ -74,7 +74,7 @@ public interface Edit<C extends Compound> {
          */
         protected abstract Sequence<C> getThreePrime(Sequence<C> editingSequence);
 
-      
+
         @Override
 		public Sequence<C> edit(Sequence<C> editingSequence) {
             Sequence<C> targetSequence = getTargetSequence(editingSequence);

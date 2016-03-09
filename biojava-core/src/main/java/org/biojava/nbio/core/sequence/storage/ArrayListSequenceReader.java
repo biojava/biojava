@@ -69,9 +69,9 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
      *
      * @param sequence
      * @param compoundSet
-     * @throws CompoundNotFoundException 
+     * @throws CompoundNotFoundException
      */
-    public ArrayListSequenceReader(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException { 
+    public ArrayListSequenceReader(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
         setCompoundSet(compoundSet);
         setContents(sequence);
     }

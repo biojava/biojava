@@ -89,7 +89,7 @@ public class GOParser {
             throw new RuntimeException( "Duplication in ontology");
         } catch (OntologyException ex) {
             throw new RuntimeException(ex);
-        } 
+        }
     }
 
     private void safeAddTriple(Ontology onto, Term s, Term o, Term p)
@@ -122,7 +122,7 @@ public class GOParser {
         } else {
             Term t = onto.createTerm(termName, termDesc);
             if (toke.hasMoreTokens()) {
-                List<String> secondaries = new ArrayList<String>(); 
+                List<String> secondaries = new ArrayList<String>();
                 while (toke.hasMoreTokens()) {
                     secondaries.add(toke.nextToken());
                 }

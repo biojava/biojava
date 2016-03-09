@@ -33,7 +33,7 @@ package org.biojava.nbio.structure.jama;
 public class CholeskyDecomposition implements java.io.Serializable {
 
     static final long serialVersionUID = 224348942390823l;
-    
+
 /* ------------------------
    Class variables
  * ------------------------ */
@@ -58,7 +58,7 @@ public class CholeskyDecomposition implements java.io.Serializable {
  * ------------------------ */
 
    /** Cholesky algorithm for symmetric and positive definite matrix.
-   @param  Arg   Square, symmetric matrix.  
+   @param  Arg   Square, symmetric matrix.
    */
 
    public CholeskyDecomposition (Matrix Arg) {
@@ -81,7 +81,7 @@ public class CholeskyDecomposition implements java.io.Serializable {
             }
             Lrowj[k] = s = (A[j][k] - s)/L[k][k];
             d = d + s*s;
-            isspd = isspd & (A[k][j] == A[j][k]); 
+            isspd = isspd & (A[k][j] == A[j][k]);
          }
          d = A[j][j] - d;
          isspd = isspd & (d > 0.0);
@@ -131,7 +131,7 @@ public class CholeskyDecomposition implements java.io.Serializable {
             }
             R[k][j] = s = s/R[k][k];
             d = d + s*s;
-            isspd = isspd & (A[k][j] == A[j][k]); 
+            isspd = isspd & (A[k][j] == A[j][k]);
          }
          d = A[j][j] - d;
          isspd = isspd & (d > 0.0);
@@ -202,7 +202,7 @@ public class CholeskyDecomposition implements java.io.Serializable {
 	           X[k][j] /= L[k][k];
 	        }
 	      }
-	
+
 	      // Solve L'*X = Y;
 	      for (int k = n-1; k >= 0; k--) {
 	        for (int j = 0; j < nx; j++) {
@@ -212,8 +212,8 @@ public class CholeskyDecomposition implements java.io.Serializable {
 	           X[k][j] /= L[k][k];
 	        }
 	      }
-      
-      
+
+
       return new Matrix(X,n,nx);
    }
 }

@@ -47,7 +47,7 @@ public class SimpleProfileTest {
     private Profile<ProteinSequence, AminoAcidCompound> global, local, single;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         query.setAccession(new AccessionID("Query"));
@@ -108,7 +108,7 @@ public class SimpleProfileTest {
     }
 
     @Test
-    public void testGetAlignedSequenceS() throws CompoundNotFoundException { 
+    public void testGetAlignedSequenceS() throws CompoundNotFoundException {
         assertEquals(global.getAlignedSequence(query).toString(), "ARND-");
         assertEquals(global.getAlignedSequence(target).toString(), "-R-DG");
         assertNull(global.getAlignedSequence(new ProteinSequence("AR")));
@@ -226,7 +226,7 @@ public class SimpleProfileTest {
     }
 
     @Test
-    public void testGetCompoundAtSInt() throws CompoundNotFoundException { 
+    public void testGetCompoundAtSInt() throws CompoundNotFoundException {
         assertEquals(global.getCompoundAt(query, 2).getShortName(), "R");
         assertEquals(global.getCompoundAt(target, 5).getShortName(), "G");
         assertNull(global.getCompoundAt(new ProteinSequence("AR"), 3));
@@ -448,13 +448,13 @@ public class SimpleProfileTest {
 
     @Test
     public void testToStringInt() {
-    
-    	
-    
-    	
+
+
+
+
         assertEquals(global.toString(3), String.format(
                 "          1 3%n" +
-                "Query   1 ARN 3%n" +                
+                "Query   1 ARN 3%n" +
                 "           | %n"+
                 "Target  1 -R- 1%n" +
                 "%n" +
@@ -474,7 +474,7 @@ public class SimpleProfileTest {
 
     @Test
     public void testToStringFormatted() {
-       
+
         assertEquals(global.toString(StringFormat.ALN), String.format(
                 "CLUSTAL W MSA from BioJava%n%n" +
                 "Query     ARND- 4%n" +

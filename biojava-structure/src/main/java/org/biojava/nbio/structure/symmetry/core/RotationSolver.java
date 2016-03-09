@@ -69,17 +69,17 @@ public class RotationSolver implements QuatSymmetrySolver {
             completeRotationGroup();
             rotations.complete();
         }
-               
+
         return rotations;
     }
 
-    private void solve() {	
+    private void solve() {
         initialize();
-        
+
         int maxSymOps = subunits.getSubunitCount();
-        
+
         boolean isSpherical = isSpherical();
-        
+
         // for cases with icosahedral symmetry n cannot be higher than 60, should check for spherical symmetry here
         // isSpherical check added 08-04-11
         if (maxSymOps % 60 == 0 && isSpherical) {
@@ -90,14 +90,14 @@ public class RotationSolver implements QuatSymmetrySolver {
         Matrix4d transformation = new Matrix4d();
 
         int n = subunits.getSubunitCount();
-        
+
         int sphereCount = SphereSampler.getSphereCount();
-        
+
         List<Double> angles = getAngles();
 
        for (int i = 0; i < sphereCount; i++) {
             SphereSampler.getAxisAngle(i, sphereAngle);
-            
+
             for (double angle : angles) {
                 // apply rotation
                 sphereAngle.angle = angle;
@@ -109,28 +109,28 @@ public class RotationSolver implements QuatSymmetrySolver {
                     transformation.transform(transformedCoords[j]);
                 }
 
-                // get permutation of subunits and check validity/uniqueness             
+                // get permutation of subunits and check validity/uniqueness
                 List<Integer> permutation = getPermutation();
   //              System.out.println("Rotation Solver: permutation: " + i + ": " + permutation);
-                
+
                 boolean isValidPermuation = isValidPermutation(permutation);
                 if (! isValidPermuation) {
                     continue;
                 }
-               
+
                 boolean newPermutation = evaluatePermutation(permutation);
                 if (newPermutation) {
                 	completeRotationGroup();
                 }
-                
-                // check if all symmetry operations have been found.          
-                if (rotations.getOrder() >= maxSymOps) {           	
+
+                // check if all symmetry operations have been found.
+                if (rotations.getOrder() >= maxSymOps) {
                 	return;
                 }
             }
         }
     }
-    
+
     private void completeRotationGroup() {
     	PermutationGroup g = new PermutationGroup();
     	for (int i = 0; i < rotations.getOrder(); i++) {
@@ -138,19 +138,19 @@ public class RotationSolver implements QuatSymmetrySolver {
     		g.addPermutation(s.getPermutation());
     	}
     	g.completeGroup();
-    	
+
     	// the group is complete, nothing to do
     	if (g.getOrder() == rotations.getOrder()) {
     		return;
     	}
-    	   	
+
     	// try to complete the group
     	for (int i = 0; i < g.getOrder(); i++) {
     		List<Integer> permutation = g.getPermutation(i);
-    		
-    		boolean isValidPermutation = isValidPermutation(permutation);	
+
+    		boolean isValidPermutation = isValidPermutation(permutation);
     		if (isValidPermutation) {
-    			
+
     			  // perform permutation of subunits
                 evaluatePermutation(permutation);
     		}
@@ -164,21 +164,21 @@ public class RotationSolver implements QuatSymmetrySolver {
 		}
 
 		int fold = PermutationGroup.getOrder(permutation);
-		
+
 		// get optimal transformation and axisangle by superimposing subunits
 		AxisAngle4d axisAngle = new AxisAngle4d();
 		Matrix4d transformation = SuperPosition.superposeAtOrigin(transformedCoords, originalCoords, axisAngle);
 		double subunitRmsd 		= SuperPosition.rmsd(transformedCoords, originalCoords);
-		
+
 		if (subunitRmsd < parameters.getRmsdThreshold()) {
 			combineWithTranslation(transformation);
-			
+
 			// evaluate superposition of CA traces
 			QuatSymmetryScores scores = QuatSuperpositionScorer.calcScores(subunits, transformation, permutation);
 			if (scores.getRmsd() < 0.0 || scores.getRmsd() > parameters.getRmsdThreshold()) {
 				return false;
 			}
-			
+
 			scores.setRmsdCenters(subunitRmsd);
 			Rotation symmetryOperation = createSymmetryOperation(permutation, transformation, axisAngle, fold, scores);
 			rotations.addRotation(symmetryOperation);
@@ -204,7 +204,7 @@ public class RotationSolver implements QuatSymmetrySolver {
         }
         return angles;
     }
-    
+
     private boolean isSpherical() {
     	MomentsOfInertia m = subunits.getMomentsOfInertia();
     	return m.getSymmetryClass(0.05) == MomentsOfInertia.SymmetryClass.SYMMETRIC;
@@ -214,27 +214,27 @@ public class RotationSolver implements QuatSymmetrySolver {
     	 if (permutation.size() == 0) {
              return false;
          }
-    	 
+
     	 // if this permutation is a duplicate, return false
     	if (hashCodes.contains(permutation)) {
     		return false;
     	}
-       
+
         // check if permutation is allowed
         if (! isAllowedPermutation(permutation)) {
         	return false;
         }
-        
+
         // get fold and make sure there is only one E (fold=1) permutation
         int fold = PermutationGroup.getOrder(permutation);
         if (rotations.getOrder() > 1 && fold == 1) {
             return false;
         }
-        
+
         if (fold == 0 || subunits.getSubunitCount() % fold != 0) {
         	return false;
         }
-        
+
         // if this permutation is a duplicate, returns false
         return hashCodes.add(permutation);
     }
@@ -284,7 +284,7 @@ public class RotationSolver implements QuatSymmetrySolver {
         double threshold = Double.MAX_VALUE;
         int n = subunits.getSubunitCount();
         List<Point3d> centers = subunits.getCenters();
-        
+
         for (int i = 0; i < n - 1; i++) {
             Point3d pi = centers.get(i);
             for (int j = i + 1; j < n; j++) {
@@ -295,7 +295,7 @@ public class RotationSolver implements QuatSymmetrySolver {
         double distanceThreshold = Math.sqrt(threshold);
 
         distanceThreshold = Math.max(distanceThreshold, parameters.getRmsdThreshold());
-        
+
         return distanceThreshold;
     }
 
@@ -313,9 +313,9 @@ public class RotationSolver implements QuatSymmetrySolver {
                 if (dist < minDist) {
                     closest = j;
                     minDist = dist;
-                } 
+                }
             }
-            
+
             sum += minDist;
             if (closest == -1) {
          	   break;
@@ -331,7 +331,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
         // check uniqueness of indices
         Set<Integer> set = new HashSet<Integer>(permutation);
-        
+
         // if size mismatch, clear permutation (its invalid)
         if (set.size() != originalCoords.length) {
             permutation.clear();
@@ -340,7 +340,7 @@ public class RotationSolver implements QuatSymmetrySolver {
         return permutation;
     }
 
-    private void initialize() {        
+    private void initialize() {
         // translation to centered coordinate system
         centroid = new Vector3d(subunits.getCentroid());
         // translation back to original coordinate system

@@ -42,7 +42,7 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  * This Class stores all the relevant information of an internal symmetry result
  * obtained with CeSymm. The purpose is to carry all the information packed
  * during the calculations and return a single object.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
  *
@@ -67,7 +67,7 @@ public class CeSymmResult {
 	/**
 	 * Conditions checked are: score above the threshold, order higher than 1
 	 * and refinement succeeded.
-	 * 
+	 *
 	 * @return true if significant, false otherwise
 	 */
 	public boolean isSignificant() {
@@ -98,7 +98,7 @@ public class CeSymmResult {
 	/**
 	 * Return the symmetric repeats as structure identifiers, if the result is
 	 * symmetric and it was refined, return null otherwise.
-	 * 
+	 *
 	 * @return List of StructureIdentifiers or null if not defined
 	 * @throws StructureException
 	 */
@@ -171,7 +171,7 @@ public class CeSymmResult {
 	/**
 	 * Return the symmetry order determined by the order detector if the
 	 * symmetry is significant. Return 1 otherwise.
-	 * 
+	 *
 	 * @return the order of symmetry if the result is significant
 	 */
 	public int getSymmOrder() {
@@ -206,11 +206,11 @@ public class CeSymmResult {
 					}
 					if (symmGroup.equals("C1"))
 						symmGroup = "R"; // could not find group
-				} else { 
+				} else {
 					// in case significant but not refined
 					if (type.equals(SymmetryType.CLOSED))
 						symmGroup = "C" + symmOrder;
-					else 
+					else
 						symmGroup = "R";
 				}
 			} else // case asymmetric

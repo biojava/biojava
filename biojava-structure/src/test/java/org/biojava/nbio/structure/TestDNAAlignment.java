@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 11, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /** make sure DNA alignments fail gracefully
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -51,11 +51,11 @@ public class TestDNAAlignment extends TestCase
          CeMain ce = new CeMain();
          AFPChain afpChain = ce.align(ca1,ca2);
          assertNotNull(afpChain);
-         
+
         String txt = afpChain.toFatcat(ca1, ca2);
-        
+
         assertNotNull(txt);
-        
+
       } catch (StructureException e){
          e.printStackTrace();
          fail(e.getMessage());

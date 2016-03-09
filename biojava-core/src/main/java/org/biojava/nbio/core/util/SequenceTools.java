@@ -70,7 +70,7 @@ public class SequenceTools {
 			}
 		}
 	}
-	
+
     public static int percentNucleotideSequence(String sequence)
     {
             if (sequence == null || sequence.length() == 0) return 0;
@@ -103,16 +103,16 @@ public class SequenceTools {
             }
             return true;
     }
-    
+
     public Sequence<?> getSequenceFromString(String sequence) throws CompoundNotFoundException {
-    	
-  
+
+
     	if( isNucleotideSequence(sequence)) {
     		return  new DNASequence(sequence);
     	} else {
     		return new ProteinSequence(sequence);
     	}
-    	
+
     }
-	
+
 }

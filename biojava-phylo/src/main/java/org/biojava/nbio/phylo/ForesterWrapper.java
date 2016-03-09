@@ -37,7 +37,7 @@ import org.forester.phylogeny.Phylogeny;
 /**
  * This class contains wrapper methods for communication between BioJava and
  * forester (e.g, Data Structure conversion).
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
  *
@@ -52,16 +52,16 @@ public class ForesterWrapper {
 	 * Convert a BioJava {@link MultipleSequenceAlignment} to a forester
 	 * {@link Msa}. The easiest way to convert them is writting the msa as a
 	 * FASTA file and then parsing it with the forester {@link FastaParser}.
-	 * 
+	 *
 	 * @param msa
 	 *            BioJava MultipleSequenceAlignment
 	 * @return forester Msa object
-	 * @throws IOException 
+	 * @throws IOException
 	 *             if the conversion was not possible
 	 */
 	public static <C extends Sequence<D>, D extends Compound> Msa convert(
 			MultipleSequenceAlignment<C, D> msa) throws IOException {
-		
+
 		// Convert the biojava MSA to a FASTA String
 		OutputStream os = new ByteArrayOutputStream();
 		FastaWriter<C, D> fastaW = new FastaWriter<C, D>(os,
@@ -72,7 +72,7 @@ public class ForesterWrapper {
 						return sequence.getAccession().toString();
 					};
 				});
-		
+
 		fastaW.process();
 		String fastaMSA = os.toString();
 
@@ -83,7 +83,7 @@ public class ForesterWrapper {
 	/**
 	 * Convert a Phylogenetic tree to its Newick representation, so that it can
 	 * be exported to an external application.
-	 * 
+	 *
 	 * @param phylo
 	 *            Phylogeny phylogenetic tree
 	 * @param writeDistances
@@ -101,7 +101,7 @@ public class ForesterWrapper {
 
 	/**
 	 * Helper function to clone a forester symmetrical DistanceMatrix.
-	 * 
+	 *
 	 * @param distM
 	 *            forester symmetrical DistanceMatrix
 	 * @return identical copy of the forester symmetrical DistanceMatrix
@@ -110,7 +110,7 @@ public class ForesterWrapper {
 			BasicSymmetricalDistanceMatrix distM) {
 
 		int n = distM.getSize();
-		BasicSymmetricalDistanceMatrix cloneDM = 
+		BasicSymmetricalDistanceMatrix cloneDM =
 				new BasicSymmetricalDistanceMatrix(n);
 
 		for (int i = 0; i < n; i++) {

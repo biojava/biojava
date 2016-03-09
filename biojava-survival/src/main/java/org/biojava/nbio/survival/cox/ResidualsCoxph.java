@@ -97,7 +97,7 @@ public class ResidualsCoxph {
             vv = ci.getVariance();
         }
         if (otype == Type.dfbeta) {
-            //rr <- rr %*% vv           
+            //rr <- rr %*% vv
             rr = Matrix.multiply(rr, vv);
         } else if (otype == Type.dfbetas) {
             //rr <- (rr %*% vv) %*% diag(sqrt(1/diag(vv)))
@@ -136,7 +136,7 @@ public class ResidualsCoxph {
         for (int j = 0; j < rr[0].length; j++) {
             for (int i = 0; i < sets.size(); i++) {
                 String s = sets.get(i);
-                Double v = sumMap.get(s); //get in order 
+                Double v = sumMap.get(s); //get in order
                 if (v == null) {
                     v = 0.0;
                 }

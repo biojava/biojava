@@ -39,17 +39,17 @@ import org.biojava.nbio.structure.align.multiple.mc.MultipleMcParameters;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
- * Demo for running the CEMC Algorithm on a protein family and 
+ * Demo for running the CEMC Algorithm on a protein family and
  * visualizing the results.
  * Choose the family by commenting out the protein family names.
- * 
+ *
  * @author Aleix Lafita
- * 
+ *
  */
 public class DemoMultipleMC {
 
 	public static void main(String[] args) throws IOException, StructureException, InterruptedException, ExecutionException {
-		
+
 		//ASP-proteinases (CEMC paper)
 		//List<String> names = Arrays.asList("3app", "4ape", "2apr", "5pep", "1psn", "4cms", "1bbs.A", "1smr.A", "2jxr.A", "1mpp", "2asi", "1am5");
 		//Protein Kinases (CEMC paper)
@@ -93,7 +93,7 @@ public class DemoMultipleMC {
 		//List<String> names = Arrays.asList("3b8e.A","2zxe.A", "3tlm.A","1iwo.A");
 		//Ankyrin Repeats
 		//List<String> names = Arrays.asList("d1n0ra_", "3ehq.A", "1awc.B");  //ankyrin
-		
+
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
 
@@ -104,7 +104,7 @@ public class DemoMultipleMC {
 			atomArrays.add(cache.getAtoms(name));
 			identifiers.add(new SubstructureIdentifier(name));
 		}
-		
+
 		//Here the multiple structural alignment algorithm comes in place to generate the alignment object
 		//StructureAlignment pairwise = new FatCatFlexible();
 		StructureAlignment pairwise = new CeMain();
@@ -112,14 +112,14 @@ public class DemoMultipleMC {
 		MultipleMcParameters params = (MultipleMcParameters) algorithm.getParameters();
 		params.setMinBlockLen(10);
 		params.setGapExtension(20.0);
-		
+
 		MultipleAlignment result = algorithm.align(atomArrays);
 		result.getEnsemble().setStructureIdentifiers(identifiers);
-		
+
 		//Information about the alignment
 		result.getEnsemble().setAlgorithmName(algorithm.getAlgorithmName());
 		result.getEnsemble().setVersion(algorithm.getVersion());
-        
+
 		MultipleAlignmentJmolDisplay.display(result);
 	}
 }

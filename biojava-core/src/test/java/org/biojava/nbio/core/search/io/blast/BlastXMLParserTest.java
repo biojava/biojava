@@ -40,22 +40,22 @@ import org.junit.Ignore;
  * @author Paolo Pavan
  */
 public class BlastXMLParserTest {
-    
+
     public BlastXMLParserTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -87,19 +87,19 @@ public class BlastXMLParserTest {
     @Test
     public void testCreateObjects() throws Exception {
         System.out.println("createObjects");
-        
+
         String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blastxml";
 
 
         File file = getFileForResource(resource);
-        
+
         BlastXMLParser instance = new BlastXMLParser();
         instance.setFile(file);
-        
+
         //instance.setQueryReferences(null);
         //instance.setDatabaseReferences(null);
         List<Result> result = instance.createObjects(1e-10);
-        
+
         // test with random manual selected results
         BlastHsp hsp1hit1res1 = new BlastHspBuilder()
                 .setHspNum(1)
@@ -123,7 +123,7 @@ public class BlastXMLParserTest {
         List<Hsp> hsplist = new ArrayList<Hsp>();
         hsplist.add(hsp1hit1res1);
         hsplist.add(hsp1hit1res1);
-        
+
         BlastHit hit1res1 = new BlastHitBuilder()
                 .setHitNum(1)
                 .setHitId("gnl|BL_ORD_ID|2006")
@@ -132,10 +132,10 @@ public class BlastXMLParserTest {
                 .setHitLen(1780517)
                 .setHsps(hsplist)
                 .createBlastHit();
-        
+
         List<Hit> hitlist = new ArrayList<Hit>();
         hitlist.add(hit1res1);
-        
+
         BlastResult res1 = new BlastResultBuilder()
                 .setProgram("blastn")
                 .setVersion("BLASTN 2.2.29+")
@@ -144,17 +144,17 @@ public class BlastXMLParserTest {
                 .setQueryDef("CP000411_-_16S_rRNA Oenococcus oeni PSU-1, complete genome")
                 .setQueryLength(1567)
                 .createBlastResult();
-        
+
         Result expRes1 = result.get(0);
         Hit expHit1res1 = expRes1.iterator().next();
         Hsp expHsp1hit1res1 = expHit1res1.iterator().next();
-        
+
         // result not testable without all hits and hsp
         //assertEquals(expRes1, res1);
-        
+
         // hit test
         assertEquals(expHit1res1, hit1res1);
-        
+
         // hsp test
         assertEquals(expHsp1hit1res1, hsp1hit1res1);
     }

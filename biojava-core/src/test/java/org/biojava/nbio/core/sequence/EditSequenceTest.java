@@ -57,7 +57,7 @@ public class EditSequenceTest {
   }
 
   @Test
-  public void insert() throws CompoundNotFoundException { 
+  public void insert() throws CompoundNotFoundException {
     DNASequence seq = new DNASequence("ACGT");
     assertSeq(new Edit.Insert<NucleotideCompound>("TT", 1).edit(seq), "TTACGT");
     assertSeq(new Edit.Insert<NucleotideCompound>("TT", 2,3).edit(seq), "ACTTGT");

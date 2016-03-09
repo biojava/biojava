@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.core.sequence.io;
 
@@ -37,7 +37,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author mckeee1
- * 
+ *
  */
 public class GenbankWriterTest extends TestCase{
 
@@ -59,8 +59,8 @@ public class GenbankWriterTest extends TestCase{
 		ByteArrayInputStream fragreader = new ByteArrayInputStream(fragwriter.toByteArray());
                 /**
                  * Hello Jacek
-                 * can you please investigate why this test fails? it seems that 
-                 * fragreader at the line below is read with the last feature 
+                 * can you please investigate why this test fails? it seems that
+                 * fragreader at the line below is read with the last feature
                  * in an invalid state: location = 2005..2004
                  */
 		//dnaSequences = GenbankReaderHelper.readGenbankDNASequence( fragreader );

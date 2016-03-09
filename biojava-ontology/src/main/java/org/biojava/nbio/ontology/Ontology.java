@@ -54,9 +54,9 @@ public interface Ontology  {
 	public String getName();
 
 	/** Set the name for this ontology
-	 * 
-	 * @param name - the name 
-	 * 
+	 *
+	 * @param name - the name
+	 *
 	 */
 	public void setName(String name);
 
@@ -69,7 +69,7 @@ public interface Ontology  {
 	public String getDescription();
 
 	/** set the description of this ontology
-	 * 
+	 *
 	 * @param description
 	 */
 	public void setDescription(String description);
@@ -129,7 +129,7 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException 
+	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name)
@@ -148,7 +148,7 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException 
+	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name, String description)
@@ -168,7 +168,7 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException 
+	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name, String description, Object[] synonyms)
@@ -187,7 +187,7 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException 
+	 * @throws ChangeVetoException
 	 */
 
 	public Variable createVariable(String name, String description)
@@ -208,8 +208,8 @@ public interface Ontology  {
 	 * @param t  the Term to import
 	 * @param localName  the local name to import it under, optionally null
 	 * @return a Term
-	 * @throws ChangeVetoException 
-	 * @throws IllegalArgumentException 
+	 * @throws ChangeVetoException
+	 * @throws IllegalArgumentException
 	 */
 
 	public Term importTerm(Term t, String localName)
@@ -240,9 +240,9 @@ public interface Ontology  {
 
 	/**
 	 * See if a triple exists in this ontology
-	 * @param subject 
-	 * @param object 
-	 * @param predicate 
+	 * @param subject
+	 * @param object
+	 * @param predicate
 	 * @return true if contained
 	 */
 
@@ -250,15 +250,15 @@ public interface Ontology  {
 
 	/**
 	 * Remove a term from an ontology, together with all triples which refer to it.
-	 * @param t 
-	 * @throws ChangeVetoException 
+	 * @param t
+	 * @throws ChangeVetoException
 	 */
 
 	public void deleteTerm(Term t) ;
 
 	/**
 	 * Determines if this ontology currently contains a term named <code>name</code>
-	 * @param name 
+	 * @param name
 	 * @return true is contained
 	 */
 
@@ -278,7 +278,7 @@ public interface Ontology  {
 
 	implements Ontology, java.io.Serializable {
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = -8064461497813727957L;
 		private final Map<String,Term> terms;
@@ -308,7 +308,7 @@ public interface Ontology  {
 			this.description = description;
 			ops = new DefaultOps() {
 				/**
-				 * 
+				 *
 				 */
 				private static final long serialVersionUID = -2135777733685713181L;
 
@@ -515,7 +515,7 @@ public interface Ontology  {
 				String description)
 						throws
 						AlreadyExistsException,
-						IllegalArgumentException,						
+						IllegalArgumentException,
 						NullPointerException,
 						IllegalArgumentException
 						{

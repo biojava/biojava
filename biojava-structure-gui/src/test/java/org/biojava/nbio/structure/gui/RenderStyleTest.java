@@ -32,7 +32,7 @@ import junit.framework.TestCase;
  * @author Jules
  */
 public class RenderStyleTest extends TestCase {
-    
+
     public RenderStyleTest(String testName) {
         super(testName);
     }

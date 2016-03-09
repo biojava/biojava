@@ -176,7 +176,7 @@ public class TabDelimParser {
         }
       } catch (AlreadyExistsException aee) {
         throw new RuntimeException("Assertion Failure: Could not create term", aee);
-      } 
+      }
     }
   }
 
@@ -188,7 +188,7 @@ public class TabDelimParser {
         return onto.createTriple(sub, obj, rel, null, null);
       } catch (AlreadyExistsException aee) {
         throw new RuntimeException("Assertion Failure: Could not create triple",aee);
-      } 
+      }
     }
   }
 }

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 17, 2010
- * Author: ap3 
+ * Author: ap3
  *
  */
 
@@ -28,7 +28,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 
 /** Everything that is needed to uniquely describe a residue position
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -42,7 +42,7 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 
 	public ResidueNumber() {
 	}
-	
+
 	public ResidueNumber(ResidueNumber o) {
 		this.chainId = o.chainId;
 		this.insCode = o.insCode;
@@ -80,9 +80,9 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		this.seqNum = seqNum;
 	}
 
-	
 
-	
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -108,10 +108,10 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 				return false;
 		} else if (!seqNum.equals(other.seqNum))
 			return false;
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -152,26 +152,26 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		return String.format("%s%4d%-2s", chainId, seqNum, insCodeS);
 	}
 
-	
+
 	/** Convert a string representation of a residue number to a residue number object.
 	 * The string representation can be a integer followed by a character.
-	 * 
+	 *
 	 * @param pdb_code
 	 * @return a ResidueNumber object, or null if the input was null
 	 */
 	public static ResidueNumber fromString(String pdb_code) {
 		if(pdb_code == null)
 			return null;
-		
+
 		ResidueNumber residueNumber = new ResidueNumber();
 		Integer resNum = null;
-		String icode = null;		
-		
+		String icode = null;
+
 		try {
 			resNum = Integer.parseInt(pdb_code);
 		} catch ( NumberFormatException e){
 			// there is an insertion code..
-		
+
 			// Split at any position that's either:
 			// preceded by a digit and followed by a non-digit, or
 			// preceded by a non-digit and followed by a digit.
@@ -180,9 +180,9 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 				resNum = Integer.parseInt(spl[0]);
 				icode = spl[1];
 			}
-			
+
 		}
-				
+
 		residueNumber.setSeqNum(resNum);
 		if ( icode == null)
 			residueNumber.setInsCode(null);
@@ -194,7 +194,7 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 
 	@Override
 	public int compareTo(ResidueNumber other) {
-		
+
 		// chain id
 		if (chainId != null && other.chainId != null) {
 			if (!chainId.equals(other.chainId)) return chainId.compareTo(other.chainId);
@@ -204,7 +204,7 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		} else if (chainId == null && other.chainId != null) {
 			return -1;
 		}
-		
+
 		// sequence number
 		if (seqNum != null && other.seqNum != null) {
 			if (!seqNum.equals(other.seqNum)) return seqNum.compareTo(other.seqNum);
@@ -214,7 +214,7 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		} else if (seqNum == null && other.seqNum != null) {
 			return -1;
 		}
-		
+
 		// insertion code
 		if (insCode != null && other.insCode != null) {
 			if (!insCode.equals(other.insCode)) return insCode.compareTo(other.insCode);
@@ -224,7 +224,7 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		} else if (insCode == null && other.insCode != null) {
 			return -1;
 		}
-		
+
 		return 0;
 	}
 
@@ -232,5 +232,5 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		final String chain = chainId==null? "" : chainId;
 		return chain + "_" + toString();
 	}
-	
+
 }

@@ -64,7 +64,7 @@ public class SequenceAsStringHelper<C extends Compound> {
                     C compound = parsedCompounds.get(index);
                     builder.append(compoundSet.getStringForCompound(compound));
                 }
-                
+
                 for (int index = parsedCompounds.size() - 1; index >= bioEnd - 1; index--) {
                     C compound = parsedCompounds.get(index);
                     builder.append(compoundSet.getStringForCompound(compound));

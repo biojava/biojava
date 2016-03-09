@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 30, 2010
- * Author: Mark 
+ * Author: Mark
  *
  */
 
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertNotNull;
 public class FractionalSimilarityScorerTest {
 
 	private static final double PRECISION = 0.00000001;
-	
+
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
@@ -48,7 +48,7 @@ public class FractionalSimilarityScorerTest {
     private PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound> scorer1, scorer2;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         query = new ProteinSequence("ARXB");
         target = new ProteinSequence("RADG");
         gaps = new SimpleGapPenalty((short) 2, (short) 1);

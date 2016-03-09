@@ -1,8 +1,8 @@
-/* 
+/*
  * @(#)SequenceUtil.java 1.0 September 2009
- * 
+ *
  * Copyright (c) 2009 Peter Troshin
- *  
+ *
  *        BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 
 /**
  * Utility class for operations on sequences
- * 
+ *
  * @author Peter Troshin
  * @version 1.0
  * @since 3.0.2
@@ -104,7 +104,7 @@ public final class SequenceUtil {
      * OutputStreamWriter(os)); pir_out.write(">P1;" + seq.getId() +
      * SysPrefs.newlinechar); pir_out.write(seq.getSequence() +
      * SysPrefs.newlinechar); pir_out.close(); }
-     * 
+     *
      * public static void write_FastaSeq(OutputStream os, FastaSequence seq)
      * throws IOException { BufferedWriter fasta_out = new BufferedWriter( new
      * OutputStreamWriter(os)); fasta_out.write(">" + seq.getId() +
@@ -142,7 +142,7 @@ public final class SequenceUtil {
 
     /**
      * Removes all whitespace chars in the sequence string
-     * 
+     *
      * @param sequence
      * @return cleaned up sequence
      */
@@ -156,7 +156,7 @@ public final class SequenceUtil {
     /**
      * Removes all special characters and digits as well as whitespace chars
      * from the sequence
-     * 
+     *
      * @param sequence
      * @return cleaned up sequence
      */
@@ -170,7 +170,7 @@ public final class SequenceUtil {
     }
 
     /**
-     * 
+     *
      * @param sequence
      * @return true is the sequence is a protein sequence, false overwise
      */
@@ -192,7 +192,7 @@ public final class SequenceUtil {
 
     /**
      * Check whether the sequence confirms to amboguous protein sequence
-     * 
+     *
      * @param sequence
      * @return return true only if the sequence if ambiguous protein sequence
      *         Return false otherwise. e.g. if the sequence is non-ambiguous
@@ -219,7 +219,7 @@ public final class SequenceUtil {
     /**
      * Writes list of FastaSequeces into the outstream formatting the sequence
      * so that it contains width chars on each line
-     * 
+     *
      * @param outstream
      * @param sequences
      * @param width
@@ -242,7 +242,7 @@ public final class SequenceUtil {
     /**
      * Reads fasta sequences from inStream into the list of FastaSequence
      * objects
-     * 
+     *
      * @param inStream
      *            from
      * @return list of FastaSequence objects
@@ -278,7 +278,7 @@ public final class SequenceUtil {
 
     /**
      * Writes FastaSequence in the file, each sequence will take one line only
-     * 
+     *
      * @param os
      * @param sequences
      * @throws IOException

@@ -54,13 +54,13 @@ public class FastaReaderHelper {
             return readFastaDNASequence(file);
         }
 
-        FastaReader<DNASequence, NucleotideCompound> fastaProxyReader = 
+        FastaReader<DNASequence, NucleotideCompound> fastaProxyReader =
         		new FastaReader<DNASequence, NucleotideCompound>(
-        				file, 
-        				new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), 
+        				file,
+        				new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
         				new FileProxyDNASequenceCreator(
-        						file, 
-        						DNACompoundSet.getDNACompoundSet(), 
+        						file,
+        						DNACompoundSet.getDNACompoundSet(),
         						new FastaSequenceParser()
     						)
     				);

@@ -12,7 +12,7 @@
  * authors.  These should be listed in @author doc comments.
  *
  * @author Karl Nicholas <github:karlnicholas>
- * 
+ *
  * For more information on the BioJava project and its aims,
  * or to join the biojava-l mailing list, visit the home page
  * at:
@@ -53,7 +53,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         sequence.setAccession(new AccessionID(accession, DataSource.GENBANK, version, identifier));
     	sequence.setDescription(description);
     }
-    
+
     /**
      * Sets the sequence info back to default values, ie. in order to start
      * constructing a new sequence from scratch.
@@ -68,7 +68,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         this.name = null;
         this.comments.clear();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -83,8 +83,8 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
             }
         }
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
      * The last accession passed to this routine will always be the one used.
@@ -93,7 +93,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         if (accession==null) throw new ParserException("Accession cannot be null");
         this.accession = accession;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -102,7 +102,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         this.description = description;
     }
     private String description;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -111,7 +111,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         if (this.identifier!=null) throw new ParserException("Current BioEntry already has a identifier");
         this.identifier = identifier;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -120,7 +120,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         if (this.name!=null) throw new ParserException("Current BioEntry already has a name");
         this.name = name;
     }
-    
+
     /**
      * {@inheritDoc}
      */

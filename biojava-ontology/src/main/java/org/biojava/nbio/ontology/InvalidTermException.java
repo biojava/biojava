@@ -32,23 +32,23 @@ package org.biojava.nbio.ontology;
  */
 
 public class InvalidTermException
-    extends OntologyException 
+    extends OntologyException
 {
-  
+
 	private static final long serialVersionUID = 1L;
 
 public InvalidTermException() {
     super();
   }
-  
+
   public InvalidTermException(String message) {
     super(message);
   }
-  
+
   public InvalidTermException(Throwable cause) {
     super(cause);
   }
-  
+
   public InvalidTermException(String message, Throwable cause) {
     super(message, cause);
   }

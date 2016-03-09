@@ -32,12 +32,12 @@ import java.util.Map;
  * <B>Note:</B> Deuterium and Tritium are treated as separate elements D and T,
  * respectively. Sometimes part of a molecule is represented as an R-group, which
  * is represented as the element R.
- * 
- *  
+ *
+ *
  * @author Peter Rose
  * @version %I% %G%
  * @since 3.0
- * 
+ *
  */
 
 public enum Element implements Serializable {
@@ -66,7 +66,7 @@ public enum Element implements Serializable {
     Al(13, 3, 4, 1.50f, 1.18f, 3, 0, 5, 0, 4, 26.982f, 10, 3, new int[] {0,1,2,3}, 1.61f, ElementType.POST_TRANSITION_METAL),
     Si(14, 3, 86, 2.20f, 1.11f, 4, 4, 4, 4, 4, 28.086f, 10, 4, new int[] {-4,-3,-2,-1,0,1,2,3,4}, 1.90f, ElementType.METALLOID),
     P(15, 3, 67, 1.88f, 1.06f, 5, 3, 5, 3, 5, 30.974f, 10, 5, new int[] {-3,-2,-1,0,1,2,3,4,5}, 2.19f, ElementType.OTHER_NONMETAL),
-    S(16, 3, 82, 1.81f, 1.02f, 6, 2, 6, 2, 6, 32.060f, 10, -2, new int[] {-2,-1,0,1,2,3,4,5,6}, 2.58f, ElementType.OTHER_NONMETAL), 
+    S(16, 3, 82, 1.81f, 1.02f, 6, 2, 6, 2, 6, 32.060f, 10, -2, new int[] {-2,-1,0,1,2,3,4,5,6}, 2.58f, ElementType.OTHER_NONMETAL),
     Cl(17, 3, 21, 1.75f, 0.99f, 7, 0, 1, 1, 1, 35.453f, 10, -1, new int[] {-1,0,1,2,3,4,5,6,7}, 3.16f, ElementType.HALOGEN),
     Ar(18, 4, 6, 2.77f, 1.54f, 8, 0, 12, 0, 0, 39.948f, 18, 0, new int[] {0}, 0.00f, ElementType.NOBLE_GAS), // electroneg not reported
     K(19, 4, 47, 2.39f, 1.96f, 1, 0, 12, 0, 0, 39.102f, 18, 1, new int[] {-1,0,1}, 0.82f, ElementType.ALKALI_METAL),
@@ -179,7 +179,7 @@ public enum Element implements Serializable {
     // Element type: http://www.ptable.com/
     private ElementType elementType;
     //private static final Element[] hillOrderIndex;
-    
+
 //
 //    static {
 //        hillOrderIndex = new Element[Element.values().length + 1];
@@ -190,7 +190,7 @@ public enum Element implements Serializable {
 //    }
 
     private static final Map<String,Element> allElements ;
-   
+
 	static {
     	allElements = new HashMap<String,Element>();
     	for (Element e : Element.values()){
@@ -230,10 +230,10 @@ public enum Element implements Serializable {
         this.allOxidationStates = allOxidationStates;
         this.paulingElectronegativity = paulingElectronegativity;
         this.elementType = elementType;
-        
-       
+
+
     }
-    
+
     /**
      * Returns a list of all oxidation states the element is found in.
      * The set is by Greenwood and Norman in "Chemistry of the Elements (ISBN:0080379419).
@@ -379,7 +379,7 @@ public enum Element implements Serializable {
     public ElementType getElementType() {
         return elementType;
     }
-    
+
     /**
      * Returns the Element that corresponds to the specified element symbol. The case
      * of the element symbol is ignored. Example: FE, fe, Fe represent iron.
@@ -400,7 +400,7 @@ public enum Element implements Serializable {
 	 * <strong>Note:</strong> Deuterium ({@link #D}) and Tritium ({@link Element#T}) will return
 	 * <code>true</code> to this method.
      * </p>
-	 * 
+	 *
 	 * @return <CODE>true</CODE> if the Element is Hydrogen.
 	 */
 	public boolean isHydrogen() {
@@ -413,7 +413,7 @@ public enum Element implements Serializable {
 	 * <p>
 	 * This method is the exact opposite of {@link #isHydrogen()}.
      * </p>
-	 * 
+	 *
 	 * @return <CODE>true</CODE> is Element is not Hydrogen.
 	 */
 	public boolean isHeavyAtom() {
@@ -435,7 +435,7 @@ public enum Element implements Serializable {
 	public boolean isMetal() {
 		return elementType.isMetal();
 	}
-	
+
 	/**
      * Returns <CODE>true</CODE> if ElementType is a metalloid.
      * @return <CODE>true</CODE> if ElementType is a metalloid.
@@ -443,7 +443,7 @@ public enum Element implements Serializable {
 	public boolean isMetalloid() {
 		return elementType.isMetalloid();
 	}
-	
+
 	/**
      * Returns <CODE>true</CODE> if ElementType is a non-metal.
      * @return <CODE>true</CODE> if ElementType is a non-metal.
@@ -451,7 +451,7 @@ public enum Element implements Serializable {
 	public boolean isNonMetal() {
 		return elementType.isNonMetal();
 	}
-	
+
 	/**
      * Returns <CODE>true</CODE> if Element is a halogen (F, Cl, Br, I, At).
      * @return <CODE>true</CODE> if Element is a halogen.
@@ -459,7 +459,7 @@ public enum Element implements Serializable {
     public boolean isHalogen() {
         return elementType.equals(ElementType.HALOGEN);
     }
-    
+
     /**
      * Returns <CODE>true</CODE> if Element is a chalcogen (O, S, Se, Te, Po).
      * @return <CODE>true</CODE> if Element is a chalcogen.

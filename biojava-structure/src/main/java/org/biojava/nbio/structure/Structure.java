@@ -169,7 +169,7 @@ public void calcPhiPsi({@link Structure} structure){
 public interface Structure extends Cloneable {
 
 
-	/** 
+	/**
 	 * Return an identical copy of this Structure object
 	 *
 	 * @return identical copy of this Structure object
@@ -198,7 +198,7 @@ public interface Structure extends Cloneable {
      */
     public String  getPDBCode () ;
 
-    /** 
+    /**
      * Set biological name of Structure .
      *
      * @param name  a String specifying the biological name of the Structure
@@ -206,7 +206,7 @@ public interface Structure extends Cloneable {
      */
     public void setName(String name);
 
-    /** 
+    /**
      * Get biological name of Structure.
      *
      * @return a String representing the biological name of the Structure
@@ -274,13 +274,13 @@ public interface Structure extends Cloneable {
     @Deprecated
     public List<Map<String,Integer>> getConnections();
 
-    /** 
+    /**
      * Return number of Chains in this Structure.
      * @return an int representing the number of Chains in this Structure
      */
     public int size() ;
 
-    /** 
+    /**
      * Return number of chains of model.
      *
      * @param modelnr  an int specifying the number of the Model that should be used
@@ -288,7 +288,7 @@ public interface Structure extends Cloneable {
      */
     public int size(int modelnr);
 
-    /** 
+    /**
      * Return the number of models .
      * In this implementation also XRAY structures have "1 model", since
      * model is the container for the chains.
@@ -299,7 +299,7 @@ public interface Structure extends Cloneable {
      */
     public int nrModels() ;
 
-    /** 
+    /**
      * Test if this structure is an NMR structure.
      *
      * @return true if this Structure has been solved by NMR
@@ -309,13 +309,13 @@ public interface Structure extends Cloneable {
 
     /**
 	 * Test if this structure is a crystallographic structure, i.e. it is an asymmetric unit
-	 * from which it is possible to reconstruct the crystal lattice given cell parameters and 
+	 * from which it is possible to reconstruct the crystal lattice given cell parameters and
 	 * space group.
-	 * 
+	 *
 	 * @return true if crystallographic, false otherwise
 	 */
 	public boolean isCrystallographic();
-	
+
     /** set NMR flag.
      *
      * @param nmr  true to declare that this Structure has been solved by NMR.
@@ -324,7 +324,7 @@ public interface Structure extends Cloneable {
     public void setNmr(boolean nmr);
 
 
-    /** 
+    /**
      * Add a new model.
      *
      * @param model  a List object containing the Chains of the new Model
@@ -332,7 +332,7 @@ public interface Structure extends Cloneable {
     public void addModel(List<Chain> model);
 
 
-    /** 
+    /**
      * A convenience function if one wants to edit and replace the
      * models in a structure. Allows to set (replace) the model at position
      * with the new List of Chains.
@@ -341,7 +341,7 @@ public interface Structure extends Cloneable {
      */
     public void setModel(int position, List<Chain> model);
 
-    /** 
+    /**
      * Retrieve all Chains belonging to a model .
      * @see #getChains(int modelnr)
      *
@@ -351,7 +351,7 @@ public interface Structure extends Cloneable {
      */
     public List<Chain> getModel(int modelnr);
 
-    /** 
+    /**
      * Retrieve all chains - if it is a NMR structure will return the chains of the first model.
      * This is the same as getChains(0);
      * @see #getModel(int modelnr)
@@ -362,7 +362,7 @@ public interface Structure extends Cloneable {
     public List<Chain> getChains();
 
 
-    /** 
+    /**
      * Set the chains of a structure, if this is a NMR structure,
      * this will only set model 0.
      *
@@ -372,7 +372,7 @@ public interface Structure extends Cloneable {
      */
     public void setChains(List<Chain> chains);
 
-    /** 
+    /**
      * Retrieve all chains of a model.
      * @see #getModel
      *
@@ -381,21 +381,21 @@ public interface Structure extends Cloneable {
      */
     public List<Chain> getChains(int modelnr);
 
-    /** 
+    /**
      * Set the chains for a model
      * @param chains
      * @param modelnr
      */
     public void setChains( int modelnr, List<Chain> chains);
 
-    /** 
+    /**
      * Add a new chain.
      *
      * @param chain  a Chain object
      */
     public void addChain(Chain chain);
 
-    /** 
+    /**
      * Add a new chain, if several models are available.
      *
      * @param chain    a Chain object
@@ -403,7 +403,7 @@ public interface Structure extends Cloneable {
      */
     public void addChain(Chain chain, int modelnr);
 
-    /** 
+    /**
      * Retrieve a chain by its position within the Structure .
      *
      * @param pos  an int for the position in the List of Chains.
@@ -411,7 +411,7 @@ public interface Structure extends Cloneable {
     */
     public Chain getChain(int pos);
 
-    /** 
+    /**
      * Retrieve a chain by its position within the Structure and model number.
      *
      * @param pos      an int
@@ -422,7 +422,7 @@ public interface Structure extends Cloneable {
 
 
 
-    /** 
+    /**
      * Request a particular chain from a structure.
      * by default considers only the first model.
      * @param chainId the ID of a chain that should be returned
@@ -433,7 +433,7 @@ public interface Structure extends Cloneable {
     throws StructureException;
 
 
-    /** 
+    /**
      * Check if a chain with the id chainId is contained in this structure.
      *
      * @param chainId the name of the chain
@@ -441,7 +441,7 @@ public interface Structure extends Cloneable {
      */
     public boolean hasChain(String chainId);
 
-    /** 
+    /**
      * Request a particular chain from a particular model
      * @param modelnr the number of the model to use
      * @param chainId the ID of a chain that should be returned
@@ -451,7 +451,7 @@ public interface Structure extends Cloneable {
     public Chain findChain(String chainId, int modelnr)
     throws StructureException;
 
-    /** 
+    /**
      * Request a particular group from a structure.
      * by default considers only the first model in the structure.
      * @param chainId the ID of the chain to use
@@ -462,7 +462,7 @@ public interface Structure extends Cloneable {
     public  Group findGroup(String chainId, String pdbResnum)
     		throws StructureException;
 
-    /** 
+    /**
      * Request a particular group from a structure.
      * considers only model nr X. count starts with 0.
      * @param chainId the ID of the chain to use
@@ -475,7 +475,7 @@ public interface Structure extends Cloneable {
      throws StructureException;
 
 
-     /** 
+     /**
       * Request a chain by its PDB code
       * by default takes only the first model
       *
@@ -486,7 +486,7 @@ public interface Structure extends Cloneable {
      public Chain getChainByPDB(String chainId)
          throws StructureException;
 
-     /** 
+     /**
       * Request a chain by its PDB code
       * by default takes only the first model
       *
@@ -499,7 +499,7 @@ public interface Structure extends Cloneable {
          throws StructureException;
 
 
-    /** 
+    /**
      * Create a String that contains this Structure's contents in PDB file format.
      *
      * @return a String that looks like a PDB file
@@ -512,15 +512,15 @@ public interface Structure extends Cloneable {
      * @return
      */
     public String toMMCIF();
-    
-    /** 
+
+    /**
      * Set the Compounds
      *
      * @param molList
      */
     public void setCompounds(List<Compound> molList);
 
-    /** 
+    /**
      * Get all the Compounds for this Structure.
      * Compounds are called Entities in mmCIF dictionary.
      *
@@ -532,22 +532,22 @@ public interface Structure extends Cloneable {
      * Add a Compound to this Structure
      */
     public void addCompound(Compound compound);
-    
-    /** 
+
+    /**
      * Set the list of database references for this structure
      * @param dbrefs list of DBRef objects
      *
      */
     public void setDBRefs(List<DBRef> dbrefs);
 
-    /** 
+    /**
      * Get the list of database references
      *
      * @return list of DBRef objects
      */
     public List<DBRef> getDBRefs();
 
-    /** 
+    /**
      * Request a particular compound by its molId (entity_id in mmCIF dictionary)
      *
      * @param molId
@@ -556,7 +556,7 @@ public interface Structure extends Cloneable {
     public Compound getCompoundById(int molId);
 
 
-    /** 
+    /**
      * Return the header information for this PDB file
      *
      * @return the PDBHeader object
@@ -585,35 +585,35 @@ public interface Structure extends Cloneable {
      */
     public void setJournalArticle(JournalArticle journalArticle);
 
-    /** 
+    /**
      * Get the list of disulfide Bonds as they have been defined in the PDB files
      *
      * @return a list of Bonds
      */
     public List<Bond> getSSBonds();
 
-    /** 
+    /**
      * Set the list of SSBonds for this structure
      *
      * @param ssbonds
      */
     public void setSSBonds(List<Bond> ssbonds);
 
-    /** 
+    /**
      * Add a single disulfide Bond to this structure
      *
      * @param ssbond
      */
     public void addSSBond(Bond ssbond);
 
-    /** 
+    /**
      * Set the the header information for this PDB file
      *
      * @param header the PDBHeader object
      */
     public void setPDBHeader(PDBHeader header);
 
-    /** 
+    /**
      * Get the ID used by Hibernate
      *
      * @return the ID used by Hibernate
@@ -637,7 +637,7 @@ public interface Structure extends Cloneable {
     public List<Site> getSites();
 
     public List<Group> getHetGroups();
-    
+
     /**
      * Set a flag to indicate if this structure is a biological assembly
      * @param biologicalAssembly true if biological assembly, otherwise false
@@ -657,22 +657,22 @@ public interface Structure extends Cloneable {
      * @param PDBCrystallographicInfo crystallographic information
      * @since 3.2
      */
-    
+
     public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo);
-    
+
     /**
      * Get crystallographic information for this structure
      * @return PDBCrystallographicInfo crystallographic information
      * @since 3.2
      */
     public PDBCrystallographicInfo getCrystallographicInfo();
- 
+
     /**
 	 * Resets all models of this Structure
 	 * @since 4.0.1
 	 */
     public void resetModels();
-    
+
 	/**
 	 * Returns the PDB identifier associated with this StructureIdentifier.
 	 * @deprecated From BioJava 4.2, use {@link #getPDBCode()} or
@@ -680,7 +680,7 @@ public interface Structure extends Cloneable {
 	 */
     @Deprecated
 	String getPdbId();
-	
+
 	/**
 	 * Returns the list of {@link ResidueRange ResidueRanges} that this StructureIdentifier defines.
 	 * This is a unique representation.
@@ -689,7 +689,7 @@ public interface Structure extends Cloneable {
 	 */
     @Deprecated
 	List<? extends ResidueRange> getResidueRanges();
-	
+
 	/**
 	 * Returns a list of residue ranges. For example:
 	 * <pre>
@@ -702,7 +702,7 @@ public interface Structure extends Cloneable {
 	 */
     @Deprecated
 	List<String> getRanges();
-    
+
 	/**
 	 * Get a string representing this structure's contents. The following places
 	 * are searched for a non-null value, with the first being returned:

@@ -45,7 +45,7 @@ import java.util.LinkedHashMap;
 public class KaplanMeierFigure extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	ArrayList<String> title = new ArrayList<String>();
     /**
      *

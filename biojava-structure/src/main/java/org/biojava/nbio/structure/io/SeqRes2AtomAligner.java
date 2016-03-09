@@ -67,7 +67,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** 
+/**
  * Aligns the SEQRES residues to the ATOM residues.
  * The AminoAcids that can be matched between the two of them will be set in the SEQRES
  * chains
@@ -79,11 +79,11 @@ import org.slf4j.LoggerFactory;
 public class SeqRes2AtomAligner {
 
 	private static final Logger logger = LoggerFactory.getLogger(SeqRes2AtomAligner.class);
-	
+
 
 
 	private String alignmentString;
-	
+
 	public SeqRes2AtomAligner(){
 		logger.debug("initialising SeqRes2AtomAligner");
 		alignmentString = "";
@@ -123,19 +123,19 @@ public class SeqRes2AtomAligner {
 
 				mapSeqresRecords(atomRes,seqRes);
 
- 
+
 		}
 
 	}
 
-	/** 
+	/**
 	 * Map the seqRes groups to the atomRes chain.
 	 * Updates the atomRes chain object with the mapped data
 	 * The seqRes chain should not be needed after this and atomRes should be further used.
-	 *  
-	 * @param atomRes the chain containing ATOM groups (in atomGroups slot). This chain 
+	 *
+	 * @param atomRes the chain containing ATOM groups (in atomGroups slot). This chain
 	 * is modified to contain in its seqresGroups slot the mapped atom groups
-	 * @param seqRes the chain containing SEQRES groups (in atomGroups slot). This chain 
+	 * @param seqRes the chain containing SEQRES groups (in atomGroups slot). This chain
 	 * is not modified
 	 */
 	public void mapSeqresRecords(Chain atomRes, Chain seqRes) {
@@ -143,15 +143,15 @@ public class SeqRes2AtomAligner {
 		List<Group> atmResGroups = atomRes.getAtomGroups();
 
 
-		
-		logger.debug("Comparing ATOM {} ({} groups) to SEQRES {} ({} groups) ", 
+
+		logger.debug("Comparing ATOM {} ({} groups) to SEQRES {} ({} groups) ",
 				atomRes.getChainID(), atmResGroups.size(), seqRes.getChainID(), seqResGroups.size());
-		
+
 
 		List<Group> matchedGroups = trySimpleMatch(seqResGroups, atmResGroups);
 
 		if ( matchedGroups != null) {
-			// update the new SEQRES list			
+			// update the new SEQRES list
 			atomRes.setSeqResGroups(matchedGroups);
 			return;
 		}
@@ -162,17 +162,17 @@ public class SeqRes2AtomAligner {
 		int numNucleotidesSeqres = seqRes.getAtomGroups(GroupType.NUCLEOTIDE).size();
 
 		if ( numAminosSeqres < 1) {
-				
+
 			if ( numNucleotidesSeqres > 1) {
-				
+
 				logger.debug("SEQRES chain {} is a nucleotide chain ({} nucleotides), aligning nucleotides...", seqRes.getChainID(), numNucleotidesSeqres);
-				
+
 				alignNucleotideChains(seqRes,atomRes);
 				return;
 			} else {
-				
+
 				logger.debug("SEQRES chain {} contains {} amino acids and {} nucleotides, ignoring...", seqRes.getChainID(),numAminosSeqres,numNucleotidesSeqres);
-				
+
 				return;
 			}
 		}
@@ -181,7 +181,7 @@ public class SeqRes2AtomAligner {
 			logger.debug("ATOM chain {} does not contain amino acids, ignoring...", atomRes.getChainID());
 			return;
 		}
-		
+
 		logger.debug("Proceeding to do protein alignment for chain {}", atomRes.getChainID() );
 
 
@@ -196,7 +196,7 @@ public class SeqRes2AtomAligner {
 
 		if ( atomRes.getAtomGroups(GroupType.NUCLEOTIDE).size() < 1) {
 			logger.debug("ATOM chain {} does not contain nucleotides, ignoring...", atomRes.getChainID());
-			
+
 			return;
 		}
 		logger.debug("Alignment for chain {}", atomRes.getChainID() );
@@ -209,9 +209,9 @@ public class SeqRes2AtomAligner {
 
 	}
 
-	/** 
+	/**
 	 * A simple matching approach that tries to do a 1:1 mapping between SEQRES and ATOM records
-	 *  
+	 *
 	 * @param seqRes
 	 * @param atomList
 	 * @return the matching or null if the matching didn't work
@@ -253,11 +253,11 @@ public class SeqRes2AtomAligner {
 					// they match! seems in this case the numbering starts with 0...
 					startAt1 = false;
 				} else {
-					
+
 					logger.debug("SEQRES position 1 ({}) does not match ATOM PDB res num 0 ({})",
 							seqResGroup.getPDBName(), atomResGroup.getPDBName());
 
-					
+
 					return null;
 
 				}
@@ -310,9 +310,9 @@ public class SeqRes2AtomAligner {
 			// replace the SEQRES group with the ATOM group...
 
 			Group replacedGroup = newSeqResGroups.set(seqResPos, atomResGroup);
-			logger.debug("Merging index {}: replaced seqres group {} ({}) with atom group {} ({})", 
-					seqResPos, 
-					replacedGroup.getResidueNumber(), replacedGroup.getPDBName(), 
+			logger.debug("Merging index {}: replaced seqres group {} ({}) with atom group {} ({})",
+					seqResPos,
+					replacedGroup.getResidueNumber(), replacedGroup.getPDBName(),
 					atomResGroup.getResidueNumber(), atomResGroup.getPDBName());
 
 		}
@@ -321,20 +321,20 @@ public class SeqRes2AtomAligner {
 		// note: if something went wrong, we did not modifiy the original list.
 		//seqResGroups = newSeqResGroups;
 
-		
+
 		//			int pos = -1;
 		//			for (Group g: seqResGroups){
 		//				pos++;
 		//				logger.debug(pos + " " + g);
 		//			}
-		
+
 		//System.out.println("I:" + seqResGroups);
 		// all atom records could get matched correctly!
 		return newSeqResGroups;
 
 	}
 
-	/** 
+	/**
 	 * Returns the full sequence of the Atom records of a parent
 	 * with X instead of HETATMSs. The advantage of this is
 	 * that it allows us to also align HETATM groups back to the SEQRES.
@@ -350,7 +350,7 @@ public class SeqRes2AtomAligner {
 		int seqIndex = 0; // track sequence.length()
 		for ( int i=0 ; i< groups.size(); i++){
 			Group g = groups.get(i);
-			
+
 			if ( g instanceof AminoAcid ){
 				AminoAcid a = (AminoAcid)g;
 				char oneLetter =a.getAminoType();
@@ -376,7 +376,7 @@ public class SeqRes2AtomAligner {
 						continue;
 
 				}
-				
+
 				ChemComp cc = g.getChemComp();
 				if ( cc == null) {
 					logger.debug("No chem comp available for group {}",g.toString());
@@ -399,15 +399,15 @@ public class SeqRes2AtomAligner {
 						}
 					}
 
-					// For some unusual cases the het residue can map to 2 or more standard aas and thus give an 
-					// insertion of length >1. 
+					// For some unusual cases the het residue can map to 2 or more standard aas and thus give an
+					// insertion of length >1.
 					//      e.g. 1: SUI maps to DG  (in 1oew,A)
 					//		e.g. 2: NRQ maps to MYG (in 3cfh,A)
 					if (c.length()>1) {
 						logger.info("Group '{}' maps to more than 1 standard aminoacid: {}.",
 								g.toString(), c);
 					}
-					// because of the mapping to more than 1 aminoacid, we have 
+					// because of the mapping to more than 1 aminoacid, we have
 					// to loop through it (99% of cases c will have length 1 anyway)
 					for (int cIdx=0;cIdx<c.length();cIdx++) {
 						positionIndex.put(seqIndex,i);
@@ -450,7 +450,7 @@ public class SeqRes2AtomAligner {
 		Sequence<NucleotideCompound> s1 = getNucleotideSequence(seq1);
 		Sequence<NucleotideCompound> s2 = getNucleotideSequence(seq2);
 
-		if (s1==null || s2==null) return true;		
+		if (s1==null || s2==null) return true;
 
 		if ( ! s1.getCompoundSet().equals(s2.getCompoundSet()) ) {
 			// e.g. trying to align a DNA and an RNA sequence...
@@ -474,8 +474,8 @@ public class SeqRes2AtomAligner {
 				}
 			}
 		}
-		
-		
+
+
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
 
 		GapPenalty penalty = new SimpleGapPenalty(8,1);
@@ -483,9 +483,9 @@ public class SeqRes2AtomAligner {
 		PairwiseSequenceAligner<Sequence<NucleotideCompound>, NucleotideCompound> smithWaterman =
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-		
 
-		SequencePair<Sequence<NucleotideCompound>, NucleotideCompound> pair = smithWaterman.getPair();  
+
+		SequencePair<Sequence<NucleotideCompound>, NucleotideCompound> pair = smithWaterman.getPair();
 
 
 
@@ -498,31 +498,31 @@ public class SeqRes2AtomAligner {
 
 		}
 
-		
-		
+
+
 		logger.debug("Alignment:\n"+pair.toString(100));
-		
+
 
 		boolean noMatchFound = mapDNAChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
 
 		return noMatchFound;
 
 	}
-	
+
 	private Sequence<NucleotideCompound> getNucleotideSequence(String seq) {
 		Sequence<NucleotideCompound> s = null;
-		
+
 		// first we try DNA, then RNA, them hybrid
-		
+
 		try {
-		
+
 			s = new DNASequence(seq, AmbiguityDNACompoundSet.getDNACompoundSet());
 		} catch (CompoundNotFoundException e){
 
 			try {
 				s= new RNASequence(seq, AmbiguityRNACompoundSet.getRNACompoundSet());
 			} catch (CompoundNotFoundException ex) {
-				
+
 				try {
 					// it could still be a hybrid, e.g. 3hoz, chain T, what to do in that case?
 					s = new DNASequence(seq, AmbiguityDNARNAHybridCompoundSet.getDNARNAHybridCompoundSet());
@@ -530,16 +530,16 @@ public class SeqRes2AtomAligner {
 				} catch (CompoundNotFoundException exc) {
 					// not DNA, nor RNA, nor hybrid
 					logger.warn("Could not determine compound set (neither DNA, RNA nor hybrid) for nucleotide sequence " + seq);
-					return null;					
+					return null;
 				}
-				
+
 			}
 		}
 		return s;
 	}
 
 
-	/** 
+	/**
 	 * Aligns two chains of groups, where the first parent is representing the
 	 * list of amino acids as obtained from the SEQRES records, and the second parent
 	 * represents the groups obtained from the ATOM records (and containing the actual ATOM information).
@@ -559,10 +559,10 @@ public class SeqRes2AtomAligner {
 		//
 		String seq2 = getFullAtomSequence(atomRes, atomIndexPosition, false);
 
-		
+
 		logger.debug("Protein seq1 to align (length "+ seq1.length()+"): " + seq1);
 		logger.debug("Protein seq2 to align (length "+ seq2.length()+"): " + seq2);
-		
+
 		ProteinSequence s1;
 		ProteinSequence s2;
 		try {
@@ -572,7 +572,7 @@ public class SeqRes2AtomAligner {
 			logger.warn("Could not create protein sequences ({}) to align ATOM and SEQRES groups, they will remain unaligned.", e.getMessage());
 			return true;
 		}
-		
+
 
 		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
 
@@ -592,11 +592,11 @@ public class SeqRes2AtomAligner {
 			logger.warn(seq1);
 			logger.warn(seq2);
 			return true;
-		}			
+		}
 
 
 		logger.debug("Alignment:\n"+pair.toString(100));
-		
+
 
 		boolean noMatchFound = mapChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
 
@@ -634,7 +634,7 @@ public class SeqRes2AtomAligner {
 				int posAtom = pair.getIndexInTargetAt(i) - 1;
 
 				if (  s.equals(gapSymbol) || a.equals(gapSymbol)){
-					continue;				
+					continue;
 				}
 
 				if ( s.equals(a)){
@@ -655,17 +655,17 @@ public class SeqRes2AtomAligner {
 					// pdb1b2m
 					String pdbNameS = s1.getPDBName();
 					String pdbNameA = a1.getPDBName();
-					
+
 					if ( pdbNameS == null || pdbNameA == null ){
 						logger.warn("null value for group.getPDBName found at {} when trying to align {} and {} {}",posSeq, s1, a1, posAtom);
 						logger.warn("ATOM and SEQRES sequences will not be aligned.");
 						return true;
 					}
-					
+
 					if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
 
-						String msg = "'"+ s1 + "' (position " + posSeq + ") does not align with '" + a1+ "' (position " + posAtom + "), should be: " + s + " : " + a; 						
-						
+						String msg = "'"+ s1 + "' (position " + posSeq + ") does not align with '" + a1+ "' (position " + posAtom + "), should be: " + s + " : " + a;
+
 						if ( s1.getType().equals(HetatomImpl.type) && a1.getType().equals(HetatomImpl.type)){
 							logger.info(msg + ". They seem to be hetatoms, so ignoring mismatch.");
 						}
@@ -728,7 +728,7 @@ public class SeqRes2AtomAligner {
 				int posAtom = pair.getIndexInTargetAt(i) -1;
 
 				if (  s.equals(gapSymbol) || a.equals(gapSymbol)){
-					continue;				
+					continue;
 				}
 
 				if ( s.equals(a)){
@@ -802,9 +802,9 @@ public class SeqRes2AtomAligner {
 
 			for (Chain seqRes: seqResChains){
 				Chain atomRes;
-			
+
 				if (headerOnly) {
-					// In header-only mode skip ATOM records.  
+					// In header-only mode skip ATOM records.
 					// Here we store chains with SEQRES instead of AtomGroups.
 					seqRes.setSeqResGroups(seqRes.getAtomGroups());
 					seqRes.setAtomGroups(new ArrayList<Group>()); // clear out the atom groups.
@@ -817,7 +817,7 @@ public class SeqRes2AtomAligner {
 						atomRes.setSeqResGroups(seqRes.getAtomGroups());
 					else
 						logger.warn("Could not find atom records for chain " + seqRes.getChainID());
-				} 				
+				}
 			}
 			if (headerOnly) {
 				structure.setChains(i, atomChains);

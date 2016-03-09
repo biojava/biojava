@@ -75,11 +75,11 @@ public interface Term extends Annotatable {
      */
 
     public String getDescription();
-    
+
     /** set the description of the term;
-     * 
+     *
      * @param description
-     * 
+     *
      */
     public void setDescription(String description);
 
@@ -106,11 +106,11 @@ public interface Term extends Annotatable {
 
     /**
      * Remove a synonym for this term.
-     * @param synonym 
+     * @param synonym
      */
 
     public void removeSynonym(Object synonym);
-    
+
     /**
      * Simple in-memory implementation of an ontology term.
      * @see org.biojavax.ontology.SimpleComparableTerm
@@ -121,12 +121,12 @@ public interface Term extends Annotatable {
     extends AbstractTerm
     implements Term, java.io.Serializable {
         /**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 6561668917514377417L;
 
 		private final String name;
-        
+
         private final Ontology ontology;
         private Annotation annotation;
         private Set<Object> synonyms;
@@ -134,11 +134,11 @@ public interface Term extends Annotatable {
         public Impl(Ontology ontology, String name) {
             this(ontology,name,null,null);
         }
-        
+
         public Impl(Ontology ontology, String name, String description) {
             this(ontology,name,description,null);
         }
-         
+
         public Impl(Ontology ontology, String name, String description, Object[] synonyms) {
             if (name == null) {
                 throw new NullPointerException("Name must not be null");
@@ -162,18 +162,18 @@ public interface Term extends Annotatable {
         public void addSynonym(Object synonym) {
             this.synonyms.add(synonym);
         }
-        
+
         public void removeSynonym(Object synonym) {
             this.synonyms.remove(synonym);
         }
-        
+
         public Object[] getSynonyms() {
             return this.synonyms.toArray();
         }
 
         public String getName() {
             return name;
-        }                        
+        }
 
 		public void setAnnotation(Annotation annotation) {
 			this.annotation = annotation;

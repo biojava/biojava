@@ -30,14 +30,14 @@ import java.util.*;
 public class ClusterMerger {
 	private List<SequenceAlignmentCluster> clusters = null;
     private QuatSymmetryParameters parameters = null;
-    
+
     List<PairwiseAlignment> pairwiseAlignments = Collections.emptyList();
 
 	public ClusterMerger(List<SequenceAlignmentCluster> clusters, QuatSymmetryParameters parameters) {
 		this.clusters = clusters;
 		this.parameters = parameters;
 	}
-	
+
 	/**
 	 * Aligns all pairs of input clusters, calculating their pairwise alignments
 	 */
@@ -53,7 +53,7 @@ public class ClusterMerger {
 				for (int j = i + 1; j < n; j++) {
 					SequenceAlignmentCluster c2 = clusters.get(j);
 					PairwiseAlignment alignment = c1.getPairwiseAlignment(c2);
-					if (alignment != null && 
+					if (alignment != null &&
 							alignment.getAlignmentLengthFraction() >= parameters.getAlignmentFractionThreshold() &&
 							alignment.getRmsd() <= parameters.getRmsdThreshold()) {
 						merged[j] = true;
@@ -67,19 +67,19 @@ public class ClusterMerger {
 			}
 		}
 	}
-	
+
 	/**
 	 * Combine clusters based on the given sequence identity
 	 * @param sequenceIdentityCutoff
 	 * @return
 	 */
-	public List<SequenceAlignmentCluster> getMergedClusters(double sequenceIdentityCutoff) {		
+	public List<SequenceAlignmentCluster> getMergedClusters(double sequenceIdentityCutoff) {
 		List<SequenceAlignmentCluster> mergedClusters = new ArrayList<SequenceAlignmentCluster>();
 		Map<SequenceAlignmentCluster, Integer> map = getClusterMap();
-		
+
 		boolean[] processed = new boolean[clusters.size()];
 		Arrays.fill(processed, false);
-		
+
 		for (int i = 0, n = clusters.size(); i < n; i++) {
 			SequenceAlignmentCluster cluster = clusters.get(i);
 			SequenceAlignmentCluster clone = null;
@@ -88,7 +88,7 @@ public class ClusterMerger {
 				mergedClusters.add(clone);
 				processed[i] = true;
 			}
-			
+
 			for (PairwiseAlignment alignment: pairwiseAlignments) {
 				if (alignment.getCluster1() == cluster && alignment.getSequenceIdentity() >= sequenceIdentityCutoff) {
 					clone.setMinSequenceIdentity(Math.min(clone.getMinSequenceIdentity(), alignment.getSequenceIdentity()));
@@ -99,12 +99,12 @@ public class ClusterMerger {
 				}
 			}
 		}
-		
+
 		ProteinSequenceClusterer.sortSequenceClustersBySize(mergedClusters);
 		return mergedClusters;
 	}
-	
-	
+
+
 	private Map<SequenceAlignmentCluster, Integer> getClusterMap() {
 		 Map<SequenceAlignmentCluster, Integer> map = new HashMap<SequenceAlignmentCluster, Integer>();
 		 for (int i = 0, n = clusters.size(); i < n; i++) {
@@ -112,7 +112,7 @@ public class ClusterMerger {
 		 }
 		 return map;
 	}
-	
+
 	private void combineClusters(SequenceAlignmentCluster c1, PairwiseAlignment alignment) {
 		SequenceAlignmentCluster c2 = (SequenceAlignmentCluster) alignment.getCluster2().clone();
 		int[][][] align = alignment.getAlignment();
@@ -130,10 +130,10 @@ public class ClusterMerger {
 		for (Integer a2: align[0][1]) {
 			align2.add(a2);
 		}
-		u.setAlignment2(align2);	
+		u.setAlignment2(align2);
 		c1.addUniqueSequenceList(u);
-		
-		// note, i starts at 1 (ONE), since i = 0 corresponds to reference sequence, 
+
+		// note, i starts at 1 (ONE), since i = 0 corresponds to reference sequence,
 		// which has already been processed above
 		for (int i = 1; i < c2.getUniqueSequenceList().size(); i++) {
 			u =c2.getUniqueSequenceList().get(i);
@@ -151,7 +151,7 @@ public class ClusterMerger {
 				}
 			}
 			u.setAlignment1(newAlign1);
-			u.setAlignment2(newAlign2);	
+			u.setAlignment2(newAlign2);
 			c1.addUniqueSequenceList(u);
 		}
 	}

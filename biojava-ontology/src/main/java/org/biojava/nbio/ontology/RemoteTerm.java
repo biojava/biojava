@@ -72,7 +72,7 @@ public interface RemoteTerm extends Term {
     extends AbstractTerm
     implements RemoteTerm, java.io.Serializable {
         /**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 922700041939183676L;
 		private final Ontology ontology;
@@ -83,7 +83,7 @@ public interface RemoteTerm extends Term {
         public Impl(Ontology ontology, Term remoteTerm, String name) {
             this(ontology, remoteTerm, name, null);
         }
-         
+
         public Impl(Ontology ontology, Term remoteTerm, String name, Object[] synonyms) {
             if (ontology == null) {
                 throw new NullPointerException("Ontology must not be null");
@@ -98,7 +98,7 @@ public interface RemoteTerm extends Term {
             this.ontology = ontology;
             this.remoteTerm = remoteTerm;
             this.name = name;
-            
+
             this.synonyms = new TreeSet();
             if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
         }
@@ -106,11 +106,11 @@ public interface RemoteTerm extends Term {
         public void addSynonym(Object synonym) {
             this.synonyms.add(synonym);
         }
-        
+
         public void removeSynonym(Object synonym) {
             this.synonyms.remove(synonym);
         }
-        
+
         public Object[] getSynonyms() {
             return this.synonyms.toArray();
         }

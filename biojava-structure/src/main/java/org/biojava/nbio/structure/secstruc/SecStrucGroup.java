@@ -29,7 +29,7 @@ import org.biojava.nbio.structure.HetatomImpl;
  * faster interface for retrieving the important Atom types and it is applicable
  * to any Group implementation that fulfills the {@link Group#hasAminoAtoms()}
  * condition.
- * 
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
  *

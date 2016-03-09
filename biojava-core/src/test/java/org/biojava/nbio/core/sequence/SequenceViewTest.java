@@ -43,7 +43,7 @@ public class SequenceViewTest {
     SequenceView<NucleotideCompound> s = new DNASequence("ATGC").getSubSequence(1, 4);
     CompoundSet<NucleotideCompound> cs = s.getCompoundSet();
     assertEquals("Last index of ", 4, s.getLastIndexOf(cs.getCompoundForString("C")));
-    
+
     s = new DNASequence("GAAAAAAAAG").getSubSequence(1, 10);
     assertEquals("Last index of G is 10", 10,
         s.getLastIndexOf(cs.getCompoundForString("G")));
@@ -52,7 +52,7 @@ public class SequenceViewTest {
   }
 
   @Test
-  public void testInverse() throws CompoundNotFoundException { 
+  public void testInverse() throws CompoundNotFoundException {
     SequenceView<NucleotideCompound> s = new DNASequence("ATGC").getSubSequence(2, 3).getInverse();
     assertEquals("Reversed complementing view", s.getSequenceAsString(), "CA");
   }

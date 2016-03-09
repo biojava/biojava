@@ -1,10 +1,10 @@
-/* 
+/*
  * @(#)NullOutputStream.java	1.0 June 2010
- * 
+ *
  * Copyright (c) 2010 Peter Troshin
- * 
- * JRONN version: 3.1     
- *  
+ *
+ * JRONN version: 3.1
+ *
  *        BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -24,7 +24,7 @@
  *      http://www.biojava.org/
  *
  */
- 
+
 package org.biojava.nbio.ronn;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ import java.io.OutputStream;
 
 /**
  * The stream that void its input
- * 
+ *
  * @author Petr Troshin
  * @version 1.0
  * @since 3.0.2

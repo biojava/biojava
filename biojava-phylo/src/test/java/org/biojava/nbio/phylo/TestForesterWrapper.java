@@ -41,7 +41,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test the BioJava-forester wrapper methods.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -54,7 +54,7 @@ public class TestForesterWrapper {
 		InputStream inStream = TestForesterWrapper.class
 				.getResourceAsStream("/1u6d_symm.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = 
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
 				new FastaReader<ProteinSequence, AminoAcidCompound>(
 				inStream,
 				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
@@ -66,7 +66,7 @@ public class TestForesterWrapper {
 
 		inStream.close();
 
-		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = 
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa =
 				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
 
 		String expected = "";
@@ -78,7 +78,7 @@ public class TestForesterWrapper {
 
 		// Convert the biojava MSA to a FASTA String
 		OutputStream os = new ByteArrayOutputStream();
-		FastaWriter<ProteinSequence, AminoAcidCompound> fastaW = 
+		FastaWriter<ProteinSequence, AminoAcidCompound> fastaW =
 				new FastaWriter<ProteinSequence, AminoAcidCompound>(os,
 				msa.getAlignedSequences(),
 				new FastaHeaderFormatInterface<ProteinSequence, AminoAcidCompound>() {

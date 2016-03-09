@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 10, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -43,11 +43,11 @@ import java.io.StringWriter;
 public class HasResultXMLConverter
 {
 
-   
-   
+
+
 
    /** return flag if the server has a result
-    * 
+    *
     * @param hasResult
     * @return flag if there is a result
     */
@@ -65,9 +65,9 @@ public class HasResultXMLConverter
    }
 
    public boolean fromXML(String xml) {
-      
+
       boolean hasResult = false;
-      
+
       try
       {
          //Convert string to XML document
@@ -84,14 +84,14 @@ public class HasResultXMLConverter
          //Element rootElement = doc.getDocumentElement();
 
          NodeList listOfAlignments = doc.getElementsByTagName("alignment");
-         //int numArrays = listOfAlignments.getLength();    
+         //int numArrays = listOfAlignments.getLength();
          //System.out.println("got " + numArrays + " alignment results.");
          // go over the blocks
-         
-       
+
+
          for(int afpPos=0; afpPos<listOfAlignments.getLength() ; afpPos++)
          {
-            
+
             Node rootElement       = listOfAlignments.item(afpPos);
 
             String flag = getAttribute(rootElement,"hasResult");
@@ -100,10 +100,10 @@ public class HasResultXMLConverter
                hasResult = true;
 
          }
-      } 
-      catch (SAXParseException err) 
+      }
+      catch (SAXParseException err)
       {
-         System.out.println ("** Parsing error" + ", line " 
+         System.out.println ("** Parsing error" + ", line "
                + err.getLineNumber () + ", uri " + err.getSystemId ());
          System.out.println(" " + err.getMessage ());
       }
@@ -122,7 +122,7 @@ public class HasResultXMLConverter
 
 
    private static String getAttribute(Node node, String attr){
-      if( ! node.hasAttributes()) 
+      if( ! node.hasAttributes())
          return null;
 
       NamedNodeMap atts = node.getAttributes();

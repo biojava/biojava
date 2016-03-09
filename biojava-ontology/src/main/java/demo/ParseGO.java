@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 19, 2014
- * Author: andreas 
+ * Author: andreas
  *
  */
 
@@ -38,7 +38,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class ParseGO {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ParseGO.class);
 
 	public static void main(String[] args){

@@ -63,7 +63,7 @@ public class AmbiguityDNACompoundSet extends DNACompoundSet {
 
     addNucleotideCompound("I", "I", "N", "A", "C", "G", "T");
 
-    
+
     calculateIndirectAmbiguities();
   }
 }

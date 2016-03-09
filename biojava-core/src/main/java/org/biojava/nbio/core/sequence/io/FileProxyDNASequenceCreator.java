@@ -60,7 +60,7 @@ public class FileProxyDNASequenceCreator implements
      * @param compoundSet
      */
     public FileProxyDNASequenceCreator(File file,
-            CompoundSet<NucleotideCompound> compoundSet, 
+            CompoundSet<NucleotideCompound> compoundSet,
             SequenceParserInterface sequenceParser) {
         this.compoundSet = compoundSet;
         this.file = file;
@@ -73,15 +73,15 @@ public class FileProxyDNASequenceCreator implements
      * @param sequence
      * @param index
      * @return
-     * @throws CompoundNotFoundException  
+     * @throws CompoundNotFoundException
      * @throws IOException
      */
     @Override
 	public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) throws CompoundNotFoundException, IOException {
         SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<NucleotideCompound>(
-                file, 
-                sequenceParser, 
-                index, 
+                file,
+                sequenceParser,
+                index,
                 sequence.length(),
                 compoundSet);
         return new DNASequence(sequenceFileProxyLoader, compoundSet);

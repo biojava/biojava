@@ -10,7 +10,7 @@
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
- * 
+ *
  * @author Jacek Grzebyta <github:jgrzebyta>
  *
  * For more information on the BioJava project and its aims,
@@ -36,14 +36,14 @@ import java.util.Map;
 
 /**
  * It is {@link DBReferenceInfo} which implements {@link FeatureInterface}. It allows to keep a dbReferenceInfo as a feature.
- * 
+ *
  * @author Jacek Grzebyta
  * @author Paolo Pavan
  * @param <S>
  * @param <C>
  */
 public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Compound> extends DBReferenceInfo implements FeatureInterface<S,C> {
-    
+
     private AbstractLocation location;
     private FeatureInterface<S,C> parentFeature;
     private List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
@@ -51,12 +51,12 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
     private String shortDescription = "";
     private Object userObject;
     private Map<String, List<Qualifier>> qualifiers = new HashMap<String,List<Qualifier>>();
-    
-    
+
+
     public FeatureDbReferenceInfo(String database, String id) {
         super(database, id);
     }
-    
+
     @Override
     public String getShortDescription() {
         return shortDescription;

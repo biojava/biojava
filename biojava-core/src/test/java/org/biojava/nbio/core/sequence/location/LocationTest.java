@@ -75,7 +75,7 @@ public class LocationTest {
         Sequence<NucleotideCompound> subSeq = circularLocation.getSubSequence(s);
         assertEquals("Checking subseq as expected", expectedDna, subSeq.getSequenceAsString());
 
-    
+
         Location newCircularLocation = Location.Tools.circularLocation(
                 3, 52, Strand.POSITIVE, 20);
         //Check this is the right set of coords even to use!
@@ -89,7 +89,7 @@ public class LocationTest {
     }
 
     @Test
-    public void testWithStrandSwitch() throws CompoundNotFoundException { 
+    public void testWithStrandSwitch() throws CompoundNotFoundException {
         DNASequence s = new DNASequence("AAAAAAAAAATTTTTTTTTTCCCCCCCCCCGGGGGGGGGGAAATTTCCCG");
         Location location = new SimpleLocation(1, 50, Strand.UNDEFINED,
                 new SimpleLocation(1, 10, Strand.POSITIVE), //AAAAAAAAAA

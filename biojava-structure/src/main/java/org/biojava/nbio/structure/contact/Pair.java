@@ -24,17 +24,17 @@ import java.io.Serializable;
 
 /**
  * A Pair of objects. Implements an equals and hashCode so
- * that it can be used as key in hashes. 
+ * that it can be used as key in hashes.
  * Based on the JUNG graph library implementation.
- * 
+ *
  * @author duarte_j
  *
  * @param <T>
  */
 public final class Pair<T> implements Serializable {
-    
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private T first;
     private T second;
 
@@ -45,22 +45,22 @@ public final class Pair<T> implements Serializable {
      * @throws IllegalArgumentException if either argument is null
      */
     public Pair(T value1, T value2) {
-    	if(value1 == null || value2 == null) 
+    	if(value1 == null || value2 == null)
     		throw new IllegalArgumentException("Pair cannot contain null values");
         first = value1;
         second = value2;
     }
-    
+
     public T getFirst() {
     	return first;
     }
-    
+
     public T getSecond() {
     	return second;
     }
-    
-    
-    
+
+
+
     @Override
 	public int hashCode() {
 		final int prime = 31;

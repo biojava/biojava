@@ -76,13 +76,13 @@ public class RCSBLigandsFactoryTest {
 	@Test
 	public void testFromPdbId() {
 		RCSBLigands description = RCSBLigandsFactory.getFromPdbId(openStream("describeMol/4hhb_ligands.xml"));
-		
+
 		assertEquals("4HHB", description.getPdbId());
 		List<RCSBLigand> ligands = description.getLigands();
 		assertEquals(2, ligands.size());
-		
+
 		RCSBLigand ligand;
-		
+
 		ligand = ligands.get(0);
 		assertEquals("HEM", ligand.getId());
 		assertEquals("non-polymer", ligand.getType());
@@ -111,7 +111,7 @@ public class RCSBLigandsFactoryTest {
 		assertEquals("Wrong formula", "C8 H15 N O6", ligands.get(0).getFormula());
 		assertEquals("Wrong formula", "C27 H38 N2 O 2", ligands.get(1).getFormula());
 	}
-	
+
 	@Test
 	public void testFromHeteroAtomIdUrl() {
 		List<RCSBLigand> ligands = RCSBLigandsFactory.getFromHeteroAtomIds("NAG");
@@ -119,5 +119,5 @@ public class RCSBLigandsFactoryTest {
 		RCSBLigand ligand = ligands.get(0);
 		assertEquals("Wrong formula", "C8 H15 N O6", ligand.getFormula());
 	}
-	
+
 }

@@ -91,7 +91,7 @@ public final class ConvertTest
                 {
                     // ignore
                 }
-                
+
                 FastqReader resultReader = readers.get(variant2);
                 List<Fastq> observed = Lists.newArrayList(resultReader.read(tmp));
                 List<Fastq> expected = Lists.newArrayList(resultReader.read(getClass().getResource(expectedFileName)));

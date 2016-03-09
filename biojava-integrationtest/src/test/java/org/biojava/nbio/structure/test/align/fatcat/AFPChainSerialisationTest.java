@@ -32,7 +32,7 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 
 import java.io.IOException;
 
-public class AFPChainSerialisationTest 
+public class AFPChainSerialisationTest
 extends TestCase
 {
 
@@ -56,13 +56,13 @@ extends TestCase
 //
 //      AtomCache cache =    TmpAtomCache.cache;
 //      try {
-//         
-//         Atom[] ca1 = cache.getAtoms(name1);         
+//
+//         Atom[] ca1 = cache.getAtoms(name1);
 //         Atom[] ca2 = cache.getAtoms(name2);
-//         
+//
 //         testAlignment(name1,name2 ,ca1,ca2,false);
 //         testAlignment(name1,name2,ca1,ca2,true);
-//         
+//
 //      } catch (Exception e){
 //         e.printStackTrace();
 //         fail(e.getMessage());
@@ -75,7 +75,7 @@ extends TestCase
 
       try {
 
-         Structure s1 = getStructure("1a21", "A");			
+         Structure s1 = getStructure("1a21", "A");
          Structure s2 = getStructure("1hwg","C");
 
 
@@ -91,13 +91,13 @@ extends TestCase
       }
    }
 
-   
+
    // slow...
 //   public void testSerialization1cdg_1tim(){
 //
 //      try {
 //
-//         Structure s1 = getStructure("1cdg", "A");		
+//         Structure s1 = getStructure("1cdg", "A");
 //         Structure s2 = getStructure("1tim","A");
 //
 //         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
@@ -115,7 +115,7 @@ extends TestCase
 //
 //      try {
 //
-//         Structure s1 = getStructure("4hhb", "A");		
+//         Structure s1 = getStructure("4hhb", "A");
 //         Structure s2 = getStructure("4hhb", "B");
 //
 //         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
@@ -161,7 +161,7 @@ extends TestCase
       //System.out.println(xml);
       AFPChain newChain = AFPChainXMLParser.fromXML (xml, ca1, ca3);
 
-      // test blockNum and optLen arrays 
+      // test blockNum and optLen arrays
       int blockNum = afpChain.getBlockNum();
       int[] optLen = afpChain.getOptLen();
 
@@ -179,7 +179,7 @@ extends TestCase
       int[][][] optAln1 = afpChain.getOptAln();
       int[][][] optAln2 = newChain.getOptAln();
 
-      for(int i = 0; i < blockNum; i ++)  {        	
+      for(int i = 0; i < blockNum; i ++)  {
          for(int j = 0; j < optLen[i]; j ++) {
             int p1 = optAln1[i][0][j];
             int p2 = optAln1[i][1][j];
@@ -298,16 +298,16 @@ extends TestCase
       assertTrue(new2.getName1().equals(name3));
 
       try {
-         AFPChainXMLParser.rebuildAFPChain(new1, ca1, ca3);				
-         String fatcat1 = new1.toFatcat(ca1, ca3); 
-         assertEquals(fatcat1, result1[0]);				
+         AFPChainXMLParser.rebuildAFPChain(new1, ca1, ca3);
+         String fatcat1 = new1.toFatcat(ca1, ca3);
+         assertEquals(fatcat1, result1[0]);
          String xmlnew1 = AFPChainXMLConverter.toXML(new1, ca1, ca3);
          assertTrue(xmlnew1.equals(result1[1]));
 
          AFPChainXMLParser.rebuildAFPChain(new2, ca4, ca6);
          String fatcat2 = new2.toFatcat(ca4, ca6);
-        
-         assertEquals(fatcat2,result2[0]);			
+
+         assertEquals(fatcat2,result2[0]);
          String xmlnew2 = AFPChainXMLConverter.toXML(new2, ca4, ca6);
          assertEquals(xmlnew2,result2[1]);
       } catch (IOException e){

@@ -51,14 +51,14 @@ import java.util.List;
 
 
 /** A JPanel that can display an AFPChain in a nice way and interact with Jmol.
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class AligPanel  extends JPrintPanel implements AlignmentPositionListener, WindowListener{
 
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = -6892229111166263764L;
 
@@ -81,7 +81,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
 
    private static final Color COLOR_EQUAL   = Color.decode("#6A93D4");
    private static final Color COLOR_SIMILAR = Color.decode("#D460CF");
-   
+
 
    public static void main(String[] args){
 
@@ -153,7 +153,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
    public void destroy(){
 
       setAFPChain(null);
-      mouseMoLi.destroy();	
+      mouseMoLi.destroy();
       jmol = null;
       ca1 = null;
       ca2 = null;
@@ -174,7 +174,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
             colorByAlignmentBlock = true;
          }
       }
-      
+
    }
 
 
@@ -194,10 +194,10 @@ public void paintComponent(Graphics g){
 
 
       // only draw within the ranges of the Clip
-      //Rectangle drawHere = g2D.getClipBounds();        
+      //Rectangle drawHere = g2D.getClipBounds();
 
 
-      //int startpos = coordManager.getSeqPos(0,drawHere.x);       
+      //int startpos = coordManager.getSeqPos(0,drawHere.x);
       //int endpos   = coordManager.getSeqPos(0,drawHere.x+drawHere.width-2);
 
 
@@ -206,7 +206,7 @@ public void paintComponent(Graphics g){
       char[] symb = afpChain.getAlnsymb();
 
       int startpos = 0;
-      int endpos = afpChain.getAlnLength(); 		
+      int endpos = afpChain.getAlnLength();
 
       String summary = afpChain.toString();
       g2D.drawString(summary, 20, coordManager.getSummaryPos());
@@ -217,7 +217,7 @@ public void paintComponent(Graphics g){
 
       g2D.setPaint(significantCol);
       // draw a darker backgroun
-      Rectangle sig = new Rectangle(10,10,10,10);				
+      Rectangle sig = new Rectangle(10,10,10,10);
       g2D.fill(sig);
       boolean isFATCAT = false;
       if ( afpChain.getAlgorithmName().startsWith("jFatCat")){
@@ -267,7 +267,7 @@ public void paintComponent(Graphics g){
             Color bg2 = Color.white;
             Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
             Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum  +1)) ;
-            
+
             if ( colorByAlignmentBlock) {
 
                if (! alignedPos.contains(i)){
@@ -276,7 +276,7 @@ public void paintComponent(Graphics g){
                   bg = Color.white;
                   bg2 = Color.white;
                } else  {
-                  
+
                   int colorPos = 0;
                   if (isFATCAT) {
                      int block = 0;
@@ -288,7 +288,7 @@ public void paintComponent(Graphics g){
                         //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * block  );
                         //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * block );
                      } catch (Exception e){}
-                     
+
                      if ( colorPos > ColorUtils.colorWheel.length){
                         colorPos = ColorUtils.colorWheel.length % colorPos ;
                      }
@@ -299,14 +299,14 @@ public void paintComponent(Graphics g){
             		  //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
             		  //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
                   }
-                  
+
                }
             } else {
 
                bg = Color.LIGHT_GRAY;
                bg2 = Color.LIGHT_GRAY;
             }
-            
+
             // draw a darker background
             g2D.setPaint(bg);
             Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+1);
@@ -322,12 +322,12 @@ public void paintComponent(Graphics g){
             if ( c1 == c2){
                Color bg = COLOR_EQUAL;
                g2D.setPaint(bg);
-               Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);				
+               Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);
                g2D.fill(rec);
             } else if (AFPAlignmentDisplay.aaScore(c1, c2) > 0) {
                Color bg = COLOR_SIMILAR;
                g2D.setPaint(bg);
-               Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);				
+               Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);
                g2D.fill(rec);
             }
          }
@@ -340,7 +340,7 @@ public void paintComponent(Graphics g){
             Color bg = Color.YELLOW;
             g2D.setPaint(bg);
             // draw a darker backgroun
-            Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);				
+            Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);
             g2D.fill(rec);
             //	}
          }
@@ -370,7 +370,7 @@ public void paintComponent(Graphics g){
             int aligPos = i * AFPChainCoordManager.DEFAULT_LINE_LENGTH ;
             Atom a1 = DisplayAFP.getAtomForAligPos(afpChain, 0,aligPos, ca1,false);
             Atom a2 = DisplayAFP.getAtomForAligPos(afpChain, 1,aligPos, ca2,false);
-            String label1 = JmolTools.getPdbInfo(a1,false);				
+            String label1 = JmolTools.getPdbInfo(a1,false);
             String label2 = JmolTools.getPdbInfo(a2,false);
             g2D.drawString(label1, p1.x,p1.y);
             g2D.drawString(label2, p2.x,p2.y);
@@ -399,7 +399,7 @@ public void paintComponent(Graphics g){
 
    }
 
- 
+
 
 
    private boolean isSelected(int alignmentPosition) {
@@ -443,7 +443,7 @@ public void mouseOverPosition(AlignedPosition p) {
 
                String select1 = "";
 
-               if ( a1 != null ) 
+               if ( a1 != null )
                   select1 = JmolTools.getPdbInfo(a1);
                String select2 = "" ;
                if ( a2 != null)

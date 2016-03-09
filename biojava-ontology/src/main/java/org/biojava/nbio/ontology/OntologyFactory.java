@@ -32,7 +32,7 @@ public interface OntologyFactory {
    *
    * @param name  the name to give the ontology
    * @param description the description for the ontology
-   * @return an Ontology 
+   * @return an Ontology
    * @throws NullPointerException if either name or description are null
    * @throws OntologyException if the ontology could not be created
    */

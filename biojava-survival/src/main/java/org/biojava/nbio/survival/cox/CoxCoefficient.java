@@ -216,7 +216,7 @@ public class CoxCoefficient {
     public void setStandardDeviation(double standardDeviation) {
         this.standardDeviation = standardDeviation;
     }
-    
+
         /**
      *
      * @param d

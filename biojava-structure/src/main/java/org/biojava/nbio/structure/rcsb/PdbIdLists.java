@@ -258,7 +258,7 @@ public class PdbIdLists {
 
             throws IOException
     {
-        
+
         // Send data
 
         URLConnection conn = url.openConnection();

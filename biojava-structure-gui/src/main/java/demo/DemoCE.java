@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 15, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -46,64 +46,64 @@ public class DemoCE
    public static void main(String[] args){
        //String name1 = "4hhb.A";
        //String name2 = "4hhb.B";
-       
+
        String name1 = "d1pqsa_";
        String name2 = "d1poha_";
-       
+
 //	   String name1 = "5AZQ.A";
 //	   String name2 = "4ODC.A";
-      
+
        AtomCache cache = new AtomCache();
-       
-       DownloadChemCompProvider prov = new DownloadChemCompProvider();      
+
+       DownloadChemCompProvider prov = new DownloadChemCompProvider();
        prov.setDownloadAll(true);
-              
+
        ChemCompGroupFactory.setChemCompProvider(prov);
-               
+
        Structure structure1 = null;
        Structure structure2 = null;
 
        try {
 
           StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-          
+
            structure1 = cache.getStructure(name1);
            structure2 = cache.getStructure(name2);
-           
+
            Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
            Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
-           
+
            // get default parameters
            CeParameters params = new CeParameters();
-           
+
            // add more print
            params.setShowAFPRanges(true);
-           
-           // set the maximum gap size to unlimited 
+
+           // set the maximum gap size to unlimited
            params.setMaxGapSize(-1);
-           
-           AFPChain afpChain = algorithm.align(ca1,ca2,params);            
+
+           AFPChain afpChain = algorithm.align(ca1,ca2,params);
 
            afpChain.setName1(name1);
            afpChain.setName2(name2);
 
            // show a nice summary print
            System.out.println(AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2));
-           
+
            // print rotation matrices
            System.out.println(afpChain.toRotMat());
            //System.out.println(afpChain.toCE(ca1, ca2));
-           
+
            // print XML representation
            //System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
-                        
+
            StructureAlignmentDisplay.display(afpChain, ca1, ca2);
-           
-           
+
+
            double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
            afpChain.setTMScore(tmScore);
            System.out.println(AfpChainWriter.toScoresList(afpChain));
-           
+
        } catch (Exception e) {
            e.printStackTrace();
            return;

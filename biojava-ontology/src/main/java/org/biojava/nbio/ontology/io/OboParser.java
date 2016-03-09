@@ -16,9 +16,9 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 18, 2008
- * 
+ *
  */
 
 package org.biojava.nbio.ontology.io;
@@ -36,25 +36,25 @@ import java.text.ParseException;
 
 
 /** Parses an OBO file.
- * 
+ *
  * @author Andreas Prlic
  * @since 1.7
- * 
+ *
  * <h2>Example</h2>
  * <pre>
  * OboParser parser = new OboParser();
 		InputStream inStream = this.getClass().getResourceAsStream("/files/ontology/biosapiens.obo");
-		
+
 		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 		try {
 			Ontology ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
-						
+
 			Set keys = ontology.getTerms();
 			Iterator iter = keys.iterator();
 			while (iter.hasNext()){
 				System.out.println(iter.next());
 			}
-			
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -62,10 +62,10 @@ import java.text.ParseException;
  *
  */
 public class OboParser {
-	
+
 	/** Parse a OBO file and return its content as a BioJava Ontology object
-	 * 
-	 * @param oboFile the file to be parsed 
+	 *
+	 * @param oboFile the file to be parsed
 	 * @param ontoName
 	 * @param ontoDescription
 
@@ -79,26 +79,26 @@ public class OboParser {
             String ontoDescription
             )
 	throws ParseException, IOException {
-		
+
 		 try {
 			 OntologyFactory factory = OntoTools.getDefaultFactory();
 			 Ontology ontology = factory.createOntology(ontoName, ontoDescription);
-			 
+
 	         OboFileParser parser = new OboFileParser();
-	         
+
 	         OboFileEventListener handler = new OboFileHandler(ontology);
-	         
+
 	         parser.addOboFileEventListener(handler);
 	         parser.parseOBO(oboFile);
-	         
+
 	         return ontology;
-	         
-			 
+
+
 		 } catch (AlreadyExistsException ex) {
 	            throw new RuntimeException( "Duplication in ontology");
 	        } catch (OntologyException ex) {
 	            throw new RuntimeException(ex);
-	        } 
-	        
+	        }
+
 	}
 }

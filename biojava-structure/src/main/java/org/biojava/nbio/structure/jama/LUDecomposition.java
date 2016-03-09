@@ -36,7 +36,7 @@ package org.biojava.nbio.structure.jama;
 public class LUDecomposition implements java.io.Serializable {
 
     static final long serialVersionUID = 9271028462937843l;
-    
+
 /* ------------------------
    Class variables
  * ------------------------ */
@@ -51,7 +51,7 @@ public class LUDecomposition implements java.io.Serializable {
    @serial row dimension.
    @serial pivot sign.
    */
-   private int m, n, pivsign; 
+   private int m, n, pivsign;
 
    /** Internal storage of pivot vector.
    @serial pivot vector.
@@ -63,7 +63,7 @@ public class LUDecomposition implements java.io.Serializable {
  * ------------------------ */
 
    /** LU Decomposition provides a data structure  to access L, U and piv.
-   @param  A   Rectangular matrix  
+   @param  A   Rectangular matrix
    */
 
    public LUDecomposition (Matrix A) {
@@ -106,7 +106,7 @@ public class LUDecomposition implements java.io.Serializable {
 
             LUrowi[j] = LUcolj[i] -= s;
          }
-   
+
          // Find pivot and exchange if necessary.
 
          int p = j;
@@ -124,7 +124,7 @@ public class LUDecomposition implements java.io.Serializable {
          }
 
          // Compute multipliers.
-         
+
          if (j < m & LU[j][j] != 0.0) {
             for (int i = j+1; i < m; i++) {
                LU[i][j] /= LU[j][j];

@@ -114,7 +114,7 @@ public class UniprotToFasta {
        //     System.out.println("Unique Species=" + uniqueSpecies.size());
        //     System.out.println("Total sequences=" + seqCodingRegionsList.size());
             FastaWriterHelper.writeProteinSequence(new File(fastaFileName), seqCodingRegionsList);
-            
+
             br.close();
             fr.close();
 

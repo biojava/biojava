@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -19,8 +19,8 @@
  * authors.  These should be listed in @author doc comments.
  *
  *
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 package org.biojava.nbio.structure.align.fatcat;
 
@@ -41,7 +41,7 @@ public class FatCatRigid extends FatCat implements StructureAlignment{
 	public FatCatRigid(){
 		super();
 		params = new FatCatParameters();
-	    params.setMaxTra(0);		
+	    params.setMaxTra(0);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class FatCatRigid extends FatCat implements StructureAlignment{
 			throw new IllegalArgumentException("FatCat algorithm needs FatCatParameters object as argument.");
 		}
 
-		params = (FatCatParameters) param;		
+		params = (FatCatParameters) param;
 
 		AFPChain afpChain= alignRigid(ca1, ca2, params);
 		afpChain.setAlgorithmName(algorithmName);

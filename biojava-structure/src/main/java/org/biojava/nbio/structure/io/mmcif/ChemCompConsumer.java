@@ -31,7 +31,7 @@ import java.util.List;
 public class ChemCompConsumer implements MMcifConsumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(ChemCompConsumer.class);
-	
+
 	ChemicalComponentDictionary dictionary;
 
 	String latestChemCompId;
@@ -56,7 +56,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 			logger.warn("chem comp ID == null " + c);
 
 		latestChemCompId = c.getId();
-		dictionary.addChemComp(c);		
+		dictionary.addChemComp(c);
 		if ( c.getResidueType() == ResidueType.nonPolymer)
 			return;
 
@@ -116,17 +116,17 @@ public class ChemCompConsumer implements MMcifConsumer {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public void newCell(Cell cell) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void newSymmetry(Symmetry symmetry) {
-		// TODO Auto-generated method stub 
+		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		// TODO Auto-generated method stub
@@ -231,19 +231,19 @@ public class ChemCompConsumer implements MMcifConsumer {
 	@Override
 	public void newPdbxStructOperList(PdbxStructOperList structOper) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -254,7 +254,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 	@Override
 	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -265,30 +265,30 @@ public class ChemCompConsumer implements MMcifConsumer {
 	@Override
 	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newEntitySrcGen(EntitySrcGen entitySrcGen) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void newEntitySrcNat(EntitySrcNat entitySrcNat) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newStructConn(StructConn structConn) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

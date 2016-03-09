@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class SequenceLocation<S extends AbstractSequence<C>, C extends Compound> extends SimpleLocation {
     private S sequence;
-    
+
     public SequenceLocation(int start, int end,S sequence){
         super(start,end);
         this.sequence = sequence;
@@ -69,7 +69,7 @@ public class SequenceLocation<S extends AbstractSequence<C>, C extends Compound>
     public S getSequence() {
         return sequence;
     }
-    
+
     public void setSequence(S sequence) {
         this.sequence = sequence;
     }

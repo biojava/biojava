@@ -42,14 +42,14 @@ import java.util.List;
 //import org.slf4j.LoggerFactory;
 
 /** A sequence display that can show the results of a protein structure alignment.
- * 
+ *
  * @author Andreas Prlic
  * @since 1.7
- */ 
+ */
 public class SequenceDisplay extends JPanel implements ChangeListener {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1829252532712454236L;
 
@@ -61,13 +61,13 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	SequenceScalePanel panel2;
 
 	JSlider  residueSizeSlider;
-	JLabel  percentageDisplay;	
+	JLabel  percentageDisplay;
 
 	int[] idx1;
 	int[] idx2;
 
 	/** the maximum value that the scale can get
-	 * 
+	 *
 	 */
 	public static final int MAX_SCALE               = 10;
 
@@ -92,7 +92,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 			//String pdb2 = "1ede";
 
 			String pdb1 = "1buz";
-			String pdb2 = "5pti";            
+			String pdb2 = "5pti";
 
 
 			// NO NEED TO DO CHANGE ANYTHING BELOW HERE...
@@ -105,7 +105,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 			System.out.println("aligning " + pdb1 + " vs. " + pdb2);
 
 			Structure s1 = pdbr.getStructureById(pdb1);
-			Structure s2 = pdbr.getStructureById(pdb2);                       
+			Structure s2 = pdbr.getStructureById(pdb2);
 
 			// step 2 : do the calculations
 			sc.align(s1,s2);
@@ -254,7 +254,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 		this.structurePairAligner = structurePairAligner;
 	}
 	/** get the identical position in the alignment
-	 * 
+	 *
 	 * @return identical positions for structure1
 	 */
 	public int[] getIdx1() {
@@ -262,7 +262,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	}
 
 	/** set the identical positions in the alignment
-	 * 
+	 *
 	 * @param idx identical positions for structure1
 	 */
 	private void setIdx1(int[] idx) {
@@ -270,7 +270,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 
 	}
 	/** get the identical position in the alignment
-	 * 
+	 *
 	 * @return identical positions for structure2
 	 */
 	public int[] getIdx2() {
@@ -278,7 +278,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	}
 
 	/** set the identical positions in the alignment
-	 * 
+	 *
 	 * @param idx identical positions for structure2
 	 */
 	private void setIdx2(int[] idx) {
@@ -320,7 +320,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 				m.setEquivalent(AlignedPosition.NOT_ALIGNED);
 
 				//System.out.println(m + " => " + end);
-				apos.add(m);				
+				apos.add(m);
 			}
 
 			// add this aligned position
@@ -352,13 +352,13 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 		Chain c = new ChainImpl();
 		c.setChainID("1");
 		for (Atom atom : ca1) {
-			
+
 			Group g = atom.getGroup();
-			
+
 			Chain parentChain = g.getChain();
-			
+
 			c.addGroup(g);
-			// hack for Jmol?			
+			// hack for Jmol?
 			g.setChain(parentChain);
 		}
 		panel.setChain(c);
@@ -473,7 +473,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 			zoomFactor = 1;
 
 
-		int DEFAULT_X_START 	   
+		int DEFAULT_X_START
 		= SequenceScalePanel.DEFAULT_X_START;
 		int DEFAULT_X_RIGHT_BORDER = SequenceScalePanel.DEFAULT_X_RIGHT_BORDER;
 
@@ -496,11 +496,11 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	}
 
 	/** a value of 100 means that the whole sequence should be displayed in the current visible window
-	 * a factor of 1 means that one amino acid shoud be drawn as big as possible   
-	 *  
+	 * a factor of 1 means that one amino acid shoud be drawn as big as possible
+	 *
 	 * @param zoomFactor - a value between 1 and 100
 	 *
-	 *  
+	 *
 	 */
 	public void calcScale(int zoomFactor){
 

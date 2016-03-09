@@ -76,9 +76,9 @@ public class CathInstallation implements CathDatabase{
     Map<String, CathDomain> domainMap;
     Map<String, CathNode> cathTree;
     Map<String, List<CathFragment>> fragmentMap;
-    
-  
-    	
+
+
+
     public CathInstallation(String cacheLocation, boolean usingCDDF, boolean parseCF) {
         setCacheLocation(cacheLocation);
 
@@ -282,7 +282,7 @@ public class CathInstallation implements CathDatabase{
         } else {
             ensureDomallInstalled();
         }
-        
+
       // cath IDs in lower case...
         return pdbMap.get(pdbId.toLowerCase());
     }
@@ -345,9 +345,9 @@ public class CathInstallation implements CathDatabase{
             if ( line.startsWith("#") ) continue;
             CathDomain cathDomain = parseCathListFileLine(line);
            // counter++;
-                        
+
             String pdbId = cathDomain.getPdbIdAndChain().substring(0,4); // includes chain letter
-			            
+
             List<CathDomain> domainList;
 			if ( pdbMap.containsKey(pdbId)){
 				domainList = pdbMap.get(pdbId);
@@ -399,7 +399,7 @@ public class CathInstallation implements CathDatabase{
         CathSegment segment = null;
         StringBuilder sseqh = null;
         StringBuilder sseqs = null;
-        while ( (line = bufferedReader.readLine()) != null ) {        	
+        while ( (line = bufferedReader.readLine()) != null ) {
             if ( line.startsWith("#") ) continue;
             if ( line.startsWith("FORMAT") ) {
                 cathDescription = new CathDomain();
@@ -624,10 +624,10 @@ public class CathInstallation implements CathDatabase{
 
     protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
 //        System.out.println("downloading " + remoteURL + " to: " + localFile);
-        
+
         long timeS = System.currentTimeMillis();
     	File tempFile  = File.createTempFile(FileDownloadUtils.getFilePrefix(localFile), "."+ FileDownloadUtils.getFileExtension(localFile));
-        
+
         FileOutputStream out = new FileOutputStream(tempFile);
 
         InputStream in = remoteURL.openStream();
@@ -638,14 +638,14 @@ public class CathInstallation implements CathDatabase{
         }
         in.close();
         out.close();
-        
+
         FileDownloadUtils.copy(tempFile,localFile);
-        
-        // delete the tmp file			
+
+        // delete the tmp file
      	tempFile.delete();
-        
+
      	long size =  localFile.length();
-     	
+
      	double disp = size / 1024.0;
      	String unit = " kB";
      	if ( disp > 1024 ) {

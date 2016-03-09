@@ -41,9 +41,9 @@ import static org.junit.Assert.assertEquals;
 public class LocalAlignmentTest {
 
 	private static final double PRECISION = 0.00000001;
-	
+
 	@Test
-	public void shouldAllowZeroLengthMatches() throws CompoundNotFoundException { 
+	public void shouldAllowZeroLengthMatches() throws CompoundNotFoundException {
         DNASequence query = new DNASequence("C", DNACompoundSet.getDNACompoundSet());
         DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
         SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();

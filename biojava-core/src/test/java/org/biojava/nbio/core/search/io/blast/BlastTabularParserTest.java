@@ -39,22 +39,22 @@ import static org.junit.Assert.*;
  * @author Paolo Pavan
  */
 public class BlastTabularParserTest {
-    
+
     public BlastTabularParserTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -66,11 +66,11 @@ public class BlastTabularParserTest {
     public void testGetFileExtensions() {
         System.out.println("getFileExtensions");
         BlastTabularParser instance = new BlastTabularParser();
-        
+
         List<String> expResult = new ArrayList<String>();
         expResult.add("blasttabular");
         expResult.add("blasttxt");
-        
+
         List<String> result = instance.getFileExtensions();
         assertEquals(expResult, result);
     }
@@ -106,15 +106,15 @@ public class BlastTabularParserTest {
         Result expRes1;
         Hit expHit1res1;
         Hsp expHsp1hit1res1;
-        
+
         String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blasttxt";
         File file = getFileForResource(resource);
-        
+
         BlastTabularParser instance = new BlastTabularParser();
         instance.setFile(file);
-        
+
         List<Result> results = instance.createObjects(1e-10);
-        
+
         BlastHsp hsp1Hit1Res1 = new BlastHspBuilder()
                 .setHspNum(1)
                 .setPercentageIdentity(100.0/100)
@@ -128,7 +128,7 @@ public class BlastTabularParserTest {
                 .setHspEvalue(0)
                 .setHspBitScore(2894)
                 .createBlastHsp();
-        
+
         BlastHsp hsp1Hit1Res2 = new BlastHspBuilder()
                 .setHspNum(1)
                 .setPercentageIdentity(100.0/100)
@@ -142,48 +142,48 @@ public class BlastTabularParserTest {
                 .setHspEvalue(0)
                 .setHspBitScore(2894)
                 .createBlastHsp();
-        
+
         List<Hsp> hsplist = new ArrayList<Hsp>();
         hsplist.add(hsp1Hit1Res1);
         hsplist.add(hsp1Hit1Res2);
-        
+
         BlastHit hit1Res1 = new BlastHitBuilder()
                 .setHitDef("CP000411")
                 .setHsps(hsplist)
                 .createBlastHit();
         List<Hit> hitlist = new ArrayList<Hit>();
         hitlist.add(hit1Res1);
-        
+
         BlastResult res1 = new BlastResultBuilder()
                 .setQueryID("CP000411_-_16S_rRNA")
                 .setQueryDef("CP000411_-_16S_rRNA")
                 .setHits(hitlist)
                 .createBlastResult();
-        
+
         expRes1 = results.get(0);
         expHit1res1 = expRes1.iterator().next();
         expHsp1hit1res1 = expHit1res1.iterator().next();
-        
+
         // results test
         assertEquals(expRes1, res1);
         // hit test
         assertEquals(expHit1res1, hit1Res1);
         // hsp test
         assertEquals(expHsp1hit1res1, hsp1Hit1Res1);
-        
-        
+
+
         String resource2 = "/org/biojava/nbio/core/search/io/blast/testBlastTabularReport.txt";
 
         File file2 = getFileForResource(resource2);
-        
+
         BlastTabularParser instance2 = new BlastTabularParser();
         instance2.setFile(file2);
-        
+
         List<Result> results2 = instance2.createObjects(1e-10);
         expRes1 = results2.get(0);
         expHit1res1 = expRes1.iterator().next();
         expHsp1hit1res1 = expHit1res1.iterator().next();
-        
+
         hsp1Hit1Res1 = new BlastHspBuilder()
                 .setPercentageIdentity(100.00/100)
                 .setHspAlignLen(48)
@@ -196,7 +196,7 @@ public class BlastTabularParserTest {
                 .setHspEvalue(4e-19)
                 .setHspBitScore(95.6)
                 .createBlastHsp();
-        
+
         // results test
         assertEquals(expRes1.getQueryID(), "1_759_906_F3");
         assertEquals(results2.size(), 298);
@@ -204,6 +204,6 @@ public class BlastTabularParserTest {
         assertEquals(expHsp1hit1res1, hsp1Hit1Res1);
     }
 
-    
-    
+
+
 }

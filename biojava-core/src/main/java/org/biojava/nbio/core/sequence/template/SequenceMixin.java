@@ -422,7 +422,7 @@ public class SequenceMixin {
             return (currentPosition < length);
         }
 
-     
+
         @Override
 		public C next() {
             if(!hasNext()) {

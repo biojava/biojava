@@ -31,38 +31,38 @@ import javax.vecmath.*;
  * @author Peter
  */
 public final class SuperPosition {
-    
+
     public static Matrix4d superpose(Point3d[] x, Point3d[] y) {
         //superpose x onto y
         Point3d[] ref = clonePoint3dArray(y);
-        
+
         Point3d ytrans = centroid(ref);
         ytrans.negate();
         translate(ytrans, ref);
-        
+
         center(x);
-        
+
         // calculate quaternion from relative orientation
         Quat4d q = quaternionOrientation(x, ref);
-        
+
         Matrix4d rotTrans = new Matrix4d();
         rotTrans.set(q);
-        
+
         // set translational component of transformation matrix
         ytrans.negate();
         rotTrans.setTranslation(new Vector3d(ytrans));
-        
+
         // tranform coordinates
         transform(rotTrans, x);
-        
+
         // TODO should include translation into transformation matrix
 
         return rotTrans;
     }
-    
+
     public static Matrix4d superposeWithTranslation(Point3d[] x, Point3d[] y) {
         //superpose x onto y
-             
+
         // translate to origin
     	Point3d[] xref = clonePoint3dArray(x);
     	Point3d xtrans = centroid(xref);
@@ -72,13 +72,13 @@ public final class SuperPosition {
     	Point3d[] yref = clonePoint3dArray(y);
         Point3d ytrans = centroid(yref);
         ytrans.negate();
-        translate(ytrans, yref); 
-        
+        translate(ytrans, yref);
+
         // calculate rotational component (rotation around origin)
         Quat4d q = quaternionOrientation(xref, yref);
         Matrix4d rotTrans = new Matrix4d();
-        rotTrans.set(q);   
- 
+        rotTrans.set(q);
+
         // combine with x -> origin translation
         Matrix4d trans = new Matrix4d();
         trans.setIdentity();
@@ -86,29 +86,29 @@ public final class SuperPosition {
         rotTrans.mul(rotTrans, trans);
 
         // combine with origin -> y translation
-        ytrans.negate();  
-        Matrix4d transInverse = new Matrix4d(); 
-        transInverse.setIdentity();     
+        ytrans.negate();
+        Matrix4d transInverse = new Matrix4d();
+        transInverse.setIdentity();
         transInverse.setTranslation(new Vector3d(ytrans));
         rotTrans.mul(transInverse, rotTrans);
-        
+
         // transform x coordinates onto y coordinate frame
         transform(rotTrans, x);
 
         return rotTrans;
     }
-    
+
     public static Matrix4d superposeAtOrigin(Point3d[] x, Point3d[] y) {
         Quat4d q = quaternionOrientation(x, y);
-        
+
         Matrix4d rotTrans = new Matrix4d();
         rotTrans.set(q);
-        
+
         return rotTrans;
     }
 
     public static Matrix4d superposeAtOrigin(Point3d[] x, Point3d[] y, AxisAngle4d axisAngle) {
-        Quat4d q = quaternionOrientation(x, y);    
+        Quat4d q = quaternionOrientation(x, y);
         Matrix4d rotTrans = new Matrix4d();
         rotTrans.setIdentity();
         rotTrans.set(q);
@@ -136,10 +136,10 @@ public final class SuperPosition {
 //		System.out.println(temp);
         return rotTrans;
     }
-    
-    
-    
-    
+
+
+
+
     public static double rmsd(Point3d[] x, Point3d[] y) {
         double sum = 0.0;
         for (int i = 0; i < x.length; i++) {
@@ -168,28 +168,28 @@ public final class SuperPosition {
      * @param lengthNative total length of native sequence
      * @return
      */
-    public static double TMScore(Point3d[] x, Point3d[] y, int lengthNative) {   
+    public static double TMScore(Point3d[] x, Point3d[] y, int lengthNative) {
         double d0 = 1.24 * Math.cbrt(x.length - 15.0) - 1.8;
         double d0Sq = d0*d0;
-        
+
         double sum = 0;
         for(int i = 0; i < x.length; i++) {
         	sum += 1.0/(1.0 + x[i].distanceSquared(y[i])/d0Sq);
         }
-        
+
         return sum/lengthNative;
     }
-    
+
     public static double GTSlikeScore(Point3d[] x, Point3d[] y) {
         int contacts = 0;
 
         for (Point3d px: x) {
             double minDist = Double.MAX_VALUE;
-            
+
             for (Point3d py: y) {
                minDist = Math.min(minDist, px.distanceSquared(py));
             }
-            
+
             if (minDist > 64) continue;
             contacts++;
 
@@ -205,7 +205,7 @@ public final class SuperPosition {
 
         return contacts*25.0/x.length;
     }
-    
+
     public static int contacts(Point3d[] x, Point3d[] y, double maxDistance) {
         int contacts = 0;
         for (int i = 0; i < x.length; i++) {
@@ -219,25 +219,25 @@ public final class SuperPosition {
         }
         return contacts;
     }
-    
+
     public static void transform(Matrix4d rotTrans, Point3d[] x) {
         for (Point3d p: x) {
             rotTrans.transform(p);
         }
     }
-    
+
     public static void translate(Point3d trans, Point3d[] x) {
         for (Point3d p: x) {
             p.add(trans);
         }
     }
-    
+
     public static void center(Point3d[] x) {
         Point3d center = centroid(x);
         center.negate();
         translate(center, x);
     }
-    
+
     public static Point3d centroid(Point3d[] x) {
         Point3d center = new Point3d();
         for (Point3d p: x) {
@@ -246,7 +246,7 @@ public final class SuperPosition {
         center.scale(1.0/x.length);
         return center;
     }
-    
+
     private static Quat4d quaternionOrientation(Point3d[] a, Point3d[] b)  {
         Matrix m = calcFormMatrix(a, b);
         EigenvalueDecomposition eig = m.eig();
@@ -257,10 +257,10 @@ public final class SuperPosition {
  //       System.out.println("SuperPosition.quaternionOrientation: " + q);
         return q;
     }
-    
+
     private static Matrix calcFormMatrix(Point3d[] a, Point3d[] b) {
         double xx=0.0, xy=0.0, xz=0.0, yx=0.0, yy=0.0, yz=0.0, zx=0.0, zy=0.0, zz=0.0;
-        
+
         for (int i = 0; i < a.length; i++) {
             xx += a[i].x * b[i].x;
             xy += a[i].x * b[i].y;
@@ -272,7 +272,7 @@ public final class SuperPosition {
             zy += a[i].z * b[i].y;
             zz += a[i].z * b[i].z;
         }
-        
+
         double[][] f = new double[4][4];
         f[0][0] = xx + yy + zz;
         f[0][1] = zy - yz;
@@ -290,10 +290,10 @@ public final class SuperPosition {
         f[2][3] = yz + zy;
         f[3][2] = f[2][3];
         f[3][3] = zz - xx - yy;
-        
+
         return new Matrix(f);
     }
-    
+
     public static Point3d[] clonePoint3dArray(Point3d[] x) {
         Point3d[] clone = new Point3d[x.length];
         for (int i = 0; i < x.length; i++) {

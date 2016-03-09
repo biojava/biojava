@@ -92,7 +92,7 @@ public class Feature implements FeatureI {
     /**
      * Get score. (GFF field 7). The meaning of the score varies from file to file.
      *
-     * @return Score value. 
+     * @return Score value.
      */
     public double score() {
         return mScore;
@@ -102,7 +102,7 @@ public class Feature implements FeatureI {
 
     /**
      * Get frame (aka phase). (GFF field 8). Specifies the offset of the
-     * first nucleotide of the first in-frame codon, assuming this feature 
+     * first nucleotide of the first in-frame codon, assuming this feature
      * is a dna/rna sequence that codes
      * for a protein. If you
      * intend to use this field, you probably want to look it up on the web first.
@@ -200,7 +200,7 @@ public class Feature implements FeatureI {
     }
 
      HashMap<String,String> attributeHashMap = new HashMap<String,String>();
-    
+
     private void initAttributeHashMap(){
        String[] values = mAttributes.split(";");
        for(String attribute : values){
@@ -219,7 +219,7 @@ public class Feature implements FeatureI {
            attributeHashMap.put(data[0].trim(), value);
        }
     }
-    
+
     /**
      * Get value of specified attribute key. Returns null if the attribute key has no value (does not exist).
      * Keys are case-sensitive. Assumes attributes are correctly formatted in GFF style.
@@ -230,7 +230,7 @@ public class Feature implements FeatureI {
      */
     @Override
 	public String getAttribute(String key) {
-        
+
         return attributeHashMap.get(key);
     }
 
@@ -337,7 +337,7 @@ public class Feature implements FeatureI {
 
 	@Override
 	public HashMap<String, String> getAttributes() {
-		
+
 		return attributeHashMap;
 	}
 }

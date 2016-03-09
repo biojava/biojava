@@ -38,7 +38,7 @@ public class ConfigXMLHandler extends DefaultHandler {
    UserConfiguration config ;
 
    /**
-    * 
+    *
     */
    public ConfigXMLHandler() {
       super();
@@ -63,7 +63,7 @@ public class ConfigXMLHandler extends DefaultHandler {
          } else {
             config.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
          }
-         
+
          String fetchBehavior = atts.getValue("fetchBehavior");
          if(fetchBehavior == null) {
             config.setFetchBehavior(FetchBehavior.DEFAULT);

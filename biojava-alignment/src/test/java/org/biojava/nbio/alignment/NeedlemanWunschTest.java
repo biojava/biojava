@@ -46,14 +46,14 @@ import static org.junit.Assert.assertTrue;
 public class NeedlemanWunschTest {
 
 	private static final double PRECISION = 0.00000001;
-	
+
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
     private NeedlemanWunsch<ProteinSequence, AminoAcidCompound> alignment, self;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         gaps = new SimpleGapPenalty(10, 1);
@@ -222,9 +222,9 @@ public class NeedlemanWunschTest {
         assertEquals(String.format("ARND%n-RDG%n"), alignment.getPair().toString());
         assertEquals(String.format("ARND%nARND%n"), self.getPair().toString());
     }
-    
+
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void should_align_all_anchored() throws CompoundNotFoundException {
@@ -234,9 +234,9 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { 0, 1, 2} );
 		assertEquals(String.format("ACG%nCGT%n"), aligner.getPair().toString());
     }
-    
+
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void should_align_starting_anchor() throws CompoundNotFoundException {
@@ -246,9 +246,9 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { 1, -1, -1} );
 		assertEquals(String.format("-AAT%nAATT%n"), aligner.getPair().toString());
     }
-    
+
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void should_align_ending_anchor() throws CompoundNotFoundException {
@@ -258,9 +258,9 @@ public class NeedlemanWunschTest {
 		aligner.addAnchor(2, 3);
 		assertEquals(String.format("AA-G%nAATT%n"), aligner.getPair().toString());
     }
-    
+
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void should_align_middle_anchor() throws CompoundNotFoundException {
@@ -270,9 +270,9 @@ public class NeedlemanWunschTest {
 		aligner.setAnchors(new int[] { -1, 2, -1} );
 		assertEquals(String.format("A-CTTT%nACGTTT%n"), aligner.getPair().toString());
     }
-    
+
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void should_align_multiple_anchors() throws CompoundNotFoundException {
@@ -285,9 +285,9 @@ public class NeedlemanWunschTest {
 		aligner.addAnchor(3, 5);
 		assertEquals(String.format("ACG--T%nATACGT%n"), aligner.getPair().toString());
     }
-    
+
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
     @Test
 	public void anchors_should_not_change_score() throws CompoundNotFoundException {
@@ -301,9 +301,9 @@ public class NeedlemanWunschTest {
 		anchored.addAnchor(3, 3);
 		assertEquals(aligner.getScore(), anchored.getScore(), PRECISION);
     }
-    
+
     /**
-     * @author Daniel Cameron 
+     * @author Daniel Cameron
      */
 	@Test
 	public void testAnchoredDNAAlignment() throws CompoundNotFoundException {
@@ -312,9 +312,9 @@ public class NeedlemanWunschTest {
 		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
 		assertEquals(String.format("-ACGTACCGGTT-------TT%nTACGT-CCGGTTACGTACGTT%n"), aligner.getPair().toString());
 	}
-	
+
 	/**
-	 * See issue #202 in github 
+	 * See issue #202 in github
 	 * @author Jose M Duarte
 	 */
 	@Test
@@ -335,16 +335,16 @@ public class NeedlemanWunschTest {
 		DNASequence query = new DNASequence(str2,
 				AmbiguityDNACompoundSet.getDNACompoundSet());
 
-		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = 
+		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner =
 				new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, gap, matrix);
 
-		
+
 		//System.out.println("getScore: " + aligner.getScore());
 		//System.out.println("getMaxScore: " + aligner.getMaxScore());
 		//System.out.println("getMinScore: " + aligner.getMinScore());
 		//System.out.println("getSimilarity: " + aligner.getSimilarity());
-		
+
 		assertTrue("Similarity must be positive, this must be an integer overflow bug!", aligner.getSimilarity()>0);
-	} 
-	
+	}
+
 }

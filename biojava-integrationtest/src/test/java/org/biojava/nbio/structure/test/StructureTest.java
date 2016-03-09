@@ -57,7 +57,7 @@ public class StructureTest {
 		params.setAlignSeqRes(true);
 		params.setCreateAtomBonds(true);
 		pdbpars.setFileParsingParameters(params);
-		
+
 		structure = pdbpars.parsePDBFile(inStream) ;
 
 		assertNotNull(structure);
@@ -96,9 +96,9 @@ public class StructureTest {
 	}
 
 
-	/** 
+	/**
 	 * Tests if a PDB file can be parsed
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Test
 	public void testReadPDBFile() throws Exception {
@@ -115,7 +115,7 @@ public class StructureTest {
 		assertTrue(c2.getAtomGroups(GroupType.NUCLEOTIDE).size() == 0 );
 
 		List<Compound> compounds= structure.getCompounds();
-		
+
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals(2, compounds.size());
@@ -137,18 +137,18 @@ public class StructureTest {
 		assertDisulfideBond("A", "A", 5, 55, bond1);
 
 		Bond bond2 = ssbonds.get(1);
-		assertDisulfideBond("A", "A", 14, 38, bond2);		
+		assertDisulfideBond("A", "A", 14, 38, bond2);
 
 		List<SSBondImpl> list = SSBondImpl.getSsBondListFromBondList(ssbonds);
 
-		//System.out.println(list.get(0).toPDB()); 
+		//System.out.println(list.get(0).toPDB());
 		assertEquals("PDB representation incorrect", pdb1, list.get(0).toPDB().trim());
-		
+
 		//System.out.println(list.get(1).toPDB());
 		assertEquals("PDB representation incorrect", pdb2, list.get(1).toPDB().trim());
 
 	}
-	
+
 	private void assertDisulfideBond(String expectedChainId1, String expectedChainId2, int expectedResSerial1, int expectedResSerial2, Bond bond) {
 		String chainId1 = bond.getAtomA().getGroup().getChainId();
 		String chainId2 = bond.getAtomB().getGroup().getChainId();
@@ -160,9 +160,9 @@ public class StructureTest {
 		assertEquals("disulfide bond failed second residue number failed ", new ResidueNumber(expectedChainId2, expectedResSerial2, null), resNum2);
 	}
 
-	/** 
+	/**
 	 * Tests that standard amino acids are working properly
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Test
 	public void testStandardAmino() throws Exception {
@@ -177,7 +177,7 @@ public class StructureTest {
 
 	@Test
 	public void testPDBHeader(){
-		
+
 		PDBHeader header = structure.getPDBHeader();
 		String classification = header.getClassification();
 		assertTrue(classification.equals("PROTEINASE INHIBITOR (TRYPSIN)"));
@@ -188,7 +188,7 @@ public class StructureTest {
 		float resolution = header.getResolution();
 		assertEquals("the resolution in the Header is " + resolution + " and not 1.0, as expected",1.0,resolution,0.0001);
 
-		// commenting out test for deprecated method 
+		// commenting out test for deprecated method
 		//String technique = header.getTechnique();
 		String techShould = "X-RAY DIFFRACTION";
 		//assertEquals("the technique in the Header is " + technique, techShould,technique);
@@ -199,7 +199,7 @@ public class StructureTest {
 
 
 		List <Compound> compounds = structure.getCompounds();
-		
+
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals("did not find the right number of compounds! ", 2, compounds.size());
@@ -279,7 +279,7 @@ public class StructureTest {
 		Atom oldca2 =       g2.getAtom("CA");
 		Atom newca2 = newGroup.getAtom("CA");
 		Element e1 = ca1.getElement();
-		
+
 		assertEquals(Element.C, e1);
 
 		// this also tests the cloning ...

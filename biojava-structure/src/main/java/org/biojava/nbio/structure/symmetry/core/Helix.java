@@ -98,7 +98,7 @@ public class Helix {
 	public void setRise(double rise) {
 		this.rise = rise;
 	}
-	
+
 	/**
 	 * Returns the pitch angle of the helix
 	 * @param transformation helix transformation
@@ -107,7 +107,7 @@ public class Helix {
 	public double getAngle() {
 		return getAxisAngle().angle;
 	}
-	
+
 	/**
 	 * Returns the AxisAngle of the helix transformation
 	 * @param transformation helix transformation
@@ -140,7 +140,7 @@ public class Helix {
     public void setFold(int fold) {
         this.fold = fold;
     }
-    
+
     public int getContacts() {
 		return contacts;
 	}
@@ -159,19 +159,19 @@ public class Helix {
         sb.append("Fold          : " + getFold() + "\n");
         return sb.toString();
     }
-    
+
     public List<List<Integer>> getLayerLines() {
 		List<List<Integer>> layerLines = new ArrayList<List<Integer>>();
-		
+
 		createLineSegments(permutation, layerLines);
-		
+
 //		System.out.println("Line segments: " + layerLines.size());
 //		for (List<Integer> lineSegment: layerLines) {
 //			System.out.println(lineSegment);
 //		}
-		
+
 		int count = layerLines.size();
-		
+
 		// iteratively join line segments
 		do {
 			count = layerLines.size();
@@ -184,7 +184,7 @@ public class Helix {
 //				System.out.println(lineSegment);
 //			}
 		} while (layerLines.size() < count);
-		
+
 		return layerLines;
 	}
 
@@ -199,7 +199,7 @@ public class Helix {
 			}
 		}
 	}
-	
+
 	private static void joinLineSegments(List<List<Integer>> layerLines) {
 		for (int i = 0; i < layerLines.size()-1; i++) {
 			List<Integer> lineSegmentI = layerLines.get(i);
@@ -211,7 +211,7 @@ public class Helix {
 //							System.out.println("join right: " + lineSegmentI + " - " + lineSegmentJ);
 							lineSegmentI.addAll(lineSegmentJ.subList(1,  lineSegmentJ.size()));
 //							System.out.println("joned segment: " + lineSegmentI);
-							lineSegmentJ.clear();		
+							lineSegmentJ.clear();
 						} else if ((lineSegmentI.get(0).equals(lineSegmentJ.get(lineSegmentJ.size()-1)))) {
 							lineSegmentI.addAll(0, lineSegmentJ.subList(0,  lineSegmentJ.size()-1));
 //							System.out.println("join left: " + lineSegmentJ + " - " + lineSegmentI);
@@ -223,7 +223,7 @@ public class Helix {
 			}
 		}
 	}
-	
+
 	private static void trimEmptyLineSegments(List<List<Integer>> layerLines) {
 		for (Iterator<List<Integer>> iter = layerLines.iterator(); iter.hasNext();) {
 			if (iter.next().isEmpty()) {

@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Dec 21, 2005
  *
  */
@@ -30,38 +30,38 @@ import java.util.Map;
 
 
 /** A class that provides a set of standard amino acids.
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Andreas Prlic
  * @author Tamas Horvath provided the standard amino acids.
- *   
+ *
  *
  */
 public final class StandardAminoAcid {
-    
+
 	private static final String STANDARD_AMINOS_FILE = "org/biojava/nbio/structure/standardaminos.pdb";
-	
+
     static private Map<String,AminoAcid> aminoAcids;
-    
+
     /**
      * Cannot be instantiated.
      */
     private StandardAminoAcid() {
         super();
     }
-    
+
     /**
      * <p>
      * Initialize the static StandardAminoAcid resource.
      * </p>
      *
      * <p>
-     * This parses the resource 
+     * This parses the resource
      * <code>{@value #STANDARD_AMINOS_FILE}</code>
      * and builds a basic set of amino acids.
      *</p>
-     * @author Tamas Horvath provided the standard amino acids 
+     * @author Tamas Horvath provided the standard amino acids
      */
     static {
     	aminoAcids = new HashMap<String,AminoAcid>();
@@ -94,15 +94,15 @@ public final class StandardAminoAcid {
             throw new RuntimeException( "Unable to initialize standard aminoacids", t);
         }
     }
-    
+
     /** get a standard amino acid.
-     * 
+     *
      * @param name the 3- or 1-letter representation of the amino acid.
      * @return the amino acids, or null if the name can not be matched
      */
     public static AminoAcid getAminoAcid(String name){
-        
+
         return aminoAcids.get(name);
     }
-    
+
 }

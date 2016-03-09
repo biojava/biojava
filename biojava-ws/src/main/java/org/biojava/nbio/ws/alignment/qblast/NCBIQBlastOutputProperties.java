@@ -34,7 +34,7 @@ import static org.biojava.nbio.ws.alignment.qblast.BlastOutputParameterEnum.*;
 /**
  * This class wraps a QBlast output parameter {@code Map} by adding several convenient parameter addition methods. Other
  * QBlast URL API parameters should be added using {@link #setOutputOption(BlastOutputParameterEnum, String)}
- * 
+ *
  * @author Sylvain Foisy, Diploide BioIT
  * @author Gediminas Rimsa
  */
@@ -46,7 +46,7 @@ public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutput
 	/**
 	 * This constructor builds the parameters for the output of the GET command sent to the QBlast service with default
 	 * values:
-	 * 
+	 *
 	 * <pre>
 	 * FORMAT_TYPE = XML;
 	 * ALIGNMENT_VIEW = Pairwise;
@@ -122,13 +122,13 @@ public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutput
 	 * <p/>
 	 * If {@code HTML} format is selected, also adds the following parameters (which are removed if another output
 	 * format is chosen):
-	 * 
+	 *
 	 * <pre>
 	 * NOHEADER = true;
 	 * SHOW_OVERVIEW = false;
 	 * SHOW_LINKOUT = false;
 	 * </pre>
-	 * 
+	 *
 	 * @param formatType : one of the output format types defined in enum
 	 */
 	public void setOutputFormat(BlastOutputFormatEnum formatType) {
@@ -155,7 +155,7 @@ public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutput
 
 	/**
 	 * Sets the alignment output format to get from the QBlast service
-	 * 
+	 *
 	 * @param alignmentFormat : one of available alignment types
 	 */
 	public void setAlignmentOutputFormat(BlastOutputAlignmentFormatEnum alignmentFormat) {
@@ -171,7 +171,7 @@ public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutput
 
 	/**
 	 * Sets the number of descriptions to fetch
-	 * 
+	 *
 	 * @param number : an int with the required number of descriptions to fetch
 	 */
 	public void setDescriptionNumber(int number) {
@@ -187,7 +187,7 @@ public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutput
 
 	/**
 	 * Set the number of alignments to fetch
-	 * 
+	 *
 	 * @param number : an int with the required number of alignments to fetch
 	 */
 	public void setAlignmentNumber(int number) {

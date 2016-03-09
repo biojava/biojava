@@ -28,7 +28,7 @@ import java.io.Serializable;
 public class SeqMisMatchImpl implements SeqMisMatch, Serializable{
 
 	private static final long serialVersionUID = -3699285122925652562L;
-	
+
 	Integer seqNum;
     String origGroup;
     String pdbGroup;

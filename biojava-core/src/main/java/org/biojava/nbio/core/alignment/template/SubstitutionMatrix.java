@@ -122,7 +122,7 @@ public interface SubstitutionMatrix<C extends Compound> {
     void setName(String name);
 
     Map<C, Short> getRow(C row);
-    
+
     Map<C, Short> getColumn(C column);
-    
+
 }

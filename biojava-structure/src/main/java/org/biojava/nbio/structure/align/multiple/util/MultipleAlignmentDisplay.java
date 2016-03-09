@@ -35,12 +35,12 @@ import java.util.List;
  * Utility functions to generalize the visualization of MultipleAlignments in
  * molecular viewers. The methods return different types of selectors for the
  * aligned residues in the alignment.
- * 
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
  * @author Spencer Bliven
  * @since 4.2.0
- * 
+ *
  */
 public class MultipleAlignmentDisplay {
 

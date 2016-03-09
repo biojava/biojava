@@ -88,7 +88,7 @@ public enum ResidueType implements Serializable {
     * @return
     */
    public PolymerType getPolymerType() {return polymerType;}
-   
+
    /**
     * String value of the type
     */
@@ -96,10 +96,10 @@ public enum ResidueType implements Serializable {
 
    public static ResidueType getResidueTypeFromString(String chem_comp_type)
    {
-	   
+
 	   chem_comp_type = chem_comp_type.replaceAll("'", "");
 	   chem_comp_type = chem_comp_type.replaceAll("\"", "");
-	   
+
       for(ResidueType rt : ResidueType.values())
       {
          if(rt.chem_comp_type.equalsIgnoreCase(chem_comp_type))

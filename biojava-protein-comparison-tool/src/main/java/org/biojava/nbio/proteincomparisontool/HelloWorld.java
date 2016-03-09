@@ -30,7 +30,7 @@ class HelloWorld{
     }
 
     /** Prints hello world on command line
-     * 
+     *
      */
     public void print(){
         System.out.println("Hello World!");

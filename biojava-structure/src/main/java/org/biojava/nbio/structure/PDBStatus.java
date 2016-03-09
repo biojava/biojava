@@ -43,30 +43,30 @@ import java.util.*;
  * Methods for getting the status of a PDB file (current, obsolete, etc)
  * and for accessing different versions of the structure.
  *
- * <p>All methods query the 
+ * <p>All methods query the
  * <a href="http://www.rcsb.org/pdb/rest/idStatus?structureId=1HHB,3HHB,4HHB">
  * PDB website.</a>
  *
  * <p>PDB supersessions form a directed acyclic graph, where edges point from an
- * obsolete ID to the entry that directly superseded it. For example, here are  
+ * obsolete ID to the entry that directly superseded it. For example, here are
  * edges from one portion of the graph:<br/>
  *
  * 1CAT -> 3CAT<br/>
  * 3CAT -> 7CAT<br/>
  * 3CAT -> 8CAT<br/>
  *
- * <p>The methods {@link #getReplaces(String, boolean) getReplaces(pdbId, false)}/ 
+ * <p>The methods {@link #getReplaces(String, boolean) getReplaces(pdbId, false)}/
  * {@link #getReplacement(String, boolean, boolean) getReplacement(pdbId, false, true)}
- * just get the incoming/outgoing edges for a single node. The recursive versions 
- * ({@link #getReplaces(String, boolean) getReplaces(pdbId, true)}, 
+ * just get the incoming/outgoing edges for a single node. The recursive versions
+ * ({@link #getReplaces(String, boolean) getReplaces(pdbId, true)},
  * {@link #getReplacement(String, boolean, boolean) getReplacement(pdbId, true, false)})
  * will do a depth-first search up/down the tree and return a list of all nodes ]
  * reached.
  *
- * <p>Finally, the getCurrent() method returns a single PDB ID from among the 
- * results of 
- * {@link #getReplacement(String, boolean) getReplacement(pdbId, true)}. 
- * To be consistent with the old REST ordering, this is the PDB ID that occurs 
+ * <p>Finally, the getCurrent() method returns a single PDB ID from among the
+ * results of
+ * {@link #getReplacement(String, boolean) getReplacement(pdbId, true)}.
+ * To be consistent with the old REST ordering, this is the PDB ID that occurs
  * last alphabetically.
  *
  * <p>Results are cached to reduce server load.
@@ -244,15 +244,15 @@ public class PDBStatus {
 
 	/**
 	 * Gets the PDB which superseded oldPdbId. For CURRENT IDs, this will
-	 * be itself. For obsolete IDs, the behavior depends on the recursion 
+	 * be itself. For obsolete IDs, the behavior depends on the recursion
 	 * parameter. If false, only IDs which directly supersede oldPdbId are
-	 * returned. If true, the replacements for obsolete records are recursively 
+	 * returned. If true, the replacements for obsolete records are recursively
 	 * fetched, yielding a list of all current replacements of oldPdbId.
 	 *
 	 *
 	 *
 	 * @param oldPdbId A pdb ID
-	 * @param recurse Indicates whether the replacements for obsolete records 
+	 * @param recurse Indicates whether the replacements for obsolete records
 	 * 		should be fetched.
 	 * @param includeObsolete Indicates whether obsolete records should be
 	 * 		included in the results.

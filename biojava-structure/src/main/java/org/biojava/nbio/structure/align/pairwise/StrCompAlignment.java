@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 29, 2006
  *
  */
@@ -26,11 +26,11 @@ import org.biojava.nbio.structure.align.helper.AligMatEl;
 import org.biojava.nbio.structure.align.helper.IndexPair;
 
 
-public class StrCompAlignment 
+public class StrCompAlignment
 implements Alignable
 {
-    
-   
+
+
     AligMatEl[][] aligmat;
     int rows;
     int cols;
@@ -41,13 +41,13 @@ implements Alignable
     float gapExtCol;
     float gapExtRow;
     float score;
-    
+
     public StrCompAlignment(int rows, int cols){
         //System.out.println("new alignment " + rows + " " + cols);
         this.rows = rows;
         this.cols = cols;
         aligmat = new AligMatEl[rows+1][cols+1];
-    
+
         /*for (int i=0;i<rows+1;i++){
             for(int j=0;j<cols+1;j++){
                 aligmat[i][j] = new AligMatEl();
@@ -56,29 +56,29 @@ implements Alignable
         path = new IndexPair[0];
         score = 0;
     }
-    
+
     @Override
 	public int getRows(){
         return rows;
     }
-    
+
     @Override
 	public int getCols() {
         return cols;
     }
-    
+
     public void setAligMat(int i, int j,AligMatEl el){
         aligmat[i][j] = el;
     }
     public AligMatEl getAligMat(int i,int j){
         return aligmat[i][j];
     }
-    
+
     @Override
 	public AligMatEl[][] getAligMat(){
         return aligmat;
     }
-    
+
     @Override
 	public void setAligMat(AligMatEl[][] al){
         //System.out.println("setting alig mat: " + al.length + " " + al[0].length);
@@ -86,7 +86,7 @@ implements Alignable
         cols = al[0].length -1;
         aligmat = al;
     }
-    
+
     @Override
 	public float getGapExtCol() {
         return gapExtCol;
@@ -157,9 +157,9 @@ implements Alignable
 	public void setPathSize(int pathSize) {
         this.pathSize = pathSize;
     }
-    
-    
-    
+
+
+
 }
 
 

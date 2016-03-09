@@ -31,7 +31,7 @@ import org.biojava.nbio.survival.cox.matrix.Matrix;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
- 
+
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
@@ -103,13 +103,13 @@ public class CoxCC {
             }
             sum = sum + weight;
             Nj.put(strata, sum);
-            
+
         }
-        
+
         for(Double value : Nj.values()){
             N = N + value;
         }
-        
+
         LinkedHashMap<Integer, Double> k1j = new LinkedHashMap<Integer, Double>();
         for (Integer key : nj.keySet()) {
             double _nj = (nj.get(key)); //trying to copy what R is doing on precision
@@ -124,7 +124,7 @@ public class CoxCC {
             //          System.out.println("Strata=" + i + " " + k1j.get(i) + " " + Nj.get(i) + " " + nj.get(i));
             if (nj.get(i) > 1) {
                 LinkedHashMap<String, DescriptiveStatistics> variableStatsMap = new LinkedHashMap<String, DescriptiveStatistics>();
-                
+
                 for (int p = 0; p < survivalInfoList.size(); p++) {
                     SurvivalInfo si = survivalInfoList.get(p);
                     if (si.getStrata() != i) {
@@ -164,9 +164,9 @@ public class CoxCC {
          //              System.out.println();
          //              System.out.println("sstrat=" + i);
          //              StdArrayIO.print(var_covar);
-                       
+
                        V = Matrix.add(V, Matrix.scale(var_covar, k1j.get(i))  );
-                       
+
          //       for (int m = 0; m < V.length; m++) {
          //           for (int n = 0; n < V.length; n++) {
          //               V[m][n] = V[m][n] + (k1j.get(i) * var_covar[m][n]);
@@ -185,7 +185,7 @@ public class CoxCC {
         //  System.out.println("New var");
         //  StdArrayIO.print(imat1);
         ci.setVariance(imat1);
-        
+
         //need to update walsh stats for overall model
         CoxR.calculateWaldTestInfo(ci);
         //per Bob/Kathryn email on 4/23/2014 in a weighted model LogRank p-value is no longer valid so should erase it

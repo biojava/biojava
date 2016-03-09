@@ -63,7 +63,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Unsupported
      */
-    
+
     @Override
 	public void setCompoundSet(CompoundSet<C> compoundSet) {
         throw new UnsupportedOperationException("Not supported.");
@@ -72,7 +72,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Unsupported
      */
-    
+
     @Override
 	public void setContents(String sequence) throws CompoundNotFoundException {
         throw new UnsupportedOperationException("Not supported.");
@@ -81,7 +81,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Returns the length given during construction
      */
-    
+
     @Override
 	public int getLength() {
         return length;
@@ -90,7 +90,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Always returns the compound given at construction
      */
-    
+
     @Override
 	public C getCompoundAt(int position) {
         return compound;
@@ -100,7 +100,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Returns 1 if the given compound is equal to the one given during
      * construction; otherwise will return -1.
      */
-    
+
     @Override
 	public int getIndexOf(C compound) {
         if(compound.equals(this.compound)) {
@@ -113,7 +113,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Returns the length of the Sequence if the given compound was equal to
      * the one given during construction. Otherwise returns -1
      */
-    
+
     @Override
 	public int getLastIndexOf(C compound) {
         if(compound.equals(this.compound)) {
@@ -125,7 +125,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Delegates to {@link SequenceMixin#toList(org.biojava.nbio.core.sequence.template.Sequence) }
      */
-    
+
     @Override
 	public String getSequenceAsString() {
         return SequenceMixin.toString(this);
@@ -134,7 +134,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Delegates to {@link SequenceMixin#toList(org.biojava.nbio.core.sequence.template.Sequence) }
      */
-    
+
     @Override
 	public List<C> getAsList() {
         return SequenceMixin.toList(this);
@@ -143,7 +143,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Creates a {@link SequenceProxyView} for the given coordinates
      */
-    
+
     @Override
 	public SequenceView<C> getSubSequence(Integer start, Integer end) {
         return new SequenceProxyView<C>(this, start, end);
@@ -152,7 +152,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Returns the compound set given at construction
      */
-    
+
     @Override
 	public CompoundSet<C> getCompoundSet() {
         return compoundSet;
@@ -161,7 +161,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Unsupoorted
      */
-    
+
     @Override
 	public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -170,7 +170,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Delegates to {@link SequenceMixin#countCompounds(org.biojava.nbio.core.sequence.template.Sequence, C[]) }
      */
-    
+
     @Override
 	public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
@@ -179,7 +179,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     /**
      * Returns an instance of {@link SequenceMixin.SequenceIterator}
      */
-    
+
     @Override
 	public Iterator<C> iterator() {
         return new SequenceMixin.SequenceIterator<C>(this);

@@ -52,7 +52,7 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
     CompoundSet<AminoAcidCompound> compoundSet;
     File file;
     SequenceParserInterface sequenceParser;
-    
+
     /**
      * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
      * @param fastaFile
@@ -70,17 +70,17 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
      * @param sequence
      * @param index
      * @return
-     * @throws CompoundNotFoundException 
+     * @throws CompoundNotFoundException
      * @throws IOException
      */
     @Override
 	public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException {
-        SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader = 
+        SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader =
         		new SequenceFileProxyLoader<AminoAcidCompound>(
-        				file, 
-        				sequenceParser, 
-        				index, 
-        				sequence.length(), 
+        				file,
+        				sequenceParser,
+        				index,
+        				sequence.length(),
         				compoundSet
         				);
         return new ProteinSequence(sequenceFileProxyLoader, compoundSet);

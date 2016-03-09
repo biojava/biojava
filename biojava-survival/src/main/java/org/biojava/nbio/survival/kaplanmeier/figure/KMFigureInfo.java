@@ -35,7 +35,7 @@ import java.util.Properties;
  */
 public class KMFigureInfo {
 
-    /** 
+    /**
      *
      */
     public int titleHeight = 40;
@@ -137,7 +137,7 @@ public class KMFigureInfo {
         if (properties.containsKey("xAxisLegend")) {
             xAxisLegend = properties.getProperty("xAxisLegend");
         }
-        
+
                 if (properties.containsKey("yAxisLegend")) {
             yAxisLegend = properties.getProperty("yAxisLegend");
         }

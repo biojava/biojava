@@ -84,23 +84,23 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 
         //equivalentsMap.put(sourceCompound, targetCompound);
     	//      equivalentsMap.put(sourceCompound, lcTargetCompound);
-	        
-          
+
+
           checkAdd(equivalentsMap, sourceCompound, targetCompound);
           checkAdd(equivalentsMap, sourceCompound, lcTargetCompound);
-        
+
           checkAdd(equivalentsMap,targetCompound,sourceCompound);
           checkAdd(equivalentsMap, lcTargetCompound, sourceCompound);
-          
+
           checkAdd(equivalentsMap, lcSourceCompound, targetCompound);
           checkAdd(equivalentsMap, lcSourceCompound, lcTargetCompound);
-                    
+
         }
       }
     }
 
     //And once it's all done start adding them to the equivalents map
-    
+
     for ( NucleotideCompound key: equivalentsMap.keySet()){
     	List<NucleotideCompound> vals = equivalentsMap.get(key);
     	for (NucleotideCompound value: vals){
@@ -115,15 +115,15 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 		NucleotideCompound key,
 		NucleotideCompound value) {
 
-	  
+
       List<NucleotideCompound> listS = equivalentsMap.get(key);
       if ( listS == null){
     	  listS = new ArrayList<NucleotideCompound>();
     	  equivalentsMap.put(key, listS);
       }
       listS.add(value);
-      
-	
+
+
 }
 
 private NucleotideCompound toLowerCase(NucleotideCompound compound) {

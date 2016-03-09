@@ -93,8 +93,8 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 
     public void process() throws IOException {
        // boolean closeit = false;
-       
-        
+
+
 
         for (S sequence : sequences) {
             String header = headerFormat.getHeader(sequence);
@@ -125,7 +125,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
                 os.write(lineSep);
             }
         }
-        
+
     }
 
     public static void main(String[] args) {
@@ -141,7 +141,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
           //  logger.debug(proteinSequences);
 
             FileOutputStream fileOutputStream = new FileOutputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds_temp.faa");
-           
+
             BufferedOutputStream bo = new BufferedOutputStream(fileOutputStream);
             long start = System.currentTimeMillis();
             FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(bo, proteinSequences.values(), new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
@@ -149,7 +149,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
             bo.close();
             long end = System.currentTimeMillis();
             logger.info("Took {} seconds", (end - start));
-         
+
             fileOutputStream.close();
 
 

@@ -72,14 +72,14 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @throws IOException if problems occur while reading the file
      * @throws CompoundNotFoundException if a compound in the sequence can't be found in the given compoundSet
      */
-    public SequenceFileProxyLoader(File file, SequenceParserInterface sequenceParser, long sequenceStartIndex, int sequenceLength, CompoundSet<C> compoundSet) 
+    public SequenceFileProxyLoader(File file, SequenceParserInterface sequenceParser, long sequenceStartIndex, int sequenceLength, CompoundSet<C> compoundSet)
     		throws IOException, CompoundNotFoundException {
         this.sequenceParser = sequenceParser;
         this.file = file;
         this.sequenceStartIndex = sequenceStartIndex;
         this.sequenceLength = sequenceLength;
         setCompoundSet(compoundSet);
-        
+
         init();
     }
 
@@ -149,7 +149,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     @Override
 	public C getCompoundAt(int position) {
-        
+
         return this.parsedCompounds.get(position - 1);
     }
 
@@ -160,7 +160,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     @Override
 	public int getIndexOf(C compound) {
-        
+
         return this.parsedCompounds.indexOf(compound) + 1;
     }
 
@@ -171,7 +171,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     @Override
 	public int getLastIndexOf(C compound) {
-        
+
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
@@ -181,7 +181,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     @Override
 	public String toString() {
-        
+
         return getSequenceAsString();
     }
 
@@ -202,7 +202,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @return
      */
     public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
-        
+
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
     }
@@ -213,7 +213,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     @Override
 	public List<C> getAsList() {
-        
+
         return this.parsedCompounds;
 
     }
@@ -226,7 +226,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     @Override
 	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-        
+
         return new SequenceProxyView<C>(SequenceFileProxyLoader.this, bioBegin, bioEnd);
     }
 
@@ -236,7 +236,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     @Override
 	public Iterator<C> iterator() {
-        
+
         return this.parsedCompounds.iterator();
     }
 

@@ -41,7 +41,7 @@ import java.util.Set;
  *
  * @author Scooter Willis
  * @author Aleix Lafita
- * 
+ *
  */
 public class DistanceTreeEvaluator {
 
@@ -59,7 +59,7 @@ public class DistanceTreeEvaluator {
 	 * <p>
 	 * This measure can also give an estimate of the quality of the distance
 	 * matrix, because a bad fit may mean that the distance is non-additive.
-	 * 
+	 *
 	 * @param tree
 	 *            Phylogenetic Distance Tree to evaluate
 	 * @param matrix

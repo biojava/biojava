@@ -57,7 +57,7 @@ public class JoiningSequenceReaderTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void empty() throws CompoundNotFoundException { 
+  public void empty() throws CompoundNotFoundException {
     JoiningSequenceReader<NucleotideCompound> seq =
       new JoiningSequenceReader<NucleotideCompound>(
           new DNASequence(""),

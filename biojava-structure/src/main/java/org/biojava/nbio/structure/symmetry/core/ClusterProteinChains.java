@@ -41,14 +41,14 @@ public class ClusterProteinChains {
 		this.parameters = parameters;
 		run();
 	}
-	
+
 	public ClusterProteinChains(Structure structure1, Structure structure2, QuatSymmetryParameters parameters) {
 		this.structure = structure1;
 		this.structure2 = structure2;
 		this.parameters = parameters;
 		run();
 	}
-	
+
 	/**
 	 * Get a non-redundent set of clusters for a given sequence cutoff
 	 * @param sequenceIdentityThreshold
@@ -60,7 +60,7 @@ public class ClusterProteinChains {
 		}
 		return merger.getMergedClusters(sequenceIdentityThreshold);
 	}
-	
+
 	/**
 	 * @return the proteinChainCount
 	 */
@@ -78,7 +78,7 @@ public class ClusterProteinChains {
 	private void run () {
 		// cluster protein entities
 		List<SequenceAlignmentCluster> seqClusters = null;
-		
+
 		if (structure2 == null) {
 			ProteinSequenceClusterer clusterer = new ProteinSequenceClusterer(structure, parameters);
 			seqClusters = clusterer.getSequenceAlignmentClusters();
@@ -91,7 +91,7 @@ public class ClusterProteinChains {
 		if (seqClusters == null  || seqClusters.size() == 0) {
 			return;
 		}
-	
+
 		// calculate pairwise aligment between protein clusters
 		merger = new ClusterMerger(seqClusters, parameters);
 		merger.calcPairwiseAlignments();

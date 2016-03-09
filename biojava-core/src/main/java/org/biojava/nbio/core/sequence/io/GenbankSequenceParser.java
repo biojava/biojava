@@ -10,7 +10,7 @@
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
- * 
+ *
  * @author Richard Holland
  * @author Mark Schreiber
  * @author David Scott
@@ -19,7 +19,7 @@
  * @author Deepak Sheoran
  * @author Karl Nicholas <github:karlnicholas>
  * @author Jacek Grzebyta
- * @author Paolo Pavan 
+ * @author Paolo Pavan
  *
  * For more information on the BioJava project and its aims,
  * or to join the biojava-l mailing list, visit the home page
@@ -116,7 +116,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     protected static final Pattern refp = Pattern.compile("^(\\d+)\\s*(?:(\\((?:bases|residues)\\s+(\\d+\\s+to\\s+\\d+(\\s*;\\s*\\d+\\s+to\\s+\\d+)*)\\))|\\(sites\\))?");
     // dbxref line
     protected static final Pattern dbxp = Pattern.compile("^([^:]+):(\\S+)$");
-    
+
     protected static final InsdcParser locationParser = new InsdcParser(DataSource.GENBANK);
     //sections start at a line and continue till the first line afterwards with a
     //non-whitespace first character
@@ -133,8 +133,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private static final String DBLINK = "DBLINK";
 
 //  private NCBITaxon tax = null;
-    
-    
+
+
 
     private String parse(BufferedReader bufferedReader) {
         String sectionKey = null;
@@ -265,7 +265,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                     } else {
                         // new feature!
                         gbFeature = new TextFeature(key, val, key, key);
-                        Location l = 
+                        Location l =
                                 locationParser.parse(val);
                         gbFeature.setLocation((AbstractLocation)l);
 
@@ -303,7 +303,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
         return seqData;
     }
 
-    
+
 
 	// reads an indented section, combining split lines and creating a list of
     // key->value tuples
@@ -409,14 +409,14 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     public ArrayList<String> getKeyWords() {
         return new ArrayList<String>(featureCollection.keySet());
     }
-    
+
     public ArrayList<AbstractFeature> getFeatures(String keyword) {
         return featureCollection.get(keyword);
     }
     public HashMap<String, ArrayList<AbstractFeature>> getFeatures() {
         return featureCollection;
     }
-    
+
     public void parseFeatures(AbstractSequence<C> sequence) {
         for (String k: featureCollection.keySet())
             for (AbstractFeature f: featureCollection.get(k))

@@ -74,7 +74,7 @@ public class MMCIFFileReader extends LocalPDBDirectory {
 
 	/**
 	 * Constructs a new MMCIFFileReader, initializing the extensions member variable.
-	 * The path is initialized in the same way as {@link UserConfiguration}, 
+	 * The path is initialized in the same way as {@link UserConfiguration},
 	 * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
 	 * Both autoFetch and splitDir are initialized to false
 	 */

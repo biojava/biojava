@@ -38,8 +38,8 @@ import java.util.Set;
 
 /**
  * This is an adaptor class which enable the ease of generating protein properties.
- * At least one adaptor method is written for each available properties provided in IPeptideProperties. 
- * 
+ * At least one adaptor method is written for each available properties provided in IPeptideProperties.
+ *
  * @author kohchuanhock
  * @version 2011.08.22
  * @since 3.0.2
@@ -47,9 +47,9 @@ import java.util.Set;
  * @see PeptidePropertiesImpl
  */
 public class PeptideProperties {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(PeptideProperties.class);
-	
+
 	/**
 	 * Enumeration of 20 standard amino acid code
 	 */
@@ -69,11 +69,11 @@ public class PeptideProperties {
 	}
 
 	/**
-	 * An adaptor method to return the molecular weight of sequence. 
+	 * An adaptor method to return the molecular weight of sequence.
 	 * The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
 	 * This method will sum the molecular weight of each amino acid in the
 	 * sequence. Molecular weights are based on <a href="http://web.expasy.org/findmod/findmod_masses.html">here</a>.
-	 * 
+	 *
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
 	 * @return the total molecular weight of sequence + weight of water molecule
@@ -92,24 +92,24 @@ public class PeptideProperties {
 	}
 
 	/**
-	 * An adaptor method to return the molecular weight of sequence. 
+	 * An adaptor method to return the molecular weight of sequence.
 	 * The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
 	 * This method will sum the molecular weight of each amino acid in the
 	 * sequence. Molecular weights are based on the input xml file.
-	 * 
+	 *
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
-	 * @param elementMassFile 
+	 * @param elementMassFile
 	 * 	xml file that details the mass of each elements and isotopes
-	 * @param aminoAcidCompositionFile 
+	 * @param aminoAcidCompositionFile
 	 * 	xml file that details the composition of amino acids
 	 * @return the total molecular weight of sequence + weight of water molecule
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
-	 * @throws JAXBException 
+	 * @throws JAXBException
 	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 */
-	public static final double getMolecularWeight(String sequence, File elementMassFile, File aminoAcidCompositionFile) 
+	public static final double getMolecularWeight(String sequence, File elementMassFile, File aminoAcidCompositionFile)
 	throws FileNotFoundException, JAXBException{
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
@@ -128,7 +128,7 @@ public class PeptideProperties {
 	 * This method will sum the molecular weight of each amino acid in the
 	 * sequence. Molecular weights are based on the input files. These input files must be XML using the defined schema.
 	 * Note that it assumes that ElementMass.xml file can be found in default location.
-	 * 
+	 *
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
 	 * 	xml file that details the mass of each elements and isotopes
@@ -154,10 +154,10 @@ public class PeptideProperties {
 	}
 
 	/**
-	 * An adaptor method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
+	 * An adaptor method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to
 	 * IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence, AminoAcidCompositionTable).
 	 * Note that ElementMass.xml is assumed to be able to be seen in default location.
-	 * 
+	 *
 	 * @param aminoAcidCompositionFile
 	 * 	xml file that details the composition of amino acids
 	 * @return the initialized amino acid composition table
@@ -166,16 +166,16 @@ public class PeptideProperties {
 	 * @throws FileNotFoundException
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) 
+	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile)
 	throws JAXBException, FileNotFoundException{
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.obtainAminoAcidCompositionTable(aminoAcidCompositionFile);
 	}
 
 	/**
-	 * An adaptor method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
+	 * An adaptor method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to
 	 * IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence, AminoAcidCompositionTable).
-	 * 
+	 *
 	 * @param elementMassFile
 	 * 	xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
@@ -195,9 +195,9 @@ public class PeptideProperties {
 	/**
 	 * An adaptor method that returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
 	 * This method will sum the molecular weight of each amino acid in the
-	 * sequence. Molecular weights are based on the AminoAcidCompositionTable. 
+	 * sequence. Molecular weights are based on the AminoAcidCompositionTable.
 	 * Those input files must be XML using the defined schema.
-	 * 
+	 *
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCompositionTable
@@ -223,7 +223,7 @@ public class PeptideProperties {
 	 * must be a protein sequence consisting of only non-ambiguous characters.
 	 * The computation of absorbance (optical density) follows the
 	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
-	 * 
+	 *
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
 	 * @param assumeCysReduced
@@ -251,7 +251,7 @@ public class PeptideProperties {
 	 * coefficient for following a protein which a spectrophotometer when
 	 * purifying it. The computation of extinction coefficient follows the
 	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
-	 * 
+	 *
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
 	 * @param assumeCysReduced
@@ -278,7 +278,7 @@ public class PeptideProperties {
 	 * The instability index provides an estimate of the stability of your
 	 * protein in a test tube. The computation of instability index follows the
 	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
-	 * 
+	 *
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the instability index of sequence
@@ -305,7 +305,7 @@ public class PeptideProperties {
 	 * thermostability of globular proteins. The computation of aliphatic index
 	 * follows the documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
 	 * A protein whose instability index is smaller than 40 is predicted as stable, a value above 40 predicts that the protein may be unstable.
-	 * 
+	 *
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the aliphatic index of sequence
@@ -332,8 +332,8 @@ public class PeptideProperties {
 	 * sequence. Hydropathy values are based on (Kyte, J. and Doolittle, R.F.
 	 * (1982) A simple method for displaying the hydropathic character of a
 	 * protein. J. Mol. Biol. 157, 105-132).
-	 * 
-	 * @param sequence 
+	 *
+	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the average hydropathy value of sequence
 	 */
@@ -355,14 +355,14 @@ public class PeptideProperties {
 	 * a protein sequence consisting of only non-ambiguous characters.
 	 * The isoelectric point is the pH at which the protein carries no net
 	 * electrical charge. The isoelectric point will be computed based on
-	 * approach stated in 
+	 * approach stated in
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
-	 * 
-	 * pKa values used will be either 
-	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" 
+	 *
+	 * pKa values used will be either
+	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539"
 	 * OR
 	 * A.Lehninger, Principles of Biochemistry, 4th Edition (2005), Chapter 3, page78, Table 3-1.
-	 * 
+	 *
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param useExpasyValues
@@ -381,7 +381,7 @@ public class PeptideProperties {
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getIsoelectricPoint(pSequence, useExpasyValues);
 	}
-	
+
 	public static final double getIsoelectricPoint(String sequence){
 		return getIsoelectricPoint(sequence, true);
 	}
@@ -389,14 +389,14 @@ public class PeptideProperties {
 	/**
 	 * An adaptor method to return the net charge of sequence at pH 7. The sequence argument must be
 	 * a protein sequence consisting of only non-ambiguous characters.
-	 * The net charge will be computed using the approach stated in 
+	 * The net charge will be computed using the approach stated in
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
-	 * 
-	 * pKa values used will be either 
-	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" 
+	 *
+	 * pKa values used will be either
+	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539"
 	 * OR
 	 * A.Lehninger, Principles of Biochemistry, 4th Edition (2005), Chapter 3, page78, Table 3-1.
-	 * 
+	 *
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param useExpasyValues
@@ -417,11 +417,11 @@ public class PeptideProperties {
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getNetCharge(pSequence, useExpasyValues, pHPoint);
 	}
-	
+
 	public static final double getNetCharge(String sequence, boolean useExpasyValues) {
 		return getNetCharge(sequence, useExpasyValues, 7.0);
 	}
-	
+
 	public static final double getNetCharge(String sequence){
 		return getNetCharge(sequence, true);
 	}
@@ -433,7 +433,7 @@ public class PeptideProperties {
 	 * character.
 	 * The composition of an amino acid is the total number of its occurrence,
 	 * divided by the total length of the sequence.
-	 * 
+	 *
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCode
@@ -452,7 +452,7 @@ public class PeptideProperties {
 	 * character.
 	 * The composition of an amino acid is the total number of its occurrence,
 	 * divided by the total length of the sequence.
-	 * 
+	 *
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCode
@@ -470,7 +470,7 @@ public class PeptideProperties {
 	 * character.
 	 * The composition of an amino acid is the total number of its occurrence,
 	 * divided by the total length of the sequence.
-	 * 
+	 *
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCode
@@ -497,7 +497,7 @@ public class PeptideProperties {
 	 * non-ambiguous characters.
 	 * The composition of an amino acid is the total number of its occurrence,
 	 * divided by the total length of the sequence.
-	 * 
+	 *
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
 	 * @return the composition of the 20 standard amino acid in the sequence
@@ -522,7 +522,7 @@ public class PeptideProperties {
 	 * non-ambiguous characters.
 	 * The composition of an amino acid is the total number of its occurrence,
 	 * divided by the total length of the sequence.
-	 * 
+	 *
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the composition of the 20 standard amino acid in the sequence
@@ -542,7 +542,7 @@ public class PeptideProperties {
 	 * non-ambiguous characters.
 	 * The composition of an amino acid is the total number of its occurrence,
 	 * divided by the total length of the sequence.
-	 * 
+	 *
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the composition of the 20 standard amino acid in the sequence
@@ -555,4 +555,4 @@ public class PeptideProperties {
 		}
 		return aaChar2Composition;
 	}
-}	
+}

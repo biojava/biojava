@@ -72,7 +72,7 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
         aminoAcidCompoundCache.put(".", new AminoAcidCompound(null, ".", "...", "Unspecified", null));
         aminoAcidCompoundCache.put("_", new AminoAcidCompound(null, "_", "___", "Unspecified", null));
         aminoAcidCompoundCache.put("*", new AminoAcidCompound(null, "*", "***", "Stop", null));
-        
+
         //Selenocysteine - this is encoded by UGA with the presence
         //of a SECIS element (SElenoCysteine Insertion Sequence) in the mRNA
         //and is a post-translation modification
@@ -82,7 +82,7 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
         //this amino acid under the presence of pylT which creates an anti-codon CUA & pylS
         //which then does the actual conversion to Pyl.
         aminoAcidCompoundCache.put("O", new AminoAcidCompound(null, "O", "Pyl", "Pyrrolysine", 255.3172f));
-        
+
         Map<String, AminoAcidCompound> lowerCaseSet = new HashMap<String, AminoAcidCompound>();
         for(String s:this.aminoAcidCompoundCache.keySet()){
         	lowerCaseSet.put(s.toLowerCase(), this.aminoAcidCompoundCache.get(s));

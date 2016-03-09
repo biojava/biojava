@@ -18,11 +18,11 @@
  */
 
 package org.biojava.nbio.structure.io.mmcif.model;
-/** 
+/**
  * A bean that stores data from the mmcif category _struct_conn
  * @author Peter Rose
  *
- */ 
+ */
 public class StructConn extends AbstractBean
 {
 	private String id;

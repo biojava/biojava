@@ -36,7 +36,7 @@ import org.biojava.nbio.structure.io.PDBFileReader;
 public class MyTestHelper
 {
 
-    
+
    public static final String pdbPath = System.getProperty("java.io.tmpdir");
 
    public static String compareAlignment(String pdb1, String chain1, String pdb2, String chain2, String originalOutput, boolean doRigid){
@@ -46,19 +46,19 @@ public class MyTestHelper
       PDBFileReader pdbpars = new PDBFileReader();
       pdbpars.setPath(pdbPath);
       pdbpars.setFetchBehavior(FetchBehavior.FETCH_FILES);
-      
+
       FileParsingParameters params = new FileParsingParameters();
       params.setAlignSeqRes(true);
       params.setLoadChemCompInfo(false);
       params.setParseCAOnly(true);
       pdbpars.setFileParsingParameters(params);
-      
+
       Structure structure1;
       Structure structure2;
 
       //                   default:      new:
-      // 1buz - 1ali : time: 8.3s eqr 68 rmsd 3.1 score 161 | time 6.4 eqr 58 rmsd 3.0 scre 168 | rigid: identical, flexible: not significant alignment, 
-      // 5pti - 1tap : time: 6.2s eqr 48 rmsd 2.67 score 164 | time 5.2 eqr 49 rmsd 2.9 score 151 | rigid: 
+      // 1buz - 1ali : time: 8.3s eqr 68 rmsd 3.1 score 161 | time 6.4 eqr 58 rmsd 3.0 scre 168 | rigid: identical, flexible: not significant alignment,
+      // 5pti - 1tap : time: 6.2s eqr 48 rmsd 2.67 score 164 | time 5.2 eqr 49 rmsd 2.9 score 151 | rigid:
       // 1cdg - 8tim
       // 1jbe - 1ord : identical with fatcat
       // 1nbw.A - 1kid : rigid: identical, flexible: not identical, alignment not significant.
@@ -73,7 +73,7 @@ public class MyTestHelper
          //structure1 = pdbpars.getStructureById("1cdg");
          Chain c1 = structure1.getChainByPDB(chain1);
 
-         //structure2 = pdbpars.getStructureById("2aaa");         
+         //structure2 = pdbpars.getStructureById("2aaa");
          Chain c2 = structure2.getChainByPDB(chain2);
 
          Structure s3 = new StructureImpl();
@@ -98,8 +98,8 @@ public class MyTestHelper
          FatCatParameters fparams = new FatCatParameters();
 
          if ( doRigid)
-            fatCat = new FatCatRigid();            
-         else 
+            fatCat = new FatCatRigid();
+         else
             fatCat = new FatCatFlexible();
 
          afpChain = fatCat.align(ca1, ca2, fparams);
@@ -126,7 +126,7 @@ public class MyTestHelper
             System.out.println(result);
             System.out.println("***");
             System.out.println(resultSerialized);
-            throw new StructureException("the JFatCat alignment image does not look identical after XML serialization.");        	 
+            throw new StructureException("the JFatCat alignment image does not look identical after XML serialization.");
          }
 
          if ( ! afpChain.toString().equals(newChain.toString())){

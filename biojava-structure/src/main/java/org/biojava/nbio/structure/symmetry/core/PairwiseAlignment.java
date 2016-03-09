@@ -38,7 +38,7 @@ public class PairwiseAlignment {
 	public SequenceAlignmentCluster getCluster1() {
 		return cluster1;
 	}
-	
+
 	public SequenceAlignmentCluster getCluster2() {
 		return cluster2;
 	}
@@ -46,11 +46,11 @@ public class PairwiseAlignment {
 	public double getAlignmentLengthFraction() {
 		return alignmentLengthFraction;
 	}
-	
+
 	public double getSequenceIdentity() {
 		return sequenceIdentity;
 	}
-	
+
 	public double getRmsd() {
 		return rmsd;
 	}
@@ -58,7 +58,7 @@ public class PairwiseAlignment {
 	public int[][][] getAlignment() {
 		return alignment;
 	}
-	
+
 	public void setAlignmentLengthFraction(double alignmentLengthFraction) {
 		this.alignmentLengthFraction = alignmentLengthFraction;
 	}
@@ -74,7 +74,7 @@ public class PairwiseAlignment {
 	public void setAlignment(int[][][] alignment) {
 		this.alignment = alignment;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuffer s = new StringBuffer();

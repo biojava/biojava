@@ -50,26 +50,26 @@ import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.SelectMultiplePanel;
 
-/** 
+/**
  * A JFrame that allows to trigger a multiple structure alignment,
  * either from files in a directory or after manual upload.
  * <p>
  * The current version allows to select the parameters of
- * the pairwise alignment algorithm and the parameters of 
+ * the pairwise alignment algorithm and the parameters of
  * the multiple alignment algorithm.
  *
  * @author Aleix Lafita
  * @since 4.2.0
- * 
+ *
  */
 public class MultipleAlignmentGUI extends JFrame {
 
 	private final static long serialVersionUID =0l;
 	private final static String version = "1.0";
-	
+
 	private MultipleStructureAligner multiple;
 	private StructureAlignment pairwise;
-	
+
 	private SelectMultiplePanel tab;
 	private JTabbedPane tabPane;
 
@@ -78,10 +78,10 @@ public class MultipleAlignmentGUI extends JFrame {
 	private JProgressBar progress;
 	private JButton abortB;
 
-	private static final String MAIN_TITLE = 
+	private static final String MAIN_TITLE =
 			"Multiple Structure Alignment - Main - V." + version;
 
-	private static final MultipleAlignmentGUI me = 
+	private static final MultipleAlignmentGUI me =
 			new MultipleAlignmentGUI();
 
 	public static void main(String[] args){
@@ -89,7 +89,7 @@ public class MultipleAlignmentGUI extends JFrame {
 	}
 
 	public static MultipleAlignmentGUI getInstance(){
-		
+
 		//TODO change about me
 		AbstractUserArgumentProcessor.printAboutMe();
 		AligUIManager.setLookAndFeel();
@@ -118,13 +118,13 @@ public class MultipleAlignmentGUI extends JFrame {
 
 		// setup tabPane
 		tabPane = new JTabbedPane();
-		tabPane.addTab("Select Structures", null, 
+		tabPane.addTab("Select Structures", null,
 				tab, "Input Structure identifiers");
-		
+
 		Box hBoxPair = setupPairwiseAlgorithm();
 		Box hBoxMult = setupMultipleAlgorithm();
 		Box vBox = Box.createVerticalBox();
-		
+
 		vBox.add(tabPane);
 		vBox.add(Box.createGlue());
 
@@ -132,16 +132,16 @@ public class MultipleAlignmentGUI extends JFrame {
 		vBoxMain.add(hBoxPair);
 		vBoxMain.add(hBoxMult);
 		vBoxMain.add(tabPane);
-		
+
 		vBoxMain.add(initButtons());
 		this.getContentPane().add(vBoxMain);
-		
+
 		this.pack();
 		this.setVisible(true);
 	}
 
 	private Box setupPairwiseAlgorithm() {
-		
+
 		String[] pairAlgo = StructureAlignmentFactory.getAllAlgorithmNames();
 		try {
 			pairwise = StructureAlignmentFactory.getAlgorithm(pairAlgo[0]);
@@ -163,7 +163,7 @@ public class MultipleAlignmentGUI extends JFrame {
 			}
 		};
 		algorithmList.addActionListener(actionAlgorithm);
-		
+
 		Action paramAction = new AbstractAction("Parameters") {
 			public static final long serialVersionUID = 0l;
 			@Override
@@ -177,17 +177,17 @@ public class MultipleAlignmentGUI extends JFrame {
 
 		Box hBoxAlgoPair = Box.createHorizontalBox();
 		hBoxAlgoPair.add(Box.createGlue());
-		hBoxAlgoPair.add(algoLabel);      
+		hBoxAlgoPair.add(algoLabel);
 		hBoxAlgoPair.add(algorithmList);
 		hBoxAlgoPair.add(Box.createGlue());
 		hBoxAlgoPair.add(parameterButton);
 		hBoxAlgoPair.add(Box.createGlue());
-		
+
 		return hBoxAlgoPair;
 	}
-	
+
 	private Box setupMultipleAlgorithm() {
-		
+
 		//TODO change in the future when more multiple algorithms are added
 		String[] multAlgo = {MultipleMcMain.algorithmName};
 		multiple = new MultipleMcMain(pairwise);
@@ -204,7 +204,7 @@ public class MultipleAlignmentGUI extends JFrame {
 			}
 		};
 		multList.addActionListener(actionMultiple);
-		
+
 		Action paramAction = new AbstractAction("Parameters") {
 			public static final long serialVersionUID = 0l;
 			@Override
@@ -218,17 +218,17 @@ public class MultipleAlignmentGUI extends JFrame {
 
 		Box hBoxAlgo = Box.createHorizontalBox();
 		hBoxAlgo.add(Box.createGlue());
-		hBoxAlgo.add(multLabel);      
+		hBoxAlgo.add(multLabel);
 		hBoxAlgo.add(multList);
 		hBoxAlgo.add(Box.createGlue());
 		hBoxAlgo.add(parameterButton);
 		hBoxAlgo.add(Box.createGlue());
-		
+
 		return hBoxAlgo;
 	}
-	
+
 	private Box initButtons(){
-		
+
 		//Progress Bar
 		progress = new JProgressBar();
 		progress.setIndeterminate(false);
@@ -267,7 +267,7 @@ public class MultipleAlignmentGUI extends JFrame {
 			}
 		};
 		JButton closeB = new JButton(action2);
-		
+
 		Box hBox = Box.createHorizontalBox();
 		hBox.add(closeB);
 		hBox.add(Box.createGlue());
@@ -277,11 +277,11 @@ public class MultipleAlignmentGUI extends JFrame {
 
 		return hBox;
 	}
-	
+
 	public void cleanUp() {
 		if (alicalc != null) alicalc.cleanup();
 	}
-	
+
 	private void calcAlignment() {
 
 		try {
@@ -293,7 +293,7 @@ public class MultipleAlignmentGUI extends JFrame {
 			}
 
 			List<StructureIdentifier> names = tab.getNames();
-			
+
 			String message = "aligning: ";
 			for (StructureIdentifier name:names){
 				message += name.getIdentifier() + " ";
@@ -308,7 +308,7 @@ public class MultipleAlignmentGUI extends JFrame {
 			progress.setIndeterminate(true);
 			ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
 			drawer.start();
-			
+
 		} catch (StructureException e){
 			JOptionPane.showMessageDialog(null,"Could not align structures. "
 					+ "Exception: " + e.getMessage());
@@ -333,7 +333,7 @@ public class MultipleAlignmentGUI extends JFrame {
 	public MultipleStructureAligner getMultipleStructureAligner() {
 		return multiple;
 	}
-	
+
 	public StructureAlignment getPairwiseStructureAligner() {
 		return pairwise;
 	}
@@ -345,12 +345,12 @@ public class MultipleAlignmentGUI extends JFrame {
 			ConfigStrucAligParams params = multiple.getParameters();
 			updateMultipleAlgorithm();
 			multiple.setParameters(params);
-			
+
 		} catch (StructureException ex){
 			ex.printStackTrace();
 		}
 	}
-	
+
 	private void updateMultipleAlgorithm() {
 		//TODO a factory would be needed to select the MultipleAligner
 		multiple = new MultipleMcMain(pairwise);

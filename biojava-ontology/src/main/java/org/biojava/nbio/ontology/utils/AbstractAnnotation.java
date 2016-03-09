@@ -36,24 +36,24 @@ import java.util.*;
  *
  * If you are still reading this, then you must be trying to
  * implement Annotation. To do that, extend this class and implement
- * <code>getProperties()</code> and <code>propertiesAllocated()</code>. 
- * Where possible implementations should be backed with a 
+ * <code>getProperties()</code> and <code>propertiesAllocated()</code>.
+ * Where possible implementations should be backed with a
  * <code>LinkedHashMap</code> or similar so properties are iterated in the order
  * they were added.
- * 
+ *
  * @author Matthew Pocock
  * @author Greg Cox
  *
  * @since 1.0
  */
 public abstract class AbstractAnnotation
-  
+
   implements
     Annotation,
     Serializable
 {
   /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2753449055959952873L;
 
@@ -63,8 +63,8 @@ public abstract class AbstractAnnotation
    *
    * From code in the 1.2 version of AbstractAnnotation
    * This is required for the implementation of an Annotation that
-   *            extends AbstractAnnotation. Where possible implementations 
-   *            should be backed with a 
+   *            extends AbstractAnnotation. Where possible implementations
+   *            should be backed with a
    *            <code>LinkedHashMap</code> or similar so properties are iterated in the order
    *            they were added.
    *
@@ -78,7 +78,7 @@ public abstract class AbstractAnnotation
    * This is required for the implementation of an Annotation that
    *            extends AbstractAnnotation.
    * @return true if the properties have been allocated, false otherwise
-   * 
+   *
    */
   protected abstract boolean propertiesAllocated();
 
@@ -95,9 +95,9 @@ public abstract class AbstractAnnotation
 
   public void setProperty(Object key, Object value)
    {
-    
+
       getProperties().put(key, value);
-   
+
   }
 
   public void removeProperty(Object key)
@@ -107,9 +107,9 @@ public abstract class AbstractAnnotation
         throw new NoSuchElementException("Can't remove key " + key.toString());
     }
 
-    
+
       getProperties().remove(key);
-    
+
   }
 
   public boolean containsProperty(Object key) {

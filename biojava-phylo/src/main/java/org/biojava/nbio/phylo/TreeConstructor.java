@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Scooter Willis
  * @author Aleix Lafita
- * 
+ *
  */
 public class TreeConstructor {
 

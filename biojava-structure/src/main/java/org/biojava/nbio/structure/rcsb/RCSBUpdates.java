@@ -31,19 +31,19 @@ import java.util.List;
 import java.util.Map;
 
 public class RCSBUpdates {
-	
+
 	// The URL for acquiring the data
 	public static final String baseURL = "ftp://ftp.rcsb.org/pub/pdb/data/status/latest/";
 
 	/**
-	 * 
+	 *
 	 * @return A map mapping each field (defined by a separate FTP file) to the PDB ids in the field. The possible fields
-	 * are: added.models, added.nmr, added.pdb, added.sf, modified.cs, modified.models, modified.nmr, modified.pdb, modified.sf, 
+	 * are: added.models, added.nmr, added.pdb, added.sf, modified.cs, modified.models, modified.nmr, modified.pdb, modified.sf,
 	 * obsolete.cs, obsolete.models, obsolete.nmr, obsolete.pdb, obsolete.sf
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public Map<String,String[]> getUpdates() throws IOException{
-		
+
 		Map<String,String[]> outMap = new HashMap<String, String[]>();
 		// A list of files to get
 		String[] newStringList = {"added.models","added.nmr","added.pdb","added.sf","modified.cs","modified.models",
@@ -51,14 +51,14 @@ public class RCSBUpdates {
 		for(String fileName: newStringList){
 			String[] thisList = readURL(baseURL+""+fileName);
 			outMap.put(fileName, thisList);
-		}		
+		}
 		return outMap;
 
 	}
 
 
 	/**
-	 * 
+	 *
 	 * @param urlIn The url to be read
 	 * @return A list of PDB ids as strings
 	 * @throws IOException

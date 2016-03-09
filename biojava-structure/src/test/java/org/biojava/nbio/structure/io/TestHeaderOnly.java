@@ -44,81 +44,81 @@ import org.junit.Test;
 public class TestHeaderOnly {
 
 	final String pdbID = "1REP";
-	
+
 	/**
 	 * All groups are expected to be empty.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
 	@Test
 	public void testHeaderOnly() throws StructureException, IOException {
 		// Get either PDB or mmCIF with a headerOnly = true.
-		
+
 		// Test 1: with PDB
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(false);
-		
+
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(true);
 		// params.setAlignSeqRes(true);  // Now this is default.
 		cache.setFileParsingParams(params);
-		
-		StructureIO.setAtomCache(cache); 
-		
+
+		StructureIO.setAtomCache(cache);
+
 		Structure sPDB = StructureIO.getStructure(pdbID);
-		
+
 		Assert.assertEquals(false, doSeqResHaveAtoms(sPDB));
-		
+
 		for (Chain c : sPDB.getChains()) {
 			System.out.println(c.getChainID() + ":" + getSequenceString(c.getSeqResGroups()));
 		}
-		
+
 		// Test 2: with mmCIF
 		cache.setUseMmCif(true);
-		
+
 		Structure sCIF = StructureIO.getStructure(pdbID);
 		Assert.assertEquals(false, doSeqResHaveAtoms(sCIF));
-		
+
 		for (Chain c : sCIF.getChains()) {
 			System.out.println(c.getChainID() + ":" + getSequenceString(c.getSeqResGroups()));
 		}
 	}
-	
+
 	/**
 	 * Test that with alignSeqRes, expected Group(s) have Atoms, while others
 	 * are present with correct sequence but empty.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
 	@Test
 	public void testAlignSeqres() throws StructureException, IOException {
 		// Get either PDB or mmCIF with a headerOnly = false.
-		
+
 		// Test 1: with PDB
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(false);
-		
+
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(false);
 		// params.setAlignSeqRes(true);  // Now this is default.
 		cache.setFileParsingParams(params);
-		
-		StructureIO.setAtomCache(cache); 
-		
+
+		StructureIO.setAtomCache(cache);
+
 		Structure sPDB = StructureIO.getStructure(pdbID);
 		Assert.assertEquals(true, doSeqResHaveAtoms(sPDB));
 		check1REPChainC(sPDB); // Check particular residues to be aligned.
-		
+
 		// Test 2: with mmCIF
 		cache.setUseMmCif(true);
-		
+
 		Structure sCIF = StructureIO.getStructure(pdbID);
 		Assert.assertEquals(true, doSeqResHaveAtoms(sCIF));
 		check1REPChainC(sCIF); // Check particular residues to be aligned.
 	}
-	
+
 	// A better test follows that uses local files.
 	// @Test
     public void testSpeed() {
@@ -146,20 +146,20 @@ public class TestHeaderOnly {
         double diff = (stop - start) / 1000000000.0;
         System.out.println(String.format("[%s] Elapsed time: %.3f s", s.getIdentifier(), diff));
     }
-    
+
     // Test using local files.
     @Test
     public void testSpeed2() throws StructureException, IOException {
     	// Test the file parsing speed when the files are already downloaded.
-    	
+
 		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.cif.gz"));
 		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.pdb.gz"));
-		
+
 		assertNotNull(cifStream);
-		
+
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(true);  // Flip this true/false to compare parsing speed.
-		
+
 		System.out.println("Testing PDB parsing speed");
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
@@ -182,13 +182,13 @@ public class TestHeaderOnly {
         stop = System.nanoTime();
         diff = (stop - start) / 1000000000.0;
         System.out.println(String.format("[%s] Elapsed time: %.3f s", s2.getIdentifier(), diff));
-        
+
         /* Running from an SSD..
          * PDB .165s (all atom) -> 0.009s (only header)  95% faster.
          * mmCIF 0.323s (no header) -> 0.175s (only header) 45% faster.
          */
     }
-	
+
 	/**
 	 * Scan through SeqResGroups, returns true if any have Atoms.
 	 * @param s
@@ -202,13 +202,13 @@ public class TestHeaderOnly {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Does a group have any Atom(s)?
-	 * 
+	 *
 	 * @param g : a group
 	 * @return true if has any Atom(s)
 	 */
@@ -216,63 +216,63 @@ public class TestHeaderOnly {
 		if (g.getAtoms().size() > 0) return true;
 		return false;
 	}
-	
+
 	/**
 	 * Check that the gapped residues have no atoms, but that ungapped residues
-	 * have atoms.  
-	 * 
+	 * have atoms.
+	 *
 	 * @param s: Structure to test.
 	 */
 	public void check1REPChainC(Structure s) throws StructureException {
-		String sequence = "MAETAVINHKKRKNSPRIVQSNDLTEAAYSLSRDQKRMLYLFVDQIRK" + 
-				"SDGTLQEHDGICEIHVAKYAEIFGLTSAEASKDIRQALKSFAGKEVVFYRPEEDAGDE" + 
+		String sequence = "MAETAVINHKKRKNSPRIVQSNDLTEAAYSLSRDQKRMLYLFVDQIRK" +
+				"SDGTLQEHDGICEIHVAKYAEIFGLTSAEASKDIRQALKSFAGKEVVFYRPEEDAGDE" +
 				"KGYESFPWFIKPAHSPSRGLYSVHINPYLIPFFIGLQNRFTQFRLSETKEITNPYAMR" +
 				"LYESLCQYRKPDGSGIVSLKIDWIIERYQLPQSYQRMPDFRRRFLQVCVNEINSRTPM" +
 				"RLSYIEKKKGRQTTHIVFSFRDITSMTTG";
-		
+
 		boolean [] shouldMatch = new boolean[sequence.length()];
 		for (int i = 0; i < sequence.length(); i++) shouldMatch[i] = true;
-		
+
 		// 1-14 is gap
 		for (int i = 0; i < 14; i++) shouldMatch[i] = false;
-		
+
 		// 50-55 is gap
 		for (int i = 49; i < 55; i++) shouldMatch[i] = false;
-		
+
 		// 98-109 is gap
 		for (int i = 97; i < 109; i++) shouldMatch[i] = false;
-		
+
 		// 247-251 is gap
 		for (int i = 246; i < 251; i++) shouldMatch[i] = false;
-		
+
 		Chain c = s.findChain("C");
-		
+
 		List<Group> seqres = c.getSeqResGroups();
-		
+
 		// Check lengths
 		Assert.assertEquals(sequence.length(), seqres.size());
-		
+
 		// Check sequences.
 		Assert.assertEquals(sequence, c.getSeqResSequence());
-		
+
 		for (int i = 0; i < sequence.length(); i++) {
 			Assert.assertEquals(shouldMatch[i], hasAtoms(seqres.get(i)));
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param seqres : a list of Group(s)
 	 * @return a String representing these Groups
 	 */
 	public String getSequenceString(List<Group> seqres) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (Group g : seqres) {
 			ChemComp c = g.getChemComp();
 			sb.append(c.getOne_letter_code());
 		}
-		
+
 		return sb.toString();
 	}
 }

@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
  */
 
 public class HspTest {
-    
+
     Hsp hspImpl = new BlastHspBuilder()
                 .setHspNum(1)
                 .setHspBitScore(377.211)
@@ -54,7 +54,7 @@ public class HspTest {
                 .setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
                 .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
                 .createBlastHsp();
-    
+
     Hsp uncompleteHsp = new BlastHspBuilder()
                 .setPercentageIdentity(100.00/100)
                 .setHspAlignLen(48)
@@ -67,22 +67,22 @@ public class HspTest {
                 .setHspEvalue(4e-19)
                 .setHspBitScore(95.6)
                 .createBlastHsp();
-    
+
     public HspTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -96,7 +96,7 @@ public class HspTest {
         Hsp instance;
         int expResult;
         int result;
-        
+
         instance = new BlastHspBuilder()
                 .setHspNum(1)
                 .setHspBitScore(377.211)
@@ -114,11 +114,11 @@ public class HspTest {
                 .setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
                 .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
                 .createBlastHsp();
-        
+
         expResult = hspImpl.hashCode();
         result = instance.hashCode();
         assertEquals(expResult, result);
-        
+
         instance = new BlastHspBuilder()
                 .setPercentageIdentity(100.00/100)
                 .setHspAlignLen(48)
@@ -131,11 +131,11 @@ public class HspTest {
                 .setHspEvalue(4e-19)
                 .setHspBitScore(95.6)
                 .createBlastHsp();
-        
+
         expResult = uncompleteHsp.hashCode();
         result = instance.hashCode();
         assertEquals(expResult, result);
-        
+
         Hsp uncompleteHsp2 = new BlastHspBuilder()
                 .setPercentageIdentity(100.00/100)
                 .setHspAlignLen(48)
@@ -148,7 +148,7 @@ public class HspTest {
                 .setHspEvalue(4e-19)
                 .setHspBitScore(95.6)
                 .createBlastHsp();
-        
+
         assertEquals(uncompleteHsp.hashCode(), uncompleteHsp2.hashCode());
     }
 
@@ -177,9 +177,9 @@ public class HspTest {
                 .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
                 .createBlastHsp();
         Hsp instance = hspImpl;
-        
+
         assertEquals(o, instance);
-        
+
         // example of Hsp retrieved from uncomplete report.
         // (Those HSP may come from a tabular format, for example)
         o = new BlastHspBuilder()
@@ -194,7 +194,7 @@ public class HspTest {
                 .setHspEvalue(4e-19)
                 .setHspBitScore(95.6)
                 .createBlastHsp();
-        
+
         assertEquals(uncompleteHsp, o);
     }
 
@@ -204,20 +204,20 @@ public class HspTest {
     @Test
     public void testGetAlignment() {
         System.out.println("getAlignment");
-        
+
         SequencePair<DNASequence, NucleotideCompound> aln = hspImpl.getAlignment();
-        
+
         StringBuilder s = new StringBuilder();
         s.append(hspImpl.getHspQseq());
         s.append(String.format("%n"));
         s.append(hspImpl.getHspHseq());
         s.append(String.format("%n"));
-        
+
         String expResult = s.toString();
-        
+
         String result = aln.toString();
-        
+
         assertEquals(expResult, result);
     }
-    
+
 }

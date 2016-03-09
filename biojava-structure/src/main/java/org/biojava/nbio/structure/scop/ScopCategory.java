@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 30, 2010
- * Author: ap3 
+ * Author: ap3
  *
  */
 
@@ -27,11 +27,11 @@ package org.biojava.nbio.structure.scop;
 import java.io.Serializable;
 
 /** The various categories provided by SCOP.
- * 
- * The SCOP node types are 'cl' (Class), 
- * 'cf' (Fold), 'sf' (Superfamily), 'fa' (Family), 'dm' (Domain), 
+ *
+ * The SCOP node types are 'cl' (Class),
+ * 'cf' (Fold), 'sf' (Superfamily), 'fa' (Family), 'dm' (Domain),
  *  'sp' (Species), 'px' (protein).
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -56,28 +56,28 @@ public enum ScopCategory implements Serializable
       else
          return Px;
    }
-   
+
    @Override
 public String toString(){
       switch (this) {
          case Class:
             return "cl";
-            
+
          case Fold:
             return "cf";
-            
+
          case Superfamily:
             return "sf";
-            
+
          case Family:
             return "fa";
-            
+
          case Domain:
             return "dm";
-            
+
          case Species:
             return "sp";
-                        
+
           default:
              return "px";
       }

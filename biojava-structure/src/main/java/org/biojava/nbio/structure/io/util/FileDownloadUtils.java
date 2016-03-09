@@ -52,7 +52,7 @@ public class FileDownloadUtils {
     @SuppressWarnings("resource")
 	public static void copy(File src, File dst) throws IOException {
 
-		// Took following recipe from 
+		// Took following recipe from
         // http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
         // The nio package seems to be the most efficient way to copy a file
         FileChannel source = null;
@@ -139,7 +139,7 @@ public class FileDownloadUtils {
         logger.debug("Copying temp file {} to final location {}", tempFile, destination);
         copy(tempFile, destination);
 
-        // delete the tmp file			
+        // delete the tmp file
         tempFile.delete();
 
     }

@@ -87,7 +87,7 @@ public Float getMolecularWeight() {
 public String getShortName() {
     return getUnderlyingCompound().getShortName();
   }
-  
+
   @Override
 public String toString() {
     return getUnderlyingCompound().toString();

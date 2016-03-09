@@ -33,7 +33,7 @@ import java.util.Comparator;
  */
     public class ExonComparator implements Comparator<ExonSequence>{
 
-     
+
         @Override
 		public int compare(ExonSequence o1, ExonSequence o2) {
 

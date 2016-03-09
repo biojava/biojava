@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 4, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -30,39 +30,39 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
 public class ModificationConditionImpl implements ModificationCondition {
 	private final List<Component> components;
 	private final List<ModificationLinkage> linkages;
-	
+
 	public ModificationConditionImpl(final List<Component> components,
 			final List<ModificationLinkage> linkages) {
-		
+
 		if ( components == null)
 			throw new IllegalArgumentException("Can not create ModificationCondition, components == null!");
-		
+
 		if ( components.isEmpty())
 			throw new IllegalArgumentException("Can not create ModificationCondition, components is empty!");
-		
-		
+
+
 		if (components.size() > 1) {
 			Set<Integer> indices = new HashSet<Integer>();
 			for (ModificationLinkage linkage : linkages) {
 				indices.add(linkage.getIndexOfComponent1());
 				indices.add(linkage.getIndexOfComponent2());
 			}
-			
-			// TODO: a more comprehensive check would be checking whether 
+
+			// TODO: a more comprehensive check would be checking whether
 			// all components are connected
 			if (indices.size()!=components.size()) {
 				throw new IllegalStateException("All components " +
 						"have to be linked. indices.size:" + indices.size() + " components size:" + components.size()); // TODO: is this true?
 			}
 		}
-		
+
 		this.components = Collections.unmodifiableList(components);
 		if (linkages==null) {
 			this.linkages = Collections.emptyList();
@@ -70,27 +70,27 @@ public class ModificationConditionImpl implements ModificationCondition {
 			this.linkages = Collections.unmodifiableList(linkages);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}}
 	 */
 	@Override
 	public List<Component> getComponents() {
 		return components;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}}
 	 */
 	@Override
 	public List<ModificationLinkage> getLinkages() {
 		return linkages;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -100,7 +100,7 @@ public class ModificationConditionImpl implements ModificationCondition {
             sb.append(comp).append(";");
 		}
 		sb.deleteCharAt(sb.length()-1);
-		
+
 		if (!linkages.isEmpty()) {
 			sb.append("\nLinkages:");
 			for (ModificationLinkage link : linkages) {
@@ -108,7 +108,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 			}
 			sb.deleteCharAt(sb.length()-1);
 		}
-		
+
 		return sb.toString();
 	}
 }

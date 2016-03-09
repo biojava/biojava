@@ -36,26 +36,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/** 
- * Calculate and assign the secondary structure (SS) to the 
+/**
+ * Calculate and assign the secondary structure (SS) to the
  * Groups of a Structure object. This object also stores the result
  * of the calculation.
  * <p>
  * The rules for SS calculation are the ones defined by DSSP:
  * Kabsch,W. and Sander,C. (1983) Biopolymers 22, 2577-2637.
  * Original DSSP article see at:
- * <a href="http://www.cmbi.kun.nl/gv/dssp/dssp.pdf">dssp.pdf</a>. 
- * Some parts are also taken from: T.E.Creighton, Proteins - 
+ * <a href="http://www.cmbi.kun.nl/gv/dssp/dssp.pdf">dssp.pdf</a>.
+ * Some parts are also taken from: T.E.Creighton, Proteins -
  * Structure and Molecular Properties, 2nd Edition, Freeman 1994.
- * 
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
  * @autho Anthony Bradley
- * 
+ *
  */
 public class SecStrucCalc {
 
-	/** 
+	/**
 	 * DSSP assigns helices one residue shorter at each end, because the
 	 * residues at (i-1) and (i+n+1) are not assigned helix type although
 	 * they contain a consistent turn (H-bond). If this parameter
@@ -64,7 +64,7 @@ public class SecStrucCalc {
 	 */
 	private static final boolean DSSP_HELICES = true;
 
-	private static final Logger logger = 
+	private static final Logger logger =
 			LoggerFactory.getLogger(SecStrucCalc.class);
 
 	/** min distance between two residues */
@@ -107,7 +107,7 @@ public class SecStrucCalc {
 	}
 
 
-	/** 
+	/**
 	 * Predicts the secondary structure of this Structure object,
 	 * using a DSSP implementation.
 	 *
@@ -140,13 +140,13 @@ public class SecStrucCalc {
 		detectStrands();
 		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
 		for (SecStrucGroup sg : groups){
-			SecStrucState ss = (SecStrucState) 
+			SecStrucState ss = (SecStrucState)
 					sg.getProperty(Group.SEC_STRUC);
 			//Add to return list and assign to original if flag is true
 			secstruc.add(ss);
 			if (assign) sg.getOriginal().setProperty(Group.SEC_STRUC, ss);
 		}
-		return secstruc;	
+		return secstruc;
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class SecStrucCalc {
 					setSecStrucType(l2count, SecStrucType.extended);
 				}
 				else {
-					if ( !stype.isHelixType() && 
+					if ( !stype.isHelixType() &&
 							( !stype.equals(SecStrucType.extended)))
 						setSecStrucType(lcount,SecStrucType.bridge);
 
@@ -313,9 +313,9 @@ public class SecStrucCalc {
 	}
 
 	/**
-	 * For beta structures, we define explicitly: a bulge-linked 
-	 * ladder consists of two (perfect) ladder or bridges of the 
-	 * same type connected by at most one extra residue on one 
+	 * For beta structures, we define explicitly: a bulge-linked
+	 * ladder consists of two (perfect) ladder or bridges of the
+	 * same type connected by at most one extra residue on one
 	 * strand and at most four extra residues on the other strand,
 	 * all residues in bulge-linked ladders are marked "E,"
 	 * including the extra residues.
@@ -409,19 +409,19 @@ public class SecStrucCalc {
 	 * residues i and j if there are two H bonds characteristic of beta-
 	 * structure; in particular:
 	 * <p>
-	 * Parallel Bridge(i,j) =: [Hbond(i-1,j) and Hbond(j,i+1)] 
+	 * Parallel Bridge(i,j) =: [Hbond(i-1,j) and Hbond(j,i+1)]
 	 * 							or [Hbond(j-1,i) and Hbond(i,j+1)]
 	 * <p>
-	 * Antiparallel Bridge(i,j) =: [Hbond(i,j) and Hbond(j,i)] 
+	 * Antiparallel Bridge(i,j) =: [Hbond(i,j) and Hbond(j,i)]
 	 * 								or [Hbond(i-1,j+1) and Hbond(j-1,i+1)]
-	 * 
+	 *
 	 * Optimised to use the contact set
 	 */
 	private void findBridges() {
 		// Get the interator of contacts
 		Iterator<AtomContact> myIter = contactSet.iterator();
 		List<Pair<Integer>> outList = new ArrayList<Pair<Integer>>();
-		
+
 		// Now iterate through this
 		while(myIter.hasNext()){
 			// Get the next atom contact
@@ -456,7 +456,7 @@ public class SecStrucCalc {
 			if(j==groups.length-1){
 				continue;
 			}
-			
+
 			Pair<Integer> thisPair = new Pair<Integer>(i,j);
 			outList.add(thisPair);
 		}
@@ -483,8 +483,8 @@ public class SecStrucCalc {
 				}
 			}
 		});
-		
-		
+
+
 
 		for(Pair<Integer> p: outList){
 				int i = p.getFirst();
@@ -539,7 +539,7 @@ public class SecStrucCalc {
 
 			double angle = Calc.angle(caminus2, caplus2);
 
-			SecStrucState state = getSecStrucState(i); 
+			SecStrucState state = getSecStrucState(i);
 			state.setKappa((float) angle);
 
 			//Angles = 360 should be discarded
@@ -576,9 +576,9 @@ public class SecStrucCalc {
 			double psi = Calc.torsionAngle(a_N,a_CA,a_C,b_N);
 			double omega = Calc.torsionAngle(a_CA,a_C,b_N,b_CA);
 
-			SecStrucState state1 = (SecStrucState) 
+			SecStrucState state1 = (SecStrucState)
 					a.getProperty(Group.SEC_STRUC);
-			SecStrucState state2 = (SecStrucState) 
+			SecStrucState state2 = (SecStrucState)
 					b.getProperty(Group.SEC_STRUC);
 
 			state2.setPhi(phi);
@@ -621,12 +621,12 @@ public class SecStrucCalc {
 	}
 
 	/**
-	 * Generate a summary of this SS prediction with information about 
+	 * Generate a summary of this SS prediction with information about
 	 * the three types of helix turns in different row sequences.
 	 * <p>
 	 * This is similar to the summary output of Jmol, and useful to visualize
 	 * the helix patterns.
-	 * 
+	 *
 	 * @return String helix summary
 	 */
 	public String printHelixSummary() {
@@ -660,7 +660,7 @@ public class SecStrucCalc {
 
 	/**
 	 * Generate a FASTA sequence with the SS annotation letters in the
-	 * aminoacid sequence order. 
+	 * aminoacid sequence order.
 	 * @return String in FASTA sequence format
 	 */
 	public String printFASTA() {
@@ -721,8 +721,8 @@ public class SecStrucCalc {
 					sg.setO((Atom)  O.clone());
 					sg.setOriginal(g);
 
-					SecStrucState state = new SecStrucState(sg, 
-							SecStrucInfo.BIOJAVA_ASSIGNMENT, 
+					SecStrucState state = new SecStrucState(sg,
+							SecStrucInfo.BIOJAVA_ASSIGNMENT,
 							SecStrucType.coil);
 
 					sg.setProperty(Group.SEC_STRUC, state);
@@ -733,7 +733,7 @@ public class SecStrucCalc {
 		return groupList.toArray(new SecStrucGroup[groupList.size()]);
 	}
 
-	/** 
+	/**
 	 * Calculate the coordinates of the H atoms. They are usually
 	 * missing in the PDB files as only few experimental methods allow
 	 * to resolve their location.
@@ -755,7 +755,7 @@ public class SecStrucCalc {
 
 
 
-	/** 
+	/**
 	 * Calculate the HBonds between different groups.
 	 * see Creighton page 147 f
 	 * Modified to use only the contact map
@@ -813,7 +813,7 @@ public class SecStrucCalc {
 	 * Calculate HBond energy of two groups in cal/mol
 	 * see Creighton page 147 f
 	 * <p>
-	 * Jeffrey, George A., An introduction to hydrogen bonding, 
+	 * Jeffrey, George A., An introduction to hydrogen bonding,
 	 * Oxford University Press, 1997.
 	 * categorizes hbonds with donor-acceptor distances of
 	 * 2.2-2.5 &aring; as "strong, mostly covalent",
@@ -821,7 +821,7 @@ public class SecStrucCalc {
 	 * 3.2-4.0 &aring; as "weak, electrostatic".
 	 * Energies are given as 40-14, 15-4, and <4 kcal/mol respectively.
 	 */
-	private static double calculateHBondEnergy(SecStrucGroup one, 
+	private static double calculateHBondEnergy(SecStrucGroup one,
 			SecStrucGroup two) {
 
 		Atom N = one.getN();
@@ -835,15 +835,15 @@ public class SecStrucCalc {
 		double dho = Calc.getDistance(O,H);
 		double dnc = Calc.getDistance(C,N);
 
-		logger.debug("     cccc: " + one.getResidueNumber() + 
-				" " + one.getPDBName() + " " +two.getResidueNumber()+ 
+		logger.debug("     cccc: " + one.getResidueNumber() +
+				" " + one.getPDBName() + " " +two.getResidueNumber()+
 				" " + two.getPDBName() + String.format(" O ("+
 						O.getPDBserial()+")..N ("+ N.getPDBserial()+
-						"):%4.1f  |  ho:%4.1f - hc:%4.1f + nc:%4.1f - no:%4.1f ", 
+						"):%4.1f  |  ho:%4.1f - hc:%4.1f + nc:%4.1f - no:%4.1f ",
 						dno,dho,dhc,dnc,dno));
 
 		//there seems to be a contact!
-		if ( (dno < MINDIST) || (dhc < MINDIST) || 
+		if ( (dno < MINDIST) || (dhc < MINDIST) ||
 				(dnc < MINDIST) || (dno < MINDIST)) {
 			return HBONDLOWENERGY;
 		}
@@ -926,7 +926,7 @@ public class SecStrucCalc {
 		}
 	}
 
-	/** 
+	/**
 	 * Detect helical turn patterns.
 	 */
 	private void calculateTurns(){
@@ -952,13 +952,13 @@ public class SecStrucCalc {
 		}
 	}
 
-	/** 
+	/**
 	 * Test if two groups are forming an H-Bond. The bond tested is
 	 * from the CO of group i to the NH of group j. Acceptor (i) and
-	 * donor (j). The donor of i has to be j, and the acceptor of j 
+	 * donor (j). The donor of i has to be j, and the acceptor of j
 	 * has to be i.
 	 * DSSP defines H-Bonds if the energy < -500 cal/mol.
-	 * 
+	 *
 	 * @param one group one
 	 * @param two group two
 	 * @return flag if the two are forming an Hbond
@@ -984,7 +984,7 @@ public class SecStrucCalc {
 				(acc1p == i && acc1e < HBONDHIGHENERGY) ||
 				(acc2p == i && acc2e < HBONDHIGHENERGY);
 
-		if (hbond){				
+		if (hbond){
 			logger.debug("*** H-bond from CO of " + i + " to NH of " + j);
 			return true;
 		}
@@ -1077,15 +1077,15 @@ public class SecStrucCalc {
 
 	/**
 	 * A minimal helix is defined by two consecutive n-turns.
-	 * For example, a 4-helix, of minimal length 4 from residues 
+	 * For example, a 4-helix, of minimal length 4 from residues
 	 * i to (i+3), requires turns (of type 4) at residues (i-1) and i.
 	 * <p>
 	 * Note that the orignal DSSP implementation does not assign
-	 * helix type to residue (i-1) and residue (i+n+1), although 
+	 * helix type to residue (i-1) and residue (i+n+1), although
 	 * they contain a helix turn. As they state in the original paper,
 	 * "the helices are one residue shorter than they would be according
 	 * to rule 6.3 of IUPAC-IUB".
-	 * 
+	 *
 	 * @param n
 	 * @param type
 	 */

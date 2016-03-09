@@ -44,7 +44,7 @@ import java.util.Collections;
 public class ExpressionFigure extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	ArrayList<String> title = new ArrayList<String>();
     /**
      *
@@ -90,13 +90,13 @@ public class ExpressionFigure extends JPanel {
 
     /**
      * The data used to draw the graph
-     * @return 
+     * @return
      */
-    
+
     public ArrayList<SurvivalInfo> getSurvivalInfoList(){
         return siList;
     }
-    
+
     /**
      *
      * @param kmfi
@@ -257,7 +257,7 @@ public class ExpressionFigure extends JPanel {
     private void drawLegend(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         Font font = g2.getFont();
-   
+
         font = new Font(font.getFontName(), Font.BOLD, font.getSize());
         g2.setFont(font);
         fm = getFontMetrics(font);

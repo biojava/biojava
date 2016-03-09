@@ -16,9 +16,9 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 24, 2008
- * 
+ *
  */
 
 package org.biojava.nbio.ontology;
@@ -38,12 +38,12 @@ public class Synonym implements Comparable<Synonym>{
 	int scope;
 	String category;
 	String name;
-	
+
 	public String toString(){
 		String txt = "Synonym: name:"+name+ " category:" + category + " scope: " +scope;
 		return txt;
 	}
-	
+
 	public final static Comparator<Synonym> COMPARATOR = new Comparator<Synonym>() {
 		public int compare(Synonym a, Synonym b) {
 			if (a == null && b == null)
@@ -58,8 +58,8 @@ public class Synonym implements Comparable<Synonym>{
 				else if ( a.getCategory()==null)
 					return -1;
 				else if ( b.getCategory()==null)
-					return 1;				
-				
+					return 1;
+
 				return ((Synonym) a).getCategory().compareToIgnoreCase(
 						((Synonym) b).getCategory());
 			}

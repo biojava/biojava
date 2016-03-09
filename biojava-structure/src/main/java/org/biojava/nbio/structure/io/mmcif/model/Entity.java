@@ -22,20 +22,20 @@
 package org.biojava.nbio.structure.io.mmcif.model;
 
 /** A simple class to represent Entity records in mmCif files
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class Entity {
 	String id;
-	
-	String type; 
-	String src_method; 
-	String pdbx_description; 
+
+	String type;
+	String src_method;
+	String pdbx_description;
 	String formula_weight;
-	String pdbx_number_of_molecules; 
+	String pdbx_number_of_molecules;
 	String details;
-	String pdbx_mutation; 
+	String pdbx_mutation;
 	String pdbx_fragment;
 	String pdbx_ec;
 
@@ -54,7 +54,7 @@ public class Entity {
         buf.append(" pdbx_mutation:").append(pdbx_mutation);
         buf.append(" pdbx_fragment:").append(pdbx_fragment);
         buf.append(" pdbx_ec:").append(pdbx_ec);
-		
+
 		return buf.toString();
 	}
 	public String getId() {
@@ -63,7 +63,7 @@ public class Entity {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public String getType() {
 		return type;
 	}
@@ -118,6 +118,6 @@ public class Entity {
 	public void setPdbx_ec(String pdbx_ec) {
 		this.pdbx_ec = pdbx_ec;
 	}
-	
-	
+
+
 }

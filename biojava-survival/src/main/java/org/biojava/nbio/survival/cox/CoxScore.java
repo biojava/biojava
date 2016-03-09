@@ -44,10 +44,10 @@ public class CoxScore {
         int i, j, k;
         double temp;
         int n = survivalInfoList.size();
-        
+
         ArrayList<String> variables = new ArrayList<String>(coxInfo.getCoefficientsList().keySet());
         int nvar = variables.size();
-        
+
         double deaths;
         int dd;
         double[] time = new double[n];
@@ -78,17 +78,17 @@ public class CoxScore {
             }
             weights[p] = si.getWeight();
             score[p] = si.getScore();
-            
+
             for(int v = 0; v < variables.size(); v++){
                 String variable = variables.get(v);
                 Double value = si.getVariable(variable);
                 covar[v][p] = value;
             }
-            
+
         }
-        
-       
-        
+
+
+
         //  a = scratch;
         //  a2 = a+nvar;
     /*
@@ -176,7 +176,7 @@ public class CoxScore {
                 }
             }
         }
-        
+
         for (int p = 0; p < n; p++) {
             SurvivalInfo si = survivalInfoList.get(p);
             for (int v = 0; v < variables.size(); v++) {
@@ -184,16 +184,16 @@ public class CoxScore {
             }
 
         }
-        
+
         //appears to be backward internally
         double[][] flipresid = new double[n][nvar];
-        
+
         for(int s = 0; s < resid.length; s++){
             for(int t = 0; t  < resid[0].length; t++){
                 flipresid[t][s] = resid[s][t];
             }
         }
-        
+
         return flipresid;
 
     }

@@ -120,5 +120,5 @@ public class CathSegment implements Serializable{
 				+ sequenceHeader + ", sequence=" + sequence + "]";
 	}
 
-   
+
 }

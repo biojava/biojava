@@ -33,7 +33,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
- 
+
 /**
  * Ported from survfitKM.S When combining multiple entries with same time not
  * sure how the weighting adds up
@@ -214,7 +214,7 @@ public class SurvFitKM {
         return this.process(variable, dataT, Method.kaplanMeier, Error.greenwood, true, .95, ConfType.log, ConfLower.usual, null, null, useWeighted);
     }
 
-   
+
     public LinkedHashMap<String, StrataInfo>  processStrataInfo(String variable, ArrayList<SurvivalInfo> dataT, SurvFitKM.Method method, SurvFitKM.Error error, boolean seFit, double confInt, ConfType confType, ConfLower confLower, Double startTime, Double newTime, boolean useWeighted) throws Exception{
                 Collections.sort(dataT);
         if (startTime == null && newTime != null) {
@@ -485,10 +485,10 @@ public class SurvFitKM {
 //            }
 //            System.out.println();
 //        }
-        
+
         return strataInfoHashMap;
     }
-    
+
     /**
      *
      * @param variable
@@ -507,7 +507,7 @@ public class SurvFitKM {
      */
     public SurvFitInfo process(String variable, ArrayList<SurvivalInfo> dataT, SurvFitKM.Method method, SurvFitKM.Error error, boolean seFit, double confInt, ConfType confType, ConfLower confLower, Double startTime, Double newTime, boolean useWeighted) throws Exception {
         SurvFitInfo si = new SurvFitInfo();
-        
+
         LinkedHashMap<String, StrataInfo> strataInfoHashMap = this.processStrataInfo(variable, dataT, method, error, seFit, confInt, confType, confLower, startTime, newTime, useWeighted);
         si.setStrataInfoHashMap(strataInfoHashMap);
         LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = this.processStrataInfo(variable, dataT, method, error, seFit, confInt, confType, confLower, startTime, newTime, false);

@@ -27,42 +27,42 @@ package org.biojava.nbio.structure.align.gui.autosuggest;
 import java.util.Vector;
 
 /** A class that provides auto-completion suggestions for JAutoSuggest
- * 
+ *
  * @author AndreasPrlic
  *
  */
 public interface AutoSuggestProvider {
-	
+
 	/** get a list of suggestions for a userInput
-	 * 
+	 *
 	 * @param userInput
 	 * @return list of suggestions
 	 */
 	public Vector<String> getSuggestion(String userInput);
-	
-	
+
+
 	/** set the maximum number of suggestions to return
-	 * 
+	 *
 	 * @param maxNrSuggestions
 	 */
 	public void setMaxNrSuggestions(int maxNrSuggestions);
 
-	
-	/** Get the maximun nr of suggestions 
-	 * 
+
+	/** Get the maximun nr of suggestions
+	 *
 	 * @return maxNrSuggestions
 	 */
 	public int getMaxNrSuggestions();
-	
-	
+
+
 	/** reset all suggestions
-	 * 
+	 *
 	 */
 	public void clear();
-	
-	
+
+
 	/** Interrupt searching for suggestions
-	 * 
+	 *
 	 */
 	public void stop();
 }

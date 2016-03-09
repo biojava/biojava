@@ -103,7 +103,7 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
     public Set<NucleotideCompound> getConstituents() {
       return constituents;
     }
-    
+
     /**@deprecated replaced with {@link #getConstituents()} due to typographical error */
     @Deprecated
 	public Set<NucleotideCompound> getConsituents() {

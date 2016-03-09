@@ -33,7 +33,7 @@ import junit.framework.TestCase;
  * @author Jules
  */
 public class JmolViewerImplTest extends TestCase {
-    
+
     public JmolViewerImplTest(String testName) {
         super(testName);
     }
@@ -51,7 +51,7 @@ public class JmolViewerImplTest extends TestCase {
     public void testMe(){
        assertTrue(true);
     }
-    
+
 //    /**
 //     * Test of setStructure method, of class JmolViewerImpl.
 //     */

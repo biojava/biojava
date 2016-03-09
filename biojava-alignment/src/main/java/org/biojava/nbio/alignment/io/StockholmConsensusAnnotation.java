@@ -25,11 +25,11 @@ package org.biojava.nbio.alignment.io;
 
 /**
  * Stores all the content parsed from the #=GC lines
- * 
+ *
  * @since 3.0.5
  * @author Amr AL-Hossary
  * @author Marko Vaz
- * 
+ *
  */
 class StockholmConsensusAnnotation {
 	private String secondaryStructure;
@@ -52,11 +52,11 @@ class StockholmConsensusAnnotation {
 	public void setSecondaryStructure(String secondaryStructure) {
 		this.secondaryStructure = secondaryStructure;
 	}
-	
+
 	public String getSequenceConsensus() {
 		return sequenceConsensus;
 	}
-	
+
 	public void setSequenceConsensus(String sequenceConsensus) {
 		this.sequenceConsensus = sequenceConsensus;
 	}

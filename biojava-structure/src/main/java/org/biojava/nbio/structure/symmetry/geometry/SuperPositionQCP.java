@@ -34,17 +34,17 @@ import javax.vecmath.Vector3d;
 public final class SuperPositionQCP {
     double evecprec = 1d-6;
     double evalprec = 1d-11;
-    
+
     private Point3d[] x = null;
     private Point3d[] y = null;
-    
+
     private double[] weight = null;
-    
+
     private Point3d[] xref = null;
     private Point3d[] yref = null;
     private Point3d xtrans;
     private Point3d ytrans;
-    
+
     private double e0;
     private Matrix3d rotmat = new Matrix3d();
     private Matrix4d transformation = new Matrix4d();
@@ -56,15 +56,15 @@ public final class SuperPositionQCP {
     private boolean rmsdCalculated = false;
     private boolean transformationCalculated = false;
     private boolean centered = false;
-    
-    
+
+
     public void set(Point3d[] x, Point3d[] y) {
     	this.x = x;
     	this.y = y;
         rmsdCalculated = false;
         transformationCalculated = false;
     }
-    
+
     public void set(Point3d[] x, Point3d[] y, double[] weight) {
     	this.x = x;
     	this.y = y;
@@ -72,18 +72,18 @@ public final class SuperPositionQCP {
         rmsdCalculated = false;
         transformationCalculated = false;
     }
-    
+
     public void setCentered(boolean centered) {
     	this.centered = centered;
     }
-    
+
     public double getRmsd() {
     	if (! rmsdCalculated) {
     		calcRmsd(x, y);
     	}
     	return rmsd;
     }
-    
+
     public Matrix4d getTransformationMatrix() {
     	getRotationMatrix();
     	if (! centered) {
@@ -91,22 +91,22 @@ public final class SuperPositionQCP {
     	} else {
     		transformation.set(rotmat);
     	}
-    	return transformation; 	
+    	return transformation;
     }
-    
+
     public Matrix3d getRotationMatrix() {
     	getRmsd();
     	if (! transformationCalculated) {
     		calcRotationMatrix();
     	}
-    	return rotmat; 	
+    	return rotmat;
     }
-    
+
     public Point3d[] getTransformedCoordinates() {
     	SuperPosition.transform(transformation, x);
     	return x;
     }
-    
+
     /**
      * this requires the coordinates to be precentered
      * @param x
@@ -127,12 +127,12 @@ public final class SuperPositionQCP {
     		ytrans = SuperPosition.centroid(yref);
     		// 	System.out.println("y centroid: " + ytrans);
     		ytrans.negate();
-    		SuperPosition.translate(ytrans, yref); 
+    		SuperPosition.translate(ytrans, yref);
     		innerProduct(yref, xref);
     	}
     	calcRmsd(x.length);
     }
-  
+
     /* Superposition coords2 onto coords1 -- in other words, coords2 is rotated, coords1 is held fixed */
     private void calcTransformation() {
      //   transformation.set(rotmat,new Vector3d(0,0,0), 1);
@@ -151,16 +151,16 @@ public final class SuperPositionQCP {
 //        System.out.println(transformation);
 //
 //        // combine with origin -> y translation
-        ytrans.negate();  
-        Matrix4d transInverse = new Matrix4d(); 
-        transInverse.setIdentity();     
+        ytrans.negate();
+        Matrix4d transInverse = new Matrix4d();
+        transInverse.setIdentity();
         transInverse.setTranslation(new Vector3d(ytrans));
         transformation.mul(transInverse, transformation);
 //        System.out.println("setting ytrans");
 //        System.out.println(transformation);
     }
-    
-    /** 
+
+    /**
      * http://theobald.brandeis.edu/qcp/qcprot.c
      * @param A
      * @param coords1
@@ -170,7 +170,7 @@ public final class SuperPositionQCP {
     private void innerProduct(Point3d[] coords1, Point3d[] coords2) {
     	double          x1, x2, y1, y2, z1, z2;
         double          g1 = 0.0, g2 = 0.0;
-        
+
         Sxx = 0;
         Sxy = 0;
         Sxz = 0;
@@ -179,7 +179,7 @@ public final class SuperPositionQCP {
         Syz = 0;
         Szx = 0;
         Szy = 0;
-        Szz = 0; 
+        Szz = 0;
 
         if (weight != null)
         {
@@ -207,13 +207,13 @@ public final class SuperPositionQCP {
 
                 Szx +=  (z1 * x2);
                 Szy +=  (z1 * y2);
-                Szz +=  (z1 * z2);   
+                Szz +=  (z1 * z2);
             }
         }
         else
         {
             for (int i = 0; i < coords1.length; i++)
-            { 
+            {
                 g1 += coords1[i].x * coords1[i].x + coords1[i].y * coords1[i].y + coords1[i].z * coords1[i].z;
                 g2 += coords2[i].x * coords2[i].x + coords2[i].y * coords2[i].y + coords2[i].z * coords2[i].z;
 
@@ -227,7 +227,7 @@ public final class SuperPositionQCP {
 
                 Szx +=  coords1[i].z * coords2[i].x;
                 Szy +=  coords1[i].z * coords2[i].y;
-                Szz +=  coords1[i].z * coords2[i].z;  
+                Szz +=  coords1[i].z * coords2[i].z;
             }
         }
 
@@ -235,7 +235,7 @@ public final class SuperPositionQCP {
     }
 
     private int calcRmsd(int len)
-    {     
+    {
         double Sxx2 = Sxx * Sxx;
         double Syy2 = Syy * Syy;
         double Szz2 = Szz * Szz;
@@ -262,7 +262,7 @@ public final class SuperPositionQCP {
         SxymSyx = Sxy - Syx;
         SxxpSyy = Sxx + Syy;
         SxxmSyy = Sxx - Syy;
-        
+
         double Sxy2Sxz2Syx2Szx2 = Sxy2 + Sxz2 - Syx2 - Szx2;
 
         double c0 = Sxy2Sxz2Syx2Szx2 * Sxy2Sxz2Syx2Szx2
@@ -272,8 +272,8 @@ public final class SuperPositionQCP {
              + (+(SxypSyx)*(SyzpSzy)+(SxzpSzx)*(SxxmSyy+Szz)) * (-(SxymSyx)*(SyzmSzy)+(SxzpSzx)*(SxxpSyy+Szz))
              + (+(SxypSyx)*(SyzmSzy)+(SxzmSzx)*(SxxmSyy-Szz)) * (-(SxymSyx)*(SyzpSzy)+(SxzmSzx)*(SxxpSyy-Szz));
 
-        mxEigenV = e0;      
- 
+        mxEigenV = e0;
+
         int i;
         for (i = 0; i < 50; ++i)
         {
@@ -287,39 +287,39 @@ public final class SuperPositionQCP {
             if (Math.abs(mxEigenV - oldg) < Math.abs(evalprec*mxEigenV))
                 break;
         }
-        
 
-        if (i == 50) 
+
+        if (i == 50)
            System.err.println("More than %d iterations needed!" + i);
 
         /* the fabs() is to guard against extremely small, but *negative* numbers due to floating point error */
         rmsd = Math.sqrt(Math.abs(2.0 * (e0 - mxEigenV)/len));
-       
+
         return 1;
     }
-    
+
     private int calcRotationMatrix() {
         double a11 = SxxpSyy + Szz-mxEigenV;
-        double a12 = SyzmSzy; 
-        double a13 = - SxzmSzx; 
+        double a12 = SyzmSzy;
+        double a13 = - SxzmSzx;
         double a14 = SxymSyx;
-        double a21 = SyzmSzy; 
-        double a22 = SxxmSyy - Szz-mxEigenV; 
-        double a23 = SxypSyx; 
+        double a21 = SyzmSzy;
+        double a22 = SxxmSyy - Szz-mxEigenV;
+        double a23 = SxypSyx;
         double a24= SxzpSzx;
-        double a31 = a13; 
-        double a32 = a23; 
-        double a33 = Syy-Sxx-Szz - mxEigenV; 
+        double a31 = a13;
+        double a32 = a23;
+        double a33 = Syy-Sxx-Szz - mxEigenV;
         double a34 = SyzpSzy;
-        double a41 = a14; 
-        double a42 = a24; 
-        double a43 = a34; 
+        double a41 = a14;
+        double a42 = a24;
+        double a43 = a34;
         double a44 = Szz - SxxpSyy - mxEigenV;
-        double a3344_4334 = a33 * a44 - a43 * a34; 
+        double a3344_4334 = a33 * a44 - a43 * a34;
         double a3244_4234 = a32 * a44-a42*a34;
-        double a3243_4233 = a32 * a43 - a42 * a33; 
+        double a3243_4233 = a32 * a43 - a42 * a33;
         double a3143_4133 = a31 * a43-a41*a33;
-        double a3144_4134 = a31 * a44 - a41 * a34; 
+        double a3144_4134 = a31 * a44 - a41 * a34;
         double a3142_4132 = a31 * a42-a41*a32;
         double q1 =  a22*a3344_4334-a23*a3244_4234+a24*a3243_4233;
         double q2 = -a21*a3344_4334+a23*a3144_4134-a24*a3143_4133;
@@ -328,10 +328,10 @@ public final class SuperPositionQCP {
 
         double qsqr = q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4;
 
-    /* The following code tries to calculate another column in the adjoint matrix when the norm of the 
+    /* The following code tries to calculate another column in the adjoint matrix when the norm of the
        current column is too small.
        Usually this commented block will never be activated.  To be absolutely safe this should be
-       uncommented, but it is most likely unnecessary.  
+       uncommented, but it is most likely unnecessary.
     */
         if (qsqr < evecprec)
         {
@@ -360,7 +360,7 @@ public final class SuperPositionQCP {
                     q3 =  a31 * a1224_1422 - a32 * a1124_1421 + a34 * a1122_1221;
                     q4 = -a31 * a1223_1322 + a32 * a1123_1321 - a33 * a1122_1221;
                     qsqr = q1*q1 + q2 *q2 + q3*q3 + q4*q4;
-                    
+
                     if (qsqr < evecprec)
                     {
                         /* if qsqr is still too small, return the identity matrix. */
@@ -377,7 +377,7 @@ public final class SuperPositionQCP {
         q2 /= normq;
         q3 /= normq;
         q4 /= normq;
-        
+
         System.out.println("q: " + q1 + " " + q2 + " " + q3 + " " + q4);
 
         double a2 = q1 * q1;
@@ -406,5 +406,5 @@ public final class SuperPositionQCP {
 
         return 1;
     }
-	
+
 }

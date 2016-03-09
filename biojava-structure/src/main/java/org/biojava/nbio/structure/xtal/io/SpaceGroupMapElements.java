@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 27 Mar 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.xtal.io;
@@ -29,17 +29,17 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class SpaceGroupMapElements {
 
-	@XmlElement 
+	@XmlElement
 	public Integer key;
-	
+
 	@XmlElement(name="SpaceGroup", namespace="http://www.biojava.org")
 	public SpaceGroup value;
-	
+
 	@SuppressWarnings("unused")
 	private SpaceGroupMapElements(){
-		
+
 	}
-	
+
 	public SpaceGroupMapElements(Integer key, SpaceGroup value){
 		this.key = key;
 		this.value = value;

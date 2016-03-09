@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Apr 6, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -39,21 +39,21 @@ public class ConfigPDBInstallPanel extends JPanel
 {
 
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = -1055193854675583808L;
 
    JCheckBox fromFtp;
    JComboBox fileType;
-   
+
    JTextField pdbDir;
 
    private static ConfigPDBInstallPanel instance = new ConfigPDBInstallPanel();
-   
+
    static JDialog dialog;
-   
+
    private ConfigPDBInstallPanel(){
-      
+
       UserConfiguration   config = WebStartMain.getWebStartConfig();
 
       fileType = PDBUploadPanel.getFileFormatSelect();
@@ -62,7 +62,7 @@ public class ConfigPDBInstallPanel extends JPanel
       Box hBox = Box.createHorizontalBox();
 
       pdbDir = new JTextField(20);
-      
+
       String conf = System.getProperty(UserConfiguration.PDB_DIR);
       if ( conf != null){
          pdbDir.setText(conf);
@@ -106,37 +106,37 @@ public class ConfigPDBInstallPanel extends JPanel
       this.add(vBox);
 
    }
-   
+
    public static void showDialog(){
       if ( dialog != null) {
-        
+
          dialog.setVisible(true);
          return;
       }
-      
+
       dialog = new JDialog();
       dialog.setSize(new Dimension(600,300));
       Box vBox = Box.createVerticalBox();
-      
+
       vBox.add(instance);
 
-      
-      
+
+
       UIManager.LookAndFeelInfo lookAndFeels[] = UIManager.getInstalledLookAndFeels();
       JPanel panel = new JPanel();
-      
+
       for(int i = 0; i < lookAndFeels.length; i++){
         JButton button = new JButton(lookAndFeels[i].getName());
         button.addActionListener(new MyAction(dialog));
         panel.add(button);
       }
-      
+
       JTabbedPane jTab = new JTabbedPane();
       jTab.addTab("Select User Interface", null, panel, "Select the Look and Feel of the application.");
-           
+
       vBox.add(jTab);
       vBox.add(Box.createGlue());
-      
+
       JButton apply = new JButton("Apply");
       apply.addActionListener(new ActionListener(){
          @Override
@@ -145,7 +145,7 @@ public class ConfigPDBInstallPanel extends JPanel
             dialog.dispose();
          }
       });
-      
+
       JButton close = new JButton("Cancel");
 
       close.addActionListener(new ActionListener(){
@@ -163,13 +163,13 @@ public class ConfigPDBInstallPanel extends JPanel
 
       dialog.getContentPane().add(vBox);
       dialog.setVisible(true);
-      
+
    }
 
    protected void applyValues()
    {
       UserConfiguration config = WebStartMain.getWebStartConfig();
-      
+
       String dir = pdbDir.getText();
       config.setPdbFilePath(dir);
       boolean fromFtpF = fromFtp.isSelected();
@@ -180,10 +180,10 @@ public class ConfigPDBInstallPanel extends JPanel
       }
       String fileFormat = (String)fileType.getSelectedItem();
       config.setFileFormat(fileFormat);
-      
+
       // and now persist..
       WebStartMain.persistConfig(config);
-      
+
    }
 
    public JCheckBox getFromFtp()
@@ -203,18 +203,18 @@ public class ConfigPDBInstallPanel extends JPanel
    }
 
 
-   
+
 
 }
 
 class MyAction implements ActionListener{
    JDialog dialog;
-   
+
    public MyAction(JDialog dialog) {
       this.dialog= dialog;
    }
-   
-   
+
+
    @Override
 @SuppressWarnings("unused")
 public void actionPerformed(ActionEvent ae){
@@ -229,13 +229,13 @@ public void actionPerformed(ActionEvent ae){
      }
      try{
        UIManager.setLookAndFeel(lookAndFeelClassName);
-      
+
        SwingUtilities.updateComponentTreeUI(dialog);
-       
+
        SwingUtilities.updateComponentTreeUI( AlignmentGui.getInstanceNoVisibilityChange());
      }
      catch(Exception e){
-       JOptionPane.showMessageDialog(dialog, "Can't change look and feel:" 
+       JOptionPane.showMessageDialog(dialog, "Can't change look and feel:"
 + lookAndFeelClassName, "Invalid PLAF", JOptionPane.ERROR_MESSAGE);
      }
    }

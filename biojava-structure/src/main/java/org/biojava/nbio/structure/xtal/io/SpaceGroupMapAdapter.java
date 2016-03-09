@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 27 Mar 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.xtal.io;

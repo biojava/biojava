@@ -21,22 +21,22 @@
 /*
 /*
  * Copyright (c) 2002 Sun Microsystems, Inc. All  Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * -Redistributions of source code must retain the above copyright
  *  notice, this list of conditions and the following disclaimer.
- * 
+ *
  * -Redistribution in binary form must reproduct the above copyright
  *  notice, this list of conditions and the following disclaimer in
  *  the documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of Sun Microsystems, Inc. or the names of contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- * 
+ *
  * This software is provided "AS IS," without a warranty of any kind. ALL
  * EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
  * ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
@@ -48,7 +48,7 @@
  * INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY
  * OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE SOFTWARE, EVEN
  * IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- * 
+ *
  * You acknowledge that Software is not designed, licensed or intended for
  * use in the design, construction, operation or maintenance of any nuclear
  * facility.
@@ -75,15 +75,15 @@ import java.util.Date;
 * Tracks Memory allocated & used, displayed in graph form.
 */
 public class MemoryMonitor extends JPanel {
-   
+
    static JCheckBox dateStampCB = new JCheckBox("Output Date Stamp");
    public Surface surf;
    JPanel controls;
    boolean doControls;
    JTextField tf;
-   
+
    public static final long serialVersionUID = 56289234782130l;
-   
+
    public MemoryMonitor() {
        setLayout(new BorderLayout());
        setBorder(new TitledBorder(new EtchedBorder(), "Memory Monitor"));
@@ -111,7 +111,7 @@ public class MemoryMonitor extends JPanel {
                    surf.stop();
                    add(controls);
                } else {
-                   try { 
+                   try {
                        surf.sleepAmount = Long.parseLong(tf.getText().trim());
                    } catch (Exception ex) {}
                    surf.start();
@@ -122,12 +122,12 @@ public class MemoryMonitor extends JPanel {
            }
        });
    }
-   
-   
+
+
    public class Surface extends JPanel implements Runnable {
-       
+
        public static final long serialVersionUID = 2387409854370432908l;
-       
+
        public Thread thread;
        public long sleepAmount = 1000;
        private int w, h;
@@ -147,8 +147,8 @@ public class MemoryMonitor extends JPanel {
        private Color graphColor = new Color(46, 139, 87);
        private Color mfColor = new Color(0, 100, 0);
        private String usedStr;
-       
-       
+
+
        public Surface() {
            setBackground(Color.black);
            addMouseListener(new MouseAdapter() {
@@ -158,60 +158,60 @@ public class MemoryMonitor extends JPanel {
                }
            });
        }
-       
+
        @Override
 	public Dimension getMinimumSize() {
            return getPreferredSize();
        }
-       
+
        @Override
 	public Dimension getMaximumSize() {
            return getPreferredSize();
        }
-       
+
        @Override
 	public Dimension getPreferredSize() {
            return new Dimension(135,80);
        }
-       
-       
+
+
        @Override
 	public void paint(Graphics g) {
-           
+
            if (big == null) {
                return;
            }
-           
+
            big.setBackground(getBackground());
            big.clearRect(0,0,w,h);
-           
+
            float freeMemory = (float) r.freeMemory();
            float totalMemory = (float) r.totalMemory();
-           
+
            // .. Draw allocated and used strings ..
            big.setColor(Color.green);
            big.drawString(String.valueOf((int) totalMemory/1024) + "K allocated",  4.0f, (float) ascent+0.5f);
-           usedStr = String.valueOf(((int) (totalMemory - freeMemory))/1024) 
+           usedStr = String.valueOf(((int) (totalMemory - freeMemory))/1024)
            + "K used";
            big.drawString(usedStr, 4, h-descent);
-           
+
            // Calculate remaining size
            float ssH = ascent + descent;
            float remainingHeight = (float) (h - (ssH*2) - 0.5f);
            float blockHeight = remainingHeight/10;
            float blockWidth = 20.0f;
            //float remainingWidth = (float) (w - blockWidth - 10);
-           
+
            // .. Memory Free ..
            big.setColor(mfColor);
            int MemUsage = (int) ((freeMemory / totalMemory) * 10);
            int i = 0;
-           for ( ; i < MemUsage ; i++) { 
+           for ( ; i < MemUsage ; i++) {
                mfRect.setRect(5,(float) ssH+i*blockHeight,
                        blockWidth,(float) blockHeight-1);
                big.fill(mfRect);
            }
-           
+
            // .. Memory Used ..
            big.setColor(Color.green);
            for ( ; i < 10; i++)  {
@@ -219,7 +219,7 @@ public class MemoryMonitor extends JPanel {
                        blockWidth,(float) blockHeight-1);
                big.fill(muRect);
            }
-           
+
            // .. Draw History Graph ..
            big.setColor(graphColor);
            int graphX = 30;
@@ -228,38 +228,38 @@ public class MemoryMonitor extends JPanel {
            int graphH = (int) remainingHeight;
            graphOutlineRect.setRect(graphX, graphY, graphW, graphH);
            big.draw(graphOutlineRect);
-           
+
            int graphRow = graphH/10;
-           
+
            // .. Draw row ..
            for (int j = graphY; j <= graphH+graphY; j += graphRow) {
                graphLine.setLine(graphX,j,graphX+graphW,j);
                big.draw(graphLine);
            }
-           
+
            // .. Draw animated column movement ..
            int graphColumn = graphW/15;
-           
+
            if (columnInc == 0) {
                columnInc = graphColumn;
            }
-           
+
            for (int j = graphX+columnInc; j < graphW+graphX; j+=graphColumn) {
                graphLine.setLine(j,graphY,j,graphY+graphH);
                big.draw(graphLine);
            }
-           
+
            --columnInc;
-           
+
            if (pts == null) {
                pts = new int[graphW];
                ptNum = 0;
            } else if (pts.length != graphW) {
                int tmp[] = null;
-               if (ptNum < graphW) {     
+               if (ptNum < graphW) {
                    tmp = new int[ptNum];
                    System.arraycopy(pts, 0, tmp, 0, tmp.length);
-               } else {        
+               } else {
                    tmp = new int[graphW];
                    System.arraycopy(pts, pts.length-tmp.length, tmp, 0, tmp.length);
                    ptNum = tmp.length - 2;
@@ -290,33 +290,33 @@ public class MemoryMonitor extends JPanel {
            }
            g.drawImage(bimg, 0, 0, this);
        }
-       
-       
+
+
        public void start() {
            thread = new Thread(this);
            thread.setPriority(Thread.MIN_PRIORITY);
            thread.setName("MemoryMonitor");
            thread.start();
        }
-       
-       
+
+
        public synchronized void stop() {
            thread = null;
            notify();
        }
-       
-       
+
+
        @Override
 	public void run() {
-           
+
            Thread me = Thread.currentThread();
-           
+
            while (thread == me && !isShowing() || getSize().width == 0) {
                try {
                    Thread.sleep(500);
                } catch (InterruptedException e) { return; }
            }
-           
+
            while (thread == me && isShowing()) {
                Dimension d = getSize();
                if (d.width != w || d.height != h) {
@@ -340,8 +340,8 @@ public class MemoryMonitor extends JPanel {
            thread = null;
        }
    }
-   
-   
+
+
    public static void main(String s[]) {
        final MemoryMonitor demo = new MemoryMonitor();
        WindowListener l = new WindowAdapter() {

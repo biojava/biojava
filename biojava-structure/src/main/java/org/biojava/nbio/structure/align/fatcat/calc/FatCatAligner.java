@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,8 +20,8 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align.fatcat.calc;
@@ -40,11 +40,11 @@ import java.util.List;
 
 
 /** A class that does calculations on an AFPChain
- * 
+ *
  * @author Andreas Prlic
  *
  */
-public class FatCatAligner 
+public class FatCatAligner
 {
 
    public static final boolean debug = false;
@@ -52,36 +52,36 @@ public class FatCatAligner
 
    AFPChain afpChain ;
    Group[] twistedGroups;
-   
-   
-   
+
+
+
    public AFPChain getAfpChain()
    {
       return afpChain;
    }
 
-  
+
    public Group[] getTwistedGroups()
    {
-	   	  
+
       return twistedGroups;
    }
-   
+
    public void setTwistedGroups(Group[] twistedGroups)
    {
 	   this.twistedGroups = twistedGroups;
    }
 
-   
+
    public  void align(Atom[] ca1, Atom[] ca2, boolean doRigid, FatCatParameters params) throws StructureException{
 
 	  long tstart = System.currentTimeMillis();
-    
+
       afpChain = new AFPChain(FatCat.algorithmName);
       afpChain.setCa1Length(ca1.length);
       afpChain.setCa2Length(ca2.length);
- 
-      
+
+
 
       AFPCalculator.extractAFPChains(params, afpChain,ca1, ca2);
 
@@ -90,7 +90,7 @@ public class FatCatAligner
       if (printTimeStamps)
          System.out.println("calculation took:" + (cend - tstart) + " ms.");
 
-      
+
       AFPCalculator.sortAfps(afpChain,ca1,ca2);
 
       if ( printTimeStamps) {
@@ -99,25 +99,25 @@ public class FatCatAligner
 
          System.out.println("sorting  took:" + (send - cend) + " ms.");
       }
-      
+
       if ( doRigid)
          this.twistedGroups = rChainAfp(params, afpChain,ca1,ca2);
 
       else {
          this.twistedGroups = chainAfp(params,afpChain,ca1,ca2);
       }
-      
+
      // long start = System.currentTimeMillis();
 		long end = System.currentTimeMillis();
 		afpChain.setCalculationTime(end-tstart);
 		if ( printTimeStamps)
 			System.out.println("TOTAL calc time: " + (end -tstart) / 1000.0);
-   
+
    }
-   
-   
-   
-   
+
+
+
+
    /** runs rigid chaining process
    *
    */
@@ -129,16 +129,16 @@ public class FatCatAligner
 
   /**
    * run AFP chaining allowing up to maxTra flexible regions.
-   * Input is original coordinates. 
-   * 
+   * Input is original coordinates.
+   *
    */
   private static Group[] chainAfp(FatCatParameters params,AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException{
-     
+
 	// we don;t want to rotate input atoms, do we?
 	  Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
-	  
+
      List<AFP> afpSet = afpChain.getAfpSet();
-     
+
      if (debug)
         System.out.println("entering chainAfp");
      int afpNum = afpSet.size();
@@ -156,9 +156,9 @@ public class FatCatAligner
      AFPChainer.doChainAfp(params,afpChain ,ca1,ca2);
 
      int afpChainLen = afpChain.getAfpChainLen();
-     
+
      if(afpChainLen < 1)     {
-        
+
         afpChain.setShortAlign(true);
         return new Group[0];
      } //very short alignment
@@ -168,13 +168,13 @@ public class FatCatAligner
 
         System.out.println("Afp chaining: time " + (chaintime-bgtime));
      }
-     
+
      // do post processing
-     
+
      AFPPostProcessor.postProcess(params, afpChain,ca1,ca2);
-          
-     // Optimize the final alignment 
-     
+
+     // Optimize the final alignment
+
      AFPOptimizer.optimizeAln(params, afpChain,ca1,ca2);
 
      AFPOptimizer.blockInfo( afpChain);
@@ -182,15 +182,15 @@ public class FatCatAligner
      AFPOptimizer.updateScore(params,afpChain);
 
      AFPAlignmentDisplay.getAlign(afpChain,ca1,ca2);
-                                            
+
      Group[] twistedPDB = AFPTwister.twistPDB(afpChain, ca1, ca2clone);
-     
+
      SigEva sig =  new SigEva();
      double probability = sig.calSigAll(params, afpChain);
      afpChain.setProbability(probability);
      double normAlignScore = sig.calNS(params,afpChain);
      afpChain.setNormAlignScore(normAlignScore);
-    
+
      /*
 
   SIGEVA  sig;
@@ -216,10 +216,10 @@ public class FatCatAligner
      return twistedPDB;
 
   }
-   
-   
 
 
 
-   
+
+
+
 }

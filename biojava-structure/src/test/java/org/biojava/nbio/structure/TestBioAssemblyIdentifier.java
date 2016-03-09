@@ -38,11 +38,11 @@ public class TestBioAssemblyIdentifier {
 		// Save global state
 		Class<? extends BioUnitDataProvider> prevProvider = BioUnitDataProviderFactory.getBioUnitDataProviderClass();
 		BioUnitDataProviderFactory.setBioUnitDataProvider(MmCifBiolAssemblyProvider.class);
-		
+
 		AtomCache cache = new AtomCache();
 		BioAssemblyIdentifier id;
 		Structure s;
-		
+
 		// first assembly
 		id = new BioAssemblyIdentifier("BIO:2ehz:1");
 		s = cache.getStructure(id);

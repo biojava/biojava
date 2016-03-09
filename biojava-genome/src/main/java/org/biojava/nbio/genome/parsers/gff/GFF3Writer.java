@@ -136,7 +136,7 @@ public class GFF3Writer {
                 if (noteindex < notesList.size() - 1) {
                     notes = notes + " ";
                 }
-            } 
+            }
 
         }
         return notes;

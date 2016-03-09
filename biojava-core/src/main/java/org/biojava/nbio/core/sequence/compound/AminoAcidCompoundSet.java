@@ -41,7 +41,7 @@ import java.util.*;
 public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Serializable {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4000344194364133456L;
 	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<String, AminoAcidCompound>();
@@ -89,7 +89,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
         //this amino acid under the presence of pylT which creates an anti-codon CUA & pylS
         //which then does the actual conversion to Pyl.
         aminoAcidCompoundCache.put("O", new AminoAcidCompound(this, "O", "Pyl", "Pyrrolysine", 255.3172f));
-        
+
         for(String oneLtr : aminoAcidCompoundCache.keySet()) {
         	AminoAcidCompound aa = aminoAcidCompoundCache.get(oneLtr);
         	String threeLtr = aa.getLongName().toUpperCase();

@@ -32,23 +32,23 @@ import java.util.LinkedHashMap;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SurvFitInfo {
- 
+
     private LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
     private LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
     private boolean weighted = false;
 
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public LinkedHashMap<String, StrataInfo> getUnweightedStrataInfoHashMap() {
         return unweightedStrataInfoHashMap;
     }
 
     /**
-     * 
-     * @param unweightedStrataInfoHashMap 
+     *
+     * @param unweightedStrataInfoHashMap
      */
     public void setUnweightedStrataInfoHashMap(LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap) {
         this.unweightedStrataInfoHashMap = unweightedStrataInfoHashMap;

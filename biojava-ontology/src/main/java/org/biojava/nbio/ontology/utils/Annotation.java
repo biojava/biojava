@@ -59,8 +59,8 @@ import java.util.Set;
  * @since 1.0
  */
 public interface Annotation  {
-  
-  
+
+
   /**
    * <p>
    * Retrieve the value of a property by key.
@@ -76,10 +76,10 @@ public interface Annotation  {
    * @return  the object associated with that key
    * @throws NoSuchElementException if there is no property with the key
    *
-   * 
+   *
    */
   Object getProperty(Object key) throws NoSuchElementException;
-  
+
   /**
    * <p>
    * Set the value of a property.
@@ -97,11 +97,11 @@ public interface Annotation  {
    * @throws IllegalArgumentException if the property <code>key</code> is not
    *         legal
    * @throws ChangeVetoException if this annotation object can't be changed, or
-   *         if the change was vetoed. 
+   *         if the change was vetoed.
    */
   void setProperty(Object key, Object value)
       throws IllegalArgumentException;
-      
+
   /**
    * Delete a property. Normal raw access to the property. For cleverer access, use
    * methods in AnnotationType.
@@ -110,12 +110,12 @@ public interface Annotation  {
    * @throws NoSuchElementException if the property doesn't exist
    * @throws ChangeVetoException if the change is vetoed
    * @since 1.3
-   * 
+   *
    */
-   
+
   public void removeProperty(Object key)
       throws NoSuchElementException;
-  
+
   /**
    * Returns whether there the property is defined. Normal raw access to the property. For cleverer access, use
    * methods in AnnotationType.
@@ -124,14 +124,14 @@ public interface Annotation  {
    * @return true if this Annotation knows about the key, false otherwise
    */
   boolean containsProperty(Object key);
-  
+
   /**
    * Get a set of key objects.
    *
    * @return  a Set of key objects
    */
   Set keys();
-  
+
   /**
    * Return a map that contains the same key/values as this Annotation.
    * <p>
@@ -141,7 +141,7 @@ public interface Annotation  {
    * @return a Map
    */
   Map asMap();
-   
+
   /**
    * <p>
    * A really useful empty and immutable annotation object.

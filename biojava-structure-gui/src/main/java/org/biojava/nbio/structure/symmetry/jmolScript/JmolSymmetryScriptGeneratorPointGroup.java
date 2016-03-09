@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
@@ -45,38 +45,38 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	private static String TWO_FOLD_AXIS_COLOR = "deepskyblue";
 	private static String THREE_FOLD_AXIS_COLOR = "lime";
 	private static double AXIS_SCALE_FACTOR = 1.2;
-	
+
 	private RotationAxisAligner rotationAxisAligner = null;
 	private RotationGroup rotationGroup = null;
 	private Polyhedron polyhedron = null;
 	private String name = "";
 	private String defaultColoring = "";
 	private boolean onTheFly = true;
-	
+
 	public JmolSymmetryScriptGeneratorPointGroup(RotationAxisAligner rotationAxisAligner, String name) {
 		this.rotationAxisAligner = rotationAxisAligner;
 		this.rotationGroup = this.rotationAxisAligner.getRotationGroup();
 		this.name = name;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getZoom()
 	 */
 	@Override
 	abstract public int getZoom();
-	
+
 	public void setOnTheFly(boolean onTheFly) {
 		this.onTheFly = onTheFly;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getDefaultOrientation()
 	 */
 	@Override
-	public String getDefaultOrientation() {	
+	public String getDefaultOrientation() {
 		StringBuilder s = new StringBuilder();
 		s.append(setCentroid());
-		
+
 		// calculate  orientation
 		Quat4d q = new Quat4d();
 		q.set(polyhedron.getViewMatrix(0));
@@ -86,7 +86,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		r.normalize();
 		q.mul(r);
 		q.normalize();
-		
+
 		// set orientation
 		s.append("moveto 0 quaternion{");
 		s.append(jMolFloat(q.x));
@@ -99,7 +99,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append("};");
 		return s.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getOrientationCount()
 	 */
@@ -107,15 +107,15 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	public int getOrientationCount() {
 		return polyhedron.getViewCount();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getOrientation(int)
 	 */
 	@Override
-	public String getOrientation(int index) {	
+	public String getOrientation(int index) {
 		StringBuilder s = new StringBuilder();
 		s.append(setCentroid());
-		
+
 		// calculate  orientation
 		Quat4d q = new Quat4d();
 		q.set(polyhedron.getViewMatrix(index));
@@ -125,7 +125,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		r.normalize();
 		q.mul(r);
 		q.normalize();
-		
+
 		// set orientation
 		s.append("moveto 4 quaternion{");
 		s.append(jMolFloat(q.x));
@@ -139,7 +139,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(";");
 		return s.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getOrientationWithZoom(int)
 	 */
@@ -149,13 +149,13 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(getOrientation(index));
 		s.insert(s.length()-1, getZoom());
 		return s.toString();
-		
+
 	}
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getOrientationName(int)
 	 */
 	@Override
-	public String getOrientationName(int index) {	
+	public String getOrientationName(int index) {
 	    return polyhedron.getViewName(index);
 	}
 
@@ -163,14 +163,14 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getTransformation()
 	 */
 	@Override
-	public Matrix4d getTransformation() {	
+	public Matrix4d getTransformation() {
 	    return rotationAxisAligner.getTransformation();
 	}
-	
+
 	public void setDefaultColoring(String colorScript) {
 		this.defaultColoring = colorScript;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#drawPolyhedron()
 	 */
@@ -179,7 +179,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		StringBuilder s = new StringBuilder();
 
 		Point3d[] vertices = getPolyhedronVertices();
-		
+
 		int index = 0;
 		double width = getMaxExtension()*0.015;
 
@@ -201,7 +201,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		return s.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#hidePolyhedron()
 	 */
@@ -209,7 +209,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	public String hidePolyhedron() {
 		return "draw polyhedron* off;";
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#showPolyhedron()
 	 */
@@ -217,7 +217,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	public String showPolyhedron() {
 		return "draw polyhedron* on;";
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#drawAxes()
 	 */
@@ -229,7 +229,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			return drawSymmetryAxes();
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#hideAxes()
 	 */
@@ -237,7 +237,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	public String hideAxes() {
 		return "draw axes* off;";
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#showAxes()
 	 */
@@ -245,30 +245,30 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	public String showAxes() {
 		return "draw axes* on;";
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#playOrientations()
 	 */
 	@Override
 	public String playOrientations() {
 		StringBuilder s = new StringBuilder();
-		
+
 		// draw point group
-				
+
 		if ( rotationGroup.getPointGroup().equals("C1")) {
 			s.append(drawFooter("Asymmetric", "white"));
 		} else {
 			s.append(drawFooter("Point group " + rotationGroup.getPointGroup(), "white"));
 		}
-		
+
 		// draw polygon
 		s.append(drawPolyhedron()); // draw invisibly
 		s.append(showPolyhedron());
-			
+
 		// draw axes
 		s.append(drawAxes());
 		s.append(showAxes());
-		
+
 		// loop over all orientations with 4 sec. delay
 		for (int i = 0; i < getOrientationCount(); i++) {
 			s.append(deleteHeader());
@@ -276,15 +276,15 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			s.append(drawHeader(polyhedron.getViewName(i), "white"));
 			s.append("delay 4;");
 		}
-		
+
 		// go back to first orientation
 		s.append(deleteHeader());
 		s.append(getOrientationWithZoom(0));
 		s.append(drawHeader(polyhedron.getViewName(0), "white"));
-		
+
 		return s.toString();
-	}	
-	
+	}
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#colorBySubunit()
 	 */
@@ -314,7 +314,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			}
 		}
 	    Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
-	    
+
 		for (int i = 0; i < orbits.size(); i++) {
 			for (int j = 0; j < fold; j++) {
 				// assign alternating color sets to adjacent orbits
@@ -340,7 +340,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		return defaultColoring + getJmolColorScript(colorMap) + getJmolLigandScript();
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#colorBySequenceCluster()
 	 */
@@ -355,7 +355,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	    Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
 	    Color4f[] colors = ColorConverter.convertColor4f(col);
 		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
-		
+
 		for (int i = 0; i < n; i++) {
 			Color4f c = colors[seqClusterIds.get(i)];
 			List<String> ids = colorMap.get(c);
@@ -367,10 +367,10 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			ids.add(id);
 
 		}
-		
+
 		return defaultColoring + getJmolColorScript(colorMap) + getJmolLigandScript();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#colorBySymmetry()
 	 */
@@ -385,14 +385,14 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		int n = subunits.getSubunitCount();
 		int fold = rotationGroup.getRotation(0).getFold();
-		
+
 		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
 
 		// Simple Cn symmetry
 		if (pointGroup.startsWith("C") && n == fold) {
 			colorMap = getCnColorMap();
 			// complex cases
-		} else if ((pointGroup.startsWith("D") && orbits.size() > 2) || 
+		} else if ((pointGroup.startsWith("D") && orbits.size() > 2) ||
 				pointGroup.equals("T")|| pointGroup.equals("O") || pointGroup.equals("I")) {
 			int nColor = 0;
 			if (orbits.size() % 2 == 0) {
@@ -400,11 +400,11 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			} else {
 				nColor = (orbits.size() + 1)/2;
 			}
-			Color4f[] colors = getSymmetryColors(nColor); 
+			Color4f[] colors = getSymmetryColors(nColor);
 
 			for (int i = 0; i < orbits.size(); i++) {
 				int colorIndex = i;
-				
+
 				// reverse colors once the center of the structure has been reached
 				if (i >= nColor) {
 					colorIndex = orbits.size() - 1 - i;
@@ -424,7 +424,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			// Simple Dn symmetry
 		} else {
 			Color4f[] colors = getSymmetryColors(orbits.size());
-			
+
 			for (int i = 0; i < orbits.size(); i++) {
 				Color4f c = new Color4f(colors[i]);
 				List<String> ids = colorMap.get(c);
@@ -439,10 +439,10 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				}
 			}
 		}
-		
+
 		return defaultColoring + getJmolColorScript(colorMap) + getJmolLigandScript();
 	}
-	
+
 	// --- protected methods ---
 	/**
 	 * Returns the maximum extension (length) of structure
@@ -454,7 +454,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		maxExtension = Math.max(maxExtension, dimension.z);
 		return maxExtension;
 	}
-	
+
 	/**
 	 * Returns the mean extension (length) of structure
 	 * @return
@@ -463,7 +463,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		Vector3d dimension = rotationAxisAligner.getDimension();
 		return (dimension.x+dimension.y+dimension.z)/3;
 	}
-	
+
 	/**
 	 * @return the axisTransformation
 	 */
@@ -505,9 +505,9 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	protected void setPolyhedron(Polyhedron polyhedron) {
 		this.polyhedron = polyhedron;
 	}
-	
+
 //  --- private methods ---
-	
+
 	private String getChainSpecification(List<Integer> modelNumbers, List<String> chainIds, int subunit) {
 		if (onTheFly) {
 			if (Collections.max(modelNumbers) > 1) {
@@ -520,7 +520,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			return chainIds.get(subunit) + "/" + (modelNumbers.get(subunit)+1);
 		}
 	}
-	
+
 	private Map<Color4f, List<String>> getCnColorMap() {
 		Subunits subunits = rotationAxisAligner.getSubunits();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
@@ -549,7 +549,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		return colorMap;
 	}
-	
+
 	private Point3d[] getPolyhedronVertices() {
 		Point3d[] vertices = polyhedron.getVertices();
 		Matrix4d reverseTransformation = rotationAxisAligner.getGeometicCenterTransformation();
@@ -558,7 +558,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		}
 		return vertices;
 	}
-	
+
 	/**
 	 * Return a color that is complementary to the symmetry color
 	 * @return
@@ -570,7 +570,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		complement.sub(strongestColor);
 		return complement;
 	}
-	
+
 	/**
 	 * Returns a unique color palette based on point group
 	 * @param nColors
@@ -584,7 +584,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			col = ColorBrewer.Greys.getColorPalette(nColors);
 	        colors = ColorConverter.convertColor4f(col);
 		} else if (pointGroup.startsWith("C")) {
-			col = ColorBrewer.YlGnBu.getColorPalette(nColors);	
+			col = ColorBrewer.YlGnBu.getColorPalette(nColors);
 	        colors = ColorConverter.convertColor4f(col);
 		} else if (pointGroup.startsWith("D")) {
 			col = ColorBrewer.YlOrRd.getColorPalette(nColors);
@@ -603,9 +603,9 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	        colors = ColorConverter.convertColor4f(col);
 		}
 		System.arraycopy(colors, 0, colors, 0, nColors);
-		return colors;	
+		return colors;
 	}
-	
+
 	private String drawInertiaAxes() {
 		StringBuilder s = new StringBuilder();
 		Point3d centroid = rotationAxisAligner.getGeometricCenter();
@@ -637,7 +637,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		}
         return s.toString();
 	};
-	
+
 	private String drawSymmetryAxes() {
 		StringBuilder s = new StringBuilder();
 
@@ -659,7 +659,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				color = N_FOLD_AXIS_COLOR;
 			} else {
 				radius = polyhedron.getCirumscribedRadius();
-			
+
 				if (r.getFold() == 2) {
 					color = TWO_FOLD_AXIS_COLOR;
 				} else if (r.getFold() == 3) {
@@ -668,13 +668,13 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 					color = N_FOLD_AXIS_COLOR;
 				}
 			}
-		
+
 
 			Point3d center = rotationAxisAligner.getGeometricCenter();
 			AxisAngle4d axisAngle = r.getAxisAngle();
 			Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
 			Vector3d refAxis = rotationAxisAligner.getRotationReferenceAxis();
-			
+
 			s.append(getSymmetryAxis(i, i+axes.size(), rotationGroup.getPointGroup(), r.getFold(), refAxis, radius, diameter, color, center, axis));
 	        i++;
 		}
@@ -682,7 +682,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		return s.toString();
 	}
 
-	private Vector3d getAligmentVector(Point3d point, Vector3d axis) {		
+	private Vector3d getAligmentVector(Point3d point, Vector3d axis) {
 		// for system with a single Cn axis
 		if (rotationGroup.getPointGroup().startsWith("C") || rotationGroup.getPointGroup().startsWith("D")) {
 			// if axis is orthogonal to principal axis, use principal axis as reference axis
@@ -700,7 +700,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		double dSqMin = Double.MAX_VALUE;
 		Point3d refPoint = null;
 		// find nearest point on polyhedron as reference point,
-		// but do not choose a point on the same axis (therefore, we 
+		// but do not choose a point on the same axis (therefore, we
 		// apply a distance threshold squared 5A*5A = 25A^2
 		for (Point3d v: getPolyhedronVertices()) {
 			double dSq = point.distanceSquared(v);
@@ -715,7 +715,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		ref.sub(point, refPoint);
 
-		// this ref vector is usually not orthogonal to the 
+		// this ref vector is usually not orthogonal to the
 		// axis. The following double-cross product makes it
 		// orthogonal.
 		ref.cross(axis, ref);
@@ -723,10 +723,10 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		ref.normalize();
 		return ref;
 	}
-	
+
 	private String getSymmetryAxis(int i, int j, String pointGroup, int n, Vector3d referenceAxis, double radius, float diameter, String color, Point3d center, Vector3d axis) {
 		boolean drawPolygon = true;
-		
+
 		Point3d p1 = new Point3d(axis);
 		p1.scaleAdd(-AXIS_SCALE_FACTOR * radius, center);
 
@@ -772,7 +772,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		return s.toString();
 	}
-	
+
 	private static String getPolygonJmol(int index, Point3d center, Vector3d referenceAxis, Vector3d axis, int n, String color, double radius, String name) {
 		StringBuilder s = new StringBuilder();
 		s.append("draw axesSymbol");
@@ -781,7 +781,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(" ");
 		s.append("polygon");
 		s.append(" ");
-		s.append(n+1); 
+		s.append(n+1);
 		s.append(getJmolPoint(center));
 
 		Vector3d[] vertexes = getPolygonVertices(axis, referenceAxis, center, n, radius);
@@ -817,10 +817,10 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		return s.toString();
 	}
-	
+
 	private static Vector3d[] getPolygonVertices(Vector3d axis, Vector3d referenceAxis, Point3d center, int n, double radius) {
 		Vector3d ref = new Vector3d(referenceAxis);
-		ref.scale(radius);		
+		ref.scale(radius);
 
 		AxisAngle4d axisAngle = new AxisAngle4d(axis, 0);
 		Vector3d[] vectors = new Vector3d[n];
@@ -828,7 +828,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		for (int i = 0; i < n; i++) {
 			axisAngle.angle = i * 2 * Math.PI/n;
-			vectors[i] = new Vector3d(ref);		
+			vectors[i] = new Vector3d(ref);
 			m.set(axisAngle);
 			// make sure matrix element m33 is 1.0. It's 0 on Linux.
 			m.setElement(3, 3, 1.0);
@@ -837,7 +837,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		}
 		return vectors;
 	}
-	
+
 	private static String getC2PolygonJmol(int index, Point3d center, Vector3d referenceAxis, Vector3d axis, String color, double radius, String name) {
 		StringBuilder s = new StringBuilder();
 		int n = 10;
@@ -847,7 +847,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(" ");
 		s.append("polygon");
 		s.append(" ");
-		s.append(n-1); 
+		s.append(n-1);
 		s.append(getJmolPoint(center));
 
 		Vector3d[] vertexes = getC2PolygonVertices(axis, referenceAxis, center, n, radius);
@@ -883,36 +883,36 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	}
 	private static Vector3d[] getC2PolygonVertices(Vector3d axis, Vector3d referenceAxis, Point3d center, int n, double radius) {
 		Vector3d ref = new Vector3d(referenceAxis);
-		ref.scale(4*radius);		
+		ref.scale(4*radius);
 
 		AxisAngle4d axisAngle = new AxisAngle4d(axis, 0);
 		int k = n / 2;
 		// draw arc 1/6 of a full circle
 		int f = 6;
-		Vector3d[] vectors = new Vector3d[n-2];	
+		Vector3d[] vectors = new Vector3d[n-2];
 		Matrix4d m = new Matrix4d();
-		
+
 		// first point of arc
 		axisAngle.angle = (k+0.5) * 2 * Math.PI/(f*k);
-		Vector3d begin = new Vector3d(ref);		
+		Vector3d begin = new Vector3d(ref);
 		m.set(axisAngle);
 		// make sure matrix element m33 is 1.0. It's 0 on Linux.
 		m.setElement(3, 3, 1.0);
 		m.transform(begin);
-		
+
 		// last point of arc
 		axisAngle.angle = (2*k-1+0.5) * 2 * Math.PI/(f*k);
-		Vector3d end = new Vector3d(ref);		
+		Vector3d end = new Vector3d(ref);
 		m.set(axisAngle);
 		// make sure matrix element m33 is 1.0. It's 0 on Linux.
 		m.setElement(3, 3, 1.0);
 		m.transform(end);
-		
+
 		// center of arc
 		Vector3d arcCenter = new Vector3d();
 		arcCenter.interpolate(begin, end, 0.5);
 		arcCenter.negate();
-		
+
 		// add translation component
 		Vector3d trans =  new Vector3d();
 		trans.sub(center, arcCenter);
@@ -920,7 +920,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		// draw arc (1/6 of a full circle)
 		for (int i = 0; i < k; i++) {
 			axisAngle.angle = (k + i + 0.5) * 2 * Math.PI/(f*k);
-			vectors[i] = new Vector3d(ref);		
+			vectors[i] = new Vector3d(ref);
 			m.set(axisAngle);
 			// make sure matrix element m33 is 1.0. It's 0 on Linux.
 			m.setElement(3, 3, 1.0);
@@ -932,7 +932,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		// don't draw first and last element, since the are already part of the previous arc
 		for (int i = k; i < 2*k-2; i++) {
 			axisAngle.angle = (f/2*k + i + 1.5) * 2 * Math.PI/(f*k);
-			vectors[i] = new Vector3d(ref);		
+			vectors[i] = new Vector3d(ref);
 			m.set(axisAngle);
 			// make sure matrix element m33 is 1.0. It's 0 on Linux.
 			m.setElement(3, 3, 1.0);
@@ -942,16 +942,16 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		}
 		return vectors;
 	}
-	
+
 
     private List<Rotation> getUniqueAxes() {
     	List<Rotation> uniqueRotations = new ArrayList<Rotation>();
-    	
+
     	for (int i = 0, n = rotationGroup.getOrder(); i < n; i++) {
 			Rotation rotationI = rotationGroup.getRotation(i);
 			AxisAngle4d axisAngleI = rotationI.getAxisAngle();
 			Vector3d axisI = new Vector3d(axisAngleI.x, axisAngleI.y, axisAngleI.z);
-			
+
 			boolean redundant = false;
 			for (Rotation r: uniqueRotations) {
 				AxisAngle4d axisAngleJ = r.getAxisAngle();
@@ -961,14 +961,14 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			    	break;
 			    }
 			}
-			
+
 			if (! redundant) {
 				uniqueRotations.add(rotationI);
 			}
     	}
         return uniqueRotations;
     }
-	
+
 	private String drawHeader(String text, String color) {
 		StringBuilder s = new StringBuilder();
 		s.append("set echo top center;");
@@ -981,11 +981,11 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(";");
 		return s.toString();
 	}
-	
+
 	private String deleteHeader() {
 		return "set echo top center;echo ;";
 	}
-	
+
 	private String drawFooter(String text, String color) {
 		StringBuilder s = new StringBuilder();
 		s.append("set echo bottom center;");
@@ -999,12 +999,12 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(";");
 		return s.toString();
 	}
-	
+
 	private String setCentroid() {
 		// calculate center of rotation
 	//	Point3d centroid = axisTransformation.getGeometricCenter();
 		Point3d centroid = rotationAxisAligner.getCentroid();
-			
+
 		// set centroid
 		StringBuilder s = new StringBuilder();
 		s.append("center");

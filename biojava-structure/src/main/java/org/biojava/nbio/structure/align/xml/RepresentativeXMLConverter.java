@@ -49,7 +49,7 @@ public class RepresentativeXMLConverter {
 
 			for ( String repr : representatives){
 				xml.openTag("pdbChain");
-				xml.attribute("name", repr);								
+				xml.attribute("name", repr);
 				xml.closeTag("pdbChain");
 			}
 			xml.closeTag("representatives");
@@ -86,14 +86,14 @@ public class RepresentativeXMLConverter {
 
 				NamedNodeMap map = pair.getAttributes();
 
-				String name =  map.getNamedItem("name").getTextContent();				
+				String name =  map.getNamedItem("name").getTextContent();
 				representatives.add(name);
 			}
 
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
 		return representatives;
 	}
 }

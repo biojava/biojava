@@ -37,7 +37,7 @@ public class CollectionTools {
         }
         return a;
     }
-    
+
     public static double[] toDoubleArray(Collection<Number> l) {
         double[] a = new double[l.size()];
         int i = 0;
@@ -46,7 +46,7 @@ public class CollectionTools {
         }
         return a;
     }
-    
+
     public static Object randomPick(Collection<Number> col) {
         Object[] objs = col.toArray(new Object[col.size()]);
         return objs[(int) Math.floor(Math.random() * objs.length)];

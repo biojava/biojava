@@ -26,15 +26,15 @@ import java.util.Random;
 
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 
-/** 
+/**
  * Contains the parameters to be sent to the MC optimization.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.0
  *
  */
 public class MultipleMcParameters implements ConfigStrucAligParams {
-	
+
 	private int randomSeed;
 	private int minBlockLen;
 	private int minAlignedStructures;
@@ -43,7 +43,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	private double distanceCutoff;
 	private int convergenceSteps;
 	private int nrThreads;
-	
+
 	/**
 	 * Constructor with DEFAULT values of the parameters.
 	 */
@@ -53,7 +53,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 
 	@Override
 	public List<String> getUserConfigParameters() {
-		
+
 		List<String> params = new ArrayList<String>();
 		params.add("RandomSeed");
 		params.add("MinBlockLen");
@@ -68,7 +68,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 
 	@Override
 	public List<String> getUserConfigParameterNames() {
-		
+
 		List<String> params = new ArrayList<String>();
 		params.add("Random Seed");
 		params.add("Minimum Block Length");
@@ -84,7 +84,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
-		
+
 		List<Class> params = new ArrayList<Class>();
 		params.add(Integer.class);
 		params.add(Integer.class);
@@ -99,14 +99,14 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 
 	@Override
 	public List<String> getUserConfigHelp() {
-		
+
 		List<String> params =new ArrayList<String>();
-		String randomSeed = 
+		String randomSeed =
 				"Random seed for the optimizer random number generator.";
-		String minBlockLen = 
+		String minBlockLen =
 				"Minimum number of aligned positions in a Block of the "
 				+ "Multiple Alignment.";
-		String minAlignedStructures = 
+		String minAlignedStructures =
 				"Minimum number of structures aligned in a column (without "
 				+ "gaps). If it is 0 the minimum is calculated as a third of "
 				+ "the total number of structures.";
@@ -115,7 +115,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 				+ " the structures.";
 		String dCutoff = "Distance Cutoff: the maximum allowed distance (in A) "
 				+ "between two aligned residues.";
-		String convergenceSteps = 
+		String convergenceSteps =
 				"Number of steps without a change in the alignment before "
 				+ "stopping. Proportional to the calculation time. "
 				+"If it is 0 the convergence steps are calculated proportional"
@@ -123,7 +123,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 		String nrThreads =
 				"Number of threads to be used for the seed calculation (all-"
 				+ "to-all pairwise alignments) and the MC optimization.";
-		
+
 		params.add(randomSeed);
 		params.add(minBlockLen);
 		params.add(minAlignedStructures);
@@ -147,7 +147,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 
 	@Override
 	public void reset() {
-		
+
 		randomSeed = new Random().nextInt(10000);
 		minBlockLen = 10;
 		minAlignedStructures = 0;
@@ -220,5 +220,5 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 
 	public void setDistanceCutoff(Double distanceCutoff) {
 		this.distanceCutoff = distanceCutoff;
-	}	
+	}
 }

@@ -46,7 +46,7 @@ public class SimpleAlignedSequenceTest {
     private AminoAcidCompoundSet cs;
 
     @Before
-    public void setup() throws CompoundNotFoundException { 
+    public void setup() throws CompoundNotFoundException {
         go = new ProteinSequence("ARND");
         lo = new ProteinSequence("CEQGHILKM");
         global = new SimpleAlignedSequence<ProteinSequence, AminoAcidCompound>(go, Arrays.asList(new Step[] {

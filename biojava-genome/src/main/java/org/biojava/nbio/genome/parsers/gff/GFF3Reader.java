@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
  * @author Hanno Hinsch
  */
 public class GFF3Reader {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(GFF3Reader.class);
 
 	private static final  Pattern p = Pattern.compile("\t");
@@ -65,7 +65,7 @@ public class GFF3Reader {
      * @return A FeatureList.
      * @throws IOException Something went wrong -- check exception detail message.
      */
-    
+
     public static FeatureList read(String filename, List<String> indexes) throws IOException {
     	logger.info("Reading: {}", filename);
 
@@ -87,7 +87,7 @@ public class GFF3Reader {
                     FeatureI f = parseLine(s);
                     if (f != null) {
                         features.add(f);
-             
+
                     }
                 }
             }
@@ -97,13 +97,13 @@ public class GFF3Reader {
         br.close();
         return features;
     }
-    
-    
+
+
     public static FeatureList read(String filename) throws IOException {
        return read(filename,new ArrayList<String>(0));
     }
-    
-    
+
+
     /**
      * create Feature from line of GFF file
      */
@@ -140,7 +140,7 @@ public class GFF3Reader {
             int temp = locationStart;
             locationStart = locationEnd;
             locationEnd = temp;
-           
+
         }
         Location location = Location.fromBio(locationStart, locationEnd, strand);
 

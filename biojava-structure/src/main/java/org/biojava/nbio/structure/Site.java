@@ -62,7 +62,7 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
         StringBuilder stringBuilder = new StringBuilder("SITE ");
         stringBuilder.append(siteID).append(" ").append(groups.size()).append(" ");
         for (Group group : groups) {
-            // 012345678910   
+            // 012345678910
             //'ARG H 221A '
             String groupString = String.format("%s %s",
                         group.getPDBName(),
@@ -73,7 +73,7 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
         return stringBuilder.toString();
     }
 
-   
+
     @Override
 	public String toPDB() {
         StringBuffer buffer = new StringBuffer();
@@ -101,7 +101,7 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
         int groupNum = 0;
         //new StringBuilder for adding the groups to
         StringBuilder stringBuilder = new StringBuilder();
-        
+
         while (groupsWritten < groups.size()) {
             StringBuilder groupsString = new StringBuilder();
             for (int i = 0; i < 4 && groupsWritten < groups.size(); i++) {
@@ -156,7 +156,7 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
      * REMARK 800 EVIDENCE_CODE: UNKNOWN
      * REMARK 800 SITE_DESCRIPTION: ACTIVE SITE
      *
-     * 
+     *
      */
     public String remark800toPDB() {
         StringBuffer stringBuffer = new StringBuffer();
@@ -258,8 +258,8 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
         hash = 37 * hash + (this.description != null ? this.description.hashCode() : 0);
         return hash;
     }
-    
-    
+
+
 
 	@Override
 	public int compareTo(Site other) {

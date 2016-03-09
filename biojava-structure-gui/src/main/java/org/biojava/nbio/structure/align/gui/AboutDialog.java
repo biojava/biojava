@@ -31,13 +31,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AboutDialog 
+public class AboutDialog
 {
    Box vBox;
    public AboutDialog(){
-      
+
    }
-   
+
    public void showDialog(){
       JDialog dialog = new JDialog();
 
@@ -46,18 +46,18 @@ public class AboutDialog
       ResourceManager mgr = ResourceManager.getResourceManager("ce");
 
       String msg = "";
-    	  
+
       msg += mgr.getString("ce.about");
-      
+
       msg += "<b>Currently suported algorithms and version:</b><br>";
       // add the Algorithms and  version nrs.
-      
+
       StructureAlignment[] algorithms = StructureAlignmentFactory.getAllAlgorithms();
       for (StructureAlignment algorithm: algorithms){
     	  msg+="<i>"+algorithm.getAlgorithmName()+"</i> V." +algorithm.getVersion()+"<br>";
       }
       //msg+="<hr>";
-      
+
       JEditorPane txt = new JEditorPane("text/html", msg);
       txt.setEditable(false);
 
@@ -65,12 +65,12 @@ public class AboutDialog
       scroll.setSize(new Dimension(300,500));
       vBox= Box.createVerticalBox();
       vBox.add(scroll);
-      
+
       txt.addHyperlinkListener(new HyperlinkListener(){
-         
+
          @Override
 		public void hyperlinkUpdate(HyperlinkEvent e) {
-             
+
              if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                  String href = e.getDescription();
                  BrowserOpener.showDocument(href);
@@ -79,14 +79,14 @@ public class AboutDialog
                  // change the mouse curor
                  vBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
              }
-             if (e.getEventType() == HyperlinkEvent.EventType.EXITED) { 
+             if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
                  vBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
              }
          }
      });
 
 
-      
+
 
       JButton close = new JButton("Close");
 
@@ -111,7 +111,7 @@ public class AboutDialog
 
       dialog.getContentPane().add(vBox);
       dialog.setVisible(true);
-      
-      
+
+
    }
 }

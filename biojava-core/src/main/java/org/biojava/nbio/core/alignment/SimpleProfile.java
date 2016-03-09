@@ -52,9 +52,9 @@ import java.util.*;
  */
 public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements Serializable, Profile<S, C> {
 
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private List<AlignedSequence<S, C>> list;
 	private List<S> originals;
 	private int length;
@@ -165,17 +165,17 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     public SimpleProfile(Collection<AlignedSequence<S,C>> alignedSequences) {
         list = new ArrayList<AlignedSequence<S,C>>();
         originals = new ArrayList<S>();
-        
+
         Iterator<AlignedSequence<S,C>> itr = alignedSequences.iterator();
         if(!itr.hasNext()) {
             throw new IllegalArgumentException("alignedSequences must not be empty");
         }
-        
+
         AlignedSequence<S, C> curAlignedSeq = itr.next();
         length = curAlignedSeq.getLength();
         list.add(curAlignedSeq);
         originals.add((S) curAlignedSeq.getOriginalSequence());
-        
+
         while (itr.hasNext()) {
             curAlignedSeq = itr.next();
             if (curAlignedSeq.getLength() != length) {
@@ -187,8 +187,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
         list = Collections.unmodifiableList(list);
         originals = Collections.unmodifiableList(originals);
     }
-	
-	
+
+
 	// methods for Profile
 
 	@Override
@@ -416,7 +416,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 		// TODO handle circular alignments
 		StringBuilder s = (header == null) ? new StringBuilder() : new StringBuilder(header);
-		
+
 		if ( webDisplay && list.size() == 2){
 			s.append("<div><pre>");
 		}

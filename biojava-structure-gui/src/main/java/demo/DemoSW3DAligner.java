@@ -66,7 +66,7 @@ public class DemoSW3DAligner {
 			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
 
-			AFPChain afpChain = algorithm.align(ca1,ca2,params);            
+			AFPChain afpChain = algorithm.align(ca1,ca2,params);
 
 			afpChain.setName1(name1);
 			afpChain.setName2(name2);

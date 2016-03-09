@@ -48,7 +48,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 
 	/**
 	 * Used in the the 'header' of each GenBank record.
-	 * 
+	 *
 	 * @param tag
 	 * @param text
 	 */
@@ -60,7 +60,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 
 	/**
 	 * Used in the the 'header' of each GenBank record.
-	 * 
+	 *
 	 * @param tag
 	 * @param text
 	 */
@@ -80,7 +80,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 	/**
 	 * used for DBLINK and any similar later line types. If the list of strings
 	 * is empty, nothing is written.
-	 * 
+	 *
 	 * @param tag
 	 * @param text_list
 	 */
@@ -148,7 +148,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 
 	/**
 	 * Write the LOCUS line.
-	 * 
+	 *
 	 * @param sequence
 	 * @param seqType
 	 */
@@ -186,16 +186,16 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		}
 
 		String division = _get_data_division(sequence);
-		
+
 		if (seqType != null) {
 			division = seqType;
 		}
 		assert units.length() == 2;
-		
+
 		// the next line does not seem right.. seqType == linear
 		// uncommenting for now
 		//assert division.length() == 3;
-		
+
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb, Locale.US);
 		formatter
@@ -210,12 +210,12 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		return output;
 		/*
 		 * assert len(line) == 79+1, repr(line) #plus one for new line
-		 * 
+		 *
 		 * assert line[12:28].rstrip() == locus, \ 'LOCUS line does not contain
 		 * the locus at the expected position:\n' + line assert line[28:29] ==
 		 * " " assert line[29:40].lstrip() == str(len(record)), \ 'LOCUS line
 		 * does not contain the length at the expected position:\n' + line
-		 * 
+		 *
 		 * #Tests copied from Bio.GenBank.Scanner assert line[40:44] in [' bp ',
 		 * ' aa '] , \ 'LOCUS line does not contain size units at expected
 		 * position:\n' + line assert line[44:47] in [' ', 'ss-', 'ds-', 'ms-'],
@@ -242,7 +242,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 	 * with newlines. A list of lines is also reasonable. A single (long) string
 	 * is perhaps the most natural of all. This means we may need to deal with
 	 * line wrapping.
-	 * 
+	 *
 	 * @param sequence
 	 */
 	private String _write_comment(S sequence) {
@@ -277,16 +277,16 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 
 		/*
 		 * gi = self._get_annotation_str(record, "gi", just_first=True)
-		 * 
+		 *
 		 * self._write_single_line("ACCESSION", accession) if gi != ".":
 		 * self._write_single_line("VERSION", "%s  GI:%s" \ % (acc_with_version,
 		 * gi)) else: self._write_single_line("VERSION", "%s" %
 		 * (acc_with_version))
-		 * 
+		 *
 		 * #The NCBI only expect two types of link so far, #e.g. "Project:28471"
 		 * and "Trace Assembly Archive:123456" #TODO - Filter the dbxrefs list
 		 * to just these? self._write_multi_entries("DBLINK", record.dbxrefs)
-		 * 
+		 *
 		 * try: #List of strings #Keywords should be given separated with semi
 		 * colons, keywords = "; ".join(record.annotations["keywords"]) #with a
 		 * trailing period: if not keywords.endswith(".") : keywords += "."
@@ -302,7 +302,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		 * record.annotations["segment"] if isinstance(segment, list): assert
 		 * len(segment)==1, segment segment = segment[0]
 		 * self._write_single_line("SEGMENT", segment)
-		 * 
+		 *
 		 * self._write_multi_line("SOURCE", \ self._get_annotation_str(record,
 		 * "source"))
 		 */
@@ -319,7 +319,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		 * "; ".join(record.annotations["taxonomy"]) #with a trailing period: if
 		 * not taxonomy.endswith(".") : taxonomy += "." except KeyError:
 		 * taxonomy = "." self._write_multi_line("", taxonomy)
-		 * 
+		 *
 		 * if "references" in record.annotations: self._write_references(record)
 		 */
 		if (!sequence.getNotesList().isEmpty()) {

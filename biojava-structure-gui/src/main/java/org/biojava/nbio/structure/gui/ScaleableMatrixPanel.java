@@ -16,9 +16,9 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
- * 
+ *
  */
 
 package org.biojava.nbio.structure.gui;
@@ -47,19 +47,19 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 
-/** A JPanel that can display the underlying distance matrix 
- * data of the protein structure alignment algorithm. It adds a 
+/** A JPanel that can display the underlying distance matrix
+ * data of the protein structure alignment algorithm. It adds a
  * JSlider to a JMatrixPanel.
- * 
+ *
  * see also JMatrixPanel.
- * 
+ *
  */
-public class ScaleableMatrixPanel 
-extends JPanel 
+public class ScaleableMatrixPanel
+extends JPanel
 implements ChangeListener, ActionListener {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8082261434322968652L;
 
@@ -67,15 +67,15 @@ implements ChangeListener, ActionListener {
 	protected JSlider slider;
 	protected JScrollPane scroll;
 	protected JComboBox coloring;
-	
+
 	protected Map<String,ContinuousColorMapper> gradients;
-	
+
 	protected static final int SLIDER_STEPS = 8; // Number of minor ticks per unit scaled
-	
-	
+
+
 	public static void main(String[] args){
 
-		PDBFileReader pdbr = new PDBFileReader();  
+		PDBFileReader pdbr = new PDBFileReader();
 		pdbr.setPath("/tmp/");
 
 
@@ -83,7 +83,7 @@ implements ChangeListener, ActionListener {
 		//String pdb2 = "1ede";
 
 		String pdb1 = "1buz";
-		String pdb2 = "1ali";            
+		String pdb2 = "1ali";
 
 		//String pdb1 = "5pti";
 		//String pdb2 = "5pti";
@@ -98,7 +98,7 @@ implements ChangeListener, ActionListener {
 		// step1 : read molecules
 		try {
 			Structure s1 = pdbr.getStructureById(pdb1);
-			Structure s2 = pdbr.getStructureById(pdb2);      
+			Structure s2 = pdbr.getStructureById(pdb2);
 
 			System.out.println("aligning " + pdb1 + " vs. " + pdb2);
 			System.out.println(s1);
@@ -118,25 +118,25 @@ implements ChangeListener, ActionListener {
 					f.dispose();
 				}
 
-						
-				
+
+
 			});
-						
+
 			smp.setMatrix(sc.getDistMat());
 			smp.setFragmentPairs(sc.getFragmentPairs());
 			smp.setAlternativeAligs(sc.getAlignments());
-			
+
 			for (int i = 0; i < sc.getAlignments().length; i++) {
 				AlternativeAlignment aa =sc.getAlignments()[i];
 				System.out.println(aa);
-				
+
 			}
-			
+
 			frame.getContentPane().add(smp);
 
 			frame.pack();
 			frame.setVisible(true);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -147,20 +147,20 @@ implements ChangeListener, ActionListener {
 
 		mPanel   = new JMatrixPanel();
 		Box vBox = Box.createVerticalBox();
-		
+
 		Box gradientBox = Box.createHorizontalBox();
 		vBox.add(gradientBox);
 		gradientBox.add(new JLabel("Coloring:"));
 		gradients = createGradients(); //sets gradients
 		//Set first gradient
 		this.setCellColor(gradients.values().iterator().next());
-		
+
 		coloring = new JComboBox(gradients.keySet().toArray(new String[] {}));
 		coloring.setRenderer(new GradientRenderer());
 		coloring.addActionListener(this);
 		coloring.setMaximumSize(new Dimension(1000,30));
 		gradientBox.add(coloring);
-		
+
 		int RES_MIN  = 0*SLIDER_STEPS;
 		int RES_MAX  = 8*SLIDER_STEPS;
 		int RES_INIT = 1*SLIDER_STEPS;
@@ -199,23 +199,23 @@ implements ChangeListener, ActionListener {
 
 	protected static Map<String,ContinuousColorMapper> createGradients() {
 		SortedMap<String,ContinuousColorMapper> gradients = new TreeMap<String,ContinuousColorMapper>();
-		
+
 		int i = 0; //prepend number, since sorted alphabetically
 		ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
 		LinearColorInterpolator interp;
 		GradientMapper gradient;
-		
+
 		/*
 		DefaultMatrixMapper defaultMapper = new DefaultMatrixMapper(10., .9f);
 		gradients.put((++i)+". Default", defaultMapper);
 		defaultMapper = new DefaultMatrixMapper(5., .9f);
 		gradients.put((++i)+". Sensitive", defaultMapper);
-		
-		
+
+
 		gradients.put((++i)+". Rainbow", GradientMapper.getGradientMapper(GradientMapper.RAINBOW_INTENSITY_GRADIENT, 0, 10));
 		gradients.put((++i)+". Rainbow", GradientMapper.getGradientMapper(GradientMapper.RAINBOW_INTENSITY_GRADIENT, 10, 0));
 		*/
-		
+
 
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
@@ -223,11 +223,11 @@ implements ChangeListener, ActionListener {
 		gradient.put( -50., new Color(hsv,new float[] {0f, .9f, 0f},1f));
 		gradient.put( 10., new Color(hsv,new float[] {1f, .9f, 1f},1f));
 		gradient.setInterpolator(interp);
-		
-		gradients.put((++i)+". -50 to 10", gradient);	
-		
-		
-		
+
+		gradients.put((++i)+". -50 to 10", gradient);
+
+
+
 		// Mimic DefaultMapper
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
@@ -235,9 +235,9 @@ implements ChangeListener, ActionListener {
 		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
 		gradient.put(10., new Color(hsv,new float[] {0f, .9f, 0f},1f));
 		gradient.setInterpolator(interp);
-		
+
 		gradients.put((++i)+". Default", gradient);
-		
+
 		// Sensitive DefaultMapper
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
@@ -245,9 +245,9 @@ implements ChangeListener, ActionListener {
 		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
 		gradient.put( 5., new Color(hsv,new float[] {0f, .9f, 0f},1f));
 		gradient.setInterpolator(interp);
-		
-		gradients.put((++i)+". Sensitive", gradient);	
-		
+
+		gradients.put((++i)+". Sensitive", gradient);
+
 		// color [0,1]import java.awt.Color;
 
 		interp = new LinearColorInterpolator(hsv);
@@ -258,19 +258,19 @@ implements ChangeListener, ActionListener {
 		gradient.put( 1+1e-6, Color.white);
 		gradient.put(5., Color.black);
 		gradient.setInterpolator(interp);
-		
+
 		gradients.put((++i)+". Emphasize low", gradient);
-		
-		
+
+
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
 		gradient = new GradientMapper(Color.green, Color.black, hsv);
 		gradient.put( 0., new Color(hsv,new float[] {0f, .9f, 0f},1f));
 		gradient.put( 100., new Color(hsv,new float[] {1f, .9f, 1f},1f));
 		gradient.setInterpolator(interp);
-		
-		gradients.put((++i)+". 0 to 100", gradient);	
-		
+
+		gradients.put((++i)+". 0 to 100", gradient);
+
 		// log color
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
@@ -278,10 +278,10 @@ implements ChangeListener, ActionListener {
 		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
 		gradient.put( 10., new Color(hsv,new float[] {0f, .9f, 0f},1f));
 		gradient.setInterpolator(interp);
-		
+
 		ContinuousColorMapper logGradient = new LogColorMapper(gradient,2);
-		gradients.put((++i)+". Logorithmic", logGradient);	
-		
+		gradients.put((++i)+". Logorithmic", logGradient);
+
 		// sqrt color
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
@@ -289,10 +289,10 @@ implements ChangeListener, ActionListener {
 		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
 		gradient.put( 4., new Color(hsv,new float[] {0f, .9f, 0f},1f));
 		gradient.setInterpolator(interp);
-		
+
 		ContinuousColorMapper sqrtGradient = new SqrtColorMapper(gradient);
 		gradients.put((++i)+". Square Root", sqrtGradient);
-		
+
 		GradientMapper black = new GradientMapper(Color.BLACK, Color.BLACK);
 		gradients.put((++i)+". Black", black);
 
@@ -301,16 +301,16 @@ implements ChangeListener, ActionListener {
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		
+
 		JSlider source = (JSlider)e.getSource();
-		
+
 		if ( source.getValueIsAdjusting()) {
 			//return;
 		}
-		
+
 		//System.out.println("Changed scale to "+source.getValue());
 		mPanel.setScale((float)source.getValue()/SLIDER_STEPS);
-		
+
 		scroll.repaint();
 		scroll.updateUI();
 	}
@@ -321,14 +321,14 @@ implements ChangeListener, ActionListener {
 
 	public void setMatrix(Matrix matrix) {
 		mPanel.setMatrix(matrix);
-	
-		
+
+
 	}
 
 	public JMatrixPanel getMatrixPanel(){
 		return mPanel;
 	}
-	
+
 	public FragmentPair[] getFragmentPairs(){
 		return mPanel.getFragmentPairs();
 	}
@@ -345,7 +345,7 @@ implements ChangeListener, ActionListener {
 	public void setAlternativeAligs(AlternativeAlignment[] aligs) {
 		mPanel.setAlternativeAligs(aligs);
 	}
-	
+
 	public int getSelectedAlignmentPos() {
 		return mPanel.getSelectedAlignmentPos();
 	}
@@ -371,7 +371,7 @@ implements ChangeListener, ActionListener {
 	/**
 	 * A renderer for the the gradient dropdown menu at the top of scaleableMatrixPanes.
 	 * Knows how to draw a gradient and nicely label it.
-	 * 
+	 *
 	 * @author Spencer Bliven
 	 *
 	 */
@@ -382,18 +382,18 @@ implements ChangeListener, ActionListener {
 		private int min,max;
 		JLabel title;
 		JPanel gradientContainer;
-		
+
 		public GradientRenderer() {
 			this.setPreferredSize(new Dimension(100,25));
 			this.setLayout(new BorderLayout());
 			this.min = -1;
 			this.max = 10;
-			
+
 			JPanel gradientBounds = new JPanel();
 			gradientBounds.setLayout(new BorderLayout());
 			//gradientBounds.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 			gradientBounds.add(new JLabel(Integer.toString(min)),BorderLayout.WEST);
-			
+
 			gradientContainer = new JPanel();
 			gradientContainer.setLayout(new BorderLayout());
 			gradientContainer.setOpaque(false);
@@ -403,11 +403,11 @@ implements ChangeListener, ActionListener {
 			//gradientBounds.setPreferredSize(new Dimension(200,25));
 			gradientBounds.add(gradientContainer,BorderLayout.CENTER);
 			gradientBounds.setOpaque(false);
-			
+
 			gradientBounds.add(new JLabel(Integer.toString(max)),BorderLayout.EAST);
-			
+
 			this.add(gradientBounds, BorderLayout.EAST);
-			
+
 			this.title = new JLabel("No gradient");
 			//this.title.setOpaque(true);
 			this.title.setHorizontalAlignment(JLabel.CENTER);
@@ -430,7 +430,7 @@ implements ChangeListener, ActionListener {
 			//Get the selected index. (The index param isn't
 			//always valid, so just use the value.)
 			String gradientLabel = (String)value;
-			
+
 			if (isSelected) {
 				setBackground(list.getSelectionBackground());
 				setForeground(list.getSelectionForeground());
@@ -438,7 +438,7 @@ implements ChangeListener, ActionListener {
 				setBackground(list.getBackground());
 				setForeground(list.getForeground());
 			}
-			
+
 			//Set the icon and text.  If icon was null, say so.
 			GradientPanel gradPanel = new GradientPanel(gradients.get(gradientLabel),min,max);
 			gradPanel.setPreferredSize(new Dimension(100,20));
@@ -449,7 +449,7 @@ implements ChangeListener, ActionListener {
 			title.setText(gradientLabel);
 
 			this.validate();
-			
+
 			return this;
 		}
 	}
@@ -468,5 +468,5 @@ implements ChangeListener, ActionListener {
         this.repaint();
 	}
 
-	
+
 }

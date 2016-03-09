@@ -47,13 +47,13 @@ public class JFatCatClient {
 	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
 	private static final String serverAPPEND    = "show?name1=%s&name2=%s";
-	
+
 	private static final String sendAPPEND      = "submit?name1=%s&name2=%s&version=%s";
-	
+
 	private static final String multiSendAPPEND = "jobSubmit?username=%s&version=%s";
-	
+
 	private static final String representAPPEND = "representatives?cluster=%s";
-	
+
 	private static final String serverHasResult = "hasResult?method=%s&name1=%s&name2=%s";
 
 	private static final int DEFAULT_TIMEOUT = 5000;
@@ -65,13 +65,13 @@ public class JFatCatClient {
 	private static String newline = System.getProperty("line.separator");
 
 	private static String KILL_JOB = "KILL_JOB";
-	
+
 	private static String COME_BACK_LATER = "COME_BACK_LATER";
 
 	static {
-		
+
 		generator = new Random();
-	
+
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -167,7 +167,7 @@ public class JFatCatClient {
 		return getAFPChainFromServer(serverLocation, method, name1, name2, ca1, ca2,DEFAULT_TIMEOUT);
 	}
 
-	public static AFPChain getAFPChainFromServer(String serverLocation , String method, String name1, String name2, Atom[] ca1, Atom[] ca2, int timeout) 
+	public static AFPChain getAFPChainFromServer(String serverLocation , String method, String name1, String name2, Atom[] ca1, Atom[] ca2, int timeout)
 	{
 
 		String serverURL = serverLocation + serverAPPEND;
@@ -233,12 +233,12 @@ public class JFatCatClient {
 		String version = resourceManager.getString("jfatcat.version");
 		return sendMultiAFPChainToServer(serverLocation, multiXML, username, version);
 	}
-	
+
 	public static String sendMultiAFPChainToServer(String serverLocation, String multiXML, String username, String version) throws JobKillException{
 		String multiSendURL = serverLocation + multiSendAPPEND;
 
 		String responseS = "";
-		
+
 		String u = String.format(multiSendURL,username,version);
 
 		int timeout = getTimeout();
@@ -246,7 +246,7 @@ public class JFatCatClient {
 		boolean submitted = false;
 
 		while (! submitted ){
-			try { 
+			try {
 				URL url = new URL(u);
 				InputStream response = HTTPConnectionTools.doPOST(url, multiXML,timeout);
 				responseS = convertStreamToString(response);
@@ -270,7 +270,7 @@ public class JFatCatClient {
 					logger.warn("Interrupted while sleeping", ex);
 				}
 			}
-		} 
+		}
 
 		if ( responseS.startsWith(KILL_JOB)){
 			throw new JobKillException("Server responded with KILL message.");
@@ -283,7 +283,7 @@ public class JFatCatClient {
 
 	public static int getRandomSleepTime() {
 
-		// now wait between 7 and 13 min. 
+		// now wait between 7 and 13 min.
 
 		int minTime = 560000;
 
@@ -295,7 +295,7 @@ public class JFatCatClient {
 	}
 
 
-	public static final void sendAFPChainToServer(String serverLocation, AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws JobKillException 
+	public static final void sendAFPChainToServer(String serverLocation, AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws JobKillException
 	{
 
 		String sendURL = serverLocation + sendAPPEND;
@@ -313,7 +313,7 @@ public class JFatCatClient {
 
 			String u = String.format(sendURL,afpChain.getName1() , afpChain.getName2(),version);
 
-			URL url = new URL(u); 
+			URL url = new URL(u);
 
 			InputStream response = HTTPConnectionTools.doPOST(url, xml,timeout);
 
@@ -366,7 +366,7 @@ public class JFatCatClient {
 				}
 				msg = PdbPairXMLConverter.convertXMLtoPairs(xml);
 
-			} 
+			}
 		}
 
 		return msg;
@@ -382,7 +382,7 @@ public class JFatCatClient {
 			cutoff = 40;
 		int timeout = getTimeout();
 		String u = String.format(representURL,cutoff);
-		
+
 		logger.info("Fetching representatives from "+u);
 		try {
 			URL url = new URL(u);

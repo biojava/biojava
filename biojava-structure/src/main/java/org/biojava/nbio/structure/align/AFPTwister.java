@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,8 +20,8 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align;
@@ -46,13 +46,13 @@ public class AFPTwister
 
    /**
     * calculate the total rmsd of the blocks
-    * output a merged pdb file for both proteins                                                                                                                                       
-     protein 1, in chain A                                                                                                                                                            
+    * output a merged pdb file for both proteins
+     protein 1, in chain A
     protein 2 is twisted according to the twists detected, in chain B
     * @return  twisted Groups
-    */     
+    */
    public static Group[] twistPDB(AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws StructureException {
-      //--------------------------------------------------------                                                                                                                         
+      //--------------------------------------------------------
 
       if ( afpChain.isShortAlign())
          return new Group[0];
@@ -96,9 +96,9 @@ public class AFPTwister
 
          transformOrigPDB(blockResSize[bk], blockResList[bk][0], blockResList[bk][1],  ca1, ca2, null,-1);
 
-         //transform pro2 according to comparison of pro1 and pro2 at give residues                                                                                         
-         if(bk > 0)      { 
-            b2 = e2; 
+         //transform pro2 according to comparison of pro1 and pro2 at give residues
+         if(bk > 0)      {
+            b2 = e2;
          }
 
          logger.debug("b2 is {} before  modifyCon", b2);
@@ -114,16 +114,16 @@ public class AFPTwister
             AFP a2 = afpSet.get(afpPos2);
             e2 = (a2.getP2() - e2)/ 2 + e2;
             logger.debug("e2 : {}", e2);
-         } else{ 
+         } else{
             // last one is until the end...
-            e2 = ca2.length; 
+            e2 = ca2.length;
          }
 
          // this copies the coordinates over into iniTwistPdb
          cloneAtomRange(iniTwistPdb, ca2, b2, e2);
 
          //bound[bk] = e2;
-         for(i = 0; i < blockSize[bk]; i ++)     {                       
+         for(i = 0; i < blockSize[bk]; i ++)     {
             focusAfpList[focusAfpn] = afpChainList[block2Afp[bk] + i];
             focusAfpn++;
          }
@@ -151,11 +151,11 @@ public class AFPTwister
       afpChain.setBlock2Afp(block2Afp);
       afpChain.setAfpChainList(afpChainList);
 
-      return twistOptimized(afpChain,ca1,origCA); 
+      return twistOptimized(afpChain,ca1,origCA);
    }
 
    /**       superimposing according to the optimized alignment
-    * 
+    *
     * @param afpChain
     * @param ca1
     * @param ca2
@@ -167,7 +167,7 @@ public class AFPTwister
       Atom[] optTwistPdb = new Atom[ca2.length];
 
       int gPos = -1;
-      for (Atom a : ca2){ 
+      for (Atom a : ca2){
          gPos++;
          optTwistPdb[gPos] = a;
       }
@@ -188,7 +188,7 @@ public class AFPTwister
           focusRes2 = new int[afpChain.getCa2Length()];
           afpChain.setFocusRes2(focusRes2);
       }
-      
+
       int[] optLen      = afpChain.getOptLen();
       int[][][] optAln  = afpChain.getOptAln();
 
@@ -197,9 +197,9 @@ public class AFPTwister
          // copies the atoms over to iniTwistPdb later on in modifyCod
          transformOrigPDB(optLen[bk], optAln[bk][0], optAln[bk][1], ca1, ca2,afpChain,bk);
 
-         //transform pro2 according to comparison of pro1 and pro2 at give residues                                                                                         
+         //transform pro2 according to comparison of pro1 and pro2 at give residues
          if(bk > 0)      { b2 = e2; }
-         if(bk < blockNum - 1)   { //bend at the middle of two consecutive blocks                                                                                           
+         if(bk < blockNum - 1)   { //bend at the middle of two consecutive blocks
             e2 = optAln[bk][1][optLen[bk] - 1];
             e2 = (optAln[bk + 1][1][0] - e2)/ 2 + e2;
          }
@@ -233,14 +233,14 @@ public class AFPTwister
    /**
     * transform the coordinates in the ca2 according to the superimposing of the given position pairs.
     * No Cloning, transforms input atoms.
-    */                                                                                                                                             
+    */
    // orig name: transPdb
    private static void transformOrigPDB(int n, int[] res1, int[] res2, Atom[] ca1, Atom[] ca2, AFPChain afpChain, int blockNr)
    throws StructureException
    {
       logger.debug("transforming original coordinates {} len1: {} res1: {} len2: {} res2: {}", n, ca1.length, res1.length, ca2.length, res2.length);
 
-      Atom[] cod1 = getAtoms(ca1, res1, n,false); 
+      Atom[] cod1 = getAtoms(ca1, res1, n,false);
       Atom[] cod2 = getAtoms(ca2, res2, n,false);
 
       //double  *cod1 = pro1->Cod4Res(n, res1);
@@ -255,7 +255,7 @@ public class AFPTwister
       t = svd.getTranslation();
 
       logger.debug("transPdb: transforming orig coordinates with matrix: {}", r);
-      
+
       if ( afpChain != null ){
          Matrix[] ms = afpChain.getBlockRotationMatrix();
          if ( ms == null)
@@ -302,9 +302,9 @@ public class AFPTwister
 
 
 
-   /** Clones and copies the Atoms from p2 into p1 range is between r1 and r2 
-    * 
-    * @param p1 
+   /** Clones and copies the Atoms from p2 into p1 range is between r1 and r2
+    *
+    * @param p1
     * @param p2
     * @param r1
     * @param r2
@@ -354,13 +354,13 @@ public class AFPTwister
    /**
     * Return the rmsd of the CAs between the input pro and this protein, at given positions.
     * quite similar to transPdb but while that one transforms the whole ca2, this one only works on the res1 and res2 positions.
-    *  
+    *
     *  Modifies the coordinates in the second set of Atoms (pro).
-    *                                                                                                                               
+    *
     * @return rmsd of CAs
     */
    private static double calCaRmsd(Atom[] ca1, Atom[] pro, int resn, int[] res1, int[] res2) throws StructureException
-   { 
+   {
 
 
 
@@ -378,7 +378,7 @@ public class AFPTwister
 
       r = svd.getRotation();
       t = svd.getTranslation();
-            
+
       for (Atom a : cod2){
 
          Calc.rotate(a.getGroup(), r);
@@ -389,10 +389,10 @@ public class AFPTwister
    }
 
    /**
-    * Set the list of equivalent residues in the two proteins given a list of AFPs    
-    * 
+    * Set the list of equivalent residues in the two proteins given a list of AFPs
+    *
     * WARNING: changes the values for FocusRes1, focusRes2 and FocusResn in afpChain!
-    *                                                                                                                                                 
+    *
     * @param afpChain the AFPChain to store resuts
     * @param afpn nr of afp
     * @param afpPositions
@@ -402,18 +402,18 @@ public class AFPTwister
 
    public static int afp2Res(AFPChain afpChain, int afpn, int[] afpPositions , int listStart   )
    {
-      int[] res1 = afpChain.getFocusRes1(); 
+      int[] res1 = afpChain.getFocusRes1();
       int[] res2 = afpChain.getFocusRes2();
       int minLen = afpChain.getMinLen();
-      
+
       int n = 0;
-      
+
       List<AFP> afpSet =afpChain.getAfpSet();
-           
+
       for(int i = listStart; i < listStart+afpn; i ++)      {
          int a = afpPositions[i];
          for(int j = 0; j < afpSet.get(a).getFragLen(); j ++)     {
-            if(n >= minLen) {              
+            if(n >= minLen) {
                throw new RuntimeException("Error: too many residues in AFPChainer.afp2Res!");
             }
             res1[n] = afpSet.get(a).getP1() + j;
@@ -421,11 +421,11 @@ public class AFPTwister
             n ++;
          }
       }
-      
+
       afpChain.setFocusRes1(res1);
       afpChain.setFocusRes2(res2);
       afpChain.setFocusResn(n);
-      
+
       if ( n == 0 ){
          logger.warn("n=0!!! + " + afpn + " " + listStart + " " + afpPositions.length);
       }

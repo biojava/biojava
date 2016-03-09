@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.genome;
 
@@ -42,7 +42,7 @@ public class FeatureListTest extends TestCase {
         fl.addIndex("transcript_id");
         assertEquals(1, fl.selectByAttribute("transcript_id").size());
 
-    
+
         FeatureList f2 = new FeatureList();
         f2.addIndex("transcript_id");
         f2.add(new Feature("seqname", "source", "type", new Location(1, 2), (double)0, 0, "gene_id \"gene_id_1\"; transcript_id \"transcript_id_1\";"));

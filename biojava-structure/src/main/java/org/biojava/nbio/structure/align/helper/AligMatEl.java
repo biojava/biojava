@@ -16,25 +16,25 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Mar 1, 2006
  *
  */
 package org.biojava.nbio.structure.align.helper;
 
-public class AligMatEl 
+public class AligMatEl
 extends IndexPair{
 
-   
-   
+
+
         /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -4040926588803887471L;
-		int value;       
+		int value;
         int contig;
-       
-        
+
+
         public AligMatEl(){
             super();
             value  = -1;
@@ -47,23 +47,23 @@ extends IndexPair{
         public void setContig(int contig) {
             this.contig = contig;
         }
-     
+
         public int getValue() {
             return value;
         }
         public void setValue(int value) {
             this.value = value;
         }
-        
+
         @Override
 		public String toString(){
-            String ret = "AligMatEl val:" + value + " contig:" + contig + 
+            String ret = "AligMatEl val:" + value + " contig:" + contig +
             " trackrow:" + getRow() + " trackcol:" + getCol();
             return ret;
         }
-        
+
     }
 
-    
+
 
 

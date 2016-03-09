@@ -32,7 +32,7 @@ import java.util.*;
  *
  * @author Matthew Pocock
  * @author Thomas Down
- * 
+ *
  * @since 1.0 as part of Annotation
  * @since 1.4 as top-level class
  * @see org.biojavax.EmptyRichAnnotation
@@ -46,29 +46,29 @@ implements Annotation, Serializable {
       key
     );
   }
-  
+
   public void setProperty(Object key, Object value){
     }
-  
+
   public void removeProperty(Object key)
-    
+
   {
-   
+
   }
-  
+
   public boolean containsProperty(Object key) {
     return false;
   }
-  
+
   public Set keys() {
     return Collections.EMPTY_SET;
   }
-  
+
   public Map asMap() {
     //return Collections.EMPTY_MAP; 1.3
     return new HashMap();
   }
-  
+
   private Object writeReplace() throws ObjectStreamException {
     try {
       return new StaticMemberPlaceHolder(Annotation.class.getField("EMPTY_ANNOTATION"));
@@ -76,16 +76,16 @@ implements Annotation, Serializable {
       throw new NotSerializableException(nsfe.getMessage());
     }
   }
-  
+
   public int hashCode() {
     return asMap().hashCode();
   }
-  
+
   public boolean equals(Object o) {
     if (! (o instanceof Annotation)) {
       return false;
     }
-    
+
     return ((Annotation) o).asMap().equals(asMap());
   }
 }

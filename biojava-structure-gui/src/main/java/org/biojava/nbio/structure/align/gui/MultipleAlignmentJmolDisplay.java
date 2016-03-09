@@ -46,34 +46,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility Class that provides helper methods for the visualization of 
+ * Utility Class that provides helper methods for the visualization of
  * {@link MultipleAlignment}s.
  * <p>
- * Currently supported: Alignment Panel Display, select aligned 
+ * Currently supported: Alignment Panel Display, select aligned
  * residues in Jmol by their PDB name, show a text Frame for any sequence
  * alignment format, basic Jmol display from a MultipleAlignment, generate
  * an artificial PDB structure with a new model for every aligned structure.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
  *
  */
 public class MultipleAlignmentJmolDisplay  {
 
-	private static final Logger logger = 
+	private static final Logger logger =
 			LoggerFactory.getLogger(MultipleAlignmentJmolDisplay.class);
 
 	/**
-	 * Utility method used in the {@link MultipleAlignmentJmol} Frame, 
-	 * when the aligned residues of a structure in the alignment have 
+	 * Utility method used in the {@link MultipleAlignmentJmol} Frame,
+	 * when the aligned residues of a structure in the alignment have
 	 * to be selected for formatting them (coloring and style).
-	 * 
+	 *
 	 * @param structNum the structure index (row) of the alignment
-	 * @param multAln the MultipleAlignment that contains the equivalent 
+	 * @param multAln the MultipleAlignment that contains the equivalent
 	 * 			positions
-	 * @param ca the atom array of the structure specified 
+	 * @param ca the atom array of the structure specified
 	 * 			(corresponding to the structure index)
-	 * @return List of pdb Strings corresponding to the aligned positions 
+	 * @return List of pdb Strings corresponding to the aligned positions
 	 * 			of the structure.
 	 */
 	public static List<String> getPDBresnum(int structNum,
@@ -96,10 +96,10 @@ public class MultipleAlignmentJmolDisplay  {
 	}
 
 	/**
-	 * Creates a new Frame with the MultipleAlignment Sequence Panel. 
-	 * The panel can communicate with the Jmol 3D visualization by 
+	 * Creates a new Frame with the MultipleAlignment Sequence Panel.
+	 * The panel can communicate with the Jmol 3D visualization by
 	 * selecting the aligned residues of every structure.
-	 * 
+	 *
 	 * @param multAln
 	 * @param jmol
 
@@ -111,10 +111,10 @@ public class MultipleAlignmentJmolDisplay  {
 		MultipleAligPanel me = new MultipleAligPanel(multAln, jmol);
 		JFrame frame = new JFrame();
 
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setTitle(jmol.getTitle());
 		me.setPreferredSize(new Dimension(
-				me.getCoordManager().getPreferredWidth() , 
+				me.getCoordManager().getPreferredWidth() ,
 				me.getCoordManager().getPreferredHeight()));
 
 		JMenuBar menu = MenuCreator.getAlignmentPanelMenu(
@@ -140,9 +140,9 @@ public class MultipleAlignmentJmolDisplay  {
 	}
 
 	/**
-	 * Creates a new Frame with the String output representation of the 
+	 * Creates a new Frame with the String output representation of the
 	 * {@link MultipleAlignment}.
-	 * 
+	 *
 	 * @param multAln
 	 * @param result String output
 	 */
@@ -151,7 +151,7 @@ public class MultipleAlignmentJmolDisplay  {
 
 		JFrame frame = new JFrame();
 
-		String title = multAln.getEnsemble().getAlgorithmName() + 
+		String title = multAln.getEnsemble().getAlgorithmName() +
 				" V."+multAln.getEnsemble().getVersion();
 		frame.setTitle(title);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -168,44 +168,44 @@ public class MultipleAlignmentJmolDisplay  {
 		js.getViewport().setBorder(null);
 
 		frame.getContentPane().add(js);
-		frame.pack();      
+		frame.pack();
 		frame.setVisible(true);
 	}
 
-	/** 
-	 * Display a MultipleAlignment with a JmolPanel. 
-	 * New structures are downloaded if they were 
-	 * not cached in the alignment and they are entirely 
+	/**
+	 * Display a MultipleAlignment with a JmolPanel.
+	 * New structures are downloaded if they were
+	 * not cached in the alignment and they are entirely
 	 * transformed here with the superposition information
 	 * in the Multiple Alignment.
-	 * 
+	 *
 	 * @param multAln
 	 * @return MultipleAlignmentJmol instance
 	 * @throws StructureException
 	 */
-	public static MultipleAlignmentJmol display(MultipleAlignment multAln) 
+	public static MultipleAlignmentJmol display(MultipleAlignment multAln)
 			throws StructureException {
 
 		List<Atom[]> rotatedAtoms = MultipleAlignmentDisplay.getRotatedAtoms(multAln);
 
-		MultipleAlignmentJmol jmol = 
+		MultipleAlignmentJmol jmol =
 				new MultipleAlignmentJmol(multAln, rotatedAtoms);
 
 		jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 		return jmol;
 	}
 
-	/** 
+	/**
 	 * Get an artifical Structure containing a different model for every
 	 * input structure, so that the alignment result can be viewed in Jmol.
 	 * The Atoms have to be rotated beforehand.
-	 * 
+	 *
 	 * @param atomArrays an array of Atoms for every aligned structure
-	 * @return a structure object containing a set of models, 
+	 * @return a structure object containing a set of models,
 	 * 			one for each input array of Atoms.
 	 * @throws StructureException
 	 */
-	public static final Structure getAlignedStructure(List<Atom[]> atomArrays) 
+	public static final Structure getAlignedStructure(List<Atom[]> atomArrays)
 			throws StructureException {
 
 		Structure s = new StructureImpl();

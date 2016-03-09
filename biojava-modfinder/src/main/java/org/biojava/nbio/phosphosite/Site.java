@@ -34,7 +34,7 @@ import java.util.zip.GZIPInputStream;
 public class Site {
 
 	private final static Logger logger = LoggerFactory.getLogger(Site.class);
-	
+
     public Site(){
 
 
@@ -113,7 +113,7 @@ public class Site {
             s.setGroup(group);
             s.setOrganism(organism);
             data.add(s);
-            
+
         }
         buf.close();
 

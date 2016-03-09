@@ -138,7 +138,7 @@ public class WeakValueHashMap extends AbstractMap {
 	    }
 	    return cache != null;
 	}
-	
+
 	public Object next() {
 	    if (cache == null) {
 		primeCache();
@@ -175,34 +175,34 @@ public class WeakValueHashMap extends AbstractMap {
     private static class WVMapEntry implements Map.Entry {
 	private Object key;
 	private Object value;
-    
+
 	private WVMapEntry(Object key, Object value) {
 	    this.key = key;
 	    this.value = value;
 	}
-    
+
 	public Object getKey() {
 	    return key;
 	}
-    
+
 	public Object getValue() {
 	    return value;
 	}
-    
+
 	public Object setValue(Object v) {
 	    throw new UnsupportedOperationException();
 	}
-    
+
 	public boolean equals(Object o) {
 	    if (! (o instanceof Map.Entry)) {
 		return false;
 	    }
-      
+
 	    Map.Entry mo = (Map.Entry) o;
 	    return ((key == null ? mo.getKey() == null : key.equals(mo.getKey())) &&
 		    (value == null ? mo.getValue() == null : value.equals(mo.getValue())));
 	}
-    
+
 	public int hashCode() {
 	    return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
 	}

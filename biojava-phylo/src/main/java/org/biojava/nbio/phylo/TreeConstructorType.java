@@ -28,10 +28,10 @@ package org.biojava.nbio.phylo;
  * The TreeConstructorType specifies the aligorithm used to construct the tree
  * (clustering algorithm). Only support for the NJ algorithm (from forester) is
  * currently implemented.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
- * 
+ *
  */
 public enum TreeConstructorType {
 

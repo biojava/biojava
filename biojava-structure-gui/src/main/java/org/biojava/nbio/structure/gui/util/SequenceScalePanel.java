@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Nov 8, 2005
  *
  */
@@ -32,7 +32,7 @@ import java.util.List;
 
 
 /** A class that draws a Sequence as a rectangle, a scale display over it.
- * 
+ *
  * @author Andreas Prlic
  * @since 1.7
  */
@@ -49,7 +49,7 @@ extends JPanel{
 	public static final int    DEFAULT_Y_STEP           = 10 ;
 	public static final int    DEFAULT_Y_HEIGHT         = 8 ;// the size of the box
 	public static final int    DEFAULT_Y_BOTTOM         = 16 ;
-	public static final int    LINE_HEIGHT              = 10 ;    
+	public static final int    LINE_HEIGHT              = 10 ;
 	public static final int    MINIMUM_HEIGHT           = 20;
 	public static final Color  SEQUENCE_COLOR           = Color.LIGHT_GRAY;
 	public static final Color  SCALE_COLOR              = Color.black;
@@ -59,7 +59,7 @@ extends JPanel{
 	public static final Color  BACKGROUND_COLOR;
 	public static final Font   seqFont ;
 
-	// the scale value after which to show the sequence as text    
+	// the scale value after which to show the sequence as text
 	private static final int   SEQUENCE_SHOW = 9;
 
 	// the height of the panel
@@ -68,11 +68,11 @@ extends JPanel{
 	Chain chain;
 	int chainLength;
 	float scale;
-	Character[] seqArr;    
+	Character[] seqArr;
 
 	CoordManager coordManager;
 
-	
+
 
 	int position;
 	List<AlignedPosition> apos;
@@ -98,7 +98,7 @@ extends JPanel{
 		chain = new ChainImpl();
 		setDoubleBuffered(true);
 
-		seqArr = new Character[0];       
+		seqArr = new Character[0];
 		chainLength = 0;
 		scale = 1.0f;
 
@@ -106,15 +106,15 @@ extends JPanel{
 		coordManager = new CoordManager();
 
 		apos = new ArrayList<AlignedPosition>();
-		
+
 	}
 
-	
+
 
 
 	private void setPrefSize() {
 
-		int length = chainLength  ; 
+		int length = chainLength  ;
 		int l = Math.round(length*scale) + DEFAULT_X_START + DEFAULT_X_RIGHT_BORDER ;
 		if ( l  < 60){
 			l = 60;
@@ -171,7 +171,7 @@ extends JPanel{
 		coordManager.setLength(chainLength);
 		setPrefSize();
 
-		this.repaint();  
+		this.repaint();
 	}
 
 	public Chain getChain(){
@@ -194,7 +194,7 @@ extends JPanel{
 	}
 
 	/** set some default rendering hints, like text antialiasing on
-	 * 
+	 *
 	 * @param g2D the graphics object to set the defaults on
 	 */
 	protected void setPaintDefaults(Graphics2D g2D){
@@ -211,7 +211,7 @@ extends JPanel{
 
 		g.setColor(BACKGROUND_COLOR);
 
-		Rectangle drawHere = g.getClipBounds();        
+		Rectangle drawHere = g.getClipBounds();
 		g.fillRect(drawHere.x,drawHere.y, drawHere.width, drawHere.height);
 
 
@@ -222,7 +222,7 @@ extends JPanel{
 		int y = 1;
 
 
-		// draw the scale        
+		// draw the scale
 
 		y = drawScale(g2D,1);
 
@@ -238,7 +238,7 @@ extends JPanel{
 
 
 	/** draw the Scale
-	 * 
+	 *
 	 * @param g2D
 	 * @param y the height on which to draw the scale
 	 * @return the new y position
@@ -246,7 +246,7 @@ extends JPanel{
 	protected int drawScale(Graphics2D g2D, int y){
 
 		// only draw within the ranges of the Clip
-		Rectangle drawHere = g2D.getClipBounds();        
+		Rectangle drawHere = g2D.getClipBounds();
 
 		g2D.setColor(SCALE_COLOR);
 
@@ -256,18 +256,18 @@ extends JPanel{
 
 
 
-		int startpos = coordManager.getSeqPos(drawHere.x);       
+		int startpos = coordManager.getSeqPos(drawHere.x);
 		int endpos   = coordManager.getSeqPos(drawHere.x+drawHere.width);
 
 		if ( endpos > apos.size())
 			endpos = apos.size();
 
-		int l = endpos - startpos + 1 ;     
+		int l = endpos - startpos + 1 ;
 
 		int drawStart = coordManager.getPanelPos(startpos);
 		int drawEnd   = coordManager.getPanelPos(l) - DEFAULT_X_START + aminosize;
 
-		/*System.out.println("SeqScalePanel drawing scale s:" + startpos + " e: " + endpos + 
+		/*System.out.println("SeqScalePanel drawing scale s:" + startpos + " e: " + endpos +
              " ps: " + drawStart + " pe:" + drawEnd  + " draw.x " + drawHere.x + " draw.w " + drawHere.width +
              " scale " + scale);
 		 */
@@ -279,14 +279,14 @@ extends JPanel{
 			Rectangle seqline = new Rectangle(drawStart, y, drawEnd, LINE_HEIGHT);
 
 			//g2D=  (Graphics2D)g;
-			g2D.fill(seqline);   
+			g2D.fill(seqline);
 			//g2D.setColor(Color.blue);
 			//g2D.draw(seqline);
 		}
 
 		// the top line for the scale
 		g2D.setColor(SCALE_COLOR);
-		Rectangle baseline = new Rectangle(drawStart, y, drawEnd, 2);        
+		Rectangle baseline = new Rectangle(drawStart, y, drawEnd, 2);
 		g2D.fill(baseline);
 
 
@@ -322,16 +322,16 @@ extends JPanel{
 				}
 
 			}else if  ( ((i+1)%50) == 0 ) {
-				if ( scale>1.4) {                    
+				if ( scale>1.4) {
 					g2D.setColor(TEXT_SCALE_COLOR);
-					g2D.fillRect(xpos,y+2, aminosize, y+lineH);  
+					g2D.fillRect(xpos,y+2, aminosize, y+lineH);
 					g2D.setColor(SCALE_COLOR);
 					if ( scale < SEQUENCE_SHOW)
 						g2D.drawString(""+(i+1),xpos,y+DEFAULT_Y_STEP);
 
 				}
 
-			} else if  ( ((i+1)%10) == 0 ) {                
+			} else if  ( ((i+1)%10) == 0 ) {
 				if ( scale> 3) {
 					g2D.setColor(TEXT_SCALE_COLOR);
 					g2D.fillRect(xpos, y+2, aminosize, y+lineH);
@@ -340,11 +340,11 @@ extends JPanel{
 						g2D.drawString(""+(i+1),xpos,y+DEFAULT_Y_STEP);
 
 				}
-			} 
+			}
 		}
 
 
-		int length = chainLength;       
+		int length = chainLength;
 		if ( endpos >= length-1) {
 
 			int endPanel = coordManager.getPanelPos(endpos);
@@ -362,13 +362,13 @@ extends JPanel{
 			aminosize = 1;
 
 		// only draw within the ranges of the Clip
-		Rectangle drawHere = g2D.getClipBounds();        
-		int startpos = coordManager.getSeqPos(drawHere.x);       
+		Rectangle drawHere = g2D.getClipBounds();
+		int startpos = coordManager.getSeqPos(drawHere.x);
 		//int endpos   = coordManager.getSeqPos(drawHere.x+drawHere.width-2);
 
 
 		Composite oldComp = g2D.getComposite();
-		g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f));  
+		g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f));
 		//logger.info("paint l " + l + " length " + length );
 
 		if ( startpos < 0)
@@ -388,7 +388,7 @@ extends JPanel{
 
 			AlignedPosition m = apos.get(gap);
 			if ( m.getEquivalent() == AlignedPosition.NOT_ALIGNED){
-				// a gap position				
+				// a gap position
 				continue;
 			}
 
@@ -398,7 +398,7 @@ extends JPanel{
 
 
 			for (AlignedPosition xi : apos ) {
-				if (xi.getPos(position)!= -1) 
+				if (xi.getPos(position)!= -1)
 					if ( i == xi.getPos(position)){
 						g2D.fillRect(xpos, y+2, aminosize, y+lineH);
 						break;
@@ -408,14 +408,14 @@ extends JPanel{
 			// color amino acids by hydrophobicity
 
 
-		}     
+		}
 
 		g2D.setComposite(oldComp);
 
 	}
 
 	/** draw the Amino acid sequence
-	 * 
+	 *
 	 * @param g2D
 	 * @param y .. height of line to draw the sequence onto
 	 * @return the new y value
@@ -429,13 +429,13 @@ extends JPanel{
 			aminosize = 1;
 
 		// only draw within the ranges of the Clip
-		Rectangle drawHere = g2D.getClipBounds();        
-		int startpos = coordManager.getSeqPos(drawHere.x);       
+		Rectangle drawHere = g2D.getClipBounds();
+		int startpos = coordManager.getSeqPos(drawHere.x);
 		//int endpos   = coordManager.getSeqPos(drawHere.x+drawHere.width-2);
 
 
 		Composite oldComp = g2D.getComposite();
-		g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f));  
+		g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f));
 		//logger.info("paint l " + l + " length " + length );
 
 		if ( startpos < 0)
@@ -455,7 +455,7 @@ extends JPanel{
 
 				AlignedPosition m = apos.get(gap);
 				if (m.getPos(position) == -1){
-					// a gap position	
+					// a gap position
 					g2D.drawString("-",xpos+1,y+2+DEFAULT_Y_STEP);
 					continue;
 				}
@@ -466,11 +466,11 @@ extends JPanel{
 				// color amino acids by hydrophobicity
 
 				g2D.drawString(seqArr[i].toString(),xpos+1,y+2+DEFAULT_Y_STEP);
-			}     
+			}
 
 //			in full sequence mode we need abit more space to look nice
 
-			y+=2;  
+			y+=2;
 		}
 		g2D.setComposite(oldComp);
 		y+= DEFAULT_Y_STEP + 2;

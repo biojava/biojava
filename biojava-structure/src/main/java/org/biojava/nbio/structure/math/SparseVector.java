@@ -28,28 +28,28 @@ import java.io.Serializable;
 
 
 /**
- *  
+ *
  *  A sparse vector, implemented using a symbol table.
- *  
+ *
  *  Derived from http://introcs.cs.princeton.edu/java/44st/SparseVector.java.html
- *  
+ *
  *  For additional documentation, see <a href="http://introcs.cs.princeton.edu/44st">Section 4.4</a> of
- *  <i>Introduction to Programming in Java: An Interdisciplinary Approach</i> by Robert Sedgewick and Kevin Wayne. 
+ *  <i>Introduction to Programming in Java: An Interdisciplinary Approach</i> by Robert Sedgewick and Kevin Wayne.
  */
 
 public class SparseVector implements Serializable{
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1174668523213431927L;
-	
+
 	private final int N;             // length
-	
+
     private SymbolTable<Integer, Double> symbolTable;  // the vector, represented by index-value pairs
 
 
     /** Constructor. initialize the all 0s vector of length N
-     *  
+     *
      * @param N
      */
     public SparseVector(int N) {
@@ -58,7 +58,7 @@ public class SparseVector implements Serializable{
     }
 
    /** Setter method (should it be renamed to set?)
-    * 
+    *
     * @param i set symbolTable[i]
     * @param value
     */
@@ -69,7 +69,7 @@ public class SparseVector implements Serializable{
     }
 
     /** get a value
-     * 
+     *
      * @param i
      * @return  return symbolTable[i]
      */
@@ -90,7 +90,7 @@ public class SparseVector implements Serializable{
     }
 
     /** Calculates the dot product of this vector a with b
-     * 
+     *
      * @param b
      * @return
      */
@@ -112,7 +112,7 @@ public class SparseVector implements Serializable{
     }
 
     /** Calculates the 2-norm
-     * 
+     *
      * @return
      */
     public double norm() {
@@ -121,7 +121,7 @@ public class SparseVector implements Serializable{
     }
 
     /** Calculates  alpha * a
-     * 
+     *
      * @param alpha
      * @return
      */
@@ -133,7 +133,7 @@ public class SparseVector implements Serializable{
     }
 
     /** Calcualtes return a + b
-     * 
+     *
      * @param b
      * @return
      */
