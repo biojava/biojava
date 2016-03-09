@@ -29,7 +29,7 @@ import java.io.Serializable;
 public class SiftsResidue implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3425769737629800828L;
 	String pdbResNum;
@@ -42,7 +42,7 @@ public class SiftsResidue implements Serializable{
 	String pdbId;
 	String uniProtAccessionId;
 	Boolean notObserved;
-	
+
 	public String getPdbResNum() {
 		return pdbResNum;
 	}
@@ -167,5 +167,5 @@ public class SiftsResidue implements Serializable{
 		} else if (!uniProtResName.equals(other.uniProtResName)) return false;
 		return true;
 	}
-	
+
 }

@@ -17,74 +17,74 @@
  *
  *      http://www.biojava.org/
  *
- * 
+ *
  */
 package org.biojava.nbio.structure.io.mmcif.model;
 
 
 /**
  *  Data items in the ENTITY_SRC_GEN category record details of
-               the source from which the entity was obtained in cases
-               where the source was genetically manipulated.  The
-               following are treated separately:  items pertaining to the tissue
-               from which the gene was obtained, items pertaining to the host
-               organism for gene expression and items pertaining to the actual
-               producing organism (plasmid).
-               
+ *  the source from which the entity was obtained in cases
+ *  where the source was genetically manipulated.  The
+ *  following are treated separately:  items pertaining to the tissue
+ *  from which the gene was obtained, items pertaining to the host
+ *  organism for gene expression and items pertaining to the actual
+ *  producing organism (plasmid).
+ *
  * @author Andreas Prlic
  *
  */
 public class EntitySrcGen {
-	String  entity_id;	
-	String  expression_system_id;	
-	String  gene_src_common_name;	 
-	String  gene_src_details	; 
+	String  entity_id;
+	String  expression_system_id;
+	String  gene_src_common_name;
+	String  gene_src_details	;
 	String  gene_src_dev_stage	 ;
 	String  gene_src_genus	 ;
-	String  gene_src_species	; 
+	String  gene_src_species	;
 	String  gene_src_strain	 ;
 	String  gene_src_tissue	 ;
-	String  gene_src_tissue_fraction;	 
+	String  gene_src_tissue_fraction;
 	String  host_org_common_name	 ;
 	String  host_org_details	 ;
 	String  host_org_genus	 ;
-	String  host_org_species;	 
+	String  host_org_species;
 	String  host_org_strain	 ;
 	String  pdbx_src_id;
 	String  pdbx_seq_type;
 	String  pdbx_alt_source_flag;
 	String  pdbx_beg_seq_num;
 	String  pdbx_end_seq_num;
-	String  pdbx_description;	 
-	String  pdbx_gene_src_atcc;	 
-	String  pdbx_gene_src_cell	; 
-	String  pdbx_gene_src_cell_line;	 
-	String  pdbx_gene_src_cellular_location;	 
+	String  pdbx_description;
+	String  pdbx_gene_src_atcc;
+	String  pdbx_gene_src_cell	;
+	String  pdbx_gene_src_cell_line;
+	String  pdbx_gene_src_cellular_location;
 	String  pdbx_gene_src_fragment	 ;
 	String  pdbx_gene_src_gene	 ;
-	String  pdbx_gene_src_ncbi_taxonomy_id;	 
+	String  pdbx_gene_src_ncbi_taxonomy_id;
 	String  pdbx_gene_src_organ	 ;
-	String  pdbx_gene_src_organelle ;	 
+	String  pdbx_gene_src_organelle ;
 	String  pdbx_gene_src_plasmid	 ;
 	String  pdbx_gene_src_plasmid_name	 ;
-	String  pdbx_gene_src_scientific_name;	 
+	String  pdbx_gene_src_scientific_name;
 	String  pdbx_gene_src_variant	 ;
 	String  pdbx_host_org_atcc	 ;
 	String  pdbx_host_org_cell	 ;
-	String  pdbx_host_org_cell_line ;	 
-	String  pdbx_host_org_cellular_location ;	 
-	String  pdbx_host_org_culture_collection ;	 
+	String  pdbx_host_org_cell_line ;
+	String  pdbx_host_org_cellular_location ;
+	String  pdbx_host_org_culture_collection ;
 	String  pdbx_host_org_gene	  ;
-	String  pdbx_host_org_ncbi_taxonomy_id ;	 
+	String  pdbx_host_org_ncbi_taxonomy_id ;
 	String  pdbx_host_org_organ	 ;
-	String  pdbx_host_org_organelle ;	 
-	String  pdbx_host_org_scientific_name ;	 
+	String  pdbx_host_org_organelle ;
+	String  pdbx_host_org_scientific_name ;
 	String  pdbx_host_org_strain	  ;
 	String  pdbx_host_org_tissue	 ;
-	String  pdbx_host_org_tissue_fraction ;	 
+	String  pdbx_host_org_tissue_fraction ;
 	String  pdbx_host_org_variant	 ;
 	String  pdbx_host_org_vector	 ;
-	String  pdbx_host_org_vector_type;	 
+	String  pdbx_host_org_vector_type;
 	String  plasmid_details	 ;
 	String  plasmid_name	 ;
 	String  start_construct_id ;
@@ -420,8 +420,8 @@ public class EntitySrcGen {
 	public void setStart_construct_id(String start_construct_id) {
 		this.start_construct_id = start_construct_id;
 	}
-	
-	
-	
-	
+
+
+
+
 }

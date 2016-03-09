@@ -26,7 +26,7 @@ import java.io.Serializable;
 
 public class Segment implements Serializable, Comparable<Segment> {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1393487067559539657L;
 	private Integer from;
@@ -34,10 +34,10 @@ public class Segment implements Serializable, Comparable<Segment> {
 	double score;
 
 	public Segment(){
-		
+
 	}
-	
-	
+
+
 
 	@Override
 	public String toString() {
@@ -46,7 +46,7 @@ public class Segment implements Serializable, Comparable<Segment> {
 	}
 
 
-	
+
 	public Integer getFrom() {
 		return from;
 	}
@@ -75,19 +75,19 @@ public class Segment implements Serializable, Comparable<Segment> {
 
 	@Override
 	public int compareTo(Segment o) {
-		
+
 		Integer s1 = getFrom();
 		Integer s2 = o.getFrom();
-		
+
 		int comp = s1.compareTo(s2);
 		if ( comp != 0)
 			return comp;
-		
+
 		Integer e1 = getTo();
 		Integer e2 = o.getTo();
-		
+
 		return e1.compareTo(e2);
-			
+
 	}
 
 

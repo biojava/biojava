@@ -23,9 +23,9 @@ package org.biojava.nbio.structure.align.gui.aligpanel;
 import java.awt.*;
 
 /**
- * Generalization of the Coodinate Manager to include an arbitrary number of 
+ * Generalization of the Coodinate Manager to include an arbitrary number of
  * sequences (lines) for MultipleAlignment visualization.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -45,43 +45,43 @@ public class MultipleAlignmentCoordManager {
 		DEFAULT_Y_STEP = 30*size;
 	}
 
-	/** 
+	/**
 	 * Space on the right side between sequence and legend.
 	 */
 	public static final int DEFAULT_RIGHT_SPACER = 10;
 
-	/** 
+	/**
 	 * Number of chars per line
 	 */
 	public static final int DEFAULT_LINE_LENGTH = 70;
 
-	/** 
-	 * Size of space between rows. 
+	/**
+	 * Size of space between rows.
 	 * Depends on the number of structures aligned.
 	 */
 	public final int DEFAULT_Y_STEP;
 
-	/** 
+	/**
 	 * Size per character
 	 */
 	public static final int DEFAULT_CHAR_SIZE = 12;
 
-	/** 
+	/**
 	 * Separation between sequences in the alignment
 	 */
 	public static final int DEFAULT_LINE_SEPARATION = 20;
 
-	/** 
+	/**
 	 * Left boundary
 	 */
 	public static final int DEFAULT_X_SPACE = 20;
 
-	/** 
+	/**
 	 * Top boundary
 	 */
 	public static final int DEFAULT_Y_SPACE = 40;
 
-	/** 
+	/**
 	 * Position at which the alignment summary is printed
 	 */
 	public static final int SUMMARY_POS = 20;
@@ -92,32 +92,32 @@ public class MultipleAlignmentCoordManager {
 		return SUMMARY_POS;
 	}
 
-	/** 
+	/**
 	 * X coordinate size
-	 * 
+	 *
 	 * @return the preferred width
 	 */
 	public int getPreferredWidth(){
-		return alignmentSize* DEFAULT_X_SPACE + DEFAULT_LINE_LENGTH * 
-				DEFAULT_CHAR_SIZE + DEFAULT_LEGEND_SIZE + 
+		return alignmentSize* DEFAULT_X_SPACE + DEFAULT_LINE_LENGTH *
+				DEFAULT_CHAR_SIZE + DEFAULT_LEGEND_SIZE +
 				DEFAULT_RIGHT_SPACER + DEFAULT_LEGEND_SIZE;
 	}
 
-	/** 
+	/**
 	 * Y coordinate size
-	 * 
+	 *
 	 * @return the preferred height
 	 */
 	public int getPreferredHeight(){
-		return alignmentSize* DEFAULT_Y_SPACE + 
-				(alignmentLength / DEFAULT_LINE_LENGTH) * 
+		return alignmentSize* DEFAULT_Y_SPACE +
+				(alignmentLength / DEFAULT_LINE_LENGTH) *
 				DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
 	}
 
-	/** 
+	/**
 	 * Convert from an X position in the JPanel to the position
 	 * in the sequence alignment.
-	 * 
+	 *
 	 * @param aligSeq sequence number
 	 * @param p point on panel
 	 * @return the sequence position for a point on the Panel
@@ -135,9 +135,9 @@ public class MultipleAlignmentCoordManager {
 
 	}
 
-	/** 
+	/**
 	 * Get the X position on the Panel of a particular sequence position.
-	 * 
+	 *
 	 * @param structure index of the structure for the sequence position.
 	 * @param pos sequence position, the aligned position index
 	 * @return the point on a panel for a sequence position
@@ -148,7 +148,7 @@ public class MultipleAlignmentCoordManager {
 		int lineNr = pos / DEFAULT_LINE_LENGTH;
 		int linePos = pos % DEFAULT_LINE_LENGTH;
 
-		int x = linePos * DEFAULT_CHAR_SIZE + DEFAULT_X_SPACE + 
+		int x = linePos * DEFAULT_CHAR_SIZE + DEFAULT_X_SPACE +
 				DEFAULT_LEGEND_SIZE;
 		int y = lineNr * DEFAULT_Y_STEP + DEFAULT_Y_SPACE;
 
@@ -158,7 +158,7 @@ public class MultipleAlignmentCoordManager {
 		return p;
 	}
 
-	/** 
+	/**
 	 * Returns the index of the structure, for a given point in the Panel.
 	 * Returns -1 if not over a position in the sequence alignment.
 	 * @param point x and y coordinates in the panel
@@ -170,16 +170,16 @@ public class MultipleAlignmentCoordManager {
 			int i = getSeqPos(pos, point);
 			Point t = getPanelPos(pos,i);
 
-			if ( Math.abs(t.x - point.x) <= DEFAULT_CHAR_SIZE && 
+			if ( Math.abs(t.x - point.x) <= DEFAULT_CHAR_SIZE &&
 					Math.abs(t.y-point.y) < DEFAULT_CHAR_SIZE ) return pos;
 		}
 		return -1;
 	}
 
-	/** 
-	 * Provide the coordinates for where to draw the legend for 
+	/**
+	 * Provide the coordinates for where to draw the legend for
 	 * line X given the structure index.
-	 * 
+	 *
 	 * @param lineNr line of the Panel
 	 * @param structure the structure index
 	 * @return get the point where to draw the legend

@@ -38,11 +38,11 @@ import java.util.Locale;
 /**
  * A sequence creator which preserves the case of its input string in
  * the user collection of the returned ProteinSequence.
- * 
+ *
  * <p>The user collection will be the same length as the resulting ProteinSequence.
  * Each object can be cast to a Boolean. If true, the corresponding position in
  * the input file was uppercase.
- * 
+ *
  * <h3>Example</h3>
  * <code><pre>CasePreservingProteinSequenceCreator creator =
  *    new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
@@ -61,7 +61,7 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.biojava.nbio.core.sequence.io.ProteinSequenceCreator#getSequence(org.biojava.nbio.core.sequence.template.ProxySequenceReader, long)
 	 */
 	@Override
@@ -82,7 +82,7 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 		seq.setUserCollection(getStringCase(sequence));
 		return seq;
 	}
-	
+
 
 	/**
 	 * Assumes all compounds were uppercase
@@ -115,24 +115,24 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 		}
 		return types;
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
 		AbstractSequence<AminoAcidCompound> seq = creator.getSequence("aaAA",0);
 		logger.info("Sequence: {}", seq.getSequenceAsString()); //"AAAA"
 		logger.info("User Collection: {}", seq.getUserCollection()); //"[false, false, true, true]"
 	}
-	
+
 	/**
-	 * Takes a {@link ProteinSequence} which was created by a 
+	 * Takes a {@link ProteinSequence} which was created by a
 	 * {@link CasePreservingProteinSequenceCreator}. Uses the case info
-	 * stored in the user collection to modify the output array. 
-	 * 
+	 * stored in the user collection to modify the output array.
+	 *
 	 * <p>Sets elements of the output array which correspond to lowercase letters
 	 * to null.
-	 * 
+	 *
 	 * @param seq Input sequence with case stored as the user collection
-	 * @param out 
+	 * @param out
 	 */
 	public static void setLowercaseToNull( ProteinSequence seq,
 			Object[] out) {
@@ -142,7 +142,7 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 			throw new IllegalArgumentException("Sequence doesn't contain valid case info");
 		if(userCollection.size() != out.length)
 			throw new IllegalArgumentException("Sequence length doesn't math output array length");
-		
+
 		int pos = 0;
 		for(Object isAligned : userCollection) {
 			assert(isAligned instanceof Boolean);

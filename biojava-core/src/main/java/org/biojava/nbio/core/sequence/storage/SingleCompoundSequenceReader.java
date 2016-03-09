@@ -40,174 +40,174 @@ import java.util.List;
  */
 public class SingleCompoundSequenceReader<C extends Compound> implements ProxySequenceReader<C> {
 
-    private final C compound;
-    private final CompoundSet<C> compoundSet;
-    private final int length;
+	private final C compound;
+	private final CompoundSet<C> compoundSet;
+	private final int length;
 
-    /**
-     * Public constructor to be used with String based constructor
-     */
-    public SingleCompoundSequenceReader(String compound, CompoundSet<C> compoundSet, int length) {
-        this(compoundSet.getCompoundForString(compound), compoundSet, length);
-    }
+	/**
+	 * Public constructor to be used with String based constructor
+	 */
+	public SingleCompoundSequenceReader(String compound, CompoundSet<C> compoundSet, int length) {
+		this(compoundSet.getCompoundForString(compound), compoundSet, length);
+	}
 
-    /**
-     * Build the object with a compound rather than a String
-     */
-    public SingleCompoundSequenceReader(C compound, CompoundSet<C> compoundSet, int length) {
-        this.compound = compound;
-        this.compoundSet = compoundSet;
-        this.length = length;
-    }
+	/**
+	 * Build the object with a compound rather than a String
+	 */
+	public SingleCompoundSequenceReader(C compound, CompoundSet<C> compoundSet, int length) {
+		this.compound = compound;
+		this.compoundSet = compoundSet;
+		this.length = length;
+	}
 
-    /**
-     * Unsupported
-     */
-    
-    @Override
+	/**
+	 * Unsupported
+	 */
+
+	@Override
 	public void setCompoundSet(CompoundSet<C> compoundSet) {
-        throw new UnsupportedOperationException("Not supported.");
-    }
+		throw new UnsupportedOperationException("Not supported.");
+	}
 
-    /**
-     * Unsupported
-     */
-    
-    @Override
+	/**
+	 * Unsupported
+	 */
+
+	@Override
 	public void setContents(String sequence) throws CompoundNotFoundException {
-        throw new UnsupportedOperationException("Not supported.");
-    }
+		throw new UnsupportedOperationException("Not supported.");
+	}
 
-    /**
-     * Returns the length given during construction
-     */
-    
-    @Override
+	/**
+	 * Returns the length given during construction
+	 */
+
+	@Override
 	public int getLength() {
-        return length;
-    }
+		return length;
+	}
 
-    /**
-     * Always returns the compound given at construction
-     */
-    
-    @Override
+	/**
+	 * Always returns the compound given at construction
+	 */
+
+	@Override
 	public C getCompoundAt(int position) {
-        return compound;
-    }
+		return compound;
+	}
 
-    /**
-     * Returns 1 if the given compound is equal to the one given during
-     * construction; otherwise will return -1.
-     */
-    
-    @Override
+	/**
+	 * Returns 1 if the given compound is equal to the one given during
+	 * construction; otherwise will return -1.
+	 */
+
+	@Override
 	public int getIndexOf(C compound) {
-        if(compound.equals(this.compound)) {
-            return 1;
-        }
-        return -1;
-    }
+		if(compound.equals(this.compound)) {
+			return 1;
+		}
+		return -1;
+	}
 
-    /**
-     * Returns the length of the Sequence if the given compound was equal to
-     * the one given during construction. Otherwise returns -1
-     */
-    
-    @Override
+	/**
+	 * Returns the length of the Sequence if the given compound was equal to
+	 * the one given during construction. Otherwise returns -1
+	 */
+
+	@Override
 	public int getLastIndexOf(C compound) {
-        if(compound.equals(this.compound)) {
-            return getLength();
-        }
-        return -1;
-    }
+		if(compound.equals(this.compound)) {
+			return getLength();
+		}
+		return -1;
+	}
 
-    /**
-     * Delegates to {@link SequenceMixin#toList(org.biojava.nbio.core.sequence.template.Sequence) }
-     */
-    
-    @Override
+	/**
+	 * Delegates to {@link SequenceMixin#toList(org.biojava.nbio.core.sequence.template.Sequence) }
+	 */
+
+	@Override
 	public String getSequenceAsString() {
-        return SequenceMixin.toString(this);
-    }
+		return SequenceMixin.toString(this);
+	}
 
-    /**
-     * Delegates to {@link SequenceMixin#toList(org.biojava.nbio.core.sequence.template.Sequence) }
-     */
-    
-    @Override
+	/**
+	 * Delegates to {@link SequenceMixin#toList(org.biojava.nbio.core.sequence.template.Sequence) }
+	 */
+
+	@Override
 	public List<C> getAsList() {
-        return SequenceMixin.toList(this);
-    }
+		return SequenceMixin.toList(this);
+	}
 
-    /**
-     * Creates a {@link SequenceProxyView} for the given coordinates
-     */
-    
-    @Override
+	/**
+	 * Creates a {@link SequenceProxyView} for the given coordinates
+	 */
+
+	@Override
 	public SequenceView<C> getSubSequence(Integer start, Integer end) {
-        return new SequenceProxyView<C>(this, start, end);
-    }
+		return new SequenceProxyView<C>(this, start, end);
+	}
 
-    /**
-     * Returns the compound set given at construction
-     */
-    
-    @Override
+	/**
+	 * Returns the compound set given at construction
+	 */
+
+	@Override
 	public CompoundSet<C> getCompoundSet() {
-        return compoundSet;
-    }
+		return compoundSet;
+	}
 
-    /**
-     * Unsupoorted
-     */
-    
-    @Override
+	/**
+	 * Unsupoorted
+	 */
+
+	@Override
 	public AccessionID getAccession() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    /**
-     * Delegates to {@link SequenceMixin#countCompounds(org.biojava.nbio.core.sequence.template.Sequence, C[]) }
-     */
-    
-    @Override
+	/**
+	 * Delegates to {@link SequenceMixin#countCompounds(org.biojava.nbio.core.sequence.template.Sequence, C[]) }
+	 */
+
+	@Override
 	public int countCompounds(C... compounds) {
-        return SequenceMixin.countCompounds(this, compounds);
-    }
+		return SequenceMixin.countCompounds(this, compounds);
+	}
 
-    /**
-     * Returns an instance of {@link SequenceMixin.SequenceIterator}
-     */
-    
-    @Override
+	/**
+	 * Returns an instance of {@link SequenceMixin.SequenceIterator}
+	 */
+
+	@Override
 	public Iterator<C> iterator() {
-        return new SequenceMixin.SequenceIterator<C>(this);
-    }
+		return new SequenceMixin.SequenceIterator<C>(this);
+	}
 
-    @Override
-    public SequenceView<C> getInverse() {
-        return SequenceMixin.inverse(this);
-    }
+	@Override
+	public SequenceView<C> getInverse() {
+		return SequenceMixin.inverse(this);
+	}
 
-    @Override
-    public int hashCode() {
-        int s = Hashcoder.SEED;
-        s = Hashcoder.hash(s, compound);
-        s = Hashcoder.hash(s, length);
-        s = Hashcoder.hash(s, compoundSet);
-        return s;
-    }
+	@Override
+	public int hashCode() {
+		int s = Hashcoder.SEED;
+		s = Hashcoder.hash(s, compound);
+		s = Hashcoder.hash(s, length);
+		s = Hashcoder.hash(s, compoundSet);
+		return s;
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public boolean equals(Object o) {
-        if(Equals.classEqual(this, o)) {
-            SingleCompoundSequenceReader<C> that = (SingleCompoundSequenceReader<C>)o;
-            return  Equals.equal(compound, that.compound) &&
-                    Equals.equal(compoundSet, that.compoundSet) &&
-                    Equals.equal(length, that.length);
-        }
-        return false;
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if(Equals.classEqual(this, o)) {
+			SingleCompoundSequenceReader<C> that = (SingleCompoundSequenceReader<C>)o;
+			return  Equals.equal(compound, that.compound) &&
+					Equals.equal(compoundSet, that.compoundSet) &&
+					Equals.equal(length, that.length);
+		}
+		return false;
+	}
 }

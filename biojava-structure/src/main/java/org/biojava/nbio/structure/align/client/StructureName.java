@@ -56,17 +56,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** 
+/**
  * A utility class that makes working with names of structures, domains and ranges easier.
- * 
+ *
  * Accepts a wide range of identifier formats, including {@link ScopDomain},
  * {@link CathDomain}, PDP domains, and {@link SubstructureIdentifier} residue
  * ranges.
- * 
- * Where possible, data is extracted from the input string. Otherwise, range 
+ *
+ * Where possible, data is extracted from the input string. Otherwise, range
  * information may be loaded from one of the factory classes:
  * {@link CathFactory},{@link ScopFactory}, etc.
- * 
+ *
  * @see #getName the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
  */
 
@@ -96,13 +96,13 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		BIO,
 	};
 
-	private Source mySource = null; 
+	private Source mySource = null;
 
 	// cache for getBaseIdentifier() method
 	private StructureIdentifier base = null;
 
 	/**
-	 * Create a new StructureName from the given identifier, which may be a 
+	 * Create a new StructureName from the given identifier, which may be a
 	 * domain name, a substructure identifier, etc.
 	 * <p>
 	 * The source and PDB-Id are extracted at compile time, but fully
@@ -353,7 +353,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 
 	/**
 	 * Get the PDB ID for this name, if any.
-	 * 
+	 *
 	 * Equivalent to {@link SubstructureIdentifier#getPdbId()
 	 * toCanonical().getPdbId()}
 	 * @return The upper-case PDB Name, or null if not applicable
@@ -370,7 +370,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * Gets the chain ID, for structures where it is unique and well-defined.
 	 * May return '.' for multi-chain ranges, '_' for wildcard chains, or
 	 * null if the information is unavailable.
-	 * 
+	 *
 	 * <p>This method should only be used casually. For precise chainIds, it
 	 * is better to use {@link #toCanonical()} and iterate through the
 	 * residue ranges.
@@ -380,7 +380,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		return chainId;
 	}
 	/**
-	 * 
+	 *
 	 * @return the identifier string
 	 * @deprecated use {@link #getIdentifier()}
 	 */
@@ -619,17 +619,17 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	/**
 	 * <p>
 	 * Guess a scop domain. If an exact match is found, return that.
-	 * 
+	 *
 	 * <p>
 	 * Otherwise, return the first scop domain found for the specified protein such that
 	 * <ul>
 	 * <li>The chains match, or one of the chains is '_' or '.'.
 	 * <li>The domains match, or one of the domains is '_'.
 	 * </ul>
-	 * 
+	 *
 	 * In some cases there may be several valid matches. In this case a warning
 	 * will be logged.
-	 * 
+	 *
 	 * @param name SCOP domain name, or a guess thereof
 	 * @param scopDB SCOP domain provider
 	 * @return The best match for name among the domains of scopDB, or null if none match.

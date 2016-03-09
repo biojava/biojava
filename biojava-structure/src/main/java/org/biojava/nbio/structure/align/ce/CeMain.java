@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 15, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -36,12 +36,12 @@ import org.biojava.nbio.structure.jama.Matrix;
 /** The main class of the Java implementation of the Combinatorial Extension Algorithm (CE),
  * as has been originally developed by I. Shindyalov and P.Bourne (1998).
  * The original CE paper is available from here: <a href="http://peds.oxfordjournals.org/cgi/content/short/11/9/739">http://peds.oxfordjournals.org/cgi/content/short/11/9/739</a>
- * 
+ *
  * For a demo of how to use this algorithm, visit the BioJava web site:
  * <a href="">CE usage example</a>.
- * 
+ *
  * The BioJava CE version is based on CE version 2.3 (2003 or 2004).
- * 
+ *
  * @author Andreas Prlic.
  *
  */
@@ -60,7 +60,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	protected CeParameters params;
 	protected CECalculator calculator;
 	private Atom[] ca2clone;
-	
+
 	public CeMain(){
 		super();
 		params = new CeParameters();
@@ -70,9 +70,9 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 	/**
 	 * Example Parameters:
-	 * 
-	 * -pdbFilePath /tmp -autoFetch -printCE -pdb1 1cnv -pdb2 3cna 
-	 * 
+	 *
+	 * -pdbFilePath /tmp -autoFetch -printCE -pdb1 1cnv -pdb2 3cna
+	 *
 	 */
 	public static void main(String[] args) throws Exception {
 		CeUserArgumentProcessor processor = new CeUserArgumentProcessor(); //Responsible for creating a CeMain instance
@@ -83,7 +83,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	 * Align ca2 onto ca1.
 	 */
 	@Override
-	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{		
+	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
 		if ( ! (param instanceof CeParameters))
 			throw new IllegalArgumentException("CE algorithm needs an object of call CeParameters as argument.");
 
@@ -111,7 +111,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 		afpChain.setAlgorithmName(getAlgorithmName());
 		afpChain.setVersion(version);
-		
+
 		// Try to guess names
 
 		if (ca1.length!=0 && ca1[0].getGroup().getChain()!=null && ca1[0].getGroup().getChain().getStructure()!=null)
@@ -119,14 +119,14 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 		if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getStructure()!=null)
 			afpChain.setName2(ca2[0].getGroup().getChain().getStructure().getName());
-		
+
 		if ( afpChain.getNrEQR() == 0)
 		   return afpChain;
 
 		// Set the distance matrix
-		
+
 		int winSize = params.getWinSize();
-		int winSizeComb1 = (winSize-1)*(winSize-2)/2;	
+		int winSizeComb1 = (winSize-1)*(winSize-2)/2;
 		double[][] m = calculator.initSumOfDistances(ca1.length, ca2.length, winSize, winSizeComb1, ca1, ca2clone);
 		afpChain.setDistanceMatrix(new Matrix(m));
 		afpChain.setSequentialAlignment(true);

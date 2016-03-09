@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.phylo;
 
 /**
@@ -31,9 +27,9 @@ package org.biojava.nbio.phylo;
  * Since 4.1.1 the methods for distance inference in forester are also used in
  * BioJava, so this implementation of percentage of identity is not needed
  * anymore. However, the code is maintained as the own BioJava implementation.
- * 
+ *
  * @author Scooter Willis
- * 
+ *
  */
 public class Comparison {
 

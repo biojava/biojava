@@ -37,18 +37,18 @@ public class AFPChainXMLConverter {
 
 
 	/** Convert an afpChain to a simple XML representation
-	 * 
+	 *
 	 * @param afpChain
 	 * @return XML representation of the AFPCHain
 	 */
 	public synchronized static String toXML(AFPChain afpChain, Atom[] ca1, Atom[]ca2) throws IOException{
-		StringWriter result = new StringWriter();	
+		StringWriter result = new StringWriter();
 		toXML(afpChain,result,ca1,ca2);
 		return result.toString();
 	}
 
 	/** Write the XML representation to a StringWriter
-	 * 
+	 *
 	 * @param afpChain
 	 * @param swriter
 	 * @throws IOException
@@ -86,7 +86,7 @@ public class AFPChainXMLConverter {
 					throw new IOException(ex.getMessage());
 				}
 			}
-			else 
+			else
 				printXMLEQRInferPositions(xml, afpChain,bk,ca1,ca2);
 
 			printXMLMatrixShift(xml, afpChain, bk);
@@ -140,7 +140,7 @@ public class AFPChainXMLConverter {
 	}
 
 
-	public static void printXMLEQRInferPositions(PrettyXMLWriter xml,			
+	public static void printXMLEQRInferPositions(PrettyXMLWriter xml,
 			AFPChain afpChain, int bk, Atom[] ca1, Atom[] ca2)  throws IOException{
 
 		int[] optLen       = afpChain.getOptLen();
@@ -162,12 +162,12 @@ public class AFPChainXMLConverter {
 			xml.attribute("chain2", ca2[pos2].getGroup().getChain().getChainID());
 
 			xml.closeTag("eqr");
-			//System.out.println("aligned position: " + pos1  + ":" + pos2 + 
+			//System.out.println("aligned position: " + pos1  + ":" + pos2 +
 			//" pdbresnum " + ca1[pos1].getGroup().getResidueNumber().toString() + " " +
-			//ca1[pos1].getParent().getPDBName()+":" + 
+			//ca1[pos1].getParent().getPDBName()+":" +
 			//ca2[pos2].getGroup().getResidueNumber().toString() + " " + ca2[pos2].getParent().getPDBName());
 
-		}	 
+		}
 
 	}
 
@@ -201,7 +201,7 @@ public class AFPChainXMLConverter {
 		if ( ms == null || ms.length == 0)
 			return;
 
-		Matrix matrix = ms[blockNr];	
+		Matrix matrix = ms[blockNr];
 		if ( matrix == null)
 			return;
 		xml.openTag("matrix");

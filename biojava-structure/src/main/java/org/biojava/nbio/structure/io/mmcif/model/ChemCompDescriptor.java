@@ -26,24 +26,24 @@ import java.io.Serializable;
 
 
 /** Container object for _pdbx_chem_comp_descriptor
- * 
+ *
  * @author Andreas Prlic
  * @since 3.2
  *
  */
 public class ChemCompDescriptor implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1078685833800736278L;
-	String comp_id; 
-	String type; 
+	String comp_id;
+	String type;
 	String program;
 	String program_version;
 	String descriptor;
-	
+
 	public ChemCompDescriptor(){
-		
+
 	}
 	public String getComp_id() {
 		return comp_id;
@@ -130,7 +130,7 @@ public class ChemCompDescriptor implements Serializable {
 				+ ", program=" + program + ", program_version="
 				+ program_version + ", descriptor=" + descriptor + "]";
 	}
-	 
-	
-	
+
+
+
 }

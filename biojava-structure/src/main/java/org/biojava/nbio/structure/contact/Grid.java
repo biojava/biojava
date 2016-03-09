@@ -26,39 +26,39 @@ import org.biojava.nbio.structure.Atom;
 
 /**
  * A grid to be used for calculating atom contacts through geometric hashing algorithm.
- * 
+ *
  * The grid is composed of cells of size of the cutoff so that the distances that need to be calculated
  * are reduced to those within each cell and to the neighbouring cells.
- * 
+ *
  * @author duarte_j
  *
  */
 public class Grid {
-	
+
 	/**
 	 * The scale: we use units of hundredths of Angstroms (thus cutoffs can be specified with a maximum precision of 0.01A)
 	 */
 	private static final int SCALE=100;
-	
+
 	private GridCell[][][] cells;
-	
+
 	private double cutoff;
 	private int cellSize;
-	
+
 	private Atom[] iAtoms;
 	private Atom[] jAtoms;
-	
+
 	// the bounds in int grid coordinates
 	private int[] bounds;
-	
+
 	// the i and j bounding boxes in original double coordinates
 	private BoundingBox ibounds;
 	private BoundingBox jbounds;
-	
+
 	private boolean noOverlap; // if the 2 sets of atoms are found not to overlap then this is set to true
-	
+
 	/**
-	 * Creates a <code>Grid</code>, the cutoff is in Angstroms and can 
+	 * Creates a <code>Grid</code>, the cutoff is in Angstroms and can
 	 * be specified to a precision of 0.01A
 	 * @param cutoff
 	 */
@@ -67,23 +67,23 @@ public class Grid {
 		this.cellSize = (int) Math.floor(cutoff*SCALE);
 		this.noOverlap = false;
 	}
-	
+
 	private int getFloor(double number) {
 		return (cellSize*((int)Math.floor(number*SCALE/cellSize)));
 	}
-	
+
 	private int xintgrid2xgridindex(int xgridDim) {
 		return (xgridDim-bounds[0])/cellSize;
 	}
-	
+
 	private int yintgrid2ygridindex(int ygridDim) {
 		return (ygridDim-bounds[1])/cellSize;
 	}
-	
+
 	private int zintgrid2zgridindex(int zgridDim) {
 		return (zgridDim-bounds[2])/cellSize;
 	}
-	
+
 	/**
 	 * Adds the i and j atoms and fills the grid. Their bounds will be computed.
 	 * @param iAtoms
@@ -92,7 +92,7 @@ public class Grid {
 	public void addAtoms(Atom[] iAtoms, Atom[] jAtoms) {
 		addAtoms(iAtoms, null, jAtoms, null);
 	}
-	
+
 	/**
 	 * Adds the i and j atoms and fills the grid, passing their bounds (array of size 6 with x,y,z minima and x,y,z maxima)
 	 * This way the bounds don't need to be recomputed.
@@ -109,7 +109,7 @@ public class Grid {
 		} else {
 			this.ibounds = new BoundingBox(iAtoms);
 		}
-		
+
 		this.jAtoms = jAtoms;
 
 		if (jAtoms==iAtoms) {
@@ -119,13 +119,13 @@ public class Grid {
 				this.jbounds = jcoordbounds;
 			} else {
 				this.jbounds = new BoundingBox(jAtoms);
-				
+
 			}
 		}
-		
+
 		fillGrid();
 	}
-	
+
 	/**
 	 * Adds a set of atoms, subsequent call to getContacts will produce the interatomic contacts.
 	 * The bounding box of the atoms will be computed based on input array
@@ -134,7 +134,7 @@ public class Grid {
 	public void addAtoms(Atom[] atoms) {
 		addAtoms(atoms, (BoundingBox) null);
 	}
-	
+
 	/**
 	 * Adds a set of atoms, subsequent call to getContacts will produce the interatomic contacts.
 	 * The bounds calculated elsewhere can be passed, or if null they are computed.
@@ -149,7 +149,7 @@ public class Grid {
 		} else {
 			this.ibounds = new BoundingBox(iAtoms);
 		}
-		
+
 		this.jAtoms = null;
 		this.jbounds = null;
 
@@ -159,7 +159,7 @@ public class Grid {
 	/**
 	 * Creates the grid based on the boundaries defined by all atoms given (iAtoms and jAtoms)
 	 * and places the atoms in their corresponding grid cells.
-	 * Checks also if the i and j grid overlap, i.e. the enclosing bounds of 
+	 * Checks also if the i and j grid overlap, i.e. the enclosing bounds of
 	 * the 2 grids (i and j) are no more than one cell size apart. If they don't
 	 * overlap then they are too far apart so there's nothing to calculate, we set
 	 * the noOverlap flag and then {@link #getContacts()} will do no calculation at all.
@@ -171,16 +171,16 @@ public class Grid {
 			noOverlap = true;
 			return;
 		}
-		
+
 		findFullGridIntBounds();
-		
+
 		cells = new GridCell[1+(bounds[3]-bounds[0])/cellSize]
 		                    [1+(bounds[4]-bounds[1])/cellSize]
 		                    [1+(bounds[5]-bounds[2])/cellSize];
-		
+
 		int i = 0;
 		for (Atom atom:iAtoms) {
-			
+
 			int xind = xintgrid2xgridindex(getFloor(atom.getX()));
 			int yind = yintgrid2ygridindex(getFloor(atom.getY()));
 			int zind = zintgrid2zgridindex(getFloor(atom.getZ()));
@@ -190,12 +190,12 @@ public class Grid {
 			cells[xind][yind][zind].addIindex(i);
 			i++;
 		}
-		
+
 		if (jAtoms==null) return;
-		
+
 		int j = 0;
 		for (Atom atom:jAtoms) {
-			
+
 			int xind = xintgrid2xgridindex(getFloor(atom.getX()));
 			int yind = yintgrid2ygridindex(getFloor(atom.getY()));
 			int zind = zintgrid2zgridindex(getFloor(atom.getZ()));
@@ -205,9 +205,9 @@ public class Grid {
 			cells[xind][yind][zind].addJindex(j);
 			j++;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Calculates an int array of size 6 into member variable bounds:
 	 * - elements 0,1,2: minimum x,y,z of the iAtoms and jAtoms
@@ -215,7 +215,7 @@ public class Grid {
 	 */
 	private void findFullGridIntBounds() {
 		int[] iIntBounds = getIntBounds(ibounds);
-		
+
 		bounds = new int[6];
 		if (jbounds==null) {
 			bounds = iIntBounds;
@@ -234,7 +234,7 @@ public class Grid {
 	 * Returns an int array of size 6 :
 	 * - elements 0,1,2: minimum x,y,z (in grid int coordinates) of the given atoms
 	 * - elements 3,4,5: maximum x,y,z (in grid int coordinates) of the given atoms
-	 * @return 
+	 * @return
 	 */
 	private int[] getIntBounds(BoundingBox coordbounds) {
 		int[] bs = new int[6];
@@ -246,7 +246,7 @@ public class Grid {
 		bs[5] = getFloor(coordbounds.zmax);
 		return bs;
 	}
-	
+
 	/**
 	 * Returns all contacts, i.e. all atoms that are within the cutoff distance.
 	 * If both iAtoms and jAtoms are defined then contacts are between iAtoms and jAtoms,
@@ -254,14 +254,14 @@ public class Grid {
 	 * @return
 	 */
 	public AtomContactSet getContacts() {
-		
+
 		AtomContactSet contacts = new AtomContactSet(cutoff);
 
 		// if the 2 sets of atoms are not overlapping they are too far away and no need to calculate anything
 		// this won't apply if there's only one set of atoms (iAtoms), where we would want all-to-all contacts
 		if (noOverlap) return contacts;
 
-		
+
 		for (int xind=0;xind<cells.length;xind++) {
 			for (int yind=0;yind<cells[xind].length;yind++) {
 				for (int zind=0;zind<cells[xind][yind].length;zind++) {
@@ -276,11 +276,11 @@ public class Grid {
 						for (int y=yind-1;y<=yind+1;y++) {
 							for (int z=zind-1;z<=zind+1;z++) {
 								if (x==xind && y==yind && z==zind) continue;
-								
+
 								if (x>=0 && x<cells.length && y>=0 && y<cells[x].length && z>=0 && z<cells[x][y].length) {
 									if (cells[x][y][z] == null) continue;
-									
-									contacts.addAll(thisCell.getContactsToOtherCell(cells[x][y][z], iAtoms, jAtoms, cutoff));									
+
+									contacts.addAll(thisCell.getContactsToOtherCell(cells[x][y][z], iAtoms, jAtoms, cutoff));
 								}
 							}
 						}
@@ -295,14 +295,14 @@ public class Grid {
 	public double getCutoff() {
 		return cutoff;
 	}
-	
+
 	/**
-	 * Tells whether (after having added atoms to grid) the i and j grids are not overlapping. 
+	 * Tells whether (after having added atoms to grid) the i and j grids are not overlapping.
 	 * Overlap is defined as enclosing bounds of the 2 grids being no more than one cell size apart.
 	 * @return true if the 2 grids don't overlap, false if they do
 	 */
 	public boolean isNoOverlap() {
 		return noOverlap;
 	}
-	
+
 }

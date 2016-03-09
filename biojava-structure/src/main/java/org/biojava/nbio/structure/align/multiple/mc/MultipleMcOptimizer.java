@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This class implements Callable, because multiple instances of the
  * optimization can be run in parallel.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.0
  *
@@ -101,7 +101,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	/**
 	 * Constructor. Sets the internal variables from the parameters. To run the
 	 * optimization use the call (in a different thread) or optimize methods.
-	 * 
+	 *
 	 * @param seedAln
 	 *            MultipleAlignment to be optimized.
 	 * @param params
@@ -177,7 +177,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	/**
 	 * Initialize the freePool and all the variables needed for the
 	 * optimization.
-	 * 
+	 *
 	 * @throws StructureException
 	 */
 	private void initialize() throws StructureException {
@@ -342,7 +342,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	 * There must be at least Rmin residues different than null in every
 	 * alignment column. In case there is a column with more gaps it will be
 	 * shrinked (moved to freePool).
-	 * 
+	 *
 	 * @return true if any columns has been shrinked and false otherwise
 	 */
 	private boolean checkGaps() {
@@ -395,7 +395,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	 * distance to their aligned neighbors are more likely to be gapped.
 	 * <p>
 	 * A gap is a null in the Block position.
-	 * 
+	 *
 	 * @return true if the alignment has been changed, false otherwise.
 	 */
 	private boolean insertGap() {
@@ -449,7 +449,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	 * <p>
 	 * The boundaries are determined by any irregularity (either a null or a
 	 * discontinuity in the alignment).
-	 * 
+	 *
 	 * @return true if the alignment has been changed, false otherwise.
 	 */
 	private boolean shiftRow() {

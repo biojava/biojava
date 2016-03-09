@@ -34,7 +34,7 @@ import java.util.List;
 public class PdbxStructAssemblyXMLContainer {
 
 	private List<PdbxStructAssembly> data ;
-	
+
 	static JAXBContext jaxbContext;
 	static {
 		try {
@@ -43,17 +43,17 @@ public class PdbxStructAssemblyXMLContainer {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@XmlElementWrapper
 	public List<PdbxStructAssembly> getPdbxStructAssemblies(){
 		return data;
-		
+
 	}
-	
+
 	public void setPdbxStructAssemblies(List<PdbxStructAssembly> d){
 		data = d;
 	}
-	
+
 	public  String toXML(){
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -67,7 +67,7 @@ public class PdbxStructAssemblyXMLContainer {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( this, ps);
-			
+
 
 		} catch (Exception e){
 			e.printStackTrace();
@@ -95,5 +95,5 @@ public class PdbxStructAssemblyXMLContainer {
 
 		return job;
 	}
-	
+
 }

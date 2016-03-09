@@ -39,7 +39,7 @@ import java.util.*;
  *
  */
 public enum GroupType {
-	
+
 
 	/**
 	 * The type for amino acids (L-peptides)
@@ -51,7 +51,7 @@ public enum GroupType {
 	 */
 	NUCLEOTIDE("nucleotide",GroupType.matchPolymerTypes(PolymerType.POLYNUCLEOTIDE_ONLY)),
 
-	/** 
+	/**
 	 * The type for hetero groups (everything else)
 	 */
 	HETATM("hetatm",GroupType.getHetatmTypes());
@@ -68,7 +68,7 @@ public enum GroupType {
 	 * @see Group#isWater()
 	 */
 	public static final List<String> WATERNAMES = Arrays.asList("HOH", "DOD", "WAT");
-	
+
 	/**
 	 * @return The name of this GroupType. One of "amino", "nucleotide", or "hetatm"
 	 */
@@ -76,10 +76,10 @@ public enum GroupType {
 	public String toString() {
 		return name;
 	}
-	
+
 	/**
 	 * Get a set of ResidueTypes loosely equivalent to this GroupType.
-	 * 
+	 *
 	 * <p>Because mmCIF and PDB handle modified residues differently, some
 	 * Groups may have a well-defined ResidueType yet still be HETATMs.
 	 * @return A Set of ResidueTypes commonly classified as this GroupType

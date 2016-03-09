@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 7, 2010
- * Author: ap3 
+ * Author: ap3
  *
  */
 
@@ -71,7 +71,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 	{
 		List<String> params =new ArrayList<String>();
 		params.add("GapOpen");
-		params.add("GapExtend");      
+		params.add("GapExtend");
 
 		return params;
 	}
@@ -91,7 +91,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 	public void reset()
 	{
 		gapOpen = (short) 8;
-		gapExtend = (short) 1;      
+		gapExtend = (short) 1;
 
 	}
 

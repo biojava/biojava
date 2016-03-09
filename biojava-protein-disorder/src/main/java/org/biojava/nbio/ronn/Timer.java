@@ -1,8 +1,8 @@
-/* 
+/*
  * @(#)Timer.java	1.0 June 2010
- * 
+ *
  * Copyright (c) 2010 Peter Troshin
- *  
+ *
  *        BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -31,50 +31,50 @@ import java.util.concurrent.TimeUnit;
  * counters, one for long time intervals, to measure time between the start and
  * end of the application for instance, and another for short events, to measure
  * how long it took to reach a next block of code.
- * 
+ *
  * @author Peter Troshin
  * @version 1.0
  * @since 3.0.2
  */
 public class Timer {
 
-    private long checkPoint;
-    private final long startTime;
-    private TimeUnit reportTimeUnit;
+	private long checkPoint;
+	private final long startTime;
+	private TimeUnit reportTimeUnit;
 
-    public Timer() {
+	public Timer() {
 	startTime = System.nanoTime();
 	checkPoint = startTime;
 	// set default time unit for reporting
 	reportTimeUnit = TimeUnit.SECONDS;
-    }
+	}
 
-    public Timer(final TimeUnit reportIn) {
+	public Timer(final TimeUnit reportIn) {
 	this();
 	reportTimeUnit = reportIn;
-    }
+	}
 
-    public void checkPoint() {
+	public void checkPoint() {
 	checkPoint = System.nanoTime();
-    }
+	}
 
-    long getStepTime(final TimeUnit tunit) {
+	long getStepTime(final TimeUnit tunit) {
 	final long duration = tunit.convert(System.nanoTime() - checkPoint,
 		TimeUnit.NANOSECONDS);
 	checkPoint();
 	return duration;
-    }
+	}
 
-    long getStepTime() {
+	long getStepTime() {
 	return getStepTime(reportTimeUnit);
-    }
+	}
 
-    long getTotalTime() {
+	long getTotalTime() {
 	return getTotalTime(reportTimeUnit);
-    }
+	}
 
-    long getTotalTime(final TimeUnit tunit) {
+	long getTotalTime(final TimeUnit tunit) {
 	return tunit.convert(System.nanoTime() - startTime,
 		TimeUnit.NANOSECONDS);
-    }
+	}
 }

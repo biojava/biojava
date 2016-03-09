@@ -10,7 +10,7 @@
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
- * 
+ *
  * @author Jacek Grzebyta <github:jgrzebyta>
  *
  * For more information on the BioJava project and its aims,
@@ -36,132 +36,132 @@ import java.util.Map;
 
 /**
  * It is {@link DBReferenceInfo} which implements {@link FeatureInterface}. It allows to keep a dbReferenceInfo as a feature.
- * 
+ *
  * @author Jacek Grzebyta
  * @author Paolo Pavan
  * @param <S>
  * @param <C>
  */
 public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Compound> extends DBReferenceInfo implements FeatureInterface<S,C> {
-    
-    private AbstractLocation location;
-    private FeatureInterface<S,C> parentFeature;
-    private List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
-    private String description = "";
-    private String shortDescription = "";
-    private Object userObject;
-    private Map<String, List<Qualifier>> qualifiers = new HashMap<String,List<Qualifier>>();
-    
-    
-    public FeatureDbReferenceInfo(String database, String id) {
-        super(database, id);
-    }
-    
-    @Override
-    public String getShortDescription() {
-        return shortDescription;
-    }
 
-    @Override
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-    }
+	private AbstractLocation location;
+	private FeatureInterface<S,C> parentFeature;
+	private List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
+	private String description = "";
+	private String shortDescription = "";
+	private Object userObject;
+	private Map<String, List<Qualifier>> qualifiers = new HashMap<String,List<Qualifier>>();
 
-    @Override
-    public String getDescription() {
-        return description;
-    }
 
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public FeatureDbReferenceInfo(String database, String id) {
+		super(database, id);
+	}
 
-    @Override
-    public AbstractLocation getLocations() {
-        return location;
-    }
+	@Override
+	public String getShortDescription() {
+		return shortDescription;
+	}
 
-    @Override
-    public void setLocation(AbstractLocation loc) {
-        location = loc;
-    }
+	@Override
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
 
-    @Override
-    public String getType() {
-        return super.getDatabase();
-    }
+	@Override
+	public String getDescription() {
+		return description;
+	}
 
-    @Override
-    public void setType(String type) {
-       super.setDatabase(type);
-    }
+	@Override
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    @Override
-    public String getSource() {
-        return super.getId();
-    }
+	@Override
+	public AbstractLocation getLocations() {
+		return location;
+	}
 
-    @Override
-    public void setSource(String source) {
-        super.setId(source);
-    }
+	@Override
+	public void setLocation(AbstractLocation loc) {
+		location = loc;
+	}
 
-    @Override
-    public void setParentFeature(FeatureInterface<S,C> feature) {
-        this.parentFeature = feature;
-    }
+	@Override
+	public String getType() {
+		return super.getDatabase();
+	}
 
-    @Override
-    public FeatureInterface<S,C> getParentFeature() {
-        return this.parentFeature;
-    }
+	@Override
+	public void setType(String type) {
+	   super.setDatabase(type);
+	}
 
-    @Override
-    public List<FeatureInterface<S, C>> getChildrenFeatures() {
-        return this.childrenFeatures;
-    }
+	@Override
+	public String getSource() {
+		return super.getId();
+	}
 
-    @Override
-    public void setChildrenFeatures(List<FeatureInterface<S, C>> features) {
-        this.childrenFeatures = features;
-    }
+	@Override
+	public void setSource(String source) {
+		super.setId(source);
+	}
 
-    @Override
-    public Object getUserObject() {
-        return this.userObject;
-    }
+	@Override
+	public void setParentFeature(FeatureInterface<S,C> feature) {
+		this.parentFeature = feature;
+	}
 
-    @Override
-    public void setUserObject(Object userObject) {
-        this.userObject = userObject;
-    }
+	@Override
+	public FeatureInterface<S,C> getParentFeature() {
+		return this.parentFeature;
+	}
 
-    @Override
-    public Map<String, List<Qualifier>> getQualifiers() {
-        return qualifiers;
-    }
+	@Override
+	public List<FeatureInterface<S, C>> getChildrenFeatures() {
+		return this.childrenFeatures;
+	}
 
-    @Override
-    public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
-        this.qualifiers = qualifiers;
-    }
+	@Override
+	public void setChildrenFeatures(List<FeatureInterface<S, C>> features) {
+		this.childrenFeatures = features;
+	}
 
-    @Override
-    public void addQualifier(String key, Qualifier qualifier) {
-        if (qualifiers == null) {
-            qualifiers = new HashMap<String, List<Qualifier>>();
-        }
-        // Check for key. Update list of values
-        if (qualifiers.containsKey(key)){
-            List<Qualifier> vals = qualifiers.get(key);
-            vals.add(qualifier);
-            qualifiers.put(key, vals);
-        } else {
-            List<Qualifier> vals = new ArrayList<Qualifier>();
-            vals.add(qualifier);
-            qualifiers.put(key, vals);
-        }
+	@Override
+	public Object getUserObject() {
+		return this.userObject;
+	}
 
-    }
+	@Override
+	public void setUserObject(Object userObject) {
+		this.userObject = userObject;
+	}
+
+	@Override
+	public Map<String, List<Qualifier>> getQualifiers() {
+		return qualifiers;
+	}
+
+	@Override
+	public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
+		this.qualifiers = qualifiers;
+	}
+
+	@Override
+	public void addQualifier(String key, Qualifier qualifier) {
+		if (qualifiers == null) {
+			qualifiers = new HashMap<String, List<Qualifier>>();
+		}
+		// Check for key. Update list of values
+		if (qualifiers.containsKey(key)){
+			List<Qualifier> vals = qualifiers.get(key);
+			vals.add(qualifier);
+			qualifiers.put(key, vals);
+		} else {
+			List<Qualifier> vals = new ArrayList<Qualifier>();
+			vals.add(qualifier);
+			qualifiers.put(key, vals);
+		}
+
+	}
 }

@@ -24,17 +24,17 @@ import java.io.Serializable;
 import java.util.SortedSet;
 
 /** The results of a Hmmer search for a single sequence
- * 
+ *
  * @author Andreas Prlic
  * @since 3.0.3
  */
 public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6016026193090737943L;
-	
+
 	String desc ;
 	Float score;
 	Float evalue;
@@ -44,9 +44,9 @@ public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 	String name;
 	Integer ndom;
 	Integer nreported;
-	
+
 	SortedSet<HmmerDomain>domains;
-	
+
 	public SortedSet<HmmerDomain> getDomains() {
 		return domains;
 	}
@@ -114,29 +114,29 @@ public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 				+ dcl + ", name=" + name + ", ndom=" + ndom + ", nreported="
 				+ nreported + ", domains=" + domains + "]";
 	}
-	
-	
+
+
 	@Override
 	public int compareTo(HmmerResult o) {
 		// 	sort  by the start position of the first domain
-		
+
 		if ( emptyDomains(this) && emptyDomains(o)){
 			return 0;
 		}
-		
+
 		if ( ! emptyDomains(this) && emptyDomains(o))
 			return -1;
-		
+
 		if ( emptyDomains(this) && (! emptyDomains(o)))
 			return 1;
-		
+
 		// ok when we are here, both domains are not empty
-		
+
 		HmmerDomain me = this.getDomains().first();
 		HmmerDomain other = o.getDomains().first();
-		
+
 		//System.out.println(" domains: " + me.getHmmAcc() + " " + other.getHmmAcc()+ " " + me.getSqFrom().compareTo(other.getSqFrom()));
-		
+
 		return(me.getSqFrom().compareTo(other.getSqFrom()));
 	}
 	private boolean emptyDomains(HmmerResult o) {
@@ -144,15 +144,15 @@ public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 			return true;
 		return false;
 	}
-	
-	
+
+
 	/** Get the overlap between two HmmerResult objects
-	 * 
+	 *
 	 * @param other
 	 * @return 0 if no overlap, otherwise the length of the overlap
 	 */
 	public int getOverlapLength(HmmerResult other){
-		
+
 		int overlap = 0;
 		for ( HmmerDomain d1 : getDomains()){
 			for (HmmerDomain d2 : other.getDomains()){
@@ -160,9 +160,9 @@ public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 			}
 		}
 		return overlap;
-		
+
 	}
-	
+
 	private int getOverlap(HmmerDomain one, HmmerDomain other){
 		int xs = one.getSqFrom();
 		int ys = one.getSqTo();
@@ -171,27 +171,27 @@ public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 
 		int overlap = 0;
 		//1:
-		
+
 		if ((( xs< as)  && ( as<ys)) || ((xs < bs) && ( bs <= ys)) || (as<xs && ys<bs)) {
-			
+
 			//2:
 
 			if ( xs < as) {
-				if ( ys < bs) 
+				if ( ys < bs)
 					overlap = ys-as;
 				else
 					overlap = bs-as;
 			} else {
-				if  ( ys < bs) 
+				if  ( ys < bs)
 					overlap = ys -xs;
-				else 
+				else
 					overlap = bs - xs;
 
-			} 
+			}
 
 		}
 
 		return overlap;
 	}
-	
+
 }

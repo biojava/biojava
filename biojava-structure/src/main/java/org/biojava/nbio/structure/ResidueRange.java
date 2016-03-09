@@ -30,11 +30,11 @@ import java.util.regex.Pattern;
 
 /**
  * A chain, a start residue, and an end residue.
- * 
+ *
  * Chain may be null when referencing a single-chain structure; for multi-chain
  * structures omitting the chain is an error. Start and/or end may also be null,
  * which is interpreted as the first and last residues in the chain, respectively.
- * 
+ *
  * @author dmyerstu
  * @see ResidueNumber
  * @see org.biojava.nbio.structure.ResidueRangeAndLength
@@ -71,7 +71,7 @@ public class ResidueRange {
 	 *
 	 * <p>Residues can be positive or negative and may include insertion codes.
 	 * See {@link ResidueNumber#fromString(String)}.
-	 * 
+	 *
 	 * <p>Examples:
 	 * <ul>
 	 * <li><code>A.5-100</code>
@@ -250,10 +250,10 @@ public class ResidueRange {
 			return Arrays.asList(new ResidueNumber[0]).iterator();
 		}
 		// Peek at upcoming entry
-		
+
 		return new Iterator<ResidueNumber>() {
 			Entry<ResidueNumber,Integer> next = loadNext();
-			
+
 			private Entry<ResidueNumber,Integer> loadNext() {
 
 				while( entryIt.hasNext() ) {
@@ -354,7 +354,7 @@ public class ResidueRange {
 		}
 		return list;
 	}
-	
+
 	public static String toString(List<? extends ResidueRange> ranges) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < ranges.size(); i++) {

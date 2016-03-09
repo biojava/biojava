@@ -38,9 +38,9 @@ import java.util.*;
  *
  */
 public class SequenceAlignmentCluster implements Cloneable {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(SequenceAlignmentCluster.class);
-	
+
 	private QuatSymmetryParameters parameters = null;
 	private List<UniqueSequenceList> uniqueSequenceList = new ArrayList<UniqueSequenceList>();
 	private List<Atom[]> alignedCAlphaAtoms = null;
@@ -48,24 +48,24 @@ public class SequenceAlignmentCluster implements Cloneable {
 	private int alignmentLength = 0;
 	private double minSequenceIdentity = 1.0;
 	private double maxSequenceIdentity = 0.0;
-	
+
 	private boolean modified = true;
 
 	public SequenceAlignmentCluster (QuatSymmetryParameters parameters) {
 		this.parameters = parameters;
 	}
-	
+
 	public boolean isPseudoStoichiometric() {
 		return minSequenceIdentity < parameters.getSequencePseudoSymmetryThreshold();
 	}
-	
+
 	public double getMinSequenceIdentity() {
 		if (! isPseudoStoichiometric()) {
 			return 1.0;
 		}
 		return minSequenceIdentity;
 	}
-	
+
 	public void setMinSequenceIdentity(double minSequenceIdentity) {
 		this.minSequenceIdentity = minSequenceIdentity;
 	}
@@ -80,7 +80,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 	public void setMaxSequenceIdentity(double maxSequenceIdentity) {
 		this.maxSequenceIdentity = maxSequenceIdentity;
 	}
-	
+
 	public void addUniqueSequenceList(UniqueSequenceList sequenceList) {
 		uniqueSequenceList.add(sequenceList);
 		modified = true;
@@ -92,12 +92,12 @@ public class SequenceAlignmentCluster implements Cloneable {
 	public int getSequenceCount() {
 		return uniqueSequenceList.size();
 	}
-	
+
 	public int getSequenceAlignmentLength() {
 		run();
 		return alignmentLength;
 	}
-	
+
 	public List<UniqueSequenceList> getUniqueSequenceList() {
 		return uniqueSequenceList;
 	}
@@ -109,7 +109,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 		return ids;
 	}
-	
+
 	public List<Integer> getModelNumbers() {
 		List<Integer> numbers = new ArrayList<Integer>();
 		for (UniqueSequenceList list: uniqueSequenceList) {
@@ -117,7 +117,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 		return numbers;
 	}
-	
+
 	public List<Integer> getStructureIds() {
 		List<Integer> numbers = new ArrayList<Integer>();
 		for (UniqueSequenceList list: uniqueSequenceList) {
@@ -125,19 +125,19 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 		return numbers;
 	}
-	
+
 	public List<Atom[]> getAlignedCalphaAtoms() {
 		run();
 		return alignedCAlphaAtoms;
 	}
-	
+
 	/**
 	 * Match a sequence to this cluster at 100% identity.
-	 * 
+	 *
 	 * If the given sequence matches the cluster seed (100%), then performs an
 	 * alignment to the seed and adds it to the {@link #getUniqueSequenceList()
 	 * unique sequence list}.
-	 *  
+	 *
 	 * @param cAlphaAtoms
 	 * @param chainId
 	 * @param modelNumber
@@ -152,7 +152,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		String refSequence = u.getSeqResSequence();
 		boolean seqMatch = refSequence.equals(sequence);
 
-		// if reference (SEQRES) sequences match 100%, 
+		// if reference (SEQRES) sequences match 100%,
 		// find alignment of atom sequences by Smith-Waterman alignment
 		if (seqMatch) {
 			List<Integer> alig1 = new ArrayList<Integer>();
@@ -180,51 +180,51 @@ public class SequenceAlignmentCluster implements Cloneable {
 
 		return false;
 	}
-	
+
 	public PairwiseAlignment getPairwiseAlignment(SequenceAlignmentCluster other) {
 		PairwiseAlignment alignment = new PairwiseAlignment(this, other);
-		
+
 		Atom[] referenceAtoms1 = this.getUniqueSequenceList().get(0).getCalphaAtoms();
 		Atom[] referenceAtoms2 = other.getUniqueSequenceList().get(0).getCalphaAtoms();
-		
+
 		double alignmentLengthFraction = (double)Math.min(referenceAtoms1.length, referenceAtoms2.length) /
 				Math.max(referenceAtoms1.length, referenceAtoms2.length);
-	
+
 		if (alignmentLengthFraction < parameters.getAlignmentFractionThreshold()) {
 			return null;
 		}
-		
+
 		AFPChain afp = alignPairByStructure(referenceAtoms1, referenceAtoms2,parameters.isVerbose());
 		if (afp == null) {
 			return null;
 		}
-		
+
 		if (! afp.isSignificantResult()) {
 			return null;
 
-    		// alternative: tmSCore:
-    		// double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
-    		// if ( tmScore < 0.35) {
-    		// return null ...
+			// alternative: tmSCore:
+			// double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
+			// if ( tmScore < 0.35) {
+			// return null ...
 		}
-		
+
 		int[][][] align = afp.getOptAln();
 		if (align == null) {
 			return null;
 		}
-			
-    	alignmentLengthFraction = (double)afp.getOptLength()/Math.max(referenceAtoms1.length, referenceAtoms2.length);
-    	alignment.setAlignmentLengthFraction(alignmentLengthFraction);
-    	alignment.setRmsd(afp.getChainRmsd());
-    	alignment.setSequenceIdentity(afp.getIdentity());
-    	alignment.setAlignment(afp.getOptAln());
-    	
+
+		alignmentLengthFraction = (double)afp.getOptLength()/Math.max(referenceAtoms1.length, referenceAtoms2.length);
+		alignment.setAlignmentLengthFraction(alignmentLengthFraction);
+		alignment.setRmsd(afp.getChainRmsd());
+		alignment.setSequenceIdentity(afp.getIdentity());
+		alignment.setAlignment(afp.getOptAln());
+
 		return alignment;
 	}
-	
+
 	@Override
 	public Object clone() {
-	    SequenceAlignmentCluster copy = null;
+		SequenceAlignmentCluster copy = null;
 		try {
 			copy = (SequenceAlignmentCluster) super.clone();
 		} catch (CloneNotSupportedException e) {
@@ -237,7 +237,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 		return copy;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -247,7 +247,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 		return builder.toString();
 	}
-	
+
 	private void run() {
 		if (modified) {
 			alignedCAlphaAtoms = null;
@@ -256,15 +256,15 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 	}
 
-	private static AFPChain alignPairBySequence(Atom[] ca1Seq, Atom[] ca2Seq) throws StructureException { 
+	private static AFPChain alignPairBySequence(Atom[] ca1Seq, Atom[] ca2Seq) throws StructureException {
 		SmithWaterman3Daligner aligner = new SmithWaterman3Daligner();
 		return aligner.align(ca1Seq, ca2Seq);
 	}
-	
-	private static AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq, boolean verbose) {
-       CeParameters params = new CeParameters();
 
-        AFPChain afp = null;
+	private static AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq, boolean verbose) {
+	   CeParameters params = new CeParameters();
+
+		AFPChain afp = null;
 		try {
 			StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			afp = algorithm.align(ca1Seq,ca2Seq,params);
@@ -273,11 +273,11 @@ public class SequenceAlignmentCluster implements Cloneable {
 			}
 		} catch (StructureException e) {
 			logger.error("StructureException caught",e);
-		}            
+		}
 		return afp;
 	}
-	
-	
+
+
 	private static int alignIdenticalSequence(Atom[] ca1Seq, Atom[] ca2Seq, List<Integer> align1, List<Integer> align2) throws StructureException {
 		AFPChain afp = alignPairBySequence(ca1Seq, ca2Seq);
 		int[][][] align = afp.getOptAln();
@@ -295,25 +295,25 @@ public class SequenceAlignmentCluster implements Cloneable {
 			Atom a2 = ca2Seq[align[0][1][i]];
 			String residueName2 = a2.getGroup().getPDBName();
 			if (residueName1.equals(residueName2)) {
-			    int n1 = a1.getGroup().getResidueNumber().getSeqNum();
-			    int n2 = a2.getGroup().getResidueNumber().getSeqNum();
-			    delta.add(n2-n1);
-			    unique.add(n2-n1);
+				int n1 = a1.getGroup().getResidueNumber().getSeqNum();
+				int n2 = a2.getGroup().getResidueNumber().getSeqNum();
+				delta.add(n2-n1);
+				unique.add(n2-n1);
 			}
 		}
-		
+
 		int offset = 0;
 		int frequency = 0;
-        for (Integer i: unique) {
-        	int freq = Collections.frequency(delta, i);
-        	if (freq > frequency) {
-        		offset = i;
-        		frequency = freq;
-        	}
-        }
-        
-        for (int i = 0; i < len; i++) {
-        	Atom a1 = ca1Seq[align[0][0][i]];
+		for (Integer i: unique) {
+			int freq = Collections.frequency(delta, i);
+			if (freq > frequency) {
+				offset = i;
+				frequency = freq;
+			}
+		}
+
+		for (int i = 0; i < len; i++) {
+			Atom a1 = ca1Seq[align[0][0][i]];
 			int n1 = a1.getGroup().getResidueNumber().getSeqNum();
 			Atom a2 = ca2Seq[align[0][1][i]];
 			int n2 = a2.getGroup().getResidueNumber().getSeqNum();
@@ -321,13 +321,13 @@ public class SequenceAlignmentCluster implements Cloneable {
 				align1.add(align[0][0][i]);
 				align2.add(align[0][1][i]);
 			}
-        }
+		}
 //        System.out.println("PDB alignment: ");
 //        System.out.println(align1);
 //        System.out.println(align2);
-        return align1.size();
+		return align1.size();
 	}
-	
+
 	private void createAlignedCAlphaAtoms() {
 		List<Integer> indices = getReferenceResidueIndices();
 		alignmentLength = indices.size();
@@ -350,11 +350,11 @@ public class SequenceAlignmentCluster implements Cloneable {
 			alignedCAlphaAtoms.add(alignedAtoms);
 		}
 	}
-	
+
 	private List<Integer> getReferenceResidueIndices() {
 		List<Integer> indices = new ArrayList<Integer>(uniqueSequenceList.get(0).getAlignment1());
 		for (UniqueSequenceList u: uniqueSequenceList) {
-           indices.retainAll(u.getAlignment1());
+		   indices.retainAll(u.getAlignment1());
 		}
 		return indices;
 	}

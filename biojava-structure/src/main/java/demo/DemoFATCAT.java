@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 15, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -37,50 +37,50 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 public class DemoFATCAT
 {
 
-   public static void main(String[] args){
+	public static void main(String[] args){
 
-      //String name1 = "4hhb.A";
-      //String name2 = "4hhb.B";
+		//String name1 = "4hhb.A";
+		//String name2 = "4hhb.B";
 
-      String name1 = "1cdg.A";
-      String name2 = "1tim.B";
+		String name1 = "1cdg.A";
+		String name2 = "1tim.B";
 
 
 
-      AtomCache cache = new AtomCache();
+		AtomCache cache = new AtomCache();
 
-      Structure structure1 = null;
-      Structure structure2 = null;
+		Structure structure1 = null;
+		Structure structure2 = null;
 
-      try {
+		try {
 
-         StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
+			StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
 
-         structure1 = cache.getStructure(name1);
-         structure2 = cache.getStructure(name2);
+			structure1 = cache.getStructure(name1);
+			structure2 = cache.getStructure(name2);
 
-         Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
-         Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
+			Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
-         // the default parameters
-         FatCatParameters params = new FatCatParameters();
+			// the default parameters
+			FatCatParameters params = new FatCatParameters();
 
-         AFPChain afpChain = algorithm.align(ca1,ca2,params);            
+			AFPChain afpChain = algorithm.align(ca1,ca2,params);
 
-         afpChain.setName1(name1);
-         afpChain.setName2(name2);
+			afpChain.setName1(name1);
+			afpChain.setName2(name2);
 
-         // flexible original results:
-         System.out.println(afpChain.toFatcat(ca1,ca2));
+			// flexible original results:
+			System.out.println(afpChain.toFatcat(ca1,ca2));
 
-         System.out.println(afpChain.toRotMat());
-         //System.out.println(afpChain.toCE(ca1, ca2));
+			System.out.println(afpChain.toRotMat());
+			//System.out.println(afpChain.toCE(ca1, ca2));
 
-         //System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
+			//System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
 
-      } catch (Exception e) {
-         e.printStackTrace();
-         return;
-      }
-   }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+	}
 }

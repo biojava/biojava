@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure;
 
 import java.io.BufferedReader;
@@ -28,9 +48,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Represents a structure loaded from a URL (including a file URL)
- * 
+ *
  * A few custom query parameters are supported:
- * 
+ *
  * <ul>
  * <li><tt>format=[pdb|cif]</tt> Specify the file format (will otherwise be
  *     guessed from the extension)
@@ -58,12 +78,12 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @see SubstructureIdentifier
 	 */
 	public static final String RESIDUES_PARAM = "residues";
-	
+
 	final private URL url;
 	public URLIdentifier(URL url) {
 		this.url = url;
 	}
-	
+
 	public URLIdentifier(String url) throws MalformedURLException {
 		this(new URL(url));
 	}
@@ -115,7 +135,7 @@ public class URLIdentifier implements StructureIdentifier {
 	public Structure loadStructure(AtomCache cache) throws StructureException,
 			IOException {
 		StructureFiletype format = StructureFiletype.UNKNOWN;
-		
+
 		// Use user-specified format
 		try {
 			Map<String, String> params = parseQuery(url);
@@ -126,12 +146,12 @@ public class URLIdentifier implements StructureIdentifier {
 		} catch (UnsupportedEncodingException e) {
 			logger.error("Unable to decode URL "+url,e);
 		}
-		
+
 		// Guess format from extension
 		if(format == StructureFiletype.UNKNOWN) {
 			format = StructureIO.guessFiletype(url.getPath());
 		}
-		
+
 		switch(format) {
 		case CIF:
 			// need to do mmcif parsing!
@@ -166,7 +186,7 @@ public class URLIdentifier implements StructureIdentifier {
 			return reader.getStructure(url);
 		}
 	}
-	
+
 
 	/**
 	 * Recognizes PDB IDs that occur at the beginning of name followed by some
@@ -186,7 +206,7 @@ public class URLIdentifier implements StructureIdentifier {
 
 	/**
 	 * Parses URL parameters into a map. Keys are stored lower-case.
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 * @throws UnsupportedEncodingException

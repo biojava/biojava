@@ -34,205 +34,205 @@ import java.util.zip.GZIPInputStream;
 public class Site {
 
 	private final static Logger logger = LoggerFactory.getLogger(Site.class);
-	
-    public Site(){
+
+	public Site(){
 
 
-    }
+	}
 
-    public static List<Site> parseSites(File f) throws IOException {
+	public static List<Site> parseSites(File f) throws IOException {
 
-        InputStream inStream = new FileInputStream(f);
-        InputStream gzipStream = new GZIPInputStream(inStream);
+		InputStream inStream = new FileInputStream(f);
+		InputStream gzipStream = new GZIPInputStream(inStream);
 
-        Reader decoder = new InputStreamReader(gzipStream);
-        BufferedReader buf = new BufferedReader(decoder);
+		Reader decoder = new InputStreamReader(gzipStream);
+		BufferedReader buf = new BufferedReader(decoder);
 
-        String line = null;
+		String line = null;
 
-        List<Site > data = new ArrayList<Site>();
+		List<Site > data = new ArrayList<Site>();
 
-        List<String> headerFields = null;
+		List<String> headerFields = null;
 
-        int proteinIndex = -1;
-        int uniprotIndex = -1;
-        int modTypeIndex = -1;
-        int residueIndex = -1;
-        int orgIndex     = -1;
-        int groupIndex   = -1;
+		int proteinIndex = -1;
+		int uniprotIndex = -1;
+		int modTypeIndex = -1;
+		int residueIndex = -1;
+		int orgIndex     = -1;
+		int groupIndex   = -1;
 
-        boolean inHeader = true;
+		boolean inHeader = true;
 
 
-        while ((line = buf.readLine()) != null){
-            if ( line.startsWith("PROTEIN")) {
+		while ((line = buf.readLine()) != null){
+			if ( line.startsWith("PROTEIN")) {
 
-                headerFields = parseHeaderFields(line);
+				headerFields = parseHeaderFields(line);
 
-                proteinIndex = headerFields.indexOf("PROTEIN");
-                uniprotIndex = headerFields.indexOf("ACC_ID");
-                modTypeIndex = headerFields.indexOf("MOD_TYPE");
-                residueIndex = headerFields.indexOf("MOD_RSD");
-                orgIndex     = headerFields.indexOf("ORG");
-                groupIndex   = headerFields.indexOf("SITE_GRP_ID");
+				proteinIndex = headerFields.indexOf("PROTEIN");
+				uniprotIndex = headerFields.indexOf("ACC_ID");
+				modTypeIndex = headerFields.indexOf("MOD_TYPE");
+				residueIndex = headerFields.indexOf("MOD_RSD");
+				orgIndex     = headerFields.indexOf("ORG");
+				groupIndex   = headerFields.indexOf("SITE_GRP_ID");
 
-                inHeader = false;
-                continue;
-            }
-            if ( inHeader)
-                continue;
+				inHeader = false;
+				continue;
+			}
+			if ( inHeader)
+				continue;
 
-            if ( line.trim().length() == 0)
-                continue;
+			if ( line.trim().length() == 0)
+				continue;
 
-            // fields are:
-            String[] spl = line.split("\t");
-            if ( spl.length  < 5){
-                logger.info("Found wrong line length: " + line);
-                continue;
+			// fields are:
+			String[] spl = line.split("\t");
+			if ( spl.length  < 5){
+				logger.info("Found wrong line length: " + line);
+				continue;
 
-            }
+			}
 
-            String protein = spl[proteinIndex];
-            String uniprot = spl[uniprotIndex];
-            //String geneSymb = spl[2];
-            //String chrLoc   = spl[3];
-            String modType = spl[modTypeIndex];
-            String residue = spl[residueIndex];
-            String group    = spl[groupIndex];
+			String protein = spl[proteinIndex];
+			String uniprot = spl[uniprotIndex];
+			//String geneSymb = spl[2];
+			//String chrLoc   = spl[3];
+			String modType = spl[modTypeIndex];
+			String residue = spl[residueIndex];
+			String group    = spl[groupIndex];
 
-            String organism = spl[orgIndex];
+			String organism = spl[orgIndex];
 
-            Site s = new Site();
-            s.setProtein(protein);
-            s.setUniprot(uniprot);
-            //s.setGeneSymb(geneSymb);
-            //s.setChrLoc(chrLoc);
-            s.setModType(modType);
-            s.setResidue(residue);
-            s.setGroup(group);
-            s.setOrganism(organism);
-            data.add(s);
-            
-        }
-        buf.close();
+			Site s = new Site();
+			s.setProtein(protein);
+			s.setUniprot(uniprot);
+			//s.setGeneSymb(geneSymb);
+			//s.setChrLoc(chrLoc);
+			s.setModType(modType);
+			s.setResidue(residue);
+			s.setGroup(group);
+			s.setOrganism(organism);
+			data.add(s);
 
-        return data;
+		}
+		buf.close();
 
-    }
+		return data;
 
-    private static List<String> parseHeaderFields(String line) {
-        String[] spl = line.split("\t");
+	}
 
-        List<String> h = new ArrayList<String>();
-        for (String s: spl){
-            h.add(s);
+	private static List<String> parseHeaderFields(String line) {
+		String[] spl = line.split("\t");
 
-        }
+		List<String> h = new ArrayList<String>();
+		for (String s: spl){
+			h.add(s);
 
-        return h;
-    }
+		}
 
-    String protein;
-    String uniprot;
-    String geneSymb;
-    String chrLoc;
-    String modType;
-    String residue ;
-    String group;
-    String organism;
+		return h;
+	}
 
-    public String getProtein() {
-        return protein;
-    }
+	String protein;
+	String uniprot;
+	String geneSymb;
+	String chrLoc;
+	String modType;
+	String residue ;
+	String group;
+	String organism;
 
-    public void setProtein(String protein) {
-        this.protein = protein;
-    }
+	public String getProtein() {
+		return protein;
+	}
 
-    public String getUniprot() {
-        return uniprot;
-    }
+	public void setProtein(String protein) {
+		this.protein = protein;
+	}
 
-    public void setUniprot(String uniprot) {
-        this.uniprot = uniprot;
-    }
+	public String getUniprot() {
+		return uniprot;
+	}
 
-    public String getGeneSymb() {
-        return geneSymb;
-    }
+	public void setUniprot(String uniprot) {
+		this.uniprot = uniprot;
+	}
 
-    public void setGeneSymb(String geneSymb) {
-        this.geneSymb = geneSymb;
-    }
+	public String getGeneSymb() {
+		return geneSymb;
+	}
 
-    public String getChrLoc() {
-        return chrLoc;
-    }
+	public void setGeneSymb(String geneSymb) {
+		this.geneSymb = geneSymb;
+	}
 
-    public void setChrLoc(String chrLoc) {
-        this.chrLoc = chrLoc;
-    }
+	public String getChrLoc() {
+		return chrLoc;
+	}
 
-    public String getModType() {
-        return modType;
-    }
+	public void setChrLoc(String chrLoc) {
+		this.chrLoc = chrLoc;
+	}
 
-    public void setModType(String modType) {
-        this.modType = modType;
-    }
+	public String getModType() {
+		return modType;
+	}
 
-    public String getResidue() {
-        return residue;
-    }
+	public void setModType(String modType) {
+		this.modType = modType;
+	}
 
-    public void setResidue(String residue) {
-        this.residue = residue;
-    }
+	public String getResidue() {
+		return residue;
+	}
 
-    public String getGroup() {
-        return group;
-    }
+	public void setResidue(String residue) {
+		this.residue = residue;
+	}
 
-    public void setGroup(String group) {
-        this.group = group;
-    }
+	public String getGroup() {
+		return group;
+	}
 
-    public String getOrganism() {
-        return organism;
-    }
+	public void setGroup(String group) {
+		this.group = group;
+	}
 
-    public void setOrganism(String organism) {
-        this.organism = organism;
-    }
+	public String getOrganism() {
+		return organism;
+	}
 
-    @Override
-    public String toString() {
-        StringBuffer s = new StringBuffer();
+	public void setOrganism(String organism) {
+		this.organism = organism;
+	}
 
-        s.append("Site{" +
-                "protein='" + protein + '\'');
-        if ( uniprot != null)
-                s.append(", uniprot='" + uniprot + '\'' );
-        if ( geneSymb != null)
-            s.append(
-                ", geneSymb='" + geneSymb + '\'' );
-        if (chrLoc != null)
-                s.append(", chrLoc='" + chrLoc + '\'' );
-        if (modType != null)
-            s.append(", modType='" + modType + '\'' );
+	@Override
+	public String toString() {
+		StringBuffer s = new StringBuffer();
 
-        if (residue != null)
-            s.append(        ", residue='" + residue + '\'' );
-        if ( group != null)
-                s.append(", group='" + group + '\'' );
-        if (organism != null)
-            s.append(", organism='" + organism + '\'' );
+		s.append("Site{" +
+				"protein='" + protein + '\'');
+		if ( uniprot != null)
+				s.append(", uniprot='" + uniprot + '\'' );
+		if ( geneSymb != null)
+			s.append(
+				", geneSymb='" + geneSymb + '\'' );
+		if (chrLoc != null)
+				s.append(", chrLoc='" + chrLoc + '\'' );
+		if (modType != null)
+			s.append(", modType='" + modType + '\'' );
 
-          s.append(      '}');
+		if (residue != null)
+			s.append(        ", residue='" + residue + '\'' );
+		if ( group != null)
+				s.append(", group='" + group + '\'' );
+		if (organism != null)
+			s.append(", organism='" + organism + '\'' );
 
-        return s.toString();
-    }
+		  s.append(      '}');
+
+		return s.toString();
+	}
 }
 
 

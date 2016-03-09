@@ -42,7 +42,7 @@ import java.io.File;
 public class MenuCreator {
 
 	/** provide a JMenuBar that can be added to a JFrame
-	 * 
+	 *
 	 * @return a JMenuBar
 	 */
 	public static JMenuBar initMenu(){
@@ -59,7 +59,7 @@ public class MenuCreator {
 		openI.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();			        
+				String cmd = e.getActionCommand();
 				if ( cmd.equals("Open")){
 					final JFileChooser fc = new JFileChooser();
 
@@ -67,7 +67,7 @@ public class MenuCreator {
 					int returnVal = fc.showOpenDialog(null);
 					if ( returnVal == JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
-						
+
 						PDBFileReader reader = new PDBFileReader();
 						try {
 							Structure s = reader.getStructure(file);
@@ -79,11 +79,11 @@ public class MenuCreator {
 						} catch (Exception ex){
 							ex.printStackTrace();
 						}
-						
+
 
 					}
-				}				
-			}		
+				}
+			}
 		});
 		file.add(openI);
 
@@ -97,8 +97,8 @@ public class MenuCreator {
 
 				if ( cmd.equals("Exit")){
 					System.exit(0);
-				}				
-			}			
+				}
+			}
 		});
 
 		file.add(exitI);
@@ -113,7 +113,7 @@ public class MenuCreator {
 
 				if ( cmd.equals("2 protein structures")){
 					MenuCreator.showPairDialog();
-				}				
+				}
 			}
 		});
 
@@ -131,8 +131,8 @@ public class MenuCreator {
 
 				if ( cmd.equals("PDBview")){
 					MenuCreator.showAboutDialog();
-				}				
-			}			
+				}
+			}
 		});
 
 		about.add(aboutI);
@@ -146,7 +146,7 @@ public class MenuCreator {
 
 
 	/** provide a display for the pairwise structure alignment
-	 * 
+	 *
 	 */
 	private static void showPairDialog(){
 		AlignmentGui gui = AlignmentGui.getInstance();
@@ -154,7 +154,7 @@ public class MenuCreator {
 	}
 
 	/** show some info about this gui
-	 * 
+	 *
 	 */
 	private static void showAboutDialog(){
 

@@ -27,7 +27,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
-import org.biojava.nbio.structure.align.ce.CeParameters;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3DParameters;
@@ -66,7 +65,7 @@ public class DemoSW3DAligner {
 			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
 
-			AFPChain afpChain = algorithm.align(ca1,ca2,params);            
+			AFPChain afpChain = algorithm.align(ca1,ca2,params);
 
 			afpChain.setName1(name1);
 			afpChain.setName2(name2);

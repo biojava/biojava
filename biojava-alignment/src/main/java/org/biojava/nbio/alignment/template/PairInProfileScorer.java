@@ -36,10 +36,10 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface PairInProfileScorer<S extends Sequence<C>, C extends Compound> extends PairwiseSequenceScorer<S, C> {
 
-    /**
-     * Returns the {@link Profile} from which the aligned pair originated.
-     * @return the original profile
-     */
-    Profile<S, C> getProfile();
+	/**
+	 * Returns the {@link Profile} from which the aligned pair originated.
+	 * @return the original profile
+	 */
+	Profile<S, C> getProfile();
 
 }

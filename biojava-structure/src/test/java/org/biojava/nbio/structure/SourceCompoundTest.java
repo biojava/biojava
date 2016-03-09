@@ -172,28 +172,28 @@ public class SourceCompoundTest extends TestCase{
 		}
 	}
 
-   /**
-     * There is a file format change in v3.2 of the PDB file format, adding the
-     * tax id.
+	/**
+	 * There is a file format change in v3.2 of the PDB file format, adding the
+	 * tax id.
 	 * This test makes sure that the tax id for the organism and expression
-     * systems is set correctly.
+	 * systems is set correctly.
 	 */
 	public void testSourceTaxIdVersion32File(){
 		Structure structure = getStructure("/3dl7_v32.pdb");
 
-        Compound comp = structure.getCompoundById(1);
+		Compound comp = structure.getCompoundById(1);
 
-        comp.showSource();
+		comp.showSource();
 
-        assertEquals("10090", comp.getOrganismTaxId());
-        assertEquals("9606", comp.getExpressionSystemTaxId());
+		assertEquals("10090", comp.getOrganismTaxId());
+		assertEquals("9606", comp.getExpressionSystemTaxId());
 
 	}
 
-    /**
-     * 3.2 format includes PMID and DOI in the JRNL section.
-     */
-    public void testJournalRefs(){
+	/**
+	 * 3.2 format includes PMID and DOI in the JRNL section.
+	 */
+	public void testJournalRefs(){
 //        JRNL        AUTH   M.HAMMEL,G.SFYROERA,D.RICKLIN,P.MAGOTTI,
 //        JRNL        AUTH 2 J.D.LAMBRIS,B.V.GEISBRECHT
 //        JRNL        TITL   A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY
@@ -202,27 +202,27 @@ public class SourceCompoundTest extends TestCase{
 //        JRNL        REFN                   ISSN 1529-2908
 //        JRNL        PMID   17351618
 //        JRNL        DOI    10.1038/NI1450
-        Structure structure = getStructure("/2gox_v315.pdb");
-        //check that there really is an publication
-        assertTrue(structure.hasJournalArticle());
+		Structure structure = getStructure("/2gox_v315.pdb");
+		//check that there really is an publication
+		assertTrue(structure.hasJournalArticle());
 
-        if (structure.hasJournalArticle()) {
-            JournalArticle journal = structure.getJournalArticle();
-            List<Author> authorList = journal.getAuthorList();
-            Author firstAuthor = authorList.get(0);
-            //check the authors
-            assertEquals(6, authorList.size());
-            assertEquals("HAMMEL", firstAuthor.getSurname());
-            assertEquals("M.", firstAuthor.getInitials());
-            //check the other publication details
-            assertEquals("A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY STAPHYLOCOCCUS AUREUS.", journal.getTitle());               
-            assertEquals("NAT.IMMUNOL.", journal.getJournalName());
-            assertEquals(2007, journal.getPublicationDate());
-            assertEquals("8", journal.getVolume());
-            assertEquals("430", journal.getStartPage());
-            assertEquals("ISSN 1529-2908", journal.getRefn());
-            assertEquals("17351618", journal.getPmid());
-            assertEquals("10.1038/NI1450", journal.getDoi());
-        }
-    }
+		if (structure.hasJournalArticle()) {
+			JournalArticle journal = structure.getJournalArticle();
+			List<Author> authorList = journal.getAuthorList();
+			Author firstAuthor = authorList.get(0);
+			//check the authors
+			assertEquals(6, authorList.size());
+			assertEquals("HAMMEL", firstAuthor.getSurname());
+			assertEquals("M.", firstAuthor.getInitials());
+			//check the other publication details
+			assertEquals("A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY STAPHYLOCOCCUS AUREUS.", journal.getTitle());
+			assertEquals("NAT.IMMUNOL.", journal.getJournalName());
+			assertEquals(2007, journal.getPublicationDate());
+			assertEquals("8", journal.getVolume());
+			assertEquals("430", journal.getStartPage());
+			assertEquals("ISSN 1529-2908", journal.getRefn());
+			assertEquals("17351618", journal.getPmid());
+			assertEquals("10.1038/NI1450", journal.getDoi());
+		}
+	}
 }

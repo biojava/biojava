@@ -32,16 +32,16 @@ import java.util.List;
  * @author Peter
  */
 public class Helix {
-    private QuatSymmetryScores scores = new QuatSymmetryScores();
-    private List<Integer> permutation;
-    private List<List<Integer>> repeatUnits;
-    private Matrix4d transformation;
-    private double rise;
-    private int nStart;
-    private int fold;
-    private int contacts;
+	private QuatSymmetryScores scores = new QuatSymmetryScores();
+	private List<Integer> permutation;
+	private List<List<Integer>> repeatUnits;
+	private Matrix4d transformation;
+	private double rise;
+	private int nStart;
+	private int fold;
+	private int contacts;
 
-    /**
+	/**
 	 * @return the scores
 	 */
 	public QuatSymmetryScores getScores() {
@@ -55,21 +55,21 @@ public class Helix {
 		this.scores = scores;
 	}
 
-    /**
-     * @return the permutation
-     */
-    public List<Integer> getPermutation() {
-        return permutation;
-    }
+	/**
+	 * @return the permutation
+	 */
+	public List<Integer> getPermutation() {
+		return permutation;
+	}
 
-    /**
-     * @param permutation the permutation to set
-     */
-    public void setPermutation(List<Integer> permutation) {
-        this.permutation = permutation;
-    }
+	/**
+	 * @param permutation the permutation to set
+	 */
+	public void setPermutation(List<Integer> permutation) {
+		this.permutation = permutation;
+	}
 
-    public List<List<Integer>> getRepeatUnits() {
+	public List<List<Integer>> getRepeatUnits() {
 		return repeatUnits;
 	}
 
@@ -78,27 +78,27 @@ public class Helix {
 	}
 
 	/**
-     * @return the transformation
-     */
-    public Matrix4d getTransformation() {
-        return transformation;
-    }
+	 * @return the transformation
+	 */
+	public Matrix4d getTransformation() {
+		return transformation;
+	}
 
-    /**
-     * @param transformation the transformation to set
-     */
-    public void setTransformation(Matrix4d transformation) {
-        this.transformation = transformation;
-    }
+	/**
+	 * @param transformation the transformation to set
+	 */
+	public void setTransformation(Matrix4d transformation) {
+		this.transformation = transformation;
+	}
 
-    public double getRise() {
+	public double getRise() {
 		return rise;
 	}
 
 	public void setRise(double rise) {
 		this.rise = rise;
 	}
-	
+
 	/**
 	 * Returns the pitch angle of the helix
 	 * @param transformation helix transformation
@@ -107,7 +107,7 @@ public class Helix {
 	public double getAngle() {
 		return getAxisAngle().angle;
 	}
-	
+
 	/**
 	 * Returns the AxisAngle of the helix transformation
 	 * @param transformation helix transformation
@@ -128,20 +128,20 @@ public class Helix {
 	}
 
 	/**
-     * @return the fold
-     */
-    public int getFold() {
-        return fold;
-    }
+	 * @return the fold
+	 */
+	public int getFold() {
+		return fold;
+	}
 
-    /**
-     * @param fold the fold to set
-     */
-    public void setFold(int fold) {
-        this.fold = fold;
-    }
-    
-    public int getContacts() {
+	/**
+	 * @param fold the fold to set
+	 */
+	public void setFold(int fold) {
+		this.fold = fold;
+	}
+
+	public int getContacts() {
 		return contacts;
 	}
 
@@ -149,29 +149,29 @@ public class Helix {
 		this.contacts = contacts;
 	}
 
-    @Override
+	@Override
 	public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Permutation   : " + getPermutation() + "\n");
-        sb.append("Repeat units  : " + getRepeatUnits() + "\n");
-        sb.append("Rise          : " + getRise() + "\n");
-        sb.append("Angle         : " + Math.toDegrees(getAngle()) +"\n");
-        sb.append("Fold          : " + getFold() + "\n");
-        return sb.toString();
-    }
-    
-    public List<List<Integer>> getLayerLines() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Permutation   : " + getPermutation() + "\n");
+		sb.append("Repeat units  : " + getRepeatUnits() + "\n");
+		sb.append("Rise          : " + getRise() + "\n");
+		sb.append("Angle         : " + Math.toDegrees(getAngle()) +"\n");
+		sb.append("Fold          : " + getFold() + "\n");
+		return sb.toString();
+	}
+
+	public List<List<Integer>> getLayerLines() {
 		List<List<Integer>> layerLines = new ArrayList<List<Integer>>();
-		
+
 		createLineSegments(permutation, layerLines);
-		
+
 //		System.out.println("Line segments: " + layerLines.size());
 //		for (List<Integer> lineSegment: layerLines) {
 //			System.out.println(lineSegment);
 //		}
-		
+
 		int count = layerLines.size();
-		
+
 		// iteratively join line segments
 		do {
 			count = layerLines.size();
@@ -184,7 +184,7 @@ public class Helix {
 //				System.out.println(lineSegment);
 //			}
 		} while (layerLines.size() < count);
-		
+
 		return layerLines;
 	}
 
@@ -199,7 +199,7 @@ public class Helix {
 			}
 		}
 	}
-	
+
 	private static void joinLineSegments(List<List<Integer>> layerLines) {
 		for (int i = 0; i < layerLines.size()-1; i++) {
 			List<Integer> lineSegmentI = layerLines.get(i);
@@ -211,7 +211,7 @@ public class Helix {
 //							System.out.println("join right: " + lineSegmentI + " - " + lineSegmentJ);
 							lineSegmentI.addAll(lineSegmentJ.subList(1,  lineSegmentJ.size()));
 //							System.out.println("joned segment: " + lineSegmentI);
-							lineSegmentJ.clear();		
+							lineSegmentJ.clear();
 						} else if ((lineSegmentI.get(0).equals(lineSegmentJ.get(lineSegmentJ.size()-1)))) {
 							lineSegmentI.addAll(0, lineSegmentJ.subList(0,  lineSegmentJ.size()-1));
 //							System.out.println("join left: " + lineSegmentJ + " - " + lineSegmentI);
@@ -223,7 +223,7 @@ public class Helix {
 			}
 		}
 	}
-	
+
 	private static void trimEmptyLineSegments(List<List<Integer>> layerLines) {
 		for (Iterator<List<Integer>> iter = layerLines.iterator(); iter.hasNext();) {
 			if (iter.next().isEmpty()) {

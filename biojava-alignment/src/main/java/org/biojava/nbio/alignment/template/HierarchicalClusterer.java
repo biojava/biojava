@@ -35,18 +35,18 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface HierarchicalClusterer<S extends Sequence<C>, C extends Compound> {
 
-    /**
-     * Returns the distance matrix used in clustering.  May be calculated from another original source.
-     *
-     * @return the distance matrix input to clustering
-     */
-    float[][] getDistanceMatrix();
+	/**
+	 * Returns the distance matrix used in clustering.  May be calculated from another original source.
+	 *
+	 * @return the distance matrix input to clustering
+	 */
+	float[][] getDistanceMatrix();
 
-    /**
-     * Returns the root node of the tree resulting from this clustering algorithm.
-     *
-     * @return the resulting tree output from clustering
-     */
-    GuideTreeNode<S, C> getRoot();
+	/**
+	 * Returns the root node of the tree resulting from this clustering algorithm.
+	 *
+	 * @return the resulting tree output from clustering
+	 */
+	GuideTreeNode<S, C> getRoot();
 
 }

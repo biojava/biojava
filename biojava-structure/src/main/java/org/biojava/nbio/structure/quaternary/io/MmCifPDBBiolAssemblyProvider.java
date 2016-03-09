@@ -40,43 +40,43 @@ import java.util.List;
 
 
 /** A provider for information about biological units for PDB files that is based on reading local MMcif files.
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 
 	private static final Logger logger = LoggerFactory.getLogger(MmCifPDBBiolAssemblyProvider.class);
-	
+
 	private String pdbId;
 	private List<PdbxStructAssembly> pdbxStructAssemblies;
 	private List<PdbxStructAssemblyGen> pdbxStructAssemblyGens;
 	private List<PdbxStructOperList> pdbxStructOperList;
 	private Structure asymUnit;
-	
+
 	private AtomCache cache ;
-	
+
 	public MmCifPDBBiolAssemblyProvider(){
 		//reset();
 	}
-	
+
 	@Override
 	public void setPdbId(String pdbId) {
 		if ( cache == null)
 			cache =new AtomCache();
-		
+
 		if (
-				this.pdbId != null && 
+				this.pdbId != null &&
 				(this.pdbId.equals(pdbId))
 				) {
 			// we already have all the data we need...
 			return;
 		}
-		
+
 		this.pdbId= pdbId;
-		
+
 		reset();
-		
+
 		MMCIFFileReader reader = new MMCIFFileReader(cache.getPath());
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setAlignSeqRes(true);
@@ -84,31 +84,31 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 		reader.setFileParsingParameters(params);
 		reader.setFetchBehavior(cache.getFetchBehavior());
 		reader.setObsoleteBehavior(cache.getObsoleteBehavior());
-		
+
 		try{
 			asymUnit = reader.getStructureById(pdbId);
 			if ( asymUnit.nrModels() > 1) {
 				// why do some NMR structures have bio units???
 				asymUnit = StructureTools.removeModels(asymUnit);
 			}
-				
+
 			SimpleMMcifConsumer consumer = reader.getMMcifConsumer();
-					
-			
+
+
 			pdbxStructOperList 		= consumer.getStructOpers();
 			pdbxStructAssemblies 	= consumer.getStructAssemblies();
 			pdbxStructAssemblyGens 	= consumer.getStructAssemblyGens();
-			
+
 			//System.out.println(asymUnit.getPDBHeader());
-			
+
 			//System.out.println("OPER:" + pdbxStructOperList);
 			//System.out.println("ASSEMBLIES:" + pdbxStructAssemblies);
 			//System.out.println("ASSEMBLYGENS:" + pdbxStructAssemblyGens);
-			
+
 			// reset the consumer data to avoid memory leaks
 			consumer.documentStart();
-			
-			
+
+
 			// here we trim in the same way as we do in SimpleMmcifConsumer, removing PAU and XAU bioassemblies, see #230 in github
 			Iterator<PdbxStructAssembly> it = pdbxStructAssemblies.iterator();
 			while (it.hasNext()) {
@@ -120,16 +120,16 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 					it.remove();
 				}
 			}
-			
+
 		} catch (IOException e){
 			// TODO this should be thrown but setPdbId doesn't have a throws in contract, we need a better solution - JD 2016-01-27
 			logger.error("IOException caught when reading mmcif file to get bioassembly for PDB " + pdbId, e);
-			
+
 		}
 	}
 
 	private void reset() {
-		
+
 		pdbxStructOperList   	= new ArrayList<PdbxStructOperList>();
 		pdbxStructAssemblies	= new ArrayList<PdbxStructAssembly>();
 		pdbxStructAssemblyGens 	= new ArrayList<PdbxStructAssemblyGen>();
@@ -139,7 +139,7 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 	public String getPdbId(){
 		return pdbId;
 	}
-	
+
 	@Override
 	public List<PdbxStructAssembly> getPdbxStructAssemblies() {
 		return pdbxStructAssemblies;
@@ -163,9 +163,9 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 	@Override
 	public boolean hasBiolAssembly() {
 		int nrAssemblies = getNrBiolAssemblies();
-		if ( nrAssemblies > 0) 
+		if ( nrAssemblies > 0)
 			return true;
-		
+
 		return false;
 	}
 
@@ -180,7 +180,7 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGen(int biolAssemblyNr) {
 		if ( biolAssemblyNr > getNrBiolAssemblies())
 			return null;
-		
+
 		List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>();
 		for (PdbxStructAssemblyGen psag : pdbxStructAssemblyGens){
 			if ( psag.getAssembly_id().equals((biolAssemblyNr +1)+ ""))
@@ -188,15 +188,15 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 		}
 		return psags;
 	}
-	
+
 	/** get the asym unit for this PDB ID
-	 * 
+	 *
 	 * @return
 	 */
 	public Structure getAsymUnit(){
 		return asymUnit;
 	}
-	
+
 	public void setAsymUnit(Structure s){
 		this.asymUnit = s;
 	}
@@ -208,7 +208,7 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 	public void setAtomCache(AtomCache cache) {
 		this.cache = cache;
 	}
-	
-	
+
+
 
 }

@@ -77,7 +77,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * @param chemicalComponentDictionaryFile : path to zip archive for chemical components.
 	 * @param tempDir : path for temporary directory, (null) defaults to path in property "java.io.tmpdir".
 	 * @throws IOException
-     */
+	 */
 	public ZipChemCompProvider(String chemicalComponentDictionaryFile, String tempDir) throws IOException {
 		this.m_zipFile = Paths.get(chemicalComponentDictionaryFile);
 
@@ -118,21 +118,21 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * Remove downloaded .cif.gz after adding to zip archive?
 	 * Default is true.
 	 * @param doRemove
-     */
+	 */
 	public void setRemoveCif(boolean doRemove) {
 		m_removeCif = doRemove;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.io.mmcif.ChemCompProvider#getChemComp(java.lang.String)
-	 * 
+	 *
 	 * @param recordName : three letter PDB name for a residue
 	 * @return ChemComp from .zip or ChemComp from repository.  Will return empty ChemComp when unable to find a residue and will return null if not provided a valid recordName.
 	 */
 	@Override
 	public ChemComp getChemComp(String recordName) {
 		if (null == recordName) return null;
-		
+
 		// handle non-existent ChemComp codes and do not repeatedly attempt to add these.
 		for (String str : unavailable) {
 			if (recordName.equals(str)) return getEmptyChemComp(recordName);
@@ -159,7 +159,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 *
 	 * @param recordName is the three-letter chemical component code (i.e. residue name).
 	 * @return ChemComp matching recordName
-     */
+	 */
 	private ChemComp downloadAndAdd(String recordName){
 		final ChemComp cc = m_dlProvider.getChemComp(recordName);
 
@@ -177,7 +177,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	/**
 	 * Cleanup chemical component (.cif.gz) files downloaded to tmpdir.
 	 * @param tempdir : path to temporary directory for chemical components
-     */
+	 */
 	public static void purgeTempFiles(String tempdir) {
 		if (tempdir == null) return;
 
@@ -193,19 +193,19 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * @param resName
 	 * @return
 	 */
-    private ChemComp getEmptyChemComp(String resName){
-    	String pdbName = ""; // Empty string is default
-    	if (null != resName && resName.length() >= 3) {
-    		pdbName = resName.substring(0,3);
-    	}
-    	final ChemComp comp = new ChemComp();
-    	comp.setOne_letter_code("?");
-    	comp.setThree_letter_code(pdbName);
-    	comp.setPolymerType(PolymerType.unknown);
-    	comp.setResidueType(ResidueType.atomn);
-    	return comp;
-    }
-    
+	private ChemComp getEmptyChemComp(String resName){
+		String pdbName = ""; // Empty string is default
+		if (null != resName && resName.length() >= 3) {
+			pdbName = resName.substring(0,3);
+		}
+		final ChemComp comp = new ChemComp();
+		comp.setOne_letter_code("?");
+		comp.setThree_letter_code(pdbName);
+		comp.setPolymerType(PolymerType.unknown);
+		comp.setResidueType(ResidueType.atomn);
+		return comp;
+	}
+
 	/**
 	 * Return File(s) in dirName that match suffix.
 	 * @param dirName
@@ -218,7 +218,8 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		}
 
 		final File dir = new File(dirName);
-		return dir.listFiles(new FilenameFilter() { 
+		return dir.listFiles(new FilenameFilter() {
+			@Override
 			public boolean accept(File dir, String filename)
 			{ return filename.endsWith(suffix); }
 		} );
@@ -228,7 +229,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * This is synchronized, along with addToFileSystem to prevent simulatenous reading/writing.
 	 * @param recordName to find in zipfile.
 	 * @return ChemComp if found or null if missing.
-     */
+	 */
 	private synchronized ChemComp getFromZip(String recordName) {
 		ChemComp cc = null;
 		if (!m_zipFile.toFile().exists()) return cc;

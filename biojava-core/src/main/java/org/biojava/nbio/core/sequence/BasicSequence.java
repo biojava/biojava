@@ -32,11 +32,11 @@ import org.biojava.nbio.core.sequence.template.*;
  */
 public class BasicSequence<C extends Compound> extends AbstractSequence<C> {
 
-  public BasicSequence(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
-    super(sequence, compoundSet);
-  }
+	public BasicSequence(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
+		super(sequence, compoundSet);
+	}
 
-  public BasicSequence(ProxySequenceReader<C> reader) {
-    super(reader, reader.getCompoundSet());
-  }
+	public BasicSequence(ProxySequenceReader<C> reader) {
+		super(reader, reader.getCompoundSet());
+	}
 }

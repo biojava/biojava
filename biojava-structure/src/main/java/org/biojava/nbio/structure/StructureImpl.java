@@ -146,8 +146,8 @@ public class StructureImpl implements Structure, Serializable {
 		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
-		n.setSites(getSites()); 
-				
+		n.setSites(getSites());
+
 
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
@@ -161,7 +161,7 @@ public class StructureImpl implements Structure, Serializable {
 				cloned_chain.setStructure(n);
 
 				cloned_model.add(cloned_chain);
-				
+
 			}
 			n.addModel(cloned_model);
 
@@ -173,7 +173,7 @@ public class StructureImpl implements Structure, Serializable {
 		for (Compound compound:this.compounds) {
 			Compound newCompound = new Compound(compound); // this sets everything but the chains
 			for (String chainId:compound.getChainIds()) {
-				
+
 					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
 						try {
 							Chain newChain = n.getChainByPDB(chainId,modelNr);
@@ -187,7 +187,7 @@ public class StructureImpl implements Structure, Serializable {
 			}
 			newCompoundList.add(newCompound);
 		}
-		n.setCompounds(newCompoundList); 
+		n.setCompounds(newCompoundList);
 
 		// TODO ssbonds are complicated to clone: there are deep references inside Atom objects, how would we do it? - JD 2016-03-03
 
@@ -304,8 +304,8 @@ public class StructureImpl implements Structure, Serializable {
 		this.structureIdentifier = structureIdentifier;
 	}
 
-	/** 
-	 * {@inheritDoc} 
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
@@ -506,8 +506,8 @@ public class StructureImpl implements Structure, Serializable {
 	/**
 	 * Whether this Structure is a crystallographic structure or not.
 	 * It will first check the experimental technique and if not present it will try
-	 * to guess from the presence of a space group and sensible cell parameters  
-	 * 
+	 * to guess from the presence of a space group and sensible cell parameters
+	 *
 	 * @return true if crystallographic, false otherwise
 	 */
 	@Override
@@ -546,14 +546,14 @@ public class StructureImpl implements Structure, Serializable {
 			if (nrModels()>1) {
 				if (pdbHeader.getCrystallographicInfo().getSpaceGroup()!=null) {
 					// multimodel, sg defined, but missing cell: must be NMR
-					if (pdbHeader.getCrystallographicInfo().getCrystalCell()==null) 
-						return true;					
+					if (pdbHeader.getCrystallographicInfo().getCrystalCell()==null)
+						return true;
 					// multi-model, sg defined and cell unreasonable: must be NMR
 					if (!pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable())
 						return true;
-				} else { 
+				} else {
 					// multi-model and missing space group: must be NMR
-					return true; 
+					return true;
 				}
 			}
 		}
@@ -563,7 +563,7 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public void setNmr(boolean nmr) {	
+	public void setNmr(boolean nmr) {
 		// old implementation was:
 		// this.nmrflag = nmr;
 	}
@@ -679,7 +679,7 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public List<Compound> getCompounds() {
 		// compounds are parsed from the PDB/mmCIF file normally
-		// but if the file is incomplete, it won't have the Compounds information and we try 
+		// but if the file is incomplete, it won't have the Compounds information and we try
 		// to guess it from the existing seqres/atom sequences
 		if (compounds==null || compounds.isEmpty()) {
 			CompoundFinder cf = new CompoundFinder(this);
@@ -745,14 +745,14 @@ public class StructureImpl implements Structure, Serializable {
 		return ssbonds;
 
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void setSSBonds(List<Bond> ssbonds){
 		this.ssbonds = ssbonds;
 	}
 
-	/** 
+	/**
 	 * Adds a single disulfide Bond to this structure
 	 *
 	 * @param ssbond the SSBond.
@@ -902,10 +902,10 @@ public class StructureImpl implements Structure, Serializable {
 	public List<String> getRanges() {
 		return ResidueRange.toStrings(getResidueRanges());
 	}
-	
+
 	/**
 	 * Creates a SubstructureIdentifier based on the residues in this Structure.
-	 * 
+	 *
 	 * Only the first and last residues of each chain are considered, so chains
 	 * with gaps
 	 * @return A {@link SubstructureIdentifier} with residue ranges constructed from each chain
@@ -919,7 +919,7 @@ public class StructureImpl implements Structure, Serializable {
 				// generate fake one if needed
 			}
 		}
-		
+
 		// No identifier set, so generate based on residues present in the structure
 		List<ResidueRange> range = new ArrayList<ResidueRange>();
 		for (Chain chain : getChains()) {

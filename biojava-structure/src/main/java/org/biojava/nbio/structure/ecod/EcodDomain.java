@@ -78,10 +78,10 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	private String fGroupName;
 	private Long assemblyId; //for non-assemblies, matches the uid.
 	private Set<String> ligands;
-	
+
 	/** Default constructor with all null properties */
 	public EcodDomain() {}
-	
+
 	public EcodDomain(Long uid, String domainId, Boolean manual,
 			Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 			String chainId, String range, String architectureName,
@@ -216,7 +216,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	/**
 	 * Get the range of this domain, in 1-based residue indices (mmCif's
 	 * _pdbx_poly_seq_scheme.seq_id)
-	 * 
+	 *
 	 * Note that {@link #getRange()} is used when constructing the domain.
 	 * @return The chain and residue range, e.g. "A:1-100"
 	 */

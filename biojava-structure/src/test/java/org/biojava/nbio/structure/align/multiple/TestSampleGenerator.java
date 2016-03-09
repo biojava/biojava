@@ -43,7 +43,7 @@ import org.biojava.nbio.structure.io.StructureIOFile;
  * This class is a helper for all the other MultipleAlignment test classes.
  * It contains methods for generating sample MultipleAlignments with known
  * properties that can be used to test correctness of the calculation methods.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -57,7 +57,7 @@ public class TestSampleGenerator {
 	 * Fields left unfilled (null): distanceMatrices and ioTime.<p>
 	 * Atoms are not downladed, but the structure (2gox) is obtained from the
 	 * test/resources folder.
-	 * 
+	 *
 	 * @return
 	 * @throws StructureException
 	 * @throws IOException
@@ -129,7 +129,7 @@ public class TestSampleGenerator {
 	 * The alignment is manually constructed. All ensemble fields are filled,
 	 * so that no one is null.<p>
 	 * Atoms of four structures (globins) are downloaded.
-	 * 
+	 *
 	 * @return MultipleAlignment the test multiple alignment
 	 * @throws StructureException
 	 * @throws IOException
@@ -145,7 +145,7 @@ public class TestSampleGenerator {
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
 		for (StructureIdentifier name:names) atomArrays.add(cache.getAtoms(name));
 
-		MultipleAlignmentEnsemble ensemble = 
+		MultipleAlignmentEnsemble ensemble =
 				new MultipleAlignmentEnsembleImpl();
 		MultipleAlignment alignment = new MultipleAlignmentImpl(ensemble);
 

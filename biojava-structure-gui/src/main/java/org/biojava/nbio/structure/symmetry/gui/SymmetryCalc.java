@@ -31,23 +31,23 @@ import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
+/**
  * Calculates a symmetry analysis and displays the results.
  * Linked to the SymmetryGUI.
  * Does not generalize, uses CeSymm class directly to allow
  * for the symmetry axis recovery.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
- * 
+ *
  */
 public class SymmetryCalc implements AlignmentCalculationRunnable {
-	
-	private static final Logger logger = 
+
+	private static final Logger logger =
 			LoggerFactory.getLogger(SymmetryCalc.class);
-	
+
 	boolean interrupted = false;
-	
+
 	private Structure structure;
 	private SymmetryGui parent;
 
@@ -60,9 +60,9 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 
 	@Override
 	public void run() {
-		
+
 		CESymmParameters params = parent.getParameters();
-		
+
 		try {
 
 			Atom[] atoms = StructureTools.getRepresentativeAtomArray(structure);
@@ -74,7 +74,7 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 		}
 		parent.notifyCalcFinished();
 	}
-	
+
 	@Override
 	public void interrupt() {
 		interrupted = true;
@@ -87,7 +87,7 @@ public class SymmetryCalc implements AlignmentCalculationRunnable {
 		parent = null;
 		structure = null;
 	}
-	
+
 	@Override
 	public void setNrCPUs(int useNrCPUs) {}
 }

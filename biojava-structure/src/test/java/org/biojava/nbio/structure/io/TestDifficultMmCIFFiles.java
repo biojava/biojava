@@ -51,11 +51,11 @@ import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.junit.Test;
 
 /**
- * Testing parsing of some difficult mmCIF files. 
+ * Testing parsing of some difficult mmCIF files.
  * For instance those containing multi-line quoting using ";\n" as delimiters
  * Feel free to add any other difficult case here
- * 
- * 
+ *
+ *
  * @author duarte_j
  *
  */
@@ -63,15 +63,15 @@ public class TestDifficultMmCIFFiles {
 
 	/**
 	 * The 2KSA mmCIF contains a 5 model NMR structure.  The first residue of the sequence is not visible
-	 * and the models should all begin with Asp indexed as residue #2.  
+	 * and the models should all begin with Asp indexed as residue #2.
 	 * @throws IOException
 	 * @throws StructureException
 	 */
 	@Test
-	public void test2KSA() throws IOException, StructureException { 
+	public void test2KSA() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 
-		StructureIO.setAtomCache(cache); 
+		StructureIO.setAtomCache(cache);
 
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setParseBioAssembly(true);
@@ -87,75 +87,75 @@ public class TestDifficultMmCIFFiles {
 		// Unit test for each of the chains to show they begin with the correct first residue.
 		for (int i = 0; i < sCif.nrModels(); i++) {
 			List<Chain> chains = sCif.getModel(i);
-			
-			// Chain A first residue should start at ASP 2.. 
+
+			// Chain A first residue should start at ASP 2..
 			// but if replaceGroupSeqPos(PdbxPolySeqScheme ppss) is used, this is incorrect and will be 1.
 			assertEquals(2, chains.get(0).getAtomGroup(0).getResidueNumber().getSeqNum().intValue());
 		}
 	}
-	
+
 	@Test
 	public void test2BI6() throws IOException, StructureException {
-		
-		// In this entry _struct_conf contains multiline quoting (quoting with "\n;" ) in a non-loop field
-		
-		// It seems that at the moment the field is not parsed by the mmCIF parser, anyway let's 
-		// keep this here if in the future it is  
 
-		
+		// In this entry _struct_conf contains multiline quoting (quoting with "\n;" ) in a non-loop field
+
+		// It seems that at the moment the field is not parsed by the mmCIF parser, anyway let's
+		// keep this here if in the future it is
+
+
 		AtomCache cache = new AtomCache();
-		
-		StructureIO.setAtomCache(cache); 
+
+		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);
 		Structure sCif = StructureIO.getStructure("2BI6");
-		
+
 		assertNotNull(sCif);
-		
+
 		// an NMR entry
 		assertFalse(sCif.isCrystallographic());
 
 		assertTrue(sCif.isNmr());
-		
+
 		assertTrue(sCif.getPDBHeader().getRevisionRecords().size() > 1);
 
-	
+
 	}
-	
+
 	@Test
 	public void test1GQO() throws IOException, StructureException {
-		
+
 		// In this entry _pdbx_struct_assembly_gen contains multiline quoting (quoting with "\n;" ) in loop field
-		
+
 		AtomCache cache = new AtomCache();
-		
-		StructureIO.setAtomCache(cache); 
-				
+
+		StructureIO.setAtomCache(cache);
+
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setParseBioAssembly(true);
 		StructureIO.setAtomCache(cache);
-	
+
 		cache.setUseMmCif(false);
 		Structure sPdb = StructureIO.getStructure("1GQO");
-		
+
 		cache.setUseMmCif(true);
 		Structure sCif = StructureIO.getStructure("1GQO");
-		
+
 		assertNotNull(sCif);
 
 		assertNotNull(sPdb.getPDBHeader().getBioAssemblies());
 		assertNotNull(sCif.getPDBHeader().getBioAssemblies());
-		
+
 		Map<Integer,BioAssemblyInfo> mapPdb = sPdb.getPDBHeader().getBioAssemblies();
 		Map<Integer,BioAssemblyInfo> mapCif = sCif.getPDBHeader().getBioAssemblies();
-		
-		
-		
+
+
+
 		assertEquals(mapPdb.size(),mapCif.size());
-		
+
 		assertEquals(60, mapCif.get(1).getTransforms().size());
 		assertEquals(60, mapCif.get(2).getTransforms().size());
-		
+
 		// an X-RAY entry
 		assertTrue(sPdb.isCrystallographic());
 		assertTrue(sCif.isCrystallographic());
@@ -163,7 +163,7 @@ public class TestDifficultMmCIFFiles {
 		assertFalse(sPdb.isNmr());
 		assertFalse(sCif.isNmr());
 
-		
+
 	}
 
 	@Test
@@ -207,13 +207,13 @@ public class TestDifficultMmCIFFiles {
 		assertNotNull(chain2);
 		assertEquals(chain2, chain);
 	}
-	
+
 	/**
 	 * This is to test the issue discussed here:
 	 * http://www.globalphasing.com/startools/
 	 * Essentially single quote characters (') are valid not only for quoting, but also as parts of
 	 * data values as long as some rules of the STAR format are followed.
-	 * For instance Phenix produces mmCIF files with non-quoted strings containing single quote characters 
+	 * For instance Phenix produces mmCIF files with non-quoted strings containing single quote characters
 	 * @throws IOException
 	 */
 	@Test
@@ -230,29 +230,29 @@ public class TestDifficultMmCIFFiles {
 
 		parser.addMMcifConsumer(consumer);
 
-		parser.parse(new BufferedReader(new InputStreamReader(inStream))); 
+		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
 
 		Structure s = consumer.getStructure();
-		
+
 		assertNotNull(s);
-		
-		
+
+
 	}
-	
+
 	/**
-	 * The last category in 2KLI mmCIF file is _pdbx_struct_oper_list, which is needed for 
+	 * The last category in 2KLI mmCIF file is _pdbx_struct_oper_list, which is needed for
 	 * the biounit annotation.
-	 * This tests makes sure that the last category in a mmCIF file is not missed because 
+	 * This tests makes sure that the last category in a mmCIF file is not missed because
 	 * of its position as last one in file.
 	 * @throws IOException
 	 * @throws StructureException
 	 */
 	@Test
-	public void test2KLI() throws IOException, StructureException { 
+	public void test2KLI() throws IOException, StructureException {
 
 		AtomCache cache = new AtomCache();
 
-		StructureIO.setAtomCache(cache); 
+		StructureIO.setAtomCache(cache);
 
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setParseBioAssembly(true);
@@ -267,7 +267,7 @@ public class TestDifficultMmCIFFiles {
 		assertNotNull(sCif.getPDBHeader().getBioAssemblies());
 
 		Map<Integer,BioAssemblyInfo> mapCif = sCif.getPDBHeader().getBioAssemblies();
-		
+
 		assertNotNull(mapCif);
 
 	}

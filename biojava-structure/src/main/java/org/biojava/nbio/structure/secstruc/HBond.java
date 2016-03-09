@@ -21,7 +21,7 @@ package org.biojava.nbio.structure.secstruc;
 /**
  * Container that represents a hidrogen bond. It contains the energy of the bond
  * in cal/mol and the partner index.
- * 
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
  *

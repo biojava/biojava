@@ -54,10 +54,10 @@ import org.slf4j.LoggerFactory;
  * Use call method to parallelize optimizations, or use optimize method instead.
  * Because gaps are allowed in the repeats, a {@link MultipleAlignment} format
  * is returned.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
- * 
+ *
  */
 public class SymmOptimizer {
 
@@ -102,7 +102,7 @@ public class SymmOptimizer {
 	 * Constructor with a seed MultipleAligment storing a refined symmetry
 	 * alignment of the repeats. To perform the optimization use the call or
 	 * optimize methods after instantiation.
-	 * 
+	 *
 	 * @param symmResult
 	 *            CeSymmResult with all the information
 	 * @throws RefinerFailedException
@@ -128,7 +128,7 @@ public class SymmOptimizer {
 			Rmin = Math.max(order / 2, 2);
 		else
 			Rmin = order;
-		
+
 		maxIter = symmResult.getParams().getOptimizationSteps();
 		if (maxIter < 1)
 			maxIter = 100 * atoms.length;
@@ -180,7 +180,7 @@ public class SymmOptimizer {
 	 * <li>2- Expand Block: add another alignment column.
 	 * <li>3- Shrink Block: move a block column to the freePool.
 	 * <li>4- Insert gap: insert a gap in a position of the alignment.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws RefinerFailedException
 	 *             if the alignment is not symmetric or too short.
@@ -302,7 +302,7 @@ public class SymmOptimizer {
 	 * This method translates the internal data structures to a
 	 * MultipleAlignment of the repeats in order to use the methods to score
 	 * MultipleAlignments.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws RefinerFailedException
 	 */
@@ -329,7 +329,7 @@ public class SymmOptimizer {
 	 * There must be at least Rmin residues different than null in every
 	 * alignment column.In case there is a column with more gaps than allowed it
 	 * will be shrinked (moved to freePool).
-	 * 
+	 *
 	 * @return true if any columns has been shrinked and false otherwise
 	 */
 	private boolean checkGaps() {
@@ -371,7 +371,7 @@ public class SymmOptimizer {
 	 * Insert a gap in one of the repeats into selected position (by higher
 	 * distances) in the alignment. Calculates the average residue distance to
 	 * make the choice. A gap is a null in the block.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws RefinerFailedException
 	 */
@@ -736,7 +736,7 @@ public class SymmOptimizer {
 
 	/**
 	 * Deletes an alignment column at a randomly selected position.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws RefinerFailedException
 	 */

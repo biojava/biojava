@@ -27,14 +27,14 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class PdbxStructAssemblyGen implements Serializable{
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6739568389242514332L;
-	String assembly_id; 
-	String oper_expression; 
+	String assembly_id;
+	String oper_expression;
 	String asym_id_list;
-	
-	
+
+
 	public String getAssembly_id() {
 		return assembly_id;
 	}
@@ -58,10 +58,10 @@ public class PdbxStructAssemblyGen implements Serializable{
 		return "PdbxStructAssemblyGen [assembly_id=" + assembly_id
 				+ ", oper_expression=" + oper_expression + ", asym_id_list="
 				+ asym_id_list + "]";
-	} 
-	
-	
+	}
 
-	
-	
+
+
+
+
 }

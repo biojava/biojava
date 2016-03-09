@@ -34,10 +34,10 @@ import org.junit.Test;
 /**
  * Run two easy cases of internal symmetry and test that results are significant
  * and order is correct.
- * 
+ *
  * @author Spencer Bliven
  * @author Aleix Lafita
- * 
+ *
  */
 public class TestCeSymm {
 

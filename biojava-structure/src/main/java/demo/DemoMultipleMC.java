@@ -42,9 +42,9 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  * For visualizing the results in jmol use the same Demo in the GUI module.
  * Here only the sequence alignment will be displayed.
  * Choose the family by commenting out the protein family names.
- * 
+ *
  * @author Aleix Lafita
- * 
+ *
  */
 public class DemoMultipleMC {
 
@@ -93,7 +93,7 @@ public class DemoMultipleMC {
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
-		
+
 		List<StructureIdentifier> ids = new ArrayList<StructureIdentifier>();
 		for (String name:names)	{
 			StructureIdentifier id = new StructureName(name);

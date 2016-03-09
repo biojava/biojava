@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 5, 2013
- * Author: andreas 
+ * Author: andreas
  *
  */
 
@@ -50,7 +50,7 @@ public class TestSiftsParsing extends TestCase {
 				assertTrue(e.getSegments().size() > 0 );
 				for ( SiftsSegment seg: e.getSegments()) {
 					assertTrue(seg.getResidues().size() > 0);
-					
+
 					for ( SiftsResidue res: seg.getResidues() ) {
 
 						if ( res.getUniProtResName() != null ) {
@@ -94,13 +94,13 @@ public class TestSiftsParsing extends TestCase {
 					assertTrue(seg.getResidues().size() > 0);
 					//System.out.println(seg.getResidues().size());
 					//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;
-					//					
+					//
 					for ( SiftsResidue res: seg.getResidues() ) {
 						//System.out.println("  " + res);
 						if ( res.getUniProtResName() != null ) {
 							assertNotNull(res.getUniProtAccessionId() );
 							assertNotNull(res.getUniProtResName());
-							
+
 						}
 					}
 				}
@@ -128,26 +128,26 @@ public class TestSiftsParsing extends TestCase {
 
 				//	4DOU has 3 segments
 				assertTrue(e.getSegments().size() == 3);
-				
+
 				// test segment 1:
-				
+
 				//SiftsSegment seg1 = e.getSegments().get(0);
 				//System.out.println(" Segment: " + seg1.getSegId() + " " + seg1.getStart() + " " + seg1.getEnd() + " res. size: " + seg1.getResidues().size());
 				//assertTrue(seg1.getResidues().size() == 17);
-				
+
 				for ( SiftsSegment seg: e.getSegments()) {
 					assertTrue(seg.getResidues().size() > 0);
-					
+
 					//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd() + " res. size: " + seg.getResidues().size()) ;
-										
+
 					for ( SiftsResidue res: seg.getResidues() ) {
-						
-						
+
+
 						if ( res.getUniProtResName() != null ) {
 							//System.out.println("  " + res);
 							assertNotNull(res.getUniProtAccessionId() );
 							assertNotNull(res.getUniProtResName());
-							
+
 						}
 					}
 					//break;
@@ -210,7 +210,7 @@ public class TestSiftsParsing extends TestCase {
 					}
 
 					if (res.getPdbResNum().equals("502")){
-						
+
 						assertTrue(res.getNotObserved());
 
 					}

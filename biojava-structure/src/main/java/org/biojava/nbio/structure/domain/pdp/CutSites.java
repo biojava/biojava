@@ -26,13 +26,13 @@ import java.util.Arrays;
 public class CutSites {
 	int ncuts;
 	int[] cut_sites;
-	
+
 	public CutSites(){
 		ncuts = 0;
-		
+
 		cut_sites = new int[PDPParameters.MAX_CUTS];
 	}
-	
+
 	@Override
 	public String toString() {
 		return "CutSites [ncuts=" + ncuts + ", cut_sites="
@@ -50,7 +50,7 @@ public class CutSites {
 	public void setCut_sites(int[] cut_sites) {
 		this.cut_sites = cut_sites;
 	}
-	
-	
-	
+
+
+
 }

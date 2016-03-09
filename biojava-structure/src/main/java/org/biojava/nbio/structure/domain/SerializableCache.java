@@ -30,16 +30,16 @@ import java.util.Map;
 
 
 /** A class that provides all that is necessary to create a Serializable Cache
- * 
+ *
  * @author Andreas Prlic
  *
  * @param <K> The key type of the cache
  * @param <V> the value type to be stored on the cache
- * 
+ *
  * @since 3.0.3
  */
 public class SerializableCache <K,V>{
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(SerializableCache.class);
 
 	protected String cacheFileName;
@@ -47,7 +47,7 @@ public class SerializableCache <K,V>{
 
 
 	/** set cacheFileName to null to disable caching
-	 * 
+	 *
 	 * @param cacheFileName
 	 */
 	public SerializableCache(String cacheFileName ) {
@@ -60,24 +60,24 @@ public class SerializableCache <K,V>{
 	}
 
 	public boolean isCacheEnabled(){
-		return ( serializedCache != null ); 
+		return ( serializedCache != null );
 	}
 
 	/** This will not cache null values.
 	 *  Null means not cached yet.
 	 *  If you want to cache "no data exists" use e.g. empty collections to represent this.
-	 *  
+	 *
 	 * @param name
 	 * @param data
 	 */
 	public void cache(K name, V data) {
-		
+
 		if ( data == null){
 			return;
 		}
 		if ( serializedCache != null){
 
-			
+
 			logger.debug("Caching {}  {}", name, data);
 
 			serializedCache.put(name,data);
@@ -126,11 +126,11 @@ public class SerializableCache <K,V>{
 		}
 
 		try{
-			
+
 			logger.debug("Reloading from cache " + f.getAbsolutePath());
-			
+
 			FileInputStream fis = new FileInputStream(f);
-			ObjectInputStream ois = new ObjectInputStream(fis);			
+			ObjectInputStream ois = new ObjectInputStream(fis);
 			serializedCache = (HashMap<K,V>) ois.readObject();
 			ois.close();
 		} catch (IOException e){
@@ -162,9 +162,9 @@ public class SerializableCache <K,V>{
 		synchronized(serializedCache){
 
 			File f = getCacheFile();
-			
+
 			try {
-				
+
 				FileOutputStream fos = new FileOutputStream(f);
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(serializedCache);
@@ -174,5 +174,5 @@ public class SerializableCache <K,V>{
 			}
 		}
 	}
-	
+
 }

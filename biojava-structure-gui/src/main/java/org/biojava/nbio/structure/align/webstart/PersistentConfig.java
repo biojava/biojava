@@ -47,14 +47,14 @@ import java.net.URL;
 public class PersistentConfig
 {
 
-	PersistenceService ps; 
-	BasicService bs      ; 
+	PersistenceService ps;
+	BasicService bs      ;
 
 	public PersistentConfig()
 	throws UnavailableServiceException
 	{
 		try {
-			ps = (PersistenceService)ServiceManager.lookup("javax.jnlp.PersistenceService"); 
+			ps = (PersistenceService)ServiceManager.lookup("javax.jnlp.PersistenceService");
 			bs = (BasicService)ServiceManager.lookup("javax.jnlp.BasicService");
 		} catch (Exception e){
 			System.err.println("Can't init webstart - persistent configuration. " + e.getMessage() );
@@ -62,11 +62,11 @@ public class PersistentConfig
 	}
 
 	/** writes the configuration
-	 * 
+	 *
 	 * @param config
 	 */
 	public void save(UserConfiguration config ) {
-		if (ps != null && bs != null) { 
+		if (ps != null && bs != null) {
 			// Persistent Service is available, running as javaws
 			saveWebStart(config) ;
 		} else {
@@ -81,12 +81,12 @@ public class PersistentConfig
 		try {
 
 			// find all the muffins for our URL
-			URL codebase = bs.getCodeBase(); 
+			URL codebase = bs.getCodeBase();
 
 			FileContents fc = null ;
 
 
-			try {		
+			try {
 				// test if persistent storage already created
 
 				fc = ps.get(codebase);
@@ -101,7 +101,7 @@ public class PersistentConfig
 			fc = ps.get(codebase);
 
 
-			OutputStream os = fc.getOutputStream(true); 
+			OutputStream os = fc.getOutputStream(true);
 
 			//StringWriter sw = new StringWriter();
 			//StringWriter stw = new StringWriter(os)   ;
@@ -114,7 +114,7 @@ public class PersistentConfig
 
 			xw.close();
 			pw.close();
-			os.close(); 
+			os.close();
 
 
 		} catch (Exception e) {
@@ -125,11 +125,11 @@ public class PersistentConfig
 
 	/** loads Config from PersistenceService
 	 *  returns null if no PErsistenceService has been created ...
-	 *  
+	 *
 	 *  @return WebStartConfiguration
 	 */
 	public UserConfiguration load() {
-		if (ps != null && bs != null) { 
+		if (ps != null && bs != null) {
 			// Persistent Service is available, running as javaws
 			return loadWebStart() ;
 		} else {
@@ -144,8 +144,8 @@ public class PersistentConfig
 	 */
 	private UserConfiguration loadWebStart() {
 		UserConfiguration config = null;
-		try { 
-			URL codebase = bs.getCodeBase(); 
+		try {
+			URL codebase = bs.getCodeBase();
 
 			FileContents fc = null ;
 
@@ -156,7 +156,7 @@ public class PersistentConfig
 				// has not been created, so nothing can be loaded ...
 				e.printStackTrace();
 				return null ;
-			}	
+			}
 
 
 			// parse the XML file ...

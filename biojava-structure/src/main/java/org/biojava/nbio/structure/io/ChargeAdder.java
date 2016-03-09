@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan. 22, 2016
  *
  */
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class ChargeAdder {
 
 	private static final Logger logger = LoggerFactory.getLogger(ChargeAdder.class);
-	
+
 	private Structure structure;
 
 	public ChargeAdder(Structure structure) {
@@ -57,9 +57,9 @@ public class ChargeAdder {
 				for(int i=0; i<protAtoms.size();i++){
 					ChemCompAtom cca = chemAtoms.get(i);
 					Atom a = protAtoms.get(i);
-					// Get the charge 
+					// Get the charge
 					try {
-						short charge = Short.parseShort(cca.getCharge());					
+						short charge = Short.parseShort(cca.getCharge());
 						a.setCharge(charge);
 					} catch (NumberFormatException e) {
 						logger.info("Could not parse charge for atom {} of {}. Will set its charge to 0", a.getName(), g.getPDBName());

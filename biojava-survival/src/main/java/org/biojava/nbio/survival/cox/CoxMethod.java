@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.survival.cox;
 
 /**
@@ -29,12 +25,12 @@ package org.biojava.nbio.survival.cox;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public enum CoxMethod{
-        /**
-     *
-     */
-    Breslow ,
-        /**
-     *
-     */
-    Efron
-    }
+	/**
+	 *
+	 */
+	Breslow ,
+	/**
+	 *
+	 */
+	Efron
+}

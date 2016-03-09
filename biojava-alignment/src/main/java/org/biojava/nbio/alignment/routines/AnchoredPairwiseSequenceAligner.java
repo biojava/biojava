@@ -50,90 +50,90 @@ import java.util.List;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Compound> extends
-        AbstractPairwiseSequenceAligner<S, C> {
+		AbstractPairwiseSequenceAligner<S, C> {
 
-    /**
-     * Before running a pairwise global sequence alignment, data must be sent in via calls to
-     * {@link #setQuery(Sequence)}, {@link #setTarget(Sequence)}, {@link #setGapPenalty(GapPenalty)}, and
-     * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
-     */
-    public AnchoredPairwiseSequenceAligner() {
-    }
+	/**
+	 * Before running a pairwise global sequence alignment, data must be sent in via calls to
+	 * {@link #setQuery(Sequence)}, {@link #setTarget(Sequence)}, {@link #setGapPenalty(GapPenalty)}, and
+	 * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
+	 */
+	public AnchoredPairwiseSequenceAligner() {
+	}
 
-    /**
-     * Prepares for a pairwise global sequence alignment.
-     *
-     * @param query the first {@link Sequence} of the pair to align
-     * @param target the second {@link Sequence} of the pair to align
-     * @param gapPenalty the gap penalties used during alignment
-     * @param subMatrix the set of substitution scores used during alignment
-     * @param cutsPerSection the number of cuts added to each section during each pass
-     */
-    public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        this(query, target, gapPenalty, subMatrix, null);
-    }
+	/**
+	 * Prepares for a pairwise global sequence alignment.
+	 *
+	 * @param query the first {@link Sequence} of the pair to align
+	 * @param target the second {@link Sequence} of the pair to align
+	 * @param gapPenalty the gap penalties used during alignment
+	 * @param subMatrix the set of substitution scores used during alignment
+	 * @param cutsPerSection the number of cuts added to each section during each pass
+	 */
+	public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+		this(query, target, gapPenalty, subMatrix, null);
+	}
 
-    /**
-     * Prepares for a pairwise global sequence alignment.
-     *
-     * @param query the first {@link Sequence} of the pair to align
-     * @param target the second {@link Sequence} of the pair to align
-     * @param gapPenalty the gap penalties used during alignment
-     * @param subMatrix the set of substitution scores used during alignment
-     * @param cutsPerSection the number of cuts added to each section during each pass
-     * @param anchors the initial list of anchors
-     */
-    public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix, int[] anchors) {
-        super(query, target, gapPenalty, subMatrix);
-        setAnchors(anchors);
-    }
+	/**
+	 * Prepares for a pairwise global sequence alignment.
+	 *
+	 * @param query the first {@link Sequence} of the pair to align
+	 * @param target the second {@link Sequence} of the pair to align
+	 * @param gapPenalty the gap penalties used during alignment
+	 * @param subMatrix the set of substitution scores used during alignment
+	 * @param cutsPerSection the number of cuts added to each section during each pass
+	 * @param anchors the initial list of anchors
+	 */
+	public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix, int[] anchors) {
+		super(query, target, gapPenalty, subMatrix);
+		setAnchors(anchors);
+	}
 
-    /**
-     * Returns the list of anchors.  The populated elements correspond to query compounds with a connection established
-     * to a target compound.
-     *
-     * @return the list of anchors
-     */
-    public int[] getAnchors() {
-    	int[] anchor = new int[getScoreMatrixDimensions()[0] - 1];
-    	for (int i = 0; i < anchor.length; i++) {
-    		anchor[i] = -1;
-    	}
-    	for (int i = 0; i < anchors.size(); i++) {
-    		anchor[anchors.get(i).getQueryIndex()] = anchors.get(i).getTargetIndex();
-    	}
-    	return anchor;
-    }
+	/**
+	 * Returns the list of anchors.  The populated elements correspond to query compounds with a connection established
+	 * to a target compound.
+	 *
+	 * @return the list of anchors
+	 */
+	public int[] getAnchors() {
+		int[] anchor = new int[getScoreMatrixDimensions()[0] - 1];
+		for (int i = 0; i < anchor.length; i++) {
+			anchor[i] = -1;
+		}
+		for (int i = 0; i < anchors.size(); i++) {
+			anchor[anchors.get(i).getQueryIndex()] = anchors.get(i).getTargetIndex();
+		}
+		return anchor;
+	}
 
-    /**
-     * Sets the starting list of anchors before running the alignment routine.
-     *
-     * @param anchors list of points that are tied to the given indices in the target
-     */
-    public void setAnchors(int[] anchors) {
-    	super.anchors = new ArrayList<Anchor>();
-    	if (anchors != null) {
-	    	for (int i = 0; i < anchors.length; i++) {
-	    		if (anchors[i] >= 0) {
-	    			addAnchor(i, anchors[i]);
-	    		}
-	    	}
-    	}
-    }
-    /**
-     * Adds an additional anchor to the set of anchored compounds
-     * @param queryIndex 0-based index of query sequence compound
-     * @param targetIndex 0-base index of target sequence compound to anchor to
-     */
-    public void addAnchor(int queryIndex, int targetIndex) {
-    	anchors.add(new Anchor(queryIndex, targetIndex));
-    }
+	/**
+	 * Sets the starting list of anchors before running the alignment routine.
+	 *
+	 * @param anchors list of points that are tied to the given indices in the target
+	 */
+	public void setAnchors(int[] anchors) {
+		super.anchors = new ArrayList<Anchor>();
+		if (anchors != null) {
+			for (int i = 0; i < anchors.length; i++) {
+				if (anchors[i] >= 0) {
+					addAnchor(i, anchors[i]);
+				}
+			}
+		}
+	}
+	/**
+	 * Adds an additional anchor to the set of anchored compounds
+	 * @param queryIndex 0-based index of query sequence compound
+	 * @param targetIndex 0-base index of target sequence compound to anchor to
+	 */
+	public void addAnchor(int queryIndex, int targetIndex) {
+		anchors.add(new Anchor(queryIndex, targetIndex));
+	}
 
-    // method for AbstractMatrixAligner
+	// method for AbstractMatrixAligner
 
-    @Override
-    protected void setProfile(List<Step> sx, List<Step> sy) {
-        profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, sy);
-    }
+	@Override
+	protected void setProfile(List<Step> sx, List<Step> sy) {
+		profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, sy);
+	}
 
 }

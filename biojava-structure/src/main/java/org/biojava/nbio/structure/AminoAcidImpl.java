@@ -61,40 +61,40 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	public GroupType getType(){ return type;}
 
 	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getN()    {return getAtom("N");  }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getCA()   {
 		// note CA can also be Calcium, but that can't happen in a standard aminoacid, so this should be safe
-		return getAtom("CA"); 
+		return getAtom("CA");
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getC()    {return getAtom("C");  }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getO()    {return getAtom("O");  }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getCB()   {return getAtom("CB"); }
 
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -102,7 +102,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 		return amino_char;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -110,7 +110,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 		amino_char  = aa ;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -118,7 +118,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 		recordType = recordName;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -136,7 +136,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 			str = str + " atoms: "+atoms.size();
 		}
 		if (!getAltLocs().isEmpty())
-			str += " has altLocs :" + getAltLocs().size(); 
+			str += " has altLocs :" + getAltLocs().size();
 
 		return str ;
 
@@ -161,7 +161,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	public Object clone() {
 
 		AminoAcidImpl n = new AminoAcidImpl();
-		n.setPDBFlag(has3D());		
+		n.setPDBFlag(has3D());
 		n.setResidueNumber(getResidueNumber());
 
 		n.setPDBName(getPDBName());
@@ -183,7 +183,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
-		
+
 		return n;
 	}
 

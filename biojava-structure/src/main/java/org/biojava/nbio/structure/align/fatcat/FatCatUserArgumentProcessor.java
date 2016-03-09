@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Nov 2, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -42,7 +42,7 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		double disCut;
 		int maxTra;
 		boolean flexible;
-		
+
 		public FatCatStartupParams() {
 			// Defaults should match those in FatCatParameters.reset()
 			fragLen = FatCatParameters.DEFAULT_FRAGLEN;
@@ -51,7 +51,7 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 			maxTra = 5;
 			flexible = false;
 		}
-		
+
 		public int getFragLen() {
 			return fragLen;
 		}
@@ -110,15 +110,15 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
 		FatCatParameters aligParams = (FatCatParameters) alignment.getParameters();
 		FatCatStartupParams startParams = (FatCatStartupParams) params;
-		
+
 		if ( aligParams == null)
 			aligParams = new FatCatParameters();
-		
+
 		aligParams.setFragLen(startParams.getFragLen());
 		aligParams.setRmsdCut(startParams.getRmsdCut());
 		aligParams.setDisCut(startParams.getDisCut());
 		aligParams.setMaxTra(startParams.getMaxTra());
-		
+
 		return aligParams;
 	}
 

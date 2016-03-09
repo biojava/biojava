@@ -35,15 +35,15 @@ import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 
 /**
- * Superimposes each structure in a {@link MultipleAlignment} onto a reference 
- * structure. 
+ * Superimposes each structure in a {@link MultipleAlignment} onto a reference
+ * structure.
  * <p>
- * Performs a global superposition of the MultipleAlignment in case 
- * there is only one {@link BlockSet}, and a superposition for every BlockSet 
+ * Performs a global superposition of the MultipleAlignment in case
+ * there is only one {@link BlockSet}, and a superposition for every BlockSet
  * in case there is more than one (flexible alignment).
  * <p>
  * This class uses the {@link SVDSuperimposer} algorithm.
- * 
+ *
  * @author Spencer Bliven
  * @author Aleix Lafita
  * @since 4.1.0
@@ -54,7 +54,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 	private int reference;
 
 	/**
-	 * Default Constructor. 
+	 * Default Constructor.
 	 * Uses the first structure as the reference.
 	 */
 	public ReferenceSuperimposer() {
@@ -63,8 +63,8 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 
 	/**
 	 * Constructor using a specified structure as reference.
-	 * 
-	 * @param reference Index of the structure to use as a reference 
+	 *
+	 * @param reference Index of the structure to use as a reference
 	 * 			(it has to be > 0)
 	 */
 	public ReferenceSuperimposer(int reference) {
@@ -76,18 +76,18 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 	}
 
 	@Override
-	public void superimpose(MultipleAlignment alignment) 
+	public void superimpose(MultipleAlignment alignment)
 			throws StructureException {
 
 		//Check for inconsistencies in the alignment
 		if(alignment.getEnsemble() == null) {
 			throw new NullPointerException("No ensemble set for this alignment."
 					+ " Structure information cannot be obtained.");
-		} 
+		}
 		if (alignment.size() < 1) {
 			throw new IndexOutOfBoundsException(
 					"No aligned structures, alignment size == 0.");
-		} 
+		}
 		if (alignment.getCoreLength() < 1){
 			throw new IndexOutOfBoundsException(
 					"Alignment too short, core alignment length < 1.");
@@ -107,7 +107,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 		for (BlockSet bs:alignment.getBlockSets()){
 
 			//Block transformations
-			List<Matrix4d> transforms = 
+			List<Matrix4d> transforms =
 					new ArrayList<Matrix4d>(atomArrays.size());
 
 			//Loop through structures

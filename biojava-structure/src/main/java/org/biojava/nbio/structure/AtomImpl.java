@@ -40,13 +40,13 @@ import java.util.List;
 public class AtomImpl implements Atom, Serializable, PDBRecord {
 
 	private static final long serialVersionUID = -2258364127420562883L;
-	
+
 	/**
-	 * The inital capacity of the bonds list. 
+	 * The inital capacity of the bonds list.
 	 * Most atoms have a maximum of 3 heavy atom neighbors.
 	 */
 	public static final int BONDS_INITIAL_CAPACITY = 3;
-	
+
 	private String name     ;
 	private Element element;
 	private double[] coords ;
@@ -72,8 +72,8 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		bonds      = null; // let's save some memory and let's not initialise this until it's needed - JD 2016-03-02
 		charge     = 0				;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -85,25 +85,25 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	@Override
 	public String getName()         { return name ;}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void setPDBserial(int i) { pdbserial = i    ; }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public int  getPDBserial()      { return pdbserial ; }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void     setCoords( double[] c ) { coords = c   ; }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -122,38 +122,38 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		coords[2] = z ;
 	}
 
-	/** 
-	 * {@inheritDoc} 
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public double getX() { return coords[0]; }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public double getY() { return coords[1]; }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public double getZ() { return coords[2]; }
 
-	/** 
+	/**
 	 * Set alternate Location.
 	 * @see #getAltLoc
 	 */
 	@Override
 	public void setAltLoc(Character c) {
 		// after changing altLoc from Character to char, we do this to keep the interface the same as it used to be - JD 2016-01-27
-		if (c==null) 
+		if (c==null)
 			altLoc = 0;
-		else 
+		else
 			altLoc = c ;
 	}
-	
-	/** 
+
+	/**
 	 * Get alternate Location.
 	 * @return a Character object representing the alt loc value
 	 * @see #setAltLoc
@@ -171,23 +171,23 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	}
 
 	@Override
-	public void   setOccupancy(float occu){ 
+	public void   setOccupancy(float occu){
 		occupancy = occu ;
-	}
-	
-	@Override
-	public float getOccupancy(){ 
-		return occupancy; 
 	}
 
 	@Override
-	public void   setTempFactor(float temp) { 
+	public float getOccupancy(){
+		return occupancy;
+	}
+
+	@Override
+	public void   setTempFactor(float temp) {
 		tempfactor = temp ;
 	}
-	
+
 	@Override
-	public float getTempFactor() { 
-		return tempfactor; 
+	public float getTempFactor() {
+		return tempfactor;
 	}
 
 	/** returns and identical copy of this  object .
@@ -207,9 +207,9 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		n.setPDBserial(getPDBserial());
 		n.setName(getName());
 		n.setElement(getElement());
-		// NOTE bonds can't be cloned here, they would need to be cloned at the 
+		// NOTE bonds can't be cloned here, they would need to be cloned at the
 		//      chain or group level (depending if they are intra or inter group bonds) -- JD 2016-03-02
-		
+
 		return n ;
 	}
 
@@ -265,7 +265,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	public List<Bond> getBonds() {
 		return bonds;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -281,17 +281,17 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 		}
 		bonds.add(bond);
 	}
-	
+
 	@Override
 	public short getCharge() {
 		// Get the charge
 		return charge;
 	}
-	
+
 	@Override
 	public void setCharge(short inputCharge) {
 		// Set the charge
 		charge = inputCharge;
-		
+
 	}
 }

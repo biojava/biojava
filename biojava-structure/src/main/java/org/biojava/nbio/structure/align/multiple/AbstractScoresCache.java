@@ -28,19 +28,19 @@ import java.util.TreeMap;
 /**
  * Abstact implementation of the {@link ScoresCache} with the shared code used
  * in all objects with a variables cache.
- * 
+ *
  * @author Spencer Bliven
  * @since 4.1.0
  *
  */
 public abstract class AbstractScoresCache implements ScoresCache {
-	
+
 	private Map<String,Double> scores = null;
 
 	protected AbstractScoresCache() {
 		scores = null;
 	}
-	
+
 	protected AbstractScoresCache(AbstractScoresCache cache) {
 		this.scores = cache.scores;
 	}
@@ -69,7 +69,7 @@ public abstract class AbstractScoresCache implements ScoresCache {
 
 	/**
 	 * Subclasses should override clone and use the copy constructor.
-	 * 
+	 *
 	 * @param e
 	 * @return
 	 * @throws CloneNotSupportedException

@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.Structure;
 /**
  * This class contains methods for obtaining and converting secondary structure
  * information from BioJava {@link Structure}s.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
  *
@@ -43,7 +43,7 @@ public class SecStrucTools {
 	/**
 	 * Obtain the List of secondary structure information (SecStrucInfo) of a
 	 * Structure.
-	 * 
+	 *
 	 * @param s
 	 *            Structure with SS assignments
 	 * @return List of SecStrucInfo objects
@@ -70,7 +70,7 @@ public class SecStrucTools {
 	/**
 	 * Obtain the List of secondary structure elements (SecStrucElement) of a
 	 * Structure.
-	 * 
+	 *
 	 * @param s
 	 *            Structure with SS assignments
 	 * @return List of SecStrucElement objects
@@ -143,7 +143,7 @@ public class SecStrucTools {
 	 * Obtain the List of secondary structure elements (SecStrucElement) of a
 	 * List of Groups (assumed to be sequential, this is, connected in the
 	 * original Structure).
-	 * 
+	 *
 	 * @param groups
 	 *            Structure with SS assignments
 	 * @return List of SecStrucElement objects

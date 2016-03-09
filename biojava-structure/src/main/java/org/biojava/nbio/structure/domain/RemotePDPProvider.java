@@ -47,12 +47,12 @@ import org.slf4j.LoggerFactory;
 
 
 /** A class that provided PDP assignments that are loaded from a remote web server
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class RemotePDPProvider extends SerializableCache<String,SortedSet<String>>  implements PDPProvider{
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(RemotePDPProvider.class);
 
 	public static final String DEFAULT_SERVER = "http://source.rcsb.org/jfatcatserver/domains/";
@@ -86,7 +86,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 
 	/**
-	 * 
+	 *
 	 * @param useCache
 	 * @throws IOException
 	 */
@@ -116,7 +116,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 			URL u = new URL(server + "getRepresentativePDPDomains");
 			logger.info("Fetching {}",u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
-			String xml = JFatCatClient.convertStreamToString(response);			
+			String xml = JFatCatClient.convertStreamToString(response);
 			results  = AssignmentXMLSerializer.fromXML(xml);
 
 			Map<String,String> data = results.getAssignments();
@@ -150,7 +150,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 	public void setServer(String server) {
 		this.server = server;
 	}
-	
+
 	/**
 	 * Get the structure for a particular PDP domain
 	 * @param pdpDomainName PDP identifier, e.g. "PDP:4HHBAa"
@@ -166,7 +166,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 	/**
 	 * Get a StructureIdentifier representing the specified PDP domain.
-	 * 
+	 *
 	 * @param pdpDomainName PDP domain name
 	 * @return a PDPDomain representing this domain name
 	 * @throws IOException if the server cannot be reached
@@ -198,7 +198,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 			logger.error("Problem generating PDP request URL for "+pdpDomainName,e);
 			throw new IllegalArgumentException("Invalid PDP name: "+pdpDomainName, e);
 		}
-		
+
 		String pdbId = null;
 		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
 		for(String domainRange : domainRanges) {
@@ -216,23 +216,23 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 	}
 
 	/** returns true if client should fetch domain definitions from server
-	 * 
+	 *
 	 * @param domainRanges
 	 * @return
 	 */
 	private boolean checkDomainRanges(SortedSet<String> domainRanges) {
-		
+
 		if ( (domainRanges == null) || (domainRanges.size() == 0)){
 			return true;
 		}
-		
+
 		for ( String d : domainRanges){
 			//System.out.println("domainRange: >" + d +"< " + d.length());
 			if ( (d != null) && (d.length() >0)){
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 

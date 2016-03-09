@@ -43,7 +43,7 @@ import org.junit.Test;
 public class TestSequenceFunctionOrderDetector {
 
 	@Test
-	public void testGetSymmetryOrder() 
+	public void testGetSymmetryOrder()
 			throws IOException, StructureException, RefinerFailedException {
 		// List of alignments to try, along with proper symmetry
 		Map<String,Integer> orderMap = new HashMap<String,Integer>();
@@ -52,21 +52,21 @@ public class TestSequenceFunctionOrderDetector {
 		//orderMap.put("d1p9ha_",-1); // not rotational symmetry
 		orderMap.put("3HKE.A",2); // very questionable alignment
 		orderMap.put("d1jlya1",3); // a very nice trefoil
-		
+
 		AtomCache cache = new AtomCache();
-		
+
 		for(String name : orderMap.keySet()) {
 			CESymmParameters params = new CESymmParameters();
 			params.setRefineMethod(RefineMethod.NOT_REFINED);
 			Atom[] ca1 = cache.getAtoms(name);
-			
+
 			CeSymmResult result = CeSymm.analyzeLevel(ca1, params);
 			AFPChain afpChain = result.getSelfAlignment();
-			
+
 			int order = new SequenceFunctionOrderDetector().calculateOrder(afpChain, ca1);
-			
+
 			assertEquals("Wrong order for "+name,orderMap.get(name).intValue(), order);
 		}
 	}
-	
+
 }

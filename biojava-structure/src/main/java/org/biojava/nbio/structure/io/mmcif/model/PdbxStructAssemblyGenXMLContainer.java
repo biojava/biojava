@@ -34,7 +34,7 @@ import java.util.List;
 public class PdbxStructAssemblyGenXMLContainer {
 
 	private List<PdbxStructAssemblyGen> data ;
-	
+
 	static JAXBContext jaxbContext;
 	static {
 		try {
@@ -43,21 +43,21 @@ public class PdbxStructAssemblyGenXMLContainer {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@XmlElementWrapper
 	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGens(){
 		return data;
-		
+
 	}
-	
+
 	public void setPdbxStructAssemblies(List<PdbxStructAssemblyGen> d){
 		data = d;
 	}
-	
+
 	public  String toXML(){
 
 		System.out.println("converting to XML: " + data);
-		
+
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		PrintStream ps = new PrintStream(baos);
@@ -69,7 +69,7 @@ public class PdbxStructAssemblyGenXMLContainer {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( this, ps);
-			
+
 
 		} catch (Exception e){
 			e.printStackTrace();
@@ -97,5 +97,5 @@ public class PdbxStructAssemblyGenXMLContainer {
 
 		return job;
 	}
-	
+
 }

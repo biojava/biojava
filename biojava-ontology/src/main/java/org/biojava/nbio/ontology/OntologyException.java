@@ -31,22 +31,22 @@ package org.biojava.nbio.ontology;
 
 public class OntologyException
 extends Exception {
-  
+
 	private static final long serialVersionUID = 1L;
 
 public OntologyException() {
-    super();
-  }
-  
-  public OntologyException(String message) {
-    super(message);
-  }
-  
-  public OntologyException(Throwable cause) {
-    super(cause);
-  }
-  
-  public OntologyException(String message, Throwable cause) {
-    super(message, cause);
-  }
+		super();
+	}
+
+	public OntologyException(String message) {
+		super(message);
+	}
+
+	public OntologyException(Throwable cause) {
+		super(cause);
+	}
+
+	public OntologyException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

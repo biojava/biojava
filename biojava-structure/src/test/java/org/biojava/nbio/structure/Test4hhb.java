@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 5, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -39,7 +39,7 @@ import java.util.zip.GZIPInputStream;
 import static org.junit.Assert.*;
 
 /** A collection of tests to make sure 4hhb is represented correctly.
- *  
+ *
  * @author Andreas Prlic
  *
  */
@@ -84,14 +84,14 @@ public class Test4hhb {
 
 		mmcifpars.parse(inStream) ;
 		structure2 = consumer.getStructure();
-		
+
 
 		assertNotNull(structure2);
 
 		assertEquals("structure does not contain four chains ", 4 ,structure2.size());
 
 		testStructure(structure2);
-		
+
 		assertEquals(structure.getPDBHeader().toPDB().toLowerCase(),structure2.getPDBHeader().toPDB().toLowerCase());
 
 		for ( int i = 0 ; i < 4 ; i++){
@@ -99,10 +99,10 @@ public class Test4hhb {
 			Chain c2 = structure.getChain(i);
 			testEqualChains(c1, c2);
 		}
-		
+
 		// test crystallographic info parses correctly
 		testCrystallographicInfo(structure, structure2);
-		
+
 	}
 
 
@@ -124,7 +124,7 @@ public class Test4hhb {
 		assertEquals("4HHB fourth chain should be D. " , d.getChainID(), "D");
 
 		assertTrue("chain " + a.getChainID() + " length should be 141. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), ( a.getAtomGroups(GroupType.AMINOACID).size() == 141 ));
-		assertTrue("chain " + b.getChainID() + " length should be 146. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), ( b.getAtomGroups(GroupType.AMINOACID).size() == 146 ));		
+		assertTrue("chain " + b.getChainID() + " length should be 146. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), ( b.getAtomGroups(GroupType.AMINOACID).size() == 146 ));
 		assertTrue("chain " + c.getChainID() + " length should be 141. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 141 ));
 		assertTrue("chain " + d.getChainID() + " length should be 146. was: " + d.getAtomGroups(GroupType.AMINOACID).size(), ( d.getAtomGroups(GroupType.AMINOACID).size() == 146 ));
 
@@ -168,7 +168,7 @@ public class Test4hhb {
 		assertEquals("sequences should be identical. " , a.getAtomSequence(),   b.getAtomSequence());
 		assertEquals("sequences should be identical. " , a.getSeqResSequence(), b.getSeqResSequence());
 	}
-	
+
 	private void testCrystallographicInfo(Structure s1, Structure s2) {
 		PDBCrystallographicInfo xtalInfo = s1.getPDBHeader().getCrystallographicInfo();
 		PDBCrystallographicInfo xtalInfo2 = s2.getPDBHeader().getCrystallographicInfo();

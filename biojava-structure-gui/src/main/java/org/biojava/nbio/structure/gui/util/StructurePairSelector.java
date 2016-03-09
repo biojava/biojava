@@ -27,8 +27,8 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 
 /** To be implemented by JPanels that are part of the GUI to trigger structure aligmnents.
- * 
- * 
+ *
+ *
  * @author Andreas Prlic
  * @since 1.7
  *
@@ -37,5 +37,5 @@ public interface StructurePairSelector {
 
 	public Structure getStructure1() throws StructureException, IOException;
 	public Structure getStructure2() throws StructureException, IOException;
-	
+
 }

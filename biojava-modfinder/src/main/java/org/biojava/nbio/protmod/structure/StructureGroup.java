@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Aug 2, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -27,17 +27,17 @@ package org.biojava.nbio.protmod.structure;
 import org.biojava.nbio.structure.ResidueNumber;
 
 /**
- * Information of a group (residue or ligand) involved in a modification. 
+ * Information of a group (residue or ligand) involved in a modification.
  * @author Jianjiong Gao
  * @since 3.0
  */
 public class StructureGroup
 implements Comparable<StructureGroup> {
-	
+
 	private  ResidueNumber resNum;
 	private  String pdbName;
-        private Boolean isAminoAcid;
-	
+	private Boolean isAminoAcid;
+
 	public StructureGroup(){
 		resNum = new ResidueNumber();
 	}
@@ -46,7 +46,7 @@ implements Comparable<StructureGroup> {
 			 String pdbName, boolean isAminoAcid) {
 		this.resNum = resNum;
 		this.pdbName = pdbName;
-        this.isAminoAcid = isAminoAcid;
+		this.isAminoAcid = isAminoAcid;
 	}
 
 //	public StructureGroup( ResidueNumber resNum,
@@ -57,34 +57,34 @@ implements Comparable<StructureGroup> {
 	public ResidueNumber getPDBResidueNumber() {
 		return resNum;
 	}
-	
+
 	public void setPDBResidueNumber(ResidueNumber resNum) {
 		this.resNum = resNum;
 	}
 	public String getChainId() {
 		return resNum.getChainId();
 	}
-	
+
 	public void setChainId(String chainId){
 		if ( resNum == null)
 			resNum = new ResidueNumber();
 		resNum.setChainId(chainId);
 	}
-	
+
 	public int getResidueNumber() {
 		return resNum.getSeqNum();
 	}
-	
+
 	public void setResidueNumber(int seqNr){
 		if ( resNum == null)
 			resNum = new ResidueNumber();
 		resNum.setSeqNum(seqNr);
 	}
-	
+
 	public Character getInsCode() {
 		return resNum.getInsCode();
 	}
-	
+
 	public void setInsCode(Character c){
 		if ( resNum == null)
 			resNum = new ResidueNumber();
@@ -94,12 +94,12 @@ implements Comparable<StructureGroup> {
 	public String getPDBName() {
 		return pdbName;
 	}
-	
+
 	public void setPDBName(String pdbName){
 		this.pdbName = pdbName;
-		
+
 	}
-	
+
 	public void setIsAminoAcid(boolean isAminoAcid) {
 		this.isAminoAcid = isAminoAcid;
 	}
@@ -112,14 +112,14 @@ implements Comparable<StructureGroup> {
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		
+
 		if (!(obj instanceof StructureGroup))
 			return false;
-		
+
 		StructureGroup aGroup = (StructureGroup) obj;
 		if (!resNum.equals(aGroup.resNum))
 			return false;
-		
+
 		return true;
 	}
 

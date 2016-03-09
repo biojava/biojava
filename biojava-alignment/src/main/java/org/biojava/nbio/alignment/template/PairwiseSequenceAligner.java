@@ -35,13 +35,13 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public interface PairwiseSequenceAligner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C>,
-        PairwiseSequenceScorer<S, C> {
+		PairwiseSequenceScorer<S, C> {
 
-    /**
-     * Returns sequence alignment pair.
-     *
-     * @return sequence alignment pair
-     */
-    SequencePair<S, C> getPair();
+	/**
+	 * Returns sequence alignment pair.
+	 *
+	 * @return sequence alignment pair
+	 */
+	SequencePair<S, C> getPair();
 
 }

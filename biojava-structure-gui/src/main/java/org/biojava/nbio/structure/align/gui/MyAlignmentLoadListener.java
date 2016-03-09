@@ -51,10 +51,10 @@ import java.util.List;
  * one. However, all the alignments in the same file have to be in the same
  * format (either AFPChain or MultipleAlignment).
  * Multiple Jmol panels can be created for that purpose.
- * 
+ *
  * @author Aleix Lafita
  * @version 2.0 - adapted for MultipleAlignments
- * 
+ *
  */
 public class MyAlignmentLoadListener implements ActionListener {
 
@@ -88,7 +88,7 @@ public class MyAlignmentLoadListener implements ActionListener {
 				//Determine the format of the file
 				if (xml.contains("MultipleAlignmentEnsemble")){
 
-					List<MultipleAlignmentEnsemble> ensembles = 
+					List<MultipleAlignmentEnsemble> ensembles =
 							MultipleAlignmentXMLParser.parseXMLfile(xml);
 
 					//Display all ensembles, and all its alignments
@@ -112,7 +112,7 @@ public class MyAlignmentLoadListener implements ActionListener {
 						Atom[] ca2 = cache.getAtoms(afpChain.getName2());
 
 						AFPChainXMLParser.rebuildAFPChain(afpChain, ca1, ca2);
-						StructureAlignmentJmol jmol = 
+						StructureAlignmentJmol jmol =
 								StructureAlignmentDisplay.display(
 										afpChain, ca1, ca2);
 

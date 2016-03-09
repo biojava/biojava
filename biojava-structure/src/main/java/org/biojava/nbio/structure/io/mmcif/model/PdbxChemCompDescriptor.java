@@ -30,14 +30,14 @@ _pdbx_chem_comp_descriptor.type
 _pdbx_chem_comp_descriptor.program
 _pdbx_chem_comp_descriptor.program_version
 _pdbx_chem_comp_descriptor.descriptor
-*/
+ */
 public class PdbxChemCompDescriptor {
 	String comp_id;
 	String type;
 	String program;
 	String program_version;
 	String identifier;
-	
+
 	public String getComp_id() {
 		return comp_id;
 	}

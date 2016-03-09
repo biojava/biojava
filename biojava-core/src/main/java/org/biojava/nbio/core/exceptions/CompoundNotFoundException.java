@@ -27,7 +27,7 @@ package org.biojava.nbio.core.exceptions;
 
 public class CompoundNotFoundException extends Exception {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

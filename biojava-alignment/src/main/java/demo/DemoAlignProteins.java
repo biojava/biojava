@@ -62,7 +62,7 @@ public class DemoAlignProteins {
 
 		System.out.println(pair.toString(60));
 
-		
+
 	}
 
 	private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
@@ -70,7 +70,7 @@ public class DemoAlignProteins {
 		ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
 		System.out.printf("id : %s %s%s%s", uniProtId, seq, System.getProperty("line.separator"), seq.getOriginalHeader());
 		System.out.println();
-		
+
 		return seq;
 	}
 }

@@ -45,7 +45,7 @@ import java.util.*;
  * functionality of downloading structure files from the FTP site is gathered
  * here, making the child classes responsible for only the specific paths and
  * file formats needed.
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -54,7 +54,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	private static final Logger logger = LoggerFactory.getLogger(LocalPDBDirectory.class);
 
 	/**
-	 * The default server name, prefixed by the protocol string (http:// or ftp://). 
+	 * The default server name, prefixed by the protocol string (http:// or ftp://).
 	 * Note that we don't support file stamp retrieving for ftp protocol, thus some of the
 	 * fetch modes will not work properly with ftp protocol
 	 */
@@ -88,8 +88,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		/** Fetch missing files from the server. Don't check for outdated files */
 		FETCH_FILES,
 		/**
-		 * Fetch missing files from the server, also fetch if file present but older than the  
-		 * server file. 
+		 * Fetch missing files from the server, also fetch if file present but older than the
+		 * server file.
 		 * This requires always querying the server for the last modified time of the file, thus
 		 * it adds an overhead to getting files from cache.
 		 */
@@ -131,7 +131,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	private List<String> extensions;
 
 	/**
-	 * The server name, prefixed by the protocol string (http:// or ftp://). 
+	 * The server name, prefixed by the protocol string (http:// or ftp://).
 	 * Note that we don't support file stamp retrieving for ftp protocol, thus some of the
 	 * fetch modes will not work properly with ftp protocol
 	 */
@@ -142,13 +142,13 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	private ObsoleteBehavior obsoleteBehavior;
 	private FetchBehavior fetchBehavior;
 
-	
+
 	// Cache results of get*DirPath()
 	private String splitDirURL; // path on the server, starting with a slash and ending before the 2-char split directories
 	private String obsoleteDirURL;
 	private File splitDirPath; // path to the directory before the 2-char split
 	private File obsoleteDirPath;
-	
+
 	/**
 	 * Subclasses should provide default and single-string constructors.
 	 * They should use {@link #addExtension(String)} to add one or more extensions.
@@ -173,7 +173,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		this.path = new File(path);
 
 		this.serverName = getServerName();
-		
+
 		// Initialize splitDirURL,obsoleteDirURL,splitDirPath,obsoleteDirPath
 		initPaths();
 
@@ -185,8 +185,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		this(null);
 	}
 
-	/** 
-	 * Sets the path for the directory where PDB files are read/written 
+	/**
+	 * Sets the path for the directory where PDB files are read/written
 	 */
 	public void setPath(String p){
 		path = new File(FileDownloadUtils.expandUserHome(p)) ;
@@ -266,12 +266,12 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 *   Load the requested ID from the PDB's obsolete repository
 	 * <li>{@link ObsoleteBehavior#FETCH_CURRENT FETCH_CURRENT}
 	 *   Load the most recent version of the requested structure
-	 * 
+	 *
 	 * <p>This setting may be silently ignored by implementations which do not have
 	 * access to the server to determine whether an entry is obsolete, such as
 	 * if {@link #isAutoFetch()} is false. Note that an obsolete entry may still be
 	 * returned even this is FETCH_CURRENT if the entry is found locally.
-	 * 
+	 *
 	 * @param fetchFileEvenIfObsolete Whether to fetch obsolete records
 	 * @see #setFetchCurrent(boolean)
 	 * @since 4.0.0
@@ -284,10 +284,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Returns how this instance deals with obsolete entries. Note that this
 	 * setting may be ignored by some implementations or in some situations,
 	 * such as when {@link #isAutoFetch()} is false.
-	 * 
+	 *
 	 * <p>For most implementations, the default value is
 	 * {@link ObsoleteBehavior#THROW_EXCEPTION THROW_EXCEPTION}.
-	 * 
+	 *
 	 * @return The ObsoleteBehavior
 	 * @since 4.0.0
 	 */
@@ -381,10 +381,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	/**
 	 * Download a structure, but don't parse it yet or store it in memory.
-	 * 
+	 *
 	 * Used to pre-fetch large numbers of structures.
 	 * @param pdbId
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void prefetchStructure(String pdbId) throws IOException {
 		if ( pdbId.length() != 4)
@@ -397,7 +397,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
 		}
 	}
-	
+
 	/**
 	 * Attempts to delete all versions of a structure from the local directory.
 	 * @param pdbId
@@ -437,7 +437,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				existing = getLocalFile(pdbId);
 			}
 			return deleted;
-			
+
 		} finally {
 			setObsoleteBehavior(obsolete);
 		}
@@ -475,7 +475,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 					if (lastModified < LAST_REMEDIATION_DATE) {
 						logger.warn("FileParsingParameters.setUpdateRemediatedFiles() is deprecated, please use LocalPDBDirectory.setFetchBehavior() instead. The option will be removed in upcoming releases");
 						// the file is too old, replace with newer version
-						logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.", 
+						logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
 								existing, LAST_REMEDIATION_DATE_STRING);
 						break;
 					}
@@ -487,9 +487,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			break;
 		case FETCH_IF_OUTDATED:
 			// here existing can be null or not:
-			// existing == null : downloadStructure(String,String,boolean,File) will download it 
+			// existing == null : downloadStructure(String,String,boolean,File) will download it
 			// existing != null : downloadStructure(String,String,boolean,File) will check its date and download if older
-			break;			
+			break;
 		case FETCH_REMEDIATED:
 			// Use existing if present and recent enough
 			if( existing != null) {
@@ -497,18 +497,18 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 				if (lastModified < LAST_REMEDIATION_DATE) {
 					// the file is too old, replace with newer version
-					logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.", 
+					logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
 							existing, LAST_REMEDIATION_DATE_STRING);
 					existing = null;
 					break;
 				} else {
 					return existing;
 				}
-			}			
+			}
 		case FORCE_DOWNLOAD:
 			// discard the existing file to force redownload
 			existing = null; // downloadStructure(String,String,boolean,File) will download it
-			break; 
+			break;
 		}
 
 		// Force the download now
@@ -533,25 +533,25 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @param pdbId PDB ID
 	 * @param pathOnServer Path on the FTP server, e.g. data/structures/divided/pdb
 	 * @param obsolete Whether or not file should be saved to the obsolete location locally
-	 * @param existingFile if not null and checkServerFileDate is true, the last modified date of the 
+	 * @param existingFile if not null and checkServerFileDate is true, the last modified date of the
 	 * server file and this file will be compared to decide whether to download or not
 	 * @return
 	 * @throws IOException
 	 */
-	private File downloadStructure(String pdbId, String pathOnServer, boolean obsolete, File existingFile) 
+	private File downloadStructure(String pdbId, String pathOnServer, boolean obsolete, File existingFile)
 			throws IOException{
-		
+
 		File dir = getDir(pdbId,obsolete);
 		File realFile = new File(dir,getFilename(pdbId));
 
-		String ftp = String.format("%s%s/%s/%s", 
+		String ftp = String.format("%s%s/%s/%s",
 				serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
 
 		URL url = new URL(ftp);
-		
+
 		Date serverFileDate = null;
 		if (existingFile!=null) {
-			
+
 			serverFileDate = getLastModifiedTime(url);
 
 			if (serverFileDate!=null) {
@@ -566,7 +566,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				logger.warn("Could not determine if file {} is outdated (could not get timestamp from server). Will force redownload", existingFile);
 			}
 		}
-		
+
 		logger.info("Fetching " + ftp);
 		logger.info("Writing to "+ realFile);
 
@@ -576,30 +576,30 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		// Commented out following code used for setting the modified date to the downloaded file - JD 2015-01-15
 		// The only reason to have it was in order to get an rsync-like behavior, respecting the timestamps
-		// but the issue is that it would make the FETCH_REMEDIATED mode redownload files with timestamps before 
+		// but the issue is that it would make the FETCH_REMEDIATED mode redownload files with timestamps before
 		// the remediation.
 		//if (serverFileDate==null)
 		//	serverFileDate = getLastModifiedTime(url);
 		//
 		//if (serverFileDate!=null) {
 		//	logger.debug("Setting modified time of downloaded file {} to {}",realFile,serverFileDate.toString());
-		//	realFile.setLastModified(serverFileDate.getTime());				
+		//	realFile.setLastModified(serverFileDate.getTime());
 		//} else {
 		//	logger.warn("Unknown modified time of file {}, will set its modified time to now.", ftp);
 		//}
-			
+
 
 		return realFile;
 	}
 
 	/**
-	 * Get the last modified time of the file in given url by retrieveing the "Last-Modified" header. 
+	 * Get the last modified time of the file in given url by retrieveing the "Last-Modified" header.
 	 * Note that this only works for http URLs
 	 * @param url
 	 * @return the last modified date or null if it couldn't be retrieved (in that case a warning will be logged)
 	 */
 	private Date getLastModifiedTime(URL url) {
-		
+
 		// see http://stackoverflow.com/questions/2416872/how-do-you-obtain-modified-date-from-a-remote-file-java
 		Date date = null;
 		try {
@@ -612,27 +612,27 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				try {
 					date = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).parse(lastModified);
 				} catch (ParseException e) {
-					logger.warn("Could not parse last modified time from string '{}', no last modified time available for file {}", 
+					logger.warn("Could not parse last modified time from string '{}', no last modified time available for file {}",
 							lastModified, url.toString());
 					// this will return null
 				}
 
-			} 
+			}
 		} catch (IOException e) {
 			logger.warn("Problems while retrieving last modified time for file {}", url.toString());
 		}
 		return date;
-		
+
 	}
-	
+
 	/**
 	 * Gets the directory in which the file for a given MMCIF file would live,
 	 * creating it if necessary.
-	 * 
+	 *
 	 * The obsolete parameter is necessary to avoid additional server queries.
 	 * @param pdbId
 	 * @param obsolete Whether the pdbId is obsolete or not
-	 * @return File pointing to the directory, 
+	 * @return File pointing to the directory,
 	 */
 	protected File getDir(String pdbId, boolean obsolete) {
 
@@ -702,13 +702,13 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			return true;
 		return false;
 	}
-	
+
 	/**
-	 * Return the String with the PDB server name, including the leading protocol 
-	 * String (http:// or ftp://). 
-	 * The server name will be by default the value {@value #DEFAULT_PDB_FILE_SERVER} or the one 
+	 * Return the String with the PDB server name, including the leading protocol
+	 * String (http:// or ftp://).
+	 * The server name will be by default the value {@value #DEFAULT_PDB_FILE_SERVER} or the one
 	 * read from system property {@value #PDB_FILE_SERVER_PROPERTY}
-	 *  
+	 *
 	 * @return the server name including the leading protocol string
 	 */
 	public static String getServerName() {
@@ -726,7 +726,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		}
 		return name;
 	}
-	
+
 	/**
 	 * Should be called whenever any of the path variables change.
 	 * Thus, if {@link getSplitDirPath()} or {@link getObsoleteDirPath()}
@@ -737,7 +737,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		// Hand-rolled String.join(), for java 6
 		String[] split = getSplitDirPath();
 		String[] obsolete = getObsoleteDirPath();
-		
+
 		//URLs are joined with '/'
 		StringBuilder splitURL = new StringBuilder("/pub/pdb");
 		for(int i=0;i<split.length;i++) {
