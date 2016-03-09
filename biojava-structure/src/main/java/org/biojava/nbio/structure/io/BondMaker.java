@@ -51,10 +51,10 @@ import java.util.Set;
  *
  */
 public class BondMaker {
-	
-	
+
+
 	private static final Logger logger = LoggerFactory.getLogger(BondMaker.class);
-	
+
 	/**
 	 * The types of bonds that are read from struct_conn (type specified in field conn_type_id)
 	 */
@@ -68,8 +68,8 @@ public class BondMaker {
 		BOND_TYPES_TO_PARSE.add("covale_sugar");
 		BOND_TYPES_TO_PARSE.add("modres");
 	}
-	
-	
+
+
 	/**
 	 * Maximum peptide (C - N) bond length considered for bond formation
 	 */
@@ -249,7 +249,7 @@ public class BondMaker {
 		}
 		structure.setSSBonds(bonds);
 	}
-	
+
 	private Bond formDisulfideBond(SSBondImpl disulfideBond) {
 		try {
 			Atom a = getAtomFromRecord("SG", "", "CYS",
@@ -258,13 +258,13 @@ public class BondMaker {
 			Atom b = getAtomFromRecord("SG", "", "CYS",
 					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
 					disulfideBond.getInsCode2());
-			
+
 			Bond ssbond = new BondImpl(a, b, 1);
-			
+
 			structure.addSSBond(ssbond);
-			
+
 			return ssbond;
-			
+
 		} catch (StructureException e) {
 			// Note, in Calpha only mode the CYS SG's are not present.
 			if (! params.isParseCAOnly()) {
@@ -272,11 +272,11 @@ public class BondMaker {
 			} else {
 				logger.debug("Could not find atoms specified in SSBOND record while parsing in parseCAonly mode.");
 			}
-			
+
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Creates bond objects from a LinkRecord as parsed from a PDB file
 	 * @param linkRecord
@@ -308,28 +308,34 @@ public class BondMaker {
 			} else {
 				logger.debug("Could not find atoms specified in LINK record while parsing in parseCAonly mode.");
 			}
-			
+
 		}
 	}
-	
+
 	public void formBondsFromStructConn(List<StructConn> structConn) {
-		
+
 		final String symop = "1_555"; // For now - accept bonds within origin asymmetric unit.
-		
+
 		List<Bond> ssbonds = new ArrayList<>();
-		
+
 		for (StructConn conn : structConn) {
-				
+
 			if (!BOND_TYPES_TO_PARSE.contains(conn.getConn_type_id())) continue;
-			
-			String chainId1 = conn.getPtnr1_auth_asym_id();
-			String chainId2 = conn.getPtnr2_auth_asym_id();
-			
+			String chainId1;
+			String chainId2;
+			if(params.isUseInternalChainId()){
+				chainId1 = conn.getPtnr1_label_asym_id();
+				chainId2 = conn.getPtnr2_label_asym_id();
+			}
+			else{
+				chainId1 = conn.getPtnr1_auth_asym_id();
+				chainId2 = conn.getPtnr2_auth_asym_id();
+			}
 			String insCode1 = "";
 			if (!conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
 			String insCode2 = "";
 			if (!conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
-			
+
 			String seqId1 = conn.getPtnr1_auth_seq_id();	
 			String seqId2 = conn.getPtnr2_auth_seq_id();
 			String resName1 = conn.getPtnr1_label_comp_id();
@@ -340,13 +346,13 @@ public class BondMaker {
 			if (!conn.getPdbx_ptnr1_label_alt_id().equals("?")) altLoc1 = conn.getPdbx_ptnr1_label_alt_id();
 			String altLoc2 = "";
 			if (!conn.getPdbx_ptnr2_label_alt_id().equals("?")) altLoc2 = conn.getPdbx_ptnr2_label_alt_id();
-			
+
 			Atom a1 = null;
 			Atom a2 = null;
-			
+
 			try {
 				a1 = getAtomFromRecord(atomName1, altLoc1, resName1, chainId1, seqId1, insCode1);
-				
+
 			} catch (StructureException e) {
 				String altLocStr1 = altLoc1.isEmpty()? "" : "(alt loc "+altLoc1+")";
 				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId1, insCode1, resName1, chainId1, atomName1, altLocStr1);
@@ -359,7 +365,7 @@ public class BondMaker {
 				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId2, insCode2, resName2, chainId2, atomName2, altLocStr2);
 				continue;
 			}
-			
+
 
 			// TODO: when issue 220 is implemented, add robust symmetry handling to allow bonds between symmetry-related molecules.
 			if (!conn.getPtnr1_symmetry().equals(symop) || !conn.getPtnr2_symmetry().equals(symop) ) {
@@ -374,24 +380,23 @@ public class BondMaker {
 			if (conn.getConn_type_id().equals("disulf")) {
 				ssbonds.add(bond);
 			}
-			
+
 		}
-		
+
 		// only for ss bonds we add a specific map in structure, all the rests are linked only from Atom.getBonds
 		structure.setSSBonds(ssbonds);
 	}
-	
+
 	private Atom getAtomFromRecord(String name, String altLoc, String resName, String chainID, String resSeq, String iCode)
 			throws StructureException {
-		
+
 		if (iCode==null || iCode.isEmpty()) {
 			iCode = " "; // an insertion code of ' ' is ignored
 		}
-		
 		Chain chain = structure.getChainByPDB(chainID);
 		ResidueNumber resNum = new ResidueNumber(chainID, Integer.parseInt(resSeq), iCode.charAt(0));
 		Group group = chain.getGroupByPDB(resNum);
-		
+
 		Group g = group;
 		// there is an alternate location
 		if (!altLoc.isEmpty()) {
@@ -399,7 +404,7 @@ public class BondMaker {
 			if (g==null) 
 				throw new StructureException("Could not find altLoc code "+altLoc+" in group "+resSeq+iCode+" of chain "+ chainID);
 		}
-		
+
 		return g.getAtom(name);
 	}
 }
