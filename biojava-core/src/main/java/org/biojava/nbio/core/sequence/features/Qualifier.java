@@ -93,8 +93,8 @@ public class Qualifier {
 		this.value = value;
 	}
 
-        @Override
-        public String toString() {
-            return "Qualifier[ name='" + name +"' value='"+ value + "' ]";
-        }
+	@Override
+	public String toString() {
+		return "Qualifier[ name='" + name +"' value='"+ value + "' ]";
+	}
 }

@@ -33,18 +33,18 @@ public class TransfAlgebraicAdapter extends XmlAdapter<String[], List<String>>{
 	@Override
 	public String[] marshal(List<String> arg0) throws Exception {
 		String[] elements = new String[arg0.size()];
-        int i = 0;
-        for (String s : arg0)
-        	elements[i++] = s;
-        return elements;
+		int i = 0;
+		for (String s : arg0)
+			elements[i++] = s;
+		return elements;
 	}
 
 	@Override
 	public List<String> unmarshal(String[] arg0) throws Exception {
 		List<String> l = new ArrayList<String>();
-        for (String s : arg0)
-            l.add(s);
-        return l;
+		for (String s : arg0)
+			l.add(s);
+		return l;
 	}
 
 }

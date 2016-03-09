@@ -58,9 +58,9 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "entry",
-    "modelledSubgroup",
-    "programs"
+	"entry",
+	"modelledSubgroup",
+	"programs"
 })
 @XmlRootElement(name = "wwPDB-validation-information")
 public class WwPDBValidationInformation implements Serializable {
@@ -68,87 +68,87 @@ public class WwPDBValidationInformation implements Serializable {
 	private static final long serialVersionUID = -996804963717482650L;
 
 	@XmlElement(name = "Entry", required = true)
-    protected Entry entry;
-    @XmlElement(name = "ModelledSubgroup", required = true)
-    protected List<ModelledSubgroup> modelledSubgroup;
-    @XmlElement(required = true)
-    protected Programs programs;
+	protected Entry entry;
+	@XmlElement(name = "ModelledSubgroup", required = true)
+	protected List<ModelledSubgroup> modelledSubgroup;
+	@XmlElement(required = true)
+	protected Programs programs;
 
-    /**
-     * Gets the value of the entry property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Entry }
-     *
-     */
-    public Entry getEntry() {
-        return entry;
-    }
+	/**
+	 * Gets the value of the entry property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link Entry }
+	 *
+	 */
+	public Entry getEntry() {
+		return entry;
+	}
 
-    /**
-     * Sets the value of the entry property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Entry }
-     *
-     */
-    public void setEntry(Entry value) {
-        this.entry = value;
-    }
+	/**
+	 * Sets the value of the entry property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link Entry }
+	 *
+	 */
+	public void setEntry(Entry value) {
+		this.entry = value;
+	}
 
-    /**
-     * Gets the value of the modelledSubgroup property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the modelledSubgroup property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getModelledSubgroup().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ModelledSubgroup }
-     *
-     *
-     */
-    public List<ModelledSubgroup> getModelledSubgroup() {
-        if (modelledSubgroup == null) {
-            modelledSubgroup = new ArrayList<ModelledSubgroup>();
-        }
-        return this.modelledSubgroup;
-    }
+	/**
+	 * Gets the value of the modelledSubgroup property.
+	 *
+	 * <p>
+	 * This accessor method returns a reference to the live list,
+	 * not a snapshot. Therefore any modification you make to the
+	 * returned list will be present inside the JAXB object.
+	 * This is why there is not a <CODE>set</CODE> method for the modelledSubgroup property.
+	 *
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * <pre>
+	 *    getModelledSubgroup().add(newItem);
+	 * </pre>
+	 *
+	 *
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list
+	 * {@link ModelledSubgroup }
+	 *
+	 *
+	 */
+	public List<ModelledSubgroup> getModelledSubgroup() {
+		if (modelledSubgroup == null) {
+			modelledSubgroup = new ArrayList<ModelledSubgroup>();
+		}
+		return this.modelledSubgroup;
+	}
 
-    /**
-     * Gets the value of the programs property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Programs }
-     *
-     */
-    public Programs getPrograms() {
-        return programs;
-    }
+	/**
+	 * Gets the value of the programs property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link Programs }
+	 *
+	 */
+	public Programs getPrograms() {
+		return programs;
+	}
 
-    /**
-     * Sets the value of the programs property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Programs }
-     *
-     */
-    public void setPrograms(Programs value) {
-        this.programs = value;
-    }
+	/**
+	 * Sets the value of the programs property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link Programs }
+	 *
+	 */
+	public void setPrograms(Programs value) {
+		this.programs = value;
+	}
 
 }

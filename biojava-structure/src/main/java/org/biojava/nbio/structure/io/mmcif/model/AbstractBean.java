@@ -42,15 +42,15 @@ public abstract class AbstractBean {
 	@SuppressWarnings({  "unchecked" })
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
-        buf.append(this.getClass().getName()).append(": ");
+		buf.append(this.getClass().getName()).append(": ");
 		/* disabled for the moment
 
-    	 buf.append(" chains: " );
-    	Iterator<Chain> iter = chainList.iterator();
-    	while (iter.hasNext()){
-    		Chain c = iter.next();
-    		buf.append (c.getName() + " ");
-    	}
+		buf.append(" chains: " );
+		Iterator<Chain> iter = chainList.iterator();
+		while (iter.hasNext()){
+			Chain c = iter.next();
+			buf.append (c.getName() + " ");
+		}
 
 		 */
 		try {
@@ -65,17 +65,17 @@ public abstract class AbstractBean {
 
 					Object o  = m.invoke(this, new Object[]{});
 					if ( o instanceof String){
-                        buf.append(name.substring(3, name.length())+": "+ o + " ");
+						buf.append(name.substring(3, name.length())+": "+ o + " ");
 					}
 					else if ( o instanceof List){
-                        buf.append(name.substring(3, name.length())).append(": ");
+						buf.append(name.substring(3, name.length())).append(": ");
 
 						List<Object>lst = (List<Object>)o;
 						for (Object obj : lst){
 							if ( obj instanceof Chain){
 								continue;
 							}
-                            buf.append(obj).append(" ");
+							buf.append(obj).append(" ");
 						}
 
 					}

@@ -344,9 +344,9 @@ public class CrystalCell implements Serializable {
 	 * with text: "THE ENTRY COORDINATES ARE NOT PRESENTED IN THE STANDARD CRYSTAL FRAME". There were only 148 PDB
 	 * entries with non-standard code in 2011. See:
 	 * http://www.wwpdb.org/documentation/2011remediation_overview-061711.pdf
-     * The SCALE1,2,3 records contain the correct transformation matrix (what Giacovazzo calls M matrix).
-     * In those cases if we calculate the M matrix following Giacovazzo's equations here, we get an entirely wrong one.
-     * Examples of PDB with non-standard orthogonalisation are 1bab and 1bbb.
+	 * The SCALE1,2,3 records contain the correct transformation matrix (what Giacovazzo calls M matrix).
+	 * In those cases if we calculate the M matrix following Giacovazzo's equations here, we get an entirely wrong one.
+	 * Examples of PDB with non-standard orthogonalisation are 1bab and 1bbb.
 	 * @return
 	 */
 	private Matrix3d getMInv() {

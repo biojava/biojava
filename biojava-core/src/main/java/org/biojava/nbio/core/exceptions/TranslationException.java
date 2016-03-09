@@ -30,18 +30,18 @@ package org.biojava.nbio.core.exceptions;
 
 public class TranslationException extends RuntimeException {
 
-  private static final long serialVersionUID = -3017433758219757440L;
+	private static final long serialVersionUID = -3017433758219757440L;
 
-  public TranslationException(String m) {
-    super(m);
-  }
+	public TranslationException(String m) {
+		super(m);
+	}
 
-  public TranslationException(Exception t) {
-    super(t);
-  }
+	public TranslationException(Exception t) {
+		super(t);
+	}
 
-  public TranslationException(String m, Exception t) {
-    super(m, t);
-  }
+	public TranslationException(String m, Exception t) {
+		super(m, t);
+	}
 
 }

@@ -42,36 +42,36 @@ import org.junit.Test;
 
 public class TestAmbiguityCompoundSet extends TestCase{
 
-    @Test
-    public void testCompountSet(){
-        try {
+	@Test
+	public void testCompountSet(){
+		try {
 
-            CompoundSet<NucleotideCompound> dnaSet = AmbiguityDNACompoundSet.getDNACompoundSet();
-            CompoundSet<NucleotideCompound> rnaSet = AmbiguityRNACompoundSet.getRNACompoundSet();
+			CompoundSet<NucleotideCompound> dnaSet = AmbiguityDNACompoundSet.getDNACompoundSet();
+			CompoundSet<NucleotideCompound> rnaSet = AmbiguityRNACompoundSet.getRNACompoundSet();
 
-            DNASequence dna=new DNASequence("AGTCS", dnaSet);
+			DNASequence dna=new DNASequence("AGTCS", dnaSet);
 
-            assertEquals("AGTCS",dna.toString());
+			assertEquals("AGTCS",dna.toString());
 
-            RNASequence rna = dna.getRNASequence();
+			RNASequence rna = dna.getRNASequence();
 
-            rna = new RNASequence(dna.getSequenceAsString().replaceAll("T", "U"), AmbiguityRNACompoundSet.getRNACompoundSet()); //fails with missing compound S
+			rna = new RNASequence(dna.getSequenceAsString().replaceAll("T", "U"), AmbiguityRNACompoundSet.getRNACompoundSet()); //fails with missing compound S
 
-            assertEquals("AGUCS",rna.toString());
+			assertEquals("AGUCS",rna.toString());
 
-            /** now, do the translation also using the underlying API (should not be needed for a user)
-             *
-             */
-            DNAToRNATranslator translator = new DNAToRNATranslator(new RNASequenceCreator(rnaSet
-                    ),dnaSet,rnaSet,false);
+			/** now, do the translation also using the underlying API (should not be needed for a user)
+			 *
+			 */
+			DNAToRNATranslator translator = new DNAToRNATranslator(new RNASequenceCreator(rnaSet
+					),dnaSet,rnaSet,false);
 
-            Sequence<NucleotideCompound> translated = translator.createSequence(dna);
+			Sequence<NucleotideCompound> translated = translator.createSequence(dna);
 
-            assertEquals("AGUCS", translated.toString());
+			assertEquals("AGUCS", translated.toString());
 
-        } catch (CompoundNotFoundException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
-    }
+		} catch (CompoundNotFoundException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }

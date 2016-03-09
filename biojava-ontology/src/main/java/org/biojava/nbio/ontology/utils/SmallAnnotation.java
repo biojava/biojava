@@ -45,43 +45,43 @@ import java.util.Map;
  */
 
 public class SmallAnnotation extends AbstractAnnotation {
-  private Map properties;
+	private Map properties;
 
-  protected final Map getProperties() {
-    if(!propertiesAllocated()) {
-      properties = new SmallMap();
-    }
-    return properties;
-  }
+	protected final Map getProperties() {
+		if(!propertiesAllocated()) {
+			properties = new SmallMap();
+		}
+		return properties;
+	}
 
-  protected final boolean propertiesAllocated() {
-    return properties != null;
-  }
+	protected final boolean propertiesAllocated() {
+		return properties != null;
+	}
 
-  /**
-   * Return a new SmallAnnotation optimised for small sets of properties.
-   */
-  public SmallAnnotation() {
-    super();
-  }
+	/**
+	 * Return a new SmallAnnotation optimised for small sets of properties.
+	 */
+	public SmallAnnotation() {
+		super();
+	}
 
-  /**
-   * Return a new SmallAnnotation that copies all values from another annoation.
-   *
-   * @param ann  the Annoation to copy all values from
-   * @throws NullPointerException if ann is null
-   */
-  public SmallAnnotation(Annotation ann) {
-    super(ann);
-  }
+	/**
+	 * Return a new SmallAnnotation that copies all values from another annoation.
+	 *
+	 * @param ann  the Annoation to copy all values from
+	 * @throws NullPointerException if ann is null
+	 */
+	public SmallAnnotation(Annotation ann) {
+		super(ann);
+	}
 
-  /**
-   * Return a new SmallAnnotation that copies all values from a Map.
-   *
-   * @param map  the Map to copy values from
-   */
-  public SmallAnnotation(Map map) {
-    super(map);
-  }
+	/**
+	 * Return a new SmallAnnotation that copies all values from a Map.
+	 *
+	 * @param map  the Map to copy values from
+	 */
+	public SmallAnnotation(Map map) {
+		super(map);
+	}
 }
 

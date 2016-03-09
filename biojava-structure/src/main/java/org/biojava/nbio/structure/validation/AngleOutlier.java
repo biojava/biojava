@@ -62,193 +62,193 @@ import java.math.BigDecimal;
 @XmlRootElement(name = "angle-outlier")
 public class AngleOutlier {
 
-    @XmlAttribute(name = "atom0", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
-    protected String atom0;
-    @XmlAttribute(name = "atom1", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
-    protected String atom1;
-    @XmlAttribute(name = "atom2", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
-    protected String atom2;
-    @XmlAttribute(name = "mean", required = true)
-    protected BigDecimal mean;
-    @XmlAttribute(name = "obs", required = true)
-    protected BigDecimal obs;
-    @XmlAttribute(name = "stdev", required = true)
-    protected BigDecimal stdev;
-    @XmlAttribute(name = "z", required = true)
-    protected BigDecimal z;
+	@XmlAttribute(name = "atom0", required = true)
+	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+	@XmlSchemaType(name = "NCName")
+	protected String atom0;
+	@XmlAttribute(name = "atom1", required = true)
+	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+	@XmlSchemaType(name = "NCName")
+	protected String atom1;
+	@XmlAttribute(name = "atom2", required = true)
+	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+	@XmlSchemaType(name = "NCName")
+	protected String atom2;
+	@XmlAttribute(name = "mean", required = true)
+	protected BigDecimal mean;
+	@XmlAttribute(name = "obs", required = true)
+	protected BigDecimal obs;
+	@XmlAttribute(name = "stdev", required = true)
+	protected BigDecimal stdev;
+	@XmlAttribute(name = "z", required = true)
+	protected BigDecimal z;
 
-    /**
-     * Gets the value of the atom0 property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getAtom0() {
-        return atom0;
-    }
+	/**
+	 * Gets the value of the atom0 property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link String }
+	 *
+	 */
+	public String getAtom0() {
+		return atom0;
+	}
 
-    /**
-     * Sets the value of the atom0 property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setAtom0(String value) {
-        this.atom0 = value;
-    }
+	/**
+	 * Sets the value of the atom0 property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link String }
+	 *
+	 */
+	public void setAtom0(String value) {
+		this.atom0 = value;
+	}
 
-    /**
-     * Gets the value of the atom1 property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getAtom1() {
-        return atom1;
-    }
+	/**
+	 * Gets the value of the atom1 property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link String }
+	 *
+	 */
+	public String getAtom1() {
+		return atom1;
+	}
 
-    /**
-     * Sets the value of the atom1 property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setAtom1(String value) {
-        this.atom1 = value;
-    }
+	/**
+	 * Sets the value of the atom1 property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link String }
+	 *
+	 */
+	public void setAtom1(String value) {
+		this.atom1 = value;
+	}
 
-    /**
-     * Gets the value of the atom2 property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getAtom2() {
-        return atom2;
-    }
+	/**
+	 * Gets the value of the atom2 property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link String }
+	 *
+	 */
+	public String getAtom2() {
+		return atom2;
+	}
 
-    /**
-     * Sets the value of the atom2 property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setAtom2(String value) {
-        this.atom2 = value;
-    }
+	/**
+	 * Sets the value of the atom2 property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link String }
+	 *
+	 */
+	public void setAtom2(String value) {
+		this.atom2 = value;
+	}
 
-    /**
-     * Gets the value of the mean property.
-     *
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *
-     */
-    public BigDecimal getMean() {
-        return mean;
-    }
+	/**
+	 * Gets the value of the mean property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public BigDecimal getMean() {
+		return mean;
+	}
 
-    /**
-     * Sets the value of the mean property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *
-     */
-    public void setMean(BigDecimal value) {
-        this.mean = value;
-    }
+	/**
+	 * Sets the value of the mean property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public void setMean(BigDecimal value) {
+		this.mean = value;
+	}
 
-    /**
-     * Gets the value of the obs property.
-     *
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *
-     */
-    public BigDecimal getObs() {
-        return obs;
-    }
+	/**
+	 * Gets the value of the obs property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public BigDecimal getObs() {
+		return obs;
+	}
 
-    /**
-     * Sets the value of the obs property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *
-     */
-    public void setObs(BigDecimal value) {
-        this.obs = value;
-    }
+	/**
+	 * Sets the value of the obs property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public void setObs(BigDecimal value) {
+		this.obs = value;
+	}
 
-    /**
-     * Gets the value of the stdev property.
-     *
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *
-     */
-    public BigDecimal getStdev() {
-        return stdev;
-    }
+	/**
+	 * Gets the value of the stdev property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public BigDecimal getStdev() {
+		return stdev;
+	}
 
-    /**
-     * Sets the value of the stdev property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *
-     */
-    public void setStdev(BigDecimal value) {
-        this.stdev = value;
-    }
+	/**
+	 * Sets the value of the stdev property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public void setStdev(BigDecimal value) {
+		this.stdev = value;
+	}
 
-    /**
-     * Gets the value of the z property.
-     *
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *
-     */
-    public BigDecimal getZ() {
-        return z;
-    }
+	/**
+	 * Gets the value of the z property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public BigDecimal getZ() {
+		return z;
+	}
 
-    /**
-     * Sets the value of the z property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *
-     */
-    public void setZ(BigDecimal value) {
-        this.z = value;
-    }
+	/**
+	 * Sets the value of the z property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public void setZ(BigDecimal value) {
+		this.z = value;
+	}
 
 }

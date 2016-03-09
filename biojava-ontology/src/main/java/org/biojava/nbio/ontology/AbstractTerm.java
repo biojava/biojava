@@ -36,9 +36,9 @@ package org.biojava.nbio.ontology;
 
 public abstract class AbstractTerm  implements Term {
 
-    protected String description;
+	protected String description;
 
-    public  void setDescription(String description){
-    	this.description = description;
-    }
+	public  void setDescription(String description){
+		this.description = description;
+	}
 }

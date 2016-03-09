@@ -79,7 +79,7 @@ public class StringManipulationHelper  {
 		try {
 			while ((line = reader.readLine()) != null) {
 
-                sb.append(line).append(UNIX_NEWLINE);
+		sb.append(line).append(UNIX_NEWLINE);
 			}
 		} catch (IOException e) {
 			// logger.error("Exception: ", e);
@@ -188,7 +188,7 @@ public class StringManipulationHelper  {
 	    StringBuilder builder = new StringBuilder(iter.next());
 	    while( iter.hasNext() )
 	    {
-	        builder.append(delimiter).append(iter.next());
+		builder.append(delimiter).append(iter.next());
 	    }
 	    return builder.toString();
 	}

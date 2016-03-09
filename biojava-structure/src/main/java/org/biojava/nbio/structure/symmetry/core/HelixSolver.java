@@ -215,11 +215,11 @@ public class HelixSolver {
 			h2 = new Point3d[point2.size()];
 			point1.toArray(h1);
 			point2.toArray(h2);
-            Point3d[] h3 = SuperPosition.clonePoint3dArray(h1);
+			Point3d[] h3 = SuperPosition.clonePoint3dArray(h1);
 			transformation = SuperPosition.superposeWithTranslation(h1, h2);
 
 			Point3d xtrans = SuperPosition.centroid(h3);
-	    	xtrans.negate();
+			xtrans.negate();
 
 
 			double traceRmsd = SuperPosition.rmsd(h1, h2);
@@ -260,7 +260,7 @@ public class HelixSolver {
 			helix.setPermutation(permutation);
 			helix.setRise(rise);
 			// Old version of Vecmath on LINUX doesn't set element m33 to 1. Here we make sure it's 1.
-	        transformation.setElement(3, 3, 1.0);
+			transformation.setElement(3, 3, 1.0);
 			transformation.invert();
 			QuatSymmetryScores scores = QuatSuperpositionScorer.calcScores(subunits, transformation, permutation);
 			scores.setRmsdCenters(subunitRmsd);

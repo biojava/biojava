@@ -35,54 +35,54 @@ import java.util.List;
 public class UniqueSequenceList implements Cloneable {
 	private String sequenceString = "";
 	private String seqResSequence = "";
-    private List<Integer> alignment1 = null;
-    private List<Integer> alignment2 = null;
-    private Atom[] caAtoms = null;
-    private String chainId = null;
-    private int modelNumber = -1;
-    private int structureId = -1;
+	private List<Integer> alignment1 = null;
+	private List<Integer> alignment2 = null;
+	private Atom[] caAtoms = null;
+	private String chainId = null;
+	private int modelNumber = -1;
+	private int structureId = -1;
 
-    public UniqueSequenceList(Atom[] cAlphaAtoms, String chainId, int modelNumber, int structureId, String seqResSequence) {
-    	this.caAtoms = cAlphaAtoms;
-    	this.chainId = chainId;
-    	this.modelNumber = modelNumber;
-    	this.structureId = structureId;
-    	this.seqResSequence = seqResSequence;
-    	this.sequenceString =  getSequenceString(cAlphaAtoms);
-    	this.alignment1 = new ArrayList<Integer>(cAlphaAtoms.length);
-    	this.alignment2 = new ArrayList<Integer>(cAlphaAtoms.length);
-    	for (int i = 0; i < cAlphaAtoms.length; i++) {
-    		this.alignment1.add(i);
-    		this.alignment2.add(i);
-    	}
-    }
+	public UniqueSequenceList(Atom[] cAlphaAtoms, String chainId, int modelNumber, int structureId, String seqResSequence) {
+		this.caAtoms = cAlphaAtoms;
+		this.chainId = chainId;
+		this.modelNumber = modelNumber;
+		this.structureId = structureId;
+		this.seqResSequence = seqResSequence;
+		this.sequenceString =  getSequenceString(cAlphaAtoms);
+		this.alignment1 = new ArrayList<Integer>(cAlphaAtoms.length);
+		this.alignment2 = new ArrayList<Integer>(cAlphaAtoms.length);
+		for (int i = 0; i < cAlphaAtoms.length; i++) {
+			this.alignment1.add(i);
+			this.alignment2.add(i);
+		}
+	}
 
-    /**
-     * Return true is the sequence and residues numbers of the passed in array of
-     * atoms matches those of this unique sequence list
-     *
-     * @param caAlphaAtoms
-     * @return
-     */
-    public boolean isMatch(Atom[] caAlphaAtoms) {
-    	return sequenceString.equals(getSequenceString(caAlphaAtoms));
-    }
+	/**
+	 * Return true is the sequence and residues numbers of the passed in array of
+	 * atoms matches those of this unique sequence list
+	 *
+	 * @param caAlphaAtoms
+	 * @return
+	 */
+	public boolean isMatch(Atom[] caAlphaAtoms) {
+		return sequenceString.equals(getSequenceString(caAlphaAtoms));
+	}
 
-    public String getChainId() {
-    	return chainId;
-    }
+	public String getChainId() {
+		return chainId;
+	}
 
-    public int getModelNumber() {
-    	return modelNumber;
-    }
+	public int getModelNumber() {
+		return modelNumber;
+	}
 
-    public int getStructureId() {
-    	return structureId;
-    }
+	public int getStructureId() {
+		return structureId;
+	}
 
-    public Atom[] getCalphaAtoms() {
-    	return caAtoms;
-    }
+	public Atom[] getCalphaAtoms() {
+		return caAtoms;
+	}
 
 	public String getSeqResSequence() {
 		return seqResSequence;

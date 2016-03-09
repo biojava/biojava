@@ -34,74 +34,74 @@ package org.biojava.nbio.structure.cath;
  * @author Daniel Asarnow
  */
 public enum CathCategory {
-    Class,
-    Architecture,
-    Topolgy,
-    Homology,
-    SequenceFamily,
-    OrthologousSequenceFamily,
-    LikeSequenceFamily,
-    IdenticalSequenceFamily,
-    DomainCounter;
+	Class,
+	Architecture,
+	Topolgy,
+	Homology,
+	SequenceFamily,
+	OrthologousSequenceFamily,
+	LikeSequenceFamily,
+	IdenticalSequenceFamily,
+	DomainCounter;
 
-    static final String lut = "CATHSOLID";
+	static final String lut = "CATHSOLID";
 
-    public static CathCategory fromString(String type) {
-        if ( type.equals("C") ) {
-            return Class;
-        } else if ( type.equals("A") ) {
-            return Architecture;
-        } else if ( type.equals("T") ) {
-            return Topolgy;
-        } else if ( type.equals("H") ) {
-            return Homology;
-        } else if ( type.equals("S") ) {
-            return SequenceFamily;
-        } else if ( type.equals("O") ) {
-            return OrthologousSequenceFamily;
-        } else if ( type.equals("L") ) {
-            return LikeSequenceFamily;
-        } else if ( type.equals("I") ) {
-            return IdenticalSequenceFamily;
+	public static CathCategory fromString(String type) {
+		if ( type.equals("C") ) {
+			return Class;
+		} else if ( type.equals("A") ) {
+			return Architecture;
+		} else if ( type.equals("T") ) {
+			return Topolgy;
+		} else if ( type.equals("H") ) {
+			return Homology;
+		} else if ( type.equals("S") ) {
+			return SequenceFamily;
+		} else if ( type.equals("O") ) {
+			return OrthologousSequenceFamily;
+		} else if ( type.equals("L") ) {
+			return LikeSequenceFamily;
+		} else if ( type.equals("I") ) {
+			return IdenticalSequenceFamily;
 //        } else if ( type.equals("D") ) {
-        } else {
-            return DomainCounter;
-        }
-    }
+		} else {
+			return DomainCounter;
+		}
+	}
 
-    @Override
+	@Override
 	public String toString() {
-        switch (this) {
-            case Class:
-                return "C";
-            case Architecture:
-                return "A";
-            case Topolgy:
-                return "T";
-            case Homology:
-                return "H";
-            case SequenceFamily:
-                return "S";
-            case OrthologousSequenceFamily:
-                return "O";
-            case LikeSequenceFamily:
-                return "L";
-            case IdenticalSequenceFamily:
-                return "I";
+		switch (this) {
+			case Class:
+				return "C";
+			case Architecture:
+				return "A";
+			case Topolgy:
+				return "T";
+			case Homology:
+				return "H";
+			case SequenceFamily:
+				return "S";
+			case OrthologousSequenceFamily:
+				return "O";
+			case LikeSequenceFamily:
+				return "L";
+			case IdenticalSequenceFamily:
+				return "I";
 //            case DomainCounter:
-            default:
-                return "D";
-        }
-    }
+			default:
+				return "D";
+		}
+	}
 
-    public static CathCategory fromCathCode(String code) {
-        int count = 0;
-        int idx = 0;
-        while ((idx = code.indexOf(".",idx)) != -1) {
-            count++;
-            idx++;
-        }
-        return fromString(lut.substring(count,count+1));
-    }
+	public static CathCategory fromCathCode(String code) {
+		int count = 0;
+		int idx = 0;
+		while ((idx = code.indexOf(".",idx)) != -1) {
+			count++;
+			idx++;
+		}
+		return fromString(lut.substring(count,count+1));
+	}
 
 }

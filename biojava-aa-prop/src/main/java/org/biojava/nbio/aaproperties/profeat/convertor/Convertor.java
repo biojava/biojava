@@ -43,8 +43,8 @@ public abstract class Convertor {
 	public final static char group3 = '3';
 	public final static char unknownGroup = '0';
 
- 	/**
- 	 * Returns the grouping of the amino acid character.
+	/**
+	 * Returns the grouping of the amino acid character.
 	 * The aminoAcid argument is preferably of non-ambiguous characters.
 	 * Standard amino acids will be converted to '1', '2' or '3' depending on its grouping
 	 * Non-standard amino acids are simply converted to '0'.
@@ -52,7 +52,7 @@ public abstract class Convertor {
 	 * @param aminoAcid
 	 * 		an amino acid character preferably of non-ambiguous characters
 	 * @return its grouping
- 	 */
+	 */
 	public abstract char convert(char aminoAcid);
 
 	/**

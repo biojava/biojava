@@ -27,12 +27,12 @@ package org.biojava.nbio.structure.io.mmcif.model;
 
 
 /**
-  _pdbx_chem_comp_identifier.comp_id
+_pdbx_chem_comp_identifier.comp_id
 _pdbx_chem_comp_identifier.type
 _pdbx_chem_comp_identifier.program
 _pdbx_chem_comp_identifier.program_version
 _pdbx_chem_comp_identifier.identifier
-*/
+ */
 public class PdbxChemCompIdentifier {
 	String comp_id;
 	String type;

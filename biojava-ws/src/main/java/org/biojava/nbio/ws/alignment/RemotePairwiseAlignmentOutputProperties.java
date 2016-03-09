@@ -39,14 +39,14 @@ public interface RemotePairwiseAlignmentOutputProperties extends Serializable{
 	 */
 	public static final long serialVersionUID = 1L;
 
-    /**
-     * Method that returns the value associated with the key given in parameter.
-     *
-     * @param key :a String with the required key for this map.
-     * @return a String with the value associated with this key
-     * @throws Exception if key is not in the map of output options.
-     */
- 	public String getOutputOption(String key) throws Exception;
+	/**
+	 * Method that returns the value associated with the key given in parameter.
+	 *
+	 * @param key :a String with the required key for this map.
+	 * @return a String with the value associated with this key
+	 * @throws Exception if key is not in the map of output options.
+	 */
+	public String getOutputOption(String key) throws Exception;
 
 
 	/**

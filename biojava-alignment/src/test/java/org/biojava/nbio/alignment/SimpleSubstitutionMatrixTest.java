@@ -40,93 +40,93 @@ import static org.junit.Assert.assertEquals;
 
 public class SimpleSubstitutionMatrixTest {
 
-    @Test(expected=FileNotFoundException.class)
-    public void testSimpleSubstitutionMatrixNotFound() throws FileNotFoundException {
-        new SimpleSubstitutionMatrix<AminoAcidCompound>(AminoAcidCompoundSet.getAminoAcidCompoundSet(),
-                new File("blosum63.txt"));
-    }
+	@Test(expected=FileNotFoundException.class)
+	public void testSimpleSubstitutionMatrixNotFound() throws FileNotFoundException {
+		new SimpleSubstitutionMatrix<AminoAcidCompound>(AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+				new File("blosum63.txt"));
+	}
 
-    @Test
-    public void test() throws CompoundNotFoundException {
-        NucleotideCompound A = new DNASequence("A").getCompoundAt(1);
-        NucleotideCompound a = new DNASequence("a").getCompoundAt(1);
-        NucleotideCompound c = new DNASequence("c").getCompoundAt(1);
-        SubstitutionMatrix<NucleotideCompound> matrix = new SimpleSubstitutionMatrix<NucleotideCompound>(DNACompoundSet.getDNACompoundSet(), (short)1, (short)0);
-        assertEquals(1, (matrix.getValue(A, A)));
-        assertEquals(1, (matrix.getValue(a, a)));
-        assertEquals(1, (matrix.getValue(A, a)));
-        assertEquals(0, (matrix.getValue(a, c)));
-    }
+	@Test
+	public void test() throws CompoundNotFoundException {
+		NucleotideCompound A = new DNASequence("A").getCompoundAt(1);
+		NucleotideCompound a = new DNASequence("a").getCompoundAt(1);
+		NucleotideCompound c = new DNASequence("c").getCompoundAt(1);
+		SubstitutionMatrix<NucleotideCompound> matrix = new SimpleSubstitutionMatrix<NucleotideCompound>(DNACompoundSet.getDNACompoundSet(), (short)1, (short)0);
+		assertEquals(1, (matrix.getValue(A, A)));
+		assertEquals(1, (matrix.getValue(a, a)));
+		assertEquals(1, (matrix.getValue(A, a)));
+		assertEquals(0, (matrix.getValue(a, c)));
+	}
 
-    @Test()
-    public void testSimpleSubstitutionMatrix() {
-        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
-        assertEquals(matrix.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
-        assertEquals(matrix.getName(), "blosum62");
-        assertEquals(matrix.getMaxValue(), 11);
-        assertEquals(matrix.getMinValue(), -4);
-    }
+	@Test()
+	public void testSimpleSubstitutionMatrix() {
+		SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
+		assertEquals(matrix.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
+		assertEquals(matrix.getName(), "blosum62");
+		assertEquals(matrix.getMaxValue(), 11);
+		assertEquals(matrix.getMinValue(), -4);
+	}
 
-    @Test
-    public void testSimpleSubstitutionMatrixCompoundSetOfCStringString() {
-        DNACompoundSet dnacs = DNACompoundSet.getDNACompoundSet();
-        SubstitutionMatrix<NucleotideCompound> dnaTest = new SimpleSubstitutionMatrix<NucleotideCompound>(dnacs,
-                "# Test\nA C G T\nA 5 0 0 0\nC 0 5 0 0\nG 0 0 5 0\nT 0 0 0 1\n", "DNA Test");
-        short[][] matrix = dnaTest.getMatrix();
-        assertEquals(matrix[1][1], 5);
-        assertEquals(matrix[3][3], 1);
-        assertEquals(matrix[3][1], 0);
-        assertEquals(dnaTest.getMatrixAsString().substring(2,9), "A C G T");
-        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("G"), dnacs.getCompoundForString("G")), 5);
-        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("A"), dnacs.getCompoundForString("G")), 0);
-    }
-
-    @Test
-    public void testSimpleSubstitutionMatrixCompoundSetOfCShortShort() {
-        SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>(
-                AminoAcidCompoundSet.getAminoAcidCompoundSet(), (short) 5, (short) 1);
-        assertEquals(matrix.getName(), "IDENTITY_5_1");
-    }
-
-    @Test
-    public void testSetDescription() {
-        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
-        assertEquals(matrix.getDescription().substring(0, 2), "# ");
-        matrix.setDescription("blah");
-        assertEquals(matrix.getDescription().substring(0, 2), "bl");
-    }
-
-    @Test
-    public void testSetName() {
-        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
-        assertEquals(matrix.getName(), "blosum62");
-        matrix.setName("blah");
-        assertEquals(matrix.getName(), "blah");
-    }
-
-    @Test
-    public void testToString() {
-        SubstitutionMatrix<NucleotideCompound> matrix = new SimpleSubstitutionMatrix<NucleotideCompound>(
-                DNACompoundSet.getDNACompoundSet(),
-                "# Test\nA C  G T\nA 5  0 0 0\nC 0 5 0 0 \nG 0 0 5 0\n    T 0     0 0 1\n", "DNAtest");
-        assertEquals(matrix.toString().substring(0,6), "# Test");
-        assertEquals(matrix.toString(),
-                String.format("# Test%n  A C G T%nA 5 0 0 0%nC 0 5 0 0%nG 0 0 5 0%nT 0 0 0 1%n"));
-    }
-    /*
-     * Author: Daniel Cameron
-     */
-    @Test
-    public void testCaseEquivalence() {
-    	DNACompoundSet dnacs = DNACompoundSet.getDNACompoundSet();
-        SubstitutionMatrix<NucleotideCompound> dnaTest = new SimpleSubstitutionMatrix<NucleotideCompound>(dnacs,
-                "# Test\nA C G T\nA 5 0 0 0\nC 0 5 0 0\nG 0 0 5 0\nT 0 0 0 1\n", "DNA Test");
-        @SuppressWarnings("unused")
+	@Test
+	public void testSimpleSubstitutionMatrixCompoundSetOfCStringString() {
+		DNACompoundSet dnacs = DNACompoundSet.getDNACompoundSet();
+		SubstitutionMatrix<NucleotideCompound> dnaTest = new SimpleSubstitutionMatrix<NucleotideCompound>(dnacs,
+				"# Test\nA C G T\nA 5 0 0 0\nC 0 5 0 0\nG 0 0 5 0\nT 0 0 0 1\n", "DNA Test");
 		short[][] matrix = dnaTest.getMatrix();
-        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("G"), dnacs.getCompoundForString("g")), 5);
-        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("A"), dnacs.getCompoundForString("g")), 0);
-        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("g"), dnacs.getCompoundForString("G")), 5);
-        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("g"), dnacs.getCompoundForString("A")), 0);
-    }
+		assertEquals(matrix[1][1], 5);
+		assertEquals(matrix[3][3], 1);
+		assertEquals(matrix[3][1], 0);
+		assertEquals(dnaTest.getMatrixAsString().substring(2,9), "A C G T");
+		assertEquals(dnaTest.getValue(dnacs.getCompoundForString("G"), dnacs.getCompoundForString("G")), 5);
+		assertEquals(dnaTest.getValue(dnacs.getCompoundForString("A"), dnacs.getCompoundForString("G")), 0);
+	}
+
+	@Test
+	public void testSimpleSubstitutionMatrixCompoundSetOfCShortShort() {
+		SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>(
+				AminoAcidCompoundSet.getAminoAcidCompoundSet(), (short) 5, (short) 1);
+		assertEquals(matrix.getName(), "IDENTITY_5_1");
+	}
+
+	@Test
+	public void testSetDescription() {
+		SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
+		assertEquals(matrix.getDescription().substring(0, 2), "# ");
+		matrix.setDescription("blah");
+		assertEquals(matrix.getDescription().substring(0, 2), "bl");
+	}
+
+	@Test
+	public void testSetName() {
+		SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
+		assertEquals(matrix.getName(), "blosum62");
+		matrix.setName("blah");
+		assertEquals(matrix.getName(), "blah");
+	}
+
+	@Test
+	public void testToString() {
+		SubstitutionMatrix<NucleotideCompound> matrix = new SimpleSubstitutionMatrix<NucleotideCompound>(
+				DNACompoundSet.getDNACompoundSet(),
+				"# Test\nA C  G T\nA 5  0 0 0\nC 0 5 0 0 \nG 0 0 5 0\n    T 0     0 0 1\n", "DNAtest");
+		assertEquals(matrix.toString().substring(0,6), "# Test");
+		assertEquals(matrix.toString(),
+				String.format("# Test%n  A C G T%nA 5 0 0 0%nC 0 5 0 0%nG 0 0 5 0%nT 0 0 0 1%n"));
+	}
+	/*
+	 * Author: Daniel Cameron
+	 */
+	@Test
+	public void testCaseEquivalence() {
+		DNACompoundSet dnacs = DNACompoundSet.getDNACompoundSet();
+		SubstitutionMatrix<NucleotideCompound> dnaTest = new SimpleSubstitutionMatrix<NucleotideCompound>(dnacs,
+				"# Test\nA C G T\nA 5 0 0 0\nC 0 5 0 0\nG 0 0 5 0\nT 0 0 0 1\n", "DNA Test");
+		@SuppressWarnings("unused")
+		short[][] matrix = dnaTest.getMatrix();
+		assertEquals(dnaTest.getValue(dnacs.getCompoundForString("G"), dnacs.getCompoundForString("g")), 5);
+		assertEquals(dnaTest.getValue(dnacs.getCompoundForString("A"), dnacs.getCompoundForString("g")), 0);
+		assertEquals(dnaTest.getValue(dnacs.getCompoundForString("g"), dnacs.getCompoundForString("G")), 5);
+		assertEquals(dnaTest.getValue(dnacs.getCompoundForString("g"), dnacs.getCompoundForString("A")), 0);
+	}
 
 }

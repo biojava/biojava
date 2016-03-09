@@ -80,15 +80,15 @@ public class TestLocation {
 		assertTrue(!r2_5.overlaps( r5_8 ));
 
 
-        //prefix
-        assertEquals(L(2,3), L(2,20).prefix(1));
-        assertEquals(L(2,19), L(2,20).prefix(-1));
-        assertEquals( L(2,10), L(2,20).prefix( L(10,12)));
+		//prefix
+		assertEquals(L(2,3), L(2,20).prefix(1));
+		assertEquals(L(2,19), L(2,20).prefix(-1));
+		assertEquals( L(2,10), L(2,20).prefix( L(10,12)));
 
-        //suffix
-        assertEquals(L(3,20), L(2,20).suffix(1));
-        assertEquals(L(19,20), L(2,20).suffix(-1));
-        assertEquals(L(12,20), L(2,20).suffix( L(10,12)));
+		//suffix
+		assertEquals(L(3,20), L(2,20).suffix(1));
+		assertEquals(L(19,20), L(2,20).suffix(-1));
+		assertEquals(L(12,20), L(2,20).suffix( L(10,12)));
 
 	}
 

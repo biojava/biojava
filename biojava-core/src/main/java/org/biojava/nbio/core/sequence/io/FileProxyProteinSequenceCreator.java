@@ -49,63 +49,63 @@ import java.util.List;
  */
 public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface<AminoAcidCompound> {
 
-    CompoundSet<AminoAcidCompound> compoundSet;
-    File file;
-    SequenceParserInterface sequenceParser;
+	CompoundSet<AminoAcidCompound> compoundSet;
+	File file;
+	SequenceParserInterface sequenceParser;
 
-    /**
-     * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
-     * @param fastaFile
-     * @param compoundSet
-     */
-    public FileProxyProteinSequenceCreator(File file, CompoundSet<AminoAcidCompound> compoundSet, SequenceParserInterface sequenceParser ) {
-        this.compoundSet = compoundSet;
-        this.file = file;
-        this.sequenceParser = sequenceParser;
-    }
+	/**
+	 * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
+	 * @param fastaFile
+	 * @param compoundSet
+	 */
+	public FileProxyProteinSequenceCreator(File file, CompoundSet<AminoAcidCompound> compoundSet, SequenceParserInterface sequenceParser ) {
+		this.compoundSet = compoundSet;
+		this.file = file;
+		this.sequenceParser = sequenceParser;
+	}
 
-    /**
-     * Even though we are passing in the sequence we really only care about the length of the sequence and the offset
-     * index in the fasta file.
-     * @param sequence
-     * @param index
-     * @return
-     * @throws CompoundNotFoundException
-     * @throws IOException
-     */
-    @Override
+	/**
+	 * Even though we are passing in the sequence we really only care about the length of the sequence and the offset
+	 * index in the fasta file.
+	 * @param sequence
+	 * @param index
+	 * @return
+	 * @throws CompoundNotFoundException
+	 * @throws IOException
+	 */
+	@Override
 	public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException {
-        SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader =
-        		new SequenceFileProxyLoader<AminoAcidCompound>(
-        				file,
-        				sequenceParser,
-        				index,
-        				sequence.length(),
-        				compoundSet
-        				);
-        return new ProteinSequence(sequenceFileProxyLoader, compoundSet);
-    }
+		SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader =
+				new SequenceFileProxyLoader<AminoAcidCompound>(
+						file,
+						sequenceParser,
+						index,
+						sequence.length(),
+						compoundSet
+						);
+		return new ProteinSequence(sequenceFileProxyLoader, compoundSet);
+	}
 
-    /**
-     * Should be able to extend the same concept to a remote URL call or database connection. Not supported yet
-     * @param proxyLoader
-     * @param index
-     * @return
-     */
-    @Override
+	/**
+	 * Should be able to extend the same concept to a remote URL call or database connection. Not supported yet
+	 * @param proxyLoader
+	 * @param index
+	 * @return
+	 */
+	@Override
 	public AbstractSequence<AminoAcidCompound> getSequence(
-            ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+			ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    /**
-     * Not sure of use case and currently not supported
-     * @param list
-     * @return
-     */
-    @Override
+	/**
+	 * Not sure of use case and currently not supported
+	 * @param list
+	 * @return
+	 */
+	@Override
 	public AbstractSequence<AminoAcidCompound> getSequence(
-            List<AminoAcidCompound> list) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+			List<AminoAcidCompound> list) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 }

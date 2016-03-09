@@ -89,11 +89,11 @@ public class QuatSymmetryResults {
 	}
 
 
-    /**
-     * Returns the symmetry group. For point groups returns the point group symbol
-     * and for helical symmetry returns "H".
-     * @return symmetry symbol
-     */
+	/**
+	 * Returns the symmetry group. For point groups returns the point group symbol
+	 * and for helical symmetry returns "H".
+	 * @return symmetry symbol
+	 */
 	public String getSymmetry() {
 		if (helixLayers != null && helixLayers.size() > 0) {
 			return "H";
@@ -159,35 +159,35 @@ public class QuatSymmetryResults {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 
-	    sb.append("Stoichiometry         : ");
-	    sb.append(getSubunits().getStoichiometry());
-	    sb.append("\n");
-	    sb.append("Pseudostoichiometry   : ");
-	    sb.append(getSubunits().isPseudoStoichiometric());
-	    sb.append("\n");
-	    sb.append("Pseudosymmetry        : ");
-	    sb.append(getSubunits().isPseudoSymmetric());
-	    sb.append("\n");
-	    sb.append("Min sequence identity : ");
-	    sb.append(Math.round(getSubunits().getMinSequenceIdentity()*100));
-	    sb.append("\n");
-	    sb.append("Max sequence identity : ");
-	    sb.append(Math.round(getSubunits().getMaxSequenceIdentity()*100));
-	    sb.append("\n");
-	    sb.append("Symmetry              : ");
-	    sb.append(getSymmetry());
-	    sb.append("\n");
-	    sb.append("Symmetry RMSD         : ");
-	    sb.append((float) getAverageTraceRmsd());
-	    sb.append("\n");
-	    sb.append("Symmetry TmScoreMin   : ");
-	    sb.append((float) getAverageTraceTmScoreMin());
-	    sb.append("\n");
-	    sb.append("Prefered result       : ");
-	    sb.append(isPreferredResult());
-	    sb.append("\n");
+		sb.append("Stoichiometry         : ");
+		sb.append(getSubunits().getStoichiometry());
+		sb.append("\n");
+		sb.append("Pseudostoichiometry   : ");
+		sb.append(getSubunits().isPseudoStoichiometric());
+		sb.append("\n");
+		sb.append("Pseudosymmetry        : ");
+		sb.append(getSubunits().isPseudoSymmetric());
+		sb.append("\n");
+		sb.append("Min sequence identity : ");
+		sb.append(Math.round(getSubunits().getMinSequenceIdentity()*100));
+		sb.append("\n");
+		sb.append("Max sequence identity : ");
+		sb.append(Math.round(getSubunits().getMaxSequenceIdentity()*100));
+		sb.append("\n");
+		sb.append("Symmetry              : ");
+		sb.append(getSymmetry());
+		sb.append("\n");
+		sb.append("Symmetry RMSD         : ");
+		sb.append((float) getAverageTraceRmsd());
+		sb.append("\n");
+		sb.append("Symmetry TmScoreMin   : ");
+		sb.append((float) getAverageTraceTmScoreMin());
+		sb.append("\n");
+		sb.append("Prefered result       : ");
+		sb.append(isPreferredResult());
+		sb.append("\n");
 
-	    return sb.toString();
+		return sb.toString();
 	}
 
 	/**

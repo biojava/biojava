@@ -46,20 +46,20 @@ public final class  JNLPProxy
 {
 
 private static final Object  basicServiceObject
-  = getBasicServiceObject ( );
+	= getBasicServiceObject ( );
 
 @SuppressWarnings("rawtypes")
 private static final Class   basicServiceClass
-  = getBasicServiceClass ( );
+	= getBasicServiceClass ( );
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 public static void  main ( String [ ]  args )
-  throws Exception
+	throws Exception
 //////////////////////////////////////////////////////////////////////
 {
-  showDocument ( new URL ( args [ 0 ] ) );
+	showDocument ( new URL ( args [ 0 ] ) );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -69,31 +69,31 @@ public static void  main ( String [ ]  args )
 public static boolean  showDocument ( URL  url )
 //////////////////////////////////////////////////////////////////////
 {
-  if ( basicServiceObject == null )
-  {
-      System.out.println("basisServiceObject = null");
-      return false;
-  }
+	if ( basicServiceObject == null )
+	{
+			System.out.println("basisServiceObject = null");
+			return false;
+	}
 
-  try
-  {
-    Method  method = basicServiceClass.getMethod (
-      "showDocument", new Class [ ] { URL.class } );
+	try
+	{
+		Method  method = basicServiceClass.getMethod (
+			"showDocument", new Class [ ] { URL.class } );
 
-    Boolean  resultBoolean = ( Boolean )
-      method.invoke ( basicServiceObject, new Object [ ] { url } );
+		Boolean  resultBoolean = ( Boolean )
+			method.invoke ( basicServiceObject, new Object [ ] { url } );
 
-    boolean success = resultBoolean.booleanValue ( );
-    if ( ! success )
-    System.out.println("invocation of method failed!");
-    return success;
-  }
-  catch ( Exception  ex )
-  {
-    ex.printStackTrace ( );
+		boolean success = resultBoolean.booleanValue ( );
+		if ( ! success )
+		System.out.println("invocation of method failed!");
+		return success;
+	}
+	catch ( Exception  ex )
+	{
+		ex.printStackTrace ( );
 
-    throw new RuntimeException ( ex.getMessage ( ) );
-  }
+		throw new RuntimeException ( ex.getMessage ( ) );
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -103,35 +103,35 @@ public static boolean  showDocument ( URL  url )
 private static Object  getBasicServiceObject ( )
 //////////////////////////////////////////////////////////////////////
 {
-  try
-  {
-    Class  serviceManagerClass
-      = Class.forName ( "javax.jnlp.ServiceManager" );
+	try
+	{
+		Class  serviceManagerClass
+			= Class.forName ( "javax.jnlp.ServiceManager" );
 
-    Method  lookupMethod = serviceManagerClass.getMethod ( "lookup",
-      new Class [ ] { String.class } );
+		Method  lookupMethod = serviceManagerClass.getMethod ( "lookup",
+			new Class [ ] { String.class } );
 
-    return lookupMethod.invoke (
-      null, new Object [ ] { "javax.jnlp.BasicService" } );
-  }
-  catch ( Exception  ex )
-  {
-    return null;
-  }
+		return lookupMethod.invoke (
+			null, new Object [ ] { "javax.jnlp.BasicService" } );
+	}
+	catch ( Exception  ex )
+	{
+		return null;
+	}
 }
 
 @SuppressWarnings("rawtypes")
 private static Class  getBasicServiceClass ( )
 //////////////////////////////////////////////////////////////////////
 {
-  try
-  {
-    return Class.forName ( "javax.jnlp.BasicService" );
-  }
-  catch ( Exception  ex )
-  {
-    return null;
-  }
+	try
+	{
+		return Class.forName ( "javax.jnlp.BasicService" );
+	}
+	catch ( Exception  ex )
+	{
+		return null;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////

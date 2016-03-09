@@ -35,66 +35,66 @@ import org.junit.Test;
  */
 public class Test2JA5 {
 
-    @Test
-    public void test2JA5() throws IOException, StructureException {
+	@Test
+	public void test2JA5() throws IOException, StructureException {
 
-        FileParsingParameters fileParsingParameters = new FileParsingParameters();
-        fileParsingParameters.setAlignSeqRes(true); // Need to align seqres to match chains.
-        fileParsingParameters.setLoadChemCompInfo(true);
-        fileParsingParameters.setHeaderOnly(false); // Need header only off to have chains to match.
+	FileParsingParameters fileParsingParameters = new FileParsingParameters();
+	fileParsingParameters.setAlignSeqRes(true); // Need to align seqres to match chains.
+	fileParsingParameters.setLoadChemCompInfo(true);
+	fileParsingParameters.setHeaderOnly(false); // Need header only off to have chains to match.
 
-        AtomCache cache = new AtomCache();
-        cache.setUseMmCif(false);
-        cache.setFileParsingParams(fileParsingParameters);
+	AtomCache cache = new AtomCache();
+	cache.setUseMmCif(false);
+	cache.setFileParsingParams(fileParsingParameters);
 
-        StructureIO.setAtomCache(cache);
-
-
-        Structure s1 = StructureIO.getStructure("2ja5");
-
-        // This is not applicable anymore, we need to parse atoms to have chains to match.
-        // assertTrue(StructureTools.getNrAtoms(s1) == 0);
-
-        // SeqRes contains 15 chains, but since we cannot align Chain N to AtomGroups => 14.
-        assertTrue(s1.getChains().size() == 14);
-
-        Chain nChain = null;
-        try {
-        	nChain = s1.getChainByPDB("N");
-        } catch (StructureException e){
-        	// this is expected here, since there is no chain N
-        }
-        assertNull(nChain);
-    }
-
-    @Test
-    public void test2JA5noHeader() throws IOException, StructureException {
-
-        FileParsingParameters fileParsingParameters = new FileParsingParameters();
-        fileParsingParameters.setLoadChemCompInfo(true);
-        fileParsingParameters.setHeaderOnly(true);
-
-        AtomCache cache = new AtomCache();
-        cache.setUseMmCif(false);
-        cache.setFileParsingParams(fileParsingParameters);
-
-        StructureIO.setAtomCache(cache);
+	StructureIO.setAtomCache(cache);
 
 
-        Structure s1 = StructureIO.getStructure("2ja5");
+	Structure s1 = StructureIO.getStructure("2ja5");
 
-        // This is not applicable anymore, we need to parse atoms to have chains to match.
-        assertTrue(StructureTools.getNrAtoms(s1) == 0);
+	// This is not applicable anymore, we need to parse atoms to have chains to match.
+	// assertTrue(StructureTools.getNrAtoms(s1) == 0);
 
-        // All 15 seqres chains will be store.
-        assertTrue(s1.getChains().size() == 15);
+	// SeqRes contains 15 chains, but since we cannot align Chain N to AtomGroups => 14.
+	assertTrue(s1.getChains().size() == 14);
 
-        Chain nChain = null;
-        try {
-        	nChain = s1.getChainByPDB("N");
-        } catch (StructureException e){
-        	// this is expected here, since there is no chain N
-        }
-        assertNotNull(nChain);
-    }
+	Chain nChain = null;
+	try {
+		nChain = s1.getChainByPDB("N");
+	} catch (StructureException e){
+		// this is expected here, since there is no chain N
+	}
+	assertNull(nChain);
+	}
+
+	@Test
+	public void test2JA5noHeader() throws IOException, StructureException {
+
+	FileParsingParameters fileParsingParameters = new FileParsingParameters();
+	fileParsingParameters.setLoadChemCompInfo(true);
+	fileParsingParameters.setHeaderOnly(true);
+
+	AtomCache cache = new AtomCache();
+	cache.setUseMmCif(false);
+	cache.setFileParsingParams(fileParsingParameters);
+
+	StructureIO.setAtomCache(cache);
+
+
+	Structure s1 = StructureIO.getStructure("2ja5");
+
+	// This is not applicable anymore, we need to parse atoms to have chains to match.
+	assertTrue(StructureTools.getNrAtoms(s1) == 0);
+
+	// All 15 seqres chains will be store.
+	assertTrue(s1.getChains().size() == 15);
+
+	Chain nChain = null;
+	try {
+		nChain = s1.getChainByPDB("N");
+	} catch (StructureException e){
+		// this is expected here, since there is no chain N
+	}
+	assertNotNull(nChain);
+	}
 }

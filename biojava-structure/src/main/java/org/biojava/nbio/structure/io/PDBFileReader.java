@@ -172,7 +172,7 @@ public class PDBFileReader extends LocalPDBDirectory {
 
 
 			/*
-			 GroupIterator gi = new GroupIterator(struc);
+			GroupIterator gi = new GroupIterator(struc);
 			while (gi.hasNext()){
 				Group g = (Group) gi.next();
 				Chain  c = g.getParent();

@@ -28,104 +28,104 @@ package org.biojava.nbio.core.sequence.template;
  */
 public abstract class AbstractCompound implements Compound {
 
-  private final String base;
-  private final String upperedBase;
-  private String shortName = null;
-  private String longName = null;
-  private String description = null;
-  private Float molecularWeight = null;
+	private final String base;
+	private final String upperedBase;
+	private String shortName = null;
+	private String longName = null;
+	private String description = null;
+	private Float molecularWeight = null;
 
 
-  // Added an empty constructor for Serialization
-  public AbstractCompound(){
-	  this.base = null;
-	  this.upperedBase = null;
-  }
+	// Added an empty constructor for Serialization
+	public AbstractCompound(){
+		this.base = null;
+		this.upperedBase = null;
+	}
 
-  public AbstractCompound(String base) {
-    this.base = base;
-    this.upperedBase = base.toUpperCase();
-  }
+	public AbstractCompound(String base) {
+		this.base = base;
+		this.upperedBase = base.toUpperCase();
+	}
 
-  public String getBase() {
-    return base;
-  }
+	public String getBase() {
+		return base;
+	}
 
-  public String getUpperedBase() {
-    return upperedBase;
-  }
+	public String getUpperedBase() {
+		return upperedBase;
+	}
 
-  @Override
+	@Override
 public String getDescription() {
-    return description;
-  }
+		return description;
+	}
 
-  @Override
+	@Override
 public void setDescription(String description) {
-    this.description = description;
-  }
+		this.description = description;
+	}
 
-  @Override
+	@Override
 public String getShortName() {
-    return shortName;
-  }
+		return shortName;
+	}
 
-  @Override
+	@Override
 public void setShortName(String shortName) {
-    this.shortName = shortName;
-  }
+		this.shortName = shortName;
+	}
 
-  @Override
+	@Override
 public String getLongName() {
-    return longName;
-  }
+		return longName;
+	}
 
-  @Override
+	@Override
 public void setLongName(String longName) {
-    this.longName = longName;
-  }
+		this.longName = longName;
+	}
 
-  @Override
+	@Override
 public Float getMolecularWeight() {
-    return molecularWeight;
-  }
+		return molecularWeight;
+	}
 
-  @Override
+	@Override
 public void setMolecularWeight(Float molecularWeight) {
-    this.molecularWeight = molecularWeight;
-  }
+		this.molecularWeight = molecularWeight;
+	}
 
-  @Override
-  public String toString() {
-    return base;
-  }
+	@Override
+	public String toString() {
+		return base;
+	}
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (!(obj instanceof AbstractCompound)) {
-      return false;
-    }
-    AbstractCompound them = (AbstractCompound) obj;
-    return this.base.equals(them.base);
-  }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof AbstractCompound)) {
+			return false;
+		}
+		AbstractCompound them = (AbstractCompound) obj;
+		return this.base.equals(them.base);
+	}
 
-  @Override
-  public int hashCode() {
-    return this.base.hashCode();
-  }
+	@Override
+	public int hashCode() {
+		return this.base.hashCode();
+	}
 
-  @Override
-  public boolean equalsIgnoreCase(Compound compound) {
-    if (compound == null) {
-      return false;
-    }
-    if (!(compound instanceof AbstractCompound)) {
-      return false;
-    }
-    AbstractCompound them = (AbstractCompound) compound;
-    return this.base.toString().equalsIgnoreCase(them.base.toString());
-  }
+	@Override
+	public boolean equalsIgnoreCase(Compound compound) {
+		if (compound == null) {
+			return false;
+		}
+		if (!(compound instanceof AbstractCompound)) {
+			return false;
+		}
+		AbstractCompound them = (AbstractCompound) compound;
+		return this.base.toString().equalsIgnoreCase(them.base.toString());
+	}
 }

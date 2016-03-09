@@ -26,31 +26,31 @@ public class GapArray {
 
 
 
-        public int index;
-        public int value;
+		public int index;
+		public int value;
 
-        public GapArray() {
-            super();
+		public GapArray() {
+			super();
 
-            index =0;
-            value=0;
-        }
+			index =0;
+			value=0;
+		}
 
-        public int getIndex() {
-            return index;
-        }
-        public void setIndex(int index) {
-            this.index = index;
-        }
-        public int getValue() {
-            return value;
-        }
-        public void setValue(int value) {
-            this.value = value;
-        }
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
+		public int getValue() {
+			return value;
+		}
+		public void setValue(int value) {
+			this.value = value;
+		}
 
 
-    }
+	}
 
 
 

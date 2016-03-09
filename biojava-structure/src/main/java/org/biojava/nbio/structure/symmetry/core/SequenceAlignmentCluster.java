@@ -202,10 +202,10 @@ public class SequenceAlignmentCluster implements Cloneable {
 		if (! afp.isSignificantResult()) {
 			return null;
 
-    		// alternative: tmSCore:
-    		// double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
-    		// if ( tmScore < 0.35) {
-    		// return null ...
+			// alternative: tmSCore:
+			// double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
+			// if ( tmScore < 0.35) {
+			// return null ...
 		}
 
 		int[][][] align = afp.getOptAln();
@@ -213,18 +213,18 @@ public class SequenceAlignmentCluster implements Cloneable {
 			return null;
 		}
 
-    	alignmentLengthFraction = (double)afp.getOptLength()/Math.max(referenceAtoms1.length, referenceAtoms2.length);
-    	alignment.setAlignmentLengthFraction(alignmentLengthFraction);
-    	alignment.setRmsd(afp.getChainRmsd());
-    	alignment.setSequenceIdentity(afp.getIdentity());
-    	alignment.setAlignment(afp.getOptAln());
+		alignmentLengthFraction = (double)afp.getOptLength()/Math.max(referenceAtoms1.length, referenceAtoms2.length);
+		alignment.setAlignmentLengthFraction(alignmentLengthFraction);
+		alignment.setRmsd(afp.getChainRmsd());
+		alignment.setSequenceIdentity(afp.getIdentity());
+		alignment.setAlignment(afp.getOptAln());
 
 		return alignment;
 	}
 
 	@Override
 	public Object clone() {
-	    SequenceAlignmentCluster copy = null;
+		SequenceAlignmentCluster copy = null;
 		try {
 			copy = (SequenceAlignmentCluster) super.clone();
 		} catch (CloneNotSupportedException e) {
@@ -262,9 +262,9 @@ public class SequenceAlignmentCluster implements Cloneable {
 	}
 
 	private static AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq, boolean verbose) {
-       CeParameters params = new CeParameters();
+	   CeParameters params = new CeParameters();
 
-        AFPChain afp = null;
+		AFPChain afp = null;
 		try {
 			StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			afp = algorithm.align(ca1Seq,ca2Seq,params);
@@ -295,25 +295,25 @@ public class SequenceAlignmentCluster implements Cloneable {
 			Atom a2 = ca2Seq[align[0][1][i]];
 			String residueName2 = a2.getGroup().getPDBName();
 			if (residueName1.equals(residueName2)) {
-			    int n1 = a1.getGroup().getResidueNumber().getSeqNum();
-			    int n2 = a2.getGroup().getResidueNumber().getSeqNum();
-			    delta.add(n2-n1);
-			    unique.add(n2-n1);
+				int n1 = a1.getGroup().getResidueNumber().getSeqNum();
+				int n2 = a2.getGroup().getResidueNumber().getSeqNum();
+				delta.add(n2-n1);
+				unique.add(n2-n1);
 			}
 		}
 
 		int offset = 0;
 		int frequency = 0;
-        for (Integer i: unique) {
-        	int freq = Collections.frequency(delta, i);
-        	if (freq > frequency) {
-        		offset = i;
-        		frequency = freq;
-        	}
-        }
+		for (Integer i: unique) {
+			int freq = Collections.frequency(delta, i);
+			if (freq > frequency) {
+				offset = i;
+				frequency = freq;
+			}
+		}
 
-        for (int i = 0; i < len; i++) {
-        	Atom a1 = ca1Seq[align[0][0][i]];
+		for (int i = 0; i < len; i++) {
+			Atom a1 = ca1Seq[align[0][0][i]];
 			int n1 = a1.getGroup().getResidueNumber().getSeqNum();
 			Atom a2 = ca2Seq[align[0][1][i]];
 			int n2 = a2.getGroup().getResidueNumber().getSeqNum();
@@ -321,11 +321,11 @@ public class SequenceAlignmentCluster implements Cloneable {
 				align1.add(align[0][0][i]);
 				align2.add(align[0][1][i]);
 			}
-        }
+		}
 //        System.out.println("PDB alignment: ");
 //        System.out.println(align1);
 //        System.out.println(align2);
-        return align1.size();
+		return align1.size();
 	}
 
 	private void createAlignedCAlphaAtoms() {
@@ -354,7 +354,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 	private List<Integer> getReferenceResidueIndices() {
 		List<Integer> indices = new ArrayList<Integer>(uniqueSequenceList.get(0).getAlignment1());
 		for (UniqueSequenceList u: uniqueSequenceList) {
-           indices.retainAll(u.getAlignment1());
+		   indices.retainAll(u.getAlignment1());
 		}
 		return indices;
 	}

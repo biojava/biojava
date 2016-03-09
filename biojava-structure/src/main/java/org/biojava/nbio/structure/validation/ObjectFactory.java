@@ -49,99 +49,99 @@ import javax.xml.bind.annotation.XmlRegistry;
 public class ObjectFactory {
 
 
-    /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.biojava.nbio.structure.validation
-     *
-     */
-    public ObjectFactory() {
-    }
+	/**
+	 * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.biojava.nbio.structure.validation
+	 *
+	 */
+	public ObjectFactory() {
+	}
 
-    /**
-     * Create an instance of {@link BondOutlier }
-     *
-     */
-    public BondOutlier createBondOutlier() {
-        return new BondOutlier();
-    }
+	/**
+	 * Create an instance of {@link BondOutlier }
+	 *
+	 */
+	public BondOutlier createBondOutlier() {
+		return new BondOutlier();
+	}
 
-    /**
-     * Create an instance of {@link Programs }
-     *
-     */
-    public Programs createPrograms() {
-        return new Programs();
-    }
+	/**
+	 * Create an instance of {@link Programs }
+	 *
+	 */
+	public Programs createPrograms() {
+		return new Programs();
+	}
 
-    /**
-     * Create an instance of {@link Program }
-     *
-     */
-    public Program createProgram() {
-        return new Program();
-    }
+	/**
+	 * Create an instance of {@link Program }
+	 *
+	 */
+	public Program createProgram() {
+		return new Program();
+	}
 
-    /**
-     * Create an instance of {@link Entry }
-     *
-     */
-    public Entry createEntry() {
-        return new Entry();
-    }
+	/**
+	 * Create an instance of {@link Entry }
+	 *
+	 */
+	public Entry createEntry() {
+		return new Entry();
+	}
 
-    /**
-     * Create an instance of {@link WwPDBValidationInformation }
-     *
-     */
-    public WwPDBValidationInformation createWwPDBValidationInformation() {
-        return new WwPDBValidationInformation();
-    }
+	/**
+	 * Create an instance of {@link WwPDBValidationInformation }
+	 *
+	 */
+	public WwPDBValidationInformation createWwPDBValidationInformation() {
+		return new WwPDBValidationInformation();
+	}
 
-    /**
-     * Create an instance of {@link ModelledSubgroup }
-     *
-     */
-    public ModelledSubgroup createModelledSubgroup() {
-        return new ModelledSubgroup();
-    }
+	/**
+	 * Create an instance of {@link ModelledSubgroup }
+	 *
+	 */
+	public ModelledSubgroup createModelledSubgroup() {
+		return new ModelledSubgroup();
+	}
 
-    /**
-     * Create an instance of {@link AngleOutlier }
-     *
-     */
-    public AngleOutlier createAngleOutlier() {
-        return new AngleOutlier();
-    }
+	/**
+	 * Create an instance of {@link AngleOutlier }
+	 *
+	 */
+	public AngleOutlier createAngleOutlier() {
+		return new AngleOutlier();
+	}
 
-    /**
-     * Create an instance of {@link Clash }
-     *
-     */
-    public Clash createClash() {
-        return new Clash();
-    }
+	/**
+	 * Create an instance of {@link Clash }
+	 *
+	 */
+	public Clash createClash() {
+		return new Clash();
+	}
 
-    /**
-     * Create an instance of {@link MogAngleOutlier }
-     *
-     */
-    public MogAngleOutlier createMogAngleOutlier() {
-        return new MogAngleOutlier();
-    }
+	/**
+	 * Create an instance of {@link MogAngleOutlier }
+	 *
+	 */
+	public MogAngleOutlier createMogAngleOutlier() {
+		return new MogAngleOutlier();
+	}
 
-    /**
-     * Create an instance of {@link SymmClash }
-     *
-     */
-    public SymmClash createSymmClash() {
-        return new SymmClash();
-    }
+	/**
+	 * Create an instance of {@link SymmClash }
+	 *
+	 */
+	public SymmClash createSymmClash() {
+		return new SymmClash();
+	}
 
-    /**
-     * Create an instance of {@link MogBondOutlier }
-     *
-     */
-    public MogBondOutlier createMogBondOutlier() {
-        return new MogBondOutlier();
-    }
+	/**
+	 * Create an instance of {@link MogBondOutlier }
+	 *
+	 */
+	public MogBondOutlier createMogBondOutlier() {
+		return new MogBondOutlier();
+	}
 
 }

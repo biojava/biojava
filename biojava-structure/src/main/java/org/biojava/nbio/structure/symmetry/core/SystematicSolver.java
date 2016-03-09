@@ -39,151 +39,151 @@ import java.util.Set;
  * @author Peter
  */
 public class SystematicSolver implements QuatSymmetrySolver {
-    private Subunits subunits = null;
-    private QuatSymmetryParameters parameters = null;
+	private Subunits subunits = null;
+	private QuatSymmetryParameters parameters = null;
 
-    private Point3d[] originalCoords = null;
-    private Point3d[] transformedCoords = null;
-    private RotationGroup rotations = new RotationGroup();
-    private Vector3d centroid = new Vector3d();
-    private Matrix4d centroidInverse = new Matrix4d();
-    private Set<List<Integer>> hashCodes = new HashSet<List<Integer>>();
+	private Point3d[] originalCoords = null;
+	private Point3d[] transformedCoords = null;
+	private RotationGroup rotations = new RotationGroup();
+	private Vector3d centroid = new Vector3d();
+	private Matrix4d centroidInverse = new Matrix4d();
+	private Set<List<Integer>> hashCodes = new HashSet<List<Integer>>();
 
-    public SystematicSolver(Subunits subunits, QuatSymmetryParameters parameters) {
-    	if (subunits.getSubunitCount()== 2) {
-    		throw new IllegalArgumentException("SystematicSolver cannot be applied to subunits with 2 centers");
-    	}
-        this.subunits = subunits;
-        this.parameters = parameters;
-    }
+	public SystematicSolver(Subunits subunits, QuatSymmetryParameters parameters) {
+		if (subunits.getSubunitCount()== 2) {
+			throw new IllegalArgumentException("SystematicSolver cannot be applied to subunits with 2 centers");
+		}
+		this.subunits = subunits;
+		this.parameters = parameters;
+	}
 
-    @Override
+	@Override
 	public RotationGroup getSymmetryOperations() {
-        if (rotations.getOrder() == 0) {
-            solve();
-            rotations.complete();
-        }
-        return rotations;
-    }
+		if (rotations.getOrder() == 0) {
+			solve();
+			rotations.complete();
+		}
+		return rotations;
+	}
 
-    private void solve() {
-        initialize();
-        int n = subunits.getSubunitCount();
-        PermutationGenerator g = new PermutationGenerator(n);
+	private void solve() {
+		initialize();
+		int n = subunits.getSubunitCount();
+		PermutationGenerator g = new PermutationGenerator(n);
 
-        // loop over all permutations
-        while (g.hasMore()) {
-            int[] perm = g.getNext();
-            List<Integer> permutation = new ArrayList<Integer>(perm.length);
-            for (int j = 0; j < n; j++) {
-                permutation.add(perm[j]);
-            }
+		// loop over all permutations
+		while (g.hasMore()) {
+			int[] perm = g.getNext();
+			List<Integer> permutation = new ArrayList<Integer>(perm.length);
+			for (int j = 0; j < n; j++) {
+				permutation.add(perm[j]);
+			}
 
-            if (! isValidPermutation(permutation)) {
-                continue;
-            }
+			if (! isValidPermutation(permutation)) {
+				continue;
+			}
 
-            boolean newPermutation = evaluatePermutation(permutation);
-            if (newPermutation) {
-            	completeRotationGroup();
-            }
+			boolean newPermutation = evaluatePermutation(permutation);
+			if (newPermutation) {
+				completeRotationGroup();
+			}
 
-            if (rotations.getOrder() >= subunits.getSubunitCount()) {
-            	return;
-            }
-        }
-    }
+			if (rotations.getOrder() >= subunits.getSubunitCount()) {
+				return;
+			}
+		}
+	}
 
-    /**
-     * Adds translational component to rotation matrix
-     * @param rotTrans
-     * @param rotation
-     * @return
-     */
-    private void combineWithTranslation(Matrix4d rotation) {
-        rotation.setTranslation(centroid);
-        rotation.mul(rotation, centroidInverse);
-    }
+	/**
+	 * Adds translational component to rotation matrix
+	 * @param rotTrans
+	 * @param rotation
+	 * @return
+	 */
+	private void combineWithTranslation(Matrix4d rotation) {
+		rotation.setTranslation(centroid);
+		rotation.mul(rotation, centroidInverse);
+	}
 
-    private Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
-        Rotation s = new Rotation();
-        s.setPermutation(new ArrayList<Integer>(permutation));
-        s.setTransformation(new Matrix4d(transformation));
-        s.setAxisAngle(new AxisAngle4d(axisAngle));
-        s.setFold(fold);
-        s.setScores(scores);
-        return s;
-    }
+	private Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
+		Rotation s = new Rotation();
+		s.setPermutation(new ArrayList<Integer>(permutation));
+		s.setTransformation(new Matrix4d(transformation));
+		s.setAxisAngle(new AxisAngle4d(axisAngle));
+		s.setFold(fold);
+		s.setScores(scores);
+		return s;
+	}
 
-    private void completeRotationGroup() {
-    	PermutationGroup g = new PermutationGroup();
-    	for (int i = 0; i < rotations.getOrder(); i++) {
-    		Rotation s = rotations.getRotation(i);
-    		g.addPermutation(s.getPermutation());
-    	}
-    	g.completeGroup();
+	private void completeRotationGroup() {
+		PermutationGroup g = new PermutationGroup();
+		for (int i = 0; i < rotations.getOrder(); i++) {
+			Rotation s = rotations.getRotation(i);
+			g.addPermutation(s.getPermutation());
+		}
+		g.completeGroup();
 
- //   	System.out.println("Completing rotation group from: " +symmetryOperations.getSymmetryOperationCount() + " to " + g.getPermutationCount());
+//   	System.out.println("Completing rotation group from: " +symmetryOperations.getSymmetryOperationCount() + " to " + g.getPermutationCount());
 
-    	// the group is complete, nothing to do
-    	if (g.getOrder() == rotations.getOrder()) {
-    		return;
-    	}
+		// the group is complete, nothing to do
+		if (g.getOrder() == rotations.getOrder()) {
+			return;
+		}
 
-  //  	System.out.println("complete group: " +  rotations.getOrder() +"/" + g.getOrder());
-    	// try to complete the group
-    	for (int i = 0; i < g.getOrder(); i++) {
-    		List<Integer> permutation = g.getPermutation(i);
-    		if (isValidPermutation(permutation)) {
-    			  // perform permutation of subunits
-                evaluatePermutation(permutation);
-    		}
-    	}
-    }
+//  	System.out.println("complete group: " +  rotations.getOrder() +"/" + g.getOrder());
+		// try to complete the group
+		for (int i = 0; i < g.getOrder(); i++) {
+			List<Integer> permutation = g.getPermutation(i);
+			if (isValidPermutation(permutation)) {
+				  // perform permutation of subunits
+				evaluatePermutation(permutation);
+			}
+		}
+	}
 
-    private boolean isValidPermutation(List<Integer> permutation) {
-    	if (permutation.size() == 0) {
-    		return false;
-    	}
+	private boolean isValidPermutation(List<Integer> permutation) {
+		if (permutation.size() == 0) {
+			return false;
+		}
 
-    	// if this permutation is a duplicate, return false
-    	if (hashCodes.contains(permutation)) {
-    		return false;
-    	}
+		// if this permutation is a duplicate, return false
+		if (hashCodes.contains(permutation)) {
+			return false;
+		}
 
-        // check if permutation is pseudosymmetric
-        if (! isAllowedPermuation(permutation)) {
-        	return false;
-        }
+		// check if permutation is pseudosymmetric
+		if (! isAllowedPermuation(permutation)) {
+			return false;
+		}
 
-        // get fold and make sure there is only one E (fold=1) permutation
-        int fold = PermutationGroup.getOrder(permutation);
-        if (rotations.getOrder() > 1 && fold == 1) {
-            return false;
-        }
-        if (fold == 0 || subunits.getSubunitCount() % fold != 0) {
-        	return false;
-        }
+		// get fold and make sure there is only one E (fold=1) permutation
+		int fold = PermutationGroup.getOrder(permutation);
+		if (rotations.getOrder() > 1 && fold == 1) {
+			return false;
+		}
+		if (fold == 0 || subunits.getSubunitCount() % fold != 0) {
+			return false;
+		}
 
-        // if this permutation is a duplicate, returns false
-        return hashCodes.add(permutation);
-    }
+		// if this permutation is a duplicate, returns false
+		return hashCodes.add(permutation);
+	}
 
-    private boolean isAllowedPermuation(List<Integer> permutation) {
-    	List<Integer> seqClusterId = subunits.getSequenceClusterIds();
-    	for (int i = 0; i < permutation.size(); i++) {
-    		int j = permutation.get(i);
-    		if (seqClusterId.get(i) != seqClusterId.get(j)) {
-    			return false;
-    		}
-    	}
-    	return true;
-    }
+	private boolean isAllowedPermuation(List<Integer> permutation) {
+		List<Integer> seqClusterId = subunits.getSequenceClusterIds();
+		for (int i = 0; i < permutation.size(); i++) {
+			int j = permutation.get(i);
+			if (seqClusterId.get(i) != seqClusterId.get(j)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	private boolean evaluatePermutation(List<Integer> permutation) {
 		// permutate subunits
 		for (int j = 0, n = subunits.getSubunitCount(); j < n; j++) {
-		    transformedCoords[j].set(originalCoords[permutation.get(j)]);
+			transformedCoords[j].set(originalCoords[permutation.get(j)]);
 		}
 
 		int fold = PermutationGroup.getOrder(permutation);
@@ -208,26 +208,26 @@ public class SystematicSolver implements QuatSymmetrySolver {
 		return false;
 	}
 
-    private void initialize() {
-        // translation to centered coordinate system
-        centroid = new Vector3d(subunits.getCentroid());
+	private void initialize() {
+		// translation to centered coordinate system
+		centroid = new Vector3d(subunits.getCentroid());
 
-        // translation back to original coordinate system
-        Vector3d reverse = new Vector3d(centroid);
-        reverse.negate();
-        centroidInverse.set(reverse);
-        // Make sure matrix element m33 is 1.0. An old version vecmath did not set this element.
-        centroidInverse.setElement(3, 3, 1.0);
+		// translation back to original coordinate system
+		Vector3d reverse = new Vector3d(centroid);
+		reverse.negate();
+		centroidInverse.set(reverse);
+		// Make sure matrix element m33 is 1.0. An old version vecmath did not set this element.
+		centroidInverse.setElement(3, 3, 1.0);
 
-        List<Point3d> centers = subunits.getCenters();
-        int n = subunits.getSubunitCount();
+		List<Point3d> centers = subunits.getCenters();
+		int n = subunits.getSubunitCount();
 
-        originalCoords = new Point3d[n];
-        transformedCoords = new Point3d[n];
+		originalCoords = new Point3d[n];
+		transformedCoords = new Point3d[n];
 
-        for (int i = 0; i < n; i++) {
-            originalCoords[i] = centers.get(i);
-            transformedCoords[i] = new Point3d();
-        }
-    }
+		for (int i = 0; i < n; i++) {
+			originalCoords[i] = centers.get(i);
+			transformedCoords[i] = new Point3d();
+		}
+	}
 }

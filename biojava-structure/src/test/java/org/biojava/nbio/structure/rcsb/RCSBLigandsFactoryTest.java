@@ -42,7 +42,7 @@ public class RCSBLigandsFactoryTest {
 	 * Opens the file as a {@link InputStream}.
 	 */
 	private InputStream openStream(String filename) {
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(filename);
+	InputStream is = this.getClass().getClassLoader().getResourceAsStream(filename);
 
 		return is;
 	}

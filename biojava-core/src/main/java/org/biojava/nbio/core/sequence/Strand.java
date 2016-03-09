@@ -29,31 +29,31 @@ package org.biojava.nbio.core.sequence;
  */
 public enum Strand {
 
-    POSITIVE("+", 1), NEGATIVE("-", -1), UNDEFINED(".", 0);
-    private final String stringRepresentation;
-    private final int numericRepresentation;
+	POSITIVE("+", 1), NEGATIVE("-", -1), UNDEFINED(".", 0);
+	private final String stringRepresentation;
+	private final int numericRepresentation;
 
-    private Strand(String stringRepresentation, int numericRepresentation) {
-        this.stringRepresentation = stringRepresentation;
-        this.numericRepresentation = numericRepresentation;
-    }
+	private Strand(String stringRepresentation, int numericRepresentation) {
+		this.stringRepresentation = stringRepresentation;
+		this.numericRepresentation = numericRepresentation;
+	}
 
-    public int getNumericRepresentation() {
-        return numericRepresentation;
-    }
+	public int getNumericRepresentation() {
+		return numericRepresentation;
+	}
 
-    public String getStringRepresentation() {
-        return stringRepresentation;
-    }
+	public String getStringRepresentation() {
+		return stringRepresentation;
+	}
 
-    public Strand getReverse() {
-        switch (this) {
-            case POSITIVE:
-                return NEGATIVE;
-            case NEGATIVE:
-                return POSITIVE;
-            default:
-                return UNDEFINED;
-        }
-    }
+	public Strand getReverse() {
+		switch (this) {
+			case POSITIVE:
+				return NEGATIVE;
+			case NEGATIVE:
+				return POSITIVE;
+			default:
+				return UNDEFINED;
+		}
+	}
 }

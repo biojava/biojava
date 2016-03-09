@@ -32,37 +32,37 @@ import java.io.PrintWriter;
 
 public class MyExportListener implements ActionListener{
 
-   AbstractAlignmentJmol parent;
-   MyExportListener(AbstractAlignmentJmol parent){
-      this.parent = parent;
-   }
-   @Override
+	AbstractAlignmentJmol parent;
+	MyExportListener(AbstractAlignmentJmol parent){
+		this.parent = parent;
+	}
+	@Override
 public void actionPerformed(ActionEvent arg0)
-   {
-      final JFileChooser fc = new JFileChooser();
+	{
+		final JFileChooser fc = new JFileChooser();
 
-      int returnVal = fc.showSaveDialog(null);
+		int returnVal = fc.showSaveDialog(null);
 
-      if (returnVal == JFileChooser.APPROVE_OPTION) {
-         File file = fc.getSelectedFile();
-         //This is where a real application would open the file.
-         System.out.println("Exporting PDB file to: " + file.getName());
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			//This is where a real application would open the file.
+			System.out.println("Exporting PDB file to: " + file.getName());
 
-         Structure s = parent.getStructure();
+			Structure s = parent.getStructure();
 
-         try {
-            PrintWriter pw = new PrintWriter(new FileWriter(file));
-            pw.println(s.toPDB());
-            pw.close();
-         } catch (IOException e){
-        	 JOptionPane.showMessageDialog(null,"Could not export file. Exception: " + e.getMessage());
-         }
-
-
-      } else {
-         System.out.println("Export command cancelled by user.");
-      }
+			try {
+				PrintWriter pw = new PrintWriter(new FileWriter(file));
+				pw.println(s.toPDB());
+				pw.close();
+			} catch (IOException e){
+			 JOptionPane.showMessageDialog(null,"Could not export file. Exception: " + e.getMessage());
+			}
 
 
-   }
+		} else {
+			System.out.println("Export command cancelled by user.");
+		}
+
+
+	}
 }

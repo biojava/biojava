@@ -28,21 +28,21 @@ package org.biojava.nbio.core.sequence.template;
 
 public interface Compound {
 
-    public boolean equalsIgnoreCase(Compound compound);
+	public boolean equalsIgnoreCase(Compound compound);
 
-    public String getDescription();
+	public String getDescription();
 
-    public void setDescription(String description);
+	public void setDescription(String description);
 
-    public String getShortName();
+	public String getShortName();
 
-    public void setShortName(String shortName);
+	public void setShortName(String shortName);
 
-    public String getLongName();
+	public String getLongName();
 
-    public void setLongName(String longName);
+	public void setLongName(String longName);
 
-    public Float getMolecularWeight();
+	public Float getMolecularWeight();
 
-    public void setMolecularWeight(Float molecularWeight);
+	public void setMolecularWeight(Float molecularWeight);
 }

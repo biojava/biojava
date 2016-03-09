@@ -38,76 +38,76 @@ import org.biojava.nbio.structure.align.util.ConfigurationException;
 public class FatCat
 {
 
-   /**
-    *  version history:
-    *  1.1 - Added more parameters to the command line
-    *  1.0 - Initial version
-    */
-   public static final String VERSION = "1.1";
+	/**
+	 *  version history:
+	 *  1.1 - Added more parameters to the command line
+	 *  1.0 - Initial version
+	 */
+	public static final String VERSION = "1.1";
 
-   public static String newline = System.getProperty("line.separator");
+	public static String newline = System.getProperty("line.separator");
 
-   FatCatAligner aligner;
+	FatCatAligner aligner;
 
-   public static final String algorithmName = "jFatCat";
-
-
-   /** See demo/FatCatDemo.java for an example how to run.
-    *
-    * Launch FatCat from command line.
-    *
-    * Parameters are:
-    *
-    * @param argv
-    */
-   public static void main(String[] argv) throws ConfigurationException {
-      FatCatUserArgumentProcessor processor = new FatCatUserArgumentProcessor();
-      processor.process(argv);
-   }
-
-   @Override
-   public String toString(){
-      return "JFatCat v. " + VERSION;
-   }
+	public static final String algorithmName = "jFatCat";
 
 
-   public AFPChain alignRigid(Atom[] ca1, Atom[] ca2) throws StructureException{
-      StructureAlignment fatCat = new FatCatRigid();
-      return fatCat.align(ca1,ca2);
-   }
+	/** See demo/FatCatDemo.java for an example how to run.
+	 *
+	 * Launch FatCat from command line.
+	 *
+	 * Parameters are:
+	 *
+	 * @param argv
+	 */
+	public static void main(String[] argv) throws ConfigurationException {
+		FatCatUserArgumentProcessor processor = new FatCatUserArgumentProcessor();
+		processor.process(argv);
+	}
 
-   public AFPChain alignRigid(Atom[] ca1, Atom[] ca2, FatCatParameters params) throws StructureException{
-
-      AFPChain afpChain = align(ca1,ca2,params,true);
-      afpChain.setAlgorithmName(FatCatRigid.algorithmName);
-      afpChain.setVersion(VERSION+"");
-      return afpChain;
-   }
-
-   public AFPChain alignFlexible(Atom[] ca1, Atom[] ca2, FatCatParameters params) throws StructureException{
-
-      AFPChain afpChain = align(ca1,ca2,params,false);
-      afpChain.setAlgorithmName(FatCatFlexible.algorithmName);
-      afpChain.setVersion(VERSION+"");
-      return afpChain;
-   }
+	@Override
+	public String toString(){
+		return "JFatCat v. " + VERSION;
+	}
 
 
-   protected AFPChain align(Atom[] ca1, Atom[] ca2, FatCatParameters params, boolean doRigid) throws StructureException{
+	public AFPChain alignRigid(Atom[] ca1, Atom[] ca2) throws StructureException{
+		StructureAlignment fatCat = new FatCatRigid();
+		return fatCat.align(ca1,ca2);
+	}
 
-      aligner = new FatCatAligner();
+	public AFPChain alignRigid(Atom[] ca1, Atom[] ca2, FatCatParameters params) throws StructureException{
 
-      aligner.align(ca1, ca2, doRigid, params);
+		AFPChain afpChain = align(ca1,ca2,params,true);
+		afpChain.setAlgorithmName(FatCatRigid.algorithmName);
+		afpChain.setVersion(VERSION+"");
+		return afpChain;
+	}
 
-      return aligner.getAfpChain();
+	public AFPChain alignFlexible(Atom[] ca1, Atom[] ca2, FatCatParameters params) throws StructureException{
+
+		AFPChain afpChain = align(ca1,ca2,params,false);
+		afpChain.setAlgorithmName(FatCatFlexible.algorithmName);
+		afpChain.setVersion(VERSION+"");
+		return afpChain;
+	}
 
 
-   }
+	protected AFPChain align(Atom[] ca1, Atom[] ca2, FatCatParameters params, boolean doRigid) throws StructureException{
 
-   public FatCatAligner getFatCatAligner(){
-      if ( aligner == null)
-         aligner = new FatCatAligner();
-      return aligner;
-   }
+		aligner = new FatCatAligner();
+
+		aligner.align(ca1, ca2, doRigid, params);
+
+		return aligner.getAfpChain();
+
+
+	}
+
+	public FatCatAligner getFatCatAligner(){
+		if ( aligner == null)
+			aligner = new FatCatAligner();
+		return aligner;
+	}
 
 }

@@ -37,245 +37,245 @@ public class JmolViewerImpl implements StructureViewer {
 
 	private static final Logger logger = LoggerFactory.getLogger(JmolViewerImpl.class);
 
-    public static final String viewer = "org.jmol.api.JmolSimpleViewer";
-    public static final String adapter = "org.jmol.api.JmolAdapter";
-    public static final String smartAdapter = "org.jmol.adapter.smarter.SmarterJmolAdapter";
-    Structure structure;
-    JmolPanel jmolPanel;
-    JFrame frame;
+	public static final String viewer = "org.jmol.api.JmolSimpleViewer";
+	public static final String adapter = "org.jmol.api.JmolAdapter";
+	public static final String smartAdapter = "org.jmol.adapter.smarter.SmarterJmolAdapter";
+	Structure structure;
+	JmolPanel jmolPanel;
+	JFrame frame;
 
-    public JmolViewerImpl() {
+	public JmolViewerImpl() {
 
-        frame = new JFrame();
+		frame = new JFrame();
 
-        JMenuBar menu = MenuCreator.initJmolMenu(frame, null, null, null);
+		JMenuBar menu = MenuCreator.initJmolMenu(frame, null, null, null);
 
-        frame.setJMenuBar(menu);
+		frame.setJMenuBar(menu);
 
-        frame.addWindowListener(new WindowAdapter() {
+		frame.addWindowListener(new WindowAdapter() {
 
-            @Override
-            public void windowClosing(WindowEvent e) {
-                frame.dispose();
-                //System.exit(0);
-            }
-        });
+			@Override
+			public void windowClosing(WindowEvent e) {
+				frame.dispose();
+				//System.exit(0);
+			}
+		});
 
-        Container contentPane = frame.getContentPane();
+		Container contentPane = frame.getContentPane();
 
-        Box vBox = Box.createVerticalBox();
+		Box vBox = Box.createVerticalBox();
 
-        try {
+		try {
 
-            jmolPanel = new JmolPanel();
+			jmolPanel = new JmolPanel();
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
-            return;
-        }
-        jmolPanel.setPreferredSize(new Dimension(500, 500));
-        vBox.add(jmolPanel);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
+			return;
+		}
+		jmolPanel.setPreferredSize(new Dimension(500, 500));
+		vBox.add(jmolPanel);
 
 
-        JTextField field = new JTextField();
+		JTextField field = new JTextField();
 
-        field.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
-        field.setText("enter RASMOL like command...");
+		field.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
+		field.setText("enter RASMOL like command...");
 //        RasmolCommandListener listener = new RasmolCommandListener(jmolPanel, field);
 
 //        field.addActionListener(listener);
 //        field.addMouseListener(listener);
 //        field.addKeyListener(listener);
-        vBox.add(field);
+		vBox.add(field);
 
-        contentPane.add(vBox);
+		contentPane.add(vBox);
 
 
 
-        frame.pack();
-        frame.setVisible(true);
+		frame.pack();
+		frame.setVisible(true);
 
-    }
+	}
 
-    public void setTitle(String label) {
-        frame.setTitle(label);
-        frame.repaint();
-    }
+	public void setTitle(String label) {
+		frame.setTitle(label);
+		frame.repaint();
+	}
 
-    @Override
+	@Override
 	public void setStructure(Structure structure) {
-        if (jmolPanel == null) {
-            System.err.println("please install Jmol first");
-            return;
-        }
+		if (jmolPanel == null) {
+			System.err.println("please install Jmol first");
+			return;
+		}
 
-        setTitle(structure.getPDBCode());
+		setTitle(structure.getPDBCode());
 
-        // actually this is very simple
-        // just convert the structure to a PDB file
+		// actually this is very simple
+		// just convert the structure to a PDB file
 
-        String pdb = structure.toPDB();
-        //System.out.println(s.isNmr());
+		String pdb = structure.toPDB();
+		//System.out.println(s.isNmr());
 
-        //System.out.println(pdb);
-        // Jmol could also read the file directly from your file system
-        //viewer.openFile("/Path/To/PDB/1tim.pdb");
+		//System.out.println(pdb);
+		// Jmol could also read the file directly from your file system
+		//viewer.openFile("/Path/To/PDB/1tim.pdb");
 
-        //System.out.println(pdb);
-        jmolPanel.openStringInline(pdb);
+		//System.out.println(pdb);
+		jmolPanel.openStringInline(pdb);
 
-        // send the PDB file to Jmol.
-        // there are also other ways to interact with Jmol, e.g make it directly
-        // access the biojava structure object, but they require more
-        // code. See the SPICE code repository for how to do this.
-    }
+		// send the PDB file to Jmol.
+		// there are also other ways to interact with Jmol, e.g make it directly
+		// access the biojava structure object, but they require more
+		// code. See the SPICE code repository for how to do this.
+	}
 
-    @Override
+	@Override
 	public void clear() {
-        // TODO Auto-generated method stub
-    }
+		// TODO Auto-generated method stub
+	}
 
-    @Override
+	@Override
 	public Color getColor() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
+	@Override
 	public Selection getSelection() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
+	@Override
 	public void repaint() {
-        // TODO Auto-generated method stub
-    }
+		// TODO Auto-generated method stub
+	}
 
-    @Override
+	@Override
 	public void setColor(Color red) {
-        // TODO Auto-generated method stub
-    }
+		// TODO Auto-generated method stub
+	}
 
-    @Override
+	@Override
 	public void setSelection(Selection selection) {
-        // TODO Auto-generated method stub
-    }
+		// TODO Auto-generated method stub
+	}
 
-    @Override
+	@Override
 	public void setStyle(RenderStyle wireframe) {
-        // TODO Auto-generated method stub
-    }
+		// TODO Auto-generated method stub
+	}
 
-    @Override
+	@Override
 	public void setZoom(int i) {
-        // TODO Auto-generated method stub
-    }
-    @SuppressWarnings("rawtypes")
-    static class JmolPanel extends JPanel {
+		// TODO Auto-generated method stub
+	}
+	@SuppressWarnings("rawtypes")
+	static class JmolPanel extends JPanel {
 
-        /**
-         *
-         */
-        private static final long serialVersionUID = -3661941083797644242L;
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = -3661941083797644242L;
 
 		Class viewerC;
 
-        Class adapterC;
+		Class adapterC;
 
 
 		Class smartAdapterC;
-        Object viewerO;
-        Object adapterO;
-        Method evalString;
-        Method renderScreenImage;
-        Method openStringInline;
+		Object viewerO;
+		Object adapterO;
+		Method evalString;
+		Method renderScreenImage;
+		Method openStringInline;
 
-        //JmolSimpleViewer viewer;
-        //JmolAdapter adapter;
-        @SuppressWarnings("unchecked")
+		//JmolSimpleViewer viewer;
+		//JmolAdapter adapter;
+		@SuppressWarnings("unchecked")
 		JmolPanel() throws ClassNotFoundException {
 
-            try {
-                viewerC = Class.forName(viewer);
+			try {
+				viewerC = Class.forName(viewer);
 
-                adapterC = Class.forName(adapter);
-                smartAdapterC = Class.forName(smartAdapter);
+				adapterC = Class.forName(adapter);
+				smartAdapterC = Class.forName(smartAdapter);
 
-                Method m = viewerC.getMethod("allocateSimpleViewer", new Class[]{Component.class, adapterC});
+				Method m = viewerC.getMethod("allocateSimpleViewer", new Class[]{Component.class, adapterC});
 
-                Constructor constructor = smartAdapterC.getConstructor(new Class[]{});
-                adapterO = constructor.newInstance(new Object[]{});
+				Constructor constructor = smartAdapterC.getConstructor(new Class[]{});
+				adapterO = constructor.newInstance(new Object[]{});
 
-                //viewerC = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
-                viewerO = m.invoke(viewerC, this, adapterO);
+				//viewerC = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
+				viewerO = m.invoke(viewerC, this, adapterO);
 
-                evalString = viewerC.getMethod("evalString", String.class);
+				evalString = viewerC.getMethod("evalString", String.class);
 
-                renderScreenImage = viewerC.getMethod("renderScreenImage",
-                        new Class[]{Graphics.class, Dimension.class, Rectangle.class});
+				renderScreenImage = viewerC.getMethod("renderScreenImage",
+						new Class[]{Graphics.class, Dimension.class, Rectangle.class});
 
-                openStringInline = viewerC.getMethod("openStringInline", new Class[]{String.class});
+				openStringInline = viewerC.getMethod("openStringInline", new Class[]{String.class});
 
-            } catch (InstantiationException ex) {
-                logger.error("Exception caught", ex);
-            } catch (IllegalAccessException ex) {
-            	logger.error("Exception caught", ex);
-            } catch (IllegalArgumentException ex) {
-            	logger.error("Exception caught", ex);
-            } catch (InvocationTargetException ex) {
-            	logger.error("Exception caught", ex);
-            } catch (NoSuchMethodException e) {
-                logger.error("Exception caught", e);
-            }
+			} catch (InstantiationException ex) {
+				logger.error("Exception caught", ex);
+			} catch (IllegalAccessException ex) {
+				logger.error("Exception caught", ex);
+			} catch (IllegalArgumentException ex) {
+				logger.error("Exception caught", ex);
+			} catch (InvocationTargetException ex) {
+				logger.error("Exception caught", ex);
+			} catch (NoSuchMethodException e) {
+				logger.error("Exception caught", e);
+			}
 
-            evalString("set scriptQueue on;");
+			evalString("set scriptQueue on;");
 
-        }
+		}
 
 
-        public Class getViewer() {
-            return viewerC;
-        }
+		public Class getViewer() {
+			return viewerC;
+		}
 
-        public void evalString(String rasmolScript) {
-            try {
-                evalString.invoke(viewerO, rasmolScript);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+		public void evalString(String rasmolScript) {
+			try {
+				evalString.invoke(viewerO, rasmolScript);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-        public void openStringInline(String pdbFile) {
-            try {
-                openStringInline.invoke(viewerO, pdbFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+		public void openStringInline(String pdbFile) {
+			try {
+				openStringInline.invoke(viewerO, pdbFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-        public void executeCmd(String rasmolScript) {
-            try {
-                evalString.invoke(viewerO, rasmolScript);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        final Dimension currentSize = new Dimension();
-        final Rectangle rectClip = new Rectangle();
+		public void executeCmd(String rasmolScript) {
+			try {
+				evalString.invoke(viewerO, rasmolScript);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		final Dimension currentSize = new Dimension();
+		final Rectangle rectClip = new Rectangle();
 
-        @Override
+		@Override
 		public void paint(Graphics g) {
-            getSize(currentSize);
-            g.getClipBounds(rectClip);
-            //viewer.renderScreenImage(g, currentSize, rectClip);
+			getSize(currentSize);
+			g.getClipBounds(rectClip);
+			//viewer.renderScreenImage(g, currentSize, rectClip);
 
-            try {
-                renderScreenImage.invoke(viewerO, g, currentSize, rectClip);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+			try {
+				renderScreenImage.invoke(viewerO, g, currentSize, rectClip);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

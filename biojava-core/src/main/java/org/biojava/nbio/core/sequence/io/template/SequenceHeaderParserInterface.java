@@ -30,10 +30,10 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public interface SequenceHeaderParserInterface<S extends Sequence<?>, C extends Compound> {
-/**
- *
- * @param header
- * @param sequence
- */
-    public void parseHeader(String header, S sequence);
+	/**
+	 *
+	 * @param header
+	 * @param sequence
+	 */
+	public void parseHeader(String header, S sequence);
 }

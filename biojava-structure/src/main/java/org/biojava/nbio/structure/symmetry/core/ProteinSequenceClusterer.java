@@ -124,24 +124,24 @@ public class ProteinSequenceClusterer {
 			}
 			processed[i] = true;
 			// create new sequence cluster
-            UniqueSequenceList seqList = new UniqueSequenceList(caUnaligned.get(i), chainIds.get(i), modelNumbers.get(i), 0, sequences.get(i));
-            SequenceAlignmentCluster seqCluster = new SequenceAlignmentCluster(parameters);
-            seqCluster.addUniqueSequenceList(seqList);
-            seqClusters.add(seqCluster);
+			UniqueSequenceList seqList = new UniqueSequenceList(caUnaligned.get(i), chainIds.get(i), modelNumbers.get(i), 0, sequences.get(i));
+			SequenceAlignmentCluster seqCluster = new SequenceAlignmentCluster(parameters);
+			seqCluster.addUniqueSequenceList(seqList);
+			seqClusters.add(seqCluster);
 
-            for (int j = i + 1; j < caUnaligned.size(); j++) {
-            	if (processed[j]) {
-            		continue;
-            	}
-            	// Mark any future identical sequences as processed
-            	for (SequenceAlignmentCluster c: seqClusters) {
-            			if (c.identityMatch(caUnaligned.get(j), chainIds.get(j), modelNumbers.get(j), 0, sequences.get(j))) {
-            				processed[j] = true;
-            				//System.out.println("found identity match: " + i + " - " + j);
-            				break;
-            			}
-            	}
-            }
+			for (int j = i + 1; j < caUnaligned.size(); j++) {
+				if (processed[j]) {
+					continue;
+				}
+				// Mark any future identical sequences as processed
+				for (SequenceAlignmentCluster c: seqClusters) {
+						if (c.identityMatch(caUnaligned.get(j), chainIds.get(j), modelNumbers.get(j), 0, sequences.get(j))) {
+							processed[j] = true;
+							//System.out.println("found identity match: " + i + " - " + j);
+							break;
+						}
+				}
+			}
 		}
 		sortSequenceClustersBySize(seqClusters);
 	}

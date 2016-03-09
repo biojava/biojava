@@ -460,12 +460,12 @@ implements ChangeListener, ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        JComboBox cb = (JComboBox)e.getSource(); // == coloring
-        String gradientName = (String)cb.getSelectedItem();
-        ContinuousColorMapper gradient = gradients.get(gradientName);
-        assert(gradient != null);
-        this.setCellColor(gradient);
-        this.repaint();
+		JComboBox cb = (JComboBox)e.getSource(); // == coloring
+		String gradientName = (String)cb.getSelectedItem();
+		ContinuousColorMapper gradient = gradients.get(gradientName);
+		assert(gradient != null);
+		this.setCellColor(gradient);
+		this.repaint();
 	}
 
 

@@ -157,24 +157,24 @@ public interface Group {
 
 	/**
 	 * Calculate if this group has all atoms required for an amino acid backbone.
-     * This allows to include chemically modified amino acids that
-     * are labeled hetatoms into some computations, the usual way
-     * to identify if a group is an amino acid is {@link #getType()}
-     * <p>
-     * amino atoms are : N, CA, C, O
-     * </p>
+	 * This allows to include chemically modified amino acids that
+	 * are labeled hetatoms into some computations, the usual way
+	 * to identify if a group is an amino acid is {@link #getType()}
+	 * <p>
+	 * amino atoms are : N, CA, C, O
+	 * </p>
 	 *
-     * Example: 1DW9 chain A first group is a Selenomethionine, provided as HETATM, but here returns true.
-     * <pre>
-     * HETATM    1  N   MSE A   1      11.720  20.973   1.584  0.00  0.00           N
-     * HETATM    2  CA  MSE A   1      10.381  20.548   1.139  0.00  0.00           C
-     * HETATM    3  C   MSE A   1       9.637  20.037   2.398  0.00  0.00           C
-     * HETATM    4  O   MSE A   1      10.198  19.156   2.985  0.00  0.00           O
-     * HETATM    5  CB  MSE A   1      10.407  19.441   0.088  0.00  0.00           C
-     * </pre>
+	 * Example: 1DW9 chain A first group is a Selenomethionine, provided as HETATM, but here returns true.
+	 * <pre>
+	 * HETATM    1  N   MSE A   1      11.720  20.973   1.584  0.00  0.00           N
+	 * HETATM    2  CA  MSE A   1      10.381  20.548   1.139  0.00  0.00           C
+	 * HETATM    3  C   MSE A   1       9.637  20.037   2.398  0.00  0.00           C
+	 * HETATM    4  O   MSE A   1      10.198  19.156   2.985  0.00  0.00           O
+	 * HETATM    5  CB  MSE A   1      10.407  19.441   0.088  0.00  0.00           C
+	 * </pre>
 	 *
 	 * @return true if all Atoms required for an AminoAcid are available (N, CA, C, O)
-     * @see #getType
+	 * @see #getType
 	 */
 	public boolean hasAminoAtoms() ;
 

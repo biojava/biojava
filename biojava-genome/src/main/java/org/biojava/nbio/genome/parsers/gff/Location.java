@@ -114,19 +114,19 @@ public class Location implements Iterable<Location>
 		assert isHealthy(): toString();
 	}
 
-        public int getBegin(){
-            if(isNegative())
-                return mEnd;
-            else
-                return mStart;
-        }
+		public int getBegin(){
+			if(isNegative())
+				return mEnd;
+			else
+				return mStart;
+		}
 
-        public int getEnd(){
-            if(isNegative())
-                return mStart;
-            else
-                return mEnd;
-        }
+		public int getEnd(){
+			if(isNegative())
+				return mStart;
+			else
+				return mEnd;
+		}
 
 
 	/**
@@ -708,8 +708,8 @@ public class Location implements Iterable<Location>
 
 	/**
 	 * Check if this location starts before other location starts.
-     * The locations may overlap.
-     *
+	 * The locations may overlap.
+	 *
 	 * @param other The location to compare.
 	 * @return True if this starts before other.
 	 * @throws IllegalArgumentException Locations are on opposite strands.
@@ -728,8 +728,8 @@ public class Location implements Iterable<Location>
 
 	/**
 	 * Check if this location ends after other location ends.
-     * The locations may overlap.
-     *
+	 * The locations may overlap.
+	 *
 	 * @param other The location to compare.
 	 * @return True if location ends after other.
 	 * @throws IllegalArgumentException Locations are on opposite strands.
@@ -748,8 +748,8 @@ public class Location implements Iterable<Location>
 
 	/**
 	 * Check if this location ends before other location ends.
-     * The locations may overlap.
-     *
+	 * The locations may overlap.
+	 *
 	 * @param other The location to compare.
 	 * @return True if this ends before other.
 	 * @throws IllegalArgumentException Locations are on opposite strands.
@@ -894,11 +894,11 @@ public class Location implements Iterable<Location>
 	   return new Location( s, e );
 	}
 
-    @SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	static private Location R( int s, int e )
-    {
-       return new Location( -e, -s );
-    }
+	{
+	   return new Location( -e, -s );
+	}
 
 
 	/**
@@ -958,26 +958,26 @@ public class Location implements Iterable<Location>
 		assert !r2_5.overlaps( r5_8 );
 
 
-        //prefix
-        assert L(2,20).prefix(1).equals( L(2,3));
-        assert L(2,20).prefix(-1).equals( L(2,19));
-        assert L(2,20).prefix( L(10,12)).equals( L(2,10));
+		//prefix
+		assert L(2,20).prefix(1).equals( L(2,3));
+		assert L(2,20).prefix(-1).equals( L(2,19));
+		assert L(2,20).prefix( L(10,12)).equals( L(2,10));
 
-        //suffix
-        assert L(2,20).suffix(1).equals( L(3,20));
-        assert L(2,20).suffix(-1).equals( L(19,20));
-        assert L(2,20).suffix( L(10,12)).equals( L(12,20));
+		//suffix
+		assert L(2,20).suffix(1).equals( L(3,20));
+		assert L(2,20).suffix(-1).equals( L(19,20));
+		assert L(2,20).suffix( L(10,12)).equals( L(12,20));
 
 
-        //upstream
-        //downstream
+		//upstream
+		//downstream
 
-        //startsBefore
-        //startsAfter
-        //endsBefore
-        //endsAfter
+		//startsBefore
+		//startsAfter
+		//endsBefore
+		//endsAfter
 
-        //equals
+		//equals
 
 		//percentoverlap
 

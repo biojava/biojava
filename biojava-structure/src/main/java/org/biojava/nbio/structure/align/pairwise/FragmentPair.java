@@ -37,177 +37,177 @@ import org.biojava.nbio.structure.jama.Matrix;
 public class FragmentPair {
 
 
-    int length;
-    int pos1;
-    int pos2;
+	int length;
+	int pos1;
+	int pos2;
 
-    // parameter below may be used in different approaches
+	// parameter below may be used in different approaches
 
-    int contacts;
-    int cluster;
-    double rms;
-    int used;
-    int covered;
+	int contacts;
+	int cluster;
+	double rms;
+	int used;
+	int covered;
 
-    //filled if fragments are superimposed
-    Matrix rot;
-    Atom trans;
+	//filled if fragments are superimposed
+	Matrix rot;
+	Atom trans;
 
-    //this unit vector indicates the rotation of j onto i
-    Atom unitv;
+	//this unit vector indicates the rotation of j onto i
+	Atom unitv;
 
-    Atom center1;
-    Atom center2;
+	Atom center1;
+	Atom center2;
 
 
-    public FragmentPair(int length, int p1, int p2) {
-        super();
-        this.length = length ;
-         pos1 = p1;
-         pos2 = p2;
+	public FragmentPair(int length, int p1, int p2) {
+		super();
+		this.length = length ;
+		 pos1 = p1;
+		 pos2 = p2;
 
-         contacts = 0;
-         cluster = 0;
-         rms = 0.0;
-         used = 0;
-         covered = 0;
+		 contacts = 0;
+		 cluster = 0;
+		 rms = 0.0;
+		 used = 0;
+		 covered = 0;
 
-         unitv = new AtomImpl();
-         unitv.setX(0);
-         unitv.setY(0);
-         unitv.setZ(1);
-         rot = null;
-         trans = new AtomImpl();
-         center1 = new AtomImpl();
-         center2 = new AtomImpl();
+		 unitv = new AtomImpl();
+		 unitv.setX(0);
+		 unitv.setY(0);
+		 unitv.setZ(1);
+		 rot = null;
+		 trans = new AtomImpl();
+		 center1 = new AtomImpl();
+		 center2 = new AtomImpl();
 
-    }
-    @Override
-    public Object clone(){
+	}
+	@Override
+	public Object clone(){
 
-        FragmentPair n = new FragmentPair(length,pos1,pos2);
-        if ( center1 !=null)
-            n.setCenter1((Atom)center1.clone());
+		FragmentPair n = new FragmentPair(length,pos1,pos2);
+		if ( center1 !=null)
+			n.setCenter1((Atom)center1.clone());
 
-        if ( center2 != null)
-            n.setCenter2((Atom)center2.clone());
+		if ( center2 != null)
+			n.setCenter2((Atom)center2.clone());
 
-        n.setCluster(cluster);
-        n.setContacts(contacts);
-        n.setCovered(covered);
-        n.setRms(rms);
-        n.setLength(length);
-        n.setRot((Matrix)rot.clone());
-        n.setUnitv((Atom)unitv.clone());
+		n.setCluster(cluster);
+		n.setContacts(contacts);
+		n.setCovered(covered);
+		n.setRms(rms);
+		n.setLength(length);
+		n.setRot((Matrix)rot.clone());
+		n.setUnitv((Atom)unitv.clone());
 
-        return n;
-    }
-    public int getCluster() {
-        return cluster;
-    }
+		return n;
+	}
+	public int getCluster() {
+		return cluster;
+	}
 
-    public void setCluster(int cluster) {
-        this.cluster = cluster;
-    }
+	public void setCluster(int cluster) {
+		this.cluster = cluster;
+	}
 
-    public int getContacts() {
-        return contacts;
-    }
+	public int getContacts() {
+		return contacts;
+	}
 
-    public void setContacts(int contacts) {
-        this.contacts = contacts;
-    }
+	public void setContacts(int contacts) {
+		this.contacts = contacts;
+	}
 
-    public int getCovered() {
-        return covered;
-    }
+	public int getCovered() {
+		return covered;
+	}
 
-    public void setCovered(int covered) {
-        this.covered = covered;
-    }
+	public void setCovered(int covered) {
+		this.covered = covered;
+	}
 
-    public int getLength() {
-        return length;
-    }
+	public int getLength() {
+		return length;
+	}
 
-    public void setLength(int length) {
-        this.length = length;
-    }
+	public void setLength(int length) {
+		this.length = length;
+	}
 
-    public int getPos1() {
-        return pos1;
-    }
+	public int getPos1() {
+		return pos1;
+	}
 
-    public void setPos1(int pos1) {
-        this.pos1 = pos1;
-    }
+	public void setPos1(int pos1) {
+		this.pos1 = pos1;
+	}
 
-    public int getPos2() {
-        return pos2;
-    }
+	public int getPos2() {
+		return pos2;
+	}
 
-    public void setPos2(int pos2) {
-        this.pos2 = pos2;
-    }
+	public void setPos2(int pos2) {
+		this.pos2 = pos2;
+	}
 
-    public double getRms() {
-        return rms;
-    }
+	public double getRms() {
+		return rms;
+	}
 
-    public void setRms(double rms) {
-        this.rms = rms;
-    }
+	public void setRms(double rms) {
+		this.rms = rms;
+	}
 
-    public Matrix getRot() {
-        return rot;
-    }
+	public Matrix getRot() {
+		return rot;
+	}
 
-    public void setRot(Matrix rot) {
-        this.rot = rot;
-    }
+	public void setRot(Matrix rot) {
+		this.rot = rot;
+	}
 
-    public Atom getTrans() {
-        return trans;
-    }
+	public Atom getTrans() {
+		return trans;
+	}
 
-    public void setTrans(Atom trans) {
-        this.trans = trans;
-    }
+	public void setTrans(Atom trans) {
+		this.trans = trans;
+	}
 
-    public Atom getUnitv() {
-        return unitv;
-    }
+	public Atom getUnitv() {
+		return unitv;
+	}
 
-    public void setUnitv(Atom unitv) {
-        this.unitv = unitv;
-    }
+	public void setUnitv(Atom unitv) {
+		this.unitv = unitv;
+	}
 
-    public int getUsed() {
-        return used;
-    }
+	public int getUsed() {
+		return used;
+	}
 
-    public void setUsed(int used) {
-        this.used = used;
-    }
+	public void setUsed(int used) {
+		this.used = used;
+	}
 
-    public Atom getCenter1() {
-        return center1;
-    }
+	public Atom getCenter1() {
+		return center1;
+	}
 
-    public void setCenter1(Atom center1) {
-        this.center1 = center1;
-    }
+	public void setCenter1(Atom center1) {
+		this.center1 = center1;
+	}
 
-    public Atom getCenter2() {
-        return center2;
-    }
+	public Atom getCenter2() {
+		return center2;
+	}
 
-    public void setCenter2(Atom center2) {
-        this.center2 = center2;
-    }
+	public void setCenter2(Atom center2) {
+		this.center2 = center2;
+	}
 
-    @Override
-    public String toString() {
-    	return String.format("Fragment (%d,%d) len %d", pos1, pos2, length);
-    }
+	@Override
+	public String toString() {
+		return String.format("Fragment (%d,%d) len %d", pos1, pos2, length);
+	}
 }

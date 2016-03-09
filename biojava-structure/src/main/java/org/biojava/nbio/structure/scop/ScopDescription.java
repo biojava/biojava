@@ -55,7 +55,7 @@ public class ScopDescription implements Serializable,Cloneable{
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
 
-        buf.append(String.valueOf(sunID));
+		buf.append(String.valueOf(sunID));
 		buf.append("\t");
 		buf.append(category);
 		buf.append("\t");

@@ -56,16 +56,16 @@ package org.biojava.nbio.ontology.utils;
  */
 public class AssertionFailure
 extends AssertionError {
-  public AssertionFailure(String message) {
-    super(message);
-  }
+	public AssertionFailure(String message) {
+		super(message);
+	}
 
-  public AssertionFailure(Throwable cause) {
-    initCause(cause);
-  }
+	public AssertionFailure(Throwable cause) {
+		initCause(cause);
+	}
 
-  public AssertionFailure(String message, Throwable cause) {
-    this(message);
-    initCause(cause);
-  }
+	public AssertionFailure(String message, Throwable cause) {
+		this(message);
+		initCause(cause);
+	}
 }

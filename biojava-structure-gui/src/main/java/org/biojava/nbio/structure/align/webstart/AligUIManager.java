@@ -31,39 +31,39 @@ import javax.swing.UIManager.LookAndFeelInfo;
 public class AligUIManager
 {
 
-   public static void setLookAndFeel(){
-      try {
+	public static void setLookAndFeel(){
+		try {
 
 
-         String system = UIManager.getSystemLookAndFeelClassName();
-         if ( system != null) {
-            //System.out.println("setting look and feel to " + system);
-            UIManager.setLookAndFeel(system);
+			String system = UIManager.getSystemLookAndFeelClassName();
+			if ( system != null) {
+				//System.out.println("setting look and feel to " + system);
+				UIManager.setLookAndFeel(system);
 
-         }
+			}
 
-         //System.out.println("Installed Look And Feels:");
-         LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
+			//System.out.println("Installed Look And Feels:");
+			LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
 
-         if ( feels != null){
-            //for ( LookAndFeelInfo info: feels){
-               //System.out.println(info.getName() + " " + info.getClassName());
-           // }
-         }
-
-
-         //System.out.println("Auxiliary Look And Feels:");
-        // LookAndFeel[] looks = UIManager.getAuxiliaryLookAndFeels();
-         //printLookAndFeel(looks);
+			if ( feels != null){
+				//for ( LookAndFeelInfo info: feels){
+					//System.out.println(info.getName() + " " + info.getClassName());
+			  // }
+			}
 
 
+			//System.out.println("Auxiliary Look And Feels:");
+		  // LookAndFeel[] looks = UIManager.getAuxiliaryLookAndFeels();
+			//printLookAndFeel(looks);
 
 
-      } catch ( Exception e ) {
-         e.printStackTrace();
-      }
 
-   }
+
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
+	}
 
 //   private static void printLookAndFeel(LookAndFeel[] looks)
 //   {

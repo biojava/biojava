@@ -27,42 +27,42 @@ extends IndexPair{
 
 
 
-        /**
+		/**
 	 *
 	 */
 	private static final long serialVersionUID = -4040926588803887471L;
 		int value;
-        int contig;
+		int contig;
 
 
-        public AligMatEl(){
-            super();
-            value  = -1;
-            contig = -1;
-        }
+		public AligMatEl(){
+			super();
+			value  = -1;
+			contig = -1;
+		}
 
-        public int getContig() {
-            return contig;
-        }
-        public void setContig(int contig) {
-            this.contig = contig;
-        }
+		public int getContig() {
+			return contig;
+		}
+		public void setContig(int contig) {
+			this.contig = contig;
+		}
 
-        public int getValue() {
-            return value;
-        }
-        public void setValue(int value) {
-            this.value = value;
-        }
+		public int getValue() {
+			return value;
+		}
+		public void setValue(int value) {
+			this.value = value;
+		}
 
-        @Override
+		@Override
 		public String toString(){
-            String ret = "AligMatEl val:" + value + " contig:" + contig +
-            " trackrow:" + getRow() + " trackcol:" + getCol();
-            return ret;
-        }
+			String ret = "AligMatEl val:" + value + " contig:" + contig +
+			" trackrow:" + getRow() + " trackcol:" + getCol();
+			return ret;
+		}
 
-    }
+	}
 
 
 

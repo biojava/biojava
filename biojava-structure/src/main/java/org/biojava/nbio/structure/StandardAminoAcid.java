@@ -42,67 +42,67 @@ public final class StandardAminoAcid {
 
 	private static final String STANDARD_AMINOS_FILE = "org/biojava/nbio/structure/standardaminos.pdb";
 
-    static private Map<String,AminoAcid> aminoAcids;
+	static private Map<String,AminoAcid> aminoAcids;
 
-    /**
-     * Cannot be instantiated.
-     */
-    private StandardAminoAcid() {
-        super();
-    }
+	/**
+	 * Cannot be instantiated.
+	 */
+	private StandardAminoAcid() {
+		super();
+	}
 
-    /**
-     * <p>
-     * Initialize the static StandardAminoAcid resource.
-     * </p>
-     *
-     * <p>
-     * This parses the resource
-     * <code>{@value #STANDARD_AMINOS_FILE}</code>
-     * and builds a basic set of amino acids.
-     *</p>
-     * @author Tamas Horvath provided the standard amino acids
-     */
-    static {
-    	aminoAcids = new HashMap<String,AminoAcid>();
-
-
-    	InputStream fileStream = StandardAminoAcid.class.getClassLoader().getResourceAsStream(STANDARD_AMINOS_FILE);
-    	if (fileStream == null) {
-    		throw new RuntimeException("Could not find resource "+STANDARD_AMINOS_FILE+".  This probably means that your biojava.jar file is corrupt or incorrectly built.");
-    	}
-
-    	try {
-    		PDBFileParser parser = new PDBFileParser();
-    		Structure s = parser.parsePDBFile(fileStream);
+	/**
+	 * <p>
+	 * Initialize the static StandardAminoAcid resource.
+	 * </p>
+	 *
+	 * <p>
+	 * This parses the resource
+	 * <code>{@value #STANDARD_AMINOS_FILE}</code>
+	 * and builds a basic set of amino acids.
+	 *</p>
+	 * @author Tamas Horvath provided the standard amino acids
+	 */
+	static {
+		aminoAcids = new HashMap<String,AminoAcid>();
 
 
-    		GroupIterator iter = new GroupIterator(s);
-    		while (iter.hasNext()){
-    			Group g = iter.next();
+		InputStream fileStream = StandardAminoAcid.class.getClassLoader().getResourceAsStream(STANDARD_AMINOS_FILE);
+		if (fileStream == null) {
+			throw new RuntimeException("Could not find resource "+STANDARD_AMINOS_FILE+".  This probably means that your biojava.jar file is corrupt or incorrectly built.");
+		}
 
-    			if ( g instanceof AminoAcid){
-    				AminoAcid aa = (AminoAcid)g;
+		try {
+			PDBFileParser parser = new PDBFileParser();
+			Structure s = parser.parsePDBFile(fileStream);
 
-    				aminoAcids.put(aa.getPDBName(),aa);
-    				aminoAcids.put(aa.getAminoType().toString(),aa);
 
-    			}
-    		}
+			GroupIterator iter = new GroupIterator(s);
+			while (iter.hasNext()){
+				Group g = iter.next();
 
-    	} catch (Exception t) {
-            throw new RuntimeException( "Unable to initialize standard aminoacids", t);
-        }
-    }
+				if ( g instanceof AminoAcid){
+					AminoAcid aa = (AminoAcid)g;
 
-    /** get a standard amino acid.
-     *
-     * @param name the 3- or 1-letter representation of the amino acid.
-     * @return the amino acids, or null if the name can not be matched
-     */
-    public static AminoAcid getAminoAcid(String name){
+					aminoAcids.put(aa.getPDBName(),aa);
+					aminoAcids.put(aa.getAminoType().toString(),aa);
 
-        return aminoAcids.get(name);
-    }
+				}
+			}
+
+		} catch (Exception t) {
+			throw new RuntimeException( "Unable to initialize standard aminoacids", t);
+		}
+	}
+
+	/** get a standard amino acid.
+	 *
+	 * @param name the 3- or 1-letter representation of the amino acid.
+	 * @return the amino acids, or null if the name can not be matched
+	 */
+	public static AminoAcid getAminoAcid(String name){
+
+		return aminoAcids.get(name);
+	}
 
 }

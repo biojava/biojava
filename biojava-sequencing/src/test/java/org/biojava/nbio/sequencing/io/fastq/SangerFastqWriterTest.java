@@ -26,37 +26,37 @@ import java.io.IOException;
  * Unit test for SangerFastqWriter.
  */
 public final class SangerFastqWriterTest
-    extends AbstractFastqWriterTest
+	extends AbstractFastqWriterTest
 {
 
-    @Override
-    public FastqWriter createFastqWriter()
-    {
-        return new SangerFastqWriter();
-    }
+	@Override
+	public FastqWriter createFastqWriter()
+	{
+		return new SangerFastqWriter();
+	}
 
-    @Override
-    public Fastq createFastq()
-    {
-        return new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_SANGER)
-            .build();
-    }
+	@Override
+	public Fastq createFastq()
+	{
+		return new FastqBuilder()
+			.withDescription("description")
+			.withSequence("sequence")
+			.withQuality("quality_")
+			.withVariant(FastqVariant.FASTQ_SANGER)
+			.build();
+	}
 
-    public void testConvertNotSangerVariant() throws Exception
-    {
-        SangerFastqWriter writer = new SangerFastqWriter();
-        Appendable appendable = new StringBuilder();
-        Fastq invalid = new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_SOLEXA)
-            .build();
+	public void testConvertNotSangerVariant() throws Exception
+	{
+		SangerFastqWriter writer = new SangerFastqWriter();
+		Appendable appendable = new StringBuilder();
+		Fastq invalid = new FastqBuilder()
+			.withDescription("description")
+			.withSequence("sequence")
+			.withQuality("quality_")
+			.withVariant(FastqVariant.FASTQ_SOLEXA)
+			.build();
 
-        writer.append(appendable, invalid);
-    }
+		writer.append(appendable, invalid);
+	}
 }

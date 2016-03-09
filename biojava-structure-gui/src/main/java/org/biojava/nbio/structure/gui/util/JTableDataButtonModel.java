@@ -26,45 +26,45 @@ import javax.swing.table.AbstractTableModel;
 
 class JTableDataButtonModel extends AbstractTableModel {
 
-    public static final long serialVersionUID = 0l;
+		public static final long serialVersionUID = 0l;
 
-    Object[][] __rows;
-    String[]   __columns;
+		Object[][] __rows;
+		String[]   __columns;
 
-    public JTableDataButtonModel(Object[][] rows, String[] columns){
-        __rows = rows;
-        __columns = columns;
-    }
+		public JTableDataButtonModel(Object[][] rows, String[] columns){
+				__rows = rows;
+				__columns = columns;
+		}
 
 
-    @Override
+		@Override
 	public String getColumnName(int column) {
-      return __columns[column];
-    }
+			return __columns[column];
+		}
 
-    @Override
+		@Override
 	public int getRowCount() {
-      return __rows.length;
-    }
+			return __rows.length;
+		}
 
-    @Override
+		@Override
 	public int getColumnCount() {
-      return __columns.length;
-    }
+			return __columns.length;
+		}
 
-    @Override
+		@Override
 	public Object getValueAt(int row, int column) {
-        return __rows[row][column];
-    }
+				return __rows[row][column];
+		}
 
-    @Override
+		@Override
 	public boolean isCellEditable(int row, int column) {
-      return false;
-    }
+			return false;
+		}
 
-    @Override
+		@Override
 	@SuppressWarnings({ "unchecked" })
 	public Class getColumnClass(int column) {
-      return getValueAt(0, column).getClass();
-    }
-  }
+			return getValueAt(0, column).getClass();
+		}
+	}

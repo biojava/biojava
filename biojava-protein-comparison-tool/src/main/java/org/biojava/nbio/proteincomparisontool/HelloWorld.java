@@ -25,14 +25,14 @@ package org.biojava.nbio.proteincomparisontool;
  */
 class HelloWorld{
 
-    public HelloWorld(){
-        // hello world
-    }
+	public HelloWorld(){
+		// hello world
+	}
 
-    /** Prints hello world on command line
-     *
-     */
-    public void print(){
-        System.out.println("Hello World!");
-    }
+	/** Prints hello world on command line
+	 *
+	 */
+	public void print(){
+		System.out.println("Hello World!");
+	}
 }

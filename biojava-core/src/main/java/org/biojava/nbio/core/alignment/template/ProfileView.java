@@ -36,25 +36,25 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface ProfileView<S extends Sequence<C>, C extends Compound> extends Profile<S, C> {
 
-    /**
-     * Returns the column index of the viewed {@link Profile} corresponding to the final element in this view
-     *
-     * @return column index of this view's final element
-     */
-    int getEnd();
+	/**
+	 * Returns the column index of the viewed {@link Profile} corresponding to the final element in this view
+	 *
+	 * @return column index of this view's final element
+	 */
+	int getEnd();
 
-    /**
-     * Returns the column index of the viewed {@link Profile} corresponding to the first element in this view
-     *
-     * @return column index of this view's first element
-     */
-    int getStart();
+	/**
+	 * Returns the column index of the viewed {@link Profile} corresponding to the first element in this view
+	 *
+	 * @return column index of this view's first element
+	 */
+	int getStart();
 
-    /**
-     * Returns the entire {@link Profile} being viewed
-     *
-     * @return the entire alignment profile
-     */
-    Profile<S, C> getViewedProfile();
+	/**
+	 * Returns the entire {@link Profile} being viewed
+	 *
+	 * @return the entire alignment profile
+	 */
+	Profile<S, C> getViewedProfile();
 
 }

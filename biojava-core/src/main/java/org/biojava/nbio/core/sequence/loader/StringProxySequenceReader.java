@@ -43,121 +43,121 @@ import java.util.List;
 
 public class StringProxySequenceReader<C extends Compound> implements ProxySequenceReader<C> {
 
-    private String sequence;
-    private CompoundSet<C> compoundSet;
-    private List<C> parsedCompounds = new ArrayList<C>();
+	private String sequence;
+	private CompoundSet<C> compoundSet;
+	private List<C> parsedCompounds = new ArrayList<C>();
 
-    public StringProxySequenceReader() {}
+	public StringProxySequenceReader() {}
 
-    public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
-        this.sequence = sequence;
-        setCompoundSet(compoundSet);
-        setContents(sequence);
-    }
+	public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
+		this.sequence = sequence;
+		setCompoundSet(compoundSet);
+		setContents(sequence);
+	}
 
-    @Override
+	@Override
 	public void setCompoundSet(CompoundSet<C> compoundSet) {
-        this.compoundSet = compoundSet;
-    }
+		this.compoundSet = compoundSet;
+	}
 
-    @Override
+	@Override
 	public void setContents(String sequence) throws CompoundNotFoundException {
-        // Horrendously inefficient - pretty much the way the old BJ did things.
-        // TODO Should be optimised.
-    	this.sequence = sequence;
-        this.parsedCompounds.clear();
-        for (int i = 0; i < sequence.length();) {
-            String compoundStr = null;
-            C compound = null;
-            for (int compoundStrLength = 1; compound == null && compoundStrLength <= compoundSet.getMaxSingleCompoundStringLength(); compoundStrLength++) {
-                compoundStr = sequence.substring(i, i + compoundStrLength);
-                compound = compoundSet.getCompoundForString(compoundStr);
-            }
-            if (compound == null) {
-                throw new CompoundNotFoundException("Compound "+compoundStr+" not found");
-            } else {
-                i += compoundStr.length();
-            }
-            this.parsedCompounds.add(compound);
-        }
-    }
+		// Horrendously inefficient - pretty much the way the old BJ did things.
+		// TODO Should be optimised.
+		this.sequence = sequence;
+		this.parsedCompounds.clear();
+		for (int i = 0; i < sequence.length();) {
+			String compoundStr = null;
+			C compound = null;
+			for (int compoundStrLength = 1; compound == null && compoundStrLength <= compoundSet.getMaxSingleCompoundStringLength(); compoundStrLength++) {
+				compoundStr = sequence.substring(i, i + compoundStrLength);
+				compound = compoundSet.getCompoundForString(compoundStr);
+			}
+			if (compound == null) {
+				throw new CompoundNotFoundException("Compound "+compoundStr+" not found");
+			} else {
+				i += compoundStr.length();
+			}
+			this.parsedCompounds.add(compound);
+		}
+	}
 
-    public void setContents(String sequence, ArrayList features) throws CompoundNotFoundException{
-        setContents(sequence);
-    }
+	public void setContents(String sequence, ArrayList features) throws CompoundNotFoundException{
+		setContents(sequence);
+	}
 
-    @Override
+	@Override
 	public int getLength() {
-        return this.parsedCompounds.size();
-    }
+		return this.parsedCompounds.size();
+	}
 
-    @Override
+	@Override
 	public C getCompoundAt(int position) {
-        return this.parsedCompounds.get(position - 1);
-    }
+		return this.parsedCompounds.get(position - 1);
+	}
 
-    @Override
+	@Override
 	public int getIndexOf(C compound) {
-        return this.parsedCompounds.indexOf(compound) + 1;
-    }
+		return this.parsedCompounds.indexOf(compound) + 1;
+	}
 
-    @Override
+	@Override
 	public int getLastIndexOf(C compound) {
-        return this.parsedCompounds.lastIndexOf(compound) + 1;
-    }
+		return this.parsedCompounds.lastIndexOf(compound) + 1;
+	}
 
 
-    @Override
+	@Override
 	public String toString() {
-        return getSequenceAsString();
-    }
+		return getSequenceAsString();
+	}
 
-    @Override
+	@Override
 	public String getSequenceAsString() {
-        return sequence;
-    }
+		return sequence;
+	}
 
-    @Override
+	@Override
 	public List<C> getAsList() {
-        return this.parsedCompounds;
-    }
+		return this.parsedCompounds;
+	}
 
 
 
-    public String getSequenceAsString(Integer bioBegin, Integer bioEnd,Strand strand) {
-        SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
-        return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
-    }
+	public String getSequenceAsString(Integer bioBegin, Integer bioEnd,Strand strand) {
+		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+		return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
+	}
 
-    @Override
+	@Override
 	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-        return new SequenceProxyView<C>(StringProxySequenceReader.this,bioBegin,bioEnd);
-    }
+		return new SequenceProxyView<C>(StringProxySequenceReader.this,bioBegin,bioEnd);
+	}
 
-    @Override
+	@Override
 	public Iterator<C> iterator() {
-        return this.parsedCompounds.iterator();
-    }
+		return this.parsedCompounds.iterator();
+	}
 
-    @Override
+	@Override
 	public CompoundSet<C> getCompoundSet() {
-      return compoundSet;
-    }
+	  return compoundSet;
+	}
 
 
-    @Override
+	@Override
 	public AccessionID getAccession() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
 
-    @Override
+	@Override
 	public int countCompounds(C... compounds) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    @Override
-    public SequenceView<C> getInverse() {
-        return SequenceMixin.inverse(this);
-    }
+	@Override
+	public SequenceView<C> getInverse() {
+		return SequenceMixin.inverse(this);
+	}
 }

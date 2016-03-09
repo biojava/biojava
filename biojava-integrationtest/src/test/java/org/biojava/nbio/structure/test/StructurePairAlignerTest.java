@@ -33,64 +33,64 @@ import java.io.InputStream;
 
 public class StructurePairAlignerTest extends TestCase {
 
-    Structure structure1;
-    Structure structure2;
+	Structure structure1;
+	Structure structure2;
 
-    protected void setUp()
-    {
-        InputStream inStream = this.getClass().getResourceAsStream("/5pti.pdb");
-        assertNotNull(inStream);
-        InputStream inStream2 = this.getClass().getResourceAsStream("/1tap.pdb");
-        assertNotNull(inStream2);
+	protected void setUp()
+	{
+		InputStream inStream = this.getClass().getResourceAsStream("/5pti.pdb");
+		assertNotNull(inStream);
+		InputStream inStream2 = this.getClass().getResourceAsStream("/1tap.pdb");
+		assertNotNull(inStream2);
 
-        PDBFileParser pdbpars = new PDBFileParser();
-        try {
-            structure1 = pdbpars.parsePDBFile(inStream) ;
-            structure2 = pdbpars.parsePDBFile(inStream2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		PDBFileParser pdbpars = new PDBFileParser();
+		try {
+			structure1 = pdbpars.parsePDBFile(inStream) ;
+			structure2 = pdbpars.parsePDBFile(inStream2);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        assertNotNull(structure1);
-        assertNotNull(structure2);
-        assertEquals("structure does not contain one chain ", 1 ,structure1.size());
+		assertNotNull(structure1);
+		assertNotNull(structure2);
+		assertEquals("structure does not contain one chain ", 1 ,structure1.size());
 
-    }
-
-
-    public void testAlignStructureStructure() {
-       StructurePairAligner aligner = new StructurePairAligner();
-
-       boolean allFine = true;
-       String msg = "";
-       try {
-           aligner.align(structure1,structure2);
-
-           AlternativeAlignment[] aligs = aligner.getAlignments();
-           assertEquals("the number of obtained alternative alignments is not correct",20, aligs.length);
-           AlternativeAlignment a = aligs[0];
-
-           assertNotNull(a);
-
-           assertEquals("the expected nr of eq. residues is not correct.",47,a.getEqr());
-
-           // they are v. close, but not identical
-           assertTrue(a.getRmsd() < 4);
-           assertTrue(a.getRmsd() > 3);
-           assertTrue(a.getPercId() > 9);
-           assertTrue(a.getScore() > 140);
-
-       } catch (Exception e){
-           msg = e.getMessage();
-           allFine = false;
-           e.printStackTrace();
-       }
-       assertTrue(allFine);
-       assertEquals("an error occured","" ,msg);
+	}
 
 
+	public void testAlignStructureStructure() {
+		StructurePairAligner aligner = new StructurePairAligner();
 
-    }
+		boolean allFine = true;
+		String msg = "";
+		try {
+			aligner.align(structure1,structure2);
+
+			AlternativeAlignment[] aligs = aligner.getAlignments();
+			assertEquals("the number of obtained alternative alignments is not correct",20, aligs.length);
+			AlternativeAlignment a = aligs[0];
+
+			assertNotNull(a);
+
+			assertEquals("the expected nr of eq. residues is not correct.",47,a.getEqr());
+
+			// they are v. close, but not identical
+			assertTrue(a.getRmsd() < 4);
+			assertTrue(a.getRmsd() > 3);
+			assertTrue(a.getPercId() > 9);
+			assertTrue(a.getScore() > 140);
+
+		} catch (Exception e){
+			msg = e.getMessage();
+			allFine = false;
+			e.printStackTrace();
+		}
+		assertTrue(allFine);
+		assertEquals("an error occured","" ,msg);
+
+
+
+	}
 
 
 

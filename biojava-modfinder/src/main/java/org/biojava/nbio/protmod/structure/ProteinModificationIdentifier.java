@@ -49,10 +49,10 @@ public class ProteinModificationIdentifier {
 	private Set<StructureAtomLinkage> unidentifiableAtomLinkages = null;
 	private Set<StructureGroup> unidentifiableModifiedResidues = null;
 
-        /**
-         * Temporary save the amino acids for each call of identify().
-         */
-        private List<Group> residues;
+	/**
+	 * Temporary save the amino acids for each call of identify().
+	 */
+	private List<Group> residues;
 
 
 	public ProteinModificationIdentifier(){
@@ -280,7 +280,7 @@ public class ProteinModificationIdentifier {
 			//List<Group> ligs = chain.getAtomLigands();
 			List<Group> ligs = StructureTools.filterLigands(chain.getAtomGroups());
 			residues.addAll(ress);
-                        residues.removeAll(ligs);
+			residues.removeAll(ligs);
 			ligands.addAll(ligs);
 			addModificationGroups(potentialModifications, ress, ligs, mapCompGroups);
 		}
@@ -747,18 +747,18 @@ public class ProteinModificationIdentifier {
 						continue;
 					}
 
-                                        // only for wildcard match of two residues
-                                        boolean ignoreNCLinkage =
-                                                potentialNamesOfAtomOnGroup1 == null &&
-                                                potentialNamesOfAtomOnGroup2 == null &&
-                                                residues.contains(g1) &&
-                                                residues.contains(g2);
+					// only for wildcard match of two residues
+					boolean ignoreNCLinkage =
+						potentialNamesOfAtomOnGroup1 == null &&
+						potentialNamesOfAtomOnGroup2 == null &&
+						residues.contains(g1) &&
+						residues.contains(g2);
 
 					Atom[] atoms = StructureUtil.findNearestAtomLinkage(
 							g1, g2,
 							potentialNamesOfAtomOnGroup1,
 							potentialNamesOfAtomOnGroup2,
-                                                        ignoreNCLinkage,
+							ignoreNCLinkage,
 							bondLengthTolerance);
 					if (atoms!=null) {
 						list.add(atoms);

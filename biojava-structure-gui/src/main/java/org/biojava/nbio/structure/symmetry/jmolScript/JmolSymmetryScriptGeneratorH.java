@@ -47,8 +47,8 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	private boolean onTheFly = false;
 
 	public JmolSymmetryScriptGeneratorH(HelixAxisAligner helixAxisAligner, String name) {
-        this.helixAxisAligner = helixAxisAligner;
-        this.name = name;
+		this.helixAxisAligner = helixAxisAligner;
+		this.name = name;
 	}
 
 	public void setOnTheFly(boolean onTheFly) {
@@ -137,11 +137,11 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 */
 	public String getOrientationName(int index) {
 		switch (index) {
-		    case 0: return "Side";
-		    case 1: return "Front";
-		    case 2: return "Other side";
-		    case 3: return "Back";
-		    default: return "";
+			case 0: return "Side";
+			case 1: return "Front";
+			case 2: return "Other side";
+			case 3: return "Back";
+			default: return "";
 		}
 	}
 
@@ -149,7 +149,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getTransformation()
 	 */
 	public Matrix4d getTransformation() {
-	    return helixAxisAligner.getTransformation();
+		return helixAxisAligner.getTransformation();
 	}
 
 
@@ -192,7 +192,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 				s.append(getJmolPoint(vertices.get(i)));
 			}
 			s.append("width ");
-		    s.append(fDot2(width));
+			s.append(fDot2(width));
 			s.append(" color");
 			s.append(getJmolColor(c));
 			s.append(" off;");
@@ -208,7 +208,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			s.append(getJmolPoint(vertices.get(i)));
 			s.append(getJmolPoint(interiorVertices.get(i)));
 			s.append("width ");
-		    s.append(fDot2(width));
+			s.append(fDot2(width));
 			s.append(" color");
 			s.append(getJmolColor(c));
 			s.append(" off;");
@@ -385,13 +385,13 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * @return
 	 */
 	public String colorBySubunit() {
-	    Subunits subunits = helixAxisAligner.getSubunits();
-	    List<Integer> modelNumbers = subunits.getModelNumbers();
-	    List<String> chainIds = subunits.getChainIds();
-	    List<List<Integer>> orbits = helixAxisAligner.getOrbits();
+		Subunits subunits = helixAxisAligner.getSubunits();
+		List<Integer> modelNumbers = subunits.getModelNumbers();
+		List<String> chainIds = subunits.getChainIds();
+		List<List<Integer>> orbits = helixAxisAligner.getOrbits();
 
 		Color[] col = ColorBrewer.Spectral.getColorPalette(orbits.size());
-	    Color4f[] colors = ColorConverter.convertColor4f(col);
+		Color4f[] colors = ColorConverter.convertColor4f(col);
 		int half = colors.length/2;
 		for (int i = 0; i < half; i++) {
 			if (i % 2 != 0) {
@@ -400,7 +400,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			   colors[half+i] = temp;
 			}
 		}
-	    Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
 
 		for (int i = 0; i < orbits.size(); i++) {
 				for (Integer j: orbits.get(i)) {
@@ -423,14 +423,14 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * @return Jmol script
 	 */
 	public String colorBySequenceCluster() {
-	    Subunits subunits = helixAxisAligner.getSubunits();
-	    int n = subunits.getSubunitCount();
-	    List<Integer> modelNumbers = subunits.getModelNumbers();
-	    List<String> chainIds = subunits.getChainIds();
-	    List<Integer> seqClusterIds = subunits.getSequenceClusterIds();
-	    int clusters = Collections.max(seqClusterIds) + 1;
-	    Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
-	    Color4f[] colors = ColorConverter.convertColor4f(col);
+		Subunits subunits = helixAxisAligner.getSubunits();
+		int n = subunits.getSubunitCount();
+		List<Integer> modelNumbers = subunits.getModelNumbers();
+		List<String> chainIds = subunits.getChainIds();
+		List<Integer> seqClusterIds = subunits.getSequenceClusterIds();
+		int clusters = Collections.max(seqClusterIds) + 1;
+		Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
+		Color4f[] colors = ColorConverter.convertColor4f(col);
 		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
 
 		for (int i = 0; i < n; i++) {
@@ -508,7 +508,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 				return chainIds.get(subunit);
 			}
 		} else {
-		    return chainIds.get(subunit) + "/" + (modelNumbers.get(subunit)+1);
+			return chainIds.get(subunit) + "/" + (modelNumbers.get(subunit)+1);
 		}
 	}
 
@@ -564,13 +564,13 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		List<Point3d> ePoints = new ArrayList<Point3d>(points.size());
 		for (Point3d p: points) {
 			Point3d q = new Point3d(p);
-            transformation.transform(q);
-            double d = Math.sqrt(q.x*q.x + q.z*q.z);
-            double scale = radius/d;
-            q.x *= scale;
-            q.z *= scale;
-            reversetransformation.transform(q);
-            ePoints.add(q);
+			transformation.transform(q);
+			double d = Math.sqrt(q.x*q.x + q.z*q.z);
+			double scale = radius/d;
+			q.x *= scale;
+			q.z *= scale;
+			reversetransformation.transform(q);
+			ePoints.add(q);
 		}
 		return ePoints;
 	}
@@ -582,11 +582,11 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		List<Point3d> ePoints = new ArrayList<Point3d>(points.size());
 		for (Point3d p: points) {
 			Point3d q = new Point3d(p);
-            transformation.transform(q);
-            q.x = 0;
-            q.z = 0;
-            reversetransformation.transform(q);
-            ePoints.add(q);
+			transformation.transform(q);
+			q.x = 0;
+			q.z = 0;
+			reversetransformation.transform(q);
+			ePoints.add(q);
 		}
 		return ePoints;
 	}
@@ -629,12 +629,12 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		int offset = 0;
 		int dMax = nColors + offset;
 		Color[] col = ColorBrewer.Spectral.getColorPalette(dMax);
-	    Color4f[] colors = ColorConverter.convertColor4f(col);
+		Color4f[] colors = ColorConverter.convertColor4f(col);
 		System.arraycopy(colors, offset, colors, 0, dMax-offset);
 		return colors;
 	}
 
- 	private String setCentroid() {
+	private String setCentroid() {
 		// calculate center of rotation
 	//	Point3d centroid = axisTransformation.getGeometricCenter();
 	//	Point3d centroid = helixAxisAligner.getCentroid();

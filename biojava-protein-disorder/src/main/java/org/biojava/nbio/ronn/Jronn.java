@@ -1,4 +1,4 @@
- /*        BioJava development code
+/*        BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -19,18 +19,18 @@
  */
 package org.biojava.nbio.ronn;
 
- import org.biojava.nbio.core.sequence.ProteinSequence;
- import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
- import org.biojava.nbio.data.sequence.FastaSequence;
- import org.biojava.nbio.data.sequence.SequenceUtil;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.data.sequence.FastaSequence;
+import org.biojava.nbio.data.sequence.SequenceUtil;
 
- import java.io.FileInputStream;
- import java.io.FileNotFoundException;
- import java.io.IOException;
- import java.util.ArrayList;
- import java.util.List;
- import java.util.Map;
- import java.util.TreeMap;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**

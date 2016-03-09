@@ -80,10 +80,10 @@ public class PDBBioAssemblyParser {
 			addToCurrentChainList(line);
 
 		} else if ( line.startsWith("REMARK 350   BIOMT")) {
-	        if (readMatrix(line)) {
-	        	saveMatrix();
-	        	modelNumber++;
-	        }
+		if (readMatrix(line)) {
+			saveMatrix();
+			modelNumber++;
+		}
 		}
 	}
 
@@ -211,7 +211,7 @@ public class PDBBioAssemblyParser {
 	private void addToCurrentChainList(String line) {
 		int index = line.indexOf(":");
 		String chainList = line.substring(index+1).trim();
-        // split by spaces or commas
+	// split by spaces or commas
 		String[] chainIds = chainList.split("[ ,]+");
 		currentChainIDs.addAll(Arrays.asList(chainIds));
 	}

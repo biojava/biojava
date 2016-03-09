@@ -72,35 +72,35 @@ public class AfpChainWriter
 
 
 		writer.append("Sab (nr. equivalent residues): " );
-        writer.append(String.valueOf(afpChain.getNrEQR())).append("");
+		writer.append(String.valueOf(afpChain.getNrEQR())).append("");
 		writer.append(newline);
 
 		writer.append("Dab (distance between folds a,b): ");
 		int dab = afpChain.getCa1Length()+afpChain.getCa2Length() - 2 * afpChain.getNrEQR();
-        writer.append(String.valueOf(dab)).append("");
+		writer.append(String.valueOf(dab)).append("");
 		writer.append(newline);
 
 		writer.append("sab (relative similarity): ");
 		double sab = 2 * afpChain.getNrEQR() / (double)( afpChain.getCa1Length() + afpChain.getCa2Length());
-        writer.append(String.valueOf(sab)).append("");
+		writer.append(String.valueOf(sab)).append("");
 		writer.append(newline);
 
 		writer.append("cab (coverage a): ");
 		double cab = afpChain.getNrEQR() / (double) afpChain.getCa1Length();
-        writer.append(String.valueOf(cab)).append("");
+		writer.append(String.valueOf(cab)).append("");
 		writer.append(newline);
 
 		writer.append("cba (coverage b): ");
 		double cba = afpChain.getNrEQR() / (double) afpChain.getCa2Length();
-        writer.append(String.valueOf(cba)).append("");
+		writer.append(String.valueOf(cba)).append("");
 		writer.append(newline);
 
 		writer.append("seq similarity: ");
-        writer.append(String.valueOf(afpChain.getSimilarity())).append("");
+		writer.append(String.valueOf(afpChain.getSimilarity())).append("");
 		writer.append(newline);
 
 		writer.append("TM-score: ");
-        writer.append(String.valueOf(afpChain.getTMScore())).append("");
+		writer.append(String.valueOf(afpChain.getTMScore())).append("");
 		writer.append(newline);
 
 		return writer.toString();
@@ -1212,12 +1212,12 @@ public class AfpChainWriter
 			//System.err.println("B:" + b);
 
 			/*
-            txt.append(newline);
-            txt.append(String.format("%14s", " "));
+			txt.append(newline);
+			txt.append(String.format("%14s", " "));
 
-            for(k = 10; k <= len; k += 10)
-                txt.append("    .    :");
-            if(k <= len + 5) txt.append("    .");
+			for(k = 10; k <= len; k += 10)
+				txt.append("    .    :");
+			if(k <= len + 5) txt.append("    .");
 			 */
 
 			//String pdb1 = ca1[ap].getParent().getPDBCode();

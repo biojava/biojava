@@ -38,16 +38,16 @@ import java.util.List;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class RNASequenceCreator implements
-    SequenceCreatorInterface<NucleotideCompound> {
+		SequenceCreatorInterface<NucleotideCompound> {
 
-  private final CompoundSet<NucleotideCompound> compoundSet;
+	private final CompoundSet<NucleotideCompound> compoundSet;
 /**
  *
  * @param compoundSet
  */
-  public RNASequenceCreator(CompoundSet<NucleotideCompound> compoundSet) {
-    this.compoundSet = compoundSet;
-  }
+	public RNASequenceCreator(CompoundSet<NucleotideCompound> compoundSet) {
+		this.compoundSet = compoundSet;
+	}
 /**
  *
  * @param sequence
@@ -55,32 +55,32 @@ public class RNASequenceCreator implements
  * @return
  * @throws CompoundNotFoundException
  */
-  @Override
+	@Override
 public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index) throws CompoundNotFoundException {
-    return new RNASequence(sequence, compoundSet);
-  }
+		return new RNASequence(sequence, compoundSet);
+	}
 /**
  *
  * @param proxyLoader
  * @param index
  * @return
  */
-  @Override
+	@Override
 public AbstractSequence<NucleotideCompound> getSequence(
-      ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
-    return new RNASequence(proxyLoader, compoundSet);
-  }
+			ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
+		return new RNASequence(proxyLoader, compoundSet);
+	}
 /**
  *
  * @param list
  * @return
  */
-  @Override
+	@Override
 public AbstractSequence<NucleotideCompound> getSequence(List<NucleotideCompound> list) {
-    ArrayListProxySequenceReader<NucleotideCompound> store =
-      new ArrayListProxySequenceReader<NucleotideCompound>();
-    store.setCompoundSet(compoundSet);
-    store.setContents(list);
-    return new RNASequence(store);
-  }
+		ArrayListProxySequenceReader<NucleotideCompound> store =
+			new ArrayListProxySequenceReader<NucleotideCompound>();
+		store.setCompoundSet(compoundSet);
+		store.setContents(list);
+		return new RNASequence(store);
+	}
 }

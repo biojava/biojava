@@ -40,25 +40,25 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 public class TestDNAAlignment extends TestCase
 {
 
-   public void test1() throws IOException {
-      String name1="1l3s.A";
-      String name2="1t7p.P";
+	public void test1() throws IOException {
+		String name1="1l3s.A";
+		String name2="1t7p.P";
 
-      AtomCache cache = new AtomCache();
-      try {
-         Atom[] ca1 = cache.getAtoms(name1);
-         Atom[] ca2 = cache.getAtoms(name2);
-         CeMain ce = new CeMain();
-         AFPChain afpChain = ce.align(ca1,ca2);
-         assertNotNull(afpChain);
+		AtomCache cache = new AtomCache();
+		try {
+			Atom[] ca1 = cache.getAtoms(name1);
+			Atom[] ca2 = cache.getAtoms(name2);
+			CeMain ce = new CeMain();
+			AFPChain afpChain = ce.align(ca1,ca2);
+			assertNotNull(afpChain);
 
-        String txt = afpChain.toFatcat(ca1, ca2);
+		  String txt = afpChain.toFatcat(ca1, ca2);
 
-        assertNotNull(txt);
+		  assertNotNull(txt);
 
-      } catch (StructureException e){
-         e.printStackTrace();
-         fail(e.getMessage());
-      }
-   }
+		} catch (StructureException e){
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }

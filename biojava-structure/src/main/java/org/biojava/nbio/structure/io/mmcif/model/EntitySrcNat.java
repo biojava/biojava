@@ -24,8 +24,8 @@
 package org.biojava.nbio.structure.io.mmcif.model;
 
 /** Data items in the ENTITY_SRC_NAT category record details of
-               the source from which the entity was obtained in cases
-               where the entity was isolated directly from a natural tissue.
+			   the source from which the entity was obtained in cases
+			   where the entity was isolated directly from a natural tissue.
  */
 public class EntitySrcNat {
 	String  common_name	;
@@ -45,12 +45,12 @@ public class EntitySrcNat {
 	String  pdbx_plasmid_name	 ;
 	String  pdbx_secretion	 ;
 	String  pdbx_variant	 ;
-    String  pdbx_src_id;
-    String  pdbx_alt_source_flag;
-    String  pdbx_beg_seq_num;
-    String  pdbx_end_seq_num;
-    String  pdbx_leaving_atom_flag;
-    String  species	 ;
+	String  pdbx_src_id;
+	String  pdbx_alt_source_flag;
+	String  pdbx_beg_seq_num;
+	String  pdbx_end_seq_num;
+	String  pdbx_leaving_atom_flag;
+	String  species	 ;
 	String  strain	 ;
 	String  tissue	 ;
 	String  tissue_fraction;
@@ -182,43 +182,43 @@ public class EntitySrcNat {
 		this.tissue_fraction = tissue_fraction;
 	}
 
-    public String getPdbx_src_id() {
-        return pdbx_src_id;
-    }
+	public String getPdbx_src_id() {
+		return pdbx_src_id;
+	}
 
-    public void setPdbx_src_id(String pdbx_src_id) {
-        this.pdbx_src_id = pdbx_src_id;
-    }
+	public void setPdbx_src_id(String pdbx_src_id) {
+		this.pdbx_src_id = pdbx_src_id;
+	}
 
-    public String getPdbx_alt_source_flag() {
-        return pdbx_alt_source_flag;
-    }
+	public String getPdbx_alt_source_flag() {
+		return pdbx_alt_source_flag;
+	}
 
-    public void setPdbx_alt_source_flag(String pdbx_alt_source_flag) {
-        this.pdbx_alt_source_flag = pdbx_alt_source_flag;
-    }
+	public void setPdbx_alt_source_flag(String pdbx_alt_source_flag) {
+		this.pdbx_alt_source_flag = pdbx_alt_source_flag;
+	}
 
-    public String getPdbx_beg_seq_num() {
-        return pdbx_beg_seq_num;
-    }
+	public String getPdbx_beg_seq_num() {
+		return pdbx_beg_seq_num;
+	}
 
-    public void setPdbx_beg_seq_num(String pdbx_beg_seq_num) {
-        this.pdbx_beg_seq_num = pdbx_beg_seq_num;
-    }
+	public void setPdbx_beg_seq_num(String pdbx_beg_seq_num) {
+		this.pdbx_beg_seq_num = pdbx_beg_seq_num;
+	}
 
-    public String getPdbx_end_seq_num() {
-        return pdbx_end_seq_num;
-    }
+	public String getPdbx_end_seq_num() {
+		return pdbx_end_seq_num;
+	}
 
-    public void setPdbx_end_seq_num(String pdbx_end_seq_num) {
-        this.pdbx_end_seq_num = pdbx_end_seq_num;
-    }
+	public void setPdbx_end_seq_num(String pdbx_end_seq_num) {
+		this.pdbx_end_seq_num = pdbx_end_seq_num;
+	}
 
-    public String getPdbx_leaving_atom_flag() {
-        return pdbx_leaving_atom_flag;
-    }
+	public String getPdbx_leaving_atom_flag() {
+		return pdbx_leaving_atom_flag;
+	}
 
-    public void setPdbx_leaving_atom_flag(String pdbx_leaving_atom_flag) {
-        this.pdbx_leaving_atom_flag = pdbx_leaving_atom_flag;
-    }
+	public void setPdbx_leaving_atom_flag(String pdbx_leaving_atom_flag) {
+		this.pdbx_leaving_atom_flag = pdbx_leaving_atom_flag;
+	}
 }

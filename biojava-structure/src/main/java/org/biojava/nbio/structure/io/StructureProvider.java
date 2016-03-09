@@ -57,10 +57,10 @@ public interface StructureProvider {
 
 
 	/** Get the parameters that should be used for file parsing
-     *
-     * @return the FileParsingParameters that are configuring the behavior of the parser
-     */
-    public FileParsingParameters getFileParsingParameters();
+	 *
+	 * @return the FileParsingParameters that are configuring the behavior of the parser
+	 */
+	public FileParsingParameters getFileParsingParameters();
 
 
 }

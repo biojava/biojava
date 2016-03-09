@@ -75,30 +75,30 @@ public class OboParser {
 	 */
 	public Ontology parseOBO(
 			BufferedReader oboFile,
-            String ontoName,
-            String ontoDescription
-            )
-	throws ParseException, IOException {
+			String ontoName,
+			String ontoDescription
+			)
+					throws ParseException, IOException {
 
-		 try {
-			 OntologyFactory factory = OntoTools.getDefaultFactory();
-			 Ontology ontology = factory.createOntology(ontoName, ontoDescription);
+		try {
+			OntologyFactory factory = OntoTools.getDefaultFactory();
+			Ontology ontology = factory.createOntology(ontoName, ontoDescription);
 
-	         OboFileParser parser = new OboFileParser();
+			OboFileParser parser = new OboFileParser();
 
-	         OboFileEventListener handler = new OboFileHandler(ontology);
+			OboFileEventListener handler = new OboFileHandler(ontology);
 
-	         parser.addOboFileEventListener(handler);
-	         parser.parseOBO(oboFile);
+			parser.addOboFileEventListener(handler);
+			parser.parseOBO(oboFile);
 
-	         return ontology;
+			return ontology;
 
 
-		 } catch (AlreadyExistsException ex) {
-	            throw new RuntimeException( "Duplication in ontology");
-	        } catch (OntologyException ex) {
-	            throw new RuntimeException(ex);
-	        }
+		} catch (AlreadyExistsException ex) {
+			throw new RuntimeException( "Duplication in ontology");
+		} catch (OntologyException ex) {
+			throw new RuntimeException(ex);
+		}
 
 	}
 }

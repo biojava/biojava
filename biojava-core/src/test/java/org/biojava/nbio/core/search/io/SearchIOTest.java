@@ -41,73 +41,73 @@ import static org.junit.Assert.*;
 
 public class SearchIOTest {
 
-    public SearchIOTest() {
-    }
+	public SearchIOTest() {
+	}
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
+	@BeforeClass
+	public static void setUpClass() {
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-    }
+	@AfterClass
+	public static void tearDownClass() {
+	}
 
-    @Before
-    public void setUp() {
-    }
+	@Before
+	public void setUp() {
+	}
 
-    @After
-    public void tearDown() {
-    }
-    /**
-     * Constructor test with GuessFactory
-     */
-    @Test
-    public void testConstructorWithFactoryGuess() {
-        String resource = "/org/biojava/nbio/core/search/io/blast/test.two-query.blasttxt";
-        URL resourceURL = getClass().getResource(resource);
-        File file = new File(resourceURL.getFile());
+	@After
+	public void tearDown() {
+	}
+	/**
+	 * Constructor test with GuessFactory
+	 */
+	@Test
+	public void testConstructorWithFactoryGuess() {
+		String resource = "/org/biojava/nbio/core/search/io/blast/test.two-query.blasttxt";
+		URL resourceURL = getClass().getResource(resource);
+		File file = new File(resourceURL.getFile());
 
-        final SearchIO instance;
-        try {
-            instance = new SearchIO(file);
-        } catch (Exception e) {
-            fail("test failed:\n"+e.getMessage());
-        }
-    }
-    /**
-     * Constructor test specifying Factory
-     */
-    @Test
-    public void testConstructorWithoutFactoryGuess() {
-        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
-        URL resourceURL = getClass().getResource(resource);
-        File file = new File(resourceURL.getFile());
+		final SearchIO instance;
+		try {
+			instance = new SearchIO(file);
+		} catch (Exception e) {
+			fail("test failed:\n"+e.getMessage());
+		}
+	}
+	/**
+	 * Constructor test specifying Factory
+	 */
+	@Test
+	public void testConstructorWithoutFactoryGuess() {
+		String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
+		URL resourceURL = getClass().getResource(resource);
+		File file = new File(resourceURL.getFile());
 
-        ResultFactory blastResultFactory = new BlastXMLParser();
-        final SearchIO instance;
-        try {
-            instance = new SearchIO(file, blastResultFactory);
-        } catch (Exception e) {
-            fail("test failed:\n"+e.getMessage());
-        }
-    }
-    /**
-     * Constructor test specifying Factory and using a evalue threshold filter
-     */
-    @Test
-    public void testConstructorWithEvalueHspFilter() {
-        //
-        String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
-        URL resourceURL = getClass().getResource(resource);
-        File file = new File(resourceURL.getFile());
+		ResultFactory blastResultFactory = new BlastXMLParser();
+		final SearchIO instance;
+		try {
+			instance = new SearchIO(file, blastResultFactory);
+		} catch (Exception e) {
+			fail("test failed:\n"+e.getMessage());
+		}
+	}
+	/**
+	 * Constructor test specifying Factory and using a evalue threshold filter
+	 */
+	@Test
+	public void testConstructorWithEvalueHspFilter() {
+		//
+		String resource = "/org/biojava/nbio/core/search/io/blast/testBlastReport.blastxml";
+		URL resourceURL = getClass().getResource(resource);
+		File file = new File(resourceURL.getFile());
 
-        ResultFactory blastResultFactory = new BlastXMLParser();
-        final SearchIO instance;
-        try {
-            instance = new SearchIO(file, blastResultFactory, 10e-10);
-        } catch (Exception e) {
-            fail("test failed:\n"+e.getMessage());
-        }
-    }
+		ResultFactory blastResultFactory = new BlastXMLParser();
+		final SearchIO instance;
+		try {
+			instance = new SearchIO(file, blastResultFactory, 10e-10);
+		} catch (Exception e) {
+			fail("test failed:\n"+e.getMessage());
+		}
+	}
 }

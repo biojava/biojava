@@ -38,91 +38,91 @@ import java.util.Map;
  */
 public interface SubstitutionMatrix<C extends Compound> {
 
-    /**
-     * Returns the {@link CompoundSet} on which the matrix is defined.
-     *
-     * @return the {@link CompoundSet} on which the matrix is defined
-     */
-    CompoundSet<C> getCompoundSet();
+	/**
+	 * Returns the {@link CompoundSet} on which the matrix is defined.
+	 *
+	 * @return the {@link CompoundSet} on which the matrix is defined
+	 */
+	CompoundSet<C> getCompoundSet();
 
-    /**
-     * Returns the description of this matrix.
-     *
-     * @return description
-     */
-    String getDescription();
+	/**
+	 * Returns the description of this matrix.
+	 *
+	 * @return description
+	 */
+	String getDescription();
 
-    /**
-     * Returns entire matrix.
-     *
-     * @return matrix
-     */
-    short[][] getMatrix();
+	/**
+	 * Returns entire matrix.
+	 *
+	 * @return matrix
+	 */
+	short[][] getMatrix();
 
-    /**
-     * Returns this matrix as a formatted String with {@link Compound} labels along the axes.
-     *
-     * @return this matrix as a formatted String
-     */
-    String getMatrixAsString();
+	/**
+	 * Returns this matrix as a formatted String with {@link Compound} labels along the axes.
+	 *
+	 * @return this matrix as a formatted String
+	 */
+	String getMatrixAsString();
 
-    /**
-     * Returns the maximum value in this matrix.
-     *
-     * @return the maximum value in this matrix
-     */
-    short getMaxValue();
+	/**
+	 * Returns the maximum value in this matrix.
+	 *
+	 * @return the maximum value in this matrix
+	 */
+	short getMaxValue();
 
-    /**
-     * Returns the minimum value in this matrix.
-     *
-     * @return the minimum value in this matrix
-     */
-    short getMinValue();
+	/**
+	 * Returns the minimum value in this matrix.
+	 *
+	 * @return the minimum value in this matrix
+	 */
+	short getMinValue();
 
-    /**
-     * Returns the name (short description) of this matrix.
-     *
-     * @return name
-     */
-    String getName();
+	/**
+	 * Returns the name (short description) of this matrix.
+	 *
+	 * @return name
+	 */
+	String getName();
 
-    /**
-     * Returns value in matrix for conversion from first {@link Compound} to the second.  If an argument does not
-     * belong to the {@link CompoundSet}, this could either throw an {@link IllegalArgumentException} or it could
-     * return {@link #getMinValue()}.
-     *
-     * @param from original {@link Compound}
-     * @param to replacement {@link Compound}
-     * @return value in matrix for conversion from first {@link Compound} to the second
-     * @throws IllegalArgumentException possibly, if an argument does not belong to the {@link CompoundSet}
-     */
-    short getValue(C from, C to);
+	/**
+	 * Returns value in matrix for conversion from first {@link Compound} to the second.  If an argument does not
+	 * belong to the {@link CompoundSet}, this could either throw an {@link IllegalArgumentException} or it could
+	 * return {@link #getMinValue()}.
+	 *
+	 * @param from original {@link Compound}
+	 * @param to replacement {@link Compound}
+	 * @return value in matrix for conversion from first {@link Compound} to the second
+	 * @throws IllegalArgumentException possibly, if an argument does not belong to the {@link CompoundSet}
+	 */
+	short getValue(C from, C to);
 
-    /**
-     * Rescales the matrix so that to {@link #getMaxValue()} - {@link #getMinValue()} = scale.
-     *
-     * @param scale new normalization scale of this matrix
-     * @throws IllegalArgumentException if scale < 1
-     */
-    SubstitutionMatrix<C> normalizeMatrix(short scale);
+	/**
+	 * Rescales the matrix so that to {@link #getMaxValue()} - {@link #getMinValue()} = scale.
+	 *
+	 * @param scale new normalization scale of this matrix
+	 * @throws IllegalArgumentException if scale < 1
+	 */
+	SubstitutionMatrix<C> normalizeMatrix(short scale);
 
-    /**
-     * Sets the description of this matrix.
-     *
-     * @param description new description
-     */
-    void setDescription(String description);
+	/**
+	 * Sets the description of this matrix.
+	 *
+	 * @param description new description
+	 */
+	void setDescription(String description);
 
-    /**
-     * Sets the name (short description) of this matrix.
-     *
-     * @param name new name
-     */
-    void setName(String name);
+	/**
+	 * Sets the name (short description) of this matrix.
+	 *
+	 * @param name new name
+	 */
+	void setName(String name);
 
-    Map<C, Short> getRow(C row);
+	Map<C, Short> getRow(C row);
 
-    Map<C, Short> getColumn(C column);
+	Map<C, Short> getColumn(C column);
 
 }

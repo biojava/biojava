@@ -144,23 +144,27 @@ public class Octahedron implements Polyhedron {
 		break;
 		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
-        return name;
+		return name;
 	}
 
 	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {
-		case 0:  m.setIdentity(); // C4 vertex-centered
-		break;
-		case 1:  m.rotX(-0.5 * TETRAHEDRAL_ANGLE); // C3 face-centered  2.0*Math.PI/3
-                 Matrix3d m1 = new Matrix3d();
-                 m1.rotZ(Math.PI/4);
-                 m.mul(m1);
-		break;
-		case 2:  m.rotY(Math.PI/4); // side face-centered
-		break;
-		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
+		case 0:
+			m.setIdentity(); // C4 vertex-centered
+			break;
+		case 1:
+			m.rotX(-0.5 * TETRAHEDRAL_ANGLE); // C3 face-centered  2.0*Math.PI/3
+			Matrix3d m1 = new Matrix3d();
+			m1.rotZ(Math.PI/4);
+			m.mul(m1);
+			break;
+		case 2:
+			m.rotY(Math.PI/4); // side face-centered
+			break;
+		default:
+			throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
 		return m;
 	}

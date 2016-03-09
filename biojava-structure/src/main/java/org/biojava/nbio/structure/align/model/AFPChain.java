@@ -347,7 +347,7 @@ public class AFPChain implements Serializable, Cloneable {
 	/** Get the coverage of protein 2 with the alignment
 	 *
 	 * @return percentage of coverage, between 0 and 100.
-	*/
+	 */
 	public int getCoverage2(){
 		if ( myResultsSimilarity2 < 0 ) {
 
@@ -411,7 +411,7 @@ public class AFPChain implements Serializable, Cloneable {
 		str.append(String.format("%.2f",this.getTotalRmsdOpt()));
 
 		str.append("\tSeqID:");
-        str.append(String.format("%.0f",getIdentity()*100));
+		str.append(String.format("%.0f",getIdentity()*100));
 		str.append("%\tSeqSim:");
 		str.append(String.format("%.0f",getSimilarity()*100));
 		str.append("%\tCov1:");
@@ -620,13 +620,13 @@ public class AFPChain implements Serializable, Cloneable {
 	}
 
 
-    /**
-     * Set the set of AFPs for this alignment.
-     * An AFP is a local ungapped alignment between the two peptides.
-     *
-     * AFPs are set before the final optimization step. To get the final
-     * alignment, look at the aligned pairs from {@link #getOptAln()}.
-     */
+	/**
+	 * Set the set of AFPs for this alignment.
+	 * An AFP is a local ungapped alignment between the two peptides.
+	 *
+	 * AFPs are set before the final optimization step. To get the final
+	 * alignment, look at the aligned pairs from {@link #getOptAln()}.
+	 */
 	public void setAfpSet(List<AFP> afpSet)
 	{
 		this.afpSet = afpSet;
@@ -1227,10 +1227,10 @@ public class AFPChain implements Serializable, Cloneable {
 		this.probability = probability;
 	}
 
-/** The percent of residues that are sequence-identical in the alignment.
- *
- * @return a value between 0 and 1
- */
+	/** The percent of residues that are sequence-identical in the alignment.
+	 *
+	 * @return a value between 0 and 1
+	 */
 	public double getIdentity() {
 		if ( identity <= 0) {
 			calcSimilarity();
@@ -1364,7 +1364,7 @@ public class AFPChain implements Serializable, Cloneable {
 
 
 	public void setTMScore(double tmScore){
-	   this.tmScore = tmScore;
+		this.tmScore = tmScore;
 	}
 
 	/** Returns the tmScore of the alignment. If the score has not been calcualted yet,
@@ -1372,18 +1372,18 @@ public class AFPChain implements Serializable, Cloneable {
 	 *
 	 * @return -1, if not calculated, or the TM-score, a score between 0 and 1
 	 */
-   public double getTMScore()
-   {
+	public double getTMScore()
+	{
 
-      return tmScore;
-   }
+		return tmScore;
+	}
 
 
 
-   /** Get a textual description for the protein 2 of the alignment.
-    *
-    * @return
-    */
+	/** Get a textual description for the protein 2 of the alignment.
+	 *
+	 * @return
+	 */
 	public String getDescription2() {
 		return description2;
 	}

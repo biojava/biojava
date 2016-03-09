@@ -41,7 +41,7 @@ public class ChainClusterer  {
 	}
 
 	public List<Point3d[]> getCalphaCoordinates() {
-        run();
+		run();
 		return caCoords;
 	}
 
@@ -55,10 +55,10 @@ public class ChainClusterer  {
 		List<String> chainIdList = new ArrayList<String>();
 
 		for (int i = 0; i < seqClusters.size(); i++) {
-	        SequenceAlignmentCluster cluster = seqClusters.get(i);
-	        for (String chainId: cluster.getChainIds()) {
-	        	chainIdList.add(chainId);
-	        }
+			SequenceAlignmentCluster cluster = seqClusters.get(i);
+			for (String chainId: cluster.getChainIds()) {
+				chainIdList.add(chainId);
+			}
 		}
 		return chainIdList;
 	}
@@ -69,10 +69,10 @@ public class ChainClusterer  {
 		List<Integer> modNumbers = new ArrayList<Integer>();
 
 		for (int i = 0; i < seqClusters.size(); i++) {
-	        SequenceAlignmentCluster cluster = seqClusters.get(i);
-	        for (Integer number: cluster.getModelNumbers()) {
-	        	modNumbers.add(number);
-	        }
+			SequenceAlignmentCluster cluster = seqClusters.get(i);
+			for (Integer number: cluster.getModelNumbers()) {
+				modNumbers.add(number);
+			}
 		}
 		return modNumbers;
 	}

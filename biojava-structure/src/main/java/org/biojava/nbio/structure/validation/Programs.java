@@ -54,41 +54,41 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "program"
+	"program"
 })
 @XmlRootElement(name = "programs")
 public class Programs {
 
-    @XmlElement(required = true)
-    protected List<Program> program;
+	@XmlElement(required = true)
+	protected List<Program> program;
 
-    /**
-     * Gets the value of the program property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the program property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getProgram().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Program }
-     *
-     *
-     */
-    public List<Program> getProgram() {
-        if (program == null) {
-            program = new ArrayList<Program>();
-        }
-        return this.program;
-    }
+	/**
+	 * Gets the value of the program property.
+	 *
+	 * <p>
+	 * This accessor method returns a reference to the live list,
+	 * not a snapshot. Therefore any modification you make to the
+	 * returned list will be present inside the JAXB object.
+	 * This is why there is not a <CODE>set</CODE> method for the program property.
+	 *
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * <pre>
+	 *    getProgram().add(newItem);
+	 * </pre>
+	 *
+	 *
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list
+	 * {@link Program }
+	 *
+	 *
+	 */
+	public List<Program> getProgram() {
+		if (program == null) {
+			program = new ArrayList<Program>();
+		}
+		return this.program;
+	}
 
 }

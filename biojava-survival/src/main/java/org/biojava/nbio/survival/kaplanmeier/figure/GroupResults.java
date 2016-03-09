@@ -29,20 +29,20 @@ import java.util.ArrayList;
 public class GroupResults {
 
 
-    /**
-     *
-     */
-    public ArrayList<CensorStatus> group1;
-    /**
-     *
-     */
-    public ArrayList<CensorStatus> group2;
-    /**
-     *
-     */
-    public boolean group1WorseOutcome = false;
-    /**
-     *
-     */
-    public String signatureName ="";
+	/**
+	 *
+	 */
+	public ArrayList<CensorStatus> group1;
+	/**
+	 *
+	 */
+	public ArrayList<CensorStatus> group2;
+	/**
+	 *
+	 */
+	public boolean group1WorseOutcome = false;
+	/**
+	 *
+	 */
+	public String signatureName ="";
 }

@@ -35,18 +35,18 @@ extends Exception {
 	private static final long serialVersionUID = 1L;
 
 public OntologyException() {
-    super();
-  }
+		super();
+	}
 
-  public OntologyException(String message) {
-    super(message);
-  }
+	public OntologyException(String message) {
+		super(message);
+	}
 
-  public OntologyException(Throwable cause) {
-    super(cause);
-  }
+	public OntologyException(Throwable cause) {
+		super(cause);
+	}
 
-  public OntologyException(String message, Throwable cause) {
-    super(message, cause);
-  }
+	public OntologyException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

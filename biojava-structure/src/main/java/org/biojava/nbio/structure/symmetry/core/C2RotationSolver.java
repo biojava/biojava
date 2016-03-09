@@ -36,32 +36,32 @@ import java.util.List;
  * @author Peter
  */
 public class C2RotationSolver implements QuatSymmetrySolver {
-    private Subunits subunits = null;
-    private QuatSymmetryParameters parameters = null;
-    private Vector3d centroid = new Vector3d();
-    private Matrix4d centroidInverse = new Matrix4d();
+	private Subunits subunits = null;
+	private QuatSymmetryParameters parameters = null;
+	private Vector3d centroid = new Vector3d();
+	private Matrix4d centroidInverse = new Matrix4d();
 
-    private RotationGroup rotations = new RotationGroup();
+	private RotationGroup rotations = new RotationGroup();
 
 
-    public C2RotationSolver(Subunits subunits, QuatSymmetryParameters parameters) {
-        if (subunits.getSubunitCount() != 2) {
-    		throw new IllegalArgumentException("C2RotationSolver can only be applied to cases with 2 centers");
-    	}
-        this.subunits = subunits;
-        this.parameters = parameters;
-    }
+	public C2RotationSolver(Subunits subunits, QuatSymmetryParameters parameters) {
+		if (subunits.getSubunitCount() != 2) {
+			throw new IllegalArgumentException("C2RotationSolver can only be applied to cases with 2 centers");
+		}
+		this.subunits = subunits;
+		this.parameters = parameters;
+	}
 
-    @Override
+	@Override
 	public RotationGroup getSymmetryOperations() {
-        if (rotations.getOrder() == 0) {
-            solve();
-        }
-        return rotations;
-    }
+		if (rotations.getOrder() == 0) {
+			solve();
+		}
+		return rotations;
+	}
 
-    private void solve() {
-    	initialize();
+	private void solve() {
+		initialize();
 		Vector3d trans = new Vector3d(subunits.getCentroid());
 		trans.negate();
 		List<Point3d[]> traces = subunits.getTraces();
@@ -94,7 +94,7 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 
 		// add C2 operation
 		int fold = 2;
-	    combineWithTranslation(transformation);
+		combineWithTranslation(transformation);
 		List<Integer> permutation = Arrays.asList(1,0);
 		QuatSymmetryScores scores = QuatSuperpositionScorer.calcScores(subunits, transformation, permutation);
 		scores.setRmsdCenters(0.0); // rmsd for superposition of two subunits centers is zero by definition
@@ -106,50 +106,50 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 
 		Rotation symmetryOperation = createSymmetryOperation(permutation, transformation, axisAngle, fold, scores);
 		rotations.addRotation(symmetryOperation);
-    }
+	}
 
-    private void addEOperation() {
-    	List<Integer> permutation = Arrays.asList(new Integer[]{0,1});
-    	Matrix4d transformation = new Matrix4d();
-    	transformation.setIdentity();
+	private void addEOperation() {
+		List<Integer> permutation = Arrays.asList(new Integer[]{0,1});
+		Matrix4d transformation = new Matrix4d();
+		transformation.setIdentity();
 		combineWithTranslation(transformation);
-    	AxisAngle4d axisAngle = new AxisAngle4d();
-    	QuatSymmetryScores scores = new QuatSymmetryScores();
-    	int fold = 1; // ??
-        Rotation rotation = createSymmetryOperation(permutation, transformation, axisAngle, fold, scores);
-        rotations.addRotation(rotation);
-    }
+		AxisAngle4d axisAngle = new AxisAngle4d();
+		QuatSymmetryScores scores = new QuatSymmetryScores();
+		int fold = 1; // ??
+		Rotation rotation = createSymmetryOperation(permutation, transformation, axisAngle, fold, scores);
+		rotations.addRotation(rotation);
+	}
 
-    /**
-     * Adds translational component to rotation matrix
-     * @param rotTrans
-     * @param rotation
-     * @return
-     */
-    private void combineWithTranslation(Matrix4d rotation) {
-        rotation.setTranslation(centroid);
-        rotation.mul(rotation, centroidInverse);
-    }
+	/**
+	 * Adds translational component to rotation matrix
+	 * @param rotTrans
+	 * @param rotation
+	 * @return
+	 */
+	private void combineWithTranslation(Matrix4d rotation) {
+		rotation.setTranslation(centroid);
+		rotation.mul(rotation, centroidInverse);
+	}
 
-    private Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
-        Rotation s = new Rotation();
-        s.setPermutation(new ArrayList<Integer>(permutation));
-        s.setTransformation(new Matrix4d(transformation));
-        s.setAxisAngle(new AxisAngle4d(axisAngle));
-        s.setFold(fold);
-        s.setScores(scores);
-        return s;
-    }
+	private Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
+		Rotation s = new Rotation();
+		s.setPermutation(new ArrayList<Integer>(permutation));
+		s.setTransformation(new Matrix4d(transformation));
+		s.setAxisAngle(new AxisAngle4d(axisAngle));
+		s.setFold(fold);
+		s.setScores(scores);
+		return s;
+	}
 
-    private void initialize() {
-        // translation to centered coordinate system
-        centroid = new Vector3d(subunits.getCentroid());
-       // translation back to original coordinate system
-        Vector3d reverse = new Vector3d(centroid);
-        reverse.negate();
-        centroidInverse.set(reverse);
+	private void initialize() {
+		// translation to centered coordinate system
+		centroid = new Vector3d(subunits.getCentroid());
+	   // translation back to original coordinate system
+		Vector3d reverse = new Vector3d(centroid);
+		reverse.negate();
+		centroidInverse.set(reverse);
 //        // On LINUX there seems to be a bug with vecmath, and element m33 is zero. Here we make sure it's 1.
-        centroidInverse.setElement(3, 3, 1.0);
-    }
+		centroidInverse.setElement(3, 3, 1.0);
+	}
 
 }

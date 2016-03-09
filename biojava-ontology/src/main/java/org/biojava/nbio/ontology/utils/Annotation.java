@@ -61,102 +61,102 @@ import java.util.Set;
 public interface Annotation  {
 
 
-  /**
-   * <p>
-   * Retrieve the value of a property by key.
-   * </p>
-   *
-   * <p>
-   * Unlike the Map collections, it will complain if the key does not exist. It
-   * will only return null if the key is defined and has value null.
-   * </p> Normal raw access to the property. For cleverer access, use
-   * methods in AnnotationType.
-   *
-   * @param key  the key of the property to retrieve
-   * @return  the object associated with that key
-   * @throws NoSuchElementException if there is no property with the key
-   *
-   *
-   */
-  Object getProperty(Object key) throws NoSuchElementException;
+	/**
+	 * <p>
+	 * Retrieve the value of a property by key.
+	 * </p>
+	 *
+	 * <p>
+	 * Unlike the Map collections, it will complain if the key does not exist. It
+	 * will only return null if the key is defined and has value null.
+	 * </p> Normal raw access to the property. For cleverer access, use
+	 * methods in AnnotationType.
+	 *
+	 * @param key  the key of the property to retrieve
+	 * @return  the object associated with that key
+	 * @throws NoSuchElementException if there is no property with the key
+	 *
+	 *
+	 */
+	Object getProperty(Object key) throws NoSuchElementException;
 
-  /**
-   * <p>
-   * Set the value of a property.
-   * </p>
-   *
-   * <p>
-   * This method throws an exception if either properties can not be
-   * added to this object, or that this particular property is immutable or
-   * illegal within the implementation.
-   * </p> Normal raw access to the property. For cleverer access, use
-   * methods in AnnotationType.
-   *
-   * @param key the key object
-   * @param value the new value for this key
-   * @throws IllegalArgumentException if the property <code>key</code> is not
-   *         legal
-   * @throws ChangeVetoException if this annotation object can't be changed, or
-   *         if the change was vetoed.
-   */
-  void setProperty(Object key, Object value)
-      throws IllegalArgumentException;
+	/**
+	 * <p>
+	 * Set the value of a property.
+	 * </p>
+	 *
+	 * <p>
+	 * This method throws an exception if either properties can not be
+	 * added to this object, or that this particular property is immutable or
+	 * illegal within the implementation.
+	 * </p> Normal raw access to the property. For cleverer access, use
+	 * methods in AnnotationType.
+	 *
+	 * @param key the key object
+	 * @param value the new value for this key
+	 * @throws IllegalArgumentException if the property <code>key</code> is not
+	 *         legal
+	 * @throws ChangeVetoException if this annotation object can't be changed, or
+	 *         if the change was vetoed.
+	 */
+	void setProperty(Object key, Object value)
+			throws IllegalArgumentException;
 
-  /**
-   * Delete a property. Normal raw access to the property. For cleverer access, use
-   * methods in AnnotationType.
-   *
-   * @param key the key object
-   * @throws NoSuchElementException if the property doesn't exist
-   * @throws ChangeVetoException if the change is vetoed
-   * @since 1.3
-   *
-   */
+	/**
+	 * Delete a property. Normal raw access to the property. For cleverer access, use
+	 * methods in AnnotationType.
+	 *
+	 * @param key the key object
+	 * @throws NoSuchElementException if the property doesn't exist
+	 * @throws ChangeVetoException if the change is vetoed
+	 * @since 1.3
+	 *
+	 */
 
-  public void removeProperty(Object key)
-      throws NoSuchElementException;
+	public void removeProperty(Object key)
+			throws NoSuchElementException;
 
-  /**
-   * Returns whether there the property is defined. Normal raw access to the property. For cleverer access, use
-   * methods in AnnotationType.
-   *
-   * @param key the key Object to search for
-   * @return true if this Annotation knows about the key, false otherwise
-   */
-  boolean containsProperty(Object key);
+	/**
+	 * Returns whether there the property is defined. Normal raw access to the property. For cleverer access, use
+	 * methods in AnnotationType.
+	 *
+	 * @param key the key Object to search for
+	 * @return true if this Annotation knows about the key, false otherwise
+	 */
+	boolean containsProperty(Object key);
 
-  /**
-   * Get a set of key objects.
-   *
-   * @return  a Set of key objects
-   */
-  Set keys();
+	/**
+	 * Get a set of key objects.
+	 *
+	 * @return  a Set of key objects
+	 */
+	Set keys();
 
-  /**
-   * Return a map that contains the same key/values as this Annotation.
-   * <p>
-   * If the annotation changes, the map may not reflect this.  The Map
-   * may be unmodifiable.
-   *
-   * @return a Map
-   */
-  Map asMap();
+	/**
+	 * Return a map that contains the same key/values as this Annotation.
+	 * <p>
+	 * If the annotation changes, the map may not reflect this.  The Map
+	 * may be unmodifiable.
+	 *
+	 * @return a Map
+	 */
+	Map asMap();
 
-  /**
-   * <p>
-   * A really useful empty and immutable annotation object.
-   * </p>
-   *
-   * Be careful when stooring Annotation arguments to
-   *  constructors. It is possible that you have been passed EMPTY_ANNOTATION but
-   * that code later on will access this object believing it to be
-   * mutable. For example, the SeqIO factory code clones some
-   * Annotations passed in on Feature.Template instances
-   *
-   * Use this instead of null when you really don't want an object or
-   * an implementation to have annotation even though it should implement
-   * Annotatable.
-   */
-  static final Annotation EMPTY_ANNOTATION = new EmptyAnnotation();
+	/**
+	 * <p>
+	 * A really useful empty and immutable annotation object.
+	 * </p>
+	 *
+	 * Be careful when stooring Annotation arguments to
+	 *  constructors. It is possible that you have been passed EMPTY_ANNOTATION but
+	 * that code later on will access this object believing it to be
+	 * mutable. For example, the SeqIO factory code clones some
+	 * Annotations passed in on Feature.Template instances
+	 *
+	 * Use this instead of null when you really don't want an object or
+	 * an implementation to have annotation even though it should implement
+	 * Annotatable.
+	 */
+	static final Annotation EMPTY_ANNOTATION = new EmptyAnnotation();
 }
 

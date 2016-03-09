@@ -37,78 +37,78 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compound> extends AbstractScorer
-        implements PairwiseSequenceScorer<S, C> {
+		implements PairwiseSequenceScorer<S, C> {
 
-    // always stored
-    private S query, target;
-    private int max, score;
+	// always stored
+	private S query, target;
+	private int max, score;
 
-    // optional cached input field
-    private PairwiseSequenceAligner<S, C> aligner;
+	// optional cached input field
+	private PairwiseSequenceAligner<S, C> aligner;
 
-    /**
-     * Creates a fractional similarity scorer for a pair of sequences aligned by the given pairwise sequence aligner.
-     *
-     * @param aligner a pairwise sequence aligner
-     */
-    public FractionalSimilarityScorer(PairwiseSequenceAligner<S, C> aligner) {
-        query = aligner.getQuery();
-        target = aligner.getTarget();
-        this.aligner = aligner;
-    }
+	/**
+	 * Creates a fractional similarity scorer for a pair of sequences aligned by the given pairwise sequence aligner.
+	 *
+	 * @param aligner a pairwise sequence aligner
+	 */
+	public FractionalSimilarityScorer(PairwiseSequenceAligner<S, C> aligner) {
+		query = aligner.getQuery();
+		target = aligner.getTarget();
+		this.aligner = aligner;
+	}
 
-    /**
-     * Creates a fractional similarity scorer for an aligned pair of sequences.
-     *
-     * @param pair an aligned pair of sequences
-     */
-    public FractionalSimilarityScorer(SequencePair<S, C> pair) {
-        query = pair.getQuery().getOriginalSequence();
-        target = pair.getTarget().getOriginalSequence();
-        max = pair.getLength();
-        score = pair.getNumSimilars();
-    }
+	/**
+	 * Creates a fractional similarity scorer for an aligned pair of sequences.
+	 *
+	 * @param pair an aligned pair of sequences
+	 */
+	public FractionalSimilarityScorer(SequencePair<S, C> pair) {
+		query = pair.getQuery().getOriginalSequence();
+		target = pair.getTarget().getOriginalSequence();
+		max = pair.getLength();
+		score = pair.getNumSimilars();
+	}
 
-    // methods for PairwiseSequenceScorer
+	// methods for PairwiseSequenceScorer
 
-    @Override
-    public S getQuery() {
-        return query;
-    }
+	@Override
+	public S getQuery() {
+		return query;
+	}
 
-    @Override
-    public S getTarget() {
-        return target;
-    }
+	@Override
+	public S getTarget() {
+		return target;
+	}
 
-    // methods for Scorer
+	// methods for Scorer
 
-    @Override
-    public double getMaxScore() {
-        if (aligner != null) {
-            align();
-        }
-        return max;
-    }
+	@Override
+	public double getMaxScore() {
+		if (aligner != null) {
+			align();
+		}
+		return max;
+	}
 
-    @Override
-    public double getMinScore() {
-        return 0;
-    }
+	@Override
+	public double getMinScore() {
+		return 0;
+	}
 
-    @Override
-    public double getScore() {
-        if (aligner != null) {
-            align();
-        }
-        return score;
-    }
+	@Override
+	public double getScore() {
+		if (aligner != null) {
+			align();
+		}
+		return score;
+	}
 
-    // helper method for initialization from an aligner
-    private void align() {
-        max = aligner.getPair().getLength();
-        score = aligner.getPair().getNumSimilars();
-        aligner = null;
-    }
+	// helper method for initialization from an aligner
+	private void align() {
+		max = aligner.getPair().getLength();
+		score = aligner.getPair().getNumSimilars();
+		aligner = null;
+	}
 
 }

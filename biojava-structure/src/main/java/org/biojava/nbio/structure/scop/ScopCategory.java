@@ -38,48 +38,48 @@ import java.io.Serializable;
 public enum ScopCategory implements Serializable
 {
 
-   Class,Fold, Superfamily,  Family, Domain, Species, Px;
+	Class,Fold, Superfamily,  Family, Domain, Species, Px;
 
-   public static ScopCategory fromString(String type){
-      if ( type.equals("cl"))
-         return Class;
-      else if ( type.equals("cf"))
-         return Fold;
-      else if ( type.equals("sf"))
-         return Superfamily;
-      else if ( type.equals("fa"))
-         return Family;
-      else if ( type.equals("dm"))
-         return Domain;
-      else if ( type.equals("sp"))
-         return Species;
-      else
-         return Px;
-   }
+	public static ScopCategory fromString(String type){
+		if ( type.equals("cl"))
+			return Class;
+		else if ( type.equals("cf"))
+			return Fold;
+		else if ( type.equals("sf"))
+			return Superfamily;
+		else if ( type.equals("fa"))
+			return Family;
+		else if ( type.equals("dm"))
+			return Domain;
+		else if ( type.equals("sp"))
+			return Species;
+		else
+			return Px;
+	}
 
-   @Override
+	@Override
 public String toString(){
-      switch (this) {
-         case Class:
-            return "cl";
+		switch (this) {
+			case Class:
+				return "cl";
 
-         case Fold:
-            return "cf";
+			case Fold:
+				return "cf";
 
-         case Superfamily:
-            return "sf";
+			case Superfamily:
+				return "sf";
 
-         case Family:
-            return "fa";
+			case Family:
+				return "fa";
 
-         case Domain:
-            return "dm";
+			case Domain:
+				return "dm";
 
-         case Species:
-            return "sp";
+			case Species:
+				return "sp";
 
-          default:
-             return "px";
-      }
-   }
+			 default:
+				 return "px";
+		}
+	}
 }

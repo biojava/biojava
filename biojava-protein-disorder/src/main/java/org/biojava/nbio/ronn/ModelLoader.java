@@ -50,11 +50,11 @@ public final class ModelLoader {
 
 	private static final Logger logger = LoggerFactory.getLogger(ModelLoader.class);
 
-    /**
-     * Represents a Threshold
-     *
-     */
-    public final static class Threshold {
+	/**
+	 * Represents a Threshold
+	 *
+	 */
+	public final static class Threshold {
 
 	final float mu0;
 	final float mu1;
@@ -62,21 +62,21 @@ public final class ModelLoader {
 	final float sigma1;
 
 	public Threshold(final int modelNum) {
-	    final float[] values = RonnConstraint.Threshold
-		    .getTreshold(modelNum);
-	    mu0 = values[0];
-	    mu1 = values[1];
-	    sigma0 = values[2];
-	    sigma1 = values[3];
+		final float[] values = RonnConstraint.Threshold
+			.getTreshold(modelNum);
+		mu0 = values[0];
+		mu1 = values[1];
+		sigma0 = values[2];
+		sigma1 = values[3];
 	}
 
-    }
+	}
 
-    /**
-     * Represent a RONN model
-     *
-     */
-    public static class Model {
+	/**
+	 * Represent a RONN model
+	 *
+	 */
+	public static class Model {
 
 	/**
 	 * Stores encoded sequences from the model similar to seqAA
@@ -99,105 +99,105 @@ public final class ModelLoader {
 	int modelNum = -1;
 
 	public Model(final int modelNum, final int numberofSequence) {
-	    this.modelNum = modelNum;
-	    numOfDBAAseq = numberofSequence;
-	    dbAA = new short[numberofSequence][190];
-	    Length = new short[numberofSequence];
-	    W = new float[numberofSequence];
+		this.modelNum = modelNum;
+		numOfDBAAseq = numberofSequence;
+		dbAA = new short[numberofSequence][190];
+		Length = new short[numberofSequence];
+		W = new float[numberofSequence];
 	}
 
 	@Override
 	public int hashCode() {
-	    final int prime = 31;
-	    int result = 1;
-	    result = prime * result + Arrays.hashCode(Length);
-	    result = prime * result + Arrays.hashCode(W);
-	    result = prime * result + Arrays.hashCode(dbAA);
-	    result = prime * result + modelNum;
-	    result = prime * result + numOfDBAAseq;
-	    return result;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(Length);
+		result = prime * result + Arrays.hashCode(W);
+		result = prime * result + Arrays.hashCode(dbAA);
+		result = prime * result + modelNum;
+		result = prime * result + numOfDBAAseq;
+		return result;
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
-	    if (this == obj) {
+		if (this == obj) {
 		return true;
-	    }
-	    if (obj == null) {
+		}
+		if (obj == null) {
 		return false;
-	    }
-	    if (getClass() != obj.getClass()) {
+		}
+		if (getClass() != obj.getClass()) {
 		return false;
-	    }
-	    final Model other = (Model) obj;
-	    if (!Arrays.equals(Length, other.Length)) {
+		}
+		final Model other = (Model) obj;
+		if (!Arrays.equals(Length, other.Length)) {
 		return false;
-	    }
-	    if (!Arrays.equals(W, other.W)) {
+		}
+		if (!Arrays.equals(W, other.W)) {
 		return false;
-	    }
-	    if (!Arrays.equals(dbAA, other.dbAA)) {
+		}
+		if (!Arrays.equals(dbAA, other.dbAA)) {
 		return false;
-	    }
-	    if (modelNum != other.modelNum) {
+		}
+		if (modelNum != other.modelNum) {
 		return false;
-	    }
-	    if (numOfDBAAseq != other.numOfDBAAseq) {
+		}
+		if (numOfDBAAseq != other.numOfDBAAseq) {
 		return false;
-	    }
-	    return true;
+		}
+		return true;
 	}
 
 	@Override
 	public String toString() {
-	    return "Model [modelNum=" + modelNum + ", numOfDBAAseq="
-		    + numOfDBAAseq + "]";
+		return "Model [modelNum=" + modelNum + ", numOfDBAAseq="
+			+ numOfDBAAseq + "]";
 	}
 
-    }
+	}
 
-    private static final Map<Integer, Model> models = new HashMap<Integer, Model>();
+	private static final Map<Integer, Model> models = new HashMap<Integer, Model>();
 
-    public Model getModel(final int modelNum) {
+	public Model getModel(final int modelNum) {
 	return ModelLoader.models.get(modelNum);
-    }
+	}
 
-    void loadModels() throws NumberFormatException, IOException {
+	void loadModels() throws NumberFormatException, IOException {
 
-        for (int i = 0; i < 10; i++) {
-            final BufferedReader bfr = new BufferedReader(
-                    new InputStreamReader(ModelLoader.class.getResourceAsStream(
-                            "model" + i + ".rec"),
-                            "ISO-8859-1"));
-            String line = null;
-            line = bfr.readLine().trim();
-            final int numberOfSeqs = Integer.parseInt(line);
-            final Model model = new Model(i, numberOfSeqs);
-            // ignore this one, its always 19 defined in RonnConstrain
-            line = bfr.readLine();
-            for (int j = 0; j < numberOfSeqs; j++) {
-                line = bfr.readLine();
-                final char[] dbseq = line.trim().toCharArray();
-                assert dbseq.length < Short.MAX_VALUE;
-                model.Length[j] = (short) dbseq.length;
-                for (int dResidue = 0; dResidue < dbseq.length; dResidue++) {
-                    model.dbAA[j][dResidue] = RonnConstraint.INDEX[dbseq[dResidue] - 'A'];
-                    assert !((model.dbAA[j][dResidue] < 0) || (model.dbAA[j][dResidue] > 19));
-                }
-                line = bfr.readLine().trim();
-                model.W[j] = Float.parseFloat(line);
-            }
-            ModelLoader.models.put(model.modelNum, model);
-            bfr.close();
-        }
-    }
+		for (int i = 0; i < 10; i++) {
+			final BufferedReader bfr = new BufferedReader(
+					new InputStreamReader(ModelLoader.class.getResourceAsStream(
+							"model" + i + ".rec"),
+							"ISO-8859-1"));
+			String line = null;
+			line = bfr.readLine().trim();
+			final int numberOfSeqs = Integer.parseInt(line);
+			final Model model = new Model(i, numberOfSeqs);
+			// ignore this one, its always 19 defined in RonnConstrain
+			line = bfr.readLine();
+			for (int j = 0; j < numberOfSeqs; j++) {
+				line = bfr.readLine();
+				final char[] dbseq = line.trim().toCharArray();
+				assert dbseq.length < Short.MAX_VALUE;
+				model.Length[j] = (short) dbseq.length;
+				for (int dResidue = 0; dResidue < dbseq.length; dResidue++) {
+					model.dbAA[j][dResidue] = RonnConstraint.INDEX[dbseq[dResidue] - 'A'];
+					assert !((model.dbAA[j][dResidue] < 0) || (model.dbAA[j][dResidue] > 19));
+				}
+				line = bfr.readLine().trim();
+				model.W[j] = Float.parseFloat(line);
+			}
+			ModelLoader.models.put(model.modelNum, model);
+			bfr.close();
+		}
+	}
 
-    public static void main(final String[] args) throws NumberFormatException,
-	    IOException {
+	public static void main(final String[] args) throws NumberFormatException,
+		IOException {
 	final ModelLoader loader = new ModelLoader();
 	loader.loadModels();
 	logger.info("{}", ModelLoader.models.get(0));
 	logger.info("{}", ModelLoader.models.get(9));
 	logger.info("{}", ModelLoader.models.size());
-    }
+	}
 }

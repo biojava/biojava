@@ -27,122 +27,122 @@ package org.biojava.nbio.sequencing.io.fastq;
  */
 public final class Fastq
 {
-    /** Description of this FASTQ formatted sequence. */
-    private final String description;
+	/** Description of this FASTQ formatted sequence. */
+	private final String description;
 
-    /** Sequence for this FASTQ formatted sequence. */
-    private final String sequence;
+	/** Sequence for this FASTQ formatted sequence. */
+	private final String sequence;
 
-    /** Quality scores for this FASTQ formatted sequence. */
-    private final String quality;
+	/** Quality scores for this FASTQ formatted sequence. */
+	private final String quality;
 
-    /** FASTQ sequence format variant for this FASTQ formatted sequence. */
-    private final FastqVariant variant;
-
-
-    /**
-     * Create a new FASTQ formatted sequence from the specified description, sequence, quality scores,
-     * and sequence format variant.
-     *
-     * @param description description of this FASTQ formatted sequence, must not be null
-     * @param sequence sequence for this FASTQ formatted sequence, must not be null
-     * @param quality quality scores for this FASTQ formatted sequence, must not be null
-     * @param variant FASTQ sequence format variant for this FASTQ formatted sequence, must not be null
-     */
-    Fastq(final String description,
-          final String sequence,
-          final String quality,
-          final FastqVariant variant)
-    {
-        if (description == null)
-        {
-            throw new IllegalArgumentException("description must not be null");
-        }
-        if (sequence == null)
-        {
-            throw new IllegalArgumentException("sequence must not be null");
-        }
-        if (quality == null)
-        {
-            throw new IllegalArgumentException("quality must not be null");
-        }
-        if (variant == null)
-        {
-            throw new IllegalArgumentException("variant must not be null");
-        }
-        this.description = description;
-        this.sequence = sequence;
-        this.quality = quality;
-        this.variant = variant;
-    }
+	/** FASTQ sequence format variant for this FASTQ formatted sequence. */
+	private final FastqVariant variant;
 
 
-    /**
-     * Return the description of this FASTQ formatted sequence.
-     * The description will not be null.
-     *
-     * @return the description of this FASTQ formatted sequence
-     */
-    public String getDescription()
-    {
-        return description;
-    }
+	/**
+	 * Create a new FASTQ formatted sequence from the specified description, sequence, quality scores,
+	 * and sequence format variant.
+	 *
+	 * @param description description of this FASTQ formatted sequence, must not be null
+	 * @param sequence sequence for this FASTQ formatted sequence, must not be null
+	 * @param quality quality scores for this FASTQ formatted sequence, must not be null
+	 * @param variant FASTQ sequence format variant for this FASTQ formatted sequence, must not be null
+	 */
+	Fastq(final String description,
+		  final String sequence,
+		  final String quality,
+		  final FastqVariant variant)
+	{
+		if (description == null)
+		{
+			throw new IllegalArgumentException("description must not be null");
+		}
+		if (sequence == null)
+		{
+			throw new IllegalArgumentException("sequence must not be null");
+		}
+		if (quality == null)
+		{
+			throw new IllegalArgumentException("quality must not be null");
+		}
+		if (variant == null)
+		{
+			throw new IllegalArgumentException("variant must not be null");
+		}
+		this.description = description;
+		this.sequence = sequence;
+		this.quality = quality;
+		this.variant = variant;
+	}
 
-    /**
-     * Return the sequence for this FASTQ formatted sequence.
-     * The sequence will not be null.
-     *
-     * @return the sequence for this FASTQ formatted sequence
-     */
-    public String getSequence()
-    {
-        return sequence;
-    }
 
-    /**
-     * Return the quality scores for this FASTQ formatted sequence.
-     * The quality scores will not be null.
-     *
-     * @return the quality scores for this FASTQ formatted sequence
-     */
-    public String getQuality()
-    {
-        return quality;
-    }
+	/**
+	 * Return the description of this FASTQ formatted sequence.
+	 * The description will not be null.
+	 *
+	 * @return the description of this FASTQ formatted sequence
+	 */
+	public String getDescription()
+	{
+		return description;
+	}
 
-    /**
-     * Return the FASTQ sequence format variant for this FASTQ formatted sequence.
-     * The FASTQ sequence format variant will not be null.
-     *
-     * @return the FASTQ sequence format variant for this FASTQ formatted sequence
-     */
-    public FastqVariant getVariant()
-    {
-        return variant;
-    }
+	/**
+	 * Return the sequence for this FASTQ formatted sequence.
+	 * The sequence will not be null.
+	 *
+	 * @return the sequence for this FASTQ formatted sequence
+	 */
+	public String getSequence()
+	{
+		return sequence;
+	}
 
-    /**
-     * Create and return a new FASTQ formatted sequence from this converted to the
-     * specified FASTQ sequence format variant.
-     *
-     * @since 4.2
-     * @param variant FASTQ sequence format variant, must not be null
-     * @return a new FASTQ formatted sequence from this converted to the
-     *    specified FASTQ sequence format variant
-     */
-    public Fastq convertTo(final FastqVariant variant)
-    {
-        return FastqTools.convert(this, variant);
-    }
+	/**
+	 * Return the quality scores for this FASTQ formatted sequence.
+	 * The quality scores will not be null.
+	 *
+	 * @return the quality scores for this FASTQ formatted sequence
+	 */
+	public String getQuality()
+	{
+		return quality;
+	}
 
-    /**
-     * Create and return a new FastqBuilder.
-     * The FastqBuilder will not be null.
-     *
-     * @return a new FastqBuilder
-     */
-    public static final FastqBuilder builder()
-    {
-        return new FastqBuilder();
-    }
+	/**
+	 * Return the FASTQ sequence format variant for this FASTQ formatted sequence.
+	 * The FASTQ sequence format variant will not be null.
+	 *
+	 * @return the FASTQ sequence format variant for this FASTQ formatted sequence
+	 */
+	public FastqVariant getVariant()
+	{
+		return variant;
+	}
+
+	/**
+	 * Create and return a new FASTQ formatted sequence from this converted to the
+	 * specified FASTQ sequence format variant.
+	 *
+	 * @since 4.2
+	 * @param variant FASTQ sequence format variant, must not be null
+	 * @return a new FASTQ formatted sequence from this converted to the
+	 *    specified FASTQ sequence format variant
+	 */
+	public Fastq convertTo(final FastqVariant variant)
+	{
+		return FastqTools.convert(this, variant);
+	}
+
+	/**
+	 * Create and return a new FastqBuilder.
+	 * The FastqBuilder will not be null.
+	 *
+	 * @return a new FastqBuilder
+	 */
+	public static final FastqBuilder builder()
+	{
+		return new FastqBuilder();
+	}
 }

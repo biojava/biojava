@@ -34,34 +34,34 @@ import java.util.Comparator;
 public class AltAligComparator implements Comparator<AlternativeAlignment> {
 
 
-    public AltAligComparator() {
-        super();
+	public AltAligComparator() {
+		super();
 
-    }
+	}
 
-    @Override
+	@Override
 	public int compare(AlternativeAlignment a, AlternativeAlignment b) {
 
-        int s1 = a.getIdx1().length;
-        int s2 = b.getIdx1().length;
+		int s1 = a.getIdx1().length;
+		int s2 = b.getIdx1().length;
 
-        if ( s1 > s2)
-            return 1;
-        if ( s1 < s2)
-            return -1;
+		if ( s1 > s2)
+			return 1;
+		if ( s1 < s2)
+			return -1;
 
-        // seem to have the same length
+		// seem to have the same length
 
-        double rms1 = a.getRmsd();
-        double rms2 = b.getRmsd();
+		double rms1 = a.getRmsd();
+		double rms2 = b.getRmsd();
 
-        if ( rms1 < rms2)
-            return 1;
-        if ( rms1 < rms2)
-            return -1;
+		if ( rms1 < rms2)
+			return 1;
+		if ( rms1 < rms2)
+			return -1;
 
-        return 0;
-    }
+		return 0;
+	}
 
 
 }

@@ -31,138 +31,134 @@ import java.util.List;
  *
  * example usage:
  * <pre>
+String outputfile =  "/Users/ap3/WORK/PDB/mutated.pdb" ;
 
- String outputfile =  "/Users/ap3/WORK/PDB/mutated.pdb" ;
+Structure struc = StructureIO.getStructure("5pti");
+System.out.println(struc);
 
+String chainId = "A";
+String pdbResnum = "3";
+String newType = "ARG";
 
-     Structure struc = StructureIO.getStructure("5pti");
-     System.out.println(struc);
+// mutate the original structure and create a new one.
+Mutator m = new Mutator();
+Structure newstruc = m.mutate(struc,chainId,pdbResnum,newType);
 
-     String chainId = "A";
-     String pdbResnum = "3";
-     String newType = "ARG";
+FileOutputStream out= new FileOutputStream(outputfile);
+PrintStream p =  new PrintStream( out );
 
-     // mutate the original structure and create a new one.
-      Mutator m = new Mutator();
-      Structure newstruc = m.mutate(struc,chainId,pdbResnum,newType);
+p.println (newstruc.toPDB());
 
-      FileOutputStream out= new FileOutputStream(outputfile);
-      PrintStream p =  new PrintStream( out );
-
-      p.println (newstruc.toPDB());
-
-      p.close();
-
-
-  </pre>
-  * @author Andreas Prlic
-  * @since 1.5
-  * @version %I% %G%
-  */
+p.close();
+</pre>
+ * @author Andreas Prlic
+ * @since 1.5
+ * @version %I% %G%
+ */
 public class Mutator{
-    List<String> supportedAtoms;
+	List<String> supportedAtoms;
 
-    public Mutator(){
-        supportedAtoms = new ArrayList<String>();
-        supportedAtoms.add("N");
-        supportedAtoms.add("CA");
-        supportedAtoms.add("C");
-        supportedAtoms.add("O");
-        supportedAtoms.add("CB");
-    }
+	public Mutator(){
+		supportedAtoms = new ArrayList<String>();
+		supportedAtoms.add("N");
+		supportedAtoms.add("CA");
+		supportedAtoms.add("C");
+		supportedAtoms.add("O");
+		supportedAtoms.add("CB");
+	}
 
-    /** creates a new structure which is identical with the original one.
-     * only one amino acid will be different.
-     *
-     *
-     *
-     *
-     * @param struc the structure object that is the container for the residue to be mutated
-     * @param chainId the id (name) of the chain to be mutated. @see Chain.getName()
-     * @param pdbResnum the PDB residue number of the residue
-     * @param newType the new residue type (3 characters)
-     * @return a structure object where one residue has been modified
-     * @throws PDBParseException
-     */
-    public Structure  mutate(Structure struc, String chainId, String pdbResnum, String newType)
-    throws PDBParseException{
-
-
-        // create a  container for the new structure
-        Structure newstruc = new StructureImpl();
-
-        // first we need to find our corresponding chain
-
-        // get the chains for model nr. 0
-        // if structure is xray there will be only one "model".
-        List<Chain> chains = struc.getChains(0);
-
-        // iterate over all chains.
-        for (Chain c : chains) {
-            if (c.getChainID().equals(chainId)) {
-                // here is our chain!
-
-                Chain newchain = new ChainImpl();
-                newchain.setChainID(c.getChainID());
-
-                List<Group> groups = c.getAtomGroups();
-
-                // now iterate over all groups in this chain.
-                // in order to find the amino acid that has this pdbRenum.
-
-                for (Group g : groups) {
-                    String rnum = g.getResidueNumber().toString();
-
-                    // we only mutate amino acids
-                    // and ignore hetatoms and nucleotides in this case
-                    if (rnum.equals(pdbResnum) && (g.getType() == GroupType.AMINOACID)) {
-
-                        // create the mutated amino acid and add it to our new chain
-                        AminoAcid newgroup = mutateResidue((AminoAcid) g, newType);
-                        newchain.addGroup(newgroup);
-                    } else {
-                        // add the group  to the new chain unmodified.
-                        newchain.addGroup(g);
-                    }
-                }
-
-                // add the newly constructed chain to the structure;
-                newstruc.addChain(newchain);
-            } else {
-                // this chain is not requested, add it to the new structure unmodified.
-                newstruc.addChain(c);
-            }
-
-        }
-        return newstruc;
-    }
-
-    /** create a new residue which is of the new type.
-     * Only the atoms N, Ca, C, O, Cb will be considered.
-     * @param oldAmino
-     * @param newType
-     * @return a new, mutated, residue
-     * @throws PDBParseException
-     */
-    public AminoAcid mutateResidue(AminoAcid oldAmino, String newType)
-    throws PDBParseException {
-
-        AminoAcid newgroup = new AminoAcidImpl();
-
-        newgroup.setResidueNumber(oldAmino.getResidueNumber());
-        newgroup.setPDBName(newType);
+	/** creates a new structure which is identical with the original one.
+	 * only one amino acid will be different.
+	 *
+	 *
+	 *
+	 *
+	 * @param struc the structure object that is the container for the residue to be mutated
+	 * @param chainId the id (name) of the chain to be mutated. @see Chain.getName()
+	 * @param pdbResnum the PDB residue number of the residue
+	 * @param newType the new residue type (3 characters)
+	 * @return a structure object where one residue has been modified
+	 * @throws PDBParseException
+	 */
+	public Structure  mutate(Structure struc, String chainId, String pdbResnum, String newType)
+	throws PDBParseException{
 
 
-        AtomIterator aiter =new AtomIterator(oldAmino);
-        while (aiter.hasNext()){
-            Atom a = aiter.next();
-            if ( supportedAtoms.contains(a.getName())){
-                newgroup.addAtom(a);
-            }
-        }
+		// create a  container for the new structure
+		Structure newstruc = new StructureImpl();
 
-        return newgroup;
+		// first we need to find our corresponding chain
 
-    }
+		// get the chains for model nr. 0
+		// if structure is xray there will be only one "model".
+		List<Chain> chains = struc.getChains(0);
+
+		// iterate over all chains.
+		for (Chain c : chains) {
+			if (c.getChainID().equals(chainId)) {
+				// here is our chain!
+
+				Chain newchain = new ChainImpl();
+				newchain.setChainID(c.getChainID());
+
+				List<Group> groups = c.getAtomGroups();
+
+				// now iterate over all groups in this chain.
+				// in order to find the amino acid that has this pdbRenum.
+
+				for (Group g : groups) {
+					String rnum = g.getResidueNumber().toString();
+
+					// we only mutate amino acids
+					// and ignore hetatoms and nucleotides in this case
+					if (rnum.equals(pdbResnum) && (g.getType() == GroupType.AMINOACID)) {
+
+						// create the mutated amino acid and add it to our new chain
+						AminoAcid newgroup = mutateResidue((AminoAcid) g, newType);
+						newchain.addGroup(newgroup);
+					} else {
+						// add the group  to the new chain unmodified.
+						newchain.addGroup(g);
+					}
+				}
+
+				// add the newly constructed chain to the structure;
+				newstruc.addChain(newchain);
+			} else {
+				// this chain is not requested, add it to the new structure unmodified.
+				newstruc.addChain(c);
+			}
+
+		}
+		return newstruc;
+	}
+
+	/** create a new residue which is of the new type.
+	 * Only the atoms N, Ca, C, O, Cb will be considered.
+	 * @param oldAmino
+	 * @param newType
+	 * @return a new, mutated, residue
+	 * @throws PDBParseException
+	 */
+	public AminoAcid mutateResidue(AminoAcid oldAmino, String newType)
+	throws PDBParseException {
+
+		AminoAcid newgroup = new AminoAcidImpl();
+
+		newgroup.setResidueNumber(oldAmino.getResidueNumber());
+		newgroup.setPDBName(newType);
+
+
+		AtomIterator aiter =new AtomIterator(oldAmino);
+		while (aiter.hasNext()){
+			Atom a = aiter.next();
+			if ( supportedAtoms.contains(a.getName())){
+				newgroup.addAtom(a);
+			}
+		}
+
+		return newgroup;
+
+	}
 
 }

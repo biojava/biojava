@@ -157,36 +157,36 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 	}
 
 	 /**
-     * Creates a profile for the already aligned sequences.
-     * @param alignedSequences the already aligned sequences
-     * @throws IllegalArgument if aligned sequences differ in length or
-     * collection is empty.
-     */
-    public SimpleProfile(Collection<AlignedSequence<S,C>> alignedSequences) {
-        list = new ArrayList<AlignedSequence<S,C>>();
-        originals = new ArrayList<S>();
+	 * Creates a profile for the already aligned sequences.
+	 * @param alignedSequences the already aligned sequences
+	 * @throws IllegalArgument if aligned sequences differ in length or
+	 * collection is empty.
+	 */
+	public SimpleProfile(Collection<AlignedSequence<S,C>> alignedSequences) {
+		list = new ArrayList<AlignedSequence<S,C>>();
+		originals = new ArrayList<S>();
 
-        Iterator<AlignedSequence<S,C>> itr = alignedSequences.iterator();
-        if(!itr.hasNext()) {
-            throw new IllegalArgumentException("alignedSequences must not be empty");
-        }
+		Iterator<AlignedSequence<S,C>> itr = alignedSequences.iterator();
+		if(!itr.hasNext()) {
+			throw new IllegalArgumentException("alignedSequences must not be empty");
+		}
 
-        AlignedSequence<S, C> curAlignedSeq = itr.next();
-        length = curAlignedSeq.getLength();
-        list.add(curAlignedSeq);
-        originals.add((S) curAlignedSeq.getOriginalSequence());
+		AlignedSequence<S, C> curAlignedSeq = itr.next();
+		length = curAlignedSeq.getLength();
+		list.add(curAlignedSeq);
+		originals.add((S) curAlignedSeq.getOriginalSequence());
 
-        while (itr.hasNext()) {
-            curAlignedSeq = itr.next();
-            if (curAlignedSeq.getLength() != length) {
-                throw new IllegalArgumentException("Aligned sequences differ in size");
-            }
-            list.add(curAlignedSeq);
-            originals.add((S) curAlignedSeq.getOriginalSequence());
-        }
-        list = Collections.unmodifiableList(list);
-        originals = Collections.unmodifiableList(originals);
-    }
+		while (itr.hasNext()) {
+			curAlignedSeq = itr.next();
+			if (curAlignedSeq.getLength() != length) {
+				throw new IllegalArgumentException("Aligned sequences differ in size");
+			}
+			list.add(curAlignedSeq);
+			originals.add((S) curAlignedSeq.getOriginalSequence());
+		}
+		list = Collections.unmodifiableList(list);
+		originals = Collections.unmodifiableList(originals);
+	}
 
 
 	// methods for Profile
@@ -377,21 +377,21 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 	@Override
 	public String toString(StringFormat format) {
-        switch (format) {
-        case ALN:
-        case CLUSTALW:
-        default:
-            return toString(60, String.format("CLUSTAL W MSA from BioJava%n%n"), IOUtils.getIDFormat(list) + "   ",
-                    false, true, true, false, true, false);
-        case FASTA:
-            return toString(60, null, ">%s%n", false, false, false, false, false, false);
-        case GCG:
-        case MSF:
-            return toString(50, IOUtils.getGCGHeader(list), IOUtils.getIDFormat(list), false, false, true, false,
-                    false, false);
-        case PDBWEB:
-            return toString(60, null, "%10s", true, true, true, false, true, true);
-        }
+		switch (format) {
+		case ALN:
+		case CLUSTALW:
+		default:
+			return toString(60, String.format("CLUSTAL W MSA from BioJava%n%n"), IOUtils.getIDFormat(list) + "   ",
+					false, true, true, false, true, false);
+		case FASTA:
+			return toString(60, null, ">%s%n", false, false, false, false, false, false);
+		case GCG:
+		case MSF:
+			return toString(50, IOUtils.getGCGHeader(list), IOUtils.getIDFormat(list), false, false, true, false,
+					false, false);
+		case PDBWEB:
+			return toString(60, null, "%10s", true, true, true, false, true, true);
+		}
 	}
 
 	// method from Object
@@ -453,7 +453,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 					if ( webDisplay && list.size() == 2){
 						printSequenceAlignmentWeb(s, counter, idFormat, seqIndexPre, seqIndexFormatPre, seqIndexPost,
-						        seqIndexFormatPost, start, end);
+								seqIndexFormatPost, start, end);
 					} else {
 						if (idFormat != null) {
 							s.append(String.format(idFormat, as.getAccession()));
@@ -471,7 +471,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 					}
 
 					if (aligConservation && list.size() == 2 && counter == 1) {
-					    printConservation(s, idFormat, seqIndexPad, seqIndexPre, start, end, webDisplay);
+						printConservation(s, idFormat, seqIndexPad, seqIndexPre, start, end, webDisplay);
 					}
 				}
 
@@ -502,7 +502,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 	}
 
 	private void printSequenceAlignmentWeb(StringBuilder s, int counter, String idFormat, boolean seqIndexPre,
-	        String seqIndexFormatPre, boolean seqIndexPost, String seqIndexFormatPost, int start, int end) {
+			String seqIndexFormatPre, boolean seqIndexPost, String seqIndexFormatPost, int start, int end) {
 		AlignedSequence<S,C> as1 = list.get(0), as2 = list.get(1), as = list.get(counter - 1);
 
 		if (idFormat != null) {
@@ -512,9 +512,9 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 			s.append(String.format(seqIndexFormatPre, as.getSequenceIndexAt(start)));
 		}
 
-        String mySeq = as.getSubSequence(start, end).getSequenceAsString();
-        String s1 = as1.getSubSequence(start, end).getSequenceAsString();
-        String s2 = as2.getSubSequence(start, end).getSequenceAsString();
+		String mySeq = as.getSubSequence(start, end).getSequenceAsString();
+		String s1 = as1.getSubSequence(start, end).getSequenceAsString();
+		String s2 = as2.getSubSequence(start, end).getSequenceAsString();
 
 		for (int i = 0; i < s1.length(); i++) {
 			if (i >= s2.length() || i >= mySeq.length())
@@ -534,32 +534,32 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 	}
 
 	private void printConservation(StringBuilder s, String idFormat, int seqIndexPad, boolean seqIndexPre, int start,
-	        int end, boolean webDisplay) {
-	    AlignedSequence<S,C> as1 = list.get(0), as2 = list.get(1);
+			int end, boolean webDisplay) {
+		AlignedSequence<S,C> as1 = list.get(0), as2 = list.get(1);
 
-	    if (idFormat != null) {
-	        AccessionID ac1 = as1.getAccession();
-	        String id1 = (ac1 == null) ? "null" : ac1.getID();
-	        id1 = id1.replaceAll(".", " ");
-	        s.append(String.format(idFormat, id1));
-	    }
+		if (idFormat != null) {
+			AccessionID ac1 = as1.getAccession();
+			String id1 = (ac1 == null) ? "null" : ac1.getID();
+			id1 = id1.replaceAll(".", " ");
+			s.append(String.format(idFormat, id1));
+		}
 
-	    if (seqIndexPre) {
-	        s.append(String.format("%" + (seqIndexPad + 1) + "s", ""));
-	    }
+		if (seqIndexPre) {
+			s.append(String.format("%" + (seqIndexPad + 1) + "s", ""));
+		}
 
-	    String subseq1 = as1.getSubSequence(start, end).getSequenceAsString();
-	    String subseq2 = as2.getSubSequence(start, end).getSequenceAsString();
+		String subseq1 = as1.getSubSequence(start, end).getSequenceAsString();
+		String subseq2 = as2.getSubSequence(start, end).getSequenceAsString();
 
-	    for ( int ii =0 ; ii < subseq1.length() ; ii++){
-	        if ( ii >= subseq2.length())
-	            break;
-	        char c1 = subseq1.charAt(ii);
-	        char c2 = subseq2.charAt(ii);
-	        s.append(IOUtils.getPDBConservation(webDisplay, c1, c2, isSimilar(c1, c2)));
-	    }
+		for ( int ii =0 ; ii < subseq1.length() ; ii++){
+			if ( ii >= subseq2.length())
+				break;
+			char c1 = subseq1.charAt(ii);
+			char c2 = subseq2.charAt(ii);
+			s.append(IOUtils.getPDBConservation(webDisplay, c1, c2, isSimilar(c1, c2)));
+		}
 
-	    s.append(String.format("%n"));
+		s.append(String.format("%n"));
 	}
 
 	protected static final SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();

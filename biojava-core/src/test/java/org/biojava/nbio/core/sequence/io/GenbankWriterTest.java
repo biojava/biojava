@@ -45,7 +45,7 @@ public class GenbankWriterTest extends TestCase{
 	@Test
 	public void testProcess() throws Exception {
 
-        InputStream inStream = GenbankWriterTest.class.getResourceAsStream("/NM_000266.gb");
+		InputStream inStream = GenbankWriterTest.class.getResourceAsStream("/NM_000266.gb");
 		//File dnaFile = new File("src/test/resources/NM_000266.gb");
 		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence( inStream );
 		ByteArrayOutputStream fragwriter = new ByteArrayOutputStream();
@@ -57,12 +57,12 @@ public class GenbankWriterTest extends TestCase{
 				GenbankWriterHelper.LINEAR_DNA);
 		//System.out.println(fragwriter.toString());
 		ByteArrayInputStream fragreader = new ByteArrayInputStream(fragwriter.toByteArray());
-                /**
-                 * Hello Jacek
-                 * can you please investigate why this test fails? it seems that
-                 * fragreader at the line below is read with the last feature
-                 * in an invalid state: location = 2005..2004
-                 */
+		/**
+		 * Hello Jacek
+		 * can you please investigate why this test fails? it seems that
+		 * fragreader at the line below is read with the last feature
+		 * in an invalid state: location = 2005..2004
+		 */
 		//dnaSequences = GenbankReaderHelper.readGenbankDNASequence( fragreader );
 		fragwriter.close();
 		assertEquals(seqs.get(0).getSequenceAsString(),dnaSequences.values().iterator().next().getSequenceAsString());

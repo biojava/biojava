@@ -73,8 +73,8 @@ extends Term {
 	 * <p>This <em>must</em> be implemented as:
 	 * <pre>
 	 * return getSubject().hashCode() +
-   31 * getObject().hashCode() +
-   31 * 31 * getPredicate().hashCode();
+	 * 31 * getObject().hashCode() +
+	 * 31 * 31 * getPredicate().hashCode();
 	 * </pre>
 	 * If you do not implement hashcode in this way then you have no guarantee
 	 * that your Triple objects will be found in an ontology and that they will
@@ -252,7 +252,7 @@ extends Term {
 
 		public String toString() {
 			if (getName().length() > 0)
-    			return getName();
+				return getName();
 			return subject + " " + predicate + " " + object;
 		}
 	}

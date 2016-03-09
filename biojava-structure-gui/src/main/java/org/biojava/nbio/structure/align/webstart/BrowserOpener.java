@@ -30,40 +30,40 @@ public class BrowserOpener {
 
 	private static final Logger logger = LoggerFactory.getLogger(BrowserOpener.class);
 
-    /** open a URL in the browser that was used to launch SPICE
-     *
-     * @param url URL to be opened
-     * @return true if this was successfull
-     */
-    public static boolean showDocument(URL url)
-    {
-        if ( url != null ){
-            boolean success = JNLPProxy.showDocument(url);
-            if ( ! success)
-                logger.info("could not open URL "+url+" in browser. check your config or browser version.");
-        return success;
+	/** open a URL in the browser that was used to launch SPICE
+	 *
+	 * @param url URL to be opened
+	 * @return true if this was successfull
+	 */
+	public static boolean showDocument(URL url)
+	{
+		if ( url != null ){
+			boolean success = JNLPProxy.showDocument(url);
+			if ( ! success)
+				logger.info("could not open URL "+url+" in browser. check your config or browser version.");
+		return success;
 
-        }
-        else
-            return false;
-    }
+		}
+		else
+			return false;
+	}
 
 
-    /** open a URL in the browser that was used to launch SPICE
-     *
-     * @param urlstring string represntation of URL to be opened
-     * @return true if this was successfull
-     */
-    public static boolean showDocument(String urlstring){
-        try{
-            URL url = new URL(urlstring);
+	/** open a URL in the browser that was used to launch SPICE
+	 *
+	 * @param urlstring string represntation of URL to be opened
+	 * @return true if this was successfull
+	 */
+	public static boolean showDocument(String urlstring){
+		try{
+			URL url = new URL(urlstring);
 
-            return showDocument(url);
-        } catch (MalformedURLException e){
-            logger.warn("malformed URL {}", urlstring, e);
-            return false;
-        }
-    }
+			return showDocument(url);
+		} catch (MalformedURLException e){
+			logger.warn("malformed URL {}", urlstring, e);
+			return false;
+		}
+	}
 
 }
 

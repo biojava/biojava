@@ -89,7 +89,7 @@ public class AFPChainXMLParser
 
 	 }
 
-   public static AFPChain fromXML(String xml, Atom[] ca1, Atom[] ca2) throws IOException
+	public static AFPChain fromXML(String xml, Atom[] ca1, Atom[] ca2) throws IOException
 	{
 		AFPChain[] afps = parseMultiXML( xml);
 		if ( afps.length > 0 ) {
@@ -102,20 +102,20 @@ public class AFPChainXMLParser
 		return null;
 	}
 
-   /** returns true if the alignment XML contains an error message
-    *
-    * @param xml
-    * @return flag if there was an Error while processing the alignment.
-    */
-   public static boolean isErrorXML(String xml){
+	/** returns true if the alignment XML contains an error message
+	 *
+	 * @param xml
+	 * @return flag if there was an Error while processing the alignment.
+	 */
+	public static boolean isErrorXML(String xml){
 
-      if ( xml.contains("error=\""))
-         return true;
+		if ( xml.contains("error=\""))
+			return true;
 
-      return false;
+		return false;
 
 
-   }
+	}
 
 	/** Takes an XML representation of the alignment and flips the positions of name1 and name2
 	 *
@@ -130,7 +130,7 @@ public class AFPChainXMLParser
 		if ( afps.length == 1) {
 			AFPChain newChain = AFPChainFlipper.flipChain(afps[0]);
 			if ( newChain.getAlgorithmName() == null) {
-			   newChain.setAlgorithmName(DEFAULT_ALGORITHM_NAME);
+				newChain.setAlgorithmName(DEFAULT_ALGORITHM_NAME);
 			}
 			return AFPChainXMLConverter.toXML(newChain);
 		}
@@ -146,12 +146,12 @@ public class AFPChainXMLParser
 	 */
 	public static void rebuildAFPChain(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
 
-	   if ( afpChain.getAlgorithmName() == null) {
-	      afpChain.setAlgorithmName(DEFAULT_ALGORITHM_NAME);
-	   }
-	   if ( afpChain.getVersion() == null){
-	      afpChain.setVersion("1.0");
-	   }
+		if ( afpChain.getAlgorithmName() == null) {
+			afpChain.setAlgorithmName(DEFAULT_ALGORITHM_NAME);
+		}
+		if ( afpChain.getVersion() == null){
+			afpChain.setVersion("1.0");
+		}
 
 		int blockNum  = afpChain.getBlockNum();
 		int ca1Length = afpChain.getCa1Length();
@@ -162,7 +162,7 @@ public class AFPChainXMLParser
 
 		int[][][] blockResList = afpChain.getBlockResList();
 		if ( blockResList == null){
-		   blockResList = new int[blockNum][2][minLength];
+			blockResList = new int[blockNum][2][minLength];
 		}
 		int[] optLen = afpChain.getOptLen();
 
@@ -178,7 +178,7 @@ public class AFPChainXMLParser
 		for (int blockNr = 0 ; blockNr < blockNum ; blockNr++){
 
 			//System.out.println("got block " + blockNr + " size: " + optLen[blockNr]);
-		   int verifiedEQR = -1;
+			int verifiedEQR = -1;
 			for ( int eqrNr = 0 ; eqrNr < optLen[blockNr] ; eqrNr++ ){
 				String pdbResnum1 = pdbAln[blockNr][0][eqrNr];
 				String pdbResnum2 = pdbAln[blockNr][1][eqrNr];
@@ -197,11 +197,11 @@ public class AFPChainXMLParser
 				int pos2 = getPositionForPDBresunm(pdbres2,chain2,ca2);
 
 				if ( pos1 == -1 || pos2 == -1 ){
-				   // this can happen when parsing old files that contained Calcium atoms...
-				   logger.warn("pos1: {} (residue {}), pos2: {} (residue {}), should never be -1. Probably parsing an old file.",
-						   pos1, pdbResnum1, pos2, pdbResnum2);
-				   verifiedOptLen[blockNr]-- ;
-				   continue;
+					// this can happen when parsing old files that contained Calcium atoms...
+					logger.warn("pos1: {} (residue {}), pos2: {} (residue {}), should never be -1. Probably parsing an old file.",
+							pos1, pdbResnum1, pos2, pdbResnum2);
+					verifiedOptLen[blockNr]-- ;
+					continue;
 				}
 
 				verifiedEQR++;
@@ -268,8 +268,8 @@ public class AFPChainXMLParser
 				a.setBlockNum(		new Integer(getAttribute(rootElement,"blockNum")).intValue());
 
 				if ( a.getAlgorithmName().equals(CeCPMain.algorithmName)){
-                   a.setSequentialAlignment(a.getBlockNum() == 1);
-                }
+						 a.setSequentialAlignment(a.getBlockNum() == 1);
+					 }
 
 				a.setAlignScore(new Double(getAttribute(rootElement,"alignScore")).doubleValue());
 				a.setChainRmsd(new Double(getAttribute(rootElement,"chainRmsd")).doubleValue());

@@ -36,10 +36,10 @@ public class AlreadyExistsException extends OntologyException {
 	private static final long serialVersionUID = 1L;
 
 	public AlreadyExistsException() {
-        super();
-    }
+		super();
+	}
 
-    public AlreadyExistsException(String description) {
-        super(description);
-    }
+	public AlreadyExistsException(String description) {
+		super(description);
+	}
 }

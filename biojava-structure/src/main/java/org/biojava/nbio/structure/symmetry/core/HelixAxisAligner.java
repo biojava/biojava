@@ -87,7 +87,7 @@ public class HelixAxisAligner extends AxisAligner {
 		run();
 		Matrix3d m = new Matrix3d();
 		transformationMatrix.getRotationScale(m);
-	    return m;
+		return m;
 	}
 
 	/* (non-Javadoc)
@@ -154,8 +154,8 @@ public class HelixAxisAligner extends AxisAligner {
 	public Matrix4d getGeometicCenterTransformation() {
 		run();
 
-	    Matrix4d geometricCentered = new Matrix4d(reverseTransformationMatrix);
-	    geometricCentered.setTranslation(new Vector3d(getGeometricCenter()));
+		Matrix4d geometricCentered = new Matrix4d(reverseTransformationMatrix);
+		geometricCentered.setTranslation(new Vector3d(getGeometricCenter()));
 
 		return geometricCentered;
 	}
@@ -250,24 +250,24 @@ public class HelixAxisAligner extends AxisAligner {
 		}
 
 		Point3d centerOfRotation = new Point3d();
-	    List<Point3d> centers = subunits.getOriginalCenters();
+		List<Point3d> centers = subunits.getOriginalCenters();
 
-	    // calculate helix mid points for each set of 3 adjacent subunits
-	    for (int i = 0; i < line.size()-2; i++) {
-	    	Point3d p1 = new Point3d(centers.get(line.get(i)));
-	    	Point3d p2 = new Point3d(centers.get(line.get(i+1)));
-	    	Point3d p3 = new Point3d(centers.get(line.get(i+2)));
-	    	transformationMatrix.transform(p1);
-	    	transformationMatrix.transform(p2);
-	    	transformationMatrix.transform(p3);
-	    	centerOfRotation.add(getMidPoint(p1, p2, p3));
-	    }
+		// calculate helix mid points for each set of 3 adjacent subunits
+		for (int i = 0; i < line.size()-2; i++) {
+			Point3d p1 = new Point3d(centers.get(line.get(i)));
+			Point3d p2 = new Point3d(centers.get(line.get(i+1)));
+			Point3d p3 = new Point3d(centers.get(line.get(i+2)));
+			transformationMatrix.transform(p1);
+			transformationMatrix.transform(p2);
+			transformationMatrix.transform(p3);
+			centerOfRotation.add(getMidPoint(p1, p2, p3));
+		}
 
-	    // average over all midpoints to find best center of rotation
-	    centerOfRotation.scale(1/(line.size()-2));
-	    // since helix is aligned along the y-axis, with an origin at y = 0, place the center of rotation there
-	    centerOfRotation.y = 0;
-	    // transform center of rotation to the original coordinate frame
+		// average over all midpoints to find best center of rotation
+		centerOfRotation.scale(1/(line.size()-2));
+		// since helix is aligned along the y-axis, with an origin at y = 0, place the center of rotation there
+		centerOfRotation.y = 0;
+		// transform center of rotation to the original coordinate frame
 		reverseTransformationMatrix.transform(centerOfRotation);
 //		System.out.println("center of rotation: " + centerOfRotation);
 		return centerOfRotation;
@@ -334,7 +334,7 @@ public class HelixAxisAligner extends AxisAligner {
 		matrix.setIdentity();
 		matrix.setRotation(new AxisAngle4d(1,0,0,Math.PI/2*(index+1)));
 		matrix.mul(transformationMatrix);
-        return matrix;
+	return matrix;
 	}
 
 	/**
@@ -550,7 +550,7 @@ public class HelixAxisAligner extends AxisAligner {
 
 	private double[] getSubunitZDepth() {
 		int n = subunits.getSubunitCount();
-	    double[] depth = new double[n];
+		double[] depth = new double[n];
 		Point3d probe = new Point3d();
 
 		// transform subunit centers into z-aligned position and calculate

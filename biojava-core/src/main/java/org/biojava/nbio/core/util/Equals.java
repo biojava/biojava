@@ -30,58 +30,58 @@ package org.biojava.nbio.core.util;
  */
 public class Equals {
 
-  public static boolean equal(int one, int two) {
-    return one == two;
-  }
+	public static boolean equal(int one, int two) {
+		return one == two;
+	}
 
-  public static boolean equal(long one, long two) {
-    return (one == two);
-  }
+	public static boolean equal(long one, long two) {
+		return (one == two);
+	}
 
-  public static boolean equal(boolean one, boolean two) {
-    return one == two;
-  }
+	public static boolean equal(boolean one, boolean two) {
+		return one == two;
+	}
 
-  /**
-   * Does not compare class types.
-   * @see #classEqual(Object, Object)
-   */
-  public static boolean equal(Object one, Object two) {
-    return one == null && two == null || !(one == null || two == null) && (one == two || one.equals(two));
-  }
+	/**
+	 * Does not compare class types.
+	 * @see #classEqual(Object, Object)
+	 */
+	public static boolean equal(Object one, Object two) {
+		return one == null && two == null || !(one == null || two == null) && (one == two || one.equals(two));
+	}
 
-  /**
-   * This method should be called before beginning any equals methods. In order
-   * to return true the method:
-   *
-   * <ol>
-   * <li>The two given objects are the same instance using ==. This also means
-   * if both Objects are null then this method will return true (well
-   * technically they are equal)</li>
-   * <li>Tests that neither object is null</li>
-   * <li>The the two classes from the objects are equal using ==</li>
-   * </ol>
-   *
-   * The boilerplate using this method then becomes:
-   *
-   * <pre>
-   * boolean equals = false;
-   * if (EqualsHelper.classEqual(this, obj)) {
-   *   TargetClass casted = (TargetClass) obj;
-   *   equals = (EqualsHelper.equal(this.getId(), casted.getId()) &amp;&amp; EqualsHelper
-   *       .equal(this.getName(), casted.getName()));
-   * }
-   * return equals;
-   * </pre>
-   *
-   * @param one
-   *          The first object to test
-   * @param two
-   *          The second object to test
-   * @return A boolean indicating if the logic agrees that these two objects are
-   *         equal at the class level
-   */
-  public static boolean classEqual(Object one, Object two) {
-    return one == two || !(one == null || two == null) && one.getClass() == two.getClass();
-  }
+	/**
+	 * This method should be called before beginning any equals methods. In order
+	 * to return true the method:
+	 *
+	 * <ol>
+	 * <li>The two given objects are the same instance using ==. This also means
+	 * if both Objects are null then this method will return true (well
+	 * technically they are equal)</li>
+	 * <li>Tests that neither object is null</li>
+	 * <li>The the two classes from the objects are equal using ==</li>
+	 * </ol>
+	 *
+	 * The boilerplate using this method then becomes:
+	 *
+	 * <pre>
+	 * boolean equals = false;
+	 * if (EqualsHelper.classEqual(this, obj)) {
+	 *   TargetClass casted = (TargetClass) obj;
+	 *   equals = (EqualsHelper.equal(this.getId(), casted.getId()) &amp;&amp; EqualsHelper
+	 *       .equal(this.getName(), casted.getName()));
+	 * }
+	 * return equals;
+	 * </pre>
+	 *
+	 * @param one
+	 *          The first object to test
+	 * @param two
+	 *          The second object to test
+	 * @return A boolean indicating if the logic agrees that these two objects are
+	 *         equal at the class level
+	 */
+	public static boolean classEqual(Object one, Object two) {
+		return one == two || !(one == null || two == null) && one.getClass() == two.getClass();
+	}
 }

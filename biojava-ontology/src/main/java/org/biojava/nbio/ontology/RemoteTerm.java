@@ -55,88 +55,88 @@ import java.util.TreeSet;
  */
 
 public interface RemoteTerm extends Term {
-    /**
-     * Return the imported term
-     * @return the term
-     */
+	/**
+	 * Return the imported term
+	 * @return the term
+	 */
 
-    public Term getRemoteTerm();
+	public Term getRemoteTerm();
 
-    /**
-     * Simple in-memory implementation of a remote ontology term.
-     *
-     * This can be used to implement Ontology.importTerm
-     */
+	/**
+	 * Simple in-memory implementation of a remote ontology term.
+	 *
+	 * This can be used to implement Ontology.importTerm
+	 */
 
-    public final static class Impl
-    extends AbstractTerm
-    implements RemoteTerm, java.io.Serializable {
-        /**
+	public final static class Impl
+	extends AbstractTerm
+	implements RemoteTerm, java.io.Serializable {
+		/**
 		 *
 		 */
 		private static final long serialVersionUID = 922700041939183676L;
 		private final Ontology ontology;
-        private final Term remoteTerm;
-        private final String name;
-        private Set synonyms;
+		private final Term remoteTerm;
+		private final String name;
+		private Set synonyms;
 
-        public Impl(Ontology ontology, Term remoteTerm, String name) {
-            this(ontology, remoteTerm, name, null);
-        }
+		public Impl(Ontology ontology, Term remoteTerm, String name) {
+			this(ontology, remoteTerm, name, null);
+		}
 
-        public Impl(Ontology ontology, Term remoteTerm, String name, Object[] synonyms) {
-            if (ontology == null) {
-                throw new NullPointerException("Ontology must not be null");
-            }
-            if (remoteTerm == null) {
-                throw new NullPointerException("RemoteTerm must not be null");
-            }
-            if(name == null) {
-              name = remoteTerm.getOntology().getName() + "." + remoteTerm.getName();
-            }
+		public Impl(Ontology ontology, Term remoteTerm, String name, Object[] synonyms) {
+			if (ontology == null) {
+				throw new NullPointerException("Ontology must not be null");
+			}
+			if (remoteTerm == null) {
+				throw new NullPointerException("RemoteTerm must not be null");
+			}
+			if(name == null) {
+			  name = remoteTerm.getOntology().getName() + "." + remoteTerm.getName();
+			}
 
-            this.ontology = ontology;
-            this.remoteTerm = remoteTerm;
-            this.name = name;
+			this.ontology = ontology;
+			this.remoteTerm = remoteTerm;
+			this.name = name;
 
-            this.synonyms = new TreeSet();
-            if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
-        }
+			this.synonyms = new TreeSet();
+			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
+		}
 
-        public void addSynonym(Object synonym) {
-            this.synonyms.add(synonym);
-        }
+		public void addSynonym(Object synonym) {
+			this.synonyms.add(synonym);
+		}
 
-        public void removeSynonym(Object synonym) {
-            this.synonyms.remove(synonym);
-        }
+		public void removeSynonym(Object synonym) {
+			this.synonyms.remove(synonym);
+		}
 
-        public Object[] getSynonyms() {
-            return this.synonyms.toArray();
-        }
+		public Object[] getSynonyms() {
+			return this.synonyms.toArray();
+		}
 
-        public String getName() {
-            return getOntology().getName() + ":" + remoteTerm.getName();
-        }
+		public String getName() {
+			return getOntology().getName() + ":" + remoteTerm.getName();
+		}
 
-        public String getDescription() {
-            return remoteTerm.getDescription();
-        }
+		public String getDescription() {
+			return remoteTerm.getDescription();
+		}
 
-        public Ontology getOntology() {
-            return ontology;
-        }
+		public Ontology getOntology() {
+			return ontology;
+		}
 
-        public Term getRemoteTerm() {
-            return remoteTerm;
-        }
+		public Term getRemoteTerm() {
+			return remoteTerm;
+		}
 
-        public String toString() {
-            return name;
-        }
+		public String toString() {
+			return name;
+		}
 
-        public Annotation getAnnotation() {
-            return remoteTerm.getAnnotation();
-        }
-    }
+		public Annotation getAnnotation() {
+			return remoteTerm.getAnnotation();
+		}
+	}
 }

@@ -30,23 +30,23 @@ import junit.framework.TestCase;
  */
 public class JmolViewerImplTest extends TestCase {
 
-    public JmolViewerImplTest(String testName) {
-        super(testName);
-    }
+	public JmolViewerImplTest(String testName) {
+		super(testName);
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
 
-    public void testMe(){
-       assertTrue(true);
-    }
+	public void testMe(){
+	   assertTrue(true);
+	}
 
 //    /**
 //     * Test of setStructure method, of class JmolViewerImpl.

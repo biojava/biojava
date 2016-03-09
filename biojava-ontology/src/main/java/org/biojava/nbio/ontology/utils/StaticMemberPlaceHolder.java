@@ -29,27 +29,27 @@ import java.lang.reflect.Field;
  * @author Matthew Pocock
  */
 public class StaticMemberPlaceHolder implements Serializable {
-  private String className;
-  private String fieldName;
+	private String className;
+	private String fieldName;
 
-  public StaticMemberPlaceHolder(Field field) {
-    this.className = field.getDeclaringClass().getName();
-    this.fieldName = field.getName();
-  }
+	public StaticMemberPlaceHolder(Field field) {
+		this.className = field.getDeclaringClass().getName();
+		this.fieldName = field.getName();
+	}
 
-  protected StaticMemberPlaceHolder() {}
+	protected StaticMemberPlaceHolder() {}
 
-  public Object readResolve() throws ObjectStreamException {
-    try {
-      Class c = Class.forName(className);
-      Field f = c.getDeclaredField(fieldName);
-      return f.get(null);
-    } catch (Exception e) {
-      throw new InvalidObjectException(
-        "Unable to retrieve static field " + fieldName +
-        "for class " + className + " because:\n" +
-        e.getMessage()
-      );
-    }
-  }
+	public Object readResolve() throws ObjectStreamException {
+		try {
+			Class c = Class.forName(className);
+			Field f = c.getDeclaredField(fieldName);
+			return f.get(null);
+		} catch (Exception e) {
+			throw new InvalidObjectException(
+				"Unable to retrieve static field " + fieldName +
+				"for class " + className + " because:\n" +
+				e.getMessage()
+			);
+		}
+	}
 }

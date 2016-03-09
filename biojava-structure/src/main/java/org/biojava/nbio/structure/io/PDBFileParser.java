@@ -117,20 +117,20 @@ import org.slf4j.LoggerFactory;
  * <p>
  * A:
  * <pre>
- public {@link Structure} loadStructure(String pathToPDBFile){
- 	    // The PDBFileParser is wrapped by the PDBFileReader
-		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
+public {@link Structure} loadStructure(String pathToPDBFile){
+	// The PDBFileParser is wrapped by the PDBFileReader
+	{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
 
-		{@link Structure} structure = null;
-		try{
-			structure = pdbreader.getStructure(pathToPDBFile);
-			System.out.println(structure);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return structure;
+	{@link Structure} structure = null;
+	try{
+		structure = pdbreader.getStructure(pathToPDBFile);
+		System.out.println(structure);
+	} catch (IOException e) {
+		e.printStackTrace();
 	}
- </pre>
+	return structure;
+}
+</pre>
  *
  *
  * @author Andreas Prlic
@@ -1456,7 +1456,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 
 	private void pdb_CRYST1_Handler(String line) {
-        // for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 63
+		// for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 63
 		if (line.length() < 63) {
 			logger.warn("CRYST1 record has fewer than 63 columns: will ignore it");
 			return;
@@ -1499,7 +1499,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if (!xtalCell.isCellReasonable()) {
 			// If the entry describes a structure determined by a technique other than X-ray crystallography,
-		    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+			// CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
 			// if so we don't add the crystal cell and it remains null
 			logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.",
 					CrystalCell.MIN_VALID_CELL_SIZE);
@@ -1507,9 +1507,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			crystallographicInfo.setCrystalCell(xtalCell);
 		}
 
-        SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-        if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
-        crystallographicInfo.setSpaceGroup(sg);
+		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
+		if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
+		crystallographicInfo.setSpaceGroup(sg);
 	}
 
 	/**

@@ -161,9 +161,9 @@ public class FileConvert {
 			salt2      = String.format("%5s",salt2) ;
 
 			String connectLine = "CONECT" + atomserial + bond1 + bond2 + bond3 +
-			bond4 + hyd1 + hyd2 + salt1 + hyd3 + hyd4 + salt2;
+					bond4 + hyd1 + hyd2 + salt1 + hyd3 + hyd4 + salt2;
 
-            str.append(connectLine).append(newline);
+			str.append(connectLine).append(newline);
 		}
 		return str.toString();
 	}
@@ -189,8 +189,8 @@ public class FileConvert {
 
 		//REMARK 800
 		if (!structure.getSites().isEmpty()) {
-            str.append("REMARK 800                                                                      ").append(newline);
-            str.append("REMARK 800 SITE                                                                 ").append(newline);
+			str.append("REMARK 800                                                                      ").append(newline);
+			str.append("REMARK 800 SITE                                                                 ").append(newline);
 			for (Site site : structure.getSites()) {
 				site.remark800toPDB(str);
 			}
@@ -252,7 +252,7 @@ public class FileConvert {
 			}
 
 			if ( nrModels>1) {
-                str.append("ENDMDL").append(newline);
+				str.append("ENDMDL").append(newline);
 			}
 
 
@@ -356,7 +356,7 @@ public class FileConvert {
 	/**
 	 * Print ATOM record in the following syntax
 	<pre>
-    ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
+ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
 *
 COLUMNS        DATA TYPE       FIELD         DEFINITION
 ---------------------------------------------------------------------------------
@@ -380,9 +380,9 @@ Angstroms.
 77 - 78        LString(2)      element       Element symbol, right-justified.
 79 - 80        LString(2)      charge        Charge on the atom.
 </pre>
-     * @param a
-     * @param str
-     * @param chainID the chain ID that the Atom will have in the output string
+	 * @param a
+	 * @param str
+	 * @param chainID the chain ID that the Atom will have in the output string
 	 */
 	public static void toPDB(Atom a, StringBuffer str, String chainID) {
 
@@ -477,7 +477,7 @@ Angstroms.
 	 *
 	 */
 	public void toDASStructure(XMLWriter xw)
-	throws IOException
+			throws IOException
 	{
 
 		/*xmlns="http://www.sanger.ac.uk/xml/das/2004/06/17/dasalignment.xsd" xmlns:align="http://www.sanger.ac.uk/xml/das/2004/06/17/alignment.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:schemaLocation="http://www.sanger.ac.uk/xml/das/2004/06/17/dasalignment.xsd http://www.sanger.ac.uk/xml/das//2004/06/17/dasalignment.xsd"*/
@@ -520,8 +520,8 @@ Angstroms.
 
 				//do for all groups:
 				for (int groupnr =0;
-				groupnr<chain.getAtomLength()
-				;groupnr++){
+						groupnr<chain.getAtomLength()
+						;groupnr++){
 					Group gr = chain.getAtomGroup(groupnr);
 					xw.openTag("group");
 					xw.attribute("name",gr.getPDBName());
@@ -558,13 +558,13 @@ Angstroms.
 
 
 				/*
-                 the HashMap for a single CONECT line contains the following fields:
-                 <ul>
-                 <li>atomserial (mandatory) : Atom serial number
-                 <li>bond1 .. bond4 (optional): Serial number of bonded atom
-                 <li>hydrogen1 .. hydrogen4 (optional):Serial number of hydrogen bonded atom
-                 <li>salt1 .. salt2 (optional): Serial number of salt bridged atom
-                 </ul>
+				 the HashMap for a single CONECT line contains the following fields:
+				 <ul>
+				 <li>atomserial (mandatory) : Atom serial number
+				 <li>bond1 .. bond4 (optional): Serial number of bonded atom
+				 <li>hydrogen1 .. hydrogen4 (optional):Serial number of hydrogen bonded atom
+				 <li>salt1 .. salt2 (optional): Serial number of salt bridged atom
+				 </ul>
 				 */
 
 				Map<String, Integer> con = cons.get(cnr);

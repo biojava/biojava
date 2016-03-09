@@ -35,42 +35,42 @@ import java.util.List;
  * @author Paolo Pavan
  */
 public class SequenceLocation<S extends AbstractSequence<C>, C extends Compound> extends SimpleLocation {
-    private S sequence;
+	private S sequence;
 
-    public SequenceLocation(int start, int end,S sequence){
-        super(start,end);
-        this.sequence = sequence;
+	public SequenceLocation(int start, int end,S sequence){
+		super(start,end);
+		this.sequence = sequence;
 
-    }
+	}
 
 
-    public SequenceLocation(int start, int end, S sequence, Strand strand, boolean circular, List<Location> subLocations) {
-        super(new SimplePoint(start), new SimplePoint(end), strand, circular, subLocations);
+	public SequenceLocation(int start, int end, S sequence, Strand strand, boolean circular, List<Location> subLocations) {
+		super(new SimplePoint(start), new SimplePoint(end), strand, circular, subLocations);
 
-        this.sequence = sequence;
-    }
+		this.sequence = sequence;
+	}
 
-    public SequenceLocation(int start, int end,S sequence, Strand strand){
-        super(start,end);
-        this.sequence = sequence;
-        setStrand(strand);
+	public SequenceLocation(int start, int end,S sequence, Strand strand){
+		super(start,end);
+		this.sequence = sequence;
+		setStrand(strand);
 
-    }
+	}
 
-    public SequenceLocation(Point start, Point end, S sequence, Strand strand) {
-        super(start, end, strand);
-        this.sequence = sequence;
-        setStrand(strand);
-    }
+	public SequenceLocation(Point start, Point end, S sequence, Strand strand) {
+		super(start, end, strand);
+		this.sequence = sequence;
+		setStrand(strand);
+	}
 
-    /**
-     * @return the sequence
-     */
-    public S getSequence() {
-        return sequence;
-    }
+	/**
+	 * @return the sequence
+	 */
+	public S getSequence() {
+		return sequence;
+	}
 
-    public void setSequence(S sequence) {
-        this.sequence = sequence;
-    }
+	public void setSequence(S sequence) {
+		this.sequence = sequence;
+	}
 }

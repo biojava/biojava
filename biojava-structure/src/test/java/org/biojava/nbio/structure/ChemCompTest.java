@@ -114,64 +114,64 @@ public class ChemCompTest {
 	}
 
 	@Test
-    public void testChangingProviders(){
+	public void testChangingProviders(){
 
 		// test for issue #145
 
-        String chemID = "MEA";
+	String chemID = "MEA";
 
-        // first we test with reduced chem comp provider
-        ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
+	// first we test with reduced chem comp provider
+	ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
 
-        ChemComp cc = ChemCompGroupFactory.getChemComp(chemID);
+	ChemComp cc = ChemCompGroupFactory.getChemComp(chemID);
 
-        assertNotNull(cc);
+	assertNotNull(cc);
 
-        assertTrue(" is not mea" , cc.getId().equals(chemID));
+	assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-        assertTrue(cc.isEmpty());
+	assertTrue(cc.isEmpty());
 
-        // now we change to download chem comp provider
+	// now we change to download chem comp provider
 
-        ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+	ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
-        cc = ChemCompGroupFactory.getChemComp(chemID);
+	cc = ChemCompGroupFactory.getChemComp(chemID);
 
-        assertNotNull(cc);
+	assertNotNull(cc);
 
-        assertTrue(" is not mea" , cc.getId().equals(chemID));
+	assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-        assertEquals("MEA",cc.getThree_letter_code());
-
-
-
-        // now testing in opposite order
-
-        // first we test with download chem comp provider
-
-        ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
-
-        cc = ChemCompGroupFactory.getChemComp(chemID);
-
-        assertNotNull(cc);
-
-        assertTrue(" is not mea" , cc.getId().equals(chemID));
-
-        assertEquals("MEA",cc.getThree_letter_code());
-
-        // now we change to reduced chem comp provider
-        ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
-
-        cc = ChemCompGroupFactory.getChemComp(chemID);
-
-        assertNotNull(cc);
-
-        assertTrue(" is not mea" , cc.getId().equals(chemID));
-
-        //the cached description contains all information even with the ReducedProvider
-        assertNotNull(cc.getThree_letter_code());
+	assertEquals("MEA",cc.getThree_letter_code());
 
 
-    }
+
+	// now testing in opposite order
+
+	// first we test with download chem comp provider
+
+	ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+	cc = ChemCompGroupFactory.getChemComp(chemID);
+
+	assertNotNull(cc);
+
+	assertTrue(" is not mea" , cc.getId().equals(chemID));
+
+	assertEquals("MEA",cc.getThree_letter_code());
+
+	// now we change to reduced chem comp provider
+	ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
+
+	cc = ChemCompGroupFactory.getChemComp(chemID);
+
+	assertNotNull(cc);
+
+	assertTrue(" is not mea" , cc.getId().equals(chemID));
+
+	//the cached description contains all information even with the ReducedProvider
+	assertNotNull(cc.getThree_letter_code());
+
+
+	}
 
 }

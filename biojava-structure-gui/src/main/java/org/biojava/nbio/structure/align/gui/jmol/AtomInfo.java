@@ -33,76 +33,76 @@ import java.util.regex.Pattern;
  */
 public class AtomInfo {
 
-    String chainId;
-    String atomName;
+	String chainId;
+	String atomName;
 
-    String residueName;
-    String residueNumber;
-    int modelNumber;
+	String residueName;
+	String residueNumber;
+	int modelNumber;
 
-    private static Pattern inscodePatter ;
+	private static Pattern inscodePatter ;
 	static {
 		inscodePatter = Pattern.compile("([0-9]+)([a-zA-Z]*)?");
 	}
 
-    public AtomInfo() {
-        super();
+	public AtomInfo() {
+		super();
 
-    }
+	}
 
-    public static AtomInfo fromString(String atomInfo){
-    	return AtomInfoParser.parse(atomInfo);
-    }
+	public static AtomInfo fromString(String atomInfo){
+		return AtomInfoParser.parse(atomInfo);
+	}
 
-    public int getModelNumber() {
-        return modelNumber;
-    }
+	public int getModelNumber() {
+		return modelNumber;
+	}
 
-    public void setModelNumber(int modelNumber) {
-        this.modelNumber = modelNumber;
-    }
+	public void setModelNumber(int modelNumber) {
+		this.modelNumber = modelNumber;
+	}
 
-    public String getResidueName() {
-        return residueName;
-    }
+	public String getResidueName() {
+		return residueName;
+	}
 
-    /** Including insertion code
-     *
-     * @param residueName
-     */
-    public void setResidueName(String residueName) {
-        this.residueName = residueName;
-    }
+	/** Including insertion code
+	 *
+	 * @param residueName
+	 */
+	public void setResidueName(String residueName) {
+		this.residueName = residueName;
+	}
 
-    public String getResidueNumber() {
-        return residueNumber;
-    }
+	public String getResidueNumber() {
+		return residueNumber;
+	}
 
-    public void setResidueNumber(String residueNumber) {
-        this.residueNumber = residueNumber;
-    }
+	public void setResidueNumber(String residueNumber) {
+		this.residueNumber = residueNumber;
+	}
 
-    public String getChainId() {
-        return chainId;
-    }
-
-
-
-    public void setChainId(String chainId) {
-        this.chainId = chainId;
-    }
+	public String getChainId() {
+		return chainId;
+	}
 
 
 
-    public String getAtomName() {
-        return atomName;
-    }
+	public void setChainId(String chainId) {
+		this.chainId = chainId;
+	}
 
 
 
-    public void setAtomName(String name) {
-        this.atomName = name;
-    }
+	public String getAtomName() {
+		return atomName;
+	}
+
+
+
+	public void setAtomName(String name) {
+		this.atomName = name;
+	}
 
 	@Override
 	public String toString() {

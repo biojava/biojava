@@ -122,7 +122,7 @@ public class FileParsingParameters implements Serializable
 	private boolean useInternalChainId;
 	/**
 	 * The maximum number of atoms we will add to a structure,
-     * this protects from memory overflows in the few really big protein structures.
+	 * this protects from memory overflows in the few really big protein structures.
 	 */
 	public static final int MAX_ATOMS = Integer.MAX_VALUE; // no limit, we don't want to truncate molecules, but the user should make sure there is more memory available
 	//public static final int MAX_ATOMS = 700000; // tested with java -Xmx300M

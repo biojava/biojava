@@ -57,25 +57,25 @@ public enum ElementType implements Serializable {
 	}
 
 	/**
-     * Returns <CODE>true</CODE> if ElementType is a metal.
-     * @return <CODE>true</CODE> if ElementType is a metal.
-     */
+	 * Returns <CODE>true</CODE> if ElementType is a metal.
+	 * @return <CODE>true</CODE> if ElementType is a metal.
+	 */
 	public boolean isMetal() {
 		return metal;
 	}
 
 	/**
-     * Returns <CODE>true</CODE> if ElementType is a metalloid.
-     * @return <CODE>true</CODE> if ElementType is a metalloid.
-     */
+	 * Returns <CODE>true</CODE> if ElementType is a metalloid.
+	 * @return <CODE>true</CODE> if ElementType is a metalloid.
+	 */
 	public boolean isMetalloid() {
 		return this.equals(METALLOID);
 	}
 
 	/**
-     * Returns <CODE>true</CODE> if ElementType is a non-metal.
-     * @return <CODE>true</CODE> if ElementType is a non-metal.
-     */
+	 * Returns <CODE>true</CODE> if ElementType is a non-metal.
+	 * @return <CODE>true</CODE> if ElementType is a non-metal.
+	 */
 	public boolean isNonMetal() {
 		return this.equals(OTHER_NONMETAL) || this.equals(HALOGEN) || this.equals(NOBLE_GAS);
 	}

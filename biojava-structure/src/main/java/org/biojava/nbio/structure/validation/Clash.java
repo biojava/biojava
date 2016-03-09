@@ -60,111 +60,111 @@ import java.math.BigInteger;
 @XmlRootElement(name = "clash")
 public class Clash {
 
-    @XmlAttribute(name = "atom", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
-    protected String atom;
-    @XmlAttribute(name = "cid", required = true)
-    protected BigInteger cid;
-    @XmlAttribute(name = "clashmag", required = true)
-    protected BigDecimal clashmag;
-    @XmlAttribute(name = "dist", required = true)
-    protected BigDecimal dist;
+	@XmlAttribute(name = "atom", required = true)
+	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+	@XmlSchemaType(name = "NCName")
+	protected String atom;
+	@XmlAttribute(name = "cid", required = true)
+	protected BigInteger cid;
+	@XmlAttribute(name = "clashmag", required = true)
+	protected BigDecimal clashmag;
+	@XmlAttribute(name = "dist", required = true)
+	protected BigDecimal dist;
 
-    /**
-     * Gets the value of the atom property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getAtom() {
-        return atom;
-    }
+	/**
+	 * Gets the value of the atom property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link String }
+	 *
+	 */
+	public String getAtom() {
+		return atom;
+	}
 
-    /**
-     * Sets the value of the atom property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setAtom(String value) {
-        this.atom = value;
-    }
+	/**
+	 * Sets the value of the atom property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link String }
+	 *
+	 */
+	public void setAtom(String value) {
+		this.atom = value;
+	}
 
-    /**
-     * Gets the value of the cid property.
-     *
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *
-     */
-    public BigInteger getCid() {
-        return cid;
-    }
+	/**
+	 * Gets the value of the cid property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link BigInteger }
+	 *
+	 */
+	public BigInteger getCid() {
+		return cid;
+	}
 
-    /**
-     * Sets the value of the cid property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *
-     */
-    public void setCid(BigInteger value) {
-        this.cid = value;
-    }
+	/**
+	 * Sets the value of the cid property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link BigInteger }
+	 *
+	 */
+	public void setCid(BigInteger value) {
+		this.cid = value;
+	}
 
-    /**
-     * Gets the value of the clashmag property.
-     *
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *
-     */
-    public BigDecimal getClashmag() {
-        return clashmag;
-    }
+	/**
+	 * Gets the value of the clashmag property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public BigDecimal getClashmag() {
+		return clashmag;
+	}
 
-    /**
-     * Sets the value of the clashmag property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *
-     */
-    public void setClashmag(BigDecimal value) {
-        this.clashmag = value;
-    }
+	/**
+	 * Sets the value of the clashmag property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public void setClashmag(BigDecimal value) {
+		this.clashmag = value;
+	}
 
-    /**
-     * Gets the value of the dist property.
-     *
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *
-     */
-    public BigDecimal getDist() {
-        return dist;
-    }
+	/**
+	 * Gets the value of the dist property.
+	 *
+	 * @return
+	 *     possible object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public BigDecimal getDist() {
+		return dist;
+	}
 
-    /**
-     * Sets the value of the dist property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *
-     */
-    public void setDist(BigDecimal value) {
-        this.dist = value;
-    }
+	/**
+	 * Sets the value of the dist property.
+	 *
+	 * @param value
+	 *     allowed object is
+	 *     {@link BigDecimal }
+	 *
+	 */
+	public void setDist(BigDecimal value) {
+		this.dist = value;
+	}
 
 }

@@ -91,26 +91,26 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 
 
 	/**
-     * Invoked when the user presses the stop button.
-     */
-    @Override
+	 * Invoked when the user presses the stop button.
+	 */
+	@Override
 	public void actionPerformed(ActionEvent evt) {
 
-    	//System.out.println("stopping!");
-    	logStatus("terminating");
-    	logStatus(" Total alignments processed: " + alignmentsProcessed);
-        stopButton.setEnabled(false);
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        progressBar.setIndeterminate(true);
-        progressBar.setStringPainted(false);
-        System.out.println("terminating jobs");
+		//System.out.println("stopping!");
+		logStatus("terminating");
+		logStatus(" Total alignments processed: " + alignmentsProcessed);
+		stopButton.setEnabled(false);
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		progressBar.setIndeterminate(true);
+		progressBar.setStringPainted(false);
+		System.out.println("terminating jobs");
 
-        farmJob.terminate();
+		farmJob.terminate();
 
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        progressBar.setIndeterminate(false);
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		progressBar.setIndeterminate(false);
 
-    }
+	}
 
 
 	@Override
@@ -123,7 +123,7 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 
 		progressBar.setValue(v+1);
 		progressBar.setString(v+"");
-        synchronized(this){notifyAll();}
+		synchronized(this){notifyAll();}
 
 	}
 
@@ -147,7 +147,7 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 		logStatus("Requesting " + nrAlignments + " alignments to be calculated");
 		progressBar.setMaximum(nrAlignments);
 		progressBar.setValue(0);
-        synchronized(this){notifyAll();}
+		synchronized(this){notifyAll();}
 
 	}
 

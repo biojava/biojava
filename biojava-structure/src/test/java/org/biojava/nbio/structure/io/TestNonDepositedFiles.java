@@ -299,7 +299,7 @@ public class TestNonDepositedFiles {
 	 */
 	@Test
 	public void testNewLigandChain() throws IOException, StructureException {
-    	// Test the file parsing speed when the files are already downloaded.
+		// Test the file parsing speed when the files are already downloaded.
 
 		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/ligandTest.pdb.gz"));
 		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/ligandTest.cif.gz"));

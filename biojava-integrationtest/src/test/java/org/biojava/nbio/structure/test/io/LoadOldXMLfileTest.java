@@ -67,42 +67,42 @@ public class LoadOldXMLfileTest {
 	}
 
 
-   private void loadOldXMLFile(String name1, String name2) throws IOException, StructureException {
+	private void loadOldXMLFile(String name1, String name2) throws IOException, StructureException {
 
-      System.out.println("loading " + name1 + " " + name2);
-      InputStream inStream = this.getClass().getResourceAsStream("/align/"+name1+"_"+name2+".xml");
-      assertNotNull(inStream);
+		System.out.println("loading " + name1 + " " + name2);
+		InputStream inStream = this.getClass().getResourceAsStream("/align/"+name1+"_"+name2+".xml");
+		assertNotNull(inStream);
 
-      String xml = convertStreamToString(inStream);
+		String xml = convertStreamToString(inStream);
 
-      AtomCache cache = new AtomCache();
+		AtomCache cache = new AtomCache();
 
-      Atom[] ca1 = cache.getAtoms(name1);
-      Atom[] ca2 = cache.getAtoms(name2);
+		Atom[] ca1 = cache.getAtoms(name1);
+		Atom[] ca2 = cache.getAtoms(name2);
 
-      AFPChain afpChain = AFPChainXMLParser.fromXML(xml, ca1, ca2);
-
-
-
-      String txt = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2);
-      assertNotNull(txt);
+		AFPChain afpChain = AFPChainXMLParser.fromXML(xml, ca1, ca2);
 
 
-   }
 
-   public static String convertStreamToString(InputStream stream) throws IOException {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-      StringBuilder sb = new StringBuilder();
-
-      String line = null;
-
-      while ((line = reader.readLine()) != null) {
-    	  sb.append(line).append("\n");
-      }
-
-      stream.close();
+		String txt = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2);
+		assertNotNull(txt);
 
 
-      return sb.toString();
-   }
+	}
+
+	public static String convertStreamToString(InputStream stream) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+
+		while ((line = reader.readLine()) != null) {
+		  sb.append(line).append("\n");
+		}
+
+		stream.close();
+
+
+		return sb.toString();
+	}
 }

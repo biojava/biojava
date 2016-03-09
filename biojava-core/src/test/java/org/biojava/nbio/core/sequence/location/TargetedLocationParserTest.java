@@ -40,60 +40,60 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class TargetedLocationParserTest {
 
-    private Data request;
+	private Data request;
 
-    public static class Data {
-        private String Insdc;
+	public static class Data {
+		private String Insdc;
 
-        /**
-         * Parser data input. Based on that input it should be able to identity the origin and wanted target
-         * @param gi origin GI number
-         * @param originType origin compound set type
-         * @param Insdc string with INSDC notation
-         * @param compound wanted compound type {@see CompoundSet}
-         */
-        public Data(String gi, CompoundSet<?> originType, String Insdc, CompoundSet<?> compound) {
-            this.Insdc = Insdc;
-        }
-    };
+		/**
+		 * Parser data input. Based on that input it should be able to identity the origin and wanted target
+		 * @param gi origin GI number
+		 * @param originType origin compound set type
+		 * @param Insdc string with INSDC notation
+		 * @param compound wanted compound type {@see CompoundSet}
+		 */
+		public Data(String gi, CompoundSet<?> originType, String Insdc, CompoundSet<?> compound) {
+			this.Insdc = Insdc;
+		}
+	};
 
-    @Parameterized.Parameters
-    public static Collection<Data[]> getLocations() throws Exception {
-
-
-        Data[][] out = new Data[][]{
-            {new Data("7525057", AminoAcidCompoundSet.getAminoAcidCompoundSet(),
-                    "join(complement(NC_000932.1:69611..69724),NC_000932.1:139856..140087,NC_000932.1:140625..140650)", DNACompoundSet.getDNACompoundSet())},
-
-            {new Data("7525059", AminoAcidCompoundSet.getAminoAcidCompoundSet(),
-                    "NC_000932.1:72371..73897", DNACompoundSet.getDNACompoundSet())},
-
-            {new Data("7525073", DNACompoundSet.getDNACompoundSet() ,
-                    "complement(NC_000932.1:84005..84283)", DNACompoundSet.getDNACompoundSet())},
+	@Parameterized.Parameters
+	public static Collection<Data[]> getLocations() throws Exception {
 
 
-            {new Data("7525012", DNACompoundSet.getDNACompoundSet(),
-                    "complement(9938..11461)", DNACompoundSet.getDNACompoundSet())}
-        };
+		Data[][] out = new Data[][]{
+			{new Data("7525057", AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+					"join(complement(NC_000932.1:69611..69724),NC_000932.1:139856..140087,NC_000932.1:140625..140650)", DNACompoundSet.getDNACompoundSet())},
 
-        return Arrays.asList(out);
-    }
+			{new Data("7525059", AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+					"NC_000932.1:72371..73897", DNACompoundSet.getDNACompoundSet())},
 
-    public TargetedLocationParserTest(Data request) {
-        this.request = request;
-    }
+			{new Data("7525073", DNACompoundSet.getDNACompoundSet() ,
+					"complement(NC_000932.1:84005..84283)", DNACompoundSet.getDNACompoundSet())},
 
 
-    @Test
-    public void locationTest() throws Exception {
+			{new Data("7525012", DNACompoundSet.getDNACompoundSet(),
+					"complement(9938..11461)", DNACompoundSet.getDNACompoundSet())}
+		};
 
-        InsdcParser parser = new InsdcParser(DataSource.GENBANK);
-        Location loc = parser.parse(request.Insdc);
+		return Arrays.asList(out);
+	}
 
-        Assert.assertNotNull(loc);
-        if (loc.isComplex()) {
-            Assert.assertFalse(loc.getSubLocations().isEmpty());
-        } else {
-        }
-    }
+	public TargetedLocationParserTest(Data request) {
+		this.request = request;
+	}
+
+
+	@Test
+	public void locationTest() throws Exception {
+
+		InsdcParser parser = new InsdcParser(DataSource.GENBANK);
+		Location loc = parser.parse(request.Insdc);
+
+		Assert.assertNotNull(loc);
+		if (loc.isComplex()) {
+			Assert.assertFalse(loc.getSubLocations().isEmpty());
+		} else {
+		}
+	}
 }

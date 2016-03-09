@@ -27,13 +27,13 @@ import org.slf4j.LoggerFactory;
 import java.util.Iterator;
 
 /**
-* Move a sliding window over a Location.
-* Window size and increment can be specified.
-* If the increment is negative, the iteration starts
-* at end of Location and moves toward beginning.
-*
-* @author Hanno Hinsch
-*/
+ * Move a sliding window over a Location.
+ * Window size and increment can be specified.
+ * If the increment is negative, the iteration starts
+ * at end of Location and moves toward beginning.
+ *
+ * @author Hanno Hinsch
+ */
 public class LocIterator implements Iterator<Location> {
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 
@@ -78,15 +78,15 @@ public class LocIterator implements Iterator<Location> {
 
 
 	/**
-	* Check if next window of specified size is available.
-	*
-	* @param windowSize Size of window. May be smaller or larger than default window size.
-	* @param increment The increment by which to move the window at each iteration. Note that this
-	* method does not actually change the position. However, it checks the sign of the increment parameter to determine
-	* the direction of the iteration.
-	* @return True if window of specified size is available.
-	* @throws IllegalArgumentException Window size parameter was not positive.
-	*/
+	 * Check if next window of specified size is available.
+	 *
+	 * @param windowSize Size of window. May be smaller or larger than default window size.
+	 * @param increment The increment by which to move the window at each iteration. Note that this
+	 * method does not actually change the position. However, it checks the sign of the increment parameter to determine
+	 * the direction of the iteration.
+	 * @return True if window of specified size is available.
+	 * @throws IllegalArgumentException Window size parameter was not positive.
+	 */
 	public boolean hasNext( int windowSize, int increment )
 	{
 		if( windowSize <= 0 )
@@ -104,11 +104,11 @@ public class LocIterator implements Iterator<Location> {
 			{
 				if( mPosition == 0 )
 				{
-                    return windowSize == mBounds.suffix( - windowSize ).length();
-                }
+					return windowSize == mBounds.suffix( - windowSize ).length();
+				}
 				else
 				{
-    				return windowSize == mBounds.prefix( mPosition ).suffix( - windowSize ).length();
+					return windowSize == mBounds.prefix( mPosition ).suffix( - windowSize ).length();
 				}
 			}
 		}
@@ -119,47 +119,47 @@ public class LocIterator implements Iterator<Location> {
 	}
 
 	/**
-	* Check if next window of default size is available.
-	*
-	* @return True if window of default size is available. The default size
-	* is the size specified in the LocIterator constructor.
-	*/
+	 * Check if next window of default size is available.
+	 *
+	 * @return True if window of default size is available. The default size
+	 * is the size specified in the LocIterator constructor.
+	 */
 	@Override
 	public boolean hasNext()
 	{
 		return hasNext( mWindowSize, mIncrement );
 	}
 
-    /**
-     * Get portion of bounding location that has not yet been retrieved by next() method.
-     *
-     * @return The location not yet retrieved.
-     */
-    public Location remainder()
-    {
-        Location remainder= null;
+	/**
+	 * Get portion of bounding location that has not yet been retrieved by next() method.
+	 *
+	 * @return The location not yet retrieved.
+	 */
+	public Location remainder()
+	{
+		Location remainder= null;
 
-        if( mPosition == 0 )
-        {
-            remainder= mBounds;
-        }
-        else
-        {
-            if( mIncrement > 0 )
-            {
-                remainder = mBounds.suffix( mPosition );
-            }
-            else
-            {
-                remainder = mBounds.prefix( mPosition );
-            }
-        }
+		if( mPosition == 0 )
+		{
+			remainder= mBounds;
+		}
+		else
+		{
+			if( mIncrement > 0 )
+			{
+				remainder = mBounds.suffix( mPosition );
+			}
+			else
+			{
+				remainder = mBounds.prefix( mPosition );
+			}
+		}
 
-        return remainder;
+		return remainder;
 
-    }
+	}
 
-    /**
+	/**
 	 * Get next window of default size, then increment position by default amount. Both
 	 * defaults are specified in the LocIterator constructor.
 	 *
@@ -207,12 +207,12 @@ public class LocIterator implements Iterator<Location> {
 			{
 				if( mPosition == 0 )
 				{
-    				r= mBounds.suffix( - windowSize );
+					r= mBounds.suffix( - windowSize );
 				}
 				else
 				{
-                    r= mBounds.prefix( mPosition ).suffix( - windowSize );
-                }
+					r= mBounds.prefix( mPosition ).suffix( - windowSize );
+				}
 			}
 
 			mPosition+= increment;
@@ -248,116 +248,116 @@ public class LocIterator implements Iterator<Location> {
 		throw new UnsupportedOperationException();
 	}
 
-     /**
-     * @deprecated
-     */
-    @Deprecated
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public static void main( String args[] )
-    {
+	{
 
-       Location r= new Location( 10, 21 );
+		Location r= new Location( 10, 21 );
 
-       logger.info( "10 to 21, 1 by 1" );
-       for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 1 by 1" );
+		for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by 3" );
-       for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by 3" );
+		for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by 1" );
-       for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by 1" );
+		for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 11 by 1" );
-       for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 11 by 1" );
+		for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 12 by 1" );
-       for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 12 by 1" );
+		for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 1 by -1" );
-       for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 1 by -1" );
+		for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by -3" );
-       for( Location t: r.window( 3, -3 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by -3" );
+		for( Location t: r.window( 3, -3 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by -1" );
-       for( Location t: r.window( 3, -1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by -1" );
+		for( Location t: r.window( 3, -1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 1 by 1" );
-       for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 1 by 1" );
+		for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by 3" );
-       for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by 3" );
+		for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by 1" );
-       for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by 1" );
+		for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 11 by 1" );
-       for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 11 by 1" );
+		for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 12 by 1" );
-       for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 12 by 1" );
+		for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 1 by -1" );
-       for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 1 by -1" );
+		for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
 
-       //reverse strand
-       r= r.opposite();
-       logger.info( "reverse strand" );
+		//reverse strand
+		r= r.opposite();
+		logger.info( "reverse strand" );
 
-       logger.info( "10 to 21, 1 by 1" );
-       for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 1 by 1" );
+		for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by 3" );
-       for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by 3" );
+		for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by 1" );
-       for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by 1" );
+		for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 11 by 1" );
-       for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 11 by 1" );
+		for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 12 by 1" );
-       for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 12 by 1" );
+		for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 1 by -1" );
-       for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 1 by -1" );
+		for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by -3" );
-       for( Location t: r.window( 3, -3 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by -3" );
+		for( Location t: r.window( 3, -3 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by -1" );
-       for( Location t: r.window( 3, -1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by -1" );
+		for( Location t: r.window( 3, -1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 1 by 1" );
-       for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 1 by 1" );
+		for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by 3" );
-       for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by 3" );
+		for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 3 by 1" );
-       for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 3 by 1" );
+		for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 11 by 1" );
-       for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 11 by 1" );
+		for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 12 by 1" );
-       for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 12 by 1" );
+		for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 1 by -1" );
-       for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
+		logger.info( "10 to 21, 1 by -1" );
+		for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
 
-       logger.info( "10 to 21, 1 by 1 (+2)" );
-       LocIterator i= r.iterator();
-       int chunk= 1;
-       while( i.hasNext( 1, chunk ) )
-       {
-        Location t= i.next( 1, chunk );
-        logger.info( t.toString() );
-        chunk+= 2;
-       }
+		logger.info( "10 to 21, 1 by 1 (+2)" );
+		LocIterator i= r.iterator();
+		int chunk= 1;
+		while( i.hasNext( 1, chunk ) )
+		{
+			Location t= i.next( 1, chunk );
+			logger.info( t.toString() );
+			chunk+= 2;
+		}
 
-       //FIXME test remainder()
+		//FIXME test remainder()
 
-       logger.info("JavaGene.LocIterator Passed.");
-    }
+		logger.info("JavaGene.LocIterator Passed.");
+	}
 
 }

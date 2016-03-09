@@ -128,20 +128,20 @@ public class AFPAlignmentDisplay
 
 
 	/**
-     * Extract the alignment output
-     * <p>eg<pre>
-     * STWNTWACTWHLKQP--WSTILILA
-     * 111111111111     22222222
-     * SQNNTYACSWKLKSWNNNSTILILG
-     * </pre>
-     * Those position pairs labeled by 1 and 2 are equivalent positions, belongs to
-     * two blocks 1 and 2. The residues between labeled residues are non-equivalent,
-     * with '-' filling in their resulting gaps.
-     * <p>
-     * The three lines can be accessed using
-     * {@link AFPChain#getAlnseq1()}, {@link AFPChain#getAlnsymb()},
-     * and {@link AFPChain#getAlnseq2()}.
-     *
+	 * Extract the alignment output
+	 * <p>eg<pre>
+	 * STWNTWACTWHLKQP--WSTILILA
+	 * 111111111111     22222222
+	 * SQNNTYACSWKLKSWNNNSTILILG
+	 * </pre>
+	 * Those position pairs labeled by 1 and 2 are equivalent positions, belongs to
+	 * two blocks 1 and 2. The residues between labeled residues are non-equivalent,
+	 * with '-' filling in their resulting gaps.
+	 * <p>
+	 * The three lines can be accessed using
+	 * {@link AFPChain#getAlnseq1()}, {@link AFPChain#getAlnsymb()},
+	 * and {@link AFPChain#getAlnseq2()}.
+	 *
 	 */
 	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2) {
 		getAlign(afpChain, ca1, ca2, false);

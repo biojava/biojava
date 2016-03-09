@@ -36,32 +36,32 @@ public final class Pair<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private T first;
-    private T second;
+	private T second;
 
-    /**
-     * Creates a <code>Pair</code> from the specified elements.
-     * @param value1 the first value in the new <code>Pair</code>
-     * @param value2 the second value in the new <code>Pair</code>
-     * @throws IllegalArgumentException if either argument is null
-     */
-    public Pair(T value1, T value2) {
-    	if(value1 == null || value2 == null)
-    		throw new IllegalArgumentException("Pair cannot contain null values");
-        first = value1;
-        second = value2;
-    }
+	/**
+	 * Creates a <code>Pair</code> from the specified elements.
+	 * @param value1 the first value in the new <code>Pair</code>
+	 * @param value2 the second value in the new <code>Pair</code>
+	 * @throws IllegalArgumentException if either argument is null
+	 */
+	public Pair(T value1, T value2) {
+		if(value1 == null || value2 == null)
+			throw new IllegalArgumentException("Pair cannot contain null values");
+		first = value1;
+		second = value2;
+	}
 
-    public T getFirst() {
-    	return first;
-    }
+	public T getFirst() {
+		return first;
+	}
 
-    public T getSecond() {
-    	return second;
-    }
+	public T getSecond() {
+		return second;
+	}
 
 
 
-    @Override
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -94,7 +94,7 @@ public final class Pair<T> implements Serializable {
 	}
 
 	@Override
-    public String toString() {
-        return "<" + first.toString() + ", " + second.toString() + ">";
-    }
+	public String toString() {
+		return "<" + first.toString() + ", " + second.toString() + ">";
+	}
 }

@@ -29,12 +29,12 @@ import org.biojava.nbio.survival.data.WorkSheet;
  */
 public interface CensorStatusSelect {
 
-    /**
-     *
-     * @param worksheet
-     * @param row
-     * @return
-     * @throws Exception
-     */
-    public CensorStatus select(WorkSheet worksheet,String row) throws Exception;
+	/**
+	 *
+	 * @param worksheet
+	 * @param row
+	 * @return
+	 * @throws Exception
+	 */
+	public CensorStatus select(WorkSheet worksheet,String row) throws Exception;
 }

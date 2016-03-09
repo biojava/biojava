@@ -267,10 +267,9 @@ extends JPanel{
 		int drawStart = coordManager.getPanelPos(startpos);
 		int drawEnd   = coordManager.getPanelPos(l) - DEFAULT_X_START + aminosize;
 
-		/*System.out.println("SeqScalePanel drawing scale s:" + startpos + " e: " + endpos +
-             " ps: " + drawStart + " pe:" + drawEnd  + " draw.x " + drawHere.x + " draw.w " + drawHere.width +
-             " scale " + scale);
-		 */
+//		System.out.println("SeqScalePanel drawing scale s:" + startpos + " e: " + endpos +
+//				" ps: " + drawStart + " pe:" + drawEnd  + " draw.x " + drawHere.x + " draw.w " + drawHere.width +
+//				" scale " + scale);
 
 //		the frame around the sequence box
 		if ( scale < SEQUENCE_SHOW){

@@ -79,119 +79,119 @@ public class StdArrayIO {
 
 
 
-    /**
-     * Print an array of doubles to standard output.
-     * @param a
-     */
-    public static void print(double[] a) {
-        int N = a.length;
-        System.out.println(N);
-        for (int i = 0; i < N; i++) {
-         //   System.out.printf("%9.5f ", a[i]);
-            System.out.print(a[i] + " ");
-        }
-        System.out.println();
-    }
+	/**
+	 * Print an array of doubles to standard output.
+	 * @param a
+	 */
+	public static void print(double[] a) {
+		int N = a.length;
+		System.out.println(N);
+		for (int i = 0; i < N; i++) {
+		 //   System.out.printf("%9.5f ", a[i]);
+			System.out.print(a[i] + " ");
+		}
+		System.out.println();
+	}
 
 
 
 
-    /**
-     * Print the M-by-N array of doubles to standard output.
-     * @param a
-     */
-    public static void print(double[][] a) {
-        int M = a.length;
-        int N = a[0].length;
-        System.out.println(M + "x" + N);
-        for (int i = 0; i < M; i++) {
-            for (int j = 0; j < N; j++) {
-    //            System.out.printf("%9.5f ", a[i][j]);
-                System.out.print(a[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
+	/**
+	 * Print the M-by-N array of doubles to standard output.
+	 * @param a
+	 */
+	public static void print(double[][] a) {
+		int M = a.length;
+		int N = a[0].length;
+		System.out.println(M + "x" + N);
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < N; j++) {
+	//            System.out.printf("%9.5f ", a[i][j]);
+				System.out.print(a[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
 
 
 
 
-    /**
-     * Print an array of ints to standard output.
-     * @param a
-     */
-    public static void print(int[] a) {
-        int N = a.length;
-        System.out.println(N);
-        for (int i = 0; i < N; i++) {
-            System.out.printf("%9d ", a[i]);
-        }
-        System.out.println();
-    }
+	/**
+	 * Print an array of ints to standard output.
+	 * @param a
+	 */
+	public static void print(int[] a) {
+		int N = a.length;
+		System.out.println(N);
+		for (int i = 0; i < N; i++) {
+			System.out.printf("%9d ", a[i]);
+		}
+		System.out.println();
+	}
 
 
 
 
-    /**
-     * Print the M-by-N array of ints to standard output.
-     * @param a
-     */
-    public static void print(int[][] a) {
-        int M = a.length;
-        int N = a[0].length;
-        System.out.println(M + " " + N);
-        for (int i = 0; i < M; i++) {
-            for (int j = 0; j < N; j++) {
-                System.out.printf("%9d ", a[i][j]);
-            }
-            System.out.println();
-        }
-    }
+	/**
+	 * Print the M-by-N array of ints to standard output.
+	 * @param a
+	 */
+	public static void print(int[][] a) {
+		int M = a.length;
+		int N = a[0].length;
+		System.out.println(M + " " + N);
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < N; j++) {
+				System.out.printf("%9d ", a[i][j]);
+			}
+			System.out.println();
+		}
+	}
 
 
 
 
-    /**
-     * Print an array of booleans to standard output.
-     * @param a
-     */
-    public static void print(boolean[] a) {
-        int N = a.length;
-        System.out.println(N);
-        for (int i = 0; i < N; i++) {
-            if (a[i]) System.out.print("1 ");
-            else      System.out.print("0 ");
-        }
-        System.out.println();
-    }
+	/**
+	 * Print an array of booleans to standard output.
+	 * @param a
+	 */
+	public static void print(boolean[] a) {
+		int N = a.length;
+		System.out.println(N);
+		for (int i = 0; i < N; i++) {
+			if (a[i]) System.out.print("1 ");
+			else      System.out.print("0 ");
+		}
+		System.out.println();
+	}
 
 
 
-   /**
-     * Print the  M-by-N array of booleans to standard output.
-     * @param a
-     */
-    public static void print(boolean[][] a) {
-        int M = a.length;
-        int N = a[0].length;
-        System.out.println(M + " " + N);
-        for (int i = 0; i < M; i++) {
-            for (int j = 0; j < N; j++) {
-                if (a[i][j]) System.out.print("1 ");
-                else         System.out.print("0 ");
-            }
-            System.out.println();
-        }
-    }
+	/**
+	 * Print the  M-by-N array of booleans to standard output.
+	 * @param a
+	 */
+	public static void print(boolean[][] a) {
+		int M = a.length;
+		int N = a[0].length;
+		System.out.println(M + " " + N);
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < N; j++) {
+				if (a[i][j]) System.out.print("1 ");
+				else         System.out.print("0 ");
+			}
+			System.out.println();
+		}
+	}
 
 
-   /**
-     * Test client.
-     * @param args
-     */
-    public static void main(String[] args) {
+	/**
+	 * Test client.
+	 * @param args
+	 */
+	public static void main(String[] args) {
 
 
-    }
+	}
 
 }

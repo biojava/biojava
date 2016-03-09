@@ -43,68 +43,68 @@ public class CookBook
 {
 
 
-   public static void main(String[] args){
+	public static void main(String[] args){
 
-      String name1="1HNG.B";
-      String name2="1A64.A";
-
-
-      try {
-
-         // for this example we are going to use the jFatCat-rigid algorithm
-         StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName);
-
-         // the cache takes care of loading the structures
-         // Downloads files to a temp dir by default
-         AtomCache cache = new AtomCache();
+		String name1="1HNG.B";
+		String name2="1A64.A";
 
 
-         //////////////////////////////
-         // no need to change anything below this line
-         // ////////////////////////////
+		try {
 
-         // load the structures
-         Structure structure1 = cache.getStructure(name1);
-         Structure structure2 = cache.getStructure(name2);
+			// for this example we are going to use the jFatCat-rigid algorithm
+			StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName);
 
-         // we are only using the CA atoms in the structure for the alignment
-         Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
-         Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
-
-         // do the actual alignment
-         AFPChain afpChain = algorithm.align(ca1,ca2);
-
-         // just name the two molecules
-         afpChain.setName1(name1);
-         afpChain.setName2(name2);
-
-         // print and display results:
+			// the cache takes care of loading the structures
+			// Downloads files to a temp dir by default
+			AtomCache cache = new AtomCache();
 
 
-         // flexible original results:
-         System.out.println(afpChain.toFatcat(ca1,ca2));
+			//////////////////////////////
+			// no need to change anything below this line
+			// ////////////////////////////
 
-         // show the alignment in 3D in jmol
-         StructureAlignmentJmol jmol= StructureAlignmentDisplay.display(afpChain, ca1, ca2);
+			// load the structures
+			Structure structure1 = cache.getStructure(name1);
+			Structure structure2 = cache.getStructure(name2);
 
-         // set the display title for the frame
-         jmol.setTitle(algorithm.getAlgorithmName() + " : " + name1 + " vs. " + name2);
+			// we are only using the CA atoms in the structure for the alignment
+			Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
-         // here we open up the alignment - text panel that can interact with the 3D jmol display.
-         DisplayAFP.showAlignmentPanel(afpChain, ca1,ca2,jmol);
+			// do the actual alignment
+			AFPChain afpChain = algorithm.align(ca1,ca2);
 
-         // we can print an XML version
-         //System.out.println(AFPChainXMLConverter.toXML(afpChain, ca1, ca2));
+			// just name the two molecules
+			afpChain.setName1(name1);
+			afpChain.setName2(name2);
 
-         // or print the same output as original FATCAT
-         System.out.println(AfpChainWriter.toFatCat(afpChain, ca1, ca2));
+			// print and display results:
 
 
+			// flexible original results:
+			System.out.println(afpChain.toFatcat(ca1,ca2));
+
+			// show the alignment in 3D in jmol
+			StructureAlignmentJmol jmol= StructureAlignmentDisplay.display(afpChain, ca1, ca2);
+
+			// set the display title for the frame
+			jmol.setTitle(algorithm.getAlgorithmName() + " : " + name1 + " vs. " + name2);
+
+			// here we open up the alignment - text panel that can interact with the 3D jmol display.
+			DisplayAFP.showAlignmentPanel(afpChain, ca1,ca2,jmol);
+
+			// we can print an XML version
+			//System.out.println(AFPChainXMLConverter.toXML(afpChain, ca1, ca2));
+
+			// or print the same output as original FATCAT
+			System.out.println(AfpChainWriter.toFatCat(afpChain, ca1, ca2));
 
 
 
-      } catch (Exception e){
-         e.printStackTrace();
-      }
-   }
+
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }

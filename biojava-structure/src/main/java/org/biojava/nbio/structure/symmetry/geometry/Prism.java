@@ -176,26 +176,30 @@ public class Prism implements Polyhedron {
 		break;
 		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
-        return name;
+		return name;
 	}
 
 	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {
-		case 0:  m.setIdentity(); // front
-		break;
-		case 1:  m.rotX(Math.PI/2); // side edge-centered
-		break;
-		case 2:  m.rotY(Math.PI/n); // side face-centered
-		         Matrix3d m1 = new Matrix3d();
-		         m1.rotX(Math.PI/2);
-		         m.mul(m1);
-		break;
-		case 3:  m.set(flipX()); // back
-
-		break;
-		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
+		case 0:
+			m.setIdentity(); // front
+			break;
+		case 1:
+			m.rotX(Math.PI/2); // side edge-centered
+			break;
+		case 2:
+			m.rotY(Math.PI/n); // side face-centered
+			Matrix3d m1 = new Matrix3d();
+			m1.rotX(Math.PI/2);
+			m.mul(m1);
+			break;
+		case 3:
+			m.set(flipX()); // back
+			break;
+		default:
+			throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
 		return m;
 	}

@@ -38,18 +38,18 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface RescoreRefiner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C> {
 
-    /**
-     * Returns class type of pairwise scoring subroutine.
-     *
-     * @return class type of pairwise scoring subroutine
-     */
-    PairInProfileScorerType getPairInProfileScorer();
+	/**
+	 * Returns class type of pairwise scoring subroutine.
+	 *
+	 * @return class type of pairwise scoring subroutine
+	 */
+	PairInProfileScorerType getPairInProfileScorer();
 
-    /**
-     * Returns class type of profile-profile alignment subroutine.
-     *
-     * @return class type of profile-profile alignment subroutine
-     */
-    ProfileProfileAlignerType getProfileProfileAligner();
+	/**
+	 * Returns class type of profile-profile alignment subroutine.
+	 *
+	 * @return class type of profile-profile alignment subroutine
+	 */
+	ProfileProfileAlignerType getProfileProfileAligner();
 
 }

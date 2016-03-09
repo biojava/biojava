@@ -315,7 +315,7 @@ public class PeptideProperties {
 		ProteinSequence pSequence = null;
 		try {
 			pSequence = new ProteinSequence(sequence);
- 		} catch (CompoundNotFoundException e) {
+		} catch (CompoundNotFoundException e) {
 			// the sequence was checked with Utils.checkSequence, this shouldn't happen
 			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
 		}

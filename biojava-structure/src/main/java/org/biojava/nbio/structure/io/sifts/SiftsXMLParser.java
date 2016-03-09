@@ -174,18 +174,18 @@ public class SiftsXMLParser {
 
 		/**
 		 *  <residue dbResNum="1" dbResName="THR">
-          <crossRefDb dbSource="PDB" dbVersion="20101103"
-          dbCoordSys="PDBresnum" dbAccessionId="1a4w" dbResNum="1H"
-          dbResName="THR" dbChainId="L"></crossRefDb>
-          <crossRefDb dbSource="UniProt" dbVersion="157-2"
-          dbCoordSys="UniProt" dbAccessionId="P00734"
-          dbResNum="328" dbResName="T"></crossRefDb>
-          <crossRefDb dbSource="SCOP" dbVersion="1.75"
-          dbCoordSys="PDBresnum" dbAccessionId="26083"
-          dbResNum="1H" dbResName="THR" dbChainId="L"></crossRefDb>
-          <residueDetail dbSource="MSD" property="Annotation">
-          Not_Observed</residueDetail>
-        </residue>
+					<crossRefDb dbSource="PDB" dbVersion="20101103"
+					dbCoordSys="PDBresnum" dbAccessionId="1a4w" dbResNum="1H"
+					dbResName="THR" dbChainId="L"></crossRefDb>
+					<crossRefDb dbSource="UniProt" dbVersion="157-2"
+					dbCoordSys="UniProt" dbAccessionId="P00734"
+					dbResNum="328" dbResName="T"></crossRefDb>
+					<crossRefDb dbSource="SCOP" dbVersion="1.75"
+					dbCoordSys="PDBresnum" dbAccessionId="26083"
+					dbResNum="1H" dbResName="THR" dbChainId="L"></crossRefDb>
+					<residueDetail dbSource="MSD" property="Annotation">
+					Not_Observed</residueDetail>
+				</residue>
 
 		 */
 		private SiftsResidue getResidue(Element residue) {

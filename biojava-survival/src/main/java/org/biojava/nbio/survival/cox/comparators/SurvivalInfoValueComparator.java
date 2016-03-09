@@ -30,25 +30,25 @@ import java.util.Comparator;
  */
 public class SurvivalInfoValueComparator implements Comparator<SurvivalInfo> {
 
-    String variable = "";
+	String variable = "";
 
-    /**
-     *
-     * @param variable
-     */
-    public SurvivalInfoValueComparator(String variable){
-        this.variable = variable;
-    }
+	/**
+	 *
+	 * @param variable
+	 */
+	public SurvivalInfoValueComparator(String variable){
+		this.variable = variable;
+	}
 
-    public int compare(SurvivalInfo t, SurvivalInfo t1) {
-        double v = t.getContinuousVariable(variable);
-        double v1 = t1.getContinuousVariable(variable);
-        if(v < v1)
-            return -1;
-        else if(v > v1)
-            return 1;
-        else
-            return 0;
-    }
+	public int compare(SurvivalInfo t, SurvivalInfo t1) {
+		double v = t.getContinuousVariable(variable);
+		double v1 = t1.getContinuousVariable(variable);
+		if(v < v1)
+			return -1;
+		else if(v > v1)
+			return 1;
+		else
+			return 0;
+	}
 
 }

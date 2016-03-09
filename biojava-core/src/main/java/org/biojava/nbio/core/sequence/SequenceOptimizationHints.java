@@ -38,46 +38,46 @@ package org.biojava.nbio.core.sequence;
  */
 public class SequenceOptimizationHints {
 
-    /**
-     * @return the sequenceUsage
-     */
-    public static SequenceUsage getSequenceUsage() {
-        return sequenceUsage;
-    }
+	/**
+	 * @return the sequenceUsage
+	 */
+	public static SequenceUsage getSequenceUsage() {
+		return sequenceUsage;
+	}
 
-    /**
-     * @param aSequenceUsage the sequenceUsage to set
-     */
-    public static void setSequenceUsage(SequenceUsage aSequenceUsage) {
-        sequenceUsage = aSequenceUsage;
-    }
+	/**
+	 * @param aSequenceUsage the sequenceUsage to set
+	 */
+	public static void setSequenceUsage(SequenceUsage aSequenceUsage) {
+		sequenceUsage = aSequenceUsage;
+	}
 
-    /**
-     * @return the sequenceColection
-     */
-    public static SequenceCollection getSequenceCollection() {
-        return sequenceCollection;
-    }
+	/**
+	 * @return the sequenceColection
+	 */
+	public static SequenceCollection getSequenceCollection() {
+		return sequenceCollection;
+	}
 
-    /**
-     * @param aSequenceColection the sequenceColection to set
-     */
-    public static void setSequenceCollection(SequenceCollection aSequenceColection) {
-        sequenceCollection = aSequenceColection;
-    }
+	/**
+	 * @param aSequenceColection the sequenceColection to set
+	 */
+	public static void setSequenceCollection(SequenceCollection aSequenceColection) {
+		sequenceCollection = aSequenceColection;
+	}
 
-    public enum SequenceUsage {
+	public enum SequenceUsage {
 
-        FULL_SEQUENCE_DATA, SUB_SEQUENCE_DATA, MINIMAL_SEQUENCE_DATA;
-    }
+		FULL_SEQUENCE_DATA, SUB_SEQUENCE_DATA, MINIMAL_SEQUENCE_DATA;
+	}
 
-    public enum SequenceCollection {
+	public enum SequenceCollection {
 
-        ALL_SEQUENCES, VARIABLE_SEQUENCES, MINIMINAL_SEQUENCES;
-    }
+		ALL_SEQUENCES, VARIABLE_SEQUENCES, MINIMINAL_SEQUENCES;
+	}
 
-    static private SequenceUsage sequenceUsage = SequenceUsage.FULL_SEQUENCE_DATA;
-    static private SequenceCollection sequenceCollection = SequenceCollection.ALL_SEQUENCES;
+	static private SequenceUsage sequenceUsage = SequenceUsage.FULL_SEQUENCE_DATA;
+	static private SequenceCollection sequenceCollection = SequenceCollection.ALL_SEQUENCES;
 
 
 

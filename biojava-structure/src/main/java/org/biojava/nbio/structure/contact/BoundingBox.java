@@ -100,7 +100,7 @@ public class BoundingBox implements Serializable {
 	/** Returns the dimensions of this bounding box.
 	 *
 	 * @return a double array (x,y,z) with the dimensions of the box.
-     */
+	 */
 	public double[] getDimensions(){
 
 		double[] dim = new double[3];
@@ -182,7 +182,7 @@ public class BoundingBox implements Serializable {
 	private boolean areOverlapping(double imin, double imax, double jmin, double jmax, double cutoff) {
 
 		Bound[] bounds = {new Bound(0,imin), new Bound(1,imax),
-				   		   new Bound(2,jmin), new Bound(3,jmax)};
+				new Bound(2,jmin), new Bound(3,jmax)};
 
 		Arrays.sort(bounds);
 

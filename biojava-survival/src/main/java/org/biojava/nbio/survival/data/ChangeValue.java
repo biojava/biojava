@@ -27,10 +27,10 @@ package org.biojava.nbio.survival.data;
  */
 public interface ChangeValue {
 
-    /**
-     *
-     * @param originalValue
-     * @return
-     */
-    public String change(String originalValue);
+	/**
+	 *
+	 * @param originalValue
+	 * @return
+	 */
+	public String change(String originalValue);
 }

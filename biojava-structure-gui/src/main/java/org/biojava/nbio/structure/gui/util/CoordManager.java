@@ -33,56 +33,56 @@ package org.biojava.nbio.structure.gui.util;
 public class CoordManager {
 
 
-    float scale;
-    int chainLength;
+	float scale;
+	int chainLength;
 
-    public CoordManager() {
-        super();
-        scale  = 1.0f;
-        chainLength = 0;
-    }
+	public CoordManager() {
+		super();
+		scale  = 1.0f;
+		chainLength = 0;
+	}
 
-    public void setLength(int length){
-        chainLength = length;
-    }
+	public void setLength(int length){
+		chainLength = length;
+	}
 
-    public void setScale(float scale){
-        this.scale = scale;
-    }
-
-
-    /** start counting at 0...
-     *
-     * @param panelPos
-     * @return the sequence position
-     */
-    protected int getSeqPos(int panelPos){
+	public void setScale(float scale){
+		this.scale = scale;
+	}
 
 
-        int seqPos = Math.round((panelPos - SequenceScalePanel.DEFAULT_X_START) / scale) ;
-        if ( seqPos < 0)
-            seqPos = 0;
-        //int length = chainLength;
-        //if ( seqPos >= length)
-         //   seqPos = length-1;
-        return seqPos;
-    }
+	/** start counting at 0...
+	 *
+	 * @param panelPos
+	 * @return the sequence position
+	 */
+	protected int getSeqPos(int panelPos){
 
-    protected int getPanelPos(int seqPos){
 
-        if ( seqPos < 0 )
-            seqPos = 0;
+		int seqPos = Math.round((panelPos - SequenceScalePanel.DEFAULT_X_START) / scale) ;
+		if ( seqPos < 0)
+			seqPos = 0;
+		//int length = chainLength;
+		//if ( seqPos >= length)
+		 //   seqPos = length-1;
+		return seqPos;
+	}
 
-        //if ( seqPos >= length)
-         //   seqPos = length-1;
+	protected int getPanelPos(int seqPos){
 
-        int aminosize = Math.round(1*scale);
-        if ( aminosize < 1)
-            aminosize = 1;
+		if ( seqPos < 0 )
+			seqPos = 0;
 
-        int panelPos = Math.round(seqPos * scale) + SequenceScalePanel.DEFAULT_X_START ;
-        return panelPos;
-    }
+		//if ( seqPos >= length)
+		 //   seqPos = length-1;
+
+		int aminosize = Math.round(1*scale);
+		if ( aminosize < 1)
+			aminosize = 1;
+
+		int panelPos = Math.round(seqPos * scale) + SequenceScalePanel.DEFAULT_X_START ;
+		return panelPos;
+	}
 
 
 }

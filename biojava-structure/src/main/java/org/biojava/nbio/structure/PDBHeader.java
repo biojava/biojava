@@ -578,23 +578,23 @@ public class PDBHeader implements PDBRecord, Serializable{
 		return this.journalArticle != null;
 	}
 
-    /**
-     * Get the associated publication as defined by the JRNL records in a PDB
-     * file.
-     * @return a JournalArticle
-     */
-    public JournalArticle getJournalArticle() {
-        return this.journalArticle;
-    }
+	/**
+	 * Get the associated publication as defined by the JRNL records in a PDB
+	 * file.
+	 * @return a JournalArticle
+	 */
+	public JournalArticle getJournalArticle() {
+		return this.journalArticle;
+	}
 
-    /**
-     * Set the associated publication as defined by the JRNL records in a PDB
-     * file.
-     * @param journalArticle the article
-     */
-    public void setJournalArticle(JournalArticle journalArticle) {
-        this.journalArticle = journalArticle;
-    }
+	/**
+	 * Set the associated publication as defined by the JRNL records in a PDB
+	 * file.
+	 * @param journalArticle the article
+	 */
+	public void setJournalArticle(JournalArticle journalArticle) {
+		this.journalArticle = journalArticle;
+	}
 
 	/**
 	 * Return the map of biological assemblies. The keys are the

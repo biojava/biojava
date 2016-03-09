@@ -152,10 +152,10 @@ public class OboFileHandler implements OboFileEventListener {
 					key.equals(INTERSECTION_OF) ||
 					key.equals(SUBSET)) {
 				try {
-					Term object = ontology.containsTerm(value) ?
-						object = ontology.getTerm(value): ontology.createTerm(value);
-					Term predicate = ontology.containsTerm(key) ? ontology.getTerm(key) : ontology.createTerm(key);
-   			        ontology.createTriple(currentTerm, object, predicate, currentTerm + " " + predicate + " " + object, key+"-relationship");
+					Term object = (ontology.containsTerm(value) ?
+							ontology.getTerm(value): ontology.createTerm(value));
+					Term predicate = (ontology.containsTerm(key) ? ontology.getTerm(key) : ontology.createTerm(key));
+					ontology.createTriple(currentTerm, object, predicate, currentTerm + " " + predicate + " " + object, key+"-relationship");
 				} catch (AlreadyExistsException ex) {
 				}
 

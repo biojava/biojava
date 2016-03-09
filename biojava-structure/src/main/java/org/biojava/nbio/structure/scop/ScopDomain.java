@@ -90,23 +90,23 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		buf.append("\t") ;
 		buf.append(classificationId);
 		buf.append("\t") ;
-        buf.append(String.valueOf(sunid));
+		buf.append(String.valueOf(sunid));
 		buf.append("\t") ;
 
 		buf.append("cl=");
-        buf.append(String.valueOf(classId));
+		buf.append(String.valueOf(classId));
 		buf.append(",cf=");
-        buf.append(String.valueOf(foldId));
+		buf.append(String.valueOf(foldId));
 		buf.append(",sf=");
 		buf.append(String.valueOf(superfamilyId));
 		buf.append(",fa=");
 		buf.append(String.valueOf(familyId));
 		buf.append(",dm=");
-        buf.append(String.valueOf(domainId));
+		buf.append(String.valueOf(domainId));
 		buf.append(",sp=");
-        buf.append(String.valueOf(speciesId));
+		buf.append(String.valueOf(speciesId));
 		buf.append(",px=");
-        buf.append(String.valueOf(px));
+		buf.append(String.valueOf(px));
 
 
 		return buf.toString();
@@ -241,7 +241,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 
 	@Override
 	public Structure loadStructure(AtomCache cache) throws StructureException,
-			IOException {
+	IOException {
 		return cache.getStructureForPdbId(pdbId);
 	}
 

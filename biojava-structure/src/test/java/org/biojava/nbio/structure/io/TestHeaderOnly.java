@@ -121,36 +121,36 @@ public class TestHeaderOnly {
 
 	// A better test follows that uses local files.
 	// @Test
-    public void testSpeed() {
-    	// Force using a file reader.
-        MMCIFFileReader fr = new MMCIFFileReader();
-        FileParsingParameters par = new FileParsingParameters();
-        //par.setAlignSeqRes(true);
-        // par.setHeaderOnly(true);
-        par.setHeaderOnly(false);
-        fr.setFileParsingParameters(par);
-        fr.setFetchBehavior(FetchBehavior.FETCH_FILES);
+	public void testSpeed() {
+		// Force using a file reader.
+		MMCIFFileReader fr = new MMCIFFileReader();
+		FileParsingParameters par = new FileParsingParameters();
+		//par.setAlignSeqRes(true);
+		// par.setHeaderOnly(true);
+		par.setHeaderOnly(false);
+		fr.setFileParsingParameters(par);
+		fr.setFetchBehavior(FetchBehavior.FETCH_FILES);
 
-        Structure s = null;
-        long start = System.nanoTime();
-        try {
-            // Medium sized structure parsed in 0.549s (no header) vs .676s (header) ~ 20% faster
-        	s = fr.getStructureById("4WZ6");
-        	// A larger structure could be parsed ~ 4.991s (no header) vs 5.867s (header) ~ 16% faster
-        	// s = fr.getStructureById("4V60");
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        long stop = System.nanoTime();
-        double diff = (stop - start) / 1000000000.0;
-        System.out.println(String.format("[%s] Elapsed time: %.3f s", s.getIdentifier(), diff));
-    }
+		Structure s = null;
+		long start = System.nanoTime();
+		try {
+			// Medium sized structure parsed in 0.549s (no header) vs .676s (header) ~ 20% faster
+			s = fr.getStructureById("4WZ6");
+			// A larger structure could be parsed ~ 4.991s (no header) vs 5.867s (header) ~ 16% faster
+			// s = fr.getStructureById("4V60");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		long stop = System.nanoTime();
+		double diff = (stop - start) / 1000000000.0;
+		System.out.println(String.format("[%s] Elapsed time: %.3f s", s.getIdentifier(), diff));
+	}
 
-    // Test using local files.
-    @Test
-    public void testSpeed2() throws StructureException, IOException {
-    	// Test the file parsing speed when the files are already downloaded.
+	// Test using local files.
+	@Test
+	public void testSpeed2() throws StructureException, IOException {
+		// Test the file parsing speed when the files are already downloaded.
 
 		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.cif.gz"));
 		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.pdb.gz"));
@@ -164,11 +164,11 @@ public class TestHeaderOnly {
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
 		//pdbpars.setLoadChemCompInfo(true);
-        long start = System.nanoTime();
+		long start = System.nanoTime();
 		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
-        long stop = System.nanoTime();
-        double diff = (stop - start) / 1000000000.0;
-        System.out.println(String.format("[%s] Elapsed time: %.3f s", s1.getIdentifier(), diff));
+		long stop = System.nanoTime();
+		double diff = (stop - start) / 1000000000.0;
+		System.out.println(String.format("[%s] Elapsed time: %.3f s", s1.getIdentifier(), diff));
 
 		MMcifParser mmcifpars = new SimpleMMcifParser();
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
@@ -176,18 +176,18 @@ public class TestHeaderOnly {
 		mmcifpars.addMMcifConsumer(consumer);
 
 		System.out.println("Testing mmCIF parsing speed");
-        start = System.nanoTime();
+		start = System.nanoTime();
 		mmcifpars.parse(cifStream) ;
 		Structure s2 = consumer.getStructure();
-        stop = System.nanoTime();
-        diff = (stop - start) / 1000000000.0;
-        System.out.println(String.format("[%s] Elapsed time: %.3f s", s2.getIdentifier(), diff));
+		stop = System.nanoTime();
+		diff = (stop - start) / 1000000000.0;
+		System.out.println(String.format("[%s] Elapsed time: %.3f s", s2.getIdentifier(), diff));
 
-        /* Running from an SSD..
-         * PDB .165s (all atom) -> 0.009s (only header)  95% faster.
-         * mmCIF 0.323s (no header) -> 0.175s (only header) 45% faster.
-         */
-    }
+		/* Running from an SSD..
+		 * PDB .165s (all atom) -> 0.009s (only header)  95% faster.
+		 * mmCIF 0.323s (no header) -> 0.175s (only header) 45% faster.
+		 */
+	}
 
 	/**
 	 * Scan through SeqResGroups, returns true if any have Atoms.

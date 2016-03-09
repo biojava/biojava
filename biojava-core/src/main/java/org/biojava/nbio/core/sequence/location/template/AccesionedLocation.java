@@ -34,10 +34,10 @@ import org.biojava.nbio.core.sequence.template.ProxySequenceReader;
  */
 public interface AccesionedLocation extends Location, Accessioned {
 
-    /**
-     * Return the proxy reader used to get sequence for this location. We
-     * assume that AccessionID is bound to the instance to facilitate this
-     * lookup.
-     */
-    ProxySequenceReader<? extends Compound> getProxySequenceReader();
+	/**
+	 * Return the proxy reader used to get sequence for this location. We
+	 * assume that AccessionID is bound to the instance to facilitate this
+	 * lookup.
+	 */
+	ProxySequenceReader<? extends Compound> getProxySequenceReader();
 }

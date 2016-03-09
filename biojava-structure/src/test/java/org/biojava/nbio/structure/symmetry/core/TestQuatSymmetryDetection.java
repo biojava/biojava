@@ -124,7 +124,7 @@ public class TestQuatSymmetryDetection {
 		Structure bioAssembly = builder.rebuildQuaternaryStructure(pdb, transformations);
 
 		QuatSymmetryParameters parameters = new QuatSymmetryParameters();
-        parameters.setOnTheFly(true);
+		parameters.setOnTheFly(true);
 		parameters.setVerbose(false);
 
 		QuatSymmetryDetector detector = new QuatSymmetryDetector(bioAssembly, parameters);

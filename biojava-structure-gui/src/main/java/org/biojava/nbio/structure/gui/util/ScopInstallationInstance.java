@@ -33,20 +33,20 @@ public class ScopInstallationInstance
 {
 
 
-   static ScopInstallationInstance me = new ScopInstallationInstance();
-   ScopDatabase install;
-   private ScopInstallationInstance(){
-      UserConfiguration config = WebStartMain.getWebStartConfig();
-      String cacheLocation = config.getPdbFilePath();
+	static ScopInstallationInstance me = new ScopInstallationInstance();
+	ScopDatabase install;
+	private ScopInstallationInstance(){
+		UserConfiguration config = WebStartMain.getWebStartConfig();
+		String cacheLocation = config.getPdbFilePath();
 
-       install = new ScopInstallation(cacheLocation);
-   }
+		 install = new ScopInstallation(cacheLocation);
+	}
 
 
-   public static ScopInstallationInstance getInstance(){
-      return me;
-   }
-   public  ScopDatabase getSCOP(){
-      return install;
-   }
+	public static ScopInstallationInstance getInstance(){
+		return me;
+	}
+	public  ScopDatabase getSCOP(){
+		return install;
+	}
 }

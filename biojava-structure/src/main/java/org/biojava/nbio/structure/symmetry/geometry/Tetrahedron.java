@@ -142,7 +142,7 @@ public class Tetrahedron implements Polyhedron {
 		break;
 		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
-        return name;
+		return name;
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class Tetrahedron implements Polyhedron {
 		case 1:  m.rotX(Math.PI); // back face-centered
 		break;
 		case 2: double angle = Math.PI - 0.5 * TETRAHEDRAL_ANGLE; // Side edge-centered
-				m.rotX(angle);
+		m.rotX(angle);
 		break;
 		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}

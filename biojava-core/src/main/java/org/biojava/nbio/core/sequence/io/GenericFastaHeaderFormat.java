@@ -36,19 +36,19 @@ import org.biojava.nbio.core.sequence.template.Compound;
  */
 public class GenericFastaHeaderFormat<S extends AbstractSequence<?>, C extends Compound> implements FastaHeaderFormatInterface<S, C> {
 
-    @Override
+	@Override
 	public String getHeader(S sequence) {
-        String header = "";
+		String header = "";
 
-        if (sequence.getOriginalHeader() != null && sequence.getOriginalHeader().length() > 0) {
-            header = sequence.getOriginalHeader();
-        } else {
-            AccessionID accessionID = sequence.getAccession();
-            if (accessionID != null) {
-                header = accessionID.getID();
-            }
-        }
+		if (sequence.getOriginalHeader() != null && sequence.getOriginalHeader().length() > 0) {
+			header = sequence.getOriginalHeader();
+		} else {
+			AccessionID accessionID = sequence.getAccession();
+			if (accessionID != null) {
+				header = accessionID.getID();
+			}
+		}
 
-        return header;
-    }
+		return header;
+	}
 }

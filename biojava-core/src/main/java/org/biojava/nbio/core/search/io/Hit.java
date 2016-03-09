@@ -36,107 +36,107 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 
 public abstract class Hit implements Iterable<Hsp>{
-    private final int hitNum;
-    private final String hitId;
-    private final String hitDef;
-    private final String hitAccession;
-    /**
-     * the length of the hit sequence
-     */
-    private final int hitLen;
-    private final List<Hsp> hsps;
-    private Sequence hitSequence;
+	private final int hitNum;
+	private final String hitId;
+	private final String hitDef;
+	private final String hitAccession;
+	/**
+	 * the length of the hit sequence
+	 */
+	private final int hitLen;
+	private final List<Hsp> hsps;
+	private Sequence hitSequence;
 
 
 
-    public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp> hsps, Sequence hitSequence) {
-        this.hitNum = hitNum;
-        this.hitId = hitId;
-        this.hitDef = hitDef;
-        this.hitAccession = hitAccession;
-        this.hitLen = hitLen;
-        this.hsps = hsps;
-        this.hitSequence = hitSequence;
-    }
+	public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp> hsps, Sequence hitSequence) {
+		this.hitNum = hitNum;
+		this.hitId = hitId;
+		this.hitDef = hitDef;
+		this.hitAccession = hitAccession;
+		this.hitLen = hitLen;
+		this.hsps = hsps;
+		this.hitSequence = hitSequence;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + this.hitLen;
-        hash = 89 * hash + (this.hsps != null ? this.hsps.hashCode() : 0);
-        return hash;
-    }
-     /**
-     * Implements conceptual comparisons of search results.
-     * Fields unrelated to search are deliberately not considered.
-     * @return
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Hit other = (Hit) obj;
-        if (this.hitLen != other.hitLen) {
-            return false;
-        }
-        if (this.hsps != other.hsps && (this.hsps == null || !this.hsps.equals(other.hsps))) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 89 * hash + this.hitLen;
+		hash = 89 * hash + (this.hsps != null ? this.hsps.hashCode() : 0);
+		return hash;
+	}
+	 /**
+	 * Implements conceptual comparisons of search results.
+	 * Fields unrelated to search are deliberately not considered.
+	 * @return
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Hit other = (Hit) obj;
+		if (this.hitLen != other.hitLen) {
+			return false;
+		}
+		if (this.hsps != other.hsps && (this.hsps == null || !this.hsps.equals(other.hsps))) {
+			return false;
+		}
+		return true;
+	}
 
-    public int getHitNum() {
-        return hitNum;
-    }
+	public int getHitNum() {
+		return hitNum;
+	}
 
-    public String getHitId() {
-        return hitId;
-    }
+	public String getHitId() {
+		return hitId;
+	}
 
-    public String getHitDef() {
-        return hitDef;
-    }
+	public String getHitDef() {
+		return hitDef;
+	}
 
-    public String getHitAccession() {
-        return hitAccession;
-    }
+	public String getHitAccession() {
+		return hitAccession;
+	}
 
-    public int getHitLen() {
-        return hitLen;
-    }
+	public int getHitLen() {
+		return hitLen;
+	}
 
-    /**
-     * returns the reference to the original and whole sequence hit in the database.
-     * Available only if the ResultFactory implements setHitReferences and
-     * it was used before the parsing with SearchIO
-     * @return Sequence object
-     */
-    public Sequence getHitSequence() {
-        return hitSequence;
-    }
+	/**
+	 * returns the reference to the original and whole sequence hit in the database.
+	 * Available only if the ResultFactory implements setHitReferences and
+	 * it was used before the parsing with SearchIO
+	 * @return Sequence object
+	 */
+	public Sequence getHitSequence() {
+		return hitSequence;
+	}
 
-    @Override
-    public Iterator<Hsp> iterator() {
-        return new Iterator<Hsp>() {
-            int current = 0;
-            @Override
-            public boolean hasNext() {
-                return current < hsps.size();
-            }
+	@Override
+	public Iterator<Hsp> iterator() {
+		return new Iterator<Hsp>() {
+			int current = 0;
+			@Override
+			public boolean hasNext() {
+				return current < hsps.size();
+			}
 
-            @Override
-            public Hsp next() {
-                return hsps.get(current++);
-            }
+			@Override
+			public Hsp next() {
+				return hsps.get(current++);
+			}
 
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("The remove operation is not supported by this iterator");
-            }
-        };
-    }
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException("The remove operation is not supported by this iterator");
+			}
+		};
+	}
 }

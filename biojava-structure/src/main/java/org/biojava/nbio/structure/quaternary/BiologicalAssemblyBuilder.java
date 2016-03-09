@@ -57,7 +57,7 @@ public class BiologicalAssemblyBuilder {
 
 	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations){
 		// ensure that new chains are build in the same order as they appear in the asymmetric unit
-        orderTransformationsByChainId(asymUnit, transformations);
+	orderTransformationsByChainId(asymUnit, transformations);
 
 		Structure s = asymUnit.clone();
 		// this resets all models (not only the first one): this is important for NMR (multi-model)

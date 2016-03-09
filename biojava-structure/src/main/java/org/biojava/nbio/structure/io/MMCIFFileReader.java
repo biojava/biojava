@@ -35,15 +35,15 @@ import java.io.InputStreamReader;
 
 /** How to parse an mmCif file:
  * <pre>
-  public static void main(String[] args) throws Exception {
-        String filename =  "/path/to/something.cif.gz" ;
+public static void main(String[] args) throws Exception {
+	String filename =  "/path/to/something.cif.gz" ;
 
-        StructureIOFile reader = new MMCIFFileReader();
+	StructureIOFile reader = new MMCIFFileReader();
 
-        Structure struc = reader.getStructure(filename);
-        System.out.println(struc);
-    }
-    </pre>
+	Structure struc = reader.getStructure(filename);
+	System.out.println(struc);
+}
+</pre>
  *
  * @author Andreas Prlic
  * @since 1.7

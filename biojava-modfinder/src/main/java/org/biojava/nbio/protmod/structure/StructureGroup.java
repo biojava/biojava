@@ -36,7 +36,7 @@ implements Comparable<StructureGroup> {
 
 	private  ResidueNumber resNum;
 	private  String pdbName;
-        private Boolean isAminoAcid;
+	private Boolean isAminoAcid;
 
 	public StructureGroup(){
 		resNum = new ResidueNumber();
@@ -46,7 +46,7 @@ implements Comparable<StructureGroup> {
 			 String pdbName, boolean isAminoAcid) {
 		this.resNum = resNum;
 		this.pdbName = pdbName;
-        this.isAminoAcid = isAminoAcid;
+		this.isAminoAcid = isAminoAcid;
 	}
 
 //	public StructureGroup( ResidueNumber resNum,

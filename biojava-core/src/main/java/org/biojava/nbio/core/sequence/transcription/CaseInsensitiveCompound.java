@@ -30,86 +30,86 @@ import org.biojava.nbio.core.sequence.template.Compound;
  */
 public class CaseInsensitiveCompound implements Compound {
 
-  private final NucleotideCompound compound;
+	private final NucleotideCompound compound;
 
-  public CaseInsensitiveCompound(NucleotideCompound compound) {
-    this.compound = compound;
-  }
+	public CaseInsensitiveCompound(NucleotideCompound compound) {
+		this.compound = compound;
+	}
 
-  @Override
+	@Override
 public boolean equalsIgnoreCase(Compound compound) {
-    if (compound == null) {
-      return false;
-    }
-    if (!(compound instanceof CaseInsensitiveCompound)) {
-      return false;
-    }
-    CaseInsensitiveCompound them = (CaseInsensitiveCompound) compound;
-    return toString().equalsIgnoreCase(them.toString());
-  }
+		if (compound == null) {
+			return false;
+		}
+		if (!(compound instanceof CaseInsensitiveCompound)) {
+			return false;
+		}
+		CaseInsensitiveCompound them = (CaseInsensitiveCompound) compound;
+		return toString().equalsIgnoreCase(them.toString());
+	}
 
-  @Override
+	@Override
 public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (!(obj instanceof CaseInsensitiveCompound)) {
-      return false;
-    }
-    return equalsIgnoreCase((Compound)obj);
-  }
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof CaseInsensitiveCompound)) {
+			return false;
+		}
+		return equalsIgnoreCase((Compound)obj);
+	}
 
-  @Override
+	@Override
 public int hashCode() {
-    return toString().toUpperCase().hashCode();
-  }
+		return toString().toUpperCase().hashCode();
+	}
 
-  public NucleotideCompound getUnderlyingCompound() {
-    return this.compound;
-  }
+	public NucleotideCompound getUnderlyingCompound() {
+		return this.compound;
+	}
 
-  @Override
+	@Override
 public String getDescription() {
-    return getUnderlyingCompound().getDescription();
-  }
+		return getUnderlyingCompound().getDescription();
+	}
 
-  @Override
+	@Override
 public String getLongName() {
-    return getUnderlyingCompound().getLongName();
-  }
+		return getUnderlyingCompound().getLongName();
+	}
 
-  @Override
+	@Override
 public Float getMolecularWeight() {
-    return getUnderlyingCompound().getMolecularWeight();
-  }
+		return getUnderlyingCompound().getMolecularWeight();
+	}
 
-  @Override
+	@Override
 public String getShortName() {
-    return getUnderlyingCompound().getShortName();
-  }
+		return getUnderlyingCompound().getShortName();
+	}
 
-  @Override
+	@Override
 public String toString() {
-    return getUnderlyingCompound().toString();
-  }
+		return getUnderlyingCompound().toString();
+	}
 
-  @Override
+	@Override
 public void setDescription(String description) {
-    //Nothing
-  }
+		//Nothing
+	}
 
-  @Override
+	@Override
 public void setLongName(String longName) {
-    //Nothing
-  }
+		//Nothing
+	}
 
-  @Override
+	@Override
 public void setMolecularWeight(Float molecularWeight) {
-    //Nothing
-  }
+		//Nothing
+	}
 
-  @Override
+	@Override
 public void setShortName(String shortName) {
-    //Nothing
-  }
+		//Nothing
+	}
 }

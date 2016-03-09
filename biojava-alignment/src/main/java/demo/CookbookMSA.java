@@ -37,32 +37,32 @@ import java.util.List;
 
 public class CookbookMSA {
 
-    public static void main(String[] args) throws Exception {
-        String[] ids = new String[] {"Q21691", "A8WS47", "O48771"};
-        multipleSequenceAlignment(ids);
-    }
+	public static void main(String[] args) throws Exception {
+		String[] ids = new String[] {"Q21691", "A8WS47", "O48771"};
+		multipleSequenceAlignment(ids);
+	}
 
-    private static void multipleSequenceAlignment(String[] ids) throws Exception {
-        List<ProteinSequence> lst = new ArrayList<ProteinSequence>();
-        for (String id : ids) {
-            lst.add(getSequenceForId(id));
-        }
-        Profile<ProteinSequence, AminoAcidCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
-        System.out.printf("Clustalw:%s%s", System.getProperty("line.separator"), profile);
-        System.out.println();
+	private static void multipleSequenceAlignment(String[] ids) throws Exception {
+		List<ProteinSequence> lst = new ArrayList<ProteinSequence>();
+		for (String id : ids) {
+			lst.add(getSequenceForId(id));
+		}
+		Profile<ProteinSequence, AminoAcidCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
+		System.out.printf("Clustalw:%s%s", System.getProperty("line.separator"), profile);
+		System.out.println();
 
-        ConcurrencyTools.shutdown();
-    }
+		ConcurrencyTools.shutdown();
+	}
 
-    private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
-    	URL uniprotFasta = new URL(String.format("http://www.uniprot.org/uniprot/%s.fasta", uniProtId));
-    	System.out.println("Getting Sequence from URL: "+ uniprotFasta);
+	private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
+		URL uniprotFasta = new URL(String.format("http://www.uniprot.org/uniprot/%s.fasta", uniProtId));
+		System.out.println("Getting Sequence from URL: "+ uniprotFasta);
 
-    	ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
-    	System.out.printf("id : %s %s%s%s", uniProtId, seq, System.getProperty("line.separator"), seq.getOriginalHeader());
-    	System.out.println();
+		ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
+		System.out.printf("id : %s %s%s%s", uniProtId, seq, System.getProperty("line.separator"), seq.getOriginalHeader());
+		System.out.println();
 
-    	return seq;
-    }
+		return seq;
+	}
 
 }

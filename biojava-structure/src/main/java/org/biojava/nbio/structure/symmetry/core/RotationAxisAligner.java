@@ -82,7 +82,7 @@ public class RotationAxisAligner extends AxisAligner{
 		run();
 		Matrix3d m = new Matrix3d();
 		transformationMatrix.getRotationScale(m);
-	    return m;
+		return m;
 	}
 
 	@Override
@@ -138,8 +138,8 @@ public class RotationAxisAligner extends AxisAligner{
 	public Matrix4d getGeometicCenterTransformation() {
 		run();
 
-	    Matrix4d geometricCentered = new Matrix4d(reverseTransformationMatrix);
-	    geometricCentered.setTranslation(new Vector3d(getGeometricCenter()));
+		Matrix4d geometricCentered = new Matrix4d(reverseTransformationMatrix);
+		geometricCentered.setTranslation(new Vector3d(getGeometricCenter()));
 
 		return geometricCentered;
 	}
@@ -537,12 +537,12 @@ public class RotationAxisAligner extends AxisAligner{
 			for (int subunit: orbit) {
 				meanWidth += width[subunit];
 			}
-		    meanWidth /= orbit.size();
+			meanWidth /= orbit.size();
 
-		    if (widthMap.get(meanWidth) != null) {
-		    	meanWidth += 0.01;
-		    }
-		    widthMap.put(meanWidth, orbit);
+			if (widthMap.get(meanWidth) != null) {
+				meanWidth += 0.01;
+			}
+			widthMap.put(meanWidth, orbit);
 		}
 
 		// now fill orbits back into list ordered by width
@@ -555,7 +555,7 @@ public class RotationAxisAligner extends AxisAligner{
 
 	private double[] getSubunitXYWidth() {
 		int n = subunits.getSubunitCount();
-	    double[] width = new double[n];
+		double[] width = new double[n];
 		Point3d probe = new Point3d();
 
 		// transform subunit centers into z-aligned position and calculate
@@ -563,9 +563,9 @@ public class RotationAxisAligner extends AxisAligner{
 		for (int i = 0; i < n; i++) {
 			width[i] = Double.MIN_VALUE;
 			for (Point3d p: subunits.getTraces().get(i)) {
-		   	    probe.set(p);
-			    transformationMatrix.transform(probe);
-			    width[i] = Math.max(width[i], Math.sqrt(probe.x*probe.x + probe.y*probe.y));
+				probe.set(p);
+				transformationMatrix.transform(probe);
+				width[i] = Math.max(width[i], Math.sqrt(probe.x*probe.x + probe.y*probe.y));
 			}
 		}
 		return width;
@@ -573,7 +573,7 @@ public class RotationAxisAligner extends AxisAligner{
 
 	private double[] getSubunitZDepth() {
 		int n = subunits.getSubunitCount();
-	    double[] depth = new double[n];
+		double[] depth = new double[n];
 		Point3d probe = new Point3d();
 
 		// transform subunit centers into z-aligned position and calculate
@@ -820,7 +820,7 @@ public class RotationAxisAligner extends AxisAligner{
 		if (maxFold == 2) {
 			maxFold = 3;
 		}
-    	// TODO how about D2, where minor axis = 2 = principal axis??
+		// TODO how about D2, where minor axis = 2 = principal axis??
 		for (int i = 0; i < rotationGroup.getOrder(); i++) {
 			if (rotationGroup.getRotation(i).getDirection() == 1 && rotationGroup.getRotation(i).getFold() < maxFold) {
 				AxisAngle4d axisAngle = rotationGroup.getRotation(i).getAxisAngle();

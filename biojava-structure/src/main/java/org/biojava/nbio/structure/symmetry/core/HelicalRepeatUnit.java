@@ -224,7 +224,7 @@ private Map<Integer, List<Integer[]>> findClosestPairs(int maxNeighbors) {
 	}
 	distanceMap.clear();
 
-    return reducedMap;
+	return reducedMap;
 }
 
 private static int calcContactNumber(Point3d[] a, Point3d[] b) {

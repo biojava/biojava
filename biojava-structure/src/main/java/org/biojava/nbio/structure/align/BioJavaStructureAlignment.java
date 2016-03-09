@@ -93,7 +93,7 @@ implements StructureAlignment  {
 
 	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object params)
-	throws StructureException {
+			throws StructureException {
 		if ( ! (params instanceof StrucAligParameters)){
 			throw new IllegalArgumentException("BioJava structure alignment requires a StrucAligParameters class for the arguments.");
 		}
@@ -193,8 +193,8 @@ implements StructureAlignment  {
 			}
 		}
 		afpChain.setAlnseq1(alnseq1);
-        afpChain.setAlnseq2(alnseq2);
-        afpChain.setAlnsymb(alnsymb);
+		afpChain.setAlnseq2(alnseq2);
+		afpChain.setAlnsymb(alnsymb);
 
 	}
 

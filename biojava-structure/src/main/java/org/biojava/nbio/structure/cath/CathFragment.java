@@ -30,59 +30,59 @@ import java.io.Serializable;
  */
 public class CathFragment implements Serializable{
 
-    public static final long serialVersionUID = 1L;
+	public static final long serialVersionUID = 1L;
 
-    /**
-     * The number of this segment within the domain.
-     */
-    Integer fragmentId;
+	/**
+	 * The number of this segment within the domain.
+	 */
+	Integer fragmentId;
 
-    /**
-     * The first residue in the segment.
-     * Refers to the complete residue specification (sequence number AND insertion code).
-     */
-    String start;
+	/**
+	 * The first residue in the segment.
+	 * Refers to the complete residue specification (sequence number AND insertion code).
+	 */
+	String start;
 
-     /**
-     * The last residue in the segment.
-     * Refers to the complete residue specification (sequence number AND insertion code).
-     */
-    String stop;
+	 /**
+	 * The last residue in the segment.
+	 * Refers to the complete residue specification (sequence number AND insertion code).
+	 */
+	String stop;
 
-    /**
-     * Number of residues in the segment. This value is parsed, not calculated.
-     */
-    Integer length;
+	/**
+	 * Number of residues in the segment. This value is parsed, not calculated.
+	 */
+	Integer length;
 
-    public Integer getFragmentId() {
-        return fragmentId;
-    }
+	public Integer getFragmentId() {
+		return fragmentId;
+	}
 
-    public void setFragmentId(Integer fragmentId) {
-        this.fragmentId = fragmentId;
-    }
+	public void setFragmentId(Integer fragmentId) {
+		this.fragmentId = fragmentId;
+	}
 
-    public String getStart() {
-        return start;
-    }
+	public String getStart() {
+		return start;
+	}
 
-    public void setStart(String start) {
-        this.start = start;
-    }
+	public void setStart(String start) {
+		this.start = start;
+	}
 
-    public String getStop() {
-        return stop;
-    }
+	public String getStop() {
+		return stop;
+	}
 
-    public void setStop(String stop) {
-        this.stop = stop;
-    }
+	public void setStop(String stop) {
+		this.stop = stop;
+	}
 
-    public Integer getLength() {
-        return length;
-    }
+	public Integer getLength() {
+		return length;
+	}
 
-    public void setLength(Integer length) {
-        this.length = length;
-    }
+	public void setLength(Integer length) {
+		this.length = length;
+	}
 }

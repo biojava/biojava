@@ -24,13 +24,13 @@ package org.biojava.nbio.structure.io.mmcif.model;
 
 /**
  *  Data items in the ENTITY_SRC_GEN category record details of
-               the source from which the entity was obtained in cases
-               where the source was genetically manipulated.  The
-               following are treated separately:  items pertaining to the tissue
-               from which the gene was obtained, items pertaining to the host
-               organism for gene expression and items pertaining to the actual
-               producing organism (plasmid).
-
+ *  the source from which the entity was obtained in cases
+ *  where the source was genetically manipulated.  The
+ *  following are treated separately:  items pertaining to the tissue
+ *  from which the gene was obtained, items pertaining to the host
+ *  organism for gene expression and items pertaining to the actual
+ *  producing organism (plasmid).
+ *
  * @author Andreas Prlic
  *
  */

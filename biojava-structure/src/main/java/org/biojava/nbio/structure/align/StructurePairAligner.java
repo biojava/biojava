@@ -148,13 +148,13 @@ public class StructurePairAligner {
 		distanceMatrix = new Matrix(0,0);
 	}
 
-	  public void addProgressListener(AlignmentProgressListener li){
-	     listeners.add(li);
-	  }
+	public void addProgressListener(AlignmentProgressListener li){
+		listeners.add(li);
+	}
 
-	  public void clearListeners(){
-	     listeners.clear();
-	  }
+	public void clearListeners(){
+		listeners.clear();
+	}
 
 
 	/** example usage of this class
@@ -162,76 +162,76 @@ public class StructurePairAligner {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-			// UPDATE THE FOLLOWING LINES TO MATCH YOUR SETUP
+		// UPDATE THE FOLLOWING LINES TO MATCH YOUR SETUP
 
-			PDBFileReader pdbr = new PDBFileReader();
-			pdbr.setPath("/Users/andreas/WORK/PDB/");
-
-
-			//String pdb1 = "1crl";
-			//String pdb2 = "1ede";
-
-			String pdb1 = "1buz";
-			String pdb2 = "1ali";
-			String outputfile = "/tmp/alig_"+pdb1+"_"+pdb2+".pdb";
-
-			// NO NEED TO DO CHANGE ANYTHING BELOW HERE...
-
-			StructurePairAligner sc = new StructurePairAligner();
+		PDBFileReader pdbr = new PDBFileReader();
+		pdbr.setPath("/Users/andreas/WORK/PDB/");
 
 
-			// step1 : read molecules
+		//String pdb1 = "1crl";
+		//String pdb2 = "1ede";
 
-			logger.info("aligning {} vs. {}", pdb1, pdb2);
+		String pdb1 = "1buz";
+		String pdb2 = "1ali";
+		String outputfile = "/tmp/alig_"+pdb1+"_"+pdb2+".pdb";
 
-			Structure s1 = pdbr.getStructureById(pdb1);
-			Structure s2 = pdbr.getStructureById(pdb2);
+		// NO NEED TO DO CHANGE ANYTHING BELOW HERE...
 
-			// step 2 : do the calculations
-			sc.align(s1,s2);
-
-
-			AlternativeAlignment[] aligs = sc.getAlignments();
-
-			//cluster similar results together
-			ClusterAltAligs.cluster(aligs);
+		StructurePairAligner sc = new StructurePairAligner();
 
 
-			// print the result:
-			// the AlternativeAlignment object gives also access to rotation matrices / shift vectors.
-			for (AlternativeAlignment aa : aligs) {
-				logger.info("Alternative Alignment: ", aa);
+		// step1 : read molecules
+
+		logger.info("aligning {} vs. {}", pdb1, pdb2);
+
+		Structure s1 = pdbr.getStructureById(pdb1);
+		Structure s2 = pdbr.getStructureById(pdb2);
+
+		// step 2 : do the calculations
+		sc.align(s1,s2);
+
+
+		AlternativeAlignment[] aligs = sc.getAlignments();
+
+		//cluster similar results together
+		ClusterAltAligs.cluster(aligs);
+
+
+		// print the result:
+		// the AlternativeAlignment object gives also access to rotation matrices / shift vectors.
+		for (AlternativeAlignment aa : aligs) {
+			logger.info("Alternative Alignment: ", aa);
+		}
+
+
+
+		// convert AlternativeAlignemnt 1 to PDB file, so it can be opened with a viewer (e.g. Jmol, Rasmol)
+
+		if ( aligs.length > 0) {
+			AlternativeAlignment aa1 =aligs[0];
+			String pdbstr = aa1.toPDB(s1,s2);
+
+			logger.info("writing alignment to {}", outputfile);
+			FileOutputStream out= new FileOutputStream(outputfile);
+			PrintStream p =  new PrintStream( out );
+
+			p.println (pdbstr);
+
+			p.close();
+			out.close();
+		}
+
+
+		// display the alignment in Jmol
+		// only will work if Jmol is in the Classpath
+
+		if ( aligs.length > 0) {
+
+			if (! GuiWrapper.isGuiModuleInstalled()){
+				logger.error("Could not find structure-gui modules in classpath, please install first!");
 			}
 
-
-
-			// convert AlternativeAlignemnt 1 to PDB file, so it can be opened with a viewer (e.g. Jmol, Rasmol)
-
-			if ( aligs.length > 0) {
-				AlternativeAlignment aa1 =aligs[0];
-				String pdbstr = aa1.toPDB(s1,s2);
-
-				logger.info("writing alignment to {}", outputfile);
-				FileOutputStream out= new FileOutputStream(outputfile);
-				PrintStream p =  new PrintStream( out );
-
-				p.println (pdbstr);
-
-				p.close();
-				out.close();
-			}
-
-
-			// display the alignment in Jmol
-			// only will work if Jmol is in the Classpath
-
-			if ( aligs.length > 0) {
-
-				if (! GuiWrapper.isGuiModuleInstalled()){
-					logger.error("Could not find structure-gui modules in classpath, please install first!");
-				}
-
-			}
+		}
 
 
 	}
@@ -318,7 +318,7 @@ public class StructurePairAligner {
 	 * @throws StructureException
 	 */
 	public void align(Structure s1, Structure s2)
-	throws StructureException {
+			throws StructureException {
 
 		align(s1,s2,params);
 	}
@@ -331,7 +331,7 @@ public class StructurePairAligner {
 	 * @throws StructureException
 	 */
 	public void align(Structure s1, Structure s2, StrucAligParameters params)
-	throws StructureException {
+			throws StructureException {
 		// step 1 convert the structures to Atom Arrays
 
 
@@ -351,7 +351,7 @@ public class StructurePairAligner {
 	 * @param chainId2
 	 */
 	public void align(Structure s1, String chainId1, Structure s2, String chainId2)
-	throws StructureException{
+			throws StructureException{
 		align(s1,chainId1,s2,chainId2, params);
 	}
 
@@ -365,7 +365,7 @@ public class StructurePairAligner {
 	 * @throws StructureException
 	 */
 	public void align(Structure s1, String chainId1, Structure s2, String chainId2, StrucAligParameters params)
-	throws StructureException{
+			throws StructureException{
 		reset();
 		this.params = params;
 
@@ -405,7 +405,7 @@ public class StructurePairAligner {
 	 * @throws StructureException
 	 */
 	public void align(Atom[] ca1, Atom[] ca2, StrucAligParameters params)
-	throws StructureException {
+			throws StructureException {
 
 
 		reset();
@@ -427,7 +427,7 @@ public class StructurePairAligner {
 			throw new StructureException("structure 1 too short ("+ca1.length+"), can not align");
 		}
 		if ( ca2.length < (fragmentLength + 1) ){
-		   throw new StructureException("structure 2 too short ("+ca2.length+"), can not align");
+			throw new StructureException("structure 2 too short ("+ca2.length+"), can not align");
 		}
 		int rows = ca1.length - fragmentLength + 1;
 		int cols = ca2.length - fragmentLength + 1;
@@ -516,22 +516,22 @@ public class StructurePairAligner {
 		JointFragments[] frags;
 
 		if ( params.isJoinFast()) {
-		   // apply the quick alignment procedure.
-		   // less quality in alignments, better for DB searches...
-		   frags =  joiner.approach_ap3(ca1,ca2,fp,params);
+			// apply the quick alignment procedure.
+			// less quality in alignments, better for DB searches...
+			frags =  joiner.approach_ap3(ca1,ca2,fp,params);
 
-		   joiner.extendFragments(ca1,ca2,frags,params);
+			joiner.extendFragments(ca1,ca2,frags,params);
 
 		} else if ( params.isJoinPlo()){
-		// this approach by StrComPy (peter lackner):
-           frags =  joiner.frag_pairwise_compat(fp,
-                   params.getAngleDiff(),
-                   params.getFragCompat(),
-                   params.getMaxrefine());
+			// this approach by StrComPy (peter lackner):
+			frags =  joiner.frag_pairwise_compat(fp,
+					params.getAngleDiff(),
+					params.getFragCompat(),
+					params.getMaxrefine());
 
 		} else {
 
-		   // my first implementation
+			// my first implementation
 			frags =  joiner.approach_ap3(
 					ca1,ca2, fp, params);
 		}
@@ -557,7 +557,7 @@ public class StructurePairAligner {
 				}
 				else {
 
-				      a.finish(params,ca1,ca2);
+					a.finish(params,ca1,ca2);
 
 				}
 			} catch (StructureException e){
@@ -585,23 +585,23 @@ public class StructurePairAligner {
 	}
 
 	private void notifyStartingAlignment(String name1, Atom[] ca1, String name2, Atom[] ca2){
-	   for (AlignmentProgressListener li : listeners){
-	      li.startingAlignment(name1, ca1, name2, ca2);
-	   }
+		for (AlignmentProgressListener li : listeners){
+			li.startingAlignment(name1, ca1, name2, ca2);
+		}
 	}
 
 	private void notifyFragmentListeners(List<FragmentPair> fragments){
 
-	   for (AlignmentProgressListener li : listeners){
-	      li.calculatedFragmentPairs(fragments);
-	   }
+		for (AlignmentProgressListener li : listeners){
+			li.calculatedFragmentPairs(fragments);
+		}
 
 	}
 
 	private void notifyJointFragments(JointFragments[] fragments){
-	   for (AlignmentProgressListener li : listeners){
-	      li.jointFragments(fragments);
-	   }
+		for (AlignmentProgressListener li : listeners){
+			li.jointFragments(fragments);
+		}
 	}
 
 }

@@ -55,8 +55,8 @@ public class OrderedPair<T> {
 	}
 
 	/**
-     * Sets the first element of an ordered pair.
-     *
+	 * Sets the first element of an ordered pair.
+	 *
 	 * @param element1 the first element of an ordered pair
 	 */
 	public void setElement1(T element1) {
@@ -71,8 +71,8 @@ public class OrderedPair<T> {
 	}
 
 	/**
-     * Sets the second element of an ordered pair.
-     *
+	 * Sets the second element of an ordered pair.
+	 *
 	 * @param element2 the second element of an ordered pair
 	 */
 	public void setElement2(T element2) {

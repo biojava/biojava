@@ -34,27 +34,27 @@ import java.util.List;
  */
 public class HetatomImplTest extends TestCase{
 
-    int bigTestNumber = 60000;
+	int bigTestNumber = 60000;
 
-    public HetatomImplTest() {
+	public HetatomImplTest() {
 
-    }
+	}
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+	}
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+	@AfterClass
+	public static void tearDownClass() throws Exception {
+	}
 
-    @Override @Before
-    public void setUp() {
-    }
+	@Override @Before
+	public void setUp() {
+	}
 
-    @After @Override
-    public void tearDown() {
-    }
+	@After @Override
+	public void tearDown() {
+	}
 
 //    /**
 //     * Test of has3D method, of class HetatomImpl.
@@ -470,149 +470,149 @@ public class HetatomImplTest extends TestCase{
 //        fail("The test case is a prototype.");
 //    }
 //
-    /**
-     * Test of setChain method, of class HetatomImpl.
-     */
-    @Test
-    public void testSetGetChain() {
+	/**
+	 * Test of setChain method, of class HetatomImpl.
+	 */
+	@Test
+	public void testSetGetChain() {
 //        System.out.println("setGetChain");
-        Chain chain = new ChainImpl();
-        chain.setChainID("A");
-        HetatomImpl instance = new HetatomImpl();
-        instance.setChain(chain);
-        Chain expResult = chain;
-        Chain result = instance.getChain();
-        assertEquals(expResult, result);
-    }
+		Chain chain = new ChainImpl();
+		chain.setChainID("A");
+		HetatomImpl instance = new HetatomImpl();
+		instance.setChain(chain);
+		Chain expResult = chain;
+		Chain result = instance.getChain();
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of getChainId method, of class HetatomImpl.
-     */
-    @Test
-    public void testGetChainId() {
+	/**
+	 * Test of getChainId method, of class HetatomImpl.
+	 */
+	@Test
+	public void testGetChainId() {
 //        System.out.println("getChainId");
-        Chain chain = new ChainImpl();
-        chain.setChainID("A");
-        HetatomImpl instance = new HetatomImpl();
-        instance.setChain(chain);
-        String expResult = "A";
-        String result = instance.getChainId();
-        assertEquals(expResult, result);
-    }
+		Chain chain = new ChainImpl();
+		chain.setChainID("A");
+		HetatomImpl instance = new HetatomImpl();
+		instance.setChain(chain);
+		String expResult = "A";
+		String result = instance.getChainId();
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of getSeqNum method, of class HetatomImpl.
-     */
-    @Test
-    public void testSetGetResidueNumber() {
+	/**
+	 * Test of getSeqNum method, of class HetatomImpl.
+	 */
+	@Test
+	public void testSetGetResidueNumber() {
 //        System.out.println("setGetResidueNumber");
-        ResidueNumber residueNumber = new ResidueNumber("A", 42, ' ');
-        HetatomImpl instance = new HetatomImpl();
-        instance.setResidueNumber(residueNumber);
-        ResidueNumber expResult = residueNumber;
-        ResidueNumber result = instance.getResidueNumber();
-        assertEquals(expResult, result);
+		ResidueNumber residueNumber = new ResidueNumber("A", 42, ' ');
+		HetatomImpl instance = new HetatomImpl();
+		instance.setResidueNumber(residueNumber);
+		ResidueNumber expResult = residueNumber;
+		ResidueNumber result = instance.getResidueNumber();
+		assertEquals(expResult, result);
 
-    }
+	}
 
-    @Test
-    public void testGetResidueNumberUsage() {
+	@Test
+	public void testGetResidueNumberUsage() {
 //        System.out.println("testGetResidueNumberUsage");
-        List<Group> resNumgroups = new ArrayList<Group>();
+		List<Group> resNumgroups = new ArrayList<Group>();
 
-        for (int i = 0; i < bigTestNumber; i++) {
-            ResidueNumber resNum = new ResidueNumber("A", i, ' ');
-            HetatomImpl hetAtom = new HetatomImpl();
-            hetAtom.setResidueNumber(resNum);
-            resNumgroups.add(hetAtom);
-        }
+		for (int i = 0; i < bigTestNumber; i++) {
+			ResidueNumber resNum = new ResidueNumber("A", i, ' ');
+			HetatomImpl hetAtom = new HetatomImpl();
+			hetAtom.setResidueNumber(resNum);
+			resNumgroups.add(hetAtom);
+		}
 
-        List<Integer> integers = new ArrayList<Integer>();
+		List<Integer> integers = new ArrayList<Integer>();
 
-        for (Group group : resNumgroups) {
-            ResidueNumber resnum = group.getResidueNumber();
-            integers.add(resnum.getSeqNum());
-        }
-        assertEquals(bigTestNumber, integers.size());
-    }
+		for (Group group : resNumgroups) {
+			ResidueNumber resnum = group.getResidueNumber();
+			integers.add(resnum.getSeqNum());
+		}
+		assertEquals(bigTestNumber, integers.size());
+	}
 
-    @Test
-    public void testSetResidueNumberUsage() {
+	@Test
+	public void testSetResidueNumberUsage() {
 
-        List<Group> resNumgroups = new ArrayList<Group>();
+		List<Group> resNumgroups = new ArrayList<Group>();
 
-        for (int i = 0; i < bigTestNumber; i++) {
-            ResidueNumber resNum = new ResidueNumber("A", i, ' ');
-            HetatomImpl hetAtom = new HetatomImpl();
-            hetAtom.setResidueNumber(resNum);
-            resNumgroups.add(hetAtom);
-        }
-        int groupsSize = resNumgroups.size();
-        assertEquals(bigTestNumber, groupsSize);
-    }
+		for (int i = 0; i < bigTestNumber; i++) {
+			ResidueNumber resNum = new ResidueNumber("A", i, ' ');
+			HetatomImpl hetAtom = new HetatomImpl();
+			hetAtom.setResidueNumber(resNum);
+			resNumgroups.add(hetAtom);
+		}
+		int groupsSize = resNumgroups.size();
+		assertEquals(bigTestNumber, groupsSize);
+	}
 
-    @Test
-    public void testHasAminoAtoms() {
+	@Test
+	public void testHasAminoAtoms() {
 
-    	Atom CA = new AtomImpl();
-    	CA.setName("CA");
-    	CA.setElement(Element.C);
-    	CA.setPDBserial(1);
-    	Atom C = new AtomImpl();
-    	C.setName("C");
-    	C.setElement(Element.C);
-    	C.setPDBserial(2);
-    	Atom N = new AtomImpl();
-    	N.setName("N");
-    	N.setElement(Element.N);
-    	N.setPDBserial(3);
-    	Atom O = new AtomImpl();
-    	O.setName("O");
-    	O.setElement(Element.O);
-    	O.setPDBserial(4);
-    	Atom OXT = new AtomImpl();
-    	OXT.setName("OXT");
-    	OXT.setElement(Element.O);
-    	OXT.setPDBserial(5);
+		Atom CA = new AtomImpl();
+		CA.setName("CA");
+		CA.setElement(Element.C);
+		CA.setPDBserial(1);
+		Atom C = new AtomImpl();
+		C.setName("C");
+		C.setElement(Element.C);
+		C.setPDBserial(2);
+		Atom N = new AtomImpl();
+		N.setName("N");
+		N.setElement(Element.N);
+		N.setPDBserial(3);
+		Atom O = new AtomImpl();
+		O.setName("O");
+		O.setElement(Element.O);
+		O.setPDBserial(4);
+		Atom OXT = new AtomImpl();
+		OXT.setName("OXT");
+		OXT.setElement(Element.O);
+		OXT.setPDBserial(5);
 
-    	Group g = new HetatomImpl();
-    	g.addAtom(CA);
-    	g.addAtom(C);
-    	g.addAtom(N);
-    	g.addAtom(O);
+		Group g = new HetatomImpl();
+		g.addAtom(CA);
+		g.addAtom(C);
+		g.addAtom(N);
+		g.addAtom(O);
 
-    	assertTrue(g.hasAminoAtoms());
+		assertTrue(g.hasAminoAtoms());
 
-    	g = new HetatomImpl();
-    	g.addAtom(CA);
-    	g.addAtom(C);
-    	g.addAtom(N);
-    	g.addAtom(O);
-    	g.addAtom(OXT);
+		g = new HetatomImpl();
+		g.addAtom(CA);
+		g.addAtom(C);
+		g.addAtom(N);
+		g.addAtom(O);
+		g.addAtom(OXT);
 
-    	assertTrue(g.hasAminoAtoms());
+		assertTrue(g.hasAminoAtoms());
 
-    	g = new AminoAcidImpl();
-    	g.addAtom(CA);
-    	g.addAtom(C);
-    	g.addAtom(N);
-    	g.addAtom(O);
+		g = new AminoAcidImpl();
+		g.addAtom(CA);
+		g.addAtom(C);
+		g.addAtom(N);
+		g.addAtom(O);
 
-    	assertTrue(g.hasAminoAtoms());
+		assertTrue(g.hasAminoAtoms());
 
-    	g = new HetatomImpl();
-    	g.addAtom(CA);
-    	g.addAtom(C);
-    	g.addAtom(N);
-    	assertFalse(g.hasAminoAtoms());
+		g = new HetatomImpl();
+		g.addAtom(CA);
+		g.addAtom(C);
+		g.addAtom(N);
+		assertFalse(g.hasAminoAtoms());
 
-    	g = new HetatomImpl();
-    	g.addAtom(CA);
-    	g.addAtom(C);
-    	g.addAtom(N);
-    	g.addAtom(OXT);
+		g = new HetatomImpl();
+		g.addAtom(CA);
+		g.addAtom(C);
+		g.addAtom(N);
+		g.addAtom(OXT);
 
-    	assertFalse(g.hasAminoAtoms());
+		assertFalse(g.hasAminoAtoms());
 
-    }
+	}
 }

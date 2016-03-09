@@ -25,12 +25,12 @@ package org.biojava.nbio.survival.cox;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public enum CoxMethod{
-        /**
-     *
-     */
-    Breslow ,
-        /**
-     *
-     */
-    Efron
-    }
+	/**
+	 *
+	 */
+	Breslow ,
+	/**
+	 *
+	 */
+	Efron
+}

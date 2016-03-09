@@ -214,7 +214,7 @@ public class JFatCatClient {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-                sb.append(line).append(newline);
+				sb.append(line).append(newline);
 			}
 		} catch (IOException e) {
 			logger.error("Couldn't convert stream to string", e); // TODO dmyersturnbull: method should throw; we shouldn't catch here

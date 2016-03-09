@@ -198,7 +198,7 @@ public abstract class JmolSymmetryScriptGenerator {
 				s.append(":");
 				s.append(ids.get(i));
 				if (i < ids.size() -1 ) {
-			    s.append("|");
+					s.append("|");
 				}
 			}
 			s.append("}");
@@ -209,8 +209,8 @@ public abstract class JmolSymmetryScriptGenerator {
 	}
 
 	protected static String getJmolColor(Color4f color) {
-        String hex = Integer.toHexString((color.get().getRGB() & 0xffffff) | 0x1000000).substring(1);
-        return " [x" + hex + "]";
+		String hex = Integer.toHexString((color.get().getRGB() & 0xffffff) | 0x1000000).substring(1);
+		return " [x" + hex + "]";
 	}
 
 	protected static String getJmolPoint(Tuple3d point) {

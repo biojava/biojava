@@ -29,9 +29,9 @@ import java.util.*;
  */
 public class ClusterMerger {
 	private List<SequenceAlignmentCluster> clusters = null;
-    private QuatSymmetryParameters parameters = null;
+	private QuatSymmetryParameters parameters = null;
 
-    List<PairwiseAlignment> pairwiseAlignments = Collections.emptyList();
+	List<PairwiseAlignment> pairwiseAlignments = Collections.emptyList();
 
 	public ClusterMerger(List<SequenceAlignmentCluster> clusters, QuatSymmetryParameters parameters) {
 		this.clusters = clusters;

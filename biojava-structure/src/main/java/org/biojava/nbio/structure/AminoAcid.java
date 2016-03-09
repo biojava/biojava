@@ -60,52 +60,52 @@ public interface AminoAcid extends Group {
 	 */
 	public static final String SEQRESRECORD = "SEQRES";
 
-    /**
-     * Get N atom.
-     *
-     * @return an Atom object or null if N atom does not exist
-     */
-    public Atom getN()    ;
+	/**
+	 * Get N atom.
+	 *
+	 * @return an Atom object or null if N atom does not exist
+	 */
+	public Atom getN()    ;
 
-    /**
-     * Get CA atom.
-     * @return an Atom object or null if CA atom does not exist
-     */
-    public Atom getCA()   ;
+	/**
+	 * Get CA atom.
+	 * @return an Atom object or null if CA atom does not exist
+	 */
+	public Atom getCA()   ;
 
-    /**
-     * Get C atom.
-     * @return an Atom object or null if C atom does not exist
-     */
-    public Atom getC()    ;
+	/**
+	 * Get C atom.
+	 * @return an Atom object or null if C atom does not exist
+	 */
+	public Atom getC()    ;
 
-    /**
-     * Get O atom.
-     * @return an Atom object or null if O atom does not exist
-     */
-    public Atom getO()    ;
+	/**
+	 * Get O atom.
+	 * @return an Atom object or null if O atom does not exist
+	 */
+	public Atom getO()    ;
 
-    /**
-     * Get CB atom.
-     * @return an Atom object or null if CB atom does not exist
-     */
-    public Atom getCB()   ;
+	/**
+	 * Get CB atom.
+	 * @return an Atom object or null if CB atom does not exist
+	 */
+	public Atom getCB()   ;
 
-    /**
-     * Returns the name of the AA, in single letter code.
-     *
-     * @return a Character object representing the amino type value
-     * @see #setAminoType
-     */
-    public  Character getAminoType() ;
+	/**
+	 * Returns the name of the AA, in single letter code.
+	 *
+	 * @return a Character object representing the amino type value
+	 * @see #setAminoType
+	 */
+	public  Character getAminoType() ;
 
-    /**
-     * Set the name of the AA, in single letter code .
-     *
-     * @param aa  a Character object specifying the amino type value
-     * @see #getAminoType
-     */
-    public void setAminoType(Character aa) ;
+	/**
+	 * Set the name of the AA, in single letter code .
+	 *
+	 * @param aa  a Character object specifying the amino type value
+	 * @see #getAminoType
+	 */
+	public void setAminoType(Character aa) ;
 
 	/**
 	 * Allows to distinguish between amino acids that are provided
@@ -121,6 +121,6 @@ public interface AminoAcid extends Group {
 	 * @return the origin of this amino acid (ATOM or SEQRES records)
 	 * @see #setRecordType(String)
 	 */
-    public String getRecordType();
+	public String getRecordType();
 
 }

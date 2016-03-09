@@ -31,87 +31,87 @@ import java.io.Serializable;
  */
 public class CathSegment implements Serializable{
 
-    public static final long serialVersionUID = 1L;
+	public static final long serialVersionUID = 1L;
 
-    /**
-     * The number of this segment within the domain.
-     */
-    Integer segmentId;
+	/**
+	 * The number of this segment within the domain.
+	 */
+	Integer segmentId;
 
-    /**
-     * The first residue in the segment.
-     * Refers to the complete residue specification (sequence number AND insertion code).
-     */
-    String start;
+	/**
+	 * The first residue in the segment.
+	 * Refers to the complete residue specification (sequence number AND insertion code).
+	 */
+	String start;
 
-     /**
-     * The last residue in the segment.
-     * Refers to the complete residue specification (sequence number AND insertion code).
-     */
-    String stop;
+	 /**
+	 * The last residue in the segment.
+	 * Refers to the complete residue specification (sequence number AND insertion code).
+	 */
+	String stop;
 
-    /**
-     * Number of residues in the segment. This value is parsed, not calculated.
-     */
-    Integer length;
+	/**
+	 * Number of residues in the segment. This value is parsed, not calculated.
+	 */
+	Integer length;
 
-    /**
-     * FASTA header.
-     */
-    String sequenceHeader;
+	/**
+	 * FASTA header.
+	 */
+	String sequenceHeader;
 
-    /**
-     * FASTA sequence.
-     */
-    String sequence;
+	/**
+	 * FASTA sequence.
+	 */
+	String sequence;
 
-    public Integer getSegmentId() {
-        return segmentId;
-    }
+	public Integer getSegmentId() {
+		return segmentId;
+	}
 
-    public void setSegmentId(Integer segmentId) {
-        this.segmentId = segmentId;
-    }
+	public void setSegmentId(Integer segmentId) {
+		this.segmentId = segmentId;
+	}
 
-    public String getStart() {
-        return start;
-    }
+	public String getStart() {
+		return start;
+	}
 
-    public void setStart(String start) {
-        this.start = start;
-    }
+	public void setStart(String start) {
+		this.start = start;
+	}
 
-    public String  getStop() {
-        return stop;
-    }
+	public String  getStop() {
+		return stop;
+	}
 
-    public void setStop(String  stop) {
-        this.stop = stop;
-    }
+	public void setStop(String  stop) {
+		this.stop = stop;
+	}
 
-    public Integer getLength() {
-        return length;
-    }
+	public Integer getLength() {
+		return length;
+	}
 
-    public void setLength(Integer length) {
-        this.length = length;
-    }
+	public void setLength(Integer length) {
+		this.length = length;
+	}
 
-    public String getSequenceHeader() {
-        return sequenceHeader;
-    }
+	public String getSequenceHeader() {
+		return sequenceHeader;
+	}
 
-    public void setSequenceHeader(String sequenceHeader) {
-        this.sequenceHeader = sequenceHeader;
-    }
+	public void setSequenceHeader(String sequenceHeader) {
+		this.sequenceHeader = sequenceHeader;
+	}
 
-    public String getSequence() {
-        return sequence;
-    }
+	public String getSequence() {
+		return sequence;
+	}
 
-    public void setSequence(String sequence) {
-        this.sequence = sequence;
-    }
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
 
 	@Override
 	public String toString() {

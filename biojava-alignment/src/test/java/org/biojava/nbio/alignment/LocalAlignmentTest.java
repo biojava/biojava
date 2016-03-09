@@ -44,12 +44,12 @@ public class LocalAlignmentTest {
 
 	@Test
 	public void shouldAllowZeroLengthMatches() throws CompoundNotFoundException {
-        DNASequence query = new DNASequence("C", DNACompoundSet.getDNACompoundSet());
-        DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
-        SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
-        SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
-        PairwiseSequenceAligner<DNASequence, NucleotideCompound> result = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
-        assertEquals(0, result.getScore(), PRECISION);
-        assertEquals(0, result.getProfile().getLength());
+	DNASequence query = new DNASequence("C", DNACompoundSet.getDNACompoundSet());
+	DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
+	SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+	SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
+	PairwiseSequenceAligner<DNASequence, NucleotideCompound> result = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
+	assertEquals(0, result.getScore(), PRECISION);
+	assertEquals(0, result.getProfile().getLength());
 	}
 }

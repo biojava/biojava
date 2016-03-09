@@ -33,48 +33,48 @@ import java.net.URL;
 public interface FastqReader
 {
 
-    /**
-     * Parse the specified readable.
-     *
-     * @param readable readable, must not be null
-     * @param listener low-level event based parser callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
-    void parse(Readable readable, ParseListener listener) throws IOException;
+	/**
+	 * Parse the specified readable.
+	 *
+	 * @param readable readable, must not be null
+	 * @param listener low-level event based parser callback, must not be null
+	 * @throws IOException if an I/O error occurs
+	 */
+	void parse(Readable readable, ParseListener listener) throws IOException;
 
-    /**
-     * Stream the specified readable.
-     *
-     * @param readable readable, must not be null
-     * @param listener event based reader callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
-    void stream(Readable readable, StreamListener listener) throws IOException;
+	/**
+	 * Stream the specified readable.
+	 *
+	 * @param readable readable, must not be null
+	 * @param listener event based reader callback, must not be null
+	 * @throws IOException if an I/O error occurs
+	 */
+	void stream(Readable readable, StreamListener listener) throws IOException;
 
-    /**
-     * Read zero or more FASTQ formatted sequences from the specified file.
-     *
-     * @param file file to read from, must not be null
-     * @return zero or more FASTQ formatted sequences read from the specified file
-     * @throws IOException if an I/O error occurs
-     */
-    Iterable<Fastq> read(File file) throws IOException;
+	/**
+	 * Read zero or more FASTQ formatted sequences from the specified file.
+	 *
+	 * @param file file to read from, must not be null
+	 * @return zero or more FASTQ formatted sequences read from the specified file
+	 * @throws IOException if an I/O error occurs
+	 */
+	Iterable<Fastq> read(File file) throws IOException;
 
-    /**
-     * Read zero or more FASTQ formatted sequences from the specified url.
-     *
-     * @param url URL to read from, must not be null
-     * @return zero or more FASTQ formatted sequences read from the specified url
-     * @throws IOException if an I/O error occurs
-     */
-    Iterable<Fastq> read(URL url) throws IOException;
+	/**
+	 * Read zero or more FASTQ formatted sequences from the specified url.
+	 *
+	 * @param url URL to read from, must not be null
+	 * @return zero or more FASTQ formatted sequences read from the specified url
+	 * @throws IOException if an I/O error occurs
+	 */
+	Iterable<Fastq> read(URL url) throws IOException;
 
-    /**
-     * Read zero or more FASTQ formatted sequences from the specified input stream.
-     *
-     * @param inputStream input stream to read from, must not be null
-     * @return zero or more FASTQ formatted sequences read from the specified input stream
-     * @throws IOException if an I/O error occurs
-     */
-    Iterable<Fastq> read(InputStream inputStream) throws IOException;
+	/**
+	 * Read zero or more FASTQ formatted sequences from the specified input stream.
+	 *
+	 * @param inputStream input stream to read from, must not be null
+	 * @return zero or more FASTQ formatted sequences read from the specified input stream
+	 * @throws IOException if an I/O error occurs
+	 */
+	Iterable<Fastq> read(InputStream inputStream) throws IOException;
 }

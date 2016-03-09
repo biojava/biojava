@@ -47,24 +47,24 @@ import java.util.StringTokenizer;
 public class ScaledSubstitutionMatrix implements
 		SubstitutionMatrix<AminoAcidCompound> {
 
-    private static final String comment = "#";
+	private static final String comment = "#";
 
-    private String description, name;
-    private short[][] matrix;
-    private short max, min;
-    private AminoAcidCompoundSet compoundSet;
+	private String description, name;
+	private short[][] matrix;
+	private short max, min;
+	private AminoAcidCompoundSet compoundSet;
 
-    private List<AminoAcidCompound> rows, cols;
+	private List<AminoAcidCompound> rows, cols;
 
-    private int scale;
+	private int scale;
 
-    public ScaledSubstitutionMatrix(){
-    	compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-    }
+	public ScaledSubstitutionMatrix(){
+		compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+	}
 
 
 
-    public int getScale() {
+	public int getScale() {
 		return scale;
 	}
 
@@ -124,30 +124,30 @@ public class ScaledSubstitutionMatrix implements
 	}
 
 	  /**
-     * Returns in a format similar to the standard NCBI files.
-     */
-    @Override
-    public String toString() {
+	 * Returns in a format similar to the standard NCBI files.
+	 */
+	@Override
+	public String toString() {
 
-    	String newline = System.getProperty("line.separator");
-        StringBuilder s = new StringBuilder();
+		String newline = System.getProperty("line.separator");
+		StringBuilder s = new StringBuilder();
 
 
 
-        StringTokenizer st = new StringTokenizer(description, newline);
-        while (st.hasMoreTokens()) {
-            String line = st.nextToken();
-            if (!line.startsWith(comment)) {
-                s.append(comment);
-            }
-            s.append(String.format("%s%n", line));
-        }
+		StringTokenizer st = new StringTokenizer(description, newline);
+		while (st.hasMoreTokens()) {
+			String line = st.nextToken();
+			if (!line.startsWith(comment)) {
+				s.append(comment);
+			}
+			s.append(String.format("%s%n", line));
+		}
 
-        if ( scale != 1)
-        	s.append("# Matrix scaled by a factor of " + scale + newline );
-        s.append(getMatrixAsString());
-        return s.toString();
-    }
+		if ( scale != 1)
+			s.append("# Matrix scaled by a factor of " + scale + newline );
+		s.append(getMatrixAsString());
+		return s.toString();
+	}
 
 
 
@@ -156,33 +156,33 @@ public class ScaledSubstitutionMatrix implements
 		return compoundSet;
 	}
 	  @Override
-	    public String getMatrixAsString() {
-	        StringBuilder s = new StringBuilder();
+		public String getMatrixAsString() {
+			StringBuilder s = new StringBuilder();
 
 
 
-	        int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
-	                Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
+			int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
+					Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
 
-	        String padCompound = "%" + Integer.toString(lengthCompound) + "s",
-	                padRest = "%" + Integer.toString(lengthRest);
+			String padCompound = "%" + Integer.toString(lengthCompound) + "s",
+					padRest = "%" + Integer.toString(lengthRest);
 
-	        for (int i = 0; i < lengthCompound; i++) {
-	            s.append(" ");
-	        }
-	        for (AminoAcidCompound col : cols) {
-	            s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
-	        }
-	        s.append(String.format("%n"));
-	        for (AminoAcidCompound row : rows) {
-	            s.append(String.format(padCompound, compoundSet.getStringForCompound(row)));
-	            for (AminoAcidCompound col : cols) {
-	                s.append(String.format(padRest + "d", getValue(row, col)));
-	            }
-	            s.append(String.format("%n"));
-	        }
-	        return s.toString();
-	    }
+			for (int i = 0; i < lengthCompound; i++) {
+				s.append(" ");
+			}
+			for (AminoAcidCompound col : cols) {
+				s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
+			}
+			s.append(String.format("%n"));
+			for (AminoAcidCompound row : rows) {
+				s.append(String.format(padCompound, compoundSet.getStringForCompound(row)));
+				for (AminoAcidCompound col : cols) {
+					s.append(String.format(padRest + "d", getValue(row, col)));
+				}
+				s.append(String.format("%n"));
+			}
+			return s.toString();
+		}
 	@Override
 	public short getMaxValue() {
 		return max;
@@ -194,14 +194,14 @@ public class ScaledSubstitutionMatrix implements
 	@Override
 	public short getValue(AminoAcidCompound from, AminoAcidCompound to) {
 		 int row = rows.indexOf(from), col = cols.indexOf(to);
-	        if (row == -1 || col == -1) {
-	            row = cols.indexOf(from);
-	            col = rows.indexOf(to);
-	            if (row == -1 || col == -1) {
-	                return min;
-	            }
-	        }
-	        return matrix[row][col];
+			if (row == -1 || col == -1) {
+				row = cols.indexOf(from);
+				col = rows.indexOf(to);
+				if (row == -1 || col == -1) {
+					return min;
+				}
+			}
+			return matrix[row][col];
 
 
 	}

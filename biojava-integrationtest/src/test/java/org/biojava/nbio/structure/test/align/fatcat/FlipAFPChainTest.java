@@ -57,10 +57,10 @@ public class FlipAFPChainTest extends TestCase {
 
 			// we currently don;t test CECP, because there is a minor mismatch.
 			StructureAlignment[] aligs = new StructureAlignment[]{
-				StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName),
-				StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName),
-				StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName),
-				StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName),
+					StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName),
+					StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName),
+					StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName),
+					StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName),
 			};
 
 			// TODO replace aligs with StructureAlignmentFactory.getAllAlgorithms()
@@ -78,7 +78,7 @@ public class FlipAFPChainTest extends TestCase {
 	}
 
 	private void align (StructureAlignment algorithm, String name1, String name2)
-	throws StructureException, IOException{
+			throws StructureException, IOException{
 
 
 		AtomCache cache = new AtomCache();
@@ -157,7 +157,7 @@ public class FlipAFPChainTest extends TestCase {
 	 * @return
 	 */
 	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
-	throws StructureException {
+			throws StructureException {
 
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		rotateAtoms2(afpChain,ca2clone);
@@ -171,7 +171,7 @@ public class FlipAFPChainTest extends TestCase {
 
 		assertTrue(catmp1.length == afpChain.getNrEQR());
 
-         return SVDSuperimposer.getRMS(catmp1,catmp2);
+		return SVDSuperimposer.getRMS(catmp1,catmp2);
 	}
 
 	public static void rotateAtoms2(AFPChain afpChain,Atom[] ca2){

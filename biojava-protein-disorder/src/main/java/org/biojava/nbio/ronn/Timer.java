@@ -38,43 +38,43 @@ import java.util.concurrent.TimeUnit;
  */
 public class Timer {
 
-    private long checkPoint;
-    private final long startTime;
-    private TimeUnit reportTimeUnit;
+	private long checkPoint;
+	private final long startTime;
+	private TimeUnit reportTimeUnit;
 
-    public Timer() {
+	public Timer() {
 	startTime = System.nanoTime();
 	checkPoint = startTime;
 	// set default time unit for reporting
 	reportTimeUnit = TimeUnit.SECONDS;
-    }
+	}
 
-    public Timer(final TimeUnit reportIn) {
+	public Timer(final TimeUnit reportIn) {
 	this();
 	reportTimeUnit = reportIn;
-    }
+	}
 
-    public void checkPoint() {
+	public void checkPoint() {
 	checkPoint = System.nanoTime();
-    }
+	}
 
-    long getStepTime(final TimeUnit tunit) {
+	long getStepTime(final TimeUnit tunit) {
 	final long duration = tunit.convert(System.nanoTime() - checkPoint,
 		TimeUnit.NANOSECONDS);
 	checkPoint();
 	return duration;
-    }
+	}
 
-    long getStepTime() {
+	long getStepTime() {
 	return getStepTime(reportTimeUnit);
-    }
+	}
 
-    long getTotalTime() {
+	long getTotalTime() {
 	return getTotalTime(reportTimeUnit);
-    }
+	}
 
-    long getTotalTime(final TimeUnit tunit) {
+	long getTotalTime(final TimeUnit tunit) {
 	return tunit.convert(System.nanoTime() - startTime,
 		TimeUnit.NANOSECONDS);
-    }
+	}
 }

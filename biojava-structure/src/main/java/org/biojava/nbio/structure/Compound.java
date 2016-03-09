@@ -98,7 +98,7 @@ public class Compound implements Serializable {
 	private String synthetic = null;
 	private String fragment = null;
 	private String organismScientific = null;
-    private String organismTaxId = null;
+	private String organismTaxId = null;
 	private String organismCommon = null;
 	private String strain = null;
 	private String variant = null;
@@ -112,7 +112,7 @@ public class Compound implements Serializable {
 	private String gene = null;
 	private String cellularLocation = null;
 	private String expressionSystem = null;
-    private String expressionSystemTaxId = null;
+	private String expressionSystemTaxId = null;
 	private String expressionSystemStrain = null;
 	private String expressionSystemVariant = null;
 	private String expressionSystemCellLine = null;
@@ -190,7 +190,7 @@ public class Compound implements Serializable {
 		this.gene = c.gene;
 		this.cellularLocation = c.cellularLocation;
 		this.expressionSystem = c.expressionSystem;
-	    this.expressionSystemTaxId = c.expressionSystemTaxId;
+		this.expressionSystemTaxId = c.expressionSystemTaxId;
 		this.expressionSystemStrain = c.expressionSystemStrain;
 		this.expressionSystemVariant = c.expressionSystemVariant;
 		this.expressionSystemCellLine = c.expressionSystemCellLine;
@@ -342,7 +342,7 @@ public class Compound implements Serializable {
 		if (this.organismScientific != null) {
 			System.out.println("Organism Scientific: " + this.organismScientific);
 		}
-        if (this.organismTaxId != null) {
+		if (this.organismTaxId != null) {
 			System.out.println("Organism Tax Id: " + this.organismTaxId);
 		}
 		if (this.organismCommon != null) {
@@ -384,7 +384,7 @@ public class Compound implements Serializable {
 		if (this.expressionSystem != null) {
 			System.out.println("Expression System: " + this.expressionSystem);
 		}
-        if (this.expressionSystemTaxId != null) {
+		if (this.expressionSystemTaxId != null) {
 			System.out.println("Expression System Tax Id: " + this.expressionSystemTaxId);
 		}
 		if (this.expressionSystemStrain != null) {
@@ -731,13 +731,13 @@ public class Compound implements Serializable {
 		this.organismScientific = organismScientific;
 	}
 
-    public String getOrganismTaxId() {
-        return organismTaxId;
-    }
+	public String getOrganismTaxId() {
+		return organismTaxId;
+	}
 
-    public void setOrganismTaxId(String organismTaxId) {
-        this.organismTaxId = organismTaxId;
-    }
+	public void setOrganismTaxId(String organismTaxId) {
+		this.organismTaxId = organismTaxId;
+	}
 
 	public String getOrganismCommon() {
 		return organismCommon;
@@ -839,13 +839,13 @@ public class Compound implements Serializable {
 		return expressionSystem;
 	}
 
-    public String getExpressionSystemTaxId() {
-        return expressionSystemTaxId;
-    }
+	public String getExpressionSystemTaxId() {
+		return expressionSystemTaxId;
+	}
 
-    public void setExpressionSystemTaxId(String expressionSystemTaxId) {
-        this.expressionSystemTaxId = expressionSystemTaxId;
-    }
+	public void setExpressionSystemTaxId(String expressionSystemTaxId) {
+		this.expressionSystemTaxId = expressionSystemTaxId;
+	}
 
 	public void setExpressionSystem(String expressionSystem) {
 		this.expressionSystem = expressionSystem;

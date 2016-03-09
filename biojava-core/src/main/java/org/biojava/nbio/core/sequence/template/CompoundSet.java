@@ -31,16 +31,16 @@ import java.util.Set;
 
 public interface CompoundSet<C extends Compound> {
 
-    /**
-     * Returns the maximum size of a compound String this set holds
-     */
+	/**
+	 * Returns the maximum size of a compound String this set holds
+	 */
 	public int getMaxSingleCompoundStringLength();
 
-    /**
-     * Returns true if all String representations of Compounds are of the
-     * same length.
-     */
-    public boolean isCompoundStringLengthEqual();
+	/**
+	 * Returns true if all String representations of Compounds are of the
+	 * same length.
+	 */
+	public boolean isCompoundStringLengthEqual();
 
 	/**
 	 * Return null if not recognised. Throw IllegalArgumentException if string
@@ -52,7 +52,7 @@ public interface CompoundSet<C extends Compound> {
 
 	public boolean compoundsEquivalent(C compoundOne, C compoundTwo);
 
-    public boolean isValidSequence(Sequence<C> sequence);
+	public boolean isValidSequence(Sequence<C> sequence);
 
 	public Set<C> getEquivalentCompounds(C compound);
 
@@ -60,5 +60,5 @@ public interface CompoundSet<C extends Compound> {
 
 	public List<C> getAllCompounds();
 
-    boolean isComplementable();
+	boolean isComplementable();
 }

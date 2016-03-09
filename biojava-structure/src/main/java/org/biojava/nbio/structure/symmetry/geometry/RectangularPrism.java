@@ -67,7 +67,7 @@ public class RectangularPrism implements Polyhedron {
 	 * @return the midRadius
 	 */
 	public double getHeight() {
-        return height;
+		return height;
 	}
 
 	/**
@@ -93,14 +93,14 @@ public class RectangularPrism implements Polyhedron {
 		double y = 0.5 * height;
 		double z = 0.5 * length;
 		Point3d[] vertices = new Point3d[8];
-	    vertices[0] = new Point3d(-x, -y,  z);
-	    vertices[1] = new Point3d(-x,  y,  z);
-	    vertices[2] = new Point3d( x,  y,  z);
-	    vertices[3] = new Point3d( x, -y,  z);
-	    vertices[4] = new Point3d(-x, -y, -z);
-	    vertices[5] = new Point3d(-x,  y, -z);
-	    vertices[6] = new Point3d( x,  y, -z);
-	    vertices[7] = new Point3d( x, -y, -z);
+		vertices[0] = new Point3d(-x, -y,  z);
+		vertices[1] = new Point3d(-x,  y,  z);
+		vertices[2] = new Point3d( x,  y,  z);
+		vertices[3] = new Point3d( x, -y,  z);
+		vertices[4] = new Point3d(-x, -y, -z);
+		vertices[5] = new Point3d(-x,  y, -z);
+		vertices[6] = new Point3d( x,  y, -z);
+		vertices[7] = new Point3d( x, -y, -z);
 
 		return vertices;
 	};

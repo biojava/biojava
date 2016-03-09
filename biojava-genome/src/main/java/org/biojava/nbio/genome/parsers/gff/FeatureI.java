@@ -59,14 +59,14 @@ public interface FeatureI
 	 */
 	public String type();
 
-    /**
-     * Get the sequence name.
-     *
-     * @return Sequence name.
-     */
-    public String seqname();
+	/**
+	 * Get the sequence name.
+	 *
+	 * @return Sequence name.
+	 */
+	public String seqname();
 
-    /**
+	/**
 	 * Get the attribute value for this key.
 	 *
 	 * @param key The key.
@@ -75,22 +75,22 @@ public interface FeatureI
 	public String getAttribute( String key );
 
 
-    /**
-     * Check if the feature has a value defined for the specified key.
-     *
-     * @param key The key.
-     * @return True if a value is defined for this key.
-     */
-    public boolean hasAttribute( String key );
+	/**
+	 * Check if the feature has a value defined for the specified key.
+	 *
+	 * @param key The key.
+	 * @return True if a value is defined for this key.
+	 */
+	public boolean hasAttribute( String key );
 
-    /**
-     * Check if the feature attributes include the specified key/value pair.
-     *
-     * @param key The key.
-     * @param value The value.
-     * @return True if the feature's value for this key matches the specified value.
-     */
-    public boolean hasAttribute( String key, String value );
+	/**
+	 * Check if the feature attributes include the specified key/value pair.
+	 *
+	 * @param key The key.
+	 * @param value The value.
+	 * @return True if the feature's value for this key matches the specified value.
+	 */
+	public boolean hasAttribute( String key, String value );
 
 	/**
 	 * A string representation of the feature.
@@ -100,12 +100,12 @@ public interface FeatureI
 	@Override
 	public String toString();
 
-    /**
-     * Get HashMap of user data.
-     *
-     * @return The user HashMap.
-     */
-    public  HashMap<String, String> userData();
+	/**
+	 * Get HashMap of user data.
+	 *
+	 * @return The user HashMap.
+	 */
+	public  HashMap<String, String> userData();
 
 	public HashMap<String, String> getAttributes();
 

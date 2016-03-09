@@ -57,7 +57,7 @@ public class BlastClustReader implements Serializable {
 			for (String chainId: cluster) {
 				if (chainId.startsWith(pdbIdUc)) {
 					representatives.put(chainId, cluster.get(0));
-                    break;
+					break;
 				}
 			}
 		}
