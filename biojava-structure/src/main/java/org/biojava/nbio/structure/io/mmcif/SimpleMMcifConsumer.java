@@ -931,8 +931,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		
 		for (int i =0; i< structure.nrModels() ; i++){
 			for (Chain chain : structure.getModel(i)) {
-				
-				String entityId = asymId2entityId.get(chain.getInternalChainID());
+				String entityId;
+				if( params.isUseInternalChainId()){
+					entityId = asymId2entityId.get(chain.getChainID());
+				}
+				else{
+					entityId = asymId2entityId.get(chain.getInternalChainID());
+				}
 				if (entityId==null) {
 					// this can happen for instance if the cif file didn't have _struct_asym category at all
 					// and thus we have no asymId2entityId mapping at all
@@ -1896,7 +1901,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				String comp_id = siteGen.getLabel_comp_id();  // PDBName
 				// Assumption: the author chain ID and residue number for the site is consistent with the original
 				// author chain id and residue numbers.
-				String chain_id = siteGen.getAuth_asym_id(); // ChainID
+				String chain_id;
+				if (params.isUseInternalChainId()){
+						chain_id = siteGen.getLabel_asym_id();
+				}
+				else {
+				        chain_id = siteGen.getAuth_asym_id(); // ChainID
+				}
 				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
 
 				String insCode = siteGen.getPdbx_auth_ins_code();

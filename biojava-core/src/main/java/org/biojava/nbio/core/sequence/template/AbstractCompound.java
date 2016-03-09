@@ -35,6 +35,13 @@ public abstract class AbstractCompound implements Compound {
   private String description = null;
   private Float molecularWeight = null;
 
+  
+  // Added an empty constructor for Serialization
+  public AbstractCompound(){
+	  this.base = null;
+	  this.upperedBase = null;
+  }
+  
   public AbstractCompound(String base) {
     this.base = base;
     this.upperedBase = base.toUpperCase();

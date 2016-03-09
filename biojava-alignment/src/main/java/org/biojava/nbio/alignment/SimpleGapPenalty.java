@@ -23,6 +23,8 @@
 
 package org.biojava.nbio.alignment;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.alignment.template.GapPenalty;
 
 /**
@@ -30,9 +32,13 @@ import org.biojava.nbio.alignment.template.GapPenalty;
  *
  * @author Mark Chapman
  */
-public class SimpleGapPenalty implements GapPenalty {
+public class SimpleGapPenalty implements GapPenalty, Serializable {
 
-    private static int dgop = 10, dgep = 1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3945671344135815456L;
+	private static int dgop = 10, dgep = 1;
 
     /**
      * Sets the default gap extension penalty.
