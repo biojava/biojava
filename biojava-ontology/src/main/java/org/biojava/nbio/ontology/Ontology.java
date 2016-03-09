@@ -312,29 +312,35 @@ public interface Ontology  {
 				 */
 				private static final long serialVersionUID = -2135777733685713181L;
 
+				@Override
 				public Set<Term> getRemoteTerms() {
 					return localRemoteTerms;
 				}
 			};
 		}
 
+		@Override
 		public String getName() {
 			return name;
 		}
 
+		@Override
 		public String getDescription() {
 			return description;
 		}
 
 
+		@Override
 		public void setDescription(String description){
 			this.description = description;
 		}
 
+		@Override
 		public Set<Term> getTerms() {
 			return new HashSet<Term>(terms.values());
 		}
 
+		@Override
 		public Term getTerm(String name)
 				throws NoSuchElementException
 				{
@@ -346,6 +352,7 @@ public interface Ontology  {
 			}
 				}
 
+		@Override
 		public Set<Triple> getTriples(Term subject, Term object, Term predicate) {
 			if(subject != null && subject.getOntology() != this) {
 				throw new IllegalArgumentException("Subject is not in this ontology: " + subject + " " + this);
@@ -406,6 +413,7 @@ public interface Ontology  {
 
 				}
 
+		@Override
 		public Term createTerm(String name)
 				throws AlreadyExistsException, IllegalArgumentException
 				{
@@ -414,6 +422,7 @@ public interface Ontology  {
 			return t;
 				}
 
+		@Override
 		public Term createTerm(String name, String description)
 				throws AlreadyExistsException, IllegalArgumentException
 				{
@@ -422,6 +431,7 @@ public interface Ontology  {
 			return t;
 				}
 
+		@Override
 		public Term createTerm(String name, String description, Object[] synonyms)
 				throws AlreadyExistsException, IllegalArgumentException
 				{
@@ -430,6 +440,7 @@ public interface Ontology  {
 			return t;
 				}
 
+		@Override
 		public Variable createVariable(String name, String description)
 				throws
 				AlreadyExistsException,
@@ -449,6 +460,7 @@ public interface Ontology  {
 				}
 
 
+		@Override
 		public Term importTerm(Term t, String name)
 				throws IllegalArgumentException
 				{
@@ -477,6 +489,7 @@ public interface Ontology  {
 			return rt;
 				}
 
+		@Override
 		public void deleteTerm(Term t)
 
 		{
@@ -492,6 +505,7 @@ public interface Ontology  {
 
 		}
 
+		@Override
 		public boolean containsTerm(String name) {
 			return terms.containsKey(name);
 		}
@@ -500,6 +514,7 @@ public interface Ontology  {
 			return (terms.get(t.getName()) == t);
 		}
 
+		@Override
 		public boolean containsTriple(Term subject, Term object, Term predicate) {
 			if(!(subject.getOntology() == this)) return false;
 			if(!(object.getOntology() == this)) return false;
@@ -508,6 +523,7 @@ public interface Ontology  {
 			return triples.contains(new Triple.Impl(subject, object, predicate));
 		}
 
+		@Override
 		public Triple createTriple(Term subject,
 				Term object,
 				Term predicate,
@@ -570,14 +586,17 @@ public interface Ontology  {
 			}
 		}
 
+		@Override
 		public OntologyOps getOps() {
 			return ops;
 		}
 
+		@Override
 		public String toString() {
 			return "ontology: " + getName();
 		}
 
+		@Override
 		public void setName(String name) {
 			this.name=name;
 

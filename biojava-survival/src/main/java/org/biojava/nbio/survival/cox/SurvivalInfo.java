@@ -234,6 +234,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	//    return (a[0] - b[0] - (a[1] - b[1]) / 1024);
 	// }
 
+	@Override
 	public int compareTo(SurvivalInfo o) {
 		//    return (int) (this.time - o.time - (this.status - o.status) / 1024);
 		if (time < o.time) {

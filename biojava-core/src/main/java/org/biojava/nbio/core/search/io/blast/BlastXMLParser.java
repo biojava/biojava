@@ -62,6 +62,7 @@ public class BlastXMLParser implements ResultFactory {
 	public BlastXMLParser() {
 
 	}
+	@Override
 	public void setFile(File f){
 		targetFile = f;
 	}
@@ -80,6 +81,7 @@ public class BlastXMLParser implements ResultFactory {
 		logger.info("Read finished");
 	}
 
+	@Override
 	public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
 		if (targetFile == null) throw new IllegalStateException("File to be parsed not specified.");
 
@@ -191,6 +193,7 @@ public class BlastXMLParser implements ResultFactory {
 		return resultsCollection;
 	}
 
+	@Override
 	public List<String> getFileExtensions(){
 		ArrayList<String> extensions = new ArrayList<String>(1);
 		extensions.add("blastxml");

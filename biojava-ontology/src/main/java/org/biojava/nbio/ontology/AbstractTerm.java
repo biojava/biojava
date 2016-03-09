@@ -38,6 +38,7 @@ public abstract class AbstractTerm  implements Term {
 
 	protected String description;
 
+	@Override
 	public  void setDescription(String description){
 		this.description = description;
 	}

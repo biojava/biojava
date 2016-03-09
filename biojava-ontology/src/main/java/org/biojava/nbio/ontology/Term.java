@@ -159,18 +159,22 @@ public interface Term extends Annotatable {
 			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
 		}
 
+		@Override
 		public void addSynonym(Object synonym) {
 			this.synonyms.add(synonym);
 		}
 
+		@Override
 		public void removeSynonym(Object synonym) {
 			this.synonyms.remove(synonym);
 		}
 
+		@Override
 		public Object[] getSynonyms() {
 			return this.synonyms.toArray();
 		}
 
+		@Override
 		public String getName() {
 			return name;
 		}
@@ -183,18 +187,22 @@ public interface Term extends Annotatable {
 			this.synonyms = synonyms;
 		}
 
+		@Override
 		public String getDescription() {
 			return description;
 		}
 
+		@Override
 		public Ontology getOntology() {
 			return ontology;
 		}
 
+		@Override
 		public String toString() {
 			return name;
 		}
 
+		@Override
 		public Annotation getAnnotation() {
 			if (annotation == null) {
 				annotation = new SmallAnnotation();
@@ -202,14 +210,16 @@ public interface Term extends Annotatable {
 			return annotation;
 		}
 
-	  public int hashCode() {
+	  @Override
+	public int hashCode() {
 		int value = 17;
 		if(getName() != null)
 		  value *= 31 * getName().hashCode();
 		return 17 * value;
 	  }
 
-	  public boolean equals(Object obj)
+	  @Override
+	public boolean equals(Object obj)
 	  {
 		if(obj == this) return true;
 		if(!(obj instanceof Term)) return false;

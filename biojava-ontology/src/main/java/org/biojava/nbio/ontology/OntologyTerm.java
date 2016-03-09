@@ -51,6 +51,7 @@ public interface OntologyTerm extends Term {
 	 * Get the remote ontology referenced by this term
 	 */
 
+	@Override
 	public Ontology getOntology();
 
 	/**
@@ -87,29 +88,36 @@ public interface OntologyTerm extends Term {
 			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
 		}
 
+		@Override
 		public void addSynonym(Object synonym) {
 			this.synonyms.add(synonym);
 		}
 
+		@Override
 		public void removeSynonym(Object synonym) {
 			this.synonyms.remove(synonym);
 		}
 
+		@Override
 		public Object[] getSynonyms() {
 			return this.synonyms.toArray();
 		}
 
+		@Override
 		public String getName() {
 			return target.getName();
 		}
 
+		@Override
 		public String getDescription() {
 			return target.getDescription();
 		}
+		@Override
 		public void setDescription(String description) {
 			 target.setDescription(description);
 		}
 
+		@Override
 		public Ontology getOntology() {
 			return ontology;
 		}
@@ -118,10 +126,12 @@ public interface OntologyTerm extends Term {
 			return target;
 		}
 
+		@Override
 		public String toString() {
 			return "Remote ontology: " + getName();
 		}
 
+		@Override
 		public Annotation getAnnotation() {
 			return Annotation.EMPTY_ANNOTATION;
 		}

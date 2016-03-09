@@ -40,6 +40,7 @@ public class SurvivalInfoValueComparator implements Comparator<SurvivalInfo> {
 		this.variable = variable;
 	}
 
+	@Override
 	public int compare(SurvivalInfo t, SurvivalInfo t1) {
 		double v = t.getContinuousVariable(variable);
 		double v1 = t1.getContinuousVariable(variable);

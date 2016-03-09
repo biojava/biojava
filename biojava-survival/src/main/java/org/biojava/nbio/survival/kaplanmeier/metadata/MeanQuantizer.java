@@ -34,6 +34,7 @@ public class MeanQuantizer implements DiscreteQuantizerInterface {
 	 * @param worksheet
 	 * @param column
 	 */
+	@Override
 	public void process(WorkSheet worksheet, String column) {
 		DescriptiveStatistics ds = new DescriptiveStatistics();
 		for (String row : worksheet.getRows()) {

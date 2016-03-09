@@ -81,19 +81,23 @@ public class OboFileHandler implements OboFileEventListener {
 
 	}
 
+	@Override
 	public void documentEnd() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void documentStart() {
 		termStack = new ArrayList<Term>();
 	}
 
+	@Override
 	public void newOboFileHeader() {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void newStanza(String stanza) {
 		//logger.info("got a new stanza: {}", stanza);
 		if ( stanza.equals(TERM)){
@@ -105,6 +109,7 @@ public class OboFileHandler implements OboFileEventListener {
 
 	}
 
+	@Override
 	public void newKey(String key, String value) {
 		if (isTerm) {
 
@@ -178,6 +183,7 @@ public class OboFileHandler implements OboFileEventListener {
 
 	}
 
+	@Override
 	public void newSynonym(Synonym synonym) {
 		if (isTerm) {
 			currentTerm.addSynonym(synonym);

@@ -46,6 +46,7 @@ public class JmolSymmetryScriptGeneratorCn extends JmolSymmetryScriptGeneratorPo
 		}
 	}
 
+	@Override
 	public int getZoom() {
 		// find maximum extension of structure
 		double maxExtension = getMaxExtension();
@@ -60,6 +61,7 @@ public class JmolSymmetryScriptGeneratorCn extends JmolSymmetryScriptGeneratorPo
 		return zoom;
 	}
 
+	@Override
 	public int getOrientationCount() {
 		//  the last two views (top, bottom) are not that interesting.
 		if (getAxisTransformation().getRotationGroup().getPointGroup().equals("C2")) {
@@ -73,6 +75,7 @@ public class JmolSymmetryScriptGeneratorCn extends JmolSymmetryScriptGeneratorPo
 	 * @param index orientation index
 	 * @return name of orientation
 	 */
+	@Override
 	public String getOrientationName(int index) {
 		if (getAxisTransformation().getRotationGroup().getPointGroup().equals("C2")) {
 			if (index == 0) {

@@ -67,6 +67,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	/**
 	 * Gets parameters, which are currently set
 	 */
+	@Override
 	public Set<String> getAlignmentOptions() {
 		Set<String> result = new HashSet<String>();
 		for (BlastAlignmentParameterEnum parameter : param.keySet()) {

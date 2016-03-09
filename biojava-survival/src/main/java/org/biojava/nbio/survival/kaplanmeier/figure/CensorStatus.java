@@ -103,10 +103,12 @@ public class CensorStatus implements Comparable<CensorStatus> {
 		return cs;
 	}
 
+	@Override
 	public String toString() {
 		return time + " " + censored + " " + group + " " + row;
 	}
 
+	@Override
 	public int compareTo(CensorStatus o) {
 	//    System.out.println("Comparing " + this + " " + o);
 		if (time == null) {

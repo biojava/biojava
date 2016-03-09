@@ -47,6 +47,7 @@ public class CoxCoefficient {
 	public CoxCoefficient() {
 	}
 
+	@Override
 	public String toString() {
 		return name + " " + coeff + " " + pvalue + " " + hazardRatio + " " + hazardRatioLoCI + " " + hazardRatioHiCI;
 	}

@@ -41,6 +41,7 @@ public class JmolSymmetryScriptGeneratorO extends JmolSymmetryScriptGeneratorPoi
 		setPolyhedron(o);
 	}
 
+	@Override
 	public int getZoom() {
 		// find maximum extension of structure
 		double maxExtension = getMaxExtension();

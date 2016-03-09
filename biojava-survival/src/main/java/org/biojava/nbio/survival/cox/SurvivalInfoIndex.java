@@ -81,6 +81,7 @@ public class SurvivalInfoIndex implements Comparable<SurvivalInfoIndex> {
 	//    return (a[0] - b[0] - (a[1] - b[1]) / 1024);
 	// }
 
+	@Override
 	public int compareTo(SurvivalInfoIndex o) {
 	//    double compare = (this.time - o.time - (this.event - o.event) / 1024);
 		if (time < o.time) {

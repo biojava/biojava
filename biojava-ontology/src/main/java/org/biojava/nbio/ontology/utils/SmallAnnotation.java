@@ -47,6 +47,7 @@ import java.util.Map;
 public class SmallAnnotation extends AbstractAnnotation {
 	private Map properties;
 
+	@Override
 	protected final Map getProperties() {
 		if(!propertiesAllocated()) {
 			properties = new SmallMap();
@@ -54,6 +55,7 @@ public class SmallAnnotation extends AbstractAnnotation {
 		return properties;
 	}
 
+	@Override
 	protected final boolean propertiesAllocated() {
 		return properties != null;
 	}

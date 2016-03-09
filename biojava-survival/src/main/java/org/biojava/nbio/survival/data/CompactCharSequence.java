@@ -65,6 +65,7 @@ public class CompactCharSequence implements CharSequence, Serializable {
 		}
 	}
 
+	@Override
 	public char charAt(int index) {
 		int ix = index + offset;
 		if (ix >= end) {
@@ -74,10 +75,12 @@ public class CompactCharSequence implements CharSequence, Serializable {
 		return (char) (data[ix] & 0xff);
 	}
 
+	@Override
 	public int length() {
 		return end - offset;
 	}
 
+	@Override
 	public CharSequence subSequence(int start, int end) {
 		if (start < 0 || end >= (this.end - offset)) {
 			throw new IllegalArgumentException("Illegal range "
@@ -86,6 +89,7 @@ public class CompactCharSequence implements CharSequence, Serializable {
 		return new CompactCharSequence(data, start + offset, end + offset);
 	}
 
+	@Override
 	public String toString() {
 		try {
 			if (nullstring) {

@@ -39,12 +39,14 @@ public class Synonym implements Comparable<Synonym>{
 	String category;
 	String name;
 
+	@Override
 	public String toString(){
 		String txt = "Synonym: name:"+name+ " category:" + category + " scope: " +scope;
 		return txt;
 	}
 
 	public final static Comparator<Synonym> COMPARATOR = new Comparator<Synonym>() {
+		@Override
 		public int compare(Synonym a, Synonym b) {
 			if (a == null && b == null)
 				return 0;
@@ -86,6 +88,7 @@ public class Synonym implements Comparable<Synonym>{
 	public void setScope(int scope) {
 		this.scope = scope;
 	}
+	@Override
 	public int compareTo(Synonym o) {
 		return COMPARATOR.compare(this, o);
 	}

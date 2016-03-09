@@ -162,6 +162,7 @@ public class ExpressionFigure extends JPanel {
 
 	}
 
+	@Override
 	public void paintComponent(Graphics g) // draw graphics in the panel
 	{
 		//int width = getWidth();             // width of window in pixels

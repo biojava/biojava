@@ -40,6 +40,7 @@ import java.util.*;
 class EmptyAnnotation
 
 implements Annotation, Serializable {
+	@Override
 	public Object getProperty(Object key) throws NoSuchElementException {
 		throw new NoSuchElementException(
 			"There are no keys in the Empty Annotation object: " +
@@ -47,23 +48,28 @@ implements Annotation, Serializable {
 		);
 	}
 
+	@Override
 	public void setProperty(Object key, Object value){
 		}
 
+	@Override
 	public void removeProperty(Object key)
 
 	{
 
 	}
 
+	@Override
 	public boolean containsProperty(Object key) {
 		return false;
 	}
 
+	@Override
 	public Set keys() {
 		return Collections.EMPTY_SET;
 	}
 
+	@Override
 	public Map asMap() {
 		//return Collections.EMPTY_MAP; 1.3
 		return new HashMap();
@@ -77,10 +83,12 @@ implements Annotation, Serializable {
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		return asMap().hashCode();
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (! (o instanceof Annotation)) {
 			return false;

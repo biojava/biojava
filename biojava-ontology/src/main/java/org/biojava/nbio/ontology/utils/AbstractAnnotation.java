@@ -83,6 +83,7 @@ public abstract class AbstractAnnotation
 	protected abstract boolean propertiesAllocated();
 
 
+	@Override
 	public Object getProperty(Object key) throws NoSuchElementException {
 		if(propertiesAllocated()) {
 			Map prop = getProperties();
@@ -93,6 +94,7 @@ public abstract class AbstractAnnotation
 		throw new NoSuchElementException("Property " + key + " unknown");
 	}
 
+	@Override
 	public void setProperty(Object key, Object value)
 	 {
 
@@ -100,6 +102,7 @@ public abstract class AbstractAnnotation
 
 	}
 
+	@Override
 	public void removeProperty(Object key)
 		throws  NoSuchElementException
 	{
@@ -112,6 +115,7 @@ public abstract class AbstractAnnotation
 
 	}
 
+	@Override
 	public boolean containsProperty(Object key) {
 		if(propertiesAllocated()) {
 			return getProperties().containsKey(key);
@@ -120,6 +124,7 @@ public abstract class AbstractAnnotation
 		}
 	}
 
+	@Override
 	public Set keys() {
 		if(propertiesAllocated()) {
 			return getProperties().keySet();
@@ -128,6 +133,7 @@ public abstract class AbstractAnnotation
 		}
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer("{");
 		Map prop = getProperties();
@@ -144,6 +150,7 @@ public abstract class AbstractAnnotation
 		return sb.substring(0);
 	}
 
+	@Override
 	public Map asMap() {
 		return Collections.unmodifiableMap(getProperties());
 	}
@@ -212,10 +219,12 @@ public abstract class AbstractAnnotation
 	}
 
 
+	@Override
 	public int hashCode() {
 		return asMap().hashCode();
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if(o == this){
 				return true;

@@ -52,5 +52,6 @@ public interface SeqMisMatch {
 
 	public void setPdbResNum(String pdbResNum) ;
 
+	@Override
 	public String toString();
 }

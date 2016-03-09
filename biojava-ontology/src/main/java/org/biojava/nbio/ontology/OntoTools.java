@@ -74,6 +74,7 @@ public final class OntoTools {
 
 	static {
 		DEFAULT_FACTORY = new OntologyFactory() {
+			@Override
 			public Ontology createOntology(String name, String desc)
 			throws OntologyException {
 				return new Ontology.Impl(name, desc);

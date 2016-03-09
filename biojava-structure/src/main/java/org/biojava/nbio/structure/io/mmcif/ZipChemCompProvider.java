@@ -219,6 +219,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 
 		final File dir = new File(dirName);
 		return dir.listFiles(new FilenameFilter() {
+			@Override
 			public boolean accept(File dir, String filename)
 			{ return filename.endsWith(suffix); }
 		} );

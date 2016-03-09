@@ -30,6 +30,7 @@ import java.util.Comparator;
  */
 public class SurvivalInfoComparator implements Comparator<SurvivalInfo> {
 
+	@Override
 	public int compare(SurvivalInfo t, SurvivalInfo t1) {
 		return t.getOrder() - t1.getOrder();
 	}

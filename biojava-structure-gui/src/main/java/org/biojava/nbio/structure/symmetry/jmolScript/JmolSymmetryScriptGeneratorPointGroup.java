@@ -65,6 +65,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	@Override
 	abstract public int getZoom();
 
+	@Override
 	public void setOnTheFly(boolean onTheFly) {
 		this.onTheFly = onTheFly;
 	}
@@ -167,6 +168,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		return rotationAxisAligner.getTransformation();
 	}
 
+	@Override
 	public void setDefaultColoring(String colorScript) {
 		this.defaultColoring = colorScript;
 	}

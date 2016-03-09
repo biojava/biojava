@@ -42,6 +42,7 @@ public class CoxVariablesOverallModelFitComparator implements Comparator<CoxVari
 		this.variables = variables;
 	}
 
+	@Override
 	public int compare(CoxVariables coxVariables1, CoxVariables coxVariables2) {
 		CoxInfo ci1 = coxVariables1.getCoxInfo(variables);
 		CoxInfo ci2 = coxVariables2.getCoxInfo(variables);

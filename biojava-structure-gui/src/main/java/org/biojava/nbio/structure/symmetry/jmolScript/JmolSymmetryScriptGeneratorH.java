@@ -51,10 +51,12 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		this.name = name;
 	}
 
+	@Override
 	public void setOnTheFly(boolean onTheFly) {
 		this.onTheFly = onTheFly;
 	}
 
+	@Override
 	public int getZoom() {
 		int zoom = (int) Math.round(100.0/AXIS_SCALE_FACTOR);
 		return zoom;
@@ -64,6 +66,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * Returns a Jmol script to set the default orientation for a structure
 	 * @return Jmol script
 	 */
+	@Override
 	public String getDefaultOrientation() {
 		StringBuilder s = new StringBuilder();
 		s.append(setCentroid());
@@ -84,6 +87,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		return s.toString();
 	}
 
+	@Override
 	public int getOrientationCount() {
 		return 4;
 	}
@@ -123,6 +127,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * @param index orientation index
 	 * @return Jmol script
 	 */
+	@Override
 	public String getOrientationWithZoom(int index) {
 		StringBuilder s = new StringBuilder();
 		s.append(getOrientation(index));
@@ -135,6 +140,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * @param index orientation index
 	 * @return name of orientation
 	 */
+	@Override
 	public String getOrientationName(int index) {
 		switch (index) {
 			case 0: return "Side";
@@ -148,11 +154,13 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.jmolScript.JMolSymmetryScriptInterface#getTransformation()
 	 */
+	@Override
 	public Matrix4d getTransformation() {
 		return helixAxisAligner.getTransformation();
 	}
 
 
+	@Override
 	public void setDefaultColoring(String colorScript) {
 		this.defaultColoring = colorScript;
 	}
@@ -162,6 +170,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * Use showPolyhedron() and hidePolyhedron() to toggle visibility.
 	 * @return Jmol script
 	 */
+	@Override
 	public String drawPolyhedron() {
 		StringBuilder s = new StringBuilder();
 
@@ -286,10 +295,12 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		return s.toString();
 	}
 
+	@Override
 	public String hidePolyhedron() {
 		return "draw polyhedron* off;";
 	}
 
+	@Override
 	public String showPolyhedron() {
 		return "draw polyhedron* on;";
 	}
@@ -299,6 +310,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * Use showAxes() and hideAxes() to toggle visibility.
 	 * @return Jmol script
 	 */
+	@Override
 	public String drawAxes() {
 		StringBuilder s = new StringBuilder();
 //		Point3d centroid = helixAxisAligner.getCentroid();
@@ -332,6 +344,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * Returns a Jmol script to hide axes
 	 * @return Jmol script
 	 */
+	@Override
 	public String hideAxes() {
 		return "draw axes* off;";
 	}
@@ -340,6 +353,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * Returns a Jmol script to show axes
 	 * @return Jmol script
 	 */
+	@Override
 	public String showAxes() {
 		return "draw axes* on;";
 	}
@@ -349,6 +363,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * and then loop through different orientations
 	 * @return Jmol script
 	 */
+	@Override
 	public String playOrientations() {
 		StringBuilder s = new StringBuilder();
 
@@ -384,6 +399,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * Returns a Jmol script that colors the subunits of a structure by different colors
 	 * @return
 	 */
+	@Override
 	public String colorBySubunit() {
 		Subunits subunits = helixAxisAligner.getSubunits();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
@@ -422,6 +438,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * Returns a Jmol script that colors subunits by their sequence cluster ids.
 	 * @return Jmol script
 	 */
+	@Override
 	public String colorBySequenceCluster() {
 		Subunits subunits = helixAxisAligner.getSubunits();
 		int n = subunits.getSubunitCount();
@@ -454,6 +471,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 * Different subunits should have a consistent color scheme or different shade of the same colors
 	 * @return Jmol script
 	 */
+	@Override
 	public String colorBySymmetry() {
 		List<List<Integer>> units = helixAxisAligner.getHelixLayers().getByLargestContacts().getLayerLines();
 		units = orientLayerLines(units);

@@ -103,38 +103,47 @@ public interface RemoteTerm extends Term {
 			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
 		}
 
+		@Override
 		public void addSynonym(Object synonym) {
 			this.synonyms.add(synonym);
 		}
 
+		@Override
 		public void removeSynonym(Object synonym) {
 			this.synonyms.remove(synonym);
 		}
 
+		@Override
 		public Object[] getSynonyms() {
 			return this.synonyms.toArray();
 		}
 
+		@Override
 		public String getName() {
 			return getOntology().getName() + ":" + remoteTerm.getName();
 		}
 
+		@Override
 		public String getDescription() {
 			return remoteTerm.getDescription();
 		}
 
+		@Override
 		public Ontology getOntology() {
 			return ontology;
 		}
 
+		@Override
 		public Term getRemoteTerm() {
 			return remoteTerm;
 		}
 
+		@Override
 		public String toString() {
 			return name;
 		}
 
+		@Override
 		public Annotation getAnnotation() {
 			return remoteTerm.getAnnotation();
 		}

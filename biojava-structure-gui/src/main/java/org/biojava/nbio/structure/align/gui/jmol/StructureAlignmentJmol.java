@@ -275,6 +275,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		resetDisplay();
 
 	}
+	@Override
 	protected void initCoords(){
 		try {
 			if ( ca1 == null || ca2 == null ){
@@ -540,6 +541,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		jmol.append(buf);
 	}
 
+	@Override
 	public void resetDisplay(){
 
 		if (afpChain != null && ca1 != null && ca2 != null) {

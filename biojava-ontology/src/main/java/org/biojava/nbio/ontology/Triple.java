@@ -81,6 +81,7 @@ extends Term {
 	 * not be duplicated.
 	 * </p>
 	 */
+	@Override
 	public int hashCode();
 
 	/**
@@ -103,6 +104,7 @@ extends Term {
 	 * not be duplicated.
 	 * </p>
 	 */
+	@Override
 	public boolean equals(Object obj);
 
 	/**
@@ -184,18 +186,22 @@ extends Term {
 			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
 		}
 
+		@Override
 		public void addSynonym(Object synonym) {
 			this.synonyms.add(synonym);
 		}
 
+		@Override
 		public void removeSynonym(Object synonym) {
 			this.synonyms.remove(synonym);
 		}
 
+		@Override
 		public Object[] getSynonyms() {
 			return this.synonyms.toArray();
 		}
 
+		@Override
 		public String getName() {
 			if(name == null) {
 				name = predicate + "(" + subject + ", " + object + ")";
@@ -203,29 +209,36 @@ extends Term {
 			return name;
 		}
 
+		@Override
 		public String getDescription() {
 			return description;
 		}
+		@Override
 		public void setDescription(String desc){
 			this.description = desc;
 		}
 
+		@Override
 		public Ontology getOntology() {
 			return subject.getOntology();
 		}
 
+		@Override
 		public Term getSubject() {
 			return subject;
 		}
 
+		@Override
 		public Term getObject() {
 			return object;
 		}
 
+		@Override
 		public Term getPredicate() {
 			return predicate;
 		}
 
+		@Override
 		public Annotation getAnnotation() {
 			return Annotation.EMPTY_ANNOTATION;
 		}
@@ -234,6 +247,7 @@ extends Term {
 		 * Two triples are equal if all their fields are identical.
 		 */
 
+		@Override
 		public boolean equals(Object o) {
 			if (! (o instanceof Triple)) {
 				return false;
@@ -244,12 +258,14 @@ extends Term {
 			to.getPredicate().equals(getPredicate());
 		}
 
+		@Override
 		public int hashCode() {
 			return getSubject().hashCode() +
 			31 * getObject().hashCode() +
 			31 * 31 * getPredicate().hashCode();
 		}
 
+		@Override
 		public String toString() {
 			if (getName().length() > 0)
 				return getName();

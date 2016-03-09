@@ -37,58 +37,72 @@ public class SeqMisMatchImpl implements SeqMisMatch, Serializable{
 	String insCode;
 	String pdbResNum;
 
+	@Override
 	public Integer getSeqNum() {
 		return seqNum;
 	}
 
+	@Override
 	public void setSeqNum(Integer seqNum) {
 		this.seqNum = seqNum;
 	}
 
+	@Override
 	public String getOrigGroup() {
 		return origGroup;
 	}
 
+	@Override
 	public void setOrigGroup(String origGroup) {
 		this.origGroup = origGroup;
 	}
 
+	@Override
 	public String getPdbGroup() {
 		return pdbGroup;
 	}
 
+	@Override
 	public void setPdbGroup(String pdbGroup) {
 		this.pdbGroup = pdbGroup;
 	}
 
+	@Override
 	public String getDetails() {
 		return details;
 	}
 
+	@Override
 	public void setDetails(String details) {
 		this.details = details;
 	}
 
+	@Override
 	public String getUniProtId() {
 		return uniProtId;
 	}
 
+	@Override
 	public void setUniProtId(String uniProtId) {
 		this.uniProtId = uniProtId;
 	}
 
+	@Override
 	public String getInsCode() {
 		return insCode;
 	}
 
+	@Override
 	public void setInsCode(String insCode) {
 		this.insCode = insCode;
 	}
 
+	@Override
 	public String getPdbResNum() {
 		return pdbResNum;
 	}
 
+	@Override
 	public void setPdbResNum(String pdbResNum) {
 		this.pdbResNum = pdbResNum;
 	}

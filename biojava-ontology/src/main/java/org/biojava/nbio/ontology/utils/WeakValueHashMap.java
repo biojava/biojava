@@ -74,6 +74,7 @@ public class WeakValueHashMap extends AbstractMap {
 	}
 	}
 
+	@Override
 	public Object put(Object key, Object value) {
 	diddleReferenceQueue();
 	Reference oldRef = (Reference) keyToRefMap.put(key, new KeyedWeakReference(key, value, queue));
@@ -86,6 +87,7 @@ public class WeakValueHashMap extends AbstractMap {
 	}
 	}
 
+	@Override
 	public Object get(Object key) {
 	Reference ref = (Reference) keyToRefMap.get(key);
 	if (ref != null) {
@@ -95,11 +97,13 @@ public class WeakValueHashMap extends AbstractMap {
 	}
 	}
 
+	@Override
 	public boolean containsKey(Object o) {
 	diddleReferenceQueue();
 	return keyToRefMap.containsKey(o);
 	}
 
+	@Override
 	public Set entrySet() {
 	diddleReferenceQueue();
 	return new WVEntrySet();
@@ -113,10 +117,12 @@ public class WeakValueHashMap extends AbstractMap {
 		keyRefEntrySet = keyToRefMap.entrySet();
 	}
 
+	@Override
 	public int size() {
 		return keyRefEntrySet.size();
 	}
 
+	@Override
 	public Iterator iterator() {
 		Iterator i = new WVEntryIterator(keyRefEntrySet.iterator());
 		iteratorRefs.add(new PhantomReference(i, iteratorRefQueue));
@@ -132,6 +138,7 @@ public class WeakValueHashMap extends AbstractMap {
 		this.keyRefIterator = keyRefIterator;
 	}
 
+	@Override
 	public boolean hasNext() {
 		if (cache == null) {
 		primeCache();
@@ -139,6 +146,7 @@ public class WeakValueHashMap extends AbstractMap {
 		return cache != null;
 	}
 
+	@Override
 	public Object next() {
 		if (cache == null) {
 		primeCache();
@@ -152,6 +160,7 @@ public class WeakValueHashMap extends AbstractMap {
 		}
 	}
 
+	@Override
 	public void remove() {
 		if (cache != null) {
 		throw new IllegalStateException("next() not called");
@@ -181,18 +190,22 @@ public class WeakValueHashMap extends AbstractMap {
 		this.value = value;
 	}
 
+	@Override
 	public Object getKey() {
 		return key;
 	}
 
+	@Override
 	public Object getValue() {
 		return value;
 	}
 
+	@Override
 	public Object setValue(Object v) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (! (o instanceof Map.Entry)) {
 		return false;
@@ -203,6 +216,7 @@ public class WeakValueHashMap extends AbstractMap {
 			(value == null ? mo.getValue() == null : value.equals(mo.getValue())));
 	}
 
+	@Override
 	public int hashCode() {
 		return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
 	}

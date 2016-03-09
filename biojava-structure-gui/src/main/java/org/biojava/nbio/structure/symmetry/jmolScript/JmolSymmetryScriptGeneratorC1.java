@@ -38,6 +38,7 @@ public class JmolSymmetryScriptGeneratorC1 extends JmolSymmetryScriptGeneratorPo
 		setPolyhedron(new RectangularPrism(axisTransformation.getDimension().z*2, axisTransformation.getDimension().x*2, axisTransformation.getDimension().y*2));
 	}
 
+	@Override
 	public int getZoom() {
 		// find maximum extension of structure
 		double maxExtension = getMaxExtension();
@@ -53,6 +54,7 @@ public class JmolSymmetryScriptGeneratorC1 extends JmolSymmetryScriptGeneratorPo
 		return zoom;
 	}
 
+	@Override
 	public int getOrientationCount() {
 		// the last two views (top, bottom) are not that interesting.
 		return getPolyhedron().getViewCount()-2;

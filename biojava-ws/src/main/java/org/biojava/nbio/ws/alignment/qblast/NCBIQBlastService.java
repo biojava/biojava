@@ -293,6 +293,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * @return an {@code InputStream} of results
 	 * @throws Exception if it is not possible to recover the results
 	 */
+	@Override
 	public InputStream getAlignmentResults(String id, RemotePairwiseAlignmentOutputProperties outputProperties) throws Exception {
 		Map<String, String> params = new HashMap<String, String>();
 		for (String key : outputProperties.getOutputOptions()) {

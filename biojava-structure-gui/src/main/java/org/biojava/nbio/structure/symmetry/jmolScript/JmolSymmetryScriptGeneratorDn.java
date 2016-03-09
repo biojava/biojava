@@ -49,6 +49,7 @@ public class JmolSymmetryScriptGeneratorDn extends JmolSymmetryScriptGeneratorPo
 		setPolyhedron(p);
 	}
 
+	@Override
 	public int getZoom() {
 		// find maximum extension of structure
 		double maxExtension = getMaxExtension();
@@ -62,6 +63,7 @@ public class JmolSymmetryScriptGeneratorDn extends JmolSymmetryScriptGeneratorPo
 		return zoom;
 	}
 
+	@Override
 	public int getOrientationCount() {
 		// for Dn point groups the last view is redundant due to symmetry.
 		return getPolyhedron().getViewCount()-1;
@@ -72,6 +74,7 @@ public class JmolSymmetryScriptGeneratorDn extends JmolSymmetryScriptGeneratorPo
 	 * @param index orientation index
 	 * @return name of orientation
 	 */
+	@Override
 	public String getOrientationName(int index) {
 		if (index == 0 && getAxisTransformation().getRotationGroup().getPointGroup().equals("D2")) {
 			return "Front C2 axis";

@@ -36,6 +36,7 @@ public class StructurePairAlignerTest extends TestCase {
 	Structure structure1;
 	Structure structure2;
 
+	@Override
 	protected void setUp()
 	{
 		InputStream inStream = this.getClass().getResourceAsStream("/5pti.pdb");

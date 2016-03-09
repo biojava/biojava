@@ -41,6 +41,7 @@ public class MeanModelComparator implements Comparator<CoxVariables> {
 	  this.variable = variable;
 	}
 
+	@Override
 	public int compare(CoxVariables coxVariables1, CoxVariables coxVariables2) {
 		CoxInfo ci1LTMean = coxVariables1.getCoxInfo("<MEAN");
 		CoxInfo ci1GTMean = coxVariables1.getCoxInfo(">MEAN");
