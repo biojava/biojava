@@ -172,32 +172,100 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
     /* new feature interface methods for accessing qualifers and the new map 
      * see abstract feature for implementation 
      */
+    /**
+     * map implementation to store qualifiers where only qualifier hold its key and value pair
+     * @return
+     */
     public GenBankQualifierMap getQualifierMap();
+    /**
+     * get all qualifiers of this feature
+     * @return
+     */
     public Qualifier[] getQualifiers();
+	/**
+	 * overwrite qualifiermap
+	 * @param qualifierMap
+	 */
 	public void setQualifierMap(GenBankQualifierMap qualifierMap);
+	/**
+	 * overwrite qualifiers 
+	 * @param qualifiers
+	 */
 	public void setQualifiers(Qualifier[] qualifiers);
+	/**
+	 * overwrite this qualifier 
+	 * @param qualifiers
+	 */
+	public void setQualifier(Qualifier q);
+	/**
+	 * add this qualifier
+	 * @param qualifier
+	 */
 	public void addQualifier(Qualifier qualifier);
+	/**
+	 * add a bunch of qualifiers  
+	 * @param qa
+	 */
 	public void addQualifiers(Qualifier[] qa);
     public Qualifier getQualifierByName(String qName);
     public Qualifier getFirstQualifierByValue(String value);
     public Qualifier[] getQualifiersByValue(String value);
-	//DBreferenceInfo 
-	public String[][] getAllDatabasesReferenceInfos();
-	public String[] getAllDatabases();
+	//DBreferenceInfo
+	/**
+	 * returns the dbreferenceinfo of this feature, which can contain lots of 
+	 * entries 
+	 * * @return
+	 */
+    public DBReferenceInfo getAllDatabaseReferenceInfos();
+	/**
+	 * returns all databases of this feature in a string[]
+	 * @return
+	 */
+    public String[] getAllDatabases();
+	/**
+	 * returns all sequence database references for all databases in a string[]
+	 * for this feature 
+	 * @return
+	 */
 	public String[] getAllDatabaseReferences();
-	public String[] getDatabaseReferenceInfo(int i);
+	/**
+	 * get database reference info #i as new DBReferenceInfo
+	 * @param i
+	 * @return
+	 */
+	public DBReferenceInfo getDatabaseReferenceInfo(int i); 
+	/**
+	 * get database #i 
+	 * @param i
+	 * @return
+	 */
 	public String getDatabase(int i);
+	/**
+	 * get sequence database reference #i
+	 * @param i
+	 * @return
+	 */
 	public String getDatabaseReference(int i);
-	public String[] getFirstDatabaseReferenceInfo();
+	/**
+	 * convenience method to point out that there are several
+	 * @return
+	 */
+	public DBReferenceInfo getFirstDatabaseReferenceInfo();
 	public String getFirstDatabaseReference();
 	public String getFirstDatabase();
 	public String getDatabaseReference(String database, int i);
 	public String[] getAllDatabaseReferences(String database);
 	public String getFirstDatabaseReference(String database);
-	public void setDatabaseReferenceInfo(String database, String reference);
-	public boolean addDatabaseReferenceInfos(String[][] entries);
+	public void setDatabaseReferenceInfo(DBReferenceInfo dbRefI);
+	public void addDatabaseReferenceInfo(DBReferenceInfo dbRefI);
 	//old stuff to be removed
-	@Deprecated //use addQualifier(Qualifier q)
+	/**
+	 * 
+	 * @param str
+	 * @param q
+	 * Deprecated use addQualifier(Qualifier q)
+	 */
+	@Deprecated
 	public void addQualifier(String str, Qualifier q);
 		
 }

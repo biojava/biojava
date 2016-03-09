@@ -626,7 +626,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      */
     @Override
 	public DBReferenceInfo getDatabaseReferences()  {
-    	ArrayList<String> dbEntries=new ArrayList<String>();
+    	//ArrayList<String> dbEntries=new ArrayList<String>();
+    	DBReferenceInfo dbRefI=null;
     	//DBReferenceInfo dbRef=null;
         //LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
         if (uniprotDoc == null) return null;
@@ -645,19 +646,25 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         		//	idlist = new ArrayList<DBReferenceInfo>();
         		//	databaseReferencesHashMap.put(type, idlist);
         		//}
-        		//DBReferenceInfo dbreferenceInfo = new DBReferenceInfo(type, id);
+        		if(dbRefI==null) dbRefI = new DBReferenceInfo(type, id);
+        		else dbRefI.addDBReferenceInfo(type, id);
+        		/*
+        		 * in uniprot each database entry has short descriptor which we can not store in this way\
+        		 * we could store it in a new qualifier, but then we would have to change the return type of 
+        		 * DBReferenceInfo to GenBankQualifierMap for example. We could also create a feature which stores these
+        		 * values...
         		ArrayList<Element> propertyElementList = XMLHelper.selectElements(element, "property");
         		for (Element propertyElement : propertyElementList) {
         			String propertyType = propertyElement.getAttribute("type");
         			String propertyValue = propertyElement.getAttribute("value");
         			//dbreferenceInfo.addProperty(propertyType, propertyValue);
-        			
-        			System.out.println("here comes a dbxref, with: type: "+type+", id: "+id+", propertyType: "+propertyType+", propertyValue: "+propertyValue);
+        			S//ystem.out.println("and then elements propertyType: "+propertyType+", propertyValue: "+propertyValue);
         			//this is just a preliminary guess// stefan
         			//if(dbRef==null) dbRef=new DBReferenceInfo(propertyType+":"+propertyValue);
         			//else dbRef.addValue(propertyType+":"+propertyValue);
         			dbEntries.add(propertyType+":"+propertyValue);
         		}
+        		*/
         		
         		//idlist.add(dbreferenceInfo);
         	}
@@ -666,7 +673,6 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         	//return new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
         	return null;
         }
-
-        return new DBReferenceInfo(dbEntries.toArray(new String[dbEntries.size()]));
+        return dbRefI;
     }
 }

@@ -66,7 +66,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private ArrayList<String> notesList = new ArrayList<String>();
     private Double sequenceScore = null;
     private FeaturesKeyWordInterface featuresKeyWord = null;
-    private DatabaseReferenceInterface databaseReferences = null;
+    // private DatabaseReferenceInterface databaseReferences = null;
     private FeatureRetriever featureRetriever = null;
     private ArrayList<FeatureInterface<AbstractSequence<C>, C>> features =
             new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
@@ -116,23 +116,31 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         if (proxyLoader instanceof FeaturesKeyWordInterface) {
             this.setFeaturesKeyWord((FeaturesKeyWordInterface) sequenceStorage);
         }
+        /*
         if (proxyLoader instanceof DatabaseReferenceInterface) {
             this.setDatabaseReferences((DatabaseReferenceInterface) sequenceStorage);
         }
-        
+         */
         if (proxyLoader instanceof FeatureRetriever) {
             this.setFeatureRetriever((FeatureRetriever) sequenceStorage);
             HashMap<String, ArrayList<AbstractFeature>> ff = getFeatureRetriever().getFeatures();
+            DBReferenceInfo dbQualifier = null;
             for (String k: ff.keySet()){
                 for (AbstractFeature f: ff.get(k)){
                     this.addFeature(f);
+                    //store all dbreferenceinfos of all features
+                    //if(dbQualifier==null) dbQualifier = f.getAllDatabaseReferenceInfos();
+                    //else dbQualifier.add(f.getAllDatabaseReferenceInfos());
                 }
             }
             // success of next statement guaranteed because source is a compulsory field
-            DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifierMap().get("db_xref");
+            //DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifierMap().get("db_xref");
+            //DBReferenceInfo dbQualifier = ff.g
             //ArrayList<DBReferenceInfo> dbQualifiers = (ArrayList)ff.get("source").get(0).getQualifiers().get("db_xref");
             //DBReferenceInfo dbQualifier = dbQualifiers.get(0);
-
+            dbQualifier = ff.get("source").get(0).getAllDatabaseReferenceInfos();
+            //if(dbQualifier==null) System.out.println("dbQualifier is null");
+            //else System.out.println("we have "+dbQualifier.valueSize()+" database records");
             if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getFirstValue(), DataSource.UNKNOWN));
         }
         
@@ -443,18 +451,19 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
     /**
      * @return the databaseReferences
-     */
+     *
     public DatabaseReferenceInterface getDatabaseReferences() {
         return databaseReferences;
     }
 
     /**
      * @param databaseReferences the databaseReferences to set
-     */
+     *
+    @Deprecated
     public void setDatabaseReferences(DatabaseReferenceInterface databaseReferences) {
         this.databaseReferences = databaseReferences;
     }
-
+     // */
     public FeatureRetriever getFeatureRetriever() {
         return featureRetriever;
     }

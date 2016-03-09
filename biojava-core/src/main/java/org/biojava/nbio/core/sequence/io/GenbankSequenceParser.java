@@ -238,7 +238,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                             val = val.substring(1, val.length() - 1); // strip quotes
                         }
                         // parameter on old feature
-                        if (key.equals("db_xref")) {
+                        if (key.equals(DBReferenceInfo.DBXREF)) {
                             Matcher m = dbxp.matcher(val);
                             if (m.matches()) {
                             	//check if we do need to take this string apart at all and can not do so in DBReferenceInfo itself??
