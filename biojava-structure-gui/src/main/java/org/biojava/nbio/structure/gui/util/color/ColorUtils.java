@@ -102,7 +102,7 @@ public class ColorUtils
 			position = position - stepSize ;
 		}
 
-		float inc = (range * position / (float) stepSize) ;
+		float inc = (range * position / stepSize) ;
 		float hueNew = hue1 + inc;
 
 		//System.out.println(position + " " + hue1 + " " + hue2 + " new: " + hueNew + " inc " + inc + " range " + range);

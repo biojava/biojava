@@ -257,7 +257,7 @@ public class TwoBitParser extends InputStream {
 			}
 		}
 		cur_seq_pos++;
-		return (int)ret;
+		return ret;
 	}
 	/**
 	 * Method skips n nucleotides in sequence stream. You should set current sequence

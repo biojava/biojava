@@ -141,7 +141,7 @@ public class WorkSheet {
 	public void randomlyDivideSave(double percentage, String fileName1, String fileName2) throws Exception {
 		ArrayList<String> rows = this.getDataRows();
 		Collections.shuffle(rows);
-		int portion = (int) ((double) rows.size() * percentage);
+		int portion = (int) (rows.size() * percentage);
 		for (int i = 0; i < portion; i++) {
 			this.hideRow(rows.get(i), true);
 		}

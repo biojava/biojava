@@ -64,9 +64,9 @@ public class GOParser {
 				String parentRel = toke.nextToken();
 				Term term = parseTerm(onto, toke.nextToken());
 				if (parentRel.equals("%")) {
-					safeAddTriple(onto, term, (Term) termStack.get(leadSpaces - 1), isa);
+					safeAddTriple(onto, term, termStack.get(leadSpaces - 1), isa);
 				} else if (parentRel.equals("<")) {
-					safeAddTriple(onto, term, (Term) termStack.get(leadSpaces - 1), partof);
+					safeAddTriple(onto, term, termStack.get(leadSpaces - 1), partof);
 				}
 				while (toke.hasMoreTokens()) {
 					String altRel = toke.nextToken();

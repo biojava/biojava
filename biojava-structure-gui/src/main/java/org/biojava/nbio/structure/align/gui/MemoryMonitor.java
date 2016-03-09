@@ -164,19 +164,19 @@ public class MemoryMonitor extends JPanel {
 			big.setBackground(getBackground());
 			big.clearRect(0,0,w,h);
 
-			float freeMemory = (float) r.freeMemory();
-			float totalMemory = (float) r.totalMemory();
+			float freeMemory = r.freeMemory();
+			float totalMemory = r.totalMemory();
 
 			// .. Draw allocated and used strings ..
 			big.setColor(Color.green);
-			big.drawString(String.valueOf((int) totalMemory/1024) + "K allocated",  4.0f, (float) ascent+0.5f);
+			big.drawString(String.valueOf((int) totalMemory/1024) + "K allocated",  4.0f, ascent+0.5f);
 			usedStr = String.valueOf(((int) (totalMemory - freeMemory))/1024)
 					+ "K used";
 			big.drawString(usedStr, 4, h-descent);
 
 			// Calculate remaining size
 			float ssH = ascent + descent;
-			float remainingHeight = (float) (h - (ssH*2) - 0.5f);
+			float remainingHeight = h - (ssH*2) - 0.5f;
 			float blockHeight = remainingHeight/10;
 			float blockWidth = 20.0f;
 			//float remainingWidth = (float) (w - blockWidth - 10);
@@ -186,16 +186,16 @@ public class MemoryMonitor extends JPanel {
 			int MemUsage = (int) ((freeMemory / totalMemory) * 10);
 			int i = 0;
 			for ( ; i < MemUsage ; i++) {
-				mfRect.setRect(5,(float) ssH+i*blockHeight,
-						blockWidth,(float) blockHeight-1);
+				mfRect.setRect(5,ssH+i*blockHeight,
+						blockWidth,blockHeight-1);
 				big.fill(mfRect);
 			}
 
 			// .. Memory Used ..
 			big.setColor(Color.green);
 			for ( ; i < 10; i++)  {
-				muRect.setRect(5,(float) ssH+i*blockHeight,
-						blockWidth,(float) blockHeight-1);
+				muRect.setRect(5,ssH+i*blockHeight,
+						blockWidth,blockHeight-1);
 				big.fill(muRect);
 			}
 
@@ -305,8 +305,8 @@ public class MemoryMonitor extends JPanel {
 					big = bimg.createGraphics();
 					big.setFont(font);
 					FontMetrics fm = big.getFontMetrics(font);
-					ascent = (int) fm.getAscent();
-					descent = (int) fm.getDescent();
+					ascent = fm.getAscent();
+					descent = fm.getDescent();
 				}
 				repaint();
 				try {

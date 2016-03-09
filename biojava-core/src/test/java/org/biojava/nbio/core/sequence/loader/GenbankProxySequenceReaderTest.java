@@ -139,7 +139,7 @@ public class GenbankProxySequenceReaderTest {
 		if (CDSs != null) {
 			if (CDSs.size() == 1) {
 				ArrayList<Qualifier> qualifiers = (ArrayList)CDSs.get(0).getQualifiers().get("coded_by");
-				Qualifier codedBy = (Qualifier) qualifiers.get(0);
+				Qualifier codedBy = qualifiers.get(0);
 				if (codedBy != null) {
 
 					AbstractSequence<?> parentSeq = seq.getParentSequence();

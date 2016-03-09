@@ -282,14 +282,14 @@ public class ExpressionFigure extends JPanel {
 		while (d < maxY) {
 			int yvalue = getY(maxY - d);
 			label = df.format(d);
-			g2.drawString(label, left - (int) (fm.stringWidth(label)) - 20, yvalue + titleHeight / 6); //
+			g2.drawString(label, left - (fm.stringWidth(label)) - 20, yvalue + titleHeight / 6); //
 
 			g2.drawLine(left - 5, yvalue, left, yvalue);
 			d = d + (increment);
 		}
 
 		label = df.format(maxY);
-		g2.drawString(label, left - (int) (fm.stringWidth(label)) - 20, top + (titleHeight) / 6);
+		g2.drawString(label, left - (fm.stringWidth(label)) - 20, top + (titleHeight) / 6);
 		g2.drawLine(left - 5, top, left, top);
 
 		double timeDistance = maxX - minX;

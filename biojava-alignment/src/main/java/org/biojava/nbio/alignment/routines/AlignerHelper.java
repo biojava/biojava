@@ -356,13 +356,13 @@ public class AlignerHelper {
 		int i = scores[x][y - 1][0] + gep;
 		int s = scores[x - 1][y - 1][0] + sub;
 		if (d >= s && d >= i) {
-			scores[x][y][0] = (int) d;
+			scores[x][y][0] = d;
 			return Last.DELETION;
 		} else if (s >= i) {
-			scores[x][y][0] = (int) s;
+			scores[x][y][0] = s;
 			return Last.SUBSTITUTION;
 		} else {
-			scores[x][y][0] = (int) i;
+			scores[x][y][0] = i;
 			return Last.INSERTION;
 		}
 	}
@@ -416,7 +416,7 @@ public class AlignerHelper {
 			Last[] insertion = new Last[] { null, null, Last.INSERTION };
 			for (int y = yb + 1; y <= ye; y++) {
 				scores[xb][y][0] = scores[xb][y][1] = min;
-				scores[xb][y][2] = (int) (scores[xb][y - 1][2] + gep);
+				scores[xb][y][2] = scores[xb][y - 1][2] + gep;
 				pointers[y] = insertion;
 			}
 		} else {
@@ -465,15 +465,15 @@ public class AlignerHelper {
 		if (x == xb) {
 			if (startAnchored) {
 				assert (xb > 0 && yb > 0);
-				scores[xb][yb][0] = (int) (scores[xb - 1][yb - 1][0] + subs[yb]);
+				scores[xb][yb][0] = scores[xb - 1][yb - 1][0] + subs[yb];
 				pointers[yb][0] = Last.SUBSTITUTION;
 			}
 			for (int y = yb + 1; y <= ye; y++) {
-				scores[xb][y][0] = (int) (scores[xb][y - 1][0] + gep);
+				scores[xb][y][0] = scores[xb][y - 1][0] + gep;
 				pointers[y][0] = Last.INSERTION;
 			}
 		} else {
-			scores[x][yb][0] = (int) (scores[x - 1][yb][0] + gep);
+			scores[x][yb][0] = scores[x - 1][yb][0] + gep;
 			pointers[yb][0] = Last.DELETION;
 			for (int y = yb + 1; y <= ye; y++) {
 				pointers[y][0] = setScorePoint(x, y, gep, subs[y], scores);

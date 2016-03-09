@@ -75,7 +75,7 @@ MouseListener {
 		// if equivalent, don't add,
 		// otherwise add
 		if (history.size()>0){
-			String txt=(String)history.get(history.size()-1);
+			String txt=history.get(history.size()-1);
 			if (! txt.equals(cmd)) {
 				history.add(cmd);
 			}
@@ -150,7 +150,7 @@ MouseListener {
 		}
 
 		if ( historyPosition >= 0) {
-			String txt = (String)history.get(historyPosition);
+			String txt = history.get(historyPosition);
 			textfield.setText(txt);
 		}
 

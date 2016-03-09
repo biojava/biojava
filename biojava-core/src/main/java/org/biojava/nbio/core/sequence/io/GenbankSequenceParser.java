@@ -142,7 +142,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		// Get an ordered list of key->value pairs in array-tuples
 		do {
 			section = this.readSection(bufferedReader);
-			sectionKey = ((String[]) section.get(0))[0];
+			sectionKey = section.get(0)[0];
 			if (sectionKey == null) {
 				//if we reach the end of the file, section contains empty strings
 				if(section.get(0)[1]==null || section.get(0)[1]=="" ||
@@ -153,7 +153,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			}
 			// process section-by-section
 			if (sectionKey.equals(LOCUS_TAG)) {
-				String loc = ((String[]) section.get(0))[1];
+				String loc = section.get(0)[1];
 				header = loc;
 				Matcher m = lp.matcher(loc);
 				if (m.matches()) {
@@ -183,15 +183,15 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					throw new ParserException("Bad locus line");
 				}
 			} else if (sectionKey.equals(DEFINITION_TAG)) {
-				headerParser.setDescription(((String[]) section.get(0))[1]);
+				headerParser.setDescription(section.get(0)[1]);
 			} else if (sectionKey.equals(ACCESSION_TAG)) {
 				// if multiple accessions, store only first as accession,
 				// and store rest in annotation
-				String[] accs = ((String[]) section.get(0))[1].split("\\s+");
+				String[] accs = section.get(0)[1].split("\\s+");
 				accession = accs[0].trim();
 				headerParser.setAccession(accession);
 			} else if (sectionKey.equals(VERSION_TAG)) {
-				String ver = ((String[]) section.get(0))[1];
+				String ver = section.get(0)[1];
 				Matcher m = vp.matcher(ver);
 				if (m.matches()) {
 					String verAcc = m.group(1);
@@ -216,14 +216,14 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			} else if (sectionKey.equals(REFERENCE_TAG)) {
 			} else if (sectionKey.equals(COMMENT_TAG)) {
 				// Set up some comments
-				headerParser.setComment(((String[]) section.get(0))[1]);
+				headerParser.setComment(section.get(0)[1]);
 			} else if (sectionKey.equals(FEATURE_TAG)) {
 				// starting from second line of input, start a new feature whenever we come across
 				// a key that does not start with /
 				AbstractFeature gbFeature = null;
 				for (int i = 1; i < section.size(); i++) {
-					String key = ((String[]) section.get(i))[0];
-					String val = ((String[]) section.get(i))[1];
+					String key = section.get(i)[0];
+					String val = section.get(i)[1];
 					if (key.startsWith("/")) {
 						if (gbFeature == null) {
 							throw new ParserException("Malformed GenBank file: found a qualifier without feature.");
@@ -285,7 +285,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				// and replace '.' and '~' with '-' for our parser.
 				StringBuffer seq = new StringBuffer();
 				for (int i = 1; i < section.size(); i++) {
-					seq.append(((String[]) section.get(i))[1]);
+					seq.append(section.get(i)[1]);
 				}
 				seqData = seq.toString().replaceAll("\\s+", "").replaceAll("[\\.|~]", "-").toUpperCase();
 			} else if(sectionKey.equals(DBSOURCE)) {
@@ -325,7 +325,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				bufferedReader.mark(320);
 				line = bufferedReader.readLine();
 				String firstSecKey = section.isEmpty() ? ""
-						: ((String[]) section.get(0))[0];
+						: section.get(0)[0];
 				if (line != null && line.matches("\\p{Space}*")) {
 					// regular expression \p{Space}* will match line
 					// having only white space characters

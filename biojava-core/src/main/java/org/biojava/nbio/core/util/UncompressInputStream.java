@@ -366,7 +366,7 @@ public synchronized long skip(long num) throws IOException {
 		int got = read(tmp, 0, (int) num);
 
 		if (got > 0)
-			return (long) got;
+			return got;
 		else
 			return 0L;
 	}

@@ -115,7 +115,7 @@ public class SequenceMixin {
 	public static <C extends Compound> Map<C, Double> getDistribution(Sequence<C> sequence) {
 		Map<C, Double> results = new HashMap<C, Double>();
 		Map<C, Integer> composition = getComposition(sequence);
-		double length = (double) sequence.getLength();
+		double length = sequence.getLength();
 		for (Map.Entry<C, Integer> entry : composition.entrySet()) {
 			double dist = entry.getValue().doubleValue() / length;
 			results.put(entry.getKey(), dist);

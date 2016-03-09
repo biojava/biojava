@@ -74,7 +74,7 @@ public class OptimalCECPMainTest extends TestCase {
 		// Calculate all alignments initially
 		OptimalCECPMain cecp = new OptimalCECPMain();
 		Atom[] ca2clone = cache.getAtoms(name2);
-		AFPChain cp0 = cecp.alignPermuted(ca1, ca2clone, (OptimalCECPParameters) cecp.getParameters(), 0);
+		AFPChain cp0 = cecp.alignPermuted(ca1, ca2clone, cecp.getParameters(), 0);
 
 		CeMain ce = new CeMain();
 		AFPChain nocp = ce.align(ca1,ca2);
@@ -146,7 +146,7 @@ public class OptimalCECPMainTest extends TestCase {
 		// Calculate all alignments initially
 		ce = new OptimalCECPMain();
 		AFPChain[] alignments = new AFPChain[ca2.length];
-		ce.alignOptimal(ca1, ca2, (OptimalCECPParameters) ce.getParameters(), alignments);
+		ce.alignOptimal(ca1, ca2, ce.getParameters(), alignments);
 
 		for(int cp : cps) {
 			// fresh instance to avoid contamination
@@ -154,7 +154,7 @@ public class OptimalCECPMainTest extends TestCase {
 
 			// new copy of ca2, since alignPermuted has side effects
 			Atom[] ca2clone = cache.getAtoms(name2);
-			afpChain = ce.alignPermuted(ca1, ca2clone, (OptimalCECPParameters) ce.getParameters(), cp);
+			afpChain = ce.alignPermuted(ca1, ca2clone, ce.getParameters(), cp);
 
 			assertEquals("Alignment "+cp+" differs.",afpChain, alignments[cp]);
 		}

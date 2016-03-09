@@ -48,7 +48,7 @@ public enum FastqVariant
 		@Override
 		public int qualityScore(final char c)
 		{
-			return ((int) c) - 33;
+			return (c) - 33;
 		}
 
 		@Override
@@ -76,7 +76,7 @@ public enum FastqVariant
 		@Override
 		public double errorProbability(final int qualityScore)
 		{
-			return Math.pow(10.0d, ((double) qualityScore) / -10.0d);
+			return Math.pow(10.0d, (qualityScore) / -10.0d);
 		}
 	},
 
@@ -98,7 +98,7 @@ public enum FastqVariant
 		@Override
 		public int qualityScore(final char c)
 		{
-			return ((int) c) - 64;
+			return (c) - 64;
 		}
 
 		@Override
@@ -129,7 +129,7 @@ public enum FastqVariant
 		@Override
 		public double errorProbability(final int qualityScore)
 		{
-			double q = Math.pow(10.0d, ((double) qualityScore) / -10.0d);
+			double q = Math.pow(10.0d, (qualityScore) / -10.0d);
 			return q / (1.0d + q);
 		}
 	},
@@ -152,7 +152,7 @@ public enum FastqVariant
 		@Override
 		public int qualityScore(final char c)
 		{
-			return ((int) c) - 64;
+			return (c) - 64;
 		}
 
 		@Override
@@ -180,7 +180,7 @@ public enum FastqVariant
 		@Override
 		public double errorProbability(final int qualityScore)
 		{
-			return Math.pow(10.0d, ((double) qualityScore) / -10.0d);
+			return Math.pow(10.0d, (qualityScore) / -10.0d);
 		}
 	};
 

@@ -498,7 +498,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 				if (i < m) {
 					int subunit = units.get(j).get(i);
 					int cluster = clusterIds.get(subunit);
-					float scale = 0.3f + 0.7f * (float) (cluster+1)/clusterCount;
+					float scale = 0.3f + 0.7f * (cluster+1)/clusterCount;
 					Color4f c = new Color4f(colors[count]);
 					count++;
 					c.scale(scale);

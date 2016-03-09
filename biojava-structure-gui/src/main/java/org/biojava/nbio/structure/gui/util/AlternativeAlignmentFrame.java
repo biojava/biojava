@@ -202,7 +202,7 @@ extends JFrame{
 		shift1.setCoords(new double[]{0,0,1});
 		Atom shift2 = alig.getShift();
 
-		Structure s3 = (Structure)structure2.clone();
+		Structure s3 = structure2.clone();
 
 		Calc.rotate(s3,m2);
 		Calc.shift(s3,shift2);

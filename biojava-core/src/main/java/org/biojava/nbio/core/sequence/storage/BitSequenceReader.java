@@ -346,8 +346,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 			int arrayIndex = biologicalIndexToArrayIndex(position);
 			int currentByte = sequence[arrayIndex];
 			int shiftBy = shiftBy(position);
-			int shifted = (int) (currentByte >>> shiftBy);
-			int masked = (int) (shifted & bitMask());
+			int shifted = currentByte >>> shiftBy;
+			int masked = shifted & bitMask();
 
 			//If we could encode 4 compounds then our max masked value is 3
 			if (masked > (compoundsPerDatatype() - 1)) {

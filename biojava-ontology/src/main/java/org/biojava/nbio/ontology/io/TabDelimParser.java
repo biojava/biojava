@@ -182,7 +182,7 @@ public class TabDelimParser {
 
 	private Triple resolveTriple(Term sub, Term obj, Term rel, Ontology onto) {
 		if(onto.containsTriple(sub, obj, rel)) {
-			return (Triple) onto.getTriples(sub, obj, rel).iterator().next();
+			return onto.getTriples(sub, obj, rel).iterator().next();
 		} else {
 			try {
 				return onto.createTriple(sub, obj, rel, null, null);

@@ -142,7 +142,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	}
 
 	public SequenceReader<C> getProxySequenceReader() {
-		return (SequenceReader<C>) sequenceStorage;
+		return sequenceStorage;
 	}
 
 	/**

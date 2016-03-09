@@ -262,11 +262,11 @@ public class KaplanMeierFigure extends JPanel {
 			}
 		}
 
-		int evenCheck = Math.round((float) mTime.floatValue());
+		int evenCheck = Math.round(mTime.floatValue());
 		if (evenCheck % 2 == 1) {
 			evenCheck = evenCheck + 1;
 		}
-		this.maxTime = (double) evenCheck;
+		this.maxTime = evenCheck;
 
 		if (userSetMaxTime != null && userSetMaxTime > maxTime) {
 			this.maxTime = userSetMaxTime;
@@ -315,11 +315,11 @@ public class KaplanMeierFigure extends JPanel {
 			}
 		}
 
-		int evenCheck = Math.round((float) mTime.floatValue());
+		int evenCheck = Math.round(mTime.floatValue());
 		if (evenCheck % 2 == 1) {
 			evenCheck = evenCheck + 1;
 		}
-		this.maxTime = (double) evenCheck;
+		this.maxTime = evenCheck;
 
 		if (userSetMaxTime != null && userSetMaxTime > maxTime) {
 			this.maxTime = userSetMaxTime;
@@ -575,7 +575,7 @@ public class KaplanMeierFigure extends JPanel {
 		}
 		// draw the maxPercentage and minPercentage values
 		String label = df.format(minPercentage);
-		g2.drawString(label, left - 5 - (int) (fm.stringWidth(label)), bottom + titleHeight / 6);
+		g2.drawString(label, left - 5 - (fm.stringWidth(label)), bottom + titleHeight / 6);
 		g2.drawLine(left - 5, bottom, left, bottom);
 		double d = minPercentage + kmfi.yaxisPercentIncrement;
 		//double graphHeight = top - bottom;
@@ -583,14 +583,14 @@ public class KaplanMeierFigure extends JPanel {
 		while (d < maxPercentage) {
 			int yvalue = bottom - (int) (d * (bottom - top));
 			label = df.format(d * 100);
-			g2.drawString(label, left - 5 - (int) (fm.stringWidth(label)), yvalue + titleHeight / 6); //
+			g2.drawString(label, left - 5 - (fm.stringWidth(label)), yvalue + titleHeight / 6); //
 
 			g2.drawLine(left - 5, yvalue, left, yvalue);
 			d = d + kmfi.yaxisPercentIncrement;
 		}
 
 		label = df.format(maxPercentage * 100);
-		g2.drawString(label, left - 5 - (int) (fm.stringWidth(label)), top + (titleHeight) / 6);
+		g2.drawString(label, left - 5 - (fm.stringWidth(label)), top + (titleHeight) / 6);
 		g2.drawLine(left - 5, top, left, top);
 
 		// Create a rotation transformation for the font.
@@ -606,7 +606,7 @@ public class KaplanMeierFigure extends JPanel {
 
 		// Render a string using the derived font
 		int yaxisHeight = fm.stringWidth(kmfi.yAxisLegend);
-		g2.drawString(kmfi.yAxisLegend, (int) yaxisLabel, ((int) bottom - (int) (.5 * (bottom - top))) + yaxisHeight / 2);
+		g2.drawString(kmfi.yAxisLegend, yaxisLabel, (bottom - (int) (.5 * (bottom - top))) + yaxisHeight / 2);
 
 		// put the original font back
 		g2.setFont(f);

@@ -413,7 +413,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 		JSlider source = (JSlider)e.getSource();
 		//if (!source.getValueIsAdjusting()) {
 
-		int residueSize = (int)source.getValue();
+		int residueSize = source.getValue();
 		calcScale(residueSize);
 
 		updatePercentageDisplay();
@@ -436,7 +436,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	}
 	public void updateDisplay(){
 
-		int residueSize = (int)residueSizeSlider.getValue();
+		int residueSize = residueSizeSlider.getValue();
 		calcScale(residueSize);
 		updatePercentageDisplay();
 		this.repaint();

@@ -53,7 +53,7 @@ class JTableMouseButtonListener implements MouseListener {
 		//System.out.println("converting event");
 		component = (Component)value;
 
-		MouseEvent mevent = (MouseEvent) SwingUtilities.convertMouseEvent(__table, e, component);
+		MouseEvent mevent = SwingUtilities.convertMouseEvent(__table, e, component);
 
 		//System.out.println(mevent);
 

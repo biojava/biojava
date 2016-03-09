@@ -377,7 +377,7 @@ public class GeneFeatureHelper {
 				Feature geneFeature = (Feature) geneFeatureList.get(0);
 				geneID = geneFeature.getAttribute("ID");
 				geneNote = geneFeature.getAttribute("Note");
-				geneSource = ((Feature) geneFeature).source();
+				geneSource = geneFeature.source();
 				sequenceName = geneFeature.seqname();
 
 				//

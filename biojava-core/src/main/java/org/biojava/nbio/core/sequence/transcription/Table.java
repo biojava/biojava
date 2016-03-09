@@ -263,7 +263,7 @@ public interface Table {
 
 		public int compoundToInt(NucleotideCompound c) {
 			char b = c.getUpperedBase().charAt(0);
-			return (int)b;
+			return b;
 //            int v = -1;
 //            if('A' == b) {
 //                v = 1;

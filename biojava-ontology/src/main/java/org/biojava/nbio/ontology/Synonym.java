@@ -62,8 +62,8 @@ public class Synonym implements Comparable<Synonym>{
 				else if ( b.getCategory()==null)
 					return 1;
 
-				return ((Synonym) a).getCategory().compareToIgnoreCase(
-						((Synonym) b).getCategory());
+				return a.getCategory().compareToIgnoreCase(
+						b.getCategory());
 			}
 		}
 	};

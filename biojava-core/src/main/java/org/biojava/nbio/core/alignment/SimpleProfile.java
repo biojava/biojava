@@ -75,8 +75,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 		list.add(target);
 		list = Collections.unmodifiableList(list);
 		originals = new ArrayList<S>();
-		originals.add((S) query.getOriginalSequence());
-		originals.add((S) target.getOriginalSequence());
+		originals.add(query.getOriginalSequence());
+		originals.add(target.getOriginalSequence());
 		originals = Collections.unmodifiableList(originals);
 		length = query.getLength();
 	}
@@ -174,7 +174,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 		AlignedSequence<S, C> curAlignedSeq = itr.next();
 		length = curAlignedSeq.getLength();
 		list.add(curAlignedSeq);
-		originals.add((S) curAlignedSeq.getOriginalSequence());
+		originals.add(curAlignedSeq.getOriginalSequence());
 
 		while (itr.hasNext()) {
 			curAlignedSeq = itr.next();
@@ -182,7 +182,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 				throw new IllegalArgumentException("Aligned sequences differ in size");
 			}
 			list.add(curAlignedSeq);
-			originals.add((S) curAlignedSeq.getOriginalSequence());
+			originals.add(curAlignedSeq.getOriginalSequence());
 		}
 		list = Collections.unmodifiableList(list);
 		originals = Collections.unmodifiableList(originals);

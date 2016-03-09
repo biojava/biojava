@@ -63,7 +63,7 @@ public class Hashcoder {
 	}
 
 	public static int hash(int seed, char c) {
-		return (PRIME * seed) + (int) c;
+		return (PRIME * seed) + c;
 	}
 
 	/**

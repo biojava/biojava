@@ -49,7 +49,7 @@ public class CasePreservingProteinSequenceCreatorTest {
 		for(Object obj : uppercase) {
 			assertTrue("Not a Boolean",obj instanceof Boolean);
 			Boolean bool = (Boolean)obj;
-			assertEquals("Doesn't match case of "+seq.charAt(i),(Boolean)Character.isUpperCase(seq.charAt(i)),bool);
+			assertEquals("Doesn't match case of "+seq.charAt(i),Character.isUpperCase(seq.charAt(i)),bool);
 			i++;
 		}
 	}
