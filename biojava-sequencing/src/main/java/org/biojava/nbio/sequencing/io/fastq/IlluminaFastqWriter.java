@@ -20,20 +20,18 @@
  */
 package org.biojava.nbio.sequencing.io.fastq;
 
-import java.io.IOException;
-
 /**
  * Writer for {@link FastqVariant#FASTQ_ILLUMINA} formatted sequences.
  *
  * @since 3.0.3
  */
 public final class IlluminaFastqWriter
-    extends AbstractFastqWriter
+	extends AbstractFastqWriter
 {
 
-    @Override
-    protected Fastq convert(final Fastq fastq)
-    {
-        return fastq.convertTo(FastqVariant.FASTQ_ILLUMINA);
-    }
+	@Override
+	protected Fastq convert(final Fastq fastq)
+	{
+		return fastq.convertTo(FastqVariant.FASTQ_ILLUMINA);
+	}
 }

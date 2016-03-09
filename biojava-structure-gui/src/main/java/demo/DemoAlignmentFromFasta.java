@@ -47,14 +47,14 @@ import org.biojava.nbio.structure.io.StructureSequenceMatcher;
 /**
  * Demo of how to use the {@link FastaStructureParser} class to read protein
  * structures from a FASTA file.
- * 
+ *
  * @author Spencer Bliven
  *
  */
 public class DemoAlignmentFromFasta {
 
 	public static void getAlignmentFromFasta() throws StructureException {
-		
+
 		// Load a test sequence
 		// Normally this would come from a file, eg
 		// File fasta = new File("/path/to/file.fa");
@@ -65,8 +65,8 @@ public class DemoAlignmentFromFasta {
 			"> 1C4Q.D\n" +
 			"............................tPDcVTGKVEYTKYndddtFTVKVG....DKELATnranlqs\n" +
 			"lllsaqitgmtvtiktnachnggGFSEVIFr...........\n";
-		
-		
+
+
 		InputStream fasta;
 		try {
 			fasta = new ByteArrayInputStream(fastaStr.getBytes("UTF-8"));
@@ -74,7 +74,7 @@ public class DemoAlignmentFromFasta {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		// Create a header parser to parse the header lines into valid structure accessions.
 		// The resulting accession can be anything interpretable by AtomCache.getStructure.
 		// Possible Examples: "4HHB" (whole structure), "d4hhba_" (SCOP domain),
@@ -82,15 +82,15 @@ public class DemoAlignmentFromFasta {
 		// For this example, the built-in fasta parser will extract the correct accession.
 		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser;
 		headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
-		
+
 		// Create AtomCache to fetch structures from the PDB
 		AtomCache cache = new AtomCache();
-		
+
 		// Create SequenceCreator. This converts a String to a ProteinSequence
 		AminoAcidCompoundSet aaSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 		SequenceCreatorInterface<AminoAcidCompound> creator;
 		creator = new CasePreservingProteinSequenceCreator(aaSet);
-		
+
 		// parse file
 		FastaStructureParser parser = new FastaStructureParser(
 				fasta, headerParser, creator, cache);
@@ -107,7 +107,7 @@ public class DemoAlignmentFromFasta {
 		ResidueNumber[][] residues = parser.getResidues();
 		ProteinSequence[] sequences = parser.getSequences();
 		Structure[] structures = parser.getStructures();
-		
+
 		// Set lowercase residues to null too
 		for(int structNum = 0; structNum<sequences.length;structNum++) {
 			CasePreservingProteinSequenceCreator.setLowercaseToNull(
@@ -117,13 +117,13 @@ public class DemoAlignmentFromFasta {
 		// Remove alignment columns with a gap
 		residues = StructureSequenceMatcher.removeGaps(residues);
 
-		
+
 		// Create AFPChain from the alignment
 		Atom[] ca1 = StructureTools.getAtomCAArray(structures[0]);
 		Atom[] ca2 = StructureTools.getAtomCAArray(structures[1]);
 		AFPChain afp = AlignmentTools.createAFPChain(ca1, ca2, residues[0], residues[1]);
-		
-		
+
+
 		try {
 			StructureAlignmentDisplay.display(afp, ca1, ca2);
 		} catch (StructureException e) {

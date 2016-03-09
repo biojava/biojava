@@ -30,7 +30,7 @@ public class Tetrahedron implements Polyhedron {
 	private static double TETRAHEDRAL_ANGLE = Math.acos(-1.0/3.0);
 	private static int[] lineLoop1 = {0,1,2,3,0,2};
 	private static int[] lineLoop2 = {1,3};
-	
+
 	private double circumscribedRadius = 1.0;
 
 	/**
@@ -52,7 +52,7 @@ public class Tetrahedron implements Polyhedron {
 		this.circumscribedRadius = cirumscribedRadius;
 	}
 	/**
-	 * Returns the radius of an inscribed sphere, that is tangent to each 
+	 * Returns the radius of an inscribed sphere, that is tangent to each
 	 * of the tetrahedrons's faces
 	 * @return the inscribedRadius
 	 */
@@ -62,7 +62,7 @@ public class Tetrahedron implements Polyhedron {
 	}
 
 	/**
-	 * Sets the radius of an inscribed sphere, that is tangent to each 
+	 * Sets the radius of an inscribed sphere, that is tangent to each
 	 * of the tetrahedron's faces
 	 * @param inscribedRadius the inscribedRadius to set
 	 */
@@ -72,7 +72,7 @@ public class Tetrahedron implements Polyhedron {
 	}
 
 	/**
-	 * Returns the radius of a sphere, that is tangent to each 
+	 * Returns the radius of a sphere, that is tangent to each
 	 * of the tetrahedron's edges
 	 *
 	 * @return the midRadius
@@ -83,7 +83,7 @@ public class Tetrahedron implements Polyhedron {
 	}
 
 	/**
-	 * Sets the radius of radius of a sphere, that is tangent to each 
+	 * Sets the radius of radius of a sphere, that is tangent to each
 	 * of the tetrahedron's edges
 	 * @param midRadius the midRadius to set
 	 */
@@ -93,12 +93,12 @@ public class Tetrahedron implements Polyhedron {
 	}
 
 	/**
-	 * Returns the vertices of an n-fold polygon of given radius and center	
+	 * Returns the vertices of an n-fold polygon of given radius and center
 	 * @param n
 	 * @param radius
 	 * @param center
 	 * @return
-	 */ 
+	 */
 	@Override
 	public  Point3d[] getVertices() {
 		double x = getSideLengthFromCircumscribedRadius(circumscribedRadius)/2;
@@ -109,7 +109,7 @@ public class Tetrahedron implements Polyhedron {
 		tetrahedron[2] = new Point3d( 0, -x,  z);
 		tetrahedron[3] = new Point3d( 0,  x,  z);
 		Point3d centroid = SuperPosition.centroid(tetrahedron);
-		
+
 		// rotate tetrahedron to align one vertex with the +z axis
 		Matrix3d m = new Matrix3d();
 		m.rotX(0.5 * TETRAHEDRAL_ANGLE);
@@ -119,17 +119,17 @@ public class Tetrahedron implements Polyhedron {
 		}
 		return tetrahedron;
 	};
-	
+
 	@Override
 	public List<int[]> getLineLoops() {
 		return Arrays.asList(lineLoop1, lineLoop2);
 	}
-	
+
 	@Override
 	public int getViewCount() {
 		return 3;
 	}
-	
+
 	@Override
 	public String getViewName(int index) {
 		String name;
@@ -142,9 +142,9 @@ public class Tetrahedron implements Polyhedron {
 		break;
 		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
-        return name;
+		return name;
 	}
-	
+
 	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
@@ -154,35 +154,35 @@ public class Tetrahedron implements Polyhedron {
 		case 1:  m.rotX(Math.PI); // back face-centered
 		break;
 		case 2: double angle = Math.PI - 0.5 * TETRAHEDRAL_ANGLE; // Side edge-centered
-				m.rotX(angle);
+		m.rotX(angle);
 		break;
 		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
 		return m;
 	}
-	
+
 	private static double getSideLengthFromInscribedRadius(double radius) {
 		return radius * Math.sqrt(24);
 	}
-	
+
 	private static double getInscribedRadiusFromSideLength(double sideLength) {
 		return sideLength / Math.sqrt(24);
 	}
-	
+
 	private static double getSideLengthFromMiddleRadius(double radius) {
 		return radius * Math.sqrt(8);
 	}
-	
+
 	private static double getMiddleRadiusFromSideLength(double sideLength) {
 		return sideLength / Math.sqrt(8);
 	}
-	
+
 	private static double getSideLengthFromCircumscribedRadius(double radius) {
 		return radius / Math.sqrt(3.0/8.0);
 	}
-	
+
 	private static double getCircumscribedRadiusFromSideLength(double sideLength) {
 		return sideLength * Math.sqrt(3.0/8.0);
 	}
-	
+
 }

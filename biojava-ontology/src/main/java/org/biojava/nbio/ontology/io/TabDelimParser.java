@@ -77,118 +77,118 @@ import java.util.StringTokenizer;
  * @author Matthew Pocock
  */
 public class TabDelimParser {
-  /**
-   * Parse an ontology from a reader.
-   * The reader will be emptied of text. It is the caller's responsibility to
-   * close the reader.
-   *
-   * @param in  the BufferedReader to read from
-   * @param of  an OntologyFactory used to create the Ontology instance
-   * @return  a new Ontology
-   * @throws IOException if there is some problem with the buffered reader
-   * @throws OntologyException if it was not possible to instantiate a new
-   *         ontology
-   */
-  public Ontology parse(BufferedReader in, OntologyFactory of)
-  throws IOException, OntologyException {
-    String name = "";
-    String description = "";
-    Ontology onto = null;
+	/**
+	 * Parse an ontology from a reader.
+	 * The reader will be emptied of text. It is the caller's responsibility to
+	 * close the reader.
+	 *
+	 * @param in  the BufferedReader to read from
+	 * @param of  an OntologyFactory used to create the Ontology instance
+	 * @return  a new Ontology
+	 * @throws IOException if there is some problem with the buffered reader
+	 * @throws OntologyException if it was not possible to instantiate a new
+	 *         ontology
+	 */
+	public Ontology parse(BufferedReader in, OntologyFactory of)
+	throws IOException, OntologyException {
+		String name = "";
+		String description = "";
+		Ontology onto = null;
 
-    for(
-      String line = in.readLine();
-      line != null;
-      line = in.readLine()
-    ) {
-      line = line.trim();
-      if(line.length() > 0) {
-        if(line.startsWith("#")) {
-          // comment line - let's try to pull out name or description
+		for(
+			String line = in.readLine();
+			line != null;
+			line = in.readLine()
+		) {
+			line = line.trim();
+			if(line.length() > 0) {
+				if(line.startsWith("#")) {
+					// comment line - let's try to pull out name or description
 
-          if(line.startsWith("#name:")) {
-            name = line.substring("#name:".length()).trim();
-          } else if(line.startsWith("#description:")) {
-            description = line.substring("#description:".length()).trim();
-          }
-        } else {
-          try {
-            // make sure we have an ontology
-            if(onto == null) {
-              onto = of.createOntology(name, description);
-            }
+					if(line.startsWith("#name:")) {
+						name = line.substring("#name:".length()).trim();
+					} else if(line.startsWith("#description:")) {
+						description = line.substring("#description:".length()).trim();
+					}
+				} else {
+					try {
+						// make sure we have an ontology
+						if(onto == null) {
+							onto = of.createOntology(name, description);
+						}
 
-            // build a tripple
+						// build a tripple
 
-            /*
+						/*
 
-            int t1 = line.indexOf("\t");
-            int t2 = line.indexOf("\t", t1 + 1);
+						int t1 = line.indexOf("\t");
+						int t2 = line.indexOf("\t", t1 + 1);
 
-            String subject  = line.substring(0, t1);
-            String predicate = line.substring(t1 + 1, t2);
-            String object   = line.substring(t2 + 1);
+						String subject  = line.substring(0, t1);
+						String predicate = line.substring(t1 + 1, t2);
+						String object   = line.substring(t2 + 1);
 
-            */
+						*/
 
-            StringTokenizer toke = new StringTokenizer(line);
-            String subject = toke.nextToken();
-            String predicate = toke.nextToken();
-            String object = toke.nextToken();
+						StringTokenizer toke = new StringTokenizer(line);
+						String subject = toke.nextToken();
+						String predicate = toke.nextToken();
+						String object = toke.nextToken();
 
-            Term subT = resolveTerm(subject, onto);
-            Term objT = resolveTerm(object, onto);
-            Term relT = resolveTerm(predicate, onto);
+						Term subT = resolveTerm(subject, onto);
+						Term objT = resolveTerm(object, onto);
+						Term relT = resolveTerm(predicate, onto);
 
-            Triple trip = resolveTriple(subT, objT, relT, onto);
-            trip = trip==null?null:trip; // prevent unused field error
-          } catch (StringIndexOutOfBoundsException e) {
-            throw new IOException("Could not parse line: " + line);
-          }
-        }
-      }
-    }
+						Triple trip = resolveTriple(subT, objT, relT, onto);
+						trip = trip==null?null:trip; // prevent unused field error
+					} catch (StringIndexOutOfBoundsException e) {
+						throw new IOException("Could not parse line: " + line);
+					}
+				}
+			}
+		}
 
-    return onto;
-  }
+		return onto;
+	}
 
-  private Term resolveTerm(String termName, Ontology onto) {
-    boolean isTrippleTerm = termName.startsWith("(") && termName.endsWith(")");
+	private Term resolveTerm(String termName, Ontology onto) {
+		boolean isTrippleTerm = termName.startsWith("(") && termName.endsWith(")");
 
-    if(onto.containsTerm(termName)) {
-      return onto.getTerm(termName);
-    } else {
-      try {
-        if(isTrippleTerm) {
-          int c1 = termName.indexOf(",");
-          int c2 = termName.indexOf(",", c1 + 1);
+		if(onto.containsTerm(termName)) {
+			return onto.getTerm(termName);
+		} else {
+			try {
+				if(isTrippleTerm) {
+					int c1 = termName.indexOf(",");
+					int c2 = termName.indexOf(",", c1 + 1);
 
-          String source = termName.substring(1, c1);
-          String target = termName.substring(c2 + 1, termName.length() - 1);
-          String predicate = termName.substring(c1 + 1, c2);
+					String source = termName.substring(1, c1);
+					String target = termName.substring(c2 + 1, termName.length() - 1);
+					String predicate = termName.substring(c1 + 1, c2);
 
-          Term st = resolveTerm(source, onto);
-          Term tt = resolveTerm(target, onto);
-          Term rt = resolveTerm(predicate, onto);
+					Term st = resolveTerm(source, onto);
+					Term tt = resolveTerm(target, onto);
+					Term rt = resolveTerm(predicate, onto);
 
-          return onto.createTriple(st, tt, rt, null, null);
-        } else {
-          return onto.createTerm(termName, "");
-        }
-      } catch (AlreadyExistsException aee) {
-        throw new RuntimeException("Assertion Failure: Could not create term", aee);
-      } 
-    }
-  }
+					return onto.createTriple(st, tt, rt, null, null);
+				} else {
+					return onto.createTerm(termName, "");
+				}
+			} catch (AlreadyExistsException aee) {
+				throw new RuntimeException("Assertion Failure: Could not create term", aee);
+			}
+		}
+	}
 
-  private Triple resolveTriple(Term sub, Term obj, Term rel, Ontology onto) {
-    if(onto.containsTriple(sub, obj, rel)) {
-      return (Triple) onto.getTriples(sub, obj, rel).iterator().next();
-    } else {
-      try {
-        return onto.createTriple(sub, obj, rel, null, null);
-      } catch (AlreadyExistsException aee) {
-        throw new RuntimeException("Assertion Failure: Could not create triple",aee);
-      } 
-    }
-  }
+	private Triple resolveTriple(Term sub, Term obj, Term rel, Ontology onto) {
+		if(onto.containsTriple(sub, obj, rel)) {
+			return (Triple) onto.getTriples(sub, obj, rel).iterator().next();
+		} else {
+			try {
+				return onto.createTriple(sub, obj, rel, null, null);
+			} catch (AlreadyExistsException aee) {
+				throw new RuntimeException("Assertion Failure: Could not create triple",aee);
+			}
+		}
+	}
 }

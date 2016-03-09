@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 11, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -30,14 +30,14 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 
 public class TmpAtomCache
 {
-   static String tmpDir = System.getProperty("java.io.tmpdir");
-   public static AtomCache cache = new AtomCache(tmpDir, tmpDir);
-   static {
-	   FileParsingParameters params = new FileParsingParameters();
-	   params.setLoadChemCompInfo(true);
-	   params.setAlignSeqRes(true);
-	   params.setParseSecStruc(false);
-	   cache.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
-	   cache.setFileParsingParams(params);
-   }
+	static String tmpDir = System.getProperty("java.io.tmpdir");
+	public static AtomCache cache = new AtomCache(tmpDir, tmpDir);
+	static {
+		FileParsingParameters params = new FileParsingParameters();
+		params.setLoadChemCompInfo(true);
+		params.setAlignSeqRes(true);
+		params.setParseSecStruc(false);
+		cache.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
+		cache.setFileParsingParams(params);
+	}
 }

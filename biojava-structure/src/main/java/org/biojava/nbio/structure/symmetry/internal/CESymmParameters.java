@@ -27,11 +27,11 @@ import org.biojava.nbio.structure.align.ce.CeParameters;
 
 /**
  * Provides parameters to {@link CeSymm}.
- * 
+ *
  * @author Spencer Bliven
  * @author Aleix Lafita
  * @since 4.1.1
- * 
+ *
  */
 public class CESymmParameters extends CeParameters {
 
@@ -223,7 +223,7 @@ public class CESymmParameters extends CeParameters {
 
 		// gaps
 		params.add("MStA Gaps: allow gaps in the multiple alignment if true.");
-		
+
 		// optimization steps
 		params.add("Optimization Steps: maximum number of optimization steps:"
 				+ " 0 means calculated automatically with the alignment length.");
@@ -372,7 +372,7 @@ public class CESymmParameters extends CeParameters {
 	public void setScoreThreshold(Double scoreThreshold) {
 		this.scoreThreshold = scoreThreshold;
 	}
-	
+
 	public int getSSEThreshold() {
 		return sseThreshold;
 	}

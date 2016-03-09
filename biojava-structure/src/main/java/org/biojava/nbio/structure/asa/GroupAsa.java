@@ -30,18 +30,18 @@ import java.util.List;
 /**
  * A class to store the results of ASA calculations, it can
  * hold ASA values per atom present in {@link org.biojava.nbio.structure.Group}
- * 
+ *
  * @author duarte_j
  *
- */ 
+ */
 public class GroupAsa implements Serializable {
 
-	
+
 	private static final long serialVersionUID = 1L;
 
-	// ASA in extended tripeptide conformation (GLY-X-GLY) 
+	// ASA in extended tripeptide conformation (GLY-X-GLY)
 	private static final HashMap<Character,Double> tripeptAsa = initTriPeptAsas();
-	
+
 	private static HashMap<Character,Double>  initTriPeptAsas() {
 		// ASA in extended tripeptide conformation (GLY-X-GLY) from Miller et al JMB 1987 (for calculation of relative ASAs)
 		HashMap<Character,Double> map = new HashMap<Character,Double>();
@@ -67,40 +67,40 @@ public class GroupAsa implements Serializable {
 		map.put('V', 160.0);
 		return map;
 	}
-	
-	
-	
-	
+
+
+
+
 	private Group g;
-	
+
 	/**
 	 * ASA of uncomplexed residue
 	 */
 	private double asaU;
-	
+
 	/**
 	 * ASA of complexed residue
 	 */
 	private double asaC;
-	
+
 	/**
 	 * The individual atoms uncomplexed ASAs
 	 */
 	private List<Double> atomAsaUs;
-	
+
 	/**
 	 * The individual atoms complexed ASAs
 	 */
 	private List<Double> atomAsaCs;
-	
+
 	public GroupAsa(Group g) {
 		this.g = g;
-		
+
 		int groupNoHSize = getGroupNoHSize();
 		atomAsaUs = new ArrayList<Double>(groupNoHSize);
 		atomAsaCs = new ArrayList<Double>(groupNoHSize);
 	}
-	
+
 	private int getGroupNoHSize() {
 		int count = 0;
 		for (Atom atom:g.getAtoms()) {
@@ -112,9 +112,9 @@ public class GroupAsa implements Serializable {
 	public Group getGroup() {
 		return g;
 	}
-	
+
 	/**
-	 * Returns the ASA of the residue in the uncomplexed state 
+	 * Returns the ASA of the residue in the uncomplexed state
 	 * @return
 	 */
 	public double getAsaU() {
@@ -136,7 +136,7 @@ public class GroupAsa implements Serializable {
 	public void setAsaC(double asaC) {
 		this.asaC = asaC;
 	}
-	
+
 	public void addAtomAsaU(double asa) {
 		this.asaU += asa;
 		this.atomAsaUs.add(asa);
@@ -146,11 +146,11 @@ public class GroupAsa implements Serializable {
 		this.asaC += asa;
 		this.atomAsaCs.add(asa);
 	}
-	
+
 	public List<Double> getAtomAsaUs() {
 		return atomAsaUs;
 	}
-	
+
 	public void setAtomAsaUs(List<Double> atomAsaUs) {
 		this.atomAsaUs = atomAsaUs;
 		this.asaU = 0;
@@ -158,11 +158,11 @@ public class GroupAsa implements Serializable {
 			this.asaU += atomAsaU;
 		}
 	}
-	
+
 	public List<Double> getAtomAsaCs() {
 		return atomAsaCs;
 	}
-	
+
 	public void setAtomAsaCs(List<Double> atomAsaCs) {
 		this.atomAsaCs = atomAsaCs;
 		this.asaC = 0;
@@ -171,7 +171,7 @@ public class GroupAsa implements Serializable {
 		}
 	}
 
-	
+
 	/**
 	 * Returns the BSA value for this group, i.e. the difference between ASA uncomplexed and ASA complexed
 	 * @return
@@ -187,14 +187,14 @@ public class GroupAsa implements Serializable {
 	public double getBsaToAsaRatio() {
 		return getBsa()/asaU;
 	}
-	
+
 	/**
-	 * Returns the relative (uncomplexed) ASA, i.e. the ASA of the residue 
+	 * Returns the relative (uncomplexed) ASA, i.e. the ASA of the residue
 	 * with respect to its ASA in an extended tri-peptide conformation (GLY-x-GLY)
 	 * @return
 	 */
 	public double getRelativeAsaU() {
-		if (!g.getType().equals(GroupType.AMINOACID)) 
+		if (!g.getType().equals(GroupType.AMINOACID))
 			throw new IllegalArgumentException("Can not calculate relative ASA for non amino-acid");
 
 		char aa = ((AminoAcid)g).getAminoType();
@@ -202,14 +202,14 @@ public class GroupAsa implements Serializable {
 		return (asaU/tripeptAsa.get(aa));
 
 	}
-	
+
 	/**
-	 * Returns the relative (complexed) ASA, i.e. the ASA of the residue 
-	 * with respect to its ASA in an extended tri-peptide conformation (GLY-x-GLY) 
+	 * Returns the relative (complexed) ASA, i.e. the ASA of the residue
+	 * with respect to its ASA in an extended tri-peptide conformation (GLY-x-GLY)
 	 * @return
 	 */
 	public double getRelativeAsaC() {
-		if (!g.getType().equals(GroupType.AMINOACID)) 
+		if (!g.getType().equals(GroupType.AMINOACID))
 			throw new IllegalArgumentException("Can not calculate relative ASA for non amino-acid");
 
 		char aa = ((AminoAcid)g).getAminoType();
@@ -217,7 +217,7 @@ public class GroupAsa implements Serializable {
 		return (asaC/tripeptAsa.get(aa));
 
 	}
-	
+
 	@Override
 	public Object clone() {
 		GroupAsa n = new GroupAsa(this.g);
@@ -231,7 +231,7 @@ public class GroupAsa implements Serializable {
 		for (int i=0;i<this.atomAsaCs.size();i++) {
 			n.atomAsaCs.add(this.atomAsaCs.get(i));
 		}
-		
+
 		return n;
 	}
 }

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 16, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -27,7 +27,7 @@ package org.biojava.nbio.structure.align.client;
 public class JobKillException extends Exception {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

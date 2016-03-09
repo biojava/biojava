@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Feb 9, 2007
  *
  */
@@ -38,17 +38,17 @@ import java.io.File;
 import java.io.IOException;
 
 /** A class to define where a structure for the alignment is coming from
- * 
+ *
  * @author Andreas Prlic
  * @since 1.7
  * @version %I% %G%
  */
-public class PDBDirPanel 
-extends JPanel 
+public class PDBDirPanel
+extends JPanel
 implements StructurePairSelector{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5682120627824627408L;
 
@@ -60,9 +60,9 @@ implements StructurePairSelector{
 	JTextField c2;
 
 	private static final Logger logger = LoggerFactory.getLogger(StructurePairSelector.class);
-	
+
 	/** load the PDB files from a local directory
-	 * 
+	 *
 	 */
 	public PDBDirPanel() {
 
@@ -143,7 +143,7 @@ implements StructurePairSelector{
 			logger.warn(e.getMessage());
 			throw new StructureException(e);
 		}
-		return tmp1;	
+		return tmp1;
 	}
 
 
@@ -154,7 +154,7 @@ implements StructurePairSelector{
 	}
 
 	@Override
-	public Structure getStructure2() throws StructureException{    
+	public Structure getStructure2() throws StructureException{
 		return fromPDB(f2,c2);
 	}
 
@@ -234,14 +234,14 @@ class ChooseDirAction extends AbstractAction{
 		String txt = textField.getText();
 		if ( txt != null){
 			chooser.setCurrentDirectory(new java.io.File(txt));
-		} 
+		}
 		chooser.setDialogTitle("Choose directory that contains your PDB files");
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		//
 		// disable the "All files" option.
 		//
 		chooser.setAcceptAllFileFilterUsed(false);
-		//    
+		//
 
 
 

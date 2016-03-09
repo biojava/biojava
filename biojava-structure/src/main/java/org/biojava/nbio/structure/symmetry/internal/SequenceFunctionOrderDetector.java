@@ -31,16 +31,16 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
  * Calls Spencer's method for determining order.
  * This method uses the sequence alignment information
  * to guess the order of symmetry.
- * 
+ *
  * @author dmyersturnbull
  * @since 4.2.0
- * 
+ *
  */
 public class SequenceFunctionOrderDetector implements OrderDetector {
 
 	private int maxSymmetry = 8;
 	private float minimumMetricChange = 0.4f;
-	
+
 	public SequenceFunctionOrderDetector() {}
 
 	public SequenceFunctionOrderDetector(int maxSymmetry, float minimumMetricChange) {
@@ -49,16 +49,16 @@ public class SequenceFunctionOrderDetector implements OrderDetector {
 	}
 
 	@Override
-	public int calculateOrder(AFPChain afpChain, Atom[] ca) 
+	public int calculateOrder(AFPChain afpChain, Atom[] ca)
 			throws RefinerFailedException {
 		try {
-			Map<Integer,Integer> alignment = 
+			Map<Integer,Integer> alignment =
 					AlignmentTools.alignmentAsMap(afpChain);
 
 			return AlignmentTools.getSymmetryOrder(alignment,
-					new AlignmentTools.IdentityMap<Integer>(), 
+					new AlignmentTools.IdentityMap<Integer>(),
 					maxSymmetry, minimumMetricChange);
-			
+
 		} catch (StructureException e) {
 			throw new RefinerFailedException(e);
 		}

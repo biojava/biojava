@@ -82,7 +82,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A simple mmCif file parser
  *
- * 
+ *
  * Usage:
  * <pre>
 String file = "path/to/mmcif/file";
@@ -96,7 +96,7 @@ System.out.println(s.toPDB());
 
  * </pre>
  * For more documentation see <a href="http://biojava.org/wiki/BioJava:CookBook#Protein_Structure">http://biojava.org/wiki/BioJava:CookBook#Protein_Structure</a>.
- * 
+ *
  * @author Andreas Prlic
  * @author Jose Duarte
  * @since 1.7
@@ -106,7 +106,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 
 	/**
-	 * The header appearing at the beginning of a mmCIF file. 
+	 * The header appearing at the beginning of a mmCIF file.
 	 * A "block code" can be added to it of no more than 32 chars.
 	 * See http://www.iucr.org/__data/assets/pdf_file/0019/22618/cifguide.pdf
 	 */
@@ -669,7 +669,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewSymmetry(symmetry);
 		} else if ( category.equals("_struct_ncs_oper")) {
-			
+
 			// this guy is special because of the [] in the field names
 			StructNcsOper sNcsOper = getStructNcsOper(loopFields,lineData);
 			triggerNewStructNcsOper(sNcsOper);
@@ -932,7 +932,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
-		
+
 		Object o = null;
 		Class<?> c = null;
 
@@ -978,7 +978,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			if ( m == null) { 	// no method found in model class with the name found in file
 
-				if (!key.contains("[")) { // the fields with square brackets are handled elsewhere, see for instance getStructNcsOper						
+				if (!key.contains("[")) { // the fields with square brackets are handled elsewhere, see for instance getStructNcsOper
 
 					String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
 					String warnkey = key+"-"+c.getName();
@@ -995,7 +995,7 @@ public class SimpleMMcifParser implements MMcifParser {
 				}
 				continue;
 			}
-			
+
 			// now we populate the object with the values by invoking the corresponding setter method,
 			// note that all of the mmCif container classes have only one argument (they are beans)
 

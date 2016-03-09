@@ -24,12 +24,12 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Quat4d;
 
 /**
- * 
+ *
  * @author Peter
  */
 public final class IcosahedralSampler {
-    private static Quat4d quat = new Quat4d();
-         
+	private static Quat4d quat = new Quat4d();
+
 	// this class cannot be instantiated
 	private IcosahedralSampler() {
 	};
@@ -37,7 +37,7 @@ public final class IcosahedralSampler {
 	public static int getSphereCount() {
 		return orientations.length;
 	}
-	
+
 	public static Quat4d getQuat4d(int index) {
 		Quat4d q = new Quat4d(orientations[index]);
 		return q;
@@ -52,7 +52,7 @@ public final class IcosahedralSampler {
 //	# $Id: c600v.quat 6102 2006-02-21 19:45:40Z ckarney $
 //	# For more information, eee http://charles.karney.info/orientation/
 //	format quaternion
-    private static double[][] orientations = {
+	private static double[][] orientations = {
 	{1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f, 1.000000f},
 	{0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f, 1.000000f},
 	{0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f, 1.000000f},

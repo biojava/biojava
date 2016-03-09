@@ -34,7 +34,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test the correctness of various Text outputs 
+ * Test the correctness of various Text outputs
  * for {@link MultipleAlignment}s.<p>
  * Currently tested:
  * <ul><li>FASTA
@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
  * <li>Transformation Matrices
  * <li>XML format
  * </ul>
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -53,12 +53,12 @@ public class TestMultipleAlignmentWriter {
 	private MultipleAlignment alignment2;
 
 	/**
-	 * Build the alignments in common for every writer output, 
+	 * Build the alignments in common for every writer output,
 	 * so that they do not have to be created each time.
-	 * @throws IOException 
-	 * @throws StructureException 
+	 * @throws IOException
+	 * @throws StructureException
 	 */
-	public TestMultipleAlignmentWriter() 
+	public TestMultipleAlignmentWriter()
 			throws StructureException, IOException{
 
 		alignment1 = TestSampleGenerator.testAlignment1();
@@ -127,7 +127,7 @@ public class TestMultipleAlignmentWriter {
 		String expected = stringBuilder.toString();
 		assertEquals(expected,result);
 	}
-	
+
 	@Test
 	public void testFatCat2() throws IOException{
 
@@ -169,7 +169,7 @@ public class TestMultipleAlignmentWriter {
 		String expected = stringBuilder.toString();
 		assertEquals(expected,result);
 	}
-	
+
 	@Test
 	public void testAlignedResidues2() throws IOException{
 
@@ -193,7 +193,7 @@ public class TestMultipleAlignmentWriter {
 
 	@Test
 	public void testTransformMatrices1() throws IOException{
-		
+
 		String result = MultipleAlignmentWriter.
 				toTransformMatrices(alignment1);
 
@@ -212,10 +212,10 @@ public class TestMultipleAlignmentWriter {
 		String expected = stringBuilder.toString();
 		assertEquals(expected,result);
 	}
-	
+
 	@Test
 	public void testTransformMatrices2() throws IOException{
-		
+
 		String result = MultipleAlignmentWriter.
 				toTransformMatrices(alignment2);
 		System.out.println(result);
@@ -258,7 +258,7 @@ public class TestMultipleAlignmentWriter {
 		String expected = stringBuilder.toString();
 		assertEquals(expected,result);
 	}
-	
+
 	@Test
 	public void testXMLformat2() throws IOException{
 

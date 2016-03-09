@@ -78,15 +78,15 @@ public class ResidueRangeAndLength extends ResidueRange {
 
 	/**
 	 * Parses a residue range.
-	 * 
+	 *
 	 * The AtomPositionMap is used to calculate the length and fill in missing
 	 * information, such as for whole chains ('A:'). Supports the special chain
 	 * name '_' for single-chain structures.
-	 * 
+	 *
 	 * If residues are specified outside of the range given in the map,
 	 * attempts to decrease the input range to valid values. In extreme cases
 	 * where this process fails fails to find any valid indices, returns null.
-	 * 
+	 *
 	 * For a function which more conservatively represents the input range,
 	 * without chain inference and error fixes, use {@link ResidueRange#parse(String)}.
 	 * @param s
@@ -96,9 +96,9 @@ public class ResidueRangeAndLength extends ResidueRange {
 	public static ResidueRangeAndLength parse(String s, AtomPositionMap map) {
 		ResidueRange rr = parse(s);
 		ResidueNumber start = rr.getStart();
-		
+
 		String chain = rr.getChainId();
-		
+
 		// handle special "_" chain
 		if(chain == null || chain.equals("_")) {
 			ResidueNumber first = map.getNavMap().firstKey();
@@ -122,7 +122,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 		// Replace '_'
 		start.setChainId(chain);
 		end.setChainId(chain);
-		
+
 		// Now fix any errors and calculate the length
 		return map.trimToValidResidues(new ResidueRange(chain, start, end));
 	}

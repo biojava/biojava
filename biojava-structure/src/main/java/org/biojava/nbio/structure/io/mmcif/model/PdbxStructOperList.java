@@ -34,7 +34,7 @@ import java.util.Arrays;
 public class PdbxStructOperList implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8933552854747969787L;
 
@@ -44,19 +44,19 @@ public class PdbxStructOperList implements Serializable{
 				+ matrix + ", vector=" + Arrays.toString(vector) + "]";
 	}
 
-	
+
 	private String id;
-	
+
 	private String type;
-	
+
 	private Matrix matrix;
-	
-	
+
+
 	private double[] vector;
 
 	public PdbxStructOperList(){
 		matrix =  Matrix.identity(3,3);
-		
+
 	}
 	@XmlAttribute
 	public String getType() {
@@ -90,7 +90,7 @@ public class PdbxStructOperList implements Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public void setMatrix11(double val){
 		matrix.set(0,0,val);
 	}
@@ -100,7 +100,7 @@ public class PdbxStructOperList implements Serializable{
 	public void setMatrix31(double val){
 		matrix.set(2,0,val);
 	}
-	
+
 	public void setMatrix12(double val){
 		matrix.set(0,1,val);
 	}
@@ -119,7 +119,7 @@ public class PdbxStructOperList implements Serializable{
 	public void setMatrix33(double val){
 		matrix.set(2,2,val);
 	}
-	
+
 	@XmlElement
 	public double getMatrix11(){
 		return matrix.get(0,0);

@@ -31,5 +31,5 @@ public interface AlignmentPositionListener {
 	public void rangeSelected(AlignedPosition start , AlignedPosition end);
 	public void selectionLocked();
 	public void selectionUnlocked();
-	
+
 }

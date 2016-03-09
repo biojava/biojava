@@ -36,18 +36,18 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface Aligner<S extends Sequence<C>, C extends Compound> extends Scorer {
 
-    /**
-     * Returns the computation time needed for an alignment computed in nanoseconds.
-     *
-     * @return the computation time in nanoseconds
-     */
-    long getComputationTime();
+	/**
+	 * Returns the computation time needed for an alignment computed in nanoseconds.
+	 *
+	 * @return the computation time in nanoseconds
+	 */
+	long getComputationTime();
 
-    /**
-     * Returns the alignment {@link Profile} produced by this alignment algorithm.
-     *
-     * @return the alignment profile
-     */
-    Profile<S, C> getProfile();
+	/**
+	 * Returns the alignment {@link Profile} produced by this alignment algorithm.
+	 *
+	 * @return the alignment profile
+	 */
+	Profile<S, C> getProfile();
 
 }

@@ -30,7 +30,7 @@ import java.util.Collections;
 
 /**
  * A crystal cell's parameters.
- * 
+ *
  * @author duarte_j
  *
  */
@@ -41,32 +41,32 @@ public class CrystalCell implements Serializable {
 
 	public static final double MIN_VALID_CELL_SIZE = 10.0; // the minimum admitted for a crystal cell
 
-	
+
 	private double a;
 	private double b;
 	private double c;
-	
+
 	private double alpha;
 	private double beta;
 	private double gamma;
-	
+
 	private double alphaRad;
 	private double betaRad;
 	private double gammaRad;
-	
+
 	private double volume; // cached volume
-	
+
 	private double maxDimension; // cached max dimension
 
 	private Matrix3d M; 	// cached basis change transformation matrix
 	private Matrix3d Minv;  // cached basis change transformation matrix
 	private Matrix3d Mtransp;
 	private Matrix3d MtranspInv;
-	
+
 	public CrystalCell() {
-		
+
 	}
-	
+
 	public CrystalCell(double a, double b, double c, double alpha, double beta, double gamma){
 		this.a = a;
 		this.b = b;
@@ -126,7 +126,7 @@ public class CrystalCell implements Serializable {
 		this.gamma = gamma;
 		this.gammaRad = Math.toRadians(gamma);
 	}
-	
+
 	/**
 	 * Returns the volume of this unit cell.
 	 * See http://en.wikipedia.org/wiki/Parallelepiped
@@ -139,13 +139,13 @@ public class CrystalCell implements Serializable {
 		volume =  a*b*c*
 		Math.sqrt(1-Math.cos(alphaRad)*Math.cos(alphaRad)-Math.cos(betaRad)*Math.cos(betaRad)-Math.cos(gammaRad)*Math.cos(gammaRad)
 				+2.0*Math.cos(alphaRad)*Math.cos(betaRad)*Math.cos(gammaRad));
-		
+
 		return volume;
 	}
-	
+
 	/**
 	 * Get the index of a unit cell to which the query point belongs.
-	 * 
+	 *
 	 * <p>For instance, all points in the unit cell at the origin will return (0,0,0);
 	 * Points in the unit cell one unit further along the `a` axis will return (1,0,0),
 	 * etc.
@@ -204,9 +204,9 @@ public class CrystalCell implements Serializable {
 			transfToOrthonormal(point);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param ops Set of operations in orthonormal coordinates
 	 * @param reference Reference point, which should be in the unit cell after
 	 *  each operation (also in orthonormal coordinates)
@@ -224,9 +224,9 @@ public class CrystalCell implements Serializable {
 		for(int i=0;i<ops.length;i++) {
 			opsXtal[i] = transfToCrystal(ops[i]);
 		}
-		
+
 		Matrix4d[] transformed = transfToOriginCellCrystal(opsXtal, refXtal);
-		
+
 		// Convert back to orthonormal
 		for(int i=0;i<ops.length;i++) {
 			transformed[i] = transfToOrthonormal(transformed[i]);
@@ -234,7 +234,7 @@ public class CrystalCell implements Serializable {
 		return transformed;
 	}
 	/**
-	 * 
+	 *
 	 * @param ops Set of operations in crystal coordinates
 	 * @param reference Reference point, which should be in the unit cell after
 	 *  each operation (also in crystal coordinates)
@@ -246,7 +246,7 @@ public class CrystalCell implements Serializable {
 		Matrix4d[] transformed = new Matrix4d[ops.length];
 		for(int j=0;j<ops.length;j++) {
 			Matrix4d op = ops[j];
-			
+
 			// transform the reference point
 			Point3d xXtal = new Point3d(reference);
 			op.transform(xXtal);
@@ -255,7 +255,7 @@ public class CrystalCell implements Serializable {
 			int x = (int)Math.floor(xXtal.x);
 			int y = (int)Math.floor(xXtal.y);
 			int z = (int)Math.floor(xXtal.z);
-			
+
 			Matrix4d translation = new Matrix4d();
 			translation.set(new Vector3d(-x,-y,-z));
 
@@ -264,10 +264,10 @@ public class CrystalCell implements Serializable {
 
 			Point3d ref2 = new Point3d(reference);
 			translation.transform(ref2);
-			
+
 			transformed[j] = translation;
 		}
-		
+
 		return transformed;
 	}
 
@@ -293,16 +293,16 @@ public class CrystalCell implements Serializable {
 
 	/**
 	 * Transforms the given crystal basis coordinates into orthonormal coordinates.
-	 * e.g. transfToOrthonormal(new Point3d(1,1,1)) returns the orthonormal coordinates of the 
+	 * e.g. transfToOrthonormal(new Point3d(1,1,1)) returns the orthonormal coordinates of the
 	 * vertex of the unit cell.
-	 * See Giacovazzo section 2.E, eq. 2.E.1 (or any linear algebra manual) 
+	 * See Giacovazzo section 2.E, eq. 2.E.1 (or any linear algebra manual)
 	 * @param v
 	 */
 	public void transfToOrthonormal(Tuple3d v) {
 		// see Giacovazzo section 2.E, eq. 2.E.1
 		getMTransposeInv().transform(v);
 	}
-	
+
 	/**
 	 * Transform given Matrix4d in orthonormal basis to the crystal basis using
 	 * the PDB axes convention (NCODE=1)
@@ -312,7 +312,7 @@ public class CrystalCell implements Serializable {
 	public Matrix4d transfToCrystal(Matrix4d m) {
 		Vector3d trans = new Vector3d(m.m03,m.m13,m.m23);
 		transfToCrystal(trans);
-		
+
 		Matrix3d rot = new Matrix3d();
 		m.getRotationScale(rot);
 		// see Giacovazzo section 2.E, eq. 2.E.1 (the inverse equation)
@@ -320,9 +320,9 @@ public class CrystalCell implements Serializable {
 		rot.mul(this.getMTransposeInv());
 		rot.mul(this.getMTranspose(),rot);
 
-		return new Matrix4d(rot,trans,1.0);		
+		return new Matrix4d(rot,trans,1.0);
 	}
-	
+
 	/**
 	 * Transforms the given orthonormal basis coordinates into crystal coordinates.
 	 * See Giacovazzo eq 2.20 (or any linear algebra manual)
@@ -331,22 +331,22 @@ public class CrystalCell implements Serializable {
 	public void transfToCrystal(Tuple3d v) {
 		getMTranspose().transform(v);
 	}
-	
+
 	/**
-	 * Returns the change of basis (crystal to orthonormal) transform matrix, that is 
-	 * M inverse in the notation of Giacovazzo. 
-	 * Using the PDB axes convention 
-	 * (CCP4 uses NCODE identifiers to distinguish the different conventions, the PDB one is called NCODE=1) 
+	 * Returns the change of basis (crystal to orthonormal) transform matrix, that is
+	 * M inverse in the notation of Giacovazzo.
+	 * Using the PDB axes convention
+	 * (CCP4 uses NCODE identifiers to distinguish the different conventions, the PDB one is called NCODE=1)
 	 * The matrix is only calculated upon first call of this method, thereafter it is cached.
 	 * See "Fundamentals of Crystallography" C. Giacovazzo, section 2.5 (eq 2.30)
-	 * 
+	 *
 	 * The non-standard orthogonalisation codes (NCODE for ccp4) are flagged in REMARK 285 after 2011's remediation
 	 * with text: "THE ENTRY COORDINATES ARE NOT PRESENTED IN THE STANDARD CRYSTAL FRAME". There were only 148 PDB
 	 * entries with non-standard code in 2011. See:
-	 * http://www.wwpdb.org/documentation/2011remediation_overview-061711.pdf 
-     * The SCALE1,2,3 records contain the correct transformation matrix (what Giacovazzo calls M matrix). 
-     * In those cases if we calculate the M matrix following Giacovazzo's equations here, we get an entirely wrong one.  
-     * Examples of PDB with non-standard orthogonalisation are 1bab and 1bbb.
+	 * http://www.wwpdb.org/documentation/2011remediation_overview-061711.pdf
+	 * The SCALE1,2,3 records contain the correct transformation matrix (what Giacovazzo calls M matrix).
+	 * In those cases if we calculate the M matrix following Giacovazzo's equations here, we get an entirely wrong one.
+	 * Examples of PDB with non-standard orthogonalisation are 1bab and 1bbb.
 	 * @return
 	 */
 	private Matrix3d getMInv() {
@@ -354,7 +354,7 @@ public class CrystalCell implements Serializable {
 			return Minv;
 		}
 
-		// see eq. 2.30 Giacovazzo 
+		// see eq. 2.30 Giacovazzo
 		Minv =  new Matrix3d(                    this.a,                                           0,              0,
 							  this.b*Math.cos(gammaRad),                   this.b*Math.sin(gammaRad),              0,
 							  this.c*Math.cos(betaRad) , -this.c*Math.sin(betaRad)*getCosAlphaStar(),  1.0/getCstar());
@@ -371,7 +371,7 @@ public class CrystalCell implements Serializable {
 //				                        0,                                                  0,                  this.c);
 //		return Minv;
 //	}
-	
+
 	// and yet another axes convention (from Giacovazzo) eq. 2.31c, not sure what would be the NCODE of this
 //	private Matrix3d getMInv() {
 //		if (Minv!=null) {
@@ -382,58 +382,58 @@ public class CrystalCell implements Serializable {
 //				                                                        0, this.c*Math.cos(alphaRad),                   this.c*Math.sin(alphaRad));
 //		return Minv;
 //	}
-	
+
 	// relationships among direct and reciprocal lattice parameters
 	// see Table 2.1 of chapter 2 of Giacovazzo
 	@SuppressWarnings("unused")
 	private double getAstar() {
 		return (this.b*this.c*Math.sin(alphaRad))/getVolume();
 	}
-	
+
 	@SuppressWarnings("unused")
 	private double getBstar() {
 		return (this.a*this.c*Math.sin(betaRad))/getVolume();
 	}
-	
+
 	private double getCstar() {
 		return (this.a*this.b*Math.sin(gammaRad))/getVolume();
 	}
-	
+
 	private double getCosAlphaStar() {
 		return (Math.cos(betaRad)*Math.cos(gammaRad)-Math.cos(alphaRad))/(Math.sin(betaRad)*Math.sin(gammaRad));
 	}
-	
+
 	@SuppressWarnings("unused")
 	private double getCosBetaStar() {
 		return (Math.cos(alphaRad)*Math.cos(gammaRad)-Math.cos(betaRad))/(Math.sin(alphaRad)*Math.sin(gammaRad));
 	}
-	
+
 	@SuppressWarnings("unused")
 	private double getCosGammaStar() {
 		return (Math.cos(alphaRad)*Math.cos(betaRad)-Math.cos(gammaRad))/(Math.sin(alphaRad)*Math.sin(betaRad));
 	}
-	
+
 	@SuppressWarnings("unused")
 	private double getSinAlphaStar() {
 		return getVolume()/(this.a*this.b*this.c*Math.sin(betaRad)*Math.sin(gammaRad));
 	}
-	
+
 	@SuppressWarnings("unused")
 	private double getSinBetaStar() {
 		return getVolume()/(this.a*this.b*this.c*Math.sin(alphaRad)*Math.sin(gammaRad));
 	}
-	
+
 	@SuppressWarnings("unused")
 	private double getSinGammaStar() {
 		return getVolume()/(this.a*this.b*this.c*Math.sin(alphaRad)*Math.sin(betaRad));
 	}
-	
+
 	/**
 	 * Returns the change of basis (orthonormal to crystal) transform matrix, that is
 	 * M in the notation of Giacovazzo.
 	 * Using the PDB convention (NCODE=1).
-	 * The matrix is only calculated upon first call of this method, thereafter it is cached. 
-	 * See "Fundamentals of Crystallography" C. Giacovazzo, section 2.5 
+	 * The matrix is only calculated upon first call of this method, thereafter it is cached.
+	 * See "Fundamentals of Crystallography" C. Giacovazzo, section 2.5
 	 * @return
 	 */
 	private Matrix3d getM() {
@@ -444,7 +444,7 @@ public class CrystalCell implements Serializable {
 		M.invert(getMInv());
 		return M;
 	}
-	
+
 	public Matrix3d getMTranspose() {
 		if (Mtransp!=null){
 			return Mtransp;
@@ -454,7 +454,7 @@ public class CrystalCell implements Serializable {
 		Mtransp.transpose(M);
 		return Mtransp;
 	}
-	
+
 	private Matrix3d getMTransposeInv() {
 		if (MtranspInv!=null){
 			return MtranspInv;
@@ -463,7 +463,7 @@ public class CrystalCell implements Serializable {
 		MtranspInv.invert(getMTranspose());
 		return MtranspInv;
 	}
-	
+
 	/**
 	 * Gets the maximum dimension of the unit cell.
 	 * @return
@@ -496,7 +496,7 @@ public class CrystalCell implements Serializable {
 		maxDimension = Collections.max(vertDists);
 		return maxDimension;
 	}
-	
+
 	/**
 	 * Given a scale matrix parsed from the PDB entry (SCALE1,2,3 records),
 	 * checks that the matrix is a consistent scale matrix by comparing the
@@ -515,8 +515,8 @@ public class CrystalCell implements Serializable {
 
 		// note we need to have a relaxed tolerance here as the PDB scale matrix is given with not such high precision
 		// plus we don't want to have false positives, so we stay conservative
-		double tolerance = vol/100.0;		
-		if ((Math.abs(vol - 1.0/m.determinant() )>tolerance)) { 
+		double tolerance = vol/100.0;
+		if ((Math.abs(vol - 1.0/m.determinant() )>tolerance)) {
 			//System.err.println("Warning! SCALE matrix from PDB does not match 1/determinat == cell volume: "+
 			//		String.format("vol=%6.3f  1/det=%6.3f",vol,1.0/m.determinant()));
 			return false;
@@ -527,12 +527,12 @@ public class CrystalCell implements Serializable {
 		//}
 
 		return true;
-		
+
 	}
-	
+
 	/**
-	 * Given a scale matrix parsed from a PDB entry (SCALE1,2,3 records), 
-	 * compares it to our calculated Mtranspose matrix to see if they coincide and 
+	 * Given a scale matrix parsed from a PDB entry (SCALE1,2,3 records),
+	 * compares it to our calculated Mtranspose matrix to see if they coincide and
 	 * returns true if they do.
 	 * If they don't that means that the PDB entry is not in the standard
 	 * orthogonalisation (NCODE=1 in ccp4).
@@ -540,19 +540,19 @@ public class CrystalCell implements Serializable {
 	 * a non-standard orthogonalisation. See:
 	 * http://www.wwpdb.org/documentation/2011remediation_overview-061711.pdf
 	 * For normal cases the scale matrix is diagonal without a translation component.
-	 * Additionally the translation component of the SCALE matrix is also checked to 
+	 * Additionally the translation component of the SCALE matrix is also checked to
 	 * make sure it is (0,0,0), if not false is return
 	 * @param scaleMatrix
 	 * @return
 	 */
 	public boolean checkScaleMatrix(Matrix4d scaleMatrix) {
-		
+
 		for (int i=0;i<3;i++) {
 			for (int j=0;j<3;j++) {
 				if (!deltaComp(getMTranspose().getElement(i, j),scaleMatrix.getElement(i, j))) {
 					//System.out.println("Our value   ("+i+","+j+"): "+getM().getElement(i,j));
 					//System.out.println("Their value ("+i+","+j+"): "+scaleMatrix.getElement(i,j));
-					return false;	
+					return false;
 				}
 			}
 		}
@@ -563,33 +563,33 @@ public class CrystalCell implements Serializable {
 		}
 		return true;
 	}
-	
+
 	private boolean deltaComp(double d1, double d2) {
 		if (Math.abs(d1-d2)<0.0001) return true;
 		return false;
 	}
-	
+
 	/**
-	 * Checks whether the dimensions of this crystal cell are reasonable for protein 
-	 * crystallography: if all 3 dimensions are below {@value #MIN_VALID_CELL_SIZE} the cell 
+	 * Checks whether the dimensions of this crystal cell are reasonable for protein
+	 * crystallography: if all 3 dimensions are below {@value #MIN_VALID_CELL_SIZE} the cell
 	 * is considered unrealistic and false returned
 	 * @return
 	 */
 	public boolean isCellReasonable() {
 		// this check is necessary mostly when reading PDB files that can contain the default 1 1 1 crystal cell
 		// if we use that further things can go wrong, for instance for interface calculation
-		// For instance programs like coot produce by default a 1 1 1 cell 
-		
+		// For instance programs like coot produce by default a 1 1 1 cell
+
 		if (this.getA()<MIN_VALID_CELL_SIZE &&
 				this.getB()<MIN_VALID_CELL_SIZE &&
 				this.getC()<MIN_VALID_CELL_SIZE) {
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("a%7.2f b%7.2f c%7.2f alpha%6.2f beta%6.2f gamma%6.2f", a, b, c, alpha, beta, gamma);

@@ -29,7 +29,7 @@ import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
 /**
  * Get an instance of the two alignment GUIs.
  * Try to align 2hyn vs. 1zll, for example.
- * 
+ *
  * @author Andreas Prlic
  *
  */

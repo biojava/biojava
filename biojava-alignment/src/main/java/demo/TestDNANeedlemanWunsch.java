@@ -32,7 +32,7 @@ import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 
 public class TestDNANeedlemanWunsch {
-	
+
 	public static void main(String[] args) throws Exception {
 
 		String query = "AGGATGAACGCTGGCGGCGTGCTTAACACATGCAAGTCGAACGGTGAAGCCCAGCTTGCTGGGTGGATCA" +
@@ -87,9 +87,9 @@ public class TestDNANeedlemanWunsch {
 				penalty, SubstitutionMatrixHelper.getNuc4_4());
 		SequencePair<DNASequence, NucleotideCompound>
 		alignment = aligner.getPair();
-		
+
 		System.out.println("Alignment: "+ alignment);
-		
+
 		int identical = alignment.getNumIdenticals();
 		System.out.println("Number of identical residues: "+ identical);
 		System.out.println("% identical query: "+ identical / (float) query.length());

@@ -24,7 +24,7 @@ package org.biojava.nbio.structure.secstruc;
  * Container that represents a beta Bridge between two residues. It contains the
  * two partner indices and the type of the bridge. For consistency, partner1 is
  * always the small index.
- * 
+ *
  * @author Aleix Lafita
  *
  */

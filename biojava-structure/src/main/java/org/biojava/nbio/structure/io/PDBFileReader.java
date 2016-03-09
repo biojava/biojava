@@ -43,7 +43,7 @@ import java.util.List;
  *  <p>
  *  Several flags can be set for this class
  *  <ul>
- *  
+ *
  * <li> {@link #setAutoFetch(boolean)} - if the PDB file can not be found locally, should it be fetched
  *  from the PDB ftp servers? (default:false)</li>
  *  <li> Other parameters can be set using the {@link #setFileParsingParameters(FileParsingParameters)}</li>
@@ -154,10 +154,10 @@ public class PDBFileReader extends LocalPDBDirectory {
 				List<Chain> chains = comp.getChains();
 				System.out.print(">Chains :" );
 				for (Chain c : chains){
-					System.out.print(c.getChainID() + " " );					
+					System.out.print(c.getChainID() + " " );
 				}
 				System.out.println();
-				if ( chains.size() > 0)	{				
+				if ( chains.size() > 0)	{
 					System.out.println(chains.get(0).getAtomSequence());
 					System.out.println(chains.get(0).getSeqResSequence());
 					System.out.print("  Atom Ligands: ");
@@ -172,7 +172,7 @@ public class PDBFileReader extends LocalPDBDirectory {
 
 
 			/*
-			 GroupIterator gi = new GroupIterator(struc);
+			GroupIterator gi = new GroupIterator(struc);
 			while (gi.hasNext()){
 				Group g = (Group) gi.next();
 				Chain  c = g.getParent();
@@ -202,18 +202,18 @@ public class PDBFileReader extends LocalPDBDirectory {
 
 	/**
 	 * Constructs a new PDBFileReader, initializing the extensions member variable.
-	 * The path is initialized in the same way as {@link UserConfiguration}, 
+	 * The path is initialized in the same way as {@link UserConfiguration},
 	 * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
 	 * Both autoFetch and splitDir are initialized to false
 	 */
 	public PDBFileReader() {
 		this(null);
 	}
-	
+
 	/**
 	 * Constructs a new PDBFileReader, initializing the extensions member variable.
 	 * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
-	 * 
+	 *
 	 * <p>If path is null, initialize using the system property/environment variable
 	 * {@link UserConfiguration#PDB_DIR}.
 	 * @param path Path to the PDB file directory
@@ -319,7 +319,7 @@ public class PDBFileReader extends LocalPDBDirectory {
 	protected String[] getObsoleteDirPath() {
 		return PDB_OBSOLETE_DIR;
 	}
-	
+
 
 
 }

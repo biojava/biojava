@@ -51,7 +51,7 @@ public class SubunitGraph {
 		for (int i = 0; i < n; i++) {
 			graph.addVertex(i);
 		}
-		
+
 		// add edges if there are 10 or more contact of Calpha atoms
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = i + 1; j < n; j++) {

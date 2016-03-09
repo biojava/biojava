@@ -42,20 +42,20 @@ public class MMcifTest {
 
 	@Test
 	public void testLoad() throws IOException {
-		
+
 		headerOnly = false;
 
 		doTestLoad();
-		
+
 	}
-	
+
 	@Test
 	public void testLoadHeaderOnly() throws IOException {
-		
+
 		headerOnly = true;
-		
+
 		doTestLoad();
-		
+
 	}
 
 	private void doTestLoad() throws IOException {
@@ -85,7 +85,7 @@ public class MMcifTest {
 	}
 
 	private void comparePDB2cif(String id, String chainId) throws IOException {
-		String fileName = "/"+id+".cif"; 
+		String fileName = "/"+id+".cif";
 		InputStream inStream = this.getClass().getResourceAsStream(fileName);
 		assertNotNull("Could not find file " + fileName + ". Config problem?" , inStream);
 
@@ -117,9 +117,9 @@ public class MMcifTest {
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
 
-		
+
 		pdbStructure = pdbpars.parsePDBFile(pinStream) ;
-		
+
 
 		assertNotNull(pdbStructure);
 
@@ -163,10 +163,10 @@ public class MMcifTest {
 
 			// actually this check not necessarily works, since there can be waters in PDB that we don;t deal with yet in cif...
 			//assertEquals("the nr of ATOM record groups is not the same!" , a_pdb.getAtomLength(),a_cif.getAtomLength());
-			for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){				
+			for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){
 				Group gp = a_pdb.getAtomGroups(GroupType.AMINOACID).get(i);
 
-				List<Group> cifGroups = a_cif.getAtomGroups(GroupType.AMINOACID);					
+				List<Group> cifGroups = a_cif.getAtomGroups(GroupType.AMINOACID);
 				Group gc = cifGroups.get(i);
 				checkGroups(gp, gc);
 			}

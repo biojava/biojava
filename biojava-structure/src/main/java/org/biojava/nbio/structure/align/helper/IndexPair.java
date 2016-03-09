@@ -26,39 +26,39 @@ import java.io.Serializable;
 
 public class IndexPair implements Serializable {
 
-   /**
-    *
-    */
-   private static final long serialVersionUID = 1832393751152650420L;
-   short row;
-   short col;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1832393751152650420L;
+	short row;
+	short col;
 
-   public IndexPair(){
-      row = -1;
-      col = -1;
-   }
+	public IndexPair(){
+		row = -1;
+		col = -1;
+	}
 
-   public IndexPair(short row, short col){
-      this.row = row;
-      this.col=col;
+	public IndexPair(short row, short col){
+		this.row = row;
+		this.col=col;
 
-   }
-   public short getCol() {
-      return col;
-   }
-   public void setCol(short col) {
-      this.col = col;
-   }
-   public short getRow() {
-      return row;
-   }
-   public void setRow(short row) {
-      this.row = row;
-   }
+	}
+	public short getCol() {
+		return col;
+	}
+	public void setCol(short col) {
+		this.col = col;
+	}
+	public short getRow() {
+		return row;
+	}
+	public void setRow(short row) {
+		this.row = row;
+	}
 
-   @Override
+	@Override
 public String toString(){
-      return "["+row + " " + col+"]";
-   }
+		return "["+row + " " + col+"]";
+	}
 }
 

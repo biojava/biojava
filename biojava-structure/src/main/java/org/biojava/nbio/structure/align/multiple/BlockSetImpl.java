@@ -27,14 +27,14 @@ import java.util.List;
 import javax.vecmath.Matrix4d;
 
 /**
- * A general implementation of a BlockSet to store a flexible part of a 
+ * A general implementation of a BlockSet to store a flexible part of a
  * multiple alignment.
  *
  * @author Aleix Lafita
  * @since 4.1.0
- * 
+ *
  */
-public class BlockSetImpl extends AbstractScoresCache 
+public class BlockSetImpl extends AbstractScoresCache
 implements Serializable, BlockSet, Cloneable {
 
 	private static final long serialVersionUID = -1015791986000076089L;
@@ -51,7 +51,7 @@ implements Serializable, BlockSet, Cloneable {
 	/**
 	 * Constructor. Links also the parent to this instance by adding the
 	 * BlockSet to the parent's List.
-	 * 
+	 *
 	 * @param alignment MultipleAlignment parent of the BlockSet.
 	 * @return BlockSet an instance linked to the parent alignment.
 	 */
@@ -67,9 +67,9 @@ implements Serializable, BlockSet, Cloneable {
 	}
 
 	/**
-	 * Copy constructor. Makes also a deep copy of all constituent 
+	 * Copy constructor. Makes also a deep copy of all constituent
 	 * {@link Block}s.
-	 * 
+	 *
 	 * @param bs BlockSet object to be copied.
 	 * @return BlockSet an identical copy of the input object.
 	 */

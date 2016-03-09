@@ -47,16 +47,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides access to the Evolutionary Classification of Protein Domains (ECOD).
- * 
+ *
  * The preferred mechanism for obtaining instances of this class is through the
  * {@link EcodFactory} class.
- * 
+ *
  * Reference:
  * H. Cheng, R. D. Schaeffer, Y. Liao, L. N. Kinch, J. Pei, S. Shi, B. H.\
  *   Kim, N. V. Grishin. (2014) ECOD: An evolutionary classification of protein
  *   domains. PLoS Comput Biol 10(12): e1003926.
  * http://prodata.swmed.edu/ecod/
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -159,7 +159,7 @@ public class EcodInstallation implements EcodDatabase {
 	 * @param hierarchy A dot-separated list giving the X-group, H-group, and/or
 	 *  T-group (e.g. "1.1" for all members of the RIFT-related H-group)
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Override
 	public List<EcodDomain> filterByHierarchy(String hierarchy) throws IOException {
@@ -259,7 +259,7 @@ public class EcodInstallation implements EcodDatabase {
 	}
 	/**
 	 * Return the ECOD version, as parsed from the file.
-	 * 
+	 *
 	 * Note that this may differ from the version requested in the constructor
 	 * for the special case of "latest"
 	 * @return the ECOD version
@@ -317,7 +317,7 @@ public class EcodInstallation implements EcodDatabase {
 
 	/**
 	 * Blocks until ECOD domains file has been downloaded and parsed.
-	 * 
+	 *
 	 * This may be useful in multithreaded environments.
 	 * @throws IOException
 	 */
@@ -422,7 +422,7 @@ public class EcodInstallation implements EcodDatabase {
 
 	/**
 	 * Populates domainMap from allDomains
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void indexDomains() throws IOException {
 		domainsFileLock.writeLock().lock();
@@ -494,7 +494,7 @@ Notes older versions:
 changelog:
 v1.0 - original version (8/04/2014)
 v1.1 - added rep/nonrep data (1/15/2015)
-v1.2 - added f-group identifiers to fasta file, domain description file. ECODf identifiers now used when available for F-group name. 
+v1.2 - added f-group identifiers to fasta file, domain description file. ECODf identifiers now used when available for F-group name.
 	Domain assemblies now represented by assembly uid in domain assembly status.
 v1.4 - added seqid_range and headers (develop101)
 		 */
@@ -529,7 +529,7 @@ v1.4 - added seqid_range and headers (develop101)
 
 		private void parse(BufferedReader in) throws IOException {
 			try {
-				// Allocate plenty of space for ECOD as of 2015 
+				// Allocate plenty of space for ECOD as of 2015
 				ArrayList<EcodDomain> domainsList = new ArrayList<EcodDomain>(500000);
 
 				Pattern versionRE = Pattern.compile("^\\s*#.*ECOD\\s*version\\s+(\\S+).*");
@@ -563,7 +563,7 @@ v1.4 - added seqid_range and headers (develop101)
 									Long uid = Long.parseLong(fields[i++]);
 									//Column 2: ECOD domain id - domain identifier
 									String domainId = fields[i++];
-									
+
 									//Column 3: ECOD representative status - manual (curated) or automated nonrep
 									// Manual column may be missing in version 1.0 files
 									Boolean manual = null;
@@ -608,7 +608,7 @@ v1.4 - added seqid_range and headers (develop101)
 									if( fields.length >= 15) {
 										seqId = fields[i++];
 									}
-									
+
 									//Column 9: Architecture name
 									// Intern strings likely to be shared by many domains
 									String architectureName = fields[i++].intern();
@@ -635,7 +635,7 @@ v1.4 - added seqid_range and headers (develop101)
 										} else if(warnIsDomainAssembly == 0) {
 											logger.info("Deprecated 'IS_DOMAIN_ASSEMBLY' value ignored in line {}. Not printing future similar warnings.",lineNum);
 											warnIsDomainAssembly--;
-										} 
+										}
 										//assemblyId = null;
 									} else {
 										assemblyId = Long.parseLong(assemblyStr);

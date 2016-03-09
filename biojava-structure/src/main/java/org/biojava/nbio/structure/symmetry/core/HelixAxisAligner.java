@@ -60,25 +60,25 @@ public class HelixAxisAligner extends AxisAligner {
 		}
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getTransformation()
 	 */
 	@Override
 	public String getSymmetry() {
-		run();   
+		run();
 		return "H";
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getTransformation()
 	 */
 	@Override
 	public Matrix4d getTransformation() {
-		run();   
+		run();
 		return transformationMatrix;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getRotationMatrix()
 	 */
@@ -87,18 +87,18 @@ public class HelixAxisAligner extends AxisAligner {
 		run();
 		Matrix3d m = new Matrix3d();
 		transformationMatrix.getRotationScale(m);
-	    return m;
+		return m;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getReverseTransformation()
 	 */
 	@Override
 	public Matrix4d getReverseTransformation() {
-		run();   
+		run();
 		return reverseTransformationMatrix;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getPrincipalRotationAxis()
 	 */
@@ -107,7 +107,7 @@ public class HelixAxisAligner extends AxisAligner {
 		run();
 		return principalRotationVector;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getRotationReferenceAxis()
 	 */
@@ -116,7 +116,7 @@ public class HelixAxisAligner extends AxisAligner {
 		run();
 		return referenceVector;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getPrincipalAxesOfInertia()
 	 */
@@ -125,7 +125,7 @@ public class HelixAxisAligner extends AxisAligner {
 		run();
 		return principalAxesOfInertia;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getDimension()
 	 */
@@ -153,10 +153,10 @@ public class HelixAxisAligner extends AxisAligner {
 	@Override
 	public Matrix4d getGeometicCenterTransformation() {
 		run();
-	
-	    Matrix4d geometricCentered = new Matrix4d(reverseTransformationMatrix);
-	    geometricCentered.setTranslation(new Vector3d(getGeometricCenter()));
-	
+
+		Matrix4d geometricCentered = new Matrix4d(reverseTransformationMatrix);
+		geometricCentered.setTranslation(new Vector3d(getGeometricCenter()));
+
 		return geometricCentered;
 	}
 
@@ -166,11 +166,11 @@ public class HelixAxisAligner extends AxisAligner {
 	@Override
 	public Point3d getGeometricCenter() {
 		run();
-		
+
 		Point3d geometricCenter = new Point3d();
 		Vector3d translation = new Vector3d();
 //		reverseTransformationMatrix.get(translation);
-		
+
 		// TODO does this apply to the helic case?
 		// calculate adjustment around z-axis and transform adjustment to
 		//  original coordinate frame with the reverse transformation
@@ -204,7 +204,7 @@ public class HelixAxisAligner extends AxisAligner {
 		run();
 		return helixLayers;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getOrbits()
 	 */
@@ -217,21 +217,21 @@ public class HelixAxisAligner extends AxisAligner {
 	/**
 	 * @return
 	 */
-	
+
 	private void run () {
 		if (modified) {
 			calcPrincipalRotationVector();
-			calcPrincipalAxes();	
+			calcPrincipalAxes();
 			calcReferenceVector();
 			calcTransformation();
 			// orient helix along Y axis by rotating 90 degrees around X-axis
 			transformationMatrix = reorientHelix(0);
-			
+
 			calcReverseTransformation();
 			calcBoundaries();
 			calcAlignedOrbits();
 			calcCenterOfRotation();
-			
+
 			// orient helix along Y axis by rotating 90 degrees around X-axis
 //			transformationMatrix = reorientHelix(0);
 //			calcReverseTransformation();
@@ -239,35 +239,35 @@ public class HelixAxisAligner extends AxisAligner {
 			modified = false;
 		}
 	}
-	
+
 	public Point3d calcCenterOfRotation() {
 		List<Integer> line = getLongestLayerLine();
-		
+
 		// can't determine center of rotation if there are only 2 points
 		// TODO does this ever happen??
 		if (line.size() < 3) {
 			return subunits.getCentroid();
 		}
-		
+
 		Point3d centerOfRotation = new Point3d();
-	    List<Point3d> centers = subunits.getOriginalCenters();
-	    
-	    // calculate helix mid points for each set of 3 adjacent subunits
-	    for (int i = 0; i < line.size()-2; i++) {
-	    	Point3d p1 = new Point3d(centers.get(line.get(i)));
-	    	Point3d p2 = new Point3d(centers.get(line.get(i+1)));
-	    	Point3d p3 = new Point3d(centers.get(line.get(i+2)));
-	    	transformationMatrix.transform(p1);
-	    	transformationMatrix.transform(p2);
-	    	transformationMatrix.transform(p3);
-	    	centerOfRotation.add(getMidPoint(p1, p2, p3));
-	    }
-	    
-	    // average over all midpoints to find best center of rotation
-	    centerOfRotation.scale(1/(line.size()-2));
-	    // since helix is aligned along the y-axis, with an origin at y = 0, place the center of rotation there
-	    centerOfRotation.y = 0;
-	    // transform center of rotation to the original coordinate frame
+		List<Point3d> centers = subunits.getOriginalCenters();
+
+		// calculate helix mid points for each set of 3 adjacent subunits
+		for (int i = 0; i < line.size()-2; i++) {
+			Point3d p1 = new Point3d(centers.get(line.get(i)));
+			Point3d p2 = new Point3d(centers.get(line.get(i+1)));
+			Point3d p3 = new Point3d(centers.get(line.get(i+2)));
+			transformationMatrix.transform(p1);
+			transformationMatrix.transform(p2);
+			transformationMatrix.transform(p3);
+			centerOfRotation.add(getMidPoint(p1, p2, p3));
+		}
+
+		// average over all midpoints to find best center of rotation
+		centerOfRotation.scale(1/(line.size()-2));
+		// since helix is aligned along the y-axis, with an origin at y = 0, place the center of rotation there
+		centerOfRotation.y = 0;
+		// transform center of rotation to the original coordinate frame
 		reverseTransformationMatrix.transform(centerOfRotation);
 //		System.out.println("center of rotation: " + centerOfRotation);
 		return centerOfRotation;
@@ -276,7 +276,7 @@ public class HelixAxisAligner extends AxisAligner {
 	private List<Integer> getLongestLayerLine() {
 		int len = 0;
 		int index = 0;
-		
+
 		Helix helix = helixLayers.getByLargestContacts();
 		List<List<Integer>> layerLines = helix.getLayerLines();
 		for (int i = 0; i < layerLines.size(); i++) {
@@ -315,12 +315,12 @@ public class HelixAxisAligner extends AxisAligner {
 		double chord = Math.sqrt(dTotal*dTotal - rise*rise);
 //		System.out.println("Chord d: " + dTotal + " rise: " + rise + "chord: " + chord);
 		double angle = helixLayers.getByLargestContacts().getAxisAngle().angle;
-		
+
 		// using the axis angle and the chord length, we can calculate the radius of the helix
 		// http://en.wikipedia.org/wiki/Chord_%28geometry%29
 		double radius = chord/Math.sin(angle/2)/2; // can this go to zero?
 //		System.out.println("Radius: " + radius);
-		
+
 		// project the radius onto the vector that points toward the helix axis
 		v3.scale(radius);
 		v3.add(p2);
@@ -334,11 +334,11 @@ public class HelixAxisAligner extends AxisAligner {
 		matrix.setIdentity();
 		matrix.setRotation(new AxisAngle4d(1,0,0,Math.PI/2*(index+1)));
 		matrix.mul(transformationMatrix);
-        return matrix;
+	return matrix;
 	}
-	
+
 	/**
-	 * Returns a list of orbits (an orbit is a cyclic permutation of subunit indices that are related 
+	 * Returns a list of orbits (an orbit is a cyclic permutation of subunit indices that are related
 	 * by a rotation around the principal rotation axis) ordered from the +z direction to the -z direction (z-depth).
 	 * Within an orbit, subunit indices are ordered with a clockwise rotation around the z-axis.
 	 * @return list of orbits ordered by z-depth
@@ -367,7 +367,7 @@ public class HelixAxisAligner extends AxisAligner {
 		// now fill orbits back into list ordered by depth
 		alignedOrbits.clear();
 		for (List<Integer> orbit: depthMap.values()) {
-			// order subunit in a clockwise rotation around the z-axis 
+			// order subunit in a clockwise rotation around the z-axis
 			/// starting at the 12 O-clock position (+y position)
 			// TODO how should this be aligned??
 	//		alignWithReferenceAxis(orbit);
@@ -405,7 +405,7 @@ public class HelixAxisAligner extends AxisAligner {
 		trans.negate();
 		combined.setTranslation(trans);
 		transformationMatrix.mul(combined);
-		
+
 		// for helical geometry, set a canonical view for the Z direction
 		calcZDirection();
 	}
@@ -421,7 +421,7 @@ public class HelixAxisAligner extends AxisAligner {
 		Matrix4d m1 = new Matrix4d();
 		AxisAngle4d a = new AxisAngle4d();
 		Vector3d axis = new Vector3d();
-		
+
 		// calculate rotation matrix to rotate refPoints[0] into coordPoints[0]
 		Vector3d v1 = new Vector3d(axisVectors[0]);
 		Vector3d v2 = new Vector3d(referenceVectors[0]);
@@ -440,11 +440,11 @@ public class HelixAxisAligner extends AxisAligner {
 			// anti-parallel axis, flip around x-axis
 			m1.set(flipX());
 		}
-		
+
 		// apply transformation matrix to all refPoints
 		m1.transform(axisVectors[0]);
 		m1.transform(axisVectors[1]);
-		
+
 		// calculate rotation matrix to rotate refPoints[1] into coordPoints[1]
 		v1 = new Vector3d(axisVectors[1]);
 		v2 = new Vector3d(referenceVectors[1]);
@@ -464,11 +464,11 @@ public class HelixAxisAligner extends AxisAligner {
 			// anti-parallel axis, flip around z-axis
 			m2.set(flipZ());
 		}
-		
+
 		// apply transformation matrix to all refPoints
 		m2.transform(axisVectors[0]);
 		m2.transform(axisVectors[1]);
-		
+
 		// combine the two rotation matrices
 		m2.mul(m1);
 
@@ -482,13 +482,13 @@ public class HelixAxisAligner extends AxisAligner {
 		if (SuperPosition.rmsd(axes, ref) > 0.1) {
 			System.out.println("Warning: AxisTransformation: axes alignment is off. RMSD: " + SuperPosition.rmsd(axes, ref));
 		}
-		
+
 		return m2;
 	}
-	
+
 	private void calcPrincipalAxes() {
 		MomentsOfInertia moi = new MomentsOfInertia();
-	
+
 		for (Point3d[] list: subunits.getTraces()) {
 			for (Point3d p: list) {
 				moi.addPoint(p, 1.0);
@@ -501,7 +501,7 @@ public class HelixAxisAligner extends AxisAligner {
 	 * Calculates the min and max boundaries of the structure after it has been
 	 * transformed into its canonical orientation.
 	 */
-	private void calcBoundaries() {	
+	private void calcBoundaries() {
 		minBoundary.x = Double.MAX_VALUE;
 		maxBoundary.x = Double.MIN_VALUE;
 		minBoundary.y = Double.MAX_VALUE;
@@ -530,7 +530,7 @@ public class HelixAxisAligner extends AxisAligner {
 //		System.out.println("MaxBoundary: " + maxBoundary);
 //		System.out.println("zxRadius: " + xzRadiusMax);
 	}
-	
+
 	/*
 	 * Modifies the rotation part of the transformation axis for
 	 * a Cn symmetric complex, so that the narrower end faces the
@@ -538,7 +538,7 @@ public class HelixAxisAligner extends AxisAligner {
 	 */
 	private void calcZDirection() {
 		calcBoundaries();
-	
+
 		// if the longer part of the structure faces towards the back (-z direction),
 		// rotate around y-axis so the longer part faces the viewer (+z direction)
 		if (Math.abs(minBoundary.z) > Math.abs(maxBoundary.z)) {
@@ -548,11 +548,11 @@ public class HelixAxisAligner extends AxisAligner {
 		}
 	}
 
-	private double[] getSubunitZDepth() {	
+	private double[] getSubunitZDepth() {
 		int n = subunits.getSubunitCount();
-	    double[] depth = new double[n];        
+		double[] depth = new double[n];
 		Point3d probe = new Point3d();
-	
+
 		// transform subunit centers into z-aligned position and calculate
 		// z-coordinates (depth) along the z-axis.
 		for (int i = 0; i < n; i++) {
@@ -576,10 +576,10 @@ public class HelixAxisAligner extends AxisAligner {
 		for (int i = 0; i < n; i++) {
 			orbits.add(Collections.singletonList(i));
 		}
-		
+
 		return orbits;
 	}
-		
+
 	/**
 	 * Returns a vector along the principal rotation axis for the
 	 * alignment of structures along the z-axis
@@ -598,7 +598,7 @@ public class HelixAxisAligner extends AxisAligner {
 	 */
 	private void calcReferenceVector() {
 		referenceVector = getReferenceAxisCylic();
-		
+
 		if (referenceVector == null) {
 			System.err.println("Warning: no reference vector found. Using y-axis.");
 			referenceVector = new Vector3d(Y_AXIS);
@@ -606,7 +606,7 @@ public class HelixAxisAligner extends AxisAligner {
 		// make sure reference vector is perpendicular principal roation vector
 		referenceVector = orthogonalize(principalRotationVector, referenceVector);
 	}
-	
+
 	private Vector3d orthogonalize(Vector3d vector1, Vector3d vector2) {
 		double dot = vector1.dot(vector2);
 		Vector3d ref = new Vector3d(vector2);
@@ -621,9 +621,9 @@ public class HelixAxisAligner extends AxisAligner {
 		vector2.cross(vector1, vector2);
 //		System.out.println("Intermed. refVector: " + vector2);
 		vector2.normalize();
-//		referenceVector.cross(referenceVector, principalRotationVector); 
-		vector2.cross(vector1, vector2); 
-		vector2.normalize();	
+//		referenceVector.cross(referenceVector, principalRotationVector);
+		vector2.cross(vector1, vector2);
+		vector2.normalize();
 		if (ref.dot(vector2) < 0) {
 			vector2.negate();
 		}
@@ -633,9 +633,9 @@ public class HelixAxisAligner extends AxisAligner {
 	/**
 	 * Returns the default reference vector for the alignment of Cn structures
 	 * @return
-	 */	
-	private Vector3d getReferenceAxisCylic() {		
-		// get principal axis vector that is perpendicular to the principal 
+	 */
+	private Vector3d getReferenceAxisCylic() {
+		// get principal axis vector that is perpendicular to the principal
 		// rotation vector
 		Vector3d vmin = null;
 		double dotMin = 1.0;
@@ -648,7 +648,7 @@ public class HelixAxisAligner extends AxisAligner {
 		if (principalRotationVector.dot(vmin) < 0) {
 			vmin.negate();
 		}
-		
+
 		return vmin;
 	}
 
@@ -660,7 +660,7 @@ public class HelixAxisAligner extends AxisAligner {
 		rot.m33 = 1;
 		return rot;
 	}
-	
+
 	private static Matrix4d flipY() {
 		Matrix4d rot = new Matrix4d();
 		rot.m00 = -1;
@@ -669,7 +669,7 @@ public class HelixAxisAligner extends AxisAligner {
 		rot.m33 = 1;
 		return rot;
 	}
-	
+
 	private static Matrix4d flipZ() {
 		Matrix4d rot = new Matrix4d();
 		rot.m00 = -1;
@@ -678,5 +678,5 @@ public class HelixAxisAligner extends AxisAligner {
 		rot.m33 = 1;
 		return rot;
 	}
-	
+
 }

@@ -38,7 +38,7 @@ import java.util.List;
  * 	<li>directory of PDB ID</li>
  * 	<li>several files that are available for this PDB ID</li>
  * </ul>
- * 
+ *
  * <pre>
 a1/2a1v/2a1v.cif.gz
 a1/2a1v/2a1v.dssp.gz
@@ -102,8 +102,8 @@ a1/2a1x/2a1x-deriv.cif.gz
 a1/2a1x/2a1x-extatom.xml.gz
 a1/2a1x/2a1x-noatom.xml.gz
 </pre>
- * 
- * 
+ *
+ *
  * @author Andreas Prlic
  *
  *
@@ -111,26 +111,26 @@ a1/2a1x/2a1x-noatom.xml.gz
  */
 public class SandboxStyleStructureProvider implements StructureProvider {
 	FileParsingParameters params ;
-	
+
 	String path;
 	public static final String fileSeparator = System.getProperty("file.separator");
-	
+
 	public SandboxStyleStructureProvider() {
 		params = new FileParsingParameters();
-		
+
 		UserConfiguration config = new UserConfiguration();
-		
+
 		setPath(config.getPdbFilePath());
 	}
-	
+
 	/** directory where to find PDB files */
 	public void setPath(String p){
-		
+
 		path = p ;
-		
+
 		if ( ! (path.endsWith(fileSeparator) ) )
 			path = path + fileSeparator;
-				
+
 	}
 
 	@Override
@@ -176,31 +176,31 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 	}
 
 	/** Returns a list of all PDB IDs that are available in this installation
-	 * 
+	 *
 	 * @return a list of PDB IDs
 	 */
 	public List<String> getAllPDBIDs() throws IOException{
-		
+
 		File f = new File(path);
 		if ( ! f.isDirectory())
 			throw new IOException("Path " + path + " is not a directory!");
-		
+
 		String[] dirName = f.list();
-		
+
 		List<String>pdbIds = new ArrayList<String>();
 		for (String dir : dirName) {
 			File d2= new File(f,dir);
 			if ( ! d2.isDirectory())
 				continue;
-			
+
 			String[] pdbDirs = d2.list();
 			for (String pdbId : pdbDirs) {
 				if ( ! pdbIds.contains(pdbId))
 					pdbIds.add(pdbId);
-				
+
 			}
 		}
-		
+
 		return pdbIds;
 	}
 

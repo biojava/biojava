@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at Sep 18, 2013
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.validation;
@@ -92,15 +92,15 @@ public class TestValidationReportParsing {
 			WwPDBValidationInformation validationReport = (WwPDBValidationInformation) um.unmarshal(inStream);
 
 			validationReport.getEntry();
-			
+
 //			Entry entry = validationReport.getEntry();
-//			System.out.println(pdbId + " " + entry.getPDBRevisionNumber() +  
+//			System.out.println(pdbId + " " + entry.getPDBRevisionNumber() +
 //					"\t Rfree: " + entry.getDCCRfree() +
-//					"\t Clashscore " + entry.getClashscore() + 
-//					"\t % Ramachandran outliers: "  + entry.getPercentRamaOutliers() + 
+//					"\t Clashscore " + entry.getClashscore() +
+//					"\t % Ramachandran outliers: "  + entry.getPercentRamaOutliers() +
 //					"\t % RSRC outliers: " + entry.getPercentRSRZOutliers() );
-			
- 			
+
+
 		} catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());

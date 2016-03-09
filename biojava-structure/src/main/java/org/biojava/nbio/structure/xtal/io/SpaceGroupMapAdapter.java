@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 27 Mar 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.xtal.io;
@@ -30,21 +30,21 @@ import java.util.Map;
 import java.util.TreeMap;
 
 class SpaceGroupMapAdapter extends XmlAdapter<SpaceGroupMapElements[], Map<Integer, SpaceGroup>> {
-    @Override
-    public SpaceGroupMapElements[] marshal(Map<Integer, SpaceGroup> arg0) throws Exception {
-    	SpaceGroupMapElements[] mapElements = new SpaceGroupMapElements[arg0.size()];
-        int i = 0;
-        for (Map.Entry<Integer, SpaceGroup> entry : arg0.entrySet())
-            mapElements[i++] = new SpaceGroupMapElements(entry.getKey(), entry.getValue());
+	@Override
+	public SpaceGroupMapElements[] marshal(Map<Integer, SpaceGroup> arg0) throws Exception {
+		SpaceGroupMapElements[] mapElements = new SpaceGroupMapElements[arg0.size()];
+		int i = 0;
+		for (Map.Entry<Integer, SpaceGroup> entry : arg0.entrySet())
+			mapElements[i++] = new SpaceGroupMapElements(entry.getKey(), entry.getValue());
 
-        return mapElements;
-    }
+		return mapElements;
+	}
 
-    @Override
-    public Map<Integer, SpaceGroup> unmarshal(SpaceGroupMapElements[] arg0) throws Exception {
-        Map<Integer, SpaceGroup> r = new TreeMap<Integer, SpaceGroup>();
-        for (SpaceGroupMapElements mapelement : arg0)
-            r.put(mapelement.key, mapelement.value);
-        return r;
-    }
+	@Override
+	public Map<Integer, SpaceGroup> unmarshal(SpaceGroupMapElements[] arg0) throws Exception {
+		Map<Integer, SpaceGroup> r = new TreeMap<Integer, SpaceGroup>();
+		for (SpaceGroupMapElements mapelement : arg0)
+			r.put(mapelement.key, mapelement.value);
+		return r;
+	}
 }

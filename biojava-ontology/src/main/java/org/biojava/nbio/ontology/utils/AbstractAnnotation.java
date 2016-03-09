@@ -36,194 +36,203 @@ import java.util.*;
  *
  * If you are still reading this, then you must be trying to
  * implement Annotation. To do that, extend this class and implement
- * <code>getProperties()</code> and <code>propertiesAllocated()</code>. 
- * Where possible implementations should be backed with a 
+ * <code>getProperties()</code> and <code>propertiesAllocated()</code>.
+ * Where possible implementations should be backed with a
  * <code>LinkedHashMap</code> or similar so properties are iterated in the order
  * they were added.
- * 
+ *
  * @author Matthew Pocock
  * @author Greg Cox
  *
  * @since 1.0
  */
 public abstract class AbstractAnnotation
-  
-  implements
-    Annotation,
-    Serializable
+
+	implements
+		Annotation,
+		Serializable
 {
-  /**
-	 * 
+	/**
+	 *
 	 */
 	private static final long serialVersionUID = 2753449055959952873L;
 
 /**
-   * Implement this to return the Map delegate. Modifying this return value will
-   * modify the properties associated with this annotation.
-   *
-   * From code in the 1.2 version of AbstractAnnotation
-   * This is required for the implementation of an Annotation that
-   *            extends AbstractAnnotation. Where possible implementations 
-   *            should be backed with a 
-   *            <code>LinkedHashMap</code> or similar so properties are iterated in the order
-   *            they were added.
-   *
-   * @return a Map containing all properties
-   */
-  protected abstract Map getProperties();
+	 * Implement this to return the Map delegate. Modifying this return value will
+	 * modify the properties associated with this annotation.
+	 *
+	 * From code in the 1.2 version of AbstractAnnotation
+	 * This is required for the implementation of an Annotation that
+	 *            extends AbstractAnnotation. Where possible implementations
+	 *            should be backed with a
+	 *            <code>LinkedHashMap</code> or similar so properties are iterated in the order
+	 *            they were added.
+	 *
+	 * @return a Map containing all properties
+	 */
+	protected abstract Map getProperties();
 
-  /**
-   * A convenience method to see if we have allocated the properties
-   * Map.
-   * This is required for the implementation of an Annotation that
-   *            extends AbstractAnnotation.
-   * @return true if the properties have been allocated, false otherwise
-   * 
-   */
-  protected abstract boolean propertiesAllocated();
-
-
-  public Object getProperty(Object key) throws NoSuchElementException {
-    if(propertiesAllocated()) {
-      Map prop = getProperties();
-      if(prop.containsKey(key)) {
-        return prop.get(key);
-      }
-    }
-    throw new NoSuchElementException("Property " + key + " unknown");
-  }
-
-  public void setProperty(Object key, Object value)
-   {
-    
-      getProperties().put(key, value);
-   
-  }
-
-  public void removeProperty(Object key)
-    throws  NoSuchElementException
-  {
-    if (!getProperties().containsKey(key)) {
-        throw new NoSuchElementException("Can't remove key " + key.toString());
-    }
-
-    
-      getProperties().remove(key);
-    
-  }
-
-  public boolean containsProperty(Object key) {
-    if(propertiesAllocated()) {
-      return getProperties().containsKey(key);
-    } else {
-      return false;
-    }
-  }
-
-  public Set keys() {
-    if(propertiesAllocated()) {
-      return getProperties().keySet();
-    } else {
-      return Collections.EMPTY_SET;
-    }
-  }
-
-  public String toString() {
-    StringBuffer sb = new StringBuffer("{");
-    Map prop = getProperties();
-    Iterator i = prop.keySet().iterator();
-    if(i.hasNext()) {
-      Object key = i.next();
-      sb.append(key + "=" + prop.get(key));
-    }
-    while(i.hasNext()) {
-      Object key = i.next();
-      sb.append("," + key + "=" + prop.get(key));
-    }
-    sb.append("}");
-    return sb.substring(0);
-  }
-
-  public Map asMap() {
-    return Collections.unmodifiableMap(getProperties());
-  }
-
-  /**
-   * Protected no-args constructor intended for sub-classes. This class is
-   * abstract and can not be directly instantiated.
-   */
-  protected AbstractAnnotation() {
-  }
-
-  /**
-   * Copy-constructor.
-   *
-   * <p>
-   * This does a shallow copy of the annotation. The result is an annotation
-   * with the same properties and values, but which is independant of the
-   * original annotation.
-   * </p>
-   *
-   * @param ann  the Annotation to copy
-   */
-  protected AbstractAnnotation(Annotation ann) {
-    if(ann == null) {
-      throw new NullPointerException(
-        "Null annotation not allowed. Use Annotation.EMPTY_ANNOTATION instead."
-      );
-    }
-    if(ann == Annotation.EMPTY_ANNOTATION) {
-      return;
-    }
-    Map properties = getProperties();
-    for(Iterator i = ann.keys().iterator(); i.hasNext(); ) {
-      Object key = i.next();
-      try {
-        properties.put(key, ann.getProperty(key));
-      } catch (IllegalArgumentException iae) {
-        throw new RuntimeException(
-          "Property was there and then disappeared: " + key, iae
-        );
-      }
-    }
-  }
-
-  /**
-   * Create a new Annotation by copying the key-value pairs from a map. The
-   * resulting Annotation is independant of the map.
-   *
-   * @param annMap  the Map to copy from.
-   */
-  public AbstractAnnotation(Map annMap) {
-    if(annMap == null) {
-      throw new IllegalArgumentException(
-        "Null annotation Map not allowed. Use an empy map instead."
-      );
-    }
-    if(annMap.isEmpty()) {
-      return;
-    }
-
-    Map properties = getProperties();
-    for(Iterator i = annMap.keySet().iterator(); i.hasNext(); ) {
-      Object key = i.next();
-      properties.put(key, annMap.get(key));
-    }
-  }
+	/**
+	 * A convenience method to see if we have allocated the properties
+	 * Map.
+	 * This is required for the implementation of an Annotation that
+	 *            extends AbstractAnnotation.
+	 * @return true if the properties have been allocated, false otherwise
+	 *
+	 */
+	protected abstract boolean propertiesAllocated();
 
 
-  public int hashCode() {
-    return asMap().hashCode();
-  }
+	@Override
+	public Object getProperty(Object key) throws NoSuchElementException {
+		if(propertiesAllocated()) {
+			Map prop = getProperties();
+			if(prop.containsKey(key)) {
+				return prop.get(key);
+			}
+		}
+		throw new NoSuchElementException("Property " + key + " unknown");
+	}
 
-  public boolean equals(Object o) {
-    if(o == this){
-        return true;
-    }
-    if (! (o instanceof Annotation)) {
-      return false;
-    }
+	@Override
+	public void setProperty(Object key, Object value)
+	 {
 
-    return ((Annotation) o).asMap().equals(asMap());
-  }
+			getProperties().put(key, value);
+
+	}
+
+	@Override
+	public void removeProperty(Object key)
+		throws  NoSuchElementException
+	{
+		if (!getProperties().containsKey(key)) {
+				throw new NoSuchElementException("Can't remove key " + key.toString());
+		}
+
+
+			getProperties().remove(key);
+
+	}
+
+	@Override
+	public boolean containsProperty(Object key) {
+		if(propertiesAllocated()) {
+			return getProperties().containsKey(key);
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public Set keys() {
+		if(propertiesAllocated()) {
+			return getProperties().keySet();
+		} else {
+			return Collections.EMPTY_SET;
+		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer("{");
+		Map prop = getProperties();
+		Iterator i = prop.keySet().iterator();
+		if(i.hasNext()) {
+			Object key = i.next();
+			sb.append(key + "=" + prop.get(key));
+		}
+		while(i.hasNext()) {
+			Object key = i.next();
+			sb.append("," + key + "=" + prop.get(key));
+		}
+		sb.append("}");
+		return sb.substring(0);
+	}
+
+	@Override
+	public Map asMap() {
+		return Collections.unmodifiableMap(getProperties());
+	}
+
+	/**
+	 * Protected no-args constructor intended for sub-classes. This class is
+	 * abstract and can not be directly instantiated.
+	 */
+	protected AbstractAnnotation() {
+	}
+
+	/**
+	 * Copy-constructor.
+	 *
+	 * <p>
+	 * This does a shallow copy of the annotation. The result is an annotation
+	 * with the same properties and values, but which is independant of the
+	 * original annotation.
+	 * </p>
+	 *
+	 * @param ann  the Annotation to copy
+	 */
+	protected AbstractAnnotation(Annotation ann) {
+		if(ann == null) {
+			throw new NullPointerException(
+				"Null annotation not allowed. Use Annotation.EMPTY_ANNOTATION instead."
+			);
+		}
+		if(ann == Annotation.EMPTY_ANNOTATION) {
+			return;
+		}
+		Map properties = getProperties();
+		for(Iterator i = ann.keys().iterator(); i.hasNext(); ) {
+			Object key = i.next();
+			try {
+				properties.put(key, ann.getProperty(key));
+			} catch (IllegalArgumentException iae) {
+				throw new RuntimeException(
+					"Property was there and then disappeared: " + key, iae
+				);
+			}
+		}
+	}
+
+	/**
+	 * Create a new Annotation by copying the key-value pairs from a map. The
+	 * resulting Annotation is independant of the map.
+	 *
+	 * @param annMap  the Map to copy from.
+	 */
+	public AbstractAnnotation(Map annMap) {
+		if(annMap == null) {
+			throw new IllegalArgumentException(
+				"Null annotation Map not allowed. Use an empy map instead."
+			);
+		}
+		if(annMap.isEmpty()) {
+			return;
+		}
+
+		Map properties = getProperties();
+		for(Iterator i = annMap.keySet().iterator(); i.hasNext(); ) {
+			Object key = i.next();
+			properties.put(key, annMap.get(key));
+		}
+	}
+
+
+	@Override
+	public int hashCode() {
+		return asMap().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(o == this){
+				return true;
+		}
+		if (! (o instanceof Annotation)) {
+			return false;
+		}
+
+		return ((Annotation) o).asMap().equals(asMap());
+	}
 }

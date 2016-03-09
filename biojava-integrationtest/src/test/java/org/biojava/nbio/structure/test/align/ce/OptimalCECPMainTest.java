@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.test.align.ce;
 
@@ -45,28 +45,29 @@ import java.util.Arrays;
 public class OptimalCECPMainTest extends TestCase {
 
 	AtomCache cache = new AtomCache();
-	
+
 	/* (non-Javadoc)
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}
-	
+
 	/**
 	 * Basic test that alignPermuted(..., 0) is equivalent to a normal CE alignment.
-	 * 
+	 *
 	 * Also checks that {@link AFPChain#equals(Object)} is working the way we expect.
 	 * @throws IOException
 	 * @throws StructureException
 	 */
 	public void testUnpermuted() throws IOException, StructureException {
 		String name1, name2;
-		
+
 		//small case
 		name1 = "d1qdmA1";
 		name2 = "d1nklA_";
-		
+
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
 
@@ -77,21 +78,21 @@ public class OptimalCECPMainTest extends TestCase {
 
 		CeMain ce = new CeMain();
 		AFPChain nocp = ce.align(ca1,ca2);
-		
+
 		assertEquals(nocp,cp0);
 	}
-	
+
 	/**
 	 * Very basic test of {@link OptimalCECPMain#permuteOptAln(AFPChain, int)}
-	 * 
+	 *
 	 * It should do nothing on unpermuted alignments.
-	 * @throws NoSuchMethodException 
-	 * @throws SecurityException 
-	 * @throws StructureException 
-	 * @throws IOException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws StructureException
+	 * @throws IOException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
 	 */
 	public void testPermuteOptAlnUnpermuted() throws SecurityException, NoSuchMethodException, StructureException, IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		//test private member using reflection
@@ -102,29 +103,29 @@ public class OptimalCECPMainTest extends TestCase {
 		String name1, name2;
 		name1 = "d1qdmA1";
 		name2 = "d1nklA_";
-		
+
 		CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 		CECPParameters param = (CECPParameters)ce.getParameters();
 		param.setDuplicationHint(DuplicationHint.RIGHT);
-		
+
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
-		
+
 		AFPChain afpChain = ce.align(ca1, ca2);
 		AFPChain afpChain2 = (AFPChain) afpChain.clone();
-		
+
 		permuteOptAln.invoke(null, afpChain2, 0);
-		
+
 		assertEquals("Permuting by 0 changed the alignment!",afpChain, afpChain2);
 	}
-	
+
 	/**
 	 * Checks that individual alignments performed by alignOptimal are consistent
 	 * with the alignments returned by individual calls to alignPermuted.
-	 * 
+	 *
 	 * This addresses a bug involving multiple calls to align() on the same
 	 * CE instance.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -133,12 +134,12 @@ public class OptimalCECPMainTest extends TestCase {
 		OptimalCECPMain ce;
 		AFPChain afpChain;
 		int[] cps; //CP points to check for consistency
-		
+
 		//small case
 		name1 = "d1qdmA1";
 		name2 = "d1nklA_";
 		cps = new int[] {0,1,2,41,5,38};
-		
+
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
 
@@ -146,20 +147,20 @@ public class OptimalCECPMainTest extends TestCase {
 		ce = new OptimalCECPMain();
 		AFPChain[] alignments = new AFPChain[ca2.length];
 		ce.alignOptimal(ca1, ca2, (OptimalCECPParameters) ce.getParameters(), alignments);
-		
+
 		for(int cp : cps) {
 			// fresh instance to avoid contamination
 			ce = new OptimalCECPMain();
-			
+
 			// new copy of ca2, since alignPermuted has side effects
 			Atom[] ca2clone = cache.getAtoms(name2);
 			afpChain = ce.alignPermuted(ca1, ca2clone, (OptimalCECPParameters) ce.getParameters(), cp);
 
 			assertEquals("Alignment "+cp+" differs.",afpChain, alignments[cp]);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Tests private {@link OptimalCECPMain#permuteArray(Object[], int)}
 	 * @throws Exception
@@ -181,7 +182,7 @@ public class OptimalCECPMainTest extends TestCase {
 		permuteArray.invoke(null, arrP, 0);
 		assertTrue(String.format("Permuting by 0 gave %s%s%s%s%s%s",(Object[])arrP),
 				Arrays.deepEquals(arr0, arrP));
-		
+
 		arrP = Arrays.copyOf(arr0, arr0.length);
 		permuteArray.invoke(null, arrP, 1);
 		assertTrue(String.format("Permuting by 1 gave %s%s%s%s%s%s",(Object[])arrP),
@@ -216,20 +217,20 @@ public class OptimalCECPMainTest extends TestCase {
 		Method permuteOptAln = OptimalCECPMain.class.getDeclaredMethod(
 				"permuteOptAln", AFPChain.class, int.class);
 		permuteOptAln.setAccessible(true);
-		
+
 		// Two structures with nearly 100% sequence identity
-		/* 
+		/*
 		 * Aligned (0-based index):
 		 * 	3LB9.A	1HV1
 		 * 	------	----
 		 * 	0-62	122-184
 		 * 	63		0
 		 * 	65-181	1-117
-		 * 
+		 *
 		 * unaligned:
 		 * 	64		-
 		 * 	-		118-121
-		 * 
+		 *
 		 * PDB numbering:
 		 * 	+2		+1
 		 *
@@ -237,32 +238,32 @@ public class OptimalCECPMainTest extends TestCase {
 		String name1, name2;
 		name1 = "3LB9.A";
 		name2 = "1HV1";
-		
+
 		CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 		CECPParameters param = (CECPParameters)ce.getParameters();
 		param.setDuplicationHint(DuplicationHint.RIGHT);
-		
+
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
-		
+
 		// Create permuted CA chain
 		Method permuteArray = OptimalCECPMain.class.getDeclaredMethod(
 				"permuteArray", Object[].class, int.class);
 		permuteArray.setAccessible(true);
 		Atom[] ca2p = StructureTools.cloneAtomArray(ca2);
 		permuteArray.invoke(null, ca2p, 63);
-		
+
 		AFPChain cpAlignment = ce.align(ca1, ca2);
 		//System.out.println(cpAlignment.toCE(ca1, ca2));
 		//printOptAln(cpAlignment);
-		
+
 		assertNotNull(cpAlignment);
-		
-		
+
+
 		int[] optLen = cpAlignment.getOptLen();
 		int[][][] optAln = cpAlignment.getOptAln();
-		
-		
+
+
 		assertEquals("Wrong total length",181,cpAlignment.getOptLength());
 		assertEquals("Wrong number of blocks",2, cpAlignment.getBlockNum());
 		assertEquals("Wrong block 0 length",63,optLen[0]);
@@ -285,20 +286,20 @@ public class OptimalCECPMainTest extends TestCase {
 		assertEquals("Wrong residue at end of block 1, protein 0",181,optAln[1][0][117]);
 		assertEquals("Wrong residue at end of block 1, protein 1",117,optAln[1][1][117]);
 
-		
+
 		// permute! should align at 0,0
 		//System.out.println("Permuting by 63 residues...");
 		permuteOptAln.invoke(null, cpAlignment, 63);
 		//System.out.println(cpAlignment.toCE(ca1, ca2p));
 		//printOptAln(cpAlignment);
-		
+
 		optLen = cpAlignment.getOptLen();
 		optAln = cpAlignment.getOptAln();
-		
+
 		assertEquals("Wrong total length",181,cpAlignment.getOptLength());
 		assertEquals("Wrong number of blocks",2, cpAlignment.getBlockNum());
 		assertEquals("Wrong block 0 length",63,optLen[0]);
-		assertEquals("Wrong block 1 length",118,optLen[1]);		
+		assertEquals("Wrong block 1 length",118,optLen[1]);
 
 		//just test some key positions in each block
 		assertEquals("Wrong residue at start of block 0, protein 0",0,optAln[0][0][0]);
@@ -313,16 +314,16 @@ public class OptimalCECPMainTest extends TestCase {
 		assertEquals("Wrong residue at end of block 1, protein 0",181,optAln[1][0][117]);
 		assertEquals("Wrong residue at end of block 1, protein 1",180,optAln[1][1][117]);
 
-		
+
 		// undo permutation
 		//System.out.println("Permuting by -63 residues...");
 		permuteOptAln.invoke(null, cpAlignment, -63);
 		//System.out.println(cpAlignment.toCE(ca1, ca2));
 		//printOptAln(cpAlignment);
-		
+
 		optLen = cpAlignment.getOptLen();
 		optAln = cpAlignment.getOptAln();
-		
+
 		assertEquals("Wrong total length",181,cpAlignment.getOptLength());
 		assertEquals("Wrong number of blocks",2, cpAlignment.getBlockNum());
 		assertEquals("Wrong block 0 length",63,optLen[0]);
@@ -355,7 +356,7 @@ public class OptimalCECPMainTest extends TestCase {
 	private static void printOptAln(AFPChain cpAlignment) {
 		int[] optLen = cpAlignment.getOptLen();
 		int[][][] optAln = cpAlignment.getOptAln();
-		
+
 		for(int block=0;block<cpAlignment.getBlockNum();block++) {
 			for(int pos=0;pos<optLen[block]; pos++) {
 				System.out.format("%s\t%s\n", optAln[block][0][pos],
@@ -364,12 +365,12 @@ public class OptimalCECPMainTest extends TestCase {
 			System.out.println();
 		}
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		// this is to test this issue:
 		// https://github.com/rcsb/symmetry/issues/46
-		// 
-		
+		//
+
 		OptimalCECPMainTest t = new OptimalCECPMainTest();
 		System.out.println("Test 1");
 		t.testPermuteOptAlnUnpermuted();

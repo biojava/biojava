@@ -46,30 +46,30 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  */
 public class DemoCeSymm {
 
-	public static void main(String[] args) 
+	public static void main(String[] args)
 			throws IOException, StructureException {
 
-		/* 
+		/*
 		 * Some examples:
-		 * 
+		 *
 		 * CLOSED
-		 * 2-fold: 1hiv.A, 
+		 * 2-fold: 1hiv.A,
 		 * 3-fold: 4i4q, 4dou
 		 * 5-fold: 2jaj.A
 		 * 6-fold: 1u6d
 		 * 7-fold: 1jof.A
 		 * 8-fold: 1vzw, d1i4na_
-		 * 
+		 *
 		 * OPEN
 		 * ankyrin: 1n0r.A, 3ehq.A
 		 * leucine repeats: 2bnh.A, 3o6n
 		 * helical: 1d0b.A
-		 * 
+		 *
 		 * MULTIPLE AXES
 		 * dihedral: 4hhb, 1vym
 		 * hierarchical: 4gcr, 1ppr.O, 1hiv
 		 * monoclonal Ab: 4NZU
-		 * 
+		 *
 		 * - For more examples see the symmetry benchmark
 		 */
 
@@ -91,13 +91,13 @@ public class DemoCeSymm {
 
 		//Run the alignment
 		CeSymmResult result = CeSymm.analyze(atoms, params);
-		
+
 		//Display the results in FatCat format
 		System.out.println(MultipleAlignmentWriter.toFatCat(result.getMultipleAlignment()));
-		
+
 		//Obtain the point group symmetry
 		QuatSymmetryResults pg = SymmetryTools.getQuaternarySymmetry(result);
 		System.out.println("Point group internal symmetry: "+pg.getSymmetry());
 	}
-	
+
 }

@@ -41,14 +41,14 @@ import static org.junit.Assert.*;
 
 
 /** This class tests the correct loading of Nucleotides
- * 
+ *
  * @author Andreas Prlic
  * @since 3.0.3
  */
 public class TestNucleotides {
 
 	private static AtomCache cache;
-	
+
 	@BeforeClass
 	public static void beforeClass() {
 		cache = new AtomCache();
@@ -56,7 +56,7 @@ public class TestNucleotides {
 
 	@Test
 	public void test3T5N() throws IOException, StructureException{
-		
+
 		String pdbId = "3T5N";
 		Structure s = getStructure(pdbId);
 
@@ -67,8 +67,8 @@ public class TestNucleotides {
 		assertEquals("C", c.getChainID());
 		List<Group> ngr = c.getAtomGroups(GroupType.NUCLEOTIDE);
 		assertEquals(6,ngr.size());
-		
-		
+
+
 		// now test if we download all definitions correctly for this one...
 		PDBFileReader reader = new PDBFileReader();
 		FileParsingParameters params = new FileParsingParameters();
@@ -77,7 +77,7 @@ public class TestNucleotides {
 		params.setParseCAOnly(false);
 		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
-		
+
 		ChemCompProvider chemProv = ChemCompGroupFactory.getChemCompProvider();
 
 		DownloadChemCompProvider download = new DownloadChemCompProvider();
@@ -108,8 +108,8 @@ public class TestNucleotides {
 
 
 		ChemCompGroupFactory.setChemCompProvider(chemProv);
-		
-		
+
+
 	}
 
 	@Test
@@ -131,14 +131,14 @@ public class TestNucleotides {
 
 	private Structure getStructure(String pdbId) throws IOException, StructureException {
 		//System.out.println("cache: " + ChemCompGroupFactory.getChemCompProvider().getClass().getName());
-		
+
 		//System.out.println("cache: download chem comp:" + cache.getFileParsingParams().isLoadChemCompInfo());
 		return cache.getStructure(pdbId);
 	}
 
 	@Test
 	public void test1REP() throws StructureException, IOException{
-		
+
 		PDBFileReader reader = new PDBFileReader();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setParseSecStruc(true);
@@ -176,6 +176,6 @@ public class TestNucleotides {
 		assertEquals("23", n2.getResidueNumber().toString());
 		assertTrue(n1.getResidueNumber().equals(n2.getResidueNumber()));
 
-		
+
 	}
 }

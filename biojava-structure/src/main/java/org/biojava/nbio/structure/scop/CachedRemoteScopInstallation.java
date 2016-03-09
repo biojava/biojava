@@ -40,7 +40,7 @@ import java.util.List;
 
 
 /** An extension of the RemoteScopInstallation that caches some of the data locally.
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -162,13 +162,13 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 	public ScopDomain getDomainByScopID(String scopId) {
 		ScopDomain dom;
 
-		if ( serializedCache != null){			
+		if ( serializedCache != null){
 			if ( serializedCache.containsKey(scopId)) {
 				dom = serializedCache.get(scopId);
 				if ( dom != null) {
 					return dom;
 				}
-			}			
+			}
 		}
 
 		dom = proxy.getDomainByScopID(scopId);

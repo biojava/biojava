@@ -43,168 +43,182 @@ import java.util.*;
  */
 
 public class WeakValueHashMap extends AbstractMap {
-    private final Map keyToRefMap;
-    private final ReferenceQueue queue;
-    private final Set iteratorRefs;
-    private final ReferenceQueue iteratorRefQueue;
+	private final Map keyToRefMap;
+	private final ReferenceQueue queue;
+	private final Set iteratorRefs;
+	private final ReferenceQueue iteratorRefQueue;
 
-    public WeakValueHashMap() {
+	public WeakValueHashMap() {
 	keyToRefMap = new HashMap();
 	queue = new ReferenceQueue();
 	iteratorRefs = new HashSet();
 	iteratorRefQueue = new ReferenceQueue();
-    }
+	}
 
-    private void diddleReferenceQueue() {
+	private void diddleReferenceQueue() {
 	// Avoid making behind-the-scenes modifications while iterators exist.
 
 	if (iteratorRefs.size() > 0) {
-	    Reference ref;
-	    while ((ref = iteratorRefQueue.poll()) != null) {
+		Reference ref;
+		while ((ref = iteratorRefQueue.poll()) != null) {
 		iteratorRefs.remove(ref);
-	    }
-	    if (iteratorRefs.size() > 0) {
+		}
+		if (iteratorRefs.size() > 0) {
 		return;
-	    }
+		}
 	}
 
 	KeyedWeakReference ref;
 	while ((ref = (KeyedWeakReference) queue.poll()) != null) {
-	    keyToRefMap.remove(ref.getKey());
+		keyToRefMap.remove(ref.getKey());
 	}
-    }
+	}
 
-    public Object put(Object key, Object value) {
+	@Override
+	public Object put(Object key, Object value) {
 	diddleReferenceQueue();
 	Reference oldRef = (Reference) keyToRefMap.put(key, new KeyedWeakReference(key, value, queue));
 	if (oldRef != null) {
-	    Object oldRefVal = oldRef.get();
-	    oldRef.clear();
-	    return oldRefVal;
+		Object oldRefVal = oldRef.get();
+		oldRef.clear();
+		return oldRefVal;
 	} else {
-	    return null;
+		return null;
 	}
-    }
+	}
 
-    public Object get(Object key) {
+	@Override
+	public Object get(Object key) {
 	Reference ref = (Reference) keyToRefMap.get(key);
 	if (ref != null) {
-	    return ref.get();
+		return ref.get();
 	} else {
-	    return null;
+		return null;
 	}
-    }
+	}
 
-    public boolean containsKey(Object o) {
+	@Override
+	public boolean containsKey(Object o) {
 	diddleReferenceQueue();
 	return keyToRefMap.containsKey(o);
-    }
+	}
 
-    public Set entrySet() {
+	@Override
+	public Set entrySet() {
 	diddleReferenceQueue();
 	return new WVEntrySet();
-    }
+	}
 
-    private class WVEntrySet extends AbstractSet {
+	private class WVEntrySet extends AbstractSet {
 	private Set keyRefEntrySet;
 
 	public WVEntrySet() {
-	    super();
-	    keyRefEntrySet = keyToRefMap.entrySet();
+		super();
+		keyRefEntrySet = keyToRefMap.entrySet();
 	}
 
+	@Override
 	public int size() {
-	    return keyRefEntrySet.size();
+		return keyRefEntrySet.size();
 	}
 
+	@Override
 	public Iterator iterator() {
-	    Iterator i = new WVEntryIterator(keyRefEntrySet.iterator());
-	    iteratorRefs.add(new PhantomReference(i, iteratorRefQueue));
-	    return i;
+		Iterator i = new WVEntryIterator(keyRefEntrySet.iterator());
+		iteratorRefs.add(new PhantomReference(i, iteratorRefQueue));
+		return i;
 	}
-    }
+	}
 
-    private class WVEntryIterator implements Iterator {
+	private class WVEntryIterator implements Iterator {
 	private Object cache;
 	private Iterator keyRefIterator;
 
 	public WVEntryIterator(Iterator keyRefIterator) {
-	    this.keyRefIterator = keyRefIterator;
+		this.keyRefIterator = keyRefIterator;
 	}
 
+	@Override
 	public boolean hasNext() {
-	    if (cache == null) {
+		if (cache == null) {
 		primeCache();
-	    }
-	    return cache != null;
+		}
+		return cache != null;
 	}
-	
+
+	@Override
 	public Object next() {
-	    if (cache == null) {
+		if (cache == null) {
 		primeCache();
-	    }
-	    if (cache == null) {
+		}
+		if (cache == null) {
 		throw new NoSuchElementException();
-	    } else {
+		} else {
 		Object o = cache;
 		cache = null;
 		return o;
-	    }
+		}
 	}
 
+	@Override
 	public void remove() {
-	    if (cache != null) {
+		if (cache != null) {
 		throw new IllegalStateException("next() not called");
-	    } else {
+		} else {
 		keyRefIterator.remove();
-	    }
+		}
 	}
 
 	private void primeCache() {
-	    while (keyRefIterator.hasNext()) {
+		while (keyRefIterator.hasNext()) {
 		Map.Entry krme = (Map.Entry) keyRefIterator.next();
 		Object ref = ((Reference) krme.getValue()).get();
 		if (ref != null) {
-		    cache = new WVMapEntry(krme.getKey(), ref);
-		    return;
+			cache = new WVMapEntry(krme.getKey(), ref);
+			return;
 		}
-	    }
+		}
 	}
-    }
+	}
 
-    private static class WVMapEntry implements Map.Entry {
+	private static class WVMapEntry implements Map.Entry {
 	private Object key;
 	private Object value;
-    
+
 	private WVMapEntry(Object key, Object value) {
-	    this.key = key;
-	    this.value = value;
+		this.key = key;
+		this.value = value;
 	}
-    
+
+	@Override
 	public Object getKey() {
-	    return key;
+		return key;
 	}
-    
+
+	@Override
 	public Object getValue() {
-	    return value;
+		return value;
 	}
-    
+
+	@Override
 	public Object setValue(Object v) {
-	    throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException();
 	}
-    
+
+	@Override
 	public boolean equals(Object o) {
-	    if (! (o instanceof Map.Entry)) {
+		if (! (o instanceof Map.Entry)) {
 		return false;
-	    }
-      
-	    Map.Entry mo = (Map.Entry) o;
-	    return ((key == null ? mo.getKey() == null : key.equals(mo.getKey())) &&
-		    (value == null ? mo.getValue() == null : value.equals(mo.getValue())));
+		}
+
+		Map.Entry mo = (Map.Entry) o;
+		return ((key == null ? mo.getKey() == null : key.equals(mo.getKey())) &&
+			(value == null ? mo.getValue() == null : value.equals(mo.getValue())));
 	}
-    
+
+	@Override
 	public int hashCode() {
-	    return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
+		return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
 	}
-    }
+	}
 }

@@ -30,13 +30,13 @@ import java.util.Map;
 
 /**
  * Controls the global ScopDatabase being used.
- * 
+ *
  * <p>Defaults to a {@link RemoteScopInstallation}, which is fast for small numbers
  * of queries. For many queries, using {@link #getSCOP(String, boolean) getSCOP(version,true)}
  * may be faster, since it makes only one network request.
- * 
+ *
  * <p>Example: Fetch the structure corresponding to an old version of scop
- * 
+ *
  * <pre>
  * ScopInstallation scop = new ScopInstallation();
  * scop.setScopVersion("1.69");
@@ -81,7 +81,7 @@ public class ScopFactory {
 	public static final String LATEST_VERSION = VERSION_2_0_5;
 
 	// Hold one instance for each version
-	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 
+	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>();
 	private static String defaultVersion = LATEST_VERSION;
 
 	/**
@@ -93,7 +93,7 @@ public class ScopFactory {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param forceLocalData Whether to use a local installation or a remote installation
 	 * @return
 	 * @see #getSCOP(String, boolean)
@@ -117,16 +117,16 @@ public class ScopFactory {
 
 	/**
 	 * Gets an instance of the specified scop version.
-	 * 
+	 *
 	 * <p>
 	 * The particular implementation returned is influenced by the <tt>forceLocalData</tt>
 	 * parameter. When false, the instance returned will generally be a
 	 * {@link RemoteScopInstallation}, although this may be influenced by
 	 * previous calls to this class. When true, the result is guaranteed to
 	 * implement {@link LocalScopDatabase} (generally a {@link BerkeleyScopInstallation}).
-	 * 
+	 *
 	 * <p>
-	 * Note that  
+	 * Note that
 	 * @param version A version number, such as {@link #VERSION_1_75A}
 	 * @param forceLocalData Whether to use a local installation or a remote installation
 	 * @return an
@@ -167,7 +167,7 @@ public class ScopFactory {
 		getSCOP(version);
 		defaultVersion = version;
 	}
-	
+
 	/**
 	 * Set the default scop version
 	 * @param version A version number, such as {@link #VERSION_1_75A}

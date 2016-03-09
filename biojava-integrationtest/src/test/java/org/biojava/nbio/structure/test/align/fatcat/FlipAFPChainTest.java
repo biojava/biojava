@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 9, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -54,13 +54,13 @@ public class FlipAFPChainTest extends TestCase {
 
 			String name1= "1a4w.H";
 			String name2= "1hiv.A";
-			
+
 			// we currently don;t test CECP, because there is a minor mismatch.
 			StructureAlignment[] aligs = new StructureAlignment[]{
-				StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName),
-				StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName),
-				StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName),
-				StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName),
+					StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName),
+					StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName),
+					StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName),
+					StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName),
 			};
 
 			// TODO replace aligs with StructureAlignmentFactory.getAllAlgorithms()
@@ -78,9 +78,9 @@ public class FlipAFPChainTest extends TestCase {
 	}
 
 	private void align (StructureAlignment algorithm, String name1, String name2)
-	throws StructureException, IOException{
-		
-		
+			throws StructureException, IOException{
+
+
 		AtomCache cache = new AtomCache();
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
@@ -91,14 +91,14 @@ public class FlipAFPChainTest extends TestCase {
 		afpChain.setName2(name2);
 		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
 		afpChain.setTMScore(tmScore);
-		
+
 		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 
-		AFPChain newC    = AFPChainXMLParser.fromXML(xml, ca1, ca2);	
+		AFPChain newC    = AFPChainXMLParser.fromXML(xml, ca1, ca2);
 		//System.out.println(xml);
 		//System.out.println(AFPChainXMLConverter.toXML(newC));
 		AFPChain flipped = AFPChainFlipper.flipChain(newC);
-		
+
 		assertEquals(afpChain.getName1(), flipped.getName2());
 		assertEquals(afpChain.getName2(),flipped.getName1());
 		assertEquals(afpChain.getCa1Length(),flipped.getCa2Length());
@@ -112,24 +112,24 @@ public class FlipAFPChainTest extends TestCase {
 		AFPChain origFlip  = AFPChainFlipper.flipChain(backChain);
 
 		assertNotNull("Got null, instead of an AFPChain object!", origFlip);
-		
+
 		assertNotNull("could not get nr. of eqr: ", afpChain.getNrEQR());
 		assertNotNull("could not get nr. of eqr: ", origFlip.getNrEQR());
-				
+
 		assertTrue("The nr. of equivalent positions is not equal!", afpChain.getNrEQR() == origFlip.getNrEQR());
-		
+
 		Atom shift1 = afpChain.getBlockShiftVector()[0];
 		Atom shift2 = origFlip.getBlockShiftVector()[0];
-		
+
 		assertTrue("The shift vectors are not similar!", Calc.getDistance(shift1, shift2) < 0.1);
-		
-		//assert the RMSD in the flipped alignment is small		
+
+		//assert the RMSD in the flipped alignment is small
 		double rmsd1 = getRMSD(afpChain,ca1,ca2);
 		double rmsd2 = getRMSD(flipped,ca2,ca1);
 		//System.out.println("rmsd:" +rmsd1 + " " + rmsd2);
 		assertTrue("The RMSD are vastly different!", Math.abs(rmsd1-rmsd2) < 0.01);
-		
-		
+
+
 		// this can;t work any more because there is minor after comma mismatches..
 		//String xmlBack = AFPChainXMLConverter.toXML(origFlip);
 		//if ( ! xmlBack.equals(xml)){
@@ -140,49 +140,49 @@ public class FlipAFPChainTest extends TestCase {
 		String img1 = AfpChainWriter.toDBSearchResult(afpChain);
 		String img2 = AfpChainWriter.toDBSearchResult(origFlip);
 		assertEquals("The alignment images do not match!",img1,img2);
-		
+
 		//System.out.println(xml);
 		//System.out.println(xmlNew);
-		
-		
+
+
 
 	}
 
 
 	/** get the RMSD between the aligned positions
-	 * 
+	 *
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
 	 * @return
 	 */
-	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2) 
-	throws StructureException {
-		
+	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
+			throws StructureException {
+
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		rotateAtoms2(afpChain,ca2clone);
-		
+
 		// get only the subset of Atoms that is on structurally equivalent positions
-		
+
 		Atom[] catmp1 = AFPAlignmentDisplay.getAlignedAtoms1(afpChain, ca1);
 		Atom[] catmp2 = AFPAlignmentDisplay.getAlignedAtoms2(afpChain, ca2clone);
-		
+
 		assertTrue(catmp1.length == catmp2.length);
-		
+
 		assertTrue(catmp1.length == afpChain.getNrEQR());
-				
-         return SVDSuperimposer.getRMS(catmp1,catmp2);
+
+		return SVDSuperimposer.getRMS(catmp1,catmp2);
 	}
-	
+
 	public static void rotateAtoms2(AFPChain afpChain,Atom[] ca2){
 
-		
+
 
 		int blockNum = afpChain.getBlockNum();
 
 		int[] optLen = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
-		
+
 		for(int bk = 0; bk < blockNum; bk ++)       {
 
 			Matrix m= afpChain.getBlockRotationMatrix()[bk];
@@ -190,15 +190,15 @@ public class FlipAFPChainTest extends TestCase {
 			for ( int i=0;i< optLen[bk];i++){
 				int pos = optAln[bk][1][i];
 				Atom a = ca2[pos];
-				
+
 				Calc.rotate(a, m);
 				Calc.shift(a, shift);
-				
+
 				//atoms.add(ca2[pos]);
 			}
 
 		}
-		
+
 	}
 
 
@@ -238,7 +238,7 @@ public class FlipAFPChainTest extends TestCase {
 					System.err.println("line2: " + line2.substring(0,j+1));
 
 					System.err.println("mismatch at position " + (j+1) + " c1: "+ c1 + " " + c2);
-					
+
 					return;
 				}
 			}

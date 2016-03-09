@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 9, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -36,7 +36,7 @@ public class AFPChainFlipper {
 	/** Flip the position of name1 and name2 (as well as all underlying data) in an AFPChain.
 	 * This is a utility function for AFPChainXMLParser.
 	 * You will have to call AFPCHainXMLParser.rebuildAFPChain in order to get twisted groups...
-	 * 
+	 *
 	 * @param o ... the original AFPCHain that should be flipped
 	 * @return a cloned AFPCHain which the positions of name1 and name2 flipped.
 	 */
@@ -111,14 +111,14 @@ public class AFPChainFlipper {
 		n.setOptLength(o.getOptLength());
 		n.setProbability(o.getProbability());
 		n.setSimilarity(o.getSimilarity());
-		n.setTotalLenIni(o.getTotalLenIni());		
+		n.setTotalLenIni(o.getTotalLenIni());
 		n.setTotalRmsdIni(o.getTotalRmsdIni());
 		n.setTotalRmsdOpt(o.getTotalRmsdOpt());
 		n.setTMScore(o.getTMScore());
 
 
 		// change direction of the Matrix and shift!
-		// 
+		//
 		Matrix[] maxO  = o.getBlockRotationMatrix();
 		Matrix[] maxN = new Matrix[maxO.length];
 

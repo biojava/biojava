@@ -32,60 +32,60 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 public class StandardRescoreRefiner<S extends Sequence<C>, C extends Compound> extends AbstractScorer
-        implements RescoreRefiner<S, C> {
+		implements RescoreRefiner<S, C> {
 
-    private PairInProfileScorerType pips;
-    private ProfileProfileAlignerType ppa;
+	private PairInProfileScorerType pips;
+	private ProfileProfileAlignerType ppa;
 
-    public StandardRescoreRefiner(PairInProfileScorerType pips, ProfileProfileAlignerType ppa) {
-        this.pips = pips;
-        this.ppa = ppa;
-    }
+	public StandardRescoreRefiner(PairInProfileScorerType pips, ProfileProfileAlignerType ppa) {
+		this.pips = pips;
+		this.ppa = ppa;
+	}
 
-    // methods for RescoreRefiner
+	// methods for RescoreRefiner
 
-    @Override
-    public PairInProfileScorerType getPairInProfileScorer() {
-        return pips;
-    }
+	@Override
+	public PairInProfileScorerType getPairInProfileScorer() {
+		return pips;
+	}
 
-    @Override
-    public ProfileProfileAlignerType getProfileProfileAligner() {
-        return ppa;
-    }
+	@Override
+	public ProfileProfileAlignerType getProfileProfileAligner() {
+		return ppa;
+	}
 
-    // methods for Aligner
+	// methods for Aligner
 
-    @Override
-    public long getComputationTime() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public long getComputationTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-    @Override
-    public Profile<S, C> getProfile() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public Profile<S, C> getProfile() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    // methods for Scorer
+	// methods for Scorer
 
-    @Override
-    public double getMaxScore() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public double getMaxScore() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-    @Override
-    public double getMinScore() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public double getMinScore() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-    @Override
-    public double getScore() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public double getScore() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }

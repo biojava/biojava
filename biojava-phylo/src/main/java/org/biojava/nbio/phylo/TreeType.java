@@ -18,18 +18,14 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.phylo;
 
 /**
  * The TreeType specifies the optimization criteria used to generate the tree.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
- * 
+ *
  */
 public enum TreeType {
 
@@ -41,10 +37,10 @@ public enum TreeType {
 
 	/** Parsimony Tree */
 	PARSIMONY("Parsimony-Tree");
-	
+
 	/** Description name of the Tree Type */
 	protected final String name;
-	
+
 	private TreeType(String name){
 		this.name = name;
 	}

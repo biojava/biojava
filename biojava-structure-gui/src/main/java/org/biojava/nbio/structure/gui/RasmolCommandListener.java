@@ -30,12 +30,12 @@ import java.util.List;
 
 
 /** a utility class that listens to Ramsol script commands in the @link {@link BiojavaJmol} class
- * 
+ *
  * @author Andreas Prlic
  * @deprecated use  org.biojava.nbio.structure.align.gui.jmol.RasmolCommandListener instead
  */
-@Deprecated 
-public class RasmolCommandListener 
+@Deprecated
+public class RasmolCommandListener
 extends KeyAdapter
 implements ActionListener,
 MouseListener {
@@ -51,8 +51,8 @@ MouseListener {
 		jmolPanel = panel;
 		history = new ArrayList<String>();
 		historyPosition = -2; // -2 = history = empty;
-	}	
-	
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		/*
@@ -72,13 +72,13 @@ MouseListener {
 
 		// check last command in history
 		// if equivalent, don't add,
-		// otherwise add               
+		// otherwise add
 		if (history.size()>0){
 			String txt=(String)history.get(history.size()-1);
 			if (! txt.equals(cmd)) {
-				history.add(cmd);  
+				history.add(cmd);
 			}
-		} else {             
+		} else {
 			// the first time always add
 			history.add(cmd);
 		}
@@ -107,11 +107,11 @@ MouseListener {
 	@Override
 	public void  mouseEntered(MouseEvent e){};
 
-	/** takes care of the cursor up/down keys. triggers copying of stored 
+	/** takes care of the cursor up/down keys. triggers copying of stored
 	 * commands into the current textfield
-	 * 
-	 */ 
-	 
+	 *
+	 */
+
 
 	@Override
 	public void keyReleased(KeyEvent e){
@@ -119,16 +119,16 @@ MouseListener {
 		int code = e.getKeyCode();
 		//String s = e.getKeyText(code);
 		//System.out.println(s);
-		if (( code == KeyEvent.VK_UP ) || 
+		if (( code == KeyEvent.VK_UP ) ||
 				( code == KeyEvent.VK_KP_UP)) {
 			// go one back in history;
 			if ( historyPosition > 0){
-				historyPosition= historyPosition-1;              
-			} 
-		} else if (( code == KeyEvent.VK_DOWN ) || 
-				( code == KeyEvent.VK_KP_DOWN)) {            
+				historyPosition= historyPosition-1;
+			}
+		} else if (( code == KeyEvent.VK_DOWN ) ||
+				( code == KeyEvent.VK_KP_DOWN)) {
 			if ( historyPosition < (history.size()-1) ){
-				historyPosition++;                
+				historyPosition++;
 			} else {
 				// clear command if at beginning of history
 				textfield.setText("");

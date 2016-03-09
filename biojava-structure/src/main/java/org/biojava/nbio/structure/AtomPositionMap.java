@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A map from {@link ResidueNumber ResidueNumbers} to ATOM record positions in a PDB file.
- * 
+ *
  * <p>To use:
- * 
+ *
  * <pre>
  * Atom[] atoms = new AtomCache().getAtoms("1w0p");
  * AtomPositionMap map = new AtomPositionMap(atoms);
@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * int pos = map.getPosition(start);
  * int length = map.calcLength(start, end);
  * </pre>
- * 
+ *
  * <p>Note: The getLength() methods were introduced in BioJava 4.0.0 to replace
  * the calcLength methods. The new method returns the number of residues between
  * two residues, inclusive, whereas the previous method returned 1 less than that.
@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
 public class AtomPositionMap {
 
 	private static final Logger logger = LoggerFactory.getLogger(AtomPositionMap.class);
-	
+
 	private HashMap<ResidueNumber, Integer> hashMap;
 	private TreeMap<ResidueNumber, Integer> treeMap;
 
@@ -111,9 +111,9 @@ public class AtomPositionMap {
 
 	/**
 	 * A map that is sorted by its values. Used for the treemap
-	 * 
+	 *
 	 * @author dmyerstu
-	 * 
+	 *
 	 * @param <T>
 	 *            The key type
 	 * @param <V>
@@ -136,7 +136,7 @@ public class AtomPositionMap {
 
 	/**
 	 * Creates a new AtomPositionMap containing peptide alpha-carbon atoms
-	 * 
+	 *
 	 * @param atoms
 	 */
 	public AtomPositionMap(Atom[] atoms) {
@@ -145,7 +145,7 @@ public class AtomPositionMap {
 
 	/**
 	 * Creates a new AtomPositionMap containing only atoms matched by {@code matcher}.
-	 * 
+	 *
 	 * If multiple atoms are present from a group, the first atom encountered will
 	 * be used.
 	 * @param atoms
@@ -165,7 +165,7 @@ public class AtomPositionMap {
 		treeMap = new TreeMap<ResidueNumber, Integer>(vc);
 		treeMap.putAll(hashMap);
 	}
-	
+
 	/**
 	 * Creates a new AtomPositionMap containing representative atoms
 	 * from a structure.
@@ -183,7 +183,7 @@ public class AtomPositionMap {
 	 * @return The number of atoms between A and B inclusive belonging to the given chain
 	 */
 	public int getLength(int positionA, int positionB, String startingChain) {
-		
+
 		int positionStart, positionEnd;
 		if (positionA <= positionB) {
 			positionStart = positionA;
@@ -421,7 +421,7 @@ public class AtomPositionMap {
 				logger.warn("Unable to find Residue {}, so substituting {}.",rr.getEnd(),end);
 			}
 		}
-		
+
 		// now use those to calculate the length
 		// if start or end is null, will throw NPE
 		int length = getLength(startIndex, endIndex,chain);

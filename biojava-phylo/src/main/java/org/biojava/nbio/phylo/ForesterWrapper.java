@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.phylo;
 
 import java.io.ByteArrayOutputStream;
@@ -17,7 +37,7 @@ import org.forester.phylogeny.Phylogeny;
 /**
  * This class contains wrapper methods for communication between BioJava and
  * forester (e.g, Data Structure conversion).
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
  *
@@ -32,16 +52,16 @@ public class ForesterWrapper {
 	 * Convert a BioJava {@link MultipleSequenceAlignment} to a forester
 	 * {@link Msa}. The easiest way to convert them is writting the msa as a
 	 * FASTA file and then parsing it with the forester {@link FastaParser}.
-	 * 
+	 *
 	 * @param msa
 	 *            BioJava MultipleSequenceAlignment
 	 * @return forester Msa object
-	 * @throws IOException 
+	 * @throws IOException
 	 *             if the conversion was not possible
 	 */
 	public static <C extends Sequence<D>, D extends Compound> Msa convert(
 			MultipleSequenceAlignment<C, D> msa) throws IOException {
-		
+
 		// Convert the biojava MSA to a FASTA String
 		OutputStream os = new ByteArrayOutputStream();
 		FastaWriter<C, D> fastaW = new FastaWriter<C, D>(os,
@@ -52,7 +72,7 @@ public class ForesterWrapper {
 						return sequence.getAccession().toString();
 					};
 				});
-		
+
 		fastaW.process();
 		String fastaMSA = os.toString();
 
@@ -63,7 +83,7 @@ public class ForesterWrapper {
 	/**
 	 * Convert a Phylogenetic tree to its Newick representation, so that it can
 	 * be exported to an external application.
-	 * 
+	 *
 	 * @param phylo
 	 *            Phylogeny phylogenetic tree
 	 * @param writeDistances
@@ -81,7 +101,7 @@ public class ForesterWrapper {
 
 	/**
 	 * Helper function to clone a forester symmetrical DistanceMatrix.
-	 * 
+	 *
 	 * @param distM
 	 *            forester symmetrical DistanceMatrix
 	 * @return identical copy of the forester symmetrical DistanceMatrix
@@ -90,7 +110,7 @@ public class ForesterWrapper {
 			BasicSymmetricalDistanceMatrix distM) {
 
 		int n = distM.getSize();
-		BasicSymmetricalDistanceMatrix cloneDM = 
+		BasicSymmetricalDistanceMatrix cloneDM =
 				new BasicSymmetricalDistanceMatrix(n);
 
 		for (int i = 0; i < n; i++) {

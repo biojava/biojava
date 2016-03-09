@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at Aug 12, 2013
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.io;
@@ -39,12 +39,12 @@ import static org.junit.Assert.assertTrue;
 
 
 public class TestMMcifOrganismParsing {
-	
-	
-	
+
+
+
 	@BeforeClass
 	public static void setUp() throws Exception {
-				
+
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
@@ -53,38 +53,38 @@ public class TestMMcifOrganismParsing {
 	@Test
 	public void test1STP() throws IOException, StructureException{
 		String pdbId = "1stp";
-		
+
 		checkPDB(pdbId);
-		
+
 	}
 
 	// removed this test, since entity 3 of 1a4w has no organism tax_id
 	public void test1a4w() throws IOException, StructureException{
 		String pdbId = "1a4w";
-		
+
 		checkPDB(pdbId);
-		
+
 	}
-	
+
 	@Test
 	public void test4hhb() throws IOException, StructureException{
 		String pdbId = "4hhb";
-		
+
 		checkPDB(pdbId);
-		
+
 	}
-	
+
 	@Test
 	public void test3ZD6() throws IOException, StructureException {
 		// a PDB ID that contains a synthetic entity
 		String pdbId = "3ZD6";
-		
+
 		checkPDB(pdbId);
-		
+
 	}
-	
-	
-	
+
+
+
 
 	private void checkPDB(String pdbId) throws IOException, StructureException {
 		Structure s = StructureIO.getStructure(pdbId);

@@ -35,7 +35,7 @@ import static org.junit.Assert.fail;
 
 
 /** Test case for https://redmine.open-bio.org/issues/3334
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -43,45 +43,45 @@ public class TestChemCompProvider {
 
 	@Test
 	public  void testChemCompProvider(){
-		
+
 		String pdbId = "1znf";
-		
+
 		FileParsingParameters params = new FileParsingParameters();
 		params.setLoadChemCompInfo(true);
-		
+
 		PDBFileReader r = new PDBFileReader();
 		r.setFileParsingParameters(params);
-		
+
 		ChemCompProvider prov = ChemCompGroupFactory.getChemCompProvider();
-		
+
 		//System.out.println(prov.getClass().getName());
-		
+
 		try {
 			r.getStructureById(pdbId);
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		
+
 		ChemCompProvider prov2 = ChemCompGroupFactory.getChemCompProvider();
 		String name1 = prov.getClass().getName();
 		String name2 = prov2.getClass().getName();
 		assertEquals("The ChemCompProvider got modified from " + name1 + " to " + name2, name1, name2);
-	
-		
+
+
 		params.setLoadChemCompInfo(false);
 		r.setFileParsingParameters(params);
-		
+
 		try {
 			r.getStructureById(pdbId);
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		
+
 		ChemCompProvider prov3 = ChemCompGroupFactory.getChemCompProvider();
 		String name3 = prov3.getClass().getName();
-		
+
 		//changing the load to false does not change the provider
 		assertEquals("The ChemCompProvider got modified from " + name1 + " to " + name3, name1, name3);
 	}

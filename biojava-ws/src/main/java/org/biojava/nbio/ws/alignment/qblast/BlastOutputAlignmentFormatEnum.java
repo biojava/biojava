@@ -27,7 +27,7 @@ package org.biojava.nbio.ws.alignment.qblast;
  * Enum representing available output alignment types.
  * <p/>
  * Values as used in QBlast URL API.
- * 
+ *
  * @author Gediminas Rimsa
  */
 public enum BlastOutputAlignmentFormatEnum {

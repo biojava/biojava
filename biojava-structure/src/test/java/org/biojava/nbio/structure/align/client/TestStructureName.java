@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.align.client;
 
 import static org.biojava.nbio.structure.align.client.StructureName.Source.*;
@@ -16,62 +36,62 @@ public class TestStructureName {
 
 	@Test
 	public void testMultiCharChainIds() throws StructureException {
-		
+
 		String str = "4V4F.AL";
-		
+
 		StructureName sn = new StructureName(str);
-		
+
 		assertEquals("AL", sn.getChainId());
 		assertEquals("4V4F", sn.getPdbId());
-		
+
 		str = "4v4f.AL";
 		sn = new StructureName(str);
-		
+
 		assertEquals("AL", sn.getChainId());
 		assertEquals("4V4F", sn.getPdbId());
 
 		str = "4v4f.al";
 		sn = new StructureName(str);
-		
+
 		assertEquals("al", sn.getChainId());
 		assertEquals("4V4F", sn.getPdbId());
 
-		
+
 		str = "4v4f.ABCD";
 		sn = new StructureName(str);
-		
+
 		assertEquals("ABCD", sn.getChainId());
 		assertEquals("4V4F", sn.getPdbId());
 
-		
-		// More than 4 characters should work too. In principle there's no limit in mmCIF, though the PDB is 
-		// restricting chain ids to 4 chars 
+
+		// More than 4 characters should work too. In principle there's no limit in mmCIF, though the PDB is
+		// restricting chain ids to 4 chars
 		str = "4v4f.ABCDEFGHIJ";
 		sn = new StructureName(str);
-		
+
 		assertEquals("ABCDEFGHIJ", sn.getChainId());
 		assertEquals("4V4F", sn.getPdbId());
 
 
 	}
-	
+
 	@Test
 	public void testSingleCharChainIds() throws StructureException {
-		
+
 		String str = "1SMT.A";
-		
+
 		StructureName sn = new StructureName(str);
-		
+
 		assertEquals("A", sn.getChainId());
 		assertEquals("1SMT", sn.getPdbId());
-		
+
 		str = "1SMT.a";
 		sn = new StructureName(str);
-		
+
 		assertEquals("a", sn.getChainId());
 		assertEquals("1SMT", sn.getPdbId());
 
-		
+
 	}
 
 	@Test
@@ -90,7 +110,7 @@ public class TestStructureName {
 	@Test
 	public void testPrefixes() throws StructureException {
 		StructureName sn;
-		
+
 		// Basic case
 		sn = new StructureName("PDB:4hhb");
 		assertTrue(sn.isPdbId());
@@ -155,7 +175,7 @@ public class TestStructureName {
 		assertTrue(sn.isBioAssembly());
 		assertTrue(sn.getSource() == BIO);
 		assertEquals("2EHZ",sn.getPdbId());
-		
+
 		// Invalid prefix
 		sn = new StructureName("XXX:2ehz");
 		assertTrue(sn.isPdbId());
@@ -170,7 +190,7 @@ public class TestStructureName {
 	@Test
 	public void testGuesses() throws StructureException {
 		StructureName sn;
-		
+
 		// Basic case
 		sn = new StructureName("4hhb");
 		assertTrue(sn.isPdbId());
@@ -238,13 +258,13 @@ public class TestStructureName {
 		assertEquals("2ehz:1",sn.getPdbId());
 
 	}
-	
+
 	// Not really a test, but rather documenting Java's URL behavior
 	@Ignore
 	@Test
 	public void testURLs() throws MalformedURLException {
 		URL url;
-		
+
 		// Tilde doesn't get expanded
 		url = new URL("file://~/1abc.pdb");
 		assertEquals("/1abc.pdb", url.getPath());
@@ -252,17 +272,17 @@ public class TestStructureName {
 		url = new URL("file:///~/1abc.pdb");
 		assertEquals("/~/1abc.pdb", url.getPath());
 		assertEquals("",url.getHost());
-		
+
 		// Supports omitting the initial slashes
 		url = new URL("file:~/1abc.pdb");
 		assertEquals("~/1abc.pdb", url.getPath());
 		assertEquals("",url.getHost());
-		
+
 		// proper case. Three slashes gives empty host
 		url = new URL("file:///1abc.pdb");
 		assertEquals("/1abc.pdb", url.getPath());
 		assertEquals("",url.getHost());
-		
+
 		// Two slashes triggers host
 		url = new URL("file://1abc.pdb");
 		assertEquals("", url.getPath());

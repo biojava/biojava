@@ -20,20 +20,18 @@
  */
 package org.biojava.nbio.sequencing.io.fastq;
 
-import java.io.IOException;
-
 /**
  * Writer for {@link FastqVariant#FASTQ_SOLEXA} formatted sequences.
  *
  * @since 3.0.3
  */
 public final class SolexaFastqWriter
-    extends AbstractFastqWriter
+	extends AbstractFastqWriter
 {
 
-    @Override
-    protected Fastq convert(final Fastq fastq)
-    {
-        return fastq.convertTo(FastqVariant.FASTQ_SOLEXA);
-    }
+	@Override
+	protected Fastq convert(final Fastq fastq)
+	{
+		return fastq.convertTo(FastqVariant.FASTQ_SOLEXA);
+	}
 }

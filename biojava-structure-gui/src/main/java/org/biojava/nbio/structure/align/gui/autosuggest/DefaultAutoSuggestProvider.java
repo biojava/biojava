@@ -31,7 +31,7 @@ public class DefaultAutoSuggestProvider implements AutoSuggestProvider {
 	@Override
 	public Vector<String> getSuggestion(String userInput) {
 		Vector<String> data = new Vector<String>();
-		
+
 		data.add(userInput + " no AutoSuggestProvider registered yet!");
 		return data;
 	}
@@ -47,15 +47,15 @@ public class DefaultAutoSuggestProvider implements AutoSuggestProvider {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	@Override
 	public void clear(){
-		
+
 	}
-	
-	
+
+
 	@Override
 	public void stop(){
-		
+
 	}
 }

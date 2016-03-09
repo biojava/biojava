@@ -41,7 +41,7 @@ import java.io.IOException;
 
 /**
  * Demo displaying a structural alignment from a FASTA file using {@link FastaAFPChainConverter}.
- * 
+ *
  * @author dmyerstu
  * @see {@link DemoAlignmentFromFasta} Also demonstrates the display of {@link StructureAlignment StructureAlignments} from FASTA sequences, but does so using the more general
  *      {@link FastaStructureParser}

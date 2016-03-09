@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
@@ -40,18 +40,19 @@ public class JmolSymmetryScriptGeneratorT extends JmolSymmetryScriptGeneratorPoi
 		t.setMidRadius(radius);
 		setPolyhedron(t);
 	}
-	
+
+	@Override
 	public int getZoom() {
 		// find maximum extension of structure
 		double maxExtension = getMaxExtension();
 		// find maximum extension of polyhedron
 		double polyhedronExtension = getPolyhedron().getCirumscribedRadius();
-		
+
 		int zoom = Math.round((float)(maxExtension/polyhedronExtension * 110));
 		if (zoom > 100) {
 			zoom = 100;
 		}
 		return zoom;
 	}
-	
+
 }

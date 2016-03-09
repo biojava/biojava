@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
  */
 package org.biojava.nbio.structure.gui.util.color;
@@ -24,23 +24,23 @@ package org.biojava.nbio.structure.gui.util.color;
 import java.awt.*;
 
 /**
- * Maps colors by performing a transform of the input data and then passing 
+ * Maps colors by performing a transform of the input data and then passing
  * the transformed value to a ContinuousColorMapper for rendering.
- * 
+ *
  * For instance, to map [10^0, 10^10] to a rainbow gradient, use
- * 
+ *
  * new LogColorMapper(GradientMapper.getGradientMapper(GradientMapper.RAINBOW_GRADIENT, 0, 10))
- * 
+ *
  * @author Spencer Bliven
  *
  */
 public abstract class ContinuousColorMapperTransform implements ContinuousColorMapper {
-	
+
 	protected ContinuousColorMapper mapper;
 
 	/**
 	 * Creates a transform.
-	 * @param submapper A color mapper which acts on the transformed input value. 
+	 * @param submapper A color mapper which acts on the transformed input value.
 	 */
 	public ContinuousColorMapperTransform(ContinuousColorMapper submapper) {
 		this.mapper = submapper;
@@ -48,7 +48,7 @@ public abstract class ContinuousColorMapperTransform implements ContinuousColorM
 
 	/**
 	 * Return the color corresponding to submapper.getColor(transform(value)).
-	 * 
+	 *
 	 * @param value Value to be mapped
 	 * @return color corresponding to transform(value)
 	 * @see org.biojava.nbio.structure.gui.util.color.ContinuousColorMapper#getColor(double)

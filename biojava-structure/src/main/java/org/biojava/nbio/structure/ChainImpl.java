@@ -170,24 +170,24 @@ public class ChainImpl implements Chain, Serializable {
 			g.setChain(n);
 		}
 
-		
-		
+
+
 		if (seqResGroups!=null){
 
 			List<Group> tmpSeqRes = new ArrayList<Group>();
 
 			// cloning seqres and atom groups is ugly, due to their
 			// nested relationship (some of the atoms can be in the seqres, but not all)
-			
+
 			for (Group seqResGroup : seqResGroups) {
-				
+
 				int i = findMathingGroupIndex(groups, seqResGroup);
-				
+
 				Group g = null;
-				
+
 				if (i!=-1) {
 					// group found in atom groups, we get the equivalent reference from the newly cloned atom groups
-					g = n.getAtomGroup(i);				
+					g = n.getAtomGroup(i);
 				} else {
 					// group not found in atom groups, we clone the seqres group
 					g = (Group) seqResGroup.clone();
@@ -198,11 +198,11 @@ public class ChainImpl implements Chain, Serializable {
 
 			n.setSeqResGroups(tmpSeqRes);
 		}
-		
+
 
 		return n ;
 	}
-	
+
 	private static int findMathingGroupIndex(List<Group> atomGroups, Group g) {
 		int i = 0;
 		for (Group atomGroup: atomGroups) {
@@ -255,7 +255,7 @@ public class ChainImpl implements Chain, Serializable {
 	public void addGroup(Group group) {
 
 		group.setChain(this);
-		
+
 		// Set the altlocs chain as well
 		for(Group g : group.getAltLocs()) {
 			g.setChain(this);
@@ -278,7 +278,7 @@ public class ChainImpl implements Chain, Serializable {
 		 * ATOM    621  CA  GLY    93     -24.960  -6.849   5.497  1.00 47.35           C
 		 * ATOM    622  C   GLY    93     -26.076  -5.873   5.804  1.00 47.24           C
 		 * ATOM    623  O   GLY    93     -26.382  -4.986   5.006  1.00 47.56           O
-         and ...
+		 *    and ...
 		 * HETATM 1348  O   HOH    92     -21.853 -16.886  19.138  1.00 66.92           O
 		 * HETATM 1349  O   HOH    93     -26.126   1.226  29.069  1.00 71.69           O
 		 * HETATM 1350  O   HOH    94     -22.250 -18.060  -6.401  1.00 61.97           O

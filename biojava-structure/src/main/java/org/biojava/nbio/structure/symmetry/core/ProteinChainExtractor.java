@@ -36,15 +36,15 @@ import java.util.List;
  * chain Ids, sequences, and atoms. Includes both protein and nucleic acid chains.
  */
 public class ProteinChainExtractor  {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ProteinChainExtractor.class);
-	
+
 	private Structure structure = null;
 	private QuatSymmetryParameters parameters = null;
 	private boolean modified = true;
 	private int adjustedMinimumSequenceLength = 0;
 
-	private List<Atom[]> cAlphaTrace = new ArrayList<Atom[]>();	
+	private List<Atom[]> cAlphaTrace = new ArrayList<Atom[]>();
 	private List<String> chainIds = new ArrayList<String>();
 	private List<Integer> modelNumbers = new ArrayList<Integer>();
 	private List<String> sequences = new ArrayList<String>();
@@ -112,7 +112,7 @@ public class ProteinChainExtractor  {
 			for (Chain c : structure.getChains(i)) {
 				if (isNucleicAcidChain(c)) {
 					nucleicAcidChainCount++;
-				} //TODO Should we break here for DNA? If "CA" atoms are present, could cause bugs. -Spencer 9-2015 
+				} //TODO Should we break here for DNA? If "CA" atoms are present, could cause bugs. -Spencer 9-2015
 				Atom[] ca = StructureTools.getAtomCAArray(c);
 				ca = retainStandardAminoAcidResidues(ca);
 
@@ -179,7 +179,7 @@ public class ProteinChainExtractor  {
 			adjustedMinimumSequenceLength = Math.min(minLength, parameters.getMinimumSequenceLength());
 		}
 	}
-	
+
 	private boolean isNucleicAcidChain(Chain chain) {
 		int count = 0;
 		for (Group group: chain.getAtomGroups()) {

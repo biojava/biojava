@@ -225,19 +225,19 @@ public class StructureToolsTest extends TestCase {
 			range = "X:";
 			substr = StructureTools.getSubRanges(structure2, range);
 			fail("Illegal chain name in '"+range+"'. Should throw StructureException");
-		} catch(StructureException ex) {} //expected 
+		} catch(StructureException ex) {} //expected
 
 		// some negative tests
 		try {
 			range = "7-10";
 			substr = StructureTools.getSubRanges(structure2, range);
 			fail("Illegal range '"+range+"'. Should throw IllegalArgumentException");
-		} catch(IllegalArgumentException ex) {} //expected 
+		} catch(IllegalArgumentException ex) {} //expected
 		try {
 			range = "A7-10";
 			substr = StructureTools.getSubRanges(structure2, range);
 			fail("Illegal range '"+range+"'. Should throw IllegalArgumentException");
-		} catch(IllegalArgumentException ex) {} //expected 
+		} catch(IllegalArgumentException ex) {} //expected
 	}
 
 	public void testRevisedConvention() throws IOException, StructureException{
@@ -473,7 +473,7 @@ public class StructureToolsTest extends TestCase {
 
 		assertEquals("PDB has wrong length",409,pdbCA.length);
 		assertEquals("PDB has wrong length",409,mmcifCA.length);
-		
+
 		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
 

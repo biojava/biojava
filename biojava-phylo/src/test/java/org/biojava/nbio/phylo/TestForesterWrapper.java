@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.phylo;
 
 import java.io.ByteArrayOutputStream;
@@ -21,7 +41,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test the BioJava-forester wrapper methods.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -34,7 +54,7 @@ public class TestForesterWrapper {
 		InputStream inStream = TestForesterWrapper.class
 				.getResourceAsStream("/1u6d_symm.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = 
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
 				new FastaReader<ProteinSequence, AminoAcidCompound>(
 				inStream,
 				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
@@ -46,7 +66,7 @@ public class TestForesterWrapper {
 
 		inStream.close();
 
-		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = 
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa =
 				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
 
 		String expected = "";
@@ -58,7 +78,7 @@ public class TestForesterWrapper {
 
 		// Convert the biojava MSA to a FASTA String
 		OutputStream os = new ByteArrayOutputStream();
-		FastaWriter<ProteinSequence, AminoAcidCompound> fastaW = 
+		FastaWriter<ProteinSequence, AminoAcidCompound> fastaW =
 				new FastaWriter<ProteinSequence, AminoAcidCompound>(os,
 				msa.getAlignedSequences(),
 				new FastaHeaderFormatInterface<ProteinSequence, AminoAcidCompound>() {

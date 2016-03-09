@@ -36,157 +36,157 @@ import java.util.NoSuchElementException;
  */
 
 public class GroupIterator implements Iterator<Group> {
-    
-    Structure structure   ;
-    int current_model_pos ;
-    int current_chain_pos ;
-    int current_group_pos ;
-    
-    /**
-     * Constructs a GroupIterator object.
-     *
-     * @param struct  a Structure object
-     */
-    
-    public GroupIterator (Structure struct) { 
-        structure = struct     ;
-        current_model_pos = 0  ;
-        current_chain_pos = 0  ;
-        current_group_pos = -1 ;
-        
-    } 
-    
-    
-    /** needed to do a copy of iterator ... */
-    private Structure getStructure() { return structure         ;}    
-    private int  getModelPos()       { return current_model_pos ;}
-    private void setModelPos(int pos){ current_model_pos = pos  ;}
-    private int  getChainPos()       { return current_chain_pos ;}
-    private void setChainPos(int pos){ current_chain_pos = pos  ;}
-    private int  getGroupPos()       { return current_group_pos ;}
-    private void setGroupPos(int pos){ current_group_pos = pos  ;}
-    
-    /**  Creates and returns a copy of this object. */
-    @Override
-    public Object clone () {
-        
-        GroupIterator gr = new GroupIterator(this.getStructure()) ;
-        gr.setModelPos(this.getModelPos());
-        gr.setChainPos(this.getChainPos());
-        gr.setGroupPos(this.getGroupPos());
-        return gr ;
-        
-    }
-    
-    
-    /** is there a group after the current one in the structure? */
-    @Override
-    public boolean hasNext() {
-        return hasSubGroup(current_model_pos,current_chain_pos , current_group_pos +1) ;
-    }
-    
-    /** recursive method to determine if there is a next group. Helper
-     * method for hasNext(). 
-     * @see #hasNext
-     */
-    private boolean hasSubGroup(int tmp_model,int tmp_chain,int tmp_group) {
 
-        if (tmp_model >= structure.nrModels()) {
-            return false;
-        }
+	Structure structure   ;
+	int current_model_pos ;
+	int current_chain_pos ;
+	int current_group_pos ;
 
-        List<Chain> model = structure.getModel(tmp_model);
+	/**
+	 * Constructs a GroupIterator object.
+	 *
+	 * @param struct  a Structure object
+	 */
 
-        if (tmp_chain >= model.size()) {
-            return hasSubGroup(tmp_model + 1, 0, 0);
-        }
+	public GroupIterator (Structure struct) {
+		structure = struct     ;
+		current_model_pos = 0  ;
+		current_chain_pos = 0  ;
+		current_group_pos = -1 ;
 
-        Chain chain = model.get(tmp_chain);
+	}
 
-        // start search at beginning of next chain.
-        return tmp_group < chain.getAtomLength() || hasSubGroup(tmp_model, tmp_chain + 1, 0);
 
-    }
-    
-    /** Get the model number of the current model.
-     * 
-     * @return the number of the model
-     */
-    public int getCurrentModel(){
-        
-        return current_model_pos;
-    }
-    
-    /** Get the current Chain. Returns null if we are at the end of the iteration.
-     * 
-     * @return the Chain of the current position 
-     */
-    public Chain getCurrentChain(){
-        if ( current_model_pos >= structure.nrModels()){
-            return null;
-        }
-        
-        List<Chain> model =  structure.getModel(current_model_pos);
-        
-        if ( current_chain_pos >= model.size() ){
-            return null;
-        }
+	/** needed to do a copy of iterator ... */
+	private Structure getStructure() { return structure         ;}
+	private int  getModelPos()       { return current_model_pos ;}
+	private void setModelPos(int pos){ current_model_pos = pos  ;}
+	private int  getChainPos()       { return current_chain_pos ;}
+	private void setChainPos(int pos){ current_chain_pos = pos  ;}
+	private int  getGroupPos()       { return current_group_pos ;}
+	private void setGroupPos(int pos){ current_group_pos = pos  ;}
 
-        return model.get(current_chain_pos);
-        
-    }
-    
-    /** get next Group.
-     * @return next Group 
-     * @throws NoSuchElementException ... 
-     */
-    @Override
-    public Group next()
-    throws NoSuchElementException
-    {
-        
-        return getNextGroup(current_model_pos,current_chain_pos,current_group_pos+1);
-    }
-    
-    /** recursive method to retrieve the next group. Helper
-     * method for gext(). 
-     * @see #next
-     */
-    private Group getNextGroup(int tmp_model,int tmp_chain,int tmp_group)
-    throws NoSuchElementException
-    { 
-        
-        if ( tmp_model >= structure.nrModels()){
-            throw new NoSuchElementException("arrived at end of structure!");
-        }
-        
-        List<Chain> model = structure.getModel(tmp_model);
-        
-        if ( tmp_chain >= model.size() ){
-            return getNextGroup(tmp_model+1,0,0);
-        }
-        
-        Chain     chain = model.get(tmp_chain);
-        
-        if (tmp_group  >= chain.getAtomLength()){	   
-            // start search at beginning of next chain.	    
-            return getNextGroup(tmp_model,tmp_chain+1,0);
-        } else {
-            current_model_pos = tmp_model;
-            current_chain_pos = tmp_chain;
-            current_group_pos = tmp_group;
-            return chain.getAtomGroup(current_group_pos);
-        }
-        
-    }
-    
-    /** does nothing .
-     */
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException("Cannot call remove() for GroupIterator");
-    }
+	/**  Creates and returns a copy of this object. */
+	@Override
+	public Object clone () {
 
-    
+		GroupIterator gr = new GroupIterator(this.getStructure()) ;
+		gr.setModelPos(this.getModelPos());
+		gr.setChainPos(this.getChainPos());
+		gr.setGroupPos(this.getGroupPos());
+		return gr ;
+
+	}
+
+
+	/** is there a group after the current one in the structure? */
+	@Override
+	public boolean hasNext() {
+		return hasSubGroup(current_model_pos,current_chain_pos , current_group_pos +1) ;
+	}
+
+	/** recursive method to determine if there is a next group. Helper
+	 * method for hasNext().
+	 * @see #hasNext
+	 */
+	private boolean hasSubGroup(int tmp_model,int tmp_chain,int tmp_group) {
+
+		if (tmp_model >= structure.nrModels()) {
+			return false;
+		}
+
+		List<Chain> model = structure.getModel(tmp_model);
+
+		if (tmp_chain >= model.size()) {
+			return hasSubGroup(tmp_model + 1, 0, 0);
+		}
+
+		Chain chain = model.get(tmp_chain);
+
+		// start search at beginning of next chain.
+		return tmp_group < chain.getAtomLength() || hasSubGroup(tmp_model, tmp_chain + 1, 0);
+
+	}
+
+	/** Get the model number of the current model.
+	 *
+	 * @return the number of the model
+	 */
+	public int getCurrentModel(){
+
+		return current_model_pos;
+	}
+
+	/** Get the current Chain. Returns null if we are at the end of the iteration.
+	 *
+	 * @return the Chain of the current position
+	 */
+	public Chain getCurrentChain(){
+		if ( current_model_pos >= structure.nrModels()){
+			return null;
+		}
+
+		List<Chain> model =  structure.getModel(current_model_pos);
+
+		if ( current_chain_pos >= model.size() ){
+			return null;
+		}
+
+		return model.get(current_chain_pos);
+
+	}
+
+	/** get next Group.
+	 * @return next Group
+	 * @throws NoSuchElementException ...
+	 */
+	@Override
+	public Group next()
+	throws NoSuchElementException
+	{
+
+		return getNextGroup(current_model_pos,current_chain_pos,current_group_pos+1);
+	}
+
+	/** recursive method to retrieve the next group. Helper
+	 * method for gext().
+	 * @see #next
+	 */
+	private Group getNextGroup(int tmp_model,int tmp_chain,int tmp_group)
+	throws NoSuchElementException
+	{
+
+		if ( tmp_model >= structure.nrModels()){
+			throw new NoSuchElementException("arrived at end of structure!");
+		}
+
+		List<Chain> model = structure.getModel(tmp_model);
+
+		if ( tmp_chain >= model.size() ){
+			return getNextGroup(tmp_model+1,0,0);
+		}
+
+		Chain     chain = model.get(tmp_chain);
+
+		if (tmp_group  >= chain.getAtomLength()){
+			// start search at beginning of next chain.
+			return getNextGroup(tmp_model,tmp_chain+1,0);
+		} else {
+			current_model_pos = tmp_model;
+			current_chain_pos = tmp_chain;
+			current_group_pos = tmp_group;
+			return chain.getAtomGroup(current_group_pos);
+		}
+
+	}
+
+	/** does nothing .
+	 */
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException("Cannot call remove() for GroupIterator");
+	}
+
+
 }
 

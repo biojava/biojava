@@ -27,17 +27,17 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 
 /**
  * Interface for all symmetry refinement implementations.
- *  
+ *
  * @author Aleix Lafita
  * @since 4.2.0
- * 
+ *
  */
 public interface SymmetryRefiner {
 
 	/**
 	 * Returns a refined symmetry alignment, where the repeat residues are
 	 * aligned consistently in a MultipleAlignment.
-	 * 
+	 *
 	 * @param selfAlignment
 	 *            optimal self-alignment calculated by CeSymm
 	 * @param atoms

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Nov 3, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -38,7 +38,7 @@ import java.io.File;
 public class DBSearchGUI extends JPanel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5657960663049062301L;
 
@@ -56,7 +56,7 @@ public class DBSearchGUI extends JPanel {
 	JProgressBar progress;
 	ProgressThreadDrawer drawer;
 	JTextField outFileLocation;
-	
+
 	Boolean useDomainSplit = true;
 	static final ResourceManager resourceManager = ResourceManager.getResourceManager("ce");
 
@@ -102,7 +102,7 @@ public class DBSearchGUI extends JPanel {
 	public boolean isDomainSplit(){
 		return useDomainSplit;
 	}
-	
+
 	public JTabbedPane getTabPane()
 	{
 		return tabPane;
@@ -132,7 +132,7 @@ public class DBSearchGUI extends JPanel {
 	private JPanel createListPane() {
 		//JTabbedPane tabP = new JTabbedPane();
 
-		
+
 		JLabel lable = new JLabel("Select Output Directory");
 		JPanel dir = new JPanel();
 
@@ -145,14 +145,14 @@ public class DBSearchGUI extends JPanel {
 		fileSelectBox.add(outFileLocation);
 		fileSelectBox.add(chB);
 		fileSelectBox.add(Box.createGlue());
-		
-		
-		Box hBox = Box.createVerticalBox();		
+
+
+		Box hBox = Box.createVerticalBox();
 		hBox.add(fileSelectBox);
 
 		Box panel =createDomainSelectPane();
 		hBox.add(panel);
-		
+
 		dir.add(hBox);
 
 		chB.addActionListener(new ActionListener() {
@@ -167,7 +167,7 @@ public class DBSearchGUI extends JPanel {
 				// disable the "All files" option.
 				//
 				chooser.setAcceptAllFileFilterUsed(false);
-				//    
+				//
 
 
 				//				In response to a button click:
@@ -190,9 +190,9 @@ public class DBSearchGUI extends JPanel {
 
 
 	private Box createDomainSelectPane() {
-		
 
-		
+
+
 
 		useDomainSplit  = true;
 
@@ -211,24 +211,24 @@ public class DBSearchGUI extends JPanel {
 				int index = box.getSelectedIndex();
 				if ( index == 0)
 					useDomainSplit = true;
-				else 
+				else
 					useDomainSplit = false;
 
 			}
 		});
 
 		JLabel label= new JLabel("Domains:");
-		
+
 		Box domainBox = Box.createHorizontalBox();
 		domainBox.add(label);
-		
+
 		domainBox.add(domainList);
 		domainBox.add(Box.createGlue());
 		//Box hBox = Box.createHorizontalBox();
-		
+
 		//hBox.add(Box.createGlue());
 
-		
+
 
 		return domainBox;
 	}
@@ -238,7 +238,7 @@ public class DBSearchGUI extends JPanel {
 	public void notifyCalcFinished(){
 		if ( drawer != null)
 			drawer.interrupt();
-		abortB.setEnabled(false);		
+		abortB.setEnabled(false);
 		progress.setIndeterminate(false);
 
 	}

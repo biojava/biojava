@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 9, 2010
- * Author: Spencer Bliven 
+ * Author: Spencer Bliven
  *
  */
 
@@ -39,16 +39,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-/** 
+/**
  * A wrapper for {@link CeMain} which sets default parameters to be appropriate for finding
  * circular permutations.
  * <p>
- * A circular permutation consists of a single cleavage point and rearrangement 
+ * A circular permutation consists of a single cleavage point and rearrangement
  * between two structures, for example:
  * <pre>
  * ABCDEFG
  * DEFGABC
- * </pre>  
+ * </pre>
  * @author Spencer Bliven.
  *
  */
@@ -65,15 +65,15 @@ public class OptimalCECPMain extends CeMain {
 	public static final String version = "1.0";
 
 	protected OptimalCECPParameters params;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public OptimalCECPMain() {
 		super();
 		params = new OptimalCECPParameters();
 	}
-	
+
 	@Override
 	public String getAlgorithmName() {
 		return OptimalCECPMain.algorithmName;
@@ -83,9 +83,9 @@ public class OptimalCECPMain extends CeMain {
 	public String getVersion() {
 		return OptimalCECPMain.version;
 	}
-	
+
 	/**
-	 * @return an {@link OptimalCECPParameters} object 
+	 * @return an {@link OptimalCECPParameters} object
 	 */
 	@Override
 	public ConfigStrucAligParams getParameters() {
@@ -102,10 +102,10 @@ public class OptimalCECPMain extends CeMain {
 		}
 		this.params = (OptimalCECPParameters) params;
 	}
-	
+
 	/**
 	 * Circularly permutes arr in place.
-	 * 
+	 *
 	 * <p>Similar to {@link Collections#rotate(List, int)} but with reversed
 	 * direction. Perhaps it would be more efficient to use the Collections version?
 	 * @param <T>
@@ -125,7 +125,7 @@ public class OptimalCECPMain extends CeMain {
 			throw new ArrayIndexOutOfBoundsException(
 					"Permutation point ("+cp+") must be between -ca2.length and ca2.length-1" );
 		}
-		
+
 		List<T> temp = new ArrayList<T>(cp);
 
 		// shift residues left
@@ -139,10 +139,10 @@ public class OptimalCECPMain extends CeMain {
 			arr[arr.length-cp+i] = temp.get(i);
 		}
 	}
-	
+
 	/**
 	 * Circularly permutes arr in place.
-	 * 
+	 *
 	 * <p>Similar to {@link Collections#rotate(List, int)} but with reversed
 	 * direction. Perhaps it would be more efficient to use the Collections version?
 	 * @param <T>
@@ -162,7 +162,7 @@ public class OptimalCECPMain extends CeMain {
 			throw new ArrayIndexOutOfBoundsException(
 					"Permutation point ("+cp+") must be between -ca2.length and ca2.length-1" );
 		}
-		
+
 		List<Integer> temp = new ArrayList<Integer>(cp);
 
 		// shift residues left
@@ -182,28 +182,28 @@ public class OptimalCECPMain extends CeMain {
 	 * Aligns ca1 with ca2 permuted by <i>cp</i> residues.
 	 * <p><strong>WARNING:</strong> Modifies ca2 during the permutation. Be sure
 	 * to make a copy before calling this method.
-	 * 
+	 *
 	 * @param ca1
 	 * @param ca2
 	 * @param param
 	 * @param cp
 	 * @return
-	 * @throws StructureException 
+	 * @throws StructureException
 	 */
 	public AFPChain alignPermuted(Atom[] ca1, Atom[] ca2, Object param, int cp) throws StructureException {
 		// initial permutation
 		permuteArray(ca2,cp);
-				
+
 		// perform alignment
 		AFPChain afpChain = super.align(ca1, ca2, param);
-		
+
 		// un-permute alignment
 		permuteAFPChain(afpChain, -cp);
-		
+
 		if(afpChain.getName2() != null) {
 			afpChain.setName2(afpChain.getName2()+" CP="+cp);
 		}
-		
+
 		// Specify the permuted
 		return afpChain;
 	}
@@ -211,13 +211,13 @@ public class OptimalCECPMain extends CeMain {
 	/**
 	 * Permute the second protein of afpChain by the specified number of residues.
 	 * @param afpChain Input alignment
-	 * @param cp Amount leftwards (or rightward, if negative) to shift the 
+	 * @param cp Amount leftwards (or rightward, if negative) to shift the
 	 * @return A new alignment equivalent to afpChain after the permutations
 	 */
 	private static void permuteAFPChain(AFPChain afpChain, int cp) {
-		
+
 		int ca2len = afpChain.getCa2Length();
-				
+
 		//fix up cp to be positive
 		if(cp == 0) {
 			return;
@@ -229,10 +229,10 @@ public class OptimalCECPMain extends CeMain {
 			throw new ArrayIndexOutOfBoundsException(
 					"Permutation point ("+cp+") must be between -ca2.length and ca2.length-1" );
 		}
-		
+
 		// Fix up optAln
 		permuteOptAln(afpChain,cp);
-		
+
 		if(afpChain.getBlockNum() > 1)
 			afpChain.setSequentialAlignment(false);
 		// fix up matrices
@@ -242,9 +242,9 @@ public class OptimalCECPMain extends CeMain {
 		afpChain.setDisTable2(permuteMatrix(afpChain.getDisTable2(),-cp,-cp));
 
 		//TODO fix up other AFP parameters?
-		
+
 	}
-	
+
 	/**
 	 * Permutes <i>mat</i> by moving the rows of the matrix upwards by <i>cp</i>
 	 * rows.
@@ -263,7 +263,7 @@ public class OptimalCECPMain extends CeMain {
 		}
 		if(cpRows < 0 || cpRows >= mat.getRowDimension()) {
 			throw new ArrayIndexOutOfBoundsException( String.format(
-					"Can't permute rows by %d: only %d rows.", 
+					"Can't permute rows by %d: only %d rows.",
 					cpRows, mat.getRowDimension() )
 			);
 		}
@@ -273,11 +273,11 @@ public class OptimalCECPMain extends CeMain {
 		}
 		if(cpCols < 0 || cpCols >= mat.getColumnDimension()) {
 			throw new ArrayIndexOutOfBoundsException( String.format(
-					"Can't permute cols by %d: only %d rows.", 
+					"Can't permute cols by %d: only %d rows.",
 					cpCols, mat.getColumnDimension() )
 			);
 		}
-		
+
 		int[] rows = new int[mat.getRowDimension()];
 		for(int i=0;i<rows.length;i++) {
 			rows[i] = (i+cpRows)%rows.length;
@@ -286,23 +286,23 @@ public class OptimalCECPMain extends CeMain {
 		for(int i=0;i<cols.length;i++) {
 			cols[i] = (i+cpCols)%cols.length;
 		}
-		
+
 		Matrix newMat = mat.getMatrix(rows, cols);
 		assert(newMat.getRowDimension() == mat.getRowDimension());
 		assert(newMat.getColumnDimension() == mat.getColumnDimension());
 		assert(newMat.get(0, 0) ==
 			mat.get(cpRows%mat.getRowDimension(), cpCols%mat.getColumnDimension()));
-		
-		
+
+
 		return newMat;
 	}
 
 	/**
 	 * Modifies the {@link AFPChain#setOptAln(int[][][]) optAln} of an AFPChain
 	 * by permuting the second protein.
-	 * 
+	 *
 	 * Sets residue numbers in the second protein to <i>(i-cp)%len</i>
-	 * 
+	 *
 	 * @param afpChain
 	 * @param cp Amount leftwards (or rightward, if negative) to shift the
 	 */
@@ -334,13 +334,13 @@ public class OptimalCECPMain extends CeMain {
 
 		// the processed alignment
 		List<List<List<Integer>>> blocks = new ArrayList<List<List<Integer>>>(afpChain.getBlockNum()*2);
-		
+
 		//Update residue indices
 		// newi = (oldi-cp) % N
 		for(int block = 0; block < afpChain.getBlockNum(); block++) {
 			if(optLen[block]<1)
 				continue;
-			
+
 			// set up storage for the current block
 			List<List<Integer>> currBlock = new ArrayList<List<Integer>>(2);
 			currBlock.add( new ArrayList<Integer>());
@@ -350,11 +350,11 @@ public class OptimalCECPMain extends CeMain {
 			// pos = 0 case
 			currBlock.get(0).add( optAln[block][0][0] );
 			currBlock.get(1).add( (optAln[block][1][0]+cp ) % ca2len);
-			
+
 			for(int pos = 1; pos < optLen[block]; pos++) {
 				//check if we need to start a new block
 				//this happens when the new alignment crosses the protein terminus
-				if( optAln[block][1][pos-1]+cp<ca2len && 
+				if( optAln[block][1][pos-1]+cp<ca2len &&
 						optAln[block][1][pos]+cp >= ca2len) {
 					currBlock = new ArrayList<List<Integer>>(2);
 					currBlock.add( new ArrayList<Integer>());
@@ -365,7 +365,7 @@ public class OptimalCECPMain extends CeMain {
 				currBlock.get(1).add( (optAln[block][1][pos]+cp ) % ca2len);
 			}
 		}
-		
+
 		// save permuted blocks to afpChain
 		assignOptAln(afpChain,blocks);
 	}
@@ -375,22 +375,22 @@ public class OptimalCECPMain extends CeMain {
 	 * where <tt>blocks.get(blockNum).get(0).get(pos)</tt> specifies the aligned
 	 * residue at position <i>pos</i> of block <i>blockNum</i> of the first
 	 * protein.
-	 * 
+	 *
 	 * This method takes such a collection and stores it into the afpChain's
 	 * {@link AFPChain#setOptAln(int[][][]) optAln}, setting the associated
 	 * length variables as well.
-	 * 
+	 *
 	 * @param afpChain
 	 * @param blocks
 	 */
 	private static void assignOptAln(AFPChain afpChain, List<List<List<Integer>>> blocks)
 	{
-		
+
 		int[][][] optAln = new int[blocks.size()][][];
 		int[] optLen = new int[blocks.size()];
 		int optLength = 0;
 		int numBlocks = blocks.size();
-		
+
 		for(int block = 0; block < numBlocks; block++) {
 			// block should be 2xN rectangular
 			assert(blocks.get(block).size() == 2);
@@ -398,7 +398,7 @@ public class OptimalCECPMain extends CeMain {
 
 			optLen[block] = blocks.get(block).get(0).size();
 			optLength+=optLen[block];
-			
+
 			optAln[block] = new int[][] {
 					new int[optLen[block]],
 					new int[optLen[block]]
@@ -408,37 +408,37 @@ public class OptimalCECPMain extends CeMain {
 				optAln[block][1][pos] = blocks.get(block).get(1).get(pos);
 			}
 		}
-		
-		
+
+
 		afpChain.setBlockNum(numBlocks);
 		afpChain.setOptAln(optAln);
 		afpChain.setOptLen(optLen);
 		afpChain.setOptLength(optLength);
-		
+
 		// TODO I don't know what these do. Should they be set?
 		//afpChain.setBlockSize(blockSize);
 		//afpChain.setBlockResList(blockResList);
 		//afpChain.setChainLen(chainLen);
-		
+
 	}
 
 	/**
 	 * Finds the optimal alignment between two proteins allowing for a circular
 	 * permutation (CP).
-	 * 
-	 * The precise algorithm is controlled by the 
+	 *
+	 * The precise algorithm is controlled by the
 	 * {@link OptimalCECPParameters parameters}. If the parameter
 	 * {@link OptimalCECPParameters#isTryAllCPs() tryAllCPs} is true, all possible
 	 * CP sites are tried and the optimal site is returned. Otherwise, the
 	 * {@link OptimalCECPParameters#getCPPoint() cpPoint} parameter is used to
 	 * determine the CP point, greatly reducing the computation required.
-	 * 
+	 *
 	 * @param ca1 CA atoms of the first protein
 	 * @param ca2 CA atoms of the second protein
 	 * @param param {@link CeParameters} object
 	 * @return The best-scoring alignment
 	 * @throws StructureException
-	 * 
+	 *
 	 * @see #alignOptimal(Atom[], Atom[], Object, AFPChain[])
 	 */
 	@Override
@@ -456,16 +456,16 @@ public class OptimalCECPMain extends CeMain {
 	/**
 	 * Finds the optimal alignment between two proteins allowing for a circular
 	 * permutation (CP).
-	 * 
+	 *
 	 * This algorithm performs a CE alignment for each possible CP site. This is
 	 * quite slow. Use {@link #alignHeuristic(Atom[], Atom[], Object)} for a
 	 * faster algorithm.
-	 * 
+	 *
 	 * @param ca1 CA atoms of the first protein
 	 * @param ca2 CA atoms of the second protein
 	 * @param param {@link CeParameters} object
 	 * @param alignments If not null, should be an empty array of the same length as
-	 *  ca2. This will be filled with the alignments from permuting ca2 by 
+	 *  ca2. This will be filled with the alignments from permuting ca2 by
 	 *  0 to n-1 residues.
 	 * @return The best-scoring alignment
 	 * @throws StructureException
@@ -474,14 +474,14 @@ public class OptimalCECPMain extends CeMain {
 	throws StructureException
 	{
 		long startTime = System.currentTimeMillis();
-		
+
 		if(alignments != null && alignments.length != ca2.length) {
 			throw new IllegalArgumentException("scores param should have same length as ca2");
 		}
-		
+
 		AFPChain unaligned = super.align(ca1, ca2, param);
 		AFPChain bestAlignment = unaligned;
-		
+
 		if(debug) {
 			// print progress bar header
 			System.out.print("|");
@@ -495,29 +495,29 @@ public class OptimalCECPMain extends CeMain {
 		if(alignments != null) {
 			alignments[0] = unaligned;
 		}
-		
+
 		for(int cp=1;cp<ca2.length;cp++) {
 			// clone ca2 to prevent side effects from propegating
 			Atom[] ca2p = StructureTools.cloneAtomArray(ca2);
 
 			//permute one each time. Alters ca2p as a side effect
 			AFPChain currentAlignment = alignPermuted(ca1,ca2p,param,cp);
-			
+
 			// increment progress bar
 			if(debug) System.out.print(".");
-			
+
 			// fix up names, since cloning ca2 wipes it
-			
+
 			if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getStructure()!=null) {
 				currentAlignment.setName2(ca2[0].getGroup().getChain().getStructure().getName()+" CP="+cp);
 			}
-			
+
 			double currentScore = currentAlignment.getAlignScore();
-			
+
 			if(alignments != null) {
 				alignments[cp] = currentAlignment;
 			}
-			
+
 			if(currentScore>bestAlignment.getAlignScore()) {
 				bestAlignment = currentAlignment;
 			}
@@ -529,20 +529,20 @@ public class OptimalCECPMain extends CeMain {
 					ca2.length, elapsedTime/1000., (double)elapsedTime/ca2.length);
 		}
 
-		
+
 		return bestAlignment;
-		
+
 	}
 
 
 
-	
+
 	public static void main(String[] args){
 		try {
 			String name1, name2;
 
 			//int[] cps= new int[] {};
-			
+
 			//Concanavalin
 			//name1 = "2pel.A";
 			//name2 = "3cna";
@@ -558,32 +558,32 @@ public class OptimalCECPMain extends CeMain {
 					//39, // TM-score optimum
 					0,
 			};*/
-			
+
 			//1itb selfsymmetry
 			//name1 = "1ITB.A";
 			//name2 = "1ITB.A";
 			//cps = new int[] {92};
-			
+
 			name1=name2 = "2LSQ";
 
 			OptimalCECPMain ce = new OptimalCECPMain();
 			CeParameters params = (CeParameters) ce.getParameters();
 			ce.setParameters(params);
-			
+
 			AtomCache cache = new AtomCache();
 
 			Atom[] ca1 = cache.getAtoms(name1);
 			Atom[] ca2 = cache.getAtoms(name2);
 
 			AFPChain afpChain;
-			
 
-			
-			// find optimal solution			
+
+
+			// find optimal solution
 			AFPChain[] alignments = new AFPChain[ca2.length];
 			afpChain = ce.alignOptimal(ca1, ca2, params, alignments);
 			System.out.format("Optimal Score: %.2f\n", afpChain.getAlignScore());
-			
+
 			System.out.println("Pos\tScore\tTMScore\tLen\tRMSD\tBlocks");
 			for(int i = 0; i< alignments.length; i++) {
 				double tm = AFPChainScorer.getTMScore(alignments[i], ca1, ca2);
@@ -596,31 +596,31 @@ public class OptimalCECPMain extends CeMain {
 						alignments[i].getBlockNum()
 				);
 			}
-			
+
 			//displayAlignment(afpChain,ca1,ca2);
-			
+
 			// permuted alignment
 			//for(int cp : cps) {
 				// new copy of ca2, since alignPermuted has side effects
 				//Atom[] ca2clone = cache.getAtoms(name2);
 				//afpChain = ce.alignPermuted(ca1, ca2clone, params, cp);
 				//displayAlignment(afpChain, ca1, ca2);
-				
+
 				//displayAlignment(alignments[cp],ca1,ca2);
 			//}
-			
+
 			// CECP alignment
 			CeCPMain cecp = new CeCPMain();
 			afpChain = cecp.align(ca1, ca2);
 			displayAlignment(afpChain,ca1,ca2);
-			
+
 			System.out.println("Inspect additional alignments?");
 			Scanner scanner = new Scanner(System.in);
 			System.out.print("CP location [0,"+ca2.length+"): ");
 			while(scanner.hasNext()) {
 				if(scanner.hasNextInt()) {
 					int cp = scanner.nextInt();
-					
+
 					if(0<=cp && cp<ca2.length) {
 						alignments[cp].setName1(name1);
 						alignments[cp].setName2(name2+"@"+cp);
@@ -633,7 +633,7 @@ public class OptimalCECPMain extends CeMain {
 				System.out.print("CP location [0,"+ca2.length+"): ");
 			}
 			scanner.close();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -641,9 +641,9 @@ public class OptimalCECPMain extends CeMain {
 
 	/**
 	 * Try showing a the afpChain in a GUI.
-	 * 
+	 *
 	 * <p>requires additional dependencies biojava-structure-gui and JmolApplet
-	 * 
+	 *
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2

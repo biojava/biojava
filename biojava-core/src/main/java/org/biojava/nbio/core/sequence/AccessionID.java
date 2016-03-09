@@ -36,117 +36,117 @@ import org.biojava.nbio.core.util.Hashcoder;
  */
 public class AccessionID {
 
-    private String id = null;
-    private DataSource source = DataSource.LOCAL;
-    private Integer version;
-    private String identifier = null;
+	private String id = null;
+	private DataSource source = DataSource.LOCAL;
+	private Integer version;
+	private String identifier = null;
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 
-    public AccessionID(){
-        id = "";
-        
-    }
+	public AccessionID(){
+		id = "";
 
-    /**
-     *
-     * @param id
-     */
-    public AccessionID(String id) {
-        this.id = id.trim();
-        this.source = DataSource.LOCAL;
-    }
-    
+	}
 
-    /**
-     *
-     * @param id
-     * @param source
-     */
-    public AccessionID(String id, DataSource source) {
-        this.id = id.trim();
-        this.source = source;
-    }
-    
-    public AccessionID(String id, DataSource source, Integer version, String identifier) {
-        this.id = id;
-        this.source = source;
-        this.version = version;
-        this.identifier = identifier;
-    }
+	/**
+	 *
+	 * @param id
+	 */
+	public AccessionID(String id) {
+		this.id = id.trim();
+		this.source = DataSource.LOCAL;
+	}
 
-    /**
-     * @return the id
-     */
-    public String getID() {
-        return id;
-    }
 
-    /**
-     * @return the source
-     */
-    public DataSource getDataSource() {
-        return source;
-    }
+	/**
+	 *
+	 * @param id
+	 * @param source
+	 */
+	public AccessionID(String id, DataSource source) {
+		this.id = id.trim();
+		this.source = source;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        boolean equals = false;
-        if (Equals.classEqual(this, o)) {
-            AccessionID l = (AccessionID) o;
-            equals = (Equals.equal(getID(), l.getID())
-                    && Equals.equal(getDataSource(), l.getDataSource())
-                    && Equals.equal(getIdentifier(), l.getIdentifier())
-                    && Equals.equal(getVersion(), l.getVersion()));
-    }
-        return equals;
-    }
+	public AccessionID(String id, DataSource source, Integer version, String identifier) {
+		this.id = id;
+		this.source = source;
+		this.version = version;
+		this.identifier = identifier;
+	}
 
-    @Override
-    public int hashCode() {
-        int r = Hashcoder.SEED;
-        r = Hashcoder.hash(r, getID());
-        r = Hashcoder.hash(r, getDataSource());
-        r = Hashcoder.hash(r, getIdentifier());
-        r = Hashcoder.hash(r, getVersion());
-        return r;
-        }
+	/**
+	 * @return the id
+	 */
+	public String getID() {
+		return id;
+	}
+
+	/**
+	 * @return the source
+	 */
+	public DataSource getDataSource() {
+		return source;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		if (Equals.classEqual(this, o)) {
+			AccessionID l = (AccessionID) o;
+			equals = (Equals.equal(getID(), l.getID())
+					&& Equals.equal(getDataSource(), l.getDataSource())
+					&& Equals.equal(getIdentifier(), l.getIdentifier())
+					&& Equals.equal(getVersion(), l.getVersion()));
+	}
+		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		int r = Hashcoder.SEED;
+		r = Hashcoder.hash(r, getID());
+		r = Hashcoder.hash(r, getDataSource());
+		r = Hashcoder.hash(r, getIdentifier());
+		r = Hashcoder.hash(r, getVersion());
+		return r;
+		}
 
  //   public void setDataSource(DataSource dataSource){
  //       source = dataSource;
  //   }
 
 
-    /**
-     * In case if the {@link #getID() } is not unique keeps the id version.
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * In case if the {@link #getID() } is not unique keeps the id version.
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * In case if {@link #getID() } in not unique keeps the alternative id, eg. NCBI GI number.
-     * 
-     * @return 
-     */
-    public String getIdentifier() {
-        return identifier;
-    }
+	/**
+	 * In case if {@link #getID() } in not unique keeps the alternative id, eg. NCBI GI number.
+	 *
+	 * @return
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-    
-    
-    @Override
-    public String toString() {
-        return id;
-    }
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+
+	@Override
+	public String toString() {
+		return id;
+	}
 }

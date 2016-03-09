@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package org.biojava.nbio.structure.gui;
 
@@ -33,25 +29,25 @@ import junit.framework.TestCase;
  * @author Jules
  */
 public class JmolViewerImplTest extends TestCase {
-    
-    public JmolViewerImplTest(String testName) {
-        super(testName);
-    }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
+	public JmolViewerImplTest(String testName) {
+		super(testName);
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
 
-    public void testMe(){
-       assertTrue(true);
-    }
-    
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
+
+	public void testMe(){
+	   assertTrue(true);
+	}
+
 //    /**
 //     * Test of setStructure method, of class JmolViewerImpl.
 //     */

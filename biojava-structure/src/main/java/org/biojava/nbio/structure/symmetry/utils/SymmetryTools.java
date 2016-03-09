@@ -74,7 +74,7 @@ import org.slf4j.LoggerFactory;
  * rotation symmetry angles, split repeats in quaternary structure chains,
  * convert between symmetry formats (full, repeats, rotations), determine if two
  * symmetry axes are equivalent, get groups from representative Atoms.
- * 
+ *
  * @author Spencer Bliven
  * @author Aleix Lafita
  *
@@ -94,7 +94,7 @@ public class SymmetryTools {
 	 * <p>
 	 * This is possible if {@code gradientPolyCoeff = Integer.MIN_VALUE} and
 	 * {@code gradientExpCoeff = 0}.
-	 * 
+	 *
 	 * @param unpenalizedScore
 	 * @param nResFromMainDiag
 	 * @param gradientPolyCoeff
@@ -120,7 +120,7 @@ public class SymmetryTools {
 
 	/**
 	 * Grays out the main diagonal of a duplicated distance matrix.
-	 * 
+	 *
 	 * @param ca2
 	 * @param rows
 	 *            Number of rows
@@ -415,7 +415,7 @@ public class SymmetryTools {
 	 * Returns the <em>magnitude</em> of the angle between the first and second
 	 * blocks of {@code afpChain}, measured in degrees. This is always a
 	 * positive value (unsigned).
-	 * 
+	 *
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
@@ -430,14 +430,14 @@ public class SymmetryTools {
 	 * Converts a set of AFP alignments into a Graph of aligned residues, where
 	 * each vertex is a residue and each edge means the connection between the
 	 * two residues in one of the alignments.
-	 * 
+	 *
 	 * @param afps
 	 *            List of AFPChains
 	 * @param atoms
 	 *            Atom array of the symmetric structure
 	 * @param undirected
 	 *            if true, the graph is undirected
-	 * 
+	 *
 	 * @return adjacency List of aligned residues
 	 */
 	public static List<List<Integer>> buildSymmetryGraph(List<AFPChain> afps,
@@ -467,10 +467,10 @@ public class SymmetryTools {
 	 * Converts a self alignment into a directed jGraphT of aligned residues,
 	 * where each vertex is a residue and each edge means the equivalence
 	 * between the two residues in the self-alignment.
-	 * 
+	 *
 	 * @param selfAlignment
 	 *            AFPChain
-	 * 
+	 *
 	 * @return alignment Graph
 	 */
 	public static UndirectedGraph<Integer, DefaultEdge> buildSymmetryGraph(
@@ -497,7 +497,7 @@ public class SymmetryTools {
 	 * <p>
 	 * Application: obtain the internal symmetry axis with the quaternary
 	 * symmetry code in biojava or calculate independent repeat properties.
-	 * 
+	 *
 	 * @param symmetry
 	 *            CeSymmResult
 	 * @return Structure with different chains for every symmetric unit
@@ -546,7 +546,7 @@ public class SymmetryTools {
 	 * <p>
 	 * Example: if the structure has repeats A,B and C, the original alignment
 	 * is A-B-C, and the returned alignment is ABC-BCA-CAB.
-	 * 
+	 *
 	 * @param symm
 	 *            CeSymmResult
 	 * @return MultipleAlignment of the full structure superpositions
@@ -578,7 +578,7 @@ public class SymmetryTools {
 	 * changes.
 	 * <p>
 	 * Application: display superimposed repeats in Jmol.
-	 * 
+	 *
 	 * @param result
 	 *            CeSymmResult of symmetry
 	 * @return MultipleAlignment of the repeats
@@ -631,7 +631,7 @@ public class SymmetryTools {
 	 * representation of symmetry in a MultipleAlignment, that contains the
 	 * entire Atom array of the strcuture and the symmetric repeats are orgaized
 	 * in different rows in a single Block.
-	 * 
+	 *
 	 * @param symm
 	 *            AFPChain created with a symmetry algorithm and refined
 	 * @param atoms
@@ -688,7 +688,7 @@ public class SymmetryTools {
 	 * threshold. It only takes into account the direction of the vector where
 	 * the rotation is made: the angle and translation are not taken into
 	 * account.
-	 * 
+	 *
 	 * @param axis1
 	 * @param axis2
 	 * @param epsilon
@@ -725,7 +725,7 @@ public class SymmetryTools {
 	 * Given a symmetry result, it calculates the overall global symmetry,
 	 * factoring out the alignment and detection steps of
 	 * {@link QuatSymmetryDetector} algorithm.
-	 * 
+	 *
 	 * @param result
 	 *            symmetry result
 	 * @return global symmetry results
@@ -797,7 +797,7 @@ public class SymmetryTools {
 	 * For a refined alignment only one Block with no repeated residues is
 	 * necessary. Sufficient condition is not tested (only known from the
 	 * algorithm or CeSymmResult).
-	 * 
+	 *
 	 * @param symm
 	 *            the symmetry alignment
 	 * @return true if the alignment is refined
@@ -835,7 +835,7 @@ public class SymmetryTools {
 	 * <p>
 	 * It is recommended to use the {@link CeSymmResult#isSignificant()} method
 	 * instead.
-	 * 
+	 *
 	 * @param msa
 	 * @param symmetryThreshold
 	 * @return
@@ -854,10 +854,10 @@ public class SymmetryTools {
 			tm = MultipleAlignmentScorer.getAvgTMScore(msa);
 		else
 			tm = msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
-		
+
 		if (tm < symmetryThreshold)
 			return false;
-		
+
 		return true;
 	}
 
@@ -866,7 +866,7 @@ public class SymmetryTools {
 	 * array. The representative Atom array needs to fulfill: no two Atoms are
 	 * from the same Group and Groups are sequential (connected in the original
 	 * Structure), except if they are from different Chains.
-	 * 
+	 *
 	 * @param rAtoms
 	 *            array of representative Atoms (CA, P, etc).
 	 * @return List of Groups
@@ -894,7 +894,7 @@ public class SymmetryTools {
 	 * <p>
 	 * This method also sets the scores (RMSD and TM-score) after the new
 	 * superposition has been updated.
-	 * 
+	 *
 	 * @param axes
 	 *            SymmetryAxes object. It will be modified.
 	 * @param msa
@@ -960,7 +960,7 @@ public class SymmetryTools {
 	/**
 	 * Update the scores (TM-score and RMSD) of a symmetry multiple alignment.
 	 * This method does not redo the superposition of the alignment.
-	 * 
+	 *
 	 * @param symm
 	 *            Symmetry Multiple Alignment of Repeats
 	 * @throws StructureException

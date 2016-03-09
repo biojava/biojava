@@ -56,10 +56,10 @@ public class AminoAcidComposition {
 	 */
 	@XmlElement(name = "isotope", required = false)
 	private List<Name2Count> isotopeList;
-	
+
 	public AminoAcidComposition(){}
-	
-	public AminoAcidComposition(String symbol, String shortName, String name, List<Name2Count> elementList, 
+
+	public AminoAcidComposition(String symbol, String shortName, String name, List<Name2Count> elementList,
 			List<Name2Count> isotopeList){
 		if(symbol.length() != 1){
 			throw new Error("Symbol attribute must be of length 1.");
@@ -70,40 +70,40 @@ public class AminoAcidComposition {
 		this.elementList = elementList;
 		this.isotopeList = isotopeList;
 	}
-	
+
 	@Override
 	public String toString(){
 		return symbol + ", " + shortName + ", " + name;
 	}
-	
+
 	public String getSymbol() {
 		return symbol;
 	}
-	
+
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
 	}
-	
+
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
-	
+
 	public String getShorName(){
 		return this.shortName;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getName(){
 		return this.name;
 	}
-	
+
 	public List<Name2Count> getElementList(){
 		return this.elementList;
 	}
-	
+
 	public List<Name2Count> getIsotopeList(){
 		return this.isotopeList;
 	}

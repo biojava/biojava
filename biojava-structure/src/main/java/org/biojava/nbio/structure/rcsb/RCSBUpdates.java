@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.rcsb;
 
 import java.io.BufferedReader;
@@ -11,19 +31,19 @@ import java.util.List;
 import java.util.Map;
 
 public class RCSBUpdates {
-	
+
 	// The URL for acquiring the data
 	public static final String baseURL = "ftp://ftp.rcsb.org/pub/pdb/data/status/latest/";
 
 	/**
-	 * 
+	 *
 	 * @return A map mapping each field (defined by a separate FTP file) to the PDB ids in the field. The possible fields
-	 * are: added.models, added.nmr, added.pdb, added.sf, modified.cs, modified.models, modified.nmr, modified.pdb, modified.sf, 
+	 * are: added.models, added.nmr, added.pdb, added.sf, modified.cs, modified.models, modified.nmr, modified.pdb, modified.sf,
 	 * obsolete.cs, obsolete.models, obsolete.nmr, obsolete.pdb, obsolete.sf
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public Map<String,String[]> getUpdates() throws IOException{
-		
+
 		Map<String,String[]> outMap = new HashMap<String, String[]>();
 		// A list of files to get
 		String[] newStringList = {"added.models","added.nmr","added.pdb","added.sf","modified.cs","modified.models",
@@ -31,14 +51,14 @@ public class RCSBUpdates {
 		for(String fileName: newStringList){
 			String[] thisList = readURL(baseURL+""+fileName);
 			outMap.put(fileName, thisList);
-		}		
+		}
 		return outMap;
 
 	}
 
 
 	/**
-	 * 
+	 *
 	 * @param urlIn The url to be read
 	 * @return A list of PDB ids as strings
 	 * @throws IOException

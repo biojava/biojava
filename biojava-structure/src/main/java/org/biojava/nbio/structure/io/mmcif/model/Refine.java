@@ -602,6 +602,6 @@ public class Refine {
 	public void setLs_number_reflns_R_work(String ls_number_reflns_R_work) {
 		this.ls_number_reflns_R_work = ls_number_reflns_R_work;
 	}
-	
+
 
 }

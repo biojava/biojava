@@ -50,7 +50,7 @@ public class Octahedron implements Polyhedron {
 		this.cirumscribedRadius = cirumscribedRadius;
 	}
 	/**
-	 * Returns the radius of an inscribed sphere, that is tangent to each 
+	 * Returns the radius of an inscribed sphere, that is tangent to each
 	 * of the octahedron's faces
 	 * @return the inscribedRadius
 	 */
@@ -60,7 +60,7 @@ public class Octahedron implements Polyhedron {
 	}
 
 	/**
-	 * Sets the radius of an inscribed sphere, that is tangent to each 
+	 * Sets the radius of an inscribed sphere, that is tangent to each
 	 * of the octahedron's faces
 	 * @param inscribedRadius the inscribedRadius to set
 	 */
@@ -70,7 +70,7 @@ public class Octahedron implements Polyhedron {
 	}
 
 	/**
-	 * Returns the radius of a sphere, that is tangent to each 
+	 * Returns the radius of a sphere, that is tangent to each
 	 * of the octahedron's edges
 	 *
 	 * @return the midRadius
@@ -81,7 +81,7 @@ public class Octahedron implements Polyhedron {
 	}
 
 	/**
-	 * Sets the radius of radius of a sphere, that is tangent to each 
+	 * Sets the radius of radius of a sphere, that is tangent to each
 	 * of the octahedron's edges
 	 * @param midRadius the midRadius to set
 	 */
@@ -91,12 +91,12 @@ public class Octahedron implements Polyhedron {
 	}
 
 	/**
-	 * Returns the vertices of an n-fold polygon of given radius and center	
+	 * Returns the vertices of an n-fold polygon of given radius and center
 	 * @param n
 	 * @param radius
 	 * @param center
 	 * @return
-	 */ 
+	 */
 	@Override
 	public Point3d[] getVertices() {
 		Point3d[] octahedron = new Point3d[6];
@@ -109,12 +109,12 @@ public class Octahedron implements Polyhedron {
 
 		return octahedron;
 	};
-	
+
 	@Override
 	public List<int[]> getLineLoops() {
 		return Arrays.asList(lineLoop1);
 	}
-	
+
 	public Point3d getC4Axis(double scale) {
 		return new Point3d(0, 0, cirumscribedRadius*scale);
 	}
@@ -126,12 +126,12 @@ public class Octahedron implements Polyhedron {
 		double s = 1/Math.sqrt(2);
 		return new Point3d(cirumscribedRadius*scale*s, cirumscribedRadius*scale*s, 0);
 	}
-	
+
 	@Override
 	public int getViewCount() {
 		return 3;
 	}
-	
+
 	@Override
 	public String getViewName(int index) {
 		String name;
@@ -144,47 +144,51 @@ public class Octahedron implements Polyhedron {
 		break;
 		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
-        return name;
+		return name;
 	}
-	
+
 	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {
-		case 0:  m.setIdentity(); // C4 vertex-centered
-		break;
-		case 1:  m.rotX(-0.5 * TETRAHEDRAL_ANGLE); // C3 face-centered  2.0*Math.PI/3
-                 Matrix3d m1 = new Matrix3d();
-                 m1.rotZ(Math.PI/4);
-                 m.mul(m1);
-		break;
-		case 2:  m.rotY(Math.PI/4); // side face-centered
-		break;
-		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
+		case 0:
+			m.setIdentity(); // C4 vertex-centered
+			break;
+		case 1:
+			m.rotX(-0.5 * TETRAHEDRAL_ANGLE); // C3 face-centered  2.0*Math.PI/3
+			Matrix3d m1 = new Matrix3d();
+			m1.rotZ(Math.PI/4);
+			m.mul(m1);
+			break;
+		case 2:
+			m.rotY(Math.PI/4); // side face-centered
+			break;
+		default:
+			throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
 		return m;
 	}
-	
+
 	private static double getSideLengthFromInscribedRadius(double radius) {
 		return radius * 6 / Math.sqrt(6);
 	}
-	
+
 	private static double getInscribedRadiusFromSideLength(double sideLength) {
 		return sideLength / 6 * Math.sqrt(6);
 	}
-	
+
 	private static double getSideLengthFromMiddleRadius(double radius) {
 		return radius * 2;
 	}
-	
+
 	private static double getMiddleRadiusFromSideLength(double sideLength) {
 		return sideLength / 2;
 	}
-	
+
 	private static double getSideLengthFromCircumscribedRadius(double radius) {
 		return radius * 2 / Math.sqrt(2);
 	}
-	
+
 	private static double getCircumscribedRadiusFromSideLength(double sideLength) {
 		return sideLength / 2 * Math.sqrt(2);
 	}

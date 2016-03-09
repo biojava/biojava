@@ -40,40 +40,40 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  * Creates a refined alignment with the CE-Symm alternative self-alignment.
  * Needs the order of symmetry and assumes that the last repeat aligns
  * with the first, being thus a CLOSE symmetry.
- * 
+ *
  * @author Spencer Bliven
  * @author Aleix Lafita
  * @since 4.2.0
- * 
+ *
  */
 public class SequenceFunctionRefiner implements SymmetryRefiner {
-	
+
 	@Override
-	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, 
+	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms,
 			int order) throws RefinerFailedException, StructureException {
-		
+
 		if (order < 2)	throw new RefinerFailedException(
 				"Symmetry not found in the structure: order < 2.");
-		
+
 		AFPChain afp = refineSymmetry(selfAlignment, atoms, atoms, order);
 		return SymmetryTools.fromAFP(afp, atoms);
 	}
-	
+
 	/**
 	 * Refines a CE-Symm alignment so that it is perfectly symmetric.
 	 *
 	 * The resulting alignment will have a one-to-one correspondance between
 	 * aligned residues of each symmetric part.
-	 * 
+	 *
 	 * @param afpChain Input alignment from CE-Symm
 	 * @param k Symmetry order. This can be guessed by {@link CeSymm#getSymmetryOrder(AFPChain)}
 	 * @return The refined alignment
 	 * @throws StructureException
-	 * @throws RefinerFailedException 
+	 * @throws RefinerFailedException
 	 */
 	public static AFPChain refineSymmetry(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int k)
 			throws StructureException, RefinerFailedException {
-		
+
 		// Transform alignment to a Map
 		Map<Integer, Integer> alignment = AlignmentTools.alignmentAsMap(afpChain);
 
@@ -81,7 +81,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 		Map<Integer, Integer> refined = refineSymmetry(alignment, k);
 		if (refined.size() < 1)
 			throw new RefinerFailedException("Refiner returned empty alignment");
-		
+
 		//Substitute and partition the alignment
 		try {
 			AFPChain refinedAFP = AlignmentTools.replaceOptAln(afpChain, ca1, ca2, refined);
@@ -426,10 +426,10 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 
 		return error;
 	}
-	
+
 	/**
 	 *  Partitions an afpChain alignment into order blocks of aligned residues.
-	 * 
+	 *
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
@@ -437,12 +437,12 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 	 * @return
 	 * @throws StructureException
 	 */
-	private static AFPChain partitionAFPchain(AFPChain afpChain, 
+	private static AFPChain partitionAFPchain(AFPChain afpChain,
 			Atom[] ca1, Atom[] ca2, int order) throws StructureException{
-		
+
 		int[][][] newAlgn = new int[order][][];
 		int repeatLen = afpChain.getOptLength()/order;
-		
+
 		//Extract all the residues considered in the first chain of the alignment
 		List<Integer> alignedRes = new ArrayList<Integer>();
 		for (int su=0; su<afpChain.getBlockNum(); su++){
@@ -450,7 +450,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 				alignedRes.add(afpChain.getOptAln()[su][0][i]);
 			}
 		}
-		
+
 		//Build the new alignment
 		for (int su=0; su<order; su++){
 			newAlgn[su] = new int[2][];
@@ -462,7 +462,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 						(repeatLen*(su+1)+i)%alignedRes.size());
 			}
 		}
-		
+
 		return AlignmentTools.replaceOptAln(newAlgn, afpChain, ca1, ca2);
 	}
 }

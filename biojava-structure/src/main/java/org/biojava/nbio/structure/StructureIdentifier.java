@@ -32,10 +32,10 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  * An identifier that <em>uniquely</em> identifies a whole {@link Structure} or
  * arbitrary substructure. Common examples would be reducing a structure to a
  * single chain, domain, or residue range.
- * 
+ *
  * StructureIdentifiers are represented by unique strings. The getId() and fromId()
  * methods convert to and from the string representation.
- * 
+ *
  * Implementations should provide a constructor which takes a String. A static
  * <tt>fromId(String)</tt> method is also recommended.
  *
@@ -46,7 +46,7 @@ public interface StructureIdentifier {
 
 	/**
 	 * Get the String form of this identifier.
-	 * 
+	 *
 	 * It is recommended that the {@link #toString()} method also return the
 	 * identifier, for consistency during serialization.
 	 * @return The String form of this identifier
@@ -58,7 +58,7 @@ public interface StructureIdentifier {
 	 * Loads a structure encompassing the structure identified.
 	 * The Structure returned should be suitable for passing as
 	 * the input to {@link #reduce(Structure)}.
-	 * 
+	 *
 	 * It is recommended that the most complete structure available be returned
 	 * (e.g. the full PDB) to allow processing of unselected portions where
 	 * appropriate.
@@ -69,10 +69,10 @@ public interface StructureIdentifier {
 	 * @throws IOException Errors reading the structure from disk
 	 */
 	Structure loadStructure(AtomCache cache) throws StructureException, IOException;
-	
+
 	/**
 	 * Convert to a canonical SubstructureIdentifier.
-	 * 
+	 *
 	 * <p>This allows all domains to be converted to a standard format String.
 	 * @return A SubstructureIdentifier equivalent to this
 	 * @throws StructureException Wraps exceptions that may be thrown by individual
@@ -84,13 +84,13 @@ public interface StructureIdentifier {
 	/**
 	 * Takes a complete structure as input and reduces it to the substructure
 	 * represented by this StructureIdentifier.
-	 * 
+	 *
 	 * <p>The returned structure may be a shallow copy of the input, with shared
 	 * Chains, Residues, etc.
 	 * @param input A full structure, e.g. as loaded from the PDB. The structure
 	 * ID should match that returned by getPdbId(), if applicable.
-	 * @return 
-	 * @throws StructureException 
+	 * @return
+	 * @throws StructureException
 	 * @see StructureTools#getReducedStructure(Structure, String)
 	 */
 	Structure reduce(Structure input) throws StructureException;

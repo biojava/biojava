@@ -28,9 +28,9 @@
  * Charge (Positive, Neutral, Negative)<br/>
  * Secondary structure (Helix, Strand, Coil)<br/>
  * Solvent accessibility (Buried, Exposed, Intermediate)<br/>
- * 
+ *
  * @author Koh Chuan Hock
- * 
+ *
  * @version 2011.08.22
  * @since 3.0.2
  */

@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.genome.parsers.gff;
 
 import org.biojava.nbio.core.sequence.DNASequence;
@@ -34,37 +30,37 @@ import java.util.Collection;
  */
 public class GCStats {
 
-    public static double getGCStats(Collection<DNASequence> sequences) {
-        double gcCount = 0;
-        double total = 0;
+	public static double getGCStats(Collection<DNASequence> sequences) {
+		double gcCount = 0;
+		double total = 0;
 
-        for (DNASequence sequence : sequences) {
-            char[] dna = sequence.toString().toCharArray();
-            for (char d : dna) {
-                if (d == 'G' || d == 'C' || d == 'g' || d == 'c') {
-                    gcCount++;
-                }
-                total++;
-            }
-        }
+		for (DNASequence sequence : sequences) {
+			char[] dna = sequence.toString().toCharArray();
+			for (char d : dna) {
+				if (d == 'G' || d == 'C' || d == 'g' || d == 'c') {
+					gcCount++;
+				}
+				total++;
+			}
+		}
 
-        return (gcCount / total) * 100.0;
-    }
+		return (gcCount / total) * 100.0;
+	}
 
-    public static double getGCStatsString(Collection<String> sequences) {
-        double gcCount = 0;
-        double total = 0;
+	public static double getGCStatsString(Collection<String> sequences) {
+		double gcCount = 0;
+		double total = 0;
 
-        for (String sequence : sequences) {
-            char[] dna = sequence.toCharArray();
-            for (char d : dna) {
-                if (d == 'G' || d == 'C' || d == 'g' || d == 'c') {
-                    gcCount++;
-                }
-                total++;
-            }
-        }
+		for (String sequence : sequences) {
+			char[] dna = sequence.toCharArray();
+			for (char d : dna) {
+				if (d == 'G' || d == 'C' || d == 'g' || d == 'c') {
+					gcCount++;
+				}
+				total++;
+			}
+		}
 
-        return (gcCount / total) * 100.0;
-    }
+		return (gcCount / total) * 100.0;
+	}
 }

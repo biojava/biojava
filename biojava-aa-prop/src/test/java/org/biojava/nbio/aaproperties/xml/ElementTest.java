@@ -47,7 +47,7 @@ public class ElementTest {
 		JAXBContext context = JAXBContext.newInstance(ElementTable.class);
 		context.generateSchema(new SchemaGenerator(outputFile.toString()));
 	}
-	
+
 	@Test
 	public void readXml() throws JAXBException, IOException{
 		ElementTable iTable = new ElementTable();
@@ -59,7 +59,7 @@ public class ElementTest {
 			logger.debug("Element: {}", e);
 		}
 	}
-	
+
 	@Test
 	public void generateXml() throws JAXBException, IOException {
 		List<Isotope> iList = new ArrayList<Isotope>();
