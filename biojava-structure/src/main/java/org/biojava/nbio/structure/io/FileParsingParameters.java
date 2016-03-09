@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * <li> {@link #setHeaderOnly(boolean)} - parse only the PDB/mmCIF file header, ignoring coordinates
  * </li>
  * <li> {@link #setCreateAtomBonds(boolean)} - create atom bonds from parsed bonds in PDB/mmCIF files and chemical component files 
- * </li?
+ * </li>
  * </ul>
  * 
  * @author Andreas Prlic
