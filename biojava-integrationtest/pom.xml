@@ -4,7 +4,7 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>4.1.1-SNAPSHOT</version>
+    <version>4.2.0</version>
   </parent>
   <artifactId>biojava-integrationtest</artifactId>
   <packaging>jar</packaging>
@@ -32,7 +32,7 @@
     <dependency>
     	<groupId>org.biojava</groupId>
     	<artifactId>biojava-structure</artifactId>
-    	<version>4.1.1-SNAPSHOT</version>
+    	<version>4.2.0</version>
     </dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
 		<dependency>
