@@ -41,38 +41,35 @@ public class Test1a4w extends TestCase{
 
 	private static Structure structure = null;
 
-
+	
 	@Override
 	protected void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		super.setUp();
-
+		
 		if ( structure != null )
 			return;
-		try {
-			InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
-			assertNotNull(inStream);
 
-			PDBFileParser pdbpars = new PDBFileParser();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setLoadChemCompInfo(true);
-			params.setAlignSeqRes(true);
+		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
+		assertNotNull(inStream);
 
-			pdbpars.setFileParsingParameters(params);
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
 
-			structure = pdbpars.parsePDBFile(inStream) ;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		pdbpars.setFileParsingParameters(params);
+
+		structure = pdbpars.parsePDBFile(inStream) ;
+
 	}
 
 
 
-	public void test1a4wPDBFile()
+	public void test1a4wPDBFile() throws IOException
 	{
 
 		//		structure = null;
-
+		
 
 		assertNotNull(structure);
 
@@ -83,25 +80,21 @@ public class Test1a4w extends TestCase{
 
 
 		Structure structure2 = null;
-		try {
-			InputStream inStream = this.getClass().getResourceAsStream("/1a4w.cif");
-			assertNotNull(inStream);
 
-			MMcifParser pdbpars = new SimpleMMcifParser();
-			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-			FileParsingParameters params = new FileParsingParameters();
-			params.setLoadChemCompInfo(true);
-			params.setAlignSeqRes(true);
-			consumer.setFileParsingParameters(params);
-			pdbpars.addMMcifConsumer(consumer);
+		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.cif");
+		assertNotNull(inStream);
 
-			pdbpars.parse(inStream) ;
-			structure2 = consumer.getStructure();
+		MMcifParser pdbpars = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		consumer.setFileParsingParameters(params);
+		pdbpars.addMMcifConsumer(consumer);
+
+		pdbpars.parse(inStream) ;
+		structure2 = consumer.getStructure();
 
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		assertNotNull(structure2);
 
@@ -174,13 +167,13 @@ public class Test1a4w extends TestCase{
 
 			boolean noWater = true;
 			boolean darPresent = false;
-
+		
 
 			for ( Group g : ligands){
 				String pdbName = g.getPDBName();
 				if ( pdbName.equals("QWE"))
 					darPresent = true;
-
+			
 				else if ( pdbName.equals("H2O"))
 					noWater = false;
 			}
@@ -188,7 +181,7 @@ public class Test1a4w extends TestCase{
 			assertTrue("Found water in ligands list!", noWater );
 
 			assertTrue("Did not find QWE in ligands list!", darPresent);
-
+						
 			assertEquals("Did not find the correct nr of ligands in chain! " , 3,ligands.size());
 		} catch (Exception e){
 			e.printStackTrace();
@@ -196,19 +189,19 @@ public class Test1a4w extends TestCase{
 		}
 
 	}
-
+	
 	public void testLigandLoading(){
 		Chain c2 = structure.getChain(1);
 		assertTrue(c2.getChainID().equals("H"));
 
 		List<Group> ligands = c2.getAtomLigands();
-
-
+		
+		
 		System.out.println("LIGANDS:" + ligands);
 		assertEquals("Did not find the correct nr of ligands in chain! " , 6,ligands.size());
-
+		
 		List<Group> lignads2 = StructureTools.filterLigands(c2.getAtomGroups());
-
+		
 		assertEquals("Did not get the same nr of ligands from different access methods! ",ligands.size(), lignads2.size());
 
 	}
@@ -217,7 +210,7 @@ public class Test1a4w extends TestCase{
 		try {
 
 			assertNotNull(structure);
-
+			
 			//			Structure s = TmpAtomCache.cache.getStructure("1a4w");
 
 			//                    test1a4wPDBFile();
@@ -273,9 +266,9 @@ public class Test1a4w extends TestCase{
 
 	}
 
-	public void testGetHetGroups() {
+        public void testGetHetGroups() {
 //            try {
-		Structure struct = structure;
+                Structure struct = structure;
 
 //                HET    TYS  I 363      16
 //                HET     NA  H 541       1
@@ -300,15 +293,15 @@ public class Test1a4w extends TestCase{
 //                FORMUL   7  KTH    C4 H3 N O S
 //                FORMUL   8  HOH   *157(H2 O)
 
-		List<Group> hets = struct.getHetGroups();
+                List<Group> hets = struct.getHetGroups();
+           
+                assertEquals(7, hets.size());
 
-		assertEquals(7, hets.size());
-
-
+                
 
 
 //            } catch (Exception e) {
 //                fail(e.getMessage());
 //            }
-	}
+        }
 }

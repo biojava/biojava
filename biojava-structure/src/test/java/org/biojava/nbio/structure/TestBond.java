@@ -44,7 +44,6 @@ public class TestBond {
 		FileParsingParameters params = cache.getFileParsingParams();
 
 		params.setAlignSeqRes(true);
-		params.setLoadChemCompInfo(true);
 		params.setCreateAtomBonds(true);
 
 		StructureIO.setAtomCache(cache);

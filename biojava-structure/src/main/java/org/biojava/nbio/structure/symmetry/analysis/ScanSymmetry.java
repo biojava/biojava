@@ -105,7 +105,7 @@ public class ScanSymmetry implements Runnable {
 		for (String pdbId: set) {
 			if (skip && pdbId.equals(restartId)) {
 				skip = false;
-			}
+			} 
 			if (skip) {
 				continue;
 			}
@@ -113,7 +113,7 @@ public class ScanSymmetry implements Runnable {
 			System.out.println("------------- " + pdbId  + "-------------");
 
 			StructureIO.setAtomCache(cache);
-
+			
 			// get number of biological assemblies. If value is -1, the original PDB file is used (bio assembly id = 0)
 			int bioAssemblyCount = StructureIO.getNrBiologicalAssemblies(pdbId);
 
@@ -122,9 +122,9 @@ public class ScanSymmetry implements Runnable {
 			if (bioAssemblyCount != -1) {
 				first = 1;
 				last = bioAssemblyCount + 1;
-			}
+			} 
 
-			for (int i = first; i < last; i++) {
+			for (int i = first; i < last; i++) {	
 				Structure structure = null;
 				try {
 					structure = StructureIO.getBiologicalAssembly(pdbId, i);
@@ -138,7 +138,7 @@ public class ScanSymmetry implements Runnable {
 					error.flush();
 				}
 
-				long ts1 = System.nanoTime();
+				long ts1 = System.nanoTime(); 	
 
 				try {
 					SpaceGroup spaceGroup =null;
@@ -149,11 +149,11 @@ public class ScanSymmetry implements Runnable {
 							spaceGroup = info.getSpaceGroup();
 						}
 						//PDBHeader pdbHeader = structure.getPDBHeader();
-						//resolution = pdbHeader.getResolution();
+						//resolution = pdbHeader.getResolution();	
 					}
 					QuatSymmetryDetector detector = new QuatSymmetryDetector(structure, parameters);
 
-					if (detector.hasProteinSubunits()) {
+					if (detector.hasProteinSubunits()) {	
 						long ts2 = System.nanoTime();
 
 						int time = Math.round((ts2-ts1)/1000000.0f);
@@ -195,7 +195,7 @@ public class ScanSymmetry implements Runnable {
 	private void printToCsv(BlastClustReader reader95,
 			BlastClustReader reader30, PrintWriter out, String pdbId,
 			int bioAssemblyId, int time, List<QuatSymmetryResults> resultsList, SpaceGroup spaceGroup) {
-
+		
 		for (QuatSymmetryResults results: resultsList) {
 			ProteinComplexSignature s95 = new ProteinComplexSignature(pdbId, results.getSubunits().getChainIds(), reader95);
 			String signature95 = s95.getComplexSignature();
@@ -213,7 +213,7 @@ public class ScanSymmetry implements Runnable {
 					"," + results.getSubunits().getStoichiometry() +
 					"," + results.getSubunits().isPseudoSymmetric() +
 					"," + results.getSymmetry() +
-					"," + order +
+					"," + order + 
 					"," + isLowSymmetry(results) +
 					"," + Math.round(results.getSubunits().getMinSequenceIdentity()*100.0) +
 					"," + Math.round(results.getSubunits().getMaxSequenceIdentity()*100.0) +
@@ -256,8 +256,7 @@ public class ScanSymmetry implements Runnable {
 		cache.setUseMmCif(true);
 		params.setParseCAOnly(true);
 //		MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
-//		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());
-		params.setLoadChemCompInfo(true);
+//		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());	
 		ChemCompGroupFactory.setChemCompProvider(new AllChemCompProvider());
 //		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 	}

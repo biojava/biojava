@@ -99,7 +99,6 @@ public class StructureToolsTest extends TestCase {
 
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = new FileParsingParameters();
-		params.setLoadChemCompInfo(true);
 		cache.setFileParsingParams(params);
 
 		Structure hivA = cache.getStructure("1hiv.A");
@@ -448,13 +447,11 @@ public class StructureToolsTest extends TestCase {
 		AtomCache pdbCache = new AtomCache();
 		pdbCache.setUseMmCif(false);
 		FileParsingParameters params = new FileParsingParameters();
-		params.setLoadChemCompInfo(true);
 		pdbCache.setFileParsingParams(params);
 
 		AtomCache mmcifCache = new AtomCache();
 		mmcifCache.setUseMmCif(true);
 		FileParsingParameters params2 = new FileParsingParameters();
-		params2.setLoadChemCompInfo(true);
 		mmcifCache.setFileParsingParams(params2);
 
 

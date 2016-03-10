@@ -75,7 +75,6 @@ public class TestNucleotides {
 		params.setParseSecStruc(true);
 		params.setAlignSeqRes(true);
 		params.setParseCAOnly(false);
-		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
 
 		ChemCompProvider chemProv = ChemCompGroupFactory.getChemCompProvider();
@@ -144,7 +143,6 @@ public class TestNucleotides {
 		params.setParseSecStruc(true);
 		params.setAlignSeqRes(true);
 		params.setParseCAOnly(false);
-		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
 
 

@@ -25,7 +25,6 @@ package org.biojava.nbio.structure;
 
 
 import org.biojava.nbio.structure.io.FileConvert;
-import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -285,7 +284,11 @@ public class ChainImpl implements Chain, Serializable {
 		 */
 
 			// this check is to give in this case the entry priority that is an AminoAcid / comes first...
+			// a good example of same residue number for 2 residues is 3th3, chain T, residue 201 (a LYS and a sugar BGC covalently attached to it) - JD 2016-03-09
 			if (  pdbResnumMap.containsKey(pdbResnum)) {
+				
+				logger.warn("Adding residue {}({}) to chain {} but a residue with same residue number is already present: {}({}). Will add only the aminoacid residue (if any) to the lookup, lookups for that residue number won't work properly.", 
+						pdbResnum, group.getPDBName(), getChainID(), groups.get(pdbResnumMap.get(pdbResnum)).getResidueNumber(), groups.get(pdbResnumMap.get(pdbResnum)).getPDBName()); 
 				if ( group instanceof AminoAcid)
 					pdbResnumMap.put(pdbResnum,pos);
 			} else
@@ -551,49 +554,25 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public String getAtomSequence(){
 
-		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
 
-		if ( prop != null && prop.equalsIgnoreCase("true")){
-
-			logger.info("The property {} is true. Will use the chemical component dictionary files to produce the atom sequence",
-					PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
-			List<Group> groups = getAtomGroups();
-			StringBuilder sequence = new StringBuilder() ;
-
-			for ( Group g: groups){
-				ChemComp cc = g.getChemComp();
-
-				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
-						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
-					// an amino acid residue.. use for alignment
-					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
-					if ( oneLetter == null)
-						oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
-					sequence.append(oneLetter);
-				}
-
-			}
-			return sequence.toString();
-		}
-
-		logger.info("The property {} is false or not set. Will use only amino acids for the atom sequence",
-				PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
-		// not using ChemComp records...
-		List<Group> aminos = getAtomGroups(GroupType.AMINOACID);
+		List<Group> groups = getAtomGroups();
 		StringBuilder sequence = new StringBuilder() ;
-		for (Group amino : aminos) {
-			if (amino instanceof AminoAcid) {
-				AminoAcid a = (AminoAcid) amino;
-				sequence.append(a.getAminoType());
-			} else {
-				// I suppose this can't happen, but just in case...
-				logger.warn("Group {} is tagged as GroupType.AMINOACID but its class is not AminoAcid", amino.toString());
-			}
-		}
 
+		for ( Group g: groups){
+			ChemComp cc = g.getChemComp();
+
+			if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+				// an amino acid residue.. use for alignment
+				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+				if ( oneLetter == null)
+					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+				sequence.append(oneLetter);
+			}
+
+		}
 		return sequence.toString();
+
 
 	}
 
@@ -603,47 +582,24 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public String getSeqResSequence(){
 
-		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
-		if ( prop != null && prop.equalsIgnoreCase("true")) {
-
-			logger.info("The property {} is true. Will use the chemical component dictionary files to produce the seqres sequence",
-					PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
-			StringBuilder str = new StringBuilder();
-			for (Group g : seqResGroups) {
-				ChemComp cc = g.getChemComp();
-				if ( cc == null) {
-					logger.warn("Could not load ChemComp for group: ", g);
-					str.append(StructureTools.UNKNOWN_GROUP_LABEL);
-				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
-						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
-					// an amino acid residue.. use for alignment
-					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
-					if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?"))
-						oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
-					str.append(oneLetter);
-				} else {
-					str.append(StructureTools.UNKNOWN_GROUP_LABEL);
-				}
-			}
-			return str.toString();
-		}
-
-		logger.info("The property {} is false or not set. Will use only amino acids for the seqres sequence",
-				PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
 		StringBuilder str = new StringBuilder();
-		for (Group group : seqResGroups) {
-			if (group instanceof AminoAcid) {
-				AminoAcid aa = (AminoAcid)group;
-				str.append(aa.getAminoType()) ;
+		for (Group g : seqResGroups) {
+			ChemComp cc = g.getChemComp();
+			if ( cc == null) {
+				logger.warn("Could not load ChemComp for group: ", g);
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
+			} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+				// an amino acid residue.. use for alignment
+				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?"))
+					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+				str.append(oneLetter);
 			} else {
 				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
 			}
 		}
 		return str.toString();
-
 	}
 
 

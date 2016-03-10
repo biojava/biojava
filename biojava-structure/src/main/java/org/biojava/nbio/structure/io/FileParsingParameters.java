@@ -27,7 +27,6 @@ package org.biojava.nbio.structure.io;
 import java.io.Serializable;
 
 import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +41,8 @@ import org.slf4j.LoggerFactory;
  *      and ATOM records of a PDB file be aligned? (default:yes)</li>
  * <li> {@link #setHeaderOnly(boolean)} - parse only the PDB/mmCIF file header, ignoring coordinates
  * </li>
- * <li> {@link #setCreateAtomBonds(boolean)} - create atom bonds from parsed bonds in PDB/mmCIF files and chemical component cif files
- * </li?
+ * <li> {@link #setCreateAtomBonds(boolean)} - create atom bonds from parsed bonds in PDB/mmCIF files and chemical component files 
+ * </li>
  * </ul>
  *
  * @author Andreas Prlic
@@ -70,12 +69,7 @@ public class FileParsingParameters implements Serializable
 	 */
 	private boolean alignSeqRes;
 
-	/**
-	 * Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
-	 */
-	private boolean loadChemCompInfo;
-
-	/**
+	/** 
 	 * Flag to control reading in only Calpha atoms - this is useful for parsing large structures like 1htq.
 	 */
 	private boolean parseCAOnly;
@@ -142,8 +136,6 @@ public class FileParsingParameters implements Serializable
 		alignSeqRes   = true;
 		parseCAOnly = false;
 
-		// don't download ChemComp dictionary by default.
-		setLoadChemCompInfo(false);
 		headerOnly = false;
 
 		updateRemediatedFiles = false;
@@ -178,34 +170,6 @@ public class FileParsingParameters implements Serializable
 	 */
 	public void setParseSecStruc(boolean parseSecStruc) {
 		this.parseSecStruc = parseSecStruc;
-	}
-
-
-
-	/** Should the chemical component information be automatically downloaded from the web?
-	 * If set to false, a limited set of ChemComps is being used.
-	 * @return flag if the data should be loaded
-	 */
-	public boolean isLoadChemCompInfo()
-	{
-		return loadChemCompInfo;
-	}
-
-	/** Sets if chemical component defintions should be loaded or not.
-	 * The decision from where the definitions are obtained is
-	 * in the static variable inside {@link ChemCompGroupFactory}.
-	 *
-	 * @param loadChemCompInfo flag
-	 */
-	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
-
-		if (loadChemCompInfo){
-			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "true");
-		} else {
-			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "false");
-		}
-		this.loadChemCompInfo = loadChemCompInfo;
-
 	}
 
 	/** Parse only the PDB file header out of the files

@@ -1,23 +1,3 @@
-/*
- *                    BioJava development code
- *
- * This code may be freely distributed and modified under the
- * terms of the GNU Lesser General Public Licence.  This should
- * be distributed with the code.  If you do not have a copy,
- * see:
- *
- *      http://www.gnu.org/copyleft/lesser.html
- *
- * Copyright for this code is held jointly by the individual
- * authors.  These should be listed in @author doc comments.
- *
- * For more information on the BioJava project and its aims,
- * or to join the biojava-l mailing list, visit the home page
- * at:
- *
- *      http://www.biojava.org/
- *
- */
 package org.biojava.nbio.structure.io.mmcif;
 
 import static org.junit.Assert.assertEquals;
@@ -43,8 +23,8 @@ public class TestChemCompProvider {
 	private static final Logger s_logger = LoggerFactory.getLogger(TestChemCompProvider.class);
 
 	// Short test with bad ligand name (QNA is bogus)
-	final	String DNAexample =
-
+	final	String DNAexample = 
+				
 	"ATOM      1  H   MET A   1      11.756 -15.759  11.647  1.00  7.95\n" +
 	"ATOM      2  N   MET A   1      12.461 -16.373  11.329  1.00  7.95\n" +
 	"ATOM      3  CA  MET A   1      12.297 -17.782  11.674  1.00  7.95\n" +
@@ -76,7 +56,7 @@ public class TestChemCompProvider {
 	"TER\n" +
 	"HETATM  101  O5' QNA A  1      15.062 -23.351   2.519  1.00 66.98           O\n" +
 	"HETATM  102  C5' QNA A  1      14.372 -23.705   1.300  1.00 68.27           C\n" +
-	"HETATM  103  C4' QNA A  1      14.836 -22.832   0.142  1.00 68.36           C\n" +
+	"HETATM  103  C4' QNA A  1      14.836 -22.832   0.142  1.00 68.36           C\n" + 
 	"HETATM  104  O4' QNA A  1      14.402 -23.357  -1.153  1.00 68.93           O\n" +
 	"HETATM  105  C3' QNA A  1      14.235 -21.444   0.256  1.00 68.53           C\n" +
 	"HETATM  106  O3' QNA A  1      15.060 -20.416  -0.271  1.00 66.63           O\n" +
@@ -110,34 +90,33 @@ public class TestChemCompProvider {
 	"HETATM  134  N4  QNA A  2       7.535 -22.097  -2.627  1.00 27.42           N\n" +
 	"HETATM  135  C5  QNA A  2       9.289 -20.623  -1.901  1.00 31.45           C\n" +
 	"HETATM  136  C6  QNA A  2      10.305 -19.829  -2.271  1.00 33.51           C\n";
-
+	
 	@Test
 	public void testZipChemCompProvider() throws IOException {
 		// Test file input from a stream created from a string.
 		InputStream testPDB = new ByteArrayInputStream(DNAexample.getBytes());
-
+		
 		// we just need this to track where to store PDB files
-		// this checks the PDB_DIR property (and uses a tmp location if not set)
+		// this checks the PDB_DIR property (and uses a tmp location if not set) 
 		UserConfiguration config = new UserConfiguration();
 		String cachePath = config.getCacheFilePath();
-
+		
 		// Setup a ChemCompProvider
 		Path pdbdir = Paths.get(cachePath);
 		Path chemComp = pdbdir.resolve("chemcomp.zip");
-
+		
 		System.out.println("Using PDB_DIR=" + pdbdir.toString() + " as temporary file directory");
 		ZipChemCompProvider zp = new ZipChemCompProvider(chemComp.toString(), pdbdir.toString());
 		// Keep the .cif.gz files - avoid re-downloading for unit testing.
 		zp.setRemoveCif(false);
 		ChemCompGroupFactory.setChemCompProvider(zp);
-
+		
 		// Parameters
 		FileParsingParameters params = new FileParsingParameters();
-		params.setLoadChemCompInfo(true);
-
+		
 		PDBFileReader pdbreader = new PDBFileReader();
 		pdbreader.setFileParsingParameters(params);
-
+		
 		Structure s = pdbreader.getStructure(testPDB);
 		assertEquals(5, s.getChain(0).getAtomGroups().size());
 		// Not wanted here for testing, but useful for cleaning up downloaded .cif.gz files.
@@ -161,7 +140,6 @@ public class TestChemCompProvider {
 		StructureIO.setAtomCache(cache);
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setParseBioAssembly(true);
-		params.setLoadChemCompInfo(true);
 
 		/*
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
@@ -179,7 +157,7 @@ public class TestChemCompProvider {
 		ChemCompGroupFactory.setChemCompProvider(zp);
 
 		long startTime = System.currentTimeMillis();
-		Structure sCif = StructureIO.getStructure("4HHM");
+		StructureIO.getStructure("4HHM");
 		long finishTime = System.currentTimeMillis();
 		s_logger.info("ZipChemComp time: "+(finishTime-startTime)+ " ms");
 
