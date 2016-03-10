@@ -117,20 +117,20 @@ import org.slf4j.LoggerFactory;
  * <p>
  * A:
  * <pre>
- public {@link Structure} loadStructure(String pathToPDBFile){
- 	    // The PDBFileParser is wrapped by the PDBFileReader
-		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
-
-		{@link Structure} structure = null;
-		try{
-			structure = pdbreader.getStructure(pathToPDBFile);
-			System.out.println(structure);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return structure;
-	}
- </pre>
+ * public {@link Structure} loadStructure(String pathToPDBFile){
+ * 	// The PDBFileParser is wrapped by the PDBFileReader
+ * 	{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
+ * 
+ * 	{@link Structure} structure = null;
+ * 	try{
+ * 		structure = pdbreader.getStructure(pathToPDBFile);
+ * 		System.out.println(structure);
+ * 	} catch (IOException e) {
+ * 		e.printStackTrace();
+ * 	}
+ * 	return structure;
+ * }
+ * </pre>
  *
  *
  * @author Andreas Prlic
@@ -384,15 +384,15 @@ public class PDBFileParser  {
 
 
 	/** parses the following record:
-	 <pre>
-	 COLUMNS      DATA  TYPE      FIELD         DEFINITION
-------------------------------------------------------------------------------------
- 1 -  6      Record name     "AUTHOR"
- 9 - 10      Continuation    continuation  Allows concatenation of multiple records.
-11 - 79      List            authorList    List of the author names, separated
-                                           by commas.
-
-</pre>
+	 * <pre>
+	 *  COLUMNS      DATA  TYPE      FIELD         DEFINITION
+	 * ------------------------------------------------------------------------------------
+	 *  1 -  6      Record name     "AUTHOR"
+	 *  9 - 10      Continuation    continuation  Allows concatenation of multiple records.
+	 * 11 - 79      List            authorList    List of the author names, separated
+	 *                                            by commas.
+	 * 
+	 * </pre>
 	 * @param line
 	 */
 	private void pdb_AUTHOR_Handler(String line) {
@@ -412,37 +412,37 @@ public class PDBFileParser  {
 
 
 	/** parses the following record:
-
-	 <pre>
-    COLUMNS       DATA TYPE        FIELD        DEFINITION
-    --------------------------------------------------------------------
-     1 -  6       Record name      "HELIX "
-     8 - 10       Integer          serNum       Serial number of the helix.
-                                                This starts at 1 and increases
-                                                incrementally.
-    12 - 14       LString(3)       helixID      Helix identifier. In addition
-                                                to a serial number, each helix is
-                                                given an alphanumeric character
-                                                helix identifier.
-    16 - 18       Residue name     initResName  Name of the initial residue.
-    20            Character        initChainID  Chain identifier for the chain
-                                                containing this helix.
-    22 - 25       Integer          initSeqNum   Sequence number of the initial
-                                                residue.
-    26            AChar            initICode    Insertion code of the initial
-                                                residue.
-    28 - 30       Residue name     endResName   Name of the terminal residue of
-                                                the helix.
-    32            Character        endChainID   Chain identifier for the chain
-                                                containing this helix.
-    34 - 37       Integer          endSeqNum    Sequence number of the terminal
-                                                residue.
-    38            AChar            endICode     Insertion code of the terminal
-                                                residue.
-    39 - 40       Integer          helixClass   Helix class (see below).
-    41 - 70       String           comment      Comment about this helix.
-    72 - 76       Integer          length       Length of this helix.
-</pre>
+	 * 
+	 * <pre>
+	 * COLUMNS       DATA TYPE        FIELD        DEFINITION
+	 * --------------------------------------------------------------------
+	 *  1 -  6       Record name      "HELIX "
+	 *  8 - 10       Integer          serNum       Serial number of the helix.
+	 *                                             This starts at 1 and increases
+	 *                                             incrementally.
+	 * 12 - 14       LString(3)       helixID      Helix identifier. In addition
+	 *                                             to a serial number, each helix is
+	 *                                             given an alphanumeric character
+	 *                                             helix identifier.
+	 * 16 - 18       Residue name     initResName  Name of the initial residue.
+	 * 20            Character        initChainID  Chain identifier for the chain
+	 *                                             containing this helix.
+	 * 22 - 25       Integer          initSeqNum   Sequence number of the initial
+	 *                                             residue.
+	 * 26            AChar            initICode    Insertion code of the initial
+	 *                                             residue.
+	 * 28 - 30       Residue name     endResName   Name of the terminal residue of
+	 *                                             the helix.
+	 * 32            Character        endChainID   Chain identifier for the chain
+	 *                                             containing this helix.
+	 * 34 - 37       Integer          endSeqNum    Sequence number of the terminal
+	 *                                             residue.
+	 * 38            AChar            endICode     Insertion code of the terminal
+	 *                                             residue.
+	 * 39 - 40       Integer          helixClass   Helix class (see below).
+	 * 41 - 70       String           comment      Comment about this helix.
+	 * 72 - 76       Integer          length       Length of this helix.
+	 * </pre>
 	 */
 
 	private void pdb_HELIX_Handler(String line){
@@ -482,57 +482,55 @@ public class PDBFileParser  {
 	}
 
 	/**
-      Handler for
-      <pre>
-      COLUMNS     DATA TYPE        FIELD           DEFINITION
---------------------------------------------------------------
- 1 -  6     Record name      "SHEET "
- 8 - 10     Integer          strand       Strand number which starts at 1
-                                          for each strand within a sheet
-                                          and increases by one.
-12 - 14     LString(3)       sheetID      Sheet identifier.
-15 - 16     Integer          numStrands   Number of strands in sheet.
-18 - 20     Residue name     initResName  Residue name of initial residue.
-22          Character        initChainID  Chain identifier of initial
-                                          residue in strand.
-23 - 26     Integer          initSeqNum   Sequence number of initial
-                                          residue in strand.
-27          AChar            initICode    Insertion code of initial residue
-                                          in strand.
-29 - 31     Residue name     endResName   Residue name of terminal residue.
-33          Character        endChainID   Chain identifier of terminal
-                                          residue.
-34 - 37     Integer          endSeqNum    Sequence number of terminal
-                                          residue.
-38          AChar            endICode     Insertion code of terminal
-                                          residue.
-39 - 40     Integer          sense        Sense of strand with respect to
-                                          previous strand in the sheet. 0
-                                          if first strand, 1 if parallel,
-                                          -1 if anti-parallel.
-42 - 45     Atom             curAtom      Registration. Atom name in
-                                          current strand.
-46 - 48     Residue name     curResName   Registration. Residue name in
-                                          current strand.
-50          Character        curChainId   Registration. Chain identifier in
-                                          current strand.
-51 - 54     Integer          curResSeq    Registration. Residue sequence
-                                          number in current strand.
-55          AChar            curICode     Registration. Insertion code in
-                                          current strand.
-57 - 60     Atom             prevAtom     Registration. Atom name in
-                                          previous strand.
-61 - 63     Residue name     prevResName  Registration. Residue name in
-                                          previous strand.
-65          Character        prevChainId  Registration. Chain identifier in
-                                          previous strand.
-66 - 69     Integer          prevResSeq   Registration. Residue sequence
-                                          number in previous strand.
-70          AChar            prevICode    Registration. Insertion code in
-                                              previous strand.
-</pre>
-
-
+	 * Handler for
+	 * <pre>
+	 *       COLUMNS     DATA TYPE        FIELD           DEFINITION
+	 * --------------------------------------------------------------
+	 *  1 -  6     Record name      "SHEET "
+	 *  8 - 10     Integer          strand       Strand number which starts at 1
+	 *                                           for each strand within a sheet
+	 *                                           and increases by one.
+	 * 12 - 14     LString(3)       sheetID      Sheet identifier.
+	 * 15 - 16     Integer          numStrands   Number of strands in sheet.
+	 * 18 - 20     Residue name     initResName  Residue name of initial residue.
+	 * 22          Character        initChainID  Chain identifier of initial
+	 *                                           residue in strand.
+	 * 23 - 26     Integer          initSeqNum   Sequence number of initial
+	 *                                           residue in strand.
+	 * 27          AChar            initICode    Insertion code of initial residue
+	 *                                           in strand.
+	 * 29 - 31     Residue name     endResName   Residue name of terminal residue.
+	 * 33          Character        endChainID   Chain identifier of terminal
+	 *                                           residue.
+	 * 34 - 37     Integer          endSeqNum    Sequence number of terminal
+	 *                                           residue.
+	 * 38          AChar            endICode     Insertion code of terminal
+	 *                                           residue.
+	 * 39 - 40     Integer          sense        Sense of strand with respect to
+	 *                                           previous strand in the sheet. 0
+	 *                                           if first strand, 1 if parallel,
+	 *                                           -1 if anti-parallel.
+	 * 42 - 45     Atom             curAtom      Registration. Atom name in
+	 *                                           current strand.
+	 * 46 - 48     Residue name     curResName   Registration. Residue name in
+	 *                                           current strand.
+	 * 50          Character        curChainId   Registration. Chain identifier in
+	 *                                           current strand.
+	 * 51 - 54     Integer          curResSeq    Registration. Residue sequence
+	 *                                           number in current strand.
+	 * 55          AChar            curICode     Registration. Insertion code in
+	 *                                           current strand.
+	 * 57 - 60     Atom             prevAtom     Registration. Atom name in
+	 *                                           previous strand.
+	 * 61 - 63     Residue name     prevResName  Registration. Residue name in
+	 *                                           previous strand.
+	 * 65          Character        prevChainId  Registration. Chain identifier in
+	 *                                           previous strand.
+	 * 66 - 69     Integer          prevResSeq   Registration. Residue sequence
+	 *                                           number in previous strand.
+	 * 70          AChar            prevICode    Registration. Insertion code in
+	 *                                               previous strand.
+	 * </pre>
 	 */
 	private void pdb_SHEET_Handler( String line){
 		
@@ -572,32 +570,31 @@ public class PDBFileParser  {
 
 	/**
 	 * Handler for TURN lines
-     <pre>
-     COLUMNS      DATA TYPE        FIELD         DEFINITION
---------------------------------------------------------------------
- 1 -  6      Record name      "TURN "
- 8 - 10      Integer          seq           Turn number; starts with 1 and
-                                            increments by one.
-12 - 14      LString(3)       turnId        Turn identifier
-16 - 18      Residue name     initResName   Residue name of initial residue in
-                                            turn.
-20           Character        initChainId   Chain identifier for the chain
-                                            containing this turn.
-21 - 24      Integer          initSeqNum    Sequence number of initial residue
-                                            in turn.
-25           AChar            initICode     Insertion code of initial residue
-                                            in turn.
-27 - 29      Residue name     endResName    Residue name of terminal residue
-                                            of turn.
-31           Character        endChainId    Chain identifier for the chain
-                                            containing this turn.
-32 - 35      Integer          endSeqNum     Sequence number of terminal
-                                            residue of turn.
-36           AChar            endICode      Insertion code of terminal residue
-                                            of turn.
-41 - 70      String           comment       Associated comment.
-
-     </pre>
+	 * <pre>
+	 * COLUMNS      DATA TYPE        FIELD         DEFINITION
+	 * --------------------------------------------------------------------
+	 *  1 -  6      Record name      "TURN "
+	 *  8 - 10      Integer          seq           Turn number; starts with 1 and
+	 *                                             increments by one.
+	 * 12 - 14      LString(3)       turnId        Turn identifier
+	 * 16 - 18      Residue name     initResName   Residue name of initial residue in
+	 *                                             turn.
+	 * 20           Character        initChainId   Chain identifier for the chain
+	 *                                             containing this turn.
+	 * 21 - 24      Integer          initSeqNum    Sequence number of initial residue
+	 *                                             in turn.
+	 * 25           AChar            initICode     Insertion code of initial residue
+	 *                                             in turn.
+	 * 27 - 29      Residue name     endResName    Residue name of terminal residue
+	 *                                             of turn.
+	 * 31           Character        endChainId    Chain identifier for the chain
+	 *                                             containing this turn.
+	 * 32 - 35      Integer          endSeqNum     Sequence number of terminal
+	 *                                             residue of turn.
+	 * 36           AChar            endICode      Insertion code of terminal residue
+	 *                                             of turn.
+	 * 41 - 70      String           comment       Associated comment.
+	 * </pre>
 	 * @param line
 	 */
 	private void pdb_TURN_Handler( String line){
@@ -636,32 +633,32 @@ public class PDBFileParser  {
 	}
 
 	/**
-	 Handler for
-	 REVDAT Record format:
-
-	 COLUMNS       DATA TYPE      FIELD         DEFINITION
-	 ----------------------------------------------------------------------------------
-	 1 -  6       Record name    "REVDAT"
-	 8 - 10       Integer        modNum        Modification number.
-	 11 - 12       Continuation   continuation  Allows concatenation of multiple
-	 records.
-	 14 - 22       Date           modDate       Date of modification (or release for
-	 new entries).  This is not repeated
-	 on continuation lines.
-	 24 - 28       String(5)      modId         Identifies this particular
-	 modification.  It links to the
-	 archive used internally by PDB.
-	 This is not repeated on continuation
-	 lines.
-	 32            Integer        modType       An integer identifying the type of
-	 modification.  In case of revisions
-	 with more than one possible modType,
-	 the highest value applicable will be
-	 assigned.
-	 40 - 45       LString(6)     record        Name of the modified record.
-	 47 - 52       LString(6)     record        Name of the modified record.
-	 54 - 59       LString(6)     record        Name of the modified record.
-	 61 - 66       LString(6)     record        Name of the modified record.
+	 * Handler for
+	 * REVDAT Record format:
+	 *
+	 * COLUMNS       DATA TYPE      FIELD         DEFINITION
+	 * ----------------------------------------------------------------------------------
+	 * 1 -  6       Record name    "REVDAT"
+	 * 8 - 10       Integer        modNum        Modification number.
+	 * 11 - 12       Continuation   continuation  Allows concatenation of multiple
+	 * records.
+	 * 14 - 22       Date           modDate       Date of modification (or release for
+	 * new entries).  This is not repeated
+	 * on continuation lines.
+	 * 24 - 28       String(5)      modId         Identifies this particular
+	 * modification.  It links to the
+	 * archive used internally by PDB.
+	 * This is not repeated on continuation
+	 * lines.
+	 * 32            Integer        modType       An integer identifying the type of
+	 * modification.  In case of revisions
+	 * with more than one possible modType,
+	 * the highest value applicable will be
+	 * assigned.
+	 * 40 - 45       LString(6)     record        Name of the modified record.
+	 * 47 - 52       LString(6)     record        Name of the modified record.
+	 * 54 - 59       LString(6)     record        Name of the modified record.
+	 * 61 - 66       LString(6)     record        Name of the modified record.
 	 */
 	private void pdb_REVDAT_Handler(String line) {
 
@@ -736,19 +733,19 @@ public class PDBFileParser  {
 	private void pdb_SEQRES_Handler(String line) {
 			
 		/*
-                 1         2         3         4         5         6         7
-        1234567890123456789012345678901234567890123456789012345678901234567890
-        SEQRES   1 A  376  LYS PRO VAL THR VAL LYS LEU VAL ASP SER GLN ALA THR
-        SEQRES   1 A   21  GLY ILE VAL GLU GLN CYS CYS THR SER ILE CYS SER LEU
-        SEQRES   2 A   21  TYR GLN LEU GLU ASN TYR CYS ASN
-        SEQRES   1 B   30  PHE VAL ASN GLN HIS LEU CYS GLY SER HIS LEU VAL GLU
-        SEQRES   2 B   30  ALA LEU TYR LEU VAL CYS GLY GLU ARG GLY PHE PHE TYR
-        SEQRES   3 B   30  THR PRO LYS ALA
-        SEQRES   1 C   21  GLY ILE VAL GLU GLN CYS CYS THR SER ILE CYS SER LEU
-        SEQRES   2 C   21  TYR GLN LEU GLU ASN TYR CYS ASN
-        SEQRES   1 D   30  PHE VAL ASN GLN HIS LEU CYS GLY SER HIS LEU VAL GLU
-        SEQRES   2 D   30  ALA LEU TYR LEU VAL CYS GLY GLU ARG GLY PHE PHE TYR
-        SEQRES   3 D   30  THR PRO LYS ALA
+		 *          1         2         3         4         5         6         7
+		 * 1234567890123456789012345678901234567890123456789012345678901234567890
+		 * SEQRES   1 A  376  LYS PRO VAL THR VAL LYS LEU VAL ASP SER GLN ALA THR
+		 * SEQRES   1 A   21  GLY ILE VAL GLU GLN CYS CYS THR SER ILE CYS SER LEU
+		 * SEQRES   2 A   21  TYR GLN LEU GLU ASN TYR CYS ASN
+		 * SEQRES   1 B   30  PHE VAL ASN GLN HIS LEU CYS GLY SER HIS LEU VAL GLU
+		 * SEQRES   2 B   30  ALA LEU TYR LEU VAL CYS GLY GLU ARG GLY PHE PHE TYR
+		 * SEQRES   3 B   30  THR PRO LYS ALA
+		 * SEQRES   1 C   21  GLY ILE VAL GLU GLN CYS CYS THR SER ILE CYS SER LEU
+		 * SEQRES   2 C   21  TYR GLN LEU GLU ASN TYR CYS ASN
+		 * SEQRES   1 D   30  PHE VAL ASN GLN HIS LEU CYS GLY SER HIS LEU VAL GLU
+		 * SEQRES   2 D   30  ALA LEU TYR LEU VAL CYS GLY GLU ARG GLY PHE PHE TYR
+		 * SEQRES   3 D   30  THR PRO LYS ALA
 		 */
 
 		String recordName = line.substring(0, 6).trim();
@@ -859,15 +856,15 @@ public class PDBFileParser  {
 	 * The JRNL record contains the primary literature citation that describes the experiment which resulted
 	 * in the deposited coordinate set. There is at most one JRNL reference per entry. If there is no primary
 	 * reference, then there is no JRNL reference. Other references are given in REMARK 1.
-
-    Record Format
-
-    COLUMNS       DATA TYPE     FIELD         DEFINITION
-    -----------------------------------------------------------------------
-    1 -  6       Record name   "JRNL  "
-
-    13 - 70       LString        text         See Details below.
-
+	 * 
+	 * Record Format
+	 *
+	 * COLUMNS       DATA TYPE     FIELD         DEFINITION
+	 * -----------------------------------------------------------------------
+	 * 1 -  6       Record name   "JRNL  "
+	 *
+	 * 13 - 70       LString        text         See Details below.
+	 * 
 	 */
 	private void pdb_JRNL_Handler(String line) {
 		//add the strings to the journalLines
@@ -1106,16 +1103,15 @@ public class PDBFileParser  {
 	 * SOURCE Record format
 	 *
 	 * The SOURCE record specifies the biological and/or chemical source of each biological molecule in the entry. Sources are described by both the common name and the scientific name, e.g., genus and species. Strain and/or cell-line for immortalized cells are given when they help to uniquely identify the biological entity studied.
-Record Format
-
-COLUMNS   DATA TYPE         FIELD          DEFINITION
--------------------------------------------------------------------------------
- 1 -  6   Record name       "SOURCE"
- 9 - 10   Continuation      continuation   Allows concatenation of multiple records.
-11 - 70   Specification     srcName        Identifies the source of the macromolecule in
-           list                            a token: value format.
+	 * Record Format
+	 * 
+	 * COLUMNS   DATA TYPE         FIELD          DEFINITION
+	 * -------------------------------------------------------------------------------
+	 *  1 -  6   Record name       "SOURCE"
+	 *  9 - 10   Continuation      continuation   Allows concatenation of multiple records.
+	 * 11 - 70   Specification     srcName        Identifies the source of the macromolecule in
+	 *            list                            a token: value format.
 	 * @param line the line to be parsed
-
 	 */
 	private void pdb_SOURCE_Handler(String line) {
 		// works in the same way as the pdb_COMPND_Handler.
@@ -1434,27 +1430,27 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	}
 	
 	/** Handler for
-	 CRYST1 Record Format
-	 The CRYST1 record presents the unit cell parameters, space group, and Z value.
-	 If the entry describes a structure determined by a technique other than X-ray crystallography,
-     CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
-
-	 COLUMNS DATA TYPE    FIELD          DEFINITION
-     -------------------------------------------------------------
-      1 - 6  Record name  "CRYST1"
-      7 - 15 Real(9.3)    a              a (Angstroms).
-     16 - 24 Real(9.3)    b              b (Angstroms).
-     25 - 33 Real(9.3)    c              c (Angstroms).
-     34 - 40 Real(7.2)    alpha          alpha (degrees).
-     41 - 47 Real(7.2)    beta           beta (degrees).
-     48 - 54 Real(7.2)    gamma          gamma (degrees).
-     56 - 66 LString      sGroup         Space group.
-     67 - 70 Integer      z              Z value.
-
+	 * CRYST1 Record Format
+	 * The CRYST1 record presents the unit cell parameters, space group, and Z value.
+	 * If the entry describes a structure determined by a technique other than X-ray crystallography,
+	 * CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+	 *
+	 * COLUMNS DATA TYPE    FIELD          DEFINITION
+	 * -------------------------------------------------------------
+	 *  1 - 6  Record name  "CRYST1"
+	 *  7 - 15 Real(9.3)    a              a (Angstroms).
+	 * 16 - 24 Real(9.3)    b              b (Angstroms).
+	 * 25 - 33 Real(9.3)    c              c (Angstroms).
+	 * 34 - 40 Real(7.2)    alpha          alpha (degrees).
+	 * 41 - 47 Real(7.2)    beta           beta (degrees).
+	 * 48 - 54 Real(7.2)    gamma          gamma (degrees).
+	 * 56 - 66 LString      sGroup         Space group.
+	 * 67 - 70 Integer      z              Z value.
+	 *
 	 */
 
 	private void pdb_CRYST1_Handler(String line) {    
-        // for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 63
+		// for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 63
 		if (line.length() < 63) {
 			logger.warn("CRYST1 record has fewer than 63 columns: will ignore it");
 			return;
@@ -1505,9 +1501,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			crystallographicInfo.setCrystalCell(xtalCell);
 		}
 		
-        SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-        if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
-        crystallographicInfo.setSpaceGroup(sg);
+		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
+		if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+		crystallographicInfo.setSpaceGroup(sg);
 	}
 
 	/**
@@ -1612,31 +1608,28 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 Handler for
 	 ATOM Record Format
 	 *
-	 <pre>
-         ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
+	 * <pre>
+	 * ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
 	 *
-	 COLUMNS        DATA TYPE       FIELD         DEFINITION
-	 ---------------------------------------------------------------------------------
-	 1 -  6        Record name     "ATOM  "
-	 7 - 11        Integer         serial        Atom serial number.
-	 13 - 16        Atom            name          Atom name.
-	 17             Character       altLoc        Alternate location indicator.
-	 18 - 20        Residue name    resName       Residue name.
-	 22             Character       chainID       Chain identifier.
-	 23 - 26        Integer         resSeq        Residue sequence number.
-	 27             AChar           iCode         Code for insertion of residues.
-	 31 - 38        Real(8.3)       x             Orthogonal coordinates for X in
-	 Angstroms.
-	 39 - 46        Real(8.3)       y             Orthogonal coordinates for Y in
-	 Angstroms.
-	 47 - 54        Real(8.3)       z             Orthogonal coordinates for Z in
-	 Angstroms.
-	 55 - 60        Real(6.2)       occupancy     Occupancy.
-	 61 - 66        Real(6.2)       tempFactor    Temperature factor.
-	 73 - 76        LString(4)      segID         Segment identifier, left-justified.
-	 77 - 78        LString(2)      element       Element symbol, right-justified.
-	 79 - 80        LString(2)      charge        Charge on the atom.
-	 </pre>
+	 * COLUMNS        DATA TYPE       FIELD         DEFINITION
+	 * ---------------------------------------------------------------------------------
+	 * 1 -  6        Record name     "ATOM  "
+	 * 7 - 11        Integer         serial        Atom serial number.
+	 * 13 - 16        Atom            name          Atom name.
+	 * 17             Character       altLoc        Alternate location indicator.
+	 * 18 - 20        Residue name    resName       Residue name.
+	 * 22             Character       chainID       Chain identifier.
+	 * 23 - 26        Integer         resSeq        Residue sequence number.
+	 * 27             AChar           iCode         Code for insertion of residues.
+	 * 31 - 38        Real(8.3)       x             Orthogonal coordinates for X in Angstroms.
+	 * 39 - 46        Real(8.3)       y             Orthogonal coordinates for Y in Angstroms.
+	 * 47 - 54        Real(8.3)       z             Orthogonal coordinates for Z in Angstroms.
+	 * 55 - 60        Real(6.2)       occupancy     Occupancy.
+	 * 61 - 66        Real(6.2)       tempFactor    Temperature factor.
+	 * 73 - 76        LString(4)      segID         Segment identifier, left-justified.
+	 * 77 - 78        LString(2)      element       Element symbol, right-justified.
+	 * 79 - 80        LString(2)      charge        Charge on the atom.
+	 * </pre>
 	 */
 	private void  pdb_ATOM_Handler(String line)	{
 		// build up chains first.
@@ -2141,33 +2134,33 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 	/**
-    COLUMNS       DATA TYPE          FIELD          DEFINITION
-    ----------------------------------------------------------------
-     1 - 6        Record name        "DBREF "
-     8 - 11       IDcode             idCode         ID code of this entry.
-    13            Character          chainID        Chain identifier.
-    15 - 18       Integer            seqBegin       Initial sequence number
-                                                    of the PDB sequence segment.
-    19            AChar              insertBegin    Initial insertion code
-                                                    of the PDB sequence segment.
-    21 - 24       Integer            seqEnd         Ending sequence number
-                                                    of the PDB sequence segment.
-    25            AChar              insertEnd      Ending insertion code
-                                                    of the PDB sequence segment.
-    27 - 32       LString            database       Sequence database name.
-    34 - 41       LString            dbAccession    Sequence database accession code.
-    43 - 54      LString            dbIdCode        Sequence database
-                                                    identification code.
-    56 - 60      Integer            dbseqBegin      Initial sequence number of the
-                                                    database seqment.
-    61           AChar              idbnsBeg        Insertion code of initial residue
-                                                    of the segment, if PDB is the
-                                                    reference.
-    63 - 67      Integer            dbseqEnd        Ending sequence number of the
-                                                    database segment.
-    68           AChar              dbinsEnd        Insertion code of the ending
-                                                    residue of the segment, if PDB is
-                                                    the reference.
+	 * COLUMNS       DATA TYPE          FIELD          DEFINITION
+	 * ----------------------------------------------------------------
+	 *  1 - 6        Record name        "DBREF "
+	 *  8 - 11       IDcode             idCode         ID code of this entry.
+	 * 13            Character          chainID        Chain identifier.
+	 * 15 - 18       Integer            seqBegin       Initial sequence number
+	 *                                                 of the PDB sequence segment.
+	 * 19            AChar              insertBegin    Initial insertion code
+	 *                                                 of the PDB sequence segment.
+	 * 21 - 24       Integer            seqEnd         Ending sequence number
+	 *                                                 of the PDB sequence segment.
+	 * 25            AChar              insertEnd      Ending insertion code
+	 *                                                 of the PDB sequence segment.
+	 * 27 - 32       LString            database       Sequence database name.
+	 * 34 - 41       LString            dbAccession    Sequence database accession code.
+	 * 43 - 54      LString            dbIdCode        Sequence database
+	 *                                                 identification code.
+	 * 56 - 60      Integer            dbseqBegin      Initial sequence number of the
+	 *                                                 database seqment.
+	 * 61           AChar              idbnsBeg        Insertion code of initial residue
+	 *                                                 of the segment, if PDB is the
+	 *                                                 reference.
+	 * 63 - 67      Integer            dbseqEnd        Ending sequence number of the
+	 *                                                 database segment.
+	 * 68           AChar              dbinsEnd        Insertion code of the ending
+	 *                                                 residue of the segment, if PDB is
+	 *                                                 the reference.
 	 */
 	private void pdb_DBREF_Handler(String line){
 		
@@ -2215,38 +2208,40 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * For each het group that appears in the entry, the wwPDB checks that the corresponding HET, HETNAM, HETSYN, FORMUL, HETATM, and CONECT records appear, if applicable. The HET record is generated automatically using the Chemical Component Dictionary and information from the HETATM records.
 
 	 * Record Format
-
-            COLUMNS       DATA  TYPE     FIELD         DEFINITION
-            ---------------------------------------------------------------------------------
-             1 -  6       Record name   "HET   "
-             8 - 10       LString(3)    hetID          Het identifier, right-justified.
-            13            Character     ChainID        Chain  identifier.
-            14 - 17       Integer       seqNum         Sequence  number.
-            18            AChar         iCode          Insertion  code.
-            21 - 25       Integer       numHetAtoms    Number of HETATM records for the group
-                                                       present in the entry.
-            31 - 70       String        text           Text describing Het group.
-
-            Each unique hetID represents a unique molecule.
-
-            Relationships to Other Record Types
-
-            For each het group that appears in the entry, there must be corresponding HET, HETNAM, HETSYN, FORMUL,HETATM, and CONECT records. LINK records may also be created.
-
-            Example
-
-                     1         2         3         4         5         6         7         8
-            12345678901234567890123456789012345678901234567890123456789012345678901234567890
-            HET    TRS    975       8
-
-            HET    UDP  A1457      25
-            HET    B3P  A1458      19
-
-            HET    NAG  Y   3      15
-            HET    FUC  Y   4      10
-            HET    NON  Y   5      12
-            HET    UNK  A 161       1
-
+	 * 
+	 * <pre>
+	 * COLUMNS       DATA  TYPE     FIELD         DEFINITION
+	 * ---------------------------------------------------------------------------------
+	 *  1 -  6       Record name   "HET   "
+	 *  8 - 10       LString(3)    hetID          Het identifier, right-justified.
+	 * 13            Character     ChainID        Chain  identifier.
+	 * 14 - 17       Integer       seqNum         Sequence  number.
+	 * 18            AChar         iCode          Insertion  code.
+	 * 21 - 25       Integer       numHetAtoms    Number of HETATM records for the group
+	 *                                            present in the entry.
+	 * 31 - 70       String        text           Text describing Het group.
+	 *
+	 * Each unique hetID represents a unique molecule.
+	 *
+	 * Relationships to Other Record Types
+	 *
+	 * For each het group that appears in the entry, there must be corresponding HET, HETNAM, HETSYN, FORMUL,HETATM, and CONECT records. LINK records may also be created.
+	 *
+	 * Example
+	 *
+	 *          1         2         3         4         5         6         7         8
+	 * 12345678901234567890123456789012345678901234567890123456789012345678901234567890
+	 * HET    TRS    975       8
+	 *
+	 * HET    UDP  A1457      25
+	 * HET    B3P  A1458      19
+	 *
+	 * HET    NAG  Y   3      15
+	 * HET    FUC  Y   4      10
+	 * HET    NON  Y   5      12
+	 * HET    UNK  A 161       1
+	 * </pre>
+	 * 
 	 * Heterogen sections are HET, HETNAM, HETSYN, FORMUL
 	 * @see http://www.wwpdb.org/documentation/format32/sect4.html
 	 */

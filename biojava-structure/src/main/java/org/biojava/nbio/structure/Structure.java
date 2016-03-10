@@ -64,101 +64,101 @@ import java.util.Map;
  * </p>
  *
  *
-<hr/>
-</hr>
+ * <hr/>
+ * </hr>
  * <p>
  * Q: How can I get a Structure object from a PDB file?
  * </p>
  * <p>
  * A:
- </p>
+ * </p>
  * <pre>
-public {@link Structure} loadStructure(String pathToPDBFile){
-		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
-
-		{@link Structure} structure = null;
-		try{
-			structure = pdbreader.getStructure(pathToPDBFile);
-			System.out.println(structure);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return structure;
-	}
- </pre>
-
-<hr>
-</hr>
-<p>
-Q: How can I calculate Phi and Psi angles of AminoAcids?
-</p>
-<p>
-A:
-</p>
-<pre>
-public void calcPhiPsi({@link Structure} structure){
-
-
-		// get the first chain from the structure
-
-		{@link Chain} chain  = structure.getChain(0);
-
-		// A protein chain consists of a number of groups. These can be either
-		// {@link AminoAcid}, {@link HetatomImpl Hetatom} or {@link NucleotideImpl Nucleotide} groups.
-		//
-		// Note: BioJava provides access to both the ATOM and SEQRES data in a PDB file.
-		// since we are interested in doing calculations here, we only request the groups
-		// from the ATOM records
-
-		//  get the Groups of the chain that are AminoAcids.
-		List<Group> groups = chain.getAtomGroups(GroupType.AMINOACID);
-
-		{@link AminoAcid} a;
-		{@link AminoAcid} b;
-		{@link AminoAcid} c ;
-
-		for ( int i=0; i < groups.size(); i++){
-
-			// since we requested only groups of type AMINOACID they will always be amino acids
-			// Nucleotide and Hetatom groups will not be present in the groups list.
-
-			b = ({@link AminoAcid})groups.get(i);
-
-			double phi =360.0;
-			double psi =360.0;
-
-			if ( i > 0) {
-				a = ({@link AminoAcid})groups.get(i-1) ;
-				try {
-
-					// the Calc class provides utility methods for various calculations on
-					// structures, groups and atoms
-
-					phi = {@link Calc}.getPhi(a,b);
-				} catch ({@link StructureException} e){
-					e.printStackTrace();
-					phi = 360.0 ;
-				}
-			}
-			if ( i < groups.size()-1) {
-				c = ({@link AminoAcid})groups.get(i+1) ;
-				try {
-					psi = {@link Calc}.getPsi(b,c);
-				}catch ({@link StructureException} e){
-					e.printStackTrace();
-					psi = 360.0 ;
-				}
-			}
-
-			System.out.print(b.getPDBCode() + " " + b.getPDBName() + ":"  );
-
-			System.out.println(String.format("\tphi: %+7.2f psi: %+7.2f", phi, psi));
-
-		}
-</pre>
-<hr>
-</hr>
-
+ * public {@link Structure} loadStructure(String pathToPDBFile){
+ * 		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
+ * 
+ * 		{@link Structure} structure = null;
+ * 		try{
+ * 			structure = pdbreader.getStructure(pathToPDBFile);
+ * 			System.out.println(structure);
+ * 		} catch (IOException e) {
+ * 			e.printStackTrace();
+ * 		}
+ * 		return structure;
+ * 	}
+ *  </pre>
+ * 
+ * <hr>
+ * </hr>
+ * <p>
+ * Q: How can I calculate Phi and Psi angles of AminoAcids?
+ * </p>
+ * <p>
+ * A:
+ * </p>
+ * <pre>
+ * public void calcPhiPsi({@link Structure} structure){
+ * 
+ * 
+ * 		// get the first chain from the structure
+ * 
+ * 		{@link Chain} chain  = structure.getChain(0);
+ * 
+ * 		// A protein chain consists of a number of groups. These can be either
+ * 		// {@link AminoAcid}, {@link HetatomImpl Hetatom} or {@link NucleotideImpl Nucleotide} groups.
+ * 		//
+ * 		// Note: BioJava provides access to both the ATOM and SEQRES data in a PDB file.
+ * 		// since we are interested in doing calculations here, we only request the groups
+ * 		// from the ATOM records
+ * 
+ * 		//  get the Groups of the chain that are AminoAcids.
+ * 		List<Group> groups = chain.getAtomGroups(GroupType.AMINOACID);
+ * 
+ * 		{@link AminoAcid} a;
+ * 		{@link AminoAcid} b;
+ * 		{@link AminoAcid} c ;
+ * 
+ * 		for ( int i=0; i < groups.size(); i++){
+ * 
+ * 			// since we requested only groups of type AMINOACID they will always be amino acids
+ * 			// Nucleotide and Hetatom groups will not be present in the groups list.
+ * 
+ * 			b = ({@link AminoAcid})groups.get(i);
+ * 
+ * 			double phi =360.0;
+ * 			double psi =360.0;
+ * 
+ * 			if ( i > 0) {
+ * 				a = ({@link AminoAcid})groups.get(i-1) ;
+ * 				try {
+ * 
+ * 					// the Calc class provides utility methods for various calculations on
+ * 					// structures, groups and atoms
+ * 
+ * 					phi = {@link Calc}.getPhi(a,b);
+ * 				} catch ({@link StructureException} e){
+ * 					e.printStackTrace();
+ * 					phi = 360.0 ;
+ * 				}
+ * 			}
+ * 			if ( i < groups.size()-1) {
+ * 				c = ({@link AminoAcid})groups.get(i+1) ;
+ * 				try {
+ * 					psi = {@link Calc}.getPsi(b,c);
+ * 				}catch ({@link StructureException} e){
+ * 					e.printStackTrace();
+ * 					psi = 360.0 ;
+ * 				}
+ * 			}
+ * 
+ * 			System.out.print(b.getPDBCode() + " " + b.getPDBName() + ":"  );
+ * 
+ * 			System.out.println(String.format("\tphi: %+7.2f psi: %+7.2f", phi, psi));
+ * 
+ * 		}
+ * </pre>
+ * <hr>
+ * </hr>
+ *
  *
  *
  *

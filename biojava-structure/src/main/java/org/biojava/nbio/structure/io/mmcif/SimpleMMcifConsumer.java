@@ -1469,9 +1469,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	
 	@Override
 	public void newSymmetry(Symmetry symmetry) {
-        String spaceGroup = symmetry.getSpace_group_name_H_M();
+		String spaceGroup = symmetry.getSpace_group_name_H_M();
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-        if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+		if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
 
 		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg); 
 	}
@@ -1480,7 +1480,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		structNcsOper.add(sNcsOper);
 	}
-	
+
 	@Override
 	public void newStructRef(StructRef sref) {
 		logger.debug(sref.toString());
@@ -1499,25 +1499,26 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-	/** create a DBRef record from the StrucRefSeq record:
-	 *  <pre>
-  PDB record 					DBREF
-  Field Name 					mmCIF Data Item
-  Section   	  				n.a.
-  PDB_ID_Code   	  			_struct_ref_seq.pdbx_PDB_id_code
-  Strand_ID   	 			 	_struct_ref_seq.pdbx_strand_id
-  Begin_Residue_Number   	  	_struct_ref_seq.pdbx_auth_seq_align_beg
-  Begin_Ins_Code   	  			_struct_ref_seq.pdbx_seq_align_beg_ins_code
-  End_Residue_Number   	  		_struct_ref_seq.pdbx_auth_seq_align_end
-  End_Ins_Code   	  			_struct_ref_seq.pdbx_seq_align_end_ins_code
-  Database   	  				_struct_ref.db_name
-  Database_Accession_No   	  	_struct_ref_seq.pdbx_db_accession
-  Database_ID_Code   	  		_struct_ref.db_code
-  Database_Begin_Residue_Number	_struct_ref_seq.db_align_beg
-  Databaes_Begin_Ins_Code   	_struct_ref_seq.pdbx_db_align_beg_ins_code
-  Database_End_Residue_Number  	_struct_ref_seq.db_align_end
-  Databaes_End_Ins_Code   	  	_struct_ref_seq.pdbx_db_align_end_ins_code
-  </pre>
+	/**
+	 * create a DBRef record from the StrucRefSeq record:
+	 * <pre>
+	 * PDB record                    DBREF
+	 * Field Name                    mmCIF Data Item
+	 * Section                       n.a.
+	 * PDB_ID_Code                   _struct_ref_seq.pdbx_PDB_id_code
+	 * Strand_ID                     _struct_ref_seq.pdbx_strand_id
+	 * Begin_Residue_Number          _struct_ref_seq.pdbx_auth_seq_align_beg
+	 * Begin_Ins_Code                _struct_ref_seq.pdbx_seq_align_beg_ins_code
+	 * End_Residue_Number            _struct_ref_seq.pdbx_auth_seq_align_end
+	 * End_Ins_Code                  _struct_ref_seq.pdbx_seq_align_end_ins_code
+	 * Database                      _struct_ref.db_name
+	 * Database_Accession_No         _struct_ref_seq.pdbx_db_accession
+	 * Database_ID_Code              _struct_ref.db_code
+	 * Database_Begin_Residue_Number _struct_ref_seq.db_align_beg
+	 * Databaes_Begin_Ins_Code       _struct_ref_seq.pdbx_db_align_beg_ins_code
+	 * Database_End_Residue_Number   _struct_ref_seq.db_align_end
+	 * Databaes_End_Ins_Code         _struct_ref_seq.pdbx_db_align_end_ins_code
+	 * </pre>
 	 *
 	 *
 	 */
@@ -1618,15 +1619,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	//}
 
 
-	/** Data items in the ENTITY_SRC_GEN category record details of
-               the source from which the entity was obtained in cases
-               where the source was genetically manipulated.  The
-               following are treated separately:  items pertaining to the tissue
-               from which the gene was obtained, items pertaining to the host
-               organism for gene expression and items pertaining to the actual
-               producing organism (plasmid).
+	/**
+	 * Data items in the ENTITY_SRC_GEN category record details of
+	 * the source from which the entity was obtained in cases
+	 * where the source was genetically manipulated.  The
+	 * following are treated separately:  items pertaining to the tissue
+	 * from which the gene was obtained, items pertaining to the host
+	 * organism for gene expression and items pertaining to the actual
+	 * producing organism (plasmid).
 	 */
-
 	@Override
 	public void newEntitySrcGen(EntitySrcGen entitySrcGen){
 
@@ -1910,7 +1911,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 						chain_id = siteGen.getLabel_asym_id();
 				}
 				else {
-				        chain_id = siteGen.getAuth_asym_id(); // ChainID
+					chain_id = siteGen.getAuth_asym_id(); // ChainID
 				}
 				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
 

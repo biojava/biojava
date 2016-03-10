@@ -266,9 +266,9 @@ public class Test1a4w extends TestCase{
 
 	}
 
-        public void testGetHetGroups() {
+	public void testGetHetGroups() {
 //            try {
-                Structure struct = structure;
+		Structure struct = structure;
 
 //                HET    TYS  I 363      16
 //                HET     NA  H 541       1
@@ -293,15 +293,15 @@ public class Test1a4w extends TestCase{
 //                FORMUL   7  KTH    C4 H3 N O S
 //                FORMUL   8  HOH   *157(H2 O)
 
-                List<Group> hets = struct.getHetGroups();
-           
-                assertEquals(7, hets.size());
+		List<Group> hets = struct.getHetGroups();
+	   
+		assertEquals(7, hets.size());
 
-                
+		
 
 
 //            } catch (Exception e) {
 //                fail(e.getMessage());
 //            }
-        }
+	}
 }
