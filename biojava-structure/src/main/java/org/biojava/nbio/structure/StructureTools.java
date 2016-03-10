@@ -700,7 +700,14 @@ public class StructureTools {
 			Group parentN = (Group) parentG.clone();
 
 			newCA[apos] = parentN.getAtom(a.getName());
-			newChain.addGroup(parentN);
+			try {
+				// if the group doesn't exist yet, this produces a StructureException
+				newChain.getGroupByPDB(parentN.getResidueNumber()); 
+			} catch (StructureException e) {
+				// the group doesn't exist yet in the newChain, let's add it
+				newChain.addGroup(parentN);	
+			}
+			
 		}
 		return newCA;
 	}
