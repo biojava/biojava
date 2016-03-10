@@ -64,7 +64,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	/** 
+	/**
 	 * Returns the O3' atom if present, otherwise null
 	 * @return O3' atom or null
 	 */
@@ -74,7 +74,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	/** 
+	/**
 	 * Returns the O5' atom if present, otherwise null
 	 * @return O5' atom or null
 	 */
@@ -84,7 +84,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	/** 
+	/**
 	 * Returns the P atom if present, otherwise null
 	 * @return P atom or null
 	 */

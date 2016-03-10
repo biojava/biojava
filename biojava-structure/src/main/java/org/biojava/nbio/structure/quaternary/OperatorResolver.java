@@ -25,12 +25,12 @@ import java.util.List;
 
 
 /** A class to resolve the operators for transformations
- * 
+ *
  * @author Peter Rose
  *
  */
 public class OperatorResolver {
-	
+
 	/**
 	 * Unary operator expressions are parsed stored unary operations.
 	 * For example the operator expression "(1,2,3,4)" is stored as a list 1,2,3,4
@@ -43,7 +43,7 @@ public class OperatorResolver {
 	 */
 	private List<OrderedPair<String>> binaryOperators = Collections.emptyList();
 
-	
+
 	/**
 	 * Parses the operator expression and save the operators as a list
 	 * of unary or binary operators (i.e. matrix multiplication, see below).
@@ -51,17 +51,17 @@ public class OperatorResolver {
 	 * matrices from the operations list.
 	 * An operation expression can be a comma-separated list 1, 5, 9,
 	 * a dash-delimited range 1-60 or a matrix multiplication involving two
-	 * or more lists or ranges. For instance, (X0)(1-20) specifies the 
-	 * portion of the X174 procapsid crystal asymmetric unit belonging to 
+	 * or more lists or ranges. For instance, (X0)(1-20) specifies the
+	 * portion of the X174 procapsid crystal asymmetric unit belonging to
 	 * the first independent virus particle and corresponds
 	 * to the 20 transformations [X0][1], [X0][2], ... , [X0][20].
 	 * See C. Lawson, Acta Cryst., D64, 874-882, 2008.
-	 *   
+	 *
 	 * @param operatorExpression the operator expression to be parsed
 	 */
 	public  void parseOperatorExpressionString(String operatorExpression) throws IllegalArgumentException {
 		String expression = operatorExpression.trim();
-		
+
 		// remove single quotes, i.e. '(1-49)' in 1CGM
 		expression = expression.replaceAll("'", "");
 
@@ -70,12 +70,12 @@ public class OperatorResolver {
 		} else {
 			binaryOperators = BioAssemblyTools.parseBinaryOperatorExpression(expression);
 		}
-		
+
 		//System.out.println("OperatorResolver: unary: " + unaryOperators + " | binary: " + binaryOperators);
 	}
 
 
-	
+
 
 
 	public void setUnaryOperators(List<String> unaryOperators) {
@@ -83,13 +83,13 @@ public class OperatorResolver {
 	}
 
 
-	
+
 
 
 	public void setBinaryOperators(List<OrderedPair<String>> binaryOperators) {
 		this.binaryOperators = binaryOperators;
 	}
-	
+
 	/**
 	 * Returns a list of operators for this assembly. The operators
 	 * refer to the transformations that should be applied to
@@ -103,8 +103,8 @@ public class OperatorResolver {
 	/**
 	 * Returns a list of operators for this assembly. The operators
 	 * refer to the transformations that should be applied to
-	 * the asym ids to generate this macromolecular assembly. 
-	 * Each ordered pair refers to the multiplication 
+	 * the asym ids to generate this macromolecular assembly.
+	 * Each ordered pair refers to the multiplication
 	 * of the two transformation matrices in the
 	 * pdbx_structure_oper_list category.
 	 * @return the binary operators for this assembly
@@ -112,6 +112,6 @@ public class OperatorResolver {
 	public List<OrderedPair<String>> getBinaryOperators() {
 		return binaryOperators;
 	}
-	
-	
+
+
 }

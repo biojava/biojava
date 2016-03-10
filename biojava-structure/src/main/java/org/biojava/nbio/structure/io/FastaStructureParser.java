@@ -41,16 +41,16 @@ import java.util.LinkedHashMap;
  * Reads a protein sequence from a fasta file and attempts to match it to a
  * 3D structure. Any gaps ('-') in the fasta file are preserved as null atoms in
  * the output, allowing structural alignments to be read from fasta files.
- * 
+ *
  * <p>Structures are loaded from an AtomCache. For this to work, the accession
  * for each protein should be parsed from the fasta header line into a form
  * understood by {@link AtomCache#getStructure(String)}.
- * 
+ *
  * <p>Lowercase letters are sometimes used to specify unaligned residues.
  * This information can be preserved by using a CasePreservingSequenceCreator,
- * which allows the case of residues to be accessed through the 
+ * which allows the case of residues to be accessed through the
  * {@link ProteinSequence#getUserCollection()} method.
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -59,13 +59,13 @@ public class FastaStructureParser {
 	// inputs
 	private FastaReader<ProteinSequence, AminoAcidCompound> reader;
 	private AtomCache cache;
-	
+
 	// cache processed data
 	private String[] accessions;
 	private ProteinSequence[] sequences;
 	private Structure[] structures;
 	private ResidueNumber[][] residues;
-	
+
 	public FastaStructureParser(InputStream is,
 			SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser,
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
@@ -74,7 +74,7 @@ public class FastaStructureParser {
 		this(new FastaReader<ProteinSequence, AminoAcidCompound>(
 				is, headerParser, sequenceCreator),cache);
 	}
-	
+
 	public FastaStructureParser(File file,
 			SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser,
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
@@ -83,7 +83,7 @@ public class FastaStructureParser {
 		this(new FastaReader<ProteinSequence, AminoAcidCompound>(
 				file, headerParser, sequenceCreator), cache);
 	}
-	
+
 	public FastaStructureParser(FastaReader<ProteinSequence, AminoAcidCompound> reader,
 			AtomCache cache) {
 		this.reader = reader;
@@ -93,24 +93,24 @@ public class FastaStructureParser {
 		this.structures = null;
 		this.residues = null;
 	}
-	
+
 
 	/**
 	 * Parses the fasta file and loads it into memory.
-	 * 
+	 *
 	 * Information can be subsequently accessed through
 	 * {@link #getSequences()},
 	 * {@link #getStructures()},
 	 * {@link #getResidues()}, and
 	 * {@link #getAccessions()}.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public void process() throws IOException, StructureException { 
+	public void process() throws IOException, StructureException {
 		if(sequences == null) { // only process once, then return cached values
 			LinkedHashMap<String, ProteinSequence> sequenceMap = reader.process();
-			
+
 			sequences = sequenceMap.values().toArray(new ProteinSequence[0]);
 			accessions = new String[sequences.length];
 			structures = new Structure[sequences.length];
@@ -119,7 +119,7 @@ public class FastaStructureParser {
 			// Match each sequence  to a series of PDB Residue numbers
 			for(int i=0;i<sequences.length;i++) {
 				accessions[i] = sequences[i].getAccession().getID();
-								
+
 				//System.out.println("Fetching "+accession);
 				structures[i] = cache.getStructure(accessions[i]);
 
@@ -129,7 +129,7 @@ public class FastaStructureParser {
 			}
 		}
 	}
-	
+
 
 	/**
 	 * Gets the protein sequences read from the Fasta file.
@@ -144,13 +144,13 @@ public class FastaStructureParser {
 	/**
 	 * Gets the protein structures mapped from the Fasta file.
 	 * Returns null if {@link #process()} has not been called.
-	 * @return An array of Structures for each protein 
+	 * @return An array of Structures for each protein
 	 *  in the fasta file, or null if process() hasn't been called.
 	 */
 	public Structure[] getStructures() {
 		return structures;
 	}
-	
+
 	/**
 	 * For each residue in the fasta file, return the ResidueNumber in the
 	 * corresponding structure. If the residue cannot be found in the structure,
@@ -163,11 +163,11 @@ public class FastaStructureParser {
 	public ResidueNumber[][] getResidues() {
 		return residues;
 	}
-	
+
 	/**
 	 * Gets the protein accessions mapped from the Fasta file.
 	 * Returns null if {@link #process()} has not been called.
-	 * @return An array of Structures for each protein 
+	 * @return An array of Structures for each protein
 	 *  in the fasta file, or null if process() hasn't been called.
 	 */
 	public String[] getAccessions() {

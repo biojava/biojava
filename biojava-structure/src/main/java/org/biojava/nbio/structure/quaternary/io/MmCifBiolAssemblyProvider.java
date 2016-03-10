@@ -36,67 +36,67 @@ import java.util.List;
 
 public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
-	private MmCifPDBBiolAssemblyProvider provider; 
-	
+	private MmCifPDBBiolAssemblyProvider provider;
+
 	// no initialisation here, this gives an opportunity to setAtomCache to initialise it
 	private AtomCache cache;
-	
+
 	public MmCifBiolAssemblyProvider(){
 		provider  = new MmCifPDBBiolAssemblyProvider();
 	}
-	
+
 	@Override
 	public Structure getAsymUnit(String pdbId){
-	 
+
 		provider.setPdbId(pdbId);
-		
+
 		Structure s1 = provider.getAsymUnit();
 		return s1;
 	}
-	
+
 	@Override
 	public void setAsymUnit(Structure s){
 		provider.setAsymUnit(s);
 	}
-	
+
 	@Override
 	public List<BiologicalAssemblyTransformation> getBioUnitTransformationList(
 			String pdbId, int biolAssemblyNr) {
-		
+
 
 		provider.setPdbId(pdbId);
 
 		List<PdbxStructAssembly> psas= provider.getPdbxStructAssemblies();
-		
+
 		PdbxStructAssembly psa = null;
 		if ( psas.size() >= biolAssemblyNr ){
 			psa = psas.get(biolAssemblyNr -1);
 		} else {
 			throw new IllegalArgumentException("Requested not existing biolAssemblyNr");
-			
+
 		}
 
 		// we start counting at 1!
 		//PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr-1) ;
-		
+
 		List<PdbxStructAssemblyGen> psags = provider.getPdbxStructAssemblyGen(biolAssemblyNr-1);
-				
+
 		if ( psa == null || psags == null) {
 			return null;
 		}
 		//System.out.println(psa);
 		//System.out.println(psags);
-		
+
 		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
 		//System.out.println(operators);
-		
-		
-		/** 
+
+
+		/**
 		 * Now we start to rebuild the quaternary structure
 		 */
-		
+
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
-		
+
 		// these are the transformations that need to be applied to our model
 		List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, operators);
 		//System.out.println(transformations);
@@ -105,9 +105,9 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
 	@Override
 	public int getNrBiolAssemblies(String pdbId) {
-		
+
 		provider.setPdbId(pdbId);
-		
+
 		return provider.getNrBiolAssemblies();
 	}
 
@@ -116,53 +116,53 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
 
 		provider.setPdbId(pdbId);
-		
+
 		return provider.hasBiolAssembly();
 	}
-	
+
 	public Structure getBiolAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
 
-		
+
 		provider.setPdbId(pdbId);
-		
+
 		if ( ! provider.hasBiolAssembly()){
 			return null;
 		}
-				
+
 		if (  provider.getNrBiolAssemblies() <= biolAssemblyNr){
 			return null;
 		}
 
 		// First we read the required data from wherever we get it from (configured in the factory)
 		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr) ;
-		
+
 		List<PdbxStructAssemblyGen> psags = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
-		
-		
+
+
 		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
-		
-		
+
+
 		// now we start to rebuild the quaternary structure
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
-		
+
 		// these are the transformations that need to be applied to our model
 		ArrayList<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, operators);
-		
-		
-		
+
+
+
 		Structure asymUnit = null;
-		
+
 		if ( provider instanceof MmCifPDBBiolAssemblyProvider){
 			MmCifPDBBiolAssemblyProvider mmcifprov = provider;
 			asymUnit = mmcifprov.getAsymUnit();
 		} else {
-			
+
 			// how to request internal chain IDs?
-			
+
 			asymUnit = StructureIO.getStructure(pdbId);
-			
+
 		}
-						
+
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations);
 	}
 

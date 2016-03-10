@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 30, 2010
- * Author: ap3 
+ * Author: ap3
  *
  */
 
@@ -38,127 +38,127 @@ import java.awt.*;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
-public class ScopSelectPanel 
+public class ScopSelectPanel
 extends JPanel
 implements StructurePairSelector
 {
 
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 757947454156959178L;
-   JAutoSuggest dom1;
-   JAutoSuggest dom2;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 757947454156959178L;
+	JAutoSuggest dom1;
+	JAutoSuggest dom2;
 
-   //private static final Logger logger = LoggerFactory.getLogger(ScopSelectPanel.class);
-   
-   public ScopSelectPanel(){
-      
-     this(true);
-   }
-   
-   public ScopSelectPanel(boolean show2boxes){
-	   Box vBox = Box.createVerticalBox();
-	      
-	      //dom1 = new JTextField(10);
-	      //dom2 = new JTextField(10);
-	      
-	      AutoSuggestProvider autoSuggesP = new SCOPAutoSuggestProvider();
-			
-	      dom1 = new JAutoSuggest(10);		
-	      dom1.setAutoSuggestProvider(autoSuggesP);
-	      
-	      dom2 = new JAutoSuggest(10);
-	      dom2.setAutoSuggestProvider(autoSuggesP);
-	            
-	      Box b1 = getDomainPanel(1,dom1);
-	      Box b2 = getDomainPanel(2,dom2);
-	      
-	      
-	      vBox.add(b1);
-	      if ( show2boxes)
-	    	  vBox.add(b2);
-	      
-	      this.add(vBox);
-   }
-   
-   private Box getDomainPanel(int pos ,JTextField f){
+	//private static final Logger logger = LoggerFactory.getLogger(ScopSelectPanel.class);
 
-      //JPanel panel = new JPanel();
-      //panel.setBorder(BorderFactory.createLineBorder(Color.black));
+	public ScopSelectPanel(){
 
-      JLabel l01 = new JLabel("SCOP or domain id:");
+		this(true);
+	}
 
-      //panel.add(l01);
-      Box hBox = Box.createHorizontalBox();
-      hBox.add(Box.createGlue());
-      hBox.add(l01);
+	public ScopSelectPanel(boolean show2boxes){
+		Box vBox = Box.createVerticalBox();
 
-      JLabel l11 = new JLabel(pos + ":");
-      f.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
-      f.setToolTipText("Provide SCOP ID here. Example: d1zyma1");
-      hBox.add(l11);
-      hBox.add(Box.createVerticalGlue());
-      hBox.add(f, BorderLayout.CENTER);
-      hBox.add(Box.createGlue());
-      
+		//dom1 = new JTextField(10);
+		//dom2 = new JTextField(10);
 
-      //hBox21.add(Box.createGlue());
+		AutoSuggestProvider autoSuggesP = new SCOPAutoSuggestProvider();
 
-      //panel.add(hBox21);
+		dom1 = new JAutoSuggest(10);
+		dom1.setAutoSuggestProvider(autoSuggesP);
+
+		dom2 = new JAutoSuggest(10);
+		dom2.setAutoSuggestProvider(autoSuggesP);
+
+		Box b1 = getDomainPanel(1,dom1);
+		Box b2 = getDomainPanel(2,dom2);
 
 
+		vBox.add(b1);
+		if ( show2boxes)
+			vBox.add(b2);
 
-      return hBox;
-  }
-   
-   @Override
-public Structure getStructure1() throws StructureException
-   {
-	   String scop1 = dom1.getText();
-      return getStructure(scop1);
-   }
+		this.add(vBox);
+	}
 
-   @Override
-public Structure getStructure2() throws StructureException
-   {
-      return getStructure(dom2.getText());
-   }
-   
-   private Structure getStructure(String domainID) throws StructureException{
-      //PDBFileReader reader = new PDBFileReader();
-      
-	   if ( domainID == null || domainID.equals(""))
-		   return null;
-      
-      
-      
-      UserConfiguration config = WebStartMain.getWebStartConfig();
-      //String cacheLocation = config.getPdbFilePath();
-      
-      AtomCache cache = new AtomCache(config);
-      
-     Structure s = null;
-     try {
-     	s =	cache.getStructure(domainID);
-     	s.setName(domainID);
-     } catch (Exception e){
-    	 e.printStackTrace();
-     }
-     return s;
-      
+	private Box getDomainPanel(int pos ,JTextField f){
+
+		//JPanel panel = new JPanel();
+		//panel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		JLabel l01 = new JLabel("SCOP or domain id:");
+
+		//panel.add(l01);
+		Box hBox = Box.createHorizontalBox();
+		hBox.add(Box.createGlue());
+		hBox.add(l01);
+
+		JLabel l11 = new JLabel(pos + ":");
+		f.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
+		f.setToolTipText("Provide SCOP ID here. Example: d1zyma1");
+		hBox.add(l11);
+		hBox.add(Box.createVerticalGlue());
+		hBox.add(f, BorderLayout.CENTER);
+		hBox.add(Box.createGlue());
+
+
+		//hBox21.add(Box.createGlue());
+
+		//panel.add(hBox21);
+
+
+
+		return hBox;
+	}
+
+	@Override
+	public Structure getStructure1() throws StructureException
+	{
+		String scop1 = dom1.getText();
+		return getStructure(scop1);
+	}
+
+	@Override
+	public Structure getStructure2() throws StructureException
+	{
+		return getStructure(dom2.getText());
+	}
+
+	private Structure getStructure(String domainID) throws StructureException{
+		//PDBFileReader reader = new PDBFileReader();
+
+		if ( domainID == null || domainID.equals(""))
+			return null;
+
+
+
+		UserConfiguration config = WebStartMain.getWebStartConfig();
+		//String cacheLocation = config.getPdbFilePath();
+
+		AtomCache cache = new AtomCache(config);
+
+		Structure s = null;
+		try {
+			s =	cache.getStructure(domainID);
+			s.setName(domainID);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return s;
+
 //      AtomCache cache = new AtomCache(cacheLocation );
-//      
+//
 //      ScopDatabase scop = ScopInstallationInstance.getInstance().getSCOP();
-//      
+//
 //      ScopDomain domain = scop.getDomainByScopID(domainID) ;
-//      
+//
 //      System.out.println("found scop domain :" + domain);
-//      
+//
 //      if ( domain == null)
 //         return null;
-//      
-//      
+//
+//
 //      Structure s = null;
 //      try {
 //         s =cache.getStructureForDomain(domain);
@@ -169,9 +169,9 @@ public Structure getStructure2() throws StructureException
 //         e.printStackTrace();
 //         logger.warning(e.getMessage());
 //      }
-//      
+//
 //      return s;
 
-  }
+	}
 
 }

@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
@@ -36,19 +36,20 @@ public class JmolSymmetryScriptGeneratorDn extends JmolSymmetryScriptGeneratorPo
 	public JmolSymmetryScriptGeneratorDn(RotationAxisAligner axisTransformation, String name) {
 		super(axisTransformation, name);
 		int fold = axisTransformation.getRotationGroup().getRotation(0).getFold();
-		
+
 		// special case for D2. Since there is no 2-fold prism, draw a 4-fold
 		// prism that encases the D2 structure
 		if (axisTransformation.getRotationGroup().getPointGroup().equals("D2")) {
 			fold = 4;
 		}
-		
+
 		Prism p = new Prism(fold);
 		p.setHeight(axisTransformation.getDimension().z*2);
 		p.setInscribedRadius(axisTransformation.getRadius());
 		setPolyhedron(p);
 	}
-	
+
+	@Override
 	public int getZoom() {
 		// find maximum extension of structure
 		double maxExtension = getMaxExtension();
@@ -61,18 +62,20 @@ public class JmolSymmetryScriptGeneratorDn extends JmolSymmetryScriptGeneratorPo
 		}
 		return zoom;
 	}
-	
+
+	@Override
 	public int getOrientationCount() {
 		// for Dn point groups the last view is redundant due to symmetry.
 		return getPolyhedron().getViewCount()-1;
 	}
-	
+
 	/**
 	 * Returns the name of a specific orientation
 	 * @param index orientation index
 	 * @return name of orientation
 	 */
-	public String getOrientationName(int index) {	
+	@Override
+	public String getOrientationName(int index) {
 		if (index == 0 && getAxisTransformation().getRotationGroup().getPointGroup().equals("D2")) {
 			return "Front C2 axis";
 		} else {

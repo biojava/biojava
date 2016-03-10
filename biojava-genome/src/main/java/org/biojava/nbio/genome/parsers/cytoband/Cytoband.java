@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 20 Feb 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.genome.parsers.cytoband;
@@ -27,9 +27,9 @@ import java.io.Serializable;
 
 public class Cytoband implements Serializable, Comparable<Cytoband> {
 
-	
+
 	 /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2805976387404499650L;
 	String chromosome;
@@ -38,8 +38,8 @@ public class Cytoband implements Serializable, Comparable<Cytoband> {
 	String locus;
 	StainType type;
 
-	
-	
+
+
 	public String getChromosome() {
 		return chromosome;
 	}
@@ -90,13 +90,13 @@ public class Cytoband implements Serializable, Comparable<Cytoband> {
 
 	@Override
 	public int compareTo(Cytoband o) {
-	
+
 		if ( this.chromosome.equals( o.chromosome)) {
 			return this.start.compareTo(o.start);
 		} else {
-			
-	
-			
+
+
+
 			Short s1 = null;
 			try {
 				s1 = Short.parseShort(chromosome.substring(3));
@@ -105,14 +105,14 @@ public class Cytoband implements Serializable, Comparable<Cytoband> {
 			try {
 				s2 = Short.parseShort(o.chromosome.substring(3));
 			}catch (NumberFormatException ex){}
-			
+
 			if (s1 == null || s2 == null){
 				return this.chromosome.compareTo(o.chromosome);
 			} else {
 				return s1.compareTo(s2);
 			}
 		}
-		
+
 	}
 
 
@@ -137,8 +137,8 @@ public class Cytoband implements Serializable, Comparable<Cytoband> {
 
 
 
-	
-	
-	
-	
+
+
+
+
 }

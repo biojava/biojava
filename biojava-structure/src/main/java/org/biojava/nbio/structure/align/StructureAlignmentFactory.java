@@ -59,10 +59,10 @@ public class StructureAlignmentFactory {
 
 	/**
 	 * Adds a new StructureAlignment algorithm to the list.
-	 * 
+	 *
 	 * Only one instance is stored for each algorithmName, so it is possible
 	 * that a different instance may be returned by getAlgorithm(alg.getAlgorithmName())
-	 * 
+	 *
 	 * @param alg the alignment algorithm
 	 */
 	public static void addAlgorithm(StructureAlignment alg) {

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 9, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -35,7 +35,7 @@ import java.awt.print.PrinterJob;
 
 public class JPrintPanel extends JPanel implements Printable,ActionListener{
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3337337068138131455L;
 
@@ -49,31 +49,31 @@ public class JPrintPanel extends JPanel implements Printable,ActionListener{
 		g.translate(20, 20);
 		Font  f = new Font("Monospaced",Font.PLAIN,10);
 		g.setFont (f);
-		
+
 		double scale = pf.getImageableWidth()/this.getSize().getWidth();
 
 	    g2D.scale(scale,scale);
-		
+
 		paint (g);
-		
-		
-		
-	    
-		
+
+
+
+
+
 		return Printable.PAGE_EXISTS;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		PrinterJob printJob = PrinterJob.getPrinterJob();
 		printJob.setPrintable(this);
 
-		try { 
+		try {
 			if(printJob.printDialog()){
 				printJob.print();
 			}
-		} catch (Exception printException) { 
+		} catch (Exception printException) {
 			System.err.println("Error during printing: " +printException.getMessage());
 			printException.printStackTrace();
 		}

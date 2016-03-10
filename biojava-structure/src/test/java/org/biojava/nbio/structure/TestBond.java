@@ -31,18 +31,18 @@ import static org.junit.Assert.*;
 
 
 public class TestBond {
-	
+
 
 	private static AtomCache cache;
-	
+
 	@BeforeClass
-	public static void setUp() throws IOException, StructureException {		
+	public static void setUp() throws IOException, StructureException {
 		cache = new AtomCache();
 
 		cache.setUseMmCif(true);
 
 		FileParsingParameters params = cache.getFileParsingParams();
-		
+
 		params.setAlignSeqRes(true);
 		params.setCreateAtomBonds(true);
 
@@ -54,9 +54,9 @@ public class TestBond {
 	@Test
 	public void testIntraResidueBonds() throws StructureException, IOException {
 
-		
+
 		Structure s = StructureIO.getStructure("1kh9");
-		
+
 
 		Group g = s.getChainByPDB("A").getSeqResGroup(274);
 		Atom cg = g.getAtom("CG");
@@ -79,9 +79,9 @@ public class TestBond {
 
 	@Test
 	public void testPeptideBonds() throws StructureException, IOException {
-		
+
 		Structure s = StructureIO.getStructure("1kh9");
-		
+
 
 		AminoAcidImpl residue1 = (AminoAcidImpl) s.getChainByPDB("A").getSeqResGroup(273);
 		AminoAcidImpl residue2 = (AminoAcidImpl) s.getChainByPDB("A").getSeqResGroup(274);
@@ -94,14 +94,14 @@ public class TestBond {
 
 	@Test
 	public void testLINKBonds() throws StructureException, IOException {
-		
+
 		cache.setUseMmCif(false);
 
 		Structure s = StructureIO.getStructure("1kh9");
-		
+
 		Group g1 = s.getChainByPDB("A").getSeqResGroup(50);
 		assertNotNull(g1);
-		
+
 		assertTrue(g1 instanceof AminoAcid);
 
 		AminoAcid aa = (AminoAcid)g1;
@@ -112,15 +112,15 @@ public class TestBond {
 		assertNotNull(atom1);
 		assertNotNull(atom2);
 		assertTrue(areBonded(atom1, atom2));
-		
+
 		cache.setUseMmCif(true);
 	}
 
 	@Test
 	public void testDisulfideBonds() throws StructureException, IOException {
-		
+
 		Structure s = StructureIO.getStructure("1kh9");
-		
+
 		Atom atom1 = s.getChainByPDB("A").getSeqResGroup(177).getAtom("SG");
 		Atom atom2 = s.getChainByPDB("A").getSeqResGroup(167).getAtom("SG");
 
@@ -129,9 +129,9 @@ public class TestBond {
 
 	@Test
 	public void testLigandBonds() throws StructureException, IOException {
-		
+
 		Structure s = StructureIO.getStructure("1kh9");
-		
+
 		Atom phosphateP = s.getChainByPDB("A").getAtomGroup(447).getAtom("P");
 		Atom phosphateO = s.getChainByPDB("A").getAtomGroup(447).getAtom("O1");
 
@@ -166,5 +166,5 @@ public class TestBond {
 	public void test1BDX() throws IOException, StructureException {
 		StructureIO.getStructure("1BDX");
 	}
-	
+
 }

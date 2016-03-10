@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Factory to create BioUnitDataProvider instances.
- * 
+ *
  * Unlike many other BioJava Factory classes, this class does not store
  * singletons, but creates a new instance for every call of
  * {@link #getBioUnitDataProvider()}.
@@ -33,40 +33,40 @@ import org.slf4j.LoggerFactory;
 public class BioUnitDataProviderFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(BioUnitDataProviderFactory.class);
-	
+
 	public static final String mmcifProviderClassName     = MmCifBiolAssemblyProvider.class.getName();
-	
+
 	public static final String remoteProviderClassName    = RemoteBioUnitDataProvider.class.getName();
-	
+
 	public static final String pdbProviderClassName       = PDBBioUnitDataProvider.class.getName();
-	
+
 	public static Class<? extends BioUnitDataProvider> DEFAULT_PROVIDER_CLASS = MmCifBiolAssemblyProvider.class;
 	public static final String DEFAULT_PROVIDER_CLASSNAME =  DEFAULT_PROVIDER_CLASS.getName();
-	
+
 	private static Class<? extends BioUnitDataProvider> providerClass = DEFAULT_PROVIDER_CLASS;
-	
+
 	private BioUnitDataProviderFactory(){
-		
+
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return A new instance of the current BioUnitDataProvider class
 	 */
 	public static BioUnitDataProvider getBioUnitDataProvider() {
-		
+
 		// use reflection to return a new instance...
-		
+
 		try {
 			return providerClass.newInstance();
 		} catch (IllegalAccessException e) {
 			logger.error("Exception caught",e);
 		} catch (InstantiationException e) {
-			logger.error("Exception caught",e);			
+			logger.error("Exception caught",e);
 		}
-		
+
 		return null;
-		
+
 	}
 
 	/**

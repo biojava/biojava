@@ -25,9 +25,9 @@ public class PDPDistanceMatrix {
 	int nclose;
 	int[] iclose ;
 	int[] jclose ;
-	
+
 	public PDPDistanceMatrix(){
-		
+
 	}
 
 	public int[][] getDist() {
@@ -61,8 +61,8 @@ public class PDPDistanceMatrix {
 	public void setJclose(int[] jclose) {
 		this.jclose = jclose;
 	}
-	
-	
-		
+
+
+
 
 }

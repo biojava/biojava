@@ -29,10 +29,10 @@ import java.util.Map;
 
 /**
  * SCOPe:
- * 
+ *
  * The Structural Classification of Proteins (extended) at Berkeley Lab and UC Berkeley
  * (<a href="http://scop.berkeley.edu/">http://scop.berkeley.edu/</a>).
- * 
+ *
  * <p>This provides updates to the MRC SCOP hierarchical classification.
  */
 public class BerkeleyScopInstallation extends ScopInstallation {
@@ -106,7 +106,7 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 				return "dir." + fileType + ".scope." + version + "-stable.txt";
 			}
 		}
-		
+
 		@Override
 		public String toString() {
 			return "BerkeleyScopMirror[ \"" + rootURL + " ]";

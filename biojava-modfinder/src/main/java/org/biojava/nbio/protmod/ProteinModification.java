@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 27, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -28,95 +28,95 @@ import java.util.Set;
 
 /**
  * This interface defines information about a specific protein
- * modification. 
- * 
+ * modification.
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
 public interface ProteinModification {
 
 	/**
-	 * 
+	 *
 	 * @return modification id.
 	 */
 	public String getId();
-	
+
 	/**
-	 * 
+	 *
 	 * @return Protein Data Bank Chemical Component ID.
 	 */
 	public String getPdbccId();
-	
+
 	/**
-	 * 
+	 *
 	 * @return Protein Data Bank Chemical Component name.
 	 */
 	public String getPdbccName();
-	
+
 	/**
-	 * 
+	 *
 	 * @return RESID ID.
 	 */
 	public String getResidId();
-	
+
 	/**
-	 * 
+	 *
 	 * @return RESID name.
 	 */
 	public String getResidName();
-	
+
 	/**
-	 * 
+	 *
 	 * @return PSI-MOD ID.
 	 */
 	public String getPsimodId();
-	
+
 	/**
-	 * 
+	 *
 	 * @return PSI-MOD name.
 	 */
 	public String getPsimodName();
-	
+
 	/**
-	 * 
+	 *
 	 * @return Systematic name.
 	 */
 	public String getSystematicName();
-	
+
 	/**
-	 * 
+	 *
 	 * @return Description.
 	 */
 	public String getDescription();
-	
+
 	/**
-	 * 
+	 *
 	 * @return a set of keywords.
 	 */
 	public Set<String> getKeywords();
-	
+
 	/**
-	 * 
+	 *
 	 * @return {@link ModificationCondition}
 	 */
 	public ModificationCondition getCondition();
-	
+
 	/**
-	 * 
+	 *
 	 * @return formula of the modified residue.
 	 */
 	public String getFormula();
-	
+
 	/**
-	 * 
+	 *
 	 * @return the modification category.
 	 */
 	public ModificationCategory getCategory();
-	
+
 	/**
-	 * 
+	 *
 	 * @return the modification occurrence type.
 	 */
 	public ModificationOccurrenceType getOccurrenceType();
-	
+
 }

@@ -24,7 +24,7 @@ package org.biojava.nbio.structure.symmetry.core;
 
 /**
  * Holds the results of quaternary symmetry perception.
- * 
+ *
  * @author Peter Rose
  *
  */
@@ -36,7 +36,7 @@ public class QuatSymmetryResults {
 	private double sequenceIdentityThreshold = 0;
 	private boolean local = false;
 	private boolean preferredResult = false;
-	
+
 	public QuatSymmetryResults(Subunits subunits, RotationGroup rotationGroup, String method) {
 	//	SymmetryDeviation sd = new SymmetryDeviation(subunits, rotationGroup);
 	//	rotationGroup.setSymmetryDeviation(sd.getSymmetryDeviation());
@@ -44,28 +44,28 @@ public class QuatSymmetryResults {
 		this.rotationGroup = rotationGroup;
 		this.method = method;
 	}
-	
+
 	public QuatSymmetryResults(Subunits subunits, HelixLayers helixLayers, String method) {
 	//	SymmetryDeviation sd = new SymmetryDeviation(subunits, helixLayers);
 	//	helixLayers.setSymmetryDeviation(sd.getSymmetryDeviation());
 		this.subunits = subunits;
 		this.helixLayers = helixLayers;
-		this.method = method;	
+		this.method = method;
 	}
-	
+
 	/**
 	 * Returns protein subunit information that was used to determine symmetry information
-	 * 
+	 *
 	 * @return
 	 */
 	public Subunits getSubunits() {
 		return subunits;
 	}
-	
+
 	/**
 	 * Returns rotation group (point group) information representing rotational quaternary symmetry,
 	 * see http://en.wikipedia.org/wiki/Rotation_group_SO(3)
-	 * 
+	 *
 	 * @return rotation group
 	 */
 	public RotationGroup getRotationGroup() {
@@ -81,19 +81,19 @@ public class QuatSymmetryResults {
 
 	/**
 	 * Returns name of method used for symmetry perception.
-	 * 
+	 *
 	 * @return method
 	 */
 	public String getMethod() {
 		return method;
 	}
 
-	
-    /**
-     * Returns the symmetry group. For point groups returns the point group symbol
-     * and for helical symmetry returns "H".
-     * @return symmetry symbol
-     */
+
+	/**
+	 * Returns the symmetry group. For point groups returns the point group symbol
+	 * and for helical symmetry returns "H".
+	 * @return symmetry symbol
+	 */
 	public String getSymmetry() {
 		if (helixLayers != null && helixLayers.size() > 0) {
 			return "H";
@@ -102,21 +102,21 @@ public class QuatSymmetryResults {
 		}
 		return "";
 	}
-	
-	
+
+
 	public QuatSymmetryScores getScores() {
-		if (helixLayers != null && helixLayers.size() > 0) {	
+		if (helixLayers != null && helixLayers.size() > 0) {
 			return helixLayers.getScores();
 		} else if (rotationGroup != null && rotationGroup.getOrder() > 0) {
 			return rotationGroup.getScores();
 		}
 		return new QuatSymmetryScores();
 	}
-	
+
 	/**
 	 * Returns the average Calpha trace RMSD for all symmetry operations
 	 * @return
-	 * @deprecated use {@link getScores()} instead.  
+	 * @deprecated use {@link getScores()} instead.
 	 */
 	@Deprecated
 	public double getAverageTraceRmsd() {
@@ -127,11 +127,11 @@ public class QuatSymmetryResults {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Returns the average Calpha trace Tm for all symmetry operations
 	 * @return
-	 * @deprecated use {@link getScores()} instead.  
+	 * @deprecated use {@link getScores()} instead.
 	 */
 	@Deprecated
 	public double getAverageTraceTmScoreMin() {
@@ -142,11 +142,11 @@ public class QuatSymmetryResults {
 		}
 		return 0;
 	}
-	
+
 	public int getNucleicAcidChainCount() {
 		return subunits.getNucleicAcidChainCount();
 	}
-	
+
 	public double getSequenceIdentityThreshold() {
 		return sequenceIdentityThreshold;
 	}
@@ -158,40 +158,40 @@ public class QuatSymmetryResults {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
-	    sb.append("Stoichiometry         : ");
-	    sb.append(getSubunits().getStoichiometry());
-	    sb.append("\n");
-	    sb.append("Pseudostoichiometry   : ");
-	    sb.append(getSubunits().isPseudoStoichiometric());
-	    sb.append("\n");
-	    sb.append("Pseudosymmetry        : ");
-	    sb.append(getSubunits().isPseudoSymmetric());
-	    sb.append("\n");
-	    sb.append("Min sequence identity : ");
-	    sb.append(Math.round(getSubunits().getMinSequenceIdentity()*100));
-	    sb.append("\n");
-	    sb.append("Max sequence identity : ");
-	    sb.append(Math.round(getSubunits().getMaxSequenceIdentity()*100));
-	    sb.append("\n");
-	    sb.append("Symmetry              : ");
-	    sb.append(getSymmetry());				
-	    sb.append("\n");
-	    sb.append("Symmetry RMSD         : ");
-	    sb.append((float) getAverageTraceRmsd());
-	    sb.append("\n");
-	    sb.append("Symmetry TmScoreMin   : ");
-	    sb.append((float) getAverageTraceTmScoreMin());
-	    sb.append("\n");
-	    sb.append("Prefered result       : ");
-	    sb.append(isPreferredResult());
-	    sb.append("\n");
-	    
-	    return sb.toString();
+
+		sb.append("Stoichiometry         : ");
+		sb.append(getSubunits().getStoichiometry());
+		sb.append("\n");
+		sb.append("Pseudostoichiometry   : ");
+		sb.append(getSubunits().isPseudoStoichiometric());
+		sb.append("\n");
+		sb.append("Pseudosymmetry        : ");
+		sb.append(getSubunits().isPseudoSymmetric());
+		sb.append("\n");
+		sb.append("Min sequence identity : ");
+		sb.append(Math.round(getSubunits().getMinSequenceIdentity()*100));
+		sb.append("\n");
+		sb.append("Max sequence identity : ");
+		sb.append(Math.round(getSubunits().getMaxSequenceIdentity()*100));
+		sb.append("\n");
+		sb.append("Symmetry              : ");
+		sb.append(getSymmetry());
+		sb.append("\n");
+		sb.append("Symmetry RMSD         : ");
+		sb.append((float) getAverageTraceRmsd());
+		sb.append("\n");
+		sb.append("Symmetry TmScoreMin   : ");
+		sb.append((float) getAverageTraceTmScoreMin());
+		sb.append("\n");
+		sb.append("Prefered result       : ");
+		sb.append(isPreferredResult());
+		sb.append("\n");
+
+		return sb.toString();
 	}
-	
+
 	/**
-	 * Return true 
+	 * Return true
 	 * @return
 	 */
 	public boolean isLocal() {

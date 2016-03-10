@@ -36,18 +36,18 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface ProfileProfileScorer<S extends Sequence<C>, C extends Compound> extends Scorer {
 
-    /**
-     * Returns the first profile of the pair.
-     *
-     * @return the first profile of the pair
-     */
-    Profile<S, C> getQuery();
+	/**
+	 * Returns the first profile of the pair.
+	 *
+	 * @return the first profile of the pair
+	 */
+	Profile<S, C> getQuery();
 
-    /**
-     * Returns the second profile of the pair.
-     *
-     * @return the second profile of the pair
-     */
-    Profile<S, C> getTarget();
+	/**
+	 * Returns the second profile of the pair.
+	 *
+	 * @return the second profile of the pair
+	 */
+	Profile<S, C> getTarget();
 
 }

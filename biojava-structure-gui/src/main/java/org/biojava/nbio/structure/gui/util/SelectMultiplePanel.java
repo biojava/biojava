@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 30, 2010
- * Author: ap3 
+ * Author: ap3
  *
  */
 package org.biojava.nbio.structure.gui.util;
@@ -42,9 +42,9 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 
 /**
- * A Text Panel that allows the user to specify multiple structure 
+ * A Text Panel that allows the user to specify multiple structure
  * identifiers, space separated.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
  *

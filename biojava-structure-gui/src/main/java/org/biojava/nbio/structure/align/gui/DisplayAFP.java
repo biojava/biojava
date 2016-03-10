@@ -48,14 +48,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** A utility class for visualistion of structure alignments
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class DisplayAFP {
 
 	private static final Logger logger = LoggerFactory.getLogger(DisplayAFP.class);
-	
+
 	//TODO: same as getEqrPos??? !!!
 	public static final List<Integer> getEQRAlignmentPos(AFPChain afpChain){
 		List<Integer> lst = new ArrayList<Integer>();
@@ -70,7 +70,7 @@ public class DisplayAFP {
 			char c2 = s2[i];
 
 			if ( isAlignedPosition(i,c1,c2,isFatCat, symb)) {
-				lst.add(i);			  
+				lst.add(i);
 			}
 
 		}
@@ -88,7 +88,7 @@ public class DisplayAFP {
 			char s = symb[i];
 			if ( c1 != '-' && c2 != '-' && s != ' '){
 				return true;
-			}          
+			}
 //		} else {
 //
 //			if ( c1 != '-' && c2 != '-')
@@ -101,9 +101,9 @@ public class DisplayAFP {
 	}
 
 	/**
-	 * Return a list of pdb Strings corresponding to the aligned positions of the molecule. 
+	 * Return a list of pdb Strings corresponding to the aligned positions of the molecule.
 	 * Only supports a pairwise alignment with the AFPChain DS.
-	 * 
+	 *
 	 * @param aligPos
 	 * @param afpChain
 	 * @param ca
@@ -113,9 +113,9 @@ public class DisplayAFP {
 		if ( aligPos > 1) {
 			System.err.println("multiple alignments not supported yet!");
 			return lst;
-		}	
+		}
 
-		int blockNum = afpChain.getBlockNum();      
+		int blockNum = afpChain.getBlockNum();
 		int[] optLen = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
 
@@ -139,7 +139,7 @@ public class DisplayAFP {
 	}
 
 	/** get the block number for an aligned position
-	 * 
+	 *
 	 * @param afpChain
 	 * @param aligPos
 	 * @return
@@ -157,7 +157,7 @@ public class DisplayAFP {
 	 * @param afpChain an afpChain object
 	 * @param aligPos position on the alignment
 	 * @param getPrevious gives the previous position if false, gives the next posible atom
-	 * @return a CA atom that is at a particular position of the alignment 
+	 * @return a CA atom that is at a particular position of the alignment
 	 */
 	public static final Atom getAtomForAligPos(AFPChain afpChain,int chainNr, int aligPos, Atom[] ca , boolean getPrevious ) throws StructureException{
 		int[] optLen = afpChain.getOptLen();
@@ -180,7 +180,7 @@ public class DisplayAFP {
 
 			//System.out.println(" got next" + capos + " for " + chainNr + " alignedPos: " + aligPos);
 		} else {
-			//System.out.println("got aligned fatcat position: " + capos + " " + chainNr + " for alig pos: " + aligPos);	
+			//System.out.println("got aligned fatcat position: " + capos + " " + chainNr + " for alig pos: " + aligPos);
 		}
 
 		if ( capos < 0) {
@@ -194,12 +194,12 @@ public class DisplayAFP {
 		return ca[capos];
 		//}
 
-		//    
-		//      
+		//
+		//
 		//      int ungappedPos = getUngappedPos(afpChain, aligPos);
 		//      System.out.println("getAtomForAligPOs " + aligPos  + " " + ungappedPos );
 		//      return ca[ungappedPos];
-		//      
+		//
 		//      if ( ungappedPos >= optAln[bk][chainNr].length)
 		//         return null;
 		//      int pos = optAln[bk][chainNr][ungappedPos];
@@ -235,7 +235,7 @@ public class DisplayAFP {
 
 
 		boolean terminateNextMatch = false;
-		for(int i = 0; i < blockNum; i ++)  {        	
+		for(int i = 0; i < blockNum; i ++)  {
 			for(int j = 0; j < optLen[i]; j ++) {
 
 				p1 = optAln[i][0][j];
@@ -248,7 +248,7 @@ public class DisplayAFP {
 
 					// lmax gives the length of an alignment gap
 
-					//System.out.println("  pos "+ len+" p1-p2: " + p1 + " - " + p2 + " lmax: " + lmax + " p1b-p2b:"+p1b + " " + p2b + " terminate? "+ terminateNextMatch);	
+					//System.out.println("  pos "+ len+" p1-p2: " + p1 + " - " + p2 + " lmax: " + lmax + " p1b-p2b:"+p1b + " " + p2b + " terminate? "+ terminateNextMatch);
 					for(int k = 0; k < lmax; k ++)      {
 
 						if(k >= (p1 - p1b - 1)) {
@@ -271,7 +271,7 @@ public class DisplayAFP {
 							if ( aligPos == len && chainNr == 1){
 								if ( getPrevious)
 									return p2b;
-								else 
+								else
 									terminateNextMatch = true;
 							}
 						}
@@ -297,7 +297,7 @@ public class DisplayAFP {
 				if ( terminateNextMatch)
 					if ( chainNr == 0)
 						return p1;
-					else 
+					else
 						return p2;
 				if ( len > aligPos) {
 					if ( getPrevious) {
@@ -348,7 +348,7 @@ public class DisplayAFP {
 		int len = 0;
 
 
-		for(int i = 0; i < blockNum; i ++)  {        	
+		for(int i = 0; i < blockNum; i ++)  {
 			for(int j = 0; j < optLen[i]; j ++) {
 
 				p1 = optAln[i][0][j];
@@ -361,7 +361,7 @@ public class DisplayAFP {
 
 					// lmax gives the length of an alignment gap
 
-					//System.out.println("   p1-p2: " + p1 + " - " + p2 + " lmax: " + lmax + " p1b-p2b:"+p1b + " " + p2b);	
+					//System.out.println("   p1-p2: " + p1 + " - " + p2 + " lmax: " + lmax + " p1b-p2b:"+p1b + " " + p2b);
 					for(int k = 0; k < lmax; k ++)      {
 
 						if(k >= (p1 - p1b - 1)) {
@@ -469,7 +469,7 @@ public class DisplayAFP {
 		List<Chain>model2 = getAlignedModel(ca2);
 		s.addModel(model1);
 		s.addModel(model2);
-		
+
 		return s;*/
 
 		Structure s = new StructureImpl();
@@ -494,7 +494,7 @@ public class DisplayAFP {
 		Collections.addAll(atoms, ca);
 
 		logger.debug("got {} hetatoms", hetatms.size());
-		
+
 		// we only add atom nr 1, since the getAlignedStructure method actually adds the parent group, and not the atoms...
 		for (Group g : hetatms){
 			if (g.size() < 1)
@@ -535,7 +535,7 @@ public class DisplayAFP {
 		Atom[] arr1 = getAtomArray(ca1, hetatms1);
 		Atom[] arr2 = getAtomArray(twistedAtoms, hetatms2);
 
-		// 
+		//
 
 		//if ( hetatms2.size() > 0)
 			//	System.out.println("atom after:" + hetatms2.get(0).getAtom(0));
@@ -549,7 +549,7 @@ public class DisplayAFP {
 
 
 
-		StructureAlignmentJmol jmol = new StructureAlignmentJmol(afpChain,arr1,arr2);      
+		StructureAlignmentJmol jmol = new StructureAlignmentJmol(afpChain,arr1,arr2);
 		//jmol.setStructure(artificial);
 
 		System.out.format("CA2[0]=(%.2f,%.2f,%.2f)%n", arr2[0].getX(), arr2[0].getY(), arr2[0].getZ());
@@ -560,7 +560,7 @@ public class DisplayAFP {
 	}
 
 	public static void showAlignmentPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureException {
-		
+
 		AligPanel me = new AligPanel();
 		me.setAlignmentJmol(jmol);
 		me.setAFPChain(afpChain);
@@ -569,7 +569,7 @@ public class DisplayAFP {
 
 		JFrame frame = new JFrame();
 
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setTitle(afpChain.getName1() + " vs. " + afpChain.getName2() + " | " + afpChain.getAlgorithmName() + " V. " + afpChain.getVersion());
 		me.setPreferredSize(new Dimension(me.getCoordManager().getPreferredWidth() , me.getCoordManager().getPreferredHeight()));
 
@@ -620,13 +620,13 @@ public class DisplayAFP {
 		//js.setBackground(Color.white);
 
 		frame.getContentPane().add(js);
-		frame.pack();      
+		frame.pack();
 		frame.setVisible(true);
 
 	}
-	
+
 	/** Create a "fake" Structure objects that contains the two sets of atoms aligned on top of each other.
-	 * 
+	 *
 	 * @param afpChain the container of the alignment
 	 * @param ca1 atoms for protein 1
 	 * @param ca2 atoms for protein 2
@@ -636,11 +636,11 @@ public class DisplayAFP {
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2) throws StructureException{
 
-		
+
 		if ( afpChain.getNrEQR() < 1){
 			return DisplayAFP.getAlignedStructure(ca1, ca2);
 		}
-		
+
 		Group[] twistedGroups = StructureAlignmentDisplay.prepareGroupsForDisplay(afpChain,ca1, ca2);
 
 		List<Atom> twistedAs = new ArrayList<Atom>();

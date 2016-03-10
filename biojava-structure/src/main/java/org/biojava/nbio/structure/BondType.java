@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package org.biojava.nbio.structure;
 
@@ -30,5 +26,5 @@ package org.biojava.nbio.structure;
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  */
 public enum BondType {
-    UNDEFINED, COVALENT, IONIC, HBOND, VANDERWAALS, HYDROPHOBIC, METAL, PLANAR, ATOM_PLANE;
+	UNDEFINED, COVALENT, IONIC, HBOND, VANDERWAALS, HYDROPHOBIC, METAL, PLANAR, ATOM_PLANE;
 }

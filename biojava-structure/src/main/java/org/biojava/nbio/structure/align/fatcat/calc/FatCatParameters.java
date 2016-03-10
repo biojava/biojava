@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,8 +20,8 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align.fatcat.calc;
@@ -119,7 +119,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 
 	/** The cutoff to be used during AFP detection
-	 * 
+	 *
 	 * @return rmsdCut parameter
 	 */
 	public Double getRmsdCut()
@@ -128,7 +128,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	}
 
 	/** The cutoff to be used during AFP detection
-	 * 
+	 *
 	 * @param rmsdCut
 	 */
 	public void setRmsdCut(Double rmsdCut)
@@ -137,7 +137,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	}
 
 	/** Get the distance cutoff used during AFP chain connectivity checks
-	 * 
+	 *
 	 * @return distance Cutoff
 	 */
 	public Double getDisCut()
@@ -249,7 +249,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 
 	/** get the maximum number of Twists that are allowed...
-	 * 
+	 *
 	 * @return max nr of allowed twists
 	 */
 	public Integer getMaxTra()
@@ -258,7 +258,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	}
 
 	/** set the maximum number of Twists that are allowed...
-	 * 
+	 *
 	 * @param maxTra
 	 */
 	public void setMaxTra(Integer maxTra)
@@ -420,7 +420,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 		writer.append("[");
 		if ( maxTra == 0)
 			writer.append("Mode: rigid, ");
-		else 
+		else
 			writer.append("Mode: flexible, ");
 		List<String> params = getUserConfigParameters();
 

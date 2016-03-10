@@ -31,9 +31,9 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 
 public class TestAAINDEXLoading extends TestCase{
 /**
- * 
+ *
  * M rows = ARNDCQEGHILKMFPSTWYV, cols = ARNDCQEGHILKMFPSTWYV
- * 
+ *
  *   A		R		N		D		C		Q		E		G		H		I		L		K		M		F		P		S		T		W		Y		V
 A    2.09
 R   -0.50    2.87
@@ -59,56 +59,56 @@ V    0.02   -1.52   -2.17   -2.02    0.34   -1.38   -1.84   -1.96   -0.35    1.9
  */
 	public void testSDMmatrix(){
 		String matrixName = "PRLA000101";
-	
+
 		SubstitutionMatrix<AminoAcidCompound> sdm = SubstitutionMatrixHelper.getMatrixFromAAINDEX(matrixName);
-		
+
 		int scale = 1;
 		if ( sdm instanceof ScaledSubstitutionMatrix) {
 			ScaledSubstitutionMatrix scaledSDM = (ScaledSubstitutionMatrix)sdm;
 			scale = scaledSDM.getScale();
 			assertEquals(100,scale);
 		}
-		
-		
+
+
 		AminoAcidCompoundSet aas = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-		
+
 		AminoAcidCompound v = aas.getCompoundForString("V");
 		AminoAcidCompound w = aas.getCompoundForString("W");
 		AminoAcidCompound r = aas.getCompoundForString("R");
 		AminoAcidCompound n = aas.getCompoundForString("N");
-		
-		short rn = sdm.getValue(r,n);		
+
+		short rn = sdm.getValue(r,n);
 		assertEquals(60,rn);
-		
+
 		short nr = sdm.getValue(n,r);
 		assertEquals(rn,nr);
-		
-		
-		short vv = sdm.getValue(v,v); 		
+
+
+		short vv = sdm.getValue(v,v);
 		assertEquals(205,vv);
-		
+
 		short vw = sdm.getValue(v,w);
 		assertEquals( -109,vw);
-		
+
 		short wv = sdm.getValue(w,v);
 		assertEquals(vw,wv);
-		
-	
-	
-	   
+
+
+
+
 	}
-	
-	
+
+
 
 
 
 
 	/*
-	 * 
+	 *
 	 * M rows = ACDEFGHIKLMNPQRSTVWYJ-, cols = ACDEFGHIKLMNPQRSTVWYJ
-	 * 
-	 * 
-	 A		C		D		E		F		G		H		I		K		L		M		N		P		Q		R		S		T		V		W		Y		J 
+	 *
+	 *
+	 A		C		D		E		F		G		H		I		K		L		M		N		P		Q		R		S		T		V		W		Y		J
 A   0.224   0.013   0.055   0.068   0.031   0.067   0.048   0.053   0.068   0.050   0.087   0.059   0.067   0.073   0.062   0.074   0.059   0.079   0.033   0.035   0.121
 C   0.002   0.739   0.001   0.006   0.012   0.000   0.001   0.004   0.003   0.000   0.000   0.001   0.001   0.005   0.008   0.001   0.001   0.000   0.001   0.000   0.008
 D   0.044   0.007   0.284   0.091   0.016   0.041   0.056   0.033   0.034   0.012   0.022   0.094   0.047   0.052   0.025   0.054   0.044   0.025   0.014   0.023   0.030
@@ -132,45 +132,45 @@ Y   0.014   0.000   0.013   0.018   0.111   0.012   0.034   0.028   0.017   0.02
 J   0.002   0.000   0.001   0.000   0.001   0.002   0.002   0.001   0.002   0.001   0.003   0.001   0.001   0.001   0.001   0.002   0.001   0.007   0.000   0.001   0.341
 -   0.086   0.092   0.072   0.072   0.045   0.089   0.060   0.043   0.061   0.075   0.048   0.061   0.083   0.050   0.056   0.087   0.050   0.057   0.021   0.048   0.091
 //
-	 * 
-	 * 
+	 *
+	 *
 	 */
-	
+
 	public void testOVEJ920104(){
 		String name = "OVEJ920104";
 		SubstitutionMatrix<AminoAcidCompound> max = SubstitutionMatrixHelper.getMatrixFromAAINDEX(name);
-		
+
 		if ( max instanceof ScaledSubstitutionMatrix) {
 			ScaledSubstitutionMatrix scaledMAX = (ScaledSubstitutionMatrix) max;
 			int scale = scaledMAX.getScale();
-			
+
 			assertEquals(1000,scale);
 		}
-				
+
 		AminoAcidCompoundSet aas = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-		
+
 		AminoAcidCompound minus = aas.getCompoundForString("-");
-		
+
 		AminoAcidCompound j = aas.getCompoundForString("J");
 		AminoAcidCompound y = aas.getCompoundForString("Y");
 		AminoAcidCompound a = aas.getCompoundForString("A");
-		
+
 		short ay = max.getValue(a,y);
 		assertEquals(35,ay);
-		
-		
+
+
 		short ya = max.getValue(y,a);
 		assertEquals(14,ya);
-		
+
 		short minusa = max.getValue(minus, a);
 		assertEquals(86, minusa);
-		
-		short minusy = max.getValue(minus, y);		
+
+		short minusy = max.getValue(minus, y);
 		assertEquals( 48,minusy);
-		
-		short minusj = max.getValue(minus, j);		
+
+		short minusj = max.getValue(minus, j);
 		assertEquals( 91,minusj);
-		
+
 	}
-	
+
 }

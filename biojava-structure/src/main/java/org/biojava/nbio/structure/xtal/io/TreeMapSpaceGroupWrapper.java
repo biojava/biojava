@@ -45,12 +45,12 @@ import java.util.TreeMap;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class TreeMapSpaceGroupWrapper implements Serializable{
 
-	
+
 	private static final long serialVersionUID = 4193799052494327416L;
 
 	private TreeMap<Integer,SpaceGroup> data;
-	
-	
+
+
 	public TreeMapSpaceGroupWrapper(){
 		data = new TreeMap<Integer,SpaceGroup>();
 	}
@@ -62,7 +62,7 @@ public class TreeMapSpaceGroupWrapper implements Serializable{
 	public void setData(TreeMap<Integer,SpaceGroup> data) {
 		this.data = data;
 	}
-	
+
 	public  String toXML() throws JAXBException{
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -70,25 +70,25 @@ public class TreeMapSpaceGroupWrapper implements Serializable{
 		PrintStream ps = new PrintStream(baos);
 
 		JAXBContext jaxbContext = JAXBContext.newInstance(TreeMapSpaceGroupWrapper.class);
-		
+
 		Marshaller m = jaxbContext.createMarshaller();
 
 		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 		m.marshal( this, ps);
-			
+
 		JAXBContext.newInstance(TreeMapSpaceGroupWrapper.class);
 
 		return baos.toString();
 
 	}
 
-	public static TreeMapSpaceGroupWrapper fromXML(String xml) throws JAXBException{ 
+	public static TreeMapSpaceGroupWrapper fromXML(String xml) throws JAXBException{
 
 		TreeMapSpaceGroupWrapper job = null;
 
 		JAXBContext jaxbContext = JAXBContext.newInstance(TreeMapSpaceGroupWrapper.class);
-		
+
 		Unmarshaller un = jaxbContext.createUnmarshaller();
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
@@ -97,6 +97,6 @@ public class TreeMapSpaceGroupWrapper implements Serializable{
 
 		return job;
 	}
-	
-	
+
+
 }

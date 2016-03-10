@@ -33,9 +33,9 @@ import org.biojava.nbio.structure.StructureIdentifier;
  *
  * @author Aleix Lafita
  * @since 4.1.0
- * 
+ *
  */
-public class MultipleAlignmentImpl extends AbstractScoresCache 
+public class MultipleAlignmentImpl extends AbstractScoresCache
 implements Serializable, MultipleAlignment, Cloneable {
 
 	private static final long serialVersionUID = 3432043794125805139L;
@@ -49,7 +49,7 @@ implements Serializable, MultipleAlignment, Cloneable {
 
 	/**
 	 * Default Constructor. Empty alignment. No structures assigned.
-	 * 
+	 *
 	 * @return MultipleAlignment an empty MultipleAlignment instance.
 	 */
 	public MultipleAlignmentImpl() {
@@ -59,7 +59,7 @@ implements Serializable, MultipleAlignment, Cloneable {
 	/**
 	 * Constructor linking to an existing ensemble.
 	 * Automatically adds this alignment to the parent ensemble.
-	 * 
+	 *
 	 * @param ensemble parent MultipleAlignmentEnsemble.
 	 * @return MultipleAlignment an alignment instance part of an ensemble.
 	 */
@@ -77,7 +77,7 @@ implements Serializable, MultipleAlignment, Cloneable {
 
 	/**
 	 * Copy constructor. Recursively copies member BlockSets.
-	 * 
+	 *
 	 * @param ma MultipleAlignmentImpl to copy.
 	 * @return MultipleAlignmentImpl identical copy of the alignment.
 	 */
@@ -122,10 +122,10 @@ implements Serializable, MultipleAlignment, Cloneable {
 		for(StructureIdentifier i : parent.getStructureIdentifiers()) {
 			ids.add(i.getIdentifier());
 		}
-		String resume = "Structures:" + ids + 
-				" \nAlgorithm:" + parent.getAlgorithmName() + "_" + 
-				parent.getVersion() + 
-				" \nBlockSets: "+ getBlockSets().size() + 
+		String resume = "Structures:" + ids +
+				" \nAlgorithm:" + parent.getAlgorithmName() + "_" +
+				parent.getVersion() +
+				" \nBlockSets: "+ getBlockSets().size() +
 				" \nBlocks: " + getBlocks().size() +
 				" \nLength: " + length() +
 				" \nCore Length: "+ getCoreLength();
@@ -171,7 +171,7 @@ implements Serializable, MultipleAlignment, Cloneable {
 	public List<Atom[]> getAtomArrays() {
 		return parent.getAtomArrays();
 	}
-	
+
 	@Override
 	public StructureIdentifier getStructureIdentifier(int index) {
 		return parent.getStructureIdentifiers().get(index);
@@ -195,7 +195,7 @@ implements Serializable, MultipleAlignment, Cloneable {
 	}
 
 	/**
-	 * Force recalculation of the length (aligned columns) based on the 
+	 * Force recalculation of the length (aligned columns) based on the
 	 * BlockSet lengths.
 	 */
 	protected void updateLength() {
@@ -210,7 +210,7 @@ implements Serializable, MultipleAlignment, Cloneable {
 	}
 
 	/**
-	 * Force recalculation of the core length (ungapped columns) based on the 
+	 * Force recalculation of the core length (ungapped columns) based on the
 	 * BlockSet core lengths.
 	 */
 	protected void updateCoreLength() {
@@ -220,14 +220,14 @@ implements Serializable, MultipleAlignment, Cloneable {
 		} //Otherwise try to calculate it from the BlockSet information
 		else {
 			coreLength = 0;
-			for (BlockSet blockSet:blockSets) 
+			for (BlockSet blockSet:blockSets)
 				coreLength += blockSet.getCoreLength();
 		}
 	}
 
 	/**
 	 * Updates all cached properties
-	 * 
+	 *
 	 * @throws StructureException
 	 */
 	protected void updateCache() {

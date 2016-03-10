@@ -31,7 +31,7 @@ public class JmolTools {
 	 *  jmol style: [MET]508:A.CA/1 #3918
 	 *  insertion code: [ASP]1^A:A.CA/1 #2
 	 * @param a .. the Atom
-	 * 
+	 *
 	 * @return a String representation in Jmol style of the PDB information of this atom
 	 */
 	public static final String getPdbInfo(Atom a){
@@ -60,9 +60,9 @@ public class JmolTools {
 		System.out.println(getPdbInfo(a));
 	}
 
-	
+
 	// TODO: move this to AtomInfo class
-	
+
 	public static final String getPdbInfo(Atom a, boolean printResName){
 		String aa3 = "";
 
@@ -104,7 +104,7 @@ public class JmolTools {
 				if ( insCode != null && ! ( insCode.equals(""))) {
 					buf.append("^");
 					buf.append(insCode);
-				}								
+				}
 			}
 
 		}

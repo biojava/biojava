@@ -344,7 +344,7 @@ public class StructureTools {
 
 	/**
 	 * Convert all atoms of the structure (first model) into an Atom array
-	 * 
+	 *
 	 * @param s
 	 *            input structure
 	 * @return all atom array
@@ -363,7 +363,7 @@ public class StructureTools {
 	/**
 	 * Returns and array of all atoms of the chain (first model), including
 	 * Hydrogens (if present) and all HETATOMs. Waters are not included.
-	 * 
+	 *
 	 * @param c
 	 *            input chain
 	 * @return all atom array
@@ -383,10 +383,10 @@ public class StructureTools {
 
 	/**
 	 * List of groups from the structure not included in ca (e.g. ligands).
-	 * 
+	 *
 	 * Unaligned groups are searched from all chains referenced in ca, as well
 	 * as any chains in the first model of the structure from ca[0], if any.
-	 * 
+	 *
 	 * @param ca an array of atoms
 	 * @return
 	 */
@@ -440,7 +440,7 @@ public class StructureTools {
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure,
 	 * optionally including HET atoms or not. Waters are not included.
-	 * 
+	 *
 	 * @param s
 	 * @param hetAtoms
 	 *            if true HET atoms are included in array, if false they are not
@@ -471,7 +471,7 @@ public class StructureTools {
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Chain,
 	 * optionally including HET atoms or not Waters are not included.
-	 * 
+	 *
 	 * @param c
 	 * @param hetAtoms
 	 *            if true HET atoms are included in array, if false they are not
@@ -501,7 +501,7 @@ public class StructureTools {
 	 * Adds to the given atoms list, all atoms of groups that contained all
 	 * requested atomNames, i.e. if a group does not contain all of the
 	 * requested atom names, its atoms won't be added.
-	 * 
+	 *
 	 * @param atomNames
 	 * @param chains
 	 * @param atoms
@@ -590,7 +590,7 @@ public class StructureTools {
 	/**
 	 * Returns an Atom array of the C-alpha atoms. Any atom that is a carbon and
 	 * has CA name will be returned.
-	 * 
+	 *
 	 * @param c
 	 *            the structure object
 	 * @return an Atom[] array
@@ -614,11 +614,11 @@ public class StructureTools {
 	 * backbone. Note that modified aminoacids won't be returned as part of the
 	 * backbone if the {@link org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider} was used to load the
 	 * structure.
-	 * 
+	 *
 	 * For amino acids, the representative is a CA carbon. For nucleotides, the
 	 * representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}. Other group
 	 * types will be ignored.
-	 * 
+	 *
 	 * @param c
 	 * @return representative Atoms of the chain backbone
 	 * @since Biojava 4.1.0
@@ -653,7 +653,7 @@ public class StructureTools {
 	 * Provides an equivalent copy of Atoms in a new array. Clones everything,
 	 * starting with parent groups and chains. The chain will only contain
 	 * groups that are part of the input array.
-	 * 
+	 *
 	 * @param ca
 	 *            array of representative atoms, e.g. CA atoms
 	 * @return Atom array
@@ -668,7 +668,7 @@ public class StructureTools {
 	 * Provides an equivalent copy of Atoms in a new array. Clones everything,
 	 * starting with parent groups and chains. The chain will only contain
 	 * groups that are part of the input array.
-	 * 
+	 *
 	 * @param ca
 	 *            array of representative atoms, e.g. CA atoms
 	 * @return Atom array
@@ -700,14 +700,21 @@ public class StructureTools {
 			Group parentN = (Group) parentG.clone();
 
 			newCA[apos] = parentN.getAtom(a.getName());
-			newChain.addGroup(parentN);
+			try {
+				// if the group doesn't exist yet, this produces a StructureException
+				newChain.getGroupByPDB(parentN.getResidueNumber()); 
+			} catch (StructureException e) {
+				// the group doesn't exist yet in the newChain, let's add it
+				newChain.addGroup(parentN);	
+			}
+			
 		}
 		return newCA;
 	}
 
 	/**
 	 * Clone a set of representative Atoms, but returns the parent groups
-	 * 
+	 *
 	 * @param ca
 	 *            Atom array
 	 * @return Group array
@@ -745,7 +752,7 @@ public class StructureTools {
 	/**
 	 * Utility method for working with circular permutations. Creates a
 	 * duplicated and cloned set of Calpha atoms from the input array.
-	 * 
+	 *
 	 * @param ca2
 	 *            atom array
 	 * @return cloned and duplicated set of input array
@@ -811,7 +818,7 @@ public class StructureTools {
 	/**
 	 * Return an Atom array of the C-alpha atoms. Any atom that is a carbon and
 	 * has CA name will be returned.
-	 * 
+	 *
 	 * @param s
 	 *            the structure object
 	 * @return an Atom[] array
@@ -838,11 +845,11 @@ public class StructureTools {
 	 * backbone. Note that modified aminoacids won't be returned as part of the
 	 * backbone if the {@link org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider} was used to load the
 	 * structure.
-	 * 
+	 *
 	 * For amino acids, the representative is a CA carbon. For nucleotides, the
 	 * representative is the {@value #NUCLEOTIDE_REPRESENTATIVE}. Other group
 	 * types will be ignored.
-	 * 
+	 *
 	 * @param s
 	 *            Input structure
 	 * @return representative Atoms of the structure backbone
@@ -865,7 +872,7 @@ public class StructureTools {
 	/**
 	 * Return an Atom array of the main chain atoms: CA, C, N, O Any group that
 	 * contains those atoms will be included, be it a standard aminoacid or not
-	 * 
+	 *
 	 * @param s
 	 *            the structure object
 	 * @return an Atom[] array
@@ -935,7 +942,7 @@ public class StructureTools {
 	 * convert CYS to C. Valid 3-letter codes will be those of the standard 20
 	 * amino acids plus MSE, CSE, SEC, PYH, PYL (see the {@link #aminoAcids}
 	 * map)
-	 * 
+	 *
 	 * @return the 1 letter code, or null if the given 3 letter code does not
 	 *         correspond to an amino acid code
 	 * @param groupCode3
@@ -947,7 +954,7 @@ public class StructureTools {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param code3
 	 * @return
 	 * @deprecated Use {@link #get1LetterCodeAmino(String)} instead
@@ -963,7 +970,7 @@ public class StructureTools {
 	 * nucleotide, returns {@link #UNKNOWN_GROUP_LABEL}.
 	 *
 	 * Returned null for nucleotides prior to version 4.0.1.
-	 * 
+	 *
 	 * @param groupCode3
 	 *            three letter representation
 	 * @return The 1-letter abbreviation
@@ -1002,7 +1009,7 @@ public class StructureTools {
 	/**
 	 * Test if the three-letter code of an ATOM entry corresponds to a
 	 * nucleotide or to an aminoacid.
-	 * 
+	 *
 	 * @param groupCode3
 	 *            3-character code for a group.
 	 *
@@ -1018,7 +1025,7 @@ public class StructureTools {
 	 * first model of the structure. If chainId is provided only return a
 	 * structure containing that Chain ID. Converts lower case chain IDs to
 	 * upper case if structure does not contain a chain with that ID.
-	 * 
+	 *
 	 * @param s
 	 * @param chainId
 	 * @return Structure
@@ -1086,7 +1093,7 @@ public class StructureTools {
 	 * Reduce a structure to provide a smaller representation. Only takes the
 	 * first model of the structure. If chainNr >=0 only takes the chain at that
 	 * position into account.
-	 * 
+	 *
 	 * @param s
 	 * @param chainNr
 	 *            can be -1 to request all chains of model 0, otherwise will
@@ -1141,21 +1148,21 @@ public class StructureTools {
 	 * {@link #getReducedStructure(Structure, int)} and
 	 * {@link #getReducedStructure(Structure, String)}, also provides a way to
 	 * specify sub-regions of a structure with the following specification:
-	 * 
+	 *
 	 * <p>
 	 * <li>ranges can be surrounded by ( and ). (but will be removed).</li>
 	 * <li>ranges are specified as PDBresnum1 : PDBresnum2</li>
-	 * 
+	 *
 	 * <li>a list of ranges is separated by ,</li>
 	 * </p>
 	 * Example
-	 * 
+	 *
 	 * <pre>
 	 *  4GCR (A:1-83)
 	 *  1CDG (A:407-495,A:582-686)
 	 *  1CDG (A_407-495,A_582-686)
 	 * </pre>
-	 * 
+	 *
 	 * @param s
 	 *            The full structure
 	 * @param ranges
@@ -1167,7 +1174,7 @@ public class StructureTools {
 	 * @deprecated Use {@link StructureIdentifier} instead (4.2.0)
 	 */
 	@Deprecated
-	public static final Structure getSubRanges(Structure s, String ranges ) 
+	public static final Structure getSubRanges(Structure s, String ranges )
 			throws StructureException
 	{
 		if (ranges == null || ranges.equals(""))
@@ -1218,7 +1225,7 @@ public class StructureTools {
 
 	/**
 	 * Get a group represented by a ResidueNumber.
-	 * 
+	 *
 	 * @param struc
 	 *            a {@link Structure}
 	 * @param pdbResNum
@@ -1244,7 +1251,7 @@ public class StructureTools {
 	 * speeds up the calculation without need of full distance matrix. The
 	 * parsing mode {@link FileParsingParameters#setAlignSeqRes(boolean)} needs
 	 * to be set to true for this to work.
-	 * 
+	 *
 	 * @param chain
 	 * @param atomNames
 	 *            the array with atom names to be used. Beware: CA will do both
@@ -1276,7 +1283,7 @@ public class StructureTools {
 	 * matrix. The parsing mode
 	 * {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to
 	 * true for this to work.
-	 * 
+	 *
 	 * @param chain
 	 * @param cutoff
 	 * @return
@@ -1292,7 +1299,7 @@ public class StructureTools {
 	 * the calculation without need of full distance matrix. The parsing mode
 	 * {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to
 	 * true for this to work.
-	 * 
+	 *
 	 * @param chain
 	 * @param cutoff
 	 * @return
@@ -1313,7 +1320,7 @@ public class StructureTools {
 	 * or C3' atoms (including non-standard aminoacids appearing as HETATM
 	 * groups), i.e. the contact map. Uses a geometric hashing algorithm that
 	 * speeds up the calculation without need of full distance matrix.
-	 * 
+	 *
 	 * @param chain
 	 * @param cutoff
 	 * @return
@@ -1336,7 +1343,7 @@ public class StructureTools {
 	 * the calculation without need of full distance matrix. The parsing mode
 	 * {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to
 	 * true for this to work.
-	 * 
+	 *
 	 * @param chain1
 	 * @param chain2
 	 * @param atomNames
@@ -1371,7 +1378,7 @@ public class StructureTools {
 	 * calculation without need of full distance matrix. The parsing mode
 	 * {@link FileParsingParameters#setAlignSeqRes(boolean)} needs to be set to
 	 * true for this to work.
-	 * 
+	 *
 	 * @param chain1
 	 * @param chain2
 	 * @param cutoff
@@ -1387,7 +1394,7 @@ public class StructureTools {
 	/**
 	 * Finds Groups in {@code structure} that contain at least one Atom that is
 	 * within {@code radius} Angstroms of {@code centroid}.
-	 * 
+	 *
 	 * @param structure
 	 *            The structure from which to find Groups
 	 * @param centroid
@@ -1525,7 +1532,7 @@ public class StructureTools {
 	 * <p>
 	 * Updated 18-Sep-2015 sroughley to return a Set so only a unique set of
 	 * Groups returned
-	 * 
+	 *
 	 * @param structure
 	 *            The structure to work with
 	 * @param group
@@ -1555,7 +1562,7 @@ public class StructureTools {
 
 	/**
 	 * Remove all models from a Structure and keep only the first
-	 * 
+	 *
 	 * @param s
 	 *            original Structure
 	 * @return a structure that contains only the first model
@@ -1576,7 +1583,7 @@ public class StructureTools {
 		// TODO: do deep copying of data!
 		n.setPDBHeader(s.getPDBHeader());
 		n.setDBRefs(s.getDBRefs());
-		
+
 		n.setSites(s.getSites());
 
 		n.setChains(s.getModel(0));
@@ -1587,7 +1594,7 @@ public class StructureTools {
 
 	/**
 	 * Removes all polymeric and solvent groups from a list of groups
-	 * 
+	 *
 	 */
 	public static List<Group> filterLigands(List<Group> allGroups) {
 
@@ -1613,7 +1620,7 @@ public class StructureTools {
 	/**
 	 * Short version of {@link #getStructure(String, PDBFileParser, AtomCache)}
 	 * which creates new parsers when needed
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 * @throws IOException
@@ -1636,7 +1643,7 @@ public class StructureTools {
 	 * <li>Residue ranges
 	 * <li>Other formats supported by AtomCache
 	 * </ol>
-	 * 
+	 *
 	 * @param name
 	 *            Some reference to the protein structure
 	 * @param parser
@@ -1671,7 +1678,7 @@ public class StructureTools {
 
 	/**
 	 * Tell whether given chain is a protein chain
-	 * 
+	 *
 	 * @param c
 	 * @return true if protein, false if nucleotide or ligand
 	 * @see #getPredominantGroupType(Chain)
@@ -1682,7 +1689,7 @@ public class StructureTools {
 
 	/**
 	 * Tell whether given chain is DNA or RNA
-	 * 
+	 *
 	 * @param c
 	 * @return true if nucleic acid, false if protein or ligand
 	 * @see #getPredominantGroupType(Chain)
@@ -1705,7 +1712,7 @@ public class StructureTools {
 	 * dictionary and provide a much more accurate description of groups and
 	 * their linking.
 	 * </p>
-	 * 
+	 *
 	 * @param c
 	 * @return
 	 */
@@ -1762,7 +1769,7 @@ public class StructureTools {
 
 	/**
 	 * Returns true if the given chain is composed of water molecules only
-	 * 
+	 *
 	 * @param c
 	 * @return
 	 */
@@ -1778,7 +1785,7 @@ public class StructureTools {
 
 	/**
 	 * Returns true if the given chain is composed of non-polymeric groups only
-	 * 
+	 *
 	 * @param c
 	 * @return
 	 */

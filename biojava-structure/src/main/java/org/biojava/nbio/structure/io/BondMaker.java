@@ -347,6 +347,17 @@ public class BondMaker {
 			String altLoc2 = "";
 			if (!conn.getPdbx_ptnr2_label_alt_id().equals("?")) altLoc2 = conn.getPdbx_ptnr2_label_alt_id();
 
+			// TODO: when issue 220 is implemented, add robust symmetry handling to allow bonds between symmetry-related molecules.
+			if (!conn.getPtnr1_symmetry().equals(symop) || !conn.getPtnr2_symmetry().equals(symop) ) {
+				logger.info("Skipping bond between atoms {}(residue {}{}) and {}(residue {}{}) belonging to different symmetry partners, because it is not supported yet", 
+						atomName1, seqId1, insCode1, atomName2, seqId2, insCode2);
+				continue;
+			}
+
+			
+			String altLocStr1 = altLoc1.isEmpty()? "" : "(alt loc "+altLoc1+")";
+			String altLocStr2 = altLoc2.isEmpty()? "" : "(alt loc "+altLoc2+")";
+			
 			Atom a1 = null;
 			Atom a2 = null;
 
@@ -354,24 +365,27 @@ public class BondMaker {
 				a1 = getAtomFromRecord(atomName1, altLoc1, resName1, chainId1, seqId1, insCode1);
 
 			} catch (StructureException e) {
-				String altLocStr1 = altLoc1.isEmpty()? "" : "(alt loc "+altLoc1+")";
+				
 				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId1, insCode1, resName1, chainId1, atomName1, altLocStr1);
 				continue;
 			}
 			try {
 				a2 = getAtomFromRecord(atomName2, altLoc2, resName2, chainId2, seqId2, insCode2);
 			} catch (StructureException e) {
-				String altLocStr2 = altLoc2.isEmpty()? "" : "(alt loc "+altLoc2+")";
+				
 				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId2, insCode2, resName2, chainId2, atomName2, altLocStr2);
 				continue;
 			}
 
-
-			// TODO: when issue 220 is implemented, add robust symmetry handling to allow bonds between symmetry-related molecules.
-			if (!conn.getPtnr1_symmetry().equals(symop) || !conn.getPtnr2_symmetry().equals(symop) ) {
-				logger.info("Skipping bond between atoms {}({}) and {}({}) belonging to different symmetry partners, because it is not supported yet", 
-						a1.getPDBserial(), a1.getName(), a2.getPDBserial(), a2.getName());
+			if (a1==null) {
+				// we couldn't find the atom, something must be wrong with the file 
+				logger.warn("Could not find atom {} {} from residue {}{}({}) in chain {} to create bond specified in struct_conn", atomName1, altLocStr1, seqId1, insCode1, resName1, chainId1);
 				continue;
+			}
+			if (a2==null) {
+				// we couldn't find the atom, something must be wrong with the file 
+				logger.warn("Could not find atom {} {} from residue {}{}({}) in chain {} to create bond specified in struct_conn", atomName2, altLocStr2, seqId2, insCode2, resName2, chainId2);
+				continue;				
 			}
 
 			// assuming order 1 for all bonds, no information is provided by struct_conn

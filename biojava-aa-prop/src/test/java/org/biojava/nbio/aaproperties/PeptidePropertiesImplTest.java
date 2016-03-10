@@ -39,60 +39,60 @@ public class PeptidePropertiesImplTest {
 	private final static Logger logger = LoggerFactory.getLogger(PeptidePropertiesImplTest.class);
 
 	private static final double delta = 0.00001;
-	
+
 	/**
-	 * Test input 
+	 * Test input
 	 */
 	private final String sequence = "MTADGPCRELLCQLRAAVRHRWWC1";
 	private final String fullInvalidSequence = "3176412372301230183--2310";
 
 	@Test
-	public void testAAComposition() { 
+	public void testAAComposition() {
 		//'W', 'C', 'M', 'H', 'Y', 'F', 'Q', 'N', 'I', 'R', 'D', 'P', 'T', 'K', 'E', 'V', 'S', 'G', 'A', 'L'
 		Map<String, Double> composition = PeptideProperties.getAACompositionString(sequence);
 		int sequenceLength = sequence.length() - Utils.getNumberOfInvalidChar(sequence, null, true);
-		assertEquals(2.0/sequenceLength,(double) composition.get("W"), delta);
-		assertEquals(3.0/sequenceLength,(double) composition.get("C"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("M"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("H"), delta);
-		assertEquals(0.0/sequenceLength,(double) composition.get("Y"), delta);
-		assertEquals(0.0/sequenceLength,(double) composition.get("F"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("Q"), delta);
-		assertEquals(0.0/sequenceLength,(double) composition.get("N"), delta);
-		assertEquals(0.0/sequenceLength,(double) composition.get("I"), delta);
-		assertEquals(4.0/sequenceLength,(double) composition.get("R"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("D"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("P"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("T"), delta);
-		assertEquals(0.0/sequenceLength,(double) composition.get("K"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("E"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("V"), delta);
-		assertEquals(0.0/sequenceLength,(double) composition.get("S"), delta);
-		assertEquals(1.0/sequenceLength,(double) composition.get("G"), delta);
-		assertEquals(3.0/sequenceLength,(double) composition.get("A"), delta);
-		assertEquals(3.0/sequenceLength,(double) composition.get("L"), delta);
+		assertEquals(2.0/sequenceLength,composition.get("W"), delta);
+		assertEquals(3.0/sequenceLength,composition.get("C"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("M"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("H"), delta);
+		assertEquals(0.0/sequenceLength,composition.get("Y"), delta);
+		assertEquals(0.0/sequenceLength,composition.get("F"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("Q"), delta);
+		assertEquals(0.0/sequenceLength,composition.get("N"), delta);
+		assertEquals(0.0/sequenceLength,composition.get("I"), delta);
+		assertEquals(4.0/sequenceLength,composition.get("R"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("D"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("P"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("T"), delta);
+		assertEquals(0.0/sequenceLength,composition.get("K"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("E"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("V"), delta);
+		assertEquals(0.0/sequenceLength,composition.get("S"), delta);
+		assertEquals(1.0/sequenceLength,composition.get("G"), delta);
+		assertEquals(3.0/sequenceLength,composition.get("A"), delta);
+		assertEquals(3.0/sequenceLength,composition.get("L"), delta);
 
 		Map<String, Double> iComposition = PeptideProperties.getAACompositionString(fullInvalidSequence);
-		assertEquals(0.0,(double) iComposition.get("W"), delta);
-		assertEquals(0.0,(double) iComposition.get("C"), delta);
-		assertEquals(0.0,(double) iComposition.get("M"), delta);
-		assertEquals(0.0,(double) iComposition.get("H"), delta);
-		assertEquals(0.0,(double) iComposition.get("Y"), delta);
-		assertEquals(0.0,(double) iComposition.get("F"), delta);
-		assertEquals(0.0,(double) iComposition.get("Q"), delta);
-		assertEquals(0.0,(double) iComposition.get("N"), delta);
-		assertEquals(0.0,(double) iComposition.get("I"), delta);
-		assertEquals(0.0,(double) iComposition.get("R"), delta);
-		assertEquals(0.0,(double) iComposition.get("D"), delta);
-		assertEquals(0.0,(double) iComposition.get("P"), delta);
-		assertEquals(0.0,(double) iComposition.get("T"), delta);
-		assertEquals(0.0,(double) iComposition.get("K"), delta);
-		assertEquals(0.0,(double) iComposition.get("E"), delta);
-		assertEquals(0.0,(double) iComposition.get("V"), delta);
-		assertEquals(0.0,(double) iComposition.get("S"), delta);
-		assertEquals(0.0,(double) iComposition.get("G"), delta);
-		assertEquals(0.0,(double) iComposition.get("A"), delta);
-		assertEquals(0.0,(double) iComposition.get("L"), delta);
+		assertEquals(0.0,iComposition.get("W"), delta);
+		assertEquals(0.0,iComposition.get("C"), delta);
+		assertEquals(0.0,iComposition.get("M"), delta);
+		assertEquals(0.0,iComposition.get("H"), delta);
+		assertEquals(0.0,iComposition.get("Y"), delta);
+		assertEquals(0.0,iComposition.get("F"), delta);
+		assertEquals(0.0,iComposition.get("Q"), delta);
+		assertEquals(0.0,iComposition.get("N"), delta);
+		assertEquals(0.0,iComposition.get("I"), delta);
+		assertEquals(0.0,iComposition.get("R"), delta);
+		assertEquals(0.0,iComposition.get("D"), delta);
+		assertEquals(0.0,iComposition.get("P"), delta);
+		assertEquals(0.0,iComposition.get("T"), delta);
+		assertEquals(0.0,iComposition.get("K"), delta);
+		assertEquals(0.0,iComposition.get("E"), delta);
+		assertEquals(0.0,iComposition.get("V"), delta);
+		assertEquals(0.0,iComposition.get("S"), delta);
+		assertEquals(0.0,iComposition.get("G"), delta);
+		assertEquals(0.0,iComposition.get("A"), delta);
+		assertEquals(0.0,iComposition.get("L"), delta);
 
 		//Null would be returned for invalid character
 		assertNotSame(0d, composition.get("Z"));
@@ -103,7 +103,7 @@ public class PeptidePropertiesImplTest {
 
 	@Test()
 	public void testEnrichment() {
-		
+
 		//'W', 'C', 'M', 'H', 'Y', 'F', 'Q', 'N', 'I', 'R', 'D', 'P', 'T', 'K', 'E', 'V', 'S', 'G', 'A', 'L'
 		int sequenceLength = sequence.length();
 		assertEquals(2.0/sequenceLength, PeptideProperties.getEnrichment(sequence, "W"), delta);
@@ -153,7 +153,7 @@ public class PeptidePropertiesImplTest {
 	@Test (expected = NullPointerException.class)
 	public void testEnrichmentNull(){
 		assertEquals(0.0, PeptideProperties.getEnrichment(sequence, ""), delta);
-		assertNull(PeptideProperties.getEnrichment(sequence, "1"));		
+		assertNull(PeptideProperties.getEnrichment(sequence, "1"));
 	}
 
 	@Test
@@ -174,8 +174,8 @@ public class PeptidePropertiesImplTest {
 		File aminoAcidCompositionFile = new File("./src/main/resources/AminoAcidComposition.xml");
 
 		assertEquals(
-				PeptideProperties.getMolecularWeight("A", elementMassFile, aminoAcidCompositionFile) 
-						* 5.0 -  4 * (17.0073 + 1.0079), 
+				PeptideProperties.getMolecularWeight("A", elementMassFile, aminoAcidCompositionFile)
+						* 5.0 -  4 * (17.0073 + 1.0079),
 				PeptideProperties.getMolecularWeight("AAAAA", elementMassFile, aminoAcidCompositionFile),
 				delta);
 	}
@@ -185,7 +185,7 @@ public class PeptidePropertiesImplTest {
 		File aminoAcidCompositionFile = new File("./src/main/resources/AminoAcidComposition.xml");
 
 		assertEquals(
-				PeptideProperties.getMolecularWeight("A", aminoAcidCompositionFile) * 5.0 -  4 * (17.0073 + 1.0079), 
+				PeptideProperties.getMolecularWeight("A", aminoAcidCompositionFile) * 5.0 -  4 * (17.0073 + 1.0079),
 				PeptideProperties.getMolecularWeight("AAAAA", aminoAcidCompositionFile),
 				delta);
 	}
@@ -197,7 +197,7 @@ public class PeptidePropertiesImplTest {
 		AminoAcidCompositionTable table = PeptideProperties.obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile);
 
 		assertEquals(
-				PeptideProperties.getMolecularWeightBasedOnXML("A", table) * 5.0 -  4 * (17.0073 + 1.0079), 
+				PeptideProperties.getMolecularWeightBasedOnXML("A", table) * 5.0 -  4 * (17.0073 + 1.0079),
 				PeptideProperties.getMolecularWeightBasedOnXML("AAAAA", table),
 				delta);
 	}
@@ -293,7 +293,7 @@ public class PeptidePropertiesImplTest {
 		 */
 		assertEquals(3.42, PeptideProperties.getIsoelectricPoint("ACCACAAADADADACA"), 0.01);
 		assertEquals(3.42, PeptideProperties.getIsoelectricPoint("ACCACAAADADADACM"), 0.01);
-		//		
+		//
 		assertEquals(3.37, PeptideProperties.getIsoelectricPoint("ECCACAAADADADACS", true), 0.01);
 
 
@@ -329,11 +329,11 @@ public class PeptidePropertiesImplTest {
 		assertEquals(-3.2, PeptideProperties.getNetCharge("ACCACAAADADADACA", false), 0.1);
 		/*
 		 * Did not test for Expasy because in their website, net charge is not given.
-		 * However, since Isoelectric point is given which rely on getNetCharge values therefore, 
+		 * However, since Isoelectric point is given which rely on getNetCharge values therefore,
 		 * 	we infer that if getIsoelectricPoint is correct, getNetCharge would be correct for Expasy.
 		 */
-		
-		
+
+
 		/*
 		 * Provided by Steve Darnell to compare the difference between Innovagen and Expasy
 		 */
@@ -348,7 +348,7 @@ public class PeptidePropertiesImplTest {
 				double phPoint = (new Double(i)).doubleValue();
 				double chrgInnovagen = PeptideProperties.getNetCharge(p,false,phPoint);
 				double chrgExpasy = PeptideProperties.getNetCharge(p,true,phPoint);
-				logger.debug(String.format("%2.1f\t%2.2f\t%2.2f\t%2.2f", phPoint, chrgInnovagen, 
+				logger.debug(String.format("%2.1f\t%2.2f\t%2.2f\t%2.2f", phPoint, chrgInnovagen,
 						chrgExpasy, chrgInnovagen - chrgExpasy));
 			}
 		}

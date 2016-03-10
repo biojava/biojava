@@ -29,9 +29,9 @@ import java.util.List;
 
 /**
  * Corresponds to the wrapper element "ligandInfo" in an RCSB {@code ligandInfo} XML file.
- * 
+ *
  * @see <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB RESTful</a>
- * 
+ *
  * @author dmyerstu
  * @since 3.0.6
  */

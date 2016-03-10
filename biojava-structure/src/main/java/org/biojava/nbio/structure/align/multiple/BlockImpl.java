@@ -29,12 +29,12 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 /**
  * General implementation of a {@link Block} that supports any type of
  * sequential alignment with gaps.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.0
- * 
+ *
  */
-public class BlockImpl extends AbstractScoresCache 
+public class BlockImpl extends AbstractScoresCache
 implements Serializable, Block, Cloneable {
 
 	private static final long serialVersionUID = -5804042669466177641L;
@@ -46,7 +46,7 @@ implements Serializable, Block, Cloneable {
 	/**
 	 * Constructor. Links also the parent to this instance, by adding the
 	 * Block to the parent's list.
-	 * 
+	 *
 	 * @param blockSet the parent BlockSet of the BlockImpl instance.
 	 * @return BlockImpl a BlockImpl instance linked to its parent BlockSet.
 	 */
@@ -60,7 +60,7 @@ implements Serializable, Block, Cloneable {
 
 	/**
 	 * Copy constructor.
-	 * 
+	 *
 	 * @param b BlockImpl object to be copied.
 	 * @return BlockImpl an identical copy of the input BlockImpl object.
 	 */
@@ -171,5 +171,5 @@ implements Serializable, Block, Cloneable {
 		return alignRes.get(str).get(getFinalIndex(str));
 	}
 
-	
+
 }

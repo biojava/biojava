@@ -42,7 +42,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 	StructureLoaderThread(UserConfiguration config, String name, boolean showBiolAssembly){
 		this.name = name;
 		this.showBiolAssembly = showBiolAssembly;
-	
+
 		this.config = config;
 	}
 
@@ -71,7 +71,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 			}
 
 			System.out.println("done loading structure...");
-		
+
 
 			StructureAlignmentJmol jmol = new StructureAlignmentJmol();
 			jmol.setStructure(s);
@@ -125,7 +125,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 		}
 
 
-	}       
+	}
 
 	static JFrame progressFrame = null;
 	private void hideProgressBar() {

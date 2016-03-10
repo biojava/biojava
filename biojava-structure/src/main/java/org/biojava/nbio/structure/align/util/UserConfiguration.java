@@ -34,7 +34,7 @@ import java.util.Map;
 
 
 /** A container to persist config to the file system
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -42,15 +42,15 @@ public class UserConfiguration
 {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserConfiguration.class);
-	
+
 	public static final String PDB_FORMAT   = "PDB";
 	public static final String MMCIF_FORMAT = "mmCif";
 
 	public static final String TMP_DIR = "java.io.tmpdir";
-	
+
 	public static final String PDB_DIR   = "PDB_DIR";
 	public static final String PDB_CACHE_DIR = "PDB_CACHE_DIR";
-	
+
 	public static final String lineSplit = System.getProperty("file.separator");
 
 	private String pdbFilePath;
@@ -73,7 +73,7 @@ public class UserConfiguration
 	 *   <li>{@value #PDB_DIR} environment variable</li>
 	 *   <li>System temp directory (java.io.tmpdir property)</li>
 	 *   </ol>
-	 *   if the provided path is not a directory then 
+	 *   if the provided path is not a directory then
 	 *   the system's temp directory is used. A non-writable path is allowed,
 	 *   only a warning will be logged.
 	 * </li>
@@ -82,9 +82,9 @@ public class UserConfiguration
 	 *   <li>{@value #PDB_CACHE_DIR} environment variable</li>
 	 *   <li>the value set for {@value #PDB_DIR}</li>
 	 *   </ol>
-	 *   if the provided path is not a directory or is not writable then 
+	 *   if the provided path is not a directory or is not writable then
 	 *   the system's temp directory is used.
-	 * </li> 
+	 * </li>
 	 * </ul>
 	 */
 	public UserConfiguration(){
@@ -94,16 +94,16 @@ public class UserConfiguration
 		pdbFilePath = initPdbFilePath();
 		// note that in initCacheFilePath, we set to the provided one (if readable) or to the same as pdbFilePath
 		cacheFilePath = initCacheFilePath();
-		
+
 		fileFormat = MMCIF_FORMAT;
 	}
-	
+
 	private String initPdbFilePath() {
-		
+
 		String path = null;
-		
+
 		String propertyName = PDB_DIR;
-		
+
 		String userProvidedDir = System.getProperty(propertyName);
 
 		if ( userProvidedDir != null && !userProvidedDir.trim().isEmpty()) {
@@ -113,17 +113,17 @@ public class UserConfiguration
 			File f = new File(path);
 			if (!f.isDirectory()) {
 				logger.warn(
-						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}", 
+						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}",
 						path, propertyName, System.getProperty(TMP_DIR));
 				path = System.getProperty(TMP_DIR);
 			} else if (!f.canWrite()) {
 				logger.warn(
-						"Provided path {} (with system property {}) is not writable. Will not be able to write cached files.", 
+						"Provided path {} (with system property {}) is not writable. Will not be able to write cached files.",
 						path, propertyName);
 				// we don't require the PDB_DIR to be writable, so that it can be used with a pre-rsynced dir
 				// thus if not writable, we only warn and go ahead using it
 			}
-			
+
 
 		} else {
 			Map<String,String> env = System.getenv();
@@ -131,16 +131,16 @@ public class UserConfiguration
 			if( env.containsKey(propertyName) && !env.get(propertyName).trim().isEmpty()) {
 				path = env.get(propertyName);
 				logger.debug("Read dir from environment variable {}: {}", propertyName, path);
-				
+
 				File f = new File(path);
 				if (!f.isDirectory()) {
 					logger.warn(
-							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}", 
+							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}",
 							path, propertyName, System.getProperty(TMP_DIR));
 					path = System.getProperty(TMP_DIR);
 				} else if (!f.canWrite()) {
 					logger.warn(
-							"Provided path {} (with environment variable {}) is not writable. Will not be able to write cached files", 
+							"Provided path {} (with environment variable {}) is not writable. Will not be able to write cached files",
 							path, propertyName);
 					// we don't require the PDB_DIR to be writable, so that it can be used with a pre-rsynced dir
 					// thus if not writable, we only warn and go ahead using it
@@ -155,20 +155,20 @@ public class UserConfiguration
 				System.setProperty(propertyName,path);
 			}
 		}
-		
+
 		if ( ! path.endsWith(lineSplit) )
 			path = path + lineSplit;
-		
+
 		return path;
 
 	}
 
 	private String initCacheFilePath() {
-		
+
 		String path = null;
-		
+
 		String propertyName = PDB_CACHE_DIR;
-		
+
 		String userProvidedDir = System.getProperty(propertyName);
 
 		if ( userProvidedDir != null ) {
@@ -178,17 +178,17 @@ public class UserConfiguration
 			File f = new File(path);
 			if (!f.isDirectory()) {
 				logger.warn(
-						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}", 
+						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}",
 						path, propertyName, System.getProperty(TMP_DIR));
 				path = System.getProperty(TMP_DIR);
 			} else if (!f.canWrite()) {
 				logger.warn(
-						"Provided path {} (with system property {}) is not writable. Using system's temp directory instead {}", 
+						"Provided path {} (with system property {}) is not writable. Using system's temp directory instead {}",
 						path, propertyName, System.getProperty(TMP_DIR));
 				path = System.getProperty(TMP_DIR);
 				System.setProperty(propertyName,path);
 			}
-			
+
 
 		} else {
 			Map<String,String> env = System.getenv();
@@ -196,16 +196,16 @@ public class UserConfiguration
 			if( env.containsKey(propertyName)) {
 				path = env.get(propertyName);
 				logger.debug("Read dir from environment variable {}: {}", propertyName, path);
-				
+
 				File f = new File(path);
 				if (!f.isDirectory()) {
 					logger.warn(
-							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}", 
+							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}",
 							path, propertyName, System.getProperty(TMP_DIR));
 					path = System.getProperty(TMP_DIR);
 				} else if (!f.canWrite()) {
 					logger.warn(
-							"Provided path {} (with environment variable {}) is not writable. Using system's temp directory instead {}", 
+							"Provided path {} (with environment variable {}) is not writable. Using system's temp directory instead {}",
 							path, propertyName, System.getProperty(TMP_DIR));
 					path = System.getProperty(TMP_DIR);
 				}
@@ -228,16 +228,16 @@ public class UserConfiguration
 					System.setProperty(propertyName,path);
 
 				}
-			}   
+			}
 		}
-		
+
 		if ( ! path.endsWith(lineSplit) )
 			path = path + lineSplit;
-		
+
 		return path;
 
 	}
-	
+
 	public String getPdbFilePath()
 	{
 		return pdbFilePath;
@@ -293,12 +293,12 @@ public class UserConfiguration
 	}
 
 	/** convert Configuration to an XML file so it can be serialized
-	 * 
+	 *
 	 * @param pw
 	 * @return XMLWriter
 	 * @throws IOException
 	 */
-	public XMLWriter toXML(PrintWriter pw) 
+	public XMLWriter toXML(PrintWriter pw)
 			throws IOException
 			{
 
@@ -311,14 +311,14 @@ public class UserConfiguration
 
 	/** convert Configuration to an XML file so it can be serialized
 	 * add to an already existing xml file.
-	 * 
+	 *
 	 * @param xw the XML writer to use
 	 * @return the writer again
 	 * @throws IOException
 	 * @see org.biojava.nbio.structure.align.webstart.ConfigXMLHandler
 	 */
 
-	public XMLWriter toXML(XMLWriter xw) 
+	public XMLWriter toXML(XMLWriter xw)
 			throws IOException
 			{
 		xw.printRaw("<?xml version='1.0' standalone='no' ?>");

@@ -35,9 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestSubOptimalMSA {
-	
+
 	private List<DNASequence> sequences = new ArrayList<DNASequence>();
-	
+
 	@Before
 	public void setUp() {
 		try {
@@ -54,28 +54,28 @@ public class TestSubOptimalMSA {
 		SimpleGapPenalty gapP = new SimpleGapPenalty((short) 5, (short) 2);
 		Profile<DNASequence, NucleotideCompound> msa = Alignments
 				.getMultipleSequenceAlignment(sequences, gapP);
-		
+
 		assertEquals("TTGGGGCCTCTAAACGGGGTCTT\n"
 				+ "TTGGGGCCTCTAAACGGG-TCTT\n"
-				+ "TTGGGGC-TCTAA-CGGG-TCTT\n", 
+				+ "TTGGGGC-TCTAA-CGGG-TCTT\n",
 				msa.toString());
-		
+
 		ConcurrencyTools.shutdown();
 	}
-	
+
 	@Test @Ignore
 	public void gapPenaltyDefault() {
 		// Default is currently 10-1
 		SimpleGapPenalty gapP = new SimpleGapPenalty((short) 10, (short) 1);
 		Profile<DNASequence, NucleotideCompound> msa = Alignments
 				.getMultipleSequenceAlignment(sequences, gapP);
-		
+
 		// TODO test not passing (see issue 288 in github) - Aleix 03.2016
 		assertEquals("TTGGGGCCTCTAAACGGGGTCTT\n"
 				+ "TTGGGGCCTCTAAACGGG-TCTT\n"
-				+ "TTGGGGC-TCTAA-CGGG-TCTT\n", 
+				+ "TTGGGGC-TCTAA-CGGG-TCTT\n",
 				msa.toString());
-		
+
 		ConcurrencyTools.shutdown();
 	}
 }

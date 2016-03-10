@@ -30,41 +30,41 @@ import static org.junit.Assert.assertEquals;
 
 public class JoiningSequenceReaderTest {
 
-  @SuppressWarnings("unchecked")
-  @Test
-  public void canScan() throws CompoundNotFoundException {
-    JoiningSequenceReader<NucleotideCompound> seq =
-      new JoiningSequenceReader<NucleotideCompound>(
-          new DNASequence("AAAA"),
-          new DNASequence("GGG"),
-          new JoiningSequenceReader<NucleotideCompound>(new DNASequence("A"), new DNASequence("C")),
-          new DNASequence("TT"),
-          new DNASequence("C")
-    );
+	@SuppressWarnings("unchecked")
+	@Test
+	public void canScan() throws CompoundNotFoundException {
+		JoiningSequenceReader<NucleotideCompound> seq =
+			new JoiningSequenceReader<NucleotideCompound>(
+					new DNASequence("AAAA"),
+					new DNASequence("GGG"),
+					new JoiningSequenceReader<NucleotideCompound>(new DNASequence("A"), new DNASequence("C")),
+					new DNASequence("TT"),
+					new DNASequence("C")
+		);
 
-    String expected = "AAAAGGGACTTC";
+		String expected = "AAAAGGGACTTC";
 
-    StringBuilder builderByIndex = new StringBuilder();
-    for(int i = 1; i <= seq.getLength(); i++) {
-      builderByIndex.append(seq.getCompoundAt(i));
-    }
+		StringBuilder builderByIndex = new StringBuilder();
+		for(int i = 1; i <= seq.getLength(); i++) {
+			builderByIndex.append(seq.getCompoundAt(i));
+		}
 
-    StringBuilder builderByIterator = SequenceMixin.toStringBuilder(seq);
+		StringBuilder builderByIterator = SequenceMixin.toStringBuilder(seq);
 
-    assertEquals("Index builder", expected, builderByIndex.toString());
-    assertEquals("Iterator builder", expected, builderByIterator.toString());
-  }
+		assertEquals("Index builder", expected, builderByIndex.toString());
+		assertEquals("Iterator builder", expected, builderByIterator.toString());
+	}
 
-  @SuppressWarnings("unchecked")
-  @Test
-  public void empty() throws CompoundNotFoundException { 
-    JoiningSequenceReader<NucleotideCompound> seq =
-      new JoiningSequenceReader<NucleotideCompound>(
-          new DNASequence(""),
-          new DNASequence(""),
-          new DNASequence("A"),
-          new DNASequence("")
-      );
-    assertEquals("Testing empty sequences", "A", seq.getSequenceAsString());
-  }
+	@SuppressWarnings("unchecked")
+	@Test
+	public void empty() throws CompoundNotFoundException {
+		JoiningSequenceReader<NucleotideCompound> seq =
+			new JoiningSequenceReader<NucleotideCompound>(
+					new DNASequence(""),
+					new DNASequence(""),
+					new DNASequence("A"),
+					new DNASequence("")
+			);
+		assertEquals("Testing empty sequences", "A", seq.getSequenceAsString());
+	}
 }

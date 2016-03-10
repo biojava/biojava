@@ -49,14 +49,14 @@ import java.util.Map;
  * @author Horvath Tamas
  * @since 1.4
  * @version %I% %G%
- * 
+ *
  */
 public interface Group {
 
 	/** Group property key for secondary structure annotation */
 	public static final String SEC_STRUC = "secstruc";
 
-	/** 
+	/**
 	 * Get number of atoms.
 	 * @return number of atoms of this Group
 	 */
@@ -77,7 +77,7 @@ public interface Group {
 
 	/**
 	 * Get Type of group, one of {@link GroupType#AMINOACID}, {@link GroupType#HETATM}
-	 * or {@link GroupType#NUCLEOTIDE} 
+	 * or {@link GroupType#NUCLEOTIDE}
 	 *
 	 * @return a String representing the type value
 	 */
@@ -108,7 +108,7 @@ public interface Group {
 	 */
 	public void clearAtoms();
 
-	/** 
+	/**
 	 * Get an atom given its PDB name.
 	 * Beware that some PDB atom names are ambiguous (e.g. CA, which means C-alpha or Calcium),
 	 * ambiguities should not occur within the same group though. To solve these ambiguities
@@ -120,7 +120,7 @@ public interface Group {
 	public Atom getAtom(String name) ;
 
 
-	/** 
+	/**
 	 * Get at atom by position.
 	 *
 	 * @param position  an int
@@ -128,17 +128,17 @@ public interface Group {
 	 */
 	public Atom getAtom(int position) ;
 
-	/** 
+	/**
 	 * Tell whether a particular atom exists within this group.
 	 * Beware that some PDB atom names are ambiguous (e.g. CA, which means C-alpha or Calcium),
-	 * ambiguities should not occur within the same group though. 
-	 * 
+	 * ambiguities should not occur within the same group though.
+	 *
 	 * @param name  a trimmed String representing the atom's PDB name, e.g. "CA"
 	 * @return true if Atom with name exists within this group
 	 */
 	public boolean hasAtom(String name);
 
-	/** 
+	/**
 	 * Get the PDB 3-letter name for this group. (e.g. ALA)
 	 *
 	 * @return a String representing the PDBName value
@@ -146,7 +146,7 @@ public interface Group {
 	 */
 	public String getPDBName();
 
-	/** 
+	/**
 	 * Set the PDB 3-letter name for this group. (e.g. ALA)
 	 *
 	 * @param s  a String specifying the PDBName value
@@ -155,30 +155,30 @@ public interface Group {
 	public void setPDBName(String s) ;
 
 
-	/** 
+	/**
 	 * Calculate if this group has all atoms required for an amino acid backbone.
-     * This allows to include chemically modified amino acids that
-     * are labeled hetatoms into some computations, the usual way
-     * to identify if a group is an amino acid is {@link #getType()}
-     * <p>
-     * amino atoms are : N, CA, C, O 
-     * </p>
-	 * 
-     * Example: 1DW9 chain A first group is a Selenomethionine, provided as HETATM, but here returns true.
-     * <pre>
-     * HETATM    1  N   MSE A   1      11.720  20.973   1.584  0.00  0.00           N
-     * HETATM    2  CA  MSE A   1      10.381  20.548   1.139  0.00  0.00           C
-     * HETATM    3  C   MSE A   1       9.637  20.037   2.398  0.00  0.00           C
-     * HETATM    4  O   MSE A   1      10.198  19.156   2.985  0.00  0.00           O
-     * HETATM    5  CB  MSE A   1      10.407  19.441   0.088  0.00  0.00           C
-     * </pre>
+	 * This allows to include chemically modified amino acids that
+	 * are labeled hetatoms into some computations, the usual way
+	 * to identify if a group is an amino acid is {@link #getType()}
+	 * <p>
+	 * amino atoms are : N, CA, C, O
+	 * </p>
+	 *
+	 * Example: 1DW9 chain A first group is a Selenomethionine, provided as HETATM, but here returns true.
+	 * <pre>
+	 * HETATM    1  N   MSE A   1      11.720  20.973   1.584  0.00  0.00           N
+	 * HETATM    2  CA  MSE A   1      10.381  20.548   1.139  0.00  0.00           C
+	 * HETATM    3  C   MSE A   1       9.637  20.037   2.398  0.00  0.00           C
+	 * HETATM    4  O   MSE A   1      10.198  19.156   2.985  0.00  0.00           O
+	 * HETATM    5  CB  MSE A   1      10.407  19.441   0.088  0.00  0.00           C
+	 * </pre>
 	 *
 	 * @return true if all Atoms required for an AminoAcid are available (N, CA, C, O)
-     * @see #getType
+	 * @see #getType
 	 */
 	public boolean hasAminoAtoms() ;
 
-	/** 
+	/**
 	 * Properties of this amino acid. Currently available properties are:
 	 * phi
 	 * psi
@@ -251,16 +251,16 @@ public interface Group {
 	 */
 	public ResidueNumber getResidueNumber();
 
-	
+
 	/** sets the ResidueNumber for this Group
-	 * 
+	 *
 	 * @param residueNumber the PDB residueNumber
 	 */
 	public void setResidueNumber(ResidueNumber residueNumber);
 
 	/** Utility method to temporarily set a chainID for a group, if a parent chain object does not exist yet.
 	 * Not recommended for general use other than parsing.
-	 * 
+	 *
 	 * @param chainId
 	 * @param residueNumber
 	 * @param iCode
@@ -270,66 +270,66 @@ public interface Group {
 	/**
 	 * Utility method for returning the chainId of the Group or null if no
 	 * Chain has been set. This replaces the need to use the expression
-	 * group.getChain().getId() 
+	 * group.getChain().getId()
 	 * @since 3.0
 	 * @return  the ID of the chain
 	 */
 	public String getChainId();
 
 	/** Set the Chemical Component that closer describes this group.
-	 * 
+	 *
 	 * @param cc the chemical component
 	 */
 	public void setChemComp(ChemComp cc);
 
 	/** Get the chemical component that closer describes this group. If the information does not exist yet, fetches the information from PDB web site.
-	 *  
+	 *
 	 * @return the Chemical Component definition for this Group.
 	 */
 	public ChemComp getChemComp();
 
-	
+
 	/** Test if this group has alternate locations.
-	 * 
+	 *
 	 * @return boolean flag if there are alternate locations.
 	 */
 	public boolean hasAltLoc();
-	
-	
+
+
 	/** Get the list of alternate locations.
-	 * 
+	 *
 	 * @return List of other groups that are on alternate locations
 	 */
 	public List<Group> getAltLocs();
-	
+
 	/** Add a group that is an alternate location for this group.
-	 * 
+	 *
 	 */
 	public void addAltLoc(Group g);
 
 	/**
 	 * Determines if this group is water.
-	 * 
+	 *
 	 * @see {@link GroupType#WATERNAMES}
 	 * @return true if it's water, false otherwise.
 	 */
 	public boolean isWater();
-	
+
 	/**
 	 * Gets the alternate location group to this group that has the alt-loc character code passed.
-	 * 
+	 *
 	 * @param altLoc the alternate location code of the group desired
 	 * @return the alternate location group if found, or null otherwise
 	 */
 	public Group getAltLocGroup(Character altLoc);
-	
-	
-	/** attempts to reduce the memory imprint of this group by trimming 
+
+
+	/** attempts to reduce the memory imprint of this group by trimming
 	 * all internal Collection objects to the required size.
-	 * 
+	 *
 	 */
 	public void trimToSize();
-	
+
 	/**
 	 * Function to get the Group as an MDL molblock
 	 * @return the string of the MDL molblock

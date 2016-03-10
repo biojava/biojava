@@ -41,39 +41,49 @@ implements Ontology {
 		termCache = new WeakValueHashMap();
 	}
 
+	@Override
 	public String getName() {
 		return "core.integer";
 	}
 
+	@Override
 	public String getDescription() {
 		return "Ontology containing all integers";
 	}
 
-	public void setDescription(String description){		
+	@Override
+	public void setDescription(String description){
 	}
 
+	@Override
 	public Set getTerms() {
 		return new AbstractSet() {
+			@Override
 			public boolean contains(Object o) {
 				return o instanceof IntTerm;
 			}
 
+			@Override
 			public int size() {
 				return Integer.MAX_VALUE;
 			}
 
+			@Override
 			public Iterator iterator() {
 				return new Iterator() {
 					int i = 0;
 
+					@Override
 					public boolean hasNext() {
 						return i > 0;
 					}
 
+					@Override
 					public Object next() {
 						return resolveInt(i++);
 					}
 
+					@Override
 					public void remove() {
 						throw new UnsupportedOperationException();
 					}
@@ -82,27 +92,33 @@ implements Ontology {
 		};
 	}
 
+	@Override
 	public Term getTerm(String s) throws NoSuchElementException {
 		int val = Integer.parseInt(s);
 		return resolveInt(val);
 	}
 
+	@Override
 	public Set getTriples(Term subject, Term object, Term predicate) {
 		return Collections.EMPTY_SET;
 	}
 
+	@Override
 	public OntologyOps getOps() {
 		return new DefaultOps() {
+			@Override
 			public Set getRemoteTerms() {
 				return Collections.EMPTY_SET;
 			}
 		};
 	}
 
+	@Override
 	public Term createTerm(String name) throws AlreadyExistsException,  IllegalArgumentException {
 		throw new IllegalArgumentException(getName() + " is immutable");
 	}
 
+	@Override
 	public Term createTerm(String name, String description)
 			throws
 			AlreadyExistsException,
@@ -112,6 +128,7 @@ implements Ontology {
 		throw new IllegalArgumentException(getName() + " is immutable");
 			}
 
+	@Override
 	public Term createTerm(String name, String description, Object[] synonyms)
 			throws
 			AlreadyExistsException,
@@ -121,6 +138,7 @@ implements Ontology {
 		throw new IllegalArgumentException(getName() + " is immutable");
 			}
 
+	@Override
 	public Variable createVariable(String name, String description)
 			throws
 			AlreadyExistsException,
@@ -130,6 +148,7 @@ implements Ontology {
 		throw new IllegalArgumentException(getName() + " is immutable");
 			}
 
+	@Override
 	public Term importTerm(Term t, String name)
 
 
@@ -137,6 +156,7 @@ implements Ontology {
 		throw new IllegalArgumentException(getName() + " is immutable");
 	}
 
+	@Override
 	public Triple createTriple(Term subject, Term object, Term predicate, String name, String description)
 			throws
 			AlreadyExistsException
@@ -144,14 +164,17 @@ implements Ontology {
 		throw new IllegalArgumentException(getName() + " is immutable");
 			}
 
+	@Override
 	public boolean containsTriple(Term subject, Term object, Term predicate) {
 		return false;
 	}
 
+	@Override
 	public void deleteTerm(Term t)  {
 		throw new RuntimeException(getName() + " is immutable");
 	}
 
+	@Override
 	public boolean containsTerm(String name) {
 		// uglee hack - perhaps we should use a regex?
 		try {
@@ -192,14 +215,17 @@ implements Ontology {
 			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
 		}
 
+		@Override
 		public void addSynonym(Object synonym) {
 			this.synonyms.add(synonym);
 		}
 
+		@Override
 		public void removeSynonym(Object synonym) {
 			this.synonyms.remove(synonym);
 		}
 
+		@Override
 		public Object[] getSynonyms() {
 			return this.synonyms.toArray();
 		}
@@ -208,27 +234,33 @@ implements Ontology {
 			return val;
 		}
 
+		@Override
 		public String getName() {
 			return String.valueOf(val);
 		}
 
+		@Override
 		public String getDescription() {
 			return "The integer " + getName();
 		}
 
+		@Override
 		public void setDescription(String description){
 
 		}
 
+		@Override
 		public Ontology getOntology() {
 			return IntegerOntology.this;
 		}
 
+		@Override
 		public Annotation getAnnotation() {
 			return Annotation.EMPTY_ANNOTATION;
 		}
 	}
 
+	@Override
 	public void setName(String name) {
 		//ignore
 

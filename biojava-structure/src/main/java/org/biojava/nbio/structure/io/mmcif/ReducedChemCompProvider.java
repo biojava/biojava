@@ -31,14 +31,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** Unlike the {@link DownloadChemCompProvider}, this  {@link ChemCompProvider} does not download any chem comp definitions. 
- * It has access to a limited set of files that are part of the biojava distribution. 
- *   
+/** Unlike the {@link DownloadChemCompProvider}, this  {@link ChemCompProvider} does not download any chem comp definitions.
+ * It has access to a limited set of files that are part of the biojava distribution.
+ *
  * @author Andreas Prlic
  * @since 3.0
  */
 public class ReducedChemCompProvider implements ChemCompProvider {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ReducedChemCompProvider.class);
 
 	public ReducedChemCompProvider(){

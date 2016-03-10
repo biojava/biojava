@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 30, 2010
- * Author: ap3 
+ * Author: ap3
  *
  */
 
@@ -36,7 +36,7 @@ public class ScopNode implements Serializable
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1187083944488580995L;
 

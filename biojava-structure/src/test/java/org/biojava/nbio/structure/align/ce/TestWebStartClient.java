@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 18, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -52,7 +52,7 @@ public class TestWebStartClient extends TestCase
 		//String name2="1tim.A";
 		String name1="1VHR.A";
 		String name2="2IHB.A";
-		
+
 		try {
 			//StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 			for (StructureAlignment algorithm : StructureAlignmentFactory.getAllAlgorithms()){
@@ -66,13 +66,13 @@ public class TestWebStartClient extends TestCase
 	}
 
 	@SuppressWarnings("unused")
-	private void align(String name1, String name2, StructureAlignment algorithm) 
+	private void align(String name1, String name2, StructureAlignment algorithm)
 	throws StructureException, IOException {
 		if ( algorithm.getAlgorithmName().startsWith("Smith")) {
 			System.err.println("not testing SW, no need to run that on server...");
 			return;
 		}
-			
+
 		//System.out.println("testing " + name1 + " " + name2 + " " + algorithm.getAlgorithmName());
 		AtomCache cache = new AtomCache();
 
@@ -80,9 +80,9 @@ public class TestWebStartClient extends TestCase
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
 
-		
+
 		AFPChain afpChain = algorithm.align(ca1,ca2);
-		afpChain.setName1(name1);  
+		afpChain.setName1(name1);
 		afpChain.setName2(name2);
 
 		assertNotNull(afpChain);
@@ -94,7 +94,7 @@ public class TestWebStartClient extends TestCase
 		/// SERVER part
 		String serverLocation = "http://beta.rcsb.org/pdb/rest/";
 		AFPChain afpServer = JFatCatClient.getAFPChainFromServer(serverLocation,algorithm.getAlgorithmName(), name1, name2, ca1, ca2, 5000);
-		assertNotNull(afpServer); 
+		assertNotNull(afpServer);
 
 		assertTrue("Algorithm names don't match!", afpServer.getAlgorithmName().equals(algorithm.getAlgorithmName()));
 		assertTrue("Alignment blockNum < 1" , afpServer.getBlockNum() >= 1);
@@ -134,7 +134,7 @@ public class TestWebStartClient extends TestCase
 		//AFPChainXMLConverter.printXMLHeader(xml, afpChain);
 		int blockNum = afpChain.getBlockNum();
 		for(int bk = 0; bk < blockNum; bk ++) {
-			
+
 			xml.openTag("block");
 			AFPChainXMLConverter.printXMLEQRInferPositions(xml, afpChain, bk, ca1, ca2);
 			xml.closeTag("block");

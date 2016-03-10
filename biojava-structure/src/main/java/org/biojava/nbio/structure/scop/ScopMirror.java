@@ -27,7 +27,7 @@ import java.net.URISyntaxException;
 
 /**
  * Helper class to store paths to the four SCOP files
- * 
+ *
  * The string "%s" is replaced with the version number.
  * @author Spencer Bliven
  *
@@ -38,7 +38,7 @@ public class ScopMirror {
 	private final String desURL;
 	private final String hieURL;
 	private final String comURL;
-		
+
 	/** Specify all keys individually */
 	public ScopMirror(String claURL, String desURL,
 			String hieURL, String comURL) {
@@ -63,7 +63,7 @@ public class ScopMirror {
 	public ScopMirror() {
 		this(ScopInstallation.SCOP_DOWNLOAD);
 	}
-	
+
 	/**
 	 * Get the URL for the root download directory, or null if none is set.
 	 * @return

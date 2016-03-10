@@ -45,35 +45,35 @@ import java.io.FileWriter;
  * The format to save the alignment depends on the Frame that generated the
  * Action: from a sequence alignment a FatCat or FASTA formats are saved,
  * and from a Jmol view an XML format is saved.
- * 
+ *
  * @author Aleix Lafita
  * @version 2.0 - adapted for MultipleAligments
- * 
+ *
  */
 public class MySaveFileListener implements ActionListener {
 
 	private AFPChain afpChain;
 	private MultipleAlignment msa;
 	private boolean printText;
-	
+
 	public MySaveFileListener (AFPChain afpChain){
 		this.afpChain = afpChain;
 		this.msa = null;
 		printText = false;
 	}
-	
+
 	public MySaveFileListener (MultipleAlignment msa){
 		this.afpChain = null;
 		this.msa = msa;
 		printText = false;
 	}
-	
+
 	/**
 	 * Constructor to avoid checking which of the two is null before
 	 * instantiating this class. One of the two, or both, have to be null.
 	 * If both are different than null the MultipleAlignment will be saved
 	 * only.
-	 * 
+	 *
 	 * @param afpChain
 	 * @param msa
 	 */
@@ -92,7 +92,7 @@ public class MySaveFileListener implements ActionListener {
 					"Could not save alignment, no alignment being displayed.");
 			return;
 		}
-		
+
 		//Choose the file path from the user input
 		JFileChooser fc = new JFileChooser();
 		int returnVal = fc.showSaveDialog(null);
@@ -108,9 +108,9 @@ public class MySaveFileListener implements ActionListener {
 
 		//XML serialization of the alignment
 		try {
-			
+
 			String output = "";
-			
+
 			if (msa!=null){
 				if (!printText) {
 					output = MultipleAlignmentWriter.toXML(msa.getEnsemble());
@@ -121,19 +121,19 @@ public class MySaveFileListener implements ActionListener {
 			else if (afpChain!=null){
 				UserConfiguration config = WebStartMain.getWebStartConfig();
 				AtomCache cache = new AtomCache(config);
-	
+
 				//TODO use the right ca atoms, fails for a custom file!
 				//This is a bad solution, solved for MultipleAlignments
 				Atom[] ca1 =cache.getAtoms(afpChain.getName1());
 				Atom[] ca2 =cache.getAtoms(afpChain.getName2());
-				
+
 				if (!printText) {
 					output = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 				} else {
 					output = afpChain.toFatcat(ca1,ca2);
 				}
 			}
-			
+
 			//Write to the file
 			BufferedWriter out = new BufferedWriter(new FileWriter(selFile));
 			out.write(output);
@@ -149,7 +149,7 @@ public class MySaveFileListener implements ActionListener {
 	/**
 	 * If true, the alignment format saved will be a text output (FASTA for
 	 * MultipleAlignments and FatCat for pairwise alignments)
-	 * 
+	 *
 	 * @param text if true the output will be text format
 	 */
 	public void setTextOutput(boolean text) {

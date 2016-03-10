@@ -26,7 +26,7 @@ import org.biojava.nbio.structure.Group;
  * Container for the secondary structure information of a single residue. This
  * class is designed to be stored inside an Amino Acid object. It can also
  * contain a back-reference to its parent AA.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
  *

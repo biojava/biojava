@@ -50,22 +50,22 @@ import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
-/** 
- * A JPanel that can display the sequence alignment of a 
- * {@link MultipleAlignment} in a nice way and interact with Jmol by 
+/**
+ * A JPanel that can display the sequence alignment of a
+ * {@link MultipleAlignment} in a nice way and interact with Jmol by
  * selecting the aligned atoms of the  sequence selection.
  * <p>
- * Coloring options include: sequence similarity, by Block or by Structure. 
+ * Coloring options include: sequence similarity, by Block or by Structure.
  * Colors are connected with the JmolPanel using the same pattelete.
  * <p>
- * The positions can be selected individually or in ranges and they will be 
+ * The positions can be selected individually or in ranges and they will be
  * translated to jmol commands.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.0
  *
  */
-public class MultipleAligPanel extends JPrintPanel 
+public class MultipleAligPanel extends JPrintPanel
 implements AlignmentPositionListener, WindowListener {
 
 	private static final long serialVersionUID = -6892229111166263764L;
@@ -114,15 +114,15 @@ implements AlignmentPositionListener, WindowListener {
 	}
 
 	/**
-	 * Constructor using an afpChain and the atom arrays for pairwise 
+	 * Constructor using an afpChain and the atom arrays for pairwise
 	 * alignments. The AFPChain is converted into a MultipleAlignment.
-	 * 
-	 * @param afpChain 
-	 * @param ca1 
-	 * @param ca2 
-	 * @throws StructureException  
+	 *
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @throws StructureException
 	 */
-	public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, 
+	public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
 			AbstractAlignmentJmol jmol) throws StructureException {
 
 		this();
@@ -134,7 +134,7 @@ implements AlignmentPositionListener, WindowListener {
 		}
 
 		//Convert the apfChain into a MultipleAlignment object
-		MultipleAlignmentEnsembleImpl ensemble = 
+		MultipleAlignmentEnsembleImpl ensemble =
 				new MultipleAlignmentEnsembleImpl(afpChain, ca1, ca2, flex);
 		this.multAln = ensemble.getMultipleAlignment(0);
 
@@ -153,7 +153,7 @@ implements AlignmentPositionListener, WindowListener {
 
 	/**
 	 * Constructor using a MultipleAlignment.
-	 * 
+	 *
 	 * @param multAln
 	 * @param colors
 	 */
@@ -249,22 +249,22 @@ implements AlignmentPositionListener, WindowListener {
 							}
 							char c2 = alnSeq.get(st+1).charAt(i);
 							//If any position is a gap continue
-							if (c1=='-' || c2=='-' || 
-									Character.isLowerCase(c1) || 
+							if (c1=='-' || c2=='-' ||
+									Character.isLowerCase(c1) ||
 									Character.isLowerCase(c2)) {
 								continue;
 							}
 							if (equal && c1 == c2)
 								continue;
 							else equal = false;
-							if (AFPAlignmentDisplay.aaScore(c1, c2) > 0) 
+							if (AFPAlignmentDisplay.aaScore(c1, c2) > 0)
 								continue;
 							else similar = false; break;
 						}
 						if (equal) bg = COLOR_EQUAL;
 						else if (similar) bg = COLOR_SIMILAR;
 						else bg = Color.LIGHT_GRAY;
-					} 
+					}
 					//Color by alignment block the same way as in the Jmol
 					else if (colorByAlignmentBlock){
 						int blockNr = MultipleAlignmentTools.
@@ -278,7 +278,7 @@ implements AlignmentPositionListener, WindowListener {
 					if (Character.isUpperCase(c) && c!='-'){
 						g2D.setPaint(bg);
 						Rectangle rec = new Rectangle(points.get(str).x-1,
-								points.get(str).y-11, (p2.x-p1.x)+12, 
+								points.get(str).y-11, (p2.x-p1.x)+12,
 								(p2.y-p1.y)/size);
 						g2D.fill(rec);
 					}
@@ -290,7 +290,7 @@ implements AlignmentPositionListener, WindowListener {
 			}
 		}
 
-		int nrLines = (length-1) / 
+		int nrLines = (length-1) /
 				(MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH);
 
 		for (int i = 0 ; i < nrLines+1 ; i++){
@@ -300,10 +300,10 @@ implements AlignmentPositionListener, WindowListener {
 
 				Point p1 = coordManager.getLegendPosition(i,str);
 
-				int aligPos = i * 
+				int aligPos = i *
 						MultipleAlignmentCoordManager.DEFAULT_LINE_LENGTH;
 				Atom a1 = null;
-				while (a1==null && 
+				while (a1==null &&
 						aligPos < Math.min((i+1)*MultipleAlignmentCoordManager.
 								DEFAULT_LINE_LENGTH-1,length)){
 					a1 = MultipleAlignmentTools.getAtomForSequencePosition(
@@ -365,7 +365,7 @@ implements AlignmentPositionListener, WindowListener {
 				}
 				nrSelected++;
 			}
-		}	
+		}
 		if (nrSelected == 0) cmd.append(" none;");
 		else cmd.append(" none; set display selected;");
 		//System.out.println(cmd.toString());

@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.align.ce;
 
@@ -51,7 +51,7 @@ public class CeCPMainTest extends TestCase {
 		dupAlign[0][0] = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13 };
 		dupAlign[0][1] = new int[] { 3, 5, 6, 7, 8, 9,10,11, 0+ca2len, 1+ca2len, 2+ca2len, 3+ca2len, 4+ca2len, 7+ca2len };
 		Atom[] ca1,ca2;
-		
+
 		ca1 = makeDummyCA(dupAlign[0][0].length);
 		ca2 = makeDummyCA(ca2len);
 		ca2 = StructureTools.duplicateCA2(ca2);
@@ -77,12 +77,12 @@ public class CeCPMainTest extends TestCase {
 						new int[] { 0,  1,  2,  3,  4, },
 				},
 		};
-		
+
 		int[] expectedLen = new int[] { expected[0][0].length, expected[1][0].length };
-		
+
 		assertTrue(Arrays.deepEquals(expected, align));
 		assertTrue(Arrays.equals(expectedLen, blkLen));
-		
+
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class CeCPMainTest extends TestCase {
 		int[][][] startAln, filteredAln;
 		int[] filteredLen;
 		int ca2len;
-		
+
 		ca2len = 10;
 		startAln = new int[][][] {
 				new int[][] {
@@ -98,7 +98,7 @@ public class CeCPMainTest extends TestCase {
 						new int[] {  0, 3, 5, 6, 7, 8, 9, 0+ca2len, 1+ca2len, 2+ca2len, 3+ca2len,},
 				},
 		};
-		
+
 		Atom[] ca1, ca2;
 		AFPChain afpChain,result;
 		ca1 = makeDummyCA(startAln[0][0].length);
@@ -106,8 +106,8 @@ public class CeCPMainTest extends TestCase {
 		ca2 = StructureTools.duplicateCA2(ca2);
 		afpChain = makeDummyAFPChain(startAln, ca1, ca2);
 
-		
-		
+
+
 		// Best block with minCPlen 0-3
 		filteredAln = new int[][][] {
 				new int[][] {
@@ -120,14 +120,14 @@ public class CeCPMainTest extends TestCase {
 				},
 		};
 		filteredLen = new int[] { filteredAln[0][0].length, filteredAln[1][0].length };
-		
+
 		CECPParameters params = new CECPParameters();
-		
-		
+
+
 		for(int minCPlength=0;minCPlength<4;minCPlength++) {
 			params.setMinCPLength(minCPlength);
 			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
-		
+
 			assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
 			assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
 	}
@@ -302,8 +302,8 @@ public class CeCPMainTest extends TestCase {
 		afp.setOptLen(new int[] {dupAlign[0][1].length});
 		return afp;
 	}
-	
-	
+
+
 	@Test
 	public void testCalculateMinCP() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		int[] block;
@@ -377,7 +377,7 @@ public class CeCPMainTest extends TestCase {
 
 	/**
 	 * Makes dummy CA atoms at 1A intervals
-	 * 
+	 *
 	 * @param len
 	 * @return
 	 * @throws PDBParseException
@@ -399,8 +399,8 @@ public class CeCPMainTest extends TestCase {
 		}
 		return ca1;
 	}
-	
-	public void testCECP1() throws IOException, StructureException{ 
+
+	public void testCECP1() throws IOException, StructureException{
 
 		String name1 = "PDP:3A2KAc";
 		String name2 = "d1wy5a2";

@@ -31,30 +31,30 @@ package org.biojava.nbio.core.sequence;
  */
 public class ExonSequence extends DNASequence {
 
-    //private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
+	//private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
 
-    /**
-     * Need a parent gene sequence and the bioBegin and bioEnd. An Exon sequence doesn't actually imply what the
-     * protein coding sequence will be. This is a little difficult to model and have it make sense.
-     * A gene has a collection of Exon and Intron sequences where the Exon sequences will join up. A gene
-     * sequences has a collection of different possible isoform proteins based on the transcription rules.
-     * A TranscriptionSequence will contain CDSSequence where the CDSSequence will be contained in the ExonSequence.
-     * Thus a ExonSequence is the union of overlapping CDSSequences.
-     * @param parentGeneSequence
-     * @param bioBegin
-     * @param bioEnd
-     */
-    public ExonSequence(GeneSequence parentGeneSequence, int bioBegin, int bioEnd) {
-        this.setParentSequence(parentGeneSequence);
-        setBioBegin(bioBegin);
-        setBioEnd(bioEnd);
+	/**
+	 * Need a parent gene sequence and the bioBegin and bioEnd. An Exon sequence doesn't actually imply what the
+	 * protein coding sequence will be. This is a little difficult to model and have it make sense.
+	 * A gene has a collection of Exon and Intron sequences where the Exon sequences will join up. A gene
+	 * sequences has a collection of different possible isoform proteins based on the transcription rules.
+	 * A TranscriptionSequence will contain CDSSequence where the CDSSequence will be contained in the ExonSequence.
+	 * Thus a ExonSequence is the union of overlapping CDSSequences.
+	 * @param parentGeneSequence
+	 * @param bioBegin
+	 * @param bioEnd
+	 */
+	public ExonSequence(GeneSequence parentGeneSequence, int bioBegin, int bioEnd) {
+		this.setParentSequence(parentGeneSequence);
+		setBioBegin(bioBegin);
+		setBioEnd(bioEnd);
 
-    }
+	}
 
-    @Override
-    public int getLength() {
-        return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
-    }
+	@Override
+	public int getLength() {
+		return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
+	}
 
 
 }

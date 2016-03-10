@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.survival.cox;
 
 import java.util.LinkedHashMap;
@@ -32,70 +28,70 @@ import java.util.LinkedHashMap;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SurvFitInfo {
- 
-    private LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
-    private LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
-    private boolean weighted = false;
 
-    
-    /**
-     * 
-     * @return 
-     */
-    public LinkedHashMap<String, StrataInfo> getUnweightedStrataInfoHashMap() {
-        return unweightedStrataInfoHashMap;
-    }
+	private LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
+	private LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
+	private boolean weighted = false;
 
-    /**
-     * 
-     * @param unweightedStrataInfoHashMap 
-     */
-    public void setUnweightedStrataInfoHashMap(LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap) {
-        this.unweightedStrataInfoHashMap = unweightedStrataInfoHashMap;
-    }
 
-    /**
-     * @return the strataInfoHashMap
-     */
-    public LinkedHashMap<String, StrataInfo> getStrataInfoHashMap() {
-        return strataInfoHashMap;
-    }
+	/**
+	 *
+	 * @return
+	 */
+	public LinkedHashMap<String, StrataInfo> getUnweightedStrataInfoHashMap() {
+		return unweightedStrataInfoHashMap;
+	}
 
-    /**
-     * @param strataInfoHashMap the strataInfoHashMap to set
-     */
-    public void setStrataInfoHashMap(LinkedHashMap<String, StrataInfo> strataInfoHashMap) {
-        this.strataInfoHashMap = strataInfoHashMap;
-    }
+	/**
+	 *
+	 * @param unweightedStrataInfoHashMap
+	 */
+	public void setUnweightedStrataInfoHashMap(LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap) {
+		this.unweightedStrataInfoHashMap = unweightedStrataInfoHashMap;
+	}
 
-    /**
-     *
-     * @param siHashMap
-     * @param label
-     */
-    public void addStrataInfoHashMap(LinkedHashMap<String, StrataInfo> siHashMap, String label) {
-        for (String key : siHashMap.keySet()) {
-            StrataInfo si = siHashMap.get(key);
-            strataInfoHashMap.put(label + " " + key, si);
-        }
-    }
+	/**
+	 * @return the strataInfoHashMap
+	 */
+	public LinkedHashMap<String, StrataInfo> getStrataInfoHashMap() {
+		return strataInfoHashMap;
+	}
 
-    @Override
-    public String toString() {
-        return strataInfoHashMap.toString(); //To change body of generated methods, choose Tools | Templates.
-    }
+	/**
+	 * @param strataInfoHashMap the strataInfoHashMap to set
+	 */
+	public void setStrataInfoHashMap(LinkedHashMap<String, StrataInfo> strataInfoHashMap) {
+		this.strataInfoHashMap = strataInfoHashMap;
+	}
 
-    /**
-     * @return the weighted
-     */
-    public boolean isWeighted() {
-        return weighted;
-    }
+	/**
+	 *
+	 * @param siHashMap
+	 * @param label
+	 */
+	public void addStrataInfoHashMap(LinkedHashMap<String, StrataInfo> siHashMap, String label) {
+		for (String key : siHashMap.keySet()) {
+			StrataInfo si = siHashMap.get(key);
+			strataInfoHashMap.put(label + " " + key, si);
+		}
+	}
 
-    /**
-     * @param weighted the weighted to set
-     */
-    public void setWeighted(boolean weighted) {
-        this.weighted = weighted;
-    }
+	@Override
+	public String toString() {
+		return strataInfoHashMap.toString(); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	/**
+	 * @return the weighted
+	 */
+	public boolean isWeighted() {
+		return weighted;
+	}
+
+	/**
+	 * @param weighted the weighted to set
+	 */
+	public void setWeighted(boolean weighted) {
+		this.weighted = weighted;
+	}
 }

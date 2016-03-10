@@ -39,94 +39,94 @@ import java.util.List;
 
 public class CookbookMSAProfiler {
 
-    private static class Profiler {
+	private static class Profiler {
 
-        private long maxMemoryUsed, timeCheckpoint;
-        private final long timeStart;
+		private long maxMemoryUsed, timeCheckpoint;
+		private final long timeStart;
 
-        private Profiler() {
-            maxMemoryUsed = Runtime.getRuntime().totalMemory();
-            timeStart = timeCheckpoint = System.nanoTime();
-        }
+		private Profiler() {
+			maxMemoryUsed = Runtime.getRuntime().totalMemory();
+			timeStart = timeCheckpoint = System.nanoTime();
+		}
 
-        private long getMaxMemoryUsed() {
-            return maxMemoryUsed = Math.max(maxMemoryUsed, Runtime.getRuntime().totalMemory());
-        }
+		private long getMaxMemoryUsed() {
+			return maxMemoryUsed = Math.max(maxMemoryUsed, Runtime.getRuntime().totalMemory());
+		}
 
-        private long getTimeSinceCheckpoint() {
-            return System.nanoTime() - timeCheckpoint;
-        }
+		private long getTimeSinceCheckpoint() {
+			return System.nanoTime() - timeCheckpoint;
+		}
 
-        private long getTimeSinceStart() {
-            return System.nanoTime() - timeStart;
-        }
+		private long getTimeSinceStart() {
+			return System.nanoTime() - timeStart;
+		}
 
-        private void setCheckpoint() {
-            maxMemoryUsed = Math.max(maxMemoryUsed, Runtime.getRuntime().totalMemory());
-            timeCheckpoint = System.nanoTime();
-        }
+		private void setCheckpoint() {
+			maxMemoryUsed = Math.max(maxMemoryUsed, Runtime.getRuntime().totalMemory());
+			timeCheckpoint = System.nanoTime();
+		}
 
-    }
+	}
 
-    public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
-        if (args.length < 1) {
-            System.err.println("The first argument must be a fasta file of protein sequences.");
-            return;
-        }
+		if (args.length < 1) {
+			System.err.println("The first argument must be a fasta file of protein sequences.");
+			return;
+		}
 
-        // ConcurrencyTools.setThreadPoolSingle();
+		// ConcurrencyTools.setThreadPoolSingle();
 
-        PrintStream fout = new PrintStream("msa.txt");
-        Profiler profiler = new Profiler();
+		PrintStream fout = new PrintStream("msa.txt");
+		Profiler profiler = new Profiler();
 
-        System.out.printf("Loading sequences from %s... ", args[0]);
-        List<ProteinSequence> list = new ArrayList<ProteinSequence>();
-        list.addAll(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
-        if (args.length > 1 && Integer.parseInt(args[1]) < list.size()) {
-            System.out.printf("%s/%d", args[1], list.size());
-            list = list.subList(0, Integer.parseInt(args[1]));
-        } else {
-            System.out.printf("%d", list.size());
-        }
-        System.out.printf(" sequences in %d ms using %d kB%n%n", profiler.getTimeSinceCheckpoint()/1000000,
-                profiler.getMaxMemoryUsed()/1024);
+		System.out.printf("Loading sequences from %s... ", args[0]);
+		List<ProteinSequence> list = new ArrayList<ProteinSequence>();
+		list.addAll(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
+		if (args.length > 1 && Integer.parseInt(args[1]) < list.size()) {
+			System.out.printf("%s/%d", args[1], list.size());
+			list = list.subList(0, Integer.parseInt(args[1]));
+		} else {
+			System.out.printf("%d", list.size());
+		}
+		System.out.printf(" sequences in %d ms using %d kB%n%n", profiler.getTimeSinceCheckpoint()/1000000,
+				profiler.getMaxMemoryUsed()/1024);
 
-        profiler.setCheckpoint();
+		profiler.setCheckpoint();
 
-        System.out.print("Stage 1: pairwise similarity calculation... ");
-        GapPenalty gaps = new SimpleGapPenalty();
-        SubstitutionMatrix<AminoAcidCompound> blosum62 = SimpleSubstitutionMatrix.getBlosum62();
-        List<PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound>> scorers = Alignments.getAllPairsScorers(list,
-                PairwiseSequenceScorerType.GLOBAL_IDENTITIES, gaps, blosum62);
-        Alignments.runPairwiseScorers(scorers);
-        System.out.printf("%d scores in %d ms using %d kB%n%n", scorers.size(),
-                profiler.getTimeSinceCheckpoint()/1000000, profiler.getMaxMemoryUsed()/1024);
+		System.out.print("Stage 1: pairwise similarity calculation... ");
+		GapPenalty gaps = new SimpleGapPenalty();
+		SubstitutionMatrix<AminoAcidCompound> blosum62 = SimpleSubstitutionMatrix.getBlosum62();
+		List<PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound>> scorers = Alignments.getAllPairsScorers(list,
+				PairwiseSequenceScorerType.GLOBAL_IDENTITIES, gaps, blosum62);
+		Alignments.runPairwiseScorers(scorers);
+		System.out.printf("%d scores in %d ms using %d kB%n%n", scorers.size(),
+				profiler.getTimeSinceCheckpoint()/1000000, profiler.getMaxMemoryUsed()/1024);
 
-        profiler.setCheckpoint();
+		profiler.setCheckpoint();
 
-        System.out.print("Stage 2: hierarchical clustering into a guide tree... ");
-        GuideTree<ProteinSequence, AminoAcidCompound> tree = new GuideTree<ProteinSequence, AminoAcidCompound>(list,
-                scorers);
-        scorers = null;
-        System.out.printf("%d ms using %d kB%n%n%s%n%n", profiler.getTimeSinceCheckpoint()/1000000,
-                profiler.getMaxMemoryUsed()/1024, tree);
+		System.out.print("Stage 2: hierarchical clustering into a guide tree... ");
+		GuideTree<ProteinSequence, AminoAcidCompound> tree = new GuideTree<ProteinSequence, AminoAcidCompound>(list,
+				scorers);
+		scorers = null;
+		System.out.printf("%d ms using %d kB%n%n%s%n%n", profiler.getTimeSinceCheckpoint()/1000000,
+				profiler.getMaxMemoryUsed()/1024, tree);
 
-        profiler.setCheckpoint();
+		profiler.setCheckpoint();
 
-        System.out.print("Stage 3: progressive alignment... ");
-        Profile<ProteinSequence, AminoAcidCompound> msa = Alignments.getProgressiveAlignment(tree,
-                ProfileProfileAlignerType.GLOBAL, gaps, blosum62);
-        System.out.printf("%d profile-profile alignments in %d ms using %d kB%n%n", list.size() - 1,
-                profiler.getTimeSinceCheckpoint()/1000000, profiler.getMaxMemoryUsed()/1024);
-        fout.print(msa);
-        fout.close();
+		System.out.print("Stage 3: progressive alignment... ");
+		Profile<ProteinSequence, AminoAcidCompound> msa = Alignments.getProgressiveAlignment(tree,
+				ProfileProfileAlignerType.GLOBAL, gaps, blosum62);
+		System.out.printf("%d profile-profile alignments in %d ms using %d kB%n%n", list.size() - 1,
+				profiler.getTimeSinceCheckpoint()/1000000, profiler.getMaxMemoryUsed()/1024);
+		fout.print(msa);
+		fout.close();
 
-        ConcurrencyTools.shutdown();
+		ConcurrencyTools.shutdown();
 
-        System.out.printf("Total time: %d ms%nMemory use: %d kB%n", profiler.getTimeSinceStart()/1000000,
-                profiler.getMaxMemoryUsed()/1024);
+		System.out.printf("Total time: %d ms%nMemory use: %d kB%n", profiler.getTimeSinceStart()/1000000,
+				profiler.getMaxMemoryUsed()/1024);
 
-    }
+	}
 
 }

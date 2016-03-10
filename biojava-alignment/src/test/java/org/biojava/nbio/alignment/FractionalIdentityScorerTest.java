@@ -39,63 +39,63 @@ import static org.junit.Assert.assertNotNull;
 public class FractionalIdentityScorerTest {
 
 	private static final double PRECISION = 0.00000001;
-	
-    private ProteinSequence query, target;
-    private GapPenalty gaps;
-    private SubstitutionMatrix<AminoAcidCompound> blosum62;
-    private NeedlemanWunsch<ProteinSequence, AminoAcidCompound> alignment, self;
-    private PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound> scorer1, scorer2;
 
-    @Before
-    public void setup() throws CompoundNotFoundException { 
-        query = new ProteinSequence("ARND");
-        target = new ProteinSequence("RDG");
-        gaps = new SimpleGapPenalty((short) 10, (short) 1);
-        blosum62 = SubstitutionMatrixHelper.getBlosum62();
-        alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
-        self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
-        scorer1 = new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment);
-        scorer2 = new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(self);
-    }
+	private ProteinSequence query, target;
+	private GapPenalty gaps;
+	private SubstitutionMatrix<AminoAcidCompound> blosum62;
+	private NeedlemanWunsch<ProteinSequence, AminoAcidCompound> alignment, self;
+	private PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound> scorer1, scorer2;
 
-    @Test
-    public void testFractionalIdentityScorerPairwiseSequenceAlignerOfSC() {
-        assertNotNull(new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment));
-    }
+	@Before
+	public void setup() throws CompoundNotFoundException {
+		query = new ProteinSequence("ARND");
+		target = new ProteinSequence("RDG");
+		gaps = new SimpleGapPenalty((short) 10, (short) 1);
+		blosum62 = SubstitutionMatrixHelper.getBlosum62();
+		alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
+		self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
+		scorer1 = new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment);
+		scorer2 = new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(self);
+	}
 
-    @Test
-    public void testFractionalIdentityScorerSequencePairOfSC() {
-        assertNotNull(new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment.getPair()));
-    }
+	@Test
+	public void testFractionalIdentityScorerPairwiseSequenceAlignerOfSC() {
+		assertNotNull(new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment));
+	}
 
-    @Test
-    public void testGetQuery() {
-        assertEquals(scorer1.getQuery(), query);
-        assertEquals(scorer2.getQuery(), query);
-    }
+	@Test
+	public void testFractionalIdentityScorerSequencePairOfSC() {
+		assertNotNull(new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment.getPair()));
+	}
 
-    @Test
-    public void testGetTarget() {
-        assertEquals(scorer1.getTarget(), target);
-        assertEquals(scorer2.getTarget(), query);
-    }
+	@Test
+	public void testGetQuery() {
+		assertEquals(scorer1.getQuery(), query);
+		assertEquals(scorer2.getQuery(), query);
+	}
 
-    @Test
-    public void testGetMaxScore() {
-        assertEquals(scorer1.getMaxScore(), 4, PRECISION);
-        assertEquals(scorer2.getMaxScore(), 4, PRECISION);
-    }
+	@Test
+	public void testGetTarget() {
+		assertEquals(scorer1.getTarget(), target);
+		assertEquals(scorer2.getTarget(), query);
+	}
 
-    @Test
-    public void testGetMinScore() {
-        assertEquals(scorer1.getMinScore(), 0, PRECISION);
-        assertEquals(scorer2.getMinScore(), 0, PRECISION);
-    }
+	@Test
+	public void testGetMaxScore() {
+		assertEquals(scorer1.getMaxScore(), 4, PRECISION);
+		assertEquals(scorer2.getMaxScore(), 4, PRECISION);
+	}
 
-    @Test
-    public void testGetScore() {
-        assertEquals(scorer1.getScore(), 1, PRECISION);
-        assertEquals(scorer2.getScore(), 4, PRECISION);
-    }
+	@Test
+	public void testGetMinScore() {
+		assertEquals(scorer1.getMinScore(), 0, PRECISION);
+		assertEquals(scorer2.getMinScore(), 0, PRECISION);
+	}
+
+	@Test
+	public void testGetScore() {
+		assertEquals(scorer1.getScore(), 1, PRECISION);
+		assertEquals(scorer2.getScore(), 4, PRECISION);
+	}
 
 }

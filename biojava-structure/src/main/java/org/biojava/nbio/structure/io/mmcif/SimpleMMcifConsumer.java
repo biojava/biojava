@@ -287,11 +287,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return  group ;
 	}
 	
-	/** test if the chain is already known (is in current_model
-	 * ArrayList) and if yes, returns the chain
-	 * if no -> returns null
+	/** 
+	 * Test if the given chainID is already present in the list of chains given. If yes, returns the chain
+	 * otherwise returns null. 
 	 */
-	private Chain isKnownChain(String chainID, List<Chain> chains){
+	private static Chain isKnownChain(String chainID, List<Chain> chains){
 
 		for (int i = 0; i< chains.size();i++){
 			Chain testchain =  chains.get(i);

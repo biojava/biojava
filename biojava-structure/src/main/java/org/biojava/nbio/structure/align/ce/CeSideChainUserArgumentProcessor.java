@@ -31,9 +31,9 @@ public class CeSideChainUserArgumentProcessor extends CeUserArgumentProcessor {
 
 	@Override
 	public Object getParameters() {
-	   
+
 		CeParameters params = new CeParameters();
-	
+
 		params.setScoringStrategy(CeParameters.ScoringStrategy.SIDE_CHAIN_SCORING);
 		//params.setMaxGapSize(0);
 		return params;

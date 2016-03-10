@@ -34,7 +34,7 @@ import java.util.List;
 
 
 /** A Web Start wrapper for a FarmJobRunnable.
- * 
+ *
  */
 public class WebStartDBSearch  {
 
@@ -45,25 +45,25 @@ public class WebStartDBSearch  {
 	public WebStartDBSearch(){
 	}
 
-	
+
 
 	public static void main(String[] argv) {
 
 		FarmJob job = new FarmJob();
-		
+
 
 		if (argv.length  == 0 ) {
 			job.printHelp();
 			JOptionPane.showMessageDialog(null,
 					"Not enough arguments!");
 			return;
-			
-			
+
+
 		}
 
 		if ( argv.length == 1){
 			if (argv[0].equalsIgnoreCase("-h") || argv[0].equalsIgnoreCase("-help")|| argv[0].equalsIgnoreCase("--help")){
-				job.printHelp();	
+				job.printHelp();
 				JOptionPane.showMessageDialog(null,
 				"Help not supported...");
 				return;
@@ -72,7 +72,7 @@ public class WebStartDBSearch  {
 
 		FarmJobParameters params = new FarmJobParameters();
 
-		
+
 		for (int i = 0 ; i < argv.length; i++){
 			String arg   = argv[i];
 
@@ -83,7 +83,7 @@ public class WebStartDBSearch  {
 			// if value starts with - then the arg does not have a value.
 			if (value != null && value.startsWith("-"))
 				value = null;
-			else 
+			else
 				i++;
 
 
@@ -91,10 +91,10 @@ public class WebStartDBSearch  {
 
 			try {
 
-				CliTools.configureBean(params, tmp);  
+				CliTools.configureBean(params, tmp);
 
 			} catch (ConfigurationException e){
-				
+
 				e.printStackTrace();
 
 				if ( mandatoryArgs.contains(arg) ) {
@@ -102,23 +102,23 @@ public class WebStartDBSearch  {
 					JOptionPane.showMessageDialog(null,
 							e.getMessage());
 					return;
-					
+
 				} else {
 					// but there can be with optional ...
 				}
-			}    
+			}
 		}
 
 		params.setRunBackground(true);
 		GUIFarmJobRunnable runnable = new GUIFarmJobRunnable(params);
-		
+
 		//javax.swing.SwingUtilities.invokeLater(runnable);
 		runnable.run();
 
-		
 
-		
+
+
 	}
 
-		
+
 }

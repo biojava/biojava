@@ -30,24 +30,24 @@ package org.biojava.nbio.alignment.template;
  */
 public abstract class AbstractScorer implements Scorer {
 
-    @Override
-    public double getDistance() {
-        return getDistance(1.0);
-    }
+	@Override
+	public double getDistance() {
+		return getDistance(1.0);
+	}
 
-    @Override
-    public double getDistance(double scale) {
-        return scale * (getMaxScore() - getScore()) / (getMaxScore() - getMinScore());
-    }
+	@Override
+	public double getDistance(double scale) {
+		return scale * (getMaxScore() - getScore()) / (getMaxScore() - getMinScore());
+	}
 
-    @Override
-    public double getSimilarity() {
-        return getSimilarity(1.0);
-    }
+	@Override
+	public double getSimilarity() {
+		return getSimilarity(1.0);
+	}
 
-    @Override
-    public double getSimilarity(double scale) {
-        return scale * (getScore() - getMinScore()) / (getMaxScore() - getMinScore());
-    }
+	@Override
+	public double getSimilarity(double scale) {
+		return scale * (getScore() - getMinScore()) / (getMaxScore() - getMinScore());
+	}
 
 }

@@ -31,112 +31,112 @@ import java.util.Set;
  * @author Peter
  */
 public class PermutationGroup {
-    List<List<Integer>> permutations = new ArrayList<List<Integer>>();
+	List<List<Integer>> permutations = new ArrayList<List<Integer>>();
 
-    public void addPermutation(List<Integer> permutation) {
-        if (!permutations.contains(permutation)) {
-            permutations.add(permutation);
-        }
-    }
+	public void addPermutation(List<Integer> permutation) {
+		if (!permutations.contains(permutation)) {
+			permutations.add(permutation);
+		}
+	}
 
-    public List<Integer> getPermutation(int index) {
-    	return permutations.get(index);
-    }
-    
-    public int getOrder() {
-    	return permutations.size();
-    }
-    
- 
-    /**
-     * Starts with an incomplete set of group generators in `permutations` and
-     * expands it to include all possible combinations.
-     *
-     * Ways to complete group: 
-     * - combinations of permutations pi x pj
-     * - combinations with itself p^k
-     * 
-     */
-    public void completeGroup() {
-    	// Copy initial set to allow permutations to grow
-    	List<List<Integer>> gens = new ArrayList<List<Integer>>(permutations);
-    	// Keep HashSet version of permutations for fast lookup.
-    	Set<List<Integer>> known = new HashSet<List<Integer>>(permutations);
-    	//breadth-first search through the map of all members
-    	List<List<Integer>> currentLevel = new ArrayList<List<Integer>>(permutations);
-    	while( currentLevel.size() > 0) {
-    		List<List<Integer>> nextLevel = new ArrayList<List<Integer>>();
-    		for( List<Integer> p : currentLevel) {
-    			for(List<Integer> gen : gens) {
-    				List<Integer> y = combine(p,gen);
-    				if(!known.contains(y)) {
-    					nextLevel.add(y);
-    					//bypass addPermutation(y) for performance
-    					permutations.add(y);
-    					known.add(y);
-    				}
-    			}
-    		}
-    		currentLevel = nextLevel;
-    	}
-    }
+	public List<Integer> getPermutation(int index) {
+		return permutations.get(index);
+	}
 
-    @Override
+	public int getOrder() {
+		return permutations.size();
+	}
+
+
+	/**
+	 * Starts with an incomplete set of group generators in `permutations` and
+	 * expands it to include all possible combinations.
+	 *
+	 * Ways to complete group:
+	 * - combinations of permutations pi x pj
+	 * - combinations with itself p^k
+	 *
+	 */
+	public void completeGroup() {
+		// Copy initial set to allow permutations to grow
+		List<List<Integer>> gens = new ArrayList<List<Integer>>(permutations);
+		// Keep HashSet version of permutations for fast lookup.
+		Set<List<Integer>> known = new HashSet<List<Integer>>(permutations);
+		//breadth-first search through the map of all members
+		List<List<Integer>> currentLevel = new ArrayList<List<Integer>>(permutations);
+		while( currentLevel.size() > 0) {
+			List<List<Integer>> nextLevel = new ArrayList<List<Integer>>();
+			for( List<Integer> p : currentLevel) {
+				for(List<Integer> gen : gens) {
+					List<Integer> y = combine(p,gen);
+					if(!known.contains(y)) {
+						nextLevel.add(y);
+						//bypass addPermutation(y) for performance
+						permutations.add(y);
+						known.add(y);
+					}
+				}
+			}
+			currentLevel = nextLevel;
+		}
+	}
+
+	@Override
 	public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Permutation Group: " + permutations.size() + " permutation");
-        for (List<Integer> permutation : permutations) {
-            sb.append(permutation.toString());
-        }
-        return sb.toString();
-    }
+		StringBuilder sb = new StringBuilder();
+		sb.append("Permutation Group: " + permutations.size() + " permutation");
+		for (List<Integer> permutation : permutations) {
+			sb.append(permutation.toString());
+		}
+		return sb.toString();
+	}
 
-    public static List<Integer> combine(List<Integer> permutation1, List<Integer> permutation2) {
-        List<Integer> intermediate = new ArrayList<Integer>(permutation1.size());
-        for (int i = 0, n = permutation1.size(); i < n; i++) {
-            intermediate.add(permutation2.get(permutation1.get(i)));
-        }
-        return intermediate;
-    }
+	public static List<Integer> combine(List<Integer> permutation1, List<Integer> permutation2) {
+		List<Integer> intermediate = new ArrayList<Integer>(permutation1.size());
+		for (int i = 0, n = permutation1.size(); i < n; i++) {
+			intermediate.add(permutation2.get(permutation1.get(i)));
+		}
+		return intermediate;
+	}
 
-    public static int getOrder(List<Integer> permutation) {
-        List<Integer> copy = new ArrayList<Integer>(permutation);
-        for (int i = 0, n = permutation.size(); i < n; i++) {
-            copy = combine(copy, permutation);
-            if (copy.equals(permutation)) {
-                return i + 1;
-            }
-        }
-        return 0;
-    }
-    
-    public String getGroupTable() {
-    	StringBuilder builder = new StringBuilder();
-    	builder.append("  |");
-    	for (int i = 0; i < getOrder(); i++) {
-    		builder.append(" ");
-    		builder.append(i);
-    	}
-    	builder.append("\n");
-    	builder.append("---");
-    	for (int i = 0; i < getOrder(); i++) {
-    		builder.append("--");
-    	}
-    	builder.append("\n");
-    	for (int i = 0; i < getOrder(); i++) {
-    		builder.append(i);
-    		builder.append(" |");
-    		for (int j = 0; j < getOrder(); j++) {
-    			builder.append(" ");
-    			builder.append(permutations.indexOf(combine(permutations.get(i), permutations.get(j))));
-    		}
-    		builder.append("\n");
-    	}
-    	return builder.toString();
-    }
-    
-    @Override
+	public static int getOrder(List<Integer> permutation) {
+		List<Integer> copy = new ArrayList<Integer>(permutation);
+		for (int i = 0, n = permutation.size(); i < n; i++) {
+			copy = combine(copy, permutation);
+			if (copy.equals(permutation)) {
+				return i + 1;
+			}
+		}
+		return 0;
+	}
+
+	public String getGroupTable() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("  |");
+		for (int i = 0; i < getOrder(); i++) {
+			builder.append(" ");
+			builder.append(i);
+		}
+		builder.append("\n");
+		builder.append("---");
+		for (int i = 0; i < getOrder(); i++) {
+			builder.append("--");
+		}
+		builder.append("\n");
+		for (int i = 0; i < getOrder(); i++) {
+			builder.append(i);
+			builder.append(" |");
+			for (int j = 0; j < getOrder(); j++) {
+				builder.append(" ");
+				builder.append(permutations.indexOf(combine(permutations.get(i), permutations.get(j))));
+			}
+			builder.append("\n");
+		}
+		return builder.toString();
+	}
+
+	@Override
 	public int hashCode() {
-    	return getGroupTable().hashCode();
-    }
+		return getGroupTable().hashCode();
+	}
 }

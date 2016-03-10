@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This class extends the basic container for secondary structure annotation,
  * including all the information used in the DSSP algorithm.
- * 
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
  *
@@ -106,7 +106,7 @@ public class SecStrucState extends SecStrucInfo {
 	 * > or ending < was set and the opposite is being set, the value will be
 	 * converted to X. If a number was set, it will be overwritten by the new
 	 * character.
-	 * 
+	 *
 	 * @param c
 	 *            character in the column
 	 * @param t
@@ -192,7 +192,7 @@ public class SecStrucState extends SecStrucInfo {
 	 * Adds a Bridge to the residue. Each residue can only store two bridges. If
 	 * the residue contains already two Bridges, the Bridge will not be added
 	 * and the method returns false.
-	 * 
+	 *
 	 * @param bridge
 	 * @return false if the Bridge was not added, true otherwise
 	 */

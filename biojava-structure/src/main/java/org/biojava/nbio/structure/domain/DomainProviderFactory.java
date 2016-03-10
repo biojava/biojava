@@ -24,29 +24,29 @@ import java.io.IOException;
 
 
 /** A simple factory object that returns the system wide default DomainProvider
- * 
+ *
  * @author andreas
  *
  */
 public class DomainProviderFactory {
 
 	private DomainProviderFactory(){
-		
+
 	}
-	
+
 	static DomainProvider domainProvider ;
-	
-	
-	
+
+
+
 	public static void setDomainProvider(DomainProvider provider){
 		domainProvider = provider;
-		
+
 	}
-	
+
 	public static DomainProvider getDomainProvider() throws IOException{
 		if ( domainProvider == null)
 			domainProvider = new RemoteDomainProvider(true);
-		
+
 		return domainProvider;
 	}
 }

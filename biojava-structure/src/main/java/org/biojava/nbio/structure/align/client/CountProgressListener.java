@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 15, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -68,7 +68,7 @@ public class CountProgressListener implements AlignmentProgressListener {
 
 	@Override
 	public void sentResultsToServer(int nrAlignments, String serverMessage) {
-		nrSubmitted+=nrAlignments;				
+		nrSubmitted+=nrAlignments;
 	}
 
 

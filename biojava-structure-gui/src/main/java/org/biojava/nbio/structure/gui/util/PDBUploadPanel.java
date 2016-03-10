@@ -40,16 +40,16 @@ import java.io.IOException;
 import java.net.URL;
 
 /** A JPanel to upload 2 custom PDB files.
- * 
+ *
  * @author Andreas Prlic
  * @since 1.7
  */
-public class PDBUploadPanel 
-extends JPanel 
+public class PDBUploadPanel
+extends JPanel
 implements StructurePairSelector {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -57,21 +57,21 @@ implements StructurePairSelector {
 
 	private static final Logger logger = LoggerFactory.getLogger(PDBUploadPanel.class);
 
-	
-	
+
+
 	private JComboBox fileType ;
-	
+
 	JTextField filePath1;
 	JTextField filePath2;
 	JTextField chain1;
 	JTextField chain2;
-	
+
 	public static JComboBox getFileFormatSelect(){
 		JComboBox fileType = new JComboBox();
 			fileType = new JComboBox(new String[] {UserConfiguration.PDB_FORMAT,UserConfiguration.MMCIF_FORMAT});
 			fileType.setSelectedIndex(0);
 			fileType.setMaximumSize(new Dimension(10,50));
-			
+
 		return fileType;
 	}
 	public PDBUploadPanel(){
@@ -84,14 +84,14 @@ implements StructurePairSelector {
 		filePath2 = new JTextField(20);
 		chain1 = new JTextField(1);
 		chain2 = new JTextField(1);
-		
+
 		JPanel p1 = getLocalFilePanel(1,filePath1,chain1);
 		JPanel p2 = getLocalFilePanel(2,filePath2,chain2);
 
 		vBox.add(p1);
 		if ( show2boxes)
 			vBox.add(p2);
-		
+
 		JLabel ftype = new JLabel("File format:");
 		Box hBox = Box.createHorizontalBox();
 		hBox.add(Box.createGlue());
@@ -99,7 +99,7 @@ implements StructurePairSelector {
 		fileType = getFileFormatSelect();
 		hBox.add(fileType);
 		hBox.add(Box.createGlue());
-		
+
 		vBox.add(hBox);
 
 		this.add(vBox);
@@ -109,7 +109,7 @@ implements StructurePairSelector {
 	public String getFilePath1(){
 		return filePath1.getText();
 	}
-	
+
 	public String getChain1(){
 		return chain1.getText();
 	}
@@ -128,7 +128,7 @@ implements StructurePairSelector {
 
 	private Structure getStructure(JTextField filePath,JTextField chainId) throws StructureException{
 		//PDBFileReader reader = new PDBFileReader();
-		
+
 		StructureIOFile reader = null;
 		String fileFormat = (String)fileType.getSelectedItem();
 		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
@@ -138,7 +138,7 @@ implements StructurePairSelector {
 		} else {
 			throw new StructureException("Unkown file format " + fileFormat);
 		}
-		
+
 		String path = filePath.getText();
 		File f = new File(path);
 		Structure s = null;
@@ -149,33 +149,33 @@ implements StructurePairSelector {
 			//e.printStackTrace();
 			throw new StructureException(e);
 		}
-		
+
 		Structure reduced = StructureTools.getReducedStructure(s, chainId.getText());
-		
+
 		String fileURL = "";
 		try {
-						
+
 			URL u ;
-			
+
 			if ( chainId.getText() == null || chainId.getText().equals("")){
-			
+
 				u = f.toURI().toURL();
 			} else {
 				u = new URL(f.toURI().toURL().toString() + "?chainId=" + chainId.getText());
 			}
-			fileURL = u.toString() ; 
-					
+			fileURL = u.toString() ;
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
 		reduced.setPDBCode(fileURL);
 		reduced.setName(fileURL);
 		return reduced;
 
 	}
 
-	
+
 
 	private JPanel getLocalFilePanel(int pos ,JTextField filePath, JTextField  chainId){
 
@@ -189,11 +189,11 @@ implements StructurePairSelector {
 		Action action3 = new ChooseAction(filePath);
 		JButton chooser = new JButton(action3);
 		panel.add(chooser);
-		
+
 		JLabel chainLabel = new JLabel("Chain "+pos+": (optional)");
 		panel.add(chainLabel);
 		panel.add(chainId);
-		
+
 		return panel;
 
 	}

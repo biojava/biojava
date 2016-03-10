@@ -43,13 +43,13 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ListStringWrapper implements Serializable{
 
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4193799052494327416L;
 	List<String> data;
-	
+
 	static JAXBContext jaxbContext;
 	static {
 		try {
@@ -58,7 +58,7 @@ public class ListStringWrapper implements Serializable{
 			throw new RuntimeException("Could not initialize JAXB context for " + ListStringWrapper.class, e);
 		}
 	}
-	
+
 	public ListStringWrapper(){
 		data = new ArrayList<String>();
 	}
@@ -83,7 +83,7 @@ public class ListStringWrapper implements Serializable{
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( this, ps);
-			
+
 
 		} catch (Exception e){
 			throw new RuntimeException("Could not convert " + getClass() + " to XML", e);
@@ -111,6 +111,6 @@ public class ListStringWrapper implements Serializable{
 
 		return job;
 	}
-	
-	
+
+
 }

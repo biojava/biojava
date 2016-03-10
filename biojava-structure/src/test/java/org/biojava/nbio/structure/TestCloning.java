@@ -34,7 +34,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TestCloning {
-	
+
 	@Test
 	public void test1a4wCloning() throws StructureException, IOException {
 
@@ -51,12 +51,12 @@ public class TestCloning {
 
 		Structure c = s.clone();
 
-		compareCloned(s,c);			
-		
+		compareCloned(s,c);
+
 	}
-	
-	
-	
+
+
+
 	@Test
 	public void testAsymUnitCloning() throws StructureException, IOException {
 
@@ -76,7 +76,7 @@ public class TestCloning {
 
 		compareCloned(s,c);
 	}
-	
+
 	@Test
 	public void testBioUnitCloning() throws StructureException, IOException {
 
@@ -88,7 +88,7 @@ public class TestCloning {
 		compareCloned(s,c);
 
 	}
-	
+
 	/**
 	 * A Structure with alt locs, we make sure they are being cloned too
 	 * @throws StructureException
@@ -96,7 +96,7 @@ public class TestCloning {
 	 */
 	@Test
 	public void test3piuCloning() throws StructureException, IOException {
-		
+
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
@@ -105,24 +105,24 @@ public class TestCloning {
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("3piu");
-		
+
 		Structure c = s.clone();
-		
+
 		compareCloned(s, c);
 	}
 
 	private void compareCloned(Structure s, Structure c) throws StructureException {
 
 		assertEquals(s.getChains().size(), c.getChains().size());
-		
+
 		for ( Chain chain : s.getChains()) {
-	
+
 			Chain test = c.getChainByPDB(chain.getChainID());
-			
+
 			assertEquals("Could not correctly clone seqres for chain " + chain.getChainID() , chain.getSeqResLength(),test.getSeqResLength());
-		
+
 			assertEquals("Could not correctly clone atom records for chain " + chain.getChainID() , chain.getAtomLength(),test.getAtomLength());
-			
+
 			Iterator<Group> it = test.getAtomGroups().iterator();
 			for (Group g : chain.getAtomGroups()) {
 				Group testGroup = it.next();
@@ -132,13 +132,13 @@ public class TestCloning {
 				assertEquals(g.getAltLocs().size(), testGroup.getAltLocs().size());
 			}
 		}
-				
+
 		Atom[] allAtoms = StructureTools.getAllAtomArray(s);
-		
+
 		Atom[] allAtomsCloned = StructureTools.getAllAtomArray(c);
-		
+
 		assertEquals(allAtoms.length,allAtomsCloned.length);
-		
+
 	}
 
 }

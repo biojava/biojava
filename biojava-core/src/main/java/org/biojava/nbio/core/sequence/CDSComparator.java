@@ -27,7 +27,7 @@ import java.util.Comparator;
 
 
 
-    public class CDSComparator implements Comparator<CDSSequence>{
+	public class CDSComparator implements Comparator<CDSSequence>{
 
 /**
  * Used to sort two CDSSequences where Negative Strand makes it tough
@@ -35,16 +35,16 @@ import java.util.Comparator;
  * @param o2
  * @return val
  */
-        @Override
+		@Override
 		public int compare(CDSSequence o1, CDSSequence o2) {
-            if(o1.getStrand() != o2.getStrand()){
-                return o1.getBioBegin() - o2.getBioBegin();
-            }
-            if(o1.getStrand() == Strand.NEGATIVE){
-                return -1 * (o1.getBioBegin() - o2.getBioBegin());
-            }
+			if(o1.getStrand() != o2.getStrand()){
+				return o1.getBioBegin() - o2.getBioBegin();
+			}
+			if(o1.getStrand() == Strand.NEGATIVE){
+				return -1 * (o1.getBioBegin() - o2.getBioBegin());
+			}
 
-            return o1.getBioBegin() - o2.getBioBegin();
-        }
+			return o1.getBioBegin() - o2.getBioBegin();
+		}
 
-    }
+	}

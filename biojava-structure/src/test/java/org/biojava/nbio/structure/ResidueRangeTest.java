@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 
 /**
  * A unit test for {@link ResidueRange}.
- * 
+ *
  * @author dmyerstu
  *
  */
@@ -275,7 +275,7 @@ public class ResidueRangeTest {
 	 * Tests
 	 * {@link org.biojava.nbio.structure.ResidueRangeAndLength#parseMultiple(String, org.biojava.nbio.structure.AtomPositionMap)}
 	 * .
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
@@ -333,7 +333,7 @@ public class ResidueRangeTest {
 		// Valid ranges
 		String[] yes = new String[] { "A_", "A:", "ABC:", "abc:", "A_5-100",
 				"A_5-100S", "A_5S-100", "A_5S-100S", "A_-5-100", "A_-5--100",
-				"A_-5S--100S", "ABC:-5--200S", "A", "ABCD", "A_1", 
+				"A_-5S--100S", "ABC:-5--200S", "A", "ABCD", "A_1",
 				"A1", // valid multi-char chain name
 				"3A:1-100", // Weird chain name
 				"_", "_:1-10", "__-2--1", "__", // catch-all chain

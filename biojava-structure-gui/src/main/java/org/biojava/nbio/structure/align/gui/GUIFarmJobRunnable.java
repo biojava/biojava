@@ -31,7 +31,7 @@ public class GUIFarmJobRunnable implements Runnable{
 	GUIAlignmentProgressListener progressListener ;
 	public GUIFarmJobRunnable(FarmJobParameters params){
 		this.params = params;
-		
+
 
 	}
 
@@ -57,30 +57,30 @@ public class GUIFarmJobRunnable implements Runnable{
 
 	@Override
 	public void run() {
-		
+
 		progressListener = new GUIAlignmentProgressListener();
 		progressListener.logStatus(params.toString());
 
 		//createAndShowGUI(progressListener);
 
 		FarmJob job = new FarmJob();
-		
+
 		progressListener.setFarmJob(job);
 
 		job.addAlignmentProgressListener(progressListener);
 		job.setParams(params);
-		
+
 		Thread t = new Thread(job);
 		t.start();
-		
-		
+
+
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	        @Override
 			public void run() {
 	            createAndShowGUI(progressListener);
 	        }
 		});
-		
-	}	
+
+	}
 
 }

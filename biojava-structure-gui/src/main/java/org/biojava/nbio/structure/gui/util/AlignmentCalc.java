@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jul 16, 2006
  *
  */
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /** A class that obtains two structures via DAS and aligns them
  *  This is done in a separate thread.
  *  It is possible to register Event listeners to get notification of when the download has finished.
- *  
+ *
  * @author Andreas Prlic
  * @since 1.7
  * @version %I% %G%
@@ -63,7 +63,7 @@ public class AlignmentCalc implements Runnable {
 	/** requests an alignment of pdb1 vs pdb 2.
 	 * Chain 1 and chain2 are optional.
 	 * If they are empty strings, they are ignored
-	 * @param parent the alignment gui frame that interacts with this class          
+	 * @param parent the alignment gui frame that interacts with this class
 	 * @param s1 structure 1
 	 * @param s2 structure 2
 	 */
@@ -83,7 +83,7 @@ public class AlignmentCalc implements Runnable {
 
 
 		StructurePairAligner aligner = new StructurePairAligner();
-		
+
 		try {
 			aligner.align(structure1,structure2);
 		} catch (StructureException e){
@@ -94,7 +94,7 @@ public class AlignmentCalc implements Runnable {
 
 
 		AlternativeAlignment[] aligs = aligner.getAlignments();
-		//cluster similar results together 
+		//cluster similar results together
 		ClusterAltAligs.cluster(aligs);
 		showAlignment(aligner,aligs);
 
@@ -118,7 +118,7 @@ public class AlignmentCalc implements Runnable {
 	}
 
 	/** stops what is currently happening and does not continue
-	 * 
+	 *
 	 *
 	 */
 	public void interrupt() {

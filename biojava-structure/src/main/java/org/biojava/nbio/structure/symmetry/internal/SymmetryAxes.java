@@ -30,18 +30,18 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 /**
- * Data Structure that stores all the symmetry axis that describe 
- * the symmetry of a structure. Generalizes to all types of symmetry, 
+ * Data Structure that stores all the symmetry axis that describe
+ * the symmetry of a structure. Generalizes to all types of symmetry,
  * the classic ones (Cn, Dn) and any hierarchical or local symmetries.
  * <p>
- * It also stores the parts of the structure (symmetric units) involved 
+ * It also stores the parts of the structure (symmetric units) involved
  * in each axis, in addition to the way to calculate them.
  * <p>
- * This is intended to provide a general axis support for the multiple 
- * repeat alignment optimization and the axis display in Jmol. This 
- * object is related to a MultipleAlignment object that defines the 
+ * This is intended to provide a general axis support for the multiple
+ * repeat alignment optimization and the axis display in Jmol. This
+ * object is related to a MultipleAlignment object that defines the
  * symmetric units.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
  *
@@ -49,9 +49,9 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 public class SymmetryAxes {
 
 	/**
-	 * List of all symmetry axis. They are sorted from higher to lower 
-	 * in the symmetry hierarchy, where higher means that they apply 
-	 * more globally and lower means that they apply to a local region 
+	 * List of all symmetry axis. They are sorted from higher to lower
+	 * in the symmetry hierarchy, where higher means that they apply
+	 * more globally and lower means that they apply to a local region
 	 * of the higher axis division.
 	 */
 	private List<Matrix4d> axes;
@@ -64,7 +64,7 @@ public class SymmetryAxes {
 	private List<Integer> tree;
 
 	/**
-	 * Matrix of size [repeats][axes]. The first index of the matrix 
+	 * Matrix of size [repeats][axes]. The first index of the matrix
 	 * indicates which repeat is considered, and the second index
 	 * indicates which axis. The integer stored means how many times
 	 * the transformation has to be applied to the repeat, and a value
@@ -74,7 +74,7 @@ public class SymmetryAxes {
 
 	/**
 	 * The list of integers defines which repeats are involved in this axis
-	 * and how the axis transformation is computed. The list has size 2 for 
+	 * and how the axis transformation is computed. The list has size 2 for
 	 * the first index and any size for the second index. Describes that all
 	 * repeats in the first list superimposed to all repeats of the second
 	 * list should generate the axis transformation.
@@ -82,7 +82,7 @@ public class SymmetryAxes {
 	private Map<Integer, List<List<Integer>>> mapAxisRepeats;
 
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 * Initializes variables only.
 	 */
 	public SymmetryAxes(){
@@ -93,20 +93,20 @@ public class SymmetryAxes {
 	}
 
 	/**
-	 * Adds a new axis of symmetry. 
+	 * Adds a new axis of symmetry.
 	 * The repeats that participate in this axis and their superposition
 	 * relation should also be indicated.
-	 * 
+	 *
 	 * @param axis the new axis of symmetry found
 	 * @param superposition repeats participating and superposition relation
 	 * @param repeats number of times the transformation is applied to every
 	 * 			repeat. index1=repeat, index2=times.
 	 * @param division number of parts that this axis divides the structure in
-	 * 
+	 *
 	 * @throws IllegalArgumentException if the repeat relation is in the
 	 * 			wrong format: should be double List of equal sizes.
 	 */
-	public void addAxis(Matrix4d axis, List<List<Integer>> superposition, 
+	public void addAxis(Matrix4d axis, List<List<Integer>> superposition,
 			List<Integer> repeats, Integer division) {
 
 		//Check correct format of repeat relations
@@ -154,7 +154,7 @@ public class SymmetryAxes {
 
 	/**
 	 * Updates an axis of symmetry, after the superposition changed.
-	 * 
+	 *
 	 * @param index old axis index
 	 * @param newAxis
 	 */
@@ -166,7 +166,7 @@ public class SymmetryAxes {
 	 * Return all elementary axes of symmetry of the structure, that is,
 	 * the axes stored in the List as unique and from which all the symmetry
 	 * axes are constructed.
-	 * 
+	 *
 	 * @return axes elementary axes of symmetry.
 	 */
 	public List<Matrix4d> getElementaryAxes(){
@@ -177,7 +177,7 @@ public class SymmetryAxes {
 	 * Return the repeat superposition relation needed to obtain the
 	 * axis of symmetry (which repeats and in which order have to be
 	 * superimposed to obtain the axis).
-	 *  
+	 *
 	 * @param index the axis index
 	 * @return the double List of repeat relations, or null if the
 	 * 			axis is not already stored.
@@ -188,9 +188,9 @@ public class SymmetryAxes {
 
 
 	/**
-	 * Return the transformation that needs to be applied to a determinate 
-	 * repeat so that all get superimposed to the same point. 
-	 * 
+	 * Return the transformation that needs to be applied to a determinate
+	 * repeat so that all get superimposed to the same point.
+	 *
 	 * @param repeat the repeat index
 	 * @return transformation matrix for the repeat
 	 */
@@ -223,7 +223,7 @@ public class SymmetryAxes {
 	 * describe all parts of the structure. This combines the elementary
 	 * axes to generate all possible axes.
 	 * Use this method to display the axes.
-	 * 
+	 *
 	 * @return axes all symmetry axes of the structure.
 	 */
 	public List<Matrix4d> getSymmetryAxes(){
@@ -259,7 +259,7 @@ public class SymmetryAxes {
 			}
 			if (!ident) symmAxes.add(axis);
 		}
-		
+
 		//Ensure the axis are not equivalent
 		for (int a=0; a<symmAxes.size(); a++){
 			for (int b=a+1; b<symmAxes.size(); b++){

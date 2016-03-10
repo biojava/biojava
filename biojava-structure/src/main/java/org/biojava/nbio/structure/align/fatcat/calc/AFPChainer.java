@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,8 +20,8 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align.fatcat.calc;
@@ -38,7 +38,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 import java.util.List;
 
 /** a class to chain AFPs to an alignment
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -48,30 +48,30 @@ public class AFPChainer
 	// private static final boolean showAlig = false;
 
 	/**
-  // Key function: chain (assembly) the AFPs
-  // a AFP (k) is defined as (i, j, k), with i and j are staring points
-  // AFP extension (eg. AFP(k-1) -> AFP(k) ) requiring
-  // AFP(k-1) < AFP(k)(refer AFP.h definition),
-  // ie i(k-1) < i(k) and j(k-1) < j(k)
-  // in the figure, only (2) AFP can extend to AFP(k)
-  // Key features: a coordination transformation is allowed in the AFP extension
-  //                      gap penalties are also considered
-  //
-  //                                   protein1
-  //                 ---------------------------
-  //                 |        \                |
-  //                 |         \(1)            |
-  //                 |     \    \              |
-  //                 |      \(2) \             |
-  //              p  |       \                 |
-  //              r  |   \                     |
-  //              o  |    \(3)  \(i,j, k)      |
-  //              t  |     \     \             |
-  //              e  |            \            |
-  //              i  |                         |
-  //              n  |                         |
-  //              2  ---------------------------
-  //                  schematic of AFP chaining
+	// Key function: chain (assembly) the AFPs
+	// a AFP (k) is defined as (i, j, k), with i and j are staring points
+	// AFP extension (eg. AFP(k-1) -> AFP(k) ) requiring
+	// AFP(k-1) < AFP(k)(refer AFP.h definition),
+	// ie i(k-1) < i(k) and j(k-1) < j(k)
+	// in the figure, only (2) AFP can extend to AFP(k)
+	// Key features: a coordination transformation is allowed in the AFP extension
+	//                      gap penalties are also considered
+	//
+	//                                   protein1
+	//                 ---------------------------
+	//                 |        \                |
+	//                 |         \(1)            |
+	//                 |     \    \              |
+	//                 |      \(2) \             |
+	//              p  |       \                 |
+	//              r  |   \                     |
+	//              o  |    \(3)  \(i,j, k)      |
+	//              t  |     \     \             |
+	//              e  |            \            |
+	//              i  |                         |
+	//              n  |                         |
+	//              2  ---------------------------
+	//                  schematic of AFP chaining
 	 */
 	public static void doChainAfp(FatCatParameters params, AFPChain afpChain,Atom[] ca1, Atom[] ca2){
 		List<AFP> afpSet = afpChain.getAfpSet();
@@ -188,41 +188,41 @@ public class AFPChainer
 
 	/*
 
-  derive the compabitle AFP lists for AFP-chaining
-  this is important for speeding up the process
-  for a given AFP(i1,j1), there are three regions that could be the starting
-  point for the compabitle AFPs of AFP(i1,j1)
-  //                 a1        a2   a3
-  //               i1-G    i1-f-c i1-f+1 i1
-  //                 |          |   |   |
-  //              ----------------------------
-  //              | B               |   |
-  //b1  j1-G  -|  ---------------|   |
-  //              |  |          |   |   |
-  //              |  |     C    | 3 |   |
-  //              |  |          |   |   |
-  //b2 j1-f-c -|  |--------------|   |
-  //              |  |     2    | 1 |   |
-  //b3 j1-f+1 -|------------------   |
-  //              |                   A |
-  //          j1 -|---------------------\
-  //              |                      \ (AFP(i1,j1))
-  //              -----------------------------
-  //
-  f: the length of AFPs (we use segments of same length)
-  G: g + f, where g is the maximum allowed gaps
-  c: the maximum allowed cross-over in AFP-connection,
-     here we use c = f, and j1-f-c = j1-2f
-  incompatible region A: its AFPs overlap with given AFP(i1,j1)
-  incompatible region B: the gaps between its AFP with given AFP is larger than g
-  incompatible region C: its AFPs connect with given AFP but cross a given threshold.
-  compatible region 1: [i1-f-c,i1-f+1>,[j1-f-c,j1-f+1> or [a2,a3],[b2,b3]
-  compatible region 2: [i1-G,i1-f-c],[j1-f-c,j1-f] or [a1,a2],[b2,b3]
-  combine 1 and 2    : [i1-G,i1-f],[j1-f-c,j1-f]   or [a1,a3],[b2,b3]
-  compatible region 3: [i1-f-c,i1-f],[j1-G,j1-f-c] or [a2,a3],[b1,b2]
-  c->misCut
-  f->fragLen
-  G->fragLen+maxGap->maxGapFrag
+	derive the compabitle AFP lists for AFP-chaining
+	this is important for speeding up the process
+	for a given AFP(i1,j1), there are three regions that could be the starting
+	point for the compabitle AFPs of AFP(i1,j1)
+	//                 a1        a2   a3
+	//               i1-G    i1-f-c i1-f+1 i1
+	//                 |          |   |   |
+	//              ----------------------------
+	//              | B               |   |
+	//b1  j1-G  -|  ---------------|   |
+	//              |  |          |   |   |
+	//              |  |     C    | 3 |   |
+	//              |  |          |   |   |
+	//b2 j1-f-c -|  |--------------|   |
+	//              |  |     2    | 1 |   |
+	//b3 j1-f+1 -|------------------   |
+	//              |                   A |
+	//          j1 -|---------------------\
+	//              |                      \ (AFP(i1,j1))
+	//              -----------------------------
+	//
+	f: the length of AFPs (we use segments of same length)
+	G: g + f, where g is the maximum allowed gaps
+	c: the maximum allowed cross-over in AFP-connection,
+		 here we use c = f, and j1-f-c = j1-2f
+	incompatible region A: its AFPs overlap with given AFP(i1,j1)
+	incompatible region B: the gaps between its AFP with given AFP is larger than g
+	incompatible region C: its AFPs connect with given AFP but cross a given threshold.
+	compatible region 1: [i1-f-c,i1-f+1>,[j1-f-c,j1-f+1> or [a2,a3],[b2,b3]
+	compatible region 2: [i1-G,i1-f-c],[j1-f-c,j1-f] or [a1,a2],[b2,b3]
+	combine 1 and 2    : [i1-G,i1-f],[j1-f-c,j1-f]   or [a1,a3],[b2,b3]
+	compatible region 3: [i1-f-c,i1-f],[j1-G,j1-f-c] or [a2,a3],[b1,b2]
+	c->misCut
+	f->fragLen
+	G->fragLen+maxGap->maxGapFrag
 	 *
 	 *
 	 */
@@ -294,10 +294,10 @@ public class AFPChainer
 
 
 	/**
-  //Key function: calculate the connectivity of AFP pairs
-  //no compatibility criteria is executed
-  //note: afp1 is previous to afp2 in terms of the position
-     //this module must be optimized
+	//Key function: calculate the connectivity of AFP pairs
+	//no compatibility criteria is executed
+	//note: afp1 is previous to afp2 in terms of the position
+		 //this module must be optimized
 	 *
 	 * @param afp1
 	 * @param afp2
@@ -385,17 +385,17 @@ public class AFPChainer
 	}
 
 	/**
-  //return the root mean square of the distance matrix between the residues
-  //from the segments that form the given AFP list
-  //this value can be a measurement (2) for the connectivity of the AFPs
-  //and its calculation is quicker than the measurement (1), rmsd
-  //currently only deal with AFP pair
+	//return the root mean square of the distance matrix between the residues
+	//from the segments that form the given AFP list
+	//this value can be a measurement (2) for the connectivity of the AFPs
+	//and its calculation is quicker than the measurement (1), rmsd
+	//currently only deal with AFP pair
 //
 //           |-d1--|
 //          |--d2---|
 //         |---d3----|
-  //-----------------------------------------------------------------------
-  //this module is optimized
+	//-----------------------------------------------------------------------
+	//this module is optimized
 	 *
 	 * @param afp1
 	 * @param afp2
@@ -620,11 +620,11 @@ public class AFPChainer
 	}
 
 	/**
-  //return the rmsd of the residues from the segments that form the given AFP list
-  //this value can be a measurement (1) for the connectivity of the AFPs
+	//return the rmsd of the residues from the segments that form the given AFP list
+	//this value can be a measurement (1) for the connectivity of the AFPs
 	 *
 	 * @param afpn
-	 * @param afpPositions the positions of AFPs to work on. 
+	 * @param afpPositions the positions of AFPs to work on.
 	 * @param listStart the starting position in the list of AFPs
 	 * @param afpChain
 	 * @param ca1
@@ -726,7 +726,7 @@ public class AFPChainer
 		//      for ( Atom a : catmp2){
 		//         c2.addGroup(a.getParent());
 		//      }
-		//      
+		//
 		//      Structure fake = new StructureImpl();
 		//      fake.setPDBCode("AFPCHainer: getRmsd" + rmsd);
 		//      List<Chain> model1 = new ArrayList<Chain>();

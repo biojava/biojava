@@ -44,17 +44,17 @@ public interface SequenceCreatorInterface<C extends Compound> {
 	 * @throws IOException
 	 */
 	public AbstractSequence<C> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException;
-	
+
 	/**
-	 * 
+	 *
 	 * @param proxyLoader
 	 * @param index
 	 * @return
 	 */
 	public AbstractSequence<C> getSequence(ProxySequenceReader<C> proxyLoader, long index);
-	
+
 	/**
-	 * 
+	 *
 	 * @param list
 	 * @return
 	 */

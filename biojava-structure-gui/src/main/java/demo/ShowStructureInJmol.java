@@ -26,14 +26,14 @@ import org.biojava.nbio.structure.StructureIO;
 
 
 /** Demo how to load and display a structure in Jmol
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class ShowStructureInJmol {
 	public static void main(String[] args){
 		try {
-			
+
 			Structure struc = StructureIO.getStructure("1aoi");
 
 			StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol();

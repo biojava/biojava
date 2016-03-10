@@ -27,43 +27,43 @@ import java.io.Serializable;
 
 public class DatabasePdbrevRecord implements Serializable {
 
-   
+
 	private static final long serialVersionUID = 1L;
-	
+
 	String rev_num;
-    String type;
-    String details;
+	String type;
+	String details;
 
-    public String getRev_num() {
-        return rev_num;
-    }
+	public String getRev_num() {
+		return rev_num;
+	}
 
-    public void setRev_num(String rev_num) {
-        this.rev_num = rev_num;
-    }
+	public void setRev_num(String rev_num) {
+		this.rev_num = rev_num;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public String getDetails() {
-        return details;
-    }
+	public String getDetails() {
+		return details;
+	}
 
-    public void setDetails(String details) {
-        this.details = details;
-    }
+	public void setDetails(String details) {
+		this.details = details;
+	}
 
-    @Override
-    public String toString() {
-        return "DatabasePdbrevRecord{" +
-                "rev_num='" + rev_num + '\'' +
-                ", type='" + type + '\'' +
-                ", details='" + details + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "DatabasePdbrevRecord{" +
+				"rev_num='" + rev_num + '\'' +
+				", type='" + type + '\'' +
+				", details='" + details + '\'' +
+				'}';
+	}
 }

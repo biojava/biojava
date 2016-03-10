@@ -24,7 +24,7 @@ public class Convert2Polarity extends Convertor{
 	/**
 	 * Class for the conversion of protein sequence into polarity
 	 */
-	
+
 	@Override
 	public char convert(char c){
 		switch(c){

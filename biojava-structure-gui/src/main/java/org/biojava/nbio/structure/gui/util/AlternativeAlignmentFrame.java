@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jul 16, 2006
  *
  */
@@ -45,17 +45,17 @@ import java.util.List;
 
 
 /** a frame showing the alternative alignments, which are the result of a structure superimposition
- * 
+ *
  * @author Andreas Prlic
  * @since 1.7
  * @version %I% %G%
  */
-public class AlternativeAlignmentFrame 
+public class AlternativeAlignmentFrame
 extends JFrame{
 
 	private static final long serialVersionUID=0l;
 
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AlternativeAlignmentFrame.class);
 
 	private static String[] columnNames = new String[]{"#","eqr","score", "rms", "gaps","cluster", "show distance matrix","show alignment"};
@@ -89,7 +89,7 @@ extends JFrame{
 	public void setStructurePairAligner(StructurePairAligner aligner){
 		this.structurePairAligner = aligner;
 	}
-	
+
 	public void setAlternativeAlignments(AlternativeAlignment[] aligs) {
 		this.aligs = aligs;
 		panel.removeAll();
@@ -100,21 +100,21 @@ extends JFrame{
 		Object[][] data = getDataFromAligs(aligs);
 		JTableDataButtonModel model = new JTableDataButtonModel(data, columnNames);
 		JTable table = new JTable(model);
-		
-		
+
+
 		TableCellRenderer defaultRenderer = table.getDefaultRenderer(JButton.class);
-		
+
 		JButtonTableCellRenderer myRenderer = new JButtonTableCellRenderer(defaultRenderer);
-		
+
 		table.setDefaultRenderer(JButton.class, myRenderer);
-		
+
 		table.addMouseListener(new JTableMouseButtonListener(table));
-		
+
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setPreferredSize(new Dimension(800,400));
 		//vBox.add(e);
 		panel.add(scrollPane);
-		
+
 
 	}
 
@@ -136,14 +136,14 @@ extends JFrame{
 			maxb.addMouseListener(new MatrixMouseListener(this,i));
 
 			data[i][6] = maxb;
-			
+
 
 			//Action action1 = new MyButtonAction(t,this,i);
 			JButton but = new JButton("Show in Jmol");
 			but.addMouseListener(new MyButtonMouseListener(this,i));
 			data[i][7] = but;
 
-			
+
 		}
 		return data;
 	}
@@ -154,11 +154,11 @@ extends JFrame{
 		}
 		AlternativeAlignment alig = aligs[position];
 		logger.info("display distance matrix for alternative alignment " + (position +1));
-		
+
 		ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
 		JFrame frame = new JFrame();
 		frame.setTitle("Alt. Alig [" + position+"] - Distance Matrix & path");
-		
+
 		frame.addWindowListener(new WindowAdapter(){
 			@Override
 			public void windowClosing(WindowEvent e){
@@ -167,13 +167,13 @@ extends JFrame{
 				f.dispose();
 			}
 
-					
-			
+
+
 		});
-					
-		smp.setMatrix(alig.getDistanceMatrix());		
+
+		smp.setMatrix(alig.getDistanceMatrix());
 		smp.setAlternativeAligs(new AlternativeAlignment[]{alig});
-		
+
 		frame.getContentPane().add(smp);
 
 		frame.pack();
@@ -202,7 +202,7 @@ extends JFrame{
 		shift1.setCoords(new double[]{0,0,1});
 		Atom shift2 = alig.getShift();
 
-		Structure s3 = (Structure)structure2.clone();
+		Structure s3 = structure2.clone();
 
 		Calc.rotate(s3,m2);
 		Calc.shift(s3,shift2);
@@ -211,31 +211,31 @@ extends JFrame{
 		jmol.setTitle(pdb1 + " vs. " + pdb2);
 
 		Structure n = new StructureImpl();
-		
+
 		List<Chain> chains1 = structure1.getChains();
-		
+
 		n.addModel(chains1);
-		
+
 		List<Chain> chains3 = s3.getChains();
 		n.addModel(chains3);
-	
+
 		jmol.setStructure(n);
 		String[] cmds = createRasmolScripts(alig);
 		jmol.evalString("model 0 ; select * ; wireframe off ; spacefill off; backbone 0.3;");
 		jmol.evalString(cmds[0]);
-		jmol.evalString(cmds[1]);		
-		
+		jmol.evalString(cmds[1]);
+
 		JFrame frame = new JFrame("Sequences for AlternativeAlignment ["+position+"]");
-		
+
 		SequenceDisplay seqdisp;
 		seqdisp =  new SequenceDisplay(structurePairAligner);
 		seqdisp.setStructure1(structure1);
 		seqdisp.setStructure2(structure2);
-	
+
 		seqdisp.setAlternativeAlignment(alig);
-		
+
 		frame.getContentPane().add(seqdisp);
-		
+
 		frame.pack();
 		frame.setVisible(true);
 		frame.addWindowListener(new WindowAdapter(){
@@ -246,22 +246,22 @@ extends JFrame{
 				f.dispose();
 			}
 
-					
-			
+
+
 		});
-		
+
 		seqdisp.updateDisplay();
-		
+
 		JmolAlignedPositionListener jmolBridge = new JmolAlignedPositionListener(jmol,structurePairAligner);
-		jmolBridge.setStructure1(structure1);		
+		jmolBridge.setStructure1(structure1);
 		jmolBridge.setStructure2(s3);
-		
+
 		seqdisp.addAlignmentPositionListener(jmolBridge);
-		
+
 	}
 
-	
-	
+
+
 	private String[] createRasmolScripts(AlternativeAlignment alig){
 		String[] scripts = new String[2];
 
@@ -271,8 +271,8 @@ extends JFrame{
 		Color chaincol1 = new Color(col1.getRed()/2,col1.getGreen()/2,col1.getBlue()/2);
 		Color chaincol2 = new Color(col2.getRed()/2,col2.getGreen()/2,col2.getBlue()/2);
 
-		
-		
+
+
 		String cmd1 = "";
 		String cmd2 = "";
 
@@ -304,10 +304,10 @@ extends JFrame{
 		}
 
 		cmd1 += "; color [" +col1.getRed()+","+col1.getGreen() +","+col1.getBlue() +"];";
-		cmd1 += " backbone 0.6;";   
+		cmd1 += " backbone 0.6;";
 
 		cmd2 += "; color [" +col2.getRed()+","+col2.getGreen() +","+col2.getBlue() +"];";
-		cmd2 += " backbone 0.6;";   
+		cmd2 += " backbone 0.6;";
 
 		//System.out.println(cmd1);
 		scripts[0] = cmd1;
@@ -344,7 +344,7 @@ class MyButtonMouseListener implements MouseListener{
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {     
+	public void mouseReleased(MouseEvent arg0) {
 		parent.showAlternative(pos);
 
 	}
@@ -376,7 +376,7 @@ class MatrixMouseListener implements MouseListener{
 	public void mousePressed(MouseEvent arg0) {}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {     
+	public void mouseReleased(MouseEvent arg0) {
 		parent.showDistanceMatrix(pos);
 
 	}

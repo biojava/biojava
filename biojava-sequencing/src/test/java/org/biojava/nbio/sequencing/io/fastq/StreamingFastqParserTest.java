@@ -30,54 +30,54 @@ import java.io.StringReader;
 public class StreamingFastqParserTest extends TestCase
 {
 
-    public void testStreamNullReadable() throws Exception
-    {
-        try
-        {
-            StreamingFastqParser.stream((Readable) null, FastqVariant.FASTQ_SANGER, new StreamListener() {
-                @Override
-                public void fastq(final Fastq fastq) {
-                    // empty
-                }
-            });
-            fail("stream(null,,) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
+	public void testStreamNullReadable() throws Exception
+	{
+		try
+		{
+			StreamingFastqParser.stream((Readable) null, FastqVariant.FASTQ_SANGER, new StreamListener() {
+				@Override
+				public void fastq(final Fastq fastq) {
+					// empty
+				}
+			});
+			fail("stream(null,,) expected IllegalArgumentException");
+		}
+		catch (IllegalArgumentException e)
+		{
+			// expected
+		}
+	}
 
-    public void testStreamNullVariant() throws Exception
-    {
-        try
-        {
-            final String input = "";
-            StreamingFastqParser.stream(new StringReader(input), null, new StreamListener() {
-                @Override
-                public void fastq(final Fastq fastq) {
-                    // empty
-                }
-            });
-            fail("stream(null,,) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
+	public void testStreamNullVariant() throws Exception
+	{
+		try
+		{
+			final String input = "";
+			StreamingFastqParser.stream(new StringReader(input), null, new StreamListener() {
+				@Override
+				public void fastq(final Fastq fastq) {
+					// empty
+				}
+			});
+			fail("stream(null,,) expected IllegalArgumentException");
+		}
+		catch (IllegalArgumentException e)
+		{
+			// expected
+		}
+	}
 
-    public void testStreamNullListener() throws Exception
-    {
-        try
-        {
-            final String input = "";
-            StreamingFastqParser.stream(new StringReader(input), FastqVariant.FASTQ_SANGER, null);
-            fail("stream(null,,) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
+	public void testStreamNullListener() throws Exception
+	{
+		try
+		{
+			final String input = "";
+			StreamingFastqParser.stream(new StringReader(input), FastqVariant.FASTQ_SANGER, null);
+			fail("stream(null,,) expected IllegalArgumentException");
+		}
+		catch (IllegalArgumentException e)
+		{
+			// expected
+		}
+	}
 }

@@ -50,11 +50,11 @@ import java.util.regex.Pattern;
  * A crystallographic space group. We store the standard numeric identifier,
  * the international short symbol and the transformations corresponding to
  * each space group (as Matrix4ds and in algebraic notation).
- * The information for all (protein crystallography) space groups can be 
+ * The information for all (protein crystallography) space groups can be
  * parsed from the XML file in the resource directory.
- * 
+ *
  * See: http://en.wikipedia.org/wiki/Space_group
- * 
+ *
  * @author duarte_j
  * @see SymoplibParser
  */
@@ -221,7 +221,7 @@ public class SpaceGroup implements Serializable {
 			} else if (coord.equals("Z")) {
 				coefficients[2] = s;
 			}
-		}		
+		}
 		if (noLetters!=null) {
 			m = transCoefPat.matcher(noLetters);
 			if (m.matches()) {
@@ -249,7 +249,7 @@ public class SpaceGroup implements Serializable {
 	}
 
 	/**
-	 * Gets the international short name (as used in PDB), 
+	 * Gets the international short name (as used in PDB),
 	 * e.g. "P 21 21 21" or "C 1 c 1"
 	 * @return
 	 */
@@ -292,20 +292,20 @@ public class SpaceGroup implements Serializable {
 
 			axisAngles[i] = getRotAxisAndAngle(r);
 
-		}	
+		}
 	}
 
 	/**
 	 * Calculates the axis fold type (1, 2, 3, 4, 5, 6 for rotations or -1, -2, -3, -4, -6 improper rotations)
-	 * from the trace of the rotation matrix, see for instance 
-	 * http://www.crystallography.fr/mathcryst/pdf/Gargnano/Aroyo_Gargnano_1.pdf 
+	 * from the trace of the rotation matrix, see for instance
+	 * http://www.crystallography.fr/mathcryst/pdf/Gargnano/Aroyo_Gargnano_1.pdf
 	 */
 	private void calcAxisFoldTypes() {
 		axisTypes = new int[multiplicity];
 
 		for (int i=0;i<this.transformations.size();i++){
 
-			axisTypes[i] = getRotAxisType(transformations.get(i)); 
+			axisTypes[i] = getRotAxisType(transformations.get(i));
 
 		}
 	}
@@ -345,7 +345,7 @@ public class SpaceGroup implements Serializable {
 	/**
 	 * Given a transformId returns the type of axis of rotation: 1 (no rotation), 2, 3, 4 or 6 -fold
 	 * and for improper rotations: -1, -2, -3, -4 and -6
-	 * 
+	 *
 	 * @param transformId
 	 * @return
 	 */
@@ -357,7 +357,7 @@ public class SpaceGroup implements Serializable {
 	/**
 	 * Gets a transformation by index expressed in crystal axes basis.
 	 * Index 0 corresponds always to the identity transformation.
-	 * Beware the returned Matrix4d is not a copy but it stays linked 
+	 * Beware the returned Matrix4d is not a copy but it stays linked
 	 * to the one stored in this SpaceGroup object
 	 * @param i
 	 * @return
@@ -368,7 +368,7 @@ public class SpaceGroup implements Serializable {
 
 	/**
 	 * Gets a transformation algebraic string given its index.
-	 * Index 0 corresponds always to the identity transformation. 
+	 * Index 0 corresponds always to the identity transformation.
 	 * @param i
 	 * @return
 	 */
@@ -389,7 +389,7 @@ public class SpaceGroup implements Serializable {
 	}
 
 	/**
-	 * Gets the number of symmetry operators corresponding to this SpaceGroup (counting 
+	 * Gets the number of symmetry operators corresponding to this SpaceGroup (counting
 	 * the identity operator)
 	 * @return
 	 */
@@ -480,16 +480,16 @@ public class SpaceGroup implements Serializable {
 	 * Given a rotation matrix calculates the rotation axis and angle for it.
 	 * The angle is calculated from the trace, the axis from the eigenvalue
 	 * decomposition.
-	 * If given matrix is improper rotation or identity matrix then 
+	 * If given matrix is improper rotation or identity matrix then
 	 * axis (0,0,0) and angle 0 are returned.
 	 * @param m
 	 * @return
 	 * @throws IllegalArgumentException if given matrix is not a rotation matrix (determinant not 1 or -1)
 	 */
-	public static AxisAngle4d getRotAxisAndAngle(Matrix3d m) {	
+	public static AxisAngle4d getRotAxisAndAngle(Matrix3d m) {
 		double determinant = m.determinant();
 
-		if (!(Math.abs(determinant)-1.0<DELTA)) throw new IllegalArgumentException("Given matrix is not a rotation matrix"); 
+		if (!(Math.abs(determinant)-1.0<DELTA)) throw new IllegalArgumentException("Given matrix is not a rotation matrix");
 
 		AxisAngle4d axisAndAngle = new AxisAngle4d(new Vector3d(0,0,0),0);
 
@@ -515,8 +515,8 @@ public class SpaceGroup implements Serializable {
 		for (indexOfEv1=0;indexOfEv1<3;indexOfEv1++) {
 			if (deltaComp(eval.get(indexOfEv1, indexOfEv1),1,DELTA)) break;
 		}
-		Matrix evec = evd.getV(); 
-		axisAndAngle.set(new Vector3d(evec.get(0,indexOfEv1), evec.get(1, indexOfEv1), evec.get(2, indexOfEv1)), 
+		Matrix evec = evd.getV();
+		axisAndAngle.set(new Vector3d(evec.get(0,indexOfEv1), evec.get(1, indexOfEv1), evec.get(2, indexOfEv1)),
 				Math.acos((eval.trace()-1.0)/2.0));
 
 		return axisAndAngle;
@@ -524,9 +524,9 @@ public class SpaceGroup implements Serializable {
 
 	/**
 	 * Given a transformation matrix containing a rotation returns the type of rotation:
-	 * 1 for identity, 2 for 2-fold rotation, 3 for 3-fold rotation, 4 for 4-fold rotation, 
+	 * 1 for identity, 2 for 2-fold rotation, 3 for 3-fold rotation, 4 for 4-fold rotation,
 	 * 6 for 6-fold rotation,
-	 * -1 for inversions, -2 for mirror planes, -3 for 3-fold improper rotation, 
+	 * -1 for inversions, -2 for mirror planes, -3 for 3-fold improper rotation,
 	 * -4 for 4-fold improper rotation and -6 for 6-fold improper rotation
 	 * @param m
 	 * @return
@@ -555,7 +555,7 @@ public class SpaceGroup implements Serializable {
 				break;
 			case 0:
 				axisType=3;
-				break;						
+				break;
 			case 1:
 				axisType=4;
 				break;
@@ -575,7 +575,7 @@ public class SpaceGroup implements Serializable {
 				break;
 			case 0:
 				axisType=-3;
-				break;						
+				break;
 			case -1:
 				axisType=-4;
 				break;
@@ -627,7 +627,7 @@ public class SpaceGroup implements Serializable {
 	}
 
 	//@XmlElementWrapper(name="transfAlgebraicList", namespace="http://www.biojava.org")
-	//@XmlElement 
+	//@XmlElement
 	@XmlJavaTypeAdapter(TransfAlgebraicAdapter.class)
 	public List<String> getTransfAlgebraic() {
 		return transfAlgebraic;
@@ -635,7 +635,7 @@ public class SpaceGroup implements Serializable {
 
 	public void setTransfAlgebraic(List<String> transfAlgebraic) {
 		//System.out.println("setting transfAlgebraic " + transfAlgebraic);
-		if ( transformations == null || transformations.size() == 0)		
+		if ( transformations == null || transformations.size() == 0)
 			transformations = new ArrayList<Matrix4d>(transfAlgebraic.size());
 
 		if ( this.transfAlgebraic == null || this.transfAlgebraic.size() == 0)

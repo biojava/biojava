@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
  */
 package org.biojava.nbio.structure.gui.util.color;
@@ -24,31 +24,31 @@ package org.biojava.nbio.structure.gui.util.color;
 /**
  * Performs a log10 transform on input before passing the values off to another
  * colorMapper.
- * 
+ *
  * For instance, to map [10^0, 10^10] to a rainbow gradient, use
- * 
+ *
  * new LogColorMapper(GradientMapper.getGradientMapper(GradientMapper.RAINBOW_GRADIENT, 0, 10))
- * 
+ *
  * @author Spencer Bliven
  *
  */
 public class LogColorMapper extends ContinuousColorMapperTransform {
-	
+
 	private int base;
 
 	/**
 	 * Creates a new LogColorMapper with base 10.
-	 * @param logspaceMapper 
+	 * @param logspaceMapper
 	 */
 	public LogColorMapper(ContinuousColorMapper logspaceMapper) {
 		this(logspaceMapper, 10);
 	}
-	
+
 	/**
 	 * If logspaceMapper maps values x1 to x2, this creates a
 	 * mapper for values base^x1 to base^x2
-	 * 
-	 * @param logspaceMapper logspace mapper 
+	 *
+	 * @param logspaceMapper logspace mapper
 	 * @param base The base of the logorithm
 	 */
 	public LogColorMapper(ContinuousColorMapper logspaceMapper, int base) {

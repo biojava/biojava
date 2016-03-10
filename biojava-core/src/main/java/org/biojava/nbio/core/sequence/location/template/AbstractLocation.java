@@ -54,352 +54,352 @@ public abstract class AbstractLocation implements Serializable, Location {
 	private static final long serialVersionUID = 1L;
 
 	//TODO Need to have the Sequence lookup resolver here; see the next one as well
-    //TODO Need a way of late binding of start/stop
+	//TODO Need a way of late binding of start/stop
 
-    private Point start;
-    private Point end;
-    private Strand strand;
-    private List<Location> subLocations;
-    private boolean circular;
-    private boolean betweenCompounds;
-    private AccessionID accession;
-    
-    private boolean partialOn5prime = false;
-    private boolean partialOn3prime = false;
-   
+	private Point start;
+	private Point end;
+	private Strand strand;
+	private List<Location> subLocations;
+	private boolean circular;
+	private boolean betweenCompounds;
+	private AccessionID accession;
+
+	private boolean partialOn5prime = false;
+	private boolean partialOn3prime = false;
 
 
-    protected AbstractLocation() {
-        super();
-    }
 
-    /**
-     * Default constructor
-     *
-     * @param start start of the location
-     * @param end end of the location
-     * @param strand strand it is located on
-     * @param circular Boolean which says if the current location was circular
-     * or not
-     * @param betweenCompounds Indicates the location lies at the position between
-     * a pair of bases; means the bases must be next to each other (and
-     * therefore cannot be complex)
-     * @param subLocations Sub locations which composes this location
-     */
-    public AbstractLocation(Point start, Point end, Strand strand,
-            boolean circular, boolean betweenCompounds,
-            List<Location> subLocations) {
-        this(start, end, strand, circular, betweenCompounds, null, subLocations);
-    }
+	protected AbstractLocation() {
+		super();
+	}
 
-    /**
-     * Default constructor
-     *
-     * @param start start of the location
-     * @param end end of the location
-     * @param strand strand it is located on
-     * @param circular Boolean which says if the current location was circular
-     * or not
-     * @param betweenCompounds Indicates the location lies at the position between
-     * a pair of bases; means the bases must be next to each other (and
-     * therefore cannot be complex)
-     * @param accession The accession ID to link this location to
-     * @param subLocations Sub locations which composes this location
-     */
-    public AbstractLocation(Point start, Point end, Strand strand,
-            boolean circular, boolean betweenCompounds, AccessionID accession,
-            List<Location> subLocations) {
-        this.start = start;
-        this.end = end;
-        this.strand = strand;
-        this.circular = circular;
-        this.betweenCompounds = betweenCompounds;
-        this.accession = accession;
-        this.subLocations = subLocations==null? null : Collections.unmodifiableList(subLocations);
-        assertLocation();
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param start start of the location
+	 * @param end end of the location
+	 * @param strand strand it is located on
+	 * @param circular Boolean which says if the current location was circular
+	 * or not
+	 * @param betweenCompounds Indicates the location lies at the position between
+	 * a pair of bases; means the bases must be next to each other (and
+	 * therefore cannot be complex)
+	 * @param subLocations Sub locations which composes this location
+	 */
+	public AbstractLocation(Point start, Point end, Strand strand,
+			boolean circular, boolean betweenCompounds,
+			List<Location> subLocations) {
+		this(start, end, strand, circular, betweenCompounds, null, subLocations);
+	}
 
-    protected void assertLocation() {
-        if (isCircular() && !isComplex()) {
-            throw new IllegalStateException("Cannot have a circular "
-                    + "location which is not complex");
-        }
+	/**
+	 * Default constructor
+	 *
+	 * @param start start of the location
+	 * @param end end of the location
+	 * @param strand strand it is located on
+	 * @param circular Boolean which says if the current location was circular
+	 * or not
+	 * @param betweenCompounds Indicates the location lies at the position between
+	 * a pair of bases; means the bases must be next to each other (and
+	 * therefore cannot be complex)
+	 * @param accession The accession ID to link this location to
+	 * @param subLocations Sub locations which composes this location
+	 */
+	public AbstractLocation(Point start, Point end, Strand strand,
+			boolean circular, boolean betweenCompounds, AccessionID accession,
+			List<Location> subLocations) {
+		this.start = start;
+		this.end = end;
+		this.strand = strand;
+		this.circular = circular;
+		this.betweenCompounds = betweenCompounds;
+		this.accession = accession;
+		this.subLocations = subLocations==null? null : Collections.unmodifiableList(subLocations);
+		assertLocation();
+	}
 
-        int st = getStart().getPosition();
-        int e = getEnd().getPosition();
+	protected void assertLocation() {
+		if (isCircular() && !isComplex()) {
+			throw new IllegalStateException("Cannot have a circular "
+					+ "location which is not complex");
+		}
 
-        if (st > e) {
-            throw new IllegalStateException(
-                    String.format("Start (%d) is greater than end (%d); "
-                    + "this is an incorrect format",
-                    st, e));
-        }
+		int st = getStart().getPosition();
+		int e = getEnd().getPosition();
 
-        if(isBetweenCompounds() && isComplex()) {
-            throw new IllegalStateException("Cannot have a complex location "
-                    + "which is located between a pair of compounds");
-        }
+		if (st > e) {
+			throw new IllegalStateException(
+					String.format("Start (%d) is greater than end (%d); "
+					+ "this is an incorrect format",
+					st, e));
+		}
 
-        if(isBetweenCompounds() && (st + 1) != e) {
-            throw new IllegalStateException(
-                    String.format("Start (%d) is not next to end (%d)", st, e));
-        }
+		if(isBetweenCompounds() && isComplex()) {
+			throw new IllegalStateException("Cannot have a complex location "
+					+ "which is located between a pair of compounds");
+		}
 
-    }
+		if(isBetweenCompounds() && (st + 1) != e) {
+			throw new IllegalStateException(
+					String.format("Start (%d) is not next to end (%d)", st, e));
+		}
 
-    
-    @Override
+	}
+
+
+	@Override
 	public Point getEnd() {
-        return end;
-    }
+		return end;
+	}
 
-    
-    @Override
+
+	@Override
 	public Point getStart() {
-        return start;
-    }
+		return start;
+	}
 
-    
-    @Override
+
+	@Override
 	public int getLength() {
-        return (getEnd().getPosition() - getStart().getPosition()) + 1;
-    }
+		return (getEnd().getPosition() - getStart().getPosition()) + 1;
+	}
 
-    
-    @Override
+
+	@Override
 	public Strand getStrand() {
-        return strand;
-    }
+		return strand;
+	}
 
-    
-    @Override
+
+	@Override
 	public List<Location> getSubLocations() {
-        if(subLocations == null) {
-            return Collections.emptyList();
-        }
-        return subLocations;
-    }
+		if(subLocations == null) {
+			return Collections.emptyList();
+		}
+		return subLocations;
+	}
 
-    
-    @Override
+
+	@Override
 	public boolean isComplex() {
-        return !getSubLocations().isEmpty();
-    }
+		return !getSubLocations().isEmpty();
+	}
 
-    
-    @Override
+
+	@Override
 	public AccessionID getAccession() {
-        return accession;
-    }
-    
-    public boolean isPartialOn5prime() {
-        return partialOn5prime;
-    }
+		return accession;
+	}
 
-    public void setPartialOn5prime(boolean partialOn5prime) {
-        this.partialOn5prime = partialOn5prime;
-    }
+	public boolean isPartialOn5prime() {
+		return partialOn5prime;
+	}
 
-    public boolean isPartialOn3prime() {
-        return partialOn3prime;
-    }
+	public void setPartialOn5prime(boolean partialOn5prime) {
+		this.partialOn5prime = partialOn5prime;
+	}
 
-    public void setPartialOn3prime(boolean partialOn3prime) {
-        this.partialOn3prime = partialOn3prime;
-    }
-    
-    public boolean isPartial() {
-        return partialOn5prime || partialOn3prime;
-    }
+	public boolean isPartialOn3prime() {
+		return partialOn3prime;
+	}
 
-    /**
-     * Iterates through all known sub-locations for this location but does
-     * not descend
-     */
-    
-    @Override
+	public void setPartialOn3prime(boolean partialOn3prime) {
+		this.partialOn3prime = partialOn3prime;
+	}
+
+	public boolean isPartial() {
+		return partialOn5prime || partialOn3prime;
+	}
+
+	/**
+	 * Iterates through all known sub-locations for this location but does
+	 * not descend
+	 */
+
+	@Override
 	public Iterator<Location> iterator() {
-        List<Location> list;
-        if(isComplex()) {
-            list = getSubLocations();
-        }
-        else {
-            list = new ArrayList<Location>();
-            list.add(this);
-        }
-        return list.iterator();
-    }
+		List<Location> list;
+		if(isComplex()) {
+			list = getSubLocations();
+		}
+		else {
+			list = new ArrayList<Location>();
+			list.add(this);
+		}
+		return list.iterator();
+	}
 
-    /**
-     * Returns the normalised list of sub locations i.e. only those locations
-     * which do not have a sub location. Useful for when you need to get
-     * the exact elements of a location back for sub sequences.
-     */
-    
-    @Override
+	/**
+	 * Returns the normalised list of sub locations i.e. only those locations
+	 * which do not have a sub location. Useful for when you need to get
+	 * the exact elements of a location back for sub sequences.
+	 */
+
+	@Override
 	public List<Location> getRelevantSubLocations() {
-        return getAllSubLocations(this);
-    }
+		return getAllSubLocations(this);
+	}
 
-    /**
-     * Here to allow for recursion
-     */
-    private List<Location> getAllSubLocations(Location location) {
-        List<Location> flatSubLocations = new ArrayList<Location>();
-        for (Location l : location.getSubLocations()) {
-            if (l.isComplex()) {
-                flatSubLocations.addAll(getAllSubLocations(l));
-            }
-            else {
-                flatSubLocations.add(l);
-            }
-        }
-        return flatSubLocations;
-    }
+	/**
+	 * Here to allow for recursion
+	 */
+	private List<Location> getAllSubLocations(Location location) {
+		List<Location> flatSubLocations = new ArrayList<Location>();
+		for (Location l : location.getSubLocations()) {
+			if (l.isComplex()) {
+				flatSubLocations.addAll(getAllSubLocations(l));
+			}
+			else {
+				flatSubLocations.add(l);
+			}
+		}
+		return flatSubLocations;
+	}
 
-    
-    @Override
+
+	@Override
 	public boolean equals(Object obj) {
-        boolean equals = false;
-        if (classEqual(this, obj)) {
-            AbstractLocation l = (AbstractLocation) obj;
-            equals = (equal(getStart(), l.getStart())
-                    && equal(getEnd(), l.getEnd())
-                    && equal(getStrand(), l.getStrand())
-                    && equal(isCircular(), l.isCircular())
-                    && equal(isBetweenCompounds(), l.isBetweenCompounds())
-                    && equal(getSubLocations(), l.getSubLocations())
-                    && equal(getAccession(), l.getAccession()));
-        }
-        return equals;
-    }
+		boolean equals = false;
+		if (classEqual(this, obj)) {
+			AbstractLocation l = (AbstractLocation) obj;
+			equals = (equal(getStart(), l.getStart())
+					&& equal(getEnd(), l.getEnd())
+					&& equal(getStrand(), l.getStrand())
+					&& equal(isCircular(), l.isCircular())
+					&& equal(isBetweenCompounds(), l.isBetweenCompounds())
+					&& equal(getSubLocations(), l.getSubLocations())
+					&& equal(getAccession(), l.getAccession()));
+		}
+		return equals;
+	}
 
-    
-    @Override
+
+	@Override
 	public int hashCode() {
-        int r = Hashcoder.SEED;
-        r = Hashcoder.hash(r, getStart());
-        r = Hashcoder.hash(r, getEnd());
-        r = Hashcoder.hash(r, getStrand());
-        r = Hashcoder.hash(r, isCircular());
-        r = Hashcoder.hash(r, isBetweenCompounds());
-        r = Hashcoder.hash(r, getSubLocations());
-        r = Hashcoder.hash(r, getAccession());
-        return r;
-    }
+		int r = Hashcoder.SEED;
+		r = Hashcoder.hash(r, getStart());
+		r = Hashcoder.hash(r, getEnd());
+		r = Hashcoder.hash(r, getStrand());
+		r = Hashcoder.hash(r, isCircular());
+		r = Hashcoder.hash(r, isBetweenCompounds());
+		r = Hashcoder.hash(r, getSubLocations());
+		r = Hashcoder.hash(r, getAccession());
+		return r;
+	}
 
-    
-    @Override
+
+	@Override
 	public boolean isCircular() {
-        return circular;
-    }
+		return circular;
+	}
 
-    
-    @Override
+
+	@Override
 	public boolean isBetweenCompounds() {
-        return betweenCompounds;
-    }
+		return betweenCompounds;
+	}
 
-    //TODO Support the accession based lookup system; maybe still require a different impl?
+	//TODO Support the accession based lookup system; maybe still require a different impl?
 
-    /**
-     * If circular this will return the sequence represented by the sub
-     * locations joined. If not circular then we get the Sequence for the
-     * outer-bounds defined by this location.
-     */
-    
-    @Override
+	/**
+	 * If circular this will return the sequence represented by the sub
+	 * locations joined. If not circular then we get the Sequence for the
+	 * outer-bounds defined by this location.
+	 */
+
+	@Override
 	public <C extends Compound> Sequence<C> getSubSequence(Sequence<C> sequence) {
-        if(isCircular()) {
-            List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
-            for(Location l: this) {
-                sequences.add(l.getSubSequence(sequence));
-            }
-            return new JoiningSequenceReader<C>(sequence.getCompoundSet(), sequences);
-        }
-        return reverseSequence(sequence.getSubSequence(
-                getStart().getPosition(), getEnd().getPosition()));
-    }
+		if(isCircular()) {
+			List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
+			for(Location l: this) {
+				sequences.add(l.getSubSequence(sequence));
+			}
+			return new JoiningSequenceReader<C>(sequence.getCompoundSet(), sequences);
+		}
+		return reverseSequence(sequence.getSubSequence(
+				getStart().getPosition(), getEnd().getPosition()));
+	}
 
-    /**
-     * 
-     */
-    
-    @Override
+	/**
+	 *
+	 */
+
+	@Override
 	public <C extends Compound> Sequence<C> getRelevantSubSequence(Sequence<C> sequence) {
-        List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
-        for(Location l: getRelevantSubLocations()) {
-            sequences.add(l.getSubSequence(sequence));
-        }
-        return new JoiningSequenceReader<C>(sequence.getCompoundSet(), sequences);
-    }
+		List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
+		for(Location l: getRelevantSubLocations()) {
+			sequences.add(l.getSubSequence(sequence));
+		}
+		return new JoiningSequenceReader<C>(sequence.getCompoundSet(), sequences);
+	}
 
-    /**
-     * Reverses and (if possible) complements the Sequence so as to represent
-     * the reverse strand (if one exists). Also does checking to see if the
-     * location we are on is on the reverse strand or not.
-     */
-    @SuppressWarnings("unchecked")
-    protected <C extends Compound> Sequence<C> reverseSequence(Sequence<C> sequence) {
-        if(getStrand() != Strand.NEGATIVE) {
-            return sequence;
-        }
+	/**
+	 * Reverses and (if possible) complements the Sequence so as to represent
+	 * the reverse strand (if one exists). Also does checking to see if the
+	 * location we are on is on the reverse strand or not.
+	 */
+	@SuppressWarnings("unchecked")
+	protected <C extends Compound> Sequence<C> reverseSequence(Sequence<C> sequence) {
+		if(getStrand() != Strand.NEGATIVE) {
+			return sequence;
+		}
 
-        Sequence<C> reversed = new ReversedSequenceView<C>(sequence);
-        // "safe" operation as we have tried to check this
-        if(canComplement(sequence)) {
-            Sequence<ComplementCompound> casted = (Sequence<ComplementCompound>) reversed;
-            ComplementSequenceView<ComplementCompound> complement =
-                    new ComplementSequenceView<ComplementCompound>(casted);
-            return (Sequence<C>)complement;
-        }
-        return reversed;
-    }
+		Sequence<C> reversed = new ReversedSequenceView<C>(sequence);
+		// "safe" operation as we have tried to check this
+		if(canComplement(sequence)) {
+			Sequence<ComplementCompound> casted = (Sequence<ComplementCompound>) reversed;
+			ComplementSequenceView<ComplementCompound> complement =
+					new ComplementSequenceView<ComplementCompound>(casted);
+			return (Sequence<C>)complement;
+		}
+		return reversed;
+	}
 
-    /**
-     * Uses the Sequence's CompoundSet to decide if a compound can
-     * be assgined to ComplementCompound meaning it can complement
-     */
-    protected <C extends Compound> boolean canComplement(Sequence<C> sequence) {
-        CompoundSet<C> compoundSet = sequence.getCompoundSet();
-        Compound c = compoundSet.getAllCompounds().iterator().next();
-        return ComplementCompound.class.isAssignableFrom(c.getClass());
-    }
+	/**
+	 * Uses the Sequence's CompoundSet to decide if a compound can
+	 * be assgined to ComplementCompound meaning it can complement
+	 */
+	protected <C extends Compound> boolean canComplement(Sequence<C> sequence) {
+		CompoundSet<C> compoundSet = sequence.getCompoundSet();
+		Compound c = compoundSet.getAllCompounds().iterator().next();
+		return ComplementCompound.class.isAssignableFrom(c.getClass());
+	}
 
-    
-    @Override
+
+	@Override
 	public String toString() {
-        String circ = (isCircular()) ? " - circular" : "";
-        String between = (isBetweenCompounds()) ? "^" : "..";
-        return format("%d%s%d(%s%s)", getStart().getPosition(), between, getEnd().getPosition(),
-                getStrand().getStringRepresentation(), circ);
-    }
+		String circ = (isCircular()) ? " - circular" : "";
+		String between = (isBetweenCompounds()) ? "^" : "..";
+		return format("%d%s%d(%s%s)", getStart().getPosition(), between, getEnd().getPosition(),
+				getStrand().getStringRepresentation(), circ);
+	}
 
-    protected void setCircular(boolean circular) {
-        this.circular = circular;
-    }
+	protected void setCircular(boolean circular) {
+		this.circular = circular;
+	}
 
-    protected void setEnd(Point end) {
-        this.end = end;
-    }
+	protected void setEnd(Point end) {
+		this.end = end;
+	}
 
-    protected void setStart(Point start) {
-        this.start = start;
-    }
+	protected void setStart(Point start) {
+		this.start = start;
+	}
 
-    public void setStrand(Strand strand) {
-        this.strand = strand;
-    }
+	public void setStrand(Strand strand) {
+		this.strand = strand;
+	}
 
-    public void setBetweenCompounds(boolean betweenCompounds) {
-        this.betweenCompounds = betweenCompounds;
-    }
+	public void setBetweenCompounds(boolean betweenCompounds) {
+		this.betweenCompounds = betweenCompounds;
+	}
 
-    public void setSubLocations(List<Location> subLocations) {
-        this.subLocations = subLocations;
-    }
+	public void setSubLocations(List<Location> subLocations) {
+		this.subLocations = subLocations;
+	}
 
-    public void setAccession(AccessionID accession) {
-        this.accession = accession;
-    }
+	public void setAccession(AccessionID accession) {
+		this.accession = accession;
+	}
 }

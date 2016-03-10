@@ -22,9 +22,9 @@ package org.biojava.nbio.aaproperties.profeat.convertor;
 
 public class Convert2Hydrophobicity extends Convertor {
 	/**
-	 * Class for the conversion of protein sequence into hydrophobicity 
+	 * Class for the conversion of protein sequence into hydrophobicity
 	 */
-	
+
 	@Override
 	public char convert(char c){
 		switch(c){

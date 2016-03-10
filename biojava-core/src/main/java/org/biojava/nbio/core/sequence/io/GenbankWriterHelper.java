@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.core.sequence.io;
 
@@ -41,9 +41,9 @@ import java.util.Collection;
 /**
  * The class that should be used to write out genbank file of a sequence
  * collection
- * 
+ *
  * @author mckeee1
- * 
+ *
  */
 public class GenbankWriterHelper {
 	public static final String LINEAR_DNA = "linear";
@@ -51,7 +51,7 @@ public class GenbankWriterHelper {
 
 	/**
 	 * Write collection of protein sequences to a file
-	 * 
+	 *
 	 * @param file
 	 * @param proteinSequences
 	 * @throws Exception
@@ -67,7 +67,7 @@ public class GenbankWriterHelper {
 
 	/**
 	 * Write collection of protein sequences to a stream
-	 * 
+	 *
 	 * @param outputStream
 	 * @param proteinSequences
 	 * @throws Exception
@@ -86,7 +86,7 @@ public class GenbankWriterHelper {
 
 	/**
 	 * Write a collection of NucleotideSequences to a file
-	 * 
+	 *
 	 * @param file
 	 * @param dnaSequences
 	 * @throws Exception
@@ -103,7 +103,7 @@ public class GenbankWriterHelper {
 
 	/**
 	 * Write a collection of NucleotideSequences to a file
-	 * 
+	 *
 	 * @param outputStream
 	 * @param dnaSequences
 	 * @throws Exception
@@ -116,7 +116,7 @@ public class GenbankWriterHelper {
 
 	/**
 	 * Write a collection of NucleotideSequences to a file
-	 * 
+	 *
 	 * @param outputStream
 	 * @param dnaSequences
 	 * @param seqType
@@ -137,7 +137,7 @@ public class GenbankWriterHelper {
 
 	/**
 	 * Write a sequence to a file
-	 * 
+	 *
 	 * @param file
 	 * @param sequence
 	 * @throws Exception
@@ -153,7 +153,7 @@ public class GenbankWriterHelper {
 
 	/**
 	 * Write a sequence to OutputStream
-	 * 
+	 *
 	 * @param outputStream
 	 * @param sequence
 	 * @throws Exception
@@ -164,7 +164,7 @@ public class GenbankWriterHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sequence
 	 * @return
 	 */
@@ -180,7 +180,7 @@ public class GenbankWriterHelper {
 	 * Method which will write your given Sequences to the specified
 	 * {@link OutputStream}. This is a very generic method which writes just the
 	 * AccessionID of the Sequence as the FASTA header.
-	 * 
+	 *
 	 * @param outputStream
 	 *            Stream to write to; can be System.out
 	 * @param sequences

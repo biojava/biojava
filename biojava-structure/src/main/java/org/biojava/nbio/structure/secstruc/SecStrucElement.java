@@ -26,7 +26,7 @@ import org.biojava.nbio.structure.ResidueRangeAndLength;
 /**
  * A secondary structure element (SSE) is an object representing a block of
  * sequential residues that share the same secondary structure type.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
  *
@@ -40,7 +40,7 @@ public class SecStrucElement {
 	/**
 	 * Create a new SSE object. The start and end residue numbers cannot be the
 	 * same.
-	 * 
+	 *
 	 * @param type
 	 *            object describing the type of SS
 	 * @param start
@@ -63,7 +63,7 @@ public class SecStrucElement {
 
 	/**
 	 * Returns the {@link SecStrucType} of this element.
-	 * 
+	 *
 	 * @return
 	 */
 	public SecStrucType getType() {
@@ -73,16 +73,16 @@ public class SecStrucElement {
 	/**
 	 * Returns the index of the SSE for its type. This is, the sequential
 	 * position of this SSE relative to the other SSE of the same type.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getIndex() {
 		return index;
 	}
-	
+
 	/**
 	 * Return the length (number of residues) in the SSE.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLength() {
@@ -92,7 +92,7 @@ public class SecStrucElement {
 	/**
 	 * Returns the ID of this element. The ID is the concatenation of the type
 	 * letter and the numerical element identifier (e.g. H1, S1, ...).
-	 * 
+	 *
 	 * @return
 	 */
 	public String getId() {
@@ -101,7 +101,7 @@ public class SecStrucElement {
 
 	/**
 	 * Returns the residue range of this SSE.
-	 * 
+	 *
 	 * @return
 	 */
 	public ResidueRangeAndLength getRange() {

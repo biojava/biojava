@@ -16,9 +16,9 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 18, 2008
- * 
+ *
  */
 
 package org.biojava.nbio.ontology.obo;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** A  file handler for .obo files
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -65,35 +65,39 @@ public class OboFileHandler implements OboFileEventListener {
 	public static final String DISJOINT_FROM = "disjoint_from";
 	public static final String SUBSET       = "subset";
 	public static final String INTERSECTION_OF = "intersection_of";
-	
-		
+
+
 	public static final String ALT_ID      = "alt_id";
-	
+
 	boolean isTerm ;
 
 	private Term currentTerm;
-	
+
 	public OboFileHandler(Ontology ontology){
 		this.ontology = ontology ;
-		
+
 		//Term isa = onto.importTerm(OntoTools.IS_A, null);
 		//Term partof = onto.importTerm(OntoTools.PART_OF, null);;
 
 	}
 
+	@Override
 	public void documentEnd() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void documentStart() {
 		termStack = new ArrayList<Term>();
 	}
 
+	@Override
 	public void newOboFileHeader() {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void newStanza(String stanza) {
 		//logger.info("got a new stanza: {}", stanza);
 		if ( stanza.equals(TERM)){
@@ -102,12 +106,13 @@ public class OboFileHandler implements OboFileEventListener {
 		} else {
 			isTerm = false;
 		}
-		
+
 	}
 
+	@Override
 	public void newKey(String key, String value) {
 		if (isTerm) {
-			
+
 			if ( key.equals(ID_KEY)) {
 				if ( ontology.containsTerm(key)){
 					currentTerm = ontology.getTerm(key);
@@ -121,10 +126,10 @@ public class OboFileHandler implements OboFileEventListener {
 					} catch (AlreadyExistsException ex) {
 						logger.error("Exception: ", ex);
 					}
-					
+
 				}
 				return;
-			} 
+			}
 			if (currentTerm == null) {
 				logger.warn("did not find ID for Term! ");
 				return;
@@ -134,50 +139,51 @@ public class OboFileHandler implements OboFileEventListener {
 			} else if (key.equals(DEF)){
 				//TODO
 				// set definition
-				Annotation anno = currentTerm.getAnnotation();				
+				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(DEF, value);
-			} else if (key.equals(XREF_ANALOG)){				
+			} else if (key.equals(XREF_ANALOG)){
 				// set xref analog
-				Annotation anno = currentTerm.getAnnotation();				
+				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(XREF_ANALOG, value);
 			} else if (key.equals(IS_OBSOLETE)) {
 				// ignore obsolete Terms...
 				//logger.info("obsolete: {}", currentTerm);
-				Annotation anno = currentTerm.getAnnotation();				
+				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(IS_OBSOLETE, new Boolean(true));
-				
-			} else if (key.equals(IS_A) || 
-					key.equals(RELATIONSHIP) || 
+
+			} else if (key.equals(IS_A) ||
+					key.equals(RELATIONSHIP) ||
 					key.equals(DISJOINT_FROM) ||
 					key.equals(INTERSECTION_OF) ||
 					key.equals(SUBSET)) {
 				try {
-					Term object = ontology.containsTerm(value) ?
-						object = ontology.getTerm(value): ontology.createTerm(value);
-					Term predicate = ontology.containsTerm(key) ? ontology.getTerm(key) : ontology.createTerm(key);
-   			        ontology.createTriple(currentTerm, object, predicate, currentTerm + " " + predicate + " " + object, key+"-relationship");				      
+					Term object = (ontology.containsTerm(value) ?
+							ontology.getTerm(value): ontology.createTerm(value));
+					Term predicate = (ontology.containsTerm(key) ? ontology.getTerm(key) : ontology.createTerm(key));
+					ontology.createTriple(currentTerm, object, predicate, currentTerm + " " + predicate + " " + object, key+"-relationship");
 				} catch (AlreadyExistsException ex) {
 				}
-								
+
 			} else if (key.equals(COMMENT)){
-				Annotation anno = currentTerm.getAnnotation();				
+				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(COMMENT, value);
 			} else if (key.equals(ALT_ID)){
-				Annotation anno = currentTerm.getAnnotation();				
+				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(ALT_ID, value);
-			} 
-			
+			}
+
 			else {
 				//logger.info("unknown key {}", key);
 			}
-			
-											
+
+
 		} else {
 			//logger.info("not a term and ignoring: {}->{}", key, value);
 		}
 
 	}
 
+	@Override
 	public void newSynonym(Synonym synonym) {
 		if (isTerm) {
 			currentTerm.addSynonym(synonym);

@@ -32,7 +32,7 @@ import static org.biojava.nbio.ws.alignment.qblast.BlastAlignmentParameterEnum.E
 
 /**
  * A simple demo showing {@link NCBIQBlastService} usage
- * 
+ *
  * @author Gediminas Rimsa
  */
 public class NCBIQBlastServiceDemo {

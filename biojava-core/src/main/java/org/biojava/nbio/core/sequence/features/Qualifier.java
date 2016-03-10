@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.core.sequence.features;
 
@@ -34,7 +34,7 @@ public class Qualifier {
 	boolean needsQuotes;
 
 	/**
-	 * 
+	 *
 	 */
 	public Qualifier(String name, String value) {
 		// TODO Auto-generated constructor stub
@@ -44,7 +44,7 @@ public class Qualifier {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Qualifier(String name, String value, boolean needsQuotes) {
 		// TODO Auto-generated constructor stub
@@ -92,9 +92,9 @@ public class Qualifier {
 	public void setValue(String value) {
 		this.value = value;
 	}
-        
-        @Override
-        public String toString() {
-            return "Qualifier[ name='" + name +"' value='"+ value + "' ]";
-        }
+
+	@Override
+	public String toString() {
+		return "Qualifier[ name='" + name +"' value='"+ value + "' ]";
+	}
 }

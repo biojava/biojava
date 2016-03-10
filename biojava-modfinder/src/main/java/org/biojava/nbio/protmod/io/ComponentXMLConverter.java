@@ -45,15 +45,15 @@ public class ComponentXMLConverter {
 
 	public static void toXML(Component component, PrettyXMLWriter xml) throws IOException{
 		xml.openTag("component");
-		
+
 		xml.attribute("nTerminal" , component.isNTerminal()+"");
 		xml.attribute("cTerminal", component.isCTerminal()+"");
 		for (String pdbccId : component.getPdbccIds()){
 			xml.openTag("pdbccID");
 			xml.attribute("id", pdbccId);
-			xml.closeTag("pdbccID");					
+			xml.closeTag("pdbccID");
 		}
-		
+
 		xml.closeTag("component");
 	}
 
@@ -62,18 +62,18 @@ public class ComponentXMLConverter {
 	}
 
 	public static Component fromXML(Node componentN) {
-		
+
 		String name = componentN.getNodeName();
 		if ( ! name.equals("component"))
 			throw new RuntimeException("did not get component element, but " + name);
-		
+
 		//String type = getAttribute(componentN, "type");
 		String nTerminalS = getAttribute(componentN, "nTerminal");
 		String cTerminalS = getAttribute(componentN, "cTerminal");
-		
-		boolean isNTerminal = Boolean.parseBoolean(nTerminalS); 
+
+		boolean isNTerminal = Boolean.parseBoolean(nTerminalS);
 		boolean isCTerminal = Boolean.parseBoolean(cTerminalS);
-                
+
 		Set<String>pdbccIds = new HashSet<String>();
 
 		NodeList valList = componentN.getChildNodes();
@@ -99,7 +99,7 @@ public class ComponentXMLConverter {
 	}
 
 	private static String getAttribute(Node node, String attr){
-		if( ! node.hasAttributes()) 
+		if( ! node.hasAttributes())
 			return null;
 
 		NamedNodeMap atts = node.getAttributes();

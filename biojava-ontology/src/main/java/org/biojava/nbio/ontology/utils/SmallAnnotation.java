@@ -35,53 +35,55 @@ import java.util.Map;
  * @author Matthew Pocock
  * @since 1.2
  *
- * 
+ *
  * A minimal-memory alternative to SimpleAnnotation
  *
- * 
+ *
  * When creating a large number of small Annotation instances, it is worth
  * instantiating SmallAnnotation. Small is anything up to at least 30 properties
  * but will vary with the JavaVM and underlying platform.
  */
 
 public class SmallAnnotation extends AbstractAnnotation {
-  private Map properties;
-  
-  protected final Map getProperties() {
-    if(!propertiesAllocated()) {
-      properties = new SmallMap();
-    }
-    return properties;
-  }
-  
-  protected final boolean propertiesAllocated() {
-    return properties != null;
-  }
+	private Map properties;
 
-  /**
-   * Return a new SmallAnnotation optimised for small sets of properties.
-   */
-  public SmallAnnotation() {
-    super();
-  }
+	@Override
+	protected final Map getProperties() {
+		if(!propertiesAllocated()) {
+			properties = new SmallMap();
+		}
+		return properties;
+	}
 
-  /**
-   * Return a new SmallAnnotation that copies all values from another annoation.
-   *
-   * @param ann  the Annoation to copy all values from
-   * @throws NullPointerException if ann is null
-   */
-  public SmallAnnotation(Annotation ann) {
-    super(ann);
-  }
+	@Override
+	protected final boolean propertiesAllocated() {
+		return properties != null;
+	}
 
-  /**
-   * Return a new SmallAnnotation that copies all values from a Map.
-   *
-   * @param map  the Map to copy values from
-   */
-  public SmallAnnotation(Map map) {
-    super(map);
-  }
+	/**
+	 * Return a new SmallAnnotation optimised for small sets of properties.
+	 */
+	public SmallAnnotation() {
+		super();
+	}
+
+	/**
+	 * Return a new SmallAnnotation that copies all values from another annoation.
+	 *
+	 * @param ann  the Annoation to copy all values from
+	 * @throws NullPointerException if ann is null
+	 */
+	public SmallAnnotation(Annotation ann) {
+		super(ann);
+	}
+
+	/**
+	 * Return a new SmallAnnotation that copies all values from a Map.
+	 *
+	 * @param map  the Map to copy values from
+	 */
+	public SmallAnnotation(Map map) {
+		super(map);
+	}
 }
 

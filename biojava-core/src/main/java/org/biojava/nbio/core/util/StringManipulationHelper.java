@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 14, 2011
- * Author: Amr AL-Hossary 
+ * Author: Amr AL-Hossary
  *
  */
 package org.biojava.nbio.core.util;
@@ -43,7 +43,7 @@ import java.util.Scanner;
 /**
  * A utility class for common {@link String} manipulation tasks.
  * All functions are static methods.
- * 
+ *
  * @author Amr AL-Hossary
  */
 public class StringManipulationHelper  {
@@ -62,9 +62,9 @@ public class StringManipulationHelper  {
 		// to prevent instantiation
 	}
 
-	
 
-	
+
+
 
 	/**
 	 * @author andreas
@@ -79,7 +79,7 @@ public class StringManipulationHelper  {
 		try {
 			while ((line = reader.readLine()) != null) {
 
-                sb.append(line).append(UNIX_NEWLINE);
+		sb.append(line).append(UNIX_NEWLINE);
 			}
 		} catch (IOException e) {
 			// logger.error("Exception: ", e);
@@ -93,14 +93,14 @@ public class StringManipulationHelper  {
 
 		return sb.toString();
 	}
-	
+
 	/**
 	 * compares two strings for equality, line by line, ignoring any difference
 	 * of end line delimiters contained within the 2 Strings. This method should
 	 * be used if and only if two Strings are considered identical when all nodes
 	 * are identical including their relative order. Generally useful when
 	 * asserting identity of <b>automatically regenerated</b> XML or PDB.
-	 * 
+	 *
 	 * @param expected
 	 * @param actual
 	 */
@@ -133,8 +133,8 @@ public class StringManipulationHelper  {
 		scanner2.close();
 		return true;
 	}
-	
-	
+
+
 	public static boolean equalsToXml(String expected, String actual) {
 		Document expectedDocument=null;
 		Document actualDocument=null;
@@ -168,29 +168,29 @@ public class StringManipulationHelper  {
 			}else{
 				return false;
 			}
-			
+
 		}
-		
+
 		throw new UnsupportedOperationException("not yet implemented");
 	}
-	
+
 	public static String padLeft(String s, int n) {
-	    return String.format("%1$" + n + "s", s);  
+	    return String.format("%1$" + n + "s", s);
 	}
-	
+
 	public static String padRight(String s, int n) {
-	     return String.format("%1$-" + n + "s", s);  
+	     return String.format("%1$-" + n + "s", s);
 	}
-	
+
 	public static String join(AbstractCollection<String> s, String delimiter) {
 	    if (s == null || s.isEmpty()) return "";
 	    Iterator<String> iter = s.iterator();
 	    StringBuilder builder = new StringBuilder(iter.next());
 	    while( iter.hasNext() )
 	    {
-	        builder.append(delimiter).append(iter.next());
+		builder.append(delimiter).append(iter.next());
 	    }
 	    return builder.toString();
 	}
-	
+
 }

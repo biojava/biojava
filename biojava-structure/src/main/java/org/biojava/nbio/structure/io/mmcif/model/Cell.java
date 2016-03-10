@@ -21,25 +21,25 @@
 package org.biojava.nbio.structure.io.mmcif.model;
 
 public class Cell extends AbstractBean {
-	
-	String entry_id; 
-	String length_a; 
-	String length_b; 
-	String length_c; 
-	String angle_alpha; 
-	String angle_beta; 
-	String angle_gamma; 
-	String Z_PDB; 
+
+	String entry_id;
+	String length_a;
+	String length_b;
+	String length_c;
+	String angle_alpha;
+	String angle_beta;
+	String angle_gamma;
+	String Z_PDB;
 	String pdbx_unique_axis;
-	
+
 	// some PDB entries like 1aac have the extra esd fields
-	String length_a_esd; 
-	String length_b_esd; 
-	String length_c_esd; 
-	String angle_alpha_esd; 
-	String angle_beta_esd; 
+	String length_a_esd;
+	String length_b_esd;
+	String length_c_esd;
+	String angle_alpha_esd;
+	String angle_beta_esd;
 	String angle_gamma_esd;
-	
+
 	public String getEntry_id() {
 		return entry_id;
 	}
@@ -129,7 +129,7 @@ public class Cell extends AbstractBean {
 	}
 	public void setAngle_gamma_esd(String angle_gamma_esd) {
 		this.angle_gamma_esd = angle_gamma_esd;
-	} 
+	}
 
 
 }

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 6, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -33,17 +33,17 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class MyJmolStatusListener implements JmolStatusListener {
-	
+
 	private boolean verbose = false;
 
 	JTextField status;
 	public MyJmolStatusListener(){
 	}
-	
+
 	public void setTextField (JTextField statusField) {
 		status = statusField;
 	}
-	
+
 	@Override
 	public String createImage(String arg0, String arg1, Object arg2, int arg3) {
 		// TODO Auto-generated method stub
@@ -110,35 +110,35 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	}
 
 	public void showConsole(boolean arg0) {
-		
+
 		// TODO Auto-generated method stub
 		if(verbose) System.out.println("showConsole");
-		
+
 	}
 
-	
+
 	@Override
 	public void notifyCallback(EnumCallback arg0, Object[] arg1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
+
 	@Override
 	public boolean notifyEnabled(EnumCallback arg0) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	
+
 	@Override
 	public Map<String, Object> getProperty(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
-		
+
+
 	public Map<String, Object> getJSpecViewProperty(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
@@ -148,7 +148,7 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	@Override
 	public void resizeInnerPanel(String data) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean isVerbose() {
@@ -159,7 +159,7 @@ public class MyJmolStatusListener implements JmolStatusListener {
 		this.verbose = verbose;
 	}
 
-	
-	
+
+
 
 }

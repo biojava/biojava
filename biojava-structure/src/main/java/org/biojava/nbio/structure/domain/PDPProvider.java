@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 
 /**
  * Decomposes a structure into representative PDP domains.
- * 
+ *
  * Implementations will probably want to also implement {@link DomainProvider},
  * which provides a very similar set of methods for general structure domain
  * decomposition.
@@ -60,7 +60,7 @@ public interface PDPProvider {
 	public Structure getDomain(String pdpDomainName, AtomCache cache) throws IOException, StructureException;
 	/**
 	 * Get a StructureIdentifier representing the specified PDP domain.
-	 * 
+	 *
 	 * @param pdpDomainName PDP domain name
 	 * @return a PDPDomain representing this domain name
 	 * @throws IOException

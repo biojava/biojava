@@ -84,7 +84,7 @@ public interface MMcifConsumer {
 	public void newEntitySrcNat(EntitySrcNat entitySrcNat);
 	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn);
 	public void newStructConn(StructConn structConn);
-	
+
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *
 	 * @param aa
@@ -102,11 +102,11 @@ public interface MMcifConsumer {
 	public void setFileParsingParameters(FileParsingParameters params);
 	public FileParsingParameters getFileParsingParameters();
 
-	
 
-	
 
-	
 
-	
+
+
+
+
 }

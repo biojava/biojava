@@ -31,9 +31,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test that all relevant information (except scores and cache) is correctly 
+ * Test that all relevant information (except scores and cache) is correctly
  * copied from the AFPChain to the generated MultipleAlignment object.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -73,7 +73,7 @@ public class TestAFPChainConversion {
 		afp.setBlockShiftVector(blockShift);
 
 		//Convert the AFPChain into a MultipleAlignment (without Atoms)
-		MultipleAlignmentEnsemble ensemble = 
+		MultipleAlignmentEnsemble ensemble =
 				new MultipleAlignmentEnsembleImpl(afp,null,null,true);
 		MultipleAlignment msa = ensemble.getMultipleAlignment(0);
 

@@ -34,19 +34,19 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * A test to check the performance of AtomCache downloading
- * 
+ *
  * By default it is excluded from executing by main biojava pom.
  * To execute use:
- * <pre> 
+ * <pre>
  * mvn -Dtest=TestAtomCachePerformance test
  * </pre>
- * 
+ *
  * @author duarte_j
  *
  */
 public class TestAtomCachePerformance {
 
-	private static final String[] PDB_IDS = { 
+	private static final String[] PDB_IDS = {
 		"1zjo",		"2dqc",		"4af2",		"1r52",		"4f3u",		"1f9v",		"3kuq",		"2yr4",		"3m4f",		"4j5p",
 		"7ccp",		"4kro",		"1x7q",		"2gaw",		"2kli",		"2bdo",		"3csf",		"1muu",		"190l",		"2ecm"
 	 	,
@@ -57,17 +57,17 @@ public class TestAtomCachePerformance {
 		"2xjb",		"1vgj",		"3tpp",		"2gnl",		"3jpz",		"2pgt",		"1fn2",		"2h13",		"1xyj",		"1ds7",
 		"2x93",		"4j5y",		"2bk2",		"1v83",		"4lj9",		"4ahc",		"1m34",		"1jo4",		"3flb",		"2cb2",
 		"4k3p",		"1yq8",		"2h7z",		"2lbp",		"3vas",		"4jwn",		"2e47",		"3r43",		"3edd",		"3kss",
-		"2dnk",		"1kg2",		"2pwh",		"1sjh",		"4cc0",		"3a7c",		"1o5a",		"4fu7",		"3hc4",		"3hoz" 
+		"2dnk",		"1kg2",		"2pwh",		"1sjh",		"4cc0",		"3a7c",		"1o5a",		"4fu7",		"3hc4",		"3hoz"
 		};
-	
+
 	private static AtomCache cache;
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		cache = new AtomCache();
 		cache.setFetchBehavior(FetchBehavior.FORCE_DOWNLOAD);
 	}
-	
+
 	@Test
 	public void testDownload() throws IOException, StructureException {
 		System.out.println("Starting performance test for "+PDB_IDS.length+" PDB ids");
@@ -79,28 +79,28 @@ public class TestAtomCachePerformance {
 			assertNotNull(pdbS);
 			assertEquals(pdbId,cifS.getPDBCode().toLowerCase());
 			assertEquals(cifS.getPDBCode(),pdbS.getPDBCode());
-			
+
 			//System.out.print(".");
-			
+
 		}
-		
+
 		System.out.println();
-		
+
 		long end = System.currentTimeMillis();
-		
+
 		System.out.printf("Done in %5.1f s\n",(end-start)/1000.0);
 	}
 
 	private Structure getCifStructure(String pdbId) throws IOException, StructureException {
 		cache.setUseMmCif(true);
-		
+
 		return cache.getStructure(pdbId);
-		
+
 	}
-	
+
 	private Structure getPdbStructure(String pdbId) throws IOException, StructureException {
-		cache.setUseMmCif(false);		
-		
+		cache.setUseMmCif(false);
+
 		return cache.getStructure(pdbId);
 
 	}

@@ -26,20 +26,20 @@ package org.biojava.nbio.structure.secstruc;
  * <p>
  * When compared, the types are sorted in the declaration order of the enum,
  * which is the DSSP preference of type assignment.
- * 
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
  *
  */
 public enum SecStrucType {
 
-	helix4("alpha Helix", 'H'), 
-	extended("Extended", 'E'), 
-	bridge("Bridge", 'B'), 
-	helix3("3-10 Helix", 'G'), 
-	helix5("pi Helix", 'I'), 
-	turn("Turn", 'T'), 
-	bend("Bend", 'S'), 
+	helix4("alpha Helix", 'H'),
+	extended("Extended", 'E'),
+	bridge("Bridge", 'B'),
+	helix3("3-10 Helix", 'G'),
+	helix5("pi Helix", 'I'),
+	turn("Turn", 'T'),
+	bend("Bend", 'S'),
 	coil("Coil", ' ');
 
 	public final Character type;
@@ -53,7 +53,7 @@ public enum SecStrucType {
 	/**
 	 * Converts a Character representing a Secondary Structure type into the
 	 * corresponding enum object.
-	 * 
+	 *
 	 * @param stype
 	 *            the character representing the SS type
 	 * @return SecStrucType or null if the character is invalid
@@ -75,7 +75,7 @@ public enum SecStrucType {
 
 	/**
 	 * Helix type can be 3-10 helix, pi-helix or alpha-helix.
-	 * 
+	 *
 	 * @return true if the type is any of the helix types, false otherwise
 	 */
 	public boolean isHelixType() {
@@ -89,7 +89,7 @@ public enum SecStrucType {
 	/**
 	 * A Beta-Strand is an extended set of sequential Bridges that, together
 	 * with other Beta-Strands, is part of a Beta-Sheet.
-	 * 
+	 *
 	 * @return true if the type is a Beta-Strand
 	 */
 	public boolean isBetaStrand() {

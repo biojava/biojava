@@ -218,7 +218,7 @@ public class RNAToAminoAcidTranslator extends
 			if (doTranslate == false && target.isStart()) {
 				doTranslate = true;
 			}
-			
+
 			if (doTranslate) {
 				if (target != null)
 					aminoAcid = target.getAminoAcid();

@@ -46,31 +46,31 @@ import org.slf4j.LoggerFactory;
  * This class has been ported from the OWL Java library for
  * Structural Bioinformatics (https://github.com/eppic-team/owl).
  * <p>
- * As of September 2015, the DSSP source code and executables can 
+ * As of September 2015, the DSSP source code and executables can
  * be downloaded from http://swift.cmbi.ru.nl/gv/dssp/.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
- * 
+ *
  */
 public class DSSPParser {
-	
-	private static final Logger logger = 
+
+	private static final Logger logger =
 			LoggerFactory.getLogger(DSSPParser.class);
 
-	/** 
-	 * Parse a DSSP output file and return the secondary structure 
+	/**
+	 * Parse a DSSP output file and return the secondary structure
 	 * annotation as a List of {@link SecStrucState} objects.
-	 * 
+	 *
 	 * @param dsspPath path to the DSSP file to parse
 	 * @param structure Structure object associated to the dssp
 	 * @param assign assigns the SS to the structure if true
 	 * @return a List of SS annotation objects
-	 * @throws StructureException 
+	 * @throws StructureException
 	 * @throws IOException
 	 */
-	public static List<SecStrucState> parseFile(String dsspPath, 
-			Structure structure, boolean assign) 
+	public static List<SecStrucState> parseFile(String dsspPath,
+			Structure structure, boolean assign)
 					throws IOException, StructureException {
 
 		File file = new File(dsspPath);
@@ -78,72 +78,72 @@ public class DSSPParser {
 		BufferedReader reader = new BufferedReader(read);
 		return generalParse(reader, structure, assign);
 	}
-	
-	/** 
+
+	/**
 	 * Fetch and parse the DSSP file of the specified pdb code
-	 * from the PDB web server and return the secondary structure 
+	 * from the PDB web server and return the secondary structure
 	 * annotation as a List of {@link SecStrucState} objects.
-	 * 
+	 *
 	 * @param pdb path to the DSSP file to parse
 	 * @param structure Structure object associated to the dssp
 	 * @param assign assigns the SS to the structure if true
 	 * @return a List of SS annotation objects
-	 * @throws StructureException 
+	 * @throws StructureException
 	 * @throws IOException
 	 */
 	public static List<SecStrucState> fetch(String pdb,
-			Structure structure, boolean assign) 
+			Structure structure, boolean assign)
 					throws IOException, StructureException {
-		
+
 		InputStream in = new URL("http://www.rcsb.org/pdb/files/"+
 				pdb+".dssp").openStream();
 		Reader read = new InputStreamReader(in);
 		BufferedReader reader = new BufferedReader(read);
 		return generalParse(reader, structure, assign);
 	}
-	
-	/** 
-	 * Parse a DSSP format String and return the secondary structure 
+
+	/**
+	 * Parse a DSSP format String and return the secondary structure
 	 * annotation as a List of {@link SecStrucState} objects.
-	 * 
+	 *
 	 * @param dsspOut String with the DSSP output to parse
 	 * @param structure Structure object associated to the dssp
 	 * @param assign assigns the SS to the structure if true
 	 * @return a List of SS annotation objects
-	 * @throws StructureException 
+	 * @throws StructureException
 	 * @throws IOException
 	 */
-	public static List<SecStrucState> parseString(String dsspOut, 
-			Structure structure, boolean assign) 
+	public static List<SecStrucState> parseString(String dsspOut,
+			Structure structure, boolean assign)
 					throws IOException, StructureException {
-		
+
 		Reader read = new StringReader(dsspOut);
 		BufferedReader reader = new BufferedReader(read);
 		return generalParse(reader, structure, assign);
 	}
-	
-	private static List<SecStrucState> generalParse(BufferedReader reader, 
-			Structure structure, boolean assign) 
+
+	private static List<SecStrucState> generalParse(BufferedReader reader,
+			Structure structure, boolean assign)
 					throws IOException, StructureException {
-		
+
 		String startLine = "  #  RESIDUE AA STRUCTURE BP1 BP2  ACC";
 		String line;
-		
+
 		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
-		
+
 		//Find the first line of the DSSP output
 		while((line = reader.readLine()) != null) {
 			if(line.startsWith(startLine)) break;
 		}
-		
+
 		while((line = reader.readLine()) != null) {
-			
+
 			String indexStr = line.substring(0,5).trim();
 			String resNumStr = line.substring(5,10).trim();
-			
+
 			//Only happens if dssp inserts a line indicating a chain break
-			if(!resNumStr.equals("")) {	
-				
+			if(!resNumStr.equals("")) {
+
 				int index = Integer.valueOf(indexStr);
 				//Get the group of the structure corresponding to the residue
 				int resNum = Integer.valueOf(resNumStr);
@@ -152,12 +152,12 @@ public class DSSPParser {
 				ResidueNumber r = new ResidueNumber(chainId, resNum, insCode);
 				Group parent = structure.getChainByPDB(chainId)
 						.getGroupByPDB(r);
-				SecStrucType ssType = 
+				SecStrucType ssType =
 						SecStrucType.fromCharacter(line.charAt(16));
-				
-				SecStrucState ss = new SecStrucState(parent, 
+
+				SecStrucState ss = new SecStrucState(parent,
 						SecStrucInfo.DSSP_ASSIGNMENT, ssType);
-				
+
 				//Parse the Bridge partners - TODO parallel or antiparallel?
 				String bp = line.substring(25,29).trim();
 				if (bp != "") {
@@ -165,70 +165,70 @@ public class DSSPParser {
 							index, Integer.valueOf(bp), BridgeType.parallel);
 					ss.addBridge(bb);
 				} else logger.warn("Unable to parse beta Bridge for resn "+index);
-				
+
 				bp = line.substring(29,33).trim();
 				if (bp != "") {
 					BetaBridge bb = new BetaBridge(
 							index, Integer.valueOf(bp), BridgeType.parallel);
 					ss.addBridge(bb);
 				} else logger.warn("Unable to parse beta Bridge for resn "+index);
-				
+
 				//Parse the energy terms of donor and acceptor
 				for (int i=0; i<4; i++){
-					
+
 					int a = 42 + i*11;
 					int b = a + 8;
-					
+
 					String val = line.substring(a,b).trim();
 					if (val == "") {
 						logger.warn("Unable to parse energy for resn "+index);
 						continue;
 					}
-					
+
 					String[] p = val.split(",");
-					
+
 					int partner = Integer.valueOf(p[0]);
 					if (partner != 0) partner += index;
 					double energy = Double.valueOf(p[1]) * 1000.0;
-					
+
 					switch(i){
-					case 0: 
+					case 0:
 						ss.getAccept1().setPartner(partner);
 						ss.getAccept1().setEnergy(energy);
 						break;
-					case 1: 
+					case 1:
 						ss.getDonor1().setPartner(partner);
 						ss.getDonor1().setEnergy(energy);
 						break;
-					case 2: 
+					case 2:
 						ss.getAccept2().setPartner(partner);
 						ss.getAccept2().setEnergy(energy);
 						break;
-					case 3: 
+					case 3:
 						ss.getDonor2().setPartner(partner);
 						ss.getDonor1().setEnergy(energy);
 						break;
 					}
 				}
-				
+
 				//Angle properties
 				String val = line.substring(91,97).trim();
 				if (val != "") ss.setKappa(Float.valueOf(val));
 				else logger.warn("Unable to parse kappa for resn "+index);
-				
+
 				val = line.substring(103,109).trim();
 				if (val != "") ss.setPhi(Float.valueOf(val));
 				else logger.warn("Unable to parse phi for resn "+index);
-				
+
 				val = line.substring(109,116).trim();
 				if (val != "") ss.setPsi(Float.valueOf(val));
 				else logger.warn("Unable to parse psi for resn "+index);
-				
+
 				if (assign) parent.setProperty(Group.SEC_STRUC, ss);
 				secstruc.add(ss);
 			}
 		}
-		
+
 		reader.close();
 		return secstruc;
 	}

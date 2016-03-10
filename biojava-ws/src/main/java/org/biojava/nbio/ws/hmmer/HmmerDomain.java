@@ -22,19 +22,19 @@ package org.biojava.nbio.ws.hmmer;
 
 import java.io.Serializable;
 
-/** Provides the details of a domain hit 
- * 
+/** Provides the details of a domain hit
+ *
  * @author Andreas Prlic
  * @since 3.0.3
  */
 public class HmmerDomain implements Comparable<HmmerDomain>, Serializable{
 
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8004302800150892757L;
-	
+
 	Integer sqFrom;
 	Integer sqTo;
 	Integer aliLenth;
@@ -109,34 +109,34 @@ public class HmmerDomain implements Comparable<HmmerDomain>, Serializable{
 	}
 	@Override
 	public String toString() {
-		return "HmmerDomain [hmmAcc=" + hmmAcc + ", hmmDesc=" + hmmDesc 
+		return "HmmerDomain [hmmAcc=" + hmmAcc + ", hmmDesc=" + hmmDesc
 				+ "sqFrom=" + sqFrom + ", sqTo=" + sqTo
 				+ ", aliLenth=" + aliLenth + ", simCount=" + simCount
 				+ ", hmmFrom=" + hmmFrom + ", hmmTo=" + hmmTo + ", hmmName="
 				+ hmmName  + "]" ;
-				
+
 	}
 	@Override
 	public int compareTo(HmmerDomain o) {
 		if (emptyDomain(this) &&emptyDomain(o))
 			return 0;
-		
+
 		if ( ! emptyDomain(this) &&emptyDomain(o))
 			return -1;
 		if (emptyDomain(this) && (! emptyDomain(o)))
 			return 1;
-		
+
 		return (this.getSqFrom().compareTo(o.getSqFrom()));
 	}
 	private boolean emptyDomain(HmmerDomain o) {
-		
+
 		if  ( o.getSqFrom() == null)
 			return true;
 		return false;
 	}
-	
+
 	/*
-	 * 
+	 *
 	 * that's the full data that is currently responded from the JSON api:
 	[{"ievalue":"0.021","cevalue":"1.0e-05",
 		"alimline":"+++Wc+ ++++ +GW+ ++ +","jali":62,
@@ -156,7 +156,7 @@ public class HmmerDomain implements Comparable<HmmerDomain>, Serializable{
 			"alihmmfrom":"33","alimem":46912854337136,
 			"aliId":0.19047619047619,"is_included":"0",
 			"alisqdesc":"","ienv":"36"}] */
-					
-					
-					
+
+
+
 }

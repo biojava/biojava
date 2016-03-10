@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io;
 
 import java.io.IOException;
@@ -42,12 +62,12 @@ public class TestParseOnAsymId {
 		assertArrayEquals(authChainListTest, authChainList);
 		assertArrayEquals(asymChainListTest, asymChainList);
 
-		
+
 		params.setUseInternalChainId(false);
 		Structure bioJavaStructDiff = StructureIO.getStructure("4cup");
 		List<Chain> chainListDiff = bioJavaStructDiff.getChains();
 		assertEquals(1,chainListDiff.size());
-		
+
 		String[] authChainListTestDiff = new String[1];
 		String[] asymChainListTestDiff = new String[1];
 		for(int i=0; i<chainListDiff.size();i++){
@@ -57,7 +77,7 @@ public class TestParseOnAsymId {
 		}
 		assertArrayEquals(authChainListTestDiff, asymChainListTestDiff);
 		assertArrayEquals(new String[] {"A"}, asymChainListTestDiff);
-		
+
 	}
 
 }

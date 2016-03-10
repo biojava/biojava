@@ -32,11 +32,11 @@ import java.util.List;
 
 @XmlRootElement(name="PdbxStructOperListXMLContainer")
 public class PdbxStructOperListXMLContainer {
-	
-	
+
+
 
 		private List<PdbxStructOperList> data ;
-		
+
 		static JAXBContext jaxbContext;
 		static {
 			try {
@@ -45,17 +45,17 @@ public class PdbxStructOperListXMLContainer {
 				e.printStackTrace();
 			}
 		}
-		
+
 		@XmlElementWrapper
 		public List<PdbxStructOperList> getPdbxStructOperLists(){
 			return data;
-			
+
 		}
-		
+
 		public void setPdbxStructOperLists(List<PdbxStructOperList> d){
 			data = d;
 		}
-		
+
 		public  String toXML(){
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -69,7 +69,7 @@ public class PdbxStructOperListXMLContainer {
 				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 				m.marshal( this, ps);
-				
+
 
 			} catch (Exception e){
 				e.printStackTrace();
@@ -97,5 +97,5 @@ public class PdbxStructOperListXMLContainer {
 
 			return job;
 		}
-		
+
 }

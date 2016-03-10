@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.symmetry.core;
 
@@ -38,7 +38,7 @@ public class QuatSymmetryScores {
 	private double rmsdIntra = 0;
 	private double tmIntra = 0;
 	private double symDeviation = 0;
-	
+
 	/**
 	 * @return the minRmsd
 	 */
@@ -123,7 +123,7 @@ public class QuatSymmetryScores {
 	public void setRmsdCenters(double rmsdCenters) {
 		this.rmsdCenters = rmsdCenters;
 	}
-	
+
 	/**
 	 * @return the rmsdIntra
 	 */

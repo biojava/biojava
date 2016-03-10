@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 10, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -43,94 +43,94 @@ import java.io.StringWriter;
 public class PositionInQueueXMLConverter
 {
 
-   public String toXML(int position) throws IOException{
-      StringWriter swriter = new StringWriter();
+	public String toXML(int position) throws IOException{
+		StringWriter swriter = new StringWriter();
 
-      PrintWriter writer = new PrintWriter(swriter);
-      PrettyXMLWriter xml = new PrettyXMLWriter(writer);
+		PrintWriter writer = new PrintWriter(swriter);
+		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
 
-      xml.openTag("queue");
-      xml.attribute("position", position+"");
-      xml.closeTag("queue");
-      xml.close();
-      return swriter.toString(); 
-   }
-   
-   public int fromXML(String xml){
-      int position = Integer.MIN_VALUE;
-      
-      try
-      {
-         //Convert string to XML document
-         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-         DocumentBuilder db = factory.newDocumentBuilder();
-         InputSource inStream = new InputSource();
-         inStream.setCharacterStream(new StringReader(xml));
-         Document doc = db.parse(inStream);
+		xml.openTag("queue");
+		xml.attribute("position", position+"");
+		xml.closeTag("queue");
+		xml.close();
+		return swriter.toString();
+	}
 
-         // normalize text representation
-         doc.getDocumentElement().normalize();
+	public int fromXML(String xml){
+		int position = Integer.MIN_VALUE;
+
+		try
+		{
+			//Convert string to XML document
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = factory.newDocumentBuilder();
+			InputSource inStream = new InputSource();
+			inStream.setCharacterStream(new StringReader(xml));
+			Document doc = db.parse(inStream);
+
+			// normalize text representation
+			doc.getDocumentElement().normalize();
 
 
-         //Element rootElement = doc.getDocumentElement();
+			//Element rootElement = doc.getDocumentElement();
 
-         NodeList listOfAlignments = doc.getElementsByTagName("queue");
-         //int numArrays = listOfAlignments.getLength();    
-         //System.out.println("got " + numArrays + " alignment results.");
-         // go over the blocks
-         
-       
-         for(int afpPos=0; afpPos<listOfAlignments.getLength() ; afpPos++)
-         {
-            
-            Node rootElement       = listOfAlignments.item(afpPos);
+			NodeList listOfAlignments = doc.getElementsByTagName("queue");
+			//int numArrays = listOfAlignments.getLength();
+			//System.out.println("got " + numArrays + " alignment results.");
+			// go over the blocks
 
-            String pos = getAttribute(rootElement,"position");
-          
-            try {
-               position = Integer.parseInt(pos); 
-            } catch (NumberFormatException f){
-               f.printStackTrace();
-            }
 
-         }
-      } 
-      catch (SAXParseException err) 
-      {
-         System.out.println ("** Parsing error" + ", line " 
-               + err.getLineNumber () + ", uri " + err.getSystemId ());
-         System.out.println(" " + err.getMessage ());
-      }
-      catch (SAXException e)
-      {
-         Exception x = e.getException ();
-         ((x == null) ? e : x).printStackTrace ();
-      }
-      catch (Throwable t)
-      {
-         t.printStackTrace ();
-      }
+			for(int afpPos=0; afpPos<listOfAlignments.getLength() ; afpPos++)
+			{
 
-      return position;
-   }
-   
+				Node rootElement       = listOfAlignments.item(afpPos);
 
-   private static String getAttribute(Node node, String attr){
-      if( ! node.hasAttributes()) 
-         return null;
+				String pos = getAttribute(rootElement,"position");
 
-      NamedNodeMap atts = node.getAttributes();
+				try {
+					position = Integer.parseInt(pos);
+				} catch (NumberFormatException f){
+					f.printStackTrace();
+				}
 
-      if ( atts == null)
-         return null;
+			}
+		}
+		catch (SAXParseException err)
+		{
+			System.out.println ("** Parsing error" + ", line "
+					+ err.getLineNumber () + ", uri " + err.getSystemId ());
+			System.out.println(" " + err.getMessage ());
+		}
+		catch (SAXException e)
+		{
+			Exception x = e.getException ();
+			((x == null) ? e : x).printStackTrace ();
+		}
+		catch (Throwable t)
+		{
+			t.printStackTrace ();
+		}
 
-      Node att = atts.getNamedItem(attr);
-      if ( att == null)
-         return null;
+		return position;
+	}
 
-      String value = att.getTextContent();
 
-      return value;
+	private static String getAttribute(Node node, String attr){
+		if( ! node.hasAttributes())
+			return null;
 
-   }
+		NamedNodeMap atts = node.getAttributes();
+
+		if ( atts == null)
+			return null;
+
+		Node att = atts.getNamedItem(attr);
+		if ( att == null)
+			return null;
+
+		String value = att.getTextContent();
+
+		return value;
+
+	}
 }

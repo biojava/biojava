@@ -31,15 +31,15 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-/** 
+/**
  * Utility operations on Atoms, AminoAcids, etc.
  * <p>
- * Currently the coordinates of an Atom are stored as an array 
+ * Currently the coordinates of an Atom are stored as an array
  * of size 3 (double[3]). It would be more powerful to use Point3D from
  * javax.vecmath, but unfortunately this is not a part of standard
  * java installations, since it comes with java3d. So to keep things
  * simple at the moment biojava does not depend on java3d.
- * 
+ *
  * @author Andreas Prlic
  * @since 1.4
  * @version %I% %G%
@@ -54,7 +54,7 @@ public class Calc {
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
-	 * @return a double	
+	 * @return a double
 	 */
 	public static final double getDistance(Atom a, Atom b) {
 		double x = a.getX() - b.getX();
@@ -155,7 +155,7 @@ public class Calc {
 		return a.getX() * b.getX() + a.getY() * b.getY() + a.getZ() * b.getZ();
 	}
 
-	/** 
+	/**
 	 * Gets the length of the vector (2-norm)
 	 *
 	 * @param a  an Atom object
@@ -165,13 +165,13 @@ public class Calc {
 		return Math.sqrt(scalarProduct(a,a));
 	}
 
-	/** 
+	/**
 	 * Gets the angle between two vectors
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
-	 * @return Angle between a and b in degrees, in range [0,180]. 
-	 * If either vector has length 0 then angle is not defined and NaN is returned 
+	 * @return Angle between a and b in degrees, in range [0,180].
+	 * If either vector has length 0 then angle is not defined and NaN is returned
 	 */
 	public static final double angle(Atom a, Atom b){
 
@@ -183,7 +183,7 @@ public class Calc {
 
 	}
 
-	/** 
+	/**
 	 * Returns the unit vector of vector a .
 	 *
 	 * @param a  an Atom object
@@ -204,14 +204,14 @@ public class Calc {
 	}
 
 	/**
-	 * Calculate the torsion angle, i.e. the angle between the normal vectors of the 
+	 * Calculate the torsion angle, i.e. the angle between the normal vectors of the
 	 * two plains a-b-c and b-c-d.
 	 * See http://en.wikipedia.org/wiki/Dihedral_angle
 	 * @param a  an Atom object
 	 * @param b  an Atom object
 	 * @param c  an Atom object
 	 * @param d  an Atom object
-	 * @return the torsion angle in degrees, in range +-[0,180]. 
+	 * @return the torsion angle in degrees, in range +-[0,180].
 	 * If either first 3 or last 3 atoms are colinear then torsion angle is not defined and NaN is returned
 	 */
 	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d) {
@@ -309,7 +309,7 @@ public class Calc {
 		return distance < 2.5;
 	}
 
-	/** 
+	/**
 	 * Rotate a single Atom aroud a rotation matrix.
 	 * The rotation Matrix must be a pre-multiplication 3x3 Matrix.
 	 *
@@ -334,18 +334,18 @@ public class Calc {
 		atom.setZ(nz);
 	}
 
-	/** 
+	/**
 	 * Rotate a structure.
 	 * The rotation Matrix must be a pre-multiplication Matrix.
 	 *
 	 * @param structure a Structure object
-	 * @param rotationmatrix an array (3x3) of double 
-	 * 			representing the rotation matrix. 
+	 * @param rotationmatrix an array (3x3) of double
+	 * 			representing the rotation matrix.
 	 * @throws StructureException ...
 	 */
-	public static final void rotate(Structure structure, 
+	public static final void rotate(Structure structure,
 			double[][] rotationmatrix) throws StructureException {
-		
+
 		if ( rotationmatrix.length != 3 ) {
 			throw new StructureException ("matrix does not have size 3x3 !");
 		}
@@ -356,16 +356,16 @@ public class Calc {
 		}
 	}
 
-	/** 
+	/**
 	 * Rotate a Group.
 	 * The rotation Matrix must be a pre-multiplication Matrix.
 	 *
 	 * @param group a group object
-	 * @param rotationmatrix an array (3x3) of double 
-	 * 			representing the rotation matrix. 
+	 * @param rotationmatrix an array (3x3) of double
+	 * 			representing the rotation matrix.
 	 * @throws StructureException ...
 	 */
-	public static final void rotate(Group group, 
+	public static final void rotate(Group group,
 			double[][] rotationmatrix) throws StructureException {
 
 		if ( rotationmatrix.length != 3 ) {
@@ -381,7 +381,7 @@ public class Calc {
 		}
 	}
 
-	/** 
+	/**
 	 * Rotate an Atom around a Matrix object.
 	 * The rotation Matrix must be a pre-multiplication Matrix.
 	 *
@@ -404,7 +404,7 @@ public class Calc {
 
 	}
 
-	/** 
+	/**
 	 * Rotate a group object.
 	 * The rotation Matrix must be a pre-multiplication Matrix.
 	 *
@@ -423,12 +423,12 @@ public class Calc {
 
 	}
 
-	/** 
+	/**
 	 * Rotate a structure object.
 	 * The rotation Matrix must be a pre-multiplication Matrix.
 	 *
 	 * @param structure the structure to be rotated
-	 * @param m rotation matrix to be applied 
+	 * @param m rotation matrix to be applied
 	 */
 	public static final void rotate(Structure structure, Matrix m){
 
@@ -445,7 +445,7 @@ public class Calc {
 	/**
 	 * Transform an array of atoms at once.
 	 * The transformation Matrix must be a post-multiplication Matrix.
-	 * 
+	 *
 	 * @param ca array of Atoms to shift
 	 * @param t transformation Matrix4d
 	 */
@@ -454,10 +454,10 @@ public class Calc {
 	}
 
 	/**
-	 * Transforms an atom object, given a Matrix4d (i.e. the vecmath library 
+	 * Transforms an atom object, given a Matrix4d (i.e. the vecmath library
 	 * double-precision 4x4 rotation+translation matrix).
 	 * The transformation Matrix must be a post-multiplication Matrix.
-	 * 
+	 *
 	 * @param atom
 	 * @param m
 	 */
@@ -472,10 +472,10 @@ public class Calc {
 	}
 
 	/**
-	 * Transforms a group object, given a Matrix4d (i.e. the vecmath library 
+	 * Transforms a group object, given a Matrix4d (i.e. the vecmath library
 	 * double-precision 4x4 rotation+translation matrix).
 	 * The transformation Matrix must be a post-multiplication Matrix.
-	 * 
+	 *
 	 * @param group
 	 * @param m
 	 */
@@ -490,10 +490,10 @@ public class Calc {
 	}
 
 	/**
-	 * Transforms a structure object, given a Matrix4d (i.e. the vecmath library 
+	 * Transforms a structure object, given a Matrix4d (i.e. the vecmath library
 	 * double-precision 4x4 rotation+translation matrix).
 	 * The transformation Matrix must be a post-multiplication Matrix.
-	 * 
+	 *
 	 * @param structure
 	 * @param m
 	 */
@@ -508,10 +508,10 @@ public class Calc {
 	}
 
 	/**
-	 * Transforms a chain object, given a Matrix4d (i.e. the vecmath library 
+	 * Transforms a chain object, given a Matrix4d (i.e. the vecmath library
 	 * double-precision 4x4 rotation+translation matrix).
 	 * The transformation Matrix must be a post-multiplication Matrix.
-	 * 
+	 *
 	 * @param chain
 	 * @param m
 	 */
@@ -525,7 +525,7 @@ public class Calc {
 	}
 
 	/**
-	 * Translates an atom object, given a Vector3d (i.e. the vecmath library 
+	 * Translates an atom object, given a Vector3d (i.e. the vecmath library
 	 * double-precision 3-d vector)
 	 * @param atom
 	 * @param v
@@ -538,7 +538,7 @@ public class Calc {
 	}
 
 	/**
-	 * Translates a group object, given a Vector3d (i.e. the vecmath library 
+	 * Translates a group object, given a Vector3d (i.e. the vecmath library
 	 * double-precision 3-d vector)
 	 * @param group
 	 * @param v
@@ -554,7 +554,7 @@ public class Calc {
 	}
 
 	/**
-	 * Translates a chain object, given a Vector3d (i.e. the vecmath library 
+	 * Translates a chain object, given a Vector3d (i.e. the vecmath library
 	 * double-precision 3-d vector)
 	 * @param chain
 	 * @param v
@@ -569,7 +569,7 @@ public class Calc {
 	}
 
 	/**
-	 * Translates a Structure object, given a Vector3d (i.e. the vecmath library 
+	 * Translates a Structure object, given a Vector3d (i.e. the vecmath library
 	 * double-precision 3-d vector)
 	 * @param structure
 	 * @param v
@@ -584,7 +584,7 @@ public class Calc {
 		}
 	}
 
-	/** calculate structure + Matrix coodinates ... 
+	/** calculate structure + Matrix coodinates ...
 	 *
 	 * @param s the structure to operate on
 	 * @param matrix a Matrix object
@@ -808,7 +808,7 @@ public class Calc {
 
 	/** Returns the Vector that needs to be applied to shift a set of atoms
 	 * to the Centroid.
-	 * @param atomSet array of Atoms  
+	 * @param atomSet array of Atoms
 	 * @return the vector needed to shift the set of atoms to its geometric center
 	 */
 	public static final Atom getCenterVector(Atom[] atomSet){
@@ -820,7 +820,7 @@ public class Calc {
 
 	/** Returns the Vector that needs to be applied to shift a set of atoms
 	 * to the Centroid, if the centroid is already known
-	 * @param atomSet array of Atoms  
+	 * @param atomSet array of Atoms
 	 * @return the vector needed to shift the set of atoms to its geometric center
 	 */
 	public static final Atom getCenterVector(Atom[] atomSet, Atom centroid){
@@ -838,7 +838,7 @@ public class Calc {
 	}
 
 
-	/** Center the atoms at the Centroid. 
+	/** Center the atoms at the Centroid.
 	 * @param atomSet a set of Atoms
 	 * @return an Atom representing the Centroid of the set of atoms
 	 * @throws StructureException
@@ -874,7 +874,7 @@ public class Calc {
 	/** creates a virtual C-beta atom. this might be needed when working with GLY
 	 *
 	 * thanks to Peter Lackner for a python template of this method.
-	 * @param amino the amino acid for which a "virtual" CB atom should be calculated 
+	 * @param amino the amino acid for which a "virtual" CB atom should be calculated
 	 * @return a "virtual" CB atom
 	 * @throws StructureException
 	 */
@@ -1009,30 +1009,30 @@ public class Calc {
 
 	/**
 	 * Calculates the angle from centerPt to targetPt in degrees.
-	 * The return should range from [0,360), rotating CLOCKWISE, 
+	 * The return should range from [0,360), rotating CLOCKWISE,
 	 * 0 and 360 degrees represents NORTH,
 	 * 90 degrees represents EAST, etc...
 	 *
-	 * Assumes all points are in the same coordinate space.  If they are not, 
-	 * you will need to call SwingUtilities.convertPointToScreen or equivalent 
+	 * Assumes all points are in the same coordinate space.  If they are not,
+	 * you will need to call SwingUtilities.convertPointToScreen or equivalent
 	 * on all arguments before passing them  to this function.
 	 *
 	 * @param centerPt   Point we are rotating around.
-	 * @param targetPt   Point we want to calculate the angle to.  
+	 * @param targetPt   Point we want to calculate the angle to.
 	 * @return angle in degrees.  This is the angle from centerPt to targetPt.
 	 */
 	public static double calcRotationAngleInDegrees(Atom centerPt, Atom targetPt)
 	{
 		// calculate the angle theta from the deltaY and deltaX values
 		// (atan2 returns radians values from [-PI,PI])
-		// 0 currently points EAST.  
-		// NOTE: By preserving Y and X param order to atan2,  we are expecting 
-		// a CLOCKWISE angle direction.  
+		// 0 currently points EAST.
+		// NOTE: By preserving Y and X param order to atan2,  we are expecting
+		// a CLOCKWISE angle direction.
 		double theta = Math.atan2(targetPt.getY() - centerPt.getY(), targetPt.getX() - centerPt.getX());
 
-		// rotate the theta angle clockwise by 90 degrees 
+		// rotate the theta angle clockwise by 90 degrees
 		// (this makes 0 point NORTH)
-		// NOTE: adding to an angle rotates it clockwise.  
+		// NOTE: adding to an angle rotates it clockwise.
 		// subtracting would rotate it counter-clockwise
 		theta += Math.PI/2.0;
 
@@ -1083,9 +1083,9 @@ public class Calc {
 	/**
 	 * Convert JAMA rotation and translation to a Vecmath transformation matrix.
 	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
-	 * matrix is a post-multiplication one, the rotation matrix is transposed to 
+	 * matrix is a post-multiplication one, the rotation matrix is transposed to
 	 * ensure that the transformation they produce is the same.
-	 * 
+	 *
 	 * @param rot 3x3 Rotation matrix
 	 * @param trans 3x1 Translation matrix
 	 * @return 4x4 transformation matrix
@@ -1099,9 +1099,9 @@ public class Calc {
 	/**
 	 * Convert JAMA rotation and translation to a Vecmath transformation matrix.
 	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
-	 * matrix is a post-multiplication one, the rotation matrix is transposed to 
+	 * matrix is a post-multiplication one, the rotation matrix is transposed to
 	 * ensure that the transformation they produce is the same.
-	 * 
+	 *
 	 * @param rot 3x3 Rotation matrix
 	 * @param trans 3x1 translation vector in Atom coordinates
 	 * @return 4x4 transformation matrix
@@ -1115,14 +1115,14 @@ public class Calc {
 	/**
 	 * Convert Vecmath transformation into a JAMA rotation matrix.
 	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
-	 * matrix is a post-multiplication one, the rotation matrix is transposed to 
+	 * matrix is a post-multiplication one, the rotation matrix is transposed to
 	 * ensure that the transformation they produce is the same.
-	 * 
+	 *
 	 * @param transform Matrix4d with transposed rotation matrix
 	 * @return
 	 */
 	public static Matrix getRotationMatrix(Matrix4d transform){
-		
+
 		Matrix rot = new Matrix(3,3);
 		for (int i=0;i<3;i++) {
 			for (int j=0;j<3;j++) {
@@ -1131,21 +1131,21 @@ public class Calc {
 		}
 		return rot;
 	}
-	
+
 	/**
 	 * Extract the translational vector of a Vecmath transformation.
-	 * 
+	 *
 	 * @param transform Matrix4d
 	 * @return Atom shift vector
 	 */
 	public static Atom getTranslationVector(Matrix4d transform){
-		
+
 		Atom transl = new AtomImpl();
 		double[] coords = {transform.m03, transform.m13, transform.m23};
 		transl.setCoords(coords);
 		return transl;
 	}
-	
+
 	/**
 	 * Convert an array of atoms into an array of vecmath points
 	 * @param atoms list of atoms

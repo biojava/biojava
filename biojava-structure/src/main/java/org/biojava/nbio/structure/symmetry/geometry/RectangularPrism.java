@@ -41,7 +41,7 @@ public class RectangularPrism implements Polyhedron {
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	/**
 	 * Returns the radius of a circumscribed sphere, that goes
 	 * through all vertices
@@ -52,7 +52,7 @@ public class RectangularPrism implements Polyhedron {
 	}
 
 	/**
-	 * Returns the radius of an inscribed sphere, that is tangent to each 
+	 * Returns the radius of an inscribed sphere, that is tangent to each
 	 * of the octahedron's faces
 	 * @return the inscribedRadius
 	 */
@@ -61,15 +61,15 @@ public class RectangularPrism implements Polyhedron {
 	}
 
 	/**
-	 * Returns the radius of a sphere, that is tangent to each 
+	 * Returns the radius of a sphere, that is tangent to each
 	 * of the octahedron's edges
 	 *
 	 * @return the midRadius
 	 */
 	public double getHeight() {
-        return height;
+		return height;
 	}
-	
+
 	/**
 	 * Returns the radius of a circumscribed sphere (length of diagonal of
 	 * rectangular prism/2, that goes through at least four vertices
@@ -81,45 +81,45 @@ public class RectangularPrism implements Polyhedron {
 	}
 
 	/**
-	 * Returns the vertices of an n-fold polygon of given radius and center	
+	 * Returns the vertices of an n-fold polygon of given radius and center
 	 * @param n
 	 * @param radius
 	 * @param center
 	 * @return
-	 */ 
+	 */
 	@Override
 	public Point3d[] getVertices() {
 		double x = 0.5 * width;
 		double y = 0.5 * height;
 		double z = 0.5 * length;
 		Point3d[] vertices = new Point3d[8];
-	    vertices[0] = new Point3d(-x, -y,  z);
-	    vertices[1] = new Point3d(-x,  y,  z);
-	    vertices[2] = new Point3d( x,  y,  z);
-	    vertices[3] = new Point3d( x, -y,  z);
-	    vertices[4] = new Point3d(-x, -y, -z);
-	    vertices[5] = new Point3d(-x,  y, -z);
-	    vertices[6] = new Point3d( x,  y, -z);
-	    vertices[7] = new Point3d( x, -y, -z);
+		vertices[0] = new Point3d(-x, -y,  z);
+		vertices[1] = new Point3d(-x,  y,  z);
+		vertices[2] = new Point3d( x,  y,  z);
+		vertices[3] = new Point3d( x, -y,  z);
+		vertices[4] = new Point3d(-x, -y, -z);
+		vertices[5] = new Point3d(-x,  y, -z);
+		vertices[6] = new Point3d( x,  y, -z);
+		vertices[7] = new Point3d( x, -y, -z);
 
 		return vertices;
 	};
-	
+
 	@Override
 	public List<int[]> getLineLoops() {
 		return Arrays.asList(lineLoop1, lineLoop2, lineLoop3, lineLoop4);
 	}
-	
+
 	@Override
 	public int getViewCount() {
 		return viewNames.length;
 	}
-	
+
 	@Override
 	public String getViewName(int index) {
 		return viewNames[index];
 	}
-	
+
 	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();

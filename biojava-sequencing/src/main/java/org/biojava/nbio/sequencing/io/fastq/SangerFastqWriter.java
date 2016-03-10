@@ -20,20 +20,18 @@
  */
 package org.biojava.nbio.sequencing.io.fastq;
 
-import java.io.IOException;
-
 /**
  * Writer for {@link FastqVariant#FASTQ_SANGER} formatted sequences.
  *
  * @since 3.0.3
  */
 public final class SangerFastqWriter
-    extends AbstractFastqWriter
+	extends AbstractFastqWriter
 {
 
-    @Override
-    protected Fastq convert(final Fastq fastq)
-    {
-        return fastq.convertTo(FastqVariant.FASTQ_SANGER);
-    }
+	@Override
+	protected Fastq convert(final Fastq fastq)
+	{
+		return fastq.convertTo(FastqVariant.FASTQ_SANGER);
+	}
 }

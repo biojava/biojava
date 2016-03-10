@@ -43,10 +43,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A DomainProvider that uses a mixture of SCOP and PDP domains.
- * 
+ *
  * SCOP domains are preferred, with PDP providing a backup for structures where
  * SCOP has not been assigned.
- * 
+ *
  * As of 2015, this class is equivalent to the method used by RCSB to define
  * representatives for structural similarity comparisons.
  */
@@ -70,9 +70,9 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	}
 
 	/** initialize this provider with caching enabled
-	 * 
+	 *
 	 * @param cache
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public RemoteDomainProvider(boolean cache) throws IOException{
 		super(CACHE_FILE_NAME);
@@ -92,7 +92,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 
 	/** Requests the domain assignments for the current PDB IDs from the PDB.
 	 * @throws IOException if the server cannot be reached
-	 * 
+	 *
 	 */
 	private void loadRepresentativeDomainAssignments() throws IOException {
 		AssignmentXMLSerializer results = null;

@@ -47,7 +47,7 @@ public class TestStockholmParser extends TestCase {
 //		buf = new BufferedReader(new InputStreamReader(inStream));
 //
 //		try {
-//			StockholmStructure data = fileParser.parseFile(buf);					
+//			StockholmStructure data = fileParser.parseFile(buf);
 //			System.out.println(data);
 //
 //			assertTrue(data.getBioSequences().size()==5);
@@ -74,13 +74,13 @@ public class TestStockholmParser extends TestCase {
 
 			StockholmFileParser fileParser = new StockholmFileParser();
 
-			StockholmStructure data = fileParser.parse(inStream);					
-			
+			StockholmStructure data = fileParser.parse(inStream);
+
 			assertTrue("Did not get enough sequences!", data.getBioSequences(false).size()==20);
 
 			AbstractSequence<?> seq = data.getBioSequences(false).get(0);
 			assertTrue(seq != null );
-			
+
 			assertTrue(seq.getSequenceAsString().length() > 20);
 
 		} catch (Exception e) {

@@ -27,7 +27,7 @@ package org.biojava.nbio.ws.alignment.qblast;
  * Enum representing available blast programs.
  * <p/>
  * Values are as used by QBlast URL API.
- * 
+ *
  * @author Gediminas Rimsa
  */
 public enum BlastProgramEnum {

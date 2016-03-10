@@ -31,11 +31,11 @@ public abstract class AbstractStructureAlignment implements StructureAlignment{
 	public static String newline = System.getProperty("line.separator");
 
 	@Override
-	abstract public  AFPChain align(Atom[] ca1, Atom[] ca2) 
+	abstract public  AFPChain align(Atom[] ca1, Atom[] ca2)
 			throws StructureException;
 
 	@Override
-	abstract public AFPChain align(Atom[] ca1, Atom[] ca2, Object params) 
+	abstract public AFPChain align(Atom[] ca1, Atom[] ca2, Object params)
 			throws StructureException;
 
 	@Override

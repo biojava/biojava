@@ -36,18 +36,18 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface ProfilePair<S extends Sequence<C>, C extends Compound> extends Profile<S, C> {
 
-    /**
-     * Returns the first {@link Profile} of the pair.
-     *
-     * @return the first {@link Profile} of the pair
-     */
-    Profile<S, C> getQuery();
+	/**
+	 * Returns the first {@link Profile} of the pair.
+	 *
+	 * @return the first {@link Profile} of the pair
+	 */
+	Profile<S, C> getQuery();
 
-    /**
-     * Returns the second {@link Profile} of the pair.
-     *
-     * @return the second {@link Profile} of the pair
-     */
-    Profile<S, C> getTarget();
+	/**
+	 * Returns the second {@link Profile} of the pair.
+	 *
+	 * @return the second {@link Profile} of the pair
+	 */
+	Profile<S, C> getTarget();
 
 }

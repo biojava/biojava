@@ -39,9 +39,9 @@ public class CalcBioAssemblySymmetry {
 	private QuatSymmetryResults results;
 
 	private JmolSymmetryScriptGenerator scriptGenerator;
-	
+
 	static public String version;
-	static public String build; 
+	static public String build;
 	static {
 		try {
 			ResourceManager about = ResourceManager.getResourceManager("about");
@@ -53,12 +53,12 @@ public class CalcBioAssemblySymmetry {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public CalcBioAssemblySymmetry(Structure bioAssembly, QuatSymmetryParameters parameters){
 		this.bioAssembly = bioAssembly;
 		this.parameters = parameters;
 	}
-	
+
 	public QuatSymmetryParameters getParameters(){
 		return parameters;
 	}
@@ -67,7 +67,7 @@ public class CalcBioAssemblySymmetry {
 		QuatSymmetryDetector detector = new QuatSymmetryDetector(bioAssembly, parameters);
 		String defaultColoring = "";
 
-		if (detector.hasProteinSubunits()) {	
+		if (detector.hasProteinSubunits()) {
 			for (QuatSymmetryResults globalSymmetry: detector.getGlobalSymmetry()) {
 
 				String postFix = "g";
@@ -79,16 +79,16 @@ public class CalcBioAssemblySymmetry {
 					this.results = globalSymmetry;
 					this.scriptGenerator = generator;
 				}
-					
+
 				// get default color by symmetry for all subunits (for asymmetric cases only)
 				if (globalSymmetry.getSymmetry().equals("C1") && ! globalSymmetry.getSubunits().isPseudoStoichiometric()) {
 					defaultColoring = generator.colorBySymmetry();
 				}
-				
+
 				if (parameters.isVerbose()) {
 					System.out.println("Global symmetry: ");
 					System.out.println(globalSymmetry);
-					
+
 //					System.out.println();
 //					System.out.println(generator.getDefaultOrientation());
 //					System.out.println(generator.getZoom());
@@ -98,10 +98,10 @@ public class CalcBioAssemblySymmetry {
 					System.out.println(generator.colorBySequenceCluster());
 					System.out.println(generator.colorBySymmetry());
 				}
-				
+
 			}
 
-			for (List<QuatSymmetryResults> localSymmetries: detector.getLocalSymmetries()) {	
+			for (List<QuatSymmetryResults> localSymmetries: detector.getLocalSymmetries()) {
 				int count = 0;
 
 				for (QuatSymmetryResults localSymmetry: localSymmetries) {
@@ -109,7 +109,7 @@ public class CalcBioAssemblySymmetry {
 					// to avoid naming conflicts when more than one symmetry is displayed at one time.
 					String postFix = "l" + count;
 					AxisAligner aligner = AxisAligner.getInstance(localSymmetry);
-					JmolSymmetryScriptGenerator generator = JmolSymmetryScriptGenerator.getInstance(aligner, postFix);		
+					JmolSymmetryScriptGenerator generator = JmolSymmetryScriptGenerator.getInstance(aligner, postFix);
 					generator.setOnTheFly(parameters.isOnTheFly());
 					// sets color by symmetry for all subunits. This is
 					// required for local symmetry, to ensure all subunits are colored.
@@ -123,7 +123,7 @@ public class CalcBioAssemblySymmetry {
 					if (parameters.isVerbose()) {
 						System.out.println("Local symmetry: ");
 						System.out.println(localSymmetry);
-						
+
 //						System.out.println();
 //						System.out.println(generator.getDefaultOrientation());
 //						System.out.println(generator.getZoom());
@@ -147,13 +147,13 @@ public class CalcBioAssemblySymmetry {
 		return results.getRotationGroup();
 	}
 
-	
+
 	public Subunits getSubunits() {
 		return results.getSubunits();
 	}
-	
-	/** String representation of Symmetry, e.g. C1, C2, H 
-	 * 
+
+	/** String representation of Symmetry, e.g. C1, C2, H
+	 *
 	 * @return
 	 */
 	public String getSymmetry() {

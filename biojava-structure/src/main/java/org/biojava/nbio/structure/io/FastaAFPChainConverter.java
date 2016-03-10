@@ -52,7 +52,7 @@ import java.util.*;
 
 /**
  * A collection of static utilities to convert between {@link AFPChain AFPChains} and {@link FastaSequence FastaSequences}.
- * 
+ *
  * @author dmyersturnbull
  * @see StructureSequenceMatcher
  * @see FastaStructureParser
@@ -61,8 +61,8 @@ import java.util.*;
 public class FastaAFPChainConverter {
 
 	private final static Logger logger = LoggerFactory.getLogger(FastaAFPChainConverter.class);
-	
-		
+
+
 	public static AFPChain cpFastaToAfpChain(String first, String second, Structure structure, int cpSite) throws StructureException, CompoundNotFoundException {
 		ProteinSequence s1 = new ProteinSequence(first);
 		s1.setUserCollection(getAlignedUserCollection(first));
@@ -74,13 +74,13 @@ public class FastaAFPChainConverter {
 	/**
 	 * Takes a structure and sequence corresponding to an alignment between a structure or sequence and itself (or even a structure with a sequence), where the result has a circular permutation site
 	 * {@link cpSite} residues to the right.
-	 * 
+	 *
 	 * @param fastaFile A FASTA file containing exactly 2 sequences, the first unpermuted and the second permuted
 	 * @param cpSite
 	 *            The number of residues from the beginning of the sequence at which the circular permutation site occurs; can be positive or negative; values greater than the length of the sequence
 	 *            are acceptable
-	 * @throws IOException 
-	 * @throws StructureException 
+	 * @throws IOException
+	 * @throws StructureException
 	 */
 	public static AFPChain cpFastaToAfpChain(File fastaFile, Structure structure, int cpSite) throws IOException, StructureException {
 		InputStream inStream = new FileInputStream(fastaFile);
@@ -98,7 +98,7 @@ public class FastaAFPChainConverter {
 	/**
 	 * Takes a structure and sequence corresponding to an alignment between a structure or sequence and itself (or even a structure with a sequence), where the result has a circular permutation site
 	 * {@link cpSite} residues to the right.
-	 * 
+	 *
 	 * @param first The unpermuted sequence
 	 * @param second The sequence permuted by cpSite
 	 * @param cpSite
@@ -139,7 +139,7 @@ public class FastaAFPChainConverter {
 
 		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(structure);
 		Atom[] ca2 =  StructureTools.getRepresentativeAtomArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
-		
+
 		ProteinSequence antipermuted = null;
 		try {
 			antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), gappedCpShift));
@@ -186,7 +186,7 @@ public class FastaAFPChainConverter {
 	/**
 	 * Reads the file {@code fastaFile}, expecting exactly two sequences which give a pairwise alignment. Uses this and two structures to create an AFPChain corresponding to the alignment. Uses a
 	 * {@link CasePreservingProteinSequenceCreator} and assumes that a residue is aligned if and only if it is given by an uppercase letter.
-	 * 
+	 *
 	 * @see #fastaToAfpChain(ProteinSequence, ProteinSequence, Structure, Structure)
 	 * @throws IOException
 	 * @throws StructureException
@@ -219,7 +219,7 @@ public class FastaAFPChainConverter {
 
 	/**
 	 * Uses two sequences each with a corresponding structure to create an AFPChain corresponding to the alignment. Provided only for convenience since FastaReaders return such maps.
-	 * 
+	 *
 	 * @param sequences
 	 *            A Map containing exactly two entries from sequence names as Strings to gapped ProteinSequences; the name is ignored
 	 * @see #fastaToAfpChain(ProteinSequence, ProteinSequence, Structure, Structure)
@@ -254,7 +254,7 @@ public class FastaAFPChainConverter {
 	 * @param structure2
 	 * @return
 	 * @throws StructureException
-	 * @throws CompoundNotFoundException 
+	 * @throws CompoundNotFoundException
 	 */
 	public static AFPChain fastaToAfpChain(String sequence1, String sequence2, Structure structure1,
 			Structure structure2) throws StructureException, CompoundNotFoundException {
@@ -303,7 +303,7 @@ public class FastaAFPChainConverter {
 
 	/**
 	 * Provided only for convenience.
-	 * 
+	 *
 	 * @see #fastaToAfpChain(ProteinSequence, ProteinSequence, Structure, Structure)
 	 * @throws StructureException
 	 */
@@ -333,7 +333,7 @@ public class FastaAFPChainConverter {
 
 	/**
 	 * Builds an {@link AFPChain} from already-matched arrays of atoms and residues.
-	 * 
+	 *
 	 * @param ca1
 	 *            An array of atoms in the first structure
 	 * @param ca2
@@ -388,7 +388,7 @@ public class FastaAFPChainConverter {
 
 	/**
 	 * Prints out the XML representation of an AFPChain from a file containing exactly two FASTA sequences.
-	 * 
+	 *
 	 * @param args
 	 *            A String array of fasta-file structure-1-name structure-2-name
 	 * @throws StructureException
@@ -408,5 +408,5 @@ public class FastaAFPChainConverter {
 		String xml = AFPChainXMLConverter.toXML(afpChain);
 		System.out.println(xml);
 	}
-	
+
 }

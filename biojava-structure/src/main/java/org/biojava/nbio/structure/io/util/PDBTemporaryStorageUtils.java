@@ -22,12 +22,12 @@ package org.biojava.nbio.structure.io.util;
 
 /**
  * <b>Internal use only. Do not use this class.</b>
- * 
+ *
  * A class for temporary storing of data when parsing PDB Files.
- * 
+ *
  * Why is this here? Because making private inner classes in PDBFileParser would
  * make that hulking giant of a class even more gigantic.
- * 
+ *
  * @author Ulysse Carion
  */
 public class PDBTemporaryStorageUtils {
@@ -36,7 +36,7 @@ public class PDBTemporaryStorageUtils {
 	 * records precede the atoms they correspond to in a PDB file, so we must
 	 * store the information encoded in a LINK record until we actually know
 	 * about the atoms a LINK refers to.
-	 * 
+	 *
 	 * @author Ulysse Carion
 	 */
 	public static class LinkRecord {
@@ -132,11 +132,11 @@ public class PDBTemporaryStorageUtils {
 		public String getSym2() {
 			return sym2;
 		}
-		
+
 		@Override
 		public String toString() {
 			String s = "[LINK Record:\n";
-			
+
 			s += "Atom 1:\n";
 			s += "\tName: " + name1 + "\n";
 			s += "\tAlt Loc: " + altLoc1 + "\n";
@@ -144,7 +144,7 @@ public class PDBTemporaryStorageUtils {
 			s += "\tChain ID: " + chainID1 + "\n";
 			s += "\tRes Seq: " + resSeq1 + "\n";
 			s += "\tIns Code: " + iCode1 + "\n";
-			
+
 			s += "Atom 2:\n";
 			s += "\tName: " + name2 + "\n";
 			s += "\tAlt Loc: " + altLoc2 + "\n";
@@ -152,9 +152,9 @@ public class PDBTemporaryStorageUtils {
 			s += "\tChain ID: " + chainID2 + "\n";
 			s += "\tRes Seq: " + resSeq2 + "\n";
 			s += "\tIns Code: " + iCode2 + "\n";
-			
+
 			s += "]";
-			
+
 			return s;
 		}
 	}

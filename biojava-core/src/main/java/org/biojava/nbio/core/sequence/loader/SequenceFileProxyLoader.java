@@ -54,226 +54,226 @@ import java.util.List;
  */
 public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenceReader<C> {
 
-    SequenceParserInterface sequenceParser;
-    private CompoundSet<C> compoundSet;
-    private List<C> parsedCompounds = new ArrayList<C>();
-    File file;
-    long sequenceStartIndex = -1;
-    int sequenceLength = -1;
-    //private boolean initialized = false;
+	SequenceParserInterface sequenceParser;
+	private CompoundSet<C> compoundSet;
+	private List<C> parsedCompounds = new ArrayList<C>();
+	File file;
+	long sequenceStartIndex = -1;
+	int sequenceLength = -1;
+	//private boolean initialized = false;
 
-    /**
-     *
-     * @param file The file where the sequence will be found
-     * @param sequenceParser The parser to use to load the sequence
-     * @param sequenceStartIndex The file offset to the start of the sequence
-     * @param sequenceLength The length of the sequence
-     * @param compoundSet
-     * @throws IOException if problems occur while reading the file
-     * @throws CompoundNotFoundException if a compound in the sequence can't be found in the given compoundSet
-     */
-    public SequenceFileProxyLoader(File file, SequenceParserInterface sequenceParser, long sequenceStartIndex, int sequenceLength, CompoundSet<C> compoundSet) 
-    		throws IOException, CompoundNotFoundException {
-        this.sequenceParser = sequenceParser;
-        this.file = file;
-        this.sequenceStartIndex = sequenceStartIndex;
-        this.sequenceLength = sequenceLength;
-        setCompoundSet(compoundSet);
-        
-        init();
-    }
+	/**
+	 *
+	 * @param file The file where the sequence will be found
+	 * @param sequenceParser The parser to use to load the sequence
+	 * @param sequenceStartIndex The file offset to the start of the sequence
+	 * @param sequenceLength The length of the sequence
+	 * @param compoundSet
+	 * @throws IOException if problems occur while reading the file
+	 * @throws CompoundNotFoundException if a compound in the sequence can't be found in the given compoundSet
+	 */
+	public SequenceFileProxyLoader(File file, SequenceParserInterface sequenceParser, long sequenceStartIndex, int sequenceLength, CompoundSet<C> compoundSet)
+			throws IOException, CompoundNotFoundException {
+		this.sequenceParser = sequenceParser;
+		this.file = file;
+		this.sequenceStartIndex = sequenceStartIndex;
+		this.sequenceLength = sequenceLength;
+		setCompoundSet(compoundSet);
 
-    /**
-     *
-     * @param compoundSet
-     */
-    @Override
+		init();
+	}
+
+	/**
+	 *
+	 * @param compoundSet
+	 */
+	@Override
 	public void setCompoundSet(CompoundSet<C> compoundSet) {
-        this.compoundSet = compoundSet;
-    }
+		this.compoundSet = compoundSet;
+	}
 
-    /**
-     *  Load the sequence
-     * @return
-     */
-    private boolean init() throws IOException, CompoundNotFoundException {
+	/**
+	 *  Load the sequence
+	 * @return
+	 */
+	private boolean init() throws IOException, CompoundNotFoundException {
 
-    	BufferedReader br = new BufferedReader(new FileReader(file));
-    	br.skip(sequenceStartIndex);
-    	String sequence = sequenceParser.getSequence(br, sequenceLength);
-    	setContents(sequence);
-    	br.close(); // close file to prevent too many being open
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.skip(sequenceStartIndex);
+		String sequence = sequenceParser.getSequence(br, sequenceLength);
+		setContents(sequence);
+		br.close(); // close file to prevent too many being open
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     *
-     * @param sequence
-     */
-    @Override
+	/**
+	 *
+	 * @param sequence
+	 */
+	@Override
 	public void setContents(String sequence) throws CompoundNotFoundException {
-        // Horrendously inefficient - pretty much the way the old BJ did things.
-        // TODO Should be optimised.
-        this.parsedCompounds.clear();
-        for (int i = 0; i < sequence.length();) {
-            String compoundStr = null;
-            C compound = null;
-            for (int compoundStrLength = 1; compound == null && compoundStrLength <= compoundSet.getMaxSingleCompoundStringLength(); compoundStrLength++) {
-                compoundStr = sequence.substring(i, i + compoundStrLength);
-                compound = compoundSet.getCompoundForString(compoundStr);
-            }
-            if (compound == null) {
-                throw new CompoundNotFoundException("Compound "+compoundStr+" not found");
-            } else {
-                i += compoundStr.length();
-            }
-            this.parsedCompounds.add(compound);
-        }
+		// Horrendously inefficient - pretty much the way the old BJ did things.
+		// TODO Should be optimised.
+		this.parsedCompounds.clear();
+		for (int i = 0; i < sequence.length();) {
+			String compoundStr = null;
+			C compound = null;
+			for (int compoundStrLength = 1; compound == null && compoundStrLength <= compoundSet.getMaxSingleCompoundStringLength(); compoundStrLength++) {
+				compoundStr = sequence.substring(i, i + compoundStrLength);
+				compound = compoundSet.getCompoundForString(compoundStr);
+			}
+			if (compound == null) {
+				throw new CompoundNotFoundException("Compound "+compoundStr+" not found");
+			} else {
+				i += compoundStr.length();
+			}
+			this.parsedCompounds.add(compound);
+		}
 
-    }
+	}
 
-    /**
-     *
-     * @return
-     */
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public int getLength() {
-        return sequenceLength;
-    }
+		return sequenceLength;
+	}
 
-    /**
-     *
-     * @param position
-     * @return
-     */
-    @Override
+	/**
+	 *
+	 * @param position
+	 * @return
+	 */
+	@Override
 	public C getCompoundAt(int position) {
-        
-        return this.parsedCompounds.get(position - 1);
-    }
 
-    /**
-     *
-     * @param compound
-     * @return
-     */
-    @Override
+		return this.parsedCompounds.get(position - 1);
+	}
+
+	/**
+	 *
+	 * @param compound
+	 * @return
+	 */
+	@Override
 	public int getIndexOf(C compound) {
-        
-        return this.parsedCompounds.indexOf(compound) + 1;
-    }
 
-    /**
-     *
-     * @param compound
-     * @return
-     */
-    @Override
+		return this.parsedCompounds.indexOf(compound) + 1;
+	}
+
+	/**
+	 *
+	 * @param compound
+	 * @return
+	 */
+	@Override
 	public int getLastIndexOf(C compound) {
-        
-        return this.parsedCompounds.lastIndexOf(compound) + 1;
-    }
 
-    /**
-     *
-     * @return
-     */
-    @Override
+		return this.parsedCompounds.lastIndexOf(compound) + 1;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public String toString() {
-        
-        return getSequenceAsString();
-    }
 
-    /**
-     *
-     * @return
-     */
-    @Override
+		return getSequenceAsString();
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public String getSequenceAsString() {
-        return getSequenceAsString(1, getLength(), Strand.POSITIVE);
-    }
+		return getSequenceAsString(1, getLength(), Strand.POSITIVE);
+	}
 
-    /**
-     *
-     * @param bioBegin
-     * @param bioEnd
-     * @param strand
-     * @return
-     */
-    public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
-        
-        SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
-        return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
-    }
+	/**
+	 *
+	 * @param bioBegin
+	 * @param bioEnd
+	 * @param strand
+	 * @return
+	 */
+	public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
 
-    /**
-     *
-     * @return
-     */
-    @Override
+		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+		return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public List<C> getAsList() {
-        
-        return this.parsedCompounds;
 
-    }
+		return this.parsedCompounds;
 
-    /**
-     *
-     * @param bioBegin
-     * @param bioEnd
-     * @return
-     */
-    @Override
+	}
+
+	/**
+	 *
+	 * @param bioBegin
+	 * @param bioEnd
+	 * @return
+	 */
+	@Override
 	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-        
-        return new SequenceProxyView<C>(SequenceFileProxyLoader.this, bioBegin, bioEnd);
-    }
 
-    /**
-     *
-     * @return
-     */
-    @Override
+		return new SequenceProxyView<C>(SequenceFileProxyLoader.this, bioBegin, bioEnd);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public Iterator<C> iterator() {
-        
-        return this.parsedCompounds.iterator();
-    }
 
-    /**
-     *
-     * @return
-     */
-    @Override
+		return this.parsedCompounds.iterator();
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public CompoundSet<C> getCompoundSet() {
-        return compoundSet;
-    }
+		return compoundSet;
+	}
 
-    /**
-     *
-     * @return
-     */
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public AccessionID getAccession() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    /**
-     *
-     * @param compounds
-     * @return
-     */
-    @Override
+	/**
+	 *
+	 * @param compounds
+	 * @return
+	 */
+	@Override
 	public int countCompounds(C... compounds) {
-        return SequenceMixin.countCompounds(this, compounds);
-    }
+		return SequenceMixin.countCompounds(this, compounds);
+	}
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public SequenceView<C> getInverse() {
-        return SequenceMixin.inverse(this);
-    }
+	/**
+	 *
+	 * @return
+	 */
+	@Override
+	public SequenceView<C> getInverse() {
+		return SequenceMixin.inverse(this);
+	}
 }

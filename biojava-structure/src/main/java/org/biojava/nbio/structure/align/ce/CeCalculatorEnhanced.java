@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 25, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -42,13 +42,13 @@ import java.util.List;
 /** This is based on the original Combinatorial Extension (CE) source code from 2003 or 2004 (CE version 2.3),
  * as has been originally developed by I. Shindyalov and P.Bourne (1998).
  * The original CE paper is available from here: <a href="http://peds.oxfordjournals.org/cgi/content/short/11/9/739">http://peds.oxfordjournals.org/cgi/content/short/11/9/739</a>.
- * 
+ *
  * This class is a pretty much exact 1:1 port from C, where I cared about exact reproduce of the CE results
  * and not about Java style.
- * 
+ *
  * @author Spencer Bliven
  * @author Andreas Prlic
- * 
+ *
 
  *
  */
@@ -56,7 +56,7 @@ public class CeCalculatorEnhanced {
 
 	protected static final boolean isPrint = true;
 	private static final boolean showAlignmentSteps = true;
-	private static final boolean debug = true;  
+	private static final boolean debug = true;
 
 	int[] f1;
 	int[] f2;
@@ -118,7 +118,7 @@ public class CeCalculatorEnhanced {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param afpChain A new AFPChain, which will be filled in by this function
 	 * @param ca1
 	 * @param ca2
@@ -153,7 +153,7 @@ public class CeCalculatorEnhanced {
 
 		int winSize = params.getWinSize();
 
-		int winSizeComb1 = (winSize-1)*(winSize-2)/2;		
+		int winSizeComb1 = (winSize-1)*(winSize-2)/2;
 
 		traceIndexContainer = new int[traceMaxSize];
 
@@ -164,7 +164,7 @@ public class CeCalculatorEnhanced {
 				traceIndexContainer[i]=(i+1)*i*winSize*winSize/2+(i+1)*winSizeComb1;
 		} else {
 			for(int i=0; i<traceMaxSize; i++) {
-				traceIndexContainer[i]=(i+1)*i*winSize/2+(i+1)*winSizeComb1;	
+				traceIndexContainer[i]=(i+1)*i*winSize/2+(i+1)*winSizeComb1;
 
 
 			}
@@ -185,10 +185,10 @@ public class CeCalculatorEnhanced {
 		//					JFrame f = (JFrame) e.getSource();
 		//					f.setVisible(false);
 		//					f.dispose();
-		//				}				
+		//				}
 		//			});
-		//						
-		//			
+		//
+		//
 		//			frame.getContentPane().add(panel);
 		//
 		//			frame.pack();
@@ -202,15 +202,15 @@ public class CeCalculatorEnhanced {
 		//afpChain.setDistanceMatrix(new Matrix(mat.clone()));
 
 
-		//		
+		//
 		//			   double rmsdThr = params.getRmsdThr();
-		//			   StringBuffer buf = new StringBuffer("  ");  
-		//			   for(int i=0; i<nse2; i++) 
+		//			   StringBuffer buf = new StringBuffer("  ");
+		//			   for(int i=0; i<nse2; i++)
 		//			      buf.append(String.format("%c", i%10==0?(i%100)/10+48:32));
-		//			   buf.append("\n");  
+		//			   buf.append("\n");
 		//			   for(int i=0; i<nse1; i++) {
 		//			      buf.append(String.format("%c ", i%10==0?(i%100)/10+48:32));
-		//			      for(int j=0; j<nse2; j++) 
+		//			      for(int j=0; j<nse2; j++)
 		//			         buf.append(String.format("%c", (mat[i][j])<rmsdThr?'+':'X'));
 		//			      //printf("%c", ((int)*(mat[i]+j)/40)>9?'*':((int)*(mat[i]+j)/40)+48);
 		//			      buf.append("\n");
@@ -218,7 +218,7 @@ public class CeCalculatorEnhanced {
 		//			   buf.append("\n");
 		//
 		//			   System.out.println(buf.toString());
-		//			
+		//
 
 
 		return afpChain;
@@ -226,30 +226,30 @@ public class CeCalculatorEnhanced {
 
 	/**
 	 * Evaluates the distance between two atoms
-	 * Several scoring functions are implemented and can be changed by calling 
+	 * Several scoring functions are implemented and can be changed by calling
 	 * {@link CeParameters#setScoringStrategy(Integer) setScoringStrategy()}
 	 * on {@link CeParameters parameter} object this CECalculator was created with.
 	 * <p>
 	 * Scoring Strategies:<dl>
 	 * <dt>DEFAULT_SCORING_STRATEGY</dt>
 	 * <dd>Strategy of the original CE publication; CA-CA distance</dd>
-	 * 
+	 *
 	 * <dt>SIDE_CHAIN_SCORING</dt>
 	 * <dd>CB-CB distance. This performs better for sheets and helices than CA.</dd>
-	 * 
+	 *
 	 * <dt>SIDE_CHAIN_ANGLE_SCORING</dt>
 	 * <dd>Use the dot product (eg the cosine) of the two CA-CB vectors.</dd>
-	 * 
+	 *
 	 * <dt>CA_AND_SIDE_CHAIN_ANGLE_SCORING</dt>
 	 * <dd>Equivalent to DEFAULT_SCORING_STRATEGY + SIDE_CHAIN_ANGLE_SCORING</dd>
 	 * </dl>
-	 * 
+	 *
 	 *  <dt>SEQUENCE_CONSERVATION</dt>
 	 * <dd>A mix between the DEFAULT_SCORING_STRATEGY and a scoring function that favors the alignment of sequence conserved positions in the alignment</dd>
 	 * </dl>
-	 * 
-	 *   
-	 * 
+	 *
+	 *
+	 *
 	 * @param ca1 The CA of the first residue
 	 * @param ca2 The CA of the second residue
 	 * @return The distance between the two fragments, according to the selected
@@ -284,7 +284,7 @@ public class CeCalculatorEnhanced {
 			// here we are using side chain orientation for scoring...
 
 
-			// score type 1    consider side chain distances   
+			// score type 1    consider side chain distances
 			if ( cb1 != null && cb2 != null) {
 				// CB distance
 				dist = Calc.getDistance(cb1,cb2);
@@ -307,7 +307,7 @@ public class CeCalculatorEnhanced {
 				Atom c1 = Calc.subtract(cb1, ca1);
 				Atom c2 = Calc.subtract(cb2, ca2);
 				Atom newA = Calc.subtract(c2, c1);
-				dist = Calc.amount(newA); 
+				dist = Calc.amount(newA);
 			}  else {
 				//dist += Calc.getDistance(ca1,ca2);
 				dist = 0;
@@ -351,7 +351,7 @@ public class CeCalculatorEnhanced {
 	}
 
 	/** build up intramolecular distance matrix dist1 & dist2
-	 * 
+	 *
 	 * @param ca
 	 * @param nse
 	 * @return
@@ -363,11 +363,11 @@ public class CeCalculatorEnhanced {
 
 		double[][] intraDist = new double[nse][nse];
 
-		// 
+		//
 		for(int ise1=0; ise1<nse; ise1++)  {
 
-			for(int ise2=0; ise2<nse; ise2++)  {				
-				intraDist[ise1][ise2] = getDistanceWithSidechain(ca[ise1], ca[ise2]);            
+			for(int ise2=0; ise2<nse; ise2++)  {
+				intraDist[ise1][ise2] = getDistanceWithSidechain(ca[ise1], ca[ise2]);
 
 			}
 		}
@@ -390,15 +390,15 @@ public class CeCalculatorEnhanced {
 
 				if(ise1>nse1-winSize || ise2>nse2-winSize) continue;
 
-				d=0.0; 
+				d=0.0;
 				// this sums up over the distances of the fragments
 				for(int is1=0; is1<winSize-2; is1++)
 					for(int is2=is1+2; is2<winSize; is2++) {
 						//System.out.println("pos1 :" +  (ise1+is1) + " " + (ise1+is2) +  " " + (ise2+is1) + " " + (ise2+is2));
 						// is this abs or floor? check!
-						d+=Math.abs(dist1[ise1+is1][ise1+is2]-dist2[ise2+is1][ise2+is2]);							
-					}					
-				mat[ise1][ise2]=d/winSizeComb1;					
+						d+=Math.abs(dist1[ise1+is1][ise1+is2]-dist2[ise2+is1][ise2+is2]);
+					}
+				mat[ise1][ise2]=d/winSizeComb1;
 
 				//System.out.println("mat ["+ise1+"]["+ise2+"]="+mat[ise1][ise2]);
 			}
@@ -433,7 +433,7 @@ public class CeCalculatorEnhanced {
 		int winSizeComb2=distAll?winSize*winSize:winSize;
 		double rmsdThrJoin = params.getRmsdThrJoin();
 
-		double z0;		
+		double z0;
 
 		//double bestTraceZScore=-1.0;
 
@@ -446,7 +446,7 @@ public class CeCalculatorEnhanced {
 
 		bestTrace1 = new int [traceMaxSize];
 		bestTrace2 = new int [traceMaxSize];
-		trace1     = new int [traceMaxSize]; 
+		trace1     = new int [traceMaxSize];
 		trace2     = new int [traceMaxSize];
 
 		int[] traceIndex     = new int [traceMaxSize];
@@ -512,13 +512,13 @@ public class CeCalculatorEnhanced {
 				oldBestTraceScore=bestTraceScore;
 
 				if(iter==1) {
-					z0=zStrAlign(winSize, nBestTrace, bestTraceScore, 
+					z0=zStrAlign(winSize, nBestTrace, bestTraceScore,
 							bestTrace1[nBestTrace]+winSize-bestTrace1[0]+
 							bestTrace2[nBestTrace]+winSize-bestTrace2[0]-
 							nBestTrace*2*winSize);
 					if(z0<zThr) break;
 					nBestTrace0=nBestTrace;
-					nBestTrace=0; 
+					nBestTrace=0;
 					bestTraceScore=100.0;
 
 					nTraces=0;
@@ -542,7 +542,7 @@ public class CeCalculatorEnhanced {
 					if(ise11<0) ise11=0;
 					if(ise12>nse1) ise12=nse1;
 					if(ise21<0) ise21=0;
-					if(ise22>nse2) ise22=nse2;				
+					if(ise22>nse2) ise22=nse2;
 				}
 
 				//System.out.println("ise1Loop: " + ise11 + " " + ise12 + " " + ise21 + " " + ise22);
@@ -558,14 +558,14 @@ public class CeCalculatorEnhanced {
 								//if(ise2==ise21) 	System.out.println(String.format("(%d, %d)",ise1, nTraces));
 
 
-								if(iter==0 && (ise1>nse1-winSize*(nBestTrace-1) || 
+								if(iter==0 && (ise1>nse1-winSize*(nBestTrace-1) ||
 										ise2>nse2-winSize*(nBestTrace-1))) continue ise2Loop;
 
 								if(mat[ise1][ise2]<0.0) continue ise2Loop;
 								if(mat[ise1][ise2]>rmsdThr) continue ise2Loop;
 								if (mat[ise1][ise2]>userRMSDMax) continue ise2Loop;
 								nTrace=0;
-								trace1[nTrace]=ise1; 
+								trace1[nTrace]=ise1;
 								trace2[nTrace]=ise2;
 								traceIndex[nTrace]=0;
 								traceIterLevel[nTrace]=0;
@@ -594,7 +594,7 @@ public class CeCalculatorEnhanced {
 										}
 
 
-										traceIndex_=-1; 
+										traceIndex_=-1;
 
 										if(isTraceUp) {
 
@@ -653,14 +653,14 @@ public class CeCalculatorEnhanced {
 
 
 													//System.out.println("up: " + nTrace + " "  + score + " " + score0 + " " + score1 + " " + winSize + " " + traceIndex_ + " " + it + " ");
-													if(score1>rmsdThrJoin) 
+													if(score1>rmsdThrJoin)
 														continue itLoop;
 													if(score1>userRMSDMax)
 														continue itLoop;
 													score2=score1;
 
 													// this just got checked, no need to check again..
-													//if(score2>rmsdThrJoin) 
+													//if(score2>rmsdThrJoin)
 													//	continue itLoop;
 
 													if(nTrace>nBestExtTrace || (nTrace==nBestExtTrace &&
@@ -695,10 +695,10 @@ public class CeCalculatorEnhanced {
 
 												score2 = getScore2(jse1, jse2, traceScore, traceIndex_, traceIndex, winSizeComb1, winSizeComb2, score0, score1);
 
-												if(score2>rmsdThrJoin) 
+												if(score2>rmsdThrJoin)
 													traceIndex_=-1;
-												else if ( score2 > userRMSDMax) 
-													traceIndex_=-1;												
+												else if ( score2 > userRMSDMax)
+													traceIndex_=-1;
 												else {
 													traceScore[nTrace-1][traceIndex_]=score2;
 
@@ -707,8 +707,8 @@ public class CeCalculatorEnhanced {
 
 											}
 											else {
-												if(traceScoreMax>rmsdThrJoin && nBestTrace>=nBestTrace0) 
-													traceIndex_=-1;								
+												if(traceScoreMax>rmsdThrJoin && nBestTrace>=nBestTrace0)
+													traceIndex_=-1;
 												traceTotalScore=traceScoreMax;
 											}
 										}
@@ -731,8 +731,8 @@ public class CeCalculatorEnhanced {
 											nTrace++;
 											isTraceUp=true;
 
-											if(nTrace>nBestTrace || 
-													(nTrace==nBestTrace  && 
+											if(nTrace>nBestTrace ||
+													(nTrace==nBestTrace  &&
 													bestTraceScore>traceTotalScore)) {
 
 												for(int itrace=0; itrace<nTrace; itrace++) {
@@ -772,10 +772,10 @@ public class CeCalculatorEnhanced {
 		//					JFrame f = (JFrame) e.getSource();
 		//					f.setVisible(false);
 		//					f.dispose();
-		//				}				
+		//				}
 		//			});
-		//						
-		//			
+		//
+		//
 		//			frame.getContentPane().add(panel);
 		//
 		//			frame.pack();
@@ -787,7 +787,7 @@ public class CeCalculatorEnhanced {
 
 		if ( params.isShowAFPRanges()){
 			System.out.println("fragment length: " + params.getWinSize());
-			System.out.println("ntraces : " + nTraces );         
+			System.out.println("ntraces : " + nTraces );
 
 		}
 
@@ -821,7 +821,7 @@ public class CeCalculatorEnhanced {
 
 		// only do the whole method if this criteria is fulfilled...
 		if(nTrace>bestTracesN[newBestTrace] ||
-				(nTrace==bestTracesN[newBestTrace] && 
+				(nTrace==bestTracesN[newBestTrace] &&
 				bestTracesScores[newBestTrace]>traceTotalScore)) {
 
 
@@ -846,8 +846,8 @@ public class CeCalculatorEnhanced {
 				double scoreTmp=bestTracesScores[0];
 				int nTraceTmp=bestTracesN[0];
 				for(int ir=1; ir<nBestTraces; ir++) {
-					if(bestTracesN[ir]<nTraceTmp || 
-							(bestTracesN[ir]==nTraceTmp && 
+					if(bestTracesN[ir]<nTraceTmp ||
+							(bestTracesN[ir]==nTraceTmp &&
 							scoreTmp<bestTracesScores[ir])) {
 						nTraceTmp=bestTracesN[ir];
 						scoreTmp=bestTracesScores[ir];
@@ -863,7 +863,7 @@ public class CeCalculatorEnhanced {
 
 
 		/*
-z=zStrAlign(winSize, nTrace, traceTotalScore, 
+z=zStrAlign(winSize, nTrace, traceTotalScore,
 trace1[nTrace-1]-trace1[0]+trace2[nTrace-1]-trace2[0]-
 2*(nTrace-1)*winSize);
 if(z>bestTraceZScore) {
@@ -896,7 +896,7 @@ nBestTrace=nTrace;
 					[mse1+winSize-1]-
 					dist2[trace2[itrace]+winSize-1][mse2+winSize-1]);
 
-			for(int id=1; id<winSize-1; id++) 
+			for(int id=1; id<winSize-1; id++)
 				score+=  Math.abs(dist1[trace1[itrace]+id][mse1+winSize-1-id]-
 						dist2[trace2[itrace]+id][mse2+winSize-1-id]);
 
@@ -952,8 +952,8 @@ nBestTrace=nTrace;
 
 		// removing some loops that are run in orig CE
 		// and which did not do anything
-		if ( debug ){			
-			checkPrintRmsdNew(traceMaxSize, winSize, ca1, ca2);						
+		if ( debug ){
+			checkPrintRmsdNew(traceMaxSize, winSize, ca1, ca2);
 		}
 
 		double rmsd=100.0;
@@ -995,8 +995,8 @@ nBestTrace=nTrace;
 
 		int jt;
 		strLen=0;
-		nGaps=0;    
-		nTrace=nBestTrace;  
+		nGaps=0;
+		nTrace=nBestTrace;
 
 		for(jt=0; jt<nBestTrace; jt++) {
 			trace1[jt]=bestTrace1[jt];
@@ -1007,14 +1007,14 @@ nBestTrace=nTrace;
 				nGaps+=bestTrace1[jt+1]-bestTrace1[jt]-winSize+
 						bestTrace2[jt+1]-bestTrace2[jt]-winSize;
 			}
-		}    
+		}
 		nBestTrace=0;
 		for(int it=0; it<nTrace; ) {
 			int cSize=traceLen[it];
 			for(jt=it+1; jt<nTrace; jt++) {
 				if(trace1[jt]-trace1[jt-1]-traceLen[jt-1]!=0 ||
 						trace2[jt]-trace2[jt-1]-traceLen[jt-1]!=0) break;
-				cSize+=traceLen[jt]; 
+				cSize+=traceLen[jt];
 			}
 			bestTrace1[nBestTrace]=trace1[it];
 			bestTrace2[nBestTrace]=trace2[it];
@@ -1042,7 +1042,7 @@ nBestTrace=nTrace;
 		boolean isCopied=false;
 
 		outer_loop:
-			for(int it=1; it<nBestTrace; it++) {			
+			for(int it=1; it<nBestTrace; it++) {
 
 				/* not needed...
 			int igap;
@@ -1075,7 +1075,7 @@ nBestTrace=nTrace;
 								is=0;
 								for(jt=0; jt<nBestTrace; jt++) {
 									for(int i=0; i<traceLen[jt]; i++) {
-										if(ca1[trace1[jt]+i].getX()>1e10 || ca2[trace2[jt]+i].getX()>1e10) 
+										if(ca1[trace1[jt]+i].getX()>1e10 || ca2[trace2[jt]+i].getX()>1e10)
 											continue main_loop;
 										strBuf1[is+i]=ca1[trace1[jt]+i];
 										strBuf2[is+i]=ca2[trace2[jt]+i];
@@ -1119,9 +1119,9 @@ nBestTrace=nTrace;
 		if(params.isShowAFPRanges()) {
 			System.out.println("win size: " + winSize + " strLen/winSize: " + strLen/winSize + " best trace score: " + String.format("%.2f",bestTraceScore) + " nr gaps: " + nGaps + " nr residues: " + nAtom);
 
-			System.out.println(String.format("size=%d rmsd=%.2f z=%.1f gaps=%d(%.1f%%) comb=%d", 
+			System.out.println(String.format("size=%d rmsd=%.2f z=%.1f gaps=%d(%.1f%%) comb=%d",
 					nAtom, rmsd, z, nGaps, nGaps*100.0/nAtom,
-					nTraces)); 
+					nTraces));
 
 			System.out.println("Best Trace, before optimization");
 			for(int k=0; k<nBestTrace; k++)
@@ -1153,11 +1153,11 @@ nBestTrace=nTrace;
 			//	      if(isPrint) {
 			//		/*
 			//		FILE *f=fopen("homologies", "a");
-			//		fprintf(f, "%s(%d) %s(%d) %3d %4.1f %4.1f %d(%d) ", 
-			//			name1, nse1, name2, nse2, nAtom, rmsd, z, 
+			//		fprintf(f, "%s(%d) %s(%d) %3d %4.1f %4.1f %d(%d) ",
+			//			name1, nse1, name2, nse2, nAtom, rmsd, z,
 			//			nGaps, nGaps*100/nAtom);
 			//		for(int k=0; k<nBestTrace; k++)
-			//		  fprintf(f, "(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1, 
+			//		  fprintf(f, "(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1,
 			//			  bestTraceLen[k]);
 			//		fprintf(f, "\n");
 			//		fclose(f);
@@ -1216,7 +1216,7 @@ nBestTrace=nTrace;
 
 		int[] optLen = new int[]{nAtom};
 		afpChain.setOptLen(optLen);
-		afpChain.setOptLength(nAtom);		
+		afpChain.setOptLength(nAtom);
 		afpChain.setAlnLength(alignmentPositionOrLength);
 
 		afpChain.setProbability(z);
@@ -1227,7 +1227,7 @@ nBestTrace=nTrace;
 	/** set the Atoms for a particular residue position.
 	 * Requires that atom.getParent returns the correct group!
 	 * take care during cloning of atoms. Best to use StructureTools.cloneCaAtoms();
-	 * 
+	 *
 	 * @param strBuf
 	 * @param i
 	 * @param ca
@@ -1259,7 +1259,7 @@ nBestTrace=nTrace;
 
 	// TODO:  consider all requested Atoms?
 	private double getRMSDForBestTrace(int ir, Atom[] strBuf1, Atom[] strBuf2,
-			int[] bestTracesN2, int[][] bestTraces12, int[] bestTrace22, 
+			int[] bestTracesN2, int[][] bestTraces12, int[] bestTrace22,
 			int winSize,Atom[] ca1, Atom[] ca2 ) throws StructureException {
 		int is=0;
 		for(int jt=0; jt<bestTracesN[ir]; jt++) {
@@ -1282,7 +1282,7 @@ nBestTrace=nTrace;
 
 
 	/** calc initial RMSD for bestTrace1 in debug only
-	 * 
+	 *
 	 */
 	private void checkPrintRmsdNew(int traceMaxSize, int winSize, Atom[] ca1, Atom[] ca2) throws StructureException{
 
@@ -1325,13 +1325,13 @@ nBestTrace=nTrace;
 	private static char getOneLetter(Group g){
 
 		if (g==null) return StructureTools.UNKNOWN_GROUP_LABEL;
-		
+
 		return StructureTools.get1LetterCode(g.getPDBName());
 	}
 
 
 
-	private int optimizeSuperposition(AFPChain afpChain, int nse1, int nse2, int strLen, double rmsd, Atom[] ca1, Atom[] ca2,int nGaps, 
+	private int optimizeSuperposition(AFPChain afpChain, int nse1, int nse2, int strLen, double rmsd, Atom[] ca1, Atom[] ca2,int nGaps,
 			Atom[] strBuf1, Atom[] strBuf2 ) throws StructureException {
 
 		//System.out.println("optimizing Superimposition...");
@@ -1343,9 +1343,9 @@ nBestTrace=nTrace;
 		double rmsdLen  = 0.0;
 
 		// this flag tests if the RMSDLen has been assigned.
-		// this is to enforce that the alignment ends up 
+		// this is to enforce that the alignment ends up
 		// smaller than 95% of the original alignment.
-		// +/- 
+		// +/-
 		boolean isRmsdLenAssigned=false;
 		int nAtomPrev=-1;
 
@@ -1359,7 +1359,7 @@ nBestTrace=nTrace;
 		int maxNrIterations = params.getMaxNrIterationsForOptimization();
 
 		//double[][] mat = new double[nse1][nse2];
-		while((nAtom<strLen*0.95 || 
+		while((nAtom<strLen*0.95 ||
 				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) && ( counter< maxNrIterations)) {
 
 			counter++;
@@ -1420,7 +1420,7 @@ nBestTrace=nTrace;
 			afpChain.setAlignScore(score);
 
 
-			nAtom=0; nGaps=0; 
+			nAtom=0; nGaps=0;
 			for(int ia=0; ia<alignmentPositionOrLength; ia++) {
 				if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
 
@@ -1452,10 +1452,10 @@ nBestTrace=nTrace;
 			//afpChain.setTotalRmsdOpt(rmsd);
 			//System.out.println("rmsd: " + rmsd);
 
-			if(!(nAtom<strLen*0.95) && (!isRmsdLenAssigned)) { 
+			if(!(nAtom<strLen*0.95) && (!isRmsdLenAssigned)) {
 				rmsdLen=rmsd;
 				isRmsdLenAssigned=true;
-			}	
+			}
 			//System.out.println(String.format("nAtom %d %d rmsd %.1f", nAtom, nAtomPrev, rmsd));
 
 
@@ -1474,7 +1474,7 @@ nBestTrace=nTrace;
 
 		//System.out.println("done optimizing");
 		/*
-		nAtom=0; nGaps=0; 
+		nAtom=0; nGaps=0;
 		for(int ia=0; ia<lcmp; ia++)
 		if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
 		if(ca1[align_se1[ia]].X<1e10 && ca2[align_se2[ia]].X<1e10) {
@@ -1496,7 +1496,7 @@ nBestTrace=nTrace;
 			if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
 				//System.out.println(" " +align_se1[ia] + " " + align_se2[ia]);
 
-				if(newBestTrace) {						
+				if(newBestTrace) {
 					bestTrace1[nBestTrace]=align_se1[ia];
 					bestTrace2[nBestTrace]=align_se2[ia];
 					bestTraceLen[nBestTrace]=0;
@@ -1518,7 +1518,7 @@ nBestTrace=nTrace;
 	}
 
 	/** Modifies an alignment matrix by favoring the alignment of similar and identical amino acids and penalizing the alignment of unrelated ones.
-	 * 
+	 *
 	 * @param max alignment matrix
 	 * @param ca1 Atoms for protein 1
 	 * @param ca2 Atoms for Protein 2
@@ -1592,7 +1592,7 @@ nBestTrace=nTrace;
 	}
 
 
-	private double dpAlign(int nSeq1, int nSeq2, double gapI, double gapE, 
+	private double dpAlign(int nSeq1, int nSeq2, double gapI, double gapE,
 			boolean isGlobal1, boolean isGlobal2) {
 
 
@@ -1609,7 +1609,7 @@ nBestTrace=nTrace;
 		brk_flg = notifyBreakFlagListener(brk_flg);
 
 		// ge = true here...
-		/*  
+		/*
 		  for(i=0; i<nSeq1; i++)
 		   {
 		     printf("\n");
@@ -1632,7 +1632,7 @@ nBestTrace=nTrace;
 		//			System.out.println();
 		//		}
 		//		System.out.println("----");
-		//		
+		//
 		//		for ( i = 69 ; i < 72 ;i ++){
 		//			//System.out.println(" " + i + " ");
 		//			for (  j = 170 ; j < 175 ; j++) {
@@ -1649,14 +1649,14 @@ nBestTrace=nTrace;
 				{
 					double sum ;
 					brk_flg[i][j]=false;
-					if(j<nSeq2-1 && i<nSeq1-1) 
+					if(j<nSeq2-1 && i<nSeq1-1)
 					{
 						sum=mat[i+1][j+1];
 					}
 					else
 					{
 						sum=0.0;
-						if((isGlobal1 && i!=nSeq1-1) || (isGlobal2 && j!=nSeq2-1)) 
+						if((isGlobal1 && i!=nSeq1-1) || (isGlobal2 && j!=nSeq2-1))
 							sum=-gapI;
 					}
 					if(j+1<nSeq2)
@@ -1673,7 +1673,7 @@ nBestTrace=nTrace;
 						}
 					sum+=mat[i][j];
 					sum_brk=(isGlobal1?-gapI:0.0)+(isGlobal2?-gapI:0.0);
-					if(sum<sum_brk) 
+					if(sum<sum_brk)
 					{
 						sum=sum_brk;
 						brk_flg[i][j]=true;
@@ -1689,14 +1689,14 @@ nBestTrace=nTrace;
 				{
 					double maxSum ;
 					brk_flg[i][j]=false;
-					if(j<nSeq2-1 && i<nSeq1-1) 
+					if(j<nSeq2-1 && i<nSeq1-1)
 					{
 						// any row/column which is not the last
 						maxSum=mat[i+1][j+1];
 						tracebackMatrix1[i][j] = i+1;
 						tracebackMatrix2[i][j] = j+1;
 					}
-					else 
+					else
 					{
 						// sets the last row and column
 						maxSum=0.0;
@@ -1731,10 +1731,10 @@ nBestTrace=nTrace;
 
 
 					sum_brk=(isGlobal1?(-gapI-gapE*(nSeq1-1-i)):0.0)+(isGlobal2?(-gapI-gapE*(nSeq2-1-j)):0.0);
-					if(maxSum<sum_brk) 
-					{						
+					if(maxSum<sum_brk)
+					{
 						maxSum=sum_brk;
-						brk_flg[i][j]=true;						 
+						brk_flg[i][j]=true;
 					}
 					mat[i][j]=maxSum;
 				}
@@ -1744,7 +1744,7 @@ nBestTrace=nTrace;
 
 
 		iStart=0; jStart=0; alignmentPositionOrLength=0;
-		// no nc-end penalty - begin 
+		// no nc-end penalty - begin
 		sum_ret=mat[0][0];
 
 		// look for the highest score in mat[i][j]
@@ -1757,7 +1757,7 @@ nBestTrace=nTrace;
 				double sum=mat[i][j];
 				if(isGlobal1) sum+=-gapI-gapE*i;
 				if(isGlobal2) sum+=-gapI-gapE*j;
-				if(sum>sum_ret) 
+				if(sum>sum_ret)
 				{
 					sum_ret=sum;
 					iStart=i; jStart=j;
@@ -1770,7 +1770,7 @@ nBestTrace=nTrace;
 		//System.out.println("start at " + is + "  " + js);
 		//for(k=0; k<is; k++) align1[k]=-1;
 		//for(k=0; k<js; k++) align2[k]=-1;
-		// no nc-end penalty - end 
+		// no nc-end penalty - end
 		int prevGapEnd = -1;
 		//
 		for(i=iStart, j=jStart; i<nSeq1 && j<nSeq2; i++, j++)
@@ -1843,7 +1843,7 @@ nBestTrace=nTrace;
 					//											align_se2[ alignmentPositionOrLength ] = pos;
 					//											align_se1[ alignmentPositionOrLength ] = -1;
 					//										}
-					//										
+					//
 					//										alignmentPositionOrLength++;
 				}
 			}
@@ -1883,7 +1883,7 @@ nBestTrace=nTrace;
 			alignmentPositionOrLength++;
 
 			if(brk_flg[i][j]) {
-				//System.out.println("hit break flag at: " + i + "  " + j + " sum " + sum_ret + " lcmp " + alignmentPositionOrLength);				
+				//System.out.println("hit break flag at: " + i + "  " + j + " sum " + sum_ret + " lcmp " + alignmentPositionOrLength);
 				break;
 
 			}
@@ -1935,23 +1935,23 @@ nBestTrace=nTrace;
 	//			  double dx, dy, dz;
 	//			  for(int l=0; l<nAtom; l++) {
 	//			    if(molA[l].X<1e10) {
-	//			      dx=molA[l].X; 
+	//			      dx=molA[l].X;
 	//			      dy=molA[l].Y;
 	//			      dz=molA[l].Z;
 	//			      molB[l].X=dx*d_[0]+dy*d_[1]+dz*d_[2]+d_[9];
 	//			      molB[l].Y=dx*d_[3]+dy*d_[4]+dz*d_[5]+d_[10];
 	//			      molB[l].Z=dx*d_[6]+dy*d_[7]+dz*d_[8]+d_[11];
-	//			    }  
+	//			    }
 	//			    else {
 	//			      molB[l]=molA[l];
 	//			    }
 	//			  }
 	//			}
-	//		
+	//
 
 
 	/** superimpose and get rmsd
-	 * 
+	 *
 	 * @param pro1
 	 * @param pro2
 	 * @param strLen
@@ -2148,21 +2148,21 @@ nBestTrace=nTrace;
 		4.99, 5.22, 5.46, 5.70, 5.94, 6.13, 6.36, 6.52, 6.68, 6.91};
 	private static final double scoreSd8[]={1.33, 0.88, 0.73, 0.71, 0.74, 0.80, 0.86, 0.92, 0.98, 1.04,
 		1.08, 1.10, 1.15, 1.19, 1.23, 1.25, 1.32, 1.34, 1.36, 1.45};
-	private static final double gapsAv8[]={0.00, 11.50, 23.32, 35.95, 49.02, 62.44, 76.28, 90.26, 
-		104.86, 119.97, 134.86, 150.54, 164.86, 179.57, 194.39, 
+	private static final double gapsAv8[]={0.00, 11.50, 23.32, 35.95, 49.02, 62.44, 76.28, 90.26,
+		104.86, 119.97, 134.86, 150.54, 164.86, 179.57, 194.39,
 		209.38, 224.74, 238.96, 253.72, 270.79};
 	private static final double gapsSd8[]={0.00, 9.88, 14.34, 17.99, 21.10, 23.89, 26.55, 29.00, 31.11,
-		33.10, 35.02, 36.03, 37.19, 38.82, 41.04, 43.35, 45.45, 
+		33.10, 35.02, 36.03, 37.19, 38.82, 41.04, 43.35, 45.45,
 		48.41, 50.87, 52.27};
 	private static final double scoreAv6[]={1.98, 1.97, 2.22, 2.54, 2.87, 3.18, 3.48, 3.77, 4.05, 4.31,
 		4.57, 4.82, 5.03, 5.24, 5.43, 5.64, 5.82, 6.02, 6.21, 6.42};
 	private static final double scoreSd6[]={1.15, 0.73, 0.63, 0.64, 0.71, 0.80, 0.87, 0.95, 1.01, 1.07,
 		1.13, 1.19, 1.22, 1.25, 1.28, 1.32, 1.35, 1.39, 1.45, 1.50};
-	private static final double gapsAv6[]={0.00, 10.12, 20.25, 31.29, 42.95, 55.20, 67.53, 80.15, 
-		93.30, 106.47, 120.52, 134.38, 148.59, 162.58, 176.64, 
+	private static final double gapsAv6[]={0.00, 10.12, 20.25, 31.29, 42.95, 55.20, 67.53, 80.15,
+		93.30, 106.47, 120.52, 134.38, 148.59, 162.58, 176.64,
 		191.23, 204.12, 218.64, 231.82, 243.43};
 	private static final double gapsSd6[]={0.00, 9.80, 14.44, 18.14, 21.35, 24.37, 27.00, 29.68, 32.22,
-		34.37, 36.65, 38.63, 40.31, 42.16, 43.78, 44.98, 47.08, 
+		34.37, 36.65, 38.63, 40.31, 42.16, 43.78, 44.98, 47.08,
 		49.09, 50.78, 52.15};
 
 
@@ -2200,7 +2200,7 @@ nBestTrace=nTrace;
 		14.46,14.51,14.57,14.62,14.67,14.72,14.77,14.83,14.88,14.93};
 
 	/** copy data from this class into AFPChain container object.
-	 * 
+	 *
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
@@ -2235,7 +2235,7 @@ nBestTrace=nTrace;
 
 		if ( nse1 > 0 && dist1.length > 0 )
 			afpChain.setDisTable1(new Matrix(dist1));
-		else 
+		else
 			afpChain.setDisTable1 (Matrix.identity(3, 3));
 		if ( nse2 > 0 && dist2.length > 0 )
 			afpChain.setDisTable2(new Matrix(dist2));
@@ -2267,7 +2267,7 @@ nBestTrace=nTrace;
 				alnseq1[ia] = Character.toUpperCase(l1);
 				alnseq2[ia] = Character.toUpperCase(l2);
 				alnsymb[ia] = ' ';
-				if ( l1 == l2) {					
+				if ( l1 == l2) {
 					nrIdent++;
 					nrSim++;
 					alnsymb[ia] = '|';
@@ -2364,7 +2364,7 @@ nBestTrace=nTrace;
 
 	/**
 	 * Caution: this matrix is overwriten with very different data at several
-	 * points in the alignment algorithm. After 
+	 * points in the alignment algorithm. After
 	 * {@link #initSumOfDistances(int, int, int, int, Atom[], Atom[]) initSumOfDistances}
 	 * is run, this will hold the distance matrix between AFPs.
 	 * @return mat
@@ -2378,7 +2378,7 @@ nBestTrace=nTrace;
 	}
 
 	/**
-	 * Gets the rotation matrix from the last call to 
+	 * Gets the rotation matrix from the last call to
 	 * {@link #calc_rmsd(Atom[], Atom[], int, boolean, boolean) calc_rmsd}.
 	 * @return The rotatiokn matrix
 	 */
@@ -2387,7 +2387,7 @@ nBestTrace=nTrace;
 	}
 
 	/**
-	 * Gets the shift from the last call to 
+	 * Gets the shift from the last call to
 	 * {@link #calc_rmsd(Atom[], Atom[], int, boolean, boolean) calc_rmsd}.
 	 * @return The shift
 	 */

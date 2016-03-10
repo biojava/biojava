@@ -49,379 +49,379 @@ import static org.biojava.nbio.alignment.routines.AlignerHelper.setSteps;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Compound> extends AbstractScorer
-        implements MatrixAligner<S, C> {
+		implements MatrixAligner<S, C> {
 
-    // input fields
-    protected GapPenalty gapPenalty;
-    private SubstitutionMatrix<C> subMatrix;
-    private boolean local, storingScoreMatrix;
-    protected List<Anchor> anchors = new ArrayList<Anchor>();
-    protected int cutsPerSection;
+	// input fields
+	protected GapPenalty gapPenalty;
+	private SubstitutionMatrix<C> subMatrix;
+	private boolean local, storingScoreMatrix;
+	protected List<Anchor> anchors = new ArrayList<Anchor>();
+	protected int cutsPerSection;
 
-    // output fields
-    protected Profile<S, C> profile;
-    /**
-     * Start position of the aligned sequence in the query and target respectively
-     */
-    protected int[] xyStart;
-    /**
-     * End position of the aligned sequence in the query and target respectively
-     */
-    protected int[] xyMax;
-    protected int max, min, score;
-    /**
-     * Dynamic programming score matrix
-     * The first dimension has the length of the first (query) sequence + 1
-     * The second has the length of the second (target) sequence + 1
-     * The third has length 1 for linear gap penalty and 3 for affine/constant gap
-     * (one each for match/substitution, deletion, insertion) 
-     */
-    protected int[][][] scores;
-    /**
-     * Friendly name of each copy of the scoring matrix.
-     * The number of elements must match the number of elements in third dimension of @see scores 
-     */
-    private String[] types;
-    protected long time = -1;
+	// output fields
+	protected Profile<S, C> profile;
+	/**
+	 * Start position of the aligned sequence in the query and target respectively
+	 */
+	protected int[] xyStart;
+	/**
+	 * End position of the aligned sequence in the query and target respectively
+	 */
+	protected int[] xyMax;
+	protected int max, min, score;
+	/**
+	 * Dynamic programming score matrix
+	 * The first dimension has the length of the first (query) sequence + 1
+	 * The second has the length of the second (target) sequence + 1
+	 * The third has length 1 for linear gap penalty and 3 for affine/constant gap
+	 * (one each for match/substitution, deletion, insertion)
+	 */
+	protected int[][][] scores;
+	/**
+	 * Friendly name of each copy of the scoring matrix.
+	 * The number of elements must match the number of elements in third dimension of @see scores
+	 */
+	private String[] types;
+	protected long time = -1;
 
-    /**
-     * Before running an alignment, data must be sent in via calls to {@link #setGapPenalty(GapPenalty)} and
-     * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
-     */
-    protected AbstractMatrixAligner() {
-    }
-
-    /**
-     * Prepares for an alignment.
-     *
-     * @param gapPenalty the gap penalties used during alignment
-     * @param subMatrix the set of substitution scores used during alignment
-     */
-    protected AbstractMatrixAligner(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        this(gapPenalty, subMatrix, false);
-    }
-
-    /**
-     * Prepares for an alignment.
-     *
-     * @param gapPenalty the gap penalties used during alignment
-     * @param subMatrix the set of substitution scores used during alignment
-     * @param local if true, find a region of similarity rather than aligning every compound
-     */
-    protected AbstractMatrixAligner(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix, boolean local) {
-        this.gapPenalty = gapPenalty;
-        this.subMatrix = subMatrix;
-        this.local = local;
-        reset();
-    }
-
-    /**
-     * Returns the gap penalties.
-     *
-     * @return the gap penalties used during alignment
-     */
-    public GapPenalty getGapPenalty() {
-        return gapPenalty;
-    }
-
-    /**
-     * Returns the substitution matrix.
-     *
-     * @return the set of substitution scores used during alignment
-     */
-    public SubstitutionMatrix<C> getSubstitutionMatrix() {
-        return subMatrix;
-    }
-
-    /**
-     * Returns whether alignment finds a region of similarity rather than aligning every compound.
-     *
-     * @return true if alignment finds a region of similarity rather than aligning every compound
-     */
-    public boolean isLocal() {
-        return local;
-    }
-
-    /**
-     * Returns choice to cache the score matrix or to save memory by deleting score matrix after alignment.
-     *
-     * @return choice to cache the score matrix
-     */
-    public boolean isStoringScoreMatrix() {
-        return storingScoreMatrix;
-    }
-
-    /**
-     * Sets the gap penalties.
-     *
-     * @param gapPenalty the gap penalties used during alignment
-     */
-    public void setGapPenalty(GapPenalty gapPenalty) {
-        this.gapPenalty = gapPenalty;
-        reset();
-    }
-
-    /**
-     * Sets the substitution matrix.
-     *
-     * @param subMatrix the set of substitution scores used during alignment
-     */
-    public void setSubstitutionMatrix(SubstitutionMatrix<C> subMatrix) {
-        this.subMatrix = subMatrix;
-        reset();
-    }
-
-    /**
-     * Sets choice to cache the score matrix or to save memory by deleting score matrix after alignment.
-     *
-     * @param storingScoreMatrix choice to cache the score matrix
-     */
-    public void setStoringScoreMatrix(boolean storingScoreMatrix) {
-        this.storingScoreMatrix = storingScoreMatrix;
-        if (!storingScoreMatrix) {
-            scores = null;
-        }
-    }
-
-    // methods for MatrixAligner
-
-    @Override
-    public int[][][] getScoreMatrix() {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
-        if (scores == null) {
-            storingScoreMatrix = true;
-            align();
-            if (scores == null) {
-                return null;
-            }
-        }
-        int[][][] copy = scores;
-        if (tempStoringScoreMatrix) {
-            copy = new int[scores.length][scores[0].length][];
-            for (int i = 0; i < copy.length; i++) {
-                for (int j = 0; j < copy[0].length; j++) {
-                    copy[i][j] = Arrays.copyOf(scores[i][j], scores[i][j].length);
-                }
-            }
-        }
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return copy;
-    }
-
-    @Override
-    public String getScoreMatrixAsString() {
-        int[][][] scores = getScoreMatrix();
-        return scoreMatrixToString(scores);
-    }
-	private String scoreMatrixToString(int[][][] scores) {
-		StringBuilder s = new StringBuilder();
-        CompoundSet<C> compoundSet = getCompoundSet();
-        int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
-                Math.max(Math.max(Integer.toString(min).length(), Integer.toString(max).length()), lengthCompound) + 1;
-        String padCompound = "%" + Integer.toString(lengthCompound) + "s",
-                padRest = "%" + Integer.toString(lengthRest);
-        List<C> query = getCompoundsOfQuery(), target = getCompoundsOfTarget();
-        for (int type = 0; type < scores[0][0].length; type++) {
-            if (type > 0) {
-                s.append(String.format("%n"));
-            }
-            if (types[type] != null) {
-                s.append(String.format("%s%n", types[type]));
-            }
-            s.append(String.format(padCompound, ""));
-            s.append(String.format(padRest + "s", ""));
-            for (C col : target) {
-                s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
-            }
-            s.append(String.format("%n"));
-            for (int x = 0; x < scores.length; x++) {
-                s.append(String.format(padCompound, (x == 0) ? "" :
-                    compoundSet.getStringForCompound(query.get(x - 1))));
-                for (int y = 0; y < scores[0].length; y++) {
-                    s.append(scores[x][y][type] >= min ? String.format(padRest + "d", scores[x][y][type]) :
-                            String.format(padRest + "s", "-\u221E"));
-                }
-                s.append(String.format("%n"));
-            }
-        }
-        return s.toString();
+	/**
+	 * Before running an alignment, data must be sent in via calls to {@link #setGapPenalty(GapPenalty)} and
+	 * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
+	 */
+	protected AbstractMatrixAligner() {
 	}
 
-    // methods for Aligner
-    @Override
-    public long getComputationTime() {
-        if (profile == null) {
-            align();
-        }
-        return time;
-    }
+	/**
+	 * Prepares for an alignment.
+	 *
+	 * @param gapPenalty the gap penalties used during alignment
+	 * @param subMatrix the set of substitution scores used during alignment
+	 */
+	protected AbstractMatrixAligner(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+		this(gapPenalty, subMatrix, false);
+	}
 
-    @Override
-    public Profile<S, C> getProfile() {
-        if (profile == null) {
-            align();
-        }
-        return profile;
-    }
+	/**
+	 * Prepares for an alignment.
+	 *
+	 * @param gapPenalty the gap penalties used during alignment
+	 * @param subMatrix the set of substitution scores used during alignment
+	 * @param local if true, find a region of similarity rather than aligning every compound
+	 */
+	protected AbstractMatrixAligner(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix, boolean local) {
+		this.gapPenalty = gapPenalty;
+		this.subMatrix = subMatrix;
+		this.local = local;
+		reset();
+	}
 
-    // methods for Scorer
+	/**
+	 * Returns the gap penalties.
+	 *
+	 * @return the gap penalties used during alignment
+	 */
+	public GapPenalty getGapPenalty() {
+		return gapPenalty;
+	}
 
-    @Override
-    public double getMaxScore() {
-        if (profile == null) {
-            align();
-        }
-        return max;
-    }
+	/**
+	 * Returns the substitution matrix.
+	 *
+	 * @return the set of substitution scores used during alignment
+	 */
+	public SubstitutionMatrix<C> getSubstitutionMatrix() {
+		return subMatrix;
+	}
 
-    @Override
-    public double getMinScore() {
-        if (profile == null) {
-            align();
-        }
-        return min;
-    }
+	/**
+	 * Returns whether alignment finds a region of similarity rather than aligning every compound.
+	 *
+	 * @return true if alignment finds a region of similarity rather than aligning every compound
+	 */
+	public boolean isLocal() {
+		return local;
+	}
 
-    @Override
-    public double getScore() {
-        if (profile == null) {
-            align();
-        }
-        return score;
-    }
+	/**
+	 * Returns choice to cache the score matrix or to save memory by deleting score matrix after alignment.
+	 *
+	 * @return choice to cache the score matrix
+	 */
+	public boolean isStoringScoreMatrix() {
+		return storingScoreMatrix;
+	}
 
-    // helper methods
+	/**
+	 * Sets the gap penalties.
+	 *
+	 * @param gapPenalty the gap penalties used during alignment
+	 */
+	public void setGapPenalty(GapPenalty gapPenalty) {
+		this.gapPenalty = gapPenalty;
+		reset();
+	}
 
-    /**
-     * Performs alignment
-     */
-    protected void align() {
-        if (!isReady()) {
-            return;
-        }
+	/**
+	 * Sets the substitution matrix.
+	 *
+	 * @param subMatrix the set of substitution scores used during alignment
+	 */
+	public void setSubstitutionMatrix(SubstitutionMatrix<C> subMatrix) {
+		this.subMatrix = subMatrix;
+		reset();
+	}
 
-        long timeStart = System.nanoTime();
+	/**
+	 * Sets choice to cache the score matrix or to save memory by deleting score matrix after alignment.
+	 *
+	 * @param storingScoreMatrix choice to cache the score matrix
+	 */
+	public void setStoringScoreMatrix(boolean storingScoreMatrix) {
+		this.storingScoreMatrix = storingScoreMatrix;
+		if (!storingScoreMatrix) {
+			scores = null;
+		}
+	}
 
-        int[] dim = getScoreMatrixDimensions();
-        if (storingScoreMatrix) {
-            scores = new int[dim[0]][dim[1]][dim[2]];
-        } else {
-            scores = new int[dim[0]][][];
-            scores[0] = new int[dim[1]][dim[2]];
-            scores[1] = new int[dim[1]][dim[2]];
-        }
-        boolean linear = (gapPenalty.getType() == GapPenalty.Type.LINEAR);
-        Last[][][] traceback = new Last[dim[0]][][];
-        List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
+	// methods for MatrixAligner
 
-        if (!local) {
-        	xyMax = new int[] { dim[0] - 1, dim[1] - 1 };
-        	xyStart = new int[] { 0, 0 };
-            score = 0;
-            List<Subproblem> problems = Subproblem.getSubproblems(anchors, xyMax[0], xyMax[1]);
-            assert problems.size() == anchors.size() + 1;
-            for (int i = 0; i < problems.size(); i++) {
-            	Subproblem subproblem = problems.get(i);
-            	for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
-                	
-            		traceback[x] = 
-                		
-            		  linear ? 
-                		setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) : 
-                		
-                		setScoreVector(x, subproblem, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
-                }
-            }
-            setSteps(traceback, scores, sx, sy);
-            score = Integer.MIN_VALUE;
-            int[] finalScore = scores[xyMax[0]][xyMax[1]];
-            for (int z = 0; z < finalScore.length; z++) {
-            	score = Math.max(score, finalScore[z]);
-            }
-        } else {
-            for (int x = 0; x < dim[0]; x++) {
-            	
-            	traceback[x] = 
-            			
-            	  linear ? 
-           			setScoreVector(x, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
-                    
-           			setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
-           				
-                if (xyMax[0] == x) {
-                    score = scores[x][xyMax[1]][0];
-                }
-            }
-            xyStart = local ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
-        }
+	@Override
+	public int[][][] getScoreMatrix() {
+		boolean tempStoringScoreMatrix = storingScoreMatrix;
+		if (scores == null) {
+			storingScoreMatrix = true;
+			align();
+			if (scores == null) {
+				return null;
+			}
+		}
+		int[][][] copy = scores;
+		if (tempStoringScoreMatrix) {
+			copy = new int[scores.length][scores[0].length][];
+			for (int i = 0; i < copy.length; i++) {
+				for (int j = 0; j < copy[0].length; j++) {
+					copy[i][j] = Arrays.copyOf(scores[i][j], scores[i][j].length);
+				}
+			}
+		}
+		setStoringScoreMatrix(tempStoringScoreMatrix);
+		return copy;
+	}
 
-        setProfile(sx, sy);
+	@Override
+	public String getScoreMatrixAsString() {
+		int[][][] scores = getScoreMatrix();
+		return scoreMatrixToString(scores);
+	}
+	private String scoreMatrixToString(int[][][] scores) {
+		StringBuilder s = new StringBuilder();
+		CompoundSet<C> compoundSet = getCompoundSet();
+		int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
+				Math.max(Math.max(Integer.toString(min).length(), Integer.toString(max).length()), lengthCompound) + 1;
+		String padCompound = "%" + Integer.toString(lengthCompound) + "s",
+				padRest = "%" + Integer.toString(lengthRest);
+		List<C> query = getCompoundsOfQuery(), target = getCompoundsOfTarget();
+		for (int type = 0; type < scores[0][0].length; type++) {
+			if (type > 0) {
+				s.append(String.format("%n"));
+			}
+			if (types[type] != null) {
+				s.append(String.format("%s%n", types[type]));
+			}
+			s.append(String.format(padCompound, ""));
+			s.append(String.format(padRest + "s", ""));
+			for (C col : target) {
+				s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
+			}
+			s.append(String.format("%n"));
+			for (int x = 0; x < scores.length; x++) {
+				s.append(String.format(padCompound, (x == 0) ? "" :
+					compoundSet.getStringForCompound(query.get(x - 1))));
+				for (int y = 0; y < scores[0].length; y++) {
+					s.append(scores[x][y][type] >= min ? String.format(padRest + "d", scores[x][y][type]) :
+							String.format(padRest + "s", "-\u221E"));
+				}
+				s.append(String.format("%n"));
+			}
+		}
+		return s.toString();
+	}
 
-        if (!storingScoreMatrix) {
-            scores = null;
-        }
+	// methods for Aligner
+	@Override
+	public long getComputationTime() {
+		if (profile == null) {
+			align();
+		}
+		return time;
+	}
 
-        time = System.nanoTime() - timeStart;
-    }
+	@Override
+	public Profile<S, C> getProfile() {
+		if (profile == null) {
+			align();
+		}
+		return profile;
+	}
 
-    /**
-     * Returns score for the alignment of the query column to all target columns
-     * @param queryColumn
-     * @return
-     */
-    protected int[] getSubstitutionScoreVector(int queryColumn) {
-        return getSubstitutionScoreVector(queryColumn, new Subproblem(0, 0, scores.length - 1, scores[0].length - 1));
-    }
+	// methods for Scorer
 
-    /**
-     * Returns score for the alignment of the query column to all target columns
-     * @param queryColumn
-     * @param subproblem
-     * @return
-     */
-    protected int[] getSubstitutionScoreVector(int queryColumn, Subproblem subproblem) {
-        int[] subs = new int[subproblem.getTargetEndIndex() + 1];
-        if (queryColumn > 0) {
-            for (int y = Math.max(1, subproblem.getTargetStartIndex()); y <= subproblem.getTargetEndIndex(); y++) {
-                subs[y] = getSubstitutionScore(queryColumn, y);
-            }
-        }
-        return subs;
-    }
+	@Override
+	public double getMaxScore() {
+		if (profile == null) {
+			align();
+		}
+		return max;
+	}
 
-    /**
-     * Resets output fields; should be overridden to set max and min
-     */
-    protected void reset() {
-        xyMax = new int[] {0, 0};
-        xyStart = new int[] {0, 0};
-        scores = null;
-        types = (gapPenalty == null || gapPenalty.getType() == GapPenalty.Type.LINEAR) ? new String[] { null } :
-                new String[] { "Substitution", "Deletion", "Insertion" };
-        time = -1;
-        profile = null;
-    }
-    // abstract methods
+	@Override
+	public double getMinScore() {
+		if (profile == null) {
+			align();
+		}
+		return min;
+	}
 
-    // returns compound set of sequences
-    protected abstract CompoundSet<C> getCompoundSet();
+	@Override
+	public double getScore() {
+		if (profile == null) {
+			align();
+		}
+		return score;
+	}
 
-    // returns compounds in query sequence/profile
-    protected abstract List<C> getCompoundsOfQuery();
+	// helper methods
 
-    // returns compounds in target sequence/profile
-    protected abstract List<C> getCompoundsOfTarget();
+	/**
+	 * Performs alignment
+	 */
+	protected void align() {
+		if (!isReady()) {
+			return;
+		}
 
-    // returns the 3 score matrix dimensions
-    protected abstract int[] getScoreMatrixDimensions();
+		long timeStart = System.nanoTime();
 
-    // returns score for the alignment of two columns
-    protected abstract int getSubstitutionScore(int queryColumn, int targetColumn);
+		int[] dim = getScoreMatrixDimensions();
+		if (storingScoreMatrix) {
+			scores = new int[dim[0]][dim[1]][dim[2]];
+		} else {
+			scores = new int[dim[0]][][];
+			scores[0] = new int[dim[1]][dim[2]];
+			scores[1] = new int[dim[1]][dim[2]];
+		}
+		boolean linear = (gapPenalty.getType() == GapPenalty.Type.LINEAR);
+		Last[][][] traceback = new Last[dim[0]][][];
+		List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
 
-    // prepares for alignment; returns true if everything is set to run the alignment
-    protected abstract boolean isReady();
+		if (!local) {
+			xyMax = new int[] { dim[0] - 1, dim[1] - 1 };
+			xyStart = new int[] { 0, 0 };
+			score = 0;
+			List<Subproblem> problems = Subproblem.getSubproblems(anchors, xyMax[0], xyMax[1]);
+			assert problems.size() == anchors.size() + 1;
+			for (int i = 0; i < problems.size(); i++) {
+				Subproblem subproblem = problems.get(i);
+				for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
 
-    // sets profile following the given alignment path
-    protected abstract void setProfile(List<Step> sx, List<Step> sy);
+					traceback[x] =
+
+					  linear ?
+						setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) :
+
+						setScoreVector(x, subproblem, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
+				}
+			}
+			setSteps(traceback, scores, sx, sy);
+			score = Integer.MIN_VALUE;
+			int[] finalScore = scores[xyMax[0]][xyMax[1]];
+			for (int z = 0; z < finalScore.length; z++) {
+				score = Math.max(score, finalScore[z]);
+			}
+		} else {
+			for (int x = 0; x < dim[0]; x++) {
+
+				traceback[x] =
+
+				  linear ?
+					setScoreVector(x, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
+
+					setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
+
+				if (xyMax[0] == x) {
+					score = scores[x][xyMax[1]][0];
+				}
+			}
+			xyStart = local ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
+		}
+
+		setProfile(sx, sy);
+
+		if (!storingScoreMatrix) {
+			scores = null;
+		}
+
+		time = System.nanoTime() - timeStart;
+	}
+
+	/**
+	 * Returns score for the alignment of the query column to all target columns
+	 * @param queryColumn
+	 * @return
+	 */
+	protected int[] getSubstitutionScoreVector(int queryColumn) {
+		return getSubstitutionScoreVector(queryColumn, new Subproblem(0, 0, scores.length - 1, scores[0].length - 1));
+	}
+
+	/**
+	 * Returns score for the alignment of the query column to all target columns
+	 * @param queryColumn
+	 * @param subproblem
+	 * @return
+	 */
+	protected int[] getSubstitutionScoreVector(int queryColumn, Subproblem subproblem) {
+		int[] subs = new int[subproblem.getTargetEndIndex() + 1];
+		if (queryColumn > 0) {
+			for (int y = Math.max(1, subproblem.getTargetStartIndex()); y <= subproblem.getTargetEndIndex(); y++) {
+				subs[y] = getSubstitutionScore(queryColumn, y);
+			}
+		}
+		return subs;
+	}
+
+	/**
+	 * Resets output fields; should be overridden to set max and min
+	 */
+	protected void reset() {
+		xyMax = new int[] {0, 0};
+		xyStart = new int[] {0, 0};
+		scores = null;
+		types = (gapPenalty == null || gapPenalty.getType() == GapPenalty.Type.LINEAR) ? new String[] { null } :
+				new String[] { "Substitution", "Deletion", "Insertion" };
+		time = -1;
+		profile = null;
+	}
+	// abstract methods
+
+	// returns compound set of sequences
+	protected abstract CompoundSet<C> getCompoundSet();
+
+	// returns compounds in query sequence/profile
+	protected abstract List<C> getCompoundsOfQuery();
+
+	// returns compounds in target sequence/profile
+	protected abstract List<C> getCompoundsOfTarget();
+
+	// returns the 3 score matrix dimensions
+	protected abstract int[] getScoreMatrixDimensions();
+
+	// returns score for the alignment of two columns
+	protected abstract int getSubstitutionScore(int queryColumn, int targetColumn);
+
+	// prepares for alignment; returns true if everything is set to run the alignment
+	protected abstract boolean isReady();
+
+	// sets profile following the given alignment path
+	protected abstract void setProfile(List<Step> sx, List<Step> sy);
 
 }

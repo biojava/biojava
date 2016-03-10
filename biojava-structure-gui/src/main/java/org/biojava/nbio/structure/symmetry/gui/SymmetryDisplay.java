@@ -48,18 +48,18 @@ import org.jmol.util.Logger;
 /**
  * Class that provides visualizations methods for symmetry alignments. Call the
  * display() method for the default visualization of symmetry.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
- * 
+ *
  */
 public class SymmetryDisplay {
 
 	/**
 	 * Displays a multiple alignment of the symmetry repeats.
-	 * 
+	 *
 	 * * @param symm CeSymmResult
-	 * 
+	 *
 	 * @throws StructureException
 	 */
 	public static MultipleAlignmentJmol displayRepeats(CeSymmResult symm)
@@ -74,7 +74,7 @@ public class SymmetryDisplay {
 	/**
 	 * Displays a multiple alignment of the whole structure transformations
 	 * colored by blocks, corresponding to the symmetric protodomains.
-	 * 
+	 *
 	 * @param symm
 	 *            CeSymmResult
 	 * @throws StructureException
@@ -94,7 +94,7 @@ public class SymmetryDisplay {
 	/**
 	 * Displays a single structure in a cartoon representation with each
 	 * symmetric repeat colored differently.
-	 * 
+	 *
 	 * @param msa
 	 *            the symmetry multiple alignment obtained from CeSymm
 	 * @throws StructureException
@@ -131,7 +131,7 @@ public class SymmetryDisplay {
 	/**
 	 * Adds a Symmetry menu to the Jmol display, so that further symmetry
 	 * analysis can be triggered.
-	 * 
+	 *
 	 * @param jmol
 	 *            parent jmol
 	 * @param symmResult
@@ -177,7 +177,7 @@ public class SymmetryDisplay {
 
 	/**
 	 * Generates a String that displays the symmetry axes of a structure.
-	 * 
+	 *
 	 * @param msa
 	 * @param axes
 	 * @param elementary
@@ -210,11 +210,11 @@ public class SymmetryDisplay {
 	 * polyhedron box around the structure. It uses the quaternary symmetry
 	 * detection code, but tries to factor out the alignment and detection
 	 * steps.
-	 * 
+	 *
 	 * @param symm
 	 *            CeSymmResult
 	 * @return
-	 * @throws StructureException 
+	 * @throws StructureException
 	 */
 	public static String printSymmetryGroup(CeSymmResult symm) throws StructureException {
 
@@ -242,21 +242,21 @@ public class SymmetryDisplay {
 	 * Create a symmetry title for a display frame (Jmol, alignment, etc). The
 	 * title contains information about the algorithm, structure id and
 	 * parameters used.
-	 * 
+	 *
 	 * @param result
 	 * @return title String
 	 */
 	public static String getSymmTitle(CeSymmResult result) {
-		
+
 		StringBuffer buff = new StringBuffer();
-		
+
 		// Add algorithm name and version
 		buff.append(result.getMultipleAlignment().getEnsemble()
 				.getAlgorithmName());
 		buff.append(" V");
 		buff.append(result.getMultipleAlignment().getEnsemble().getVersion());
 		buff.append(": ");
-		
+
 		// Add the result summary string
 		buff.append(result.toString());
 		return buff.toString();

@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.survival.kaplanmeier.metadata;
 
 import org.biojava.nbio.survival.data.WorkSheet;
@@ -34,62 +30,62 @@ import java.util.ArrayList;
  */
 public class MetaDataInfo {
 
-    /**
-     *
-     */
-    public String column = "";
-    /**
-     *
-     */
-    public boolean numeric = false;
-    /**
-     *
-     */
-    public DiscreteQuantizerInterface discreteQuantizer = null;
-    ArrayList<String> discreteValues = new ArrayList<String>();
+	/**
+	 *
+	 */
+	public String column = "";
+	/**
+	 *
+	 */
+	public boolean numeric = false;
+	/**
+	 *
+	 */
+	public DiscreteQuantizerInterface discreteQuantizer = null;
+	ArrayList<String> discreteValues = new ArrayList<String>();
 
-    /**
-     *
-     * @param column
-     * @param numeric
-     * @param discreteQuantizer
-     */
-    public MetaDataInfo(String column, boolean numeric, DiscreteQuantizerInterface discreteQuantizer) {
-        this.column = column;
-        this.numeric = numeric;
-        this.discreteQuantizer = discreteQuantizer;
-    }
+	/**
+	 *
+	 * @param column
+	 * @param numeric
+	 * @param discreteQuantizer
+	 */
+	public MetaDataInfo(String column, boolean numeric, DiscreteQuantizerInterface discreteQuantizer) {
+		this.column = column;
+		this.numeric = numeric;
+		this.discreteQuantizer = discreteQuantizer;
+	}
 
-    /**
-     *
-     * @param column
-     */
-    public MetaDataInfo(String column) {
-        this.column = column;
-    }
+	/**
+	 *
+	 * @param column
+	 */
+	public MetaDataInfo(String column) {
+		this.column = column;
+	}
 
-    /**
-     *
-     * @param worksheet
-     * @throws Exception
-     */
-    public void setDiscreteValues(WorkSheet worksheet) throws Exception {
-        discreteValues = worksheet.getDiscreteColumnValues(column);
-    }
+	/**
+	 *
+	 * @param worksheet
+	 * @throws Exception
+	 */
+	public void setDiscreteValues(WorkSheet worksheet) throws Exception {
+		discreteValues = worksheet.getDiscreteColumnValues(column);
+	}
 
-    /**
-     *
-     * @return
-     */
-    public ArrayList<String> getDiscreteValues() {
-        return discreteValues;
-    }
+	/**
+	 *
+	 * @return
+	 */
+	public ArrayList<String> getDiscreteValues() {
+		return discreteValues;
+	}
 
-    /**
-     *
-     * @return
-     */
-    public int getNumberDiscreteValues() {
-        return discreteValues.size();
-    }
+	/**
+	 *
+	 * @return
+	 */
+	public int getNumberDiscreteValues() {
+		return discreteValues.size();
+	}
 }
