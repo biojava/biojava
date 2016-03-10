@@ -24,6 +24,8 @@
  */
 package org.biojava.nbio.structure.io.mmcif.model;
 
+import java.io.Serializable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +39,9 @@ _chem_comp_bond.pdbx_aromatic_flag
 _chem_comp_bond.pdbx_stereo_config
 _chem_comp_bond.pdbx_ordinal
  */
-public class ChemCompBond {
+public class ChemCompBond implements Serializable {
+
+	private static final long serialVersionUID = 5905371029161975421L;
 
 	private static final Logger logger = LoggerFactory.getLogger(ChemCompBond.class);
 
