@@ -40,8 +40,8 @@ import static org.junit.Assert.fail;
  * Asx (B), 5-hydroxytryptamine receptor 1F, UniProt Q9N2D9
  * Xaa (X), DNA-3-methyladenine glycosylase (Fragment), UniProt P23571
  * Glx (Z), 14-3-3 protein gamma-1, UniProt Q6UFZ3
- * 
- * 
+ *
+ *
  */
 public class NonstandardProteinCompoundTest  {
 

@@ -20,7 +20,7 @@
  */
 /* Derived from the MathWorks and NIST implementation, which was released into
  * the public domain.
- * 
+ *
  * http://math.nist.gov/javanumerics/jama/
  */
 package org.biojava.nbio.structure.jama;
@@ -73,7 +73,7 @@ import java.util.Locale;
  * 		double rnorm = r.normInf();
  * </PRE></DD>
  * </DL>
- * 
+ *
  * @author The MathWorks, Inc. and the National Institute of Standards and Technology.
  * @version 5 August 1998
  */

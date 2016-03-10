@@ -61,7 +61,7 @@ import java.util.List;
  * <pre>
  * public {@link Structure} loadStructure(String pathToPDBFile){
  * 	{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
- * 
+ *
  * 	{@link Structure} structure = null;
  * 	try{
  * 		structure = pdbreader.getStructure(pathToPDBFile);
@@ -77,7 +77,7 @@ import java.util.List;
  * <pre>
  * public {@link Structure} loadStructureById() {
  * 	String path = "/path/to/PDB/directory/";
- * 
+ *
  * 	{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
  * 	pdbreader.setPath(path);
  * 	{@link Structure} structure = null;
@@ -87,7 +87,7 @@ import java.util.List;
  * 		e.printStackTrace();
  * 	}
  * 	return structure;
- * 
+ *
  * }
  * </pre>
  *

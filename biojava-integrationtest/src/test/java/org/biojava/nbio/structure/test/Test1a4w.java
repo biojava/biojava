@@ -41,12 +41,12 @@ public class Test1a4w extends TestCase{
 
 	private static Structure structure = null;
 
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		super.setUp();
-		
+
 		if ( structure != null )
 			return;
 
@@ -69,7 +69,7 @@ public class Test1a4w extends TestCase{
 	{
 
 		//		structure = null;
-		
+
 
 		assertNotNull(structure);
 
@@ -167,13 +167,13 @@ public class Test1a4w extends TestCase{
 
 			boolean noWater = true;
 			boolean darPresent = false;
-		
+
 
 			for ( Group g : ligands){
 				String pdbName = g.getPDBName();
 				if ( pdbName.equals("QWE"))
 					darPresent = true;
-			
+
 				else if ( pdbName.equals("H2O"))
 					noWater = false;
 			}
@@ -181,7 +181,7 @@ public class Test1a4w extends TestCase{
 			assertTrue("Found water in ligands list!", noWater );
 
 			assertTrue("Did not find QWE in ligands list!", darPresent);
-						
+
 			assertEquals("Did not find the correct nr of ligands in chain! " , 3,ligands.size());
 		} catch (Exception e){
 			e.printStackTrace();
@@ -189,19 +189,19 @@ public class Test1a4w extends TestCase{
 		}
 
 	}
-	
+
 	public void testLigandLoading(){
 		Chain c2 = structure.getChain(1);
 		assertTrue(c2.getChainID().equals("H"));
 
 		List<Group> ligands = c2.getAtomLigands();
-		
-		
+
+
 		System.out.println("LIGANDS:" + ligands);
 		assertEquals("Did not find the correct nr of ligands in chain! " , 6,ligands.size());
-		
+
 		List<Group> lignads2 = StructureTools.filterLigands(c2.getAtomGroups());
-		
+
 		assertEquals("Did not get the same nr of ligands from different access methods! ",ligands.size(), lignads2.size());
 
 	}
@@ -210,7 +210,7 @@ public class Test1a4w extends TestCase{
 		try {
 
 			assertNotNull(structure);
-			
+
 			//			Structure s = TmpAtomCache.cache.getStructure("1a4w");
 
 			//                    test1a4wPDBFile();
@@ -294,10 +294,10 @@ public class Test1a4w extends TestCase{
 //                FORMUL   8  HOH   *157(H2 O)
 
 		List<Group> hets = struct.getHetGroups();
-	   
+
 		assertEquals(7, hets.size());
 
-		
+
 
 
 //            } catch (Exception e) {

@@ -357,7 +357,7 @@ public class FileConvert {
 	 * Print ATOM record in the following syntax
 	 * <pre>
 	 * ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
-	 * 
+	 *
 	 * COLUMNS        DATA TYPE       FIELD         DEFINITION
 	 * ---------------------------------------------------------------------------------
 	 * 1 -  6        Record name     "ATOM  "
