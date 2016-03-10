@@ -894,7 +894,7 @@ public class GeneFeatureHelper {
 			GeneFeatureHelper.outputFastaSequenceLengthGFF3(new File("Scaffolds.fna"), new File("scaffolds.gff3"));
 		}
 
-*/
+ */
 
 		try {
 

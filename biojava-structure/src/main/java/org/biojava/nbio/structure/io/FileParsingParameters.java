@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  *      and ATOM records of a PDB file be aligned? (default:yes)</li>
  * <li> {@link #setHeaderOnly(boolean)} - parse only the PDB/mmCIF file header, ignoring coordinates
  * </li>
- * <li> {@link #setCreateAtomBonds(boolean)} - create atom bonds from parsed bonds in PDB/mmCIF files and chemical component files 
+ * <li> {@link #setCreateAtomBonds(boolean)} - create atom bonds from parsed bonds in PDB/mmCIF files and chemical component files
  * </li>
  * </ul>
  *
@@ -69,7 +69,7 @@ public class FileParsingParameters implements Serializable
 	 */
 	private boolean alignSeqRes;
 
-	/** 
+	/**
 	 * Flag to control reading in only Calpha atoms - this is useful for parsing large structures like 1htq.
 	 */
 	private boolean parseCAOnly;

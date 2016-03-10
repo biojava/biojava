@@ -162,7 +162,7 @@ public class GFF3Reader {
 		} else {
 			attributes = new String(s.substring(start, end));
 		}
-*/
+ */
 		return new Feature(seqname, source, type, location, score, frame, attributes.split("#")[0]);
 
 	}

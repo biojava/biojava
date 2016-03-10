@@ -19,20 +19,20 @@
  *
  */
 /*********************************************************************
-* Uses reflection to access JNLP services.
-*
-* @see
-*   <a target="_blank"
-*     href="http://croftsoft.com/library/tutorials/browser/">
-*   Launching a Browser from Java</a>
-*
-* @version
-*   2001-10-23
-* @since
-*   2001-08-31
-* @author
-*   <a href="http://croftsoft.com/">David Wallace Croft</a>
-*********************************************************************/
+ * Uses reflection to access JNLP services.
+ *
+ * @see
+ *   <a target="_blank"
+ *     href="http://croftsoft.com/library/tutorials/browser/">
+ *   Launching a Browser from Java</a>
+ *
+ * @version
+ *   2001-10-23
+ * @since
+ *   2001-08-31
+ * @author
+ *   <a href="http://croftsoft.com/">David Wallace Croft</a>
+ *********************************************************************/
 
 package org.biojava.nbio.structure.align.webstart;
 

@@ -29,79 +29,82 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/*
+/**
  *   This is a port of the R survival code used for doing Cox Regression. The algorithm was a fairly easy port from C code to Java where the challenge was
  *   making the code a little more object friendly. In the R code everything is passed around as an array and a large portion of the code is spent extracting
  *   data from the array for use in different calculations. By organizing the data in a class for each data point was able to simplify much of the code.
  *   Not all variants of different methods that you can select for doing various statistical calculations are implemented. Wouldn't be difficult to go back in
  *   add them in if they are important.
  *
- *   In R you can pass in different paramaters to override defaults which requires parsing of the paramaters. In the Java code tried to be a little more exact
+ *<p>In R you can pass in different paramaters to override defaults which requires parsing of the paramaters. In the Java code tried to be a little more exact
  *   in the code related to paramaters where using strata, weighting, robust and cluster are advance options. Additionaly code is implemented from Bob Gray
  *   to do variance correction when using weighted paramaters in a data set.
  *   /Users/Scooter/NetBeansProjects/biojava3-survival/docs/wtexamples.docx
  *
- *   The CoxHelper class is meant to hide some of the implementation details.
+ *<p>The CoxHelper class is meant to hide some of the implementation details.
  *
- *   Issues - sign in CoxMart?
- *   double toler_chol = 1.818989e-12; Different value for some reason
- *   In robust linear_predictor set to 0 which implies score = 1 but previous score value doesn't get reset
+ *<p>Issues
+ *<ul>
+ *<li>sign in CoxMart?
+ *<li>double toler_chol = 1.818989e-12; Different value for some reason
+ *<li>In robust linear_predictor set to 0 which implies score = 1 but previous score value doesn't get reset
+ *</ul>
+ *
+ *  Cox regression fit, replacement for coxfit2 in order
+ *    to be more frugal about memory: specificly that we
+ *    don't make copies of the input data.
  *
  *
- ** Cox regression fit, replacement for coxfit2 in order
- **   to be more frugal about memory: specificly that we
- **   don't make copies of the input data.
  *
  *
  *
+ * <p>
+ * the input parameters are
  *
- *
- **
- **  the input parameters are
- **
- **       maxiter      :number of iterations
- **       time(n)      :time of status or censoring for person i
- **       status(n)    :status for the ith person    1=dead , 0=censored
- **       covar(nv,n)  :covariates for person i.
- **                        Note that S sends this in column major order.
- **       strata(n)    :marks the strata.  Will be 1 if this person is the
- **                       last one in a strata.  If there are no strata, the
- **                       vector can be identically zero, since the nth person's
- **                       value is always assumed to be = to 1.
- **       offset(n)    :offset for the linear predictor
- **       weights(n)   :case weights
- **       init         :initial estimate for the coefficients
- **       eps          :tolerance for convergence.  Iteration continues until
- **                       the percent change in loglikelihood is <= eps.
- **       chol_tol     : tolerance for the Cholesky decompostion
- **       method       : 0=Breslow, 1=Efron
- **       doscale      : 0=don't scale the X matrix, 1=scale the X matrix
- **
- **  returned parameters
- **       means(nv)    : vector of column means of X
- **       beta(nv)     :the vector of answers (at start contains initial est)
- **       u(nv)        :score vector
- **       imat(nv,nv)  :the variance matrix at beta=final
- **                      (returned as a vector)
- **       loglik(2)    :loglik at beta=initial values, at beta=final
- **       sctest       :the score test at beta=initial
- **       flag         :success flag  1000  did not converge
- **                                   1 to nvar: rank of the solution
- **       iterations         :actual number of iterations used
- **
- **  work arrays
- **       mark(n)
- **       wtave(n)
- **       a(nvar), a2(nvar)
- **       cmat(nvar,nvar)       ragged array
- **       cmat2(nvar,nvar)
- **       newbeta(nvar)         always contains the "next iteration"
- **
- **  calls functions:  cholesky2, chsolve2, chinv2
- **
- **  the data must be sorted by ascending time within strata
- */
-/**
+ * <pre>
+ *      maxiter      :number of iterations
+ *      time(n)      :time of status or censoring for person i
+ *      status(n)    :status for the ith person    1=dead , 0=censored
+ *      covar(nv,n)  :covariates for person i.
+ *                       Note that S sends this in column major order.
+ *      strata(n)    :marks the strata.  Will be 1 if this person is the
+ *                      last one in a strata.  If there are no strata, the
+ *                      vector can be identically zero, since the nth person's
+ *                      value is always assumed to be = to 1.
+ *      offset(n)    :offset for the linear predictor
+ *      weights(n)   :case weights
+ *      init         :initial estimate for the coefficients
+ *      eps          :tolerance for convergence.  Iteration continues until
+ *                      the percent change in loglikelihood is <= eps.
+ *      chol_tol     : tolerance for the Cholesky decompostion
+ *      method       : 0=Breslow, 1=Efron
+ *      doscale      : 0=don't scale the X matrix, 1=scale the X matrix
+ * </pre>
+ * returned parameters
+ * <pre>
+ *      means(nv)    : vector of column means of X
+ *      beta(nv)     :the vector of answers (at start contains initial est)
+ *      u(nv)        :score vector
+ *      imat(nv,nv)  :the variance matrix at beta=final
+ *                     (returned as a vector)
+ *      loglik(2)    :loglik at beta=initial values, at beta=final
+ *      sctest       :the score test at beta=initial
+ *      flag         :success flag  1000  did not converge
+ *                                  1 to nvar: rank of the solution
+ *      iterations         :actual number of iterations used
+ * </pre>
+ * work arrays
+ * <pre>
+ *      mark(n)
+ *      wtave(n)
+ *      a(nvar), a2(nvar)
+ *      cmat(nvar,nvar)       ragged array
+ *      cmat2(nvar,nvar)
+ *      newbeta(nvar)         always contains the "next iteration"
+ * </pre>
+ * calls functions:  cholesky2, chsolve2, chinv2
+ * <p>
+ * the data must be sorted by ascending time within strata
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
@@ -824,9 +827,9 @@ public class CoxR {
 			si.setLinearPredictor(lp);
 			si.setScore(Math.exp(lp));
 
- //           System.out.println("lp score " + si.order + " " + si.time + " " + si.getWeight() + " " + si.getClusterValue() + " " + lp + " " + Math.exp(lp));
+//           System.out.println("lp score " + si.order + " " + si.time + " " + si.getWeight() + " " + si.getClusterValue() + " " + lp + " " + Math.exp(lp));
 		}
- //       ci.dump();
+//       ci.dump();
 		//begin code after call to coxfit6 in coxph.fit.S
 		//Compute the martingale residual for a Cox model
 		// appears to be C syntax error for = - vs -=

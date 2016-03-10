@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 20 Mar 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.test.io;
@@ -75,5 +75,5 @@ public class TestSeqResParsing {
 		assertEquals(AminoAcid.ATOMRECORD, aathird.getRecordType());
 
 	}
-	
+
 }

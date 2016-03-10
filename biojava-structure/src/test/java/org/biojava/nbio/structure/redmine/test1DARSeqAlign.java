@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 /** test for https://redmine.open-bio.org/issues/3282
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -45,7 +45,7 @@ public class test1DARSeqAlign {
 		FileParsingParameters orig = cache.getFileParsingParams();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
-		
+
 		cache.setFileParsingParams(params);
 
 		boolean usingReducedChemCompProvider = false;
@@ -83,11 +83,11 @@ public class test1DARSeqAlign {
 		assertTrue( g3 instanceof AminoAcid);
 
 
-		
-		
+
+
 		if (usingReducedChemCompProvider)
 			ChemCompGroupFactory.setChemCompProvider(ccp);
-		
+
 		cache.setFileParsingParams(orig);
 	}
 }

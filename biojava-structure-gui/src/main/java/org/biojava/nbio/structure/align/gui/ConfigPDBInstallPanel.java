@@ -216,27 +216,27 @@ class MyAction implements ActionListener{
 
 
 	@Override
-@SuppressWarnings("unused")
-public void actionPerformed(ActionEvent ae){
-	  Object EventSource = ae.getSource();
-	  String lookAndFeelClassName = null;
-	  UIManager.LookAndFeelInfo looks[] = UIManager.getInstalledLookAndFeels();
-	  for(int i = 0; i < looks.length; i++){
-		 if(ae.getActionCommand().equals(looks[i].getName())){
-			lookAndFeelClassName = looks[i].getClassName();
-			break;
-		 }
-	  }
-	  try{
-		 UIManager.setLookAndFeel(lookAndFeelClassName);
+	@SuppressWarnings("unused")
+	public void actionPerformed(ActionEvent ae){
+		Object EventSource = ae.getSource();
+		String lookAndFeelClassName = null;
+		UIManager.LookAndFeelInfo looks[] = UIManager.getInstalledLookAndFeels();
+		for(int i = 0; i < looks.length; i++){
+			if(ae.getActionCommand().equals(looks[i].getName())){
+				lookAndFeelClassName = looks[i].getClassName();
+				break;
+			}
+		}
+		try{
+			UIManager.setLookAndFeel(lookAndFeelClassName);
 
-		 SwingUtilities.updateComponentTreeUI(dialog);
+			SwingUtilities.updateComponentTreeUI(dialog);
 
-		 SwingUtilities.updateComponentTreeUI( AlignmentGui.getInstanceNoVisibilityChange());
-	  }
-	  catch(Exception e){
-		 JOptionPane.showMessageDialog(dialog, "Can't change look and feel:"
-+ lookAndFeelClassName, "Invalid PLAF", JOptionPane.ERROR_MESSAGE);
-	  }
+			SwingUtilities.updateComponentTreeUI( AlignmentGui.getInstanceNoVisibilityChange());
+		}
+		catch(Exception e){
+			JOptionPane.showMessageDialog(dialog, "Can't change look and feel:"
+					+ lookAndFeelClassName, "Invalid PLAF", JOptionPane.ERROR_MESSAGE);
+		}
 	}
- }
+}

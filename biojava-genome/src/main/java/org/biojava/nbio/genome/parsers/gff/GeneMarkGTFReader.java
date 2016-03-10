@@ -192,7 +192,7 @@ public class GeneMarkGTFReader {
 		bw.write(s);
 		bw.newLine();
 	}
-*/
+ */
 
 	public static void main(String args[]) throws Exception {
 
