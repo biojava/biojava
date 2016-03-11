@@ -587,7 +587,7 @@ public class SeqRes2AtomAligner {
 
 		// sequences that are only X (e.g. 1jnv chain A) produced empty alignments, because nothing aligns to nothing and thus the local alignment is empty
 		// to avoid those empty alignments we catch them here with pair.getLength()==0
-		if ( pair == null || pair.getLength()==0) { 
+		if ( pair == null || pair.getLength()==0) {
 			logger.warn("Could not align protein sequences. ATOM and SEQRES groups will not be aligned.");
 			logger.warn("Sequences: ");
 			logger.warn(seq1);

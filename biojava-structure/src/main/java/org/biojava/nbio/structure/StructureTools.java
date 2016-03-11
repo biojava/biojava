@@ -702,12 +702,12 @@ public class StructureTools {
 			newCA[apos] = parentN.getAtom(a.getName());
 			try {
 				// if the group doesn't exist yet, this produces a StructureException
-				newChain.getGroupByPDB(parentN.getResidueNumber()); 
+				newChain.getGroupByPDB(parentN.getResidueNumber());
 			} catch (StructureException e) {
 				// the group doesn't exist yet in the newChain, let's add it
-				newChain.addGroup(parentN);	
+				newChain.addGroup(parentN);
 			}
-			
+
 		}
 		return newCA;
 	}

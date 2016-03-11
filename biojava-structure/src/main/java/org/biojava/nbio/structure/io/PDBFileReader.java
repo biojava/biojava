@@ -59,37 +59,37 @@ import java.util.List;
  * <p>
  * A:
  * <pre>
- public {@link Structure} loadStructure(String pathToPDBFile){
-		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
-
-		{@link Structure} structure = null;
-		try{
-			structure = pdbreader.getStructure(pathToPDBFile);
-			System.out.println(structure);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return structure;
-	}
- </pre>
+ * public {@link Structure} loadStructure(String pathToPDBFile){
+ * 	{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
+ *
+ * 	{@link Structure} structure = null;
+ * 	try{
+ * 		structure = pdbreader.getStructure(pathToPDBFile);
+ * 		System.out.println(structure);
+ * 	} catch (IOException e) {
+ * 		e.printStackTrace();
+ * 	}
+ * 	return structure;
+ * }
+ * </pre>
  *
  * Access PDB files from a directory, take care of compressed PDB files
  * <pre>
  * public {@link Structure} loadStructureById() {
-		String path = "/path/to/PDB/directory/";
-
-		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
-		pdbreader.setPath(path);
-		{@link Structure} structure = null;
-		try {
-			structure = pdbreader.getStructureById("5pti");
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-		return structure;
-
-	}
-	</pre>
+ * 	String path = "/path/to/PDB/directory/";
+ *
+ * 	{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
+ * 	pdbreader.setPath(path);
+ * 	{@link Structure} structure = null;
+ * 	try {
+ * 		structure = pdbreader.getStructureById("5pti");
+ * 	} catch (IOException e){
+ * 		e.printStackTrace();
+ * 	}
+ * 	return structure;
+ *
+ * }
+ * </pre>
  *
  *
  * @author Andreas Prlic

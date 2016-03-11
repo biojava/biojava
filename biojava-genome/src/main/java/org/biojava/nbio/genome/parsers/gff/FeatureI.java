@@ -23,11 +23,11 @@ package org.biojava.nbio.genome.parsers.gff;
 import java.util.HashMap;
 
 /**
-* A feature on a sequence (for example, an exon or a gene), defined by a location
-* and a set of attributes encoded as key/value pairs.
-*
-* @author Hanno Hinsch
-*/
+ * A feature on a sequence (for example, an exon or a gene), defined by a location
+ * and a set of attributes encoded as key/value pairs.
+ *
+ * @author Hanno Hinsch
+ */
 public interface FeatureI
 {
 

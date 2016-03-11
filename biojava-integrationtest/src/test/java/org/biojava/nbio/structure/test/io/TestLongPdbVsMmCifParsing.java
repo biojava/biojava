@@ -429,11 +429,11 @@ public class TestLongPdbVsMmCifParsing {
 
 
 		assertEquals("failed for getAtomLength (chain "+chainId+"):",cPdb.getAtomLength(),cCif.getAtomLength());
-		
+
 		// entries with polymers composed of all unknowns (giving only-X sequences) can't be aligned seqres-to-atom (for PDB files)
 		// we've got to skip them because they won't have seqres groups
 		// e.g. is 1jnv chain A
-		
+
 		if (cPdb.getAtomSequence().matches("^X+$")) return;
 
 		// note for getSeqResLength to work one needs the setAlignSeqRes option in the parsers

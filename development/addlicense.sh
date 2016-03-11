@@ -1,7 +1,8 @@
 #!/bin/bash
 # Adds the BioJava LGPL license statement to the top of every java file
 
-find . -iname '*.java' -exec grep -L 'http://www.gnu.org/copyleft/lesser.html' '{}' ';' |
+find . -iname '*.java' -exec grep -L 'http://www.gnu.org/copyleft/lesser.html' '{}' '+'|
+xargs grep -Li 'copyright' |
 while read file; do
     echo "$file"
     cat >tmp.java <<END
