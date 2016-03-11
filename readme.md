@@ -14,7 +14,7 @@ We are also working on a [tutorial](https://github.com/biojava/biojava3-tutorial
 
 ### Maven Repository
 
-The [Maven Repository](http://biojava.org/download/maven/) contains the jars of all releases, as well as SNAPSHOT builds of the latest code base.
+BioJava release are available from Maven Central. Snapshot builds are distributed using [OSS Sonatype](https://oss.sonatype.org/content/repositories/snapshots/org/biojava)
 
 ### Quick Installation
 
