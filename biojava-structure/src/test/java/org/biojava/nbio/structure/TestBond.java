@@ -21,6 +21,8 @@
 package org.biojava.nbio.structure;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -45,7 +47,6 @@ public class TestBond {
 
 		params.setAlignSeqRes(true);
 		params.setCreateAtomBonds(true);
-
 		StructureIO.setAtomCache(cache);
 
 
@@ -138,6 +139,38 @@ public class TestBond {
 		assertTrue(areBonded(phosphateP, phosphateO));
 	}
 
+
+	/**
+	 * Test whether nucleotide bonds are being generated
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test 
+	public void testNucleotideBonds() throws IOException, StructureException {
+		Structure bio = StructureIO.getStructure("4y60");
+		for( Chain c : bio.getChains()) {
+			int groupCounter = 0;
+			List<Group> currentGroups = c.getAtomGroups();
+			for ( Group g : currentGroups) {
+				if(groupCounter!=0 && groupCounter<currentGroups.size()) {
+					List<Atom> atoms = g.getAtoms();
+					for ( Atom a : atoms) {
+						if ( a.getName().equals("P")){
+							// Check to see if one of the phosphate atoms has bonding to something
+							// outside of the group.
+							List<Integer> indexList = new ArrayList<>();
+							for (Bond b : a.getBonds()){
+								indexList.add(atoms.indexOf(b.getOther(a)));
+							}
+							assertTrue(indexList.contains(-1));
+						}
+					}
+				}
+				groupCounter++;
+			}
+
+		}
+	}
 	private boolean areBonded(Atom a, Atom b) {
 		for (Bond bond : a.getBonds()) {
 			if (bond.getOther(a) == b) {
