@@ -165,8 +165,8 @@ public class BondMaker {
 					continue;
 				}
 
-				Atom phosphorous = tail.getP();
-				Atom oThreePrime = head.getO3Prime();
+				Atom phosphorous = head.getP();
+				Atom oThreePrime = tail.getO3Prime();
 
 				if (phosphorous == null || oThreePrime == null) {
 					continue;
