@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,7 +15,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  */
 /**
@@ -157,14 +157,14 @@ public class Qualifier {
 		}
 		this.values[i]=newValue;
 	}
-        
+		
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Qualifier[ name='" + name +"' value='" + values[0]);
 		if(values.length>1) for(int i=0;i<values.length;i++) sb.append(", "+values[i]);
 		sb.append("]");
-		return sb.toString();       	
+		return sb.toString();	   	
 	}
 	
 	/**

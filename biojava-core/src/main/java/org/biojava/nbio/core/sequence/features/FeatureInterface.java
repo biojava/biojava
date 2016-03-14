@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,7 +15,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  */
 /*
@@ -46,142 +46,142 @@ import org.biojava.nbio.core.sequence.template.Compound;
  */
 public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compound> {
 
-    /**
-     * Get the short description that can be used to describe the feature
-     * @return
-     */
+	/**
+	 * Get the short description that can be used to describe the feature
+	 * @return
+	 */
 
-    public String getShortDescription();
+	public String getShortDescription();
 
-    /**
-     * Set the short description that can be used to describe the feature
-     * @param shortDescription
-     */
+	/**
+	 * Set the short description that can be used to describe the feature
+	 * @param shortDescription
+	 */
 
-    public void setShortDescription(String shortDescription);
+	public void setShortDescription(String shortDescription);
 
-      /**
-     * Get the description that can be used to describe the feature
-     * @return
-     */
+	  /**
+	 * Get the description that can be used to describe the feature
+	 * @return
+	 */
 
-    public String getDescription();
-
-
-      /**
-     * Set the description that can be used to describe the feature
-     * @return
-     */
-
-    public void setDescription(String description);
-
-        /**
-     * The location(s) of this feature where the location should contain a reference to parent and sequence etc.
-     * <p>
-     * The location may be complicated, or simply a range.
-     * The annotation is assumed to apply to all the region contained
-     * within the location.
-     *
-     * @return a Location anchoring this feature
-     */
-    public AbstractLocation getLocations();
-
-        /**
-     * The new location for this feature.
-     * <p>
-     * The location may be complicated or simply a range. The annotation is
-     * assumed to apply to the entire region contained within the location.
-     * Any values returned from methods that rely on the old location must
-     * not be affected.
-     *
-     * @param loc the new Location for this feature
-     *
-     */
-    public void setLocation(AbstractLocation loc);
-
-        /**
-     * The type of the feature.
-     *
-     * @return the type of this sequence
-     */
-    public String getType();
-
-    /**
-     * Change the type of this feature.
-     *
-     * @param type  new type String
-     *
-     */
-    public void setType(String type);
+	public String getDescription();
 
 
-        /**
-     * The source of the feature. This may be a program or process.
-     *
-     * @return the source, or generator
-     */
-    public String getSource();
+	  /**
+	 * Set the description that can be used to describe the feature
+	 * @return
+	 */
 
-    /**
-     * Change the source of the FeatureInterface.
-     *
-     * @param source the new source String
-     *
-     */
-    public void setSource(String source);
+	public void setDescription(String description);
 
-    /**
-     * Set the parent feature
-     * @param feature
-     */
+		/**
+	 * The location(s) of this feature where the location should contain a reference to parent and sequence etc.
+	 * <p>
+	 * The location may be complicated, or simply a range.
+	 * The annotation is assumed to apply to all the region contained
+	 * within the location.
+	 *
+	 * @return a Location anchoring this feature
+	 */
+	public AbstractLocation getLocations();
 
-    public void setParentFeature(FeatureInterface<S, C> feature);
+		/**
+	 * The new location for this feature.
+	 * <p>
+	 * The location may be complicated or simply a range. The annotation is
+	 * assumed to apply to the entire region contained within the location.
+	 * Any values returned from methods that rely on the old location must
+	 * not be affected.
+	 *
+	 * @param loc the new Location for this feature
+	 *
+	 */
+	public void setLocation(AbstractLocation loc);
 
-    /**
-     * Get the parent feature
-     * @return
-     */
+		/**
+	 * The type of the feature.
+	 *
+	 * @return the type of this sequence
+	 */
+	public String getType();
 
-    public FeatureInterface<S, C> getParentFeature();
-
-    /**
-     * Get the features contained by this feature
-     * @return
-     */
-
-    public List<FeatureInterface<S, C>> getChildrenFeatures();
-
-    /**
-     * Set the children features
-     * @param features
-     */
-
-    public void setChildrenFeatures(List<FeatureInterface<S, C>> features);
+	/**
+	 * Change the type of this feature.
+	 *
+	 * @param type  new type String
+	 *
+	 */
+	public void setType(String type);
 
 
-        /**
-     * @return the userObject
-     */
-    public Object getUserObject();
+		/**
+	 * The source of the feature. This may be a program or process.
+	 *
+	 * @return the source, or generator
+	 */
+	public String getSource();
 
-    /**
-     * @param userObject the userObject to set
-     */
-    public void setUserObject(Object userObject);
+	/**
+	 * Change the source of the FeatureInterface.
+	 *
+	 * @param source the new source String
+	 *
+	 */
+	public void setSource(String source);
 
-    /* new feature interface methods for accessing qualifers and the new map 
-     * see abstract feature for implementation 
-     */
-    /**
-     * map implementation to store qualifiers where only qualifier hold its key and value pair
-     * @return
-     */
-    public GenBankQualifierMap getQualifierMap();
-    /**
-     * get all qualifiers of this feature
-     * @return
-     */
-    public Qualifier[] getQualifiers();
+	/**
+	 * Set the parent feature
+	 * @param feature
+	 */
+
+	public void setParentFeature(FeatureInterface<S, C> feature);
+
+	/**
+	 * Get the parent feature
+	 * @return
+	 */
+
+	public FeatureInterface<S, C> getParentFeature();
+
+	/**
+	 * Get the features contained by this feature
+	 * @return
+	 */
+
+	public List<FeatureInterface<S, C>> getChildrenFeatures();
+
+	/**
+	 * Set the children features
+	 * @param features
+	 */
+
+	public void setChildrenFeatures(List<FeatureInterface<S, C>> features);
+
+
+		/**
+	 * @return the userObject
+	 */
+	public Object getUserObject();
+
+	/**
+	 * @param userObject the userObject to set
+	 */
+	public void setUserObject(Object userObject);
+
+	/* new feature interface methods for accessing qualifers and the new map 
+	 * see abstract feature for implementation 
+	 */
+	/**
+	 * map implementation to store qualifiers where only qualifier hold its key and value pair
+	 * @return
+	 */
+	public GenBankQualifierMap getQualifierMap();
+	/**
+	 * get all qualifiers of this feature
+	 * @return
+	 */
+	public Qualifier[] getQualifiers();
 	/**
 	 * overwrite qualifiermap
 	 * @param qualifierMap
@@ -207,21 +207,21 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 * @param qa
 	 */
 	public void addQualifiers(Qualifier[] qa);
-    public Qualifier getQualifierByName(String qName);
-    public Qualifier getFirstQualifierByValue(String value);
-    public Qualifier[] getQualifiersByValue(String value);
+	public Qualifier getQualifierByName(String qName);
+	public Qualifier getFirstQualifierByValue(String value);
+	public Qualifier[] getQualifiersByValue(String value);
 	//DBreferenceInfo
 	/**
 	 * returns the dbreferenceinfo of this feature, which can contain lots of 
 	 * entries 
 	 * * @return
 	 */
-    public DBReferenceInfo getAllDatabaseReferenceInfos();
+	public DBReferenceInfo getAllDatabaseReferenceInfos();
 	/**
 	 * returns all databases of this feature in a string[]
 	 * @return
 	 */
-    public String[] getAllDatabases();
+	public String[] getAllDatabases();
 	/**
 	 * returns all sequence database references for all databases in a string[]
 	 * for this feature 
