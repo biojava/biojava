@@ -5,7 +5,7 @@ import static org.junit.Assert.assertArrayEquals;
 import java.io.IOException;
 
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -37,7 +37,14 @@ public class TestEntityNameAndType {
 		StructureIO.setAtomCache(cache);
 		// This is hte information we want to test against
 		String[] typeInformation = new String[] {"polymer", "non-polymer", "non-polymer", "non-polymer", "non-polymer", "water"};
-		String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-FLUOROBENZAMIDOXIME", "4-FLUOROBENZAMIDOXIME", "METHANOL", "METHANOL", "water"};	
+		String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-FLUOROBENZAMIDOXIME",  "METHANOL", "METHANOL", "METHANOL", "water"};	
+		
+		// Now some other information fields to test this data is collated correctly
+		String[] geneSourceSciName = new String[] {"HOMO SAPIENS", null, null, null, null, null};
+		String[] geneSourceTaxId = new String[] {"9606", null, null, null, null, null};
+		String[] hostOrganismSciName = new String[] {"ESCHERICHIA COLI", null, null, null, null, null};
+		String[] hostOrganismTaxId = new String[] {"469008", null, null, null, null, null};		
+
 		
 		
 		/// TODO GET ALL THE ENTITY INFORMATION REQUIRED FOR 4CUP 
@@ -45,18 +52,35 @@ public class TestEntityNameAndType {
 		Structure bioJavaStruct = StructureIO.getStructure("4cup");
 		String[] testTypeInfo = new String[6];
 		String[] testDescInfo = new String[6];
+		
+		
+		String[] testGeneSourceSciName = new String[6];
+		String[] testGeneSourceTaxId = new String[6];
+		String[] testHostOrganismSciName = new String[6];
+		String[] testHostOrganismTaxId = new String[6];
+
 		// Now loop through the structure
 		int chainCounter = 0;
 		for (Chain c: bioJavaStruct.getChains()) {
 			// Now get the entity information we want to test
-			Compound thisCmpd = c.getCompound();
-//			testTypeInfo[chainCounter] = thisCmpd.get
-			testDescInfo[chainCounter] = thisCmpd.getMolName();
+			EntityInfo thisCmpd = c.getCompound();
+			testTypeInfo[chainCounter] = thisCmpd.getType();
+			testDescInfo[chainCounter] = thisCmpd.getDescription();
+			testGeneSourceSciName[chainCounter] =  thisCmpd.getOrganismScientific();
+			testGeneSourceTaxId[chainCounter] = thisCmpd.getOrganismTaxId();
+			testHostOrganismSciName[chainCounter] = thisCmpd.getExpressionSystem();
+			testHostOrganismTaxId[chainCounter] = thisCmpd.getExpressionSystemTaxId();
+
 			chainCounter++;
 		}
 		// Now check they're both the same
 		assertArrayEquals(testDescInfo, descriptionInformation);
-//		assertArrayEquals(testTypeInfo, typeInformation);
+		assertArrayEquals(testTypeInfo, typeInformation);
+		// Now check these work too
+		assertArrayEquals(geneSourceSciName, testGeneSourceSciName);
+		assertArrayEquals(geneSourceTaxId, testGeneSourceTaxId);
+		assertArrayEquals(hostOrganismSciName, testHostOrganismSciName);
+		assertArrayEquals(hostOrganismTaxId, testHostOrganismTaxId);
 
 		
 		

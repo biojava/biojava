@@ -107,7 +107,7 @@ public class TestCompoundResIndexMapping {
 		// 3ddo has 6 chains in 1 entity, all of them with different residue numbering (chain A is 1000+, chain B 2000+ ...)
 		Structure s = getStructure("3ddo_raw_noseqres.pdb.gz", true);
 
-		assertEquals(1,s.getCompounds().size());
+		assertEquals(1,s.getEntityInformation().size());
 
 		Chain chainA = s.getChainByPDB("A");
 		Chain chainB = s.getChainByPDB("B");
@@ -137,7 +137,7 @@ public class TestCompoundResIndexMapping {
 		// this should work either with or without setAlignSeqRes, since the mapping happens in CompoundFinder
 		s = getStructure("3ddo_raw_noseqres.pdb.gz", false);
 
-		assertEquals(1,s.getCompounds().size());
+		assertEquals(1,s.getEntityInformation().size());
 
 		chainA = s.getChainByPDB("A");
 		chainB = s.getChainByPDB("B");
@@ -171,7 +171,7 @@ public class TestCompoundResIndexMapping {
 		// 3ddo has 6 chains in 1 entity, all of them with different residue numbering (chain A is 1000+, chain B 2000+ ...)
 		Structure s = getStructure("3ddo_raw_trunc_seqres.pdb.gz", true);
 
-		assertEquals(1,s.getCompounds().size());
+		assertEquals(1,s.getEntityInformation().size());
 
 		Chain chainA = s.getChainByPDB("A");
 		Chain chainB = s.getChainByPDB("B");

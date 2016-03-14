@@ -24,7 +24,7 @@
 package org.biojava.nbio.structure.io;
 
 
-import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -89,10 +89,10 @@ public class TestMMcifOrganismParsing {
 	private void checkPDB(String pdbId) throws IOException, StructureException {
 		Structure s = StructureIO.getStructure(pdbId);
 
-		assertNotNull(s.getCompounds());
-		assertTrue(s.getCompounds().size() > 0);
+		assertNotNull(s.getEntityInformation());
+		assertTrue(s.getEntityInformation().size() > 0);
 
-		for ( Compound c : s.getCompounds()) {
+		for ( EntityInfo c : s.getEntityInformation()) {
 			assertNotNull(c.getOrganismTaxId());
 		}
 
