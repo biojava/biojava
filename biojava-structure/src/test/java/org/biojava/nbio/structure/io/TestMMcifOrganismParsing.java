@@ -34,6 +34,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -54,7 +55,7 @@ public class TestMMcifOrganismParsing {
 	public void test1STP() throws IOException, StructureException{
 		String pdbId = "1stp";
 
-		checkPDB(pdbId);
+		checkPDB(pdbId, "1895");
 
 	}
 
@@ -62,7 +63,7 @@ public class TestMMcifOrganismParsing {
 	public void test1a4w() throws IOException, StructureException{
 		String pdbId = "1a4w";
 
-		checkPDB(pdbId);
+		checkPDB(pdbId, "9606");
 
 	}
 
@@ -70,30 +71,40 @@ public class TestMMcifOrganismParsing {
 	public void test4hhb() throws IOException, StructureException{
 		String pdbId = "4hhb";
 
-		checkPDB(pdbId);
+		checkPDB(pdbId, "9606");
 
 	}
 
 	@Test
 	public void test3ZD6() throws IOException, StructureException {
 		// a PDB ID that contains a synthetic entity
-		String pdbId = "3ZD6";
+		String pdbId = "3zd6";
 
-		checkPDB(pdbId);
+		checkPDB(pdbId, "9606");
 
 	}
 
 
 
 
-	private void checkPDB(String pdbId) throws IOException, StructureException {
+	private void checkPDB(String pdbId, String organismTaxId) throws IOException, StructureException {
 		Structure s = StructureIO.getStructure(pdbId);
 
 		assertNotNull(s.getEntityInformation());
 		assertTrue(s.getEntityInformation().size() > 0);
 
 		for ( EntityInfo c : s.getEntityInformation()) {
-			assertNotNull(c.getOrganismTaxId());
+			if(c.getType().equals("polymer")) { 
+				assertNotNull(c.getOrganismTaxId());
+				if(pdbId.equals("3zd6")){
+					if(c.getMolId()==2) {
+						assertEquals(c.getOrganismTaxId(), "32630");
+						continue;
+					}
+				}
+				assertEquals(c.getOrganismTaxId(), organismTaxId);
+			
+			}
 		}
 
 	}
