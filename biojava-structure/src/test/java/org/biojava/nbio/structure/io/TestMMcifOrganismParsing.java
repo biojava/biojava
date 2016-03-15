@@ -85,8 +85,6 @@ public class TestMMcifOrganismParsing {
 	}
 
 
-
-
 	private void checkPDB(String pdbId, String organismTaxId) throws IOException, StructureException {
 		Structure s = StructureIO.getStructure(pdbId);
 
