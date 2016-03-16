@@ -48,11 +48,12 @@ import java.util.TreeSet;
  *
  * @author Jules Jacobsen
  * @author Jose Duarte
+ * @author Anthony Bradley
  * @since 1.5
  */
-public class Compound implements Serializable {
+public class EntityInfo implements Serializable {
 
-	private final static Logger logger = LoggerFactory.getLogger(Compound.class);
+	private final static Logger logger = LoggerFactory.getLogger(EntityInfo.class);
 
 
 	//TODO we should consider having the data here as it is in mmCIF dictionary - JD 2014-12-11
@@ -80,21 +81,21 @@ public class Compound implements Serializable {
 	private Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
 
 	private String refChainId;
-
-	private String molName = null;
+	private String description = null;
 	private String title = null;
+	/**
+	 * The type of group (polymer, non-polymer, water)
+	 */
+	private String type = null;
 	private List<String> synonyms = null;
 	private List<String> ecNums = null;
 	private String engineered = null;
 	private String mutation = null;
 	private String biologicalUnit = null;
 	private String details = null;
-
 	private String numRes = null;
 	private String resNames = null;
-
 	private String headerVars = null;
-
 	private String synthetic = null;
 	private String fragment = null;
 	private String organismScientific = null;
@@ -130,7 +131,7 @@ public class Compound implements Serializable {
 
 	private Long id;
 
-	public Compound () {
+	public EntityInfo () {
 		chains = new ArrayList<Chain>();
 		chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
 		molId = -1;
@@ -141,7 +142,7 @@ public class Compound implements Serializable {
 	 * but not setting the Chains
 	 * @param c
 	 */
-	public Compound (Compound c) {
+	public EntityInfo (EntityInfo c) {
 
 		this.chains = new ArrayList<Chain>();
 
@@ -151,7 +152,7 @@ public class Compound implements Serializable {
 
 		this.refChainId = c.refChainId;
 
-		this.molName = c.molName;
+		this.description = c.description;
 		this.title = c.title;
 
 		if (c.synonyms!=null) {
@@ -213,7 +214,7 @@ public class Compound implements Serializable {
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
 		buf.append("Compound: ").append(molId).append(" ");
-		buf.append(molName==null?"(no name)":"("+molName+")");
+		buf.append(description==null?"(no name)":"("+description+")");
 		buf.append(" chains: ");
 		if (chains!=null) {
 			for (int i=0;i<chains.size();i++) {
@@ -292,8 +293,8 @@ public class Compound implements Serializable {
 			}
 			System.out.println("Chains: " + buf.toString());
 		}
-		if (this.molName != null) {
-			System.out.println("Mol Name: " + this.molName);
+		if (this.description != null) {
+			System.out.println("Mol Name: " + this.description);
 		}
 		if (this.title != null) {
 			System.out.println("Title: " + this.title);
@@ -619,12 +620,12 @@ public class Compound implements Serializable {
 		this.molId = molId;
 	}
 
-	public String getMolName() {
-		return molName;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setMolName(String molName) {
-		this.molName = molName;
+	public void setDescription(String molName) {
+		this.description = molName;
 	}
 
 	public String getTitle() {
@@ -987,5 +988,19 @@ public class Compound implements Serializable {
 	 */
 	public void setChains(List<Chain> chains){
 		this.chains = chains;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
 	}
 }

@@ -210,15 +210,15 @@ public class TestLongPdbVsMmCifParsing {
 		// compounds: there's quite some inconsistencies here between pdb and cif:
 		// sugar polymers are not in pdb at all: we avoid them
 		boolean canCompareCompoundsSize = true;
-		for (Compound compound: sCif.getCompounds()) {
-			if (compound.getMolName()==null || compound.getMolName().contains("SUGAR")) {
+		for (EntityInfo compound: sCif.getEntityInformation()) {
+			if (compound.getDescription()==null || compound.getDescription().contains("SUGAR")) {
 				canCompareCompoundsSize = false;
 				break;
 			}
 		}
 
 		if (canCompareCompoundsSize)
-			assertEquals("failed number of Compounds pdb vs cif", sPdb.getCompounds().size(), sCif.getCompounds().size());
+			assertEquals("failed number of Compounds pdb vs cif", sPdb.getEntityInformation().size(), sCif.getEntityInformation().size());
 
 
 		// ss bonds

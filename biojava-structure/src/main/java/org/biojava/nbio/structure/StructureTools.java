@@ -1046,7 +1046,7 @@ public class StructureTools {
 		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-		newS.setCompounds(s.getCompounds());
+		newS.setCompounds(s.getEntityInformation());
 		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
@@ -1075,13 +1075,13 @@ public class StructureTools {
 		}
 		if (c != null) {
 			newS.addChain(c);
-			for (Compound comp : s.getCompounds()) {
+			for (EntityInfo comp : s.getEntityInformation()) {
 				if (comp.getChainIds() != null
 						&& comp.getChainIds().contains(c.getChainID())) {
 					// found matching compound. set description...
 					newS.getPDBHeader().setDescription(
 							"Chain " + c.getChainID() + " of " + s.getPDBCode()
-									+ " " + comp.getMolName());
+									+ " " + comp.getDescription());
 				}
 			}
 		}
@@ -1116,7 +1116,7 @@ public class StructureTools {
 		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-		newS.setCompounds(s.getCompounds());
+		newS.setCompounds(s.getEntityInformation());
 		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());

@@ -86,7 +86,7 @@ public class TestNonDepositedFiles {
 		assertEquals(2,s.getChains().size());
 
 		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
-		assertEquals(1, s.getCompounds().size());
+		assertEquals(1, s.getEntityInformation().size());
 
 		//System.out.println("Chains from incomplete header file: ");
 		//checkChains(s);
@@ -101,7 +101,7 @@ public class TestNonDepositedFiles {
 
 		assertEquals(2,s.getChains().size());
 
-		assertEquals(1, s.getCompounds().size());
+		assertEquals(1, s.getEntityInformation().size());
 	}
 
 	//@Test
@@ -220,7 +220,7 @@ public class TestNonDepositedFiles {
 		assertEquals(6, s.getChains().size());
 
 		// 4 entities: 1 protein, 1 nucleotide, 1 water, 1 ligand (EDO)
-		assertEquals(4, s.getCompounds().size());
+		assertEquals(4, s.getEntityInformation().size());
 
 	}
 
@@ -243,7 +243,7 @@ public class TestNonDepositedFiles {
 		assertEquals(6, s.getChains().size());
 
 		// 4 entities: 1 protein, 1 nucleotide, 1 water, 1 ligand (EDO)
-		assertEquals(4, s.getCompounds().size());
+		assertEquals(4, s.getEntityInformation().size());
 	}
 
 	@Test
@@ -263,7 +263,7 @@ public class TestNonDepositedFiles {
 
 		assertEquals(2, s.getChains().size());
 
-		assertEquals(1, s.getCompounds().size());
+		assertEquals(1, s.getEntityInformation().size());
 	}
 
 
@@ -286,7 +286,7 @@ public class TestNonDepositedFiles {
 		assertEquals(3, s.getChains().size());
 
 		// 1 polymer entity, 1 water entity
-		assertEquals(2, s.getCompounds().size());
+		assertEquals(2, s.getEntityInformation().size());
 	}
 
 	/**
@@ -359,7 +359,7 @@ public class TestNonDepositedFiles {
 		assertNotNull(c1.getCompound());
 
 		// checking that the water molecule was assigned an ad-hoc compound
-		assertEquals(2,s1.getCompounds().size());
+		assertEquals(2,s1.getEntityInformation().size());
 
 
 
@@ -384,6 +384,6 @@ public class TestNonDepositedFiles {
 		assertNotNull(c.getCompound());
 
 		// checking that the water molecule was assigned an ad-hoc compound
-		assertEquals(2,s2.getCompounds().size());
+		assertEquals(2,s2.getEntityInformation().size());
 	}
 }

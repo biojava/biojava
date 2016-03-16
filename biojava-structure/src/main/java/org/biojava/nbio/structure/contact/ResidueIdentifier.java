@@ -23,7 +23,7 @@ package org.biojava.nbio.structure.contact;
 import java.io.Serializable;
 
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ class ResidueIdentifier implements Serializable {
 			logger.warn("Chain is not available for group {}. Contact comparison will not work for this residue",g.toString());
 			this.seqResIndex = -1;
 		} else {
-			Compound comp = c.getCompound();
+			EntityInfo comp = c.getCompound();
 			if (comp==null) {
 				logger.warn("Compound is not available for group {}. Contact comparison will not work for this residue",g.toString());
 				this.seqResIndex = -1;

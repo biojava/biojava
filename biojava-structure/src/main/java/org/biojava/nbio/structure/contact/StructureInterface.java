@@ -372,8 +372,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return true if homomeric or if either of the entities is unknonw (null Compounds), false otherwise
 	 */
 	public boolean isHomomeric() {
-		Compound first = getParentChains().getFirst().getCompound();
-		Compound second = getParentChains().getSecond().getCompound();
+		EntityInfo first = getParentChains().getFirst().getCompound();
+		EntityInfo second = getParentChains().getSecond().getCompound();
 		if (first==null || second==null) {
 			logger.warn("Some compound of interface {} is null, can't determine whether it is homo/heteromeric. Consider it homomeric", getId());
 			return true;
@@ -562,7 +562,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * The two sides of the given StructureInterface need to match this StructureInterface
 	 * in the sense that they must come from the same Compound (Entity), i.e.
 	 * their residue numbers need to align with 100% identity, except for unobserved
-	 * density residues. The SEQRES indices obtained through {@link Compound#getAlignedResIndex(Group, Chain)} are
+	 * density residues. The SEQRES indices obtained through {@link EntityInfo#getAlignedResIndex(Group, Chain)} are
 	 * used to match residues, thus if no SEQRES is present or if {@link FileParsingParameters#setAlignSeqRes(boolean)}
 	 * is not used, this calculation is not guaranteed to work properly.
 	 * @param other
@@ -594,8 +594,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			return 0;
 		}
 
-		Pair<Compound> thisCompounds = new Pair<Compound>(thisChains.getFirst().getCompound(), thisChains.getSecond().getCompound());
-		Pair<Compound> otherCompounds = new Pair<Compound>(otherChains.getFirst().getCompound(), otherChains.getSecond().getCompound());
+		Pair<EntityInfo> thisCompounds = new Pair<EntityInfo>(thisChains.getFirst().getCompound(), thisChains.getSecond().getCompound());
+		Pair<EntityInfo> otherCompounds = new Pair<EntityInfo>(otherChains.getFirst().getCompound(), otherChains.getSecond().getCompound());
 
 		if ( (  (thisCompounds.getFirst() == otherCompounds.getFirst()) &&
 				(thisCompounds.getSecond() == otherCompounds.getSecond())   )  ||
@@ -673,13 +673,13 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * Finds the parent compounds by looking up the references of first atom of each side of this interface
 	 * @return
 	 */
-	public Pair<Compound> getParentCompounds() {
+	public Pair<EntityInfo> getParentCompounds() {
 		Pair<Chain> chains = getParentChains();
 		if (chains == null) {
 			logger.warn("Could not find parents chains, compounds will be null");
 			return null;
 		}
-		return new Pair<Compound>(chains.getFirst().getCompound(), chains.getSecond().getCompound());
+		return new Pair<EntityInfo>(chains.getFirst().getCompound(), chains.getSecond().getCompound());
 	}
 
 	private Structure getParentStructure() {

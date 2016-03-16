@@ -195,15 +195,15 @@ public interface Chain {
 	 * @param compound the Compound
 	 * @see #getCompound()
 	*/
-	public void setCompound(Compound compound);
+	public void setCompound(EntityInfo compound);
 
 	/**
 	 * Returns the Compound for this chain.
 	 *
 	 * @return the Compound object
-	 * @see #setCompound(Compound)
+	 * @see #setCompound(EntityInfo)
 	 */
-	public Compound getCompound();
+	public EntityInfo getCompound();
 
 	/**
 	 * Sets the name of this chain (Chain id in PDB file ).
