@@ -41,7 +41,12 @@ public class NCBIQBlastServiceDemo {
 	private static final String SEQUENCE = "MKWVTFISLLFLFSSAYSRGVFRRDAHKSEVAHRFKDLGEENFKALVLIAFAQYLQQCPFEDHVKLVNEVTEFAKTCVADESAENCDKS";
 
 	public static void main(String[] args) {
-		NCBIQBlastService service = new NCBIQBlastService();
+		NCBIQBlastService service = null;
+        if (args.length == 1) {
+            service = new NCBIQBlastService(args[0]);
+        } else {
+            service = new NCBIQBlastService();
+        }
 
 		// set alignment options
 		NCBIQBlastAlignmentProperties props = new NCBIQBlastAlignmentProperties();
