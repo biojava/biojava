@@ -3,9 +3,11 @@ package org.biojava.nbio.structure.io.mmtf;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.vecmath.Matrix4d;
 
@@ -31,6 +33,8 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.StructureDecoderInterface;
+import org.rcsb.mmtf.dataholders.BioAssemblyData;
+import org.rcsb.mmtf.dataholders.BioAssemblyTrans;
 
 
 /**
@@ -270,52 +274,6 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface
-	 * #setBioAssembly(java.util.Map, java.util.Map,
-	 * java.util.Map, java.util.Map, java.util.Map)
-	 */
-	@Override
-	public final void setBioAssembly(final Map<Integer,
-			Integer> keyList, final Map<Integer, Integer> sizeList,
-			final Map<Integer, List<String>> inputIds, final Map<Integer,
-			List<String>> inputChainIds, final Map<Integer,
-			List<double[]>> inputTransformations) {
-		PDBHeader pdbHeader = structure.getPDBHeader();
-		// Get the bioassebly data
-		Map<Integer, BioAssemblyInfo> bioAssemblies = new HashMap<>();
-		for (Entry<Integer, Integer> entry: keyList.entrySet()) {
-			// Get the key and the value
-			Integer key = entry.getKey();
-			Integer value = entry.getValue();
-			// Make a biojava bioassembly object
-			BioAssemblyInfo bioAssInfo = new  BioAssemblyInfo();
-			bioAssInfo.setId(value);
-			// Set size
-			bioAssInfo.setMacromolecularSize(sizeList.get(key));
-			// Now get the new sizes
-			List<BiologicalAssemblyTransformation> newList = new ArrayList<>();
-			for (int i = 0; i < inputIds.get(key).size(); i++) {
-				BiologicalAssemblyTransformation bioAssTrans =
-						new BiologicalAssemblyTransformation();
-				bioAssTrans.setId(inputIds.get(key).get(i));
-				bioAssTrans.setChainId(inputChainIds.get(key).get(i));
-				// Now set matrix
-				Matrix4d mat4d = new Matrix4d(inputTransformations.get(key).get(i));
-				bioAssTrans.setTransformationMatrix(mat4d);
-				// Now add this
-				newList.add(bioAssTrans);
-			}
-			// Now set the transform list
-			bioAssInfo.setTransforms(newList);
-			// Now set this
-			bioAssemblies.put(key, bioAssInfo);
-		}
-		// Now actually set them
-		pdbHeader.setBioAssemblies(bioAssemblies);
-		structure.setPDBHeader(pdbHeader);
-	}
-
 
 	/* (non-Javadoc)
 	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface#
@@ -376,6 +334,50 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 		else{
 			return 0;
 		}
+	}
+
+	@Override
+	public void setBioAssembly(Map<Integer, BioAssemblyData> inputBioassemblies) {
+
+		PDBHeader pdbHeader = structure.getPDBHeader();
+		// Get the bioassebly data
+		Map<Integer, BioAssemblyInfo> bioAssemblies = new HashMap<>();
+		int bioassemlyCounter = 0;
+		for (Entry<Integer, BioAssemblyData> entry: inputBioassemblies.entrySet()) {
+			bioassemlyCounter++;
+			// Get the key and the value
+			Integer key = entry.getKey();
+			BioAssemblyData value = entry.getValue();
+			// Make a biojava bioassembly object
+			BioAssemblyInfo bioAssInfo = new  BioAssemblyInfo();
+			bioAssInfo.setId(bioassemlyCounter);
+			// Now get the new sizes
+			List<BiologicalAssemblyTransformation> newList = new ArrayList<>();
+			Integer transIdCounter =0;
+			for (BioAssemblyTrans transform : value.getTransforms()) {
+				transIdCounter++;
+				// Now loop over the chains
+				for(String currChainId : transform.getChainId()){
+					BiologicalAssemblyTransformation bioAssTrans =
+							new BiologicalAssemblyTransformation();
+					bioAssTrans.setId(transIdCounter.toString());
+					bioAssTrans.setChainId(currChainId);
+					// Now set matrix
+					Matrix4d mat4d = new Matrix4d(transform.getTransformation());
+					bioAssTrans.setTransformationMatrix(mat4d);
+					// Now add this
+					newList.add(bioAssTrans);
+				}
+			}
+			// Now set the transform list
+			bioAssInfo.setTransforms(newList);
+			bioAssInfo.setMacromolecularSize(value.getMacroMolecularSize());
+			// Now set this
+			bioAssemblies.put(key, bioAssInfo);
+		}
+		// Now actually set them
+		pdbHeader.setBioAssemblies(bioAssemblies);
+		structure.setPDBHeader(pdbHeader);		
 	}
 
 
