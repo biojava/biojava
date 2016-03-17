@@ -17,7 +17,7 @@ public class ParseUsingBioJava {
      // Make the decoder
      BioJavaStructureDecoder biojavaStructureDecoder = new BioJavaStructureDecoder();
      DecodeStructure ds = new DecodeStructure(inputByteArray);
-      ds.getStructFromByteArray(biojavaStructureDecoder, parsingParams);
+     ds.getStructFromByteArray(biojavaStructureDecoder, parsingParams);
      // Now return this structure
      return biojavaStructureDecoder.getStructure();
    }
