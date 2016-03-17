@@ -357,7 +357,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			for (BioAssemblyTrans transform : value.getTransforms()) {
 				transIdCounter++;
 				// Now loop over the chains
-				for(String currChainId : transform.getChainId()){
+				for(String currChainId : transform.getChainIdList()){
 					BiologicalAssemblyTransformation bioAssTrans =
 							new BiologicalAssemblyTransformation();
 					bioAssTrans.setId(transIdCounter.toString());
