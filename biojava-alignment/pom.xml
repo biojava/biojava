@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>biojava</artifactId>
@@ -24,17 +25,18 @@
 	<build>
 		<plugins>
 
-			<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>demo/**</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-		
+			<!-- Excluding demo package is required for avoiding namespace clashes 
+				(demo package is in all modules) for signing the jar. See issue #387 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>demo/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 	<dependencies>
@@ -53,28 +55,29 @@
 			<groupId>org.biojava.thirdparty</groupId>
 			<artifactId>forester</artifactId>
 		</dependency>
-		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
+		<!-- logging dependencies (managed by parent pom, don't set versions or 
+			scopes here) -->
 		<dependency>
-        	<groupId>org.slf4j</groupId>
-        	<artifactId>slf4j-api</artifactId>
-    	</dependency>
-    	<!-- binding for log4j2, scope=runTime set in parent pom -->
- 		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-slf4j-impl</artifactId>
-  		</dependency>
-  		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-api</artifactId>
-  		</dependency>
-  		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-core</artifactId>
-  		</dependency>
-  		<dependency>
-  			<groupId>org.biojava</groupId>
-  			<artifactId>biojava-phylo</artifactId>
-  			<version>5.0.0-SNAPSHOT</version>
-  		</dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<!-- binding for log4j2, scope=runTime set in parent pom -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.biojava</groupId>
+			<artifactId>biojava-phylo</artifactId>
+			<version>5.0.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>
