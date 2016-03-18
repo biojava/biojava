@@ -12,7 +12,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>5.0.0-alpha1</version>
+	<version>5.0.0-alpha2-SNAPSHOT</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
         data. It provides analytical and statistical routines, parsers for common file formats and allows the
@@ -45,7 +45,7 @@
 		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
 		<url>https://github.com/biojava/biojava</url>
 
-		<tag>biojava-5.0.0-alpha1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<!-- This section required for release at Maven Central. For a full list 
