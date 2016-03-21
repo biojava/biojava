@@ -205,7 +205,7 @@ public class TestStructureCrossReferences {
 		}
 
 		// compounds linking
-		for (Compound compound:s.getCompounds()) {
+		for (EntityInfo compound:s.getEntityInformation()) {
 			for (Chain c:compound.getChains()) {
 				assertSame(compound, c.getCompound());
 				int count = 0;

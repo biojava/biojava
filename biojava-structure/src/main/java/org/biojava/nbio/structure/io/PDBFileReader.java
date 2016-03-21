@@ -26,7 +26,7 @@ package org.biojava.nbio.structure.io;
 
 
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
@@ -147,8 +147,8 @@ public class PDBFileReader extends LocalPDBDirectory {
 			Structure struc = pdbreader.getStructureById("193D");
 			System.out.println(struc);
 
-			List<Compound>	compounds = struc.getCompounds();
-			for (Compound comp : compounds  ){
+			List<EntityInfo>	compounds = struc.getEntityInformation();
+			for (EntityInfo comp : compounds  ){
 				List<Chain> chains = comp.getChains();
 				System.out.print(">Chains :" );
 				for (Chain c : chains){
