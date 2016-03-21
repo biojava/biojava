@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>biojava</artifactId>
@@ -20,6 +21,18 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>org.rcsb</groupId>
+			<artifactId>mmtf-api</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.rcsb</groupId>
+			<artifactId>mmtf-decoder</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-alignment</artifactId>
 			<version>5.0.0-SNAPSHOT</version>
@@ -37,35 +50,36 @@
 			<artifactId>vecmath</artifactId>
 			<version>1.3.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jgrapht</groupId>
-  			<artifactId>jgrapht-core</artifactId>
-  			<version>0.9.1</version>
+			<artifactId>jgrapht-core</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 
-		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
+		<!-- logging dependencies (managed by parent pom, don't set versions or 
+			scopes here) -->
 		<dependency>
-        	<groupId>org.slf4j</groupId>
-        	<artifactId>slf4j-api</artifactId>
-    	</dependency>
-    	<!-- binding for log4j2, scope=runTime set in parent pom -->
- 		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-slf4j-impl</artifactId>
-  		</dependency>
-  		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-api</artifactId>
-  		</dependency>
-  		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-core</artifactId>
-  		</dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<!-- binding for log4j2, scope=runTime set in parent pom -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
 
 
 
-		<!--  Testing related dependencies -->
+		<!-- Testing related dependencies -->
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -93,16 +107,17 @@
 
 		<plugins>
 
-			<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>demo/**</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+			<!-- Excluding demo package is required for avoiding namespace clashes 
+				(demo package is in all modules) for signing the jar. See issue #387 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>demo/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
