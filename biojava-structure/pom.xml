@@ -23,13 +23,13 @@
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-api</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>0.0.1-alpha1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-decoder</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1-alpha1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -76,9 +76,6 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 		</dependency>
-
-
-
 		<!-- Testing related dependencies -->
 
 		<dependency>
