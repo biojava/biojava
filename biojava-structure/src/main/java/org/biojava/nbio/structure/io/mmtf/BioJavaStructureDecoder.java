@@ -3,11 +3,9 @@ package org.biojava.nbio.structure.io.mmtf;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.vecmath.Matrix4d;
 
@@ -378,6 +376,30 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 		// Now actually set them
 		pdbHeader.setBioAssemblies(bioAssemblies);
 		structure.setPDBHeader(pdbHeader);		
+	}
+
+	@Override
+	public void cleanUpStructure() {
+		// Ensure all altlocs have all atoms
+		for (int i =0; i< structure.nrModels() ; i++){
+			for (Chain chain : structure.getModel(i)) {
+				for (Group group : chain.getAtomGroups()) {
+					for (Group altLocGroup : group.getAltLocs()) { 
+						for ( Atom groupAtom : group.getAtoms()) {
+							// If this alt loc doesn't have this atom
+							if (! altLocGroup.hasAtom(groupAtom.getName())) {
+								altLocGroup.addAtom(groupAtom);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void prepareStructure() {
+		
 	}
 
 
