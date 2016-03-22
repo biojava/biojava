@@ -123,7 +123,6 @@ public class SymmetryDisplay {
 					cloned);
 			RotationAxis axis = new RotationAxis(symmResult.getSelfAlignment());
 			jmol.evalString(axis.getJmolScript(symmResult.getAtoms()));
-			jmol.setTitle(getSymmTitle(symmResult));
 			return jmol;
 		}
 	}
