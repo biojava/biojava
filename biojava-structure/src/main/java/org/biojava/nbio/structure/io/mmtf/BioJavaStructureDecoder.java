@@ -398,7 +398,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	}
 
 	@Override
-	public void prepareStructure() {
+	public void prepareStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels) {
 		
 	}
 
