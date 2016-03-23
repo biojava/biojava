@@ -84,7 +84,7 @@ public class EntityInfo implements Serializable {
 	private String description = null;
 	private String title = null;
 	/**
-	 * The type of group (polymer, non-polymer, water)
+	 * The type of entity (polymer, non-polymer, water)
 	 */
 	private String type = null;
 	private List<String> synonyms = null;
