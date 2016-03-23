@@ -39,6 +39,7 @@ import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.DBRef;
 import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.Group;
@@ -1125,7 +1126,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// we only add the compound if a polymeric one (to match what the PDB parser does)
 			if (e!=null) {
 				c.setDescription(e.getPdbx_description());
-				c.setType(e.getType());
+				c.setType(EntityType.entityTypeFromString(e.getType()));
 				addAnicilliaryEntityData(asym, eId, e, c);
 				structure.addEntityInfo(c);
 				logger.debug("Adding Compound with entity id {} from _entity, with name: {}",eId, c.getDescription());

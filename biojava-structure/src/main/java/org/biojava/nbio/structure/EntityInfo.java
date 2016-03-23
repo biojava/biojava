@@ -86,7 +86,7 @@ public class EntityInfo implements Serializable {
 	/**
 	 * The type of entity (polymer, non-polymer, water)
 	 */
-	private String type = null;
+	private EntityType type = null;
 	private List<String> synonyms = null;
 	private List<String> ecNums = null;
 	private String engineered = null;
@@ -995,8 +995,8 @@ public class EntityInfo implements Serializable {
 	 * Options are polymer, non-polymer or water.
 	 * @return a string describing the type of entity. (polymer, non-polymer or water).
 	 */
-	public String getType() {
-		return type;
+	public EntityType getType() {
+		return this.type;
 	}
 
 	/**
@@ -1004,7 +1004,7 @@ public class EntityInfo implements Serializable {
 	 * Options are polymer, non-polymer or water.
 	 * @param type a string describing the type of entity. (polymer, non-polymer or water).
 	 */
-	public void setType(String type) {
+	public void setType(EntityType type) {
 		this.type = type;
 	}
 }
