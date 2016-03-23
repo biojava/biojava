@@ -59,13 +59,13 @@ public class EntityInfo implements Serializable {
 	//TODO we should consider having the data here as it is in mmCIF dictionary - JD 2014-12-11
 	//     Especially useful would be to have the polymer/non-polymer/water classification present in mmCIF
 	//     We could drop a lot of the stuff here that is PDB-file related (actually many PDB files don't contain many of these fields)
-	//     The only really essential part of a Compound is the member chains and the entity_id/mol_id
+	//     The only really essential part of a EntityInfo is the member chains and the entity_id/mol_id
 	// See also issue https://github.com/biojava/biojava/issues/219
 
 	private static final long serialVersionUID = 2991897825657586356L;
 
 	/**
-	 * The list of chains that are described by this Compound
+	 * The list of chains that are described by this EntityInfo
 	 */
 	private List<Chain> chains;
 
@@ -138,7 +138,7 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * Constructs a new Compound copying all data from the given one
+	 * Constructs a new EntityInfo copying all data from the given one
 	 * but not setting the Chains
 	 * @param c
 	 */
@@ -213,7 +213,7 @@ public class EntityInfo implements Serializable {
 	@Override
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
-		buf.append("Compound: ").append(molId).append(" ");
+		buf.append("EntityInfo: ").append(molId).append(" ");
 		buf.append(description==null?"(no name)":"("+description+")");
 		buf.append(" chains: ");
 		if (chains!=null) {
@@ -228,10 +228,10 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * Get the representative Chain for this Compound.
+	 * Get the representative Chain for this EntityInfo.
 	 * We choose the Chain with the first chain identifier after
 	 * lexicographical sorting (case insensitive),
-	 * e.g. chain A if Compound is composed of chains A,B,C,D,E
+	 * e.g. chain A if EntityInfo is composed of chains A,B,C,D,E
 	 * @return
 	 */
 	public Chain getRepresentative() {
@@ -249,7 +249,7 @@ public class EntityInfo implements Serializable {
 			}
 		}
 
-		logger.error("Could not find a representative chain for compound '{}'", this.toString());
+		logger.error("Could not find a representative chain for EntityInfo '{}'", this.toString());
 
 		return null;
 	}
@@ -276,12 +276,12 @@ public class EntityInfo implements Serializable {
 	 *
 	 */
 	public void showHeader(){
-		this.showCompound();
+		this.showEntityInfo();
 		this.showSource();
 	}
 
-	public void showCompound() {
-		System.out.println("COMPOUND INFO:");
+	public void showEntityInfo() {
+		System.out.println("ENTITY INFO:");
 		if (this.molId != -1) {
 			System.out.println("Mol ID: " + this.molId);
 		}
@@ -433,12 +433,12 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * Return the list of member chain IDs that are described by this Compound,
+	 * Return the list of member chain IDs that are described by this EnityInfo,
 	 * only unique chain IDs are contained in the list.
 	 * Note that in the case of multimodel structures this will return just the unique
 	 * chain identifiers whilst {@link #getChains()} will return a corresponding chain
 	 * per model.
-	 * @return the list of unique ChainIDs that are described by this Compound
+	 * @return the list of unique ChainIDs that are described by this EnityInfo
 	 * @see #setChains(List)
 	 * @see #getChains()
 	 */
@@ -453,9 +453,9 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * Given a Group g of Chain c (member of this Compound) return the corresponding position in the
+	 * Given a Group g of Chain c (member of this EnityInfo) return the corresponding position in the
 	 * alignment of all member sequences (1-based numbering), i.e. the index (1-based) in the SEQRES sequence.
-	 * This allows for comparisons of residues belonging to different chains of the same Compound (entity).
+	 * This allows for comparisons of residues belonging to different chains of the same EnityInfo (entity).
 	 * <p>
 	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping
 	 * will not be available and this method will return {@link ResidueNumber#getSeqNum()} for all residues, which
@@ -468,7 +468,7 @@ public class EntityInfo implements Serializable {
 	 * @return the aligned residue index (1 to n), if no SEQRES groups are available at all then {@link ResidueNumber#getSeqNum()}
 	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned
 	 * for the given group and chain
-	 * @throws IllegalArgumentException if the given Chain is not a member of this Compound
+	 * @throws IllegalArgumentException if the given Chain is not a member of this EnityInfo
 	 * @see {@link Chain#getSeqResGroup(int)}
 	 */
 	public int getAlignedResIndex(Group g, Chain c) {
@@ -481,7 +481,7 @@ public class EntityInfo implements Serializable {
 			}
 		}
 		if (!contained)
-			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this Compound (entity): "+getChainIds().toString());
+			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this entity: "+getChainIds().toString());
 
 		if (!chains2pdbResNums2ResSerials.containsKey(c.getChainID())) {
 			// we do lazy initialisation of the map
@@ -494,7 +494,7 @@ public class EntityInfo implements Serializable {
 
 			ResidueNumber resNum = g.getResidueNumber();
 			// the resNum will be null for groups that are SEQRES only and not in ATOM,
-			// still it can happen that a group is in ATOM in one chain but not in other of the same compound.
+			// still it can happen that a group is in ATOM in one chain but not in other of the same entity.
 			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):
 			if (resNum==null && c.getSeqResGroups()!=null && !c.getSeqResGroups().isEmpty()) {
 				int index = -1;
@@ -548,9 +548,9 @@ public class EntityInfo implements Serializable {
 
 			// The seqres group will have a null residue number whenever its corresponding atom group doesn't exist
 			// because it is missing in the electron density.
-			// However, it can be observed in the density in other chains of the same compound,
+			// However, it can be observed in the density in other chains of the same entity,
 			// to be complete we go and look for the residue number in other chains, so that we have a
-			// seqres to atom mapping as complete as possible (with all known atom groups of any chain of this compound)
+			// seqres to atom mapping as complete as possible (with all known atom groups of any chain of this entity)
 
 			ResidueNumber resNum = c.getSeqResGroup(i).getResidueNumber();
 
@@ -965,7 +965,7 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * Get the list of chains that are part of this Compound. Note that for multi-model
+	 * Get the list of chains that are part of this EntityInfo. Note that for multi-model
 	 * structures chains from all models are returned.
 	 *
 	 * @return a List of Chain objects
@@ -975,7 +975,7 @@ public class EntityInfo implements Serializable {
 	}
 
 	 /**
-	  * Add new Chain to this Compound
+	  * Add new Chain to this EntityInfo
 	  * @param chain
 	  */
 	public void addChain(Chain chain){
@@ -983,7 +983,7 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * Set the chains for this Compound
+	 * Set the chains for this EntityInfo
 	 * @param chains
 	 */
 	public void setChains(List<Chain> chains){
@@ -991,14 +991,18 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * @return the type
+	 * Get the type of entity this EntityInfo describes.
+	 * Options are polymer, non-polymer or water.
+	 * @return a string describing the type of entity. (polymer, non-polymer or water).
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @param type the type to set
+	 * Set the type of entity this EntityInfo describes.
+	 * Options are polymer, non-polymer or water.
+	 * @param type a string describing the type of entity. (polymer, non-polymer or water).
 	 */
 	public void setType(String type) {
 		this.type = type;

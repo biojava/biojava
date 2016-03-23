@@ -100,7 +100,7 @@ public class TestInterfaceClustering {
 
 		assertEquals(8, s.getChains().size());
 
-		assertEquals(4, s.getEntityInformation().size());
+		assertEquals(4, s.getEntityInfos().size());
 
 		CrystalBuilder cb = new CrystalBuilder(s);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
@@ -149,7 +149,7 @@ public class TestInterfaceClustering {
 
 		assertEquals(6, s.getChains().size());
 
-		assertEquals(1, s.getEntityInformation().size());
+		assertEquals(1, s.getEntityInfos().size());
 
 		CrystalBuilder cb = new CrystalBuilder(s);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);

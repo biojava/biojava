@@ -177,7 +177,7 @@ public class StructureImpl implements Structure, Serializable {
 					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
 						try {
 							Chain newChain = n.getChainByPDB(chainId,modelNr);
-							newChain.setCompound(newCompound);
+							newChain.setEntityInfo(newCompound);
 							newCompound.addChain(newChain);
 						} catch (StructureException e) {
 							// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
@@ -187,7 +187,7 @@ public class StructureImpl implements Structure, Serializable {
 			}
 			newCompoundList.add(newCompound);
 		}
-		n.setCompounds(newCompoundList);
+		n.setEntityInfos(newCompoundList);
 
 		// TODO ssbonds are complicated to clone: there are deep references inside Atom objects, how would we do it? - JD 2016-03-03
 
@@ -442,8 +442,8 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
 				str.append("chain ").append(j).append(": >").append(cha.getChainID()).append("< ");
-				if ( cha.getCompound() != null){
-					EntityInfo comp = cha.getCompound();
+				if ( cha.getEntityInfo() != null){
+					EntityInfo comp = cha.getEntityInfo();
 					String molName = comp.getDescription();
 					if ( molName != null){
 						str.append(molName);
@@ -665,19 +665,19 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setCompounds(List<EntityInfo> molList){
+	public void setEntityInfos(List<EntityInfo> molList){
 		this.compounds = molList;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void addCompound(EntityInfo compound) {
+	public void addEntityInfo(EntityInfo compound) {
 		this.compounds.add(compound);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<EntityInfo> getEntityInformation() {
+	public List<EntityInfo> getEntityInfos() {
 		// compounds are parsed from the PDB/mmCIF file normally
 		// but if the file is incomplete, it won't have the Compounds information and we try
 		// to guess it from the existing seqres/atom sequences
@@ -688,7 +688,7 @@ public class StructureImpl implements Structure, Serializable {
 			// now we need to set references in chains:
 			for (EntityInfo compound:compounds) {
 				for (Chain c:compound.getChains()) {
-					c.setCompound(compound);
+					c.setEntityInfo(compound);
 				}
 			}
 		}

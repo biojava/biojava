@@ -962,13 +962,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					compound = new EntityInfo();
 					compound.setMolId(eId);
 					compound.addChain(chain);
-					chain.setCompound(compound);
-					structure.addCompound(compound);
+					chain.setEntityInfo(compound);
+					structure.addEntityInfo(compound);
 				} else {
 					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
 							chain.getChainID(), chain.getInternalChainID(), eId);
 					compound.addChain(chain);
-					chain.setCompound(compound);
+					chain.setEntityInfo(compound);
 				}
 
 			}
@@ -977,7 +977,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
-		List<EntityInfo> compounds = structure.getEntityInformation();
+		List<EntityInfo> compounds = structure.getEntityInfos();
 
 		// final sanity check: it can happen that from the annotated compounds some are not linked to any chains
 		// e.g. 3s26: a sugar entity does not have any chains associated to it (it seems to be happening with many sugar compounds)
@@ -1127,7 +1127,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				c.setDescription(e.getPdbx_description());
 				c.setType(e.getType());
 				addAnicilliaryEntityData(asym, eId, e, c);
-				structure.addCompound(c);
+				structure.addEntityInfo(c);
 				logger.debug("Adding Compound with entity id {} from _entity, with name: {}",eId, c.getDescription());
 			}
 		}

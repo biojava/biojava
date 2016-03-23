@@ -63,7 +63,7 @@ public class TestEntityNameAndType {
 		int chainCounter = 0;
 		for (Chain c: bioJavaStruct.getChains()) {
 			// Now get the entity information we want to test
-			EntityInfo thisCmpd = c.getCompound();
+			EntityInfo thisCmpd = c.getEntityInfo();
 			testTypeInfo[chainCounter] = thisCmpd.getType();
 			testDescInfo[chainCounter] = thisCmpd.getDescription();
 			testGeneSourceSciName[chainCounter] =  thisCmpd.getOrganismScientific();

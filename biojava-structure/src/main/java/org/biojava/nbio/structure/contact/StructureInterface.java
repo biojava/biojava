@@ -372,8 +372,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return true if homomeric or if either of the entities is unknonw (null Compounds), false otherwise
 	 */
 	public boolean isHomomeric() {
-		EntityInfo first = getParentChains().getFirst().getCompound();
-		EntityInfo second = getParentChains().getSecond().getCompound();
+		EntityInfo first = getParentChains().getFirst().getEntityInfo();
+		EntityInfo second = getParentChains().getSecond().getEntityInfo();
 		if (first==null || second==null) {
 			logger.warn("Some compound of interface {} is null, can't determine whether it is homo/heteromeric. Consider it homomeric", getId());
 			return true;
@@ -586,16 +586,16 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		Pair<Chain> thisChains = getParentChains();
 		Pair<Chain> otherChains = other.getParentChains();
 
-		if (thisChains.getFirst().getCompound() == null || thisChains.getSecond().getCompound() == null ||
-			otherChains.getFirst().getCompound() == null || otherChains.getSecond().getCompound() == null ) {
+		if (thisChains.getFirst().getEntityInfo() == null || thisChains.getSecond().getEntityInfo() == null ||
+			otherChains.getFirst().getEntityInfo() == null || otherChains.getSecond().getEntityInfo() == null ) {
 			// this happens in cases like 2uub
 			logger.warn("Found chains with null compounds while comparing interfaces {} and {}. Contact overlap score for them will be 0.",
 					this.getId(), other.getId());
 			return 0;
 		}
 
-		Pair<EntityInfo> thisCompounds = new Pair<EntityInfo>(thisChains.getFirst().getCompound(), thisChains.getSecond().getCompound());
-		Pair<EntityInfo> otherCompounds = new Pair<EntityInfo>(otherChains.getFirst().getCompound(), otherChains.getSecond().getCompound());
+		Pair<EntityInfo> thisCompounds = new Pair<EntityInfo>(thisChains.getFirst().getEntityInfo(), thisChains.getSecond().getEntityInfo());
+		Pair<EntityInfo> otherCompounds = new Pair<EntityInfo>(otherChains.getFirst().getEntityInfo(), otherChains.getSecond().getEntityInfo());
 
 		if ( (  (thisCompounds.getFirst() == otherCompounds.getFirst()) &&
 				(thisCompounds.getSecond() == otherCompounds.getSecond())   )  ||
@@ -679,7 +679,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			logger.warn("Could not find parents chains, compounds will be null");
 			return null;
 		}
-		return new Pair<EntityInfo>(chains.getFirst().getCompound(), chains.getSecond().getCompound());
+		return new Pair<EntityInfo>(chains.getFirst().getEntityInfo(), chains.getSecond().getEntityInfo());
 	}
 
 	private Structure getParentStructure() {

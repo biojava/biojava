@@ -210,7 +210,7 @@ public class TestLongPdbVsMmCifParsing {
 		// compounds: there's quite some inconsistencies here between pdb and cif:
 		// sugar polymers are not in pdb at all: we avoid them
 		boolean canCompareCompoundsSize = true;
-		for (EntityInfo compound: sCif.getEntityInformation()) {
+		for (EntityInfo compound: sCif.getEntityInfos()) {
 			if (compound.getDescription()==null || compound.getDescription().contains("SUGAR")) {
 				canCompareCompoundsSize = false;
 				break;
@@ -218,7 +218,7 @@ public class TestLongPdbVsMmCifParsing {
 		}
 
 		if (canCompareCompoundsSize)
-			assertEquals("failed number of Compounds pdb vs cif", sPdb.getEntityInformation().size(), sCif.getEntityInformation().size());
+			assertEquals("failed number of Compounds pdb vs cif", sPdb.getEntityInfos().size(), sCif.getEntityInfos().size());
 
 
 		// ss bonds
@@ -410,13 +410,13 @@ public class TestLongPdbVsMmCifParsing {
 
 		// getCompound() is some times null for badly formatted PDB files (e.g. 4a10, all waters are in a separate chain F)
 		if (isPolymer(cPdb)) {
-			assertNotNull("getCompound is null in pdb (chain "+chainId+")",cPdb.getCompound());
-			assertNotNull("getCompound is null in cif (chain "+chainId+")",cCif.getCompound());
+			assertNotNull("getCompound is null in pdb (chain "+chainId+")",cPdb.getEntityInfo());
+			assertNotNull("getCompound is null in cif (chain "+chainId+")",cCif.getEntityInfo());
 
 			// for some badly formatted entries there are mismatches of mol_ids on pdb cs mmcif, e.g. 2efw
 			// we thus count them and only warn at the end
-			int molIdPdb = cPdb.getCompound().getMolId();
-			int molIdCif = cCif.getCompound().getMolId();
+			int molIdPdb = cPdb.getEntityInfo().getMolId();
+			int molIdCif = cCif.getEntityInfo().getMolId();
 			if (molIdPdb!=molIdCif) {
 				logger.warn("Mismatching mol_id (entity_id) for {}. pdb: {}, mmCIF: {}",pdbId,molIdPdb,molIdCif);
 				pdbIdsWithMismatchingMolIds.add(pdbId);

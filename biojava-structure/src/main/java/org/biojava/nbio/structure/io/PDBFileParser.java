@@ -2881,7 +2881,7 @@ public class PDBFileParser  {
 
 
 		linkChains2Compound(structure);
-		structure.setCompounds(compounds);
+		structure.setEntityInfos(compounds);
 
 		//associate the temporary Groups in the siteMap to the ones
 
@@ -2919,7 +2919,7 @@ public class PDBFileParser  {
 
 		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
 		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
-		structure.getEntityInformation();
+		structure.getEntityInfos();
 	}
 
 	private void setSecStruc(){
@@ -3058,7 +3058,7 @@ public class PDBFileParser  {
 					continue;
 				try {
 					Chain c = s.getChainByPDB(chainId);
-					c.setCompound(comp);
+					c.setEntityInfo(comp);
 				} catch (StructureException e){
 					logger.warn("Chain {} was not found, can't assign a compound (entity) to it.",chainId);
 				}
@@ -3071,12 +3071,12 @@ public class PDBFileParser  {
 
 		if (compounds!=null && !compounds.isEmpty()) {
 			for (Chain c: s.getChains()) {
-				if (c.getCompound() == null) {
+				if (c.getEntityInfo() == null) {
 
 					EntityInfo compound = new EntityInfo();
 					compound.addChain(c);
 					compound.setMolId(findMaxCompoundId(compounds)+1);
-					c.setCompound(compound);
+					c.setEntityInfo(compound);
 					compounds.add(compound);
 
 					logger.warn("No compound (entity) found in file for chain {}. Creating new compound {} for it.", c.getChainID(), compound.getMolId());

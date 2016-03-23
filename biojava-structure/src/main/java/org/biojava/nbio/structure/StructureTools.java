@@ -1046,7 +1046,7 @@ public class StructureTools {
 		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-		newS.setCompounds(s.getEntityInformation());
+		newS.setEntityInfos(s.getEntityInfos());
 		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
@@ -1075,7 +1075,7 @@ public class StructureTools {
 		}
 		if (c != null) {
 			newS.addChain(c);
-			for (EntityInfo comp : s.getEntityInformation()) {
+			for (EntityInfo comp : s.getEntityInfos()) {
 				if (comp.getChainIds() != null
 						&& comp.getChainIds().contains(c.getChainID())) {
 					// found matching compound. set description...
@@ -1116,7 +1116,7 @@ public class StructureTools {
 		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-		newS.setCompounds(s.getEntityInformation());
+		newS.setEntityInfos(s.getEntityInfos());
 		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());

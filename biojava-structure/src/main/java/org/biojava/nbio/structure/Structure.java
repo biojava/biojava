@@ -518,7 +518,7 @@ public interface Structure extends Cloneable {
 	 *
 	 * @param molList
 	 */
-	public void setCompounds(List<EntityInfo> molList);
+	public void setEntityInfos(List<EntityInfo> molList);
 
 	/**
 	 * Get all the Compounds for this Structure.
@@ -526,12 +526,12 @@ public interface Structure extends Cloneable {
 	 *
 	 * @return a list of Compounds
 	 */
-	public List<EntityInfo> getEntityInformation();
+	public List<EntityInfo> getEntityInfos();
 
 	/**
 	 * Add a Compound to this Structure
 	 */
-	public void addCompound(EntityInfo compound);
+	public void addEntityInfo(EntityInfo compound);
 
 	/**
 	 * Set the list of database references for this structure
