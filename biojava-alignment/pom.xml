@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>5.0.0-SNAPSHOT</version>
+		<version>5.0.0-alpha2</version>
 	</parent>
 	<artifactId>biojava-alignment</artifactId>
 	<name>biojava-alignment</name>
@@ -48,7 +47,7 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
+			<version>5.0.0-alpha2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -77,7 +76,7 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-phylo</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
+			<version>5.0.0-alpha2</version>
 		</dependency>
 	</dependencies>
 </project>
