@@ -683,7 +683,7 @@ public class StructureImpl implements Structure, Serializable {
 		// to guess it from the existing seqres/atom sequences
 		if (compounds==null || compounds.isEmpty()) {
 			EntityFinder cf = new EntityFinder(this);
-			this.compounds = cf.findCompounds();
+			this.compounds = cf.findEntities();
 
 			// now we need to set references in chains:
 			for (EntityInfo compound:compounds) {

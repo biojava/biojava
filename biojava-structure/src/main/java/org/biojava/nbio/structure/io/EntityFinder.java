@@ -49,14 +49,14 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * Heuristical finding of Compounds (called Entities in mmCIF dictionary)
- * in a given Structure. Compounds are the groups of sequence identical NCS-related polymer chains
+ * Heuristical finding of Entities (called Compounds in legacy PDB format)
+ * in a given Structure. Entities are the groups of sequence identical NCS-related polymer chains
  * in the Structure.
  *
- * This is related to {@link SeqRes2AtomAligner} but it is intended for raw PDB files where
+ * This is related to {@link SeqRes2AtomAligner} but it is intended for raw PDB/mmCIF files where
  * possibly no SEQRES is given.
  *
- * @author duarte_j
+ * @author Jose Duarte
  */
 public class EntityFinder {
 
@@ -87,11 +87,11 @@ public class EntityFinder {
 	}
 
 	/**
-	 * Utility method that employs some heuristics to find the Compounds
+	 * Utility method that employs some heuristics to find the {@link EntityInfo}s
 	 * for this Structure in case the information is missing in PDB/mmCIF file
 	 * @return
 	 */
-	public List<EntityInfo> findCompounds() {
+	public List<EntityInfo> findEntities() {
 
 		TreeMap<String,EntityInfo> chainIds2entities = findCompoundsFromAlignment();
 
