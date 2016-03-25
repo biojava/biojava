@@ -124,7 +124,7 @@ public class TestLongPdbVsMmCifParsing {
 
 	@Test
 	public void testSingle() throws IOException, StructureException {
-		testAll(Arrays.asList("1bcr"));
+		testAll(Arrays.asList("4kro"));
 	}
 
 	@After
@@ -207,19 +207,36 @@ public class TestLongPdbVsMmCifParsing {
 		// TODO journal article not parsed in mmCIF parser
 		//assertEquals("failed hasJournalArticle",sPdb.hasJournalArticle(),sCif.hasJournalArticle());
 
-		// compounds: there's quite some inconsistencies here between pdb and cif:
-		// sugar polymers are not in pdb at all: we avoid them
-		boolean canCompareCompoundsSize = true;
-		for (EntityInfo compound: sCif.getEntityInfos()) {
-			if (compound.getDescription()==null || compound.getDescription().contains("SUGAR")) {
-				canCompareCompoundsSize = false;
-				break;
-			}
+		// entity type should always be present
+		for (EntityInfo e: sPdb.getEntityInfos()) {
+			assertNotNull(e.getType());
 		}
 
-		if (canCompareCompoundsSize)
-			assertEquals("failed number of Compounds pdb vs cif", sPdb.getEntityInfos().size(), sCif.getEntityInfos().size());
+		for (EntityInfo e: sCif.getEntityInfos()) {
+			assertNotNull(e.getType());
+		}
+		
+		// entities: there's quite some inconsistencies here between pdb and cif:
+		// sugar polymers are not in pdb at all: we avoid them
+		boolean canCompareEntityCounts = true;
+		for (EntityInfo e:sCif.getEntityInfos()) {
+			if (e.getDescription().contains("SUGAR")) canCompareEntityCounts = false;
+		}
+		if (canCompareEntityCounts) {
+			int entCountCif = 0;
+			for (EntityInfo e: sCif.getEntityInfos()) {
+				if (e.getType() == EntityType.POLYMER) 
+					entCountCif++; 
 
+			}
+			int entCountPdb = 0;
+			for (EntityInfo e:sPdb.getEntityInfos()) {
+				if (e.getType() == EntityType.POLYMER) 
+					entCountPdb++;
+			}
+
+			assertEquals("failed number of non-sugar polymeric Entities pdb vs cif", entCountPdb, entCountCif);
+		}
 
 		// ss bonds
 		// 4ab9 contains an error in ssbond in pdb file (misses 1 ssbond)

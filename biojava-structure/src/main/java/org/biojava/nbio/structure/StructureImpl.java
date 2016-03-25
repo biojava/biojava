@@ -698,8 +698,14 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	public EntityInfo getCompoundById(int molId) {
+		return getEntityById(molId);
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public EntityInfo getEntityById(int entityId) {
 		for (EntityInfo mol : this.compounds){
-			if (mol.getMolId()==molId){
+			if (mol.getMolId()==entityId){
 				return mol;
 			}
 		}

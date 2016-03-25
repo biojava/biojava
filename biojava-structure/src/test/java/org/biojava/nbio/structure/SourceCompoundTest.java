@@ -181,7 +181,7 @@ public class SourceCompoundTest extends TestCase{
 	public void testSourceTaxIdVersion32File(){
 		Structure structure = getStructure("/3dl7_v32.pdb");
 
-		EntityInfo comp = structure.getCompoundById(1);
+		EntityInfo comp = structure.getEntityById(1);
 
 		comp.showSource();
 
