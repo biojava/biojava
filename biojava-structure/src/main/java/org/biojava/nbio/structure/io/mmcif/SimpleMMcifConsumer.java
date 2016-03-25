@@ -923,7 +923,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	/**
 	 * Here we link entities to chains.
-	 * Also if entities are not present in file, this initialises the entities with some heuristics, see {@link CompoundFinder}
+	 * Also if entities are not present in file, this initialises the entities with some heuristics, see {@link EntityFinder}
 	 */
 	private void linkEntities() {
 
@@ -963,6 +963,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					e = new EntityInfo();
 					e.setMolId(eId);
 					e.addChain(chain);
+					if (StructureTools.isChainWaterOnly(chain)) {
+						e.setType(EntityType.WATER);
+					} else {
+						e.setType(EntityType.NONPOLYMER);
+					}
 					chain.setEntityInfo(e);
 					structure.addEntityInfo(e);
 				} else {
@@ -976,8 +981,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 
-		// to make sure we have Entities linked to chains, we call getCompounds() which will lazily initialise the
-		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
+		// to make sure we have Entities linked to chains, we call getEntityInfos() which will lazily initialise the
+		// compounds using heuristics (see EntityFinder) in the case that they were not explicitly present in the file
 		List<EntityInfo> entities = structure.getEntityInfos();
 
 		// final sanity check: it can happen that from the annotated entities some are not linked to any chains

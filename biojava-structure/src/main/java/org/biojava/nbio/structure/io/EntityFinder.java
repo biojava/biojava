@@ -58,11 +58,11 @@ import java.util.TreeSet;
  *
  * @author duarte_j
  */
-public class CompoundFinder {
+public class EntityFinder {
 
 	private Structure s;
 
-	private static final Logger logger = LoggerFactory.getLogger(CompoundFinder.class);
+	private static final Logger logger = LoggerFactory.getLogger(EntityFinder.class);
 
 	/**
 	 * Above this ratio of mismatching residue types for same residue numbers we
@@ -82,7 +82,7 @@ public class CompoundFinder {
 	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
 
 
-	public CompoundFinder(Structure s) {
+	public EntityFinder(Structure s) {
 		this.s = s;
 	}
 

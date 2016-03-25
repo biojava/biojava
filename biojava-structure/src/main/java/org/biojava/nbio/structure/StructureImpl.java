@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.biojava.nbio.structure.io.CompoundFinder;
+import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -682,7 +682,7 @@ public class StructureImpl implements Structure, Serializable {
 		// but if the file is incomplete, it won't have the Compounds information and we try
 		// to guess it from the existing seqres/atom sequences
 		if (compounds==null || compounds.isEmpty()) {
-			CompoundFinder cf = new CompoundFinder(this);
+			EntityFinder cf = new EntityFinder(this);
 			this.compounds = cf.findCompounds();
 
 			// now we need to set references in chains:
