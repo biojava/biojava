@@ -222,7 +222,9 @@ public class CESymmParameters extends CeParameters {
 				+ "between two aligned residues.");
 
 		// gaps
-		params.add("MStA Gaps: allow gaps in the multiple alignment if true.");
+		params.add("Internal Gaps: allow up to 50% of repeats to have gaps in "
+				+ "the multiple alignment if true, "
+				+ "otherwise all repeats must be aligned at each position.");
 
 		// optimization steps
 		params.add("Optimization Steps: maximum number of optimization steps:"
@@ -266,7 +268,7 @@ public class CESymmParameters extends CeParameters {
 		params.add("SSE Threshold");
 		params.add("Minimum Core Length");
 		params.add("Distance Cutoff");
-		params.add("MStA Gaps");
+		params.add("Internal Gaps");
 		params.add("Optimization Steps");
 		return params;
 	}
