@@ -57,7 +57,7 @@ public class StructureImpl implements Structure, Serializable {
 	private List<List<Chain>> models;
 
 	private List<Map <String,Integer>> connections ;
-	private List<Compound> compounds;
+	private List<EntityInfo> compounds;
 	private List<DBRef> dbrefs;
 	private List<Bond> ssbonds;
 	private List<Site> sites;
@@ -79,7 +79,7 @@ public class StructureImpl implements Structure, Serializable {
 		models         = new ArrayList<List<Chain>>();
 		name           = "";
 		connections    = new ArrayList<Map<String,Integer>>();
-		compounds      = new ArrayList<Compound>();
+		compounds      = new ArrayList<EntityInfo>();
 		dbrefs         = new ArrayList<DBRef>();
 		pdbHeader      = new PDBHeader();
 		ssbonds        = new ArrayList<Bond>();
@@ -169,15 +169,15 @@ public class StructureImpl implements Structure, Serializable {
 
 		// deep-copying of Compounds is tricky: there's cross references also in the Chains
 		// beware: if we copy the compounds we would also need to reset the references to compounds in the individual chains
-		List<Compound> newCompoundList = new ArrayList<Compound>();
-		for (Compound compound:this.compounds) {
-			Compound newCompound = new Compound(compound); // this sets everything but the chains
+		List<EntityInfo> newCompoundList = new ArrayList<EntityInfo>();
+		for (EntityInfo compound:this.compounds) {
+			EntityInfo newCompound = new EntityInfo(compound); // this sets everything but the chains
 			for (String chainId:compound.getChainIds()) {
 
 					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
 						try {
 							Chain newChain = n.getChainByPDB(chainId,modelNr);
-							newChain.setCompound(newCompound);
+							newChain.setEntityInfo(newCompound);
 							newCompound.addChain(newChain);
 						} catch (StructureException e) {
 							// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
@@ -187,7 +187,7 @@ public class StructureImpl implements Structure, Serializable {
 			}
 			newCompoundList.add(newCompound);
 		}
-		n.setCompounds(newCompoundList);
+		n.setEntityInfos(newCompoundList);
 
 		// TODO ssbonds are complicated to clone: there are deep references inside Atom objects, how would we do it? - JD 2016-03-03
 
@@ -442,9 +442,9 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
 				str.append("chain ").append(j).append(": >").append(cha.getChainID()).append("< ");
-				if ( cha.getCompound() != null){
-					Compound comp = cha.getCompound();
-					String molName = comp.getMolName();
+				if ( cha.getEntityInfo() != null){
+					EntityInfo comp = cha.getEntityInfo();
+					String molName = comp.getDescription();
 					if ( molName != null){
 						str.append(molName);
 					}
@@ -465,7 +465,7 @@ public class StructureImpl implements Structure, Serializable {
 			str.append(dbref.toPDB()).append(newline);
 		}
 		str.append("Molecules: ").append(newline);
-		for (Compound mol : compounds) {
+		for (EntityInfo mol : compounds) {
 			str.append(mol).append(newline);
 		}
 
@@ -665,19 +665,19 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setCompounds(List<Compound> molList){
+	public void setEntityInfos(List<EntityInfo> molList){
 		this.compounds = molList;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void addCompound(Compound compound) {
+	public void addEntityInfo(EntityInfo compound) {
 		this.compounds.add(compound);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Compound> getCompounds() {
+	public List<EntityInfo> getEntityInfos() {
 		// compounds are parsed from the PDB/mmCIF file normally
 		// but if the file is incomplete, it won't have the Compounds information and we try
 		// to guess it from the existing seqres/atom sequences
@@ -686,9 +686,9 @@ public class StructureImpl implements Structure, Serializable {
 			this.compounds = cf.findCompounds();
 
 			// now we need to set references in chains:
-			for (Compound compound:compounds) {
+			for (EntityInfo compound:compounds) {
 				for (Chain c:compound.getChains()) {
-					c.setCompound(compound);
+					c.setEntityInfo(compound);
 				}
 			}
 		}
@@ -697,8 +697,8 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public Compound getCompoundById(int molId) {
-		for (Compound mol : this.compounds){
+	public EntityInfo getCompoundById(int molId) {
+		for (EntityInfo mol : this.compounds){
 			if (mol.getMolId()==molId){
 				return mol;
 			}

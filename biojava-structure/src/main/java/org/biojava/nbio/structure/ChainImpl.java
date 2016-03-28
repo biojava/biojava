@@ -65,7 +65,7 @@ public class ChainImpl implements Chain, Serializable {
 	private List<Group> seqResGroups;
 
 	private Long id;
-	private Compound mol;
+	private EntityInfo mol;
 	private Structure parent;
 
 	private Map<String, Integer> pdbResnumMap;
@@ -159,7 +159,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		// NOTE the Compound will be reset at the parent level (Structure) if cloning is happening from parent level
 		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
-		n.setCompound(this.mol);
+		n.setEntityInfo(this.mol);
 
 		n.setInternalChainID(internalChainID);
 
@@ -217,7 +217,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
-	public void setCompound(Compound mol) {
+	public void setEntityInfo(EntityInfo mol) {
 		this.mol = mol;
 	}
 
@@ -225,7 +225,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
-	public Compound getCompound() {
+	public EntityInfo getEntityInfo() {
 		return this.mol;
 	}
 
@@ -516,8 +516,8 @@ public class ChainImpl implements Chain, Serializable {
 		StringBuilder str = new StringBuilder();
 		str.append("Chain >").append(getChainID()).append("<").append(newline);
 		if ( mol != null ){
-			if ( mol.getMolName() != null){
-				str.append(mol.getMolName()).append(newline);
+			if ( mol.getDescription() != null){
+				str.append(mol.getDescription()).append(newline);
 			}
 		}
 		str.append("total SEQRES length: ").append(getSeqResGroups().size()).append(" total ATOM length:")

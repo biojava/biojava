@@ -119,13 +119,13 @@ public class StructureTest {
 		assertEquals(64, c2.getAtomGroups(GroupType.HETATM).size());
 		assertEquals(0, c2.getAtomGroups(GroupType.NUCLEOTIDE).size());
 
-		List<Compound> compounds= structure.getCompounds();
+		List<EntityInfo> compounds= structure.getEntityInfos();
 
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals(2, compounds.size());
-		Compound mol = compounds.get(0);
-		assertTrue(mol.getMolName().startsWith("TRYPSIN INHIBITOR"));
+		EntityInfo mol = compounds.get(0);
+		assertTrue(mol.getDescription().startsWith("TRYPSIN INHIBITOR"));
 	}
 
 	@Test
@@ -203,14 +203,14 @@ public class StructureTest {
 		assertEquals("the technique in the Header is " + technique, techShould, technique);
 
 
-		List <Compound> compounds = structure.getCompounds();
+		List <EntityInfo> compounds = structure.getEntityInfos();
 
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals("did not find the right number of compounds! ", 2, compounds.size());
 
-		Compound comp = compounds.get(0);
-		assertEquals("did not get the right compounds info",true,comp.getMolName().startsWith("TRYPSIN INHIBITOR"));
+		EntityInfo comp = compounds.get(0);
+		assertEquals("did not get the right compounds info",true,comp.getDescription().startsWith("TRYPSIN INHIBITOR"));
 
 		List<String> chainIds = comp.getChainIds();
 		List<Chain> chains    = comp.getChains();

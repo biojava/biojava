@@ -86,7 +86,7 @@ public class CAConverter {
 
 		Chain newChain = new ChainImpl();
 		newChain.setChainID(chain.getChainID());
-		newChain.setCompound(chain.getCompound());
+		newChain.setEntityInfo(chain.getEntityInfo());
 		newChain.setSwissprotId(chain.getSwissprotId());
 
 		List<Group> groups = chain.getAtomGroups();
@@ -127,7 +127,7 @@ public class CAConverter {
 
 		Chain newChain = new ChainImpl();
 		newChain.setChainID(chain.getChainID());
-		newChain.setCompound(chain.getCompound());
+		newChain.setEntityInfo(chain.getEntityInfo());
 		newChain.setSwissprotId(chain.getSwissprotId());
 
 		List<Group> groups = chain.getAtomGroups();

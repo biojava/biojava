@@ -40,7 +40,7 @@ import java.util.Map;
  * <ul>
  * <li>{@link PDBHeader}</li>
  * <li>{@link DBRef}</li>
- * <li>{@link Compound}</li>
+ * <li>{@link EntityInfo}</li>
  * </ul>
  *
  * The structure object provides access to the data from the ATOM records through
@@ -518,7 +518,7 @@ public interface Structure extends Cloneable {
 	 *
 	 * @param molList
 	 */
-	public void setCompounds(List<Compound> molList);
+	public void setEntityInfos(List<EntityInfo> molList);
 
 	/**
 	 * Get all the Compounds for this Structure.
@@ -526,12 +526,12 @@ public interface Structure extends Cloneable {
 	 *
 	 * @return a list of Compounds
 	 */
-	public List<Compound> getCompounds();
+	public List<EntityInfo> getEntityInfos();
 
 	/**
 	 * Add a Compound to this Structure
 	 */
-	public void addCompound(Compound compound);
+	public void addEntityInfo(EntityInfo compound);
 
 	/**
 	 * Set the list of database references for this structure
@@ -553,7 +553,7 @@ public interface Structure extends Cloneable {
 	 * @param molId
 	 * @return a compound
 	 */
-	public Compound getCompoundById(int molId);
+	public EntityInfo getCompoundById(int molId);
 
 
 	/**
