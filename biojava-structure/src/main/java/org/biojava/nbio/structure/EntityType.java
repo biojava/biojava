@@ -24,23 +24,42 @@ public enum EntityType implements Serializable {
 	MACROLIDE("macrolide");
 	
 	private String entityType;
-	
+
+	/**
+	 * @param entType the type of the Entity
+	 */
 	private EntityType(String entType) {
 		
 		this.setEntityType(entType);
 		
 	}
 
+	/** Returns the type of the Entity as a String
+	 *
+	 * @return String representation of the entity type.
+     */
 	public String getEntityType() {
 		return entityType;
 	}
 
-	public void setEntityType(String entityType) {
+
+	private void setEntityType(String entityType) {
 		this.entityType = entityType;
 	}
-	
+
+	/** Creates a new EntityType from a String value.
+	 *  Returns null if entityType is null or not one of the supported
+	 *  standard types.
+	 *
+	 * @param entityType String value , should be one of "polymer","non-polymer","water","macolide"
+	 * @return an EntityType object
+     */
 	public static EntityType entityTypeFromString(String entityType)
 	{
+
+		if ( entityType == null)
+			return null;
+
 		for(EntityType et : EntityType.values())
 		{
 			if(entityType.equals(et.entityType))
