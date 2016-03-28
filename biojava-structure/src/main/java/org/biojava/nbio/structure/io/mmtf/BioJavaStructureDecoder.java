@@ -316,17 +316,17 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 */
 	private int getGroupTypIndicator(String currentGroupType) {
 		// At the moment - peptide like is a HETATM group (consistent with biojava)
-		if(currentGroupType.equals("PEPTIDE-LIKE")){
+		if(currentGroupType.toUpperCase().equals("PEPTIDE-LIKE")){
 			return 0;
 		}
 		// Again to correspond with Biojava - but I suspect we really want this to be 1
-		if(currentGroupType.equals("D-PEPTIDE LINKING")){
+		if(currentGroupType.toUpperCase().equals("D-PEPTIDE LINKING")){
 			return 0;
 		}
-		if(currentGroupType.contains("PEPTIDE")){
+		if(currentGroupType.toUpperCase().contains("PEPTIDE")){
 			return 1;
 		}
-		if(currentGroupType.contains("DNA") || currentGroupType.contains("RNA")){
+		if(currentGroupType.toUpperCase().contains("DNA") || currentGroupType.toUpperCase().contains("RNA")){
 			return 2;
 		}
 		else{
