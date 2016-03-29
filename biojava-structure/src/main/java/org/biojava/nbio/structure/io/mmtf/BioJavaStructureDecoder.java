@@ -388,7 +388,9 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 						for ( Atom groupAtom : group.getAtoms()) {
 							// If this alt loc doesn't have this atom
 							if (! altLocGroup.hasAtom(groupAtom.getName())) {
+								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
 								altLocGroup.addAtom(groupAtom);
+								}								
 							}
 						}
 					}
