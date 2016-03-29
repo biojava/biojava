@@ -49,6 +49,7 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.biojava.nbio.structure.io.mmtf.ParseUsingBioJava;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.nbio.structure.quaternary.io.MmCifBiolAssemblyProvider;
@@ -58,6 +59,8 @@ import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDescription;
 import org.biojava.nbio.structure.scop.ScopDomain;
 import org.biojava.nbio.structure.scop.ScopFactory;
+import org.rcsb.mmtf.decoder.ParsingParams;
+import org.rcsb.mmtf.examples.HandleIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,6 +103,12 @@ public class AtomCache {
 	private String path;
 
 	private boolean useMmCif;
+	
+	// MMTF caches
+	private boolean useMMTF;
+	private HandleIO mmtfHandle;
+	private ParsingParams mmtfParams;
+	private ParseUsingBioJava mmtfParser;
 
 	/**
 	 * Default AtomCache constructor.
@@ -159,7 +168,7 @@ public class AtomCache {
 		//
 
 		setUseMmCif(true);
-
+		setUseMMTF(false);
 	}
 
 	/**
@@ -938,6 +947,13 @@ public class AtomCache {
 	}
 
 	/**
+	 * @return Whether MMTF should be used
+	 */
+	public boolean isUseMMTF() {
+		return useMMTF;
+	}
+	
+	/**
 	 * @param useMmCif
 	 *            the useMmCif to set
 	 */
@@ -956,6 +972,15 @@ public class AtomCache {
 		}
 	}
 
+	/**
+	 * @param useMmCif
+	 *            the useMmCif to set
+	 */
+	public void setUseMMTF(boolean useMMTF) {
+		this.useMMTF = useMMTF;
+		// TODO set BioUnitDataProviderFactory? --SB 2016-04
+	}
+	
 	private boolean checkLoading(String name) {
 		return currentlyLoading.contains(name);
 
@@ -1031,7 +1056,9 @@ public class AtomCache {
 		}
 
 		Structure s;
-		if (useMmCif) {
+		if( useMMTF ) {
+			s = loadStructureFromMMCF(pdbId);
+		} else if (useMmCif) {
 			s = loadStructureFromCifByPdbId(pdbId);
 		} else {
 			s = loadStructureFromPdbByPdbId(pdbId);
@@ -1040,6 +1067,36 @@ public class AtomCache {
 	}
 
 
+	protected Structure loadStructureFromMMCF(String pdbId) throws IOException, StructureException {
+		flagLoading(pdbId);
+		Structure s;
+		try {
+			synchronized(this) {
+				if( mmtfHandle == null) {
+					mmtfHandle = new HandleIO();
+				}
+				if( mmtfParams == null) {
+					mmtfParams = new ParsingParams();
+					mmtfParams.setParseInternal(false);
+				}
+				if( mmtfParser == null) {
+					mmtfParser = new ParseUsingBioJava();
+				}
+			}
+
+			long startTime = System.currentTimeMillis();
+			byte[] inputByteArr = mmtfHandle.getFromUrl(pdbId);
+			long dlTime = System.currentTimeMillis();
+			s = mmtfParser.getBiojavaStruct(inputByteArr, mmtfParams);
+			long parserTime = System.currentTimeMillis();
+			logger.info("Downloaded MMTF file for {} in {} s and parsed in {} s",
+					pdbId, (dlTime-startTime)/1000., (parserTime-dlTime)/1000.);
+		} finally {
+			flagLoadingFinished(pdbId);
+		}
+
+		return s;
+	}
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
 
 		Structure s;
