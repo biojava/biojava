@@ -179,8 +179,10 @@ public class TestAltLocs {
 			return;
 		}
 		
-		// Check that the atom group is the same size as the alt loc group
-		assertEquals(groupInputAltLocGroup.getAtoms().size(), inputMainGroup.getAtoms().size());
+		// Check that the atom group is the same size as the alt loc group (as long as it's not a case of microheterogenity
+		if (groupInputAltLocGroup.getPDBName().equals(inputMainGroup.getPDBName())){
+			assertEquals(groupInputAltLocGroup.getAtoms().size(), inputMainGroup.getAtoms().size());
+		}
 		Character defaultAltLoc = null;
 		for (Atom atom : groupInputAltLocGroup.getAtoms()) {
 			
