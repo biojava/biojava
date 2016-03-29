@@ -21,7 +21,11 @@
 package org.biojava.nbio.structure.symmetry.gui;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -40,10 +44,10 @@ import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.symmetry.core.AxisAligner;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
+import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
 import org.biojava.nbio.structure.symmetry.jmolScript.JmolSymmetryScriptGenerator;
 import org.biojava.nbio.structure.symmetry.jmolScript.JmolSymmetryScriptGeneratorPointGroup;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,7 +119,7 @@ public class SymmetryDisplay {
 			jmol.setTitle(jmol.getStructure().getPDBHeader().getTitle());
 			addSymmetryMenu(jmol, symmResult);
 			jmol.evalString(printSymmetryGroup(symmResult));
-			jmol.evalString(printSymmetryAxes(symmResult, false));
+			jmol.evalString(printSymmetryAxes(symmResult));
 			jmol.setTitle(getSymmTitle(symmResult));
 			return jmol;
 		} else {
@@ -182,30 +186,31 @@ public class SymmetryDisplay {
 	/**
 	 * Generates a String that displays the symmetry axes of a structure.
 	 *
-	 * @param msa
-	 * @param axes
-	 * @param elementary
-	 *            only print elementary axes if true
+	 * @param symm CeSymmResult
 	 * @return
+	 * @throws StructureException 
 	 */
-	public static String printSymmetryAxes(CeSymmResult symm, boolean elementary) {
+	public static String printSymmetryAxes(CeSymmResult symm) 
+			throws StructureException {
 
 		int id = 0;
 		String script = "";
-		Atom[] atoms = symm.getAtoms();
+		SymmetryAxes axes = symm.getAxes();
+		List<Atom[]> repeats = SymmetryTools.toRepeatsAlignment(symm).getAtomArrays();
 
-		List<Matrix4d> symmAxes = null;
-		if (elementary) {
-			symmAxes = symm.getAxes().getElementaryAxes();
-		} else {
-			symmAxes = symm.getAxes().getSymmetryAxes();
-		}
-
-		for (Matrix4d axis : symmAxes) {
-			RotationAxis rot = new RotationAxis(axis);
-			script += rot.getJmolScript(atoms, id);
+		List<Matrix4d> symmAxes = axes.getElementaryAxes();
+		for (int a = 0; a < symmAxes.size(); a++) {
+			RotationAxis rot = new RotationAxis(symmAxes.get(a));
+			Set<Integer> repIndex = new TreeSet<Integer>(axes.getRepeatRelation(a).get(0));
+			repIndex.addAll(axes.getRepeatRelation(a).get(1));
+			List<Atom> repAtoms = new ArrayList<Atom>();
+			for (Integer r : repIndex)
+				repAtoms.addAll(Arrays.asList(repeats.get(r)));
+			
+			script += rot.getJmolScript(repAtoms.toArray(new Atom[repAtoms.size()]), id);
 			id++;
 		}
+
 		return script;
 	}
 
