@@ -300,11 +300,12 @@ public class CeSymm {
 						atoms);
 				break;
 			}
+			result.setSymmOrder(order);
+			
 			// REFINEMENT
 			SymmetryRefiner refiner = null;
 			switch (params.getRefineMethod()) {
 			case NOT_REFINED:
-				result.setSymmOrder(order);
 				return result;
 			case SEQUENCE_FUNCTION:
 				// Does not work for OPEN alignments
@@ -330,7 +331,7 @@ public class CeSymm {
 			return result;
 		}
 
-		// STEP4: determine the symmetry axis and its repeat dependencies
+		// STEP 4: determine the symmetry axis and its repeat dependencies
 		SymmetryAxes axes = new SymmetryAxes();
 		int order = result.getMultipleAlignment().size();
 		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)

@@ -43,7 +43,9 @@ import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.biojava.nbio.structure.symmetry.jmolScript.JmolSymmetryScriptGenerator;
 import org.biojava.nbio.structure.symmetry.jmolScript.JmolSymmetryScriptGeneratorPointGroup;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
-import org.jmol.util.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class that provides visualizations methods for symmetry alignments. Call the
@@ -54,6 +56,9 @@ import org.jmol.util.Logger;
  *
  */
 public class SymmetryDisplay {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(SymmetryDisplay.class);
 
 	/**
 	 * Displays a multiple alignment of the symmetry repeats.
@@ -115,7 +120,7 @@ public class SymmetryDisplay {
 			return jmol;
 		} else {
 			// Show the optimal self-alignment
-			Logger.info("Showing optimal self-alignment");
+			logger.info("Showing optimal self-alignment");
 			Atom[] cloned = StructureTools
 					.cloneAtomArray(symmResult.getAtoms());
 			AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
