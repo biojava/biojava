@@ -55,6 +55,7 @@ import org.biojava.nbio.structure.Author;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.DBRef;
 import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.Group;
@@ -1015,6 +1016,9 @@ public class PDBFileParser  {
 				current_compound = new EntityInfo();
 
 				current_compound.setMolId(i);
+				
+				// we will set polymer for all defined compounds in PDB file (non-polymer compounds are not defined in header) - JD 2016-03-25
+				current_compound.setType(EntityType.POLYMER);
 
 				prevMolId = i;
 			}
@@ -3002,7 +3006,8 @@ public class PDBFileParser  {
 	}
 
 
-	/** After the parsing of a PDB file the {@link Chain} and  {@link EntityInfo}
+	/** 
+	 * After the parsing of a PDB file the {@link Chain} and  {@link EntityInfo}
 	 * objects need to be linked to each other.
 	 *
 	 * @param s the structure
@@ -3078,8 +3083,14 @@ public class PDBFileParser  {
 					compound.setMolId(findMaxCompoundId(compounds)+1);
 					c.setEntityInfo(compound);
 					compounds.add(compound);
+					
+					if (StructureTools.isChainWaterOnly(c)) {
+						compound.setType(EntityType.WATER);
+					} else {
+						compound.setType(EntityType.NONPOLYMER);
+					}
 
-					logger.warn("No compound (entity) found in file for chain {}. Creating new compound {} for it.", c.getChainID(), compound.getMolId());
+					logger.warn("No compound (entity) found in file for chain {}. Creating new entity {} for it.", c.getChainID(), compound.getMolId());
 				}
 			}
 		}
