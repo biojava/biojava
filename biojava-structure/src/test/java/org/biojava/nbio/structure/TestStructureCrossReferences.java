@@ -205,9 +205,9 @@ public class TestStructureCrossReferences {
 		}
 
 		// compounds linking
-		for (Compound compound:s.getCompounds()) {
+		for (EntityInfo compound:s.getEntityInfos()) {
 			for (Chain c:compound.getChains()) {
-				assertSame(compound, c.getCompound());
+				assertSame(compound, c.getEntityInfo());
 				int count = 0;
 				for (int modelNr=0;modelNr<s.nrModels();modelNr++) {
 					// the chain must be matched by 1 and only 1 chain from all models
@@ -221,7 +221,7 @@ public class TestStructureCrossReferences {
 
 	private void testChainRefs(Chain c, boolean emptySeqRes) {
 
-		assertNotNull(c.getCompound());
+		assertNotNull(c.getEntityInfo());
 
 		for (Group g:c.getAtomGroups()) {
 			assertSame("Failed parent chain for group "+g.toString(), c, g.getChain());
@@ -268,11 +268,11 @@ public class TestStructureCrossReferences {
 	private void testInterfaceRefs(Structure s, StructureInterface i) throws StructureException {
 
 		for (Atom a:i.getMolecules().getFirst()) {
-			assertNotNull(a.getGroup().getChain().getCompound());
+			assertNotNull(a.getGroup().getChain().getEntityInfo());
 		}
 
 		for (Atom a:i.getMolecules().getSecond()) {
-			assertNotNull(a.getGroup().getChain().getCompound());
+			assertNotNull(a.getGroup().getChain().getEntityInfo());
 		}
 
 	}

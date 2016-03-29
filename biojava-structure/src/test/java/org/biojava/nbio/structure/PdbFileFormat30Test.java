@@ -58,12 +58,12 @@ public class PdbFileFormat30Test {
 		int shouldNr = 20;
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr ,nrNuc);
 
-		List<Compound> compounds= s.getCompounds();
+		List<EntityInfo> compounds= s.getEntityInfos();
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals(2, compounds.size());
-		Compound mol = compounds.get(0);
-		assertTrue(mol.getMolName().startsWith("DNA"));
+		EntityInfo mol = compounds.get(0);
+		assertTrue(mol.getDescription().startsWith("DNA"));
 
 
 		Structure s2 = getStructure("/104D_v30.pdb");
@@ -83,13 +83,13 @@ public class PdbFileFormat30Test {
 		int shouldNr = 24;
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr , nrNuc);
 
-		List<Compound> compounds= s.getCompounds();
+		List<EntityInfo> compounds= s.getEntityInfos();
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals(2, compounds.size());
-		Compound mol = compounds.get(0);
+		EntityInfo mol = compounds.get(0);
 
-		assertTrue(mol.getMolName().startsWith("DNA"));
+		assertTrue(mol.getDescription().startsWith("DNA"));
 
 
 		Structure s2 = getStructure("/104D_v23.pdb");
@@ -144,10 +144,10 @@ public class PdbFileFormat30Test {
 
 		Structure s = getStructure("/3mk3.pdb");
 
-		List<Compound> compounds= s.getCompounds();
+		List<EntityInfo> compounds= s.getEntityInfos();
 		assertTrue(compounds.size() == 1);
-		Compound mol = compounds.get(0);
-		assertTrue(mol.getMolName().equals("6,7-DIMETHYL-8-RIBITYLLUMAZINE SYNTHASE"));
+		EntityInfo mol = compounds.get(0);
+		assertTrue(mol.getDescription().equals("6,7-DIMETHYL-8-RIBITYLLUMAZINE SYNTHASE"));
 		assertEquals(60, mol.getChainIds().size());
 		assertEquals(60, mol.getChains().size());
 		assertTrue(mol.getChainIds().contains("S"));
