@@ -76,8 +76,8 @@ public class CeSymmResult {
 		if (symmOrder < 2)
 			return false;
 
-		// If the TM-Score is below the threshold
-		if (selfAlignment.getTMScore() < params.getScoreThreshold())
+		// If the TM-Score before refinement is below the threshold
+		if (selfAlignment.getTMScore() < params.getUnrefinedScoreThreshold())
 			return false;
 
 		// If the refinement was attempted
@@ -87,7 +87,7 @@ public class CeSymmResult {
 				return false;
 			// Allow 90% of original TM-Score theshold
 			if (multipleAlignment.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
-					.getScoreThreshold() * 0.9)
+					.getRefinedScoreThreshold())
 				return false;
 			return true;
 		}

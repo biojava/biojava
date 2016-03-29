@@ -212,7 +212,7 @@ public class CeSymm {
 			newAFP.setTMScore(tmScore3);
 
 			// Determine if the alignment is significant, stop if false
-			if (tmScore3 < params.getScoreThreshold()) {
+			if (tmScore3 < params.getUnrefinedScoreThreshold()) {
 				// If it is the first alignment save it anyway
 				if (i == 0)
 					selfAlignments.add(newAFP);
@@ -262,7 +262,7 @@ public class CeSymm {
 			result.setType(params.getSymmType());
 
 		// Do not try the refinement if the self-alignment is not significant
-		if (optimalAFP.getTMScore() < params.getScoreThreshold()){
+		if (optimalAFP.getTMScore() < params.getUnrefinedScoreThreshold()){
 			result.setSymmOrder(1);
 			return result;
 		}
