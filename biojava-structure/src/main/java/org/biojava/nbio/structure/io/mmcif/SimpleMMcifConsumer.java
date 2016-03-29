@@ -510,10 +510,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 
-		// make sure that main group has all atoms
+		// make sure that main group has all atoms 
 		// GitHub issue: #76
+		// Unless it's microheterogenity https://github.com/rcsb/codec-devel/issues/81
 		if ( ! current_group.hasAtom(a.getName())) {
-			current_group.addAtom(a);
+			if (current_group.getPDBName().equals(a.getGroup().getPDBName())) {
+				current_group.addAtom(a);
+			}
 		}
 
 
@@ -938,7 +941,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 							// If this alt loc doesn't have this atom
 							if (! altLocGroup.hasAtom(groupAtom.getName())) {
 								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
-								altLocGroup.addAtom(groupAtom);
+									altLocGroup.addAtom(groupAtom);
 								}
 							}
 						}
