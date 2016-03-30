@@ -397,7 +397,6 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			}
 			// Now set the transform list
 			bioAssInfo.setTransforms(newList);
-			bioAssInfo.setMacromolecularSize(value.getMacroMolecularSize());
 			// Now set this
 			bioAssemblies.put(key, bioAssInfo);
 		}
