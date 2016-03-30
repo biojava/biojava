@@ -108,9 +108,21 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 */
 	@Override
 	public final void setChainInfo(final String chainId, final int groupCount) {
-		chain = new ChainImpl();
-		chain.setChainID(chainId.trim());
-		structure.addChain(chain, modelNumber);
+		// First check to see if the chain exists
+		boolean newChain = true;
+		for (Chain c: structure.getChains(modelNumber)) {
+			if (c.getChainID().equals(chainId)) {
+				newChain = false;
+				chain = c;
+				break;
+			}
+		}
+		// If we need to set a new chain do this
+		if (newChain){
+			chain = new ChainImpl();
+			chain.setChainID(chainId.trim());
+			structure.addChain(chain, modelNumber);
+		}
 	}
 
 
@@ -317,22 +329,6 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			pci.setCrystalCell(cell);
 			structure.setCrystallographicInfo(pci);
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.rcsb.mmtf.decoder.StructureDecoder
-	 * Interface#updateChainInfo(java.lang.String, int)
-	 */
-	@Override
-	public final void updateChainInfo(final String chainId,
-			final int groupCount) {
-		for (Chain c: structure.getChains(modelNumber)) {
-			if (c.getChainID().equals(chainId)) {
-				chain = c;
-				break;
-			}
-		}
-
 	}
 
 
