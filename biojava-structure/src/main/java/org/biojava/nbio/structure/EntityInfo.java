@@ -56,9 +56,7 @@ public class EntityInfo implements Serializable {
 	private final static Logger logger = LoggerFactory.getLogger(EntityInfo.class);
 
 
-	//TODO we should consider having the data here as it is in mmCIF dictionary - JD 2014-12-11
-	//     Especially useful would be to have the polymer/non-polymer/water classification present in mmCIF
-	//     We could drop a lot of the stuff here that is PDB-file related (actually many PDB files don't contain many of these fields)
+	// TODO We could drop a lot of the stuff here that is PDB-file related (actually many PDB files don't contain many of these fields) - JD 2016-03-25
 	//     The only really essential part of a EntityInfo is the member chains and the entity_id/mol_id
 	// See also issue https://github.com/biojava/biojava/issues/219
 
@@ -149,6 +147,8 @@ public class EntityInfo implements Serializable {
 		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
 
 		this.molId = c.molId;
+		
+		this.type = c.type;
 
 		this.refChainId = c.refChainId;
 

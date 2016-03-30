@@ -548,13 +548,21 @@ public interface Structure extends Cloneable {
 	public List<DBRef> getDBRefs();
 
 	/**
-	 * Request a particular compound by its molId (entity_id in mmCIF dictionary)
+	 * Request a particular entity by its entity id (mol id in legacy PDB format)
 	 *
-	 * @param molId
+	 * @param entityId
 	 * @return a compound
+	 * @deprecated use {@link #getEntityById(int)} instead
 	 */
-	public EntityInfo getCompoundById(int molId);
+	public EntityInfo getCompoundById(int entityId);
 
+	/**
+	 * Request a particular entity by its entity id (mol id in legacy PDB format)
+	 *
+	 * @param entityId
+	 * @return an entity 
+	 */	
+	public EntityInfo getEntityById(int entityId);
 
 	/**
 	 * Return the header information for this PDB file

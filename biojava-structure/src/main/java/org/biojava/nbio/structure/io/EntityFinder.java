@@ -49,20 +49,20 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * Heuristical finding of Compounds (called Entities in mmCIF dictionary)
- * in a given Structure. Compounds are the groups of sequence identical NCS-related polymer chains
+ * Heuristical finding of Entities (called Compounds in legacy PDB format)
+ * in a given Structure. Entities are the groups of sequence identical NCS-related polymer chains
  * in the Structure.
  *
- * This is related to {@link SeqRes2AtomAligner} but it is intended for raw PDB files where
+ * This is related to {@link SeqRes2AtomAligner} but it is intended for raw PDB/mmCIF files where
  * possibly no SEQRES is given.
  *
- * @author duarte_j
+ * @author Jose Duarte
  */
-public class CompoundFinder {
+public class EntityFinder {
 
 	private Structure s;
 
-	private static final Logger logger = LoggerFactory.getLogger(CompoundFinder.class);
+	private static final Logger logger = LoggerFactory.getLogger(EntityFinder.class);
 
 	/**
 	 * Above this ratio of mismatching residue types for same residue numbers we
@@ -82,16 +82,16 @@ public class CompoundFinder {
 	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
 
 
-	public CompoundFinder(Structure s) {
+	public EntityFinder(Structure s) {
 		this.s = s;
 	}
 
 	/**
-	 * Utility method that employs some heuristics to find the Compounds
+	 * Utility method that employs some heuristics to find the {@link EntityInfo}s
 	 * for this Structure in case the information is missing in PDB/mmCIF file
 	 * @return
 	 */
-	public List<EntityInfo> findCompounds() {
+	public List<EntityInfo> findEntities() {
 
 		TreeMap<String,EntityInfo> chainIds2entities = findCompoundsFromAlignment();
 
@@ -150,6 +150,11 @@ public class CompoundFinder {
 				EntityInfo comp = new EntityInfo();
 				comp.addChain(c);
 				comp.setMolId(molId);
+				if (StructureTools.isChainWaterOnly(c)) {
+					comp.setType(EntityType.WATER);
+				} else {
+					comp.setType(EntityType.NONPOLYMER);
+				}
 				logger.warn("Chain {} is purely non-polymeric, will assign a new Compound (entity) to it (entity id {})", c.getChainID(), molId);
 				molId++;
 
@@ -295,6 +300,7 @@ public class CompoundFinder {
 							ent.addChain(c1);
 							ent.addChain(c2);
 							ent.setMolId(molId++);
+							ent.setType(EntityType.POLYMER);
 							chainIds2compounds.put(c1.getChainID(), ent);
 							chainIds2compounds.put(c2.getChainID(), ent);
 
