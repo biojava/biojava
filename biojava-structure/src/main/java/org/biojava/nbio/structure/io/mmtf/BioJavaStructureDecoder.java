@@ -223,7 +223,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 * face#setGroupBonds(int, int, int)
 	 */
 	@Override
-	public final void setGroupBonds(final int indOne,
+	public final void setGroupBond(final int indOne,
 			final int indTwo, final int bondOrder) {
 		// Get the atom
 		Atom atomOne = atomsInGroup.get(indOne);
@@ -239,7 +239,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 * Interface#setInterGroupBonds(int, int, int)
 	 */
 	@Override
-	public final void setInterGroupBonds(final int indOne,
+	public final void setInterGroupBond(final int indOne,
 			final int indTwo, final int bondOrder) {
 		// Get the atom
 		Atom atomOne = allAtoms.get(indOne);
