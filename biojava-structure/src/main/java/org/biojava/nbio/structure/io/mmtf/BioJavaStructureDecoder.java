@@ -362,7 +362,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	}
 
 	@Override
-	public void setBioAssembly(List<BioAssemblyData> inputBioassemblies) {
+	public void setBioAssemblyList(List<BioAssemblyData> inputBioassemblies) {
 
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		// Get the bioassebly data
