@@ -318,14 +318,14 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 */
 	@Override
 	public final void setXtalInfo(final String spaceGroupString,
-			final List<Float> unitCell) {
+			final float[] unitCell) {
 		// Now set the xtalographic information
 		PDBCrystallographicInfo pci = new PDBCrystallographicInfo();
 		SpaceGroup spaceGroup = SpaceGroup.parseSpaceGroup(spaceGroupString);
 		pci.setSpaceGroup(spaceGroup);
-		if (unitCell.size() > 0) {
-			CrystalCell cell = new CrystalCell(unitCell.get(0), unitCell.get(1),
-					unitCell.get(2), unitCell.get(3), unitCell.get(4), unitCell.get(5));
+		if (unitCell.length > 0) {
+			CrystalCell cell = new CrystalCell(unitCell[0], unitCell[1],
+					unitCell[2], unitCell[3], unitCell[4], unitCell[5]);
 			pci.setCrystalCell(cell);
 			structure.setCrystallographicInfo(pci);
 		}
