@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.vecmath.Matrix4d;
 
@@ -363,17 +362,15 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	}
 
 	@Override
-	public void setBioAssembly(Map<Integer, BioAssemblyData> inputBioassemblies) {
+	public void setBioAssembly(List<BioAssemblyData> inputBioassemblies) {
 
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		// Get the bioassebly data
 		Map<Integer, BioAssemblyInfo> bioAssemblies = new HashMap<>();
 		int bioassemlyCounter = 0;
-		for (Entry<Integer, BioAssemblyData> entry: inputBioassemblies.entrySet()) {
+		for (BioAssemblyData value: inputBioassemblies) {
 			bioassemlyCounter++;
 			// Get the key and the value
-			Integer key = entry.getKey();
-			BioAssemblyData value = entry.getValue();
 			// Make a biojava bioassembly object
 			BioAssemblyInfo bioAssInfo = new  BioAssemblyInfo();
 			bioAssInfo.setId(bioassemlyCounter);
@@ -398,7 +395,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			// Now set the transform list
 			bioAssInfo.setTransforms(newList);
 			// Now set this
-			bioAssemblies.put(key, bioAssInfo);
+			bioAssemblies.put(bioassemlyCounter, bioAssInfo);
 		}
 		// Now actually set them
 		pdbHeader.setBioAssemblies(bioAssemblies);

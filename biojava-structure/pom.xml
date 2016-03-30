@@ -22,13 +22,13 @@
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-api</artifactId>
-			<version>0.0.1-alpha2</version>
+            <version>0.0.1-alpha3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-decoder</artifactId>
-            <version>0.0.1-alpha2</version>
+            <version>0.0.1-alpha3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
