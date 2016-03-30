@@ -156,6 +156,21 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	private Group getGroupWithSameResNumButDiffPDBName() {
+		// If this chain already has this group number
+		for (Group g : chain.getAtomGroups() ) {
+			if (g.getResidueNumber().getSeqNum()==group.getResidueNumber().getSeqNum()) {
+				if( ! g.getPDBName().equals(group.getPDBName() )){
+					return g;
+				}
+			}
+		}
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface#
@@ -193,8 +208,12 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			altGroup.addAtom(atom);
 		}
 
+		// IF the main group doesn't have this atom
 		if (!group.hasAtom(atom.getName())) {
-			group.addAtom(atom);
+			// If it's not a microheterogenity case
+			if (group.getPDBName().equals(atom.getGroup().getPDBName())) {
+				group.addAtom(atom);
+			}
 		}
 		atomsInGroup.add(atom);
 		allAtoms.add(atom);
@@ -252,10 +271,19 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			}
 		}
 
-		// Get the altLovGroup
+		// Get the altLocGroup
 		Group altLocgroup = group.getAltLocGroup(altLoc);
 		if (altLocgroup != null) {
 			return altLocgroup;
+		}
+		// If the group already exists (microheterogenity).
+		Group oldGroup = getGroupWithSameResNumButDiffPDBName();
+		if (oldGroup!= null){
+			Group altLocG = group;
+			group = oldGroup;
+			group.addAltLoc(altLocG);
+			chain.getAtomGroups().remove(altLocG);
+			return altLocG;
 		}
 		// no matching altLoc group found.
 		// build it up.
@@ -388,9 +416,10 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 						for ( Atom groupAtom : group.getAtoms()) {
 							// If this alt loc doesn't have this atom
 							if (! altLocGroup.hasAtom(groupAtom.getName())) {
+								// Make sure it's not a microheterogenity
 								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
-								altLocGroup.addAtom(groupAtom);
-								}								
+									altLocGroup.addAtom(groupAtom);
+								}
 							}
 						}
 					}
@@ -401,7 +430,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 
 	@Override
 	public void prepareStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels) {
-		
+
 	}
 
 
