@@ -1078,7 +1078,7 @@ public class StructureTools {
 			for (EntityInfo comp : s.getEntityInfos()) {
 				if (comp.getChainIds() != null
 						&& comp.getChainIds().contains(c.getChainID())) {
-					// found matching compound. set description...
+					// found matching entity info. set description...
 					newS.getPDBHeader().setDescription(
 							"Chain " + c.getChainID() + " of " + s.getPDBCode()
 									+ " " + comp.getDescription());
