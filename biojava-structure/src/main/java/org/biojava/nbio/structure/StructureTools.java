@@ -1103,25 +1103,24 @@ public class StructureTools {
 	 * @deprecated Use {@link StructureIdentifier#reduce(Structure)} instead (v. 4.2.0)
 	 */
 	@Deprecated
-	public static final Structure getReducedStructure(Structure s, int chainNr)
-			throws StructureException {
+	public static final Structure getReducedStructure(Structure s, int chainNr) {
 		// since we deal here with structure alignments,
 		// only use Model 1...
 
-		Structure newS = new StructureImpl();
-		newS.setPDBCode(s.getPDBCode());
-		newS.setPDBHeader(s.getPDBHeader());
-		newS.setName(s.getName());
-		newS.setSSBonds(s.getSSBonds());
-		newS.setDBRefs(s.getDBRefs());
-		newS.setSites(s.getSites());
-		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-		newS.setEntityInfos(s.getEntityInfos());
-		newS.setConnections(s.getConnections());
-		newS.setSSBonds(s.getSSBonds());
-		newS.setSites(s.getSites());
-		newS.setCrystallographicInfo(s.getCrystallographicInfo());
-		newS.getPDBHeader().setDescription(
+		Structure newStructure = new StructureImpl();
+		newStructure.setPDBCode(s.getPDBCode());
+		newStructure.setPDBHeader(s.getPDBHeader());
+		newStructure.setName(s.getName());
+		newStructure.setSSBonds(s.getSSBonds());
+		newStructure.setDBRefs(s.getDBRefs());
+		newStructure.setSites(s.getSites());
+		newStructure.setBiologicalAssembly(s.isBiologicalAssembly());
+		newStructure.setEntityInfos(s.getEntityInfos());
+		newStructure.setConnections(s.getConnections());
+		newStructure.setSSBonds(s.getSSBonds());
+		newStructure.setSites(s.getSites());
+		newStructure.setCrystallographicInfo(s.getCrystallographicInfo());
+		newStructure.getPDBHeader().setDescription(
 				"subset of " + s.getPDBCode() + " "
 						+ s.getPDBHeader().getDescription());
 
@@ -1130,17 +1129,17 @@ public class StructureTools {
 			// only get model 0
 			List<Chain> model0 = s.getModel(0);
 			for (Chain c : model0) {
-				newS.addChain(c);
+				newStructure.addChain(c);
 			}
-			return newS;
+			return newStructure;
 		}
 		Chain c = null;
 
 		c = s.getChain(0, chainNr);
 
-		newS.addChain(c);
+		newStructure.addChain(c);
 
-		return newS;
+		return newStructure;
 	}
 
 	/**
