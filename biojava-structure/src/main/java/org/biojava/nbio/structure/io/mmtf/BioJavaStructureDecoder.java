@@ -424,8 +424,8 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	}
 
 	@Override
-	public void prepareStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels) {
-
+	public void prepareStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels, String modelId) {
+		structure.setPDBCode(modelId);
 	}
 
 	@Override
@@ -441,10 +441,23 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 				try {
 					chains.add(structure.getChainByPDB(chainId, i));
 				} catch (StructureException e) {
-					// Just means it's not in this model
+					// Just means it's not in this models
 				}
 			}
 		}
 		entityInfo.setChains(chains);
+	}
+
+	@Override
+	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, List<String> experimnetalMethods) {
+		// Get the pdb header
+		PDBHeader pdbHeader = structure.getPDBHeader();
+		pdbHeader.setTitle(title);
+		pdbHeader.setResolution(resolution);
+		pdbHeader.setRfree(rFree);
+		// Now loop through the techniques and add them in
+		for (String techniqueStr : experimnetalMethods) {
+			pdbHeader.setExperimentalTechnique(techniqueStr);
+		}
 	}
 }
