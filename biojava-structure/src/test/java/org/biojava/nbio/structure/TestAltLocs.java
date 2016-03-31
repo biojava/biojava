@@ -449,7 +449,6 @@ public class TestAltLocs {
 
 				for (Group altLocGroup:g.getAltLocs()) {
 					ensureAllAtomsSameAltCode(altLocGroup, g);
-					// }
 					for (Atom a:altLocGroup.getAtoms()) {
 						// Check the atomsall have bonds 
 						assertNotEquals(a.getBonds(),null);
