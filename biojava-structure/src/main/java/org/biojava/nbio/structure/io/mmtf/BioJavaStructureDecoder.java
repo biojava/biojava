@@ -16,12 +16,14 @@ import org.biojava.nbio.structure.BondImpl;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -357,6 +359,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 		}
 	}
 
+
 	@Override
 	public void setBioAssemblyList(List<BioAssemblyData> inputBioassemblies) {
 
@@ -425,5 +428,23 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 
 	}
 
-
+	@Override
+	public void setEntityInfo(String[] chainIds, String sequence, String description, String title) {
+		// First get the chains
+		EntityInfo entityInfo = new EntityInfo();
+		entityInfo.setDescription(description);
+		entityInfo.setTitle(title);
+		List<Chain> chains = new ArrayList<>(); 
+		// Now loop through the chain ids and make a list of them
+		for (String chainId : chainIds) {
+			for (int i=0; i<structure.nrModels(); i++) {
+				try {
+					chains.add(structure.getChainByPDB(chainId, i));
+				} catch (StructureException e) {
+					// Just means it's not in this model
+				}
+			}
+		}
+		entityInfo.setChains(chains);
+	}
 }

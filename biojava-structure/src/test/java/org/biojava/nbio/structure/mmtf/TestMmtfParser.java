@@ -30,6 +30,5 @@ public class TestMmtfParser {
 	    ParseUsingBioJava parseUseBiojava = new ParseUsingBioJava();
 	    Structure biojavaStruct = parseUseBiojava.getBiojavaStruct(inputByteArr, parsingParms);
 	    assertEquals(biojavaStruct.getChains().size(), 6);
-		
 	}
 }
