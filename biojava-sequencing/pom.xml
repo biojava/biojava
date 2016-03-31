@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>5.0.0-alpha3-SNAPSHOT</version>
+		<version>5.0.0-alpha3</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>biojava-sequencing</artifactId>
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>5.0.0-alpha3-SNAPSHOT</version>
+			<version>5.0.0-alpha3</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
