@@ -994,7 +994,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					compound.setMolId(eId);
 					compound.addChain(chain);
 					chain.setCompound(compound);
-					structure.addCompound(compound);
+					structure.addEntityInfo(compound);
 				} else {
 					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
 							chain.getChainID(), chain.getInternalChainID(), eId);
@@ -1158,7 +1158,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				c.setDescription(e.getPdbx_description());
 				c.setType(e.getType());
 				addAnicilliaryEntityData(asym, eId, e, c);
-				structure.addCompound(c);
+				structure.addEntityInfo(c);
 				logger.debug("Adding Compound with entity id {} from _entity, with name: {}",eId, c.getDescription());
 			}
 		}

@@ -514,24 +514,23 @@ public interface Structure extends Cloneable {
 	public String toMMCIF();
 
 	/**
-	 * Set the Compounds
+	 * Set the EntityInfo
 	 *
 	 * @param molList
 	 */
-	public void setCompounds(List<EntityInfo> molList);
+	public void setEntityInfo(List<EntityInfo> molList);
 
 	/**
-	 * Get all the Compounds for this Structure.
-	 * Compounds are called Entities in mmCIF dictionary.
+	 * Get all the EntityInfo for this Structure.
 	 *
 	 * @return a list of Compounds
 	 */
 	public List<EntityInfo> getEntityInformation();
 
 	/**
-	 * Add a Compound to this Structure
+	 * Add an EntityInfo to this Structure
 	 */
-	public void addCompound(EntityInfo compound);
+	public void addEntityInfo(EntityInfo compound);
 
 	/**
 	 * Set the list of database references for this structure

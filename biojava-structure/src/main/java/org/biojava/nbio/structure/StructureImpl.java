@@ -187,7 +187,7 @@ public class StructureImpl implements Structure, Serializable {
 			}
 			newCompoundList.add(newCompound);
 		}
-		n.setCompounds(newCompoundList);
+		n.setEntityInfo(newCompoundList);
 
 		// TODO ssbonds are complicated to clone: there are deep references inside Atom objects, how would we do it? - JD 2016-03-03
 
@@ -665,13 +665,13 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setCompounds(List<EntityInfo> molList){
+	public void setEntityInfo(List<EntityInfo> molList){
 		this.compounds = molList;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void addCompound(EntityInfo compound) {
+	public void addEntityInfo(EntityInfo compound) {
 		this.compounds.add(compound);
 	}
 

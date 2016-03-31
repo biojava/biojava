@@ -67,6 +67,9 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 
 	/** All the atoms. */
 	private List<Atom> allAtoms;
+	
+	/** The list of EntityInformation */
+	private List<EntityInfo> entityInfoList;
 
 	/**
 	 * Instantiates a new bio java structure decoder.
@@ -75,7 +78,8 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 		structure = new StructureImpl();
 		modelNumber = 0;
 		chemicalComponentGroup = new ChemComp();
-		allAtoms  = new ArrayList<Atom>();
+		allAtoms  = new ArrayList<>();
+		entityInfoList = new ArrayList<>();
 	}
 
 	/**
@@ -420,20 +424,13 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 				}
 			}
 		}
-		// Remove null or empty entity information
-		List<EntityInfo> entityInfosToRemove = new ArrayList<>();
-		for (EntityInfo entityInfo : structure.getEntityInformation()) {
-			if (entityInfo.getDescription()==null) {
-				entityInfosToRemove.add(entityInfo);
-			}
-		}
-		structure.getEntityInformation().removeAll(entityInfosToRemove);
 		// Number the remaining ones
 		int counter =0;
-		for (EntityInfo entityInfo : structure.getEntityInformation()) {
+		for (EntityInfo entityInfo : entityInfoList) {
 			counter++;
 			entityInfo.setMolId(counter);
 		}
+		structure.setEntityInfo(entityInfoList);
 	}
 
 	@Override
@@ -459,7 +456,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			}
 		}
 		entityInfo.setChains(chains);
-		structure.getEntityInformation().add(entityInfo);
+		entityInfoList.add(entityInfo);
 	}
 
 	@Override

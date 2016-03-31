@@ -2909,7 +2909,7 @@ public class PDBFileParser  {
 
 
 		linkChains2Compound(structure);
-		structure.setCompounds(compounds);
+		structure.setEntityInfo(compounds);
 
 		//associate the temporary Groups in the siteMap to the ones
 
