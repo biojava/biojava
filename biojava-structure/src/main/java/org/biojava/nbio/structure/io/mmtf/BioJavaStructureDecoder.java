@@ -362,7 +362,6 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 
 	@Override
 	public void setBioAssemblyList(List<BioAssemblyData> inputBioassemblies) {
-
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		// Get the bioassebly data
 		Map<Integer, BioAssemblyInfo> bioAssemblies = new HashMap<>();
@@ -421,6 +420,20 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 				}
 			}
 		}
+		// Remove null or empty entity information
+		List<EntityInfo> entityInfosToRemove = new ArrayList<>();
+		for (EntityInfo entityInfo : structure.getEntityInformation()) {
+			if (entityInfo.getDescription()==null) {
+				entityInfosToRemove.add(entityInfo);
+			}
+		}
+		structure.getEntityInformation().removeAll(entityInfosToRemove);
+		// Number the remaining ones
+		int counter =0;
+		for (EntityInfo entityInfo : structure.getEntityInformation()) {
+			counter++;
+			entityInfo.setMolId(counter);
+		}
 	}
 
 	@Override
@@ -446,6 +459,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			}
 		}
 		entityInfo.setChains(chains);
+		structure.getEntityInformation().add(entityInfo);
 	}
 
 	@Override
