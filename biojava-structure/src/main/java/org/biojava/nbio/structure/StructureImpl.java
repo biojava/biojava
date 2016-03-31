@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.biojava.nbio.structure.io.CompoundFinder;
+import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,7 +177,7 @@ public class StructureImpl implements Structure, Serializable {
 					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
 						try {
 							Chain newChain = n.getChainByPDB(chainId,modelNr);
-							newChain.setCompound(newCompound);
+							newChain.setEntityInfo(newCompound);
 							newCompound.addChain(newChain);
 						} catch (StructureException e) {
 							// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
@@ -187,8 +187,7 @@ public class StructureImpl implements Structure, Serializable {
 			}
 			newCompoundList.add(newCompound);
 		}
-		n.setEntityInfo(newCompoundList);
-
+		n.setEntityInfos(newCompoundList);
 		// TODO ssbonds are complicated to clone: there are deep references inside Atom objects, how would we do it? - JD 2016-03-03
 
 		return n ;
@@ -442,8 +441,8 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
 				str.append("chain ").append(j).append(": >").append(cha.getChainID()).append("< ");
-				if ( cha.getCompound() != null){
-					EntityInfo comp = cha.getCompound();
+				if ( cha.getEntityInfo() != null){
+					EntityInfo comp = cha.getEntityInfo();
 					String molName = comp.getDescription();
 					if ( molName != null){
 						str.append(molName);
@@ -665,7 +664,7 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setEntityInfo(List<EntityInfo> molList){
+	public void setEntityInfos(List<EntityInfo> molList){
 		this.compounds = molList;
 	}
 
@@ -677,18 +676,18 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<EntityInfo> getEntityInformation() {
+	public List<EntityInfo> getEntityInfos() {
 		// compounds are parsed from the PDB/mmCIF file normally
 		// but if the file is incomplete, it won't have the Compounds information and we try
 		// to guess it from the existing seqres/atom sequences
 		if (compounds==null || compounds.isEmpty()) {
-			CompoundFinder cf = new CompoundFinder(this);
-			this.compounds = cf.findCompounds();
+			EntityFinder cf = new EntityFinder(this);
+			this.compounds = cf.findEntities();
 
 			// now we need to set references in chains:
 			for (EntityInfo compound:compounds) {
 				for (Chain c:compound.getChains()) {
-					c.setCompound(compound);
+					c.setEntityInfo(compound);
 				}
 			}
 		}
@@ -698,8 +697,14 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	public EntityInfo getCompoundById(int molId) {
+		return getEntityById(molId);
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public EntityInfo getEntityById(int entityId) {
 		for (EntityInfo mol : this.compounds){
-			if (mol.getMolId()==molId){
+			if (mol.getMolId()==entityId){
 				return mol;
 			}
 		}

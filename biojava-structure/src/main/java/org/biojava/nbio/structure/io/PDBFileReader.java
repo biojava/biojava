@@ -147,7 +147,7 @@ public class PDBFileReader extends LocalPDBDirectory {
 			Structure struc = pdbreader.getStructureById("193D");
 			System.out.println(struc);
 
-			List<EntityInfo>	compounds = struc.getEntityInformation();
+			List<EntityInfo>	compounds = struc.getEntityInfos();
 			for (EntityInfo comp : compounds  ){
 				List<Chain> chains = comp.getChains();
 				System.out.print(">Chains :" );

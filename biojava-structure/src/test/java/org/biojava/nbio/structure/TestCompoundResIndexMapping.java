@@ -51,7 +51,7 @@ public class TestCompoundResIndexMapping {
 		Structure s = StructureIO.getStructure("1B8G");
 
 		Chain chainA = s.getChainByPDB("A");
-		int i = chainA.getCompound().getAlignedResIndex(chainA.getAtomGroup(0),chainA);
+		int i = chainA.getEntityInfo().getAlignedResIndex(chainA.getAtomGroup(0),chainA);
 		assertEquals("First residue in 1b8gA "+chainA.getAtomGroup(0).toString()+" should map to 1 in SEQRES",1,i);
 
 		checkAllResidues(s);
@@ -74,10 +74,10 @@ public class TestCompoundResIndexMapping {
 		Structure s = StructureIO.getStructure("1SMT");
 
 		Chain chainA = s.getChainByPDB("A");
-		int i = chainA.getCompound().getAlignedResIndex(chainA.getAtomGroup(0),chainA);
+		int i = chainA.getEntityInfo().getAlignedResIndex(chainA.getAtomGroup(0),chainA);
 		assertEquals("First residue in 1smtA "+chainA.getAtomGroup(0).toString()+" should map to 24 in SEQRES",24,i);
 		Chain chainB = s.getChainByPDB("B");
-		i = chainB.getCompound().getAlignedResIndex(chainB.getAtomGroup(0),chainB);
+		i = chainB.getEntityInfo().getAlignedResIndex(chainB.getAtomGroup(0),chainB);
 		assertEquals("First residue in 1smtB "+chainA.getAtomGroup(0).toString()+" should map to 20 in SEQRES",20,i);
 
 		checkAllResidues(s);
@@ -88,7 +88,7 @@ public class TestCompoundResIndexMapping {
 			for (Group g:c.getAtomGroups()) {
 				if (g.getType() != GroupType.AMINOACID) continue;
 
-				int resIndex = c.getCompound().getAlignedResIndex(g, c);
+				int resIndex = c.getEntityInfo().getAlignedResIndex(g, c);
 				assertNotEquals("Residue "+g.getResidueNumber()+" should not map to -1 in SEQRES",-1, resIndex);
 				assertNotEquals("Residue "+g.getResidueNumber()+" should not map to 0 in SEQRES",0, resIndex);
 				assertTrue(resIndex <= c.getSeqResLength());
@@ -107,7 +107,7 @@ public class TestCompoundResIndexMapping {
 		// 3ddo has 6 chains in 1 entity, all of them with different residue numbering (chain A is 1000+, chain B 2000+ ...)
 		Structure s = getStructure("3ddo_raw_noseqres.pdb.gz", true);
 
-		assertEquals(1,s.getEntityInformation().size());
+		assertEquals(1,s.getEntityInfos().size());
 
 		Chain chainA = s.getChainByPDB("A");
 		Chain chainB = s.getChainByPDB("B");
@@ -116,13 +116,13 @@ public class TestCompoundResIndexMapping {
 		// the last 3 residues of each chain are all the same: they should map to the same index
 		for (int resNum=251;resNum<=253;resNum++) {
 			Group groupInChainA = chainA.getGroupByPDB(new ResidueNumber("A", resNum+1000, null));
-			int indexInChainA = chainA.getCompound().getAlignedResIndex(groupInChainA, chainA);
+			int indexInChainA = chainA.getEntityInfo().getAlignedResIndex(groupInChainA, chainA);
 
 			Group groupInChainB = chainB.getGroupByPDB(new ResidueNumber("B", resNum+2000, null));
-			int indexInChainB = chainB.getCompound().getAlignedResIndex(groupInChainB, chainB);
+			int indexInChainB = chainB.getEntityInfo().getAlignedResIndex(groupInChainB, chainB);
 
 			Group groupInChainC = chainC.getGroupByPDB(new ResidueNumber("C", resNum+3000, null));
-			int indexInChainC = chainC.getCompound().getAlignedResIndex(groupInChainC, chainC);
+			int indexInChainC = chainC.getEntityInfo().getAlignedResIndex(groupInChainC, chainC);
 
 			assertNotEquals(-1, indexInChainA);
 			assertNotEquals(-1, indexInChainB);
@@ -137,7 +137,7 @@ public class TestCompoundResIndexMapping {
 		// this should work either with or without setAlignSeqRes, since the mapping happens in CompoundFinder
 		s = getStructure("3ddo_raw_noseqres.pdb.gz", false);
 
-		assertEquals(1,s.getEntityInformation().size());
+		assertEquals(1,s.getEntityInfos().size());
 
 		chainA = s.getChainByPDB("A");
 		chainB = s.getChainByPDB("B");
@@ -146,13 +146,13 @@ public class TestCompoundResIndexMapping {
 		// the last 3 residues of each chain are all the same: they should map to the same index
 		for (int resNum=251;resNum<=253;resNum++) {
 			Group groupInChainA = chainA.getGroupByPDB(new ResidueNumber("A", resNum+1000, null));
-			int indexInChainA = chainA.getCompound().getAlignedResIndex(groupInChainA, chainA);
+			int indexInChainA = chainA.getEntityInfo().getAlignedResIndex(groupInChainA, chainA);
 
 			Group groupInChainB = chainB.getGroupByPDB(new ResidueNumber("B", resNum+2000, null));
-			int indexInChainB = chainB.getCompound().getAlignedResIndex(groupInChainB, chainB);
+			int indexInChainB = chainB.getEntityInfo().getAlignedResIndex(groupInChainB, chainB);
 
 			Group groupInChainC = chainC.getGroupByPDB(new ResidueNumber("C", resNum+3000, null));
-			int indexInChainC = chainC.getCompound().getAlignedResIndex(groupInChainC, chainC);
+			int indexInChainC = chainC.getEntityInfo().getAlignedResIndex(groupInChainC, chainC);
 
 			assertNotEquals(-1, indexInChainA);
 			assertNotEquals(-1, indexInChainB);
@@ -171,7 +171,7 @@ public class TestCompoundResIndexMapping {
 		// 3ddo has 6 chains in 1 entity, all of them with different residue numbering (chain A is 1000+, chain B 2000+ ...)
 		Structure s = getStructure("3ddo_raw_trunc_seqres.pdb.gz", true);
 
-		assertEquals(1,s.getEntityInformation().size());
+		assertEquals(1,s.getEntityInfos().size());
 
 		Chain chainA = s.getChainByPDB("A");
 		Chain chainB = s.getChainByPDB("B");
@@ -180,13 +180,13 @@ public class TestCompoundResIndexMapping {
 		// the last 3 residues of each chain are all the same: they should map to the same index
 		for (int resNum=28;resNum<=30;resNum++) {
 			Group groupInChainA = chainA.getGroupByPDB(new ResidueNumber("A", resNum+1000, null));
-			int indexInChainA = chainA.getCompound().getAlignedResIndex(groupInChainA, chainA);
+			int indexInChainA = chainA.getEntityInfo().getAlignedResIndex(groupInChainA, chainA);
 
 			Group groupInChainB = chainB.getGroupByPDB(new ResidueNumber("B", resNum+2000, null));
-			int indexInChainB = chainB.getCompound().getAlignedResIndex(groupInChainB, chainB);
+			int indexInChainB = chainB.getEntityInfo().getAlignedResIndex(groupInChainB, chainB);
 
 			Group groupInChainC = chainC.getGroupByPDB(new ResidueNumber("C", resNum+3000, null));
-			int indexInChainC = chainC.getCompound().getAlignedResIndex(groupInChainC, chainC);
+			int indexInChainC = chainC.getEntityInfo().getAlignedResIndex(groupInChainC, chainC);
 
 			assertNotEquals(-1, indexInChainA);
 			assertNotEquals(-1, indexInChainB);

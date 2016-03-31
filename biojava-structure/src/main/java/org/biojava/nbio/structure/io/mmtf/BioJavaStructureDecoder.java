@@ -430,7 +430,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			counter++;
 			entityInfo.setMolId(counter);
 		}
-		structure.setEntityInfo(entityInfoList);
+		structure.setEntityInfos(entityInfoList);
 	}
 
 	@Override

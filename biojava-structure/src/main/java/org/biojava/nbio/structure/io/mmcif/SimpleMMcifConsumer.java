@@ -39,6 +39,7 @@ import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.DBRef;
 import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.Group;
@@ -812,7 +813,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// compounds (entities)
 		// In addCompounds above we created the compounds if they were present in the file
 		// Now we need to make sure that they are linked to chains and also that if they are not present in the file we need to add them now
-		linkCompounds();
+		linkEntities();
 
 		if (!params.isHeaderOnly()) {
 
@@ -952,10 +953,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	/**
-	 * Here we link compounds (entities) to chains.
-	 * Also if compounds are not present in file, this initialises the compounds with some heuristics, see {@link CompoundFinder}
+	 * Here we link entities to chains.
+	 * Also if entities are not present in file, this initialises the entities with some heuristics, see {@link EntityFinder}
 	 */
-	private void linkCompounds() {
+	private void linkEntities() {
 
 
 		for (int i =0; i< structure.nrModels() ; i++){
@@ -975,7 +976,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 				int eId = Integer.parseInt(entityId);
 
-				// Compounds are not added for non-polymeric entities, if a chain is non-polymeric its compound won't be found.
+				// Entities are not added for non-polymeric entities, if a chain is non-polymeric its entity won't be found.
 				// TODO: add all entities and unique compounds and add methods to directly get polymer or non-polymer
 				// asyms (chains).  Either create a unique StructureImpl or modify existing for a better representation of the
 				// mmCIF internal data structures but is compatible with Structure interface.
@@ -984,39 +985,44 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
 				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone
 
-				EntityInfo compound = structure.getCompoundById(eId);
-				if (compound==null) {
+				EntityInfo entityInfo = structure.getEntityById(eId);
+				if (entityInfo==null) {
 					// Supports the case where the only chain members were from non-polymeric entity that is missing.
 					// Solved by creating a new Compound(entity) to which this chain will belong.
-					logger.warn("Could not find a compound for entity_id {}, for chain id {}, creating a new compound.",
+					logger.warn("Could not find an Entity for entity_id {}, for chain id {}, creating a new Entity.",
 							eId, chain.getChainID());
-					compound = new EntityInfo();
-					compound.setMolId(eId);
-					compound.addChain(chain);
-					chain.setCompound(compound);
-					structure.addEntityInfo(compound);
+					entityInfo = new EntityInfo();
+					entityInfo.setMolId(eId);
+					entityInfo.addChain(chain);
+					if (StructureTools.isChainWaterOnly(chain)) {
+						entityInfo.setType(EntityType.WATER);
+					} else {
+						entityInfo.setType(EntityType.NONPOLYMER);
+					}
+					chain.setEntityInfo(entityInfo);
+					structure.addEntityInfo(entityInfo);
 				} else {
-					logger.debug("Adding chain with chain id {} (asym id {}) to compound with entity_id {}",
+					logger.debug("Adding chain with chain id {} (asym id {}) to Entity with entity_id {}",
 							chain.getChainID(), chain.getInternalChainID(), eId);
-					compound.addChain(chain);
-					chain.setCompound(compound);
+					entityInfo.addChain(chain);
+					chain.setEntityInfo(entityInfo);
 				}
 
 			}
 
 		}
 
-		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
-		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
-		List<EntityInfo> compounds = structure.getEntityInformation();
+		// to make sure we have Entities linked to chains, we call getEntityInfos() which will lazily initialise the
+		// compounds using heuristics (see EntityFinder) in the case that they were not explicitly present in the file
+		List<EntityInfo> entities = structure.getEntityInfos();
 
-		// final sanity check: it can happen that from the annotated compounds some are not linked to any chains
+		// final sanity check: it can happen that from the annotated entities some are not linked to any chains
 		// e.g. 3s26: a sugar entity does not have any chains associated to it (it seems to be happening with many sugar compounds)
-		// we simply log it, this can sign some other problems if the compounds are used down the line
-		for (EntityInfo compound:compounds) {
-			if (compound.getChains().isEmpty()) {
-				logger.info("Compound {} '{}' has no chains associated to it",
-						compound.getId()==null?"with no entity id":compound.getId(), compound.getDescription());
+		// we simply log it, this can sign some other problems if the entities are used down the line
+		for (EntityInfo e:entities) {
+			if (e.getChains().isEmpty()) {
+				logger.info("Entity {} '{}' has no chains associated to it",
+						e.getId()==null?"with no entity id":e.getId(), e.getDescription());
 			}
 		}
 
@@ -1141,14 +1147,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		try {
 			eId = Integer.parseInt(asym.getEntity_id());
 		} catch (NumberFormatException e) {
-			logger.warn("Could not parse mol_id from string {}. Will use 0 for creating Compound",asym.getEntity_id());
+			logger.warn("Could not parse mol_id from string {}. Will use 0 for creating Entity",asym.getEntity_id());
 		}
 		Entity e = getEntity(eId);
 
 		// for some mmCIF files like 1yrm all 3 of _entity_src_gen, _entity_src_nat and _pdbx_entity_src_syn are missing
 		// we need to fill the Compounds in some other way:
 
-		EntityInfo c = structure.getCompoundById(eId);
+		EntityInfo c = structure.getEntityById(eId);
 
 		if (c==null) {
 			c = new EntityInfo();
@@ -1156,10 +1162,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// we only add the compound if a polymeric one (to match what the PDB parser does)
 			if (e!=null) {
 				c.setDescription(e.getPdbx_description());
-				c.setType(e.getType());
-				addAnicilliaryEntityData(asym, eId, e, c);
+
+				EntityType eType = EntityType.entityTypeFromString(e.getType());
+				if (eType!=null) {
+					c.setType(eType);
+				} else {
+					logger.warn("Type '{}' is not recognised as a valid entity type for entity {}", e.getType(), eId);
+				}
+				addAncilliaryEntityData(asym, eId, e, c);
 				structure.addEntityInfo(c);
-				logger.debug("Adding Compound with entity id {} from _entity, with name: {}",eId, c.getDescription());
+				logger.debug("Adding Entity with entity id {} from _entity, with name: {}",eId, c.getDescription());
 			}
 		}
 	}
@@ -1172,7 +1184,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param entity 
 	 * @param entityInfo 
 	 */
-	private void addAnicilliaryEntityData(StructAsym asym, int entityId, Entity entity, EntityInfo entityInfo) {
+	private void addAncilliaryEntityData(StructAsym asym, int entityId, Entity entity, EntityInfo entityInfo) {
 		// Loop through each of the entity types and add the corresponding data
 		// We're assuming if data is duplicated between sources it is consistent
 		// This is a potentially huge assumption...
@@ -1659,7 +1671,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	/**
 	 * The EntityPolySeq object provide the amino acid sequence objects for the Entities.
-	 * Later on the entities are mapped to the BioJava Chain and Compound objects.
+	 * Later on the entities are mapped to the BioJava {@link Chain} and {@link EntityInfo} objects.
 	 * @param epolseq the EntityPolySeq record for one amino acid
 	 */
 	@Override

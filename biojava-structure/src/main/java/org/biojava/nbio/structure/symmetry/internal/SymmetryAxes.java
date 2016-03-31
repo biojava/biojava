@@ -221,11 +221,12 @@ public class SymmetryAxes {
 	/**
 	 * Return all symmetry axes of of the structure: the set of axes that
 	 * describe all parts of the structure. This combines the elementary
-	 * axes to generate all possible axes.
-	 * Use this method to display the axes.
-	 *
+	 * axes to generate all possible axes. The axes are returned in the repeat
+	 * order.
+	 * @deprecated because it does not work as expected for open symmetry
 	 * @return axes all symmetry axes of the structure.
 	 */
+	@Deprecated
 	public List<Matrix4d> getSymmetryAxes(){
 
 		List<Matrix4d> symmAxes = new ArrayList<Matrix4d>();

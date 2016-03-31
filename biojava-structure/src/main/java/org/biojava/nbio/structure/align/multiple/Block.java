@@ -115,6 +115,14 @@ public interface Block extends ScoresCache {
 	public int getCoreLength();
 
 	/**
+	 * Returns the number of non null positions (residues) of each structure in
+	 * the alignment Block. The values can be used to compute the coverages.
+	 * 
+	 * @return List of residue counts for each structure
+	 */
+	public List<Integer> getAlignResCounts();
+
+	/**
 	 * Calculates and returns the first position of the specified structure in
 	 * the alignment that is not null. This will return the aligment index, not
 	 * the reisude aligned in that position.

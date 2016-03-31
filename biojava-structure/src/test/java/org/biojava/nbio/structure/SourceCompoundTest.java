@@ -51,8 +51,8 @@ public class SourceCompoundTest extends TestCase{
 	public void testCompoundSourceStructure(){
 
 		Structure s2 = getStructure("/2gox.pdb");
-		assertEquals(2, s2.getEntityInformation().size());
-		for (EntityInfo compound : s2.getEntityInformation()){
+		assertEquals(2, s2.getEntityInfos().size());
+		for (EntityInfo compound : s2.getEntityInfos()){
 			if (compound.getMolId()==1) {
 				assertEquals("COMPLEMENT C3", compound.getDescription());
 				assertEquals("[A, C]", compound.getChainIds().toString());
@@ -91,14 +91,14 @@ public class SourceCompoundTest extends TestCase{
 
 		// this file has a CHAIN: string in the value for the FRAGMENT: filed which breaks the version 1.4 parser
 
-		for (EntityInfo compound : s2.getEntityInformation()) {
+		for (EntityInfo compound : s2.getEntityInfos()) {
 			if (compound.getMolId()==1) {
 				assertEquals("FRAGMENT OF ALPHA CHAIN: RESIDUES 996-1287", compound.getFragment());
 			}
 
 		}
 
-		for (EntityInfo compound : s4.getEntityInformation()) {
+		for (EntityInfo compound : s4.getEntityInfos()) {
 			if (compound.getMolId()==1) {
 				assertEquals("SIGNAL RECEIVER DOMAIN: RESIDUES 2-128", compound.getFragment());
 			}
@@ -109,8 +109,8 @@ public class SourceCompoundTest extends TestCase{
 
 	public void testCOMPNDsectionCHAINS(){
 		Structure s3 = getStructure("/2pos.pdb");
-		assertEquals(1, s3.getEntityInformation().size());
-		for (EntityInfo compound : s3.getEntityInformation()){
+		assertEquals(1, s3.getEntityInfos().size());
+		for (EntityInfo compound : s3.getEntityInfos()){
 			/*System.out.println(compound.getMolId());
 			System.out.println(compound.getMolName());
 			System.out.println(compound.getChainId().toString());
@@ -128,7 +128,7 @@ public class SourceCompoundTest extends TestCase{
 
 	public void testSOURCEsectionSTRAIN(){
 		Structure s4 = getStructure("/3cfy.pdb");
-		for (EntityInfo compound : s4.getEntityInformation()){
+		for (EntityInfo compound : s4.getEntityInfos()){
 			if (compound.getMolId()==1) {
 				/*System.out.println(compound.getMolId());
 				System.out.println(compound.getMolName());
@@ -164,7 +164,7 @@ public class SourceCompoundTest extends TestCase{
 
 	public void testSOURCEsectionORGSCI(){
 		Structure s5 = getStructure("/3cdl.pdb");
-		for (EntityInfo compound : s5.getEntityInformation()){
+		for (EntityInfo compound : s5.getEntityInfos()){
 			if (compound.getMolId()==1) {
 				//System.out.println(compound.getOrganismScientific());
 				assertEquals("PSEUDOMONAS SYRINGAE PV. TOMATO STR. DC3000", compound.getOrganismScientific());
@@ -181,7 +181,7 @@ public class SourceCompoundTest extends TestCase{
 	public void testSourceTaxIdVersion32File(){
 		Structure structure = getStructure("/3dl7_v32.pdb");
 
-		EntityInfo comp = structure.getCompoundById(1);
+		EntityInfo comp = structure.getEntityById(1);
 
 		comp.showSource();
 

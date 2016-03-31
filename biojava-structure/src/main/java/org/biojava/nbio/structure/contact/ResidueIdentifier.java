@@ -52,7 +52,7 @@ class ResidueIdentifier implements Serializable {
 			logger.warn("Chain is not available for group {}. Contact comparison will not work for this residue",g.toString());
 			this.seqResIndex = -1;
 		} else {
-			EntityInfo comp = c.getCompound();
+			EntityInfo comp = c.getEntityInfo();
 			if (comp==null) {
 				logger.warn("Compound is not available for group {}. Contact comparison will not work for this residue",g.toString());
 				this.seqResIndex = -1;

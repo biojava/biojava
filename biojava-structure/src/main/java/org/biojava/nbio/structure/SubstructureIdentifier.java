@@ -182,8 +182,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 				"sub-range " + ranges + " of "  + newS.getPDBCode() + " "
 						+ s.getPDBHeader().getDescription());
 		// TODO The following should be only copied for atoms which are present in the range.
-		newS.setEntityInfo(s.getEntityInformation());
-
+		newS.setEntityInfos(s.getEntityInfos());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 
@@ -198,7 +197,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 			if(getResidueRanges().isEmpty()) {
 				// Include all residues
-				newS.setEntityInfo(s.getEntityInformation());
+				newS.setEntityInfos(s.getEntityInfos());
 				newS.setSSBonds(s.getSSBonds());
 				newS.setSites(s.getSites());
 

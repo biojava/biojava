@@ -303,9 +303,9 @@ public class MMCIFFileTools {
 
 		String entityId = "0";
 		String labelSeqId = Integer.toString(g.getResidueNumber().getSeqNum());
-		if (g.getChain()!=null && g.getChain().getCompound()!=null) {
-			entityId = Integer.toString(g.getChain().getCompound().getMolId());
-			labelSeqId = Integer.toString(g.getChain().getCompound().getAlignedResIndex(g, g.getChain()));
+		if (g.getChain()!=null && g.getChain().getEntityInfo()!=null) {
+			entityId = Integer.toString(g.getChain().getEntityInfo().getMolId());
+			labelSeqId = Integer.toString(g.getChain().getEntityInfo().getAlignedResIndex(g, g.getChain()));
 		}
 
 		Character  altLoc = a.getAltLoc()           ;
@@ -394,7 +394,7 @@ public class MMCIFFileTools {
 
 		List<AtomSite> list = new ArrayList<AtomSite>();
 
-		if (c.getCompound()==null) {
+		if (c.getEntityInfo()==null) {
 			logger.warn("No Compound (entity) found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", c.getChainID());
 		}
 
