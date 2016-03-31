@@ -685,9 +685,9 @@ public class StructureImpl implements Structure, Serializable {
 			this.entityInfos = cf.findEntities();
 
 			// now we need to set references in chains:
-			for (EntityInfo compound:entityInfos) {
-				for (Chain c:compound.getChains()) {
-					c.setEntityInfo(compound);
+			for (EntityInfo entityInfo : entityInfos) {
+				for (Chain c:entityInfo.getChains()) {
+					c.setEntityInfo(entityInfo);
 				}
 			}
 		}

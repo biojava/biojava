@@ -18,7 +18,7 @@ import org.rcsb.mmtf.examples.HandleIO;
 public class TestMmtfParser {
 
 	/**
-	 * Can we parse an MMTF file and 
+	 * Can we parse an MMTF file and get the right number of chains.
 	 * @throws IOException 
 	 */
 	@Test
@@ -30,5 +30,6 @@ public class TestMmtfParser {
 	    ParseUsingBioJava parseUseBiojava = new ParseUsingBioJava();
 	    Structure biojavaStruct = parseUseBiojava.getBiojavaStruct(inputByteArr, parsingParms);
 	    assertEquals(biojavaStruct.getChains().size(), 6);
+	    assertEquals(biojavaStruct.getPDBCode().toLowerCase(), "1qmz");
 	}
 }
