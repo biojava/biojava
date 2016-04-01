@@ -178,27 +178,27 @@ public class StructureTools {
 		nucleotides30.put("TC1", UNKNOWN_GROUP_LABEL); // Furanosyl
 		nucleotides30.put("TFE", UNKNOWN_GROUP_LABEL); // Fluorinated Thymine
 		nucleotides30.put("TFO", UNKNOWN_GROUP_LABEL); // Tenofovir (3'
-														// terminator)
+		// terminator)
 		nucleotides30.put("TGP", UNKNOWN_GROUP_LABEL); // Guanine variant
 		nucleotides30.put("THX", UNKNOWN_GROUP_LABEL); // 5' terminator
 		nucleotides30.put("TLC", UNKNOWN_GROUP_LABEL); // Thymine with dicyclic
-														// sugar
+		// sugar
 		nucleotides30.put("TLN", UNKNOWN_GROUP_LABEL); // locked Thymine
 		nucleotides30.put("LCG", UNKNOWN_GROUP_LABEL); // locked Guanine
 		nucleotides30.put("TP1", UNKNOWN_GROUP_LABEL); // Thymine peptide
-														// nucleic acid, with
-														// added methyl
+		// nucleic acid, with
+		// added methyl
 		nucleotides30.put("CP1", UNKNOWN_GROUP_LABEL); // Cytidine peptide
-														// nucleic acid, with
-														// added methyl
+		// nucleic acid, with
+		// added methyl
 		nucleotides30.put("TPN", UNKNOWN_GROUP_LABEL); // Thymine peptide
-														// nucleic acid
+		// nucleic acid
 		nucleotides30.put("CPN", UNKNOWN_GROUP_LABEL); // Cytidine peptide
-														// nucleic acid
+		// nucleic acid
 		nucleotides30.put("GPN", UNKNOWN_GROUP_LABEL); // Guanine peptide
-														// nucleic acid
+		// nucleic acid
 		nucleotides30.put("APN", UNKNOWN_GROUP_LABEL); // Adenosine peptide
-														// nucleic acid
+		// nucleic acid
 		nucleotides30.put("TPC", UNKNOWN_GROUP_LABEL); // Thymine variant
 
 		// store nucleic acids (C, G, A, T, U, and I), and
@@ -767,7 +767,7 @@ public class StructureTools {
 		String prevChainId = "";
 		for (Atom a : ca2) {
 			Group g = (Group) a.getGroup().clone(); // works because each group
-													// has only a single atom
+			// has only a single atom
 
 			if (c == null) {
 				c = new ChainImpl();
@@ -1081,7 +1081,7 @@ public class StructureTools {
 					// found matching entity info. set description...
 					newS.getPDBHeader().setDescription(
 							"Chain " + c.getChainID() + " of " + s.getPDBCode()
-									+ " " + comp.getDescription());
+							+ " " + comp.getDescription());
 				}
 			}
 		}
@@ -1626,7 +1626,7 @@ public class StructureTools {
 	 * @throws StructureException
 	 */
 	public static Structure getStructure(String name) throws IOException,
-			StructureException {
+	StructureException {
 		return StructureTools.getStructure(name, null, null);
 	}
 
@@ -1758,10 +1758,10 @@ public class StructureTools {
 				"Ratio of residues to total for chain {} is below {}. Assuming it is a {} chain. "
 						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
 						+ "ratio aa/total: {}, ratio nuc/total: {}",
-				c.getChainID(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
-				sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
-				(double) sizeAminos / (double) fullSize,
-				(double) sizeNucleotides / (double) fullSize);
+						c.getChainID(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
+						sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
+						(double) sizeAminos / (double) fullSize,
+						(double) sizeNucleotides / (double) fullSize);
 
 		return max;
 	}
@@ -1797,5 +1797,29 @@ public class StructureTools {
 
 		}
 		return true;
+	}
+
+	/**
+	 * Cleans up the structure's alternate location groups. All alternate location groups should have all atoms (except in the case of microheterogenity.
+	 * Ensure that all the alt loc groups have all the atoms in the main group
+	 * @param structure The Structure to be cleaned up
+	 */
+	public static void cleanUpAltLocs(Structure structure) {
+		for (int i =0; i< structure.nrModels() ; i++){
+			for (Chain chain : structure.getModel(i)) {
+				for (Group group : chain.getAtomGroups()) {
+					for (Group altLocGroup : group.getAltLocs()) { 
+						for ( Atom groupAtom : group.getAtoms()) {
+							// If this alt loc doesn't have this atom
+							if (! altLocGroup.hasAtom(groupAtom.getName())) {
+								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
+									altLocGroup.addAtom(groupAtom);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

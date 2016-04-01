@@ -796,7 +796,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		// Now make sure all altlocgroups have all the atoms in all the groups
-		correctAltLocGroups();
+		StructureTools.cleanUpAltLocs(structure);
 		
 		
 		// NOTE bonds and charges can only be done at this point that the chain id mapping is properly sorted out
@@ -928,28 +928,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 
-	}
-	
-	/**
-	 * Ensure that all the alt loc groups have all the atoms in the main group
-	 */
-	private void correctAltLocGroups() {
-		for (int i =0; i< structure.nrModels() ; i++){
-			for (Chain chain : structure.getModel(i)) {
-				for (Group group : chain.getAtomGroups()) {
-					for (Group altLocGroup : group.getAltLocs()) { 
-						for ( Atom groupAtom : group.getAtoms()) {
-							// If this alt loc doesn't have this atom
-							if (! altLocGroup.hasAtom(groupAtom.getName())) {
-								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
-									altLocGroup.addAtom(groupAtom);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**

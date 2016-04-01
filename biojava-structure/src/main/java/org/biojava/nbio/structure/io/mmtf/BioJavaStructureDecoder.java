@@ -407,23 +407,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	@Override
 	public void cleanUpStructure() {
 		// Ensure all altlocs have all atoms
-		for (int i =0; i< structure.nrModels() ; i++){
-			for (Chain chain : structure.getModel(i)) {
-				for (Group group : chain.getAtomGroups()) {
-					for (Group altLocGroup : group.getAltLocs()) { 
-						for ( Atom groupAtom : group.getAtoms()) {
-							// If this alt loc doesn't have this atom
-							if (! altLocGroup.hasAtom(groupAtom.getName())) {
-								// Make sure it's not a microheterogenity
-								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
-									altLocGroup.addAtom(groupAtom);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		StructureTools.cleanUpAltLocs(structure);
 		// Number the remaining ones
 		int counter =0;
 		for (EntityInfo entityInfo : entityInfoList) {

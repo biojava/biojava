@@ -2763,34 +2763,12 @@ public class PDBFileParser  {
 			setSecStruc();
 
 		// Now correct the alternate location group
-		correctAltLocGroups();
+		StructureTools.cleanUpAltLocs(structure);
 
 		return structure;
 
 			}
-	
-	
-	/**
-	 * Ensure that all the alt loc groups have all the atoms in the main group
-	 */
-	private void correctAltLocGroups() {
-		for (int i =0; i< structure.nrModels() ; i++){
-			for (Chain chain : structure.getModel(i)) {
-				for (Group group : chain.getAtomGroups()) {
-					for (Group altLocGroup : group.getAltLocs()) { 
-						for ( Atom groupAtom : group.getAtoms()) {
-							// If this alt loc doesn't have this atom
-							if (! altLocGroup.hasAtom(groupAtom.getName())) {
-								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
-								altLocGroup.addAtom(groupAtom);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+
 
 	/**
 	 * Add the charges to the Structure
