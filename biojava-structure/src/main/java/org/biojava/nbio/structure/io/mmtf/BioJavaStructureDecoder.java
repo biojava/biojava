@@ -2,7 +2,6 @@ package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +31,6 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.StructureDecoderInterface;
-import org.rcsb.mmtf.dataholders.BioAssemblyData;
-import org.rcsb.mmtf.dataholders.BioAssemblyTrans;
 
 
 /**
@@ -365,43 +362,33 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 
 
 	@Override
-	public void setBioAssemblyList(List<BioAssemblyData> inputBioassemblies) {
+	public void setBioAssemblyTrans(int bioAssemblyId, String[] inputChainIds, double[] inputTransform) {
 		PDBHeader pdbHeader = structure.getPDBHeader();
-		// Get the bioassebly data
-		Map<Integer, BioAssemblyInfo> bioAssemblies = new HashMap<>();
-		int bioassemlyCounter = 0;
-		for (BioAssemblyData value: inputBioassemblies) {
-			bioassemlyCounter++;
-			// Get the key and the value
-			// Make a biojava bioassembly object
-			BioAssemblyInfo bioAssInfo = new  BioAssemblyInfo();
-			bioAssInfo.setId(bioassemlyCounter);
-			// Now get the new sizes
-			List<BiologicalAssemblyTransformation> newList = new ArrayList<>();
-			Integer transIdCounter =0;
-			for (BioAssemblyTrans transform : value.getTransforms()) {
-				transIdCounter++;
-				// Now loop over the chains
-				for(String currChainId : transform.getChainIdList()){
-					BiologicalAssemblyTransformation bioAssTrans =
-							new BiologicalAssemblyTransformation();
-					bioAssTrans.setId(transIdCounter.toString());
-					bioAssTrans.setChainId(currChainId);
-					// Now set matrix
-					Matrix4d mat4d = new Matrix4d(transform.getTransformation());
-					bioAssTrans.setTransformationMatrix(mat4d);
-					// Now add this
-					newList.add(bioAssTrans);
-				}
-			}
-			// Now set the transform list
-			bioAssInfo.setTransforms(newList);
-			// Now set this
-			bioAssemblies.put(bioassemlyCounter, bioAssInfo);
+		// Get the bioassembly data
+		Map<Integer, BioAssemblyInfo> bioAssemblies = pdbHeader.getBioAssemblies();
+		// Get the bioassembly itself (if it exists
+		BioAssemblyInfo bioAssInfo;
+	    if (bioAssemblies.containsKey(bioAssemblyId)){
+	    	bioAssInfo = bioAssemblies.get(bioAssemblyId);
+	    }
+	    else{
+	    	bioAssInfo = new  BioAssemblyInfo();
+	    	bioAssInfo.setTransforms(new ArrayList<BiologicalAssemblyTransformation>());
+	    	bioAssemblies.put(bioAssemblyId, bioAssInfo);
+	    	bioAssInfo.setId(bioAssemblyId);
+	    }
+	    
+		for(String currChainId : inputChainIds){
+		    BiologicalAssemblyTransformation bioAssTrans = new BiologicalAssemblyTransformation();
+		    Integer transId = bioAssInfo.getTransforms().size()+1;
+			bioAssTrans.setId(transId.toString());
+			bioAssTrans.setChainId(currChainId);
+			// Now set matrix
+			Matrix4d mat4d = new Matrix4d(inputTransform);
+			bioAssTrans.setTransformationMatrix(mat4d);
+			// Now add this
+			bioAssInfo.getTransforms().add(bioAssTrans);
 		}
-		// Now actually set them
-		pdbHeader.setBioAssemblies(bioAssemblies);
-		structure.setPDBHeader(pdbHeader);		
 	}
 
 	@Override
@@ -455,4 +442,5 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			pdbHeader.setExperimentalTechnique(techniqueStr);
 		}
 	}
+
 }
