@@ -389,7 +389,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			bioAssTrans.setId(transId.toString());
 			// If it actually has an index - if it doesn't it is because the chain has no density.
 			if (currChainIndex!=-1){
-				bioAssTrans.setChainId(totChainList.get(currChainIndex).getChainID());
+			bioAssTrans.setChainId(totChainList.get(currChainIndex).getChainID());
 			}
 			else {
 				continue;
