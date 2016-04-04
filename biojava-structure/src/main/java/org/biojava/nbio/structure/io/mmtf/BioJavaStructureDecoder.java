@@ -362,8 +362,13 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 
 
 	@Override
-	public void setBioAssemblyTrans(int bioAssemblyId, String[] inputChainIds, double[] inputTransform) {
+	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform) {
 		PDBHeader pdbHeader = structure.getPDBHeader();
+		List<Chain> totChainList = new ArrayList<>(); 
+		for (int i=0; i<structure.nrModels(); i++) { 
+			totChainList.addAll(structure.getChains(i));
+		}
+		
 		// Get the bioassembly data
 		Map<Integer, BioAssemblyInfo> bioAssemblies = pdbHeader.getBioAssemblies();
 		// Get the bioassembly itself (if it exists
@@ -378,11 +383,17 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	    	bioAssInfo.setId(bioAssemblyId);
 	    }
 	    
-		for(String currChainId : inputChainIds){
+		for(int currChainIndex : inputChainIndices){
 		    BiologicalAssemblyTransformation bioAssTrans = new BiologicalAssemblyTransformation();
 		    Integer transId = bioAssInfo.getTransforms().size()+1;
 			bioAssTrans.setId(transId.toString());
-			bioAssTrans.setChainId(currChainId);
+			// If it actually has an index - if it doesn't it is because the chain has no density.
+			if (currChainIndex!=-1){
+				bioAssTrans.setChainId(totChainList.get(currChainIndex).getChainID());
+			}
+			else {
+				continue;
+			}
 			// Now set matrix
 			Matrix4d mat4d = new Matrix4d(inputTransform);
 			bioAssTrans.setTransformationMatrix(mat4d);
