@@ -30,7 +30,7 @@ import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
-import org.rcsb.mmtf.api.StructureDecoderInterface;
+import org.rcsb.mmtf.api.MmtfDecoderInterface;
 import org.rcsb.mmtf.decoder.DecodeStructure;
 import org.rcsb.mmtf.decoder.ParsingParams;
 
@@ -41,7 +41,7 @@ import org.rcsb.mmtf.decoder.ParsingParams;
  *
  * @author Anthony Bradley
  */
-public class MmtfStructureDecoder implements StructureDecoderInterface, Serializable {
+public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6772030485225130853L;
@@ -90,6 +90,24 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 		return structure;
 	}
 
+	@Override
+	public void finalizeStructure() {
+		// Ensure all altlocs have all atoms
+		StructureTools.cleanUpAltLocs(structure);
+		// Number the remaining ones
+		int counter =0;
+		for (EntityInfo entityInfo : entityInfoList) {
+			counter++;
+			entityInfo.setMolId(counter);
+		}
+		structure.setEntityInfos(entityInfoList);
+	}
+
+	@Override
+	public void initStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels, String modelId) {
+		structure.setPDBCode(modelId);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface#setModelCount(int)
 	 */
@@ -405,24 +423,6 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	}
 
 	@Override
-	public void cleanUpStructure() {
-		// Ensure all altlocs have all atoms
-		StructureTools.cleanUpAltLocs(structure);
-		// Number the remaining ones
-		int counter =0;
-		for (EntityInfo entityInfo : entityInfoList) {
-			counter++;
-			entityInfo.setMolId(counter);
-		}
-		structure.setEntityInfos(entityInfoList);
-	}
-
-	@Override
-	public void prepareStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels, String modelId) {
-		structure.setPDBCode(modelId);
-	}
-
-	@Override
 	public void setEntityInfo(String[] chainIds, String sequence, String description, String title) {
 		// First get the chains
 		EntityInfo entityInfo = new EntityInfo();
@@ -444,7 +444,7 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	}
 
 	@Override
-	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, List<String> experimnetalMethods) {
+	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, String[] experimnetalMethods) {
 		// Get the pdb header
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		pdbHeader.setTitle(title);
@@ -470,4 +470,5 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 		// Now return this structure
 		return biojavaStructureDecoder.getStructure();
 	}
+
 }
