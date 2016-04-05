@@ -5,7 +5,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmtf.ParseUsingBioJava;
+import org.biojava.nbio.structure.io.mmtf.MmtfStructureDecoder;
 import org.junit.Test;
 import org.rcsb.mmtf.decoder.ParsingParams;
 import org.rcsb.mmtf.examples.HandleIO;
@@ -27,8 +27,8 @@ public class TestMmtfParser {
 	    byte[] inputByteArr = gbjs.getFromUrl("1qmz");
 	    ParsingParams parsingParms = new ParsingParams();
 	    parsingParms.setParseInternal(false);
-	    ParseUsingBioJava parseUseBiojava = new ParseUsingBioJava();
-	    Structure biojavaStruct = parseUseBiojava.getBiojavaStruct(inputByteArr, parsingParms);
+	    // Now get the biojava structure.
+	    Structure biojavaStruct = MmtfStructureDecoder.getBiojavaStruct(inputByteArr, parsingParms);
 	    assertEquals(biojavaStruct.getChains().size(), 6);
 	    assertEquals(biojavaStruct.getPDBCode().toLowerCase(), "1qmz");
 	}
