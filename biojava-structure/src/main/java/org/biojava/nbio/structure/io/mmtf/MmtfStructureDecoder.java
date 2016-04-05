@@ -34,6 +34,8 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.StructureDecoderInterface;
 import org.rcsb.mmtf.dataholders.BioAssemblyData;
 import org.rcsb.mmtf.dataholders.BioAssemblyTrans;
+import org.rcsb.mmtf.decoder.DecodeStructure;
+import org.rcsb.mmtf.decoder.ParsingParams;
 
 
 /**
@@ -42,7 +44,7 @@ import org.rcsb.mmtf.dataholders.BioAssemblyTrans;
  *
  * @author Anthony Bradley
  */
-public class BioJavaStructureDecoder implements StructureDecoderInterface, Serializable {
+public class MmtfStructureDecoder implements StructureDecoderInterface, Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6772030485225130853L;
@@ -67,14 +69,14 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 
 	/** All the atoms. */
 	private List<Atom> allAtoms;
-	
+
 	/** The list of EntityInformation */
 	private List<EntityInfo> entityInfoList;
 
 	/**
 	 * Instantiates a new bio java structure decoder.
 	 */
-	public BioJavaStructureDecoder() {
+	public MmtfStructureDecoder() {
 		structure = new StructureImpl();
 		modelNumber = 0;
 		chemicalComponentGroup = new ChemComp();
@@ -454,5 +456,20 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 		for (String techniqueStr : experimnetalMethods) {
 			pdbHeader.setExperimentalTechnique(techniqueStr);
 		}
+	}
+
+	/**
+	 * Utility function to get a Biojava structure from a byte array.
+	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
+	 * @param parsingParams
+	 * @return
+	 */
+	public static Structure getBiojavaStruct(byte[] inputByteArray, ParsingParams parsingParams) {
+		// Make the decoder
+		MmtfStructureDecoder biojavaStructureDecoder = new MmtfStructureDecoder();
+		DecodeStructure ds = new DecodeStructure(inputByteArray);
+		ds.getStructFromByteArray(biojavaStructureDecoder, parsingParams);
+		// Now return this structure
+		return biojavaStructureDecoder.getStructure();
 	}
 }
