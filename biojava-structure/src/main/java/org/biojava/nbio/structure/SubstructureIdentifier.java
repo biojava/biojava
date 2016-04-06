@@ -183,7 +183,6 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 						+ s.getPDBHeader().getDescription());
 		// TODO The following should be only copied for atoms which are present in the range.
 		newS.setEntityInfos(s.getEntityInfos());
-
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 

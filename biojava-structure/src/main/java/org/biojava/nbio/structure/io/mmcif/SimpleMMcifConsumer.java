@@ -429,19 +429,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		if (current_group == null) {
 
+
 			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
 			current_group.setResidueNumber(residueNumber);
 			current_group.setPDBName(groupCode3);
 		}
 
-		if ( startOfNewChain){
-			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
-
-			current_group.setResidueNumber(residueNumber);
-			current_group.setPDBName(groupCode3);
-		}
-
+		// SET UP THE ALT LOC GROUP
 		Group altGroup = null;
 		String altLocS = atom.getLabel_alt_id();
 		Character altLoc = ' ';
@@ -451,33 +446,40 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				altLoc = ' ';
 
 		}
-
-		// check if residue number is the same ...
-		// insertion code is part of residue number
-		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
-			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
-			current_chain.addGroup(current_group);
-			current_group.trimToSize();
-			current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
-			current_group.setPDBName(groupCode3);
+		// If it's the start of the new chain 
+		if ( startOfNewChain){
+			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 			current_group.setResidueNumber(residueNumber);
+			current_group.setPDBName(groupCode3);
+		}
+		// ANTHONY BRADLEY ADDED THIS -> WE ONLY WAN'T TO CHECK FOR ALT LOCS WHEN IT's NOT THE FIRST GROUP IN CHAIN
+		else{
+			// check if residue number is the same ...
+			// insertion code is part of residue number
+			if ( ! residueNumber.equals(current_group.getResidueNumber())) {
+				//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
+				current_chain.addGroup(current_group);
+				current_group.trimToSize();
+				current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
+				current_group.setPDBName(groupCode3);
+				current_group.setResidueNumber(residueNumber);
 
 
-			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
+				//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
-		} else {
-			// same residueNumber, but altLocs...
-
-			// test altLoc
-			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {
-				logger.debug("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
-				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
-				if (altGroup.getChain()==null) {
-					altGroup.setChain(current_chain);
+			} else {
+				// same residueNumber, but altLocs...
+				// test altLoc
+				
+				if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {
+					logger.debug("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
+					altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
+					if (altGroup.getChain()==null) {
+						altGroup.setChain(current_chain);
+					}
 				}
 			}
 		}
-
 		//atomCount++;
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
@@ -509,10 +511,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 
-		// make sure that main group has all atoms
+		// make sure that main group has all atoms 
 		// GitHub issue: #76
+		// Unless it's microheterogenity https://github.com/rcsb/codec-devel/issues/81
 		if ( ! current_group.hasAtom(a.getName())) {
-			current_group.addAtom(a);
+			if (current_group.getPDBName().equals(a.getGroup().getPDBName())) {
+				current_group.addAtom(a);
+			}
 		}
 
 
@@ -790,6 +795,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 
+		// Now make sure all altlocgroups have all the atoms in all the groups
+		StructureTools.cleanUpAltLocs(structure);
+		
+		
 		// NOTE bonds and charges can only be done at this point that the chain id mapping is properly sorted out
 		if (!params.isHeaderOnly()) {
 			if ( params.shouldCreateAtomBonds()) {
@@ -849,7 +858,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					if (bioAssemblyId!=-1)
 						// if we have a numerical id, then it's unusual to have no oligomeric size: we warn about it
 						logger.warn("Could not parse oligomeric count from '{}' for biological assembly id {}",
-							psa.getOligomeric_count(),psa.getId());
+								psa.getOligomeric_count(),psa.getId());
 					else
 						// no numerical id (PAU,XAU in virus entries), it's normal to have no oligomeric size
 						logger.info("Could not parse oligomeric count from '{}' for biological assembly id {}",
@@ -954,27 +963,27 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
 				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone
 
-				EntityInfo e = structure.getEntityById(eId);
-				if (e==null) {
+				EntityInfo entityInfo = structure.getEntityById(eId);
+				if (entityInfo==null) {
 					// Supports the case where the only chain members were from non-polymeric entity that is missing.
 					// Solved by creating a new Compound(entity) to which this chain will belong.
 					logger.warn("Could not find an Entity for entity_id {}, for chain id {}, creating a new Entity.",
 							eId, chain.getChainID());
-					e = new EntityInfo();
-					e.setMolId(eId);
-					e.addChain(chain);
+					entityInfo = new EntityInfo();
+					entityInfo.setMolId(eId);
+					entityInfo.addChain(chain);
 					if (StructureTools.isChainWaterOnly(chain)) {
-						e.setType(EntityType.WATER);
+						entityInfo.setType(EntityType.WATER);
 					} else {
-						e.setType(EntityType.NONPOLYMER);
+						entityInfo.setType(EntityType.NONPOLYMER);
 					}
-					chain.setEntityInfo(e);
-					structure.addEntityInfo(e);
+					chain.setEntityInfo(entityInfo);
+					structure.addEntityInfo(entityInfo);
 				} else {
 					logger.debug("Adding chain with chain id {} (asym id {}) to Entity with entity_id {}",
 							chain.getChainID(), chain.getInternalChainID(), eId);
-					e.addChain(chain);
-					chain.setEntityInfo(e);
+					entityInfo.addChain(chain);
+					chain.setEntityInfo(entityInfo);
 				}
 
 			}
@@ -1131,6 +1140,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// we only add the compound if a polymeric one (to match what the PDB parser does)
 			if (e!=null) {
 				c.setDescription(e.getPdbx_description());
+
 				EntityType eType = EntityType.entityTypeFromString(e.getType());
 				if (eType!=null) {
 					c.setType(eType);
@@ -1440,7 +1450,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			if (!xtalCell.isCellReasonable()) {
 				// If the entry describes a structure determined by a technique other than X-ray crystallography,
-			    // cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
+				// cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
 				// if so we don't add and CrystalCell will be null
 				logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.",
 						CrystalCell.MIN_VALID_CELL_SIZE);
@@ -1888,70 +1898,70 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (sites == null) sites = new ArrayList<Site>();
 
 		for (StructSiteGen siteGen : structSiteGens) {
-				// For each StructSiteGen, find the residues involved, if they exist then
-				String site_id = siteGen.getSite_id(); // multiple could be in same site.
-				if (site_id == null) site_id = "";
-				String comp_id = siteGen.getLabel_comp_id();  // PDBName
-				// Assumption: the author chain ID and residue number for the site is consistent with the original
-				// author chain id and residue numbers.
-				String chain_id;
-				if (params.isUseInternalChainId()){
-						chain_id = siteGen.getLabel_asym_id();
-				}
-				else {
-					chain_id = siteGen.getAuth_asym_id(); // ChainID
-				}
-				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
+			// For each StructSiteGen, find the residues involved, if they exist then
+			String site_id = siteGen.getSite_id(); // multiple could be in same site.
+			if (site_id == null) site_id = "";
+			String comp_id = siteGen.getLabel_comp_id();  // PDBName
+			// Assumption: the author chain ID and residue number for the site is consistent with the original
+			// author chain id and residue numbers.
+			String chain_id;
+			if (params.isUseInternalChainId()){
+				chain_id = siteGen.getLabel_asym_id();
+			}
+			else {
+				chain_id = siteGen.getAuth_asym_id(); // ChainID
+			}
+			String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
 
-				String insCode = siteGen.getPdbx_auth_ins_code();
-				if ( insCode != null && insCode.equals("?"))
-					insCode = null;
+			String insCode = siteGen.getPdbx_auth_ins_code();
+			if ( insCode != null && insCode.equals("?"))
+				insCode = null;
 
-				// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
-				Group g = null;
-				try {
-					Chain chain = structure.getChainByPDB(chain_id);
-					if (null != chain) {
-						try {
-							Character insChar = null;
-							if (null != insCode && insCode.length() > 0) insChar = insCode.charAt(0);
-							g = chain.getGroupByPDB(new ResidueNumber(chain_id, Integer.parseInt(auth_seq_id), insChar));
-						} catch (NumberFormatException e) {
-							logger.warn("Could not lookup residue : " + chain_id + auth_seq_id);
-						}
+			// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
+			Group g = null;
+			try {
+				Chain chain = structure.getChainByPDB(chain_id);
+				if (null != chain) {
+					try {
+						Character insChar = null;
+						if (null != insCode && insCode.length() > 0) insChar = insCode.charAt(0);
+						g = chain.getGroupByPDB(new ResidueNumber(chain_id, Integer.parseInt(auth_seq_id), insChar));
+					} catch (NumberFormatException e) {
+						logger.warn("Could not lookup residue : " + chain_id + auth_seq_id);
 					}
-				} catch (StructureException e) {
-					logger.warn("Problem finding residue in site entry " + siteGen.getSite_id() + " - " + e.getMessage(), e.getMessage());
+				}
+			} catch (StructureException e) {
+				logger.warn("Problem finding residue in site entry " + siteGen.getSite_id() + " - " + e.getMessage(), e.getMessage());
+			}
+
+			if (g != null) {
+				// 2. find the site_id, if not existing, create anew.
+				Site site = null;
+				for (Site asite: sites) {
+					if (site_id.equals(asite.getSiteID())) site = asite;
 				}
 
-				if (g != null) {
-					// 2. find the site_id, if not existing, create anew.
-					Site site = null;
-					for (Site asite: sites) {
-						if (site_id.equals(asite.getSiteID())) site = asite;
-					}
+				boolean addSite = false;
 
-					boolean addSite = false;
-
-					// 3. add this residue to the site.
-					if (site == null) {
-						addSite = true;
-						site = new Site();
-						site.setSiteID(site_id);
-					}
-
-					List<Group> groups = site.getGroups();
-					if (groups == null) groups = new ArrayList<Group>();
-
-					// Check the self-consistency of the residue reference from auth_seq_id and chain_id
-					if (!comp_id.equals(g.getPDBName())) {
-						logger.warn("comp_id doesn't match the residue at " + chain_id + auth_seq_id + " - skipping");
-					} else {
-						groups.add(g);
-						site.setGroups(groups);
-					}
-					if (addSite) sites.add(site);
+				// 3. add this residue to the site.
+				if (site == null) {
+					addSite = true;
+					site = new Site();
+					site.setSiteID(site_id);
 				}
+
+				List<Group> groups = site.getGroups();
+				if (groups == null) groups = new ArrayList<Group>();
+
+				// Check the self-consistency of the residue reference from auth_seq_id and chain_id
+				if (!comp_id.equals(g.getPDBName())) {
+					logger.warn("comp_id doesn't match the residue at " + chain_id + auth_seq_id + " - skipping");
+				} else {
+					groups.add(g);
+					site.setGroups(groups);
+				}
+				if (addSite) sites.add(site);
+			}
 		}
 		structure.setSites(sites);
 	}

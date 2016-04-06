@@ -38,7 +38,7 @@ public class TestBond {
 	private static AtomCache cache;
 
 	@BeforeClass
-	public static void setUp() throws IOException, StructureException {
+	public static void setUp() {
 		cache = new AtomCache();
 
 		cache.setUseMmCif(true);
@@ -140,37 +140,97 @@ public class TestBond {
 		assertTrue(areBonded(phosphateP, phosphateO));
 	}
 
- 	/**
- 	 * Test whether nucleotide bonds are being generated
- 	 * @throws IOException
- 	 * @throws StructureException
- 	 */
- 	@Test 
- 	public void testNucleotideBonds() throws IOException, StructureException {
- 		Structure bio = StructureIO.getStructure("4y60");
- 		for( Chain c : bio.getChains()) {
- 			int groupCounter = 0;
- 			List<Group> currentGroups = c.getAtomGroups();
- 			for ( Group g : currentGroups) {
- 				if(groupCounter!=0 && groupCounter<currentGroups.size()) {
- 					List<Atom> atoms = g.getAtoms();
- 					for ( Atom a : atoms) {
- 						if ( a.getName().equals("P")){
- 							// Check to see if one of the phosphate atoms has bonding to something
- 							// outside of the group.
- 							List<Integer> indexList = new ArrayList<>();
- 							for (Bond b : a.getBonds()){
- 								indexList.add(atoms.indexOf(b.getOther(a)));
- 							}
- 							assertTrue(indexList.contains(-1));
- 						}
- 					}
- 				}
- 				groupCounter++;
- 			}
- 
- 		}
- 	}
+	/**
+	 * Test whether nucleotide bonds are being generated
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test 
+	public void testNucleotideBonds() throws IOException, StructureException {
+		Structure bio = StructureIO.getStructure("4y60");
+		for( Chain c : bio.getChains()) {
+			int groupCounter = 0;
+			List<Group> currentGroups = c.getAtomGroups();
+			for ( Group g : currentGroups) {
+				if(groupCounter!=0 && groupCounter<currentGroups.size()) {
+					List<Atom> atoms = g.getAtoms();
+					for ( Atom a : atoms) {
+						if ( a.getName().equals("P")){
+							// Check to see if one of the phosphate atoms has bonding to something
+							// outside of the group.
+							List<Integer> indexList = new ArrayList<>();
+							for (Bond b : a.getBonds()){
+								indexList.add(atoms.indexOf(b.getOther(a)));
+							}
+							assertTrue(indexList.contains(-1));
+						}
+					}
+				}
+				groupCounter++;
+			}
+
+		}
+	}
+
+	/**
+	 * Test whether these partial occupancy hydrogens are bonded to the residue.
+	 * @throws StructureException 
+	 * @throws IOException 
+	 */
+	@Test
+	public void testHeavyAtomBondMissing() throws IOException, StructureException {
+		testPartialOccBonds("3jtm");
+		testPartialOccBonds("3jq8");
+		testPartialOccBonds("3jq9");
+		testPartialOccBonds("3i06");
+		testPartialOccBonds("3nu3");
+		testPartialOccBonds("3nu4");
+		testPartialOccBonds("3nvd");
+	}
+
+
+	/**
+	 * Test whether these partial occupancy hydrogens are bonded to the residue.
+	 * @throws StructureException 
+	 * @throws IOException 
+	 */
+	@Test
+	public void testHydrogenToProteinBondMissing() throws IOException, StructureException {
+		testPartialOccBonds("4txr");
+		testPartialOccBonds("3nvd");
+	}
+
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	private void testPartialOccBonds(String pdbId) throws IOException, StructureException { 
+		Structure inputStructure = StructureIO.getStructure(pdbId);
+		// Loop through the structure
+		for(int i=0;i<inputStructure.nrModels();i++){
+			for(Chain c: inputStructure.getChains(i)){
+				for(Group g: c.getAtomGroups()){
+					// Skip single atom groups
+					if(g.size()<=1){
+						continue;
+					}
+					// Get all the atoms
+					List<Atom> atomsList = new ArrayList<>(g.getAtoms());
+					for(Group altLocOne: g.getAltLocs()){
+						atomsList.addAll(altLocOne.getAtoms());
+					}
+					// Check they all have bonds
+					for(Atom a: atomsList){
+						assertNotEquals(a.getBonds(), null);
+					}
+
+				}
+			}
+		}
+
+	}
+
 
 	private boolean areBonded(Atom a, Atom b) {
 		for (Bond bond : a.getBonds()) {

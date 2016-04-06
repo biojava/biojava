@@ -2762,11 +2762,17 @@ public class PDBFileParser  {
 		if ( params.isParseSecStruc() && !params.isHeaderOnly())
 			setSecStruc();
 
+		// Now correct the alternate location group
+		StructureTools.cleanUpAltLocs(structure);
 
 		return structure;
 
 			}
 
+
+	/**
+	 * Add the charges to the Structure
+	 */
 	private void addCharges() {
 		ChargeAdder adder = new ChargeAdder(structure);
 		adder.addCharges();
@@ -2886,7 +2892,6 @@ public class PDBFileParser  {
 
 		linkChains2Compound(structure);
 		structure.setEntityInfos(compounds);
-
 		//associate the temporary Groups in the siteMap to the ones
 
 		if (!params.isHeaderOnly()) {
