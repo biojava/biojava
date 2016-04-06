@@ -264,26 +264,27 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 						groups = Arrays.asList(chain.getGroupsByPDB(pdbresnum1, pdbresnum2));
 					}
 
-					// Create new chain, if needed
 					Chain c = null;
-					if ( prevChainId == null) {
-						// first chain...
-						c = new ChainImpl();
-						c.setChainID(chain.getChainID());
-						newS.addChain(c,modelNr);
-					} else if ( prevChainId.equals(chain.getChainID())) {
+					
+					// Reuse prevChain
+					if ( prevChainId != null && prevChainId.equals(chain.getChainID())) {
 						c = newS.getChainByPDB(prevChainId,modelNr);
-
 					} else {
 						try {
 							c = newS.getChainByPDB(chain.getChainID(),modelNr);
 						} catch (StructureException e){
 							// chain not in structure yet...
-							c = new ChainImpl();
-							c.setChainID(chain.getChainID());
-							newS.addChain(c,modelNr);
 						}
 					}
+					// Create new chain
+					if ( c == null) {
+						// first chain...
+						c = new ChainImpl();
+						c.setChainID(chain.getChainID());
+						newS.addChain(c,modelNr);
+						c.setSeqResGroups(chain.getSeqResGroups());
+						c.setSeqMisMatches(chain.getSeqMisMatches());
+					} 
 
 					// add the groups to the chain:
 					for ( Group g: groups) {
