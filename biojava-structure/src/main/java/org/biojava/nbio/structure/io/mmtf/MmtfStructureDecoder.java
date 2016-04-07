@@ -2,6 +2,7 @@ package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,6 @@ import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.MmtfDecoderInterface;
 import org.rcsb.mmtf.decoder.DecodeStructure;
-import org.rcsb.mmtf.decoder.ParsingParams;
 
 
 /**
@@ -130,7 +130,7 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * #setChainInfo(java.lang.String, int)
 	 */
 	@Override
-	public final void setChainInfo(final String chainId, final int groupCount) {
+	public final void setChainInfo(final String chainId, final String chainName, final int groupCount) {
 		// First check to see if the chain exists
 		boolean newChain = true;
 		for (Chain c: structure.getChains(modelNumber)) {
@@ -444,7 +444,7 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	}
 
 	@Override
-	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, String[] experimnetalMethods) {
+	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, String date, String[] experimnetalMethods) {
 		// Get the pdb header
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		pdbHeader.setTitle(title);
@@ -462,11 +462,11 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * @param parsingParams
 	 * @return
 	 */
-	public static Structure getBiojavaStruct(byte[] inputByteArray, ParsingParams parsingParams) {
+	public static Structure getBiojavaStruct(byte[] inputByteArray) {
 		// Make the decoder
 		MmtfStructureDecoder biojavaStructureDecoder = new MmtfStructureDecoder();
 		DecodeStructure ds = new DecodeStructure(inputByteArray);
-		ds.getStructFromByteArray(biojavaStructureDecoder, parsingParams);
+		ds.getStructFromByteArray(biojavaStructureDecoder);
 		// Now return this structure
 		return biojavaStructureDecoder.getStructure();
 	}
