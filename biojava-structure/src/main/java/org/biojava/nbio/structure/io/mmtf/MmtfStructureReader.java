@@ -22,7 +22,6 @@ import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -31,7 +30,7 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.MmtfDecoderInterface;
-import org.rcsb.mmtf.decoder.DecodeStructure;
+import org.rcsb.mmtf.decoder.GetApiToInflatorInterface;
 
 
 /**
@@ -40,7 +39,7 @@ import org.rcsb.mmtf.decoder.DecodeStructure;
  *
  * @author Anthony Bradley
  */
-public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable {
+public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6772030485225130853L;
@@ -72,7 +71,7 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	/**
 	 * Instantiates a new bio java structure decoder.
 	 */
-	public MmtfStructureDecoder() {
+	public MmtfStructureReader() {
 		structure = new StructureImpl();
 		modelNumber = 0;
 		chemicalComponentGroup = new ChemComp();
@@ -85,7 +84,7 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 *
 	 * @return the structure
 	 */
-	public final Structure getStructure() {
+	public Structure getStructure() {
 		return structure;
 	}
 
@@ -106,20 +105,14 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	public void initStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels, String modelId) {
 		structure.setPDBCode(modelId);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface#setModelCount(int)
-	 */
-	@Override
-	public void setModelCount(final int inputModelCount) {
-	}
+
 
 	/* (non-Javadoc)
 	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface#setModelInfo(int, int)
 	 */
 	@Override
-	public final void setModelInfo(final int inputModelNumber,
-			final int chainCount) {
+	public void setModelInfo(int inputModelNumber,
+			int chainCount) {
 		modelNumber = inputModelNumber;
 		structure.addModel(new ArrayList<Chain>(chainCount));
 	}
@@ -129,7 +122,7 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * #setChainInfo(java.lang.String, int)
 	 */
 	@Override
-	public final void setChainInfo(final String chainId, final String chainName, final int groupCount) {
+	public void setChainInfo(String chainId, String chainName, int groupCount) {
 		// First check to see if the chain exists
 		boolean newChain = true;
 		for (Chain c: structure.getChains(modelNumber)) {
@@ -153,8 +146,8 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * #setGroupInfo(java.lang.String, int, char, int, int)
 	 */
 	@Override
-	public final void setGroupInfo(final String groupName, final int groupNumber,
-			final char insertionCode, final String chemCompType, final int atomCount) {
+	public void setGroupInfo(String groupName, int groupNumber,
+			char insertionCode, String chemCompType, int atomCount, char singleLetterCode) {
 		// Get the polymer type
 		int polymerType = getGroupTypIndicator(chemCompType);
 		switch (polymerType) {
@@ -211,11 +204,11 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * float, float, float, java.lang.String, int)
 	 */
 	@Override
-	public final void setAtomInfo(final String atomName,
-			final int serialNumber, final char alternativeLocationId, final float x,
-			final float y, final float z, final float occupancy,
-			final float temperatureFactor,
-			final String element, final int charge) {
+	public void setAtomInfo(String atomName,
+			int serialNumber, char alternativeLocationId, float x,
+			float y, float z, float occupancy,
+			float temperatureFactor,
+			String element, int charge) {
 		Atom atom = new AtomImpl();
 		Group altGroup = null;
 		atom.setPDBserial(serialNumber);
@@ -257,8 +250,8 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * face#setGroupBonds(int, int, int)
 	 */
 	@Override
-	public final void setGroupBond(final int indOne,
-			final int indTwo, final int bondOrder) {
+	public void setGroupBond(int indOne,
+			int indTwo, int bondOrder) {
 		// Get the atom
 		Atom atomOne = atomsInGroup.get(indOne);
 		Atom atomTwo = atomsInGroup.get(indTwo);
@@ -273,8 +266,8 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * Interface#setInterGroupBonds(int, int, int)
 	 */
 	@Override
-	public final void setInterGroupBond(final int indOne,
-			final int indTwo, final int bondOrder) {
+	public void setInterGroupBond(int indOne,
+			int indTwo, int bondOrder) {
 		// Get the atom
 		Atom atomOne = allAtoms.get(indOne);
 		Atom atomTwo = allAtoms.get(indTwo);
@@ -291,7 +284,7 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * @param altLoc the alt loc
 	 * @return the correct alt loc group
 	 */
-	private Group getCorrectAltLocGroup(final Character altLoc) {
+	private Group getCorrectAltLocGroup(Character altLoc) {
 
 		// see if we know this altLoc already;
 		List<Atom> atoms = group.getAtoms();
@@ -339,8 +332,8 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 * setXtalInfo(java.lang.String, java.util.List)
 	 */
 	@Override
-	public final void setXtalInfo(final String spaceGroupString,
-			final float[] unitCell) {
+	public void setXtalInfo(String spaceGroupString,
+			float[] unitCell) {
 		// Now set the xtalographic information
 		PDBCrystallographicInfo pci = new PDBCrystallographicInfo();
 		SpaceGroup spaceGroup = SpaceGroup.parseSpaceGroup(spaceGroupString);
@@ -422,21 +415,15 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	}
 
 	@Override
-	public void setEntityInfo(String[] chainIds, String sequence, String description, String title) {
+	public void setEntityInfo(int[] chainIndices, String sequence, String description, String title) {
 		// First get the chains
 		EntityInfo entityInfo = new EntityInfo();
 		entityInfo.setDescription(description);
 		entityInfo.setTitle(title);
 		List<Chain> chains = new ArrayList<>(); 
 		// Now loop through the chain ids and make a list of them
-		for (String chainId : chainIds) {
-			for (int i=0; i<structure.nrModels(); i++) {
-				try {
-					chains.add(structure.getChainByPDB(chainId, i));
-				} catch (StructureException e) {
-					// Just means it's not in this models
-				}
-			}
+		for( int index : chainIndices) {
+			chains.add(structure.getChain(index));
 		}
 		entityInfo.setChains(chains);
 		entityInfoList.add(entityInfo);
@@ -463,8 +450,8 @@ public class MmtfStructureDecoder implements MmtfDecoderInterface, Serializable 
 	 */
 	public static Structure getBiojavaStruct(byte[] inputByteArray) {
 		// Make the decoder
-		MmtfStructureDecoder biojavaStructureDecoder = new MmtfStructureDecoder();
-		DecodeStructure ds = new DecodeStructure(inputByteArray);
+		MmtfStructureReader biojavaStructureDecoder = new MmtfStructureReader();
+		GetApiToInflatorInterface ds = new GetApiToInflatorInterface(inputByteArray);
 		ds.getStructFromByteArray(biojavaStructureDecoder);
 		// Now return this structure
 		return biojavaStructureDecoder.getStructure();
