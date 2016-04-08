@@ -30,7 +30,6 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.MmtfDecoderInterface;
-import org.rcsb.mmtf.decoder.GetApiToInflatorInterface;
 
 
 /**
@@ -442,19 +441,5 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		}
 	}
 
-	/**
-	 * Utility function to get a Biojava structure from a byte array.
-	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @param parsingParams
-	 * @return
-	 */
-	public static Structure getBiojavaStruct(byte[] inputByteArray) {
-		// Make the decoder
-		MmtfStructureReader biojavaStructureDecoder = new MmtfStructureReader();
-		GetApiToInflatorInterface ds = new GetApiToInflatorInterface(inputByteArray);
-		ds.getStructFromByteArray(biojavaStructureDecoder);
-		// Now return this structure
-		return biojavaStructureDecoder.getStructure();
-	}
 
 }

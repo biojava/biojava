@@ -30,9 +30,10 @@ import org.biojava.nbio.structure.secstruc.DSSPParser;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
+import org.rcsb.mmtf.utils.CodecUtils;
 
 /**
- * A utils class of functions needed for Biojava.
+ * A utils class of functions needed for Biojava to read and write to mmtf.
  * @author Anthony Bradley
  *
  */
@@ -61,7 +62,7 @@ public class MmtfUtils {
 	/**
 	 * Set up the configuration parameters for BioJava. - with an extra URL
 	 */
-	public AtomCache setUpBioJava(String extraUrl) {
+	public static AtomCache setUpBioJava(String extraUrl) {
 		// Set up the atom cache etc
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
@@ -290,22 +291,9 @@ public class MmtfUtils {
 		}
 		Map<double[], int[]> outMap = new HashMap<>();
 		for (Entry<Matrix4d, List<Integer>> entry : matMap.entrySet()) {
-			outMap.put(convertToDoubleArray(entry.getKey()), convertToIntArray(entry.getValue()));
+			outMap.put(convertToDoubleArray(entry.getKey()), CodecUtils.convertToIntArray(entry.getValue()));
 		}
 		return outMap;
-	}
-
-	/**
-	 * Convert a List<Integer> to an int[]
-	 * @param integerList the input list
-	 * @return the output array
-	 */
-	private static int[] convertToIntArray(List<Integer> integerList) {
-		int[] integerArray = new int[integerList.size()];
-		for(int i=0; i<integerList.size(); i++){
-			integerArray[i] = integerList.get(i);
-		}
-		return integerArray;
 	}
 
 	/**

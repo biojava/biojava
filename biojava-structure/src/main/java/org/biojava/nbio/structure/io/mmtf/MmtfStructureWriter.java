@@ -15,6 +15,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.MmtfDecoderInterface;
+import org.rcsb.mmtf.api.MmtfWriter;
 
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding. 
@@ -22,21 +23,27 @@ import org.rcsb.mmtf.api.MmtfDecoderInterface;
  * @author Anthony Bradley
  *
  */
-public class MmtfStructureWriter  {
+public class MmtfStructureWriter implements MmtfWriter {
 
 
 	private MmtfDecoderInterface mmtfDecoderInterface;
+	private Structure structure;
 
 	/**
 	 * The constructor requires a structre input.
-	 * @param structure ths structure to be encoded
+	 * @param mmtfDecoderInterface the interface to be used
+	 * @param structure the structure to be encoded
 	 */
-	public MmtfStructureWriter(MmtfDecoderInterface mmtfDecoderInterface) {
-		this.mmtfDecoderInterface = mmtfDecoderInterface;
+	public MmtfStructureWriter(Structure data) {
+		this.structure = data;
+		
 	}
 
 
-	public void encodeStructure(Structure structure) {
+	public void write(MmtfDecoderInterface decoder) {
+		
+		this.mmtfDecoderInterface = decoder;
+		
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);
 		// Generate the secondary structure
@@ -64,7 +71,6 @@ public class MmtfStructureWriter  {
 				Chain chain = modelChains.get(chainInModelIndex);
 				List<Group> groups = chain.getAtomGroups();
 				List<Group> sequenceGroups = chain.getSeqResGroups();
-				// TODO we need to include the sequence to group mapping information....
 				mmtfDecoderInterface.setChainInfo(chain.getChainID(), chain.getInternalChainID(), groups.size());
 				for(int groupInChainIndex=0; groupInChainIndex<groups.size(); groupInChainIndex++){
 					// Get the major compy of this group
@@ -72,7 +78,6 @@ public class MmtfStructureWriter  {
 					List<Atom> atomsInGroup = MmtfUtils.getAtomsForGroup(group);
 					// Get the group type
 					ChemComp chemComp = group.getChemComp();
-					// TODO We need to specify what type of group is being added
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), group.getResidueNumber().getInsCode().charValue(), 
 							chemComp.getPdbx_type(), atomsInGroup.size(), chemComp.getOne_letter_code().charAt(0), sequenceGroups.indexOf(group));
 					for (Atom atom : atomsInGroup){
@@ -155,4 +160,5 @@ public class MmtfStructureWriter  {
 			}
 		}
 	}
+
 }
