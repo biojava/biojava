@@ -40,7 +40,7 @@ public class MmtfUtils {
 	/**
 	 * Set up the configuration parameters for BioJava.
 	 */
-	public AtomCache setUpBioJava() {
+	public static AtomCache setUpBioJava() {
 		// Set up the atom cache etc
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
