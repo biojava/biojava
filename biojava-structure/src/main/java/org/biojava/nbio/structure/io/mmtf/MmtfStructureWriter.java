@@ -36,9 +36,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 	 */
 	public MmtfStructureWriter(Structure data) {
 		this.structure = data;
-		
 	}
-
 
 	public void write(MmtfDecoderInterface decoder) {
 		

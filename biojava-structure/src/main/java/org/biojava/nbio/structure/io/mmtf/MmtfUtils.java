@@ -82,7 +82,9 @@ public class MmtfUtils {
 
 
 	/**
-	 * This sets all microheterogeneous groups (previously alternate location groups) as separate groups.
+	 * This sets all microheterogeneous groups 
+	 * (previously alternate location groups) as separate groups.
+	 * This is required because mmtf groups cannot have multiple HET codes.
 	 * @param bioJavaStruct
 	 */
 	public static void fixMicroheterogenity(Structure bioJavaStruct) {
@@ -116,9 +118,8 @@ public class MmtfUtils {
 
 	/**
 	 * Function to get all the atoms in the strucutre as a list.
-	 *
-	 * @param bioJavaStruct the bio java struct
-	 * @return the all atoms
+	 * @param bioJavaStruct the biojava structure
+	 * @return a list of all the unique atoms in the structure
 	 */
 	public static List<Atom> getAllAtoms(Structure bioJavaStruct) {
 		// Get all the atoms
@@ -138,7 +139,6 @@ public class MmtfUtils {
 
 	/**
 	 * Function to get a list of atoms for a group.
-	 *
 	 * @param inputGroup the Biojava Group to consider
 	 * @return the atoms for the input Biojava Group
 	 */
@@ -240,7 +240,6 @@ public class MmtfUtils {
 	 * @return the time in ISO time format
 	 */
 	public static String dateToIsoString(Date inputDate) {
-		//TODO THIS COULD BE A STATIC METHOD IN A UTILS CLASS
 		DateFormat dateStringFormat = new SimpleDateFormat("yyyy-MM-dd");
 		return dateStringFormat.format(inputDate);
 	}

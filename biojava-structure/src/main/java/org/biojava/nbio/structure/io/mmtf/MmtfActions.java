@@ -3,6 +3,9 @@ package org.biojava.nbio.structure.io.mmtf;
 import java.io.IOException;
 
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.rcsb.mmtf.api.MmtfDecodedDataInterface;
 import org.rcsb.mmtf.dataholders.MmtfBean;
 import org.rcsb.mmtf.decoder.BeanToGet;
 import org.rcsb.mmtf.decoder.GetToInflator;
@@ -36,7 +39,19 @@ public class MmtfActions {
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
-	
+
+	/**
+	 * 
+	 * @param pdbId
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public static byte[] getByteArray(String pdbId) throws IOException, StructureException {
+		MmtfUtils.setUpBioJava();
+		return getByteArray(StructureIO.getStructure(pdbId));
+	}
+
 	/**
 	 * Utility function to get a byte array from a Biojava structure
 	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
@@ -45,6 +60,45 @@ public class MmtfActions {
 	 * @throws IOException 
 	 */
 	public static byte[] getByteArray(Structure structure) throws IOException {
+		MessagePackSerializer messagePackSerializer = new MessagePackSerializer();
+		return messagePackSerializer.serialize(getBean(structure));
+	}
+
+	/**
+	 * Utility function to get an mmtf bean from a Biojava structure
+	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
+	 * @param parsingParams
+	 * @return
+	 * @throws IOException 
+	 */
+	public static MmtfBean getBean(Structure structure) throws IOException {
+		// Get to bean
+		GetToBean getToBean = new GetToBean(getApi(structure));
+		return getToBean.getMmtfBean();
+	}
+	
+	/**
+	 * Utility function to get an mmtf bean from a Biojava structure
+	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
+	 * @param parsingParams
+	 * @return
+	 * @throws IOException 
+	 * @throws StructureException 
+	 */
+	public static MmtfBean getBean(String pdbId) throws IOException, StructureException {
+		// Get to bean
+		GetToBean getToBean = new GetToBean(getApi(pdbId));
+		return getToBean.getMmtfBean();
+	}
+	
+	/**
+	 * Utility function to get an mmtf bean from a Biojava structure
+	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
+	 * @param parsingParams
+	 * @return
+	 * @throws IOException 
+	 */
+	public static MmtfDecodedDataInterface getApi(Structure structure) throws IOException {
 		// Set up the transform from the inflator to the get api
 		InflatorToGet inflatorToGet = new InflatorToGet();
 		// Get the writer - this is what people implement
@@ -52,15 +106,33 @@ public class MmtfActions {
 		// Now deflate
 		mmtfStructureWriter.write(inflatorToGet);
 		// Get to bean
-		GetToBean getToBean = new GetToBean(inflatorToGet);
-		MessagePackSerializer messagePackSerializer = new MessagePackSerializer();
-		return messagePackSerializer.serialize(getToBean.getMmtfBean());
+		return inflatorToGet;
 	}
-	
+
 	/**
-	 * 
-	 * @param structure
+	 * Utility function to get an mmtf bean from a Biojava structure
+	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
+	 * @param parsingParams
 	 * @return
+	 * @throws IOException 
+	 * @throws StructureException 
+	 */
+	public static MmtfDecodedDataInterface getApi(String pdbId) throws IOException, StructureException {
+		// Set up the transform from the inflator to the get api
+		InflatorToGet inflatorToGet = new InflatorToGet();
+		// Get the writer - this is what people implement
+		MmtfStructureWriter mmtfStructureWriter = new MmtfStructureWriter(
+				StructureIO.getStructure(pdbId));
+		// Now deflate
+		mmtfStructureWriter.write(inflatorToGet);
+		// Get to bean
+		return inflatorToGet;
+	}
+
+	/**
+	 * Round trip a given structure. Mainly for testing purposes
+	 * @param structure the input structure
+	 * @return the round tripped structure (conversion to messge pack mmtf and back).
 	 * @throws IOException
 	 */
 	public static Structure roundTrip(Structure structure) throws IOException {
