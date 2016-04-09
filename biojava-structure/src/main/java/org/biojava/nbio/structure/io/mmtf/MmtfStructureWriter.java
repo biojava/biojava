@@ -16,6 +16,7 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.MmtfDecoderInterface;
 import org.rcsb.mmtf.api.MmtfWriter;
+import org.rcsb.mmtf.dataholders.MmtfBean;
 
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding. 
@@ -49,8 +50,9 @@ public class MmtfStructureWriter implements MmtfWriter {
 		Map<String, Integer> chainIdToIndexMap = MmtfUtils.getChainIdToIndexMap(structure);
 		List<Chain> allChains = MmtfUtils.getAllChains(structure);
 		List<Atom> allAtoms = MmtfUtils.getAllAtoms(structure);
+		int numBonds = MmtfUtils.getNumBonds(allAtoms);
 		
-		mmtfDecoderInterface.initStructure(allAtoms.size(), MmtfUtils.getNumGroups(structure), allChains.size(), structure.nrModels(), structure.getPDBCode());
+		mmtfDecoderInterface.initStructure(numBonds, allAtoms.size(), MmtfUtils.getNumGroups(structure), allChains.size(), structure.nrModels(), structure.getPDBCode());
 		// Get the header and the xtal info.
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
@@ -77,8 +79,12 @@ public class MmtfStructureWriter implements MmtfWriter {
 					List<Atom> atomsInGroup = MmtfUtils.getAtomsForGroup(group);
 					// Get the group type
 					ChemComp chemComp = group.getChemComp();
-					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), group.getResidueNumber().getInsCode().charValue(), 
-							chemComp.getPdbx_type(), atomsInGroup.size(), chemComp.getOne_letter_code().charAt(0), sequenceGroups.indexOf(group));
+					Character insCode = group.getResidueNumber().getInsCode();
+					if(insCode==null){
+						insCode=MmtfBean.UNAVAILABLE_CHAR_VALUE;
+					}
+					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 
+							chemComp.getPdbx_type(), atomsInGroup.size(), chemComp.getBonds().size(), chemComp.getOne_letter_code().charAt(0), sequenceGroups.indexOf(group));
 					for (Atom atom : atomsInGroup){
 						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), atom.getAltLoc().charValue(), (float) atom.getX(), 
 								(float) atom.getY(), (float) atom.getZ(), atom.getOccupancy(), 
@@ -99,6 +105,9 @@ public class MmtfStructureWriter implements MmtfWriter {
 	 * @param allAtoms the list of atoms in the whole structure
 	 */
 	private void addBonds(Atom atom, List<Atom> atomsInGroup, List<Atom> allAtoms) {
+		if(atom.getBonds()==null){
+			return;
+		}
 		for(Bond bond : atom.getBonds()) {
 			// Now set the bonding information.
 			Atom other = bond.getOther(atom);
@@ -119,7 +128,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 				// Don't add the same bond twice
 				if (firstBondIndex<secondBondIndex){
 					int bondOrder = bond.getBondOrder();							
-					mmtfDecoderInterface.setGroupBond(firstBondIndex, secondBondIndex, bondOrder);
+					mmtfDecoderInterface.setInterGroupBond(firstBondIndex, secondBondIndex, bondOrder);
 				}
 			}
 		}		

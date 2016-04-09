@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ExperimentalTechnique;
 import org.biojava.nbio.structure.Group;
@@ -339,5 +340,26 @@ public class MmtfUtils {
 			}
 		}
 		return count;
+	}
+
+	/**
+	 * Get the number of unique bonds in the strucutre.
+	 * @param allAtoms
+	 * @return
+	 */
+	public static int getNumBonds(List<Atom> allAtoms) {
+		int bondCount = 0;
+		for(int indexAtomOne=0;indexAtomOne<allAtoms.size();indexAtomOne++) {
+			Atom atomOne = allAtoms.get(indexAtomOne);
+			if(atomOne.getBonds()==null){
+				continue;
+			}
+			for(Bond bond : atomOne.getBonds()) {
+				if(allAtoms.indexOf(bond.getOther(atomOne))>indexAtomOne){
+					bondCount++;
+				}
+			}
+		}
+		return bondCount;
 	}	
 }

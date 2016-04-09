@@ -101,7 +101,8 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 	}
 
 	@Override
-	public void initStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels, String modelId) {
+	public void initStructure(int totalNumBonds, int totalNumAtoms, int totalNumGroups, 
+			int totalNumChains, int totalNumModels, String modelId) {
 		structure.setPDBCode(modelId);
 	}
 
@@ -146,7 +147,8 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 	 */
 	@Override
 	public void setGroupInfo(String groupName, int groupNumber,
-			char insertionCode, String chemCompType, int atomCount, char singleLetterCode, int sequenceIndexId) {
+			char insertionCode, String chemCompType, int atomCount, int bondCount, 
+			char singleLetterCode, int sequenceIndexId) {
 		// Get the polymer type
 		int polymerType = getGroupTypIndicator(chemCompType);
 		switch (polymerType) {
