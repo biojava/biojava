@@ -12,7 +12,7 @@ public class DemoMmtfRoundTrip {
 
 	public static void main(String[] args) throws IOException, StructureException {
 		MmtfUtils.setUpBioJava();
-		Structure structure = StructureIO.getStructure("4cup");
+		Structure structure = StructureIO.getStructure("/Users/abradley/Downloads/4cup.cif");
 		// We can do somme comparisons on the round tripped structure
 		MmtfActions.roundTrip(structure);
 	}

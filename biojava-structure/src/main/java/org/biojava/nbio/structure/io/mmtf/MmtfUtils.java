@@ -325,5 +325,20 @@ public class MmtfUtils {
 			chainList.addAll(structure.getChains(i));
 		}
 		return chainList;
+	}
+
+	/**
+	 * Count the total number of groups in the structure
+	 * @param structure the input structure
+	 * @return the total number of groups
+	 */
+	public static int getNumGroups(Structure structure) {
+		int count = 0;
+		for(int i=0; i<structure.nrModels(); i++) {
+			for(Chain chain : structure.getChains(i)){
+				count+= chain.getAtomGroups().size();
+			}
+		}
+		return count;
 	}	
 }

@@ -43,7 +43,6 @@ public class MmtfStructureWriter implements MmtfWriter {
 	public void write(MmtfDecoderInterface decoder) {
 		
 		this.mmtfDecoderInterface = decoder;
-		
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);
 		// Generate the secondary structure
@@ -52,6 +51,8 @@ public class MmtfStructureWriter implements MmtfWriter {
 		Map<String, Integer> chainIdToIndexMap = MmtfUtils.getChainIdToIndexMap(structure);
 		List<Chain> allChains = MmtfUtils.getAllChains(structure);
 		List<Atom> allAtoms = MmtfUtils.getAllAtoms(structure);
+		
+		mmtfDecoderInterface.initStructure(allAtoms.size(), MmtfUtils.getNumGroups(structure), allChains.size(), structure.nrModels(), structure.getPDBCode());
 		// Get the header and the xtal info.
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
@@ -89,6 +90,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 				}
 			}
 		}
+		mmtfDecoderInterface.finalizeStructure();
 
 	}
 
