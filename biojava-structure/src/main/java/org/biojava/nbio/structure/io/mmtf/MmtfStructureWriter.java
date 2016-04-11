@@ -157,7 +157,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 
 
 	/**
-	 * Generate pas the bioassembly information on in the desired form.
+	 * Generate the bioassembly information on in the desired form.
 	 * @param bioJavaStruct the Biojava structure
 	 * @param header the header
 	 */
@@ -168,6 +168,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 			for(Entry<double[], int[]> transformEntry : transformMap.entrySet()) {
 				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey());
 			}
+			 bioAssemblyIndex+=1;
 		}
 	}
 
