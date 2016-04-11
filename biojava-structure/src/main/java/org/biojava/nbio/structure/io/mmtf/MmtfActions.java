@@ -13,14 +13,24 @@ import org.rcsb.mmtf.deserializers.MessagePackDeserializer;
 import org.rcsb.mmtf.encoder.DataApiToBean;
 import org.rcsb.mmtf.encoder.WriterToDataApi;
 import org.rcsb.mmtf.serializers.MessagePackSerializer;
+import org.rcsb.mmtf.utils.DownloadUtils;
 
 public class MmtfActions {
 
 	/**
+	 * Utility function to get a Biojava structure from a PDB code.
+	 * @param pdbCode the pdb code of the structure you desire
+	 * @return a Biojava structure object relating to the input PDB code
+	 * @throws IOException 
+	 */
+	public static Structure getBiojavaStruct(String pdbCode) throws IOException {
+		return getBiojavaStruct(DownloadUtils.getDataFromUrl(pdbCode));
+	}
+	
+	/**
 	 * Utility function to get a Biojava structure from a byte array.
 	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @param parsingParams
-	 * @return
+	 * @return a Biojava structure object relating to the input byte array.
 	 * @throws IOException 
 	 */
 	public static Structure getBiojavaStruct(byte[] inputByteArray) throws IOException {
@@ -41,9 +51,9 @@ public class MmtfActions {
 	}
 
 	/**
-	 * 
-	 * @param pdbId
-	 * @return
+	 * Get the byte array (messagepack encoded) of the PDB code you desire.
+	 * @param pdbId the input PDB id for the structure you want
+	 * @return the byte array of the structure compressed and message pack encoded
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -53,10 +63,9 @@ public class MmtfActions {
 	}
 
 	/**
-	 * Utility function to get a byte array from a Biojava structure
-	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @param parsingParams
-	 * @return
+	 * Utility function to get a byte array from a Biojava structure.
+	 * @param structure the input Biojava structure object
+	 * @return the byte array of the structure compressed and message pack encoded
 	 * @throws IOException 
 	 */
 	public static byte[] getByteArray(Structure structure) throws IOException {
@@ -65,10 +74,9 @@ public class MmtfActions {
 	}
 
 	/**
-	 * Utility function to get an mmtf bean from a Biojava structure
-	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @param parsingParams
-	 * @return
+	 * Utility function to get an mmtf bean from a Biojava structure.
+	 * @param structure the input Biojava structure object
+	 * @return the raw (compressed) data as an MmtfBean object
 	 * @throws IOException 
 	 */
 	public static MmtfBean getBean(Structure structure) throws IOException {
@@ -78,10 +86,9 @@ public class MmtfActions {
 	}
 	
 	/**
-	 * Utility function to get an mmtf bean from a Biojava structure
-	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @param parsingParams
-	 * @return
+	 * Utility function to get an mmtf bean from a PDB id.
+	 * @param pdbId the input PDB id for the structure you want
+	 * @return the byte array of the structure compressed and message pack encoded
 	 * @throws IOException 
 	 * @throws StructureException 
 	 */
@@ -92,10 +99,9 @@ public class MmtfActions {
 	}
 	
 	/**
-	 * Utility function to get an mmtf bean from a Biojava structure
-	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @param parsingParams
-	 * @return
+	 * Utility function to get an API to the data  from a Biojava structure
+	 * @param structure the input Biojava structure object
+	 * @return the API to the data in the form of an MmtfDecodedDataInterface
 	 * @throws IOException 
 	 */
 	public static MmtfDecodedDataInterface getApi(Structure structure) throws IOException {
@@ -110,10 +116,9 @@ public class MmtfActions {
 	}
 
 	/**
-	 * Utility function to get an mmtf bean from a Biojava structure
-	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @param parsingParams
-	 * @return
+	 * Utility function to get an API to the data from a PDB code.
+	 * @param pdbId the input PDB id for the structure you want
+	 * @return the API to the data in the form of an MmtfDecodedDataInterface
 	 * @throws IOException 
 	 * @throws StructureException 
 	 */
@@ -130,8 +135,8 @@ public class MmtfActions {
 	}
 
 	/**
-	 * Round trip a given structure. Mainly for testing purposes
-	 * @param structure the input structure
+	 * Round trip a given structure. Mainly for testing purposes.
+	 * @param structure the input Biojava structure object
 	 * @return the round tripped structure (conversion to messge pack mmtf and back).
 	 * @throws IOException
 	 */
