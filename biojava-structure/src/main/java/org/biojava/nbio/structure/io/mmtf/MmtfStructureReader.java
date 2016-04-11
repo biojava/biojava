@@ -66,6 +66,9 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 
 	/** The list of EntityInformation */
 	private List<EntityInfo> entityInfoList;
+	
+	/** All the chains */
+	private List<Chain> chainList; 
 
 	/**
 	 * Instantiates a new bio java structure decoder.
@@ -76,6 +79,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		chemicalComponentGroup = new ChemComp();
 		allAtoms  = new ArrayList<>();
 		entityInfoList = new ArrayList<>();
+		chainList = new ArrayList<>();
 	}
 
 	/**
@@ -137,6 +141,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 			chain = new ChainImpl();
 			chain.setChainID(chainId.trim());
 			structure.addChain(chain, modelNumber);
+			chainList.add(chain);
 		}
 	}
 
@@ -148,7 +153,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 	@Override
 	public void setGroupInfo(String groupName, int groupNumber,
 			char insertionCode, String chemCompType, int atomCount, int bondCount, 
-			char singleLetterCode, int sequenceIndexId) {
+			char singleLetterCode, int sequenceIndexId, int secStructType) {
 		// Get the polymer type
 		int polymerType = getGroupTypIndicator(chemCompType);
 		switch (polymerType) {
@@ -181,6 +186,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		if (atomCount > 0) {
 			chain.addGroup(group);
 		}
+		MmtfUtils.setSecStructType(group, secStructType);
 	}
 
 	/**
@@ -215,7 +221,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		atom.setPDBserial(serialNumber);
 		atom.setName(atomName.trim());
 		atom.setElement(Element.valueOfIgnoreCase(element));
-		if (alternativeLocationId != '?') {
+		if (alternativeLocationId != ' ') {
 			// Get the altGroup
 			altGroup = getCorrectAltLocGroup(alternativeLocationId);
 			atom.setAltLoc(alternativeLocationId);
@@ -285,7 +291,6 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 	 * @return the correct alt loc group
 	 */
 	private Group getCorrectAltLocGroup(Character altLoc) {
-
 		// see if we know this altLoc already;
 		List<Atom> atoms = group.getAtoms();
 		if (atoms.size() > 0) {
@@ -293,8 +298,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 			// we are just adding atoms to the current group
 			// probably there is a second group following later...
 			if (a1.getAltLoc().equals(altLoc)) {
-				return group;
-			}
+				return group;	}
 		}
 
 		// Get the altLocGroup
@@ -422,7 +426,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		List<Chain> chains = new ArrayList<>(); 
 		// Now loop through the chain ids and make a list of them
 		for( int index : chainIndices) {
-			chains.add(structure.getChain(index));
+			chains.add(chainList.get(index));
 		}
 		entityInfo.setChains(chains);
 		entityInfoList.add(entityInfo);

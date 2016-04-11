@@ -41,7 +41,6 @@ public class MmtfStructureWriter implements MmtfWriter {
 	}
 
 	public void write(MmtfDecoderInterface decoder) {
-
 		this.mmtfDecoderInterface = decoder;
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);
@@ -52,7 +51,6 @@ public class MmtfStructureWriter implements MmtfWriter {
 		List<Chain> allChains = MmtfUtils.getAllChains(structure);
 		List<Atom> allAtoms = MmtfUtils.getAllAtoms(structure);
 		int numBonds = MmtfUtils.getNumBonds(allAtoms);
-
 		mmtfDecoderInterface.initStructure(numBonds, allAtoms.size(), MmtfUtils.getNumGroups(structure), allChains.size(), structure.nrModels(), structure.getPDBCode());
 		// Get the header and the xtal info.
 		PDBHeader pdbHeader = structure.getPDBHeader();
@@ -84,8 +82,10 @@ public class MmtfStructureWriter implements MmtfWriter {
 					if(insCode==null){
 						insCode=MmtfBean.UNAVAILABLE_CHAR_VALUE;
 					}
+					
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 
-							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), chemComp.getOne_letter_code().charAt(0), sequenceGroups.indexOf(group));
+							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), chemComp.getOne_letter_code().charAt(0),
+							sequenceGroups.indexOf(group), MmtfUtils.getSecStructType(group));
 					for (Atom atom : atomsInGroup){
 						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), atom.getAltLoc().charValue(), (float) atom.getX(), 
 								(float) atom.getY(), (float) atom.getZ(), atom.getOccupancy(), 

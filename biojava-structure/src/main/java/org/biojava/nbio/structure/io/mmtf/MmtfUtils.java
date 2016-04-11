@@ -29,8 +29,11 @@ import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.secstruc.DSSPParser;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
+import org.biojava.nbio.structure.secstruc.SecStrucState;
+import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
+import org.rcsb.mmtf.dataholders.DsspType;
 import org.rcsb.mmtf.utils.CodecUtils;
 
 /**
@@ -51,10 +54,10 @@ public class MmtfUtils {
 		params.setAlignSeqRes(true);
 		params.setParseBioAssembly(true);
 		params.setUseInternalChainId(true);
-// MOVE INTO BIOJAVA IF NEED BE
-//		CustomChemCompProvider cc = new CustomChemCompProvider();
-//		ChemCompGroupFactory.setChemCompProvider(cc);
-//		cc.checkDoFirstInstall();
+		// MOVE INTO BIOJAVA IF NEED BE
+		//		CustomChemCompProvider cc = new CustomChemCompProvider();
+		//		ChemCompGroupFactory.setChemCompProvider(cc);
+		//		cc.checkDoFirstInstall();
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		return cache;
@@ -73,9 +76,9 @@ public class MmtfUtils {
 		params.setParseBioAssembly(true);
 		params.setUseInternalChainId(true);
 		// MOVE INTO BIOJAVA IF NEED BE
-//		CustomChemCompProvider cc = new CustomChemCompProvider();
-//		ChemCompGroupFactory.setChemCompProvider(cc);
-//		cc.checkDoFirstInstall();
+		//		CustomChemCompProvider cc = new CustomChemCompProvider();
+		//		ChemCompGroupFactory.setChemCompProvider(cc);
+		//		cc.checkDoFirstInstall();
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		return cache;
@@ -139,7 +142,7 @@ public class MmtfUtils {
 	}
 
 	/**
-	 * Function to get a list of atoms for a group.
+	 * Function to get a list of atoms for a group. Only add each atom once.
 	 * @param inputGroup the Biojava Group to consider
 	 * @return the atoms for the input Biojava Group
 	 */
@@ -161,8 +164,8 @@ public class MmtfUtils {
 		}
 		return theseAtoms;
 	}
-	
-	
+
+
 	/**
 	 * Function to generate the secondary structure for a Biojava structure object.
 	 * @param bioJavaStruct the Biojava structure for which it is to be calculate.
@@ -184,7 +187,7 @@ public class MmtfUtils {
 		}
 
 	}
-	
+
 	/**
 	 * Get the string representation of a space group.
 	 * @param spaceGroup the input SpaceGroup object
@@ -244,8 +247,8 @@ public class MmtfUtils {
 		DateFormat dateStringFormat = new SimpleDateFormat("yyyy-MM-dd");
 		return dateStringFormat.format(inputDate);
 	}
-	
-	
+
+
 	/**
 	 * Derive a map mapping chain ids to the chain index.
 	 * @param bioJavaStruct the input structure for the map
@@ -278,6 +281,10 @@ public class MmtfUtils {
 		List<BiologicalAssemblyTransformation> transforms = bioassemblyInfo.getTransforms();
 		for (BiologicalAssemblyTransformation transformation : transforms) {
 			Matrix4d transMatrix = transformation.getTransformationMatrix();
+			String transChainId = transformation.getChainId();
+			if (!chainIdToIndexMap.containsKey(transChainId)){
+				continue;
+			}
 			int chainIndex = chainIdToIndexMap.get(transformation.getChainId());
 			if(matMap.containsKey(transMatrix)){
 				matMap.get(transMatrix).add(chainIndex);
@@ -312,7 +319,7 @@ public class MmtfUtils {
 		}
 		return outArray;
 	}
-	
+
 	/**
 	 * Get a list of all the chains in a structure.
 	 * @param structure the input structure
@@ -361,7 +368,7 @@ public class MmtfUtils {
 		}
 		return bondCount;
 	}	
-	
+
 	/**
 	 * Find the number of bonds in a group
 	 * @param atomsInGroup the list of atoms in the group
@@ -388,5 +395,42 @@ public class MmtfUtils {
 			}
 		}
 		return bondCounter;
+	}
+
+	/**
+	 * Get the secondary structure as defined by DSSP.
+	 * @param group the input group to be calculated
+	 * @return the integer index of the group type.
+	 */
+	public static int getSecStructType(Group group) {
+		SecStrucState props = (SecStrucState) group.getProperty("secstruc");
+		if(props==null){
+			return DsspType.NULL_ENTRY.getDsspIndex();
+		}
+		return DsspType.dsspTypeFromString(props.getType().name).getDsspIndex();
+	}
+	
+	/**
+	 * Get the secondary structure as defined by DSSP.
+	 * @param group the input group to be calculated
+	 * @param the integer index of the group type.
+	 */
+	public static void setSecStructType(Group group, int dsspIndex) {
+		@SuppressWarnings("unused")
+		SecStrucState secStrucState = new SecStrucState(group, "MMTF_ASSIGNMENT",getSecStructType(dsspIndex));
+	}
+	
+
+	private static SecStrucType getSecStructType(int dsspIndex) {
+		String dsspType = DsspType.dsspTypeFromInt(dsspIndex).getDsspType();
+		for(SecStrucType secStrucType : SecStrucType.values())
+		{
+			if(dsspType==secStrucType.name)
+			{
+				return secStrucType;
+			}
+		}
+		// Return a null entry.
+		return null;
 	}
 }
