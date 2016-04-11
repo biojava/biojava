@@ -8,8 +8,8 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmtf.MmtfStructureReader;
 import org.junit.Test;
 import org.rcsb.mmtf.dataholders.MmtfBean;
-import org.rcsb.mmtf.decoder.BeanToGet;
-import org.rcsb.mmtf.decoder.GetToInflator;
+import org.rcsb.mmtf.decoder.BeanToDataApi;
+import org.rcsb.mmtf.decoder.DataApiToReader;
 import org.rcsb.mmtf.deserializers.MessagePackDeserializer;
 import org.rcsb.mmtf.examples.HandleIO;
 
@@ -35,9 +35,9 @@ public class TestMmtfParser {
 		// Get the data
 		MmtfBean mmtfBean = messagePackDeserializer.deserialize(inputbyteArr);
 		// Set up the data API
-		BeanToGet beanToGet = new BeanToGet(mmtfBean);
+		BeanToDataApi beanToGet = new BeanToDataApi(mmtfBean);
 		// Set up the inflator
-		GetToInflator getToInflator = new GetToInflator();
+		DataApiToReader getToInflator = new DataApiToReader();
 		// Do the inflation
 		getToInflator.read(beanToGet, mmtfStructureReader);
 		// Get the structue

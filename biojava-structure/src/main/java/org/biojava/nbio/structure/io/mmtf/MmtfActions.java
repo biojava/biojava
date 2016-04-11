@@ -7,11 +7,11 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.rcsb.mmtf.api.MmtfDecodedDataInterface;
 import org.rcsb.mmtf.dataholders.MmtfBean;
-import org.rcsb.mmtf.decoder.BeanToGet;
-import org.rcsb.mmtf.decoder.GetToInflator;
+import org.rcsb.mmtf.decoder.BeanToDataApi;
+import org.rcsb.mmtf.decoder.DataApiToReader;
 import org.rcsb.mmtf.deserializers.MessagePackDeserializer;
-import org.rcsb.mmtf.encoder.GetToBean;
-import org.rcsb.mmtf.encoder.InflatorToGet;
+import org.rcsb.mmtf.encoder.DataApiToBean;
+import org.rcsb.mmtf.encoder.WriterToDataApi;
 import org.rcsb.mmtf.serializers.MessagePackSerializer;
 
 public class MmtfActions {
@@ -31,9 +31,9 @@ public class MmtfActions {
 		// Get the data
 		MmtfBean mmtfBean = messagePackDeserializer.deserialize(inputByteArray);
 		// Set up the data API
-		BeanToGet beanToGet = new BeanToGet(mmtfBean);
+		BeanToDataApi beanToGet = new BeanToDataApi(mmtfBean);
 		// Set up the inflator
-		GetToInflator getToInflator = new GetToInflator();
+		DataApiToReader getToInflator = new DataApiToReader();
 		// Do the inflation
 		getToInflator.read(beanToGet, mmtfStructureReader);
 		// Get the structue
@@ -73,7 +73,7 @@ public class MmtfActions {
 	 */
 	public static MmtfBean getBean(Structure structure) throws IOException {
 		// Get to bean
-		GetToBean getToBean = new GetToBean(getApi(structure));
+		DataApiToBean getToBean = new DataApiToBean(getApi(structure));
 		return getToBean.getMmtfBean();
 	}
 	
@@ -87,7 +87,7 @@ public class MmtfActions {
 	 */
 	public static MmtfBean getBean(String pdbId) throws IOException, StructureException {
 		// Get to bean
-		GetToBean getToBean = new GetToBean(getApi(pdbId));
+		DataApiToBean getToBean = new DataApiToBean(getApi(pdbId));
 		return getToBean.getMmtfBean();
 	}
 	
@@ -100,7 +100,7 @@ public class MmtfActions {
 	 */
 	public static MmtfDecodedDataInterface getApi(Structure structure) throws IOException {
 		// Set up the transform from the inflator to the get api
-		InflatorToGet inflatorToGet = new InflatorToGet();
+		WriterToDataApi inflatorToGet = new WriterToDataApi();
 		// Get the writer - this is what people implement
 		MmtfStructureWriter mmtfStructureWriter = new MmtfStructureWriter(structure);
 		// Now deflate
@@ -119,7 +119,7 @@ public class MmtfActions {
 	 */
 	public static MmtfDecodedDataInterface getApi(String pdbId) throws IOException, StructureException {
 		// Set up the transform from the inflator to the get api
-		InflatorToGet inflatorToGet = new InflatorToGet();
+		WriterToDataApi inflatorToGet = new WriterToDataApi();
 		// Get the writer - this is what people implement
 		MmtfStructureWriter mmtfStructureWriter = new MmtfStructureWriter(
 				StructureIO.getStructure(pdbId));
