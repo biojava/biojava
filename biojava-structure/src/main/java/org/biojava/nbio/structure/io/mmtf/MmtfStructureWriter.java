@@ -30,6 +30,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 	private MmtfDecoderInterface mmtfDecoderInterface;
 	private Structure structure;
 
+
 	/**
 	 * The constructor requires a structre input.
 	 * @param mmtfDecoderInterface the interface to be used
@@ -40,7 +41,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 	}
 
 	public void write(MmtfDecoderInterface decoder) {
-		
+
 		this.mmtfDecoderInterface = decoder;
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);
@@ -51,7 +52,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 		List<Chain> allChains = MmtfUtils.getAllChains(structure);
 		List<Atom> allAtoms = MmtfUtils.getAllAtoms(structure);
 		int numBonds = MmtfUtils.getNumBonds(allAtoms);
-		
+
 		mmtfDecoderInterface.initStructure(numBonds, allAtoms.size(), MmtfUtils.getNumGroups(structure), allChains.size(), structure.nrModels(), structure.getPDBCode());
 		// Get the header and the xtal info.
 		PDBHeader pdbHeader = structure.getPDBHeader();
@@ -84,7 +85,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 						insCode=MmtfBean.UNAVAILABLE_CHAR_VALUE;
 					}
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 
-							chemComp.getPdbx_type(), atomsInGroup.size(), chemComp.getBonds().size(), chemComp.getOne_letter_code().charAt(0), sequenceGroups.indexOf(group));
+							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), chemComp.getOne_letter_code().charAt(0), sequenceGroups.indexOf(group));
 					for (Atom atom : atomsInGroup){
 						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), atom.getAltLoc().charValue(), (float) atom.getX(), 
 								(float) atom.getY(), (float) atom.getZ(), atom.getOccupancy(), 
@@ -116,7 +117,7 @@ public class MmtfStructureWriter implements MmtfWriter {
 				Integer firstBondIndex = atomsInGroup.indexOf(atom);
 				Integer secondBondIndex = atomsInGroup.indexOf(other);
 				// Don't add the same bond twice
-				if (firstBondIndex<secondBondIndex){
+				if(firstBondIndex>secondBondIndex){
 					int bondOrder = bond.getBondOrder();
 					mmtfDecoderInterface.setGroupBond(firstBondIndex, secondBondIndex, bondOrder);
 				}
@@ -125,8 +126,8 @@ public class MmtfStructureWriter implements MmtfWriter {
 			else {
 				Integer firstBondIndex = allAtoms.indexOf(atom);
 				Integer secondBondIndex = allAtoms.indexOf(other);
-				// Don't add the same bond twice
-				if (firstBondIndex<secondBondIndex){
+				if(firstBondIndex<secondBondIndex){
+					// Don't add the same bond twice
 					int bondOrder = bond.getBondOrder();							
 					mmtfDecoderInterface.setInterGroupBond(firstBondIndex, secondBondIndex, bondOrder);
 				}

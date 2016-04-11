@@ -105,7 +105,7 @@ public class MmtfActions {
 		MmtfStructureWriter mmtfStructureWriter = new MmtfStructureWriter(structure);
 		// Now deflate
 		mmtfStructureWriter.write(inflatorToGet);
-		// Get to bean
+		// Return the API
 		return inflatorToGet;
 	}
 

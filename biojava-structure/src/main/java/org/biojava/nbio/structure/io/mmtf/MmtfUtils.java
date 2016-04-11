@@ -277,7 +277,6 @@ public class MmtfUtils {
 		Map<Matrix4d, List<Integer>> matMap = new HashMap<>();
 		List<BiologicalAssemblyTransformation> transforms = bioassemblyInfo.getTransforms();
 		for (BiologicalAssemblyTransformation transformation : transforms) {
-			//			double[] tranMatrix = convertToDoubleArray();
 			Matrix4d transMatrix = transformation.getTransformationMatrix();
 			int chainIndex = chainIdToIndexMap.get(transformation.getChainId());
 			if(matMap.containsKey(transMatrix)){
@@ -362,4 +361,32 @@ public class MmtfUtils {
 		}
 		return bondCount;
 	}	
+	
+	/**
+	 * Find the number of bonds in a group
+	 * @param atomsInGroup the list of atoms in the group
+	 * @return the number of atoms in the group
+	 */
+	public static int getNumBondsInGroup(List<Atom> atomsInGroup) {
+		int bondCounter = 0;
+		for(Atom atom : atomsInGroup) { 
+			if(atom.getBonds()==null){
+				continue;
+			}
+			for(Bond bond : atom.getBonds()) {
+				// Now set the bonding information.
+				Atom other = bond.getOther(atom);
+				// If both atoms are in the group
+				if (atomsInGroup.indexOf(other)!=-1){
+					Integer firstBondIndex = atomsInGroup.indexOf(atom);
+					Integer secondBondIndex = atomsInGroup.indexOf(other);
+					// Don't add the same bond twice
+					if (firstBondIndex<secondBondIndex){
+						bondCounter++;
+					}
+				}
+			}
+		}
+		return bondCounter;
+	}
 }

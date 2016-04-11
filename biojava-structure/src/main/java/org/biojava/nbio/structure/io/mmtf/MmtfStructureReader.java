@@ -259,7 +259,6 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		// set the new bond
 		@SuppressWarnings("unused")
 		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
-
 	}
 
 	/* (non-Javadoc)
@@ -381,7 +380,6 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		for (int i=0; i<structure.nrModels(); i++) { 
 			totChainList.addAll(structure.getChains(i));
 		}
-		
 		// Get the bioassembly data
 		Map<Integer, BioAssemblyInfo> bioAssemblies = pdbHeader.getBioAssemblies();
 		// Get the bioassembly itself (if it exists
