@@ -11,7 +11,7 @@ import org.rcsb.mmtf.dataholders.MmtfBean;
 import org.rcsb.mmtf.decoder.BeanToDataApi;
 import org.rcsb.mmtf.decoder.DataApiToReader;
 import org.rcsb.mmtf.deserializers.MessagePackDeserializer;
-import org.rcsb.mmtf.examples.HandleIO;
+import org.rcsb.mmtf.utils.DownloadUtils;
 
 /**
  * Tests for the MMTF parser in Biojava
@@ -26,8 +26,7 @@ public class TestMmtfParser {
 	 */
 	@Test
 	public void basicTest() throws IOException {
-	    HandleIO gbjs = new HandleIO();
-	    byte[] inputbyteArr = gbjs.getFromUrl("1qmz");
+	    byte[] inputbyteArr = DownloadUtils.getDataFromUrl("1qmz");
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Set up the deserializer
