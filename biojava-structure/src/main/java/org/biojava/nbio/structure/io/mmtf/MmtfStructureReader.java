@@ -434,7 +434,8 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 	}
 
 	@Override
-	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, String date, String[] experimnetalMethods) {
+	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, String depositionDate,
+			String releaseDate, String[] experimnetalMethods) {
 		// Get the pdb header
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		pdbHeader.setTitle(title);
