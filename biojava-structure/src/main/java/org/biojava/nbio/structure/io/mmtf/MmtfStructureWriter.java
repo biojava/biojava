@@ -82,12 +82,15 @@ public class MmtfStructureWriter implements MmtfWriter {
 					if(insCode==null){
 						insCode=MmtfBean.UNAVAILABLE_CHAR_VALUE;
 					}
-					
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 
 							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), chemComp.getOne_letter_code().charAt(0),
 							sequenceGroups.indexOf(group), MmtfUtils.getSecStructType(group));
 					for (Atom atom : atomsInGroup){
-						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), atom.getAltLoc().charValue(), (float) atom.getX(), 
+						char altLoc = MmtfBean.UNAVAILABLE_CHAR_VALUE;
+						if(atom.getAltLoc()!=null){
+							altLoc=atom.getAltLoc().charValue();
+						}
+						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), altLoc, (float) atom.getX(), 
 								(float) atom.getY(), (float) atom.getZ(), atom.getOccupancy(), 
 								atom.getTempFactor(), atom.getElement().toString(), atom.getCharge());
 						addBonds(atom, atomsInGroup, allAtoms);

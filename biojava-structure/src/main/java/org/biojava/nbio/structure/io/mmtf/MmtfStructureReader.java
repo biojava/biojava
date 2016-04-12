@@ -30,6 +30,7 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.MmtfDecoderInterface;
+import org.rcsb.mmtf.dataholders.MmtfBean;
 
 
 /**
@@ -66,7 +67,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 
 	/** The list of EntityInformation */
 	private List<EntityInfo> entityInfoList;
-	
+
 	/** All the chains */
 	private List<Chain> chainList; 
 
@@ -173,7 +174,7 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		// Set the CC -> empty but not null
 		group.setChemComp(chemicalComponentGroup);
 		group.setPDBName(groupName);
-		if (insertionCode == '?') {
+		if (insertionCode == MmtfBean.UNAVAILABLE_CHAR_VALUE) {
 			group.setResidueNumber(chain.getChainID().trim(), groupNumber, null);
 		} else {
 			group.setResidueNumber(chain.getChainID().trim(),
@@ -388,23 +389,23 @@ public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
 		Map<Integer, BioAssemblyInfo> bioAssemblies = pdbHeader.getBioAssemblies();
 		// Get the bioassembly itself (if it exists
 		BioAssemblyInfo bioAssInfo;
-	    if (bioAssemblies.containsKey(bioAssemblyId)){
-	    	bioAssInfo = bioAssemblies.get(bioAssemblyId);
-	    }
-	    else{
-	    	bioAssInfo = new  BioAssemblyInfo();
-	    	bioAssInfo.setTransforms(new ArrayList<BiologicalAssemblyTransformation>());
-	    	bioAssemblies.put(bioAssemblyId, bioAssInfo);
-	    	bioAssInfo.setId(bioAssemblyId);
-	    }
-	    
+		if (bioAssemblies.containsKey(bioAssemblyId)){
+			bioAssInfo = bioAssemblies.get(bioAssemblyId);
+		}
+		else{
+			bioAssInfo = new  BioAssemblyInfo();
+			bioAssInfo.setTransforms(new ArrayList<BiologicalAssemblyTransformation>());
+			bioAssemblies.put(bioAssemblyId, bioAssInfo);
+			bioAssInfo.setId(bioAssemblyId);
+		}
+
 		for(int currChainIndex : inputChainIndices){
-		    BiologicalAssemblyTransformation bioAssTrans = new BiologicalAssemblyTransformation();
-		    Integer transId = bioAssInfo.getTransforms().size()+1;
+			BiologicalAssemblyTransformation bioAssTrans = new BiologicalAssemblyTransformation();
+			Integer transId = bioAssInfo.getTransforms().size()+1;
 			bioAssTrans.setId(transId.toString());
 			// If it actually has an index - if it doesn't it is because the chain has no density.
 			if (currChainIndex!=-1){
-			bioAssTrans.setChainId(totChainList.get(currChainIndex).getChainID());
+				bioAssTrans.setChainId(totChainList.get(currChainIndex).getChainID());
 			}
 			else {
 				continue;
