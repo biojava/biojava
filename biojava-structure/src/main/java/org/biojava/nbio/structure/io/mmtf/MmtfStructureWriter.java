@@ -15,7 +15,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.MmtfDecoderInterface;
-import org.rcsb.mmtf.api.MmtfWriter;
 import org.rcsb.mmtf.dataholders.MmtfBean;
 
 /**
@@ -24,7 +23,7 @@ import org.rcsb.mmtf.dataholders.MmtfBean;
  * @author Anthony Bradley
  *
  */
-public class MmtfStructureWriter implements MmtfWriter {
+public class MmtfStructureWriter {
 
 
 	private MmtfDecoderInterface mmtfDecoderInterface;
