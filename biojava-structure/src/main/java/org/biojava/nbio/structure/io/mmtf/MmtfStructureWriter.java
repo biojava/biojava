@@ -55,7 +55,7 @@ public class MmtfStructureWriter {
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
 		// TODO Get release date information
-		String releaseDate = "";
+		String releaseDate = "NA";
 		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), 1.0f, pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
 				releaseDate, MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
 		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo));
