@@ -16,6 +16,7 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
@@ -59,9 +60,6 @@ public class MmtfStructureReader implements DataTransferInterface, Serializable 
 	/** The atoms in a group. */
 	private List<Atom> atomsInGroup;
 
-	/** The chemical component group. */
-	private ChemComp chemicalComponentGroup;
-
 	/** All the atoms. */
 	private List<Atom> allAtoms;
 
@@ -77,7 +75,6 @@ public class MmtfStructureReader implements DataTransferInterface, Serializable 
 	public MmtfStructureReader() {
 		structure = new StructureImpl();
 		modelNumber = 0;
-		chemicalComponentGroup = new ChemComp();
 		allAtoms  = new ArrayList<>();
 		entityInfoList = new ArrayList<>();
 		chainList = new ArrayList<>();
@@ -172,7 +169,15 @@ public class MmtfStructureReader implements DataTransferInterface, Serializable 
 		}
 		atomsInGroup = new ArrayList<Atom>();
 		// Set the CC -> empty but not null
-		group.setChemComp(chemicalComponentGroup);
+		ChemComp chemComp = new ChemComp();
+		if(singleLetterCode=='X'){
+			chemComp.setOne_letter_code("?");
+
+		}
+		else{
+			chemComp.setOne_letter_code("" + singleLetterCode);
+		}
+		group.setChemComp(chemComp);
 		group.setPDBName(groupName);
 		if (insertionCode == MmtfBean.UNAVAILABLE_CHAR_VALUE) {
 			group.setResidueNumber(chain.getChainID().trim(), groupNumber, null);
@@ -419,11 +424,11 @@ public class MmtfStructureReader implements DataTransferInterface, Serializable 
 	}
 
 	@Override
-	public void setEntityInfo(int[] chainIndices, String sequence, String description, String title) {
+	public void setEntityInfo(int[] chainIndices, String sequence, String description, String type) {
 		// First get the chains
 		EntityInfo entityInfo = new EntityInfo();
 		entityInfo.setDescription(description);
-		entityInfo.setTitle(title);
+		entityInfo.setType(EntityType.entityTypeFromString(type));
 		List<Chain> chains = new ArrayList<>(); 
 		// Now loop through the chain ids and make a list of them
 		for( int index : chainIndices) {
