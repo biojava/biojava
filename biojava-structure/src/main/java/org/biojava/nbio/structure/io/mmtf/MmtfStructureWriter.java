@@ -55,7 +55,7 @@ public class MmtfStructureWriter {
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
 		// TODO Get release date information
-		String releaseDate = "NA";
+		String releaseDate = null;
 		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), 1.0f, pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
 				releaseDate, MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
 		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo));
@@ -83,8 +83,12 @@ public class MmtfStructureWriter {
 					if(insCode==null){
 						insCode=MmtfBean.UNAVAILABLE_CHAR_VALUE;
 					}
+					char singleLetterCode = 'X';
+					if (chemComp.getOne_letter_code().charAt(0)!='?'){
+						singleLetterCode = chemComp.getOne_letter_code().charAt(0);
+					}
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 
-							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), chemComp.getOne_letter_code().charAt(0),
+							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), singleLetterCode,
 							sequenceGroups.indexOf(group), MmtfUtils.getSecStructType(group));
 					for (Atom atom : atomsInGroup){
 						char altLoc = MmtfBean.UNAVAILABLE_CHAR_VALUE;
@@ -148,14 +152,14 @@ public class MmtfStructureWriter {
 	private void storeEntityInformation(List<Chain> allChains, List<EntityInfo> entityInfos) {
 		for (EntityInfo entityInfo : entityInfos) {
 			String description = entityInfo.getDescription();
-			String details = entityInfo.getDetails();
+			String type = entityInfo.getType().getEntityType();
 			List<Chain> entityChains = entityInfo.getChains();
 			int[] chainIndices = new int[entityChains.size()];
 			for (int i=0; i<entityChains.size(); i++) {
 				chainIndices[i] = allChains.indexOf(entityChains.get(i));
 			}
 			String sequence = entityChains.get(0).getSeqResSequence();
-			mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, details);
+			mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, type);
 		}		
 	}
 
