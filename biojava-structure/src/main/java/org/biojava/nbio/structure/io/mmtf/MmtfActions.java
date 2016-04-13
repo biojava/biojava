@@ -3,10 +3,10 @@ package org.biojava.nbio.structure.io.mmtf;
 import java.io.IOException;
 
 import org.biojava.nbio.structure.Structure;
-import org.rcsb.mmtf.decoder.BeanToDataApi;
-import org.rcsb.mmtf.decoder.DataApiToReader;
+import org.rcsb.mmtf.decoder.DefaultDecoder;
+import org.rcsb.mmtf.decoder.DecoderToReader;
 import org.rcsb.mmtf.decoder.ReaderUtils;
-import org.rcsb.mmtf.encoder.WriterToDataApi;
+import org.rcsb.mmtf.encoder.WriterToEncoder;
 import org.rcsb.mmtf.encoder.WriterUtils;
 
 /**
@@ -26,9 +26,9 @@ public class MmtfActions {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Set up the inflator
-		DataApiToReader getToInflator = new DataApiToReader();
+		DecoderToReader getToInflator = new DecoderToReader();
 		// Do the inflation
-		getToInflator.read(new BeanToDataApi(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
+		getToInflator.read(new DefaultDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
@@ -41,7 +41,7 @@ public class MmtfActions {
 	 */
 	public static void writeBiojavaStruct(Structure structure, String path) throws IOException {
 		// Set up this writer
-		WriterToDataApi inflatorToGet = new WriterToDataApi();
+		WriterToEncoder inflatorToGet = new WriterToEncoder();
 		// Get the writer - this is what people implement
 		MmtfStructureWriter mmtfStructureWriter = new MmtfStructureWriter(structure);
 		// Now pass to the get API

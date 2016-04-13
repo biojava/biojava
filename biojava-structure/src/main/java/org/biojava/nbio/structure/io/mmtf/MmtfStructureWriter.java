@@ -14,19 +14,19 @@ import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
-import org.rcsb.mmtf.api.MmtfDecoderInterface;
+import org.rcsb.mmtf.api.DataTransferInterface;
 import org.rcsb.mmtf.dataholders.MmtfBean;
 
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding. 
- * Must implement all the functions in {@link MmtfDecoderInterface}.
+ * Must implement all the functions in {@link DataTransferInterface}.
  * @author Anthony Bradley
  *
  */
 public class MmtfStructureWriter {
 
 
-	private MmtfDecoderInterface mmtfDecoderInterface;
+	private DataTransferInterface mmtfDecoderInterface;
 	private Structure structure;
 
 
@@ -39,7 +39,7 @@ public class MmtfStructureWriter {
 		this.structure = data;
 	}
 
-	public void write(MmtfDecoderInterface decoder) {
+	public void write(DataTransferInterface decoder) {
 		this.mmtfDecoderInterface = decoder;
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);

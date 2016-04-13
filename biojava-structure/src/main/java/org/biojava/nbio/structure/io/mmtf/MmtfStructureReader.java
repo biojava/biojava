@@ -29,7 +29,7 @@ import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
-import org.rcsb.mmtf.api.MmtfDecoderInterface;
+import org.rcsb.mmtf.api.DataTransferInterface;
 import org.rcsb.mmtf.dataholders.MmtfBean;
 
 
@@ -39,7 +39,7 @@ import org.rcsb.mmtf.dataholders.MmtfBean;
  *
  * @author Anthony Bradley
  */
-public class MmtfStructureReader implements MmtfDecoderInterface, Serializable {
+public class MmtfStructureReader implements DataTransferInterface, Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6772030485225130853L;
