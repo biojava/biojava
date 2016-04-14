@@ -223,6 +223,10 @@ public class CeSymmIterative {
 	 */
 	private boolean buildAlignment() throws StructureException {
 
+		// If one level, nothing to build
+		if (levels.size() == 1)
+			return false;
+		
 		// Initialize a new multiple alignment
 		MultipleAlignment msa = new MultipleAlignmentImpl();
 		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());

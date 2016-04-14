@@ -88,10 +88,10 @@ public class TestMMcifOrganismParsing {
 	private void checkPDB(String pdbId, String organismTaxId) throws IOException, StructureException {
 		Structure s = StructureIO.getStructure(pdbId);
 
-		assertNotNull(s.getEntityInformation());
-		assertTrue(s.getEntityInformation().size() > 0);
+		assertNotNull(s.getEntityInfos());
+		assertTrue(s.getEntityInfos().size() > 0);
 
-		for ( EntityInfo c : s.getEntityInformation()) {
+		for ( EntityInfo c : s.getEntityInfos()) {
 			if(c.getType().equals("polymer")) { 
 				assertNotNull(c.getOrganismTaxId());
 				if(pdbId.equals("3zd6")){

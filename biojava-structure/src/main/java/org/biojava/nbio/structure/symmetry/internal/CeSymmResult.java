@@ -76,8 +76,8 @@ public class CeSymmResult {
 		if (symmOrder < 2)
 			return false;
 
-		// If the TM-Score is below the threshold
-		if (selfAlignment.getTMScore() < params.getScoreThreshold())
+		// If the TM-Score before refinement is below the threshold
+		if (selfAlignment.getTMScore() < params.getUnrefinedScoreThreshold())
 			return false;
 
 		// If the refinement was attempted
@@ -87,7 +87,7 @@ public class CeSymmResult {
 				return false;
 			// Allow 90% of original TM-Score theshold
 			if (multipleAlignment.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
-					.getScoreThreshold() * 0.9)
+					.getRefinedScoreThreshold())
 				return false;
 			return true;
 		}
@@ -213,7 +213,8 @@ public class CeSymmResult {
 					else
 						symmGroup = "R";
 				}
-			} else // case asymmetric
+			} else
+				// case asymmetric
 				symmGroup = "C1";
 		}
 		return symmGroup;
@@ -253,6 +254,62 @@ public class CeSymmResult {
 
 	public void setStructureId(StructureIdentifier structureId) {
 		this.structureId = structureId;
+	}
+
+	/**
+	 * Return a String describing the reasons for the CE-Symm final decision
+	 * in this particular result.
+	 * 
+	 * @return String decision reason
+	 */
+	public String getReason() {
+		// Cases:
+		// 1. Asymmetric because insignificant self-alignment (1itb.A_1-100)
+		double tm = selfAlignment.getTMScore();
+		if (tm < params.getUnrefinedScoreThreshold()) {
+			return String.format("Insignificant self-alignment (TM=%.2f)", tm);
+		}
+		// 2. Asymmetric because order detector returned 1
+		if (symmOrder == 1) {
+			return String.format("Order detector found asymmetric alignment (TM=%.2f)", tm);
+		}
+
+		// Check that the user requested refinement
+		if (params.getRefineMethod() != RefineMethod.NOT_REFINED) {
+			// 3. Asymmetric because refinement failed
+			if (!refined) {
+				return "Refinement failed";
+			}
+			tm = multipleAlignment.getScore(
+					MultipleAlignmentScorer.AVGTM_SCORE);
+			// 4. Asymmetric because refinement & optimization were not
+			// significant
+			if (!isSignificant()) {
+				return String.format(
+						"Refinement was not significant (TM=%.2f)", tm);
+			}
+		} else {
+			// 4. Not refined, but result was not significant
+			if (!isSignificant()) {
+				return String
+						.format("Result was not significant (TM=%.2f)", tm);
+			}
+		}
+
+		String hierarchical = "";
+		if (symmLevels > 1) {
+			hierarchical = String.format("; Contains %d levels of symmetry",
+					symmLevels);
+		}
+		// 5. Symmetric.
+		// a. Open. Give # repeats (1n0r.A)
+		if (type == SymmetryType.OPEN) {
+			return String.format("Contains %d open repeats (TM=%.2f)%s",
+					getSymmOrder(), tm, hierarchical);
+		}
+		// b. Closed, non-hierarchical (1itb.A)
+		// c. Closed, heirarchical (4gcr)
+		return String.format("Significant (TM=%.2f)%s", tm, hierarchical);
 	}
 
 }

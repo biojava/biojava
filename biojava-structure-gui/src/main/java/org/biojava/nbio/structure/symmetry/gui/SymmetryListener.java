@@ -66,12 +66,12 @@ public class SymmetryListener implements ActionListener {
 		try {
 			if (cmd.equals("Repeats Superposition")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayRepeats(symm);
-				String s = SymmetryDisplay.printSymmetryAxes(symm, true);
+				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				j.evalString(s);
 
 			} else if (cmd.equals("Multiple Structure Alignment")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm);
-				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
+				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				j.evalString(s);
 
 			} else if (cmd.equals("Optimal Self Alignment")) {
@@ -87,7 +87,7 @@ public class SymmetryListener implements ActionListener {
 				jmol.evalString(script);
 
 			} else if (cmd.equals("Show Symmetry Axes")) {
-				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
+				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				jmol.evalString(s);
 			}
 

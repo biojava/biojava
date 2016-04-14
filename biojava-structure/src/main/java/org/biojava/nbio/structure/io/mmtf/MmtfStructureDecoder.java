@@ -3,11 +3,8 @@ package org.biojava.nbio.structure.io.mmtf;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.vecmath.Matrix4d;
 
@@ -19,12 +16,14 @@ import org.biojava.nbio.structure.BondImpl;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -35,6 +34,8 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.StructureDecoderInterface;
 import org.rcsb.mmtf.dataholders.BioAssemblyData;
 import org.rcsb.mmtf.dataholders.BioAssemblyTrans;
+import org.rcsb.mmtf.decoder.DecodeStructure;
+import org.rcsb.mmtf.decoder.ParsingParams;
 
 
 /**
@@ -43,7 +44,7 @@ import org.rcsb.mmtf.dataholders.BioAssemblyTrans;
  *
  * @author Anthony Bradley
  */
-public class BioJavaStructureDecoder implements StructureDecoderInterface, Serializable {
+public class MmtfStructureDecoder implements StructureDecoderInterface, Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6772030485225130853L;
@@ -69,14 +70,18 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	/** All the atoms. */
 	private List<Atom> allAtoms;
 
+	/** The list of EntityInformation */
+	private List<EntityInfo> entityInfoList;
+
 	/**
 	 * Instantiates a new bio java structure decoder.
 	 */
-	public BioJavaStructureDecoder() {
+	public MmtfStructureDecoder() {
 		structure = new StructureImpl();
 		modelNumber = 0;
 		chemicalComponentGroup = new ChemComp();
-		allAtoms  = new ArrayList<Atom>();
+		allAtoms  = new ArrayList<>();
+		entityInfoList = new ArrayList<>();
 	}
 
 	/**
@@ -111,9 +116,21 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 */
 	@Override
 	public final void setChainInfo(final String chainId, final int groupCount) {
-		chain = new ChainImpl();
-		chain.setChainID(chainId.trim());
-		structure.addChain(chain, modelNumber);
+		// First check to see if the chain exists
+		boolean newChain = true;
+		for (Chain c: structure.getChains(modelNumber)) {
+			if (c.getChainID().equals(chainId)) {
+				newChain = false;
+				chain = c;
+				break;
+			}
+		}
+		// If we need to set a new chain do this
+		if (newChain){
+			chain = new ChainImpl();
+			chain.setChainID(chainId.trim());
+			structure.addChain(chain, modelNumber);
+		}
 	}
 
 
@@ -158,6 +175,21 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	private Group getGroupWithSameResNumButDiffPDBName() {
+		// If this chain already has this group number
+		for (Group g : chain.getAtomGroups() ) {
+			if (g.getResidueNumber().getSeqNum()==group.getResidueNumber().getSeqNum()) {
+				if( ! g.getPDBName().equals(group.getPDBName() )){
+					return g;
+				}
+			}
+		}
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface#
@@ -195,8 +227,12 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			altGroup.addAtom(atom);
 		}
 
+		// IF the main group doesn't have this atom
 		if (!group.hasAtom(atom.getName())) {
-			group.addAtom(atom);
+			// If it's not a microheterogenity case
+			if (group.getPDBName().equals(atom.getGroup().getPDBName())) {
+				group.addAtom(atom);
+			}
 		}
 		atomsInGroup.add(atom);
 		allAtoms.add(atom);
@@ -207,7 +243,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 * face#setGroupBonds(int, int, int)
 	 */
 	@Override
-	public final void setGroupBonds(final int indOne,
+	public final void setGroupBond(final int indOne,
 			final int indTwo, final int bondOrder) {
 		// Get the atom
 		Atom atomOne = atomsInGroup.get(indOne);
@@ -223,7 +259,7 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 * Interface#setInterGroupBonds(int, int, int)
 	 */
 	@Override
-	public final void setInterGroupBonds(final int indOne,
+	public final void setInterGroupBond(final int indOne,
 			final int indTwo, final int bondOrder) {
 		// Get the atom
 		Atom atomOne = allAtoms.get(indOne);
@@ -254,10 +290,19 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			}
 		}
 
-		// Get the altLovGroup
+		// Get the altLocGroup
 		Group altLocgroup = group.getAltLocGroup(altLoc);
 		if (altLocgroup != null) {
 			return altLocgroup;
+		}
+		// If the group already exists (microheterogenity).
+		Group oldGroup = getGroupWithSameResNumButDiffPDBName();
+		if (oldGroup!= null){
+			Group altLocG = group;
+			group = oldGroup;
+			group.addAltLoc(altLocG);
+			chain.getAtomGroups().remove(altLocG);
+			return altLocG;
 		}
 		// no matching altLoc group found.
 		// build it up.
@@ -281,33 +326,17 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 */
 	@Override
 	public final void setXtalInfo(final String spaceGroupString,
-			final List<Float> unitCell) {
+			final float[] unitCell) {
 		// Now set the xtalographic information
 		PDBCrystallographicInfo pci = new PDBCrystallographicInfo();
 		SpaceGroup spaceGroup = SpaceGroup.parseSpaceGroup(spaceGroupString);
 		pci.setSpaceGroup(spaceGroup);
-		if (unitCell.size() > 0) {
-			CrystalCell cell = new CrystalCell(unitCell.get(0), unitCell.get(1),
-					unitCell.get(2), unitCell.get(3), unitCell.get(4), unitCell.get(5));
+		if (unitCell.length > 0) {
+			CrystalCell cell = new CrystalCell(unitCell[0], unitCell[1],
+					unitCell[2], unitCell[3], unitCell[4], unitCell[5]);
 			pci.setCrystalCell(cell);
 			structure.setCrystallographicInfo(pci);
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.rcsb.mmtf.decoder.StructureDecoder
-	 * Interface#updateChainInfo(java.lang.String, int)
-	 */
-	@Override
-	public final void updateChainInfo(final String chainId,
-			final int groupCount) {
-		for (Chain c: structure.getChains(modelNumber)) {
-			if (c.getChainID().equals(chainId)) {
-				chain = c;
-				break;
-			}
-		}
-
 	}
 
 
@@ -318,17 +347,17 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 	 */
 	private int getGroupTypIndicator(String currentGroupType) {
 		// At the moment - peptide like is a HETATM group (consistent with biojava)
-		if(currentGroupType.equals("PEPTIDE-LIKE")){
+		if(currentGroupType.toUpperCase().equals("PEPTIDE-LIKE")){
 			return 0;
 		}
 		// Again to correspond with Biojava - but I suspect we really want this to be 1
-		if(currentGroupType.equals("D-PEPTIDE LINKING")){
+		if(currentGroupType.toUpperCase().equals("D-PEPTIDE LINKING")){
 			return 0;
 		}
-		if(currentGroupType.contains("PEPTIDE")){
+		if(currentGroupType.toUpperCase().contains("PEPTIDE")){
 			return 1;
 		}
-		if(currentGroupType.contains("DNA") || currentGroupType.contains("RNA")){
+		if(currentGroupType.toUpperCase().contains("DNA") || currentGroupType.toUpperCase().contains("RNA")){
 			return 2;
 		}
 		else{
@@ -336,18 +365,16 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 		}
 	}
 
-	@Override
-	public void setBioAssembly(Map<Integer, BioAssemblyData> inputBioassemblies) {
 
+	@Override
+	public void setBioAssemblyList(List<BioAssemblyData> inputBioassemblies) {
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		// Get the bioassebly data
 		Map<Integer, BioAssemblyInfo> bioAssemblies = new HashMap<>();
 		int bioassemlyCounter = 0;
-		for (Entry<Integer, BioAssemblyData> entry: inputBioassemblies.entrySet()) {
+		for (BioAssemblyData value: inputBioassemblies) {
 			bioassemlyCounter++;
 			// Get the key and the value
-			Integer key = entry.getKey();
-			BioAssemblyData value = entry.getValue();
 			// Make a biojava bioassembly object
 			BioAssemblyInfo bioAssInfo = new  BioAssemblyInfo();
 			bioAssInfo.setId(bioassemlyCounter);
@@ -371,14 +398,78 @@ public class BioJavaStructureDecoder implements StructureDecoderInterface, Seria
 			}
 			// Now set the transform list
 			bioAssInfo.setTransforms(newList);
-			bioAssInfo.setMacromolecularSize(value.getMacroMolecularSize());
 			// Now set this
-			bioAssemblies.put(key, bioAssInfo);
+			bioAssemblies.put(bioassemlyCounter, bioAssInfo);
 		}
 		// Now actually set them
 		pdbHeader.setBioAssemblies(bioAssemblies);
 		structure.setPDBHeader(pdbHeader);		
 	}
 
+	@Override
+	public void cleanUpStructure() {
+		// Ensure all altlocs have all atoms
+		StructureTools.cleanUpAltLocs(structure);
+		// Number the remaining ones
+		int counter =0;
+		for (EntityInfo entityInfo : entityInfoList) {
+			counter++;
+			entityInfo.setMolId(counter);
+		}
+		structure.setEntityInfos(entityInfoList);
+	}
 
+	@Override
+	public void prepareStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels, String modelId) {
+		structure.setPDBCode(modelId);
+	}
+
+	@Override
+	public void setEntityInfo(String[] chainIds, String sequence, String description, String title) {
+		// First get the chains
+		EntityInfo entityInfo = new EntityInfo();
+		entityInfo.setDescription(description);
+		entityInfo.setTitle(title);
+		List<Chain> chains = new ArrayList<>(); 
+		// Now loop through the chain ids and make a list of them
+		for (String chainId : chainIds) {
+			for (int i=0; i<structure.nrModels(); i++) {
+				try {
+					chains.add(structure.getChainByPDB(chainId, i));
+				} catch (StructureException e) {
+					// Just means it's not in this models
+				}
+			}
+		}
+		entityInfo.setChains(chains);
+		entityInfoList.add(entityInfo);
+	}
+
+	@Override
+	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, List<String> experimnetalMethods) {
+		// Get the pdb header
+		PDBHeader pdbHeader = structure.getPDBHeader();
+		pdbHeader.setTitle(title);
+		pdbHeader.setResolution(resolution);
+		pdbHeader.setRfree(rFree);
+		// Now loop through the techniques and add them in
+		for (String techniqueStr : experimnetalMethods) {
+			pdbHeader.setExperimentalTechnique(techniqueStr);
+		}
+	}
+
+	/**
+	 * Utility function to get a Biojava structure from a byte array.
+	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
+	 * @param parsingParams
+	 * @return
+	 */
+	public static Structure getBiojavaStruct(byte[] inputByteArray, ParsingParams parsingParams) {
+		// Make the decoder
+		MmtfStructureDecoder biojavaStructureDecoder = new MmtfStructureDecoder();
+		DecodeStructure ds = new DecodeStructure(inputByteArray);
+		ds.getStructFromByteArray(biojavaStructureDecoder, parsingParams);
+		// Now return this structure
+		return biojavaStructureDecoder.getStructure();
+	}
 }

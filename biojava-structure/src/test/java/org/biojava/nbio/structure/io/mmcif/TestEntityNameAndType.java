@@ -36,7 +36,7 @@ public class TestEntityNameAndType {
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		// This is hte information we want to test against
-		String[] typeInformation = new String[] {"polymer", "non-polymer", "non-polymer", "non-polymer", "non-polymer", "water"};
+		String[] typeInformation = new String[] {"POLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "WATER"};
 		String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-FLUOROBENZAMIDOXIME",  "METHANOL", "METHANOL", "METHANOL", "water"};	
 		
 		// Now some other information fields to test this data is collated correctly
@@ -63,8 +63,8 @@ public class TestEntityNameAndType {
 		int chainCounter = 0;
 		for (Chain c: bioJavaStruct.getChains()) {
 			// Now get the entity information we want to test
-			EntityInfo thisCmpd = c.getCompound();
-			testTypeInfo[chainCounter] = thisCmpd.getType();
+			EntityInfo thisCmpd = c.getEntityInfo();
+			testTypeInfo[chainCounter] = thisCmpd.getType().toString();
 			testDescInfo[chainCounter] = thisCmpd.getDescription();
 			testGeneSourceSciName[chainCounter] =  thisCmpd.getOrganismScientific();
 			testGeneSourceTaxId[chainCounter] = thisCmpd.getOrganismTaxId();

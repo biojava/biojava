@@ -148,7 +148,7 @@ public class StructureIO {
 		checkInitAtomCache();
 		return getBiologicalAssembly(pdbId,biolAssemblyNr,StructureIO.cache);
 	}
-	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, AtomCache cache) throws IOException, StructureException {
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, AtomCache cache) throws StructureException {
 
 		BioUnitDataProvider provider = null;
 		try {
@@ -164,7 +164,7 @@ public class StructureIO {
 			}
 		}
 	}
-	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, AtomCache cache, BioUnitDataProvider provider) throws IOException, StructureException {
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, AtomCache cache, BioUnitDataProvider provider) throws StructureException {
 
 		pdbId = pdbId.toLowerCase();
 

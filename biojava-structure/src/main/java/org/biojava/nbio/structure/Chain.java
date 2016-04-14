@@ -191,19 +191,19 @@ public interface Chain {
 	public int getSeqResLength();
 
 	/**
-	 * Sets the Compound
-	 * @param compound the Compound
-	 * @see #getCompound()
+	 * Sets the Entity information
+	 * @param entityInfo the EntityInfo
+	 * @see #getEntityInfo()
 	*/
-	public void setCompound(EntityInfo compound);
+	public void setEntityInfo(EntityInfo entityInfo);
 
 	/**
-	 * Returns the Compound for this chain.
+	 * Returns the EntityInfo for this chain.
 	 *
-	 * @return the Compound object
-	 * @see #setCompound(EntityInfo)
+	 * @return the EntityInfo object
+	 * @see #setEntityInfo(EntityInfo)
 	 */
-	public EntityInfo getCompound();
+	public EntityInfo getEntityInfo();
 
 	/**
 	 * Sets the name of this chain (Chain id in PDB file ).

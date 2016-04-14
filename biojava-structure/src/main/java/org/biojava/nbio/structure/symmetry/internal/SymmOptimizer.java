@@ -93,10 +93,12 @@ public class SymmOptimizer {
 	// Variables that store the history of the optimization - slower if on
 	private static final boolean history = false;
 	private static final int saveStep = 100;
-	private static final String pathToHistory = "./results/";
+	private static final String pathToHistory = "results/symm-opt/";
+	private List<Long> timeHistory;
 	private List<Integer> lengthHistory;
 	private List<Double> rmsdHistory;
-	private List<Double> scoreHistory;
+	private List<Double> tmScoreHistory;
+	private List<Double> mcScoreHistory;
 
 	/**
 	 * Constructor with a seed MultipleAligment storing a refined symmetry
@@ -136,14 +138,19 @@ public class SymmOptimizer {
 
 	private void initialize() throws StructureException, RefinerFailedException {
 
-		if (order == 1) {
+		if (order == 1)
 			throw new RefinerFailedException(
-					"Non-symmetric seed slignment: order = 1");
-		}
-		if (repeatCore < 1) {
+					"Non-symmetric seed alignment: order = 1");
+		if (repeatCore < 1)
 			throw new RefinerFailedException(
-					"Seed alignment too short: repeat core length == 0");
-		}
+					"Seed alignment too short: repeat core length < 1");
+
+		// Initialize the history variables
+		timeHistory = new ArrayList<Long>();
+		lengthHistory = new ArrayList<Integer>();
+		rmsdHistory = new ArrayList<Double>();
+		mcScoreHistory = new ArrayList<Double>();
+		tmScoreHistory = new ArrayList<Double>();
 
 		C = 20 * order;
 
@@ -154,15 +161,13 @@ public class SymmOptimizer {
 
 		// Store the residues aligned in the block
 		List<Integer> aligned = new ArrayList<Integer>();
-		for (int su = 0; su < order; su++) {
+		for (int su = 0; su < order; su++)
 			aligned.addAll(block.get(su));
-		}
 
 		// Add any residue not aligned to the free pool
 		for (int i = 0; i < atoms.length; i++) {
-			if (!aligned.contains(i)) {
+			if (!aligned.contains(i))
 				freePool.add(i);
-			}
 		}
 		checkGaps();
 
@@ -190,14 +195,21 @@ public class SymmOptimizer {
 
 		initialize();
 
-		// Initialize the history variables
-		lengthHistory = new ArrayList<Integer>();
-		rmsdHistory = new ArrayList<Double>();
-		scoreHistory = new ArrayList<Double>();
+		// Save the optimal alignment
+		List<List<Integer>> optBlock = new ArrayList<List<Integer>>();
+		List<Integer> optFreePool = new ArrayList<Integer>();
+		optFreePool.addAll(freePool);
+		for (int k = 0; k < order; k++) {
+			List<Integer> b = new ArrayList<Integer>();
+			b.addAll(block.get(k));
+			optBlock.add(b);
+		}
+		double optScore = mcScore;
 
 		int conv = 0; // Number of steps without an alignment improvement
 		int i = 1;
 		int stepsToConverge = Math.max(maxIter / 50, 1000);
+		long initialTime = System.nanoTime()/1000000;
 
 		while (i < maxIter && conv < stepsToConverge) {
 
@@ -266,24 +278,44 @@ public class SymmOptimizer {
 
 			logger.debug(i + ": --prob: " + prob + ", --score: " + AS
 					+ ", --conv: " + conv);
+			
+			// Store as the optimal alignment if better
+			if (mcScore > optScore) {
+				optBlock = new ArrayList<List<Integer>>();
+				optFreePool = new ArrayList<Integer>();
+				optFreePool.addAll(freePool);
+				for (int k = 0; k < order; k++) {
+					List<Integer> b = new ArrayList<Integer>();
+					b.addAll(block.get(k));
+					optBlock.add(b);
+				}
+				optScore = mcScore;
+			}
 
 			if (history) {
 				if (i % saveStep == 1) {
 					// Get the correct superposition again
 					updateMultipleAlignment();
 
+					timeHistory.add(System.nanoTime()/1000000 - initialTime);
 					lengthHistory.add(length);
 					rmsdHistory.add(msa.getScore(MultipleAlignmentScorer.RMSD));
-					scoreHistory.add(msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE));
+					tmScoreHistory.add(msa
+							.getScore(MultipleAlignmentScorer.AVGTM_SCORE));
+					mcScoreHistory.add(mcScore);
 				}
 			}
 
 			i++;
 		}
+		
+		// Use the optimal alignment of the trajectory
+		block = optBlock;
+		freePool = optFreePool;
+		mcScore = optScore;
+		
 		// Superimpose and calculate final scores
 		updateMultipleAlignment();
-		mcScore = MultipleAlignmentScorer.getMCScore(msa, Gopen, Gextend,
-				dCutoff);
 		msa.putScore(MultipleAlignmentScorer.MC_SCORE, mcScore);
 
 		// Save the history to the results folder of the symmetry project
@@ -327,8 +359,8 @@ public class SymmOptimizer {
 	 * are no more gaps than the maximum allowed: Rmin.
 	 * <p>
 	 * There must be at least Rmin residues different than null in every
-	 * alignment column.In case there is a column with more gaps than allowed it
-	 * will be shrinked (moved to freePool).
+	 * alignment column. In case there is a column with more gaps than allowed
+	 * it will be shrinked (moved to freePool).
 	 *
 	 * @return true if any columns has been shrinked and false otherwise
 	 */
@@ -805,15 +837,17 @@ public class SymmOptimizer {
 	private void saveHistory(String folder) throws IOException {
 
 		String name = msa.getStructureIdentifier(0).getIdentifier();
-		FileWriter writer = new FileWriter(folder + name + "-symm_optimization.csv");
-		writer.append("Structure,Step,Repeat Length,RMSD,TM-Score\n");
+		FileWriter writer = new FileWriter(folder + name
+				+ "-symm_opt.csv");
+		writer.append("Step,Time,RepeatLength,RMSD,TMscore,MCscore\n");
 
 		for (int i = 0; i < lengthHistory.size(); i++) {
-			writer.append(name + ",");
 			writer.append(i * saveStep + ",");
+			writer.append(timeHistory.get(i) + ",");
 			writer.append(lengthHistory.get(i) + ",");
 			writer.append(rmsdHistory.get(i) + ",");
-			writer.append(scoreHistory.get(i) + "\n");
+			writer.append(tmScoreHistory.get(i) + ",");
+			writer.append(mcScoreHistory.get(i) + "\n");
 		}
 
 		writer.flush();

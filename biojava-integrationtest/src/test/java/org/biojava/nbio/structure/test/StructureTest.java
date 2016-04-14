@@ -119,7 +119,7 @@ public class StructureTest {
 		assertEquals(64, c2.getAtomGroups(GroupType.HETATM).size());
 		assertEquals(0, c2.getAtomGroups(GroupType.NUCLEOTIDE).size());
 
-		List<EntityInfo> compounds= structure.getEntityInformation();
+		List<EntityInfo> compounds= structure.getEntityInfos();
 
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
@@ -203,7 +203,7 @@ public class StructureTest {
 		assertEquals("the technique in the Header is " + technique, techShould, technique);
 
 
-		List <EntityInfo> compounds = structure.getEntityInformation();
+		List <EntityInfo> compounds = structure.getEntityInfos();
 
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394

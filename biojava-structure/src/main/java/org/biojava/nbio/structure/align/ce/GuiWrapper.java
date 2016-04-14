@@ -47,6 +47,7 @@ public class GuiWrapper {
 	static final String displayAFP   = "org.biojava.nbio.structure.align.gui.DisplayAFP" ;
 	static final String alignmentGUI = "org.biojava.nbio.structure.align.gui.AlignmentGui";
 	static final String strucAligJmol = "org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol";
+	static final String abstractAligJmol = "org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol";
 
 	static final String scaleMatrixPanel = "org.biojava.nbio.structure.gui.ScaleableMatrixPanel";
 
@@ -83,10 +84,10 @@ public class GuiWrapper {
 			Atom[] ca2, Object jmol)
 					throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException{
 
-		Class structureAlignmentJmol = Class.forName(strucAligJmol);
+		Class abstractAligJmolC = Class.forName(abstractAligJmol);
 
 		Class c = Class.forName(displayAFP);
-		Method show = c.getMethod("showAlignmentImage", new Class[] {AFPChain.class, Atom[].class, Atom[].class, structureAlignmentJmol});
+		Method show = c.getMethod("showAlignmentPanel", new Class[] {AFPChain.class, Atom[].class, Atom[].class, abstractAligJmolC});
 
 		show.invoke(null,afpChain, ca1, ca2, jmol);
 	}

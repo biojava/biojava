@@ -157,9 +157,9 @@ public class ChainImpl implements Chain, Serializable {
 		n.setChainID( getChainID());
 		n.setSwissprotId ( getSwissprotId());
 
-		// NOTE the Compound will be reset at the parent level (Structure) if cloning is happening from parent level
+		// NOTE the EntityInfo will be reset at the parent level (Structure) if cloning is happening from parent level
 		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
-		n.setCompound(this.mol);
+		n.setEntityInfo(this.mol);
 
 		n.setInternalChainID(internalChainID);
 
@@ -217,7 +217,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
-	public void setCompound(EntityInfo mol) {
+	public void setEntityInfo(EntityInfo mol) {
 		this.mol = mol;
 	}
 
@@ -225,7 +225,7 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
-	public EntityInfo getCompound() {
+	public EntityInfo getEntityInfo() {
 		return this.mol;
 	}
 
