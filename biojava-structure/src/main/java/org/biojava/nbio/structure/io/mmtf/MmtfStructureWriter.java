@@ -154,6 +154,10 @@ public class MmtfStructureWriter {
 			String description = entityInfo.getDescription();
 			String type = entityInfo.getType().getEntityType();
 			List<Chain> entityChains = entityInfo.getChains();
+			if (entityChains.isEmpty()){
+				// Error mapping chain to entity
+				System.err.println("ERROR MAPPING CHAIN TO ENTITY: "+description);
+			}
 			int[] chainIndices = new int[entityChains.size()];
 			for (int i=0; i<entityChains.size(); i++) {
 				chainIndices[i] = allChains.indexOf(entityChains.get(i));
