@@ -31,22 +31,13 @@ public class MmtfStructureWriter {
 
 
 	/**
-	 * The constructor requires a structre input.
-	 * @param mmtfDecoderInterface the interface to be used
-	 * @param structure the structure to be encoded
-	 */
-	public MmtfStructureWriter(Structure data) {
-		this.structure = data;
-	}
-
-	/**
 	 * Function to pass data from Biojava structure 
 	 * to another generic output type.Loops through the data 
 	 * structure and calls all the set functions.
 	 * @param dataTransferInterface the generic interface that 
 	 * implements all the set methods.
 	 */
-	public void write(StructureAdapterInterface dataTransferInterface) {
+	public MmtfStructureWriter(Structure data, StructureAdapterInterface dataTransferInterface) {
 		this.mmtfDecoderInterface = dataTransferInterface;
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);

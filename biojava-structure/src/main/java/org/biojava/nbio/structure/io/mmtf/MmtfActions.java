@@ -25,10 +25,8 @@ public class MmtfActions {
 	public static Structure readBiojavaStruct(String filePath) throws IOException {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
-		// Set up the inflator
-		DecoderToReader getToInflator = new DecoderToReader();
 		// Do the inflation
-		getToInflator.read(new DefaultDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
+		new DecoderToReader(new DefaultDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
@@ -41,13 +39,11 @@ public class MmtfActions {
 	 */
 	public static void writeBiojavaStruct(Structure structure, String path) throws IOException {
 		// Set up this writer
-		WriterToEncoder inflatorToGet = new WriterToEncoder();
+		WriterToEncoder writerToEncoder = new WriterToEncoder();
 		// Get the writer - this is what people implement
-		MmtfStructureWriter mmtfStructureWriter = new MmtfStructureWriter(structure);
-		// Now pass to the get API
-		mmtfStructureWriter.write(inflatorToGet);
+		new MmtfStructureWriter(structure, writerToEncoder);
 		// Now write this data to file
-		WriterUtils.writeDataToFile(inflatorToGet, path);
+		WriterUtils.writeDataToFile(writerToEncoder, path);
 	}
 
 }
