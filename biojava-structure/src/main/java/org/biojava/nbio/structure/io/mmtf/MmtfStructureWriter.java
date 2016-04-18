@@ -39,6 +39,7 @@ public class MmtfStructureWriter {
 	 */
 	public MmtfStructureWriter(Structure data, StructureAdapterInterface dataTransferInterface) {
 		this.mmtfDecoderInterface = dataTransferInterface;
+		this.structure = data;
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);
 		// Get the chain name to index map
