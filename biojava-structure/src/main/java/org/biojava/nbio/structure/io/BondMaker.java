@@ -107,115 +107,121 @@ public class BondMaker {
 	}
 
 	private void formPeptideBonds() {
-		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getSeqResGroups();
+		for (int modelInd=0; modelInd<structure.nrModels(); modelInd++){
+			for (Chain chain : structure.getChains(modelInd)) {
+				List<Group> groups = chain.getSeqResGroups();
 
-			for (int i = 0; i < groups.size() - 1; i++) {
-				if (!(groups.get(i) instanceof AminoAcidImpl)
-						|| !(groups.get(i + 1) instanceof AminoAcidImpl))
-					continue;
+				for (int i = 0; i < groups.size() - 1; i++) {
+					if (!(groups.get(i) instanceof AminoAcidImpl)
+							|| !(groups.get(i + 1) instanceof AminoAcidImpl))
+						continue;
 
-				AminoAcidImpl tail = (AminoAcidImpl) groups.get(i);
-				AminoAcidImpl head = (AminoAcidImpl) groups.get(i + 1);
+					AminoAcidImpl tail = (AminoAcidImpl) groups.get(i);
+					AminoAcidImpl head = (AminoAcidImpl) groups.get(i + 1);
 
-				// atoms with no residue number don't have atom information
-				if (tail.getResidueNumber() == null
-						|| head.getResidueNumber() == null) {
-					continue;
+					// atoms with no residue number don't have atom information
+					if (tail.getResidueNumber() == null
+							|| head.getResidueNumber() == null) {
+						continue;
+					}
+
+					Atom carboxylC;
+					Atom aminoN;
+
+					carboxylC = tail.getC();
+					aminoN = head.getN();
+
+
+					if (carboxylC == null || aminoN == null) {
+						// some structures may be incomplete and not store info
+						// about all of their atoms
+
+						continue;
+					}
+
+
+					if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
+						new BondImpl(carboxylC, aminoN, 1);
+					}
+
 				}
-
-				Atom carboxylC;
-				Atom aminoN;
-
-				carboxylC = tail.getC();
-				aminoN = head.getN();
-
-
-				if (carboxylC == null || aminoN == null) {
-					// some structures may be incomplete and not store info
-					// about all of their atoms
-
-					continue;
-				}
-
-
-				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
-					new BondImpl(carboxylC, aminoN, 1);
-				}
-
 			}
 		}
 	}
 
 	private void formNucleotideBonds() {
-		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getSeqResGroups();
+		for (int modelInd=0; modelInd<structure.nrModels(); modelInd++){
+			for (Chain chain : structure.getChains(modelInd)) {
+				List<Group> groups = chain.getSeqResGroups();
 
-			for (int i = 0; i < groups.size() - 1; i++) {
-				if (!(groups.get(i) instanceof NucleotideImpl)
-						|| !(groups.get(i + 1) instanceof NucleotideImpl))
-					continue;
+				for (int i = 0; i < groups.size() - 1; i++) {
+					if (!(groups.get(i) instanceof NucleotideImpl)
+							|| !(groups.get(i + 1) instanceof NucleotideImpl))
+						continue;
 
-				NucleotideImpl tail = (NucleotideImpl) groups.get(i);
-				NucleotideImpl head = (NucleotideImpl) groups.get(i + 1);
+					NucleotideImpl tail = (NucleotideImpl) groups.get(i);
+					NucleotideImpl head = (NucleotideImpl) groups.get(i + 1);
 
-				// atoms with no residue number don't have atom information
-				if (tail.getResidueNumber() == null
-						|| head.getResidueNumber() == null) {
-					continue;
+					// atoms with no residue number don't have atom information
+					if (tail.getResidueNumber() == null
+							|| head.getResidueNumber() == null) {
+						continue;
+					}
+
+					Atom phosphorous = head.getP();
+					Atom oThreePrime = tail.getO3Prime();
+
+					if (phosphorous == null || oThreePrime == null) {
+						continue;
+					}
+
+
+					if (Calc.getDistance(phosphorous, oThreePrime) < MAX_NUCLEOTIDE_BOND_LENGTH) {
+						new BondImpl(phosphorous, oThreePrime, 1);
+					}
+
 				}
-
-				Atom phosphorous = head.getP();
-				Atom oThreePrime = tail.getO3Prime();
-
-				if (phosphorous == null || oThreePrime == null) {
-					continue;
-				}
-
-
-				if (Calc.getDistance(phosphorous, oThreePrime) < MAX_NUCLEOTIDE_BOND_LENGTH) {
-					new BondImpl(phosphorous, oThreePrime, 1);
-				}
-
 			}
 		}
 	}
 
 	private void formIntraResidueBonds() {
-		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getAtomGroups();
+		for (int modelInd=0; modelInd<structure.nrModels(); modelInd++){
+			for (Chain chain : structure.getChains(modelInd)) {
+				List<Group> groups = chain.getAtomGroups();
 
-			for (Group mainGroup : groups) {
-				// atoms with no residue number don't have atom information
-				if (mainGroup.getResidueNumber() == null) {
-					continue;
-				}
+				for (Group mainGroup : groups) {
+					// atoms with no residue number don't have atom information
+					if (mainGroup.getResidueNumber() == null) {
+						continue;
+					}
 
-				// Now add support for altLocGroup
-				List<Group> totList = new ArrayList<Group>();
-				totList.add(mainGroup);
-				for(Group altLoc: mainGroup.getAltLocs()){
-					totList.add(altLoc);
-				}
-				// Now iterate through this list
-				for(Group group : totList){
+					// Now add support for altLocGroup
+					List<Group> totList = new ArrayList<Group>();
+					totList.add(mainGroup);
+					for(Group altLoc: mainGroup.getAltLocs()){
+						totList.add(altLoc);
+					}
+					// Now iterate through this list
+					for(Group group : totList){
 
-					ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group
-							.getPDBName());
+						ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group
+								.getPDBName());
 
-					for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
+						for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
 
-						Atom a = group.getAtom(chemCompBond.getAtom_id_1());
-						Atom b = group.getAtom(chemCompBond.getAtom_id_2());
-						if ( a != null && b != null){
+							Atom a = group.getAtom(chemCompBond.getAtom_id_1());
+							Atom b = group.getAtom(chemCompBond.getAtom_id_2());
+							if ( a != null && b != null){
 
-							int bondOrder = chemCompBond.getNumericalBondOrder();
+								int bondOrder = chemCompBond.getNumericalBondOrder();
 
-							new BondImpl(a, b, bondOrder);
-						} else  {
+								new BondImpl(a, b, bondOrder);
+							} else  {
 
-							// Some of the atoms were missing. That's fine, there's
-							// nothing to do in this case.
+								// Some of the atoms were missing. That's fine, there's
+								// nothing to do in this case.
+							}
 						}
 					}
 				}
@@ -225,11 +231,13 @@ public class BondMaker {
 
 
 	private void trimBondLists() {
-		for (Chain chain : structure.getChains()) {
-			for (Group group : chain.getAtomGroups()) {
-				for (Atom atom : group.getAtoms()) {
-					if (atom.getBonds()!=null && atom.getBonds().size() > 0) {
-						((ArrayList<Bond>) atom.getBonds()).trimToSize();
+		for (int modelInd=0; modelInd<structure.nrModels(); modelInd++){
+			for (Chain chain : structure.getChains(modelInd)) {
+				for (Group group : chain.getAtomGroups()) {
+					for (Atom atom : group.getAtoms()) {
+						if (atom.getBonds()!=null && atom.getBonds().size() > 0) {
+							((ArrayList<Bond>) atom.getBonds()).trimToSize();
+						}
 					}
 				}
 			}
