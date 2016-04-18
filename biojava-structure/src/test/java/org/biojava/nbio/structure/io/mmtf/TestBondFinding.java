@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.mmtf;
+package org.biojava.nbio.structure.io.mmtf;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -19,6 +19,11 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
+/**
+ * Test bond finding in BioJava
+ * @author Anthony Bradley
+ *
+ */
 public class TestBondFinding {
 
 	/**
@@ -39,6 +44,13 @@ public class TestBondFinding {
 
 	}
 
+	/**
+	 * Find all of the inter group bonds in a structure
+	 * @param pdbId the pdb id of the structure to determine
+	 * @return the number of inter group bonds (dobule counted) in a structure
+	 * @throws IOException
+	 * @throws StructureException
+	 */
 	public int getInterBonds(String pdbId) throws IOException, StructureException{
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);

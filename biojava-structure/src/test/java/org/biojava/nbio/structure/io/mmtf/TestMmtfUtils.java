@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.mmtf;
+package org.biojava.nbio.structure.io.mmtf;
 
 
 import org.junit.Test;
@@ -19,6 +19,11 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.io.mmtf.MmtfUtils;
 
+/**
+ * Test the MMTF utils class
+ * @author Anthony Bradley
+ *
+ */
 public class TestMmtfUtils {
 	
 	/**
