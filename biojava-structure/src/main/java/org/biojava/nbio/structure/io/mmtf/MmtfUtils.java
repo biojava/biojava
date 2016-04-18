@@ -248,33 +248,11 @@ public class MmtfUtils {
 		return dateStringFormat.format(inputDate);
 	}
 
-
-	/**
-	 * Derive a map mapping chain ids to the chain index.
-	 * @param bioJavaStruct the input structure for the map
-	 * @return the output map
-	 */
-	public static Map<String, Integer> getChainIdToIndexMap(Structure bioJavaStruct) {
-		// First build a map of asymid -> chain index
-		Map<String,Integer> chainIdToIndexMapOne = new HashMap<>();
-		int chainCounter = 0;
-		for (int i=0; i<bioJavaStruct.nrModels(); i++) {
-			for (Chain chain : bioJavaStruct.getChains(i)) {
-				String idOne = chain.getChainID();
-				if (!chainIdToIndexMapOne.containsKey(idOne)) { 
-					chainIdToIndexMapOne.put(idOne, chainCounter);
-				}
-				chainCounter++;
-			}
-		}
-		return chainIdToIndexMapOne;
-	}
-
 	/**
 	 * Convert a bioassembly information into a map of transform -> chainindices it relates to
 	 * @param bioassemblyInfo
 	 * @param chainIdToIndexMap 
-	 * @return
+	 * @return the bioassembly information (as primitive types).
 	 */
 	public static Map<double[], int[]> getTransformMap(BioAssemblyInfo bioassemblyInfo, Map<String, Integer> chainIdToIndexMap) {
 		Map<Matrix4d, List<Integer>> matMap = new HashMap<>();
@@ -351,7 +329,7 @@ public class MmtfUtils {
 	/**
 	 * Get the number of unique bonds in the strucutre.
 	 * @param allAtoms
-	 * @return
+	 * @return the number of bonds
 	 */
 	public static int getNumBonds(List<Atom> allAtoms) {
 		int bondCount = 0;
@@ -409,7 +387,7 @@ public class MmtfUtils {
 		}
 		return DsspType.dsspTypeFromString(props.getType().name).getDsspIndex();
 	}
-	
+
 	/**
 	 * Get the secondary structure as defined by DSSP.
 	 * @param group the input group to be calculated
@@ -419,7 +397,7 @@ public class MmtfUtils {
 		@SuppressWarnings("unused")
 		SecStrucState secStrucState = new SecStrucState(group, "MMTF_ASSIGNMENT",getSecStructType(dsspIndex));
 	}
-	
+
 
 	private static SecStrucType getSecStructType(int dsspIndex) {
 		String dsspType = DsspType.dsspTypeFromInt(dsspIndex).getDsspType();
@@ -432,5 +410,46 @@ public class MmtfUtils {
 		}
 		// Return a null entry.
 		return null;
+	}
+
+	/**
+	 * Function to get summary information for the structure.
+	 * @param structure the structure for which to get the information.
+	 */
+	public static MmtfSummaryDataBean getStructureInfo(Structure structure) {
+		MmtfSummaryDataBean mmtfSummaryDataBean = new MmtfSummaryDataBean();
+		// Get all the atoms
+		List<Atom> theseAtoms = new ArrayList<>();
+		List<Chain> allChains = new ArrayList<>();
+		Map<String, Integer> chainIdToIndexMap = new HashMap<>();
+		int chainCounter = 0;
+		int bondCount = 0;
+		mmtfSummaryDataBean.setAllAtoms(theseAtoms);
+		mmtfSummaryDataBean.setAllChains(allChains);
+		mmtfSummaryDataBean.setChainIdToIndexMap(chainIdToIndexMap);
+		for (int i=0; i<structure.nrModels(); i++){
+			List<Chain> chains = structure.getModel(i);
+			allChains.addAll(chains);
+			for (Chain chain : chains) {
+				String idOne = chain.getChainID();
+				if (!chainIdToIndexMap.containsKey(idOne)) { 
+					chainIdToIndexMap.put(idOne, chainCounter);
+				}
+				chainCounter++;
+				for (Group g : chain.getAtomGroups()) {
+					for(Atom atom: getAtomsForGroup(g)){
+						theseAtoms.add(atom);		
+						// If both atoms are in the group
+						if (atom.getBonds()!=null){
+							bondCount+=atom.getBonds().size();
+						}
+					}
+				}
+			}
+		}
+		// Assumes all bonds are referenced twice
+		mmtfSummaryDataBean.setNumBonds(bondCount/2);
+		return mmtfSummaryDataBean;
+
 	}
 }

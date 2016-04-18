@@ -39,18 +39,26 @@ public class MmtfStructureWriter {
 		this.structure = data;
 	}
 
-	public void write(DataTransferInterface decoder) {
-		this.mmtfDecoderInterface = decoder;
+	/**
+	 * Function to pass data from Biojava structure 
+	 * to another generic output type.Loops through the data 
+	 * structure and calls all the set functions.
+	 * @param dataTransferInterface the generic interface that 
+	 * implements all the set methods.
+	 */
+	public void write(DataTransferInterface dataTransferInterface) {
+		this.mmtfDecoderInterface = dataTransferInterface;
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);
+		// Get the chain name to index map
+		MmtfSummaryDataBean mmtfSummaryDataBean = MmtfUtils.getStructureInfo(structure);
+		Map<String, Integer> chainIdToIndexMap = mmtfSummaryDataBean.getChainIdToIndexMap();
+		List<Atom> allAtoms = mmtfSummaryDataBean.getAllAtoms();
+		int numBonds = mmtfSummaryDataBean.getNumBonds();
+		List<Chain> allChains = mmtfSummaryDataBean.getAllChains();
+		mmtfDecoderInterface.initStructure(numBonds, allAtoms.size(), MmtfUtils.getNumGroups(structure), allChains.size(), structure.nrModels(), structure.getPDBCode());
 		// Generate the secondary structure
 		MmtfUtils.calculateDsspSecondaryStructure(structure);
-		// Get the chain name to index map
-		Map<String, Integer> chainIdToIndexMap = MmtfUtils.getChainIdToIndexMap(structure);
-		List<Chain> allChains = MmtfUtils.getAllChains(structure);
-		List<Atom> allAtoms = MmtfUtils.getAllAtoms(structure);
-		int numBonds = MmtfUtils.getNumBonds(allAtoms);
-		mmtfDecoderInterface.initStructure(numBonds, allAtoms.size(), MmtfUtils.getNumGroups(structure), allChains.size(), structure.nrModels(), structure.getPDBCode());
 		// Get the header and the xtal info.
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();

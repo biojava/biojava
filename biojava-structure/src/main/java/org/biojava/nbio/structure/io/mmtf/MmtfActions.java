@@ -46,7 +46,7 @@ public class MmtfActions {
 		MmtfStructureWriter mmtfStructureWriter = new MmtfStructureWriter(structure);
 		// Now pass to the get API
 		mmtfStructureWriter.write(inflatorToGet);
-		// Now write this dat to file
+		// Now write this data to file
 		WriterUtils.writeDataToFile(inflatorToGet, path);
 	}
 
