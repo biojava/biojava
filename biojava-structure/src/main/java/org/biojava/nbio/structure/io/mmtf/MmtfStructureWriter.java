@@ -152,7 +152,13 @@ public class MmtfStructureWriter {
 	private void storeEntityInformation(List<Chain> allChains, List<EntityInfo> entityInfos) {
 		for (EntityInfo entityInfo : entityInfos) {
 			String description = entityInfo.getDescription();
-			String type = entityInfo.getType().getEntityType();
+			String type;
+			if (entityInfo.getType()==null){
+				type = null;
+			}
+			else{
+				type = entityInfo.getType().getEntityType();
+			}
 			List<Chain> entityChains = entityInfo.getChains();
 			if (entityChains.isEmpty()){
 				// Error mapping chain to entity
@@ -181,7 +187,7 @@ public class MmtfStructureWriter {
 			for(Entry<double[], int[]> transformEntry : transformMap.entrySet()) {
 				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey());
 			}
-			 bioAssemblyIndex+=1;
+			bioAssemblyIndex+=1;
 		}
 	}
 

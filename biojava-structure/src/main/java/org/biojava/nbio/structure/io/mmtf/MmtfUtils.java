@@ -185,6 +185,9 @@ public class MmtfUtils {
 	 * @return the array of strings describing the methods used.
 	 */
 	public static String[] techniquesToStringArray(Set<ExperimentalTechnique> experimentalTechniques) {
+		if(experimentalTechniques==null){
+			return new String[0];
+		}
 		String[] outArray = new String[experimentalTechniques.size()];
 		int index = 0;
 		for (ExperimentalTechnique experimentalTechnique : experimentalTechniques) {
