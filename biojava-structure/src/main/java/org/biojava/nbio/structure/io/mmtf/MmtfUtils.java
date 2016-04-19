@@ -25,6 +25,8 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.secstruc.DSSPParser;
@@ -55,9 +57,9 @@ public class MmtfUtils {
 		params.setParseBioAssembly(true);
 		params.setUseInternalChainId(true);
 		// MOVE INTO BIOJAVA IF NEED BE
-		//		CustomChemCompProvider cc = new CustomChemCompProvider();
-		//		ChemCompGroupFactory.setChemCompProvider(cc);
-		//		cc.checkDoFirstInstall();
+		DownloadChemCompProvider cc = new DownloadChemCompProvider();
+		ChemCompGroupFactory.setChemCompProvider(cc);
+		cc.checkDoFirstInstall();
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		return cache;
