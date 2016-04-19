@@ -122,51 +122,6 @@ public class MmtfUtils {
 		}
 	}
 
-	/**
-	 * Function to get all the atoms in the strucutre as a list.
-	 * @param bioJavaStruct the biojava structure
-	 * @return a list of all the unique atoms in the structure
-	 */
-	public static List<Atom> getAllAtoms(Structure bioJavaStruct) {
-		// Get all the atoms
-		List<Atom> theseAtoms = new ArrayList<Atom>();
-		for (int i=0; i<bioJavaStruct.nrModels(); i++){
-			List<Chain> chains = bioJavaStruct.getModel(i);
-			for (Chain c : chains) {
-				for (Group g : c.getAtomGroups()) {
-					for(Atom a: getAtomsForGroup(g)){
-						theseAtoms.add(a);					
-					}
-				}
-			}
-		}
-		return theseAtoms;
-	}
-
-	/**
-	 * Function to get a list of atoms for a group. Only add each atom once.
-	 * @param inputGroup the Biojava Group to consider
-	 * @return the atoms for the input Biojava Group
-	 */
-	public static List<Atom> getAtomsForGroup(Group inputGroup) {
-		Set<Atom> uniqueAtoms = new HashSet<Atom>();
-		List<Atom> theseAtoms = new ArrayList<Atom>();
-		for(Atom a: inputGroup.getAtoms()){
-			theseAtoms.add(a);
-			uniqueAtoms.add(a);
-		}
-		List<Group> altLocs = inputGroup.getAltLocs();
-		for(Group thisG: altLocs){
-			for(Atom a: thisG.getAtoms()){
-				if(uniqueAtoms.contains(a)){ 
-					continue;
-				}
-				theseAtoms.add(a);
-			}
-		}
-		return theseAtoms;
-	}
-
 
 	/**
 	 * Function to generate the secondary structure for a Biojava structure object.
@@ -187,7 +142,6 @@ public class MmtfUtils {
 				System.out.println(bige);
 			}
 		}
-
 	}
 
 	/**
@@ -251,9 +205,9 @@ public class MmtfUtils {
 	}
 
 	/**
-	 * Convert a bioassembly information into a map of transform -> chainindices it relates to
-	 * @param bioassemblyInfo
-	 * @param chainIdToIndexMap 
+	 * Convert a bioassembly information into a map of transform, chainindices it relates to.
+	 * @param bioassemblyInfo  the bioassembly info object for this structure
+	 * @param chainIdToIndexMap the map of chain ids to the index that chain corresponds to.
 	 * @return the bioassembly information (as primitive types).
 	 */
 	public static Map<double[], int[]> getTransformMap(BioAssemblyInfo bioassemblyInfo, Map<String, Integer> chainIdToIndexMap) {
@@ -287,7 +241,7 @@ public class MmtfUtils {
 	 * @param transformationMatrix the input matrix4d object
 	 * @return the double array (16 long).
 	 */
-	private static double[] convertToDoubleArray(Matrix4d transformationMatrix) {
+	public static double[] convertToDoubleArray(Matrix4d transformationMatrix) {
 		// Initialise the output array
 		double[] outArray = new double[16];
 		// Iterate over the matrix
@@ -298,19 +252,6 @@ public class MmtfUtils {
 			}
 		}
 		return outArray;
-	}
-
-	/**
-	 * Get a list of all the chains in a structure.
-	 * @param structure the input structure
-	 * @return the list of chains
-	 */
-	public static List<Chain> getAllChains(Structure structure) {
-		List<Chain> chainList = new ArrayList<>();
-		for (int i=0; i<structure.nrModels(); i++) {
-			chainList.addAll(structure.getChains(i));
-		}
-		return chainList;
 	}
 
 	/**
@@ -327,27 +268,31 @@ public class MmtfUtils {
 		}
 		return count;
 	}
+	
 
 	/**
-	 * Get the number of unique bonds in the strucutre.
-	 * @param allAtoms
-	 * @return the number of bonds
+	 * Function to get a list of atoms for a group. Only add each atom once.
+	 * @param inputGroup the Biojava Group to consider
+	 * @return the atoms for the input Biojava Group
 	 */
-	public static int getNumBonds(List<Atom> allAtoms) {
-		int bondCount = 0;
-		for(int indexAtomOne=0;indexAtomOne<allAtoms.size();indexAtomOne++) {
-			Atom atomOne = allAtoms.get(indexAtomOne);
-			if(atomOne.getBonds()==null){
-				continue;
-			}
-			for(Bond bond : atomOne.getBonds()) {
-				if(allAtoms.indexOf(bond.getOther(atomOne))>indexAtomOne){
-					bondCount++;
+	public static List<Atom> getAtomsForGroup(Group inputGroup) {
+		Set<Atom> uniqueAtoms = new HashSet<Atom>();
+		List<Atom> theseAtoms = new ArrayList<Atom>();
+		for(Atom a: inputGroup.getAtoms()){
+			theseAtoms.add(a);
+			uniqueAtoms.add(a);
+		}
+		List<Group> altLocs = inputGroup.getAltLocs();
+		for(Group thisG: altLocs){
+			for(Atom a: thisG.getAtoms()){
+				if(uniqueAtoms.contains(a)){ 
+					continue;
 				}
+				theseAtoms.add(a);
 			}
 		}
-		return bondCount;
-	}	
+		return theseAtoms;
+	}
 
 	/**
 	 * Find the number of bonds in a group
@@ -396,12 +341,23 @@ public class MmtfUtils {
 	 * @param the integer index of the group type.
 	 */
 	public static void setSecStructType(Group group, int dsspIndex) {
-		@SuppressWarnings("unused")
-		SecStrucState secStrucState = new SecStrucState(group, "MMTF_ASSIGNMENT",getSecStructType(dsspIndex));
+		 SecStrucType secStrucType = getSecStructTypeFromDsspIndex(dsspIndex);
+		 SecStrucState secStrucState = new SecStrucState(group, "MMTF_ASSIGNED", secStrucType);
+		 if(secStrucType!=null){
+		 group.setProperty("secstruc", secStrucState);
+		 }
+		 else{
+		 }
 	}
 
-
-	private static SecStrucType getSecStructType(int dsspIndex) {
+	
+	/**
+	 * Helper function to set the DSSP type based on a numerical index.
+	 * @param dsspIndex the integer index of the type to set
+	 * @return the instance of the SecStrucType object holding this secondary
+	 * structure type.
+	 */
+	public static SecStrucType getSecStructTypeFromDsspIndex(int dsspIndex) {
 		String dsspType = DsspType.dsspTypeFromInt(dsspIndex).getDsspType();
 		for(SecStrucType secStrucType : SecStrucType.values())
 		{
