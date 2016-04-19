@@ -17,12 +17,12 @@ import org.rcsb.mmtf.encoder.WriterUtils;
 public class MmtfActions {
 	
 	/**
-	 * Utility function to get a Biojava structure from a byte array.
+	 * Utility function to get a Biojava structure from a file.
 	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
 	 * @return a Biojava structure object relating to the input byte array.
 	 * @throws IOException 
 	 */
-	public static Structure readBiojavaStruct(String filePath) throws IOException {
+	public static Structure readFromFile(String filePath) throws IOException {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
@@ -37,7 +37,7 @@ public class MmtfActions {
 	 * @param path the full path of the file to write
 	 * @throws IOException
 	 */
-	public static void writeBiojavaStruct(Structure structure, String path) throws IOException {
+	public static void writeToFile(Structure structure, String path) throws IOException {
 		// Set up this writer
 		WriterToEncoder writerToEncoder = new WriterToEncoder();
 		// Get the writer - this is what people implement
@@ -46,4 +46,19 @@ public class MmtfActions {
 		WriterUtils.writeDataToFile(writerToEncoder, path);
 	}
 
+	
+	/**
+	 * Utility function to get a Biojava structure from the REST service.
+	 * @param pdbId the PDB code of the required structure
+	 * @return a Biojava structure object relating to the input byte array
+	 * @throws IOException 
+	 */
+	public static Structure readFromWeb(String pdbId) throws IOException {
+		// Get the reader - this is the bit that people need to implement.
+		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
+		// Do the inflation
+		new DecoderToReader(new DefaultDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
+		// Get the structue
+		return mmtfStructureReader.getStructure();
+	}
 }

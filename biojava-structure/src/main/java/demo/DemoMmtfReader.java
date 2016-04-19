@@ -15,7 +15,7 @@ import org.biojava.nbio.structure.io.mmtf.MmtfUtils;
 public class DemoMmtfReader {
 
 	public static void main(String[] args) throws IOException, StructureException {
-		Structure structure = MmtfActions.readBiojavaStruct("/path/to/file");
+		Structure structure = MmtfActions.readFromFile("/path/to/file");
 		System.out.println(structure.getChains().size());
 	}
 	

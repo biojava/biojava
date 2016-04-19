@@ -13,7 +13,7 @@ public class DemoMmtfWriter {
 	public static void main(String[] args) throws IOException, StructureException {
 		MmtfUtils.setUpBioJava();
 		Structure structure = StructureIO.getStructure("4cup");
-		MmtfActions.writeBiojavaStruct(structure, "/tmp/4cup.mmtf");
+		MmtfActions.writeToFile(structure, "/tmp/4cup.mmtf");
 	}
 	
 	
