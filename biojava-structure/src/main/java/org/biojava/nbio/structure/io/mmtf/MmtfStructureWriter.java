@@ -134,7 +134,7 @@ public class MmtfStructureWriter {
 			else {
 				Integer firstBondIndex = allAtoms.indexOf(atom);
 				Integer secondBondIndex = allAtoms.indexOf(other);
-				if(firstBondIndex<secondBondIndex){
+				if(firstBondIndex>secondBondIndex){
 					// Don't add the same bond twice
 					int bondOrder = bond.getBondOrder();							
 					mmtfDecoderInterface.setInterGroupBond(firstBondIndex, secondBondIndex, bondOrder);

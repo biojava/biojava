@@ -61,7 +61,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	private List<Atom> atomsInGroup;
 
 	/** All the atoms. */
-	private List<Atom> allAtoms;
+	private Atom[] allAtoms;
+	private int atomCounter;
 
 	/** The list of EntityInformation */
 	private List<EntityInfo> entityInfoList;
@@ -75,7 +76,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	public MmtfStructureReader() {
 		structure = new StructureImpl();
 		modelNumber = 0;
-		allAtoms  = new ArrayList<>();
 		entityInfoList = new ArrayList<>();
 		chainList = new ArrayList<>();
 	}
@@ -106,6 +106,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	public void initStructure(int totalNumBonds, int totalNumAtoms, int totalNumGroups, 
 			int totalNumChains, int totalNumModels, String modelId) {
 		structure.setPDBCode(modelId);
+		allAtoms = new Atom[totalNumAtoms];
 	}
 
 
@@ -255,7 +256,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			}
 		}
 		atomsInGroup.add(atom);
-		allAtoms.add(atom);
+		allAtoms[atomCounter] = atom;
+		atomCounter++;
 	}
 
 	/* (non-Javadoc)
@@ -281,8 +283,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	public void setInterGroupBond(int indOne,
 			int indTwo, int bondOrder) {
 		// Get the atom
-		Atom atomOne = allAtoms.get(indOne);
-		Atom atomTwo = allAtoms.get(indTwo);
+		Atom atomOne = allAtoms[indOne];
+		Atom atomTwo = allAtoms[indTwo];
 		// set the new bond
 		@SuppressWarnings("unused")
 		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
