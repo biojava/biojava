@@ -5,9 +5,9 @@ import java.nio.file.Path;
 
 import org.biojava.nbio.structure.Structure;
 import org.rcsb.mmtf.decoder.DefaultDecoder;
-import org.rcsb.mmtf.decoder.DecoderToReader;
+import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.decoder.ReaderUtils;
-import org.rcsb.mmtf.encoder.WriterToEncoder;
+import org.rcsb.mmtf.encoder.AdapterToStructureData;
 import org.rcsb.mmtf.encoder.WriterUtils;
 
 /**
@@ -27,7 +27,7 @@ public class MmtfActions {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
-		new DecoderToReader(new DefaultDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
+		new StructureDataToAdapter(new DefaultDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
@@ -40,7 +40,7 @@ public class MmtfActions {
 	 */
 	public static void writeToFile(Structure structure, Path path) throws IOException {
 		// Set up this writer
-		WriterToEncoder writerToEncoder = new WriterToEncoder();
+		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
 		// Get the writer - this is what people implement
 		new MmtfStructureWriter(structure, writerToEncoder);
 		// Now write this data to file
@@ -58,7 +58,7 @@ public class MmtfActions {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
-		new DecoderToReader(new DefaultDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
+		new StructureDataToAdapter(new DefaultDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}

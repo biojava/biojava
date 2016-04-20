@@ -15,7 +15,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.StructureAdapterInterface;
-import org.rcsb.mmtf.dataholders.MmtfBean;
+import org.rcsb.mmtf.dataholders.MmtfEncodedStructure;
 
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding. 
@@ -81,7 +81,7 @@ public class MmtfStructureWriter {
 					ChemComp chemComp = group.getChemComp();
 					Character insCode = group.getResidueNumber().getInsCode();
 					if(insCode==null){
-						insCode=MmtfBean.UNAVAILABLE_CHAR_VALUE;
+						insCode=MmtfEncodedStructure.UNAVAILABLE_CHAR_VALUE;
 					}
 					char singleLetterCode = 'X';
 					if (chemComp.getOne_letter_code().charAt(0)!='?'){
@@ -91,7 +91,7 @@ public class MmtfStructureWriter {
 							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), singleLetterCode,
 							sequenceGroups.indexOf(group), MmtfUtils.getSecStructType(group));
 					for (Atom atom : atomsInGroup){
-						char altLoc = MmtfBean.UNAVAILABLE_CHAR_VALUE;
+						char altLoc = MmtfEncodedStructure.UNAVAILABLE_CHAR_VALUE;
 						if(atom.getAltLoc()!=null){
 							altLoc=atom.getAltLoc().charValue();
 						}
