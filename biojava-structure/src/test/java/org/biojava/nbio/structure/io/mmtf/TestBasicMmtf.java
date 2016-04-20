@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.biojava.nbio.structure.AminoAcidImpl;
@@ -43,7 +44,7 @@ public class TestBasicMmtf {
 	@Test
 	public void testRead() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
-		Structure structure = MmtfActions.readFromFile((classLoader.getResource("org/biojava/nbio/structure/io/mmtf/4CUP.mmtf").getPath()));
+		Structure structure = MmtfActions.readFromFile((Paths.get(classLoader.getResource("org/biojava/nbio/structure/io/mmtf/4CUP.mmtf").getPath())));
 		assertEquals(structure.getPDBCode(),"4CUP");
 		assertEquals(structure.getChains().size(),6);
 	}
@@ -74,6 +75,6 @@ public class TestBasicMmtf {
 		group.setResidueNumber(residueNumber);
 		structure.addChain(chain);
 		File tempFile = testFolder.newFile("tmpfile");
-		MmtfActions.writeToFile(structure, tempFile.getAbsolutePath());		
+		MmtfActions.writeToFile(structure, tempFile.toPath());		
 	}
 }

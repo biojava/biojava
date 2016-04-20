@@ -1,6 +1,7 @@
 package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.biojava.nbio.structure.Structure;
 import org.rcsb.mmtf.decoder.DefaultDecoder;
@@ -17,12 +18,12 @@ import org.rcsb.mmtf.encoder.WriterUtils;
 public class MmtfActions {
 	
 	/**
-	 * Utility function to get a Biojava structure from a file.
-	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @return a Biojava structure object relating to the input byte array.
+	 * Utility function to get a Structure object from a mmtf file.
+	 * @param filePath the mmtf file
+	 * @return a Structure object relating to the input byte array.
 	 * @throws IOException 
 	 */
-	public static Structure readFromFile(String filePath) throws IOException {
+	public static Structure readFromFile(Path filePath) throws IOException {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
@@ -32,12 +33,12 @@ public class MmtfActions {
 	}
 	
 	/**
-	 * Utility function to write a Biojava structure object to a path.
-	 * @param structure the structure to write
-	 * @param path the full path of the file to write
+	 * Utility function to write a Structure object to a file.
+	 * @param structure the Structure to write
+	 * @param path the file to write
 	 * @throws IOException
 	 */
-	public static void writeToFile(Structure structure, String path) throws IOException {
+	public static void writeToFile(Structure structure, Path path) throws IOException {
 		// Set up this writer
 		WriterToEncoder writerToEncoder = new WriterToEncoder();
 		// Get the writer - this is what people implement
@@ -48,9 +49,9 @@ public class MmtfActions {
 
 	
 	/**
-	 * Utility function to get a Biojava structure from the REST service.
+	 * Utility function to get a Biojava structure from the mmtf REST service.
 	 * @param pdbId the PDB code of the required structure
-	 * @return a Biojava structure object relating to the input byte array
+	 * @return a Structure object relating to the input byte array
 	 * @throws IOException 
 	 */
 	public static Structure readFromWeb(String pdbId) throws IOException {
