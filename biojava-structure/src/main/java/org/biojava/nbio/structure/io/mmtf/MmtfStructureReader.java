@@ -31,7 +31,7 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.StructureAdapterInterface;
-import org.rcsb.mmtf.dataholders.MmtfEncodedStructure;
+import org.rcsb.mmtf.dataholders.MmtfStructure;
 
 
 /**
@@ -180,7 +180,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		}
 		group.setChemComp(chemComp);
 		group.setPDBName(groupName);
-		if (insertionCode == MmtfEncodedStructure.UNAVAILABLE_CHAR_VALUE) {
+		if (insertionCode == MmtfStructure.UNAVAILABLE_CHAR_VALUE) {
 			group.setResidueNumber(chain.getChainID().trim(), groupNumber, null);
 		} else {
 			group.setResidueNumber(chain.getChainID().trim(),
