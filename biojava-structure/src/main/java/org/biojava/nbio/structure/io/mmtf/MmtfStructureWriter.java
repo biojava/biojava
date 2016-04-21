@@ -15,7 +15,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.StructureAdapterInterface;
-import org.rcsb.mmtf.dataholders.MmtfEncodedStructure;
+import org.rcsb.mmtf.dataholders.MmtfStructure;
 
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding. 
@@ -56,7 +56,9 @@ public class MmtfStructureWriter {
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
 		// TODO Get release date information
 		String releaseDate = null;
-		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), 1.0f, pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
+		// TODO Get the Rwork
+		float rWork = 1.0f;
+		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), rWork, pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
 				releaseDate, MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
 		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo));
 		// Store the bioassembly data
@@ -81,17 +83,17 @@ public class MmtfStructureWriter {
 					ChemComp chemComp = group.getChemComp();
 					Character insCode = group.getResidueNumber().getInsCode();
 					if(insCode==null){
-						insCode=MmtfEncodedStructure.UNAVAILABLE_CHAR_VALUE;
+						insCode=MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 					}
 					char singleLetterCode = 'X';
-					if (chemComp.getOne_letter_code().charAt(0)!='?'){
+					if (chemComp.getOne_letter_code().charAt(0)!='?' && chemComp.getOne_letter_code().length()==1){
 						singleLetterCode = chemComp.getOne_letter_code().charAt(0);
 					}
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 
 							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), singleLetterCode,
 							sequenceGroups.indexOf(group), MmtfUtils.getSecStructType(group));
 					for (Atom atom : atomsInGroup){
-						char altLoc = MmtfEncodedStructure.UNAVAILABLE_CHAR_VALUE;
+						char altLoc = MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 						if(atom.getAltLoc()!=null){
 							altLoc=atom.getAltLoc().charValue();
 						}
