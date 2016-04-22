@@ -23,25 +23,25 @@
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-api</artifactId>
-			<version>0.0.1-alpha5-SNAPSHOT</version>
+			<version>0.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-serialization</artifactId>
-			<version>0.0.1-alpha5-SNAPSHOT</version>
+			<version>0.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-decoder</artifactId>
-			<version>0.0.1-alpha5-SNAPSHOT</version>
+			<version>0.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-encoder</artifactId>
-			<version>0.0.1-alpha5-SNAPSHOT</version>
+			<version>0.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
