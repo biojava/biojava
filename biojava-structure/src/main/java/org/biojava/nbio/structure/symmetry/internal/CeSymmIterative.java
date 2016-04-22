@@ -224,8 +224,10 @@ public class CeSymmIterative {
 	private boolean buildAlignment() throws StructureException {
 
 		// If one level, nothing to build
-		if (levels.size() == 1)
+		if (levels.size() == 1) {
+			result.setSymmLevels(1);
 			return false;
+		}
 		
 		// Initialize a new multiple alignment
 		MultipleAlignment msa = new MultipleAlignmentImpl();
