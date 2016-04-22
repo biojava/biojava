@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class CathInstallation implements CathDatabase{
 
-	public static final String DEFAULT_VERSION = "3.5.0";
+	public static final String DEFAULT_VERSION = CathFactory.DEFAULT_VERSION;
 
 	String cathVersion;
 
