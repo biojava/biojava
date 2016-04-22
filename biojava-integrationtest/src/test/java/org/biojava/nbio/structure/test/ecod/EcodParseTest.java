@@ -47,8 +47,8 @@ import org.slf4j.LoggerFactory;
  * The most common warning is caused by residue ranges with missing terminal CA atoms,
  * which cause a warning to print.
  *
- * develop83 and earlier versions also had a number of invalid ranges, which cause
- * error messages to print.
+ * develop134, 127, 84 and earlier versions also had a number of invalid ranges, which
+ * cause error messages to print.
  *
  * Filtering log4j messages to the 'error' level will filter all but the most
  * grievous errors.
