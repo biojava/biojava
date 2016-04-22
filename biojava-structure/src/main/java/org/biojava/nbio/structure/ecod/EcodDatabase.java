@@ -23,7 +23,7 @@ package org.biojava.nbio.structure.ecod;
 import java.io.IOException;
 import java.util.List;
 
-/** General API for interacting with CATH.
+/** General API for interacting with ECOD.
  *
  * @author Spencer Bliven
  */
