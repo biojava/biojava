@@ -593,6 +593,37 @@ public class ChainImpl implements Chain, Serializable {
 				// an amino acid residue.. use for alignment
 				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
 				// AB oneLetter.length() should be one. e.g. in 1EMA it is 3 and this makes mapping residue to sequence impossible.
+				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?")) {
+					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+				}
+				str.append(oneLetter);
+			} else {
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
+			}
+		}
+		return str.toString();
+	}
+	
+	/**
+	 * Get the one letter sequence so that Sequence is guaranteed to
+	 * be the same length as seqResGroups.
+	 * Method related to https://github.com/biojava/biojava/issues/457
+	 * @return a string of the sequence guaranteed to be the same length
+	 * as seqResGroups.
+	 */
+	public String getSeqResOneLetterSeq(){
+
+		StringBuilder str = new StringBuilder();
+		for (Group g : seqResGroups) {
+			ChemComp cc = g.getChemComp();
+			if ( cc == null) {
+				logger.warn("Could not load ChemComp for group: ", g);
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
+			} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+				// an amino acid residue.. use for alignment
+				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+				// AB oneLetter.length() should be one. e.g. in 1EMA it is 3 and this makes mapping residue to sequence impossible.
 				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?") || oneLetter.length()!=1) {
 					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
 				}

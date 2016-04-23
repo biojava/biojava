@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.io.mmtf;
+	package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
 import java.util.ArrayList;

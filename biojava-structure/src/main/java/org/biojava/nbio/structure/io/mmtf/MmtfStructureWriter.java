@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
@@ -171,7 +172,15 @@ public class MmtfStructureWriter {
 			for (int i=0; i<entityChains.size(); i++) {
 				chainIndices[i] = allChains.indexOf(entityChains.get(i));
 			}
-			String sequence = entityChains.get(0).getSeqResSequence();
+			Chain chain = entityChains.get(0);
+			ChainImpl chainImpl;
+			if (chain instanceof ChainImpl){
+			chainImpl = (ChainImpl) entityChains.get(0);
+			}
+			else{
+				throw new RuntimeException();
+			}
+			String sequence = chainImpl.getSeqResOneLetterSeq();
 			mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, type);
 		}		
 	}
