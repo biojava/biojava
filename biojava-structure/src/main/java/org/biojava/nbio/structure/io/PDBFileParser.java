@@ -2431,7 +2431,7 @@ public class PDBFileParser  {
 		List<ResidueNumber> siteResidues = siteToResidueMap.get(siteID);
 
 		//if the siteResidues doesn't yet exist, make a new one.
-		if (siteResidues == null |! siteToResidueMap.containsKey(siteID.trim())){
+		if (siteResidues == null || ! siteToResidueMap.containsKey(siteID.trim())){
 			siteResidues = new ArrayList<ResidueNumber>();
 			siteToResidueMap.put(siteID.trim(), siteResidues);
 
