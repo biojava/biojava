@@ -272,16 +272,16 @@ public class ChainImpl implements Chain, Serializable {
 			Integer pos = groups.size() - 1;
 			// ARGH sometimes numbering in PDB files is confusing.
 			// e.g. PDB: 1sfe
-		/*
-		 * ATOM    620  N   GLY    93     -24.320  -6.591   4.210  1.00 46.82           N
-		 * ATOM    621  CA  GLY    93     -24.960  -6.849   5.497  1.00 47.35           C
-		 * ATOM    622  C   GLY    93     -26.076  -5.873   5.804  1.00 47.24           C
-		 * ATOM    623  O   GLY    93     -26.382  -4.986   5.006  1.00 47.56           O
-		 *    and ...
-		 * HETATM 1348  O   HOH    92     -21.853 -16.886  19.138  1.00 66.92           O
-		 * HETATM 1349  O   HOH    93     -26.126   1.226  29.069  1.00 71.69           O
-		 * HETATM 1350  O   HOH    94     -22.250 -18.060  -6.401  1.00 61.97           O
-		 */
+			/*
+			 * ATOM    620  N   GLY    93     -24.320  -6.591   4.210  1.00 46.82           N
+			 * ATOM    621  CA  GLY    93     -24.960  -6.849   5.497  1.00 47.35           C
+			 * ATOM    622  C   GLY    93     -26.076  -5.873   5.804  1.00 47.24           C
+			 * ATOM    623  O   GLY    93     -26.382  -4.986   5.006  1.00 47.56           O
+			 *    and ...
+			 * HETATM 1348  O   HOH    92     -21.853 -16.886  19.138  1.00 66.92           O
+			 * HETATM 1349  O   HOH    93     -26.126   1.226  29.069  1.00 71.69           O
+			 * HETATM 1350  O   HOH    94     -22.250 -18.060  -6.401  1.00 61.97           O
+			 */
 
 			// this check is to give in this case the entry priority that is an AminoAcid / comes first...
 			// a good example of same residue number for 2 residues is 3th3, chain T, residue 201 (a LYS and a sugar BGC covalently attached to it) - JD 2016-03-09
@@ -521,7 +521,7 @@ public class ChainImpl implements Chain, Serializable {
 			}
 		}
 		str.append("total SEQRES length: ").append(getSeqResGroups().size()).append(" total ATOM length:")
-				.append(getAtomLength()).append(" residues ").append(newline);
+		.append(getAtomLength()).append(" residues ").append(newline);
 
 		return str.toString() ;
 
@@ -592,8 +592,41 @@ public class ChainImpl implements Chain, Serializable {
 					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
 				// an amino acid residue.. use for alignment
 				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
-				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?"))
+				// AB oneLetter.length() should be one. e.g. in 1EMA it is 3 and this makes mapping residue to sequence impossible.
+				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?")) {
 					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+				}
+				str.append(oneLetter);
+			} else {
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
+			}
+		}
+		return str.toString();
+	}
+	
+	/**
+	 * Get the one letter sequence so that Sequence is guaranteed to
+	 * be the same length as seqResGroups.
+	 * Method related to https://github.com/biojava/biojava/issues/457
+	 * @return a string of the sequence guaranteed to be the same length
+	 * as seqResGroups.
+	 */
+	public String getSeqResOneLetterSeq(){
+
+		StringBuilder str = new StringBuilder();
+		for (Group g : seqResGroups) {
+			ChemComp cc = g.getChemComp();
+			if ( cc == null) {
+				logger.warn("Could not load ChemComp for group: ", g);
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
+			} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+				// an amino acid residue.. use for alignment
+				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+				// AB oneLetter.length() should be one. e.g. in 1EMA it is 3 and this makes mapping residue to sequence impossible.
+				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?") || oneLetter.length()!=1) {
+					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+				}
 				str.append(oneLetter);
 			} else {
 				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
