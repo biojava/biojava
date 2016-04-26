@@ -67,9 +67,14 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
 
-	public static String SERVER_LOCATION = "http://www.rcsb.org/pdb/files/ligand/";
+	public static final String DEFAULT_SERVER_URL = "http://files.rcsb.org/ligands/download/";
 	
-	public static boolean USE_DEFAULT = true;
+	public static String serverBaseUrl = DEFAULT_SERVER_URL;
+	
+	/**
+	 * Use default RCSB server layout (true) or internal RCSB server layout (false)
+	 */
+	public static boolean useDefaultUrlLayout = true;
 
 
 	private static File path;
@@ -359,11 +364,11 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			return false;
 		}
 		String u;
-		if(USE_DEFAULT){
-			u = SERVER_LOCATION + recordName + ".cif";
+		if(useDefaultUrlLayout){
+			u = serverBaseUrl + recordName + ".cif";
 		}
 		else{
-			u = SERVER_LOCATION + recordName.charAt(0) + "/"  + recordName +"/" + recordName + ".cif";
+			u = serverBaseUrl + recordName.charAt(0) + "/"  + recordName +"/" + recordName + ".cif";
 		}
 
 		logger.debug("downloading " + u);
