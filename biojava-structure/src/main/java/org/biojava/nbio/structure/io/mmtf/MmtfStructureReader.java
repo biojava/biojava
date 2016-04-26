@@ -1,4 +1,4 @@
-	package org.biojava.nbio.structure.io.mmtf;
+package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -171,13 +171,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		atomsInGroup = new ArrayList<Atom>();
 		// Set the CC -> empty but not null
 		ChemComp chemComp = new ChemComp();
-		if(singleLetterCode=='X'){
-			chemComp.setOne_letter_code("?");
-
-		}
-		else{
-			chemComp.setOne_letter_code("" + singleLetterCode);
-		}
+		chemComp.setOne_letter_code("" + singleLetterCode);
 		group.setChemComp(chemComp);
 		group.setPDBName(groupName);
 		if (insertionCode == MmtfStructure.UNAVAILABLE_CHAR_VALUE) {
