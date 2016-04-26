@@ -78,8 +78,8 @@ public class MmtfUtils {
 		params.setParseBioAssembly(true);
 		params.setUseInternalChainId(true);
 		// MOVE INTO BIOJAVA IF NEED BE
-		DownloadChemCompProvider.SERVER_LOCATION = extraUrl;
-		DownloadChemCompProvider.USE_DEFAULT = false;
+		DownloadChemCompProvider.serverBaseUrl = extraUrl;
+		DownloadChemCompProvider.useDefaultUrlLayout = false;
 		DownloadChemCompProvider cc = new DownloadChemCompProvider();
 		ChemCompGroupFactory.setChemCompProvider(cc);
 		cc.checkDoFirstInstall();
