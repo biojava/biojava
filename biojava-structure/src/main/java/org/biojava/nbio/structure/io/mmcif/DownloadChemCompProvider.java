@@ -67,7 +67,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
 
-	public static final String SERVER_LOCATION = "http://www.rcsb.org/pdb/files/ligand/";
+	public static String SERVER_LOCATION = "http://www.rcsb.org/pdb/files/ligand/";
+	
+	public static boolean USE_DEFAULT = true;
 
 
 	private static File path;
@@ -356,7 +358,13 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			logger.error("Could not write to temp directory {} to create the chemical component download temp file", System.getProperty("java.io.tmpdir"));
 			return false;
 		}
-		String u = SERVER_LOCATION + recordName + ".cif";
+		String u;
+		if(USE_DEFAULT){
+			u = SERVER_LOCATION + recordName + ".cif";
+		}
+		else{
+			u = SERVER_LOCATION + recordName.charAt(0) + "/"  + recordName +"/" + recordName + ".cif";
+		}
 
 		logger.debug("downloading " + u);
 
@@ -436,7 +444,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			split();
 		} catch (IOException e) {
 			logger.error("Could not split all chem comp file into individual chemical component files. Error: {}",
-				 e.getMessage());
+					e.getMessage());
 			// no point in reporting time
 			loading.set(false);
 			return;
