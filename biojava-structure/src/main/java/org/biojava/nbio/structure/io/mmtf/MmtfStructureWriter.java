@@ -87,7 +87,7 @@ public class MmtfStructureWriter {
 						insCode=MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 					}
 					char singleLetterCode = 'X';
-					if (chemComp.getOne_letter_code().charAt(0)!='?' && chemComp.getOne_letter_code().length()==1){
+					if (chemComp.getOne_letter_code().length()==1){
 						singleLetterCode = chemComp.getOne_letter_code().charAt(0);
 					}
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 

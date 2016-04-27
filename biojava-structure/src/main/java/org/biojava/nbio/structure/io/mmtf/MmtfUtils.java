@@ -78,9 +78,11 @@ public class MmtfUtils {
 		params.setParseBioAssembly(true);
 		params.setUseInternalChainId(true);
 		// MOVE INTO BIOJAVA IF NEED BE
-		//		CustomChemCompProvider cc = new CustomChemCompProvider();
-		//		ChemCompGroupFactory.setChemCompProvider(cc);
-		//		cc.checkDoFirstInstall();
+		DownloadChemCompProvider.serverBaseUrl = extraUrl;
+		DownloadChemCompProvider.useDefaultUrlLayout = false;
+		DownloadChemCompProvider cc = new DownloadChemCompProvider();
+		ChemCompGroupFactory.setChemCompProvider(cc);
+		cc.checkDoFirstInstall();
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		return cache;
@@ -271,7 +273,7 @@ public class MmtfUtils {
 		}
 		return count;
 	}
-	
+
 
 	/**
 	 * Function to get a list of atoms for a group. Only add each atom once.
@@ -344,16 +346,16 @@ public class MmtfUtils {
 	 * @param the integer index of the group type.
 	 */
 	public static void setSecStructType(Group group, int dsspIndex) {
-		 SecStrucType secStrucType = getSecStructTypeFromDsspIndex(dsspIndex);
-		 SecStrucState secStrucState = new SecStrucState(group, "MMTF_ASSIGNED", secStrucType);
-		 if(secStrucType!=null){
-		 group.setProperty("secstruc", secStrucState);
-		 }
-		 else{
-		 }
+		SecStrucType secStrucType = getSecStructTypeFromDsspIndex(dsspIndex);
+		SecStrucState secStrucState = new SecStrucState(group, "MMTF_ASSIGNED", secStrucType);
+		if(secStrucType!=null){
+			group.setProperty("secstruc", secStrucState);
+		}
+		else{
+		}
 	}
 
-	
+
 	/**
 	 * Helper function to set the DSSP type based on a numerical index.
 	 * @param dsspIndex the integer index of the type to set
