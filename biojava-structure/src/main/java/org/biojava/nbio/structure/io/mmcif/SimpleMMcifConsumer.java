@@ -1406,8 +1406,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		StringBuffer newaa = new StringBuffer();
-		newaa.append(initials);
-		newaa.append(famName);
+		newaa.append(initials)
+				.append(famName);
 
 		PDBHeader header = structure.getPDBHeader();
 		String auth = header.getAuthors();

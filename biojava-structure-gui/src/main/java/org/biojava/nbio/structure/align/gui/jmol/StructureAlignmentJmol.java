@@ -377,11 +377,12 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 			sel.append(res);
 			sel.append("/1");
 		}
-		if ( pos == 0)
+		if ( pos == 0) {
 			sel.append("none");
-		sel.append(";");
-		sel.append("backbone 0.6 ;   color orange;");
-		sel.append("select */2; color lightgrey; model 2; ");
+		}
+		sel.append(";")
+				.append("backbone 0.6 ;   color orange;")
+				.append("select */2; color lightgrey; model 2; ");
 		//jmol.evalString("select */2; color lightgrey; model 2; ");
 		List<String> pdb2 = DisplayAFP.getPDBresnum(1,afpChain,ca2);
 		sel.append("select ");
@@ -398,11 +399,11 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 			sel.append("none");
 		sel.append("; backbone 0.6 ;   color cyan;");
 		//System.out.println(sel);
-		j.append(sel);
-		// now show both models again.
-		j.append("model 0;  ");
-		j.append(LIGAND_DISPLAY_SCRIPT);
-		//color [object] cpk , set defaultColors Jmol , set defaultColors Rasmol
+		j.append(sel)
+				// now show both models again.
+				.append("model 0;  ")
+				.append(LIGAND_DISPLAY_SCRIPT);
+				//color [object] cpk , set defaultColors Jmol , set defaultColors Rasmol
 
 		// and now select the aligned residues...
 		StringBuffer buf = new StringBuffer("select ");

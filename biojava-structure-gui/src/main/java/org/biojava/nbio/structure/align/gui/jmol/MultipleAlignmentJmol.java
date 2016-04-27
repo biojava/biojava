@@ -471,9 +471,9 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 					+ colors[i].getGreen() + "," + colors[i].getBlue() + "]; ");
 		}
 
-		j.append(sel);
-		j.append("model 0;  ");
-		j.append(LIGAND_DISPLAY_SCRIPT);
+		j.append(sel)
+				.append("model 0;  ")
+				.append(LIGAND_DISPLAY_SCRIPT);
 
 		return j.toString();
 	}

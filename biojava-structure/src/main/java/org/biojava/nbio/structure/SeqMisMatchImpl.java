@@ -111,19 +111,19 @@ public class SeqMisMatchImpl implements SeqMisMatch, Serializable{
 	public String toString() {
 		StringBuffer  s = new StringBuffer();
 
-		s.append("SeqMisMatchImpl{");
-		s.append("seqNum=" );
-		s.append(seqNum );
-		s.append(", origGroup='" );
-		s.append(origGroup + '\'' );
-		s.append(", pdbGroup='" );
-		s.append(pdbGroup + '\'' );
-		s.append(", details='" );
-		s.append(details + '\'' );
-		s.append(", uniProtId='" );
-		s.append(uniProtId + '\'' );
-		s.append(", pdbResNum='" );
-		s.append(pdbResNum + '\'' );
+		s.append("SeqMisMatchImpl{")
+				.append("seqNum=")
+				.append(seqNum)
+				.append(", origGroup='")
+				.append(origGroup + '\'')
+				.append(", pdbGroup='")
+				.append(pdbGroup + '\'')
+				.append(", details='")
+				.append(details + '\'')
+				.append(", uniProtId='")
+				.append(uniProtId + '\'')
+				.append(", pdbResNum='")
+				.append(pdbResNum + '\'');
 
 		if ( insCode == null)
 			s.append(", insCode=null ") ;

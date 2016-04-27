@@ -78,28 +78,28 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	@Override
 	public String toString(){
 		StringBuffer buf = new StringBuffer("ChemComp ");
-		buf.append(id);
-		buf.append(" ");
-		buf.append(one_letter_code);
-		buf.append(" ");
-		buf.append(three_letter_code);
-		buf.append(" poly:");
-		buf.append(getPolymerType());
-		buf.append(" resi:");
-		buf.append(getResidueType());
+		buf.append(id)
+				.append(" ")
+				.append(one_letter_code)
+				.append(" ")
+				.append(three_letter_code)
+				.append(" poly:")
+				.append(getPolymerType())
+				.append(" resi:")
+				.append(getResidueType());
 		if (isStandard())
 			buf.append(" standard");
 		else
 			buf.append(" modified");
-		buf.append(" ");
+		buf.append(" ")
 
-		buf.append(name);
-		buf.append(" ");
-		buf.append(pdbx_type);
-		buf.append(" ");
-		buf.append(formula);
-		buf.append(" parent:");
-		buf.append(mon_nstd_parent_comp_id);
+				.append(name)
+				.append(" ")
+				.append(pdbx_type)
+				.append(" ")
+				.append(formula)
+				.append(" parent:")
+				.append(mon_nstd_parent_comp_id);
 		return buf.toString();
 	}
 

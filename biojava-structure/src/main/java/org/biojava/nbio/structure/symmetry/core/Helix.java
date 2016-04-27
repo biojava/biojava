@@ -151,13 +151,12 @@ public class Helix {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Permutation   : " + getPermutation() + "\n");
-		sb.append("Repeat units  : " + getRepeatUnits() + "\n");
-		sb.append("Rise          : " + getRise() + "\n");
-		sb.append("Angle         : " + Math.toDegrees(getAngle()) +"\n");
-		sb.append("Fold          : " + getFold() + "\n");
-		return sb.toString();
+		return new StringBuilder()
+				.append("Permutation   : " + getPermutation() + "\n")
+				.append("Repeat units  : " + getRepeatUnits() + "\n")
+				.append("Rise          : " + getRise() + "\n")
+				.append("Angle         : " + Math.toDegrees(getAngle()) + "\n")
+				.append("Fold          : " + getFold() + "\n").toString();
 	}
 
 	public List<List<Integer>> getLayerLines() {

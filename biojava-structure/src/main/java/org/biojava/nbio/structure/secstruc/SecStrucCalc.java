@@ -603,13 +603,13 @@ public class SecStrucCalc {
 
 		//Header Line
 		buf.append("==== Secondary Structure Definition by BioJava"
-				+ " DSSP implementation, Version October 2015 ===="+nl);
+				+ " DSSP implementation, Version October 2015 ====" + nl)
 
-		//First line with column definition
-		buf.append("  #  RESIDUE AA STRUCTURE BP1 BP2  ACC     "
-				+ "N-H-->O    O-->H-N    N-H-->O    O-->H-N    "
-				+ "TCO  KAPPA ALPHA  PHI    PSI    "
-				+ "X-CA   Y-CA   Z-CA ");
+				//First line with column definition
+				.append("  #  RESIDUE AA STRUCTURE BP1 BP2  ACC     "
+						+ "N-H-->O    O-->H-N    N-H-->O    O-->H-N    "
+						+ "TCO  KAPPA ALPHA  PHI    PSI    "
+						+ "X-CA   Y-CA   Z-CA ");
 
 		for (int i =0 ; i < groups.length ;i++){
 			buf.append(nl);

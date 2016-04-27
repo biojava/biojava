@@ -49,35 +49,35 @@ public class AlignmentResult implements Serializable
 	@Override
 public String toString(){
 		StringBuffer buf = new StringBuffer();
-		buf.append(pdb1);
-		buf.append("_");
-		buf.append(chain1);
-		buf.append(" vs. ");
-		buf.append(pdb2);
-		buf.append("_");
-		buf.append(chain2);
-		buf.append(" : ");
-		buf.append(" l1: ");
-		buf.append(length1);
-		buf.append(" l2: ");
-		buf.append(length2);
-		buf.append(" ");
+		buf.append(pdb1)
+				.append("_")
+				.append(chain1)
+				.append(" vs. ")
+				.append(pdb2)
+				.append("_")
+				.append(chain2)
+				.append(" : ")
+				.append(" l1: ")
+				.append(length1)
+				.append(" l2: ")
+				.append(length2)
+				.append(" ");
 		if ( alignments != null)
 			if ( alignments.length > 0) {
 				AlternativeAlignment a = alignments[0];
 				buf.append(a.toString());
 				int eqr = a.getEqr();
-				buf.append(" %res1: ");
-				buf.append(Math.round((eqr/(float)length2)*100));
-				buf.append(" %res2: ");
-				buf.append(Math.round((eqr/(float)length1)*100));
-				buf.append(" ");
+				buf.append(" %res1: ")
+						.append(Math.round((eqr / (float) length2) * 100))
+						.append(" %res2: ")
+						.append(Math.round((eqr / (float) length1) * 100))
+						.append(" ");
 
 			}
-		buf.append(" ioTime: ");
-		buf.append(ioTime);
-		buf.append(" compTime: ");
-		buf.append(calculationTime);
+		buf.append(" ioTime: ")
+				.append(ioTime)
+				.append(" compTime: ")
+				.append(calculationTime);
 		return buf.toString();
 
 	}

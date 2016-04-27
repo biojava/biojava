@@ -133,12 +133,12 @@ implements Comparable<StructureGroup> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(pdbName);
-		sb.append('\t');
-		sb.append(resNum.getChainId());
-		sb.append('\t');
-		sb.append(resNum.getSeqNum());
+		StringBuilder sb = new StringBuilder()
+				.append(pdbName)
+				.append('\t')
+				.append(resNum.getChainId())
+				.append('\t')
+				.append(resNum.getSeqNum());
 		if (resNum.getInsCode() != null)
 			sb.append(resNum.getInsCode());
 		sb.append('\t');

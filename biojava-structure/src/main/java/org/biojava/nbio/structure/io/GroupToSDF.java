@@ -33,10 +33,9 @@ public class GroupToSDF {
 
 	public String getText(Group thisGroup) {
 		// Fuction to convert a Group to a strign of  the MDL molnlock
-		StringBuilder sb = new StringBuilder();
-		sb.append(getHeader(thisGroup));
-		sb.append(getCtab(thisGroup));
-		return sb.toString();
+		return new StringBuilder()
+				.append(getHeader(thisGroup))
+				.append(getCtab(thisGroup)).toString();
 	}
 
 	private String getCtab(Group thisGroup){
@@ -80,16 +79,16 @@ public class GroupToSDF {
 		// Add the first line now
 		String spaceNumAtoms = getSpace(3, Integer.toString(thisGroup.getAtoms().size()));
 		String spaceNumBonds = getSpace(3, Integer.toString(numBonds));
-		header.append("\n");
-		header.append(spaceNumAtoms+thisGroup.getAtoms().size()+spaceNumBonds+numBonds+"  0  0  0  0  0  0  0  0999 V2000\n");
-		// Now add the header, atom, bond and charge information togeyher
-		outString.append(header.toString());
-		outString.append(atomList.toString());
-		outString.append(bondOrders.toString());
-		outString.append(getCharges(thisGroup));
-		// Add the final line and the $$$$ delimiter
-		outString.append("M  END\n$$$$");
-		// Get the string and return it
+		header.append("\n")
+				.append(spaceNumAtoms + thisGroup.getAtoms().size() + spaceNumBonds + numBonds + "  0  0  0  0  0  0  0  0999 V2000\n")
+				// Now add the header, atom, bond and charge information togeyher
+				.append(header.toString())
+				.append(atomList.toString())
+				.append(bondOrders.toString())
+				.append(getCharges(thisGroup))
+				// Add the final line and the $$$$ delimiter
+				.append("M  END\n$$$$");
+				// Get the string and return it
 		return outString.toString();
 	}
 
@@ -149,10 +148,9 @@ public class GroupToSDF {
 
 	private String getHeader(Group thisGroup) {
 		// Make the header info for the start of the block
-		StringBuilder sb = new StringBuilder();
-		sb.append(thisGroup.getPDBName()+"\n");
-		sb.append("Made by BioJava");
-		sb.append("\n");
-		return sb.toString();
+		return new StringBuilder()
+				.append(thisGroup.getPDBName() + "\n")
+				.append("Made by BioJava")
+				.append("\n").toString();
 	}
 }

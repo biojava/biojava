@@ -426,21 +426,21 @@ public class FileConvert {
 		String leftResName = String.format("%3s",resName);
 
 		StringBuffer s = new StringBuffer();
-		s.append(record);
-		s.append(serial);
-		s.append(" ");
-		s.append(fullName);
-		s.append(altLoc);
-		s.append(leftResName);
-		s.append(" ");
-		s.append(chainID);
-		s.append(resseq);
-		s.append("   ");
-		s.append(x);
-		s.append(y);
-		s.append(z);
-		s.append(occupancy);
-		s.append(tempfactor);
+		s.append(record)
+				.append(serial)
+				.append(" ")
+				.append(fullName)
+				.append(altLoc)
+				.append(leftResName)
+				.append(" ")
+				.append(chainID)
+				.append(resseq)
+				.append("   ")
+				.append(x)
+				.append(y)
+				.append(z)
+				.append(occupancy)
+				.append(tempfactor);
 
 		Element e = a.getElement();
 
@@ -706,10 +706,9 @@ public class FileConvert {
 	}
 
 	public static String toMMCIF(Chain chain, boolean writeHeader) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
-		sb.append(toMMCIF(chain, chain.getChainID(),chain.getInternalChainID(),writeHeader));
-		return sb.toString();
+		return new StringBuilder()
+				.append(SimpleMMcifParser.MMCIF_TOP_HEADER + "BioJava_mmCIF_file" + newline)
+				.append(toMMCIF(chain, chain.getChainID(), chain.getInternalChainID(), writeHeader)).toString();
 	}
 
 	public static String getAtomSiteHeader() {

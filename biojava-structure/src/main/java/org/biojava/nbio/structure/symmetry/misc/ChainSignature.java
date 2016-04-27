@@ -86,9 +86,9 @@ public class ChainSignature implements Comparable<ChainSignature> {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("(");
-		builder.append(representative);
-		builder.append(")");
+		builder.append("(")
+				.append(representative)
+				.append(")");
 		if (chainCount> 1) {
 			builder.append(chainCount);
 		}

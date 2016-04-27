@@ -209,14 +209,13 @@ public class ChainClusterer  {
 	public String toString() {
 		run();
 		StringBuilder builder = new StringBuilder();
-		builder.append("Sequence alignment clusters: " + seqClusters.size());
-		builder.append("\n");
+		builder.append("Sequence alignment clusters: " + seqClusters.size()).append("\n");
 		for (SequenceAlignmentCluster s: seqClusters) {
-			builder.append("# seq: ");
-			builder.append(s.getSequenceCount());
-			builder.append(" alignment length: ");
-			builder.append(s.getSequenceAlignmentLength());
-			builder.append("\n");
+			builder.append("# seq: ")
+					.append(s.getSequenceCount())
+					.append(" alignment length: ")
+					.append(s.getSequenceAlignmentLength())
+					.append("\n");
 		}
 		return builder.toString();
 	}

@@ -81,9 +81,9 @@ public class CRC64Checksum implements Checksum {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer builder = new StringBuffer();
-		builder.append(Long.toHexString(crc >>> 4));
-		builder.append(Long.toHexString(crc & 0xF));
+		StringBuffer builder = new StringBuffer()
+				.append(Long.toHexString(crc >>> 4))
+				.append(Long.toHexString(crc & 0xF));
 		for (int i = 16 - builder.length(); i > 0; --i)
 			builder.insert(0, '0');
 		return builder.toString().toUpperCase();

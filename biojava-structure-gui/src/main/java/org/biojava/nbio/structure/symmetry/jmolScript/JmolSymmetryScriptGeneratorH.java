@@ -75,15 +75,15 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		q.set(helixAxisAligner.getRotationMatrix());
 
 		// set orientation
-		s.append("moveto 0 quaternion{");
-		s.append(jMolFloat(q.x));
-		s.append(",");
-		s.append(jMolFloat(q.y));
-		s.append(",");
-		s.append(jMolFloat(q.z));
-		s.append(",");
-		s.append(jMolFloat(q.w));
-		s.append("};");
+		s.append("moveto 0 quaternion{")
+				.append(jMolFloat(q.x))
+				.append(",")
+				.append(jMolFloat(q.y))
+				.append(",")
+				.append(jMolFloat(q.z))
+				.append(",")
+				.append(jMolFloat(q.w))
+				.append("};");
 		return s.toString();
 	}
 
@@ -108,16 +108,16 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		r.mul(q);
 
 		// set orientation
-		s.append("moveto 4 quaternion{");
-		s.append(jMolFloat(r.x));
-		s.append(",");
-		s.append(jMolFloat(r.y));
-		s.append(",");
-		s.append(jMolFloat(r.z));
-		s.append(",");
-		s.append(jMolFloat(r.w));
-		s.append("}");
-		s.append(";");
+		s.append("moveto 4 quaternion{")
+				.append(jMolFloat(r.x))
+				.append(",")
+				.append(jMolFloat(r.y))
+				.append(",")
+				.append(jMolFloat(r.z))
+				.append(",")
+				.append(jMolFloat(r.w))
+				.append("}")
+				.append(";");
 		return s.toString();
 	}
 
@@ -321,22 +321,22 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		AxisAngle4d axisAngle = helixAxisAligner.getHelixLayers().getByLowestAngle().getAxisAngle();
 		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
 
-		s.append("draw axesHelical");
-		s.append(name);
-		s.append(0);
-		s.append(" ");
-		s.append("line");
+		s.append("draw axesHelical")
+				.append(name)
+				.append(0)
+				.append(" ")
+				.append("line");
 		Point3d v1 = new Point3d(axis);
 		v1.scale(AXIS_SCALE_FACTOR*(helixAxisAligner.getDimension().y + SIDE_CHAIN_EXTENSION));
 		Point3d v2 = new Point3d(v1);
 		v2.negate();
 		v1.add(centroid);
 		v2.add(centroid);
-		s.append(getJmolPoint(v1));
-		s.append(getJmolPoint(v2));
-		s.append("width 1.0 ");
-		s.append(" color red");
-		s.append(" off;");
+		s.append(getJmolPoint(v1))
+				.append(getJmolPoint(v2))
+				.append("width 1.0 ")
+				.append(" color red")
+				.append(" off;");
 		return s.toString();
 	}
 
@@ -368,28 +368,28 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		StringBuilder s = new StringBuilder();
 
 		// draw footer
-		s.append(drawFooter("Symmetry Helical", "white"));
+		s.append(drawFooter("Symmetry Helical", "white"))
 
-		// draw polygon
-		s.append(drawPolyhedron()); // draw invisibly
-		s.append(showPolyhedron());
+				// draw polygon
+				.append(drawPolyhedron()) // draw invisibly
+				.append(showPolyhedron())
 
-		// draw axes
-		s.append(drawAxes());
-		s.append(showAxes());
+				// draw axes
+				.append(drawAxes())
+				.append(showAxes());
 
 		// loop over all orientations with 4 sec. delay
 		for (int i = 0; i < getOrientationCount(); i++) {
-			s.append(deleteHeader());
-			s.append(getOrientationWithZoom(i));
-			s.append(drawHeader(getOrientationName(i), "white"));
-			s.append("delay 4;");
+			s.append(deleteHeader())
+					.append(getOrientationWithZoom(i))
+					.append(drawHeader(getOrientationName(i), "white"))
+					.append("delay 4;");
 		}
 
 		// go back to first orientation
-		s.append(deleteHeader());
-		s.append(getOrientationWithZoom(0));
-		s.append(drawHeader(getOrientationName(0), "white"));
+		s.append(deleteHeader())
+				.append(getOrientationWithZoom(0))
+				.append(drawHeader(getOrientationName(0), "white"));
 
 		return s.toString();
 	}
@@ -610,16 +610,15 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	}
 
 	private String drawHeader(String text, String color) {
-		StringBuilder s = new StringBuilder();
-		s.append("set echo top center;");
-		s.append("color echo ");
-		s.append(color);
-		s.append(";");
-		s.append("font echo 24 sanserif;");
-		s.append("echo ");
-		s.append(text);
-		s.append(";");
-		return s.toString();
+		return new StringBuilder()
+				.append("set echo top center;")
+				.append("color echo ")
+				.append(color)
+				.append(";")
+				.append("font echo 24 sanserif;")
+				.append("echo ")
+				.append(text)
+				.append(";").toString();
 	}
 
 	private String deleteHeader() {
@@ -627,15 +626,14 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	}
 
 	private String drawFooter(String text, String color) {
-		StringBuilder s = new StringBuilder();
-		s.append("set echo bottom center;");
-		s.append("color echo ");
-		s.append(color);
-		s.append(";");
-		s.append("font echo 24 sanserif;");
-		s.append("echo "+ text);
-		s.append(";");
-		return s.toString();
+		return new StringBuilder()
+				.append("set echo bottom center;")
+				.append("color echo ")
+				.append(color)
+				.append(";")
+				.append("font echo 24 sanserif;")
+				.append("echo " + text)
+				.append(";").toString();
 	}
 
 	/**
@@ -659,11 +657,10 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		Point3d centroid = helixAxisAligner.calcCenterOfRotation();
 
 		// set centroid
-		StringBuilder s = new StringBuilder();
-		s.append("center");
-		s.append(getJmolPoint(centroid));
-		s.append(";");
-		return s.toString();
+		return new StringBuilder()
+				.append("center")
+				.append(getJmolPoint(centroid))
+				.append(";").toString();
 	}
 
 }
