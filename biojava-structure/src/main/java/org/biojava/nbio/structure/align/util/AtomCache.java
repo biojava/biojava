@@ -152,12 +152,6 @@ public class AtomCache {
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
 
-		// we don't need this here
-		params.setAlignSeqRes(false);
-		// no secstruc either
-		params.setParseSecStruc(false);
-		//
-
 		setUseMmCif(true);
 
 	}
