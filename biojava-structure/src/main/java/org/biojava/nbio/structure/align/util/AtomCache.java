@@ -826,7 +826,7 @@ public class AtomCache {
 	 * Set whether to use mmtf.
 	 * @param bool the input boolean to set
 	 */
-	private void setUseMmtf(boolean bool) {
+	public void setUseMmtf(boolean bool) {
 		useMmtf = bool;
 		
 	}
