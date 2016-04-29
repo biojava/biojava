@@ -54,12 +54,21 @@ public class ChargeAdder {
 					ChemComp thisChemComp = ChemCompGroupFactory.getChemComp(g.getPDBName());
 					List<ChemCompAtom> chemAtoms = thisChemComp.getAtoms();
 					for(ChemCompAtom chemCompAtom : chemAtoms) {
-						Atom atom = g.getAtom(chemCompAtom.getAtom_id());
-
+						Atom atom = g.getAtom(chemCompAtom.getAtom_id());	
 						String stringCharge = chemCompAtom.getCharge();
 						short shortCharge = 0;
 						if (stringCharge!=null){
-							shortCharge = Short.parseShort(stringCharge);
+							if(!stringCharge.equals("?")){
+								try{
+									shortCharge = Short.parseShort(stringCharge);
+								}
+								catch(NumberFormatException e){
+									logger.warn("Number format exception. Parsing '"+stringCharge+"' to short");
+								}
+							}
+							else{
+								logger.warn("? charge on atom "+chemCompAtom.getAtom_id()+" in group "+thisChemComp.getId());
+							}
 						}
 						else{
 							logger.warn("Null charge on atom "+chemCompAtom.getAtom_id()+" in group "+thisChemComp.getId());
