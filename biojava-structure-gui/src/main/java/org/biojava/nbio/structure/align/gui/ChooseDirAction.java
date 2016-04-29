@@ -62,14 +62,7 @@ public class ChooseDirAction extends AbstractAction{
 		if ( txt != null){
 			chooser.setCurrentDirectory(new java.io.File(txt));
 			config.setPdbFilePath(txt);
-			try {
-				PersistentConfig webstartConfig = new PersistentConfig();
 
-				webstartConfig.save(config);
-
-			} catch (Exception e){
-				e.printStackTrace();
-			}
 		}
 		chooser.setDialogTitle("Choose directory that contains your PDB files");
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
