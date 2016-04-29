@@ -25,7 +25,6 @@
 package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.align.webstart.PersistentConfig;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 
 import javax.swing.*;
