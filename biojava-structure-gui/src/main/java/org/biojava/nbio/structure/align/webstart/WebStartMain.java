@@ -40,7 +40,6 @@ import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 
-import javax.jnlp.UnavailableServiceException;
 import javax.swing.*;
 
 import java.io.File;
