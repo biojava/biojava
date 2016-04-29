@@ -16,31 +16,11 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <repositories>
-        <!-- Used for javaws:javaws -->
-        <repository>
-            <id>biojava-maven-repo</id>
-            <name>BioJava repository</name>
-            <url>http://www.biojava.org/download/maven/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javaws</groupId>
-            <artifactId>javaws</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.biojava</groupId>
@@ -94,7 +74,7 @@
     <build>
         <plugins>
 
-			<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
+	<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -107,5 +87,6 @@
         
         </plugins>
     </build>
+
 
 </project>

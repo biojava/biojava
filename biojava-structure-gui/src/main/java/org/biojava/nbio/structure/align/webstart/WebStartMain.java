@@ -229,29 +229,10 @@ public class WebStartMain
 
 	public static UserConfiguration getWebStartConfig(){
 
-		if ( userConfig == null) {
-			try {
-				PersistentConfig webstartConfig = new PersistentConfig();
-
-				userConfig = webstartConfig.load();
-
-			} catch (Exception e){
-				System.err.println(e.getMessage());
-			}
-		}
-
 		// check if we could load it (i.e. we are running in web start mode)
 		if ( userConfig == null ) {
 			userConfig = WebStartMain.getDefaultConfig();
 
-			try {
-				PersistentConfig webstartConfig = new PersistentConfig();
-
-				webstartConfig.save(userConfig);
-
-			} catch (UnavailableServiceException e){
-				System.err.println(e.getMessage());
-			}
 		}
 
 		return userConfig;
@@ -270,18 +251,6 @@ public class WebStartMain
 		return userConfig;
 	}
 
-	public static void persistConfig(UserConfiguration config){
-
-		try {
-			PersistentConfig webstartConfig = new PersistentConfig();
-
-			webstartConfig.save(config);
-
-		} catch (UnavailableServiceException e){
-			e.printStackTrace();
-		}
-
-	}
 
 	public static UserConfiguration requestUserConfig(){
 
