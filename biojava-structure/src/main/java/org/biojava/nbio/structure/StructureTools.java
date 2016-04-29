@@ -1269,7 +1269,11 @@ public class StructureTools {
 		} else {
 			atoms = getAtomArray(chain, atomNames);
 		}
-
+		// If tha
+		if(atoms.length==0){ 
+			logger.warn("No atoms found for buidling grid!");
+			return new AtomContactSet(cutoff);
+		}
 		grid.addAtoms(atoms);
 
 		return grid.getContacts();
