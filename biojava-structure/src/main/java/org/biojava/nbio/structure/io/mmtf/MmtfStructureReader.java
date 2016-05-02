@@ -126,10 +126,12 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 */
 	@Override
 	public void setChainInfo(String chainId, String chainName, int groupCount) {
+
+
 		// First check to see if the chain exists
 		boolean newChain = true;
 		for (Chain c: structure.getChains(modelNumber)) {
-			if (c.getChainID().equals(chainId)) {
+			if (c.getChainID().equals(chainName)) {
 				newChain = false;
 				chain = c;
 				break;
@@ -138,7 +140,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// If we need to set a new chain do this
 		if (newChain){
 			chain = new ChainImpl();
-			chain.setChainID(chainId.trim());
+			chain.setChainID(chainName.trim());
 			structure.addChain(chain, modelNumber);
 			chainList.add(chain);
 		}
