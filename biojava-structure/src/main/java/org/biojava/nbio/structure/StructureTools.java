@@ -34,6 +34,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
@@ -1269,7 +1272,11 @@ public class StructureTools {
 		} else {
 			atoms = getAtomArray(chain, atomNames);
 		}
-
+		// If tha
+		if(atoms.length==0){ 
+			logger.warn("No atoms found for buidling grid!");
+			return new AtomContactSet(cutoff);
+		}
 		grid.addAtoms(atoms);
 
 		return grid.getContacts();
@@ -1820,6 +1827,56 @@ public class StructureTools {
 					}
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Expands the NCS operators in the given Structure adding new chains as needed.
+	 * The new chains are assigned ids of the form: original_chain_id+ncs_operator_index+"n"
+	 * @param structure
+	 */
+	public static void expandNcsOps(Structure structure) {
+		PDBCrystallographicInfo xtalInfo = structure.getCrystallographicInfo();
+		if (xtalInfo ==null) return;
+		
+		if (xtalInfo.getNcsOperators()==null || xtalInfo.getNcsOperators().length==0) return;
+		
+		List<Chain> chainsToAdd = new ArrayList<>();
+		int i = 0;
+		for (Matrix4d m:xtalInfo.getNcsOperators()) {
+			i++;
+			
+			for (Chain c:structure.getChains()) {
+				Chain clonedChain = (Chain)c.clone();
+				String newChainId = c.getChainID()+i+"n";
+				clonedChain.setChainID(newChainId);
+				clonedChain.setInternalChainID(newChainId);
+				setChainIdsInResidueNumbers(clonedChain, newChainId);
+				Calc.transform(clonedChain, m);
+				chainsToAdd.add(clonedChain);
+				c.getEntityInfo().addChain(clonedChain);
+			}
+		}
+		
+		for (Chain c:chainsToAdd) {
+			structure.addChain(c);
+		}
+	}
+	
+	/**
+	 * Auxiliary method to reset chain ids of residue numbers in a chain.
+	 * Used when cloning chains and resetting their ids: one needs to take care of 
+	 * resetting the ids within residue numbers too.
+	 * @param c
+	 * @param newChainId
+	 */
+	private static void setChainIdsInResidueNumbers(Chain c, String newChainId) {
+		for (Group g:c.getAtomGroups()) {
+			g.setResidueNumber(newChainId, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
+		}
+		for (Group g:c.getSeqResGroups()) {
+			if (g.getResidueNumber()==null) continue;
+			g.setResidueNumber(newChainId, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
 		}
 	}
 }

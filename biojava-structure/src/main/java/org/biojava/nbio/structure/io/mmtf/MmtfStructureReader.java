@@ -431,6 +431,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// Now loop through the chain ids and make a list of them
 		for( int index : chainIndices) {
 			chains.add(chainList.get(index));
+			chainList.get(index).setEntityInfo(entityInfo);
 		}
 		entityInfo.setChains(chains);
 		entityInfoList.add(entityInfo);
