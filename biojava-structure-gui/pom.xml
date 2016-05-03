@@ -3,7 +3,7 @@
     <parent>
         <artifactId>biojava</artifactId>
         <groupId>org.biojava</groupId>
-        <version>4.2.1-SNAPSHOT</version>
+        <version>4.2.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>biojava-structure-gui</artifactId>
@@ -25,13 +25,13 @@
         <dependency>
             <groupId>org.biojava</groupId>
             <artifactId>biojava-structure</artifactId>
-            <version>4.2.1-SNAPSHOT</version>
+            <version>4.2.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.biojava</groupId>
             <artifactId>biojava-core</artifactId>
-            <version>4.2.1-SNAPSHOT</version>
+            <version>4.2.1</version>
             <scope>compile</scope>
         </dependency>
 
