@@ -466,12 +466,27 @@ public interface Structure extends Cloneable {
 
 
 	/**
-	 * Check if a chain with the name authId is contained in this structure.
+	 * Check if a chain with the chainId aymId is contained in this structure.
 	 *
-	 * @param authId the name of the chain
-	 * @return true if a chain with the name authId is found
+	 * @param asymId the Id of the chain
+	 * @return true if a chain with the id asymId is found
 	 */
-	 boolean hasChain(String authId);
+	 boolean hasChain(String asymId);
+
+	/** Check if a non polymeric chain with chainId asymId is contained in the structure.
+	 *
+	 * @param asymId the id of the chain
+	 * @return true if a nonpolymeric chain with the asymId is found
+     */
+	boolean hasNonPolyChain(String asymId);
+
+
+	/** Check if a chain  with chain name authId is contained in the structure
+	 *
+	 * @param authId the chain name
+	 * @return true if a chain with the name authId is found
+     */
+	public boolean hasPdbChain(String authId) ;
 
 	/**
 	 * Request a particular chain from a particular model
@@ -543,7 +558,7 @@ public interface Structure extends Cloneable {
 	 * @return a polymeric chain
 	 * @throws StructureException
 	 */
-	 Chain getPolyChainByPdb(String authId)
+	 Chain getPolyChainByPDB(String authId)
 			throws StructureException;
 
 	/** Retrieve a non-polymeric chain based on the 'public' chain
@@ -552,7 +567,7 @@ public interface Structure extends Cloneable {
 	 * @return a non-polymeric chain
 	 * @throws StructureException
 	 */
-	 Chain getNonPolyChainByPdb(String authId)
+	 Chain getNonPolyChainByPDB(String authId)
 			throws StructureException;
 
 	 /**

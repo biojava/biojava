@@ -564,7 +564,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 	private Group getCorrectAltLocGroup( Character altLoc,
-			String recordName, Character aminoCode1, String groupCode3, long seq_id) {
+										 String recordName,
+										 Character aminoCode1,
+										 String groupCode3,
+										 long seq_id) {
 
 		// see if we know this altLoc already;
 		List<Atom> atoms = current_group.getAtoms();

@@ -713,7 +713,7 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 	@Override
-	public Chain getPolyChainByPdb(String authId) throws StructureException {
+	public Chain getPolyChainByPDB(String authId) throws StructureException {
 		List<Chain> polyChains = models.get(0).getPolyChains();
 		for (Chain c : polyChains){
 			if (c.getName().equals(authId))
@@ -724,7 +724,7 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 	@Override
-	public Chain getNonPolyChainByPdb(String authId) throws StructureException {
+	public Chain getNonPolyChainByPDB(String authId) throws StructureException {
 		List<Chain> nonpolyChains = models.get(0).getNonPolyChains();
 		for (Chain c : nonpolyChains){
 			if (c.getName().equals(authId))
@@ -751,13 +751,43 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean hasChain(String chainId) {
+	public boolean hasChain(String authId) {
 		int modelnr = 0;
 
 		List<Chain> chains = getChains(modelnr);
 		for (Chain c : chains) {
 			// we check here with equals because we might want to distinguish between upper and lower case chains!
-			if (c.getChainID().equals(chainId)) {
+			if (c.getId().equals(authId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean hasNonPolyChain(String asymId){
+		int modelnr = 0;
+
+		List<Chain> chains = models.get(modelnr).getNonPolyChains();
+		for (Chain c : chains) {
+			// we check here with equals because we might want to distinguish between upper and lower case chains!
+			if (c.getId().equals(asymId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean hasPdbChain(String authId) {
+		int modelnr = 0;
+
+		List<Chain> chains = getChains(modelnr);
+		for (Chain c : chains) {
+			// we check here with equals because we might want to distinguish between upper and lower case chains!
+			if (c.getName().equals(authId)) {
 				return true;
 			}
 		}

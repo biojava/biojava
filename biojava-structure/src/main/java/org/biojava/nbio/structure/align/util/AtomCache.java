@@ -27,17 +27,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import org.biojava.nbio.core.util.InputStreamProvider;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomPositionMap;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.ResidueRangeAndLength;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.cath.CathDatabase;
 import org.biojava.nbio.structure.cath.CathDomain;
@@ -493,12 +483,22 @@ public class AtomCache {
 			map = new AtomPositionMap(StructureTools.getAllAtomArray(fullStructure), AtomPositionMap.ANYTHING_MATCHER);
 			rrs = ResidueRangeAndLength.parseMultiple(domain.getRanges(), map);
 		}
-		for (Chain chain : fullStructure.getChains()) {
-			if (!structure.hasChain(chain.getChainID())) {
+		for (Chain chain : fullStructure.getNonPolyChains()) {
+
+			if (!structure.hasPdbChain(chain.getName())) {
 				continue; // we can't do anything with a chain our domain
 			}
-			// doesn't contain
-			Chain newChain = structure.getChainByPDB(chain.getChainID());
+
+			Chain newChain;
+			if (! structure.hasNonPolyChain(chain.getId())) {
+				newChain = new ChainImpl();
+				newChain.setId(chain.getId());
+				newChain.setName(chain.getName());
+				newChain.setEntityInfo(chain.getEntityInfo());
+				structure.addChain(newChain);
+			} else {
+				newChain = structure.getNonPolyChain(chain.getId());
+			}
 			List<Group> ligands = StructureTools.filterLigands(chain.getAtomGroups());
 			for (Group group : ligands) {
 				boolean shouldContain = true;
@@ -513,7 +513,9 @@ public class AtomCache {
 				boolean alreadyContains = newChain.getAtomGroups().contains(group); // we don't want to add duplicate
 																					// ligands
 				if (shouldContain && !alreadyContains) {
+
 					newChain.addGroup(group);
+
 				}
 			}
 		}
@@ -857,7 +859,7 @@ public class AtomCache {
 		// add the ligands of the chain...
 
 		Chain newChain = n.getChainByPDB(structureName.getChainId());
-		Chain origChain = s.getChainByPDB(structureName.getChainId());
+		Chain origChain = s.getNonPolyChainByPDB(structureName.getChainId());
 		List<Group> ligands = origChain.getAtomLigands();
 
 		for (Group g : ligands) {
