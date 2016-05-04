@@ -52,7 +52,7 @@ public class StructureGroupXMLConverter {
 		String isAminoAcid = getAttribute(n,"isAminoAcid");
 
 		ResidueNumber resNum = new ResidueNumber();
-		resNum.setChainId(chainID);
+		resNum.setChainName(chainID);
 		if ( ( insCode != null) && (! insCode.equals("null")) && insCode.length() == 1)
 		resNum.setInsCode(insCode.charAt(0));
 		resNum.setSeqNum(Integer.parseInt(resN));

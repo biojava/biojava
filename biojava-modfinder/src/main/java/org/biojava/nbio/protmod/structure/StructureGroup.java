@@ -62,13 +62,13 @@ implements Comparable<StructureGroup> {
 		this.resNum = resNum;
 	}
 	public String getChainId() {
-		return resNum.getChainId();
+		return resNum.getChainName();
 	}
 
 	public void setChainId(String chainId){
 		if ( resNum == null)
 			resNum = new ResidueNumber();
-		resNum.setChainId(chainId);
+		resNum.setChainName(chainId);
 	}
 
 	public int getResidueNumber() {
@@ -136,7 +136,7 @@ implements Comparable<StructureGroup> {
 		StringBuilder sb = new StringBuilder();
 		sb.append(pdbName);
 		sb.append('\t');
-		sb.append(resNum.getChainId());
+		sb.append(resNum.getChainName());
 		sb.append('\t');
 		sb.append(resNum.getSeqNum());
 		if (resNum.getInsCode() != null)

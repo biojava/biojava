@@ -40,9 +40,6 @@ public class Test1o2f extends TestCase{
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
-		FileParsingParameters params = cache.getFileParsingParams();
-		params.setUseInternalChainId(true);
-		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		String pdbId = "1O2F";
 		structure = StructureIO.getStructure(pdbId);
