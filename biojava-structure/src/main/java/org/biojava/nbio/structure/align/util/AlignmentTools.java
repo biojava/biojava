@@ -590,8 +590,8 @@ public class AlignmentTools {
 
 		String[][][] pdbAln = new String[1][2][alnLen];
 		for(int i=0;i<alnLen;i++) {
-			pdbAln[0][0][i] = aligned1[i].getChainId()+":"+aligned1[i];
-			pdbAln[0][1][i] = aligned2[i].getChainId()+":"+aligned2[i];
+			pdbAln[0][0][i] = aligned1[i].getChainName()+":"+aligned1[i];
+			pdbAln[0][1][i] = aligned2[i].getChainName()+":"+aligned2[i];
 		}
 
 		a.setPdbAln(pdbAln);
@@ -1163,8 +1163,8 @@ public class AlignmentTools {
 				ResidueNumber rn1 = ca1[res1].getGroup().getResidueNumber();
 				ResidueNumber rn2 = ca2[res2].getGroup().getResidueNumber();
 
-				String node1 = name1+rn1.getChainId()+rn1.toString();
-				String node2 = name2+rn2.getChainId()+rn2.toString();
+				String node1 = name1+rn1.getChainName()+rn1.toString();
+				String node2 = name2+rn2.getChainName()+rn2.toString();
 
 				out.write(String.format("%s\t%s\t%s\n",node1, alignmentInteraction, node2));
 			}
@@ -1172,10 +1172,10 @@ public class AlignmentTools {
 
 		// Print first backbone edges
 		ResidueNumber rn = ca1[0].getGroup().getResidueNumber();
-		String last = name1+rn.getChainId()+rn.toString();
+		String last = name1+rn.getChainName()+rn.toString();
 		for(int i=1;i<ca1.length;i++) {
 			rn = ca1[i].getGroup().getResidueNumber();
-			String curr = name1+rn.getChainId()+rn.toString();
+			String curr = name1+rn.getChainName()+rn.toString();
 			out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
 			last = curr;
 		}
@@ -1188,10 +1188,10 @@ public class AlignmentTools {
 				(ca1.length>0 && ca1[0].getGroup()!=null && ca2[0].getGroup()!=null &&
 						!ca1[0].getGroup().getResidueNumber().equals(ca2[0].getGroup().getResidueNumber()) ) ) {
 			rn = ca2[0].getGroup().getResidueNumber();
-			last = name2+rn.getChainId()+rn.toString();
+			last = name2+rn.getChainName()+rn.toString();
 			for(int i=1;i<ca2.length;i++) {
 				rn = ca2[i].getGroup().getResidueNumber();
-				String curr = name2+rn.getChainId()+rn.toString();
+				String curr = name2+rn.getChainName()+rn.toString();
 				out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
 				last = curr;
 			}

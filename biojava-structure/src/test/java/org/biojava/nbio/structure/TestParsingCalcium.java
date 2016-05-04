@@ -50,8 +50,8 @@ public class TestParsingCalcium {
 
 		Structure m = cache.getStructure(pdbID);
 
-		Group g1 = s.getChainByPDB("A").getGroupByPDB(new ResidueNumber("A",995,null));
-		Group g2 = m.getChainByPDB("A").getGroupByPDB(new ResidueNumber("A",995,null));
+		Group g1 = s.getNonPolyChainByPDB("A").getGroupByPDB(new ResidueNumber("A",995,null));
+		Group g2 = m.getNonPolyChainByPDB("A").getGroupByPDB(new ResidueNumber("A",995,null));
 
 		// can't do that! the atom index is not the same!
 		//assertEquals(g1.getAtom(0).toPDB(),g2.getAtom(0).toPDB());

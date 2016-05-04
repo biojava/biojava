@@ -173,13 +173,13 @@ public class TestDifficultMmCIFFiles {
 
 		Structure s = cache.getStructure("2PTC");
 		Chain c = s.getChain(0);
-
-		assertEquals("Wrong first chain",c.getChainID(),"E");
+		System.out.println(c);
+		assertEquals("Wrong first chain",c.getName(),"E");
 
 		Group res = c.getAtomGroup(0);
 		ResidueNumber resNum = res.getResidueNumber();
 
-		assertEquals("Groups have wrong chain in resnum",resNum.getChainId(),"E");
+		assertEquals("Groups have wrong chain in resnum",resNum.getChainName(),"E");
 	}
 
 	@Test

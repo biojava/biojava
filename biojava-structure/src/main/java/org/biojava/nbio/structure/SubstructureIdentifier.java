@@ -215,9 +215,9 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 						// Handle special case of "_" chain for single-chain proteins
 						chain = s.getChain(modelNr,0);
 						if(pdbresnum1 != null)
-							pdbresnum1.setChainId(chain.getChainID());
+							pdbresnum1.setChainName(chain.getName());
 						if(pdbresnum2 != null)
-							pdbresnum2.setChainId(chain.getChainID());
+							pdbresnum2.setChainName(chain.getName());
 
 						if(s.size() != 1) {
 							// SCOP 1.71 uses this for some proteins with multiple chains

@@ -443,10 +443,10 @@ public class HetatomImpl implements Group,Serializable {
 	@Override
 	public void setChain(Chain chain) {
 		this.parent = chain;
-		//TODO: setChain(), getChainId() and ResidueNumber.set/getChainId() are
+		//TODO: setChain(), getChainName() and ResidueNumber.set/getChainName() are
 		//duplicating functionality at present and could give different values.
 		if (residueNumber != null) {
-			residueNumber.setChainId(chain.getChainID());
+			residueNumber.setChainName(chain.getName());
 		}
 
 	}

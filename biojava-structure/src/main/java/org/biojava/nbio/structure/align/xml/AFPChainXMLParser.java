@@ -511,30 +511,30 @@ public class AFPChainXMLParser
 
 	/** get the position of PDB residue nr X in the ato marray
 	 *
-	 * @param pdbresnum
-	 * @param chainId
-	 * @param atoms
+	 * @param pdbresnum pdbresidue number
+	 * @param authId chain name
+	 * @param atoms atom array
 	 * @return
 	 */
-	private static int getPositionForPDBresunm(String pdbresnum, String chainId , Atom[] atoms){
+	private static int getPositionForPDBresunm(String pdbresnum, String authId , Atom[] atoms){
 		ResidueNumber residueNumber =  ResidueNumber.fromString(pdbresnum);
-		residueNumber.setChainId(chainId);
+		residueNumber.setChainName(authId);
 
-		boolean blankChain = chainId == null || chainId.equalsIgnoreCase("null") || chainId.equals("_");
+		boolean blankChain = authId == null || authId.equalsIgnoreCase("null") || authId.equals("_");
 
 		for ( int i =0; i< atoms.length ;i++){
 			Group g = atoms[i].getGroup();
 
 			// match _ to any chain
 			if( blankChain ) {
-				residueNumber.setChainId(g.getChainId());
+				residueNumber.setChainName(g.getChain().getName());
 			}
 
 			//System.out.println(g.getResidueNumber() + "< ? >" + residueNumber +"<");
 			if ( g.getResidueNumber().equals(residueNumber)){
 				//System.out.println(g + " == " + residueNumber );
 				Chain c = g.getChain();
-				if ( blankChain || c.getChainID().equals(chainId)){
+				if ( blankChain || c.getName().equals(authId)){
 					return i;
 				}
 			}

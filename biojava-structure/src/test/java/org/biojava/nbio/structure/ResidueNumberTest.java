@@ -63,7 +63,7 @@ public class ResidueNumberTest extends TestCase {
 //        System.out.println("getChainName");
 		ResidueNumber instance = new ResidueNumber("A", 42, ' ');
 		String expResult = "A";
-		String result = instance.getChainId();
+		String result = instance.getChainName();
 		assertEquals(expResult, result);
 	}
 

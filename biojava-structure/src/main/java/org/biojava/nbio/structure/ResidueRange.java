@@ -91,13 +91,13 @@ public class ResidueRange {
 				chain = matcher.group(1);
 				if (matcher.group(2) != null) {
 					start = ResidueNumber.fromString(matcher.group(2));
-					start.setChainId(chain);
+					start.setChainName(chain);
 					if(matcher.group(3) == null) {
 						// single-residue range
 						end = start;
 					} else {
 						end = ResidueNumber.fromString(matcher.group(3));
-						end.setChainId(chain);
+						end.setChainName(chain);
 					}
 				}
 				return new ResidueRange(chain, start, end);
@@ -137,9 +137,9 @@ public class ResidueRange {
 	public ResidueRange(String chainName, String start, String end) {
 		this.chainName = chainName;
 		this.start = ResidueNumber.fromString(start);
-		this.start.setChainId(chainName);
+		this.start.setChainName(chainName);
 		this.end = ResidueNumber.fromString(end);
-		this.end.setChainId(chainName);
+		this.end.setChainName(chainName);
 	}
 
 	public ResidueRange(String chainName, ResidueNumber start, ResidueNumber end) {

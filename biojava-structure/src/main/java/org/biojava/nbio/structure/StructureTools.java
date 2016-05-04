@@ -775,12 +775,14 @@ public class StructureTools {
 			if (c == null) {
 				c = new ChainImpl();
 				Chain orig = a.getGroup().getChain();
-				c.setChainID(orig.getChainID());
+				c.setId(orig.getId());
+				c.setName(orig.getName());
 			} else {
 				Chain orig = a.getGroup().getChain();
-				if (!orig.getChainID().equals(prevChainId)) {
+				if (!orig.getId().equals(prevChainId)) {
 					c = new ChainImpl();
-					c.setChainID(orig.getChainID());
+					c.setId(orig.getId());
+					c.setName(orig.getName());
 				}
 			}
 
@@ -799,12 +801,14 @@ public class StructureTools {
 			if (c == null) {
 				c = new ChainImpl();
 				Chain orig = a.getGroup().getChain();
-				c.setChainID(orig.getChainID());
+				c.setId(orig.getId());
+				c.setName(orig.getName());
 			} else {
 				Chain orig = a.getGroup().getChain();
-				if (!orig.getChainID().equals(prevChainId)) {
+				if (!orig.getId().equals(prevChainId)) {
 					c = new ChainImpl();
-					c.setChainID(orig.getChainID());
+					c.setId(orig.getId());
+					c.setName(orig.getName());
 				}
 			}
 
@@ -1242,7 +1246,7 @@ public class StructureTools {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 
-		Chain chain = struc.findChain(pdbResNum.getChainId());
+		Chain chain = struc.findChain(pdbResNum.getChainName());
 
 		return chain.getGroupByPDB(pdbResNum);
 	}

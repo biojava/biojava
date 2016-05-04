@@ -113,7 +113,7 @@ public class SourceCompoundTest extends TestCase{
 		for (EntityInfo compound : s3.getEntityInfos()){
 			/*System.out.println(compound.getMolId());
 			System.out.println(compound.getMolName());
-			System.out.println(compound.getChainId().toString());
+			System.out.println(compound.getChainName().toString());
 			System.out.println(compound.getOrganismScientific());
 			System.out.println(compound.getStrain());
 	*/
@@ -132,7 +132,7 @@ public class SourceCompoundTest extends TestCase{
 			if (compound.getMolId()==1) {
 				/*System.out.println(compound.getMolId());
 				System.out.println(compound.getMolName());
-				System.out.println(compound.getChainId().toString());
+				System.out.println(compound.getChainName().toString());
 				System.out.println(compound.getFragment());
 				System.out.println(compound.getEngineered());
 				System.out.println(compound.getOrganismScientific());

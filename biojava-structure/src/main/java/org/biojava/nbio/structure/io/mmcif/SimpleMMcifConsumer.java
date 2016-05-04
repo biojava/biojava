@@ -952,7 +952,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			// note we have to deep copy this, otherwise they stay linked and would get altered in addGroup(g)
 			ResidueNumber currentResNum = new ResidueNumber(
-					g.getResidueNumber().getChainId(),
+					g.getResidueNumber().getChainName(),
 					g.getResidueNumber().getSeqNum(),
 					g.getResidueNumber().getInsCode());
 

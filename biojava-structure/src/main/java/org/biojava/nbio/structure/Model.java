@@ -50,7 +50,7 @@ public class Model {
 
     public void addChain(Chain c) {
         EntityInfo info = c.getEntityInfo();
-        if ( info == null) {
+        if ( info == null || info.getType() == null) {
 
             polyChains.add(c);
         } else if ( info.getType().equals(EntityType.POLYMER)){

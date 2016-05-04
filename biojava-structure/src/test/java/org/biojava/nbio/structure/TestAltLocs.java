@@ -77,7 +77,7 @@ public class TestAltLocs {
 
 
 		ResidueNumber resNum = ResidueNumber.fromString("273");
-		resNum.setChainId("A");
+		resNum.setChainName("A");
 
 		Group g = a.getGroupByPDB(resNum);
 

@@ -2486,7 +2486,7 @@ public class PDBFileParser  {
 
 			logger.debug("pdbCode: '" + resNum + insCode + "'");
 
-			residueNumber.setChainId(chainId);
+			residueNumber.setChainName(chainId);
 			residueNumber.setSeqNum(resNum);
 			residueNumber.setInsCode(insCode);
 			//add the resNum to the groups
@@ -3160,7 +3160,7 @@ public class PDBFileParser  {
 			for (ResidueNumber residueNumber : linkedGroups) {
 
 				String pdbCode = residueNumber.toString();
-				String chain = residueNumber.getChainId();
+				String chain = residueNumber.getChainName();
 				//                    System.out.println("chain: '" + chain + "'");
 				//                    String resNum = resNum.getSeqNum().toString();
 				//                    System.out.println("resNum: '" + resNum + "'");
