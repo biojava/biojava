@@ -771,6 +771,7 @@ public class PDBFileParser  {
 
 			current_chain = new ChainImpl();
 			current_chain.setChainID(chainID);
+			current_chain.setName(chainID);
 
 		}
 
@@ -1649,6 +1650,7 @@ public class PDBFileParser  {
 		if (current_chain == null) {
 			current_chain = new ChainImpl();
 			current_chain.setChainID(chain_id);
+			current_chain.setName(chain_id);
 			startOfNewChain = true;
 			current_model.add(current_chain);
 		}
@@ -1679,7 +1681,7 @@ public class PDBFileParser  {
 
 				current_chain = new ChainImpl();
 				current_chain.setChainID(chain_id);
-
+				current_chain.setName(chain_id);
 			}   else {
 				current_chain = testchain;
 			}
@@ -3063,12 +3065,14 @@ public class PDBFileParser  {
 				continue;
 			}
 			for ( String chainId : compoundMolIds2chainIds.get(comp.getMolId())){
+
 				if ( chainId.equals("NULL"))
 					continue;
 				try {
 					Chain c = s.getChainByPDB(chainId);
 					c.setEntityInfo(comp);
 				} catch (StructureException e){
+
 					logger.warn("Chain {} was not found, can't assign a compound (entity) to it.",chainId);
 				}
 			}

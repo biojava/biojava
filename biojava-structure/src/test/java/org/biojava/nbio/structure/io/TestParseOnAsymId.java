@@ -41,7 +41,7 @@ public class TestParseOnAsymId {
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		FileParsingParameters params = cache.getFileParsingParams();
-		params.setUseInternalChainId(true);
+
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		// Set the test lists
@@ -62,8 +62,6 @@ public class TestParseOnAsymId {
 		assertArrayEquals(authChainListTest, authChainList);
 		assertArrayEquals(asymChainListTest, asymChainList);
 
-
-		params.setUseInternalChainId(false);
 		Structure bioJavaStructDiff = StructureIO.getStructure("4cup");
 		List<Chain> chainListDiff = bioJavaStructDiff.getChains();
 		assertEquals(1,chainListDiff.size());

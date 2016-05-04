@@ -62,19 +62,33 @@ public interface Chain {
 	 */
 	public void addGroup(Group group);
 
-	/** Get the ID used by Hibernate.
+	/** Get the 'private' asymId (internal chain IDs in mmCif) for this chain.
 	 *
-	 * @return the ID used by Hibernate
-	 * @see #setId(Long)
+	 * @return the asymId
+	 * @see #setId(String)
 	 */
-	public Long getId() ;
+	public String getId() ;
 
-	/** Set the ID used by Hibernate.
+
+	/** Set the 'private' asymId (internal chain IDs in mmCif) for this chain.
 	 *
-	 * @param id assigned by Hibernate
+	 * @param asymId the internal chain Id
+     */
+	public void setId(String asymId) ;
+
+
+	/** Set the 'public' authId (chain ID in PDB file)
+	 *
+	 * @param authId the 'public' authId (chain ID in PDB file)
 	 * @see #getId()
 	 */
-	public void setId(Long id) ;
+	void setName(String authId);
+
+	/** Get the 'public' authId (chain ID in PDB file)
+	 *
+	 * @return the authId for this chain.
+     */
+	String getName();
 
 
 	/**
@@ -206,16 +220,16 @@ public interface Chain {
 	public EntityInfo getEntityInfo();
 
 	/**
-	 * Sets the name of this chain (Chain id in PDB file ).
-	 * @param name  a String specifying the name value
+	 * Sets the 'private' asymId of this chain (Chain id in PDB file ).
+	 * @param asymId  a String specifying the name value
 	 * @see #getChainID()
 	 */
-	public void setChainID(String name);
+	public void setChainID(String asymId);
 
 
 
 	/**
-	 * Gets the name of this chain (Chain id in PDB file ).
+	 * Gets the 'private' asymId of this chain.
 	 * @return a String representing the name value
 	 * @see #setChainID(String)
 	 */
@@ -227,6 +241,7 @@ public interface Chain {
 	 *
 	 * @return String or null
 	 * @since 3.0.5
+	 * @deprecated  use getId() instead
 	 */
 	public String getInternalChainID();
 
@@ -235,6 +250,7 @@ public interface Chain {
 	 *
 	 * @param internalChainID
 	 * @since 3.0.5
+	 * @deprecated use getId() instead
 	 */
 	public void setInternalChainID(String internalChainID);
 

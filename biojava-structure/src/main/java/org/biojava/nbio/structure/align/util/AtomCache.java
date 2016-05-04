@@ -790,7 +790,7 @@ public class AtomCache {
 	 * For strictSCOP==False, create a {@link StructureName} or use
 	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
 	 *
-	 * @param strictSCOP Ignored
+	 * @param ignored Ignored
 	 * @deprecated Removed in 4.2.0
 	 */
 	@Deprecated

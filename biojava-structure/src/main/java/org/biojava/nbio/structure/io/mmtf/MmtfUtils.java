@@ -55,7 +55,7 @@ public class MmtfUtils {
 		params.setCreateAtomBonds(true);
 		params.setAlignSeqRes(true);
 		params.setParseBioAssembly(true);
-		params.setUseInternalChainId(true);
+
 		// MOVE INTO BIOJAVA IF NEED BE
 		DownloadChemCompProvider cc = new DownloadChemCompProvider();
 		ChemCompGroupFactory.setChemCompProvider(cc);
@@ -76,7 +76,7 @@ public class MmtfUtils {
 		params.setCreateAtomBonds(true);
 		params.setAlignSeqRes(true);
 		params.setParseBioAssembly(true);
-		params.setUseInternalChainId(true);
+
 		// MOVE INTO BIOJAVA IF NEED BE
 		DownloadChemCompProvider.serverBaseUrl = extraUrl;
 		DownloadChemCompProvider.useDefaultUrlLayout = false;

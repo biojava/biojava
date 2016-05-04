@@ -215,7 +215,7 @@ public class EntityInfo implements Serializable {
 		StringBuilder buf = new StringBuilder();
 		buf.append("EntityInfo: ").append(molId).append(" ");
 		buf.append(description==null?"(no name)":"("+description+")");
-		buf.append(" chains: ");
+		buf.append(" chainIds: ");
 		if (chains!=null) {
 			for (int i=0;i<chains.size();i++) {
 				buf.append(chains.get(i).getChainID());

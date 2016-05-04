@@ -98,12 +98,12 @@ public class SeqRes2AtomAligner {
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
 			Chain atomChain = iter.next();
-			if ( atomChain.getChainID().equals(seqRes.getChainID())){
+			if ( atomChain.getName().equals(seqRes.getName())){
 				return atomChain;
 			}
 		}
 
-		logger.info("Could not match SEQRES chainID >" + seqRes.getChainID() + "< to ATOM chains!, size of atom chain: " + atomList.size());
+		logger.info("Could not match SEQRES chainID asymId:" + seqRes.getChainID() + " authId:"+ seqRes.getName() +"  to ATOM chains!, size of atom chain: " + atomList.size());
 		return null;
 	}
 
@@ -212,8 +212,8 @@ public class SeqRes2AtomAligner {
 	/**
 	 * A simple matching approach that tries to do a 1:1 mapping between SEQRES and ATOM records
 	 *
-	 * @param seqRes
-	 * @param atomList
+	 * @param seqResGroups list of seqREs groups
+	 * @param atmResGroups list of atmRes Groups
 	 * @return the matching or null if the matching didn't work
 	 */
 	private List<Group> trySimpleMatch(List<Group> seqResGroups,List<Group> atmResGroups) {

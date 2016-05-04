@@ -111,10 +111,6 @@ public class FileParsingParameters implements Serializable
 	private boolean createAtomCharges;
 
 	/**
-	 * Should we use internal (asym_id) or public facing (author) chain ids
-	 */
-	private boolean useInternalChainId;
-	/**
 	 * The maximum number of atoms we will add to a structure,
 	 * this protects from memory overflows in the few really big protein structures.
 	 */
@@ -151,7 +147,6 @@ public class FileParsingParameters implements Serializable
 
 		createAtomCharges = true;
 
-		useInternalChainId = false;
 	}
 
 	/**
@@ -233,7 +228,7 @@ public class FileParsingParameters implements Serializable
 	 * @returns updateRemediatedFiles flag
 	 * @deprecated Properties which impact downloading and caching behavior
 	 *  have been moved to the {@link StructureIOFile} implementations.
-	 *  See {@link LocalPDBDirectory#getFetchBehavior(LocalPDBDirectory.FetchBehavior)}
+	 *  See {@link LocalPDBDirectory#getFetchBehavior()} (LocalPDBDirectory.FetchBehavior)}
 	 */
 	@Deprecated
 	public boolean isUpdateRemediatedFiles() {
@@ -266,7 +261,7 @@ public class FileParsingParameters implements Serializable
 	/**
 	 * By default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
 	 * {"CA", "CB" }. Returns null if all atoms are accepted.
-	 * @param accepted atom names, or null if all atoms are accepted. default null
+	 * @param fullAtomNames accepted atom names, or null if all atoms are accepted. default null
 	 */
 
 	public void setAcceptedAtomNames(String[] fullAtomNames) {
@@ -375,26 +370,6 @@ public class FileParsingParameters implements Serializable
 		this.createAtomCharges = createAtomCharges;
 	}
 
-	/**
-	 * Should we use internal (asym_id) or public facing (author) chain ids
-	 * @return
-	 * @since 4.2
-	 */
-	public boolean isUseInternalChainId() {
-		return useInternalChainId;
-	}
 
-	/**
-	 * Set the useInternalChainId parsing mode. This is an experimental
-	 * parsing mode that applies only to the mmCIF parser. It will create chains
-	 * following the model specified in the mmCIF dictionary where both polymer and
-	 * non-polymer entities are assigned separate chains. The chain identifiers
-	 * used are the asym_ids specified in mmCIF file. Some BioJava features might not
-	 * work properly in this parsing mode.
-	 * @param useInternalChainId
-	 * @since 4.2
-	 */
-	public void setUseInternalChainId(boolean useInternalChainId) {
-		this.useInternalChainId = useInternalChainId;
-	}
+
 }

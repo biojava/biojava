@@ -53,8 +53,7 @@ public class StructureImpl implements Structure, Serializable {
 
 	private String pdb_id ;
 
-	/* models is an ArrayList of ArrayLists */
-	private List<List<Chain>> models;
+	private List<Model> models;
 
 	private List<Map <String,Integer>> connections ;
 	private List<EntityInfo> entityInfos;
@@ -76,16 +75,17 @@ public class StructureImpl implements Structure, Serializable {
 	public StructureImpl() {
 		super();
 
-		models         = new ArrayList<List<Chain>>();
+		models         = new ArrayList<>();
 		name           = "";
-		connections    = new ArrayList<Map<String,Integer>>();
-		entityInfos      = new ArrayList<EntityInfo>();
-		dbrefs         = new ArrayList<DBRef>();
+		connections    = new ArrayList<>();
+		entityInfos      = new ArrayList<>();
+		dbrefs         = new ArrayList<>();
 		pdbHeader      = new PDBHeader();
-		ssbonds        = new ArrayList<Bond>();
-		sites          = new ArrayList<Site>();
-		hetAtoms       = new ArrayList<Group>();
+		ssbonds        = new ArrayList<>();
+		sites          = new ArrayList<>();
+		hetAtoms       = new ArrayList<>();
 	}
+
 
 	/** get the ID used by Hibernate
 	 *
@@ -98,7 +98,7 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** set the ID used by Hibernate
 	 *
-	 * @param id
+	 * @param id the hibernate ID
 	 */
 	@Override
 	public void setId(Long id) {
@@ -106,9 +106,10 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 
-	/** construct a Structure object that only contains a single group
+
+	/** Construct a Structure object that only contains a single group
 	 *
-	 * @param g
+	 * @param g group object
 	 */
 	public StructureImpl(Group g){
 		this();
@@ -121,7 +122,7 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** construct a Structure object that contains a particular chain
 	 *
-	 * @param c
+	 * @param c chain
 	 */
 	public StructureImpl(Chain c){
 		this();
@@ -181,7 +182,7 @@ public class StructureImpl implements Structure, Serializable {
 							newEntityInfo.addChain(newChain);
 						} catch (StructureException e) {
 							// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
-							logger.warn("Could not find chain id "+chainId+" of model "+modelNr+" while cloning entityInfo "+entityInfo.getMolId()+". Something is wrong!");
+							logger.warn("Could not find chain asymId "+chainId+" of model "+modelNr+" while cloning entityInfo "+entityInfo.getMolId()+". Something is wrong!");
 						}
 					}
 			}
@@ -328,13 +329,15 @@ public class StructureImpl implements Structure, Serializable {
 		// if model has not been initialized, init it!
 		chain.setStructure(this);
 		if (models.isEmpty()) {
-			List<Chain> model = new ArrayList<Chain>() ;
-			model.add(chain);
+			Model model = new Model();
+			List<Chain> modelChains = new ArrayList<Chain>() ;
+			modelChains.add(chain);
+			model.setChains(modelChains);
 			models.add(model);
 
 		} else {
-			List<Chain> model = models.get(modelnr);
-			model.add(chain);
+			Model model = models.get(modelnr);
+			model.addChain(chain);
 		}
 
 
@@ -357,19 +360,21 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public Chain getChain(int modelnr,int number) {
 
-		List<Chain> model  =  models.get(modelnr);
+		Model model = models.get(modelnr);
 
-		return model.get (number );
+		return model.getChains().get(number);
 	}
 
 
 
 	/** {@inheritDoc} */
 	@Override
-	public void addModel(List<Chain> model){
-		for (Chain c: model){
+	public void addModel(List<Chain> modelChains){
+		for (Chain c: modelChains){
 			c.setStructure(this);
 		}
+		Model model = new Model();
+		model.setChains(modelChains);
 		models.add(model);
 	}
 
@@ -385,14 +390,18 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setModel(int position, List<Chain> model){
-		if (model == null)
+	public void setModel(int position, List<Chain> modelChains){
+		if (modelChains == null)
 			throw new IllegalArgumentException("trying to set model to null!");
 
-		for (Chain c: model)
+		for (Chain c: modelChains)
 			c.setStructure(this);
 
 		//System.out.println("model size:" + models.size());
+
+
+		Model model = new Model();
+		model.setChains(modelChains);
 
 		if (models.isEmpty()){
 			models.add(model);
@@ -401,7 +410,7 @@ public class StructureImpl implements Structure, Serializable {
 		}
 	}
 
-	/** string representation.
+	/** String representation.
 	 *
 	 */
 	@Override
@@ -440,7 +449,7 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> hgr = cha.getAtomGroups(GroupType.HETATM);
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
-				str.append("chain ").append(j).append(": >").append(cha.getChainID()).append("< ");
+				str.append("chain ").append(j).append(": asymId:>").append(cha.getChainID()).append("< authId:>").append(cha.getName()).append("< ");
 				if ( cha.getEntityInfo() != null){
 					EntityInfo comp = cha.getEntityInfo();
 					String molName = comp.getDescription();
@@ -480,7 +489,7 @@ public class StructureImpl implements Structure, Serializable {
 		int modelnr = 0 ;
 
 		if (!models.isEmpty()) {
-			return models.get(modelnr).size();
+			return models.get(modelnr).getPolyChains().size();
 		}
 		else {
 			return 0 ;
@@ -516,11 +525,9 @@ public class StructureImpl implements Structure, Serializable {
 		} else {
 			// no experimental technique known, we try to guess...
 			if (pdbHeader.getCrystallographicInfo().getSpaceGroup()!=null) {
-				if (pdbHeader.getCrystallographicInfo().getCrystalCell()==null) {
-					return false; // space group defined but no crystal cell: incomplete info, return false
-				} else {
-					return pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable();
-				}
+				// space group defined but no crystal cell: incomplete info, return false
+				return  pdbHeader.getCrystallographicInfo().getCrystalCell() != null &&
+						pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable();
 			}
 		}
 		return false;
@@ -581,7 +588,19 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	public List<Chain> getChains(){
-		return getModel(0);
+
+		 return models.get(0).getChains();
+
+	}
+
+	@Override
+	public List<Chain> getPolyChains() {
+		return models.get(0).getPolyChains();
+	}
+
+	@Override
+	public List<Chain> getNonPolyChains() {
+		return models.get(0).getNonPolyChains();
 	}
 
 	/** {@inheritDoc} */
@@ -591,11 +610,14 @@ public class StructureImpl implements Structure, Serializable {
 			c.setStructure(this);
 		}
 		models.remove(modelnr);
-		models.add(modelnr, chains);
+
+		Model model = new Model();
+		model.setChains(chains);
+		models.add(modelnr, model);
 
 	}
 
-	/** retrieve all Chains belonging to a model .
+	/** Retrieve all Chains belonging to a model .
 	 *
 	 * @param modelnr  an int
 	 * @return a List object
@@ -603,24 +625,23 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public List<Chain> getModel(int modelnr) {
 
-		return models.get(modelnr);
+		return models.get(modelnr).getChains();
 	}
-
-
-
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain getChainByPDB(String chainId, int modelnr)
+	public Chain getChainByPDB(String authId, int modelnr)
 			throws StructureException{
 
 		List<Chain> chains = getChains(modelnr);
 		for (Chain c : chains) {
-			if (c.getChainID().equals(chainId)) {
+			if (c.getName().equals(authId)) {
 				return c;
 			}
 		}
-		throw new StructureException("did not find chain with chainId \"" + chainId + "\"" + " for PDB id " + pdb_id);
+
+		//TODO return a ChainCollection here
+		throw new StructureException("did not find chain with authId \"" + authId + "\"" + " for PDB id " + pdb_id);
 
 	}
 
@@ -630,6 +651,50 @@ public class StructureImpl implements Structure, Serializable {
 	public Chain getChainByPDB(String chainId)
 			throws StructureException{
 		return getChainByPDB(chainId,0);
+	}
+
+	@Override
+	public Chain getPolyChain(String asymId) throws StructureException {
+		List<Chain> polyChains = models.get(0).getPolyChains();
+		for (Chain c : polyChains){
+			if (c.getId().equals(asymId))
+				return c;
+		}
+
+		throw new StructureException("Did not find Chain with asymId " + asymId);
+	}
+
+	@Override
+	public Chain getNonPolyChain(String asymId) throws StructureException {
+		List<Chain> nonpolyChains = models.get(0).getNonPolyChains();
+		for (Chain c : nonpolyChains){
+			if (c.getId().equals(asymId))
+				return c;
+		}
+
+		throw new StructureException("Did not find Chain with asymId " + asymId);
+	}
+
+	@Override
+	public Chain getPolyChainByPdb(String authId) throws StructureException {
+		List<Chain> polyChains = models.get(0).getPolyChains();
+		for (Chain c : polyChains){
+			if (c.getName().equals(authId))
+				return c;
+		}
+
+		throw new StructureException("Did not find Chain with authId " + authId);
+	}
+
+	@Override
+	public Chain getNonPolyChainByPdb(String authId) throws StructureException {
+		List<Chain> nonpolyChains = models.get(0).getNonPolyChains();
+		for (Chain c : nonpolyChains){
+			if (c.getName().equals(authId))
+				return c;
+		}
+
+		throw new StructureException("Did not find Chain with authId " + authId);
 	}
 
 
@@ -893,7 +958,7 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	public void resetModels() {
-		models = new ArrayList<List<Chain>>();
+		models = new ArrayList<Model>();
 	}
 	/** {@inheritDoc} */
 	@Deprecated
