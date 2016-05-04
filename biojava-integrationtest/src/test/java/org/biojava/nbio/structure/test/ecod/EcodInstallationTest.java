@@ -151,7 +151,7 @@ public class EcodInstallationTest {
 				20669l, "e1lyw.1", false,
 				//				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 				1,1,1,2,"1lyw",
-				//				String chainId, String range, String seqId, String architectureName,
+				//				String chainName, String range, String seqId, String architectureName,
 				".", "A:3-97,B:106-346", "A:3-97,B:1-241", "beta barrels",
 				//				String xGroupName, String hGroupName, String tGroupName,
 				"cradle loop barrel", "RIFT-related",

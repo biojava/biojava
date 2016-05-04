@@ -328,7 +328,7 @@ public class MultipleAlignmentWriter {
 		String tPdbId = canon.getPdbId();
 		String tChain = null;
 		for(ResidueRange range : canon.getResidueRanges()) {
-			tChain = range.getChainId();
+			tChain = range.getChainName();
 			break;
 		}
 

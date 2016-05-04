@@ -40,14 +40,11 @@ public class TestAltLocs {
 	@Test
 	public void testAltLocParsing() throws StructureException, IOException{
 
-
 		AtomCache cache = new AtomCache();
+
 		Structure s = cache.getStructure("2CI1");
 
-		//System.out.println(s);
-
 		Chain a = s.getChainByPDB("A");
-		//System.out.println(a);
 
 		int groupCount = 0;
 		List<Group> groups = a.getAtomGroups();
@@ -96,7 +93,12 @@ public class TestAltLocs {
 
 		assertEquals(altLocG.getPDBName(),"K1R");
 
-		assertEquals(276,groupCount);
+		assertEquals(275,groupCount);
+
+		// citric acid is now in its own chain
+
+		Chain b = s.getChain("B");
+		assertTrue(b.getAtomGroups().size() == 1);
 
 
 		ResidueNumber resNum2 = ResidueNumber.fromString("265");

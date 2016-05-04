@@ -503,7 +503,7 @@ public class TestLongPdbVsMmCifParsing {
 		// in the current implementation this is not a valid test, entries that have aminoacid residues in
 		// ligands, e.g. 3o6g won't pass this test
 		//assertTrue("getSeqResLength ("+cPdb.getSeqResLength()+") must be >= than getAtomGroups(GroupType.AMINOACID).size() ("+
-		//		cPdb.getAtomGroups(GroupType.AMINOACID).size()+") (chain "+chainId+")",
+		//		cPdb.getAtomGroups(GroupType.AMINOACID).size()+") (chain "+chainName+")",
 		//		cPdb.getSeqResLength()>=cPdb.getAtomGroups(GroupType.AMINOACID).size());
 
 		int allAtomGroupsSizePdb =

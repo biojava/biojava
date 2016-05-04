@@ -1025,7 +1025,7 @@ public class StructureTools {
 
 	/**
 	 * Reduce a structure to provide a smaller representation . Only takes the
-	 * first model of the structure. If chainId is provided only return a
+	 * first model of the structure. If chainName is provided only return a
 	 * structure containing that Chain ID. Converts lower case chain IDs to
 	 * upper case if structure does not contain a chain with that ID.
 	 *

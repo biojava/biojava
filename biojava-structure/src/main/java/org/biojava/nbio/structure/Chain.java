@@ -223,8 +223,10 @@ public interface Chain {
 	 * Sets the 'private' asymId of this chain (Chain id in PDB file ).
 	 * @param asymId  a String specifying the name value
 	 * @see #getChainID()
+	 * @deprecated  use setId(String asymId) instead
 	 */
-	public void setChainID(String asymId);
+	@Deprecated
+	 void setChainID(String asymId);
 
 
 
@@ -232,8 +234,10 @@ public interface Chain {
 	 * Gets the 'private' asymId of this chain.
 	 * @return a String representing the name value
 	 * @see #setChainID(String)
+	 * @deprecated  use getId() instead
 	 */
-	public String getChainID();
+	 @Deprecated
+	 String getChainID();
 
 
 	/**
@@ -243,7 +247,7 @@ public interface Chain {
 	 * @since 3.0.5
 	 * @deprecated  use getId() instead
 	 */
-	public String getInternalChainID();
+	 String getInternalChainID();
 
 	/**
 	 * Sets the internal chain ID that is used in mmCif files
@@ -252,11 +256,11 @@ public interface Chain {
 	 * @since 3.0.5
 	 * @deprecated use getId() instead
 	 */
-	public void setInternalChainID(String internalChainID);
+	 void setInternalChainID(String internalChainID);
 
 
 	@Override
-	public String toString();
+	 String toString();
 
 
 	/**
@@ -264,16 +268,16 @@ public interface Chain {
 	 *
 	 * @return the SEQRES groups of the Chain as a Sequence object.
 	 */
-	public Sequence<?> getBJSequence()  ;
+	 Sequence<?> getBJSequence()  ;
 
 	/**
 	 * Returns the sequence of amino acids as it has been provided in the ATOM records.
 	 * Non-standard residues will be present in the string only if the property
-	 * {@value PDBFileReader#LOAD_CHEM_COMP_PROPERTY} has been set.
+	 * {@value PDBFileReader.LOAD_CHEM_COMP_PROPERTY} has been set.
 	 * @return amino acid sequence as string
 	 * @see #getSeqResSequence()
 	 */
-	public String getAtomSequence();
+	 String getAtomSequence();
 
 	/**
 	 * Returns the PDB SEQRES sequence as a one-letter sequence string.
@@ -281,21 +285,21 @@ public interface Chain {
 	 * @return one-letter PDB SEQRES sequence as string
 	 * @see #getAtomSequence()
 	 */
-	public String getSeqResSequence();
+	 String getSeqResSequence();
 
 	/**
 	 * Sets the Swissprot id of this chain.
 	 * @param sp_id  a String specifying the swissprot id value
 	 * @see #getSwissprotId()
 	 */
-	public void setSwissprotId(String sp_id);
+	 void setSwissprotId(String sp_id);
 
 	/**
 	 * Gets the Swissprot id of this chain.
 	 * @return a String representing the swissprot id value
 	 * @see #setSwissprotId(String sp_id)
 	 */
-	public String getSwissprotId() ;
+	 String getSwissprotId() ;
 
 
 	/**
@@ -305,7 +309,7 @@ public interface Chain {
 	 * @return an List object
 	 * @see #setSeqResGroups(List)
 	 */
-	public List<Group> getSeqResGroups (GroupType type);
+	 List<Group> getSeqResGroups (GroupType type);
 
 	/**
 	 * Returns a list of all groups in SEQRES records of the chain, i.e.
@@ -315,7 +319,7 @@ public interface Chain {
 	 * @see #getSeqResLength()
 	 * @see #getAtomGroups()
 	 */
-	public List<Group> getSeqResGroups ();
+	 List<Group> getSeqResGroups ();
 
 	/**
 	 * Sets the list of SeqResGroups for this chain.
@@ -323,7 +327,7 @@ public interface Chain {
 	 * @param seqResGroups a List of Group objects that from the SEQRES groups of this chain.
 	 * @see #getSeqResGroups()
 	 */
-	public void setSeqResGroups(List<Group> seqResGroups);
+	 void setSeqResGroups(List<Group> seqResGroups);
 
 	/**
 	 * Sets the back-reference to its parent Structure.
@@ -333,14 +337,14 @@ public interface Chain {
 	 *
 	 */
 	@Deprecated
-	public void setParent(Structure parent) ;
+	 void setParent(Structure parent) ;
 
 	/** Sets the back-reference to its parent Structure.
 	 *
 	 * @param parent
 	 */
 
-	public void setStructure(Structure parent) ;
+	 void setStructure(Structure parent) ;
 
 	/**
 	 * Returns the parent Structure of this chain.
@@ -350,7 +354,7 @@ public interface Chain {
 	 * @deprecated use getStructure(Structure) instead.
 	 */
 	@Deprecated
-	public Structure getParent() ;
+	 Structure getParent() ;
 
 
 	/**
@@ -359,7 +363,7 @@ public interface Chain {
 	 * @return the parent Structure object
 	 * @see #setStructure(Structure)
 	 */
-	public Structure getStructure() ;
+	 Structure getStructure() ;
 
 	/**
 	 * Gets all groups that are not polymer groups and that are not solvent groups.
@@ -368,30 +372,30 @@ public interface Chain {
 	 * Otherwise the Ligands could not correctly be identified.
 	 * @return list of Groups that are ligands
 	 */
-	public List<Group> getAtomLigands();
+	 List<Group> getAtomLigands();
 
 	/**
 	 * Convert this Chain to a String in PDB format
 	 * @return
 	 */
-	public String toPDB();
+	 String toPDB();
 
 	/**
 	 * Convert this Chain to a String in mmCIF format
 	 * @return
 	 */
-	public String toMMCIF();
+	 String toMMCIF();
 
 
 	/** Set annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
 	 *
 	 * @param seqMisMatches
 	 */
-	public void setSeqMisMatches(List<SeqMisMatch> seqMisMatches);
+	 void setSeqMisMatches(List<SeqMisMatch> seqMisMatches);
 
 	/** Get annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
 	 *
 	 * @returns a list of sequence mismatches (or null if none found)
 	 */
-	public List<SeqMisMatch> getSeqMisMatches();
+	 List<SeqMisMatch> getSeqMisMatches();
 }

@@ -85,7 +85,6 @@ public class Test4hhb {
 		mmcifpars.parse(inStream) ;
 		structure2 = consumer.getStructure();
 
-
 		assertNotNull(structure2);
 
 		assertEquals("structure does not contain four chains ", 4 ,structure2.size());
@@ -108,7 +107,7 @@ public class Test4hhb {
 
 	private void testStructure(Structure structure){
 
-		List<Chain> chains = structure.getChains();
+		List<Chain> chains = structure.getPolyChains();
 		assertEquals("4HHB should have 4 chains. " , 4 , chains.size());
 
 		Chain a = chains.get(0);
@@ -128,8 +127,8 @@ public class Test4hhb {
 		assertTrue("chain " + c.getChainID() + " length should be 141. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 141 ));
 		assertTrue("chain " + d.getChainID() + " length should be 146. was: " + d.getAtomGroups(GroupType.AMINOACID).size(), ( d.getAtomGroups(GroupType.AMINOACID).size() == 146 ));
 
-		assertTrue("chain " + a.getChainID() + " length should be 141, but is " + a.getSeqResLength(), ( a.getSeqResLength() == 141 ));
-		assertTrue("chain " + b.getChainID() + " length should be 146.", ( b.getSeqResLength() == 146 ));
+		assertTrue("chain " + a.getChainID() + " SEQRES length should be 141, but is " + a.getSeqResLength(), ( a.getSeqResLength() == 141 ));
+		assertTrue("chain " + b.getChainID() + " SEQRES length should be 146.", ( b.getSeqResLength() == 146 ));
 
 		assertTrue("chain " + c.getChainID() + " length should be 141.", ( a.getSeqResLength() == 141 ));
 		assertTrue("chain " + d.getChainID() + " length should be 146.", ( b.getSeqResLength() == 146 ));
@@ -138,27 +137,9 @@ public class Test4hhb {
 
 		testEqualChains(b,d);
 
-		Chain[] chs = new Chain[]{a,b,c,d};
-
-		for (Chain x : chs){
-			testContainsHem(x);
-		}
 
 	}
 
-	private void testContainsHem(Chain x) {
-
-		boolean containsHem = false;
-		for ( Group g : x.getAtomGroups()){
-			if ( g.getPDBName().equals("HEM")){
-				containsHem = true;
-				break;
-			}
-		}
-
-		assertTrue("Chain " + x.getChainID() + " does not contain a HEM group. " , containsHem);
-
-	}
 
 
 	private void testEqualChains(Chain a,Chain b){

@@ -158,7 +158,7 @@ public class SiftsChainEntry {
 
 	@Override
 	public String toString() {
-		return "SiftsChainToUniprotEntry [pdbId=" + pdbId + ", chainId=" + chainId + ", uniProtId=" + uniProtId
+		return "SiftsChainToUniprotEntry [pdbId=" + pdbId + ", chainName=" + chainId + ", uniProtId=" + uniProtId
 				+ ", seqresStart=" + seqresStart + ", seqresEnd=" + seqresEnd + ", pdbStart=" + pdbStart + ", pdbEnd="
 				+ pdbEnd + ", uniprotStart=" + uniprotStart + ", uniprotEnd=" + uniprotEnd + "]";
 	}

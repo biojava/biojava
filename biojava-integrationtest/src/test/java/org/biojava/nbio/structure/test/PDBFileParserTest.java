@@ -282,7 +282,7 @@ public class PDBFileParserTest {
 				//					System.out.println("    PDBName: " + group.getPDBName());
 				//					System.out.println("    PDBCode: " + group.getPDBCode());
 				//					System.out.println("    Type: " + group.getType());
-				//					System.out.println("    Parent: " + group.getChainId());
+				//					System.out.println("    Parent: " + group.getChainName());
 			}
 
 		}

@@ -75,7 +75,7 @@ public class TestAtomCache {
 		String name1= "4hhb";
 		Structure s = cache.getStructure(name1);
 		assertNotNull(s);
-		assertTrue(s.getChains().size() == 4);
+		assertTrue(s.getPolyChains().size() == 4);
 
 		String name2 = "4hhb.C";
 		String chainId2 = "C";
@@ -83,7 +83,7 @@ public class TestAtomCache {
 
 		assertTrue(s.getChains().size() == 1);
 		Chain c = s.getChainByPDB(chainId2);
-		assertEquals(c.getChainID(),chainId2);
+		assertEquals(c.getName(),chainId2);
 
 
 		// Colon separators removed in BioJava 4.1.0

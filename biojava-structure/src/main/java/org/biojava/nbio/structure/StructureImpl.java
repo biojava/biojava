@@ -173,18 +173,19 @@ public class StructureImpl implements Structure, Serializable {
 		List<EntityInfo> newEntityInfoList = new ArrayList<EntityInfo>();
 		for (EntityInfo entityInfo : this.entityInfos) {
 			EntityInfo newEntityInfo = new EntityInfo(entityInfo); // this sets everything but the chains
-			for (String chainId:entityInfo.getChainIds()) {
+			for (String asymId:entityInfo.getChainIds()) {
 
-					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
-						try {
-							Chain newChain = n.getChainByPDB(chainId,modelNr);
-							newChain.setEntityInfo(newEntityInfo);
-							newEntityInfo.addChain(newChain);
-						} catch (StructureException e) {
-							// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
-							logger.warn("Could not find chain asymId "+chainId+" of model "+modelNr+" while cloning entityInfo "+entityInfo.getMolId()+". Something is wrong!");
-						}
+				for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
+					try {
+						Chain newChain = n.getChain(asymId,modelNr);
+						newChain.setEntityInfo(newEntityInfo);
+						newEntityInfo.addChain(newChain);
+					} catch (StructureException e) {
+
+						// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
+						logger.warn("Could not find chain asymId "+asymId+" of model "+modelNr+" while cloning entityInfo "+entityInfo.getMolId()+". Something is wrong!");
 					}
+				}
 			}
 			newEntityInfoList.add(newEntityInfo);
 		}
@@ -449,13 +450,26 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> hgr = cha.getAtomGroups(GroupType.HETATM);
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
-				str.append("chain ").append(j).append(": asymId:>").append(cha.getChainID()).append("< authId:>").append(cha.getName()).append("< ");
+
+
+
+				str.append("chain ")
+						.append(j).append(": asymId:")
+						.append(cha.getChainID())
+						.append(" authId:")
+						.append(cha.getName()).append(" ");
+
+
 				if ( cha.getEntityInfo() != null){
 					EntityInfo comp = cha.getEntityInfo();
 					String molName = comp.getDescription();
 					if ( molName != null){
 						str.append(molName);
 					}
+					String type =  comp.getType().toString();
+					str.append(" (")
+							.append(type)
+							.append(")");
 				}
 
 
@@ -501,7 +515,7 @@ public class StructureImpl implements Structure, Serializable {
 	 *
 	 */
 	@Override
-	public int size(int modelnr) { return getChains(modelnr).size();   }
+	public int size(int modelnr) { return models.get(modelnr).size(); }
 
 	// some NMR stuff :
 
@@ -589,7 +603,7 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public List<Chain> getChains(){
 
-		 return models.get(0).getChains();
+		return models.get(0).getChains();
 
 	}
 
@@ -640,11 +654,34 @@ public class StructureImpl implements Structure, Serializable {
 			}
 		}
 
-		//TODO return a ChainCollection here
 		throw new StructureException("did not find chain with authId \"" + authId + "\"" + " for PDB id " + pdb_id);
 
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public Chain getChain(String asymId, int modelnr)
+			throws StructureException{
+
+		List<Chain> chains = getChains(modelnr);
+		for (Chain c : chains) {
+			if (c.getId().equals(asymId)) {
+				return c;
+			}
+		}
+
+		throw new StructureException("did not find chain with asymId \"" + asymId + "\"" + " for PDB id " + pdb_id);
+
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Chain getChain(String asymId)
+			throws StructureException{
+
+		return getChain(asymId,0);
+
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -764,7 +801,7 @@ public class StructureImpl implements Structure, Serializable {
 	public EntityInfo getCompoundById(int molId) {
 		return getEntityById(molId);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public EntityInfo getEntityById(int entityId) {

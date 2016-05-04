@@ -83,7 +83,7 @@ public class AtomInfoParser {
 
 
 
-		//System.out.println(jmolAtomInfo +" | " +  residueName + " number:" + residueNumber + " chain:" + chainId +
+		//System.out.println(jmolAtomInfo +" | " +  residueName + " number:" + residueNumber + " chain:" + chainName +
 		//		" atomName:" + atomName + " modelNumber:" + modelNumber );
 
 		AtomInfo info = new AtomInfo();

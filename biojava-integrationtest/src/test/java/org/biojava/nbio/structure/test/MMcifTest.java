@@ -143,8 +143,8 @@ public class MMcifTest {
 			Chain a_cif = cifStructure.getChainByPDB(chainId);
 			//System.out.println(a_pdb.getAtomGroups());
 
-			//System.out.println(id + "_" + chainId + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());
-			//System.out.println(id + "_" + chainId + " cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
+			//System.out.println(id + "_" + chainName + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());
+			//System.out.println(id + "_" + chainName + " cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
 
 			//for (Group g: a_cif.getAtomGroups()){
 			//	System.out.println(g);
@@ -154,8 +154,8 @@ public class MMcifTest {
 
 			String cif_SEQseq = a_cif.getSeqResSequence();
 
-			//                        System.out.println(id + "_" + chainId + " pdbSEQ: " + pdb_SEQseq);
-			//                        System.out.println(id + "_" + chainId + " cifSEQ: " + cif_SEQseq);
+			//                        System.out.println(id + "_" + chainName + " pdbSEQ: " + pdb_SEQseq);
+			//                        System.out.println(id + "_" + chainName + " cifSEQ: " + cif_SEQseq);
 
 			assertEquals(id + ": the SEQRES sequences don't match!", pdb_SEQseq,cif_SEQseq);
 

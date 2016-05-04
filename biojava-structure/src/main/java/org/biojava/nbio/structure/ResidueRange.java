@@ -29,11 +29,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A chain, a start residue, and an end residue.
+ * A chainName, a start residue, and an end residue.
  *
- * Chain may be null when referencing a single-chain structure; for multi-chain
- * structures omitting the chain is an error. Start and/or end may also be null,
- * which is interpreted as the first and last residues in the chain, respectively.
+ * Chain may be null when referencing a single-chainName structure; for multi-chainName
+ * structures omitting the chainName is an error. Start and/or end may also be null,
+ * which is interpreted as the first and last residues in the chainName, respectively.
  *
  * @author dmyerstu
  * @see ResidueNumber
@@ -41,12 +41,12 @@ import java.util.regex.Pattern;
  */
 public class ResidueRange {
 
-	private final String chain;
+	private final String chainName;
 	private final ResidueNumber end;
 	private final ResidueNumber start;
 
 	public static final Pattern RANGE_REGEX = Pattern.compile(
-			"^\\s*([a-zA-Z0-9]+|_)" + //chain ID. Be flexible here, rather than restricting to 4-char IDs
+			"^\\s*([a-zA-Z0-9]+|_)" + //chainName ID. Be flexible here, rather than restricting to 4-char IDs
 			"(?:" + //begin range, this is a "non-capturing group"
 				"(?::|_|:$|_$|$)" + //colon or underscore, could be at the end of a line, another non-capt. group.
 				"(?:"+ // another non capturing group for the residue range
@@ -64,8 +64,8 @@ public class ResidueRange {
 	/**
 	 * Parse the residue range from a string. Several formats are accepted:
 	 * <ul>
-	 *   <li> chain.start-end
-	 *   <li> chain.residue
+	 *   <li> chainName.start-end
+	 *   <li> chainName.residue
 	 *   <li> chain_start-end (for better filename compatibility)
 	 * </ul>
 	 *
@@ -134,16 +134,16 @@ public class ResidueRange {
 		return list;
 	}
 
-	public ResidueRange(String chain, String start, String end) {
-		this.chain = chain;
+	public ResidueRange(String chainName, String start, String end) {
+		this.chainName = chainName;
 		this.start = ResidueNumber.fromString(start);
-		this.start.setChainId(chain);
+		this.start.setChainId(chainName);
 		this.end = ResidueNumber.fromString(end);
-		this.end.setChainId(chain);
+		this.end.setChainId(chainName);
 	}
 
-	public ResidueRange(String chain, ResidueNumber start, ResidueNumber end) {
-		this.chain = chain;
+	public ResidueRange(String chainName, ResidueNumber start, ResidueNumber end) {
+		this.chainName = chainName;
 		this.start = start;
 		this.end = end;
 	}
@@ -154,9 +154,9 @@ public class ResidueRange {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		ResidueRange other = (ResidueRange) obj;
-		if (chain == null) {
-			if (other.chain != null) return false;
-		} else if (!chain.equals(other.chain)) return false;
+		if (chainName == null) {
+			if (other.chainName != null) return false;
+		} else if (!chainName.equals(other.chainName)) return false;
 		if (end == null) {
 			if (other.end != null) return false;
 		} else if (!end.equals(other.end)) return false;
@@ -166,8 +166,8 @@ public class ResidueRange {
 		return true;
 	}
 
-	public String getChainId() {
-		return chain;
+	public String getChainName() {
+		return chainName;
 	}
 
 	public ResidueNumber getEnd() {
@@ -182,7 +182,7 @@ public class ResidueRange {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (chain == null ? 0 : chain.hashCode());
+		result = prime * result + (chainName == null ? 0 : chainName.hashCode());
 		result = prime * result + (end == null ? 0 : end.hashCode());
 		result = prime * result + (start == null ? 0 : start.hashCode());
 		return result;
@@ -191,10 +191,10 @@ public class ResidueRange {
 	@Override
 	public String toString() {
 		if( start == null && end == null) {
-			// Indicates the full chain
-			return chain;
+			// Indicates the full chainName
+			return chainName;
 		}
-		return chain + "_" + start + "-" + end;
+		return chainName + "_" + start + "-" + end;
 	}
 
 	/**
@@ -228,11 +228,11 @@ public class ResidueRange {
 		Integer pos = map.getPosition(residueNumber);
 		if (pos == null) throw new IllegalArgumentException("Couldn't find residue " + residueNumber.printFull());
 
-		ResidueNumber startResidue = getStart()==null? map.getFirst(getChainId()) : getStart();
+		ResidueNumber startResidue = getStart()==null? map.getFirst(getChainName()) : getStart();
 		Integer startPos = map.getPosition(startResidue);
 		if (startPos == null) throw new IllegalArgumentException("Couldn't find the start position");
 
-		ResidueNumber endResidue = getEnd()==null? map.getLast(getChainId()) : getEnd();
+		ResidueNumber endResidue = getEnd()==null? map.getLast(getChainName()) : getEnd();
 		Integer endPos = map.getPosition(endResidue);
 		if (endPos == null) throw new IllegalArgumentException("Couldn't find the end position");
 		return pos >= startPos && pos <= endPos;

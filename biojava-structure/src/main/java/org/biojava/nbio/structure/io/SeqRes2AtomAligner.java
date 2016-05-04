@@ -98,9 +98,12 @@ public class SeqRes2AtomAligner {
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
 			Chain atomChain = iter.next();
-			if ( atomChain.getName().equals(seqRes.getName())){
+			if ( atomChain.getId().equals(seqRes.getId())){
 				return atomChain;
 			}
+//			if ( atomChain.getName().equals(seqRes.getName())){
+//				return atomChain;
+//			}
 		}
 
 		logger.info("Could not match SEQRES chainID asymId:" + seqRes.getChainID() + " authId:"+ seqRes.getName() +"  to ATOM chains!, size of atom chain: " + atomList.size());

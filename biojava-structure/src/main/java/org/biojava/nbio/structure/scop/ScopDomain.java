@@ -216,7 +216,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	public Set<String> getChains() {
 		Set<String> chains = new HashSet<String>();
 		List<ResidueRange> rrs = ResidueRange.parseMultiple(getRanges());
-		for (ResidueRange rr : rrs) chains.add(rr.getChainId());
+		for (ResidueRange rr : rrs) chains.add(rr.getChainName());
 		return chains;
 	}
 

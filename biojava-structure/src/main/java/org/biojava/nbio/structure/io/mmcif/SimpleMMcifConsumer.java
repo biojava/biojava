@@ -730,6 +730,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// Now we need to make sure that they are linked to chains and also that if they are not present in the file we need to add them now
 		linkEntities();
 
+
+		// make sure the chains are in the correct poly/nonpoly categories in the models
+		reorganizeModels();
+
 		if (!params.isHeaderOnly()) {
 
 			// Do structure.setSites(sites) after any chain renaming to be like PDB.
@@ -845,6 +849,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
+	private void reorganizeModels() {
+		for (int i =0; i< structure.nrModels() ; i++){
+			List<Chain> chains = structure.getModel(i);
+			structure.setModel(i,chains);
+
+		}
+	}
+
 	/**
 	 * Here we link entities to chains.
 	 * Also if entities are not present in file, this initialises the entities with some heuristics, see {@link org.biojava.nbio.structure.io.EntityFinder}
@@ -869,9 +881,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// asyms (chains).  Either create a unique StructureImpl or modify existing for a better representation of the
 				// mmCIF internal data structures but is compatible with Structure interface.
 				// Some examples of PDB entries with this kind of problem:
-				//   - 2uub: asym_id X, chainId Z, entity_id 24: fully non-polymeric but still with its own chainId
-				//   - 3o6j: asym_id K, chainId Z, entity_id 6 : a single water molecule
-				//   - 1dz9: asym_id K, chainId K, entity_id 6 : a potassium ion alone
+				//   - 2uub: asym_id X, chainName Z, entity_id 24: fully non-polymeric but still with its own chainName
+				//   - 3o6j: asym_id K, chainName Z, entity_id 6 : a single water molecule
+				//   - 1dz9: asym_id K, chainName K, entity_id 6 : a potassium ion alone
 
 				EntityInfo entityInfo = structure.getEntityById(eId);
 				if (entityInfo==null) {
@@ -1803,15 +1815,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
 			Group g = null;
 			try {
-				Chain chain = structure.getPolyChain(asymId);
-				if ( chain == null)
-					chain = structure.getNonPolyChain(asymId);
+				Chain chain = structure.getChain(asymId);
 
 				if (null != chain) {
 					try {
 						Character insChar = null;
 						if (null != insCode && insCode.length() > 0) insChar = insCode.charAt(0);
-						g = chain.getGroupByPDB(new ResidueNumber(authId, Integer.parseInt(auth_seq_id), insChar));
+						g = chain.getGroupByPDB(new ResidueNumber(null, Integer.parseInt(auth_seq_id), insChar));
 					} catch (NumberFormatException e) {
 						logger.warn("Could not lookup residue : " + authId + auth_seq_id);
 					}

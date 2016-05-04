@@ -292,7 +292,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		return "EcodDomain [uid=" + uid + ", domainId=" + domainId
 				+ ", manual=" + manual + ", xGroup=" + xGroup + ", hGroup="
 				+ hGroup + ", tGroup=" + tGroup + ", fGroup="+ fGroup + ", pdbId=" + pdbId
-				+ ", chainId=" + chainId + ", range=" + range
+				+ ", chainName=" + chainId + ", range=" + range
 				+ ", architectureName=" + architectureName + ", xGroupName="
 				+ xGroupName + ", hGroupName=" + hGroupName + ", tGroupName="
 				+ tGroupName + ", fGroupName=" + fGroupName + ", assemblyId="

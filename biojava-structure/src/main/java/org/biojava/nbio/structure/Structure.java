@@ -436,6 +436,23 @@ public interface Structure extends Cloneable {
 	 Chain getChain( int modelnr, int pos);
 
 
+	/** Get a chain by its asym ID and model number
+	 *
+	 * @param asymId 'private' chain ID in mmcif
+	 * @param model the model nr
+     * @return
+     */
+	Chain getChain( String asymId, int model) throws StructureException;;
+
+
+	/** Get a chain by its asym ID
+	 *
+	 * @param asymId
+
+	 * @return
+	 */
+	Chain getChain( String asymId) throws StructureException;;
+
 
 	/**
 	 * Request a particular chain from a structure.

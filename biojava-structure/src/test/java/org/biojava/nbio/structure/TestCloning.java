@@ -117,7 +117,7 @@ public class TestCloning {
 
 		for ( Chain chain : s.getChains()) {
 
-			Chain test = c.getChainByPDB(chain.getChainID());
+			Chain test = c.getChain(chain.getChainID());
 
 			assertEquals("Could not correctly clone seqres for chain " + chain.getChainID() , chain.getSeqResLength(),test.getSeqResLength());
 

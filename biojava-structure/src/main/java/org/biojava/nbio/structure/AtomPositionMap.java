@@ -365,8 +365,8 @@ public class AtomPositionMap {
 	public ResidueRangeAndLength trimToValidResidues(ResidueRange rr) {
 		ResidueNumber start = rr.getStart();
 		ResidueNumber end = rr.getEnd();
-		String chain = rr.getChainId();
-		// Add chainId
+		String chain = rr.getChainName();
+		// Add chainName
 		if(start.getChainId() == null) {
 			start = new ResidueNumber(chain,start.getSeqNum(),start.getInsCode());
 		}

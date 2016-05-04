@@ -97,7 +97,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 		ResidueRange rr = parse(s);
 		ResidueNumber start = rr.getStart();
 
-		String chain = rr.getChainId();
+		String chain = rr.getChainName();
 
 		// handle special "_" chain
 		if(chain == null || chain.equals("_")) {

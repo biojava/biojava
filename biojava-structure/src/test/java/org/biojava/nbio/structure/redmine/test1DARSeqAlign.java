@@ -57,28 +57,29 @@ public class test1DARSeqAlign {
 			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 		}
 
-
 		Structure struc = cache.getStructure("1DAR");
-		//System.out.println(struc);
-		Chain c = struc.getChainByPDB("A");
+		
+		Chain a = struc.getPolyChainByPdb("A");
+		Chain b = struc.getNonPolyChainByPdb("A");
+
 		//System.out.println(c.getSeqResGroups());
 
-		Group g = c.getGroupByPDB(ResidueNumber.fromString("692"));
+		Group g = b.getGroupByPDB(ResidueNumber.fromString("692"));
 		//System.out.println(g);
 		//System.out.println(FileConvert.toPDB(g.getAtom(0)));
 
-		Group g3 = c.getGroupByPDB(ResidueNumber.fromString("689"));
+		Group g3 = a.getGroupByPDB(ResidueNumber.fromString("689"));
 		//System.out.println(g3);
 		//System.out.println(FileConvert.toPDB(g3.getAtom(0)));
 
-		assertTrue(! c.getSeqResGroups().contains(g));
+		assertTrue(! a.getSeqResGroups().contains(g));
 
 		assertTrue( g instanceof NucleotideImpl);
 
 		assertTrue(g.getType().equals(GroupType.NUCLEOTIDE));
 
 		assertTrue( g3.getPDBName().equals("LYS"));
-		assertTrue( c.getSeqResGroups().contains(g3));
+		assertTrue( a.getSeqResGroups().contains(g3));
 
 		assertTrue( g3 instanceof AminoAcid);
 

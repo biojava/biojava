@@ -44,7 +44,7 @@ import java.util.zip.GZIPInputStream;
  * <pre>
  * SiftsChainToUniprot sifts = SiftsChainToUniprot.load();
  * SiftsChainEntry entry1 = sifts.getByUniProtId("P04585");
- * System.out.println(entry1.getPdbId() + "." + entry1.getChainId()); // 1hiv.A
+ * System.out.println(entry1.getPdbId() + "." + entry1.getChainName()); // 1hiv.A
  * System.out.println(entry1.getPdbStart() + "-" + entry1.getPdbStop()); // 1-99
  * SiftsChainEntry entry2 = sifts.getByChainId("1hiv", "A");
  * System.out.println(entry1.equals(entry2)); // true

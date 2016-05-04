@@ -165,6 +165,7 @@ public class ChainImpl implements Chain, Serializable {
 		// copy chain data:
 
 		n.setChainID( getChainID());
+		n.setName(getName());
 		n.setSwissprotId ( getSwissprotId());
 
 		// NOTE the EntityInfo will be reset at the parent level (Structure) if cloning is happening from parent level
@@ -178,8 +179,6 @@ public class ChainImpl implements Chain, Serializable {
 			n.addGroup(g);
 			g.setChain(n);
 		}
-
-
 
 		if (seqResGroups!=null){
 
@@ -207,7 +206,6 @@ public class ChainImpl implements Chain, Serializable {
 
 			n.setSeqResGroups(tmpSeqRes);
 		}
-
 
 		return n ;
 	}

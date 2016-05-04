@@ -130,8 +130,8 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 	public String toString() {
 
 		StringWriter writer = new StringWriter();
-		//	   if ( chainId != null){
-		//		   writer.append(chainId);
+		//	   if ( chainName != null){
+		//		   writer.append(chainName);
 		//		   writer.append(":");
 		//	   }
 		writer.append(String.valueOf(seqNum));
