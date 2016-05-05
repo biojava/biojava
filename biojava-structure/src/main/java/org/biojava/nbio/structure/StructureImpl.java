@@ -243,17 +243,17 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain findChain(String chainId, int modelnr) throws StructureException {
+	public Chain findChain(String asymId, int modelnr) throws StructureException {
 
 		List<Chain> chains = getChains(modelnr);
 
 		// iterate over all chains.
 		for (Chain c : chains) {
-			if (c.getName().equals(chainId)) {
+			if (c.getName().equals(asymId)) {
 				return c;
 			}
 		}
-		throw new StructureException("Could not find chain \"" + chainId + "\" for PDB id " + pdb_id);
+		throw new StructureException("Could not find chain by asymId \"" + asymId + "\" for PDB id " + pdb_id);
 	}
 
 
