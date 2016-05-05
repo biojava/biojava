@@ -402,7 +402,7 @@ public class ProteinModificationIdentifier {
 				//	numIns += num.getInsCode();
 				//}
 				ResidueNumber resNum = new ResidueNumber();
-				resNum.setChainId(num.getChainId());
+				resNum.setChainName(num.getChainId());
 				resNum.setSeqNum(num.getResidueNumber());
 				resNum.setInsCode(num.getInsCode());
 				//group = chain.getGroupByPDB(numIns);

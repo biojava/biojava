@@ -134,8 +134,8 @@ public class TestBond {
 
 		Structure s = StructureIO.getStructure("1kh9");
 
-		Atom phosphateP = s.getChainByPDB("A").getAtomGroup(447).getAtom("P");
-		Atom phosphateO = s.getChainByPDB("A").getAtomGroup(447).getAtom("O1");
+		Atom phosphateP = s.getChain("I").getAtomGroup(0).getAtom("P");
+		Atom phosphateO = s.getChain("I").getAtomGroup(0).getAtom("O1");
 
 		assertTrue(areBonded(phosphateP, phosphateO));
 	}

@@ -232,10 +232,6 @@ public class SiteTest extends TestCase {
 		List<Group> result = bindingSite.getGroups();
 		Group arg221 = result.get(0);
 		ResidueNumber testResNum = new ResidueNumber("H", 221, 'A');
-//        testResNum.setChainId("H");
-//        testResNum.setSeqNum(221);
-//        testResNum.setInsCode("A");
-//        System.out.println(arg221);
 		assertEquals(testResNum, arg221.getResidueNumber());
 		//test the chainId is also set
 		assertEquals("H", arg221.getChainId());

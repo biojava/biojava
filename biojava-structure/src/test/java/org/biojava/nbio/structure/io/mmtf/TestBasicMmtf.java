@@ -61,6 +61,8 @@ public class TestBasicMmtf {
 		structure.setEntityInfos(new ArrayList<EntityInfo>());
 		structure.setPDBHeader(pdbHeader);
 		Chain chain = new ChainImpl();
+		chain.setId("A");
+		chain.setName("A");
 		Group group = new AminoAcidImpl(); 
 		group.setPDBName("FKF");
 		Atom atom = new AtomImpl();

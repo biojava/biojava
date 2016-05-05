@@ -45,10 +45,6 @@ public class Test3th3 {
 	@Test
 	public void test3th3() throws StructureException, IOException {
 		AtomCache cache = new AtomCache();
-
-		FileParsingParameters params = cache.getFileParsingParams();
-		params.setUseInternalChainId(false);
-		params.setCreateAtomBonds(true);
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("3th3");
@@ -63,7 +59,7 @@ public class Test3th3 {
 		Chain c = s.getChainByPDB("T");
 
 		ResidueNumber rn = ResidueNumber.fromString("201");
-		rn.setChainId("T");
+		rn.setChainName("T");
 
 		Group g = c.getGroupByPDB(rn);
 

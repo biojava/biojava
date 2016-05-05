@@ -38,7 +38,7 @@ public class TestBondFinding {
 		// 	Disulphide
 		assertEquals(getInterBonds("2QWO"), 956);
 		// Covalent ligand
-		assertEquals(getInterBonds("4QDV"), 2294);
+		assertEquals(getInterBonds("4QDV"), 2290);
 		// DNA 
 		assertEquals(getInterBonds("4XSN"), 22);
 

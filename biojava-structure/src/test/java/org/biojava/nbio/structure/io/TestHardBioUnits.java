@@ -77,7 +77,6 @@ public class TestHardBioUnits {
 
 			assertFalse(bioAssembly.hasChain("H"));
 
-
 			assertEquals(1,bioAssembly.getChains(0).size());
 			assertEquals(1,bioAssembly.getChains(1).size());
 		} catch (Exception e){

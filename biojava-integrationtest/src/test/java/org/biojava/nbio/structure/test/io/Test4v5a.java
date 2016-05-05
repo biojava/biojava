@@ -46,7 +46,6 @@ public class Test4v5a {
 		AtomCache cache = new AtomCache();
 
 		FileParsingParameters params = cache.getFileParsingParams();
-		params.setUseInternalChainId(false);
 		params.setCreateAtomBonds(true);
 		StructureIO.setAtomCache(cache);
 
@@ -60,7 +59,6 @@ public class Test4v5a {
 		AtomCache cache = new AtomCache();
 
 		FileParsingParameters params = cache.getFileParsingParams();
-		params.setUseInternalChainId(true);
 		params.setCreateAtomBonds(true);
 		StructureIO.setAtomCache(cache);
 
