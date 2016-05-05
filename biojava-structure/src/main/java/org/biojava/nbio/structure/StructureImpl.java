@@ -249,7 +249,7 @@ public class StructureImpl implements Structure, Serializable {
 
 		// iterate over all chains.
 		for (Chain c : chains) {
-			if (c.getChainID().equals(chainId)) {
+			if (c.getName().equals(chainId)) {
 				return c;
 			}
 		}
