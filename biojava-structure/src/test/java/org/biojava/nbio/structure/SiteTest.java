@@ -49,7 +49,8 @@ public class SiteTest extends TestCase {
 		//SITE     2 AC1  6 HOH H 464  HOH H 497
 		//groups for site CAT
 		Chain chain = new ChainImpl();
-		chain.setChainID("H");
+		chain.setName("H");
+		chain.setId("H");
 		Group his57 = new AminoAcidImpl();
 		//            his57.setPDBCode("57");
 		his57.setResidueNumber("H", 57, ' ');
