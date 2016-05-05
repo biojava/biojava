@@ -64,7 +64,7 @@ public class ChainImpl implements Chain, Serializable {
 	private List <Group> groups;
 	private List<Group> seqResGroups;
 
-	private EntityInfo mol;
+	private EntityInfo entity;
 	private Structure parent;
 
 	private Map<String, Integer> pdbResnumMap;
@@ -170,7 +170,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		// NOTE the EntityInfo will be reset at the parent level (Structure) if cloning is happening from parent level
 		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
-		n.setEntityInfo(this.mol);
+		n.setEntityInfo(this.entity);
 
 		n.setInternalChainID(asymId);
 
@@ -189,7 +189,7 @@ public class ChainImpl implements Chain, Serializable {
 
 			for (Group seqResGroup : seqResGroups) {
 
-				int i = findMathingGroupIndex(groups, seqResGroup);
+				int i = groups.indexOf(seqResGroup);
 
 				Group g ;
 
@@ -210,23 +210,12 @@ public class ChainImpl implements Chain, Serializable {
 		return n ;
 	}
 
-	private static int findMathingGroupIndex(List<Group> atomGroups, Group g) {
-		int i = 0;
-		for (Group atomGroup: atomGroups) {
-			if (g==atomGroup) return i;
-			i++;
-		}
-		return -1;
-	}
-
-
-
 	/** {@inheritDoc}
 	 *
 	 */
 	@Override
 	public void setEntityInfo(EntityInfo mol) {
-		this.mol = mol;
+		this.entity = mol;
 	}
 
 	/** {@inheritDoc}
@@ -234,7 +223,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	@Override
 	public EntityInfo getEntityInfo() {
-		return this.mol;
+		return this.entity;
 	}
 
 	/** set the Swissprot id of this chains .
@@ -516,9 +505,9 @@ public class ChainImpl implements Chain, Serializable {
 		String newline = System.getProperty("line.separator");
 		StringBuilder str = new StringBuilder();
 		str.append("Chain asymId:").append(getChainID()).append(" authId:").append(getName()).append(newline);
-		if ( mol != null ){
-			if ( mol.getDescription() != null){
-				str.append(mol.getDescription()).append(newline);
+		if ( entity != null ){
+			if ( entity.getDescription() != null){
+				str.append(entity.getDescription()).append(newline);
 			}
 		}
 		str.append("total SEQRES length: ").append(getSeqResGroups().size()).append(" total ATOM length:")

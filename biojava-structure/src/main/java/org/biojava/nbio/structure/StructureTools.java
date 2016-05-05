@@ -1054,7 +1054,6 @@ public class StructureTools {
 		newS.setSites(s.getSites());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.setEntityInfos(s.getEntityInfos());
-		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 
@@ -1123,7 +1122,6 @@ public class StructureTools {
 		newStructure.setSites(s.getSites());
 		newStructure.setBiologicalAssembly(s.isBiologicalAssembly());
 		newStructure.setEntityInfos(s.getEntityInfos());
-		newStructure.setConnections(s.getConnections());
 		newStructure.setSSBonds(s.getSSBonds());
 		newStructure.setSites(s.getSites());
 		newStructure.setCrystallographicInfo(s.getCrystallographicInfo());

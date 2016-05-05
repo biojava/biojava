@@ -269,8 +269,7 @@ public interface Group {
 
 	/**
 	 * Utility method for returning the chainId of the Group or null if no
-	 * Chain has been set. This replaces the need to use the expression
-	 * group.getChain().getId()
+	 * Chain has been set. This is equivalent to calling getChain().getId()
 	 * @since 3.0
 	 * @return  the ID of the chain
 	 */

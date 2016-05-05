@@ -27,7 +27,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
 import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileConvert;
@@ -55,7 +54,6 @@ public class StructureImpl implements Structure, Serializable {
 
 	private List<Model> models;
 
-	private List<Map <String,Integer>> connections ;
 	private List<EntityInfo> entityInfos;
 	private List<DBRef> dbrefs;
 	private List<Bond> ssbonds;
@@ -77,7 +75,6 @@ public class StructureImpl implements Structure, Serializable {
 
 		models         = new ArrayList<>();
 		name           = "";
-		connections    = new ArrayList<>();
 		entityInfos      = new ArrayList<>();
 		dbrefs         = new ArrayList<>();
 		pdbHeader      = new PDBHeader();
@@ -305,18 +302,6 @@ public class StructureImpl implements Structure, Serializable {
 		this.structureIdentifier = structureIdentifier;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Map<String,Integer>> getConnections()                { return connections ;}
-
 	/** {@inheritDoc} */
 	@Override
 	public void addChain(Chain chain) {
@@ -455,7 +440,7 @@ public class StructureImpl implements Structure, Serializable {
 
 				str.append("chain ")
 						.append(j).append(": asymId:")
-						.append(cha.getChainID())
+						.append(cha.getId())
 						.append(" authId:")
 						.append(cha.getName()).append(" ");
 
@@ -581,19 +566,6 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public void setNmr(boolean nmr) {
-		// old implementation was:
-		// this.nmrflag = nmr;
-	}
-
-
-	/** retrieve all chains of a model.
-	 *
-	 * @param modelnr  an int
-	 * @return a List object
-	 */
 	@Override
 	public List<Chain> getChains(int modelnr){
 		return getModel(modelnr);
@@ -1085,7 +1057,7 @@ public class StructureImpl implements Structure, Serializable {
 			}
 			ResidueNumber last = g.getResidueNumber();
 
-			range.add(new ResidueRange(chain.getChainID(),first,last));
+			range.add(new ResidueRange(chain.getName(),first,last));
 		}
 		return new SubstructureIdentifier(getPDBCode(),range);
 	}

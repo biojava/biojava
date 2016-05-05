@@ -3,16 +3,18 @@ package org.biojava.nbio.structure;
 import java.util.ArrayList;
 import java.util.List;
 
-/** An internal utility class for StructureImpl to make it easier to manage poly and nonpoly chains.
+/** 
+ * An internal utility class for StructureImpl to make it easier to manage poly and nonpoly chains.
  * Not to exposed to users through API.
  *
- *
  * Created by andreas on 5/3/16.
+ * @author Andreas Prlic
+ * @since 5.0
  */
 public class Model {
 
-    List<Chain> polyChains;
-    List<Chain> nonPolyChains;
+    private List<Chain> polyChains;
+    private List<Chain> nonPolyChains;
 
     public Model(){
         polyChains = new ArrayList<>(0);

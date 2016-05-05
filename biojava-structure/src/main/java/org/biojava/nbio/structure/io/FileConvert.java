@@ -33,6 +33,7 @@ import java.util.Map;
 
 import org.biojava.nbio.core.util.XMLWriter;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.DBRef;
 import org.biojava.nbio.structure.Element;
@@ -106,65 +107,26 @@ public class FileConvert {
 		this.printConnections = printConnections;
 	}
 
-	/** prints the connections in PDB style
+	/** 
+	 * Prints the connections in PDB style
 	 *
-	 * Thanks to Tamas Horvath for this one
+	 * Rewritten since 5.0 to use {@link Bond}s
+	 * Will produce strictly one CONECT record per bond (won't group several bonds in one line)
 	 */
 	private String printPDBConnections(){
 
+		StringBuilder str = new StringBuilder();
 
-		StringBuffer str = new StringBuffer();
-
-		// TODO this needs to be rewritten so that the data comes from Atom.getBonds(). Structure.getConnections will be removed in upcoming releases (after 4.2) - JD 2016-03-03
-
-		List<Map<String, Integer>> cons = structure.getConnections();
-		for (int cnr = 0; cnr<cons.size();cnr++){
-			Map<String,Integer> con =  cons.get(cnr);
-			Integer as = con.get("atomserial");
-
-			String atomserial =  "";
-
-			String bond1 = "";
-			String bond2 = "";
-			String bond3 = "";
-			String bond4 = "";
-			String hyd1  = "";
-			String hyd2  = "";
-			String salt1 = "";
-			String hyd3  = "";
-			String hyd4  = "";
-			String salt2 = "";
-
-
-
-			if (con.containsKey("bond1"))  bond1 = con.get("bond1").toString();
-			if (con.containsKey("bond2"))  bond2 = con.get("bond2").toString();
-			if (con.containsKey("bond3"))  bond3 = con.get("bond3").toString();
-			if (con.containsKey("bond4"))  bond4 = con.get("bond4").toString();
-			if (con.containsKey("hyd1"))   hyd1  = con.get("hyd1").toString();
-			if (con.containsKey("hyd2"))   hyd2  = con.get("hyd2").toString();
-			if (con.containsKey("salt1"))  salt1 = con.get("salt1").toString();
-			if (con.containsKey("hyd3"))   hyd3  = con.get("hyd3").toString();
-			if (con.containsKey("hyd4"))   hyd4  = con.get("hyd4").toString();
-			if (con.containsKey("salt2"))  salt2 = con.get("salt2").toString();
-
-			atomserial = String.format("%5d",as) ;
-			bond1      = String.format("%5s",bond1) ;
-			bond2      = String.format("%5s",bond2) ;
-			bond3      = String.format("%5s",bond3) ;
-			bond4      = String.format("%5s",bond4) ;
-			hyd1       = String.format("%5s",hyd1)  ;
-			hyd2       = String.format("%5s",hyd2)  ;
-			salt1      = String.format("%5s",salt1) ;
-			hyd3       = String.format("%5s",hyd3)  ;
-			hyd4       = String.format("%5s",hyd4)  ;
-			salt2      = String.format("%5s",salt2) ;
-
-			String connectLine = "CONECT" + atomserial + bond1 + bond2 + bond3 +
-					bond4 + hyd1 + hyd2 + salt1 + hyd3 + hyd4 + salt2;
-
-			str.append(connectLine).append(newline);
+		for (Chain c:structure.getChains()) {
+			for (Group g:c.getAtomGroups()) {
+				for (Atom a:g.getAtoms()) {
+					for (Bond b:a.getBonds()) {				//7890123456789012345678901234567890123456789012345678901234567890		
+						str.append(String.format("CONECT%5d%5d                                                                "+newline, b.getAtomA().getPDBserial(), b.getAtomB().getPDBserial()));
+					}
+				}
+			}
 		}
+		
 		return str.toString();
 	}
 
@@ -472,6 +434,7 @@ public class FileConvert {
 
 	/**
 	 * Convert a protein Structure to a DAS Structure XML response .
+	 * Since 5.0, bond (CONECT records) information is not supported anymore.
 	 * @param xw  a XMLWriter object
 	 * @throws IOException ...
 	 *
@@ -551,75 +514,7 @@ public class FileConvert {
 
 
 		if ( doPrintConnections() ) {
-			// do connectivity for all chains:
-
-			List<Map<String,Integer>> cons = structure.getConnections();
-			for (int cnr = 0; cnr<cons.size();cnr++){
-
-
-				/*
-				 the HashMap for a single CONECT line contains the following fields:
-				 <ul>
-				 <li>atomserial (mandatory) : Atom serial number
-				 <li>bond1 .. bond4 (optional): Serial number of bonded atom
-				 <li>hydrogen1 .. hydrogen4 (optional):Serial number of hydrogen bonded atom
-				 <li>salt1 .. salt2 (optional): Serial number of salt bridged atom
-				 </ul>
-				 */
-
-				Map<String, Integer> con = cons.get(cnr);
-				Integer as = con.get("atomserial");
-				int atomserial = as.intValue();
-
-
-				List<Integer> atomids = new ArrayList<Integer>() ;
-
-				// test salt and hydrogen first //
-				if (con.containsKey("salt1")) atomids.add(con.get("salt1"));
-				if (con.containsKey("salt2")) atomids.add(con.get("salt2"));
-
-				if (atomids.size()!=0){
-					addConnection(xw,"salt",atomserial,atomids);
-					atomids = new ArrayList<Integer>() ;
-				}
-				if (con.containsKey("hydrogen1")) atomids.add(con.get("hydrogen1"));
-				if (con.containsKey("hydrogen2")) atomids.add(con.get("hydrogen2"));
-				if (con.containsKey("hydrogen3")) atomids.add(con.get("hydrogen3"));
-				if (con.containsKey("hydrogen4")) atomids.add(con.get("hydrogen4"));
-				if (atomids.size()!=0){
-					addConnection(xw,"hydrogen",atomserial,atomids);
-					atomids = new ArrayList<Integer>() ;
-				}
-
-				if (con.containsKey("bond1")) atomids.add(con.get("bond1"));
-				if (con.containsKey("bond2")) atomids.add(con.get("bond2"));
-				if (con.containsKey("bond3")) atomids.add(con.get("bond3"));
-				if (con.containsKey("bond4")) atomids.add(con.get("bond4"));
-
-				if (atomids.size()!=0){
-					addConnection(xw,"bond",atomserial,atomids);
-				}
-			}
-		}
-	}
-
-	private void addConnection(XMLWriter xw,String connType, int atomserial, List<Integer> atomids){
-		try{
-			xw.openTag("connect");
-			xw.attribute("atomSerial",Integer.toString(atomserial));
-			xw.attribute("type",connType);
-			for (int i=0;i<atomids.size();i++){
-				Integer atomid = atomids.get(i);
-				if ( atomid == null)
-					continue;
-				int aid = atomid.intValue();
-				xw.openTag("atomID");
-				xw.attribute("atomID",Integer.toString(aid));
-				xw.closeTag("atomID");
-			}
-			xw.closeTag("connect");
-		} catch( Exception e) {
-			e.printStackTrace();
+			// not supported anymore since 5.0
 		}
 	}
 
@@ -690,7 +585,7 @@ public class FileConvert {
 		return str.toString();
 	}
 
-	public static String toMMCIF(Chain chain, String chainId, String internalChainId, boolean writeHeader) {
+	public static String toMMCIF(Chain chain, String authId, String asymId, boolean writeHeader) {
 		StringBuilder str = new StringBuilder();
 
 		if (writeHeader)
@@ -699,7 +594,7 @@ public class FileConvert {
 
 		@SuppressWarnings("unchecked")
 		List<Object> list =
-		(List<Object>) (List<?>) MMCIFFileTools.convertChainToAtomSites(chain, 1, chainId, internalChainId);
+		(List<Object>) (List<?>) MMCIFFileTools.convertChainToAtomSites(chain, 1, authId, asymId);
 
 		str.append(MMCIFFileTools.toMMCIF(list));
 		return str.toString();
@@ -708,7 +603,7 @@ public class FileConvert {
 	public static String toMMCIF(Chain chain, boolean writeHeader) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
-		sb.append(toMMCIF(chain, chain.getChainID(),chain.getInternalChainID(),writeHeader));
+		sb.append(toMMCIF(chain, chain.getName(), chain.getId(),writeHeader));
 		return sb.toString();
 	}
 

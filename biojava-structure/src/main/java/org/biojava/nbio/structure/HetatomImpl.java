@@ -467,7 +467,7 @@ public class HetatomImpl implements Group,Serializable {
 		if (parent == null) {
 			return "";
 		}
-		return parent.getChainID();
+		return parent.getId();
 	}
 
 	/**

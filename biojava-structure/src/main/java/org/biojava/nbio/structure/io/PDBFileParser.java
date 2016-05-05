@@ -2873,9 +2873,6 @@ public class PDBFileParser  {
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 
-		// TODO after 4.2 release we should remove setConnections/getConnections and rely only on Atom.getBonds/setBonds - JD 2016-03-03
-		structure.setConnections(connects);
-
 		structure.setDBRefs(dbrefs);
 
 		// Only align if requested (default) and not when headerOnly mode with no Atoms.

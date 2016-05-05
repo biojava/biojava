@@ -75,6 +75,7 @@ public class EntityInfo implements Serializable {
 	/**
 	 * A map to cache residue number mapping, between ResidueNumbers and index (1-based) in aligned sequences (SEQRES).
 	 * Initialised lazily upon call to {@link #getAlignedResIndex(Group, Chain)}
+	 * Keys are asym_ids of chains, values maps of residue numbers to indices.
 	 */
 	private Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
 
@@ -215,10 +216,10 @@ public class EntityInfo implements Serializable {
 		StringBuilder buf = new StringBuilder();
 		buf.append("EntityInfo: ").append(molId).append(" ");
 		buf.append(description==null?"(no name)":"("+description+")");
-		buf.append(" chainIds: ");
+		buf.append(" asymIds: ");
 		if (chains!=null) {
 			for (int i=0;i<chains.size();i++) {
-				buf.append(chains.get(i).getChainID());
+				buf.append(chains.get(i).getId());
 				if (i!=chains.size()-1) buf.append(",");
 			}
 		} else {
@@ -229,7 +230,7 @@ public class EntityInfo implements Serializable {
 
 	/**
 	 * Get the representative Chain for this EntityInfo.
-	 * We choose the Chain with the first chain identifier after
+	 * We choose the Chain with the first asym_id chain identifier after
 	 * lexicographical sorting (case insensitive),
 	 * e.g. chain A if EntityInfo is composed of chains A,B,C,D,E
 	 * @return
@@ -238,13 +239,13 @@ public class EntityInfo implements Serializable {
 
 		List<String> chainIds = new ArrayList<String>();
 		for (Chain chain:chains) {
-			chainIds.add(chain.getChainID());
+			chainIds.add(chain.getId());
 		}
 
 		Collections.sort(chainIds, String.CASE_INSENSITIVE_ORDER);
 
 		for (Chain chain:chains) {
-			if (chain.getChainID().equals(chainIds.get(0))) {
+			if (chain.getId().equals(chainIds.get(0))) {
 				return chain;
 			}
 		}
@@ -271,169 +272,7 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * Print some debug statements to System.out
-	 *
-	 *
-	 */
-	public void showHeader(){
-		this.showEntityInfo();
-		this.showSource();
-	}
-
-	public void showEntityInfo() {
-		System.out.println("ENTITY INFO:");
-		if (this.molId != -1) {
-			System.out.println("Mol ID: " + this.molId);
-		}
-		if (this.chains != null) {
-			StringBuilder buf = new StringBuilder();
-			for (int i=0;i<chains.size();i++) {
-				buf.append(chains.get(i).getChainID());
-				if (i!=chains.size()-1) buf.append(",");
-			}
-			System.out.println("Chains: " + buf.toString());
-		}
-		if (this.description != null) {
-			System.out.println("Mol Name: " + this.description);
-		}
-		if (this.title != null) {
-			System.out.println("Title: " + this.title);
-		}
-		if (this.synonyms != null) {
-			for (String x : this.synonyms) {
-				System.out.println("Synomym: " + x);
-			}
-		}
-		if (this.ecNums != null) {
-			for (String x : this.ecNums) {
-				System.out.println("EC: " + x);
-			}
-		}
-		if (this.fragment != null) {
-			System.out.println("Fragment? " + this.fragment);
-		}
-		if (this.engineered != null) {
-			System.out.println("Engineered? " + this.engineered);
-		}
-		if (this.mutation != null) {
-			System.out.println("Mutation? " + this.mutation);
-		}
-		if (this.biologicalUnit != null) {
-			System.out.println("Biological Unit: " + this.biologicalUnit);
-		}
-		if (this.details != null) {
-			System.out.println("Details: " + this.details);
-		}
-		if (this.numRes != null) {
-			System.out.println("No. Residues: " + this.numRes);
-		}
-		//System.out.println( "\n"
-
-	}
-
-
-	public void showSource() {
-		System.out.println("SOURCE INFO:");
-		if (this.synthetic != null) {
-			System.out.println("Synthetic? " + this.synthetic);
-		}
-		if (this.fragment != null) {
-			System.out.println("Fragment? " + this.fragment);
-		}
-		if (this.organismScientific != null) {
-			System.out.println("Organism Scientific: " + this.organismScientific);
-		}
-		if (this.organismTaxId != null) {
-			System.out.println("Organism Tax Id: " + this.organismTaxId);
-		}
-		if (this.organismCommon != null) {
-			System.out.println("Organism Common: " + this.organismCommon);
-		}
-		if (this.strain != null) {
-			System.out.println("Strain: " + this.strain);
-		}
-		if (this.variant != null) {
-			System.out.println("Variant: " + this.variant);
-		}
-		if (this.cellLine != null) {
-			System.out.println("Cell Line: " + this.cellLine);
-		}
-		if (this.atcc != null) {
-			System.out.println("ATCC: " + this.atcc);
-		}
-		if (this.organ != null) {
-			System.out.println("Organ: " + this.organ);
-		}
-		if (this.tissue != null) {
-			System.out.println("Tissue: " + this.tissue);
-		}
-		if (this.cell != null) {
-			System.out.println("Cell: " + this.cell);
-		}
-		if (this.organelle != null) {
-			System.out.println("Organelle: " + this.organelle);
-		}
-		if (this.secretion != null) {
-			System.out.println("Secretion: " + this.secretion);
-		}
-		if (this.gene != null) {
-			System.out.println("Gene: " + this.gene);
-		}
-		if (this.cellularLocation != null) {
-			System.out.println("Cellular Location: " + this.cellularLocation);
-		}
-		if (this.expressionSystem != null) {
-			System.out.println("Expression System: " + this.expressionSystem);
-		}
-		if (this.expressionSystemTaxId != null) {
-			System.out.println("Expression System Tax Id: " + this.expressionSystemTaxId);
-		}
-		if (this.expressionSystemStrain != null) {
-			System.out.println("Expression System Strain: " + this.expressionSystemStrain);
-		}
-		if (this.expressionSystemVariant != null) {
-			System.out.println("Expression System Variant: " + this.expressionSystemVariant);
-		}
-		if (this.expressionSystemCellLine != null) {
-			System.out.println("Expression System Cell Line: " + this.expressionSystemCellLine);
-		}
-		if (this.expressionSystemAtccNumber != null) {
-			System.out.println("Expression System ATCC Number: " + this.expressionSystemAtccNumber);
-		}
-		if (this.expressionSystemOrgan != null) {
-			System.out.println("Expression System Organ: " + this.expressionSystemOrgan);
-		}
-		if (this.expressionSystemTissue != null) {
-			System.out.println("Expression System Tissue: " + this.expressionSystemTissue);
-		}
-		if (this.expressionSystemCell != null) {
-			System.out.println("Expression System Cell: " + this.expressionSystemCell);
-		}
-		if (this.expressionSystemOrganelle != null) {
-			System.out.println("Expression System Organelle: " + this.expressionSystemOrganelle);
-		}
-		if (this.expressionSystemCellularLocation != null) {
-			System.out.println("Expression System Cellular Location: " + this.expressionSystemCellularLocation);
-		}
-		if (this.expressionSystemVectorType != null) {
-			System.out.println("Expression System Vector Type: " + this.expressionSystemVectorType);
-		}
-		if (this.expressionSystemVector != null) {
-			System.out.println("Expression System Vector: " + this.expressionSystemVector);
-		}
-		if (this.expressionSystemPlasmid != null) {
-			System.out.println("Expression System Plasmid: " + this.expressionSystemPlasmid);
-		}
-		if (this.expressionSystemGene != null) {
-			System.out.println("Expression System Gene: " + this.expressionSystemGene);
-		}
-		if (this.expressionSystemOtherDetails != null) {
-			System.out.println("Expression System Other Details: " + this.expressionSystemOtherDetails);
-		}
-	}
-
-	/**
-	 * Return the list of member chain IDs that are described by this EnityInfo,
+	 * Return the list of member chain ids (asym ids) that are described by this EntityInfo,
 	 * only unique chain IDs are contained in the list.
 	 * Note that in the case of multimodel structures this will return just the unique
 	 * chain identifiers whilst {@link #getChains()} will return a corresponding chain
@@ -446,7 +285,7 @@ public class EntityInfo implements Serializable {
 
 		Set<String> uniqChainIds = new TreeSet<String>();
 		for (int i=0;i<getChains().size();i++) {
-			uniqChainIds.add(getChains().get(i).getChainID());
+			uniqChainIds.add(getChains().get(i).getId());
 		}
 
 		return new ArrayList<String>(uniqChainIds);
@@ -475,20 +314,20 @@ public class EntityInfo implements Serializable {
 
 		boolean contained = false;
 		for (Chain member:getChains()) {
-			if (c.getChainID().equals(member.getChainID())) {
+			if (c.getId().equals(member.getId())) {
 				contained = true;
 				break;
 			}
 		}
 		if (!contained)
-			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this entity: "+getChainIds().toString());
+			throw new IllegalArgumentException("Given chain with asym_id "+c.getId()+" is not a member of this entity: "+getChainIds().toString());
 
-		if (!chains2pdbResNums2ResSerials.containsKey(c.getChainID())) {
+		if (!chains2pdbResNums2ResSerials.containsKey(c.getId())) {
 			// we do lazy initialisation of the map
 			initResSerialsMap(c);
 		}
 		// if no seqres groups are available at all the map will be null
-		Map<ResidueNumber,Integer> map = chains2pdbResNums2ResSerials.get(c.getChainID());
+		Map<ResidueNumber,Integer> map = chains2pdbResNums2ResSerials.get(c.getId());
 		int serial;
 		if (map!=null) {
 
@@ -497,12 +336,8 @@ public class EntityInfo implements Serializable {
 			// still it can happen that a group is in ATOM in one chain but not in other of the same entity.
 			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):
 			if (resNum==null && c.getSeqResGroups()!=null && !c.getSeqResGroups().isEmpty()) {
-				int index = -1;
-				for (int i=0;i<c.getSeqResGroups().size();i++) {
-					if (g==c.getSeqResGroup(i)) {
-						index = i; break;
-					}
-				}
+				
+				int index = c.getSeqResGroups().indexOf(g);
 
 				resNum = findResNumInOtherChains(index, c);
 
@@ -533,16 +368,16 @@ public class EntityInfo implements Serializable {
 
 	private void initResSerialsMap(Chain c) {
 		if (c.getSeqResGroups()==null || c.getSeqResGroups().isEmpty()) {
-			logger.warn("No SEQRES groups found in chain {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
+			logger.warn("No SEQRES groups found in chain with asym_id {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
 					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)",
-					c.getChainID());
+					c.getId());
 			// we add a explicit null to the map so that we flag it as unavailable for this chain
-			chains2pdbResNums2ResSerials.put(c.getChainID(), null);
+			chains2pdbResNums2ResSerials.put(c.getId(), null);
 			return;
 		}
 
 		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<ResidueNumber, Integer>();
-		chains2pdbResNums2ResSerials.put(c.getChainID(), resNums2ResSerials);
+		chains2pdbResNums2ResSerials.put(c.getId(), resNums2ResSerials);
 
 		for (int i=0;i<c.getSeqResGroups().size();i++) {
 
@@ -572,8 +407,8 @@ public class EntityInfo implements Serializable {
 			Group seqResGroup = c.getSeqResGroup(i);
 
 			if (seqResGroup==null) {
-				logger.warn("The SEQRES group is null for index {} in chain {}, whilst it wasn't null in chain {}",
-						 i, c.getChainID(), chain.getChainID());
+				logger.warn("The SEQRES group is null for index {} in chain with asym_id {}, whilst it wasn't null in chain with asym_id {}",
+						 i, c.getId(), chain.getId());
 				continue;
 			}
 

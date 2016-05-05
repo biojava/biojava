@@ -183,8 +183,6 @@ public class SourceCompoundTest extends TestCase{
 
 		EntityInfo comp = structure.getEntityById(1);
 
-		comp.showSource();
-
 		assertEquals("10090", comp.getOrganismTaxId());
 		assertEquals("9606", comp.getExpressionSystemTaxId());
 
