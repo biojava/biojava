@@ -73,6 +73,7 @@ public class UnitCellBoundingBox {
 	private void setBb(Structure s, boolean includeHetAtoms, int i) {
 		chainBbs[i] = new BoundingBox[numChainsAu];
 		for (int j = 0;j<numChainsAu; j++) {
+			System.out.println(s.getChain(j));
 			chainBbs[i][j] = new BoundingBox(StructureTools.getAllNonHAtomArray(s.getChain(j), includeHetAtoms));
 		}
 		auBbs[i] = new BoundingBox(chainBbs[i]);

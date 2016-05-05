@@ -129,7 +129,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// First check to see if the chain exists
 		boolean newChain = true;
 		for (Chain c: structure.getChains(modelNumber)) {
-			if (c.getChainID().equals(chainId)) {
+			if (c.getId().equals(chainId)) {
 				newChain = false;
 				chain = c;
 				break;
@@ -138,7 +138,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// If we need to set a new chain do this
 		if (newChain){
 			chain = new ChainImpl();
-			chain.setChainID(chainId.trim());
+			chain.setId(chainId.trim());
+			chain.setName(chainName);
 			structure.addChain(chain, modelNumber);
 			chainList.add(chain);
 		}
@@ -175,9 +176,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		group.setChemComp(chemComp);
 		group.setPDBName(groupName);
 		if (insertionCode == MmtfStructure.UNAVAILABLE_CHAR_VALUE) {
-			group.setResidueNumber(chain.getChainID().trim(), groupNumber, null);
+			group.setResidueNumber(chain.getName().trim(), groupNumber, null);
 		} else {
-			group.setResidueNumber(chain.getChainID().trim(),
+			group.setResidueNumber(chain.getName().trim(),
 					groupNumber, insertionCode);
 		}
 		group.setAtoms(new ArrayList<Atom>(atomCount));
@@ -406,7 +407,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			bioAssTrans.setId(transId.toString());
 			// If it actually has an index - if it doesn't it is because the chain has no density.
 			if (currChainIndex!=-1){
-				bioAssTrans.setChainId(totChainList.get(currChainIndex).getChainID());
+				bioAssTrans.setChainId(totChainList.get(currChainIndex).getId());
 			}
 			else {
 				continue;
