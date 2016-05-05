@@ -608,14 +608,22 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 	@Override
-	public List<Chain> getPolyChains() {
-		return models.get(0).getPolyChains();
+	public List<Chain> getPolyChains() { return getPolyChains(0);}
+
+	@Override
+	public List<Chain> getNonPolyChains() { return  getNonPolyChains(0);}
+	
+
+	@Override
+	public List<Chain> getPolyChains(int modelNr) {
+		return models.get(modelNr).getPolyChains();
 	}
 
 	@Override
-	public List<Chain> getNonPolyChains() {
-		return models.get(0).getNonPolyChains();
+	public List<Chain> getNonPolyChains(int modelNr) {
+		return models.get(modelNr).getNonPolyChains();
 	}
+
 
 	/** {@inheritDoc} */
 	@Override

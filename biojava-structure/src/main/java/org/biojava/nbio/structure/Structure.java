@@ -363,20 +363,6 @@ public interface Structure extends Cloneable {
 	 */
 	 List<Chain> getChains();
 
-
-	/** Return all polymeric chains.
-	 *
-	 * @return all polymeric chains.
-     */
-	 List<Chain> getPolyChains();
-
-	/** Return all non-polymeric chains.
-	 *
-	 * @return all nonpolymeric chains.
-     */
-	 List<Chain> getNonPolyChains();
-
-
 	/**
 	 * Set the chains of a structure, if this is a NMR structure,
 	 * this will only set model 0.
@@ -402,6 +388,33 @@ public interface Structure extends Cloneable {
 	 * @param modelnr the number of the model
 	 */
 	 void setChains( int modelnr, List<Chain> chains);
+
+	/** Return all polymeric chains.
+	 *
+	 * @return all polymeric chains.
+	 */
+	List<Chain> getPolyChains();
+
+	/** Return all non-polymeric chains.
+	 *
+	 * @return all nonpolymeric chains.
+	 */
+	List<Chain> getNonPolyChains();
+
+	/** Return all polymeric chains.
+	 * @param modelNr the modelNr
+	 * @return all polymeric chains.
+	 */
+	List<Chain> getPolyChains(int modelNr);
+
+	/** Return all non-polymeric chains.
+	 *
+	 * @param modelNr the modelNr
+	 * @return all nonpolymeric chains.
+	 */
+	List<Chain> getNonPolyChains(int modelNr);
+
+
 
 	/**
 	 * Add a new chain.
