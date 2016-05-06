@@ -173,7 +173,7 @@ public interface Structure extends Cloneable {
 	 *
 	 * @return identical copy of this Structure object
 	 */
-	 Structure clone();
+	Structure clone();
 
 	/**
 	 * String representation of object.
@@ -294,7 +294,7 @@ public interface Structure extends Cloneable {
 	List<Chain> getModel(int modelnr);
 
 	/**
-	 * Retrieve all chains - if it is a NMR structure will return the chains of the first model.
+	 * Retrieve all chains for the first model.
 	 * This is the same as getChains(0);
 	 * @see #getModel(int modelnr)
 	 * @see #getChains(int modelnr)
@@ -330,14 +330,14 @@ public interface Structure extends Cloneable {
 	void setChains( int modelnr, List<Chain> chains);
 
 	/** 
-	 * Return all polymeric chains.
+	 * Return all polymeric chains for the first model
 	 *
 	 * @return all polymeric chains.
 	 */
 	List<Chain> getPolyChains();
 
 	/** 
-	 * Return all non-polymeric chains.
+	 * Return all non-polymeric chains for the first model
 	 *
 	 * @return all nonpolymeric chains.
 	 */
@@ -361,14 +361,14 @@ public interface Structure extends Cloneable {
 
 
 	/**
-	 * Add a new chain.
+	 * Add a new chain to the first model
 	 *
 	 * @param chain  a Chain object
 	 */
 	void addChain(Chain chain);
 
 	/**
-	 * Add a new chain, if several models are available.
+	 * Add a new chain to the model specified by the given index
 	 *
 	 * @param chain    a Chain object
 	 * @param modelnr  an int specifying to which model the Chain should be added
@@ -376,40 +376,21 @@ public interface Structure extends Cloneable {
 	void addChain(Chain chain, int modelnr);
 
 	/**
-	 * Retrieve a chain by its position within the Structure .
+	 * Retrieve a chain by its index within the Structure .
 	 *
 	 * @param pos  an int for the position in the List of Chains.
 	 * @return a Chain object
-	*/
-	 Chain getChain(int pos);
+	 */
+	Chain getChain(int pos);
 
 	/**
-	 * Retrieve a chain by its position within the Structure and model number.
+	 * Retrieve a chain by its indices within the Structure and model.
 	 *
 	 * @param pos      an int
 	 * @param modelnr  an int
 	 * @return a Chain object
 	 */
 	Chain getChain( int modelnr, int pos);
-
-
-	/** Get a chain by its asym ID and model number
-	 *
-	 * @param asymId 'private' chain ID in mmcif
-	 * @param model the model nr
-     * @return
-     */
-	Chain getChain( String asymId, int model) throws StructureException;;
-
-
-	/** Get a chain by its asym ID
-	 *
-	 * @param asymId
-
-	 * @return
-	 */
-	Chain getChain( String asymId) throws StructureException;;
-
 
 	/**
 	 * Request a particular chain from a structure.
@@ -421,6 +402,17 @@ public interface Structure extends Cloneable {
 	 */
 	@Deprecated
 	Chain findChain(String authId) throws StructureException;
+
+	/**
+	 * Request a particular chain from a particular model
+	 * @param modelnr the number of the model to use
+	 * @param authId the name of a chain that should be returned
+	 * @return Chain the requested chain
+	 * @throws StructureException
+	 * @Deprecated use {@link #getChainByPDB(String, int)} instead
+	 */
+	@Deprecated
+	Chain findChain(String authId, int modelnr) throws StructureException;
 
 
 	/**
@@ -436,7 +428,7 @@ public interface Structure extends Cloneable {
 	 *
 	 * @param asymId the id of the chain
 	 * @return true if a nonpolymeric chain with the asymId is found
-     */
+	 */
 	boolean hasNonPolyChain(String asymId);
 
 
@@ -445,17 +437,8 @@ public interface Structure extends Cloneable {
 	 *
 	 * @param authId the chain name
 	 * @return true if a chain with the name authId is found
-     */
-	boolean hasPdbChain(String authId) ;
-
-	/**
-	 * Request a particular chain from a particular model
-	 * @param modelnr the number of the model to use
-	 * @param authId the name of a chain that should be returned
-	 * @return Chain the requested chain
-	 * @throws StructureException
 	 */
-	Chain findChain(String authId, int modelnr) throws StructureException;
+	boolean hasPdbChain(String authId) ;
 
 	/**
 	 * Request a particular group from a structure.
@@ -479,60 +462,161 @@ public interface Structure extends Cloneable {
 	Group findGroup(String authId, String pdbResnum, int modelnr) throws StructureException;
 
 
-	 /**
-	  * Request a chain by its PDB code
-	  * by default takes only the first model
-	  *
-	  * @param authId the chain name
-	  * @return the Chain that matches the authId
-	  * @throws StructureException
-	  */
-	 Chain getChainByPDB(String authId) throws StructureException;
-
-
-	/** Retrieve a polymeric chain based on the 'internal' chain
-	 * ID (asymId)
- 	 * @param asymId get a polymeric chain based on its asymId (chain Id)
-	 * @return a polymeric chain
-	 * @throws StructureException
-     */
-	Chain getPolyChain(String asymId) throws StructureException;
-
-	/** Retrieve a non-polymeric chain based on the 'internal' chain
-	 * ID (asymId)
-	 * @param asymId get a non-polymeric chain based on its asymId (chain Id)
-	 * @return a non-polymeric chain
-	 * @throws StructureException
+	/**
+	 * Request a chain by its public id (author id) for the first model.
+	 * Before 5.0 it returned a Chain that had both polymeric and non-polymeric groups
+	 * following the PDB-file data model. 
+	 * Since 5.0 it only returns the polymeric part of the chain.
+	 *
+	 * @param authId the author id (chainName, public chain id)
+	 * @return the Chain that matches the authId
+	 * @throws StructureException if chain can't be found
+	 * @Deprecated use {@link #getPolyChainByPDB(String)} instead
 	 */
-	Chain getNonPolyChain(String asymId) throws StructureException;
+	@Deprecated 
+	Chain getChainByPDB(String authId) throws StructureException;
 
-	/** Retrieve a polymeric chain based on the 'public' chain
-	 * name (authId)
-	 * @param authId get a polymeric chain based on its 'public' chain name
-	 * @return a polymeric chain
-	 * @throws StructureException
+	/**
+	 * Request a chain by its public id (author id) for the given model index.
+	 * Before 5.0 it returned a Chain that had both polymeric and non-polymeric groups
+	 * following the PDB-file data model. 
+	 * Since 5.0 it only returns the polymeric part of the chain.
+	 * 
+	 * @param authId the author id (chainName, public chain id)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return the Chain that matches the authId in the model
+	 * @throws StructureException if chain can't be found
+	 * @Deprecated use {@link #getPolyChainByPDB(String,int)} instead
 	 */
-	Chain getPolyChainByPDB(String authId) throws StructureException;
-
-	/** Retrieve a non-polymeric chain based on the 'public' chain
-	 * name (authId)
-	 * @param authId get a non-polymeric chain based on its public name
-	 * @return a non-polymeric chain
-	 * @throws StructureException
+	@Deprecated
+	Chain getChainByPDB(String authId, int modelIdx) throws StructureException;
+	
+	/**
+	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
+	 * the 'internal' chain id (asymId) for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return
+	 * @see #getPolyChain(String)
+	 * @see #getNonPolyChain(String)
+	 * @see #getWaterChain(String) 
 	 */
-	Chain getNonPolyChainByPDB(String authId) throws StructureException;
+	Chain getChain(String asymId);
+	
+	/**
+	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
+	 * the 'internal' chain id (asymId) for the given model index 
+	 * @param asymId the asymId (chainId)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return
+	 * @see #getPolyChain(String, int)
+	 * @see #getNonPolyChain(String, int)
+	 * @see #getWaterChain(String, int)
+	 */
+	Chain getChain(String asymId, int modelIdx);
+	
+	/** 
+	 * Retrieve a polymeric Chain based on the 'internal' chain
+	 * id (asymId) for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return a polymeric Chain or null if it can't be found
+	 */
+	Chain getPolyChain(String asymId);
 
-	 /**
-	  * Request a chain by its PDB code
-	  * by default takes only the first model
-	  *
-	  * @param authId the chain name
-	  * @param modelnr request a particular model;
-	  * @return the Chain that matches the authId in the model
-	  * @throws StructureException
-	  */
-	 Chain getChainByPDB(String authId, int modelnr) throws StructureException;
+	/** 
+	 * Retrieve a polymeric Chain based on the 'internal' chain
+	 * id (asymId) for the given model index
+	 * @param asymId the asymId (chainId)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return a polymeric Chain or null if it can't be found
+	 */
+	Chain getPolyChain(String asymId, int modelIdx);
 
+	/** 
+	 * Retrieve a polymeric Chain based on the 'public' chain
+	 * name (authId) for the first model
+	 * @param authId the author id (chainName, public chain id)
+	 * @return a polymeric Chain or null if it can't be found
+	 */
+	Chain getPolyChainByPDB(String authId);
+	
+	/** 
+	 * Retrieve a polymeric Chain based on the 'public' chain
+	 * name (authId) for the given model index
+	 * @param authId the author id (chainName, public chain id)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return a polymeric Chain or null if it can't be found
+	 */
+	Chain getPolyChainByPDB(String authId, int modelIdx);
+
+
+	/** 
+	 * Retrieve a non-polymeric Chain based on the 'internal' chain
+	 * id (asymId) for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return a non-polymeric chain or null if it can't be found
+	 */
+	Chain getNonPolyChain(String asymId);
+
+	/** 
+	 * Retrieve a non-polymeric Chain based on the 'internal' chain
+	 * id (asymId) for the given model index
+	 * @param asymId the asymId (chainId)
+	 * @param modelIdx the index of the required model (0-based) 
+	 * @return a non-polymeric Chain or null if it can't be found
+	 */
+	Chain getNonPolyChain(String asymId, int modelIdx);
+
+	/** 
+	 * Retrieve a non-polymeric chain based on the 'public' chain
+	 * name (authId) for the first model
+	 * @param authId the author id (chainName, public chain id)
+	 * @return a non-polymeric Chain or null if it can't be found
+	 */
+	Chain getNonPolyChainByPDB(String authId);
+
+	/** 
+	 * Retrieve a non-polymeric Chain based on the 'public' chain
+	 * name (authId) for the given model index
+	 * @param authId the author id (chainName, public chain id)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return a non-polymeric Chain or null if it can't be found
+	 */
+	Chain getNonPolyChainByPDB(String authId, int modelIdx);
+
+	/**
+	 * Retrieve a water Chain based on the 'internal' chain id (asymId)
+	 * for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return a water Chain or null if it can't be found
+	 */
+	Chain getWaterChain(String asymId);
+	
+	/**
+	 * Retrieve a water chain based on the 'internal' chain id (asymId)
+	 * for the given model index
+	 * @param asymId the asymId (chainId)
+	 * @param modelIdx the index of the required model (0-based) 
+	 * @return
+	 */
+	Chain getWaterChain(String asymId, int modelIdx);
+	
+	/**
+	 * Retrieve a water Chain based on the 'public' chain name (authId)
+	 * for the first model
+	 * @param authId the author id (chainName, public chain id)
+	 * @return
+	 */
+	Chain getWaterChainByPDB(String authId);
+
+	/**
+	 * Retrieve a water Chain based on the 'public' chain name (authId)
+	 * for the given model index
+	 * @param authId the author id (chainName, public chain id)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return
+	 */
+	Chain getWaterChainByPDB(String authId, int modelIdx);
+	
 
 	/**
 	 * Create a String that contains this Structure's contents in PDB file format.
@@ -554,7 +638,7 @@ public interface Structure extends Cloneable {
 	 * @param molList list of entityinfo objects
 	 */
 	void setEntityInfos(List<EntityInfo> molList);
-	
+
 	/**
 	 * Get all the EntityInfo for this Structure.
 	 *

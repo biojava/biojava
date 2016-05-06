@@ -173,15 +173,14 @@ public class StructureImpl implements Structure, Serializable {
 			for (String asymId:entityInfo.getChainIds()) {
 
 				for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
-					try {
-						Chain newChain = n.getChain(asymId,modelNr);
-						newChain.setEntityInfo(newEntityInfo);
-						newEntityInfo.addChain(newChain);
-					} catch (StructureException e) {
-
+					Chain newChain = n.getChain(asymId,modelNr);
+					if (newChain==null) {
 						// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
 						logger.warn("Could not find chain asymId "+asymId+" of model "+modelNr+" while cloning entityInfo "+entityInfo.getMolId()+". Something is wrong!");
+						continue;
 					}
+					newChain.setEntityInfo(newEntityInfo);
+					newEntityInfo.addChain(newChain);
 				}
 			}
 			newEntityInfoList.add(newEntityInfo);
@@ -627,21 +626,18 @@ public class StructureImpl implements Structure, Serializable {
 	public Chain getChainByPDB(String authId, int modelnr)
 			throws StructureException{
 
-		List<Chain> chains = getChains(modelnr);
-		for (Chain c : chains) {
-			if (c.getName().equals(authId)) {
-				return c;
-			}
+		Chain c = getPolyChainByPDB(authId, modelnr);
+		
+		if (c==null) {
+			throw new StructureException("Could not find chain with authId \"" + authId + "\"" + " for PDB id " + pdb_id + ", model "+modelnr);			
 		}
-
-		throw new StructureException("did not find chain with authId \"" + authId + "\"" + " for PDB id " + pdb_id);
-
+		
+		return c;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain getChain(String asymId, int modelnr)
-			throws StructureException{
+	public Chain getChain(String asymId, int modelnr) {
 
 		List<Chain> chains = getChains(modelnr);
 		for (Chain c : chains) {
@@ -649,15 +645,13 @@ public class StructureImpl implements Structure, Serializable {
 				return c;
 			}
 		}
-
-		throw new StructureException("did not find chain with asymId \"" + asymId + "\"" + " for PDB id " + pdb_id);
+		return null;
 
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain getChain(String asymId)
-			throws StructureException{
+	public Chain getChain(String asymId) {
 
 		return getChain(asymId,0);
 
@@ -671,48 +665,129 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 	@Override
-	public Chain getPolyChain(String asymId) throws StructureException {
-		List<Chain> polyChains = models.get(0).getPolyChains();
+	public Chain getPolyChain(String asymId) {
+		return getPolyChain(asymId, 0);
+
+	}
+	
+	@Override
+	public Chain getPolyChain(String asymId, int modelIdx) {
+		Model model = models.get(modelIdx);
+		if (model==null) {
+			return null;
+		}
+		List<Chain> polyChains = model.getPolyChains();
 		for (Chain c : polyChains){
 			if (c.getId().equals(asymId))
 				return c;
 		}
-
-		throw new StructureException("Did not find Chain with asymId " + asymId);
+		return null;
 	}
 
+
 	@Override
-	public Chain getNonPolyChain(String asymId) throws StructureException {
-		List<Chain> nonpolyChains = models.get(0).getNonPolyChains();
+	public Chain getNonPolyChain(String asymId) {
+		return getNonPolyChain(asymId, 0);
+	}
+	
+	@Override
+	public Chain getNonPolyChain(String asymId, int modelIdx) {
+		Model model = models.get(modelIdx);
+		if (model==null) {
+			return null;
+		}
+		
+		List<Chain> nonpolyChains = model.getNonPolyChains();
 		for (Chain c : nonpolyChains){
 			if (c.getId().equals(asymId))
 				return c;
 		}
 
-		throw new StructureException("Did not find Chain with asymId " + asymId);
+		return null;
 	}
 
 	@Override
-	public Chain getPolyChainByPDB(String authId) throws StructureException {
-		List<Chain> polyChains = models.get(0).getPolyChains();
+	public Chain getPolyChainByPDB(String authId) {
+		return getPolyChainByPDB(authId, 0);
+	}
+
+	@Override
+	public Chain getPolyChainByPDB(String authId, int modelIdx) {
+		Model model = models.get(modelIdx);
+		if (model==null) {
+			return null;
+		}
+		List<Chain> polyChains = model.getPolyChains();
 		for (Chain c : polyChains){
 			if (c.getName().equals(authId))
 				return c;
 		}
 
-		throw new StructureException("Did not find Chain with authId " + authId);
+		return null;
 	}
 
 	@Override
-	public Chain getNonPolyChainByPDB(String authId) throws StructureException {
-		List<Chain> nonpolyChains = models.get(0).getNonPolyChains();
+	public Chain getNonPolyChainByPDB(String authId) {
+		return getNonPolyChainByPDB(authId, 0);
+	}
+	
+	@Override
+	public Chain getNonPolyChainByPDB(String authId, int modelIdx) {
+		Model model = models.get(modelIdx);
+		if (model==null) {
+			return null;
+		}
+		List<Chain> nonpolyChains = model.getNonPolyChains();
 		for (Chain c : nonpolyChains){
 			if (c.getName().equals(authId))
 				return c;
 		}
 
-		throw new StructureException("Did not find Chain with authId " + authId);
+		return null;
 	}
+
+	@Override
+	public Chain getWaterChain(String asymId) {
+		return getWaterChain(asymId, 0);
+	}
+
+
+	@Override
+	public Chain getWaterChain(String asymId, int modelIdx) {
+		Model model = models.get(modelIdx);
+		if (model==null) {
+			return null;
+		}
+		List<Chain> waterChains = model.getWaterChains();
+		for (Chain c : waterChains){
+			if (c.getId().equals(asymId))
+				return c;
+		}
+		return null;
+	}
+
+
+	@Override
+	public Chain getWaterChainByPDB(String authId) {
+		return getWaterChainByPDB(authId, 0);
+	}
+
+
+	@Override
+	public Chain getWaterChainByPDB(String authId, int modelIdx) {
+		Model model = models.get(modelIdx);
+		if (model==null) {
+			return null;
+		}
+		List<Chain> waterChains = model.getWaterChains();
+		for (Chain c : waterChains){
+			if (c.getName().equals(authId))
+				return c;
+		}
+
+		return null;
+	}
+
 
 
 	/** {@inheritDoc} */
@@ -1061,5 +1136,7 @@ public class StructureImpl implements Structure, Serializable {
 		}
 		return new SubstructureIdentifier(getPDBCode(),range);
 	}
+
+
 
 }
