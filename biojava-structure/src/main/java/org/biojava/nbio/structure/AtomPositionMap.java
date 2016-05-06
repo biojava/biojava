@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  * <p>Note: The getLength() methods were introduced in BioJava 4.0.0 to replace
  * the calcLength methods. The new method returns the number of residues between
  * two residues, inclusive, whereas the previous method returned 1 less than that.
- * @author dmyerstu
+ * @author Douglas Myers-Turnbull
  */
 public class AtomPositionMap {
 

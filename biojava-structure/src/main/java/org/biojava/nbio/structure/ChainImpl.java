@@ -723,5 +723,12 @@ public class ChainImpl implements Chain, Serializable {
 	public List<SeqMisMatch> getSeqMisMatches() {
 		return seqMisMatches;
 	}
+	
+	@Override
+	public EntityType getEntityType() {
+		if (getEntityInfo()==null) return null;
+		return getEntityInfo().getType();
+	}
+	
 }
 
