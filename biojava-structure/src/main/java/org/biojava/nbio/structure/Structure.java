@@ -195,7 +195,7 @@ public interface Structure extends Cloneable {
 	 * @return a String representing the PDBCode value
 	 * @see #setPDBCode
 	 */
-	 String  getPDBCode () ;
+	String  getPDBCode () ;
 
 	/**
 	 * Set biological name of Structure .
@@ -203,7 +203,7 @@ public interface Structure extends Cloneable {
 	 * @param name  a String specifying the biological name of the Structure
 	 * @see #getName
 	 */
-	 void setName(String name);
+	void setName(String name);
 
 	/**
 	 * Get biological name of Structure.
@@ -211,25 +211,25 @@ public interface Structure extends Cloneable {
 	 * @return a String representing the biological name of the Structure
 	 * @see #setName
 	 */
-	 String getName();
+	String getName();
 
 	/**
 	 * Get an identifier corresponding to this structure
 	 * @return The StructureIdentifier used to create this structure
 	 */
-	 StructureIdentifier getStructureIdentifier();
+	StructureIdentifier getStructureIdentifier();
 
 	/**
 	 * Set the identifier corresponding to this structure
 	 * @param structureIdentifier the structureIdentifier corresponding to this structure
 	 */
-	 void setStructureIdentifier(StructureIdentifier structureIdentifier);
+	void setStructureIdentifier(StructureIdentifier structureIdentifier);
 
 	/**
 	 * Return number of Chains in this Structure.
 	 * @return an int representing the number of Chains in this Structure
 	 */
-	 int size() ;
+	int size() ;
 
 	/**
 	 * Return number of chains of model.
@@ -237,7 +237,7 @@ public interface Structure extends Cloneable {
 	 * @param modelnr  an int specifying the number of the Model that should be used
 	 * @return an int representing the number of Chains in this Model
 	 */
-	 int size(int modelnr);
+	int size(int modelnr);
 
 	/**
 	 * Return the number of models .
@@ -248,7 +248,7 @@ public interface Structure extends Cloneable {
 	 * @return an int representing the number of models in this Structure
 	 * @see #isNmr()
 	 */
-	 int nrModels() ;
+	int nrModels() ;
 
 	/**
 	 * Test if this structure is an NMR structure.
@@ -256,7 +256,7 @@ public interface Structure extends Cloneable {
 	 * @return true if this Structure has been solved by NMR
 	 * @see #nrModels()
 	 */
-	 boolean isNmr() ;
+	boolean isNmr() ;
 
 	/**
 	 * Test if this structure is a crystallographic structure, i.e. it is an asymmetric unit
@@ -265,7 +265,7 @@ public interface Structure extends Cloneable {
 	 *
 	 * @return true if crystallographic, false otherwise
 	 */
-	 boolean isCrystallographic();
+	boolean isCrystallographic();
 
 	/**
 	 * Add a new model.

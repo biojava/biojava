@@ -52,38 +52,41 @@ public interface Chain {
 	/** returns an identical copy of this Chain.
 	 * @return  an identical copy of this Chain
 	 */
-	public Object clone();
+	Object clone();
 
 	/** add a group to the list of ATOM record group of this chain.
 	 * To add SEQRES records a more complex alignment between ATOM and SEQRES residues
 	 * is required, please see SeqRes2AtomAligner for more details on that.
 	 * @param group  a Group object
 	 */
-	public void addGroup(Group group);
+	void addGroup(Group group);
 
 	/** Get the 'private' asymId (internal chain IDs in mmCif) for this chain.
 	 *
 	 * @return the asymId
 	 * @see #setId(String)
 	 */
-	public String getId() ;
+	String getId() ;
 
 
-	/** Set the 'private' asymId (internal chain IDs in mmCif) for this chain.
+	/** 
+	 * Set the 'private' asymId (internal chain IDs in mmCif) for this chain.
 	 *
 	 * @param asymId the internal chain Id
      */
-	public void setId(String asymId) ;
+	void setId(String asymId) ;
 
 
-	/** Set the 'public' authId (chain ID in PDB file)
+	/** 
+	 * Set the 'public' authId (chain ID in PDB file)
 	 *
 	 * @param authId the 'public' authId (chain ID in PDB file)
 	 * @see #getId()
 	 */
 	void setName(String authId);
 
-	/** Get the 'public' authId (chain ID in PDB file)
+	/** 
+	 * Get the 'public' authId (chain ID in PDB file)
 	 *
 	 * @return the authId for this chain.
      */
@@ -100,7 +103,7 @@ public interface Chain {
 	 * @see #getAtomGroups()
 	 * @see #getSeqResGroup(int)
 	 */
-	public Group getAtomGroup (int position);
+	Group getAtomGroup (int position);
 
 	/**
 	 * Return the Group at given position,
@@ -112,7 +115,7 @@ public interface Chain {
 	 * @see #getSeqResGroups()
 	 * @see #getAtomGroup(int)
 	 */
-	public Group getSeqResGroup (int position);
+	Group getSeqResGroup (int position);
 
 
 	/**
@@ -124,7 +127,7 @@ public interface Chain {
 	 * @see #getAtomLength()
 	 * @see #getSeqResGroups()
 	 */
-	public List<Group> getAtomGroups();
+	List<Group> getAtomGroups();
 
 	/**
 	 * Set all Groups with observed density in the chain, i.e.
@@ -132,7 +135,7 @@ public interface Chain {
 	 * @param groups a List object representing the Groups of this Chain.
 	 * @see #getAtomGroups()
 	 */
-	public void setAtomGroups(List<Group> groups);
+	void setAtomGroups(List<Group> groups);
 
 	/**
 	 * Return a List of all (observed) Groups of a special type, one of: {@link GroupType#AMINOACID},
@@ -143,7 +146,7 @@ public interface Chain {
 	 * @return a List object
 	 * @see #setAtomGroups(List)
 	 */
-	public List<Group> getAtomGroups (GroupType type);
+	List<Group> getAtomGroups (GroupType type);
 
 
 	/**
@@ -154,19 +157,21 @@ public interface Chain {
 	 * @return the matching group
 	 * @throws StructureException
 	 */
-	public Group getGroupByPDB(ResidueNumber resNum) throws StructureException;
+	Group getGroupByPDB(ResidueNumber resNum) throws StructureException;
 
-	/** Get all groups that are located between two PDB residue numbers.
+	/** 
+	 * Get all groups that are located between two PDB residue numbers.
 	 *
 	 * @param pdbresnumStart PDB residue number of start
 	 * @param pdbresnumEnd PDB residue number of end
 	 * @return Groups in between. or throws a StructureException if either start or end can not be found,
 	 * @throws StructureException
 	 */
-	public Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd) throws StructureException;
+	Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd) throws StructureException;
 
 
-	/** Get all groups that are located between two PDB residue numbers. In contrast to getGroupsByPDB
+	/** 
+	 * Get all groups that are located between two PDB residue numbers. In contrast to getGroupsByPDB
 	 * this method call ignores if the exact outer groups are not found. This is useful e.g. when requesting the range
 	 * of groups as specified by the DBREF records - these frequently are rather inaccurate.
 	 *
@@ -178,7 +183,7 @@ public interface Chain {
 	 * @throws StructureException
 	 *
 	 */
-	public Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd,boolean ignoreMissing) throws StructureException;
+	Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd,boolean ignoreMissing) throws StructureException;
 
 
 	/**
@@ -190,7 +195,7 @@ public interface Chain {
 	 * @see #getAtomGroups()
 	 * @see #getSeqResLength())
 	 */
-	public int getAtomLength();
+	int getAtomLength();
 
 	/**
 	 * Returns the number of groups in the SEQRES records of the chain, i.e.
@@ -201,14 +206,14 @@ public interface Chain {
 	 * @see #getSeqResGroups()
 	 * @see #getAtomLength()
 	 */
-	public int getSeqResLength();
+	int getSeqResLength();
 
 	/**
 	 * Sets the Entity information
 	 * @param entityInfo the EntityInfo
 	 * @see #getEntityInfo()
 	 */
-	public void setEntityInfo(EntityInfo entityInfo);
+	void setEntityInfo(EntityInfo entityInfo);
 
 	/**
 	 * Returns the EntityInfo for this chain.
@@ -216,7 +221,7 @@ public interface Chain {
 	 * @return the EntityInfo object
 	 * @see #setEntityInfo(EntityInfo)
 	 */
-	public EntityInfo getEntityInfo();
+	EntityInfo getEntityInfo();
 
 	/**
 	 * Sets the 'private' asymId of this chain (Chain id in PDB file ).
