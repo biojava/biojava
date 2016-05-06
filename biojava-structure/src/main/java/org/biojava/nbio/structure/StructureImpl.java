@@ -566,34 +566,47 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Chain> getChains(int modelnr){
-		return getModel(modelnr);
+	public List<Chain> getChains(int modelIdx){
+		return getModel(modelIdx);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List<Chain> getChains(){
-
-		return models.get(0).getChains();
+		return getChains(0);
 
 	}
 
 	@Override
-	public List<Chain> getPolyChains() { return getPolyChains(0);}
+	public List<Chain> getPolyChains() { 
+		return getPolyChains(0);
+	}
 
 	@Override
-	public List<Chain> getNonPolyChains() { return  getNonPolyChains(0);}
+	public List<Chain> getPolyChains(int modelIdx) {
+		return models.get(modelIdx).getPolyChains();
+	}
+
+	@Override
+	public List<Chain> getNonPolyChains() { 
+		return  getNonPolyChains(0);
+	}
+
+	@Override
+	public List<Chain> getNonPolyChains(int modelIdx) {
+		return models.get(modelIdx).getNonPolyChains();
+	}
 	
-
 	@Override
-	public List<Chain> getPolyChains(int modelNr) {
-		return models.get(modelNr).getPolyChains();
+	public List<Chain> getWaterChains() {
+		return getWaterChains(0);
 	}
 
 	@Override
-	public List<Chain> getNonPolyChains(int modelNr) {
-		return models.get(modelNr).getNonPolyChains();
+	public List<Chain> getWaterChains(int modelIdx) {
+		return models.get(modelIdx).getWaterChains();
 	}
+
 
 
 	/** {@inheritDoc} */
@@ -1136,6 +1149,8 @@ public class StructureImpl implements Structure, Serializable {
 		}
 		return new SubstructureIdentifier(getPDBCode(),range);
 	}
+
+
 
 
 

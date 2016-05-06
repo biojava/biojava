@@ -71,7 +71,7 @@ public class Model {
         EntityInfo info = c.getEntityInfo();
         
         if ( info == null || info.getType() == null) {
-        	logger.warn("No entity info could be find while adding chain with asym id {} (author id {}). Will consider it a polymer chain.", c.getId(), c.getName());
+        	logger.warn("No entity info could be found while adding chain with asym id {} (author id {}). Will consider it a polymer chain.", c.getId(), c.getName());
             polyChains.add(c);
             
         } else if ( info.getType() == EntityType.POLYMER) {

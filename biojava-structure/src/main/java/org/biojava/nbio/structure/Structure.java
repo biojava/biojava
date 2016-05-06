@@ -337,28 +337,39 @@ public interface Structure extends Cloneable {
 	List<Chain> getPolyChains();
 
 	/** 
+	 * Return all polymeric chains for the given model index.
+	 * @param modelIdx the model index
+	 * @return all polymeric chains.
+	 */
+	List<Chain> getPolyChains(int modelIdx);
+
+	/** 
 	 * Return all non-polymeric chains for the first model
 	 *
-	 * @return all nonpolymeric chains.
+	 * @return all non-polymeric chains.
 	 */
 	List<Chain> getNonPolyChains();
 
 	/** 
-	 * Return all polymeric chains.
-	 * @param modelNr the modelNr
-	 * @return all polymeric chains.
-	 */
-	List<Chain> getPolyChains(int modelNr);
-
-	/** 
-	 * Return all non-polymeric chains.
+	 * Return all non-polymeric chains for the given model index.
 	 *
-	 * @param modelNr the modelNr
-	 * @return all nonpolymeric chains.
+	 * @param modelIdx the model index
+	 * @return all non-polymeric chains.
 	 */
-	List<Chain> getNonPolyChains(int modelNr);
+	List<Chain> getNonPolyChains(int modelIdx);
 
-
+	/**
+	 * Return all water chains for the first model
+	 * @return
+	 */
+	List<Chain> getWaterChains();
+	
+	/**
+	 * Return all water chains for the given model index
+	 * @param modelIdx
+	 * @return
+	 */
+	List<Chain> getWaterChains(int modelIdx);
 
 	/**
 	 * Add a new chain to the first model

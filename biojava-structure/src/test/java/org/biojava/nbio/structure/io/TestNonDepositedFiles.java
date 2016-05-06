@@ -49,7 +49,7 @@ import org.junit.Test;
  * Some things tested:
  * - heuristics to guess isNMR, isCrystallographic
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class TestNonDepositedFiles {
@@ -186,7 +186,7 @@ public class TestNonDepositedFiles {
 		for (Chain chain:s.getChains()) {
 			int seqResLength = chain.getSeqResLength();
 			int atomLength = chain.getAtomLength();
-			System.out.println("chain "+chain.getChainID()+", atomLength: "+atomLength+", seqResLength: "+seqResLength);
+			System.out.println("chain "+chain.getId()+", atomLength: "+atomLength+", seqResLength: "+seqResLength);
 			//assertTrue("atom length ("+atomLength+") should be smaller than seqResLength ("+seqResLength+")",atomLength<=seqResLength);
 			System.out.println("seq res groups size: "+chain.getSeqResGroups().size());
 			System.out.println("num hetatom groups: "+chain.getAtomLigands().size());
@@ -318,7 +318,7 @@ public class TestNonDepositedFiles {
 	 * In this case, the ligands represent valuable information and should not be discarded.
 	 */
 	@Test
-	public void testNewLigandChain() throws IOException, StructureException {
+	public void testNewLigandChain() throws IOException {
 		// Test the file parsing speed when the files are already downloaded.
 
 		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/ligandTest.pdb.gz"));
@@ -333,7 +333,7 @@ public class TestNonDepositedFiles {
 		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
 
 		// The chain B should be present with 1 ligand HEM
-		Chain c1 = s1.getChainByPDB("B");
+		Chain c1 = s1.getNonPolyChainByPDB("B");
 		assertNotNull(c1);
 
 		int expectedNumLigands = 1;
@@ -347,33 +347,28 @@ public class TestNonDepositedFiles {
 		Structure s2 = consumer.getStructure();
 
 		// The chain B should be present with 1 ligand HEM
-		Chain c2 = s2.getChainByPDB("B");
+		Chain c2 = s2.getNonPolyChainByPDB("B");
 		assertNotNull(c2);
 		assertEquals(expectedNumLigands, c2.getAtomGroups().size());
 
 		// pdb and mmcif should have same number of chains
 		assertEquals(s1.getChains().size(), s2.getChains().size());
 	}
-
+	
 	@Test
-	public void testWaterOnlyChain() throws IOException, StructureException {
+	public void testWaterOnlyChainPdb() throws IOException {
 
-		// following 2 files are cut-down versions of 4a10
+		// following file is cut-down version of 4a10
 		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.pdb.gz"));
-		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.cif.gz"));
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
 
 		assertEquals(2, s1.getChains().size());
 
-		Chain c1 = null;
-		try {
-			c1 = s1.getChainByPDB("F");
+		Chain c1 = s1.getWaterChainByPDB("F");
 
-		} catch (StructureException e) {
-			fail("Got StructureException while looking for water-only chain F");
-		}
+		assertNotNull("Got null when looking for water-only chain with author id F", c1);
 
 		// checking that compounds are linked
 		assertNotNull(c1.getEntityInfo());
@@ -381,7 +376,13 @@ public class TestNonDepositedFiles {
 		// checking that the water molecule was assigned an ad-hoc compound
 		assertEquals(2,s1.getEntityInfos().size());
 
+	}
+	
+	@Test
+	public void testWaterOnlyChainCif() throws IOException {
 
+		// following file is cut-down versions of 4a10
+		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.cif.gz"));
 
 		MMcifParser mmcifpars = new SimpleMMcifParser();
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
@@ -392,20 +393,22 @@ public class TestNonDepositedFiles {
 
 		assertEquals(2, s2.getChains().size());
 
-		Chain c = null;
-		try {
-			c = s2.getChainByPDB("F");
+		Chain c = s2.getWaterChainByPDB("F");
 
-		} catch (StructureException e) {
-			fail("Got StructureException while looking for water-only chain F");
-		}
+		assertNotNull("Got null when looking for water-only chain with author id F", c);
 
 		// checking that compounds are linked
 		assertNotNull(c.getEntityInfo());
 
 		// checking that the water molecule was assigned an ad-hoc compound
 		assertEquals(2,s2.getEntityInfos().size());
+		
+		Chain cAsymId = s2.getWaterChain("E");
+		assertNotNull("Got null when looking for water-only chain with asym id E", cAsymId);
+		assertSame(c, cAsymId);
+		
 	}
+
 	
 	private static int[] countEntityTypes(List<EntityInfo> entities) {
 		int countPoly = 0;
