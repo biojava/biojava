@@ -21,23 +21,26 @@
 package org.biojava.nbio.structure.xtal;
 
 import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.contact.BoundingBox;
+
+import java.util.List;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 
 /**
- * A class to contain the BoundingBoxes of all molecules in a full unit cell
+ * A class to contain the BoundingBoxes of all polymeric molecules in a full unit cell.
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class UnitCellBoundingBox {
 
 	/**
-	 * An array with dimensions numOperatorsSg x numChainsAu to contain all
+	 * An array with dimensions numOperatorsSg x numPolyChainsAu to contain all
 	 * bounding boxes of all chains of all AUs in unit cell
 	 * e.g. chainBbs[0] would be the bounding boxes for all chains in the original AU
 	 */
@@ -50,12 +53,12 @@ public class UnitCellBoundingBox {
 	private BoundingBox[] auBbs;
 
 	private int numOperatorsSg; // i.e. multiplicity of space group
-	private int numChainsAu;
+	private int numPolyChainsAu;
 
-	public UnitCellBoundingBox(int numOperatorsSg, int numChainsAu) {
+	public UnitCellBoundingBox(int numOperatorsSg, int numPolyChainsAu) {
 		this.numOperatorsSg = numOperatorsSg;
-		this.numChainsAu = numChainsAu;
-		this.chainBbs = new BoundingBox[numOperatorsSg][numChainsAu];
+		this.numPolyChainsAu = numPolyChainsAu;
+		this.chainBbs = new BoundingBox[numOperatorsSg][numPolyChainsAu];
 		this.auBbs = new BoundingBox[numOperatorsSg];
 	}
 
@@ -71,10 +74,12 @@ public class UnitCellBoundingBox {
 	}
 
 	private void setBb(Structure s, boolean includeHetAtoms, int i) {
-		chainBbs[i] = new BoundingBox[numChainsAu];
-		for (int j = 0;j<numChainsAu; j++) {
-			System.out.println(s.getChain(j));
-			chainBbs[i][j] = new BoundingBox(StructureTools.getAllNonHAtomArray(s.getChain(j), includeHetAtoms));
+		chainBbs[i] = new BoundingBox[numPolyChainsAu];
+		List<Chain> polyChains = s.getPolyChains();
+		int j = 0;
+		for (Chain polyChain : polyChains) {
+			chainBbs[i][j] = new BoundingBox(StructureTools.getAllNonHAtomArray(polyChain, includeHetAtoms));
+			j++;
 		}
 		auBbs[i] = new BoundingBox(chainBbs[i]);
 	}
@@ -107,10 +112,10 @@ public class UnitCellBoundingBox {
 	 * @return
 	 */
 	public UnitCellBoundingBox getTranslatedBbs(Vector3d translation) {
-		UnitCellBoundingBox translatedBbs = new UnitCellBoundingBox(numOperatorsSg, numChainsAu);
+		UnitCellBoundingBox translatedBbs = new UnitCellBoundingBox(numOperatorsSg, numPolyChainsAu);
 
 		for (int i=0; i<numOperatorsSg; i++) {
-			for (int j = 0;j<numChainsAu; j++) {
+			for (int j = 0;j<numPolyChainsAu; j++) {
 				translatedBbs.chainBbs[i][j] = new BoundingBox(this.chainBbs[i][j]);
 				translatedBbs.chainBbs[i][j].translate(translation);
 			}

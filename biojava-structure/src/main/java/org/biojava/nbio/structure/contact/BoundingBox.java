@@ -34,7 +34,7 @@ import java.util.Arrays;
  *
  * See http://en.wikipedia.org/wiki/Bounding_volume
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class BoundingBox implements Serializable {
