@@ -97,13 +97,11 @@ import org.slf4j.LoggerFactory;
  * To provide excessive memory usage for large PDB files, there is the ATOM_CA_THRESHOLD.
  * If more Atoms than this threshold are being parsed in a PDB file, the parser will automatically
  * switch to a C-alpha only representation.
- * </p>
  *
  * <p>
  * The result of the parsing of the PDB file is a new {@link Structure} object.
- * </p>
  *
- *
+ * <p>
  * For more documentation on how to work with the Structure API please
  * see <a href="http://biojava.org/wiki/BioJava:CookBook#Protein_Structure" target="_top">
  * http://biojava.org/wiki/BioJava:CookBook#Protein_Structure</a>
@@ -114,7 +112,6 @@ import org.slf4j.LoggerFactory;
  * <h2>Example</h2>
  * <p>
  * Q: How can I get a Structure object from a PDB file?
- * </p>
  * <p>
  * A:
  * <pre>
@@ -336,7 +333,6 @@ public class PDBFileParser  {
 	</pre>
 	 */
 	private void pdb_HEADER_Handler(String line) {
-		//System.out.println(line);
 
 		String classification  = null;
 		String deposition_date = null;
@@ -377,7 +373,7 @@ public class PDBFileParser  {
 		if (len > 66) {
 			if (pdbId.equals(line.substring (72, 76))){
 				isLegacyFormat = true;
-				System.out.println(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
+				logger.warn(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
 			}
 		}
 
@@ -2314,18 +2310,6 @@ public class PDBFileParser  {
 
 		String sym1 = line.substring(59, 65).trim();
 		String sym2 = line.substring(66, 72).trim();
-
-//		System.err.println("LINK");
-//		System.err.println("\tName: " + name1);
-//		System.err.println("\tAlt Loc: " + altLoc1);
-//		System.err.println("\tRes name: " + resName1);
-//		System.err.println("\tChain ID: " + chainID1);
-//		System.err.println("\tRes Seq: " + resSeq1);
-//		System.err.println("\tIns Code: " + iCode1);
-//		System.err.println(name1 + "." + altLoc1 + "." + resName1 + "." + chainID1 + "." + resSeq1 + "." + iCode1);
-//		System.err.println(name2 + "." + altLoc2 + "." + resName2 + "." + chainID2 + "." + resSeq2 + "." + iCode2);
-//		System.err.println(sym1 + "." + sym2);
-//		System.err.println();
 
 		linkRecords.add(new LinkRecord(
 				name1, altLoc1, resName1, chainID1, resSeq1, iCode1,
