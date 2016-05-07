@@ -398,16 +398,22 @@ public class TestLongPdbVsMmCifParsing {
 	private void testChains(Structure sPdb, Structure sCif) throws StructureException {
 		assertNotNull(sPdb.getChains());
 		assertNotNull(sCif.getChains());
+		
+		assertEquals(sPdb.getPolyChains().size(), sCif.getPolyChains().size());
+		
+		assertEquals(sPdb.getNonPolyChains().size(), sCif.getNonPolyChains().size());
+		
+		//assertEquals(sPdb.getWaterChains().size(), sCif.getWaterChains().size());
 
 		assertEquals(sPdb.getChains().size(),sCif.getChains().size());
 
 		List<String> chainIds = new ArrayList<String>();
 		for (Chain chain:sPdb.getChains()){
-			chainIds.add(chain.getChainID());
+			chainIds.add(chain.getName());
 		}
 
 		for (String chainId:chainIds) {
-			testSingleChain(sPdb.getChainByPDB(chainId), sCif.getChainByPDB(chainId));
+			testSingleChain(sPdb.getPolyChainByPDB(chainId), sCif.getPolyChainByPDB(chainId));
 		}
 	}
 
@@ -415,15 +421,15 @@ public class TestLongPdbVsMmCifParsing {
 		assertNotNull(cPdb);
 		assertNotNull(cCif);
 
-		String chainId = cPdb.getChainID();
+		String chainId = cPdb.getName();
 
-		assertEquals("failed for getChainID():",cPdb.getChainID(),cCif.getChainID());
+		assertEquals("failed for getName():",cPdb.getName(),cCif.getName());
 		// TODO no internalChainID if parsed from PDB, should an ID be assigned following the same rules as in mmCIF?
 		//assertEquals("failed for getInternalChainID():",cPdb.getInternalChainID(),cCif.getInternalChainID());
-		assertNotNull("getInternalChainId is null",cCif.getInternalChainID());
-		assertTrue("internalChainId used in mmCIF files must be at most 4 characters",cCif.getInternalChainID().length()<=4);
-		assertEquals("chainID must be 1 character only, failed for pdb", 1, cPdb.getChainID().length());
-		assertEquals("chainID must be 1 character only, failed for cif", 1, cCif.getChainID().length());
+		assertNotNull("getId is null",cCif.getId());
+		assertTrue("id used in mmCIF files must be at most 4 characters",cCif.getId().length()<=4);
+		assertEquals("chainID must be 1 character only, failed for pdb", 1, cPdb.getName().length());
+		assertEquals("chainID must be 1 character only, failed for cif", 1, cCif.getName().length());
 
 		// getCompound() is some times null for badly formatted PDB files (e.g. 4a10, all waters are in a separate chain F)
 		if (isPolymer(cPdb)) {
@@ -482,7 +488,7 @@ public class TestLongPdbVsMmCifParsing {
 
 		// In 4imj, chain F there's an  alignment ambiguity because of a repeat, so the seqres to atom alignment
 		// doesn't work properly for it, we skip the rest of the test for this chain
-		if (cPdb.getStructure().getPDBCode().equals("4IMJ") && cPdb.getChainID().equals("F")) return;
+		if (cPdb.getStructure().getPDBCode().equals("4IMJ") && cPdb.getName().equals("F")) return;
 
 		assertEquals("failed for getSeqResGroups(GroupType.AMINOACID) pdb vs cif:",
 				cPdb.getSeqResGroups(GroupType.AMINOACID).size(),cCif.getSeqResGroups(GroupType.AMINOACID).size());

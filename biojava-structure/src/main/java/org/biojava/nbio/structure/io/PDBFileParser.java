@@ -149,6 +149,7 @@ public class PDBFileParser  {
 	// required for parsing:
 	private String pdbId; //the actual id of the entry
 	private Structure     structure;
+	private List<List<Chain>> allModels; // a temp data structure to keep all models
 	private List<Chain>   currentModel; // contains the ATOM records for each model
 	private Chain         currentChain;
 	private Group         currentGroup;
@@ -259,6 +260,7 @@ public class PDBFileParser  {
 	public PDBFileParser() {
 		params = new FileParsingParameters();
 
+		allModels = new ArrayList<>();
 		structure     = null           ;
 		currentModel = new ArrayList<Chain>();
 		currentChain = null           ;
@@ -2114,7 +2116,7 @@ public class PDBFileParser  {
 				currentModel.add(currentChain);
 			}
 
-			structure.addModel(currentModel);
+			allModels.add(currentModel);
 			currentModel = new ArrayList<Chain>();
 			currentChain = null;
 			currentGroup = null;
@@ -2800,8 +2802,17 @@ public class PDBFileParser  {
 			pdbHeader.setJournalArticle(journalArticle);
 		}
 
-
-		structure.addModel(currentModel);
+		allModels.add(currentModel);
+		
+		linkChains2Entities();
+		structure.setEntityInfos(entities);
+		
+		// now that we have entities in chains we add the chains to the structure
+		for (List<Chain> model:allModels) {
+			structure.addModel(model);
+		}
+		
+		
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 
@@ -2820,8 +2831,6 @@ public class PDBFileParser  {
 		}
 
 
-		linkChains2Entities(structure);
-		structure.setEntityInfos(entities);
 		
 		//associate the temporary Groups in the siteMap to the ones
 		if (!params.isHeaderOnly()) {
@@ -2854,20 +2863,7 @@ public class PDBFileParser  {
 		} // otherwise it remains default value: PDBHeader.DEFAULT_RFREE
 
 
-		// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
-		List<EntityInfo> entityInfos = structure.getEntityInfos();
-		if (entityInfos==null || entityInfos.isEmpty()) {
-			EntityFinder cf = new EntityFinder(structure);
-			entityInfos = cf.findEntities();
-
-			// now we need to set references in chains:
-			for (EntityInfo entityInfo : entityInfos) {
-				for (Chain c:entityInfo.getChains()) {
-					c.setEntityInfo(entityInfo);
-				}
-			}
-			structure.setEntityInfos(entityInfos);
-		}
+		
 	}
 
 	private void setSecStruc(){
@@ -2950,70 +2946,63 @@ public class PDBFileParser  {
 	}
 
 
+	private List<Chain> findChains(String chainName) {
+		List<Chain> matchingChains = new ArrayList<>();
+		for (List<Chain> chains:allModels) {
+			for (Chain c:chains) {
+				if (c.getName().equals(chainName)) {
+					matchingChains.add(c);
+				}
+			}
+		}
+		return matchingChains;
+	}
+	
 	/** 
 	 * After the parsing of a PDB file the {@link Chain} and {@link EntityInfo}
 	 * objects need to be linked to each other.
 	 *
-	 * @param s the structure
 	 */
-	private void linkChains2Entities(Structure s){
+	private void linkChains2Entities(){
 
-
-		for(EntityInfo comp : entities){
-			List<Chain> chains = new ArrayList<Chain>();
+		for (EntityInfo comp : entities){
 			List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
 			if ( chainIds == null)
 				continue;
 			for ( String chainId : chainIds) {
 				if ( chainId.equals("NULL"))
 					chainId = " ";
-				try {
+				
+				List<Chain> matchingChains = findChains(chainId);
+					
+				for (Chain c:matchingChains) {	
+					comp.addChain(c);
+					c.setEntityInfo(comp);
+				}
 
-					Chain c = s.getChainByPDB(chainId);
-					chains.add(c);
-
-				} catch (StructureException e){
+				if (matchingChains.isEmpty()) {
 					// usually if this happens something is wrong with the PDB header
 					// e.g. 2brd - there is no Chain A, although it is specified in the header
 					// Some bona-fide cases exist, e.g. 2ja5, chain N is described in SEQRES
 					// but the authors didn't observe in the density so it's completely missing
 					// from the ATOM lines
-					logger.warn("Could not find chain {} to link to compound (entity) {}. The chain will be missing in the compound.", chainId, comp.getMolId());
-				}
-			}
-			comp.setChains(chains);
-		}
-
-		if ( entities.size() == 1) {
-			EntityInfo comp = entities.get(0);
-			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null){
-				List<Chain> chains = s.getChains(0);
-				if ( chains.size() == 1) {
-					// this is an old style PDB file - add the ChainI
-					Chain ch = chains.get(0);
-					comp.addChain(ch);
+					logger.warn("Could not find chain {} to link to entity {}. The chain will be missing in the entity.", chainId, comp.getMolId());
 				}
 			}
 		}
 
-		for (EntityInfo comp: entities){
-			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null) {
-				// could not link to chain
-				// TODO: should this be allowed to happen?
-				continue;
-			}
-			for ( String chainId : compoundMolIds2chainIds.get(comp.getMolId())){
+		if (entities == null || entities.isEmpty()) {
+			logger.info("Entity information (COMPOUND record) not found in file. Will assign entities heuristically");
+			// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
+			EntityFinder cf = new EntityFinder(allModels);
+			entities = cf.findEntities();
 
-				if ( chainId.equals("NULL"))
-					continue;
-				try {
-					Chain c = s.getChainByPDB(chainId);
-					c.setEntityInfo(comp);
-				} catch (StructureException e){
-
-					logger.warn("Chain {} was not found, can't assign a compound (entity) to it.",chainId);
+			// now we need to set references in chains:
+			for (EntityInfo entityInfo : entities) {
+				for (Chain c:entityInfo.getChains()) {
+					c.setEntityInfo(entityInfo);
 				}
-			}
+			}			
 		}
 
 		// in rare cases where a purely non-polymer or purely water chain is present we have missed it above
@@ -3021,22 +3010,24 @@ public class PDBFileParser  {
 		// see https://github.com/biojava/biojava/pull/394
 
 		if (entities!=null && !entities.isEmpty()) {
-			for (Chain c: s.getChains()) {
-				if (c.getEntityInfo() == null) {
+			for (List<Chain> chains: allModels) {
+				for (Chain c:chains) {
+					if (c.getEntityInfo() == null) {
 
-					EntityInfo compound = new EntityInfo();
-					compound.addChain(c);
-					compound.setMolId(findMaxEntityId(entities)+1);
-					c.setEntityInfo(compound);
-					entities.add(compound);
-					
-					if (StructureTools.isChainWaterOnly(c)) {
-						compound.setType(EntityType.WATER);
-					} else {
-						compound.setType(EntityType.NONPOLYMER);
+						EntityInfo compound = new EntityInfo();
+						compound.addChain(c);
+						compound.setMolId(findMaxEntityId(entities)+1);
+						c.setEntityInfo(compound);
+						entities.add(compound);
+
+						if (StructureTools.isChainWaterOnly(c)) {
+							compound.setType(EntityType.WATER);
+						} else {
+							compound.setType(EntityType.NONPOLYMER);
+						}
+
+						logger.warn("No entity found in file for chain {}. Creating new entity {} for it.", c.getName(), compound.getMolId());
 					}
-
-					logger.warn("No entity found in file for chain {}. Creating new entity {} for it.", c.getName(), compound.getMolId());
 				}
 			}
 		}
