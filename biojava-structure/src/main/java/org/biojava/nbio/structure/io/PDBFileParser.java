@@ -152,11 +152,11 @@ public class PDBFileParser  {
 	// required for parsing:
 	private String pdbId; //the actual id of the entry
 	private Structure     structure;
-	private List<Chain>   current_model; // contains the ATOM records for each model
-	private Chain         current_chain;
-	private Group         current_group;
+	private List<Chain>   currentModel; // contains the ATOM records for each model
+	private Chain         currentChain;
+	private Group         currentGroup;
 
-	private List<Chain>   seqResChains; // contains all the chains for the SEQRES records
+ 	private List<Chain>   seqResChains; // contains all the chains for the SEQRES records
 	//we're going to work on the assumption that the files are current -
 	//if the pdb_HEADER_Handler detects a legacy format, this will be changed to true.
 	//if true then lines will be truncated at 72 characters in certain cases
@@ -181,7 +181,7 @@ public class PDBFileParser  {
 	private boolean isLastCompndLine = false;
 	private boolean isLastSourceLine = false;
 	private EntityInfo current_compound;
-	private List<EntityInfo> compounds = new ArrayList<EntityInfo>();
+	private List<EntityInfo> entities = new ArrayList<EntityInfo>();
 	private HashMap<Integer,List<String>> compoundMolIds2chainIds = new HashMap<Integer, List<String>>();
 	private List<String> compndLines = new ArrayList<String>();
 	private List<String> sourceLines = new ArrayList<String>();
@@ -263,9 +263,9 @@ public class PDBFileParser  {
 		params = new FileParsingParameters();
 
 		structure     = null           ;
-		current_model = new ArrayList<Chain>();
-		current_chain = null           ;
-		current_group = null           ;
+		currentModel = new ArrayList<Chain>();
+		currentChain = null           ;
+		currentGroup = null           ;
 		pdbHeader 	  = new PDBHeader();
 		crystallographicInfo = new PDBCrystallographicInfo();
 		connects      = new ArrayList<Map<String,Integer>>() ;
@@ -324,7 +324,7 @@ public class PDBFileParser  {
 	/**
 	 Handler for
 	 HEADER Record Format
-
+	 <pre>
 	 COLUMNS        DATA TYPE       FIELD           DEFINITION
 	 ----------------------------------------------------------------------------------
 	 1 -  6        Record name     "HEADER"
@@ -333,7 +333,7 @@ public class PDBFileParser  {
 	 the coordinates were received by
 	 the PDB
 	 63 - 66        IDcode          idCode          This identifier is unique within PDB
-
+	</pre>
 	 */
 	private void pdb_HEADER_Handler(String line) {
 		//System.out.println(line);
@@ -384,7 +384,8 @@ public class PDBFileParser  {
 	}
 
 
-	/** parses the following record:
+	/** 
+	 * Parses the following record:
 	 * <pre>
 	 *  COLUMNS      DATA  TYPE      FIELD         DEFINITION
 	 * ------------------------------------------------------------------------------------
@@ -412,7 +413,8 @@ public class PDBFileParser  {
 
 
 
-	/** parses the following record:
+	/** 
+	 * Parses the following record:
 	 *
 	 * <pre>
 	 * COLUMNS       DATA TYPE        FIELD        DEFINITION
@@ -445,7 +447,6 @@ public class PDBFileParser  {
 	 * 72 - 76       Integer          length       Length of this helix.
 	 * </pre>
 	 */
-
 	private void pdb_HELIX_Handler(String line){
 
 		if (params.isHeaderOnly()) return;
@@ -636,6 +637,7 @@ public class PDBFileParser  {
 	/**
 	 * Handler for
 	 * REVDAT Record format:
+	 * <pre>
 	 *
 	 * COLUMNS       DATA TYPE      FIELD         DEFINITION
 	 * ----------------------------------------------------------------------------------
@@ -660,6 +662,7 @@ public class PDBFileParser  {
 	 * 47 - 52       LString(6)     record        Name of the modified record.
 	 * 54 - 59       LString(6)     record        Name of the modified record.
 	 * 61 - 66       LString(6)     record        Name of the modified record.
+	 * </pre>
 	 */
 	private void pdb_REVDAT_Handler(String line) {
 
@@ -680,56 +683,43 @@ public class PDBFileParser  {
 		}
 	}
 
-	/** @author Jules Jacobsen
+	/** 
 	 * Handler for
 	 * SEQRES record format
 	 * SEQRES records contain the amino acid or nucleic acid sequence of residues in each chain of the macromolecule that was studied.
-	 * <p/>
-	 * Record Format
-	 * <p/>
+	 * <p>
+	 * Record Format:
+	 * <p>
+	 * <pre>
 	 * COLUMNS        DATA TYPE       FIELD         DEFINITION
 	 * ---------------------------------------------------------------------------------
 	 * 1 -  6        Record name     "SEQRES"
-	 * <p/>
 	 * 9 - 10        Integer         serNum        Serial number of the SEQRES record
 	 * for the current chain.  Starts at 1
 	 * and increments by one each line.
 	 * Reset to 1 for each chain.
-	 * <p/>
 	 * 12             Character       chainID       Chain identifier.  This may be any
 	 * single legal character, including a
 	 * blank which is used if there is
 	 * only one chain.
-	 * <p/>
 	 * 14 - 17        Integer         numRes        Number of residues in the chain.
 	 * This value is repeated on every
 	 * record.
-	 * <p/>
 	 * 20 - 22        Residue name    resName       Residue name.
-	 * <p/>
 	 * 24 - 26        Residue name    resName       Residue name.
-	 * <p/>
 	 * 28 - 30        Residue name    resName       Residue name.
-	 * <p/>
 	 * 32 - 34        Residue name    resName       Residue name.
-	 * <p/>
 	 * 36 - 38        Residue name    resName       Residue name.
-	 * <p/>
 	 * 40 - 42        Residue name    resName       Residue name.
-	 * <p/>
 	 * 44 - 46        Residue name    resName       Residue name.
-	 * <p/>
 	 * 48 - 50        Residue name    resName       Residue name.
-	 * <p/>
 	 * 52 - 54        Residue name    resName       Residue name.
-	 * <p/>
 	 * 56 - 58        Residue name    resName       Residue name.
-	 * <p/>
 	 * 60 - 62        Residue name    resName       Residue name.
-	 * <p/>
 	 * 64 - 66        Residue name    resName       Residue name.
-	 * <p/>
 	 * 68 - 70        Residue name    resName       Residue name.
+	 * </pre>
+	 * @author Jules Jacobsen
 	 */
 	private void pdb_SEQRES_Handler(String line) {
 
@@ -766,12 +756,12 @@ public class PDBFileParser  {
 			return;
 		}
 
-		current_chain = isKnownChain(chainID, seqResChains);
-		if ( current_chain == null) {
+		currentChain = isKnownChain(chainID, seqResChains);
+		if ( currentChain == null) {
 
-			current_chain = new ChainImpl();
-			current_chain.setId(chainID);
-			current_chain.setName(chainID);
+			currentChain = new ChainImpl();
+			currentChain.setId(chainID);
+			currentChain.setName(chainID);
 
 		}
 
@@ -785,28 +775,28 @@ public class PDBFileParser  {
 			// could be a nucleotide...
 			// but getNewGroup takes care of that and converts ATOM records with aminoCode1 == nnull to nucleotide...
 			//}
-			current_group = getNewGroup("ATOM", aminoCode1, threeLetter);
+			currentGroup = getNewGroup("ATOM", aminoCode1, threeLetter);
 
-			current_group.setPDBName(threeLetter);
+			currentGroup.setPDBName(threeLetter);
 
-			if ( current_group instanceof AminoAcid){
-				AminoAcid aa = (AminoAcid)current_group;
+			if ( currentGroup instanceof AminoAcid){
+				AminoAcid aa = (AminoAcid)currentGroup;
 				aa.setRecordType(AminoAcid.SEQRESRECORD);
 			}
 			// add the current resNum to the new chain.
-			current_chain.addGroup(current_group);
+			currentChain.addGroup(currentGroup);
 
 		}
 		Chain test = isKnownChain(chainID, seqResChains);
 
 		if ( test == null)
-			seqResChains.add(current_chain);
+			seqResChains.add(currentChain);
 
-		if (current_group != null)
-			current_group.trimToSize();
+		if (currentGroup != null)
+			currentGroup.trimToSize();
 
-		current_group = null;
-		current_chain = null;
+		currentGroup = null;
+		currentChain = null;
 
 		//		 the current chain is finished!
 		//if ( current_chain.getLength() != lengthCheck ){
@@ -820,17 +810,18 @@ public class PDBFileParser  {
 
 
 
-	/** Handler for
-	 TITLE Record Format
-
+	/** 
+	 * Handler for
+	 * TITLE Record Format
+	 * <pre>
 	 COLUMNS        DATA TYPE       FIELD          DEFINITION
 	 ----------------------------------------------------------------------------------
 	 1 -  6        Record name     "TITLE "
 	 9 - 10        Continuation    continuation   Allows concatenation of multiple
 	 records.
 	 11 - 70        String          title          Title of the experiment.
-
-
+	 * </pre>
+     *
 	 */
 	private void pdb_TITLE_Handler(String line) {
 		String title;
@@ -860,13 +851,13 @@ public class PDBFileParser  {
 	 * reference, then there is no JRNL reference. Other references are given in REMARK 1.
 	 *
 	 * Record Format
-	 *
+	 * <pre>
 	 * COLUMNS       DATA TYPE     FIELD         DEFINITION
 	 * -----------------------------------------------------------------------
 	 * 1 -  6       Record name   "JRNL  "
 	 *
 	 * 13 - 70       LString        text         See Details below.
-	 *
+	 * </pre>
 	 */
 	private void pdb_JRNL_Handler(String line) {
 		//add the strings to the journalLines
@@ -988,12 +979,12 @@ public class PDBFileParser  {
 			//			System.out.println("[pdb_COMPND_Handler] Final COMPND line - Finishing off final MolID header.");
 			compndValueSetter(continuationField, continuationString);
 			continuationString = "";
-			if (current_compound!=null) compounds.add(current_compound);
+			if (current_compound!=null) entities.add(current_compound);
 		}
 	}
 
 	/**
-	 * Set the value in the currrent molId object
+	 * Set the value in the current molId object
 	 * @param field
 	 * @param value
 	 */
@@ -1010,7 +1001,7 @@ public class PDBFileParser  {
 			}
 			if (i>0 && prevMolId!=i) {
 
-				if (current_compound!=null) compounds.add(current_compound);
+				if (current_compound!=null) entities.add(current_compound);
 
 				logger.debug("Initialising new Compound with mol_id {}", i);
 
@@ -1104,18 +1095,20 @@ public class PDBFileParser  {
 	}
 
 
-	/** Handler for
+	/** 
+	 * Handler for
 	 * SOURCE Record format
 	 *
 	 * The SOURCE record specifies the biological and/or chemical source of each biological molecule in the entry. Sources are described by both the common name and the scientific name, e.g., genus and species. Strain and/or cell-line for immortalized cells are given when they help to uniquely identify the biological entity studied.
 	 * Record Format
-	 *
+	 * <pre>
 	 * COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * -------------------------------------------------------------------------------
 	 *  1 -  6   Record name       "SOURCE"
 	 *  9 - 10   Continuation      continuation   Allows concatenation of multiple records.
 	 * 11 - 70   Specification     srcName        Identifies the source of the macromolecule in
 	 *            list                            a token: value format.
+	 * </pre>
 	 * @param line the line to be parsed
 	 */
 	private void pdb_SOURCE_Handler(String line) {
@@ -1227,7 +1220,8 @@ public class PDBFileParser  {
 	}
 
 
-	/** set the value in the currrent molId object
+	/** 
+	 * Set the value in the current molId object
 	 *
 	 * @param field
 	 * @param value
@@ -1239,7 +1233,7 @@ public class PDBFileParser  {
 		if (field.equals("MOL_ID:")) {
 
 			try {
-				current_compound = compounds.get(Integer.valueOf(value) - 1);
+				current_compound = entities.get(Integer.valueOf(value) - 1);
 			} catch (NumberFormatException e){
 				logger.info("could not process SOURCE MOL_ID record correctly:" + e.getMessage());
 				return;
@@ -1396,9 +1390,10 @@ public class PDBFileParser  {
 
 
 
-	/** Handler for
-	 EXPDTA Record Format
-
+	/** 
+	 * Handler for
+	 * EXPDTA Record Format
+	<pre>
 	 COLUMNS       DATA TYPE      FIELD         DEFINITION
 	 -------------------------------------------------------------------------------
 	 1 -  6       Record name    "EXPDTA"
@@ -1416,9 +1411,8 @@ public class PDBFileParser  {
 	 NMR
 	 THEORETICAL MODEL
 	 X-RAY DIFFRACTION
-
+	</pre>
 	 */
-
 	private void pdb_EXPDTA_Handler(String line) {
 
 		String technique  ;
@@ -1434,12 +1428,13 @@ public class PDBFileParser  {
 
 	}
 
-	/** Handler for
+	/** 
+	 * Handler for
 	 * CRYST1 Record Format
 	 * The CRYST1 record presents the unit cell parameters, space group, and Z value.
 	 * If the entry describes a structure determined by a technique other than X-ray crystallography,
 	 * CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
-	 *
+	 * <pre>
 	 * COLUMNS DATA TYPE    FIELD          DEFINITION
 	 * -------------------------------------------------------------
 	 *  1 - 6  Record name  "CRYST1"
@@ -1451,9 +1446,8 @@ public class PDBFileParser  {
 	 * 48 - 54 Real(7.2)    gamma          gamma (degrees).
 	 * 56 - 66 LString      sGroup         Space group.
 	 * 67 - 70 Integer      z              Z value.
-	 *
+	 * </pre>
 	 */
-
 	private void pdb_CRYST1_Handler(String line) {
 		// for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 63
 		if (line.length() < 63) {
@@ -1515,7 +1509,7 @@ public class PDBFileParser  {
 	 * Handler for MTRIXn records. They specify extra NCS operators (usually in virus entries)
 	 *
 	 * See http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn
-	 *
+	 * <pre>
 	 * COLUMNS        DATA TYPE     FIELD         DEFINITION
 	 * -------------------------------------------------------------
 	 *
@@ -1527,8 +1521,9 @@ public class PDBFileParser  {
 	 * 46 - 55        Real(10.5)    v[n]          Vn
 	 * 60             Integer       iGiven        1
 	 *
+	 * </pre>
 	 * Note that we ignore operators with iGiven==1
-	 *
+	 * 
 	 * @param line
 	 */
 	private void pdb_MTRIXn_Handler(String line) {
@@ -1647,47 +1642,47 @@ public class PDBFileParser  {
 
 		String chain_id      = line.substring(21,22);
 
-		if (current_chain == null) {
-			current_chain = new ChainImpl();
-			current_chain.setChainID(chain_id);
-			current_chain.setName(chain_id);
+		if (currentChain == null) {
+			currentChain = new ChainImpl();
+			currentChain.setId(chain_id);
+			currentChain.setName(chain_id);
 			startOfNewChain = true;
-			current_model.add(current_chain);
+			currentModel.add(currentChain);
 		}
 
 
-		if ( ! chain_id.equals(current_chain.getChainID()) ) {
+		if ( ! chain_id.equals(currentChain.getName()) ) {
 
 			startOfNewChain = true;
 
 			// end up old chain...
-			current_chain.addGroup(current_group);
+			currentChain.addGroup(currentGroup);
 
 			// see if old chain is known ...
 			Chain testchain ;
-			testchain = isKnownChain(current_chain.getChainID(),current_model);
+			testchain = isKnownChain(currentChain.getName(),currentModel);
 
 			//System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);
-			if ( testchain != null && testchain.getChainID().equals(chain_id)){
+			if ( testchain != null && testchain.getName().equals(chain_id)){
 				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);
 
 			} else {
 
-				testchain = isKnownChain(chain_id,current_model);
+				testchain = isKnownChain(chain_id,currentModel);
 			}
 
 			if ( testchain == null) {
 				//System.out.println("unknown chain. creating new chain.");
 
-				current_chain = new ChainImpl();
-				current_chain.setChainID(chain_id);
-				current_chain.setName(chain_id);
+				currentChain = new ChainImpl();
+				currentChain.setId(chain_id);
+				currentChain.setName(chain_id);
 			}   else {
-				current_chain = testchain;
+				currentChain = testchain;
 			}
 
-			if ( ! current_model.contains(current_chain))
-				current_model.add(current_chain);
+			if ( ! currentModel.contains(currentChain))
+				currentModel.add(currentChain);
 
 
 		}
@@ -1726,31 +1721,31 @@ public class PDBFileParser  {
 					aminoCode1 = null;
 		}
 
-		if (current_group == null) {
+		if (currentGroup == null) {
 
-			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
+			currentGroup = getNewGroup(recordName,aminoCode1,groupCode3);
 
 			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {
 			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
 			//}
-			current_group.setPDBName(groupCode3);
-			current_group.setResidueNumber(residueNumber);
+			currentGroup.setPDBName(groupCode3);
+			currentGroup.setResidueNumber(residueNumber);
 			//			                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
-			addTohetGroupsDecider(current_group);
+			addTohetGroupsDecider(currentGroup);
 		}
 
 
 		if ( startOfNewChain) {
 			//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
 
-			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
+			currentGroup = getNewGroup(recordName,aminoCode1,groupCode3);
 
 			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {
 			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
 			//}
-			current_group.setPDBName(groupCode3);
-			current_group.setResidueNumber(residueNumber);
-			addTohetGroupsDecider(current_group);
+			currentGroup.setPDBName(groupCode3);
+			currentGroup.setResidueNumber(residueNumber);
+			addTohetGroupsDecider(currentGroup);
 			//                        System.out.println("Made new start of chain group:  " + groupCode3 + " " + resNum + " " + iCode);
 		}
 
@@ -1762,19 +1757,19 @@ public class PDBFileParser  {
 
 		// check if residue number is the same ...
 		// insertion code is part of residue number
-		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
+		if ( ! residueNumber.equals(currentGroup.getResidueNumber())) {
 
-			current_chain.addGroup(current_group);
-			current_group.trimToSize();
+			currentChain.addGroup(currentGroup);
+			currentGroup.trimToSize();
 
-			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
+			currentGroup = getNewGroup(recordName,aminoCode1,groupCode3);
 
 			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {
 			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
 			//}
-			current_group.setPDBName(groupCode3);
-			current_group.setResidueNumber(residueNumber);
-			addTohetGroupsDecider(current_group);
+			currentGroup.setPDBName(groupCode3);
+			currentGroup.setResidueNumber(residueNumber);
+			addTohetGroupsDecider(currentGroup);
 			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		} else {
@@ -1782,11 +1777,11 @@ public class PDBFileParser  {
 
 			// test altLoc
 			if ( ! altLoc.equals(' ')) {
-				logger.debug("found altLoc! " + current_group + " " + altGroup);
+				logger.debug("found altLoc! " + currentGroup + " " + altGroup);
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3);
 				if ( altGroup.getChain() == null) {
 					// need to set current chain
-					altGroup.setChain(current_chain);
+					altGroup.setChain(currentChain);
 				}
 
 			}
@@ -1930,14 +1925,14 @@ public class PDBFileParser  {
 			altGroup = null;
 		}
 		else {
-			current_group.addAtom(atom);
+			currentGroup.addAtom(atom);
 		}
 
 
 		// make sure that main group has all atoms
 		// GitHub issue: #76
-		if ( ! current_group.hasAtom(atom.getName())) {
-			current_group.addAtom(atom);
+		if ( ! currentGroup.hasAtom(atom.getName())) {
+			currentGroup.addAtom(atom);
 		}
 
 
@@ -1950,18 +1945,18 @@ public class PDBFileParser  {
 			String recordName, Character aminoCode1, String groupCode3) {
 
 		// see if we know this altLoc already;
-		List<Atom> atoms = current_group.getAtoms();
+		List<Atom> atoms = currentGroup.getAtoms();
 		if ( atoms.size() > 0) {
 			Atom a1 = atoms.get(0);
 			// we are just adding atoms to the current group
 			// probably there is a second group following later...
 			if (a1.getAltLoc().equals(altLoc)) {
 
-				return current_group;
+				return currentGroup;
 			}
 		}
 
-		List<Group> altLocs = current_group.getAltLocs();
+		List<Group> altLocs = currentGroup.getAltLocs();
 		for ( Group altLocG : altLocs ){
 			atoms = altLocG.getAtoms();
 			if ( atoms.size() > 0) {
@@ -1977,18 +1972,18 @@ public class PDBFileParser  {
 		// no matching altLoc group found.
 		// build it up.
 
-		if ( groupCode3.equals(current_group.getPDBName())) {
-			if ( current_group.getAtoms().size() == 0) {
+		if ( groupCode3.equals(currentGroup.getPDBName())) {
+			if ( currentGroup.getAtoms().size() == 0) {
 				//System.out.println("current group is empty " + current_group + " " + altLoc);
-				return current_group;
+				return currentGroup;
 			}
 			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
-			Group altLocG = (Group) current_group.clone();
+			Group altLocG = (Group) currentGroup.clone();
 			// drop atoms from cloned group...
 			// https://redmine.open-bio.org/issues/3307
 			altLocG.setAtoms(new ArrayList<Atom>());
 			altLocG.getAltLocs().clear();
-			current_group.addAltLoc(altLocG);
+			currentGroup.addAltLoc(altLocG);
 			return altLocG;
 		}
 
@@ -1998,8 +1993,8 @@ public class PDBFileParser  {
 
 		altLocG.setPDBName(groupCode3);
 
-		altLocG.setResidueNumber(current_group.getResidueNumber());
-		current_group.addAltLoc(altLocG);
+		altLocG.setResidueNumber(currentGroup.getResidueNumber());
+		currentGroup.addAltLoc(altLocG);
 		return altLocG;
 	}
 
@@ -2007,7 +2002,7 @@ public class PDBFileParser  {
 		parseCAonly = true;
 
 
-		current_model = CAConverter.getRepresentativeAtomsOnly(current_model);
+		currentModel = CAConverter.getRepresentativeAtomsOnly(currentModel);
 
 		for ( int i =0; i< structure.nrModels() ; i++){
 			//  iterate over all known models ...
@@ -2016,7 +2011,7 @@ public class PDBFileParser  {
 			structure.setModel(i,model);
 		}
 
-		current_chain = CAConverter.getRepresentativeAtomsOnly(current_chain);
+		currentChain = CAConverter.getRepresentativeAtomsOnly(currentChain);
 
 	}
 
@@ -2036,9 +2031,8 @@ public class PDBFileParser  {
 	}
 
 	/**
-	 Handler for
-	 CONECT Record Format
-
+	 * Handler for CONECT Record Format
+	<pre>
 	 COLUMNS         DATA TYPE        FIELD           DEFINITION
 	 ---------------------------------------------------------------------------------
 	 1 -  6         Record name      "CONECT"
@@ -2059,6 +2053,7 @@ public class PDBFileParser  {
 	 atom
 	 57 - 61         Integer          serial          Serial number of salt bridged
 	 atom
+	 </pre>
 	 */
 	private void pdb_CONECT_Handler(String line) {
 		//System.out.println(line);
@@ -2106,40 +2101,42 @@ public class PDBFileParser  {
 	}
 
 	/**
-	 Handler for
-	 MODEL Record Format
-
+	 * Handler for MODEL Record Format
+	 * <pre>
 	 COLUMNS       DATA TYPE      FIELD         DEFINITION
 	 ----------------------------------------------------------------------
 	 1 -  6       Record name    "MODEL "
 	 11 - 14       Integer        serial        Model serial number.
+	 * </pre>
 	 */
 	private void pdb_MODEL_Handler(String line) {
 
 		if (params.isHeaderOnly()) return;
 
 		// check beginning of file ...
-		if (current_chain != null) {
-			if (current_group != null) {
-				current_chain.addGroup(current_group);
-				current_group.trimToSize();
+		if (currentChain != null) {
+			if (currentGroup != null) {
+				currentChain.addGroup(currentGroup);
+				currentGroup.trimToSize();
 			}
 
-			Chain ch = isKnownChain(current_chain.getChainID(),current_model) ;
+			Chain ch = isKnownChain(currentChain.getName(),currentModel) ;
 			if ( ch == null ) {
-				current_model.add(current_chain);
+				currentModel.add(currentChain);
 			}
 
-			structure.addModel(current_model);
-			current_model = new ArrayList<Chain>();
-			current_chain = null;
-			current_group = null;
+			structure.addModel(currentModel);
+			currentModel = new ArrayList<Chain>();
+			currentChain = null;
+			currentGroup = null;
 		}
 
 	}
 
 
 	/**
+	 * DBREF handler
+	 * <pre>
 	 * COLUMNS       DATA TYPE          FIELD          DEFINITION
 	 * ----------------------------------------------------------------
 	 *  1 - 6        Record name        "DBREF "
@@ -2167,6 +2164,7 @@ public class PDBFileParser  {
 	 * 68           AChar              dbinsEnd        Insertion code of the ending
 	 *                                                 residue of the segment, if PDB is
 	 *                                                 the reference.
+	 * </pre>
 	 */
 	private void pdb_DBREF_Handler(String line){
 
@@ -2210,55 +2208,11 @@ public class PDBFileParser  {
 		dbrefs.add(dbref);
 	}
 
-	/*
-	 * For each het group that appears in the entry, the wwPDB checks that the corresponding HET, HETNAM, HETSYN, FORMUL, HETATM, and CONECT records appear, if applicable. The HET record is generated automatically using the Chemical Component Dictionary and information from the HETATM records.
-
-	 * Record Format
-	 *
-	 * <pre>
-	 * COLUMNS       DATA  TYPE     FIELD         DEFINITION
-	 * ---------------------------------------------------------------------------------
-	 *  1 -  6       Record name   "HET   "
-	 *  8 - 10       LString(3)    hetID          Het identifier, right-justified.
-	 * 13            Character     ChainID        Chain  identifier.
-	 * 14 - 17       Integer       seqNum         Sequence  number.
-	 * 18            AChar         iCode          Insertion  code.
-	 * 21 - 25       Integer       numHetAtoms    Number of HETATM records for the group
-	 *                                            present in the entry.
-	 * 31 - 70       String        text           Text describing Het group.
-	 *
-	 * Each unique hetID represents a unique molecule.
-	 *
-	 * Relationships to Other Record Types
-	 *
-	 * For each het group that appears in the entry, there must be corresponding HET, HETNAM, HETSYN, FORMUL,HETATM, and CONECT records. LINK records may also be created.
-	 *
-	 * Example
-	 *
-	 *          1         2         3         4         5         6         7         8
-	 * 12345678901234567890123456789012345678901234567890123456789012345678901234567890
-	 * HET    TRS    975       8
-	 *
-	 * HET    UDP  A1457      25
-	 * HET    B3P  A1458      19
-	 *
-	 * HET    NAG  Y   3      15
-	 * HET    FUC  Y   4      10
-	 * HET    NON  Y   5      12
-	 * HET    UNK  A 161       1
-	 * </pre>
-	 *
-	 * Heterogen sections are HET, HETNAM, HETSYN, FORMUL
-	 * @see http://www.wwpdb.org/documentation/format32/sect4.html
-	 */
-	//private void pdb_HET_handler(String line) {
-
-	//}
 
 	/**
 	 * Process the disulfide bond info provided by an SSBOND record
 	 *
-	 *
+	 * <pre>
 	COLUMNS        DATA TYPE       FIELD         DEFINITION
 	-------------------------------------------------------------------
 	 1 -  6        Record name     "SSBOND"
@@ -2273,6 +2227,7 @@ public class PDBFileParser  {
 	36             AChar           icode2       Insertion code.
 	60 - 65        SymOP           sym1         Symmetry oper for 1st resid
 	67 - 72        SymOP           sym2         Symmetry oper for 2nd resid
+	 * </pre>
 	 */
 	private void pdb_SSBOND_Handler(String line){
 
@@ -2386,7 +2341,7 @@ public class PDBFileParser  {
 	}
 
 	/**
-	 * Handler for the SITE records. <br>
+	 * Handler for the SITE records. 
 	 *
 	 * <pre>
 	 *
@@ -2571,7 +2526,8 @@ public class PDBFileParser  {
 
 
 
-	/** test if the chain is already known (is in current_model
+	/** 
+	 * Test if the chain is already known (is in current_model
 	 * ArrayList) and if yes, returns the chain
 	 * if no -> returns null
 	 */
@@ -2580,7 +2536,7 @@ public class PDBFileParser  {
 		for (int i = 0; i< chains.size();i++){
 			Chain testchain =  chains.get(i);
 			//System.out.println("comparing chainID >"+chainID+"< against testchain " + i+" >" +testchain.getName()+"<");
-			if (chainID.equals(testchain.getChainID())) {
+			if (chainID.equals(testchain.getName())) {
 				//System.out.println("chain "+ chainID+" already known ...");
 				return testchain;
 			}
@@ -2632,10 +2588,9 @@ public class PDBFileParser  {
 	 * @return the Structure object
 	 * @throws IOException ...
 	 */
-
 	public  Structure parsePDBFile(BufferedReader buf)
 			throws IOException
-			{
+	{
 		// set the correct max values for parsing...
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
@@ -2644,11 +2599,11 @@ public class PDBFileParser  {
 		// (re)set structure
 
 		structure     = new StructureImpl() ;
-		current_model = new ArrayList<Chain>();
+		currentModel = new ArrayList<Chain>();
 		seqResChains  = new ArrayList<Chain>();
 		siteMap = new LinkedHashMap<String, Site>();
-		current_chain = null           ;
-		current_group = null           ;
+		currentChain = null           ;
+		currentGroup = null           ;
 		pdbHeader     = new PDBHeader();
 		connects      = new ArrayList<Map<String,Integer>>();
 		previousContinuationField = "";
@@ -2660,7 +2615,7 @@ public class PDBFileParser  {
 		isLastCompndLine = false;
 		isLastSourceLine = false;
 		prevMolId = -1;
-		compounds.clear();
+		entities.clear();
 		helixList.clear();
 		strandList.clear();
 		turnList.clear();
@@ -2769,7 +2724,7 @@ public class PDBFileParser  {
 
 		return structure;
 
-			}
+	}
 
 
 	/**
@@ -2799,10 +2754,10 @@ public class PDBFileParser  {
 		}
 		//		System.out.println("[makeCompounds] adding sources to compounds from sourceLines");
 		// since we're starting again from the first compound, reset it here
-		if ( compounds.size() == 0){
+		if ( entities.size() == 0){
 			current_compound = new EntityInfo();
 		} else {
-			current_compound = compounds.get(0);
+			current_compound = entities.get(0);
 		}
 		for (String line : sourceList) {
 			if (sourceList.indexOf(line) + 1 == sourceList.size()) {
@@ -2854,11 +2809,11 @@ public class PDBFileParser  {
 
 		// a problem occurred earlier so current_chain = null ...
 		// most likely the buffered reader did not provide data ...
-		if ( current_chain != null ) {
-			current_chain.addGroup(current_group);
+		if ( currentChain != null ) {
+			currentChain.addGroup(currentGroup);
 
-			if (isKnownChain(current_chain.getChainID(),current_model) == null) {
-				current_model.add(current_chain);
+			if (isKnownChain(currentChain.getName(),currentModel) == null) {
+				currentModel.add(currentChain);
 			}
 		}
 
@@ -2869,7 +2824,7 @@ public class PDBFileParser  {
 		}
 
 
-		structure.addModel(current_model);
+		structure.addModel(currentModel);
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 
@@ -2889,9 +2844,9 @@ public class PDBFileParser  {
 
 
 		linkChains2Compound(structure);
-		structure.setEntityInfos(compounds);
+		structure.setEntityInfos(entities);
+		
 		//associate the temporary Groups in the siteMap to the ones
-
 		if (!params.isHeaderOnly()) {
 			// Only can link SITES if Atom Groups were parsed.
 			linkSitesToGroups(); // will work now that setSites is called
@@ -2899,8 +2854,6 @@ public class PDBFileParser  {
 
 		if ( bioAssemblyParser != null){
 			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
-			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
-			//System.out.println(pdbHeader.getBioUnitTranformationMap().keySet());
 		}
 
 		if (ncsOperators !=null && ncsOperators.size()>0) {
@@ -2994,7 +2947,7 @@ public class PDBFileParser  {
 					Group g = gi.next();
 					Chain c = g.getChain();
 
-					if (c.getChainID().equals(initChainId)){
+					if (c.getName().equals(initChainId)){
 
 						String pdbCode = initSeqNum + initICode;
 						if ( g.getResidueNumber().toString().equals(pdbCode)  ) {
@@ -3008,7 +2961,7 @@ public class PDBFileParser  {
 						}
 
 					}
-					if ( c.getChainID().equals(endChainId)){
+					if ( c.getName().equals(endChainId)){
 						String pdbCode = endSeqNum + endICode;
 						if (pdbCode.equals(g.getResidueNumber().toString())){
 							inRange = false;
@@ -3029,7 +2982,7 @@ public class PDBFileParser  {
 	public void linkChains2Compound(Structure s){
 
 
-		for(EntityInfo comp : compounds){
+		for(EntityInfo comp : entities){
 			List<Chain> chains = new ArrayList<Chain>();
 			List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
 			if ( chainIds == null)
@@ -3039,7 +2992,7 @@ public class PDBFileParser  {
 					chainId = " ";
 				try {
 
-					Chain c = s.findChain(chainId);
+					Chain c = s.getChainByPDB(chainId);
 					chains.add(c);
 
 				} catch (StructureException e){
@@ -3054,8 +3007,8 @@ public class PDBFileParser  {
 			comp.setChains(chains);
 		}
 
-		if ( compounds.size() == 1) {
-			EntityInfo comp = compounds.get(0);
+		if ( entities.size() == 1) {
+			EntityInfo comp = entities.get(0);
 			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null){
 				List<Chain> chains = s.getChains(0);
 				if ( chains.size() == 1) {
@@ -3066,7 +3019,7 @@ public class PDBFileParser  {
 			}
 		}
 
-		for (EntityInfo comp: compounds){
+		for (EntityInfo comp: entities){
 			if ( compoundMolIds2chainIds.get(comp.getMolId()) == null) {
 				// could not link to chain
 				// TODO: should this be allowed to happen?
@@ -3090,15 +3043,15 @@ public class PDBFileParser  {
 		// we need now to assign a new compound to it so that at least the structure is consistent
 		// see https://github.com/biojava/biojava/pull/394
 
-		if (compounds!=null && !compounds.isEmpty()) {
+		if (entities!=null && !entities.isEmpty()) {
 			for (Chain c: s.getChains()) {
 				if (c.getEntityInfo() == null) {
 
 					EntityInfo compound = new EntityInfo();
 					compound.addChain(c);
-					compound.setMolId(findMaxCompoundId(compounds)+1);
+					compound.setMolId(findMaxEntityId(entities)+1);
 					c.setEntityInfo(compound);
-					compounds.add(compound);
+					entities.add(compound);
 					
 					if (StructureTools.isChainWaterOnly(c)) {
 						compound.setType(EntityType.WATER);
@@ -3106,13 +3059,13 @@ public class PDBFileParser  {
 						compound.setType(EntityType.NONPOLYMER);
 					}
 
-					logger.warn("No compound (entity) found in file for chain {}. Creating new entity {} for it.", c.getChainID(), compound.getMolId());
+					logger.warn("No entity found in file for chain {}. Creating new entity {} for it.", c.getName(), compound.getMolId());
 				}
 			}
 		}
 	}
 
-	private static int findMaxCompoundId(List<EntityInfo> compounds) {
+	private static int findMaxEntityId(List<EntityInfo> compounds) {
 
 		return
 
