@@ -60,10 +60,8 @@ import java.util.TreeSet;
  */
 public class EntityFinder {
 
-	private Structure s;
-
 	private static final Logger logger = LoggerFactory.getLogger(EntityFinder.class);
-
+	
 	/**
 	 * Above this ratio of mismatching residue types for same residue numbers we
 	 * consider the 2 chains to have mismatching residue numbers and warn about it
@@ -81,9 +79,18 @@ public class EntityFinder {
 	 */
 	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
 
+	//private Structure s;
+	private List<List<Chain>> allModels;
 
 	public EntityFinder(Structure s) {
-		this.s = s;
+		allModels = new ArrayList<List<Chain>>();
+		for (int i=0;i<s.nrModels();i++) {
+			this.allModels.add(s.getModel(i));
+		}
+	}
+	
+	public EntityFinder(List<List<Chain>> allModels) {
+		this.allModels = allModels;
 	}
 
 	/**
@@ -126,9 +133,9 @@ public class EntityFinder {
 	private void createPurelyNonPolyCompounds(List<EntityInfo> compounds) {
 
 		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
-		for (int i=0;i<s.getChains().size();i++) {
-			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
-				pureNonPolymerChains.add(s.getChain(i));
+		for (int i=0;i<allModels.get(0).size();i++) {
+			if (StructureTools.isChainPureNonPolymer(allModels.get(0).get(i))) {
+				pureNonPolymerChains.add(allModels.get(0).get(i));
 			}
 		}
 
@@ -155,7 +162,7 @@ public class EntityFinder {
 				} else {
 					comp.setType(EntityType.NONPOLYMER);
 				}
-				logger.warn("Chain {} is purely non-polymeric, will assign a new Compound (entity) to it (entity id {})", c.getChainID(), molId);
+				logger.warn("Chain {} is purely non-polymeric, will assign a new Compound (entity) to it (entity id {})", c.getId(), molId);
 				molId++;
 
 				compounds.add(comp);
@@ -188,7 +195,7 @@ public class EntityFinder {
 				Group g2 = c2.getGroupByPDB(g1.getResidueNumber());
 				if (!g2.getPDBName().equals(g1.getPDBName())) {
 					logger.debug("Mismatch of residues between chains {},{} for residue number {}: {} {}",
-							c1.getChainID(),c2.getChainID(),g1.getResidueNumber(), g1.getPDBName(), g2.getPDBName());
+							c1.getId(),c2.getId(),g1.getResidueNumber(), g1.getPDBName(), g2.getPDBName());
 					return false;
 				}
 			} catch (StructureException e) {
@@ -200,7 +207,7 @@ public class EntityFinder {
 
 		if ((double)countNonExisting/(double)c1AtomGroups.size() > RATIO_GAPS_FOR_MISMATCH) {
 			logger.debug("More than {} of the residues ({} out of {}) are not present in chain {} when comparing by residue numbers to chain {}.",
-					RATIO_GAPS_FOR_MISMATCH, countNonExisting, c1AtomGroups.size(), c2.getChainID(), c1.getChainID());
+					RATIO_GAPS_FOR_MISMATCH, countNonExisting, c1AtomGroups.size(), c2.getId(), c1.getId());
 			return false;
 		}
 
@@ -215,9 +222,9 @@ public class EntityFinder {
 		// polymeric (protein or nucleotide chain) should be discarded
 		Set<Integer> polyChainIndices = new TreeSet<Integer>();
 		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
-		for (int i=0;i<s.getChains().size();i++) {
-			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
-				pureNonPolymerChains.add(s.getChain(i));
+		for (int i=0;i<allModels.get(0).size();i++) {
+			if (StructureTools.isChainPureNonPolymer(allModels.get(0).get(i))) {
+				pureNonPolymerChains.add(allModels.get(0).get(i));
 			} else {
 				polyChainIndices.add(i);
 			}
@@ -234,8 +241,8 @@ public class EntityFinder {
 
 					if (j<=i) continue;
 
-					Chain c1 = s.getChain(i);
-					Chain c2 = s.getChain(j);
+					Chain c1 = allModels.get(0).get(i);
+					Chain c2 = allModels.get(0).get(j);
 
 					Map<Integer,Integer> positionIndex1 = new HashMap<Integer, Integer>();
 					Map<Integer,Integer> positionIndex2 = new HashMap<Integer, Integer>();
@@ -288,48 +295,48 @@ public class EntityFinder {
 					double gapCov2 = (double) numGaps2 / (double) seq2Length;
 
 					logger.debug("Alignment for chain pair {},{}: identity: {}, gap coverage 1: {}, gap coverage 2: {}",
-							c1.getChainID(), c2.getChainID(), String.format("%4.2f",identity), String.format("%4.2f",gapCov1), String.format("%4.2f",gapCov2));
+							c1.getId(), c2.getId(), String.format("%4.2f",identity), String.format("%4.2f",gapCov1), String.format("%4.2f",gapCov2));
 					logger.debug("\n"+pair.toString(100));
 
 					if (identity > IDENTITY_THRESHOLD && gapCov1<GAP_COVERAGE_THRESHOLD && gapCov2<GAP_COVERAGE_THRESHOLD) {
-						if (	!chainIds2compounds.containsKey(c1.getChainID()) &&
-								!chainIds2compounds.containsKey(c2.getChainID())) {
-							logger.debug("Creating Compound with chains {},{}",c1.getChainID(),c2.getChainID());
+						if (	!chainIds2compounds.containsKey(c1.getId()) &&
+								!chainIds2compounds.containsKey(c2.getId())) {
+							logger.debug("Creating Compound with chains {},{}",c1.getId(),c2.getId());
 
 							EntityInfo ent = new EntityInfo();
 							ent.addChain(c1);
 							ent.addChain(c2);
 							ent.setMolId(molId++);
 							ent.setType(EntityType.POLYMER);
-							chainIds2compounds.put(c1.getChainID(), ent);
-							chainIds2compounds.put(c2.getChainID(), ent);
+							chainIds2compounds.put(c1.getId(), ent);
+							chainIds2compounds.put(c2.getId(), ent);
 
 
 						} else {
-							EntityInfo ent = chainIds2compounds.get(c1.getChainID());
+							EntityInfo ent = chainIds2compounds.get(c1.getId());
 
 							if (ent==null) {
-								logger.debug("Adding chain {} to entity {}",c1.getChainID(),c2.getChainID());
-								ent = chainIds2compounds.get(c2.getChainID());
+								logger.debug("Adding chain {} to entity {}",c1.getId(),c2.getId());
+								ent = chainIds2compounds.get(c2.getId());
 								ent.addChain(c1);
-								chainIds2compounds.put(c1.getChainID(), ent);
+								chainIds2compounds.put(c1.getId(), ent);
 
 							} else {
-								logger.debug("Adding chain {} to entity {}",c2.getChainID(),c1.getChainID());
+								logger.debug("Adding chain {} to entity {}",c2.getId(),c1.getId());
 								ent.addChain(c2);
-								chainIds2compounds.put(c2.getChainID(), ent);
+								chainIds2compounds.put(c2.getId(), ent);
 
 							}
 						}
 						if (!areResNumbersAligned(c1, c2)) {
 							logger.warn("Including 100% identical chains {},{} in same Compound, although they have misaligned residue numbers",
-									c1.getChainID(),c2.getChainID());
+									c1.getId(),c2.getId());
 						}
 					}
 
 					if (identity>1) {
 						logger.warn("Identity for chains {},{} above 1. {} identicals out of {} non-gap-aligned residues (identity {})",
-								c1.getChainID(),c2.getChainID(),pair.getNumIdenticals(),nonGaps,identity);
+								c1.getId(),c2.getId(),pair.getNumIdenticals(),nonGaps,identity);
 						logger.warn("\n"+pair.toString(100));
 					}
 
@@ -340,15 +347,15 @@ public class EntityFinder {
 
 		// anything not in a Compound will be its own Compound
 		for (int i:polyChainIndices) {
-			Chain c = s.getChain(i);
-			if (!chainIds2compounds.containsKey(c.getChainID())) {
-				logger.debug("Creating a 1-member Compound for chain {}",c.getChainID());
+			Chain c = allModels.get(0).get(i);
+			if (!chainIds2compounds.containsKey(c.getId())) {
+				logger.debug("Creating a 1-member Compound for chain {}",c.getId());
 
 				EntityInfo ent = new EntityInfo();
 				ent.addChain(c);
 				ent.setMolId(molId++);
 
-				chainIds2compounds.put(c.getChainID(),ent);
+				chainIds2compounds.put(c.getId(),ent);
 			}
 		}
 

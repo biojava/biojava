@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -877,20 +876,6 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	public List<EntityInfo> getEntityInfos() {
-		// entity information is parsed from the PDB/mmCIF file normally
-		// but if the file is incomplete, it won't have the entityInfo information and we try
-		// to guess it from the existing seqres/atom sequences
-		if (entityInfos==null || entityInfos.isEmpty()) {
-			EntityFinder cf = new EntityFinder(this);
-			this.entityInfos = cf.findEntities();
-
-			// now we need to set references in chains:
-			for (EntityInfo entityInfo : entityInfos) {
-				for (Chain c:entityInfo.getChains()) {
-					c.setEntityInfo(entityInfo);
-				}
-			}
-		}
 		return entityInfos;
 	}
 

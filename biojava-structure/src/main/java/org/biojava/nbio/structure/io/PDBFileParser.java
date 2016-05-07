@@ -770,7 +770,7 @@ public class PDBFileParser  {
 		if ( current_chain == null) {
 
 			current_chain = new ChainImpl();
-			current_chain.setChainID(chainID);
+			current_chain.setId(chainID);
 			current_chain.setName(chainID);
 
 		}
@@ -2924,9 +2924,20 @@ public class PDBFileParser  {
 		} // otherwise it remains default value: PDBHeader.DEFAULT_RFREE
 
 
-		// to make sure we have Compounds linked to chains, we call getCompounds() which will lazily initialise the
-		// compounds using heuristics (see CompoundFinder) in the case that they were not explicitly present in the file
-		structure.getEntityInfos();
+		// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
+		List<EntityInfo> entityInfos = structure.getEntityInfos();
+		if (entityInfos==null || entityInfos.isEmpty()) {
+			EntityFinder cf = new EntityFinder(structure);
+			entityInfos = cf.findEntities();
+
+			// now we need to set references in chains:
+			for (EntityInfo entityInfo : entityInfos) {
+				for (Chain c:entityInfo.getChains()) {
+					c.setEntityInfo(entityInfo);
+				}
+			}
+			structure.setEntityInfos(entityInfos);
+		}
 	}
 
 	private void setSecStruc(){

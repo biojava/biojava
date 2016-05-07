@@ -57,6 +57,7 @@ import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.BondMaker;
 import org.biojava.nbio.structure.io.ChargeAdder;
+import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
@@ -117,11 +118,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifConsumer.class);
 
 	private Structure structure;
-	private Chain current_chain;
-	private Group current_group;
+	private Chain currentChain;
+	private Group currentGroup;
 
-
-	private List<Chain>      current_model;
+	/**
+	 * A temporary data structure to hold all parsed chains
+	 */
+	private ArrayList<List<Chain>> allModels; 
+	/**
+	 * The current set of chains per model
+	 */
+	private List<Chain>      currentModel;
 	private List<Entity>     entities;
 	private List<StructRef>  strucRefs;
 	private List<Chain>      seqResChains;
@@ -146,7 +153,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	private Map<String,String> asymId2entityId;
 
-	private String current_nmr_model ;
+	private String currentNmrModelNumber ;
 
 	private FileParsingParameters params;
 
@@ -348,75 +355,75 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			//logger.debug("Could not parse number for _atom_site.label_seq_id: "+e.getMessage());
 		}
 
-		String nmrModel = atom.getPdbx_PDB_model_num();
+		String nmrModelNumber = atom.getPdbx_PDB_model_num();
 
-		if ( current_nmr_model == null) {
-			current_nmr_model = nmrModel;
+		if ( currentNmrModelNumber == null) {
+			currentNmrModelNumber = nmrModelNumber;
 		}
 
-		if (! current_nmr_model.equals(nmrModel)){
-			current_nmr_model = nmrModel;
+		if (! currentNmrModelNumber.equals(nmrModelNumber)){
+			currentNmrModelNumber = nmrModelNumber;
 
 			// add previous data
-			if ( current_chain != null ) {
-				current_chain.addGroup(current_group);
-				current_group.trimToSize();
+			if ( currentChain != null ) {
+				currentChain.addGroup(currentGroup);
+				currentGroup.trimToSize();
 			}
 
 			// we came to the beginning of a new NMR model
-			structure.addModel(current_model);
-			current_model = new ArrayList<Chain>();
-			current_chain = null;
-			current_group = null;
+			allModels.add(currentModel);
+			currentModel = new ArrayList<Chain>();
+			currentChain = null;
+			currentGroup = null;
 		}
 
 
-		if (current_chain == null) {
+		if (currentChain == null) {
 
-			current_chain = new ChainImpl();
-			current_chain.setName(authId);
-			current_chain.setId(asymId);
-			current_model.add(current_chain);
+			currentChain = new ChainImpl();
+			currentChain.setName(authId);
+			currentChain.setId(asymId);
+			currentModel.add(currentChain);
 			startOfNewChain = true;
 		}
 
 		//System.out.println("BEFORE: " + chain_id + " " + current_chain.getName());
-		if ( ! asymId.equals(current_chain.getId()) ) {
+		if ( ! asymId.equals(currentChain.getId()) ) {
 			//logger.info("unknown chain. creating new chain. authId:" + authId + " asymId: " + asymId);
 			startOfNewChain = true;
 
 			// end up old chain...
-			current_chain.addGroup(current_group);
+			currentChain.addGroup(currentGroup);
 
 			// see if old chain is known ...
-			Chain testchain = isKnownChain(asymId,current_model);
+			Chain testchain = isKnownChain(asymId,currentModel);
 
 			if ( testchain == null) {
 				//logger.info("unknown chain. creating new chain. authId:" + authId + " asymId: " + asymId);
 
-				current_chain = new ChainImpl();
-				current_chain.setName(authId);
-				current_chain.setId(asymId);
+				currentChain = new ChainImpl();
+				currentChain.setName(authId);
+				currentChain.setId(asymId);
 
 			}   else {
-				current_chain = testchain;
+				currentChain = testchain;
 			}
 
-			if ( ! current_model.contains(current_chain))
-				current_model.add(current_chain);
+			if ( ! currentModel.contains(currentChain))
+				currentModel.add(currentChain);
 
 		}
 
 
 		ResidueNumber residueNumber = new ResidueNumber(authId,residueNrInt, insCode);
 
-		if (current_group == null) {
+		if (currentGroup == null) {
 
 
-			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
+			currentGroup = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
-			current_group.setResidueNumber(residueNumber);
-			current_group.setPDBName(groupCode3);
+			currentGroup.setResidueNumber(residueNumber);
+			currentGroup.setPDBName(groupCode3);
 		}
 
 		// SET UP THE ALT LOC GROUP
@@ -431,34 +438,32 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 		// If it's the start of the new chain 
 		if ( startOfNewChain){
-			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
-			current_group.setResidueNumber(residueNumber);
-			current_group.setPDBName(groupCode3);
+			currentGroup = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
+			currentGroup.setResidueNumber(residueNumber);
+			currentGroup.setPDBName(groupCode3);
 		}
 		// ANTHONY BRADLEY ADDED THIS -> WE ONLY WAN'T TO CHECK FOR ALT LOCS WHEN IT's NOT THE FIRST GROUP IN CHAIN
 		else{
 			// check if residue number is the same ...
 			// insertion code is part of residue number
-			if ( ! residueNumber.equals(current_group.getResidueNumber())) {
+			if ( ! residueNumber.equals(currentGroup.getResidueNumber())) {
 				//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
-				current_chain.addGroup(current_group);
-				current_group.trimToSize();
-				current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
-				current_group.setPDBName(groupCode3);
-				current_group.setResidueNumber(residueNumber);
+				currentChain.addGroup(currentGroup);
+				currentGroup.trimToSize();
+				currentGroup = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
+				currentGroup.setPDBName(groupCode3);
+				currentGroup.setResidueNumber(residueNumber);
 
-
-				//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 			} else {
 				// same residueNumber, but altLocs...
 				// test altLoc
 				
 				if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {
-					logger.debug("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
+					logger.debug("found altLoc! " + altLoc + " " + currentGroup + " " + altGroup);
 					altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
 					if (altGroup.getChain()==null) {
-						altGroup.setChain(current_chain);
+						altGroup.setChain(currentChain);
 					}
 				}
 			}
@@ -487,16 +492,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			altGroup = null;
 		}
 		else {
-			current_group.addAtom(a);
+			currentGroup.addAtom(a);
 		}
 
 
 		// make sure that main group has all atoms 
 		// GitHub issue: #76
 		// Unless it's microheterogenity https://github.com/rcsb/codec-devel/issues/81
-		if ( ! current_group.hasAtom(a.getName())) {
-			if (current_group.getPDBName().equals(a.getGroup().getPDBName())) {
-				current_group.addAtom(a);
+		if ( ! currentGroup.hasAtom(a.getName())) {
+			if (currentGroup.getPDBName().equals(a.getGroup().getPDBName())) {
+				currentGroup.addAtom(a);
 			}
 		}
 
@@ -507,7 +512,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-	/** convert a MMCif AtomSite object to a BioJava Atom object
+	/** 
+	 * Convert a mmCIF AtomSite object to a BioJava Atom object
 	 *
 	 * @param atom the mmmcif AtomSite record
 	 * @return an Atom
@@ -560,18 +566,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 										 long seq_id) {
 
 		// see if we know this altLoc already;
-		List<Atom> atoms = current_group.getAtoms();
+		List<Atom> atoms = currentGroup.getAtoms();
 		if ( atoms.size() > 0) {
 			Atom a1 = atoms.get(0);
 			// we are just adding atoms to the current group
 			// probably there is a second group following later...
 			if (a1.getAltLoc().equals(altLoc)) {
 
-				return current_group;
+				return currentGroup;
 			}
 		}
 
-		List<Group> altLocs = current_group.getAltLocs();
+		List<Group> altLocs = currentGroup.getAltLocs();
 		for ( Group altLocG : altLocs ){
 			atoms = altLocG.getAtoms();
 			if ( atoms.size() > 0) {
@@ -587,18 +593,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// no matching altLoc group found.
 		// build it up.
 
-		if ( groupCode3.equals(current_group.getPDBName())) {
-			if ( current_group.getAtoms().size() == 0) {
+		if ( groupCode3.equals(currentGroup.getPDBName())) {
+			if ( currentGroup.getAtoms().size() == 0) {
 				//System.out.println("current group is empty " + current_group + " " + altLoc);
-				return current_group;
+				return currentGroup;
 			}
 			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
-			Group altLocG = (Group) current_group.clone();
+			Group altLocG = (Group) currentGroup.clone();
 			// drop atoms from cloned group...
 			// https://redmine.open-bio.org/issues/3307
 			altLocG.setAtoms(new ArrayList<Atom>());
 			altLocG.getAltLocs().clear();
-			current_group.addAltLoc(altLocG);
+			currentGroup.addAltLoc(altLocG);
 			return altLocG;
 		}
 
@@ -607,24 +613,25 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		Group altLocG = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 
 		altLocG.setPDBName(groupCode3);
-		altLocG.setResidueNumber(current_group.getResidueNumber());
-		current_group.addAltLoc(altLocG);
+		altLocG.setResidueNumber(currentGroup.getResidueNumber());
+		currentGroup.addAltLoc(altLocG);
 		return altLocG;
 	}
 
-	/** Start the parsing
-	 *
+	/** 
+	 * Start the parsing
 	 */
 	@Override
 	public void documentStart() {
 		structure = new StructureImpl();
 
-		current_chain 		= null;
-		current_group 		= null;
-		current_nmr_model 	= null;
+		currentChain        = null;
+		currentGroup 		= null;
+		currentNmrModelNumber 	= null;
 		//atomCount     		= 0;
 
-		current_model = new ArrayList<Chain>();
+		allModels     = new ArrayList<List<Chain>>();
+		currentModel  = new ArrayList<Chain>();
 		entities      = new ArrayList<Entity>();
 		strucRefs     = new ArrayList<StructRef>();
 		seqResChains  = new ArrayList<Chain>();
@@ -651,22 +658,22 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// Expected that there is one current_chain that needs to be added to the model
 		// When in headerOnly mode, no Atoms are read, and there will not be an active
 		// current_chain.
-		if ( current_chain != null ) {
+		if ( currentChain != null ) {
 
-			current_chain.addGroup(current_group);
-			if (isKnownChain(current_chain.getId(),current_model) == null) {
-				current_model.add(current_chain);
+			currentChain.addGroup(currentGroup);
+			if (isKnownChain(currentChain.getId(),currentModel) == null) {
+				currentModel.add(currentChain);
 			}
 		} else if (!params.isHeaderOnly()){
 			logger.warn("current chain is null at end of document.");
 		}
 
-		structure.addModel(current_model);
+		allModels.add(currentModel);
 
+
+		
 		// Goal is to reproduce the PDB files exactly:
 		// What has to be done is to use the auth_mon_id for the assignment. For this
-
-		// map entities to Chains and Compound objects...
 
 		for (StructAsym asym : structAsyms) {
 
@@ -683,8 +690,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			seqResChains.add(seqres);
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
 
-			// adding the compounds (entities)
-			addCompounds(asym);
+			// adding the entities to structure
+			addEntities(asym);
 
 		}
 
@@ -692,6 +699,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.warn("No _struct_asym category in file, no SEQRES groups will be added.");
 		}
 
+		// entities
+		// In addEntities above we created the entities if they were present in the file
+		// Now we need to make sure that they are linked to chains and also that if they are not present in the file we need to add them now
+		linkEntities();
+
+		// now that we know the entities, we can add all chains to structure so that they are stored
+		// properly as polymer/nonpolymer/water chains inside structure
+		for (List<Chain> model:allModels) {
+			structure.addModel(model);
+		}
+		
 		// Only align if requested (default) and not when headerOnly mode with no Atoms.
 		// Otherwise, we store the empty SeqRes Groups unchanged in the right chains.
 		if ( params.isAlignSeqRes() && !params.isHeaderOnly() ){
@@ -717,15 +735,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				addCharges();
 			}
 		}
-
-		// compounds (entities)
-		// In addCompounds above we created the compounds if they were present in the file
-		// Now we need to make sure that they are linked to chains and also that if they are not present in the file we need to add them now
-		linkEntities();
-
-
-		// make sure the chains are in the correct poly/nonpoly categories in the models
-		reorganizeModels();
 
 		if (!params.isHeaderOnly()) {
 
@@ -843,22 +852,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-	private void reorganizeModels() {
-		for (int i =0; i< structure.nrModels() ; i++){
-			List<Chain> chains = structure.getModel(i);
-			structure.setModel(i,chains);
-
-		}
-	}
-
 	/**
 	 * Here we link entities to chains.
 	 * Also if entities are not present in file, this initialises the entities with some heuristics, see {@link org.biojava.nbio.structure.io.EntityFinder}
 	 */
 	private void linkEntities() {
 
-		for (int i =0; i< structure.nrModels() ; i++){
-			for (Chain chain : structure.getModel(i)) {
+		for (int i =0; i< allModels.size() ; i++){
+			for (Chain chain : allModels.get(i)) {
 				//logger.info("linking entities for " + chain.getId() + " "  + chain.getName());
 				String entityId = asymId2entityId.get(chain.getId());
 
@@ -906,14 +907,25 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 
-		// to make sure we have Entities linked to chains, we call getEntityInfos() which will lazily initialise the
-		// compounds using heuristics (see EntityFinder) in the case that they were not explicitly present in the file
-		List<EntityInfo> entities = structure.getEntityInfos();
+		// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
+		List<EntityInfo> entityInfos = structure.getEntityInfos();
+		if (entityInfos==null || entityInfos.isEmpty()) {
+			EntityFinder cf = new EntityFinder(allModels);
+			entityInfos = cf.findEntities();
 
+			// now we need to set references in chains:
+			for (EntityInfo entityInfo : entityInfos) {
+				for (Chain c:entityInfo.getChains()) {
+					c.setEntityInfo(entityInfo);
+				}
+			}
+			structure.setEntityInfos(entityInfos);
+		}
+		
 		// final sanity check: it can happen that from the annotated entities some are not linked to any chains
 		// e.g. 3s26: a sugar entity does not have any chains associated to it (it seems to be happening with many sugar compounds)
 		// we simply log it, this can sign some other problems if the entities are used down the line
-		for (EntityInfo e:entities) {
+		for (EntityInfo e:entityInfos) {
 			if (e.getChains().isEmpty()) {
 				logger.info("Entity {} '{}' has no chains associated to it",
 						e.getMolId()<0?"with no entity id":e.getMolId(), e.getDescription());
@@ -933,7 +945,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param c
 	 * @return
 	 */
-	private Chain removeSeqResHeterogeneity(Chain c) {
+	private static Chain removeSeqResHeterogeneity(Chain c) {
 
 		Chain trimmedChain = new ChainImpl();
 
@@ -1035,7 +1047,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
-	private void addCompounds(StructAsym asym) {
+	private void addEntities(StructAsym asym) {
 		int eId = 0;
 		try {
 			eId = Integer.parseInt(asym.getEntity_id());
