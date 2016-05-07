@@ -286,7 +286,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		for (int i = 0; i< chains.size();i++){
 			Chain testchain =  chains.get(i);
 			//System.out.println("comparing chainID >"+chainID+"< against testchain " + i+" >" +testchain.getName()+"<");
-			if (asymId.equals(testchain.getChainID())) {
+			if (asymId.equals(testchain.getId())) {
 				//System.out.println("chain "+ chainID+" already known ...");
 				return testchain;
 			}
@@ -389,17 +389,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			current_chain.addGroup(current_group);
 
 			// see if old chain is known ...
-			Chain testchain ;
-			testchain = isKnownChain(current_chain.getChainID(),current_model);
-
-			//System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);
-			if ( testchain != null && testchain.getChainID().equals(asymId)){
-				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);
-
-			} else {
-
-				testchain = isKnownChain(asymId,current_model);
-			}
+			Chain testchain = isKnownChain(asymId,current_model);
 
 			if ( testchain == null) {
 				//logger.info("unknown chain. creating new chain. authId:" + authId + " asymId: " + asymId);
@@ -664,7 +654,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( current_chain != null ) {
 
 			current_chain.addGroup(current_group);
-			if (isKnownChain(current_chain.getChainID(),current_model) == null) {
+			if (isKnownChain(current_chain.getId(),current_model) == null) {
 				current_model.add(current_chain);
 			}
 		} else if (!params.isHeaderOnly()){
@@ -688,7 +678,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			Chain seqres = (Chain)s.clone();
 			// to solve issue #160 (e.g. 3u7t)
 			seqres = removeSeqResHeterogeneity(seqres);
-			seqres.setChainID(asym.getId());
+			seqres.setId(asym.getId());
 
 			seqResChains.add(seqres);
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
@@ -841,13 +831,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		for (String chainId : misMatchMap.keySet()){
-			try {
-				Chain c = structure.getChainByPDB(chainId);
-				c.setSeqMisMatches(misMatchMap.get(chainId));
-			} catch (Exception e){
-				logger.warn("could not set mismatches for chain " + chainId);
 
+			Chain c = structure.getPolyChainByPDB(chainId);
+			if (c==null) {
+				logger.warn("Could not set mismatches for chain with author id" + chainId);
+				continue;
 			}
+			c.setSeqMisMatches(misMatchMap.get(chainId));
+
 		}
 
 	}
@@ -893,7 +884,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					// Supports the case where the only chain members were from non-polymeric entity that is missing.
 					// Solved by creating a new Compound(entity) to which this chain will belong.
 					logger.warn("Could not find an Entity for entity_id {}, for chain id {}, creating a new Entity.",
-							eId, chain.getChainID());
+							eId, chain.getId());
 					entityInfo = new EntityInfo();
 					entityInfo.setMolId(eId);
 					entityInfo.addChain(chain);
@@ -906,7 +897,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					structure.addEntityInfo(entityInfo);
 				} else {
 					logger.debug("Adding chain with chain id {} (auth id {}) to Entity with entity_id {}",
-							chain.getChainID(), chain.getName(), eId);
+							chain.getId(), chain.getName(), eId);
 					entityInfo.addChain(chain);
 					chain.setEntityInfo(entityInfo);
 				}
@@ -993,7 +984,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					// most likely there's no observed residues at all for the seqres chain: can't map
 					// e.g. 3zyb: chains with asym_id L,M,N,O,P have no observed residues
 					logger.warn("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
-							seqResChain.getChainID());
+							seqResChain.getId());
 					continue;
 				}
 
