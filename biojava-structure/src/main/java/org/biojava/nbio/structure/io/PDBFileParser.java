@@ -247,9 +247,9 @@ public class PDBFileParser  {
 
 	// parsing options:
 
-	private int my_ATOM_CA_THRESHOLD ;
+	private int atomCAThreshold ;
 
-	private int load_max_atoms;
+	private int loadMaxAtoms;
 
 	private boolean atomOverflow;
 
@@ -285,8 +285,8 @@ public class PDBFileParser  {
 		// this SHOULD not be done
 		// DONOT:setFileParsingParameters(params);
 		// set the correct max values for parsing...
-		load_max_atoms = params.getMaxAtoms();
-		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+		loadMaxAtoms = params.getMaxAtoms();
+		atomCAThreshold = params.getAtomCaThreshold();
 
 		linkRecords = new ArrayList<LinkRecord>();
 	}
@@ -1672,7 +1672,6 @@ public class PDBFileParser  {
 			}
 
 			if ( testchain == null) {
-				//System.out.println("unknown chain. creating new chain.");
 
 				currentChain = new ChainImpl();
 				currentChain.setId(chain_id);
@@ -1740,13 +1739,9 @@ public class PDBFileParser  {
 
 			currentGroup = getNewGroup(recordName,aminoCode1,groupCode3);
 
-			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {
-			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
-			//}
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
 			addTohetGroupsDecider(currentGroup);
-			//                        System.out.println("Made new start of chain group:  " + groupCode3 + " " + resNum + " " + iCode);
 		}
 
 
@@ -1789,9 +1784,9 @@ public class PDBFileParser  {
 
 		atomCount++;
 
-		if ( atomCount == my_ATOM_CA_THRESHOLD ) {
+		if ( atomCount == atomCAThreshold ) {
 			// throw away the SEQRES lines - too much to deal with...
-			logger.warn("more than " + my_ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
+			logger.warn("more than " + atomCAThreshold + " atoms in this structure, ignoring the SEQRES lines");
 			seqResChains.clear();
 
 			switchCAOnly();
@@ -1800,14 +1795,11 @@ public class PDBFileParser  {
 
 
 
-		if ( atomCount == load_max_atoms){
-			logger.warn("too many atoms (>"+load_max_atoms+"in this protein structure.");
-			logger.warn("ignoring lines after: " + line);
+		if ( atomCount == loadMaxAtoms){
+			logger.warn("File has more atoms than max specified in parsing parameters ({}). Ignoring atoms after line: {}", loadMaxAtoms, line);
 			return;
 		}
-		if ( atomCount > load_max_atoms){
-			//System.out.println("too many atoms in this protein structure.");
-			//System.out.println("ignoring line: " + line);
+		if ( atomCount > loadMaxAtoms){
 			return;
 		}
 
@@ -1907,14 +1899,14 @@ public class PDBFileParser  {
 				elementSymbol = fullname.substring(0, 1);
 			} else if ( fullname.trim().length() > 1){
 				elementSymbol = fullname.substring(0, 2).trim();
-			} else {
-				// unknown element...
-				elementSymbol = "R";
-			}
+			} 
 
 			try {
-				element = Element.valueOfIgnoreCase(elementSymbol);
-			}  catch (IllegalArgumentException e){}
+				if (elementSymbol!=null)
+					element = Element.valueOfIgnoreCase(elementSymbol);
+			} catch (IllegalArgumentException e){
+				logger.warn("Element {} was not recognised. Assigning generic element R to it", elementSymbol);
+			}
 		}
 		atom.setElement(element);
 
@@ -1938,7 +1930,7 @@ public class PDBFileParser  {
 
 
 		//System.out.println("current group: " + current_group);
-			}
+	}
 
 
 	private Group getCorrectAltLocGroup( Character altLoc,
@@ -2056,14 +2048,15 @@ public class PDBFileParser  {
 	 </pre>
 	 */
 	private void pdb_CONECT_Handler(String line) {
-		//System.out.println(line);
-		// this try .. catch is e.g. to catch 1gte which has wrongly formatted lines...
+
 		if ( atomOverflow) {
 			return ;
 		}
 		if (params.isHeaderOnly()) {
 			return;
 		}
+		
+		// this try .. catch is e.g. to catch 1gte which has wrongly formatted lines...
 		try {
 			int atomserial = Integer.parseInt (line.substring(6 ,11).trim());
 			Integer bond1      = conect_helper(line,11,16);
@@ -2592,8 +2585,8 @@ public class PDBFileParser  {
 			throws IOException
 	{
 		// set the correct max values for parsing...
-		load_max_atoms = params.getMaxAtoms();
-		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+		loadMaxAtoms = params.getMaxAtoms();
+		atomCAThreshold = params.getAtomCaThreshold();
 
 
 		// (re)set structure
@@ -2843,7 +2836,7 @@ public class PDBFileParser  {
 		}
 
 
-		linkChains2Compound(structure);
+		linkChains2Entities(structure);
 		structure.setEntityInfos(entities);
 		
 		//associate the temporary Groups in the siteMap to the ones
@@ -2974,12 +2967,12 @@ public class PDBFileParser  {
 
 
 	/** 
-	 * After the parsing of a PDB file the {@link Chain} and  {@link EntityInfo}
+	 * After the parsing of a PDB file the {@link Chain} and {@link EntityInfo}
 	 * objects need to be linked to each other.
 	 *
 	 * @param s the structure
 	 */
-	public void linkChains2Compound(Structure s){
+	private void linkChains2Entities(Structure s){
 
 
 		for(EntityInfo comp : entities){
@@ -3487,8 +3480,8 @@ public class PDBFileParser  {
 		this.params= params;
 
 		// set the correct max values for parsing...
-		load_max_atoms = params.getMaxAtoms();
-		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+		loadMaxAtoms = params.getMaxAtoms();
+		atomCAThreshold = params.getAtomCaThreshold();
 
 	}
 
