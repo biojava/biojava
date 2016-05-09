@@ -253,9 +253,9 @@ public class CliTools {
 							}  catch (Exception ex2) {
 								//give up
 								StringBuilder errMsg = new StringBuilder();
-								errMsg.append("Option ").append(arg);
-								errMsg.append(" requires a ").append(propType.getSimpleName());
-								errMsg.append(" parameter. One of: ");
+								errMsg.append("Option ").append(arg)
+										.append(" requires a ").append(propType.getSimpleName())
+										.append(" parameter. One of: ");
 								for(Object val: propType.getEnumConstants() ) {
 									Enum enumVal = (Enum) val;
 									errMsg.append(enumVal.name());

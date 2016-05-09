@@ -408,30 +408,30 @@ public class StructureImpl implements Structure, Serializable {
 	public String toString(){
 		String newline = System.getProperty("line.separator");
 		StringBuilder str = new StringBuilder();
-		str.append("structure ");
-		str.append(name);
-		str.append(" ");
-		str.append(pdb_id);
-		str.append(" ");
+		str.append("structure ")
+				.append(name)
+				.append(" ")
+				.append(pdb_id)
+				.append(" ");
 
 		if ( nrModels()>1 ){
-			str.append( " models: ");
-			str.append(nrModels());
-			str.append(newline) ;
+			str.append(" models: ")
+					.append(nrModels())
+					.append(newline);
 		}
 
-		str.append(pdbHeader);
-		str.append(newline) ;
+		str.append(pdbHeader)
+				.append(newline);
 
 		for (int i=0;i<nrModels();i++){
 			if ( nrModels()>1 ) {
-				str.append(" model[");
-				str.append(i);
-				str.append("]:");
-				str.append(newline);
+				str.append(" model[")
+						.append(i)
+						.append("]:")
+						.append(newline);
 			}
-			str.append(" chains:");
-			str.append(newline);
+			str.append(" chains:")
+					.append(newline);
 
 			for (int j=0;j<size(i);j++){
 

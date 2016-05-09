@@ -312,17 +312,16 @@ public class IOUtils {
 	 * @return legend String
 	 */
 	public static String getPDBLegend() {
-		StringBuilder s = new StringBuilder();
-		s.append("</pre></div>");
-		s.append("          <div class=\"subText\">");
-		s.append("          <b>Legend:</b>");
-		s.append("          <span class=\"m\">Green</span> - identical residues |");
-		s.append("          <span class=\"sm\">Pink</span> - similar residues | ");
-		s.append("          <span class=\"qg\">Blue</span> - sequence mismatch |");
-		s.append("          <span class=\"dm\">Brown</span> - insertion/deletion |");
-		s.append("      </div>");
-		s.append(String.format("%n"));
-		return s.toString();
+		return new StringBuilder()
+				.append("</pre></div>")
+				.append("          <div class=\"subText\">")
+				.append("          <b>Legend:</b>")
+				.append("          <span class=\"m\">Green</span> - identical residues |")
+				.append("          <span class=\"sm\">Pink</span> - similar residues | ")
+				.append("          <span class=\"qg\">Blue</span> - sequence mismatch |")
+				.append("          <span class=\"dm\">Brown</span> - insertion/deletion |")
+				.append("      </div>")
+				.append(String.format("%n")).toString();
 	}
 
 	/**

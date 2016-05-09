@@ -162,29 +162,27 @@ public class QuatSymmetryScores {
 	}
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("minimum RMSD: ");
-		sb.append(getMinRmsd());
-		sb.append("\n");
-		sb.append("maximum RMSD: ");
-		sb.append(getMaxRmsd());
-		sb.append("\n");
-		sb.append("RMSD        : ");
-		sb.append(getRmsd());
-		sb.append("\n");
-		sb.append("minimum TM  : ");
-		sb.append(getMinTm());
-		sb.append("\n");
-		sb.append("maximum TM  : ");
-		sb.append(getMaxTm());
-		sb.append("\n");
-		sb.append("TM          : ");
-		sb.append(getTm());
-		sb.append("\n");
-		sb.append("center RMSD: ");
-		sb.append(getRmsdCenters());
-		sb.append("\n");
-
-		return sb.toString();
+		return new StringBuilder()
+				.append("minimum RMSD: ")
+				.append(getMinRmsd())
+				.append("\n")
+				.append("maximum RMSD: ")
+				.append(getMaxRmsd())
+				.append("\n")
+				.append("RMSD        : ")
+				.append(getRmsd())
+				.append("\n")
+				.append("minimum TM  : ")
+				.append(getMinTm())
+				.append("\n")
+				.append("maximum TM  : ")
+				.append(getMaxTm())
+				.append("\n")
+				.append("TM          : ")
+				.append(getTm())
+				.append("\n")
+				.append("center RMSD: ")
+				.append(getRmsdCenters())
+				.append("\n").toString();
 	}
 }

@@ -257,18 +257,16 @@ public class SymmetryDisplay {
 	 */
 	public static String getSymmTitle(CeSymmResult result) {
 
-		StringBuffer buff = new StringBuffer();
-
+		return new StringBuffer()
 		// Add algorithm name and version
-		buff.append(result.getMultipleAlignment().getEnsemble()
-				.getAlgorithmName());
-		buff.append(" V");
-		buff.append(result.getMultipleAlignment().getEnsemble().getVersion());
-		buff.append(": ");
-
-		// Add the result summary string
-		buff.append(result.toString());
-		return buff.toString();
+		.append(result.getMultipleAlignment().getEnsemble()
+				.getAlgorithmName())
+				.append(" V")
+				.append(result.getMultipleAlignment().getEnsemble().getVersion())
+				.append(": ")
+				
+				// Add the result summary string
+				.append(result.toString()).toString();
 	}
 
 }

@@ -157,37 +157,34 @@ public class QuatSymmetryResults {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("Stoichiometry         : ");
-		sb.append(getSubunits().getStoichiometry());
-		sb.append("\n");
-		sb.append("Pseudostoichiometry   : ");
-		sb.append(getSubunits().isPseudoStoichiometric());
-		sb.append("\n");
-		sb.append("Pseudosymmetry        : ");
-		sb.append(getSubunits().isPseudoSymmetric());
-		sb.append("\n");
-		sb.append("Min sequence identity : ");
-		sb.append(Math.round(getSubunits().getMinSequenceIdentity()*100));
-		sb.append("\n");
-		sb.append("Max sequence identity : ");
-		sb.append(Math.round(getSubunits().getMaxSequenceIdentity()*100));
-		sb.append("\n");
-		sb.append("Symmetry              : ");
-		sb.append(getSymmetry());
-		sb.append("\n");
-		sb.append("Symmetry RMSD         : ");
-		sb.append((float) getAverageTraceRmsd());
-		sb.append("\n");
-		sb.append("Symmetry TmScoreMin   : ");
-		sb.append((float) getAverageTraceTmScoreMin());
-		sb.append("\n");
-		sb.append("Prefered result       : ");
-		sb.append(isPreferredResult());
-		sb.append("\n");
-
-		return sb.toString();
+		return new StringBuilder()
+				.append("Stoichiometry         : ")
+				.append(getSubunits().getStoichiometry())
+				.append("\n")
+				.append("Pseudostoichiometry   : ")
+				.append(getSubunits().isPseudoStoichiometric())
+				.append("\n")
+				.append("Pseudosymmetry        : ")
+				.append(getSubunits().isPseudoSymmetric())
+				.append("\n")
+				.append("Min sequence identity : ")
+				.append(Math.round(getSubunits().getMinSequenceIdentity() * 100))
+				.append("\n")
+				.append("Max sequence identity : ")
+				.append(Math.round(getSubunits().getMaxSequenceIdentity() * 100))
+				.append("\n")
+				.append("Symmetry              : ")
+				.append(getSymmetry())
+				.append("\n")
+				.append("Symmetry RMSD         : ")
+				.append((float) getAverageTraceRmsd())
+				.append("\n")
+				.append("Symmetry TmScoreMin   : ")
+				.append((float) getAverageTraceTmScoreMin())
+				.append("\n")
+				.append("Prefered result       : ")
+				.append(isPreferredResult())
+				.append("\n").toString();
 	}
 
 	/**

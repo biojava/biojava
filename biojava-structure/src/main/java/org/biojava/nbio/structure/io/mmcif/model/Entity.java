@@ -41,21 +41,18 @@ public class Entity {
 
 	@Override
 	public String toString(){
-		StringBuffer buf = new StringBuffer();
+		return new StringBuffer()
+				.append("Entity - id:").append(id)
 
-	buf.append("Entity - id:").append(id);
-
-	buf.append(" type:").append(type);
-	buf.append(" src_method:").append(src_method);
-	buf.append(" pdbx_description:").append(pdbx_description);
-	buf.append(" formula_weight:").append(formula_weight);
-	buf.append(" pdbx_number_f_molecules:").append(pdbx_number_of_molecules);
-	buf.append(" details:").append(details);
-	buf.append(" pdbx_mutation:").append(pdbx_mutation);
-	buf.append(" pdbx_fragment:").append(pdbx_fragment);
-	buf.append(" pdbx_ec:").append(pdbx_ec);
-
-		return buf.toString();
+				.append(" type:").append(type)
+				.append(" src_method:").append(src_method)
+				.append(" pdbx_description:").append(pdbx_description)
+				.append(" formula_weight:").append(formula_weight)
+				.append(" pdbx_number_f_molecules:").append(pdbx_number_of_molecules)
+				.append(" details:").append(details)
+				.append(" pdbx_mutation:").append(pdbx_mutation)
+				.append(" pdbx_fragment:").append(pdbx_fragment)
+				.append(" pdbx_ec:").append(pdbx_ec).toString();
 	}
 	public String getId() {
 		return id;

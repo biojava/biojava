@@ -391,38 +391,37 @@ public class AFPChain implements Serializable, Cloneable {
 		//int distance = lA + lB - 2 * getNrEQR();
 
 		StringBuffer str = new StringBuffer("");
-		str.append("EQR:");
-		str.append(getNrEQR());
+		str.append("EQR:")
+				.append(getNrEQR())
 
-		str.append("\tLen1:");
-		str.append(this.getCa1Length());
-		str.append("\tLen2:");
-		str.append(this.getCa2Length());
-		str.append(String.format("\tscore: %.2f",this.getAlignScore()));
-		str.append("\t");
+				.append("\tLen1:")
+				.append(this.getCa1Length())
+				.append("\tLen2:")
+				.append(this.getCa2Length())
+				.append(String.format("\tscore: %.2f", this.getAlignScore()))
+				.append("\t");
 		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName)){
-			str.append("Z-score:");
-			str.append(String.format("%.2f",this.getProbability()));
+			str.append("Z-score:")
+					.append(String.format("%.2f", this.getProbability()));
 		} else {
-			str.append("Probability:");
-			str.append(String.format("%.2e",this.getProbability()));
+			str.append("Probability:")
+					.append(String.format("%.2e", this.getProbability()));
 		}
-		str.append("\tRMSD:");
-		str.append(String.format("%.2f",this.getTotalRmsdOpt()));
+		str.append("\tRMSD:")
+				.append(String.format("%.2f", this.getTotalRmsdOpt()))
 
-		str.append("\tSeqID:");
-		str.append(String.format("%.0f",getIdentity()*100));
-		str.append("%\tSeqSim:");
-		str.append(String.format("%.0f",getSimilarity()*100));
-		str.append("%\tCov1:");
-		str.append(this.getCoverage1());
-		str.append("%\tCov2:");
-		str.append(this.getCoverage2());
-		str.append("%");
+				.append("\tSeqID:")
+				.append(String.format("%.0f", getIdentity() * 100))
+				.append("%\tSeqSim:")
+				.append(String.format("%.0f", getSimilarity() * 100))
+				.append("%\tCov1:")
+				.append(this.getCoverage1())
+				.append("%\tCov2:")
+				.append(this.getCoverage2())
+				.append("%");
 
 		if (  tmScore != -1)  {
-			str.append("\ttmScore:");
-			str.append(String.format("%.2f",tmScore));
+			str.append("\ttmScore:").append(String.format("%.2f",tmScore));
 		}
 		str.append(newline);
 

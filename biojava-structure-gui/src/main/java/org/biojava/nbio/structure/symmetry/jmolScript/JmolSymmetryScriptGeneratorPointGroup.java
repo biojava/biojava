@@ -89,15 +89,15 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		q.normalize();
 
 		// set orientation
-		s.append("moveto 0 quaternion{");
-		s.append(jMolFloat(q.x));
-		s.append(",");
-		s.append(jMolFloat(q.y));
-		s.append(",");
-		s.append(jMolFloat(q.z));
-		s.append(",");
-		s.append(jMolFloat(q.w));
-		s.append("};");
+		s.append("moveto 0 quaternion{")
+				.append(jMolFloat(q.x))
+				.append(",")
+				.append(jMolFloat(q.y))
+				.append(",")
+				.append(jMolFloat(q.z))
+				.append(",")
+				.append(jMolFloat(q.w))
+				.append("};");
 		return s.toString();
 	}
 
@@ -128,16 +128,16 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		q.normalize();
 
 		// set orientation
-		s.append("moveto 4 quaternion{");
-		s.append(jMolFloat(q.x));
-		s.append(",");
-		s.append(jMolFloat(q.y));
-		s.append(",");
-		s.append(jMolFloat(q.z));
-		s.append(",");
-		s.append(jMolFloat(q.w));
-		s.append("}");
-		s.append(";");
+		s.append("moveto 4 quaternion{")
+				.append(jMolFloat(q.x))
+				.append(",")
+				.append(jMolFloat(q.y))
+				.append(",")
+				.append(jMolFloat(q.z))
+				.append(",")
+				.append(jMolFloat(q.w))
+				.append("}")
+				.append(";");
 		return s.toString();
 	}
 
@@ -186,19 +186,18 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		double width = getMaxExtension()*0.015;
 
 		for (int[] lineLoop: polyhedron.getLineLoops()) {
-			s.append("draw polyhedron");
-			s.append(name);
-			s.append(index++);
-			s.append(" line");
+			s.append("draw polyhedron")
+					.append(name)
+					.append(index++)
+					.append(" line");
 			for (int i: lineLoop) {
 				s.append(getJmolPoint(vertices[i]));
 			}
-			s.append("width ");
-			s.append(fDot2(width));
-			s.append(" color");
+			s.append("width ")
+					.append(fDot2(width))
+					.append(" color");
 			Color4f c = getPolyhedronColor();
-			s.append(getJmolColor(c));
-			s.append(" off;");
+			s.append(getJmolColor(c)).append(" off;");
 		}
 
 		return s.toString();
@@ -264,25 +263,25 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		}
 
 		// draw polygon
-		s.append(drawPolyhedron()); // draw invisibly
-		s.append(showPolyhedron());
+		s.append(drawPolyhedron()) // draw invisibly
+				.append(showPolyhedron())
 
-		// draw axes
-		s.append(drawAxes());
-		s.append(showAxes());
+				// draw axes
+				.append(drawAxes())
+				.append(showAxes());
 
 		// loop over all orientations with 4 sec. delay
 		for (int i = 0; i < getOrientationCount(); i++) {
-			s.append(deleteHeader());
-			s.append(getOrientationWithZoom(i));
-			s.append(drawHeader(polyhedron.getViewName(i), "white"));
-			s.append("delay 4;");
+			s.append(deleteHeader())
+					.append(getOrientationWithZoom(i))
+					.append(drawHeader(polyhedron.getViewName(i), "white"))
+					.append("delay 4;");
 		}
 
 		// go back to first orientation
-		s.append(deleteHeader());
-		s.append(getOrientationWithZoom(0));
-		s.append(drawHeader(polyhedron.getViewName(0), "white"));
+		s.append(deleteHeader())
+				.append(getOrientationWithZoom(0))
+				.append(drawHeader(polyhedron.getViewName(0), "white"));
 
 		return s.toString();
 	}
@@ -614,11 +613,11 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		Vector3d[] axes = rotationAxisAligner.getPrincipalAxesOfInertia();
 
 		for (int i = 0; i < axes.length; i++) {
-			s.append("draw axesInertia");
-			s.append(name);
-			s.append(i);
-			s.append(" ");
-			s.append("line");
+			s.append("draw axesInertia")
+					.append(name)
+					.append(i)
+					.append(" ")
+					.append("line");
 			Point3d v1 = new Point3d(axes[i]);
 			if (i == 0) {
 				v1.scale(AXIS_SCALE_FACTOR*rotationAxisAligner.getDimension().y);
@@ -631,11 +630,11 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			v2.negate();
 			v1.add(centroid);
 			v2.add(centroid);
-			s.append(getJmolPoint(v1));
-			s.append(getJmolPoint(v2));
-			s.append("width 0.5 ");
-			s.append(" color white");
-			s.append(" off;");
+			s.append(getJmolPoint(v1))
+					.append(getJmolPoint(v2))
+					.append("width 0.5 ")
+					.append(" color white")
+					.append(" off;");
 		}
 		return s.toString();
 	};
@@ -736,18 +735,18 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		p2.scaleAdd(AXIS_SCALE_FACTOR * radius, center);
 
 		StringBuilder s = new StringBuilder();
-		s.append("draw");
-		s.append(" axesSymmetry");
-		s.append(name);
-		s.append(i);
-		s.append(" cylinder");
-		s.append(getJmolPoint(p1));
-		s.append(getJmolPoint(p2));
-		s.append("diameter ");
-		s.append(diameter);
-		s.append(" color ");
-		s.append(color);
-		s.append(" off;");
+		s.append("draw")
+				.append(" axesSymmetry")
+				.append(name)
+				.append(i)
+				.append(" cylinder")
+				.append(getJmolPoint(p1))
+				.append(getJmolPoint(p2))
+				.append("diameter ")
+				.append(diameter)
+				.append(" color ")
+				.append(color)
+				.append(" off;");
 
 		// calc. point to center symmetry symbols. They are offset by 0.01
 		// to avoid overlap with the polyhedron
@@ -777,14 +776,14 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 	private static String getPolygonJmol(int index, Point3d center, Vector3d referenceAxis, Vector3d axis, int n, String color, double radius, String name) {
 		StringBuilder s = new StringBuilder();
-		s.append("draw axesSymbol");
-		s.append(name);
-		s.append(index);
-		s.append(" ");
-		s.append("polygon");
-		s.append(" ");
-		s.append(n+1);
-		s.append(getJmolPoint(center));
+		s.append("draw axesSymbol")
+				.append(name)
+				.append(index)
+				.append(" ")
+				.append("polygon")
+				.append(" ")
+				.append(n + 1)
+				.append(getJmolPoint(center));
 
 		Vector3d[] vertexes = getPolygonVertices(axis, referenceAxis, center, n, radius);
 		// create vertex list
@@ -795,27 +794,27 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		// create face list
 		s.append(n);
 		for (int i = 1; i <= n; i++) {
-			s.append("[");
-			s.append(0);
-			s.append(" ");
-			s.append(i);
-			s.append(" ");
+			s.append("[")
+					.append(0)
+					.append(" ")
+					.append(i)
+					.append(" ");
 			if (i < n) {
 				s.append(i+1);
 			} else {
 				s.append(1);
 			}
-			s.append(" ");
-			s.append(7);
-			s.append("]");
+			s.append(" ")
+					.append(7)
+					.append("]");
 		}
 
 		if (n == 2) {
 			s.append("mesh off");
 		}
-		s.append(" color ");
-		s.append(color);
-		s.append(" off;");
+		s.append(" color ")
+				.append(color)
+				.append(" off;");
 
 		return s.toString();
 	}
@@ -843,14 +842,14 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	private static String getC2PolygonJmol(int index, Point3d center, Vector3d referenceAxis, Vector3d axis, String color, double radius, String name) {
 		StringBuilder s = new StringBuilder();
 		int n = 10;
-		s.append("draw axesSymbol");
-		s.append(name);
-		s.append(index);
-		s.append(" ");
-		s.append("polygon");
-		s.append(" ");
-		s.append(n-1);
-		s.append(getJmolPoint(center));
+		s.append("draw axesSymbol")
+				.append(name)
+				.append(index)
+				.append(" ")
+				.append("polygon")
+				.append(" ")
+				.append(n - 1)
+				.append(getJmolPoint(center));
 
 		Vector3d[] vertexes = getC2PolygonVertices(axis, referenceAxis, center, n, radius);
 		// create vertex list
@@ -862,24 +861,20 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(n-2);
 
 		for (int i = 1; i < n-1; i++) {
-			s.append("[");
-			s.append(0);
-			s.append(" ");
-			s.append(i);
-			s.append(" ");
+			s.append("[")
+					.append(0)
+					.append(" ")
+					.append(i)
+					.append(" ");
 			if (i < n-2) {
 				s.append(i+1);
 			} else {
 				s.append(1);
 			}
-			s.append(" ");
-			s.append(7);
-			s.append("]");
+			s.append(" ").append(7).append("]");
 		}
 
-		s.append("color ");
-		s.append(color);
-		s.append(" off;");
+		s.append("color ").append(color).append(" off;");
 
 		return s.toString();
 	}
@@ -972,16 +967,15 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	}
 
 	private String drawHeader(String text, String color) {
-		StringBuilder s = new StringBuilder();
-		s.append("set echo top center;");
-		s.append("color echo ");
-		s.append(color);
-		s.append(";");
-		s.append("font echo 24 sanserif;");
-		s.append("echo ");
-		s.append(text);
-		s.append(";");
-		return s.toString();
+		return new StringBuilder()
+				.append("set echo top center;")
+				.append("color echo ")
+				.append(color)
+				.append(";")
+				.append("font echo 24 sanserif;")
+				.append("echo ")
+				.append(text)
+				.append(";").toString();
 	}
 
 	private String deleteHeader() {
@@ -989,17 +983,16 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	}
 
 	private String drawFooter(String text, String color) {
-		StringBuilder s = new StringBuilder();
-		s.append("set echo bottom center;");
-		s.append("color echo ");
-		s.append(color);
-		s.append(";");
-		s.append("font echo 24 sanserif;");
-		s.append("echo "+ text);
-		//s.append("echo Point group ");
-		//s.append(rotationGroup.getPointGroup());
-		s.append(";");
-		return s.toString();
+		return new StringBuilder()
+				.append("set echo bottom center;")
+				.append("color echo ")
+				.append(color)
+				.append(";")
+				.append("font echo 24 sanserif;")
+				.append("echo " + text)
+				//s.append("echo Point group ");
+				//s.append(rotationGroup.getPointGroup());
+				.append(";").toString();
 	}
 
 	private String setCentroid() {
@@ -1008,10 +1001,9 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		Point3d centroid = rotationAxisAligner.getCentroid();
 
 		// set centroid
-		StringBuilder s = new StringBuilder();
-		s.append("center");
-		s.append(getJmolPoint(centroid));
-		s.append(";");
-		return s.toString();
+		return new StringBuilder()
+				.append("center")
+				.append(getJmolPoint(centroid))
+				.append(";").toString();
 	}
 }

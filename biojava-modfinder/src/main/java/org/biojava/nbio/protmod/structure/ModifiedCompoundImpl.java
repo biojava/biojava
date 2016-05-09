@@ -291,8 +291,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			cat = getModification().getCategory();
 		} else
 			cat = originalModification.getCategory();
-		sb.append("_");
-		sb.append(cat.toString());
+		sb.append("_").append(cat.toString());
 		return sb.toString();
 	}
 

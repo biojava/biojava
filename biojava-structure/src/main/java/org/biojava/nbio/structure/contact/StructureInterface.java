@@ -717,15 +717,14 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		for (Atom atom:this.molecules.getFirst()) {
 			sb.append(FileConvert.toPDB(atom, molecId1));
 		}
-		sb.append("TER");
-		sb.append(System.getProperty("line.separator"));
+		sb.append("TER").append(System.getProperty("line.separator"));
 		for (Atom atom:this.molecules.getSecond()) {
 			sb.append(FileConvert.toPDB(atom,molecId2));
 		}
-		sb.append("TER");
-		sb.append(System.getProperty("line.separator"));
-		sb.append("END");
-		sb.append(System.getProperty("line.separator"));
+		sb.append("TER")
+				.append(System.getProperty("line.separator"))
+				.append("END")
+				.append(System.getProperty("line.separator"));
 		return sb.toString();
 	}
 
@@ -747,9 +746,9 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
 		}
 
-		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_interface_"+getId()+System.getProperty("line.separator"));
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER + "BioJava_interface_" + getId() + System.getProperty("line.separator"))
 
-		sb.append(FileConvert.getAtomSiteHeader());
+				.append(FileConvert.getAtomSiteHeader());
 
 		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
 		int atomId = 1;

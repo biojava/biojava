@@ -459,9 +459,9 @@ public class FarmJobRunnable implements Runnable {
 		// after garbage collection and decrease as new objects are created.
 		long heapFreeSize = Runtime.getRuntime().freeMemory() / size;
 		StringBuilder msg = new StringBuilder();
-		msg.append("  total: ").append(heapSize).append(" M");
-		msg.append(" max: "). append(heapMaxSize).append(" M");
-		msg.append(" free: ").append(heapFreeSize).append(" M");
+		msg.append("  total: ").append(heapSize).append(" M")
+				.append(" max: ").append(heapMaxSize).append(" M")
+				.append(" free: ").append(heapFreeSize).append(" M");
 
 		logger.debug(msg.toString());
 

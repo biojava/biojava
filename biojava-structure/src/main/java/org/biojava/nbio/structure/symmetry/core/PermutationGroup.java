@@ -114,21 +114,18 @@ public class PermutationGroup {
 		StringBuilder builder = new StringBuilder();
 		builder.append("  |");
 		for (int i = 0; i < getOrder(); i++) {
-			builder.append(" ");
-			builder.append(i);
+			builder.append(" ").append(i);
 		}
-		builder.append("\n");
-		builder.append("---");
+		builder.append("\n")
+				.append("---");
 		for (int i = 0; i < getOrder(); i++) {
 			builder.append("--");
 		}
 		builder.append("\n");
 		for (int i = 0; i < getOrder(); i++) {
-			builder.append(i);
-			builder.append(" |");
+			builder.append(i).append(" |");
 			for (int j = 0; j < getOrder(); j++) {
-				builder.append(" ");
-				builder.append(permutations.indexOf(combine(permutations.get(i), permutations.get(j))));
+				builder.append(" ").append(permutations.indexOf(combine(permutations.get(i), permutations.get(j))));
 			}
 			builder.append("\n");
 		}

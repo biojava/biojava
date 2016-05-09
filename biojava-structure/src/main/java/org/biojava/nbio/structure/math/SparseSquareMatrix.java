@@ -150,16 +150,16 @@ public class SparseSquareMatrix implements Serializable {
 
 		StringBuilder s = new StringBuilder();
 
-		s.append( "N = ");
-		s.append( N);
-		s.append(", nonzeros = ");
-		s.append( nnz());
-		s.append( System.getProperty("line.separator"));
+		s.append("N = ")
+				.append(N)
+				.append(", nonzeros = ")
+				.append(nnz())
+				.append(System.getProperty("line.separator"));
 		for (int i = 0; i < N; i++) {
-			s.append(i);
-			s.append(": ");
-			s.append( rows[i]);
-			s.append( System.getProperty("line.separator"));
+			s.append(i)
+					.append(": ")
+					.append(rows[i])
+					.append(System.getProperty("line.separator"));
 		}
 
 		return s.toString();

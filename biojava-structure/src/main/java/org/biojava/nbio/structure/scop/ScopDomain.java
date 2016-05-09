@@ -73,10 +73,10 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
-		buf.append(scopId);
-		buf.append("\t") ;
-		buf.append(pdbId);
-		buf.append( "\t");
+		buf.append(scopId)
+				.append("\t")
+				.append(pdbId)
+				.append( "\t");
 
 		int rangePos = 0;
 		for (String range: ranges){
@@ -87,27 +87,26 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 			if ( ( ranges.size()> 1 ) && (rangePos < ranges.size()))
 				buf.append(",");
 		}
-		buf.append("\t") ;
-		buf.append(classificationId);
-		buf.append("\t") ;
-		buf.append(String.valueOf(sunid));
-		buf.append("\t") ;
+		buf.append("\t")
+				.append(classificationId)
+				.append("\t")
+				.append(String.valueOf(sunid))
+				.append("\t")
 
-		buf.append("cl=");
-		buf.append(String.valueOf(classId));
-		buf.append(",cf=");
-		buf.append(String.valueOf(foldId));
-		buf.append(",sf=");
-		buf.append(String.valueOf(superfamilyId));
-		buf.append(",fa=");
-		buf.append(String.valueOf(familyId));
-		buf.append(",dm=");
-		buf.append(String.valueOf(domainId));
-		buf.append(",sp=");
-		buf.append(String.valueOf(speciesId));
-		buf.append(",px=");
-		buf.append(String.valueOf(px));
-
+				.append("cl=")
+				.append(String.valueOf(classId))
+				.append(",cf=")
+				.append(String.valueOf(foldId))
+				.append(",sf=")
+				.append(String.valueOf(superfamilyId))
+				.append(",fa=")
+				.append(String.valueOf(familyId))
+				.append(",dm=")
+				.append(String.valueOf(domainId))
+				.append(",sp=")
+				.append(String.valueOf(speciesId))
+				.append(",px=")
+				.append(String.valueOf(px));
 
 		return buf.toString();
 	}

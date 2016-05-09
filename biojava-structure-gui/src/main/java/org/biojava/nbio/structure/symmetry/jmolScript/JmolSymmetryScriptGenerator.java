@@ -201,9 +201,9 @@ public abstract class JmolSymmetryScriptGenerator {
 					s.append("|");
 				}
 			}
-			s.append("}");
-			s.append(getJmolColor(entry.getKey()));
-			s.append(";");
+			s.append("}")
+					.append(getJmolColor(entry.getKey()))
+					.append(";");
 		}
 		return s.toString();
 	}
@@ -214,15 +214,14 @@ public abstract class JmolSymmetryScriptGenerator {
 	}
 
 	protected static String getJmolPoint(Tuple3d point) {
-		StringBuilder s = new StringBuilder();
-		s.append("{");
-		s.append(fDot2(point.x));
-		s.append(",");
-		s.append(fDot2(point.y));
-		s.append(",");
-		s.append(fDot2(point.z));
-		s.append("}");
-		return s.toString();
+		return new StringBuilder()
+				.append("{")
+				.append(fDot2(point.x))
+				.append(",")
+				.append(fDot2(point.y))
+				.append(",")
+				.append(fDot2(point.z))
+				.append("}").toString();
 	}
 
 	protected static String f1Dot2(float number) {

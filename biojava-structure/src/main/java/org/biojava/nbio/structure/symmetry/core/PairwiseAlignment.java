@@ -77,25 +77,24 @@ public class PairwiseAlignment {
 
 	@Override
 	public String toString() {
-		StringBuffer s = new StringBuffer();
-		s.append("cluster1:");
-		s.append("\n");
-		s.append(cluster1);
-		s.append("\n");
-		s.append("cluster2:");
-		s.append("\n");
-		s.append(cluster2);
-		s.append("\n");
-		s.append("sequence identity: " +  sequenceIdentity);
-		s.append("\n");
-		s.append("alignment fraction: " +  alignmentLengthFraction);
-		s.append("\n");
-		s.append("rmsd: " + rmsd);
-		s.append("\n");
-		s.append("aligment1: "  + Arrays.toString(alignment[0][0]));
-		s.append("\n");
-		s.append("aligment2: "  + Arrays.toString(alignment[0][1]));
-		s.append("\n");
-		return s.toString();
+		return new StringBuffer()
+				.append("cluster1:")
+				.append("\n")
+				.append(cluster1)
+				.append("\n")
+				.append("cluster2:")
+				.append("\n")
+				.append(cluster2)
+				.append("\n")
+				.append("sequence identity: " + sequenceIdentity)
+				.append("\n")
+				.append("alignment fraction: " + alignmentLengthFraction)
+				.append("\n")
+				.append("rmsd: " + rmsd)
+				.append("\n")
+				.append("aligment1: " + Arrays.toString(alignment[0][0]))
+				.append("\n")
+				.append("aligment2: " + Arrays.toString(alignment[0][1]))
+				.append("\n").toString();
 	}
 }

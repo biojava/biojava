@@ -263,9 +263,7 @@ public class DBResultTable implements ActionListener{
 		StringBuffer output = new StringBuffer();
 		output.append(String.format("Lead: %d, %d. ",
 				table.getSelectionModel().getLeadSelectionIndex(),
-				table.getColumnModel().getSelectionModel().
-				getLeadSelectionIndex()));
-		output.append("Rows:");
+				table.getColumnModel().getSelectionModel().getLeadSelectionIndex())).append("Rows:");
 		for (int c : table.getSelectedRows()) {
 			output.append(String.format(" %d", c));
 		}

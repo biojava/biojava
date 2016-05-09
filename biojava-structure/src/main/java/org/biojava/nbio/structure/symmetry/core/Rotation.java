@@ -182,19 +182,18 @@ public class Rotation {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("fold       : ");
-		sb.append(fold);
-		sb.append("/n");
-		sb.append("orientation: ");
-		sb.append("direction  : ");
-		sb.append("/n");
-		sb.append("axisAngle  : ");
-		sb.append(axisAngle);
-		sb.append("/n");
-		sb.append("permutation: ");
-		sb.append(permutation);
-		sb.append(scores);
-		return sb.toString();
+		return new StringBuilder()
+				.append("fold       : ")
+				.append(fold)
+				.append("/n")
+				.append("orientation: ")
+				.append("direction  : ")
+				.append("/n")
+				.append("axisAngle  : ")
+				.append(axisAngle)
+				.append("/n")
+				.append("permutation: ")
+				.append(permutation)
+				.append(scores).toString();
 	}
 }

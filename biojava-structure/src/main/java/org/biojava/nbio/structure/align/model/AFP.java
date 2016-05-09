@@ -56,18 +56,17 @@ public String toString(){
 		// Bioinformatics, 24, pp. 872-873  (2008)
 
 
-		StringBuffer buf = new StringBuffer();
-		buf.append("AFP: p1:");
-		buf.append(p1);
-		buf.append(" p2: ");
-		buf.append(p2);
-		buf.append(" len " );
-		buf.append(fragLen);
-		buf.append(" rmsd ");
-		buf.append(rmsd);
-		buf.append(" score ");
-		buf.append(score);
-		return buf.toString();
+		return new StringBuffer()
+				.append("AFP: p1:")
+				.append(p1)
+				.append(" p2: ")
+				.append(p2)
+				.append(" len ")
+				.append(fragLen)
+				.append(" rmsd ")
+				.append(rmsd)
+				.append(" score ")
+				.append(score).toString();
 	}
 
 

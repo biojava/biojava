@@ -736,52 +736,51 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		StringBuffer buf = new StringBuffer();
 		StructureAlignment alg = getAlgorithm();
 
-		buf.append("-------------------").append(newline);
-		buf.append(alg.getAlgorithmName() + " v." + alg.getVersion() + " help: " + newline);
-		buf.append("-------------------").append(newline);
-		buf.append(newline);
+		buf.append("-------------------").append(newline)
+				.append(alg.getAlgorithmName() + " v." + alg.getVersion() + " help: " + newline)
+				.append("-------------------").append(newline)
+				.append(newline)
+				.append(alg.getAlgorithmName() + " accepts the following parameters:" + newline)
+				.append(newline)
 
-		buf.append(alg.getAlgorithmName() + " accepts the following parameters:" + newline);
-		buf.append(newline);
+				.append("--- pairwise alignments ---").append(newline)
+				.append(" two files to align can be specified by providing a path to a file, or a URL:").append(newline)
+				.append("   -file1 the first file to align").append(newline)
+				.append("   -file2 the second file to align").append(newline)
+				.append(" alternatively you can specify PDB files by their PDB ids:").append(newline)
+				.append("   -pdbFilePath  Path to the directory in your file system that contains the PDB files.").append(newline)
+				.append("   -pdb1  PDB ID of target structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A").append(newline)
+				.append("   -pdb2  PDB ID of query structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A").append(newline)
+				.append(newline)
 
-		buf.append("--- pairwise alignments ---").append(newline);
-		buf.append(" two files to align can be specified by providing a path to a file, or a URL:").append(newline);
-		buf.append("   -file1 the first file to align").append(newline);
-		buf.append("   -file2 the second file to align").append(newline);
-		buf.append(" alternatively you can specify PDB files by their PDB ids:").append(newline);
-		buf.append("   -pdbFilePath  Path to the directory in your file system that contains the PDB files.").append(newline);
-		buf.append("   -pdb1  PDB ID of target structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A").append(newline);
-		buf.append("   -pdb2  PDB ID of query structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A").append(newline);
-		buf.append(newline);
+				.append("   -h / -help / --help : print this help string.").append(newline)
+				.append("   -version: print version info").append(newline)
+				.append("   -printXML true/false print the XML representation of the alignment on stdout.").append(newline)
+				.append("   -printFatCat true/false print the original FATCAT output to stdout.").append(newline)
+				.append("   -printCE true/false print the result in CE style").append(newline)
+				.append("   -show3d print a 3D visualisation of the alignment (requires jmolapplet.jar in classpath)").append(newline)
+				.append("   -outFile file to write the output to (default: writes XML representation).").append(newline)
+				.append("   -outputPDB use this flag together with -outFile to dump the PDB file of the aligned structures, instead of the XML representation, instead of XML").append(newline)
+				.append("   -autoFetch true/false if set to true PDB files will automatically get downloaded and stored in the right location. (default: false)").append(newline)
+				.append("   -showMenu displays the menu that allows to run alignments through a user interface.").append(newline)
+				.append(newline)
 
-		buf.append("   -h / -help / --help : print this help string.").append(newline);
-		buf.append("   -version: print version info").append(newline);
-		buf.append("   -printXML true/false print the XML representation of the alignment on stdout.").append(newline);
-		buf.append("   -printFatCat true/false print the original FATCAT output to stdout.").append(newline);
-		buf.append("   -printCE true/false print the result in CE style").append(newline);
-		buf.append("   -show3d print a 3D visualisation of the alignment (requires jmolapplet.jar in classpath)").append(newline);
-		buf.append("   -outFile file to write the output to (default: writes XML representation).").append(newline);
-		buf.append("   -outputPDB use this flag together with -outFile to dump the PDB file of the aligned structures, instead of the XML representation, instead of XML").append(newline);
-		buf.append("   -autoFetch true/false if set to true PDB files will automatically get downloaded and stored in the right location. (default: false)").append(newline);
-		buf.append("   -showMenu displays the menu that allows to run alignments through a user interface.").append(newline);
-		buf.append(newline);
+				.append("--- custom searches ---").append(newline)
+				.append("   -alignPairs (mandatory) path to a file that contains a set of pairs to compair").append(newline)
+				.append("   -outFile (mandatory) a file that will contain the summary of all the pairwise alignments").append(newline)
+				.append(newline)
 
-		buf.append("--- custom searches ---").append(newline);
-		buf.append("   -alignPairs (mandatory) path to a file that contains a set of pairs to compair").append(newline);
-		buf.append("   -outFile (mandatory) a file that will contain the summary of all the pairwise alignments").append(newline);
-		buf.append(newline);
+				.append("--- database searches ---").append(newline)
+				.append("   -searchFile (mandatory) path to a PDB file that should be used in the search").append(newline)
+				.append("   -outFile (mandatory) a directory that will contain the results of the DB search").append(newline)
+				.append("   -nrCPU (optional) Number of CPUs to use for the database search. By default will use the all, but one CPU in the system.").append(newline)
+				.append("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files.").append(newline)
+				.append("   -saveOutputDir (optional) a directory that will contain the detailed outputs of the alignments. By default will write XML files, if used together with -outputPDB, will write PDB files of the alignment.").append(newline)
+				.append(newline)
 
-		buf.append("--- database searches ---").append(newline);
-		buf.append("   -searchFile (mandatory) path to a PDB file that should be used in the search").append(newline);
-		buf.append("   -outFile (mandatory) a directory that will contain the results of the DB search").append(newline);
-		buf.append("   -nrCPU (optional) Number of CPUs to use for the database search. By default will use the all, but one CPU in the system.").append(newline);
-		buf.append("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files.").append(newline);
-		buf.append("   -saveOutputDir (optional) a directory that will contain the detailed outputs of the alignments. By default will write XML files, if used together with -outputPDB, will write PDB files of the alignment.").append(newline);
-		buf.append(newline);
-
-		buf.append(" Once DB seaches are complete it is possible to view the results with:").append(newline);
-		buf.append("   -showDBresult (optional) path to a DB outFile to show. Also provide the -pdbFilePath parameter to enable visualisation of results.").append(newline);
-		buf.append(newline);
+				.append(" Once DB seaches are complete it is possible to view the results with:").append(newline)
+				.append("   -showDBresult (optional) path to a DB outFile to show. Also provide the -pdbFilePath parameter to enable visualisation of results.").append(newline)
+				.append(newline);
 
 		ConfigStrucAligParams params = alg.getParameters();
 		List<String> paramNames = params.getUserConfigParameters();
@@ -797,22 +796,22 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			buf.append("--- ").append(alg.getAlgorithmName()).append(" parameters: ---").append(newline);
 			for(int i = 0; i< size; i++) {
 				String name = namesIt.next();
-				buf.append("   -").append(Introspector.decapitalize(name));
-				buf.append(" ").append(helpIt.next());
-				buf.append(newline);
+				buf.append("   -").append(Introspector.decapitalize(name))
+						.append(" ").append(helpIt.next())
+						.append(newline);
 			}
 		}
-		buf.append(newline);
+		buf.append(newline)
 
-		buf.append(" For boolean arguments: if neither the text >true< or >false< is provided it is assumed to mean >true<. Instead of >-argument false< it is also possible to write -noArgument.").append(newline);
-		buf.append(newline);
+				.append(" For boolean arguments: if neither the text >true< or >false< is provided it is assumed to mean >true<. Instead of >-argument false< it is also possible to write -noArgument.").append(newline)
+				.append(newline)
 
-		buf.append("--- How to specify what to align ---").append(newline);
-		buf.append(" If only a PDB code is provided, the whole structure will be used for the alignment.").append(newline);
-		buf.append(" To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)").append(newline);
-		buf.append(" To specify that the 1st chain in a structure should be used write: 4hhb:0 .").append(newline);
-		buf.append(" In order to align SCOP domains, provide pdb1/pdb2 as: d4hhba_ Note: if SCOP is not installed at the -pdbFilePath, will automatically download and install.").append(newline);
-		buf.append(newline);
+				.append("--- How to specify what to align ---").append(newline)
+				.append(" If only a PDB code is provided, the whole structure will be used for the alignment.").append(newline)
+				.append(" To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)").append(newline)
+				.append(" To specify that the 1st chain in a structure should be used write: 4hhb:0 .").append(newline)
+				.append(" In order to align SCOP domains, provide pdb1/pdb2 as: d4hhba_ Note: if SCOP is not installed at the -pdbFilePath, will automatically download and install.").append(newline)
+				.append(newline);
 
 		return buf.toString();
 	}

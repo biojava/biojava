@@ -257,11 +257,10 @@ public class SecStrucState extends SecStrucInfo {
 
 		// AA
 		char aaLetter = StructureTools.get1LetterCode(parent.getPDBName());
-		buf.append(aaLetter + "  ");
-
-		// STRUCTURE
-		buf.append(type).append(" ");
-
+		buf.append(aaLetter + "  ")
+				// STRUCTURE
+				.append(type).append(" ");
+		
 		for (int t = 0; t < 3; t++) {
 			buf.append(turn[t]);
 		}
@@ -309,10 +308,10 @@ public class SecStrucState extends SecStrucInfo {
 			buf.append(bp2);
 
 		// beta-sheet label TODO
-		buf.append(" ");
+		buf.append(" ")
 
-		// ACC TODO
-		buf.append("     ");
+				// ACC TODO
+				.append("     ");
 
 		// N-H-->O
 		int p1 = accept1.getPartner();
@@ -340,19 +339,19 @@ public class SecStrucState extends SecStrucInfo {
 		double e4 = (donor2.getEnergy() / 1000.0);
 		if (e4 < 0.0)
 			p4 -= index;
-		buf.append(String.format("%6d,%4.1f", p4, e4));
+		buf.append(String.format("%6d,%4.1f", p4, e4))
 
-		// TCO TODO
-		buf.append("        ");
+				// TCO TODO
+				.append("        ")
 
-		// KAPPA
-		buf.append(String.format("%6.1f", kappa));
+				// KAPPA
+				.append(String.format("%6.1f", kappa))
 
-		// ALPHA TODO
-		buf.append("      ");
+				// ALPHA TODO
+				.append("      ")
 
-		// PHI PSI
-		buf.append(String.format("%6.1f %6.1f ", phi, psi));
+				// PHI PSI
+				.append(String.format("%6.1f %6.1f ", phi, psi));
 
 		// X-CA Y-CA Z-CA
 		Atom ca = parent.getAtom("CA");

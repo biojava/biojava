@@ -65,17 +65,17 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		StringBuffer postContent = new StringBuffer();
 
-		postContent.append("hmmdb=pfam");
+		postContent.append("hmmdb=pfam")
 
 
-		// by default hmmscan runs with the HMMER3 cut_ga parameter enabled, the "gathering freshold", which depends on
-		// the cutoffs defined in the underlying HMM files.
-		// to request a different cutoff by e-value this could be enabled:
-		//postContent.append("&E=1");
+				// by default hmmscan runs with the HMMER3 cut_ga parameter enabled, the "gathering freshold", which depends on
+				// the cutoffs defined in the underlying HMM files.
+				// to request a different cutoff by e-value this could be enabled:
+				//postContent.append("&E=1");
 
 
-		postContent.append("&seq=");
-		postContent.append(sequence.getSequenceAsString());
+				.append("&seq=")
+				.append(sequence.getSequenceAsString());
 
 
 		HttpURLConnection connection = (HttpURLConnection) serviceLocation.openConnection();

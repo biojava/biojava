@@ -198,10 +198,10 @@ public class AfpChainWriter
 		//txt.append(String.format("raw-score: %.2f norm.-score: %.2f ", alignScore, normAlignScore));
 
 		if ( longHeader ) {
-			txt.append(String.format( "Twists %d ini-len %d ini-rmsd %.2f opt-equ %d opt-rmsd %.2f chain-rmsd %.2f Score %.2f align-len %d gaps %d (%.2f%%)",
+			txt.append(String.format("Twists %d ini-len %d ini-rmsd %.2f opt-equ %d opt-rmsd %.2f chain-rmsd %.2f Score %.2f align-len %d gaps %d (%.2f%%)",
 					blockNum - 1, totalLenIni, totalRmsdIni, optLength, totalRmsdOpt, chainRmsd, alignScore,
-					alnLength, gapLen, (100.0 * gapLen/alnLength)) );
-			txt.append(newline);
+					alnLength, gapLen, (100.0 * gapLen / alnLength)))
+					.append(newline);
 
 		}  else {
 
@@ -217,8 +217,9 @@ public class AfpChainWriter
 		if ( longHeader) {
 			printScore(txt,algorithmName,probability,longHeader);
 
-			txt.append(String.format("Afp-num %d Identity %.2f%% Similarity %.2f%%", afpNum, identity * 100, similarity * 100));
-			txt.append(newline);
+			txt.append(String.format(
+					"Afp-num %d Identity %.2f%% Similarity %.2f%%", afpNum, identity * 100, similarity * 100))
+					.append(newline);
 		}
 
 		int i;
@@ -228,9 +229,8 @@ public class AfpChainWriter
 			int fragLen = 8 ; // FatCatParameters.DEFAULT_FRAGLEN;
 			for(i = 0; i < blockNum; i ++)  {
 				gap = blockGap[i] /( (double)blockGap[i] + fragLen * blockSize[i]);
-				txt.append(String.format( "Block %2d afp %2d score %5.2f rmsd %5.2f gap %d (%.2f%%)",
-						i, blockSize[i], blockScore[i], blockRmsd[i], blockGap[i], gap));
-				txt.append(newline);
+				txt.append(String.format("Block %2d afp %2d score %5.2f rmsd %5.2f gap %d (%.2f%%)",
+						i, blockSize[i], blockScore[i], blockRmsd[i], blockGap[i], gap)).append(newline);
 			}
 		}
 
@@ -350,12 +350,11 @@ public class AfpChainWriter
 			}
 
 
+			txt.append(newline)
+					.append(String.format("Chain 1:%5s %s" + newline + "%14s%s" + newline + "Chain 2:%5s %s",
+							pdb1, a, " ", c, pdb2, b))
 
-			txt.append(newline);
-			txt.append(String.format("Chain 1:%5s %s"+newline +"%14s%s"+newline+"Chain 2:%5s %s",
-					pdb1, a, " ", c, pdb2, b));
-
-			txt.append(newline);
+					.append(newline);
 
 			if ( ! showHTML){
 				for(k = 0; k < len; k ++)       {
@@ -388,30 +387,28 @@ public class AfpChainWriter
 			int alnLength, int gapLen, double identity, double similarity, StringBuffer txt)
 	{
 		if ( blockNum - 1 > 0) {
-			txt.append(String.format( "Twists %d ", blockNum -1 ));
-			txt.append(newline);
+			txt.append(String.format( "Twists %d ", blockNum -1 )).append(newline);
 		}
 
-		txt.append(String.format("Equ: %d ", optLength));
-		txt.append(newline);
-		txt.append(String.format("RMSD: %.2f ", totalRmsdOpt));
-		txt.append(newline);
-		txt.append(String.format("Score: %.2f ", alignScore));
-		txt.append(newline);
-		txt.append(String.format("Align-len: %d ", alnLength));
-		txt.append(newline);
-		txt.append(String.format("Gaps: %d (%.2f%%)",
-				gapLen, (100.0 * gapLen/alnLength)) );
-		txt.append(newline);
+		txt.append(String.format("Equ: %d ", optLength))
+				.append(newline)
+				.append(String.format("RMSD: %.2f ", totalRmsdOpt))
+				.append(newline)
+				.append(String.format("Score: %.2f ", alignScore))
+				.append(newline)
+				.append(String.format("Align-len: %d ", alnLength))
+				.append(newline)
+				.append(String.format("Gaps: %d (%.2f%%)",
+						gapLen, (100.0 * gapLen / alnLength)))
+				.append(newline);
 		if ( afpChain.getTMScore() >= 0) {
-			txt.append(String.format("TM-score: %.2f",afpChain.getTMScore()));
-			txt.append(newline);
+			txt.append(String.format("TM-score: %.2f",afpChain.getTMScore())).append(newline);
 		}
-		txt.append(newline);
-		txt.append(String.format("Identity: %.2f%% ", identity * 100 ));
-		txt.append(newline);
-		txt.append(String.format("Similarity: %.2f%%", similarity * 100));
-		txt.append(newline);
+		txt.append(newline)
+				.append(String.format("Identity: %.2f%% ", identity * 100))
+				.append(newline)
+				.append(String.format("Similarity: %.2f%%", similarity * 100))
+				.append(newline);
 	}
 
 	private static void printScore(StringBuffer txt,
@@ -429,8 +426,8 @@ public class AfpChainWriter
 			if ( longHeader ){
 				txt.append(String.format("P-value %.2e ",probability));
 			}  else {
-				txt.append(String.format("P-value: %.2e ",probability));
-				txt.append(newline);
+				txt.append(String.format("P-value: %.2e ",probability))
+						.append(newline);
 			}
 		}
 
@@ -540,11 +537,11 @@ public class AfpChainWriter
 
 		// == end of extractation of data values from afpChain
 
-		StringBuffer txt = new StringBuffer();
+		StringBuffer txt = new StringBuffer()
 
-		txt.append(String.format("Align %s.pdb Length1: %d with %s.pdb Length2: %d", name1, ca1Length, name2, ca2Length));
+				.append(String.format("Align %s.pdb Length1: %d with %s.pdb Length2: %d", name1, ca1Length, name2, ca2Length))
 
-		txt.append(newline);
+				.append(newline);
 
 		if ( afpChain.isShortAlign()){
 			txt.append("Short match");
@@ -949,39 +946,39 @@ public class AfpChainWriter
 
 		if ( len % LINELENGTH  == 0) {
 
-			//txt.append("|");
-			txt.append(header1);
-			//txt.append("|");
-			txt.append(newline);
-			//txt.append("|");
-			txt.append(header2);
-			//txt.append("|");
-			txt.append(newline);
-			//txt.append("|");
-			txt.append(alnseq1);
-			//txt.append("|");
-			txt.append(newline);
+			//txt.append("|")
+			txt.append(header1)
+					//.append("|")
+					.append(newline)
+					//.append("|")
+					.append(header2)
+					//.append("|")
+					.append(newline)
+					//.append("|")
+					.append(alnseq1)
+					//.append("|")
+					.append(newline)
 
-			//txt.append("|");
-			txt.append(alnsymb);
-			//         txt.append(newline);
-			//         txt.append(block);
-			//txt.append("|");
-			txt.append(newline);
-			//txt.append("|");
-			txt.append(alnseq2);
-			//txt.append("|");
-			txt.append(newline);
-			//txt.append("|");
-			txt.append(footer2);
-			//txt.append("|");
-			txt.append(newline);
-			//txt.append("|");
-			txt.append(footer1);
-			//txt.append("|");
-			txt.append(newline);
-			txt.append(newline);
-			txt.append(newline);
+					//.append("|")
+					.append(alnsymb)
+					//.append(newline)
+					//.append(block)
+					//.append("|")
+					.append(newline)
+					//.append("|")
+					.append(alnseq2)
+					//.append("|")
+					.append(newline)
+					//.append("|")
+					.append(footer2)
+					//.append("|")
+					.append(newline)
+					//.append("|")
+					.append(footer1)
+					//.append("|")
+					.append(newline)
+					.append(newline)
+					.append(newline);
 
 			if (formatHTML ) {
 
@@ -1062,33 +1059,33 @@ public class AfpChainWriter
 	{
 		StringBuffer str = new StringBuffer();
 
-		str.append(afpChain.getName1());
-		str.append("\t");
-		str.append(afpChain.getName2());
-		str.append("\t");
-		str.append(String.format("%.2f",afpChain.getAlignScore()));
-		str.append("\t");
+		str.append(afpChain.getName1())
+				.append("\t")
+				.append(afpChain.getName2())
+				.append("\t")
+				.append(String.format("%.2f", afpChain.getAlignScore()))
+				.append("\t");
 		if ( afpChain.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName)){
 			str.append(String.format("%.2f",afpChain.getProbability()));
 		} else {
 			str.append(String.format("%.2e",afpChain.getProbability()));
 		}
-		str.append("\t");
-		str.append(String.format("%.2f",afpChain.getTotalRmsdOpt()));
-		str.append("\t");
-		str.append(afpChain.getCa1Length());
-		str.append("\t");
-		str.append(afpChain.getCa2Length());
-		str.append("\t");
-		str.append(afpChain.getCoverage1());
-		str.append("\t");
-		str.append(afpChain.getCoverage2());
-		str.append("\t");
-		str.append(String.format("%.2f",afpChain.getIdentity()));
-		str.append("\t");
-		str.append(afpChain.getDescription2());
-		str.append("\t");
-		str.append(newline);
+		str.append("\t")
+				.append(String.format("%.2f", afpChain.getTotalRmsdOpt()))
+				.append("\t")
+				.append(afpChain.getCa1Length())
+				.append("\t")
+				.append(afpChain.getCa2Length())
+				.append("\t")
+				.append(afpChain.getCoverage1())
+				.append("\t")
+				.append(afpChain.getCoverage2())
+				.append("\t")
+				.append(String.format("%.2f", afpChain.getIdentity()))
+				.append("\t")
+				.append(afpChain.getDescription2())
+				.append("\t")
+				.append(newline);
 
 		return str.toString();
 	}
@@ -1110,9 +1107,9 @@ public class AfpChainWriter
 			Matrix m = blockRotationMatrix[blockNr];
 			Atom shift   = blockShiftVector[blockNr];
 			if ( blockNum > 1) {
-				txt.append("Operations for block " );
-				txt.append(blockNr);
-				txt.append(newline);
+				txt.append("Operations for block ")
+						.append(blockNr)
+						.append(newline);
 			}
 
 			String origString = "orig";
@@ -1120,12 +1117,12 @@ public class AfpChainWriter
 				origString = (blockNr)+"";
 
 
-			txt.append(String.format("     X"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,0),m.get(1,0), m.get(2,0), shift.getX()));
-			txt.append( newline);
-			txt.append(String.format("     Y"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,1),m.get(1,1), m.get(2,1), shift.getY()));
-			txt.append( newline);
-			txt.append(String.format("     Z"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,2),m.get(1,2), m.get(2,2), shift.getZ()));
-			txt.append(newline);
+			txt.append(String.format("     X" + (blockNr + 1) + " = (%9.6f)*X" + origString + " + (%9.6f)*Y" + origString + " + (%9.6f)*Z" + origString + " + (%12.6f)", m.get(0, 0), m.get(1, 0), m.get(2, 0), shift.getX()))
+					.append(newline)
+					.append(String.format("     Y" + (blockNr + 1) + " = (%9.6f)*X" + origString + " + (%9.6f)*Y" + origString + " + (%9.6f)*Z" + origString + " + (%12.6f)", m.get(0, 1), m.get(1, 1), m.get(2, 1), shift.getY()))
+					.append(newline)
+					.append(String.format("     Z" + (blockNr + 1) + " = (%9.6f)*X" + origString + " + (%9.6f)*Y" + origString + " + (%9.6f)*Z" + origString + " + (%12.6f)", m.get(0, 2), m.get(1, 2), m.get(2, 2), shift.getZ()))
+					.append(newline);
 		}
 		return txt.toString();
 	}
@@ -1173,21 +1170,21 @@ public class AfpChainWriter
 
 		StringBuffer txt = new StringBuffer();
 
-		txt.append("Chain 1: ");
-		txt.append(name1);
-		txt.append(" (Size=");
-		txt.append(ca1.length);
-		txt.append(")");
-		txt.append(newline);
-		txt.append("Chain 2: ");
-		txt.append(name2);
-		txt.append(" (Size=");
-		txt.append(ca2.length);
-		txt.append(")");
-		txt.append(newline);
-		txt.append(newline);
-		txt.append(String.format("Alignment length = %d Rmsd = %.2fA Z-Score = %.1f",optLength,totalRmsdOpt,probability));
-		txt.append(String.format(" Gaps = %d(%.1f%%) CPU = %d ms. Sequence identities = %.1f%%",gapLen,( gapLen*100.0/optLength),calculationTime,identity*100));
+		txt.append("Chain 1: ")
+				.append(name1)
+				.append(" (Size=")
+				.append(ca1.length)
+				.append(")")
+				.append(newline)
+				.append("Chain 2: ")
+				.append(name2)
+				.append(" (Size=")
+				.append(ca2.length)
+				.append(")")
+				.append(newline)
+				.append(newline)
+				.append(String.format("Alignment length = %d Rmsd = %.2fA Z-Score = %.1f", optLength, totalRmsdOpt, probability))
+				.append(String.format(" Gaps = %d(%.1f%%) CPU = %d ms. Sequence identities = %.1f%%", gapLen, (gapLen * 100.0 / optLength), calculationTime, identity * 100));
 
 		int     linelen = 70;
 		String a;
@@ -1222,10 +1219,10 @@ public class AfpChainWriter
 
 			//String pdb1 = ca1[ap].getParent().getPDBCode();
 			//String pdb2 = ca2[bp].getParent().getPDBCode();
-			txt.append(newline);
-			txt.append(String.format("Chain 1:%5s %s"+newline+"Chain 2:%5s %s",
-					(ap+1), a, (bp+1), b));
-			txt.append(newline);
+			txt.append(newline)
+					.append(String.format("Chain 1:%5s %s" + newline + "Chain 2:%5s %s",
+							(ap + 1), a, (bp + 1), b))
+					.append(newline);
 			for(k = 0; k < len; k ++)       {
 				if(a.charAt(k) != '-') ap ++;
 				if(b.charAt(k) != '-') bp ++;
@@ -1233,9 +1230,9 @@ public class AfpChainWriter
 			t += len;
 
 		}
-		txt.append(newline);
+		txt.append(newline)
 
-		txt.append(toRotMat(afpChain));
+				.append(toRotMat(afpChain));
 
 		return txt.toString();
 

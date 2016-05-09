@@ -31,16 +31,14 @@ public class DatabasePDBrev {
 
 	@Override
 	public String toString(){
-		StringBuffer buf = new StringBuffer();
-		buf.append("DatabasePDBrev ");
-		buf.append("mod_type :");
-		buf.append(mod_type);
-		buf.append(" ");
-		buf.append(this.getDate());
-		buf.append( " ");
-		buf.append( this.getDate_original());
-
-		return buf.toString();
+		return new StringBuffer()
+				.append("DatabasePDBrev ")
+				.append("mod_type :")
+				.append(mod_type)
+				.append(" ")
+				.append(this.getDate())
+				.append(" ")
+				.append(this.getDate_original()).toString();
 	}
 	public String getNum() {
 		return num;

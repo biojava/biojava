@@ -249,31 +249,30 @@ public class QuatSymmetryParameters implements Serializable{
 
 	@Override
 	public String toString() {
-		StringBuilder s = new StringBuilder();
-		s.append("Minimum protein sequence length   : ");
-		s.append(minimumSequenceLength);
-		s.append(n);
-		s.append("Sequence identity thresholds      : ");
-		s.append(Arrays.toString(sequenceIdentityThresholds));
-		s.append(n);
-		s.append("Sequence pseudosymmetry threshold : ");
-		s.append(sequencePseudoSymmetryThreshold);
-		s.append(n);
-		s.append("Alignment fraction threshold      : ");
-		s.append(alignmentFractionThreshold);
-		s.append(n);
-		s.append("Angle threshold                   : ");
-		s.append(angleThreshold);
-		s.append(n);
-		s.append("Symmetry RMSD threshold           : ");
-		s.append(rmsdThreshold);
-		s.append(n);
-		s.append("Local symmetry                    : ");
-		s.append(localSymmetry);
-		s.append(n);
-		s.append("Verbose                           : ");
-		s.append(verbose);
-		s.append(n);
-		return s.toString();
+		return new StringBuilder()
+				.append("Minimum protein sequence length   : ")
+				.append(minimumSequenceLength)
+				.append(n)
+				.append("Sequence identity thresholds      : ")
+				.append(Arrays.toString(sequenceIdentityThresholds))
+				.append(n)
+				.append("Sequence pseudosymmetry threshold : ")
+				.append(sequencePseudoSymmetryThreshold)
+				.append(n)
+				.append("Alignment fraction threshold      : ")
+				.append(alignmentFractionThreshold)
+				.append(n)
+				.append("Angle threshold                   : ")
+				.append(angleThreshold)
+				.append(n)
+				.append("Symmetry RMSD threshold           : ")
+				.append(rmsdThreshold)
+				.append(n)
+				.append("Local symmetry                    : ")
+				.append(localSymmetry)
+				.append(n)
+				.append("Verbose                           : ")
+				.append(verbose)
+				.append(n).toString();
 	}
 }

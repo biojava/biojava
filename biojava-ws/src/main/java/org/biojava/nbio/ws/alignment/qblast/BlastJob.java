@@ -63,15 +63,14 @@ public class BlastJob {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("BlastJob [id=");
-		builder.append(id);
-		builder.append(", startTimestamp=");
-		builder.append(startTimestamp);
-		builder.append(", expectedExecutionTime=");
-		builder.append(expectedExecutionTime);
-		builder.append("]");
-		return builder.toString();
+		return new StringBuilder()
+				.append("BlastJob [id=")
+				.append(id)
+				.append(", startTimestamp=")
+				.append(startTimestamp)
+				.append(", expectedExecutionTime=")
+				.append(expectedExecutionTime)
+				.append("]").toString();
 	}
 
 }

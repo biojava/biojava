@@ -153,16 +153,15 @@ public class UniqueSequenceList implements Cloneable {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("length: ");
-		builder.append(caAtoms.length);
-		builder.append(" seq: ");
-		builder.append(sequenceString);
-		builder.append("\n");
-		builder.append(alignment1);
-		builder.append("\n");
-		builder.append(alignment2);
-		return builder.toString();
+		return new StringBuilder()
+				.append("length: ")
+				.append(caAtoms.length)
+				.append(" seq: ")
+				.append(sequenceString)
+				.append("\n")
+				.append(alignment1)
+				.append("\n")
+				.append(alignment2).toString();
 	}
 
 }
