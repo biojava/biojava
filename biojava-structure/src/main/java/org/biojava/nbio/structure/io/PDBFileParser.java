@@ -1629,7 +1629,7 @@ public class PDBFileParser  {
 			}
 			// we initialise the new molecule to come
 			currentChain = new ChainImpl();
-			// TODO should set a chain id later, once we have all chains
+			// note that the chainId (asym id) is set properly later in assignAsymIds
 			currentChain.setId(chainName);
 			currentChain.setName(chainName);
 			
@@ -2895,10 +2895,10 @@ public class PDBFileParser  {
 		for (Group g:chain.getAtomGroups()){
 			Chain split = new ChainImpl();
 			split.setName(chain.getName());
+			// this should include alt locs (referenced from the main group)
 			split.addGroup(g);
 			splitNonPolys.add(split);
 		}
-		// TODO deal with alt locs
 		
 		return splitNonPolys;
 	}
@@ -3058,7 +3058,7 @@ public class PDBFileParser  {
 				}
 			}
 			// now we assign entities to the nonpoly and water chains
-			EntityFinder.createPurelyNonPolyEntities(polyModels, splitNonPolyModels, waterModels, entities);
+			EntityFinder.createPurelyNonPolyEntities(splitNonPolyModels, waterModels, entities);
 			
 		} else {
 
