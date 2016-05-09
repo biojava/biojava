@@ -90,8 +90,8 @@ public class CeSymmIterative {
 	 */
 	public CeSymmIterative(CESymmParameters param) {
 		params = param;
-		alignGraph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
-		levels = new ArrayList<MultipleAlignment>();
+		alignGraph = new SimpleGraph<>(DefaultEdge.class);
+		levels = new ArrayList<>();
 	}
 
 	/**
@@ -231,21 +231,21 @@ public class CeSymmIterative {
 		
 		// Initialize a new multiple alignment
 		MultipleAlignment msa = new MultipleAlignmentImpl();
-		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());
+		msa.getEnsemble().setAtomArrays(new ArrayList<>());
 		msa.getEnsemble().setStructureIdentifiers(
-				new ArrayList<StructureIdentifier>());
+				new ArrayList<>());
 		msa.getEnsemble().setAlgorithmName(CeSymm.algorithmName);
 		msa.getEnsemble().setVersion(CeSymm.version);
 
 		BlockSet bs = new BlockSetImpl(msa);
 		Block b = new BlockImpl(bs);
-		b.setAlignRes(new ArrayList<List<Integer>>());
+		b.setAlignRes(new ArrayList<>());
 
 		// Calculate the connected groups of the alignment graph
-		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(
+		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<>(
 				alignGraph);
 		List<Set<Integer>> comps = inspector.connectedSets();
-		List<ResidueGroup> groups = new ArrayList<ResidueGroup>(comps.size());
+		List<ResidueGroup> groups = new ArrayList<>(comps.size());
 		for (Set<Integer> comp : comps)
 			groups.add(new ResidueGroup(comp));
 
@@ -254,7 +254,7 @@ public class CeSymmIterative {
 		for (MultipleAlignment m : levels)
 			order *= m.size();
 		for (int su = 0; su < order; su++)
-			b.getAlignRes().add(new ArrayList<Integer>());
+			b.getAlignRes().add(new ArrayList<>());
 
 		// Construct the resulting MultipleAlignment from ResidueGroups
 		for (ResidueGroup group : groups) {
@@ -301,14 +301,14 @@ public class CeSymmIterative {
 			parents *= subsize;
 			size /= subsize;
 
-			List<Integer> repeatTransform = new ArrayList<Integer>();
+			List<Integer> repeatTransform = new ArrayList<>();
 			for (int i = 0; i < size * parents; i++) {
 				repeatTransform.add(0);
 			}
 
-			List<List<Integer>> superpose = new ArrayList<List<Integer>>();
-			superpose.add(new ArrayList<Integer>());
-			superpose.add(new ArrayList<Integer>());
+			List<List<Integer>> superpose = new ArrayList<>();
+			superpose.add(new ArrayList<>());
+			superpose.add(new ArrayList<>());
 
 			for (int su = 0; su < subsize - 1; su++) {
 				for (int s = 0; s < size; s++) {

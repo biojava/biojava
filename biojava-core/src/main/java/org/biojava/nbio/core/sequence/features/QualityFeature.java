@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class QualityFeature<S extends AbstractSequence<C>, C extends Compound> extends AbstractFeature<S, C> {
 
-	private List<Number> qualities = new ArrayList<Number>();
+	private List<Number> qualities = new ArrayList<>();
 
 	/**
 	 * @param type

@@ -41,7 +41,7 @@ import java.util.List;
 public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 
 
-	private SoftHashMap<String, PDBHeader> headerCache = new SoftHashMap<String, PDBHeader>(0);
+	private SoftHashMap<String, PDBHeader> headerCache = new SoftHashMap<>(0);
 
 	private Structure s;
 

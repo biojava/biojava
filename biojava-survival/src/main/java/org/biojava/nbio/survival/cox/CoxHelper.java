@@ -71,7 +71,7 @@ public class CoxHelper {
 	public static CoxInfo process(WorkSheet worksheet, String timeColumn, String statusColumn, String weightColumn, String strataColumn, String clusterColumn, ArrayList<String> variables, boolean useStrata, boolean useWeights) {
 
 		try {
-			ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
+			ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 
 			int i = 1;
 			for (String row : worksheet.getRows()) {
@@ -152,7 +152,7 @@ public class CoxHelper {
 		try {
 			if (true) {
 				String datafile = "/Users/Scooter/scripps/ngs/DataSets/E2197/misc/ecoglabtransfer/500790/2013.05.10.12.28.58.313/clindasl0228.txt";
-				ArrayList<String> variables = new ArrayList<String>();
+				ArrayList<String> variables = new ArrayList<>();
 				variables.add("nndpos");
 				variables.add("meno");
 //              variables.add("er1");

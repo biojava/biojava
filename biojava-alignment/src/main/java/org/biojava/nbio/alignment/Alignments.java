@@ -189,7 +189,7 @@ public class Alignments {
 		runPairwiseScorers(scorers);
 
 		// stage 2: hierarchical clustering into a guide tree
-		GuideTree<S, C> tree = new GuideTree<S, C>(sequences, scorers);
+		GuideTree<S, C> tree = new GuideTree<>(sequences, scorers);
 		scorers = null;
 
 		// stage 3: progressive alignment
@@ -233,7 +233,7 @@ public class Alignments {
 	static <S extends Sequence<C>, C extends Compound> List<PairwiseSequenceAligner<S, C>> getAllPairsAligners(
 			List<S> sequences, PairwiseSequenceAlignerType type, GapPenalty gapPenalty,
 			SubstitutionMatrix<C> subMatrix) {
-		List<PairwiseSequenceAligner<S, C>> allPairs = new ArrayList<PairwiseSequenceAligner<S, C>>();
+		List<PairwiseSequenceAligner<S, C>> allPairs = new ArrayList<>();
 		for (int i = 0; i < sequences.size(); i++) {
 			for (int j = i+1; j < sequences.size(); j++) {
 				allPairs.add(getPairwiseAligner(sequences.get(i), sequences.get(j), type, gapPenalty, subMatrix));
@@ -256,7 +256,7 @@ public class Alignments {
 	public static <S extends Sequence<C>, C extends Compound> List<PairwiseSequenceScorer<S, C>> getAllPairsScorers(
 			List<S> sequences, PairwiseSequenceScorerType type, GapPenalty gapPenalty,
 			SubstitutionMatrix<C> subMatrix) {
-		List<PairwiseSequenceScorer<S, C>> allPairs = new ArrayList<PairwiseSequenceScorer<S, C>>();
+		List<PairwiseSequenceScorer<S, C>> allPairs = new ArrayList<>();
 		for (int i = 0; i < sequences.size(); i++) {
 			for (int j = i+1; j < sequences.size(); j++) {
 				allPairs.add(getPairwiseScorer(sequences.get(i), sequences.get(j), type, gapPenalty, subMatrix));
@@ -291,7 +291,7 @@ public class Alignments {
 	 * @return calculated elements
 	 */
 	static <E> List<E> getListFromFutures(List<Future<E>> futures) {
-		List<E> list = new ArrayList<E>();
+		List<E> list = new ArrayList<>();
 		for (Future<E> f : futures) {
 			// TODO when added to ConcurrencyTools, log completions and exceptions instead of printing stack traces
 			try {
@@ -326,9 +326,9 @@ public class Alignments {
 		switch (type) {
 		default:
 		case GLOBAL:
-			return new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
+			return new NeedlemanWunsch<>(query, target, gapPenalty, subMatrix);
 		case LOCAL:
-			return new SmithWaterman<S, C>(query, target, gapPenalty, subMatrix);
+			return new SmithWaterman<>(query, target, gapPenalty, subMatrix);
 		case GLOBAL_LINEAR_SPACE:
 		case LOCAL_LINEAR_SPACE:
 			// TODO other alignment options (Myers-Miller, Thompson)
@@ -374,18 +374,18 @@ public class Alignments {
 		case GLOBAL:
 			return getPairwiseAligner(query, target, PairwiseSequenceAlignerType.GLOBAL, gapPenalty, subMatrix);
 		case GLOBAL_IDENTITIES:
-			return new FractionalIdentityScorer<S, C>(getPairwiseAligner(query, target,
+			return new FractionalIdentityScorer<>(getPairwiseAligner(query, target,
 					PairwiseSequenceAlignerType.GLOBAL, gapPenalty, subMatrix));
 		case GLOBAL_SIMILARITIES:
-			return new FractionalSimilarityScorer<S, C>(getPairwiseAligner(query, target,
+			return new FractionalSimilarityScorer<>(getPairwiseAligner(query, target,
 					PairwiseSequenceAlignerType.GLOBAL, gapPenalty, subMatrix));
 		case LOCAL:
 			return getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapPenalty, subMatrix);
 		case LOCAL_IDENTITIES:
-			return new FractionalIdentityScorer<S, C>(getPairwiseAligner(query, target,
+			return new FractionalIdentityScorer<>(getPairwiseAligner(query, target,
 					PairwiseSequenceAlignerType.LOCAL, gapPenalty, subMatrix));
 		case LOCAL_SIMILARITIES:
-			return new FractionalSimilarityScorer<S, C>(getPairwiseAligner(query, target,
+			return new FractionalSimilarityScorer<>(getPairwiseAligner(query, target,
 					PairwiseSequenceAlignerType.LOCAL, gapPenalty, subMatrix));
 		case KMERS:
 		case WU_MANBER:
@@ -413,7 +413,7 @@ public class Alignments {
 		switch (type) {
 		default:
 		case GLOBAL:
-			return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+			return new SimpleProfileProfileAligner<>(profile1, profile2, gapPenalty, subMatrix);
 		case GLOBAL_LINEAR_SPACE:
 		case GLOBAL_CONSENSUS:
 		case LOCAL:
@@ -443,7 +443,7 @@ public class Alignments {
 		switch (type) {
 		default:
 		case GLOBAL:
-			return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+			return new SimpleProfileProfileAligner<>(profile1, profile2, gapPenalty, subMatrix);
 		case GLOBAL_LINEAR_SPACE:
 		case GLOBAL_CONSENSUS:
 		case LOCAL:
@@ -473,7 +473,7 @@ public class Alignments {
 		switch (type) {
 		default:
 		case GLOBAL:
-			return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+			return new SimpleProfileProfileAligner<>(profile1, profile2, gapPenalty, subMatrix);
 		case GLOBAL_LINEAR_SPACE:
 		case GLOBAL_CONSENSUS:
 		case LOCAL:
@@ -503,7 +503,7 @@ public class Alignments {
 		switch (type) {
 		default:
 		case GLOBAL:
-			return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+			return new SimpleProfileProfileAligner<>(profile1, profile2, gapPenalty, subMatrix);
 		case GLOBAL_LINEAR_SPACE:
 		case GLOBAL_CONSENSUS:
 		case LOCAL:
@@ -550,7 +550,7 @@ public class Alignments {
 			ProfileProfileAlignerType type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
 
 		// find inner nodes in post-order traversal of tree (each leaf node has a single sequence profile)
-		List<GuideTreeNode<S, C>> innerNodes = new ArrayList<GuideTreeNode<S, C>>();
+		List<GuideTreeNode<S, C>> innerNodes = new ArrayList<>();
 		for (GuideTreeNode<S, C> n : tree) {
 			if (n.getProfile() == null) {
 				innerNodes.add(n);
@@ -567,7 +567,7 @@ public class Alignments {
 							getProfileProfileAligner(p1, pf2, type, gapPenalty, subMatrix)) :
 					((p2 != null) ? getProfileProfileAligner(pf1, p2, type, gapPenalty, subMatrix) :
 							getProfileProfileAligner(pf1, pf2, type, gapPenalty, subMatrix));
-			n.setProfileFuture(ConcurrencyTools.submit(new CallableProfileProfileAligner<S, C>(aligner), String.format(
+			n.setProfileFuture(ConcurrencyTools.submit(new CallableProfileProfileAligner<>(aligner), String.format(
 					"Aligning pair %d of %d", i++, all)));
 		}
 
@@ -599,9 +599,9 @@ public class Alignments {
 	static <S extends Sequence<C>, C extends Compound> List<SequencePair<S, C>>
 			runPairwiseAligners(List<PairwiseSequenceAligner<S, C>> aligners) {
 		int n = 1, all = aligners.size();
-		List<Future<SequencePair<S, C>>> futures = new ArrayList<Future<SequencePair<S, C>>>();
+		List<Future<SequencePair<S, C>>> futures = new ArrayList<>();
 		for (PairwiseSequenceAligner<S, C> aligner : aligners) {
-			futures.add(ConcurrencyTools.submit(new CallablePairwiseSequenceAligner<S, C>(aligner),
+			futures.add(ConcurrencyTools.submit(new CallablePairwiseSequenceAligner<>(aligner),
 					String.format("Aligning pair %d of %d", n++, all)));
 		}
 		return getListFromFutures(futures);
@@ -619,9 +619,9 @@ public class Alignments {
 	public static <S extends Sequence<C>, C extends Compound> double[] runPairwiseScorers(
 			List<PairwiseSequenceScorer<S, C>> scorers) {
 		int n = 1, all = scorers.size();
-		List<Future<Double>> futures = new ArrayList<Future<Double>>();
+		List<Future<Double>> futures = new ArrayList<>();
 		for (PairwiseSequenceScorer<S, C> scorer : scorers) {
-			futures.add(ConcurrencyTools.submit(new CallablePairwiseSequenceScorer<S, C>(scorer),
+			futures.add(ConcurrencyTools.submit(new CallablePairwiseSequenceScorer<>(scorer),
 					String.format("Scoring pair %d of %d", n++, all)));
 		}
 		List<Double> results = getListFromFutures(futures);
@@ -644,9 +644,9 @@ public class Alignments {
 	static <S extends Sequence<C>, C extends Compound> List<ProfilePair<S, C>>
 			runProfileAligners(List<ProfileProfileAligner<S, C>> aligners) {
 		int n = 1, all = aligners.size();
-		List<Future<ProfilePair<S, C>>> futures = new ArrayList<Future<ProfilePair<S, C>>>();
+		List<Future<ProfilePair<S, C>>> futures = new ArrayList<>();
 		for (ProfileProfileAligner<S, C> aligner : aligners) {
-			futures.add(ConcurrencyTools.submit(new CallableProfileProfileAligner<S, C>(aligner),
+			futures.add(ConcurrencyTools.submit(new CallableProfileProfileAligner<>(aligner),
 					String.format("Aligning pair %d of %d", n++, all)));
 		}
 		return getListFromFutures(futures);

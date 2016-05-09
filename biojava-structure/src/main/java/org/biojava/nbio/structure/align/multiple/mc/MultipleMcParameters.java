@@ -54,7 +54,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	@Override
 	public List<String> getUserConfigParameters() {
 
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("RandomSeed");
 		params.add("MinBlockLen");
 		params.add("MinAlignedStructures");
@@ -69,7 +69,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	@Override
 	public List<String> getUserConfigParameterNames() {
 
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("Random Seed");
 		params.add("Minimum Block Length");
 		params.add("Minimum Structures per Column");
@@ -85,7 +85,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
 
-		List<Class> params = new ArrayList<Class>();
+		List<Class> params = new ArrayList<>();
 		params.add(Integer.class);
 		params.add(Integer.class);
 		params.add(Integer.class);
@@ -100,7 +100,7 @@ public class MultipleMcParameters implements ConfigStrucAligParams {
 	@Override
 	public List<String> getUserConfigHelp() {
 
-		List<String> params =new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		String randomSeed =
 				"Random seed for the optimizer random number generator.";
 		String minBlockLen =

@@ -111,7 +111,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 				// work around list in results;
 
 				String[] spl = range.split(",");
-				SortedSet<String> value = new TreeSet<String>();
+				SortedSet<String> value = new TreeSet<>();
 
 				for (String s : spl){
 					value.add(s);
@@ -150,7 +150,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 			cache(name,data);
 			return data;
 		} else {
-			SortedSet<String> r = new TreeSet<String>();
+			SortedSet<String> r = new TreeSet<>();
 			for ( ScopDomain d: scopDomains){
 				StructureName s = new StructureName(d.getScopId());
 
@@ -176,7 +176,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	private SortedSet<String> getPDPDomains(StructureName n) throws IOException, StructureException {
 		SortedSet<String> pdpDomains = pdp.getPDPDomainNamesForPDB(n.getPdbId());
 
-		SortedSet<String> r = new TreeSet<String>();
+		SortedSet<String> r = new TreeSet<>();
 		String chainID = n.getChainId();
 		for ( String s : pdpDomains){
 			StructureName d = new StructureName(s);

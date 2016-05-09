@@ -92,7 +92,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	private static String uniprotDirectoryCache = null;
 	private String sequence;
 	private CompoundSet<C> compoundSet;
-	private List<C> parsedCompounds = new ArrayList<C>();
+	private List<C> parsedCompounds = new ArrayList<>();
 	Document uniprotDoc;
 
 	/**
@@ -138,7 +138,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public static <C extends Compound> UniprotProxySequenceReader<C> parseUniprotXMLString(String xml, CompoundSet<C> compoundSet) {
 		try {
 			Document document = XMLHelper.inputStreamToDocument(new ByteArrayInputStream(xml.getBytes()));
-			return new UniprotProxySequenceReader<C>(document, compoundSet);
+			return new UniprotProxySequenceReader<>(document, compoundSet);
 		} catch (Exception e) {
 			logger.error("Exception on xml parse of: {}", xml);
 		}
@@ -260,7 +260,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 */
 	public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
-		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<>();
 		return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
 	}
 
@@ -272,7 +272,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 */
 	@Override
 	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-		return new SequenceProxyView<C>(UniprotProxySequenceReader.this, bioBegin, bioEnd);
+		return new SequenceProxyView<>(UniprotProxySequenceReader.this, bioBegin, bioEnd);
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @throws XPathExpressionException
 	 */
 	public ArrayList<AccessionID> getAccessions() throws XPathExpressionException {
-		ArrayList<AccessionID> accessionList = new ArrayList<AccessionID>();
+		ArrayList<AccessionID> accessionList = new ArrayList<>();
 		if (uniprotDoc == null) {
 			return accessionList;
 		}
@@ -341,7 +341,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @throws XPathExpressionException
 	 */
 	public ArrayList<String> getAliases() throws XPathExpressionException {
-		ArrayList<String> aliasList = new ArrayList<String>();
+		ArrayList<String> aliasList = new ArrayList<>();
 		if (uniprotDoc == null) {
 			return aliasList;
 		}
@@ -421,7 +421,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		StringBuilder sb = new StringBuilder();
 		URL uniprot = new URL(uniprotURL);
 		int attempt = 5;
-		List<String> errorCodes = new ArrayList<String>();
+		List<String> errorCodes = new ArrayList<>();
 		while(attempt > 0) {
 			HttpURLConnection uniprotConnection = (HttpURLConnection) uniprot.openConnection();
 			uniprotConnection.setRequestProperty("User-Agent", "BioJava");
@@ -531,7 +531,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public static void main(String[] args) {
 
 		try {
-			UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>("YA745_GIBZE", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+			UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>("YA745_GIBZE", AminoAcidCompoundSet.getAminoAcidCompoundSet());
 			ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
 			logger.info("Accession: {}", proteinSequence.getAccession().getID());
 			logger.info("Sequence: {}", proteinSequence.getSequenceAsString());
@@ -600,7 +600,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 */
 	@Override
 	public ArrayList<String> getKeyWords() {
-		ArrayList<String> keyWordsList = new ArrayList<String>();
+		ArrayList<String> keyWordsList = new ArrayList<>();
 		if (uniprotDoc == null) {
 			return keyWordsList;
 		}
@@ -614,7 +614,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			}
 		} catch (XPathExpressionException e) {
 			logger.error("Problems while parsing keywords in UniProt XML: {}. No keywords will be available.",e.getMessage());
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
 
 		return keyWordsList;
@@ -626,7 +626,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 */
 	@Override
 	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences()  {
-		LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+		LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<>();
 		if (uniprotDoc == null) {
 			return databaseReferencesHashMap;
 		}
@@ -640,7 +640,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 				String id = element.getAttribute("id");
 				ArrayList<DBReferenceInfo> idlist = databaseReferencesHashMap.get(type);
 				if (idlist == null) {
-					idlist = new ArrayList<DBReferenceInfo>();
+					idlist = new ArrayList<>();
 					databaseReferencesHashMap.put(type, idlist);
 				}
 				DBReferenceInfo dbreferenceInfo = new DBReferenceInfo(type, id);
@@ -655,7 +655,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			}
 		} catch (XPathExpressionException e) {
 			logger.error("Problems while parsing db references in UniProt XML: {}. No db references will be available.",e.getMessage());
-			return new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+			return new LinkedHashMap<>();
 		}
 
 		return databaseReferencesHashMap;

@@ -145,7 +145,7 @@ public class XMLHelper {
 	}
 
 	static public ArrayList<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
-		ArrayList<Element> resultVector = new ArrayList<Element>();
+		ArrayList<Element> resultVector = new ArrayList<>();
 		if (element == null) {
 			return resultVector;
 		}

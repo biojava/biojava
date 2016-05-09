@@ -45,12 +45,12 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	private double residual = 0.0;
 	private String clusterValue = "";
 
-	LinkedHashMap<String,Double> residualVariableMap = new LinkedHashMap<String,Double>();
+	LinkedHashMap<String,Double> residualVariableMap = new LinkedHashMap<>();
 
-	LinkedHashMap<String, Double> data = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> data = new LinkedHashMap<>();
 	//    LinkedHashMap<String, Double> discreteData = new LinkedHashMap<String, Double>();
-	LinkedHashMap<String, String> unknownDataType = new LinkedHashMap<String, String>();
-	LinkedHashMap<String, String> originalMetaData = new LinkedHashMap<String,String>();
+	LinkedHashMap<String, String> unknownDataType = new LinkedHashMap<>();
+	LinkedHashMap<String, String> originalMetaData = new LinkedHashMap<>();
 
 	/**
 	 *
@@ -177,7 +177,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	 * @return
 	 */
 	public ArrayList<String> getGroupCategories(String groupName) {
-		ArrayList<String> groupNameList = new ArrayList<String>();
+		ArrayList<String> groupNameList = new ArrayList<>();
 		for (String key : data.keySet()) {
 			if (key.startsWith(groupName + "_")) {
 				groupNameList.add(key);
@@ -199,7 +199,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	 * @return
 	 */
 	public ArrayList<String> getDataVariables(){
-		ArrayList<String> v = new ArrayList<String>();
+		ArrayList<String> v = new ArrayList<>();
 		v.addAll(data.keySet());
 		v.addAll(unknownDataType.keySet());
 

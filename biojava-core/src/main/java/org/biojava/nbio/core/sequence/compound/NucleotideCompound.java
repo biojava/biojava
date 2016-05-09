@@ -51,14 +51,14 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
 	  super(base);
 	  this.compoundSet = compoundSet;
 	  this.complementStr = complementStr;
-	  this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(this)));
+	  this.constituents = unmodifiableSet(new HashSet<>(asList(this)));
 	}
 
 	public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr, NucleotideCompound[] constituents) {
 		super(base);
 		this.compoundSet = compoundSet;
 		this.complementStr = complementStr;
-		this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(constituents)));
+		this.constituents = unmodifiableSet(new HashSet<>(asList(constituents)));
 	}
 
 	@Override

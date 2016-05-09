@@ -117,7 +117,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	public void setModelInfo(int inputModelNumber,
 			int chainCount) {
 		modelNumber = inputModelNumber;
-		structure.addModel(new ArrayList<Chain>(chainCount));
+		structure.addModel(new ArrayList<>(chainCount));
 	}
 
 	/* (non-Javadoc)
@@ -168,7 +168,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		default:
 			group = new HetatomImpl();
 		}
-		atomsInGroup = new ArrayList<Atom>();
+		atomsInGroup = new ArrayList<>();
 		// Set the CC -> empty but not null
 		ChemComp chemComp = new ChemComp();
 		chemComp.setOne_letter_code("" + singleLetterCode);
@@ -180,7 +180,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			group.setResidueNumber(chain.getChainID().trim(),
 					groupNumber, insertionCode);
 		}
-		group.setAtoms(new ArrayList<Atom>(atomCount));
+		group.setAtoms(new ArrayList<>(atomCount));
 		if (polymerType != 0) {
 			chain.getSeqResGroups().add(group);
 		}
@@ -325,7 +325,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		Group altLocG = (Group) group.clone();
 		// drop atoms from cloned group...
 		// https://redmine.open-bio.org/issues/3307
-		altLocG.setAtoms(new ArrayList<Atom>());
+		altLocG.setAtoms(new ArrayList<>());
 		altLocG.getAltLocs().clear();
 		group.addAltLoc(altLocG);
 		return altLocG;
@@ -395,7 +395,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		}
 		else{
 			bioAssInfo = new  BioAssemblyInfo();
-			bioAssInfo.setTransforms(new ArrayList<BiologicalAssemblyTransformation>());
+			bioAssInfo.setTransforms(new ArrayList<>());
 			bioAssemblies.put(bioAssemblyId, bioAssInfo);
 			bioAssInfo.setId(bioAssemblyId);
 		}

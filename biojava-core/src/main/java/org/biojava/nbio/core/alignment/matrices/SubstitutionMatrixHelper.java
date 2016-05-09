@@ -49,9 +49,9 @@ public class SubstitutionMatrixHelper implements Serializable {
 	private static final long serialVersionUID = 148491724604653225L;
 
 	private static Map<String, SubstitutionMatrix<AminoAcidCompound>> aminoAcidMatrices =
-			new HashMap<String, SubstitutionMatrix<AminoAcidCompound>>();
+			new HashMap<>();
 	private static Map<String, SubstitutionMatrix<NucleotideCompound>> nucleotideMatrices =
-			new HashMap<String, SubstitutionMatrix<NucleotideCompound>>();
+			new HashMap<>();
 
 	// prevents instantiation
 	private SubstitutionMatrixHelper() { }
@@ -251,7 +251,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	// reads in an amino acid substitution matrix, if necessary
 	private static SubstitutionMatrix<AminoAcidCompound> getAminoAcidMatrix(String file) {
 		if (!aminoAcidMatrices.containsKey(file)) {
-			aminoAcidMatrices.put(file, new SimpleSubstitutionMatrix<AminoAcidCompound>(
+			aminoAcidMatrices.put(file, new SimpleSubstitutionMatrix<>(
 					AminoAcidCompoundSet.getAminoAcidCompoundSet(), getReader(file), file));
 		}
 		return aminoAcidMatrices.get(file);
@@ -260,7 +260,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	// reads in a nucleotide substitution matrix, if necessary
 	private static SubstitutionMatrix<NucleotideCompound> getNucleotideMatrix(String file) {
 		if (!nucleotideMatrices.containsKey(file)) {
-			nucleotideMatrices.put(file, new SimpleSubstitutionMatrix<NucleotideCompound>(
+			nucleotideMatrices.put(file, new SimpleSubstitutionMatrix<>(
 					AmbiguityDNACompoundSet.getDNACompoundSet(), getReader(file), file));
 		}
 		return nucleotideMatrices.get(file);

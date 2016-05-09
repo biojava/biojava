@@ -32,8 +32,8 @@ import java.util.List;
 public class JournalArticle implements Serializable{
 
 	private static final long serialVersionUID = 5062668226159515468L;
-	private List<Author> authorList = new ArrayList<Author>();
-	private List<Author> editorList = new ArrayList<Author>();
+	private List<Author> authorList = new ArrayList<>();
+	private List<Author> editorList = new ArrayList<>();
 	private String title = "";
 	private String ref = "";
 	private String journalName = "";

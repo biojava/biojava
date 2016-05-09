@@ -43,7 +43,7 @@ public class CAConverter {
 	 */
 	@Deprecated
 	public static List<Chain> getCAOnly(List<Chain> chains){
-		List<Chain> newChains = new ArrayList<Chain>();
+		List<Chain> newChains = new ArrayList<>();
 
 		for (Chain chain : chains){
 			Chain newChain = getCAOnly(chain);
@@ -65,7 +65,7 @@ public class CAConverter {
 	 * @since Biojava 4.1.0
 	 */
 	public static List<Chain> getRepresentativeAtomsOnly(List<Chain> chains){
-		List<Chain> newChains = new ArrayList<Chain>();
+		List<Chain> newChains = new ArrayList<>();
 
 		for (Chain chain : chains){
 			Chain newChain = getRepresentativeAtomsOnly(chain);

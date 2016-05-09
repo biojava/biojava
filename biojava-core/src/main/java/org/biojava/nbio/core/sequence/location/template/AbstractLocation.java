@@ -224,7 +224,7 @@ public abstract class AbstractLocation implements Serializable, Location {
 			list = getSubLocations();
 		}
 		else {
-			list = new ArrayList<Location>();
+			list = new ArrayList<>();
 			list.add(this);
 		}
 		return list.iterator();
@@ -245,7 +245,7 @@ public abstract class AbstractLocation implements Serializable, Location {
 	 * Here to allow for recursion
 	 */
 	private List<Location> getAllSubLocations(Location location) {
-		List<Location> flatSubLocations = new ArrayList<Location>();
+		List<Location> flatSubLocations = new ArrayList<>();
 		for (Location l : location.getSubLocations()) {
 			if (l.isComplex()) {
 				flatSubLocations.addAll(getAllSubLocations(l));
@@ -311,11 +311,11 @@ public abstract class AbstractLocation implements Serializable, Location {
 	@Override
 	public <C extends Compound> Sequence<C> getSubSequence(Sequence<C> sequence) {
 		if(isCircular()) {
-			List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
+			List<Sequence<C>> sequences = new ArrayList<>();
 			for(Location l: this) {
 				sequences.add(l.getSubSequence(sequence));
 			}
-			return new JoiningSequenceReader<C>(sequence.getCompoundSet(), sequences);
+			return new JoiningSequenceReader<>(sequence.getCompoundSet(), sequences);
 		}
 		return reverseSequence(sequence.getSubSequence(
 				getStart().getPosition(), getEnd().getPosition()));
@@ -327,11 +327,11 @@ public abstract class AbstractLocation implements Serializable, Location {
 
 	@Override
 	public <C extends Compound> Sequence<C> getRelevantSubSequence(Sequence<C> sequence) {
-		List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
+		List<Sequence<C>> sequences = new ArrayList<>();
 		for(Location l: getRelevantSubLocations()) {
 			sequences.add(l.getSubSequence(sequence));
 		}
-		return new JoiningSequenceReader<C>(sequence.getCompoundSet(), sequences);
+		return new JoiningSequenceReader<>(sequence.getCompoundSet(), sequences);
 	}
 
 	/**
@@ -345,12 +345,12 @@ public abstract class AbstractLocation implements Serializable, Location {
 			return sequence;
 		}
 
-		Sequence<C> reversed = new ReversedSequenceView<C>(sequence);
+		Sequence<C> reversed = new ReversedSequenceView<>(sequence);
 		// "safe" operation as we have tried to check this
 		if(canComplement(sequence)) {
 			Sequence<ComplementCompound> casted = (Sequence<ComplementCompound>) reversed;
 			ComplementSequenceView<ComplementCompound> complement =
-					new ComplementSequenceView<ComplementCompound>(casted);
+					new ComplementSequenceView<>(casted);
 			return (Sequence<C>)complement;
 		}
 		return reversed;

@@ -41,10 +41,10 @@ public class PDBBioAssemblyParser {
 	private static final Logger logger = LoggerFactory.getLogger(PDBBioAssemblyParser.class);
 
 	private Integer currentBioMolecule = null;
-	private List<String> currentChainIDs = new ArrayList<String>();
+	private List<String> currentChainIDs = new ArrayList<>();
 	private Matrix currentMatrix = null;
 	private double[] shift = null;
-	private Map<Integer,BioAssemblyInfo> transformationMap = new HashMap<Integer, BioAssemblyInfo>();
+	private Map<Integer,BioAssemblyInfo> transformationMap = new HashMap<>();
 	private int modelNumber = 1;
 	private int currentMmSize;
 
@@ -217,7 +217,7 @@ public class PDBBioAssemblyParser {
 	}
 
 	private void initialize() {
-		transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		transformations = new ArrayList<>();
 		currentMatrix = Matrix.identity(3,3);
 		currentBioMolecule = null;
 		shift = new double[3];

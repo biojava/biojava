@@ -116,7 +116,7 @@ public class FragmentJoiner {
 													 StrucAligParameters params) throws StructureException {
 
 		//the final list of joined fragments stores as apairs
-		List<JointFragments> fll = new ArrayList<JointFragments>();
+		List<JointFragments> fll = new ArrayList<>();
 
 		FragmentPair[] tmpfidx = new FragmentPair[fraglst.length];
 		for ( int i=0 ; i < fraglst.length; i++){
@@ -201,7 +201,7 @@ public class FragmentJoiner {
 		Collections.sort(fll,comp);
 		Collections.reverse(fll);
 		int m = Math.min(params.getMaxrefine(),fll.size());
-		List<JointFragments> retlst = new ArrayList<JointFragments>();
+		List<JointFragments> retlst = new ArrayList<>();
 		for ( int i = 0 ; i < m ; i++){
 			JointFragments jf = fll.get(i);
 			retlst.add(jf);
@@ -372,7 +372,7 @@ public class FragmentJoiner {
 		int[] used = new int[n];
 
 		//the final list of joined fragments stores as apairs
-		List<JointFragments> fll = new ArrayList<JointFragments>();
+		List<JointFragments> fll = new ArrayList<>();
 
 		double adiff = angleDiff * Math.PI / 180d;
 		logger.finer("addiff" + adiff);
@@ -443,7 +443,7 @@ public class FragmentJoiner {
 		Collections.sort(fll,comp);
 		Collections.reverse(fll);
 		int m = Math.min(maxRefine,fll.size());
-		List<JointFragments> retlst = new ArrayList<JointFragments>();
+		List<JointFragments> retlst = new ArrayList<>();
 		for ( int i = 0 ; i < m ; i++){
 			JointFragments jf = fll.get(i);
 			retlst.add(jf);

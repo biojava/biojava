@@ -170,7 +170,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 	private List<Location> parseLocationString(String string, int versus) throws ParserException {
 		Matcher m;
-		List<Location> boundedLocationsCollection = new ArrayList<Location>();
+		List<Location> boundedLocationsCollection = new ArrayList<>();
 
 		//String[] tokens = string.split(locationSplitPattern);
 		List<String> tokens = splitString(string);
@@ -265,7 +265,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 
 	private List<String> splitString(String input) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		int start = 0;
 		int openedParenthesis = 0;
 		for (int current = 0; current < input.length(); current++) {

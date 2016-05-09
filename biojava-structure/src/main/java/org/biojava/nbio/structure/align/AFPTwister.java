@@ -284,7 +284,7 @@ public class AFPTwister
 	// most likely the clone flag is not needed
 	private static Atom[] getAtoms(Atom[] ca, int[] positions, int length, boolean clone){
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 		for ( int i = 0 ; i < length ; i++){
 			int p = positions[i];
 			Atom a;
@@ -318,7 +318,7 @@ public class AFPTwister
 
 		// special clone method, can;t use StructureTools.cloneCAArray, since we access the data
 		// slightly differently here.
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		for(int i = r1; i < r2; i ++) {
 
 			Group g = p2[i].getGroup();

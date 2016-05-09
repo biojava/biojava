@@ -60,7 +60,7 @@ public class RepresentativeXMLConverter {
 	}
 
 	public static final SortedSet<String> fromXML(String xml){
-		SortedSet<String> representatives = new TreeSet<String>();
+		SortedSet<String> representatives = new TreeSet<>();
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = factory.newDocumentBuilder();

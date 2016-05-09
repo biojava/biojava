@@ -124,16 +124,16 @@ public class MultipleMcMain implements MultipleStructureAligner {
 		int size = atomArrays.size();
 
 		//List to store the all-to-all alignments
-		List<List<AFPChain>> afpAlignments = new ArrayList<List<AFPChain>>();
+		List<List<AFPChain>> afpAlignments = new ArrayList<>();
 		for (int i=0; i<size; i++){
-			afpAlignments.add(new ArrayList<AFPChain>());
+			afpAlignments.add(new ArrayList<>());
 			for (int j=0; j<size; j++)
 				afpAlignments.get(i).add(null);
 		}
 
 		int threads = params.getNrThreads();
 		ExecutorService executor = Executors.newFixedThreadPool(threads);
-		List<Future<AFPChain>> afpFuture = new ArrayList<Future<AFPChain>>();
+		List<Future<AFPChain>> afpFuture = new ArrayList<>();
 
 		//Create all the possible protein pairwise combinations
 		//(N*(N-1)/2) and call the pairwise alignment algorithm
@@ -184,7 +184,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 
 		int size = afpAlignments.size();
 
-		List<Double> RMSDs = new ArrayList<Double>();
+		List<Double> RMSDs = new ArrayList<>();
 		for (int i=0; i<afpAlignments.size(); i++){
 			double rmsd=0.0;
 			for (int j=0; j<size; j++){
@@ -226,12 +226,12 @@ public class MultipleMcMain implements MultipleStructureAligner {
 		int length = 0;  //the number of residues of the reference structure
 		if (ref==0) length = afpList.get(1).getCa1Length();
 		else length = afpList.get(0).getCa2Length();
-		SortedSet<Integer> flexibleBoundaries = new TreeSet<Integer>();
+		SortedSet<Integer> flexibleBoundaries = new TreeSet<>();
 
 		//Stores the equivalencies of all the structures as a double List
-		List<List<Integer>> equivalencies = new ArrayList<List<Integer>>();
+		List<List<Integer>> equivalencies = new ArrayList<>();
 		for (int str=0; str<size; str++){
-			equivalencies.add(new ArrayList<Integer>());
+			equivalencies.add(new ArrayList<>());
 			for (int res=0; res<length; res++){
 				if (str==ref) equivalencies.get(str).add(res);  //identity
 				else equivalencies.get(str).add(null);
@@ -305,10 +305,10 @@ public class MultipleMcMain implements MultipleStructureAligner {
 				if (lastB.getAlignRes() == null){
 					//Initialize the aligned residues list
 					List<List<Integer>> alnRes =
-							new ArrayList<List<Integer>>(size);
+							new ArrayList<>(size);
 
 					for (int k=0; k<size; k++) {
-						alnRes.add(new ArrayList<Integer>());
+						alnRes.add(new ArrayList<>());
 					}
 					lastB.setAlignRes(alnRes);
 				}

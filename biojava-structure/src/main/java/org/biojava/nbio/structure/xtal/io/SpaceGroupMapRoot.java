@@ -43,7 +43,7 @@ public class SpaceGroupMapRoot {
 	private TreeMap<Integer, SpaceGroup> mapProperty;
 
 	public SpaceGroupMapRoot() {
-		mapProperty = new TreeMap<Integer, SpaceGroup>();
+		mapProperty = new TreeMap<>();
 	}
 
 	@XmlJavaTypeAdapter(SpaceGroupMapAdapter.class)

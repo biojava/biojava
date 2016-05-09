@@ -49,7 +49,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 
 
 		if (components.size() > 1) {
-			Set<Integer> indices = new HashSet<Integer>();
+			Set<Integer> indices = new HashSet<>();
 			for (ModificationLinkage linkage : linkages) {
 				indices.add(linkage.getIndexOfComponent1());
 				indices.add(linkage.getIndexOfComponent2());

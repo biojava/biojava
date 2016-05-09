@@ -98,7 +98,7 @@ public class SymoplibParser {
 			System.exit(1);
 		}
 
-		TreeMap<Integer, SpaceGroup> map = new TreeMap<Integer, SpaceGroup>();
+		TreeMap<Integer, SpaceGroup> map = new TreeMap<>();
 
 		try {
 			map = parseSpaceGroupsXML(spaceGroupIS);
@@ -110,7 +110,7 @@ public class SymoplibParser {
 			System.exit(1);
 		}
 
-		name2sgs = new HashMap<String, SpaceGroup>();
+		name2sgs = new HashMap<>();
 
 		for (SpaceGroup sg:map.values()) {
 
@@ -193,8 +193,8 @@ public class SymoplibParser {
 	 * @return
 	 */
 	public static TreeMap<Integer,SpaceGroup> parseSymopLib(InputStream symoplibIS) {
-		TreeMap<Integer, SpaceGroup> map = new TreeMap<Integer, SpaceGroup>();
-		name2sgs = new HashMap<String, SpaceGroup>();
+		TreeMap<Integer, SpaceGroup> map = new TreeMap<>();
+		name2sgs = new HashMap<>();
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(symoplibIS));
 			String line;

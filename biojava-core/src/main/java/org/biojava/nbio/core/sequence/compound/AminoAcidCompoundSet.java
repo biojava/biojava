@@ -44,11 +44,11 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 	 *
 	 */
 	private static final long serialVersionUID = 4000344194364133456L;
-	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<String, AminoAcidCompound>();
-	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache3Letter = new HashMap<String, AminoAcidCompound>();
+	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<>();
+	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache3Letter = new HashMap<>();
 
 	private final Map<AminoAcidCompound, Set<AminoAcidCompound>> equivalentsCache =
-			new HashMap<AminoAcidCompound, Set<AminoAcidCompound>>();
+			new HashMap<>();
 
 	public AminoAcidCompoundSet() {
 		aminoAcidCompoundCache.put("A", new AminoAcidCompound(this, "A", "Ala", "Alanine", 71.0788f));
@@ -154,7 +154,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 			addAmbiguousEquivalents("I", "L", "J");
 			// ambiguous gaps
 			AminoAcidCompound gap1, gap2, gap3;
-			Set<AminoAcidCompound> gaps = new HashSet<AminoAcidCompound>();
+			Set<AminoAcidCompound> gaps = new HashSet<>();
 			gaps.add(gap1 = aminoAcidCompoundCache.get("-"));
 			gaps.add(gap2 = aminoAcidCompoundCache.get("."));
 			gaps.add(gap3 = aminoAcidCompoundCache.get("_"));
@@ -162,7 +162,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 			equivalentsCache.put(gap2, gaps);
 			equivalentsCache.put(gap3, gaps);
 			// X is never equivalent, even to itself
-			equivalentsCache.put(aminoAcidCompoundCache.get("X"), new HashSet<AminoAcidCompound>());
+			equivalentsCache.put(aminoAcidCompoundCache.get("X"), new HashSet<>());
 		}
 		return equivalentsCache.get(compound);
 	}
@@ -172,18 +172,18 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		Set<AminoAcidCompound> equivalents;
 		AminoAcidCompound cOne, cTwo, cEither;
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>();
 		equivalents.add(cOne = aminoAcidCompoundCache.get(one));
 		equivalents.add(cTwo = aminoAcidCompoundCache.get(two));
 		equivalents.add(cEither = aminoAcidCompoundCache.get(either));
 		equivalentsCache.put(cEither, equivalents);
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>();
 		equivalents.add(cOne);
 		equivalents.add(cEither);
 		equivalentsCache.put(cOne, equivalents);
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>();
 		equivalents.add(cTwo);
 		equivalents.add(cEither);
 		equivalentsCache.put(cTwo, equivalents);
@@ -206,7 +206,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 
 	@Override
 	public List<AminoAcidCompound> getAllCompounds() {
-		return new ArrayList<AminoAcidCompound>(aminoAcidCompoundCache.values());
+		return new ArrayList<>(aminoAcidCompoundCache.values());
 	}
 
 

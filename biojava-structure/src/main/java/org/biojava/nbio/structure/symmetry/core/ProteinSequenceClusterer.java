@@ -33,11 +33,11 @@ public class ProteinSequenceClusterer {
 	private Structure structure2 = null;
 	private QuatSymmetryParameters parameters = null;
 
-	private List<Atom[]> caUnaligned = new ArrayList<Atom[]>();
-	private List<String> chainIds = new ArrayList<String>();
-	private List<Integer> modelNumbers = new ArrayList<Integer>();
-	private List<String> sequences = new ArrayList<String>();
-	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();
+	private List<Atom[]> caUnaligned = new ArrayList<>();
+	private List<String> chainIds = new ArrayList<>();
+	private List<Integer> modelNumbers = new ArrayList<>();
+	private List<String> sequences = new ArrayList<>();
+	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<>();
 	private int nucleicAcidChainCount = 0;
 	private boolean modified = true;
 

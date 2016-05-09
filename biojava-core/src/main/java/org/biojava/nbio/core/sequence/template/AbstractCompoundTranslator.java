@@ -37,7 +37,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
 	public AbstractCompoundTranslator(SequenceCreatorInterface<T> creator,
 			CompoundSet<F> fromCompoundSet, CompoundSet<T> toCompoundSet) {
 		this.creator = creator;
-		this.mapper = new HashMap<F, List<T>>();
+		this.mapper = new HashMap<>();
 		this.fromCompoundSet = fromCompoundSet;
 		this.toCompoundSet = toCompoundSet;
 	}
@@ -66,7 +66,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
 
 	 List<T> l = mapper.get(source);
 	 if ( l == null) {
-		 l = new ArrayList<T>();
+		 l = new ArrayList<>();
 		 mapper.put(source, l);
 	 }
 		 l.addAll(Arrays.asList(targets));
@@ -97,7 +97,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
 
 		@Override
 	public List<Sequence<T>> createSequences(Sequence<F> originalSequence) {
-		List<List<T>> workingList = new ArrayList<List<T>>();
+		List<List<T>> workingList = new ArrayList<>();
 		for (F source : originalSequence) {
 			List<T> compounds = translateMany(source);
 
@@ -126,7 +126,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
 
 	protected void addCompoundsToList(List<T> compounds, List<List<T>> workingList) {
 		int size = compounds.size();
-		List<List<T>> currentWorkingList = new ArrayList<List<T>>();
+		List<List<T>> currentWorkingList = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			boolean last = (i == (size - 1));
 			// If last run we add the compound to the top set of lists & then
@@ -147,7 +147,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
 	}
 
 	protected List<Sequence<T>> workingListToSequences(List<List<T>> workingList) {
-		List<Sequence<T>> sequences = new ArrayList<Sequence<T>>();
+		List<Sequence<T>> sequences = new ArrayList<>();
 		for (List<T> seqList : workingList) {
 			sequences.add(getCreator().getSequence(seqList));
 		}
@@ -155,9 +155,9 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
 	}
 
 	private List<List<T>> duplicateList(List<List<T>> incoming) {
-		List<List<T>> outgoing = new ArrayList<List<T>>();
+		List<List<T>> outgoing = new ArrayList<>();
 		for (List<T> current : incoming) {
-			outgoing.add(new ArrayList<T>(current));
+			outgoing.add(new ArrayList<>(current));
 		}
 		return outgoing;
 	}
@@ -165,7 +165,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
 	protected void addCompoundToLists(List<List<T>> list, T compound) {
 
 		if (list.isEmpty()) {
-			list.add(new ArrayList<T>());
+			list.add(new ArrayList<>());
 		}
 
 		for (List<T> current : list) {

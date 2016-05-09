@@ -251,7 +251,7 @@ implements ProteinModification , Comparable<ProteinModification> {
 		private String sysName = null;
 		private String formula = null;
 
-		private Set<String> keywords = new LinkedHashSet<String>();
+		private Set<String> keywords = new LinkedHashSet<>();
 
 		/**
 		 *
@@ -289,7 +289,7 @@ implements ProteinModification , Comparable<ProteinModification> {
 			this.sysName = copyFrom.getSystematicName();
 			this.formula = copyFrom.getFormula();
 
-			this.keywords = new LinkedHashSet<String>(copyFrom.getKeywords());
+			this.keywords = new LinkedHashSet<>(copyFrom.getKeywords());
 		}
 
 		public Builder setCategory(final ModificationCategory cat) {
@@ -448,7 +448,7 @@ implements ProteinModification , Comparable<ProteinModification> {
 		this.sysName = builder.sysName;
 		this.formula = builder.formula;
 
-		this.keywords = new LinkedHashSet<String>(builder.keywords);
+		this.keywords = new LinkedHashSet<>(builder.keywords);
 	}
 
 	@Override

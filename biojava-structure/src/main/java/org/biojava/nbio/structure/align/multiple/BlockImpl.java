@@ -80,9 +80,9 @@ public class BlockImpl extends AbstractScoresCache implements Serializable,
 		this.alignRes = null;
 		if (b.alignRes != null) {
 			// Make a deep copy of everything
-			alignRes = new ArrayList<List<Integer>>();
+			alignRes = new ArrayList<>();
 			for (int k = 0; k < b.size(); k++) {
-				alignRes.add(new ArrayList<Integer>(b.alignRes.get(k)));
+				alignRes.add(new ArrayList<>(b.alignRes.get(k)));
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public class BlockImpl extends AbstractScoresCache implements Serializable,
 		if (alignResCounts != null)
 			return alignResCounts;
 		
-		alignResCounts = new ArrayList<Integer>(size());
+		alignResCounts = new ArrayList<>(size());
 		for (int s = 0; s < size(); s++) {
 			int count = 0;
 			for (int r = 0; r < length(); r++) {

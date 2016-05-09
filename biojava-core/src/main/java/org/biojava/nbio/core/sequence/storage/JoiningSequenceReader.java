@@ -85,7 +85,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 	}
 
 	private List<Sequence<C>> grepSequences(List<Sequence<C>> sequences) {
-		List<Sequence<C>> seqs = new ArrayList<Sequence<C>>();
+		List<Sequence<C>> seqs = new ArrayList<>();
 		for (Sequence<C> s : sequences) {
 			if (s.getLength() != 0) {
 				seqs.add(s);

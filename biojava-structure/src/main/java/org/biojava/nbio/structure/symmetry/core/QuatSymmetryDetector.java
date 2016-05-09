@@ -52,8 +52,8 @@ public class QuatSymmetryDetector {
 	private Structure structure = null;
 	private QuatSymmetryParameters parameters = null;
 
-	private List<QuatSymmetryResults> globalSymmetry = new ArrayList<QuatSymmetryResults>();
-	private List<List<QuatSymmetryResults>> localSymmetries = new ArrayList<List<QuatSymmetryResults>>();
+	private List<QuatSymmetryResults> globalSymmetry = new ArrayList<>();
+	private List<List<QuatSymmetryResults>> localSymmetries = new ArrayList<>();
 	private int proteinChainCount = 0;
 	private boolean complete = false;
 
@@ -135,7 +135,7 @@ public class QuatSymmetryDetector {
 			// i.e., include all heteromers here, for example if higher symmetry is possible by stoichiometry? A6B2 -> local A6  can have higher symmetry
 			if (parameters.isLocalSymmetry() && globalSubunits.getSubunitCount() <= parameters.getMaximumLocalSubunits()) {
 				if (gSymmetry.getSymmetry().equals("C1") && proteinChainCount > 2) {
-					List<QuatSymmetryResults> lSymmetry = new ArrayList<QuatSymmetryResults>();
+					List<QuatSymmetryResults> lSymmetry = new ArrayList<>();
 
 					long start = System.nanoTime();
 
@@ -326,7 +326,7 @@ public class QuatSymmetryDetector {
 	}
 
 	private List<Subunits> createLocalSubunits(ChainClusterer chainClusterer) {
-		List<Subunits> subunits = new ArrayList<Subunits>();
+		List<Subunits> subunits = new ArrayList<>();
 		List<List<Integer>> subClusters = decomposeClusters(chainClusterer.getCalphaCoordinates(), chainClusterer.getSequenceClusterIds());
 		for (List<Integer> subCluster: subClusters) {
 			subunits.add(createLocalSubunit(subCluster, chainClusterer));
@@ -335,13 +335,13 @@ public class QuatSymmetryDetector {
 	}
 
 	private Subunits createLocalSubunit(List<Integer> subCluster, ChainClusterer chainClusterer) {
-	      List<Point3d[]> subCalphaCoordinates = new ArrayList<Point3d[]>(subCluster.size());
-	      List<Integer> subSequenceIds = new ArrayList<Integer>(subCluster.size());
-	      List<Boolean> subPseudoStoichiometry = new ArrayList<Boolean>(subCluster.size());
-	      List<Double> subMinSequenceIdentity = new ArrayList<Double>(subCluster.size());
-	      List<Double> subMaxSequenceIdentity = new ArrayList<Double>(subCluster.size());
-	      List<String> subChainIds = new ArrayList<String>(subCluster.size());
-	      List<Integer> subModelNumbers = new ArrayList<Integer>(subCluster.size());
+	      List<Point3d[]> subCalphaCoordinates = new ArrayList<>(subCluster.size());
+	      List<Integer> subSequenceIds = new ArrayList<>(subCluster.size());
+	      List<Boolean> subPseudoStoichiometry = new ArrayList<>(subCluster.size());
+	      List<Double> subMinSequenceIdentity = new ArrayList<>(subCluster.size());
+	      List<Double> subMaxSequenceIdentity = new ArrayList<>(subCluster.size());
+	      List<String> subChainIds = new ArrayList<>(subCluster.size());
+	      List<Integer> subModelNumbers = new ArrayList<>(subCluster.size());
 
 	      for (int index: subCluster) {
 	    	  subCalphaCoordinates.add(chainClusterer.getCalphaCoordinates().get(index));
@@ -385,7 +385,7 @@ public class QuatSymmetryDetector {
 	}
 
 	private List<List<Integer>> decomposeClusters(List<Point3d[]> caCoords, List<Integer> clusterIds) {
-		List<List<Integer>> subClusters = new ArrayList<List<Integer>>();
+		List<List<Integer>> subClusters = new ArrayList<>();
 
 		int last = getLastMultiSubunit(clusterIds);
 		List<Point3d[]> subList = caCoords;
@@ -428,13 +428,13 @@ public class QuatSymmetryDetector {
 					continue;
 				}
 
-				List<Integer> subSet = new ArrayList<Integer>(indices.length);
+				List<Integer> subSet = new ArrayList<>(indices.length);
 				for (int index: indices) {
 					subSet.add(index);
 				}
 
 				// check if this subset of subunits interact with each other
-				UndirectedGraph<Integer, DefaultEdge> subGraph = new UndirectedSubgraph<Integer, DefaultEdge>(graph, new HashSet<Integer>(subSet), null);
+				UndirectedGraph<Integer, DefaultEdge> subGraph = new UndirectedSubgraph<>(graph, new HashSet<>(subSet), null);
 				if (isConnectedGraph(subGraph)) {
 					subClusters.add(subSet);
 					if (subClusters.size() > parameters.getMaximumLocalResults()) {
@@ -465,12 +465,12 @@ public class QuatSymmetryDetector {
 	}
 
 	private static boolean isConnectedGraph(UndirectedGraph<Integer, DefaultEdge> graph) {
-		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(graph);
+		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<>(graph);
 		return inspector.isGraphConnected();
 	}
 
 	private static List<Integer> getFolds(Integer[] subCluster, int size) {
-		List<Integer> denominators = new ArrayList<Integer>();
+		List<Integer> denominators = new ArrayList<>();
 		int[] counts = new int[size];
 		for (int element: subCluster) {
 			counts[element]++;

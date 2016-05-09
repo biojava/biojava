@@ -365,7 +365,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	@Override
 	public List<String> getUserConfigHelp() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		String fragLen = "The length of the fragments.";
 		String rmsdCutHelp = "The RMSD cutoff to be used during AFP detection.";
 		String disCutHelp = "The distance cutoff used when calculate the connectivity of AFP pairs";
@@ -381,7 +381,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	@Override
 	public List<String> getUserConfigParameterNames() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("Fragment Length");
 		params.add("RMSD Cutoff");
 		params.add("AFP Distance Cutoff");
@@ -392,7 +392,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	@Override
 	public List<String> getUserConfigParameters() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("FragLen");
 		params.add("RmsdCut");
 		params.add("DisCut");
@@ -405,7 +405,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	@SuppressWarnings({  "rawtypes" })
 	public List<Class> getUserConfigTypes() {
 
-		List<Class> params = new ArrayList<Class>();
+		List<Class> params = new ArrayList<>();
 		params.add(Integer.class);
 		params.add(Double.class);
 		params.add(Double.class);

@@ -76,7 +76,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		int[][][] optAln = alignment.getOptAln(); // [block #][{0,1} chain index][pos]
 
 		for(;alignNumber < optAln.length;alignNumber++) {
-			List<int[]> alignPairs = new ArrayList<int[]>();
+			List<int[]> alignPairs = new ArrayList<>();
 			for(int pos = 0; pos<optAln[alignNumber][0].length; pos++ ) {
 				alignPairs.add( new int[] {
 						optAln[alignNumber][0][pos],

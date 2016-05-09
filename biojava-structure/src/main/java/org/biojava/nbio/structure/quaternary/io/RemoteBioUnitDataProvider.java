@@ -73,7 +73,7 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 		String serverURL = serverName + BIO_ASSEMBLY;
 
 		String u = String.format(serverURL,pdbId, biolAssemblyNr) ;
-		List<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		List<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
 
 		try {
 			URL url = new URL(u);

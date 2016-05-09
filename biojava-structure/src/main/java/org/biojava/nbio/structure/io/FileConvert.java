@@ -572,7 +572,7 @@ public class FileConvert {
 				int atomserial = as.intValue();
 
 
-				List<Integer> atomids = new ArrayList<Integer>() ;
+				List<Integer> atomids = new ArrayList<>() ;
 
 				// test salt and hydrogen first //
 				if (con.containsKey("salt1")) atomids.add(con.get("salt1"));
@@ -580,7 +580,7 @@ public class FileConvert {
 
 				if (atomids.size()!=0){
 					addConnection(xw,"salt",atomserial,atomids);
-					atomids = new ArrayList<Integer>() ;
+					atomids = new ArrayList<>() ;
 				}
 				if (con.containsKey("hydrogen1")) atomids.add(con.get("hydrogen1"));
 				if (con.containsKey("hydrogen2")) atomids.add(con.get("hydrogen2"));
@@ -588,7 +588,7 @@ public class FileConvert {
 				if (con.containsKey("hydrogen4")) atomids.add(con.get("hydrogen4"));
 				if (atomids.size()!=0){
 					addConnection(xw,"hydrogen",atomserial,atomids);
-					atomids = new ArrayList<Integer>() ;
+					atomids = new ArrayList<>() ;
 				}
 
 				if (con.containsKey("bond1")) atomids.add(con.get("bond1"));

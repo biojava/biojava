@@ -62,7 +62,7 @@ public enum BravaisLattice {
 	}
 
 	private static HashMap<String,BravaisLattice> initname2bl(){
-		HashMap<String,BravaisLattice> name2bl = new HashMap<String, BravaisLattice>();
+		HashMap<String,BravaisLattice> name2bl = new HashMap<>();
 		for (BravaisLattice bl:BravaisLattice.values()) {
 			name2bl.put(bl.getName(), bl);
 		}

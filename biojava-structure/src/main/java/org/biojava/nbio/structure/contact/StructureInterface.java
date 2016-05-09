@@ -96,18 +96,18 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			AtomContactSet contacts,
 			CrystalTransform firstTransf, CrystalTransform secondTransf) {
 
-		this.molecules = new Pair<Atom[]>(firstMolecule, secondMolecule);
-		this.moleculeIds = new Pair<String>(firstMoleculeId,secondMoleculeId);
+		this.molecules = new Pair<>(firstMolecule, secondMolecule);
+		this.moleculeIds = new Pair<>(firstMoleculeId, secondMoleculeId);
 		this.contacts = contacts;
-		this.transforms = new Pair<CrystalTransform>(firstTransf, secondTransf);
+		this.transforms = new Pair<>(firstTransf, secondTransf);
 	}
 
 	/**
 	 * Constructs an empty StructureInterface
 	 */
 	public StructureInterface() {
-		this.groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
-		this.groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>();
+		this.groupAsas1 = new TreeMap<>();
+		this.groupAsas2 = new TreeMap<>();
 	}
 
 	public int getId() {
@@ -125,9 +125,9 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return
 	 */
 	public Pair<String> getCrystalIds() {
-		return new Pair<String>(
-			moleculeIds.getFirst()+transforms.getFirst().getTransformId()+transforms.getFirst().getCrystalTranslation(),
-			moleculeIds.getSecond()+transforms.getSecond().getTransformId()+transforms.getSecond().getCrystalTranslation());
+		return new Pair<>(
+				moleculeIds.getFirst() + transforms.getFirst().getTransformId() + transforms.getFirst().getCrystalTranslation(),
+				moleculeIds.getSecond() + transforms.getSecond().getTransformId() + transforms.getSecond().getCrystalTranslation());
 	}
 
 	/**
@@ -201,8 +201,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			throw new IllegalArgumentException("The size of ASAs of complex doesn't match that of ASAs 1 + ASAs 2");
 
 
-		groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
-		groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>();
+		groupAsas1 = new TreeMap<>();
+		groupAsas2 = new TreeMap<>();
 
 		this.totalArea = 0;
 
@@ -288,7 +288,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return
 	 */
 	private static final Atom[] getAllNonHAtomArray(Atom[] m, int minSizeHetAtomToInclude) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Atom a:m){
 
@@ -433,8 +433,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 */
 	public Pair<List<Group>> getCoreResidues(double bsaToAsaCutoff, double minAsaForSurface) {
 
-		List<Group> core1 = new ArrayList<Group>();
-		List<Group> core2 = new ArrayList<Group>();
+		List<Group> core1 = new ArrayList<>();
+		List<Group> core2 = new ArrayList<>();
 
 		for (GroupAsa groupAsa:groupAsas1.values()) {
 
@@ -457,7 +457,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			}
 		}
 
-		return new Pair<List<Group>>(core1, core2);
+		return new Pair<>(core1, core2);
 	}
 
 	/**
@@ -469,8 +469,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 */
 	public Pair<List<Group>> getRimResidues(double bsaToAsaCutoff, double minAsaForSurface) {
 
-		List<Group> rim1 = new ArrayList<Group>();
-		List<Group> rim2 = new ArrayList<Group>();
+		List<Group> rim1 = new ArrayList<>();
+		List<Group> rim2 = new ArrayList<>();
 
 		for (GroupAsa groupAsa:groupAsas1.values()) {
 
@@ -493,7 +493,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			}
 		}
 
-		return new Pair<List<Group>>(rim1, rim2);
+		return new Pair<>(rim1, rim2);
 	}
 
 	/**
@@ -504,8 +504,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 */
 	public Pair<List<Group>> getInterfacingResidues(double minAsaForSurface) {
 
-		List<Group> interf1 = new ArrayList<Group>();
-		List<Group> interf2 = new ArrayList<Group>();
+		List<Group> interf1 = new ArrayList<>();
+		List<Group> interf2 = new ArrayList<>();
 
 		for (GroupAsa groupAsa:groupAsas1.values()) {
 
@@ -520,7 +520,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			}
 		}
 
-		return new Pair<List<Group>>(interf1, interf2);
+		return new Pair<>(interf1, interf2);
 	}
 
 	/**
@@ -529,8 +529,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return
 	 */
 	public Pair<List<Group>> getSurfaceResidues(double minAsaForSurface) {
-		List<Group> surf1 = new ArrayList<Group>();
-		List<Group> surf2 = new ArrayList<Group>();
+		List<Group> surf1 = new ArrayList<>();
+		List<Group> surf2 = new ArrayList<>();
 
 		for (GroupAsa groupAsa:groupAsas1.values()) {
 
@@ -545,7 +545,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			}
 		}
 
-		return new Pair<List<Group>>(surf1, surf2);
+		return new Pair<>(surf1, surf2);
 	}
 
 	public StructureInterfaceCluster getCluster() {
@@ -594,8 +594,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			return 0;
 		}
 
-		Pair<EntityInfo> thisCompounds = new Pair<EntityInfo>(thisChains.getFirst().getEntityInfo(), thisChains.getSecond().getEntityInfo());
-		Pair<EntityInfo> otherCompounds = new Pair<EntityInfo>(otherChains.getFirst().getEntityInfo(), otherChains.getSecond().getEntityInfo());
+		Pair<EntityInfo> thisCompounds = new Pair<>(thisChains.getFirst().getEntityInfo(), thisChains.getSecond().getEntityInfo());
+		Pair<EntityInfo> otherCompounds = new Pair<>(otherChains.getFirst().getEntityInfo(), otherChains.getSecond().getEntityInfo());
 
 		if ( (  (thisCompounds.getFirst() == otherCompounds.getFirst()) &&
 				(thisCompounds.getSecond() == otherCompounds.getSecond())   )  ||
@@ -666,7 +666,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			return null;
 		}
 
-		return new Pair<Chain>(firstMol[0].getGroup().getChain(), secondMol[0].getGroup().getChain());
+		return new Pair<>(firstMol[0].getGroup().getChain(), secondMol[0].getGroup().getChain());
 	}
 
 	/**
@@ -679,7 +679,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			logger.warn("Could not find parents chains, compounds will be null");
 			return null;
 		}
-		return new Pair<EntityInfo>(chains.getFirst().getEntityInfo(), chains.getSecond().getEntityInfo());
+		return new Pair<>(chains.getFirst().getEntityInfo(), chains.getSecond().getEntityInfo());
 	}
 
 	private Structure getParentStructure() {
@@ -753,7 +753,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
 		int atomId = 1;
-		List<Object> atomSites = new ArrayList<Object>();
+		List<Object> atomSites = new ArrayList<>();
 		for (Atom atom:this.molecules.getFirst()) {
 			if (isSymRelated()) {
 				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1, atomId));

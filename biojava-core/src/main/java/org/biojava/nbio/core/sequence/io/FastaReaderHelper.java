@@ -55,15 +55,15 @@ public class FastaReaderHelper {
 		}
 
 		FastaReader<DNASequence, NucleotideCompound> fastaProxyReader =
-				new FastaReader<DNASequence, NucleotideCompound>(
+				new FastaReader<>(
 						file,
-						new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
+						new GenericFastaHeaderParser<>(),
 						new FileProxyDNASequenceCreator(
 								file,
 								DNACompoundSet.getDNACompoundSet(),
 								new FastaSequenceParser()
-							)
-					);
+						)
+				);
 		return fastaProxyReader.process();
 
 	}
@@ -94,9 +94,9 @@ public class FastaReaderHelper {
 	 */
 	public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
 			InputStream inStream) throws IOException {
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream,
-				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+				new GenericFastaHeaderParser<>(),
 				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 		return fastaReader.process();
 	}
@@ -109,9 +109,9 @@ public class FastaReaderHelper {
 	 */
 	public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
 			InputStream inStream) throws IOException {
-		FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<DNASequence, NucleotideCompound>(
+		FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<>(
 				inStream,
-				new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
+				new GenericFastaHeaderParser<>(),
 				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
 		return fastaReader.process();
 	}

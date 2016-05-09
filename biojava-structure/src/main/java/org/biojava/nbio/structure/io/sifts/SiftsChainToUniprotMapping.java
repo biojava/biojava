@@ -151,9 +151,9 @@ public class SiftsChainToUniprotMapping {
 
 	}
 
-	private Map<String, SiftsChainEntry> byChainId = new HashMap<String, SiftsChainEntry>();
+	private Map<String, SiftsChainEntry> byChainId = new HashMap<>();
 
-	private Map<String, SiftsChainEntry> byUniProtId = new HashMap<String, SiftsChainEntry>();
+	private Map<String, SiftsChainEntry> byUniProtId = new HashMap<>();
 
 	private SiftsChainToUniprotMapping() {
 

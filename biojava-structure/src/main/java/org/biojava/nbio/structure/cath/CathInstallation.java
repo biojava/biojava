@@ -93,11 +93,11 @@ public class CathInstallation implements CathDatabase{
 		cathVersion = DEFAULT_VERSION;
 		cathDownloadUrl = CATH_DOWNLOAD;
 
-		pdbMap = new HashMap<String, List<CathDomain>>();
-		domainMap = new HashMap<String ,CathDomain>();
-		cathTree = new HashMap<String, CathNode>();
+		pdbMap = new HashMap<>();
+		domainMap = new HashMap<>();
+		cathTree = new HashMap<>();
 
-		if (parseCathFragments) fragmentMap = new HashMap<String,List<CathFragment>>();
+		if (parseCathFragments) fragmentMap = new HashMap<>();
 
 	}
 
@@ -193,7 +193,7 @@ public class CathInstallation implements CathDatabase{
 			ensureDomallInstalled();
 		}
 		ensureNodeListInstalled();
-		List<CathDomain> matches = new ArrayList<CathDomain>();
+		List<CathDomain> matches = new ArrayList<>();
 		CathNode node;
 		for ( String nodeId : cathTree.keySet() ) {
 			if ( (node = cathTree.get(nodeId)).getCategory() == category ) {
@@ -210,7 +210,7 @@ public class CathInstallation implements CathDatabase{
 		} else {
 			ensureDomallInstalled();
 		}
-		List<CathDomain> matches = new ArrayList<CathDomain>();
+		List<CathDomain> matches = new ArrayList<>();
 		for ( String k : domainMap.keySet() ) {
 			if ( domainMap.get(k).getCATH().startsWith(query) ) {
 				matches.add( domainMap.get(k) );
@@ -222,7 +222,7 @@ public class CathInstallation implements CathDatabase{
 	@Override
 	public List<CathNode> getTree(CathDomain domain) {
 		CathNode node = getCathNode( domain.getCATH() );
-		List<CathNode> tree = new ArrayList<CathNode>();
+		List<CathNode> tree = new ArrayList<>();
 		while (node != null) {
 			node = getCathNode( node.getParentId() );
 			if (node != null) tree.add(node);
@@ -234,14 +234,14 @@ public class CathInstallation implements CathDatabase{
 	@Override
 	public List<CathDomain> filterByNodeName(String query) {
 		ensureNodeListInstalled();
-		List<CathNode> matchingNodes = new ArrayList<CathNode>();
+		List<CathNode> matchingNodes = new ArrayList<>();
 		CathNode node;
 		for ( String nodeId : cathTree.keySet() ) {
 			if ( (node = cathTree.get(nodeId) ).getDescription().startsWith(query) ) {
 				matchingNodes.add(node);
 			}
 		}
-		List<CathDomain> matches = new ArrayList<CathDomain>();
+		List<CathDomain> matches = new ArrayList<>();
 		for (CathNode n : matchingNodes) {
 			matches.addAll(getDomainsByNodeId(n.getNodeId()));
 		}
@@ -255,7 +255,7 @@ public class CathInstallation implements CathDatabase{
 		} else {
 			ensureDomallInstalled();
 		}
-		List<CathDomain> matches = new ArrayList<CathDomain>();
+		List<CathDomain> matches = new ArrayList<>();
 		for ( String k : domainMap.keySet() ) {
 			if ( domainMap.get(k).getName().startsWith(query) ) {
 				matches.add( domainMap.get(k) );
@@ -314,7 +314,7 @@ public class CathInstallation implements CathDatabase{
 		} else {
 			ensureDomallInstalled();
 		}
-		List<CathDomain> domains = new ArrayList<CathDomain>();
+		List<CathDomain> domains = new ArrayList<>();
 		for (String domainName : domainMap.keySet()) {
 			CathDomain description = domainMap.get(domainName);
 			if ( description.getCATH().startsWith(nodeId) ) {
@@ -352,7 +352,7 @@ public class CathInstallation implements CathDatabase{
 			if ( pdbMap.containsKey(pdbId)){
 				domainList = pdbMap.get(pdbId);
 			} else {
-				domainList = new ArrayList<CathDomain>();
+				domainList = new ArrayList<>();
 				pdbMap.put(pdbId,domainList);
 			}
 
@@ -433,7 +433,7 @@ public class CathInstallation implements CathDatabase{
 			} else if ( line.startsWith("DSEQS") ) {
 				seqs = seqs.append( line.substring(10) );
 			} else if ( line.startsWith("NSEGMENTS") ) {
-				segments = new ArrayList<CathSegment>();
+				segments = new ArrayList<>();
 			} else if ( line.startsWith("SEGMENT") ) {
 				segment = new CathSegment();
 				sseqh = new StringBuilder();
@@ -470,7 +470,7 @@ public class CathInstallation implements CathDatabase{
 				if ( pdbMap.containsKey(pdbId)){
 					domainList = pdbMap.get(pdbId);
 				} else {
-					domainList = new ArrayList<CathDomain>();
+					domainList = new ArrayList<>();
 					pdbMap.put(pdbId,domainList);
 				}
 
@@ -570,7 +570,7 @@ public class CathInstallation implements CathDatabase{
 					continue;
 				}
 
-				List<CathSegment> segments = new ArrayList<CathSegment>(numberOfSegments);
+				List<CathSegment> segments = new ArrayList<>(numberOfSegments);
 				segIdx = 1; // Offset from domIdx.
 				for (int j=1; j<=numberOfSegments; j++) {
 					CathSegment segment = new CathSegment();
@@ -597,7 +597,7 @@ public class CathInstallation implements CathDatabase{
 				domIdx += 6*numberOfSegments + 1;
 			}
 			if (parseCathFragments) {
-			List<CathFragment> fragments = new ArrayList<CathFragment>(numberOfFragments);
+			List<CathFragment> fragments = new ArrayList<>(numberOfFragments);
 				for (int i=1; i<=numberOfFragments; i++) {
 					CathFragment fragment = new CathFragment();
 					fragment.setFragmentId(i);

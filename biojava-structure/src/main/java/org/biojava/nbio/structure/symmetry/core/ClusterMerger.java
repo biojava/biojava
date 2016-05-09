@@ -42,7 +42,7 @@ public class ClusterMerger {
 	 * Aligns all pairs of input clusters, calculating their pairwise alignments
 	 */
 	public void calcPairwiseAlignments() {
-		pairwiseAlignments = new ArrayList<PairwiseAlignment>();
+		pairwiseAlignments = new ArrayList<>();
 
 		boolean[] merged = new boolean[clusters.size()];
 		Arrays.fill(merged, false);
@@ -74,7 +74,7 @@ public class ClusterMerger {
 	 * @return
 	 */
 	public List<SequenceAlignmentCluster> getMergedClusters(double sequenceIdentityCutoff) {
-		List<SequenceAlignmentCluster> mergedClusters = new ArrayList<SequenceAlignmentCluster>();
+		List<SequenceAlignmentCluster> mergedClusters = new ArrayList<>();
 		Map<SequenceAlignmentCluster, Integer> map = getClusterMap();
 
 		boolean[] processed = new boolean[clusters.size()];
@@ -106,7 +106,7 @@ public class ClusterMerger {
 
 
 	private Map<SequenceAlignmentCluster, Integer> getClusterMap() {
-		 Map<SequenceAlignmentCluster, Integer> map = new HashMap<SequenceAlignmentCluster, Integer>();
+		 Map<SequenceAlignmentCluster, Integer> map = new HashMap<>();
 		 for (int i = 0, n = clusters.size(); i < n; i++) {
 			 map.put(clusters.get(i), i);
 		 }
@@ -120,13 +120,13 @@ public class ClusterMerger {
 		// add alignment for reference sequence
 		UniqueSequenceList u =c2.getUniqueSequenceList().get(0);
 		// set new sequence alignment
-		List<Integer> align1 = new ArrayList<Integer>(align[0][0].length);
+		List<Integer> align1 = new ArrayList<>(align[0][0].length);
 		for (Integer a1: align[0][0]) {
 			align1.add(a1);
 		}
 		u.setAlignment1(align1);
 
-		List<Integer> align2 = new ArrayList<Integer>(align[0][1].length);
+		List<Integer> align2 = new ArrayList<>(align[0][1].length);
 		for (Integer a2: align[0][1]) {
 			align2.add(a2);
 		}
@@ -139,8 +139,8 @@ public class ClusterMerger {
 			u =c2.getUniqueSequenceList().get(i);
 			List<Integer> oldAlign1 = u.getAlignment1();
 			List<Integer> oldAlign2 = u.getAlignment2();
-			List<Integer> newAlign1 = new ArrayList<Integer>();
-			List<Integer> newAlign2 = new ArrayList<Integer>();
+			List<Integer> newAlign1 = new ArrayList<>();
+			List<Integer> newAlign2 = new ArrayList<>();
 			for (int j = 0; j < align2.size(); j++) {
 				Integer element = align2.get(j);
 				Integer index = oldAlign1.indexOf(element);

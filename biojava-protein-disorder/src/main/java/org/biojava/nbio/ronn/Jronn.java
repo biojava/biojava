@@ -210,7 +210,7 @@ public class Jronn {
 
 		int count=0;
 		int regionLen=0;
-		List<Range> ranges = new ArrayList<Range>();
+		List<Range> ranges = new ArrayList<>();
 		for(float score: scores) {
 			count++;
 			// Round to 2 decimal points before comparison
@@ -241,7 +241,7 @@ public class Jronn {
 	 * @see #getDisorder(FastaSequence)
 	 */
 	public static Map<FastaSequence,float[]> getDisorderScores(List<FastaSequence> sequences) {
-		Map<FastaSequence,float[]> results = new TreeMap<FastaSequence, float[]>();
+		Map<FastaSequence,float[]> results = new TreeMap<>();
 		for(FastaSequence fsequence : sequences) {
 			results.put(fsequence, predictSerial(fsequence));
 		}
@@ -256,7 +256,7 @@ public class Jronn {
 	 * @see #getDisorder(FastaSequence)
 	 */
 	public static Map<FastaSequence,Range[]> getDisorder(List<FastaSequence> sequences) {
-		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<FastaSequence,Range[]>();
+		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<>();
 		for(FastaSequence fs: sequences) {
 			disorderRanges.put(fs, getDisorder(fs));
 		}

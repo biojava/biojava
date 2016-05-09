@@ -42,7 +42,7 @@ public class MetaDataInfo {
 	 *
 	 */
 	public DiscreteQuantizerInterface discreteQuantizer = null;
-	ArrayList<String> discreteValues = new ArrayList<String>();
+	ArrayList<String> discreteValues = new ArrayList<>();
 
 	/**
 	 *

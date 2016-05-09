@@ -129,7 +129,7 @@ public class DSSPParser {
 		String startLine = "  #  RESIDUE AA STRUCTURE BP1 BP2  ACC";
 		String line;
 
-		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
+		List<SecStrucState> secstruc = new ArrayList<>();
 
 		//Find the first line of the DSSP output
 		while((line = reader.readLine()) != null) {

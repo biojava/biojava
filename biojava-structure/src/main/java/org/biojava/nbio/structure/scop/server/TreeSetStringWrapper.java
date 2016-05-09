@@ -59,7 +59,7 @@ public class TreeSetStringWrapper implements Serializable{
 	}
 
 	public TreeSetStringWrapper(){
-		data = new TreeSet<String>();
+		data = new TreeSet<>();
 	}
 
 	public TreeSet<String> getData() {

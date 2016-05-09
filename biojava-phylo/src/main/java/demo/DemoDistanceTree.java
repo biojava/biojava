@@ -58,11 +58,11 @@ public class DemoDistanceTree {
 				.getResourceAsStream("/PF00104_small.fasta");
 
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
-				new FastaReader<ProteinSequence, AminoAcidCompound>(
-				inStream,
-				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet
-						.getAminoAcidCompoundSet()));
+				new FastaReader<>(
+						inStream,
+						new GenericFastaHeaderParser<>(),
+						new ProteinSequenceCreator(AminoAcidCompoundSet
+								.getAminoAcidCompoundSet()));
 
 		LinkedHashMap<String, ProteinSequence> proteinSequences =
 				fastaReader.process();
@@ -70,7 +70,7 @@ public class DemoDistanceTree {
 		inStream.close();
 
 		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa =
-				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+				new MultipleSequenceAlignment<>();
 
 		for (ProteinSequence proteinSequence : proteinSequences.values()) {
 			msa.addAlignedSequence(proteinSequence);

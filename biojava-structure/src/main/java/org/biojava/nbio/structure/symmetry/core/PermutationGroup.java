@@ -31,7 +31,7 @@ import java.util.Set;
  * @author Peter
  */
 public class PermutationGroup {
-	List<List<Integer>> permutations = new ArrayList<List<Integer>>();
+	List<List<Integer>> permutations = new ArrayList<>();
 
 	public void addPermutation(List<Integer> permutation) {
 		if (!permutations.contains(permutation)) {
@@ -59,13 +59,13 @@ public class PermutationGroup {
 	 */
 	public void completeGroup() {
 		// Copy initial set to allow permutations to grow
-		List<List<Integer>> gens = new ArrayList<List<Integer>>(permutations);
+		List<List<Integer>> gens = new ArrayList<>(permutations);
 		// Keep HashSet version of permutations for fast lookup.
-		Set<List<Integer>> known = new HashSet<List<Integer>>(permutations);
+		Set<List<Integer>> known = new HashSet<>(permutations);
 		//breadth-first search through the map of all members
-		List<List<Integer>> currentLevel = new ArrayList<List<Integer>>(permutations);
+		List<List<Integer>> currentLevel = new ArrayList<>(permutations);
 		while( currentLevel.size() > 0) {
-			List<List<Integer>> nextLevel = new ArrayList<List<Integer>>();
+			List<List<Integer>> nextLevel = new ArrayList<>();
 			for( List<Integer> p : currentLevel) {
 				for(List<Integer> gen : gens) {
 					List<Integer> y = combine(p,gen);
@@ -92,7 +92,7 @@ public class PermutationGroup {
 	}
 
 	public static List<Integer> combine(List<Integer> permutation1, List<Integer> permutation2) {
-		List<Integer> intermediate = new ArrayList<Integer>(permutation1.size());
+		List<Integer> intermediate = new ArrayList<>(permutation1.size());
 		for (int i = 0, n = permutation1.size(); i < n; i++) {
 			intermediate.add(permutation2.get(permutation1.get(i)));
 		}
@@ -100,7 +100,7 @@ public class PermutationGroup {
 	}
 
 	public static int getOrder(List<Integer> permutation) {
-		List<Integer> copy = new ArrayList<Integer>(permutation);
+		List<Integer> copy = new ArrayList<>(permutation);
 		for (int i = 0, n = permutation.size(); i < n; i++) {
 			copy = combine(copy, permutation);
 			if (copy.equals(permutation)) {

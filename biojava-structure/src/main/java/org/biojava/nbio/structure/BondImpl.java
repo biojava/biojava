@@ -91,7 +91,7 @@ public class BondImpl implements Serializable, Bond {
 	private void addSelfToAtoms() {
 		List<Bond> bonds = atomA.getBonds();
 		if (bonds==null) {
-			bonds = new ArrayList<Bond>(AtomImpl.BONDS_INITIAL_CAPACITY);
+			bonds = new ArrayList<>(AtomImpl.BONDS_INITIAL_CAPACITY);
 			atomA.setBonds(bonds);
 		}
 

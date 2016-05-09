@@ -86,7 +86,7 @@ MouseMotionListener
 
 		coordManager = new CoordManager();
 
-		alignmentPositionListeners = new ArrayList<AlignmentPositionListener>();
+		alignmentPositionListeners = new ArrayList<>();
 		//renderer.getLayeredPane().addMouseListener(popupFrame);
 
 	}

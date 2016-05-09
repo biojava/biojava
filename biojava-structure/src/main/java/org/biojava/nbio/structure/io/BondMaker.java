@@ -197,7 +197,7 @@ public class BondMaker {
 					}
 
 					// Now add support for altLocGroup
-					List<Group> totList = new ArrayList<Group>();
+					List<Group> totList = new ArrayList<>();
 					totList.add(mainGroup);
 					for(Group altLoc: mainGroup.getAltLocs()){
 						totList.add(altLoc);

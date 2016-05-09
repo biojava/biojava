@@ -62,7 +62,7 @@ public class ChemCompTools {
 	 */
 	static
 	{
-		Map<String, Character> foo = new HashMap<String, Character>();
+		Map<String, Character> foo = new HashMap<>();
 		foo.put("ALA", 'A');
 		foo.put("ASP", 'D');
 		foo.put("ASN", 'N');
@@ -87,7 +87,7 @@ public class ChemCompTools {
 		foo.put("VAL", 'V');
 		AMINO_ACID_LOOKUP_3TO1 = Collections.unmodifiableMap((Collections.synchronizedMap(foo)));
 
-		Map<Character, String> bar = new HashMap<Character, String>();
+		Map<Character, String> bar = new HashMap<>();
 		bar.put('A', "ALA");
 		bar.put('D', "ASP");
 		bar.put('N', "ASN");
@@ -112,7 +112,7 @@ public class ChemCompTools {
 		bar.put('V', "VAL");
 		AMINO_ACID_LOOKUP_1TO3 = Collections.unmodifiableMap(Collections.synchronizedMap(bar));
 
-		foo = new HashMap<String, Character>();
+		foo = new HashMap<>();
 		foo.put("DA",'A');
 		foo.put("DC",'C');
 		foo.put("DG",'G');
@@ -121,7 +121,7 @@ public class ChemCompTools {
 		foo.put("DT",'T');
 		DNA_LOOKUP_2TO1 = Collections.unmodifiableMap((Collections.synchronizedMap(foo)));
 
-		bar = new HashMap<Character, String>();
+		bar = new HashMap<>();
 		bar.put('A',"DA");
 		bar.put('C',"DC");
 		bar.put('G',"DG");
@@ -132,7 +132,7 @@ public class ChemCompTools {
 
 
 		// initialise standard chemical components
-		List<String> stdMonIds = new ArrayList<String>();
+		List<String> stdMonIds = new ArrayList<>();
 		stdMonIds.addAll(AMINO_ACID_LOOKUP_3TO1.keySet());
 		stdMonIds.addAll(DNA_LOOKUP_2TO1.keySet());
 

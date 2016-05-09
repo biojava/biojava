@@ -83,7 +83,7 @@ public enum Frame {
 	public <C extends NucleotideCompound> Sequence<C> wrap(Sequence<C> incoming) {
 		Sequence<C> reversed;
 		if(reverse) {
-			reversed = new ComplementSequenceView<C>(new ReversedSequenceView<C>(incoming));
+			reversed = new ComplementSequenceView<>(new ReversedSequenceView<>(incoming));
 		}
 		else {
 			reversed = incoming;

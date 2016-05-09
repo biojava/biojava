@@ -250,7 +250,7 @@ public final class SequenceUtil {
 	 */
 	public static List<FastaSequence> readFasta(final InputStream inStream)
 		throws IOException {
-	final List<FastaSequence> seqs = new ArrayList<FastaSequence>();
+	final List<FastaSequence> seqs = new ArrayList<>();
 
 	final BufferedReader infasta = new BufferedReader(
 		new InputStreamReader(inStream, "UTF8"), 16000);

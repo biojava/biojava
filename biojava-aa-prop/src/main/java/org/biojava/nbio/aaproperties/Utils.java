@@ -110,7 +110,7 @@ public class Utils {
 	 * 		a new sequence with all invalid characters being replaced by '-'.
 	 */
 	public final static String cleanSequence(String sequence, Set<Character> cSet){
-		Set<Character> invalidCharSet = new HashSet<Character>();
+		Set<Character> invalidCharSet = new HashSet<>();
 		StringBuilder cleanSeq = new StringBuilder();
 		if(cSet == null) cSet = PeptideProperties.standardAASet;
 		for(char c:sequence.toCharArray()){

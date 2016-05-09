@@ -42,9 +42,9 @@ public class CoxCC {
 	static public void process(CoxInfo ci) throws Exception {
 		ArrayList<SurvivalInfo> survivalInfoList = ci.survivalInfoList;
 		//r
-		ArrayList<String> variables = new ArrayList<String>(ci.getCoefficientsList().keySet());
+		ArrayList<String> variables = new ArrayList<>(ci.getCoefficientsList().keySet());
 
-		ArrayList<Integer> strataClass = new ArrayList<Integer>(survivalInfoList.size());
+		ArrayList<Integer> strataClass = new ArrayList<>(survivalInfoList.size());
 		double[] wt = new double[survivalInfoList.size()];
 		for (int i = 0; i < survivalInfoList.size(); i++) {
 			SurvivalInfo si = survivalInfoList.get(i);
@@ -75,7 +75,7 @@ public class CoxCC {
 			rvar = ci.getVariance();
 		}
 		//nj
-		LinkedHashMap<Integer, Double> nj = new LinkedHashMap<Integer, Double>();
+		LinkedHashMap<Integer, Double> nj = new LinkedHashMap<>();
 		Collections.sort(strataClass);
 		for (Integer value : strataClass) {
 			Double count = nj.get(value);
@@ -86,7 +86,7 @@ public class CoxCC {
 			nj.put(value, count);
 		}
 		//Nj
-		LinkedHashMap<Integer, Double> Nj = new LinkedHashMap<Integer, Double>();
+		LinkedHashMap<Integer, Double> Nj = new LinkedHashMap<>();
 		//N = N + Nj[key];
 		double N = 0;
 		for (int i = 0; i < survivalInfoList.size(); i++) {
@@ -106,7 +106,7 @@ public class CoxCC {
 			N = N + value;
 		}
 
-		LinkedHashMap<Integer, Double> k1j = new LinkedHashMap<Integer, Double>();
+		LinkedHashMap<Integer, Double> k1j = new LinkedHashMap<>();
 		for (Integer key : nj.keySet()) {
 			double _nj = (nj.get(key)); //trying to copy what R is doing on precision
 			double _Nj = (Nj.get(key));
@@ -119,7 +119,7 @@ public class CoxCC {
 		for (Integer i : k1j.keySet()) {
 			//          System.out.println("Strata=" + i + " " + k1j.get(i) + " " + Nj.get(i) + " " + nj.get(i));
 			if (nj.get(i) > 1) {
-				LinkedHashMap<String, DescriptiveStatistics> variableStatsMap = new LinkedHashMap<String, DescriptiveStatistics>();
+				LinkedHashMap<String, DescriptiveStatistics> variableStatsMap = new LinkedHashMap<>();
 
 				for (int p = 0; p < survivalInfoList.size(); p++) {
 					SurvivalInfo si = survivalInfoList.get(p);

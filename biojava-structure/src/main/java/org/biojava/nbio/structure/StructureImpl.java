@@ -76,15 +76,15 @@ public class StructureImpl implements Structure, Serializable {
 	public StructureImpl() {
 		super();
 
-		models         = new ArrayList<List<Chain>>();
+		models         = new ArrayList<>();
 		name           = "";
-		connections    = new ArrayList<Map<String,Integer>>();
-		entityInfos      = new ArrayList<EntityInfo>();
-		dbrefs         = new ArrayList<DBRef>();
+		connections    = new ArrayList<>();
+		entityInfos      = new ArrayList<>();
+		dbrefs         = new ArrayList<>();
 		pdbHeader      = new PDBHeader();
-		ssbonds        = new ArrayList<Bond>();
-		sites          = new ArrayList<Site>();
-		hetAtoms       = new ArrayList<Group>();
+		ssbonds        = new ArrayList<>();
+		sites          = new ArrayList<>();
+		hetAtoms       = new ArrayList<>();
 	}
 
 	/** get the ID used by Hibernate
@@ -151,7 +151,7 @@ public class StructureImpl implements Structure, Serializable {
 
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
-			List<Chain> cloned_model = new ArrayList<Chain>();
+			List<Chain> cloned_model = new ArrayList<>();
 
 			for (int j=0;j<size(i);j++){
 
@@ -169,7 +169,7 @@ public class StructureImpl implements Structure, Serializable {
 
 		// deep-copying of entityInfofos is tricky: there's cross references also in the Chains
 		// beware: if we copy the entityInfos we would also need to reset the references to entityInfos in the individual chains
-		List<EntityInfo> newEntityInfoList = new ArrayList<EntityInfo>();
+		List<EntityInfo> newEntityInfoList = new ArrayList<>();
 		for (EntityInfo entityInfo : this.entityInfos) {
 			EntityInfo newEntityInfo = new EntityInfo(entityInfo); // this sets everything but the chains
 			for (String chainId:entityInfo.getChainIds()) {
@@ -328,7 +328,7 @@ public class StructureImpl implements Structure, Serializable {
 		// if model has not been initialized, init it!
 		chain.setStructure(this);
 		if (models.isEmpty()) {
-			List<Chain> model = new ArrayList<Chain>() ;
+			List<Chain> model = new ArrayList<>() ;
 			model.add(chain);
 			models.add(model);
 
@@ -893,7 +893,7 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	public void resetModels() {
-		models = new ArrayList<List<Chain>>();
+		models = new ArrayList<>();
 	}
 	/** {@inheritDoc} */
 	@Deprecated
@@ -926,7 +926,7 @@ public class StructureImpl implements Structure, Serializable {
 		}
 
 		// No identifier set, so generate based on residues present in the structure
-		List<ResidueRange> range = new ArrayList<ResidueRange>();
+		List<ResidueRange> range = new ArrayList<>();
 		for (Chain chain : getChains()) {
 			List<Group> groups = chain.getAtomGroups();
 			ListIterator<Group> groupsIt = groups.listIterator();

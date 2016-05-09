@@ -171,7 +171,7 @@ public class AsaCalculator {
 	 */
 	public GroupAsa[] getGroupAsas() {
 
-		TreeMap<ResidueNumber, GroupAsa> asas = new TreeMap<ResidueNumber, GroupAsa>();
+		TreeMap<ResidueNumber, GroupAsa> asas = new TreeMap<>();
 
 		double[] asasPerAtom = calculateAsas();
 
@@ -285,7 +285,7 @@ public class AsaCalculator {
 	private ArrayList<Integer> findNeighborIndices(int k) {
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		// Thus 40 seems to be a good compromise for the starting capacity
-		ArrayList<Integer> neighbor_indices = new ArrayList<Integer>(40);
+		ArrayList<Integer> neighbor_indices = new ArrayList<>(40);
 
 		double radius = radii[k] + probe + probe;
 

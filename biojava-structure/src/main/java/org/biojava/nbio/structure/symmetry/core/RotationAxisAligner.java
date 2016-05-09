@@ -225,7 +225,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 * @return list of orbits ordered by z-depth
 	 */
 	private void calcAlignedOrbits() {
-		Map<Double, List<Integer>> depthMap = new TreeMap<Double, List<Integer>>();
+		Map<Double, List<Integer>> depthMap = new TreeMap<>();
 		double[] depth = getSubunitZDepth();
 		alignedOrbits = calcOrbits();
 
@@ -527,7 +527,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 *
 	 */
 	private List<List<Integer>> getOrbitsByXYWidth() {
-		Map<Double, List<Integer>> widthMap = new TreeMap<Double, List<Integer>>();
+		Map<Double, List<Integer>> widthMap = new TreeMap<>();
 		double[] width = getSubunitXYWidth();
 		List<List<Integer>> orbits = calcOrbits();
 
@@ -596,14 +596,14 @@ public class RotationAxisAligner extends AxisAligner{
 		int n = subunits.getSubunitCount();
 		int fold = rotationGroup.getRotation(0).getFold();
 
-		List<List<Integer>> orbits = new ArrayList<List<Integer>>();
+		List<List<Integer>> orbits = new ArrayList<>();
 		boolean[] used = new boolean[n];
 		Arrays.fill(used, false);
 
 		for (int i = 0; i < n; i++) {
 			if (! used[i]) {
 				// determine the equivalent subunits
-				List<Integer> orbit = new ArrayList<Integer>(fold);
+				List<Integer> orbit = new ArrayList<>(fold);
 				for (int j = 0; j < fold; j++) {
 					List<Integer> permutation = rotationGroup.getRotation(j).getPermutation();
 					orbit.add(permutation.get(i));
@@ -625,7 +625,7 @@ public class RotationAxisAligner extends AxisAligner{
 //		System.out.println("Permutation0: " + p0);
 //		System.out.println("Permutation1: " + p1);
 
-		List<Integer> inRotationOrder = new ArrayList<Integer>(orbit.size());
+		List<Integer> inRotationOrder = new ArrayList<>(orbit.size());
 		inRotationOrder.add(orbit.get(0));
 		for (int i = 1; i < orbit.size(); i++) {
 			int current = inRotationOrder.get(i-1);

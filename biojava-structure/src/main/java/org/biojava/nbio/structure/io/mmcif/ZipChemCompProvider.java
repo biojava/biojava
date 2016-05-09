@@ -67,7 +67,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	private boolean m_removeCif;
 
 	// Missing IDs from library that cannot be download added here to prevent delays.
-	private Set<String> unavailable = new HashSet<String>();
+	private Set<String> unavailable = new HashSet<>();
 
 	/**
 	 * ZipChemCompProvider is a Chemical Component provider that stores chemical components

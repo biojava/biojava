@@ -374,7 +374,7 @@ public class JFatCatClient {
 
 
 	public static final SortedSet<String> getRepresentatives(String serverLocation, int cutoff){
-		SortedSet<String> representatives = new TreeSet<String>();
+		SortedSet<String> representatives = new TreeSet<>();
 
 		String representURL = serverLocation + representAPPEND;
 

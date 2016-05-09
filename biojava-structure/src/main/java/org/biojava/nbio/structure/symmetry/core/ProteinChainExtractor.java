@@ -44,10 +44,10 @@ public class ProteinChainExtractor  {
 	private boolean modified = true;
 	private int adjustedMinimumSequenceLength = 0;
 
-	private List<Atom[]> cAlphaTrace = new ArrayList<Atom[]>();
-	private List<String> chainIds = new ArrayList<String>();
-	private List<Integer> modelNumbers = new ArrayList<Integer>();
-	private List<String> sequences = new ArrayList<String>();
+	private List<Atom[]> cAlphaTrace = new ArrayList<>();
+	private List<String> chainIds = new ArrayList<>();
+	private List<Integer> modelNumbers = new ArrayList<>();
+	private List<String> sequences = new ArrayList<>();
 	private int nucleicAcidChainCount = 0;
 
 	public ProteinChainExtractor(Structure structure, QuatSymmetryParameters parameters) {
@@ -145,7 +145,7 @@ public class ProteinChainExtractor  {
 		int maxLength = Integer.MIN_VALUE;
 		int minLength = Integer.MAX_VALUE;
 
-		List<Integer> lengths = new ArrayList<Integer>();
+		List<Integer> lengths = new ArrayList<>();
 		for (int i = 0; i < models; i++) {
 			for (Chain c : structure.getChains(i)) {
 				Atom[] ca = StructureTools.getAtomCAArray(c);
@@ -198,7 +198,7 @@ public class ProteinChainExtractor  {
 	}
 
 	private Atom[] retainStandardAminoAcidResidues(Atom[] atoms) {
-		List<Atom> atomList = new ArrayList<Atom>(atoms.length);
+		List<Atom> atomList = new ArrayList<>(atoms.length);
 		for (Atom atom: atoms) {
 			Group group = atom.getGroup();
 			if (group.getPDBName().equalsIgnoreCase("UNK")) {

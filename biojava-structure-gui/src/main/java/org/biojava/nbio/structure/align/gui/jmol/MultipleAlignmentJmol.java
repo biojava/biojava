@@ -113,7 +113,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		frame.setJMenuBar(menu);
 		this.multAln = msa;
 		this.transformedAtoms = rotatedAtoms;
-		this.selectedStructures = new ArrayList<JCheckBox>();
+		this.selectedStructures = new ArrayList<>();
 
 		frame.addWindowListener(new WindowAdapter() {
 
@@ -446,7 +446,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		// Color the equivalent residues of every structure
 		StringBuffer sel = new StringBuffer();
 		sel.append("select *; color lightgrey; backbone 0.1; ");
-		List<List<String>> allPDB = new ArrayList<List<String>>();
+		List<List<String>> allPDB = new ArrayList<>();
 
 		// Get the aligned residues of every structure
 		for (int i = 0; i < multAln.size(); i++) {
@@ -522,7 +522,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			int str, int colorPos, int blockNum) {
 
 		// Obtain the residues aligned in this block of the structure
-		List<String> pdb = new ArrayList<String>();
+		List<String> pdb = new ArrayList<>();
 		for (int i = 0; i < alignRes.get(str).size(); i++) {
 
 			// Handle gaps - only color if it is not null

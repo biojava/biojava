@@ -161,7 +161,7 @@ public class Helix {
 	}
 
 	public List<List<Integer>> getLayerLines() {
-		List<List<Integer>> layerLines = new ArrayList<List<Integer>>();
+		List<List<Integer>> layerLines = new ArrayList<>();
 
 		createLineSegments(permutation, layerLines);
 
@@ -192,7 +192,7 @@ public class Helix {
 			List<List<Integer>> layerLines) {
 		for (int i = 0; i < permutation.size(); i++) {
 			if (permutation.get(i) != -1 ) {
-				List<Integer> lineSegment = new ArrayList<Integer>();
+				List<Integer> lineSegment = new ArrayList<>();
 				lineSegment.add(i);
 				lineSegment.add(permutation.get(i));
 				layerLines.add(lineSegment);

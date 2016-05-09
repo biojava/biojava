@@ -90,9 +90,9 @@ public class RnaSequenceView extends SequenceProxyView<NucleotideCompound> imple
 
 	protected void buildTranslators() {
 		Map<NucleotideCompound, NucleotideCompound> localDnaToRna =
-				new HashMap<NucleotideCompound, NucleotideCompound>();
+				new HashMap<>();
 		Map<NucleotideCompound, NucleotideCompound> localRnaToDna =
-				new HashMap<NucleotideCompound, NucleotideCompound>();
+				new HashMap<>();
 
 		NucleotideCompound thymine =
 				getViewedSequence().getCompoundSet().getCompoundForString("T");

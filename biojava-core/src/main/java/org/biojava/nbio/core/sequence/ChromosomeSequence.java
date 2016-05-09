@@ -37,7 +37,7 @@ import java.util.LinkedHashMap;
 public class ChromosomeSequence extends DNASequence {
 
 	private int chromosomeNumber;
-	private LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<String, GeneSequence>();
+	private LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<>();
 
 	/**
 	 * Empty constructor used by tools that need a proper Bean that allows the actual

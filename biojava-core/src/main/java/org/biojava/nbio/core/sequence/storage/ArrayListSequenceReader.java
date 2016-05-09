@@ -44,7 +44,7 @@ import java.util.List;
 public class ArrayListSequenceReader<C extends Compound> implements SequenceReader<C> {
 
 	private CompoundSet<C> compoundSet;
-	private ArrayList<C> parsedCompounds = new ArrayList<C>();
+	private ArrayList<C> parsedCompounds = new ArrayList<>();
 
 	private volatile Integer hashcode = null;
 
@@ -94,7 +94,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	 */
 	public String getSequenceAsString(Integer begin, Integer end, Strand strand) {
 		// TODO Optimise/cache.
-		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<>();
 		return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, begin, end, strand);
 	}
 
@@ -231,7 +231,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	 */
 	@Override
 	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-		return new SequenceProxyView<C>(ArrayListSequenceReader.this, bioBegin, bioEnd);
+		return new SequenceProxyView<>(ArrayListSequenceReader.this, bioBegin, bioEnd);
 	}
 
 	/**

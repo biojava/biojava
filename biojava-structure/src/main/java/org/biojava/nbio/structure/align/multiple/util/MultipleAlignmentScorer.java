@@ -67,7 +67,7 @@ public class MultipleAlignmentScorer {
 		alignment.putScore(RMSD, getRMSD(trans));
 
 		// Put AvgTM-Score
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
@@ -238,7 +238,7 @@ public class MultipleAlignmentScorer {
 
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
@@ -315,7 +315,7 @@ public class MultipleAlignmentScorer {
 
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}

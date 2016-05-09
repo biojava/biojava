@@ -115,7 +115,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 		distanceMatrix = null;
 		if (e.distanceMatrix != null) {
 			// Make a deep copy of everything
-			distanceMatrix = new ArrayList<Matrix>();
+			distanceMatrix = new ArrayList<>();
 			for (Matrix mat : e.distanceMatrix) {
 				distanceMatrix.add((Matrix) mat.clone());
 			}
@@ -124,7 +124,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 		multipleAlignments = null;
 		if (e.multipleAlignments != null) {
 			// Make a deep copy of everything
-			multipleAlignments = new ArrayList<MultipleAlignment>();
+			multipleAlignments = new ArrayList<>();
 			for (MultipleAlignment msa : e.multipleAlignments) {
 				MultipleAlignment newMSA = msa.clone();
 				newMSA.setEnsemble(this);
@@ -133,10 +133,10 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 		}
 
 		if (e.atomArrays != null) {
-			atomArrays = new ArrayList<Atom[]>(e.atomArrays);
+			atomArrays = new ArrayList<>(e.atomArrays);
 		}
 		if (e.structureIdentifiers != null) {
-			structureIdentifiers = new ArrayList<StructureIdentifier>(
+			structureIdentifiers = new ArrayList<>(
 					e.structureIdentifiers);
 		}
 	}
@@ -193,9 +193,9 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 				}
 				blockSet.setTransformations(Arrays.asList(ident, blockTr));
 				Block block = new BlockImpl(blockSet);
-				block.setAlignRes(new ArrayList<List<Integer>>());
-				block.getAlignRes().add(new ArrayList<Integer>());
-				block.getAlignRes().add(new ArrayList<Integer>());
+				block.setAlignRes(new ArrayList<>());
+				block.getAlignRes().add(new ArrayList<>());
+				block.getAlignRes().add(new ArrayList<>());
 
 				// Set the transformation of the BlockSet
 				Matrix rotB = afp.getBlockRotationMatrix()[bs];
@@ -223,9 +223,9 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 			blockSet.setTransformations(Arrays.asList(ident, blockTr));
 			for (int bs = 0; bs < afp.getBlockNum(); bs++) {
 				Block block = new BlockImpl(blockSet);
-				block.setAlignRes(new ArrayList<List<Integer>>());
-				block.getAlignRes().add(new ArrayList<Integer>());
-				block.getAlignRes().add(new ArrayList<Integer>());
+				block.setAlignRes(new ArrayList<>());
+				block.getAlignRes().add(new ArrayList<>());
+				block.getAlignRes().add(new ArrayList<>());
 
 				// Convert the optimal alignment to a Block
 				for (int i = 0; i < afp.getOptAln()[bs][0].length; i++) {
@@ -325,7 +325,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	 */
 	public void updateAtomArrays() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		atomArrays = new ArrayList<Atom[]>();
+		atomArrays = new ArrayList<>();
 		for (StructureIdentifier name : getStructureIdentifiers()) {
 			Atom[] array = cache.getRepresentativeAtoms(name);
 			atomArrays.add(array);
@@ -345,7 +345,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	public void updateDistanceMatrix() {
 
 		// Reset the distance Matrix variable
-		distanceMatrix = new ArrayList<Matrix>();
+		distanceMatrix = new ArrayList<>();
 
 		for (int s = 0; s < size(); s++) {
 			Atom[] ca = atomArrays.get(s);
@@ -358,7 +358,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	public List<MultipleAlignment> getMultipleAlignments() {
 
 		if (multipleAlignments == null) {
-			multipleAlignments = new ArrayList<MultipleAlignment>();
+			multipleAlignments = new ArrayList<>();
 		}
 		return multipleAlignments;
 	}
@@ -376,7 +376,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	@Override
 	public void addMultipleAlignment(MultipleAlignment alignment) {
 		if (multipleAlignments == null) {
-			multipleAlignments = new ArrayList<MultipleAlignment>();
+			multipleAlignments = new ArrayList<>();
 		}
 		multipleAlignments.add(alignment);
 		alignment.setEnsemble(this);

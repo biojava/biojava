@@ -55,7 +55,7 @@ public class AssignmentXMLSerializer {
 	}
 
 	public AssignmentXMLSerializer(){
-		assignments = new HashMap<String, String>();
+		assignments = new HashMap<>();
 
 	}
 

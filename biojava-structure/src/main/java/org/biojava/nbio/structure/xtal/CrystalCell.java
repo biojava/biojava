@@ -488,7 +488,7 @@ public class CrystalCell implements Serializable {
 		Point3d vert7 = new Point3d(1,1,1);
 		transfToOrthonormal(vert7);
 
-		ArrayList<Double> vertDists = new ArrayList<Double>();
+		ArrayList<Double> vertDists = new ArrayList<>();
 		vertDists.add(vert0.distance(vert7));
 		vertDists.add(vert3.distance(vert4));
 		vertDists.add(vert1.distance(vert6));

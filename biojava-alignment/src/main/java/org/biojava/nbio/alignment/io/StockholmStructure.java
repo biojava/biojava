@@ -94,9 +94,9 @@ public class StockholmStructure {
 	public StockholmStructure() {
 		fileAnnotation = new StockholmFileAnnotation();
 		consAnnotation = new StockholmConsensusAnnotation();
-		sequences = new HashMap<String, StringBuffer>();
-		seqsAnnotation = new HashMap<String, StockholmSequenceAnnotation>();
-		resAnnotation = new HashMap<String, StockholmResidueAnnotation>();
+		sequences = new HashMap<>();
+		seqsAnnotation = new HashMap<>();
+		resAnnotation = new HashMap<>();
 	}
 
 	public StockholmFileAnnotation getFileAnnotation() {
@@ -247,7 +247,7 @@ public class StockholmStructure {
 		if (forcedSequenceType != null && !(forcedSequenceType.equals(PFAM) || forcedSequenceType.equals(RFAM))) {
 			throw new IllegalArgumentException("Illegal Argument " + forcedSequenceType);
 		}
-		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<AbstractSequence<? extends AbstractCompound>>();
+		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<>();
 		for (String sequencename : sequences.keySet()) {
 			AbstractSequence<? extends AbstractCompound> seq = null;
 			String sequence = sequences.get(sequencename).toString();

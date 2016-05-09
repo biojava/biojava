@@ -58,8 +58,8 @@ public class RCSBPolymer {
 	private Double weight;
 
 	public RCSBPolymer() {
-		chains = new ArrayList<Character>();
-		synonyms = new ArrayList<String>();
+		chains = new ArrayList<>();
+		synonyms = new ArrayList<>();
 	}
 
 	public List<Character> getChains() {

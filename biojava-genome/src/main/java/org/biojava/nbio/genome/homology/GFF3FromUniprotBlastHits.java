@@ -77,7 +77,7 @@ public class GFF3FromUniprotBlastHits {
 				}
 				ArrayList<String> uniprotProteinHits = hits.get(accessionid);
 				String uniprotBestHit = uniprotProteinHits.get(0);
-				UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>(uniprotBestHit, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+				UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>(uniprotBestHit, AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
 				ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
 				String hitSequence = proteinSequence.getSequenceAsString();
@@ -87,7 +87,7 @@ public class GFF3FromUniprotBlastHits {
 					String predictedProteinSequence = transcriptSequence.getProteinSequence().getSequenceAsString();
 					ArrayList<ProteinSequence> cdsProteinList = transcriptSequence.getProteinCDSSequences();
 
-					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>(transcriptSequence.getCDSSequences().values());
+					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<>(transcriptSequence.getCDSSequences().values());
 					String testSequence = "";
 					for (ProteinSequence cdsProteinSequence : cdsProteinList) {
 						testSequence = testSequence + cdsProteinSequence.getSequenceAsString();

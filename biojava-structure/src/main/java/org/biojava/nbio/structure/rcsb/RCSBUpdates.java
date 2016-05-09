@@ -44,7 +44,7 @@ public class RCSBUpdates {
 	 */
 	public Map<String,String[]> getUpdates() throws IOException{
 
-		Map<String,String[]> outMap = new HashMap<String, String[]>();
+		Map<String,String[]> outMap = new HashMap<>();
 		// A list of files to get
 		String[] newStringList = {"added.models","added.nmr","added.pdb","added.sf","modified.cs","modified.models",
 				"modified.nmr","modified.pdb","modified.sf","obsolete.cs","obsolete.models","obsolete.nmr","obsolete.pdb","obsolete.sf"};
@@ -64,7 +64,7 @@ public class RCSBUpdates {
 	 * @throws IOException
 	 */
 	private String[] readURL(String urlIn) throws IOException{
-		List<String> outList = new ArrayList<String>();
+		List<String> outList = new ArrayList<>();
 		// create a url object
 		URL url = new URL(urlIn);
 

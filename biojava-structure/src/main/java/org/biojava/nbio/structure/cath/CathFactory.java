@@ -43,7 +43,7 @@ public class CathFactory {
 
 	private static CathDatabase cath;
 
-	private static Map<String, CathDatabase> versions = new HashMap<String, CathDatabase>();
+	private static Map<String, CathDatabase> versions = new HashMap<>();
 
 	/**
 	 * Sets the default (singleton) CathDatabase.

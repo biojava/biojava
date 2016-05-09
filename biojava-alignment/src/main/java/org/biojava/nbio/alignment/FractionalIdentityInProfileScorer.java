@@ -51,7 +51,7 @@ public class FractionalIdentityInProfileScorer<S extends Sequence<C>, C extends 
 	 * @param target index in the profile of the second sequence of the pair
 	 */
 	public FractionalIdentityInProfileScorer(Profile<S, C> profile, int query, int target) {
-		super(new SimpleSequencePair<S, C>(profile.getAlignedSequence(query), profile.getAlignedSequence(target)));
+		super(new SimpleSequencePair<>(profile.getAlignedSequence(query), profile.getAlignedSequence(target)));
 		this.profile = profile;
 	}
 

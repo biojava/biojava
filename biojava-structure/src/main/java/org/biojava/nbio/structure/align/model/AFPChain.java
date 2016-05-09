@@ -189,7 +189,7 @@ public class AFPChain implements Serializable, Cloneable {
 		this.alignScoreUpdate = o.alignScoreUpdate;
 		this.afpChainTwiNum = o.afpChainTwiNum;
 		this.minLen = o.minLen;
-		this.afpSet = new ArrayList<AFP>(o.afpSet);
+		this.afpSet = new ArrayList<>(o.afpSet);
 		this.afpIndex = o.afpIndex == null? null: o.afpIndex.clone();
 		this.afpAftIndex = o.afpAftIndex == null? null: o.afpAftIndex.clone();
 		this.afpBefIndex = o.afpBefIndex == null? null: o.afpBefIndex.clone();
@@ -471,7 +471,7 @@ public class AFPChain implements Serializable, Cloneable {
 
 		blockResSize = new int[maxTra+1];
 
-		afpSet = new ArrayList<AFP>();
+		afpSet = new ArrayList<>();
 		totalLenIni = totalLenOpt = 0;
 		totalRmsdIni = totalRmsdOpt = 0.0;
 

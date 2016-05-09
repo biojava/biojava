@@ -85,7 +85,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	// flags to make sure there is only one thread running that is loading the dictionary
 	static AtomicBoolean loading = new AtomicBoolean(false);
 
-	static final List<String> protectedIDs = new ArrayList<String> ();
+	static final List<String> protectedIDs = new ArrayList<>();
 	static {
 		protectedIDs.add("CON");
 		protectedIDs.add("PRN");

@@ -56,7 +56,7 @@ public class SequenceFunctionOrderDetector implements OrderDetector {
 					AlignmentTools.alignmentAsMap(afpChain);
 
 			return AlignmentTools.getSymmetryOrder(alignment,
-					new AlignmentTools.IdentityMap<Integer>(),
+					new AlignmentTools.IdentityMap<>(),
 					maxSymmetry, minimumMetricChange);
 
 		} catch (StructureException e) {

@@ -50,10 +50,10 @@ public final class Component {
 	 */
 	private static void lazyInit() {
 		if (components==null) {
-			components = new HashSet<Component>();
-			nonTerminalComps = new HashMap<Set<String>, Component>();
-			nTerminalAminoAcids = new HashMap<Set<String>, Component>();
-			cTerminalAminoAcids = new HashMap<Set<String>, Component>();
+			components = new HashSet<>();
+			nonTerminalComps = new HashMap<>();
+			nTerminalAminoAcids = new HashMap<>();
+			cTerminalAminoAcids = new HashMap<>();
 		}
 	}
 

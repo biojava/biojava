@@ -74,7 +74,7 @@ public class BioAssemblyTools {
 		}
 
 		// expand ranges if present, i.e. 1-60 -> 1, 2, 3, ..., 60
-		List<String> operators = new ArrayList<String>();
+		List<String> operators = new ArrayList<>();
 		for (String component : components) {
 			if (component.contains("-")) {
 				operators.addAll(expandRange(component));
@@ -102,7 +102,7 @@ public class BioAssemblyTools {
 			throw new IllegalArgumentException("Invalid range specification in oper_expression: " + expression);
 		}
 
-		List<String> expandedExpression = new ArrayList<String>(last-first+1);
+		List<String> expandedExpression = new ArrayList<>(last - first + 1);
 		for (int i = first; i <= last; i++) {
 			expandedExpression.add(String.valueOf(i));
 		}
@@ -125,7 +125,7 @@ public class BioAssemblyTools {
 		List<String> rightSide = parseSubExpression(subExpressions[1]);
 
 		// form the cartesian product of the two lists
-		CartesianProduct<String> product = new CartesianProduct<String>(leftSide, rightSide);
+		CartesianProduct<String> product = new CartesianProduct<>(leftSide, rightSide);
 		return product.getOrderedPairs();
 	}
 

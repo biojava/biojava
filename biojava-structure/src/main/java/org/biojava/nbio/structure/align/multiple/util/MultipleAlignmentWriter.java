@@ -93,7 +93,7 @@ public class MultipleAlignmentWriter {
 		fatcat.append(alignment.toString() + "\n\n");
 
 		// Get the alignment sequences and the mapping
-		List<Integer> mapSeqToStruct = new ArrayList<Integer>();
+		List<Integer> mapSeqToStruct = new ArrayList<>();
 		List<String> alnSequences = MultipleAlignmentTools
 				.getSequenceAlignment(alignment, mapSeqToStruct);
 

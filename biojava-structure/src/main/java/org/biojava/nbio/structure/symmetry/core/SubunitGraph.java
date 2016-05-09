@@ -47,7 +47,7 @@ public class SubunitGraph {
 		int n = caCoords.size();
 
 		// add vertex for each chain center
-		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
+		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
 		for (int i = 0; i < n; i++) {
 			graph.addVertex(i);
 		}

@@ -89,7 +89,7 @@ public class OboFileHandler implements OboFileEventListener {
 
 	@Override
 	public void documentStart() {
-		termStack = new ArrayList<Term>();
+		termStack = new ArrayList<>();
 	}
 
 	@Override

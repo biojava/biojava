@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound> implements LightweightProfile<S, C> {
 
-	private List<S> sequences = new ArrayList<S>();
+	private List<S> sequences = new ArrayList<>();
 	private Integer length = null;
 
 	/**
@@ -98,7 +98,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
 	 */
 	@Override
 	public List<C> getCompoundsAt(int alignmentIndex) {
-		List<C> column = new ArrayList<C>();
+		List<C> column = new ArrayList<>();
 		for (S s : sequences) {
 			column.add(s.getCompoundAt(alignmentIndex));
 		}

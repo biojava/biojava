@@ -100,7 +100,7 @@ public class GFF3Reader {
 
 
 	public static FeatureList read(String filename) throws IOException {
-	   return read(filename,new ArrayList<String>(0));
+	   return read(filename, new ArrayList<>(0));
 	}
 
 

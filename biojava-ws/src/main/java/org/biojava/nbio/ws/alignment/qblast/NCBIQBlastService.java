@@ -72,7 +72,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	private String email = DEFAULT_EMAIL;
 	private String tool = DEFAULT_TOOL;
 
-	private Map<String, BlastJob> jobs = new HashMap<String, BlastJob>();
+	private Map<String, BlastJob> jobs = new HashMap<>();
 
     /** Constructs a service object that targets the public NCBI BLAST network
      * service. 
@@ -164,7 +164,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 */
 	@Override
 	public String sendAlignmentRequest(String query, RemotePairwiseAlignmentProperties alignmentProperties) throws Exception {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		for (String key : alignmentProperties.getAlignmentOptions()) {
 			params.put(key, alignmentProperties.getAlignmentOption(key));
 		}
@@ -318,7 +318,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 */
 	@Override
 	public InputStream getAlignmentResults(String id, RemotePairwiseAlignmentOutputProperties outputProperties) throws Exception {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		for (String key : outputProperties.getOutputOptions()) {
 			params.put(key, outputProperties.getOutputOption(key));
 		}

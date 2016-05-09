@@ -265,7 +265,7 @@ public class AlignerHelper {
 		 */
 		public static List<Subproblem> getSubproblems(List<Anchor> anchors, int querySequenceLength, int targetSequenceLength) {
 			Collections.sort(anchors, new Anchor.QueryIndexComparator());
-			List<Subproblem> list = new ArrayList<Subproblem>();
+			List<Subproblem> list = new ArrayList<>();
 			Anchor last = new Anchor(-1, -1); // sentinal anchor
 			boolean isAnchored = false;
 			for (int i = 0; i < anchors.size(); i++) {

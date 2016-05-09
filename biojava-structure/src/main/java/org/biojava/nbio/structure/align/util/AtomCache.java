@@ -96,7 +96,7 @@ public class AtomCache {
 	private String cachePath;
 
 	// make sure IDs are loaded uniquely
-	private Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
+	private Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<>());
 
 	private String path;
 

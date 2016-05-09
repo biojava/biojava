@@ -28,7 +28,7 @@ import java.util.List;
 // Generate the permutations and sign changes for a Triple.
 class Permute {
 
-	private List<Point3i> triples = new ArrayList<Point3i>();
+	private List<Point3i> triples = new ArrayList<>();
 
 	Permute(Point3i t) {
 		Point3i tmp = new Point3i();
@@ -140,12 +140,12 @@ public final class SphereSampler {
 	static
 	{
 
-		List<Quat4d> myorientations = new ArrayList<Quat4d>();
+		List<Quat4d> myorientations = new ArrayList<>();
 
 		for (int i = 0; i < IcosahedralSampler.getSphereCount(); i++) {
 			myorientations.add(IcosahedralSampler.getQuat4d(i));
 		}
-		List<Quat4d> grid = new ArrayList<Quat4d>();
+		List<Quat4d> grid = new ArrayList<>();
 		int ncell1 = 0;
 		for (int n = 0; n < nent; ++n) {
 			Permute p = new Permute(new Point3i(k[n], l[n], m[n]));

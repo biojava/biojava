@@ -64,7 +64,7 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 
 		proxy = new RemoteScopInstallation();
 
-		scopDescriptionCache = new SerializableCache<Integer,ScopDescription>("scopDescriptionCache.ser");
+		scopDescriptionCache = new SerializableCache<>("scopDescriptionCache.ser");
 
 		if ( ! useCache) {
 			logger.warn(getClass().getSimpleName() + " disabling cache");
@@ -212,7 +212,7 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 
 	@Override
 	public List<String> getComments(int sunid) {
-		return new ArrayList<String>(1);
+		return new ArrayList<>(1);
 	}
 
 

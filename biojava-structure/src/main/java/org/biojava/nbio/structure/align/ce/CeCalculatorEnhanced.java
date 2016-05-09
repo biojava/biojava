@@ -113,7 +113,7 @@ public class CeCalculatorEnhanced {
 		dist1= new double[0][0];
 		dist2= new double[0][0];
 		this.params = params;
-		matrixListeners = new ArrayList<MatrixListener>();
+		matrixListeners = new ArrayList<>();
 
 	}
 
@@ -1131,7 +1131,7 @@ nBestTrace=nTrace;
 		}
 
 		// start to convert CE internal datastructure to generic AFPChain one...
-		List<AFP> afpSet = new ArrayList<AFP>();
+		List<AFP> afpSet = new ArrayList<>();
 		for (int afp=0;afp<nBestTrace;afp++){
 			// fill in data from nBestTrace into AFP
 
@@ -2013,7 +2013,7 @@ nBestTrace=nTrace;
 	 */
 	private Atom[] getAtoms(Atom[] ca,  int length, boolean clone) throws StructureException{
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 		for ( int i = 0 ; i < length ; i++){
 
 			Atom a;

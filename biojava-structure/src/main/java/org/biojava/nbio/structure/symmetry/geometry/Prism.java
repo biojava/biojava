@@ -119,7 +119,7 @@ public class Prism implements Polyhedron {
 
 	@Override
 	public List<int[]> getLineLoops() {
-		List<int[]> list = new ArrayList<int[]>();
+		List<int[]> list = new ArrayList<>();
 		int[] l1 = new int[2*n+2];
 		for (int i = 0; i < n; i++) {
 			l1[i] = i;

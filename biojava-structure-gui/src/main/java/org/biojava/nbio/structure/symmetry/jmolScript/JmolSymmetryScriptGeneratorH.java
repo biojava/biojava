@@ -416,14 +416,14 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			   colors[half+i] = temp;
 			}
 		}
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		for (int i = 0; i < orbits.size(); i++) {
 				for (Integer j: orbits.get(i)) {
 					Color4f c = colors[i];
 					List<String> ids = colorMap.get(c);
 					if (ids == null) {
-						ids = new ArrayList<String>();
+						ids = new ArrayList<>();
 						colorMap.put(c,  ids);
 					}
 					String id = getChainSpecification(modelNumbers, chainIds, j);
@@ -448,13 +448,13 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		int clusters = Collections.max(seqClusterIds) + 1;
 		Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
 		Color4f[] colors = ColorConverter.convertColor4f(col);
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		for (int i = 0; i < n; i++) {
 			Color4f c = colors[seqClusterIds.get(i)];
 			List<String> ids = colorMap.get(c);
 			if (ids == null) {
-				ids = new ArrayList<String>();
+				ids = new ArrayList<>();
 				colorMap.put(c,  ids);
 			}
 			String id = getChainSpecification(modelNumbers, chainIds, i);
@@ -481,7 +481,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		List<Integer> clusterIds = subunits.getSequenceClusterIds();
 		int clusterCount = Collections.max(clusterIds) + 1;
 
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		int maxLen = 0;
 		for (List<Integer> unit: units) {
@@ -504,7 +504,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 					c.scale(scale);
 					List<String> ids = colorMap.get(c);
 					if (ids == null) {
-						ids = new ArrayList<String>();
+						ids = new ArrayList<>();
 						colorMap.put(c,  ids);
 					}
 					String id = getChainSpecification(modelNumbers, chainIds, subunit);
@@ -579,7 +579,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 //		System.out.println("XZRadius: " + radius);
 
 
-		List<Point3d> ePoints = new ArrayList<Point3d>(points.size());
+		List<Point3d> ePoints = new ArrayList<>(points.size());
 		for (Point3d p: points) {
 			Point3d q = new Point3d(p);
 			transformation.transform(q);
@@ -597,7 +597,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		Matrix4d transformation = helixAxisAligner.getTransformation();
 		Matrix4d reversetransformation = helixAxisAligner.getReverseTransformation();
 
-		List<Point3d> ePoints = new ArrayList<Point3d>(points.size());
+		List<Point3d> ePoints = new ArrayList<>(points.size());
 		for (Point3d p: points) {
 			Point3d q = new Point3d(p);
 			transformation.transform(q);

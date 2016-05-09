@@ -228,7 +228,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	public static List<BiologicalAssemblyTransformation> fromMultiXML(String xml) throws ParserConfigurationException, SAXException, IOException{
 
 
-		List<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		List<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
 
 		// read the XML of a string and returns a ModelTransformationmatrix
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

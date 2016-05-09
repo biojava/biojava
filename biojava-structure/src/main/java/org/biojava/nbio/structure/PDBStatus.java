@@ -87,7 +87,7 @@ public class PDBStatus {
 	 *
 	 */
 	//TODO Use SoftReferences to allow garbage collection
-	private static Map<String, Map<String, String>> recordsCache= new Hashtable<String, Map<String, String>>();
+	private static Map<String, Map<String, String>> recordsCache= new Hashtable<>();
 
 	/**
 	 * Represents the status of PDB IDs. 'OBSOLETE' and 'CURRENT' are the most
@@ -291,7 +291,7 @@ public class PDBStatus {
 		}
 
 		// If we're current, just return
-		LinkedList<String> results = new LinkedList<String>();
+		LinkedList<String> results = new LinkedList<>();
 		switch(status) {
 			case CURRENT:
 				results.add(oldPdbId);
@@ -482,7 +482,7 @@ public class PDBStatus {
 		String replacedList = attrs.get("replaces"); //space-delimited list
 		if(replacedList == null) {
 			// no replaces value; assume root
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
 		String[] directDescendents = replacedList.split("\\s");
 
@@ -490,7 +490,7 @@ public class PDBStatus {
 		if(recurse) {
 			// Note: Assumes a proper directed acyclic graph of revisions
 			// Cycles will cause infinite loops.
-			List<String> allDescendents = new LinkedList<String>();
+			List<String> allDescendents = new LinkedList<>();
 			for(String replaced : directDescendents) {
 				List<String> roots = PDBStatus.getReplaces(replaced, recurse);
 				mergeReversed(allDescendents,roots);
@@ -536,7 +536,7 @@ public class PDBStatus {
 	 */
 	private static List<Map<String, String>> getStatusIdRecords(String[] pdbIDs) {
 
-		List<Map<String,String>> result = new ArrayList<Map<String,String>>(pdbIDs.length);
+		List<Map<String,String>> result = new ArrayList<>(pdbIDs.length);
 
 		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
 
@@ -622,7 +622,7 @@ public class PDBStatus {
 		private List<Map<String,String>> records;
 
 		public PDBStatusXMLHandler() {
-			records = new ArrayList<Map<String,String>>();
+			records = new ArrayList<>();
 		}
 
 		/**
@@ -640,7 +640,7 @@ public class PDBStatus {
 			if(qName.equals("record")) {
 				//Convert attributes into a Map, as it should have been.
 				//Important since SAX reuses Attributes objects for different calls
-				Map<String,String> attrMap = new HashMap<String,String>(attributes.getLength()*2);
+				Map<String,String> attrMap = new HashMap<>(attributes.getLength() * 2);
 				for(int i=0;i<attributes.getLength();i++) {
 					attrMap.put(attributes.getQName(i), attributes.getValue(i));
 				}
@@ -673,7 +673,7 @@ public class PDBStatus {
 
 	public static SortedSet<String> getCurrentPDBIds() throws IOException {
 
-		SortedSet<String> allPDBs = new TreeSet<String>();
+		SortedSet<String> allPDBs = new TreeSet<>();
 		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
 
 		if ( serverName == null)

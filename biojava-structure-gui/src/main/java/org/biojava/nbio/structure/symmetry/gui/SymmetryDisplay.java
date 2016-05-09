@@ -201,9 +201,9 @@ public class SymmetryDisplay {
 		List<Matrix4d> symmAxes = axes.getElementaryAxes();
 		for (int a = 0; a < symmAxes.size(); a++) {
 			RotationAxis rot = new RotationAxis(symmAxes.get(a));
-			Set<Integer> repIndex = new TreeSet<Integer>(axes.getRepeatRelation(a).get(0));
+			Set<Integer> repIndex = new TreeSet<>(axes.getRepeatRelation(a).get(0));
 			repIndex.addAll(axes.getRepeatRelation(a).get(1));
-			List<Atom> repAtoms = new ArrayList<Atom>();
+			List<Atom> repAtoms = new ArrayList<>();
 			for (Integer r : repIndex)
 				repAtoms.addAll(Arrays.asList(repeats.get(r)));
 			

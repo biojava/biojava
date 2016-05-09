@@ -110,7 +110,7 @@ public class IOUtils {
 	 * @throws ParserException Can throw this if we cannot parse the given reader
 	 */
 	public static List<String> getList(BufferedReader br) throws ParserException {
-		final List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<>();
 		processReader(br, new ReaderProcessor() {
 			@Override
 			public void process(String line) {

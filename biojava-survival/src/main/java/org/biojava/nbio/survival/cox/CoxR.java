@@ -272,7 +272,7 @@ public class CoxR {
 		ArrayList<String> clusterList = null;
 
 		if(cluster){
-			clusterList = new ArrayList<String>();
+			clusterList = new ArrayList<>();
 		}
 		//copy data over to local arrays to minimuze changing code
 		for (person = 0; person < nused; person++) {
@@ -796,7 +796,7 @@ public class CoxR {
 		double[] infs = Matrix.abs(Matrix.multiply(ci.u, ci.getVariance()));
 //        StdArrayIO.print(infs);
 
-		ArrayList<CoxCoefficient> coxCoefficients = new ArrayList<CoxCoefficient>(ci.getCoefficientsList().values());
+		ArrayList<CoxCoefficient> coxCoefficients = new ArrayList<>(ci.getCoefficientsList().values());
 
 		for (int i = 0; i < infs.length; i++) {
 			double inf = infs[i];
@@ -957,7 +957,7 @@ public class CoxR {
 
 
 				WorkSheet worksheet = WorkSheet.readCSV(is, '\t');
-				ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
+				ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 				int i = 0;
 				for (String row : worksheet.getRows()) {
 					double time = worksheet.getCellDouble(row, "TIME");
@@ -976,7 +976,7 @@ public class CoxR {
 				}
 
 				CoxR cox = new CoxR();
-				ArrayList<String> variables = new ArrayList<String>();
+				ArrayList<String> variables = new ArrayList<>();
 				//               variables.add("AGE");
 
 				variables.add("AGE");

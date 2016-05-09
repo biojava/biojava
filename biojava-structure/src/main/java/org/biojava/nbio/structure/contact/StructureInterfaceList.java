@@ -80,7 +80,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 
 	public StructureInterfaceList() {
-		this.list = new ArrayList<StructureInterface>();
+		this.list = new ArrayList<>();
 	}
 
 	public void add(StructureInterface interf) {
@@ -133,8 +133,8 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		// we get discrepancies (not very big but annoying) which lead to things like negative (small) bsa values
 
 
-		Map<String, Atom[]> uniqAsaChains = new TreeMap<String, Atom[]>();
-		Map<String, double[]> chainAsas = new TreeMap<String, double[]>();
+		Map<String, Atom[]> uniqAsaChains = new TreeMap<>();
+		Map<String, double[]> chainAsas = new TreeMap<>();
 
 		// first we gather rotation-unique chains (in terms of AU id and transform id)
 		for (StructureInterface interf:list) {
@@ -245,7 +245,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			return clusters;
 		}
 
-		clusters = new ArrayList<StructureInterfaceCluster>();
+		clusters = new ArrayList<>();
 
 		// nothing to do if we have no interfaces
 		if (list.size()==0) return clusters;
@@ -271,7 +271,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		Map<Integer,Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
 		for (int clusterIdx:clusteredIndices.keySet()) {
-			List<StructureInterface> members = new ArrayList<StructureInterface>();
+			List<StructureInterface> members = new ArrayList<>();
 			for (int idx:clusteredIndices.get(clusterIdx)) {
 				members.add(list.get(idx));
 			}

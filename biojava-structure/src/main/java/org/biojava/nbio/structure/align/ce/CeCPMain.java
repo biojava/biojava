@@ -411,8 +411,8 @@ public class CeCPMain extends CeMain {
 
 		// Fix numbering:
 		// First, split up the atoms into left and right blocks
-		List< ResiduePair > left = new ArrayList<ResiduePair>(); // residues from left of duplication
-		List< ResiduePair > right = new ArrayList<ResiduePair>(); // residues from right of duplication
+		List< ResiduePair > left = new ArrayList<>(); // residues from left of duplication
+		List< ResiduePair > right = new ArrayList<>(); // residues from right of duplication
 
 		for(int i=0;i<optLen[0];i++) {
 			if( optAln[0][1][i] >= firstRes && optAln[0][1][i] <= lastRes ) { // not trimmed
@@ -428,7 +428,7 @@ public class CeCPMain extends CeMain {
 		alignLen = 0;
 
 		// Now we don't care about left/right, so just call them "blocks"
-		List<List<ResiduePair>> blocks = new ArrayList<List<ResiduePair>>(2);
+		List<List<ResiduePair>> blocks = new ArrayList<>(2);
 		if( !left.isEmpty() ) {
 			blocks.add(left);
 			alignLen += left.size();

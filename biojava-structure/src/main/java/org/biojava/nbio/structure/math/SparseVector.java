@@ -54,7 +54,7 @@ public class SparseVector implements Serializable{
 	 */
 	public SparseVector(int N) {
 		this.N  = N;
-		this.symbolTable = new SymbolTable<Integer, Double>();
+		this.symbolTable = new SymbolTable<>();
 	}
 
 	/** Setter method (should it be renamed to set?)

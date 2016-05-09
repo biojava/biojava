@@ -232,7 +232,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
-		apos = new ArrayList<AlignedPosition>();
+		apos = new ArrayList<>();
 	}
 
 	public void clearListeners(){

@@ -189,13 +189,13 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 	@Override
 	protected List<C> getCompoundsOfQuery() {
 		// TODO replace with consensus sequence
-		return (query == null) ? new ArrayList<C>() : query.getAlignedSequence(1).getAsList();
+		return (query == null) ? new ArrayList<>() : query.getAlignedSequence(1).getAsList();
 	}
 
 	@Override
 	protected List<C> getCompoundsOfTarget() {
 		// TODO replace with consensus sequence
-		return (target == null) ? new ArrayList<C>() : target.getAlignedSequence(1).getAsList();
+		return (target == null) ? new ArrayList<>() : target.getAlignedSequence(1).getAsList();
 	}
 
 	@Override

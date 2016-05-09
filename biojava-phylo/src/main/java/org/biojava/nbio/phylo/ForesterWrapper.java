@@ -64,13 +64,15 @@ public class ForesterWrapper {
 
 		// Convert the biojava MSA to a FASTA String
 		OutputStream os = new ByteArrayOutputStream();
-		FastaWriter<C, D> fastaW = new FastaWriter<C, D>(os,
+		FastaWriter<C, D> fastaW = new FastaWriter<>(os,
 				msa.getAlignedSequences(),
 				new FastaHeaderFormatInterface<C, D>() {
 					@Override
 					public String getHeader(C sequence) {
 						return sequence.getAccession().toString();
-					};
+					}
+
+					;
 				});
 
 		fastaW.process();

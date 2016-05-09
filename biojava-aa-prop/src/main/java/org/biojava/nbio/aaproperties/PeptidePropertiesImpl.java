@@ -210,7 +210,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			}
 		}
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		Map<AminoAcidCompound, Integer> extinctAA2Count = new HashMap<AminoAcidCompound, Integer>();
+		Map<AminoAcidCompound, Integer> extinctAA2Count = new HashMap<>();
 		//Ignore Case is always true
 		extinctAA2Count.put(aaSet.getCompoundForString("W"), numW + smallW);
 		extinctAA2Count.put(aaSet.getCompoundForString("C"), (int) (numC + smallC));
@@ -532,7 +532,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			}
 		}
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		Map<AminoAcidCompound, Integer> chargedAA2Count = new HashMap<AminoAcidCompound, Integer>();
+		Map<AminoAcidCompound, Integer> chargedAA2Count = new HashMap<>();
 		chargedAA2Count.put(aaSet.getCompoundForString("K"), numK);
 		chargedAA2Count.put(aaSet.getCompoundForString("R"), numR);
 		chargedAA2Count.put(aaSet.getCompoundForString("H"), numH);
@@ -558,7 +558,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	@Override
 	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence) {
 		int validLength = 0;
-		Map<AminoAcidCompound, Double> aa2Composition = new HashMap<AminoAcidCompound, Double>();
+		Map<AminoAcidCompound, Double> aa2Composition = new HashMap<>();
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		for(AminoAcidCompound aa:aaSet.getAllCompounds()){
 			aa2Composition.put(aa, 0.0);

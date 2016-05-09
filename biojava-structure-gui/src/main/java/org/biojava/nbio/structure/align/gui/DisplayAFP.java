@@ -58,7 +58,7 @@ public class DisplayAFP {
 
 	//TODO: same as getEqrPos??? !!!
 	public static final List<Integer> getEQRAlignmentPos(AFPChain afpChain){
-		List<Integer> lst = new ArrayList<Integer>();
+		List<Integer> lst = new ArrayList<>();
 
 		char[] s1 = afpChain.getAlnseq1();
 		char[] s2 = afpChain.getAlnseq2();
@@ -109,7 +109,7 @@ public class DisplayAFP {
 	 * @param ca
 	 */
 	public static final List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
-		List<String> lst = new ArrayList<String>();
+		List<String> lst = new ArrayList<>();
 		if ( aligPos > 1) {
 			System.err.println("multiple alignments not supported yet!");
 			return lst;
@@ -421,7 +421,7 @@ public class DisplayAFP {
 	 */
 	static final List<Chain> getAlignedModel(Atom[] ca){
 
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		for ( Atom a: ca){
 
 			Group g = a.getGroup();
@@ -490,7 +490,7 @@ public class DisplayAFP {
 	 * @throws StructureException
 	 */
 	public static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms ) throws StructureException{
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 		Collections.addAll(atoms, ca);
 
 		logger.debug("got {} hetatoms", hetatms.size());
@@ -519,7 +519,7 @@ public class DisplayAFP {
 
 	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms1, List<Group> hetatms2 ) throws StructureException {
 
-		List<Atom> twistedAs = new ArrayList<Atom>();
+		List<Atom> twistedAs = new ArrayList<>();
 
 		for ( Group g: twistedGroups){
 			if ( g == null )
@@ -643,7 +643,7 @@ public class DisplayAFP {
 
 		Group[] twistedGroups = StructureAlignmentDisplay.prepareGroupsForDisplay(afpChain,ca1, ca2);
 
-		List<Atom> twistedAs = new ArrayList<Atom>();
+		List<Atom> twistedAs = new ArrayList<>();
 
 		for ( Group g: twistedGroups){
 			if ( g == null )
