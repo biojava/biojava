@@ -79,18 +79,51 @@ public class EntityFinder {
 	 */
 	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
 
-	//private Structure s;
-	private List<List<Chain>> allModels;
+	
+	private List<List<Chain>> polyModels;
+	private List<List<Chain>> nonPolyModels;
+	private List<List<Chain>> waterModels;
 
 	public EntityFinder(Structure s) {
-		allModels = new ArrayList<List<Chain>>();
+		List<List<Chain>> allModels = new ArrayList<List<Chain>>();
 		for (int i=0;i<s.nrModels();i++) {
-			this.allModels.add(s.getModel(i));
+			allModels.add(s.getModel(i));
 		}
+		initModels(allModels);
 	}
 	
 	public EntityFinder(List<List<Chain>> allModels) {
-		this.allModels = allModels;
+		initModels(allModels);
+	}
+	
+	private void initModels(List<List<Chain>> allModels) {
+		polyModels = new ArrayList<>();
+		nonPolyModels = new ArrayList<>();
+		waterModels = new ArrayList<>();
+		
+		for (List<Chain> model:allModels) {
+			
+			List<Chain> polyChains = new ArrayList<>();
+			List<Chain> nonPolyChains = new ArrayList<>();
+			List<Chain> waterChains = new ArrayList<>();
+			
+			polyModels.add(polyChains);
+			nonPolyModels.add(nonPolyChains);
+			waterModels.add(waterChains);
+			
+			for (Chain c:model) {
+
+				if (StructureTools.isChainWaterOnly(c)) {
+					waterChains.add(c);
+
+				} else if (StructureTools.isChainPureNonPolymer(c)) {
+					nonPolyChains.add(c);
+
+				} else {
+					polyChains.add(c);
+				}
+			}
+		}
 	}
 
 	/**
@@ -102,18 +135,18 @@ public class EntityFinder {
 
 		TreeMap<String,EntityInfo> chainIds2entities = findCompoundsFromAlignment();
 
-		List<EntityInfo> compounds = findUniqueCompounds(chainIds2entities);
+		List<EntityInfo> entities = findUniqueEntities(chainIds2entities);
 
-		createPurelyNonPolyCompounds(compounds);
+		createPurelyNonPolyEntities(polyModels, nonPolyModels, waterModels, entities);
 
-		return compounds;
+		return entities;
 	}
 
 	/**
 	 * Utility method to obtain a list of unique entities from the chainIds2entities map
 	 * @return
 	 */
-	private static List<EntityInfo> findUniqueCompounds(TreeMap<String,EntityInfo> chainIds2entities) {
+	private static List<EntityInfo> findUniqueEntities(TreeMap<String,EntityInfo> chainIds2entities) {
 
 		List<EntityInfo> list = new ArrayList<EntityInfo>();
 
@@ -130,45 +163,71 @@ public class EntityFinder {
 		return list;
 	}
 
-	private void createPurelyNonPolyCompounds(List<EntityInfo> compounds) {
+	/**
+	 * Given all chains of all models find entities for the nonpolymers and water chains within them,
+	 * assigning entity ids, types and descriptions to them. The result is written back to the passed entities List.
+	 * @param allModels
+	 * @param entities
+	 */
+	public static void createPurelyNonPolyEntities(List<List<Chain>> polyModels, List<List<Chain>> nonPolyModels, List<List<Chain>> waterModels, List<EntityInfo> entities) {
 
-		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
-		for (int i=0;i<allModels.get(0).size();i++) {
-			if (StructureTools.isChainPureNonPolymer(allModels.get(0).get(i))) {
-				pureNonPolymerChains.add(allModels.get(0).get(i));
-			}
-		}
-
-		if (!pureNonPolymerChains.isEmpty()) {
-
-			int maxMolId = 0; // if we have no compounds at all we just use 0, so that first assignment is 1
-			if (!compounds.isEmpty()) {
-				Collections.max(compounds, new Comparator<EntityInfo>() {
-					@Override
-					public int compare(EntityInfo o1, EntityInfo o2) {
-						return new Integer(o1.getMolId()).compareTo(o2.getMolId());
-					}
-				}).getMolId();
-			}
-
-			int molId = maxMolId + 1;
-			// for the purely non-polymeric chains we assign additional compounds
-			for (Chain c: pureNonPolymerChains) {
-				EntityInfo comp = new EntityInfo();
-				comp.addChain(c);
-				comp.setMolId(molId);
-				if (StructureTools.isChainWaterOnly(c)) {
-					comp.setType(EntityType.WATER);
-				} else {
-					comp.setType(EntityType.NONPOLYMER);
+		// let's find first the max entity id to assign entity ids to the newly found entities
+		int maxMolId = 0;
+		if (!entities.isEmpty()) {
+			maxMolId = Collections.max(entities, new Comparator<EntityInfo>() {
+				@Override
+				public int compare(EntityInfo o1, EntityInfo o2) {
+					return new Integer(o1.getMolId()).compareTo(o2.getMolId());
 				}
-				logger.warn("Chain {} is purely non-polymeric, will assign a new Compound (entity) to it (entity id {})", c.getId(), molId);
-				molId++;
-
-				compounds.add(comp);
-			}
-
+			}).getMolId();
 		}
+		// we go one over the max
+		maxMolId++;
+		
+		// TODO do this correctly for all models, not just first one!
+		
+		if (!nonPolyModels.get(0).isEmpty()) {
+			List<EntityInfo> nonPolyEntities = new ArrayList<>();
+			for (Chain c: nonPolyModels.get(0)) {
+				// we assume there's only 1 group per non-poly chain
+				String molecPdbName = c.getAtomGroup(0).getPDBName();
+				
+				EntityInfo nonPolyEntity = findNonPolyEntityWithDescription(molecPdbName, nonPolyEntities);
+				if (nonPolyEntity == null) {
+					nonPolyEntity = new EntityInfo();
+					nonPolyEntity.setDescription(molecPdbName);
+					nonPolyEntity.setType(EntityType.NONPOLYMER);
+					nonPolyEntity.setMolId(maxMolId++);
+					nonPolyEntities.add(nonPolyEntity);
+					
+				}
+				nonPolyEntity.addChain(c);
+				c.setEntityInfo(nonPolyEntity);				
+			}
+			entities.addAll(nonPolyEntities);
+		}
+		
+		if (!waterModels.get(0).isEmpty()) {
+			EntityInfo waterEntity = new EntityInfo();
+			waterEntity.setType(EntityType.WATER);
+			waterEntity.setDescription("water");
+			waterEntity.setMolId(maxMolId);
+			
+			for (Chain waterChain:waterModels.get(0)) {
+				waterEntity.addChain(waterChain);
+				waterChain.setEntityInfo(waterEntity);
+			}
+			entities.add(waterEntity);
+		}
+		
+		
+	}
+	
+	private static EntityInfo findNonPolyEntityWithDescription(String description, List<EntityInfo> nonPolyEntities) {
+		for (EntityInfo e:nonPolyEntities) {
+			if (e.getDescription().equals(description)) return e;
+		}
+		return null;
 	}
 
 
@@ -221,13 +280,8 @@ public class EntityFinder {
 		// first we determine which chains to consider: anything not looking
 		// polymeric (protein or nucleotide chain) should be discarded
 		Set<Integer> polyChainIndices = new TreeSet<Integer>();
-		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
-		for (int i=0;i<allModels.get(0).size();i++) {
-			if (StructureTools.isChainPureNonPolymer(allModels.get(0).get(i))) {
-				pureNonPolymerChains.add(allModels.get(0).get(i));
-			} else {
-				polyChainIndices.add(i);
-			}
+		for (int i=0;i<polyModels.get(0).size();i++) {
+			polyChainIndices.add(i);
 		}
 
 
@@ -241,8 +295,8 @@ public class EntityFinder {
 
 					if (j<=i) continue;
 
-					Chain c1 = allModels.get(0).get(i);
-					Chain c2 = allModels.get(0).get(j);
+					Chain c1 = polyModels.get(0).get(i);
+					Chain c2 = polyModels.get(0).get(j);
 
 					Map<Integer,Integer> positionIndex1 = new HashMap<Integer, Integer>();
 					Map<Integer,Integer> positionIndex2 = new HashMap<Integer, Integer>();
@@ -308,6 +362,8 @@ public class EntityFinder {
 							ent.addChain(c2);
 							ent.setMolId(molId++);
 							ent.setType(EntityType.POLYMER);
+							c1.setEntityInfo(ent);
+							c2.setEntityInfo(ent);
 							chainIds2compounds.put(c1.getId(), ent);
 							chainIds2compounds.put(c2.getId(), ent);
 
@@ -319,11 +375,13 @@ public class EntityFinder {
 								logger.debug("Adding chain {} to entity {}",c1.getId(),c2.getId());
 								ent = chainIds2compounds.get(c2.getId());
 								ent.addChain(c1);
+								c1.setEntityInfo(ent);
 								chainIds2compounds.put(c1.getId(), ent);
 
 							} else {
 								logger.debug("Adding chain {} to entity {}",c2.getId(),c1.getId());
 								ent.addChain(c2);
+								c2.setEntityInfo(ent);
 								chainIds2compounds.put(c2.getId(), ent);
 
 							}
@@ -347,13 +405,14 @@ public class EntityFinder {
 
 		// anything not in a Compound will be its own Compound
 		for (int i:polyChainIndices) {
-			Chain c = allModels.get(0).get(i);
+			Chain c = polyModels.get(0).get(i);
 			if (!chainIds2compounds.containsKey(c.getId())) {
 				logger.debug("Creating a 1-member Compound for chain {}",c.getId());
 
 				EntityInfo ent = new EntityInfo();
 				ent.addChain(c);
 				ent.setMolId(molId++);
+				c.setEntityInfo(ent); 
 
 				chainIds2compounds.put(c.getId(),ent);
 			}

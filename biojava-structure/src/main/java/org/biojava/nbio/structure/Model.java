@@ -101,4 +101,9 @@ public class Model {
     public int size() {
         return polyChains.size() + nonPolyChains.size() + waterChains.size();
     }
+    
+    @Override
+    public String toString() {
+    	return "["+polyChains.size()+" poly chains, "+nonPolyChains.size()+" non-poly chains, "+waterChains.size()+" water chains]";
+    }
 }

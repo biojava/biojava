@@ -32,8 +32,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -254,15 +252,23 @@ public class PDBFileParser  {
 
 
 	private FileParsingParameters params;
+	
+	private boolean startOfMolecule;
+	private boolean startOfModel;
 
 	public PDBFileParser() {
 		params = new FileParsingParameters();
 
 		allModels = new ArrayList<>();
-		structure     = null           ;
-		currentModel = new ArrayList<Chain>();
-		currentChain = null           ;
-		currentGroup = null           ;
+		structure     = null;
+		currentModel  = null;
+		currentChain  = null;
+		currentGroup  = null;
+		// we initialise to true since at the beginning of the file we are always starting a new molecule 
+		startOfMolecule = true;
+		startOfModel = true;
+
+		
 		pdbHeader 	  = new PDBHeader();
 		crystallographicInfo = new PDBCrystallographicInfo();
 		connects      = new ArrayList<Map<String,Integer>>() ;
@@ -286,6 +292,7 @@ public class PDBFileParser  {
 		atomCAThreshold = params.getAtomCaThreshold();
 
 		linkRecords = new ArrayList<LinkRecord>();
+		
 	}
 
 	/** initiate new resNum, either Hetatom, Nucleotide, or AminoAcid */
@@ -1572,8 +1579,8 @@ public class PDBFileParser  {
 	}
 
 	/**
-	 * Handler for
-	 * ATOM Record Format
+	 * Handler for ATOM.
+	 * Record Format:
 	 *
 	 * <pre>
 	 * ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
@@ -1599,70 +1606,53 @@ public class PDBFileParser  {
 	 * </pre>
 	 */
 	private void  pdb_ATOM_Handler(String line)	{
-		// build up chains first.
-		// headerOnly just goes down to chain resolution.
 
 		if ( params.isHeaderOnly())
 			return;
 
-		boolean startOfNewChain = false;
-
-		String chain_id      = line.substring(21,22);
-
-		if (currentChain == null) {
-			currentChain = new ChainImpl();
-			currentChain.setId(chain_id);
-			currentChain.setName(chain_id);
-			startOfNewChain = true;
-			currentModel.add(currentChain);
+		// let's first get the chain name which will serve to identify if we are starting a new molecule
+		String chainName      = line.substring(21,22);
+		
+		if (currentChain!=null && !currentChain.getName().equals(chainName)) {
+			// new chain name: another molecule coming
+			startOfMolecule = true;
 		}
-
-
-		if ( ! chain_id.equals(currentChain.getName()) ) {
-
-			startOfNewChain = true;
-
-			// end up old chain...
-			currentChain.addGroup(currentGroup);
-
-			// see if old chain is known ...
-			Chain testchain = isKnownChain(currentChain.getName(), currentModel);
-
-			if ( testchain != null && testchain.getName().equals(chain_id)){
-				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);
-
-			} else {
-
-				testchain = isKnownChain(chain_id, currentModel);
-			}
-
-			if ( testchain == null) {
-
-				currentChain = new ChainImpl();
-				currentChain.setId(chain_id);
-				currentChain.setName(chain_id);
-			}   else {
-				currentChain = testchain;
-			}
-
-			if ( ! currentModel.contains(currentChain))
+		
+		if (startOfMolecule) {
+			// we add last chain if there was one
+			if (currentChain!=null) {
 				currentModel.add(currentChain);
-
-
+				// let's not forget adding the last group to the finishing chain
+				if (currentGroup!=null) {
+					currentChain.addGroup(currentGroup);
+				}
+			}
+			// we initialise the new molecule to come
+			currentChain = new ChainImpl();
+			// TODO should set a chain id later, once we have all chains
+			currentChain.setId(chainName);
+			currentChain.setName(chainName);
+			
 		}
 
-		// process group data:
-		// join residue numbers and insertion codes together
-		String recordName     = line.substring (0, 6).trim ();
+		if (startOfModel) {
+			// we add last model if there was one
+			if (currentModel!=null) {
+				allModels.add(currentModel);
+			}
+			// we initialise the model to come
+			currentModel = new ArrayList<>();
+		}
+		
+		
+		// let's get the residue number and see if we need to start a new group
 
 		String groupCode3     = line.substring(17,20).trim();
-		// pdbCode is the old way of doing things...it's a concatenation
-		//of resNum and iCode which are now defined explicitly
 		String resNum  = line.substring(22,26).trim();
 		Character iCode = line.substring(26,27).charAt(0);
 		if ( iCode == ' ')
 			iCode = null;
-		ResidueNumber residueNumber = new ResidueNumber(chain_id, Integer.valueOf(resNum), iCode);
+		ResidueNumber residueNumber = new ResidueNumber(chainName, Integer.valueOf(resNum), iCode);
 
 		//recordName      groupCode3
 		//|                |    resNum
@@ -1671,63 +1661,45 @@ public class PDBFileParser  {
 		//ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
 		//ATOM   1964  N   ARG H 221A      5.963 -16.715  27.669  1.00 28.59           N
 
-		Character aminoCode1 = null;
+		Character aminoCode1 = StructureTools.get1LetterCode(groupCode3);
 
-		if ( recordName.equals("ATOM") ){
-			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
-		} else {
+		String recordName     = line.substring (0, 6).trim ();
+
+		if (recordName.equals("HETATOM") ){
 			// HETATOM RECORDS are treated slightly differently
 			// some modified amino acids that we want to treat as amino acids
 			// can be found as HETATOM records
-			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
-			if ( aminoCode1 != null)
-				if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
+			if ( aminoCode1 != null && aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
 					aminoCode1 = null;
 		}
 
-		if (currentGroup == null) {
+		if ( startOfMolecule) {
 
-			currentGroup = getNewGroup(recordName,aminoCode1,groupCode3);
-
-			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {
-			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
-			//}
-			currentGroup.setPDBName(groupCode3);
-			currentGroup.setResidueNumber(residueNumber);
-			//			                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
-		}
-
-
-		if ( startOfNewChain) {
-			//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
-
-			currentGroup = getNewGroup(recordName,aminoCode1,groupCode3);
+			currentGroup = getNewGroup(recordName, aminoCode1, groupCode3);
 
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
 		}
+		
+		// resetting states
+		startOfModel = false;
+		startOfMolecule = false;
 
 
 		Character altLoc   = new Character(line.substring (16, 17).charAt(0));
 		Group altGroup = null;
 
-		//System.out.println(current_group + " " + residueNumber);
 
 		// check if residue number is the same ...
-		// insertion code is part of residue number
 		if ( ! residueNumber.equals(currentGroup.getResidueNumber())) {
 
 			currentChain.addGroup(currentGroup);
 			currentGroup.trimToSize();
 
-			currentGroup = getNewGroup(recordName,aminoCode1,groupCode3);
+			currentGroup = getNewGroup(recordName, aminoCode1, groupCode3);
 
-			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {
-			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
-			//}
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
-			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		} else {
 			// same residueNumber, but altLocs...
@@ -1891,7 +1863,6 @@ public class PDBFileParser  {
 
 
 
-		//System.out.println("current group: " + current_group);
 	}
 
 
@@ -2058,34 +2029,29 @@ public class PDBFileParser  {
 	/**
 	 * Handler for MODEL Record Format
 	 * <pre>
-	 COLUMNS       DATA TYPE      FIELD         DEFINITION
-	 ----------------------------------------------------------------------
-	 1 -  6       Record name    "MODEL "
-	 11 - 14       Integer        serial        Model serial number.
+	 * COLUMNS       DATA TYPE      FIELD         DEFINITION
+	 * ----------------------------------------------------------------------
+	 * 1 -  6       Record name    "MODEL "
+	 * 11 - 14       Integer        serial        Model serial number.
 	 * </pre>
 	 */
 	private void pdb_MODEL_Handler(String line) {
 
 		if (params.isHeaderOnly()) return;
+		
+		// new model: we start a new molecule
+		startOfMolecule = true;
+		startOfModel = true;
 
-		// check beginning of file ...
-		if (currentChain != null) {
-			if (currentGroup != null) {
-				currentChain.addGroup(currentGroup);
-				currentGroup.trimToSize();
-			}
-
-			Chain ch = isKnownChain(currentChain.getName(), currentModel) ;
-			if ( ch == null ) {
-				currentModel.add(currentChain);
-			}
-
-			allModels.add(currentModel);
-			currentModel = new ArrayList<Chain>();
-			currentChain = null;
-			currentGroup = null;
-		}
-
+	}
+	
+	/**
+	 * Handler for TER record. The record is used in deposited PDB files and many others,
+	 * but it's often forgotten by some softwares. In any case it helps identifying the 
+	 * start of ligand molecules so we use it for that.
+	 */
+	private void pdb_TER_Handler() {
+		startOfMolecule = true;		
 	}
 
 
@@ -2538,12 +2504,17 @@ public class PDBFileParser  {
 
 		// (re)set structure
 
+		allModels = new ArrayList<>();
 		structure     = new StructureImpl() ;
-		currentModel = new ArrayList<Chain>();
+		currentModel  = null;
+		currentChain  = null;
+		currentGroup  = null;
+		// we initialise to true since at the beginning of the file we are always starting a new molecule 
+		startOfMolecule = true;
+		startOfModel = true;
+
 		seqResChains  = new ArrayList<Chain>();
 		siteMap = new LinkedHashMap<String, Site>();
-		currentChain = null           ;
-		currentGroup = null           ;
 		pdbHeader     = new PDBHeader();
 		connects      = new ArrayList<Map<String,Integer>>();
 		previousContinuationField = "";
@@ -2579,8 +2550,7 @@ public class PDBFileParser  {
 
 
 			// ignore short TER and END lines
-			if ( (line.startsWith("TER")) ||
-					(line.startsWith("END"))) {
+			if ( line.startsWith("END")) {
 				continue;
 			}
 
@@ -2599,6 +2569,8 @@ public class PDBFileParser  {
 				pdb_ATOM_Handler(line);
 			else if (recordName.equals("MODEL"))
 				pdb_MODEL_Handler(line);
+			else if (recordName.equals("TER"))
+				pdb_TER_Handler();
 			else if (recordName.equals("HEADER"))
 				pdb_HEADER_Handler(line);
 			else if (recordName.equals("AUTHOR"))
@@ -2733,8 +2705,20 @@ public class PDBFileParser  {
 
 
 	private void triggerEndFileChecks(){
-		// finish and add ...
 
+		// we need to add the last chain and model
+		currentChain.addGroup(currentGroup);
+		currentModel.add(currentChain);
+		allModels.add(currentModel);
+
+		// reordering chains following the mmcif model and assigning entities
+		assignChainsAndEntities();
+		structure.setEntityInfos(entities);
+		
+
+		
+		// header data
+		
 		Date modDate = pdbHeader.getModDate();
 		if ( modDate.equals(new Date(0)) ) {
 			// modification date = deposition date
@@ -2746,29 +2730,6 @@ public class PDBFileParser  {
 			}
 
 		}
-
-		// a problem occurred earlier so current_chain = null ...
-		// most likely the buffered reader did not provide data ...
-		if ( currentChain != null ) {
-			currentChain.addGroup(currentGroup);
-
-			if (isKnownChain(currentChain.getName(), currentModel) == null) {
-				currentModel.add(currentChain);
-			}
-		}
-
-		
-
-		allModels.add(currentModel);
-		
-		linkChains2Entities();
-		structure.setEntityInfos(entities);
-		
-		// now that we have entities in chains we add the chains to the structure
-		for (List<Chain> model:allModels) {
-			structure.addModel(model);
-		}
-		
 		
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
@@ -2908,104 +2869,222 @@ public class PDBFileParser  {
 			}
 	}
 
+	/**
+	 * Gets all chains with given chainName from given models list
+	 * @param chainName
+	 * @param polyModels
+	 * @return
+	 */
+	private static List<List<Chain>> findChains(String chainName, List<List<Chain>> polyModels) {
+		List<List<Chain>> models = new ArrayList<>();
 
-	private List<Chain> findChains(String chainName) {
-		List<Chain> matchingChains = new ArrayList<>();
-		for (List<Chain> chains:allModels) {
+		for (List<Chain> chains:polyModels) {
+			List<Chain> matchingChains = new ArrayList<>();
+			models.add(matchingChains);
 			for (Chain c:chains) {
 				if (c.getName().equals(chainName)) {
 					matchingChains.add(c);
 				}
 			}
 		}
-		return matchingChains;
+		return models;
+	}
+	
+	private static List<Chain> splitNonPolyChain(Chain chain) {
+		List<Chain> splitNonPolys = new ArrayList<>();
+		for (Group g:chain.getAtomGroups()){
+			Chain split = new ChainImpl();
+			split.setName(chain.getName());
+			split.addGroup(g);
+			splitNonPolys.add(split);
+		}
+		// TODO deal with alt locs
+		
+		return splitNonPolys;
+	}
+	
+	/**
+	 * Assign asym ids following the rules used by the PDB to assign asym ids in mmCIF files
+	 * @param polys
+	 * @param nonPolys
+	 * @param waters
+	 */
+	private void assignAsymIds(List<List<Chain>> polys, List<List<Chain>> nonPolys, List<List<Chain>> waters) {
+		
+		for (int i=0; i<polys.size(); i++) {
+			String asymId = "A";		
+
+			for (Chain poly:polys.get(i)) {
+				poly.setId(asymId);
+				asymId = getNextAsymId(asymId);
+			}
+			for (Chain nonPoly:nonPolys.get(i)) {
+				nonPoly.setId(asymId);
+				asymId = getNextAsymId(asymId);			
+			}
+			for (Chain water:waters.get(i)) {
+				water.setId(asymId);
+				asymId = getNextAsymId(asymId);			
+			}
+		}
+	}
+	
+	/**
+	 * Gets the next asym id given an asymId, according to the convention followed by 
+	 * mmCIF files produced by the PDB
+	 * i.e.: A,B,...,Z,AA,BA,CA,...,ZA,AB,BB,CB,...,ZB,.......,ZZ,AAA,BAA,CAA,...
+	 * @param asymId
+	 * @return
+	 */
+	private String getNextAsymId(String asymId) {
+		if (asymId.length()==1) {
+			if (!asymId.equals("Z")) {
+				return Character.toString(getNextChar(asymId.charAt(0)));
+			} else {
+				return "AA";
+			}
+		} else if (asymId.length()==2) {
+			if (asymId.equals("ZZ")) {
+				return "AAA";
+			}
+			char[] c = new char[2];
+			asymId.getChars(0, 2, c, 0);
+			c[0] = getNextChar(c[0]);
+			if (c[0]=='A') {
+				c[1] = getNextChar(c[1]);
+			} 
+			return new String(c);
+		} else if (asymId.length()==3) {
+			char[] c = new char[3];
+			asymId.getChars(0, 3, c, 0);
+			c[0] = getNextChar(c[0]);
+			if (c[0]=='A') {
+				c[1] = getNextChar(c[1]);
+				if (c[1]=='A') {
+					c[2] = getNextChar(c[2]);
+				}
+			}
+			return new String(c);
+		}
+		return null;
+	}
+	
+	private char getNextChar(char c) {
+		if (c!='Z') {
+			return ((char)(c+1));
+		} else {
+			return 'A';
+		}
 	}
 	
 	/** 
-	 * After the parsing of a PDB file the {@link Chain} and {@link EntityInfo}
-	 * objects need to be linked to each other.
+	 * Here we assign chains following the mmCIF data model:
+	 * one chain per polymer, one chain per non-polymer group and 
+	 * several water chains.
+	 * <p>
+	 * Subsequently we assign entities for them: either from those read from 
+	 * COMPOUND records or from those found heuristically through {@link EntityFinder} 
 	 *
 	 */
-	private void linkChains2Entities(){
+	private void assignChainsAndEntities(){
+		
+		List<List<Chain>> polyModels = new ArrayList<>();
+		List<List<Chain>> nonPolyModels = new ArrayList<>();
+		List<List<Chain>> waterModels = new ArrayList<>();
 
-		for (EntityInfo comp : entities){
-			List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
-			if ( chainIds == null)
-				continue;
-			for ( String chainId : chainIds) {
-				if ( chainId.equals("NULL"))
-					chainId = " ";
-				
-				List<Chain> matchingChains = findChains(chainId);
-					
-				for (Chain c:matchingChains) {	
-					comp.addChain(c);
-					c.setEntityInfo(comp);
-				}
+		for (List<Chain> model:allModels) {
+			
+			List<Chain> polyChains = new ArrayList<>();
+			List<Chain> nonPolyChains = new ArrayList<>();
+			List<Chain> waterChains = new ArrayList<>();
+			
+			polyModels.add(polyChains);
+			nonPolyModels.add(nonPolyChains);
+			waterModels.add(waterChains);
+			
+			for (Chain c:model) {
 
-				if (matchingChains.isEmpty()) {
-					// usually if this happens something is wrong with the PDB header
-					// e.g. 2brd - there is no Chain A, although it is specified in the header
-					// Some bona-fide cases exist, e.g. 2ja5, chain N is described in SEQRES
-					// but the authors didn't observe in the density so it's completely missing
-					// from the ATOM lines
-					logger.warn("Could not find chain {} to link to entity {}. The chain will be missing in the entity.", chainId, comp.getMolId());
+				// we only have entities for polymeric chains, all others are ignored for assigning entities
+				if (StructureTools.isChainWaterOnly(c)) {
+					waterChains.add(c);
+
+				} else if (StructureTools.isChainPureNonPolymer(c)) {
+					nonPolyChains.add(c);
+
+				} else {
+					polyChains.add(c);
 				}
 			}
 		}
+		
+		List<List<Chain>> splitNonPolyModels = new ArrayList<>();
+		for (List<Chain> nonPolyModel:nonPolyModels) {
+			List<Chain> splitNonPolys = new ArrayList<>();
+			splitNonPolyModels.add(splitNonPolys);
+			for (Chain nonPoly:nonPolyModel) {
+				splitNonPolys.addAll(splitNonPolyChain(nonPoly));
+			}
+		}
 
-		if (entities == null || entities.isEmpty()) {
+		// now we have all chains as in mmcif, let's assign ids following the mmcif rules
+		assignAsymIds(polyModels, splitNonPolyModels, waterModels);
+		
+
+		if (!entities.isEmpty()) {
+			// if the file contained COMPOUND records then we can assign entities to the poly chains
+			for (EntityInfo comp : entities){
+				List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
+				if ( chainIds == null)
+					continue;
+				for ( String chainId : chainIds) {
+
+					List<List<Chain>> models = findChains(chainId, polyModels);
+
+					for (List<Chain> matchingChains:models) {
+						for (Chain chain:matchingChains) {
+							comp.addChain(chain);
+							chain.setEntityInfo(comp);
+						}
+
+						if (matchingChains.isEmpty()) {
+							// usually if this happens something is wrong with the PDB header
+							// e.g. 2brd - there is no Chain A, although it is specified in the header
+							// Some bona-fide cases exist, e.g. 2ja5, chain N is described in SEQRES
+							// but the authors didn't observe in the density so it's completely missing
+							// from the ATOM lines
+							logger.warn("Could not find polymeric chain {} to link to entity {}. The chain will be missing in the entity.", chainId, comp.getMolId());
+						}
+					}
+				}
+			}
+			// now we assign entities to the nonpoly and water chains
+			EntityFinder.createPurelyNonPolyEntities(polyModels, splitNonPolyModels, waterModels, entities);
+			
+		} else {
+
 			logger.info("Entity information (COMPOUND record) not found in file. Will assign entities heuristically");
 			// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
 			EntityFinder cf = new EntityFinder(allModels);
 			entities = cf.findEntities();
 
-			// now we need to set references in chains:
-			for (EntityInfo entityInfo : entities) {
-				for (Chain c:entityInfo.getChains()) {
-					c.setEntityInfo(entityInfo);
-				}
-			}			
 		}
 
-		// in rare cases where a purely non-polymer or purely water chain is present we have missed it above
-		// we need now to assign a new compound to it so that at least the structure is consistent
+		// in some rare cases purely non-polymer or purely water chain are present in pdb files
 		// see https://github.com/biojava/biojava/pull/394
+		// these case should be covered by the above
 
-		if (entities!=null && !entities.isEmpty()) {
-			for (List<Chain> chains: allModels) {
-				for (Chain c:chains) {
-					if (c.getEntityInfo() == null) {
-
-						EntityInfo compound = new EntityInfo();
-						compound.addChain(c);
-						compound.setMolId(findMaxEntityId(entities)+1);
-						c.setEntityInfo(compound);
-						entities.add(compound);
-
-						if (StructureTools.isChainWaterOnly(c)) {
-							compound.setType(EntityType.WATER);
-						} else {
-							compound.setType(EntityType.NONPOLYMER);
-						}
-
-						logger.warn("No entity found in file for chain {}. Creating new entity {} for it.", c.getName(), compound.getMolId());
-					}
-				}
-			}
+		
+		// now that we have entities in chains we add the chains to the structure
+		
+		for (int i=0;i<allModels.size();i++) {
+			List<Chain> model = new ArrayList<>();
+			model.addAll(polyModels.get(i));
+			model.addAll(splitNonPolyModels.get(i));
+			model.addAll(waterModels.get(i));
+			structure.addModel(model);
 		}
-	}
 
-	private static int findMaxEntityId(List<EntityInfo> compounds) {
 
-		return
-
-		Collections.max(compounds, new Comparator<EntityInfo>() {
-			@Override
-			public int compare(EntityInfo o1, EntityInfo o2) {
-				return new Integer(o1.getMolId()).compareTo(o2.getMolId());
-			}
-		}).getMolId();
 	}
 
 	/**

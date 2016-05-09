@@ -403,7 +403,7 @@ public class TestLongPdbVsMmCifParsing {
 		
 		assertEquals(sPdb.getNonPolyChains().size(), sCif.getNonPolyChains().size());
 		
-		//assertEquals(sPdb.getWaterChains().size(), sCif.getWaterChains().size());
+		assertEquals(sPdb.getWaterChains().size(), sCif.getWaterChains().size());
 
 		assertEquals(sPdb.getChains().size(),sCif.getChains().size());
 
