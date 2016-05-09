@@ -773,8 +773,6 @@ public interface Structure extends Cloneable {
 	 */
 	List<Site> getSites();
 
-	List<Group> getHetGroups();
-
 	/**
 	 * Set a flag to indicate if this structure is a biological assembly
 	 * @param biologicalAssembly true if biological assembly, otherwise false

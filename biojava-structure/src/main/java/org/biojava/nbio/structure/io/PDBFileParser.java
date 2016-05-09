@@ -60,7 +60,6 @@ import org.biojava.nbio.structure.DBRef;
 import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupIterator;
-import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.JournalArticle;
 import org.biojava.nbio.structure.NucleotideImpl;
@@ -161,9 +160,8 @@ public class PDBFileParser  {
 	//(pdb_COMPOUND_handler for example)
 	private boolean isLegacyFormat = false;
 
-
+	
 	// for re-creating the biological assembly
-
 	private PDBBioAssemblyParser bioAssemblyParser = null;
 
 	private PDBHeader pdbHeader;
@@ -280,7 +278,7 @@ public class PDBFileParser  {
 		atomCount = 0;
 		atomOverflow = false;
 		parseCAonly = false;
-
+		
 		// this SHOULD not be done
 		// DONOT:setFileParsingParameters(params);
 		// set the correct max values for parsing...
@@ -1574,37 +1572,8 @@ public class PDBFileParser  {
 	}
 
 	/**
-	 * Decides whether or not a Group is qualified to be added to the
-	 * Structure.hetGroups list. If it likes it, it adds it.
-	 * @param group
-	 */
-	private void addTohetGroupsDecider(Group group) {
-		boolean wanted = false;
-		//these are HET groups, but they are usually less interesting
-		//than other types
-		if (group.getPDBName().equals("HOH"))
-			return;
-		if (group.getChemComp() == null) {
-			if (group.getType().equals(GroupType.HETATM)) {
-				wanted = true;
-			}
-		} else if (!group.getChemComp().isStandard()) {
-			//also want to add modified amino acids e.g. TYS
-			//these are GroupType.AMINOACID, so we need to check the ChemComp
-			wanted = true;
-		}
-
-		if (wanted) {
-			if (! structure.getHetGroups().contains(group)) {
-				//                    System.out.println("Added " + group + " to structure.hetgroups");
-				structure.getHetGroups().add(group);
-			}
-		}
-	}
-
-	/**
-	 Handler for
-	 ATOM Record Format
+	 * Handler for
+	 * ATOM Record Format
 	 *
 	 * <pre>
 	 * ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
@@ -1657,16 +1626,14 @@ public class PDBFileParser  {
 			currentChain.addGroup(currentGroup);
 
 			// see if old chain is known ...
-			Chain testchain ;
-			testchain = isKnownChain(currentChain.getName(),currentModel);
+			Chain testchain = isKnownChain(currentChain.getName(), currentModel);
 
-			//System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);
 			if ( testchain != null && testchain.getName().equals(chain_id)){
 				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);
 
 			} else {
 
-				testchain = isKnownChain(chain_id,currentModel);
+				testchain = isKnownChain(chain_id, currentModel);
 			}
 
 			if ( testchain == null) {
@@ -1728,7 +1695,6 @@ public class PDBFileParser  {
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
 			//			                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
-			addTohetGroupsDecider(currentGroup);
 		}
 
 
@@ -1739,7 +1705,6 @@ public class PDBFileParser  {
 
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
-			addTohetGroupsDecider(currentGroup);
 		}
 
 
@@ -1762,7 +1727,6 @@ public class PDBFileParser  {
 			//}
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
-			addTohetGroupsDecider(currentGroup);
 			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		} else {
@@ -2111,7 +2075,7 @@ public class PDBFileParser  {
 				currentGroup.trimToSize();
 			}
 
-			Chain ch = isKnownChain(currentChain.getName(),currentModel) ;
+			Chain ch = isKnownChain(currentChain.getName(), currentModel) ;
 			if ( ch == null ) {
 				currentModel.add(currentChain);
 			}
@@ -2506,17 +2470,14 @@ public class PDBFileParser  {
 
 
 	/** 
-	 * Test if the chain is already known (is in current_model
-	 * ArrayList) and if yes, returns the chain
-	 * if no -> returns null
+	 * Finds in the given list of chains the first one that has as name the given chainID.
+	 * If no such Chain can be found it returns null.
 	 */
-	private Chain isKnownChain(String chainID, List<Chain> chains){
+	private static Chain isKnownChain(String chainID, List<Chain> chains){
 
 		for (int i = 0; i< chains.size();i++){
 			Chain testchain =  chains.get(i);
-			//System.out.println("comparing chainID >"+chainID+"< against testchain " + i+" >" +testchain.getName()+"<");
 			if (chainID.equals(testchain.getName())) {
-				//System.out.println("chain "+ chainID+" already known ...");
 				return testchain;
 			}
 		}
@@ -2791,16 +2752,12 @@ public class PDBFileParser  {
 		if ( currentChain != null ) {
 			currentChain.addGroup(currentGroup);
 
-			if (isKnownChain(currentChain.getName(),currentModel) == null) {
+			if (isKnownChain(currentChain.getName(), currentModel) == null) {
 				currentModel.add(currentChain);
 			}
 		}
 
-		//set the JournalArticle, if there is one
-		if (!journalLines.isEmpty()) {
-			buildjournalArticle();
-			pdbHeader.setJournalArticle(journalArticle);
-		}
+		
 
 		allModels.add(currentModel);
 		
@@ -2816,6 +2773,12 @@ public class PDBFileParser  {
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 
+		//set the JournalArticle, if there is one
+		if (!journalLines.isEmpty()) {
+			buildjournalArticle();
+			pdbHeader.setJournalArticle(journalArticle);
+		}
+		
 		structure.setDBRefs(dbrefs);
 
 		// Only align if requested (default) and not when headerOnly mode with no Atoms.

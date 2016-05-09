@@ -57,7 +57,6 @@ public class StructureImpl implements Structure, Serializable {
 	private List<DBRef> dbrefs;
 	private List<Bond> ssbonds;
 	private List<Site> sites;
-	private List<Group> hetAtoms;
 	private String name ;
 	private StructureIdentifier structureIdentifier;
 
@@ -79,7 +78,6 @@ public class StructureImpl implements Structure, Serializable {
 		pdbHeader      = new PDBHeader();
 		ssbonds        = new ArrayList<>();
 		sites          = new ArrayList<>();
-		hetAtoms       = new ArrayList<>();
 	}
 
 
@@ -1006,11 +1004,6 @@ public class StructureImpl implements Structure, Serializable {
 	 * @return a list of Groups listed in the HET records - this will not
 	 * include any waters.
 	 */
-
-	@Override
-	public List<Group> getHetGroups() {
-		return hetAtoms;
-	}
 
 	/**
 	 * Sets a flag to indicate if this structure is a biological assembly
