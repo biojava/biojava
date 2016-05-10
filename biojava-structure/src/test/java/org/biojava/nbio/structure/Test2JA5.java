@@ -20,9 +20,7 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 
@@ -55,14 +53,10 @@ public class Test2JA5 {
 		// assertTrue(StructureTools.getNrAtoms(s1) == 0);
 
 		// SeqRes contains 15 chains, but since we cannot align Chain N to AtomGroups => 14.
-		assertTrue(s1.getChains().size() == 14);
+		assertEquals(14, s1.getPolyChains().size());
 
-		Chain nChain = null;
-		try {
-			nChain = s1.getChainByPDB("N");
-		} catch (StructureException e){
-			// this is expected here, since there is no chain N
-		}
+		Chain nChain = s1.getPolyChainByPDB("N");
+		
 		assertNull(nChain);
 	}
 
@@ -82,17 +76,13 @@ public class Test2JA5 {
 		Structure s1 = StructureIO.getStructure("2ja5");
 
 		// This is not applicable anymore, we need to parse atoms to have chains to match.
-		assertTrue(StructureTools.getNrAtoms(s1) == 0);
+		assertEquals(0, StructureTools.getNrAtoms(s1));
 
 		// All 15 seqres chains will be store.
-		assertTrue(s1.getChains().size() == 15);
+		assertEquals(15, s1.getPolyChains().size());
 
-		Chain nChain = null;
-		try {
-			nChain = s1.getChainByPDB("N");
-		} catch (StructureException e){
-			// this is expected here, since there is no chain N
-		}
+		Chain nChain = s1.getPolyChainByPDB("N");
+		
 		assertNotNull(nChain);
 	}
 }
