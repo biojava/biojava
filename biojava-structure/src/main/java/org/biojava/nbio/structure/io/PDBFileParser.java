@@ -70,7 +70,6 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.xtal.CrystalCell;
@@ -189,9 +188,6 @@ public class PDBFileParser  {
 	private Matrix4d currentNcsOp;
 	private List<Matrix4d> ncsOperators;
 
-	// for storing LINK until we have all the atoms parsed
-	private List<LinkRecord> linkRecords;
-
 	// for parsing COMPOUND and SOURCE Header lines
 	private int prevMolId;
 	private String previousContinuationField;
@@ -291,7 +287,6 @@ public class PDBFileParser  {
 		loadMaxAtoms = params.getMaxAtoms();
 		atomCAThreshold = params.getAtomCaThreshold();
 
-		linkRecords = new ArrayList<LinkRecord>();
 		
 	}
 
@@ -2196,60 +2191,6 @@ public class PDBFileParser  {
 
 
 	/**
-	 * Takes care of LINK records. These take the format of:
-	 *
-	 * <pre>
-	 * COLUMNS        DATA TYPE       FIELD       DEFINITION
-	 * --------------------------------------------------------------------------------
-	 *  1 -  6        Record name     "LINK  "
-	 * 13 - 16        Atom            name1       Atom name.
-	 * 17             Character       altLoc1     Alternate location indicator.
-	 * 18 - 20        Residue name    resName1    Residue name.
-	 * 22             Character       chainID1    Chain identifier.
-	 * 23 - 26        Integer         resSeq1     Residue sequence number.
-	 * 27             AChar           iCode1      Insertion code.
-	 * 43 - 46        Atom            name2       Atom name.
-	 * 47             Character       altLoc2     Alternate location indicator.
-	 * 48 - 50        Residue name    resName2    Residue name.
-	 * 52             Character       chainID2    Chain identifier.
-	 * 53 - 56        Integer         resSeq2     Residue sequence number.
-	 * 57             AChar           iCode2      Insertion code.
-	 * 60 - 65        SymOP           sym1        Symmetry operator for 1st atom.
-	 * 67 - 72        SymOP           sym2        Symmetry operator for 2nd atom.
-	 * </pre>
-	 *
-	 * (From http://www.wwpdb.org/documentation/format32/sect6.html#LINK)
-	 *
-	 * @param line the LINK record line to parse.
-	 */
-	private void pdb_LINK_Handler(String line) {
-
-		if (params.isHeaderOnly()) return;
-
-		String name1 = line.substring(12, 16).trim();
-		String altLoc1 = line.substring(16, 17).trim();
-		String resName1 = line.substring(17, 20).trim();
-		String chainID1 = line.substring(21, 22).trim();
-		String resSeq1 = line.substring(22, 26).trim();
-		String iCode1 = line.substring(26, 27).trim();
-
-		String name2 = line.substring(42, 46).trim();
-		String altLoc2 = line.substring(46, 47).trim();
-		String resName2 = line.substring(47, 50).trim();
-		String chainID2 = line.substring(51, 52).trim();
-		String resSeq2 = line.substring(52, 56).trim();
-		String iCode2 = line.substring(56, 57).trim();
-
-		String sym1 = line.substring(59, 65).trim();
-		String sym2 = line.substring(66, 72).trim();
-
-		linkRecords.add(new LinkRecord(
-				name1, altLoc1, resName1, chainID1, resSeq1, iCode1,
-				name2, altLoc2, resName2, chainID2, resSeq2, iCode2,
-				sym1, sym2));
-	}
-
-	/**
 	 * Handler for the SITE records. 
 	 *
 	 * <pre>
@@ -2533,7 +2474,6 @@ public class PDBFileParser  {
 		lengthCheck = -1;
 		atomCount = 0;
 		atomOverflow = false;
-		linkRecords = new ArrayList<LinkRecord>();
 		siteToResidueMap.clear();
 
 		parseCAonly = params.isParseCAOnly();
@@ -2601,8 +2541,6 @@ public class PDBFileParser  {
 				pdb_SITE_Handler(line);
 			else if (recordName.equals("SSBOND"))
 				pdb_SSBOND_Handler(line);
-			else if (recordName.equals("LINK"))
-				pdb_LINK_Handler(line);
 			else if ( params.isParseSecStruc()) {
 				if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
 				else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
@@ -2691,11 +2629,6 @@ public class PDBFileParser  {
 	private void formBonds() {
 
 		BondMaker maker = new BondMaker(structure, params);
-
-		// TODO do we want link records at all? aren't they overlapping with other bonds that we infer (peptide/nucleotide bonds) or get from chemical components (intra-molecule bonds) - JD 2016-03-03
-		for (LinkRecord linkRecord : linkRecords) {
-			maker.formLinkRecordBond(linkRecord);
-		}
 
 		maker.formDisulfideBonds(ssbonds);
 

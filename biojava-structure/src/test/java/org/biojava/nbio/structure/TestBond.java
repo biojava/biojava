@@ -60,7 +60,7 @@ public class TestBond {
 		Structure s = StructureIO.getStructure("1kh9");
 
 
-		Group g = s.getChainByPDB("A").getSeqResGroup(274);
+		Group g = s.getPolyChainByPDB("A").getSeqResGroup(274);
 		Atom cg = g.getAtom("CG");
 
 		Atom cb = g.getAtom("CB");
@@ -85,8 +85,8 @@ public class TestBond {
 		Structure s = StructureIO.getStructure("1kh9");
 
 
-		AminoAcidImpl residue1 = (AminoAcidImpl) s.getChainByPDB("A").getSeqResGroup(273);
-		AminoAcidImpl residue2 = (AminoAcidImpl) s.getChainByPDB("A").getSeqResGroup(274);
+		AminoAcidImpl residue1 = (AminoAcidImpl) s.getPolyChainByPDB("A").getSeqResGroup(273);
+		AminoAcidImpl residue2 = (AminoAcidImpl) s.getPolyChainByPDB("A").getSeqResGroup(274);
 
 		Atom carboxylC = residue1.getC();
 		Atom aminoN = residue2.getN();
@@ -95,36 +95,12 @@ public class TestBond {
 	}
 
 	@Test
-	public void testLINKBonds() throws StructureException, IOException {
-
-		cache.setUseMmCif(false);
-
-		Structure s = StructureIO.getStructure("1kh9");
-
-		Group g1 = s.getChainByPDB("A").getSeqResGroup(50);
-		assertNotNull(g1);
-
-		assertTrue(g1 instanceof AminoAcid);
-
-		AminoAcid aa = (AminoAcid)g1;
-		assertTrue(aa.getRecordType().equals(AminoAcid.ATOMRECORD));
-
-		Atom atom1 = g1.getAtom("OD1");
-		Atom atom2 = s.getChainByPDB("A").getAtomGroup(446).getAtom("MG");
-		assertNotNull(atom1);
-		assertNotNull(atom2);
-		assertTrue(areBonded(atom1, atom2));
-
-		cache.setUseMmCif(true);
-	}
-
-	@Test
 	public void testDisulfideBonds() throws StructureException, IOException {
 
 		Structure s = StructureIO.getStructure("1kh9");
 
-		Atom atom1 = s.getChainByPDB("A").getSeqResGroup(177).getAtom("SG");
-		Atom atom2 = s.getChainByPDB("A").getSeqResGroup(167).getAtom("SG");
+		Atom atom1 = s.getPolyChainByPDB("A").getSeqResGroup(177).getAtom("SG");
+		Atom atom2 = s.getPolyChainByPDB("A").getSeqResGroup(167).getAtom("SG");
 
 		assertTrue(areBonded(atom1, atom2));
 	}
