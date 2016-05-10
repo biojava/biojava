@@ -570,12 +570,18 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	public List<Chain> getChains(){
+		if (models.size()==0) {
+			return new ArrayList<>(0);
+		}
 		return getChains(0);
 
 	}
 
 	@Override
 	public List<Chain> getPolyChains() { 
+		if (models.size()==0) {
+			return new ArrayList<>(0);
+		}
 		return getPolyChains(0);
 	}
 
@@ -586,6 +592,9 @@ public class StructureImpl implements Structure, Serializable {
 
 	@Override
 	public List<Chain> getNonPolyChains() { 
+		if (models.size()==0) {
+			return new ArrayList<>(0);
+		}
 		return  getNonPolyChains(0);
 	}
 
@@ -596,6 +605,9 @@ public class StructureImpl implements Structure, Serializable {
 	
 	@Override
 	public List<Chain> getWaterChains() {
+		if (models.size()==0) {
+			return new ArrayList<>(0);
+		}
 		return getWaterChains(0);
 	}
 

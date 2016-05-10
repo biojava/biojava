@@ -2706,10 +2706,16 @@ public class PDBFileParser  {
 
 	private void triggerEndFileChecks(){
 
-		// we need to add the last chain and model
-		currentChain.addGroup(currentGroup);
-		currentModel.add(currentChain);
-		allModels.add(currentModel);
+		// we need to add the last chain and model, checking for nulls (e.g. the file could be completely empty of ATOM lines)
+		if (currentChain!=null && currentGroup!=null) {
+			currentChain.addGroup(currentGroup);
+		}
+		if (currentModel!=null && currentChain!=null) {
+			currentModel.add(currentChain);
+		}
+		if (currentModel!=null) {
+			allModels.add(currentModel);
+		}
 
 		// reordering chains following the mmcif model and assigning entities
 		assignChainsAndEntities();
@@ -2744,7 +2750,7 @@ public class PDBFileParser  {
 
 		// Only align if requested (default) and not when headerOnly mode with no Atoms.
 		// Otherwise, we store the empty SeqRes Groups unchanged in the right chains.
-		if ( params.isAlignSeqRes() && !params.isHeaderOnly() ){
+		if ( params.isAlignSeqRes() && !params.isHeaderOnly() && !seqResChains.isEmpty()){
 			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);

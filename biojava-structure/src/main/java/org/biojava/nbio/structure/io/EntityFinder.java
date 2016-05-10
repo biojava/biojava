@@ -187,6 +187,8 @@ public class EntityFinder {
 	 */
 	public static void createPurelyNonPolyEntities(List<List<Chain>> nonPolyModels, List<List<Chain>> waterModels, List<EntityInfo> entities) {
 
+		if (nonPolyModels.isEmpty()) return;
+		
 		// let's find first the max entity id to assign entity ids to the newly found entities
 		int maxMolId = 0;
 		if (!entities.isEmpty()) {
@@ -297,16 +299,18 @@ public class EntityFinder {
 
 	private TreeMap<String,EntityInfo> findEntitiesFromAlignment() {
 
-		// first we determine which chains to consider: anything not looking
-		// polymeric (protein or nucleotide chain) should be discarded
+
+
+		TreeMap<String, EntityInfo> chainIds2entities = new TreeMap<String,EntityInfo>();
+
+		if (polyModels.isEmpty()) return chainIds2entities;
+		
 		Set<Integer> polyChainIndices = new TreeSet<Integer>();
 		for (int i=0;i<polyModels.get(0).size();i++) {
 			polyChainIndices.add(i);
 		}
 
-
-		TreeMap<String, EntityInfo> chainIds2entities = new TreeMap<String,EntityInfo>();
-
+		
 		int molId = 1;
 
 		outer:
