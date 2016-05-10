@@ -86,10 +86,11 @@ public class TestNonDepositedFiles {
 		//cell.checkScaleMatrixConsistency(scaleMatrix);
 		//cell.checkScaleMatrix(scaleMatrix);
 
-		assertEquals(2,s.getChains().size());
+		// 2 protein chanis, 2 nonpoly PLP chains, 2 water chains
+		assertEquals(6,s.getChains().size());
 
-		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
-		assertEquals(1, s.getEntityInfos().size());
+		// checking that heuristics in CompoundFinder work. We should have 1 polymer entity (protein) + 1 nonpoly entity (PLP) + 1 water entity
+		assertEquals(3, s.getEntityInfos().size());
 		assertEquals(EntityType.POLYMER, s.getEntityById(1).getType());
 
 		//System.out.println("Chains from incomplete header file: ");
@@ -103,9 +104,9 @@ public class TestNonDepositedFiles {
 		s = pdbpars.parsePDBFile(inStream);
 		assertNotNull(s);
 
-		assertEquals(2,s.getChains().size());
+		assertEquals(6,s.getChains().size());
 
-		assertEquals(1, s.getEntityInfos().size());
+		assertEquals(3, s.getEntityInfos().size());
 		assertEquals(EntityType.POLYMER, s.getEntityById(1).getType());
 	}
 
@@ -297,14 +298,14 @@ public class TestNonDepositedFiles {
 
 		assertTrue(s.isCrystallographic());
 
-		// 2 polymer chains with ligands, 1 purely water chain
-		assertEquals(3, s.getChains().size());
+		// 2 polymer chains with 1 ligand per chain, 1 purely water chain = 5 chains
+		assertEquals(5, s.getChains().size());
 
-		// 1 polymer entity, 1 water entity
-		assertEquals(2, s.getEntityInfos().size());
+		// 1 polymer entity, 1 nonpoly entity, 1 water entity
+		assertEquals(3, s.getEntityInfos().size());
 		int[] counts = countEntityTypes(s.getEntityInfos());
 		assertEquals(1, counts[0]);
-		assertEquals(0, counts[1]);
+		assertEquals(1, counts[1]);
 		assertEquals(1, counts[2]);
 
 	}

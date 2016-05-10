@@ -913,12 +913,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			EntityFinder cf = new EntityFinder(allModels);
 			entityInfos = cf.findEntities();
 
-			// now we need to set references in chains:
-			for (EntityInfo entityInfo : entityInfos) {
-				for (Chain c:entityInfo.getChains()) {
-					c.setEntityInfo(entityInfo);
-				}
-			}
+			
 			structure.setEntityInfos(entityInfos);
 		}
 		

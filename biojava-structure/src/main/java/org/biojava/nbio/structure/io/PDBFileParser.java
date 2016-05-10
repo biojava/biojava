@@ -3057,17 +3057,19 @@ public class PDBFileParser  {
 					}
 				}
 			}
-			// now we assign entities to the nonpoly and water chains
-			EntityFinder.createPurelyNonPolyEntities(splitNonPolyModels, waterModels, entities);
 			
 		} else {
 
 			logger.info("Entity information (COMPOUND record) not found in file. Will assign entities heuristically");
 			// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
 			EntityFinder cf = new EntityFinder(allModels);
-			entities = cf.findEntities();
+			entities = cf.findPolyEntities();
 
 		}
+		
+		// now we assign entities to the nonpoly and water chains
+		EntityFinder.createPurelyNonPolyEntities(splitNonPolyModels, waterModels, entities);
+
 
 		// in some rare cases purely non-polymer or purely water chain are present in pdb files
 		// see https://github.com/biojava/biojava/pull/394

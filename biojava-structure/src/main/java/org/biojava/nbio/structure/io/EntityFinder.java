@@ -125,10 +125,25 @@ public class EntityFinder {
 			}
 		}
 	}
+	
+	/**
+	 * Utility method that employs some heuristics to find the {@link EntityInfo}s
+	 * for the polymeric chains given in constructor. 
+	 * To be used in case the information is missing in PDB/mmCIF file 
+	 * @return
+	 */
+	public List<EntityInfo> findPolyEntities() {
+		TreeMap<String,EntityInfo> chainIds2entities = findEntitiesFromAlignment();
+
+		List<EntityInfo> entities = findUniqueEntities(chainIds2entities);
+
+		return entities;
+	}
 
 	/**
 	 * Utility method that employs some heuristics to find the {@link EntityInfo}s
-	 * for this Structure in case the information is missing in PDB/mmCIF file
+	 * for all chains of all models given in constructor. 
+	 * To be used in case the information is missing in PDB/mmCIF file
 	 * @return
 	 */
 	public List<EntityInfo> findEntities() {
