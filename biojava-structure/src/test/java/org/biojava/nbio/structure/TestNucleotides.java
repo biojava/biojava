@@ -88,11 +88,11 @@ public class TestNucleotides {
 
 		assertNotNull(s1);
 
-		assertEquals(2,s1.getChains().size());
+		assertEquals(2,s1.getPolyChains().size());
 
 		Chain c1 = s1.getChains().get(1);
 
-		assertEquals("C", c1.getId());
+		assertEquals("C", c1.getName());
 
 		Group g = c1.getAtomGroup(0);
 		assertNotNull(g);
@@ -151,10 +151,10 @@ public class TestNucleotides {
 		Structure s = reader.getStructureById("1REP");
 		//System.out.println(s);
 		//System.out.println(s.toPDB());
-		Chain b = s.getChainByPDB("B");
+		Chain b = s.getPolyChainByPDB("B");
 
 		assertEquals(22,b.getSeqResGroups().size());
-		assertEquals(23,b.getAtomGroups().size());
+		assertEquals(21,b.getAtomGroups().size());
 
 		Group n1 = b.getSeqResGroup(0);
 		Group n2 = b.getAtomGroup(0);
