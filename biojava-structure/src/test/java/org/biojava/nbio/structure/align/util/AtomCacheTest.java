@@ -101,8 +101,10 @@ public class AtomCacheTest {
 		assertEquals(2, structure.getPolyChains().size());
 		Chain a = structure.getPolyChainByPDB("A");
 		Chain b = structure.getPolyChainByPDB("B");
-		assertEquals(expectedLengthA, a.getAtomGroups().size());
-		assertEquals(expectedLengthB, b.getAtomGroups().size());
+		// since biojava 5.0 we have no ligand or water molecules in the polymer chains, we have to subtract the 3 water molecules
+		assertEquals(expectedLengthA - 3, a.getAtomGroups().size());
+		// since biojava 5.0 we have no ligand or water molecules in the polymer chains, we have to subtract the 4 water molecules
+		assertEquals(expectedLengthB - 4, b.getAtomGroups().size());
 		List<Group> ligandsA = StructureTools.filterLigands(b.getAtomGroups());
 		assertEquals(0, ligandsA.size());
 		List<Group> ligandsB = StructureTools.filterLigands(b.getAtomGroups());
@@ -122,7 +124,8 @@ public class AtomCacheTest {
 		Structure structure = cache.getStructureForDomain("d1i3oe_");
 		assertEquals(1, structure.getPolyChains().size());
 		Chain e = structure.getPolyChainByPDB("E");
-		assertEquals(expectedLengthE, e.getAtomGroups().size());
+		// since biojava 5.0 we have no ligand molecules in the polymer chains, we have to subtract the 2 zinc molecules
+		assertEquals(expectedLengthE - 2, e.getAtomGroups().size());
 
 		Chain eligands = structure.getNonPolyChainByPDB("E");
 		List<Group> ligandsE = StructureTools.filterLigands(eligands.getAtomGroups());
