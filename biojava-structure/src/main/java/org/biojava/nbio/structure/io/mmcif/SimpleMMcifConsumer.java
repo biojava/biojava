@@ -71,6 +71,7 @@ import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
 import org.biojava.nbio.structure.io.mmcif.model.Entity;
+import org.biojava.nbio.structure.io.mmcif.model.EntityPoly;
 import org.biojava.nbio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
@@ -130,6 +131,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	private List<Chain>      currentModel;
 	private List<Entity>     entities;
+	/**
+	 * Needed in header only mode to get mapping between asym ids and author ids
+	 */
+	private List<EntityPoly> entityPolys;
 	private List<StructRef>  strucRefs;
 	private List<Chain>      seqResChains;
 	private List<Chain>      entityChains; // needed to link entities, chains and compounds...
@@ -152,6 +157,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * the _struct_asym category
 	 */
 	private Map<String,String> asymId2entityId;
+	
+	/**
+	 * A map of asym ids (internal chain ids) to author ids extracted from 
+	 * the _entity_poly category. Used in header only parsing.
+	 */
+	private Map<String,String> asymId2authorId;
 
 	private String currentNmrModelNumber ;
 
@@ -167,6 +178,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newEntity(Entity entity) {
 		logger.debug("New entity: {}",entity.toString());
 		entities.add(entity);
+	}
+	
+	@Override
+	public void newEntityPoly(EntityPoly entityPoly) {
+		entityPolys.add(entityPoly);
 	}
 
 	@Override
@@ -633,12 +649,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		allModels     = new ArrayList<List<Chain>>();
 		currentModel  = new ArrayList<Chain>();
 		entities      = new ArrayList<Entity>();
+		entityPolys   = new ArrayList<>();
 		strucRefs     = new ArrayList<StructRef>();
 		seqResChains  = new ArrayList<Chain>();
 		entityChains  = new ArrayList<Chain>();
 		structAsyms   = new ArrayList<StructAsym>();
 
 		asymId2entityId = new HashMap<String,String>();
+		asymId2authorId = new HashMap<>();
 		structOpers   = new ArrayList<PdbxStructOperList>();
 		strucAssemblies = new ArrayList<PdbxStructAssembly>();
 		strucAssemblyGens = new ArrayList<PdbxStructAssemblyGen>();
@@ -670,26 +688,39 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		allModels.add(currentModel);
 
-
+		// this populates the asymId2authorId and asymId2entityId maps, needed in header only mode to get the mapping 
+		// between the 2 chain identifiers.
+		initMaps();
 		
-		// Goal is to reproduce the PDB files exactly:
-		// What has to be done is to use the auth_mon_id for the assignment. For this
-
 		for (StructAsym asym : structAsyms) {
 
 			logger.debug("Entity {} matches asym_id: {}", asym.getEntity_id(), asym.getId() );
-
-			asymId2entityId.put(asym.getId(), asym.getEntity_id());
 
 			Chain s = getEntityChain(asym.getEntity_id());
 			Chain seqres = (Chain)s.clone();
 			// to solve issue #160 (e.g. 3u7t)
 			seqres = removeSeqResHeterogeneity(seqres);
 			seqres.setId(asym.getId());
+			if (asymId2authorId.get(asym.getId()) !=null ){ 
+				seqres.setName(asymId2authorId.get(asym.getId()));
+			} else {
+				seqres.setName(asym.getId());
+			}
+			
+			EntityType type = null;
+			try {
+				Entity ent = getEntity(Integer.parseInt(asym.getEntity_id()));
+				type = EntityType.entityTypeFromString(ent.getType());
+			} catch (NumberFormatException e) {
+				logger.debug("Could not parse integer from entity id field {}", asym.getEntity_id());
+			}
 
-			seqResChains.add(seqres);
+			// we'll only add seqres chains that are polymeric or unknown
+			if (type==null || (type!=null && type==EntityType.POLYMER) ) {
+				seqResChains.add(seqres);	
+			}
+			
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
-
 			// adding the entities to structure
 			addEntities(asym);
 
@@ -1157,6 +1188,54 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		c.setOrganismScientific(ess.getOrganism_scientific());
 		c.setOrganismTaxId(ess.getNcbi_taxonomy_id());
 
+	}
+	
+	private void initMaps() {
+		
+		
+		if (structAsyms == null || structAsyms.isEmpty()) {
+			logger.info("No _struct_asym category found in file. No asym id to entity_id mapping will be available");
+			return;
+		}
+
+		Map<String, List<String>> entityId2asymId = new HashMap<>();
+		
+		for (StructAsym asym : structAsyms) {
+
+			logger.debug("Entity {} matches asym_id: {}", asym.getEntity_id(), asym.getId() );
+
+			asymId2entityId.put(asym.getId(), asym.getEntity_id());
+			
+			if (entityId2asymId.containsKey(asym.getEntity_id())) {
+				List<String> asymIds = entityId2asymId.get(asym.getEntity_id());
+				asymIds.add(asym.getId());
+			} else {
+				List<String> asymIds = new ArrayList<>();
+				asymIds.add(asym.getId());
+				entityId2asymId.put(asym.getEntity_id(), asymIds);
+			}
+		}
+		
+		if (entityPolys==null || entityPolys.isEmpty()) {
+			logger.info("No _entity_poly category found in file. No asym id to author id mapping will be available for header only parsing");
+			return;
+		}
+		
+		for (EntityPoly ep:entityPolys) {
+			if (ep.getPdbx_strand_id()==null) {
+				logger.info("_entity_poly.pdbx_strand_id is null for entity {}. Won't be able to map asym ids to author ids for this entity.", ep.getEntity_id());
+				continue;
+			}
+			String[] chainNames = ep.getPdbx_strand_id().split(",");
+			List<String> asymIds = entityId2asymId.get(ep.getEntity_id());
+			if (chainNames.length!=asymIds.size()) {
+				logger.warn("The list of asym ids (from _struct_asym) and the list of author ids (from _entity_poly) for entity {} have different lengths! Can't provide a mapping from asym ids to author chain ids", ep.getEntity_id());
+				continue;
+			}
+			for (int i=0; i<chainNames.length; i++) {
+				asymId2authorId.put(asymIds.get(i), chainNames[i]);
+			}
+		}
 	}
 
 	/** This method will return the parsed protein structure, once the parsing has been finished

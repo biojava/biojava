@@ -98,11 +98,7 @@ public class MMcifTest {
 
 
 		parser.addMMcifConsumer(consumer);
-		try {
-			parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-		} catch (IOException e){
-			fail(e.getMessage());
-		}
+		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
 		// remove to avoid memory leaks
 		parser.clearConsumers();
 		Structure cifStructure = consumer.getStructure();
@@ -124,98 +120,96 @@ public class MMcifTest {
 		assertNotNull(pdbStructure);
 
 		// now compare the results
-		try {
-
-			// chech NMR data
-			assertEquals(id + ": the isNMR flag is not the same!", pdbStructure.isNmr(), cifStructure.isNmr());
-
-			if ( pdbStructure.isNmr()){
-				assertEquals(id + ": the nr of NMR models is not the same!", pdbStructure.nrModels(), pdbStructure.nrModels());
-				checkNMR(pdbStructure);
-				checkNMR(cifStructure);
-			}
-
-			//System.out.println(pdbStructure);
-			//System.out.println(cifStructure);
-
-			// compare amino acids in chain 1:
-			Chain a_pdb = pdbStructure.getChainByPDB(chainId);
-			Chain a_cif = cifStructure.getChainByPDB(chainId);
-			//System.out.println(a_pdb.getAtomGroups());
-
-			//System.out.println(id + "_" + chainName + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());
-			//System.out.println(id + "_" + chainName + " cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
-
-			//for (Group g: a_cif.getAtomGroups()){
-			//	System.out.println(g);
-			//}
-			//System.out.println("--");
-			String pdb_SEQseq = a_pdb.getSeqResSequence();
-
-			String cif_SEQseq = a_cif.getSeqResSequence();
-
-			//                        System.out.println(id + "_" + chainName + " pdbSEQ: " + pdb_SEQseq);
-			//                        System.out.println(id + "_" + chainName + " cifSEQ: " + cif_SEQseq);
-
-			assertEquals(id + ": the SEQRES sequences don't match!", pdb_SEQseq,cif_SEQseq);
-
-			assertEquals(id + ":  The nr of ATOM groups does not match!",a_pdb.getAtomGroups(GroupType.AMINOACID).size(),a_cif.getAtomGroups(GroupType.AMINOACID).size()  );
-
-			// actually this check not necessarily works, since there can be waters in PDB that we don;t deal with yet in cif...
-			//assertEquals("the nr of ATOM record groups is not the same!" , a_pdb.getAtomLength(),a_cif.getAtomLength());
-			for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){
-				Group gp = a_pdb.getAtomGroups(GroupType.AMINOACID).get(i);
-
-				List<Group> cifGroups = a_cif.getAtomGroups(GroupType.AMINOACID);
-				Group gc = cifGroups.get(i);
-				checkGroups(gp, gc);
-			}
 
 
+		// chech NMR data
+		assertEquals(id + ": the isNMR flag is not the same!", pdbStructure.isNmr(), cifStructure.isNmr());
 
-			String pdb_seq = a_pdb.getAtomSequence();
-			String cif_seq = a_cif.getAtomSequence();
-
-			//System.out.println(pdb_seq);
-			//System.out.println(cif_seq);
-
-			assertEquals("the sequences obtained from PDB and mmCif don't match!",pdb_seq, cif_seq);
-
-			List<DBRef> pdb_dbrefs= pdbStructure.getDBRefs();
-			List<DBRef> cif_dbrefs= cifStructure.getDBRefs();
-
-			assertEquals("nr of DBrefs found does not match!", pdb_dbrefs.size(),cif_dbrefs.size());
-
-			DBRef p = pdb_dbrefs.get(0);
-			DBRef c = cif_dbrefs.get(0);
-
-			//System.out.println(p.toPDB());
-			//System.out.println(c.toPDB());
-			String pdb_dbref = p.toPDB();
-			String cif_dbref = c.toPDB();
-			assertEquals("DBRef is not equal",pdb_dbref,cif_dbref);
-
-			PDBHeader h1 = pdbStructure.getPDBHeader();
-			PDBHeader h2 = cifStructure.getPDBHeader();
-
-			//compareString(h1.toPDB() ,h2.toPDB());
-			//System.out.println(h1.toPDB());
-			//System.out.println(h2.toPDB());
-			if ( ! h1.toPDB().toUpperCase().equals(h2.toPDB().toUpperCase()) ){
-				System.err.println(h1.toPDB());
-				System.err.println(h2.toPDB());
-				compareString(h1.toPDB(), h2.toPDB());
-			}
-			assertEquals("the PDBHeader.toPDB representation is not equivalent", h1.toPDB().toUpperCase(),h2.toPDB().toUpperCase());
-
-			// and the ultimate test!
-			// but we are not there yet...
-			// TODO: still need to parse SSBOND equivalent info from cif files...
-			//assertEquals("the Structure.toPDB representation is not equivalent", pdbStructure.toPDB(),cifStructure.toPDB());
-
-		} catch (StructureException ex){
-			fail(ex.getMessage() + " for PDB: " + id);
+		if ( pdbStructure.isNmr()){
+			assertEquals(id + ": the nr of NMR models is not the same!", pdbStructure.nrModels(), pdbStructure.nrModels());
+			checkNMR(pdbStructure);
+			checkNMR(cifStructure);
 		}
+
+		//System.out.println(pdbStructure);
+		//System.out.println(cifStructure);
+
+		// compare amino acids in chain 1:
+		Chain a_pdb = pdbStructure.getPolyChainByPDB(chainId);
+		Chain a_cif = cifStructure.getPolyChainByPDB(chainId);
+		//System.out.println(a_pdb.getAtomGroups());
+
+		//System.out.println(id + "_" + chainName + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());
+		//System.out.println(id + "_" + chainName + " cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
+
+		//for (Group g: a_cif.getAtomGroups()){
+		//	System.out.println(g);
+		//}
+		//System.out.println("--");
+		String pdb_SEQseq = a_pdb.getSeqResSequence();
+
+		String cif_SEQseq = a_cif.getSeqResSequence();
+
+		//                        System.out.println(id + "_" + chainName + " pdbSEQ: " + pdb_SEQseq);
+		//                        System.out.println(id + "_" + chainName + " cifSEQ: " + cif_SEQseq);
+
+		assertEquals(id + ": the SEQRES sequences don't match!", pdb_SEQseq,cif_SEQseq);
+
+		assertEquals(id + ":  The nr of ATOM groups does not match!",a_pdb.getAtomGroups(GroupType.AMINOACID).size(),a_cif.getAtomGroups(GroupType.AMINOACID).size()  );
+
+		// actually this check not necessarily works, since there can be waters in PDB that we don;t deal with yet in cif...
+		//assertEquals("the nr of ATOM record groups is not the same!" , a_pdb.getAtomLength(),a_cif.getAtomLength());
+		for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){
+			Group gp = a_pdb.getAtomGroups(GroupType.AMINOACID).get(i);
+
+			List<Group> cifGroups = a_cif.getAtomGroups(GroupType.AMINOACID);
+			Group gc = cifGroups.get(i);
+			checkGroups(gp, gc);
+		}
+
+
+
+		String pdb_seq = a_pdb.getAtomSequence();
+		String cif_seq = a_cif.getAtomSequence();
+
+		//System.out.println(pdb_seq);
+		//System.out.println(cif_seq);
+
+		assertEquals("the sequences obtained from PDB and mmCif don't match!",pdb_seq, cif_seq);
+
+		List<DBRef> pdb_dbrefs= pdbStructure.getDBRefs();
+		List<DBRef> cif_dbrefs= cifStructure.getDBRefs();
+
+		assertEquals("nr of DBrefs found does not match!", pdb_dbrefs.size(),cif_dbrefs.size());
+
+		DBRef p = pdb_dbrefs.get(0);
+		DBRef c = cif_dbrefs.get(0);
+
+		//System.out.println(p.toPDB());
+		//System.out.println(c.toPDB());
+		String pdb_dbref = p.toPDB();
+		String cif_dbref = c.toPDB();
+		assertEquals("DBRef is not equal",pdb_dbref,cif_dbref);
+
+		PDBHeader h1 = pdbStructure.getPDBHeader();
+		PDBHeader h2 = cifStructure.getPDBHeader();
+
+		//compareString(h1.toPDB() ,h2.toPDB());
+		//System.out.println(h1.toPDB());
+		//System.out.println(h2.toPDB());
+		if ( ! h1.toPDB().toUpperCase().equals(h2.toPDB().toUpperCase()) ){
+			System.err.println(h1.toPDB());
+			System.err.println(h2.toPDB());
+			compareString(h1.toPDB(), h2.toPDB());
+		}
+		assertEquals("the PDBHeader.toPDB representation is not equivalent", h1.toPDB().toUpperCase(),h2.toPDB().toUpperCase());
+
+		// and the ultimate test!
+		// but we are not there yet...
+		// TODO: still need to parse SSBOND equivalent info from cif files...
+		//assertEquals("the Structure.toPDB representation is not equivalent", pdbStructure.toPDB(),cifStructure.toPDB());
+
+
 
 	}
 
