@@ -51,7 +51,10 @@ public class SourceCompoundTest extends TestCase{
 	public void testCompoundSourceStructure(){
 
 		Structure s2 = getStructure("/2gox.pdb");
-		assertEquals(2, s2.getEntityInfos().size());
+		// note since biojava 5.0 we are finding entities for all molecules even if
+		// the annotation is not present for them
+		// 2 protein entities and 1 water entity
+		assertEquals(3, s2.getEntityInfos().size());
 		for (EntityInfo compound : s2.getEntityInfos()){
 			if (compound.getMolId()==1) {
 				assertEquals("COMPLEMENT C3", compound.getDescription());
@@ -109,21 +112,17 @@ public class SourceCompoundTest extends TestCase{
 
 	public void testCOMPNDsectionCHAINS(){
 		Structure s3 = getStructure("/2pos.pdb");
-		assertEquals(1, s3.getEntityInfos().size());
-		for (EntityInfo compound : s3.getEntityInfos()){
-			/*System.out.println(compound.getMolId());
-			System.out.println(compound.getMolName());
-			System.out.println(compound.getChainName().toString());
-			System.out.println(compound.getOrganismScientific());
-			System.out.println(compound.getStrain());
-	*/
-			assertEquals(1, compound.getMolId());
-			assertEquals("SYLVATICIN", compound.getDescription());
-			assertEquals("[A, B, C, D]", compound.getChainIds().toString());
-			assertEquals("PYTHIUM SYLVATICUM", compound.getOrganismScientific());
-			assertEquals("STRAIN 37", compound.getStrain());
+		// note since biojava 5.0 we are finding entities for all molecules even if
+		// the annotation is not present for them
+		// thus for 2pos.pdb we have 1 protein entity, but 3 non-polymer entities and 1 water entity
+		EntityInfo compound = s3.getEntityById(1);
+		assertEquals(5, s3.getEntityInfos().size());
+		assertEquals(1, compound.getMolId());
+		assertEquals("SYLVATICIN", compound.getDescription());
+		assertEquals("[A, B, C, D]", compound.getChainIds().toString());
+		assertEquals("PYTHIUM SYLVATICUM", compound.getOrganismScientific());
+		assertEquals("STRAIN 37", compound.getStrain());
 
-		}
 	}
 
 	public void testSOURCEsectionSTRAIN(){
