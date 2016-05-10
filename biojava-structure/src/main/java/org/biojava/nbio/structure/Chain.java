@@ -375,7 +375,10 @@ public interface Chain {
 	 * {@link FileParsingParameters#setLoadChemCompInfo(boolean)} has not been set to true.
 	 * Otherwise the Ligands could not correctly be identified.
 	 * @return list of Groups that are ligands
+	 * @deprecated since biojava 5.0 this does not apply anymore. Chains contain either
+	 * polymeric groups or non-polymeric groups 
 	 */
+	@Deprecated
 	List<Group> getAtomLigands();
 
 	/**
