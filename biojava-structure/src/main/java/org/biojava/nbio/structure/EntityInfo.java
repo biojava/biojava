@@ -401,9 +401,12 @@ public class EntityInfo implements Serializable {
 	}
 
 	private ResidueNumber findResNumInOtherChains(int i, Chain chain) {
-		for (Chain c: getChains()) {
-			if (c == chain) continue;
 
+		// note that getChains contains all chains from all models, we'll just use first model found and skip the others
+		for (Chain c: getFirstModelChains()) {
+			
+			if (c == chain) continue;			
+			
 			Group seqResGroup = c.getSeqResGroup(i);
 
 			if (seqResGroup==null) {
@@ -805,10 +808,23 @@ public class EntityInfo implements Serializable {
 	 *
 	 * @return a List of Chain objects
 	 */
-	 public List<Chain> getChains(){
+	public List<Chain> getChains(){
 		return this.chains;
 	}
 
+	private List<Chain> getFirstModelChains() {
+		List<Chain> firstModel = new ArrayList<>();
+		for (String id: getChainIds()) {
+			for (Chain chain:chains) {
+				if (chain.getId().equals(id)) {
+					firstModel.add(chain);
+					break;
+				}
+			}
+		}
+		return firstModel;
+	}
+	
 	 /**
 	  * Add new Chain to this EntityInfo
 	  * @param chain
@@ -843,3 +859,4 @@ public class EntityInfo implements Serializable {
 		this.type = type;
 	}
 }
+ 

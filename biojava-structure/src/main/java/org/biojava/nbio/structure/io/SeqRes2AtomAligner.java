@@ -98,7 +98,7 @@ public class SeqRes2AtomAligner {
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
 			Chain atomChain = iter.next();
-			if ( atomChain.getId().equals(seqRes.getId())){
+			if ( atomChain.getName().equals(seqRes.getName())){
 				return atomChain;
 			}
 //			if ( atomChain.getName().equals(seqRes.getName())){
