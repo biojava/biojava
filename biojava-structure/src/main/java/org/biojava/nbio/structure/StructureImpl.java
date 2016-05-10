@@ -624,7 +624,9 @@ public class StructureImpl implements Structure, Serializable {
 		for (Chain c: chains){
 			c.setStructure(this);
 		}
-		models.remove(modelnr);
+		if (models.size()>modelnr) {
+			models.remove(modelnr);
+		}
 
 		Model model = new Model();
 		model.setChains(chains);

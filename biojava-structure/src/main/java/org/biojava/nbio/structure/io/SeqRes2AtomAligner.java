@@ -818,20 +818,30 @@ public class SeqRes2AtomAligner {
 	 * @param seqResChains
 	 */
 	public static void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains, boolean headerOnly) {
+		
+		
+		if (headerOnly) {
 
-		for (int i = 0; i < structure.nrModels(); i++) {
-			List<Chain> atomChains   = structure.getModel(i);
+			List<Chain> atomChains = new ArrayList<>();
+			for (Chain seqRes: seqResChains) {
+				// In header-only mode skip ATOM records.
+				// Here we store chains with SEQRES instead of AtomGroups.
+				seqRes.setSeqResGroups(seqRes.getAtomGroups());
+				seqRes.setAtomGroups(new ArrayList<>()); // clear out the atom groups.
+				
+				atomChains.add(seqRes);
+				
+			}
+			structure.setChains(0, atomChains);
+			
+		} else {
 
-			for (Chain seqRes: seqResChains){
-				Chain atomRes;
+			for (int i = 0; i < structure.nrModels(); i++) {
+				List<Chain> atomChains   = structure.getModel(i);
 
-				if (headerOnly) {
-					// In header-only mode skip ATOM records.
-					// Here we store chains with SEQRES instead of AtomGroups.
-					seqRes.setSeqResGroups(seqRes.getAtomGroups());
-					seqRes.setAtomGroups(new ArrayList<Group>()); // clear out the atom groups.
-					atomChains.add(seqRes);
-				} else {
+				for (Chain seqRes: seqResChains){
+					Chain atomRes;
+
 					// Otherwise, we find a chain with AtomGroups
 					// and set this as SEQRES groups.
 					// TODO no idea if new parameter useChainId should be false or true here, used true as a guess - JD 2016-05-09
@@ -841,9 +851,8 @@ public class SeqRes2AtomAligner {
 					else
 						logger.warn("Could not find atom records for chain " + seqRes.getId());
 				}
-			}
-			if (headerOnly) {
-				structure.setChains(i, atomChains);
+
+
 			}
 		}
 	}
