@@ -67,7 +67,7 @@ public class PDBFileParserTest {
 		String t =
 				"HETATM 2242 NA    NA L 541       5.845 -14.122  30.560  0.88 23.48          NA"+newline+
 				"HETATM 2243 NA    NA L 542      18.411 -16.475  38.464  0.88 24.77          NA"+newline+
-				"TER"+newline;
+				"TER                                                                             "+newline;
 		BufferedReader br = new BufferedReader(new StringReader(t));
 		Structure s = parser.parsePDBFile(br);
 		String pdb = s.toPDB();
@@ -98,7 +98,7 @@ public class PDBFileParserTest {
 				"ATOM     12  O   CYS L   1       9.110  15.220  21.912  1.00 19.03           O"+newline+
 				"ATOM     13  CB  CYS L   1      12.117  14.468  20.771  1.00 21.77           C"+newline+
 				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55           S"+newline+
-				"TER"+newline;
+				"TER                                                                             "+newline;
 
 		BufferedReader br = new BufferedReader(new StringReader(t));
 
@@ -273,7 +273,7 @@ public class PDBFileParserTest {
 		Structure s = parser.parsePDBFile(inStream);
 		//                        System.out.print(s.getSites());
 		Chain chain = new ChainImpl();
-		chain.setChainID("H");
+		chain.setName("H");
 		for (Site site : s.getSites()) {
 			//System.out.println("Site: " + site.getSiteID());
 			for (Group group : site.getGroups()) {
@@ -541,7 +541,7 @@ public class PDBFileParserTest {
 				"HETATM 2283 C2'1 QWE H 373      16.825 -12.903  16.107  1.00 40.59           C"+newline+
 				"HETATM 2284  C42 QWE H 373      18.146 -14.734  13.451  1.00 43.96           C"+newline+
 				"HETATM 2285  N3  QWE H 373      18.049 -13.554  14.106  1.00 43.46           N"+newline+
-				"TER"+newline;
+				"TER                                                                             "+newline;
 
 		BufferedReader br = new BufferedReader(new StringReader(atomLines));
 

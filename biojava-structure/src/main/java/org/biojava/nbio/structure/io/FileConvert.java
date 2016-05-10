@@ -119,8 +119,10 @@ public class FileConvert {
 		for (Chain c:structure.getChains()) {
 			for (Group g:c.getAtomGroups()) {
 				for (Atom a:g.getAtoms()) {
-					for (Bond b:a.getBonds()) {				//7890123456789012345678901234567890123456789012345678901234567890		
-						str.append(String.format("CONECT%5d%5d                                                                "+newline, b.getAtomA().getPDBserial(), b.getAtomB().getPDBserial()));
+					if (a.getBonds()!=null) {
+						for (Bond b:a.getBonds()) {				//7890123456789012345678901234567890123456789012345678901234567890		
+							str.append(String.format("CONECT%5d%5d                                                                "+newline, b.getAtomA().getPDBserial(), b.getAtomB().getPDBserial()));
+						}
 					}
 				}
 			}
@@ -186,34 +188,69 @@ public class FileConvert {
 			str.append("EXPDTA    NMR, "+ nrModels+" STRUCTURES"+newline) ;
 		}
 		for (int m = 0 ; m < nrModels ; m++) {
-			List<Chain> model = structure.getModel(m);
-			// todo support NMR structures ...
+			
+			
 			if ( nrModels>1 ) {
 				str.append("MODEL      " + (m+1)+ newline);
 			}
-			// do for all chains
-			int nrChains = model.size();
-			for ( int c =0; c<nrChains;c++) {
-				Chain  chain   = model.get(c);
-				//String chainID = chain.getChainID();
-				//if ( chainID.equals(DEFAULTCHAIN) ) chainID = " ";
+			
+			List<Chain> polyChains = structure.getPolyChains(m);
+			List<Chain> nonPolyChains = structure.getNonPolyChains(m);
+			List<Chain> waterChains = structure.getWaterChains(m);
+			
+			for (Chain chain : polyChains) {
+
 				// do for all groups
 				int nrGroups = chain.getAtomLength();
 				for ( int h=0; h<nrGroups;h++){
 
 					Group g= chain.getAtomGroup(h);
 
-
 					toPDB(g,str);
 
-
 				}
-				// End any chains with a "TER" record.
-				if (nrGroups > 0) str.append("TER").append(newline);
+				// End any polymeric chain with a "TER" record
+				if (nrGroups > 0) str.append(String.format("%-80s","TER")).append(newline);
+
 			}
+			
+			boolean nonPolyGroupsExist = false;
+			for (Chain chain : nonPolyChains) {
+
+				// do for all groups
+				int nrGroups = chain.getAtomLength();
+				for ( int h=0; h<nrGroups;h++){
+
+					Group g= chain.getAtomGroup(h);
+
+					toPDB(g,str);
+					
+					nonPolyGroupsExist = true;
+				}
+
+			}
+			if (nonPolyGroupsExist) str.append(String.format("%-80s","TER")).append(newline);;
+
+			boolean waterGroupsExist = false;
+			for (Chain chain : waterChains) {
+
+				// do for all groups
+				int nrGroups = chain.getAtomLength();
+				for ( int h=0; h<nrGroups;h++){
+
+					Group g= chain.getAtomGroup(h);
+
+					toPDB(g,str);
+					
+ 					waterGroupsExist = true;
+				}
+
+			}
+			if (waterGroupsExist) str.append(String.format("%-80s","TER")).append(newline);;
+
 
 			if ( nrModels>1) {
-				str.append("ENDMDL").append(newline);
+				str.append(String.format("%-80s","ENDMDL")).append(newline);
 			}
 
 
@@ -416,7 +453,7 @@ public class FileConvert {
 	}
 
 	public static void toPDB(Atom a, StringBuffer str) {
-		toPDB(a,str,a.getGroup().getChainId());
+		toPDB(a,str,a.getGroup().getChain().getName());
 	}
 
 

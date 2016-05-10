@@ -409,18 +409,18 @@ public interface Structure extends Cloneable {
 	 * @param authId name of a chain that should be returned
 	 * @return Chain the requested chain
 	 * @throws StructureException
-	 * @Deprecated use {@link #getChainByPDB(String)} instead
+	 * @Deprecated use {@link #getPolyChainByPDB(String)} or {@link #getNonPolyChainByPDB(String)} instead
 	 */
 	@Deprecated
 	Chain findChain(String authId) throws StructureException;
 
 	/**
 	 * Request a particular chain from a particular model
-	 * @param modelnr the number of the model to use
 	 * @param authId the name of a chain that should be returned
+	 * @param modelnr the number of the model to use
 	 * @return Chain the requested chain
 	 * @throws StructureException
-	 * @Deprecated use {@link #getChainByPDB(String, int)} instead
+	 * @Deprecated use {@link #getPolyChainByPDB(String, int)} or {@link #getNonPolyChainByPDB(String, int)} instead
 	 */
 	@Deprecated
 	Chain findChain(String authId, int modelnr) throws StructureException;
@@ -578,16 +578,30 @@ public interface Structure extends Cloneable {
 	Chain getNonPolyChain(String asymId, int modelIdx);
 
 	/** 
-	 * Retrieve a non-polymeric chain based on the 'public' chain
-	 * name (authId) for the first model
+	 * Retrieve the first non-polymeric Chain corresponding to the given 'public' chain
+	 * name (authId) for the first model.
+	 * <p>
+	 * Note that other non-polymeric chains might still
+	 * exist with the same authId, due to the one-to-many relationship
+	 * between public chain ids (authIds) and the stored non-polymeric 
+	 * chains that follow the mmCIF data model. 
+	 * If the user is interested in non-polymeric chains different from first one, he/she would
+	 * need to go through {@link #getNonPolyChains()} to find them all. 
 	 * @param authId the author id (chainName, public chain id)
 	 * @return a non-polymeric Chain or null if it can't be found
 	 */
 	Chain getNonPolyChainByPDB(String authId);
 
 	/** 
-	 * Retrieve a non-polymeric Chain based on the 'public' chain
-	 * name (authId) for the given model index
+	 * Retrieve the first non-polymeric Chain corresponding to the 'public' chain
+	 * name (authId) and the given model index.
+	 * <p>
+	 * Note that other non-polymeric chains might still
+	 * exist with the same authId, due to the one-to-many relationship
+	 * between public chain ids (authIds) and the stored non-polymeric 
+	 * chains that follow the mmCIF data model. 
+	 * If the user is interested in non-polymeric chains different from first one, he/she would
+	 * need to go through {@link #getNonPolyChains(int)} to find them all.
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return a non-polymeric Chain or null if it can't be found

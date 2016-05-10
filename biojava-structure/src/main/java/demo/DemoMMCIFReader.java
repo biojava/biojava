@@ -49,7 +49,8 @@ public class DemoMMCIFReader
 
 	}
 
-	/** A basic example how to load an mmCif file and get a Structure object
+	/** 
+	 * A basic example how to load an mmCif file and get a Structure object
 	 *
 	 */
 	public void loadSimple(){
@@ -71,7 +72,8 @@ public class DemoMMCIFReader
 	}
 
 
-	/** An example demonstrating how to directly use the mmCif file parsing classes. This could potentially be used
+	/**
+	 * An example demonstrating how to directly use the mmCif file parsing classes. This could potentially be used
 	 * to use the parser to populate a data-structure that is different from the biojava-structure data model.
 	 *
 	 */
@@ -83,11 +85,11 @@ public class DemoMMCIFReader
 		try {
 			Structure s = pdbreader.getStructureById(pdbId);
 
-			Chain h = s.getChainByPDB("H");
+			Chain h = s.getNonPolyChainByPDB("H");
 
 			List<Group> ligands = h.getAtomLigands();
 
-			System.out.println("These ligands have been found in chain " + h.getChainID());
+			System.out.println("These ligands have been found in chain " + h.getName());
 
 			for (Group l:ligands){
 				System.out.println(l);

@@ -191,7 +191,7 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public Group findGroup(String chainId, String pdbResnum, int modelnr)
+	public Group findGroup(String chainName, String pdbResnum, int modelnr)
 			throws StructureException {
 
 
@@ -201,11 +201,23 @@ public class StructureImpl implements Structure, Serializable {
 					" in this structure. (contains "+models.size()+")");
 
 
-		Chain c = findChain(chainId,modelnr);
+		// first we need to gather all groups with the author id chainName: polymers, non-polymers and waters
+		Chain polyChain = getPolyChainByPDB(chainName, modelnr);
+		List<Group> groups = new ArrayList<>();
+		groups.addAll(polyChain.getAtomGroups());
 
-		List<Group> groups = c.getAtomGroups();
+		// there can be more thatn one non-poly chain for a given author id
+		for (Chain chain: getNonPolyChains(modelnr)) {
+			if (chain.getName().equals(chainName))
+				groups.addAll(chain.getAtomGroups());
+		}
+		for (Chain chain: getWaterChains(modelnr)) {
+			if (chain.getName().equals(chainName))
+				groups.addAll(chain.getAtomGroups());
+		}
 
-		// now iterate over all groups in this chain.
+
+		// now iterate over all groups 
 		// in order to find the amino acid that has this pdbRenum.
 
 		for (Group g : groups) {
@@ -219,7 +231,7 @@ public class StructureImpl implements Structure, Serializable {
 		}
 
 		throw new StructureException("could not find group " + pdbResnum +
-				" in chain " + chainId);
+				" in chain " + chainName);
 	}
 
 
@@ -236,17 +248,10 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain findChain(String asymId, int modelnr) throws StructureException {
+	public Chain findChain(String chainName, int modelnr) throws StructureException {
 
-		List<Chain> chains = getChains(modelnr);
-
-		// iterate over all chains.
-		for (Chain c : chains) {
-			if (c.getName().equals(asymId)) {
-				return c;
-			}
-		}
-		throw new StructureException("Could not find chain by asymId \"" + asymId + "\" for PDB id " + pdb_id);
+		return getChainByPDB(chainName, modelnr);
+		
 	}
 
 

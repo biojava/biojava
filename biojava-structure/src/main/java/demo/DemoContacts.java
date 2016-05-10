@@ -48,7 +48,7 @@ public class DemoContacts {
 
 		Structure structure = StructureIO.getStructure(pdbCode);
 
-		Chain chain = structure.getChainByPDB("A");
+		Chain chain = structure.getPolyChainByPDB("A");
 
 
 		String[] atoms = {"CA"};

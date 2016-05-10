@@ -31,7 +31,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
 
 /**
@@ -56,7 +55,10 @@ public class Test3th3 {
 		// below we make sure that we parse both residues but that we can only lookup the
 		// aminoacid residue (see ChainImpl.addChain)
 
-		Chain c = s.getChainByPDB("T");
+		// since biojava 5.0 polymer and nonpolymer chains are separated, we've modified the
+		// test accordingly below
+		
+		Chain c = s.getPolyChainByPDB("T");
 
 		ResidueNumber rn = ResidueNumber.fromString("201");
 		rn.setChainName("T");
@@ -74,7 +76,14 @@ public class Test3th3 {
 			if (gr.getResidueNumber().equals(rn)) count++;
 		}
 
-		assertEquals(2, count);
+		assertEquals(1, count);
+		
+		c = s.getNonPolyChainByPDB("T");
+		
+		g = c.getGroupByPDB(rn);
+		
+		assertNotNull(g);
+		assertEquals("BGC", g.getPDBName());
 	}
 
 
