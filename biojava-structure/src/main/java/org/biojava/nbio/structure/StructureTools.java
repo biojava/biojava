@@ -696,6 +696,7 @@ public class StructureTools {
 			}
 			if (newChain == null) {
 				newChain = new ChainImpl();
+				newChain.setId(parentC.getId());
 				newChain.setName(parentC.getName());
 				model.add(newChain);
 			}
@@ -734,14 +735,14 @@ public class StructureTools {
 
 			Chain newChain = null;
 			for (Chain c : model) {
-				if (c.getChainID().equals(parentC.getChainID())) {
+				if (c.getName().equals(parentC.getName())) {
 					newChain = c;
 					break;
 				}
 			}
 			if (newChain == null) {
 				newChain = new ChainImpl();
-				newChain.setChainID(parentC.getChainID());
+				newChain.setName(parentC.getName());
 				model.add(newChain);
 			}
 
