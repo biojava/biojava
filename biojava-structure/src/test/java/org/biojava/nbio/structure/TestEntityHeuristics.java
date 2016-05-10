@@ -53,7 +53,8 @@ public class TestEntityHeuristics {
 
 		Structure s = getStructure("1b8g_raw.pdb.gz", true);
 
-		assertEquals(1,s.getEntityInfos().size());
+		// 1 prot, 1 PLP, 1 water: 3 entities
+		assertEquals(3, s.getEntityInfos().size());
 
 		Chain chainA = s.getPolyChainByPDB("A");
 
@@ -66,7 +67,8 @@ public class TestEntityHeuristics {
 
 		s = getStructure("1b8g_raw.pdb.gz", false);
 
-		assertEquals(1,s.getEntityInfos().size());
+		// 1 prot, 1 PLP, 1 water: 3 entities
+		assertEquals(3, s.getEntityInfos().size());
 
 		chainA = s.getPolyChainByPDB("A");
 
@@ -83,7 +85,8 @@ public class TestEntityHeuristics {
 
 		Structure s = getStructure("2m7y_raw.pdb.gz", true);
 
-		assertEquals(1,s.getEntityInfos().size());
+		// 2 entities: 1 polymer (protein) 1 non-polymer (ZN)
+		assertEquals(2, s.getEntityInfos().size());
 
 		Chain chainA = s.getPolyChainByPDB("A");
 
@@ -96,7 +99,8 @@ public class TestEntityHeuristics {
 
 		s = getStructure("2m7y_raw.pdb.gz", false);
 
-		assertEquals(1,s.getEntityInfos().size());
+		// 2 entities: 1 polymer (protein) 1 non-polymer (ZN)
+		assertEquals(2,s.getEntityInfos().size());
 
 		chainA = s.getPolyChainByPDB("A");
 
@@ -112,11 +116,17 @@ public class TestEntityHeuristics {
 
 		Structure s = getStructure("3c5f_raw.pdb.gz", true);
 
-		assertEquals(4,s.getEntityInfos().size());
+		int polyEntities = 0;
+		for (EntityInfo e:s.getEntityInfos()) {
+			if (e.getType()==EntityType.POLYMER) polyEntities++;
+		}
+		
+		assertEquals(4, polyEntities);
 
 		Chain chainA = s.getPolyChainByPDB("A");
 
-		assertEquals(2, chainA.getEntityInfo().getChains().size());
+		// there's 2 models in file, thus for the protien polymeric entity there's 4 chains (2 from each model)
+		assertEquals(4, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
@@ -125,11 +135,17 @@ public class TestEntityHeuristics {
 
 		s = getStructure("3c5f_raw.pdb.gz", false);
 
-		assertEquals(4,s.getEntityInfos().size());
+		polyEntities = 0;
+		for (EntityInfo e:s.getEntityInfos()) {
+			if (e.getType()==EntityType.POLYMER) polyEntities++;
+		}
+		
+		assertEquals(4,polyEntities);
 
 		chainA = s.getPolyChainByPDB("A");
 
-		assertEquals(2, chainA.getEntityInfo().getChains().size());
+		// there's 2 models in file, thus for the protien polymeric entity there's 4 chains (2 from each model)
+		assertEquals(4, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
@@ -145,7 +161,8 @@ public class TestEntityHeuristics {
 
 		Chain chainA = s.getPolyChainByPDB("A");
 
-		assertEquals(1, chainA.getEntityInfo().getChains().size());
+		// only 1 protein entity with 1 chain, but 5 models
+		assertEquals(5, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
@@ -158,7 +175,7 @@ public class TestEntityHeuristics {
 
 		chainA = s.getPolyChainByPDB("A");
 
-		assertEquals(1, chainA.getEntityInfo().getChains().size());
+		assertEquals(5, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
@@ -175,18 +192,18 @@ public class TestEntityHeuristics {
 
 		assertNotNull(s);
 
-		assertEquals(6, s.getChains().size());
+		assertEquals(6, s.getPolyChains().size());
 
-		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
-		assertEquals(1, s.getEntityInfos().size());
+		// checking that heuristics in CompoundFinder work. We should have a 2 entities: 1 polymeric (prot) and 1 nonpolymeric
+		assertEquals(2, s.getEntityInfos().size());
 
 		// trying without seqAlignSeqRes
 		s = getStructure("3ddo_raw_noseqres.pdb.gz", false);
 		assertNotNull(s);
 
-		assertEquals(6, s.getChains().size());
+		assertEquals(6, s.getPolyChains().size());
 
-		assertEquals(1, s.getEntityInfos().size());
+		assertEquals(2, s.getEntityInfos().size());
 	}
 
 	@Test
