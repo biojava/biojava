@@ -411,7 +411,7 @@ public class BondMaker {
 		if (iCode==null || iCode.isEmpty()) {
 			iCode = " "; // an insertion code of ' ' is ignored
 		}
-		Chain chain = structure.getChainByPDB(chainID);
+		Chain chain = structure.getChain(chainID);
 		ResidueNumber resNum = new ResidueNumber(chainID, Integer.parseInt(resSeq), iCode.charAt(0));
 		Group group = chain.getGroupByPDB(resNum);
 
