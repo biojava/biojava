@@ -80,8 +80,8 @@ public class AtomCacheTest {
 		int expectedLengthB = rrs.get(1).getLength();
 		Structure structure = cache.getStructureForDomain("d1h6w.2");
 		assertEquals(2, structure.getPolyChains().size());
-		Chain a = structure.getChainByPDB("A");
-		Chain b = structure.getChainByPDB("B");
+		Chain a = structure.getPolyChainByPDB("A");
+		Chain b = structure.getPolyChainByPDB("B");
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
 		assertEquals(expectedLengthB, b.getAtomGroups().size());
 	}
@@ -99,8 +99,8 @@ public class AtomCacheTest {
 		int expectedLengthB = rrs.get(1).getLength();
 		Structure structure = cache.getStructureForDomain("d1i3o.1");
 		assertEquals(2, structure.getPolyChains().size());
-		Chain a = structure.getChainByPDB("A");
-		Chain b = structure.getChainByPDB("B");
+		Chain a = structure.getPolyChainByPDB("A");
+		Chain b = structure.getPolyChainByPDB("B");
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
 		assertEquals(expectedLengthB, b.getAtomGroups().size());
 		List<Group> ligandsA = StructureTools.filterLigands(b.getAtomGroups());
@@ -121,7 +121,7 @@ public class AtomCacheTest {
 		int expectedLengthE = rrs.get(0).getLength();
 		Structure structure = cache.getStructureForDomain("d1i3oe_");
 		assertEquals(1, structure.getPolyChains().size());
-		Chain e = structure.getChainByPDB("E");
+		Chain e = structure.getPolyChainByPDB("E");
 		assertEquals(expectedLengthE, e.getAtomGroups().size());
 
 		Chain eligands = structure.getNonPolyChainByPDB("E");

@@ -26,10 +26,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.biojava.nbio.core.util.XMLWriter;
 import org.biojava.nbio.structure.Atom;
@@ -49,7 +47,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** Methods to convert a structure object into different file formats.
+/** 
+ * Methods to convert a structure object into different file formats.
  * @author Andreas Prlic
  * @since 1.4
  */
@@ -475,7 +474,7 @@ public class FileConvert {
 			for (int chainnr = 0;chainnr<structure.size(modelnr);chainnr++){
 				Chain chain = structure.getChain(modelnr,chainnr);
 				xw.openTag("chain");
-				xw.attribute("id",chain.getChainID());
+				xw.attribute("id",chain.getId());
 				xw.attribute("SwissprotId",chain.getSwissprotId() );
 				if (structure.nrModels()>1){
 					xw.attribute("model",Integer.toString(modelnr+1));

@@ -394,7 +394,7 @@ public class MmtfUtils {
 			List<Chain> chains = structure.getModel(i);
 			allChains.addAll(chains);
 			for (Chain chain : chains) {
-				String idOne = chain.getChainID();
+				String idOne = chain.getId();
 				if (!chainIdToIndexMap.containsKey(idOne)) { 
 					chainIdToIndexMap.put(idOne, chainCounter);
 				}

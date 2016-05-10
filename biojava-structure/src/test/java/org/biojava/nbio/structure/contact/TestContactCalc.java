@@ -76,7 +76,7 @@ public class TestContactCalc {
 
 			Structure structure = StructureIO.getStructure(pdbCode);
 
-			Chain chain = structure.getChainByPDB(pdbChainCode);
+			Chain chain = structure.getPolyChainByPDB(pdbChainCode);
 
 
 			for (int i=0;i<cts.length;i++) {
@@ -124,9 +124,9 @@ public class TestContactCalc {
 		// 3 interfaces in the AU are NCS equivalent, they should have similar numbers of contacts
 		Structure structure = StructureIO.getStructure("3hbx");
 
-		AtomContactSet atomContacts1 = StructureTools.getAtomsInContact(structure.getChainByPDB("A"), structure.getChainByPDB("B"), 5.5, false);
-		AtomContactSet atomContacts2 = StructureTools.getAtomsInContact(structure.getChainByPDB("E"), structure.getChainByPDB("F"), 5.5, false);
-		AtomContactSet atomContacts3 = StructureTools.getAtomsInContact(structure.getChainByPDB("C"), structure.getChainByPDB("D"), 5.5, false);
+		AtomContactSet atomContacts1 = StructureTools.getAtomsInContact(structure.getPolyChainByPDB("A"), structure.getPolyChainByPDB("B"), 5.5, false);
+		AtomContactSet atomContacts2 = StructureTools.getAtomsInContact(structure.getPolyChainByPDB("E"), structure.getPolyChainByPDB("F"), 5.5, false);
+		AtomContactSet atomContacts3 = StructureTools.getAtomsInContact(structure.getPolyChainByPDB("C"), structure.getPolyChainByPDB("D"), 5.5, false);
 
 		System.out.println("AU interfaces of 3hbx, number of atom contacts: "+atomContacts1.size()+", "+atomContacts2.size()+", "+atomContacts3.size());
 
@@ -161,7 +161,7 @@ public class TestContactCalc {
 
 		Structure structure = StructureIO.getStructure("1smt");
 
-		Chain chain = structure.getChainByPDB("A");
+		Chain chain = structure.getPolyChainByPDB("A");
 
 		System.out.println("Intra-chain contacts calculation vs distance matrix for 1smtA");
 
@@ -175,7 +175,7 @@ public class TestContactCalc {
 
 		Structure structure = StructureIO.getStructure("2trx");
 
-		Chain chain = structure.getChainByPDB("A");
+		Chain chain = structure.getPolyChainByPDB("A");
 
 		System.out.println("Intra-chain contacts calculation vs distance matrix for 2trxA");
 
@@ -189,7 +189,7 @@ public class TestContactCalc {
 
 		Structure structure = StructureIO.getStructure("1su4");
 
-		Chain chain = structure.getChainByPDB("A");
+		Chain chain = structure.getPolyChainByPDB("A");
 
 		System.out.println("Intra-chain contacts calculation vs distance matrix for 1su4A");
 
@@ -235,8 +235,8 @@ public class TestContactCalc {
 
 		System.out.println("Inter-chain contacts calculation vs distance matrix for 2trx A-B");
 
-		Chain chain1 = structure.getChainByPDB("A");
-		Chain chain2 = structure.getChainByPDB("B");
+		Chain chain1 = structure.getPolyChainByPDB("A");
+		Chain chain2 = structure.getPolyChainByPDB("B");
 
 		long start = System.currentTimeMillis();
 		AtomContactSet atomContacts = StructureTools.getAtomsInContact(chain1, chain2, cutoff, false);

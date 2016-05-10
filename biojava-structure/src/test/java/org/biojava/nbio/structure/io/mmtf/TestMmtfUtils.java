@@ -372,7 +372,7 @@ public class TestMmtfUtils {
 	public void testGetStructureInfo() {
 		Structure structure = new StructureImpl();
 		Chain chain = new ChainImpl();
-		chain.setChainID("A");
+		chain.setId("A");
 		Map<String,Integer> testMap = new HashMap<>();
 		testMap.put("A", 0);
 		List<Chain> chainList = new ArrayList<>();
