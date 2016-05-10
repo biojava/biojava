@@ -379,7 +379,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			return true;
 		}
 		return
-			first.getRepresentative().getChainID().equals(second.getRepresentative().getChainID());
+			first.getRepresentative().getId().equals(second.getRepresentative().getId());
 	}
 
 	/**
@@ -628,8 +628,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			return (2.0*common)/(thisContacts.size()+otherContacts.size());
 		} else {
 			logger.debug("Chain pairs {},{} and {},{} belong to different compound pairs, contact overlap score will be 0 ",
-					thisChains.getFirst().getChainID(),thisChains.getSecond().getChainID(),
-					otherChains.getFirst().getChainID(),otherChains.getSecond().getChainID());
+					thisChains.getFirst().getId(),thisChains.getSecond().getId(),
+					otherChains.getFirst().getId(),otherChains.getSecond().getId());
 			return 0.0;
 		}
 	}

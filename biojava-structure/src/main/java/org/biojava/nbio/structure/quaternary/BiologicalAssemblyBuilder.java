@@ -126,11 +126,7 @@ public class BiologicalAssemblyBuilder {
 	private List<String> getChainIds(Structure asymUnit) {
 		List<String> chainIds = new ArrayList<String>();
 		for ( Chain c : asymUnit.getChains()){
-			String intChainID = c.getInternalChainID();
-			if ( intChainID == null) {
-				//System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
-				intChainID = c.getChainID();
-			}
+			String intChainID = c.getId();
 			chainIds.add(intChainID);
 		}
 		return chainIds;
