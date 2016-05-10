@@ -13694,4 +13694,40 @@
 		<Category>attachment</Category>
 		<Keyword>glycoprotein</Keyword>
 	</Entry>
+	<Entry>
+		<Id>0430</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6-pyridoxal phosphate-L-lysine.</Description>
+		<SystematicName>(S)-2-amino-6-[([3-hydroxy-2-methyl-5-phosphonooxymethylpyridin-4-yl]methylidene)amino]hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PLP</Id>
+			<Name>2-lysine(3-hydroxy-2-methyl-5-phosphonooxymethyl-pyridin-4-ylmethane)</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0119</Id>
+			<Name>N6-pyridoxal phosphate-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00128</Id>
+			<Name>N6-pyridoxal phosphate-L-lysine</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">PLP</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C4A</Atom>
+				<Atom component="2">NZ</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>pyridoxal phosphate</Keyword>
+	</Entry>
 </ProteinModifications>

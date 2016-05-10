@@ -64,10 +64,12 @@ public class ProteinModificationParserTest extends TestCase {
 //				{"1ZNF", "AA0053"}, // ACE on THR
 				{"1MCC", "AA0045"}, // ACE on GLU
 				{"1SCY", "AA0089"}, // NH2 on HIS
+				{"5HNE", "AA0119"}, // PLP on LYS
 
 				// Modified resdiues
 				{"1UIS", "AA0183"}, // NRQ
 				{"3MVJ", "AA0037"}, // SEP
+				{"5EUN", "AA0119"}, // LLP
 
 				// remediation changed 1DOJ...
 				//{"1DOJ", "AA0065"}, // MEA
