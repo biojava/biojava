@@ -93,17 +93,35 @@ public class SeqRes2AtomAligner {
 		return alignmentString;
 	}
 
-	public static Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
+	/**
+	 * 
+	 * @param seqRes
+	 * @param atomList
+	 * @param useChainId if true chainId (Chain.getId) is used for matching, 
+	 * if false chainName (Chain.getName) is used 
+	 * @return
+	 */
+	public static Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList, boolean useChainId)
 	{
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
 			Chain atomChain = iter.next();
-			if ( atomChain.getName().equals(seqRes.getName())){
+			
+			String atomChainId = null;
+			String seqResChainId = null;
+			if (useChainId) {
+				atomChainId = atomChain.getId();
+				seqResChainId = seqRes.getId();
+			} else {
+				atomChainId = atomChain.getName();
+				seqResChainId = seqRes.getName();
+				
+			}
+			
+			if ( atomChainId.equals(seqResChainId)){
 				return atomChain;
 			}
-//			if ( atomChain.getName().equals(seqRes.getName())){
-//				return atomChain;
-//			}
+
 		}
 
 		logger.info("Could not match SEQRES chainID asymId:" + seqRes.getId() + " authId:"+ seqRes.getName() +"  to ATOM chains!, size of atom chain: " + atomList.size());
@@ -120,7 +138,7 @@ public class SeqRes2AtomAligner {
 
 		for (Chain seqRes: seqResList){
 
-				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
+				Chain atomRes = getMatchingAtomRes(seqRes,atomList,false);
 				if ( atomRes == null)
 					continue;
 
@@ -816,7 +834,8 @@ public class SeqRes2AtomAligner {
 				} else {
 					// Otherwise, we find a chain with AtomGroups
 					// and set this as SEQRES groups.
-					atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomChains);
+					// TODO no idea if new parameter useChainId should be false or true here, used true as a guess - JD 2016-05-09
+					atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomChains,true);
 					if ( atomRes != null)
 						atomRes.setSeqResGroups(seqRes.getAtomGroups());
 					else

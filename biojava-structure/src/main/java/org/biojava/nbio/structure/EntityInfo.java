@@ -814,11 +814,12 @@ public class EntityInfo implements Serializable {
 
 	private List<Chain> getFirstModelChains() {
 		List<Chain> firstModel = new ArrayList<>();
+		outer:
 		for (String id: getChainIds()) {
 			for (Chain chain:chains) {
 				if (chain.getId().equals(id)) {
 					firstModel.add(chain);
-					break;
+					break outer;
 				}
 			}
 		}

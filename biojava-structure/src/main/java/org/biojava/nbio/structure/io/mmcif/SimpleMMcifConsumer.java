@@ -985,7 +985,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			for (Chain seqResChain: seqResChains){
 
 				// this extracts the matching atom chain from atomList
-				Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList);
+				Chain atomChain = SeqRes2AtomAligner.getMatchingAtomRes(seqResChain, atomList, true);
 
 				if (atomChain == null) {
 					// most likely there's no observed residues at all for the seqres chain: can't map
