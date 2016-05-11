@@ -2,7 +2,6 @@ package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,13 +16,13 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -31,11 +30,8 @@ import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
-import org.rcsb.mmtf.api.StructureDecoderInterface;
-import org.rcsb.mmtf.dataholders.BioAssemblyData;
-import org.rcsb.mmtf.dataholders.BioAssemblyTrans;
-import org.rcsb.mmtf.decoder.DecodeStructure;
-import org.rcsb.mmtf.decoder.ParsingParams;
+import org.rcsb.mmtf.api.StructureAdapterInterface;
+import org.rcsb.mmtf.dataholders.MmtfStructure;
 
 
 /**
@@ -44,7 +40,7 @@ import org.rcsb.mmtf.decoder.ParsingParams;
  *
  * @author Anthony Bradley
  */
-public class MmtfStructureDecoder implements StructureDecoderInterface, Serializable {
+public class MmtfStructureReader implements StructureAdapterInterface, Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6772030485225130853L;
@@ -64,24 +60,24 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	/** The atoms in a group. */
 	private List<Atom> atomsInGroup;
 
-	/** The chemical component group. */
-	private ChemComp chemicalComponentGroup;
-
 	/** All the atoms. */
-	private List<Atom> allAtoms;
+	private Atom[] allAtoms;
+	private int atomCounter;
 
 	/** The list of EntityInformation */
 	private List<EntityInfo> entityInfoList;
 
+	/** All the chains */
+	private List<Chain> chainList; 
+
 	/**
 	 * Instantiates a new bio java structure decoder.
 	 */
-	public MmtfStructureDecoder() {
+	public MmtfStructureReader() {
 		structure = new StructureImpl();
 		modelNumber = 0;
-		chemicalComponentGroup = new ChemComp();
-		allAtoms  = new ArrayList<>();
 		entityInfoList = new ArrayList<>();
+		chainList = new ArrayList<>();
 	}
 
 	/**
@@ -89,23 +85,37 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	 *
 	 * @return the structure
 	 */
-	public final Structure getStructure() {
+	public Structure getStructure() {
 		return structure;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface#setModelCount(int)
-	 */
 	@Override
-	public void setModelCount(final int inputModelCount) {
+	public void finalizeStructure() {
+		// Ensure all altlocs have all atoms
+		StructureTools.cleanUpAltLocs(structure);
+		// Number the remaining ones
+		int counter =0;
+		for (EntityInfo entityInfo : entityInfoList) {
+			counter++;
+			entityInfo.setMolId(counter);
+		}
+		structure.setEntityInfos(entityInfoList);
 	}
+
+	@Override
+	public void initStructure(int totalNumBonds, int totalNumAtoms, int totalNumGroups, 
+			int totalNumChains, int totalNumModels, String modelId) {
+		structure.setPDBCode(modelId);
+		allAtoms = new Atom[totalNumAtoms];
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.rcsb.mmtf.decoder.StructureDecoderInterface#setModelInfo(int, int)
 	 */
 	@Override
-	public final void setModelInfo(final int inputModelNumber,
-			final int chainCount) {
+	public void setModelInfo(int inputModelNumber,
+			int chainCount) {
 		modelNumber = inputModelNumber;
 		structure.addModel(new ArrayList<Chain>(chainCount));
 	}
@@ -115,7 +125,7 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	 * #setChainInfo(java.lang.String, int)
 	 */
 	@Override
-	public final void setChainInfo(final String chainId, final int groupCount) {
+	public void setChainInfo(String chainId, String chainName, int groupCount) {
 		// First check to see if the chain exists
 		boolean newChain = true;
 		for (Chain c: structure.getChains(modelNumber)) {
@@ -130,6 +140,7 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 			chain = new ChainImpl();
 			chain.setChainID(chainId.trim());
 			structure.addChain(chain, modelNumber);
+			chainList.add(chain);
 		}
 	}
 
@@ -139,8 +150,9 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	 * #setGroupInfo(java.lang.String, int, char, int, int)
 	 */
 	@Override
-	public final void setGroupInfo(final String groupName, final int groupNumber,
-			final char insertionCode, final String chemCompType, final int atomCount) {
+	public void setGroupInfo(String groupName, int groupNumber,
+			char insertionCode, String chemCompType, int atomCount, int bondCount, 
+			char singleLetterCode, int sequenceIndexId, int secStructType) {
 		// Get the polymer type
 		int polymerType = getGroupTypIndicator(chemCompType);
 		switch (polymerType) {
@@ -158,9 +170,11 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 		}
 		atomsInGroup = new ArrayList<Atom>();
 		// Set the CC -> empty but not null
-		group.setChemComp(chemicalComponentGroup);
+		ChemComp chemComp = new ChemComp();
+		chemComp.setOne_letter_code("" + singleLetterCode);
+		group.setChemComp(chemComp);
 		group.setPDBName(groupName);
-		if (insertionCode == '?') {
+		if (insertionCode == MmtfStructure.UNAVAILABLE_CHAR_VALUE) {
 			group.setResidueNumber(chain.getChainID().trim(), groupNumber, null);
 		} else {
 			group.setResidueNumber(chain.getChainID().trim(),
@@ -173,6 +187,7 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 		if (atomCount > 0) {
 			chain.addGroup(group);
 		}
+		MmtfUtils.setSecStructType(group, secStructType);
 	}
 
 	/**
@@ -197,17 +212,17 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	 * float, float, float, java.lang.String, int)
 	 */
 	@Override
-	public final void setAtomInfo(final String atomName,
-			final int serialNumber, final char alternativeLocationId, final float x,
-			final float y, final float z, final float occupancy,
-			final float temperatureFactor,
-			final String element, final int charge) {
+	public void setAtomInfo(String atomName,
+			int serialNumber, char alternativeLocationId, float x,
+			float y, float z, float occupancy,
+			float temperatureFactor,
+			String element, int charge) {
 		Atom atom = new AtomImpl();
 		Group altGroup = null;
 		atom.setPDBserial(serialNumber);
 		atom.setName(atomName.trim());
 		atom.setElement(Element.valueOfIgnoreCase(element));
-		if (alternativeLocationId != '?') {
+		if (alternativeLocationId != ' ') {
 			// Get the altGroup
 			altGroup = getCorrectAltLocGroup(alternativeLocationId);
 			atom.setAltLoc(alternativeLocationId);
@@ -235,7 +250,8 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 			}
 		}
 		atomsInGroup.add(atom);
-		allAtoms.add(atom);
+		allAtoms[atomCounter] = atom;
+		atomCounter++;
 	}
 
 	/* (non-Javadoc)
@@ -243,15 +259,14 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	 * face#setGroupBonds(int, int, int)
 	 */
 	@Override
-	public final void setGroupBond(final int indOne,
-			final int indTwo, final int bondOrder) {
+	public void setGroupBond(int indOne,
+			int indTwo, int bondOrder) {
 		// Get the atom
 		Atom atomOne = atomsInGroup.get(indOne);
 		Atom atomTwo = atomsInGroup.get(indTwo);
 		// set the new bond
 		@SuppressWarnings("unused")
 		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
-
 	}
 
 	/* (non-Javadoc)
@@ -259,11 +274,11 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	 * Interface#setInterGroupBonds(int, int, int)
 	 */
 	@Override
-	public final void setInterGroupBond(final int indOne,
-			final int indTwo, final int bondOrder) {
+	public void setInterGroupBond(int indOne,
+			int indTwo, int bondOrder) {
 		// Get the atom
-		Atom atomOne = allAtoms.get(indOne);
-		Atom atomTwo = allAtoms.get(indTwo);
+		Atom atomOne = allAtoms[indOne];
+		Atom atomTwo = allAtoms[indTwo];
 		// set the new bond
 		@SuppressWarnings("unused")
 		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
@@ -277,8 +292,7 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	 * @param altLoc the alt loc
 	 * @return the correct alt loc group
 	 */
-	private Group getCorrectAltLocGroup(final Character altLoc) {
-
+	private Group getCorrectAltLocGroup(Character altLoc) {
 		// see if we know this altLoc already;
 		List<Atom> atoms = group.getAtoms();
 		if (atoms.size() > 0) {
@@ -286,8 +300,7 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 			// we are just adding atoms to the current group
 			// probably there is a second group following later...
 			if (a1.getAltLoc().equals(altLoc)) {
-				return group;
-			}
+				return group;	}
 		}
 
 		// Get the altLocGroup
@@ -325,8 +338,8 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 	 * setXtalInfo(java.lang.String, java.util.List)
 	 */
 	@Override
-	public final void setXtalInfo(final String spaceGroupString,
-			final float[] unitCell) {
+	public void setXtalInfo(String spaceGroupString,
+			float[] unitCell) {
 		// Now set the xtalographic information
 		PDBCrystallographicInfo pci = new PDBCrystallographicInfo();
 		SpaceGroup spaceGroup = SpaceGroup.parseSpaceGroup(spaceGroupString);
@@ -367,86 +380,64 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 
 
 	@Override
-	public void setBioAssemblyList(List<BioAssemblyData> inputBioassemblies) {
+	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform) {
 		PDBHeader pdbHeader = structure.getPDBHeader();
-		// Get the bioassebly data
-		Map<Integer, BioAssemblyInfo> bioAssemblies = new HashMap<>();
-		int bioassemlyCounter = 0;
-		for (BioAssemblyData value: inputBioassemblies) {
-			bioassemlyCounter++;
-			// Get the key and the value
-			// Make a biojava bioassembly object
-			BioAssemblyInfo bioAssInfo = new  BioAssemblyInfo();
-			bioAssInfo.setId(bioassemlyCounter);
-			// Now get the new sizes
-			List<BiologicalAssemblyTransformation> newList = new ArrayList<>();
-			Integer transIdCounter =0;
-			for (BioAssemblyTrans transform : value.getTransforms()) {
-				transIdCounter++;
-				// Now loop over the chains
-				for(String currChainId : transform.getChainIdList()){
-					BiologicalAssemblyTransformation bioAssTrans =
-							new BiologicalAssemblyTransformation();
-					bioAssTrans.setId(transIdCounter.toString());
-					bioAssTrans.setChainId(currChainId);
-					// Now set matrix
-					Matrix4d mat4d = new Matrix4d(transform.getTransformation());
-					bioAssTrans.setTransformationMatrix(mat4d);
-					// Now add this
-					newList.add(bioAssTrans);
-				}
+		List<Chain> totChainList = new ArrayList<>(); 
+		for (int i=0; i<structure.nrModels(); i++) { 
+			totChainList.addAll(structure.getChains(i));
+		}
+		// Get the bioassembly data
+		Map<Integer, BioAssemblyInfo> bioAssemblies = pdbHeader.getBioAssemblies();
+		// Get the bioassembly itself (if it exists
+		BioAssemblyInfo bioAssInfo;
+		if (bioAssemblies.containsKey(bioAssemblyId)){
+			bioAssInfo = bioAssemblies.get(bioAssemblyId);
+		}
+		else{
+			bioAssInfo = new  BioAssemblyInfo();
+			bioAssInfo.setTransforms(new ArrayList<BiologicalAssemblyTransformation>());
+			bioAssemblies.put(bioAssemblyId, bioAssInfo);
+			bioAssInfo.setId(bioAssemblyId);
+		}
+
+		for(int currChainIndex : inputChainIndices){
+			BiologicalAssemblyTransformation bioAssTrans = new BiologicalAssemblyTransformation();
+			Integer transId = bioAssInfo.getTransforms().size()+1;
+			bioAssTrans.setId(transId.toString());
+			// If it actually has an index - if it doesn't it is because the chain has no density.
+			if (currChainIndex!=-1){
+				bioAssTrans.setChainId(totChainList.get(currChainIndex).getChainID());
 			}
-			// Now set the transform list
-			bioAssInfo.setTransforms(newList);
-			// Now set this
-			bioAssemblies.put(bioassemlyCounter, bioAssInfo);
+			else {
+				continue;
+			}
+			// Now set matrix
+			Matrix4d mat4d = new Matrix4d(inputTransform);
+			bioAssTrans.setTransformationMatrix(mat4d);
+			// Now add this
+			bioAssInfo.getTransforms().add(bioAssTrans);
 		}
-		// Now actually set them
-		pdbHeader.setBioAssemblies(bioAssemblies);
-		structure.setPDBHeader(pdbHeader);		
 	}
 
 	@Override
-	public void cleanUpStructure() {
-		// Ensure all altlocs have all atoms
-		StructureTools.cleanUpAltLocs(structure);
-		// Number the remaining ones
-		int counter =0;
-		for (EntityInfo entityInfo : entityInfoList) {
-			counter++;
-			entityInfo.setMolId(counter);
-		}
-		structure.setEntityInfos(entityInfoList);
-	}
-
-	@Override
-	public void prepareStructure(int totalNumAtoms, int totalNumGroups, int totalNumChains, int totalNumModels, String modelId) {
-		structure.setPDBCode(modelId);
-	}
-
-	@Override
-	public void setEntityInfo(String[] chainIds, String sequence, String description, String title) {
+	public void setEntityInfo(int[] chainIndices, String sequence, String description, String type) {
 		// First get the chains
 		EntityInfo entityInfo = new EntityInfo();
 		entityInfo.setDescription(description);
-		entityInfo.setTitle(title);
+		entityInfo.setType(EntityType.entityTypeFromString(type));
 		List<Chain> chains = new ArrayList<>(); 
 		// Now loop through the chain ids and make a list of them
-		for (String chainId : chainIds) {
-			for (int i=0; i<structure.nrModels(); i++) {
-				try {
-					chains.add(structure.getChainByPDB(chainId, i));
-				} catch (StructureException e) {
-					// Just means it's not in this models
-				}
-			}
+		for( int index : chainIndices) {
+			chains.add(chainList.get(index));
+			chainList.get(index).setEntityInfo(entityInfo);
 		}
 		entityInfo.setChains(chains);
 		entityInfoList.add(entityInfo);
 	}
 
 	@Override
-	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, List<String> experimnetalMethods) {
+	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, String depositionDate,
+			String releaseDate, String[] experimnetalMethods) {
 		// Get the pdb header
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		pdbHeader.setTitle(title);
@@ -458,18 +449,5 @@ public class MmtfStructureDecoder implements StructureDecoderInterface, Serializ
 		}
 	}
 
-	/**
-	 * Utility function to get a Biojava structure from a byte array.
-	 * @param inputByteArray Must be uncompressed (i.e. with entropy compression methods like gzip)
-	 * @param parsingParams
-	 * @return
-	 */
-	public static Structure getBiojavaStruct(byte[] inputByteArray, ParsingParams parsingParams) {
-		// Make the decoder
-		MmtfStructureDecoder biojavaStructureDecoder = new MmtfStructureDecoder();
-		DecodeStructure ds = new DecodeStructure(inputByteArray);
-		ds.getStructFromByteArray(biojavaStructureDecoder, parsingParams);
-		// Now return this structure
-		return biojavaStructureDecoder.getStructure();
-	}
+
 }

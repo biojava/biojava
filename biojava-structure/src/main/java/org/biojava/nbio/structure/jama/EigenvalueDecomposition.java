@@ -455,7 +455,7 @@ public class EigenvalueDecomposition implements java.io.Serializable {
 
 		double norm = 0.0;
 		for (int i = 0; i < nn; i++) {
-			if (i < low | i > high) {
+			if (i < low || i > high) {
 				d[i] = H[i][i];
 				e[i] = 0.0;
 			}
@@ -820,7 +820,7 @@ public class EigenvalueDecomposition implements java.io.Serializable {
 							y = H[i+1][i];
 							vr = (d[i] - p) * (d[i] - p) + e[i] * e[i] - q * q;
 							vi = (d[i] - p) * 2.0 * q;
-							if (vr == 0.0 & vi == 0.0) {
+							if (vr == 0.0 && vi == 0.0) {
 								vr = eps * norm * (Math.abs(w) + Math.abs(q) +
 								Math.abs(x) + Math.abs(y) + Math.abs(z));
 							}
@@ -854,7 +854,7 @@ public class EigenvalueDecomposition implements java.io.Serializable {
 		// Vectors of isolated roots
 
 		for (int i = 0; i < nn; i++) {
-			if (i < low | i > high) {
+			if (i < low || i > high) {
 				for (int j = i; j < nn; j++) {
 					V[i][j] = H[i][j];
 				}
@@ -892,8 +892,8 @@ public class EigenvalueDecomposition implements java.io.Serializable {
 		e = new double[n];
 
 		issymmetric = true;
-		for (int j = 0; (j < n) & issymmetric; j++) {
-			for (int i = 0; (i < n) & issymmetric; i++) {
+		for (int j = 0; (j < n) && issymmetric; j++) {
+			for (int i = 0; (i < n) && issymmetric; i++) {
 				issymmetric = (A[i][j] == A[j][i]);
 			}
 		}

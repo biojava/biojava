@@ -666,7 +666,7 @@ public class FileConvert {
 
 		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
 
-		if (structure.getPDBHeader()!=null & structure.getPDBHeader().getCrystallographicInfo()!=null &&
+		if (structure.getPDBHeader()!=null && structure.getPDBHeader().getCrystallographicInfo()!=null &&
 				structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup()!=null &&
 				structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()!=null) {
 

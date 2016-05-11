@@ -244,7 +244,7 @@ public class StockholmStructure {
 	 */
 	public List<AbstractSequence<? extends AbstractCompound>> getBioSequences(boolean ignoreCase,
 			String forcedSequenceType) {
-		if (forcedSequenceType != null && !(forcedSequenceType.equals(PFAM) | forcedSequenceType.equals(RFAM))) {
+		if (forcedSequenceType != null && !(forcedSequenceType.equals(PFAM) || forcedSequenceType.equals(RFAM))) {
 			throw new IllegalArgumentException("Illegal Argument " + forcedSequenceType);
 		}
 		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<AbstractSequence<? extends AbstractCompound>>();
