@@ -41,9 +41,9 @@ public class ChemicalComponentDictionary {
 	private Map<String,String> isreplacedby;
 
 	public ChemicalComponentDictionary(){
-		dictionary = new HashMap<String, ChemComp>();
-		replaces   = new HashMap<String, String>();
-		isreplacedby = new HashMap<String, String>();
+		dictionary = new HashMap<>();
+		replaces   = new HashMap<>();
+		isreplacedby = new HashMap<>();
 	}
 
 	public boolean isReplaced(ChemComp c){

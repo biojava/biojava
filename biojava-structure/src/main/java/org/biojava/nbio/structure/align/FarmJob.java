@@ -80,7 +80,7 @@ public class FarmJob implements Runnable {
 
 	public void addAlignmentProgressListener(AlignmentProgressListener listener){
 		if (progressListeners == null)
-			progressListeners = new ArrayList<AlignmentProgressListener>();
+			progressListeners = new ArrayList<>();
 
 		progressListeners.add(listener);
 	}
@@ -181,7 +181,7 @@ public class FarmJob implements Runnable {
 		ScopFactory.setScopDatabase(scop);
 
 		String username = params.getUsername();
-		jobs = new ArrayList<FarmJobRunnable>();
+		jobs = new ArrayList<>();
 		for ( int i = 0 ; i < params.getThreads();i++){
 			logger.info("starting thread #{}", (i+1));
 			FarmJobRunnable runner = new FarmJobRunnable(params);

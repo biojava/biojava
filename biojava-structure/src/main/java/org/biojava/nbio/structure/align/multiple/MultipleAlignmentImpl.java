@@ -99,7 +99,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 		blockSets = null;
 		if (ma.blockSets != null) {
 			// Make a deep copy of everything
-			this.blockSets = new ArrayList<BlockSet>();
+			this.blockSets = new ArrayList<>();
 			for (BlockSet bs : ma.blockSets) {
 				BlockSet newBS = bs.clone();
 				newBS.setMultipleAlignment(this);
@@ -126,7 +126,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 
 	@Override
 	public String toString() {
-		List<String> ids = new ArrayList<String>(parent
+		List<String> ids = new ArrayList<>(parent
 				.getStructureIdentifiers().size());
 		for (StructureIdentifier i : parent.getStructureIdentifiers()) {
 			ids.add(i.getIdentifier());
@@ -146,13 +146,13 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 	@Override
 	public List<BlockSet> getBlockSets() {
 		if (blockSets == null)
-			blockSets = new ArrayList<BlockSet>();
+			blockSets = new ArrayList<>();
 		return blockSets;
 	}
 
 	@Override
 	public List<Block> getBlocks() {
-		List<Block> blocks = new ArrayList<Block>();
+		List<Block> blocks = new ArrayList<>();
 		for (BlockSet bs : getBlockSets()) {
 			blocks.addAll(bs.getBlocks());
 		}
@@ -262,7 +262,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 		if (alignResCounts != null)
 			return alignResCounts;
 
-		alignResCounts = new ArrayList<Integer>(size());
+		alignResCounts = new ArrayList<>(size());
 		for (int s = 0; s < size(); s++)
 			alignResCounts.add(0);
 
@@ -281,7 +281,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 			return coverages;
 		
 		List<Integer> counts = getAlignResCounts();
-		coverages = new ArrayList<Double>(size());
+		coverages = new ArrayList<>(size());
 		for (int s = 0; s < size(); s++)
 			coverages.add(counts.get(s)
 					/ (double) getAtomArrays().get(s).length);

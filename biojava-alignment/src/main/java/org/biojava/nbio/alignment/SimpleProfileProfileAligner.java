@@ -110,7 +110,7 @@ public class SimpleProfileProfileAligner<S extends Sequence<C>, C extends Compou
 
 	@Override
 	protected void setProfile(List<Step> sx, List<Step> sy) {
-		profile = pair = new SimpleProfilePair<S, C>(getQuery(), getTarget(), sx, sy);
+		profile = pair = new SimpleProfilePair<>(getQuery(), getTarget(), sx, sy);
 	}
 
 }

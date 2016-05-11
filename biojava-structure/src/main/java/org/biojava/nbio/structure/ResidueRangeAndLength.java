@@ -129,7 +129,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 
 
 	public static List<ResidueRangeAndLength> parseMultiple(List<String> ranges, AtomPositionMap map) {
-		List<ResidueRangeAndLength> rrs = new ArrayList<ResidueRangeAndLength>(ranges.size());
+		List<ResidueRangeAndLength> rrs = new ArrayList<>(ranges.size());
 		for (String range : ranges) {
 			ResidueRangeAndLength rr = ResidueRangeAndLength.parse(range, map);
 			if (rr != null) rrs.add(rr);
@@ -145,7 +145,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 	 */
 	public static List<ResidueRangeAndLength> parseMultiple(String s, AtomPositionMap map) {
 		String[] parts = s.split(",");
-		List<ResidueRangeAndLength> list = new ArrayList<ResidueRangeAndLength>(parts.length);
+		List<ResidueRangeAndLength> list = new ArrayList<>(parts.length);
 		for (String part : parts) {
 			list.add(parse(part, map));
 		}

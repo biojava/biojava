@@ -50,7 +50,7 @@ public class EcodFactory {
 	public static final String DEFAULT_VERSION = EcodInstallation.DEFAULT_VERSION;
 
 	private static Map<String, SoftReference<EcodDatabase>> versionedEcodDBs =
-			Collections.synchronizedMap(new HashMap<String, SoftReference<EcodDatabase>>());
+			Collections.synchronizedMap(new HashMap<>());
 	private static String defaultVersion = EcodInstallation.DEFAULT_VERSION;
 
 	/**
@@ -79,13 +79,13 @@ public class EcodFactory {
 				logger.debug("Creating new {}, version {}",EcodInstallation.class.getSimpleName(),version);
 				String cacheDir = new UserConfiguration().getCacheFilePath();
 				ecod = new EcodInstallation(cacheDir, version);
-				versionedEcodDBs.put(version.toLowerCase(), new SoftReference<EcodDatabase>(ecod));
+				versionedEcodDBs.put(version.toLowerCase(), new SoftReference<>(ecod));
 
 				// If the parsed version differed from that requested, add that too
 				// Note that getVersion() may trigger file parsing
 				try {
 					if( ! versionedEcodDBs.containsKey(ecod.getVersion().toLowerCase()) ) {
-						versionedEcodDBs.put(ecod.getVersion().toLowerCase(),new SoftReference<EcodDatabase>(ecod));
+						versionedEcodDBs.put(ecod.getVersion().toLowerCase(), new SoftReference<>(ecod));
 					}
 				} catch (IOException e) {
 					// For parsing errors, just use the requested version

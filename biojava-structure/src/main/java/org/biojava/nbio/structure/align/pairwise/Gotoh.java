@@ -209,7 +209,7 @@ public class Gotoh {
 
 		int  n;
 		IndexPair[] backId = new IndexPair[a.getRows()+1+a.getCols()+1];
-		List<IndexPair> path = new ArrayList<IndexPair>();
+		List<IndexPair> path = new ArrayList<>();
 
 		backId[0] = new IndexPair((short)(a.getRows()),(short)(a.getCols()));
 

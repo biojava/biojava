@@ -102,14 +102,14 @@ public class HetatomImpl implements Group,Serializable {
 		pdb_name = null ;
 
 		residueNumber = null;
-		atoms    = new ArrayList<Atom>();
-		properties = new HashMap<String,Object>();
+		atoms    = new ArrayList<>();
+		properties = new HashMap<>();
 		parent = null;
 		chemComp = null;
 		altLocs = null;
 
 		if ( performanceBehavior == PerformanceBehavior.BETTER_PERFORMANCE_MORE_MEMORY)
-			atomNameLookup = new HashMap<String,Atom>();
+			atomNameLookup = new HashMap<>();
 		else
 			atomNameLookup = null;
 	}
@@ -500,7 +500,7 @@ public class HetatomImpl implements Group,Serializable {
 	@Override
 	public List<Group> getAltLocs() {
 		if ( altLocs == null)
-			return new ArrayList<Group>();
+			return new ArrayList<>();
 		return altLocs;
 	}
 
@@ -541,7 +541,7 @@ public class HetatomImpl implements Group,Serializable {
 	@Override
 	public void addAltLoc(Group group) {
 		if ( altLocs == null) {
-			altLocs = new ArrayList<Group>();
+			altLocs = new ArrayList<>();
 		}
 		altLocs.add(group);
 
@@ -575,10 +575,10 @@ public class HetatomImpl implements Group,Serializable {
 		}
 
 		// now let's fit the hashmaps to size
-		properties = new HashMap<String, Object>(properties);
+		properties = new HashMap<>(properties);
 
 		if ( atomNameLookup != null)
-			atomNameLookup = new HashMap<String,Atom>(atomNameLookup);
+			atomNameLookup = new HashMap<>(atomNameLookup);
 
 	}
 

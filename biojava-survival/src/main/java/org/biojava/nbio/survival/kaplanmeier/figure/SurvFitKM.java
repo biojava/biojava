@@ -122,7 +122,7 @@ public class SurvFitKM {
 	 * @throws Exception
 	 */
 	public SurvFitInfo process(LinkedHashMap<String, ArrayList<CensorStatus>> survivalData, boolean useWeights) throws Exception {
-		ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
+		ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 		int i = 0;
 		for (String strata : survivalData.keySet()) {
 			ArrayList<CensorStatus> csList = survivalData.get(strata);
@@ -154,7 +154,7 @@ public class SurvFitKM {
 	 */
 	public SurvFitInfo process(String datafile, String timeColumn, String statusColumn, String weightColumn, String variableColumn, boolean useWeights) throws Exception {
 		WorkSheet worksheet = WorkSheet.readCSV(datafile, '\t');
-		ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
+		ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 
 		int i = 1;
 		for (String row : worksheet.getRows()) {
@@ -223,8 +223,8 @@ public class SurvFitKM {
 		int n = dataT.size();
 
 
-		LinkedHashMap<String, Integer> levels = new LinkedHashMap<String, Integer>();
-		LinkedHashMap<String, ArrayList<SurvivalInfo>> strataHashMap = new LinkedHashMap<String, ArrayList<SurvivalInfo>>();
+		LinkedHashMap<String, Integer> levels = new LinkedHashMap<>();
+		LinkedHashMap<String, ArrayList<SurvivalInfo>> strataHashMap = new LinkedHashMap<>();
 
 		for (int i = 0; i < n; i++) {
 			SurvivalInfo si = dataT.get(i);
@@ -237,7 +237,7 @@ public class SurvFitKM {
 			levels.put(value, count);
 			ArrayList<SurvivalInfo> strataList = strataHashMap.get(value);
 			if (strataList == null) {
-				strataList = new ArrayList<SurvivalInfo>();
+				strataList = new ArrayList<>();
 				strataHashMap.put(value, strataList);
 			}
 			strataList.add(si);
@@ -246,7 +246,7 @@ public class SurvFitKM {
 
 		//int nstrat = levels.size();
 
-		LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
+		LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<>();
 
 		for (String strata : strataHashMap.keySet()) {
 
@@ -379,8 +379,8 @@ public class SurvFitKM {
 
 		}
 
-		ArrayList<Boolean> events = new ArrayList<Boolean>();
-		ArrayList<Double> nrisk = new ArrayList<Double>();
+		ArrayList<Boolean> events = new ArrayList<>();
+		ArrayList<Double> nrisk = new ArrayList<>();
 		for (StrataInfo strataInfo : strataInfoHashMap.values()) {
 			boolean firsttime = true;
 			for (int j = 0; j < strataInfo.getNevent().size(); j++) {
@@ -395,19 +395,19 @@ public class SurvFitKM {
 			}
 
 		}
-		ArrayList<Integer> zz = new ArrayList<Integer>();
+		ArrayList<Integer> zz = new ArrayList<>();
 		for (int i = 0; i < events.size(); i++) {
 			if (events.get(i) == true) {
 				zz.add(i + 1);
 			}
 		}
 		zz.add(events.size() + 1);
-		ArrayList<Integer> diffzz = new ArrayList<Integer>();
+		ArrayList<Integer> diffzz = new ArrayList<>();
 		for (int i = 0; i < zz.size() - 1; i++) {
 			diffzz.add(zz.get(i + 1) - zz.get(i));
 		}
 		//System.out.println(diffzz);
-		ArrayList<Double> nlag = new ArrayList<Double>();
+		ArrayList<Double> nlag = new ArrayList<>();
 		for (int j = 0; j < nrisk.size(); j++) {
 			int count = diffzz.get(j);
 			for (int c = 0; c < count; c++) {
@@ -542,12 +542,12 @@ public class SurvFitKM {
 				application.setSize(500, 400);         // window is 500 pixels wide, 400 high
 				application.setVisible(true);
 
-				ArrayList<String> titles = new ArrayList<String>();
+				ArrayList<String> titles = new ArrayList<>();
 				titles.add("Line 1");
 				titles.add("line 2");
 				kaplanMeierFigure.setSurvivalData(titles, si, null);
 
-				ArrayList<String> figureInfo = new ArrayList<String>();
+				ArrayList<String> figureInfo = new ArrayList<>();
 				//   figureInfo.add("HR=2.1 95% CI(1.8-2.5)");
 				//   figureInfo.add("p-value=.001");
 				kaplanMeierFigure.setFigureLineInfo(figureInfo);

@@ -96,7 +96,7 @@ public class DBResultTable implements ActionListener{
 
 	public void show(BufferedReader in, UserConfiguration config) throws IOException{
 		String str;
-		List<String[]> tmpdat = new ArrayList<String[]>();
+		List<String[]> tmpdat = new ArrayList<>();
 		while ((str = in.readLine()) != null) {
 			if ( str.startsWith("#")) {
 				if ( str.startsWith("# algorithm:")) {

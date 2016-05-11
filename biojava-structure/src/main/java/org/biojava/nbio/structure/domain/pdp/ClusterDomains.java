@@ -226,7 +226,7 @@ public class ClusterDomains {
 		if ( verbose)
 			System.out.println("  +++  combining domains " + Si + " " + Sj);
 
-		List<Domain> newdoms = new ArrayList<Domain>();
+		List<Domain> newdoms = new ArrayList<>();
 
 		//int ndom = domains.size();
 		for(int i=0;i<domains.get(Sj).nseg;i++) {

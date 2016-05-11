@@ -501,8 +501,8 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
 		c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
 
-		List<String> pdb1 = new ArrayList<String>();
-		List<String> pdb2 = new ArrayList<String>();
+		List<String> pdb1 = new ArrayList<>();
+		List<String> pdb2 = new ArrayList<>();
 		for ( int i=0;i< optLen[bk];i++) {
 			///
 			int pos1 = optAln[bk][0][i];

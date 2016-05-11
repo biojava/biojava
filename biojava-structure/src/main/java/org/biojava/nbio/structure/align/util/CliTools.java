@@ -100,14 +100,14 @@ public class CliTools {
 			throw new ConfigurationException("Couldn't get information for target bean " + ex.getMessage());
 		}
 
-		Map<String,PropertyDescriptor> propertiesByName = new HashMap<String, PropertyDescriptor>();
+		Map<String,PropertyDescriptor> propertiesByName = new HashMap<>();
 		for (PropertyDescriptor pd : bi.getPropertyDescriptors() ) {
 			propertiesByName.put(pd.getName(), pd);
 		}
 
-		List<String> anonArgs = new ArrayList<String>();
-		Map<PropertyDescriptor,List<String>> arrayProps = new HashMap<PropertyDescriptor, List<String>>();
-		Set<PropertyDescriptor> usedProps = new HashSet<PropertyDescriptor>();
+		List<String> anonArgs = new ArrayList<>();
+		Map<PropertyDescriptor,List<String>> arrayProps = new HashMap<>();
+		Set<PropertyDescriptor> usedProps = new HashSet<>();
 
 		boolean stdInUsed = false;
 		boolean stdOutUsed = false;

@@ -86,10 +86,10 @@ public class SymmetryAxes {
 	 * Initializes variables only.
 	 */
 	public SymmetryAxes(){
-		axes = new ArrayList<Matrix4d>();
-		mapAxisRepeats = new HashMap<Integer, List<List<Integer>>>();
-		repeatTransforms = new ArrayList<List<Integer>>();
-		tree = new ArrayList<Integer>();
+		axes = new ArrayList<>();
+		mapAxisRepeats = new HashMap<>();
+		repeatTransforms = new ArrayList<>();
+		tree = new ArrayList<>();
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class SymmetryAxes {
 
 		//Extend the double List by the necessary rows
 		while (repeatTransforms.size() < repeats.size()){
-			List<Integer> list = new ArrayList<Integer>();
+			List<Integer> list = new ArrayList<>();
 			for (int a=0; a<axes.size()-1; a++){
 				list.add(0);
 			}
@@ -196,7 +196,7 @@ public class SymmetryAxes {
 	 */
 	public Matrix4d getRepeatTransform(int repeat){
 
-		List<Matrix4d> allTransforms = new ArrayList<Matrix4d>();
+		List<Matrix4d> allTransforms = new ArrayList<>();
 		Matrix4d transform = new Matrix4d();
 		transform.setIdentity();
 
@@ -229,7 +229,7 @@ public class SymmetryAxes {
 	@Deprecated
 	public List<Matrix4d> getSymmetryAxes(){
 
-		List<Matrix4d> symmAxes = new ArrayList<Matrix4d>();
+		List<Matrix4d> symmAxes = new ArrayList<>();
 
 		//For every repeat do
 		for (int su=0; su<repeatTransforms.size(); su++){

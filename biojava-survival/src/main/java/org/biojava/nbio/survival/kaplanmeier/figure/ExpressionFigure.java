@@ -41,7 +41,7 @@ public class ExpressionFigure extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	ArrayList<String> title = new ArrayList<String>();
+	ArrayList<String> title = new ArrayList<>();
 	/**
 	 *
 	 */
@@ -70,8 +70,8 @@ public class ExpressionFigure extends JPanel {
 	FontMetrics fm;
 	KMFigureInfo kmfi = new KMFigureInfo();
 //    LinkedHashMap<String, ArrayList<CensorStatus>> survivalData = new LinkedHashMap<String, ArrayList<CensorStatus>>();
-	ArrayList<String> lineInfoList = new ArrayList<String>();
-	ArrayList<SurvivalInfo> siList = new ArrayList<SurvivalInfo>();
+	ArrayList<String> lineInfoList = new ArrayList<>();
+	ArrayList<SurvivalInfo> siList = new ArrayList<>();
 	String variable = "";
 	private String fileName = "";
 
@@ -120,7 +120,7 @@ public class ExpressionFigure extends JPanel {
 	 * @param variable
 	 */
 	public void setSurvivalInfo(ArrayList<String> title, ArrayList<SurvivalInfo> _siList, String variable) {
-		this.siList = new ArrayList<SurvivalInfo>();
+		this.siList = new ArrayList<>();
 		this.title = title;
 		this.variable = variable;
 
@@ -372,13 +372,13 @@ public class ExpressionFigure extends JPanel {
 			application.setSize(500, 400);         // window is 500 pixels wide, 400 high
 			application.setVisible(true);
 
-			ArrayList<String> titles = new ArrayList<String>();
+			ArrayList<String> titles = new ArrayList<>();
 			titles.add("Line 1");
 			titles.add("line 2");
 
-			ArrayList<String> figureInfo = new ArrayList<String>();
+			ArrayList<String> figureInfo = new ArrayList<>();
 
-			ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
+			ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 
 			for (int i = 0; i < 600; i++) {
 				double r = Math.random();

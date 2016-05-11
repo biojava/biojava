@@ -432,7 +432,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	 * Returns the chains this domain is defined over; contains more than 1 element only if this domains is a multi-chain domain.
 	 */
 	public Set<String> getChains() {
-		Set<String> chains = new HashSet<String>();
+		Set<String> chains = new HashSet<>();
 		List<ResidueRange> rrs = toCanonical().getResidueRanges();
 		for (ResidueRange rr : rrs) chains.add(rr.getChainId());
 		return chains;
@@ -445,7 +445,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 
 	@Override
 	public SubstructureIdentifier toCanonical() {
-		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
+		List<ResidueRange> ranges = new ArrayList<>();
 		String chain = String.valueOf(getDomainName().charAt(getDomainName().length() - 3));
 		for (CathSegment segment : this.getSegments()) {
 			ranges.add(new ResidueRange(chain, segment.getStart(), segment.getStop()));

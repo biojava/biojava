@@ -43,7 +43,7 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	private HashMap<Pair<ResidueIdentifier>, GroupContact> contacts;
 
 	public GroupContactSet() {
-		contacts = new HashMap<Pair<ResidueIdentifier>, GroupContact>();
+		contacts = new HashMap<>();
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	 * @param atomContacts
 	 */
 	public GroupContactSet(AtomContactSet atomContacts) {
-		contacts = new HashMap<Pair<ResidueIdentifier>, GroupContact>();
+		contacts = new HashMap<>();
 		atoms2groups(atomContacts);
 	}
 
@@ -69,8 +69,8 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 			// we skip the self-residue contacts
 			if (iResidue.equals(jResidue)) continue;
 
-			Pair<Group> residuePair = new Pair<Group> (iResidue, jResidue);
-			Pair<ResidueIdentifier> pair = new Pair<ResidueIdentifier>(new ResidueIdentifier(iResidue), new ResidueIdentifier(jResidue));
+			Pair<Group> residuePair = new Pair<>(iResidue, jResidue);
+			Pair<ResidueIdentifier> pair = new Pair<>(new ResidueIdentifier(iResidue), new ResidueIdentifier(jResidue));
 
 			if (!contacts.containsKey(pair)) {
 
@@ -114,7 +114,7 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	 * @return
 	 */
 	public boolean hasContact(ResidueNumber resNumber1, ResidueNumber resNumber2) {
-		return contacts.containsKey(new Pair<ResidueNumber>(resNumber1, resNumber2));
+		return contacts.containsKey(new Pair<>(resNumber1, resNumber2));
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	 */
 	public boolean hasContact(ResidueIdentifier resId1, ResidueIdentifier resId2) {
 
-		return contacts.containsKey(new Pair<ResidueIdentifier>(resId1, resId2));
+		return contacts.containsKey(new Pair<>(resId1, resId2));
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	 */
 	public GroupContact getContact(Group group1, Group group2) {
 		return contacts.get(
-				new Pair<ResidueNumber>(group1.getResidueNumber(),group2.getResidueNumber()));
+				new Pair<>(group1.getResidueNumber(), group2.getResidueNumber()));
 	}
 
 	public int size() {
@@ -152,9 +152,9 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	}
 
 	private Pair<ResidueIdentifier> getResIdPairFromContact(GroupContact groupContact) {
-		return new Pair<ResidueIdentifier>(
+		return new Pair<>(
 				new ResidueIdentifier(groupContact.getPair().getFirst()),
-				new ResidueIdentifier(groupContact.getPair().getSecond()) );
+				new ResidueIdentifier(groupContact.getPair().getSecond()));
 
 	}
 }

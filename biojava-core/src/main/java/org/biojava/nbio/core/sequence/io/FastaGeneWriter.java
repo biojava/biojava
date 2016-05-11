@@ -156,7 +156,7 @@ public class FastaGeneWriter {
 	public static void main(String[] args) {
 
 		try {
-			ArrayList<GeneSequence> sequences = new ArrayList<GeneSequence>();
+			ArrayList<GeneSequence> sequences = new ArrayList<>();
 			ChromosomeSequence seq1 = new ChromosomeSequence("ATATATATATATATATATATATATATATATATACGCGCGCGCGCGCGCGCGCGCGCGCGCGCGCATATATATATATATATATATATACGCGCGCGCGCGCGCGCATATATATATATATATATATATATATATATATACGCGCGCGCGCGCGCGCGCGCGCGCGCGCGCATATATATATATATATATATATACGCGCGCGCGCGCGCGC");
 			GeneSequence gene1 = seq1.addGene(new AccessionID("gene1"), 1, 20, Strand.POSITIVE);
 
@@ -170,7 +170,7 @@ public class FastaGeneWriter {
 			sequences.add(gene2);
 
 
-			FastaGeneWriter fastaWriter = new FastaGeneWriter(System.out, sequences, new GenericFastaHeaderFormat<GeneSequence, NucleotideCompound>(), true);
+			FastaGeneWriter fastaWriter = new FastaGeneWriter(System.out, sequences, new GenericFastaHeaderFormat<>(), true);
 			fastaWriter.process();
 
 

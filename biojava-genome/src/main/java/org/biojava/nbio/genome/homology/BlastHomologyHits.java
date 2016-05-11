@@ -33,7 +33,7 @@ import java.util.LinkedHashMap;
 public class BlastHomologyHits {
 
 	static public LinkedHashMap<String, ArrayList<String>> getMatches(File xmlBlastHits, double ecutoff) throws Exception {
-		LinkedHashMap<String, ArrayList<String>> homologyHits = new LinkedHashMap<String, ArrayList<String>>();
+		LinkedHashMap<String, ArrayList<String>> homologyHits = new LinkedHashMap<>();
 		BlastXMLQuery blastXMLQuery = new BlastXMLQuery(xmlBlastHits.getAbsolutePath());
 		LinkedHashMap<String, ArrayList<String>> hits = blastXMLQuery.getHitsQueryDef(ecutoff);
 		for (String accessionid : hits.keySet()) {

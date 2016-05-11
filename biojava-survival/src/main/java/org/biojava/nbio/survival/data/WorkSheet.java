@@ -31,10 +31,10 @@ import java.util.*;
  */
 public class WorkSheet {
 
-	private LinkedHashMap<String, HeaderInfo> columnLookup = new LinkedHashMap<String, HeaderInfo>();
-	private LinkedHashMap<String, HeaderInfo> rowLookup = new LinkedHashMap<String, HeaderInfo>();
+	private LinkedHashMap<String, HeaderInfo> columnLookup = new LinkedHashMap<>();
+	private LinkedHashMap<String, HeaderInfo> rowLookup = new LinkedHashMap<>();
 	private CompactCharSequence[][] data = new CompactCharSequence[1][1];
-	HashMap<String, String> dataGrid = new HashMap<String, String>();
+	HashMap<String, String> dataGrid = new HashMap<>();
 	private String indexColumnName = "";
 
 	/**
@@ -233,14 +233,14 @@ public class WorkSheet {
 
 		data = values;
 	}
-	private LinkedHashMap<String, String> metaDataColumnsHashMap = new LinkedHashMap<String, String>();
+	private LinkedHashMap<String, String> metaDataColumnsHashMap = new LinkedHashMap<>();
 
 	/**
 	 *
 	 * @return
 	 */
 	public ArrayList<String> getMetaDataColumns() {
-		ArrayList<String> metaColumns = new ArrayList<String>();
+		ArrayList<String> metaColumns = new ArrayList<>();
 		for (String key : metaDataColumnsHashMap.keySet()) {
 			HeaderInfo hi = columnLookup.get(key);
 			if (hi.isHide() == false) {
@@ -255,7 +255,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getMetaDataRows() {
-		ArrayList<String> metaRows = new ArrayList<String>();
+		ArrayList<String> metaRows = new ArrayList<>();
 		for (String key : metaDataRowsHashMap.keySet()) {
 			HeaderInfo hi = rowLookup.get(key);
 			if (hi.isHide() == false) {
@@ -270,7 +270,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getDataColumns() {
-		ArrayList<String> dataColumns = new ArrayList<String>();
+		ArrayList<String> dataColumns = new ArrayList<>();
 		ArrayList<String> columns = this.getColumns();
 		for (String column : columns) {
 			if (metaDataColumnsHashMap.containsKey(column) == false) {
@@ -292,7 +292,7 @@ public class WorkSheet {
 		doubleValues.clear();
 
 		for (String column : columns) { //shuffle all values in the column
-			ArrayList<Integer> rowIndex = new ArrayList<Integer>();
+			ArrayList<Integer> rowIndex = new ArrayList<>();
 			for (int i = 0; i < rows.size(); i++) {
 				rowIndex.add(i);
 			}
@@ -311,7 +311,7 @@ public class WorkSheet {
 		}
 
 		for (String row : rows) {
-			ArrayList<Integer> columnIndex = new ArrayList<Integer>();
+			ArrayList<Integer> columnIndex = new ArrayList<>();
 			for (int i = 0; i < columns.size(); i++) {
 				columnIndex.add(i);
 			}
@@ -344,7 +344,7 @@ public class WorkSheet {
 		doubleValues.clear();
 		ArrayList<String> rows = this.getDataRows();
 		for (String column : columns) { //shuffle all values in the column
-			ArrayList<Integer> rowIndex = new ArrayList<Integer>();
+			ArrayList<Integer> rowIndex = new ArrayList<>();
 			for (int i = 0; i < rows.size(); i++) {
 				rowIndex.add(i);
 			}
@@ -375,7 +375,7 @@ public class WorkSheet {
 		doubleValues.clear();
 		ArrayList<String> columns = this.getColumns();
 		for (String row : rows) {
-			ArrayList<Integer> columnIndex = new ArrayList<Integer>();
+			ArrayList<Integer> columnIndex = new ArrayList<>();
 			for (int i = 0; i < columns.size(); i++) {
 				columnIndex.add(i);
 			}
@@ -521,7 +521,7 @@ public class WorkSheet {
 			return true;
 		}
 	}
-	private LinkedHashMap<String, String> metaDataRowsHashMap = new LinkedHashMap<String, String>();
+	private LinkedHashMap<String, String> metaDataRowsHashMap = new LinkedHashMap<>();
 
 	/**
 	 *
@@ -646,7 +646,7 @@ public class WorkSheet {
 	 * @param defaultValue
 	 */
 	public void addColumn(String column, String defaultValue) {
-		ArrayList<String> columns = new ArrayList<String>();
+		ArrayList<String> columns = new ArrayList<>();
 		columns.add(column);
 		addColumns(columns, defaultValue);
 	}
@@ -694,7 +694,7 @@ public class WorkSheet {
 	 * @param defaultValue
 	 */
 	public void addRow(String row, String defaultValue) {
-		ArrayList<String> rows = new ArrayList<String>();
+		ArrayList<String> rows = new ArrayList<>();
 		rows.add(row);
 		addRows(rows, defaultValue);
 	}
@@ -808,7 +808,7 @@ public class WorkSheet {
 		}
 	}
 	//When we do gene signatures we ask for the same data value often. This method took up 50% of the time.
-	HashMap<String, Double> doubleValues = new HashMap<String, Double>();
+	HashMap<String, Double> doubleValues = new HashMap<>();
 	boolean cacheDoubleValues = false;
 
 	/**
@@ -909,7 +909,7 @@ public class WorkSheet {
 	 * @param changeValue
 	 */
 	public void changeRowHeader(ChangeValue changeValue) {
-		ArrayList<String> rows = new ArrayList<String>(rowLookup.keySet());
+		ArrayList<String> rows = new ArrayList<>(rowLookup.keySet());
 		for (String row : rows) {
 			String newRow = changeValue.change(row);
 			HeaderInfo value = rowLookup.get(row);
@@ -923,7 +923,7 @@ public class WorkSheet {
 	 * @param changeValue
 	 */
 	public void changeColumnHeader(ChangeValue changeValue) {
-		ArrayList<String> columns = new ArrayList<String>(columnLookup.keySet());
+		ArrayList<String> columns = new ArrayList<>(columnLookup.keySet());
 		for (String col : columns) {
 			String newCol = changeValue.change(col);
 			HeaderInfo value = columnLookup.get(col);
@@ -1030,8 +1030,8 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getRandomDataColumns(int number, ArrayList<String> columns) {
-		ArrayList<String> randomColumns = new ArrayList<String>();
-		HashMap<String, String> picked = new HashMap<String, String>();
+		ArrayList<String> randomColumns = new ArrayList<>();
+		HashMap<String, String> picked = new HashMap<>();
 		while (picked.size() < number) {
 			double v = Math.random();
 			int index = (int) (v * columns.size());
@@ -1051,7 +1051,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getAllColumns() {
-		ArrayList<String> columns = new ArrayList<String>();
+		ArrayList<String> columns = new ArrayList<>();
 		for (String col : columnLookup.keySet()) {
 			columns.add(col);
 		}
@@ -1064,7 +1064,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getColumns() {
-		ArrayList<String> columns = new ArrayList<String>();
+		ArrayList<String> columns = new ArrayList<>();
 		for (String col : columnLookup.keySet()) {
 			HeaderInfo hi = columnLookup.get(col);
 			if (hi.isHide() == false) {
@@ -1082,8 +1082,8 @@ public class WorkSheet {
 	 * @throws Exception
 	 */
 	public ArrayList<String> getDiscreteColumnValues(String column) throws Exception {
-		HashMap<String, String> hashMapValues = new HashMap<String, String>();
-		ArrayList<String> values = new ArrayList<String>();
+		HashMap<String, String> hashMapValues = new HashMap<>();
+		ArrayList<String> values = new ArrayList<>();
 		ArrayList<String> rows = getDataRows();
 		for (String row : rows) {
 			String value = getCell(row, column);
@@ -1103,8 +1103,8 @@ public class WorkSheet {
 	 * @throws Exception
 	 */
 	public ArrayList<String> getDiscreteRowValues(String row) throws Exception {
-		HashMap<String, String> hashMapValues = new HashMap<String, String>();
-		ArrayList<String> values = new ArrayList<String>();
+		HashMap<String, String> hashMapValues = new HashMap<>();
+		ArrayList<String> values = new ArrayList<>();
 		for (String column : getColumns()) {
 			String value = getCell(row, column);
 			if (hashMapValues.containsKey(value) == false) {
@@ -1121,7 +1121,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getAllRows() {
-		ArrayList<String> rows = new ArrayList<String>();
+		ArrayList<String> rows = new ArrayList<>();
 		for (String row : rowLookup.keySet()) {
 			rows.add(row);
 		}
@@ -1135,7 +1135,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getRows() {
-		ArrayList<String> rows = new ArrayList<String>();
+		ArrayList<String> rows = new ArrayList<>();
 		for (String row : rowLookup.keySet()) {
 			HeaderInfo hi = rowLookup.get(row);
 			if (hi.isHide() == false) {
@@ -1151,7 +1151,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getDataRows() {
-		ArrayList<String> rows = new ArrayList<String>();
+		ArrayList<String> rows = new ArrayList<>();
 		for (String row : rowLookup.keySet()) {
 			if (this.isMetaDataRow(row)) {
 				continue;
@@ -1262,7 +1262,7 @@ public class WorkSheet {
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
 
-		ArrayList<CompactCharSequence[]> rows = new ArrayList<CompactCharSequence[]>();
+		ArrayList<CompactCharSequence[]> rows = new ArrayList<>();
 
 		String line = br.readLine();
 		int numcolumns = -1;
@@ -1309,7 +1309,7 @@ public class WorkSheet {
 	static String[][] getAllValues(String fileName, char delimiter) throws Exception {
 		FileReader reader = new FileReader(fileName);
 		BufferedReader br = new BufferedReader(reader);
-		ArrayList<String[]> rows = new ArrayList<String[]>();
+		ArrayList<String[]> rows = new ArrayList<>();
 
 		String line = br.readLine();
 		int numcolumns = -1;
@@ -1388,7 +1388,7 @@ public class WorkSheet {
 			}
 		}
 
-		ArrayList<String> joinedColumns = new ArrayList<String>();
+		ArrayList<String> joinedColumns = new ArrayList<>();
 		joinedColumns.addAll(w1DataColumns);
 		joinedColumns.addAll(w2DataColumns);
 		if (joinedColumns.contains("META_DATA") == false && (w1MetaDataColumns.size() > 0 || w2MetaDataColumns.size() > 0)) {
@@ -1406,9 +1406,9 @@ public class WorkSheet {
 		}
 		ArrayList<String> w1Rows = w1.getRows();
 		ArrayList<String> w2Rows = w2.getRows();
-		ArrayList<String> rows = new ArrayList<String>();
+		ArrayList<String> rows = new ArrayList<>();
 
-		HashSet<String> w1Key = new HashSet<String>(w1Rows);
+		HashSet<String> w1Key = new HashSet<>(w1Rows);
 		for (String key : w2Rows) {
 			if (w1Key.contains(key)) {
 				rows.add(key);

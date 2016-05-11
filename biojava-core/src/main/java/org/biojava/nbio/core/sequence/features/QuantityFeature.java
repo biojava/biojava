@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class QuantityFeature<S extends AbstractSequence<C>, C extends Compound> extends AbstractFeature<S, C> {
 
-	private List<Number> quantities = new ArrayList<Number>();
+	private List<Number> quantities = new ArrayList<>();
 
 	/**
 	 *

@@ -41,8 +41,8 @@ public class TranscriptSequence extends DNASequence {
 
 	private final static Logger logger = LoggerFactory.getLogger(TranscriptSequence.class);
 
-	private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
-	private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
+	private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<>();
+	private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<>();
 	private StartCodonSequence startCodonSequence = null;
 	private StopCodonSequence stopCodonSequence = null;
 	private GeneSequence parentGeneSequence = null;
@@ -137,7 +137,7 @@ public class TranscriptSequence extends DNASequence {
 	 * @return
 	 */
 	public ArrayList<ProteinSequence> getProteinCDSSequences() {
-		ArrayList<ProteinSequence> proteinSequenceList = new ArrayList<ProteinSequence>();
+		ArrayList<ProteinSequence> proteinSequenceList = new ArrayList<>();
 		for (int i = 0; i < cdsSequenceList.size(); i++) {
 			CDSSequence cdsSequence = cdsSequenceList.get(i);
 			String codingSequence = cdsSequence.getCodingSequence();

@@ -102,8 +102,8 @@ public class SpaceGroup implements Serializable {
 		this.primitiveMultiplicity = primitiveMultiplicity;
 		this.shortSymbol = shortSymbol;
 		this.altShortSymbol = altShortSymbol;
-		transformations = new ArrayList<Matrix4d>(multiplicity);
-		transfAlgebraic = new ArrayList<String>(multiplicity);
+		transformations = new ArrayList<>(multiplicity);
+		transfAlgebraic = new ArrayList<>(multiplicity);
 		cellTranslations = new Vector3d[multiplicity/primitiveMultiplicity];
 		this.bravLattice = bravLattice;
 	}
@@ -271,7 +271,7 @@ public class SpaceGroup implements Serializable {
 	 * @return
 	 */
 	public List<Matrix4d> getTransformations() {
-		List<Matrix4d> transfs = new ArrayList<Matrix4d>();
+		List<Matrix4d> transfs = new ArrayList<>();
 		for (int i=1;i<this.transformations.size();i++){
 			transfs.add(transformations.get(i));
 		}
@@ -636,10 +636,10 @@ public class SpaceGroup implements Serializable {
 	public void setTransfAlgebraic(List<String> transfAlgebraic) {
 		//System.out.println("setting transfAlgebraic " + transfAlgebraic);
 		if ( transformations == null || transformations.size() == 0)
-			transformations = new ArrayList<Matrix4d>(transfAlgebraic.size());
+			transformations = new ArrayList<>(transfAlgebraic.size());
 
 		if ( this.transfAlgebraic == null || this.transfAlgebraic.size() == 0)
-			this.transfAlgebraic = new ArrayList<String>(transfAlgebraic.size());
+			this.transfAlgebraic = new ArrayList<>(transfAlgebraic.size());
 
 		for ( String transf : transfAlgebraic){
 			addTransformation(transf);

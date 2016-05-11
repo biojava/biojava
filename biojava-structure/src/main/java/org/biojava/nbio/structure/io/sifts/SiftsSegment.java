@@ -49,7 +49,7 @@ public class SiftsSegment implements Serializable{
 		this.segId = segId;
 		this.start = start;
 		this.end = end;
-		residues = new ArrayList<SiftsResidue>();
+		residues = new ArrayList<>();
 	}
 
 	public String getSegId() {

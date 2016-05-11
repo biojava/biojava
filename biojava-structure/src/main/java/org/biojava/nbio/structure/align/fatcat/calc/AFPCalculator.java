@@ -48,7 +48,7 @@ public class AFPCalculator
 
 
 
-		List<AFP> afpSet = new ArrayList<AFP>();
+		List<AFP> afpSet = new ArrayList<>();
 		afpChain.setAfpSet(afpSet);
 
 		if ( debug )

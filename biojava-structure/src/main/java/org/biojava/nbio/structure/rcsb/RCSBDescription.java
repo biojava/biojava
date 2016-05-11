@@ -42,7 +42,7 @@ public class RCSBDescription {
 	private List<RCSBPolymer> polymers;
 
 	public RCSBDescription() {
-		polymers = new ArrayList<RCSBPolymer>();
+		polymers = new ArrayList<>();
 	}
 
 	public void addPolymer(RCSBPolymer polymer) {

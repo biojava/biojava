@@ -46,7 +46,7 @@ public class SiftsEntity implements Serializable{
 	public SiftsEntity(String type, String entityId) {
 		this.type = type;
 		this.entityId = entityId;
-		segments = new ArrayList<SiftsSegment>();
+		segments = new ArrayList<>();
 	}
 
 	public void addSegment(SiftsSegment s) {

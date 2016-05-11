@@ -64,14 +64,14 @@ public class Constraints {
 	public static AminoAcidCompound Y = aaSet.getCompoundForString("Y");
 	public static AminoAcidCompound V = aaSet.getCompoundForString("V");
 
-	public static Map<AminoAcidCompound, Double> aa2ExtinctionCoefficient = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2Hydrophathicity = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2PKa = new HashMap<AminoAcidCompound, Double>();
-	public static Map<String, Double> diAA2Instability = new HashMap<String, Double>();
+	public static Map<AminoAcidCompound, Double> aa2ExtinctionCoefficient = new HashMap<>();
+	public static Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<>();
+	public static Map<AminoAcidCompound, Double> aa2Hydrophathicity = new HashMap<>();
+	public static Map<AminoAcidCompound, Double> aa2PKa = new HashMap<>();
+	public static Map<String, Double> diAA2Instability = new HashMap<>();
 
-	public static Map<AminoAcidCompound, Double> aa2NTerminalPka = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2CTerminalPka = new HashMap<AminoAcidCompound, Double>();
+	public static Map<AminoAcidCompound, Double> aa2NTerminalPka = new HashMap<>();
+	public static Map<AminoAcidCompound, Double> aa2CTerminalPka = new HashMap<>();
 
 	static{
 		initMolecularWeight();

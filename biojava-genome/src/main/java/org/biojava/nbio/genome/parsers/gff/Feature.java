@@ -153,7 +153,7 @@ public class Feature implements FeatureI {
 		mFrame = feature.mFrame;
 		mAttributes = feature.mAttributes;
 		initAttributeHashMap();
-		mUserMap = new HashMap<String, String>(feature.mUserMap);
+		mUserMap = new HashMap<>(feature.mUserMap);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class Feature implements FeatureI {
 		mFrame = frame;
 		mAttributes = attributes;
 		initAttributeHashMap();
-		mUserMap = new HashMap<String, String>();
+		mUserMap = new HashMap<>();
 
 	}
 
@@ -199,7 +199,7 @@ public class Feature implements FeatureI {
 		return mUserMap;
 	}
 
-	 HashMap<String,String> attributeHashMap = new HashMap<String,String>();
+	 HashMap<String,String> attributeHashMap = new HashMap<>();
 
 	private void initAttributeHashMap(){
 	   String[] values = mAttributes.split(";");

@@ -102,8 +102,8 @@ public class SecStrucCalc {
 	private AtomContactSet contactSet;
 	private Map<String, Integer> indResMap;
 	public SecStrucCalc(){
-		ladders = new ArrayList<Ladder>();
-		bridges = new ArrayList<BetaBridge>();
+		ladders = new ArrayList<>();
+		bridges = new ArrayList<>();
 	}
 
 
@@ -119,8 +119,8 @@ public class SecStrucCalc {
 			throws StructureException {
 
 		// Reinitialise the global vars
-		ladders = new ArrayList<Ladder>();
-		bridges = new ArrayList<BetaBridge>();
+		ladders = new ArrayList<>();
+		bridges = new ArrayList<>();
 		groups = initGroupArray(s);
 		// Initialise the contact set for this structure
 		initContactSet();
@@ -138,7 +138,7 @@ public class SecStrucCalc {
 		buildHelices();
 		detectBends();
 		detectStrands();
-		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
+		List<SecStrucState> secstruc = new ArrayList<>();
 		for (SecStrucGroup sg : groups){
 			SecStrucState ss = (SecStrucState)
 					sg.getProperty(Group.SEC_STRUC);
@@ -157,7 +157,7 @@ public class SecStrucCalc {
 		// Initialise an array of atoms
 		atoms = new Atom[groups.length];
 		// Remake this local var
-		indResMap = new HashMap<String, Integer>();
+		indResMap = new HashMap<>();
 		for (int i=0 ; i < groups.length ; i++){
 			SecStrucGroup one = groups[i];
 			indResMap.put(one.getResidueNumber().getChainId()+one.getResidueNumber().getSeqNum(), i);
@@ -420,7 +420,7 @@ public class SecStrucCalc {
 	private void findBridges() {
 		// Get the interator of contacts
 		Iterator<AtomContact> myIter = contactSet.iterator();
-		List<Pair<Integer>> outList = new ArrayList<Pair<Integer>>();
+		List<Pair<Integer>> outList = new ArrayList<>();
 
 		// Now iterate through this
 		while(myIter.hasNext()){
@@ -457,7 +457,7 @@ public class SecStrucCalc {
 				continue;
 			}
 
-			Pair<Integer> thisPair = new Pair<Integer>(i,j);
+			Pair<Integer> thisPair = new Pair<>(i, j);
 			outList.add(thisPair);
 		}
 		//
@@ -693,7 +693,7 @@ public class SecStrucCalc {
 	}
 
 	private static SecStrucGroup[] initGroupArray(Structure s) {
-		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
+		List<SecStrucGroup> groupList = new ArrayList<>();
 
 		for ( Chain c : s.getChains()){
 

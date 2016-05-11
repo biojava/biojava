@@ -113,7 +113,7 @@ public class SequenceMixin {
 	 * sequence. Any compound not in the Map will return a fraction of 0.
 	 */
 	public static <C extends Compound> Map<C, Double> getDistribution(Sequence<C> sequence) {
-		Map<C, Double> results = new HashMap<C, Double>();
+		Map<C, Double> results = new HashMap<>();
 		Map<C, Integer> composition = getComposition(sequence);
 		double length = sequence.getLength();
 		for (Map.Entry<C, Integer> entry : composition.entrySet()) {
@@ -133,7 +133,7 @@ public class SequenceMixin {
 	 * @return Counts for the instances of all compounds in the sequence
 	 */
 	public static <C extends Compound> Map<C, Integer> getComposition(Sequence<C> sequence) {
-		Map<C, Integer> results = new HashMap<C, Integer>();
+		Map<C, Integer> results = new HashMap<>();
 
 		for (C currentCompound : sequence) {
 			Integer currentInteger = results.get(currentCompound);
@@ -187,7 +187,7 @@ public class SequenceMixin {
 	 * the Compounds of that {@link Sequence}.
 	 */
 	public static <C extends Compound> List<C> toList(Sequence<C> sequence) {
-		List<C> list = new ArrayList<C>(sequence.getLength());
+		List<C> list = new ArrayList<>(sequence.getLength());
 		for (C compound : sequence) {
 			list.add(compound);
 		}
@@ -218,7 +218,7 @@ public class SequenceMixin {
 	 */
 	public static <C extends Compound> int lastIndexOf(Sequence<C> sequence,
 			C compound) {
-		int index = indexOf(new ReversedSequenceView<C>(sequence), compound);
+		int index = indexOf(new ReversedSequenceView<>(sequence), compound);
 		return (sequence.getLength() - index)+1;
 	}
 
@@ -229,7 +229,7 @@ public class SequenceMixin {
 	 */
 	public static <C extends Compound> Iterator<C> createIterator(
 			Sequence<C> sequence) {
-		return new SequenceIterator<C>(sequence);
+		return new SequenceIterator<>(sequence);
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class SequenceMixin {
 	 */
 	public static <C extends Compound> SequenceView<C> createSubSequence(
 			Sequence<C> sequence, int start, int end) {
-		return new SequenceProxyView<C>(sequence, start, end);
+		return new SequenceProxyView<>(sequence, start, end);
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class SequenceMixin {
 	public static <C extends Compound> Sequence<C> shuffle(Sequence<C> sequence) {
 		List<C> compounds = sequence.getAsList();
 		Collections.shuffle(compounds);
-		return new ArrayListSequenceReader<C>(compounds,
+		return new ArrayListSequenceReader<>(compounds,
 				sequence.getCompoundSet());
 	}
 
@@ -275,8 +275,8 @@ public class SequenceMixin {
 	 * @return The list of non-overlapping K-mers
 	 */
 	public static <C extends Compound> List<SequenceView<C>> nonOverlappingKmers(Sequence<C> sequence, int kmer) {
-		List<SequenceView<C>> l = new ArrayList<SequenceView<C>>();
-		WindowedSequence<C> w = new WindowedSequence<C>(sequence, kmer);
+		List<SequenceView<C>> l = new ArrayList<>();
+		WindowedSequence<C> w = new WindowedSequence<>(sequence, kmer);
 		for(SequenceView<C> view: w) {
 			l.add(view);
 		}
@@ -293,17 +293,17 @@ public class SequenceMixin {
 	 * @return The list of overlapping K-mers
 	 */
 	public static <C extends Compound> List<SequenceView<C>> overlappingKmers(Sequence<C> sequence, int kmer) {
-		List<SequenceView<C>> l = new ArrayList<SequenceView<C>>();
+		List<SequenceView<C>> l = new ArrayList<>();
 		List<Iterator<SequenceView<C>>> windows
-				= new ArrayList<Iterator<SequenceView<C>>>();
+				= new ArrayList<>();
 
 		for(int i=1; i<=kmer; i++) {
 			if(i == 1) {
-				windows.add(new WindowedSequence<C>(sequence, kmer).iterator());
+				windows.add(new WindowedSequence<>(sequence, kmer).iterator());
 			}
 			else {
 				SequenceView<C> sv = sequence.getSubSequence(i, sequence.getLength());
-				windows.add(new WindowedSequence<C>(sv, kmer).iterator());
+				windows.add(new WindowedSequence<>(sv, kmer).iterator());
 			}
 		}
 
@@ -333,7 +333,7 @@ public class SequenceMixin {
 	 */
 	@SuppressWarnings({ "unchecked" })
 	public static <C extends Compound> SequenceView<C> inverse(Sequence<C> sequence) {
-		SequenceView<C> reverse = new ReversedSequenceView<C>(sequence);
+		SequenceView<C> reverse = new ReversedSequenceView<>(sequence);
 		if(sequence.getCompoundSet().isComplementable()) {
 			return new ComplementSequenceView(reverse);
 		}

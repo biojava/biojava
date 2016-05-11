@@ -78,7 +78,7 @@ public class Dataset {
 
 		File dir = getLocalDir();
 
-		List<File> files = new ArrayList<File>();
+		List<File> files = new ArrayList<>();
 		for ( String f : rfiles) {
 
 

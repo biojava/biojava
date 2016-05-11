@@ -45,7 +45,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 
 	private String sequence;
 	private CompoundSet<C> compoundSet;
-	private List<C> parsedCompounds = new ArrayList<C>();
+	private List<C> parsedCompounds = new ArrayList<>();
 
 	public StringProxySequenceReader() {}
 
@@ -125,13 +125,13 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 
 
 	public String getSequenceAsString(Integer bioBegin, Integer bioEnd,Strand strand) {
-		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<>();
 		return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
 	}
 
 	@Override
 	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-		return new SequenceProxyView<C>(StringProxySequenceReader.this,bioBegin,bioEnd);
+		return new SequenceProxyView<>(StringProxySequenceReader.this, bioBegin, bioEnd);
 	}
 
 	@Override

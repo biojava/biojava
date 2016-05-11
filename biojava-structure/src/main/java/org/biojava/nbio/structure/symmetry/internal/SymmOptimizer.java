@@ -146,21 +146,21 @@ public class SymmOptimizer {
 					"Seed alignment too short: repeat core length < 1");
 
 		// Initialize the history variables
-		timeHistory = new ArrayList<Long>();
-		lengthHistory = new ArrayList<Integer>();
-		rmsdHistory = new ArrayList<Double>();
-		mcScoreHistory = new ArrayList<Double>();
-		tmScoreHistory = new ArrayList<Double>();
+		timeHistory = new ArrayList<>();
+		lengthHistory = new ArrayList<>();
+		rmsdHistory = new ArrayList<>();
+		mcScoreHistory = new ArrayList<>();
+		tmScoreHistory = new ArrayList<>();
 
 		C = 20 * order;
 
 		// Initialize alignment variables
 		block = msa.getBlock(0).getAlignRes();
-		freePool = new ArrayList<Integer>();
+		freePool = new ArrayList<>();
 		length = block.get(0).size();
 
 		// Store the residues aligned in the block
-		List<Integer> aligned = new ArrayList<Integer>();
+		List<Integer> aligned = new ArrayList<>();
 		for (int su = 0; su < order; su++)
 			aligned.addAll(block.get(su));
 
@@ -196,11 +196,11 @@ public class SymmOptimizer {
 		initialize();
 
 		// Save the optimal alignment
-		List<List<Integer>> optBlock = new ArrayList<List<Integer>>();
-		List<Integer> optFreePool = new ArrayList<Integer>();
+		List<List<Integer>> optBlock = new ArrayList<>();
+		List<Integer> optFreePool = new ArrayList<>();
 		optFreePool.addAll(freePool);
 		for (int k = 0; k < order; k++) {
-			List<Integer> b = new ArrayList<Integer>();
+			List<Integer> b = new ArrayList<>();
 			b.addAll(block.get(k));
 			optBlock.add(b);
 		}
@@ -214,11 +214,11 @@ public class SymmOptimizer {
 		while (i < maxIter && conv < stepsToConverge) {
 
 			// Save the state of the system
-			List<List<Integer>> lastBlock = new ArrayList<List<Integer>>();
-			List<Integer> lastFreePool = new ArrayList<Integer>();
+			List<List<Integer>> lastBlock = new ArrayList<>();
+			List<Integer> lastFreePool = new ArrayList<>();
 			lastFreePool.addAll(freePool);
 			for (int k = 0; k < order; k++) {
-				List<Integer> b = new ArrayList<Integer>();
+				List<Integer> b = new ArrayList<>();
 				b.addAll(block.get(k));
 				lastBlock.add(b);
 			}
@@ -281,11 +281,11 @@ public class SymmOptimizer {
 			
 			// Store as the optimal alignment if better
 			if (mcScore > optScore) {
-				optBlock = new ArrayList<List<Integer>>();
-				optFreePool = new ArrayList<Integer>();
+				optBlock = new ArrayList<>();
+				optFreePool = new ArrayList<>();
 				optFreePool.addAll(freePool);
 				for (int k = 0; k < order; k++) {
-					List<Integer> b = new ArrayList<Integer>();
+					List<Integer> b = new ArrayList<>();
 					b.addAll(block.get(k));
 					optBlock.add(b);
 				}
@@ -366,7 +366,7 @@ public class SymmOptimizer {
 	 */
 	private boolean checkGaps() {
 
-		List<Integer> shrinkColumns = new ArrayList<Integer>();
+		List<Integer> shrinkColumns = new ArrayList<>();
 		// Loop for each column
 		for (int res = 0; res < length; res++) {
 			int gapCount = 0;

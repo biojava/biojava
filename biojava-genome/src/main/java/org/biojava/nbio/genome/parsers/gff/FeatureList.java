@@ -39,7 +39,7 @@ import java.util.Map.Entry;
 @SuppressWarnings("serial")
 public class FeatureList extends ArrayList<FeatureI> {
 
-	 Map<String, Map<String,List<FeatureI>>> featindex = new HashMap<String,Map<String,List<FeatureI>>>();
+	 Map<String, Map<String,List<FeatureI>>> featindex = new HashMap<>();
 	Location mLocation;			//genomic location (union of feature locations)
 
 	/**
@@ -80,11 +80,11 @@ public class FeatureList extends ArrayList<FeatureI> {
 			if (featindex.containsKey(entry.getKey())){
 				Map<String,List<FeatureI>> feat = featindex.get(entry.getKey());
 				if (feat==null){
-					feat= new HashMap<String,List<FeatureI>>();
+					feat= new HashMap<>();
 				}
 				List<FeatureI> features = feat.get(entry.getValue());
 				if (features==null){
-					features = new ArrayList<FeatureI>();
+					features = new ArrayList<>();
 				}
 				features.add(feature);
 				feat.put(entry.getValue(), features);
@@ -184,7 +184,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * the order of features in the list.
 	 */
 	public Collection<String> groupValues() {
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (FeatureI f : this) {
 			//enter in a set -- removes duplicates
 			set.add(f.group());
@@ -206,10 +206,10 @@ public class FeatureList extends ArrayList<FeatureI> {
 		if (featindex.containsKey(key)){
 			Map<String, List<FeatureI>> map = featindex.get(key);
 			Collection<String> result = map.keySet();
-			if (result == null) result = new HashSet<String>();
+			if (result == null) result = new HashSet<>();
 			return Collections.unmodifiableCollection(result);
 		}
-		LinkedHashMap<String, String> hash = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> hash = new LinkedHashMap<>();
 		for (FeatureI f : this) {
 			//enter as a key -- removes duplicates
 			hash.put(f.getAttribute(key), null);

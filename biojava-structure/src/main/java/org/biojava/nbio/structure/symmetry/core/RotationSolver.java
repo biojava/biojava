@@ -50,7 +50,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 	private Matrix4d centroidInverse = new Matrix4d();
 	private Point3d[] originalCoords = null;
 	private Point3d[] transformedCoords = null;
-	private Set<List<Integer>> hashCodes = new HashSet<List<Integer>>();
+	private Set<List<Integer>> hashCodes = new HashSet<>();
 
 	private RotationGroup rotations = new RotationGroup();
 
@@ -194,7 +194,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 			 n = 60;
 		}
 		List<Integer> folds = subunits.getFolds();
-		List<Double> angles = new ArrayList<Double>(folds.size()-1);
+		List<Double> angles = new ArrayList<>(folds.size() - 1);
 
 		// note this loop starts at 1, we do ignore 1-fold symmetry, which is the first entry
 		for (int fold: folds) {
@@ -262,7 +262,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 	private Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
 		Rotation s = new Rotation();
-		s.setPermutation(new ArrayList<Integer>(permutation));
+		s.setPermutation(new ArrayList<>(permutation));
 		s.setTransformation(new Matrix4d(transformation));
 		s.setAxisAngle(new AxisAngle4d(axisAngle));
 		s.setFold(fold);
@@ -273,7 +273,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 	private void setupDistanceBox() {
 		distanceThreshold = calcDistanceThreshold();
-		box = new DistanceBox<Integer>(distanceThreshold);
+		box = new DistanceBox<>(distanceThreshold);
 
 		for (int i = 0; i < originalCoords.length; i++) {
 			box.addPoint(originalCoords[i], i);
@@ -300,7 +300,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 	}
 
 	private List<Integer> getPermutation() {
-		List<Integer> permutation = new ArrayList<Integer>(transformedCoords.length);
+		List<Integer> permutation = new ArrayList<>(transformedCoords.length);
 		double sum = 0.0f;
 
 		for (Point3d t: transformedCoords) {
@@ -330,7 +330,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		}
 
 		// check uniqueness of indices
-		Set<Integer> set = new HashSet<Integer>(permutation);
+		Set<Integer> set = new HashSet<>(permutation);
 
 		// if size mismatch, clear permutation (its invalid)
 		if (set.size() != originalCoords.length) {

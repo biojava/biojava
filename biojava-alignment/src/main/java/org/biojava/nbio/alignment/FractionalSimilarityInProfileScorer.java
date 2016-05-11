@@ -51,7 +51,7 @@ public class FractionalSimilarityInProfileScorer<S extends Sequence<C>, C extend
 	 * @param target index in the profile of the second sequence of the pair
 	 */
 	public FractionalSimilarityInProfileScorer(Profile<S, C> profile, int query, int target) {
-		super(new SimpleSequencePair<S, C>(profile.getAlignedSequence(query), profile.getAlignedSequence(target)));
+		super(new SimpleSequencePair<>(profile.getAlignedSequence(query), profile.getAlignedSequence(target)));
 		this.profile = profile;
 	}
 

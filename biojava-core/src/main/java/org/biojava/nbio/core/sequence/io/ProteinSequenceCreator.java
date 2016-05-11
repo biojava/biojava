@@ -70,7 +70,7 @@ public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
 	@Override
 public AbstractSequence<AminoAcidCompound> getSequence(
 			List<AminoAcidCompound> list) {
-		ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<AminoAcidCompound>();
+		ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<>();
 		store.setCompoundSet(compoundSet);
 		store.setContents(list);
 		return new ProteinSequence(store);

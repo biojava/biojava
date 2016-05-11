@@ -100,7 +100,7 @@ public class Astral {
 		}
 	}
 
-	private static Map<String, SoftReference<Astral>> instances = new HashMap<String, SoftReference<Astral>>();
+	private static Map<String, SoftReference<Astral>> instances = new HashMap<>();
 
 	private static final Logger logger = Logger.getLogger(Astral.class.getName());
 
@@ -115,7 +115,7 @@ public class Astral {
 			return instances.get(cutoff.getId()).get().getNames();
 		}
 		Astral astral = new Astral(cutoff);
-		instances.put(cutoff.getId(), new SoftReference<Astral>(astral));
+		instances.put(cutoff.getId(), new SoftReference<>(astral));
 		return astral.getNames();
 	}
 
@@ -202,8 +202,8 @@ public class Astral {
 	 * Parses the FASTA file opened by reader.
 	 */
 	private void init(Reader reader) {
-		names = new TreeSet<String>();
-		failedLines = new LinkedHashMap<Integer,String>();
+		names = new TreeSet<>();
+		failedLines = new LinkedHashMap<>();
 
 		BufferedReader br = null;
 

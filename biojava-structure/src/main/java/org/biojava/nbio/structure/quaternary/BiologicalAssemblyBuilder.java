@@ -49,7 +49,7 @@ public class BiologicalAssemblyBuilder {
 
 	private List<BiologicalAssemblyTransformation> modelTransformations;
 
-	private List<String> modelIndex = new ArrayList<String>();
+	private List<String> modelIndex = new ArrayList<>();
 
 	public BiologicalAssemblyBuilder(){
 		init();
@@ -124,7 +124,7 @@ public class BiologicalAssemblyBuilder {
 	 * @return
 	 */
 	private List<String> getChainIds(Structure asymUnit) {
-		List<String> chainIds = new ArrayList<String>();
+		List<String> chainIds = new ArrayList<>();
 		for ( Chain c : asymUnit.getChains()){
 			String intChainID = c.getInternalChainID();
 			if ( intChainID == null) {
@@ -150,7 +150,7 @@ public class BiologicalAssemblyBuilder {
 		if (modelCount == 0) {
 			s.addChain(newChain);
 		} else if (modelCount > s.nrModels()) {
-			List<Chain> newModel = new ArrayList<Chain>();
+			List<Chain> newModel = new ArrayList<>();
 			newModel.add(newChain);
 			s.addModel(newModel);
 		} else {
@@ -191,7 +191,7 @@ public class BiologicalAssemblyBuilder {
 
 	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListBinaryOperators(String assemblyId) {
 
-		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
 
 		List<OrderedPair<String>> operators = operatorResolver.getBinaryOperators();
 
@@ -238,7 +238,7 @@ public class BiologicalAssemblyBuilder {
 	}
 
 	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListUnaryOperators(String assemblyId) {
-		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
 
 
 		for ( PdbxStructAssemblyGen psag : psags){
@@ -268,6 +268,6 @@ public class BiologicalAssemblyBuilder {
 
 	private void init(){
 		operatorResolver= new OperatorResolver();
-		modelTransformations = new ArrayList<BiologicalAssemblyTransformation>(1);
+		modelTransformations = new ArrayList<>(1);
 	}
 }

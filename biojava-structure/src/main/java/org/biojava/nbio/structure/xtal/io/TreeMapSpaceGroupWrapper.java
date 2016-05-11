@@ -52,7 +52,7 @@ public class TreeMapSpaceGroupWrapper implements Serializable{
 
 
 	public TreeMapSpaceGroupWrapper(){
-		data = new TreeMap<Integer,SpaceGroup>();
+		data = new TreeMap<>();
 	}
 
 	public TreeMap<Integer,SpaceGroup> getData() {

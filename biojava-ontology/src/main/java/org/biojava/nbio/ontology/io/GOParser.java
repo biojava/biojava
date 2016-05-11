@@ -48,7 +48,7 @@ public class GOParser {
 			Ontology onto = factory.createOntology(ontoName, ontoDescription);
 			Term isa = onto.importTerm(OntoTools.IS_A, null);
 			Term partof = null; // fixme: onto.importTerm(OntoTools.PART_OF, null);
-			List<Term> termStack = new ArrayList<Term>();
+			List<Term> termStack = new ArrayList<>();
 			String line;
 			while ((line = goFile.readLine()) != null) {
 				int leadSpaces = 0;
@@ -122,7 +122,7 @@ public class GOParser {
 		} else {
 			Term t = onto.createTerm(termName, termDesc);
 			if (toke.hasMoreTokens()) {
-				List<String> secondaries = new ArrayList<String>();
+				List<String> secondaries = new ArrayList<>();
 				while (toke.hasMoreTokens()) {
 					secondaries.add(toke.nextToken());
 				}

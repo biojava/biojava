@@ -40,7 +40,7 @@ public class PdbPairsMessage {
 
 		method = PdbPairXMLConverter.DEFAULT_METHOD_NAME;
 
-		pairs = new TreeSet<PdbPair>();
+		pairs = new TreeSet<>();
 
 	}
 

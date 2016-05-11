@@ -94,7 +94,7 @@ public class ConcurrencyTools {
 	public static void setThreadPoolSize(int threads) {
 		setThreadPool(   new ThreadPoolExecutor(threads, threads,
 									  0L, TimeUnit.MILLISECONDS,
-									  new LinkedBlockingQueue<Runnable>()));
+				new LinkedBlockingQueue<>()));
 
 
 	}

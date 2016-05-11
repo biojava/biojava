@@ -63,15 +63,15 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	private Integer bioEnd = null;
 	private AbstractSequence<?> parentSequence = null;
 	private String source = null;
-	private ArrayList<String> notesList = new ArrayList<String>();
+	private ArrayList<String> notesList = new ArrayList<>();
 	private Double sequenceScore = null;
 	private FeaturesKeyWordInterface featuresKeyWord = null;
 	private DatabaseReferenceInterface databaseReferences = null;
 	private FeatureRetriever featureRetriever = null;
 	private ArrayList<FeatureInterface<AbstractSequence<C>, C>> features =
-			new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
+			new ArrayList<>();
 	private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>> groupedFeatures =
-			new LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>>();
+			new LinkedHashMap<>();
 
 	public AbstractSequence() {
 	}
@@ -84,7 +84,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	public AbstractSequence(String seqString, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
 		setCompoundSet(compoundSet);
-		sequenceStorage = new ArrayListSequenceReader<C>();
+		sequenceStorage = new ArrayListSequenceReader<>();
 		sequenceStorage.setCompoundSet(this.getCompoundSet());
 		sequenceStorage.setContents(seqString);
 	}
@@ -328,7 +328,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	public List<FeatureInterface<AbstractSequence<C>, C>> getFeatures(String featureType, int bioSequencePosition) {
 		ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureHits =
-				new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
+				new ArrayList<>();
 		List<FeatureInterface<AbstractSequence<C>, C>> features = getFeaturesByType(featureType);
 		if (features != null) {
 			for (FeatureInterface<AbstractSequence<C>, C> feature : features) {
@@ -348,7 +348,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	public List<FeatureInterface<AbstractSequence<C>, C>> getFeatures(int bioSequencePosition) {
 		ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureHits =
-				new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
+				new ArrayList<>();
 		if (features != null) {
 			for (FeatureInterface<AbstractSequence<C>, C> feature : features) {
 				if (bioSequencePosition >= feature.getLocations().getStart().getPosition() && bioSequencePosition <= feature.getLocations().getEnd().getPosition()) {
@@ -376,7 +376,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	public void addFeature(int bioStart, int bioEnd, FeatureInterface<AbstractSequence<C>, C> feature) {
 		SequenceLocation<AbstractSequence<C>, C> sequenceLocation =
-				new SequenceLocation<AbstractSequence<C>, C>(bioStart, bioEnd, this);
+				new SequenceLocation<>(bioStart, bioEnd, this);
 		feature.setLocation(sequenceLocation);
 		addFeature(feature);
 	}
@@ -391,7 +391,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		features.add(feature);
 		ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureList = groupedFeatures.get(feature.getType());
 		if (featureList == null) {
-			featureList = new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
+			featureList = new ArrayList<>();
 			groupedFeatures.put(feature.getType(), featureList);
 		}
 		featureList.add(feature);
@@ -422,7 +422,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	public List<FeatureInterface<AbstractSequence<C>, C>> getFeaturesByType(String type) {
 		List<FeatureInterface<AbstractSequence<C>, C>> features = groupedFeatures.get(type);
 		if (features == null) {
-			features = new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
+			features = new ArrayList<>();
 		}
 		return features;
 	}
@@ -534,7 +534,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 			//return parentSequence.getSequenceStorage();
 
 			if ( this.compoundSet.equals(parentSequence.getCompoundSet())){
-				sequenceStorage = new ArrayListSequenceReader<C>();
+				sequenceStorage = new ArrayListSequenceReader<>();
 				sequenceStorage.setCompoundSet(this.getCompoundSet());
 				try {
 					sequenceStorage.setContents(parentSequence.getSequenceAsString());
@@ -630,7 +630,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	@Override
 	public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
-		return new SequenceProxyView<C>(this, bioStart, bioEnd);
+		return new SequenceProxyView<>(this, bioStart, bioEnd);
 	}
 
 	/**

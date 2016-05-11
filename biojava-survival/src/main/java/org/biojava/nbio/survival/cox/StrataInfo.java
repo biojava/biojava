@@ -31,19 +31,19 @@ import java.util.LinkedHashMap;
  */
 public class StrataInfo {
 
-	private ArrayList<Double> time = new ArrayList<Double>();
-	private ArrayList<Integer> status = new ArrayList<Integer>();
-	private ArrayList<Double> nevent = new ArrayList<Double>();
-	private ArrayList<Double> ncens = new ArrayList<Double>();
-	private ArrayList<Double> nrisk = new ArrayList<Double>();
-	private ArrayList<Double> weight = new ArrayList<Double>();
-	private ArrayList<Double> surv = new ArrayList<Double>();
-	private ArrayList<Double> varhaz = new ArrayList<Double>();
-	private ArrayList<Double> stderr = new ArrayList<Double>();
-	private ArrayList<Double> stdlow = new ArrayList<Double>();
-	private ArrayList<Double> upper = new ArrayList<Double>();
-	private ArrayList<Double> lower = new ArrayList<Double>();
-	private LinkedHashMap<Double, Integer> ndead = new LinkedHashMap<Double, Integer>();
+	private ArrayList<Double> time = new ArrayList<>();
+	private ArrayList<Integer> status = new ArrayList<>();
+	private ArrayList<Double> nevent = new ArrayList<>();
+	private ArrayList<Double> ncens = new ArrayList<>();
+	private ArrayList<Double> nrisk = new ArrayList<>();
+	private ArrayList<Double> weight = new ArrayList<>();
+	private ArrayList<Double> surv = new ArrayList<>();
+	private ArrayList<Double> varhaz = new ArrayList<>();
+	private ArrayList<Double> stderr = new ArrayList<>();
+	private ArrayList<Double> stdlow = new ArrayList<>();
+	private ArrayList<Double> upper = new ArrayList<>();
+	private ArrayList<Double> lower = new ArrayList<>();
+	private LinkedHashMap<Double, Integer> ndead = new LinkedHashMap<>();
 	DecimalFormat df = new DecimalFormat("#.######");
 	DecimalFormat dfe = new DecimalFormat("0.000000E0");
 

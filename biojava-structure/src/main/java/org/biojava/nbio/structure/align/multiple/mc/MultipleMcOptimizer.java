@@ -125,7 +125,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 		imposer = new CoreSuperimposer(reference);
 
 		if (params.getConvergenceSteps() == 0) {
-			List<Integer> lens = new ArrayList<Integer>();
+			List<Integer> lens = new ArrayList<>();
 			for (int i = 0; i < size; i++)
 				lens.add(atomArrays.get(i).length);
 			convergenceSteps = Collections.min(lens) * size;
@@ -142,8 +142,8 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 		Lmin = params.getMinBlockLen();
 
 		// Delete all shorter than Lmin blocks, and empty blocksets
-		List<Block> toDelete = new ArrayList<Block>();
-		List<BlockSet> emptyBs = new ArrayList<BlockSet>();
+		List<Block> toDelete = new ArrayList<>();
+		List<BlockSet> emptyBs = new ArrayList<>();
 
 		for (Block b : msa.getBlocks()) {
 			if (b.getCoreLength() < Lmin) {
@@ -183,12 +183,12 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	private void initialize() throws StructureException {
 
 		// Initialize alignment variables
-		freePool = new ArrayList<SortedSet<Integer>>();
-		List<List<Integer>> aligned = new ArrayList<List<Integer>>();
+		freePool = new ArrayList<>();
+		List<List<Integer>> aligned = new ArrayList<>();
 
 		// Generate freePool residues from the ones not aligned
 		for (int i = 0; i < size; i++) {
-			List<Integer> residues = new ArrayList<Integer>();
+			List<Integer> residues = new ArrayList<>();
 			for (BlockSet bs : msa.getBlockSets()) {
 				for (Block b : bs.getBlocks()) {
 					for (int l = 0; l < b.length(); l++) {
@@ -199,7 +199,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 				}
 			}
 			aligned.add(residues);
-			freePool.add(new TreeSet<Integer>());
+			freePool.add(new TreeSet<>());
 		}
 
 		// Add any residue not aligned to the free pool for every structure
@@ -219,9 +219,9 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 
 		// Initialize the history variables
 		if (history) {
-			lengthHistory = new ArrayList<Integer>();
-			rmsdHistory = new ArrayList<Double>();
-			scoreHistory = new ArrayList<Double>();
+			lengthHistory = new ArrayList<>();
+			rmsdHistory = new ArrayList<>();
+			scoreHistory = new ArrayList<>();
 		}
 	}
 
@@ -249,9 +249,9 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 
 			// Save the state of the system
 			MultipleAlignment lastMSA = msa.clone();
-			List<SortedSet<Integer>> lastFreePool = new ArrayList<SortedSet<Integer>>();
+			List<SortedSet<Integer>> lastFreePool = new ArrayList<>();
 			for (int k = 0; k < size; k++) {
-				SortedSet<Integer> p = new TreeSet<Integer>();
+				SortedSet<Integer> p = new TreeSet<>();
 				for (Integer l : freePool.get(k))
 					p.add(l);
 				lastFreePool.add(p);
@@ -349,10 +349,10 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 
 		boolean shrinkedAny = false;
 
-		List<List<Integer>> shrinkColumns = new ArrayList<List<Integer>>();
+		List<List<Integer>> shrinkColumns = new ArrayList<>();
 		// Loop for each Block
 		for (Block b : msa.getBlocks()) {
-			List<Integer> shrinkCol = new ArrayList<Integer>();
+			List<Integer> shrinkCol = new ArrayList<>();
 			// Loop for each column in the Block
 			for (int res = 0; res < b.length(); res++) {
 				int gapCount = 0;

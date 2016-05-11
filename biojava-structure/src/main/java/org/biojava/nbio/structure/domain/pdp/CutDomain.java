@@ -43,7 +43,7 @@ public class CutDomain {
 
 		ndom = 0;
 
-		domains = new ArrayList<Domain>();
+		domains = new ArrayList<>();
 
 	}
 

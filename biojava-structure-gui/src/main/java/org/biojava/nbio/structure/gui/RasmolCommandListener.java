@@ -49,7 +49,7 @@ MouseListener {
 	public RasmolCommandListener(JmolPanel panel, JTextField field){
 		textfield = field;
 		jmolPanel = panel;
-		history = new ArrayList<String>();
+		history = new ArrayList<>();
 		historyPosition = -2; // -2 = history = empty;
 	}
 

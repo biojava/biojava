@@ -155,7 +155,7 @@ public class FarmJobRunnable implements Runnable {
 	public void addAlignmentProgressListener(AlignmentProgressListener listener){
 
 		if (progressListeners == null)
-			progressListeners = new ArrayList<AlignmentProgressListener>();
+			progressListeners = new ArrayList<>();
 
 		progressListeners.add(listener);
 	}
@@ -228,7 +228,7 @@ public class FarmJobRunnable implements Runnable {
 			}
 			SortedSet<PdbPair> alignmentPairs = msg.getPairs();
 			logger.debug("{}: Server responded with {} pairs.", userName, alignmentPairs.size());
-			List<String> results = new ArrayList<String>();
+			List<String> results = new ArrayList<>();
 
 			String algorithmName = msg.getMethod();
 			if ( version == null) {
@@ -531,7 +531,7 @@ public class FarmJobRunnable implements Runnable {
 		if ( maxNrAlignments < nrPairs )
 			nrPairs = maxNrAlignments;
 
-		SortedSet<PdbPair> allPairs = new TreeSet<PdbPair>();
+		SortedSet<PdbPair> allPairs = new TreeSet<>();
 
 		PdbPairsMessage msg = null;
 

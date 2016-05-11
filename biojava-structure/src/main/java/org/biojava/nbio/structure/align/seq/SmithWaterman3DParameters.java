@@ -45,7 +45,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 	@Override
 	public List<String> getUserConfigHelp()
 	{
-		List<String> params =new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("The Gap open penalty");
 		params.add("The Gap Extension penalty");
 
@@ -58,7 +58,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 	@Override
 	public List<String> getUserConfigParameterNames()
 	{
-		List<String> params =new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("Gap Open");
 		params.add("Gap Extension");
 
@@ -69,7 +69,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 	@Override
 	public List<String> getUserConfigParameters()
 	{
-		List<String> params =new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("GapOpen");
 		params.add("GapExtend");
 
@@ -80,7 +80,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes()
 	{
-		List<Class> params = new ArrayList<Class>();
+		List<Class> params = new ArrayList<>();
 		params.add(Short.class);
 		params.add(Short.class);
 

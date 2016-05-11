@@ -41,10 +41,10 @@ public class PrettyXMLWriter implements XMLWriter {
 	private boolean afterNewline = true;
 	private int indent = 0;
 
-	private Map<String, String> namespacePrefixes = new HashMap<String, String>();
+	private Map<String, String> namespacePrefixes = new HashMap<>();
 	private int namespaceSeed = 0;
-	private LinkedList<List<String>> namespaceBindings = new LinkedList<List<String>>();
-	private List<String> namespacesDeclared = new ArrayList<String>();
+	private LinkedList<List<String>> namespaceBindings = new LinkedList<>();
+	private List<String> namespacesDeclared = new ArrayList<>();
 
 	public PrettyXMLWriter(PrintWriter writer) {
 		this.writer = writer;
@@ -108,7 +108,7 @@ public class PrettyXMLWriter implements XMLWriter {
 		namespacePrefixes.put(nsURI, prefix);
 		List<String> bindings = namespaceBindings.getLast();
 		if (bindings == null) {
-			bindings = new ArrayList<String>();
+			bindings = new ArrayList<>();
 			namespaceBindings.removeLast();
 			namespaceBindings.add(bindings);
 		}

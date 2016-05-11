@@ -67,10 +67,10 @@ public class UniprotToFasta {
 			String line = br.readLine();
 			String id = "";
 			StringBuffer sequence = new StringBuffer();
-			ArrayList<ProteinSequence> seqCodingRegionsList = new ArrayList<ProteinSequence>();
+			ArrayList<ProteinSequence> seqCodingRegionsList = new ArrayList<>();
 			int count = 0;
-			HashMap<String,String> uniqueGenes = new HashMap<String,String>();
-			HashMap<String,String> uniqueSpecies = new HashMap<String,String>();
+			HashMap<String,String> uniqueGenes = new HashMap<>();
+			HashMap<String,String> uniqueSpecies = new HashMap<>();
 			while(line != null){
 				if(line.startsWith("ID")){
 					String[] data = line.split(" ");

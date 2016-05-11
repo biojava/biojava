@@ -125,7 +125,7 @@ public class StockholmFileAnnotation {
 	private Set<DatabaseReference> dbReferences;
 	private StringBuffer refComment;
 	/**TODO When implementing toString(), the function should loop on the vector */
-	private Vector<StockholmFileAnnotationReference> references = new Vector<StockholmFileAnnotation.StockholmFileAnnotationReference>();
+	private Vector<StockholmFileAnnotationReference> references = new Vector<>();
 	private StringBuffer keywords;
 	private CharSequence comment;
 	private StringBuffer pfamAccession;
@@ -137,7 +137,7 @@ public class StockholmFileAnnotation {
 	private float falseDiscoveryRate;
 
 	public StockholmFileAnnotation() {
-		embTrees = new HashMap<String, List<String>>();
+		embTrees = new HashMap<>();
 	}
 
 	public StringBuffer getDbComment() {
@@ -164,7 +164,7 @@ public class StockholmFileAnnotation {
 	 */
 	public void addDBReference(String dbReferenceRepresentingString) {
 		if (this.dbReferences == null) {
-			this.dbReferences = new HashSet<DatabaseReference>();
+			this.dbReferences = new HashSet<>();
 		}
 		dbReferences.add(new DatabaseReference(dbReferenceRepresentingString));
 	}
@@ -492,7 +492,7 @@ public class StockholmFileAnnotation {
 	public void addGFNewHampshire(String newHampshire) {
 		List<String> hampshireTree = embTrees.get(TREE_DEFAULT_ID);
 		if (hampshireTree == null) {
-			hampshireTree = new ArrayList<String>();
+			hampshireTree = new ArrayList<>();
 		}
 		hampshireTree.add(newHampshire);
 		embTrees.put(TREE_DEFAULT_ID, hampshireTree);

@@ -344,7 +344,7 @@ public class HelixAxisAligner extends AxisAligner {
 	 * @return list of orbits ordered by z-depth
 	 */
 	private void calcAlignedOrbits() {
-		Map<Double, List<Integer>> depthMap = new TreeMap<Double, List<Integer>>();
+		Map<Double, List<Integer>> depthMap = new TreeMap<>();
 		double[] depth = getSubunitZDepth();
 		alignedOrbits = calcOrbits();
 
@@ -572,7 +572,7 @@ public class HelixAxisAligner extends AxisAligner {
 	private List<List<Integer>> calcOrbits() {
 		int n = subunits.getSubunitCount();
 
-		List<List<Integer>> orbits = new ArrayList<List<Integer>>();
+		List<List<Integer>> orbits = new ArrayList<>();
 		for (int i = 0; i < n; i++) {
 			orbits.add(Collections.singletonList(i));
 		}

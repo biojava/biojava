@@ -134,7 +134,7 @@ public class CrystalBuilder {
 	}
 
 	private void initialiseVisited() {
-		visited = new ArrayList<CrystalTransform>();
+		visited = new ArrayList<>();
 	}
 
 

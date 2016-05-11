@@ -114,7 +114,7 @@ public class WindowedSequence<C extends Compound> implements Iterable<SequenceVi
 	 */
 	@Override
 	public Iterator<SequenceView<C>> iterator() {
-		return new WindowedSequenceIterator<C>(this);
+		return new WindowedSequenceIterator<>(this);
 	}
 
 	/**

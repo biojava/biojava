@@ -281,8 +281,8 @@ public class MmtfUtils {
 	 * @return the atoms for the input Biojava Group
 	 */
 	public static List<Atom> getAtomsForGroup(Group inputGroup) {
-		Set<Atom> uniqueAtoms = new HashSet<Atom>();
-		List<Atom> theseAtoms = new ArrayList<Atom>();
+		Set<Atom> uniqueAtoms = new HashSet<>();
+		List<Atom> theseAtoms = new ArrayList<>();
 		for(Atom a: inputGroup.getAtoms()){
 			theseAtoms.add(a);
 			uniqueAtoms.add(a);

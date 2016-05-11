@@ -38,7 +38,7 @@ public class FeatureHelper {
 	 */
 	static public LinkedHashMap<String,FeatureList> buildFeatureAtrributeIndex(String attribute,FeatureList list){
 
-		LinkedHashMap<String,FeatureList> featureHashMap = new LinkedHashMap<String,FeatureList>();
+		LinkedHashMap<String,FeatureList> featureHashMap = new LinkedHashMap<>();
 		FeatureList featureList = list.selectByAttribute(attribute);
 		for(FeatureI feature : featureList){
 			String value = feature.getAttribute(attribute);

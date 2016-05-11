@@ -94,7 +94,7 @@ public class GFF3Writer {
 					outputStream.write(gff3line.getBytes());
 
 					String transcriptParentName = geneSequence.getAccession().getID() + "." + transcriptIndex;
-					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>(transcriptSequence.getCDSSequences().values());
+					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<>(transcriptSequence.getCDSSequences().values());
 					Collections.sort(cdsSequenceList, new SequenceComparator());
 					for (CDSSequence cdsSequence : cdsSequenceList) {
 						gff3line = key + "\t" + cdsSequence.getSource() + "\t" + "CDS" + "\t" + cdsSequence.getBioBegin() + "\t" + cdsSequence.getBioEnd() + "\t";

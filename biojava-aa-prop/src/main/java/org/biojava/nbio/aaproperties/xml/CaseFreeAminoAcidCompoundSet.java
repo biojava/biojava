@@ -39,9 +39,9 @@ import java.util.*;
  */
 public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
 
-	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<String, AminoAcidCompound>();
+	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<>();
 	private final Map<AminoAcidCompound, Set<AminoAcidCompound>> equivalentsCache =
-			new HashMap<AminoAcidCompound, Set<AminoAcidCompound>>();
+			new HashMap<>();
 
 	public CaseFreeAminoAcidCompoundSet() {
 		aminoAcidCompoundCache.put("A", new AminoAcidCompound(null, "A", "Ala", "Alanine", 71.0788f));
@@ -83,7 +83,7 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 		//which then does the actual conversion to Pyl.
 		aminoAcidCompoundCache.put("O", new AminoAcidCompound(null, "O", "Pyl", "Pyrrolysine", 255.3172f));
 
-		Map<String, AminoAcidCompound> lowerCaseSet = new HashMap<String, AminoAcidCompound>();
+		Map<String, AminoAcidCompound> lowerCaseSet = new HashMap<>();
 		for(String s:this.aminoAcidCompoundCache.keySet()){
 			lowerCaseSet.put(s.toLowerCase(), this.aminoAcidCompoundCache.get(s));
 		}
@@ -144,7 +144,7 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 			addAmbiguousEquivalents("I", "L", "J");
 			// ambiguous gaps
 			AminoAcidCompound gap1, gap2, gap3;
-			Set<AminoAcidCompound> gaps = new HashSet<AminoAcidCompound>();
+			Set<AminoAcidCompound> gaps = new HashSet<>();
 			gaps.add(gap1 = aminoAcidCompoundCache.get("-"));
 			gaps.add(gap2 = aminoAcidCompoundCache.get("."));
 			gaps.add(gap3 = aminoAcidCompoundCache.get("_"));
@@ -152,7 +152,7 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 			equivalentsCache.put(gap2, gaps);
 			equivalentsCache.put(gap3, gaps);
 			// X is never equivalent, even to itself
-			equivalentsCache.put(aminoAcidCompoundCache.get("X"), new HashSet<AminoAcidCompound>());
+			equivalentsCache.put(aminoAcidCompoundCache.get("X"), new HashSet<>());
 		}
 		return equivalentsCache.get(compound);
 	}
@@ -162,18 +162,18 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 		Set<AminoAcidCompound> equivalents;
 		AminoAcidCompound cOne, cTwo, cEither;
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>();
 		equivalents.add(cOne = aminoAcidCompoundCache.get(one));
 		equivalents.add(cTwo = aminoAcidCompoundCache.get(two));
 		equivalents.add(cEither = aminoAcidCompoundCache.get(either));
 		equivalentsCache.put(cEither, equivalents);
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>();
 		equivalents.add(cOne);
 		equivalents.add(cEither);
 		equivalentsCache.put(cOne, equivalents);
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>();
 		equivalents.add(cTwo);
 		equivalents.add(cEither);
 		equivalentsCache.put(cTwo, equivalents);
@@ -186,7 +186,7 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 
 	@Override
 	public List<AminoAcidCompound> getAllCompounds() {
-		return new ArrayList<AminoAcidCompound>(aminoAcidCompoundCache.values());
+		return new ArrayList<>(aminoAcidCompoundCache.values());
 	}
 
 

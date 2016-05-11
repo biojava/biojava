@@ -315,7 +315,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			   colors[half+i] = temp;
 			}
 		}
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		for (int i = 0; i < orbits.size(); i++) {
 			for (int j = 0; j < fold; j++) {
@@ -332,7 +332,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				Color4f c = colors[colorIndex];
 				List<String> ids = colorMap.get(c);
 				if (ids == null) {
-					ids = new ArrayList<String>();
+					ids = new ArrayList<>();
 					colorMap.put(c,  ids);
 				}
 				String id = getChainSpecification(modelNumbers, chainIds, subunit);
@@ -356,13 +356,13 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		int clusters = Collections.max(seqClusterIds) + 1;
 		Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
 		Color4f[] colors = ColorConverter.convertColor4f(col);
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		for (int i = 0; i < n; i++) {
 			Color4f c = colors[seqClusterIds.get(i)];
 			List<String> ids = colorMap.get(c);
 			if (ids == null) {
-				ids = new ArrayList<String>();
+				ids = new ArrayList<>();
 				colorMap.put(c,  ids);
 			}
 			String id = getChainSpecification(modelNumbers, chainIds, i);
@@ -388,7 +388,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		int n = subunits.getSubunitCount();
 		int fold = rotationGroup.getRotation(0).getFold();
 
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		// Simple Cn symmetry
 		if (pointGroup.startsWith("C") && n == fold) {
@@ -414,7 +414,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				Color4f c = colors[colorIndex];
 				List<String> ids = colorMap.get(c);
 				if (ids == null) {
-					ids = new ArrayList<String>();
+					ids = new ArrayList<>();
 					colorMap.put(c,  ids);
 				}
 				for (int subunit: orbits.get(i)) {
@@ -431,7 +431,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				Color4f c = new Color4f(colors[i]);
 				List<String> ids = colorMap.get(c);
 				if (ids == null) {
-					ids = new ArrayList<String>();
+					ids = new ArrayList<>();
 					colorMap.put(c,  ids);
 				}
 				List<Integer> orbit = orbits.get(i);
@@ -531,7 +531,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		int fold = rotationGroup.getRotation(0).getFold();
 
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 		Color4f[] colors = getSymmetryColors(fold);
 
 		for (List<Integer> orbit: orbits) {
@@ -542,7 +542,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				Color4f c = colors[i];
 				List<String> ids = colorMap.get(c);
 				if (ids == null) {
-					ids = new ArrayList<String>();
+					ids = new ArrayList<>();
 					colorMap.put(c, ids);
 				}
 				ids.add(id);
@@ -947,7 +947,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 
 	private List<Rotation> getUniqueAxes() {
-		List<Rotation> uniqueRotations = new ArrayList<Rotation>();
+		List<Rotation> uniqueRotations = new ArrayList<>();
 
 		for (int i = 0, n = rotationGroup.getOrder(); i < n; i++) {
 			Rotation rotationI = rotationGroup.getRotation(i);

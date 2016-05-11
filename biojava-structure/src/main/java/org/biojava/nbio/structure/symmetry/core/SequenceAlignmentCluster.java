@@ -42,7 +42,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 	private static final Logger logger = LoggerFactory.getLogger(SequenceAlignmentCluster.class);
 
 	private QuatSymmetryParameters parameters = null;
-	private List<UniqueSequenceList> uniqueSequenceList = new ArrayList<UniqueSequenceList>();
+	private List<UniqueSequenceList> uniqueSequenceList = new ArrayList<>();
 	private List<Atom[]> alignedCAlphaAtoms = null;
 
 	private int alignmentLength = 0;
@@ -103,7 +103,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 	}
 
 	public List<String> getChainIds() {
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 		for (UniqueSequenceList list: uniqueSequenceList) {
 			ids.add(list.getChainId());
 		}
@@ -111,7 +111,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 	}
 
 	public List<Integer> getModelNumbers() {
-		List<Integer> numbers = new ArrayList<Integer>();
+		List<Integer> numbers = new ArrayList<>();
 		for (UniqueSequenceList list: uniqueSequenceList) {
 			numbers.add(list.getModelNumber());
 		}
@@ -119,7 +119,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 	}
 
 	public List<Integer> getStructureIds() {
-		List<Integer> numbers = new ArrayList<Integer>();
+		List<Integer> numbers = new ArrayList<>();
 		for (UniqueSequenceList list: uniqueSequenceList) {
 			numbers.add(list.getStructureId());
 		}
@@ -155,8 +155,8 @@ public class SequenceAlignmentCluster implements Cloneable {
 		// if reference (SEQRES) sequences match 100%,
 		// find alignment of atom sequences by Smith-Waterman alignment
 		if (seqMatch) {
-			List<Integer> alig1 = new ArrayList<Integer>();
-			List<Integer> alig2 = new ArrayList<Integer>();
+			List<Integer> alig1 = new ArrayList<>();
+			List<Integer> alig2 = new ArrayList<>();
 			Atom[] referenceAtoms = u.getCalphaAtoms();
 			int inCommon = 0;
 			try {
@@ -231,7 +231,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 			logger.error("CloneNotSupportedException caught",e);
 		}
 		// deep copy sequences
-		copy.uniqueSequenceList = new ArrayList<UniqueSequenceList>();
+		copy.uniqueSequenceList = new ArrayList<>();
 		for (UniqueSequenceList seq: this.getUniqueSequenceList()) {
 			copy.addUniqueSequenceList((UniqueSequenceList) seq.clone());
 		}
@@ -286,8 +286,8 @@ public class SequenceAlignmentCluster implements Cloneable {
 		}
 		int len =  afp.getOptLength();
 
-		List<Integer> delta = new ArrayList<Integer>();
-		Set<Integer> unique = new HashSet<Integer>();
+		List<Integer> delta = new ArrayList<>();
+		Set<Integer> unique = new HashSet<>();
 
 		for (int i = 0; i < len; i++) {
 			Atom a1 = ca1Seq[align[0][0][i]];
@@ -331,11 +331,11 @@ public class SequenceAlignmentCluster implements Cloneable {
 	private void createAlignedCAlphaAtoms() {
 		List<Integer> indices = getReferenceResidueIndices();
 		alignmentLength = indices.size();
-		alignedCAlphaAtoms = new ArrayList<Atom[]>();
+		alignedCAlphaAtoms = new ArrayList<>();
 		for (UniqueSequenceList u: uniqueSequenceList) {
 			List<Integer> alignment1 = u.getAlignment1();
 			List<Integer> alignment2 = u.getAlignment2();
-			List<Integer> alignmentIndices = new ArrayList<Integer>();
+			List<Integer> alignmentIndices = new ArrayList<>();
 			for (int i = 0; i < alignment1.size(); i++) {
 				int a1 = alignment1.get(i);
 				if (indices.contains(a1)) {
@@ -352,7 +352,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 	}
 
 	private List<Integer> getReferenceResidueIndices() {
-		List<Integer> indices = new ArrayList<Integer>(uniqueSequenceList.get(0).getAlignment1());
+		List<Integer> indices = new ArrayList<>(uniqueSequenceList.get(0).getAlignment1());
 		for (UniqueSequenceList u: uniqueSequenceList) {
 		   indices.retainAll(u.getAlignment1());
 		}

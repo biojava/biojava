@@ -44,7 +44,7 @@ public class PdbPairXMLConverter {
 	public static final String DEFAULT_METHOD_NAME = FatCatRigid.algorithmName;
 
 	public static PdbPairsMessage convertXMLtoPairs(String xml) {
-		SortedSet<PdbPair>  pairs = new TreeSet<PdbPair>();
+		SortedSet<PdbPair>  pairs = new TreeSet<>();
 		PdbPairsMessage message = new PdbPairsMessage();
 		try
 		{

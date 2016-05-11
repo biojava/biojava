@@ -148,7 +148,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 		boolean keepGoing = true;
 
 
-		LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
+		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
 
 		do {
 			line = line.trim(); // nice to have but probably not needed
@@ -245,7 +245,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
 			if ( is == null)
 				System.err.println("Could not get input file " + inputFile);
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(is, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 			LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
 			is.close();
 
@@ -254,9 +254,9 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
 			File file = new File(inputFile);
 			FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader =
-					new FastaReader<ProteinSequence,AminoAcidCompound>(
+					new FastaReader<>(
 							file,
-							new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(),
+							new GenericFastaHeaderParser<>(),
 							new FileProxyProteinSequenceCreator(
 									file,
 									AminoAcidCompoundSet.getAminoAcidCompoundSet(),

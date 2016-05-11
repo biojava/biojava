@@ -71,7 +71,7 @@ public class FastaStructureParser {
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
 			AtomCache cache)
 	{
-		this(new FastaReader<ProteinSequence, AminoAcidCompound>(
+		this(new FastaReader<>(
 				is, headerParser, sequenceCreator),cache);
 	}
 
@@ -80,7 +80,7 @@ public class FastaStructureParser {
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
 			AtomCache cache) throws FileNotFoundException
 	{
-		this(new FastaReader<ProteinSequence, AminoAcidCompound>(
+		this(new FastaReader<>(
 				file, headerParser, sequenceCreator), cache);
 	}
 

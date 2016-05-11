@@ -223,7 +223,7 @@ public class AFPChainXMLParser
 	}
 
 	public static AFPChain[] parseMultiXML(String xml) throws IOException {
-		List<AFPChain> afpChains = new ArrayList<AFPChain>();
+		List<AFPChain> afpChains = new ArrayList<>();
 
 		try
 		{
@@ -316,7 +316,7 @@ public class AFPChainXMLParser
 				a.setBlockShiftVector(blockShiftVector);
 
 				int afpNum = new Integer(getAttribute(rootElement,"afpNum")).intValue();
-				List<AFP> afpSet = new ArrayList<AFP>();
+				List<AFP> afpSet = new ArrayList<>();
 				for (int afp=0;afp<afpNum;afp++){
 					afpSet.add( new AFP());
 				}

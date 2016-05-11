@@ -151,7 +151,7 @@ public class AtomPositionMap {
 	 * @param atoms
 	 */
 	public AtomPositionMap(Atom[] atoms, GroupMatcher matcher) {
-		hashMap = new HashMap<ResidueNumber, Integer>();
+		hashMap = new HashMap<>();
 		for (int i = 0; i < atoms.length; i++) {
 			Group group = atoms[i].getGroup();
 			ResidueNumber rn = group.getResidueNumber();
@@ -161,8 +161,8 @@ public class AtomPositionMap {
 				}
 			}
 		}
-		Comparator<ResidueNumber> vc = new ValueComparator<ResidueNumber, Integer>(hashMap);
-		treeMap = new TreeMap<ResidueNumber, Integer>(vc);
+		Comparator<ResidueNumber> vc = new ValueComparator<>(hashMap);
+		treeMap = new TreeMap<>(vc);
 		treeMap.putAll(hashMap);
 	}
 
@@ -339,7 +339,7 @@ public class AtomPositionMap {
 		String currentChain = "";
 		ResidueNumber first = null;
 		ResidueNumber prev = null;
-		List<ResidueRangeAndLength> ranges = new ArrayList<ResidueRangeAndLength>();
+		List<ResidueRangeAndLength> ranges = new ArrayList<>();
 		for (ResidueNumber rn : treeMap.keySet()) {
 			if (!rn.getChainId().equals(currentChain)) {
 				if (first != null) {

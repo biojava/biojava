@@ -360,7 +360,7 @@ public class MMCIFFileTools {
 	 */
 	private static List<AtomSite> convertGroupToAtomSites(Group g, int model, String chainId, String internalChainId) {
 
-		List<AtomSite> list = new ArrayList<AtomSite>();
+		List<AtomSite> list = new ArrayList<>();
 
 		int groupsize  = g.size();
 
@@ -392,7 +392,7 @@ public class MMCIFFileTools {
 	 */
 	public static List<AtomSite> convertChainToAtomSites(Chain c, int model, String chainId, String internalChainId) {
 
-		List<AtomSite> list = new ArrayList<AtomSite>();
+		List<AtomSite> list = new ArrayList<>();
 
 		if (c.getEntityInfo()==null) {
 			logger.warn("No Compound (entity) found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", c.getChainID());
@@ -415,7 +415,7 @@ public class MMCIFFileTools {
 	 * @return
 	 */
 	public static List<AtomSite> convertStructureToAtomSites(Structure s) {
-		List<AtomSite> list = new ArrayList<AtomSite>();
+		List<AtomSite> list = new ArrayList<>();
 
 		for (int m=0;m<s.nrModels();m++) {
 			for (Chain c:s.getChains()) {

@@ -50,7 +50,7 @@ public class Site {
 
 		String line = null;
 
-		List<Site > data = new ArrayList<Site>();
+		List<Site > data = new ArrayList<>();
 
 		List<String> headerFields = null;
 
@@ -124,7 +124,7 @@ public class Site {
 	private static List<String> parseHeaderFields(String line) {
 		String[] spl = line.split("\t");
 
-		List<String> h = new ArrayList<String>();
+		List<String> h = new ArrayList<>();
 		for (String s: spl){
 			h.add(s);
 

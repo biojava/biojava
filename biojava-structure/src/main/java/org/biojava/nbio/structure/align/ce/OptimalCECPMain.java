@@ -126,7 +126,7 @@ public class OptimalCECPMain extends CeMain {
 					"Permutation point ("+cp+") must be between -ca2.length and ca2.length-1" );
 		}
 
-		List<T> temp = new ArrayList<T>(cp);
+		List<T> temp = new ArrayList<>(cp);
 
 		// shift residues left
 		for(int i=0;i<cp;i++) {
@@ -333,7 +333,7 @@ public class OptimalCECPMain extends CeMain {
 		int[] optLen = afpChain.getOptLen();
 
 		// the processed alignment
-		List<List<List<Integer>>> blocks = new ArrayList<List<List<Integer>>>(afpChain.getBlockNum()*2);
+		List<List<List<Integer>>> blocks = new ArrayList<>(afpChain.getBlockNum() * 2);
 
 		//Update residue indices
 		// newi = (oldi-cp) % N
@@ -342,9 +342,9 @@ public class OptimalCECPMain extends CeMain {
 				continue;
 
 			// set up storage for the current block
-			List<List<Integer>> currBlock = new ArrayList<List<Integer>>(2);
-			currBlock.add( new ArrayList<Integer>());
-			currBlock.add( new ArrayList<Integer>());
+			List<List<Integer>> currBlock = new ArrayList<>(2);
+			currBlock.add(new ArrayList<>());
+			currBlock.add(new ArrayList<>());
 			blocks.add(currBlock);
 
 			// pos = 0 case
@@ -356,9 +356,9 @@ public class OptimalCECPMain extends CeMain {
 				//this happens when the new alignment crosses the protein terminus
 				if( optAln[block][1][pos-1]+cp<ca2len &&
 						optAln[block][1][pos]+cp >= ca2len) {
-					currBlock = new ArrayList<List<Integer>>(2);
-					currBlock.add( new ArrayList<Integer>());
-					currBlock.add( new ArrayList<Integer>());
+					currBlock = new ArrayList<>(2);
+					currBlock.add(new ArrayList<>());
+					currBlock.add(new ArrayList<>());
 					blocks.add(currBlock);
 				}
 				currBlock.get(0).add( optAln[block][0][pos] );

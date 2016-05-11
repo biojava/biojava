@@ -121,14 +121,14 @@ public final class ProteinModificationXmlReader {
 				Node compsNode = nodes.get(0);
 
 				// keep track of the labels of component indices
-				Map<String,Integer> mapLabelComp = new HashMap<String,Integer>();
+				Map<String,Integer> mapLabelComp = new HashMap<>();
 
 				Map<String,List<Node>> compInfoNodes = getChildNodes(compsNode);
 
 				// components
 				List<Node> compNodes = compInfoNodes.get("Component");
 				int sizeComp = compNodes.size();
-				List<Component> comps = new ArrayList<Component>(sizeComp);
+				List<Component> comps = new ArrayList<>(sizeComp);
 				for (int iComp=0; iComp<sizeComp; iComp++) {
 					Node compNode = compNodes.get(iComp);
 					// comp label
@@ -146,7 +146,7 @@ public final class ProteinModificationXmlReader {
 					}
 
 					// comp PDBCC ID
-					Set<String> compIds = new HashSet<String>();
+					Set<String> compIds = new HashSet<>();
 					List<Node> compIdNodes = getChildNodes(compNode).get("Id");
 					if (compIdNodes!=null) {
 						for (Node compIdNode : compIdNodes) {
@@ -199,7 +199,7 @@ public final class ProteinModificationXmlReader {
 				List<ModificationLinkage> linkages = null;
 				if (bondNodes!=null) {
 					int sizeBonds = bondNodes.size();
-					linkages = new ArrayList<ModificationLinkage>(sizeBonds);
+					linkages = new ArrayList<>(sizeBonds);
 					for (int iBond=0; iBond<sizeBonds; iBond++) {
 						Node bondNode = bondNodes.get(iBond);
 						Map<String,List<Node>> bondChildNodes = getChildNodes(bondNode);
@@ -342,7 +342,7 @@ public final class ProteinModificationXmlReader {
 		if (parent==null)
 			return Collections.emptyMap();
 
-		Map<String,List<Node>> children = new HashMap<String,List<Node>>();
+		Map<String,List<Node>> children = new HashMap<>();
 
 		NodeList nodes = parent.getChildNodes();
 		int nNodes = nodes.getLength();
@@ -354,7 +354,7 @@ public final class ProteinModificationXmlReader {
 			String name = node.getNodeName();
 			List<Node> namesakes = children.get(name);
 			if (namesakes==null) {
-				namesakes = new ArrayList<Node>();
+				namesakes = new ArrayList<>();
 				children.put(name, namesakes);
 			}
 			namesakes.add(node);

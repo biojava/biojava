@@ -189,7 +189,7 @@ public class CeSymm {
 		CECalculator calculator = new CECalculator(params);
 		Matrix lastMatrix = null;
 
-		List<AFPChain> selfAlignments = new ArrayList<AFPChain>();
+		List<AFPChain> selfAlignments = new ArrayList<>();
 		AFPChain optimalAFP = null;
 
 		// STEP 2: perform the self-alignments of the structure
@@ -337,12 +337,12 @@ public class CeSymm {
 		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)
 				.getTransformations().get(1);
 
-		List<List<Integer>> superposition = new ArrayList<List<Integer>>();
-		List<Integer> chain1 = new ArrayList<Integer>();
-		List<Integer> chain2 = new ArrayList<Integer>();
+		List<List<Integer>> superposition = new ArrayList<>();
+		List<Integer> chain1 = new ArrayList<>();
+		List<Integer> chain2 = new ArrayList<>();
 		superposition.add(chain1);
 		superposition.add(chain2);
-		List<Integer> repeatTrans = new ArrayList<Integer>();
+		List<Integer> repeatTrans = new ArrayList<>();
 
 		switch (result.getType()) {
 		case CLOSED:

@@ -145,25 +145,25 @@ public enum PolymerType implements Serializable
 	static {
 		Set<PolymerType> tmp;
 
-		tmp = new HashSet<PolymerType>();
+		tmp = new HashSet<>();
 		tmp.add(peptide);
 		PROTEIN_ONLY = Collections.unmodifiableSet(tmp);
 
-		tmp = new HashSet<PolymerType>();
+		tmp = new HashSet<>();
 		tmp.add(dna);
 		DNA_ONLY = Collections.unmodifiableSet(tmp);
 
-		tmp = new HashSet<PolymerType>();
+		tmp = new HashSet<>();
 		tmp.add(rna);
 		RNA_ONLY = Collections.unmodifiableSet(tmp);
 
-		tmp = new HashSet<PolymerType>();
+		tmp = new HashSet<>();
 		tmp.add(dna);
 		tmp.add(rna);
 		tmp.add(dnarna);
 		POLYNUCLEOTIDE_ONLY = Collections.unmodifiableSet(tmp);
 
-		ALL_POLYMER_TYPES = Collections.unmodifiableSet(new HashSet<PolymerType>(Arrays.asList(values())));
+		ALL_POLYMER_TYPES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(values())));
 	}
 
 }

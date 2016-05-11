@@ -204,7 +204,7 @@ public class ModelledSubgroup {
 	 */
 	public List<AngleOutlier> getAngleOutlier() {
 		if (angleOutlier == null) {
-			angleOutlier = new ArrayList<AngleOutlier>();
+			angleOutlier = new ArrayList<>();
 		}
 		return this.angleOutlier;
 	}
@@ -233,7 +233,7 @@ public class ModelledSubgroup {
 	 */
 	public List<Clash> getClash() {
 		if (clash == null) {
-			clash = new ArrayList<Clash>();
+			clash = new ArrayList<>();
 		}
 		return this.clash;
 	}
@@ -262,7 +262,7 @@ public class ModelledSubgroup {
 	 */
 	public List<BondOutlier> getBondOutlier() {
 		if (bondOutlier == null) {
-			bondOutlier = new ArrayList<BondOutlier>();
+			bondOutlier = new ArrayList<>();
 		}
 		return this.bondOutlier;
 	}
@@ -291,7 +291,7 @@ public class ModelledSubgroup {
 	 */
 	public List<MogAngleOutlier> getMogAngleOutlier() {
 		if (mogAngleOutlier == null) {
-			mogAngleOutlier = new ArrayList<MogAngleOutlier>();
+			mogAngleOutlier = new ArrayList<>();
 		}
 		return this.mogAngleOutlier;
 	}
@@ -320,7 +320,7 @@ public class ModelledSubgroup {
 	 */
 	public List<SymmClash> getSymmClash() {
 		if (symmClash == null) {
-			symmClash = new ArrayList<SymmClash>();
+			symmClash = new ArrayList<>();
 		}
 		return this.symmClash;
 	}
@@ -349,7 +349,7 @@ public class ModelledSubgroup {
 	 */
 	public List<MogBondOutlier> getMogBondOutlier() {
 		if (mogBondOutlier == null) {
-			mogBondOutlier = new ArrayList<MogBondOutlier>();
+			mogBondOutlier = new ArrayList<>();
 		}
 		return this.mogBondOutlier;
 	}

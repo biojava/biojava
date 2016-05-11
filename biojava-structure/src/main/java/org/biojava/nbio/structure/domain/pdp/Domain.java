@@ -48,7 +48,7 @@ public class Domain implements Comparable<Domain>, Serializable{
 	int nseg;
 	double score;
 
-	List<Segment>segments = new ArrayList<Segment>();
+	List<Segment>segments = new ArrayList<>();
 
 	public Domain(){
 

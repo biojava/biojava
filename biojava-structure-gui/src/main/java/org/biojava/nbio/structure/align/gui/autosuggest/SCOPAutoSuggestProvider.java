@@ -47,7 +47,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 		long timeS = System.currentTimeMillis();
 
-		List<ScopDomain> domains = new ArrayList<ScopDomain>();
+		List<ScopDomain> domains = new ArrayList<>();
 
 		domains = getPossibleScopDomains(userInput);
 
@@ -55,7 +55,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 		// convert domains to Strings
 
-		Vector<String> v=new Vector<String>();
+		Vector<String> v= new Vector<>();
 
 		int counter = 0;
 		for ( ScopDomain d : domains){
@@ -82,7 +82,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 	private List<ScopDomain> getPossibleScopDomains(String userInput) {
 
-		List<ScopDomain> domains = new ArrayList<ScopDomain>();
+		List<ScopDomain> domains = new ArrayList<>();
 
 		ScopDatabase scop = ScopFactory.getSCOP();
 

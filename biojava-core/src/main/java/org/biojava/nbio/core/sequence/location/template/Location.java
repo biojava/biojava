@@ -206,7 +206,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 				end = (length * (numberOfPasses + 1)) + modEnd;
 			}
 
-			List<Location> locations = new ArrayList<Location>();
+			List<Location> locations = new ArrayList<>();
 			locations.add(new SimpleLocation(modStart, length, strand));
 			for (int i = 0; i < numberOfPasses; i++) {
 				locations.add(new SimpleLocation(1, length, strand));

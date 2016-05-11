@@ -59,7 +59,7 @@ public class Mutator{
 	List<String> supportedAtoms;
 
 	public Mutator(){
-		supportedAtoms = new ArrayList<String>();
+		supportedAtoms = new ArrayList<>();
 		supportedAtoms.add("N");
 		supportedAtoms.add("CA");
 		supportedAtoms.add("C");

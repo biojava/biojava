@@ -38,7 +38,7 @@ public class StructureAlignmentFactory {
 
 	private final static Logger logger = LoggerFactory.getLogger(StructureAlignmentFactory.class);
 
-	private static List<StructureAlignment> algorithms = new ArrayList<StructureAlignment>();
+	private static List<StructureAlignment> algorithms = new ArrayList<>();
 
 	static {
 		algorithms.add( new CeMain() );
@@ -135,7 +135,7 @@ public class StructureAlignmentFactory {
 
 	public static String[] getAllAlgorithmNames(){
 		StructureAlignment[] algos = getAllAlgorithms();
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 
 		for (StructureAlignment alg : algos){
 			names.add(alg.getAlgorithmName());

@@ -91,7 +91,7 @@ public class GeneNamesParser {
 	 */
 	public static List<GeneName> getGeneNames(InputStream inStream) throws IOException{
 
-		ArrayList<GeneName> geneNames = new ArrayList<GeneName>();
+		ArrayList<GeneName> geneNames = new ArrayList<>();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
 
 		// skip reading first line (it is the legend)

@@ -130,9 +130,9 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 
 	private void reset() {
 
-		pdbxStructOperList   	= new ArrayList<PdbxStructOperList>();
-		pdbxStructAssemblies	= new ArrayList<PdbxStructAssembly>();
-		pdbxStructAssemblyGens 	= new ArrayList<PdbxStructAssemblyGen>();
+		pdbxStructOperList   	= new ArrayList<>();
+		pdbxStructAssemblies	= new ArrayList<>();
+		pdbxStructAssemblyGens 	= new ArrayList<>();
 		asymUnit = null;
 	}
 
@@ -181,7 +181,7 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 		if ( biolAssemblyNr > getNrBiolAssemblies())
 			return null;
 
-		List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>();
+		List<PdbxStructAssemblyGen> psags = new ArrayList<>();
 		for (PdbxStructAssemblyGen psag : pdbxStructAssemblyGens){
 			if ( psag.getAssembly_id().equals((biolAssemblyNr +1)+ ""))
 				psags.add(psag);

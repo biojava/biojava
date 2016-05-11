@@ -138,7 +138,7 @@ public class StructurePairAligner {
 	StrucAligParameters params;
 	FragmentPair[]  fragPairs;
 
-	List<AlignmentProgressListener> listeners = new ArrayList<AlignmentProgressListener>();
+	List<AlignmentProgressListener> listeners = new ArrayList<>();
 
 	public StructurePairAligner() {
 		super();
@@ -447,7 +447,7 @@ public class StructurePairAligner {
 		Atom unitvector = new AtomImpl();
 		unitvector.setCoords(utmp[0]);
 
-		List<FragmentPair> fragments = new ArrayList<FragmentPair>();
+		List<FragmentPair> fragments = new ArrayList<>();
 
 		for ( int i = 0 ; i< rows; i++){
 
@@ -542,7 +542,7 @@ public class StructurePairAligner {
 
 		logger.debug("step 3 - refine alignments");
 
-		List<AlternativeAlignment> aas = new ArrayList<AlternativeAlignment>();
+		List<AlternativeAlignment> aas = new ArrayList<>();
 		for ( int i = 0 ; i < frags.length;i++){
 			JointFragments f = frags[i];
 			AlternativeAlignment a = new AlternativeAlignment();

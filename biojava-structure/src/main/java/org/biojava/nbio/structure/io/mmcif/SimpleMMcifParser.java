@@ -140,7 +140,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
 
 	public SimpleMMcifParser(){
-		consumers = new ArrayList<MMcifConsumer>();
+		consumers = new ArrayList<>();
 		struct = null;
 	}
 
@@ -201,9 +201,9 @@ public class SimpleMMcifParser implements MMcifParser {
 		boolean inLoopData = false;
 
 
-		List<String> loopFields = new ArrayList<String>();
-		List<String> lineData   = new ArrayList<String>();
-		Set<String> loopWarnings = new HashSet<String>(); // used only to reduce logging statements
+		List<String> loopFields = new ArrayList<>();
+		List<String> lineData   = new ArrayList<>();
+		Set<String> loopWarnings = new HashSet<>(); // used only to reduce logging statements
 
 		String category = null;
 
@@ -404,7 +404,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	private List<String> processSingleLine(String line){
 
-		List<String> data = new ArrayList<String>();
+		List<String> data = new ArrayList<>();
 
 		if ( line.trim().length() == 0){
 			return data;
@@ -530,7 +530,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		//System.out.println("XX processLine " + fieldLength + " " + line);
 		// go through the line and process each character
-		List<String> lineData = new ArrayList<String>();
+		List<String> lineData = new ArrayList<>();
 
 		boolean inString = false;
 
@@ -963,7 +963,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		Method[] methods = c.getMethods();
 
-		Map<String,Method> methodMap = new HashMap<String, Method>();
+		Map<String,Method> methodMap = new HashMap<>();
 		for (Method m : methods) {
 			methodMap.put(m.getName(),m);
 		}

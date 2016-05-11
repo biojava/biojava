@@ -84,9 +84,9 @@ public class RNAToAminoAcidTranslator extends
 		this.initMetOnly = initMetOnly;
 		this.translateNCodons = translateNCodons;
 
-		quickLookup = new HashMap<Table.CaseInsensitiveTriplet, Codon>(codons
+		quickLookup = new HashMap<>(codons
 				.getAllCompounds().size());
-		aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
+		aminoAcidToCodon = new HashMap<>();
 
 		List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
 		for (Codon codon : codonList) {
@@ -95,7 +95,7 @@ public class RNAToAminoAcidTranslator extends
 
 			List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
 			if (codonL == null) {
-				codonL = new ArrayList<Codon>();
+				codonL = new ArrayList<>();
 				aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
 			}
 			codonL.add(codon);
@@ -122,9 +122,9 @@ public class RNAToAminoAcidTranslator extends
 		this.initMetOnly = initMetOnly;
 		this.translateNCodons = translateNCodons;
 
-		quickLookup = new HashMap<Table.CaseInsensitiveTriplet, Codon>(codons
+		quickLookup = new HashMap<>(codons
 				.getAllCompounds().size());
-		aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
+		aminoAcidToCodon = new HashMap<>();
 
 		List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
 		for (Codon codon : codonList) {
@@ -133,7 +133,7 @@ public class RNAToAminoAcidTranslator extends
 
 			List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
 			if (codonL == null) {
-				codonL = new ArrayList<Codon>();
+				codonL = new ArrayList<>();
 				aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
 			}
 			codonL.add(codon);
@@ -159,9 +159,9 @@ public class RNAToAminoAcidTranslator extends
 		this.initMetOnly = initMetOnly;
 		this.translateNCodons = translateNCodons;
 
-		quickLookup = new HashMap<Table.CaseInsensitiveTriplet, Codon>(codons
+		quickLookup = new HashMap<>(codons
 				.getAllCompounds().size());
-		aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
+		aminoAcidToCodon = new HashMap<>();
 
 		List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
 		for (Codon codon : codonList) {
@@ -170,7 +170,7 @@ public class RNAToAminoAcidTranslator extends
 
 			List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
 			if (codonL == null) {
-				codonL = new ArrayList<Codon>();
+				codonL = new ArrayList<>();
 				aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
 			}
 			codonL.add(codon);
@@ -192,9 +192,9 @@ public class RNAToAminoAcidTranslator extends
 	public List<Sequence<AminoAcidCompound>> createSequences(
 			Sequence<NucleotideCompound> originalSequence) {
 
-		List<List<AminoAcidCompound>> workingList = new ArrayList<List<AminoAcidCompound>>();
+		List<List<AminoAcidCompound>> workingList = new ArrayList<>();
 
-		Iterable<SequenceView<NucleotideCompound>> iter = new WindowedSequence<NucleotideCompound>(
+		Iterable<SequenceView<NucleotideCompound>> iter = new WindowedSequence<>(
 				originalSequence, 3);
 
 		boolean first = true;

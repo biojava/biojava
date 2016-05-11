@@ -71,7 +71,7 @@ public enum ExperimentalTechnique {
 
 
 	 private static HashMap<String, ExperimentalTechnique> initExpTechStr2Value() {
-		HashMap<String, ExperimentalTechnique> expTechStr2Value = new HashMap<String, ExperimentalTechnique>();
+		HashMap<String, ExperimentalTechnique> expTechStr2Value = new HashMap<>();
 		for(ExperimentalTechnique exp:ExperimentalTechnique.values()) {
 			expTechStr2Value.put(exp.getName(), exp);
 		}

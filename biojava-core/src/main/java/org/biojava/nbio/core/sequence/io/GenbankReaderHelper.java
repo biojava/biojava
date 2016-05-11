@@ -59,15 +59,15 @@ public class GenbankReaderHelper {
 		}
 
 		GenbankReader<DNASequence, NucleotideCompound> GenbankProxyReader =
-				new GenbankReader<DNASequence, NucleotideCompound>(
+				new GenbankReader<>(
 						file,
-						new GenericGenbankHeaderParser<DNASequence, NucleotideCompound>(),
+						new GenericGenbankHeaderParser<>(),
 						new FileProxyDNASequenceCreator(
 								file,
 								DNACompoundSet.getDNACompoundSet(),
 								new GenbankSequenceParser<AbstractSequence<NucleotideCompound>, NucleotideCompound>()
-							)
-					);
+						)
+				);
 		return GenbankProxyReader.process();
 
 	}
@@ -87,15 +87,15 @@ public class GenbankReaderHelper {
 		}
 
 		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProxyReader =
-				new GenbankReader<ProteinSequence, AminoAcidCompound>(
+				new GenbankReader<>(
 						file,
-						new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),
+						new GenericGenbankHeaderParser<>(),
 						new FileProxyProteinSequenceCreator(
 								file,
 								AminoAcidCompoundSet.getAminoAcidCompoundSet(),
 								new GenbankSequenceParser<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>()
-							)
-					);
+						)
+				);
 		return GenbankProxyReader.process();
 
 	}
@@ -125,9 +125,9 @@ public class GenbankReaderHelper {
 	 */
 	public static LinkedHashMap<String, ProteinSequence> readGenbankProteinSequence(
 			InputStream inStream) throws Exception {
-		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(
+		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankReader = new GenbankReader<>(
 				inStream,
-				new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),
+				new GenericGenbankHeaderParser<>(),
 				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 		return GenbankReader.process();
 	}
@@ -140,9 +140,9 @@ public class GenbankReaderHelper {
 	 */
 	public static LinkedHashMap<String, DNASequence> readGenbankDNASequence(
 			InputStream inStream) throws Exception {
-		GenbankReader<DNASequence, NucleotideCompound> GenbankReader = new GenbankReader<DNASequence, NucleotideCompound>(
+		GenbankReader<DNASequence, NucleotideCompound> GenbankReader = new GenbankReader<>(
 				inStream,
-				new GenericGenbankHeaderParser<DNASequence, NucleotideCompound>(),
+				new GenericGenbankHeaderParser<>(),
 				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
 		return GenbankReader.process();
 	}

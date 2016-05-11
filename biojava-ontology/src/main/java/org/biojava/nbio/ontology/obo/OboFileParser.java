@@ -61,10 +61,10 @@ public class OboFileParser {
 
 
 	protected static final Map<Character, Character> escapeChars =
-		new HashMap<Character, Character>();
+			new HashMap<>();
 
 	protected static final Map<Character, Character> unescapeChars =
-		new HashMap<Character, Character>();
+			new HashMap<>();
 
 	static {
 		escapeChars.put(new Character('n'), new Character('\n'));
@@ -114,7 +114,7 @@ public class OboFileParser {
 
 
 	public OboFileParser(){
-		listeners = new ArrayList<OboFileEventListener>();
+		listeners = new ArrayList<>();
 	}
 
 
@@ -316,7 +316,7 @@ public class OboFileParser {
 	}
 
 	protected Map<String,Object>[] getDbxrefList(String line, int startoffset, int endoffset) throws IOException {
-		Vector<Map<String,Object>> temp = new Vector<Map<String,Object>>();
+		Vector<Map<String,Object>> temp = new Vector<>();
 		boolean stop = false;
 		while (!stop) {
 			int braceIndex = findUnescaped(line, '{', startoffset, endoffset);
@@ -381,7 +381,7 @@ public class OboFileParser {
 		}
 
 
-		Map<String, Object> m = new HashMap<String, Object>();
+		Map<String, Object> m = new HashMap<>();
 		m.put("xref",xref_str);
 		m.put("desc",desc_str);
 		return m;

@@ -40,7 +40,7 @@ public class HelixExtender {
 		List<List<Integer>> layerLines = helix.getLayerLines();
 
 		// get list of subunit indices to be used for helix extension
-		List<Integer> indices = new ArrayList<Integer>();
+		List<Integer> indices = new ArrayList<>();
 		for (List<Integer> line: layerLines) {
 			if (steps < 0) {
 				indices.add(line.get(0));
@@ -50,7 +50,7 @@ public class HelixExtender {
 		}
 		System.out.println("Extending subunits: " + indices);
 
-		List<Point3d> points = new ArrayList<Point3d>();
+		List<Point3d> points = new ArrayList<>();
 		Matrix4d transformation = helix.getTransformation();
 		for (int index: indices) {
 	    	Point3d[] trace = subunits.getTraces().get(index);

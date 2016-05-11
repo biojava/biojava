@@ -212,7 +212,7 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @throws UnsupportedEncodingException
 	 */
 	private static Map<String,String> parseQuery(URL url) throws UnsupportedEncodingException {
-		Map<String,String> params = new LinkedHashMap<String, String>();
+		Map<String,String> params = new LinkedHashMap<>();
 		String query = url.getQuery();
 		if( query == null || query.isEmpty()) {
 			// empty query

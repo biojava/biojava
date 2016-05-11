@@ -127,7 +127,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 				// work around list in results;
 
 				String[] spl = range.split(",");
-				SortedSet<String> value = new TreeSet<String>();
+				SortedSet<String> value = new TreeSet<>();
 
 				for (String s : spl){
 					value.add(s);
@@ -200,7 +200,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		}
 
 		String pdbId = null;
-		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
+		List<ResidueRange> ranges = new ArrayList<>();
 		for(String domainRange : domainRanges) {
 			SubstructureIdentifier strucId = new SubstructureIdentifier(domainRange);
 			if(pdbId == null) {

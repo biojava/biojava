@@ -353,7 +353,7 @@ public final class ORonn implements Callable<ORonn> {
 		// Do parallel execution
 		final ExecutorService executor = new ThreadPoolExecutor(prms
 				.getThreadNum(), prms.getThreadNum(), 0L, TimeUnit.SECONDS,
-				new SynchronousQueue<Runnable>(),
+				new SynchronousQueue<>(),
 				new ThreadPoolExecutor.CallerRunsPolicy());
 		try {
 			for (final FastaSequence sequence : fsequences) {

@@ -84,7 +84,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
 		rFree = DEFAULT_RFREE;
-		bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
+		bioAssemblies = new HashMap<>();
 		crystallographicInfo = new PDBCrystallographicInfo();
 
 	}

@@ -81,7 +81,7 @@ public class ScopFactory {
 	public static final String LATEST_VERSION = VERSION_2_0_5;
 
 	// Hold one instance for each version
-	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>();
+	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<>();
 	private static String defaultVersion = LATEST_VERSION;
 
 	/**

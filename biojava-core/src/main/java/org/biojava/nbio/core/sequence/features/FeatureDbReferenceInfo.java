@@ -46,11 +46,11 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
 
 	private AbstractLocation location;
 	private FeatureInterface<S,C> parentFeature;
-	private List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
+	private List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<>();
 	private String description = "";
 	private String shortDescription = "";
 	private Object userObject;
-	private Map<String, List<Qualifier>> qualifiers = new HashMap<String,List<Qualifier>>();
+	private Map<String, List<Qualifier>> qualifiers = new HashMap<>();
 
 
 	public FeatureDbReferenceInfo(String database, String id) {
@@ -150,7 +150,7 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
 	@Override
 	public void addQualifier(String key, Qualifier qualifier) {
 		if (qualifiers == null) {
-			qualifiers = new HashMap<String, List<Qualifier>>();
+			qualifiers = new HashMap<>();
 		}
 		// Check for key. Update list of values
 		if (qualifiers.containsKey(key)){
@@ -158,7 +158,7 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
 			vals.add(qualifier);
 			qualifiers.put(key, vals);
 		} else {
-			List<Qualifier> vals = new ArrayList<Qualifier>();
+			List<Qualifier> vals = new ArrayList<>();
 			vals.add(qualifier);
 			qualifiers.put(key, vals);
 		}

@@ -107,7 +107,7 @@ public class CeSymmResult {
 		if (!isRefined())
 			return null;
 
-		List<StructureIdentifier> repeats = new ArrayList<StructureIdentifier>(
+		List<StructureIdentifier> repeats = new ArrayList<>(
 				symmOrder);
 
 		String pdbId = structureId.toCanonical().getPdbId();

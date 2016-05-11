@@ -242,7 +242,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 								Qualifier xref = new DBReferenceInfo(dbname, raccession);
 								gbFeature.addQualifier(key, xref);
 
-								ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<DBReferenceInfo>();
+								ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
 								listDBEntry.add((DBReferenceInfo) xref);
 								mapDB.put(key, listDBEntry);
 							} else {
@@ -312,7 +312,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	// reads an indented section, combining split lines and creating a list of
 	// key->value tuples
 	private List<String[]> readSection(BufferedReader bufferedReader) {
-		List<String[]> section = new ArrayList<String[]>();
+		List<String[]> section = new ArrayList<>();
 		String line = "";
 
 		String currKey = null;
@@ -381,9 +381,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 	@Override
 	public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException {
-		featureCollection = new HashMap<String, ArrayList<AbstractFeature>>();
-		mapDB = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
-		headerParser = new GenericGenbankHeaderParser<S, C>();
+		featureCollection = new HashMap<>();
+		mapDB = new LinkedHashMap<>();
+		headerParser = new GenericGenbankHeaderParser<>();
 		try {
 			parse(bufferedReader);
 		} catch (ParserException e) {
@@ -407,7 +407,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	}
 
 	public ArrayList<String> getKeyWords() {
-		return new ArrayList<String>(featureCollection.keySet());
+		return new ArrayList<>(featureCollection.keySet());
 	}
 
 	public ArrayList<AbstractFeature> getFeatures(String keyword) {

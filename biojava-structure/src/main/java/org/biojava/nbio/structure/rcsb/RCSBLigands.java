@@ -42,7 +42,7 @@ public class RCSBLigands {
 	private List<RCSBLigand> ligands;
 
 	public RCSBLigands() {
-		ligands = new ArrayList<RCSBLigand>();
+		ligands = new ArrayList<>();
 	}
 
 	public void addLigand(RCSBLigand ligand) {

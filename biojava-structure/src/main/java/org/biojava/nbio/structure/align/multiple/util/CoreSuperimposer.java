@@ -110,7 +110,7 @@ public class CoreSuperimposer implements MultipleSuperimposer {
 
 			//Block transformations
 			List<Matrix4d> transforms =
-					new ArrayList<Matrix4d>(atomArrays.size());
+					new ArrayList<>(atomArrays.size());
 
 			//Loop through structures
 			for (int i=0; i<atomArrays.size(); i++){
@@ -126,8 +126,8 @@ public class CoreSuperimposer implements MultipleSuperimposer {
 				Atom[] ref = atomArrays.get(reference);
 				Atom[] curr = atomArrays.get(i);
 
-				List<Atom> atomSet1 = new ArrayList<Atom>();
-				List<Atom> atomSet2 = new ArrayList<Atom>();
+				List<Atom> atomSet1 = new ArrayList<>();
+				List<Atom> atomSet2 = new ArrayList<>();
 
 				for( Block blk : bs.getBlocks() ) {
 

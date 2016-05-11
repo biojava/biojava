@@ -198,7 +198,7 @@ implements ChangeListener, ActionListener {
 
 
 	protected static Map<String,ContinuousColorMapper> createGradients() {
-		SortedMap<String,ContinuousColorMapper> gradients = new TreeMap<String,ContinuousColorMapper>();
+		SortedMap<String,ContinuousColorMapper> gradients = new TreeMap<>();
 
 		int i = 0; //prepend number, since sorted alphabetically
 		ColorSpace hsv = HSVColorSpace.getHSVColorSpace();

@@ -74,7 +74,7 @@ public class ComponentXMLConverter {
 		boolean isNTerminal = Boolean.parseBoolean(nTerminalS);
 		boolean isCTerminal = Boolean.parseBoolean(cTerminalS);
 
-		Set<String>pdbccIds = new HashSet<String>();
+		Set<String>pdbccIds = new HashSet<>();
 
 		NodeList valList = componentN.getChildNodes();
 		int numChildren  = valList.getLength();

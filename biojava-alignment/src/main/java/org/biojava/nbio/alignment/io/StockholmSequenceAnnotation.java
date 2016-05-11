@@ -74,7 +74,7 @@ class StockholmSequenceAnnotation {
 	 */
 	public void addDBReference(String dbReferenceRepresentingString) {
 		if (this.dbReferences == null) {
-			this.dbReferences = new HashSet<DatabaseReference>();
+			this.dbReferences = new HashSet<>();
 		}
 		dbReferences.add(new DatabaseReference(dbReferenceRepresentingString));
 	}

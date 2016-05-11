@@ -294,13 +294,13 @@ public interface Ontology  {
 		private final OntologyOps ops;
 
 		{
-			terms            = new HashMap<String, Term>();
-			triples          = new HashSet<Triple>();
-			subjectTriples   = new HashMap<Term, Set<Triple>>();
-			objectTriples    = new HashMap<Term, Set<Triple>>();
-			relationTriples  = new HashMap<Term, Set<Triple>>();
-			remoteTerms      = new HashMap<Term, RemoteTerm>();
-			localRemoteTerms = new HashSet<Term>();
+			terms            = new HashMap<>();
+			triples          = new HashSet<>();
+			subjectTriples   = new HashMap<>();
+			objectTriples    = new HashMap<>();
+			relationTriples  = new HashMap<>();
+			remoteTerms      = new HashMap<>();
+			localRemoteTerms = new HashSet<>();
 		}
 
 		public Impl(String name, String description) {
@@ -337,7 +337,7 @@ public interface Ontology  {
 
 		@Override
 		public Set<Term> getTerms() {
-			return new HashSet<Term>(terms.values());
+			return new HashSet<>(terms.values());
 		}
 
 		@Override
@@ -381,10 +381,10 @@ public interface Ontology  {
 			if (base == null) {
 				return Collections.EMPTY_SET;
 			} else if (subject == null && object == null && predicate == null) {
-				return Collections.unmodifiableSet(new HashSet<Triple>(base));
+				return Collections.unmodifiableSet(new HashSet<>(base));
 			}
 
-			Set<Triple> retval = new HashSet<Triple>();
+			Set<Triple> retval = new HashSet<>();
 			for (Iterator<Triple> i = base.iterator(); i.hasNext(); ) {
 				Triple t = i.next();
 				if (subject != null && t.getSubject() != subject) {
@@ -566,7 +566,7 @@ public interface Ontology  {
 		private void pushTriple(Map<Term,Set<Triple>> m, Term key, Triple t) {
 			Set<Triple> s = m.get(key);
 			if (s == null) {
-				s = new HashSet<Triple>();
+				s = new HashSet<>();
 				m.put(key, s);
 			}
 			s.add(t);

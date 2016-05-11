@@ -75,7 +75,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			throw new IllegalArgumentException("Null argument(s)");
 		}
 
-		groups = new HashSet<StructureGroup>(1);
+		groups = new HashSet<>(1);
 		groups.add(modifiedResidue);
 
 		// is it possible that components be added by addLinkage later?
@@ -101,7 +101,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			throw new IllegalArgumentException("at least one linkage.");
 		}
 
-		this.groups = new HashSet<StructureGroup>();
+		this.groups = new HashSet<>();
 
 		addAtomLinkages(linkages);
 
@@ -128,7 +128,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			modification = originalModification;
 		else {
 			int nRes = 0;
-			Set<String> ligands = new HashSet<String>();
+			Set<String> ligands = new HashSet<>();
 			for (StructureGroup group : groups) {
 				if (group.isAminoAcid()) {
 					nRes ++;
@@ -187,7 +187,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 
 	@Override
 	public Set<StructureGroup> getGroups(boolean isAminoAcid) {
-		Set<StructureGroup> result = new HashSet<StructureGroup>();
+		Set<StructureGroup> result = new HashSet<>();
 		for (StructureGroup group : groups) {
 			if (group.isAminoAcid() == isAminoAcid) {
 				result.add(group);
@@ -207,7 +207,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 		if (atomLinkages==null) {
 			return Collections.emptySet();
 		} else {
-			Set<StructureAtomLinkage> result = new HashSet<StructureAtomLinkage>();
+			Set<StructureAtomLinkage> result = new HashSet<>();
 			for (Set<StructureAtomLinkage> linkages : atomLinkages.values()) {
 				result.addAll(linkages);
 			}
@@ -231,17 +231,17 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			throw new IllegalArgumentException("Null linkage");
 		}
 
-		Set<StructureGroup> gs = new HashSet<StructureGroup>(2);
+		Set<StructureGroup> gs = new HashSet<>(2);
 		gs.add(linkage.getAtom1().getGroup());
 		gs.add(linkage.getAtom2().getGroup());
 
 		if (atomLinkages==null) {
-			atomLinkages = new HashMap<Set<StructureGroup>, Set<StructureAtomLinkage>>();
+			atomLinkages = new HashMap<>();
 		}
 
 		Set<StructureAtomLinkage> linkages = atomLinkages.get(gs);
 		if (linkages == null) {
-			linkages = new HashSet<StructureAtomLinkage>();
+			linkages = new HashSet<>();
 			atomLinkages.put(gs, linkages);
 			groups.addAll(gs); // it's possible of new groups
 		};

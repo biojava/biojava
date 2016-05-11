@@ -44,9 +44,9 @@ public class Subunits {
 	private List<String> chainIds = Collections.emptyList();
 	private List<Integer> modelNumbers =  Collections.emptyList();
 	private List<Integer> folds = Collections.emptyList();
-	private List<Point3d> originalCenters = new ArrayList<Point3d>();
-	private List<Point3d> centers = new ArrayList<Point3d>();
-	private List<Vector3d> unitVectors = new ArrayList<Vector3d>();
+	private List<Point3d> originalCenters = new ArrayList<>();
+	private List<Point3d> centers = new ArrayList<>();
+	private List<Vector3d> unitVectors = new ArrayList<>();
 	private int nucleicAcidChainCount = 0;
 	private boolean pseudoSymmetric = false;
 
@@ -138,7 +138,7 @@ public class Subunits {
 
 	public String getStoichiometry() {
 		// count number of members in each cluster
-		Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
+		Map<Integer, Integer> map = new TreeMap<>();
 		for (Integer id: sequenceClusterIds) {
 			Integer value = map.get(id);
 			if (value == null) {
@@ -241,7 +241,7 @@ public class Subunits {
 	}
 
 	private static Set<String> getSignatures(Subunits subunits) {
-		Set<String> set = new HashSet<String>(subunits.getSubunitCount());
+		Set<String> set = new HashSet<>(subunits.getSubunitCount());
 		for (int i = 0; i < subunits.getSubunitCount(); i++) {
 			set.add(subunits.getChainIds().get(i) + "_" + subunits.getModelNumbers().get(i));
 		}

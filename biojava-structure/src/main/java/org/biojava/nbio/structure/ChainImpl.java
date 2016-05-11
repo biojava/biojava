@@ -80,10 +80,10 @@ public class ChainImpl implements Chain, Serializable {
 		super();
 
 		chainID = DEFAULT_CHAIN_ID;
-		groups = new ArrayList<Group>() ;
+		groups = new ArrayList<>() ;
 
-		seqResGroups = new ArrayList<Group>();
-		pdbResnumMap = new HashMap<String,Integer>();
+		seqResGroups = new ArrayList<>();
+		pdbResnumMap = new HashMap<>();
 		internalChainID = null;
 
 	}
@@ -173,7 +173,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		if (seqResGroups!=null){
 
-			List<Group> tmpSeqRes = new ArrayList<Group>();
+			List<Group> tmpSeqRes = new ArrayList<>();
 
 			// cloning seqres and atom groups is ugly, due to their
 			// nested relationship (some of the atoms can be in the seqres, but not all)
@@ -313,7 +313,7 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public List<Group> getAtomGroups(GroupType type){
 
-		List<Group> tmp = new ArrayList<Group>() ;
+		List<Group> tmp = new ArrayList<>() ;
 		for (Group g : groups) {
 			if (g.getType().equals(type)) {
 				tmp.add(g);
@@ -352,7 +352,7 @@ public class ChainImpl implements Chain, Serializable {
 			return getGroupsByPDB(start, end);
 
 
-		List<Group> retlst = new ArrayList<Group>();
+		List<Group> retlst = new ArrayList<>();
 
 		String pdbresnumStart = start.toString();
 		String pdbresnumEnd   = end.toString();
@@ -447,7 +447,7 @@ public class ChainImpl implements Chain, Serializable {
 		String pdbresnumStart = start.toString();
 		String pdbresnumEnd   = end.toString();
 
-		List<Group> retlst = new ArrayList<Group>();
+		List<Group> retlst = new ArrayList<>();
 
 		Iterator<Group> iter = groups.iterator();
 		boolean adding = false;
@@ -650,7 +650,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	@Override
 	public List<Group> getSeqResGroups(GroupType type) {
-		List<Group> tmp = new ArrayList<Group>() ;
+		List<Group> tmp = new ArrayList<>() ;
 		for (Group g : seqResGroups) {
 			if (g.getType().equals(type)) {
 				tmp.add(g);
@@ -698,7 +698,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	@Override
 	public List<Group> getAtomLigands(){
-		List<Group> ligands = new ArrayList<Group>();
+		List<Group> ligands = new ArrayList<>();
 
 		for (Group g : groups)
 			if (!seqResGroups.contains(g) && !g.isWater())

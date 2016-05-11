@@ -247,7 +247,7 @@ public class JAutoSuggest extends JTextField{
 		lastWord = "";
 		regular = getFont();
 		busy = new Font(getFont().getName(), Font.ITALIC, getFont().getSize());
-		suggestions = new Vector<String>();
+		suggestions = new Vector<>();
 		defaultText = DEFAULT_TEXT;
 
 

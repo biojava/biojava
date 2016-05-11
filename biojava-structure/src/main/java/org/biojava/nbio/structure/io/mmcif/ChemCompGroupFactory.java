@@ -40,7 +40,7 @@ public class ChemCompGroupFactory {
 
 	private static ChemCompProvider chemCompProvider = new DownloadChemCompProvider();
 
-	private static SoftHashMap<String, ChemComp> cache = new SoftHashMap<String, ChemComp>(0);
+	private static SoftHashMap<String, ChemComp> cache = new SoftHashMap<>(0);
 
 	public static ChemComp getChemComp(String recordName){
 

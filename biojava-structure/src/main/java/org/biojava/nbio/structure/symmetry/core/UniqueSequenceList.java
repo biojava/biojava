@@ -49,8 +49,8 @@ public class UniqueSequenceList implements Cloneable {
 		this.structureId = structureId;
 		this.seqResSequence = seqResSequence;
 		this.sequenceString =  getSequenceString(cAlphaAtoms);
-		this.alignment1 = new ArrayList<Integer>(cAlphaAtoms.length);
-		this.alignment2 = new ArrayList<Integer>(cAlphaAtoms.length);
+		this.alignment1 = new ArrayList<>(cAlphaAtoms.length);
+		this.alignment2 = new ArrayList<>(cAlphaAtoms.length);
 		for (int i = 0; i < cAlphaAtoms.length; i++) {
 			this.alignment1.add(i);
 			this.alignment2.add(i);
@@ -129,8 +129,8 @@ public class UniqueSequenceList implements Cloneable {
 			e.printStackTrace();
 		}
 		// deep copy lists and arrays
-		copy.alignment1 = new ArrayList<Integer>(this.alignment1);
-		copy.alignment2 = new ArrayList<Integer>(this.alignment2);
+		copy.alignment1 = new ArrayList<>(this.alignment1);
+		copy.alignment2 = new ArrayList<>(this.alignment2);
 		copy.caAtoms = Arrays.copyOf(this.caAtoms, this.caAtoms.length); // note, that atoms in this array will be identical (this is intended)
 		return copy;
 	}

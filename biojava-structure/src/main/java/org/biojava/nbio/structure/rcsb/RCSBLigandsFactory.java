@@ -96,7 +96,7 @@ public class RCSBLigandsFactory {
 			return null;
 		}
 
-		List<RCSBLigand> ligands = new ArrayList<RCSBLigand>();
+		List<RCSBLigand> ligands = new ArrayList<>();
 
 		// first get the ligandInfo
 		Element structureIdE = null;
@@ -239,7 +239,7 @@ public class RCSBLigandsFactory {
 
 		// first we have to handle the element "ligandsInEntry", which is not present if we have only 1 structure
 
-		List<RCSBLigands> ligandsList = new ArrayList<RCSBLigands>();
+		List<RCSBLigands> ligandsList = new ArrayList<>();
 
 		Element structureIdE = null;
 

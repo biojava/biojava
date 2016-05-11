@@ -51,7 +51,7 @@ public class GeneIDXMLReader {
 	}
 
 	public LinkedHashMap<String, ProteinSequence> getProteinSequences() throws Exception {
-		LinkedHashMap<String, ProteinSequence> proteinSequenceList = new LinkedHashMap<String, ProteinSequence>();
+		LinkedHashMap<String, ProteinSequence> proteinSequenceList = new LinkedHashMap<>();
 		ArrayList<Element> elementList = XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/protein");
 		logger.info("{} hits", elementList.size());
 
@@ -68,7 +68,7 @@ public class GeneIDXMLReader {
 	}
 
 	public LinkedHashMap<String, DNASequence> getDNACodingSequences() throws Exception {
-		LinkedHashMap<String, DNASequence> dnaSequenceList = new LinkedHashMap<String, DNASequence>();
+		LinkedHashMap<String, DNASequence> dnaSequenceList = new LinkedHashMap<>();
 		ArrayList<Element> elementList = XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/cDNA");
 		logger.info("{} hits", elementList.size());
 

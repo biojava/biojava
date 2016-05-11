@@ -95,7 +95,7 @@ public class PDBDomainProvider implements DomainProvider{
 
 			//System.out.println(url);
 
-			final SortedSet<String> results = new TreeSet<String>();
+			final SortedSet<String> results = new TreeSet<>();
 			DefaultHandler handler = new DefaultHandler() {
 				@Override
 				public void startElement(String uri, String localName,String qName,

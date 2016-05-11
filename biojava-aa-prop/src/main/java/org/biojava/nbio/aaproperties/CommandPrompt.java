@@ -95,8 +95,8 @@ public class CommandPrompt {
 		/*
 		 * Parse input arguments
 		 */
-		List<Character> propertyList = new ArrayList<Character>();
-		List<Character> specificList = new ArrayList<Character>();
+		List<Character> propertyList = new ArrayList<>();
+		List<Character> specificList = new ArrayList<>();
 		String inputLocation = null;
 		String outputLocation = null;
 		String aminoAcidCompositionLocation = null;
@@ -179,15 +179,15 @@ public class CommandPrompt {
 		}
 		LinkedHashMap<String, ProteinSequence> ret;
 		if ( inputLocation.toLowerCase().contains(".gb")) {
-			GenbankReader<ProteinSequence, AminoAcidCompound> genbankReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(
-					inStream, new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),
+			GenbankReader<ProteinSequence, AminoAcidCompound> genbankReader = new GenbankReader<>(
+					inStream, new GenericGenbankHeaderParser<>(),
 					new ProteinSequenceCreator(set));
 			ret = genbankReader.process();
 
 
 		} else {
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-					inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
+					inStream, new GenericFastaHeaderParser<>(),
 					new ProteinSequenceCreator(set));
 			ret = fastaReader.process();
 
@@ -214,7 +214,7 @@ public class CommandPrompt {
 		 * 9 Composition of the 20 standard amino acid
 		 * 0 Composition of the specific amino acid
 		 */
-		List<String> sList = new ArrayList<String>();
+		List<String> sList = new ArrayList<>();
 		sList.add("SequenceName");
 		for(Character c:propertyList){
 			switch(c){
@@ -277,7 +277,7 @@ public class CommandPrompt {
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 
 		int specificCount = 0;
-		List<Double> dList = new ArrayList<Double>();
+		List<Double> dList = new ArrayList<>();
 		for(Character c:propertyList){
 			switch(c){
 			case '1':

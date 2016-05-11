@@ -28,9 +28,9 @@ import java.util.Map.Entry;
 
 public class HelicalRepeatUnit {
 	private Subunits subunits = null;
-	private List<Point3d> repeatUnitCenters = new ArrayList<Point3d>();
-	private List<Point3d[]> repeatUnits = new ArrayList<Point3d[]>();
-	private List<List<Integer>> repeatUnitIndices = new ArrayList<List<Integer>>();
+	private List<Point3d> repeatUnitCenters = new ArrayList<>();
+	private List<Point3d[]> repeatUnits = new ArrayList<>();
+	private List<List<Integer>> repeatUnitIndices = new ArrayList<>();
 	private Map<Integer[], Integer> interactingNeighbors = Collections.emptyMap();
 
 public HelicalRepeatUnit(Subunits subunits) {
@@ -72,12 +72,12 @@ private void run() {
 }
 
 private List<Point3d> calcRepeatUnitCenters() {
-	Set<Integer> uniqueModels = new HashSet<Integer>(subunits.getModelNumbers());
+	Set<Integer> uniqueModels = new HashSet<>(subunits.getModelNumbers());
 	int modelCount = uniqueModels.size();
 	List<Integer> folds = this.subunits.getFolds();
 	int maxFold = folds.get(folds.size()-1);
 
-	List<Point3d> repeatCenters = new ArrayList<Point3d>();
+	List<Point3d> repeatCenters = new ArrayList<>();
 	List<Point3d> centers = subunits.getCenters();
 	List<Integer> models = subunits.getModelNumbers();
 
@@ -85,7 +85,7 @@ private List<Point3d> calcRepeatUnitCenters() {
 	if (maxFold%modelCount == 0 && modelCount > 1 && subunits.getSubunitCount() > 3) {
 //		System.out.println("calcRepeatUnitCenters case 1");
 		for (int i = 0; i < modelCount; i++) {
-			List<Integer> subunitIndices = new ArrayList<Integer>();
+			List<Integer> subunitIndices = new ArrayList<>();
 			Point3d p = new Point3d();
 			int count = 0;
 //			System.out.println("Models: " + models.size());
@@ -108,7 +108,7 @@ private List<Point3d> calcRepeatUnitCenters() {
 		// Case of 3B5U: A14, but seems to form (A2)*7 and symmetry related subunits don't have direct contact
 		List<Integer> sequenceClusterIds = subunits.getSequenceClusterIds();
 		for (int i = 0; i < subunits.getSubunitCount(); i++) {
-			List<Integer> subunitIndices = new ArrayList<Integer>(1);
+			List<Integer> subunitIndices = new ArrayList<>(1);
 			if (sequenceClusterIds.get(i) == 0) {
 				repeatCenters.add(new Point3d(centers.get(i)));
 //				System.out.println("Orig Repeat unit: " + centers.get(i));
@@ -128,19 +128,19 @@ private List<Point3d> calcRepeatUnitCenters() {
 }
 
 private List<Point3d[]> calcRepeatUnits() {
-	Set<Integer> uniqueModels = new HashSet<Integer>(subunits.getModelNumbers());
+	Set<Integer> uniqueModels = new HashSet<>(subunits.getModelNumbers());
 	int modelCount = uniqueModels.size();
 	List<Integer> folds = this.subunits.getFolds();
 	int maxFold = folds.get(folds.size()-1);
 
-	List<Point3d[]> repeatTraces = new ArrayList<Point3d[]>();
+	List<Point3d[]> repeatTraces = new ArrayList<>();
 	List<Integer> models = subunits.getModelNumbers();
 	List<Point3d[]> traces = subunits.getTraces();
 
 //	if (modelCount == maxFold && subunitCount > 3) {
 	if (maxFold%modelCount == 0 && modelCount > 1 && subunits.getSubunitCount() > 3) {
 		for (int i = 0; i < modelCount; i++) {
-			List<Point3d> coords = new ArrayList<Point3d>();
+			List<Point3d> coords = new ArrayList<>();
 			for (int j = 0; j < models.size(); j++) {
 				if (models.get(j) == i) {
 					coords.addAll(Arrays.asList(traces.get(j)));
@@ -169,7 +169,7 @@ private List<Point3d[]> calcRepeatUnits() {
 }
 
 private Map<Integer[], Integer> findInteractingNeigbors() {
-	Map<Integer[], Integer>  contactMap = new HashMap<Integer[], Integer>();
+	Map<Integer[], Integer>  contactMap = new HashMap<>();
 
 	Map<Integer, List<Integer[]>> distanceMap = findClosestPairs(8);
 	for (List<Integer[]> pairs: distanceMap.values())
@@ -185,9 +185,9 @@ private Map<Integer[], Integer> findInteractingNeigbors() {
 }
 
 private Map<Integer, List<Integer[]>> findClosestPairs(int maxNeighbors) {
-	Map<Integer, List<Integer[]>>  reducedMap = new TreeMap<Integer, List<Integer[]>>();
+	Map<Integer, List<Integer[]>>  reducedMap = new TreeMap<>();
 
-	Map<Integer, List<Integer[]>>  distanceMap = new TreeMap<Integer, List<Integer[]>>();
+	Map<Integer, List<Integer[]>>  distanceMap = new TreeMap<>();
 	int nCenters = repeatUnitCenters.size();
 //	System.out.println("repeatUnitCenters: " + repeatUnitCenters);
 
@@ -201,7 +201,7 @@ private Map<Integer, List<Integer[]>> findClosestPairs(int maxNeighbors) {
 			List<Integer[]> pairs = distanceMap.get(intDist);
 			// save only one representative pair for each distance
 			if (pairs == null) {
-				pairs = new ArrayList<Integer[]>();
+				pairs = new ArrayList<>();
 			}
 			Integer[] pair = new Integer[2];
 			pair[0] = i;

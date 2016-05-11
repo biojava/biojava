@@ -54,7 +54,7 @@ public class GetRepresentatives {
 	 * @return PdbChainKey set of representatives
 	 */
 	public static SortedSet<StructureName> getRepresentatives(int sequenceIdentity) {
-		SortedSet<StructureName> representatives = new TreeSet<StructureName>();
+		SortedSet<StructureName> representatives = new TreeSet<>();
 
 		if (!seqIdentities.contains(sequenceIdentity)) {
 			System.err.println("Error: representative chains are not available for %sequence identity: "
@@ -95,7 +95,7 @@ public class GetRepresentatives {
 	 * @return PdbChainKey set of all PDB IDs.
 	 */
 	public static SortedSet<String> getAll() {
-		SortedSet<String> representatives = new TreeSet<String>();
+		SortedSet<String> representatives = new TreeSet<>();
 
 		try {
 

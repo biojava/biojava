@@ -130,8 +130,8 @@ public class EntityInfo implements Serializable {
 	private Long id;
 
 	public EntityInfo () {
-		chains = new ArrayList<Chain>();
-		chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
+		chains = new ArrayList<>();
+		chains2pdbResNums2ResSerials = new HashMap<>();
 		molId = -1;
 	}
 
@@ -142,9 +142,9 @@ public class EntityInfo implements Serializable {
 	 */
 	public EntityInfo (EntityInfo c) {
 
-		this.chains = new ArrayList<Chain>();
+		this.chains = new ArrayList<>();
 
-		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
+		this.chains2pdbResNums2ResSerials = new HashMap<>();
 
 		this.molId = c.molId;
 		
@@ -156,11 +156,11 @@ public class EntityInfo implements Serializable {
 		this.title = c.title;
 
 		if (c.synonyms!=null) {
-			this.synonyms = new ArrayList<String>();
+			this.synonyms = new ArrayList<>();
 			synonyms.addAll(c.synonyms);
 		}
 		if (c.ecNums!=null) {
-			this.ecNums = new ArrayList<String>();
+			this.ecNums = new ArrayList<>();
 			ecNums.addAll(c.ecNums);
 		}
 
@@ -236,7 +236,7 @@ public class EntityInfo implements Serializable {
 	 */
 	public Chain getRepresentative() {
 
-		List<String> chainIds = new ArrayList<String>();
+		List<String> chainIds = new ArrayList<>();
 		for (Chain chain:chains) {
 			chainIds.add(chain.getChainID());
 		}
@@ -444,12 +444,12 @@ public class EntityInfo implements Serializable {
 	 */
 	public List<String> getChainIds() {
 
-		Set<String> uniqChainIds = new TreeSet<String>();
+		Set<String> uniqChainIds = new TreeSet<>();
 		for (int i=0;i<getChains().size();i++) {
 			uniqChainIds.add(getChains().get(i).getChainID());
 		}
 
-		return new ArrayList<String>(uniqChainIds);
+		return new ArrayList<>(uniqChainIds);
 	}
 
 	/**
@@ -541,7 +541,7 @@ public class EntityInfo implements Serializable {
 			return;
 		}
 
-		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<ResidueNumber, Integer>();
+		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<>();
 		chains2pdbResNums2ResSerials.put(c.getChainID(), resNums2ResSerials);
 
 		for (int i=0;i<c.getSeqResGroups().size();i++) {

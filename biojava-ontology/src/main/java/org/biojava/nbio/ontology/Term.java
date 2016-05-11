@@ -155,7 +155,7 @@ public interface Term extends Annotatable {
 			this.description = description;
 			this.ontology = ontology;
 
-			this.synonyms = new TreeSet<Object>();
+			this.synonyms = new TreeSet<>();
 			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
 		}
 

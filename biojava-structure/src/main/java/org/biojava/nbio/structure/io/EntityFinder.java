@@ -108,7 +108,7 @@ public class EntityFinder {
 	 */
 	private static List<EntityInfo> findUniqueCompounds(TreeMap<String,EntityInfo> chainIds2entities) {
 
-		List<EntityInfo> list = new ArrayList<EntityInfo>();
+		List<EntityInfo> list = new ArrayList<>();
 
 		for (EntityInfo cluster:chainIds2entities.values()) {
 			boolean present = false;
@@ -125,7 +125,7 @@ public class EntityFinder {
 
 	private void createPurelyNonPolyCompounds(List<EntityInfo> compounds) {
 
-		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
+		List<Chain> pureNonPolymerChains = new ArrayList<>();
 		for (int i=0;i<s.getChains().size();i++) {
 			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
 				pureNonPolymerChains.add(s.getChain(i));
@@ -213,8 +213,8 @@ public class EntityFinder {
 
 		// first we determine which chains to consider: anything not looking
 		// polymeric (protein or nucleotide chain) should be discarded
-		Set<Integer> polyChainIndices = new TreeSet<Integer>();
-		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
+		Set<Integer> polyChainIndices = new TreeSet<>();
+		List<Chain> pureNonPolymerChains = new ArrayList<>();
 		for (int i=0;i<s.getChains().size();i++) {
 			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
 				pureNonPolymerChains.add(s.getChain(i));
@@ -224,7 +224,7 @@ public class EntityFinder {
 		}
 
 
-		TreeMap<String, EntityInfo> chainIds2compounds = new TreeMap<String,EntityInfo>();
+		TreeMap<String, EntityInfo> chainIds2compounds = new TreeMap<>();
 
 		int molId = 1;
 
@@ -237,8 +237,8 @@ public class EntityFinder {
 					Chain c1 = s.getChain(i);
 					Chain c2 = s.getChain(j);
 
-					Map<Integer,Integer> positionIndex1 = new HashMap<Integer, Integer>();
-					Map<Integer,Integer> positionIndex2 = new HashMap<Integer, Integer>();
+					Map<Integer,Integer> positionIndex1 = new HashMap<>();
+					Map<Integer,Integer> positionIndex2 = new HashMap<>();
 					// here we use false, which means that X will be used for unknown compounds
 					String str1 = SeqRes2AtomAligner.getFullAtomSequence(c1.getAtomGroups(), positionIndex1, false);
 					String str2 = SeqRes2AtomAligner.getFullAtomSequence(c2.getAtomGroups(), positionIndex2, false);

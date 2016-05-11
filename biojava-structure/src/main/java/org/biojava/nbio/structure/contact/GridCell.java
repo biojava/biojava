@@ -40,8 +40,8 @@ public class GridCell {
 	private ArrayList<Integer> jIndices;
 
 	public GridCell(){
-		iIndices = new ArrayList<Integer>();
-		jIndices = new ArrayList<Integer>();
+		iIndices = new ArrayList<>();
+		jIndices = new ArrayList<>();
 	}
 
 	public void addIindex(int serial){
@@ -70,14 +70,14 @@ public class GridCell {
 	 */
 	public List<AtomContact> getContactsWithinCell(Atom[] iAtoms, Atom[] jAtoms, double cutoff){
 
-		List<AtomContact> contacts = new ArrayList<AtomContact>();
+		List<AtomContact> contacts = new ArrayList<>();
 
 		if (jAtoms==null) {
 			for (int i:iIndices) {
 				for (int j:iIndices) {
 					if (j>i) {
 						double distance = Calc.getDistance(iAtoms[i], iAtoms[j]);
-						if (distance<cutoff) contacts.add(new AtomContact(new Pair<Atom>(iAtoms[i],iAtoms[j]),distance));
+						if (distance<cutoff) contacts.add(new AtomContact(new Pair<>(iAtoms[i], iAtoms[j]),distance));
 					}
 				}
 			}
@@ -86,7 +86,7 @@ public class GridCell {
 			for (int i:iIndices) {
 				for (int j:jIndices) {
 					double distance = Calc.getDistance(iAtoms[i], jAtoms[j]);
-					if (distance<cutoff) contacts.add(new AtomContact(new Pair<Atom>(iAtoms[i],jAtoms[j]),distance));
+					if (distance<cutoff) contacts.add(new AtomContact(new Pair<>(iAtoms[i], jAtoms[j]),distance));
 				}
 			}
 		}
@@ -105,7 +105,7 @@ public class GridCell {
 	 */
 	public List<AtomContact> getContactsToOtherCell(GridCell otherCell , Atom[] iAtoms, Atom[] jAtoms, double cutoff){
 
-		List<AtomContact> contacts = new ArrayList<AtomContact>();
+		List<AtomContact> contacts = new ArrayList<>();
 
 		if (jAtoms==null) {
 
@@ -113,7 +113,7 @@ public class GridCell {
 				for (int j:otherCell.iIndices) {
 					if (j>i) {
 						double distance = Calc.getDistance(iAtoms[i], iAtoms[j]);
-						if (distance<cutoff) contacts.add(new AtomContact(new Pair<Atom>(iAtoms[i],iAtoms[j]),distance));
+						if (distance<cutoff) contacts.add(new AtomContact(new Pair<>(iAtoms[i], iAtoms[j]),distance));
 					}
 				}
 			}
@@ -123,7 +123,7 @@ public class GridCell {
 			for (int i:iIndices) {
 				for (int j:otherCell.jIndices) {
 					double distance = Calc.getDistance(iAtoms[i], jAtoms[j]);
-					if (distance<cutoff) contacts.add(new AtomContact(new Pair<Atom>(iAtoms[i],jAtoms[j]),distance));
+					if (distance<cutoff) contacts.add(new AtomContact(new Pair<>(iAtoms[i], jAtoms[j]),distance));
 				}
 			}
 

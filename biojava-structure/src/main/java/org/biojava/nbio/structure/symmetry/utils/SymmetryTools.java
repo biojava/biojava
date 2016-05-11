@@ -443,10 +443,10 @@ public class SymmetryTools {
 	public static List<List<Integer>> buildSymmetryGraph(List<AFPChain> afps,
 			Atom[] atoms, boolean undirected) {
 
-		List<List<Integer>> graph = new ArrayList<List<Integer>>();
+		List<List<Integer>> graph = new ArrayList<>();
 
 		for (int n = 0; n < atoms.length; n++) {
-			graph.add(new ArrayList<Integer>());
+			graph.add(new ArrayList<>());
 		}
 
 		for (int k = 0; k < afps.size(); k++) {
@@ -476,7 +476,7 @@ public class SymmetryTools {
 	public static UndirectedGraph<Integer, DefaultEdge> buildSymmetryGraph(
 			AFPChain selfAlignment) {
 
-		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<>(
 				DefaultEdge.class);
 
 		for (int i = 0; i < selfAlignment.getOptAln().length; i++) {
@@ -512,7 +512,7 @@ public class SymmetryTools {
 
 		Structure symm = new StructureImpl();
 		symm.setStructureIdentifier(symmetry.getStructureId());
-		symm.setChains(new ArrayList<Chain>());
+		symm.setChains(new ArrayList<>());
 		char chainID = 'A';
 
 		// Create new structure containing the repeat atoms
@@ -596,7 +596,7 @@ public class SymmetryTools {
 		newEnsemble.setStructureIdentifiers(result.getRepeatsID());
 
 		// Modify atom arrays to include the repeat atoms only
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+		List<Atom[]> atomArrays = new ArrayList<>();
 		Structure divided = SymmetryTools.getQuaternaryStructure(result);
 
 		MultipleAlignment repeats = newEnsemble.getMultipleAlignment(0);
@@ -649,7 +649,7 @@ public class SymmetryTools {
 
 		MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(symm,
 				atoms, atoms, false);
-		e.setAtomArrays(new ArrayList<Atom[]>());
+		e.setAtomArrays(new ArrayList<>());
 		StructureIdentifier name = null;
 		if (e.getStructureIdentifiers() != null) {
 			if (!e.getStructureIdentifiers().isEmpty())
@@ -658,12 +658,12 @@ public class SymmetryTools {
 			name = atoms[0].getGroup().getChain().getStructure()
 					.getStructureIdentifier();
 
-		e.setStructureIdentifiers(new ArrayList<StructureIdentifier>());
+		e.setStructureIdentifiers(new ArrayList<>());
 
 		MultipleAlignment result = new MultipleAlignmentImpl();
 		BlockSet bs = new BlockSetImpl(result);
 		Block b = new BlockImpl(bs);
-		b.setAlignRes(new ArrayList<List<Integer>>());
+		b.setAlignRes(new ArrayList<>());
 
 		int order = symm.getBlockNum();
 		for (int su = 0; su < order; su++) {
@@ -705,12 +705,12 @@ public class SymmetryTools {
 
 		// rot1.epsilonEquals(rot2, error); //that also compares angle
 		// L-infinite distance without comparing the angle (epsilonEquals)
-		List<Double> sameDir = new ArrayList<Double>();
+		List<Double> sameDir = new ArrayList<>();
 		sameDir.add(Math.abs(rot1.x - rot2.x));
 		sameDir.add(Math.abs(rot1.y - rot2.y));
 		sameDir.add(Math.abs(rot1.z - rot2.z));
 
-		List<Double> otherDir = new ArrayList<Double>();
+		List<Double> otherDir = new ArrayList<>();
 		otherDir.add(Math.abs(rot1.x + rot2.x));
 		otherDir.add(Math.abs(rot1.y + rot2.y));
 		otherDir.add(Math.abs(rot1.z + rot2.z));
@@ -740,19 +740,19 @@ public class SymmetryTools {
 		List<Integer> corePos = MultipleAlignmentTools.getCorePositions(repeats
 				.getBlock(0));
 
-		List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
-		List<Integer> folds = new ArrayList<Integer>();
-		List<Boolean> pseudo = new ArrayList<Boolean>();
-		List<String> chainIds = new ArrayList<String>();
-		List<Integer> models = new ArrayList<Integer>();
-		List<Double> seqIDmin = new ArrayList<Double>();
-		List<Double> seqIDmax = new ArrayList<Double>();
-		List<Integer> clusterIDs = new ArrayList<Integer>();
+		List<Point3d[]> caCoords = new ArrayList<>();
+		List<Integer> folds = new ArrayList<>();
+		List<Boolean> pseudo = new ArrayList<>();
+		List<String> chainIds = new ArrayList<>();
+		List<Integer> models = new ArrayList<>();
+		List<Double> seqIDmin = new ArrayList<>();
+		List<Double> seqIDmax = new ArrayList<>();
+		List<Integer> clusterIDs = new ArrayList<>();
 		int fold = 1;
 
 		for (int str = 0; str < alignedCA.size(); str++) {
 			Atom[] array = alignedCA.get(str);
-			List<Point3d> points = new ArrayList<Point3d>();
+			List<Point3d> points = new ArrayList<>();
 			List<Integer> alignedRes = repeats.getBlock(0).getAlignRes()
 					.get(str);
 			for (int pos = 0; pos < alignedRes.size(); pos++) {
@@ -809,7 +809,7 @@ public class SymmetryTools {
 		} else if (symm.size() < 2)
 			return false;
 		else {
-			List<Integer> alreadySeen = new ArrayList<Integer>();
+			List<Integer> alreadySeen = new ArrayList<>();
 			List<List<Integer>> align = symm.getBlock(0).getAlignRes();
 			for (int str = 0; str < symm.size(); str++) {
 				for (int res = 0; res < align.get(str).size(); res++) {
@@ -873,7 +873,7 @@ public class SymmetryTools {
 	 */
 	public static List<Group> getGroups(Atom[] rAtoms) {
 
-		List<Group> groups = new ArrayList<Group>(rAtoms.length);
+		List<Group> groups = new ArrayList<>(rAtoms.length);
 
 		for (Atom a : rAtoms) {
 			Group g = a.getGroup();
@@ -916,8 +916,8 @@ public class SymmetryTools {
 				List<Integer> chain2 = axes.getRepeatRelation(t).get(1);
 
 				// Calculate the aligned atom arrays
-				List<Atom> list1 = new ArrayList<Atom>();
-				List<Atom> list2 = new ArrayList<Atom>();
+				List<Atom> list1 = new ArrayList<>();
+				List<Atom> list2 = new ArrayList<>();
 
 				for (int pair = 0; pair < chain1.size(); pair++) {
 					int p1 = chain1.get(pair);
@@ -944,7 +944,7 @@ public class SymmetryTools {
 				}
 
 				// Get the transformations from the SymmetryAxes
-				List<Matrix4d> transformations = new ArrayList<Matrix4d>();
+				List<Matrix4d> transformations = new ArrayList<>();
 				for (int su = 0; su < msa.size(); su++) {
 					transformations.add(axes.getRepeatTransform(su));
 				}

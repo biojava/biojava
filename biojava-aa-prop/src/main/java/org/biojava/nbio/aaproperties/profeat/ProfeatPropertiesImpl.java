@@ -127,35 +127,35 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 
 	@Override
 	public Map<GROUPING, Double> getComposition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception {
-		Map<GROUPING, Double> grouping2Composition = new HashMap<GROUPING, Double>();
+		Map<GROUPING, Double> grouping2Composition = new HashMap<>();
 		for(GROUPING group:GROUPING.values()) grouping2Composition.put(group, getComposition(sequence, attribute, group));
 		return grouping2Composition;
 	}
 
 	@Override
 	public Map<ATTRIBUTE, Map<GROUPING, Double>> getComposition(ProteinSequence sequence) throws Exception {
-		Map<ATTRIBUTE, Map<GROUPING, Double>> attribute2Grouping2Composition = new HashMap<ATTRIBUTE, Map<GROUPING, Double>>();
+		Map<ATTRIBUTE, Map<GROUPING, Double>> attribute2Grouping2Composition = new HashMap<>();
 		for(ATTRIBUTE attribute:ATTRIBUTE.values()) attribute2Grouping2Composition.put(attribute, getComposition(sequence, attribute));
 		return attribute2Grouping2Composition;
 	}
 
 	@Override
 	public Map<TRANSITION, Double> getTransition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception {
-		Map<TRANSITION, Double> transition2Double = new HashMap<TRANSITION, Double>();
+		Map<TRANSITION, Double> transition2Double = new HashMap<>();
 		for(TRANSITION transition:TRANSITION.values()) transition2Double.put(transition, getTransition(sequence, attribute, transition));
 		return transition2Double;
 	}
 
 	@Override
 	public Map<ATTRIBUTE, Map<TRANSITION, Double>> getTransition(ProteinSequence sequence) throws Exception {
-		Map<ATTRIBUTE, Map<TRANSITION, Double>> attribute2Transition2Double = new HashMap<ATTRIBUTE, Map<TRANSITION, Double>>();
+		Map<ATTRIBUTE, Map<TRANSITION, Double>> attribute2Transition2Double = new HashMap<>();
 		for(ATTRIBUTE attribute:ATTRIBUTE.values()) attribute2Transition2Double.put(attribute, getTransition(sequence, attribute));
 		return attribute2Transition2Double;
 	}
 
 	@Override
 	public Map<DISTRIBUTION, Double> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception {
-		Map<DISTRIBUTION, Double> distribution2Double = new HashMap<DISTRIBUTION, Double>();
+		Map<DISTRIBUTION, Double> distribution2Double = new HashMap<>();
 		for(DISTRIBUTION distribution:DISTRIBUTION.values())
 			distribution2Double.put(distribution, getDistributionPosition(sequence, attribute, group, distribution));
 		return distribution2Double;
@@ -163,7 +163,7 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 
 	@Override
 	public Map<GROUPING, Map<DISTRIBUTION, Double>> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception {
-		Map<GROUPING, Map<DISTRIBUTION, Double>> grouping2Distribution2Double = new HashMap<GROUPING, Map<DISTRIBUTION, Double>>();
+		Map<GROUPING, Map<DISTRIBUTION, Double>> grouping2Distribution2Double = new HashMap<>();
 		for(GROUPING group:GROUPING.values())
 			grouping2Distribution2Double.put(group, getDistributionPosition(sequence, attribute, group));
 		return grouping2Distribution2Double;
@@ -172,7 +172,7 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 	@Override
 	public Map<ATTRIBUTE, Map<GROUPING, Map<DISTRIBUTION, Double>>> getDistributionPosition(ProteinSequence sequence) throws Exception {
 		Map<ATTRIBUTE, Map<GROUPING, Map<DISTRIBUTION, Double>>> attribute2Grouping2Distribution2Double =
-			new HashMap<ATTRIBUTE, Map<GROUPING, Map<DISTRIBUTION, Double>>>();
+				new HashMap<>();
 		for(ATTRIBUTE attribute:ATTRIBUTE.values())
 			attribute2Grouping2Distribution2Double.put(attribute, getDistributionPosition(sequence, attribute));
 		return attribute2Grouping2Distribution2Double;

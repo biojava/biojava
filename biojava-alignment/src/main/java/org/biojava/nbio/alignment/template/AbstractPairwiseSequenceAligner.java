@@ -137,12 +137,12 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
 
 	@Override
 	protected List<C> getCompoundsOfQuery() {
-		return (query == null) ? new ArrayList<C>() : query.getAsList();
+		return (query == null) ? new ArrayList<>() : query.getAsList();
 	}
 
 	@Override
 	protected List<C> getCompoundsOfTarget() {
-		return (target == null) ? new ArrayList<C>() : target.getAsList();
+		return (target == null) ? new ArrayList<>() : target.getAsList();
 	}
 
 	@Override
