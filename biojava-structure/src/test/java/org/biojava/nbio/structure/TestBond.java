@@ -60,7 +60,7 @@ public class TestBond {
 		Structure s = StructureIO.getStructure("1kh9");
 
 
-		Group g = s.getPolyChainByPDB("A").getSeqResGroup(274);
+		Group g = s.getPolyChainsByPDB("A").get(0).getSeqResGroup(274);
 		Atom cg = g.getAtom("CG");
 
 		Atom cb = g.getAtom("CB");
@@ -85,8 +85,8 @@ public class TestBond {
 		Structure s = StructureIO.getStructure("1kh9");
 
 
-		AminoAcidImpl residue1 = (AminoAcidImpl) s.getPolyChainByPDB("A").getSeqResGroup(273);
-		AminoAcidImpl residue2 = (AminoAcidImpl) s.getPolyChainByPDB("A").getSeqResGroup(274);
+		AminoAcidImpl residue1 = (AminoAcidImpl) s.getPolyChainsByPDB("A").get(0).getSeqResGroup(273);
+		AminoAcidImpl residue2 = (AminoAcidImpl) s.getPolyChainsByPDB("A").get(0).getSeqResGroup(274);
 
 		Atom carboxylC = residue1.getC();
 		Atom aminoN = residue2.getN();
@@ -99,8 +99,8 @@ public class TestBond {
 
 		Structure s = StructureIO.getStructure("1kh9");
 
-		Atom atom1 = s.getPolyChainByPDB("A").getSeqResGroup(177).getAtom("SG");
-		Atom atom2 = s.getPolyChainByPDB("A").getSeqResGroup(167).getAtom("SG");
+		Atom atom1 = s.getPolyChainsByPDB("A").get(0).getSeqResGroup(177).getAtom("SG");
+		Atom atom2 = s.getPolyChainsByPDB("A").get(0).getSeqResGroup(167).getAtom("SG");
 
 		assertTrue(areBonded(atom1, atom2));
 	}

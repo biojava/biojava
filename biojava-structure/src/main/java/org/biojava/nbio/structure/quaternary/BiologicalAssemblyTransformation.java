@@ -249,7 +249,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 			BiologicalAssemblyTransformation max = new BiologicalAssemblyTransformation();
 
 			max.id = getAttribute(rootElement,"index");
-			max.chainId = getAttribute(rootElement,"chainId");
+			max.chainId = getAttribute(rootElement,"chainName");
 
 			NodeList listOfChildren = rootElement.getChildNodes();
 
@@ -318,7 +318,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	 */
 	@Override
 	public String toString() {
-		return "BiologicalAssemblyTransformation [id=" + id + ", chainId="
+		return "BiologicalAssemblyTransformation [id=" + id + ", chainName="
 				+ chainId + ", rotation=" + rotMatrixToString(transformation) + ", translation="
 				+ translVecToString(transformation) + "]";
 	}

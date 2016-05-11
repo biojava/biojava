@@ -268,7 +268,7 @@ public class StructureToolsTest extends TestCase {
 		s = cache.getStructure(name9);
 
 		assertTrue(s.getChains().size() == 1);
-		Chain c = s.getPolyChainByPDB(chainId);
+		Chain c = s.getPolyChainsByPDB(chainId);
 		assertEquals(c.getName(),chainId);
 		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 		assertEquals(83,ca.length);

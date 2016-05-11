@@ -58,7 +58,7 @@ public class Test3th3 {
 		// since biojava 5.0 polymer and nonpolymer chains are separated, we've modified the
 		// test accordingly below
 		
-		Chain c = s.getPolyChainByPDB("T");
+		Chain c = s.getPolyChainsByPDB("T");
 
 		ResidueNumber rn = ResidueNumber.fromString("201");
 		rn.setChainName("T");
@@ -78,7 +78,7 @@ public class Test3th3 {
 
 		assertEquals(1, count);
 		
-		c = s.getNonPolyChainByPDB("T");
+		c = s.getNonPolyChainsByPDB("T");
 		
 		g = c.getGroupByPDB(rn);
 		

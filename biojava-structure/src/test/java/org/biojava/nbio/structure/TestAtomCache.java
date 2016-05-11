@@ -82,7 +82,7 @@ public class TestAtomCache {
 		s = cache.getStructure(name2);
 
 		assertTrue(s.getChains().size() == 1);
-		Chain c = s.getPolyChainByPDB(chainId2);
+		Chain c = s.getPolyChainsByPDB(chainId2).get(0);
 		assertEquals(c.getName(),chainId2);
 
 
@@ -103,7 +103,7 @@ public class TestAtomCache {
 		assertNotNull(s);
 		assertTrue(s.getChains().size() == 1);
 
-		c = s.getPolyChainByPDB(chainId3);
+		c = s.getPolyChainsByPDB(chainId3).get(0);
 		assertEquals(c.getName(),chainId3);
 
 
@@ -113,7 +113,7 @@ public class TestAtomCache {
 
 		assertEquals(s.getChains().size(), 3);
 
-		c = s.getPolyChainByPDB("B");
+		c = s.getPolyChainsByPDB("B").get(0);
 		assertEquals(c.getAtomLength(),11);
 
 		String name5 = "4hhb.(A:10-20,A:30-40)";
@@ -121,7 +121,7 @@ public class TestAtomCache {
 		assertNotNull(s);
 
 		assertEquals(s.getChains().size(),1 );
-		c = s.getPolyChainByPDB("A");
+		c = s.getPolyChainsByPDB("A").get(0);
 		assertEquals(c.getAtomLength(),22);
 
 		try {
@@ -136,7 +136,7 @@ public class TestAtomCache {
 		s = cache.getStructure(name8);
 
 		assertTrue(s.getChains().size() == 1);
-		c = s.getPolyChainByPDB(chainId2);
+		c = s.getPolyChainsByPDB(chainId2).get(0);
 		assertEquals(c.getName(),chainId2);
 
 	}

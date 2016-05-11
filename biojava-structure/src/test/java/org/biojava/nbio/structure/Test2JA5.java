@@ -23,6 +23,7 @@ package org.biojava.nbio.structure;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -46,7 +47,6 @@ public class Test2JA5 {
 
 		StructureIO.setAtomCache(cache);
 
-
 		Structure s1 = StructureIO.getStructure("2ja5");
 
 		// This is not applicable anymore, we need to parse atoms to have chains to match.
@@ -55,9 +55,12 @@ public class Test2JA5 {
 		// SeqRes contains 15 chains, but since we cannot align Chain N to AtomGroups => 14.
 		assertEquals(14, s1.getPolyChains().size());
 
-		Chain nChain = s1.getPolyChainByPDB("N");
+		Chain nChain = s1.getPolyChain("N");
 		
-		assertNull(nChain);
+		assertNotNull(nChain);
+
+		List<Chain> chains = s1.getPolyChainsByPDB("N");
+		assertTrue(chains.size() == 0);
 	}
 
 	@Test
@@ -81,7 +84,7 @@ public class Test2JA5 {
 		// All 15 seqres chains will be store.
 		assertEquals(15, s1.getPolyChains().size());
 
-		Chain nChain = s1.getPolyChainByPDB("N");
+		Chain nChain = s1.getPolyChainsByPDB("N").get(0);
 		
 		assertNotNull(nChain);
 	}
