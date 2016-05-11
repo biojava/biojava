@@ -130,7 +130,7 @@ extends TestCase
 		AtomCache cache = new AtomCache();
 		Structure structure1 = cache.getStructure(pdbId);
 
-		Chain c = structure1.getChainByPDB(chainId);
+		Chain c = structure1.getPolyChainByPDB(chainId);
 
 		Structure s = new StructureImpl();
 		s.addChain(c);

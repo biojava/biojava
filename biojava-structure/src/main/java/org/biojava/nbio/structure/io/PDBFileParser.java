@@ -157,6 +157,7 @@ public class PDBFileParser  {
 	//(pdb_COMPOUND_handler for example)
 	private boolean isLegacyFormat = false;
 
+	private boolean blankChainIdsPresent = false;
 	
 	// for re-creating the biological assembly
 	private PDBBioAssemblyParser bioAssemblyParser = null;
@@ -287,6 +288,7 @@ public class PDBFileParser  {
 		loadMaxAtoms = params.getMaxAtoms();
 		atomCAThreshold = params.getAtomCaThreshold();
 
+		blankChainIdsPresent = false;
 		
 	}
 
@@ -1608,6 +1610,10 @@ public class PDBFileParser  {
 		// let's first get the chain name which will serve to identify if we are starting a new molecule
 		String chainName      = line.substring(21,22);
 		
+		if (chainName.equals(" ")) {
+			blankChainIdsPresent = true;
+		}
+		
 		if (currentChain!=null && !currentChain.getName().equals(chainName)) {
 			// new chain name: another molecule coming
 			startOfMolecule = true;
@@ -2475,6 +2481,8 @@ public class PDBFileParser  {
 		atomCount = 0;
 		atomOverflow = false;
 		siteToResidueMap.clear();
+		
+		blankChainIdsPresent = false;
 
 		parseCAonly = params.isParseCAOnly();
 
@@ -2652,6 +2660,11 @@ public class PDBFileParser  {
 		}
 		if (currentModel!=null) {
 			allModels.add(currentModel);
+		}
+		
+		if (blankChainIdsPresent) {
+			// from biojava 5.0 there's limited support for old pdb files with blank chain ids
+			logger.warn("Found some blank chain ids in PDB file. Please note that support for them has been discontinued and things might not work properly.");
 		}
 
 		// reordering chains following the mmcif model and assigning entities

@@ -157,9 +157,9 @@ public class AFPChainXMLConverter {
 			xml.openTag("eqr");
 			xml.attribute("eqrNr",pos+"");
 			xml.attribute("pdbres1",ca1[pos1].getGroup().getResidueNumber().toString());
-			xml.attribute("chain1", ca1[pos1].getGroup().getChain().getChainID());
+			xml.attribute("chain1", ca1[pos1].getGroup().getChain().getName());
 			xml.attribute("pdbres2",ca2[pos2].getGroup().getResidueNumber().toString());
-			xml.attribute("chain2", ca2[pos2].getGroup().getChain().getChainID());
+			xml.attribute("chain2", ca2[pos2].getGroup().getChain().getName());
 
 			xml.closeTag("eqr");
 			//System.out.println("aligned position: " + pos1  + ":" + pos2 +
