@@ -2494,12 +2494,16 @@ public class PDBFileParser  {
 				continue;
 			}
 
-			if ( line.length() < 6) {
+			if ( line.length() < 6 && !line.startsWith("TER")) {
 				logger.info("Found line length below 6. Ignoring it, line: >" + line +"<" );
 				continue;
 			}
 
-			String recordName = line.substring (0, 6).trim ();
+			String recordName = null;
+			if (line.length()<6)
+				recordName = line.trim();
+			else
+				recordName = line.substring (0, 6).trim ();
 
 			if (recordName.equals("ATOM"))
 				pdb_ATOM_Handler(line);
