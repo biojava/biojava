@@ -95,11 +95,11 @@ public class Mutator{
 
 		// iterate over all chains.
 		for (Chain c : chains) {
-			if (c.getChainID().equals(chainId)) {
+			if (c.getName().equals(chainId)) {
 				// here is our chain!
 
 				Chain newchain = new ChainImpl();
-				newchain.setChainID(c.getChainID());
+				newchain.setName(c.getName());
 
 				List<Group> groups = c.getAtomGroups();
 

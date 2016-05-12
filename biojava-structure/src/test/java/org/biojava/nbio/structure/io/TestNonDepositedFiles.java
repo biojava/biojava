@@ -190,7 +190,6 @@ public class TestNonDepositedFiles {
 			System.out.println("chain "+chain.getId()+", atomLength: "+atomLength+", seqResLength: "+seqResLength);
 			//assertTrue("atom length ("+atomLength+") should be smaller than seqResLength ("+seqResLength+")",atomLength<=seqResLength);
 			System.out.println("seq res groups size: "+chain.getSeqResGroups().size());
-			System.out.println("num hetatom groups: "+chain.getAtomLigands().size());
 		}
 	}
 
