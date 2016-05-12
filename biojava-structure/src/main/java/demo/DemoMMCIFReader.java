@@ -85,8 +85,9 @@ public class DemoMMCIFReader
 		try {
 			Structure s = pdbreader.getStructureById(pdbId);
 
-			Chain h = s.getNonPolyChainByPDB("H");
+			List<Chain> hs = s.getNonPolyChainsByPDB("H");
 
+			Chain h = hs.get(0);
 			List<Group> ligands = h.getAtomLigands();
 
 			System.out.println("These ligands have been found in chain " + h.getName());

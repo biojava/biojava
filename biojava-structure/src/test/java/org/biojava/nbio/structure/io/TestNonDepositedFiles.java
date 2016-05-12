@@ -334,7 +334,7 @@ public class TestNonDepositedFiles {
 		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
 
 		// The chain B should be present with 1 ligand HEM
-		Chain c1 = s1.getNonPolyChainByPDB("B");
+		Chain c1 = s1.getNonPolyChainsByPDB("B").get(0);
 		assertNotNull(c1);
 
 		int expectedNumLigands = 1;
@@ -348,7 +348,7 @@ public class TestNonDepositedFiles {
 		Structure s2 = consumer.getStructure();
 
 		// The chain B should be present with 1 ligand HEM
-		Chain c2 = s2.getNonPolyChainByPDB("B");
+		Chain c2 = s2.getNonPolyChainsByPDB("B").get(0);
 		assertNotNull(c2);
 		assertEquals(expectedNumLigands, c2.getAtomGroups().size());
 

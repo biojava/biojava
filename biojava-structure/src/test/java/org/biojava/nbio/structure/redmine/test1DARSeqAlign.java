@@ -59,8 +59,8 @@ public class test1DARSeqAlign {
 
 		Structure struc = cache.getStructure("1DAR");
 
-		Chain a = struc.getPolyChainByPDB("A");
-		Chain b = struc.getNonPolyChainByPDB("A");
+		Chain a = struc.getPolyChainsByPDB("A").get(0);
+		Chain b = struc.getNonPolyChainsByPDB("A").get(0);
 
 		//System.out.println(c.getSeqResGroups());
 

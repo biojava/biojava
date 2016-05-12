@@ -202,9 +202,12 @@ public class StructureImpl implements Structure, Serializable {
 
 
 		// first we need to gather all groups with the author id chainName: polymers, non-polymers and waters
-		Chain polyChain = getPolyChainByPDB(chainName, modelnr);
+		List<Chain> polyChains = getPolyChainsByPDB(chainName, modelnr);
 		List<Group> groups = new ArrayList<>();
-		groups.addAll(polyChain.getAtomGroups());
+
+		for (Chain polyChain: polyChains) {
+			groups.addAll(polyChain.getAtomGroups());
+		}
 
 		// there can be more thatn one non-poly chain for a given author id
 		for (Chain chain: getNonPolyChains(modelnr)) {
@@ -317,7 +320,7 @@ public class StructureImpl implements Structure, Serializable {
 		chain.setStructure(this);
 		if (models.isEmpty()) {
 			Model model = new Model();
-			List<Chain> modelChains = new ArrayList<Chain>() ;
+			List<Chain> modelChains = new ArrayList<>() ;
 			modelChains.add(chain);
 			model.setChains(modelChains);
 			models.add(model);
@@ -652,13 +655,13 @@ public class StructureImpl implements Structure, Serializable {
 	public Chain getChainByPDB(String authId, int modelnr)
 			throws StructureException{
 
-		Chain c = getPolyChainByPDB(authId, modelnr);
+		List<Chain> c = getPolyChainsByPDB(authId, modelnr);
 		
-		if (c==null) {
+		if (c==null || c.size() <1) {
 			throw new StructureException("Could not find chain with authId \"" + authId + "\"" + " for PDB id " + pdb_id + ", model "+modelnr);			
 		}
 		
-		return c;
+		return c.get(0);
 	}
 
 	/** {@inheritDoc} */
@@ -733,43 +736,49 @@ public class StructureImpl implements Structure, Serializable {
 	}
 
 	@Override
-	public Chain getPolyChainByPDB(String authId) {
-		return getPolyChainByPDB(authId, 0);
+	public List<Chain> getPolyChainsByPDB(String authId) {
+		return getPolyChainsByPDB(authId, 0);
 	}
 
 	@Override
-	public Chain getPolyChainByPDB(String authId, int modelIdx) {
+	public List<Chain> getPolyChainsByPDB(String authId, int modelIdx) {
 		Model model = models.get(modelIdx);
 		if (model==null) {
 			return null;
 		}
+
+		List<Chain> chains = new ArrayList<>();
+
 		List<Chain> polyChains = model.getPolyChains();
 		for (Chain c : polyChains){
 			if (c.getName().equals(authId))
-				return c;
+				chains.add(c);
 		}
 
-		return null;
+		return chains;
 	}
 
 	@Override
-	public Chain getNonPolyChainByPDB(String authId) {
-		return getNonPolyChainByPDB(authId, 0);
+	public List<Chain> getNonPolyChainsByPDB(String authId) {
+		return getNonPolyChainsByPDB(authId, 0);
 	}
 	
 	@Override
-	public Chain getNonPolyChainByPDB(String authId, int modelIdx) {
+	public List<Chain> getNonPolyChainsByPDB(String authId, int modelIdx) {
 		Model model = models.get(modelIdx);
 		if (model==null) {
 			return null;
 		}
+
+		List<Chain> chains = new ArrayList<>();
+
 		List<Chain> nonpolyChains = model.getNonPolyChains();
 		for (Chain c : nonpolyChains){
 			if (c.getName().equals(authId))
-				return c;
+				chains.add(c);
 		}
 
-		return null;
+		return chains;
 	}
 
 	@Override
@@ -1087,7 +1096,7 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	public void resetModels() {
-		models = new ArrayList<Model>();
+		models = new ArrayList<>();
 	}
 	/** {@inheritDoc} */
 	@Deprecated
@@ -1120,7 +1129,7 @@ public class StructureImpl implements Structure, Serializable {
 		}
 
 		// No identifier set, so generate based on residues present in the structure
-		List<ResidueRange> range = new ArrayList<ResidueRange>();
+		List<ResidueRange> range = new ArrayList<>();
 		for (Chain chain : getChains()) {
 			List<Group> groups = chain.getAtomGroups();
 			ListIterator<Group> groupsIt = groups.listIterator();
