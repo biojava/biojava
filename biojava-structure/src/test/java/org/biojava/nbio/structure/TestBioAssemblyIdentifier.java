@@ -47,12 +47,12 @@ public class TestBioAssemblyIdentifier {
 		id = new BioAssemblyIdentifier("BIO:2ehz:1");
 		s = cache.getStructure(id);
 		assertEquals("Number of models",8, s.nrModels());
-		assertEquals("Number of chains per model",1,s.getChains(0).size());
+		assertEquals("Number of chains per model",11, s.getChains(0).size());
 		// equivalent
 		id = new BioAssemblyIdentifier("BIO:2ehz");
 		s = cache.getStructure(id);
 		assertEquals("Number of models",8, s.nrModels());
-		assertEquals("Number of chains per model",1,s.getChains(0).size());
+		assertEquals("Number of chains per model",1,s.getPolyChains(0).size());
 		// No second
 		id = new BioAssemblyIdentifier("BIO:2ehz:2");
 		try {
@@ -63,7 +63,7 @@ public class TestBioAssemblyIdentifier {
 		id = new BioAssemblyIdentifier("BIO:2ehz:0");
 		s = cache.getStructure(id);
 		assertEquals("Number of models",1, s.nrModels());
-		assertEquals("Number of chains per model",1,s.getChains(0).size());
+		assertEquals("Number of chains per model",1,s.getPolyChains(0).size());
 
 		BioUnitDataProviderFactory.setBioUnitDataProvider(prevProvider);
 	}

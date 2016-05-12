@@ -689,14 +689,15 @@ public class StructureTools {
 
 			Chain newChain = null;
 			for (Chain c : model) {
-				if (c.getChainID().equals(parentC.getChainID())) {
+				if (c.getName().equals(parentC.getName())) {
 					newChain = c;
 					break;
 				}
 			}
 			if (newChain == null) {
 				newChain = new ChainImpl();
-				newChain.setChainID(parentC.getChainID());
+				newChain.setId(parentC.getId());
+				newChain.setName(parentC.getName());
 				model.add(newChain);
 			}
 
@@ -734,14 +735,14 @@ public class StructureTools {
 
 			Chain newChain = null;
 			for (Chain c : model) {
-				if (c.getChainID().equals(parentC.getChainID())) {
+				if (c.getName().equals(parentC.getName())) {
 					newChain = c;
 					break;
 				}
 			}
 			if (newChain == null) {
 				newChain = new ChainImpl();
-				newChain.setChainID(parentC.getChainID());
+				newChain.setName(parentC.getName());
 				model.add(newChain);
 			}
 
@@ -775,12 +776,14 @@ public class StructureTools {
 			if (c == null) {
 				c = new ChainImpl();
 				Chain orig = a.getGroup().getChain();
-				c.setChainID(orig.getChainID());
+				c.setId(orig.getId());
+				c.setName(orig.getName());
 			} else {
 				Chain orig = a.getGroup().getChain();
-				if (!orig.getChainID().equals(prevChainId)) {
+				if (!orig.getId().equals(prevChainId)) {
 					c = new ChainImpl();
-					c.setChainID(orig.getChainID());
+					c.setId(orig.getId());
+					c.setName(orig.getName());
 				}
 			}
 
@@ -799,12 +802,14 @@ public class StructureTools {
 			if (c == null) {
 				c = new ChainImpl();
 				Chain orig = a.getGroup().getChain();
-				c.setChainID(orig.getChainID());
+				c.setId(orig.getId());
+				c.setName(orig.getName());
 			} else {
 				Chain orig = a.getGroup().getChain();
-				if (!orig.getChainID().equals(prevChainId)) {
+				if (!orig.getId().equals(prevChainId)) {
 					c = new ChainImpl();
-					c.setChainID(orig.getChainID());
+					c.setId(orig.getId());
+					c.setName(orig.getName());
 				}
 			}
 
@@ -1025,7 +1030,7 @@ public class StructureTools {
 
 	/**
 	 * Reduce a structure to provide a smaller representation . Only takes the
-	 * first model of the structure. If chainId is provided only return a
+	 * first model of the structure. If chainName is provided only return a
 	 * structure containing that Chain ID. Converts lower case chain IDs to
 	 * upper case if structure does not contain a chain with that ID.
 	 *
@@ -1050,7 +1055,6 @@ public class StructureTools {
 		newS.setSites(s.getSites());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.setEntityInfos(s.getEntityInfos());
-		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 
@@ -1119,7 +1123,6 @@ public class StructureTools {
 		newStructure.setSites(s.getSites());
 		newStructure.setBiologicalAssembly(s.isBiologicalAssembly());
 		newStructure.setEntityInfos(s.getEntityInfos());
-		newStructure.setConnections(s.getConnections());
 		newStructure.setSSBonds(s.getSSBonds());
 		newStructure.setSites(s.getSites());
 		newStructure.setCrystallographicInfo(s.getCrystallographicInfo());
@@ -1242,7 +1245,7 @@ public class StructureTools {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 
-		Chain chain = struc.findChain(pdbResNum.getChainId());
+		Chain chain = struc.findChain(pdbResNum.getChainName());
 
 		return chain.getGroupByPDB(pdbResNum);
 	}
@@ -1762,10 +1765,10 @@ public class StructureTools {
 			}
 		}
 		logger.debug(
-				"Ratio of residues to total for chain {} is below {}. Assuming it is a {} chain. "
+				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
 						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
 						+ "ratio aa/total: {}, ratio nuc/total: {}",
-						c.getChainID(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
+						c.getId(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
 						sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
 						(double) sizeAminos / (double) fullSize,
 						(double) sizeNucleotides / (double) fullSize);
@@ -1780,17 +1783,16 @@ public class StructureTools {
 	 * @return
 	 */
 	public static boolean isChainWaterOnly(Chain c) {
-		boolean waterOnly = true;
 		for (Group g : c.getAtomGroups()) {
 			if (!g.isWater())
-				waterOnly = false;
-			break;
+				return false;
 		}
-		return waterOnly;
+		return true;
 	}
 
 	/**
-	 * Returns true if the given chain is composed of non-polymeric groups only
+	 * Returns true if the given chain is composed of non-polymeric (including water) groups only. 
+	 * To be used at parsing time only.
 	 *
 	 * @param c
 	 * @return
@@ -1798,9 +1800,18 @@ public class StructureTools {
 	public static boolean isChainPureNonPolymer(Chain c) {
 
 		for (Group g : c.getAtomGroups()) {
-			if (g.getType() == GroupType.AMINOACID
-					|| g.getType() == GroupType.NUCLEOTIDE)
+			
+			ChemComp cc = g.getChemComp();
+			
+			ResidueType resType = cc.getResidueType();
+			PolymerType polType = cc.getPolymerType();
+			
+			if ( (	resType == ResidueType.lPeptideLinking || 
+					PolymerType.PROTEIN_ONLY.contains(polType) || 
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(polType) ) && 
+					!g.isHetAtomInFile() ) {								// important: the aminoacid or nucleotide residue can be in 
 				return false;
+			}
 
 		}
 		return true;

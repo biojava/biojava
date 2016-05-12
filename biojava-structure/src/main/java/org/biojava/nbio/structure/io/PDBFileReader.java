@@ -152,7 +152,7 @@ public class PDBFileReader extends LocalPDBDirectory {
 				List<Chain> chains = comp.getChains();
 				System.out.print(">Chains :" );
 				for (Chain c : chains){
-					System.out.print(c.getChainID() + " " );
+					System.out.print(c.getId() + " " );
 				}
 				System.out.println();
 				if ( chains.size() > 0)	{

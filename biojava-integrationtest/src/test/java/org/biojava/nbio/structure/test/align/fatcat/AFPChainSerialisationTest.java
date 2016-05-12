@@ -70,25 +70,20 @@ extends TestCase
 //
 //   }
 
-	public void testSerialization1a21_1hwg(){
+	public void testSerialization1a21_1hwg() throws IOException, StructureException{
 
 
-		try {
-
-			Structure s1 = getStructure("1a21", "A");
-			Structure s2 = getStructure("1hwg","C");
+		Structure s1 = getStructure("1a21", "A");
+		Structure s2 = getStructure("1hwg","C");
 
 
-			Atom[] ca1 = StructureTools.getRepresentativeAtomArray(s1);
-			Atom[] ca2 = StructureTools.getRepresentativeAtomArray(s2);
+		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(s1);
+		Atom[] ca2 = StructureTools.getRepresentativeAtomArray(s2);
 
-			testAlignment("1a21.A","1hwg.C",ca1,ca2,false);
-			testAlignment("1a21.A","1hwg.C",ca1,ca2,true);
+		testAlignment("1a21.A","1hwg.C",ca1,ca2,false);
+		testAlignment("1a21.A","1hwg.C",ca1,ca2,true);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+
 	}
 
 
@@ -135,7 +130,7 @@ extends TestCase
 		AtomCache cache = new AtomCache();
 		Structure structure1 = cache.getStructure(pdbId);
 
-		Chain c = structure1.getChainByPDB(chainId);
+		Chain c = structure1.getPolyChainByPDB(chainId);
 
 		Structure s = new StructureImpl();
 		s.addChain(c);
@@ -237,7 +232,7 @@ extends TestCase
 	}
 
 
-	public void testMulti() throws IOException {
+	public void testMulti() throws IOException, StructureException { 
 		Atom[] ca1 = null;
 		Atom[] ca2 = null;
 		Atom[] ca3 = null;
@@ -252,28 +247,24 @@ extends TestCase
 
 		String name3 ="1hiv.A";
 		String name4 ="1a4w.H";
-		try {
-			Structure s1 = getStructure("5pti","A");
-			Structure s2 = getStructure("1znf","A");
-			ca1 = StructureTools.getRepresentativeAtomArray(s1);
-			ca2 = StructureTools.getRepresentativeAtomArray(s2);
-			ca3 = StructureTools.cloneAtomArray(ca2);
+		Structure s1 = getStructure("5pti","A");
+		Structure s2 = getStructure("1znf","A");
+		ca1 = StructureTools.getRepresentativeAtomArray(s1);
+		ca2 = StructureTools.getRepresentativeAtomArray(s2);
+		ca3 = StructureTools.cloneAtomArray(ca2);
 
-			result1 = align(name1,name2,ca1, ca2,true);
+		result1 = align(name1,name2,ca1, ca2,true);
 
-			Structure s3 = getStructure("1hiv","A");
-			Structure s4 = getStructure("1a4w","H");
-			ca4 = StructureTools.getRepresentativeAtomArray(s3);
-			ca5 = StructureTools.getRepresentativeAtomArray(s4);
-			ca6 = StructureTools.cloneAtomArray(ca5);
+		Structure s3 = getStructure("1hiv","A");
+		Structure s4 = getStructure("1a4w","H");
+		ca4 = StructureTools.getRepresentativeAtomArray(s3);
+		ca5 = StructureTools.getRepresentativeAtomArray(s4);
+		ca6 = StructureTools.cloneAtomArray(ca5);
 
-			result2 = align(name3,name4,ca4, ca5,true);
+		result2 = align(name3,name4,ca4, ca5,true);
 
 
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		
 
 		String xmlNew = "<multi>"+result1[1]+ result2[1] +"</multi>";
 		//System.out.println(xmlNew);
@@ -297,22 +288,20 @@ extends TestCase
 		//System.out.println(new2.getName1() + " " + new2.getName2() + " "+ name3);
 		assertTrue(new2.getName1().equals(name3));
 
-		try {
-			AFPChainXMLParser.rebuildAFPChain(new1, ca1, ca3);
-			String fatcat1 = new1.toFatcat(ca1, ca3);
-			assertEquals(fatcat1, result1[0]);
-			String xmlnew1 = AFPChainXMLConverter.toXML(new1, ca1, ca3);
-			assertTrue(xmlnew1.equals(result1[1]));
 
-			AFPChainXMLParser.rebuildAFPChain(new2, ca4, ca6);
-			String fatcat2 = new2.toFatcat(ca4, ca6);
+		AFPChainXMLParser.rebuildAFPChain(new1, ca1, ca3);
+		String fatcat1 = new1.toFatcat(ca1, ca3);
+		assertEquals(fatcat1, result1[0]);
+		String xmlnew1 = AFPChainXMLConverter.toXML(new1, ca1, ca3);
+		assertTrue(xmlnew1.equals(result1[1]));
 
-			assertEquals(fatcat2,result2[0]);
-			String xmlnew2 = AFPChainXMLConverter.toXML(new2, ca4, ca6);
-			assertEquals(xmlnew2,result2[1]);
-		} catch (IOException e){
-			fail(e.getMessage());
-		}
+		AFPChainXMLParser.rebuildAFPChain(new2, ca4, ca6);
+		String fatcat2 = new2.toFatcat(ca4, ca6);
+
+		assertEquals(fatcat2,result2[0]);
+		String xmlnew2 = AFPChainXMLConverter.toXML(new2, ca4, ca6);
+		assertEquals(xmlnew2,result2[1]);
+		
 
 
 	}

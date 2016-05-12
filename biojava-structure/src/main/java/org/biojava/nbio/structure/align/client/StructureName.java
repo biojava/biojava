@@ -76,7 +76,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 
 	protected String name;
 	protected String pdbId;
-	protected String chainId;
+	protected String chainName;
 
 	private static final Pattern cathPattern = Pattern.compile("^(?:CATH:)?([0-9][a-z0-9]{3})(\\w)([0-9]{2})$",Pattern.CASE_INSENSITIVE);
 	// ds046__ is a special case with no PDB entry
@@ -261,7 +261,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		if ( matcher.matches() ) {
 			mySource = Source.SCOP;
 			pdbId = matcher.group(1).toUpperCase();
-			chainId = matcher.group(2);
+			chainName = matcher.group(2);
 			return true;
 		}
 		return false;
@@ -270,7 +270,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = PDPDomain.PDP_NAME_PATTERN.matcher(name);
 		if( matcher.matches() ) {
 			pdbId = matcher.group(1).toUpperCase();
-			chainId = matcher.group(2);
+			chainName = matcher.group(2);
 			return true;
 		}
 		return false;
@@ -280,7 +280,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		if ( matcher.matches() ){
 			mySource = Source.CATH;
 			pdbId = matcher.group(1).toUpperCase();
-			chainId = matcher.group(2);
+			chainName = matcher.group(2);
 			return true;
 		}
 		return false;
@@ -290,7 +290,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		if ( matcher.matches() ){
 			mySource = Source.ECOD;
 			pdbId = matcher.group(1).toUpperCase();
-			chainId = null;
+			chainName = null;
 			return true;
 		}
 		return false;
@@ -309,14 +309,14 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		base = si; // Safe to realize immediately
 
 		pdbId = si.getPdbId();
-		// Set chainId if unique
-		Set<String> chains = getChainIds(si);
+		// Set chainName if unique
+		Set<String> chains = getChainNames(si);
 		if(chains.size() == 1) {
-			this.chainId = chains.iterator().next();
+			this.chainName = chains.iterator().next();
 		} else if(chains.size() > 1) {
-			this.chainId = ".";
+			this.chainName = ".";
 		} else {
-			this.chainId = null;
+			this.chainName = null;
 		}
 		return true;
 	}
@@ -326,7 +326,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			String path = url.getPath();
 			mySource = Source.URL;
 			pdbId = URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) );
-			chainId = null; // Don't bother checking query params here
+			chainName = null; // Don't bother checking query params here
 			return true;
 		} catch(MalformedURLException e) {
 			return false;
@@ -335,17 +335,17 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private boolean initFromFile() {
 		mySource = Source.FILE;
 		pdbId = null;
-		chainId = null;
+		chainName = null;
 		return true;
 	}
 
-	private static Set<String> getChainIds(SubstructureIdentifier si) {
+	private static Set<String> getChainNames(SubstructureIdentifier si) {
 		Set<String> chains = new TreeSet<String>();
 		List<ResidueRange> ranges = si.getResidueRanges();
 		for(ResidueRange range : ranges) {
-			String chain = range.getChainId();
-			if(chain != null) {
-				chains.add(chain);
+			String chainName = range.getChainName();
+			if(chainName != null) {
+				chains.add(chainName);
 			}
 		}
 		return chains;
@@ -377,7 +377,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * @return
 	 */
 	public String getChainId() {
-		return chainId;
+		return chainName;
 	}
 	/**
 	 *
@@ -481,10 +481,10 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				if(base == null) {
 					// Guessing didn't work, so just use the PDBID and Chain from name
 					// Guess that '_' means 'whole structure'
-					if (chainId.equals("_")) {
+					if (chainName.equals("_")) {
 						base = new SubstructureIdentifier(pdbId);
 					} else {
-						base = new SubstructureIdentifier(pdbId,ResidueRange.parseMultiple(chainId));
+						base = new SubstructureIdentifier(pdbId,ResidueRange.parseMultiple(chainName));
 					}
 					logger.error("Unable to find {}, so using {}",name,base);
 				}
@@ -650,13 +650,13 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher scopMatch = scopPattern.matcher(name);
 		if (scopMatch.matches()) {
 			String pdbID = scopMatch.group(1);
-			String chainID = scopMatch.group(2);
+			String chainName = scopMatch.group(2);
 			String domainID = scopMatch.group(3);
 
 			for (ScopDomain potentialSCOP : scopDB.getDomainsForPDB(pdbID)) {
 				Matcher potMatch = scopPattern.matcher(potentialSCOP.getScopId());
 				if (potMatch.matches()) {
-					if (chainID.equals(potMatch.group(2)) || chainID.equals("_") || chainID.equals(".")
+					if (chainName.equals(potMatch.group(2)) || chainName.equals("_") || chainName.equals(".")
 							|| potMatch.group(2).equals("_") || potMatch.group(2).equals(".")) {
 						if (domainID.equals(potMatch.group(3)) || domainID.equals("_") || potMatch.group(3).equals("_")) {
 							// Match, or near match

@@ -36,13 +36,13 @@ String outputfile =  "/Users/ap3/WORK/PDB/mutated.pdb" ;
 Structure struc = StructureIO.getStructure("5pti");
 System.out.println(struc);
 
-String chainId = "A";
+String chainName = "A";
 String pdbResnum = "3";
 String newType = "ARG";
 
 // mutate the original structure and create a new one.
 Mutator m = new Mutator();
-Structure newstruc = m.mutate(struc,chainId,pdbResnum,newType);
+Structure newstruc = m.mutate(struc,chainName,pdbResnum,newType);
 
 FileOutputStream out= new FileOutputStream(outputfile);
 PrintStream p =  new PrintStream( out );

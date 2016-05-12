@@ -33,7 +33,7 @@ import java.util.zip.GZIPInputStream;
 
 import static org.junit.Assert.*;
 
-public class TestCompoundHeuristics {
+public class TestEntityHeuristics {
 
 	private static final String PATH_TO_TEST_FILES = "/org/biojava/nbio/structure/io/";
 
@@ -53,28 +53,30 @@ public class TestCompoundHeuristics {
 
 		Structure s = getStructure("1b8g_raw.pdb.gz", true);
 
-		assertEquals(1,s.getEntityInfos().size());
+		// 1 prot, 1 PLP, 1 water: 3 entities
+		assertEquals(3, s.getEntityInfos().size());
 
-		Chain chainA = s.getChainByPDB("A");
+		Chain chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(2, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
-		checkCompoundsNumbered(s.getEntityInfos());
+		checkEntitiesNumbered(s.getEntityInfos());
 
 
 		s = getStructure("1b8g_raw.pdb.gz", false);
 
-		assertEquals(1,s.getEntityInfos().size());
+		// 1 prot, 1 PLP, 1 water: 3 entities
+		assertEquals(3, s.getEntityInfos().size());
 
-		chainA = s.getChainByPDB("A");
+		chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(2, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
-		checkCompoundsNumbered(s.getEntityInfos());
+		checkEntitiesNumbered(s.getEntityInfos());
 	}
 
 
@@ -83,28 +85,30 @@ public class TestCompoundHeuristics {
 
 		Structure s = getStructure("2m7y_raw.pdb.gz", true);
 
-		assertEquals(1,s.getEntityInfos().size());
+		// 2 entities: 1 polymer (protein) 1 non-polymer (ZN)
+		assertEquals(2, s.getEntityInfos().size());
 
-		Chain chainA = s.getChainByPDB("A");
+		Chain chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(1, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
-		checkCompoundsNumbered(s.getEntityInfos());
+		checkEntitiesNumbered(s.getEntityInfos());
 
 
 		s = getStructure("2m7y_raw.pdb.gz", false);
 
-		assertEquals(1,s.getEntityInfos().size());
+		// 2 entities: 1 polymer (protein) 1 non-polymer (ZN)
+		assertEquals(2,s.getEntityInfos().size());
 
-		chainA = s.getChainByPDB("A");
+		chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(1, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
-		checkCompoundsNumbered(s.getEntityInfos());
+		checkEntitiesNumbered(s.getEntityInfos());
 	}
 
 	@Test
@@ -112,28 +116,40 @@ public class TestCompoundHeuristics {
 
 		Structure s = getStructure("3c5f_raw.pdb.gz", true);
 
-		assertEquals(4,s.getEntityInfos().size());
+		int polyEntities = 0;
+		for (EntityInfo e:s.getEntityInfos()) {
+			if (e.getType()==EntityType.POLYMER) polyEntities++;
+		}
+		
+		assertEquals(4, polyEntities);
 
-		Chain chainA = s.getChainByPDB("A");
+		Chain chainA = s.getPolyChainByPDB("A");
 
-		assertEquals(2, chainA.getEntityInfo().getChains().size());
+		// there's 2 models in file, thus for the protien polymeric entity there's 4 chains (2 from each model)
+		assertEquals(4, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
-		checkCompoundsNumbered(s.getEntityInfos());
+		checkEntitiesNumbered(s.getEntityInfos());
 
 
 		s = getStructure("3c5f_raw.pdb.gz", false);
 
-		assertEquals(4,s.getEntityInfos().size());
+		polyEntities = 0;
+		for (EntityInfo e:s.getEntityInfos()) {
+			if (e.getType()==EntityType.POLYMER) polyEntities++;
+		}
+		
+		assertEquals(4,polyEntities);
 
-		chainA = s.getChainByPDB("A");
+		chainA = s.getPolyChainByPDB("A");
 
-		assertEquals(2, chainA.getEntityInfo().getChains().size());
+		// there's 2 models in file, thus for the protien polymeric entity there's 4 chains (2 from each model)
+		assertEquals(4, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
-		checkCompoundsNumbered(s.getEntityInfos());
+		checkEntitiesNumbered(s.getEntityInfos());
 	}
 
 	@Test
@@ -143,26 +159,27 @@ public class TestCompoundHeuristics {
 
 		assertEquals(1,s.getEntityInfos().size());
 
-		Chain chainA = s.getChainByPDB("A");
+		Chain chainA = s.getPolyChainByPDB("A");
 
-		assertEquals(1, chainA.getEntityInfo().getChains().size());
+		// only 1 protein entity with 1 chain, but 5 models
+		assertEquals(5, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
-		checkCompoundsNumbered(s.getEntityInfos());
+		checkEntitiesNumbered(s.getEntityInfos());
 
 
 		s = getStructure("4b19_raw.pdb.gz", false);
 
 		assertEquals(1,s.getEntityInfos().size());
 
-		chainA = s.getChainByPDB("A");
+		chainA = s.getPolyChainByPDB("A");
 
-		assertEquals(1, chainA.getEntityInfo().getChains().size());
+		assertEquals(5, chainA.getEntityInfo().getChains().size());
 
 		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
 
-		checkCompoundsNumbered(s.getEntityInfos());
+		checkEntitiesNumbered(s.getEntityInfos());
 
 	}
 
@@ -175,18 +192,18 @@ public class TestCompoundHeuristics {
 
 		assertNotNull(s);
 
-		assertEquals(6, s.getChains().size());
+		assertEquals(6, s.getPolyChains().size());
 
-		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
-		assertEquals(1, s.getEntityInfos().size());
+		// checking that heuristics in CompoundFinder work. We should have a 2 entities: 1 polymeric (prot) and 1 nonpolymeric
+		assertEquals(2, s.getEntityInfos().size());
 
 		// trying without seqAlignSeqRes
 		s = getStructure("3ddo_raw_noseqres.pdb.gz", false);
 		assertNotNull(s);
 
-		assertEquals(6, s.getChains().size());
+		assertEquals(6, s.getPolyChains().size());
 
-		assertEquals(1, s.getEntityInfos().size());
+		assertEquals(2, s.getEntityInfos().size());
 	}
 
 	@Test
@@ -225,9 +242,9 @@ public class TestCompoundHeuristics {
 
 		System.out.println("Entities for file: "+fileName);
 		for (EntityInfo ent:s.getEntityInfos()) {
-			System.out.print(ent.getRepresentative().getChainID()+":");
+			System.out.print(ent.getRepresentative().getName()+":");
 			for (Chain c:ent.getChains()) {
-				System.out.print(" "+c.getChainID());
+				System.out.print(" "+c.getName());
 			}
 			System.out.println();
 		}
@@ -235,9 +252,9 @@ public class TestCompoundHeuristics {
 		return s;
 	}
 
-	private void checkCompoundsNumbered(List<EntityInfo> compounds) {
+	private void checkEntitiesNumbered(List<EntityInfo> entities) {
 
-		Collections.sort(compounds, new Comparator<EntityInfo>() {
+		Collections.sort(entities, new Comparator<EntityInfo>() {
 
 			@Override
 			public int compare(EntityInfo o1, EntityInfo o2) {
@@ -246,7 +263,7 @@ public class TestCompoundHeuristics {
 		});
 
 		int id = 1;
-		for (EntityInfo compound:compounds) {
+		for (EntityInfo compound:entities) {
 			assertEquals(id,compound.getMolId());
 			id++;
 		}

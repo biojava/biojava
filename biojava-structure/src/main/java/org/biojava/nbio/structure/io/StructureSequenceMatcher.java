@@ -39,10 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -68,7 +65,7 @@ public class StructureSequenceMatcher {
 	public static Structure getSubstructureMatchingProteinSequence(ProteinSequence sequence, Structure wholeStructure) {
 		ResidueNumber[] rns = matchSequenceToStructure(sequence, wholeStructure);
 		Structure structure = wholeStructure.clone();
-		structure.getChains().clear();
+		structure.setChains(new ArrayList<>());
 //		structure.getHetGroups().clear();
 		Chain currentChain = null;
 		for (ResidueNumber rn : rns) {
@@ -80,14 +77,15 @@ public class StructureSequenceMatcher {
 				throw new IllegalArgumentException("Could not find residue " + rn + " in structure", e);
 			}
 			Chain chain = new ChainImpl();
-			chain.setChainID(group.getChainId());
-			if (currentChain == null || !currentChain.getChainID().equals(chain.getChainID())) {
+			chain.setName(group.getChain().getName());
+			chain.setId(group.getChain().getId());
+			if (currentChain == null || !currentChain.getId().equals(chain.getId())) {
 				structure.addChain(chain);
 				chain.setEntityInfo(group.getChain().getEntityInfo());
 				chain.setStructure(structure);
 				chain.setSwissprotId(group.getChain().getSwissprotId());
-				chain.setInternalChainID(group.getChain().getInternalChainID());
 				chain.setId(group.getChain().getId());
+				chain.setName(group.getChain().getName());
 				currentChain = chain;
 			}
 			currentChain.addGroup(group);

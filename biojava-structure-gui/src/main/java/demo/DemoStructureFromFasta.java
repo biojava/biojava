@@ -143,7 +143,7 @@ public class DemoStructureFromFasta {
 			if(res != null) {
 				cmd.append(String.format("%d^%s:%s.CA or ", res.getSeqNum(),
 						res.getInsCode()==null?" ":res.getInsCode(),
-								res.getChainId()));
+								res.getChainName()));
 			}
 		}
 		cmd.append("none;");//easier than removing the railing 'or'

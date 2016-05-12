@@ -78,7 +78,7 @@ public class AtomPositionMapTest {
 		AtomPositionMap map = new AtomPositionMap(atoms);
 
 		// Double check that the chain length is correct
-		int chainAlen = cache.getStructure(pdbId).getChainByPDB("A").getAtomGroups(GroupType.AMINOACID).size();
+		int chainAlen = cache.getStructure(pdbId).getPolyChainByPDB("A").getAtomGroups(GroupType.AMINOACID).size();
 		assumeTrue(68==chainAlen);
 
 

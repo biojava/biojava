@@ -138,7 +138,7 @@ public class TestChemCompProvider {
 		pdbreader.setFileParsingParameters(params);
 
 		Structure s = pdbreader.getStructure(testPDB);
-		assertEquals(5, s.getChain(0).getAtomGroups().size());
+		assertEquals(3, s.getChain(0).getAtomGroups().size());
 		// Not wanted here for testing, but useful for cleaning up downloaded .cif.gz files.
 		// ZipChemCompProvider.purgeTempFiles(pdbdir.toString());
 	}

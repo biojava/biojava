@@ -75,7 +75,7 @@ public class MmtfStructureWriter {
 				Chain chain = modelChains.get(chainInModelIndex);
 				List<Group> groups = chain.getAtomGroups();
 				List<Group> sequenceGroups = chain.getSeqResGroups();
-				mmtfDecoderInterface.setChainInfo(chain.getChainID(), chain.getInternalChainID(), groups.size());
+				mmtfDecoderInterface.setChainInfo(chain.getId(), chain.getName(), groups.size());
 				for(int groupInChainIndex=0; groupInChainIndex<groups.size(); groupInChainIndex++){
 					// Get the major compy of this group
 					Group group = groups.get(groupInChainIndex);

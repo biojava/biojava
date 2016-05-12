@@ -33,6 +33,7 @@ import javax.vecmath.Point3i;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 
@@ -40,7 +41,7 @@ import java.util.Iterator;
  * A class containing methods to find interfaces in a given crystallographic Structure by
  * reconstructing the crystal lattice through application of symmetry operators
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class CrystalBuilder {
@@ -77,7 +78,7 @@ public class CrystalBuilder {
 
 	private Structure structure;
 	private PDBCrystallographicInfo crystallographicInfo;
-	private int numChainsAu;
+	private int numPolyChainsAu;
 	private int numOperatorsSg;
 
 	private static final Logger logger = LoggerFactory.getLogger(CrystalBuilder.class);
@@ -95,7 +96,7 @@ public class CrystalBuilder {
 
 		this.crystallographicInfo = structure.getCrystallographicInfo();
 
-		this.numChainsAu = structure.getChains().size();
+		this.numPolyChainsAu = structure.getPolyChains().size();
 		this.numOperatorsSg = 1;
 
 
@@ -167,7 +168,7 @@ public class CrystalBuilder {
 		// certain structures in the PDB are not macromolecules (contain no polymeric chains at all), e.g. 1ao2
 		// with the current mmCIF parsing, those will be empty since purely non-polymeric chains are removed
 		// see commit e9562781f23da0ebf3547146a307d7edd5741090
-		if (structure.getChains().size()==0) {
+		if (numPolyChainsAu==0) {
 			logger.warn("No chains present in the structure! No interfaces will be calculated");
 			return set;
 		}
@@ -220,7 +221,7 @@ public class CrystalBuilder {
 		}
 
 		// The bounding boxes of all AUs of the unit cell
-		UnitCellBoundingBox bbGrid = new UnitCellBoundingBox(numOperatorsSg, numChainsAu);;
+		UnitCellBoundingBox bbGrid = new UnitCellBoundingBox(numOperatorsSg, numPolyChainsAu);;
 		// we calculate all the bounds of each of the asym units, those will then be reused and translated
 		bbGrid.setBbs(structure, ops, INCLUDE_HETATOMS);
 
@@ -234,13 +235,13 @@ public class CrystalBuilder {
 			trialCount = 0;
 			start= System.currentTimeMillis();
 			int neighbors = (2*numCells+1)*(2*numCells+1)*(2*numCells+1)-1;
-			int auTrials = (numChainsAu*(numChainsAu-1))/2;
-			int trials = numChainsAu*numOperatorsSg*numChainsAu*neighbors;
+			int auTrials = (numPolyChainsAu*(numPolyChainsAu-1))/2;
+			int trials = numPolyChainsAu*numOperatorsSg*numPolyChainsAu*neighbors;
 			logger.debug("Chain clash trials within original AU: "+auTrials);
 			logger.debug(
 					"Chain clash trials between the original AU and the neighbouring "+neighbors+
 					" whole unit cells ("+numCells+" neighbours)" +
-					"(2x"+numChainsAu+"chains x "+numOperatorsSg+"AUs x "+neighbors+"cells) : "+trials);
+					"(2x"+numPolyChainsAu+"chains x "+numOperatorsSg+"AUs x "+neighbors+"cells) : "+trials);
 			logger.debug("Total trials: "+(auTrials+trials));
 		}
 
@@ -291,8 +292,10 @@ public class CrystalBuilder {
 						// Now that we know that boxes overlap and operator is not redundant, we have to go to the details
 						int contactsFound = 0;
 
-						for (int j=0;j<numChainsAu;j++) {
-							for (int i=0;i<numChainsAu;i++) { // we only have to compare the original asymmetric unit to every full cell around
+						List<Chain> polyChains = structure.getPolyChains();
+						
+						for (int j=0;j<numPolyChainsAu;j++) {
+							for (int i=0;i<numPolyChainsAu;i++) { // we only have to compare the original asymmetric unit to every full cell around
 
 								if(selfEquivalent && (j>i)) {
 									// in case of self equivalency of the operator we can safely skip half of the matrix
@@ -315,12 +318,12 @@ public class CrystalBuilder {
 								// finally we've gone through all short-cuts and the 2 chains seem to be close enough:
 								// we do the calculation of contacts
 								Chain chainj = null;
-								Chain chaini = structure.getChain(i);
+								Chain chaini = polyChains.get(i);
 
 								if (n==0 && a==0 && b==0 && c==0) {
-									chainj = structure.getChain(j);
+									chainj = polyChains.get(j);
 								} else {
-									chainj = (Chain)structure.getChain(j).clone();
+									chainj = (Chain)polyChains.get(j).clone();
 									Matrix4d m = new Matrix4d(ops[n]);
 									translate(m, transOrth);
 									Calc.transform(chainj,m);
@@ -337,11 +340,11 @@ public class CrystalBuilder {
 
 						if( verbose ) {
 							if (a==0 && b==0 && c==0 && n==0)
-								builder.append(" "+contactsFound+"("+(numChainsAu*(numChainsAu-1))/2+")");
+								builder.append(" "+contactsFound+"("+(numPolyChainsAu*(numPolyChainsAu-1))/2+")");
 							else if (selfEquivalent)
-								builder.append(" "+contactsFound+"("+(numChainsAu*(numChainsAu+1))/2+")");
+								builder.append(" "+contactsFound+"("+(numPolyChainsAu*(numPolyChainsAu+1))/2+")");
 							else
-								builder.append(" "+contactsFound+"("+numChainsAu*numChainsAu+")");
+								builder.append(" "+contactsFound+"("+numPolyChainsAu*numPolyChainsAu+")");
 
 							logger.debug(builder.toString());
 						}
@@ -370,7 +373,7 @@ public class CrystalBuilder {
 			CrystalTransform transf = new CrystalTransform(this.crystallographicInfo.getSpaceGroup());
 			StructureInterface interf = new StructureInterface(
 					StructureTools.getAllAtomArray(chaini), StructureTools.getAllAtomArray(chainj),
-					chaini.getChainID(), chainj.getChainID(),
+					chaini.getName(), chainj.getName(),
 					graph,
 					transf, tt);
 
@@ -421,50 +424,4 @@ public class CrystalBuilder {
 		m.m23 = m.m23+translation.z;
 	}
 
-//	/**
-//	 * If NCS operators are given in MTRIX records, a bigger AU has to be constructed based on those.
-//	 * Later they have to be removed with {@link #removeExtraChains()}
-//	 */
-//	private void constructFullStructure() {
-//
-//		if (this.crystallographicInfo.getNcsOperators()==null ||
-//			this.crystallographicInfo.getNcsOperators().length==0) {
-//			// normal case: nothing to do
-//			return;
-//		}
-//
-//		// first we store the original chains in a new list to be able to restore the structure to its original state afterwards
-//		origChains = new ArrayList<Chain>();
-//		for (Chain chain:structure.getChains()) {
-//			origChains.add(chain);
-//		}
-//
-//		// if we are here, it means that the NCS operators exist and we have to complete the given AU by applying them
-//		Matrix4d[] ncsOps = this.crystallographicInfo.getNcsOperators();
-//
-//		if (verbose)
-//			System.out.println(ncsOps.length+" NCS operators found, generating new AU...");
-//
-//
-//		for (int i=0;i<ncsOps.length;i++) {
-//			Structure transformedStruct = (Structure)structure.clone();
-//			Calc.transform(transformedStruct, ncsOps[i]);
-//
-//			for (Chain chain: transformedStruct.getChains()) {
-//				// we assign a new AU id (chain ID) consisting in original chain ID + an operator index from 1 to n
-//				chain.setChainID(chain.getChainID()+(i+1));
-//				structure.addChain(chain);
-//			}
-//		}
-//
-//		// now we have more chains in AU, we have to update the value
-//		this.numChainsAu = structure.getChains().size();
-//	}
-//
-//	/**
-//	 * Removes the extra chains that were added to the original structure in {@link #constructFullStructure()}
-//	 */
-//	private void removeExtraChains() {
-//		structure.setChains(origChains);
-//	}
 }

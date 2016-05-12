@@ -56,14 +56,14 @@ public class ResidueNumberTest extends TestCase {
 	}
 
 	/**
-	 * Test of getChainId method, of class ResidueNumber.
+	 * Test of getChainName method, of class ResidueNumber.
 	 */
 	@Test
 	public void testGetSetChainId() {
-//        System.out.println("getChainId");
+//        System.out.println("getChainName");
 		ResidueNumber instance = new ResidueNumber("A", 42, ' ');
 		String expResult = "A";
-		String result = instance.getChainId();
+		String result = instance.getChainName();
 		assertEquals(expResult, result);
 	}
 

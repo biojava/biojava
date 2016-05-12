@@ -75,7 +75,8 @@ public class CAConverter {
 		return newChains;
 	}
 
-	/** Convert a Chain to a new Chain containing C-alpha atoms only.
+	/** 
+	 * Convert a Chain to a new Chain containing C-alpha atoms only.
 	 *
 	 * @param chain to convert
 	 * @return a new chain containing Amino acids with C-alpha only.
@@ -117,7 +118,8 @@ public class CAConverter {
 	}
 
 
-	/** Convert a Chain to a new Chain containing C-alpha atoms only.
+	/** 
+	 * Convert a Chain to a new Chain containing C-alpha atoms only.
 	 *
 	 * @param chain to convert
 	 * @return a new chain containing Amino acids with C-alpha only.
@@ -126,7 +128,8 @@ public class CAConverter {
 	public static Chain getRepresentativeAtomsOnly(Chain chain){
 
 		Chain newChain = new ChainImpl();
-		newChain.setChainID(chain.getChainID());
+		newChain.setId(chain.getId());
+		newChain.setName(chain.getName());
 		newChain.setEntityInfo(chain.getEntityInfo());
 		newChain.setSwissprotId(chain.getSwissprotId());
 

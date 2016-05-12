@@ -272,7 +272,7 @@ public class ProteinModificationIdentifier {
 		Map<Component, Set<Group>> mapCompGroups = new HashMap<Component, Set<Group>>();
 
 		for (Chain chain : chains) {
-			mapChainIdChain.put(chain.getChainID(), chain);
+			mapChainIdChain.put(chain.getName(), chain);
 
 			List<Group> ress = StructureUtil.getAminoAcids(chain);
 
@@ -288,7 +288,7 @@ public class ProteinModificationIdentifier {
 		if (residues.isEmpty()) {
 			String pdbId = "?";
 			if ( chains.size() > 0) {
-				Structure struc = chains.get(0).getParent();
+				Structure struc = chains.get(0).getStructure();
 				if ( struc != null)
 					pdbId = struc.getPDBCode();
 			}
@@ -402,7 +402,7 @@ public class ProteinModificationIdentifier {
 				//	numIns += num.getInsCode();
 				//}
 				ResidueNumber resNum = new ResidueNumber();
-				resNum.setChainId(num.getChainId());
+				resNum.setChainName(num.getChainId());
 				resNum.setSeqNum(num.getResidueNumber());
 				resNum.setInsCode(num.getInsCode());
 				//group = chain.getGroupByPDB(numIns);

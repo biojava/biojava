@@ -434,7 +434,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	public Set<String> getChains() {
 		Set<String> chains = new HashSet<String>();
 		List<ResidueRange> rrs = toCanonical().getResidueRanges();
-		for (ResidueRange rr : rrs) chains.add(rr.getChainId());
+		for (ResidueRange rr : rrs) chains.add(rr.getChainName());
 		return chains;
 	}
 
