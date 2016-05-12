@@ -62,12 +62,12 @@ import org.slf4j.LoggerFactory;
  * <p>
  * After refinement of the initial alignment, an optimization step can be used
  * to improve the overall score of the repeat multiple alignment.
- * 
+ *
  * @author Andreas Prlic
  * @author Spencer Bliven
  * @author Aleix Lafita
  * @since 4.1.1
- * 
+ *
  */
 public class CeSymm {
 
@@ -212,7 +212,7 @@ public class CeSymm {
 			newAFP.setTMScore(tmScore3);
 
 			// Determine if the alignment is significant, stop if false
-			if (tmScore3 < params.getScoreThreshold()) {
+			if (tmScore3 < params.getUnrefinedScoreThreshold()) {
 				// If it is the first alignment save it anyway
 				if (i == 0)
 					selfAlignments.add(newAFP);
@@ -261,6 +261,12 @@ public class CeSymm {
 		} else
 			result.setType(params.getSymmType());
 
+		// Do not try the refinement if the self-alignment is not significant
+		if (optimalAFP.getTMScore() < params.getUnrefinedScoreThreshold()){
+			result.setSymmOrder(1);
+			return result;
+		}
+
 		// STEP 3: order detection & symmetry refinement, apply consistency
 		try {
 			// ORDER DETECTION
@@ -294,11 +300,12 @@ public class CeSymm {
 						atoms);
 				break;
 			}
+			result.setSymmOrder(order);
+			
 			// REFINEMENT
 			SymmetryRefiner refiner = null;
 			switch (params.getRefineMethod()) {
 			case NOT_REFINED:
-				result.setSymmOrder(order);
 				return result;
 			case SEQUENCE_FUNCTION:
 				// Does not work for OPEN alignments
@@ -324,7 +331,7 @@ public class CeSymm {
 			return result;
 		}
 
-		// STEP4: determine the symmetry axis and its repeat dependencies
+		// STEP 4: determine the symmetry axis and its repeat dependencies
 		SymmetryAxes axes = new SymmetryAxes();
 		int order = result.getMultipleAlignment().size();
 		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)
@@ -366,7 +373,7 @@ public class CeSymm {
 	/**
 	 * Analyze the symmetries of the input Atom array using the DEFAULT
 	 * parameters.
-	 * 
+	 *
 	 * @param atoms
 	 *            representative Atom array of the Structure
 	 * @return CeSymmResult
@@ -380,7 +387,7 @@ public class CeSymm {
 	/**
 	 * Analyze the symmetries of the input Atom array using the provided
 	 * parameters.
-	 * 
+	 *
 	 * @param atoms
 	 *            representative Atom array of the Structure
 	 * @param param
@@ -407,22 +414,17 @@ public class CeSymm {
 		CeSymmIterative iter = new CeSymmIterative(params);
 		CeSymmResult result = iter.execute(atoms);
 
-		if (result.isSignificant()) {
+		if (result.isRefined()) {
 			// Optimize the global alignment freely once more (final step)
 			if (params.getOptimization() && result.getSymmLevels() > 1) {
-				// Remove the axes to do free superposition optimization TODO
-				SymmetryAxes axes = result.getAxes();
-				result.setAxes(null);
 				try {
 					SymmOptimizer optimizer = new SymmOptimizer(result);
 					MultipleAlignment optimized = optimizer.optimize();
 					// Set the optimized MultipleAlignment and the axes
 					result.setMultipleAlignment(optimized);
-					result.setAxes(axes);
 				} catch (RefinerFailedException e) {
 					logger.info("Final optimization failed:" + e.getMessage());
 				}
-				result.setAxes(axes);
 			}
 			result.getMultipleAlignment().getEnsemble()
 					.setStructureIdentifiers(result.getRepeatsID());
@@ -432,7 +434,7 @@ public class CeSymm {
 
 	/**
 	 * Analyze a single level of symmetry.
-	 * 
+	 *
 	 * @param atoms
 	 *            Atom array of the current level
 	 * @return CeSymmResult

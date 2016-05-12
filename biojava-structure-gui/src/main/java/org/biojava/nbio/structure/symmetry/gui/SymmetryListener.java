@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
+import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Action Listener for the symmetry menu. Trigger various internal symmetry
  * specific analysis.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
  *
@@ -65,26 +66,28 @@ public class SymmetryListener implements ActionListener {
 		try {
 			if (cmd.equals("Repeats Superposition")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayRepeats(symm);
-				String s = SymmetryDisplay.printSymmetryAxes(symm, true);
+				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				j.evalString(s);
 
 			} else if (cmd.equals("Multiple Structure Alignment")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm);
-				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
+				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				j.evalString(s);
 
 			} else if (cmd.equals("Optimal Self Alignment")) {
 				Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
 				AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
 						symm.getSelfAlignment(), symm.getAtoms(), cloned);
-				jmol.setTitle(jmol.getTitle() + " Optimal Self-Alignment");
+				RotationAxis axis = new RotationAxis(symm.getSelfAlignment());
+				jmol.evalString(axis.getJmolScript(symm.getAtoms()));
+				jmol.setTitle(SymmetryDisplay.getSymmTitle(symm));
 
 			} else if (cmd.equals("Show Symmetry Group")) {
 				String script = SymmetryDisplay.printSymmetryGroup(symm);
 				jmol.evalString(script);
 
 			} else if (cmd.equals("Show Symmetry Axes")) {
-				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
+				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				jmol.evalString(s);
 			}
 

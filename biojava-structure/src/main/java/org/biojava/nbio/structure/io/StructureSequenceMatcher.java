@@ -52,7 +52,7 @@ import java.util.Map;
  *
  */
 public class StructureSequenceMatcher {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(StructureSequenceMatcher.class);
 
 	/**
@@ -83,7 +83,7 @@ public class StructureSequenceMatcher {
 			chain.setChainID(group.getChainId());
 			if (currentChain == null || !currentChain.getChainID().equals(chain.getChainID())) {
 				structure.addChain(chain);
-				chain.setCompound(group.getChain().getCompound());
+				chain.setEntityInfo(group.getChain().getEntityInfo());
 				chain.setStructure(structure);
 				chain.setSwissprotId(group.getChain().getSwissprotId());
 				chain.setInternalChainID(group.getChain().getInternalChainID());
@@ -94,22 +94,22 @@ public class StructureSequenceMatcher {
 		}
 		return structure;
 	}
-	
+
 	/**
 	 * Generates a ProteinSequence corresponding to the sequence of struct,
 	 * and maintains a mapping from the sequence back to the original groups.
-	 * 
+	 *
 	 * Chains are appended to one another. 'X' is used for heteroatoms.
-	 * 
+	 *
 	 * @param struct Input structure
 	 * @param groupIndexPosition An empty map, which will be populated with
 	 *  (residue index in returned ProteinSequence) -> (Group within struct)
 	 * @return A ProteinSequence with the full sequence of struct. Chains are
 	 *  concatenated in the same order as the input structures
-	 *  
+	 *
 	 * @see {@link SeqRes2AtomAligner#getFullAtomSequence(List, Map)}, which
 	 * 	does the heavy lifting.
-	 * 
+	 *
 	 */
 	public static ProteinSequence getProteinSequenceForStructure(Structure struct, Map<Integer,Group> groupIndexPosition ) {
 
@@ -125,7 +125,7 @@ public class StructureSequenceMatcher {
 			int prevLen = seqStr.length();
 
 			// get the sequence for this chain
-			String chainSeq = SeqRes2AtomAligner.getFullAtomSequence(groups, chainIndexPosition);
+			String chainSeq = SeqRes2AtomAligner.getFullAtomSequence(groups, chainIndexPosition, false);
 			seqStr.append(chainSeq);
 
 
@@ -144,14 +144,14 @@ public class StructureSequenceMatcher {
 			// we can log an error if it does, it would mean there's a bad bug somewhere
 			logger.error("Could not create protein sequence, unknown compounds in string: {}", e.getMessage());
 		}
-		
-		return s;	
+
+		return s;
 	}
 
 	/**
 	 * Given a sequence and the corresponding Structure, get the ResidueNumber
 	 * for each residue in the sequence.
-	 * 
+	 *
 	 * <p>Smith-Waterman alignment is used to match the sequences. Residues
 	 * in the sequence but not the structure or mismatched between sequence
 	 * and structure will have a null atom, while
@@ -173,7 +173,7 @@ public class StructureSequenceMatcher {
 		//2. Run Smith-Waterman to get the alignment
 		// Identity substitution matrix with +1 for match, -1 for mismatch
 		// TODO
-		SubstitutionMatrix<AminoAcidCompound> matrix = 
+		SubstitutionMatrix<AminoAcidCompound> matrix =
 			new SimpleSubstitutionMatrix<AminoAcidCompound>(
 					AminoAcidCompoundSet.getAminoAcidCompoundSet(),
 					(short)1, (short)-1 );
@@ -182,7 +182,7 @@ public class StructureSequenceMatcher {
 				new InputStreamReader(
 						SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum100.txt")),
 		"blosum100");
-		SequencePair<ProteinSequence, AminoAcidCompound> pair = 
+		SequencePair<ProteinSequence, AminoAcidCompound> pair =
 			Alignments.getPairwiseAlignment(seq, structSeq,
 					PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(), matrix);
 
@@ -194,7 +194,7 @@ public class StructureSequenceMatcher {
 
 
 		assert(alignedSeq.getLength() == alignedStruct.getLength());
-		
+
 //		System.out.println(pair.toString(80));
 //		System.out.format("%d/min{%d,%d}\n", pair.getNumIdenticals(),
 //				alignedSeq.getLength()-alignedSeq.getNumGaps(),
@@ -221,16 +221,16 @@ public class StructureSequenceMatcher {
 				int seqIndex = alignedSeq.getSequenceIndexAt(pos)-1;//1-indexed
 				int structIndex = alignedStruct.getSequenceIndexAt(pos)-1;//1-indexed
 				Group g = atomIndexPosition.get(structIndex);
-				
+
 				assert(0<=seqIndex && seqIndex < ca.length);
-				
+
 				ca[seqIndex] = g.getResidueNumber(); //remains null for gaps
 			}
 		}
 		return ca;
 	}
-	
-	
+
+
 	/**
 	 * Removes all gaps ('-') from a protein sequence
 	 * @param gapped
@@ -238,16 +238,16 @@ public class StructureSequenceMatcher {
 	 */
 	public static ProteinSequence removeGaps(ProteinSequence gapped) {
 		final String[] gapStrings = {"-","."};
-		
+
 		StringBuilder seq = new StringBuilder();
-		
+
 		CompoundSet<AminoAcidCompound> aaSet = gapped.getCompoundSet();
 		AminoAcidCompound[] gaps = new AminoAcidCompound[gapStrings.length];
-		
+
 		for(int i=0;i<gapStrings.length;i++) {
 			gaps[i] = aaSet.getCompoundForString(gapStrings[i]);
 		}
-		
+
 		for(int i=1; i<=gapped.getLength();i++) { //1-indexed
 			AminoAcidCompound aa = gapped.getCompoundAt(i);
 			boolean isGap = false;
@@ -261,7 +261,7 @@ public class StructureSequenceMatcher {
 				seq.append(aa.getShortName());
 			}
 		}
-		
+
 		ProteinSequence ungapped = null;
 		try {
 			ungapped = new ProteinSequence(seq.toString());
@@ -269,14 +269,14 @@ public class StructureSequenceMatcher {
 			// this can't happen, if it does there's a bug somewhere
 			logger.error("Could not create ungapped protein sequence, found unknown compounds: {}. This is most likely a bug.", e.getMessage());
 		}
-		
+
 		return ungapped;
 	}
-	
+
 	/**
-	 * Creates a new list consisting of all columns of gapped where no row 
+	 * Creates a new list consisting of all columns of gapped where no row
 	 * contained a null value.
-	 * 
+	 *
 	 * Here, "row" refers to the first index and "column" to the second, eg
 	 * gapped.get(row).get(column)
 	 * @param gapped A rectangular matrix containing null to mark gaps
@@ -285,20 +285,20 @@ public class StructureSequenceMatcher {
 	public static <T> T[][] removeGaps(final T[][] gapped) {
 		if(gapped == null ) return null;
 		if(gapped.length < 1) return Arrays.copyOf(gapped, gapped.length);
-		
+
 		final int nProts = gapped.length;
 		final int protLen = gapped[0].length; // length of gapped proteins
-		
+
 		// Verify that input is rectangular
 		for(int i=0;i<nProts;i++) {
 			if(gapped[i].length != protLen) {
 				throw new IllegalArgumentException(String.format(
 						"Expected a rectangular array, but row 0 has %d elements " +
 						"while row %d has %d.", protLen,i,gapped[i].length));
-				
+
 			}
 		}
-		
+
 		// determine where gaps exist in any structures
 		boolean[] isGap = new boolean[protLen];
 		int gaps = 0;
@@ -311,7 +311,7 @@ public class StructureSequenceMatcher {
 				}
 			}
 		}
-		
+
 		// Create ungapped array
 		T[][] ungapped = Arrays.copyOf(gapped,nProts);
 		final int ungappedLen = protLen-gaps;
@@ -327,7 +327,7 @@ public class StructureSequenceMatcher {
 			}
 			assert(k == ungappedLen);
 		}
-		
+
 		return ungapped;
 	}
 }

@@ -57,9 +57,9 @@ public class AAIndexFileParser {
 	}
 
 	/** parse an inputStream that points to an AAINDEX database file
-	 * 
+	 *
 	 * @param inputStream
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void parse(InputStream inputStream) throws IOException {
 
@@ -69,7 +69,7 @@ public class AAIndexFileParser {
 		max = Short.MIN_VALUE;
 		min = Short.MAX_VALUE;
 		inMatrix = false;
-		
+
 		BufferedReader buf = new BufferedReader (new InputStreamReader (inputStream));
 		String line = null;
 		line = buf.readLine();
@@ -107,10 +107,10 @@ public class AAIndexFileParser {
 		// increment the current row we are talking about
 		currentRowPos++;
 
-		
-		
+
+
 		for ( int i =0 ; i < values.length ; i++){
-		
+
 			if ( values[i].endsWith(".")) {
 				values[i] = values[i] + "0";
 			}
@@ -119,26 +119,26 @@ public class AAIndexFileParser {
 			if (values[i].equals("-")) {
 				values[i] = "0";
 			}
-		
+
 			if ( scale == -1 ) {
-				scale = determineScale(values[0]);				
+				scale = determineScale(values[0]);
 			}
-			
-			
+
+
 			Float score = Float.parseFloat(values[i]);
 			score = scale * score;
 
 			Short s = (short) Math.round(score);
-			
+
 			matrix[currentRowPos][i] = s;
 
 			if ( values.length < cols.size() || ( symmetricMatrix)){
 				//System.out.println(values.length + " " + cols.size() + " " + currentRowPos + " " + i + " " +  line);
-				
+
 				matrix[i][currentRowPos] = s;
-				
+
 				symmetricMatrix = true;
-				
+
 			}
 
 			if ( score > max)
@@ -151,23 +151,23 @@ public class AAIndexFileParser {
 	}
 
 	private int determineScale(String value) {
-		
+
 		String[] spl = value.split("\\.");
-		
+
 		if (spl.length <= 1)
 			return 1;
-		
+
 		String digits = spl[1];
-		
+
 		return (int)Math.round(Math.pow(10, digits.length()));
-		
+
 	}
 
 	// process a line of type >M rows = ARNDCQEGHILKMFPSTWYV, cols = ARNDCQEGHILKMFPSTWYV<
 	private void initMatrix(String line) {
 		String[] spl = line.split(" ");
 
-		// trim off the final , character 
+		// trim off the final , character
 		currentRows = spl[3].substring(0, spl[3].length()-1);
 		currentCols = spl[6];
 		currentRowPos = -1;
@@ -185,38 +185,38 @@ public class AAIndexFileParser {
 		AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 		for ( int i = 0 ; i < currentRows.length() ; i ++){
 			char c = currentRows.charAt(i);
-			AminoAcidCompound aa = compoundSet.getCompoundForString(c+""); 
+			AminoAcidCompound aa = compoundSet.getCompoundForString(c+"");
 
 			rows.add(aa);
 		}
 
 		for ( int i = 0 ; i < currentCols.length() ; i ++){
 			char c = currentRows.charAt(i);
-			AminoAcidCompound aa = compoundSet.getCompoundForString(c+""); 
+			AminoAcidCompound aa = compoundSet.getCompoundForString(c+"");
 
 			cols.add(aa);
 		}
 
 
 
-	
+
 
 		currentMatrix.setScale(scale);
 	}
 
-	
+
 	private void newMatrix(String line) {
 		symmetricMatrix = false;
 		scale = -1;
-		
+
 		currentMatrix = new ScaledSubstitutionMatrix();
 		currentMatrix.setName(line.substring(2));
-		
-		
+
+
 		//System.out.println("new Matrix " + currentMatrix.getName());
 	}
 
-	// 
+	//
 	private SubstitutionMatrix<AminoAcidCompound> finalizeMatrix() {
 
 		currentMatrix.setMatrix(matrix);

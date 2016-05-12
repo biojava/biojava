@@ -40,13 +40,13 @@ import java.util.List;
  */
 public interface MutableProfile<S extends Sequence<C>, C extends Compound> extends Profile<S, C> {
 
-    /**
-     * Sets entirely new set of {@link AlignedSequence}s.
-     *
-     * @param sequences new set of sequences
-     * @throws IllegalArgumentException if sequences have different lengths
-     */
-    void setSequences(List<AlignedSequence<S, C>> sequences);
+	/**
+	 * Sets entirely new set of {@link AlignedSequence}s.
+	 *
+	 * @param sequences new set of sequences
+	 * @throws IllegalArgumentException if sequences have different lengths
+	 */
+	void setSequences(List<AlignedSequence<S, C>> sequences);
 
-    // TODO? - make compatible with core.sequence.MultipleSequenceAlignment
+	// TODO? - make compatible with core.sequence.MultipleSequenceAlignment
 }

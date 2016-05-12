@@ -25,7 +25,7 @@ package org.biojava.nbio.ws.alignment.qblast;
 
 /**
  * Information about QBlast search job
- * 
+ *
  * @author Gediminas Rimsa
  */
 public class BlastJob {

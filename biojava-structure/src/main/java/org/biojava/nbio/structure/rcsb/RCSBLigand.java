@@ -26,9 +26,9 @@ package org.biojava.nbio.structure.rcsb;
 
 /**
  * Corresponds to a ligand in a {@code ligandInfo} XML file.
- * 
+ *
  * @see <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB RESTful</a>
- * 
+ *
  * @author dmyerstu
  * @since 3.0.6
  */

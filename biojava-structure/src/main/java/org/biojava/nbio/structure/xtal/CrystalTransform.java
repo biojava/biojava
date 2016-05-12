@@ -30,14 +30,14 @@ import static java.lang.Math.abs;
 
 
 /**
- * Representation of a transformation in a crystal: 
+ * Representation of a transformation in a crystal:
  * - a transformation id (each of the transformations in a space group, 0 to m)
  * - a crystal translation
- * The transformation matrix in crystal basis is stored, representing the basic 
- * transformation together with the crystal translation. 
+ * The transformation matrix in crystal basis is stored, representing the basic
+ * transformation together with the crystal translation.
  * Contains methods to check for equivalent transformations.
- * 
- * 
+ *
+ *
  * @author duarte_j
  *
  */
@@ -52,31 +52,31 @@ public class CrystalTransform implements Serializable {
 	 * The space group to which this transform belongs
 	 */
 	private final SpaceGroup sg;
-	
+
 	/**
-	 * The transform id corresponding to the SpaceGroup's transform indices. 
+	 * The transform id corresponding to the SpaceGroup's transform indices.
 	 * From 0 (identity) to m (m=number of symmetry operations of the space group)
-	 * It is unique within the unit cell but equivalent units of different crystal unit cells 
-	 * will have same id 
+	 * It is unique within the unit cell but equivalent units of different crystal unit cells
+	 * will have same id
 	 */
 	private int transformId;
-	
+
 	/**
 	 * The 4-dimensional matrix transformation in crystal basis.
 	 * Note that the translational component of this matrix is not necessarily
-	 * identical to crystalTranslation since some operators have fractional 
+	 * identical to crystalTranslation since some operators have fractional
 	 * translations within the cell
 	 */
 	private Matrix4d matTransform;
-	
+
 	/**
 	 * The crystal translation (always integer)
 	 */
 	private Point3i crystalTranslation;
-	
-	
+
+
 	/**
-	 * Creates a new CrystalTransform representing the identity transform 
+	 * Creates a new CrystalTransform representing the identity transform
 	 * in cell (0,0,0)
 	 */
 	public CrystalTransform(SpaceGroup sg) {
@@ -85,9 +85,9 @@ public class CrystalTransform implements Serializable {
 		this.matTransform = (Matrix4d)IDENTITY.clone();
 		this.crystalTranslation = new Point3i(0,0,0);
 	}
-	
+
 	/**
-	 * Represents the n-th transform 
+	 * Represents the n-th transform
 	 * @param sg
 	 * @param transformId
 	 */
@@ -99,11 +99,11 @@ public class CrystalTransform implements Serializable {
 		} else if (sg==null) {
 			throw new IllegalArgumentException("Space Group cannot be null if transformId!=0");
 		} else {
-			this.matTransform = (Matrix4d)sg.getTransformation(transformId).clone();			
+			this.matTransform = (Matrix4d)sg.getTransformation(transformId).clone();
 		}
 		this.crystalTranslation = new Point3i(0,0,0);
 	}
-	
+
 	/**
 	 * Copy constructor
 	 * @param transform
@@ -114,28 +114,28 @@ public class CrystalTransform implements Serializable {
 		this.matTransform = new Matrix4d(transform.matTransform);
 		this.crystalTranslation = new Point3i(transform.crystalTranslation);
 	}
-	
+
 	public Matrix4d getMatTransform() {
 		return matTransform;
 	}
-	
+
 	public void setMatTransform(Matrix4d matTransform) {
 		this.matTransform = matTransform;
 	}
-	
+
 	public Point3i getCrystalTranslation() {
 		return crystalTranslation;
 	}
-	
+
 	public void translate(Point3i translation) {
 		matTransform.m03 = matTransform.m03+translation.x;
 		matTransform.m13 = matTransform.m13+translation.y;
 		matTransform.m23 = matTransform.m23+translation.z;
-		
-		crystalTranslation.add(translation); 
+
+		crystalTranslation.add(translation);
 
 	}
-	
+
 	/**
 	 * Returns true if the given CrystalTransform is equivalent to this one.
 	 * Two crystal transforms are equivalent if one is the inverse of the other, i.e.
@@ -152,7 +152,7 @@ public class CrystalTransform implements Serializable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Tells whether this transformation is a pure crystal lattice translation,
 	 * i.e. no rotational component and an integer translation vector.
@@ -161,7 +161,7 @@ public class CrystalTransform implements Serializable {
 	public boolean isPureCrystalTranslation() {
 		return (transformId==0 && (crystalTranslation.x!=0 || crystalTranslation.y!=0 || crystalTranslation.z!=0));
 	}
-	
+
 	/**
 	 * Tells whether this transformation is the identity: no rotation and no translation
 	 * @return
@@ -169,7 +169,7 @@ public class CrystalTransform implements Serializable {
 	public boolean isIdentity() {
 		return (transformId==0 && crystalTranslation.x==0 && crystalTranslation.y==0 && crystalTranslation.z==0);
 	}
-	
+
 	/**
 	 * Tells whether this transformation is a pure translation:
 	 * either a pure crystal (lattice) translation or a fractional (within
@@ -182,23 +182,23 @@ public class CrystalTransform implements Serializable {
 		if (SpaceGroup.deltaComp(matTransform.m00,1,SpaceGroup.DELTA) &&
 			SpaceGroup.deltaComp(matTransform.m01,0,SpaceGroup.DELTA) &&
 			SpaceGroup.deltaComp(matTransform.m02,0,SpaceGroup.DELTA) &&
-			
+
 			SpaceGroup.deltaComp(matTransform.m10,0,SpaceGroup.DELTA) &&
 			SpaceGroup.deltaComp(matTransform.m11,1,SpaceGroup.DELTA) &&
 			SpaceGroup.deltaComp(matTransform.m12,0,SpaceGroup.DELTA) &&
-			
+
 			SpaceGroup.deltaComp(matTransform.m20,0,SpaceGroup.DELTA) &&
 			SpaceGroup.deltaComp(matTransform.m21,0,SpaceGroup.DELTA) &&
 			SpaceGroup.deltaComp(matTransform.m22,1,SpaceGroup.DELTA) &&
-			(	Math.abs(matTransform.m03-0.0)>SpaceGroup.DELTA || 
-				Math.abs(matTransform.m13-0.0)>SpaceGroup.DELTA || 
+			(	Math.abs(matTransform.m03-0.0)>SpaceGroup.DELTA ||
+				Math.abs(matTransform.m13-0.0)>SpaceGroup.DELTA ||
 				Math.abs(matTransform.m23-0.0)>SpaceGroup.DELTA)) {
 			return true;
 		}
-				
+
 		return false;
 	}
-	
+
 	/**
 	 * Tells whether this transformation contains a fractional translational
 	 * component (whatever its rotational component). A fractional translation
@@ -213,7 +213,7 @@ public class CrystalTransform implements Serializable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Tells whether this transformation is a rotation disregarding the translational component,
 	 * i.e. either pure rotation or screw rotation, but not improper rotation.
@@ -222,30 +222,30 @@ public class CrystalTransform implements Serializable {
 	public boolean isRotation() {
 		// if no SG, that means a non-crystallographic entry (e.g. NMR). We return false
 		if (sg==null) return false;
-		
+
 		// this also takes care of case <0 (improper rotations): won't be considered as rotations
 		if (sg.getAxisFoldType(this.transformId)>1) return true;
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Returns the TransformType of this transformation: AU, crystal translation, fractional translation
-	 * , 2 3 4 6-fold rotations, 2 3 4 6-fold screw rotations, -1 -3 -2 -4 -6 inversions/rotoinversions. 
+	 * , 2 3 4 6-fold rotations, 2 3 4 6-fold screw rotations, -1 -3 -2 -4 -6 inversions/rotoinversions.
 	 * @return
 	 */
 	public TransformType getTransformType() {
-		
+
 		// if no SG, that means a non-crystallographic entry (e.g. NMR). We return AU as type
 		if (sg==null) return TransformType.AU;
-		
+
 		int foldType = sg.getAxisFoldType(this.transformId);
 		boolean isScrewOrGlide = false;
 		Vector3d translScrewComponent = getTranslScrewComponent();
-		if (Math.abs(translScrewComponent.x-0.0)>SpaceGroup.DELTA || 
-			Math.abs(translScrewComponent.y-0.0)>SpaceGroup.DELTA || 
+		if (Math.abs(translScrewComponent.x-0.0)>SpaceGroup.DELTA ||
+			Math.abs(translScrewComponent.y-0.0)>SpaceGroup.DELTA ||
 			Math.abs(translScrewComponent.z-0.0)>SpaceGroup.DELTA) {
-			
+
 			isScrewOrGlide = true;
 		}
 
@@ -262,7 +262,7 @@ public class CrystalTransform implements Serializable {
 				case 6:
 					return TransformType.SIXFOLDSCREW;
 				default:
-					throw new NullPointerException("This transformation did not fall into any of the known types! This is most likely a bug.");					
+					throw new NullPointerException("This transformation did not fall into any of the known types! This is most likely a bug.");
 				}
 			} else {
 				switch (foldType) {
@@ -276,7 +276,7 @@ public class CrystalTransform implements Serializable {
 					return TransformType.SIXFOLD;
 				default:
 					throw new NullPointerException("This transformation did not fall into any of the known types! This is most likely a bug.");
-				}				
+				}
 			}
 
 		} else if (foldType<0) {
@@ -296,7 +296,7 @@ public class CrystalTransform implements Serializable {
 				return TransformType.SIXBAR;
 			default:
 				throw new NullPointerException("This transformation did not fall into any of the known types! This is most likely a bug.");
-			}	
+			}
 		} else {
 			if (isIdentity()) {
 				return TransformType.AU;
@@ -309,32 +309,32 @@ public class CrystalTransform implements Serializable {
 			}
 			throw new NullPointerException("This transformation did not fall into any of the known types! This is most likely a bug.");
 		}
-	
+
 	}
-	
+
 	public Vector3d getTranslScrewComponent() {
-		
+
 		return getTranslScrewComponent(matTransform);
-		
+
 	}
-	
+
 	public int getTransformId() {
 		return transformId;
 	}
-	
+
 	public void setTransformId(int transformId) {
 		this.transformId = transformId;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("[%2d-(%s)]",transformId,toXYZString());
 	}
-	
+
 	/**
 	 * Expresses this transformation in terms of x,y,z fractional coordinates.
-	 * 
-	 * Examples: 
+	 *
+	 * Examples:
 	 * @return
 	 */
 	public String toXYZString() {
@@ -342,7 +342,7 @@ public class CrystalTransform implements Serializable {
 
 		for(int i=0;i<3;i++) { //for each row
 			boolean emptyRow = true;
-			
+
 			double coef; // TODO work with rational numbers
 
 
@@ -450,26 +450,26 @@ public class CrystalTransform implements Serializable {
 			}
 		}
 
-		// Give up and use floating point; 
+		// Give up and use floating point;
 		return String.format("%.3f", coef);
 	}
 
 	/**
 	 * Given a transformation matrix containing a rotation and translation returns the
-	 * screw component of the rotation. 
+	 * screw component of the rotation.
 	 * See http://www.crystallography.fr/mathcryst/pdf/Gargnano/Aroyo_Gargnano_1.pdf
 	 * @param m
 	 * @return
 	 */
 	public static Vector3d getTranslScrewComponent(Matrix4d m) {
-		
+
 		int foldType = SpaceGroup.getRotAxisType(m);
 		// For reference see:
 		// http://www.crystallography.fr/mathcryst/pdf/Gargnano/Aroyo_Gargnano_1.pdf
 
 		Vector3d transl = null;
 
-		Matrix3d W = 
+		Matrix3d W =
 				new Matrix3d(m.m00,m.m01,m.m02,
 						m.m10,m.m11,m.m12,
 						m.m20,m.m21,m.m22);
@@ -477,10 +477,10 @@ public class CrystalTransform implements Serializable {
 		if (foldType>=0) {
 
 			// the Y matrix: Y = W^k-1 + W^k-2 ... + W + I  ; with k the fold type
-			Matrix3d Y = new Matrix3d(1,0,0, 0,1,0, 0,0,1);					
+			Matrix3d Y = new Matrix3d(1,0,0, 0,1,0, 0,0,1);
 			Matrix3d Wk = new Matrix3d(1,0,0, 0,1,0, 0,0,1);
 
-			for (int k=0;k<foldType;k++) {						
+			for (int k=0;k<foldType;k++) {
 				Wk.mul(W); // k=0 Wk=W, k=1 Wk=W^2, k=2 Wk=W^3, ... k=foldType-1, Wk=W^foldType
 				if (k!=foldType-1) Y.add(Wk);
 			}
@@ -500,7 +500,7 @@ public class CrystalTransform implements Serializable {
 				Y.transform(transl);
 
 				transl.scale(1.0/2.0);
-			} else { // for -1, -3, -4 and -6 there's nothing to do: fill with 0s 
+			} else { // for -1, -3, -4 and -6 there's nothing to do: fill with 0s
 				transl = new Vector3d(0,0,0);
 			}
 		}

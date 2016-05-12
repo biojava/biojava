@@ -99,7 +99,6 @@ public class StructureToolsTest extends TestCase {
 
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = new FileParsingParameters();
-		params.setLoadChemCompInfo(true);
 		cache.setFileParsingParams(params);
 
 		Structure hivA = cache.getStructure("1hiv.A");
@@ -225,19 +224,19 @@ public class StructureToolsTest extends TestCase {
 			range = "X:";
 			substr = StructureTools.getSubRanges(structure2, range);
 			fail("Illegal chain name in '"+range+"'. Should throw StructureException");
-		} catch(StructureException ex) {} //expected 
+		} catch(StructureException ex) {} //expected
 
 		// some negative tests
 		try {
 			range = "7-10";
 			substr = StructureTools.getSubRanges(structure2, range);
 			fail("Illegal range '"+range+"'. Should throw IllegalArgumentException");
-		} catch(IllegalArgumentException ex) {} //expected 
+		} catch(IllegalArgumentException ex) {} //expected
 		try {
 			range = "A7-10";
 			substr = StructureTools.getSubRanges(structure2, range);
 			fail("Illegal range '"+range+"'. Should throw IllegalArgumentException");
-		} catch(IllegalArgumentException ex) {} //expected 
+		} catch(IllegalArgumentException ex) {} //expected
 	}
 
 	public void testRevisedConvention() throws IOException, StructureException{
@@ -448,13 +447,11 @@ public class StructureToolsTest extends TestCase {
 		AtomCache pdbCache = new AtomCache();
 		pdbCache.setUseMmCif(false);
 		FileParsingParameters params = new FileParsingParameters();
-		params.setLoadChemCompInfo(true);
 		pdbCache.setFileParsingParams(params);
 
 		AtomCache mmcifCache = new AtomCache();
 		mmcifCache.setUseMmCif(true);
 		FileParsingParameters params2 = new FileParsingParameters();
-		params2.setLoadChemCompInfo(true);
 		mmcifCache.setFileParsingParams(params2);
 
 
@@ -473,7 +470,7 @@ public class StructureToolsTest extends TestCase {
 
 		assertEquals("PDB has wrong length",409,pdbCA.length);
 		assertEquals("PDB has wrong length",409,mmcifCA.length);
-		
+
 		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
 

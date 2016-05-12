@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.ArrayList;
@@ -14,7 +34,6 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
@@ -23,7 +42,7 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  * This Class stores all the relevant information of an internal symmetry result
  * obtained with CeSymm. The purpose is to carry all the information packed
  * during the calculations and return a single object.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.2.0
  *
@@ -38,7 +57,7 @@ public class CeSymmResult {
 
 	private CESymmParameters params;
 	private SymmetryAxes axes;
-	private QuatSymmetryResults symmGroup;
+	private String symmGroup;
 
 	private int symmOrder;
 	private int symmLevels;
@@ -46,57 +65,48 @@ public class CeSymmResult {
 	private SymmetryType type;
 
 	/**
-	 * Return true if the symmetry result is significant, false otherwise.
-	 * 
+	 * Conditions checked are: score above the threshold, order higher than 1
+	 * and refinement succeeded.
+	 *
 	 * @return true if significant, false otherwise
 	 */
 	public boolean isSignificant() {
 
 		// In any case if the order is 1 it is asymmetric
-		if (symmOrder < 1)
+		if (symmOrder < 2)
 			return false;
 
-		// If the old version was turned ON
-		if (params.getRefineMethod() == RefineMethod.NOT_REFINED) {
-			if (selfAlignment.getTMScore() < params.getScoreThreshold())
+		// If the TM-Score before refinement is below the threshold
+		if (selfAlignment.getTMScore() < params.getUnrefinedScoreThreshold())
+			return false;
+
+		// If the refinement was attempted
+		if (params.getRefineMethod() != RefineMethod.NOT_REFINED) {
+			// Check for minimum length
+			if (multipleAlignment.getCoreLength() < params.getMinCoreLength())
 				return false;
-			else
-				return true;
+			// Allow 90% of original TM-Score theshold
+			if (multipleAlignment.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
+					.getRefinedScoreThreshold())
+				return false;
+			return true;
 		}
 
-		// For the new version
-		if (refined) {
-			// Length is over min length
-			if (symmLevels > 1)
-				return true; // significance already checked
-			else if (multipleAlignment.getCoreLength() < params
-					.getMinCoreLength())
-				return false;
-			else if (multipleAlignment
-					.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
-					.getScoreThreshold())
-				return false;
-			else
-				return true;
-		} else
-			return false;
+		return true;
 	}
 
 	/**
 	 * Return the symmetric repeats as structure identifiers, if the result is
 	 * symmetric and it was refined, return null otherwise.
-	 * 
+	 *
 	 * @return List of StructureIdentifiers or null if not defined
 	 * @throws StructureException
 	 */
 	public List<StructureIdentifier> getRepeatsID() throws StructureException {
 
-		if (!isSignificant())
+		if (!isRefined())
 			return null;
-		
-		if(!isRefined())
-			return null;
-		
+
 		List<StructureIdentifier> repeats = new ArrayList<StructureIdentifier>(
 				symmOrder);
 
@@ -121,9 +131,9 @@ public class CeSymmResult {
 
 	@Override
 	public String toString() {
-		return structureId + ", symmGroup=" + symmGroup.getSymmetry()
-				+ ", symmOrder=" + symmOrder + ", symmLevels=" + symmLevels
-				+ ", refined=" + refined + ", type=" + type + " | " + params;
+		return structureId + ", symmGroup=" + getSymmGroup() + ", symmOrder="
+				+ symmOrder + ", symmLevels=" + symmLevels + ", refined="
+				+ refined + ", type=" + type + " | " + params;
 	}
 
 	public MultipleAlignment getMultipleAlignment() {
@@ -161,7 +171,7 @@ public class CeSymmResult {
 	/**
 	 * Return the symmetry order determined by the order detector if the
 	 * symmetry is significant. Return 1 otherwise.
-	 * 
+	 *
 	 * @return the order of symmetry if the result is significant
 	 */
 	public int getSymmOrder() {
@@ -183,19 +193,34 @@ public class CeSymmResult {
 		this.refined = refined;
 	}
 
-	public QuatSymmetryResults getSymmGroup() {
-		// Lazily calculate the symmetry group
+	public String getSymmGroup() {
+		// Lazily calculate the symmetry group if significant
 		if (symmGroup == null) {
-			try {
-				symmGroup = SymmetryTools.getQuaternarySymmetry(this);
-			} catch (StructureException e) {
-				e.printStackTrace();
-			}
+			if (isSignificant()) {
+				if (isRefined()) {
+					try {
+						symmGroup = SymmetryTools.getQuaternarySymmetry(this)
+								.getSymmetry();
+					} catch (StructureException e) {
+						symmGroup = "C1";
+					}
+					if (symmGroup.equals("C1"))
+						symmGroup = "R"; // could not find group
+				} else {
+					// in case significant but not refined
+					if (type.equals(SymmetryType.CLOSED))
+						symmGroup = "C" + symmOrder;
+					else
+						symmGroup = "R";
+				}
+			} else
+				// case asymmetric
+				symmGroup = "C1";
 		}
 		return symmGroup;
 	}
 
-	public void setSymmGroup(QuatSymmetryResults symmGroup) {
+	public void setSymmGroup(String symmGroup) {
 		this.symmGroup = symmGroup;
 	}
 
@@ -232,30 +257,59 @@ public class CeSymmResult {
 	}
 
 	/**
-	 * Returns the TM-Score of the symmetry alignment, independently of the
-	 * state of the result (MultipleAlignment or AFPChain).
+	 * Return a String describing the reasons for the CE-Symm final decision
+	 * in this particular result.
 	 * 
-	 * @return TM-score
+	 * @return String decision reason
 	 */
-	public double getTMScore() {
-		if (multipleAlignment != null)
-			return multipleAlignment
-					.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
-		else
-			return selfAlignment.getTMScore();
-	}
+	public String getReason() {
+		// Cases:
+		// 1. Asymmetric because insignificant self-alignment (1itb.A_1-100)
+		double tm = selfAlignment.getTMScore();
+		if (tm < params.getUnrefinedScoreThreshold()) {
+			return String.format("Insignificant self-alignment (TM=%.2f)", tm);
+		}
+		// 2. Asymmetric because order detector returned 1
+		if (symmOrder == 1) {
+			return String.format("Order detector found asymmetric alignment (TM=%.2f)", tm);
+		}
 
-	/**
-	 * Returns the RMSD of the symmetry alignment, independently of the state of
-	 * the result (MultipleAlignment or AFPChain).
-	 * 
-	 * @return RMSD
-	 */
-	public double getRMSD() {
-		if (multipleAlignment != null)
-			return multipleAlignment.getScore(MultipleAlignmentScorer.RMSD);
-		else
-			return selfAlignment.getTotalRmsdOpt();
+		// Check that the user requested refinement
+		if (params.getRefineMethod() != RefineMethod.NOT_REFINED) {
+			// 3. Asymmetric because refinement failed
+			if (!refined) {
+				return "Refinement failed";
+			}
+			tm = multipleAlignment.getScore(
+					MultipleAlignmentScorer.AVGTM_SCORE);
+			// 4. Asymmetric because refinement & optimization were not
+			// significant
+			if (!isSignificant()) {
+				return String.format(
+						"Refinement was not significant (TM=%.2f)", tm);
+			}
+		} else {
+			// 4. Not refined, but result was not significant
+			if (!isSignificant()) {
+				return String
+						.format("Result was not significant (TM=%.2f)", tm);
+			}
+		}
+
+		String hierarchical = "";
+		if (symmLevels > 1) {
+			hierarchical = String.format("; Contains %d levels of symmetry",
+					symmLevels);
+		}
+		// 5. Symmetric.
+		// a. Open. Give # repeats (1n0r.A)
+		if (type == SymmetryType.OPEN) {
+			return String.format("Contains %d open repeats (TM=%.2f)%s",
+					getSymmOrder(), tm, hierarchical);
+		}
+		// b. Closed, non-hierarchical (1itb.A)
+		// c. Closed, heirarchical (4gcr)
+		return String.format("Significant (TM=%.2f)%s", tm, hierarchical);
 	}
 
 }

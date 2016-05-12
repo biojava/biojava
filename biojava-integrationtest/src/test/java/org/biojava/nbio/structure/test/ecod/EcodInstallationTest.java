@@ -61,7 +61,7 @@ public class EcodInstallationTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(EcodInstallationTest.class);
 	private static final String VERSION = "develop124"; // Should be updated periodically
-	
+
 	// Info about known versions, for testing
 	private static final int DEVELOP_FIRST_VERSION = 45;
 	private static final int DEVELOP_LATEST_VERSTION = 124; // Should be updated periodically
@@ -70,7 +70,7 @@ public class EcodInstallationTest {
 
 	static {
 		//System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
-	} 
+	}
 	@Rule
 	public TemporaryFolder tmpFolder = new TemporaryFolder();
 	@Test
@@ -262,13 +262,13 @@ public class EcodInstallationTest {
 		// List all versions
 		List<String> versions = getKnownEcodVersions();
 		versions.add(EcodFactory.DEFAULT_VERSION);
-		
+
 		// Parse all versions
 		for(String version : versions) {
 			EcodInstallation ecod = (EcodInstallation)EcodFactory.getEcodDatabase(version);
 			ecod.getAllDomains();
 			System.out.println(version +" -> "+ ecod.getVersion());
-			
+
 			// Force garbage collection of all soft references
 			// This shouldn't be required, but without it we get
 			// 'OutOfMemoryError: GC overhead limit exceeded'.
@@ -284,20 +284,20 @@ public class EcodInstallationTest {
 			}
 		}
 	}
-	
+
 	@Test
 	public void testGetStructure() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		
+
 		// Save ECOD version, since AtomCache uses the global default
 		String prevECOD = EcodFactory.getEcodDatabase().getVersion();
 		EcodFactory.setEcodDatabase("develop124");
 		EcodDatabase ecod = EcodFactory.getEcodDatabase();
-		
+
 		String name;
 		EcodDomain id;
 		List<ResidueRange> ranges;
-		
+
 		// Test some cases where Chain and domain number are ambiguous
 		name = "e1wz2B14";
 		id = ecod.getDomainsById(name);
@@ -306,7 +306,7 @@ public class EcodInstallationTest {
 		assertEquals(1,ranges.size());
 		assertEquals(new ResidueRange("B", new ResidueNumber("B", 200,null), new ResidueNumber("B",445,null)),ranges.get(0));
 		cache.getStructure(name);
-		
+
 		name = "e3j9zS13";
 		id = ecod.getDomainsById(name);
 		assertEquals(name, id.getIdentifier());
@@ -315,18 +315,18 @@ public class EcodInstallationTest {
 		assertEquals(new ResidueRange("S1", new ResidueNumber("S1", 288,null), new ResidueNumber("S1",410,null)),ranges.get(0));
 		cache.getStructure(name);
 
-		
+
 		// Restore previous ECOD database
 		EcodFactory.setEcodDatabase(prevECOD);
 	}
-	
+
 	/**
 	 * Get a list of all develop versions, generated based on the DEVELOP_*
 	 * static variables.
 	 * @return A list of all development versions: "develop45","develop46",...
 	 */
 	public static List<String> getKnownEcodVersions() {
-		// Parse version from latest. 
+		// Parse version from latest.
 		int latestVersion = DEVELOP_LATEST_VERSTION;
 		try {
 			EcodDatabase latest = EcodFactory.getEcodDatabase(EcodFactory.DEFAULT_VERSION);

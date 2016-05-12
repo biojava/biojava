@@ -28,14 +28,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class is used to support the implementation of properties stated in IPeptideProperties. 
+ * This class is used to support the implementation of properties stated in IPeptideProperties.
  * It initializes several values that would be needed for the computation of properties such as
  * <p/>
  * Molecular weight<br/>
  * Instability index<br/>
  * Hydropathy value<br/>
  * pKa<br/>
- * 
+ *
  * @author kohchuanhock
  * @version 2011.05.21
  * @see IPeptideProperties
@@ -72,7 +72,7 @@ public class Constraints {
 
 	public static Map<AminoAcidCompound, Double> aa2NTerminalPka = new HashMap<AminoAcidCompound, Double>();
 	public static Map<AminoAcidCompound, Double> aa2CTerminalPka = new HashMap<AminoAcidCompound, Double>();
-	
+
 	static{
 		initMolecularWeight();
 		initHydropathicity();
@@ -81,7 +81,7 @@ public class Constraints {
 		initExtinctionCoefficient();
 	}
 
-	/** 
+	/**
 	 * Does the initialization of molecular weights based on http://au.expasy.org/tools/findmod/findmod_masses.html#AA
 	 */
 	public static void initMolecularWeight(){
@@ -131,45 +131,45 @@ public class Constraints {
 	 * Does the initialization of hydropathicity based on http://web.expasy.org/protscale/pscale/Hphob.Doolittle.html
 	 */
 	private static void initHydropathicity(){
-		//		Ala(A):  1.800  
+		//		Ala(A):  1.800
 		aa2Hydrophathicity.put(A, 1.800);
-		//		Arg(R): -4.500  
+		//		Arg(R): -4.500
 		aa2Hydrophathicity.put(R, -4.500);
-		//		Asn(N): -3.500  
+		//		Asn(N): -3.500
 		aa2Hydrophathicity.put(N, -3.500);
-		//		Asp(D): -3.500  
+		//		Asp(D): -3.500
 		aa2Hydrophathicity.put(D, -3.500);
-		//		Cys(C):  2.500  
+		//		Cys(C):  2.500
 		aa2Hydrophathicity.put(C, 2.500);
-		//		Gln(E): -3.500  
+		//		Gln(E): -3.500
 		aa2Hydrophathicity.put(E, -3.500);
-		//		Glu(Q): -3.500  
+		//		Glu(Q): -3.500
 		aa2Hydrophathicity.put(Q, -3.500);
-		//		Gly(G): -0.400  
+		//		Gly(G): -0.400
 		aa2Hydrophathicity.put(G, -0.400);
-		//		His(H): -3.200  
+		//		His(H): -3.200
 		aa2Hydrophathicity.put(H, -3.200);
-		//		Ile(I):  4.500  
+		//		Ile(I):  4.500
 		aa2Hydrophathicity.put(I, 4.500);
-		//		Leu(L):  3.800  
+		//		Leu(L):  3.800
 		aa2Hydrophathicity.put(L, 3.800);
-		//		Lys(K): -3.900  
+		//		Lys(K): -3.900
 		aa2Hydrophathicity.put(K, -3.900);
-		//		Met(M):  1.900  
+		//		Met(M):  1.900
 		aa2Hydrophathicity.put(M, 1.900);
-		//		Phe(F):  2.800  
+		//		Phe(F):  2.800
 		aa2Hydrophathicity.put(F, 2.800);
-		//		Pro(P): -1.600  
+		//		Pro(P): -1.600
 		aa2Hydrophathicity.put(P, -1.600);
-		//		Ser(S): -0.800  
+		//		Ser(S): -0.800
 		aa2Hydrophathicity.put(S, -0.800);
-		//		Thr(T): -0.700  
+		//		Thr(T): -0.700
 		aa2Hydrophathicity.put(T, -0.700);
-		//		Trp(W): -0.900  
+		//		Trp(W): -0.900
 		aa2Hydrophathicity.put(W, -0.900);
-		//		Tyr(Y): -1.300  
+		//		Tyr(Y): -1.300
 		aa2Hydrophathicity.put(Y, -1.300);
-		//		Val(V):  4.200  
+		//		Val(V):  4.200
 		aa2Hydrophathicity.put(V, 4.200);
 	}
 
@@ -189,24 +189,24 @@ public class Constraints {
 		aa2CTerminalPka.put(L, 2.36);
 		aa2CTerminalPka.put(I, 2.36);
 		aa2CTerminalPka.put(M, 2.28);
-		
+
 		aa2CTerminalPka.put(F, 1.83);
 		aa2CTerminalPka.put(Y, 2.20);
 		aa2CTerminalPka.put(W, 2.38);
-		
+
 		aa2CTerminalPka.put(S, 2.21);
 		aa2CTerminalPka.put(T, 2.11);
 		aa2CTerminalPka.put(C, 1.96);
 		aa2CTerminalPka.put(N, 2.02);
 		aa2CTerminalPka.put(Q, 2.17);
-		
+
 		aa2CTerminalPka.put(K, 2.18);
 		aa2CTerminalPka.put(H, 1.82);
 		aa2CTerminalPka.put(R, 2.17);
-		
+
 		aa2CTerminalPka.put(D, 1.88);
 		aa2CTerminalPka.put(E, 2.19);
-		
+
 		aa2NTerminalPka.put(G, 9.60);
 		aa2NTerminalPka.put(A, 9.69);
 		aa2NTerminalPka.put(P, 10.96);
@@ -214,49 +214,49 @@ public class Constraints {
 		aa2NTerminalPka.put(L, 9.60);
 		aa2NTerminalPka.put(I, 9.68);
 		aa2NTerminalPka.put(M, 9.21);
-		
+
 		aa2NTerminalPka.put(F, 9.13);
 		aa2NTerminalPka.put(Y, 9.11);
 		aa2NTerminalPka.put(W, 9.39);
-		
+
 		aa2NTerminalPka.put(S, 9.15);
 		aa2NTerminalPka.put(T, 9.62);
 		aa2NTerminalPka.put(C, 10.28);
 		aa2NTerminalPka.put(N, 8.80);
 		aa2NTerminalPka.put(Q, 9.13);
-		
+
 		aa2NTerminalPka.put(K, 8.95);
 		aa2NTerminalPka.put(H, 9.17);
 		aa2NTerminalPka.put(R, 9.04);
-		
+
 		aa2NTerminalPka.put(D, 9.60);
 		aa2NTerminalPka.put(E, 9.67);
-		
-		//		K, Lys	10.53	
+
+		//		K, Lys	10.53
 		aa2PKa.put(K, 10.53);
 		//		D, Asp	3.65
 		aa2PKa.put(D, 3.65);
-		//		R, Arg	12.48	
+		//		R, Arg	12.48
 		aa2PKa.put(R, 12.48);
 		//		E, Glu	4.25
 		aa2PKa.put(E, 4.25);
-		//		H, His	6.00	
+		//		H, His	6.00
 		aa2PKa.put(H, 6.00);
 		//		C, Cys	8.18
 		aa2PKa.put(C, 8.18);
 		//		Y, Tyr	10.07
 		aa2PKa.put(Y, 10.07);
 	}
-	
+
 	private static void initPKa(){
 		initPKaInnovagen();
 	}
 
-	/** 
+	/**
 	 * Does the initialization of dipeptide instability index based on the following paper
-	 * 
-	 * Guruprasad, K., Reddy, B.V.B. and Pandit, M.W. (1990) 
-	 * Correlation between stability of a protein and its dipeptide composition: a novel approach for predicting in vivo stability of a protein from its primary sequence. 
+	 *
+	 * Guruprasad, K., Reddy, B.V.B. and Pandit, M.W. (1990)
+	 * Correlation between stability of a protein and its dipeptide composition: a novel approach for predicting in vivo stability of a protein from its primary sequence.
 	 * Protein Eng. 4,155-161. Table III.
 	 */
 	private static void initInstability(){
@@ -291,7 +291,7 @@ public class Constraints {
 			}
 		}
 	}
-	
+
 	/**
 	 * Does the initialization of extinction coefficient based on
 	 * http://au.expasy.org/tools/protparam-doc.html

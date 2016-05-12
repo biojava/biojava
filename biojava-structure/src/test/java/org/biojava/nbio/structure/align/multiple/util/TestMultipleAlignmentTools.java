@@ -35,7 +35,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -58,13 +58,13 @@ public class TestMultipleAlignmentTools {
 			return String.format("Block[%s]", name);
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
+
+
 	@Test
 	public void testSortBlocks() {
-		
+
 		// Sample alignment with blocks out of order
-		
+
 		// Row0: Already sorted
 		// Row1: Unsorted
 		// Row2: Test nulls at start
@@ -73,7 +73,7 @@ public class TestMultipleAlignmentTools {
 		// Row5: Test only fist element used
 		MultipleAlignment align = new MultipleAlignmentImpl();
 		BlockSet bs = new BlockSetImpl(align);
-		
+
 		Block one = new NamedBlock("1",bs);
 		one.setAlignRes(Arrays.asList(
 				Arrays.asList( 10, 11, 12),
@@ -110,11 +110,11 @@ public class TestMultipleAlignmentTools {
 				Arrays.asList( 30, 51, 52),
 				Arrays.asList( 30, 31, 32)
 				));
-		
+
 		List<Block> blocks;
 		int index;
 		List<Block> expected;
-		
+
 		index = 0;
 		blocks = align.getBlocks();
 		MultipleAlignmentTools.sortBlocks(blocks, index);

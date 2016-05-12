@@ -22,14 +22,14 @@ package org.biojava.nbio.structure.io.mmcif.model;
 
 public class Symmetry extends AbstractBean {
 
-	String entry_id; 
+	String entry_id;
 	// next 2 fields have actually hyphen between H and M i.e. H-M
 	// but java does not allow hyphens in variable names
-	// this will have to be solved elsewhere down the line 
-	String space_group_name_H_M; 
-	String pdbx_full_space_group_name_H_M; 
-	String cell_setting; 
-	String Int_Tables_number; 
+	// this will have to be solved elsewhere down the line
+	String space_group_name_H_M;
+	String pdbx_full_space_group_name_H_M;
+	String cell_setting;
+	String Int_Tables_number;
 	String space_group_name_Hall;
 	public String getEntry_id() {
 		return entry_id;

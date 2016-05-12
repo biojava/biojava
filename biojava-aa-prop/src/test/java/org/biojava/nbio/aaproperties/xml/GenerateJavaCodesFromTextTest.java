@@ -33,14 +33,14 @@ import java.util.List;
 import java.util.Map;
 
 public class GenerateJavaCodesFromTextTest {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(GenerateJavaCodesFromTextTest.class);
 
 	/*
 	 * Generate java codes from two text files; Symbol2Name.txt and Symbol2Weight.txt
 	 */
 	// commenting out since there's no assertions here - JD 2015-07-28
-	//@Test 
+	//@Test
 	public void generateCodes() throws IOException{
 		BufferedReader input = new BufferedReader(new FileReader("./src/test/resources/Symbol2Name.txt"));
 		Map<String, String> symbol2Name = new HashMap<String, String>();
@@ -50,7 +50,7 @@ public class GenerateJavaCodesFromTextTest {
 			symbol2Name.put(sA[1].trim(), sA[2].trim());
 		}
 		input.close();
-		
+
 		input = new BufferedReader(new FileReader("./src/test/resources/Symbol2Weight.txt"));
 		List<String> elementNameList = new ArrayList<String>();
 		String elementName = null;
@@ -62,14 +62,14 @@ public class GenerateJavaCodesFromTextTest {
 				//Elements
 				logger.info("{}.setIsotopes(iList);", elementNameLower);
 				//int decimalPlace = getDecimalPlace(elementMass + "");
-				//System.out.println("assertEquals(" + elementMass + ", Utils.roundToDecimals(" + elementNameLower + 
+				//System.out.println("assertEquals(" + elementMass + ", Utils.roundToDecimals(" + elementNameLower +
 					//	".getMass(), " + decimalPlace + "));");
-				
+
 				String symbol = sA[1].trim();
 				elementName = symbol2Name.get(symbol);
 				elementNameLower = elementName.toLowerCase() ;
 				int protonNumber = Integer.parseInt(sA[0].trim());
-				elementMass = cleanNumber(sA[5]); 
+				elementMass = cleanNumber(sA[5]);
 				if(protonNumber > 82) break;
 				elementNameList.add(elementNameLower);
 
@@ -84,17 +84,17 @@ public class GenerateJavaCodesFromTextTest {
 					elementName, neutronNumber, neutronNumber, weight);
 		}
 		input.close();
-		
+
 		logger.info("List<Element> eList = new ArrayList<Element>();");
 		for(String e:elementNameList) logger.info("eList.add({});", e);
 	}
-	
+
 	private double cleanNumber(String s){
 		int index = s.indexOf("(");
 		if(index != -1) s = s.substring(0, index);
 		return Double.parseDouble(s.replace(" ", "").replace("[", "").replace("]", ""));
 	}
-	
+
 	/*private int getDecimalPlace(String s){
 		int i = s.indexOf(".");
 		return s.length() - (i + 1);

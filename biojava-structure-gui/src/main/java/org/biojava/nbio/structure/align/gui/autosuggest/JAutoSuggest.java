@@ -34,47 +34,47 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /** A JTextField that can make suggestions for auto-complete.
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class JAutoSuggest extends JTextField{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8591734727984365156L;
 
 	private static final String DEFAULT_TEXT= "Please enter text ...";
-	
+
 	String defaultText;
-	private JDialog dialog;	
+	private JDialog dialog;
 	private Point location;
 	private JList list;
-	
+
 	private Vector<String> suggestions;
-	
+
 	/** last word that was entered by user */
 	private String lastWord ;
-	
+
 	AutoSuggestProvider autoSuggestProvider;
 
 	Font regular;
 	Font busy;
-	
+
 	SuggestionFetcher matcher;
-	
+
 	public JAutoSuggest(){
 		super();
-		
+
 		init();
 	}
-	
+
 	public JAutoSuggest(int size){
 		super(size);
 		init();
 	}
-	
+
 	public JAutoSuggest(Frame owner){
 		owner.addComponentListener(new ComponentListener() {
 			@Override
@@ -134,7 +134,7 @@ public class JAutoSuggest extends JTextField{
 			public void focusLost(FocusEvent e) {
 				System.out.println("Lost Focus");
 				dialog.setVisible(false);
-				
+
 				if (getText().trim().equals("") && e.getOppositeComponent() != null && e.getOppositeComponent().getName() != null) {
 					if (!e.getOppositeComponent().getName().equals("suggestFieldDropdownButton")) {
 						setText(defaultText);
@@ -150,22 +150,22 @@ public class JAutoSuggest extends JTextField{
 				if (getText().trim().equals(defaultText)) {
 					setText("");
 				}
-				
+
 				showSuggest();
 			}
 		});
-		
-		
-		
-		
+
+
+
+
 		init();
-		
+
 		// set dialog owner...
 		//dialog.setD
-		
+
 	}
-	
-	
+
+
 	private void initSuggestionList() {
 		list = new JList();
 		list.addMouseListener(new MouseListener() {
@@ -179,7 +179,7 @@ public class JAutoSuggest extends JTextField{
 			public void mouseReleased(MouseEvent e) {
 				if (selected == list.getSelectedIndex()) {
 					// provide double-click for selecting a suggestion
-					setText((String) list.getSelectedValue());					
+					setText((String) list.getSelectedValue());
 
 					dialog.setVisible(false);
 				}
@@ -229,17 +229,17 @@ public class JAutoSuggest extends JTextField{
 					list.ensureIndexIsVisible(list.getSelectedIndex() - 1);
 					return;
 				} else if (e.getKeyCode() == KeyEvent.VK_ENTER
-						& list.getSelectedIndex() != -1 & suggestions.size() > 0) {
+						&& list.getSelectedIndex() != -1 && suggestions.size() > 0) {
 					setText((String) list.getSelectedValue());
-					
-					
+
+
 					dialog.setVisible(false);
 					return;
 				}
 				showSuggest();
 			}
 		});
-		
+
 	}
 
 	private void init(){
@@ -249,16 +249,16 @@ public class JAutoSuggest extends JTextField{
 		busy = new Font(getFont().getName(), Font.ITALIC, getFont().getSize());
 		suggestions = new Vector<String>();
 		defaultText = DEFAULT_TEXT;
-		
-		
+
+
 		dialog = new JDialog();
 		dialog.setUndecorated(true);
 		dialog.setFocusableWindowState(false);
 		dialog.setFocusable(false);
-		
+
 		initSuggestionList();
 	}
-	
+
 	public String getDefaultText() {
 		return defaultText;
 	}
@@ -280,17 +280,17 @@ public class JAutoSuggest extends JTextField{
 	 * e.g. for using JSuggestionField like a ComboBox)
 	 */
 	public void showSuggest() {
-		
+
 		assert(getText() != null);
 		lastWord = getText().trim();
 			//autoSuggestProvider.getSuggestion(lastWord);
-		
-		
-		
+
+
+
 		if (!getText().toLowerCase().contains(lastWord.toLowerCase())) {
 			suggestions.clear();
 		}
-		
+
 		if (matcher != null) {
 			matcher.setStop();
 		}
@@ -317,8 +317,8 @@ public class JAutoSuggest extends JTextField{
 		return dialog.isVisible();
 	}
 
-	
-	
+
+
 	/**
 	 * Place the suggestion window under the JTextField.
 	 */
@@ -331,17 +331,17 @@ public class JAutoSuggest extends JTextField{
 			return; // might happen on window creation
 		}
 	}
-	
-	
+
+
 	/** fetch suggestions from SuggestionProvider
-	 * 
-	 * 
+	 *
+	 *
 	 *
 	 */
 	private class SuggestionFetcher extends SwingWorker<String, Object> {
 		/** flag used to stop the thread */
 		private AtomicBoolean stop = new AtomicBoolean(false);
-		
+
 		String previousWord;
 		/**
 		 * Standard run method used in threads
@@ -354,17 +354,17 @@ public class JAutoSuggest extends JTextField{
 				String userInput = getText().trim();
 				if ( userInput == null || userInput.equals(""))
 					return "";
-				
+
 				if ( previousWord != null){
 					if ( userInput.equals(previousWord))
 						return "";
 				}
 				previousWord = userInput;
-			
+
 				suggestions = autoSuggestProvider.getSuggestion(userInput);
-							
+
 				setFont(regular);
-				
+
 				if (suggestions.size() > 0) {
 					list.setListData(suggestions);
 					list.setSelectedIndex(0);
@@ -376,7 +376,7 @@ public class JAutoSuggest extends JTextField{
 			} catch (Exception e) {
 				//e.printStackTrace();
 				// ignore...
-				
+
 			}
 			return "Done.";
 		}
@@ -384,7 +384,7 @@ public class JAutoSuggest extends JTextField{
 		public void setStop(){
 			stop.set(true);
 		}
-		
-		
+
+
 	}
 }

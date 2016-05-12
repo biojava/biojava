@@ -20,7 +20,7 @@
  * Created on Jun 10, 2007
  * Author: Andreas Prlic
  * Author: Jules Jacobsen
- * 
+ *
  */
 package org.biojava.nbio.structure.test;
 
@@ -82,21 +82,21 @@ public class PDBFileParserTest {
 
 		// from 1a4w:
 
-		
+
 		String t =
-				"ATOM      1  N   ASP L   1A     11.095  19.341  20.188  1.00 30.14           N"+newline+  
-				"ATOM      2  CA  ASP L   1A     10.070  18.634  19.379  1.00 28.34           C"+newline+  
-				"ATOM      3  C   ASP L   1A      9.846  17.102  19.503  1.00 26.08           C"+newline+  
-				"ATOM      4  O   ASP L   1A      8.744  16.584  19.162  1.00 23.47           O"+newline+  
-				"ATOM      5  CB  ASP L   1A     10.255  18.858  17.853  1.00 37.55           C"+newline+  
-				"ATOM      6  CG  ASP L   1A      8.836  19.264  17.401  1.00 42.76           C"+newline+  
-				"ATOM      7  OD1 ASP L   1A      8.058  19.292  18.400  1.00 44.03           O"+newline+  
-				"ATOM      8  OD2 ASP L   1A      8.616  19.668  16.244  1.00 46.88           O"+newline+  
-				"ATOM      9  N   CYS L   1      10.835  16.440  20.113  1.00 23.72           N"+newline+  
-				"ATOM     10  CA  CYS L   1      10.769  14.970  20.210  1.00 20.89           C"+newline+  
-				"ATOM     11  C   CYS L   1       9.580  14.524  21.006  1.00 18.64           C"+newline+  
-				"ATOM     12  O   CYS L   1       9.110  15.220  21.912  1.00 19.03           O"+newline+  
-				"ATOM     13  CB  CYS L   1      12.117  14.468  20.771  1.00 21.77           C"+newline+  
+				"ATOM      1  N   ASP L   1A     11.095  19.341  20.188  1.00 30.14           N"+newline+
+				"ATOM      2  CA  ASP L   1A     10.070  18.634  19.379  1.00 28.34           C"+newline+
+				"ATOM      3  C   ASP L   1A      9.846  17.102  19.503  1.00 26.08           C"+newline+
+				"ATOM      4  O   ASP L   1A      8.744  16.584  19.162  1.00 23.47           O"+newline+
+				"ATOM      5  CB  ASP L   1A     10.255  18.858  17.853  1.00 37.55           C"+newline+
+				"ATOM      6  CG  ASP L   1A      8.836  19.264  17.401  1.00 42.76           C"+newline+
+				"ATOM      7  OD1 ASP L   1A      8.058  19.292  18.400  1.00 44.03           O"+newline+
+				"ATOM      8  OD2 ASP L   1A      8.616  19.668  16.244  1.00 46.88           O"+newline+
+				"ATOM      9  N   CYS L   1      10.835  16.440  20.113  1.00 23.72           N"+newline+
+				"ATOM     10  CA  CYS L   1      10.769  14.970  20.210  1.00 20.89           C"+newline+
+				"ATOM     11  C   CYS L   1       9.580  14.524  21.006  1.00 18.64           C"+newline+
+				"ATOM     12  O   CYS L   1       9.110  15.220  21.912  1.00 19.03           O"+newline+
+				"ATOM     13  CB  CYS L   1      12.117  14.468  20.771  1.00 21.77           C"+newline+
 				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55           S"+newline+
 				"TER"+newline;
 
@@ -136,7 +136,7 @@ public class PDBFileParserTest {
 		// we ignore the case here, since the month FEB is written as Feb, which should be ok...
 		assertTrue("the created header does not match the PDB file" ,pdb.equalsIgnoreCase(t));
 
-		
+
 
 	}
 
@@ -144,15 +144,15 @@ public class PDBFileParserTest {
 	public void testREMARK200() throws IOException {
 
 		// test that the resolution is only read from REMARK 3 lines
-		String w1 = 
+		String w1 =
 				"REMARK 200  RESOLUTION RANGE HIGH      (A) : 1.20"+newline+
 				"REMARK 200  RESOLUTION RANGE LOW       (A) : 20.00"+
 				"REMARK   200 RESOLUTION9.9  ANGSTROMS."; // this line could give wrong resolution info, but it should not be parsed;
-		
+
 		BufferedReader br = new BufferedReader(new StringReader(w1));
 
 		Structure s = parser.parsePDBFile(br);
-		
+
 		float resolution =s.getPDBHeader().getResolution();
 		assertEquals(resolution,PDBHeader.DEFAULT_RESOLUTION,0.01);
 	}
@@ -164,27 +164,27 @@ public class PDBFileParserTest {
 		// and more consistent with info in mmCIF
 		// taken from 4tnl
 		String w2 =
-				"REMARK   3  DATA USED IN REFINEMENT.                  "+newline+                                          
-				"REMARK   3   RESOLUTION RANGE HIGH (ANGSTROMS) : 1.80 "+newline+                           
-				"REMARK   3   RESOLUTION RANGE LOW  (ANGSTROMS) : 34.27"+newline+                          
-				"REMARK   3   MIN(FOBS/SIGMA_FOBS)              : 1.421"+newline+                          
-				"REMARK   3   COMPLETENESS FOR RANGE        (%) : 99.9 "+newline+                           
-				"REMARK   3   NUMBER OF REFLECTIONS             : 58500"+newline+                          
-				"REMARK   3                                            "+newline+                                                                      
-				"REMARK   3  FIT TO DATA USED IN REFINEMENT.           "+newline+                                     
-				"REMARK   3   R VALUE     (WORKING + TEST SET) : 0.213 "+newline+                           
-				"REMARK   3   R VALUE            (WORKING SET) : 0.212 "+newline+                           
-				"REMARK   3   FREE R VALUE                     : 0.233 "+newline+                           
-				"REMARK   3   FREE R VALUE TEST SET SIZE   (%) : 5.236 "+newline+                           
-				"REMARK   3   FREE R VALUE TEST SET COUNT      : 3063  ";                            
+				"REMARK   3  DATA USED IN REFINEMENT.                  "+newline+
+				"REMARK   3   RESOLUTION RANGE HIGH (ANGSTROMS) : 1.80 "+newline+
+				"REMARK   3   RESOLUTION RANGE LOW  (ANGSTROMS) : 34.27"+newline+
+				"REMARK   3   MIN(FOBS/SIGMA_FOBS)              : 1.421"+newline+
+				"REMARK   3   COMPLETENESS FOR RANGE        (%) : 99.9 "+newline+
+				"REMARK   3   NUMBER OF REFLECTIONS             : 58500"+newline+
+				"REMARK   3                                            "+newline+
+				"REMARK   3  FIT TO DATA USED IN REFINEMENT.           "+newline+
+				"REMARK   3   R VALUE     (WORKING + TEST SET) : 0.213 "+newline+
+				"REMARK   3   R VALUE            (WORKING SET) : 0.212 "+newline+
+				"REMARK   3   FREE R VALUE                     : 0.233 "+newline+
+				"REMARK   3   FREE R VALUE TEST SET SIZE   (%) : 5.236 "+newline+
+				"REMARK   3   FREE R VALUE TEST SET COUNT      : 3063  ";
 		BufferedReader br = new BufferedReader(new StringReader(w2));
 
 		Structure s = parser.parsePDBFile(br);
-		
+
 		float resolution = s.getPDBHeader().getResolution();
 		float rfree = s.getPDBHeader().getRfree();
 
-		
+
 		assertEquals(resolution,1.8, 0.00001);
 		assertEquals(rfree,   0.233, 0.00001);
 	}
@@ -316,7 +316,7 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void testMultiLineJRNL() throws IOException { 
+	public void testMultiLineJRNL() throws IOException {
 		//            System.out.println("Testing JRNL record parsing from 3pfk");
 		String jrnlString =
 				"JRNL        AUTH   P.R.EVANS,G.W.FARRANTS,P.J.HUDSON                            " + newline +
@@ -329,9 +329,9 @@ public class PDBFileParserTest {
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
 		Structure s = null;
-		
+
 		s = parser.parsePDBFile(br);
-		
+
 		// String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
 		JournalArticle journalArticle = s.getJournalArticle();
@@ -467,7 +467,7 @@ public class PDBFileParserTest {
 	}
 
 	@Test
-	public void test4hhbAcceptedAtomNames() throws IOException, StructureException{ 
+	public void test4hhbAcceptedAtomNames() throws IOException, StructureException{
 
 		FileParsingParameters params = new FileParsingParameters();
 
@@ -491,12 +491,12 @@ public class PDBFileParserTest {
 		assertEquals(allwithoutGLY.length, (ca.length + cb.length - (ca.length-cb.length)));
 
 	}
-	
+
 	@Test
 	public void testCorrectAtomNamePadding() throws IOException {
-		
+
 		// from 1a4w:
-		String atomLines = 
+		String atomLines =
 				"HETATM 2242 NA    NA H 541       5.845 -14.122  30.560  0.88 23.48          NA"+newline+
 				"HETATM 2243 NA    NA H 542      18.411 -16.475  38.464  0.88 24.77          NA"+newline+
 				"HETATM 2244  C1  QWE H 373      17.735 -17.178  22.612  1.00 26.29           C"+newline+
@@ -542,14 +542,14 @@ public class PDBFileParserTest {
 				"HETATM 2284  C42 QWE H 373      18.146 -14.734  13.451  1.00 43.96           C"+newline+
 				"HETATM 2285  N3  QWE H 373      18.049 -13.554  14.106  1.00 43.46           N"+newline+
 				"TER"+newline;
-		
+
 		BufferedReader br = new BufferedReader(new StringReader(atomLines));
-		
+
 		Structure s = parser.parsePDBFile(br);
 		String pdb = s.toPDB();
-		
-		
+
+
 		assertTrue("the created PDB file does not match the input file", pdb.equals(atomLines));
-		
+
 	}
 }

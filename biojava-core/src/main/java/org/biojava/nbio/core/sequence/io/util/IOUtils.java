@@ -40,7 +40,7 @@ import java.util.zip.GZIPInputStream;
 public class IOUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(IOUtils.class);
-	
+
 	private static final int BUFFER = 4096;
 
 	/**
@@ -157,7 +157,7 @@ public class IOUtils {
 	 *
 	 * @param file File which may or may not be GZipped
 	 * @return The final stream
-	 * @throws IOExceptio n 
+	 * @throws IOExceptio n
 	 */
 	public static InputStream openFile(File file) throws IOException {
 		final InputStream is;
@@ -297,7 +297,7 @@ public class IOUtils {
 	private static String getPDBString(boolean web, char c1, char c2, boolean similar, String m, String sm, String dm,
 			String qg) {
 		if (c1 == c2)
-			return web ? "<span class=\"m\">" + m + "</span>" : m;                             
+			return web ? "<span class=\"m\">" + m + "</span>" : m;
 		else if (similar)
 			return web ? "<span class=\"sm\">" + sm + "</span>" : sm;
 		else if (c1 == '-' || c2 == '-')
@@ -316,10 +316,10 @@ public class IOUtils {
 		s.append("</pre></div>");
 		s.append("          <div class=\"subText\">");
 		s.append("          <b>Legend:</b>");
-		s.append("          <span class=\"m\">Green</span> - identical residues |"); 
+		s.append("          <span class=\"m\">Green</span> - identical residues |");
 		s.append("          <span class=\"sm\">Pink</span> - similar residues | ");
 		s.append("          <span class=\"qg\">Blue</span> - sequence mismatch |");
-		s.append("          <span class=\"dm\">Brown</span> - insertion/deletion |");                  
+		s.append("          <span class=\"dm\">Brown</span> - insertion/deletion |");
 		s.append("      </div>");
 		s.append(String.format("%n"));
 		return s.toString();

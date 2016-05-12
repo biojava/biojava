@@ -23,7 +23,7 @@ package org.biojava.nbio.structure.secstruc;
 /**
  * A Ladder is a set of one or more consecutive bridges of identical type. A
  * Bridge is a Ladder of length one.
- * 
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
  *

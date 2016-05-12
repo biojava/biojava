@@ -43,13 +43,13 @@ public class StructureSequenceMatcherTest extends TestCase {
 	private Structure struct1;
 	private String[] pdbNum1;
 	private String seq1;
-	
+
 	@Override
 	public void setUp() throws IOException, StructureException {
 		String name1 = "2PTC";
-		
+
 		AtomCache cache = new AtomCache();
-		
+
 		struct1 = cache.getStructure(name1);
 		pdbNum1 = new String[] {
 				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25",
@@ -90,9 +90,9 @@ public class StructureSequenceMatcherTest extends TestCase {
 				"FCAGYLEGGKDSCQGDSGGPVVCSGKLQGIVSWGSGCAQKNKPGVYTKVCNYVSWIKQTIASN"+
 				//>2PTC:I|PDBID|CHAIN|SEQUENCE
 				"RPDFCLEPPYTGPCKARIIRYFYNAKAGLCQTFVYGGCRAKRNNFKSAEDCMRTCGGA";
-		
+
 		assertTrue(seq1.length() == pdbNum1.length);
-		
+
 		/*// report some stats
 		System.out.println("The SEQRES and ATOM information is available via the chains:");
 		int modelnr = 0 ; // also is 0 if structure is an XRAY structure.
@@ -107,7 +107,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 			System.out.print(" length ATOM: " +cha.getAtomLength());
 			System.out.print(" aminos: " +agr.size());
 			System.out.print(" hetatms: "+hgr.size());
-			System.out.println(" nucleotides: "+ngr.size());  
+			System.out.println(" nucleotides: "+ngr.size());
 		}
 		System.out.println(prot.toString());
 		*/
@@ -128,24 +128,24 @@ public class StructureSequenceMatcherTest extends TestCase {
 			i++;
 		}
 	}
-	
+
 	@Test
 	public void testGetProteinSequenceForStructure() {
 		Map<Integer,Group> groupIndexPos = new HashMap<Integer,Group>();
 		ProteinSequence prot = StructureSequenceMatcher.getProteinSequenceForStructure(struct1, groupIndexPos);
 
-		
+
 		// Test returned sequence
 		assertEquals("Unreported residues", seq1.length(), prot.getLength() );
 		assertEquals("Modified residues",seq1, prot.toString());
 
 		// Test mapping
 		assertEquals("Missing residues in mapping",seq1.length(),groupIndexPos.size());
-		
+
 		for(int res=0;res<seq1.length();res++) {
 			assertTrue("no mapping for group "+res,groupIndexPos.containsKey(res));
 			Group g = groupIndexPos.get(res);
-			
+
 			ResidueNumber resnum = g.getResidueNumber();
 			Character aa = StructureTools.get1LetterCodeAmino(g.getPDBName());
 			assertEquals("Wrong PDB number at pos "+res,pdbNum1[res],resnum.toString());
@@ -177,7 +177,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 				"69", "70", "71", "72", "73", "74", "75", "76", "77", "78",
 				"79", "80", "81", "82", "83", "84", "85", "86", "87", "88",
 				"89", "90", "91", "92", "93", "94", "95", "96", "97", "98",
-				
+
 				"99", "100", "101", "102", "103", "104", "105", "106", "107",
 				"108", "109", "110", "111", "112", "113", "114", "115", "116",
 				"117", "118", "119", "120", "121", "122", "123", "124", "125",
@@ -195,11 +195,11 @@ public class StructureSequenceMatcherTest extends TestCase {
 				"229", "230", "231", "232", "233", "234", "235", "236", "237",
 				"238", "239", "240", "241", "242", "243", "244", "245"
 		};
-		
+
 		System.err.println("Note: the following 10 warnings about missing residues are expected.");
 		ProteinSequence seq = new ProteinSequence(sequenceStr);
 		ResidueNumber[] match = StructureSequenceMatcher.matchSequenceToStructure(seq, struct1);
-		
+
 		assertEquals("Wrong length!",sequenceStr.length(),match.length);
 		for(int i=0;i<sequenceStr.length();i++) {
 			ResidueNumber res = match[i];
@@ -222,13 +222,13 @@ public class StructureSequenceMatcherTest extends TestCase {
 	}
 
 	@Test
-	public void testRemoveGaps1() throws CompoundNotFoundException { 
+	public void testRemoveGaps1() throws CompoundNotFoundException {
 		String ungapped = "ACDEFGHIKLMNPQRSTVWY";
 		String gapped = "--ACDE-F-GHI..KLM-NPQRSTVWY--";
-		
+
 		ProteinSequence gappedProt = new ProteinSequence(gapped);
 		ProteinSequence ungappedProt = StructureSequenceMatcher.removeGaps(gappedProt);
-		
+
 		assertEquals(ungapped,ungappedProt.getSequenceAsString());
 	}
 

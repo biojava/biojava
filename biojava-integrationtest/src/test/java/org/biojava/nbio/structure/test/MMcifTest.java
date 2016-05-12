@@ -21,13 +21,14 @@
  */
 package org.biojava.nbio.structure.test;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,29 +36,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class MMcifTest extends TestCase {
+public class MMcifTest {
 
-	protected boolean headerOnly;
+	private static boolean headerOnly;
 
-	public MMcifTest(){
-		super();
-		setHeaderOnly(false);
+	@Test
+	public void testLoad() throws IOException {
+
+		headerOnly = false;
+
+		doTestLoad();
+
 	}
 
+	@Test
+	public void testLoadHeaderOnly() throws IOException {
 
+		headerOnly = true;
 
-	public boolean isHeaderOnly() {
-		return headerOnly;
+		doTestLoad();
+
 	}
 
-
-
-	public void setHeaderOnly(boolean headerOnly) {
-		this.headerOnly = headerOnly;
-	}
-
-	public void testLoad(){
-
+	private void doTestLoad() throws IOException {
 		// a structure with microheterogeneity
 		//comparePDB2cif("2CI1","A");
 
@@ -81,12 +82,9 @@ public class MMcifTest extends TestCase {
 
 		// test a NMR protein
 		comparePDB2cif("2kc9","A");
-
-
 	}
 
-
-	protected void comparePDB2cif(String id, String chainId){
+	private void comparePDB2cif(String id, String chainId) throws IOException {
 		String fileName = "/"+id+".cif";
 		InputStream inStream = this.getClass().getResourceAsStream(fileName);
 		assertNotNull("Could not find file " + fileName + ". Config problem?" , inStream);
@@ -119,11 +117,9 @@ public class MMcifTest extends TestCase {
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
 
-		try {
-			pdbStructure = pdbpars.parsePDBFile(pinStream) ;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		pdbStructure = pdbpars.parsePDBFile(pinStream) ;
+
 
 		assertNotNull(pdbStructure);
 
@@ -167,10 +163,10 @@ public class MMcifTest extends TestCase {
 
 			// actually this check not necessarily works, since there can be waters in PDB that we don;t deal with yet in cif...
 			//assertEquals("the nr of ATOM record groups is not the same!" , a_pdb.getAtomLength(),a_cif.getAtomLength());
-			for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){				
+			for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){
 				Group gp = a_pdb.getAtomGroups(GroupType.AMINOACID).get(i);
 
-				List<Group> cifGroups = a_cif.getAtomGroups(GroupType.AMINOACID);					
+				List<Group> cifGroups = a_cif.getAtomGroups(GroupType.AMINOACID);
 				Group gc = cifGroups.get(i);
 				checkGroups(gp, gc);
 			}
@@ -249,9 +245,9 @@ public class MMcifTest extends TestCase {
 				fail("could not get atom for group " + g1);
 			if (a2 == null)
 				fail("could not get atom for group " + g2);
-			assertEquals(a1.getX(),a2.getX());
-			assertEquals(a1.getOccupancy(),a2.getOccupancy());
-			assertEquals(a1.getTempFactor(),a2.getTempFactor());
+			assertEquals(a1.getX(),a2.getX(), 0.0001);
+			assertEquals(a1.getOccupancy(),a2.getOccupancy(), 0.0001);
+			assertEquals(a1.getTempFactor(),a2.getTempFactor(), 0.0001);
 			assertEquals(a1.getName(),a2.getName());
 
 

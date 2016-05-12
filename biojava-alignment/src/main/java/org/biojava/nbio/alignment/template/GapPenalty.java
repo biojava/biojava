@@ -30,50 +30,50 @@ package org.biojava.nbio.alignment.template;
  */
 public interface GapPenalty {
 
-    /**
-     * Defines the possible types of gap penalties.  This is:
-     * <ul>
-     *  <li>CONSTANT, if static and the extension penalty is 0
-     *  <li>LINEAR, if static and the open penalty is 0
-     *  <li>AFFINE, if static but neither CONSTANT nor LINEAR
-     *  <li>DYNAMIC, if penalty values change during alignment
-     * </ul>
-     */
-    enum Type {CONSTANT, LINEAR, AFFINE, DYNAMIC};
+	/**
+	 * Defines the possible types of gap penalties.  This is:
+	 * <ul>
+	 *  <li>CONSTANT, if static and the extension penalty is 0
+	 *  <li>LINEAR, if static and the open penalty is 0
+	 *  <li>AFFINE, if static but neither CONSTANT nor LINEAR
+	 *  <li>DYNAMIC, if penalty values change during alignment
+	 * </ul>
+	 */
+	enum Type {CONSTANT, LINEAR, AFFINE, DYNAMIC};
 
-    /**
-     * Returns penalty given when an already open gap elongates by a single element
-     *
-     * @return gap extension penalty
-     */
-    int getExtensionPenalty();
+	/**
+	 * Returns penalty given when an already open gap elongates by a single element
+	 *
+	 * @return gap extension penalty
+	 */
+	int getExtensionPenalty();
 
-    /**
-     * Returns penalty given when a deletion or insertion gap first opens
-     *
-     * @return gap open penalty
-     */
-    int getOpenPenalty();
+	/**
+	 * Returns penalty given when a deletion or insertion gap first opens
+	 *
+	 * @return gap open penalty
+	 */
+	int getOpenPenalty();
 
-    /**
-     * Returns {@link GapPenalty.Type} stored.
-     *
-     * @return gap penalty type
-     */
-    Type getType();
+	/**
+	 * Returns {@link GapPenalty.Type} stored.
+	 *
+	 * @return gap penalty type
+	 */
+	Type getType();
 
-    /**
-     * Sets penalty given when an already open gap elongates by a single element
-     *
-     * @param gep gap extension penalty
-     */
-    void setExtensionPenalty(int gep);
+	/**
+	 * Sets penalty given when an already open gap elongates by a single element
+	 *
+	 * @param gep gap extension penalty
+	 */
+	void setExtensionPenalty(int gep);
 
-    /**
-     * Sets penalty given when a deletion or insertion gap first opens
-     *
-     * @param gop gap open penalty
-     */
-    void setOpenPenalty(int gop);
+	/**
+	 * Sets penalty given when a deletion or insertion gap first opens
+	 *
+	 * @param gop gap open penalty
+	 */
+	void setOpenPenalty(int gop);
 
 }

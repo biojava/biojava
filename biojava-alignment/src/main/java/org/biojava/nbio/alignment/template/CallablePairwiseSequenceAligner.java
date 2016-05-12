@@ -37,22 +37,22 @@ import java.util.concurrent.Callable;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public class CallablePairwiseSequenceAligner<S extends Sequence<C>, C extends Compound>
-        implements Callable<SequencePair<S, C>> {
+		implements Callable<SequencePair<S, C>> {
 
-    private PairwiseSequenceAligner<S, C> psa;
+	private PairwiseSequenceAligner<S, C> psa;
 
-    /**
-     * Creates a pairwise sequence alignment task for simplified parallel execution.
-     *
-     * @param psa already initialized pairwise sequence aligner
-     */
-    public CallablePairwiseSequenceAligner(PairwiseSequenceAligner<S, C> psa) {
-        this.psa = psa;
-    }
+	/**
+	 * Creates a pairwise sequence alignment task for simplified parallel execution.
+	 *
+	 * @param psa already initialized pairwise sequence aligner
+	 */
+	public CallablePairwiseSequenceAligner(PairwiseSequenceAligner<S, C> psa) {
+		this.psa = psa;
+	}
 
-    @Override
-    public SequencePair<S, C> call() {
-        return psa.getPair();
-    }
+	@Override
+	public SequencePair<S, C> call() {
+		return psa.getPair();
+	}
 
 }

@@ -28,22 +28,12 @@ package org.biojava.nbio.structure;
  * @author Ulysse Carion
  */
 public interface Bond {
-    /**
-	 * Adds this Bond to its atoms bond lists. If this method is not called,
-	 * then the list returned from calling {@link Atom#getBonds()} will not
-	 * include this bond.
-	 * <p>
-	 * If you created your Bond with the constructor
-	 * {@link #Bond(Atom, Atom, int)}, this method has already been called for
-	 * you and should not be called again.
-	 */
-	public void addSelfToAtoms();
 
 	/**
 	 * Gets atom 'A' of this bond. There is no meaning to which atom is 'A' and
 	 * which is 'B'; the atoms are labeled 'A' or 'B' based on the order in
 	 * which they are passed to this class's constructor.
-	 * 
+	 *
 	 * @see #getAtomB()
 	 * @return one of the two atoms in this bond
 	 */
@@ -53,7 +43,7 @@ public interface Bond {
 	 * Gets atom 'B' of this bond. There is no meaning to which atom is 'A' and
 	 * which is 'B'; the atoms are labeled 'A' or 'B' based on the order in
 	 * which they are passed to this class's constructor.
-	 * 
+	 *
 	 * @see #getAtomA()
 	 * @return one of the two atoms in this bond
 	 */
@@ -67,7 +57,7 @@ public interface Bond {
 	 * <p>
 	 * <i>Note:</i> Comparison of atoms in this method is done with
 	 * <code>==</code>, not <code>equals</code>.
-	 * 
+	 *
 	 * @param exclude
 	 *            the atom of the bond to not return
 	 * @throws IllegalArgumentException
@@ -79,7 +69,7 @@ public interface Bond {
 	/**
 	 * Gets the bond order of this bond. A return value of '1' corresponds to a
 	 * single bond, '2' to a double bond, etc.
-	 * 
+	 *
 	 * @return this bond's bond order
 	 */
 	public int getBondOrder();
@@ -90,7 +80,7 @@ public interface Bond {
 	 * This distance is calculated by {@link Calc#getDistance(Atom, Atom)}, but
 	 * this method will suppress the empty threat of a
 	 * {@link StructureException} that method makes.
-	 * 
+	 *
 	 * @return the distance between the two atoms of this bond.
 	 */
 	public double getLength();

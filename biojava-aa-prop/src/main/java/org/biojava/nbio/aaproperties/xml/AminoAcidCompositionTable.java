@@ -33,25 +33,25 @@ import java.util.Set;
 @XmlRootElement(name="compoundtable", namespace="http://biojava.org")
 @XmlAccessorType(XmlAccessType.NONE)
 public class AminoAcidCompositionTable {
-	
+
 	/**
-	 * Contains the list of amino acid composition 
+	 * Contains the list of amino acid composition
 	 */
 	@XmlElement(name = "compound", required = true)
 	private List<AminoAcidComposition> aminoacid;
-	
+
 	/**
 	 * Defines the amino acid compound set unique to this table
 	 */
 	private ModifiedAminoAcidCompoundSet modifiedAminoAcidCompoundSet;
-	
+
 	/**
 	 * Stores the mapping of amino acid symbol to its molecular weight
 	 */
 	private Map<Character, Double> aaSymbol2MolecularWeight;
-	
+
 	public AminoAcidCompositionTable(){}
-	
+
 	public AminoAcidCompositionTable(List<AminoAcidComposition> aaList){
 		this.setAminoacid(aaList);
 	}
@@ -59,7 +59,7 @@ public class AminoAcidCompositionTable {
 	public ModifiedAminoAcidCompoundSet getAminoAcidCompoundSet(){
 		return this.modifiedAminoAcidCompoundSet;
 	}
-	
+
 	public List<AminoAcidComposition> getAminoacid() {
 		return aminoacid;
 	}
@@ -67,18 +67,18 @@ public class AminoAcidCompositionTable {
 	public void setAminoacid(List<AminoAcidComposition> aminoacid) {
 		this.aminoacid = aminoacid;
 	}
-	
+
 	public Set<Character> getSymbolSet(){
 		return this.aaSymbol2MolecularWeight.keySet();
 	}
-	
+
 	private void generatesAminoAcidCompoundSet(){
 		this.modifiedAminoAcidCompoundSet = new ModifiedAminoAcidCompoundSet(this.aminoacid, this.aaSymbol2MolecularWeight);
 	}
-	
+
 	/**
 	 * Computes and store the molecular weight of each amino acid by its symbol in aaSymbol2MolecularWeight.
-	 * 
+	 *
 	 * @param eTable
 	 * 		Stores the mass of elements and isotopes
 	 */
@@ -124,12 +124,12 @@ public class AminoAcidCompositionTable {
 		}
 		generatesAminoAcidCompoundSet();
 	}
-	
+
 	/**
 	 * @param aaSymbol
 	 * 	Standard symbol of Amino Acid
 	 * @return the molecular weight given its symbol
-	 * @throws NullPointerException 
+	 * @throws NullPointerException
 	 * 	thrown if AminoAcidCompositionTable.computeMolecularWeight(ElementTable) is not called before this method
 	 */
 	public double getMolecularWeight(Character aaSymbol) throws NullPointerException{
@@ -140,6 +140,6 @@ public class AminoAcidCompositionTable {
 		if(d == null)
 			return 0;
 		else
-			return d; 
+			return d;
 	}
 }

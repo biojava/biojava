@@ -1,18 +1,18 @@
 /**
  * BioJava development code
- * 
+ *
  * This code may be freely distributed and modified under the terms of the GNU Lesser General Public Licence. This
  * should be distributed with the code. If you do not have a copy, see:
- * 
+ *
  * http://www.gnu.org/copyleft/lesser.html
- * 
+ *
  * Copyright for this code is held jointly by the individual authors. These should be listed in @author doc comments.
- * 
+ *
  * For more information on the BioJava project and its aims, or to join the biojava-l mailing list, visit the home page
  * at:
- * 
+ *
  * http://www.biojava.org/
- * 
+ *
  */
 package org.biojava.nbio.structure.scop;
 
@@ -31,15 +31,15 @@ import java.util.logging.Logger;
 /**
  * Provides programmatic access to ASTRAL representative sets. See the paper by <a
  * href="http://scop.berkeley.edu/references/2004-nar-astral.pdf">Chandonia et. al.</a> for more information. Example:
- * 
+ *
  * <pre>
  * Set&lt;String&gt; astralSet = Astral.getRepresentatives(Astral.AstralSet.NINETY_FIVE_175B);
  * </pre>
- * 
+ *
  * This class uses a multiton pattern with soft references for caching. In short: the first time you call the above, it
  * will fetch the data from ASTRAL; the second time will (probably) not have to; and the instances can still be
  * garbage-collected if necessary (meaning they don't <em>require</em> heap memory).
- * 
+ *
  * @author dmyerstu
  * @since 3.0.6
  */
@@ -47,16 +47,16 @@ public class Astral {
 
 	/**
 	 * An ASTRAL sequence-identity cutoff with an identifier such as:
-	 * 
+	 *
 	 * <pre>
 	 * 1.75A_95
 	 * </pre>
-	 * 
+	 *
 	 * Also contains a URL pointing to a FASTA file containing the representatives. Every character before the first
 	 * whitespace character of each header in the FASTA file is expected to be a representative's name.
-	 * 
+	 *
 	 * @author dmyersturnbull
-	 * 
+	 *
 	 */
 	public static enum AstralSet {
 		FORTY_175("1.75_40", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75.fa"),
@@ -93,7 +93,7 @@ public class Astral {
 		public String getUrl() {
 			return url;
 		}
-		
+
 		@Override
 		public String toString() {
 			return id;
@@ -131,7 +131,7 @@ public class Astral {
 	 * Constructs a new Astral object. Generally, client code should prefer calling
 	 * {@link #getRepresentatives(AstralSet)} instead. This constructor should only be used when an ASTRAL set not
 	 * included in {@link #Astral(AstralSet)} is required.
-	 * 
+	 *
 	 * @param cutoff
 	 *            The ASTRAL sequence-identity cutoff required
 	 * @throws RuntimeException
@@ -157,7 +157,7 @@ public class Astral {
 	 * Constructs a new Astral object. Generally, client code should prefer calling
 	 * {@link #getRepresentatives(AstralSet)} instead. This constructor should only be used when an ASTRAL set not
 	 * included in {@link #Astral(AstralSet)} is required.
-	 * 
+	 *
 	 * @throws RuntimeException
 	 *             If the Astral set could not be parsed or accessed for any reason
 	 */
@@ -175,7 +175,7 @@ public class Astral {
 	 * Constructs a new Astral object. Generally, client code should prefer calling
 	 * {@link #getRepresentatives(AstralSet)} instead. This constructor should only be used when an ASTRAL set not
 	 * included in {@link #Astral(AstralSet)} is required.
-	 * 
+	 *
 	 * @throws RuntimeException
 	 *             If the Astral set could not be parsed or accessed for any reason
 	 */
@@ -246,5 +246,5 @@ public class Astral {
 		}
 
 	}
-	
+
 }

@@ -44,33 +44,33 @@ import java.util.List;
  */
 public class SmithWaterman<S extends Sequence<C>, C extends Compound> extends AbstractPairwiseSequenceAligner<S, C> {
 
-    /**
-     * Before running a pairwise local sequence alignment, data must be sent in via calls to
-     * {@link #setQuery(Sequence)}, {@link #setTarget(Sequence)}, {@link #setGapPenalty(GapPenalty)}, and
-     * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
-     */
-    public SmithWaterman() {
-        super(null, null, null, null, true);
-    }
+	/**
+	 * Before running a pairwise local sequence alignment, data must be sent in via calls to
+	 * {@link #setQuery(Sequence)}, {@link #setTarget(Sequence)}, {@link #setGapPenalty(GapPenalty)}, and
+	 * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
+	 */
+	public SmithWaterman() {
+		super(null, null, null, null, true);
+	}
 
-    /**
-     * Prepares for a pairwise local sequence alignment.
-     *
-     * @param query the first {@link Sequence} of the pair to align
-     * @param target the second {@link Sequence} of the pair to align
-     * @param gapPenalty the gap penalties used during alignment
-     * @param subMatrix the set of substitution scores used during alignment
-     */
-    public SmithWaterman(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        super(query, target, gapPenalty, subMatrix, true);
-    }
+	/**
+	 * Prepares for a pairwise local sequence alignment.
+	 *
+	 * @param query the first {@link Sequence} of the pair to align
+	 * @param target the second {@link Sequence} of the pair to align
+	 * @param gapPenalty the gap penalties used during alignment
+	 * @param subMatrix the set of substitution scores used during alignment
+	 */
+	public SmithWaterman(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+		super(query, target, gapPenalty, subMatrix, true);
+	}
 
-    // method for AbstractMatrixAligner
+	// method for AbstractMatrixAligner
 
-    @Override
-    protected void setProfile(List<Step> sx, List<Step> sy) {
-        profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, xyStart[0],
-                getQuery().getLength() - xyMax[0], sy, xyStart[1], getTarget().getLength() - xyMax[1]);
-    }
+	@Override
+	protected void setProfile(List<Step> sx, List<Step> sy) {
+		profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, xyStart[0],
+				getQuery().getLength() - xyMax[0], sy, xyStart[1], getTarget().getLength() - xyMax[1]);
+	}
 
 }

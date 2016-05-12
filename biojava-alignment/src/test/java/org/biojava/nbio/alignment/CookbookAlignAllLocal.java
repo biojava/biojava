@@ -35,34 +35,34 @@ import java.util.List;
 
 public class CookbookAlignAllLocal {
 
-    public static void main(String[] args) {
-        String[] ids = new String[] {"Q21691", "Q21495", "O48771"};
-        try {
-            alignAllLocal(ids);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+	public static void main(String[] args) {
+		String[] ids = new String[] {"Q21691", "Q21495", "O48771"};
+		try {
+			alignAllLocal(ids);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
-    private static void alignAllLocal(String[] ids) throws Exception {
-        List<ProteinSequence> lst = new ArrayList<ProteinSequence>();
-        for (String id : ids) {
-            lst.add(getSequenceForId(id));
-        }
-        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
-        List<SequencePair<ProteinSequence, AminoAcidCompound>> alig = Alignments.getAllPairsAlignments(lst,
-                PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(), matrix);
-        for (SequencePair<ProteinSequence, AminoAcidCompound> pair : alig) {
-            System.out.printf("%n%s vs %s%n%s", pair.getQuery().getAccession(), pair.getTarget().getAccession(), pair);
-        }
-        ConcurrencyTools.shutdown();
-    }
+	private static void alignAllLocal(String[] ids) throws Exception {
+		List<ProteinSequence> lst = new ArrayList<ProteinSequence>();
+		for (String id : ids) {
+			lst.add(getSequenceForId(id));
+		}
+		SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
+		List<SequencePair<ProteinSequence, AminoAcidCompound>> alig = Alignments.getAllPairsAlignments(lst,
+				PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(), matrix);
+		for (SequencePair<ProteinSequence, AminoAcidCompound> pair : alig) {
+			System.out.printf("%n%s vs %s%n%s", pair.getQuery().getAccession(), pair.getTarget().getAccession(), pair);
+		}
+		ConcurrencyTools.shutdown();
+	}
 
-    private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
-        URL uniprotFasta = new URL(String.format("http://www.uniprot.org/uniprot/%s.fasta", uniProtId));
-        ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
-        System.out.printf("id : %s %s%n%s%n", uniProtId, seq, seq.getOriginalHeader());
-        return seq;
-    }
+	private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
+		URL uniprotFasta = new URL(String.format("http://www.uniprot.org/uniprot/%s.fasta", uniProtId));
+		ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
+		System.out.printf("id : %s %s%n%s%n", uniProtId, seq, seq.getOriginalHeader());
+		return seq;
+	}
 
 }

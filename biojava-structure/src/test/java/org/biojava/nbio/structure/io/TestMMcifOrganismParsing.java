@@ -18,13 +18,13 @@
  *      http://www.biojava.org/
  *
  * created at Aug 12, 2013
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.structure.io;
 
 
-import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -34,17 +34,18 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
 public class TestMMcifOrganismParsing {
-	
-	
-	
+
+
+
 	@BeforeClass
 	public static void setUp() throws Exception {
-				
+
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
@@ -53,47 +54,55 @@ public class TestMMcifOrganismParsing {
 	@Test
 	public void test1STP() throws IOException, StructureException{
 		String pdbId = "1stp";
-		
-		checkPDB(pdbId);
-		
+
+		checkPDB(pdbId, "1895");
+
 	}
 
 	// removed this test, since entity 3 of 1a4w has no organism tax_id
 	public void test1a4w() throws IOException, StructureException{
 		String pdbId = "1a4w";
-		
-		checkPDB(pdbId);
-		
+
+		checkPDB(pdbId, "9606");
+
 	}
-	
+
 	@Test
 	public void test4hhb() throws IOException, StructureException{
 		String pdbId = "4hhb";
-		
-		checkPDB(pdbId);
-		
+
+		checkPDB(pdbId, "9606");
+
 	}
-	
+
 	@Test
 	public void test3ZD6() throws IOException, StructureException {
 		// a PDB ID that contains a synthetic entity
-		String pdbId = "3ZD6";
-		
-		checkPDB(pdbId);
-		
-	}
-	
-	
-	
+		String pdbId = "3zd6";
 
-	private void checkPDB(String pdbId) throws IOException, StructureException {
+		checkPDB(pdbId, "9606");
+
+	}
+
+
+	private void checkPDB(String pdbId, String organismTaxId) throws IOException, StructureException {
 		Structure s = StructureIO.getStructure(pdbId);
 
-		assertNotNull(s.getCompounds());
-		assertTrue(s.getCompounds().size() > 0);
+		assertNotNull(s.getEntityInfos());
+		assertTrue(s.getEntityInfos().size() > 0);
 
-		for ( Compound c : s.getCompounds()) {
-			assertNotNull(c.getOrganismTaxId());
+		for ( EntityInfo c : s.getEntityInfos()) {
+			if(c.getType().equals("polymer")) { 
+				assertNotNull(c.getOrganismTaxId());
+				if(pdbId.equals("3zd6")){
+					if(c.getMolId()==2) {
+						assertEquals(c.getOrganismTaxId(), "32630");
+						continue;
+					}
+				}
+				assertEquals(c.getOrganismTaxId(), organismTaxId);
+			
+			}
 		}
 
 	}

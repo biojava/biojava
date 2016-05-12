@@ -33,15 +33,15 @@ public class StopCodonSequence extends DNASequence {
 public DNASequence parentGeneSequence = null;
 
 
-    public StopCodonSequence(TranscriptSequence parentGeneSequence, int begin, int end){
-        this.parentGeneSequence = parentGeneSequence;
-        setBioBegin(begin);
-        setBioEnd(end);
-    }
+	public StopCodonSequence(TranscriptSequence parentGeneSequence, int begin, int end){
+		this.parentGeneSequence = parentGeneSequence;
+		setBioBegin(begin);
+		setBioEnd(end);
+	}
 
 
-        @Override
-    public int getLength() {
-        return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
-    }
+		@Override
+	public int getLength() {
+		return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
+	}
 }

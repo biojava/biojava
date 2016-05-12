@@ -42,16 +42,16 @@ import org.biojava.nbio.structure.gui.util.StructurePairSelector;
 
 
 /** A Panel that allows user to specify PDB & chain ID, as well as sub-ranges
- * 
+ *
  * @author Andreas
  *
  */
-public class SelectPDBPanel 
-extends JPanel 
+public class SelectPDBPanel
+extends JPanel
 implements StructurePairSelector{
 
 	boolean debug = true;
-	
+
 	JTextField f1;
 	JTextField f2;
 	JTextField c1;
@@ -63,7 +63,7 @@ implements StructurePairSelector{
 	JTabbedPane configPane;
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4002475313717172193L;
 
@@ -72,7 +72,7 @@ implements StructurePairSelector{
 	public SelectPDBPanel(){
 		this(true);
 	}
-	public SelectPDBPanel(boolean show2PDBs) {	
+	public SelectPDBPanel(boolean show2PDBs) {
 
 		Box vBox = Box.createVerticalBox();
 
@@ -99,7 +99,7 @@ implements StructurePairSelector{
 		Box p2 = getPDBFilePanel(2, f2,c2,r2);
 
 		if ( show2PDBs)
-			vBox.add(p2);	
+			vBox.add(p2);
 
 		//vBox.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.add(vBox);
@@ -137,7 +137,7 @@ implements StructurePairSelector{
 	}
 
 	@Override
-	public Structure getStructure2() throws StructureException, IOException{    
+	public Structure getStructure2() throws StructureException, IOException{
 		return getStructure(getName2());
 	}
 

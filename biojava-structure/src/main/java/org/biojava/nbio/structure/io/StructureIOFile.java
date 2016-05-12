@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- *  StructureIOFile extends StructureProvider with methods specific to 
+ *  StructureIOFile extends StructureProvider with methods specific to
  *  parsing files from the filesystem.
  * @author Andreas Prlic
  */
@@ -43,16 +43,16 @@ public interface StructureIOFile extends StructureProvider {
 	 * @param ext  a String ...
 	 */
 	public void addExtension(String ext);
-	
+
 	/**
 	 * Returns a list of extensions supported by this class
 	 * @return a (potentially empty) list of strings
 	 */
 	public List<String> getExtensions();
 
-	/** 
+	/**
 	 * Open filename and return a Structure object.
-	 * 
+	 *
 	 * Not to be confused with {@link #getStructureById(String)}
 	 * @param filename  The path to the file. Must be the correct format for the
 	 *  implementing class.
@@ -61,7 +61,7 @@ public interface StructureIOFile extends StructureProvider {
 	 */
 	public Structure getStructure(String filename) throws IOException ;
 
-	/** 
+	/**
 	 * Read file from File and returns
 	 * a Structure object.
 	 * @param file file containing the structure. Must be the correct format for

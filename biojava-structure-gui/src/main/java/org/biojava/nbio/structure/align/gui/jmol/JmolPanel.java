@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 6, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -48,7 +48,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 
-public class JmolPanel 
+public class JmolPanel
 extends JPrintPanel
 implements ActionListener
 {
@@ -63,7 +63,7 @@ implements ActionListener
 	Structure structure;
 
 	private boolean verbose = false;
-	
+
 	public JmolPanel() {
 		super();
 		statusListener = new MyJmolStatusListener();
@@ -113,15 +113,15 @@ implements ActionListener
 	{
 		this.structure = s;
 		String pdb = s.toPDB();
-		viewer.openStringInline(pdb);		
+		viewer.openStringInline(pdb);
 		evalString("save STATE state_1");
 	}
 
 	/** assign a custom color to the Jmol chains command.
-	 * 
+	 *
 	 */
 	public void jmolColorByChain(){
-		String script = 			
+		String script =
 				"function color_by_chain(objtype, color_list) {"+ String.format("%n") +
 				""+ String.format("%n") +
 				"		 if (color_list) {"+ String.format("%n") +
@@ -160,19 +160,19 @@ implements ActionListener
 	}
 
 	/** The user selected one of the Combo boxes...
-	 * 
+	 *
 	 * @param event an ActionEvent
 	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		
+
 		Object mysource = event.getSource();
-		
+
 		if ( ! (mysource instanceof JComboBox )) {
 			super.actionPerformed(event);
 			return;
 		}
-		
+
 		JComboBox source = (JComboBox) event.getSource();
 		String value = source.getSelectedItem().toString();
 		evalString("save selection; ");
@@ -208,7 +208,7 @@ implements ActionListener
 			this.executeCmd(script);
 
 		} else if (value.equals("Ligands")){
-			this.executeCmd("restrict ligand; cartoon off; wireframe on;  display selected;");			
+			this.executeCmd("restrict ligand; cartoon off; wireframe on;  display selected;");
 		} else if (value.equals("Ligands and Pocket")){
 			this.executeCmd(" select within (6.0,ligand); cartoon off; wireframe on; backbone off; display selected; ");
 		} else if ( value.equals("Ball and Stick")){
@@ -230,7 +230,7 @@ implements ActionListener
 			this.executeCmd("hide null; select all; set defaultColors Jmol; color structure; color cartoon structure;" + selectLigand + "; select all; " );
 
 		} else if ( value.equals("By Element")){
-			this.executeCmd("hide null; select all; set defaultColors Jmol; color cpk; color cartoon cpk; " + selectLigand + "; select all; "); 
+			this.executeCmd("hide null; select all; set defaultColors Jmol; color cpk; color cartoon cpk; " + selectLigand + "; select all; ");
 		} else if ( value.equals("By Amino Acid")){
 			this.executeCmd("hide null; select all; set defaultColors Jmol; color amino; color cartoon amino; " + selectLigand + "; select all; " );
 		} else if ( value.equals("Hydrophobicity") ){
@@ -272,7 +272,7 @@ implements ActionListener
 				String script = " select  ";
 				if ( spl.length > 1 )
 					script += spl[1]+":"+spl[0] +"/1;";
-				else 
+				else
 					script += "*" + spl[0]+"/1;";
 				script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
 				script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
@@ -332,10 +332,10 @@ implements ActionListener
 			double[] zyz = Calc.getZYZEuler(jmolRotation);
 			DecimalFormat df = new DecimalFormat("0.##");
 
-			String script = "reset; rotate z " 
-					+ df.format(zyz[0]) 
-					+ "; rotate y " 
-					+ df.format(zyz[1]) 
+			String script = "reset; rotate z "
+					+ df.format(zyz[0])
+					+ "; rotate y "
+					+ df.format(zyz[1])
 					+"; rotate z "
 					+ df.format(zyz[2])+";";
 
@@ -345,13 +345,13 @@ implements ActionListener
 	}
 
 	/** Clean up this instance for garbage collection, to avoid memory leaks...
-	 * 
+	 *
 	 */
 	public void destroy(){
-			
+
 		executeCmd("zap;");
 		structure = null;
-		
+
 		viewer = null;
 		adapter = null;
 	}

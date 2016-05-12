@@ -37,13 +37,13 @@ import java.util.logging.Logger;
 
 /**
  * Implements a class which handles one possible (alternative) solution.
-
-     Alternative alignments arise from different seed
-     alignments or seed FPairs. The AltAlg class contains methods
-     for refinement (Dynamic Programming based) and filtering
-     (i.e. removing probably wrongly matched APairs). In the refinement
-     phase, different seed alignments can converge to the same solution.
-
+ *
+ * Alternative alignments arise from different seed
+ * alignments or seed FPairs. The AltAlg class contains methods
+ * for refinement (Dynamic Programming based) and filtering
+ * (i.e. removing probably wrongly matched APairs). In the refinement
+ * phase, different seed alignments can converge to the same solution.
+ *
  * @author Andreas Prlic,
  * @author Peter Lackner (original Python and C code)
  * @since 3:04:26 PM

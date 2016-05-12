@@ -41,18 +41,21 @@ import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.jcolorbrewer.ColorBrewer;
 import org.jmol.api.JmolViewer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * An Abstract Class to generalize the visualization of AFP and 
+ * An Abstract Class to generalize the visualization of AFP and
  * MultipleAlignment structure alignments in Jmol.
- * 
+ *
  * @author Aleix Lafita
  *
  */
-public abstract class AbstractAlignmentJmol 
+public abstract class AbstractAlignmentJmol
 implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 
-	protected Structure structure; 
+	private static final Logger logger = LoggerFactory.getLogger(AbstractAlignmentJmol.class);
+	protected Structure structure;
 	protected ColorBrewer colorPalette = ColorBrewer.Spectral;
 
 	protected JmolPanel jmolPanel;
@@ -60,12 +63,12 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	protected JTextField text ;
 	protected JTextField status;
 
-	protected static final String COMMAND_LINE_HELP = 
+	protected static final String COMMAND_LINE_HELP =
 			"enter Jmol scripting command...";
 
 	protected static final int DEFAULT_HEIGHT = 500;
 	protected static final int DEFAULT_WIDTH = 500;
-	protected static final String DEFAULT_SCRIPT = 
+	protected static final String DEFAULT_SCRIPT =
 			ResourceManager.getResourceManager("ce").
 			getString("default.alignment.jmol.script");
 
@@ -81,7 +84,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	 * Set all the member variables to null.
 	 */
 	public void destroy(){
-		System.err.println("cleaning up AlignmentJmol window");
+		logger.debug("cleaning up AlignmentJmol window");
 		jmolPanel.removeMouseListener(this);
 		jmolPanel.removeMouseMotionListener(this);
 		jmolPanel.destroy();
@@ -135,7 +138,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	 */
 	public void evalString(String rasmolScript){
 		if ( jmolPanel == null ){
-			System.err.println("please install Jmol first");
+			logger.error("please install Jmol first");
 			return;
 		}
 		jmolPanel.evalString(rasmolScript);
@@ -148,7 +151,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	public void setStructure(Structure s) {
 
 		if (jmolPanel == null){
-			System.err.println("please install Jmol first");
+			logger.error("please install Jmol first");
 			return;
 		}
 		setTitle(s.getPDBCode());
@@ -157,7 +160,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 		// actually this is very simple
 		// just convert the structure to a PDB file
 
-		//String pdb = s.toPDB();	
+		//String pdb = s.toPDB();
 		//System.out.println(s.isNmr());
 
 		//System.out.println(pdb);
@@ -168,7 +171,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 		//jmolPanel.openStringInline(pdb);
 
 		// send the PDB file to Jmol.
-		// there are also other ways to interact with Jmol, 
+		// there are also other ways to interact with Jmol,
 		// e.g make it directly
 		// access the biojava structure object, but they require more
 		// code. See the SPICE code repository for how to do this.
@@ -184,7 +187,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	}
 
 	/**
-	 * Returns a List of internal Distance Matrices, 
+	 * Returns a List of internal Distance Matrices,
 	 * one for each structure in the alignment.
 	 * Returns null if no alignment is being displayed.
 	 */
@@ -244,8 +247,8 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 		status.setText("clicked: " + atomInfo);
 		AtomInfo ai = AtomInfoParser.parse(atomInfo);
 
-		String cmd = "select " + ai.getResidueNumber()+":" 
-				+ai.getChainId()+"/"+ai.getModelNumber() 
+		String cmd = "select " + ai.getResidueNumber()+":"
+				+ai.getChainId()+"/"+ai.getModelNumber()
 				+ "; set display selected;";
 		evalString(cmd);
 	}

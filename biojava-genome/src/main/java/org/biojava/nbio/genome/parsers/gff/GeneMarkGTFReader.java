@@ -52,156 +52,156 @@ public class GeneMarkGTFReader {
 
 	private static final Logger logger = LoggerFactory.getLogger(GeneMarkGTFReader.class);
 
-    /**
-     * Read a file into a FeatureList. Each line of the file becomes one Feature object.
-     *
-     * @param filename The path to the GFF file.
-     * @return A FeatureList.
-     * @throws IOException Something went wrong -- check exception detail message.
-     */
-    public static FeatureList read(String filename) throws IOException {
-        logger.info("Reading: {}", filename);
+	/**
+	 * Read a file into a FeatureList. Each line of the file becomes one Feature object.
+	 *
+	 * @param filename The path to the GFF file.
+	 * @return A FeatureList.
+	 * @throws IOException Something went wrong -- check exception detail message.
+	 */
+	public static FeatureList read(String filename) throws IOException {
+		logger.info("Reading: {}", filename);
 
-        FeatureList features = new FeatureList();
-        BufferedReader br = new BufferedReader(new FileReader(filename));
+		FeatureList features = new FeatureList();
+		BufferedReader br = new BufferedReader(new FileReader(filename));
 
-        String s;
-        for (s = br.readLine(); null != s; s = br.readLine()) {
-            s = s.trim();
+		String s;
+		for (s = br.readLine(); null != s; s = br.readLine()) {
+			s = s.trim();
 
-            if (s.length() > 0) {
-                if (s.charAt(0) == '#') {
-                    //ignore comment lines
-                } else {
+			if (s.length() > 0) {
+				if (s.charAt(0) == '#') {
+					//ignore comment lines
+				} else {
 
-                    FeatureI f = parseLine(s);
-                    if (f != null) {
-                        features.add(f);
-                    }
-                }
-            }
+					FeatureI f = parseLine(s);
+					if (f != null) {
+						features.add(f);
+					}
+				}
+			}
 
-        }
+		}
 
-        br.close();
-        return features;
-    }
+		br.close();
+		return features;
+	}
 
-    /**
-     * create Feature from line of GFF file
-     */
-    private static Feature parseLine(String s) {
-        //FIXME update to use regex split on tabs
-        //FIXME better errors on parse failures
-        int start = 0;
-        int end = 0;
+	/**
+	 * create Feature from line of GFF file
+	 */
+	private static Feature parseLine(String s) {
+		//FIXME update to use regex split on tabs
+		//FIXME better errors on parse failures
+		int start = 0;
+		int end = 0;
 
-        start = end;
-        end = s.indexOf('\t', start);
-        String seqname = s.substring(start, end).trim();
+		start = end;
+		end = s.indexOf('\t', start);
+		String seqname = s.substring(start, end).trim();
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        String source = s.substring(start, end).trim();
+		start = end + 1;
+		end = s.indexOf('\t', start);
+		String source = s.substring(start, end).trim();
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        String type = s.substring(start, end);
+		start = end + 1;
+		end = s.indexOf('\t', start);
+		String type = s.substring(start, end);
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        String locStart = s.substring(start, end);
+		start = end + 1;
+		end = s.indexOf('\t', start);
+		String locStart = s.substring(start, end);
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        String locEnd = s.substring(start, end);
+		start = end + 1;
+		end = s.indexOf('\t', start);
+		String locEnd = s.substring(start, end);
 
-        Double score;
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        try {
-            score = Double.parseDouble(s.substring(start, end));
-        } catch (Exception e) {
-            score = 0.0;
-        }
+		Double score;
+		start = end + 1;
+		end = s.indexOf('\t', start);
+		try {
+			score = Double.parseDouble(s.substring(start, end));
+		} catch (Exception e) {
+			score = 0.0;
+		}
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        char strand = s.charAt(end - 1);
+		start = end + 1;
+		end = s.indexOf('\t', start);
+		char strand = s.charAt(end - 1);
 
-        Location location = Location.fromBio(Integer.parseInt(locStart), Integer.parseInt(locEnd), strand);
+		Location location = Location.fromBio(Integer.parseInt(locStart), Integer.parseInt(locEnd), strand);
 
-        assert (strand == '-') == location.isNegative();
+		assert (strand == '-') == location.isNegative();
 
-        int frame;
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        try {
-            frame = Integer.parseInt(s.substring(start, end));
-        } catch (Exception e) {
-            frame = -1;
-        }
+		int frame;
+		start = end + 1;
+		end = s.indexOf('\t', start);
+		try {
+			frame = Integer.parseInt(s.substring(start, end));
+		} catch (Exception e) {
+			frame = -1;
+		}
 
-        //grab everything until end of line (or # comment)
-        start = end + 1;
-        end = s.indexOf('#', start);
-        String attributes = null;
-        if (end < 0) {
-            attributes = new String(s.substring(start));
-        } else {
-            attributes = new String(s.substring(start, end));
-        }
+		//grab everything until end of line (or # comment)
+		start = end + 1;
+		end = s.indexOf('#', start);
+		String attributes = null;
+		if (end < 0) {
+			attributes = new String(s.substring(start));
+		} else {
+			attributes = new String(s.substring(start, end));
+		}
 
-        return new Feature(seqname, source, type, location, score, frame, attributes);
+		return new Feature(seqname, source, type, location, score, frame, attributes);
 
-    }
+	}
 /*
 
-    public static void write(FeatureList features, String filename) throws IOException {
-        logger.info("Writing: {}", filename);
+	public static void write(FeatureList features, String filename) throws IOException {
+		logger.info("Writing: {}", filename);
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
 
-        ListIterator iter = features.listIterator();
-        while (iter.hasNext()) {
-            Feature feature = (Feature) iter.next();
-            writeLine(feature, bw);
-        }
+		ListIterator iter = features.listIterator();
+		while (iter.hasNext()) {
+			Feature feature = (Feature) iter.next();
+			writeLine(feature, bw);
+		}
 
-        bw.close();
-    }
+		bw.close();
+	}
 
-    private static void writeLine(Feature f, BufferedWriter bw) throws IOException {
-        String s = f.seqname() + '\t';
-        s += f.source() + '\t';
-        s += f.type() + '\t';
+	private static void writeLine(Feature f, BufferedWriter bw) throws IOException {
+		String s = f.seqname() + '\t';
+		s += f.source() + '\t';
+		s += f.type() + '\t';
 
-        s += f.location().bioStart() + "\t";
-        s += f.location().bioEnd() + "\t";
-        s += Double.toString(f.score()) + "\t";
-        s += f.location().bioStrand() + "\t";
+		s += f.location().bioStart() + "\t";
+		s += f.location().bioEnd() + "\t";
+		s += Double.toString(f.score()) + "\t";
+		s += f.location().bioStrand() + "\t";
 
-        if (f.frame() == -1) {
-            s += ".\t";
-        } else {
-            s += f.frame() + "\t";
-        }
+		if (f.frame() == -1) {
+			s += ".\t";
+		} else {
+			s += f.frame() + "\t";
+		}
 
-        s += f.attributes();
+		s += f.attributes();
 
-        bw.write(s);
-        bw.newLine();
-    }
-*/
+		bw.write(s);
+		bw.newLine();
+	}
+ */
 
-    public static void main(String args[]) throws Exception {
+	public static void main(String args[]) throws Exception {
 
-        FeatureList listGenes = GeneMarkGTFReader.read("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf");
+		FeatureList listGenes = GeneMarkGTFReader.read("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf");
 
-        for(FeatureI feature : listGenes){
-            logger.info("Gene Feature: {}", feature);
-        }
+		for(FeatureI feature : listGenes){
+			logger.info("Gene Feature: {}", feature);
+		}
 //        logger.info(listGenes);
-        //	GeneMarkGTFReader.write( list, args[1] );
-    }
+		//	GeneMarkGTFReader.write( list, args[1] );
+	}
 }

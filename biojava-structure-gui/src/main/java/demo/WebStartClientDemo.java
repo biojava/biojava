@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Feb 8, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -29,22 +29,22 @@ import org.biojava.nbio.structure.align.webstart.WebStartMain;
 public class WebStartClientDemo
 {
 
-   public static void main(String[] args){
-     
-      
-      //client.main(new String[]{"fatcat", "3BMV.A","2GUY.A", "http://pdb114.rcsb.org:8080/jfatcatserver/align/"});
-      //client.main(new String[]{"fatcat", "2GUY.A","3BMV.A"});
-      
-      //client.main( new String[]{"fatcat", "1EXQ.A","1EX4.B","http://pdb114.rcsb.org:8080/jfatcatserver/align/"} );
-      
-      //WebStartMain.main( new String[]{"fatcat_flexible", "1cdg.A", "1tim.B"} );
-      //WebStartMain.main( new String[]{"ce", "1tim.B", "1cdg.A"} );
-      //WebStartMain.main( new String[]{"ce", "1cdg.A", "1tim.B"} );
-      //WebStartMain.main( new String[]{"ce_cp", "1vhr.A","2ihb.A"} );
-      //WebStartMain.main( new String[]{"fatcat", "2BC3.B","1SWG.D"} );
-      WebStartMain.main(new String[]{"fatcat","1P80.D","2IUF.E"});
-      //WebStartMain.main(new String[]{"fatcat","1O08.A","1FEZ.A"});
-      
-      
-   }
+	public static void main(String[] args){
+
+
+		//client.main(new String[]{"fatcat", "3BMV.A","2GUY.A", "http://pdb114.rcsb.org:8080/jfatcatserver/align/"});
+		//client.main(new String[]{"fatcat", "2GUY.A","3BMV.A"});
+
+		//client.main( new String[]{"fatcat", "1EXQ.A","1EX4.B","http://pdb114.rcsb.org:8080/jfatcatserver/align/"} );
+
+		//WebStartMain.main( new String[]{"fatcat_flexible", "1cdg.A", "1tim.B"} );
+		//WebStartMain.main( new String[]{"ce", "1tim.B", "1cdg.A"} );
+		//WebStartMain.main( new String[]{"ce", "1cdg.A", "1tim.B"} );
+		//WebStartMain.main( new String[]{"ce_cp", "1vhr.A","2ihb.A"} );
+		//WebStartMain.main( new String[]{"fatcat", "2BC3.B","1SWG.D"} );
+		WebStartMain.main(new String[]{"fatcat","1P80.D","2IUF.E"});
+		//WebStartMain.main(new String[]{"fatcat","1O08.A","1FEZ.A"});
+
+
+	}
 }

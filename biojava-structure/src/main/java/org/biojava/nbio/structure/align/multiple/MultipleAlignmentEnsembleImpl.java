@@ -41,7 +41,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * A general implementation of a {@link MultipleAlignmentEnsemble}.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.0
  *
@@ -66,7 +66,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 
 	/**
 	 * Default Constructor. Empty ensemble, no structures assigned.
-	 * 
+	 *
 	 * @return MultipleAlignmentEnsemble an empty ensemble instance.
 	 */
 	public MultipleAlignmentEnsembleImpl() {
@@ -84,7 +84,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 
 	/**
 	 * Constructor using structure identifiers.
-	 * 
+	 *
 	 * @param structureIdentifiers
 	 *            List of Structure names, that can be parsed by
 	 *            {@link AtomCache}.
@@ -99,7 +99,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	/**
 	 * Copy constructor. This copies recursively all member variables, including
 	 * MultipleAlignments, Atom arrays and cached variables.
-	 * 
+	 *
 	 * @param e
 	 *            MultipleAlignmentEnsemble to copy.
 	 * @return MultipleAlignmentEnsemble identical copy of the input ensemble.
@@ -144,7 +144,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	/**
 	 * Constructor from an AFPChain instance. Creates an equivalent pairwise
 	 * alignment, but in the MultipleAlignment format.
-	 * 
+	 *
 	 * @param afp
 	 *            pairwise alignment
 	 * @param ca1
@@ -319,7 +319,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	/**
 	 * Force the atom arrays to regenerate based on
 	 * {@link #getStructureIdentifiers()}.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */

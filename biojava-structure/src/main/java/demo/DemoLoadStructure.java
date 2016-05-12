@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jan 27, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -32,7 +32,7 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 
 
 /** Example for how to load protein structures (from PDB files).
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -52,7 +52,7 @@ public class DemoLoadStructure
 
 	public void loadStructureIO(){
 		try {
-			Structure s1 = StructureIO.getStructure("1gav");			
+			Structure s1 = StructureIO.getStructure("1gav");
 			System.out.println(s1.getPDBCode() + " asym unit has nr atoms:");
 			System.out.println(StructureTools.getNrAtoms(s1));
 
@@ -65,11 +65,11 @@ public class DemoLoadStructure
 			for (SeqMisMatch mm : chain1.getSeqMisMatches()){
 				System.out.println(mm);
 			}
-						
-			Structure s2 = StructureIO.getBiologicalAssembly("1gav");			
+
+			Structure s2 = StructureIO.getBiologicalAssembly("1gav");
 			System.out.println(s2.getPDBCode() + " biological assembly has nr atoms:");
 			System.out.println(StructureTools.getNrAtoms(s2));
-			
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -105,7 +105,7 @@ public class DemoLoadStructure
 
 			System.out.print(c);
 
-			System.out.println(c.getCompound());
+			System.out.println(c.getEntityInfo());
 
 		} catch (Exception e){
 			e.printStackTrace();

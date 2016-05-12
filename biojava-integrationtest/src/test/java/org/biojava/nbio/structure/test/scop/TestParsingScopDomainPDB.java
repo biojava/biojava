@@ -18,10 +18,10 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 29, 2014
- * Author: andreas 
+ * Author: andreas
  *
  */
- 
+
 package org.biojava.nbio.structure.test.scop;
 
 import junit.framework.TestCase;
@@ -30,23 +30,23 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.PDBFileParser;
 
 import java.net.URL;
- 
+
 public class TestParsingScopDomainPDB extends TestCase{
 
-	
+
 	public void testd1gena(){
-		
+
 		try {
 			URL u = new URL("http://scop.berkeley.edu/astral/pdbstyle/ver=2.03&id=d1gena_&output=txt.");
-			
+
 			PDBFileParser p = new PDBFileParser();
-			
+
 			Structure s = p.parsePDBFile(u.openStream());
-			
+
 			//System.out.println(s);
 			assertTrue(StructureTools.getAllAtomArray(s).length > 100);
 		} catch (Exception e){
-			
+
 			e.printStackTrace();
 			fail(e.getMessage());
 		}

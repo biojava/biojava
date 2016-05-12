@@ -41,33 +41,32 @@ import java.util.TreeSet;
 /**
  * An object to contain the info from the PDB header for a Molecule.
  * In mmCIF dictionary, it is called an Entity. In the case of polymers it
- * is defined as each group of sequence identical NCS-related chains 
+ * is defined as each group of sequence identical NCS-related chains
  *
  * Now PDB file format 3.2 aware - contains the new TAX_ID fields for the
  * organism studied and the expression system.
  *
  * @author Jules Jacobsen
  * @author Jose Duarte
+ * @author Anthony Bradley
  * @since 1.5
  */
-public class Compound implements Serializable {
-	
-	private final static Logger logger = LoggerFactory.getLogger(Compound.class);
+public class EntityInfo implements Serializable {
 
-	
-	//TODO we should consider having the data here as it is in mmCIF dictionary - JD 2014-12-11
-	//     Especially useful would be to have the polymer/non-polymer/water classification present in mmCIF
-	//     We could drop a lot of the stuff here that is PDB-file related (actually many PDB files don't contain many of these fields)
-	//     The only really essential part of a Compound is the member chains and the entity_id/mol_id
+	private final static Logger logger = LoggerFactory.getLogger(EntityInfo.class);
+
+
+	// TODO We could drop a lot of the stuff here that is PDB-file related (actually many PDB files don't contain many of these fields) - JD 2016-03-25
+	//     The only really essential part of a EntityInfo is the member chains and the entity_id/mol_id
 	// See also issue https://github.com/biojava/biojava/issues/219
-	
+
 	private static final long serialVersionUID = 2991897825657586356L;
-	
+
 	/**
-	 * The list of chains that are described by this Compound 
+	 * The list of chains that are described by this EntityInfo
 	 */
 	private List<Chain> chains;
-	
+
 	/**
 	 * The Molecule identifier, called entity_id in mmCIF dictionary
 	 */
@@ -78,27 +77,27 @@ public class Compound implements Serializable {
 	 * Initialised lazily upon call to {@link #getAlignedResIndex(Group, Chain)}
 	 */
 	private Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
-	
-	private String refChainId;
 
-	private String molName = null;
+	private String refChainId;
+	private String description = null;
 	private String title = null;
+	/**
+	 * The type of entity (polymer, non-polymer, water)
+	 */
+	private EntityType type = null;
 	private List<String> synonyms = null;
 	private List<String> ecNums = null;
 	private String engineered = null;
 	private String mutation = null;
 	private String biologicalUnit = null;
 	private String details = null;
-
 	private String numRes = null;
 	private String resNames = null;
-
 	private String headerVars = null;
-
 	private String synthetic = null;
 	private String fragment = null;
 	private String organismScientific = null;
-    private String organismTaxId = null;
+	private String organismTaxId = null;
 	private String organismCommon = null;
 	private String strain = null;
 	private String variant = null;
@@ -112,7 +111,7 @@ public class Compound implements Serializable {
 	private String gene = null;
 	private String cellularLocation = null;
 	private String expressionSystem = null;
-    private String expressionSystemTaxId = null;
+	private String expressionSystemTaxId = null;
 	private String expressionSystemStrain = null;
 	private String expressionSystemVariant = null;
 	private String expressionSystemCellLine = null;
@@ -129,31 +128,33 @@ public class Compound implements Serializable {
 	private String expressionSystemOtherDetails = null;
 
 	private Long id;
-	
-	public Compound () {
+
+	public EntityInfo () {
 		chains = new ArrayList<Chain>();
 		chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
 		molId = -1;
 	}
 
 	/**
-	 * Constructs a new Compound copying all data from the given one
+	 * Constructs a new EntityInfo copying all data from the given one
 	 * but not setting the Chains
 	 * @param c
 	 */
-	public Compound (Compound c) {
-		
+	public EntityInfo (EntityInfo c) {
+
 		this.chains = new ArrayList<Chain>();
-		
+
 		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
-		
+
 		this.molId = c.molId;
 		
+		this.type = c.type;
+
 		this.refChainId = c.refChainId;
 
-		this.molName = c.molName;
+		this.description = c.description;
 		this.title = c.title;
-		
+
 		if (c.synonyms!=null) {
 			this.synonyms = new ArrayList<String>();
 			synonyms.addAll(c.synonyms);
@@ -162,7 +163,7 @@ public class Compound implements Serializable {
 			this.ecNums = new ArrayList<String>();
 			ecNums.addAll(c.ecNums);
 		}
-		
+
 		this.engineered = c.engineered;
 		this.mutation = c.mutation;
 		this.biologicalUnit = c.biologicalUnit;
@@ -190,7 +191,7 @@ public class Compound implements Serializable {
 		this.gene = c.gene;
 		this.cellularLocation = c.cellularLocation;
 		this.expressionSystem = c.expressionSystem;
-	    this.expressionSystemTaxId = c.expressionSystemTaxId;
+		this.expressionSystemTaxId = c.expressionSystemTaxId;
 		this.expressionSystemStrain = c.expressionSystemStrain;
 		this.expressionSystemVariant = c.expressionSystemVariant;
 		this.expressionSystemCellLine = c.expressionSystemCellLine;
@@ -206,14 +207,14 @@ public class Compound implements Serializable {
 		this.expressionSystemGene = c.expressionSystemGene;
 		this.expressionSystemOtherDetails = c.expressionSystemOtherDetails;
 
-		
+
 	}
 
 	@Override
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
-		buf.append("Compound: ").append(molId).append(" ");
-		buf.append(molName==null?"(no name)":"("+molName+")");
+		buf.append("EntityInfo: ").append(molId).append(" ");
+		buf.append(description==null?"(no name)":"("+description+")");
 		buf.append(" chains: ");
 		if (chains!=null) {
 			for (int i=0;i<chains.size();i++) {
@@ -227,19 +228,19 @@ public class Compound implements Serializable {
 	}
 
 	/**
-	 * Get the representative Chain for this Compound.
+	 * Get the representative Chain for this EntityInfo.
 	 * We choose the Chain with the first chain identifier after
-	 * lexicographical sorting (case insensitive), 
-	 * e.g. chain A if Compound is composed of chains A,B,C,D,E
+	 * lexicographical sorting (case insensitive),
+	 * e.g. chain A if EntityInfo is composed of chains A,B,C,D,E
 	 * @return
 	 */
 	public Chain getRepresentative() {
-		
+
 		List<String> chainIds = new ArrayList<String>();
 		for (Chain chain:chains) {
 			chainIds.add(chain.getChainID());
 		}
-		
+
 		Collections.sort(chainIds, String.CASE_INSENSITIVE_ORDER);
 
 		for (Chain chain:chains) {
@@ -247,12 +248,12 @@ public class Compound implements Serializable {
 				return chain;
 			}
 		}
-		
-		logger.error("Could not find a representative chain for compound '{}'", this.toString());
-		
+
+		logger.error("Could not find a representative chain for EntityInfo '{}'", this.toString());
+
 		return null;
 	}
-	
+
 	/** get the ID used by Hibernate
 	 *
 	 * @return the ID used by Hibernate
@@ -275,12 +276,12 @@ public class Compound implements Serializable {
 	 *
 	 */
 	public void showHeader(){
-		this.showCompound();
+		this.showEntityInfo();
 		this.showSource();
 	}
 
-	public void showCompound() {
-		System.out.println("COMPOUND INFO:");
+	public void showEntityInfo() {
+		System.out.println("ENTITY INFO:");
 		if (this.molId != -1) {
 			System.out.println("Mol ID: " + this.molId);
 		}
@@ -292,8 +293,8 @@ public class Compound implements Serializable {
 			}
 			System.out.println("Chains: " + buf.toString());
 		}
-		if (this.molName != null) {
-			System.out.println("Mol Name: " + this.molName);
+		if (this.description != null) {
+			System.out.println("Mol Name: " + this.description);
 		}
 		if (this.title != null) {
 			System.out.println("Title: " + this.title);
@@ -342,7 +343,7 @@ public class Compound implements Serializable {
 		if (this.organismScientific != null) {
 			System.out.println("Organism Scientific: " + this.organismScientific);
 		}
-        if (this.organismTaxId != null) {
+		if (this.organismTaxId != null) {
 			System.out.println("Organism Tax Id: " + this.organismTaxId);
 		}
 		if (this.organismCommon != null) {
@@ -384,7 +385,7 @@ public class Compound implements Serializable {
 		if (this.expressionSystem != null) {
 			System.out.println("Expression System: " + this.expressionSystem);
 		}
-        if (this.expressionSystemTaxId != null) {
+		if (this.expressionSystemTaxId != null) {
 			System.out.println("Expression System Tax Id: " + this.expressionSystemTaxId);
 		}
 		if (this.expressionSystemStrain != null) {
@@ -432,17 +433,17 @@ public class Compound implements Serializable {
 	}
 
 	/**
-	 * Return the list of member chain IDs that are described by this Compound, 
-	 * only unique chain IDs are contained in the list. 
+	 * Return the list of member chain IDs that are described by this EnityInfo,
+	 * only unique chain IDs are contained in the list.
 	 * Note that in the case of multimodel structures this will return just the unique
-	 * chain identifiers whilst {@link #getChains()} will return a corresponding chain 
-	 * per model. 
-	 * @return the list of unique ChainIDs that are described by this Compound
+	 * chain identifiers whilst {@link #getChains()} will return a corresponding chain
+	 * per model.
+	 * @return the list of unique ChainIDs that are described by this EnityInfo
 	 * @see #setChains(List)
 	 * @see #getChains()
 	 */
 	public List<String> getChainIds() {
-		
+
 		Set<String> uniqChainIds = new TreeSet<String>();
 		for (int i=0;i<getChains().size();i++) {
 			uniqChainIds.add(getChains().get(i).getChainID());
@@ -450,28 +451,28 @@ public class Compound implements Serializable {
 
 		return new ArrayList<String>(uniqChainIds);
 	}
-	
+
 	/**
-	 * Given a Group g of Chain c (member of this Compound) return the corresponding position in the 
+	 * Given a Group g of Chain c (member of this EnityInfo) return the corresponding position in the
 	 * alignment of all member sequences (1-based numbering), i.e. the index (1-based) in the SEQRES sequence.
-	 * This allows for comparisons of residues belonging to different chains of the same Compound (entity).
+	 * This allows for comparisons of residues belonging to different chains of the same EnityInfo (entity).
 	 * <p>
-	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping 
+	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping
 	 * will not be available and this method will return {@link ResidueNumber#getSeqNum()} for all residues, which
-	 * in some cases will be correctly aligned indices (when no insertion codes are 
+	 * in some cases will be correctly aligned indices (when no insertion codes are
 	 * used and when all chains within the entity are numbered in the same way), but
 	 * in general they will be neither unique (because of insertion codes) nor aligned.
 	 * </p>
 	 * @param g
 	 * @param c
-	 * @return the aligned residue index (1 to n), if no SEQRES groups are available at all then {@link ResidueNumber#getSeqNum()} 
-	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned 
+	 * @return the aligned residue index (1 to n), if no SEQRES groups are available at all then {@link ResidueNumber#getSeqNum()}
+	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned
 	 * for the given group and chain
-	 * @throws IllegalArgumentException if the given Chain is not a member of this Compound
-	 * @see {@link Chain#getSeqResGroup(int)} 
+	 * @throws IllegalArgumentException if the given Chain is not a member of this EnityInfo
+	 * @see {@link Chain#getSeqResGroup(int)}
 	 */
 	public int getAlignedResIndex(Group g, Chain c) {
-		
+
 		boolean contained = false;
 		for (Chain member:getChains()) {
 			if (c.getChainID().equals(member.getChainID())) {
@@ -479,9 +480,9 @@ public class Compound implements Serializable {
 				break;
 			}
 		}
-		if (!contained) 
-			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this Compound (entity): "+getChainIds().toString()); 
-		
+		if (!contained)
+			throw new IllegalArgumentException("Given chain "+c.getChainID()+" is not a member of this entity: "+getChainIds().toString());
+
 		if (!chains2pdbResNums2ResSerials.containsKey(c.getChainID())) {
 			// we do lazy initialisation of the map
 			initResSerialsMap(c);
@@ -490,24 +491,24 @@ public class Compound implements Serializable {
 		Map<ResidueNumber,Integer> map = chains2pdbResNums2ResSerials.get(c.getChainID());
 		int serial;
 		if (map!=null) {
-			
+
 			ResidueNumber resNum = g.getResidueNumber();
-			// the resNum will be null for groups that are SEQRES only and not in ATOM, 
-			// still it can happen that a group is in ATOM in one chain but not in other of the same compound.
-			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):			
+			// the resNum will be null for groups that are SEQRES only and not in ATOM,
+			// still it can happen that a group is in ATOM in one chain but not in other of the same entity.
+			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):
 			if (resNum==null && c.getSeqResGroups()!=null && !c.getSeqResGroups().isEmpty()) {
 				int index = -1;
 				for (int i=0;i<c.getSeqResGroups().size();i++) {
 					if (g==c.getSeqResGroup(i)) {
-						index = i; break; 
+						index = i; break;
 					}
 				}
-				
-				resNum = findResNumInOtherChains(index, c);
-								
-			}  
 
-			if (resNum == null) { 
+				resNum = findResNumInOtherChains(index, c);
+
+			}
+
+			if (resNum == null) {
 				// still null, we really can't map
 				serial = -1;
 			}
@@ -522,64 +523,64 @@ public class Compound implements Serializable {
 					serial = alignedSerial;
 				}
 			}
-			
+
 		} else {
 			// no seqres groups available we resort to using the pdb residue numbers are given
 			serial = g.getResidueNumber().getSeqNum();
 		}
 		return serial;
 	}
-	
+
 	private void initResSerialsMap(Chain c) {
 		if (c.getSeqResGroups()==null || c.getSeqResGroups().isEmpty()) {
 			logger.warn("No SEQRES groups found in chain {}, will use residue numbers as given (no insertion codes, not necessarily aligned). "
-					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)", 
+					+ "Make sure your structure has SEQRES records and that you use FileParsingParameters.setAlignSeqRes(true)",
 					c.getChainID());
 			// we add a explicit null to the map so that we flag it as unavailable for this chain
 			chains2pdbResNums2ResSerials.put(c.getChainID(), null);
 			return;
 		}
-		
+
 		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<ResidueNumber, Integer>();
 		chains2pdbResNums2ResSerials.put(c.getChainID(), resNums2ResSerials);
-		
+
 		for (int i=0;i<c.getSeqResGroups().size();i++) {
-			
+
 			// The seqres group will have a null residue number whenever its corresponding atom group doesn't exist
 			// because it is missing in the electron density.
-			// However, it can be observed in the density in other chains of the same compound,
-			// to be complete we go and look for the residue number in other chains, so that we have a 
-			// seqres to atom mapping as complete as possible (with all known atom groups of any chain of this compound)
-			
+			// However, it can be observed in the density in other chains of the same entity,
+			// to be complete we go and look for the residue number in other chains, so that we have a
+			// seqres to atom mapping as complete as possible (with all known atom groups of any chain of this entity)
+
 			ResidueNumber resNum = c.getSeqResGroup(i).getResidueNumber();
-			
+
 			if (resNum==null) {
 				resNum = findResNumInOtherChains(i,c);
 			}
-			
-			// NOTE that resNum will still be null here for cases where the residue 
+
+			// NOTE that resNum will still be null here for cases where the residue
 			// is missing in atom groups (not observed in density) in all chains
 			// Thus the mapping will not be possible for residues that are only in SEQRES groups
 			resNums2ResSerials.put(resNum, i+1);
 		}
 	}
-	
+
 	private ResidueNumber findResNumInOtherChains(int i, Chain chain) {
 		for (Chain c: getChains()) {
 			if (c == chain) continue;
-			
+
 			Group seqResGroup = c.getSeqResGroup(i);
-			
+
 			if (seqResGroup==null) {
 				logger.warn("The SEQRES group is null for index {} in chain {}, whilst it wasn't null in chain {}",
 						 i, c.getChainID(), chain.getChainID());
 				continue;
 			}
-			
+
 			if (seqResGroup.getResidueNumber()!=null) return seqResGroup.getResidueNumber();
-			
+
 		}
-		
+
 		return null;
 	}
 
@@ -619,12 +620,12 @@ public class Compound implements Serializable {
 		this.molId = molId;
 	}
 
-	public String getMolName() {
-		return molName;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setMolName(String molName) {
-		this.molName = molName;
+	public void setDescription(String molName) {
+		this.description = molName;
 	}
 
 	public String getTitle() {
@@ -731,13 +732,13 @@ public class Compound implements Serializable {
 		this.organismScientific = organismScientific;
 	}
 
-    public String getOrganismTaxId() {
-        return organismTaxId;
-    }
+	public String getOrganismTaxId() {
+		return organismTaxId;
+	}
 
-    public void setOrganismTaxId(String organismTaxId) {
-        this.organismTaxId = organismTaxId;
-    }
+	public void setOrganismTaxId(String organismTaxId) {
+		this.organismTaxId = organismTaxId;
+	}
 
 	public String getOrganismCommon() {
 		return organismCommon;
@@ -839,13 +840,13 @@ public class Compound implements Serializable {
 		return expressionSystem;
 	}
 
-    public String getExpressionSystemTaxId() {
-        return expressionSystemTaxId;
-    }
+	public String getExpressionSystemTaxId() {
+		return expressionSystemTaxId;
+	}
 
-    public void setExpressionSystemTaxId(String expressionSystemTaxId) {
-        this.expressionSystemTaxId = expressionSystemTaxId;
-    }
+	public void setExpressionSystemTaxId(String expressionSystemTaxId) {
+		this.expressionSystemTaxId = expressionSystemTaxId;
+	}
 
 	public void setExpressionSystem(String expressionSystem) {
 		this.expressionSystem = expressionSystem;
@@ -963,8 +964,8 @@ public class Compound implements Serializable {
 		this.expressionSystemOtherDetails = expressionSystemOtherDetails;
 	}
 
-	/** 
-	 * Get the list of chains that are part of this Compound. Note that for multi-model 
+	/**
+	 * Get the list of chains that are part of this EntityInfo. Note that for multi-model
 	 * structures chains from all models are returned.
 	 *
 	 * @return a List of Chain objects
@@ -974,7 +975,7 @@ public class Compound implements Serializable {
 	}
 
 	 /**
-	  * Add new Chain to this Compound
+	  * Add new Chain to this EntityInfo
 	  * @param chain
 	  */
 	public void addChain(Chain chain){
@@ -982,10 +983,28 @@ public class Compound implements Serializable {
 	}
 
 	/**
-	 * Set the chains for this Compound
+	 * Set the chains for this EntityInfo
 	 * @param chains
 	 */
 	public void setChains(List<Chain> chains){
-		this.chains = chains;		
+		this.chains = chains;
+	}
+
+	/**
+	 * Get the type of entity this EntityInfo describes.
+	 * Options are polymer, non-polymer or water.
+	 * @return a string describing the type of entity. (polymer, non-polymer or water).
+	 */
+	public EntityType getType() {
+		return this.type;
+	}
+
+	/**
+	 * Set the type of entity this EntityInfo describes.
+	 * Options are polymer, non-polymer or water.
+	 * @param type a string describing the type of entity. (polymer, non-polymer or water).
+	 */
+	public void setType(EntityType type) {
+		this.type = type;
 	}
 }

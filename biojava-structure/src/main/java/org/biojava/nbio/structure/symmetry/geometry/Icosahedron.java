@@ -55,7 +55,7 @@ public class Icosahedron implements Polyhedron {
 		this.circumscribedRadius = cirumscribedRadius;
 	}
 	/**
-	 * Returns the radius of an inscribed sphere, that is tangent to each 
+	 * Returns the radius of an inscribed sphere, that is tangent to each
 	 * of the icosahedron's faces
 	 * @return the inscribedRadius
 	 */
@@ -65,7 +65,7 @@ public class Icosahedron implements Polyhedron {
 	}
 
 	/**
-	 * Sets the radius of an inscribed sphere, that is tangent to each 
+	 * Sets the radius of an inscribed sphere, that is tangent to each
 	 * of the icosahedron's faces
 	 * @param inscribedRadius the inscribedRadius to set
 	 */
@@ -75,7 +75,7 @@ public class Icosahedron implements Polyhedron {
 	}
 
 	/**
-	 * Returns the radius of a sphere, that is tangent to each 
+	 * Returns the radius of a sphere, that is tangent to each
 	 * of the icosahedron's edges
 	 *
 	 * @return the midRadius
@@ -86,7 +86,7 @@ public class Icosahedron implements Polyhedron {
 	}
 
 	/**
-	 * Sets the radius of radius of a sphere, that is tangent to each 
+	 * Sets the radius of radius of a sphere, that is tangent to each
 	 * of the icosahedron's edges
 	 * @param midRadius the midRadius to set
 	 */
@@ -96,17 +96,17 @@ public class Icosahedron implements Polyhedron {
 	}
 
 	@Override
-    public Point3d[] getVertices() {
+	public Point3d[] getVertices() {
 		Point3d[] icosahedron = new Point3d[12];
-        // see http://answers.yahoo.com/question/index?qid=20080108041441AAJCjEu
-        double c = circumscribedRadius * 1 / Math.sqrt(5);
-        double s = 2 * c; // golden ratio
-        double c1 = Math.sqrt((3-Math.sqrt(5))/8); // cos(2Pi/5)
-        double s1 = Math.sqrt((5+Math.sqrt(5))/8); // sin(2Pi/5)
-        double c2 = Math.sqrt((3+Math.sqrt(5))/8); // cos(Pi/5)
-        double s2 = Math.sqrt((5-Math.sqrt(5))/8); // sin(Pi/5)
+		// see http://answers.yahoo.com/question/index?qid=20080108041441AAJCjEu
+		double c = circumscribedRadius * 1 / Math.sqrt(5);
+		double s = 2 * c; // golden ratio
+		double c1 = Math.sqrt((3-Math.sqrt(5))/8); // cos(2Pi/5)
+		double s1 = Math.sqrt((5+Math.sqrt(5))/8); // sin(2Pi/5)
+		double c2 = Math.sqrt((3+Math.sqrt(5))/8); // cos(Pi/5)
+		double s2 = Math.sqrt((5-Math.sqrt(5))/8); // sin(Pi/5)
 
-        icosahedron[0] = new Point3d(0, 0, circumscribedRadius);
+		icosahedron[0] = new Point3d(0, 0, circumscribedRadius);
 		icosahedron[1] = new Point3d(s, 0, c);
 		icosahedron[2] = new Point3d(s*c1, s*s1, c);
 		icosahedron[3] = new Point3d(-s*c2, s*s2, c);
@@ -122,20 +122,20 @@ public class Icosahedron implements Polyhedron {
 		for (Point3d p: icosahedron) {
 			m.transform(p);
 		}
-		
+
 		return icosahedron;
 	};
-	
+
 	@Override
 	public List<int[]> getLineLoops() {
 		return Arrays.asList(lineLoop1, lineLoop2, lineLoop3, lineLoop4, lineLoop5, lineLoop6);
 	}
-	
+
 	@Override
 	public int getViewCount() {
 		return 3;
 	}
-	
+
 	@Override
 	public String getViewName(int index) {
 		String name;
@@ -148,47 +148,51 @@ public class Icosahedron implements Polyhedron {
 		break;
 		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
-        return name;
+		return name;
 	}
-	
+
 	@Override
 	public Matrix3d getViewMatrix(int index) {
 		Matrix3d m = new Matrix3d();
 		switch (index) {
-		case 0:  m.setIdentity(); // front vertex-centered
-		break;
-		case 1:  m.rotX(-0.6523581397843639); // back face-centered -0.5535743588970415 m.rotX(Math.toRadians(-26));
-		break;
-		case 2:  m.rotZ(Math.PI/2);
-	          	 Matrix3d m1 = new Matrix3d();
-		         m1.rotX(-1.0172219678978445);
-		         m.mul(m1);
-		break;
-		default: throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
+		case 0:
+			m.setIdentity(); // front vertex-centered
+			break;
+		case 1:
+			m.rotX(-0.6523581397843639); // back face-centered -0.5535743588970415 m.rotX(Math.toRadians(-26));
+			break;
+		case 2:
+			m.rotZ(Math.PI/2);
+			Matrix3d m1 = new Matrix3d();
+			m1.rotX(-1.0172219678978445);
+			m.mul(m1);
+			break;
+		default:
+			throw new IllegalArgumentException("getViewMatrix: index out of range:" + index);
 		}
 		return m;
 	}
-	
+
 	private static double getSideLengthFromInscribedRadius(double radius) {
 		return radius / (Math.sqrt(3)/12 * (3 + Math.sqrt(5)));
 	}
-	
+
 	private static double getInscribedRadiusFromSideLength(double sideLength) {
 		return sideLength * (Math.sqrt(3)/12 * (3 + Math.sqrt(5)));
 	}
-	
+
 	private static double getSideLengthFromMiddleRadius(double radius) {
 		return radius * 4 /(1 + Math.sqrt(5));
 	}
-	
+
 	private static double getMiddleRadiusFromSideLength(double sideLength) {
 		return sideLength / 4 * (1 + Math.sqrt(5));
 	}
-	
+
 	private static double getSideLengthFromCircumscribedRadius(double radius) {
 		return radius * 4 / Math.sqrt(10 + 2 * Math.sqrt(5));
 	}
-	
+
 	private static double getCircumscribedRadiusFromSideLength(double sideLength) {
 		return sideLength / 4 * Math.sqrt(10 + 2 * Math.sqrt(5));
 	}

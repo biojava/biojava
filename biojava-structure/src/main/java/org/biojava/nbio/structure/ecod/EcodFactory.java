@@ -29,29 +29,29 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.cath.CathDatabase;
-import org.biojava.nbio.structure.cath.CathInstallation;
+import org.biojava.nbio.structure.cath.CathFactory;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Controls global {@link CathDatabase CathDatabases} being used.
- * Implements a multiton pattern through {@link #getCathDatabase(String)},
- * and a singleton pattern through {@link #getCathDatabase()}.
+ * Controls global {@link EcodDatabase EcodDatabases} being used.
+ * Implements a multiton pattern through {@link #getEcodDatabase(String)},
+ * and a singleton pattern through {@link #getEcodDatabase()}.
  * @author Spencer Bliven
  * @see ScopFactory
- * @see CathInstallation
+ * @see CathFactory
+ * @see EcodInstallation
  */
 public class EcodFactory {
 
-	private static Logger logger = LoggerFactory.getLogger(EcodFactory.class);
-
-	public static String DEFAULT_VERSION = EcodInstallation.DEFAULT_VERSION;
+	private static final Logger logger = LoggerFactory.getLogger(EcodFactory.class);
+	
+	public static final String DEFAULT_VERSION = EcodInstallation.DEFAULT_VERSION;
 
 	private static Map<String, SoftReference<EcodDatabase>> versionedEcodDBs =
 			Collections.synchronizedMap(new HashMap<String, SoftReference<EcodDatabase>>());
-	private static String defaultVersion = DEFAULT_VERSION;
+	private static String defaultVersion = EcodInstallation.DEFAULT_VERSION;
 
 	/**
 	 * Returns the (singleton) database for the current default version
@@ -67,9 +67,9 @@ public class EcodFactory {
 		logger.trace("Waiting for EcodFactory lock to get version "+version);
 		synchronized(versionedEcodDBs) {
 			logger.trace("Got EcodFactory lock to get version "+version);
-			
+
 			releaseReferences();
-			
+
 			SoftReference<EcodDatabase> ecodRef = versionedEcodDBs.get(version.toLowerCase());
 			EcodDatabase ecod = null;
 			if(ecodRef != null) {
@@ -96,7 +96,7 @@ public class EcodFactory {
 			return ecod;
 		}
 	}
-	
+
 	/**
 	 * removes SoftReferences which have already been garbage collected
 	 */

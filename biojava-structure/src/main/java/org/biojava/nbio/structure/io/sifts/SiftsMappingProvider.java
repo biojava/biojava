@@ -39,83 +39,83 @@ import java.util.List;
 public class SiftsMappingProvider {
 
 	private final static Logger logger = LoggerFactory.getLogger(SiftsMappingProvider.class);
-	
-			
+
+
 	static String EBI_SIFTS_FILE_LOCATION = "ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/%s.xml.gz";
-	
+
 	static String RCSB_SIFTS_FILE_LOCATION = "http://www.rcsb.org/pdb/files/%s.sifts.xml.gz";
-		
+
 	static String fileLoc = EBI_SIFTS_FILE_LOCATION;
-		
+
 	public static void main(String[] args){
 		try {
 			List<SiftsEntity> entities = getSiftsMapping("1gc1");
-			
+
 			for (SiftsEntity e : entities){
 				System.out.println(e.getEntityId() + " " +e.getType());
-				
+
 				for ( SiftsSegment seg: e.getSegments()) {
 					System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;
-					
+
 					for ( SiftsResidue res: seg.getResidues() ) {
 						System.out.println("  " + res);
 					}
 				}
-				
+
 			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void setFileLocation(String myFileLocation){
 		fileLoc = myFileLocation;
 	}
-	
+
 	public static List<SiftsEntity> getSiftsMapping(String pdbId) throws IOException{
 		// grab files from here:
 
 		AtomCache cache = new AtomCache();
-		
+
 		String path = cache.getCachePath();
-		
+
 		pdbId = pdbId.toLowerCase();
-		
+
 		String dirHash = pdbId.substring(1,3);
 		File siftsDir = new File(path , "SIFTS");
-		
-		
+
+
 		if ( ! siftsDir.exists()) {
 			logger.info("Creating directory {}", siftsDir.toString());
 			siftsDir.mkdir();
 		}
-		
+
 		File hashDir = new File(siftsDir, dirHash);
-		
+
 		if ( ! hashDir.exists()){
 			logger.info("Creating directory {}", hashDir.toString());
 			hashDir.mkdir();
 		}
 		File dest = new File( hashDir, pdbId + ".sifts.xml.gz");
-		
-		if ( ! dest.exists()){			
+
+		if ( ! dest.exists()){
 			String u = String.format(fileLoc,pdbId);
 			URL url = new URL(u);
 			logger.info("Downloading SIFTS file {} to {}",url,dest);
 			FileDownloadUtils.downloadFile(url, dest);
 		}
-		
+
 		InputStreamProvider prov = new InputStreamProvider();
 		InputStream is = prov.getInputStream(dest);
 		SiftsXMLParser parser = new SiftsXMLParser();
-		
+
 		parser.parseXmlFile(is);
-		
+
 		//System.out.println(parser.getEntities());
 		return parser.getEntities();
-		
-		
+
+
 	}
 
-	
+
 }

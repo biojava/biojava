@@ -30,26 +30,26 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 /**
  * Interface for the Multiple Structure Alignment Algorithms. The Pairwise Alignment Algorithms can also
  * implement this class to be able to return {@link MultipleAlignment} Objects.
- * 
+ *
  * @author Aleix Lafita
  *
  */
 public interface MultipleStructureAligner{
-	
-	/** 
-	 * Run an alignment while specifying the atoms to be aligned. 
+
+	/**
+	 * Run an alignment while specifying the atoms to be aligned.
 	 * The default parameters for the algorithm are used.
-	 * 
+	 *
 	 * @param atomArrays List of Atoms of all the structures
 	 * @return MultipleAlignment object that contains the alignment.
 	 * @throws StructureException
 	 * @see #align(List,Object)
 	 */
 	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException;
-	
-	/** 
+
+	/**
 	 * Run an alignment and also send a bean containing the parameters.
-	 * 
+	 *
 	 * @param atomArrays List of Atoms of all the structures
 	 * @return MultipleAlignment object that contains the alignment.
 	 * @throws StructureException
@@ -57,30 +57,30 @@ public interface MultipleStructureAligner{
 	 */
 	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException;
 
-	/** 
+	/**
 	 * Return the parameters of this algorithm instance.
-	 * 
+	 *
 	 * @return The returned Object will be a Java bean.
 	 */
 	public ConfigStrucAligParams getParameters();
-	
-	/** 
+
+	/**
 	 * Set the parameters for this algorithm to use.
-	 * 
+	 *
 	 * @param parameters
 	 */
 	public void setParameters(ConfigStrucAligParams parameters);
-	
-	/** 
+
+	/**
 	 * Get the name of this Algorithm.
-	 * 
+	 *
 	 * @return String name of the algorithm
 	 */
 	public String getAlgorithmName();
 
-	/** 
+	/**
 	 * Get the Version information for this Algorithm.
-	 * 
+	 *
 	 * @return String version of the algorithm
 	 */
 	public String getVersion();

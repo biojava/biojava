@@ -27,15 +27,15 @@ import java.io.Serializable;
 
 /** Contains data from
  * dir.des.scop.txt_1.75
- * 
- * <p>e.g 
+ *
+ * <p>e.g
  * <pre>
  * SunID	Cat	Class   	Name	Description
  * -----	---	-----   	----	-----------
  * 26154	px	b.47.1.2	d1nrs.1	1nrs L:,H:
  * 125030	px	b.47.1.2	d1zgia1	1zgi A:1A-245
  * </pre>
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -55,7 +55,7 @@ public class ScopDescription implements Serializable,Cloneable{
 	public String toString(){
 		StringBuilder buf = new StringBuilder();
 
-        buf.append(String.valueOf(sunID));
+		buf.append(String.valueOf(sunID));
 		buf.append("\t");
 		buf.append(category);
 		buf.append("\t");
@@ -115,7 +115,7 @@ public class ScopDescription implements Serializable,Cloneable{
 	/**
 	 * Return a portion of the classificationID corresponding to the specified
 	 * category (class, fold, superfamily, family).
-	 * 
+	 *
 	 * <p>Example: for SCOP family "b.5.1.1",
 	 * getClassificationId(ScopCategory.Superfamily) => "b.5.1"
 	 */
@@ -174,7 +174,7 @@ public class ScopDescription implements Serializable,Cloneable{
 
 	/**
 	 * Compares the fields sunID, category, classificationId, and name for equality
-	 * 
+	 *
 	 * @param obj
 	 * @return
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -220,7 +220,7 @@ public class ScopDescription implements Serializable,Cloneable{
 	protected Object clone() throws CloneNotSupportedException {
 		super.clone();
 		ScopDescription n = new ScopDescription();
-		
+
 		n.setCategory(getCategory());
 		n.setClassificationId(getClassificationId());
 		n.setDescription(getDescription());
@@ -229,6 +229,6 @@ public class ScopDescription implements Serializable,Cloneable{
 		return n;
 	}
 
-	
-	
+
+
 }

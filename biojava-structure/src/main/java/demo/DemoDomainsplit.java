@@ -38,7 +38,7 @@ public class DemoDomainsplit {
 
 		//String pdbId = "3gly";
 		String pdbId = "4hhb";
-		
+
 		split.basicLoad(pdbId);
 
 	}
@@ -49,7 +49,7 @@ public class DemoDomainsplit {
 
 			// This utility class can automatically download missing PDB files.
 			AtomCache cache = new AtomCache();
-			
+
 			//
 			// configure the parameters of file parsing (optional)
 
@@ -57,19 +57,18 @@ public class DemoDomainsplit {
 
 			// should the ATOM and SEQRES residues be aligned when creating the internal data model?
 			params.setAlignSeqRes(true);
-			params.setLoadChemCompInfo(true);
 			// should secondary structure get parsed from the file
 			params.setParseSecStruc(false);
 
-			// and set the params in the cache.			
+			// and set the params in the cache.
 			cache.setFileParsingParams(params);
 
 			// end of optional part
-			
+
 			Structure struc = cache.getStructure(pdbId);
-			
+
 			System.out.println("structure loaded: " + struc);
-			
+
 			List<Domain> domains = LocalProteinDomainParser.suggestDomains(struc);
 
 			System.out.println("RESULTS: =====");

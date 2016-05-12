@@ -37,22 +37,22 @@ import java.util.concurrent.Callable;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public class CallableProfileProfileAligner<S extends Sequence<C>, C extends Compound>
-        implements Callable<ProfilePair<S, C>> {
+		implements Callable<ProfilePair<S, C>> {
 
-    private ProfileProfileAligner<S, C> ppa;
+	private ProfileProfileAligner<S, C> ppa;
 
-    /**
-     * Creates a profile-profile alignment task for simplified parallel execution.
-     *
-     * @param ppa already initialized profile-profile aligner
-     */
-    public CallableProfileProfileAligner(ProfileProfileAligner<S, C> ppa) {
-        this.ppa = ppa;
-    }
+	/**
+	 * Creates a profile-profile alignment task for simplified parallel execution.
+	 *
+	 * @param ppa already initialized profile-profile aligner
+	 */
+	public CallableProfileProfileAligner(ProfileProfileAligner<S, C> ppa) {
+		this.ppa = ppa;
+	}
 
-    @Override
-    public ProfilePair<S, C> call() {
-        return ppa.getPair();
-    }
+	@Override
+	public ProfilePair<S, C> call() {
+		return ppa.getPair();
+	}
 
 }

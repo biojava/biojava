@@ -23,9 +23,9 @@ package org.biojava.nbio.structure.align.client;
 import org.biojava.nbio.structure.StructureException;
 
 /** A pair for structure alignment
- * 
+ *
  * @author Andreas Prlic
- * 
+ *
  * name1 is always < name2
  *
  */
@@ -95,7 +95,7 @@ public class PdbPair implements Comparable<PdbPair> {
 	public int compareTo(PdbPair o) {
 		if ( this.equals(o))
 			return 0;
-		// Use StructureName's compareTo method		
+		// Use StructureName's compareTo method
 		int c = name1.compareTo(o.name1);
 		if ( c != 0 )
 			return c;

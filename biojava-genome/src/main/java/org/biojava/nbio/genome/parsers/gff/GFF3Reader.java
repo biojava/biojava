@@ -53,130 +53,130 @@ import java.util.regex.Pattern;
  * @author Hanno Hinsch
  */
 public class GFF3Reader {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(GFF3Reader.class);
 
 	private static final  Pattern p = Pattern.compile("\t");
 
-    /**
-     * Read a file into a FeatureList. Each line of the file becomes one Feature object.
-     *
-     * @param filename The path to the GFF file.
-     * @return A FeatureList.
-     * @throws IOException Something went wrong -- check exception detail message.
-     */
-    
-    public static FeatureList read(String filename, List<String> indexes) throws IOException {
-    	logger.info("Reading: {}", filename);
+	/**
+	 * Read a file into a FeatureList. Each line of the file becomes one Feature object.
+	 *
+	 * @param filename The path to the GFF file.
+	 * @return A FeatureList.
+	 * @throws IOException Something went wrong -- check exception detail message.
+	 */
 
-        FeatureList features = new FeatureList();
-        features.addIndexes(indexes);
-        BufferedReader br = new BufferedReader(new FileReader(filename));
+	public static FeatureList read(String filename, List<String> indexes) throws IOException {
+		logger.info("Reading: {}", filename);
 
-        String s;
-        for (s = br.readLine(); null != s; s = br.readLine()) {
-            s = s.trim();
+		FeatureList features = new FeatureList();
+		features.addIndexes(indexes);
+		BufferedReader br = new BufferedReader(new FileReader(filename));
 
-            if (s.length() > 0) {
-                if (s.charAt(0) == '#') {
-                    //ignore comment lines
-                    if(s.startsWith("##fasta"))
-                        break;
-                } else {
+		String s;
+		for (s = br.readLine(); null != s; s = br.readLine()) {
+			s = s.trim();
 
-                    FeatureI f = parseLine(s);
-                    if (f != null) {
-                        features.add(f);
-             
-                    }
-                }
-            }
+			if (s.length() > 0) {
+				if (s.charAt(0) == '#') {
+					//ignore comment lines
+					if(s.startsWith("##fasta"))
+						break;
+				} else {
 
-        }
+					FeatureI f = parseLine(s);
+					if (f != null) {
+						features.add(f);
 
-        br.close();
-        return features;
-    }
-    
-    
-    public static FeatureList read(String filename) throws IOException {
-       return read(filename,new ArrayList<String>(0));
-    }
-    
-    
-    /**
-     * create Feature from line of GFF file
-     */
-    private static Feature parseLine(String s) {
-        //FIXME update to use regex split on tabs
-        //FIXME better errors on parse failures
-    	String[] line = p.split(s);
-        String seqname =line[0].trim();
+					}
+				}
+			}
 
-        String source =line[1].trim();
+		}
 
-        String type =line[2].trim();
+		br.close();
+		return features;
+	}
 
 
-        String locStart =line[3].trim();
-
-        String locEnd =line[4].trim();
-
-        Double score;
-
-        try {
-            score = Double.parseDouble(line[5].trim());
-        } catch (Exception e) {
-            score = 0.0;
-        }
+	public static FeatureList read(String filename) throws IOException {
+	   return read(filename,new ArrayList<String>(0));
+	}
 
 
-        char strand = line[6].trim().charAt(0);
-        //added by scooter willis to deal with glimmer predictions that
-        //have the start after the end but is a negative strand
-        int locationStart = Integer.parseInt(locStart);
-        int locationEnd = Integer.parseInt(locEnd);
-        if(locationStart > locationEnd){
-            int temp = locationStart;
-            locationStart = locationEnd;
-            locationEnd = temp;
-           
-        }
-        Location location = Location.fromBio(locationStart, locationEnd, strand);
+	/**
+	 * create Feature from line of GFF file
+	 */
+	private static Feature parseLine(String s) {
+		//FIXME update to use regex split on tabs
+		//FIXME better errors on parse failures
+		String[] line = p.split(s);
+		String seqname =line[0].trim();
 
-        assert (strand == '-') == location.isNegative();
+		String source =line[1].trim();
 
-        int frame;
-        try {
-            frame = Integer.parseInt(line[7].trim());
-        } catch (Exception e) {
-            frame = -1;
-        }
-        String attributes=line[8];
-    /*    //grab everything until end of line (or # comment)
-        start = end + 1;
-        end = s.indexOf('#', start);
-        String attributes = null;
-        if (end < 0) {
-            attributes = new String(s.substring(start));
-        } else {
-            attributes = new String(s.substring(start, end));
-        }
-*/
-        return new Feature(seqname, source, type, location, score, frame, attributes.split("#")[0]);
-
-    }
+		String type =line[2].trim();
 
 
+		String locStart =line[3].trim();
+
+		String locEnd =line[4].trim();
+
+		Double score;
+
+		try {
+			score = Double.parseDouble(line[5].trim());
+		} catch (Exception e) {
+			score = 0.0;
+		}
 
 
-    public static void main(String args[]) throws Exception {
-    	long start = System.currentTimeMillis();
-        @SuppressWarnings("unused")
+		char strand = line[6].trim().charAt(0);
+		//added by scooter willis to deal with glimmer predictions that
+		//have the start after the end but is a negative strand
+		int locationStart = Integer.parseInt(locStart);
+		int locationEnd = Integer.parseInt(locEnd);
+		if(locationStart > locationEnd){
+			int temp = locationStart;
+			locationStart = locationEnd;
+			locationEnd = temp;
+
+		}
+		Location location = Location.fromBio(locationStart, locationEnd, strand);
+
+		assert (strand == '-') == location.isNegative();
+
+		int frame;
+		try {
+			frame = Integer.parseInt(line[7].trim());
+		} catch (Exception e) {
+			frame = -1;
+		}
+		String attributes=line[8];
+	/*    //grab everything until end of line (or # comment)
+		start = end + 1;
+		end = s.indexOf('#', start);
+		String attributes = null;
+		if (end < 0) {
+			attributes = new String(s.substring(start));
+		} else {
+			attributes = new String(s.substring(start, end));
+		}
+ */
+		return new Feature(seqname, source, type, location, score, frame, attributes.split("#")[0]);
+
+	}
+
+
+
+
+	public static void main(String args[]) throws Exception {
+		long start = System.currentTimeMillis();
+		@SuppressWarnings("unused")
 		FeatureList listGenes = GFF3Reader.read("/home/melo/workspace/release/stdout.combined.checked2.gtf");
-        long stop = System.currentTimeMillis();
-        logger.info("Loading = {}", stop-start);
+		long stop = System.currentTimeMillis();
+		logger.info("Loading = {}", stop-start);
 //        logger.info(listGenes);
-        //	GeneMarkGTF.write( list, args[1] );
-    }
+		//	GeneMarkGTF.write( list, args[1] );
+	}
 }

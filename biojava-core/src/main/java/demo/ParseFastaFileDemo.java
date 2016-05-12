@@ -1,9 +1,27 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package demo;
 
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
@@ -23,84 +41,84 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 public class ParseFastaFileDemo {
 
 
-    public ParseFastaFileDemo(){
+	public ParseFastaFileDemo(){
 
 
-        }
+		}
 
-    /** e.g. download ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz
-     * and pass in path to local location of file
-     *
-     * @param args
-     */
-        public static void main(String[] args) {
+	/** e.g. download ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz
+	 * and pass in path to local location of file
+	 *
+	 * @param args
+	 */
+		public static void main(String[] args) {
 
-            int mb = 1024*1024;
+			int mb = 1024*1024;
 
-            //Getting the runtime reference from system
-            Runtime runtime = Runtime.getRuntime();
+			//Getting the runtime reference from system
+			Runtime runtime = Runtime.getRuntime();
 
-            System.out.println("##### Heap utilization statistics [MB] #####");
+			System.out.println("##### Heap utilization statistics [MB] #####");
 
-            //Print used memory
-            System.out.println("Used Memory:"
-                    + (runtime.totalMemory() - runtime.freeMemory()) / mb);
+			//Print used memory
+			System.out.println("Used Memory:"
+					+ (runtime.totalMemory() - runtime.freeMemory()) / mb);
 
-            //Print free memory
-            System.out.println("Free Memory:"
-                    + runtime.freeMemory() / mb);
+			//Print free memory
+			System.out.println("Free Memory:"
+					+ runtime.freeMemory() / mb);
 
-            //Print total available memory
-            System.out.println("Total Memory:" + runtime.totalMemory() / mb);
+			//Print total available memory
+			System.out.println("Total Memory:" + runtime.totalMemory() / mb);
 
-            //Print Maximum available memory
-            System.out.println("Max Memory:" + runtime.maxMemory() / mb);
-
-
-            if ( args.length < 1) {
-                System.err.println("First argument needs to be path to fasta file");
-                return;
-            }
-
-            File f = new File(args[0]);
-
-            if ( ! f.exists()) {
-                System.err.println("File does not exist " + args[0]);
-                return;
-            }
-
-            long timeS = System.currentTimeMillis();
-
-            try {
-
-                // automatically uncompress files using InputStreamProvider
-                InputStreamProvider isp = new InputStreamProvider();
-
-                InputStream inStream = isp.getInputStream(f);
+			//Print Maximum available memory
+			System.out.println("Max Memory:" + runtime.maxMemory() / mb);
 
 
-                FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-                        inStream,
-                        new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-                        new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+			if ( args.length < 1) {
+				System.err.println("First argument needs to be path to fasta file");
+				return;
+			}
 
-                LinkedHashMap<String, ProteinSequence> b;
+			File f = new File(args[0]);
 
-                int nrSeq = 0;
+			if ( ! f.exists()) {
+				System.err.println("File does not exist " + args[0]);
+				return;
+			}
 
-                while ((b = fastaReader.process(100)) != null) {
-                    for (String key : b.keySet()) {
-                        nrSeq++;
-                        //System.out.println(nrSeq + " : " + key + " " + b.get(key));
-                        if ( nrSeq % 100000 == 0)
-                            System.out.println(nrSeq );
-                    }
+			long timeS = System.currentTimeMillis();
 
-                }
-                long timeE = System.currentTimeMillis();
-                System.out.println("parsed a total of " + nrSeq + " TREMBL sequences! in " + (timeE - timeS));
-            } catch (Exception ex) {
-                Logger.getLogger(ParseFastaFileDemo.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+			try {
+
+				// automatically uncompress files using InputStreamProvider
+				InputStreamProvider isp = new InputStreamProvider();
+
+				InputStream inStream = isp.getInputStream(f);
+
+
+				FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+						inStream,
+						new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+
+				LinkedHashMap<String, ProteinSequence> b;
+
+				int nrSeq = 0;
+
+				while ((b = fastaReader.process(100)) != null) {
+					for (String key : b.keySet()) {
+						nrSeq++;
+						//System.out.println(nrSeq + " : " + key + " " + b.get(key));
+						if ( nrSeq % 100000 == 0)
+							System.out.println(nrSeq );
+					}
+
+				}
+				long timeE = System.currentTimeMillis();
+				System.out.println("parsed a total of " + nrSeq + " TREMBL sequences! in " + (timeE - timeS));
+			} catch (Exception ex) {
+				Logger.getLogger(ParseFastaFileDemo.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
 }

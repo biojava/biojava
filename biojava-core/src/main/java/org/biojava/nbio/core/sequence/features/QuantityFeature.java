@@ -35,36 +35,36 @@ import java.util.List;
  */
 public class QuantityFeature<S extends AbstractSequence<C>, C extends Compound> extends AbstractFeature<S, C> {
 
-    private List<Number> quantities = new ArrayList<Number>();
+	private List<Number> quantities = new ArrayList<Number>();
 
-    /**
-     *
-     * @param type
-     * @param source
-     */
-    public QuantityFeature(String type, String source) {
-        super(type, source);
-    }
+	/**
+	 *
+	 * @param type
+	 * @param source
+	 */
+	public QuantityFeature(String type, String source) {
+		super(type, source);
+	}
 
-    /**
-     *
-     * @param value
-     */
-    public void addQuantity(Number value) {
-        quantities.add(value);
-    }
+	/**
+	 *
+	 * @param value
+	 */
+	public void addQuantity(Number value) {
+		quantities.add(value);
+	}
 
-    /**
-     * @return the quantities
-     */
-    public List<Number> getQuantities() {
-        return quantities;
-    }
+	/**
+	 * @return the quantities
+	 */
+	public List<Number> getQuantities() {
+		return quantities;
+	}
 
-    /**
-     * @param quantities the quantities to set
-     */
-    public void setQuantities(List<Number> quantities) {
-        this.quantities = quantities;
-    }
+	/**
+	 * @param quantities the quantities to set
+	 */
+	public void setQuantities(List<Number> quantities) {
+		this.quantities = quantities;
+	}
 }

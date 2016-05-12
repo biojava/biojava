@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 1, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -41,10 +41,10 @@ import static org.junit.Assert.*;
 
 // TODO dmyersturnbull: we should merge TestAtomCache and AtomCacheTest
 public class TestAtomCache {
-	
+
 	public static final String lineSplit = System.getProperty("file.separator");
 	private AtomCache cache;
-	
+
 	@Before
 	public void setUp() {
 		cache = new AtomCache();
@@ -76,7 +76,7 @@ public class TestAtomCache {
 		Structure s = cache.getStructure(name1);
 		assertNotNull(s);
 		assertTrue(s.getChains().size() == 4);
-		
+
 		String name2 = "4hhb.C";
 		String chainId2 = "C";
 		s = cache.getStructure(name2);
@@ -95,7 +95,7 @@ public class TestAtomCache {
 		} catch(StructureException e) {
 		}
 
-		
+
 		// Numeric chain IDs are allowed but deprecated.
 		String name3 = "4hhb.1";
 		String chainId3 = "B";
@@ -107,7 +107,7 @@ public class TestAtomCache {
 		assertEquals(c.getChainID(),chainId3);
 
 
-		String name4 = "4hhb.A:10-20,B:10-20,C:10-20";		
+		String name4 = "4hhb.A:10-20,B:10-20,C:10-20";
 		s = cache.getStructure(name4);
 		assertNotNull(s);
 
@@ -140,7 +140,7 @@ public class TestAtomCache {
 		assertEquals(c.getChainID(),chainId2);
 
 	}
-	
+
 	@Test(expected=IOException.class)
 	public void testObsoleteId() throws StructureException, IOException {
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
@@ -150,14 +150,14 @@ public class TestAtomCache {
 		cache.setUseMmCif(false);
 		cache.getStructure("1HHB");
 	}
-	
+
 	// note: we expect an IOException because 1CMW is obsolete and hasn't got a replacement
 	@Test
 	public void testFetchCurrent1CMW() throws IOException, StructureException {
-		
+
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
-		
+
 		// OBSOLETE PDB; should throw an exception
 		cache.setUseMmCif(false);
 		try {
@@ -175,14 +175,14 @@ public class TestAtomCache {
 	// 1HHB is obsolete with a replacement
 	@Test
 	public void testFetchCurrent1HHB() throws IOException, StructureException {
-		
+
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
-		
+
 		cache.setUseMmCif(false);
 		Structure s = cache.getStructure("1HHB");
 		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
-		
+
 		cache.setUseMmCif(true);
 		s = cache.getStructure("1HHB");
 		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());

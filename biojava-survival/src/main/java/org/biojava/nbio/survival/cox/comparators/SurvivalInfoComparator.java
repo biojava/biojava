@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.survival.cox.comparators;
 
 import org.biojava.nbio.survival.cox.SurvivalInfo;
@@ -34,8 +30,9 @@ import java.util.Comparator;
  */
 public class SurvivalInfoComparator implements Comparator<SurvivalInfo> {
 
-    public int compare(SurvivalInfo t, SurvivalInfo t1) {
-        return t.getOrder() - t1.getOrder();
-    }
-    
+	@Override
+	public int compare(SurvivalInfo t, SurvivalInfo t1) {
+		return t.getOrder() - t1.getOrder();
+	}
+
 }

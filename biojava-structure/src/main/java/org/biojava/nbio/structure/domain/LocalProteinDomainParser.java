@@ -17,8 +17,8 @@
  *
  *      http://www.biojava.org/
  *
- * 
- * Author: Andreas Prlic 
+ *
+ * Author: Andreas Prlic
  *
  */
 package org.biojava.nbio.structure.domain;
@@ -41,8 +41,8 @@ Veretnik S, Bourne PE, Alexandrov NN, Shindyalov IN.
 </pre>
 
  * This implementation is based on a Java port of the PDP algorithm, as described in:
- *   
- * 
+ *
+ *
  * @author Andreas Prlic
  * @since 3.0.2
  */
@@ -50,14 +50,14 @@ public class LocalProteinDomainParser {
 
 
 	/** make sure this class can only get accessed via the static method calls
-	 * 
+	 *
 	 */
 	private LocalProteinDomainParser(){
-		
+
 	}
-	
+
 	/** Suggest domains for a protein structure
-	 * 
+	 *
 	 * @param s the protein structure
 	 * @return a list of possible domains
 	 * @throws StructureException
@@ -67,11 +67,11 @@ public class LocalProteinDomainParser {
 		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 
 		return suggestDomains(ca);
-	} 
+	}
 
 
 	/** Suggest domains for a set of Calpha atoms
-	 * 
+	 *
 	 * @param ca an array of Calpha atoms
 	 * @return a list of possible domains
 	 * @throws StructureException
@@ -99,7 +99,7 @@ public class LocalProteinDomainParser {
 		cutDomain.cutDomain(dom, cutSites, pdpMatrix);
 		List<Domain> domains =  cutDomain.getDomains();
 
-		
+
 		//
 		domains = ClusterDomains.cluster(domains, pdpMatrix);
 
@@ -110,6 +110,6 @@ public class LocalProteinDomainParser {
 
 	}
 
-	
+
 
 }

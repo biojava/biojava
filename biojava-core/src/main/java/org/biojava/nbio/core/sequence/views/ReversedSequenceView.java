@@ -37,24 +37,24 @@ import org.biojava.nbio.core.sequence.template.SequenceProxyView;
  */
 public class ReversedSequenceView<C extends Compound> extends SequenceProxyView<C> {
 
-    private final int sequenceSize;
+	private final int sequenceSize;
 
-    public ReversedSequenceView(Sequence<C> sequence) {
-        super(sequence);
-        this.sequenceSize = sequence.getLength();
-    }
+	public ReversedSequenceView(Sequence<C> sequence) {
+		super(sequence);
+		this.sequenceSize = sequence.getLength();
+	}
 
-    @Override
-    public String getSequenceAsString() {
-        return SequenceMixin.toString(this);
-    }
+	@Override
+	public String getSequenceAsString() {
+		return SequenceMixin.toString(this);
+	}
 
-    protected int toIndex(int index) {
-        return (sequenceSize - index) + 1;
-    }
+	protected int toIndex(int index) {
+		return (sequenceSize - index) + 1;
+	}
 
-    @Override
-    public C getCompoundAt(int position) {
-        return super.getCompoundAt(toIndex(position));
-    }
+	@Override
+	public C getCompoundAt(int position) {
+		return super.getCompoundAt(toIndex(position));
+	}
 }

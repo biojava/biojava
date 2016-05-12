@@ -70,49 +70,49 @@ public class SequenceTools {
 			}
 		}
 	}
-	
-    public static int percentNucleotideSequence(String sequence)
-    {
-            if (sequence == null || sequence.length() == 0) return 0;
 
-            int l = sequence.length();
-            int n =0;
+	public static int percentNucleotideSequence(String sequence)
+	{
+			if (sequence == null || sequence.length() == 0) return 0;
 
-            for (int i = 0; i < l; i++)
-            {
-                    if (NUCLEOTIDE_LETTERS.indexOf(sequence.charAt(i)) < 0)
-                    {
-                            continue;
-                    }
-                    n++;
-            }
-            return (100 * n) / l;
-    }
+			int l = sequence.length();
+			int n =0;
 
-    public static boolean isNucleotideSequence(String sequence)
-    {
-            if (sequence == null || sequence.length() == 0) return false;
+			for (int i = 0; i < l; i++)
+			{
+					if (NUCLEOTIDE_LETTERS.indexOf(sequence.charAt(i)) < 0)
+					{
+							continue;
+					}
+					n++;
+			}
+			return (100 * n) / l;
+	}
 
-            int l = sequence.length();
-            for (int i = 0; i < l; i++)
-            {
-                    if (NUCLEOTIDE_LETTERS.indexOf(sequence.charAt(i)) < 0)
-                    {
-                            return false;
-                    }
-            }
-            return true;
-    }
-    
-    public Sequence<?> getSequenceFromString(String sequence) throws CompoundNotFoundException {
-    	
-  
-    	if( isNucleotideSequence(sequence)) {
-    		return  new DNASequence(sequence);
-    	} else {
-    		return new ProteinSequence(sequence);
-    	}
-    	
-    }
-	
+	public static boolean isNucleotideSequence(String sequence)
+	{
+			if (sequence == null || sequence.length() == 0) return false;
+
+			int l = sequence.length();
+			for (int i = 0; i < l; i++)
+			{
+					if (NUCLEOTIDE_LETTERS.indexOf(sequence.charAt(i)) < 0)
+					{
+							return false;
+					}
+			}
+			return true;
+	}
+
+	public Sequence<?> getSequenceFromString(String sequence) throws CompoundNotFoundException {
+
+
+		if( isNucleotideSequence(sequence)) {
+			return  new DNASequence(sequence);
+		} else {
+			return new ProteinSequence(sequence);
+		}
+
+	}
+
 }

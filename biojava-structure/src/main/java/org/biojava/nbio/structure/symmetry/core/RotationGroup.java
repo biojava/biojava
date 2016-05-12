@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package org.biojava.nbio.structure.symmetry.core;
 
@@ -68,7 +64,7 @@ public class RotationGroup {
 		for (int i = 0; i < n; i++) {
 			permutation.add(i);
 		}
-		r.setPermutation(permutation);   
+		r.setPermutation(permutation);
 		Matrix4d m = new Matrix4d();
 		m.setIdentity();
 		r.setTransformation(m);
@@ -110,7 +106,7 @@ public class RotationGroup {
 	}
 
 	/**
-	 * Returns QuatSymmetryScores averaged over all rotations 
+	 * Returns QuatSymmetryScores averaged over all rotations
 	 * (except the first rotation, which is the unit operation E)
 	 * @return mean scores average over rotations
 	 */
@@ -118,7 +114,7 @@ public class RotationGroup {
 		QuatSymmetryScores scores = new QuatSymmetryScores();
 
 		int n = rotations.size()-1;
-		
+
 		if (n > 0) {
 			double[] values = new double[n];
 
@@ -174,7 +170,7 @@ public class RotationGroup {
 				values[i-1] = rotations.get(i).getScores().getRmsdIntra();
 			}
 			scores.setRmsdIntra(averageScores(values));
-			
+
 			// SymDeviation
 			scores.setSymDeviation(symmetryDeviation);
 		}
@@ -201,7 +197,7 @@ public class RotationGroup {
 		}
 		return sb.toString();
 	}
-	
+
 	private double averageScores(double[] scores) {
 		double sum = 0;
 		for (double s: scores) {
@@ -209,7 +205,7 @@ public class RotationGroup {
 		}
 		return sum/scores.length;
 	}
-	
+
 	private double minScores(double[] scores) {
 		double score = Double.MAX_VALUE;
 		for (double s: scores) {
@@ -217,7 +213,7 @@ public class RotationGroup {
 		}
 		return score;
 	}
-	
+
 	private double maxScores(double[] scores) {
 		double score = Double.MIN_VALUE;
 		for (double s: scores) {
@@ -308,7 +304,7 @@ public class RotationGroup {
 	public int getTwoFoldsPerpendicular(){
 		return twoFoldsPerpendicular;
 	}
-	
+
 	public int getPrincipalAxisIndex(){
 		return principalAxisIndex;
 	}

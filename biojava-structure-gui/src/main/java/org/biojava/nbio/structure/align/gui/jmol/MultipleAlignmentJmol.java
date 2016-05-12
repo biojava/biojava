@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A class that provides a 3D visualization Frame in Jmol for
  * {@link MultipleAlignment}s.
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.0
  *
@@ -78,7 +78,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 	private JCheckBox colorByBlocks;
 	private List<JCheckBox> selectedStructures;
 
-	private static final String LIGAND_DISPLAY_SCRIPT = 
+	private static final String LIGAND_DISPLAY_SCRIPT =
 			"select ligand; wireframe 40; spacefill 120; color CPK;";
 
 	private static final Logger logger = LoggerFactory
@@ -95,7 +95,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 	/**
 	 * The constructor displays the Mutltiple Alignment in a new JmolPanel
 	 * Frame.
-	 * 
+	 *
 	 * @param msa
 	 *            : contains the aligned residues.
 	 * @param rotatedAtoms
@@ -415,7 +415,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				Phylogeny kimura = MultipleAlignmentTools
 						.getKimuraTree(multAln);
 				Phylogeny sdm = MultipleAlignmentTools
-						.getSDMTree(multAln);
+						.getHSDMTree(multAln);
 				// Phylogeny structural = MultipleAlignmentTools
 				//		.getStructuralTree(multAln);
 

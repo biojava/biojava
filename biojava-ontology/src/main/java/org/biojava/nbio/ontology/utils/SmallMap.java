@@ -38,206 +38,227 @@ import java.util.*;
  */
 
 public class SmallMap extends AbstractMap implements Serializable {
-    private Object[] mappings = null;
-    private int numMappings = 0;
+	private Object[] mappings = null;
+	private int numMappings = 0;
 
-    public SmallMap() {
-        super();
-    }
+	public SmallMap() {
+		super();
+	}
 
-    public SmallMap(int size) {
-        super();
-        mappings = new Object[size * 2];
-    }
+	public SmallMap(int size) {
+		super();
+		mappings = new Object[size * 2];
+	}
 
-    public SmallMap(Map m) {
-        this(m.size());
-        for (Iterator i = m.entrySet().iterator(); i.hasNext(); ) {
-            Map.Entry me = (Map.Entry) i.next();
-            put(me.getKey(), me.getValue());
-        }
-    }
+	public SmallMap(Map m) {
+		this(m.size());
+		for (Iterator i = m.entrySet().iterator(); i.hasNext(); ) {
+			Map.Entry me = (Map.Entry) i.next();
+			put(me.getKey(), me.getValue());
+		}
+	}
 
-    /**
-     * @throws NullPointerException if key is null
-     */
-    public Object get(Object key) {
-        // Doesn't actually need to check if mappings is null, since numMappings
-        // will necessarily be zero.
-        
-        int keyHash = key.hashCode();
-        for (int i = 0; i < numMappings * 2; i += 2) {
-            if (keyHash == mappings[i].hashCode() && key.equals(mappings[i])) {
-                return mappings[i + 1];
-            }
-        }
-        return null;
-    }
+	/**
+	 * @throws NullPointerException if key is null
+	 */
+	@Override
+	public Object get(Object key) {
+		// Doesn't actually need to check if mappings is null, since numMappings
+		// will necessarily be zero.
 
-    /**
-     * @throws NullPointerException if key is null
-     */
-    public Object put(Object key, Object value) {
-        int keyHash = key.hashCode();
-        
-        for (int i = 0; i < numMappings * 2; i += 2) {
-            if (keyHash == mappings[i].hashCode() && key.equals(mappings[i])) {
-                Object oldValue = mappings[i+1];
-                mappings[i+1] = value;
-                return oldValue;
-            }
-        }
-        
-        int newPos = numMappings * 2;
-        int oldLength = 0;
-        if (mappings != null) {
-            oldLength = mappings.length;
-        }
-        if (newPos + 1 >= oldLength) {
-            Object[] newMappings = new Object[oldLength + 6];
-            if (oldLength > 0) {
-                System.arraycopy(mappings, 0, newMappings, 0, mappings.length);
-            }
-            mappings = newMappings;
-        }
-        
-        mappings[newPos] = key;
-        mappings[newPos + 1] = value;
-        numMappings++;
-        
-        return null;
-    }
+		int keyHash = key.hashCode();
+		for (int i = 0; i < numMappings * 2; i += 2) {
+			if (keyHash == mappings[i].hashCode() && key.equals(mappings[i])) {
+				return mappings[i + 1];
+			}
+		}
+		return null;
+	}
 
-    public Set keySet() {
-        return new KeySet();
-    }
+	/**
+	 * @throws NullPointerException if key is null
+	 */
+	@Override
+	public Object put(Object key, Object value) {
+		int keyHash = key.hashCode();
 
-    public Set entrySet() {
-        return new EntrySet();
-    }
+		for (int i = 0; i < numMappings * 2; i += 2) {
+			if (keyHash == mappings[i].hashCode() && key.equals(mappings[i])) {
+				Object oldValue = mappings[i+1];
+				mappings[i+1] = value;
+				return oldValue;
+			}
+		}
 
-    public int size() {
-        return numMappings;
-    }
+		int newPos = numMappings * 2;
+		int oldLength = 0;
+		if (mappings != null) {
+			oldLength = mappings.length;
+		}
+		if (newPos + 1 >= oldLength) {
+			Object[] newMappings = new Object[oldLength + 6];
+			if (oldLength > 0) {
+				System.arraycopy(mappings, 0, newMappings, 0, mappings.length);
+			}
+			mappings = newMappings;
+		}
 
-    public boolean containsKey(Object key) {
-        int keyHash = key.hashCode();
-        for (int i = 0; i < numMappings * 2; i += 2) {
-            if (keyHash == mappings[i].hashCode() && key.equals(mappings[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
+		mappings[newPos] = key;
+		mappings[newPos + 1] = value;
+		numMappings++;
+
+		return null;
+	}
+
+	@Override
+	public Set keySet() {
+		return new KeySet();
+	}
+
+	@Override
+	public Set entrySet() {
+		return new EntrySet();
+	}
+
+	@Override
+	public int size() {
+		return numMappings;
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		int keyHash = key.hashCode();
+		for (int i = 0; i < numMappings * 2; i += 2) {
+			if (keyHash == mappings[i].hashCode() && key.equals(mappings[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 
-    // num ranges from 1 to numMappings
-    private void removeMapping(int num) {
-        if (num < numMappings) {
-            System.arraycopy(mappings, num * 2, mappings, (num - 1) * 2, (numMappings - num) * 2);
-        }
-        mappings[numMappings * 2 - 1] = null;
-        mappings[numMappings * 2 - 2] = null;
-        numMappings--;
-    }
+	// num ranges from 1 to numMappings
+	private void removeMapping(int num) {
+		if (num < numMappings) {
+			System.arraycopy(mappings, num * 2, mappings, (num - 1) * 2, (numMappings - num) * 2);
+		}
+		mappings[numMappings * 2 - 1] = null;
+		mappings[numMappings * 2 - 2] = null;
+		numMappings--;
+	}
 
-    private class KeySet extends AbstractSet {
-        public Iterator iterator() {
-            return new KeyIterator();
-        }
+	private class KeySet extends AbstractSet {
+		@Override
+		public Iterator iterator() {
+			return new KeyIterator();
+		}
 
-        public int size() {
-            return numMappings;
-        }
-    }
+		@Override
+		public int size() {
+			return numMappings;
+		}
+	}
 
-    private class KeyIterator implements Iterator {
-        int pos = 0;
-        
-        public boolean hasNext() {
-            return pos < numMappings;
-        }
-        
-        public Object next() {
-            if (pos >= numMappings) {
-                throw new NoSuchElementException();
-            }
-            int offset = pos * 2;
-            ++pos;
-            return mappings[offset];
-        }
-        
-        public void remove() {
-            removeMapping(pos);
-            pos -= 1;
-        }
-    }
+	private class KeyIterator implements Iterator {
+		int pos = 0;
 
-    private class EntrySet extends AbstractSet {
-        public Iterator iterator() {
-            return new EntryIterator();
-        }
+		@Override
+		public boolean hasNext() {
+			return pos < numMappings;
+		}
 
-        public int size() {
-            return numMappings;
-        }
-    }
+		@Override
+		public Object next() {
+			if (pos >= numMappings) {
+				throw new NoSuchElementException();
+			}
+			int offset = pos * 2;
+			++pos;
+			return mappings[offset];
+		}
 
-    private class EntryIterator implements Iterator {
-        int pos = 0;
-        
-        public boolean hasNext() {
-            return pos < numMappings;
-        }
-        
-        public Object next() {
-            if (pos >= numMappings) {
-                throw new NoSuchElementException();
-            }
-            int offset = pos * 2;
-            ++pos;
-            return new MapEntry(offset);
-        }
-        
-        public void remove() {
-            removeMapping(pos);
-            pos -= 1;
-        }
-    }
+		@Override
+		public void remove() {
+			removeMapping(pos);
+			pos -= 1;
+		}
+	}
 
-    private class MapEntry implements Map.Entry {
-        private int offset;
-        
-        private MapEntry(int offset) {
-            this.offset = offset;
-        }
-        
-        public Object getKey() {
-            return mappings[offset];
-        }
-        
-        public Object getValue() {
-            return mappings[offset + 1];
-        }
-        
-        public Object setValue(Object v) {
-            Object oldValue = mappings[offset + 1];
-            mappings[offset + 1] = v;
-            return oldValue;
-        }
-        
-        public boolean equals(Object o) {
-            if (! (o instanceof Map.Entry)) {
-                return false;
-            }
-            
-            Map.Entry mo = (Map.Entry) o;
-            return ((getKey() == null ? mo.getKey() == null : getKey().equals(mo.getKey())) &&
-		    (getValue() == null ? mo.getValue() == null : getValue().equals(mo.getValue())));
-        }
-        
-        public int hashCode() {
-            return (getKey() == null ? 0 : getKey().hashCode()) ^ (getValue() == null ? 0 : getValue().hashCode());
-        }
-    }
+	private class EntrySet extends AbstractSet {
+		@Override
+		public Iterator iterator() {
+			return new EntryIterator();
+		}
+
+		@Override
+		public int size() {
+			return numMappings;
+		}
+	}
+
+	private class EntryIterator implements Iterator {
+		int pos = 0;
+
+		@Override
+		public boolean hasNext() {
+			return pos < numMappings;
+		}
+
+		@Override
+		public Object next() {
+			if (pos >= numMappings) {
+				throw new NoSuchElementException();
+			}
+			int offset = pos * 2;
+			++pos;
+			return new MapEntry(offset);
+		}
+
+		@Override
+		public void remove() {
+			removeMapping(pos);
+			pos -= 1;
+		}
+	}
+
+	private class MapEntry implements Map.Entry {
+		private int offset;
+
+		private MapEntry(int offset) {
+			this.offset = offset;
+		}
+
+		@Override
+		public Object getKey() {
+			return mappings[offset];
+		}
+
+		@Override
+		public Object getValue() {
+			return mappings[offset + 1];
+		}
+
+		@Override
+		public Object setValue(Object v) {
+			Object oldValue = mappings[offset + 1];
+			mappings[offset + 1] = v;
+			return oldValue;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (! (o instanceof Map.Entry)) {
+				return false;
+			}
+
+			Map.Entry mo = (Map.Entry) o;
+			return ((getKey() == null ? mo.getKey() == null : getKey().equals(mo.getKey())) &&
+			(getValue() == null ? mo.getValue() == null : getValue().equals(mo.getValue())));
+		}
+
+		@Override
+		public int hashCode() {
+			return (getKey() == null ? 0 : getKey().hashCode()) ^ (getValue() == null ? 0 : getValue().hashCode());
+		}
+	}
 }

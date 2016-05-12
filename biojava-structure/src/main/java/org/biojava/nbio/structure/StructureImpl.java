@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.biojava.nbio.structure.io.CompoundFinder;
+import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,9 +57,9 @@ public class StructureImpl implements Structure, Serializable {
 	private List<List<Chain>> models;
 
 	private List<Map <String,Integer>> connections ;
-	private List<Compound> compounds;
+	private List<EntityInfo> entityInfos;
 	private List<DBRef> dbrefs;
-	private List<SSBond> ssbonds;
+	private List<Bond> ssbonds;
 	private List<Site> sites;
 	private List<Group> hetAtoms;
 	private String name ;
@@ -79,10 +79,10 @@ public class StructureImpl implements Structure, Serializable {
 		models         = new ArrayList<List<Chain>>();
 		name           = "";
 		connections    = new ArrayList<Map<String,Integer>>();
-		compounds      = new ArrayList<Compound>();
+		entityInfos      = new ArrayList<EntityInfo>();
 		dbrefs         = new ArrayList<DBRef>();
 		pdbHeader      = new PDBHeader();
-		ssbonds        = new ArrayList<SSBond>();
+		ssbonds        = new ArrayList<Bond>();
 		sites          = new ArrayList<Site>();
 		hetAtoms       = new ArrayList<Group>();
 	}
@@ -146,9 +146,8 @@ public class StructureImpl implements Structure, Serializable {
 		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
-		n.setConnections(getConnections());
 		n.setSites(getSites());
-				
+
 
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
@@ -162,38 +161,34 @@ public class StructureImpl implements Structure, Serializable {
 				cloned_chain.setStructure(n);
 
 				cloned_model.add(cloned_chain);
-				
+
 			}
 			n.addModel(cloned_model);
 
 		}
 
-		// deep-copying of Compounds is tricky: there's cross references also in the Chains
-		// beware: if we copy the compounds we would also need to reset the references to compounds in the individual chains
-		List<Compound> newCompoundList = new ArrayList<Compound>();
-		for (Compound compound:this.compounds) {
-			Compound newCompound = new Compound(compound); // this sets everything but the chains
-			for (String chainId:compound.getChainIds()) {
-				
+		// deep-copying of entityInfofos is tricky: there's cross references also in the Chains
+		// beware: if we copy the entityInfos we would also need to reset the references to entityInfos in the individual chains
+		List<EntityInfo> newEntityInfoList = new ArrayList<EntityInfo>();
+		for (EntityInfo entityInfo : this.entityInfos) {
+			EntityInfo newEntityInfo = new EntityInfo(entityInfo); // this sets everything but the chains
+			for (String chainId:entityInfo.getChainIds()) {
+
 					for (int modelNr=0;modelNr<n.nrModels();modelNr++) {
 						try {
 							Chain newChain = n.getChainByPDB(chainId,modelNr);
-							newChain.setCompound(newCompound);
-							newCompound.addChain(newChain);
+							newChain.setEntityInfo(newEntityInfo);
+							newEntityInfo.addChain(newChain);
 						} catch (StructureException e) {
 							// this actually happens for structure 1msh, which has no chain B for model 29 (clearly a deposition error)
-							logger.warn("Could not find chain id "+chainId+" of model "+modelNr+" while cloning compound "+compound.getMolId()+". Something is wrong!");
+							logger.warn("Could not find chain id "+chainId+" of model "+modelNr+" while cloning entityInfo "+entityInfo.getMolId()+". Something is wrong!");
 						}
 					}
 			}
-			newCompoundList.add(newCompound);
+			newEntityInfoList.add(newEntityInfo);
 		}
-		n.setCompounds(newCompoundList); 
-
-
-		for (SSBond ssbond: ssbonds){
-			n.addSSBond(ssbond.clone());
-		}
+		n.setEntityInfos(newEntityInfoList);
+		// TODO ssbonds are complicated to clone: there are deep references inside Atom objects, how would we do it? - JD 2016-03-03
 
 		return n ;
 	}
@@ -308,16 +303,14 @@ public class StructureImpl implements Structure, Serializable {
 		this.structureIdentifier = structureIdentifier;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
 
 	/**
-	 * Return the connections value.
-	 *
-	 * @return a List object representing the connections value
-	 * @see Structure interface
-	 * @see #setConnections
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Map<String,Integer>> getConnections()                { return connections ;}
@@ -448,9 +441,9 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
 				str.append("chain ").append(j).append(": >").append(cha.getChainID()).append("< ");
-				if ( cha.getCompound() != null){
-					Compound comp = cha.getCompound();
-					String molName = comp.getMolName();
+				if ( cha.getEntityInfo() != null){
+					EntityInfo comp = cha.getEntityInfo();
+					String molName = comp.getDescription();
 					if ( molName != null){
 						str.append(molName);
 					}
@@ -471,7 +464,7 @@ public class StructureImpl implements Structure, Serializable {
 			str.append(dbref.toPDB()).append(newline);
 		}
 		str.append("Molecules: ").append(newline);
-		for (Compound mol : compounds) {
+		for (EntityInfo mol : entityInfos) {
 			str.append(mol).append(newline);
 		}
 
@@ -512,8 +505,8 @@ public class StructureImpl implements Structure, Serializable {
 	/**
 	 * Whether this Structure is a crystallographic structure or not.
 	 * It will first check the experimental technique and if not present it will try
-	 * to guess from the presence of a space group and sensible cell parameters  
-	 * 
+	 * to guess from the presence of a space group and sensible cell parameters
+	 *
 	 * @return true if crystallographic, false otherwise
 	 */
 	@Override
@@ -552,14 +545,14 @@ public class StructureImpl implements Structure, Serializable {
 			if (nrModels()>1) {
 				if (pdbHeader.getCrystallographicInfo().getSpaceGroup()!=null) {
 					// multimodel, sg defined, but missing cell: must be NMR
-					if (pdbHeader.getCrystallographicInfo().getCrystalCell()==null) 
-						return true;					
+					if (pdbHeader.getCrystallographicInfo().getCrystalCell()==null)
+						return true;
 					// multi-model, sg defined and cell unreasonable: must be NMR
 					if (!pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable())
 						return true;
-				} else { 
+				} else {
 					// multi-model and missing space group: must be NMR
-					return true; 
+					return true;
 				}
 			}
 		}
@@ -569,7 +562,7 @@ public class StructureImpl implements Structure, Serializable {
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public void setNmr(boolean nmr) {	
+	public void setNmr(boolean nmr) {
 		// old implementation was:
 		// this.nmrflag = nmr;
 	}
@@ -671,41 +664,47 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setCompounds(List<Compound> molList){
-		this.compounds = molList;
+	public void setEntityInfos(List<EntityInfo> molList){
+		this.entityInfos = molList;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void addCompound(Compound compound) {
-		this.compounds.add(compound);
+	public void addEntityInfo(EntityInfo entityInfo) {
+		this.entityInfos.add(entityInfo);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Compound> getCompounds() {
-		// compounds are parsed from the PDB/mmCIF file normally
-		// but if the file is incomplete, it won't have the Compounds information and we try 
+	public List<EntityInfo> getEntityInfos() {
+		// entity information is parsed from the PDB/mmCIF file normally
+		// but if the file is incomplete, it won't have the entityInfo information and we try
 		// to guess it from the existing seqres/atom sequences
-		if (compounds==null || compounds.isEmpty()) {
-			CompoundFinder cf = new CompoundFinder(this);
-			this.compounds = cf.findCompounds();
+		if (entityInfos==null || entityInfos.isEmpty()) {
+			EntityFinder cf = new EntityFinder(this);
+			this.entityInfos = cf.findEntities();
 
 			// now we need to set references in chains:
-			for (Compound compound:compounds) {
-				for (Chain c:compound.getChains()) {
-					c.setCompound(compound);
+			for (EntityInfo entityInfo : entityInfos) {
+				for (Chain c:entityInfo.getChains()) {
+					c.setEntityInfo(entityInfo);
 				}
 			}
 		}
-		return compounds;
+		return entityInfos;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Compound getCompoundById(int molId) {
-		for (Compound mol : this.compounds){
-			if (mol.getMolId()==molId){
+	public EntityInfo getCompoundById(int molId) {
+		return getEntityById(molId);
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public EntityInfo getEntityById(int entityId) {
+		for (EntityInfo mol : this.entityInfos){
+			if (mol.getMolId()==entityId){
 				return mol;
 			}
 		}
@@ -745,32 +744,27 @@ public class StructureImpl implements Structure, Serializable {
 		this.pdbHeader = pdbHeader;
 	}
 
-	/** get the list of SSBonds as they have been defined in the PDB files
-	 *
-	 * @return a list of SSBonds
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public List<SSBond> getSSBonds(){
+	public List<Bond> getSSBonds(){
 		return ssbonds;
 
 	}
-	/** set the list of SSBonds for this structure
-	 *
-	 * @param ssbonds
-	 */
+
+	/** {@inheritDoc} */
 	@Override
-	public void setSSBonds(List<SSBond> ssbonds){
+	public void setSSBonds(List<Bond> ssbonds){
 		this.ssbonds = ssbonds;
 	}
 
-	/** add a single SSBond to this structure
+	/**
+	 * Adds a single disulfide Bond to this structure
 	 *
 	 * @param ssbond the SSBond.
 	 */
 	@Override
-	public void addSSBond(SSBond ssbond){
+	public void addSSBond(Bond ssbond){
 		ssbonds.add(ssbond);
-		ssbond.setSerNum(ssbonds.size());
 	}
 
 	/**
@@ -913,10 +907,10 @@ public class StructureImpl implements Structure, Serializable {
 	public List<String> getRanges() {
 		return ResidueRange.toStrings(getResidueRanges());
 	}
-	
+
 	/**
 	 * Creates a SubstructureIdentifier based on the residues in this Structure.
-	 * 
+	 *
 	 * Only the first and last residues of each chain are considered, so chains
 	 * with gaps
 	 * @return A {@link SubstructureIdentifier} with residue ranges constructed from each chain
@@ -930,7 +924,7 @@ public class StructureImpl implements Structure, Serializable {
 				// generate fake one if needed
 			}
 		}
-		
+
 		// No identifier set, so generate based on residues present in the structure
 		List<ResidueRange> range = new ArrayList<ResidueRange>();
 		for (Chain chain : getChains()) {

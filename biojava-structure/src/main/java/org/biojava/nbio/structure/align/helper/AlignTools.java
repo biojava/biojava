@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on May 27, 2006
  *
  */
@@ -30,7 +30,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 public class AlignTools {
 
 	/** get a subset of Atoms based by their positions
-	 *  
+	 *
 	 * @param caall
 	 * @param idx an array where each element is a position of all the Atoms to return
 	 * @return at Atom[] array
@@ -41,13 +41,13 @@ public class AlignTools {
 		for (int p = 0 ; p < idx.length;p++){
 
 			int pos1 =  idx[p];
-			subset[p] =  (Atom) caall[pos1].clone();            
+			subset[p] =  (Atom) caall[pos1].clone();
 		}
 		return subset;
 	}
 
 	/** get a continue subset of Atoms based by the starting position and the length
-	 * 
+	 *
 	 * @param caall
 	 * @param pos ... the start position
 	 * @param fragmentLength .. the length of the subset to extract.
@@ -70,7 +70,7 @@ public class AlignTools {
 
 	/** get a continue subset of Atoms based by the starting position and the length
 	 * does not clone the original atoms.
-	 * 
+	 *
 	 * @param caall
 	 * @param pos ... the start position
 	 * @param fragmentLength .. the length of the subset to extract.
@@ -91,7 +91,7 @@ public class AlignTools {
 	}
 
 	/** get the centroid for the set of atoms starting fromposition pos, length fragmentLenght
-	 * 
+	 *
 	 * @param ca
 	 * @param pos
 	 * @param fragmentLength
@@ -112,7 +112,7 @@ public class AlignTools {
 
 
 	/* Get distances along diagonal k from coordinate array coords.
-	 * 
+	 *
 	 * @param atoms set of atoms to be used
 	 * @param k number of diagonal to be used
 	 */
@@ -124,8 +124,8 @@ public class AlignTools {
 
 		for ( int i = 0 ; i< (l-k); i++){
 
-			double dist = Calc.getDistance(atoms[i],atoms[i+k]);                
-			dk[i] = dist; 
+			double dist = Calc.getDistance(atoms[i],atoms[i+k]);
+			dk[i] = dist;
 
 		}
 
@@ -135,7 +135,7 @@ public class AlignTools {
 	/**
 	 * Given distance matrix diagonals dk1, dk2, get the rmsd of a fpair.
 	 * i,j is the fpair start in mol1 and mol2, l is the length of the fragment
-	 * 
+	 *
 	 * @param dk1 distances of structure 1
 	 * @param dk2 distance of structure 2
 	 * @param i position in structure 1
@@ -160,10 +160,10 @@ public class AlignTools {
 
 	}
 
-	/** 
+	/**
 	 * Matrix of all distances between two sets of Atoms. Does not
 	 * superimpose or modify the Atoms.
-	 * 
+	 *
 	 * @param ca1
 	 * @param ca2
 	 * @return a Matrix
@@ -184,7 +184,7 @@ public class AlignTools {
 				out.set(i,j,d);
 			}
 		}
-		return out;  
-	}   
+		return out;
+	}
 
 }

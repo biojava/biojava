@@ -41,36 +41,36 @@ import java.util.List;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public class SimpleProfilePair<S extends Sequence<C>, C extends Compound> extends SimpleProfile<S, C>
-        implements ProfilePair<S, C> {
+		implements ProfilePair<S, C> {
 
-    
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private Profile<S, C> query, target;
 
-    /**
-     * Creates a pair profile for the given profiles.
-     *
-     * @param query the first profile of the pair
-     * @param target the second profile of the pair
-     * @param sx lists whether the query profile aligns a {@link Compound} or gap at each index of the alignment
-     * @param sy lists whether the target profile aligns a {@link Compound} or gap at each index of the alignment
-     * @throws IllegalArgumentException if alignments differ in size or given profiles do not fit in alignments
-     */
-    public SimpleProfilePair(Profile<S, C> query, Profile<S, C> target, List<Step> sx, List<Step> sy) {
-        super(query, target, sx, sy);
-        this.query = query;
-        this.target = target;
-    }
+	/**
+	 * Creates a pair profile for the given profiles.
+	 *
+	 * @param query the first profile of the pair
+	 * @param target the second profile of the pair
+	 * @param sx lists whether the query profile aligns a {@link Compound} or gap at each index of the alignment
+	 * @param sy lists whether the target profile aligns a {@link Compound} or gap at each index of the alignment
+	 * @throws IllegalArgumentException if alignments differ in size or given profiles do not fit in alignments
+	 */
+	public SimpleProfilePair(Profile<S, C> query, Profile<S, C> target, List<Step> sx, List<Step> sy) {
+		super(query, target, sx, sy);
+		this.query = query;
+		this.target = target;
+	}
 
-    @Override
-    public Profile<S, C> getQuery() {
-        return query;
-    }
+	@Override
+	public Profile<S, C> getQuery() {
+		return query;
+	}
 
-    @Override
-    public Profile<S, C> getTarget() {
-        return target;
-    }
+	@Override
+	public Profile<S, C> getTarget() {
+		return target;
+	}
 
 }

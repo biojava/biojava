@@ -29,7 +29,7 @@ import org.biojava.nbio.structure.StructureException;
  * Decomposes a structure from the PDB into representative domains
  */
 public interface DomainProvider {
-	
+
 	/**
 	 * Get a list of constituent domain identifiers
 	 * @param name a structure identifier

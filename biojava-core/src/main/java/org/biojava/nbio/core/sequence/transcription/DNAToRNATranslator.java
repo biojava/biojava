@@ -44,79 +44,79 @@ import java.util.List;
  */
 public class DNAToRNATranslator extends AbstractCompoundTranslator<NucleotideCompound, NucleotideCompound> {
 
-    private final boolean shortCutTranslation;
+		private final boolean shortCutTranslation;
 
-  public DNAToRNATranslator(SequenceCreatorInterface<NucleotideCompound> rnaCreator,
-      CompoundSet<NucleotideCompound> dna, CompoundSet<NucleotideCompound> rna,
-      boolean shortCutTranslation) {
-    super(rnaCreator, dna, rna);
-    this.shortCutTranslation = shortCutTranslation;
-    defaultMappings();
-    thyamineToUracil();
-  }
+	public DNAToRNATranslator(SequenceCreatorInterface<NucleotideCompound> rnaCreator,
+			CompoundSet<NucleotideCompound> dna, CompoundSet<NucleotideCompound> rna,
+			boolean shortCutTranslation) {
+		super(rnaCreator, dna, rna);
+		this.shortCutTranslation = shortCutTranslation;
+		defaultMappings();
+		thyamineToUracil();
+	}
 
-    /**
-     * Overloaded local version which delegates to an optional translator
-     * when told to (specified during construction).
-     *
-     * @param originalSequence The DNA sequence to translate
-     * @return The translated single sequence
-     */
-    @Override
-    public List<Sequence<NucleotideCompound>> createSequences(Sequence<NucleotideCompound> originalSequence) {
-        if(shortCutTranslation) {
-            List<Sequence<NucleotideCompound>> result = new ArrayList<Sequence<NucleotideCompound>>(1);
-            result.add(wrapToRna(originalSequence));
-            return result;
-        }
-        else {
-            return super.createSequences(originalSequence);
-        }
-    }
+		/**
+		 * Overloaded local version which delegates to an optional translator
+		 * when told to (specified during construction).
+		 *
+		 * @param originalSequence The DNA sequence to translate
+		 * @return The translated single sequence
+		 */
+		@Override
+		public List<Sequence<NucleotideCompound>> createSequences(Sequence<NucleotideCompound> originalSequence) {
+				if(shortCutTranslation) {
+						List<Sequence<NucleotideCompound>> result = new ArrayList<Sequence<NucleotideCompound>>(1);
+						result.add(wrapToRna(originalSequence));
+						return result;
+				}
+				else {
+						return super.createSequences(originalSequence);
+				}
+		}
 
-    /**
-     * Takes in the given DNA Sequence and returns an instance of RNASequence
-     * which is using {@link RnaSequenceView} as a
-     * {@link ProxySequenceReader}.
-     */
-    protected RNASequence wrapToRna(Sequence<NucleotideCompound> dna) {
-        ProxySequenceReader<NucleotideCompound> rnaView = new RnaSequenceView(dna);
-        return new RNASequence(rnaView);
-    }
+		/**
+		 * Takes in the given DNA Sequence and returns an instance of RNASequence
+		 * which is using {@link RnaSequenceView} as a
+		 * {@link ProxySequenceReader}.
+		 */
+		protected RNASequence wrapToRna(Sequence<NucleotideCompound> dna) {
+				ProxySequenceReader<NucleotideCompound> rnaView = new RnaSequenceView(dna);
+				return new RNASequence(rnaView);
+		}
 
-  private void defaultMappings() {
-    NucleotideCompound thymine = getFromCompoundSet().getCompoundForString("T");
-    for(NucleotideCompound dnaBase: getFromCompoundSet().getAllCompounds()) {
-      if(dnaBase.equalsIgnoreCase(thymine)) {
-        continue;
-      }
-      NucleotideCompound rnaBase = getToCompoundSet().getCompoundForString(
-          dnaBase.toString());
-      addCompounds(dnaBase, rnaBase);
-    }
+	private void defaultMappings() {
+		NucleotideCompound thymine = getFromCompoundSet().getCompoundForString("T");
+		for(NucleotideCompound dnaBase: getFromCompoundSet().getAllCompounds()) {
+			if(dnaBase.equalsIgnoreCase(thymine)) {
+				continue;
+			}
+			NucleotideCompound rnaBase = getToCompoundSet().getCompoundForString(
+					dnaBase.toString());
+			addCompounds(dnaBase, rnaBase);
+		}
 
-  }
+	}
 
-  private void thyamineToUracil() {
-    addCompounds(getFromCompoundSet().getCompoundForString("T"),
-        getToCompoundSet().getCompoundForString("U"));
-    addCompounds(getFromCompoundSet().getCompoundForString("t"),
-        getToCompoundSet().getCompoundForString("u"));
-  }
+	private void thyamineToUracil() {
+		addCompounds(getFromCompoundSet().getCompoundForString("T"),
+				getToCompoundSet().getCompoundForString("U"));
+		addCompounds(getFromCompoundSet().getCompoundForString("t"),
+				getToCompoundSet().getCompoundForString("u"));
+	}
 
-  public Sequence<NucleotideCompound> createSequence(Sequence<NucleotideCompound> originalSequence, Frame frame) {
-    Sequence<NucleotideCompound> wrapped = frame.wrap(originalSequence);
-    return super.createSequence(wrapped);
-  }
+	public Sequence<NucleotideCompound> createSequence(Sequence<NucleotideCompound> originalSequence, Frame frame) {
+		Sequence<NucleotideCompound> wrapped = frame.wrap(originalSequence);
+		return super.createSequence(wrapped);
+	}
 
-  @Override
-  public Sequence<NucleotideCompound> createSequence(Sequence<NucleotideCompound> originalSequence) {
-    return createSequence(originalSequence, Frame.getDefaultFrame());
-  }
+	@Override
+	public Sequence<NucleotideCompound> createSequence(Sequence<NucleotideCompound> originalSequence) {
+		return createSequence(originalSequence, Frame.getDefaultFrame());
+	}
 
-  @Override
-  protected void postProcessCompoundLists(
-      List<List<NucleotideCompound>> compoundLists) {
-    //No post processing needed
-  }
+	@Override
+	protected void postProcessCompoundLists(
+			List<List<NucleotideCompound>> compoundLists) {
+		//No post processing needed
+	}
 }

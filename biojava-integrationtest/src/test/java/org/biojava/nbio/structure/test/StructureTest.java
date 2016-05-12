@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.test;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.SSBondImpl;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.IOException;
@@ -54,8 +55,9 @@ public class StructureTest {
 		PDBFileParser pdbpars = new PDBFileParser();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
+		params.setCreateAtomBonds(true);
 		pdbpars.setFileParsingParameters(params);
-		
+
 		structure = pdbpars.parsePDBFile(inStream) ;
 
 		assertNotNull(structure);
@@ -94,9 +96,9 @@ public class StructureTest {
 	}
 
 
-	/** 
+	/**
 	 * Tests if a PDB file can be parsed
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Test
 	public void testReadPDBFile() throws Exception {
@@ -106,50 +108,66 @@ public class StructureTest {
 		Chain c = structure.getChain(0);
 		assertEquals("did not find the expected 58 amino acids!",58,c.getAtomGroups(GroupType.AMINOACID).size());
 
-		assertTrue(c.getAtomGroups(GroupType.HETATM).size()     == 0);
+		assertEquals(0 , c.getAtomGroups(GroupType.HETATM).size());
 
 		Chain c2 = structure.getChain(1);
-		assertTrue(c2.getAtomGroups(GroupType.HETATM).size()     == 65);
-		assertTrue(c2.getAtomGroups(GroupType.NUCLEOTIDE).size() == 0 );
 
-		List<Compound> compounds= structure.getCompounds();
-		
+		// The second (unnamed) chain in te file contains 63 molecules of deutarated
+		// water + 1 PO4 molecule + 1 UNK hetatom molecule
+		// Since the UNK chemcomp is considered a peptide linked molecule (unknown aminoacid),
+		// then we have only 64 HETATMs
+		assertEquals(64, c2.getAtomGroups(GroupType.HETATM).size());
+		assertEquals(0, c2.getAtomGroups(GroupType.NUCLEOTIDE).size());
+
+		List<EntityInfo> compounds= structure.getEntityInfos();
+
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals(2, compounds.size());
-		Compound mol = compounds.get(0);
-		assertTrue(mol.getMolName().startsWith("TRYPSIN INHIBITOR"));
+		EntityInfo mol = compounds.get(0);
+		assertTrue(mol.getDescription().startsWith("TRYPSIN INHIBITOR"));
 	}
 
 	@Test
 	public void testSSBondParsing() throws Exception {
 		assertNotNull(structure);
 
-		List<SSBond> ssbonds = structure.getSSBonds();
+		List<Bond> ssbonds = structure.getSSBonds();
 		assertEquals("did not find the correct nr of SSBonds ",3,ssbonds.size());
 
 		String pdb1 = "SSBOND   1 CYS A    5    CYS A   55";
 		String pdb2 = "SSBOND   2 CYS A   14    CYS A   38";
 
-		SSBond bond1 = ssbonds.get(0);
+		Bond bond1 = ssbonds.get(0);
+		assertDisulfideBond("A", "A", 5, 55, bond1);
 
-		String b1 = bond1.toPDB();
+		Bond bond2 = ssbonds.get(1);
+		assertDisulfideBond("A", "A", 14, 38, bond2);
 
-		assertTrue("PDB representation incorrect",pdb1.equals(b1.trim()));
-		assertTrue("not right resnum1 " , bond1.getResnum1().equals("5"));
-		assertTrue("not right resnum2 " , bond1.getResnum2().equals("55"));
+		List<SSBondImpl> list = SSBondImpl.getSsBondListFromBondList(ssbonds);
 
-		SSBond bond2 = ssbonds.get(1);
-		String b2 = bond2.toPDB();
-		assertTrue("not right resnum1 " , bond2.getResnum1().equals("14"));
-		assertTrue("not right resnum2 " , bond2.getResnum2().equals("38"));
-		assertTrue("PDB representation incorrect",pdb2.equals(b2.trim()));
+		//System.out.println(list.get(0).toPDB());
+		assertEquals("PDB representation incorrect", pdb1, list.get(0).toPDB().trim());
+
+		//System.out.println(list.get(1).toPDB());
+		assertEquals("PDB representation incorrect", pdb2, list.get(1).toPDB().trim());
 
 	}
 
-	/** 
+	private void assertDisulfideBond(String expectedChainId1, String expectedChainId2, int expectedResSerial1, int expectedResSerial2, Bond bond) {
+		String chainId1 = bond.getAtomA().getGroup().getChainId();
+		String chainId2 = bond.getAtomB().getGroup().getChainId();
+		ResidueNumber resNum1 = bond.getAtomA().getGroup().getResidueNumber();
+		ResidueNumber resNum2 = bond.getAtomB().getGroup().getResidueNumber();
+		assertEquals("disulfide bond first chain id failed ", expectedChainId1, chainId1);
+		assertEquals("disulfide bond second chain id failed ", expectedChainId2, chainId2);
+		assertEquals("disulfide bond failed first residue number failed ", new ResidueNumber(expectedChainId1, expectedResSerial1, null), resNum1);
+		assertEquals("disulfide bond failed second residue number failed ", new ResidueNumber(expectedChainId2, expectedResSerial2, null), resNum2);
+	}
+
+	/**
 	 * Tests that standard amino acids are working properly
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Test
 	public void testStandardAmino() throws Exception {
@@ -164,7 +182,7 @@ public class StructureTest {
 
 	@Test
 	public void testPDBHeader(){
-		
+
 		PDBHeader header = structure.getPDBHeader();
 		String classification = header.getClassification();
 		assertTrue(classification.equals("PROTEINASE INHIBITOR (TRYPSIN)"));
@@ -175,7 +193,7 @@ public class StructureTest {
 		float resolution = header.getResolution();
 		assertEquals("the resolution in the Header is " + resolution + " and not 1.0, as expected",1.0,resolution,0.0001);
 
-		// commenting out test for deprecated method 
+		// commenting out test for deprecated method
 		//String technique = header.getTechnique();
 		String techShould = "X-RAY DIFFRACTION";
 		//assertEquals("the technique in the Header is " + technique, techShould,technique);
@@ -185,14 +203,14 @@ public class StructureTest {
 		assertEquals("the technique in the Header is " + technique, techShould, technique);
 
 
-		List <Compound> compounds = structure.getCompounds();
-		
+		List <EntityInfo> compounds = structure.getEntityInfos();
+
 		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals("did not find the right number of compounds! ", 2, compounds.size());
 
-		Compound comp = compounds.get(0);
-		assertEquals("did not get the right compounds info",true,comp.getMolName().startsWith("TRYPSIN INHIBITOR"));
+		EntityInfo comp = compounds.get(0);
+		assertEquals("did not get the right compounds info",true,comp.getDescription().startsWith("TRYPSIN INHIBITOR"));
 
 		List<String> chainIds = comp.getChainIds();
 		List<Chain> chains    = comp.getChains();
@@ -266,7 +284,7 @@ public class StructureTest {
 		Atom oldca2 =       g2.getAtom("CA");
 		Atom newca2 = newGroup.getAtom("CA");
 		Element e1 = ca1.getElement();
-		
+
 		assertEquals(Element.C, e1);
 
 		// this also tests the cloning ...

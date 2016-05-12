@@ -32,22 +32,22 @@ import java.io.IOException;
  */
 public class FastaSequenceParser implements SequenceParserInterface {
 
-    @Override
+	@Override
 	public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException {
-        StringBuilder sb;
-        if (sequenceLength != -1) {
-            sb = new StringBuilder(sequenceLength);
-        } else {
-            sb = new StringBuilder();
-        }
-        boolean keepGoing = true;
-        while (keepGoing) {
-            String line = bufferedReader.readLine();
-            if (line == null || line.startsWith(">")) {
-                break;
-            }
-            sb.append(line.trim());
-        }
-        return sb.toString();
-    }
+		StringBuilder sb;
+		if (sequenceLength != -1) {
+			sb = new StringBuilder(sequenceLength);
+		} else {
+			sb = new StringBuilder();
+		}
+		boolean keepGoing = true;
+		while (keepGoing) {
+			String line = bufferedReader.readLine();
+			if (line == null || line.startsWith(">")) {
+				break;
+			}
+			sb.append(line.trim());
+		}
+		return sb.toString();
+	}
 }

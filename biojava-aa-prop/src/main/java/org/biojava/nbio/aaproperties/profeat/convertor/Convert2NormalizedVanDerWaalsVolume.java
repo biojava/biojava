@@ -24,7 +24,7 @@ public class Convert2NormalizedVanDerWaalsVolume extends Convertor{
 	/**
 	 * Class for the conversion of protein sequence into normalized van der waals volume
 	 */
-	
+
 	@Override
 	public char convert(char c){
 		switch(c){

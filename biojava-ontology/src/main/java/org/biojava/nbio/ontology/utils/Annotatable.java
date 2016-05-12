@@ -48,10 +48,10 @@ package org.biojava.nbio.ontology.utils;
  *     ann = new SimpleAnnotation();
  *     // construct the forwarder so that it emits Annotatable.ANNOTATION ChangeEvents
  *     // for the Annotation.PROPERTY events it will listen for
- *     annFor = new ChangeForwarder.Retyper(this, getChangesupport( Annotatable.ANNOTATION ), 
+ *     annFor = new ChangeForwarder.Retyper(this, getChangesupport( Annotatable.ANNOTATION ),
  *                                          Annotatable.ANNOTATION );
  *     // connect the forwarder so it listens for Annotation.PROPERTY events
- *     ann.addChangeListener( annFor, Annotation.PROPERTY ); 
+ *     ann.addChangeListener( annFor, Annotation.PROPERTY );
  *   }
  *
  *   public Annotation getAnnotation() {
@@ -74,19 +74,19 @@ package org.biojava.nbio.ontology.utils;
  * immutable Annotation instances that are built from scratch each time.
  * @author  Matthew Pocock
  * @author <a href="mailto:kdj@sanger.ac.uk">Keith James</a> (docs).
- * @author  Kalle N�slund (docs)
+ * @author  Kalle Näslund (docs)
  * @see org.biojavax.RichAnnotatable
  * @since 1.0
  */
 public interface Annotatable  {
- 
 
-  /**
-   * Should return the associated annotation object.
-   *
-   * @return an Annotation object, never null
-   */
-  Annotation getAnnotation();
+
+	/**
+	 * Should return the associated annotation object.
+	 *
+	 * @return an Annotation object, never null
+	 */
+	Annotation getAnnotation();
 
 
 }

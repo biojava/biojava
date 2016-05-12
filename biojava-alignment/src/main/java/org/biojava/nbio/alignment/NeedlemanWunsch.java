@@ -41,23 +41,23 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound> extends AnchoredPairwiseSequenceAligner<S, C> {
 
-    /**
-     * Before running a pairwise global sequence alignment, data must be sent in via calls to
-     * {@link #setQuery(Sequence)}, {@link #setTarget(Sequence)}, {@link #setGapPenalty(GapPenalty)}, and
-     * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
-     */
-    public NeedlemanWunsch() {
-    }
+	/**
+	 * Before running a pairwise global sequence alignment, data must be sent in via calls to
+	 * {@link #setQuery(Sequence)}, {@link #setTarget(Sequence)}, {@link #setGapPenalty(GapPenalty)}, and
+	 * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
+	 */
+	public NeedlemanWunsch() {
+	}
 
-    /**
-     * Prepares for a pairwise global sequence alignment.
-     *
-     * @param query the first {@link Sequence} of the pair to align
-     * @param target the second {@link Sequence} of the pair to align
-     * @param gapPenalty the gap penalties used during alignment
-     * @param subMatrix the set of substitution scores used during alignment
-     */
-    public NeedlemanWunsch(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        super(query, target, gapPenalty, subMatrix);
-    }
+	/**
+	 * Prepares for a pairwise global sequence alignment.
+	 *
+	 * @param query the first {@link Sequence} of the pair to align
+	 * @param target the second {@link Sequence} of the pair to align
+	 * @param gapPenalty the gap penalties used during alignment
+	 * @param subMatrix the set of substitution scores used during alignment
+	 */
+	public NeedlemanWunsch(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+		super(query, target, gapPenalty, subMatrix);
+	}
 }

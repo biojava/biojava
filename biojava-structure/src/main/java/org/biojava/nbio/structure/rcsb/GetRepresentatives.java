@@ -45,9 +45,9 @@ public class GetRepresentatives {
 	// available sequence clusters
 	private static List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
 
-	
+
 	/**
-	 * Returns a representative set of PDB protein chains at the specified sequence 
+	 * Returns a representative set of PDB protein chains at the specified sequence
 	 * identity cutoff. See http://www.pdb.org/pdb/statistics/clusterStatistics.do
 	 * for more information.
 	 * @param sequenceIdentity sequence identity threshold
@@ -89,7 +89,7 @@ public class GetRepresentatives {
 
 		return representatives;
 	}
-	
+
 	/**
 	 * Returns the current list of all PDB IDs.
 	 * @return PdbChainKey set of all PDB IDs.

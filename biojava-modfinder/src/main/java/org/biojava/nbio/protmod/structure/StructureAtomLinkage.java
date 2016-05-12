@@ -18,18 +18,18 @@
  *      http://www.biojava.org/
  *
  * Created on Aug 2, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
 package org.biojava.nbio.protmod.structure;
 
 public class StructureAtomLinkage {
-	
+
 	private final StructureAtom atom1;
 	private final StructureAtom atom2;
 	private final double distance;
-	
+
 	public StructureAtomLinkage(final StructureAtom atom1,
 			final StructureAtom atom2, final double distance) {
 		if (atom1 == null || atom2 == null)
@@ -42,40 +42,40 @@ public class StructureAtomLinkage {
 	public StructureAtom getAtom1() {
 		return atom1;
 	}
-	
+
 	public StructureAtom getAtom2() {
 		return atom2;
 	}
-	
+
 	public double getDistance() {
 		return distance;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		
+
 		if (!(obj instanceof StructureAtomLinkage))
 			return false;
-		
+
 		StructureAtomLinkage aLink = (StructureAtomLinkage) obj;
 		if (aLink.atom1.equals(atom1) && aLink.atom2.equals(atom2))
 			return true;
-		
+
 		if (aLink.atom1.equals(atom2) && aLink.atom2.equals(atom1))
 			return true;
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int result = 17;
 		result = result * 31 + atom1.hashCode() + atom2.hashCode();
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		String dat =  atom1.toString() + "-" + atom2.toString() + " distance: " + String.format("%.2f",distance);

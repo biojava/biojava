@@ -37,7 +37,7 @@ public class SynchronizedOutFile {
 
 
 	/** Create a thread safe wrapper for writing to this file, the file will be gzip compressed.
-	 * 
+	 *
 	 * @param f file to write to
 	 * @param gzipCompress flag if file should be gzip compressed
 	 * @throws FileNotFoundException
@@ -59,7 +59,7 @@ public class SynchronizedOutFile {
 	}
 
 	/** create a thread safe wrapper for working with this file
-	 * 
+	 *
 	 * @param f
 	 */
 	public SynchronizedOutFile(File f) throws FileNotFoundException, IOException{

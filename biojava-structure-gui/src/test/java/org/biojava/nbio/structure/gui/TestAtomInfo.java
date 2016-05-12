@@ -52,7 +52,7 @@ public class TestAtomInfo extends TestCase {
 		assertEquals(aa.getAtomName(), "CA");
 		assertEquals(aa.getChainId(),"A");
 		assertEquals(aa.getModelNumber(),2);
-		assertEquals(aa.getResidueName(),"ASP");		
+		assertEquals(aa.getResidueName(),"ASP");
 		assertEquals(aa.getResidueNumber(), "1A");
 		assertEquals("[ASP]1^A:A.CA/2",aa.toString());
 

@@ -1,6 +1,6 @@
 # Welcome to BioJava
 
-[![Build Status](https://travis-ci.org/biojava/biojava.svg?branch=master)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394) [![Version](http://img.shields.io/badge/version-4.1.0-blue.svg?style=flat)](http://biojava.org/wiki/BioJava:Download) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/biojava/biojava.svg?branch=master)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f8b9f0e09da3dcbb000394) [![Version](http://img.shields.io/badge/version-4.2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/releases/tag/biojava-4.2.1) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
 
 
 BioJava is an open-source project dedicated to providing a Java framework for **processing biological data**. It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.
@@ -14,7 +14,7 @@ We are also working on a [tutorial](https://github.com/biojava/biojava3-tutorial
 
 ### Maven Repository
 
-The [Maven Repository](http://biojava.org/download/maven/) contains the jars of all releases, as well as SNAPSHOT builds of the latest code base.
+BioJava release are available from Maven Central. Snapshot builds are distributed using [OSS Sonatype](https://oss.sonatype.org/content/repositories/snapshots/org/biojava)
 
 ### Quick Installation
 
@@ -25,7 +25,7 @@ If you are using Maven you can add the BioJava repository by adding the followin
       <dependency>
         <groupId>org.biojava</groupId>
         <artifactId>biojava-core</artifactId>
-        <version>4.1.0</version>
+        <version>4.2.1</version>
       </dependency>
       <!-- other biojava jars as needed -->
     </dependencies>

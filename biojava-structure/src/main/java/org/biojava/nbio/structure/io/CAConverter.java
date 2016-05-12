@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Sep 12, 2007
  *
  */
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Converts full atom representations to Calpha only ones.
- * 
+ *
  * @author Andreas Prlic
  * @version %I% %G%
  */
@@ -36,7 +36,7 @@ public class CAConverter {
 
 
 	/** Convert a List of chain objects to another List of chains, containing C-alpha atoms only.
-	 * 
+	 *
 	 * @param chains list of chains
 	 * @return a list of chains
 	 * @deprecated Use the more generic {@link #getRepresentativeAtomsOnly(List)} instead
@@ -59,7 +59,7 @@ public class CAConverter {
 
 
 	/** Convert a List of chain objects to another List of chains, containing Representative atoms only.
-	 * 
+	 *
 	 * @param chains list of chains
 	 * @return a list of chains
 	 * @since Biojava 4.1.0
@@ -76,9 +76,9 @@ public class CAConverter {
 	}
 
 	/** Convert a Chain to a new Chain containing C-alpha atoms only.
-	 * 
+	 *
 	 * @param chain to convert
-	 * @return a new chain containing Amino acids with C-alpha only. 
+	 * @return a new chain containing Amino acids with C-alpha only.
 	 * @deprecated Use the more generic {@link #getRepresentativeAtomsOnly(Chain)} instead
 	 */
 	@Deprecated
@@ -86,12 +86,12 @@ public class CAConverter {
 
 		Chain newChain = new ChainImpl();
 		newChain.setChainID(chain.getChainID());
-		newChain.setCompound(chain.getCompound());
+		newChain.setEntityInfo(chain.getEntityInfo());
 		newChain.setSwissprotId(chain.getSwissprotId());
 
 		List<Group> groups = chain.getAtomGroups();
 
-		grouploop:                
+		grouploop:
 			for (Group g: groups){
 				List<Atom> atoms = g.getAtoms();
 
@@ -118,21 +118,21 @@ public class CAConverter {
 
 
 	/** Convert a Chain to a new Chain containing C-alpha atoms only.
-	 * 
+	 *
 	 * @param chain to convert
-	 * @return a new chain containing Amino acids with C-alpha only. 
+	 * @return a new chain containing Amino acids with C-alpha only.
 	 * @since Biojava 4.1.0
 	 */
 	public static Chain getRepresentativeAtomsOnly(Chain chain){
 
 		Chain newChain = new ChainImpl();
 		newChain.setChainID(chain.getChainID());
-		newChain.setCompound(chain.getCompound());
+		newChain.setEntityInfo(chain.getEntityInfo());
 		newChain.setSwissprotId(chain.getSwissprotId());
 
 		List<Group> groups = chain.getAtomGroups();
 
-		grouploop:                
+		grouploop:
 			for (Group g: groups){
 				List<Atom> atoms = g.getAtoms();
 

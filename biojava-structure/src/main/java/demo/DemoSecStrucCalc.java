@@ -34,7 +34,7 @@ import org.biojava.nbio.structure.secstruc.SecStrucTools;
  * Demonstration on how to use the Secondary Structure Prediction (DSSP)
  * implementation in BioJava and obtain different SS representations and
  * outputs.
- * 
+ *
  * @author Aleix Lafita
  *
  */

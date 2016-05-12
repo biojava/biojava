@@ -29,6 +29,18 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * An EcodDomain contains all the information of the ECOD database: id, 
+ * classification groups (from higher to lower in the tree: X,H,T,F), PDB code,
+ * chain, residue ranges and status (manual or automatic classification).
+ * <p>
+ * For detailed explanation about the ECOD information see the original article
+ * at: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4256011.
+ * <pre>
+ * Cheng H, Schaeffer RD, Liao Y, et al. 
+ * ECOD: An Evolutionary Classification of Protein Domains. 
+ * Elofsson A, ed. PLoS Computational Biology. 2014;10(12):e1003926.
+ * </pre>
+ * 
  * @author Spencer Bliven
  *
  */
@@ -78,10 +90,10 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	private String fGroupName;
 	private Long assemblyId; //for non-assemblies, matches the uid.
 	private Set<String> ligands;
-	
+
 	/** Default constructor with all null properties */
 	public EcodDomain() {}
-	
+
 	public EcodDomain(Long uid, String domainId, Boolean manual,
 			Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 			String chainId, String range, String architectureName,
@@ -216,7 +228,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	/**
 	 * Get the range of this domain, in 1-based residue indices (mmCif's
 	 * _pdbx_poly_seq_scheme.seq_id)
-	 * 
+	 *
 	 * Note that {@link #getRange()} is used when constructing the domain.
 	 * @return The chain and residue range, e.g. "A:1-100"
 	 */

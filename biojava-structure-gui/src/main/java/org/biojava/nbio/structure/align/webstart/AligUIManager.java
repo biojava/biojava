@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Apr 6, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -31,39 +31,39 @@ import javax.swing.UIManager.LookAndFeelInfo;
 public class AligUIManager
 {
 
-   public static void setLookAndFeel(){
-      try {
-   
-         
-         String system = UIManager.getSystemLookAndFeelClassName();
-         if ( system != null) {
-            //System.out.println("setting look and feel to " + system);
-            UIManager.setLookAndFeel(system);
-            
-         }
-         
-         //System.out.println("Installed Look And Feels:");
-         LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
-         
-         if ( feels != null){
-            //for ( LookAndFeelInfo info: feels){
-               //System.out.println(info.getName() + " " + info.getClassName());
-           // }
-         }
-         
-         
-         //System.out.println("Auxiliary Look And Feels:");
-        // LookAndFeel[] looks = UIManager.getAuxiliaryLookAndFeels();
-         //printLookAndFeel(looks);
-         
-         
-        
+	public static void setLookAndFeel(){
+		try {
 
-      } catch ( Exception e ) {
-         e.printStackTrace();
-      }
 
-   }
+			String system = UIManager.getSystemLookAndFeelClassName();
+			if ( system != null) {
+				//System.out.println("setting look and feel to " + system);
+				UIManager.setLookAndFeel(system);
+
+			}
+
+			//System.out.println("Installed Look And Feels:");
+			LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
+
+			if ( feels != null){
+				//for ( LookAndFeelInfo info: feels){
+					//System.out.println(info.getName() + " " + info.getClassName());
+			  // }
+			}
+
+
+			//System.out.println("Auxiliary Look And Feels:");
+		  // LookAndFeel[] looks = UIManager.getAuxiliaryLookAndFeels();
+			//printLookAndFeel(looks);
+
+
+
+
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
+	}
 
 //   private static void printLookAndFeel(LookAndFeel[] looks)
 //   {
@@ -76,6 +76,6 @@ public class AligUIManager
 //      } else {
 //         System.out.println("No other LookAndFeels found.");
 //      }
-//      
+//
 //   }
 }

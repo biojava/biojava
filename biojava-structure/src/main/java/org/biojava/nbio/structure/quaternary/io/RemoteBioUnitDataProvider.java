@@ -46,9 +46,9 @@ import java.util.List;
 
 public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(RemoteBioUnitDataProvider.class);
-			
+
 	public static final String DEFAULT_SERVERNAME = "http://pepper.rcsb.org:8080/pdb/rest/biolassembly/";
 
 	public static final String NR_BIOL_APPEND = "nrBiolAssemblies?structureId=%s";
@@ -86,9 +86,9 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 
 
 			xml = JFatCatClient.convertStreamToString(stream);
-			
+
 			if ( stream != null) {
-				
+
 				System.out.println(xml);
 				transformations = BiologicalAssemblyTransformation.fromMultiXML(xml);
 			}
@@ -169,7 +169,7 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 
 				NamedNodeMap map = pair.getAttributes();
 
-				String count =  map.getNamedItem("count").getTextContent();				
+				String count =  map.getNamedItem("count").getTextContent();
 				nrBiolAssemblies = Integer.parseInt(count);
 			}
 
@@ -187,10 +187,10 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 	public Structure getAsymUnit(String pdbId) {
 		logger.error("RemoteBioUnitDataProvider getAsymUnit Not implemented yet!");
 		return null;
-	
-	
+
+
 	}
-	
+
 	@Override
 	public void setAsymUnit(Structure s){
 		// nothing to be done here so far..
@@ -199,7 +199,7 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 	@Override
 	public void setAtomCache(AtomCache cache) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -207,5 +207,5 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

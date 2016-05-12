@@ -64,10 +64,10 @@ import org.slf4j.LoggerFactory;
  * <li>Run a final optimization of all symmetric units correctly superimposed.
  * </ul>
  * </li>
- * 
+ *
  * @author Aleix Lafita
  * @since 4.1.1
- * 
+ *
  */
 public class CeSymmIterative {
 
@@ -84,7 +84,7 @@ public class CeSymmIterative {
 	 * For the iterative algorithm to work properly the refinement and
 	 * optimization options should be turned on, because the alignment has to be
 	 * consistent at every recursive step.
-	 * 
+	 *
 	 * @param param
 	 *            CeSymm parameters, make sure they are cloned
 	 */
@@ -98,11 +98,11 @@ public class CeSymmIterative {
 	 * This method uses iteratively CeSymm to calculate all symmetries in the
 	 * input array of atoms and organize them in a multiple alignment of the
 	 * repeats.
-	 * 
+	 *
 	 * @param atoms
 	 *            atoms
 	 * @return CeSymmResult
-	 * 
+	 *
 	 * @throws StructureException
 	 */
 	public CeSymmResult execute(Atom[] atoms) throws StructureException {
@@ -135,7 +135,7 @@ public class CeSymmIterative {
 	/**
 	 * This method runs iteratively the analysis of one level of symmetry with
 	 * CeSymm on the input Atom array until no more symmetries exist.
-	 * 
+	 *
 	 * @param atoms
 	 *            representative Atom array of the Structure
 	 * @return true if any symmetry was found, false if asymmetric
@@ -216,13 +216,19 @@ public class CeSymmIterative {
 	/**
 	 * After all the analysis iteratives have finished, the final
 	 * MultipleAlignment object is constructed using the alignment graph.
-	 * 
+	 *
 	 * @return true if the MultipleAlignment could be reconstructed, false
 	 *         otherwise
 	 * @throws StructureException
 	 */
 	private boolean buildAlignment() throws StructureException {
 
+		// If one level, nothing to build
+		if (levels.size() == 1) {
+			result.setSymmLevels(1);
+			return false;
+		}
+		
 		// Initialize a new multiple alignment
 		MultipleAlignment msa = new MultipleAlignmentImpl();
 		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());
@@ -325,7 +331,7 @@ public class CeSymmIterative {
 
 	/**
 	 * Calculate the number of helix and strand SSE of a repeat.
-	 * 
+	 *
 	 * @param atoms
 	 *            Atom array of the repeat found
 	 * @return int number of helix or strand SSE

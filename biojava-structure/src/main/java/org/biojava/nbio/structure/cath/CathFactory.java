@@ -36,14 +36,15 @@ import java.util.Map;
 public class CathFactory {
 
 	public static final String VERSION_3_5_0 = "3.5.0";
-	public static final String LATEST_VERSION = VERSION_3_5_0;
-	
+	public static final String VERSION_4_0_0 = "4.0.0";
+	public static final String LATEST_VERSION = VERSION_4_0_0;
+
 	public static String DEFAULT_VERSION = LATEST_VERSION;
-	
+
 	private static CathDatabase cath;
-	
+
 	private static Map<String, CathDatabase> versions = new HashMap<String, CathDatabase>();
-	
+
 	/**
 	 * Sets the default (singleton) CathDatabase.
 	 */
@@ -61,9 +62,9 @@ public class CathFactory {
 		}
 		return cath;
 	}
-	
+
 	private CathFactory() {
-		
+
 	}
 
 	/**
@@ -80,5 +81,5 @@ public class CathFactory {
 		}
 		return cath;
 	}
-	
+
 }

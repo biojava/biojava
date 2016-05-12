@@ -24,6 +24,8 @@
  */
 package org.biojava.nbio.structure.io.mmcif.model;
 
+import java.io.Serializable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +39,12 @@ _chem_comp_bond.pdbx_aromatic_flag
 _chem_comp_bond.pdbx_stereo_config
 _chem_comp_bond.pdbx_ordinal
  */
-public class ChemCompBond {
-	
+public class ChemCompBond implements Serializable {
+
+	private static final long serialVersionUID = 5905371029161975421L;
+
 	private static final Logger logger = LoggerFactory.getLogger(ChemCompBond.class);
-	
+
 	String comp_id;
 	String atom_id_1;
 	String atom_id_2;
@@ -94,20 +98,20 @@ public class ChemCompBond {
 	/**
 	 * Converts this ChemCompBond's value_order attribute into an int using the
 	 * conversion:
-	 * 
+	 *
 	 * <pre>
 	 * 	SING -> 1
 	 * 	DOUB -> 2
 	 * 	TRIP -> 3
 	 * 	QUAD -> 4
 	 * </pre>
-	 * 
+	 *
 	 * Any other values will return -1.
 	 * <p>
 	 * (Source:
 	 * http://mmcif.rcsb.org/dictionaries/mmcif_mdb.dic/Items/_chem_comp_bond.
 	 * value_order.html)
-	 * 
+	 *
 	 * @return the numerical value of this ChemCompBond's bond order, or -1 if
 	 *         the value is non-numeric or unknown.
 	 */

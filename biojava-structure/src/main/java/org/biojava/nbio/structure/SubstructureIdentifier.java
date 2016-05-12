@@ -36,11 +36,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This is the canonical way to identify a part of a structure.
- * 
+ *
  * <p>The current syntax allows the specification of a set of residues from
  * the first model of a structure. Future versions may be extended to represent
  * additional properties.
- * 
+ *
  * <p>Identifiers should adhere to the following specification, although some
  * additional forms may be tolerated where unambiguous for backwards compatibility.
  * <pre>
@@ -76,7 +76,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 	private final String pdbId;
 	private final List<ResidueRange> ranges;
-	
+
 	/**
 	 * Create a new identifier from a string.
 	 * @param id
@@ -86,12 +86,14 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		if(1 > idRange.length || idRange.length > 2 ) {
 			throw new IllegalArgumentException(String.format("Malformed %s: %s",getClass().getSimpleName(),id));
 		}
-		this.pdbId = idRange[0];
-		if(this.pdbId.length() != 4) {
+		if(idRange[0].length() != 4) {
+			this.pdbId = idRange[0];
 			// Changed from Exception to a warning to support files and stuff -sbliven 2015/01/22
 			logger.warn(String.format("Unrecognized PDB code %s",this.pdbId));
+		} else {
+			this.pdbId = idRange[0].toUpperCase();
 		}
-		
+
 		if( idRange.length == 2) {
 			String rangeStr = idRange[1].trim();
 
@@ -103,7 +105,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 	/**
 	 * Create a new identifier based on a set of ranges.
-	 * 
+	 *
 	 * If ranges is empty, includes all residues.
 	 * @param pdbId
 	 * @param ranges
@@ -123,7 +125,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 	/**
 	 * Get the String form of this identifier.
-	 * 
+	 *
 	 * This provides the canonical form for a StructureIdentifier and has
 	 * all the information needed to recreate a particular substructure.
 	 *
@@ -155,13 +157,13 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 	/**
 	 * Takes a complete structure as input and reduces it to residues present in
 	 * the specified ranges
-	 * 
+	 *
 	 * <p>The returned structure will be a shallow copy of the input, with shared
 	 * Chains, Residues, etc.
 	 * @param input A full structure, e.g. as loaded from the PDB. The structure
 	 * ID should match that returned by getPdbId().
-	 * @return 
-	 * @throws StructureException 
+	 * @return
+	 * @throws StructureException
 	 * @see StructureTools#getReducedStructure(Structure, String)
 	 */
 	@Override
@@ -179,10 +181,8 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		newS.getPDBHeader().setDescription(
 				"sub-range " + ranges + " of "  + newS.getPDBCode() + " "
 						+ s.getPDBHeader().getDescription());
-		newS.setCrystallographicInfo(s.getCrystallographicInfo());
 		// TODO The following should be only copied for atoms which are present in the range.
-		newS.setCompounds(s.getCompounds());
-		newS.setConnections(s.getConnections());
+		newS.setEntityInfos(s.getEntityInfos());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 
@@ -190,15 +190,14 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 		for( int modelNr=0;modelNr<s.nrModels();modelNr++) {
 			String prevChainId = null;
-			
-			
+
+
 			// Construct new model
 			newS.addModel(new ArrayList<Chain>());
-			
+
 			if(getResidueRanges().isEmpty()) {
 				// Include all residues
-				newS.setCompounds(s.getCompounds());
-				newS.setConnections(s.getConnections());
+				newS.setEntityInfos(s.getEntityInfos());
 				newS.setSSBonds(s.getSSBonds());
 				newS.setSites(s.getSites());
 
@@ -264,26 +263,27 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 						groups = Arrays.asList(chain.getGroupsByPDB(pdbresnum1, pdbresnum2));
 					}
 
-					// Create new chain, if needed
 					Chain c = null;
-					if ( prevChainId == null) {
-						// first chain...
-						c = new ChainImpl();
-						c.setChainID(chain.getChainID());
-						newS.addChain(c,modelNr);
-					} else if ( prevChainId.equals(chain.getChainID())) {
+					
+					// Reuse prevChain
+					if ( prevChainId != null && prevChainId.equals(chain.getChainID())) {
 						c = newS.getChainByPDB(prevChainId,modelNr);
-
 					} else {
 						try {
 							c = newS.getChainByPDB(chain.getChainID(),modelNr);
 						} catch (StructureException e){
 							// chain not in structure yet...
-							c = new ChainImpl();
-							c.setChainID(chain.getChainID());
-							newS.addChain(c,modelNr);
 						}
 					}
+					// Create new chain
+					if ( c == null) {
+						// first chain...
+						c = new ChainImpl();
+						c.setChainID(chain.getChainID());
+						newS.addChain(c,modelNr);
+						c.setSeqResGroups(chain.getSeqResGroups());
+						c.setSeqMisMatches(chain.getSeqMisMatches());
+					} 
 
 					// add the groups to the chain:
 					for ( Group g: groups) {
@@ -300,7 +300,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 	/**
 	 * Loads the complete structure based on {@link #getPdbId()}.
-	 * 
+	 *
 	 * @param AtomCache A source of structures
 	 * @return A Structure containing at least the atoms identified by this,
 	 *  or null if no PDB ID is set

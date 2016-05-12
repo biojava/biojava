@@ -37,13 +37,13 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public class SubstitutionMatrixScorer<S extends Sequence<C>, C extends Compound> extends AbstractScorer
 implements PairwiseSequenceScorer<S, C> {
-	
+
 	private final SubstitutionMatrix<C> matrix;
-	
+
 	private S query;
 	private S target;
 	private double score;
-	
+
 	public SubstitutionMatrixScorer(SequencePair<S, C> pair, SubstitutionMatrix<C> matrix) {
 		super();
 		this.query = pair.getQuery().getOriginalSequence();
@@ -104,5 +104,5 @@ implements PairwiseSequenceScorer<S, C> {
 	public S getTarget() {
 		return target;
 	}
-	
+
 }

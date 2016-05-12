@@ -28,24 +28,24 @@ import org.biojava.nbio.core.sequence.template.AbstractNucleotideCompoundSet;
  */
 public class RNACompoundSet extends AbstractNucleotideCompoundSet<NucleotideCompound> {
 
-  private static class InitaliseOnDemand {
-    public static final RNACompoundSet INSTANCE = new RNACompoundSet();
-  }
-  public static RNACompoundSet getRNACompoundSet() {
-    return InitaliseOnDemand.INSTANCE;
-  }
+	private static class InitaliseOnDemand {
+		public static final RNACompoundSet INSTANCE = new RNACompoundSet();
+	}
+	public static RNACompoundSet getRNACompoundSet() {
+		return InitaliseOnDemand.INSTANCE;
+	}
 
-  public RNACompoundSet() {
-    addNucleotideCompound("A", "U");
-    addNucleotideCompound("U", "A");
-    addNucleotideCompound("G", "C");
-    addNucleotideCompound("C", "G");
-    addNucleotideCompound("N", "N");
-    addNucleotideCompound("-", "-");
-  }
+	public RNACompoundSet() {
+		addNucleotideCompound("A", "U");
+		addNucleotideCompound("U", "A");
+		addNucleotideCompound("G", "C");
+		addNucleotideCompound("C", "G");
+		addNucleotideCompound("N", "N");
+		addNucleotideCompound("-", "-");
+	}
 
-  @Override
+	@Override
 public NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
-    return new NucleotideCompound(base, this, complement);
-  }
+		return new NucleotideCompound(base, this, complement);
+	}
 }

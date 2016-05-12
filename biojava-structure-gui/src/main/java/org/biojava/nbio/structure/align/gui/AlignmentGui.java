@@ -39,10 +39,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 
-import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
 import org.biojava.nbio.structure.align.ce.AbstractUserArgumentProcessor;
@@ -88,7 +86,7 @@ public class AlignmentGui extends JFrame{
 
 
 	public static void main(String[] args){
-		
+
 		AlignmentGui.getInstance();
 
 	}
@@ -100,9 +98,9 @@ public class AlignmentGui extends JFrame{
 	private static final AlignmentGui me = new AlignmentGui();
 
 	public static AlignmentGui getInstance(){
-				
+
 		AbstractUserArgumentProcessor.printAboutMe();
-		
+
 		AligUIManager.setLookAndFeel();
 
 		if (!  me.isVisible())
@@ -144,10 +142,10 @@ public class AlignmentGui extends JFrame{
 		tabPane.addTab("Select PDB ID", null, tab1, "Select PDB ID to align");
 
 		tabPane.addTab("Domains",null, tab3,"Select domains to align.");
-		
+
 		tabPane.addTab("Custom files",null, tab2,"Align your own files.");
 
-		
+
 
 		Box hBoxAlgo = setupAlgorithm();
 
@@ -246,7 +244,7 @@ public class AlignmentGui extends JFrame{
 
 		Box hBoxAlgo = Box.createHorizontalBox();
 		hBoxAlgo.add(Box.createGlue());
-		hBoxAlgo.add(algoLabel);      
+		hBoxAlgo.add(algoLabel);
 		hBoxAlgo.add(algorithmList);
 		hBoxAlgo.add(Box.createGlue());
 		hBoxAlgo.add(parameterButton);
@@ -331,7 +329,7 @@ public class AlignmentGui extends JFrame{
 	protected void configureParameters() {
 		StructureAlignment algorithm = getStructureAlignment();
 		System.out.println("configure parameters for " + algorithm.getAlgorithmName());
-		
+
 		// show a new config GUI
 		new ParameterGUI(algorithm.getParameters(), algorithm.getAlgorithmName());
 	}
@@ -355,7 +353,7 @@ public class AlignmentGui extends JFrame{
 		StructurePairSelector tab = null;
 
 		if (pos == 0 ){
-			tab = tab1;         
+			tab = tab1;
 
 		} else if (pos == 1){
 			tab = tab3;
@@ -379,7 +377,7 @@ public class AlignmentGui extends JFrame{
 				return;
 			}
 
-			String name1 = "custom1"; 
+			String name1 = "custom1";
 			String name2 = "custom2";
 
 			if  ( pos == 0){
@@ -389,7 +387,7 @@ public class AlignmentGui extends JFrame{
 				name1 = s1.getName();
 				name2 = s2.getName();
 			}
-			
+
 			System.out.println("aligning: " + name1 + " " + name2);
 
 
@@ -418,7 +416,7 @@ public class AlignmentGui extends JFrame{
 
 		Structure s = null;
 		boolean domainSplit = dbsearch.isDomainSplit();
-		
+
 		StructurePairSelector tab = null;
 		int pos = tabPane.getSelectedIndex();
 
@@ -454,8 +452,8 @@ public class AlignmentGui extends JFrame{
 		if ( name1 == null || name1.equals(""))
 			name1 = s.getPDBCode();
 
-		
-		
+
+
 		System.out.println("name1 in alig gui:" + name1);
 		String file = dbsearch.getOutFileLocation();
 		if ( file == null || file.equals("") ){
@@ -485,7 +483,7 @@ public class AlignmentGui extends JFrame{
 			}
 			int n = JOptionPane.showOptionDialog(null,
 					"How many would you like to use for the calculations?",
-					"We detected " + totalNrCPUs + " processors on your system.",    			  
+					"We detected " + totalNrCPUs + " processors on your system.",
 					JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.QUESTION_MESSAGE,
 					null,

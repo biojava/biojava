@@ -35,21 +35,21 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface MatrixAligner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C> {
 
-    /**
-     * Returns the entire score matrix built during alignment.  The first dimension has the length of the first (query)
-     * sequence + 1; the second has the length of the second (target) sequence + 1; the third has length equal to the
-     * number of scores stored per pairing of an element from each {@link Sequence}.
-     *
-     * @return the score matrix
-     */
-    int[][][] getScoreMatrix();
+	/**
+	 * Returns the entire score matrix built during alignment.  The first dimension has the length of the first (query)
+	 * sequence + 1; the second has the length of the second (target) sequence + 1; the third has length equal to the
+	 * number of scores stored per pairing of an element from each {@link Sequence}.
+	 *
+	 * @return the score matrix
+	 */
+	int[][][] getScoreMatrix();
 
-    /**
-     * Returns a depiction of the score matrix as a {@link String}.  This may include additional description such as
-     * labels for each dimension: element from query sequence, element from target sequence, and meaning of each score.
-     *
-     * @return the score matrix as a character sequence
-     */
-    String getScoreMatrixAsString();
+	/**
+	 * Returns a depiction of the score matrix as a {@link String}.  This may include additional description such as
+	 * labels for each dimension: element from query sequence, element from target sequence, and meaning of each score.
+	 *
+	 * @return the score matrix as a character sequence
+	 */
+	String getScoreMatrixAsString();
 
 }

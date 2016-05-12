@@ -47,10 +47,13 @@ import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.biojava.nbio.structure.io.mmtf.MmtfActions;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
+import org.biojava.nbio.structure.quaternary.io.MmCifBiolAssemblyProvider;
+import org.biojava.nbio.structure.quaternary.io.PDBBioUnitDataProvider;
 import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDescription;
@@ -64,14 +67,14 @@ import org.slf4j.LoggerFactory;
  * re-using the same PDB structures, the AtomCache keeps an in-memory cache of the files for quicker access. The cache
  * is a soft-cache, this means it won't cause out of memory exceptions, but garbage collects the data if the Java
  * virtual machine needs to free up space. The AtomCache is thread-safe.
- * 
+ *
  * @author Andreas Prlic
  * @author Spencer Bliven
  * @author Peter Rose
  * @since 3.0
  */
 public class AtomCache {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AtomCache.class);
 
 	public static final String BIOL_ASSEMBLY_IDENTIFIER = "BIO:";
@@ -98,12 +101,13 @@ public class AtomCache {
 	private String path;
 
 	private boolean useMmCif;
+	private boolean useMmtf;
 
 	/**
 	 * Default AtomCache constructor.
-	 * 
+	 *
 	 * Usually stores files in a temp directory, but this can be overriden by setting the PDB_DIR variable at runtime.
-	 * 
+	 *
 	 * @see UserConfiguration#UserConfiguration()
 	 */
 	public AtomCache() {
@@ -112,7 +116,7 @@ public class AtomCache {
 
 	/**
 	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system. It will use the same value for pdbFilePath and cachePath.
-	 * 
+	 *
 	 * @param pdbFilePath
 	 *            a directory in the file system to use as a location to cache files.
 	 */
@@ -122,13 +126,13 @@ public class AtomCache {
 
 	/**
 	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system.
-	 * 
+	 *
 	 * @param pdbFilePath
 	 *            a directory in the file system to use as a location to cache files.
 	 * @param cachePath
 	 */
 	public AtomCache(String pdbFilePath, String cachePath) {
-		
+
 		logger.debug("Initialising AtomCache with pdbFilePath={}, cachePath={}",pdbFilePath, cachePath);
 
 		if (!pdbFilePath.endsWith(FILE_SEPARATOR)) {
@@ -150,16 +154,12 @@ public class AtomCache {
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
 
-		// we don't need this here
-		params.setAlignSeqRes(false);
-		// no secstruc either
-		params.setParseSecStruc(false);
-		//
-
 		setUseMmCif(true);
+		setUseMmtf(false);
 
 	}
-	
+
+
 	/**
 	 * @param isSplit Ignored
 	 * @deprecated isSplit parameter is ignored (4.0.0)
@@ -179,7 +179,7 @@ public class AtomCache {
 
 	/**
 	 * Creates a new AtomCache object based on the provided UserConfiguration.
-	 * 
+	 *
 	 * @param config
 	 *            the UserConfiguration to use for this cache.
 	 */
@@ -199,7 +199,7 @@ public class AtomCache {
 	 * @return an array of Atoms.
 	 * @throws IOException
 	 * @throws StructureException
-	 * @see 
+	 * @see
 	 */
 	public Atom[] getAtoms(String name) throws IOException, StructureException {
 		return getAtoms(new StructureName(name));
@@ -222,12 +222,12 @@ public class AtomCache {
 	/**
 	 * Returns the representative atoms for the provided name.
 	 * See {@link #getStructure(String)} for supported naming conventions.
-	 * 
+	 *
 	 * @param name
 	 * @return an array of Atoms.
 	 * @throws IOException
 	 * @throws StructureException
-	 * @see 
+	 * @see
 	 */
 	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
 		return getRepresentativeAtoms(new StructureName(name));
@@ -253,11 +253,11 @@ public class AtomCache {
 	 * biological assembly (bioAssemblyId=1), and a few structures have multiple biological assemblies. Set
 	 * bioAssemblyFallback to true, to download the original PDB file in cases that a biological assembly file is not
 	 * available.
-	 * 
+	 *
 	 * @param pdbId
 	 *            the PDB ID
 	 * @param bioAssemblyId
-	 *            the ID of the biological assembly
+	 *            the 1-based index of the biological assembly (0 gets the asymmetric unit)
 	 * @param bioAssemblyFallback
 	 *            if true, try reading original PDB file in case the biological assembly file is not available
 	 * @return a structure object
@@ -269,38 +269,72 @@ public class AtomCache {
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean bioAssemblyFallback)
 			throws StructureException, IOException {
 
-		if (bioAssemblyId < 1) {
-			throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + " bioAssemblyId "
+		if (bioAssemblyId < 0) {
+			throw new StructureException("bioAssemblyID must be nonnegative: " + pdbId + " bioAssemblyId "
 					+ bioAssemblyId);
-		}	
-		Structure s = StructureIO.getBiologicalAssembly(pdbId, bioAssemblyId);
-		
+		}
+		Structure s = StructureIO.getBiologicalAssembly(pdbId, bioAssemblyId,this);
+
 		if ( s == null && bioAssemblyFallback)
-			return StructureIO.getBiologicalAssembly(pdbId, 0);
-		
+			return StructureIO.getBiologicalAssembly(pdbId, 0,this);
+
 		return s;
 	}
 
 	/**
-	 * Loads the default biological unit (*.pdb1.gz) file. If it is not available, the original PDB file will be loaded,
-	 * i.e., for NMR structures, where the original files is also the biological assembly.
-	 * 
+	 * Loads the default biological unit (e.g. *.pdb1.gz). If it is not available,
+	 * the asymmetric unit will be loaded, i.e. for NMR structures.
+	 *
+	 * <p>Biological assemblies can also be accessed using
+	 * <tt>getStructure("BIO:<i>[pdbId]</i>")</tt>
+	 * @param pdbId
+	 *            the PDB ID
+	 * @return a structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 * @since 4.2
+	 */
+	public Structure getBiologicalAssembly(String pdbId) throws StructureException, IOException {
+		int bioAssemblyId = 1;
+		return getBiologicalAssembly(pdbId, bioAssemblyId);
+	}
+	/**
+	 * Loads the default biological unit (e.g. *.pdb1.gz). If it is not available,
+	 * the asymmetric unit will be loaded, i.e. for NMR structures.
+	 *
 	 * @param pdbId
 	 *            the PDB ID
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 * @since 3.2
+	 * @deprecated Renamed to {@link #getBiologicalAssembly(String)} in 4.2
 	 */
+	@Deprecated
 	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException {
-		int bioAssemblyId = 1;
+		return getBiologicalAssembly(pdbId);
+	}
+	/**
+	 * Loads the default biological unit (e.g. *.pdb1.gz). If it is not available,
+	 * the asymmetric unit will be loaded, i.e. for NMR structures.
+	 *
+	 * @param pdbId
+	 *            the PDB ID
+	 * @param bioAssemblyId
+	 *            the 1-based index of the biological assembly (0 gets the asymmetric unit)
+	 * @return a structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 * @since 4.2
+	 */
+	public Structure getBiologicalAssembly(String pdbId,int bioAssemblyId) throws StructureException, IOException {
 		boolean bioAssemblyFallback = true;
 		return getBiologicalAssembly(pdbId, bioAssemblyId, bioAssemblyFallback);
 	}
 
 	/**
 	 * Returns the path that contains the caching file for utility data, such as domain definitions.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getCachePath() {
@@ -313,7 +347,7 @@ public class AtomCache {
 
 	/**
 	 * Get the path that is used to cache PDB files.
-	 * 
+	 *
 	 * @return path to a directory
 	 */
 	public String getPath() {
@@ -326,10 +360,10 @@ public class AtomCache {
 
 	/**
 	 * Request a Structure based on a <i>name</i>.
-	 * 
+	 *
 	 * <pre>
 	 * 		Formal specification for how to specify the <i>name</i>:
-	 * 
+	 *
 	 * 		name     := pdbID
 	 * 		               | pdbID '.' chainID
 	 * 		               | pdbID '.' range
@@ -341,8 +375,8 @@ public class AtomCache {
 	 * 		chainID       := [a-zA-Z0-9]
 	 * 		scopID        := 'd' pdbID [a-z_][0-9_]
 	 * 		resNum        := [-+]?[0-9]+[A-Za-z]?
-	 * 
-	 * 
+	 *
+	 *
 	 * 		Example structures:
 	 * 		1TIM     #whole structure
 	 * 		4HHB.C     #single chain
@@ -350,9 +384,9 @@ public class AtomCache {
 	 * 		3AA0.A,B     #two chains treated as one structure
 	 * 		d2bq6a1     #scop domain
 	 * </pre>
-	 * 
+	 *
 	 * With the additional set of rules:
-	 * 
+	 *
 	 * <ul>
 	 * <li>If only a PDB code is provided, the whole structure will be return including ligands, but the first model
 	 * only (for NMR).
@@ -361,7 +395,7 @@ public class AtomCache {
 	 * see {@link #setStrictSCOP(boolean)}</li>
 	 * <li>URLs are accepted as well</li>
 	 * </ul>
-	 * 
+	 *
 	 * <p>Note that this method should not be used in StructureIdentifier
 	 * implementations to avoid circular calls.
 	 * @param name
@@ -382,7 +416,7 @@ public class AtomCache {
 	 * Get the structure corresponding to the given {@link StructureIdentifier}.
 	 * Equivalent to calling {@link StructureIdentifier#loadStructure(AtomCache)}
 	 * followed by {@link StructureIdentifier#reduce(Structure)}.
-	 * 
+	 *
 	 * <p>Note that this method should not be used in StructureIdentifier
 	 * implementations to avoid circular calls.
 	 * @param strucId
@@ -395,143 +429,11 @@ public class AtomCache {
 		Structure r = strucId.reduce(s);
 		r.setStructureIdentifier(strucId);
 		return r;
-	
-//		if (name.length() < 4) {
-//			throw new IllegalArgumentException("Can't interpret IDs that are shorter than 4 characters!");
-//		}
-//
-//		Structure n = null;
-//
-//		boolean useChainNr = false;
-//		boolean useDomainInfo = false;
-//		String range = null;
-//		int chainNr = -1;
-//
-//
-//		StructureName structureName = new StructureName(name);
-//
-//		String pdbId = null;
-//		String chainId = null;
-//
-//		if (name.length() == 4) {
-//
-//			pdbId = name;
-//			Structure s;
-//			if (useMmCif) {
-//				s = loadStructureFromCifByPdbId(pdbId);
-//			} else {
-//				s = loadStructureFromPdbByPdbId(pdbId);
-//			}
-//			return s;
-//		} else if (structureName.isScopName()) {
-//
-//			// return based on SCOP domain ID
-//			return getStructureFromSCOPDomain(name);
-//		} else if (structureName.isCathID()) {
-//			return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
-//		} else if (name.length() == 6) {
-//			// name is PDB.CHAINID style (e.g. 4hhb.A)
-//
-//			pdbId = name.substring(0, 4);
-//			if (name.substring(4, 5).equals(CHAIN_SPLIT_SYMBOL)) {
-//				chainId = name.substring(5, 6);
-//			} else if (name.substring(4, 5).equals(CHAIN_NR_SYMBOL)) {
-//
-//				useChainNr = true;
-//				chainNr = Integer.parseInt(name.substring(5, 6));
-//			}
-//
-//		} else if (name.startsWith("file:/") || name.startsWith("http:/")) {
-//			// this is a URL
-//			
-//			URL url = new URL(name);
-//			return getStructureFromURL(url);
-//			
-//
-//		} else if (structureName.isPDPDomain()) {
-//
-//			// this is a PDP domain definition
-//
-//			return getPDPStructure(name);
-//			
-//		} else if (name.startsWith(BIOL_ASSEMBLY_IDENTIFIER)) {
-//
-//			return getBioAssembly(name);
-//
-//		} else if (name.length() > 6 && !name.startsWith(PDP_DOMAIN_IDENTIFIER)
-//				&& (name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE))
-//				&& !(name.startsWith("file:/") || name.startsWith("http:/"))
-//
-//				) {
-//
-//			// this is a name + range
-//
-//			pdbId = name.substring(0, 4);
-//			// this ID has domain split information...
-//			useDomainInfo = true;
-//			range = name.substring(5);
-//
-//		}
-//
-//		// System.out.println("got: >" + name + "< " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " "
-//		// +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
-//
-//		if (pdbId == null) {
-//
-//			return null;
-//		}
-//
-//		while (checkLoading(pdbId)) {
-//			// waiting for loading to be finished...
-//
-//			try {
-//				Thread.sleep(100);
-//			} catch (InterruptedException e) {
-//				logger.error(e.getMessage());
-//			}
-//
-//		}
-//
-//		// long start = System.currentTimeMillis();
-//
-//		Structure s;
-//		if (useMmCif) {
-//			s = loadStructureFromCifByPdbId(pdbId);
-//		} else {
-//			s = loadStructureFromPdbByPdbId(pdbId);
-//		}
-//
-//		// long end = System.currentTimeMillis();
-//		// System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" +
-//		// StructureTools.getNrAtoms(s) + "\t cached: " + cache.size());
-//
-//		if (chainId == null && chainNr < 0 && range == null) {
-//			// we only want the 1st model in this case
-//			n = StructureTools.getReducedStructure(s, -1);
-//		} else {
-//
-//			if (useChainNr) {
-//				// System.out.println("using ChainNr");
-//				n = StructureTools.getReducedStructure(s, chainNr);
-//			} else if (useDomainInfo) {
-//				// System.out.println("calling getSubRanges");
-//				n = StructureTools.getSubRanges(s, range);
-//			} else {
-//				// System.out.println("reducing Chain Id " + chainId);
-//				n = StructureTools.getReducedStructure(s, chainId);
-//			}
-//		}
-//
-//
-//
-//		n.setName(name);
-//		return n;
-
 	}
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param domain
 	 *            a SCOP domain
 	 * @return a Structure object
@@ -544,7 +446,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param domain
 	 *            a SCOP domain
 	 * @param scopDatabase
@@ -560,7 +462,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param domain
 	 *            a SCOP domain
 	 * @param scopDatabase
@@ -635,7 +537,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param scopId
 	 *            a SCOP Id
 	 * @return a Structure object
@@ -648,7 +550,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param scopId
 	 *            a SCOP Id
 	 * @param scopDatabase
@@ -707,7 +609,7 @@ public class AtomCache {
 	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
 	 * For strictSCOP==False, create a {@link StructureName} or use
 	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
-	 * 
+	 *
 	 * @return false; ignored
 	 * @deprecated since 4.2
 	 */
@@ -742,7 +644,7 @@ public class AtomCache {
 
 	/**
 	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 * 
+	 *
 	 * @param autoFetch
 	 *            flag
 	 * @deprecated Use {@link #getFetchBehavior()}
@@ -758,7 +660,7 @@ public class AtomCache {
 
 	/**
 	 * set the location at which utility data should be cached.
-	 * 
+	 *
 	 * @param cachePath
 	 */
 	public void setCachePath(String cachePath) {
@@ -790,7 +692,7 @@ public class AtomCache {
 
 	/**
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
+	 *
 	 * @param fetchFileEvenIfObsolete
 	 *            the fetchFileEvenIfObsolete to set
 	 * @deprecated Use {@link FileParsingParameters#setObsoleteBehavior()} instead (4.0.0)
@@ -821,12 +723,12 @@ public class AtomCache {
 	 *   Load the requested ID from the PDB's obsolete repository
 	 * <li>{@link ObsoleteBehavior#FETCH_CURRENT FETCH_CURRENT}
 	 *   Load the most recent version of the requested structure
-	 * 
+	 *
 	 * <p>This setting may be silently ignored by implementations which do not have
 	 * access to the server to determine whether an entry is obsolete, such as
 	 * if {@link #isAutoFetch()} is false. Note that an obsolete entry may still be
 	 * returned even this is FETCH_CURRENT if the entry is found locally.
-	 * 
+	 *
 	 * @param fetchFileEvenIfObsolete Whether to fetch obsolete records
 	 * @see #setFetchCurrent(boolean)
 	 * @since 4.0.0
@@ -839,10 +741,10 @@ public class AtomCache {
 	 * Returns how this instance deals with obsolete entries. Note that this
 	 * setting may be ignored by some implementations or in some situations,
 	 * such as when {@link #isAutoFetch()} is false.
-	 * 
+	 *
 	 * <p>For most implementations, the default value is
 	 * {@link ObsoleteBehavior#THROW_EXCEPTION THROW_EXCEPTION}.
-	 * 
+	 *
 	 * @return The ObsoleteBehavior
 	 * @since 4.0.0
 	 */
@@ -867,7 +769,7 @@ public class AtomCache {
 
 	/**
 	 * Set the path that is used to cache PDB files.
-	 * 
+	 *
 	 * @param path
 	 *            to a directory
 	 */
@@ -882,12 +784,12 @@ public class AtomCache {
 
 	/**
 	 * This method does nothing.
-	 * 
+	 *
 	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
 	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
 	 * For strictSCOP==False, create a {@link StructureName} or use
 	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
-	 * 
+	 *
 	 * @param strictSCOP Ignored
 	 * @deprecated Removed in 4.2.0
 	 */
@@ -907,42 +809,31 @@ public class AtomCache {
 	 */
 	public void setUseMmCif(boolean useMmCif) {
 		this.useMmCif = useMmCif;
-		
+
 		if ( useMmCif) {
 			// get bio assembly from mmcif file
 
-			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.mmcifProviderClassName);
+			BioUnitDataProviderFactory.setBioUnitDataProvider(MmCifBiolAssemblyProvider.class);
 
 		} else {
-		
-			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
-			
+
+			BioUnitDataProviderFactory.setBioUnitDataProvider(PDBBioUnitDataProvider.class);
+
 		}
+	}
+	
+	/**
+	 * Set whether to use mmtf.
+	 * @param bool the input boolean to set
+	 */
+	public void setUseMmtf(boolean bool) {
+		useMmtf = bool;
+		
 	}
 
 	private boolean checkLoading(String name) {
 		return currentlyLoading.contains(name);
 
-	}
-
-	private Structure getBioAssembly(String name) throws IOException, StructureException {
-
-	
-		// can be specified as:
-		// BIO:1fah - first one
-		// BIO:1fah:0 - asym unit
-		// BIO:1fah:1 - first one
-		// BIO:1fah:2 - second one
-
-		String pdbId = name.substring(4, 8);
-		int biolNr = 1;
-		if (name.length() > 8) {
-			biolNr = Integer.parseInt(name.substring(9, name.length()));
-		}
-
-		Structure s= StructureIO.getBiologicalAssembly(pdbId, biolNr);
-
-		return s;
 	}
 
 	/**
@@ -980,16 +871,16 @@ public class AtomCache {
 
 	protected void flagLoading(String name) {
 		if (!currentlyLoading.contains(name)) {
-			
+
 			currentlyLoading.add(name);
 		}
 	}
 
 	protected void flagLoadingFinished(String name) {
-	
+
 		currentlyLoading.remove(name);
 	}
-	
+
 	/**
 	 * Loads a structure directly by PDB ID
 	 * @param pdbId
@@ -1015,7 +906,10 @@ public class AtomCache {
 		}
 
 		Structure s;
-		if (useMmCif) {
+		if (useMmtf) {
+			s = loadStructureFromMmtfByPdbId(pdbId);
+		}
+		else if (useMmCif) {
 			s = loadStructureFromCifByPdbId(pdbId);
 		} else {
 			s = loadStructureFromPdbByPdbId(pdbId);
@@ -1023,6 +917,15 @@ public class AtomCache {
 		return s;
 	}
 
+	/**
+	 * 
+	 * @param pdbId
+	 * @return
+	 * @throws IOException
+	 */
+	private Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
+		return MmtfActions.readFromWeb(pdbId);
+	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
 

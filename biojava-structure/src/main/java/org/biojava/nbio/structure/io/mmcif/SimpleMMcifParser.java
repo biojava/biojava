@@ -82,7 +82,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A simple mmCif file parser
  *
- * 
+ *
  * Usage:
  * <pre>
 String file = "path/to/mmcif/file";
@@ -96,7 +96,7 @@ System.out.println(s.toPDB());
 
  * </pre>
  * For more documentation see <a href="http://biojava.org/wiki/BioJava:CookBook#Protein_Structure">http://biojava.org/wiki/BioJava:CookBook#Protein_Structure</a>.
- * 
+ *
  * @author Andreas Prlic
  * @author Jose Duarte
  * @since 1.7
@@ -106,7 +106,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 
 	/**
-	 * The header appearing at the beginning of a mmCIF file. 
+	 * The header appearing at the beginning of a mmCIF file.
 	 * A "block code" can be added to it of no more than 32 chars.
 	 * See http://www.iucr.org/__data/assets/pdf_file/0019/22618/cifguide.pdf
 	 */
@@ -524,9 +524,9 @@ public class SimpleMMcifParser implements MMcifParser {
 	 * @return
 	 */
 	private List<String> processLine(String line,
-									 BufferedReader buf,
-									 int fieldLength)
-			throws IOException{
+			BufferedReader buf,
+			int fieldLength)
+					throws IOException{
 
 		//System.out.println("XX processLine " + fieldLength + " " + line);
 		// go through the line and process each character
@@ -594,9 +594,9 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void endLineChecks(String category,List<String> loopFields, List<String> lineData, Set<String> loopWarnings ) throws IOException{
 
 		logger.debug("Processing category {}, with fields: {}",category,loopFields.toString());
-//		System.out.println("parsed the following data: " +category + " fields: "+
-//				loopFields + " DATA: " +
-//				lineData);
+		//		System.out.println("parsed the following data: " +category + " fields: "+
+		//				loopFields + " DATA: " +
+		//				lineData);
 
 		if ( loopFields.size() != lineData.size()){
 			logger.warn("looks like we got a problem with nested string quote characters:");
@@ -669,10 +669,18 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewSymmetry(symmetry);
 		} else if ( category.equals("_struct_ncs_oper")) {
-			
+
 			// this guy is special because of the [] in the field names
-			StructNcsOper sNcsOper = getStructNcsOper(loopFields,lineData);
-			triggerNewStructNcsOper(sNcsOper);
+			StructNcsOper sNcsOper = null;
+			try{
+				sNcsOper = getStructNcsOper(loopFields,lineData);
+			}
+			catch(NumberFormatException e){
+				logger.warn("Error parsing doubles in NCS operator list");
+			}
+			if(sNcsOper!=null){
+				triggerNewStructNcsOper(sNcsOper);
+			}
 
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
@@ -750,25 +758,25 @@ public class SimpleMMcifParser implements MMcifParser {
 			PdbxEntityNonPoly pen = (PdbxEntityNonPoly) buildObject(
 					PdbxEntityNonPoly.class.getName(),
 					loopFields,lineData, loopWarnings
-			);
+					);
 			triggerNewPdbxEntityNonPoly(pen);
 		} else if ( category.equals("_struct_keywords")){
 			StructKeywords kw = (StructKeywords)buildObject(
 					StructKeywords.class.getName(),
 					loopFields,lineData, loopWarnings
-			);
+					);
 			triggerNewStructKeywords(kw);
 		} else if (category.equals("_refine")){
 			Refine r = (Refine)buildObject(
 					Refine.class.getName(),
 					loopFields,lineData, loopWarnings
-			);
+					);
 			triggerNewRefine(r);
 		} else if (category.equals("_chem_comp")){
 			ChemComp c = (ChemComp)buildObject(
 					ChemComp.class.getName(),
 					loopFields, lineData, loopWarnings
-			);
+					);
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
 			AuditAuthor aa = (AuditAuthor)buildObject(
@@ -839,7 +847,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 
 	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
-													 List<String> lineData) {
+			List<String> lineData) {
 		PdbxStructOperList so = new PdbxStructOperList();
 
 		//System.out.println(loopFields);
@@ -856,7 +864,7 @@ public class SimpleMMcifParser implements MMcifParser {
 				String val = lineData.get(loopFields.indexOf(max));
 				Double d = Double.parseDouble(val);
 				matrix.set(j-1,i-1,d);
-//				matrix.set(i-1,j-1,d);
+				//				matrix.set(i-1,j-1,d);
 			}
 		}
 
@@ -900,10 +908,10 @@ public class SimpleMMcifParser implements MMcifParser {
 		op.setElement(3, 2, 0.0);
 		op.setElement(3, 3, 1.0);
 
+
 		for (int i = 1 ; i <=3 ; i++){
 			for (int j =1 ; j <= 3 ; j++){
 				String max = String.format("matrix[%d][%d]",i,j);
-
 				String val = lineData.get(loopFields.indexOf(max));
 				Double d = Double.parseDouble(val);
 				op.setElement(i-1,j-1,d);
@@ -932,7 +940,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
-		
+
 		Object o = null;
 		Class<?> c = null;
 
@@ -978,7 +986,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			if ( m == null) { 	// no method found in model class with the name found in file
 
-				if (!key.contains("[")) { // the fields with square brackets are handled elsewhere, see for instance getStructNcsOper						
+				if (!key.contains("[")) { // the fields with square brackets are handled elsewhere, see for instance getStructNcsOper
 
 					String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
 					String warnkey = key+"-"+c.getName();
@@ -995,7 +1003,7 @@ public class SimpleMMcifParser implements MMcifParser {
 				}
 				continue;
 			}
-			
+
 			// now we populate the object with the values by invoking the corresponding setter method,
 			// note that all of the mmCif container classes have only one argument (they are beans)
 

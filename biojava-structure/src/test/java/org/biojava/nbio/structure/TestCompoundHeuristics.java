@@ -34,188 +34,188 @@ import java.util.zip.GZIPInputStream;
 import static org.junit.Assert.*;
 
 public class TestCompoundHeuristics {
-	
+
 	private static final String PATH_TO_TEST_FILES = "/org/biojava/nbio/structure/io/";
-	
-	//private static final String[] FILES_TO_TEST = 
+
+	//private static final String[] FILES_TO_TEST =
 	//	{"1b8g_raw.pdb.gz", "2m7y_raw.pdb.gz", "3c5f_raw.pdb.gz", "4b19_raw.pdb.gz"};
 
 
-	
+
 	//public void testCompoundHeuristics() throws IOException {
 	//	for (String fileName:FILES_TO_TEST) {
 	//		testFile(fileName);
 	//	}
 	//}
-	
+
 	@Test
-	public void test1b8gRaw() throws IOException, StructureException { 
-		
+	public void test1b8gRaw() throws IOException, StructureException {
+
 		Structure s = getStructure("1b8g_raw.pdb.gz", true);
-		
-		assertEquals(1,s.getCompounds().size());
-		
-		Chain chainA = s.getChainByPDB("A");
-		
-		assertEquals(2, chainA.getCompound().getChains().size());
-		
-		assertEquals(chainA,chainA.getCompound().getRepresentative());
 
-		checkCompoundsNumbered(s.getCompounds());
-		
-		
+		assertEquals(1,s.getEntityInfos().size());
+
+		Chain chainA = s.getChainByPDB("A");
+
+		assertEquals(2, chainA.getEntityInfo().getChains().size());
+
+		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
+
+		checkCompoundsNumbered(s.getEntityInfos());
+
+
 		s = getStructure("1b8g_raw.pdb.gz", false);
-		
-		assertEquals(1,s.getCompounds().size());
-		
-		chainA = s.getChainByPDB("A");
-		
-		assertEquals(2, chainA.getCompound().getChains().size());
-		
-		assertEquals(chainA,chainA.getCompound().getRepresentative());
 
-		checkCompoundsNumbered(s.getCompounds());
+		assertEquals(1,s.getEntityInfos().size());
+
+		chainA = s.getChainByPDB("A");
+
+		assertEquals(2, chainA.getEntityInfo().getChains().size());
+
+		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
+
+		checkCompoundsNumbered(s.getEntityInfos());
 	}
 
-	
+
 	@Test
-	public void test2m7yRaw() throws IOException, StructureException { 
-		
+	public void test2m7yRaw() throws IOException, StructureException {
+
 		Structure s = getStructure("2m7y_raw.pdb.gz", true);
-		
-		assertEquals(1,s.getCompounds().size());
-		
-		Chain chainA = s.getChainByPDB("A");
-		
-		assertEquals(1, chainA.getCompound().getChains().size());
-		
-		assertEquals(chainA,chainA.getCompound().getRepresentative());
 
-		checkCompoundsNumbered(s.getCompounds());
-		
-		
+		assertEquals(1,s.getEntityInfos().size());
+
+		Chain chainA = s.getChainByPDB("A");
+
+		assertEquals(1, chainA.getEntityInfo().getChains().size());
+
+		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
+
+		checkCompoundsNumbered(s.getEntityInfos());
+
+
 		s = getStructure("2m7y_raw.pdb.gz", false);
-		
-		assertEquals(1,s.getCompounds().size());
-		
-		chainA = s.getChainByPDB("A");
-		
-		assertEquals(1, chainA.getCompound().getChains().size());
-		
-		assertEquals(chainA,chainA.getCompound().getRepresentative());
 
-		checkCompoundsNumbered(s.getCompounds());
+		assertEquals(1,s.getEntityInfos().size());
+
+		chainA = s.getChainByPDB("A");
+
+		assertEquals(1, chainA.getEntityInfo().getChains().size());
+
+		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
+
+		checkCompoundsNumbered(s.getEntityInfos());
 	}
-	
+
 	@Test
-	public void test3c5fRaw() throws IOException, StructureException { 
-		
+	public void test3c5fRaw() throws IOException, StructureException {
+
 		Structure s = getStructure("3c5f_raw.pdb.gz", true);
-		
-		assertEquals(4,s.getCompounds().size());
-		
-		Chain chainA = s.getChainByPDB("A");
-		
-		assertEquals(2, chainA.getCompound().getChains().size());
-		
-		assertEquals(chainA,chainA.getCompound().getRepresentative());
 
-		checkCompoundsNumbered(s.getCompounds());
-		
-		
+		assertEquals(4,s.getEntityInfos().size());
+
+		Chain chainA = s.getChainByPDB("A");
+
+		assertEquals(2, chainA.getEntityInfo().getChains().size());
+
+		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
+
+		checkCompoundsNumbered(s.getEntityInfos());
+
+
 		s = getStructure("3c5f_raw.pdb.gz", false);
-		
-		assertEquals(4,s.getCompounds().size());
-		
-		chainA = s.getChainByPDB("A");
-		
-		assertEquals(2, chainA.getCompound().getChains().size());
-		
-		assertEquals(chainA,chainA.getCompound().getRepresentative());
 
-		checkCompoundsNumbered(s.getCompounds());
+		assertEquals(4,s.getEntityInfos().size());
+
+		chainA = s.getChainByPDB("A");
+
+		assertEquals(2, chainA.getEntityInfo().getChains().size());
+
+		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
+
+		checkCompoundsNumbered(s.getEntityInfos());
 	}
-	
+
 	@Test
-	public void test4b19Raw() throws IOException, StructureException { 
-		
+	public void test4b19Raw() throws IOException, StructureException {
+
 		Structure s = getStructure("4b19_raw.pdb.gz", true);
-		
-		assertEquals(1,s.getCompounds().size());
-		
+
+		assertEquals(1,s.getEntityInfos().size());
+
 		Chain chainA = s.getChainByPDB("A");
-		
-		assertEquals(1, chainA.getCompound().getChains().size());
-		
-		assertEquals(chainA,chainA.getCompound().getRepresentative());
-		
-		checkCompoundsNumbered(s.getCompounds());
-		
-		
+
+		assertEquals(1, chainA.getEntityInfo().getChains().size());
+
+		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
+
+		checkCompoundsNumbered(s.getEntityInfos());
+
+
 		s = getStructure("4b19_raw.pdb.gz", false);
-		
-		assertEquals(1,s.getCompounds().size());
-		
+
+		assertEquals(1,s.getEntityInfos().size());
+
 		chainA = s.getChainByPDB("A");
-		
-		assertEquals(1, chainA.getCompound().getChains().size());
-		
-		assertEquals(chainA,chainA.getCompound().getRepresentative());
-		
-		checkCompoundsNumbered(s.getCompounds());
+
+		assertEquals(1, chainA.getEntityInfo().getChains().size());
+
+		assertEquals(chainA,chainA.getEntityInfo().getRepresentative());
+
+		checkCompoundsNumbered(s.getEntityInfos());
 
 	}
-	
+
 	@Test
 	public void test3ddoNoseqres() throws IOException, StructureException {
-		
+
 		// 3ddo contains 6 chains in 1 entity, with residue numbering completely different in each of the chains
-		
+
 		Structure s = getStructure("3ddo_raw_noseqres.pdb.gz", true);
 
 		assertNotNull(s);
-		
+
 		assertEquals(6, s.getChains().size());
-		
+
 		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
-		assertEquals(1, s.getCompounds().size());
-		
+		assertEquals(1, s.getEntityInfos().size());
+
 		// trying without seqAlignSeqRes
 		s = getStructure("3ddo_raw_noseqres.pdb.gz", false);
 		assertNotNull(s);
-		
+
 		assertEquals(6, s.getChains().size());
-		
-		assertEquals(1, s.getCompounds().size());
+
+		assertEquals(1, s.getEntityInfos().size());
 	}
-	
+
 	@Test
 	public void test3ddoSeqres() throws IOException, StructureException {
-		
+
 		// 3ddo contains 6 chains in 1 entity, with residue numbering completely different in each of the chains
-		
+
 		Structure s = getStructure("3ddo_raw_trunc_seqres.pdb.gz", true);
 
 		assertNotNull(s);
-		
+
 		assertEquals(6, s.getChains().size());
-		
+
 		// checking that heuristics in CompoundFinder work. We should have a single entity (compound)
-		assertEquals(1, s.getCompounds().size());
-		
+		assertEquals(1, s.getEntityInfos().size());
+
 		// trying without seqAlignSeqRes
 		s = getStructure("3ddo_raw_trunc_seqres.pdb.gz", true);
 		assertNotNull(s);
-		
+
 		assertEquals(6, s.getChains().size());
-		
-		assertEquals(1, s.getCompounds().size());
+
+		assertEquals(1, s.getEntityInfos().size());
 	}
 
 
 	private Structure getStructure(String fileName, boolean setAlignSeqRes) throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream(PATH_TO_TEST_FILES+fileName));
-		
+
 		PDBFileParser pdbpars = new PDBFileParser();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(setAlignSeqRes);
@@ -224,33 +224,33 @@ public class TestCompoundHeuristics {
 		Structure s = pdbpars.parsePDBFile(inStream) ;
 
 		System.out.println("Entities for file: "+fileName);
-		for (Compound ent:s.getCompounds()) {
+		for (EntityInfo ent:s.getEntityInfos()) {
 			System.out.print(ent.getRepresentative().getChainID()+":");
 			for (Chain c:ent.getChains()) {
 				System.out.print(" "+c.getChainID());
 			}
 			System.out.println();
 		}
-		
+
 		return s;
 	}
 
-	private void checkCompoundsNumbered(List<Compound> compounds) {
-		
-		Collections.sort(compounds, new Comparator<Compound>() {
+	private void checkCompoundsNumbered(List<EntityInfo> compounds) {
+
+		Collections.sort(compounds, new Comparator<EntityInfo>() {
 
 			@Override
-			public int compare(Compound o1, Compound o2) {
+			public int compare(EntityInfo o1, EntityInfo o2) {
 				return new Integer(o1.getMolId()).compareTo(o2.getMolId());
 			}
 		});
-		
+
 		int id = 1;
-		for (Compound compound:compounds) {
+		for (EntityInfo compound:compounds) {
 			assertEquals(id,compound.getMolId());
 			id++;
 		}
 
-		
+
 	}
 }

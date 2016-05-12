@@ -26,7 +26,7 @@ package org.biojava.nbio.structure.io;
 
 
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Compound;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
@@ -43,7 +43,7 @@ import java.util.List;
  *  <p>
  *  Several flags can be set for this class
  *  <ul>
- *  
+ *
  * <li> {@link #setAutoFetch(boolean)} - if the PDB file can not be found locally, should it be fetched
  *  from the PDB ftp servers? (default:false)</li>
  *  <li> Other parameters can be set using the {@link #setFileParsingParameters(FileParsingParameters)}</li>
@@ -59,37 +59,37 @@ import java.util.List;
  * <p>
  * A:
  * <pre>
- public {@link Structure} loadStructure(String pathToPDBFile){
-		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
-
-		{@link Structure} structure = null;
-		try{
-			structure = pdbreader.getStructure(pathToPDBFile);
-			System.out.println(structure);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return structure;
-	}
- </pre>
+ * public {@link Structure} loadStructure(String pathToPDBFile){
+ * 	{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
+ *
+ * 	{@link Structure} structure = null;
+ * 	try{
+ * 		structure = pdbreader.getStructure(pathToPDBFile);
+ * 		System.out.println(structure);
+ * 	} catch (IOException e) {
+ * 		e.printStackTrace();
+ * 	}
+ * 	return structure;
+ * }
+ * </pre>
  *
  * Access PDB files from a directory, take care of compressed PDB files
  * <pre>
  * public {@link Structure} loadStructureById() {
-		String path = "/path/to/PDB/directory/";
-
-		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
-		pdbreader.setPath(path);
-		{@link Structure} structure = null;
-		try {
-			structure = pdbreader.getStructureById("5pti");
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-		return structure;
-
-	}
-	</pre>
+ * 	String path = "/path/to/PDB/directory/";
+ *
+ * 	{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
+ * 	pdbreader.setPath(path);
+ * 	{@link Structure} structure = null;
+ * 	try {
+ * 		structure = pdbreader.getStructureById("5pti");
+ * 	} catch (IOException e){
+ * 		e.printStackTrace();
+ * 	}
+ * 	return structure;
+ *
+ * }
+ * </pre>
  *
  *
  * @author Andreas Prlic
@@ -122,8 +122,6 @@ public class PDBFileReader extends LocalPDBDirectory {
 	//  "1ml5",
 	//  "1n8r",
 
-	public static final String LOAD_CHEM_COMP_PROPERTY = "loadChemCompInfo";
-
 	public static final String[] PDB_SPLIT_DIR    = new String[]{"data","structures","divided" ,"pdb"};
 	public static final String[] PDB_OBSOLETE_DIR = new String[]{"data","structures","obsolete","pdb"};
 
@@ -149,15 +147,15 @@ public class PDBFileReader extends LocalPDBDirectory {
 			Structure struc = pdbreader.getStructureById("193D");
 			System.out.println(struc);
 
-			List<Compound>	compounds = struc.getCompounds();
-			for (Compound comp : compounds  ){
+			List<EntityInfo>	compounds = struc.getEntityInfos();
+			for (EntityInfo comp : compounds  ){
 				List<Chain> chains = comp.getChains();
 				System.out.print(">Chains :" );
 				for (Chain c : chains){
-					System.out.print(c.getChainID() + " " );					
+					System.out.print(c.getChainID() + " " );
 				}
 				System.out.println();
-				if ( chains.size() > 0)	{				
+				if ( chains.size() > 0)	{
 					System.out.println(chains.get(0).getAtomSequence());
 					System.out.println(chains.get(0).getSeqResSequence());
 					System.out.print("  Atom Ligands: ");
@@ -172,7 +170,7 @@ public class PDBFileReader extends LocalPDBDirectory {
 
 
 			/*
-			 GroupIterator gi = new GroupIterator(struc);
+			GroupIterator gi = new GroupIterator(struc);
 			while (gi.hasNext()){
 				Group g = (Group) gi.next();
 				Chain  c = g.getParent();
@@ -202,18 +200,18 @@ public class PDBFileReader extends LocalPDBDirectory {
 
 	/**
 	 * Constructs a new PDBFileReader, initializing the extensions member variable.
-	 * The path is initialized in the same way as {@link UserConfiguration}, 
+	 * The path is initialized in the same way as {@link UserConfiguration},
 	 * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
 	 * Both autoFetch and splitDir are initialized to false
 	 */
 	public PDBFileReader() {
 		this(null);
 	}
-	
+
 	/**
 	 * Constructs a new PDBFileReader, initializing the extensions member variable.
 	 * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
-	 * 
+	 *
 	 * <p>If path is null, initialize using the system property/environment variable
 	 * {@link UserConfiguration#PDB_DIR}.
 	 * @param path Path to the PDB file directory
@@ -319,7 +317,7 @@ public class PDBFileReader extends LocalPDBDirectory {
 	protected String[] getObsoleteDirPath() {
 		return PDB_OBSOLETE_DIR;
 	}
-	
+
 
 
 }

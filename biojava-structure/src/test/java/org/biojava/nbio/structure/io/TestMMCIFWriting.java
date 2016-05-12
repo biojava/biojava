@@ -43,25 +43,25 @@ public class TestMMCIFWriting {
 	@Test
 	public void test1SMT() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		
-		StructureIO.setAtomCache(cache); 
+
+		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);
-		
+
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		cache.setFileParsingParams(params);
-		
+
 		Structure originalStruct = StructureIO.getStructure("1SMT");
-				
+
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
-		
-		
+
+
 		FileWriter fw = new FileWriter(outputFile);
 		fw.write(originalStruct.toMMCIF());
 		fw.close();
-		
-		
+
+
 		MMcifParser parser = new SimpleMMcifParser();
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
@@ -73,26 +73,26 @@ public class TestMMCIFWriting {
 
 		parser.addMMcifConsumer(consumer);
 
-		//parser.parse(new BufferedReader(new FileReader(new File("/home/duarte_j/test.cif")))); 
+		//parser.parse(new BufferedReader(new FileReader(new File("/home/duarte_j/test.cif"))));
 		parser.parse(new BufferedReader(new FileReader(outputFile)));
-		
+
 		Structure readStruct = consumer.getStructure();
-		
-		assertNotNull(readStruct); 
-		
+
+		assertNotNull(readStruct);
+
 		assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
-		
+
 		for (int i=0;i<originalStruct.getChains().size();i++) {
 			assertEquals(originalStruct.getChains().get(i).getAtomGroups().size(),
 							readStruct.getChains().get(i).getAtomGroups().size());
-			
+
 			Chain origChain = originalStruct.getChains().get(i);
 			Chain readChain = readStruct.getChains().get(i);
-			
+
 			assertEquals(origChain.getAtomGroups().size(), readChain.getAtomGroups().size());
 			//assertEquals(origChain.getSeqResGroups().size(), readChain.getSeqResGroups().size());
 		}
-		
+
 	}
 
 	/**
@@ -103,25 +103,25 @@ public class TestMMCIFWriting {
 	@Test
 	public void test2N3J() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		
-		StructureIO.setAtomCache(cache); 
+
+		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);
-		
+
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		cache.setFileParsingParams(params);
-		
+
 		Structure originalStruct = StructureIO.getStructure("2N3J");
-				
+
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
-		
-		
+
+
 		FileWriter fw = new FileWriter(outputFile);
 		fw.write(originalStruct.toMMCIF());
 		fw.close();
-		
-		
+
+
 		MMcifParser parser = new SimpleMMcifParser();
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
@@ -133,32 +133,90 @@ public class TestMMCIFWriting {
 
 		parser.addMMcifConsumer(consumer);
 
-		//parser.parse(new BufferedReader(new FileReader(new File("/home/duarte_j/test.cif")))); 
+		//parser.parse(new BufferedReader(new FileReader(new File("/home/duarte_j/test.cif"))));
 		parser.parse(new BufferedReader(new FileReader(outputFile)));
-		
+
 		Structure readStruct = consumer.getStructure();
-		
-		assertNotNull(readStruct); 
-		
+
+		assertNotNull(readStruct);
+
 		assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
-		
+
 		assertEquals(originalStruct.nrModels(), readStruct.nrModels());
-		
+
 		for (int i=0; i<originalStruct.nrModels();i++) {
 			assertEquals(originalStruct.getModel(i).size(), readStruct.getModel(i).size());
 		}
-		
+
 		for (int i=0;i<originalStruct.getChains().size();i++) {
 			assertEquals(originalStruct.getChains().get(i).getAtomGroups().size(),
 							readStruct.getChains().get(i).getAtomGroups().size());
-			
+
 			Chain origChain = originalStruct.getChains().get(i);
 			Chain readChain = readStruct.getChains().get(i);
-			
+
 			assertEquals(origChain.getAtomGroups().size(), readChain.getAtomGroups().size());
 			//assertEquals(origChain.getSeqResGroups().size(), readChain.getSeqResGroups().size());
 		}
+
+	}
+	
+	@Test
+	public void test1A2C() throws IOException, StructureException {
 		
+		// a structure with insertion codes
+		
+		AtomCache cache = new AtomCache();
+
+		StructureIO.setAtomCache(cache);
+
+		cache.setUseMmCif(true);
+
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+
+		Structure originalStruct = StructureIO.getStructure("1A2C");
+
+		File outputFile = File.createTempFile("biojava_testing_", ".cif");
+
+
+		FileWriter fw = new FileWriter(outputFile);
+		fw.write(originalStruct.toMMCIF());
+		fw.close();
+
+
+		MMcifParser parser = new SimpleMMcifParser();
+
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+
+		FileParsingParameters fileParsingParams = new FileParsingParameters();
+		fileParsingParams.setAlignSeqRes(true);
+
+		consumer.setFileParsingParameters(fileParsingParams);
+
+		parser.addMMcifConsumer(consumer);
+
+		//parser.parse(new BufferedReader(new FileReader(new File("/home/duarte_j/test.cif"))));
+		parser.parse(new BufferedReader(new FileReader(outputFile)));
+
+		Structure readStruct = consumer.getStructure();
+
+		assertNotNull(readStruct);
+
+		assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
+
+		for (int i=0;i<originalStruct.getChains().size();i++) {
+			assertEquals(originalStruct.getChains().get(i).getAtomGroups().size(),
+							readStruct.getChains().get(i).getAtomGroups().size());
+
+			Chain origChain = originalStruct.getChains().get(i);
+			Chain readChain = readStruct.getChains().get(i);
+
+			assertEquals(origChain.getAtomGroups().size(), readChain.getAtomGroups().size());
+			//assertEquals(origChain.getSeqResGroups().size(), readChain.getSeqResGroups().size());
+		}
+
 	}
 
 }

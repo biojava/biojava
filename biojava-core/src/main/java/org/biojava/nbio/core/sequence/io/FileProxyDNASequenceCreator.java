@@ -48,65 +48,65 @@ import java.util.List;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class FileProxyDNASequenceCreator implements
-        SequenceCreatorInterface<NucleotideCompound> {
+		SequenceCreatorInterface<NucleotideCompound> {
 
-    CompoundSet<NucleotideCompound> compoundSet = null;
-    File file = null;
-    SequenceParserInterface sequenceParser;
+	CompoundSet<NucleotideCompound> compoundSet = null;
+	File file = null;
+	SequenceParserInterface sequenceParser;
 
-    /**
-     * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
-     * @param fastaFile
-     * @param compoundSet
-     */
-    public FileProxyDNASequenceCreator(File file,
-            CompoundSet<NucleotideCompound> compoundSet, 
-            SequenceParserInterface sequenceParser) {
-        this.compoundSet = compoundSet;
-        this.file = file;
-        this.sequenceParser = sequenceParser;
-    }
+	/**
+	 * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
+	 * @param fastaFile
+	 * @param compoundSet
+	 */
+	public FileProxyDNASequenceCreator(File file,
+			CompoundSet<NucleotideCompound> compoundSet,
+			SequenceParserInterface sequenceParser) {
+		this.compoundSet = compoundSet;
+		this.file = file;
+		this.sequenceParser = sequenceParser;
+	}
 
-    /**
-     * Even though we are passing in the sequence we really only care about the length of the sequence and the offset
-     * index in the fasta file.
-     * @param sequence
-     * @param index
-     * @return
-     * @throws CompoundNotFoundException  
-     * @throws IOException
-     */
-    @Override
+	/**
+	 * Even though we are passing in the sequence we really only care about the length of the sequence and the offset
+	 * index in the fasta file.
+	 * @param sequence
+	 * @param index
+	 * @return
+	 * @throws CompoundNotFoundException
+	 * @throws IOException
+	 */
+	@Override
 	public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) throws CompoundNotFoundException, IOException {
-        SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<NucleotideCompound>(
-                file, 
-                sequenceParser, 
-                index, 
-                sequence.length(),
-                compoundSet);
-        return new DNASequence(sequenceFileProxyLoader, compoundSet);
-    }
+		SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<NucleotideCompound>(
+				file,
+				sequenceParser,
+				index,
+				sequence.length(),
+				compoundSet);
+		return new DNASequence(sequenceFileProxyLoader, compoundSet);
+	}
 
-    /**
-     * Should be able to extend the same concept to a remote URL call or database connection. Not supported yet
-     * @param proxyLoader
-     * @param index
-     * @return
-     */
-    @Override
+	/**
+	 * Should be able to extend the same concept to a remote URL call or database connection. Not supported yet
+	 * @param proxyLoader
+	 * @param index
+	 * @return
+	 */
+	@Override
 	public AbstractSequence<NucleotideCompound> getSequence(
-            ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+			ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    /**
-     * Not sure of use case and currently not supported
-     * @param list
-     * @return
-     */
-    @Override
+	/**
+	 * Not sure of use case and currently not supported
+	 * @param list
+	 * @return
+	 */
+	@Override
 	public AbstractSequence<NucleotideCompound> getSequence(
-            List<NucleotideCompound> list) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+			List<NucleotideCompound> list) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 }

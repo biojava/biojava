@@ -22,9 +22,9 @@ package org.biojava.nbio.aaproperties.profeat.convertor;
 
 public class Convert2Charge extends Convertor{
 	/**
-	 * Class for the conversion of protein sequence into charge 
+	 * Class for the conversion of protein sequence into charge
 	 */
-	
+
 	@Override
 	public char convert(char c){
 		switch(c){
@@ -38,7 +38,7 @@ public class Convert2Charge extends Convertor{
 			return unknownGroup;//Non-standard AA
 		}
 	}
-	
+
 	private static String[] subCategory = {"Positive", "Neutral", "Negative"};
 	@Override
 	public String[] getGrouping(){return Convert2Charge.subCategory;}
