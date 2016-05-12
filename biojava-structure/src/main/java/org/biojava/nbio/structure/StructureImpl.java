@@ -213,7 +213,7 @@ public class StructureImpl implements Structure, Serializable {
 			groups.addAll(chain.getAtomGroups());
 		}
 		
-		Chain water = getWaterChain(chainName, modelnr);
+		Chain water = getWaterChainByPDB(chainName, modelnr);
 		
 		if (water!=null)
 			groups.addAll(water.getAtomGroups());
