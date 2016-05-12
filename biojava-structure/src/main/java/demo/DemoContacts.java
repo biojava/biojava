@@ -27,7 +27,6 @@ import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.GroupContactSet;
 
 import java.io.IOException;
-import java.util.List;
 
 
 public class DemoContacts {
@@ -49,9 +48,7 @@ public class DemoContacts {
 
 		Structure structure = StructureIO.getStructure(pdbCode);
 
-		List<Chain> chains = structure.getPolyChainsByPDB("A");
-
-		Chain chain = chains.get(0);
+		Chain chain = structure.getPolyChainByPDB("A");
 
 		String[] atoms = {"CA"};
 		AtomContactSet contacts = StructureTools.getAtomsInContact(chain, atoms, 8.0);

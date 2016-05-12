@@ -125,7 +125,7 @@ public class EcodParseTest {
 				try {
 					Integer start = map.getPosition(range.getStart());
 					if(start == null) {
-						Group g = struct.getPolyChainsByPDB(range.getStart().getChainName()).getGroupByPDB(range.getStart());
+						Group g = struct.getPolyChainByPDB(range.getStart().getChainName()).getGroupByPDB(range.getStart());
 						if(g!=null) {
 							logger.warn("No CA atom for starting residue "+d.getDomainId()+"_"+range);
 							clean = false;
@@ -143,7 +143,7 @@ public class EcodParseTest {
 					if(end == null) {
 						Group g = null;
 						try {
-							g = struct.getPolyChainsByPDB(range.getEnd().getChainName()).getGroupByPDB(range.getEnd());
+							g = struct.getPolyChainByPDB(range.getEnd().getChainName()).getGroupByPDB(range.getEnd());
 						} catch(StructureException e ) {}
 						if(g!=null) {
 							logger.warn("No CA atom for ending residue "+d.getDomainId()+"_"+range);

@@ -333,6 +333,7 @@ public interface Structure extends Cloneable {
 	 * Return all polymeric chains for the first model
 	 *
 	 * @return all polymeric chains.
+	 * @since 5.0
 	 */
 	List<Chain> getPolyChains();
 
@@ -340,6 +341,7 @@ public interface Structure extends Cloneable {
 	 * Return all polymeric chains for the given model index.
 	 * @param modelIdx the model index
 	 * @return all polymeric chains.
+	 * @since 5.0 
 	 */
 	List<Chain> getPolyChains(int modelIdx);
 
@@ -347,6 +349,7 @@ public interface Structure extends Cloneable {
 	 * Return all non-polymeric chains for the first model
 	 *
 	 * @return all non-polymeric chains.
+	 * @since 5.0 
 	 */
 	List<Chain> getNonPolyChains();
 
@@ -355,12 +358,14 @@ public interface Structure extends Cloneable {
 	 *
 	 * @param modelIdx the model index
 	 * @return all non-polymeric chains.
+	 * @since 5.0 
 	 */
 	List<Chain> getNonPolyChains(int modelIdx);
 
 	/**
 	 * Return all water chains for the first model
 	 * @return
+	 * @since 5.0 
 	 */
 	List<Chain> getWaterChains();
 	
@@ -368,6 +373,7 @@ public interface Structure extends Cloneable {
 	 * Return all water chains for the given model index
 	 * @param modelIdx
 	 * @return
+	 * @since 5.0 
 	 */
 	List<Chain> getWaterChains(int modelIdx);
 
@@ -439,6 +445,7 @@ public interface Structure extends Cloneable {
 	 *
 	 * @param asymId the id of the chain
 	 * @return true if a nonpolymeric chain with the asymId is found
+	 * @since 5.0 
 	 */
 	boolean hasNonPolyChain(String asymId);
 
@@ -482,7 +489,7 @@ public interface Structure extends Cloneable {
 	 * @param authId the author id (chainName, public chain id)
 	 * @return the Chain that matches the authId
 	 * @throws StructureException if chain can't be found
-	 * @Deprecated use {@link #getPolyChainsByPDB(String)} instead
+	 * @deprecated use {@link #getPolyChainsByPDB(String)} instead
 	 */
 	@Deprecated 
 	Chain getChainByPDB(String authId) throws StructureException;
@@ -497,7 +504,7 @@ public interface Structure extends Cloneable {
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return the Chain that matches the authId in the model
 	 * @throws StructureException if chain can't be found
-	 * @Deprecated use {@link #getPolyChainsByPDB(String,int)} instead
+	 * @deprecated use {@link #getPolyChainsByPDB(String,int)} instead
 	 */
 	@Deprecated
 	Chain getChainByPDB(String authId, int modelIdx) throws StructureException;
@@ -530,6 +537,7 @@ public interface Structure extends Cloneable {
 	 * id (asymId) for the first model
 	 * @param asymId the asymId (chainId)
 	 * @return a polymeric Chain or null if it can't be found
+	 * @since 5.0 
 	 */
 	Chain getPolyChain(String asymId);
 
@@ -539,6 +547,7 @@ public interface Structure extends Cloneable {
 	 * @param asymId the asymId (chainId)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return a polymeric Chain or null if it can't be found
+	 * @since 5.0 
 	 */
 	Chain getPolyChain(String asymId, int modelIdx);
 
@@ -547,8 +556,9 @@ public interface Structure extends Cloneable {
 	 * name (authId) for the first model
 	 * @param authId the author id (chainName, public chain id)
 	 * @return a polymeric Chain or null if it can't be found
+	 * @since 5.0 
 	 */
-	List<Chain> getPolyChainsByPDB(String authId);
+	Chain getPolyChainByPDB(String authId);
 	
 	/** 
 	 * Retrieve a polymeric Chain based on the 'public' chain
@@ -556,8 +566,9 @@ public interface Structure extends Cloneable {
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return a polymeric Chain or null if it can't be found
+	 * @since 5.0 
 	 */
-	List<Chain> getPolyChainsByPDB(String authId, int modelIdx);
+	Chain getPolyChainByPDB(String authId, int modelIdx);
 
 
 	/** 
@@ -565,6 +576,7 @@ public interface Structure extends Cloneable {
 	 * id (asymId) for the first model
 	 * @param asymId the asymId (chainId)
 	 * @return a non-polymeric chain or null if it can't be found
+	 * @since 5.0 
 	 */
 	Chain getNonPolyChain(String asymId);
 
@@ -574,37 +586,26 @@ public interface Structure extends Cloneable {
 	 * @param asymId the asymId (chainId)
 	 * @param modelIdx the index of the required model (0-based) 
 	 * @return a non-polymeric Chain or null if it can't be found
+	 * @since 5.0 
 	 */
 	Chain getNonPolyChain(String asymId, int modelIdx);
 
 	/** 
-	 * Retrieve the first non-polymeric Chain corresponding to the given 'public' chain
-	 * name (authId) for the first model.
-	 * <p>
-	 * Note that other non-polymeric chains might still
-	 * exist with the same authId, due to the one-to-many relationship
-	 * between public chain ids (authIds) and the stored non-polymeric 
-	 * chains that follow the mmCIF data model. 
-	 * If the user is interested in non-polymeric chains different from first one, he/she would
-	 * need to go through {@link #getNonPolyChains()} to find them all. 
+	 * Retrieve all non-polymeric Chains corresponding to the given 'public' chain
+	 * name (authId) for the first model. 
 	 * @param authId the author id (chainName, public chain id)
-	 * @return a non-polymeric Chain or null if it can't be found
+	 * @return a list of non-polymeric Chains, if none found the list will be empty
+	 * @since 5.0 
 	 */
 	List<Chain> getNonPolyChainsByPDB(String authId);
 
 	/** 
-	 * Retrieve the first non-polymeric Chain corresponding to the 'public' chain
+	 * Retrieve all non-polymeric Chains corresponding to the 'public' chain
 	 * name (authId) and the given model index.
-	 * <p>
-	 * Note that other non-polymeric chains might still
-	 * exist with the same authId, due to the one-to-many relationship
-	 * between public chain ids (authIds) and the stored non-polymeric 
-	 * chains that follow the mmCIF data model. 
-	 * If the user is interested in non-polymeric chains different from first one, he/she would
-	 * need to go through {@link #getNonPolyChains(int)} to find them all.
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
-	 * @return a non-polymeric Chain or null if it can't be found
+	 * @return a list of non-polymeric Chains, if none found the list will be empty
+	 * @since 5.0 
 	 */
 	List<Chain> getNonPolyChainsByPDB(String authId, int modelIdx);
 
@@ -613,6 +614,7 @@ public interface Structure extends Cloneable {
 	 * for the first model
 	 * @param asymId the asymId (chainId)
 	 * @return a water Chain or null if it can't be found
+	 * @since 5.0 
 	 */
 	Chain getWaterChain(String asymId);
 	
@@ -622,6 +624,7 @@ public interface Structure extends Cloneable {
 	 * @param asymId the asymId (chainId)
 	 * @param modelIdx the index of the required model (0-based) 
 	 * @return
+	 * @since 5.0 
 	 */
 	Chain getWaterChain(String asymId, int modelIdx);
 	
@@ -630,6 +633,7 @@ public interface Structure extends Cloneable {
 	 * for the first model
 	 * @param authId the author id (chainName, public chain id)
 	 * @return
+	 * @since 5.0 
 	 */
 	Chain getWaterChainByPDB(String authId);
 
@@ -639,6 +643,7 @@ public interface Structure extends Cloneable {
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return
+	 * @since 5.0 
 	 */
 	Chain getWaterChainByPDB(String authId, int modelIdx);
 	

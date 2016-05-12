@@ -80,8 +80,8 @@ public class AtomCacheTest {
 		int expectedLengthB = rrs.get(1).getLength();
 		Structure structure = cache.getStructureForDomain("d1h6w.2");
 		assertEquals(2, structure.getPolyChains().size());
-		Chain a = structure.getPolyChainsByPDB("A").get(0);
-		Chain b = structure.getPolyChainsByPDB("B").get(0);
+		Chain a = structure.getPolyChainByPDB("A");
+		Chain b = structure.getPolyChainByPDB("B");
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
 		assertEquals(expectedLengthB, b.getAtomGroups().size());
 	}
@@ -99,8 +99,8 @@ public class AtomCacheTest {
 		int expectedLengthB = rrs.get(1).getLength();
 		Structure structure = cache.getStructureForDomain("d1i3o.1");
 		assertEquals(2, structure.getPolyChains().size());
-		Chain a = structure.getPolyChainsByPDB("A").get(0);
-		Chain b = structure.getPolyChainsByPDB("B").get(0);
+		Chain a = structure.getPolyChainByPDB("A");
+		Chain b = structure.getPolyChainByPDB("B");
 		// since biojava 5.0 we have no ligand or water molecules in the polymer chains, we have to subtract the 3 water molecules
 		assertEquals(expectedLengthA - 3, a.getAtomGroups().size());
 		// since biojava 5.0 we have no ligand or water molecules in the polymer chains, we have to subtract the 4 water molecules
@@ -123,7 +123,7 @@ public class AtomCacheTest {
 		int expectedLengthE = rrs.get(0).getLength();
 		Structure structure = cache.getStructureForDomain("d1i3oe_");
 		assertEquals(1, structure.getPolyChains().size());
-		Chain e = structure.getPolyChainsByPDB("E").get(0);
+		Chain e = structure.getPolyChainByPDB("E");
 		// since biojava 5.0 we have no ligand molecules in the polymer chains, we have to subtract the 2 zinc molecules
 		assertEquals(expectedLengthE - 2, e.getAtomGroups().size());
 
@@ -145,7 +145,7 @@ public class AtomCacheTest {
 		//System.out.println(cache.getStructure("1hcy"));
 		//System.out.println(structure);
 		assertEquals(1, structure.getPolyChains().size());
-		Chain a = structure.getPolyChainsByPDB("A").get(0);
+		Chain a = structure.getPolyChainByPDB("A");
 		int expectedLengthA = 135;
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
 

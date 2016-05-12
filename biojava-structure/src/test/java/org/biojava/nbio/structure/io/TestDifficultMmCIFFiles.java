@@ -203,7 +203,7 @@ public class TestDifficultMmCIFFiles {
 		Chain chain = chains.get(0);
 		assertEquals("Wrong chain ID",chain.getId(),"ABCD");
 
-		Chain chain2 = s.getPolyChainsByPDB("ABCD").get(0);
+		Chain chain2 = s.getPolyChainByPDB("ABCD");
 		assertNotNull(chain2);
 		assertEquals(chain2, chain);
 	}

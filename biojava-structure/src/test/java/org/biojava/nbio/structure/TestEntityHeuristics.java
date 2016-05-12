@@ -56,7 +56,7 @@ public class TestEntityHeuristics {
 		// 1 prot, 1 PLP, 1 water: 3 entities
 		assertEquals(3, s.getEntityInfos().size());
 
-		Chain chainA = s.getPolyChainsByPDB("A").get(0);
+		Chain chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(2, chainA.getEntityInfo().getChains().size());
 
@@ -70,7 +70,7 @@ public class TestEntityHeuristics {
 		// 1 prot, 1 PLP, 1 water: 3 entities
 		assertEquals(3, s.getEntityInfos().size());
 
-		chainA = s.getPolyChainsByPDB("A").get(0);
+		chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(2, chainA.getEntityInfo().getChains().size());
 
@@ -88,7 +88,7 @@ public class TestEntityHeuristics {
 		// 2 entities: 1 polymer (protein) 1 non-polymer (ZN)
 		assertEquals(2, s.getEntityInfos().size());
 
-		Chain chainA = s.getPolyChainsByPDB("A").get(0);
+		Chain chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(1, chainA.getEntityInfo().getChains().size());
 
@@ -102,7 +102,7 @@ public class TestEntityHeuristics {
 		// 2 entities: 1 polymer (protein) 1 non-polymer (ZN)
 		assertEquals(2,s.getEntityInfos().size());
 
-		chainA = s.getPolyChainsByPDB("A").get(0);
+		chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(1, chainA.getEntityInfo().getChains().size());
 
@@ -123,7 +123,7 @@ public class TestEntityHeuristics {
 		
 		assertEquals(4, polyEntities);
 
-		Chain chainA = s.getPolyChainsByPDB("A").get(0);
+		Chain chainA = s.getPolyChainByPDB("A");
 
 		// there's 2 models in file, thus for the protien polymeric entity there's 4 chains (2 from each model)
 		assertEquals(4, chainA.getEntityInfo().getChains().size());
@@ -142,7 +142,7 @@ public class TestEntityHeuristics {
 		
 		assertEquals(4,polyEntities);
 
-		chainA = s.getPolyChainsByPDB("A").get(0);
+		chainA = s.getPolyChainByPDB("A");
 
 		// there's 2 models in file, thus for the protien polymeric entity there's 4 chains (2 from each model)
 		assertEquals(4, chainA.getEntityInfo().getChains().size());
@@ -159,7 +159,7 @@ public class TestEntityHeuristics {
 
 		assertEquals(1,s.getEntityInfos().size());
 
-		Chain chainA = s.getPolyChainsByPDB("A").get(0);
+		Chain chainA = s.getPolyChainByPDB("A");
 
 		// only 1 protein entity with 1 chain, but 5 models
 		assertEquals(5, chainA.getEntityInfo().getChains().size());
@@ -173,7 +173,7 @@ public class TestEntityHeuristics {
 
 		assertEquals(1,s.getEntityInfos().size());
 
-		chainA = s.getPolyChainsByPDB("A").get(0);
+		chainA = s.getPolyChainByPDB("A");
 
 		assertEquals(5, chainA.getEntityInfo().getChains().size());
 

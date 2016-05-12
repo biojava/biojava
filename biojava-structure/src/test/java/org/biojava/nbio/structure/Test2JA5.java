@@ -23,7 +23,6 @@ package org.biojava.nbio.structure;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -59,8 +58,8 @@ public class Test2JA5 {
 		
 		assertNotNull(nChain);
 
-		List<Chain> chains = s1.getPolyChainsByPDB("N");
-		assertTrue(chains.size() == 0);
+		Chain chain = s1.getPolyChainByPDB("N");
+		assertNull(chain);
 	}
 
 	@Test
@@ -84,7 +83,7 @@ public class Test2JA5 {
 		// All 15 seqres chains will be store.
 		assertEquals(15, s1.getPolyChains().size());
 
-		Chain nChain = s1.getPolyChainsByPDB("N").get(0);
+		Chain nChain = s1.getPolyChainByPDB("N");
 		
 		assertNotNull(nChain);
 	}

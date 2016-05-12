@@ -44,7 +44,7 @@ public class TestAltLocs {
 
 		Structure s = cache.getStructure("2CI1");
 
-		Chain a = s.getPolyChainsByPDB("A").get(0);
+		Chain a = s.getPolyChainByPDB("A");
 
 		int groupCount = 0;
 		List<Group> groups = a.getAtomGroups();
@@ -115,7 +115,7 @@ public class TestAltLocs {
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure("2W72");
 
-		Chain a = s.getPolyChainsByPDB("A").get(0);
+		Chain a = s.getPolyChainByPDB("A");
 
 		Group val1 = a.getGroupByPDB(ResidueNumber.fromString("1"));
 		Atom ca1 = val1.getAtom("CA");
@@ -138,7 +138,7 @@ public class TestAltLocs {
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure("1U7F");
 
-		Chain c = s.getPolyChainsByPDB("B").get(0);
+		Chain c = s.getPolyChainByPDB("B");
 
 		Group g = c.getGroupByPDB(ResidueNumber.fromString("314"));
 		//System.out.println("== original group ==");
@@ -210,7 +210,7 @@ public class TestAltLocs {
 
 		Structure s = StructureIO.getStructure("1AAC");
 
-		Chain a = s.getPolyChainsByPDB("A").get(0);
+		Chain a = s.getPolyChainByPDB("A");
 
 		Group g = a.getGroupByPDB( ResidueNumber.fromString("27"));
 		testCBAtomInMainGroup(g);
@@ -219,7 +219,7 @@ public class TestAltLocs {
 		cache.setUseMmCif(true);
 
 		Structure s1 = cache.getStructure("1AAC");
-		Chain a1 = s1.getPolyChainsByPDB("A").get(0);
+		Chain a1 = s1.getPolyChainByPDB("A");
 
 		Group g1 = a1.getGroupByPDB( ResidueNumber.fromString("27"));
 

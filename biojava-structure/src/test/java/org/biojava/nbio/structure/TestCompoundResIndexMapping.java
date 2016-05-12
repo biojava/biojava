@@ -50,7 +50,7 @@ public class TestCompoundResIndexMapping {
 		cache.setUseMmCif(false);
 		Structure s = StructureIO.getStructure("1B8G");
 
-		Chain chainA = s.getPolyChainsByPDB("A").get(0);
+		Chain chainA = s.getPolyChainByPDB("A");
 		int i = chainA.getEntityInfo().getAlignedResIndex(chainA.getAtomGroup(0),chainA);
 		assertEquals("First residue in 1b8gA "+chainA.getAtomGroup(0).toString()+" should map to 1 in SEQRES",1,i);
 
@@ -73,10 +73,10 @@ public class TestCompoundResIndexMapping {
 		cache.setUseMmCif(false);
 		Structure s = StructureIO.getStructure("1SMT");
 
-		Chain chainA = s.getPolyChainsByPDB("A").get(0);
+		Chain chainA = s.getPolyChainByPDB("A");
 		int i = chainA.getEntityInfo().getAlignedResIndex(chainA.getAtomGroup(0),chainA);
 		assertEquals("First residue in 1smtA "+chainA.getAtomGroup(0).toString()+" should map to 24 in SEQRES",24,i);
-		Chain chainB = s.getPolyChainsByPDB("B").get(0);
+		Chain chainB = s.getPolyChainByPDB("B");
 		i = chainB.getEntityInfo().getAlignedResIndex(chainB.getAtomGroup(0),chainB);
 		assertEquals("First residue in 1smtB "+chainA.getAtomGroup(0).toString()+" should map to 20 in SEQRES",20,i);
 
@@ -109,9 +109,9 @@ public class TestCompoundResIndexMapping {
 
 		assertEquals(1,s.getEntityInfos().size());
 
-		Chain chainA = s.getPolyChainsByPDB("A").get(0);
-		Chain chainB = s.getPolyChainsByPDB("B").get(0);
-		Chain chainC = s.getPolyChainsByPDB("C").get(0);
+		Chain chainA = s.getPolyChainByPDB("A");
+		Chain chainB = s.getPolyChainByPDB("B");
+		Chain chainC = s.getPolyChainByPDB("C");
 
 		// the last 3 residues of each chain are all the same: they should map to the same index
 		for (int resNum=251;resNum<=253;resNum++) {
@@ -139,9 +139,9 @@ public class TestCompoundResIndexMapping {
 
 		assertEquals(1,s.getEntityInfos().size());
 
-		chainA = s.getPolyChainsByPDB("A").get(0);
-		chainB = s.getPolyChainsByPDB("B").get(0);
-		chainC = s.getPolyChainsByPDB("C").get(0);
+		chainA = s.getPolyChainByPDB("A");
+		chainB = s.getPolyChainByPDB("B");
+		chainC = s.getPolyChainByPDB("C");
 
 		// the last 3 residues of each chain are all the same: they should map to the same index
 		for (int resNum=251;resNum<=253;resNum++) {
@@ -173,9 +173,9 @@ public class TestCompoundResIndexMapping {
 
 		assertEquals(1,s.getEntityInfos().size());
 
-		Chain chainA = s.getPolyChainsByPDB("A").get(0);
-		Chain chainB = s.getPolyChainsByPDB("B").get(0);
-		Chain chainC = s.getPolyChainsByPDB("C").get(0);
+		Chain chainA = s.getPolyChainByPDB("A");
+		Chain chainB = s.getPolyChainByPDB("B");
+		Chain chainC = s.getPolyChainByPDB("C");
 
 		// the last 3 residues of each chain are all the same: they should map to the same index
 		for (int resNum=28;resNum<=30;resNum++) {

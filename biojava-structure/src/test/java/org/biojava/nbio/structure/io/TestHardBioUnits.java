@@ -68,11 +68,11 @@ public class TestHardBioUnits {
 
 		assertTrue(bioAssembly.getChains().size() > 0);
 
-		Chain g = bioAssembly.getPolyChainsByPDB("G", 0).get(0);
+		Chain g = bioAssembly.getPolyChainByPDB("G", 0);
 
 		assertNotNull(g);
 
-		Chain b = bioAssembly.getPolyChainsByPDB("B", 1).get(0);
+		Chain b = bioAssembly.getPolyChainByPDB("B", 1);
 
 		assertNotNull(b);
 

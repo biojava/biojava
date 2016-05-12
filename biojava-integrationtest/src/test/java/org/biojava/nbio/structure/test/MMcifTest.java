@@ -135,8 +135,8 @@ public class MMcifTest {
 		//System.out.println(cifStructure);
 
 		// compare amino acids in chain 1:
-		Chain a_pdb = pdbStructure.getPolyChainsByPDB(chainId);
-		Chain a_cif = cifStructure.getPolyChainsByPDB(chainId);
+		Chain a_pdb = pdbStructure.getPolyChainByPDB(chainId);
+		Chain a_cif = cifStructure.getPolyChainByPDB(chainId);
 		//System.out.println(a_pdb.getAtomGroups());
 
 		//System.out.println(id + "_" + chainName + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());

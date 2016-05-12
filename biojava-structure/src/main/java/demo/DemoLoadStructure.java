@@ -30,7 +30,6 @@ import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.core.util.InputStreamProvider;
 
-import java.util.List;
 
 
 /** Example for how to load protein structures (from PDB files).
@@ -103,13 +102,13 @@ public class DemoLoadStructure
 
 			System.out.println(structure);
 
-			List<Chain> chains = structure.getPolyChainsByPDB("C");
+			Chain c = structure.getPolyChainByPDB("C");
 
-			for ( Chain c : chains) {
-				System.out.print(c);
 
-				System.out.println(c.getEntityInfo());
-			}
+			System.out.print(c);
+
+			System.out.println(c.getEntityInfo());
+
 
 		} catch (Exception e){
 			e.printStackTrace();

@@ -151,7 +151,7 @@ public class TestNucleotides {
 		Structure s = reader.getStructureById("1REP");
 		//System.out.println(s);
 		//System.out.println(s.toPDB());
-		Chain b = s.getPolyChainsByPDB("B").get(0);
+		Chain b = s.getPolyChainByPDB("B");
 
 		assertEquals(22,b.getSeqResGroups().size());
 		assertEquals(21,b.getAtomGroups().size());

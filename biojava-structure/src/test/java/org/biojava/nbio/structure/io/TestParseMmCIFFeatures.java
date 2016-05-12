@@ -97,9 +97,9 @@ public class TestParseMmCIFFeatures {
 		assertDisulfideBond("A", "A", 23, 88, bonds.get(1));
 
 		// check that we have the bonds correctly assigned to both atom and its altgroup atom
-		Group g = sCif.getPolyChainsByPDB("A").get(0).getGroupByPDB(new ResidueNumber("A", 23, ' '));
+		Group g = sCif.getPolyChainByPDB("A").getGroupByPDB(new ResidueNumber("A", 23, ' '));
 		Group altG = g.getAltLocGroup('B');
-		Group g2 = sCif.getPolyChainsByPDB("A").get(0).getGroupByPDB(new ResidueNumber("A", 88, ' '));
+		Group g2 = sCif.getPolyChainByPDB("A").getGroupByPDB(new ResidueNumber("A", 88, ' '));
 		List<Bond> bs = g.getAtom("SG").getBonds();
 		Bond b = null;
 		for (Bond bn:bs){

@@ -153,7 +153,7 @@ public class ScopTest {
 
 		s = cache.getStructureForDomain(domains1xzp.get(0)); 
 
-		Chain a = s.getPolyChainsByPDB("A");
+		Chain a = s.getPolyChainByPDB("A");
 
 		// since biojava 5.0, there's no ligands in the polymer chains: thus we substract 3 SO4 molecules present in chain A
 		assertEquals(176 -3,a.getAtomGroups().size());
@@ -170,7 +170,7 @@ public class ScopTest {
 		
 		s = cache.getStructureForDomain(target);
 
-		a = s.getPolyChainsByPDB("A");
+		a = s.getPolyChainByPDB("A");
 		assertEquals(a.getAtomGroups().size(),52);
 		checkRange(s,"A:1A-49");
 
