@@ -27,6 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -76,41 +77,45 @@ public class TestContactCalc {
 
 			Structure structure = StructureIO.getStructure(pdbCode);
 
-			Chain chain = structure.getPolyChainByPDB(pdbChainCode);
+			List<Chain> chains = structure.getPolyChainsByPDB(pdbChainCode);
 
+			if ( chains.size() > 0) {
 
-			for (int i=0;i<cts.length;i++) {
-				System.out.print((cts[i]==null?"ALL":cts[i][0])+"\t"+cutoffs[i]+"\t");
+				Chain chain = chains.get(0);
 
-				AtomContactSet atomContacts = null;
-				if (cts[i]!=null && cts[i][0].equals("CA")) {
-					atomContacts = StructureTools.getRepresentativeAtomsInContact(chain, cutoffs[i]);
-				} else {
-					atomContacts = StructureTools.getAtomsInContact(chain, cts[i], cutoffs[i]);
+				for (int i = 0; i < cts.length; i++) {
+					System.out.print((cts[i] == null ? "ALL" : cts[i][0]) + "\t" + cutoffs[i] + "\t");
+
+					AtomContactSet atomContacts = null;
+					if (cts[i] != null && cts[i][0].equals("CA")) {
+						atomContacts = StructureTools.getRepresentativeAtomsInContact(chain, cutoffs[i]);
+					} else {
+						atomContacts = StructureTools.getAtomsInContact(chain, cts[i], cutoffs[i]);
+					}
+					GroupContactSet contacts = new GroupContactSet(atomContacts);
+
+					if (cts[i] == null)
+						allCMsizes[idx] = contacts.size();
+
+					if (cts[i] != null && cts[i][0].equals("CB"))
+						cbCMsizes[idx] = contacts.size();
+
+					int n = chain.getAtomLength();
+
+					assertTrue(contacts.size() > n * 1.20);
+
+					assertTrue(contacts.size() < (n * (n - 1)) / 2);
+
+					// for non-ALL the sizes must be smaller than for ALL
+					if (cts[i] != null)
+						assertTrue("size for non-ALL contact map (" + contacts.size() + ") should be smaller than for ALL contact map (" + allCMsizes[idx] + ")",
+								contacts.size() < allCMsizes[idx]);
+
+					// since the CB contact map will have no contacts for GLYs then the maps should be smaller than the CA
+					if (cts[i] != null && cts[i][0].equals("CA"))
+						assertTrue("size for CA contact map (" + contacts.size() + ") should be larger than for CB contact map (" + cbCMsizes[idx] + ")",
+								contacts.size() > cbCMsizes[idx]);
 				}
-				GroupContactSet contacts = new GroupContactSet(atomContacts);
-
-				if (cts[i]==null)
-					allCMsizes[idx] = contacts.size();
-
-				if (cts[i]!=null && cts[i][0].equals("CB"))
-					cbCMsizes[idx] = contacts.size();
-
-				int n = chain.getAtomLength();
-
-				assertTrue(contacts.size()>n*1.20);
-
-				assertTrue(contacts.size()<(n*(n-1))/2);
-
-				// for non-ALL the sizes must be smaller than for ALL
-				if (cts[i]!=null)
-					assertTrue("size for non-ALL contact map ("+contacts.size()+") should be smaller than for ALL contact map ("+allCMsizes[idx]+")",
-							contacts.size()<allCMsizes[idx]);
-
-				// since the CB contact map will have no contacts for GLYs then the maps should be smaller than the CA
-				if (cts[i]!=null && cts[i][0].equals("CA"))
-					assertTrue("size for CA contact map ("+contacts.size()+") should be larger than for CB contact map ("+cbCMsizes[idx]+")",
-							contacts.size()>cbCMsizes[idx]);
 			}
 			System.out.println();
 			idx++;
@@ -124,9 +129,9 @@ public class TestContactCalc {
 		// 3 interfaces in the AU are NCS equivalent, they should have similar numbers of contacts
 		Structure structure = StructureIO.getStructure("3hbx");
 
-		AtomContactSet atomContacts1 = StructureTools.getAtomsInContact(structure.getPolyChainByPDB("A"), structure.getPolyChainByPDB("B"), 5.5, false);
-		AtomContactSet atomContacts2 = StructureTools.getAtomsInContact(structure.getPolyChainByPDB("E"), structure.getPolyChainByPDB("F"), 5.5, false);
-		AtomContactSet atomContacts3 = StructureTools.getAtomsInContact(structure.getPolyChainByPDB("C"), structure.getPolyChainByPDB("D"), 5.5, false);
+		AtomContactSet atomContacts1 = StructureTools.getAtomsInContact(structure.getPolyChainsByPDB("A").get(0), structure.getPolyChainsByPDB("B").get(0), 5.5, false);
+		AtomContactSet atomContacts2 = StructureTools.getAtomsInContact(structure.getPolyChainsByPDB("E").get(0), structure.getPolyChainsByPDB("F").get(0), 5.5, false);
+		AtomContactSet atomContacts3 = StructureTools.getAtomsInContact(structure.getPolyChainsByPDB("C").get(0), structure.getPolyChainsByPDB("D").get(0), 5.5, false);
 
 		System.out.println("AU interfaces of 3hbx, number of atom contacts: "+atomContacts1.size()+", "+atomContacts2.size()+", "+atomContacts3.size());
 
@@ -161,7 +166,7 @@ public class TestContactCalc {
 
 		Structure structure = StructureIO.getStructure("1smt");
 
-		Chain chain = structure.getPolyChainByPDB("A");
+		Chain chain = structure.getPolyChainsByPDB("A").get(0);
 
 		System.out.println("Intra-chain contacts calculation vs distance matrix for 1smtA");
 
@@ -175,7 +180,7 @@ public class TestContactCalc {
 
 		Structure structure = StructureIO.getStructure("2trx");
 
-		Chain chain = structure.getPolyChainByPDB("A");
+		Chain chain = structure.getPolyChainsByPDB("A").get(0);
 
 		System.out.println("Intra-chain contacts calculation vs distance matrix for 2trxA");
 
@@ -189,7 +194,7 @@ public class TestContactCalc {
 
 		Structure structure = StructureIO.getStructure("1su4");
 
-		Chain chain = structure.getPolyChainByPDB("A");
+		Chain chain = structure.getPolyChainsByPDB("A").get(0);
 
 		System.out.println("Intra-chain contacts calculation vs distance matrix for 1su4A");
 
@@ -235,8 +240,8 @@ public class TestContactCalc {
 
 		System.out.println("Inter-chain contacts calculation vs distance matrix for 2trx A-B");
 
-		Chain chain1 = structure.getPolyChainByPDB("A");
-		Chain chain2 = structure.getPolyChainByPDB("B");
+		Chain chain1 = structure.getPolyChainsByPDB("A").get(0);
+		Chain chain2 = structure.getPolyChainsByPDB("B").get(0);
 
 		long start = System.currentTimeMillis();
 		AtomContactSet atomContacts = StructureTools.getAtomsInContact(chain1, chain2, cutoff, false);

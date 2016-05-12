@@ -413,7 +413,7 @@ public class TestLongPdbVsMmCifParsing {
 		}
 
 		for (String chainId:chainIds) {
-			testSingleChain(sPdb.getPolyChainByPDB(chainId), sCif.getPolyChainByPDB(chainId));
+			testSingleChain(sPdb.getPolyChainsByPDB(chainId), sCif.getPolyChainsByPDB(chainId));
 		}
 	}
 

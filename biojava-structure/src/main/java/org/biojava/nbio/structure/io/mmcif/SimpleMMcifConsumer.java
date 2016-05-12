@@ -872,12 +872,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		for (String chainId : misMatchMap.keySet()){
 
-			Chain c = structure.getPolyChainByPDB(chainId);
-			if (c==null) {
+			List<Chain> chains = structure.getPolyChainsByPDB(chainId);
+
+			if ( chains == null || chains.size() < 1) {
 				logger.warn("Could not set mismatches for chain with author id" + chainId);
 				continue;
 			}
-			c.setSeqMisMatches(misMatchMap.get(chainId));
+
+			for ( Chain c : chains) {
+				c.setSeqMisMatches(misMatchMap.get(chainId));
+			}
 
 		}
 

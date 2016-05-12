@@ -245,7 +245,7 @@ public class TestHeaderOnly {
 		// 247-251 is gap
 		for (int i = 246; i < 251; i++) shouldMatch[i] = false;
 
-		Chain c = s.getPolyChainByPDB("C");
+		Chain c = s.getPolyChainsByPDB("C").get(0);
 
 		List<Group> seqres = c.getSeqResGroups();
 

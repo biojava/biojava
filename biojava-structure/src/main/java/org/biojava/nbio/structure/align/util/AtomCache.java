@@ -859,12 +859,14 @@ public class AtomCache {
 		// add the ligands of the chain...
 
 		Chain newChain = n.getChainByPDB(structureName.getChainId());
-		Chain origChain = s.getNonPolyChainByPDB(structureName.getChainId());
-		List<Group> ligands = origChain.getAtomLigands();
+		List<Chain> origChains = s.getNonPolyChainsByPDB(structureName.getChainId());
+		for ( Chain origChain : origChains) {
+			List<Group> ligands = origChain.getAtomLigands();
 
-		for (Group g : ligands) {
-			if (!newChain.getAtomGroups().contains(g)) {
-				newChain.addGroup(g);
+			for (Group g : ligands) {
+				if (!newChain.getAtomGroups().contains(g)) {
+					newChain.addGroup(g);
+				}
 			}
 		}
 
