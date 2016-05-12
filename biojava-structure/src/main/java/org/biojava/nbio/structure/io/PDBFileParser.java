@@ -1684,6 +1684,7 @@ public class PDBFileParser  {
 
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
+			currentGroup.setHetAtomInFile(isHetAtomInFile);
 
 		}
 		
@@ -2878,6 +2879,8 @@ public class PDBFileParser  {
 				// previous group is water and this group is not water: we change from a water chain to a non-poly
 				// we'll need to add now the water chain to the list of water chains
 				waterChains.add(split);
+				split = new ChainImpl();
+				split.setName(chain.getName());
 			}
 			
 			if (g.isWater()) {

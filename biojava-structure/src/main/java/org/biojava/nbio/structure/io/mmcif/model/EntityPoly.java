@@ -39,6 +39,7 @@ public class EntityPoly extends AbstractBean{
 	String pdbx_seq_one_letter_code;
 	String pdbx_seq_one_letter_code_can;
 	String pdbx_strand_id;
+	String pdbx_target_identifier;
 	public String getEntity_id() {
 		return entity_id;
 	}
@@ -140,6 +141,12 @@ public class EntityPoly extends AbstractBean{
 	 */
 	public void setPdbx_strand_id(String pdbx_strand_id) {
 		this.pdbx_strand_id = pdbx_strand_id;
+	}
+	public String getPdbx_target_identifier() {
+		return pdbx_target_identifier;
+	}
+	public void setPdbx_target_identifier(String pdbx_target_identifier) {
+		this.pdbx_target_identifier = pdbx_target_identifier;
 	}
 
 }

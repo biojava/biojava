@@ -1783,13 +1783,11 @@ public class StructureTools {
 	 * @return
 	 */
 	public static boolean isChainWaterOnly(Chain c) {
-		boolean waterOnly = true;
 		for (Group g : c.getAtomGroups()) {
 			if (!g.isWater())
-				waterOnly = false;
-			break;
+				return false;
 		}
-		return waterOnly;
+		return true;
 	}
 
 	/**

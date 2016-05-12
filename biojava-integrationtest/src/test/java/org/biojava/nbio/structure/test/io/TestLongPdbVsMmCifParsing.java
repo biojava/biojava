@@ -81,6 +81,8 @@ public class TestLongPdbVsMmCifParsing {
 	private static FileParsingParameters params;
 
 	private String pdbId;
+	
+	private int countTested = 0;
 
 	private HashSet<String> pdbIdsWithMismatchingMolIds;
 
@@ -124,13 +126,13 @@ public class TestLongPdbVsMmCifParsing {
 
 	@Test
 	public void testSingle() throws IOException, StructureException {
-		testAll(Arrays.asList("2trx"));
+		testAll(Arrays.asList("4a10"));
 	}
 
 	@After
 	public void printInfo() {
 		if (pdbId!=null)
-			System.out.println("\n##### ----> Last tested PDB entry was: "+pdbId);
+			System.out.println("\n##### ----> Last tested PDB entry was: "+pdbId + " ("+ countTested + " done so far)");
 	}
 
 	private void testAll(List<String> pdbIds) throws IOException, StructureException {
@@ -143,12 +145,15 @@ public class TestLongPdbVsMmCifParsing {
 
 		for (int i = 0; i<pdbIds.size(); i++) {
 			pdbId = pdbIds.get(i);
-
+			
+			countTested = i + 1;
+			
 			System.out.print(".");
 
 			testSingleEntry(pdbId);
 
 			if ( ( (i+1)%DOTS_PER_LINE )==0 ) System.out.println();
+			
 		}
 
 		pdbId = null; // to avoid printing the message if tests pass for all PDB entries
@@ -399,16 +404,32 @@ public class TestLongPdbVsMmCifParsing {
 		assertNotNull(sPdb.getChains());
 		assertNotNull(sCif.getChains());
 		
-		assertEquals(sPdb.getPolyChains().size(), sCif.getPolyChains().size());
-		
-		assertEquals(sPdb.getNonPolyChains().size(), sCif.getNonPolyChains().size());
-		
-		assertEquals(sPdb.getWaterChains().size(), sCif.getWaterChains().size());
+		// sugar chains are badly annotated and inconsistent between pdb/mmcif
+		// let's skip this test if we have sugar entities 
 
-		assertEquals(sPdb.getChains().size(),sCif.getChains().size());
+		if (!containsSugar(sCif)) {
 
-		List<String> chainIds = new ArrayList<String>();
-		for (Chain chain:sPdb.getChains()){
+			assertEquals(sPdb.getPolyChains().size(), sCif.getPolyChains().size());
+
+			// some entries like 3c5e are inconsistent in residue numbering for UNL (unknown) residues between pdb and mmcif
+			// skipping this test for them
+			if (!containsUNL(sCif)) {
+				assertEquals(sPdb.getNonPolyChains().size(), sCif.getNonPolyChains().size());
+			}
+
+			assertEquals(sPdb.getWaterChains().size(), sCif.getWaterChains().size());
+			
+			if (!containsUNL(sCif)) {
+				assertEquals(sPdb.getChains().size(),sCif.getChains().size());
+			}
+
+		}
+
+		
+
+		
+		Set<String> chainIds = new TreeSet<String>();
+		for (Chain chain:sPdb.getPolyChains()){
 			chainIds.add(chain.getName());
 		}
 
@@ -602,6 +623,22 @@ public class TestLongPdbVsMmCifParsing {
 		}
 
 		// not a single amino-acid or nucleotide, must be something not polymeric
+		return false;
+	}
+	
+	private boolean containsSugar(Structure s) {
+		for (EntityInfo e:s.getEntityInfos()) {
+			if (e.getDescription().contains("SUGAR")) return true;
+		}
+		return false;
+	}
+	
+	private boolean containsUNL(Structure s) {
+		for (Chain c:s.getNonPolyChains()) {
+			for (Group g:c.getAtomGroups()) {
+				if (g.getPDBName().equals("UNL")) return true;
+			}
+		}
 		return false;
 	}
 }
