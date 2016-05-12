@@ -80,51 +80,7 @@ public class EntityFinder {
 	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
 
 	
-	private List<List<Chain>> polyModels;
-	private List<List<Chain>> nonPolyModels;
-	private List<List<Chain>> waterModels;
-
-	public EntityFinder(Structure s) {
-		List<List<Chain>> allModels = new ArrayList<List<Chain>>();
-		for (int i=0;i<s.nrModels();i++) {
-			allModels.add(s.getModel(i));
-		}
-		initModels(allModels);
-	}
 	
-	public EntityFinder(List<List<Chain>> allModels) {
-		initModels(allModels);
-	}
-	
-	private void initModels(List<List<Chain>> allModels) {
-		polyModels = new ArrayList<>();
-		nonPolyModels = new ArrayList<>();
-		waterModels = new ArrayList<>();
-		
-		for (List<Chain> model:allModels) {
-			
-			List<Chain> polyChains = new ArrayList<>();
-			List<Chain> nonPolyChains = new ArrayList<>();
-			List<Chain> waterChains = new ArrayList<>();
-			
-			polyModels.add(polyChains);
-			nonPolyModels.add(nonPolyChains);
-			waterModels.add(waterChains);
-			
-			for (Chain c:model) {
-
-				if (StructureTools.isChainWaterOnly(c)) {
-					waterChains.add(c);
-
-				} else if (StructureTools.isChainPureNonPolymer(c)) {
-					nonPolyChains.add(c);
-
-				} else {
-					polyChains.add(c);
-				}
-			}
-		}
-	}
 	
 	/**
 	 * Utility method that employs some heuristics to find the {@link EntityInfo}s
@@ -132,27 +88,10 @@ public class EntityFinder {
 	 * To be used in case the information is missing in PDB/mmCIF file 
 	 * @return
 	 */
-	public List<EntityInfo> findPolyEntities() {
-		TreeMap<String,EntityInfo> chainIds2entities = findEntitiesFromAlignment();
+	public static List<EntityInfo> findPolyEntities(List<List<Chain>> polyModels) {
+		TreeMap<String,EntityInfo> chainIds2entities = findEntitiesFromAlignment(polyModels);
 
 		List<EntityInfo> entities = findUniqueEntities(chainIds2entities);
-
-		return entities;
-	}
-
-	/**
-	 * Utility method that employs some heuristics to find the {@link EntityInfo}s
-	 * for all chains of all models given in constructor. 
-	 * To be used in case the information is missing in PDB/mmCIF file
-	 * @return
-	 */
-	public List<EntityInfo> findEntities() {
-
-		TreeMap<String,EntityInfo> chainIds2entities = findEntitiesFromAlignment();
-
-		List<EntityInfo> entities = findUniqueEntities(chainIds2entities);
-
-		createPurelyNonPolyEntities(nonPolyModels, waterModels, entities);
 
 		return entities;
 	}
@@ -297,7 +236,7 @@ public class EntityFinder {
 
 
 
-	private TreeMap<String,EntityInfo> findEntitiesFromAlignment() {
+	private static TreeMap<String,EntityInfo> findEntitiesFromAlignment(List<List<Chain>> polyModels) {
 
 
 
@@ -456,7 +395,7 @@ public class EntityFinder {
 		return chainIds2entities;
 	}
 
-	private SequencePair<ProteinSequence, AminoAcidCompound> alignProtein(ProteinSequence s1, ProteinSequence s2) {
+	private static SequencePair<ProteinSequence, AminoAcidCompound> alignProtein(ProteinSequence s1, ProteinSequence s2) {
 		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getIdentity();
 
 		GapPenalty penalty = new SimpleGapPenalty(8, 1);
@@ -467,7 +406,7 @@ public class EntityFinder {
 		return nw.getPair();
 	}
 
-	private SequencePair<DNASequence, NucleotideCompound> alignDNA(DNASequence s1, DNASequence s2) {
+	private static SequencePair<DNASequence, NucleotideCompound> alignDNA(DNASequence s1, DNASequence s2) {
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
 
 		GapPenalty penalty = new SimpleGapPenalty(8, 1);
@@ -478,7 +417,7 @@ public class EntityFinder {
 		return nw.getPair();
 	}
 
-	private SequencePair<RNASequence, NucleotideCompound> alignRNA(RNASequence s1, RNASequence s2) {
+	private static SequencePair<RNASequence, NucleotideCompound> alignRNA(RNASequence s1, RNASequence s2) {
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
 
 		GapPenalty penalty = new SimpleGapPenalty(8, 1);
@@ -519,7 +458,7 @@ public class EntityFinder {
 		return numGaps;
 	}
 
-	private boolean isProteinSequence(String str) {
+	private static boolean isProteinSequence(String str) {
 		try {
 			new ProteinSequence(str);
 		} catch (CompoundNotFoundException e) {
@@ -529,7 +468,7 @@ public class EntityFinder {
 		return true;
 	}
 
-	private boolean isDNASequence(String str) {
+	private static boolean isDNASequence(String str) {
 		try {
 			new DNASequence(str);
 		} catch (CompoundNotFoundException e) {
@@ -539,7 +478,7 @@ public class EntityFinder {
 		return true;
 	}
 
-	private boolean isRNASequence(String str) {
+	private static boolean isRNASequence(String str) {
 		try {
 			new RNASequence(str);
 		} catch (CompoundNotFoundException e) {
@@ -555,7 +494,7 @@ public class EntityFinder {
 	 * @param str
 	 * @return
 	 */
-	private ProteinSequence getProteinSequence(String str) {
+	private static ProteinSequence getProteinSequence(String str) {
 		try {
 			ProteinSequence s = new ProteinSequence(str);
 			return s;
@@ -571,7 +510,7 @@ public class EntityFinder {
 	 * @param str
 	 * @return
 	 */
-	private DNASequence getDNASequence(String str) {
+	private static DNASequence getDNASequence(String str) {
 		try {
 			DNASequence s = new DNASequence(str);
 			return s;
@@ -587,7 +526,7 @@ public class EntityFinder {
 	 * @param str
 	 * @return
 	 */
-	private RNASequence getRNASequence(String str) {
+	private static RNASequence getRNASequence(String str) {
 		try {
 			RNASequence s = new RNASequence(str);
 			return s;

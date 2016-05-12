@@ -481,9 +481,6 @@ public class StructureImpl implements Structure, Serializable {
 		return str.toString() ;
 	}
 
-	/** return number of chains , if NMR return number of chains of first model .
-	 *
-	 */
 	@Override
 	public int size() {
 		int modelnr = 0 ;

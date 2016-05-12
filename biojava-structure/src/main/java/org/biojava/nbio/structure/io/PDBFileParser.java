@@ -1666,12 +1666,16 @@ public class PDBFileParser  {
 
 		String recordName     = line.substring (0, 6).trim ();
 
-		if (recordName.equals("HETATOM") ){
+		boolean isHetAtomInFile = false;
+		
+		if (recordName.equals("HETATM") ){
 			// HETATOM RECORDS are treated slightly differently
 			// some modified amino acids that we want to treat as amino acids
 			// can be found as HETATOM records
 			if ( aminoCode1 != null && aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
 					aminoCode1 = null;
+			
+			isHetAtomInFile = true;
 		}
 
 		if ( startOfMolecule) {
@@ -1680,6 +1684,7 @@ public class PDBFileParser  {
 
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
+
 		}
 		
 		// resetting states
@@ -1701,6 +1706,7 @@ public class PDBFileParser  {
 
 			currentGroup.setPDBName(groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
+			currentGroup.setHetAtomInFile(isHetAtomInFile);
 
 		} else {
 			// same residueNumber, but altLocs...
@@ -2846,17 +2852,60 @@ public class PDBFileParser  {
 		return models;
 	}
 	
-	private static List<Chain> splitNonPolyChain(Chain chain) {
+	/**
+	 * Split the given chain (containing non-polymer groups and water groups only) 
+	 * into individual chains per non-polymer group and individual chains per contiguous sets of water groups. 
+	 * @param chain
+	 * @return a list of lists of size 2: first list is the split non-poly chains, second list is the split water chains 
+	 */
+	private static List<List<Chain>> splitNonPolyChain(Chain chain) {
 		List<Chain> splitNonPolys = new ArrayList<>();
+		List<Chain> waterChains = new ArrayList<>();
+		
+		Chain split = null;
+		boolean previousGroupIsWater = false;
+		
 		for (Group g:chain.getAtomGroups()){
-			Chain split = new ChainImpl();
-			split.setName(chain.getName());
+			
+			if (!previousGroupIsWater) {
+				// add last one if there's one
+				if (split!=null) {
+					splitNonPolys.add(split);
+				}
+				split = new ChainImpl();
+				split.setName(chain.getName());
+			} else if (!g.isWater()) { 
+				// previous group is water and this group is not water: we change from a water chain to a non-poly
+				// we'll need to add now the water chain to the list of water chains
+				waterChains.add(split);
+			}
+			
+			if (g.isWater()) {
+				previousGroupIsWater = true;
+			} else {
+				previousGroupIsWater = false;
+				
+			}
+						
 			// this should include alt locs (referenced from the main group)
 			split.addGroup(g);
-			splitNonPolys.add(split);
+			
 		}
 		
-		return splitNonPolys;
+		// adding the last split chain: either to water or non-poly depending on what was the last seen group
+		if (split!=null) {
+			if (previousGroupIsWater)
+				waterChains.add(split);
+			else
+				splitNonPolys.add(split);
+		}
+
+		
+		List<List<Chain>> all = new ArrayList<>(2);
+		all.add(splitNonPolys);
+		all.add(waterChains);
+
+		return all;
 	}
 	
 	/**
@@ -2974,14 +3023,21 @@ public class PDBFileParser  {
 		}
 		
 		List<List<Chain>> splitNonPolyModels = new ArrayList<>();
-		for (List<Chain> nonPolyModel:nonPolyModels) {
+		for (int i=0; i<nonPolyModels.size(); i++) {
+			List<Chain> nonPolyModel = nonPolyModels.get(i);
+			List<Chain> waterModel = waterModels.get(i);
+			
 			List<Chain> splitNonPolys = new ArrayList<>();
 			splitNonPolyModels.add(splitNonPolys);
+			
 			for (Chain nonPoly:nonPolyModel) {
-				splitNonPolys.addAll(splitNonPolyChain(nonPoly));
+				List<List<Chain>> splits = splitNonPolyChain(nonPoly);
+				splitNonPolys.addAll(splits.get(0));
+				waterModel.addAll(splits.get(1));
 			}
 		}
-
+		
+		
 		// now we have all chains as in mmcif, let's assign ids following the mmcif rules
 		assignAsymIds(polyModels, splitNonPolyModels, waterModels);
 		
@@ -3018,8 +3074,7 @@ public class PDBFileParser  {
 
 			logger.info("Entity information (COMPOUND record) not found in file. Will assign entities heuristically");
 			// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
-			EntityFinder cf = new EntityFinder(allModels);
-			entities = cf.findPolyEntities();
+			entities = EntityFinder.findPolyEntities(polyModels);
 
 		}
 		
@@ -3044,7 +3099,7 @@ public class PDBFileParser  {
 
 
 	}
-
+	
 	/**
 	 * Links the Sites in the siteMap to the Groups in the Structure via the
 	 * siteToResidueMap ResidueNumber.

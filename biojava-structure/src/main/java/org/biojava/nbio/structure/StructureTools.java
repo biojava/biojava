@@ -1765,10 +1765,10 @@ public class StructureTools {
 			}
 		}
 		logger.debug(
-				"Ratio of residues to total for chain {} is below {}. Assuming it is a {} chain. "
+				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
 						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
 						+ "ratio aa/total: {}, ratio nuc/total: {}",
-						c.getChainID(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
+						c.getId(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
 						sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
 						(double) sizeAminos / (double) fullSize,
 						(double) sizeNucleotides / (double) fullSize);
@@ -1793,7 +1793,8 @@ public class StructureTools {
 	}
 
 	/**
-	 * Returns true if the given chain is composed of non-polymeric groups only
+	 * Returns true if the given chain is composed of non-polymeric (including water) groups only. 
+	 * To be used at parsing time only.
 	 *
 	 * @param c
 	 * @return
@@ -1801,9 +1802,18 @@ public class StructureTools {
 	public static boolean isChainPureNonPolymer(Chain c) {
 
 		for (Group g : c.getAtomGroups()) {
-			if (g.getType() == GroupType.AMINOACID
-					|| g.getType() == GroupType.NUCLEOTIDE)
+			
+			ChemComp cc = g.getChemComp();
+			
+			ResidueType resType = cc.getResidueType();
+			PolymerType polType = cc.getPolymerType();
+			
+			if ( (	resType == ResidueType.lPeptideLinking || 
+					PolymerType.PROTEIN_ONLY.contains(polType) || 
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(polType) ) && 
+					!g.isHetAtomInFile() ) {								// important: the aminoacid or nucleotide residue can be in 
 				return false;
+			}
 
 		}
 		return true;

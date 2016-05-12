@@ -343,6 +343,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// the 3-letter name of the group:
 		String groupCode3    = atom.getLabel_comp_id();
 
+		boolean isHetAtomInFile = false;
+		
 		Character aminoCode1 = null;
 		if ( recordName.equals("ATOM") )
 			aminoCode1 = StructureTools.get1LetterCodeAmino(groupCode3);
@@ -352,6 +354,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// for nucleotides this will be null..
 			if (aminoCode1 != null &&  aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
 				aminoCode1 = null;
+			
+			isHetAtomInFile = true;
 		}
 		String insCodeS = atom.getPdbx_PDB_ins_code();
 		Character insCode = null;
@@ -440,6 +444,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			currentGroup.setResidueNumber(residueNumber);
 			currentGroup.setPDBName(groupCode3);
+			currentGroup.setHetAtomInFile(isHetAtomInFile);
 		}
 
 		// SET UP THE ALT LOC GROUP
@@ -457,6 +462,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			currentGroup = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
 			currentGroup.setPDBName(groupCode3);
+			currentGroup.setHetAtomInFile(isHetAtomInFile);
 		}
 		// ANTHONY BRADLEY ADDED THIS -> WE ONLY WAN'T TO CHECK FOR ALT LOCS WHEN IT's NOT THE FIRST GROUP IN CHAIN
 		else{
@@ -469,6 +475,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				currentGroup = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 				currentGroup.setPDBName(groupCode3);
 				currentGroup.setResidueNumber(residueNumber);
+				currentGroup.setHetAtomInFile(isHetAtomInFile);
 
 
 			} else {
@@ -941,8 +948,38 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
 		List<EntityInfo> entityInfos = structure.getEntityInfos();
 		if (entityInfos==null || entityInfos.isEmpty()) {
-			EntityFinder cf = new EntityFinder(allModels);
-			entityInfos = cf.findEntities();
+			
+			List<List<Chain>> polyModels = new ArrayList<>();
+			List<List<Chain>> nonPolyModels = new ArrayList<>();
+			List<List<Chain>> waterModels = new ArrayList<>();
+
+			for (List<Chain> model:allModels) {
+				
+				List<Chain> polyChains = new ArrayList<>();
+				List<Chain> nonPolyChains = new ArrayList<>();
+				List<Chain> waterChains = new ArrayList<>();
+				
+				polyModels.add(polyChains);
+				nonPolyModels.add(nonPolyChains);
+				waterModels.add(waterChains);
+				
+				for (Chain c:model) {
+
+					// we only have entities for polymeric chains, all others are ignored for assigning entities
+					if (StructureTools.isChainWaterOnly(c)) {
+						waterChains.add(c);
+
+					} else if (StructureTools.isChainPureNonPolymer(c)) {
+						nonPolyChains.add(c);
+
+					} else {
+						polyChains.add(c);
+					}
+				}
+			}
+			
+			entityInfos = EntityFinder.findPolyEntities(polyModels);
+			EntityFinder.createPurelyNonPolyEntities(nonPolyModels, waterModels, entityInfos);
 
 			
 			structure.setEntityInfos(entityInfos);

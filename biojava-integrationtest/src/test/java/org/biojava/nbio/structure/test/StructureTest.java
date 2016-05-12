@@ -62,7 +62,7 @@ public class StructureTest {
 
 		assertNotNull(structure);
 
-		assertEquals("structure does not contain one chain ", 2 ,structure.size());
+		assertEquals("structure does not contain one chain ", 1 ,structure.size());
 	}
 
 	@Test
@@ -70,7 +70,8 @@ public class StructureTest {
 
 		// System.out.println(structure);
 		List<Chain> chains = structure.getChains(0);
-		assertEquals(" nr of found chains not correct!",2,chains.size());
+		// since biojava 5.0, we have 4 chains here: 1 protein, 2 non-poly (ligands), 1 water
+		assertEquals(" nr of found chains not correct!",4,chains.size());
 		Chain c = chains.get(0);
 		//System.out.println(c);
 		List<Group> seqResGroups = c.getSeqResGroups();
@@ -105,26 +106,22 @@ public class StructureTest {
 
 		assertEquals("pdb code not set!","5PTI",structure.getPDBCode());
 
+		// since biojava 5.0, we have 4 chains here: 1 protein, 2 non-poly (ligands), 1 water
+		
 		Chain c = structure.getChain(0);
 		assertEquals("did not find the expected 58 amino acids!",58,c.getAtomGroups(GroupType.AMINOACID).size());
 
 		assertEquals(0 , c.getAtomGroups(GroupType.HETATM).size());
 
-		Chain c2 = structure.getChain(1);
+		Chain c4 = structure.getChain(3);
 
-		// The second (unnamed) chain in te file contains 63 molecules of deutarated
-		// water + 1 PO4 molecule + 1 UNK hetatom molecule
-		// Since the UNK chemcomp is considered a peptide linked molecule (unknown aminoacid),
-		// then we have only 64 HETATMs
-		assertEquals(64, c2.getAtomGroups(GroupType.HETATM).size());
-		assertEquals(0, c2.getAtomGroups(GroupType.NUCLEOTIDE).size());
+		// The fourth chain in the file contains 63 molecules of deutarated
+		assertEquals(63, c4.getAtomGroups(GroupType.HETATM).size());
+		assertEquals(0, c4.getAtomGroups(GroupType.NUCLEOTIDE).size());
 
 		List<EntityInfo> compounds= structure.getEntityInfos();
 
-		// from biojava 5.0 we have limited support for old pdb files with no chain identifiers
-		// due to that, we don't find all compounds in this file: 1 protein, 1 PO4, 1 UNK and 1 deuterated water entity
-		// thus commenting out the test
-		//assertEquals(2, compounds.size());
+		assertEquals(4, compounds.size());
 		EntityInfo mol = compounds.get(0);
 		assertTrue(mol.getDescription().startsWith("TRYPSIN INHIBITOR"));
 	}

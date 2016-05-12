@@ -69,6 +69,8 @@ public class HetatomImpl implements Group,Serializable {
 	protected List<Atom> atoms ;
 
 	private Chain parent;
+	
+	private boolean isHetAtomInFile;
 
 	/**
 	 * Behaviors for how to balance memory vs. performance.
@@ -590,5 +592,14 @@ public class HetatomImpl implements Group,Serializable {
 		return gts.getText(this);
 	}
 
+	@Override
+	public boolean isHetAtomInFile() {
+		return isHetAtomInFile;
+	}
+	
+	@Override
+	public void setHetAtomInFile(boolean isHetAtomInFile) {
+		this.isHetAtomInFile = isHetAtomInFile;
+	}
 
 }

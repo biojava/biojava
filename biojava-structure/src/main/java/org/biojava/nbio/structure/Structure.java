@@ -226,8 +226,8 @@ public interface Structure extends Cloneable {
 	void setStructureIdentifier(StructureIdentifier structureIdentifier);
 
 	/**
-	 * Return number of Chains in this Structure.
-	 * @return an int representing the number of Chains in this Structure
+	 * Return number of polymer Chains in this Structure for first model.
+	 * @return the number of polymer Chains in this Structure
 	 */
 	int size() ;
 
