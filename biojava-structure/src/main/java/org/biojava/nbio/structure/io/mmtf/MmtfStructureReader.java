@@ -26,6 +26,7 @@ import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -73,6 +74,10 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	/** All the chains as a list of maps */ 
 	private List<Map<String,Chain>> chainMap;
+	
+	private List<double[]> transformList;
+	
+	private int bioassIndex;
 
 	/**
 	 * Instantiates a new bio java structure decoder.
@@ -83,6 +88,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		entityInfoList = new ArrayList<>();
 		chainList = new ArrayList<>();
 		chainMap = new ArrayList<>();
+		transformList = new ArrayList<>();
 	}
 
 	/**
@@ -186,6 +192,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// Set the CC -> empty but not null
 		ChemComp chemComp = new ChemComp();
 		chemComp.setOne_letter_code("" + singleLetterCode);
+		ResidueType residueType = ResidueType.getResidueTypeFromString(chemCompType);
+		chemComp.setResidueType(residueType);
+		chemComp.setPolymerType(residueType.polymerType);
 		group.setChemComp(chemComp);
 		group.setPDBName(groupName);
 		if (insertionCode == MmtfStructure.UNAVAILABLE_CHAR_VALUE) {
@@ -394,6 +403,10 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	@Override
 	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform) {
+		if(bioassIndex!=bioAssemblyId){
+			transformList = new ArrayList<>();
+			bioassIndex = bioAssemblyId;
+		}
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		// Get the bioassembly data
 		Map<Integer, BioAssemblyInfo> bioAssemblies = pdbHeader.getBioAssemblies();
@@ -411,7 +424,11 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 		for(int currChainIndex : inputChainIndices){
 			BiologicalAssemblyTransformation bioAssTrans = new BiologicalAssemblyTransformation();
-			Integer transId = bioAssInfo.getTransforms().size()+1;
+			Integer transId = transformList.indexOf(inputTransform)+1;
+			if(transId==0){
+				transformList.add(inputTransform);
+				transId = transformList.indexOf(inputTransform)+1;
+			}
 			bioAssTrans.setId(transId.toString());
 			// If it actually has an index - if it doesn't it is because the chain has no density.
 			if (currChainIndex!=-1){

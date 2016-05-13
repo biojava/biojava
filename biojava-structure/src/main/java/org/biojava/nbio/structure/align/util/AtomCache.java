@@ -144,8 +144,8 @@ public class AtomCache {
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
 
-		setUseMmCif(true);
-		setUseMmtf(false);
+		setUseMmCif(false);
+		setUseMmtf(true);
 
 	}
 
@@ -811,14 +811,13 @@ public class AtomCache {
 	 */
 	public void setUseMmCif(boolean useMmCif) {
 		this.useMmCif = useMmCif;
-
+		// Either way the user wants to use PDB
+		this.useMmtf = false;
 		if ( useMmCif) {
 			// get bio assembly from mmcif file
-
 			BioUnitDataProviderFactory.setBioUnitDataProvider(MmCifBiolAssemblyProvider.class);
 
 		} else {
-
 			BioUnitDataProviderFactory.setBioUnitDataProvider(PDBBioUnitDataProvider.class);
 
 		}

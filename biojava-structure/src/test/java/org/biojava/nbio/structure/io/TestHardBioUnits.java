@@ -64,7 +64,7 @@ public class TestHardBioUnits {
 
 		//System.out.println(bioAssembly.toPDB());
 
-		assertTrue(bioAssembly.nrModels() == 2);
+		assertEquals(bioAssembly.nrModels(), 2);
 
 		assertTrue(bioAssembly.getChains().size() > 0);
 
