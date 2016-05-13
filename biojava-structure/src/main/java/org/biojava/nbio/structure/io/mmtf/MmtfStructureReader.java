@@ -2,6 +2,7 @@ package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +71,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	/** All the chains */
 	private List<Chain> chainList; 
 
+	/** All the chains as a list of maps */ 
+	private List<Map<String,Chain>> chainMap;
+
 	/**
 	 * Instantiates a new bio java structure decoder.
 	 */
@@ -78,6 +82,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		modelNumber = 0;
 		entityInfoList = new ArrayList<>();
 		chainList = new ArrayList<>();
+		chainMap = new ArrayList<>();
 	}
 
 	/**
@@ -91,15 +96,25 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	@Override
 	public void finalizeStructure() {
-		// Ensure all altlocs have all atoms
-		StructureTools.cleanUpAltLocs(structure);
+
 		// Number the remaining ones
 		int counter =0;
+		// Add the entity info
 		for (EntityInfo entityInfo : entityInfoList) {
 			counter++;
 			entityInfo.setMolId(counter);
 		}
 		structure.setEntityInfos(entityInfoList);
+		// Add the actual chains
+		for(int i=0; i<chainMap.size(); i++) {
+			// Now add the chain information
+			Map<String, Chain> modelChainMap = chainMap.get(i);
+			for(Chain modelChain : modelChainMap.values()){
+				structure.addChain(modelChain, i);
+			}
+		}
+		// Ensure all altlocs have all atoms
+		StructureTools.cleanUpAltLocs(structure);
 	}
 
 	@Override
@@ -118,6 +133,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			int chainCount) {
 		modelNumber = inputModelNumber;
 		structure.addModel(new ArrayList<Chain>(chainCount));
+		chainMap.add(new HashMap<>());
 	}
 
 	/* (non-Javadoc)
@@ -127,20 +143,17 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	@Override
 	public void setChainInfo(String chainId, String chainName, int groupCount) {
 		// First check to see if the chain exists
-		boolean newChain = true;
-		for (Chain c: structure.getChains(modelNumber)) {
-			if (c.getId().equals(chainId)) {
-				newChain = false;
-				chain = c;
-				break;
-			}
+		Map<String, Chain> modelChainMap = chainMap.get(modelNumber);
+		if(modelChainMap.containsKey(chainId)){
+			chain = modelChainMap.get(chainId);
 		}
 		// If we need to set a new chain do this
-		if (newChain){
+		else{
 			chain = new ChainImpl();
 			chain.setId(chainId.trim());
 			chain.setName(chainName);
-			structure.addChain(chain, modelNumber);
+			chain.setAtomGroups(new ArrayList<>(groupCount));
+			modelChainMap.put(chainId, chain);
 			chainList.add(chain);
 		}
 	}
@@ -283,7 +296,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// set the new bond
 		@SuppressWarnings("unused")
 		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
-
 	}
 
 
@@ -383,10 +395,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	@Override
 	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform) {
 		PDBHeader pdbHeader = structure.getPDBHeader();
-		List<Chain> totChainList = new ArrayList<>(); 
-		for (int i=0; i<structure.nrModels(); i++) { 
-			totChainList.addAll(structure.getChains(i));
-		}
 		// Get the bioassembly data
 		Map<Integer, BioAssemblyInfo> bioAssemblies = pdbHeader.getBioAssemblies();
 		// Get the bioassembly itself (if it exists
@@ -407,7 +415,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			bioAssTrans.setId(transId.toString());
 			// If it actually has an index - if it doesn't it is because the chain has no density.
 			if (currChainIndex!=-1){
-				bioAssTrans.setChainId(totChainList.get(currChainIndex).getId());
+				bioAssTrans.setChainId(chainList.get(currChainIndex).getId());
 			}
 			else {
 				continue;
