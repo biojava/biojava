@@ -20,6 +20,10 @@
  */
 package org.biojava.nbio.structure.io.mmcif.model;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Symmetry extends AbstractBean {
 
 	String entry_id;
@@ -67,5 +71,27 @@ public class Symmetry extends AbstractBean {
 	}
 	public void setSpace_group_name_Hall(String space_group_name_Hall) {
 		this.space_group_name_Hall = space_group_name_Hall;
+	}
+	
+	@IgnoreField
+	private static Map<String,String> nameMap = null;
+	/**
+	 * Map between field names and their correct mmCIF representation. For
+	 * instance, the <tt>space_group_name_H_M</tt> field corresponds to
+	 * <tt>space_group_name_H-M</tt>.
+	 * 
+	 * If a field is not contained in this map, the field and the mmCIF name
+	 * match.
+	 * @return map from field names to the mmCIF name
+	 */
+	// Note that this function is accessed via reflection
+	static Map<String,String> getCIFLabelMap() {
+		if(nameMap == null) {
+			HashMap<String,String> map = new HashMap<>();
+			map.put("space_group_name_H_M","space_group_name_H-M");
+			map.put("pdbx_full_space_group_name_H_M", "pdbx_full_space_group_name_H-M");
+			nameMap = Collections.unmodifiableMap(map);
+		}
+		return nameMap;
 	}
 }

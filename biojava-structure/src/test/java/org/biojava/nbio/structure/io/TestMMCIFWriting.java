@@ -55,7 +55,7 @@ public class TestMMCIFWriting {
 		Structure originalStruct = StructureIO.getStructure("1SMT");
 
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
-
+		outputFile.deleteOnExit();
 
 		FileWriter fw = new FileWriter(outputFile);
 		fw.write(originalStruct.toMMCIF());
@@ -93,6 +93,8 @@ public class TestMMCIFWriting {
 			//assertEquals(origChain.getSeqResGroups().size(), readChain.getSeqResGroups().size());
 		}
 
+		// Test cell and symmetry
+		assertEquals(originalStruct.getCrystallographicInfo().getSpaceGroup(),readStruct.getCrystallographicInfo().getSpaceGroup());
 	}
 
 	/**
@@ -115,6 +117,7 @@ public class TestMMCIFWriting {
 		Structure originalStruct = StructureIO.getStructure("2N3J");
 
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
+		outputFile.deleteOnExit();
 
 
 		FileWriter fw = new FileWriter(outputFile);
@@ -179,6 +182,7 @@ public class TestMMCIFWriting {
 		Structure originalStruct = StructureIO.getStructure("1A2C");
 
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
+		outputFile.deleteOnExit();
 
 
 		FileWriter fw = new FileWriter(outputFile);

@@ -680,12 +680,10 @@ public class FileConvert {
 
 		str.append(getAtomSiteHeader());
 
-		@SuppressWarnings("unchecked")
-		List<Object> list =
-		(List<Object>) (List<?>) MMCIFFileTools.convertStructureToAtomSites(structure);
+		List<AtomSite> list =  MMCIFFileTools.convertStructureToAtomSites(structure);
 
 
-		str.append(MMCIFFileTools.toMMCIF(list));
+		str.append(MMCIFFileTools.toMMCIF(list,AtomSite.class));
 
 		return str.toString();
 	}
@@ -697,11 +695,9 @@ public class FileConvert {
 			str.append(getAtomSiteHeader());
 
 
-		@SuppressWarnings("unchecked")
-		List<Object> list =
-		(List<Object>) (List<?>) MMCIFFileTools.convertChainToAtomSites(chain, 1, chainId, internalChainId);
+		List<AtomSite> list = MMCIFFileTools.convertChainToAtomSites(chain, 1, chainId, internalChainId);
 
-		str.append(MMCIFFileTools.toMMCIF(list));
+		str.append(MMCIFFileTools.toMMCIF(list,AtomSite.class));
 		return str.toString();
 	}
 
