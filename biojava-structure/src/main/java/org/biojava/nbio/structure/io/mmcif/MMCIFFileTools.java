@@ -22,12 +22,9 @@ package org.biojava.nbio.structure.io.mmcif;
 
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
@@ -38,6 +35,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.mmcif.model.AbstractBean;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
 import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
 import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
@@ -107,7 +105,6 @@ public class MMCIFFileTools {
 	 * @param o
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public static String toMMCIF(String categoryName, Object o) {
 
 		StringBuilder sb = new StringBuilder();
@@ -115,19 +112,9 @@ public class MMCIFFileTools {
 		Class<?> c = o.getClass();
 
 
-		// Check if the class requires any fields to be renamed
-		Map<String,String> nameMap = null;
-		try {
-			Method getCIFLabelMap = c.getDeclaredMethod("getCIFLabelMap");
-			getCIFLabelMap.setAccessible(true);
-			nameMap = (Map<String, String>) getCIFLabelMap.invoke(null);
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException e1) {
-			// no nameMap
-		}
-		
 		Field[] fields = getFields(c);
-		String[] names = getFieldNames(fields, nameMap);
-		
+		String[] names = getFieldNames(fields);
+
 		int maxFieldNameLength = getMaxStringLength(names);
 
 		for (int i=0;i<fields.length;i++) {
@@ -201,13 +188,15 @@ public class MMCIFFileTools {
 	 * @param nameMap
 	 * @return
 	 */
-	private static String[] getFieldNames(Field[] fields, Map<String, String> nameMap) {
+	private static String[] getFieldNames(Field[] fields) {
 		String[] names = new String[fields.length];
 		for(int i=0;i<fields.length;i++) {
-			fields[i].setAccessible(true);
+			Field f = fields[i];
+			f.setAccessible(true);
 			String rawName = fields[i].getName();
-			if(nameMap != null && nameMap.containsKey(rawName)) {
-				names[i] = nameMap.get(rawName);
+			CIFLabel cifLabel = f.getAnnotation(CIFLabel.class);
+			if(cifLabel != null) {
+				names[i] = cifLabel.label();
 			} else {
 				names[i] = rawName;
 			}
