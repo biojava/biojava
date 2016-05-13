@@ -41,7 +41,7 @@ public class TestAltLocs {
 	public void testAltLocParsing() throws StructureException, IOException{
 
 		AtomCache cache = new AtomCache();
-
+		cache.setUseMmCif(true);
 		Structure s = cache.getStructure("2CI1");
 
 		Chain a = s.getPolyChainByPDB("A");
