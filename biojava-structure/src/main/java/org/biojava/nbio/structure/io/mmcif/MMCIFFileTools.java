@@ -56,8 +56,9 @@ import org.slf4j.LoggerFactory;
  * are not valid Java identifiers) by defining a function
  * <tt>static Map<String,String> getCIFLabelMap()</tt>
  * mapping from the field's name to the correct label.
- * @author duarte_j
- *
+ * 
+ * @author Jose Duarte
+ * @author Spencer Bliven
  */
 public class MMCIFFileTools {
 
@@ -162,7 +163,7 @@ public class MMCIFFileTools {
 	 * @param c
 	 * @return
 	 */
-	private static Field[] getFields(Class<?> c) {
+	public static Field[] getFields(Class<?> c) {
 		Field[] allFields = c.getDeclaredFields();
 		Field[] fields = new Field[allFields.length];
 		int n = 0;
@@ -179,16 +180,14 @@ public class MMCIFFileTools {
 
 	/**
 	 * Gets the mmCIF record name for each field. This is generally just
-	 * the name of the field, but may be modified by passing a non-null nameMap
-	 * argument.
+	 * the name of the field or the value specified by the {@link CIFLabel @CIFLabel} annotation.
 	 * 
 	 * As a side effect, calls {@link Field#setAccessible(boolean) setAccessible(true)}
 	 * on all fields.
 	 * @param fields
-	 * @param nameMap
 	 * @return
 	 */
-	private static String[] getFieldNames(Field[] fields) {
+	public static String[] getFieldNames(Field[] fields) {
 		String[] names = new String[fields.length];
 		for(int i=0;i<fields.length;i++) {
 			Field f = fields[i];
