@@ -78,7 +78,6 @@ import org.biojava.nbio.structure.io.mmcif.model.StructRefSeqDif;
 import org.biojava.nbio.structure.io.mmcif.model.StructSite;
 import org.biojava.nbio.structure.io.mmcif.model.StructSiteGen;
 import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
-import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -927,16 +926,10 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			o = c.newInstance();
 
-		} catch (InstantiationException e){
+		} catch (InstantiationException|ClassNotFoundException|IllegalAccessException e){
 			logger.error( "Error while constructing {}: {}", className, e.getMessage());
 			return null;
-		} catch (ClassNotFoundException e){
-			logger.error( "Error while constructing {}: {}", className, e.getMessage());
-			return null;
-		} catch (IllegalAccessException e) {
-			logger.error( "Error while constructing {}: {}", className, e.getMessage());
-			return null;
-		}
+		} 
 
 		// these methods get the fields but also looking at the IgnoreField and CIFLabel annotations 
 		Field[] fields = MMCIFFileTools.getFields(c);
@@ -972,7 +965,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			}
 			// now we need to find the corresponding setter
 			// note that we can't use the field directly and then call Field.set() because many setters 
-			// have some functionality than just setting the value (e.g. some setters in ChemComp)
+			// have more functionality than just setting the value (e.g. some setters in ChemComp)
 
 			// building up the setter method name: need to upper case the first letter, leave the rest untouched
 			String setterMethodName = "set" + field.getName().substring(0,1).toUpperCase() + field.getName().substring(1, field.getName().length());
@@ -1003,11 +996,9 @@ public class SimpleMMcifParser implements MMcifParser {
 					// default val is a String					
 					setter.invoke(o, val);
 				}
-			} catch (IllegalAccessException e) {
+			} catch (IllegalAccessException|InvocationTargetException e) {
 				logger.error("Could not invoke setter {} with value {} for class {}", setterMethodName, val, className);
-			} catch (InvocationTargetException e) {
-				logger.error("Could not invoke setter {} with value {} for class {}", setterMethodName, val, className);
-			}
+			} 
 
 		}
 

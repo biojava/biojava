@@ -35,6 +35,7 @@ import java.util.Arrays;
  * <pre>
  * _pdbx_struct_oper_list.id 
  * _pdbx_struct_oper_list.type 
+ * _pdbx_struct_oper_list.symmetry_operation
  * _pdbx_struct_oper_list.matrix[1][1] 
  * _pdbx_struct_oper_list.matrix[1][2] 
  * _pdbx_struct_oper_list.matrix[1][3] 
@@ -66,6 +67,8 @@ public class PdbxStructOperList implements Serializable{
 	private String id;
 
 	private String type;
+	
+	private String symmetry_operation;
 	
 	@CIFLabel(label="matrix[1][1]")
 	String matrix11;
@@ -102,12 +105,15 @@ public class PdbxStructOperList implements Serializable{
 	
 	// from here fields that are not in the cif category
 	
+	@IgnoreField
 	private Matrix matrix;
 
+	@IgnoreField
 	private double[] vector;
 
 	public PdbxStructOperList(){
 		matrix =  Matrix.identity(3,3);
+		vector = new double[3];
 
 	}
 	@XmlAttribute
@@ -171,7 +177,38 @@ public class PdbxStructOperList implements Serializable{
 	public void setMatrix33(String val){
 		matrix.set(2,2,Double.parseDouble(val));
 	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public String getVector1() {
+		return vector1;
+	}
+	public void setVector1(String vector1) {
+		vector[0] = Double.parseDouble(vector1);
+	}
+	public String getVector2() {
+		return vector2;
+	}
+	public void setVector2(String vector2) {
+		vector[1] = Double.parseDouble(vector2);
+	}
+	public String getVector3() {
+		return vector3;
+	}
+	public void setVector3(String vector3) {
+		vector[2] = Double.parseDouble(vector3);
+	}
+	public String getName() {
+		return name;
+	}
+	public String getSymmetry_operation() {
+		return symmetry_operation;
+	}
+	public void setSymmetry_operation(String symmetry_operation) {
+		this.symmetry_operation = symmetry_operation;
+	}
 	@XmlElement
 	public double getMatrix11(){
 		return matrix.get(0,0);
