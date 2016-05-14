@@ -45,7 +45,18 @@ public class Refine {
 	String occupancy_min;
 	String occupancy_max;
 	String B_iso_mean;
-	String[][] aniso_B;
+	@CIFLabel(label="aniso_B[1][1]")
+	String aniso_B11;
+	@CIFLabel(label="aniso_B[2][2]")
+	String aniso_B22;
+	@CIFLabel(label="aniso_B[3][3]")
+	String aniso_B33;
+	@CIFLabel(label="aniso_B[1][2]")
+	String aniso_B12;
+	@CIFLabel(label="aniso_B[1][3]")
+	String aniso_B13;
+	@CIFLabel(label="aniso_B[2][3]")
+	String aniso_B23;
 	String solvent_model_details ;
 	String solvent_model_param_ksol;
 	String solvent_model_param_bsol;
@@ -87,7 +98,7 @@ public class Refine {
 	String ls_number_reflns_R_work;
 
 	public Refine(){
-		aniso_B = new String[3][3];
+		//aniso_B = new String[3][3];
 	}
 
 	public String getEntry_id() {
@@ -282,14 +293,6 @@ public class Refine {
 
 	public void setB_iso_mean(String b_iso_mean) {
 		B_iso_mean = b_iso_mean;
-	}
-
-	public String[][] getAniso_B() {
-		return aniso_B;
-	}
-
-	public void setAniso_B(String[][] aniso_B) {
-		this.aniso_B = aniso_B;
 	}
 
 	public String getSolvent_model_details() {
@@ -601,6 +604,54 @@ public class Refine {
 
 	public void setLs_number_reflns_R_work(String ls_number_reflns_R_work) {
 		this.ls_number_reflns_R_work = ls_number_reflns_R_work;
+	}
+
+	public String getAniso_B11() {
+		return aniso_B11;
+	}
+
+	public void setAniso_B11(String aniso_B11) {
+		this.aniso_B11 = aniso_B11;
+	}
+
+	public String getAniso_B22() {
+		return aniso_B22;
+	}
+
+	public void setAniso_B22(String aniso_B22) {
+		this.aniso_B22 = aniso_B22;
+	}
+
+	public String getAniso_B33() {
+		return aniso_B33;
+	}
+
+	public void setAniso_B33(String aniso_B33) {
+		this.aniso_B33 = aniso_B33;
+	}
+
+	public String getAniso_B12() {
+		return aniso_B12;
+	}
+
+	public void setAniso_B12(String aniso_B12) {
+		this.aniso_B12 = aniso_B12;
+	}
+
+	public String getAniso_B13() {
+		return aniso_B13;
+	}
+
+	public void setAniso_B13(String aniso_B13) {
+		this.aniso_B13 = aniso_B13;
+	}
+
+	public String getAniso_B23() {
+		return aniso_B23;
+	}
+
+	public void setAniso_B23(String aniso_B23) {
+		this.aniso_B23 = aniso_B23;
 	}
 
 
