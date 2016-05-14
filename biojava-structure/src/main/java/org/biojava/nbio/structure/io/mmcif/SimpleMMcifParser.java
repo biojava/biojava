@@ -790,11 +790,11 @@ public class SimpleMMcifParser implements MMcifParser {
 			triggerNewChemCompDescriptor(ccd);
 		} else if (category.equals("_pdbx_struct_oper_list")) {
 
-			// this guy is special since we convert to Matrices and shift vectors...
-			// and because it contains [] in field names
-			PdbxStructOperList structOper = getPdbxStructOperList(loopFields,lineData);
+			PdbxStructOperList structOper = (PdbxStructOperList) buildObject(
+					PdbxStructOperList.class.getName(),
+					loopFields, lineData, loopWarnings
+					);
 			triggerNewPdbxStructOper(structOper);
-
 
 		} else if (category.equals("_pdbx_struct_assembly")) {
 			PdbxStructAssembly sa = (PdbxStructAssembly) buildObject(
@@ -846,44 +846,44 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 
-	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
-			List<String> lineData) {
-		PdbxStructOperList so = new PdbxStructOperList();
-
-		//System.out.println(loopFields);
-		//System.out.println(lineData);
-
-		String id = lineData.get(loopFields.indexOf("id"));
-		so.setId(id);
-		so.setType(lineData.get(loopFields.indexOf("type")));
-		Matrix matrix = new Matrix(3,3);
-		for (int i = 1 ; i <=3 ; i++){
-			for (int j =1 ; j <= 3 ; j++){
-				String max = String.format("matrix[%d][%d]",j,i);
-
-				String val = lineData.get(loopFields.indexOf(max));
-				Double d = Double.parseDouble(val);
-				matrix.set(j-1,i-1,d);
-				//				matrix.set(i-1,j-1,d);
-			}
-		}
-
-		double[] coords =new double[3];
-
-		for ( int i = 1; i <=3 ; i++){
-			String v = String.format("vector[%d]",i);
-			String val = lineData.get(loopFields.indexOf(v));
-			Double d = Double.parseDouble(val);
-			coords[i-1] = d;
-		}
-
-		so.setMatrix(matrix);
-		so.setVector(coords);
-
-
-
-		return so;
-	}
+//	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
+//			List<String> lineData) {
+//		PdbxStructOperList so = new PdbxStructOperList();
+//
+//		//System.out.println(loopFields);
+//		//System.out.println(lineData);
+//
+//		String id = lineData.get(loopFields.indexOf("id"));
+//		so.setId(id);
+//		so.setType(lineData.get(loopFields.indexOf("type")));
+//		Matrix matrix = new Matrix(3,3);
+//		for (int i = 1 ; i <=3 ; i++){
+//			for (int j =1 ; j <= 3 ; j++){
+//				String max = String.format("matrix[%d][%d]",j,i);
+//
+//				String val = lineData.get(loopFields.indexOf(max));
+//				Double d = Double.parseDouble(val);
+//				matrix.set(j-1,i-1,d);
+//				//				matrix.set(i-1,j-1,d);
+//			}
+//		}
+//
+//		double[] coords =new double[3];
+//
+//		for ( int i = 1; i <=3 ; i++){
+//			String v = String.format("vector[%d]",i);
+//			String val = lineData.get(loopFields.indexOf(v));
+//			Double d = Double.parseDouble(val);
+//			coords[i-1] = d;
+//		}
+//
+//		so.setMatrix(matrix);
+//		so.setVector(coords);
+//
+//
+//
+//		return so;
+//	}
 
 	public void triggerNewPdbxStructOper(PdbxStructOperList structOper) {
 		for(MMcifConsumer c : consumers){
@@ -900,8 +900,8 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 	/**
-	 * Populates a bean object from {@link org.biojava.nbio.structure.io.mmcif.model} from the
-	 * data read from the CIF file.
+	 * Populates a bean object from  the {@link org.biojava.nbio.structure.io.mmcif.model} package, 
+	 * from the data read from a CIF file.
 	 * It uses reflection to lookup the field and setter method names given the category 
 	 * found in the CIF file. 
 	 * <p>
@@ -1016,21 +1016,17 @@ public class SimpleMMcifParser implements MMcifParser {
 	
 	private void produceWarning(String key, String val, Class<?> c, Set<String> warnings) {
 
-		// TODO get rid of this once we port PdbxStructOperList
-		if (!key.contains("[")) { // the fields with square brackets are handled elsewhere, see for instance getStructNcsOper
+		String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
+		String warnkey = key+"-"+c.getName();
+		// Suppress duplicate warnings or attempts to store empty data
+		if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
+			logger.debug(warning);
+		} else {
+			logger.warn(warning);
+		}
 
-			String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
-			String warnkey = key+"-"+c.getName();
-			// Suppress duplicate warnings or attempts to store empty data
-			if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
-				logger.debug(warning);
-			} else {
-				logger.warn(warning);
-			}
-
-			if(warnings != null) {
-				warnings.add(warnkey);
-			}
+		if(warnings != null) {
+			warnings.add(warnkey);
 		}
 
 	}
