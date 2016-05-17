@@ -2,6 +2,8 @@
 <ProteinModifications>
     <Revisions>
     <Revision>
+		<Date>2016-05-10</Date>
+			<Change>Added definition for PLP</Change>
     	<Date>2011-08-12</Date>
     		<Change>Added glycosylation entries 386-429</Change>
    		</Revision>
