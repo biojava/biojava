@@ -293,15 +293,11 @@ public class ProteinModificationParserTest extends TestCase {
 		multiTest();
 	}
 
-	public void multiTest() {
+	public void multiTest() throws IOException, StructureException {
 		for ( String[] name : strucs){
-			try {
-//				parserTest(name[0], (String)null);
-				parserTest(name[0], name[1]);
-			} catch (Exception e){
-				logger.error("Exception: ", e);
-				fail(e.getMessage());
-			}
+			parserTest(name[0], (String)null);
+			parserTest(name[0], name[1]);
+
 		}
 	}
 

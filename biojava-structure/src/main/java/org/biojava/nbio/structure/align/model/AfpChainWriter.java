@@ -677,13 +677,13 @@ public class AfpChainWriter
 
 				pairs.append(atom1.getGroup().getResidueNumber().toString());
 				pairs.append('\t');
-				pairs.append(atom1.getGroup().getChain().getChainID());
+				pairs.append(atom1.getGroup().getChain().getName());
 				pairs.append('\t');
 				pairs.append(atom1.getGroup().getPDBName());
 				pairs.append('\t');
 				pairs.append(atom2.getGroup().getResidueNumber().toString());
 				pairs.append('\t');
-				pairs.append(atom2.getGroup().getChain().getChainID());
+				pairs.append(atom2.getGroup().getChain().getName());
 				pairs.append('\t');
 				pairs.append(atom2.getGroup().getPDBName());
 				pairs.append('\n');
@@ -1039,7 +1039,7 @@ public class AfpChainWriter
 		if ( g!= null){
 			Chain c = g.getChain();
 			if (c != null){
-				return g.getResidueNumber().toString()+":" + c.getChainID() ;
+				return g.getResidueNumber().toString()+":" + c.getName() ;
 				//return g.getPDBCode()+":" + c.getName() + "." + getOneLetter(g) ;
 			}
 		}

@@ -532,7 +532,7 @@ public class SymmetryTools {
 				Group g = (Group) repeat[k].getGroup().clone();
 				newCh.addGroup(g);
 			}
-			newCh.setChainID(chainID + "");
+			newCh.setName(chainID + "");
 			chainID++;
 			symm.addChain(newCh);
 
@@ -975,6 +975,33 @@ public class SymmetryTools {
 
 		symm.putScore(MultipleAlignmentScorer.AVGTM_SCORE, tmScore);
 		symm.putScore(MultipleAlignmentScorer.RMSD, rmsd);
+	}
+
+	/**
+	 * Returns the representative Atom Array of the first model, if the
+	 * structure is NMR, or the Array for each model, if it is a biological
+	 * assembly with multiple models.
+	 * 
+	 * @param structure
+	 * @return representative Atom[]
+	 */
+	public static Atom[] getRepresentativeAtoms(Structure structure) {
+
+		if (structure.isNmr())
+			return StructureTools.getRepresentativeAtomArray(structure);
+
+		else {
+
+			// Get Atoms of all models and rename chains (in case BIO)
+			List<Atom> atomList = new ArrayList<Atom>();
+			for (int m = 0; m < structure.nrModels(); m++) {
+				for (Chain c : structure.getModel(m))
+					atomList.addAll(Arrays.asList(StructureTools
+							.getRepresentativeAtomArray(c)));
+			}
+			return atomList.toArray(new Atom[0]);
+		}
+		
 	}
 
 }

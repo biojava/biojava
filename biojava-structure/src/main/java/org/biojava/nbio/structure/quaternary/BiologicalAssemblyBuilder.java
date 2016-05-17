@@ -69,10 +69,10 @@ public class BiologicalAssemblyBuilder {
 			// note: for NMR structures (or any multi-model) we use the first model only and throw away the rest
 			for (Chain c : asymUnit.getChains()){
 
-				String intChainID = c.getInternalChainID();
+				String intChainID = c.getId();
 				if (intChainID == null) {
-					logger.info("No internal chain ID found while building bioassembly, using chain ID instead: " + c.getChainID());
-					intChainID = c.getChainID();
+					logger.info("No internal chain ID found while building bioassembly, using chain ID instead: " + c.getName());
+					intChainID = c.getName();
 				}
 
 				if (transformation.getChainId().equals(intChainID)){
@@ -126,11 +126,7 @@ public class BiologicalAssemblyBuilder {
 	private List<String> getChainIds(Structure asymUnit) {
 		List<String> chainIds = new ArrayList<String>();
 		for ( Chain c : asymUnit.getChains()){
-			String intChainID = c.getInternalChainID();
-			if ( intChainID == null) {
-				//System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
-				intChainID = c.getChainID();
-			}
+			String intChainID = c.getId();
 			chainIds.add(intChainID);
 		}
 		return chainIds;

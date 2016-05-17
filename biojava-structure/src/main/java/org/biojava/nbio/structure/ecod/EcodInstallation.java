@@ -28,7 +28,9 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -86,6 +88,9 @@ public class EcodInstallation implements EcodDatabase {
 
 	private String url;
 
+	// Frequency of ECOD updates, in days. If non-null, redownloads "latest" if older than this.
+	private Integer updateFrequency = 14;
+	
 	/**
 	 * Use EcodFactory to create instances. The instantiation of multiple
 	 * installations at the same path can lead to race conditions when downloading
@@ -359,7 +364,25 @@ public class EcodInstallation implements EcodDatabase {
 		try {
 			File f = getDomainFile();
 
-			return f.exists() && f.length()>0;
+			if (!f.exists() || f.length() <= 0 )
+				return false;
+			
+			// Re-download old copies of "latest"
+			if(updateFrequency != null && requestedVersion == DEFAULT_VERSION ) {
+				long mod = f.lastModified();
+				// Time of last update
+				Date lastUpdate = new Date();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(lastUpdate);
+				cal.add(Calendar.DAY_OF_WEEK, -updateFrequency);
+				long updateTime = cal.getTimeInMillis();
+				// Check if file predates last update
+				if( mod < updateTime ) {
+					logger.info("{} is out of date.",f);
+					return false;
+				}
+			}
+			return true;
 		} finally {
 			logger.trace("UNLOCK readlock");
 			domainsFileLock.readLock().unlock();
@@ -401,6 +424,27 @@ public class EcodInstallation implements EcodDatabase {
 	 */
 	private File getDomainFile() {
 		return new File(getCacheLocation(),getDomainFilename());
+	}
+
+	/**
+	 * The expected ECOD update frequency determines whether the version
+	 * "latest" should be re-downloaded
+	 * @return the expected ECOD update frequency, in days
+	 */
+	public Integer getUpdateFrequency() {
+		return updateFrequency;
+	}
+
+	/**
+	 * The "latest" version will be re-downloaded if it is older than
+	 * {@link #getUpdateFrequency()} days. Setting this to null disables
+	 * re-downloading (delete $PDB_CACHE_DIR/ecod.latest.domains.txt manually
+	 * to force updating). Setting to 0 will force downloading for every
+	 * program execution.
+	 * @param updateFrequency the updateFrequency to set
+	 */
+	public void setUpdateFrequency(Integer updateFrequency) {
+		this.updateFrequency = updateFrequency;
 	}
 
 	/**

@@ -117,11 +117,11 @@ public class TestCloning {
 
 		for ( Chain chain : s.getChains()) {
 
-			Chain test = c.getChainByPDB(chain.getChainID());
+			Chain test = c.getChain(chain.getId());
 
-			assertEquals("Could not correctly clone seqres for chain " + chain.getChainID() , chain.getSeqResLength(),test.getSeqResLength());
+			assertEquals("Could not correctly clone seqres for chain " + chain.getId() , chain.getSeqResLength(),test.getSeqResLength());
 
-			assertEquals("Could not correctly clone atom records for chain " + chain.getChainID() , chain.getAtomLength(),test.getAtomLength());
+			assertEquals("Could not correctly clone atom records for chain " + chain.getId() , chain.getAtomLength(),test.getAtomLength());
 
 			Iterator<Group> it = test.getAtomGroups().iterator();
 			for (Group g : chain.getAtomGroups()) {

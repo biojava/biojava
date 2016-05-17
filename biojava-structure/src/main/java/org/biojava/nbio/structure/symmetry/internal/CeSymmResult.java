@@ -119,7 +119,7 @@ public class CeSymmResult {
 					.getResidueNumber();
 			ResidueNumber res2 = atoms[align.getFinalResidue(su)].getGroup()
 					.getResidueNumber();
-			ResidueRange range = new ResidueRange(res1.getChainId(), res1, res2);
+			ResidueRange range = new ResidueRange(res1.getChainName(), res1, res2);
 
 			StructureIdentifier id = new SubstructureIdentifier(pdbId,
 					Arrays.asList(range));

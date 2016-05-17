@@ -477,7 +477,7 @@ public class HetatomImplTest extends TestCase{
 	public void testSetGetChain() {
 //        System.out.println("setGetChain");
 		Chain chain = new ChainImpl();
-		chain.setChainID("A");
+		chain.setId("A");
 		HetatomImpl instance = new HetatomImpl();
 		instance.setChain(chain);
 		Chain expResult = chain;
@@ -486,15 +486,18 @@ public class HetatomImplTest extends TestCase{
 	}
 
 	/**
-	 * Test of getChainId method, of class HetatomImpl.
+	 * Test of getChainName method, of class HetatomImpl.
 	 */
 	@Test
 	public void testGetChainId() {
-//        System.out.println("getChainId");
+//        System.out.println("getChainName");
 		Chain chain = new ChainImpl();
-		chain.setChainID("A");
+		chain.setId("A");
+
+
 		HetatomImpl instance = new HetatomImpl();
 		instance.setChain(chain);
+
 		String expResult = "A";
 		String result = instance.getChainId();
 		assertEquals(expResult, result);

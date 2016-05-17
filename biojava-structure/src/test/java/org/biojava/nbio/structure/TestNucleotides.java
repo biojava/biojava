@@ -61,10 +61,11 @@ public class TestNucleotides {
 		Structure s = getStructure(pdbId);
 
 
-		assertEquals(2,s.getChains().size());
+		assertEquals(2,s.getPolyChains().size());
 
 		Chain c = s.getChains().get(1);
-		assertEquals("C", c.getChainID());
+		System.out.println(c);
+		assertEquals("C", c.getName());
 		List<Group> ngr = c.getAtomGroups(GroupType.NUCLEOTIDE);
 		assertEquals(6,ngr.size());
 
@@ -87,11 +88,11 @@ public class TestNucleotides {
 
 		assertNotNull(s1);
 
-		assertEquals(2,s1.getChains().size());
+		assertEquals(2,s1.getPolyChains().size());
 
 		Chain c1 = s1.getChains().get(1);
 
-		assertEquals("C", c1.getChainID());
+		assertEquals("C", c1.getName());
 
 		Group g = c1.getAtomGroup(0);
 		assertNotNull(g);
@@ -115,15 +116,15 @@ public class TestNucleotides {
 	public void test1OFX() throws StructureException, IOException {
 		Structure s = getStructure("1OFX");
 
-		assertEquals(2,s.getChains().size());
+		assertEquals(2,s.getPolyChains().size());
 
 		Chain a = s.getChains().get(0);
-		assertEquals("A", a.getChainID());
+		assertEquals("A", a.getId());
 		List<Group> ngrA = a.getAtomGroups(GroupType.NUCLEOTIDE);
 		assertEquals(10,ngrA.size());
 
 		Chain b = s.getChains().get(1);
-		assertEquals("B", b.getChainID());
+		assertEquals("B", b.getId());
 		List<Group> ngrB = b.getAtomGroups(GroupType.NUCLEOTIDE);
 		assertEquals(10,ngrB.size());
 	}
@@ -150,10 +151,10 @@ public class TestNucleotides {
 		Structure s = reader.getStructureById("1REP");
 		//System.out.println(s);
 		//System.out.println(s.toPDB());
-		Chain b = s.getChainByPDB("B");
+		Chain b = s.getPolyChainByPDB("B");
 
 		assertEquals(22,b.getSeqResGroups().size());
-		assertEquals(23,b.getAtomGroups().size());
+		assertEquals(21,b.getAtomGroups().size());
 
 		Group n1 = b.getSeqResGroup(0);
 		Group n2 = b.getAtomGroup(0);

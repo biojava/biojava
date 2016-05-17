@@ -331,14 +331,10 @@ public class BondMaker {
 			if (!BOND_TYPES_TO_PARSE.contains(conn.getConn_type_id())) continue;
 			String chainId1;
 			String chainId2;
-			if(params.isUseInternalChainId()){
-				chainId1 = conn.getPtnr1_label_asym_id();
-				chainId2 = conn.getPtnr2_label_asym_id();
-			}
-			else{
-				chainId1 = conn.getPtnr1_auth_asym_id();
-				chainId2 = conn.getPtnr2_auth_asym_id();
-			}
+
+			chainId1 = conn.getPtnr1_label_asym_id();
+			chainId2 = conn.getPtnr2_label_asym_id();
+
 			String insCode1 = "";
 			if (!conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
 			String insCode2 = "";
@@ -415,7 +411,7 @@ public class BondMaker {
 		if (iCode==null || iCode.isEmpty()) {
 			iCode = " "; // an insertion code of ' ' is ignored
 		}
-		Chain chain = structure.getChainByPDB(chainID);
+		Chain chain = structure.getChain(chainID);
 		ResidueNumber resNum = new ResidueNumber(chainID, Integer.parseInt(resSeq), iCode.charAt(0));
 		Group group = chain.getGroupByPDB(resNum);
 

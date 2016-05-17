@@ -29,7 +29,7 @@ public class TestEntityNameAndType {
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		FileParsingParameters params = cache.getFileParsingParams();
-		params.setUseInternalChainId(true);
+
 		DownloadChemCompProvider cc = new DownloadChemCompProvider();
 		ChemCompGroupFactory.setChemCompProvider(cc);
 		cc.checkDoFirstInstall();

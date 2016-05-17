@@ -386,23 +386,23 @@ public class MMCIFFileTools {
 	 * Converts a Chain into a List of {@link AtomSite} objects
 	 * @param c
 	 * @param model
-	 * @param chainId
-	 * @param internalChainId
+	 * @param authorId
+	 * @param asymId
 	 * @return
 	 */
-	public static List<AtomSite> convertChainToAtomSites(Chain c, int model, String chainId, String internalChainId) {
+	public static List<AtomSite> convertChainToAtomSites(Chain c, int model, String authorId, String asymId) {
 
 		List<AtomSite> list = new ArrayList<AtomSite>();
 
 		if (c.getEntityInfo()==null) {
-			logger.warn("No Compound (entity) found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", c.getChainID());
+			logger.warn("No Compound (entity) found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", c.getName());
 		}
 
 		for ( int h=0; h<c.getAtomLength();h++){
 
 			Group g= c.getAtomGroup(h);
 
-			list.addAll(convertGroupToAtomSites(g, model, chainId, internalChainId));
+			list.addAll(convertGroupToAtomSites(g, model, authorId, asymId));
 
 		}
 
@@ -419,7 +419,7 @@ public class MMCIFFileTools {
 
 		for (int m=0;m<s.nrModels();m++) {
 			for (Chain c:s.getChains()) {
-				list.addAll(convertChainToAtomSites(c, m+1, c.getChainID(), c.getInternalChainID()));
+				list.addAll(convertChainToAtomSites(c, m+1, c.getName(), c.getId()));
 			}
 		}
 		return list;

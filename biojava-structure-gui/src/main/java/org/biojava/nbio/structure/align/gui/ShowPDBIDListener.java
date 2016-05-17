@@ -46,7 +46,7 @@ implements ActionListener {
 
 			String pdbId = JOptionPane.showInputDialog(null,
 					params,
-					"Enter PDB ID, PDB.chainId, or SCOP domain ID",
+					"Enter PDB ID, PDB.chainName, or SCOP domain ID",
 					JOptionPane.QUESTION_MESSAGE);
 
 			if ( pdbId != null) {

@@ -27,7 +27,6 @@ import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.PDBFileReader;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -73,7 +72,7 @@ import java.util.Map;
  * A:
  * </p>
  * <pre>
- * public {@link Structure} loadStructure(String pathToPDBFile){
+ *  {@link Structure} loadStructure(String pathToPDBFile){
  * 		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
  *
  * 		{@link Structure} structure = null;
@@ -96,7 +95,7 @@ import java.util.Map;
  * A:
  * </p>
  * <pre>
- * public void calcPhiPsi({@link Structure} structure){
+ *  void calcPhiPsi({@link Structure} structure){
  *
  *
  * 		// get the first chain from the structure
@@ -174,13 +173,13 @@ public interface Structure extends Cloneable {
 	 *
 	 * @return identical copy of this Structure object
 	 */
-	public Structure clone();
+	Structure clone();
 
 	/**
 	 * String representation of object.
 	 */
 	@Override
-	public String toString();
+	String toString();
 
 	/**
 	 * Set PDB code of structure .
@@ -188,7 +187,7 @@ public interface Structure extends Cloneable {
 	 * @param pdb_id  a String specifying the PDBCode
 	 * @see #getPDBCode
 	 */
-	public void setPDBCode (String pdb_id) ;
+	void setPDBCode (String pdb_id) ;
 
 	/**
 	 * Get PDB code of structure.
@@ -196,7 +195,7 @@ public interface Structure extends Cloneable {
 	 * @return a String representing the PDBCode value
 	 * @see #setPDBCode
 	 */
-	public String  getPDBCode () ;
+	String  getPDBCode () ;
 
 	/**
 	 * Set biological name of Structure .
@@ -204,7 +203,7 @@ public interface Structure extends Cloneable {
 	 * @param name  a String specifying the biological name of the Structure
 	 * @see #getName
 	 */
-	public void setName(String name);
+	void setName(String name);
 
 	/**
 	 * Get biological name of Structure.
@@ -212,73 +211,25 @@ public interface Structure extends Cloneable {
 	 * @return a String representing the biological name of the Structure
 	 * @see #setName
 	 */
-	public String getName();
+	String getName();
+
 	/**
 	 * Get an identifier corresponding to this structure
 	 * @return The StructureIdentifier used to create this structure
 	 */
-	public StructureIdentifier getStructureIdentifier();
+	StructureIdentifier getStructureIdentifier();
+
 	/**
 	 * Set the identifier corresponding to this structure
 	 * @param structureIdentifier the structureIdentifier corresponding to this structure
 	 */
-	public void setStructureIdentifier(StructureIdentifier structureIdentifier);
+	void setStructureIdentifier(StructureIdentifier structureIdentifier);
 
 	/**
-	   sets/gets an List of  Maps which corresponds to the CONECT lines in the PDB file:
-
-	   <pre>
-	   COLUMNS         DATA TYPE        FIELD           DEFINITION
-	   ---------------------------------------------------------------------------------
-		1 -  6         Record name      "CONECT"
-		7 - 11         Integer          serial          Atom serial number
-	   12 - 16         Integer          serial          Serial number of bonded atom
-	   17 - 21         Integer          serial          Serial number of bonded atom
-	   22 - 26         Integer          serial          Serial number of bonded atom
-	   27 - 31         Integer          serial          Serial number of bonded atom
-	   32 - 36         Integer          serial          Serial number of hydrogen bonded
-	   atom
-	   37 - 41         Integer          serial          Serial number of hydrogen bonded
-	   atom
-	   42 - 46         Integer          serial          Serial number of salt bridged
-	   atom
-	   47 - 51         Integer          serial          Serial number of hydrogen bonded
-	   atom
-	   52 - 56         Integer          serial          Serial number of hydrogen bonded
-	   atom
-	   57 - 61         Integer          serial          Serial number of salt bridged
-	   atom
-	   </pre>
-
-	   the HashMap for a single CONECT line contains the following fields:
-
-	   <li> atomserial (mandatory) : Atom serial number</li>
-	   <li> bond1 .. bond4 (optional): Serial number of bonded atom</li>
-	   <li> hydrogen1 .. hydrogen4 (optional):Serial number of hydrogen bonded atom</li>
-	   <li> salt1 .. salt2 (optional): Serial number of salt bridged atom</li>
-
-	   *
-	   * @param connections  a List object specifying the connections
-	   * @see #getConnections
-	   * @deprecated use {@link Atom#addBond(Bond)} instead
-	*/
-	@Deprecated
-	public void setConnections(List<Map<String,Integer>> connections);
-
-	/**
-	 * Return the connections value.
-	 * @return a List object representing the connections value
-	 * @see #setConnections
-	 * @deprecated use {@link Atom#getBonds()} instead
+	 * Return number of polymer Chains in this Structure for first model.
+	 * @return the number of polymer Chains in this Structure
 	 */
-	@Deprecated
-	public List<Map<String,Integer>> getConnections();
-
-	/**
-	 * Return number of Chains in this Structure.
-	 * @return an int representing the number of Chains in this Structure
-	 */
-	public int size() ;
+	int size() ;
 
 	/**
 	 * Return number of chains of model.
@@ -286,7 +237,7 @@ public interface Structure extends Cloneable {
 	 * @param modelnr  an int specifying the number of the Model that should be used
 	 * @return an int representing the number of Chains in this Model
 	 */
-	public int size(int modelnr);
+	int size(int modelnr);
 
 	/**
 	 * Return the number of models .
@@ -297,7 +248,7 @@ public interface Structure extends Cloneable {
 	 * @return an int representing the number of models in this Structure
 	 * @see #isNmr()
 	 */
-	public int nrModels() ;
+	int nrModels() ;
 
 	/**
 	 * Test if this structure is an NMR structure.
@@ -305,7 +256,7 @@ public interface Structure extends Cloneable {
 	 * @return true if this Structure has been solved by NMR
 	 * @see #nrModels()
 	 */
-	public boolean isNmr() ;
+	boolean isNmr() ;
 
 	/**
 	 * Test if this structure is a crystallographic structure, i.e. it is an asymmetric unit
@@ -314,22 +265,14 @@ public interface Structure extends Cloneable {
 	 *
 	 * @return true if crystallographic, false otherwise
 	 */
-	public boolean isCrystallographic();
-
-	/** set NMR flag.
-	 *
-	 * @param nmr  true to declare that this Structure has been solved by NMR.
-	 */
-	@Deprecated
-	public void setNmr(boolean nmr);
-
+	boolean isCrystallographic();
 
 	/**
 	 * Add a new model.
 	 *
 	 * @param model  a List object containing the Chains of the new Model
 	 */
-	public void addModel(List<Chain> model);
+	void addModel(List<Chain> model);
 
 
 	/**
@@ -337,9 +280,9 @@ public interface Structure extends Cloneable {
 	 * models in a structure. Allows to set (replace) the model at position
 	 * with the new List of Chains.
 	 * @param position starting at 0
-	 * @param model
+	 * @param model list of chains representing a model
 	 */
-	public void setModel(int position, List<Chain> model);
+	void setModel(int position, List<Chain> model);
 
 	/**
 	 * Retrieve all Chains belonging to a model .
@@ -347,20 +290,18 @@ public interface Structure extends Cloneable {
 	 *
 	 * @param modelnr  an int
 	 * @return a List object containing the Chains of Model nr. modelnr
-
 	 */
-	public List<Chain> getModel(int modelnr);
+	List<Chain> getModel(int modelnr);
 
 	/**
-	 * Retrieve all chains - if it is a NMR structure will return the chains of the first model.
+	 * Retrieve all chains for the first model.
 	 * This is the same as getChains(0);
 	 * @see #getModel(int modelnr)
 	 * @see #getChains(int modelnr)
 	 *
 	 * @return a List object containing the Chains of Model nr. modelnr
 	 */
-	public List<Chain> getChains();
-
+	List<Chain> getChains();
 
 	/**
 	 * Set the chains of a structure, if this is a NMR structure,
@@ -370,7 +311,7 @@ public interface Structure extends Cloneable {
 	 *
 	 * @param chains the list of chains for this structure.
 	 */
-	public void setChains(List<Chain> chains);
+	void setChains(List<Chain> chains);
 
 	/**
 	 * Retrieve all chains of a model.
@@ -379,125 +320,333 @@ public interface Structure extends Cloneable {
 	 * @param modelnr  an int
 	 * @return a List object containing the Chains of Model nr. modelnr
 	 */
-	public List<Chain> getChains(int modelnr);
+	List<Chain> getChains(int modelnr);
 
 	/**
 	 * Set the chains for a model
-	 * @param chains
-	 * @param modelnr
+	 * @param chains the chains for a model
+	 * @param modelnr the number of the model
 	 */
-	public void setChains( int modelnr, List<Chain> chains);
+	void setChains( int modelnr, List<Chain> chains);
+
+	/** 
+	 * Return all polymeric chains for the first model
+	 *
+	 * @return all polymeric chains.
+	 * @since 5.0
+	 */
+	List<Chain> getPolyChains();
+
+	/** 
+	 * Return all polymeric chains for the given model index.
+	 * @param modelIdx the model index
+	 * @return all polymeric chains.
+	 * @since 5.0 
+	 */
+	List<Chain> getPolyChains(int modelIdx);
+
+	/** 
+	 * Return all non-polymeric chains for the first model
+	 *
+	 * @return all non-polymeric chains.
+	 * @since 5.0 
+	 */
+	List<Chain> getNonPolyChains();
+
+	/** 
+	 * Return all non-polymeric chains for the given model index.
+	 *
+	 * @param modelIdx the model index
+	 * @return all non-polymeric chains.
+	 * @since 5.0 
+	 */
+	List<Chain> getNonPolyChains(int modelIdx);
 
 	/**
-	 * Add a new chain.
+	 * Return all water chains for the first model
+	 * @return
+	 * @since 5.0 
+	 */
+	List<Chain> getWaterChains();
+	
+	/**
+	 * Return all water chains for the given model index
+	 * @param modelIdx
+	 * @return
+	 * @since 5.0 
+	 */
+	List<Chain> getWaterChains(int modelIdx);
+
+	/**
+	 * Add a new chain to the first model
 	 *
 	 * @param chain  a Chain object
 	 */
-	public void addChain(Chain chain);
+	void addChain(Chain chain);
 
 	/**
-	 * Add a new chain, if several models are available.
+	 * Add a new chain to the model specified by the given index
 	 *
 	 * @param chain    a Chain object
 	 * @param modelnr  an int specifying to which model the Chain should be added
 	 */
-	public void addChain(Chain chain, int modelnr);
+	void addChain(Chain chain, int modelnr);
 
 	/**
-	 * Retrieve a chain by its position within the Structure .
+	 * Retrieve a chain by its index within the Structure .
 	 *
 	 * @param pos  an int for the position in the List of Chains.
 	 * @return a Chain object
-	*/
-	public Chain getChain(int pos);
+	 */
+	Chain getChain(int pos);
 
 	/**
-	 * Retrieve a chain by its position within the Structure and model number.
+	 * Retrieve a chain by its indices within the Structure and model.
 	 *
 	 * @param pos      an int
 	 * @param modelnr  an int
 	 * @return a Chain object
-	*/
-	public Chain getChain( int modelnr, int pos);
-
-
+	 */
+	Chain getChain( int modelnr, int pos);
 
 	/**
 	 * Request a particular chain from a structure.
 	 * by default considers only the first model.
-	 * @param chainId the ID of a chain that should be returned
+	 * @param authId name of a chain that should be returned
 	 * @return Chain the requested chain
 	 * @throws StructureException
+	 * @Deprecated use {@link #getPolyChainsByPDB(String)} or {@link #getNonPolyChainsByPDB(String)} instead
 	 */
-	public Chain findChain(String chainId)
-	throws StructureException;
-
-
-	/**
-	 * Check if a chain with the id chainId is contained in this structure.
-	 *
-	 * @param chainId the name of the chain
-	 * @return true if a chain with the id (name) chainId is found
-	 */
-	public boolean hasChain(String chainId);
+	@Deprecated
+	Chain findChain(String authId) throws StructureException;
 
 	/**
 	 * Request a particular chain from a particular model
+	 * @param authId the name of a chain that should be returned
 	 * @param modelnr the number of the model to use
-	 * @param chainId the ID of a chain that should be returned
 	 * @return Chain the requested chain
 	 * @throws StructureException
+	 * @Deprecated use {@link #getPolyChainsByPDB(String, int)} or {@link #getNonPolyChainsByPDB(String, int)} instead
 	 */
-	public Chain findChain(String chainId, int modelnr)
-	throws StructureException;
+	@Deprecated
+	Chain findChain(String authId, int modelnr) throws StructureException;
+
+
+	/**
+	 * Check if a chain with the chainId aymId is contained in this structure.
+	 *
+	 * @param asymId the Id of the chain
+	 * @return true if a chain with the id asymId is found
+	 */
+	boolean hasChain(String asymId);
+
+	/** 
+	 * Check if a non polymeric chain with chainId asymId is contained in the structure.
+	 *
+	 * @param asymId the id of the chain
+	 * @return true if a nonpolymeric chain with the asymId is found
+	 * @since 5.0 
+	 */
+	boolean hasNonPolyChain(String asymId);
+
+
+	/** 
+	 * Check if a chain  with chain name authId is contained in the structure
+	 *
+	 * @param authId the chain name
+	 * @return true if a chain with the name authId is found
+	 */
+	boolean hasPdbChain(String authId) ;
 
 	/**
 	 * Request a particular group from a structure.
 	 * by default considers only the first model in the structure.
-	 * @param chainId the ID of the chain to use
+	 * @param authId the name of the chain to use
 	 * @param pdbResnum the PDB residue number of the requested group
 	 * @return Group the requested Group
 	 * @throws StructureException
 	 */
-	public  Group findGroup(String chainId, String pdbResnum)
-			throws StructureException;
+	Group findGroup(String authId, String pdbResnum) throws StructureException;
 
 	/**
 	 * Request a particular group from a structure.
 	 * considers only model nr X. count starts with 0.
-	 * @param chainId the ID of the chain to use
+	 * @param authId the chain name of the chain to use
 	 * @param pdbResnum the PDB residue number of the requested group
 	 * @param modelnr the number of the model to use
 	 * @return Group the requested Group
 	 * @throws StructureException
 	 */
-	 public  Group findGroup(String chainId, String pdbResnum, int modelnr)
-	 throws StructureException;
+	Group findGroup(String authId, String pdbResnum, int modelnr) throws StructureException;
 
 
-	 /**
-	  * Request a chain by its PDB code
-	  * by default takes only the first model
-	  *
-	  * @param chainId the chain identifier
-	  * @return the Chain that matches the chainID
-	  * @throws StructureException
-	  */
-	 public Chain getChainByPDB(String chainId)
-		 throws StructureException;
+	/**
+	 * Request a chain by its public id (author id) for the first model.
+	 * Before 5.0 it returned a Chain that had both polymeric and non-polymeric groups
+	 * following the PDB-file data model. 
+	 * Since 5.0 it only returns the polymeric part of the chain.
+	 *
+	 * @param authId the author id (chainName, public chain id)
+	 * @return the Chain that matches the authId
+	 * @throws StructureException if chain can't be found
+	 * @deprecated use {@link #getPolyChainsByPDB(String)} instead
+	 */
+	@Deprecated 
+	Chain getChainByPDB(String authId) throws StructureException;
 
-	 /**
-	  * Request a chain by its PDB code
-	  * by default takes only the first model
-	  *
-	  * @param chainId the chain identifier
-	  * @param modelnr request a particular model;
-	  * @return the Chain that matches the chainID in the model
-	  * @throws StructureException
-	  */
-	 public Chain getChainByPDB(String chainId, int modelnr)
-		 throws StructureException;
+	/**
+	 * Request a chain by its public id (author id) for the given model index.
+	 * Before 5.0 it returned a Chain that had both polymeric and non-polymeric groups
+	 * following the PDB-file data model. 
+	 * Since 5.0 it only returns the polymeric part of the chain.
+	 * 
+	 * @param authId the author id (chainName, public chain id)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return the Chain that matches the authId in the model
+	 * @throws StructureException if chain can't be found
+	 * @deprecated use {@link #getPolyChainsByPDB(String,int)} instead
+	 */
+	@Deprecated
+	Chain getChainByPDB(String authId, int modelIdx) throws StructureException;
+	
+	/**
+	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
+	 * the 'internal' chain id (asymId) for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return
+	 * @see #getPolyChain(String)
+	 * @see #getNonPolyChain(String)
+	 * @see #getWaterChain(String) 
+	 */
+	Chain getChain(String asymId);
+	
+	/**
+	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
+	 * the 'internal' chain id (asymId) for the given model index 
+	 * @param asymId the asymId (chainId)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return
+	 * @see #getPolyChain(String, int)
+	 * @see #getNonPolyChain(String, int)
+	 * @see #getWaterChain(String, int)
+	 */
+	Chain getChain(String asymId, int modelIdx);
+	
+	/** 
+	 * Retrieve a polymeric Chain based on the 'internal' chain
+	 * id (asymId) for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return a polymeric Chain or null if it can't be found
+	 * @since 5.0 
+	 */
+	Chain getPolyChain(String asymId);
 
+	/** 
+	 * Retrieve a polymeric Chain based on the 'internal' chain
+	 * id (asymId) for the given model index
+	 * @param asymId the asymId (chainId)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return a polymeric Chain or null if it can't be found
+	 * @since 5.0 
+	 */
+	Chain getPolyChain(String asymId, int modelIdx);
+
+	/** 
+	 * Retrieve a polymeric Chain based on the 'public' chain
+	 * name (authId) for the first model
+	 * @param authId the author id (chainName, public chain id)
+	 * @return a polymeric Chain or null if it can't be found
+	 * @since 5.0 
+	 */
+	Chain getPolyChainByPDB(String authId);
+	
+	/** 
+	 * Retrieve a polymeric Chain based on the 'public' chain
+	 * name (authId) for the given model index
+	 * @param authId the author id (chainName, public chain id)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return a polymeric Chain or null if it can't be found
+	 * @since 5.0 
+	 */
+	Chain getPolyChainByPDB(String authId, int modelIdx);
+
+
+	/** 
+	 * Retrieve a non-polymeric Chain based on the 'internal' chain
+	 * id (asymId) for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return a non-polymeric chain or null if it can't be found
+	 * @since 5.0 
+	 */
+	Chain getNonPolyChain(String asymId);
+
+	/** 
+	 * Retrieve a non-polymeric Chain based on the 'internal' chain
+	 * id (asymId) for the given model index
+	 * @param asymId the asymId (chainId)
+	 * @param modelIdx the index of the required model (0-based) 
+	 * @return a non-polymeric Chain or null if it can't be found
+	 * @since 5.0 
+	 */
+	Chain getNonPolyChain(String asymId, int modelIdx);
+
+	/** 
+	 * Retrieve all non-polymeric Chains corresponding to the given 'public' chain
+	 * name (authId) for the first model. 
+	 * @param authId the author id (chainName, public chain id)
+	 * @return a list of non-polymeric Chains, if none found the list will be empty
+	 * @since 5.0 
+	 */
+	List<Chain> getNonPolyChainsByPDB(String authId);
+
+	/** 
+	 * Retrieve all non-polymeric Chains corresponding to the 'public' chain
+	 * name (authId) and the given model index.
+	 * @param authId the author id (chainName, public chain id)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return a list of non-polymeric Chains, if none found the list will be empty
+	 * @since 5.0 
+	 */
+	List<Chain> getNonPolyChainsByPDB(String authId, int modelIdx);
+
+	/**
+	 * Retrieve a water Chain based on the 'internal' chain id (asymId)
+	 * for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return a water Chain or null if it can't be found
+	 * @since 5.0 
+	 */
+	Chain getWaterChain(String asymId);
+	
+	/**
+	 * Retrieve a water chain based on the 'internal' chain id (asymId)
+	 * for the given model index
+	 * @param asymId the asymId (chainId)
+	 * @param modelIdx the index of the required model (0-based) 
+	 * @return
+	 * @since 5.0 
+	 */
+	Chain getWaterChain(String asymId, int modelIdx);
+	
+	/**
+	 * Retrieve a water Chain based on the 'public' chain name (authId)
+	 * for the first model
+	 * @param authId the author id (chainName, public chain id)
+	 * @return
+	 * @since 5.0 
+	 */
+	Chain getWaterChainByPDB(String authId);
+
+	/**
+	 * Retrieve a water Chain based on the 'public' chain name (authId)
+	 * for the given model index
+	 * @param authId the author id (chainName, public chain id)
+	 * @param modelIdx the index of the required model (0-based)
+	 * @return
+	 * @since 5.0 
+	 */
+	Chain getWaterChainByPDB(String authId, int modelIdx);
+	
 
 	/**
 	 * Create a String that contains this Structure's contents in PDB file format.
@@ -505,180 +654,177 @@ public interface Structure extends Cloneable {
 	 * @return a String that looks like a PDB file
 	 * @see FileConvert
 	 */
-	public String toPDB();
+	String toPDB();
 
 	/**
 	 * Create a String that contains this Structure's contents in MMCIF file format.
-	 * @return
+	 * @return a String representation of the Structure object in mmCIF.
 	 */
-	public String toMMCIF();
+	String toMMCIF();
 
 	/**
 	 * Set the EntityInfo
 	 *
-	 * @param molList
+	 * @param molList list of entityinfo objects
 	 */
-	public void setEntityInfos(List<EntityInfo> molList);
-	
+	void setEntityInfos(List<EntityInfo> molList);
+
 	/**
 	 * Get all the EntityInfo for this Structure.
 	 *
 	 * @return a list of EntityInfos
 	 */
-	public List<EntityInfo> getEntityInfos();
+	List<EntityInfo> getEntityInfos();
 
 	/**
 	 * Add an EntityInfo to this Structure
 	 */
-	public void addEntityInfo(EntityInfo entityInfo);
+	void addEntityInfo(EntityInfo entityInfo);
 
 	/**
 	 * Set the list of database references for this structure
 	 * @param dbrefs list of DBRef objects
 	 *
 	 */
-	public void setDBRefs(List<DBRef> dbrefs);
+	void setDBRefs(List<DBRef> dbrefs);
 
 	/**
 	 * Get the list of database references
 	 *
 	 * @return list of DBRef objects
 	 */
-	public List<DBRef> getDBRefs();
+	List<DBRef> getDBRefs();
 
 	/**
 	 * Request a particular entity by its entity id (mol id in legacy PDB format)
 	 *
-	 * @param entityId
+	 * @param entityId the number of the entity
 	 * @return a entityInfo
 	 * @deprecated use {@link #getEntityById(int)} instead
 	 */
-	public EntityInfo getCompoundById(int entityId);
+	EntityInfo getCompoundById(int entityId);
 
 	/**
 	 * Request a particular entity by its entity id (mol id in legacy PDB format)
 	 *
-	 * @param entityId
+	 * @param entityId the number of the entity
 	 * @return an entity 
 	 */	
-	public EntityInfo getEntityById(int entityId);
+	EntityInfo getEntityById(int entityId);
 
 	/**
 	 * Return the header information for this PDB file
 	 *
 	 * @return the PDBHeader object
 	 */
-	public PDBHeader getPDBHeader();
+	PDBHeader getPDBHeader();
 
 	/**
 	 * Return whether or not the entry has an associated journal article
-	 * or publication. The JRNL section is not mandatory and thus may not be
+	 * or ation. The JRNL section is not mandatory and thus may not be
 	 * present.
 	 * @return flag if a JournalArticle has been found.
 	 */
-	public boolean hasJournalArticle();
+	boolean hasJournalArticle();
 
 	/**
 	 * Get the associated publication as defined by the JRNL records in a PDB
 	 * file.
 	 * @return a JournalArticle
 	 */
-	public JournalArticle getJournalArticle();
+	JournalArticle getJournalArticle();
 
 	/**
 	 * Set the associated publication as defined by the JRNL records in a PDB
 	 * file.
-	 * @param journalArticle
+	 * @param journalArticle a JournalArticle object
 	 */
-	public void setJournalArticle(JournalArticle journalArticle);
+	void setJournalArticle(JournalArticle journalArticle);
 
 	/**
 	 * Get the list of disulfide Bonds as they have been defined in the PDB files
 	 *
 	 * @return a list of Bonds
 	 */
-	public List<Bond> getSSBonds();
+	List<Bond> getSSBonds();
 
 	/**
 	 * Set the list of SSBonds for this structure
 	 *
 	 * @param ssbonds
 	 */
-	public void setSSBonds(List<Bond> ssbonds);
+	void setSSBonds(List<Bond> ssbonds);
 
 	/**
 	 * Add a single disulfide Bond to this structure
 	 *
-	 * @param ssbond
+	 * @param ssbond a disulfide bond
 	 */
-	public void addSSBond(Bond ssbond);
+	void addSSBond(Bond ssbond);
 
 	/**
 	 * Set the the header information for this PDB file
 	 *
 	 * @param header the PDBHeader object
 	 */
-	public void setPDBHeader(PDBHeader header);
+	void setPDBHeader(PDBHeader header);
 
 	/**
 	 * Get the ID used by Hibernate
 	 *
 	 * @return the ID used by Hibernate
 	 */
-	public Long getId() ;
+	Long getId() ;
 
 	/** set the ID used by Hibernate
 	 *
-	 * @param id
+	 * @param id the id
 	 */
-	public void setId(Long id) ;
+	void setId(Long id) ;
 
 	/**
 	 * @param sites the sites to set in the structure
 	 */
-	public void setSites(List<Site> sites);
+	void setSites(List<Site> sites);
 
 	/**
 	 * @return the sites contained in this structure
 	 */
-	public List<Site> getSites();
-
-	public List<Group> getHetGroups();
+	List<Site> getSites();
 
 	/**
 	 * Set a flag to indicate if this structure is a biological assembly
 	 * @param biologicalAssembly true if biological assembly, otherwise false
 	 * @since 3.2
 	 */
-	public void setBiologicalAssembly(boolean biologicalAssembly);
+	void setBiologicalAssembly(boolean biologicalAssembly);
 
 	/**
 	 * Get flag that indicates if this structure is a biological assembly
 	 * @return  true if biological assembly, otherwise false
 	 * @since 3.2
 	 */
-	public boolean isBiologicalAssembly();
+	boolean isBiologicalAssembly();
 
 	/**
 	 * Set crystallographic information for this structure
-	 * @param PDBCrystallographicInfo crystallographic information
+	 * @param crystallographicInfo crystallographic information
 	 * @since 3.2
 	 */
-
-	public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo);
+	void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo);
 
 	/**
 	 * Get crystallographic information for this structure
 	 * @return PDBCrystallographicInfo crystallographic information
 	 * @since 3.2
 	 */
-	public PDBCrystallographicInfo getCrystallographicInfo();
+	PDBCrystallographicInfo getCrystallographicInfo();
 
 	/**
 	 * Resets all models of this Structure
 	 * @since 4.0.1
 	 */
-	public void resetModels();
+	void resetModels();
 
 	/**
 	 * Returns the PDB identifier associated with this StructureIdentifier.

@@ -47,6 +47,7 @@ import org.biojava.nbio.structure.ecod.EcodDatabase;
 import org.biojava.nbio.structure.ecod.EcodDomain;
 import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.structure.ecod.EcodInstallation;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -60,13 +61,13 @@ import org.slf4j.LoggerFactory;
 public class EcodInstallationTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(EcodInstallationTest.class);
-	private static final String VERSION = "develop124"; // Should be updated periodically
+	private static final String VERSION = "develop133"; // Should be updated periodically
 
 	// Info about known versions, for testing
-	private static final int DEVELOP_FIRST_VERSION = 45;
-	private static final int DEVELOP_LATEST_VERSTION = 124; // Should be updated periodically
+	private static final int DEVELOP_FIRST_VERSION = 124;
+	private static final int DEVELOP_LATEST_VERSTION = 136; // Should be updated periodically
 	//versions known to be unreleased
-	private static final List<Integer> DEVELOP_VERSIONS_BLACKLIST = Arrays.asList( 85, 107, 113 );
+	private static final List<Integer> DEVELOP_VERSIONS_BLACKLIST = Arrays.asList( 85, 107, 113, 125, 128, 131 );
 
 	static {
 		//System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
@@ -105,6 +106,18 @@ public class EcodInstallationTest {
 			break;
 		case "develop124":
 			expected = 468680; //version124
+			break;
+		case "develop133":
+			expected = 479738; //version133
+			break;
+		case "develop134":
+			expected = 483056; //version134 (stats file)
+			break;
+		case "develop135":
+			expected = 483812; //version135 (stats file)
+			break;
+		case "develop136":
+			expected = 484847; //version136 (stats file)
 			break;
 		default:
 			fail("Unrecognized version "+VERSION);
@@ -151,13 +164,12 @@ public class EcodInstallationTest {
 				20669l, "e1lyw.1", false,
 				//				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 				1,1,1,2,"1lyw",
-				//				String chainId, String range, String seqId, String architectureName,
+				//				String chainName, String range, String seqId, String architectureName,
 				".", "A:3-97,B:106-346", "A:3-97,B:1-241", "beta barrels",
 				//				String xGroupName, String hGroupName, String tGroupName,
-				"cradle loop barrel", "RIFT-related",
-				"NO_T_NAME",// should be "acid protease" except for bug in develop124
+				"cradle loop barrel", "RIFT-related","acid protease",
 				//				String fGroupName, Boolean isAssembly, List<String> ligands
-				"EF00710",//"UNK_F_TYPE",
+				"EF00710",
 				20669l, Collections.singleton("EPE")
 				);
 		assertEquals(ecodId,expected,domain);

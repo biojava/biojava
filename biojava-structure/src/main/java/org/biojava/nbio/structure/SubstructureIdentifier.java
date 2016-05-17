@@ -206,7 +206,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 				// Restrict residues
 				for( ResidueRange range: getResidueRanges()) {
 
-					String chainId = range.getChainId();
+					String chainId = range.getChainName();
 					ResidueNumber pdbresnum1 = range.getStart();
 					ResidueNumber pdbresnum2 = range.getEnd();
 
@@ -215,9 +215,9 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 						// Handle special case of "_" chain for single-chain proteins
 						chain = s.getChain(modelNr,0);
 						if(pdbresnum1 != null)
-							pdbresnum1.setChainId(chain.getChainID());
+							pdbresnum1.setChainName(chain.getName());
 						if(pdbresnum2 != null)
-							pdbresnum2.setChainId(chain.getChainID());
+							pdbresnum2.setChainName(chain.getName());
 
 						if(s.size() != 1) {
 							// SCOP 1.71 uses this for some proteins with multiple chains
@@ -230,7 +230,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 							chain = s.getChainByPDB(chainId,modelNr);
 						} catch(StructureException e) {
 							// Chain not found
-							// Maybe it was a chain index, masquerading as a chainId?
+							// Maybe it was a chain index, masquerading as a chainName?
 							try {
 								int chainNum = Integer.parseInt(chainId);
 								try {
@@ -266,11 +266,11 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 					Chain c = null;
 					
 					// Reuse prevChain
-					if ( prevChainId != null && prevChainId.equals(chain.getChainID())) {
+					if ( prevChainId != null && prevChainId.equals(chain.getName())) {
 						c = newS.getChainByPDB(prevChainId,modelNr);
 					} else {
 						try {
-							c = newS.getChainByPDB(chain.getChainID(),modelNr);
+							c = newS.getChainByPDB(chain.getName(),modelNr);
 						} catch (StructureException e){
 							// chain not in structure yet...
 						}
@@ -279,7 +279,8 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 					if ( c == null) {
 						// first chain...
 						c = new ChainImpl();
-						c.setChainID(chain.getChainID());
+						c.setId(chain.getId());
+						c.setName(chain.getName());
 						newS.addChain(c,modelNr);
 						c.setSeqResGroups(chain.getSeqResGroups());
 						c.setSeqMisMatches(chain.getSeqMisMatches());

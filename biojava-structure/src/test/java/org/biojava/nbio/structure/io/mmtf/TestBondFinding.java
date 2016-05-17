@@ -34,20 +34,20 @@ public class TestBondFinding {
 	@Test
 	public void testInterGroupBonds() throws IOException, StructureException {
 		// Normal
-		assertEquals(getInterBonds("1QMZ"), 2236);
+		assertEquals(2236, getInterBonds("1QMZ"));
 		// 	Disulphide
-		assertEquals(getInterBonds("2QWO"), 956);
+		assertEquals(956, getInterBonds("2QWO"));
 		// Covalent ligand
-		assertEquals(getInterBonds("4QDV"), 2294);
+		assertEquals(2294, getInterBonds("4QDV"));
 		// DNA 
-		assertEquals(getInterBonds("4XSN"), 22);
+		assertEquals(22, getInterBonds("4XSN"));
 
 	}
 
 	/**
 	 * Find all of the inter group bonds in a structure
 	 * @param pdbId the pdb id of the structure to determine
-	 * @return the number of inter group bonds (dobule counted) in a structure
+	 * @return the number of inter group bonds (double counted) in a structure
 	 * @throws IOException
 	 * @throws StructureException
 	 */

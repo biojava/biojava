@@ -117,6 +117,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 	public void testSubstructureMatchingProteinSequence() throws CompoundNotFoundException {
 		ProteinSequence seq = new ProteinSequence(seq1.substring(30, 40));
 		Structure result = StructureSequenceMatcher.getSubstructureMatchingProteinSequence(seq, struct1);
+
 		assertEquals("Wrong number of groups", 10, StructureTools.getNrGroups(result));
 		assertEquals("Wrong number of chains", 1, result.getChains().size());
 		int i = 0;
@@ -208,7 +209,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 					fail("Incorrectly marked as missing residue at pos "+i+" aa "+sequenceStr.charAt(i));
 				}
 			} else {
-				Group g = struct1.findGroup(res.getChainId(), res.toString());
+				Group g = struct1.findGroup(res.getChainName(), res.toString());
 				assertNotNull(g);
 				String aa3 = g.getPDBName();
 				assertNotNull(aa3);

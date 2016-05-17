@@ -59,9 +59,11 @@ public class PdbFileFormat30Test {
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr ,nrNuc);
 
 		List<EntityInfo> compounds= s.getEntityInfos();
-		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
+		// from Biojava 5.0 on we are creating entities whenever an entity is found to be without an assigned compound 
+		// in the file, for polymer entities, nonpolymer entities and water entities.
+		// For this file: 1 dna polymeric entity, 1 MG nonpolymeric entity, 1 water
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
-		assertEquals(2, compounds.size());
+		assertEquals(3, compounds.size());
 		EntityInfo mol = compounds.get(0);
 		assertTrue(mol.getDescription().startsWith("DNA"));
 
@@ -84,9 +86,11 @@ public class PdbFileFormat30Test {
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr , nrNuc);
 
 		List<EntityInfo> compounds= s.getEntityInfos();
-		// from Biojava 4.2 on we are creating compounds whenever an entity is found to be without an assigned compound in the file
+		// from Biojava 5.0 on we are creating entities whenever an entity is found to be without an assigned compound 
+		// in the file, for polymer entities, nonpolymer entities and water entities. 
+		// For this entry: we have 1 dna polymeric entity, 1 FLO nonpoly entity, 1 MO6 nonpoly entity, 1 water entity
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
-		assertEquals(2, compounds.size());
+		assertEquals(4, compounds.size());
 		EntityInfo mol = compounds.get(0);
 
 		assertTrue(mol.getDescription().startsWith("DNA"));
@@ -145,16 +149,25 @@ public class PdbFileFormat30Test {
 		Structure s = getStructure("/3mk3.pdb");
 
 		List<EntityInfo> compounds= s.getEntityInfos();
-		assertTrue(compounds.size() == 1);
+		// we are doing heuristics to find missing compounds not specified in header
+		// thus here we have the one specified in header plus a SO4 nonpolymer entity
+		assertEquals(2, compounds.size());
 		EntityInfo mol = compounds.get(0);
 		assertTrue(mol.getDescription().equals("6,7-DIMETHYL-8-RIBITYLLUMAZINE SYNTHASE"));
 		assertEquals(60, mol.getChainIds().size());
 		assertEquals(60, mol.getChains().size());
-		assertTrue(mol.getChainIds().contains("S"));
-		assertTrue(mol.getChainIds().contains("T"));
-		assertTrue(mol.getChainIds().contains("U"));
-		assertTrue(mol.getChainIds().contains("g"));
-		assertTrue(mol.getChainIds().contains("h"));
-		assertTrue(mol.getChainIds().contains("i"));
+		assertTrue(isChainNameInEntity(mol,"S"));
+		assertTrue(isChainNameInEntity(mol,"T"));
+		assertTrue(isChainNameInEntity(mol,"U"));
+		assertTrue(isChainNameInEntity(mol,"g"));
+		assertTrue(isChainNameInEntity(mol,"h"));
+		assertTrue(isChainNameInEntity(mol,"i"));
+	}
+	
+	private boolean isChainNameInEntity(EntityInfo e, String chainName) {
+		for (Chain c:e.getChains()) {
+			if (c.getName().equals(chainName)) return true;
+		}
+		return false;
 	}
 }

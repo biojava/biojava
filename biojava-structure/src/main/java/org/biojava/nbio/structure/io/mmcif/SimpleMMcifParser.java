@@ -50,6 +50,7 @@ import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
 import org.biojava.nbio.structure.io.mmcif.model.Entity;
+import org.biojava.nbio.structure.io.mmcif.model.EntityPoly;
 import org.biojava.nbio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
@@ -614,6 +615,10 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields,lineData, loopWarnings);
 			triggerNewEntity(e);
 
+		} else if (category.equals("_entity_poly")) {
+			EntityPoly ep = (EntityPoly) buildObject(EntityPoly.class.getName(), loopFields, lineData, loopWarnings);
+			triggerNewEntityPoly(ep);
+			
 		} else if ( category.equals("_struct")){
 
 			struct =  (Struct) buildObject(
@@ -1041,6 +1046,12 @@ public class SimpleMMcifParser implements MMcifParser {
 		for(MMcifConsumer c : consumers){
 			c.newEntity(entity);
 		}
+	}
+	
+	public void triggerNewEntityPoly(EntityPoly entityPoly) {
+		for(MMcifConsumer c : consumers){
+			c.newEntityPoly(entityPoly);
+		}		
 	}
 
 	public void triggerNewEntityPolySeq(EntityPolySeq epolseq){

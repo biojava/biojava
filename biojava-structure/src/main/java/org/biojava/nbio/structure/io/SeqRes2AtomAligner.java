@@ -93,17 +93,38 @@ public class SeqRes2AtomAligner {
 		return alignmentString;
 	}
 
-	public static Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
+	/**
+	 * 
+	 * @param seqRes
+	 * @param atomList
+	 * @param useChainId if true chainId (Chain.getId) is used for matching, 
+	 * if false chainName (Chain.getName) is used 
+	 * @return
+	 */
+	public static Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList, boolean useChainId)
 	{
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
 			Chain atomChain = iter.next();
-			if ( atomChain.getChainID().equals(seqRes.getChainID())){
+			
+			String atomChainId = null;
+			String seqResChainId = null;
+			if (useChainId) {
+				atomChainId = atomChain.getId();
+				seqResChainId = seqRes.getId();
+			} else {
+				atomChainId = atomChain.getName();
+				seqResChainId = seqRes.getName();
+				
+			}
+			
+			if ( atomChainId.equals(seqResChainId)){
 				return atomChain;
 			}
+
 		}
 
-		logger.info("Could not match SEQRES chainID >" + seqRes.getChainID() + "< to ATOM chains!, size of atom chain: " + atomList.size());
+		logger.info("Could not match SEQRES chainID asymId:" + seqRes.getId() + " authId:"+ seqRes.getName() +"  to ATOM chains!, size of atom chain: " + atomList.size());
 		return null;
 	}
 
@@ -117,7 +138,7 @@ public class SeqRes2AtomAligner {
 
 		for (Chain seqRes: seqResList){
 
-				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
+				Chain atomRes = getMatchingAtomRes(seqRes,atomList,false);
 				if ( atomRes == null)
 					continue;
 
@@ -145,7 +166,7 @@ public class SeqRes2AtomAligner {
 
 
 		logger.debug("Comparing ATOM {} ({} groups) to SEQRES {} ({} groups) ",
-				atomRes.getChainID(), atmResGroups.size(), seqRes.getChainID(), seqResGroups.size());
+				atomRes.getId(), atmResGroups.size(), seqRes.getId(), seqResGroups.size());
 
 
 		List<Group> matchedGroups = trySimpleMatch(seqResGroups, atmResGroups);
@@ -165,24 +186,24 @@ public class SeqRes2AtomAligner {
 
 			if ( numNucleotidesSeqres > 1) {
 
-				logger.debug("SEQRES chain {} is a nucleotide chain ({} nucleotides), aligning nucleotides...", seqRes.getChainID(), numNucleotidesSeqres);
+				logger.debug("SEQRES chain {} is a nucleotide chain ({} nucleotides), aligning nucleotides...", seqRes.getId(), numNucleotidesSeqres);
 
 				alignNucleotideChains(seqRes,atomRes);
 				return;
 			} else {
 
-				logger.debug("SEQRES chain {} contains {} amino acids and {} nucleotides, ignoring...", seqRes.getChainID(),numAminosSeqres,numNucleotidesSeqres);
+				logger.debug("SEQRES chain {} contains {} amino acids and {} nucleotides, ignoring...", seqRes.getId(),numAminosSeqres,numNucleotidesSeqres);
 
 				return;
 			}
 		}
 
 		if ( atomRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
-			logger.debug("ATOM chain {} does not contain amino acids, ignoring...", atomRes.getChainID());
+			logger.debug("ATOM chain {} does not contain amino acids, ignoring...", atomRes.getId());
 			return;
 		}
 
-		logger.debug("Proceeding to do protein alignment for chain {}", atomRes.getChainID() );
+		logger.debug("Proceeding to do protein alignment for chain {}", atomRes.getId() );
 
 
 		boolean noMatchFound = alignProteinChains(seqResGroups,atomRes.getAtomGroups());
@@ -195,11 +216,11 @@ public class SeqRes2AtomAligner {
 	private void alignNucleotideChains(Chain seqRes, Chain atomRes) {
 
 		if ( atomRes.getAtomGroups(GroupType.NUCLEOTIDE).size() < 1) {
-			logger.debug("ATOM chain {} does not contain nucleotides, ignoring...", atomRes.getChainID());
+			logger.debug("ATOM chain {} does not contain nucleotides, ignoring...", atomRes.getId());
 
 			return;
 		}
-		logger.debug("Alignment for chain {}", atomRes.getChainID() );
+		logger.debug("Alignment for chain {}", atomRes.getId() );
 
 		List<Group> seqResGroups = seqRes.getAtomGroups();
 		boolean noMatchFound = alignNucleotideGroups(seqResGroups,atomRes.getAtomGroups());
@@ -212,8 +233,8 @@ public class SeqRes2AtomAligner {
 	/**
 	 * A simple matching approach that tries to do a 1:1 mapping between SEQRES and ATOM records
 	 *
-	 * @param seqRes
-	 * @param atomList
+	 * @param seqResGroups list of seqREs groups
+	 * @param atmResGroups list of atmRes Groups
 	 * @return the matching or null if the matching didn't work
 	 */
 	private List<Group> trySimpleMatch(List<Group> seqResGroups,List<Group> atmResGroups) {
@@ -797,31 +818,41 @@ public class SeqRes2AtomAligner {
 	 * @param seqResChains
 	 */
 	public static void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains, boolean headerOnly) {
+		
+		
+		if (headerOnly) {
 
-		for (int i = 0; i < structure.nrModels(); i++) {
-			List<Chain> atomChains   = structure.getModel(i);
+			List<Chain> atomChains = new ArrayList<>();
+			for (Chain seqRes: seqResChains) {
+				// In header-only mode skip ATOM records.
+				// Here we store chains with SEQRES instead of AtomGroups.
+				seqRes.setSeqResGroups(seqRes.getAtomGroups());
+				seqRes.setAtomGroups(new ArrayList<>()); // clear out the atom groups.
+				
+				atomChains.add(seqRes);
+				
+			}
+			structure.setChains(0, atomChains);
+			
+		} else {
 
-			for (Chain seqRes: seqResChains){
-				Chain atomRes;
+			for (int i = 0; i < structure.nrModels(); i++) {
+				List<Chain> atomChains   = structure.getModel(i);
 
-				if (headerOnly) {
-					// In header-only mode skip ATOM records.
-					// Here we store chains with SEQRES instead of AtomGroups.
-					seqRes.setSeqResGroups(seqRes.getAtomGroups());
-					seqRes.setAtomGroups(new ArrayList<Group>()); // clear out the atom groups.
-					atomChains.add(seqRes);
-				} else {
+				for (Chain seqRes: seqResChains){
+					Chain atomRes;
+
 					// Otherwise, we find a chain with AtomGroups
 					// and set this as SEQRES groups.
-					atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomChains);
+					// TODO no idea if new parameter useChainId should be false or true here, used true as a guess - JD 2016-05-09
+					atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomChains,true);
 					if ( atomRes != null)
 						atomRes.setSeqResGroups(seqRes.getAtomGroups());
 					else
-						logger.warn("Could not find atom records for chain " + seqRes.getChainID());
+						logger.warn("Could not find atom records for chain " + seqRes.getId());
 				}
-			}
-			if (headerOnly) {
-				structure.setChains(i, atomChains);
+
+
 			}
 		}
 	}

@@ -56,7 +56,7 @@ public class ResidueRangeTest {
 	public void testWholeChainBasic() {
 		String range = "B:";
 		ResidueRange rr = ResidueRange.parse(range);
-		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertEquals("Wrong chain Id", "B", rr.getChainName());
 		assertNull("Start residue should be null", rr.getStart());
 		assertNull("End residue should be null", rr.getEnd());
 	}
@@ -70,7 +70,7 @@ public class ResidueRangeTest {
 		ResidueRange rr = ResidueRangeAndLength.parse(range, map);
 		ResidueNumber start = new ResidueNumber("B", 1, null);
 		ResidueNumber end = new ResidueNumber("B", 30, null);
-		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertEquals("Wrong chain Id", "B", rr.getChainName());
 		assertEquals("Wrong start", start, rr.getStart());
 		assertEquals("Wrong end", end, rr.getEnd());
 	}
@@ -81,7 +81,7 @@ public class ResidueRangeTest {
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 		String range = "B:";
 		ResidueRange rr = ResidueRangeAndLength.parse(range, map);
-		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertEquals("Wrong chain Id", "B", rr.getChainName());
 		assertEquals("Wrong start", new ResidueNumber("B",1,null),rr.getStart());
 		assertEquals("Wrong end", new ResidueNumber("B",30,null),rr.getEnd());
 	}
@@ -112,7 +112,7 @@ public class ResidueRangeTest {
 		for (int i = 0; i < ids.length; i++) {
 			ResidueRangeAndLength rr = new ResidueRangeAndLength(chains[i],
 					starts[i], ends[i], lengths[i]);
-			assertEquals("The chain is incorrect", chains[i], rr.getChainId());
+			assertEquals("The chain is incorrect", chains[i], rr.getChainName());
 			assertEquals("The start is incorrect", starts[i], rr.getStart());
 			assertEquals("The end is incorrect", ends[i], rr.getEnd());
 			assertEquals("The length is incorrect", lengths[i], rr.getLength());
@@ -213,22 +213,22 @@ public class ResidueRangeTest {
 		rangeStr = "AB,A1,ABCD_1-55,NotAG00dID:-5-1R";
 		ranges = ResidueRange.parseMultiple(rangeStr);
 		range = ranges.get(0);
-		assertEquals("Error parsing " + rangeStr, "AB", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "AB", range.getChainName());
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(1);
-		assertEquals("Error parsing " + rangeStr, "A1", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "A1", range.getChainName());
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(2);
-		assertEquals("Error parsing " + rangeStr, "ABCD", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "ABCD", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("ABCD", 1,
 				null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("ABCD", 55,
 				null), range.getEnd());
 		range = ranges.get(3);
 		assertEquals("Error parsing " + rangeStr, "NotAG00dID",
-				range.getChainId());
+				range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber(
 				"NotAG00dID", -5, null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber(
@@ -238,21 +238,21 @@ public class ResidueRangeTest {
 		rangeStr = "_,__,_:1-5,_:+1-+5";
 		ranges = ResidueRange.parseMultiple(rangeStr);
 		range = ranges.get(0);
-		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainName());
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(1);
-		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainName());
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(2);
-		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 1,
 				null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 5,
 				null), range.getEnd());
 		range = ranges.get(3);
-		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 1,
 				null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 5,
@@ -308,21 +308,21 @@ public class ResidueRangeTest {
 		rangeStr = "_,__,_:52-58";
 		ranges = ResidueRangeAndLength.parseMultiple(rangeStr, map);
 		range = ranges.get(0);
-		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",8,null),range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",161,null),range.getEnd());
 		range = ranges.get(1);
-		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",8,null),range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",161,null),range.getEnd());
 		range = ranges.get(2);
-		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A", 52,null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A", 58,null), range.getEnd());
 
 		// wildcards not converted without the map
 		ResidueRange range2 = ResidueRange.parse("_");
-		assertEquals("Error parsing " + rangeStr, "_", range2.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range2.getChainName());
 		assertNull("Error parsing " + rangeStr,range2.getStart());
 		assertNull("Error parsing " + rangeStr,range2.getEnd());
 

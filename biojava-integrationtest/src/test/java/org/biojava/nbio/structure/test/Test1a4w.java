@@ -35,6 +35,7 @@ import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Test1a4w extends TestCase{
@@ -114,194 +115,162 @@ public class Test1a4w extends TestCase{
 
 
 	private void testStructure(Structure structure){
-		List<Chain> chains = structure.getChains();
+		List<Chain> chains = structure.getPolyChains();
 		assertEquals("1a4w should have 3 chains. " , 3 , chains.size());
 
 		Chain a = chains.get(0);
-		assertEquals("1a4w first chain should be L. " , a.getChainID(), "L");
+		assertEquals("1a4w first chain should be L. " , a.getName(), "L");
 
 		Chain b = chains.get(1);
-		assertEquals("1a4w second chain should be H. " , b.getChainID(), "H");
+		assertEquals("1a4w second chain should be H. " , b.getName(), "H");
 
 		Chain c = chains.get(2);
-		assertEquals("1a4w third chain should be I. " , c.getChainID(), "I");
+		assertEquals("1a4w third chain should be I. " , c.getName(), "I");
 
 		//System.out.println(structure);
-		assertTrue("chain " + a.getChainID() + " length should be 26. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), ( a.getAtomGroups(GroupType.AMINOACID).size() == 26 ) );
+		assertTrue("chain " + a.getName() + " length should be 26. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), ( a.getAtomGroups(GroupType.AMINOACID).size() == 26 ) );
 
-		assertTrue("chain " + a.getChainID() + " seqres length should be 36. was: " + a.getSeqResLength(), a.getSeqResLength() == 36);
+		assertTrue("chain " + a.getName() + " seqres length should be 36. was: " + a.getSeqResLength(), a.getSeqResLength() == 36);
 
-		assertTrue("chain " + b.getChainID() + " length should be 248. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), ( b.getAtomGroups(GroupType.AMINOACID).size() == 248 ) );
+		assertTrue("chain " + b.getName() + " length should be 248. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), ( b.getAtomGroups(GroupType.AMINOACID).size() == 248 ) );
 
-		assertTrue("chain " + b.getChainID() + " seqres length should be 259. was: " + b.getSeqResLength(), b.getSeqResLength() == 259);
+		assertTrue("chain " + b.getName() + " seqres length should be 259. was: " + b.getSeqResLength(), b.getSeqResLength() == 259);
 
-		assertTrue("chain " + c.getChainID() + " length should be 9. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 9 ) );
+		assertTrue("chain " + c.getName() + " length should be 9. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 9 ) );
 
-		assertTrue("chain " + c.getChainID() + " seqres length should be 12. was: " + c.getSeqResLength(), c.getSeqResLength() == 12);
+		assertTrue("chain " + c.getName() + " seqres length should be 12. was: " + c.getSeqResLength(), c.getSeqResLength() == 12);
 
-		assertEquals("chain " + c.getChainID() + " seqres sequences is not correct!", "NGDFEEIPEEYL", c.getSeqResSequence());
+		assertEquals("chain " + c.getName() + " seqres sequences is not correct!", "NGDFEEIPEEYL", c.getSeqResSequence());
 	}
 
 	private void testEqualChains(Chain a,Chain b){
 
-		assertEquals("length of seqres " + a.getChainID() + " and "+b.getChainID()+" should be same. " , a.getSeqResLength(), b.getSeqResLength() );
-		assertEquals("length of atom "   + a.getChainID() + " and "+b.getChainID()+" should be same. " , a.getAtomGroups(GroupType.AMINOACID).size(), b.getAtomGroups(GroupType.AMINOACID).size());
+		assertEquals("length of seqres " + a.getName() + " and "+b.getName()+" should be same. " , a.getSeqResLength(), b.getSeqResLength() );
+		assertEquals("length of atom "   + a.getName() + " and "+b.getName()+" should be same. " , a.getAtomGroups(GroupType.AMINOACID).size(), b.getAtomGroups(GroupType.AMINOACID).size());
 		assertEquals("sequences should be identical. " , a.getAtomSequence(),   b.getAtomSequence());
 		assertEquals("sequences should be identical. " , a.getSeqResSequence(), b.getSeqResSequence());
 	}
 
-	public void testChemComps(){
-		try {
-			AtomCache cache = new AtomCache();
-			FileParsingParameters params = cache.getFileParsingParams();
-			params.setAlignSeqRes(true);
-			Structure s = cache.getStructure("1a4w");
+	public void testChemComps() throws IOException, StructureException { 
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = cache.getFileParsingParams();
+		params.setAlignSeqRes(true);
+		Structure s = cache.getStructure("1a4w");
 
-			assertTrue(s.getChains().size() == 3);
+		assertEquals(3, s.getPolyChains().size());
 
-			Chain c2 = s.getChain(1);
-			assertTrue(c2.getChainID().equals("H"));
+		Chain c2 = s.getChain(1);
+		assertEquals("H", c2.getName());
 
-			List<Group> ligands = c2.getAtomLigands();
-
-
-			boolean noWater = true;
-			boolean darPresent = false;
-
-
-			for ( Group g : ligands){
-				String pdbName = g.getPDBName();
-				if ( pdbName.equals("QWE"))
-					darPresent = true;
-
-				else if ( pdbName.equals("H2O"))
-					noWater = false;
+		
+		List<Group> hChainLigandGroups = new ArrayList<>();
+		
+		for (Chain ch : s.getNonPolyChains()) {
+			if (ch.getName().equals("H")) {
+				hChainLigandGroups.addAll(ch.getAtomGroups());
 			}
-
-			assertTrue("Found water in ligands list!", noWater );
-
-			assertTrue("Did not find QWE in ligands list!", darPresent);
-
-			assertEquals("Did not find the correct nr of ligands in chain! " , 3,ligands.size());
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
 		}
+
+
+		boolean noWater = true;
+		boolean darPresent = false;
+
+
+		for ( Group g : hChainLigandGroups){
+			String pdbName = g.getPDBName();
+			if ( pdbName.equals("QWE"))
+				darPresent = true;
+
+			else if ( pdbName.equals("H2O"))
+				noWater = false;
+		}
+
+		assertTrue("Found water in ligands list!", noWater );
+
+		assertTrue("Did not find QWE in ligands list!", darPresent);
+
+		assertEquals("Did not find the correct nr of ligands in chain! " , 3, hChainLigandGroups.size());
 
 	}
 
 	public void testLigandLoading(){
 		Chain c2 = structure.getChain(1);
-		assertTrue(c2.getChainID().equals("H"));
+		assertEquals("H", c2.getName());
 
-		List<Group> ligands = c2.getAtomLigands();
+		
 
+		List<Group> hChainLigandGroups = new ArrayList<>();
+		
+		for (Chain ch : structure.getNonPolyChains()) {
+			if (ch.getName().equals("H")) {
+				hChainLigandGroups.addAll(ch.getAtomGroups());
+			}
+		}
 
-		System.out.println("LIGANDS:" + ligands);
-		assertEquals("Did not find the correct nr of ligands in chain! " , 6,ligands.size());
+		System.out.println("LIGANDS:" + hChainLigandGroups);
+		assertEquals("Did not find the correct nr of ligands in chain! " , 6,hChainLigandGroups.size());
 
-		List<Group> lignads2 = StructureTools.filterLigands(c2.getAtomGroups());
+		List<Group> lignads2 = StructureTools.filterLigands(hChainLigandGroups);
 
-		assertEquals("Did not get the same nr of ligands from different access methods! ",ligands.size(), lignads2.size());
+		assertEquals("Did not get the same nr of ligands from different access methods! ",hChainLigandGroups.size(), lignads2.size());
 
 	}
 
 	public void testSiteGroups(){
-		try {
 
-			assertNotNull(structure);
+		assertNotNull(structure);
 
-			//			Structure s = TmpAtomCache.cache.getStructure("1a4w");
+		//			Structure s = TmpAtomCache.cache.getStructure("1a4w");
 
-			//                    test1a4wPDBFile();
-			Structure s = structure;
-//			for (Chain chain : s.getChains()) {
-//				System.out.println("Chain: " + chain.getChainID());
-//			}
-			Chain c2 = s.getChain(1);
-			assertTrue(c2.getChainID().equals("H"));
+		//                    test1a4wPDBFile();
+		Structure s = structure;
+		//			for (Chain chain : s.getChains()) {
+		//				System.out.println("Chain: " + chain.getChainID());
+		//			}
+		Chain c2 = s.getChain(1);
+		assertEquals("H", c2.getName());
 
-//			if (s == null) {
-//				System.out.println("No structure set");
-//			}
-			List<Site> sites = s.getSites();
-			//System.out.println("sites " + sites);
-			assertEquals(7, sites.size());
+		//			if (s == null) {
+		//				System.out.println("No structure set");
+		//			}
+		List<Site> sites = s.getSites();
+		//System.out.println("sites " + sites);
+		assertEquals(7, sites.size());
 
-			boolean noWater = true;
-			boolean darPresent = false;
-			boolean glyPresent = false;
-			Site testSite = null;
-			for (Site site : sites) {
-				if (site.getSiteID().equals("AC3")) {
-					testSite = site;
-					for ( Group g : site.getGroups()){
-						assertEquals(c2, g.getChain());
-						String pdbName = g.getPDBName();
-						if ( pdbName.equals("DAR")) {
-							darPresent = true;
-							//System.out.println("darPresent");
-						}
-						else if ( pdbName.equals("GLY"))
-							glyPresent = true;
-						else if ( pdbName.equals("H2O"))
-							noWater = false;
+		boolean noWater = true;
+		boolean darPresent = false;
+		boolean glyPresent = false;
+		Site testSite = null;
+		for (Site site : sites) {
+			if (site.getSiteID().equals("AC3")) {
+				testSite = site;
+				for ( Group g : site.getGroups()){
+					// before biojava 5.0 we were asserting for same chain, but now the DAR residue is in its own nonpoly chain, can't do it anymore 
+					//assertEquals(c2, g.getChain());
+					String pdbName = g.getPDBName();
+					if ( pdbName.equals("DAR")) {
+						darPresent = true;
+						//System.out.println("darPresent");
 					}
+					else if ( pdbName.equals("GLY"))
+						glyPresent = true;
+					else if ( pdbName.equals("H2O"))
+						noWater = false;
 				}
 			}
-
-
-			assertTrue("Found water in site list!", noWater );
-
-			assertTrue("Did not find DAR in site list!", darPresent);
-
-			assertTrue("Did not find GLY in site list!", glyPresent);
-
-			//System.out.println(ligands);
-			assertEquals("Did not find the correct nr of ligands in chain! " , 8, testSite.getGroups().size());
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
 		}
 
+
+		assertTrue("Found water in site list!", noWater );
+
+		assertTrue("Did not find DAR in site list!", darPresent);
+
+		assertTrue("Did not find GLY in site list!", glyPresent);
+
+		//System.out.println(ligands);
+		assertEquals("Did not find the correct nr of ligands in chain! " , 8, testSite.getGroups().size());
+		
+
 	}
 
-	public void testGetHetGroups() {
-//            try {
-		Structure struct = structure;
-
-//                HET    TYS  I 363      16
-//                HET     NA  H 541       1
-//                HET     NA  H 542       1
-//                HET    ANS  H 373      16
-//                HET    DAR  H 350      11
-//                HET    2EP  H 375       8
-//                HET    KTH  H 377       7
-//                HETNAM     TYS O-SULFO-L-TYROSINE
-//                HETNAM      NA SODIUM ION
-//                HETNAM     ANS 5-(DIMETHYLAMINO)-1-NAPHTHALENESULFONIC ACID(DANSYL
-//                HETNAM   2 ANS  ACID)
-//                HETNAM     DAR D-ARGININE
-//                HETNAM     2EP 2-ETHYLPIPERIDINE
-//                HETNAM     KTH 2-KETOTHIAZOLE
-//                HETSYN     ANS DANSYL ACID
-//                FORMUL   3  TYS    C9 H11 N O6 S
-//                FORMUL   4   NA    2(NA 1+)
-//                FORMUL   6  ANS    C12 H13 N O3 S
-//                FORMUL   6  DAR    C6 H15 N4 O2 1+
-//                FORMUL   6  2EP    C7 H15 N
-//                FORMUL   7  KTH    C4 H3 N O S
-//                FORMUL   8  HOH   *157(H2 O)
-
-		List<Group> hets = struct.getHetGroups();
-
-		assertEquals(7, hets.size());
-
-
-
-
-//            } catch (Exception e) {
-//                fail(e.getMessage());
-//            }
-	}
 }

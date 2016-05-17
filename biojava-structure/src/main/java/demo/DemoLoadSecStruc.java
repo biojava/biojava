@@ -63,7 +63,7 @@ public class DemoLoadSecStruc {
 		System.out.println("Author's assignment: ");
 		List<SecStrucInfo> ssi = SecStrucTools.getSecStrucInfo(s);
 		for (SecStrucInfo ss : ssi) {
-			System.out.println(ss.getGroup().getChain().getChainID() + " "
+			System.out.println(ss.getGroup().getChain().getName() + " "
 					+ ss.getGroup().getResidueNumber() + " "
 					+ ss.getGroup().getPDBName() + " -> " + ss.toString());
 		}
@@ -75,7 +75,7 @@ public class DemoLoadSecStruc {
 		System.out.println("DSSP assignment: ");
 		ssi = SecStrucTools.getSecStrucInfo(s);
 		for (SecStrucInfo ss : ssi) {
-			System.out.println(ss.getGroup().getChain().getChainID() + " "
+			System.out.println(ss.getGroup().getChain().getName() + " "
 					+ ss.getGroup().getResidueNumber() + " "
 					+ ss.getGroup().getPDBName() + " -> " + ss.toString());
 		}

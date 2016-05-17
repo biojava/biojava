@@ -79,9 +79,9 @@ public class AtomCacheTest {
 		int expectedLengthA = rrs.get(0).getLength();
 		int expectedLengthB = rrs.get(1).getLength();
 		Structure structure = cache.getStructureForDomain("d1h6w.2");
-		assertEquals(2, structure.getChains().size());
-		Chain a = structure.getChainByPDB("A");
-		Chain b = structure.getChainByPDB("B");
+		assertEquals(2, structure.getPolyChains().size());
+		Chain a = structure.getPolyChainByPDB("A");
+		Chain b = structure.getPolyChainByPDB("B");
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
 		assertEquals(expectedLengthB, b.getAtomGroups().size());
 	}
@@ -98,11 +98,13 @@ public class AtomCacheTest {
 		int expectedLengthA = rrs.get(0).getLength();
 		int expectedLengthB = rrs.get(1).getLength();
 		Structure structure = cache.getStructureForDomain("d1i3o.1");
-		assertEquals(2, structure.getChains().size());
-		Chain a = structure.getChainByPDB("A");
-		Chain b = structure.getChainByPDB("B");
-		assertEquals(expectedLengthA, a.getAtomGroups().size());
-		assertEquals(expectedLengthB, b.getAtomGroups().size());
+		assertEquals(2, structure.getPolyChains().size());
+		Chain a = structure.getPolyChainByPDB("A");
+		Chain b = structure.getPolyChainByPDB("B");
+		// since biojava 5.0 we have no ligand or water molecules in the polymer chains, we have to subtract the 3 water molecules
+		assertEquals(expectedLengthA - 3, a.getAtomGroups().size());
+		// since biojava 5.0 we have no ligand or water molecules in the polymer chains, we have to subtract the 4 water molecules
+		assertEquals(expectedLengthB - 4, b.getAtomGroups().size());
 		List<Group> ligandsA = StructureTools.filterLigands(b.getAtomGroups());
 		assertEquals(0, ligandsA.size());
 		List<Group> ligandsB = StructureTools.filterLigands(b.getAtomGroups());
@@ -120,10 +122,13 @@ public class AtomCacheTest {
 		List<ResidueRangeAndLength> rrs = ResidueRangeAndLength.parseMultiple(ranges, map);
 		int expectedLengthE = rrs.get(0).getLength();
 		Structure structure = cache.getStructureForDomain("d1i3oe_");
-		assertEquals(1, structure.getChains().size());
-		Chain e = structure.getChainByPDB("E");
-		assertEquals(expectedLengthE, e.getAtomGroups().size());
-		List<Group> ligandsE = StructureTools.filterLigands(e.getAtomGroups());
+		assertEquals(1, structure.getPolyChains().size());
+		Chain e = structure.getPolyChainByPDB("E");
+		// since biojava 5.0 we have no ligand molecules in the polymer chains, we have to subtract the 2 zinc molecules
+		assertEquals(expectedLengthE - 2, e.getAtomGroups().size());
+
+		Chain eligands = structure.getNonPolyChainsByPDB("E").get(0);
+		List<Group> ligandsE = StructureTools.filterLigands(eligands.getAtomGroups());
 		assertEquals(1, ligandsE.size());
 	}
 
@@ -136,12 +141,20 @@ public class AtomCacheTest {
 	public void testGetStructureForChainlessDomains() throws IOException, StructureException {
 		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_71); // Uses the range '1-135' without a chain
 		Structure structure = cache.getStructureForDomain("d1hcy_1",scop);
-		assertEquals(1, structure.getChains().size());
-		Chain a = structure.getChainByPDB("A");
-		int expectedLengthA = 135+4;
+
+		//System.out.println(cache.getStructure("1hcy"));
+		//System.out.println(structure);
+		assertEquals(1, structure.getPolyChains().size());
+		Chain a = structure.getPolyChainByPDB("A");
+		int expectedLengthA = 135;
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
-		List<Group> ligandsE = StructureTools.filterLigands(a.getAtomGroups());
-		assertEquals(4, ligandsE.size());
+
+
+		assertTrue(structure.hasNonPolyChain("M"));
+		assertTrue(structure.hasNonPolyChain("N"));
+
+		Chain copper  = structure.getNonPolyChain("M");
+		assertEquals(1,copper.getAtomGroups().size());
 
 	}
 

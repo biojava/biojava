@@ -369,8 +369,8 @@ public class StructurePairAligner {
 		reset();
 		this.params = params;
 
-		Chain c1 = s1.getChainByPDB(chainId1);
-		Chain c2 = s2.getChainByPDB(chainId2);
+		Chain c1 = s1.getPolyChainByPDB(chainId1);
+		Chain c2 = s2.getPolyChainByPDB(chainId2);
 
 		Structure s3 = new StructureImpl();
 		s3.addChain(c1);

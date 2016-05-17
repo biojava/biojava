@@ -40,14 +40,11 @@ public class TestAltLocs {
 	@Test
 	public void testAltLocParsing() throws StructureException, IOException{
 
-
 		AtomCache cache = new AtomCache();
+
 		Structure s = cache.getStructure("2CI1");
 
-		//System.out.println(s);
-
-		Chain a = s.getChainByPDB("A");
-		//System.out.println(a);
+		Chain a = s.getPolyChainByPDB("A");
 
 		int groupCount = 0;
 		List<Group> groups = a.getAtomGroups();
@@ -80,7 +77,7 @@ public class TestAltLocs {
 
 
 		ResidueNumber resNum = ResidueNumber.fromString("273");
-		resNum.setChainId("A");
+		resNum.setChainName("A");
 
 		Group g = a.getGroupByPDB(resNum);
 
@@ -96,7 +93,12 @@ public class TestAltLocs {
 
 		assertEquals(altLocG.getPDBName(),"K1R");
 
-		assertEquals(276,groupCount);
+		assertEquals(275,groupCount);
+
+		// citric acid is now in its own chain
+
+		Chain b = s.getChain("B");
+		assertTrue(b.getAtomGroups().size() == 1);
 
 
 		ResidueNumber resNum2 = ResidueNumber.fromString("265");
@@ -113,7 +115,7 @@ public class TestAltLocs {
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure("2W72");
 
-		Chain a = s.getChainByPDB("A");
+		Chain a = s.getPolyChainByPDB("A");
 
 		Group val1 = a.getGroupByPDB(ResidueNumber.fromString("1"));
 		Atom ca1 = val1.getAtom("CA");
@@ -136,7 +138,7 @@ public class TestAltLocs {
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure("1U7F");
 
-		Chain c = s.getChainByPDB("B");
+		Chain c = s.getPolyChainByPDB("B");
 
 		Group g = c.getGroupByPDB(ResidueNumber.fromString("314"));
 		//System.out.println("== original group ==");
@@ -208,7 +210,7 @@ public class TestAltLocs {
 
 		Structure s = StructureIO.getStructure("1AAC");
 
-		Chain a = s.getChainByPDB("A");
+		Chain a = s.getPolyChainByPDB("A");
 
 		Group g = a.getGroupByPDB( ResidueNumber.fromString("27"));
 		testCBAtomInMainGroup(g);
@@ -217,7 +219,7 @@ public class TestAltLocs {
 		cache.setUseMmCif(true);
 
 		Structure s1 = cache.getStructure("1AAC");
-		Chain a1 = s1.getChainByPDB("A");
+		Chain a1 = s1.getPolyChainByPDB("A");
 
 		Group g1 = a1.getGroupByPDB( ResidueNumber.fromString("27"));
 

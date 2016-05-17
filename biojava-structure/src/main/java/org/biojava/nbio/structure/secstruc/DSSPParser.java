@@ -150,7 +150,7 @@ public class DSSPParser {
 				char insCode = line.charAt(10);
 				String chainId = line.substring(11,13).trim();
 				ResidueNumber r = new ResidueNumber(chainId, resNum, insCode);
-				Group parent = structure.getChainByPDB(chainId)
+				Group parent = structure.getPolyChainByPDB(chainId)
 						.getGroupByPDB(r);
 				SecStrucType ssType =
 						SecStrucType.fromCharacter(line.charAt(16));

@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  * <p>Note: The getLength() methods were introduced in BioJava 4.0.0 to replace
  * the calcLength methods. The new method returns the number of residues between
  * two residues, inclusive, whereas the previous method returned 1 less than that.
- * @author dmyerstu
+ * @author Douglas Myers-Turnbull
  */
 public class AtomPositionMap {
 
@@ -196,7 +196,7 @@ public class AtomPositionMap {
 		int count = 0;
 		// Inefficient search
 		for (Map.Entry<ResidueNumber, Integer> entry : treeMap.entrySet()) {
-			if (entry.getKey().getChainId().equals(startingChain)
+			if (entry.getKey().getChainName().equals(startingChain)
 					&& positionStart <= entry.getValue()
 					&& entry.getValue() <= positionEnd)
 			{
@@ -234,7 +234,7 @@ public class AtomPositionMap {
 	 *  or if either of the residues doesn't exist
 	 */
 	public int getLength(ResidueNumber start, ResidueNumber end) {
-		if( ! start.getChainId().equals(end.getChainId())) {
+		if( ! start.getChainName().equals(end.getChainName())) {
 			throw new IllegalArgumentException(String.format(
 					"Chains differ between %s and %s. Unable to calculate length.",
 					start,end));
@@ -247,7 +247,7 @@ public class AtomPositionMap {
 		if(endPos == null) {
 			throw new IllegalArgumentException("Residue "+start+" was not found.");
 		}
-		return getLength(startPos, endPos, start.getChainId());
+		return getLength(startPos, endPos, start.getChainName());
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class AtomPositionMap {
 	 *  or if either of the residues doesn't exist
 	 */
 	public int getLengthDirectional(ResidueNumber start, ResidueNumber end) {
-		if( ! start.getChainId().equals(end.getChainId())) {
+		if( ! start.getChainName().equals(end.getChainName())) {
 			throw new IllegalArgumentException(String.format(
 					"Chains differ between %s and %s. Unable to calculate length.",
 					start,end));
@@ -274,7 +274,7 @@ public class AtomPositionMap {
 		if(endPos == null) {
 			throw new IllegalArgumentException("Residue "+start+" was not found.");
 		}
-		return getLengthDirectional(startPos, endPos, start.getChainId());
+		return getLengthDirectional(startPos, endPos, start.getChainName());
 	}
 
 
@@ -299,7 +299,7 @@ public class AtomPositionMap {
 	public ResidueNumber getFirst(String chainId) {
 		Map.Entry<ResidueNumber,Integer> entry = treeMap.firstEntry();
 		while (true) {
-			if (entry.getKey().getChainId().equals(chainId)) return entry.getKey();
+			if (entry.getKey().getChainName().equals(chainId)) return entry.getKey();
 			entry = treeMap.higherEntry(entry.getKey());
 			if (entry == null) return null;
 		}
@@ -312,7 +312,7 @@ public class AtomPositionMap {
 	public ResidueNumber getLast(String chainId) {
 		Map.Entry<ResidueNumber,Integer> entry = treeMap.lastEntry();
 		while (true) {
-			if (entry.getKey().getChainId().equals(chainId)) return entry.getKey();
+			if (entry.getKey().getChainName().equals(chainId)) return entry.getKey();
 			entry = treeMap.lowerEntry(entry.getKey());
 			if (entry == null) return null;
 		}
@@ -341,7 +341,7 @@ public class AtomPositionMap {
 		ResidueNumber prev = null;
 		List<ResidueRangeAndLength> ranges = new ArrayList<ResidueRangeAndLength>();
 		for (ResidueNumber rn : treeMap.keySet()) {
-			if (!rn.getChainId().equals(currentChain)) {
+			if (!rn.getChainName().equals(currentChain)) {
 				if (first != null) {
 					ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.getLength(first, prev));
 					ranges.add(newRange);
@@ -349,7 +349,7 @@ public class AtomPositionMap {
 				first = rn;
 			}
 			prev = rn;
-			currentChain = rn.getChainId();
+			currentChain = rn.getChainName();
 		}
 		ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.getLength(first, prev));
 		ranges.add(newRange);
@@ -358,19 +358,18 @@ public class AtomPositionMap {
 
 	/**
 	 * Trims a residue range so that both endpoints are contained in this map.
-	 * @param rr
-	 * @param map
-	 * @return
+	 * @param rr residue range
+	 * @return residue range and length
 	 */
 	public ResidueRangeAndLength trimToValidResidues(ResidueRange rr) {
 		ResidueNumber start = rr.getStart();
 		ResidueNumber end = rr.getEnd();
-		String chain = rr.getChainId();
-		// Add chainId
-		if(start.getChainId() == null) {
+		String chain = rr.getChainName();
+		// Add chainName
+		if(start.getChainName() == null) {
 			start = new ResidueNumber(chain,start.getSeqNum(),start.getInsCode());
 		}
-		if(end.getChainId() == null) {
+		if(end.getChainName() == null) {
 			end = new ResidueNumber(chain,end.getSeqNum(),end.getInsCode());
 		}
 		// Check that start and end are present in the map.
@@ -381,7 +380,7 @@ public class AtomPositionMap {
 			// Assume that the residue numbers are sequential
 			// Find startIndex such that the SeqNum is bigger than start's seqNum
 			for(ResidueNumber key :  treeMap.keySet()) {
-				if( !key.getChainId().equals(chain) )
+				if( !key.getChainName().equals(chain) )
 					continue;
 				if( start.getSeqNum() <= key.getSeqNum() ) {
 					start = key;
@@ -401,7 +400,7 @@ public class AtomPositionMap {
 			// Assume that the residue numbers are sequential
 			// Find startIndex such that the SeqNum is bigger than start's seqNum
 			for(ResidueNumber key :  treeMap.descendingKeySet()) {
-				if( !key.getChainId().equals(chain) )
+				if( !key.getChainName().equals(chain) )
 					continue;
 				Integer value = getPosition(key);
 				if( value < startIndex ) {
