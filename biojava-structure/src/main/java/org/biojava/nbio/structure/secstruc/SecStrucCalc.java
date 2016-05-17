@@ -168,8 +168,8 @@ public class SecStrucCalc {
 			contactSet = new AtomContactSet(CA_MIN_DIST);
 		}
 		else{
-		grid.addAtoms(atoms);
-		contactSet = grid.getContacts();
+			grid.addAtoms(atoms);
+			contactSet = grid.getContacts();
 		}
 	}
 
@@ -487,22 +487,22 @@ public class SecStrucCalc {
 
 
 		for(Pair<Integer> p: outList){
-				int i = p.getFirst();
-				int j = p.getSecond();
-				BridgeType btype = null;
-				// Now do the bonding
-				if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
-						(isBonded(j-1,i) && isBonded(i,j+1))) {
-					btype = BridgeType.parallel;
-				}
-				else if ((isBonded(i,j) && isBonded(j,i)) ||
-						(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
-					btype = BridgeType.antiparallel;
-				}
-				if (btype != null){
-					registerBridge(i, j, btype);
-				}
+			int i = p.getFirst();
+			int j = p.getSecond();
+			BridgeType btype = null;
+			// Now do the bonding
+			if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
+					(isBonded(j-1,i) && isBonded(i,j+1))) {
+				btype = BridgeType.parallel;
 			}
+			else if ((isBonded(i,j) && isBonded(j,i)) ||
+					(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
+				btype = BridgeType.antiparallel;
+			}
+			if (btype != null){
+				registerBridge(i, j, btype);
+			}
+		}
 
 
 	}
@@ -694,39 +694,42 @@ public class SecStrucCalc {
 
 	private static SecStrucGroup[] initGroupArray(Structure s) {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
+		// 
+		for (int i=0; i<s.nrModels(); i++) {
 
-		for ( Chain c : s.getChains()){
+			for ( Chain c : s.getChains(i)){
 
-			for (Group g : c.getAtomGroups()){
+				for (Group g : c.getAtomGroups()){
 
-				//We can also calc secstruc if it is a modified amino acid
-				if ( g.hasAminoAtoms()) {
+					//We can also calc secstruc if it is a modified amino acid
+					if ( g.hasAminoAtoms()) {
 
-					SecStrucGroup sg = new SecStrucGroup();
-					sg.setResidueNumber(g.getResidueNumber());
-					sg.setPDBFlag(true);
-					sg.setPDBName(g.getPDBName());
-					sg.setChain(g.getChain());
+						SecStrucGroup sg = new SecStrucGroup();
+						sg.setResidueNumber(g.getResidueNumber());
+						sg.setPDBFlag(true);
+						sg.setPDBName(g.getPDBName());
+						sg.setChain(g.getChain());
 
-					Atom N = g.getAtom(StructureTools.N_ATOM_NAME);
-					Atom CA =  g.getAtom(StructureTools.CA_ATOM_NAME);
-					Atom C = g.getAtom(StructureTools.C_ATOM_NAME);
-					Atom O =  g.getAtom(StructureTools.O_ATOM_NAME);
-					if ( N == null || CA == null || C == null || O == null)
-						continue;
+						Atom N = g.getAtom(StructureTools.N_ATOM_NAME);
+						Atom CA =  g.getAtom(StructureTools.CA_ATOM_NAME);
+						Atom C = g.getAtom(StructureTools.C_ATOM_NAME);
+						Atom O =  g.getAtom(StructureTools.O_ATOM_NAME);
+						if ( N == null || CA == null || C == null || O == null)
+							continue;
 
-					sg.setN((Atom)   N.clone());
-					sg.setCA((Atom) CA.clone());
-					sg.setC((Atom)   C.clone());
-					sg.setO((Atom)  O.clone());
-					sg.setOriginal(g);
+						sg.setN((Atom)   N.clone());
+						sg.setCA((Atom) CA.clone());
+						sg.setC((Atom)   C.clone());
+						sg.setO((Atom)  O.clone());
+						sg.setOriginal(g);
 
-					SecStrucState state = new SecStrucState(sg,
-							SecStrucInfo.BIOJAVA_ASSIGNMENT,
-							SecStrucType.coil);
+						SecStrucState state = new SecStrucState(sg,
+								SecStrucInfo.BIOJAVA_ASSIGNMENT,
+								SecStrucType.coil);
 
-					sg.setProperty(Group.SEC_STRUC, state);
-					groupList.add(sg);
+						sg.setProperty(Group.SEC_STRUC, state);
+						groupList.add(sg);
+					}
 				}
 			}
 		}
