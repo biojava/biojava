@@ -55,8 +55,6 @@ public class MmtfUtils {
 		params.setCreateAtomBonds(true);
 		params.setAlignSeqRes(true);
 		params.setParseBioAssembly(true);
-
-		// MOVE INTO BIOJAVA IF NEED BE
 		DownloadChemCompProvider cc = new DownloadChemCompProvider();
 		ChemCompGroupFactory.setChemCompProvider(cc);
 		cc.checkDoFirstInstall();
@@ -131,6 +129,7 @@ public class MmtfUtils {
 	 */
 	public static void calculateDsspSecondaryStructure(Structure bioJavaStruct) {
 		SecStrucCalc ssp = new SecStrucCalc();
+		
 		try{
 			ssp.calculate(bioJavaStruct, true);
 		}
