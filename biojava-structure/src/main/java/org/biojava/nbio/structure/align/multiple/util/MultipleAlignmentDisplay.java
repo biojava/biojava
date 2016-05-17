@@ -56,7 +56,6 @@ public class MultipleAlignmentDisplay {
 	 * @return list of transformed AtomArrays
 	 * @throws StructureException
 	 */
-
 	public static List<Atom[]> getRotatedAtoms(MultipleAlignment multAln)
 			throws StructureException {
 
@@ -96,12 +95,15 @@ public class MultipleAlignmentDisplay {
 			// Assume all atoms are from the same structure
 			Structure displayS = atomArrays.get(i)[0].getGroup().getChain()
 					.getStructure().clone();
+			
 			// Get all the atoms and include ligands and hetatoms
 			Atom[] rotCA = StructureTools.getRepresentativeAtomArray(displayS);
 			List<Group> hetatms = StructureTools.getUnalignedGroups(rotCA);
+			int index = rotCA.length;
+			rotCA = Arrays.copyOf(rotCA, rotCA.length + hetatms.size());
 			for (Group g : hetatms) {
-				rotCA = Arrays.copyOf(rotCA, rotCA.length + 1);
-				rotCA[rotCA.length - 1] = g.getAtom(0);
+				rotCA[index] = g.getAtom(0);
+				index++;
 			}
 
 			// Transform the structure to ensure a full rotation in the display
