@@ -55,12 +55,8 @@ public class MmtfStructureWriter {
 		// Get the header and the xtal info.
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
-		// TODO Get release date information
-		String releaseDate = null;
-		// TODO Get the Rwork
-		float rWork = 1.0f;
-		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), rWork, pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
-				releaseDate, MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
+		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), pdbHeader.getRwork(), pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
+				MmtfUtils.dateToIsoString(pdbHeader.getModDate()), MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
 		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo));
 		// Store the bioassembly data
 		storeBioassemblyInformation(chainIdToIndexMap, pdbHeader.getBioAssemblies());
