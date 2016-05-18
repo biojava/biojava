@@ -118,33 +118,36 @@ public class SecStrucCalc {
 	public List<SecStrucState> calculate(Structure s, boolean assign)
 			throws StructureException {
 
-		// Reinitialise the global vars
-		ladders = new ArrayList<Ladder>();
-		bridges = new ArrayList<BetaBridge>();
-		groups = initGroupArray(s);
-		// Initialise the contact set for this structure
-		initContactSet();
-		if (groups.length < 5) {
-			// not enough groups to do anything
-			throw new StructureException("Not enough backbone groups in the"
-					+ " Structure to calculate the secondary structure ("
-					+ groups.length+" given, minimum 5)" );
-		}
-
-		calculateHAtoms();
-		calculateHBonds();
-		calculateDihedralAngles();
-		calculateTurns();
-		buildHelices();
-		detectBends();
-		detectStrands();
 		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
-		for (SecStrucGroup sg : groups){
-			SecStrucState ss = (SecStrucState)
-					sg.getProperty(Group.SEC_STRUC);
-			//Add to return list and assign to original if flag is true
-			secstruc.add(ss);
-			if (assign) sg.getOriginal().setProperty(Group.SEC_STRUC, ss);
+		for(int i=0; i<s.nrModels(); i++) {
+			// Reinitialise the global vars
+			ladders = new ArrayList<Ladder>();
+			bridges = new ArrayList<BetaBridge>();
+			groups = initGroupArray(s, i);
+			// Initialise the contact set for this structure
+			initContactSet();
+			if (groups.length < 5) {
+				// not enough groups to do anything
+				throw new StructureException("Not enough backbone groups in the"
+						+ " Structure to calculate the secondary structure ("
+						+ groups.length+" given, minimum 5)" );
+			}
+
+			calculateHAtoms();
+			calculateHBonds();
+			calculateDihedralAngles();
+			calculateTurns();
+			buildHelices();
+			detectBends();
+			detectStrands();
+
+			for (SecStrucGroup sg : groups){
+				SecStrucState ss = (SecStrucState)
+						sg.getProperty(Group.SEC_STRUC);
+				// Add to return list and assign to original if flag is true
+				secstruc.add(ss);
+				if (assign) sg.getOriginal().setProperty(Group.SEC_STRUC, ss);
+			}
 		}
 		return secstruc;
 	}
@@ -168,8 +171,8 @@ public class SecStrucCalc {
 			contactSet = new AtomContactSet(CA_MIN_DIST);
 		}
 		else{
-		grid.addAtoms(atoms);
-		contactSet = grid.getContacts();
+			grid.addAtoms(atoms);
+			contactSet = grid.getContacts();
 		}
 	}
 
@@ -487,22 +490,22 @@ public class SecStrucCalc {
 
 
 		for(Pair<Integer> p: outList){
-				int i = p.getFirst();
-				int j = p.getSecond();
-				BridgeType btype = null;
-				// Now do the bonding
-				if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
-						(isBonded(j-1,i) && isBonded(i,j+1))) {
-					btype = BridgeType.parallel;
-				}
-				else if ((isBonded(i,j) && isBonded(j,i)) ||
-						(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
-					btype = BridgeType.antiparallel;
-				}
-				if (btype != null){
-					registerBridge(i, j, btype);
-				}
+			int i = p.getFirst();
+			int j = p.getSecond();
+			BridgeType btype = null;
+			// Now do the bonding
+			if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
+					(isBonded(j-1,i) && isBonded(i,j+1))) {
+				btype = BridgeType.parallel;
 			}
+			else if ((isBonded(i,j) && isBonded(j,i)) ||
+					(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
+				btype = BridgeType.antiparallel;
+			}
+			if (btype != null){
+				registerBridge(i, j, btype);
+			}
+		}
 
 
 	}
@@ -692,10 +695,10 @@ public class SecStrucCalc {
 		}
 	}
 
-	private static SecStrucGroup[] initGroupArray(Structure s) {
+	private static SecStrucGroup[] initGroupArray(Structure s, int modelId) {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
-
-		for ( Chain c : s.getChains()){
+		// 
+		for ( Chain c : s.getChains(modelId)){
 
 			for (Group g : c.getAtomGroups()){
 
@@ -729,6 +732,7 @@ public class SecStrucCalc {
 					groupList.add(sg);
 				}
 			}
+
 		}
 		return groupList.toArray(new SecStrucGroup[groupList.size()]);
 	}
