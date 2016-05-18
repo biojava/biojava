@@ -1421,6 +1421,24 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				logger.debug("Could not parse Rfree from string '{}'", r.getLs_R_factor_R_free());
 			}
 		}
+		
+		// RWORK
+		if(pdbHeader.getRwork()!=PDBHeader.DEFAULT_RFREE) {
+			logger.warn("More than 1 R work value present, will use last one {} and discard previous {} ",
+					r.getLs_R_factor_R_work(), String.format("%4.2f",pdbHeader.getRwork()));
+		}
+		if(r.getLs_R_factor_R_work()==null){
+			logger.info("_refine.ls_R_factor_R_work not present, not parsing R-work value");
+		}
+		else{
+			try{
+				pdbHeader.setRwork(Float.parseFloat(r.getLs_R_factor_R_work()));
+			}
+			catch (NumberFormatException e){
+				logger.debug("Could not parse R-work from string '{}'", r.getLs_R_factor_R_work());
+			}
+			
+		}
 
 	}
 
