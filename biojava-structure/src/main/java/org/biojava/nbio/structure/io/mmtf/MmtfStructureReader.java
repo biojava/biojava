@@ -1,7 +1,10 @@
 package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,8 @@ import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.api.StructureAdapterInterface;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -46,6 +51,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6772030485225130853L;
+	
+	/** The logger */
+	private static final Logger logger = LoggerFactory.getLogger(MmtfStructureReader.class);
 
 	/** The structure. */
 	private Structure structure;
@@ -74,9 +82,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	/** All the chains as a list of maps */ 
 	private List<Map<String,Chain>> chainMap;
-	
+
 	private List<double[]> transformList;
-	
+
 	private int bioassIndex;
 
 	/**
@@ -464,14 +472,32 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	@Override
 	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, String depositionDate,
 			String releaseDate, String[] experimnetalMethods) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		// Get the pdb header
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		pdbHeader.setTitle(title);
 		pdbHeader.setResolution(resolution);
 		pdbHeader.setRfree(rFree);
+		pdbHeader.setRwork(rWork);
 		// Now loop through the techniques and add them in
 		for (String techniqueStr : experimnetalMethods) {
 			pdbHeader.setExperimentalTechnique(techniqueStr);
+		}
+		// Set the dates
+		try {
+			Date depDate = formatter.parse(depositionDate);
+			pdbHeader.setDepDate(depDate);
+		} catch (ParseException e) {
+			logger.warn("Could not parse date string '{}', depositon date will be unavailable", depositionDate);
+
+		}
+
+		try {
+			Date relDate = formatter.parse(releaseDate);
+			pdbHeader.setModDate(relDate);
+		} catch (ParseException e) {
+			logger.warn("Could not parse date string '{}', release/modification date will be unavailable", releaseDate);
+
 		}
 	}
 
