@@ -60,16 +60,16 @@ public class TestSecStrucCalc {
 		for (String name : names) {
 
 			AtomCache cache = new AtomCache();
-			Structure s = cache.getStructure(name);
+			Structure structure = cache.getStructure(name);
 
 
-			List<SecStrucState> biojava = sec.calculate(s, true);
+			List<SecStrucState> biojava = sec.calculate(structure, true);
 
 			//Download the original DSSP implementation output
-			List<SecStrucState> dssp = DSSPParser.fetch(name, s, false);
+			List<SecStrucState> dssp = DSSPParser.fetch(name, structure, false);
 
 			assertEquals("SS assignment lengths do not match",
-					biojava.size(), dssp.size());
+					biojava.size(), dssp.size()*structure.nrModels());
 
 			for (int i=0; i<dssp.size(); i++){
 				assertEquals("SS assignment position "+(i+1)+" does not match",
@@ -78,4 +78,40 @@ public class TestSecStrucCalc {
 		}
 	}
 
+	
+	/**
+	 * Test that calculating the secondary structure for multi-model systems works.
+	 * Combine two PDBs into one multi-model system
+	 * Calculate the secondary structure
+	 * Combine with the combined list fetching from the server
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	@Test
+	public void testMultiModelPred() throws StructureException, IOException {
+
+		String pdbId = "5pti";
+		String pdbIdTwo = "4hhb";
+		SecStrucCalc sec = new SecStrucCalc();
+		// Combine these into one structure with two models
+		AtomCache cache = new AtomCache();
+		Structure structure = cache.getStructure(pdbId);
+		Structure structureTwo = cache.getStructure(pdbIdTwo);
+		// Join them together
+		structure.addModel(structureTwo.getChains());
+		
+		List<SecStrucState> biojava = sec.calculate(structure, true);
+
+		// Download the original DSSP implementation output
+		List<SecStrucState> dssp = DSSPParser.fetch(pdbId,cache.getStructure(pdbId), false);
+		dssp.addAll(DSSPParser.fetch(pdbIdTwo, cache.getStructure(pdbIdTwo), false));
+		
+		assertEquals("SS assignment lengths do not match",
+				biojava.size(), dssp.size());
+
+		for (int i=0; i<dssp.size(); i++){
+			assertEquals("SS assignment position "+(i+1)+" does not match",
+					biojava.get(i), dssp.get(i));
+		}
+	}
 }

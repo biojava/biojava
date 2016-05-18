@@ -118,33 +118,36 @@ public class SecStrucCalc {
 	public List<SecStrucState> calculate(Structure s, boolean assign)
 			throws StructureException {
 
-		// Reinitialise the global vars
-		ladders = new ArrayList<Ladder>();
-		bridges = new ArrayList<BetaBridge>();
-		groups = initGroupArray(s);
-		// Initialise the contact set for this structure
-		initContactSet();
-		if (groups.length < 5) {
-			// not enough groups to do anything
-			throw new StructureException("Not enough backbone groups in the"
-					+ " Structure to calculate the secondary structure ("
-					+ groups.length+" given, minimum 5)" );
-		}
-
-		calculateHAtoms();
-		calculateHBonds();
-		calculateDihedralAngles();
-		calculateTurns();
-		buildHelices();
-		detectBends();
-		detectStrands();
 		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
-		for (SecStrucGroup sg : groups){
-			SecStrucState ss = (SecStrucState)
-					sg.getProperty(Group.SEC_STRUC);
-			//Add to return list and assign to original if flag is true
-			secstruc.add(ss);
-			if (assign) sg.getOriginal().setProperty(Group.SEC_STRUC, ss);
+		for(int i=0; i<s.nrModels(); i++) {
+			// Reinitialise the global vars
+			ladders = new ArrayList<Ladder>();
+			bridges = new ArrayList<BetaBridge>();
+			groups = initGroupArray(s, i);
+			// Initialise the contact set for this structure
+			initContactSet();
+			if (groups.length < 5) {
+				// not enough groups to do anything
+				throw new StructureException("Not enough backbone groups in the"
+						+ " Structure to calculate the secondary structure ("
+						+ groups.length+" given, minimum 5)" );
+			}
+
+			calculateHAtoms();
+			calculateHBonds();
+			calculateDihedralAngles();
+			calculateTurns();
+			buildHelices();
+			detectBends();
+			detectStrands();
+
+			for (SecStrucGroup sg : groups){
+				SecStrucState ss = (SecStrucState)
+						sg.getProperty(Group.SEC_STRUC);
+				// Add to return list and assign to original if flag is true
+				secstruc.add(ss);
+				if (assign) sg.getOriginal().setProperty(Group.SEC_STRUC, ss);
+			}
 		}
 		return secstruc;
 	}
@@ -692,46 +695,44 @@ public class SecStrucCalc {
 		}
 	}
 
-	private static SecStrucGroup[] initGroupArray(Structure s) {
+	private static SecStrucGroup[] initGroupArray(Structure s, int modelId) {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
 		// 
-		for (int i=0; i<s.nrModels(); i++) {
+		for ( Chain c : s.getChains(modelId)){
 
-			for ( Chain c : s.getChains(i)){
+			for (Group g : c.getAtomGroups()){
 
-				for (Group g : c.getAtomGroups()){
+				//We can also calc secstruc if it is a modified amino acid
+				if ( g.hasAminoAtoms()) {
 
-					//We can also calc secstruc if it is a modified amino acid
-					if ( g.hasAminoAtoms()) {
+					SecStrucGroup sg = new SecStrucGroup();
+					sg.setResidueNumber(g.getResidueNumber());
+					sg.setPDBFlag(true);
+					sg.setPDBName(g.getPDBName());
+					sg.setChain(g.getChain());
 
-						SecStrucGroup sg = new SecStrucGroup();
-						sg.setResidueNumber(g.getResidueNumber());
-						sg.setPDBFlag(true);
-						sg.setPDBName(g.getPDBName());
-						sg.setChain(g.getChain());
+					Atom N = g.getAtom(StructureTools.N_ATOM_NAME);
+					Atom CA =  g.getAtom(StructureTools.CA_ATOM_NAME);
+					Atom C = g.getAtom(StructureTools.C_ATOM_NAME);
+					Atom O =  g.getAtom(StructureTools.O_ATOM_NAME);
+					if ( N == null || CA == null || C == null || O == null)
+						continue;
 
-						Atom N = g.getAtom(StructureTools.N_ATOM_NAME);
-						Atom CA =  g.getAtom(StructureTools.CA_ATOM_NAME);
-						Atom C = g.getAtom(StructureTools.C_ATOM_NAME);
-						Atom O =  g.getAtom(StructureTools.O_ATOM_NAME);
-						if ( N == null || CA == null || C == null || O == null)
-							continue;
+					sg.setN((Atom)   N.clone());
+					sg.setCA((Atom) CA.clone());
+					sg.setC((Atom)   C.clone());
+					sg.setO((Atom)  O.clone());
+					sg.setOriginal(g);
 
-						sg.setN((Atom)   N.clone());
-						sg.setCA((Atom) CA.clone());
-						sg.setC((Atom)   C.clone());
-						sg.setO((Atom)  O.clone());
-						sg.setOriginal(g);
+					SecStrucState state = new SecStrucState(sg,
+							SecStrucInfo.BIOJAVA_ASSIGNMENT,
+							SecStrucType.coil);
 
-						SecStrucState state = new SecStrucState(sg,
-								SecStrucInfo.BIOJAVA_ASSIGNMENT,
-								SecStrucType.coil);
-
-						sg.setProperty(Group.SEC_STRUC, state);
-						groupList.add(sg);
-					}
+					sg.setProperty(Group.SEC_STRUC, state);
+					groupList.add(sg);
 				}
 			}
+
 		}
 		return groupList.toArray(new SecStrucGroup[groupList.size()]);
 	}
