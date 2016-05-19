@@ -38,6 +38,7 @@ import java.util.*;
  *
  * @author Peter Rose
  * @author Andreas Prlic
+ * @author Jose Duarte
  *
  */
 public class BiologicalAssemblyBuilder {
@@ -87,8 +88,13 @@ public class BiologicalAssemblyBuilder {
 			} else {
 				Chain polyC = asymUnit.getPolyChainByPDB(transformation.getChainId());
 				List<Chain> nonPolyCs = asymUnit.getNonPolyChainsByPDB(transformation.getChainId());
-				chainsToTransform.add(polyC);
-				chainsToTransform.addAll(nonPolyCs);
+				Chain waterC = asymUnit.getWaterChainByPDB(transformation.getChainId());
+				if (polyC!=null) 
+					chainsToTransform.add(polyC);
+				if (!nonPolyCs.isEmpty()) 
+					chainsToTransform.addAll(nonPolyCs);
+				if (waterC!=null) 
+					chainsToTransform.add(waterC);
 			}
 			
 			for (Chain c: chainsToTransform) {

@@ -80,10 +80,6 @@ public class BioAssemblyInfo implements Serializable {
 	 * @return
 	 */
 	public int getMacromolecularSize() {
-		for (BiologicalAssemblyTransformation bat:getTransforms()) {
-			//bat.get
-		}
-		//return getTransforms().size();
 		return macromolecularSize;
 	}
 
