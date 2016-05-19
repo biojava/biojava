@@ -21,9 +21,8 @@
 
 package org.biojava.nbio.structure.quaternary;
 
-import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
@@ -82,8 +81,10 @@ public class BiologicalAssemblyBuilder {
 		orderTransformationsByChainId(asymUnit, transformations);
 
 		Structure s = asymUnit.clone();
+		
+
 		// this resets all models (not only the first one): this is important for NMR (multi-model)
-		// structures, otherwise we could not add new models below
+		// like that we can be sure we start with an empty structures and we add models or chains to it
 		s.resetModels();
 
 		for (BiologicalAssemblyTransformation transformation : transformations){
@@ -108,21 +109,16 @@ public class BiologicalAssemblyBuilder {
 			
 			for (Chain c: chainsToTransform) {
 
-
-				Chain chain = (Chain)c.clone();				
-
-				for (Group g : chain.getAtomGroups()) {
-
-					for (Atom a: g.getAtoms()) {
-
-						transformation.transformPoint(a.getCoords());
-
-					}
-				}
+				Chain chain = (Chain)c.clone();
+				
+				Calc.transform(chain, transformation.getTransformationMatrix());
 
 				String transformId = transformation.getId();
 
 				// note that the Structure.addChain/Structure.addModel methods set the parent reference to the new Structure
+				
+				// TODO set entities properly in the new structures! at the moment they are a mess... - JD 2016-05-19
+				
 				if (multiModel) 
 					addChainMultiModel(s, chain, transformId);
 				else 

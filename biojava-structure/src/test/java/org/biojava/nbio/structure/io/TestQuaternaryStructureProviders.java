@@ -38,18 +38,18 @@ public class TestQuaternaryStructureProviders {
 
 	@Test
 	public void test1STP() throws IOException, StructureException{
-		testID("1stp",1, 4);
+		comparePdbVsMmcif("1stp",1, 4);
 	}
 
 	@Test
 	public void test3FAD() throws IOException, StructureException{
-		testID("3fad",1, 1);
-		testID("3fad",2, 2);
+		comparePdbVsMmcif("3fad",1, 1);
+		comparePdbVsMmcif("3fad",2, 2);
 	}
 
 	@Test
 	public void test5LDH() throws IOException, StructureException{
-		testID("5LDH",1, 4);
+		comparePdbVsMmcif("5LDH",1, 4);
 		
 		// the pdb file of 5ldh contains only 1 bioassembly, whilst the mmcif contains 2,
 		// thus we can't test here the comparison between the 2
@@ -85,18 +85,20 @@ public class TestQuaternaryStructureProviders {
 
 	@Test
 	public void test3NTU() throws IOException, StructureException{
-		testID("3NTU",1, 6);
+		comparePdbVsMmcif("3NTU",1, 6);
 	}
 
 	@Test
 	public void test1A29() throws IOException, StructureException{
-		testID("1A29",1, 1);
+		comparePdbVsMmcif("1A29",1, 1);
 	}
 
-//	@Test
-//	public void test1EI7(){
-//		testID("1ei7",1);
-//	}
+	@Test
+	public void test1EI7() throws IOException, StructureException {
+
+		comparePdbVsMmcif("1ei7",1, 68);
+		
+	}
 
 	@Test
 	public void testGetNrBioAssemblies5LDH() throws IOException, StructureException {
@@ -112,27 +114,18 @@ public class TestQuaternaryStructureProviders {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	private void testID(String pdbId, int bioMolecule, int mmSize) throws IOException, StructureException{
+	private void comparePdbVsMmcif(String pdbId, int bioMolecule, int mmSize) throws IOException, StructureException{
 
-		// get bio assembly from PDB file
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false); 
-		StructureIO.setAtomCache(cache);		
-		Structure pdbS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
+			
+		Structure pdbS = getPdbBioAssembly(pdbId, bioMolecule, true);
 
-		// get bio assembly from mmcif file
-		cache = new AtomCache();
-		cache.setUseMmCif(true); 
-		StructureIO.setAtomCache(cache);		
-		Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
+		Structure mmcifS = getMmcifBioAssembly(pdbId, bioMolecule, true);
 
 		PDBHeader pHeader = pdbS.getPDBHeader();
 		PDBHeader mHeader = mmcifS.getPDBHeader();
-		//PDBHeader fHeader = flatFileS.getPDBHeader();
 
 		assertTrue("not correct nr of bioassemblies " + pHeader.getNrBioAssemblies() + " " , pHeader.getNrBioAssemblies() >= bioMolecule);
 		assertTrue("not correct nr of bioassemblies " + mHeader.getNrBioAssemblies() + " " , mHeader.getNrBioAssemblies() >= bioMolecule);
-		//assertTrue("not correct nr of bioassemblies " + fHeader.getNrBioAssemblies() + " " , fHeader.getNrBioAssemblies() >= bioMolecule);
 
 		// mmcif files contain sometimes partial virus assemblies, so they can contain more info than pdb
 		assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
@@ -141,9 +134,6 @@ public class TestQuaternaryStructureProviders {
 		Map<Integer, BioAssemblyInfo> pMap = pHeader.getBioAssemblies();
 		Map<Integer, BioAssemblyInfo> mMap = mHeader.getBioAssemblies();
 
-		//System.out.println("PDB: " + pMap);
-
-		//System.out.println("Mmcif: " + mMap);
 
 		assertTrue(pMap.keySet().size()<= mMap.keySet().size());
 		
@@ -205,7 +195,25 @@ public class TestQuaternaryStructureProviders {
 		
 
 	}
+
+	private Structure getPdbBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
+		// get bio assembly from PDB file
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(false); 
+		StructureIO.setAtomCache(cache);		
+		Structure pdbS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule, multiModel);
+		return pdbS;
+	}
 	
+	private Structure getMmcifBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
+		// get bio assembly from mmcif file
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true); 
+		StructureIO.setAtomCache(cache);		
+		Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule, multiModel);
+		return mmcifS;
+	}
 	
+
 
 }

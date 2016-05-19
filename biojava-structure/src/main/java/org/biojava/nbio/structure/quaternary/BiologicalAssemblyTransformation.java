@@ -171,6 +171,14 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 		combined.setTransformationMatrix(transformation);
 		return combined;
 	}
+	
+	/**
+	 * Tells whether this transformation is in identity.
+	 * @return
+	 */
+	public boolean isIdentity() {
+		return transformation.epsilonEquals(new Matrix4d(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1), 0.00000000001);
+	}
 
 	public String toXML() throws IOException{
 
