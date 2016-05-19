@@ -73,6 +73,7 @@ public class TestQuatSymmetryDetection {
 		params.setAlignSeqRes(true);
 		AtomCache cache = new AtomCache();
 		cache.setFileParsingParams(params);
+		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 		Structure pdb = StructureIO.getStructure("4hhb");
 		String[] symmetries = getSymmetry(pdb, 1);
@@ -93,6 +94,7 @@ public class TestQuatSymmetryDetection {
 		params.setAlignSeqRes(true);
 		AtomCache cache = new AtomCache();
 		cache.setFileParsingParams(params);
+		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 		Structure pdb = StructureIO.getStructure("4p2c");
 		String[] symmetries = getSymmetry(pdb, 1);
@@ -121,7 +123,8 @@ public class TestQuatSymmetryDetection {
 		}
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
-		Structure bioAssembly = builder.rebuildQuaternaryStructure(pdb, transformations);
+		// we use true in useAsymIds here because above we read mmcif files, if that changes this needs to change!
+		Structure bioAssembly = builder.rebuildQuaternaryStructure(pdb, transformations, true);
 
 		QuatSymmetryParameters parameters = new QuatSymmetryParameters();
 		parameters.setOnTheFly(true);

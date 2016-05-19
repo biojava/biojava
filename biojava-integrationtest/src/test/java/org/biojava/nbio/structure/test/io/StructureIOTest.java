@@ -20,19 +20,29 @@
  */
 package org.biojava.nbio.structure.test.io;
 
-import junit.framework.TestCase;
-import org.biojava.nbio.structure.StructureIO;
 
-public class StructureIOTest extends TestCase {
-	public void testStructureIO(){
+import static org.junit.Assert.*;
+
+import java.io.IOException;
+
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.junit.Test;
+
+
+
+public class StructureIOTest {
+	
+	@Test
+	public void testStructureIO() throws IOException, StructureException {
 
 		String pdbId = "1gav";
 
-		int nrAssembls = StructureIO.getNrBiologicalAssemblies(pdbId);
+		int nrAssembls = StructureIO.getBiologicalAssemblies(pdbId).size();
 		assertEquals(1,nrAssembls);
 
 		pdbId = "1hv4";
-		nrAssembls = StructureIO.getNrBiologicalAssemblies(pdbId);
+		nrAssembls = StructureIO.getBiologicalAssemblies(pdbId).size();
 		assertEquals(2,nrAssembls);
 
 	}

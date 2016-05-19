@@ -598,7 +598,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	/**
 	 * Return the map of biological assemblies. The keys are the
-	 * biological assembly identifiers, usually numerical from "1" to "n", but can also be "PAU" and "XAU"
+	 * biological assembly identifiers (starting at 1). Non-numerical identifiers
+	 * such as PAU or XAU are not supported.
 	 * @return
 	 */
 	public Map<Integer,BioAssemblyInfo> getBioAssemblies() {

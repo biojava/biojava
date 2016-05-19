@@ -30,7 +30,7 @@ import java.util.List;
  * Note that the PDB allows for 1 or more Biological Assemblies for a given entry. They
  * are identified by the id field.
  *
- * @author duarte_j
+ * @author Jose Duarte
  */
 public class BioAssemblyInfo implements Serializable {
 
@@ -73,7 +73,17 @@ public class BioAssemblyInfo implements Serializable {
 		this.transforms = transforms;
 	}
 
+	/**
+	 * Returns the macromolecular size of this biological assembly, i.e.
+	 * the number of polymeric chains (protein or nucleotide chains) in the biological 
+	 * assembly.
+	 * @return
+	 */
 	public int getMacromolecularSize() {
+		for (BiologicalAssemblyTransformation bat:getTransforms()) {
+			//bat.get
+		}
+		//return getTransforms().size();
 		return macromolecularSize;
 	}
 

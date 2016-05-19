@@ -55,9 +55,21 @@ public class BiologicalAssemblyBuilder {
 		init();
 	}
 
-	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations){
+	/**
+	 * Builds a Structure object containing the quaternary structure built from given asymUnit and transformations,
+	 * by adding symmetry partners as new models.
+	 * If the input Structure is multi-model, then only model 1 is retained and the quaternary structure is built
+	 * in the same way with additional models.
+	 * @param asymUnit
+	 * @param transformations
+	 * @param useAsymIds if true use {@link Chain#getId()} to match the ids in the BiologicalAssemblyTransformation (needed if data read from mmCIF), 
+	 * if false use {@link Chain#getName()} for the chain matching (needed if data read from PDB).
+	 * @return
+	 */
+	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations, boolean useAsymIds) {
+		
 		// ensure that new chains are build in the same order as they appear in the asymmetric unit
-	orderTransformationsByChainId(asymUnit, transformations);
+		orderTransformationsByChainId(asymUnit, transformations);
 
 		Structure s = asymUnit.clone();
 		// this resets all models (not only the first one): this is important for NMR (multi-model)
@@ -66,31 +78,37 @@ public class BiologicalAssemblyBuilder {
 
 		for (BiologicalAssemblyTransformation transformation : transformations){
 
+			List<Chain> chainsToTransform = new ArrayList<>();
+			
 			// note: for NMR structures (or any multi-model) we use the first model only and throw away the rest
-			for (Chain c : asymUnit.getChains()){
+			if (useAsymIds) {
+				Chain c = asymUnit.getChain(transformation.getChainId());
+				chainsToTransform.add(c);
+			} else {
+				Chain polyC = asymUnit.getPolyChainByPDB(transformation.getChainId());
+				List<Chain> nonPolyCs = asymUnit.getNonPolyChainsByPDB(transformation.getChainId());
+				chainsToTransform.add(polyC);
+				chainsToTransform.addAll(nonPolyCs);
+			}
+			
+			for (Chain c: chainsToTransform) {
 
-				String intChainID = c.getId();
-				if (intChainID == null) {
-					logger.info("No internal chain ID found while building bioassembly, using chain ID instead: " + c.getName());
-					intChainID = c.getName();
-				}
 
-				if (transformation.getChainId().equals(intChainID)){
-					Chain chain = (Chain)c.clone();
+				Chain chain = (Chain)c.clone();
 
-					for (Group g : chain.getAtomGroups()) {
+				for (Group g : chain.getAtomGroups()) {
 
-						for (Atom a: g.getAtoms()) {
+					for (Atom a: g.getAtoms()) {
 
-							transformation.transformPoint(a.getCoords());
+						transformation.transformPoint(a.getCoords());
 
-						}
 					}
-
-					String transformId = transformation.getId();
-
-					addChainAndModel(s, chain, transformId);
 				}
+
+				String transformId = transformation.getId();
+
+				addChainAndModel(s, chain, transformId);
+
 			}
 		}
 

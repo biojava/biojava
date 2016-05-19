@@ -48,7 +48,7 @@ import java.util.List;
  * @author Peter Rose
  * @author Andreas Prlic
  * @author rickb
- * @author duarte_j
+ * @author Jose Duarte
  * @see CrystalTransform
  */
 public class BiologicalAssemblyTransformation implements Cloneable, Serializable {
@@ -98,7 +98,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	}
 
 	/**
-	 * Sets the chain identified this transformation should be applied to.
+	 * Sets the chain identifier (asym id) that this transformation should be applied to.
 	 * @param chainId
 	 */
 	public void setChainId(String chainId) {
@@ -106,7 +106,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	}
 
 	/**
-	 * Returns the chain identifier this transformation should be applied to.
+	 * Returns the chain identifier (asym id) that this transformation should be applied to.
 	 * @return chain identifier
 	 */
 	public String getChainId() {
@@ -318,7 +318,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 	 */
 	@Override
 	public String toString() {
-		return "BiologicalAssemblyTransformation [id=" + id + ", chainName="
+		return "BiologicalAssemblyTransformation [id=" + id + ", chainId="
 				+ chainId + ", rotation=" + rotMatrixToString(transformation) + ", translation="
 				+ translVecToString(transformation) + "]";
 	}
